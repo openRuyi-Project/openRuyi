@@ -1,0 +1,12 @@
+Index: xinetd-2.3.15.1/contrib/xinetd.service
+===================================================================
+--- xinetd-2.3.15.1.orig/contrib/xinetd.service
++++ xinetd-2.3.15.1/contrib/xinetd.service
+@@ -7,6 +7,7 @@ Documentation=man:xinetd.log
+ 
+ [Service]
+ Type=simple
++EnvironmentFile=-/etc/sysconfig/xinetd
+ ExecStart=/usr/sbin/xinetd -stayalive -dontfork
+ ExecReload=/usr/bin/kill -HUP $MAINPID
+ 

@@ -1,0 +1,11 @@
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+## Type:	string
+## Default	"0"
+# In case bind(2) call temporarily fails insert a pause of given
+# number microseconds between retries. Ie. XINETD_BIND_DELAY=250000
+XINETD_BIND_DELAY=0
