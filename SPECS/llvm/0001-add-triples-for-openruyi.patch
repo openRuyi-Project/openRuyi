@@ -1,0 +1,28 @@
+From 56cd15c7d6cc18bc65c9cc3a8f1c56602cbc1841 Mon Sep 17 00:00:00 2001
+From: jchzhou <zhoujiacheng@iscas.ac.cn>
+Date: Wed, 22 Oct 2025 18:48:31 +0800
+Subject: [PATCH] add triples for openruyi
+
+---
+ clang/lib/Driver/ToolChains/Gnu.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
+index f5e265585..ea5e56bf7 100644
+--- a/clang/lib/Driver/ToolChains/Gnu.cpp
++++ b/clang/lib/Driver/ToolChains/Gnu.cpp
+@@ -2436,8 +2436,9 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+   static const char *const RISCV32Triples[] = {"riscv32-unknown-linux-gnu",
+                                                "riscv32-unknown-elf"};
+   static const char *const RISCV64LibDirs[] = {"/lib64", "/lib"};
+-  static const char *const RISCV64Triples[] = {"riscv64-unknown-linux-gnu",
+-                                               "riscv64-unknown-elf"};
++  static const char *const RISCV64Triples[] = {
++      "riscv64-unknown-linux-gnu", "riscv64-openruyi-linux-gnu",
++      "riscv64-unknown-elf"};
+ 
+   static const char *const SPARCv8LibDirs[] = {"/lib32", "/lib"};
+   static const char *const SPARCv8Triples[] = {"sparc-linux-gnu",
+-- 
+2.51.1
+
