@@ -5,25 +5,27 @@ Subject: [PATCH] rpmuncompress: handle top-level dir entries without trailing
  slash.
 
 Signed-off-by: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+[Adjust for rpm6]
 ---
  tools/rpmuncompress.c | 28 ++++++++++++++++++++--------
  1 file changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/tools/rpmuncompress.c b/tools/rpmuncompress.c
+diff --git a/tools/rpmuncompress.cc b/tools/rpmuncompress.cc
 index c664444..1604dd6 100644
---- a/tools/rpmuncompress.c
-+++ b/tools/rpmuncompress.c
-@@ -100,6 +100,7 @@ static char * singleRoot(const char *path)
+--- a/tools/rpmuncompress.cc
++++ b/tools/rpmuncompress.cc
+@@ -100,7 +100,8 @@ static char * singleRoot(const char *path)
  	struct archive *a;
  	struct archive_entry *entry;
  	int r, ret = -1, rootLen;
 +	int rootNoSlash = 0;
  	char *rootName = NULL;
+	char *sep = NULL;
  
  	a = archive_read_new();
 @@ -115,21 +116,32 @@ static char * singleRoot(const char *path)
  	rootName = xstrdup(archive_entry_pathname(entry));
- 	char *sep = strchr(rootName, '/');
+ 	sep = strchr(rootName, '/');
  	if (sep == NULL) {
 -	    /* No directories in the pathname */
 -	    ret = 0;

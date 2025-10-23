@@ -14,64 +14,34 @@
 Name:           rpm
 Summary:        The RPM Package Manager
 License:        GPL-2.0-or-later
-Version:        4.20.1
+Version:        6.0.1
 Release:        %autorelease
 URL:            https://rpm.org/
 VCS:            git:https://github.com/rpm-software-management/rpm.git
-#!RemoteAsset:  sha256:52647e12638364533ab671cbc8e485c96f9f08889d93fe0ed104a6632661124f
-Source:         https://ftp.osuosl.org/pub/rpm/releases/rpm-4.20.x/rpm-%{version}.tar.bz2
-#!RemoteAsset:  git+https://github.com/rpm-software-management/rpmpgp_legacy#1.1
+#!RemoteAsset:  sha256:44fd2e1425885288ce8e8da8f18e6b85bd380332c2972554a85860af10f86d0f
+Source:         https://ftp.osuosl.org/pub/rpm/releases/rpm-6.0.x/rpm-%{version}.tar.bz2
+#!RemoteAsset:  git+https://github.com/rpm-software-management/rpmpgp_legacy#d783b2cbf9bba1efbeae6a91a4ac9d7fff80aaf4
 #!CreateArchive
-Source1:        rpmpgp_legacy-1.1.tar.gz
+Source1:        rpmpgp_legacy.tar.gz
 Source2:        rpmsort
 Source3:        rpmconfigcheck
 Source4:        rpmconfigcheck.service
 
 # quilt patches start here
-Patch12:        localetag.diff
-Patch18:        refreshtestarch.diff
 Patch25:        brpcompress.diff
 Patch26:        checkfilesnoinfodir.diff
 Patch33:        rpmpopt.diff
-Patch36:        rpmqpack.diff
-Patch43:        rpm-shorten-changelog.diff
-Patch46:        remove-brp-strips.diff
-Patch51:        specfilemacro.diff
 Patch60:        safeugid.diff
-Patch61:        noprereqdeprec.diff
-Patch67:        headeradddb.diff
 Patch70:        fileattrs.diff
-Patch71:        nomagiccheck.diff
-Patch78:        headerchk2.diff
 Patch85:        brp-compress-no-img.patch
-Patch94:        checksepwarn.diff
-Patch99:        enable-postin-scripts-error.diff
 Patch102:       emptymanifest.diff
 Patch103:       find-lang-qt-qm.patch
-Patch117:       findsupplements.diff
-Patch122:       db_conversion.diff
-Patch123:       nextiteratorheaderblob.diff
-Patch131:       posttrans.diff
-Patch133:       zstdpool.diff
-Patch135:       selinux_transactional_update.patch
-Patch136:       rpmsort_reverse.diff
 Patch138:       canongnu.diff
-Patch139:       cmake_python_version.diff
-Patch141:       0002-log-build-time-if-it-is-set-from-SOURCE_DATE_EPOCH.patch
-Patch142:       0003-Error-out-on-a-missing-changelog-date.patch
 Patch150:       unshare.diff
 Patch151:       buildroot-symlink.diff
-Patch154:       undefbuildroot.diff
-Patch155:       rpm2archive.diff
-Patch156:       mtime_policy_set.diff
-Patch157:       cmake_fhardened.diff
-Patch158:       archcheck.diff
-Patch159:       emptypw.diff
-Patch160:       buildsysprep.diff
 # Fix rpmuncompress single-root archive detection for top-level directory
 # entries stored without a trailing slash.
 Patch2000:      2000-fix-rpmuncompress-handle-dir-without-slash.patch
-Patch6464:      auto-config-update-aarch64-ppc64le.diff
 
 BuildRequires:  binutils
 BuildRequires:  bzip2
@@ -86,6 +56,7 @@ BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  patch
 BuildRequires:  perl
+BuildRequires:  pkgconfig(scdoc)
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  pkgconfig(libacl)
 BuildRequires:  pkgconfig(libarchive)
@@ -195,29 +166,8 @@ ln -s rpmpgp_legacy-* rpmpgp_legacy
 popd
 
 rm -rf sqlite
-%patch -P 12 -P 18
-%patch -P 25 -P 26
-%patch        -P 33       -P 36
-%patch                   -P 43             -P 46
-%patch       -P 51
-%patch -P 60 -P 61                          -P 67
-%patch -P 70 -P 71                    -P 78
-%patch                               -P 85
-%patch                    -P 94                         -P 99
-%patch         -P 102 -P 103
-%patch                                                  -P 117
-%patch -P 122 -P 123
-%patch -P 131          -P 133 -P 135 -P 136        -P 138
-%patch -P 139
-%patch -P 141 -P 142
-%patch -P 150 -P 151 -P 154 -P 155 -P 156 -P 157 -P 158 -P 159
-%patch -P 160
+%patch 25 26 33 60 70 85 102 103 138 150 151
 %patch 2000 -p1
-
-%ifarch riscv64
-%patch -P 6464
-%endif
-
 rm -f m4/libtool.m4
 rm -f m4/lt*.m4
 
@@ -334,7 +284,6 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
        %{_bindir}/rpmgraph
        %{_bindir}/rpmkeys
        %{_bindir}/rpmlua
-       %{_bindir}/rpmqpack
        %{_bindir}/rpmquery
        %{_bindir}/rpmsign
        %{_bindir}/rpmverify
@@ -357,7 +306,7 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
        %{_libdir}/librpm.so.*
        %{_libdir}/librpmio.so.*
        %{_libdir}/librpmsign.so.*
-%doc   %{_mandir}/man[18]/*.[18]*
+%doc   %{_mandir}/man[1578]/*.[1578]*
 %ghost /var/lib/rpm
 %dir   %attr(755,root,root) %{_prefix}/src/packages/BUILD
 %dir   %attr(755,root,root) %{_prefix}/src/packages/SPECS
@@ -380,6 +329,7 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
 %{_prefix}/lib/rpm/elfdeps
 %{_prefix}/lib/rpm/rpmdeps
 %{_prefix}/lib/rpm/rpmuncompress
+%{_prefix}/lib/rpm/rpm-setup-autosign
 %{_prefix}/bin/rpmspec
 %{_prefix}/lib/rpm/brp-*
 %{_prefix}/lib/rpm/check-*
