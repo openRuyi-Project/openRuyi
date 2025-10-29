@@ -126,13 +126,13 @@ install -Dm644 %{SOURCE4} %{buildroot}%{_unitdir}/shadow.service
 
 
 %post
-%service_add_post shadow.service shadow.timer
+%systemd_post shadow.service shadow.timer
 
 %preun
-%service_del_preun shadow.service shadow.timer
+%systemd_preun shadow.service shadow.timer
 
 %postun
-%service_del_postun shadow.service shadow.timer
+%systemd_postun shadow.service shadow.timer
 
 %ldconfig_scriptlets -n subid
 
