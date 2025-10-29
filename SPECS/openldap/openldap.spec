@@ -222,9 +222,6 @@ done
 # slapo-smbk5pwd only for Samba password hashes
 make -C contrib/slapd-modules/smbk5pwd %{?_smp_mflags} "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}" DEFS="-DDO_SAMBA" HEIMDAL_LIB=""
 
-# Create ldap user
-%sysusers_generate_pre %{SOURCE12} ldap
-
 %check
 %if %run_test_suite
 # calculate the base port to be use in the test-suite
@@ -327,20 +324,20 @@ rm -f  %{buildroot}%{_libdir}/*.la
 # Provide a libldap_r for backwards-compatibility with OpenLDAP < 2.5.
 ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 
-%pre -f ldap.pre
-%service_add_pre slapd.service
+%pre
+%sysusers_create_package ldap-user.conf %SOURCE12
+%tmpfiles_create_package %{name} %SOURCE11
 
 %post
-%tmpfiles_create %{name}.conf
-%service_add_post slapd.service
+%systemd_post slapd.service
 
 %ldconfig_scriptlets -n libldap2
 
 %preun
-%service_del_preun slapd.service
+%systemd_preun slapd.service
 
 %postun
-%service_del_postun slapd.service
+%systemd_postun slapd.service
 
 %files
 %config %{_sysconfdir}/openldap/schema/*.schema
