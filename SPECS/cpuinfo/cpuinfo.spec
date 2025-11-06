@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -43,6 +44,9 @@ cpuinfo library.
 %{_bindir}/cache-info
 %{_bindir}/cpu-info
 %{_bindir}/isa-info
+%ifarch x86_64
+%{_bindir}/cpuid-dump
+%endif
 
 %files devel
 %{_includedir}/cpuinfo.h
