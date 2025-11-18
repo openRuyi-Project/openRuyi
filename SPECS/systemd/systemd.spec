@@ -267,6 +267,8 @@ This package contains the systemd-sysusers program.
 Summary:        Development headers for systemd
 License:        LGPL-2.1-or-later AND MIT
 Requires:       %{name}-libs = %{version}-%{release}
+Requires:       kmod-devel
+Requires:       libidn2-devel
 Requires(meta): (%{name}-rpm-macros = %{version}-%{release} if rpm-build)
 Provides:       libudev-devel = %{version}
 
@@ -282,7 +284,6 @@ Requires(post):   systemd = %{version}-%{release}
 Requires(preun):  systemd = %{version}-%{release}
 Requires(postun): systemd = %{version}-%{release}
 Requires(post): grep
-Requires:       kmod-devel
 Provides:       udev = %{version}
 Provides:       systemd-timesyncd = %{version}-%{release}
 Requires:       kbd
@@ -380,7 +381,6 @@ enabled for this to have any effect.
 %package        resolved
 Summary:        Network Name Resolution manager
 Requires:       %{name} = %{version}-%{release}
-Requires:       libidn2-devel
 Requires(posttrans): grep
 
 %description    resolved
