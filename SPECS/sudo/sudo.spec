@@ -13,9 +13,9 @@ License:        ISC
 URL:            https://www.sudo.ws
 #!RemoteAsset
 Source0:        https://www.sudo.ws/dist/%{name}-%{version}.tar.gz
-Source1:        sudoers
-Source2:        sudo
-Source3:        sudo-i
+Source1:        sudoers.conf
+Source2:        sudo.pam
+Source3:        sudo-i.pam
 
 # NOTE: Temporarily disable applying CVE patches below.
 # These patches (CVE-2025-32462 / CVE-2025-32463) have not yet been checked
