@@ -2237,6 +2237,7 @@ export CARGO=/bin/true
 %else
   --with-slibdir=/%{_lib} \
 %endif
+  --enable-default-pie \
   --with-system-zlib \
   --enable-libstdcxx-allocator=new \
   --disable-libstdcxx-pch \
