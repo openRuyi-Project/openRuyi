@@ -25,7 +25,7 @@ BuildRequires:  make
 
 Requires:       /bin/bash
 Requires:       /bin/sh
-Requires:       coreutils grep gzip iproute sed tar util-linux which
+Requires:       coreutils grep gzip iproute2 sed tar util-linux which
 Requires:       /usr/bin/bc /usr/bin/time
 Requires:       (wget or curl)
 Requires:       nfs-utils
@@ -41,7 +41,7 @@ Requires:      vim
 BuildRequires: vim
 BuildRequires: make
 
-%description vim-syntax
+%description   vim-syntax
 Files for syntax highlighting BeakerLib tests in VIM editor
 
 # No configure
