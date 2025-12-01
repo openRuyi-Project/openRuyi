@@ -37,8 +37,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This package contains all necessary files to develop tests using Catch2,
 including header files, CMake integration files, and pkg-config files.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.txt
 # The main package owns only the versioned, runtime shared libraries.

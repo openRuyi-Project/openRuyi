@@ -74,7 +74,6 @@ popd
 rm -f %{buildroot}%{_libdir}/*.so %{buildroot}%{_libdir}/*.la
 
 %post
-%{?ldconfig}
 %{_bindir}/install-catalog --add %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.soc \
     %{_datadir}/sgml/%{name}-%{version}/catalog >/dev/null 2>/dev/null || :
 

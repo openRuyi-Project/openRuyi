@@ -36,8 +36,6 @@ Requires:       %{name} = %{version}
 %description devel
 This package contains the header files and development libraries for leveldb.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc AUTHORS README.md NEWS

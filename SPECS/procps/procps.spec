@@ -61,8 +61,6 @@ rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 # Package localization files using the find_lang macro for the -lang subpackage.
 %find_lang %{name}  --all-name --with-man --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING COPYING.LIB
 %doc doc/bugs.md doc/FAQ NEWS README.md doc/libproc.supp

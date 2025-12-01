@@ -50,8 +50,6 @@ use tpm2-tss.
 %install -a
 find %{buildroot}%{_libdir} -type f -name \*.la -delete
 
-%ldconfig_scriptlets
-
 %files
 %doc README.md CHANGELOG.md
 %license LICENSE

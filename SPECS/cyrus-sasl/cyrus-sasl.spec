@@ -52,8 +52,6 @@ export CFLAGS="%{optflags} -fno-strict-aliasing -std=gnu17"
 mkdir -p %{buildroot}%{_sysconfdir}/sasl2
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libsasl2.so.*

@@ -58,8 +58,6 @@ This is the primary package for developers. It contains the essential
 toolchain (g-ir-scanner, etc.), header files, and development metadata (.gir)
 needed to generate introspection data for other GObject-based libraries.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LGPL
 # The main package owns only the runtime library and the binary typelib files.

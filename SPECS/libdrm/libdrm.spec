@@ -43,8 +43,6 @@ This package contains the header files and development libraries for libdrm.
 %install -a
 install -D -m0644 -t %{buildroot}%{_udevrulesdir} %{SOURCE1}
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/lib*.so.*
 %{_udevrulesdir}/91-drm-modeset.rules

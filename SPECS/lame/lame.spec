@@ -48,8 +48,6 @@ This package development files for %{name}.
 %install -a
 rm -rf %{buildroot}%{_docdir}/%{name}
 
-%ldconfig_scriptlets
-
 %files
 %doc README TODO USAGE doc/html/*.html
 %{_bindir}/lame

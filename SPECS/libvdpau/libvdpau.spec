@@ -38,8 +38,6 @@ Requires:       pkgconfig(x11)
 This package contains libraries, header files, and documentation for
 developing applications that use %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS
 %license COPYING

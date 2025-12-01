@@ -27,8 +27,6 @@ This package contains the command-line tools.
 %conf -p
 autoreconf -vif
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

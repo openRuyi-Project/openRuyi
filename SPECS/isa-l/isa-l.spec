@@ -70,8 +70,6 @@ This package contains CLI tools.
 %make_build check
 %make_build tests
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/libisal.so.2*
 %license LICENSE

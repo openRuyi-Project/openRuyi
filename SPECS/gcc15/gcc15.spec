@@ -522,10 +522,6 @@ Conflicts:      libgcc_s%{libgcc_s}
 %description -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}
 Libgcc is needed for dynamically linked C programs.
 
-%post -n libgcc_s%{libgcc_s}%{libgcc_s_suffix} -p /sbin/ldconfig
-
-%postun -n libgcc_s%{libgcc_s}%{libgcc_s_suffix} -p /sbin/ldconfig
-
 %package -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-32bit
 Summary:        C compiler runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -537,10 +533,6 @@ Conflicts:      libgcc_s%{libgcc_s}-32bit
 %description -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-32bit
 Libgcc is needed for dynamically linked C programs.
 
-%post -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-64bit
 Summary:        C compiler runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -551,10 +543,6 @@ Conflicts:      libgcc_s%{libgcc_s}-64bit
 
 %description -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-64bit
 Libgcc is needed for dynamically linked C programs.
-
-%post -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgcc_s%{libgcc_s}%{libgcc_s_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libgomp%{libgomp_sover}%{libgomp_suffix}
 Summary:        The GNU compiler collection OpenMP runtime library
@@ -569,11 +557,6 @@ This is the OpenMP runtime library needed by OpenMP enabled programs
 that were built with the -fopenmp compiler option and by programs that
 were auto-parallelized via the -ftree-parallelize-loops compiler
 option.
-
-
-%post -n libgomp%{libgomp_sover}%{libgomp_suffix} -p /sbin/ldconfig
-
-%postun -n libgomp%{libgomp_sover}%{libgomp_suffix} -p /sbin/ldconfig
 
 %package -n libgomp%{libgomp_sover}%{libgomp_suffix}-32bit
 Summary:        The GNU compiler collection OpenMP runtime library
@@ -590,10 +573,6 @@ were auto-parallelized via the -ftree-parallelize-loops compiler
 option.
 
 
-%post -n libgomp%{libgomp_sover}%{libgomp_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgomp%{libgomp_sover}%{libgomp_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libgomp%{libgomp_sover}%{libgomp_suffix}-64bit
 Summary:        The GNU compiler collection OpenMP runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -607,11 +586,6 @@ This is the OpenMP runtime library needed by OpenMP enabled programs
 that were built with the -fopenmp compiler option and by programs that
 were auto-parallelized via the -ftree-parallelize-loops compiler
 option.
-
-
-%post -n libgomp%{libgomp_sover}%{libgomp_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgomp%{libgomp_sover}%{libgomp_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}
 Summary:        The standard C++ shared library
@@ -630,10 +604,6 @@ Conflicts:      libstdc++%{libstdcxx_sover}
 The standard C++ library, needed for dynamically linked C++ programs.
 
 
-%post -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix} -p /sbin/ldconfig
-
-%postun -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix} -p /sbin/ldconfig
-
 %package -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-32bit
 Summary:        The standard C++ shared library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -651,10 +621,6 @@ Conflicts:      libstdc++%{libstdcxx_sover}-32bit
 The standard C++ library, needed for dynamically linked C++ programs.
 
 
-%post -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-64bit
 Summary:        The standard C++ shared library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -670,11 +636,6 @@ Conflicts:      libstdc++%{libstdcxx_sover}-64bit
 
 %description -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-64bit
 The standard C++ library, needed for dynamically linked C++ programs.
-
-
-%post -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libstdc++%{libstdcxx_sover}%{libstdcxx_suffix}-locale
 Summary:        Standard C++ Library Locales
@@ -744,10 +705,6 @@ Conflicts:      libobjc%{libobjc_sover}
 %description -n libobjc%{libobjc_sover}%{libobjc_suffix}
 The library for the GNU Objective C compiler.
 
-%post -n libobjc%{libobjc_sover}%{libobjc_suffix} -p /sbin/ldconfig
-
-%postun -n libobjc%{libobjc_sover}%{libobjc_suffix} -p /sbin/ldconfig
-
 %package -n libobjc%{libobjc_sover}%{libobjc_suffix}-32bit
 Summary:        Library for the GNU Objective C Compiler
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -759,10 +716,6 @@ Conflicts:      libobjc%{libobjc_sover}-32bit
 %description -n libobjc%{libobjc_sover}%{libobjc_suffix}-32bit
 The library for the GNU Objective C compiler.
 
-%post -n libobjc%{libobjc_sover}%{libobjc_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libobjc%{libobjc_sover}%{libobjc_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libobjc%{libobjc_sover}%{libobjc_suffix}-64bit
 Summary:        Library for the GNU Objective C Compiler
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -773,10 +726,6 @@ Conflicts:      libobjc%{libobjc_sover}-64bit
 
 %description -n libobjc%{libobjc_sover}%{libobjc_suffix}-64bit
 The library for the GNU Objective C compiler.
-
-%post -n libobjc%{libobjc_sover}%{libobjc_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libobjc%{libobjc_sover}%{libobjc_suffix}-64bit -p /sbin/ldconfig
 
 %package obj-c++
 Summary:        GNU Objective C++ Compiler
@@ -871,10 +820,6 @@ Implementation of the Ada Semantic Interface Specification (ASIS), the
 implementation of Distributed Systems Programming (GLADE) and the Posix
 1003.5 Binding (Florist).
 
-%post -n libada15 -p /sbin/ldconfig
-
-%postun -n libada15 -p /sbin/ldconfig
-
 %package -n libada15-32bit
 Summary:        GNU Ada Runtime Libraries
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -891,10 +836,6 @@ Implementation of the Ada Semantic Interface Specification (ASIS), the
 implementation of Distributed Systems Programming (GLADE) and the Posix
 1003.5 Binding (Florist).
 
-%post -n libada15-32bit -p /sbin/ldconfig
-
-%postun -n libada15-32bit -p /sbin/ldconfig
-
 %package -n libada15-64bit
 Summary:        GNU Ada Runtime Libraries
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -910,10 +851,6 @@ shared libraries. It also contains the shared libraries for the
 Implementation of the Ada Semantic Interface Specification (ASIS), the
 implementation of Distributed Systems Programming (GLADE) and the Posix
 1003.5 Binding (Florist).
-
-%post -n libada15-64bit -p /sbin/ldconfig
-
-%postun -n libada15-64bit -p /sbin/ldconfig
 
 %package fortran
 Summary:        The GNU Fortran Compiler and Support Files
@@ -969,10 +906,6 @@ Conflicts:      libgfortran%{libgfortran_sover}
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC).
 
-%post -n libgfortran%{libgfortran_sover}%{libgfortran_suffix} -p /sbin/ldconfig
-
-%postun -n libgfortran%{libgfortran_sover}%{libgfortran_suffix} -p /sbin/ldconfig
-
 %package -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-32bit
 Summary:        The GNU Fortran Compiler Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -987,10 +920,6 @@ Conflicts:      libgfortran%{libgfortran_sover}-32bit
 %description -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-32bit
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC).
-
-%post -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-64bit
 Summary:        The GNU Fortran Compiler Runtime Library
@@ -1007,10 +936,6 @@ Conflicts:      libgfortran%{libgfortran_sover}-64bit
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC).
 
-%post -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgfortran%{libgfortran_sover}%{libgfortran_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library
 License:        LGPL-2.1-only
@@ -1023,10 +948,6 @@ Conflicts:      libquadmath%{libquadmath_sover}
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC) and quadruple precision floating point
 operations.
-
-%post -n libquadmath%{libquadmath_sover}%{libquadmath_suffix} -p /sbin/ldconfig
-
-%postun -n libquadmath%{libquadmath_sover}%{libquadmath_suffix} -p /sbin/ldconfig
 
 %package -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-32bit
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library
@@ -1041,10 +962,6 @@ The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC) and quadruple precision floating point
 operations.
 
-%post -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-64bit
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library
 License:        LGPL-2.1-only
@@ -1057,10 +974,6 @@ Conflicts:      libquadmath%{libquadmath_sover}-64bit
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC) and quadruple precision floating point
 operations.
-
-%post -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libquadmath%{libquadmath_sover}%{libquadmath_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libquadmath%{libquadmath_sover}-devel%{libdevel_suffix}
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library Development Files
@@ -1098,10 +1011,6 @@ Conflicts:      libitm%{libitm_sover}
 The runtime library needed to run programs compiled with the
 -fgnu-tm option of the GNU Compiler Collection (GCC).
 
-%post -n libitm%{libitm_sover}%{libitm_suffix} -p /sbin/ldconfig
-
-%postun -n libitm%{libitm_sover}%{libitm_suffix} -p /sbin/ldconfig
-
 %package -n libitm%{libitm_sover}%{libitm_suffix}-32bit
 Summary:        The GNU Compiler Transactional Memory Runtime Library
 License:        MIT
@@ -1113,10 +1022,6 @@ Conflicts:      libitm%{libitm_sover}-32bit
 %description -n libitm%{libitm_sover}%{libitm_suffix}-32bit
 The runtime library needed to run programs compiled with the
 -fgnu-tm option of the GNU Compiler Collection (GCC).
-
-%post -n libitm%{libitm_sover}%{libitm_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libitm%{libitm_sover}%{libitm_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libitm%{libitm_sover}%{libitm_suffix}-64bit
 Summary:        The GNU Compiler Transactional Memory Runtime Library
@@ -1130,10 +1035,6 @@ Conflicts:      libitm%{libitm_sover}-64bit
 The runtime library needed to run programs compiled with the
 -fgnu-tm option of the GNU Compiler Collection (GCC).
 
-%post -n libitm%{libitm_sover}%{libitm_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libitm%{libitm_sover}%{libitm_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libasan%{libasan_sover}%{libasan_suffix}
 Summary:        The GNU Compiler Address Sanitizer Runtime Library
 License:        MIT
@@ -1145,10 +1046,6 @@ Conflicts:      libasan%{libasan_sover}
 %description -n libasan%{libasan_sover}%{libasan_suffix}
 The runtime library needed to run programs compiled with the
 -fsanitize=address option of the GNU Compiler Collection (GCC).
-
-%post -n libasan%{libasan_sover}%{libasan_suffix} -p /sbin/ldconfig
-
-%postun -n libasan%{libasan_sover}%{libasan_suffix} -p /sbin/ldconfig
 
 %package -n libasan%{libasan_sover}%{libasan_suffix}-32bit
 Summary:        The GNU Compiler Address Sanitizer Runtime Library
@@ -1162,10 +1059,6 @@ Conflicts:      libasan%{libasan_sover}-32bit
 The runtime library needed to run programs compiled with the
 -fsanitize=address option of the GNU Compiler Collection (GCC).
 
-%post -n libasan%{libasan_sover}%{libasan_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libasan%{libasan_sover}%{libasan_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libasan%{libasan_sover}%{libasan_suffix}-64bit
 Summary:        The GNU Compiler Address Sanitizer Runtime Library
 License:        MIT
@@ -1177,10 +1070,6 @@ Conflicts:      libasan%{libasan_sover}-64bit
 %description -n libasan%{libasan_sover}%{libasan_suffix}-64bit
 The runtime library needed to run programs compiled with the
 -fsanitize=address option of the GNU Compiler Collection (GCC).
-
-%post -n libasan%{libasan_sover}%{libasan_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libasan%{libasan_sover}%{libasan_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libtsan%{libtsan_sover}%{libtsan_suffix}
 Summary:        The GNU Compiler Thread Sanitizer Runtime Library
@@ -1194,10 +1083,6 @@ Conflicts:      libtsan%{libtsan_sover}
 The runtime library needed to run programs compiled with the
 -fsanitize=thread option of the GNU Compiler Collection (GCC).
 
-%post -n libtsan%{libtsan_sover}%{libtsan_suffix} -p /sbin/ldconfig
-
-%postun -n libtsan%{libtsan_sover}%{libtsan_suffix} -p /sbin/ldconfig
-
 %package -n libtsan%{libtsan_sover}%{libtsan_suffix}-32bit
 Summary:        The GNU Compiler Thread Sanitizer Runtime Library
 License:        MIT
@@ -1209,10 +1094,6 @@ Conflicts:      libtsan%{libtsan_sover}-32bit
 %description -n libtsan%{libtsan_sover}%{libtsan_suffix}-32bit
 The runtime library needed to run programs compiled with the
 -fsanitize=thread option of the GNU Compiler Collection (GCC).
-
-%post -n libtsan%{libtsan_sover}%{libtsan_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libtsan%{libtsan_sover}%{libtsan_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libtsan%{libtsan_sover}%{libtsan_suffix}-64bit
 Summary:        The GNU Compiler Thread Sanitizer Runtime Library
@@ -1226,10 +1107,6 @@ Conflicts:      libtsan%{libtsan_sover}-64bit
 The runtime library needed to run programs compiled with the
 -fsanitize=thread option of the GNU Compiler Collection (GCC).
 
-%post -n libtsan%{libtsan_sover}%{libtsan_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libtsan%{libtsan_sover}%{libtsan_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}
 Summary:        The GNU Compiler Hardware-assisted Address Sanitizer Runtime Library
 License:        MIT
@@ -1241,10 +1118,6 @@ Conflicts:      libhwasan%{libhwasan_sover}
 %description -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}
 The runtime library needed to run programs compiled with the
 -fsanitize=hwaddress option of the GNU Compiler Collection (GCC).
-
-%post -n libhwasan%{libhwasan_sover}%{libhwasan_suffix} -p /sbin/ldconfig
-
-%postun -n libhwasan%{libhwasan_sover}%{libhwasan_suffix} -p /sbin/ldconfig
 
 %package -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-32bit
 Summary:        The GNU Compiler Hardware-assisted Address Sanitizer Runtime Library
@@ -1258,10 +1131,6 @@ Conflicts:      libhwasan%{libhwasan_sover}-32bit
 The runtime library needed to run programs compiled with the
 -fsanitize=hwaddress option of the GNU Compiler Collection (GCC).
 
-%post -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-64bit
 Summary:        The GNU Compiler Hardware-assisted Address Sanitizer Runtime Library
 License:        MIT
@@ -1274,10 +1143,6 @@ Conflicts:      libhwasan%{libhwasan_sover}-64bit
 The runtime library needed to run programs compiled with the
 -fsanitize=hwaddress option of the GNU Compiler Collection (GCC).
 
-%post -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libhwasan%{libhwasan_sover}%{libhwasan_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libatomic%{libatomic_sover}%{libatomic_suffix}
 Summary:        The GNU Compiler Atomic Operations Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -1288,10 +1153,6 @@ Conflicts:      libatomic%{libatomic_sover}
 
 %description -n libatomic%{libatomic_sover}%{libatomic_suffix}
 The runtime library for atomic operations of the GNU Compiler Collection (GCC).
-
-%post -n libatomic%{libatomic_sover}%{libatomic_suffix} -p /sbin/ldconfig
-
-%postun -n libatomic%{libatomic_sover}%{libatomic_suffix} -p /sbin/ldconfig
 
 %package -n libatomic%{libatomic_sover}%{libatomic_suffix}-32bit
 Summary:        The GNU Compiler Atomic Operations Runtime Library
@@ -1304,10 +1165,6 @@ Conflicts:      libatomic%{libatomic_sover}-32bit
 %description -n libatomic%{libatomic_sover}%{libatomic_suffix}-32bit
 The runtime library for atomic operations of the GNU Compiler Collection (GCC).
 
-%post -n libatomic%{libatomic_sover}%{libatomic_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libatomic%{libatomic_sover}%{libatomic_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libatomic%{libatomic_sover}%{libatomic_suffix}-64bit
 Summary:        The GNU Compiler Atomic Operations Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
@@ -1318,10 +1175,6 @@ Conflicts:      libatomic%{libatomic_sover}-64bit
 
 %description -n libatomic%{libatomic_sover}%{libatomic_suffix}-64bit
 The runtime library for atomic operations of the GNU Compiler Collection (GCC).
-
-%post -n libatomic%{libatomic_sover}%{libatomic_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libatomic%{libatomic_sover}%{libatomic_suffix}-64bit -p /sbin/ldconfig
 
 %package -n liblsan%{liblsan_sover}%{liblsan_suffix}
 Summary:        The GNU Compiler Leak Sanitizer Runtime Library
@@ -1335,10 +1188,6 @@ Conflicts:      liblsan%{liblsan_sover}
 The runtime library needed to run programs compiled with the
 -fsanitize=leak option of the GNU Compiler Collection (GCC).
 
-%post -n liblsan%{liblsan_sover}%{liblsan_suffix} -p /sbin/ldconfig
-
-%postun -n liblsan%{liblsan_sover}%{liblsan_suffix} -p /sbin/ldconfig
-
 %package -n liblsan%{liblsan_sover}%{liblsan_suffix}-32bit
 Summary:        The GNU Compiler Leak Sanitizer Runtime Library
 License:        MIT
@@ -1350,10 +1199,6 @@ Conflicts:      liblsan%{liblsan_sover}-32bit
 %description -n liblsan%{liblsan_sover}%{liblsan_suffix}-32bit
 The runtime library needed to run programs compiled with the
 -fsanitize=leak option of the GNU Compiler Collection (GCC).
-
-%post -n liblsan%{liblsan_sover}%{liblsan_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n liblsan%{liblsan_sover}%{liblsan_suffix}-32bit -p /sbin/ldconfig
 
 %package -n liblsan%{liblsan_sover}%{liblsan_suffix}-64bit
 Summary:        The GNU Compiler Leak Sanitizer Runtime Library
@@ -1367,10 +1212,6 @@ Conflicts:      liblsan%{liblsan_sover}-64bit
 The runtime library needed to run programs compiled with the
 -fsanitize=leak option of the GNU Compiler Collection (GCC).
 
-%post -n liblsan%{liblsan_sover}%{liblsan_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n liblsan%{liblsan_sover}%{liblsan_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libubsan%{libubsan_sover}%{libubsan_suffix}
 Summary:        The GNU Compiler Undefined Sanitizer Runtime Library
 License:        MIT
@@ -1382,10 +1223,6 @@ Conflicts:      libubsan%{libubsan_sover}
 %description -n libubsan%{libubsan_sover}%{libubsan_suffix}
 The runtime library needed to run programs compiled with the
 -fsanitize=undefined option of the GNU Compiler Collection (GCC).
-
-%post -n libubsan%{libubsan_sover}%{libubsan_suffix} -p /sbin/ldconfig
-
-%postun -n libubsan%{libubsan_sover}%{libubsan_suffix} -p /sbin/ldconfig
 
 %package -n libubsan%{libubsan_sover}%{libubsan_suffix}-32bit
 Summary:        The GNU Compiler Undefined Sanitizer Runtime Library
@@ -1399,10 +1236,6 @@ Conflicts:      libubsan%{libubsan_sover}-32bit
 The runtime library needed to run programs compiled with the
 -fsanitize=undefined option of the GNU Compiler Collection (GCC).
 
-%post -n libubsan%{libubsan_sover}%{libubsan_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libubsan%{libubsan_sover}%{libubsan_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libubsan%{libubsan_sover}%{libubsan_suffix}-64bit
 Summary:        The GNU Compiler Undefined Sanitizer Runtime Library
 License:        MIT
@@ -1414,10 +1247,6 @@ Conflicts:      libubsan%{libubsan_sover}-64bit
 %description -n libubsan%{libubsan_sover}%{libubsan_suffix}-64bit
 The runtime library needed to run programs compiled with the
 -fsanitize=undefined option of the GNU Compiler Collection (GCC).
-
-%post -n libubsan%{libubsan_sover}%{libubsan_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libubsan%{libubsan_sover}%{libubsan_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libvtv%{libvtv_sover}%{libvtv_suffix}
 Summary:        The GNU Compiler Vtable Verifier Runtime Library
@@ -1431,10 +1260,6 @@ Conflicts:      libvtv%{libvtv_sover}
 The runtime library needed to run programs compiled with the
 -fvtable-verify option of the GNU Compiler Collection (GCC).
 
-%post -n libvtv%{libvtv_sover}%{libvtv_suffix} -p /sbin/ldconfig
-
-%postun -n libvtv%{libvtv_sover}%{libvtv_suffix} -p /sbin/ldconfig
-
 %package -n libvtv%{libvtv_sover}%{libvtv_suffix}-32bit
 Summary:        The GNU Compiler Vtable Verifier Runtime Library
 License:        MIT
@@ -1447,10 +1272,6 @@ Conflicts:      libvtv%{libvtv_sover}-32bit
 The runtime library needed to run programs compiled with the
 -fvtable-verify option of the GNU Compiler Collection (GCC).
 
-%post -n libvtv%{libvtv_sover}%{libvtv_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libvtv%{libvtv_sover}%{libvtv_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libvtv%{libvtv_sover}%{libvtv_suffix}-64bit
 Summary:        The GNU Compiler Vtable Verifier Runtime Library
 License:        MIT
@@ -1462,10 +1283,6 @@ Conflicts:      libvtv%{libvtv_sover}-64bit
 %description -n libvtv%{libvtv_sover}%{libvtv_suffix}-64bit
 The runtime library needed to run programs compiled with the
 -fvtable-verify option of the GNU Compiler Collection (GCC).
-
-%post -n libvtv%{libvtv_sover}%{libvtv_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libvtv%{libvtv_sover}%{libvtv_suffix}-64bit -p /sbin/ldconfig
 
 %package go
 Summary:        GNU Go Compiler
@@ -1511,10 +1328,6 @@ Conflicts:      libgo%{libgo_sover}
 %description -n libgo%{libgo_sover}%{libgo_suffix}
 Runtime library for the GNU Go language.
 
-%post -n libgo%{libgo_sover}%{libgo_suffix} -p /sbin/ldconfig
-
-%postun -n libgo%{libgo_sover}%{libgo_suffix} -p /sbin/ldconfig
-
 %package -n libgo%{libgo_sover}%{libgo_suffix}-32bit
 Summary:        GNU Go compiler runtime library
 License:        BSD-3-Clause
@@ -1526,10 +1339,6 @@ Conflicts:      libgo%{libgo_sover}-32bit
 %description -n libgo%{libgo_sover}%{libgo_suffix}-32bit
 Runtime library for the GNU Go language.
 
-%post -n libgo%{libgo_sover}%{libgo_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgo%{libgo_sover}%{libgo_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libgo%{libgo_sover}%{libgo_suffix}-64bit
 Summary:        GNU Go compiler runtime library
 License:        BSD-3-Clause
@@ -1540,10 +1349,6 @@ Conflicts:      libgo%{libgo_sover}-64bit
 
 %description -n libgo%{libgo_sover}%{libgo_suffix}-64bit
 Runtime library for the GNU Go language.
-
-%post -n libgo%{libgo_sover}%{libgo_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgo%{libgo_sover}%{libgo_suffix}-64bit -p /sbin/ldconfig
 
 %package d
 Summary:        GNU D Compiler
@@ -1592,10 +1397,6 @@ Conflicts:      libgphobos%{libgphobos_sover}
 %description -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}
 Runtime library for the GNU D language.
 
-%post -n libgphobos%{libgphobos_sover}%{libgphobos_suffix} -p /sbin/ldconfig
-
-%postun -n libgphobos%{libgphobos_sover}%{libgphobos_suffix} -p /sbin/ldconfig
-
 %package -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-32bit
 Summary:        GNU D compiler runtime library
 License:        BSL-1.0
@@ -1606,10 +1407,6 @@ Conflicts:      libgphobos%{libgphobos_sover}-32bit
 
 %description -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-32bit
 Runtime library for the GNU D language.
-
-%post -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-64bit
 Summary:        GNU D compiler runtime library
@@ -1622,10 +1419,6 @@ Conflicts:      libgphobos%{libgphobos_sover}-64bit
 %description -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-64bit
 Runtime library for the GNU D language.
 
-%post -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgphobos%{libgphobos_sover}%{libgphobos_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}
 Summary:        GNU D compiler runtime library
 License:        BSL-1.0
@@ -1636,10 +1429,6 @@ Conflicts:      libgdruntime%{libgdruntime_sover}
 
 %description -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}
 Runtime library for the GNU D language.
-
-%post -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix} -p /sbin/ldconfig
-
-%postun -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix} -p /sbin/ldconfig
 
 %package -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-32bit
 Summary:        GNU D compiler runtime library
@@ -1652,10 +1441,6 @@ Conflicts:      libgdruntime%{libgdruntime_sover}-32bit
 %description -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-32bit
 Runtime library for the GNU D language.
 
-%post -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-64bit
 Summary:        GNU D compiler runtime library
 License:        BSL-1.0
@@ -1666,10 +1451,6 @@ Conflicts:      libgdruntime%{libgdruntime_sover}-64bit
 
 %description -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-64bit
 Runtime library for the GNU D language.
-
-%post -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libgdruntime%{libgdruntime_sover}%{libgdruntime_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libgccjit%{libgccjit_sover}%{libgccjit_suffix}
 Summary:        The GNU Compiler Collection JIT library
@@ -1686,10 +1467,6 @@ Requires:       gcc15
 
 %description -n libgccjit%{libgccjit_sover}%{libgccjit_suffix}
 Support for embedding GCC inside programs and libraries
-
-%post -n libgccjit%{libgccjit_sover}%{libgccjit_suffix} -p /sbin/ldconfig
-
-%postun -n libgccjit%{libgccjit_sover}%{libgccjit_suffix} -p /sbin/ldconfig
 
 %package -n libgccjit%{libgccjit_sover}-devel%{libdevel_suffix}
 Summary:        Support for embedding GCC inside programs and libraries
@@ -1786,10 +1563,6 @@ Conflicts:      libm2log%{libm2_sover}
 %description -n libm2log%{libm2_sover}%{libm2_suffix}
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2log%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
-%postun -n libm2log%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
 %package -n libm2log%{libm2_sover}%{libm2_suffix}-32bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1800,10 +1573,6 @@ Conflicts:      libm2log%{libm2_sover}-32bit
 
 %description -n libm2log%{libm2_sover}%{libm2_suffix}-32bit
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2log%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libm2log%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libm2log%{libm2_sover}%{libm2_suffix}-64bit
 Summary:        GNU Modula-2 compiler runtime library
@@ -1816,10 +1585,6 @@ Conflicts:      libm2log%{libm2_sover}-64bit
 %description -n libm2log%{libm2_sover}%{libm2_suffix}-64bit
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2log%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libm2log%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libm2cor%{libm2_sover}%{libm2_suffix}
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1830,10 +1595,6 @@ Conflicts:      libm2cor%{libm2_sover}
 
 %description -n libm2cor%{libm2_sover}%{libm2_suffix}
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2cor%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
-%postun -n libm2cor%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
 
 %package -n libm2cor%{libm2_sover}%{libm2_suffix}-32bit
 Summary:        GNU Modula-2 compiler runtime library
@@ -1846,10 +1607,6 @@ Conflicts:      libm2cor%{libm2_sover}-32bit
 %description -n libm2cor%{libm2_sover}%{libm2_suffix}-32bit
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2cor%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libm2cor%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libm2cor%{libm2_sover}%{libm2_suffix}-64bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1860,10 +1617,6 @@ Conflicts:      libm2cor%{libm2_sover}-64bit
 
 %description -n libm2cor%{libm2_sover}%{libm2_suffix}-64bit
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2cor%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libm2cor%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libm2iso%{libm2_sover}%{libm2_suffix}
 Summary:        GNU Modula-2 compiler runtime library
@@ -1876,10 +1629,6 @@ Conflicts:      libm2iso%{libm2_sover}
 %description -n libm2iso%{libm2_sover}%{libm2_suffix}
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2iso%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
-%postun -n libm2iso%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
 %package -n libm2iso%{libm2_sover}%{libm2_suffix}-32bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1890,10 +1639,6 @@ Conflicts:      libm2iso%{libm2_sover}-32bit
 
 %description -n libm2iso%{libm2_sover}%{libm2_suffix}-32bit
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2iso%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libm2iso%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
 
 %package -n libm2iso%{libm2_sover}%{libm2_suffix}-64bit
 Summary:        GNU Modula-2 compiler runtime library
@@ -1906,10 +1651,6 @@ Conflicts:      libm2iso%{libm2_sover}-64bit
 %description -n libm2iso%{libm2_sover}%{libm2_suffix}-64bit
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2iso%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libm2iso%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
 %package -n libm2pim%{libm2_sover}%{libm2_suffix}
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1920,10 +1661,6 @@ Conflicts:      libm2pim%{libm2_sover}
 
 %description -n libm2pim%{libm2_sover}%{libm2_suffix}
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2pim%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
-%postun -n libm2pim%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
 
 %package -n libm2pim%{libm2_sover}%{libm2_suffix}-32bit
 Summary:        GNU Modula-2 compiler runtime library
@@ -1936,10 +1673,6 @@ Conflicts:      libm2pim%{libm2_sover}-32bit
 %description -n libm2pim%{libm2_sover}%{libm2_suffix}-32bit
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2pim%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libm2pim%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libm2pim%{libm2_sover}%{libm2_suffix}-64bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1950,10 +1683,6 @@ Conflicts:      libm2pim%{libm2_sover}-64bit
 
 %description -n libm2pim%{libm2_sover}%{libm2_suffix}-64bit
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2pim%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libm2pim%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
 
 %package -n libm2min%{libm2_sover}%{libm2_suffix}
 Summary:        GNU Modula-2 compiler runtime library
@@ -1966,10 +1695,6 @@ Conflicts:      libm2min%{libm2_sover}
 %description -n libm2min%{libm2_sover}%{libm2_suffix}
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2min%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
-%postun -n libm2min%{libm2_sover}%{libm2_suffix} -p /sbin/ldconfig
-
 %package -n libm2min%{libm2_sover}%{libm2_suffix}-32bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1981,10 +1706,6 @@ Conflicts:      libm2min%{libm2_sover}-32bit
 %description -n libm2min%{libm2_sover}%{libm2_suffix}-32bit
 Runtime library for the GNU Modula-2 language.
 
-%post -n libm2min%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
-%postun -n libm2min%{libm2_sover}%{libm2_suffix}-32bit -p /sbin/ldconfig
-
 %package -n libm2min%{libm2_sover}%{libm2_suffix}-64bit
 Summary:        GNU Modula-2 compiler runtime library
 License:        BSL-1.0
@@ -1995,10 +1716,6 @@ Conflicts:      libm2min%{libm2_sover}-64bit
 
 %description -n libm2min%{libm2_sover}%{libm2_suffix}-64bit
 Runtime library for the GNU Modula-2 language.
-
-%post -n libm2min%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
-
-%postun -n libm2min%{libm2_sover}%{libm2_suffix}-64bit -p /sbin/ldconfig
 
 %package -n gcc15-testresults
 Summary:        Testsuite results

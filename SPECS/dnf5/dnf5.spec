@@ -127,9 +127,6 @@ ln -sf dnf5 %{buildroot}%{_bindir}/dnf
 
 %find_lang %{name} --generate-subpackages --all-name
 
-%ldconfig_scriptlets -n libdnf5
-%ldconfig_scriptlets -n libdnf5-cli
-
 %files
 %license COPYING.md gpl-2.0.txt
 %doc AUTHORS.md CHANGELOG.md CONTRIBUTING.md README.md

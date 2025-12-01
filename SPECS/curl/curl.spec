@@ -80,8 +80,6 @@ pushd scripts
 %make_install
 popd
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README RELEASE-NOTES CHANGES.md

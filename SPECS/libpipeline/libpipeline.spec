@@ -35,8 +35,6 @@ API documentation needed for development with libpipeline.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc ChangeLog

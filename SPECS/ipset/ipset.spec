@@ -70,17 +70,12 @@ find %{buildroot} -name '*.la' -exec rm -f '{}' \;
 
 %post
 %systemd_post ipset.service
-/sbin/ldconfig
 
 %preun
 %systemd_preun ipset.service
 
 %postun
 %systemd_postun_with_restart ipset.service
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /sbin/ldconfig
-fi
 
 %files
 %doc ChangeLog

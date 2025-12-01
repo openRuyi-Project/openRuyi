@@ -59,8 +59,6 @@ Python3 extensions for ldns
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 # no tests.
 %check
 

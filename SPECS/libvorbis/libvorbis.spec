@@ -39,8 +39,6 @@ needed to develop applications with Ogg Vorbis.
 %install -a
 rm -f %{buildroot}%{_docdir}/%{name}-%{version}/doxygen-build.stamp
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS
 %license COPYING

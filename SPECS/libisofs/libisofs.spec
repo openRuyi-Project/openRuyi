@@ -38,8 +38,6 @@ developing applications that use %{name}.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS COPYRIGHT README

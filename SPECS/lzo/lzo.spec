@@ -36,8 +36,6 @@ de-/compression in real-time. This means it favours speed over
 compression ratio.
 
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc %{_docdir}/%{name}

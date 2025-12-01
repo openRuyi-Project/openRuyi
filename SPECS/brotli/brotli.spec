@@ -51,8 +51,6 @@ mkdir -p "%buildroot/%{_mandir}/man1" "%buildroot/%{_mandir}/man3"
 install -pm0644 docs/*.1 "%buildroot/%_mandir/man1/"
 install -pm0644 docs/*.3 "%buildroot/%_mandir/man3/"
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %_bindir/brotli

@@ -55,8 +55,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 mkdir -p "%{buildroot}%{_docdir}/%{name}"
 cp -R doc/html "%{buildroot}%{_docdir}/%{name}/"
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog README.md

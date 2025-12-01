@@ -67,8 +67,6 @@ mkdir %{buildroot}%{_pam_secconfdir}/pwquality.conf.d
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README NEWS AUTHORS

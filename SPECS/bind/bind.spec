@@ -130,8 +130,6 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %postun
 %systemd_postun_with_restart named.service
 
-%ldconfig_scriptlets utils
-
 %files
 %config(noreplace) %verify(not link) %{_sysconfdir}/named.conf
 %config(noreplace) %verify(not link) %{_localstatedir}/named/127.0.0.zone

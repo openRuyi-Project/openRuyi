@@ -49,8 +49,6 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING LICENCE-*.txt
 %doc README

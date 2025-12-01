@@ -32,7 +32,6 @@ Requires:       %{name} = %{version}-%{release}
 Include files and libraries needed for developing applications which use
 FriBidi.
 
-%ldconfig_scriptlets
 %files
 %doc README AUTHORS ChangeLog THANKS NEWS TODO
 %license COPYING

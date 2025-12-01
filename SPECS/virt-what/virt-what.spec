@@ -24,9 +24,6 @@ Requires:       dmidecode util-linux which
 virt-what is a shell script which can be used to detect if the program
 is running in a virtual machine.
 
-
-%ldconfig_scriptlets
-
 %files
 %doc README
 %license COPYING

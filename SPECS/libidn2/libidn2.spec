@@ -39,8 +39,6 @@ rm -rf %{buildroot}/%{_datadir}/gtk-doc/
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets -n %{name}
-
 %files
 %license COPYING*
 %{_libdir}/libidn2.so.*

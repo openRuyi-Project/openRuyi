@@ -122,9 +122,6 @@ if [ $1 -ge 1 ] ; then
 fi
 %systemd_postun_with_restart multipathd.service
 
-%ldconfig_scriptlets -n libdmmp
-%ldconfig_scriptlets libs
-
 %files
 %license LICENSES/GPL-2.0 LICENSES/LGPL-2.0 LICENSES/GPL-3.0
 %{_sbindir}/multipath

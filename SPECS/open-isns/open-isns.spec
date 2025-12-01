@@ -49,14 +49,12 @@ applications that use the open-isns library.
 %check
 
 %post
-/sbin/ldconfig
 %systemd_post isnsd.socket isnsd.service
 
 %preun
 %systemd_preun isnsd.socket isnsd.service
 
 %postun
-/sbin/ldconfig
 %systemd_postun_with_restart isnsd.socket isnsd.service
 
 %files

@@ -60,8 +60,6 @@ install -D -m 644 lib/libpci.pc %{buildroot}%{_libdir}/pkgconfig/libpci.pc
 # No tests
 %check
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README

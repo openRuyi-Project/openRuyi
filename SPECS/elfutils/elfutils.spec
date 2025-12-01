@@ -134,11 +134,6 @@ ls -lR %{buildroot}/%{_libdir}/libelf*
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets -n libelf1
-%ldconfig_scriptlets -n libdw1
-%ldconfig_scriptlets -n libasm1
-%ldconfig_scriptlets -n libdebuginfod1-dummy
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog NEWS NOTES README THANKS TODO

@@ -33,8 +33,6 @@ Requires:       %{name} = %{version}
 libcbor is a C library for parsing and generating CBOR.
 The libcbor-devel contains libraries and header files for libcbor.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.md
 %{_libdir}/*.so.*

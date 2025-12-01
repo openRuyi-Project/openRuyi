@@ -39,8 +39,6 @@ autoreconf -fiv
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %doc README
 %license LICENSE

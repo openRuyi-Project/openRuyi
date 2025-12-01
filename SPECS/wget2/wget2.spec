@@ -68,8 +68,6 @@ rm -f %{buildroot}%{_bindir}/%{name}_noinstall
 ln -sr %{buildroot}%{_bindir}/wget2 %{buildroot}%{_bindir}/wget
 %endif
 
-%ldconfig_scriptlets libs
-
 # XXX: fix tests.
 %check
 

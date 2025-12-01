@@ -57,8 +57,6 @@ sed -i \
     -e 's|^libdir=.*|libdir=${prefix}/%{_lib}|g' \
     %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 
-%ldconfig_scriptlets
-
 # TODO: Fix test build.
 %check
 

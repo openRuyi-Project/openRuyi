@@ -50,8 +50,6 @@ parser might find in the XML document (like start tags).
 This package contains the development headers for the library found
 in libexpat.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_bindir}/*

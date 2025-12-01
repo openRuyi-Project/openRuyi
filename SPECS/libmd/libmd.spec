@@ -38,8 +38,6 @@ API.
 
 Digests supported: MD2/4/5, RIPEMD160, SHA1, SHA2-256/384/512.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libmd.so.*

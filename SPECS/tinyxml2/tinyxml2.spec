@@ -29,8 +29,6 @@ Requires:       %{name} = %{version}
 This package contains the C++ header files, libraries, and build system files
 needed to develop applications that use the tinyxml2 library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.txt
 %doc readme.md

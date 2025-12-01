@@ -42,8 +42,6 @@ developing applications that use the José library.
 find %{buildroot} -type f -name "*.la" -delete -print
 rm -f %{buildroot}%{_licensedir}/%{name}/COPYING
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_bindir}/jose

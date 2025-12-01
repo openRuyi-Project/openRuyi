@@ -49,8 +49,6 @@ sed -i 's/.*giomm_tls_client.*//g' tests/meson.build
 chmod +x %{buildroot}%{_libdir}/glibmm-%{apiver}/proc/generate_wrap_init.pl
 chmod +x %{buildroot}%{_libdir}/glibmm-%{apiver}/proc/gmmproc
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING COPYING.tools
 %doc NEWS README.md

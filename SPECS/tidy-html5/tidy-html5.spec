@@ -41,8 +41,6 @@ developing applications that use %{name}.
 %install -a
 find %{buildroot} -type f -name "*.a" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license README/LICENSE.md
 %doc README.md

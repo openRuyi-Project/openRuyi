@@ -51,8 +51,6 @@ Memcached is an in-memory key-value store.  It has a small
 and generic API, and was originally intended for use with dynamic web
 applications.
 
-%ldconfig_scriptlets
-
 %install -a
 rm -f %{buildroot}/%{_bindir}/memcached-debug
 install -Dp -m0755 scripts/memcached-tool %{buildroot}%{_bindir}/memcached-tool

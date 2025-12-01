@@ -37,8 +37,6 @@ Requires:       %{name} = %{version}
 %description    devel
 Development libraries and headers for developing software against libconfig.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LIB
 %doc AUTHORS ChangeLog README

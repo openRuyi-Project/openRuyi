@@ -44,10 +44,6 @@ MPC multiple-precision complex library development files.
 %check
 %make_build check
 
-%post -n libmpc3 -p /sbin/ldconfig
-
-%postun -n libmpc3 -p /sbin/ldconfig
-
 %files -n libmpc3
 %defattr(-,root,root)
 %license COPYING.LESSER

@@ -35,8 +35,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, libraries, and documentation for
 developing applications that use the Snappy library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS

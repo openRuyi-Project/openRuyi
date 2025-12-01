@@ -72,9 +72,6 @@ chmod +x %{buildroot}%{_datadir}/libtool/build-aux/ltmain.sh
 sed -i "/uname -n/d" %{buildroot}%{_datadir}/aclocal/libtool.m4
 %endif
 
-%post -n libltdl7 -p /sbin/ldconfig
-%postun -n libltdl7 -p /sbin/ldconfig
-
 %if "%{name}" == "libtool"
 %files
 %license COPYING

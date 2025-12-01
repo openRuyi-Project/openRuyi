@@ -49,8 +49,6 @@ autoreconf -fiv
 %install -a
 rm %{buildroot}%{_libdir}/*.la
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS README ChangeLog

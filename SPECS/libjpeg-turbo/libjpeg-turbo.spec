@@ -65,9 +65,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 
 rm -f %{buildroot}/%{_bindir}/tjbench
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets -n turbojpeg
-
 %files
 %license LICENSE.md
 %doc README.md README.ijg ChangeLog.md

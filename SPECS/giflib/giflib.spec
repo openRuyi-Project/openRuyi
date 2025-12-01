@@ -52,8 +52,6 @@ done
 
 rm -f %{buildroot}%{_libdir}/libgif.a
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/lib*.so.*

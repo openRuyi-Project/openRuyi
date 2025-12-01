@@ -44,8 +44,6 @@ Requires:      %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md PATENTS NEWS AUTHORS

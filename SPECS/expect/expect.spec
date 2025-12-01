@@ -64,8 +64,6 @@ ln -s libexpect%{version}.so %{buildroot}%{_libdir}/libexpect.so
 # TODO: Fix tests.
 %check
 
-%ldconfig_scriptlets
-
 %files
 %doc ChangeLog HISTORY INSTALL FAQ NEWS README
 %{_bindir}/*

@@ -45,8 +45,6 @@ autoreconf -fiv
 %install -a
 find %{buildroot} -type f \( -name "*.la" -o -name "*.a" \) -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %doc        AUTHORS
 %license    COPYING

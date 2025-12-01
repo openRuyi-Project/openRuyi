@@ -35,9 +35,6 @@ Requires:       %{name} = %version
 This package contains the header files, pkg-config files, and other development
 files for the Embedded Linux Library (ELL).
 
-
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libell.so.*

@@ -57,8 +57,6 @@ rm %{buildroot}%{_libdir}/*.a
 mkdir -p %{buildroot}%{_mandir}/man3
 install -p -m 0644 man/*.3 %{buildroot}%{_mandir}/man3/
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libaio.so.1

@@ -117,8 +117,6 @@ mv %{buildroot}/%{ssletcdir}/misc %{buildroot}/%{_datadir}/ssl/
 # Do not install demo scripts executable under /usr/share/doc
 find demos -type f -perm /111 -exec chmod 644 {} +
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.txt
 %doc NEWS.md README.md

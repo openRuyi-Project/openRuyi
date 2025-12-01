@@ -68,8 +68,6 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/OpenSP
 
 %find_lang OpenSP --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README
 %doc pubtext/opensp-implied.dcl

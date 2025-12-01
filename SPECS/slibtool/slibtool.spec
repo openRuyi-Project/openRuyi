@@ -50,8 +50,6 @@ that use functionality provided by slibtool.
 %check
 :
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.SLIBTOOL
 %doc README NEWS THANKS CONTRIB

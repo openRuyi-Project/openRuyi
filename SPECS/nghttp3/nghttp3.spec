@@ -36,9 +36,6 @@ Requires:       %{name} = %{version}-%{release}
 %description devel
 This package contains the header files and development libraries for nghttp3.
 
-
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc %{_docdir}/%{name}

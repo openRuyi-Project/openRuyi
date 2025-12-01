@@ -44,6 +44,44 @@
 %define disable_assert 0
 %define enable_stackguard_randomization 1
 
+%global glibc_post_funcs %{expand:
+-- We use lua because there may be no shell that we can run during
+-- glibc upgrade. We used to implement much of %%post as a C program,
+-- but from an overall maintenance perspective the lua in the spec
+-- file was simpler and safer given the operations required.
+-- All lua code will be ignored by rpm-ostree; see:
+-- https://github.com/projectatomic/rpm-ostree/pull/1869
+-- If we add new lua actions to the %%post code we should coordinate
+-- with rpm-ostree and ensure that their glibc install is functional.
+-- We must not use rpm.execute because this is a RPM 4.15 features and
+-- we must still support downstream bootstrap with RPM 4.14 and missing
+-- containerized boostrap.
+
+-- Open-code rpm.execute with error message handling.
+function post_exec (msg, program, ...)
+  if rpm.spawn ~= nil then
+    local status = rpm.spawn ({program, ...})
+    if status == nil then
+      io.stdout:write (msg)
+      assert (nil)
+    end
+  else
+    local pid = posix.fork ()
+    if pid == 0 then
+      posix.exec (program, ...)
+      io.stdout:write (msg)
+      assert (nil)
+    elseif pid > 0 then
+      posix.wait (pid)
+    end
+  end
+end
+
+function call_ldconfig ()
+  post_exec("Error: call to ldconfig failed.\\n",
+	    "ldconfig")
+end
+}
 
 Name:           glibc%{name_suffix}
 Summary:        Standard Shared Libraries (from the GNU C Library)
@@ -560,6 +598,19 @@ end
 %postun -n nscd
 %systemd_postun nscd.service
 exit 0
+
+# File triggers for when libraries are added or removed in standard
+# paths.
+
+%transfiletriggerin -P 2000000 -p <lua> -- /lib /usr/lib /lib64 /usr/lib64
+%glibc_post_funcs
+call_ldconfig()
+%end
+
+%transfiletriggerpostun -P 2000000 -p <lua> -- /lib /usr/lib /lib64 /usr/lib64
+%glibc_post_funcs
+call_ldconfig()
+%end
 
 %files
 # glibc

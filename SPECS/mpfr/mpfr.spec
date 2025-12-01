@@ -48,8 +48,6 @@ based on the GMP multiple-precision library.
       --disable-static \
       --docdir=%{_docdir}/%{name}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING*
 %{_libdir}/libmpfr.so.6*

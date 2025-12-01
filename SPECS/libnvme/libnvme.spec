@@ -58,8 +58,6 @@ Provides:       python3-nvme = %{version}-%{release}
 %description    -n python3-libnvme
 This package contains Python binding for libnvme.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

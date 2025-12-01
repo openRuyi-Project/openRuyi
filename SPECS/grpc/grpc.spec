@@ -63,7 +63,6 @@ rm -Rf third_party/abseil-cpp/
 %install -a
 rm -Rf %{buildroot}%{_datadir}/grpc/*.pem
 %fdupes %{buildroot}%{_prefix}
-%ldconfig_scriptlets
 
 %files
 %license LICENSE

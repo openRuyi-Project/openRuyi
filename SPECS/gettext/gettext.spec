@@ -122,10 +122,6 @@ rm -f %{buildroot}%{_libdir}/*.a
 %find_lang %{name}-tools
 %endif
 
-%ldconfig_scriptlets -n gettext-runtime
-%ldconfig_scriptlets -n gettext-tools
-%ldconfig_scriptlets -n libtextstyle
-
 %files
 %license COPYING
 %doc AUTHORS NEWS README

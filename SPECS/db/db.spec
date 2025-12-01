@@ -124,8 +124,6 @@ chrpath -d %{buildroot}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 # unify documentation and examples
 mv examples docs
 
-%ldconfig_scriptlets
-
 # no tests
 %check
 

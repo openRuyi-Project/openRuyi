@@ -50,8 +50,6 @@ Static library for the %{name} library
 # no configure script
 %conf
 
-%ldconfig_scriptlets
-
 %files
 %_bindir/lz4*
 %_bindir/unlz4

@@ -65,8 +65,6 @@ Utilities to handle and/or debug libwacom devices.
 %meson_test
 %endif
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

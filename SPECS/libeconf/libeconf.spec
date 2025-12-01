@@ -47,8 +47,6 @@ Requires:       %{name} = %{version}
 %description    utils
 This package contains tools for handling configuration files.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/libeconf.so.0

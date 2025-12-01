@@ -55,8 +55,6 @@ development/testing.
 %install -a
 sed -i '1 s|/usr/bin/env\ perl|/usr/bin/perl|' %{buildroot}%{_bindir}/nss_wrapper.pl
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS README.md CHANGELOG
 %license LICENSE

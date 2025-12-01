@@ -56,8 +56,6 @@ libX11.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libXfont2.so.2*

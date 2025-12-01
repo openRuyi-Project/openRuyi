@@ -31,8 +31,6 @@ Requires:       %{name} = %{version}
 The llhttp-devel package contains libraries and header files for
 developing applications that use llhttp.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md

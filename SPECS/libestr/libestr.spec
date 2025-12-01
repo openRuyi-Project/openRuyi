@@ -35,8 +35,6 @@ developing applications that use %{name}.
 %install -a
 rm -f %{buildroot}%{_libdir}/*.{a,la}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README AUTHORS ChangeLog

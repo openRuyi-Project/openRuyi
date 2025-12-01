@@ -68,8 +68,6 @@ staticallly linking to programs that make use of extended attributes.
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets -n %{lname}
-
 %files
 %license doc/COPYING*
 %doc doc/CHANGES

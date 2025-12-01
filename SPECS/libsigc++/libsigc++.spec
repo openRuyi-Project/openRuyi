@@ -32,8 +32,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains the libraries and header files
 needed for development with %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc NEWS README.md

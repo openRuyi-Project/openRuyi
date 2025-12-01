@@ -40,9 +40,6 @@ This package contains files required to build programs with flex libraries.
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%post   -n %{name} -p /sbin/ldconfig
-%postun -n %{name} -p /sbin/ldconfig
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog NEWS ONEWS README.md THANKS

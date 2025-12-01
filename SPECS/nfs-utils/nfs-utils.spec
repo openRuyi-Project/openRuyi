@@ -117,14 +117,12 @@ fi
 if [ -f %{_localstatedir}/lock/subsys/nfsserver-rpc.idmapd ]; then
 	mv %{_localstatedir}/lock/subsys/nfsserver-rpc.idmapd /run/nfs
 fi
-/sbin/ldconfig
 %systemd_post auth-rpcgss-module.service nfs-idmapd.service nfs-blkmap.service rpc-statd-notify.service rpc-gssd.service rpc-statd.service rpc-svcgssd.service
 
 %preun -n nfs-client
 %systemd_preun auth-rpcgss-module.service nfs-idmapd.service nfs-blkmap.service rpc-statd-notify.service rpc-gssd.service rpc-statd.service rpc-svcgssd.service
 
 %postun -n nfs-client
-/sbin/ldconfig
 %systemd_postun auth-rpcgss-module.service nfs-idmapd.service nfs-blkmap.service rpc-statd-notify.service rpc-gssd.service rpc-statd.service rpc-svcgssd.service
 
 %preun -n nfs-kernel-server
@@ -143,8 +141,6 @@ fi
 
 %postun -n nfs-kernel-server
 %systemd_postun nfs-mountd.service nfs-server.service nfsdcld.service
-
-%ldconfig_scriptlets -n nfsidmap
 
 %files
 %license COPYING

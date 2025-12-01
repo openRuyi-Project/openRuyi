@@ -32,8 +32,6 @@ License:        LGPL-2.1-only and GPL-2.0-only
 %description    devel
 Provides development headers for numa library calls
 
-%ldconfig_scriptlets
-
 %files
 %doc README.md
 %{_bindir}/numactl

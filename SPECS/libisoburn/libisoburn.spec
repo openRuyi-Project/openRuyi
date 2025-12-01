@@ -59,8 +59,6 @@ touch %{buildroot}%{_bindir}/mkisofs
 touch %{buildroot}%{_mandir}/man1/cdrecord.1.gz
 touch %{buildroot}%{_mandir}/man1/mkisofs.1.gz
 
-%ldconfig_scriptlets
-
 %post -n xorriso
 /usr/sbin/alternatives --install %{_bindir}/cdrecord cdrecord %{_bindir}/xorrecord 50 \
   --slave %{_mandir}/man1/cdrecord.1.gz cdrecord-man %{_mandir}/man1/xorrecord.1.gz

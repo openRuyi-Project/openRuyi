@@ -53,8 +53,6 @@ encoded by pahole.
 %install -p
 rm -Rf %{buildroot}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README NEWS

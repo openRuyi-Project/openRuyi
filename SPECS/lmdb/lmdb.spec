@@ -72,8 +72,6 @@ install -Dpm 0644 -t %{buildroot}%{_libdir}/pkgconfig lmdb.pc
 %check
 :
 
-%ldconfig_scriptlets libs
-
 %files
 %doc libraries/liblmdb/COPYRIGHT
 %doc libraries/liblmdb/CHANGES

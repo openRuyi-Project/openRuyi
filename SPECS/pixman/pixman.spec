@@ -31,9 +31,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, pkg-config file, and other development
 files for the pixman library.
 
-
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libpixman-1.so.*

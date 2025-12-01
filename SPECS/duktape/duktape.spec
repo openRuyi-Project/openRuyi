@@ -44,8 +44,6 @@ sed -i 's@/lib$@/%{_lib}@g' Makefile.sharedlibrary
 # no tests
 %check
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS.rst
 %license LICENSE.txt

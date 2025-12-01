@@ -54,8 +54,6 @@ installed. You also need to have the readline package installed.
 rm -vrf %{buildroot}%{_docdir}/readline
 rm -vf %{buildroot}%{_infodir}/dir*
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING USAGE
 %{_libdir}/libreadline.so.*

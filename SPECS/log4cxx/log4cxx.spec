@@ -35,8 +35,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, documentation, and other files needed
 to develop applications using the Log4cxx library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc NOTICE KEYS

@@ -81,8 +81,6 @@ ln -sr %{buildroot}%{_bindir}/createrepo_c %{buildroot}%{_bindir}/createrepo
 ln -sr %{buildroot}%{_bindir}/mergerepo_c %{buildroot}%{_bindir}/mergerepo
 ln -sr %{buildroot}%{_bindir}/modifyrepo_c %{buildroot}%{_bindir}/modifyrepo
 
-%ldconfig_scriptlets libs
-
 %files
 %doc README.md
 %{_mandir}/man8/createrepo_c.8*

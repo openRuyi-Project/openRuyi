@@ -52,8 +52,6 @@ rm -rvf %buildroot/%_defaultdocdir/%name
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license doc/COPYING
 %doc doc/extensions.txt doc/libacl.txt doc/CHANGES

@@ -37,8 +37,6 @@ developing applications that use squashfuse.
 %conf -p
 ./autogen.sh
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README CONFIGURATION NEWS TODO

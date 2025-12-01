@@ -207,14 +207,12 @@ rm -rf %{buildroot}%{perl_vendorlib}/leaktest.pl \
 %check
 
 %post
-/sbin/ldconfig
 %systemd_post rrdcached.service rrdcached.socket
 
 %preun
 %systemd_post rrdcached.service rrdcached.socket
 
 %postun
-/sbin/ldconfig
 %systemd_post rrdcached.service rrdcached.socket
 
 %files

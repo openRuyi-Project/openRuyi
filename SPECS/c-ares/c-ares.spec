@@ -42,8 +42,6 @@ by Greg Hudson at MIT.
 This package provides the development libraries and headers needed
 to build packages that depend on c-ares.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.md
 %{_bindir}/adig

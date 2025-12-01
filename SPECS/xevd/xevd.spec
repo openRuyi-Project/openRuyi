@@ -41,8 +41,6 @@ echo "v%{version}" > version.txt
 %install -a
 rm -rfv %{buildroot}%{_libdir}/xevd*
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

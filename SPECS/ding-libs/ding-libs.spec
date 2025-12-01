@@ -36,8 +36,6 @@ This package provides development libraries and other development files.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %defattr(-,root,root)
 %doc COPYING COPYING.LESSER README* dhash/* refarray/README.ref_array path_utils/README.path_utils

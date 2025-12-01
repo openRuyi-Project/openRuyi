@@ -83,8 +83,6 @@ find %{buildroot} -type f -name "*.la" -delete
 chmod a+rx %{buildroot}%{_libdir}/lib*.so.*
 rm -f %{buildroot}%{_libdir}/icu/%{version}/{Makefile.inc,pkgdata.inc}
 
-%ldconfig_scriptlets
-
 %files
 %license license.html
 %doc readme.html

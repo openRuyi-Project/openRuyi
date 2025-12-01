@@ -34,8 +34,6 @@ Requires:       pkgconfig
 %description devel
 libXfixes development package
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS

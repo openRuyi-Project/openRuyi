@@ -116,8 +116,6 @@ fi
 
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %doc README README-WORDS NEWS README-LICENSE AUTHORS
 %license COPYING.LIB

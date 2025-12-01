@@ -65,8 +65,6 @@ rm %{buildroot}%{_libdir}/%{libname}.a
 install -Dpm 644 %{libname}.pc %{buildroot}%{_libdir}/pkgconfig/%{libname}.pc
 chmod -x %{buildroot}%{_includedir}/%{name}.h
 
-%ldconfig_scriptlets -n %{libname}
-
 %files
 %{_bindir}/argon2
 

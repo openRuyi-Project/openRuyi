@@ -31,9 +31,6 @@ a YAML parser and emitter written in C.
 %prep
 %autosetup -n yaml-%{version}
 
-%post   -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
 %files
 %{_libdir}/libyaml-0.so.2
 %{_libdir}/libyaml-0.so.2.0.*

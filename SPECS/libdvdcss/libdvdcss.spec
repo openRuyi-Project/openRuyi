@@ -31,8 +31,6 @@ Requires:       %{name}%{?_isa} = %{version}
 This package contains the header files and libraries for developing
 applications that use the libdvdcss library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc %{_docdir}/libdvdcss

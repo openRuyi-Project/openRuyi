@@ -44,8 +44,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 # Remove the dev docs, we pick them up below
 rm -rf %{buildroot}%{_datadir}/doc/%{name}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS NEWS README

@@ -46,8 +46,6 @@ applications that use the libass library.
 %conf -p
 ./autogen.sh
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libass.so.9*

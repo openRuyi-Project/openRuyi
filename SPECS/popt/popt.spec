@@ -50,10 +50,6 @@ autoreconf -fiv
 %license COPYING
 %{_libdir}/libpopt.so.*
 
-
-%post -n %{name} -p /sbin/ldconfig
-%postun -n %{name} -p /sbin/ldconfig
-
 %files devel
 %license COPYING
 %doc README

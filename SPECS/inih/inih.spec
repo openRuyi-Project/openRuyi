@@ -34,9 +34,6 @@ Requires:       %{name} = %{version}
 This package contains header files, pkg-config files, and development
 symlinks for the inih library.
 
-
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.txt
 %doc README.md

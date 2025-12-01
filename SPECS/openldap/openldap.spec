@@ -331,8 +331,6 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %post
 %systemd_post slapd.service
 
-%ldconfig_scriptlets -n libldap2
-
 %preun
 %systemd_preun slapd.service
 

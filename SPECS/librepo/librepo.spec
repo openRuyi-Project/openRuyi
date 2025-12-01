@@ -57,8 +57,6 @@ Development files for librepo.
 %build -p
 export PKG_CONFIG_PATH=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

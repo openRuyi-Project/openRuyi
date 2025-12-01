@@ -44,8 +44,6 @@ developing applications that use %{name}.
 # Don't run "online" tests
 sed -i '/-sonline/s/^/#/' tests/libgit2/CMakeLists.txt
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libgit2.so.1.9*

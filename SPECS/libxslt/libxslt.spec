@@ -46,8 +46,6 @@ install -D -m0644 %{SOURCE1} %{buildroot}%{_mandir}/man1/xslt-config.1
 find %{buildroot} -type f -name "*.la" -delete -print
 %fdupes %{buildroot}%{_datadir}
 
-%ldconfig_scriptlets
-
 %files
 %license Copyright
 %doc AUTHORS NEWS TODO FEATURES

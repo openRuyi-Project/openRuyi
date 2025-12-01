@@ -41,8 +41,6 @@ autoreconf -fi
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LESSER
 %{_libdir}/libcheck.so.*

@@ -55,8 +55,6 @@ export LDFLAGS="$LDFLAGS -lpthread"
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LIB
 %{_libdir}/%{name}.so.0

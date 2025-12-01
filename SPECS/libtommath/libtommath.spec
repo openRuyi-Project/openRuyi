@@ -54,8 +54,6 @@ sed -i \
 find %{buildroot} -name '*.la' -delete
 find %{buildroot} -name '*.a' -delete
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/*.so.*

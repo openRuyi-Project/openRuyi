@@ -41,8 +41,6 @@ MTD (flash) devices.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_sbindir}/doc*

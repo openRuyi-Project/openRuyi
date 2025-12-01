@@ -34,8 +34,6 @@ applications that use the libdvdnav library.
 %install -a
 rm -r %{buildroot}%{_datadir}/doc/libdvdnav/
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog TODO

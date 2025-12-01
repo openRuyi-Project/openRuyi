@@ -37,8 +37,6 @@ Requires:       pkgconfig
 %description devel
 X.Org X11 libXrandr development package
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS

@@ -83,8 +83,6 @@ rm %{__cmake_builddir}/src/python/docs/html/.doctrees/environment.pickle
 cp -a %{__cmake_builddir}/src/python/docs/html %{buildroot}%{_datadir}/doc/python-libcomps/
 %endif
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/libcomps.so.*
 %doc README.md

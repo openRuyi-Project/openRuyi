@@ -34,8 +34,6 @@ needed to develop applications that use the TRE library.
 %install -a
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_bindir}/agrep

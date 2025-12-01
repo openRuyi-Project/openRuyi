@@ -60,8 +60,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This package provides the header files, libraries, and pkg-config files
 needed to develop applications that use libtraceevent.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSES/LGPL-2.1 LICENSES/GPL-2.0
 %{_libdir}/libtraceevent.so.*

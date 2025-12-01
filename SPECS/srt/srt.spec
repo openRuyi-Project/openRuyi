@@ -49,8 +49,6 @@ rm -f %{buildroot}/%{_libdir}/pkgconfig/haisrt.pc
 %check
 %ctest --parallel 1 -E TestIPv6
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md docs

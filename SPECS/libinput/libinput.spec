@@ -72,8 +72,6 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %meson_test
 %endif
 
-%ldconfig_scriptlets
-
 %files
 %doc COPYING
 %{_libdir}/libinput.so.*

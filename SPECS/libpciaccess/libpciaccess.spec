@@ -34,8 +34,6 @@ This package contains the header files and development library for libpciaccess.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS

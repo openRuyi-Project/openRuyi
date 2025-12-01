@@ -39,8 +39,6 @@ developing applications that use %{name}.
 %install -a
 rm -f %{buildroot}%{_bindir}/libotf-config
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS COPYING README NEWS
 %{_libdir}/libotf.so.1*

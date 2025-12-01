@@ -45,8 +45,6 @@ install -m 755 -p -D testapp %{buildroot}%{_bindir}/testapp
 # Pick up docs in the files section
 rm -fr %{buildroot}%{_docdir}/%{name}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md ChangeLog

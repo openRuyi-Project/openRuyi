@@ -80,9 +80,6 @@ cd libbtrfsutil/python
 %pyproject_install
 %pyproject_save_files -L btrfsutil
 
-%ldconfig_scriptlets -n libbtrfs
-%ldconfig_scriptlets -n libbtrfsutil
-
 %files
 %license COPYING
 %{_sbindir}/btrfsck

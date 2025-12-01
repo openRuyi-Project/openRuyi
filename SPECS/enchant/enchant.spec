@@ -60,8 +60,6 @@ autoreconf -fiv
 # TODO: test require unittest-cpp.
 %check
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS ChangeLog NEWS README
 %license COPYING.LIB

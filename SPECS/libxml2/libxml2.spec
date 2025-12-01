@@ -58,8 +58,6 @@ ln -s libxml2/libxml %{buildroot}%{_includedir}/libxml
 rm -f %{buildroot}%{_docdir}/%{name}/Copyright
 %fdupes %{buildroot}%{_datadir}
 
-%ldconfig_scriptlets
-
 %files
 %license Copyright
 %doc %{_docdir}/%{name}/

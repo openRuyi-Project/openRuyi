@@ -56,8 +56,6 @@ install -D -p -m 0644 '%{SOURCE1}' '%{buildroot}%{_mandir}/man1/libIDL-config-2.
 install -d '%{buildroot}%{_docdir}/%{name}/html'
 cp -rp libIDL2.html/* '%{buildroot}%{_docdir}/%{name}/html/'
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libIDL-2.so.0*

@@ -44,8 +44,6 @@ tools for handling fonts with different character set encodings.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/libfontenc.so.1*
 

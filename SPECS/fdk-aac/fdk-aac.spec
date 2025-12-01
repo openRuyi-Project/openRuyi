@@ -39,8 +39,6 @@ developing applications that use %{name}.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %doc ChangeLog
 %license NOTICE

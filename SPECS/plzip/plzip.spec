@@ -33,8 +33,6 @@ single-member files which can't be decompressed in parallel.
 %install -a
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
-%ldconfig_scriptlets
-
 %files
 %doc README
 %license COPYING

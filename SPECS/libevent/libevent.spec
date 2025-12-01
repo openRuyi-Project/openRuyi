@@ -70,8 +70,6 @@ export ac_cv_func_select=no
 %install -a
 find %{buildroot}%{_libdir} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %defattr(-,root,root,-)
 %license LICENSE

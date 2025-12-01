@@ -42,8 +42,6 @@ libthai.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %doc README AUTHORS COPYING ChangeLog
 %{_libdir}/lib*.so.*

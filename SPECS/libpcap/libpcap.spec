@@ -50,9 +50,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 # no test
 %check
 
-
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/libpcap.so.*

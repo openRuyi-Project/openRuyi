@@ -98,11 +98,6 @@ echo "/* GNU ld script
 GROUP ( %{_libdir}/libgdbm.so %{_libdir}/libgdbm_compat.so )" > %{buildroot}/%{_libdir}/libndbm.so
 %find_lang %{name} --generate-subpackages
 
-%post -n %{lname} -p /sbin/ldconfig
-%postun -n %{lname} -p /sbin/ldconfig
-%post -n %{lcompat} -p /sbin/ldconfig
-%postun -n %{lcompat} -p /sbin/ldconfig
-
 %files -n %{lname}
 %license COPYING
 %{_libdir}/libgdbm.so.*

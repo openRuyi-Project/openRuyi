@@ -98,9 +98,6 @@ install -m 0755 %{SOURCE3} %{buildroot}%{_sbindir}/selinux-ready
 # TODO: enable test.
 %check
 
-
-%ldconfig_scriptlets
-
 %files -n selinux-tools
 %{_sbindir}/avcstat
 %{_sbindir}/getenforce

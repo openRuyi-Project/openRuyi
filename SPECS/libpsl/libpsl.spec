@@ -67,8 +67,6 @@ rm -frv list
 ln -sv %{_datadir}/publicsuffix list
 %py3_shebang_fix src/psl-make-dafsa
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libpsl.so.5

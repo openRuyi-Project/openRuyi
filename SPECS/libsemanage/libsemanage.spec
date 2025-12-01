@@ -54,8 +54,6 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/selinux
 
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/libsemanage.so.*

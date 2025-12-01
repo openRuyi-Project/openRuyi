@@ -76,9 +76,6 @@ popd
 %endif
 find %{buildroot} -type f -name "*.la" -delete
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets cli
-
 %files
 %license COPYING
 # The main package owns all non-cli libraries.

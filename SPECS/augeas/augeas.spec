@@ -58,8 +58,6 @@ Requires:      %{name} = %{version}-%{release}
 Install this package if you want intelligent bash tab-completion
 for %{name}.
 
-%ldconfig_scriptlets
-
 %ifarch riscv64
 # TODO: make tests pass.
 %check

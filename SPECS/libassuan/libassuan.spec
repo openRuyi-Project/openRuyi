@@ -41,9 +41,6 @@ Libassuan is the IPC library used by gpg2 (GnuPG version 2)
 gpgme also uses libassuan to communicate with a libassuan-enabled GnuPG
 v2 server, but it uses it's own copy of libassuan.
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
-
 %files
 %license COPYING COPYING.LIB
 %{_libdir}/libassuan.so.*

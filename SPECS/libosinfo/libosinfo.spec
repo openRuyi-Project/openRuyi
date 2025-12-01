@@ -54,8 +54,6 @@ develop applications that use the libosinfo library.
 rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LIB
 %doc AUTHORS ChangeLog NEWS README

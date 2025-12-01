@@ -37,8 +37,6 @@ to compile and develop applications that use libsodium.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/%{name}.so.26*

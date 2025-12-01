@@ -146,11 +146,6 @@ cd contrib/minizip
 %make_install
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%post -n libz1 -p /sbin/ldconfig
-%postun -n libz1 -p /sbin/ldconfig
-%post -n libminizip1 -p /sbin/ldconfig
-%postun -n libminizip1 -p /sbin/ldconfig
-
 %files -n libz1
 %license LICENSE
 %{_libdir}/libz.so.1.3.1

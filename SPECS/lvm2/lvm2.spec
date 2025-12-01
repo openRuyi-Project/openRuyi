@@ -260,12 +260,6 @@ fi
 %systemd_postun lvm2-lvmdbusd.service
 %endif
 
-%ldconfig_scriptlets libs
-
-%ldconfig_scriptlets -n device-mapper-libs
-
-%ldconfig_scriptlets -n device-mapper-event-libs
-
 %files
 %license COPYING COPYING.LIB
 %doc README VERSION WHATS_NEW

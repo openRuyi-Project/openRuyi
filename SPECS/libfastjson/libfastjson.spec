@@ -26,10 +26,6 @@ Requires:       libfastjson = %{version}-%{release}
 %description    devel
 provide development files for libfastjson
 
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog README.html

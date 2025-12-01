@@ -43,8 +43,6 @@ PRIV_WRAPPER_CHROOT_DISABLE=1
 This package does not have a devel package, because this project is for
 development/testing.
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS README.md CHANGELOG.md
 %license LICENSE

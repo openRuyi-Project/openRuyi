@@ -102,8 +102,6 @@ EOF
 # TODO: Add tests
 %check
 
-%ldconfig_scriptlets
-
 %files
 %license nss/COPYING
 %dir %{_sysconfdir}/pki

@@ -66,14 +66,12 @@ find %{buildroot} -type f -name "*.a" -delete -print
 
 %post
 %systemd_post gpm.service
-/sbin/ldconfig
 
 %preun
 %systemd_preun gpm.service
 
 %postun
 %systemd_postun_with_restart gpm.service
-/sbin/ldconfig
 
 %files
 %doc COPYING README TODO

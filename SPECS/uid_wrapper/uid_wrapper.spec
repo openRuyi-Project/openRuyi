@@ -39,8 +39,6 @@ UID_WRAPPER=1
 This package doesn't have a devel package cause this project is for
 development/testing.
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS README.md CHANGELOG
 %license LICENSE

@@ -37,8 +37,6 @@ Requires:       %{name} = %{version}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc CONTRIBUTING.md README.md

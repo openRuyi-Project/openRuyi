@@ -57,8 +57,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 This package is necessary to build programs using %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc NEWS

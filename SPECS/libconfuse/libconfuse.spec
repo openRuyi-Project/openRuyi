@@ -45,8 +45,6 @@ cp -p examples/{ftpconf.c,ftp.conf,simple.c,simple.conf,reread.c,reread.conf} \
 rm -rf %{buildroot}%{_datadir}/doc/confuse
 %find_lang confuse --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc %{_docdir}/%{name}

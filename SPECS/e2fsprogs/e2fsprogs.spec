@@ -114,9 +114,6 @@ rm -f %{buildroot}%{_libdir}/e2initrd_helper
 %systemd_postun e2scrub@.service e2scrub_all.service e2scrub_all.timer e2scrub_fail@.service e2scrub_reap.service
 %endif
 
-%ldconfig_scriptlets -n libext2fs2
-%ldconfig_scriptlets -n libcom_err2
-
 %files -f e2fsprogs.lang
 %doc doc/RelNotes/v%{version}.txt README
 %license NOTICE

@@ -47,8 +47,6 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 # remove duped documents
 rm -rf %{buildroot}%{_docdir}/speex*
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog NEWS TODO README

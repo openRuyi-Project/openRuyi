@@ -42,8 +42,6 @@ Requires:       pkgconfig(x11)
 This package contains the libraries and header files needed for
 development with libepoxy.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libepoxy.so.0*

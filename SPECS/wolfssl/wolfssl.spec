@@ -60,8 +60,6 @@ dramatically better performance when using wolfSSL over OpenSSL.
 %make_build check
 %make_build tests
 
-%ldconfig_scriptlets
-
 %files
 %{_bindir}/wolfssl-config
 %{_libdir}/libwolfssl.so.44*

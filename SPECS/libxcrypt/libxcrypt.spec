@@ -58,9 +58,6 @@ This package contains the libxcrypt static libraries for -static
 linking.  You don't need this, unless you link statically, which
 is highly discouraged.
 
-
-%ldconfig_scriptlets
-
 %files
 %license COPYING.LIB LICENSING
 %doc AUTHORS NEWS THANKS

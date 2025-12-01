@@ -55,8 +55,6 @@ autoreconf -fvi
 # Remove .la files
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc NEWS

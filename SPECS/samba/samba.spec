@@ -287,7 +287,6 @@ rm -f %{buildroot}%{_mandir}/man8/vfs_glusterfs.8*
 %systemd_post samba-bgqd.service
 %systemd_post smb.service
 %systemd_post nmb.service
-/sbin/ldconfig
 
 %preun
 %systemd_preun samba-bgqd.service
@@ -298,9 +297,6 @@ rm -f %{buildroot}%{_mandir}/man8/vfs_glusterfs.8*
 %systemd_postun_with_restart samba-bgqd.service
 %systemd_postun_with_restart smb.service
 %systemd_postun_with_restart nmb.service
-/sbin/ldconfig
-
-%ldconfig_scriptlets libs
 
 %files
 %license COPYING

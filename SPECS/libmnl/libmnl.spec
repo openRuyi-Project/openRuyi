@@ -37,8 +37,6 @@ developing applications that use libmnl.
 %install -a
 find %{buildroot} -name '*.la' -delete
 
-%ldconfig_scriptlets
-
 %files
 %doc README
 %license COPYING

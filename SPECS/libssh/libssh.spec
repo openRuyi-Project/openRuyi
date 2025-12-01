@@ -94,8 +94,6 @@ install -d -m755 %{buildroot}%{_sysconfdir}/libssh
 install -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/libssh/libssh_client.config
 install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/libssh/libssh_server.config
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS BSD CHANGELOG README
 %license COPYING

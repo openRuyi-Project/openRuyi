@@ -67,8 +67,6 @@ done
 rm -f %{buildroot}%{_libdir}/apr.exp
 rm -f %{buildroot}%{_libdir}/libapr-1.a
 
-%ldconfig_scriptlets
-
 %files
 %doc CHANGES LICENSE NOTICE README*
 %{_libdir}/libapr-1.so.*

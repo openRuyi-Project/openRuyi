@@ -149,8 +149,6 @@ rm -rf %{buildroot}%{_datadir}/aclocal
 rm -rf %{buildroot}%{_mandir}/man7
 %endif
 
-%ldconfig_scriptlets -n %{libname}
-
 %files
 %license COPYING
 %doc README.md AUTHORS NEWS

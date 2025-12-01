@@ -46,8 +46,6 @@ doxygen doxygen/%{name}.doxyconf
 # Drop sample application
 rm -fr %{buildroot}%{_bindir}
 
-%ldconfig_scriptlets
-
 %files
 %license lgpl-2.1.txt
 %doc README.md

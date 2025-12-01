@@ -43,8 +43,6 @@ soelim -r Lsof.8 > lsof.1
 install -m 0644 lsof.1 -D %{buildroot}%{_mandir}/man1/lsof.1
 rm -rf %{buildroot}%{_mandir}/man8/lsof.8*
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc 00CREDITS 00README 00FAQ 00LSOF-L 00QUICKSTART

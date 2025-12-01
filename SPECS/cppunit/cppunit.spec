@@ -36,8 +36,6 @@ applications that use the CppUnit framework.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING AUTHORS
 %doc NEWS README THANKS TODO BUGS

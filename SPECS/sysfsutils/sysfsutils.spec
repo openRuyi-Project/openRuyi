@@ -51,8 +51,6 @@ autoreconf -fiv
 %install -a
 find %{buildroot} -type f -name "*.la" -delete
 
-%ldconfig_scriptlets -n libsysfs
-
 %files
 %license COPYING cmd/GPL
 %doc AUTHORS README CREDITS docs/libsysfs.txt

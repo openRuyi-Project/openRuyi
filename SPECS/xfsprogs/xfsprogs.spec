@@ -52,8 +52,6 @@ rm -rf %{buildroot}%{_datadir}/doc/xfsprogs/
 # no check target
 %check
 
-%ldconfig_scriptlets
-
 %files
 %doc doc/CHANGES README
 %{_libdir}/lib*.so.*

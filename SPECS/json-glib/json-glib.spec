@@ -43,8 +43,6 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 rm -rf %{buildroot}%{_datadir}/locale/en_GB/LC_MESSAGES
 %find_lang json-glib-1.0 --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSES/LGPL-2.1-or-later.txt
 %doc NEWS README.md

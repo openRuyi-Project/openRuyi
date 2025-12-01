@@ -58,8 +58,6 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 rm -rf %{buildroot}%{_datadir}/locale/en_GB/LC_MESSAGES
 %find_lang libsoup-3.0 --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README NEWS AUTHORS

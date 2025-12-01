@@ -43,8 +43,6 @@ needed for developing applications that use GPGME.
 find %{buildroot} -type f -name "*.la" -delete -print
 rm -fv %{buildroot}%{_infodir}/dir
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING*
 %doc AUTHORS ChangeLog NEWS README THANKS TODO VERSION

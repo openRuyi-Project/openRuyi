@@ -50,8 +50,6 @@ Requires:       pkgconfig
 %description devel
 X.Org X11 libXi development package
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libXi.so.*

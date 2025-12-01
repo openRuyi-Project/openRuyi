@@ -60,9 +60,6 @@ Requires:       %{name} = %{version}
 This package contains the header files and development libraries needed to
 develop applications that use libwebsockets.
 
-
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md READMEs/

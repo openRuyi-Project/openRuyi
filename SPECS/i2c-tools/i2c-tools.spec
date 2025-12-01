@@ -125,8 +125,6 @@ if [ "$1" = 1 ] ; then
 fi
 exit 0
 
-%ldconfig_scriptlets -n libi2c
-
 %files
 %license COPYING
 %doc CHANGES README eeprog/README.eeprog

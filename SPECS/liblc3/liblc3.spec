@@ -42,8 +42,6 @@ Requires:       %{name}%{?_isa} = %{version}
 %description -n python3-lc3
 This package contains Python 3 bindings for the LC3 codec library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/liblc3.so.1*

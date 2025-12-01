@@ -134,8 +134,6 @@ install -Dm644 %{SOURCE4} %{buildroot}%{_unitdir}/shadow.service
 %postun
 %systemd_postun shadow.service shadow.timer
 
-%ldconfig_scriptlets -n subid
-
 %files
 %doc NEWS doc/HOWTO README
 # %config(noreplace) %attr(0600,root,root) %{_sysconfdir}/subgid

@@ -49,7 +49,6 @@ autoreconf -fiv
 %install -a
 rm -f %{buildroot}%{_infodir}/dir
 %find_lang %{name} --generate-subpackages
-%ldconfig_scriptlets
 
 %files
 %doc AUTHORS ChangeLog NEWS README

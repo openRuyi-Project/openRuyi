@@ -56,10 +56,6 @@ Development files for the python3-talloc bindings.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
-%ldconfig_scriptlets -n python3-talloc
-
 %files
 %license LICENSE
 %{_libdir}/libtalloc.so.*

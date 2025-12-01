@@ -40,8 +40,6 @@ that use the libjwt library.
 %install -a
 find %{buildroot} -type f -name "*.a" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc %{_docdir}

@@ -38,8 +38,6 @@ Requires:       pcre2-devel
 Headers, pkg-config, and other development files for the libyang library.
 This package also contains the API documentation.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_bindir}/yanglint

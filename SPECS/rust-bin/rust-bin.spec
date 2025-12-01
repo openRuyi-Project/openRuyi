@@ -48,8 +48,6 @@ mv %{buildroot}%{_prefix}%{_sysconfdir} %{buildroot}
 rm %{buildroot}%{_prefix}/lib/rustlib/install.log
 rm %{buildroot}%{_prefix}/lib/rustlib/manifest-*
 
-%ldconfig_scriptlets
-
 %files
 %defattr(-,root,root,-)
 %{_bindir}/*{cargo,rust}*

@@ -154,9 +154,6 @@ install -pm 755 %{SOURCE6} %{buildroot}%{_libexecdir}/%{name}/sensord-service-wr
 %postun sensord
 %systemd_postun_with_restart sensord.service
 
-# ===== libs =====
-%ldconfig_scriptlets libs
-
 %files
 %license COPYING
 %doc CHANGES CONTRIBUTORS doc README*

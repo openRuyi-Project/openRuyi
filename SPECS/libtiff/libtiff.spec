@@ -57,8 +57,6 @@ This package holds libtiff command lint tools and development HTML pages.
 %conf -p
 CFLAGS="%{optflags} -fPIC"
 
-%ldconfig_scriptlets
-
 %files
 %{_bindir}/*
 %doc README.md VERSION ChangeLog TODO RELEASE-DATE

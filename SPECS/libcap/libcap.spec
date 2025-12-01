@@ -68,9 +68,6 @@ libcap.
 find %{buildroot} -type f -name "*.la" -delete -print
 rm %{buildroot}%{_libdir}/libcap.a
 
-%ldconfig_scriptlets
-
-
 %files
 %license License
 %{_libdir}/libcap.so.*

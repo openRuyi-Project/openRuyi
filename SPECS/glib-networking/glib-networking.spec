@@ -41,12 +41,10 @@ rm -rf %{buildroot}%{_datadir}/locale/en_GB/LC_MESSAGES
 %find_lang %{name} --generate-subpackages
 
 %post
-/sbin/ldconfig
 # TODO: When we have these macros, we should uncomment this.
 # %%gio_module_post
 
 %postun
-/sbin/ldconfig
 # TODO: When we have these macros, we should uncomment this.
 # %%gio_module_postun
 

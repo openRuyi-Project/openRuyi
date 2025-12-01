@@ -54,8 +54,6 @@ autoreconf -fiv
 rm -f %{buildroot}%{_bindir}/example
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING license.hunspell license.myspell
 %doc README AUTHORS THANKS

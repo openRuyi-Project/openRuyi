@@ -102,9 +102,6 @@ install -p -c -m 0644 %{S:3} %{buildroot}/etc/pam.d/sudo-i
 
 %post
 /bin/chmod 0440 /etc/sudoers || :
-/sbin/ldconfig
-
-%postun -p /sbin/ldconfig
 
 %files
 %license LICENSE.md

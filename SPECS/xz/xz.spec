@@ -86,8 +86,6 @@ install -Dpm 0644 liblzma.a %{buildroot}%{_libdir}/
 rm -vf %{buildroot}%{_docdir}/%{name}/{COPYING,COPYING.GPLv2}
 %find_lang %{name} --all-name --with-man --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING COPYING.GPLv2
 %{_docdir}/%{name}

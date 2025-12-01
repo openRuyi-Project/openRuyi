@@ -70,9 +70,6 @@ mkdir -p %{buildroot}%{_datadir}/glvnd/egl_vendor.d/
 mkdir -p %{buildroot}%{_sysconfdir}/egl/egl_external_platform.d/
 mkdir -p %{buildroot}%{_datadir}/egl/egl_external_platform.d/
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets egl
-
 %files
 %doc README.md
 %dir %{_sysconfdir}/glvnd/

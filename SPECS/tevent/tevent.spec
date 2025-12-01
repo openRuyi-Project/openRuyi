@@ -58,8 +58,6 @@ Python bindings for tevent
 # workaround https://gitlab.com/ita1024/waf/-/issues/2472
 export PYTHONARCHDIR=%{python3_sitearch}
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/libtevent.so.*

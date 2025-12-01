@@ -33,8 +33,6 @@ Requires:       %{name} = %{version}
 This is the ASN.1 library used by GNUTLS. Abstract Syntax Notation One (ASN.1)
 is a standardized data description and serialization language.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_bindir}/*

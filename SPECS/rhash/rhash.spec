@@ -68,8 +68,6 @@ sed -i "s|-fomit-frame-pointer|%{optflags}|g" configure
 %install -a
 %find_lang %{name} %{?no_lang_C}
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc ChangeLog README.md

@@ -134,8 +134,6 @@ rm -f %{buildroot}%{_libdir}/libapr*.a
 sed -ri '/^dependency_libs/{s,-l(pq|sqlite[0-9]|rt|dl|uuid) ,,g}' %{buildroot}%{_libdir}/libapr*.la
 rm -f %{buildroot}%{_libdir}/apr-util-1/*.*a
 
-%ldconfig_scriptlets
-
 %files
 %doc CHANGES LICENSE NOTICE
 %{_libdir}/libaprutil-1.so.*

@@ -52,8 +52,6 @@ install -d -m 755 %{buildroot}%{_datadir}/aclocal
 install src/libFLAC/libFLAC.m4 %{buildroot}%{_datadir}/aclocal/
 install src/libFLAC++/libFLAC++.m4 %{buildroot}%{_datadir}/aclocal/
 
-%ldconfig_scriptlets libs
-
 %files
 %{_bindir}/flac
 %{_bindir}/metaflac

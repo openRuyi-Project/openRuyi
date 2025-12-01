@@ -39,8 +39,6 @@ needed to develop applications that use the libedit library.
 %install -a
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc ChangeLog

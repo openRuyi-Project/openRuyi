@@ -270,11 +270,6 @@ fi
 %__rm -f %{_localstatedir}/lib/sss/mc/sid
 %__rm -f %{_localstatedir}/lib/sss/pubconf/known_hosts
 
-%ldconfig_scriptlets -n sss-certmap
-%ldconfig_scriptlets -n ipa-hbac
-%ldconfig_scriptlets -n sss-idmap
-%ldconfig_scriptlets -n sss-nss-idmap
-
 %preun
 %systemd_preun sssd.service
 %systemd_preun sssd-autofs.socket

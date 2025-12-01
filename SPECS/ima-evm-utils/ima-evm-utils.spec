@@ -53,8 +53,6 @@ autoreconf -fiv
 rm -rf %{buildroot}%{_datadir}/doc
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSES.txt COPYING
 %doc NEWS README AUTHORS

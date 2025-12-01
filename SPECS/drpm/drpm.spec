@@ -43,8 +43,6 @@ Requires:       %{name} = %{version}
 This subpackage contains libraries and header files for developing
 applications that want to make use of drpm.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING LICENSE.BSD
 %{_libdir}/libdrpm.so.*

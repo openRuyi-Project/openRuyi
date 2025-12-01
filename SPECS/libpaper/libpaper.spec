@@ -76,8 +76,6 @@ install -m0755 src/localepaper %{buildroot}%{_libexecdir}
 gzip -c %{SOURCE2} > paperconf.1.gz
 install -m0644 paperconf.1.gz %{buildroot}%{_mandir}/man1/paperconf.1
 
-%ldconfig_scriptlets
-
 %files
 %doc ChangeLog README
 %license COPYING

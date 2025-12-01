@@ -44,8 +44,6 @@ find %{buildroot} -type f -name "*.la" -delete
 
 rm -rf %{buildroot}%{_datadir}/locale
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS README CHANGES peanuts.py popcorn.py

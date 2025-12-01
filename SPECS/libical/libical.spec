@@ -65,10 +65,6 @@ Requires:        %{name}-glib = %{version}
 %description glib-devel
 Development files needed for building things which link against %{name}-glib.
 
-%ldconfig_scriptlets
-
-%ldconfig_scriptlets glib
-
 %files
 %doc README.md ReleaseNotes.txt THANKS
 %license LICENSE

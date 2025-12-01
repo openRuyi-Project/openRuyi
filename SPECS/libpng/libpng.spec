@@ -41,8 +41,6 @@ If you want to develop programs which will manipulate PNG image format
 files, you should install libpng-devel.  You'll also need to install
 the libpng package.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_bindir}/pngfix

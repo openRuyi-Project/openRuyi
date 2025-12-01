@@ -57,8 +57,6 @@ The libsepol-devel-static package contains the static libraries
 needed for developing applications that manipulate binary SELinux
 policies.
 
-%ldconfig_scriptlets
-
 # no configure script
 %conf
 :

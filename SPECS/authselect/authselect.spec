@@ -48,8 +48,6 @@ chrpath -d %{buildroot}%{_bindir}/authselect
 find %{buildroot} -type f -name "*.la" -delete -print
 rm -fr %{buildroot}%{_datadir}/doc/%{name}
 
-%ldconfig_scriptlets
-
 %preun
 # This script must be executed before any files are removed.
 if [ $1 == 0 ] ; then

@@ -86,8 +86,6 @@ find %{buildroot} -name '*.la' -delete
 # Remove /usr/include/asoundlib.h
 rm -f %{buildroot}%{_includedir}/asoundlib.h
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc doc/asoundrc.txt modprobe-dist-oss.conf

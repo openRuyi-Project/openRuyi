@@ -43,8 +43,6 @@ Provides:       cmocka-devel:%{_libdir}/cmake/cmocka
 %description cmake
 cmake support for developing with the cmocka unit testing library.
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS README.md ChangeLog
 %license COPYING

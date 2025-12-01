@@ -46,8 +46,6 @@ mv -v example example.%{_arch}
 
 find %{buildroot} -type f -name "*.la" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc docs/AUTHORS NEWS README RELEASE-NOTES

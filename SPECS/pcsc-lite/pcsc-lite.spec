@@ -57,14 +57,12 @@ done
 install -d %{buildroot}%{_sysconfdir}/reader.conf.d
 
 %post
-/sbin/ldconfig
 %systemd_post pcscd.socket pcscd.service
 
 %preun
 %systemd_preun pcscd.socket pcscd.service
 
 %postun
-/sbin/ldconfig
 %systemd_postun_with_restart pcscd.socket pcscd.service
 
 %files

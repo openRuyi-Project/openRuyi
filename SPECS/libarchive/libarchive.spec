@@ -74,8 +74,6 @@ This package contains the development files.
 rm "%{buildroot}%{_mandir}/man5/"{tar,cpio,mtree}.5*
 sed -i -e '/Libs.private/d' %{buildroot}%{_libdir}/pkgconfig/libarchive.pc
 
-%ldconfig_scriptlets
-
 %files -n bsdtar
 %license COPYING
 %{_bindir}/bsdcat

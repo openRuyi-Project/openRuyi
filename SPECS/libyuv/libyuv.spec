@@ -55,8 +55,6 @@ find %{buildroot} -type f -name "*.a" -delete
 
 install -p -D -m 0644 %{name}.pc %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md

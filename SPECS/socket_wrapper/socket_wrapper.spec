@@ -57,10 +57,6 @@ Requires:       libsocket_wrapper_noop = %{version}-%{release}
 Development headers for applications with the need to call
 socket_wrapper_enabled().
 
-%ldconfig_scriptlets
-
-%ldconfig_scriptlets -n libsocket_wrapper_noop
-
 %files
 %doc AUTHORS README.md CHANGELOG
 %license LICENSE

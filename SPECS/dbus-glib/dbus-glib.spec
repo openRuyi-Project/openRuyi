@@ -43,8 +43,6 @@ Headers and static libraries for the D-Bus GLib bindings.
 %install -a
 chmod -x %{buildroot}%{_sysconfdir}/bash_completion.d/dbus-bash-completion.sh
 
-%ldconfig_scriptlets
-
 %files
 %doc NEWS
 %license COPYING

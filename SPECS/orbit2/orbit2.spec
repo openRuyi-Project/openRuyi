@@ -63,8 +63,6 @@ chrpath --delete %{buildroot}%{_libdir}/orbit-2.0/Everything_module.so
 chrpath --delete %{buildroot}%{_bindir}/ior-decode-2
 chrpath --delete %{buildroot}%{_bindir}/typelib-dump
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS COPYING README TODO
 %{_libdir}/*.so.*

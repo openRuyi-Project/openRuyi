@@ -40,8 +40,6 @@ Requires:       fmt-devel
 %description    devel
 This package contains C++ header files and development libraries for spdlog.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md

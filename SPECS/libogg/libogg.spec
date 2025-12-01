@@ -36,8 +36,6 @@ files needed to develop applications that use the libogg library.
 install -d -m 755 %{buildroot}%{_datadir}/aclocal
 cp -pr ogg.m4 %{buildroot}%{_datadir}/aclocal/
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS CHANGES README.md

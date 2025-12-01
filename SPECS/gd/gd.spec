@@ -83,8 +83,6 @@ autoreconf -fiv
 
 %endif
 
-%ldconfig_scriptlets devel
-
 %files
 %doc README.md
 %license COPYING

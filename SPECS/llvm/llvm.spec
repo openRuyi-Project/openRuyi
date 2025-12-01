@@ -1619,10 +1619,6 @@ reset_test_opts
 %endif
 #endregion check
 #region misc
-%ldconfig_scriptlets -n %{pkg_name_llvm}-libs
-%if %{without compat_build}
-%ldconfig_scriptlets -n %{pkg_name_lld}-libs
-%endif
 %post -n %{pkg_name_llvm}-devel
 update-alternatives --install %{_bindir}/llvm-config-%{maj_ver} llvm-config-%{maj_ver} %{install_bindir}/llvm-config %{__isa_bits}
 %if %{without compat_build}

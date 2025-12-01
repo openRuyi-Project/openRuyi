@@ -65,8 +65,6 @@ Requires:              rpm-devel
 %description devel
 Development files for the libsolv library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE*
 %{_libdir}/lib*.so.*

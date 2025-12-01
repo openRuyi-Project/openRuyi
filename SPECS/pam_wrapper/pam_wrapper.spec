@@ -80,10 +80,6 @@ sed -i -e '/Werror=declaration-after-statement/d' CompilerChecks.cmake
 # renamed in Python 3.2, old name dropped in 3.12
 sed -i -e 's/assertRaisesRegexp/assertRaisesRegex/' tests/pypamtest_test.py
 
-%ldconfig_scriptlets
-
-%ldconfig_scriptlets -n libpamtest
-
 %files
 %{_libdir}/libpam_wrapper.so*
 %{_libdir}/pkgconfig/pam_wrapper.pc

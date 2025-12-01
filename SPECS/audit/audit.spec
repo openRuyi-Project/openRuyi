@@ -63,8 +63,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 # TODO: make test pass.
 %check
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 # Merged files from libaudit1

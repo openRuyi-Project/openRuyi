@@ -43,8 +43,6 @@ that use the GNU SASL library.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS NEWS README THANKS
 %license COPYING

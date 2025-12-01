@@ -36,8 +36,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 This package contains development files for %{name}.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS TODO ChangeLog README NEWS doc/manual.pdf

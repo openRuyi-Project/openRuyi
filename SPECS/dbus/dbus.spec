@@ -107,8 +107,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/alternatives
 (cd %{buildroot}%{_bindir} && ln -sf ../../etc/alternatives/dbus-launch dbus-launch)
 find %{buildroot} -type f -name "*.la" -delete
 
-%ldconfig_scriptlets
-
 %verifyscript
 %{_sbindir}/update-alternatives --install %{_bindir}/dbus-launch dbus-launch %{_bindir}/dbus-launch.nox11 10
 
@@ -116,8 +114,6 @@ find %{buildroot} -type f -name "*.la" -delete
 if [ "$1" = 0 ] ; then
   %{_sbindir}/update-alternatives --remove dbus-launch %{_bindir}/dbus-launch.nox11
 fi
-
-/sbin/ldconfig
 
 %if %{with systemd}
 %pre common

@@ -33,8 +33,6 @@ Requires:       %{name}%{?_isa} = %{version}
 This package contains the header files and libraries needed to develop
 applications that use the dav1d AV1 decoder library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc CONTRIBUTING.md doc/PATENTS NEWS README.md THANKS.md

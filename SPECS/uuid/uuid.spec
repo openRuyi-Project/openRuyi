@@ -144,10 +144,6 @@ perl -MData::UUID -e 'print "Testing compatibility of Data::UUID version $Data::
 LD_LIBRARY_PATH=../.libs make test TEST_FILES=uuid_compat.ts
 popd
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets c++
-%ldconfig_scriptlets dce
-
 %files
 %doc AUTHORS ChangeLog HISTORY NEWS PORTING README SEEALSO THANKS TODO USERS
 %{_bindir}/uuid

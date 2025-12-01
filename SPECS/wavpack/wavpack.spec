@@ -34,8 +34,6 @@ Requires:       glibc-devel
 This package contains the header files, libraries, and documentation
 needed to develop applications that use the WavPack library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_bindir}/wavpack

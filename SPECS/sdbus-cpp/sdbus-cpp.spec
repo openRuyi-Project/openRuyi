@@ -39,8 +39,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, pkg-config file, and CMake configuration
 files needed to develop applications that use the sdbus-cpp library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING COPYING-LGPL-Exception
 %doc README.md

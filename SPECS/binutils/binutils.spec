@@ -113,7 +113,6 @@ cd ..
 %find_lang %{name} --all-name --generate-subpackages
 
 %post
-/sbin/ldconfig
 %if ! %{with libalternatives}
 "%_sbindir/update-alternatives" --install \
      "%_bindir/ld" ld "%_bindir/ld.bfd" 2

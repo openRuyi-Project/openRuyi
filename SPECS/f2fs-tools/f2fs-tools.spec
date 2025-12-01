@@ -47,8 +47,6 @@ install -m 644 mkfs/f2fs_format_utils.h %{buildroot}%{_includedir}
 
 find %{buildroot} -type f -name "*.la" -delete
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog

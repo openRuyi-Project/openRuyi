@@ -47,8 +47,6 @@ autoreconf -vfi
 find %{buildroot} -type f -name "*.la" -delete -print
 find %{buildroot} -type f -name "*.a" -delete -print
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS ChangeLog README
 %license COPYING

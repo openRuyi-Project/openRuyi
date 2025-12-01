@@ -44,8 +44,6 @@ rm -rf src/lib/hash/sha*
 mkdir -p %{buildroot}%{_libexecdir}
 install contrib/gen_xml_dictionary %{buildroot}%{_libexecdir}/zck_gen_xml_dictionary
 
-%ldconfig_scriptlets
-
 %files
 %doc README.md contrib
 %{_bindir}/zck*

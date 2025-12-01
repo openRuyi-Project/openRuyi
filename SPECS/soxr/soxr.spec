@@ -38,8 +38,6 @@ developing applications that use %{name}.
 # Remove docs and use the rpmbuild macro instead
 rm -rf %{buildroot}%{_docdir}/*
 
-%ldconfig_scriptlets
-
 %files
 %doc NEWS README
 %license LICENCE

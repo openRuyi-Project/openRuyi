@@ -60,8 +60,6 @@ autoreconf -fiv
 install -d %{buildroot}/%{python3_sitelib}
 install -pm 0644 python/libvoikko.py %{buildroot}/%{python3_sitelib}/
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc ChangeLog README

@@ -56,8 +56,6 @@ mkdir -p %{buildroot}%{_includedir}/slang
 ln -s ../slang.h %{buildroot}%{_includedir}/slang/slang.h
 ln -s ../slcurses.h %{buildroot}%{_includedir}/slang/slcurses.h
 
-%ldconfig_scriptlets
-
 %files
 %config(noreplace) %{_sysconfdir}/slsh.rc
 %license COPYING

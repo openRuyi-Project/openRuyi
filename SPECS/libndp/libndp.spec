@@ -37,8 +37,6 @@ necessary for developing programs using libndp.
 %install -a
 find $RPM_BUILD_ROOT -name \*.la -delete
 
-%ldconfig_scriptlets
-
 %files
 %doc COPYING
 %{_libdir}/*so.*

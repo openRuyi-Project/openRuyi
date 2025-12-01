@@ -128,14 +128,12 @@ install -d -m 755 %{buildroot}%{_libexecdir}/bluetooth/
 install emulator/btvirt %{buildroot}/%{_libexecdir}/bluetooth/
 
 %post
-/sbin/ldconfig
 %systemd_post bluetooth.service
 
 %preun
 %systemd_preun bluetooth.service
 
 %postun
-/sbin/ldconfig
 %systemd_postun_with_restart bluetooth.service
 
 %post hid2hci

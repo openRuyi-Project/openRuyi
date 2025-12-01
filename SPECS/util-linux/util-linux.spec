@@ -161,12 +161,6 @@ install -Dm644 %{SOURCE15} %{buildroot}%{_sysconfdir}/pam.d/chfn
 install -Dm644 %{SOURCE20} %{buildroot}%{_udevrulesdir}/60-rfkill.rules
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_scriptlets -n libuuid
-%ldconfig_scriptlets -n libblkid
-%ldconfig_scriptlets -n libmount
-%ldconfig_scriptlets -n libsmartcols
-%ldconfig_scriptlets -n libfdisk
-
 %post -n liblastlog2
 %systemd_post lastlog2-import.service
 %postun -n liblastlog2

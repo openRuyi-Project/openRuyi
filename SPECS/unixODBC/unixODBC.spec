@@ -54,8 +54,6 @@ find %{buildroot} -type f -name "*.la" -delete
 rm -f %{buildroot}%{_libdir}/libltdl.*
 rm -rf %{buildroot}%{_datadir}/libtool
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README AUTHORS ChangeLog

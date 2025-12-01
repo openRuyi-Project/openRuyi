@@ -95,8 +95,6 @@ Requires:       cryptsetup-libs = %{version}-%{release}
 The integritysetup package contains a utility for setting up
 disk integrity protection using dm-integrity kernel module.
 
-%ldconfig_scriptlets -n cryptsetup-libs
-
 %prep -a
 ./autogen.sh
 

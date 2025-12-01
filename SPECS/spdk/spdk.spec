@@ -114,8 +114,6 @@ mkdir -p %{buildroot}%{_sbindir}
 ln -sf -r %{_datadir}/%{name}/scripts/rpc.py %{buildroot}%{_sbindir}/%{name}-rpc
 ln -sf -r %{_datadir}/%{name}/scripts/spdkcli.py %{buildroot}%{_sbindir}/%{name}-cli
 
-%ldconfig_scriptlets
-
 %files
 %license %{_datadir}/licenses/%{name}/LICENSE
 %{_bindir}/spdk-setup

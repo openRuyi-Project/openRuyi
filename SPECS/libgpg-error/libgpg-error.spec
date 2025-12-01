@@ -40,9 +40,6 @@ autoreconf -fiv
 rm -r %{buildroot}%{_datadir}/common-lisp
 %find_lang %{name} --generate-subpackages
 
-%post -n libgpg-error -p /sbin/ldconfig
-%postun -n libgpg-error -p /sbin/ldconfig
-
 %files -n libgpg-error
 %license COPYING.LIB COPYING
 %doc README NEWS ChangeLog AUTHORS ABOUT-NLS

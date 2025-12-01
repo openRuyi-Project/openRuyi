@@ -33,9 +33,6 @@ Requires:       pkgconfig
 This package contains the header files and libraries for developing
 applications that use the libunibreak library.
 
-
-%ldconfig_scriptlets
-
 %files
 %license LICENCE
 %doc AUTHORS NEWS README.md

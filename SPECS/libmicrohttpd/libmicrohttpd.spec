@@ -49,8 +49,6 @@ and other files needed to develop applications that use libmicrohttpd.
 find %{buildroot} -type f -name "*.la" -delete -print
 rm -v %{buildroot}%{_infodir}/%{name}_performance_data.png
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libmicrohttpd.so.*

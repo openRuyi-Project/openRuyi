@@ -49,8 +49,6 @@ autoreconf -fiv
 %{__rm} -rf %{buildroot}%{_infodir}/dir
 %find_lang %{name} --generate-subpackages
 
-%ldconfig_postun
-
 %files
 %license COPYING
 %doc README doc/API doc/FAT

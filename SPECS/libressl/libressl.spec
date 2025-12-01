@@ -75,10 +75,6 @@ for i in %{buildroot}%{_mandir}/man*; do
 done
 rm -v "%{buildroot}%{_sysconfdir}/libressl/cert.pem"
 
-%ldconfig_scriptlets -n libcrypto56
-%ldconfig_scriptlets -n libssl59
-%ldconfig_scriptlets -n libtls32
-
 %files
 %license COPYING
 %dir %{_sysconfdir}/libressl/

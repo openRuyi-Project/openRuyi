@@ -50,8 +50,6 @@ necessary for developing applications that use the xxHash library.
 
 rm -f %{buildroot}%{_libdir}/libxxhash.a
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md

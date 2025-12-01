@@ -46,8 +46,6 @@ pushd %{buildroot}%{_libdir}
 ln -sf libkeyutils.so.1 libkeyutils.so
 popd
 
-%ldconfig_scriptlets
-
 %files
 %license LICENCE.GPL LICENCE.LGPL
 %doc README

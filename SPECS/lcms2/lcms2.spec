@@ -36,8 +36,6 @@ Provides:       littlecms-devel = %{version}
 Development files for LittleCMS. This package contains headers and libraries
 needed to build applications that use LittleCMS.
 
-%ldconfig_scriptlets
-
 %files
 %doc AUTHORS ChangeLog README.md
 %license LICENSE

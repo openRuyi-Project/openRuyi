@@ -43,8 +43,6 @@ to develop applications that require the magic "file" interface.
 %conf -p
 autoreconf -fiv
 
-%ldconfig_scriptlets
-
 %files
 %defattr (-,root,root)
 %attr(755,root,root) %{_bindir}/file

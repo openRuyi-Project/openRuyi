@@ -37,8 +37,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, libraries, and CMake/pkg-config files
 for developing applications that use the fmt library.
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/libfmt.so*
 

@@ -73,8 +73,6 @@ Requires:       %{name} = %{version}-%{release}
 Executable and data files for installed tests.
 %endif
 
-%ldconfig_scriptlets
-
 %files
 %doc README.md
 %license LICENSE

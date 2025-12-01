@@ -44,8 +44,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, libraries, and documentation for
 developing applications that use libproxy.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README.md

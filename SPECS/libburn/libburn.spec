@@ -46,7 +46,6 @@ touch %{buildroot}%{_bindir}/cdrecord
 touch %{buildroot}%{_mandir}/man1/cdrecord.1.gz
 
 %post
-/sbin/ldconfig
 /usr/sbin/alternatives --install %{_bindir}/cdrecord cdrecord %{_bindir}/cdrskin 50 \
   --slave %{_mandir}/man1/cdrecord.1.gz cdrecord-man %{_mandir}/man1/cdrskin.1.gz
 
@@ -54,9 +53,6 @@ touch %{buildroot}%{_mandir}/man1/cdrecord.1.gz
 if [ $1 -eq 0 ]; then
   /usr/sbin/alternatives --remove cdrecord %{_bindir}/cdrskin
 fi
-
-%postun
-/sbin/ldconfig
 
 %files
 %license COPYING

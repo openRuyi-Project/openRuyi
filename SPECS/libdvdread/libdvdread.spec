@@ -32,8 +32,6 @@ Requires:       %{name}%{?_isa} = %{version}
 This package contains the header files and libraries for developing
 applications that use the libdvdread library.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc AUTHORS NEWS README.md COPYING TODO

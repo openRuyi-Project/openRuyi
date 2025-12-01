@@ -38,8 +38,6 @@ Requires:       %{name}%{?_isa} = %{version}
 This package contains libraries and header files needed for
 development of programs using libnotify.
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc NEWS AUTHORS README.md

@@ -56,8 +56,6 @@ This package contains the development files needed to build against the shared l
 %make_build check
 %make_build tests
 
-%ldconfig_scriptlets
-
 %files
 %{_libdir}/libisal_crypto.so.2*
 %license LICENSE

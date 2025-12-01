@@ -45,8 +45,6 @@ sed -e 's/$(INSTALL_STRIP)/install/' -i Makefile
 # no tests
 %check
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE LICENSE.bsd LICENSE.gplv2
 %doc README.md

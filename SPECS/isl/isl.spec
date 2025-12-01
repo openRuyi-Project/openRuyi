@@ -46,9 +46,6 @@ bounded by linear constraints.
 %install -a
 rm -f  %{buildroot}%{_libdir}/libisl.so.*-gdb.py
 
-%post -n libisl%{islsover} -p /sbin/ldconfig
-%postun -n libisl%{islsover} -p /sbin/ldconfig
-
 %files -n libisl%{islsover}
 %{_libdir}/libisl.so.%{islsover}*
 

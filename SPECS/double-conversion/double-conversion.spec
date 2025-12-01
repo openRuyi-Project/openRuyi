@@ -35,8 +35,6 @@ Requires:       %{name} = %{version}
 Contains header files and CMake configuration for developing applications
 that use the double-conversion library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc README.md AUTHORS Changelog

@@ -38,8 +38,6 @@ Requires:       pkgconfig
 %description devel
 X.Org X11 libXtst development package
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %{_libdir}/libXtst.so.*

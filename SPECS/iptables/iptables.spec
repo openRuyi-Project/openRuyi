@@ -188,8 +188,6 @@ install -d %{buildroot}/%{legacy_actions}/ip6tables
 # test require root
 %check
 
-%ldconfig_scriptlets
-
 %post services
 %systemd_post arptables.service ebtables.service
 %systemd_post iptables.service ip6tables.service
@@ -199,7 +197,6 @@ install -d %{buildroot}/%{legacy_actions}/ip6tables
 %systemd_preun iptables.service ip6tables.service
 
 %postun services
-%?ldconfig
 %systemd_postun arptables.service ebtables.service
 %systemd_postun iptables.service ip6tables.service
 

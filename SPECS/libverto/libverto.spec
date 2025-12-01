@@ -112,11 +112,6 @@ autoreconf -fiv
 %install -a
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-%ldconfig_scriptlets
-%ldconfig_scriptlets glib
-%ldconfig_scriptlets libevent
-%ldconfig_scriptlets libev
-
 %files
 %license COPYING
 %doc AUTHORS ChangeLog NEWS README

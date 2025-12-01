@@ -47,8 +47,6 @@ This package contains the development headers and libraries for OpenBLAS.
 # No configure
 %conf
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %doc Changelog.txt GotoBLAS_01Readme.txt

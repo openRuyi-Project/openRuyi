@@ -64,8 +64,6 @@ cd %{buildroot}%{_libdir}/
 	ln -sf zlib-ng-compat/libz.so.1 libz.so
 %endif
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.md
 %doc README.md

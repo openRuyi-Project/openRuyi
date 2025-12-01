@@ -80,15 +80,10 @@ rm -rf %{buildroot}%{_datadir}/et/
 %if %{with systemd}
 %post
 %systemd_post kadmind.service kpropd.service
-/sbin/ldconfig
 %preun
 %systemd_preun kadmind.service kpropd.service
 %postun
 %systemd_postun_with_restart kadmind.service kpropd.service
-/sbin/ldconfig
-%else
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
 %endif
 
 %files

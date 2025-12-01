@@ -80,8 +80,6 @@ cd py
 %pyproject_install
 %pyproject_save_files nftables
 
-%ldconfig_scriptlets
-
 %post services -p /bin/sh
 %systemd_post nftables.service
 %preun services -p /bin/sh

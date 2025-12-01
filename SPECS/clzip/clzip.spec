@@ -28,8 +28,6 @@ Clzip is intended to be fully compatible with the regular lzip package.
 %install -a
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
-%ldconfig_scriptlets
-
 %files
 %doc README
 %license COPYING

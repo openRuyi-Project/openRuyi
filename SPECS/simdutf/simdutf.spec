@@ -33,9 +33,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, pkg-config, and CMake files needed
 to develop applications that use the simdutf library.
 
-
-%ldconfig_scriptlets
-
 %files
 %license LICENSE-APACHE
 %doc AUTHORS README.md

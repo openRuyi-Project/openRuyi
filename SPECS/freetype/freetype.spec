@@ -106,8 +106,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
   exit 0
 }
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE.TXT docs/FTL.TXT docs/GPLv2.TXT
 %{_libdir}/libfreetype.so.*

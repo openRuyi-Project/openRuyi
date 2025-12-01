@@ -50,8 +50,6 @@ find %{buildroot} -type f -name "*.la" -delete -print
 rm -rf %{buildroot}%{_datadir}/locale
 rm -f %{buildroot}%{_sysconfdir}/pkcs11/pkcs11.conf.example
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %dir %{_sysconfdir}/pkcs11

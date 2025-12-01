@@ -40,8 +40,6 @@ needed to develop applications that use the libffcall library.
 %install -a
 find %{buildroot} -type f -name "*.a" -delete
 
-%ldconfig_scriptlets
-
 %files
 %license COPYING
 %doc README

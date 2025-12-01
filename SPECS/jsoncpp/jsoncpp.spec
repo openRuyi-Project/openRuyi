@@ -32,8 +32,6 @@ Requires:       %{name} = %{version}
 This package contains the header files, libraries, and CMake files needed to
 develop applications that use the JsonCpp library.
 
-%ldconfig_scriptlets
-
 %files
 %license LICENSE
 %{_libdir}/libjsoncpp.so.*
