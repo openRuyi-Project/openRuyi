@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           elfutils
-Version:        0.193
+Version:        0.194
 Release:        %autorelease
 Summary:        Higher-level library to access ELF files
 License:        GPL-3.0-or-later
@@ -16,6 +16,9 @@ VCS:            git:https://sourceware.org/git/elfutils.git
 #!RemoteAsset
 Source0:        https://sourceware.org/elfutils/ftp/%{version}/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
+
+# from https://sourceware.org/git/?p=elfutils.git;a=commit;h=4a5cf8be906d5991e7527e69e3f2ceaa74811301
+Patch0:         elfutils-0.194-fix-const.patch
 
 BuildOption(conf):  --program-prefix=eu-
 BuildOption(conf):  --disable-debuginfod
@@ -179,6 +182,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/elf_*.3*
 %{_mandir}/man3/elf32_*.3*
 %{_mandir}/man3/elf64_*.3*
+%{_mandir}/man3/gelf_*.3*
 %{_mandir}/man3/libelf.3.gz
 
 %files -n libdebuginfod-dummy
