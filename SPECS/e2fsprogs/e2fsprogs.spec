@@ -54,9 +54,9 @@ License:        GPL-2.0-only
 %if %{with systemd}
 %{?systemd_requires}
 %endif
+Recommends:     /usr/sbin/sendmail
 Requires:       e2fsprogs
 Requires:       lvm2
-Requires:       postfix
 Requires:       util-linux
 
 %description -n e2fsprogs-scrub
