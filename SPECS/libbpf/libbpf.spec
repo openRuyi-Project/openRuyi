@@ -16,9 +16,9 @@ URL:            https://github.com/libbpf/libbpf
 Source:         https://github.com/libbpf/libbpf/archive/v%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(build): STATIC_LIBS= LIBDIR=%{_libdir}
+BuildOption(build): LIBDIR=%{_libdir}
 BuildOption(build): -C src
-BuildOption(install): STATIC_LIBS= LIBDIR=%{_libdir}
+BuildOption(install): LIBDIR=%{_libdir}
 BuildOption(install): -C src
 
 BuildRequires:  libelf-devel
@@ -34,6 +34,14 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 libbpf is a C library which provides API for managing eBPF programs and maps.
 
+%package        static
+Summary:        Static library for libbpf development
+Requires:       %{name}-devel = %{version}-%{release}
+
+%description    static
+The %{name}-static package contains static library for
+developing applications that use %{name}.
+
 %conf
 
 %check
@@ -46,6 +54,9 @@ libbpf is a C library which provides API for managing eBPF programs and maps.
 %{_libdir}/libbpf.so
 %{_includedir}/bpf/
 %{_libdir}/pkgconfig/libbpf.pc
+
+%files static
+%{_libdir}/libbpf.a
 
 %changelog
 %{?autochangelog}
