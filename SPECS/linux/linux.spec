@@ -21,13 +21,13 @@
 %global kver %{version}-%{release}
 %global kernel_make_flags LD=ld.bfd KBUILD_BUILD_VERSION=%{release}
 Name:             linux
-Version:          6.17.5
+Version:          6.18.1
 Release:          %autorelease
 Summary:          The Linux Kernel
 License:          GPL-2.0-only
 URL:              https://www.kernel.org/
 
-#!RemoteAsset
+#!RemoteAsset:    sha256:d0a78bf3f0d12aaa10af3b5adcaed5bc767b5b78705e5ef885d5e930b72e25d5
 Source0:          https://cdn.kernel.org/pub/linux/kernel/v6.x/%{name}-%{version}.tar.xz
 Source1:          config.%{_arch}
 
