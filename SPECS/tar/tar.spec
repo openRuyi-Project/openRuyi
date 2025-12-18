@@ -19,6 +19,8 @@ BuildSystem:    autotools
 
 # Next release will fix this - 251
 Patch0:         0001-tar-1.35-revert-fix-savannah-bug-633567.patch
+# And this, too - 251
+Patch1:         0002-add-forgotten-tests.patch
 
 BuildRequires:  gettext
 BuildRequires:  acl-devel
@@ -42,6 +44,9 @@ backups.
 
 If you want to use tar for remote backups, you also need to install
 the rmt package on the remote box.
+
+%check
+make %{?_smp_mflags} check || { cat tests/testsuite.log; exit 1; }
 
 %files
 %license COPYING
