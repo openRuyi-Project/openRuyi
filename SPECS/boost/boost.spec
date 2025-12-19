@@ -121,6 +121,9 @@ mkdir -p %{buildroot}%{_docdir}/boost
 rm -rf %{buildroot}%{_libdir}/lib*.a
 rm -rf %{buildroot}%{_datadir}/boost_predef
 
+# No check
+%check
+
 %files
 %license LICENSE_1_0.txt
 %{_libdir}/lib*.so*
