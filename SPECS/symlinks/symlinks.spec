@@ -31,6 +31,9 @@ change absolute links to relative within a given filesystem.
 # No configure
 %conf
 
+%check
+# No tests here.
+
 %files
 %{_bindir}/symlinks
 %{_mandir}/man8/symlinks.8*
