@@ -44,6 +44,10 @@ cd nspr
 rm -f %{buildroot}%{_bindir}/compile-et.pl %{buildroot}%{_bindir}/prerr.properties
 find %{buildroot} -type f -name "*.a" -delete -print
 
+%check
+cd nspr/pr/tests/dll && make
+cd .. && make runtests
+
 %files
 %license nspr/LICENSE
 %{_libdir}/lib*.so
