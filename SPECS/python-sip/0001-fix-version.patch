@@ -1,0 +1,13 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 8234f01..6a4c47a 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -16,7 +16,7 @@ dependencies = ["packaging>=24.2", "setuptools>=75.8.1", "tomli; python_version<
+ requires-python = ">=3.10"
+ license = "BSD-2-Clause"
+ license-files = ["LICENSE"]
+-dynamic = ["version"]
++version = "6.15.1"
+ 
+ [[project.authors]]
+ name = "Phil Thompson"
