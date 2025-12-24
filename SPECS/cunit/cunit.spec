@@ -38,6 +38,7 @@ headers, and documentation files.
 
 %package        devel
 Summary:        CUnit development files
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ncurses-devel
 Requires:       pkgconfig
 
