@@ -35,6 +35,9 @@ to Autoconf/Automake and compiler caches such as ccache.
 %generate_buildrequires
 %pyproject_buildrequires
 
+# No check
+%check
+
 %files -f %{pyproject_files}
 
 %changelog
