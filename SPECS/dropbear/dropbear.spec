@@ -10,6 +10,7 @@ Release:        %autorelease
 Summary:        A lightweight SSH server and client
 License:        MIT
 URL:            https://matt.ucc.asn.au/dropbear/dropbear.html
+VCS:            git:https://github.com/mkj/dropbear
 #!RemoteAsset
 Source0:        https://matt.ucc.asn.au/dropbear/releases/dropbear-%{version}.tar.bz2
 Source1:        dropbear.service
@@ -20,15 +21,15 @@ BuildSystem:    autotools
 BuildOption(conf): --enable-pam
 BuildOption(conf): --disable-bundled-libtom
 
-BuildRequires:  gcc make
-BuildRequires:  libtomcrypt-devel
-BuildRequires:  libtommath-devel
-BuildRequires:  libxcrypt-devel
-BuildRequires:  pam-devel
+BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  pkgconfig(libtomcrypt)
+BuildRequires:  pkgconfig(libtommath)
+BuildRequires:  pkgconfig(libxcrypt)
+BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig(systemd)
-BuildRequires:  zlib-devel
+BuildRequires:  pkgconfig(zlib)
 BuildRequires:  systemd-rpm-macros
-
 # for tests.
 BuildRequires:  python3
 %{?systemd_requires}
@@ -36,7 +37,6 @@ BuildRequires:  python3
 %description
 Dropbear is a relatively small SSH server and client. It's particularly useful
 for "embedded"-type Linux (or other Unix) systems, such as wireless routers.
-
 
 %build -p
 cat > localoptions.h <<EOT
