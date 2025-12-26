@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libpng
-Version:        1.6.50
+Version:        1.6.53
 Release:        %autorelease
 Summary:        A library of functions for manipulating PNG image format files
 License:        zlib
