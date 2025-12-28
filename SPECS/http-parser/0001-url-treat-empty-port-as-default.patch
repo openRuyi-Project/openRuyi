@@ -1,0 +1,80 @@
+From d1bb7a564e0f92ef2081d3af8b4b7f85a307c38f Mon Sep 17 00:00:00 2001
+From: Edward Thomson <ethomson@edwardthomson.com>
+Date: Fri, 14 Jun 2019 17:37:22 +0100
+Subject: [PATCH] url: treat empty port as default
+
+When parsing URLs, treat an empty port (eg `http://hostname:/`) as if it
+were unspecified.  RFC 3986 says:
+
+> URI producers and normalizers SHOULD omit the port component and its
+> ":" delimiter if port is empty or if its value would be the same as
+> that of the scheme's default.
+
+(Emphasis on the "SHOULD" is mine.)  This indicates that URIs MAY be
+produced with an empty port and the `:` delimiter.
+
+Thus, we stop failing if we end host parsing at the port delimiter.
+---
+ http_parser.c |  1 -
+ test.c        | 25 +++++++++++++++++++------
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/http_parser.c b/http_parser.c
+index 4896385..7e268d8 100644
+--- a/http_parser.c
++++ b/http_parser.c
+@@ -2326,7 +2326,6 @@ http_parse_host(const char * buf, struct http_parser_url *u, int found_at) {
+     case s_http_host_v6:
+     case s_http_host_v6_zone_start:
+     case s_http_host_v6_zone:
+-    case s_http_host_port_start:
+     case s_http_userinfo:
+     case s_http_userinfo_start:
+       return 1;
+diff --git a/test.c b/test.c
+index 0140a18..54eca61 100644
+--- a/test.c
++++ b/test.c
+@@ -2825,6 +2825,25 @@ const struct url_test url_tests[] =
+   ,.rv=0
+   }
+ 
++, {.name="proxy empty port"
++  ,.url="http://hostname:/"
++  ,.is_connect=0
++  ,.u=
++    {.field_set=(1 << UF_SCHEMA) | (1 << UF_HOST) | (1 << UF_PATH)
++    ,.port=0
++    ,.field_data=
++      {{  0,  4 } /* UF_SCHEMA */
++      ,{  7,  8 } /* UF_HOST */
++      ,{  0,  0 } /* UF_PORT */
++      ,{ 16,  1 } /* UF_PATH */
++      ,{  0,  0 } /* UF_QUERY */
++      ,{  0,  0 } /* UF_FRAGMENT */
++      ,{  0,  0 } /* UF_USERINFO */
++      }
++    }
++  ,.rv=0
++  }
++
+ , {.name="CONNECT request"
+   ,.url="hostname:443"
+   ,.is_connect=1
+@@ -3059,12 +3078,6 @@ const struct url_test url_tests[] =
+   ,.rv=1
+   }
+ 
+-, {.name="proxy empty port"
+-  ,.url="http://hostname:/"
+-  ,.is_connect=0
+-  ,.rv=1
+-  }
+-
+ , {.name="CONNECT with basic auth"
+   ,.url="a:b@hostname:443"
+   ,.is_connect=1
+-- 
+2.25.1
+
+
