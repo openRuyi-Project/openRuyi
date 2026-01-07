@@ -1,0 +1,35 @@
+From: Shengjing Zhu <zhsj@debian.org>
+Date: Thu, 29 Feb 2024 17:30:41 +0800
+Subject: Skip test for encoding \b and \f
+
+Go 1.22 changes encoding behavior.
+---
+ api_tests/encoder_18_test.go | 2 +-
+ value_tests/string_test.go   | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/api_tests/encoder_18_test.go b/api_tests/encoder_18_test.go
+index 3c159b5..acb34b8 100644
+--- a/api_tests/encoder_18_test.go
++++ b/api_tests/encoder_18_test.go
+@@ -1,4 +1,4 @@
+-//+build go1.8
++//+build go1.8,!go1.22
+ 
+ package test
+ 
+diff --git a/value_tests/string_test.go b/value_tests/string_test.go
+index 5f34f9d..cc93d06 100644
+--- a/value_tests/string_test.go
++++ b/value_tests/string_test.go
+@@ -14,6 +14,10 @@ func init() {
+ 		"he\u2029\u2028he",
+ 	)
+ 	for i := 0; i < utf8.RuneSelf; i++ {
++		if i == '\b' || i == '\f' {
++			// https://github.com/golang/go/issues/64346
++			continue
++		}
+ 		marshalCases = append(marshalCases, string([]byte{byte(i)}))
+ 	}
+ }
