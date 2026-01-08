@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
@@ -95,9 +95,6 @@ touch %{buildroot}/var/spool/anacron/cron.weekly
 touch %{buildroot}/var/spool/anacron/cron.monthly
 # install systemd initscript
 install -m 644 -D contrib/cronie.systemd $RPM_BUILD_ROOT/usr/lib/systemd/system/crond.service
-# TODO: Fix this once our /bin equals /sbin
-cp %{buildroot}%{_sbindir}/crond %{buildroot}%{_bindir}/crond
-cp %{buildroot}%{_sbindir}/anacron %{buildroot}%{_bindir}/anacron
 
 %post
 %systemd_post crond.service
@@ -134,7 +131,6 @@ cp %{buildroot}%{_sbindir}/anacron %{buildroot}%{_bindir}/anacron
 %config(noreplace,missingok) %{_sysconfdir}/cron.deny
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/cron.d/0hourly
 %attr(0644,root,root) /usr/lib/systemd/system/crond.service
-# TODO: Fix this once our /bin equals /sbin
 %{_sbindir}/crond
 
 %files anacron
@@ -147,7 +143,6 @@ cp %{buildroot}%{_sbindir}/anacron %{buildroot}%{_bindir}/anacron
 %ghost %attr(0600,root,root) %verify(not md5 size mtime) /var/spool/anacron/cron.monthly
 %{_mandir}/man5/anacrontab.*
 %{_mandir}/man8/anacron.*
-# TODO: Fix this once our /bin equals /sbin
 %{_sbindir}/anacron
 
 %changelog
