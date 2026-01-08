@@ -1,0 +1,282 @@
+From: Daniel Swarbrick <dswarbrick@debian.org>
+Date: Fri, 28 Jul 2023 22:28:21 +0200
+Subject: Fix testdata paths
+
+Forwarded: not-needed
+Last-Update: 2022-09-05
+
+'go test' changes the working directory to that of the Go package being
+tested, and thus if we are using a shared testdata directory outside of
+that package, we need to make the paths relative again.
+---
+ bcache/get_test.go        |  2 +-
+ blockdevice/stats_test.go | 12 ++++++------
+ btrfs/get_test.go         |  2 +-
+ internal/fs/fs_test.go    |  2 +-
+ iscsi/get_test.go         | 26 +++++++++++++-------------
+ selinuxfs/fs_test.go      |  2 +-
+ sysfs/fs_test.go          |  2 +-
+ xfs/parse_test.go         |  2 +-
+ xfs/xfs_test.go           |  4 ++--
+ 9 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/bcache/get_test.go b/bcache/get_test.go
+index 5c45374..bcf911f 100644
+--- a/bcache/get_test.go
++++ b/bcache/get_test.go
+@@ -19,7 +19,7 @@ import (
+ )
+ 
+ func TestFSBcacheStats(t *testing.T) {
+-	bcache, err := NewFS("testdata/fixtures/sys")
++	bcache, err := NewFS("../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access bcache fs: %v", err)
+ 	}
+diff --git a/blockdevice/stats_test.go b/blockdevice/stats_test.go
+index 018671f..3fbff2e 100644
+--- a/blockdevice/stats_test.go
++++ b/blockdevice/stats_test.go
+@@ -23,8 +23,8 @@ import (
+ 
+ const (
+ 	failMsgFormat  = "%v, expected %v, actual %v"
+-	procfsFixtures = "testdata/fixtures/proc"
+-	sysfsFixtures  = "testdata/fixtures/sys"
++	procfsFixtures = "../testdata/fixtures/proc"
++	sysfsFixtures  = "../testdata/fixtures/sys"
+ )
+ 
+ func TestDiskstats(t *testing.T) {
+@@ -67,7 +67,7 @@ func TestDiskstats(t *testing.T) {
+ }
+ 
+ func TestBlockDevice(t *testing.T) {
+-	blockdevice, err := NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	blockdevice, err := NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access blockdevice fs: %v", err)
+ 	}
+@@ -157,7 +157,7 @@ func TestBlockDevice(t *testing.T) {
+ }
+ 
+ func TestBlockDmInfo(t *testing.T) {
+-	blockdevice, err := NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	blockdevice, err := NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access blockdevice fs: %v", err)
+ 	}
+@@ -202,7 +202,7 @@ func TestBlockDmInfo(t *testing.T) {
+ }
+ 
+ func TestSysBlockDeviceUnderlyingDevices(t *testing.T) {
+-	blockdevice, err := NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	blockdevice, err := NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access blockdevice fs: %v", err)
+ 	}
+@@ -224,7 +224,7 @@ func TestSysBlockDeviceUnderlyingDevices(t *testing.T) {
+ }
+ 
+ func TestSysBlockDeviceSize(t *testing.T) {
+-	blockdevice, err := NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	blockdevice, err := NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access blockdevice fs: %v", err)
+ 	}
+diff --git a/btrfs/get_test.go b/btrfs/get_test.go
+index 95a20eb..5957f98 100644
+--- a/btrfs/get_test.go
++++ b/btrfs/get_test.go
+@@ -36,7 +36,7 @@ type commit struct {
+ }
+ 
+ func TestFSBtrfsStats(t *testing.T) {
+-	btrfs, err := NewFS("testdata/fixtures/sys")
++	btrfs, err := NewFS("../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access Btrfs filesystem: %v", err)
+ 	}
+diff --git a/internal/fs/fs_test.go b/internal/fs/fs_test.go
+index 2273b8d..fd4a3fa 100644
+--- a/internal/fs/fs_test.go
++++ b/internal/fs/fs_test.go
+@@ -16,7 +16,7 @@ package fs
+ import "testing"
+ 
+ const (
+-	sysTestFixtures = "testdata/fixtures/sys"
++	sysTestFixtures = "../../testdata/fixtures/sys"
+ )
+ 
+ func TestNewFS(t *testing.T) {
+diff --git a/iscsi/get_test.go b/iscsi/get_test.go
+index eeb4e42..c5711d0 100644
+--- a/iscsi/get_test.go
++++ b/iscsi/get_test.go
+@@ -31,12 +31,12 @@ func TestGetStats(t *testing.T) {
+ 				Tpgt: []iscsi.TPGT{
+ 					{
+ 						Name:     "tpgt_1",
+-						TpgtPath: "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.8888bbbbddd0/tpgt_1",
++						TpgtPath: "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.8888bbbbddd0/tpgt_1",
+ 						IsEnable: true,
+ 						Luns: []iscsi.LUN{
+ 							{
+ 								Name:       "lun_0",
+-								LunPath:    "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.8888bbbbddd0/tpgt_1/lun/lun_0",
++								LunPath:    "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.8888bbbbddd0/tpgt_1/lun/lun_0",
+ 								Backstore:  "rd_mcp",
+ 								ObjectName: "ramdisk_lio_1G",
+ 								TypeNumber: "119",
+@@ -44,7 +44,7 @@ func TestGetStats(t *testing.T) {
+ 						},
+ 					},
+ 				},
+-				RootPath: "testdata/fixtures/sys/kernel/config/target/iscsi",
++				RootPath: "../testdata/fixtures/sys/kernel/config/target/iscsi",
+ 			},
+ 		},
+ 		{
+@@ -53,12 +53,12 @@ func TestGetStats(t *testing.T) {
+ 				Tpgt: []iscsi.TPGT{
+ 					{
+ 						Name:     "tpgt_1",
+-						TpgtPath: "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.abcd1abcd2ab/tpgt_1",
++						TpgtPath: "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.abcd1abcd2ab/tpgt_1",
+ 						IsEnable: true,
+ 						Luns: []iscsi.LUN{
+ 							{
+ 								Name:       "lun_0",
+-								LunPath:    "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.abcd1abcd2ab/tpgt_1/lun/lun_0",
++								LunPath:    "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2003-01.org.linux-iscsi.osd1.x8664:sn.abcd1abcd2ab/tpgt_1/lun/lun_0",
+ 								Backstore:  "iblock",
+ 								ObjectName: "block_lio_rbd1",
+ 								TypeNumber: "0",
+@@ -66,7 +66,7 @@ func TestGetStats(t *testing.T) {
+ 						},
+ 					},
+ 				},
+-				RootPath: "testdata/fixtures/sys/kernel/config/target/iscsi",
++				RootPath: "../testdata/fixtures/sys/kernel/config/target/iscsi",
+ 			},
+ 		},
+ 		{
+@@ -75,12 +75,12 @@ func TestGetStats(t *testing.T) {
+ 				Tpgt: []iscsi.TPGT{
+ 					{
+ 						Name:     "tpgt_1",
+-						TpgtPath: "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:dev.rbd0/tpgt_1",
++						TpgtPath: "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:dev.rbd0/tpgt_1",
+ 						IsEnable: true,
+ 						Luns: []iscsi.LUN{
+ 							{
+ 								Name:       "lun_0",
+-								LunPath:    "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:dev.rbd0/tpgt_1/lun/lun_0",
++								LunPath:    "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:dev.rbd0/tpgt_1/lun/lun_0",
+ 								Backstore:  "fileio",
+ 								ObjectName: "file_lio_1G",
+ 								TypeNumber: "1",
+@@ -88,7 +88,7 @@ func TestGetStats(t *testing.T) {
+ 						},
+ 					},
+ 				},
+-				RootPath: "testdata/fixtures/sys/kernel/config/target/iscsi",
++				RootPath: "../testdata/fixtures/sys/kernel/config/target/iscsi",
+ 			},
+ 		},
+ 		{
+@@ -97,12 +97,12 @@ func TestGetStats(t *testing.T) {
+ 				Tpgt: []iscsi.TPGT{
+ 					{
+ 						Name:     "tpgt_1",
+-						TpgtPath: "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:sn.ramdemo/tpgt_1",
++						TpgtPath: "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:sn.ramdemo/tpgt_1",
+ 						IsEnable: true,
+ 						Luns: []iscsi.LUN{
+ 							{
+ 								Name:       "lun_0",
+-								LunPath:    "testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:sn.ramdemo/tpgt_1/lun/lun_0",
++								LunPath:    "../testdata/fixtures/sys/kernel/config/target/iscsi/iqn.2016-11.org.linux-iscsi.igw.x86:sn.ramdemo/tpgt_1/lun/lun_0",
+ 								Backstore:  "rbd",
+ 								ObjectName: "iscsi-images-demo",
+ 								TypeNumber: "0",
+@@ -110,7 +110,7 @@ func TestGetStats(t *testing.T) {
+ 						},
+ 					},
+ 				},
+-				RootPath: "testdata/fixtures/sys/kernel/config/target/iscsi",
++				RootPath: "../testdata/fixtures/sys/kernel/config/target/iscsi",
+ 			},
+ 		},
+ 	}
+@@ -126,7 +126,7 @@ func TestGetStats(t *testing.T) {
+ 		{1504, 4733, 1234},
+ 	}
+ 
+-	sysconfigfs, err := iscsi.NewFS("testdata/fixtures/sys", "testdata/fixtures/sys/kernel/config")
++	sysconfigfs, err := iscsi.NewFS("../testdata/fixtures/sys", "../testdata/fixtures/sys/kernel/config")
+ 	if err != nil {
+ 		t.Fatalf("failed to access xfs fs: %v", err)
+ 	}
+diff --git a/selinuxfs/fs_test.go b/selinuxfs/fs_test.go
+index 5016d94..453187c 100644
+--- a/selinuxfs/fs_test.go
++++ b/selinuxfs/fs_test.go
+@@ -19,7 +19,7 @@ package selinuxfs
+ import "testing"
+ 
+ const (
+-	selinuxTestFixtures = "testdata/fixtures" + DefaultMountPoint
++	selinuxTestFixtures = "../testdata/fixtures" + DefaultMountPoint
+ )
+ 
+ func TestNewFS(t *testing.T) {
+diff --git a/sysfs/fs_test.go b/sysfs/fs_test.go
+index 5930309..3184608 100644
+--- a/sysfs/fs_test.go
++++ b/sysfs/fs_test.go
+@@ -19,7 +19,7 @@ package sysfs
+ import "testing"
+ 
+ const (
+-	sysTestFixtures = "testdata/fixtures/sys"
++	sysTestFixtures = "../testdata/fixtures/sys"
+ )
+ 
+ func TestNewFS(t *testing.T) {
+diff --git a/xfs/parse_test.go b/xfs/parse_test.go
+index 069b965..9ff660b 100644
+--- a/xfs/parse_test.go
++++ b/xfs/parse_test.go
+@@ -732,7 +732,7 @@ func TestParseStats(t *testing.T) {
+ 			stats, err = xfs.ParseStats(strings.NewReader(tt.s))
+ 		}
+ 		if tt.fs {
+-			xfs, err := xfs.NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++			xfs, err := xfs.NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 			if err != nil {
+ 				t.Fatalf("failed to access xfs fs: %v", err)
+ 			}
+diff --git a/xfs/xfs_test.go b/xfs/xfs_test.go
+index 36698f6..a3bb48a 100644
+--- a/xfs/xfs_test.go
++++ b/xfs/xfs_test.go
+@@ -21,7 +21,7 @@ import (
+ )
+ 
+ func TestReadProcStat(t *testing.T) {
+-	xfs, err := xfs.NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	xfs, err := xfs.NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access xfs fs: %v", err)
+ 	}
+@@ -38,7 +38,7 @@ func TestReadProcStat(t *testing.T) {
+ }
+ 
+ func TestReadSysStats(t *testing.T) {
+-	xfs, err := xfs.NewFS("testdata/fixtures/proc", "testdata/fixtures/sys")
++	xfs, err := xfs.NewFS("../testdata/fixtures/proc", "../testdata/fixtures/sys")
+ 	if err != nil {
+ 		t.Fatalf("failed to access xfs fs: %v", err)
+ 	}
