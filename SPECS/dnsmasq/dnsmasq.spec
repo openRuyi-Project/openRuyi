@@ -13,10 +13,8 @@ Summary:        A lightweight DHCP/caching DNS server
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            https://thekelleys.org.uk/dnsmasq/
 VCS:            git:http://thekelleys.org.uk/git/dnsmasq.git
-#!RemoteAsset
-Source0:        https://thekelleys.org.uk/%{name}/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://thekelleys.org.uk/%{name}/%{name}-%{version}.tar.xz.asc
+#!RemoteAsset:  sha256:f622682848b33677adb2b6ad08264618a2ae0a01da486a93fd8cd91186b3d153
+Source0:        https://thekelleys.org.uk/dnsmasq/dnsmasq-%{version}.tar.xz
 Source2:        dnsmasq.service
 Source3:        dnsmasq.sysusers
 BuildSystem:    autotools
