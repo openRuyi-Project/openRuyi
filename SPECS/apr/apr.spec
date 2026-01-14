@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,6 +11,7 @@ Release:        %autorelease
 Summary:        Apache Portable Runtime library
 License:        Apache-2.0 AND (BSD-4-Clause-UC AND ISC AND Zlib AND Caldera-no-preamble)
 URL:            https://apr.apache.org/
+VCS:            git:https://github.com/apache/apr
 #!RemoteAsset
 Source:         https://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
@@ -17,26 +19,31 @@ BuildSystem:    autotools
 # Can't run testsock in qemu user space emulation
 Patch2000:      2000-Skip-testsock-test.patch
 
-BuildOption(conf): --includedir=%{_includedir}/apr-1
-BuildOption(conf): --with-installbuilddir=%{_libdir}/apr-1/build
-BuildOption(conf): --with-devrandom=/dev/urandom
-BuildOption(conf): --disable-static
-BuildOption(conf): --disable-sctp
+BuildOption(conf):  --includedir=%{_includedir}/apr-1
+BuildOption(conf):  --with-installbuilddir=%{_libdir}/apr-1/build
+BuildOption(conf):  --with-devrandom=/dev/urandom
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --disable-sctp
 
-BuildRequires: gcc autoconf libtool libuuid python3 make
-BuildRequires: libxcrypt-devel
+BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  libtool
+BuildRequires:  libuuid
+BuildRequires:  python3
+BuildRequires:  make
+BuildRequires:  pkgconfig(libxcrypt)
 
 %description
 The mission of the Apache Portable Runtime (APR) is to provide a
 free library of C data structures and routines, forming a system
 portability layer to as many operating systems as possible.
 
-%package     devel
-Summary:     APR library development kit
-Requires:    %{name} = %{version}
-Requires:    pkgconfig
+%package        devel
+Summary:        APR library development kit
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig
 
-%description devel
+%description    devel
 This package provides the support files which can be used to
 build applications using the APR library.
 
