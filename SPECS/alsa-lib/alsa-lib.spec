@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,15 +17,15 @@ Source0:        https://www.alsa-project.org/files/pub/lib/%{name}-%{version}.ta
 Source1:        asound.conf
 Source2:        modprobe-dist-alsa.conf
 Source3:        modprobe-dist-oss.conf
-
 BuildSystem:    autotools
 
 # configure options
-BuildOption(conf): --disable-aload
-BuildOption(conf): --with-plugindir=%{_libdir}/alsa-lib
-BuildOption(conf): --disable-alisp
-BuildOption(build): V=1
-BuildOption(install): DESTDIR=%{buildroot}
+BuildOption(conf):  --disable-aload
+BuildOption(conf):  --with-plugindir=%{_libdir}/alsa-lib
+BuildOption(conf):  --disable-alisp
+BuildOption(build):  V=1
+BuildOption(install):  DESTDIR=%{buildroot}
+
 BuildRequires:  doxygen
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -40,12 +41,12 @@ This package includes the ALSA runtime libraries to simplify application
 programming and provide higher level functionality as well as support for
 the older OSS API, providing binary compatibility for most OSS programs.
 
-%package devel
+%package        devel
 Summary:        Development files from the ALSA library
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
-%description devel
+%description    devel
 The Advanced Linux Sound Architecture (ALSA) provides audio and MIDI
 functionality to the Linux operating system.
 
