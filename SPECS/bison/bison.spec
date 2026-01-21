@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,15 +11,16 @@ Release:        %autorelease
 Summary:        The GNU Parser Generator
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/bison/bison.html
+VCS:            git:https://https.git.savannah.gnu.org/git/bison.git
 #!RemoteAsset
 Source:         https://ftpmirror.gnu.org/gnu/bison/bison-%{version}.tar.xz
 #!RemoteAsset
 Source:         https://ftpmirror.gnu.org/gnu/bison/bison-%{version}.tar.xz.sig
-
 BuildSystem:    autotools
 
 BuildRequires:  flex
 BuildRequires:  gcc-c++
+
 Requires:       m4
 
 %description
