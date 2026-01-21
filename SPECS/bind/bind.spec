@@ -74,6 +74,7 @@ BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(lmdb)
 BuildRequires:  python3-dnspython
 BuildRequires:  pytest
+
 %description
 BIND (Berkeley Internet Name Domain) is an implementation of the DNS
 (Domain Name System) protocols. BIND includes a DNS server (named),
@@ -93,7 +94,7 @@ for the base "bind" package.
 
 %package        devel
 Summary:        Header files and libraries for developing applications with BIND
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains full version of the header files and libraries
