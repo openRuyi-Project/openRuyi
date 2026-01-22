@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,7 +11,8 @@ Version:        0.80
 Release:        %autorelease
 Summary:        Embedded Linux Library
 License:        LGPL-2.1-or-later
-URL:            https://01.org/ell
+URL:            https://git.kernel.org/cgit/libs/ell/ell.git
+VCS:            git:https://git.kernel.org/pub/scm/libs/ell/ell.git
 #!RemoteAsset
 Source:         https://mirrors.kernel.org/pub/linux/libs/ell/ell-%{version}.tar.xz
 BuildSystem:    autotools
@@ -32,7 +34,7 @@ contains the runtime shared library.
 
 %package        devel
 Summary:        Development files for the Embedded Linux Library (ELL)
-Requires:       %{name} = %version
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, pkg-config files, and other development
