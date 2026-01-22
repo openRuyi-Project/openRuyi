@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,29 +14,29 @@ Release:        %autorelease
 Summary:        Standards-based, open source printing system for Linux
 License:        Apache-2.0
 URL:            https://openprinting.github.io/cups/
+VCS:            git:https://github.com/OpenPrinting/cups
 #!RemoteAsset
 Source0:        https://github.com/OpenPrinting/cups/releases/download/v%{version}/cups-%{version}-source.tar.gz
 Source1:        macros.cups
-
 BuildSystem:    autotools
 
-BuildOption(conf): --with-docdir=%{_datadir}/%{name}/www
-BuildOption(conf): --enable-debug
-BuildOption(conf): --disable-lspp
-BuildOption(conf): --enable-webif
-BuildOption(conf): --enable-relro
-BuildOption(conf): --enable-page-logging
-BuildOption(conf): --enable-sync-on-close
-BuildOption(conf): --with-exe-file-perm=0755
-BuildOption(conf): --with-cupsd-file-perm=0755
-BuildOption(conf): --with-log-file-perm=0600
-BuildOption(conf): --with-dbusdir=%{_sysconfdir}/dbus-1
-BuildOption(conf): --with-xinetd=no
-BuildOption(conf): --with-access-log-level=actions
-BuildOption(conf): --with-pkgconfpath=%{_libdir}/pkgconfig
-BuildOption(conf): --with-tls=gnutls
-BuildOption(conf): --with-rundir=%{_rundir}/cups
-BuildOption(conf): --localedir=%{_datadir}/locale
+BuildOption(conf):  --with-docdir=%{_datadir}/%{name}/www
+BuildOption(conf):  --enable-debug
+BuildOption(conf):  --disable-lspp
+BuildOption(conf):  --enable-webif
+BuildOption(conf):  --enable-relro
+BuildOption(conf):  --enable-page-logging
+BuildOption(conf):  --enable-sync-on-close
+BuildOption(conf):  --with-exe-file-perm=0755
+BuildOption(conf):  --with-cupsd-file-perm=0755
+BuildOption(conf):  --with-log-file-perm=0600
+BuildOption(conf):  --with-dbusdir=%{_sysconfdir}/dbus-1
+BuildOption(conf):  --with-xinetd=no
+BuildOption(conf):  --with-access-log-level=actions
+BuildOption(conf):  --with-pkgconfpath=%{_libdir}/pkgconfig
+BuildOption(conf):  --with-tls=gnutls
+BuildOption(conf):  --with-rundir=%{_rundir}/cups
+BuildOption(conf):  --localedir=%{_datadir}/locale
 
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(libacl)
@@ -75,16 +76,16 @@ CUPS is the standards-based, open source printing system developed by
 Apple and OpenPrinting. It uses the Internet Printing Protocol (IPP)
 to support printing to local and network printers.
 
-%package devel
+%package        devel
 Summary:        Development files for CUPS
 License:        Apache-2.0
-Requires:       %{name} = %{version}-%{release}
-Requires:       gnutls-devel
-Requires:       krb5-devel
-Requires:       zlib-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(gnutls)
+Requires:       pkgconfig(krb5)
+Requires:       pkgconfig(zlib)
 Requires:       pkgconfig
 
-%description devel
+%description    devel
 Development headers and pkgconfig files for CUPS. Install this package
 if you want to build applications against libcups.
 
