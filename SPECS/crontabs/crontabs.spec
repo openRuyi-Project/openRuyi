@@ -1,20 +1,24 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global snap_release 20190603
+
 Name:           crontabs
 Version:        1.11
 Release:        %autorelease
 Summary:        Root crontab files used to schedule the execution of programs
-License:        Public Domain and GPLv2+
+License:        LicenseRef-openRuyi-Public-Domain and GPL-2.0-or-later
 URL:            https://github.com/cronie-crond/crontabs
 #!RemoteAsset
 Source0:        https://github.com/cronie-crond/crontabs/releases/download/%{name}-%{snap_release}/%{name}-%{version}-%{snap_release}git.tar.gz
 BuildArch:      noarch
+
 Requires:       sed
+
 Recommends:     cronie
 
 %description
