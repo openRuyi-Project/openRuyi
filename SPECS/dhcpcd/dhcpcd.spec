@@ -2,16 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global _test_target test
+
 Name:           dhcpcd
 Version:        10.2.4
 Release:        %autorelease
 Summary:        A minimalistic network configuration daemon
 License:        BSD-2-Clause AND ISC AND MIT
 URL:            http://roy.marples.name/projects/dhcpcd/
+VCS:            git:https://github.com/NetworkConfiguration/dhcpcd
 #!RemoteAsset
 Source0:        https://github.com/NetworkConfiguration/dhcpcd/releases/download/v%{version}/dhcpcd-%{version}.tar.xz
 Source1:        dhcpcd.service
@@ -20,11 +23,12 @@ Source3:        systemd-sysusers.conf
 
 BuildSystem:    autotools
 
-BuildOption(conf): --dbdir=%{_localstatedir}/lib/%{name}
-BuildOption(conf): --runstatedir=%{_rundir}
+BuildOption(conf):  --dbdir=%{_localstatedir}/lib/%{name}
+BuildOption(conf):  --runstatedir=%{_rundir}
 
-BuildRequires:  gcc make
-BuildRequires:  systemd-devel
+BuildRequires:  gcc
+BuildRequires:  make
+BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  systemd-rpm-macros
 
 %description
