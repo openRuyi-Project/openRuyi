@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,7 +19,7 @@ BuildSystem:    autotools
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  gcc
-BuildRequires:  libconfuse-devel
+BuildRequires:  pkgconfig(libconfuse)
 BuildRequires:  libtool
 
 %description
@@ -30,7 +31,6 @@ autoreconf -fiv
 
 # TODO: enable tests when we have fakeroot.
 %check
-
 
 %files
 %license COPYING
