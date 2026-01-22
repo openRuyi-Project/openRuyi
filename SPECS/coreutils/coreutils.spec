@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,23 +11,25 @@ Version:        9.9
 Release:        %autorelease
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/coreutils/
+VCS:            git:https://github.com/coreutils/coreutils.git
 #!RemoteAsset
 Source0:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz
 #!RemoteAsset
 Source1:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz.sig
-BuildRequires:  gmp-devel
-BuildRequires:  acl-devel
-BuildRequires:  libattr-devel
-BuildRequires:  libcap-devel
+BuildSystem:    autotools
+
+BuildOption(conf):  DEFAULT_POSIX2_VERSION=200112
+BuildOption(conf):  --enable-no-install-program=kill
+
+BuildRequires:  pkgconfig(gmp)
+BuildRequires:  pkgconfig(libacl)
+BuildRequires:  pkgconfig(libattr)
+BuildRequires:  pkgconfig(libcap)
 BuildRequires:  texinfo
 BuildRequires:  autoconf
 BuildRequires:  automake
 
-BuildSystem:    autotools
 Provides:       /bin/rm
-
-BuildOption(conf): DEFAULT_POSIX2_VERSION=200112
-BuildOption(conf): --enable-no-install-program=kill
 
 %description
 These are the GNU core utilities.  This package is the union of
@@ -43,7 +46,7 @@ the GNU fileutils, sh-utils, and textutils packages.
   uptime users vdir wc who whoami yes
 
 %install -a
-# Avoid illegal package names
+# TODO: Avoid illegal package names
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
