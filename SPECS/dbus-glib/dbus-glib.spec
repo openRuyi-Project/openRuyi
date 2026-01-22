@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,6 +11,7 @@ Release:        %autorelease
 Summary:        GLib bindings for D-Bus
 License:        (AFL-2.1 OR GPL-2.0-or-later) AND GPL-2.0-or-later
 URL:            https://www.freedesktop.org/software/dbus/
+VCS:            git:https://gitlab.freedesktop.org/dbus/dbus-glib.git
 #!RemoteAsset
 Source:         https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-%{version}.tar.gz
 BuildSystem:    autotools
@@ -20,8 +22,8 @@ BuildOption(conf):  --disable-gtk-doc
 BuildOption(conf):  --disable-static
 BuildOption(conf):  CFLAGS="%{optflags} -std=gnu17"
 
-BuildRequires:  pkgconfig(dbus-1) >= 1.8
-BuildRequires:  pkgconfig(glib-2.0) >= 2.40.0
+BuildRequires:  pkgconfig(dbus-1)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  dbus-daemon
@@ -34,8 +36,8 @@ D-Bus add-on library to integrate the standard D-Bus library with
 the GLib thread abstraction and main loop.
 
 %package        devel
-Summary: Libraries and headers for the D-Bus GLib bindings
-Requires: %{name} = %{version}-%{release}
+Summary:        Libraries and headers for the D-Bus GLib bindings
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Headers and static libraries for the D-Bus GLib bindings.
