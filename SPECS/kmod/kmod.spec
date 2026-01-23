@@ -22,14 +22,14 @@ BuildOption(conf):  --with-zstd
 BuildOption(conf):  --enable-debug
 
 BuildRequires:  chrpath
-BuildRequires:  zlib-devel
-BuildRequires:  xz-devel
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(liblzma)
 BuildRequires:  scdoc
-BuildRequires:  openssl-devel
+BuildRequires:  pkgconfig(openssl)
 BuildRequires:  make
 BuildRequires:  automake
 BuildRequires:  libtool
-BuildRequires:  zstd-devel
+BuildRequires:  pkgconfig(libzstd)
 
 Provides:       %{_sbindir}/modprobe
 
@@ -48,7 +48,7 @@ wishes to load or unload Linux kernel modules from the running system.
 
 %package        devel
 Summary:        Header files for kmod development
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 The kmod-devel package provides header files used for development of
