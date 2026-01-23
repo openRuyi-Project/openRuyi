@@ -259,6 +259,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	libzstd-devel
 BuildRequires:	libffi-devel
 BuildRequires:	ncurses-devel
+BuildRequires:	binutils-devel
 
 %if %{with sphinx}
 BuildRequires:	python3-sphinx
@@ -839,7 +840,8 @@ popd
     -DLLVM_BUILD_LLVM_DYLIB=ON \\\
     -DLLVM_LINK_LLVM_DYLIB=ON \\\
     -DCLANG_LINK_CLANG_DYLIB=ON \\\
-    -DLLVM_ENABLE_FFI:BOOL=ON
+    -DLLVM_ENABLE_FFI:BOOL=ON \\\
+    -DLLVM_BINUTILS_INCDIR=/usr/include
 %if %{maj_ver} >= 22
 %global cmake_common_args %{cmake_common_args} \\\
     -DLLVM_ENABLE_EH=OFF
@@ -1229,11 +1231,6 @@ echo "%%clang%{maj_ver}_resource_dir %%{_prefix}/lib/clang/%{maj_ver}" >> %{buil
 mkdir -p %{buildroot}%{_sysconfdir}/%{pkg_name_clang}/
 echo " %{cfg_file_content}" >> %{buildroot}%{_sysconfdir}/%{pkg_name_clang}/%{_target_platform}-clang.cfg
 echo " %{cfg_file_content}" >> %{buildroot}%{_sysconfdir}/%{pkg_name_clang}/%{_target_platform}-clang++.cfg
-%ifarch x86_64
-# On x86_64, install an additional set of config files so -m32 works.
-echo " %{cfg_file_content}" >> %{buildroot}%{_sysconfdir}/%{pkg_name_clang}/i386-redhat-linux-gnu-clang.cfg
-echo " %{cfg_file_content}" >> %{buildroot}%{_sysconfdir}/%{pkg_name_clang}/i386-redhat-linux-gnu-clang++.cfg
-%endif
 #endregion CLANG installation
 #region COMPILER-RT installation
 # Triple where compiler-rt libs are installed. If it differs from llvm_triple, then there is
@@ -1879,6 +1876,7 @@ fi
     libLLVM.so.%{maj_ver}.%{min_ver}%{?llvm_snapshot_version_suffix}
     libLTO.so*
     libRemarks.so*
+    LLVMgold.so
 }}
 %if %{with compat_build}
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/%{pkg_name_llvm}-%{_arch}.conf
@@ -2272,6 +2270,7 @@ fi
 %license libcxx/LICENSE.TXT
 %doc libcxx/CREDITS.TXT libcxx/TODO.TXT
 %{_libdir}/libc++.so.*
+
 %files -n %{pkg_name_libcxx}-devel
 %{_includedir}/c++/
 %exclude %{_includedir}/c++/v1/cxxabi.h
