@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,6 +12,7 @@ Release:        %autorelease
 Summary:        IPC library used by GnuPG version 2
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnupg.org/related_software/libassuan/index.en.html
+VCS:            git:https://git.gnupg.org/libassuan.git
 #!RemoteAsset
 Source0:        https://www.gnupg.org/ftp/gcrypt/libassuan/%{name}-%{version}.tar.bz2
 #!RemoteAsset
@@ -30,12 +32,12 @@ BuildRequires:  texinfo
 %description
 Libassuan is the IPC library used by gpg2 (GnuPG version 2)
 
-%package devel
+%package        devel
 Summary:        IPC library used by GnuPG version 2
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(gpg-error)
 
-%description devel
+%description    devel
 Libassuan is the IPC library used by gpg2 (GnuPG version 2)
 
 gpgme also uses libassuan to communicate with a libassuan-enabled GnuPG
