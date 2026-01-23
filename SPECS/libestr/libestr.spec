@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,26 +12,26 @@ Release:        %autorelease
 Summary:        String handling essentials library
 License:        LGPL-2.1-or-later
 URL:            http://libestr.adiscon.com/
+VCS:            git:https://github.com/rsyslog/libestr
 #!RemoteAsset
 Source0:        http://libestr.adiscon.com/files/download/libestr-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-static
-BuildOption(conf): --with-pic
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --with-pic
 
 BuildRequires:  gcc
 
 %description
 libestr is a library for some string essentials, used by projects like rsyslog.
 
-%package devel
+%package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
-
 
 %install -a
 rm -f %{buildroot}%{_libdir}/*.{a,la}
