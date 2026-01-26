@@ -31,9 +31,9 @@ be able to link against TI-RPC for IPv6 support.
 
 %package        devel
 Summary:        Development files for libnsl
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 Development files for libnsl2
 
 %conf -p
