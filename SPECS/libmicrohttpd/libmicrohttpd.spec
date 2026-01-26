@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,37 +12,40 @@ Release:        %autorelease
 Summary:        Small Embeddable HTTP Server Library
 License:        LGPL-2.1-or-later AND GPL-3.0-or-later
 URL:            https://www.gnu.org/software/libmicrohttpd/
+VCS:            git:git://git.gnunet.org/libmicrohttpd2.git
 #!RemoteAsset
 Source:         https://ftpmirror.gnu.org/gnu/libmicrohttpd/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(conf): --enable-bauth
-BuildOption(conf): --enable-dauth
-BuildOption(conf): --enable-epoll
-BuildOption(conf): --enable-messages
-BuildOption(conf): --enable-postprocessor
-BuildOption(conf): --enable-https
-BuildOption(conf): --enable-curl
-BuildOption(conf): --disable-static
-BuildOption(conf): --disable-examples
+BuildOption(conf):  --enable-bauth
+BuildOption(conf):  --enable-dauth
+BuildOption(conf):  --enable-epoll
+BuildOption(conf):  --enable-messages
+BuildOption(conf):  --enable-postprocessor
+BuildOption(conf):  --enable-https
+BuildOption(conf):  --enable-curl
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --disable-examples
 
-BuildRequires:  libtool texinfo pkgconfig >= 0.9.0
-BuildRequires:  pkgconfig(gnutls) >= 2.8.6
-BuildRequires:  pkgconfig(libcurl) >= 7.16.4
+BuildRequires:  libtool
+BuildRequires:  texinfo
+BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(libcurl)
 
 %description
 GNU libmicrohttpd is a small C library that makes it easy to run an HTTP
 server as part of another application. This package contains the runtime
 shared libraries.
 
-%package devel
+%package        devel
 Summary:        Development files for libmicrohttpd
 License:        LGPL-2.1-or-later
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 Requires:       pkgconfig(gnutls)
 
-%description devel
+%description    devel
 This package contains the header files, pkg-config files, documentation,
 and other files needed to develop applications that use libmicrohttpd.
 
