@@ -1,0 +1,61 @@
+From 37decb1393bb6d6cb3f468ae0e39d3ecae182948 Mon Sep 17 00:00:00 2001
+From: Chukun Pan <amadeus@jmu.edu.cn>
+Date: Tue, 20 Jan 2026 18:00:01 +0800
+Subject: [PATCH 174/227] FROMLIST: riscv: dts: spacemit: Disable ETH PHY sleep
+ mode for OrangePi
+
+On the SpacemiT K1 platform, the MAC can't read statistics when the PHY
+clock stops. Disable Link Down Power Saving Mode for the YT8531C PHY on
+OrangePi R2S and RV2 boards to avoid reading statistics timeout logs.
+
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Link: https://lore.kernel.org/r/20260120100001.1285624-2-amadeus@jmu.edu.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts | 2 ++
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
+index 58098c4a2aab..de75f6aac740 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
+@@ -52,6 +52,7 @@ mdio-bus {
+ 
+ 		rgmii0: phy@1 {
+ 			reg = <0x1>;
++			motorcomm,auto-sleep-disabled;
+ 		};
+ 	};
+ };
+@@ -75,6 +76,7 @@ mdio-bus {
+ 
+ 		rgmii1: phy@1 {
+ 			reg = <0x1>;
++			motorcomm,auto-sleep-disabled;
+ 		};
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 41dc8e35e6eb..7b7331cb3c72 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -54,6 +54,7 @@ mdio-bus {
+ 
+ 		rgmii0: phy@1 {
+ 			reg = <0x1>;
++			motorcomm,auto-sleep-disabled;
+ 		};
+ 	};
+ };
+@@ -77,6 +78,7 @@ mdio-bus {
+ 
+ 		rgmii1: phy@1 {
+ 			reg = <0x1>;
++			motorcomm,auto-sleep-disabled;
+ 		};
+ 	};
+ };
+-- 
+2.52.0
+

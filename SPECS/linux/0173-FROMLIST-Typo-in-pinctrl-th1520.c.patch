@@ -1,0 +1,56 @@
+From bbb4b9c7f171a16ee4e7ef70f70dee463e2a54b2 Mon Sep 17 00:00:00 2001
+From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
+Date: Mon, 19 Jan 2026 16:20:02 +0100
+Subject: [PATCH 173/227] FROMLIST: Typo in pinctrl-th1520.c
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 19.01.26 at 15:32 Linus Walleij wrote:
+> On Mon, Jan 19, 2026 at 2:56 PM Thomas Gerner
+> <thomas.gerner@muenchen-mail.de> wrote:
+>> On Mon, 19 Jan 2026 at 10:00:06 +0100 Linus Walleij wrote
+>>
+>>> On Thu, Jan 15, 2026 at 8:16 Thomas Gerner
+>>> <thomas.gerner@muenchen-mail.de> wrote:
+>>>
+>>>> I'm new in working on the Linux kernel because of my BeagleV-Ahead. Next
+>>>> time when I send a patch I will use git send-email.
+>>>
+>>> Will you send a proper patch for this?
+>>>
+>>> Otherwise perhaps Drew can send a proper patch to fix this bug
+>>> so I can apply it?
+>>
+>> I hope this time the patch is proper formatted.
+>
+> Nah it doesn't work... but I could fix that up if you send it again
+> and provide your "Signed-off-by" because otherwise I cannot legally
+> apply it.
+>
+
+Hopefully this time everything is okay.
+
+Signed-off-by: Thomas Gerner <thomas.gerner@muenchen-mail.de>
+Link: https://lore.kernel.org/r/20260119152004.166749-1-thomas.gerner@muenchen-mail.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-th1520.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+index e641bad6728c..83e9c9f77370 100644
+--- a/drivers/pinctrl/pinctrl-th1520.c
++++ b/drivers/pinctrl/pinctrl-th1520.c
+@@ -287,7 +287,7 @@ static const struct pinctrl_pin_desc th1520_group3_pins[] = {
+ 	TH1520_PAD(5,  QSPI0_D0_MOSI, QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(6,  QSPI0_D1_MISO, QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(7,  QSPI0_D2_WP,   QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+-	TH1520_PAD(8,  QSPI1_D3_HOLD, QSPI, ____, I2S,  GPIO, ____, ____, 0),
++	TH1520_PAD(8,  QSPI0_D3_HOLD, QSPI, ____, I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(9,  I2C2_SCL,      I2C,  UART, ____, GPIO, ____, ____, 0),
+ 	TH1520_PAD(10, I2C2_SDA,      I2C,  UART, ____, GPIO, ____, ____, 0),
+ 	TH1520_PAD(11, I2C3_SCL,      I2C,  ____, ____, GPIO, ____, ____, 0),
+-- 
+2.52.0
+

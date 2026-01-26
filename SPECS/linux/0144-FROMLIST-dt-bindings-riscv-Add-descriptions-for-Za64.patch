@@ -1,0 +1,129 @@
+From 929b248c7ae5ecbc2369fb212dddae46b60a9e35 Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 8 Jan 2026 20:25:58 +0800
+Subject: [PATCH 144/227] FROMLIST: dt-bindings: riscv: Add descriptions for
+ Za64rs, Ziccamoa, Ziccif, and Zicclsm
+
+Add descriptions for four extensions: Za64rs, Ziccamoa, Ziccif, and
+Zicclsm. These extensions are ratified in RISC-V Profiles Version 1.0
+(commit b1d806605f87 "Updated to ratified state.").
+
+They are introduced as new extension names for existing features and
+regulate implementation details for RISC-V Profile compliance. According
+to RISC-V Profiles Version 1.0 and RVA23 Profiles Version 1.0, they are
+mandatory for the following profiles:
+
+ - za64rs: Mandatory in RVA22U64, RVA23U64
+ - ziccamoa: Mandatory in RVA20U64, RVA22U64, RVA23U64
+ - ziccif: Mandatory in RVA20U64, RVA22U64, RVA23U64
+ - zicclsm: Mandatory in RVA20U64, RVA22U64, RVA23U64
+
+Ziccrse specifies the main memory must support "RsrvEventual", which is
+one (totally there are four) of the support level for Load-Reserved/
+Store-Conditional (LR/SC) atomic instructions. Thus it depends on Zalrsc.
+
+Ziccamoa specifies the main memory must support AMOArithmetic, among the
+four levels of PMA support defined for AMOs in the A extension. Thus it
+depends on Zaamo.
+
+Za64rs defines reservation sets are contiguous, naturally aligned, and a
+maximum of 64 bytes. Za64rs is consumed by two extensions: Zalrsc and
+Zawrs. Zawrs itself depends on Zalrsc too.
+
+Based on the relationship that  "A" = Zaamo + Zalrsc, add the following
+dependencies checks:
+ Za64rs -> Zalrsc or A
+ Ziccrse -> Zalrsc or A
+ Ziccamoa -> Zaamo or A
+
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260108-k3-basic-dt-v3-7-ed99eb4c3ad3@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/riscv/extensions.yaml | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index d471353f95d2..606dc2616612 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -231,6 +231,12 @@ properties:
+             as ratified at commit 4a69197e5617 ("Update to ratified state") of
+             riscv-svvptc.
+ 
++        - const: za64rs
++          description:
++            The standard Za64rs extension for reservation set size of at most
++            64 bytes, as ratified in RISC-V Profiles Version 1.0, with commit
++            b1d806605f87 ("Updated to ratified state.")
++
+         - const: zaamo
+           description: |
+             The standard Zaamo extension for atomic memory operations as
+@@ -367,6 +373,27 @@ properties:
+             in commit 64074bc ("Update version numbers for Zfh/Zfinx") of
+             riscv-isa-manual.
+ 
++        - const: ziccamoa
++          description:
++            The standard Ziccamoa extension for main memory (cacheability and
++            coherence) must support all atomics in A, as ratified in RISC-V
++            Profiles Version 1.0, with commit b1d806605f87 ("Updated to
++            ratified state.")
++
++        - const: ziccif
++          description:
++            The standard Ziccif extension for main memory (cacheability and
++            coherence) instruction fetch atomicity, as ratified in RISC-V
++            Profiles Version 1.0, with commit b1d806605f87 ("Updated to
++            ratified state.")
++
++        - const: zicclsm
++          description:
++            The standard Zicclsm extension for main memory (cacheability and
++            coherence) must support misaligned loads and stores, as ratified
++            in RISC-V Profiles Version 1.0, with commit b1d806605f87 ("Updated
++            to ratified state.")
++
+         - const: ziccrse
+           description:
+             The standard Ziccrse extension which provides forward progress
+@@ -755,6 +782,18 @@ properties:
+         then:
+           contains:
+             const: b
++      # Za64rs and Ziccrse depend on Zalrsc or A
++      - if:
++          contains:
++            anyOf:
++              - const: za64rs
++              - const: ziccrse
++        then:
++          oneOf:
++            - contains:
++                const: zalrsc
++            - contains:
++                const: a
+       # Zcb depends on Zca
+       - if:
+           contains:
+@@ -796,6 +835,16 @@ properties:
+         then:
+           contains:
+             const: f
++      # Ziccamoa depends on Zaamo or A
++      - if:
++          contains:
++            const: ziccamoa
++        then:
++          oneOf:
++            - contains:
++                const: zaamo
++            - contains:
++                const: a
+       # Zvfbfmin depends on V or Zve32f
+       - if:
+           contains:
+-- 
+2.52.0
+

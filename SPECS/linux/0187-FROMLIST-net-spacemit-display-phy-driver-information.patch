@@ -1,0 +1,42 @@
+From 50ce49c7b48f2d635e14b1ffb122e49ad1bce9e0 Mon Sep 17 00:00:00 2001
+From: Chukun Pan <amadeus@jmu.edu.cn>
+Date: Thu, 22 Jan 2026 16:00:01 +0800
+Subject: [PATCH 187/227] FROMLIST: net: spacemit: display phy driver
+ information
+
+Print the PHY driver used and interrupt status after connection.
+
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Link: https://lore.kernel.org/r/20260122080001.73921-1-amadeus@jmu.edu.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/net/ethernet/spacemit/k1_emac.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
+index 220eb5ce7583..686d1e392ce5 100644
+--- a/drivers/net/ethernet/spacemit/k1_emac.c
++++ b/drivers/net/ethernet/spacemit/k1_emac.c
+@@ -1673,6 +1673,7 @@ static int emac_phy_connect(struct net_device *ndev)
+ 	struct device *dev = &priv->pdev->dev;
+ 	struct phy_device *phydev;
+ 	struct device_node *np;
++	char *irq_str;
+ 	int ret;
+ 
+ 	ret = of_get_phy_mode(dev->of_node, &priv->phy_interface);
+@@ -1717,6 +1718,11 @@ static int emac_phy_connect(struct net_device *ndev)
+ 
+ 	phy_support_asym_pause(phydev);
+ 
++	irq_str = phy_attached_info_irq(phydev);
++	netdev_info(ndev, "PHY driver [%s] (irq=%s)\n",
++		    phydev->drv->name, irq_str);
++	kfree(irq_str);
++
+ 	phydev->mac_managed_pm = true;
+ 
+ 	emac_update_delay_line(priv);
+-- 
+2.52.0
+

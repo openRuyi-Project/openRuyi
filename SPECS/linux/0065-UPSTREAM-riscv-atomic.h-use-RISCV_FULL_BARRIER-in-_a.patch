@@ -1,0 +1,61 @@
+From 84ae2dfdf5c86a807b871c3214da32c4a05d843e Mon Sep 17 00:00:00 2001
+From: Zongmin Zhou <zhouzongmin@kylinos.cn>
+Date: Thu, 20 Nov 2025 17:58:31 +0800
+Subject: [PATCH 065/227] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in
+ _arch_atomic* function.
+
+Replace the same code with the pre-defined macro
+RISCV_FULL_BARRIER to simplify the code.
+
+Signed-off-by: Zongmin Zhou <zhouzongmin@kylinos.cn>
+Link: https://patch.msgid.link/20251120095831.64211-1-min_halo@163.com
+Signed-off-by: Paul Walmsley <pjw@kernel.org>
+(cherry picked from commit f02dd254727665cc292669194b9171bb70413346)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/atomic.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
+index 5b96c2f61adb..3f33dc54f94b 100644
+--- a/arch/riscv/include/asm/atomic.h
++++ b/arch/riscv/include/asm/atomic.h
+@@ -203,7 +203,7 @@ ATOMIC_OPS(xor, xor, i)
+ 		"	add            %[rc], %[p], %[a]\n"		\
+ 		"	sc." sfx ".rl  %[rc], %[rc], %[c]\n"		\
+ 		"	bnez           %[rc], 0b\n"			\
+-		"	fence          rw, rw\n"			\
++		RISCV_FULL_BARRIER					\
+ 		"1:\n"							\
+ 		: [p]"=&r" (_prev), [rc]"=&r" (_rc), [c]"+A" (counter)	\
+ 		: [a]"r" (_a), [u]"r" (_u)				\
+@@ -242,7 +242,7 @@ static __always_inline s64 arch_atomic64_fetch_add_unless(atomic64_t *v, s64 a,
+ 		"	addi            %[rc], %[p], 1\n"		\
+ 		"	sc." sfx ".rl   %[rc], %[rc], %[c]\n"		\
+ 		"	bnez            %[rc], 0b\n"			\
+-		"	fence           rw, rw\n"			\
++		RISCV_FULL_BARRIER					\
+ 		"1:\n"							\
+ 		: [p]"=&r" (_prev), [rc]"=&r" (_rc), [c]"+A" (counter)	\
+ 		:							\
+@@ -268,7 +268,7 @@ static __always_inline bool arch_atomic_inc_unless_negative(atomic_t *v)
+ 		"	addi            %[rc], %[p], -1\n"		\
+ 		"	sc." sfx ".rl   %[rc], %[rc], %[c]\n"		\
+ 		"	bnez            %[rc], 0b\n"			\
+-		"	fence           rw, rw\n"			\
++		RISCV_FULL_BARRIER					\
+ 		"1:\n"							\
+ 		: [p]"=&r" (_prev), [rc]"=&r" (_rc), [c]"+A" (counter)	\
+ 		:							\
+@@ -294,7 +294,7 @@ static __always_inline bool arch_atomic_dec_unless_positive(atomic_t *v)
+ 		"	bltz           %[rc], 1f\n"			\
+ 		"	sc." sfx ".rl  %[rc], %[rc], %[c]\n"		\
+ 		"	bnez           %[rc], 0b\n"			\
+-		"	fence          rw, rw\n"			\
++		RISCV_FULL_BARRIER					\
+ 		"1:\n"							\
+ 		: [p]"=&r" (_prev), [rc]"=&r" (_rc), [c]"+A" (counter)	\
+ 		:							\
+-- 
+2.52.0
+

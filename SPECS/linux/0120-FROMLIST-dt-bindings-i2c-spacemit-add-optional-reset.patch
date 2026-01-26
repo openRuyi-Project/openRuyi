@@ -1,0 +1,35 @@
+From 8139edbd81e50dc5935817466bf73485c080da43 Mon Sep 17 00:00:00 2001
+From: Encrow Thorne <jyc0019@gmail.com>
+Date: Tue, 30 Dec 2025 23:06:51 +0800
+Subject: [PATCH 120/227] FROMLIST: dt-bindings: i2c: spacemit: add optional
+ resets
+
+The I2C controller requires a reset to ensure it starts from a clean state.
+
+Add the 'resets' property to support this hardware requirement.
+
+Reviewed-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Signed-off-by: Encrow Thorne <jyc0019@gmail.com>
+Link: https://lore.kernel.org/r/20251230150653.42097-1-jyc0019@gmail.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
+index b7220fff2235..5896fb120501 100644
+--- a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
+@@ -41,6 +41,9 @@ properties:
+     default: 400000
+     maximum: 3300000
+ 
++  resets:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+-- 
+2.52.0
+

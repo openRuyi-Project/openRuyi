@@ -1,0 +1,121 @@
+From 712e733f0b0173cd16b680b4265a09181444ab6d Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 8 Jan 2026 22:22:15 +0800
+Subject: [PATCH 161/227] FROMLIST: reset: Create subdirectory for SpacemiT
+ drivers
+
+Create a dedicated subdirectory for SpacemiT reset drivers to allow
+for better organization as support for more SoCs is added.
+
+Move the existing K1 reset driver into this new directory and rename
+it to reset-spacemit-k1.c.
+
+Rename the Kconfig symbol to RESET_SPACEMIT_K1 and update its default
+from ARCH_SPACEMIT to SPACEMIT_K1_CCU. The reset driver depends on the
+clock driver to register reset devices as an auxiliary device, so the
+default should reflect this dependency.
+
+Also sort the drivers/reset/Kconfig entries alphabetically.
+
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260108-k3-reset-v2-2-457df235efe9@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/reset/Kconfig                              | 12 ++----------
+ drivers/reset/Makefile                             |  2 +-
+ drivers/reset/spacemit/Kconfig                     | 14 ++++++++++++++
+ drivers/reset/spacemit/Makefile                    |  3 +++
+ .../reset-spacemit-k1.c}                           |  0
+ 5 files changed, 20 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/reset/spacemit/Kconfig
+ create mode 100644 drivers/reset/spacemit/Makefile
+ rename drivers/reset/{reset-spacemit.c => spacemit/reset-spacemit-k1.c} (100%)
+
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 78b7078478d4..bc20af4ea35d 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -286,15 +286,6 @@ config RESET_SOCFPGA
+ 	  This enables the reset driver for the SoCFPGA ARMv7 platforms. This
+ 	  driver gets initialized early during platform init calls.
+ 
+-config RESET_SPACEMIT
+-	tristate "SpacemiT reset driver"
+-	depends on ARCH_SPACEMIT || COMPILE_TEST
+-	select AUXILIARY_BUS
+-	default ARCH_SPACEMIT
+-	help
+-	  This enables the reset controller driver for SpacemiT SoCs,
+-	  including the K1.
+-
+ config RESET_SUNPLUS
+ 	bool "Sunplus SoCs Reset Driver" if COMPILE_TEST
+ 	default ARCH_SUNPLUS
+@@ -393,9 +384,10 @@ config RESET_ZYNQMP
+ 	  This enables the reset controller driver for Xilinx ZynqMP SoCs.
+ 
+ source "drivers/reset/amlogic/Kconfig"
++source "drivers/reset/hisilicon/Kconfig"
++source "drivers/reset/spacemit/Kconfig"
+ source "drivers/reset/starfive/Kconfig"
+ source "drivers/reset/sti/Kconfig"
+-source "drivers/reset/hisilicon/Kconfig"
+ source "drivers/reset/tegra/Kconfig"
+ 
+ endif
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index f7934f9fb90b..e0934ab7153c 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -2,6 +2,7 @@
+ obj-y += core.o
+ obj-y += amlogic/
+ obj-y += hisilicon/
++obj-y += spacemit/
+ obj-y += starfive/
+ obj-y += sti/
+ obj-y += tegra/
+@@ -37,7 +38,6 @@ obj-$(CONFIG_RESET_RZV2H_USB2PHY) += reset-rzv2h-usb2phy.o
+ obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
+ obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+ obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
+-obj-$(CONFIG_RESET_SPACEMIT) += reset-spacemit.o
+ obj-$(CONFIG_RESET_SUNPLUS) += reset-sunplus.o
+ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_RESET_TH1520) += reset-th1520.o
+diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
+new file mode 100644
+index 000000000000..552884e8b72a
+--- /dev/null
++++ b/drivers/reset/spacemit/Kconfig
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config RESET_SPACEMIT_K1
++	tristate "SpacemiT K1 reset driver"
++	depends on ARCH_SPACEMIT || COMPILE_TEST
++	depends on SPACEMIT_K1_CCU
++	select AUXILIARY_BUS
++	default SPACEMIT_K1_CCU
++	help
++	  Support for reset controller in SpacemiT K1 SoC.
++	  This driver works with the SpacemiT K1 clock controller
++	  unit (CCU) driver to provide reset control functionality
++	  for various peripherals and subsystems in the SoC.
++
+diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
+new file mode 100644
+index 000000000000..de7e358c74fd
+--- /dev/null
++++ b/drivers/reset/spacemit/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_RESET_SPACEMIT_K1)		+= reset-spacemit-k1.o
++
+diff --git a/drivers/reset/reset-spacemit.c b/drivers/reset/spacemit/reset-spacemit-k1.c
+similarity index 100%
+rename from drivers/reset/reset-spacemit.c
+rename to drivers/reset/spacemit/reset-spacemit-k1.c
+-- 
+2.52.0
+

@@ -1,0 +1,38 @@
+From 524b83eea891ecfa57c8cf025940a045393f1c21 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Sun, 25 Jan 2026 20:04:00 +0800
+Subject: [PATCH 209/227] REVYSR: riscv: dts: spacemit: Add a PCIe regulator
+ for OrangePi RV2
+
+Define a 3.3v fixed voltage regulator to be used by PCIe on the
+OrangePi RV2. On this platform, this regulator is always on.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index c0a0c96f2ac4..a370dd35e9bc 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -23,6 +23,16 @@ chosen {
+ 		stdout-path = "serial0";
+ 	};
+ 
++	pcie_vcc_3v3: pcie-vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "PCIE_VCC3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		gpio = <&gpio K1_GPIO(116) GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	reg_dc_in: dc-in-12v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "dc_in_12v";
+-- 
+2.52.0
+

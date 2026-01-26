@@ -1,0 +1,90 @@
+From 97fdf1c8c48f1a38d908f67d1941ddbbb44c12a5 Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 8 Jan 2026 20:25:57 +0800
+Subject: [PATCH 143/227] FROMLIST: dt-bindings: riscv: Add B ISA extension
+ description
+
+Add description of the single-letter B extennsion for Bit Manipulation.
+B is mandatory for RVA23U64.
+
+The B extension is ratified in the 20240411 version of the unprivileged
+ISA specification. According to the ratified spec, the B standard
+extension comprises instructions provided by the Zba, Zbb, and Zbs
+extensions.
+
+Add two-way dependency check to enforce that B implies Zba/Zbb/Zbs; and
+when Zba/Zbb/Zbs (all of them) are specified, then B must be added too.
+
+The reason why B/Zba/Zbb/Zbs must coexist at the same time is that
+unlike other single-letter extensions, B was ratified (Apr/2024) much
+later than its component extensions Zba/Zbb/Zbs (Jun/2021).
+
+When "b" is specified, zba/zbb/zbs must also be present to ensure
+backward compatibility with existing software and kernels that only
+look for the explicit component strings.
+
+When all three components zba/zbb/zbs are specified, "b" should also be
+present. Making "b" mandatory when all three components are present.
+
+Existing devicetrees with zba/zbb/zbs but without "b" will generate
+warnings that can be fixed in follow-up patches.
+
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260108-k3-basic-dt-v3-6-ed99eb4c3ad3@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/riscv/extensions.yaml | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index 543ac94718e8..d471353f95d2 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -109,6 +109,13 @@ properties:
+             The standard C extension for compressed instructions, as ratified in
+             the 20191213 version of the unprivileged ISA specification.
+ 
++        - const: b
++          description:
++            The standard B extension for bit manipulation instructions, as
++            ratified in the 20240411 version of the unprivileged ISA
++            specification. The B standard extension comprises instructions
++            provided by the Zba, Zbb, and Zbs extensions.
++
+         - const: v
+           description:
+             The standard V extension for vector operations, as ratified
+@@ -724,6 +731,30 @@ properties:
+         then:
+           contains:
+             const: f
++      # B comprises Zba, Zbb, and Zbs
++      - if:
++          contains:
++            const: b
++        then:
++          allOf:
++            - contains:
++                const: zba
++            - contains:
++                const: zbb
++            - contains:
++                const: zbs
++      # Zba, Zbb, Zbs together require B
++      - if:
++          allOf:
++            - contains:
++                const: zba
++            - contains:
++                const: zbb
++            - contains:
++                const: zbs
++        then:
++          contains:
++            const: b
+       # Zcb depends on Zca
+       - if:
+           contains:
+-- 
+2.52.0
+

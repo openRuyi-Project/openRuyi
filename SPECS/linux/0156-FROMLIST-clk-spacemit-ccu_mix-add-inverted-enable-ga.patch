@@ -1,0 +1,100 @@
+From 57d3396c0aa43134e23c15cec54d33a0f3dea531 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@gentoo.org>
+Date: Thu, 8 Jan 2026 10:11:06 +0800
+Subject: [PATCH 156/227] FROMLIST: clk: spacemit: ccu_mix: add inverted enable
+ gate clock
+
+K3 SoC has the clock IP which support to write value 0 for enabling the
+clock, while write 1 for disabling it, thus the enable BIT is inverted.
+So, introduce a flag to support the inverted gate clock.
+
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+Link: https://lore.kernel.org/r/20260108-k3-clk-v5-2-42a11b74ad58@gentoo.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/clk/spacemit/ccu_mix.c | 12 ++++++++----
+ drivers/clk/spacemit/ccu_mix.h | 12 ++++++++++++
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/spacemit/ccu_mix.c b/drivers/clk/spacemit/ccu_mix.c
+index 67f8b12b4f5b..9578366e9746 100644
+--- a/drivers/clk/spacemit/ccu_mix.c
++++ b/drivers/clk/spacemit/ccu_mix.c
+@@ -16,17 +16,19 @@
+ static void ccu_gate_disable(struct clk_hw *hw)
+ {
+ 	struct ccu_mix *mix = hw_to_ccu_mix(hw);
++	struct ccu_gate_config *gate = &mix->gate;
++	u32 val = gate->inverted ? gate->mask : 0;
+ 
+-	ccu_update(&mix->common, ctrl, mix->gate.mask, 0);
++	ccu_update(&mix->common, ctrl, gate->mask, val);
+ }
+ 
+ static int ccu_gate_enable(struct clk_hw *hw)
+ {
+ 	struct ccu_mix *mix = hw_to_ccu_mix(hw);
+ 	struct ccu_gate_config *gate = &mix->gate;
++	u32 val = gate->inverted ? 0 : gate->mask;
+ 
+-	ccu_update(&mix->common, ctrl, gate->mask, gate->mask);
+-
++	ccu_update(&mix->common, ctrl, gate->mask, val);
+ 	return 0;
+ }
+ 
+@@ -34,8 +36,10 @@ static int ccu_gate_is_enabled(struct clk_hw *hw)
+ {
+ 	struct ccu_mix *mix = hw_to_ccu_mix(hw);
+ 	struct ccu_gate_config *gate = &mix->gate;
++	u32 tmp = ccu_read(&mix->common, ctrl) & gate->mask;
++	u32 val = gate->inverted ? 0 : gate->mask;
+ 
+-	return (ccu_read(&mix->common, ctrl) & gate->mask) == gate->mask;
++	return !!(tmp == val);
+ }
+ 
+ static unsigned long ccu_factor_recalc_rate(struct clk_hw *hw,
+diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
+index 54d40cd39b27..8a70cf151461 100644
+--- a/drivers/clk/spacemit/ccu_mix.h
++++ b/drivers/clk/spacemit/ccu_mix.h
+@@ -16,9 +16,11 @@
+  *
+  * @mask:	Mask to enable the gate. Some clocks may have more than one bit
+  *		set in this field.
++ * @inverted:	Enable bit is inverted, 1 - disable clock, 0 - enable clock
+  */
+ struct ccu_gate_config {
+ 	u32 mask;
++	bool inverted;
+ };
+ 
+ struct ccu_factor_config {
+@@ -48,6 +50,7 @@ struct ccu_mix {
+ #define CCU_FACTOR_INIT(_div, _mul)	{ .div = _div, .mul = _mul }
+ #define CCU_MUX_INIT(_shift, _width)	{ .shift = _shift, .width = _width }
+ #define CCU_DIV_INIT(_shift, _width)	{ .shift = _shift, .width = _width }
++#define CCU_GATE_FLAGS_INIT(_mask, _inverted)	{ .mask = _mask, .inverted = _inverted }
+ 
+ #define CCU_PARENT_HW(_parent)		{ .hw = &_parent.common.hw }
+ #define CCU_PARENT_NAME(_name)		{ .fw_name = #_name }
+@@ -101,6 +104,15 @@ static struct ccu_mix _name = {							\
+ 	}									\
+ }
+ 
++#define CCU_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _inverted, _flags)		\
++static struct ccu_mix _name = {							\
++	.gate	= CCU_GATE_FLAGS_INIT(_mask_gate, _inverted),			\
++	.common	= {								\
++		.reg_ctrl	= _reg_ctrl,					\
++		CCU_MIX_INITHW(_name, _parent, spacemit_ccu_gate_ops, _flags),	\
++	}									\
++}
++
+ #define CCU_FACTOR_GATE_FLAGS_DEFINE(_name, _parent, _reg_ctrl, _mask_gate, _div,	\
+ 			       _mul, _flags)					\
+ static struct ccu_mix _name = {							\
+-- 
+2.52.0
+

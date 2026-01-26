@@ -1,0 +1,31 @@
+From 153c8671c4c2bb65854033eab154bdcfe93e3d56 Mon Sep 17 00:00:00 2001
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Date: Thu, 8 Jan 2026 16:38:55 +0800
+Subject: [PATCH 118/227] FROMLIST: mfd: simple-mfd-i2c: add default value
+
+The default value of the P1 sub-device depends on the value
+of P1, so P1 should have a default value here.
+
+Acked-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Link: https://lore.kernel.org/r/20260108-p1-kconfig-fix-v5-2-6fe19f460269@linux.spacemit.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/mfd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index ea367c7e97f1..45cb45fdf002 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1259,6 +1259,7 @@ config MFD_SPACEMIT_P1
+ 	depends on ARCH_SPACEMIT || COMPILE_TEST
+ 	depends on I2C
+ 	select MFD_SIMPLE_MFD_I2C
++	default m if ARCH_SPACEMIT
+ 	help
+ 	  This option supports the I2C-based SpacemiT P1 PMIC, which
+ 	  contains regulators, a power switch, GPIOs, an RTC, and more.
+-- 
+2.52.0
+

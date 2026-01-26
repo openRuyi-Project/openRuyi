@@ -1,0 +1,64 @@
+From 8c79e17b50339be894d12d8e5369fa418a0e38f7 Mon Sep 17 00:00:00 2001
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+Date: Tue, 16 Dec 2025 09:47:19 +0800
+Subject: [PATCH 064/227] UPSTREAM: riscv: remove irqflags.h inclusion in
+ asm/bitops.h
+
+The arch/riscv/include/asm/bitops.h does not functionally require
+including /linux/irqflags.h. Additionally, adding
+arch/riscv/include/asm/percpu.h causes a circular inclusion:
+kernel/bounds.c
+->include/linux/log2.h
+->include/linux/bitops.h
+->arch/riscv/include/asm/bitops.h
+->include/linux/irqflags.h
+->include/linux/find.h
+->return val ? __ffs(val) : size;
+->arch/riscv/include/asm/bitops.h
+
+The compilation log is as follows:
+CC      kernel/bounds.s
+In file included from ./include/linux/bitmap.h:11,
+               from ./include/linux/cpumask.h:12,
+               from ./arch/riscv/include/asm/processor.h:55,
+               from ./arch/riscv/include/asm/thread_info.h:42,
+               from ./include/linux/thread_info.h:60,
+               from ./include/asm-generic/preempt.h:5,
+               from ./arch/riscv/include/generated/asm/preempt.h:1,
+               from ./include/linux/preempt.h:79,
+               from ./arch/riscv/include/asm/percpu.h:8,
+               from ./include/linux/irqflags.h:19,
+               from ./arch/riscv/include/asm/bitops.h:14,
+               from ./include/linux/bitops.h:68,
+               from ./include/linux/log2.h:12,
+               from kernel/bounds.c:13:
+./include/linux/find.h: In function 'find_next_bit':
+./include/linux/find.h:66:30: error: implicit declaration of function '__ffs' [-Wimplicit-function-declaration]
+   66 |                 return val ? __ffs(val) : size;
+      |                              ^~~~~
+
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Acked-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+Link: https://patch.msgid.link/20251216014721.42262-2-cuiyunhui@bytedance.com
+Signed-off-by: Paul Walmsley <pjw@kernel.org>
+(cherry picked from commit 957afeb99b111b672b3529a737fe19b95daaf1a2)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/bitops.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
+index 77880677b06e..6a344f791d4c 100644
+--- a/arch/riscv/include/asm/bitops.h
++++ b/arch/riscv/include/asm/bitops.h
+@@ -11,7 +11,6 @@
+ #endif /* _LINUX_BITOPS_H */
+ 
+ #include <linux/compiler.h>
+-#include <linux/irqflags.h>
+ #include <asm/barrier.h>
+ #include <asm/bitsperlong.h>
+ 
+-- 
+2.52.0
+

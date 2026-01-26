@@ -1,0 +1,78 @@
+From 29420bcc21dc98f4b828d9cb04900a2fd413a23f Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@gentoo.org>
+Date: Thu, 8 Jan 2026 21:39:24 +0800
+Subject: [PATCH 153/227] FROMLIST: clk: spacemit: add platform SoC prefix to
+ reset name
+
+This change is needed for adding future new SpacemiT K3 reset driver.
+
+Since both K1 and K3 reset code register via the same module which its
+name changed to spacemit_ccu, it's necessary to encode the platform/SoC
+in the reset auxiliary device name to distinguish them, otherwise two
+reset drivers will claim to support same "compatible" auxiliary device
+even in the case of only one CCU clock driver got registered, which in
+the end lead to a broken reset driver.
+
+This change will introduce a runtime break to reset driver, and will be
+fixed in follow-up commit:
+("reset: spacemit: fix auxiliary device id")
+
+Reviewed-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+Link: https://lore.kernel.org/r/20260108-06-k1-clk-common-v4-3-badf635993d3@gentoo.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/clk/spacemit/ccu-k1.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+index 02c792a73759..dee14d25f75d 100644
+--- a/drivers/clk/spacemit/ccu-k1.c
++++ b/drivers/clk/spacemit/ccu-k1.c
+@@ -789,7 +789,7 @@ static struct clk_hw *k1_ccu_mpmu_hws[] = {
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_mpmu_data = {
+-	.reset_name	= "mpmu-reset",
++	.reset_name	= "k1-mpmu-reset",
+ 	.hws		= k1_ccu_mpmu_hws,
+ 	.num		= ARRAY_SIZE(k1_ccu_mpmu_hws),
+ };
+@@ -900,7 +900,7 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_apbc_data = {
+-	.reset_name	= "apbc-reset",
++	.reset_name	= "k1-apbc-reset",
+ 	.hws		= k1_ccu_apbc_hws,
+ 	.num		= ARRAY_SIZE(k1_ccu_apbc_hws),
+ };
+@@ -971,21 +971,21 @@ static struct clk_hw *k1_ccu_apmu_hws[] = {
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_apmu_data = {
+-	.reset_name	= "apmu-reset",
++	.reset_name	= "k1-apmu-reset",
+ 	.hws		= k1_ccu_apmu_hws,
+ 	.num		= ARRAY_SIZE(k1_ccu_apmu_hws),
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_rcpu_data = {
+-	.reset_name	= "rcpu-reset",
++	.reset_name	= "k1-rcpu-reset",
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_rcpu2_data = {
+-	.reset_name	= "rcpu2-reset",
++	.reset_name	= "k1-rcpu2-reset",
+ };
+ 
+ static const struct spacemit_ccu_data k1_ccu_apbc2_data = {
+-	.reset_name	= "apbc2-reset",
++	.reset_name	= "k1-apbc2-reset",
+ };
+ 
+ static const struct of_device_id of_k1_ccu_match[] = {
+-- 
+2.52.0
+

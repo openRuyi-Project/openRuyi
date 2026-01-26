@@ -1,0 +1,65 @@
+From a2d0719e9b024a3f3d8191b0fc57558f71511db1 Mon Sep 17 00:00:00 2001
+From: Zhang Xincheng <zhangxincheng@ultrarisc.com>
+Date: Wed, 5 Feb 2025 10:43:15 +0800
+Subject: [PATCH 215/227] RVCK: pcie: update the outbound mapping process
+
+Some MEM resources of the PCIe RC exceed the mapping
+limits of a single outbound register. We need to use
+multiple outbound registers to map the same MEM resource.
+
+For platforms where the MEM range does not exceed pci->region_limit,
+this change has no impact.
+
+Signed-off-by: Zhang Xincheng <zhangxincheng@ultrarisc.com>
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/6d6c0300b7a0ea54bc7070b2c3c7494b4a66a6ee
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../pci/controller/dwc/pcie-designware-host.c | 24 +++++++++++++++----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index e92513c5bda5..f2e6e8611d79 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -874,6 +874,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	struct dw_pcie_ob_atu_cfg atu = { 0 };
+ 	struct resource_entry *entry;
+ 	int i, ret;
++	resource_size_t res_start, res_size, window_size;
+ 
+ 	/* Note the very first outbound ATU is used for CFG IOs */
+ 	if (!pci->num_ob_windows) {
+@@ -911,11 +912,24 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 		else
+ 			atu.size = resource_size(entry->res);
+ 
+-		ret = dw_pcie_prog_outbound_atu(pci, &atu);
+-		if (ret) {
+-			dev_err(pci->dev, "Failed to set MEM range %pr\n",
+-				entry->res);
+-			return ret;
++		res_start = entry->res->start;
++		res_size = atu.size;
++
++		while (res_size > 0) {
++			window_size = res_size > (pci->region_limit + 1) ?
++					(pci->region_limit + 1) : res_size;
++
++			atu.size = window_size;
++
++			ret = dw_pcie_prog_outbound_atu(pci, &atu);
++			if (ret) {
++				dev_err(pci->dev, "Failed to set MEM range %pr\n",
++					entry->res);
++				return ret;
++			}
++
++			res_start += window_size;
++			res_size -= window_size;
+ 		}
+ 	}
+ 
+-- 
+2.52.0
+

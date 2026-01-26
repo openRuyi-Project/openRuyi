@@ -1,7 +1,7 @@
-From 56482a02805f6f38387e8ee161f62b9e1e433c47 Mon Sep 17 00:00:00 2001
+From d3e18ece70237b343cd2fbc04b2e4af7812083c7 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:01 +0200
-Subject: [PATCH 013/190] UPSTREAM: pwm: Export `pwmchip_release` for external
+Subject: [PATCH 013/227] UPSTREAM: pwm: Export `pwmchip_release` for external
  use
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

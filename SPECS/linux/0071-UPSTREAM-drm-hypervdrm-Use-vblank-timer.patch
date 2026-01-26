@@ -1,0 +1,72 @@
+From b46fb280ab662e4b885d88764104028ba881ef63 Mon Sep 17 00:00:00 2001
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Date: Tue, 16 Sep 2025 10:36:22 +0200
+Subject: [PATCH 071/227] UPSTREAM: drm/hypervdrm: Use vblank timer
+
+HyperV's virtual hardware does not provide vblank interrupts. Use a
+vblank timer to simulate the interrupt. Rate-limits the display's
+update frequency to the display-mode settings. Avoids excessive CPU
+overhead with compositors that do not rate-limit their output.
+
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+Tested-by: Prasanna Kumar T S M <ptsm@linux.microsoft.com>
+Link: https://lore.kernel.org/r/20250916083816.30275-5-tzimmermann@suse.de
+(cherry picked from commit 52e6b198833411564e0b9ce6e96bbd3d72f961e7)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+index 945b9482bcb3..6e6eb1c12a68 100644
+--- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
++++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+@@ -19,6 +19,8 @@
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_panic.h>
+ #include <drm/drm_plane.h>
++#include <drm/drm_vblank.h>
++#include <drm/drm_vblank_helper.h>
+ 
+ #include "hyperv_drm.h"
+ 
+@@ -111,11 +113,15 @@ static void hyperv_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+ 				crtc_state->mode.hdisplay,
+ 				crtc_state->mode.vdisplay,
+ 				plane_state->fb->pitches[0]);
++
++	drm_crtc_vblank_on(crtc);
+ }
+ 
+ static const struct drm_crtc_helper_funcs hyperv_crtc_helper_funcs = {
+ 	.atomic_check = drm_crtc_helper_atomic_check,
++	.atomic_flush = drm_crtc_vblank_atomic_flush,
+ 	.atomic_enable = hyperv_crtc_helper_atomic_enable,
++	.atomic_disable = drm_crtc_vblank_atomic_disable,
+ };
+ 
+ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
+@@ -125,6 +131,7 @@ static const struct drm_crtc_funcs hyperv_crtc_funcs = {
+ 	.page_flip = drm_atomic_helper_page_flip,
+ 	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
++	DRM_CRTC_VBLANK_TIMER_FUNCS,
+ };
+ 
+ static int hyperv_plane_atomic_check(struct drm_plane *plane,
+@@ -321,6 +328,10 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
+ 		return ret;
+ 	}
+ 
++	ret = drm_vblank_init(dev, 1);
++	if (ret)
++		return ret;
++
+ 	drm_mode_config_reset(dev);
+ 
+ 	return 0;
+-- 
+2.52.0
+

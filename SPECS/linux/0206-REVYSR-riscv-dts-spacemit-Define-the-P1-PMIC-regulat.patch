@@ -1,0 +1,140 @@
+From 67f4514c0cf8ea6bd31f3b1de127ea0297a143a3 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Sat, 24 Jan 2026 18:26:29 +0800
+Subject: [PATCH 206/227] REVYSR: riscv: dts: spacemit: Define the P1 PMIC
+ regulators for OrangePi RV2
+
+Define the SpacemiT P1 PMIC voltage regulators and their constraints.
+
+The power management hardware design on the OrangePi RV2 is identical to
+the Banana Pi BPI-F3, so the DT Nodes were taken from k1-bananapi-f3.dts.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../boot/dts/spacemit/k1-orangepi-rv2.dts     | 110 ++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index bd1e45e95e38..f87c6ab417c4 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -110,6 +110,116 @@ &i2c8 {
+ 	pinctrl-0 = <&i2c8_cfg>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
++
++	pmic@41 {
++		compatible = "spacemit,p1";
++		reg = <0x41>;
++		interrupts = <64>;
++		vin-supply = <&reg_vcc_4v>;
++
++		regulators {
++			buck1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck3_1v8: buck3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck5 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck6 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			aldo1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++			};
++
++			aldo2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			aldo3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			aldo4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++			};
++
++			dldo2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-always-on;
++			};
++
++			dldo5 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo6 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-always-on;
++			};
++
++			dldo7 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++		};
++	};
+ };
+ 
+ &uart0 {
+-- 
+2.52.0
+

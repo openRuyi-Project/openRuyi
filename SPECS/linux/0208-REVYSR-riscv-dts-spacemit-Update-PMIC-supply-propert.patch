@@ -1,0 +1,47 @@
+From eb7ba4b5563c750e4180541ecf81cfac64753a21 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Sun, 25 Jan 2026 19:23:04 +0800
+Subject: [PATCH 208/227] REVYSR: riscv: dts: spacemit: Update PMIC supply
+ properties for OrangePi RV2
+
+Update individual supply properties in pmic "spacemit,p1" node to specify
+the board's power tree topology for OrangePi RV2.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index d8d0baaec731..c0a0c96f2ac4 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -134,7 +134,15 @@ pmic@41 {
+ 		compatible = "spacemit,p1";
+ 		reg = <0x41>;
+ 		interrupts = <64>;
+-		vin-supply = <&reg_vcc_4v>;
++		vin1-supply = <&reg_vcc_4v>;
++		vin2-supply = <&reg_vcc_4v>;
++		vin3-supply = <&reg_vcc_4v>;
++		vin4-supply = <&reg_vcc_4v>;
++		vin5-supply = <&reg_vcc_4v>;
++		vin6-supply = <&reg_vcc_4v>;
++		aldoin-supply = <&reg_vcc_4v>;
++		dldoin1-supply = <&buck5>;
++		dldoin2-supply = <&buck5>;
+ 
+ 		regulators {
+ 			buck1 {
+@@ -165,7 +173,7 @@ buck4 {
+ 				regulator-always-on;
+ 			};
+ 
+-			buck5 {
++			buck5: buck5 {
+ 				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <3450000>;
+ 				regulator-ramp-delay = <5000>;
+-- 
+2.52.0
+

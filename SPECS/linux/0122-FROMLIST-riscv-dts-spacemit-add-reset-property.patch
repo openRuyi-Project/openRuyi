@@ -1,0 +1,84 @@
+From 67ca399698102a3c7c4ab5b11c8abe46b6f12147 Mon Sep 17 00:00:00 2001
+From: Encrow Thorne <jyc0019@gmail.com>
+Date: Tue, 30 Dec 2025 23:06:53 +0800
+Subject: [PATCH 122/227] FROMLIST: riscv: dts: spacemit: add reset property
+
+Add resets property to K1 I2C node.
+
+Link: https://lore.kernel.org/r/20251230150653.42097-3-jyc0019@gmail.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index fc8e09f294f0..1f7ed108da68 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -368,6 +368,7 @@ i2c0: i2c@d4010800 {
+ 				 <&syscon_apbc CLK_TWSI0_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI0>;
+ 			interrupts = <36>;
+ 			status = "disabled";
+ 		};
+@@ -381,6 +382,7 @@ i2c1: i2c@d4011000 {
+ 				 <&syscon_apbc CLK_TWSI1_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI1>;
+ 			interrupts = <37>;
+ 			status = "disabled";
+ 		};
+@@ -394,6 +396,7 @@ i2c2: i2c@d4012000 {
+ 				 <&syscon_apbc CLK_TWSI2_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI2>;
+ 			interrupts = <38>;
+ 			status = "disabled";
+ 		};
+@@ -407,6 +410,7 @@ i2c4: i2c@d4012800 {
+ 				 <&syscon_apbc CLK_TWSI4_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI4>;
+ 			interrupts = <40>;
+ 			status = "disabled";
+ 		};
+@@ -420,6 +424,7 @@ i2c5: i2c@d4013800 {
+ 				 <&syscon_apbc CLK_TWSI5_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI5>;
+ 			interrupts = <41>;
+ 			status = "disabled";
+ 		};
+@@ -490,6 +495,7 @@ i2c6: i2c@d4018800 {
+ 				 <&syscon_apbc CLK_TWSI6_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI6>;
+ 			interrupts = <70>;
+ 			status = "disabled";
+ 		};
+@@ -593,6 +599,7 @@ i2c7: i2c@d401d000 {
+ 				 <&syscon_apbc CLK_TWSI7_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI7>;
+ 			interrupts = <18>;
+ 			status = "disabled";
+ 		};
+@@ -606,6 +613,7 @@ i2c8: i2c@d401d800 {
+ 				 <&syscon_apbc CLK_TWSI8_BUS>;
+ 			clock-names = "func", "bus";
+ 			clock-frequency = <400000>;
++			resets = <&syscon_apbc RESET_TWSI8>;
+ 			interrupts = <19>;
+ 			status = "disabled";
+ 		};
+-- 
+2.52.0
+

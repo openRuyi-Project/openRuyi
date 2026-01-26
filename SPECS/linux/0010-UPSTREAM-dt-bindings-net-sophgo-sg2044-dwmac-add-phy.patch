@@ -1,7 +1,7 @@
-From 89036526f970bc678d7b37ede97a70e4f9a01aac Mon Sep 17 00:00:00 2001
+From f6e63ceea81aea81bee1de247216e3937199307c Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 14 Nov 2025 08:38:03 +0800
-Subject: [PATCH 010/190] UPSTREAM: dt-bindings: net: sophgo,sg2044-dwmac: add
+Subject: [PATCH 010/227] UPSTREAM: dt-bindings: net: sophgo,sg2044-dwmac: add
  phy mode restriction
 
 As the ethernet controller of SG2044 and SG2042 only supports

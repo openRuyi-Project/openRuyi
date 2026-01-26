@@ -1,0 +1,31 @@
+From af790564d4ba7d78ad8e5dec12b249f48a00ea4d Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 8 Jan 2026 20:25:55 +0800
+Subject: [PATCH 141/227] FROMLIST: dt-bindings: interrupt-controller: add
+ SpacemiT K3 IMSIC
+
+Add compatible string for SpacemiT K3 IMSIC.
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260108-k3-basic-dt-v3-4-ed99eb4c3ad3@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/interrupt-controller/riscv,imsics.yaml   | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
+index c23b5c09fdb9..feec122bddde 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
+@@ -48,6 +48,7 @@ properties:
+     items:
+       - enum:
+           - qemu,imsics
++          - spacemit,k3-imsics
+       - const: riscv,imsics
+ 
+   reg:
+-- 
+2.52.0
+

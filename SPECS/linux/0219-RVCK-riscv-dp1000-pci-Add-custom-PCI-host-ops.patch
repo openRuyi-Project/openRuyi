@@ -1,0 +1,71 @@
+From 116141590abf7e014ad94cc5c83b3ef286922939 Mon Sep 17 00:00:00 2001
+From: Xincheng Zhang <zhangxincheng@ultrarisc.com>
+Date: Tue, 5 Aug 2025 09:23:51 +0800
+Subject: [PATCH 219/227] RVCK: riscv: dp1000: pci: Add custom PCI host ops
+
+This patch introduces custom PCI host operations for the UltraRISC PCIe
+controller. A new 'ultrarisc_pcie_ops' structure is added to define
+'map_bus', 'read', and 'write' operations for the PCI host bridge.
+
+The 'ultrarisc_pcie_host_init' function is implemented to initialize the
+host bridge and assign these operations, integrated via the 'host_init'
+callback in 'ultrarisc_pcie_host_ops'.
+
+Signed-off-by: Xincheng Zhang <zhangxincheng@ultrarisc.com>
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/d65c15e06bf4f8e93444f4b6fa421d6c84c130d8
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/controller/dwc/pcie-ultrarisc.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-ultrarisc.c b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+index 0be9d5d97f01..ad41d65f2a10 100644
+--- a/drivers/pci/controller/dwc/pcie-ultrarisc.c
++++ b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+@@ -33,7 +33,24 @@ struct ultrarisc_pcie {
+ 
+ static const struct of_device_id ultrarisc_pcie_of_match[];
+ 
++static struct pci_ops ultrarisc_pci_ops = {
++	.map_bus = dw_pcie_own_conf_map_bus,
++	.read = pci_generic_config_read32,
++	.write = pci_generic_config_write32,
++};
++
++static int ultrarisc_pcie_host_init(struct dw_pcie_rp *pp)
++{
++	struct pci_host_bridge *bridge = pp->bridge;
++
++	/* Set the bus ops */
++	bridge->ops = &ultrarisc_pci_ops;
++
++	return 0;
++}
++
+ static const struct dw_pcie_host_ops ultrarisc_pcie_host_ops = {
++	.init = ultrarisc_pcie_host_init,
+ };
+ 
+ static int ultrarisc_pcie_establish_link(struct dw_pcie *pci)
+@@ -73,7 +90,7 @@ static int ultrarisc_pcie_establish_link(struct dw_pcie *pci)
+ 	return 0;
+ }
+ 
+-static const struct dw_pcie_ops ultrarisc_pcie_ops = {
++static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.start_link = ultrarisc_pcie_establish_link,
+ };
+ 
+@@ -94,7 +111,7 @@ static int ultrarisc_pcie_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	pci->dev = dev;
+-	pci->ops = &ultrarisc_pcie_ops;
++	pci->ops = &dw_pcie_ops;
+ 
+ 	/* Set a default value suitable for at most 16 in and 16 out windows */
+ 	pci->atu_size = SZ_8K;
+-- 
+2.52.0
+

@@ -1,0 +1,81 @@
+From 67e9288c1ac89642d7ca3da2512e6007a75028f8 Mon Sep 17 00:00:00 2001
+From: Zhang Xincheng <zhangxincheng@ultrarisc.com>
+Date: Fri, 13 Jun 2025 09:18:56 +0800
+Subject: [PATCH 218/227] RVCK: pci: Update the number of outbound and inbound
+
+Configure default maximum of 16 in and 16 out windows.
+
+Signed-off-by: Zhang Xincheng <zhangxincheng@ultrarisc.com>
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/6d6c0300b7a0ea54bc7070b2c3c7494b4a66a6ee
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/ultrarisc/dp1000.dts          | 6 +++---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 5 +++++
+ drivers/pci/controller/dwc/pcie-ultrarisc.c       | 3 +++
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dts b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+index 3eb811f73aa8..c5b516ee568c 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+@@ -469,7 +469,7 @@ pcie_x16: pcie@21000000 {
+ 			num-lanes = <16>;
+ 			ranges = <0x81000000  0x0 0x4fbf0000  0x0 0x4fbf0000  0x0 0x00400000>, /* io */
+ 				 <0x82000000  0x0 0x40000000  0x0 0x40000000  0x0 0x0fbf0000>, /* mem32 */
+-				 <0xc3000000 0x40 0x00000000 0x40 0x00000000  0x5 0x00000000>; /* mem64 prefetchable */
++				 <0xc3000000 0x40 0x00000000 0x40 0x00000000  0xd 0x00000000>; /* mem64 prefetchable */
+ 			max-link-speed = <4>;
+ 			interrupt-parent = <&plic>;
+ 			interrupts = <43>, <44>, <45>, <46>, <47>, <48>;
+@@ -495,7 +495,7 @@ pcie_x4a: pcie@23000000 {
+ 			num-lanes = <4>;
+ 			ranges = <0x81000000  0x0 0x6fbf0000  0x0 0x6fbf0000  0x0 0x00400000>, /* io */
+ 				 <0x82000000  0x0 0x60000000  0x0 0x60000000  0x0 0x0fbf0000>, /* mem32 */
+-				 <0xc3000000 0x80 0x00000000 0x80 0x00000000  0x5 0x00000000>; /* mem64 prefetchable */
++				 <0xc3000000 0x80 0x00000000 0x80 0x00000000  0xd 0x00000000>; /* mem64 prefetchable */
+ 			max-link-speed = <4>;
+ 			interrupt-parent = <&plic>;
+ 			interrupts = <63>, <64>, <65>, <66>, <67>, <68>;
+@@ -521,7 +521,7 @@ pcie_x4b: pcie@24000000 {
+ 			num-lanes = <4>;
+ 			ranges = <0x81000000  0x0 0x7fbf0000  0x0 0x7fbf0000 0x0 0x00400000>, /* io */
+ 				 <0x82000000  0x0 0x70000000  0x0 0x70000000 0x0 0x0fbf0000>, /* mem32 */
+-				 <0xc3000000 0xc0 0x00000000 0xc0 0x00000000 0x5 0x00000000>; /* mem64 prefetchable */
++				 <0xc3000000 0xc0 0x00000000 0xc0 0x00000000 0xd 0x00000000>; /* mem64 prefetchable */
+ 			max-link-speed = <4>;
+ 			interrupt-parent = <&plic>;
+ 			interrupts = <73>, <74>, <75>, <76>, <77>, <78>;
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index f2e6e8611d79..6f3bef3e926a 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -928,6 +928,11 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 				return ret;
+ 			}
+ 
++			atu.index = ++i;
++
++			if (pci->num_ob_windows <= i)
++				break;
++
+ 			res_start += window_size;
+ 			res_size -= window_size;
+ 		}
+diff --git a/drivers/pci/controller/dwc/pcie-ultrarisc.c b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+index 34ba1ea4aa6f..0be9d5d97f01 100644
+--- a/drivers/pci/controller/dwc/pcie-ultrarisc.c
++++ b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+@@ -96,6 +96,9 @@ static int ultrarisc_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &ultrarisc_pcie_ops;
+ 
++	/* Set a default value suitable for at most 16 in and 16 out windows */
++	pci->atu_size = SZ_8K;
++
+ 	ultrarisc_pcie->pci = pci;
+ 
+ 	pp = &pci->pp;
+-- 
+2.52.0
+

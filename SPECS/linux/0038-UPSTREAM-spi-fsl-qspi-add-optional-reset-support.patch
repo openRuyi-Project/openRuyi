@@ -1,0 +1,73 @@
+From 3a3a0db8770bde44ae7562b759a4c57843ebaa7c Mon Sep 17 00:00:00 2001
+From: Alex Elder <elder@riscstar.com>
+Date: Mon, 27 Oct 2025 08:30:01 -0500
+Subject: [PATCH 038/227] UPSTREAM: spi: fsl-qspi: add optional reset support
+
+Add support for one or more optional exclusive resets.  These simply need
+to be deasserted at probe time, and can remain that way for the life of the
+device.
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Signed-off-by: Alex Elder <elder@riscstar.com>
+Link: https://patch.msgid.link/20251027133008.360237-4-elder@riscstar.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+(cherry picked from commit 106d7641e55a472e7523c1f525c77fb6d420064d)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/spi/spi-fsl-qspi.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
+index c887abb028d7..1e27647dd2a0 100644
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -36,6 +36,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_qos.h>
++#include <linux/reset.h>
+ #include <linux/sizes.h>
+ 
+ #include <linux/spi/spi.h>
+@@ -267,6 +268,7 @@ struct fsl_qspi {
+ 	const struct fsl_qspi_devtype_data *devtype_data;
+ 	struct mutex lock;
+ 	struct completion c;
++	struct reset_control *resets;
+ 	struct clk *clk, *clk_en;
+ 	struct pm_qos_request pm_qos_req;
+ 	struct device *dev;
+@@ -857,6 +859,8 @@ static void fsl_qspi_cleanup(void *data)
+ {
+ 	struct fsl_qspi *q = data;
+ 
++	reset_control_assert(q->resets);
++
+ 	fsl_qspi_clk_disable_unprep(q);
+ 
+ 	mutex_destroy(&q->lock);
+@@ -902,6 +906,10 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+ 	if (!q->ahb_addr)
+ 		return -ENOMEM;
+ 
++	q->resets = devm_reset_control_array_get_optional_exclusive(dev);
++	if (IS_ERR(q->resets))
++		return PTR_ERR(q->resets);
++
+ 	/* find the clocks */
+ 	q->clk_en = devm_clk_get(dev, "qspi_en");
+ 	if (IS_ERR(q->clk_en))
+@@ -923,6 +931,10 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = reset_control_deassert(q->resets);
++	if (ret)
++		return ret;
++
+ 	/* find the irq */
+ 	ret = platform_get_irq(pdev, 0);
+ 	if (ret < 0)
+-- 
+2.52.0
+

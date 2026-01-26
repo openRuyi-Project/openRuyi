@@ -1,0 +1,43 @@
+From 5698ddabf3431774225ec44d2179dc87d9304800 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Wed, 9 Apr 2025 18:43:57 +0800
+Subject: [PATCH 213/227] RVCK: riscv: dp1000: arch: add UltraRISC DP1000 SoC
+ support
+
+ Add UltraRISC SoC support, starting with the UR-DP1000.
+ UR-DP1000 is an 8-core 64-bit RISC-V SoC that supports
+ the RV64GCBHX ISA. Supports Hardware Virtualization,
+ RISC-V RV64 ISA H(v1.0) Extension.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Signed-off-by: Yanteng Si <si.yanteng@linux.dev>
+FROM: https://github.com/RVCK-Project/rvck/commit/2ff3d000cb426da58ebd3814802b081a03a9eac6
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Kconfig.socs | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 848e7149e443..46711c38b355 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -71,6 +71,16 @@ config ARCH_THEAD
+ 	help
+ 	  This enables support for the RISC-V based T-HEAD SoCs.
+ 
++config ARCH_ULTRARISC
++	bool "UltraRISC RISC-V SoCs"
++	depends on MMU && !XIP_KERNEL
++	help
++	  This enables support for UltraRISC SoC platform hardware,
++	  including boards based on the UR-DP1000.
++	  UR-DP1000 is an 8-core 64-bit RISC-V SoC that supports
++	  the RV64GCBHX ISA. Supports Hardware Virtualization,
++	  RISC-V RV64 ISA H(v1.0) Extension.
++
+ config ARCH_VIRT
+ 	bool "QEMU Virt Machine"
+ 	select POWER_RESET
+-- 
+2.52.0
+

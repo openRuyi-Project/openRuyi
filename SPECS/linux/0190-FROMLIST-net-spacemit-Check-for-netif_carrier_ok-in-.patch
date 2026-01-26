@@ -1,0 +1,97 @@
+From 0d7aba2c6a14f4af56adeaef4ba6007c68935a8a Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Fri, 23 Jan 2026 11:52:23 +0800
+Subject: [PATCH 190/227] FROMLIST: net: spacemit: Check for netif_carrier_ok()
+ in emac_stats_update()
+
+Some PHYs stop the refclk for power saving, usually while link down.
+This causes reading stats to time out.
+
+Therefore, in emac_stats_update(), also don't update and reschedule if
+!netif_carrier_ok(). But that means we could be missing later updates if
+the link comes back up, so also reschedule when link up is detected in
+emac_adjust_link().
+
+While we're at it, improve the comments and error message prints around
+this to reflect the better understanding of how this could happen.
+Hopefully if this happens again on new hardware, these comments will
+direct towards a solution.
+
+Closes: https://lore.kernel.org/r/20260119141620.1318102-1-amadeus@jmu.edu.cn/
+Fixes: bfec6d7f2001 ("net: spacemit: Add K1 Ethernet MAC")
+Co-developed-by: Chukun Pan <amadeus@jmu.edu.cn>
+Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260123-k1-ethernet-clarify-stat-timeout-v3-1-93b9df627e87@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/net/ethernet/spacemit/k1_emac.c | 34 ++++++++++++++++++++-----
+ 1 file changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
+index 686d1e392ce5..2db20229948b 100644
+--- a/drivers/net/ethernet/spacemit/k1_emac.c
++++ b/drivers/net/ethernet/spacemit/k1_emac.c
+@@ -1099,7 +1099,13 @@ static int emac_read_stat_cnt(struct emac_priv *priv, u8 cnt, u32 *res,
+ 					100, 10000);
+ 
+ 	if (ret) {
+-		netdev_err(priv->ndev, "Read stat timeout\n");
++		/*
++		 * This could be caused by the PHY stopping its refclk even when
++		 * the link is up, for power saving. See also comments in
++		 * emac_stats_update().
++		 */
++		dev_err_ratelimited(&priv->ndev->dev,
++				    "Read stat timeout. PHY clock stopped?\n");
+ 		return ret;
+ 	}
+ 
+@@ -1147,17 +1153,25 @@ static void emac_stats_update(struct emac_priv *priv)
+ 
+ 	assert_spin_locked(&priv->stats_lock);
+ 
+-	if (!netif_running(priv->ndev) || !netif_device_present(priv->ndev)) {
+-		/* Not up, don't try to update */
++	/*
++	 * We can't read statistics if the interface is not up. Also, some PHYs
++	 * stop their reference clocks for link down power saving, which also
++	 * causes reading statistics to time out. Don't update and don't
++	 * reschedule in these cases.
++	 */
++	if (!netif_running(priv->ndev) ||
++	    !netif_carrier_ok(priv->ndev) ||
++	    !netif_device_present(priv->ndev)) {
+ 		return;
+ 	}
+ 
+ 	for (i = 0; i < sizeof(priv->tx_stats) / sizeof(*tx_stats); i++) {
+ 		/*
+-		 * If reading stats times out, everything is broken and there's
+-		 * nothing we can do. Reading statistics also can't return an
+-		 * error, so just return without updating and without
+-		 * rescheduling.
++		 * If reading stats times out anyway, the stat registers will be
++		 * stuck, and we can't really recover from that.
++		 *
++		 * Reading statistics also can't return an error, so just return
++		 * without updating and without rescheduling.
+ 		 */
+ 		if (emac_tx_read_stat_cnt(priv, i, &res))
+ 			return;
+@@ -1636,6 +1650,12 @@ static void emac_adjust_link(struct net_device *dev)
+ 		emac_wr(priv, MAC_GLOBAL_CONTROL, ctrl);
+ 
+ 		emac_set_fc_autoneg(priv);
++
++		/*
++		 * Reschedule stats updates now that link is up. See comments in
++		 * emac_stats_update().
++		 */
++		mod_timer(&priv->stats_timer, jiffies);
+ 	}
+ 
+ 	phy_print_status(phydev);
+-- 
+2.52.0
+

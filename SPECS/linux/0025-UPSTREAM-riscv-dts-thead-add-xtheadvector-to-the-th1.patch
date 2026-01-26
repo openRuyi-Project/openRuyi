@@ -1,7 +1,7 @@
-From ca8cedc54756fe3ef2c253a500f11f3217b55e41 Mon Sep 17 00:00:00 2001
+From 4ccd6c61acc5af3574ee6d9c351d5ae92c64899a Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:47 +0800
-Subject: [PATCH 025/190] UPSTREAM: riscv: dts: thead: add xtheadvector to the
+Subject: [PATCH 025/227] UPSTREAM: riscv: dts: thead: add xtheadvector to the
  th1520 devicetree
 
 The th1520 support xtheadvector [1] so it can be included in the

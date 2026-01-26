@@ -1,0 +1,33 @@
+From d7a23aa4ce2c2253a5e45874eedf556e22ed9789 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Sat, 24 Jan 2026 18:18:41 +0800
+Subject: [PATCH 204/227] REVYSR: riscv: dts: spacemit: Enable i2c8 adapter for
+ OrangePi RV2
+
+The adapter is used to access the SpacemiT P1 PMIC present in this board.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index 7b7331cb3c72..93880ba7bdfe 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -87,6 +87,12 @@ &pdma {
+ 	status = "okay";
+ };
+ 
++&i2c8 {
++	pinctrl-0 = <&i2c8_cfg>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+-- 
+2.52.0
+

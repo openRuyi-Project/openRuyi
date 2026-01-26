@@ -1,7 +1,7 @@
-From 97bf3519082e1b095767e4bae83fde005dd4336d Mon Sep 17 00:00:00 2001
+From 9e8ab1df5f8dd0942513e4e341934df6431483d2 Mon Sep 17 00:00:00 2001
 From: Chen Wang <unicorn_wang@outlook.com>
 Date: Mon, 20 Oct 2025 11:34:05 +0800
-Subject: [PATCH 003/190] UPSTREAM: riscv: sophgo: dts: enable PCIe for
+Subject: [PATCH 003/227] UPSTREAM: riscv: sophgo: dts: enable PCIe for
  PioneerBox
 
 Enable PCIe controllers for PioneerBox, which uses SG2042 SoC.

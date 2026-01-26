@@ -1,0 +1,64 @@
+From e8804f1c41f7fc7ab7b2607a786df66d630c0f86 Mon Sep 17 00:00:00 2001
+From: Yangyu Chen <cyy@cyyself.name>
+Date: Wed, 21 Jan 2026 13:45:26 +0800
+Subject: [PATCH 175/227] FROMLIST: irqchip/sifive-plic: Fix insufficient
+ irq_groups allocation
+
+Since the first irq source is 1 instead of 0, when the number of
+irqs is multiple of 32, the last irq group will be ignored during
+allocation, saving, and restoring. This lead to memory corruption
+when accessing enable_save beyond allocated memory after commit
+14ff9e54dd14 ("irqchip/sifive-plic: Cache the interrupt enable state")
+which will access enable_save for all sources during plic_probe.
+Thus, we should allocate irq_groups based on (nr_irqs + 1) instead of
+nr_irqs to avoid this issue.
+
+This is an long standing bug since Linux v6.4 but since the last irq
+source is rarely used, it may not be triggered in practice until commit
+14ff9e54dd14 ("irqchip/sifive-plic: Cache the interrupt enable state").
+
+Fixes: e80f0b6a2cf3 ("irqchip/irq-sifive-plic: Add syscore callbacks for hibernation")
+Fixes: 4d936f10ff80 ("irqchip/sifive-plic: Probe plic driver early for Allwinner D1 platform")
+Fixes: 539d147ef69c ("irqchip/sifive-plic: Add support for UltraRISC DP1000 PLIC")
+Fixes: 14ff9e54dd14 ("irqchip/sifive-plic: Cache the interrupt enable state")
+Signed-off-by: Yangyu Chen <cyy@cyyself.name>
+Link: https://lore.kernel.org/r/tencent_A697393AE256C4288768342AF245099A690A@qq.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/irqchip/irq-sifive-plic.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index c03340e7117c..f6e8dd3c9646 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -293,7 +293,7 @@ static void plic_irq_resume(void)
+ 			continue;
+ 
+ 		raw_spin_lock_irqsave(&handler->enable_lock, flags);
+-		for (i = 0; i < DIV_ROUND_UP(priv->nr_irqs, 32); i++) {
++		for (i = 0; i < DIV_ROUND_UP(priv->nr_irqs + 1, 32); i++) {
+ 			reg = handler->enable_base + i * sizeof(u32);
+ 			writel(handler->enable_save[i], reg);
+ 		}
+@@ -427,7 +427,7 @@ static u32 cp100_isolate_pending_irq(int nr_irq_groups, struct plic_handler *han
+ 
+ static irq_hw_number_t cp100_get_hwirq(struct plic_handler *handler, void __iomem *claim)
+ {
+-	int nr_irq_groups = DIV_ROUND_UP(handler->priv->nr_irqs, 32);
++	int nr_irq_groups = DIV_ROUND_UP(handler->priv->nr_irqs + 1, 32);
+ 	u32 __iomem *enable = handler->enable_base;
+ 	irq_hw_number_t hwirq = 0;
+ 	u32 iso_mask;
+@@ -715,7 +715,7 @@ static int plic_probe(struct fwnode_handle *fwnode)
+ 			context_id * CONTEXT_ENABLE_SIZE;
+ 		handler->priv = priv;
+ 
+-		handler->enable_save = kcalloc(DIV_ROUND_UP(nr_irqs, 32),
++		handler->enable_save = kcalloc(DIV_ROUND_UP(nr_irqs + 1, 32),
+ 					       sizeof(*handler->enable_save), GFP_KERNEL);
+ 		if (!handler->enable_save) {
+ 			error = -ENOMEM;
+-- 
+2.52.0
+

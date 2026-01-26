@@ -1,0 +1,70 @@
+From 35bd36e5b4aa6e3b74eb29f2826d3ecd4d80c4dd Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Sun, 25 Jan 2026 20:02:38 +0800
+Subject: [PATCH 210/227] REVYSR: riscv: dts: spacemit: PCIe and PHY-related
+ updates for OrangePi RV2
+
+Define PCIe and PHY-related Device Tree nodes for the OrangePi RV2.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../boot/dts/spacemit/k1-orangepi-rv2.dts     | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+index a370dd35e9bc..ffcbe3e2b4e2 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
+@@ -83,6 +83,12 @@ led1 {
+ 	};
+ };
+ 
++&combo_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_3_cfg>;
++	status = "okay";
++};
++
+ &eth0 {
+ 	phy-handle = <&rgmii0>;
+ 	phy-mode = "rgmii-id";
+@@ -259,6 +265,36 @@ dldo7 {
+ 	};
+ };
+ 
++&pcie1_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_3_cfg>;
++	status = "okay";
++};
++
++&pcie1_port {
++	phys = <&pcie1_phy>;
++};
++
++&pcie1 {
++	vpcie3v3-supply = <&pcie_vcc_3v3>;
++	status = "okay";
++};
++
++&pcie2_phy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie2_4_cfg>;
++	status = "okay";
++};
++
++&pcie2_port {
++	phys = <&pcie2_phy>;
++};
++
++&pcie2 {
++	vpcie3v3-supply = <&pcie_vcc_3v3>;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_2_cfg>;
+-- 
+2.52.0
+

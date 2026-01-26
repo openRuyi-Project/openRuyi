@@ -1,0 +1,45 @@
+From 95a55ff46e0dc92fa28ddb08647668ea52110020 Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Thu, 8 Jan 2026 20:25:52 +0800
+Subject: [PATCH 138/227] FROMLIST: dt-bindings: riscv: add SpacemiT X100 CPU
+ compatible
+
+Add compatible string for the SpacemiT X100 core. [1]
+
+The X100 is a 64-bit RVA23-compliant RISC-V core from SpacemiT. X100
+supports the RISC-V vector and hypervisor extensions and all mandatory
+extersions as required by the RVA23U64 and RVA23S64 profiles, per the
+definition in 'RVA23 Profile, Version 1.0'. [2]
+
+From a microarchieture viewpoint, the X100 features a 4-issue
+out-of-order pipeline.
+
+X100 is used in SpacemiT K3 SoC.
+
+Link: https://www.spacemit.com/en/spacemit-x100-core/ [1]
+Link: https://docs.riscv.org/reference/profiles/rva23/_attachments/rva23-profile.pdf [2]
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Reviewed-by: Yixun Lan <dlan@gentoo.org>
+Reviewed-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260108-k3-basic-dt-v3-1-ed99eb4c3ad3@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index 153d0dac57fb..a86819565394 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -60,6 +60,7 @@ properties:
+               - sifive,u7
+               - sifive,u74
+               - sifive,u74-mc
++              - spacemit,x100
+               - spacemit,x60
+               - thead,c906
+               - thead,c908
+-- 
+2.52.0
+
