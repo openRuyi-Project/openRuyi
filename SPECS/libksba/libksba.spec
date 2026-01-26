@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,6 +12,7 @@ Release:        %autorelease
 Summary:        A X.509 Library
 License:        (GPL-2.0-or-later OR LGPL-3.0-or-later) AND GPL-3.0-or-later AND MIT
 URL:            https://www.gnupg.org
+VCS:            git:https://git.gnupg.org/libksba.git
 #!RemoteAsset
 Source:         https://gnupg.org/ftp/gcrypt/libksba/%{name}-%{version}.tar.bz2
 #!RemoteAsset
@@ -19,10 +21,12 @@ Source2:        https://gnupg.org/ftp/gcrypt/libksba/%{name}-%{version}.tar.bz2.
 Source3:        https://gnupg.org/signature_key.asc#/%{name}.keyring
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-static
-BuildOption(conf): --with-pic
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --with-pic
 
-BuildRequires:  autoconf automake libtool
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(gpg-error)
 
@@ -31,11 +35,11 @@ KSBA is a library to simplify the task of working with X.509
 certificates, CMS data, and related data. This package contains the
 runtime shared libraries.
 
-%package devel
+%package        devel
 Summary:        Development files for the libksba library
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 This package contains the header files, documentation, and other files needed
 to develop applications that use the libksba library.
 
