@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,26 +14,30 @@ URL:            https://libosinfo.org/
 VCS:            git:https://gitlab.com/libosinfo/libosinfo
 #!RemoteAsset
 Source:         https://releases.pagure.org/libosinfo/libosinfo-%{version}.tar.xz
-Patch:          0001-libosinfo-libxml2-2.14.patch
 BuildSystem:    meson
 
-BuildOption(conf): -Denable-gtk-doc=false
-BuildOption(conf): -Denable-tests=true
-BuildOption(conf): -Denable-introspection=enabled
-BuildOption(conf): -Denable-vala=enabled
+Patch:          0001-libosinfo-libxml2-2.14.patch
+
+BuildOption(conf):  -Denable-gtk-doc=false
+BuildOption(conf):  -Denable-tests=true
+BuildOption(conf):  -Denable-introspection=enabled
+BuildOption(conf):  -Denable-vala=enabled
 
 BuildRequires:  meson
 BuildRequires:  gcc
 BuildRequires:  gettext-devel
-BuildRequires:  glib-devel
-BuildRequires:  gobject-introspection-devel
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  hwdata
 BuildRequires:  pkgconfig(libsoup-3.0)
 BuildRequires:  libxml2-devel
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  osinfo-db
 BuildRequires:  vala
-Requires:       hwdata osinfo-db osinfo-db-tools
+
+Requires:       hwdata
+Requires:       osinfo-db
+Requires:       osinfo-db-tools
 
 %description
 libosinfo is a library that allows virtualization provisioning tools to
@@ -41,17 +46,18 @@ combination.
 
 %package        devel
 Summary:        Development files for the libosinfo library
-Requires:       %{name}%{?_isa} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
-Requires:       glib-devel
+Requires:       pkgconfig(glib-2.0)
 
-%description devel
+%description    devel
 This package contains the libraries, header files, and documentation needed to
 develop applications that use the libosinfo library.
 
 %install -a
 # Avoid illegal package names
 rm -rf %{buildroot}%{_datadir}/locale/*@*
+
 %find_lang %{name} --generate-subpackages
 
 %files
