@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,9 @@ URL:            https://github.com/rsyslog/libfastjson
 #!RemoteAsset
 Source0:        https://download.rsyslog.com/libfastjson/libfastjson-%{version}.tar.gz
 BuildSystem:    autotools
-BuildOption(conf):    --disable-static
+
+BuildOption(conf):  --disable-static
+
 %description
 libfastjson is a fork from json-c aiming to provide: a small library
 with essential JSON handling functions, sufficiently good JSON support (not
@@ -21,10 +24,10 @@ with essential JSON handling functions, sufficiently good JSON support (not
 
 %package        devel
 Summary:        Development files for libfastjson
-Requires:       libfastjson = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
-provide development files for libfastjson
+Provide development files for libfastjson
 
 %files
 %license COPYING
