@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun114 <ziyu.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,6 +12,7 @@ Release:        %autorelease
 Summary:        Asychronous I/O support library
 License:        MIT
 URL:            https://libuv.org
+VCS:            git:https://github.com/libuv/libuv
 #!RemoteAsset
 Source0:        https://dist.libuv.org/dist/v%{version}/%{name}-v%{version}.tar.gz
 #!RemoteAsset
@@ -30,7 +32,7 @@ Mozilla's Rust language, Luvit, Julia, pyuv, and others.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 libuv is a support library with a focus on asynchronous I/O. It was
