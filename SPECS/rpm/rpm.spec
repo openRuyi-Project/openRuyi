@@ -58,10 +58,8 @@ Source5:        rpmsort
 Source8:        rpmconfigcheck
 Source13:       rpmconfigcheck.service
 # quilt patches start here
-Patch5:         usr-lib-sysimage-rpm.patch
 Patch12:        localetag.diff
 Patch18:        refreshtestarch.diff
-Patch24:        brp.diff
 Patch25:        brpcompress.diff
 Patch26:        checkfilesnoinfodir.diff
 Patch33:        rpmpopt.diff
@@ -203,8 +201,8 @@ ln -s rpmpgp_legacy-* rpmpgp_legacy
 popd
 
 rm -rf sqlite
-%patch -P  5      -P 12                         -P 18
-%patch                         -P 24 -P 25 -P 26
+%patch -P 12 -P 18
+%patch -P 25 -P 26
 %patch        -P 33       -P 36
 %patch                   -P 43             -P 46
 %patch       -P 51
@@ -301,7 +299,6 @@ for d in %{buildroot}/usr/lib/rpm/platform/*-linux/macros ; do
   mkdir %{buildroot}/usr/src/packages/RPMS/$dd
   chmod 755 %{buildroot}/usr/src/packages/RPMS/$dd
 done
-mkdir -p %{buildroot}/usr/lib/sysimage/rpm
 export RPM_BUILD_ROOT
 %ifarch s390x
 [ -f scripts/brp-%_arch-linux ] && sh scripts/brp-%_arch-linux
@@ -385,7 +382,6 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}/usr/lib/rpm/macros
        %{_libdir}/librpmio.so.*
        %{_libdir}/librpmsign.so.*
 %doc   %{_mandir}/man[18]/*.[18]*
-%dir   /usr/lib/sysimage/rpm
 %ghost /var/lib/rpm
 %dir   %attr(755,root,root) /usr/src/packages/BUILD
 %dir   %attr(755,root,root) /usr/src/packages/SPECS
