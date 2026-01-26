@@ -5,14 +5,12 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global upstream_version %{version_no_tilde}
-
 Name:           libpwquality
 Version:        1.4.5
 Release:        %autorelease
 Summary:        A library for password generation and password quality checking
 License:        BSD-3-Clause OR GPL-2.0-or-later
-URL:            https://github.com/libpwquality/libpwquality/
+URL:            https://github.com/libpwquality/libpwquality
 #!RemoteAsset
 Source0:        https://github.com/libpwquality/libpwquality/releases/download/libpwquality-%{version}/libpwquality-%{version}.tar.bz2
 BuildSystem:    autotools
@@ -28,8 +26,8 @@ BuildOption(conf):  --disable-static
 BuildRequires:  make
 BuildRequires:  cracklib-devel
 BuildRequires:  gettext
-BuildRequires:  pam-devel
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(pam)
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3-setuptools
 BuildRequires:  python3-packaging
 
@@ -41,7 +39,7 @@ to perform some of the checks.
 
 %package        devel
 Summary:        Support for development of applications using the libpwquality library
-Requires:       libpwquality = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig
 
 %description    devel
@@ -49,11 +47,13 @@ Files needed for development of applications using the libpwquality
 library.
 See the pwquality.h header file for the API.
 
-%package     -n python3-pwquality
+%package     -n python-pwquality
 Summary:        Python bindings for the libpwquality library
-Requires:       libpwquality = %{version}-%{release}
+Provides:       python-pwquality = %{version}-%{release}
+%python_provide python-pwquality
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n python3-pwquality
+%description -n python-pwquality
 This is pwquality Python module that provides Python bindings
 for the libpwquality library. These bindings can be used
 for easy password quality checking and generation of random
@@ -63,6 +63,7 @@ pronounceable passwords from Python applications.
 mkdir %{buildroot}%{_pam_secconfdir}/pwquality.conf.d
 # Avoid illegal package names
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
+
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -86,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/*.pc
 %{_mandir}/man3/*
 
-%files -n python3-pwquality
+%files -n python-pwquality
 %{python3_sitearch}/*.so
 %{python3_sitearch}/*.egg-info
 
