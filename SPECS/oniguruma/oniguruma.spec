@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,18 +11,19 @@ Version:        6.9.10
 Release:        %autorelease
 Summary:        Regular expressions library
 License:        BSD-2-Clause
-URL:            https://github.com/kkos/oniguruma/
+URL:            https://github.com/kkos/oniguruma
 #!RemoteAsset
-Source0:    https://github.com/kkos/oniguruma/releases/download/v%{version}/onig-%{version}.tar.gz
+Source0:        https://github.com/kkos/oniguruma/releases/download/v%{version}/onig-%{version}.tar.gz
 
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-silent-rules
-BuildOption(conf): --disable-static
+BuildOption(conf):  --disable-silent-rules
+BuildOption(conf):  --disable-static
 
-BuildRequires:      gcc
-# autoreconf needs these
-BuildRequires:  autoconf automake libtool
+BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
 
 %description
 Oniguruma is a regular expressions library that supports various character
@@ -29,12 +31,11 @@ encodings for each regular expression object.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, documentation, and other development
 files for the oniguruma library.
-
 
 %prep -a
 %{__sed} -i.multilib -e 's|-L@libdir@||' onig-config.in
