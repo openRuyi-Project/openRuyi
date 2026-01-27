@@ -21,6 +21,7 @@ Release:        %autorelease
 Summary:        An extensible library which provides authentication for applications
 License:        BSD-3-Clause AND GPL-2.0-or-later
 URL:            http://www.linux-pam.org/
+VCS:            git:https://github.com/linux-pam/linux-pam
 #!RemoteAsset
 Source0:        https://github.com/linux-pam/linux-pam/releases/download/v%{version}/Linux-PAM-%{version}.tar.xz
 #!RemoteAsset
@@ -78,18 +79,18 @@ BuildRequires:  audit-devel
 BuildRequires:  gdbm-devel
 BuildRequires:  pkgconfig(libeconf)
 %if %{with nis}
-BuildRequires: libnsl2-devel
+BuildRequires:  pkgconfig(libnsl)
 %endif
 %if %{with selinux}
-BuildRequires:  libselinux-devel
+BuildRequires:  pkgconfig(libselinux)
 %endif
 %if %{with systemd}
-BuildRequires:  systemd-devel
+BuildRequires:  pkgconfig(systemd)
 %endif
-BuildRequires:  libtirpc-devel
-BuildRequires:  libxcrypt-devel
+BuildRequires:  pkgconfig(libtirpc)
+BuildRequires:  pkgconfig(libxcrypt)
 BuildRequires:  meson
-BuildRequires:  openssl-devel
+BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig
 
 Requires:       setup
@@ -121,7 +122,7 @@ BuildRequires:  elinks
 BuildRequires:  libxslt
 BuildRequires:  linuxdoc-tools
 
-%description   doc
+%description    doc
 PAM (Pluggable Authentication Modules) is a system security tool that
 allows system administrators to set authentication policy without
 having to recompile programs that handle authentication. The pam-doc
