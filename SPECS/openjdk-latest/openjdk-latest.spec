@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,15 +13,16 @@
 %global buildver        36
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
+
 %bcond bootstrap        1
 
 Name:           java-latest-openjdk
 Version:        %{newjavaver}.%{buildver}
 Release:        %autorelease
 Summary:        OpenJDK latest Runtime Environment
-License:        GPL-2.0-with-classpath-exception
+License:        GPL-2.0-only WITH Classpath-exception-2.0
 URL:            https://openjdk.org
-
+VCS:            git:https://github.com/openjdk/jdk25u
 #!RemoteAsset
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{majorver}+%{buildver}.tar.gz
 %if %{with bootstrap}
@@ -34,29 +36,29 @@ BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  libX11-devel
-BuildRequires:  libXi-devel
-BuildRequires:  libXrandr-devel
-BuildRequires:  libXrender-devel
-BuildRequires:  libXt-devel
-BuildRequires:  libXtst-devel
-BuildRequires:  freetype-devel
-BuildRequires:  libpng-devel
-BuildRequires:  cups-devel
-BuildRequires:  alsa-lib-devel
-BuildRequires:  fontconfig-devel
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(xi)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(xrender)
+BuildRequires:  pkgconfig(xt)
+BuildRequires:  pkgconfig(xtst)
+BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  pkgconfig(libpng)
+BuildRequires:  pkgconfig(cups)
+BuildRequires:  pkgconfig(alsa)
+BuildRequires:  pkgconfig(fontconfig)
 BuildRequires:  zip
 BuildRequires:  pkgconfig
 %if %{without bootstrap}
 BuildRequires:  java-latest-openjdk
 %endif
 Requires(post): update-alternatives
-Requires(preun):update-alternatives
+Requires(preun): update-alternatives
 
-Provides:       java-openjdk-headless            = %{version}-%{release}
-Provides:       java-openjdk-devel               = %{version}-%{release}
-Provides:       java-latest-openjdk-devel        = %{version}-%{release}
-Provides:       java-latest-openjdk-headless     = %{version}-%{release}
+Provides:       java-openjdk-headless = %{version}-%{release}
+Provides:       java-openjdk-devel = %{version}-%{release}
+Provides:       java-latest-openjdk-devel = %{version}-%{release}
+Provides:       java-latest-openjdk-headless = %{version}-%{release}
 
 %description
 The OpenJDK latest runtime environment.
