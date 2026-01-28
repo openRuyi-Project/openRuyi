@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,16 +13,16 @@ Summary:        Recursive Hasher
 License:        0BSD
 URL:            https://github.com/rhash/RHash
 #!RemoteAsset
-Source:        https://github.com/rhash/RHash/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
-
+Source:         https://github.com/rhash/RHash/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+BuildOption(prep):  -n RHash-%{version}
+BuildOption(install):  install-lib-so-link
+BuildOption(install):  install-lib-headers
+BuildOption(install):  install-gmo
+
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(openssl)
-
-BuildOption(prep): -n RHash-%{version}
-BuildOption(install): install-lib-so-link
-BuildOption(install): install-lib-headers
-BuildOption(install): install-gmo
 
 %description
 RHash (Recurcive Hasher) is a console utility for computing and
@@ -39,10 +40,10 @@ Program features:
    file).
  * Ability to process directories recursively.
 
-%package devel
+%package        devel
 Summary:        Headers and Static Library for LibRHash
 
-%description devel
+%description    devel
 LibRHash is a professional, portable, thread-safe C library for
 computing a wide variety of hash sums, such as CRC32, MD4, MD5, SHA1,
 SHA256, SHA512, AICH, ED2K, Tiger, DC++ TTH, BitTorrent BTIH, GOST R
