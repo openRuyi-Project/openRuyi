@@ -11,12 +11,18 @@ Release:        %autorelease
 Summary:        Userspace RCU (read-copy-update) library
 License:        LGPL-2.1-or-later
 URL:            https://liburcu.org/
+VCS:            git:https://git.liburcu.org/userspace-rcu.git
 #!RemoteAsset
 Source:         https://lttng.org/files/urcu/%{name}-%{version}.tar.bz2
-
 BuildSystem:    autotools
 
-BuildRequires:  pkgconfig gcc gcc-c++ autoconf automake make libtool
+BuildRequires:  pkgconfig
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  make
+BuildRequires:  libtool
 
 %description
 liburcu is a LGPLv2.1 userspace RCU (read-copy-update) library. This data
@@ -25,7 +31,7 @@ the number of cores.
 
 %package        devel
 Summary:        Development files for the userspace-rcu library
-Requires:       %{name} = %{version}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, libraries, and documentation
