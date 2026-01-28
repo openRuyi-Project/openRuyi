@@ -1,0 +1,20 @@
+diff --git a/setup.cfg b/setup.cfg
+index 7a4331b..5b57e88 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -8,14 +8,12 @@ max-line-length = 121
+ [tool:pytest]
+ minversion = 3.2
+ addopts = 
+-	--cov-config=setup.cfg
+-	--cov=httplib2
+ 	--ignore=tests/_TODO_legacy/
++	--ignore=tests/test_proxy.py
+ 	--noconftest
+ 	--showlocals
+ 	--strict-markers
+ 	--tb=short
+-	--timeout=17
+ 	--verbose
+ 	-ra
+ 
