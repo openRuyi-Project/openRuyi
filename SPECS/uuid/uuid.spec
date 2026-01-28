@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,21 +11,24 @@ Release:        %autorelease
 Summary:        Universally Unique Identifier library
 License:        MIT
 URL:            http://www.ossp.org/pkg/lib/uuid/
+# VCS: TODO: http://cvs.ossp.org/pkg/lib/uuid/
 #!RemoteAsset
 Source0:        http://www.mirrorservice.org/sites/ftp.ossp.org/pkg/lib/uuid/%{name}-%{version}.tar.gz
+BuildSystem:    autotools
+
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --without-perl
+BuildOption(conf):  --without-php
+BuildOption(conf):  --with-dce
+BuildOption(conf):  --with-cxx
+BuildOption(conf):  --without-pgsql
 
 BuildRequires:  config
 BuildRequires:  make
 BuildRequires:  gcc-c++
 BuildRequires:  libtool
 BuildRequires:  chrpath
-BuildSystem:    autotools
-BuildOption(conf): --disable-static
-BuildOption(conf): --without-perl
-BuildOption(conf): --without-php
-BuildOption(conf): --with-dce
-BuildOption(conf): --with-cxx
-BuildOption(conf): --without-pgsql
+
 %patchlist
 # Rename library and binaries from uuid to ossp-uuid to avoid conflicts
 uuid-1.6.1-ossp.patch
@@ -60,22 +64,22 @@ objects across a network.
 %package        devel
 Summary:        Development support for UUID library
 Requires:       pkgconfig
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Development headers and libraries for OSSP uuid.
 
 %package        c++
 Summary:        C++ support for UUID library
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    c++
 C++ libraries for OSSP uuid.
 
 %package        c++-devel
 Summary:        C++ development support for UUID library
-Requires:       %{name}-c++ = %{version}-%{release}
-Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-c++%{?_isa} = %{version}-%{release}
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description    c++-devel
 C++ development headers and libraries for OSSP uuid.
@@ -87,7 +91,7 @@ BuildRequires:  perl-macros
 BuildRequires:  perl(Data::UUID)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       perl(Data::UUID)
 
 %description    perl
@@ -95,15 +99,15 @@ Perl OSSP uuid module.
 
 %package        dce
 Summary:        DCE support for UUID library
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    dce
 Perl OSSP uuid module.
 
 %package        dce-devel
 Summary:        DCE development support for UUID library
-Requires:       %{name}-dce = %{version}-%{release}
-Requires:       %{name}-devel = %{version}-%{release}
+Requires:       %{name}-dce%{?_isa} = %{version}-%{release}
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
 %description    dce-devel
 DCE development headers and libraries for OSSP uuid.
