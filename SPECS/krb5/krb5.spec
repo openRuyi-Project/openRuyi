@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
 #
@@ -75,6 +75,9 @@ rm -rf %{buildroot}%{_bindir}/compile_et
 rm -rf %{buildroot}%{_includedir}/com_err.h
 rm -rf %{buildroot}%{_libdir}/libcom_err.so
 rm -rf %{buildroot}%{_datadir}/et/
+
+# No tests.
+%check
 
 %if %{with systemd}
 %post
