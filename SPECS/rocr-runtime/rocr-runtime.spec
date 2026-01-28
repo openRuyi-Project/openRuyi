@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: CHEN Xuan <chenxuan@iscas.ac.cn>
 # SPDX-FileContributor: Yifan Xu <xuyifan@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -31,10 +32,10 @@ BuildSystem:    cmake
 Patch0:         0001-Add-riscv64-support.patch
 Patch1:         0002-Replace-fence-instrutions-for-riscv64.patch
 
-BuildOption(conf):      -DCMAKE_PREFIX_PATH=%{rocmllvm_cmakedir}/..
-BuildOption(conf):      -DCMAKE_SHARED_LINKER_FLAGS=-ldrm_amdgpu
-BuildOption(conf):      -DINCLUDE_PATH_COMPATIBILITY=OFF
-BuildOption(conf):      -DCMAKE_PROGRAM_PATH=%{rocmllvm_bindir}
+BuildOption(conf):  -DCMAKE_PREFIX_PATH=%{rocmllvm_cmakedir}/..
+BuildOption(conf):  -DCMAKE_SHARED_LINKER_FLAGS=-ldrm_amdgpu
+BuildOption(conf):  -DINCLUDE_PATH_COMPATIBILITY=OFF
+BuildOption(conf):  -DCMAKE_PROGRAM_PATH=%{rocmllvm_bindir}
 
 BuildRequires:  clang-devel
 BuildRequires:  cmake
