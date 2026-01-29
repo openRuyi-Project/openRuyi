@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Mahno <bestwow2014@gmail.com>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -117,6 +118,10 @@ install -pm 644 %{SOURCE1} %{SOURCE2} %{buildroot}%{_sysconfdir}/profile.d
 # Add swig.gdb
 mkdir -p %{buildroot}%{_datadir}/%{name}/gdb
 install -pm 644 Tools/swig.gdb %{buildroot}%{_datadir}/%{name}/gdb
+
+%check
+export PY3=true
+make check 
 
 %files
 %{_bindir}/swig
