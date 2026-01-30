@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,16 +11,17 @@ Version:        17.05
 Release:        %autorelease
 Summary:        7z file archiver for Linux systems
 License:        LGPL-2.1-or-later and (LGPL-2.1-or-later or CPL-1.0)
-URL:            https://github.com/p7zip-project/p7zip/
+URL:            https://github.com/p7zip-project/p7zip
 #!RemoteAsset
 Source0:        https://github.com/p7zip-project/p7zip/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(build):   OPTFLAGS="%{optflags}" LDFLAGS="%{build_ldflags}"
-BuildOption(install): DEST_DIR="%{buildroot}"
-BuildOption(install): DEST_HOME=/usr
-BuildOption(install): DEST_SHARE=%{_libdir}/p7zip
-BuildOption(install): DEST_MAN="%{_mandir}"
+BuildOption(build):  OPTFLAGS="%{optflags}" LDFLAGS="%{build_ldflags}"
+BuildOption(install):  DEST_DIR="%{buildroot}"
+BuildOption(install):  DEST_HOME=/usr
+BuildOption(install):  DEST_SHARE=%{_libdir}/p7zip
+BuildOption(install):  DEST_MAN="%{_mandir}"
+
 BuildRequires:      gcc-c++
 
 %description
