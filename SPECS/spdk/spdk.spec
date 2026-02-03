@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
@@ -16,13 +17,6 @@ VCS:            git:https://github.com/spdk/spdk
 #!RemoteAsset:  sha256:f2abbd321a8140c908d6a197e2f6e263e6ae3a42beb6e4aee2b1c62def1afd25
 Source0:        https://github.com/spdk/spdk/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
-
-# Warning: This patch seems abandoned
-# https://github.com/spdk/spdk/issues/2736
-# https://review.spdk.io/c/spdk/spdk/+/14996
-# We're using the patch based on the Alpine one (which looks somehow similar), refreshed to v25.09
-# https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/spdk/isal.patch
-Patch0:         2001-with-system-isal.patch
 
 BuildOption(install):  libdir=%{_libdir}
 
@@ -58,6 +52,16 @@ Requires:       fuse3
 The Storage Performance Development Kit provides a set of tools
 and libraries for writing high performance, scalable, user-mode storage
 applications.
+
+%patchlist
+# Warning: This patch seems abandoned
+# https://github.com/spdk/spdk/issues/2736
+# https://review.spdk.io/c/spdk/spdk/+/14996
+# We're using the patch based on the Alpine one (which looks somehow similar), refreshed to v25.09
+# https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/spdk/isal.patch
+2001-with-system-isal.patch
+# Add support for ISA-L_crypto library on RISC-V 64
+2002-ISAL_CRYPTO.patch
 
 %package        devel
 Summary:        Storage Performance Development Kit development files
