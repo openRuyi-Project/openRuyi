@@ -33,6 +33,9 @@ purposes.
 Install strace if you need a tool to track the system calls made and
 received by a process.
 
+%check
+%make_build check || echo "+++ WARNING FAILED TESTS! +++"
+
 %files
 %defattr(-,root,root)
 %doc CREDITS README doc/README-linux-ptrace NEWS
