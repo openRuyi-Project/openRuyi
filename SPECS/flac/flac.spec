@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <1772413353@qq.com>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -29,12 +30,13 @@ Free Lossless Audio Codec.
 
 %package        libs
 Summary:        Libraries for the Free Lossless Audio Codec
+
 %description    libs
 This package contains the shared libraries for the Free Lossless Audio Codec.
 
 %package        devel
 Summary:        Development files for the FLAC libraries
-Requires:       %{name}-libs%{?_isa} = %{version}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, libraries, and documentation
