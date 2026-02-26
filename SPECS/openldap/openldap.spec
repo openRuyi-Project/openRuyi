@@ -11,7 +11,7 @@
 %global _lto_cflags %{_lto_cflags} -ffat-lto-objects
 
 Name:           openldap
-Version:        2.6.10
+Version:        2.6.12
 Release:        %autorelease
 Summary:        An implementation of the Lightweight Directory Access Protocol
 License:        OLDAP-2.8
@@ -29,7 +29,6 @@ Source6:        slapd.conf.olctemplate
 Source7:        slapd.conf.example
 Source8:        start
 Source9:        slapd.service
-Source10:       sysconfig.openldap
 Source11:       openldap.conf
 Source12:       ldap-user.conf
 Source13:       fixup-modulepath.sh
@@ -260,8 +259,6 @@ install -m 755 %{SOURCE12}  ${RPM_BUILD_ROOT}/usr/lib/openldap/fixup-modulepath
 install -m 755 %{SOURCE13}  ${RPM_BUILD_ROOT}/%{_sbindir}/slapd-ldif-update-crc
 install -m 755 %{SOURCE14}  ${RPM_BUILD_ROOT}/usr/lib/openldap/update-crc
 
-mkdir -p %{buildroot}%{_fillupdir}
-install -m 644 %{SOURCE10} %{buildroot}%{_fillupdir}/sysconfig.openldap
 # Install default and sample configuration files
 install -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/openldap
 install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/openldap
@@ -325,7 +322,6 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %dir %{_sysconfdir}/openldap
 %dir %attr(0770, ldap, ldap) %{_sysconfdir}/openldap/slapd.d
 %dir %{_sysconfdir}/openldap/schema
-%{_fillupdir}/sysconfig.openldap
 %{_sbindir}/slap*
 %{_libexecdir}/openldap/*
 %exclude %{_libexecdir}/openldap/back_meta*
