@@ -1,32 +1,29 @@
 # see src/bootstrap/src/utils/change_tracker.rs
-change-id = 146435
+change-id = 148671
 
 [llvm]
 download-ci-llvm = false
 link-shared = true
 
 [build]
+build-stage = 2
+test-stage = 2
+description = "openRuyi"
+
+extended = true
 tools = [
     "cargo",
     "clippy",
     "rustdoc",
     "rustfmt",
     "rust-analyzer",
-    "rust-analyzer-proc-macro-srv",
-    "analysis",
-    "src",
-    "wasm-component-ld",
-    "miri", "cargo-miri" # for dev/nightly channels
-]
-
-target = [
-  "x86_64-unknown-linux-gnu",
-  "riscv64gc-unknown-linux-gnu",
+    "src"
 ]
 
 locked-deps = true
 vendor = true
 submodules = false
+python = "python3"
 
 cargo = "/usr/bin/cargo"
 rustc = "/usr/bin/rustc"
@@ -38,12 +35,20 @@ strip = false
 download-rustc = false
 channel = "stable"
 rpath = false
-frame-pointers = true
+llvm-tools = false
 
 [install]
 prefix = "/usr"
 
 [target.x86_64-unknown-linux-gnu]
 llvm-config = "/usr/bin/llvm-config"
+profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.profile.a"
+optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.builtins.a"
 [target.riscv64gc-unknown-linux-gnu]
 llvm-config = "/usr/bin/llvm-config"
+profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
+optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"
+[target.riscv64a23-unknown-linux-gnu]
+llvm-config = "/usr/bin/llvm-config"
+profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
+optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"

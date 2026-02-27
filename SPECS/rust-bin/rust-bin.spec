@@ -6,7 +6,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define __os_install_post %{nil}
+%define __spec_install_post %{nil}
+%global debug_package %{nil}
 
 %ifarch riscv64
 %global rust_arch riscv64gc
@@ -15,7 +16,7 @@
 %endif
 
 Name:           rust-bin
-Version:        1.91.1
+Version:        1.94.1
 Release:        %autorelease
 Summary:        A systems programming language
 License:        Apache-2.0 OR MIT
