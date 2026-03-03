@@ -20,12 +20,15 @@ VCS:            git:https://github.com/qt/qtquick3dphysics
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
+# enable riscv64 by disable simd.
+# It's from https://github.com/felixonmars/archriscv-packages/blob/master/qt6-quick3dphysics/physx-rv64.patch.
+Patch0:         0001-enable-build-for-riscv64.patch
+
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
-BuildRequires:  ninja
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
