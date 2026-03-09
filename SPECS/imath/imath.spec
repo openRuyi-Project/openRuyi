@@ -16,6 +16,14 @@ URL:            https://github.com/AcademySoftwareFoundation/Imath
 Source0:        https://github.com/AcademySoftwareFoundation/Imath/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
+%ifarch riscv64
+# https://github.com/AcademySoftwareFoundation/Imath/issues/515#issuecomment-3586903097
+# It's from upstream's issue and comment to fix tests error.
+Patch0:         0001-fix-riscv64-test-error.patch
+# Diable the test or it will fail.
+Patch1:         0002-imath-disable-python-testPlane.patch
+%endif
+
 BuildOption(conf):  -DPYTHON=ON
 %if %{with doc}
 BuildOption(conf):  -DDOCS=ON

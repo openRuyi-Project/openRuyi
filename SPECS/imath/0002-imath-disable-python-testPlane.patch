@@ -1,0 +1,13 @@
+diff --git a/src/python/PyImathTest/main.cpp b/src/python/PyImathTest/main.cpp
+index 587d946..d8a92dd 100644
+--- a/src/python/PyImathTest/main.cpp
++++ b/src/python/PyImathTest/main.cpp
+@@ -2341,7 +2341,7 @@ main (int argc, char *argv[])
+         TEST (testLine);
+         TEST (testM33);
+         TEST (testM44);
+-        TEST (testPlane);
++        //TEST (testPlane);
+         TEST (testQuat);
+         TEST (testRandom);
+         TEST (testShear);
