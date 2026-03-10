@@ -6,18 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libxcrypt
-Version:        4.4.38
+Version:        4.5.2
 Release:        %autorelease
 Summary:        Extended crypt library for DES, MD5, Blowfish and others
 License:        BSD-2-Clause AND GPL-3.0-or-later AND LGPL-2.1-or-later AND BSD-3-Clause AND LicenseRef-openRuyi-Public-Domain
 URL:            https://github.com/besser82/libxcrypt
-#!RemoteAsset
-Source0:        https://github.com/besser82/libxcrypt/releases/download/v%{version}/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://github.com/besser82/libxcrypt/releases/download/v%{version}/%{name}-%{version}.tar.xz.asc
-#!RemoteAsset
-Source2:        https://github.com/besser82/libxcrypt/releases/download/v%{version}/libxcrypt-gpgkey.asc#/%{name}.keyring
+#!RemoteAsset:  sha256:71513a31c01a428bccd5367a32fd95f115d6dac50fb5b60c779d5c7942aec071
+Source0:        https://github.com/besser82/libxcrypt/releases/download/v%{version}/libxcrypt-%{version}.tar.xz
 BuildSystem:    autotools
+
+# From https://github.com/besser82/libxcrypt/pull/220
+Patch0:         fix-werror-discarded-qualifiers.patch
 
 BuildOption(conf):  --disable-silent-rules
 BuildOption(conf):  --enable-shared
