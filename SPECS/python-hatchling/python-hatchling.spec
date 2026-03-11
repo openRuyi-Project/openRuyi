@@ -8,7 +8,7 @@
 %global srcname hatchling
 
 Name:           python-%{srcname}
-Version:        1.27.0
+Version:        1.29.0
 Release:        %autorelease
 Summary:        The build backend used by Hatch
 License:        MIT
