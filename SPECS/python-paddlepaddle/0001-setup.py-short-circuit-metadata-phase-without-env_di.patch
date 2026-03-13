@@ -1,0 +1,46 @@
+# Patch purpose:
+# - Keep setup.py metadata-only commands (egg_info/dist_info/sdist) side-effect-free.
+# Why this patch exists:
+# - RPM buildrequires probes metadata before full build environment is ready.
+# - Upstream path touched build-only checks/env access and failed in packaging builds.
+
+--- a/setup.py	2025-12-26 11:31:02.000000000 +0800
++++ b/setup.py	2026-03-05 17:40:09.488758332 +0800
+@@ -52,7 +52,7 @@
+     print(f"export PY_VERSION = {version}")
+     os.environ["PY_VERSION"] = python_version
+ 
+-elif env_version != version:
++elif env_version != version and not env_version.startswith(version + '.'):
+     raise ValueError(
+         f"You have set the PY_VERSION environment variable to {env_version}, but "
+         f"your current Python version is {version}, "
+@@ -2872,13 +2872,28 @@
+     # Parse the command line and check arguments before we proceed with building steps and setup
+     parse_input_command(filter_args_list)
+ 
++    # Metadata-only commands are used by package managers to probe
++    # requirements (for example: egg_info/dist_info during buildrequires).
++    # Keep this path side-effect-free and avoid build-time env_dict access.
++    metadata_commands = {'egg_info', 'dist_info', 'sdist'}
++    if any(cmd in sys.argv for cmd in metadata_commands):
++        setup(
++            name='paddlepaddle',
++            version='3.3.0',
++            packages=[],
++            py_modules=[],
++        )
++        return
++
+     # check build dependency
+     check_build_dependency()
+     check_submodules()
++
+     # Execute the build process,cmake and make
+     if cmake_and_build:
+         build_steps()
+ 
++    # NOTE: WITH_PYTHON=OFF is for compile-only flow.
+     if os.getenv("WITH_PYTHON") == "OFF":
+         print("only compile, not package")
+         return
