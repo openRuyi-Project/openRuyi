@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           beakerlib
-Version:        1.31.6
+Version:        1.33.2
 Release:        %autorelease
 Summary:        A shell-level integration testing library
 License:        GPL-2.0-only
 URL:            https://github.com/beakerlib/beakerlib
 #!RemoteAsset
-Source0:        https://github.com/beakerlib/beakerlib/archive/refs/tags/1.31.6.tar.gz
-Source1:        %{name}-tmpfiles.conf
+Source0:        https://github.com/beakerlib/beakerlib/archive/refs/tags/%{version}.tar.gz
+Source1:        beakerlib.tmpfiles
 BuildSystem:    autotools
 
 BuildOption(build):  build
