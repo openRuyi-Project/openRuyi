@@ -1,0 +1,268 @@
+From 81d436d26d5497423e28841af91756e373446cf4 Mon Sep 17 00:00:00 2001
+From: Collin Funk <collin.funk1@gmail.com>
+Date: Thu, 5 Mar 2026 21:35:22 -0800
+Subject: [PATCH] telnetd: add the new --accept-env option
+
+This changes telnetd to ignore all environment options from clients
+unless the variable was listed by an --accept-env option.  This
+mitigates the many ways to escalate privileges using environment
+variables.
+
+* NEWS.md: Mention the change.
+* bootstrap.conf (gnulib_modules): Add hashcode-string1, hash-set, and
+xset.
+* doc/inetutils.texi (telnetd invocation): Mention the new option.
+* telnetd/pty.c (scrub_env): Remove function.
+(start_login): Remove call to scrub_env.  Remove unsetenv call that is
+no longer needed.
+* telnetd/state.c (suboption): Check for the environment variable in
+accept_env_set before making changes to the environment.
+* telnetd/telnetd.c (accept_env_set): New variable.
+(string_hashcode, string_equals): New function needed for
+gl_set_create_empty.
+(ACCEPT_ENV_OPTION): New definition.
+(argp_options): Add the --accept-env option.
+(parse_opt): Process the new option.
+(telnetd_setup): Clear the environment before processing options.
+* telnetd/telnetd.h: Include gl_hash_set.h, gl_xset.h, and
+hashcode-string1.h.
+(accept_env_set): New declaration.
+---
+ NEWS.md            |  4 ++++
+ bootstrap.conf     |  3 +++
+ doc/inetutils.texi |  6 ++++++
+ telnetd/pty.c      | 32 --------------------------------
+ telnetd/state.c    | 22 ++++++++++++++--------
+ telnetd/telnetd.c  | 44 ++++++++++++++++++++++++++++++++++++--------
+ telnetd/telnetd.h  |  4 ++++
+ 7 files changed, 67 insertions(+), 48 deletions(-)
+
+diff --git a/bootstrap.conf b/bootstrap.conf
+index 8c4d662b..964983b5 100644
+--- a/bootstrap.conf
++++ b/bootstrap.conf
+@@ -66,6 +66,8 @@ getusershell
+ git-version-gen
+ gitlog-to-changelog
+ glob
++hashcode-string1
++hash-set
+ hostent
+ intprops
+ inttostr
+@@ -120,6 +122,7 @@ xalloc-die
+ xgetcwd
+ xgetdomainname
+ xgethostname
++xset
+ xsize
+ xstrtoimax
+ xvasprintf
+diff --git a/doc/inetutils.texi b/doc/inetutils.texi
+index 3f1adc9c..06d10d6d 100644
+--- a/doc/inetutils.texi
++++ b/doc/inetutils.texi
+@@ -4961,6 +4961,12 @@ telnetd [@var{option}]@dots{}
+ @end example
+ 
+ @table @option
++@item --accept-env @var{VAR}
++@opindex --accept-env
++Allow clients to define the @var{VAR} environment variable.  GNU
++@command{telnetd} removes all environment variables by default since
++many of them can be used to escalate privileges.
++
+ @item -a @var{authmode}
+ @itemx --authmode=@var{authmode}
+ @opindex -a
+diff --git a/telnetd/pty.c b/telnetd/pty.c
+index f3518049..4bf407ad 100644
+--- a/telnetd/pty.c
++++ b/telnetd/pty.c
+@@ -83,29 +83,6 @@ startslave (char *host, int autologin, char *autoname)
+   return master;
+ }
+ 
+-/*
+- * scrub_env()
+- *
+- * Remove a few things from the environment that
+- * don't need to be there.
+- *
+- * Security fix included in telnet-95.10.23.NE of David Borman <deb@cray.com>.
+- */
+-static void
+-scrub_env (void)
+-{
+-  char **cpp, **cpp2;
+-
+-  for (cpp2 = cpp = environ; *cpp; cpp++)
+-    {
+-      if (strncmp (*cpp, "LD_", 3)
+-	  && strncmp (*cpp, "_RLD_", 5)
+-	  && strncmp (*cpp, "LIBPATH=", 8) && strncmp (*cpp, "IFS=", 4))
+-	*cpp2++ = *cpp;
+-    }
+-  *cpp2 = 0;
+-}
+-
+ void
+ start_login (char *host, int autologin, char *name)
+ {
+@@ -117,8 +94,6 @@ start_login (char *host, int autologin, char *name)
+   (void) autologin;
+   (void) name;
+ 
+-  scrub_env ();
+-
+   /* Set the environment variable "LINEMODE" to indicate our linemode */
+   if (lmodetype == REAL_LINEMODE)
+     setenv ("LINEMODE", "real", 1);
+@@ -130,13 +105,6 @@ start_login (char *host, int autologin, char *name)
+     fatal (net, "can't expand login command line");
+   argcv_get (cmd, "", &argc, &argv);
+ 
+-  /* util-linux's "login" introduced an authentication bypass method
+-   * via environment variable "CREDENTIALS_DIRECTORY" in version 2.40.
+-   * Clear it from the environment before executing "login" to prevent
+-   * abuse via Telnet.
+-   */
+-  unsetenv ("CREDENTIALS_DIRECTORY");
+-
+   execv (argv[0], argv);
+   syslog (LOG_ERR, "%s: %m\n", cmd);
+   fatalperror (net, cmd);
+diff --git a/telnetd/state.c b/telnetd/state.c
+index a9a51e00..8c8138df 100644
+--- a/telnetd/state.c
++++ b/telnetd/state.c
+@@ -1495,10 +1495,13 @@ suboption (void)
+ 	      case NEW_ENV_VAR:
+ 	      case ENV_USERVAR:
+ 		*cp = '\0';
+-		if (valp)
+-		  setenv (varp, valp, 1);
+-		else
+-		  unsetenv (varp);
++		if (accept_env_set && gl_set_search (accept_env_set, varp))
++		  {
++		    if (valp)
++		      setenv (varp, valp, 1);
++		    else
++		      unsetenv (varp);
++		  }
+ 		cp = varp = (char *) subpointer;
+ 		valp = 0;
+ 		break;
+@@ -1514,10 +1517,13 @@ suboption (void)
+ 	      }
+ 	  }
+ 	*cp = '\0';
+-	if (valp)
+-	  setenv (varp, valp, 1);
+-	else
+-	  unsetenv (varp);
++	if (accept_env_set && gl_set_search (accept_env_set, varp))
++	  {
++	    if (valp)
++	      setenv (varp, valp, 1);
++	    else
++	      unsetenv (varp);
++	  }
+ 	break;
+       }				/* end of case TELOPT_NEW_ENVIRON */
+ #if defined AUTHENTICATION
+diff --git a/telnetd/telnetd.c b/telnetd/telnetd.c
+index 219a19da..d90985b9 100644
+--- a/telnetd/telnetd.c
++++ b/telnetd/telnetd.c
+@@ -105,10 +105,32 @@ char *terminaltype;
+ 
+ int SYNCHing;			/* we are in TELNET SYNCH mode */
+ struct telnetd_clocks clocks;
+-
++
++/* Set of environment variables that we do not remove from clients.  */
++gl_set_t accept_env_set = NULL;
++
++static size_t
++string_hashcode (const void *s)
++{
++  return hash_string (s, strlen (s));
++}
++
++static bool
++string_equals (const void *a, const void *b)
++{
++  return strcmp (a, b) == 0;
++}
++
++/* List of long options without short option counterparts.  */
++enum
++{
++  ACCEPT_ENV_OPTION = UCHAR_MAX + 1
++};
+ 
+ static struct argp_option argp_options[] = {
+ #define GRID 10
++  {"accept-env", ACCEPT_ENV_OPTION, "NAME", 0,
++   "accept the environment variable from clients", GRID},
+   {"debug", 'D', "LEVEL", OPTION_ARG_OPTIONAL,
+    "set debugging level", GRID},
+   {"exec-login", 'E', "STRING", 0,
+@@ -144,6 +166,14 @@ parse_opt (int key, char *arg, struct argp_state *state MAYBE_UNUSED)
+ {
+   switch (key)
+     {
++
++    case ACCEPT_ENV_OPTION:
++      if (!accept_env_set)
++	accept_env_set = gl_set_create_empty (GL_HASH_SET, string_equals,
++					      string_hashcode, NULL);
++      gl_set_add (accept_env_set, arg);
++      break;
++
+ #ifdef  AUTHENTICATION
+     case 'a':
+       parse_authmode (arg);
+@@ -497,13 +527,11 @@ telnetd_setup (int fd)
+ 
+   io_setup ();
+ 
+-  /* Before doing anything related to the identity of the client,
+-   * scrub the environment variable USER, since it may be set with
+-   * an irrelevant user name at this point.  OpenBSD has been known
+-   * to offend at this point with their own inetd.  Any demand for
+-   * autologin will get attention in getterminaltype().
+-   */
+-  unsetenv ("USER");
++  /* Clear the environment of all variables before doing anything.  This avoids
++     many ways of escalating privileges.  Environment variable options sent by
++     the client will be checked against ACCEPT_ENV_SET.  */
++  static char *dummy_environ[] = { NULL };
++  environ = dummy_environ;
+ 
+   /* get terminal type. */
+   uname[0] = 0;
+diff --git a/telnetd/telnetd.h b/telnetd/telnetd.h
+index df31a819..57d3130e 100644
+--- a/telnetd/telnetd.h
++++ b/telnetd/telnetd.h
+@@ -57,6 +57,9 @@
+ #define obstack_chunk_free free
+ #include <obstack.h>
+ 
++#include "gl_hash_set.h"
++#include "gl_xset.h"
++#include "hashcode-string1.h"
+ #include "xalloc.h"
+ 
+ #ifndef HAVE_CC_T
+@@ -251,6 +254,7 @@ extern char *user_name;
+ extern int pty, net;
+ extern int SYNCHing;		/* we are in TELNET SYNCH mode */
+ extern struct telnetd_clocks clocks;
++extern gl_set_t accept_env_set;
+ extern char line[];
+ 
+ extern char *xstrdup (const char *);

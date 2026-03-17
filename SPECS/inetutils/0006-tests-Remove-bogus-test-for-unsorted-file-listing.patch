@@ -1,0 +1,42 @@
+From fa9ca2f43b38a88620e0a54e3570ba3e0f592c2d Mon Sep 17 00:00:00 2001
+From: Guillem Jover <guillem@hadrons.org>
+Date: Fri, 20 Jun 2025 03:18:06 +0200
+Subject: [PATCH] tests: Remove bogus libls test for unsorted file listing
+
+We cannot reliably test whether the -f option works against a normal
+filesystem, because that relies on the unsorted output coming out
+accidentally not sorted, and this has been the cause for several
+indeterministic build failures in various hosts (such as some
+sparc64 or reproducible build nodes).
+
+This could be guaranteed with something like disorderfs, but we do
+not bother and simply remove the test case.
+---
+ tests/libls.sh | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/tests/libls.sh b/tests/libls.sh
+index 827020f2..9fdef8be 100755
+--- a/tests/libls.sh
++++ b/tests/libls.sh
+@@ -91,7 +91,6 @@ REPLY_a1=`$LS -a1 $LSDIR`
+ REPLY_A1=`$LS -A1 $LSDIR`
+ 
+ REPLY_C=`$LS -C $LSDIR`
+-REPLY_Cf=`$LS -Cf $LSDIR`
+ REPLY_Cr=`$LS -Cr $LSDIR`
+ REPLY_Ct=`$LS -Ct $LSDIR`
+ REPLY_x=`$LS -x $LSDIR`
+@@ -130,9 +129,6 @@ test `echo "$diff" | $GREP -c -v '^[.]\{1,2\}$'` -eq 0 ||
+     fi
+   }
+ 
+-test x"$REPLY_C" != x"$REPLY_Cf" ||
+-  { errno=1; echo >&2 'Failed to disable sorting with "-f".'; }
+-
+ test x"$REPLY_C" != x"$REPLY_Cr" ||
+   { errno=1; echo >&2 'Failed to reverse sorting with "-r".'; }
+ 
+-- 
+2.47.3
+
