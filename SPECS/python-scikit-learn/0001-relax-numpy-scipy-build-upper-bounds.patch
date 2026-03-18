@@ -1,0 +1,17 @@
+# Remove upper version bounds on numpy and scipy in build-system requirements.
+# scikit-learn 1.8.0 sets numpy<2.4.0 and scipy<1.17.0 as build-time upper
+# bounds to guard against untested ABI changes, but in practice the Cython
+# extensions build and run correctly with numpy 2.4.x and scipy 1.17.x.
+--- scikit_learn-1.8.0/pyproject.toml.orig
++++ scikit_learn-1.8.0/pyproject.toml
+@@ -97,8 +97,8 @@
+ requires = [
+     "meson-python>=0.17.1,<0.19.0",
+     "cython>=3.1.2,<3.3.0",
+-    "numpy>=2,<2.4.0",
+-    "scipy>=1.10.0,<1.17.0",
++    "numpy>=2",
++    "scipy>=1.10.0",
+ ]
+ 
+ [tool.pytest.ini_options]
