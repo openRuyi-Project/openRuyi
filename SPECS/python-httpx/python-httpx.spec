@@ -17,10 +17,10 @@ Source0:        %{url}/archive/%{version}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
