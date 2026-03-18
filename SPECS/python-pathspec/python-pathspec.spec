@@ -22,29 +22,25 @@ BuildSystem:    pyproject
 
 BuildOption(install):  pathspec
 
-BuildRequires:  python3-devel
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
-BuildRequires:  python3-flit-core
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(flit-core)
 BuildRequires:  expat
 
-%generate_buildrequires
-%pyproject_buildrequires
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 Path Specification (pathspec) is a utility library for pattern matching of file
 paths. So far this only includes Git's wildmatch pattern matching which itself
 is derived from Rsync's wildmatch. Git uses wildmatch for its gitignore files.
 
-%package     -n python3-pathspec
-Summary:        %{summary}
+%generate_buildrequires
+%pyproject_buildrequires
 
-%description -n python3-pathspec
-Path Specification (pathspec) is a utility library for pattern matching of file
-paths. So far this only includes Git's wildmatch pattern matching which itself
-is derived from Rsync's wildmatch. Git uses wildmatch for its gitignore files.
-
-%files -n python3-pathspec -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.rst
 %license LICENSE
 
