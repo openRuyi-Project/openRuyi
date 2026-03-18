@@ -7,11 +7,11 @@
 %global srcname distro
 
 Name:           python-%{srcname}
-Version:        1.6.0
+Version:        1.9.0
 Release:        %autorelease
 Summary:        OS platform information API
 License:        Apache-2.0
-URL:            https://github.com/nir0s/distro
+URL:            https://github.com/python-distro/distro
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
 #!RemoteAsset
@@ -22,7 +22,9 @@ BuildSystem:    pyproject
 BuildOption(install):  -l distro +auto
 
 BuildRequires:  pyproject-rpm-macros
+BuildRequires:  python3dist(pip)
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(setuptools)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
