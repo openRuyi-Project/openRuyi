@@ -45,7 +45,7 @@
   /usr/lib/rpm/brp-compress
 
 Name:           go
-Version:        1.25.5
+Version:        1.25.8
 Release:        %autorelease
 Summary:        The Go Programming Language toolchain
 License:        BSD-3-Clause
