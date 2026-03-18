@@ -17,11 +17,11 @@ VCS:            git:https://github.com/libgit2/pygit2
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  libgit2-devel
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  pkgconfig(libgit2)
 BuildRequires:  make
 
 Provides:       python3-%{srcname}
