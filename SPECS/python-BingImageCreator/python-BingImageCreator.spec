@@ -14,6 +14,7 @@ License:        Unlicense
 URL:            https://github.com/acheong08/BingImageCreator
 #!RemoteAsset:  sha256:e15798b7c0394145b334d0b3bef4aad187d5e7e0c3f7b6d949e413fe11b5ea47
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l BingImageCreator
