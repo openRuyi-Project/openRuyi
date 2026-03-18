@@ -1,0 +1,11 @@
+--- openai-2.28.0/pyproject.toml.orig
++++ openai-2.28.0/pyproject.toml
+@@ -106,7 +106,7 @@
+ "typecheck:mypy" = "mypy ."
+ 
+ [build-system]
+-requires = ["hatchling==1.26.3", "hatch-fancy-pypi-readme"]
++requires = ["hatchling>=1.26.3", "hatch-fancy-pypi-readme"]
+ build-backend = "hatchling.build"
+ 
+ [tool.hatch.build]
