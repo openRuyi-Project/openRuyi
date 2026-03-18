@@ -7,7 +7,7 @@
 %global srcname hypothesis
 
 Name:           python-%{srcname}
-Version:        6.148.6
+Version:        6.151.9
 Release:        %autorelease
 Summary:        Library for property based testing
 License:        MPL-2.0
@@ -17,10 +17,14 @@ Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname} '_%{srcname}_*'
+BuildOption(install):  -l %{srcname} '_%{srcname}_*'
 
 BuildRequires:  pyproject-rpm-macros
+BuildRequires:  python3dist(pip)
 BuildRequires:  python3-devel
+BuildRequires:  python3dist(sortedcontainers)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
