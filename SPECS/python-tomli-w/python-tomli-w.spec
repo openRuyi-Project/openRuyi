@@ -15,10 +15,10 @@ Source0:        %{url}/archive/%{version}/tomli-w-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): tomli_w
+BuildOption(install):  tomli_w
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-tomli-w
 %python_provide python3-tomli-w
