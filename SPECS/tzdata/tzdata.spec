@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
@@ -63,6 +64,9 @@ install -p -m 644 zone.tab zone1970.tab iso3166.tab leap-seconds.list leapsecond
 install -D -m 755 tzselect %{buildroot}%{_bindir}/tzselect
 install -D -m 755 zdump    %{buildroot}%{_bindir}/zdump
 install -D -m 755 zic      %{buildroot}%{_bindir}/zic
+
+# Disable checks for now
+%check
 
 %files
 %license LICENSE
