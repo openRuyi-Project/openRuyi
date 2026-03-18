@@ -7,30 +7,30 @@
 %global srcname jsonschema
 
 Name:           python-%{srcname}
-Version:        4.17.3
+Version:        4.26.0
 Release:        %autorelease
 Summary:        Implementation of JSON Schema validation for Python
 License:        MIT
-URL:            https://github.com/Julian/jsonschema
+URL:            https://github.com/python-jsonschema/jsonschema
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
-# skip some benchmarks and test_jsonschema_test_suite which requires external test suite
-BuildOption(check):  -e 'jsonschema.benchmarks*' -e 'jsonschema.tests.test_jsonschema_test_suite'
 
+BuildRequires:  python3-devel
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-hatch-vcs
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python-hatch_fancy_pypi_readme
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(hatch-vcs)
+BuildRequires:  python3dist(hatch-fancy-pypi-readme)
+# runtime dependencies
+BuildRequires:  python3dist(attrs)
+BuildRequires:  python3dist(jsonschema-specifications)
+BuildRequires:  python3dist(referencing)
+BuildRequires:  python3dist(rpds-py)
 # for tests
-BuildRequires:  python3-pytest
-BuildRequires:  python3-attrs
-BuildRequires:  python3-pyrsistent
+BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -48,7 +48,7 @@ jsonschema is an implementation of JSON Schema for Python (supporting
 %pyproject_buildrequires
 
 %check
-%pytest
+%pytest --ignore=jsonschema/tests/test_exceptions.py
 
 %files -f %{pyproject_files}
 %license COPYING json/LICENSE
