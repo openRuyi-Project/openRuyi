@@ -1,0 +1,22 @@
+diff --git a/modules/speller/default/writable.cpp b/modules/speller/default/writable.cpp
+index 63172a4..7dc8448 100644
+--- a/modules/speller/default/writable.cpp
++++ b/modules/speller/default/writable.cpp
+@@ -298,7 +298,7 @@ static inline void set_sl(WordEntry & res, Str w)
+ 
+ static void soundslike_next(WordEntry * w)
+ {
+-  const Str * & i   = (const Str * &)(w->intr[0]);
++  const Str * i   = (const Str * )(w->intr[0]);
+   const Str *   end = (const Str *  )(w->intr[1]);
+   set_word(*w, *i);
+   ++i;
+@@ -741,7 +741,7 @@ WritableReplDict::Enum * WritableReplDict::detailed_elements() const {
+ 
+ static void repl_next(WordEntry * w)
+ {
+-  const Str * & i   = (const Str * &)(w->intr[0]);
++  const Str * i   = (const Str * )(w->intr[0]);
+   const Str *   end = (const Str *  )(w->intr[1]);
+   set_word(*w, *i);
+   ++i;

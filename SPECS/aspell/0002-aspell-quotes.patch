@@ -1,0 +1,11 @@
+diff --git a/scripts/run-with-aspell.create b/scripts/run-with-aspell.create
+index 42c400d..e9e3af5 100644
+--- a/scripts/run-with-aspell.create
++++ b/scripts/run-with-aspell.create
+@@ -3,5 +3,5 @@
+ echo "#!/bin/sh"
+ echo "PATH=$1:\$PATH"
+ echo "export PATH"
+-echo "exec \$@"
++echo "exec \"\$@\""
+ 
