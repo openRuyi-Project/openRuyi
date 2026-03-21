@@ -27,6 +27,7 @@ Source2:        postgresql.pam
 Source3:        postgresql-bashprofile
 Source4:        postgresql.sysusers
 Source5:        postgresql.tmpfiles
+Source6:        postgresql.service
 BuildSystem:    autotools
 
 # Comments for these patches are in the patch files.
@@ -256,6 +257,7 @@ find_lang_bins plpython3.lst plpython
 
 install -m0644 -D %{SOURCE4} %{buildroot}%{_sysusersdir}/postgresql.conf
 install -m0644 -D %{SOURCE5} %{buildroot}%{_tmpfilesdir}/postgresql.conf
+install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 
 %pre server
 %sysusers_create_package postgresql postgresql.sysusers.conf
@@ -457,6 +459,7 @@ install -m0644 -D %{SOURCE5} %{buildroot}%{_tmpfilesdir}/postgresql.conf
 %config(noreplace) /etc/pam.d/postgresql
 %{_sysusersdir}/postgresql.conf
 %{_tmpfilesdir}/postgresql.conf
+%{_unitdir}/postgresql.service
 
 %files server-devel -f devel.lst
 %{_bindir}/pg_config

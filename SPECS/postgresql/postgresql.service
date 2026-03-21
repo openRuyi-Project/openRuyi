@@ -1,0 +1,26 @@
+[Unit]
+Description=PostgreSQL database server
+Documentation=man:postgres(1)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=postgres
+Group=postgres
+
+Environment=PGDATA=/var/lib/pgsql/data
+
+RuntimeDirectory=postgresql
+RuntimeDirectoryMode=755
+
+ExecStart=/usr/bin/postgres -D ${PGDATA}
+ExecReload=/bin/kill -HUP ${MAINPID}
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutSec=120
+
+OOMScoreAdjust=-200
+
+[Install]
+WantedBy=multi-user.target
