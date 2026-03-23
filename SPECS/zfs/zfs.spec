@@ -1,9 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Sun Yuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+# Exclude dkms source files from shebang mangling
+%global __brp_mangle_shebangs_exclude_from ^/%{_usrsrc}/.*$
 
 %global _sbindir    /sbin
 %global _libdir     /%{_lib}
@@ -16,7 +20,7 @@
 
 %define systemd_svcs zfs-import-cache.service zfs-import-scan.service zfs-mount.service zfs-mount@.service zfs-share.service zfs-zed.service zfs.target zfs-import.target zfs-volume-wait.service zfs-volumes.target
 
-Name:           zfs-utils
+Name:           zfs
 Version:        2.4.1
 Release:        %autorelease
 Summary:        Commands to control the kernel modules and libraries
@@ -62,27 +66,36 @@ Requires:       openssl
 # The zpool iostat/status -c scripts call some utilities like lsblk and iostat
 Requires:       util-linux
 Requires:       sysstat
-Requires:       zfs-libs%{?_isa} = %{version}-%{release}
-Requires:       zfs-kmod = %{version}
+Requires:       %{name}-kmod = %{version}
+Provides:       %{name}-libs = %{version}-%{release}
+Provides:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
-This package contains the core ZFS command line utilities.
+This package contains the core ZFS command line utilities and libraries.
 
-%package     -n zfs-libs
-Summary:        ZFS libraries for Linux
+%package        dkms
+Summary:        Kernel module(s) (dkms)
+BuildArch:      noarch
 
-%description -n zfs-libs
-This package contains the core ZFS libraries:
- * libzpool: Native ZFS pool library for managing zpools
- * libnvpair: Solaris name-value library for packing and unpacking data
- * libuutil: Solaris userland utility library providing compatibility functions
- * libzfs: Native ZFS filesystem library for managing ZFS filesystems
+Requires:       dkms >= 2.2.0.3
+Requires:       gcc
+Requires:       make
+Requires:       perl
+Requires:       diffutils
+Requires:       linux-devel
 
-%package     -n zfs-devel
+Provides:       %{name}-kmod = %{version}
+
+AutoReqProv:    no
+
+%description    dkms
+This package contains the dkms ZFS kernel modules.
+
+%package        devel
 Summary:        Development headers
-Requires:       zfs-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description -n zfs-devel
+%description    devel
 This package contains the header files needed for building additional
 applications against the ZFS libraries.
 
@@ -118,6 +131,19 @@ Requires:       grep
 This package contains a dracut module used to construct an initramfs
 image which is ZFS aware.
 
+%prep -a
+# Save a clean copy of the source tree for the dkms subpackage
+cp -a %{_builddir}/zfs-%{version} %{_builddir}/zfs-%{version}-dkms
+
+%build -a
+# Generate dkms.conf for the dkms subpackage
+%{_builddir}/zfs-%{version}-dkms/scripts/dkms.mkconf -n zfs -v %{version} -f %{_builddir}/zfs-%{version}-dkms/dkms.conf
+
+%install -a
+# Install dkms source
+mkdir -p %{buildroot}/%{_usrsrc}
+cp -rf %{_builddir}/zfs-%{version}-dkms %{buildroot}/%{_usrsrc}/zfs-%{version}
+
 %post
 %systemd_post %{systemd_svcs}
 
@@ -126,6 +152,54 @@ image which is ZFS aware.
 
 %postun
 %systemd_postun %{systemd_svcs}
+
+%pre dkms
+echo "Running pre installation script: $0. Parameters: $*"
+
+# Remove any existing ZFS DKMS modules to ensure clean installation
+dkms_root=/var/lib/dkms
+if [ -d ${dkms_root}/zfs ]; then
+    cd ${dkms_root}/zfs
+    for x in [[:digit:]]*; do
+        [ -d "$x" ] || continue
+        otherver="$x"
+        if [ `dkms status -m zfs -v "$otherver" | grep -c zfs` -gt 0 ]; then
+            echo "Removing old zfs dkms modules version $otherver from all kernels."
+            dkms remove -m zfs -v "$otherver" --all ||:
+        fi
+    done
+    cd ${dkms_root}
+fi
+
+%post dkms
+echo "Running post installation script: $0. Parameters: $*"
+
+# Add the module to dkms
+echo "Adding zfs dkms modules version %{version} to dkms."
+dkms add -m zfs -v %{version} --rpm_safe_upgrade ||:
+
+# Install the module for the current kernel with force overwrite
+echo "Installing zfs dkms modules version %{version} for the current kernel."
+dkms install --force -m zfs -v %{version} ||:
+
+%preun dkms
+echo "Running pre uninstall script: $0. Parameters: $*"
+
+# Skip removal on upgrade
+if [ "$1" = "1" ]; then
+    echo "This is an upgrade. Skipping pre uninstall action."
+    exit 0
+fi
+
+# Remove on uninstall
+if [ "$1" = "0" ]; then
+    if [ `dkms status -m zfs -v %{version} | grep -c zfs` -gt 0 ]; then
+        echo "Removing zfs dkms modules version %{version} from all kernels."
+        dkms remove -m zfs -v %{version} --all --rpm_safe_upgrade
+    fi
+fi
+
+exit 0
 
 %files
 # Core utilities
@@ -167,13 +241,16 @@ image which is ZFS aware.
 %config(noreplace) %{_bashcompletiondir}/zfs
 %config(noreplace) %{_bashcompletiondir}/zpool
 
-%files -n zfs-libs
+# zfs libs
 %{_libdir}/libzpool.so.*
 %{_libdir}/libnvpair.so.*
 %{_libdir}/libuutil.so.*
 %{_libdir}/libzfs*.so.*
 
-%files -n zfs-devel
+%files dkms
+%{_usrsrc}/zfs-%{version}
+
+%files devel
 %{_pkgconfigdir}/libzfs.pc
 %{_pkgconfigdir}/libzfsbootenv.pc
 %{_pkgconfigdir}/libzfs_core.pc
