@@ -1,6 +1,6 @@
 
 %_vendor openruyi
 %_vendor_name openRuyi
-%_vendor_url https://git.openruyi.cn/openRuyi/openruyi-repo
-%_vendor_bug_url https://git.openruyi.cn/openRuyi/openruyi-repo/issues
-%_vendor_repo_url https://diamond.oerv.ac.cn/openruyi/\\$basearch/
+%_vendor_url https://openruyi.cn
+%_vendor_bug_url https://github.com/openruyi-project/openruyi/issues
+%_vendor_repo_url https://repo.build.openruyi.cn/openruyi/\\$basearch/

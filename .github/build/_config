@@ -137,7 +137,7 @@ Macros:
 %autorelease 1%{?dist}
 %autochangelog %{nil}
 %_sbindir %_bindir
-%_vendor_repo_url https://diamond.oerv.ac.cn/openruyi/\\$basearch/
+%_vendor_repo_url https://repo.build.openruyi.cn/openruyi/\\$basearch/
 :Macros
 
 

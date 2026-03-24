@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %if %{undefined _vendor_repo_url}
-%global _vendor_repo_url https://diamond.oerv.ac.cn/openruyi/\\$basearch/
+%global _vendor_repo_url https://repo.build.openruyi.cn/openruyi/\\$basearch/
 %endif
 
 Name:           openRuyi-repos
@@ -14,7 +14,7 @@ Version:        3
 Release:        %autorelease
 Summary:        openRuyi repository files
 License:        MulanPSL-2.0
-URL:            https://www.openruyi.org
+URL:            https://www.openruyi.cn
 
 Provides:       system-repos
 
