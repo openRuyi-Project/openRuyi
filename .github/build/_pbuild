@@ -9,11 +9,11 @@ SPDX-License-Identifier: MulanPSL-2.0
 
 <pbuild>
   <preset name="riscv64" default="">
-    <repo>https://diamond.oerv.ac.cn/openruyi/riscv64/</repo>
+    <repo>https://repo.build.openruyi.cn/openruyi/riscv64/</repo>
     <arch>riscv64</arch>
   </preset>
   <preset name="x86_64" default="">
-   <repo>https://diamond.oerv.ac.cn/openruyi/x86_64/</repo>
+   <repo>https://repo.build.openruyi.cn/openruyi/x86_64/</repo>
    <arch>x86_64</arch>
   </preset>
 </pbuild>
