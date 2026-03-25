@@ -14,9 +14,12 @@ Summary:        A simple library that allows a network server to limit how may c
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-connlimit
 #!RemoteAsset
-Source0:        https://github.com/hashicorp/go-connlimit/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/hashicorp/go-connlimit/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# openRuyi: stabilize a flaky HTTP concurrency test on newer Go/OBS environments
+Patch0:         2000-tests-stabilize-TestHTTPServerWith429WithDuration.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros

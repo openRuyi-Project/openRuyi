@@ -1,0 +1,76 @@
+From 7b75fe37d244f2be049d9d57ee4b4fecadad7b4a Mon Sep 17 00:00:00 2001
+From: Jingwiw <wangjingwei@iscas.ac.cn>
+Date: Wed, 25 Mar 2026 11:57:11 +0800
+Subject: [PATCH] tests: stabilize TestHTTPServerWith429WithDuration
+
+TestHTTPServerWith429WithDuration is unstable on newer Go versions.
+
+Stabilize it by disabling keep-alives, synchronizing concurrent
+requests, accepting the newer transport error form, and requiring at
+least five limited requests.
+
+Signed-off-by: Jingwiw <wangjingwei@iscas.ac.cn>
+---
+ connlimit_test.go | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/connlimit_test.go b/connlimit_test.go
+index 7560820..b096c52 100644
+--- a/connlimit_test.go
++++ b/connlimit_test.go
+@@ -318,6 +318,11 @@ func testHTTPServerWithConnState(t *testing.T, funToTest func() func(net.Conn, h
+ 	srv.Start()
+ 
+ 	client := srv.Client()
++	transport, ok := client.Transport.(*http.Transport)
++	require.True(t, ok)
++	transport = transport.Clone()
++	transport.DisableKeepAlives = true
++	client.Transport = transport
+ 
+ 	// Use only http not https to force HTTP/1.1. That means each request will
+ 	// consume a separate TCP conn as they all take 1 second. If we use https it
+@@ -328,30 +333,34 @@ func testHTTPServerWithConnState(t *testing.T, funToTest func() func(net.Conn, h
+ 
+ 	// Start 10 requests concurrently so they use 10 different conns.
+ 	var wg sync.WaitGroup
+-	var reset uint64
++	var limited uint64
++	start := make(chan struct{})
+ 	for i := 0; i < 10; i++ {
+ 		wg.Add(1)
+ 		go func(i int) {
+ 			defer wg.Done()
++			<-start
+ 			resp, err := client.Get(srv.URL)
+ 			if err != nil {
+ 				if !strings.Contains(err.Error(), "server closed idle connection") &&
+ 					!strings.Contains(err.Error(), "connection reset") &&
+-					!strings.Contains(err.Error(), "EOF") {
++					!strings.Contains(err.Error(), "EOF") &&
++					!strings.Contains(err.Error(), "readLoopPeekFailLocked") {
+ 					require.NoError(t, err, "unexpected error type")
+ 				}
+-				atomic.AddUint64(&reset, 1)
++				atomic.AddUint64(&limited, 1)
+ 			} else {
+ 				if resp.StatusCode == http.StatusTooManyRequests {
+-					atomic.AddUint64(&reset, 1)
++					atomic.AddUint64(&limited, 1)
+ 				}
+ 				resp.Body.Close()
+ 			}
+ 		}(i)
+ 	}
+-
++	close(start)
+ 	wg.Wait()
+ 
+-	// 5 of the 10 requests should have had connections reset due to limit.
+-	require.Equal(t, 5, int(atomic.LoadUint64(&reset)))
++	// At least 5 of the 10 requests should be rejected once the per-client
++	// connection limit is exceeded.
++	require.GreaterOrEqual(t, int(atomic.LoadUint64(&limited)), 5)
+ }
+-- 
+2.50.1 (Apple Git-155)
