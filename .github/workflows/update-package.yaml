@@ -16,13 +16,16 @@ concurrency:
 
 jobs:
   build:
-    runs-on: openruyi
+    runs-on: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Install tools
-      run:  sudo dnf install osc obs-build perl-libwww-perl perl-XML-Parser perl-Try-Tiny perl-LWP-Protocol-https -y
+      run: |
+        echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
+        wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
+        sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
     - name: Setup osc config
       run: |
         set -x
