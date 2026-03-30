@@ -1,9 +1,0 @@
-#
-# /etc/pam.d/common-account - account settings common to all services
-#
-# This file is included from other service-specific PAM config files,
-# and should contain a list of the account modules that define
-# the central access policy for use on the system.  The default is to
-# only deny service to users whose accounts are expired.
-#
-account	required	pam_unix.so	try_first_pass
