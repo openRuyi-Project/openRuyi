@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           plzip
-Version:        1.12
+Version:        1.13
 Release:        %autorelease
 Summary:        Parallel lossless data compressor for the lzip format
 License:        GPL-2.0-or-later AND BSD-2-Clause
 URL:            https://www.nongnu.org/lzip/plzip.html
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:64d49dde20daa5fdff2b3ff28e3348082de10dd54eb10df6da7d1bc6c7a6db64
 Source0:        https://download.savannah.nongnu.org/releases/lzip/plzip/plzip-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://download.savannah.nongnu.org/releases/lzip/plzip/plzip-%{version}.tar.gz.sig
 BuildSystem:    autotools
 
 BuildRequires:  gcc-c++
