@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond static 0
 
 Name:           SDL3
-Version:        3.3.2
+Version:        3.4.2
 Release:        %autorelease
 Summary:        Cross-platform multimedia library
 License:        Zlib AND MIT AND Apache-2.0 AND (Apache-2.0 OR MIT)
 URL:            https://github.com/libsdl-org/SDL
-#!RemoteAsset
+#!RemoteAsset:  sha256:ef39a2e3f9a8a78296c40da701967dd1b0d0d6e267e483863ce70f8a03b4050c
 Source0:        https://www.libsdl.org/release/SDL3-%{version}.tar.gz
 BuildSystem:    cmake
 
