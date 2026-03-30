@@ -3,5 +3,5 @@
 # "auth sufficient pam_rootok.so" dummy line).
 auth     sufficient  pam_rootok.so
 session  optional    pam_keyinit.so force revoke
-session  include     common-session
+session  include     system-auth
 session  optional    pam_xauth.so
