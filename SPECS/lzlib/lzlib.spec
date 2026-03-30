@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           lzlib
-Version:        1.15
+Version:        1.16
 Release:        %autorelease
 Summary:        Lzip data compression C library
 License:        GPL-2.0-or-later AND BSD-2-Clause
 URL:            https://www.nongnu.org/lzip/lzlib.html
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:203228de911780309dad6813e51541d7ea89469784f01cb661edba080ff1b038
 Source0:        https://download.savannah.nongnu.org/releases/lzip/lzlib/lzlib-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://download.savannah.nongnu.org/releases/lzip/lzlib/lzlib-%{version}.tar.gz.sig
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
