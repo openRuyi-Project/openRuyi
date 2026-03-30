@@ -33,6 +33,7 @@ Source9:        sshd-keygen
 Source10:       sshd-keygen@.service
 Source11:       sshd-keygen.target
 Source12:       openssh-server-systemd-sysusers.conf
+Source13:       50-openruyi-sshd.conf
 BuildSystem:    autotools
 
 # Fix seccomp failure termination because of zlib-ng calling hwprobe
@@ -222,6 +223,8 @@ install contrib/ssh-copy-id.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 install -d -m711 ${RPM_BUILD_ROOT}/%{_datadir}/empty.sshd
 install -p -D -m 0644 %{SOURCE12} %{buildroot}%{_sysusersdir}/openssh-server.conf
 
+install -m644 %{SOURCE13} %{buildroot}%{_sysconfdir}/ssh/sshd_config.d/50-openruyi.conf
+
 # TODO: We don't need these now but maybe in the future
 rm -f $RPM_BUILD_ROOT/etc/profile.d/gnome-ssh-askpass.*
 
@@ -305,6 +308,7 @@ popd
 %attr(0644,root,root) %{_mandir}/man8/sftp-server.8*
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ssh/sshd_config
 %dir %attr(0700,root,root) %{_sysconfdir}/ssh/sshd_config.d/
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ssh/sshd_config.d/50-openruyi.conf
 %attr(0644,root,root) %config(noreplace) /etc/pam.d/sshd
 %attr(0640,root,root) %config(noreplace) /etc/sysconfig/sshd
 %attr(0644,root,root) %{_unitdir}/sshd.service
