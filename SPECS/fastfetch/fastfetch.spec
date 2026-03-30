@@ -1,17 +1,17 @@
-# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fastfetch
-Version:        2.58.0
+Version:        2.61.0
 Release:        %autorelease
 Summary:        Display system information in a stylized manner
 License:        MIT
 URL:            https://github.com/fastfetch-cli/fastfetch
-#!RemoteAsset:  sha256:95c6bb522d455ed0bd35cc0f7f3a44a70663c0e81d03fe9bfe6ffa5ea19c2b1d
+#!RemoteAsset:  sha256:b05b95bcc0915431cf732382813261497fa4412c3967904c1a9f207d5c946c65
 Source:         https://github.com/fastfetch-cli/fastfetch/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
