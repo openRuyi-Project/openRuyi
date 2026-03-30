@@ -7,18 +7,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           p7zip
-Version:        17.05
+Version:        17.06
 Release:        %autorelease
 Summary:        7z file archiver for Linux systems
 License:        LGPL-2.1-or-later and (LGPL-2.1-or-later or CPL-1.0)
 URL:            https://github.com/p7zip-project/p7zip
-#!RemoteAsset
+#!RemoteAsset:  sha256:c35640020e8f044b425d9c18e1808ff9206dc7caf77c9720f57eb0849d714cd1
 Source0:        https://github.com/p7zip-project/p7zip/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(build):  OPTFLAGS="%{optflags}" LDFLAGS="%{build_ldflags}"
 BuildOption(install):  DEST_DIR="%{buildroot}"
-BuildOption(install):  DEST_HOME=/usr
+BuildOption(install):  DEST_HOME="%{_prefix}"
 BuildOption(install):  DEST_SHARE=%{_libdir}/p7zip
 BuildOption(install):  DEST_MAN="%{_mandir}"
 
