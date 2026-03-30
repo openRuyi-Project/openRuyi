@@ -39,6 +39,9 @@ BuildSystem:    autotools
 # See: https://github.com/openssh/openssh-portable/pull/644
 Patch0:         0001-seccomp-sandbox-allow-riscv_hwprobe-syscall-if-prese.patch
 
+# Lets us ship distro config in /etc/ssh/{ssh,sshd}_config.d/*.conf
+Patch1:         2000-ssh-sshd-_config-Include-_config.d-.conf.patch
+
 BuildOption(conf):  --sysconfdir=%{_sysconfdir}/ssh
 BuildOption(conf):  --libexecdir=%{_libexecdir}/openssh
 BuildOption(conf):  --datadir=%{_datadir}/openssh
