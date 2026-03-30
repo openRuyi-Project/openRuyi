@@ -1,13 +1,14 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: kenlig <qiming.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond tests 0
 
 Name:           ruyi
-Version:        0.43.0
+Version:        0.46.0
 Release:        %autorelease
 Summary:        RuyiSDK Package Manager
 License:        Apache-2.0
