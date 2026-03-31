@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/sethmlarson/socksio
 #!RemoteAsset:  sha256:f88beb3da5b5c38b9890469de67d0cb0f9d494b78b106ca1845f96c10b91c4ac
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # change the dep version of python-flit-core.
