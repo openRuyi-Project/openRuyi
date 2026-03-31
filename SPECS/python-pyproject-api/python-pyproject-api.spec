@@ -17,10 +17,10 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/pypr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): pyproject_api
+BuildOption(install):  pyproject_api
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
