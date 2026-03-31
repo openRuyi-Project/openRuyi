@@ -14,15 +14,16 @@ License:        MIT
 URL:            https://gitlab.freedesktop.org/libevdev/python-libevdev
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-pytest
-BuildRequires:  python3-hatchling
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(hatchling)
 BuildRequires:  pkgconfig(libevdev)
 
 Provides:       python3-%{srcname}
