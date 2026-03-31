@@ -14,17 +14,18 @@ License:        MIT
 URL:            https://github.com/tsutsu3/linkify-it-py
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l linkify_it
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
-BuildRequires:  python3-uc-micro-py
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(uc-micro-py)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
