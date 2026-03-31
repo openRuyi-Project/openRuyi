@@ -14,15 +14,16 @@ License:        MIT
 URL:            https://github.com/executablebooks/mdurl
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-flit-core
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(flit-core)
+BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-randomly)
 
 Provides:       python3-%{srcname}
