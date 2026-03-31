@@ -14,6 +14,7 @@ License:        Apache-2.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND GPL-3.0-or-later
 URL:            https://github.com/fsfe/reuse-tool
 #!RemoteAsset:  sha256:4feae057a2334c9a513e6933cdb9be819d8b822f3b5b435a36138bd218897d23
 Source:         https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l reuse -L
