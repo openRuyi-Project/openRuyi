@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        4.4.0
 Release:        %autorelease
+Summary:        Determine the appropriate platform-specific directories
 License:        MIT
 URL:            https://github.com/platformdirs/platformdirs
-Summary:        Determine the appropriate platform-specific directories
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 When writing applications, finding the right location to
 store user data and configuration varies per platform.  Even for
