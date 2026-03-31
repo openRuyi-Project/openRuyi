@@ -151,7 +151,12 @@ mkdir -p %{buildroot}%{_datadir}/%{name}/examples
 %{_includedir}/graphviz
 %{_libdir}/*.so
 %{_libdir}/graphviz/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libcdt.pc
+%{_libdir}/pkgconfig/libcgraph.pc
+%{_libdir}/pkgconfig/libgvc.pc
+%{_libdir}/pkgconfig/libgvpr.pc
+%{_libdir}/pkgconfig/libpathplan.pc
+%{_libdir}/pkgconfig/libxdot.pc
 %{_mandir}/man3/*.3*
 
 %files python3
