@@ -7,15 +7,13 @@
 
 Summary:        GNU Core Utilities
 Name:           coreutils
-Version:        9.9
+Version:        9.10
 Release:        %autorelease
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/coreutils/
 VCS:            git:https://github.com/coreutils/coreutils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:16535a9adf0b10037364e2d612aad3d9f4eca3a344949ced74d12faf4bd51d25
 Source0:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
 BuildOption(conf):  DEFAULT_POSIX2_VERSION=200112
