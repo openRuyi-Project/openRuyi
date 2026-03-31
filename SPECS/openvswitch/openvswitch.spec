@@ -72,6 +72,9 @@ rm -rf %{buildroot}/run
 # TODO: make tests pass.
 %check
 
+%pre
+%sysusers_create_package %{name} %{SOURCE1}
+
 %post
 # Initialize the database if it doesn't exist
 if [ ! -f %{_sysconfdir}/openvswitch/conf.db ]; then
