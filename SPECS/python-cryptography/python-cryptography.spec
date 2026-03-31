@@ -15,21 +15,22 @@ URL:            https://cryptography.io/en/latest/
 VCS:            git:https://github.com/pyca/cryptography
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+# TODO: Remove the vendor source after
 #!RemoteAsset
 Source1:        https://github.com/TakoPack/%{name}-vendor/releases/download/vendor-%{version}/%{srcname}-%{version}-vendor.tar.bz2
 BuildSystem:    pyproject
 
 BuildOption(prep):  -a1
-BuildOption(install): %{srcname}
+BuildOption(install):  %{srcname}
 
 BuildRequires:  rust
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-cffi
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
-BuildRequires:  python3-maturin
+BuildRequires:  python3dist(cffi)
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(maturin)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
