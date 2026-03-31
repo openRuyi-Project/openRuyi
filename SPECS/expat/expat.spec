@@ -62,7 +62,7 @@ in libexpat.
 %files devel
 %doc doc/reference.html doc/*.css examples/*.c
 %{_libdir}/libexpat.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/expat.pc
 %{_includedir}/*.h
 %{_libdir}/cmake/expat-%{version}
 %exclude %{_libdir}/libexpat.la
