@@ -19,7 +19,7 @@ BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
 
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
