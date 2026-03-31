@@ -13,17 +13,18 @@ Summary:        Colored formatter for the Python logging module
 License:        MIT
 URL:            https://github.com/borntyping/python-colorlog
 #!RemoteAsset
-Source:         https://github.com/borntyping/python-colorlog/archive/refs/tags/v%{version}.tar.gz
+Source:         https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
