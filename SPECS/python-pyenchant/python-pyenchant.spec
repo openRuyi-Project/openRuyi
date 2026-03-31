@@ -17,10 +17,10 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -L enchant
+BuildOption(install):  -L enchant
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  enchant
 
 Provides:       python3-%{srcname}
@@ -37,7 +37,6 @@ library by Dom Lachowicz.
 
 # TODO: Fix tests
 %check
-
 
 %files -f %{pyproject_files}
 %doc README.rst
