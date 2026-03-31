@@ -78,7 +78,8 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 
 %files devel
 %{_includedir}/*
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/liblldp_clif.pc
+%{_libdir}/pkgconfig/lldpad.pc
 %{_libdir}/liblldp_clif.so
 
 %changelog
