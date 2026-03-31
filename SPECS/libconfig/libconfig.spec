@@ -48,7 +48,8 @@ Development libraries and headers for developing software against libconfig.
 %{_includedir}/libconfig*
 %{_libdir}/cmake/libconfig
 %{_libdir}/libconfig*.so
-%{_libdir}/pkgconfig/libconfig*.pc
+%{_libdir}/pkgconfig/libconfig++.pc
+%{_libdir}/pkgconfig/libconfig.pc
 
 %changelog
 %{?autochangelog}
