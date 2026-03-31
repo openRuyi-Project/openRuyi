@@ -9,19 +9,22 @@
 Name:           python-%{srcname}
 Version:        0.4.6
 Release:        %autorelease
-License:        BSD-3-Clause
-URL:            https://pypi.org/project/colorama/
 Summary:        Colored terminal text rendering for Python
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+License:        BSD-3-Clause
+URL:            https://pypi.org/project/colorama
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
-
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 Makes ANSI escape character sequences, for producing colored
 terminal text and cursor positioning, work under MS Windows.
