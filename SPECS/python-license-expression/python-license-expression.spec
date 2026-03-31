@@ -17,6 +17,7 @@ License:        Apache-2.0
 URL:            https://github.com/nexB/license-expression
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/l/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
@@ -29,15 +30,14 @@ BuildRequires:  python3dist(setuptools-scm)
 # for tests.
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(boolean-py)
-
 %if %{with doc}
 BuildRequires:  python3dist(sphinx)
 BuildRequires:  python3dist(sphinxcontrib-apidoc)
 BuildRequires:  python3dist(sphinx-rtd-theme)
 %endif
 
-Provides:       python3-%{pypi_name}
-%python_provide python3-%{pypi_name}
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 This module defines a mini language to parse, validate, simplify, normalize and
@@ -51,7 +51,7 @@ conventions and license identifiers aliases to resolve and normalize licenses.
 Summary:        Documentation for python-license-expression
 License:        Apache-2.0 AND BSD-2-Clause AND MIT
 BuildArch:      noarch
-Requires:       python3-license_expression = %{version}-%{release}
+Requires:       python3-license-expression = %{version}-%{release}
 
 %description    doc
 Documentation for license-expression.
