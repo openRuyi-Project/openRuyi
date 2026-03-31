@@ -14,6 +14,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/konstin/puccinialin
 #!RemoteAsset:  sha256:e19f6316967ae100bf3fb92d8af95e3cec11ce0de58acd2f1a0bca835403a394
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
