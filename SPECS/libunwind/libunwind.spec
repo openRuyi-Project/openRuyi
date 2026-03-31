@@ -56,7 +56,11 @@ rm -rf %{buildroot}%{_libexecdir}
 
 %files devel
 %{_libdir}/libunwind*.so
-%{_libdir}/pkgconfig/libunwind*.pc
+%{_libdir}/pkgconfig/libunwind-coredump.pc
+%{_libdir}/pkgconfig/libunwind-generic.pc
+%{_libdir}/pkgconfig/libunwind-ptrace.pc
+%{_libdir}/pkgconfig/libunwind-setjmp.pc
+%{_libdir}/pkgconfig/libunwind.pc
 %{_includedir}/unwind.h
 %{_includedir}/libunwind*.h
 
