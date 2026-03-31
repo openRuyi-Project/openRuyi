@@ -5,10 +5,10 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define package_version 9.1
-%define patchlevel 1927
+%define package_version 9.2
+%define patchlevel 0272
 
-%define vimdir vim91
+%define vimdir vim92
 
 Name:           vim
 Version:        %{package_version}.%{patchlevel}
@@ -17,8 +17,8 @@ Summary:        A popular VI editor derivative with enhanced functionality
 License:        Vim AND LGPL-2.1-or-later AND MIT AND GPL-1.0-only AND (GPL-2.0-only OR Vim) AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND GPL-3.0-or-later AND OPUBL-1.0 AND Apache-2.0
 URL:            https://www.vim.org/
 VCS:            git:https://github.com/vim/vim
-#!RemoteAsset
-Source0:        https://github.com/%{name}/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:020efae1f8187a65a457f4b73cdbd0be3ccbae230e63293af51fdfcf3c831cb5
+Source0:        https://github.com/vim/vim/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildRequires:  gettext
@@ -138,6 +138,7 @@ rm -rf %{buildroot}%{_mandir}/tr.UTF-8/
 %lang(sk.cp1250) %{_datadir}/%{name}/%{vimdir}/lang/sk.cp1250
 %lang(sr) %{_datadir}/%{name}/%{vimdir}/lang/sr
 %lang(sv) %{_datadir}/%{name}/%{vimdir}/lang/sv
+%lang(ta) %{_datadir}/%{name}/%{vimdir}/lang/ta
 %lang(tr) %{_datadir}/%{name}/%{vimdir}/lang/tr
 %lang(uk) %{_datadir}/%{name}/%{vimdir}/lang/uk
 %lang(uk.cp1251) %{_datadir}/%{name}/%{vimdir}/lang/uk.cp1251
