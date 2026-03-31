@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/fastapi/typer
 #!RemoteAsset:  sha256:73495dd08c2d0940d611c5a8c04e91c2a0a98600cbd4ee19192255a233b6dbfd
 Source0:        https://files.pythonhosted.org/packages/source/t/typer-slim/typer_slim-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
