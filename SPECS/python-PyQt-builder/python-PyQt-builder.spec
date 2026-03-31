@@ -16,17 +16,20 @@ License:        BSD-2-Clause
 URL:            https://www.riverbankcomputing.com/software/pyqt/
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # not support dynamic version.
 Patch0:         0001-fix-version.patch
+
 BuildOption(install):  -l pyqtbuild
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-sip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(sip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(setuptools-scm) >= 8
 
 Provides:       python3-%{srcname}
