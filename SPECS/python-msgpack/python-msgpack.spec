@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname msgpack
-%global python3_pkgversion 3
 
 Name:           python-%{srcname}
 Version:        1.1.2
@@ -17,11 +16,11 @@ URL:            https://msgpack.org/
 Source0:        https://github.com/msgpack/msgpack-python/archive/v%{version}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  gcc-c++
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
