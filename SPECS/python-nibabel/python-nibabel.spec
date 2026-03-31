@@ -15,6 +15,7 @@ URL:            http://nipy.org/nibabel/
 VCS:            git:https://github.com/nipy/nibabel
 #!RemoteAsset:  sha256:8d2006b70d727fd0a798a88ae5fd64339741f436fcfc83d6ea3256cdbc51c5b7
 Source:         https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
