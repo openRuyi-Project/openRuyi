@@ -71,7 +71,7 @@ linked in as a library when building extensible programs.
 %{_datadir}/aclocal/guile.m4
 %{_infodir}/*.info*
 %{_libdir}/libguile-*.so
-%{_libdir}/pkgconfig/guile-*.pc
+%{_libdir}/pkgconfig/guile-3.0.pc
 
 %changelog
 %autochangelog
