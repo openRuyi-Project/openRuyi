@@ -69,7 +69,7 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %files devel
 %{_libdir}/lib*.so
 %{_includedir}/%{name}/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/lognorm.pc
 
 %changelog
 %{?autochangelog}
