@@ -25,8 +25,8 @@ BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 BuildRequires:  perl(XML::LibXML) >= 1.70
 # Manual
-BuildRequires:  libxslt-devel
-BuildRequires:  libxml2-devel
+BuildRequires:  pkgconfig(libxslt)
+BuildRequires:  pkgconfig(libxml-2.0)
 
 Requires:       perl(File::Path) >= 2.06
 Requires:       perl(XML::LibXML) >= 1.70
