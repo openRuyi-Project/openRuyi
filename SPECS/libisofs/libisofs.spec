@@ -51,7 +51,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/libisofs/
 %{_libdir}/libisofs.so
-%{_libdir}/pkgconfig/libisofs*.pc
+%{_libdir}/pkgconfig/libisofs-1.pc
 
 %changelog
 %{?autochangelog}
