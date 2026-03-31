@@ -15,6 +15,7 @@ URL:            https://gitlab.freedesktop.org/polkit/polkit
 #!RemoteAsset
 Source0:        https://github.com/polkit-org/polkit/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:        50-default.rules
+Source2:        polkit.sysusers
 BuildSystem:    meson
 
 BuildOption(conf):  -D session_tracking=logind
@@ -57,8 +58,12 @@ Development files for the PolicyKit Authorization Framework.
 install -d %{buildroot}%{_localstatedir}/lib/polkit
 install -m0644 %{SOURCE1} %{buildroot}%{_datadir}/polkit-1/rules.d/
 mkdir -p %{buildroot}%{_sysconfdir}/polkit-1/actions
+install -Dpm0644 %{SOURCE2} %{buildroot}%{_sysusersdir}/polkit.conf
 
 %find_lang polkit-1 --generate-subpackages
+
+%pre
+%sysusers_create_package %{name} %{SOURCE2}
 
 %post
 # The implied (systemctl preset) will fail and complain, but the macro hides
