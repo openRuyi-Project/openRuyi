@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/gumblex/zhconv
 #!RemoteAsset:  sha256:ad42d9057ca0605f8e41d62b67ca797f879f58193ee6840562c51459b2698c45
 Source:         https://files.pythonhosted.org/packages/source/z/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
