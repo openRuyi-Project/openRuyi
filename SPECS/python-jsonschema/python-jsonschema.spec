@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/Julian/jsonschema
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -22,15 +23,15 @@ BuildOption(check):  -e 'jsonschema.benchmarks*' -e 'jsonschema.tests.test_jsons
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-hatch-vcs
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python-hatch_fancy_pypi_readme
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(hatch-vcs)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(hatch-fancy-pypi-readme)
 # for tests
-BuildRequires:  python3-pytest
-BuildRequires:  python3-attrs
-BuildRequires:  python3-pyrsistent
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(attrs)
+BuildRequires:  python3dist(pyrsistent)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
