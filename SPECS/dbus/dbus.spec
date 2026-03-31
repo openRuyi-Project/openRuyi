@@ -64,7 +64,9 @@ BuildRequires:  pkgconfig(libselinux)
 Requires(post): update-alternatives
 Requires(preun):update-alternatives
 Requires(pre):  dbus-common
+Requires(pre):  user(messagebus)
 Requires:       dbus-common
+Requires:       user(messagebus)
 Requires:       dbus-tools
 Requires:       dbus-broker
 
@@ -104,6 +106,11 @@ This package contains the header files and libraries needed for D-Bus developmen
 mv -f %{buildroot}%{_bindir}/dbus-launch %{buildroot}%{_bindir}/dbus-launch.nox11
 install -d %{buildroot}/run/dbus
 mkdir -p %{buildroot}%{_sysconfdir}/alternatives
+%if %{with systemd}
+# openRuyi keeps messagebus in setup, so drop the upstream sysusers
+# provider file instead of shipping a second source of truth here.
+rm -f %{buildroot}%{_sysusersdir}/dbus.conf
+%endif
 
 %post
 if [ "$1" = 1 ]; then
@@ -152,7 +159,6 @@ fi
 %dir %{_userunitdir}/sockets.target.wants
 %{_userunitdir}/sockets.target.wants/dbus.socket
 %{_tmpfilesdir}/dbus.conf
-%{_sysusersdir}/dbus.conf
 %{_unitdir}/dbus.service
 %{_unitdir}/dbus.socket
 %dir %{_unitdir}/multi-user.target.wants
