@@ -72,7 +72,8 @@ rm -rf %{buildroot}%{_docdir}
 %{_libdir}/*.a
 %{_libdir}/*.so
 %{_includedir}/X11/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/x11-xcb.pc
+%{_libdir}/pkgconfig/x11.pc
 %{_includedir}/X11/extensions/XKBgeom.h
 
 %files doc
