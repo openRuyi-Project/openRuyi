@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        1.5.5
 Release:        %autorelease
+Summary:        Test utility for mocking the datetime module
 License:        Apache-2.0
 URL:            https://github.com/spulec/freezegun
-Summary:        Test utility for mocking the datetime module
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 FreezeGun is a library that allows your python tests to travel through
 time by mocking the datetime module.
