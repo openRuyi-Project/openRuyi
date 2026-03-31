@@ -15,6 +15,7 @@ License:        MIT
 URL:            https://github.com/mgxd/ci-info
 #!RemoteAsset:  sha256:34d5a18726b3780abdf985234b871ac33124d64dd8e294870b8cc5b410c18418
 Source:         https://files.pythonhosted.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
