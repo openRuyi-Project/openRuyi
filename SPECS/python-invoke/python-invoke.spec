@@ -9,18 +9,18 @@
 Name:           python-%{srcname}
 Version:        2.2.1
 Release:        %autorelease
+Summary:        Pythonic task execution
 License:        BSD-3-Clause
 URL:            https://www.pyinvoke.org/
-Summary:        Pythonic task execution
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname} +auto
+BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -36,7 +36,6 @@ instead of servers and network commands.
 
 # TODO: Enable tests.
 %check
-
 
 %files -f %{pyproject_files}
 %doc README*
