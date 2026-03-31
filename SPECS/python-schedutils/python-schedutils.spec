@@ -12,14 +12,14 @@ Release:        %autorelease
 Summary:        Linux scheduler python bindings
 License:        GPL-2.0-only
 URL:            https://git.kernel.org/cgit/libs/python/python-schedutils/python-schedutils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:90a24f8d46574513b3d334b473e128c456e7eddaec6e3dd198d7e5ad69ddc12f
 Source0:        https://cdn.kernel.org/pub/software/libs/python/%{name}/%{name}-%{version}.tar.xz
 BuildSystem:    pyproject
 
-BuildOption(install): %{srcname}
+BuildOption(install):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -39,4 +39,4 @@ functions and friends.
 %{_mandir}/man1/ptaskset.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
