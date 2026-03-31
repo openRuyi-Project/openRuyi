@@ -179,7 +179,8 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libcolord.so
 %{_libdir}/libcolordprivate.so
 %{_libdir}/libcolorhug.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/colord.pc
+%{_libdir}/pkgconfig/colorhug.pc
 %{_datadir}/gir-1.0/*.gir
 %{_datadir}/vala/vapi/colord.vapi
 %{_datadir}/vala/vapi/colord.deps
