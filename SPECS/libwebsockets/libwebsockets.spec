@@ -75,7 +75,8 @@ develop applications that use libwebsockets.
 %{_includedir}/*.h
 %{_includedir}/%{name}
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libwebsockets.pc
+%{_libdir}/pkgconfig/libwebsockets_static.pc
 %{_libdir}/cmake/libwebsockets/
 
 %changelog
