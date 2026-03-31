@@ -6,19 +6,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libtool
-Version:        2.4.7
+Version:        2.5.4
 Release:        %autorelease
 Summary:        A Tool to Build Shared Libraries
 License:        GFDL-1.2-or-later AND GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnu.org/software/libtool/
 VCS:            git:https://git.savannah.gnu.org/git/libtool.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:f81f5860666b0bc7d84baddefa60d1cb9fa6fceb2398cc3baca6afaa60266675
 Source0:        https://ftpmirror.gnu.org/gnu/libtool/libtool-%{version}.tar.xz
 Buildsystem:    autotools
-
-Patch0:         libtool-reproducible-hostname.patch
-Patch1:         handle-Werror-return-type.patch
-Patch2:         libtool-2.4.7-grep-3.8.patch
 
 BuildOption(conf):  --enable-ltdl-install
 
