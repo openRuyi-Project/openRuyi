@@ -9,19 +9,22 @@
 Name:           python-%{srcname}
 Version:        0.5.1
 Release:        %autorelease
+Summary:        Character encoding aliases for legacy web content
 License:        BSD-3-Clause
 URL:            https://github.com/SimonSapin/python-webencodings
-Summary:        Character encoding aliases for legacy web content
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
-
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): %{srcname} +auto
+
+BuildOption(install):  %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 In order to be compatible with legacy web content when interpreting
 something like @code{Content-Type: text/html; charset=latin1}, tools need
