@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/martinblech/xmltodict
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/x/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
