@@ -9,23 +9,26 @@
 Name:           python-%{srcname}
 Version:        25.4.0
 Release:        %autorelease
-License:        MIT
-URL:            https://github.com/python-attrs/attrs/
 Summary:        Attributes without boilerplate
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+License:        MIT
+URL:            https://github.com/python-attrs/attrs
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l attr %{srcname} +auto
+
+BuildOption(install):  -l attr %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 attrs is an MIT-licensed Python package with class decorators that
 ease the chores of implementing the most common attribute-related
 object protocols.
-
 
 %generate_buildrequires
 %pyproject_buildrequires
