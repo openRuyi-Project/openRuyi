@@ -8,21 +8,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           cmake
-Version:        4.2.2
+Version:        4.3.1
 Release:        %autorelease
 Summary:        Cross-platform make system
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
 VCS:            git:https://gitlab.kitware.com/cmake/cmake
-#!RemoteAsset:  sha256:bbda94dd31636e89eb1cc18f8355f6b01d9193d7676549fba282057e8b730f58
-Source0:        https://www.cmake.org/files/v4.2/cmake-%{version}.tar.gz
+#!RemoteAsset:  sha256:0798f4be7a1a406a419ac32db90c2956936fecbf50db3057d7af47d69a2d7edb
+Source0:        https://www.cmake.org/files/v4.3/cmake-%{version}.tar.gz
 Source1:        macros.cmake
 Source2:        macros.buildsystem.cmake
 Source3:        cmake.attr
 BuildSystem:    autotools
-
-# Patch for ruby to unconditionally check for vendordir
-Patch0:         0001-cmake-findruby.patch
 
 BuildOption(conf):  --no-system-libs
 
