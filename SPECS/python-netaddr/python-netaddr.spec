@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
 %global srcname netaddr
 %bcond doc 0
 
@@ -21,11 +22,11 @@ BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(pytest)
 %if %{with doc}
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-sphinx-issues
-BuildRequires:  python3-furo
+BuildRequires:  python3dist(sphinx)
+BuildRequires:  python3dist(sphinx-issues)
+BuildRequires:  python3dist(furo)
 %endif
 
 Provides:       python3-%{srcname}
