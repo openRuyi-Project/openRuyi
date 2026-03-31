@@ -9,20 +9,23 @@
 Name:           python-%{srcname}
 Version:        2.5.0
 Release:        %autorelease
+Summary:        HTTP library with thread-safe connection pooling
 License:        MIT
 URL:            https://urllib3.readthedocs.io/
-Summary:        HTTP library with thread-safe connection pooling
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/u/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pytest
-BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 Urllib3 supports features left out of urllib and urllib2 libraries.  It
 can reuse the same socket connection for multiple requests, it can POST files,
