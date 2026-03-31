@@ -14,6 +14,7 @@ License:        MPL-2.0 AND MIT
 URL:            https://github.com/tqdm/tqdm
 #!RemoteAsset:  sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
