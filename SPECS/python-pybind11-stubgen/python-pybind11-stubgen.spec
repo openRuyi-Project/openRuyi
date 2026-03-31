@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/pybind/pybind11-stubgen
 #!RemoteAsset:  sha256:758d6d6bbeefc62ad7f78d5e5bbf357ccf6af83cd4504f5f549403f452942708
 Source0:        https://files.pythonhosted.org/packages/source/p/pybind11-stubgen/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
