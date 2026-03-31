@@ -14,13 +14,13 @@
 %endif
 
 Name:           m4
-Version:        1.4.20
+Version:        1.4.21
 Release:        %autorelease
 Summary:        The GNU macro processor
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/m4/
 VCS:            git:http://git.savannah.gnu.org/r/m4.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:f25c6ab51548a73a75558742fb031e0625d6485fe5f9155949d6486a2408ab66
 Source0:        https://ftpmirror.gnu.org/gnu/m4/m4-%{version}.tar.xz
 BuildSystem:    autotools
 
