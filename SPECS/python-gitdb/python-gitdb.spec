@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/gitdb
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
