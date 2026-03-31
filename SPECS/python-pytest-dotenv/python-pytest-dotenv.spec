@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        0.5.2
 Release:        %autorelease
+Summary:        Automatically detect and load a .env file before running tests
 License:        MIT
 URL:            https://github.com/quiqua/pytest-dotenv
-Summary:        Automatically detect and load a .env file before running tests
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l pytest_dotenv +auto
+
+BuildOption(install):  -l pytest_dotenv +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 This Pytest plugin automatically detects and loads environment variables
 from a .env file before running tests.
