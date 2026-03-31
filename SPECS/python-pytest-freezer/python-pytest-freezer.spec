@@ -9,19 +9,22 @@
 Name:           python-pytest-freezer
 Version:        0.4.9
 Release:        %autorelease
+Summary:        Pytest plugin providing a fixture interface for spulec/freezegun
 License:        MIT
 URL:            https://github.com/pytest-dev/pytest-freezer/
-Summary:        Pytest plugin providing a fixture interface for spulec/freezegun
-Provides:       python3-pytest-freezer
-%python_provide python3-pytest-freezer
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-pytest-freezer
+%python_provide python3-pytest-freezer
+
 %description
 Pytest plugin providing a fixture interface for
 @url{https://github.com/spulec/freezegun, freezegun}.
