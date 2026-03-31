@@ -21,9 +21,9 @@ URL:            https://github.com/lxml/lxml
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
 
-BuildRequires:  libxml2-devel
-BuildRequires:  libxslt-devel
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(libxml-2.0)
+BuildRequires:  pkgconfig(libxslt)
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  expat
 
