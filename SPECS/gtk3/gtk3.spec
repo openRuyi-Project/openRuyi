@@ -156,7 +156,14 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_includedir}/gail-3.0/
 %{_includedir}/gtk-3.0/
 %{_datadir}/aclocal/gtk-3.0.m4
-%{_libdir}/pkgconfig/g*-3.0.pc
+%{_libdir}/pkgconfig/gail-3.0.pc
+%{_libdir}/pkgconfig/gdk-3.0.pc
+%{_libdir}/pkgconfig/gdk-wayland-3.0.pc
+%{_libdir}/pkgconfig/gdk-x11-3.0.pc
+%{_libdir}/pkgconfig/gtk+-3.0.pc
+%{_libdir}/pkgconfig/gtk+-unix-print-3.0.pc
+%{_libdir}/pkgconfig/gtk+-wayland-3.0.pc
+%{_libdir}/pkgconfig/gtk+-x11-3.0.pc
 %{_bindir}/gtk3-*
 %{_bindir}/gtk-builder-tool
 %{_bindir}/gtk-encode-symbolic-svg
