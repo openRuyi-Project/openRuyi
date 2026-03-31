@@ -33,10 +33,10 @@ URL:            https://flit.pypa.io/
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 %if %{without bootstrap}
 BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(pip)
 %endif
 BuildRequires:  expat
 
