@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        2.1.2
 Release:        %autorelease
+Summary:        Poetry PEP 517 build back-end
 License:        MIT
 URL:            https://github.com/python-poetry/poetry-core
-Summary:        Poetry PEP 517 build back-end
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): poetry +auto
+
+BuildOption(install):  poetry +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
+
 %description
 The poetry-core module provides a PEP 517 build back-end
 implementation developed for Poetry.  This project is intended to be
