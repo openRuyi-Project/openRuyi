@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/skelsec/minidump
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
