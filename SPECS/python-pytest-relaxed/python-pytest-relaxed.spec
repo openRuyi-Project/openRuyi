@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        2.0.2
 Release:        %autorelease
+Summary:        Relaxed test discovery for pytest
 License:        BSD-2-clause
 URL:            https://github.com/bitprophet/pytest-relaxed
-Summary:        Relaxed test discovery for pytest
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): pytest_relaxed +auto
+
+BuildOption(install):  pytest_relaxed +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 This package provides relaxed test discovery for pytest.
 
