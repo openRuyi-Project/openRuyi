@@ -9,9 +9,9 @@
 Name:           python-%{srcname}
 Version:        2.1.0
 Release:        %autorelease
+Summary:        Filters to transform text into typographically-improved HTML
 License:        BSD-3-Clause
 URL:            https://github.com/justinmayer/typogrify
-Summary:        Filters to transform text into typographically-improved HTML
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
@@ -19,11 +19,12 @@ BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} +auto
 
-BuildRequires:  python3-devel
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
 # For check
 BuildRequires:  pytest
-BuildRequires:  python3-jinja2
-BuildRequires:  python3-django
+BuildRequires:  python3dist(jinja2)
+BuildRequires:  python3dist(django)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
