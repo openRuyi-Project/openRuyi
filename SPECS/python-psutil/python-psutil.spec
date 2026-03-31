@@ -9,23 +9,24 @@
 Name:           python-%{srcname}
 Version:        7.2.2
 Release:        %autorelease
+Summary:        Library for retrieving information on running processes
 License:        BSD-3-Clause
 URL:            https://github.com/giampaolo/psutil
-Summary:        Library for retrieving information on running processes
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
-
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildSystem:    pyproject
 
-BuildRequires:  gcc
+BuildOption(install):  -l %{srcname} +auto
+
 BuildRequires:  sed
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(pip) >= 19
 BuildRequires:  python3dist(setuptools) >= 43
-BuildSystem:    pyproject
-BuildOption(install):  -l %{srcname} +auto
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 @code{psutil} (Python system and process utilities) is a library for
 retrieving information on running processes and system utilization (CPU,
