@@ -14,12 +14,13 @@ License:        Apache-2.0
 URL:            https://github.com/pyca/pyopenssl
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): OpenSSL
+BuildOption(install):  OpenSSL
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  openssl
 
 Provides:       python3-%{srcname}
