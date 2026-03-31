@@ -9,19 +9,21 @@
 Name:           python-%{srcname}
 Version:        1.3.0
 Release:        %autorelease
+Summary:        Simple Python PEP 517 package builder
 License:        MIT
 URL:            https://pypa-build.readthedocs.io/en/latest/
-Summary:        Simple Python PEP 517 package builder
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
-BuildOption(install): build +auto
+
+BuildOption(install):  build +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 %description
 The @command{build} command invokes the PEP 517 hooks to
 build a distribution package.  It is a simple build tool and does not perform
@@ -34,5 +36,6 @@ order to make bootstrapping easier.
 %files -f %{pyproject_files}
 %doc README*
 %license LICENSE
+
 %changelog
 %{?autochangelog}
