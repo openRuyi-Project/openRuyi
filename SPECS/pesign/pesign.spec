@@ -16,6 +16,7 @@ URL:            https://github.com/rhboot/pesign
 #!RemoteAsset
 Source0:        https://github.com/rhboot/pesign/releases/download/%{version}/pesign-%{version}.tar.bz2
 Source1:        pesign.py
+Source2:        pesign.sysusers
 BuildSystem:    autotools
 
 Patch0:         0001-cms_common-Fixed-Segmentation-fault.patch
@@ -71,11 +72,10 @@ rm -f %{buildroot}/usr/share/doc/pesign-%{version}/COPYING
 install -d -m 0755 %{buildroot}%{python3_sitelib}/mockbuild/plugins/
 install -m 0755 %{SOURCE1} %{buildroot}%{python3_sitelib}/mockbuild/plugins/
 
-cat >pesign.sysusers.conf <<EOF
-u pesign - 'Group for the pesign signing daemon' /run/pesign -
-EOF
+install -m0644 -D %{SOURCE2} %{buildroot}%{_sysusersdir}/pesign.conf
 
-install -m0644 -D pesign.sysusers.conf %{buildroot}%{_sysusersdir}/pesign.conf
+%pre
+%sysusers_create_package %{name} %{SOURCE2}
 
 %post
 %systemd_post pesign.service
