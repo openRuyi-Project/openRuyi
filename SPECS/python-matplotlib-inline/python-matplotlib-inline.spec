@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/ipython/matplotlib-inline
 #!RemoteAsset:  sha256:e1ee949c340d771fc39e241ea75683deb94762c8fa5f2927ec57c83c4dffa9fe
 Source0:        https://files.pythonhosted.org/packages/source/m/matplotlib-inline/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
