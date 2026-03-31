@@ -16,17 +16,18 @@ License:        MIT
 URL:            https://github.com/Textualize/rich
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} -L
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-poetry_core
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(poetry-core)
 %if %{with tests}
-BuildRequires:  python3-pytest
-BuildRequires:  python3-attrs
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(attrs)
 %endif
 
 Provides:       python3-%{srcname}
