@@ -13,15 +13,16 @@ Summary:        RPM Macro Expansion in Python
 License:        LGPL-2.1-or-later
 #!RemoteAsset:  sha256:9c32c8e41c1937a79c67735e19d3969be28b308d63bc31b1cfb790b1f556ab0c
 Source:         https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l norpm
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip) >= 19
 BuildRequires:  python3dist(ply)
 
