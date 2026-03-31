@@ -265,6 +265,9 @@ install -pm640 tls.conf          %{buildroot}%{valkey_modules_cfg}/tls.conf
 taskset -c 1 ./runtest --clients 50 --skiptest "Active defrag - AOF loading"
 %endif
 
+%pre
+%sysusers_create_package %{name} %{SOURCE4}
+
 %post
 %systemd_post valkey.service
 %systemd_post valkey-sentinel.service
