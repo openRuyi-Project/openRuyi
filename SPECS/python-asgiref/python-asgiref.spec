@@ -9,24 +9,21 @@
 Name:           python-%{srcname}
 Version:        3.8.1
 Release:        %autorelease
-# bundled async-timeout is Apache-2.0
-License:        BSD-3-Clause AND Apache-2.0
-URL:            https://github.com/django/asgiref/
 Summary:        ASGI specs, helper code, and adapters
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+License:        BSD-3-Clause AND Apache-2.0
+URL:            https://github.com/django/asgiref
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
 
-# https://github.com/django/asgiref/commit/9c6df6e02700092eb19adefff3552d44388f69b8
-# This code is modified and probably cannot be unvendored.
-Provides:       bundled(python3dist(async-timeout)) == 3.0.1
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  pyproject-rpm-macros
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 ASGI is a standard for Python asynchronous web apps and servers to
