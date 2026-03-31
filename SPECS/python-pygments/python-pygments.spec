@@ -15,22 +15,23 @@ URL:            https://pygments.org/
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l pygments
+BuildOption(check):  -e 'pygments.sphinxext*'
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(docutils)
+
 Provides:       python3-pygments
 %python_provide python3-pygments
 
-BuildRequires:  python3-devel
-BuildSystem:    pyproject
-
-BuildRequires:  python3-docutils
-BuildOption(install):  -l pygments
-BuildOption(check):    -e 'pygments.sphinxext*'
 %description
 Pygments is a syntax highlighting package written in Python.
 
-
 %generate_buildrequires
 %pyproject_buildrequires
-
 
 %files -f %{pyproject_files}
 %license LICENSE*
