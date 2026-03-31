@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/aio-libs/yarl
 #!RemoteAsset:  sha256:6c5822b7b756a99a356b915dd1267f52ab8a4efaa135963bd7f4bd5d368f71d7
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
