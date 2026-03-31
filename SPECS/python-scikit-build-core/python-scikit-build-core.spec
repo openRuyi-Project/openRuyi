@@ -17,26 +17,26 @@ License:        Apache-2.0 AND MIT
 URL:            https://github.com/scikit-build/scikit-build-core
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/s/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-hatch-vcs
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  cmake
 BuildRequires:  ninja
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 %if %{with test}
 # for tests.
-BuildRequires:  python3-pytest
-BuildRequires:  python3-virtualenv
-BuildRequires:  python3-numpy
-BuildRequires:  python3-pybind11
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(virtualenv)
+BuildRequires:  python3dist(numpy)
+BuildRequires:  python3dist(pybind11)
 %endif
 
 Provides:       python3-%{srcname}
