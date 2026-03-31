@@ -220,6 +220,9 @@ mkdir -p %{buildroot}%{_rundir}/unbound
 # Link unbound-control-setup.8 manpage to unbound-control.8
 echo ".so man8/unbound-control.8" > %{buildroot}/%{_mandir}/man8/unbound-control-setup.8
 
+%pre -n %{name}-libs
+%sysusers_create_package unbound %{SOURCE17}
+
 %pre
 %sysusers_create_package unbound %{SOURCE17}
 
