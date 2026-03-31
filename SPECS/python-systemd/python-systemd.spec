@@ -11,8 +11,6 @@ Release:        %autorelease
 Summary:        Python module wrapping libsystemd functionality
 License:        LGPL-2.1-or-later
 URL:            https://github.com/systemd/python-systemd
-Provides:       python3-systemd
-%python_provide python3-systemd
 #!RemoteAsset
 Source0:        %{url}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    pyproject
@@ -20,13 +18,16 @@ BuildSystem:    pyproject
 # https://github.com/systemd/python-systemd/pull/140
 Patch0:         0001-docs-update-intersphinx-_-mapping.patch
 
-BuildOption(install): systemd +auto
+BuildOption(install):  systemd +auto
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
-BuildRequires:  python-rpm-macros
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pytest
 BuildRequires:  pkgconfig(libsystemd)
+
+Provides:       python3-systemd
+%python_provide python3-systemd
 
 %description
 Python module for native access to the libsystemd facilities. Functionality
