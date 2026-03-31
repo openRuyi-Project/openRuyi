@@ -1,24 +1,22 @@
-u root         0:0     "Super User"            /root            /bin/bash
-u bin          1       "bin"                   /bin             -
-u daemon       2       "daemon"                /sbin            -
-u sync         5:0     "sync"                  /sbin            /bin/sync
-u shutdown     6:0     "shutdown"              /sbin            /sbin/shutdown
-u halt         7:0     "halt"                  /sbin            /sbin/halt
-u mail         8:12    "mail"                  /var/spool/mail  -
-u operator    11:0     "operator"              /root            -
-u games       12:100   "games"                 /usr/games       -
-u ftp         14:50    "FTP User"              /var/ftp         -
-u nobody   65534:65534 "Kernel Overflow User"  -                -
-u messagebus 977:977   "User for D-Bus"        /run/dbus        -
-g root           0
+# Base groups
 g sys            3
-g tty            5
 g mem            8
 g mail           12
-g man            15
+g shadow         15
 g floppy         19
 g games          20
 g ftp            50
 g lock           54
 g messagebus     977
-g nobody         65534
+
+# Base users
+u bin          1             "bin"                  /bin             -
+u daemon       2             "daemon"               /sbin            -
+u sync         5:root        "sync"                 /sbin            /bin/sync
+u shutdown     6:root        "shutdown"             /sbin            /sbin/shutdown
+u halt         7:root        "halt"                 /sbin            /sbin/halt
+u mail         8:mail        "mail"                 /var/spool/mail  -
+u operator    11:root        "operator"             /root            -
+u games       12:games       "games"                /usr/games       -
+u ftp         14:ftp         "FTP User"             /var/ftp         -
+u messagebus 977:messagebus  "User for D-Bus"       /run/dbus        -

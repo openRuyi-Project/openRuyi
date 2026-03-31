@@ -18,9 +18,8 @@ mail	8	12	/var/spool/mail		/usr/sbin/nologin	setup
 news	9	13	/var/spool/news		/usr/sbin/nologin	inn
 uucp	10	14	/var/spool/uucp		/usr/sbin/nologin	uucp
 operator	11	(0)	/root		/usr/sbin/nologin	setup
-games	12	(100)	/usr/games		/usr/sbin/nologin	setup
+games	12	(20)	/usr/games		/usr/sbin/nologin	setup
 ftp	14	50	/var/ftp		/usr/sbin/nologin	setup
-man	-	15	-		-	setup
 dialout	-	18	-		-	setup
 floppy	-	19	-		-	setup
 games	-	20	-		-	setup
@@ -138,6 +137,7 @@ systemd-journal	-	190	-		-	systemd
 #systemd-journal-gateway	191	191	/		/usr/sbin/nologin	systemd
 systemd-network	192	192	/		/usr/sbin/nologin	systemd
 systemd-resolve	193	193	/		/usr/sbin/nologin	systemd
+messagebus	977	977	/run/dbus		/usr/sbin/nologin	setup
 xrootd	194	194	/var/spool/xrootd		-	xrootd-server
 #gnats	?	?	?		?	gnats, gnats-db
 #listar	?	?	?		?	listar

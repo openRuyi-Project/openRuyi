@@ -30,6 +30,9 @@ Source21:       lang.csh
 Source22:       lang.sh
 Source31:       COPYING
 Source32:       uidgid
+# Single source of truth for base identities.
+# Used in %build to seed packaged /etc/{passwd,group,shadow,gshadow},
+# and shipped as the runtime vendor sysusers config.
 Source33:       setup.sysusers
 Source34:       uidgidlint
 Source35:       serviceslint
@@ -44,6 +47,10 @@ BuildRequires:  systemd-rpm-macros
 
 #require system release for saner dependency order
 Requires:       system-release
+# Keep explicit messagebus providers until openRuyi re-enables rpm native
+# sysusers handling in SPECS/rpm/rpm.spec.
+Provides:       user(messagebus)
+Provides:       group(messagebus)
 
 %description
 The setup package contains a set of important system configuration and
@@ -60,7 +67,7 @@ cp %SOURCE31 %SOURCE32 docs/
 
 %build
 # This produces ./etc/{passwd,group,shadow,gshadow}
-systemd-sysusers --root=./ %SOURCE33
+systemd-sysusers --root=./ /usr/lib/sysusers.d/basic.conf %SOURCE33
 # Allow the user to copy the file
 chmod 0400 ./etc/{shadow,gshadow}
 
