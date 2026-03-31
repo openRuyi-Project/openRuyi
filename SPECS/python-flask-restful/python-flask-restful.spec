@@ -18,12 +18,12 @@ Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/Flas
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): flask_restful
+BuildOption(install):  flask_restful
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 # Tests
-BuildRequires:  python3-pycryptodome
+BuildRequires:  python3dist(pycryptodome)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
