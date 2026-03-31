@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            http://pypi.python.org/pypi/pyserial
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l serial
@@ -26,9 +27,9 @@ BuildOption(check):  -e serial.urlhandler.protocol_cp2110
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
