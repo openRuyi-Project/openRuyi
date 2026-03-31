@@ -15,6 +15,7 @@ URL:            https://marshmallow.readthedocs.io/
 VCS:            git:https://github.com/marshmallow-code/marshmallow/
 #!RemoteAsset:  sha256:4d1d66189c8d279ca73a6b0599d74117e5f8a3830b5cd766b75c2bb08e3464e7
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
