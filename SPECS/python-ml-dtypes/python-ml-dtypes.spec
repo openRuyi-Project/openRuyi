@@ -19,11 +19,11 @@ BuildSystem:    pyproject
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(pip)
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-numpy
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(numpy)
 BuildRequires:  gcc-c++
 
 Provides:       python3-%{srcname}
