@@ -24,10 +24,10 @@
 Name:           glibc
 Summary:        Standard Shared Libraries (from the GNU C Library)
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND GPL-3.0-or-later
-Version:        2.42
+Version:        2.43
 Release:        %autorelease
 URL:            https://www.gnu.org/software/libc/libc.html
-#!RemoteAsset:  sha256:d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f
+#!RemoteAsset:  sha256:d9c86c6b5dbddb43a3e08270c5844fc5177d19442cf5b8df4be7c07cd5fa3831
 Source0:        https://ftpmirror.gnu.org/gnu/glibc/glibc-%{version}.tar.xz
 Source1:        nsswitch.conf
 %if %{with nscd}
