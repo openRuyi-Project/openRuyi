@@ -37,7 +37,7 @@ module.
 
 %package        devel
 Summary:        Development files for %{name}-libs
-Requires:       %{name}%{?isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Development files for libttfautohint.
