@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/pydantic/pydantic
 #!RemoteAsset:  sha256:4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
