@@ -25,7 +25,7 @@ This package contains brush files for use with MyPaint and other programs.
 
 %package        devel
 Summary:        Files for developing with mypaint-brushes
-Requires:       %{name}%{?isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains a pkgconfig file which makes it easier to develop
