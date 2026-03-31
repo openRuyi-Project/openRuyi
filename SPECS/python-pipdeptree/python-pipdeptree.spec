@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/naiquevin/pipdeptree
 #!RemoteAsset:  sha256:0f78fe4bcf36a72d0d006aee0f4e315146cb278e4c4d51621f370a3d6b8861c1
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # remove graphviz test
