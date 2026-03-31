@@ -23,7 +23,7 @@ BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(warnings)
 # Manual
-BuildRequires:  expat-devel
+BuildRequires:  pkgconfig(expat)
 
 %description
 This module provides ways to parse XML documents. It is built on top of
