@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        25.1.0
 Release:        %autorelease
+Summary:        Fancy PyPI READMEs with Hatch
 License:        MIT
 URL:            https://github.com/hynek/hatch-fancy-pypi-readme
-Summary:        Fancy PyPI READMEs with Hatch
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 This hatch plugin allows defining a project description in
 terms of concatenated fragments that are based on static strings, files and
