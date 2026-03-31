@@ -19,15 +19,16 @@ Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  procps-ng
 BuildRequires:  pkgconfig(python3)
 %if %{with doc}
 BuildRequires:  make
 BuildRequires:  sphinx-build
 %endif
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
