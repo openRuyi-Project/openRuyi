@@ -48,7 +48,7 @@ BuildRequires:  perl(XML::SAX::Exception)
 # Manual
 BuildRequires:  perl(Alien::Base::Wrapper)
 BuildRequires:  perl(Alien::Libxml2)
-BuildRequires:  libxml2-devel
+BuildRequires:  pkgconfig(libxml-2.0)
 
 Requires:       perl(Exporter) >= 5.57
 Requires:       perl(XML::NamespaceSupport) >= 1.07
