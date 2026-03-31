@@ -103,7 +103,7 @@ done
 popd
 
 %pre
-%sysusers_create_package %{name} %{SOURCE2}
+%sysusers_create_package %{name} %{SOURCE1}
 
 %files
 %doc README.md FIPS-NOTES.md NEWS
