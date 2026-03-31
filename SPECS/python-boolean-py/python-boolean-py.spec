@@ -9,18 +9,22 @@
 Name:           python-boolean-py
 Version:        5.0
 Release:        %autorelease
+Summary:        Boolean algebra in one Python module
 License:        BSD-2-clause
 URL:            https://github.com/bastikr/boolean.py
-Summary:        Boolean algebra in one Python module
-Provides:       python3-boolean-py
-%python_provide python3-boolean-py
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l boolean +auto
+
+BuildOption(install):  -l boolean +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-boolean-py
+%python_provide python3-boolean-py
+
 %description
 This is a small Python library that implements boolean algebra.
 It defines two base elements, @code{TRUE} and @code{FALSE}, and a
