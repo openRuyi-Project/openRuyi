@@ -1,1 +1,1 @@
-u lighttpd - 'lighttpd web server' %{webroot} -
+u lighttpd - "lighttpd web server" /var/www/lighttpd -

@@ -315,6 +315,9 @@ install -m0644 -D %{SOURCE3} %{buildroot}%{_sysusersdir}/lighttpd.conf
 mkdir -p %{buildroot}/usr/lib/tmpfiles.d
 install -m0644 -D %{SOURCE4} %{buildroot}/usr/lib/tmpfiles.d/lighttpd.conf
 
+%pre
+%sysusers_create_package %{name} %{SOURCE3}
+
 %post
 %systemd_post lighttpd.service
 
