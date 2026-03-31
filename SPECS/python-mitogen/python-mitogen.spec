@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/mitogen-hq/mitogen
 #!RemoteAsset:  sha256:6ac841a1b520c3136062ec930b95f6f4718ed8c3136ef3d7caf1a1d8e92d4823
 Source:         https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
