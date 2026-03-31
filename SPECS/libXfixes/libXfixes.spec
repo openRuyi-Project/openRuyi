@@ -43,7 +43,7 @@ libXfixes development package
 
 %files devel
 %{_includedir}/X11/extensions/Xfixes.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xfixes.pc
 %{_libdir}/libXfixes.so
 %if %{with static}
 %{_libdir}/*.a
