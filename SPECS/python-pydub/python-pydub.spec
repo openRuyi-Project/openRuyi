@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/jiaaro/pydub
 #!RemoteAsset:  sha256:980a33ce9949cab2a569606b65674d748ecbca4f0796887fd6f46173a7b0d30f
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # PATCH-FIX-OPENSUSE skip_libopenh264-7.patch gh#jiaaro/pydub#700 mcepl@suse.com
