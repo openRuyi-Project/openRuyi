@@ -34,8 +34,8 @@ BuildRequires:  perl(Storable)
 BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::More) >= 0.60_01
 # Manual
-BuildRequires:  openssl-devel
-BuildRequires:  zlib-devel
+BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(zlib)
 
 %description
 This module provides Perl bindings for libssl (an SSL/TLS API) and
