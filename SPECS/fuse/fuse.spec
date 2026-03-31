@@ -84,7 +84,7 @@ rm -rf doc/Makefile.am doc/Makefile.in doc/Makefile
 %{_libdir}/libulockmgr.so
 %{_includedir}/fuse.h
 %{_includedir}/fuse
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/fuse.pc
 %{_includedir}/ulockmgr.h
 
 %changelog
