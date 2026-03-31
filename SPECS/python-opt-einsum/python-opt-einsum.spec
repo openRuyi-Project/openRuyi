@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/dgasmith/opt_einsum
 #!RemoteAsset:  sha256:96ca72f1b886d148241348783498194c577fa30a8faac108586b14f1ba4473ac
 Source0:        https://files.pythonhosted.org/packages/source/o/opt-einsum/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
