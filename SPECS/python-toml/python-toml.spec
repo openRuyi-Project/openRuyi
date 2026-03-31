@@ -17,11 +17,13 @@ URL:            https://github.com/uiri/toml
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
 %description
 python-toml is a library for parsing and creating Tom's Obvious, Minimal
 Language (TOML) configuration files.
