@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/pydantic/typing-inspection
 #!RemoteAsset:  sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464
 Source0:        https://files.pythonhosted.org/packages/source/t/typing-inspection/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
