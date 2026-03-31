@@ -59,7 +59,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/X11/extensions/*.h
 %{_libdir}/libXext.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xext.pc
 
 %files doc
 %{_docdir}/libXext/*
