@@ -14,6 +14,7 @@ License:        Apache-2.0 WITH LLVM-exception
 URL:            https://github.com/sighingnow/libclang
 #!RemoteAsset:  sha256:a1214966d08d73d971287fc3ead8dfaf82eb07fb197680d8b3859dbbbbf78250
 Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l clang
@@ -24,10 +25,10 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Requires:       clang
-
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
+
+Requires:       clang
 
 %description
 This package provides Python bindings for the Clang C library.
