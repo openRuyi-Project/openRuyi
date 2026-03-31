@@ -1,0 +1,5 @@
+This profile assumes:
+- systemd and nss-systemd are present on the base system
+- pam_env.so, pam_unix.so, pam_deny.so, pam_pwquality.so, pam_limits.so, pam_systemd.so, and pam_umask.so are available
+- pam_lastlog2.so is available if you want the optional postlogin last-login update
+- local account data lives in /etc/passwd, /etc/group, /etc/shadow, and /etc/gshadow

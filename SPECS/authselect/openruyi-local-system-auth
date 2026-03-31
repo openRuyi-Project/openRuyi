@@ -1,0 +1,14 @@
+auth        required      pam_env.so
+auth        sufficient    pam_unix.so try_first_pass
+auth        required      pam_deny.so
+
+account     required      pam_unix.so
+
+password    requisite     pam_pwquality.so local_users_only
+password    sufficient    pam_unix.so yescrypt shadow try_first_pass use_authtok
+password    required      pam_deny.so
+
+session     required      pam_limits.so
+session     optional      pam_systemd.so
+session     optional      pam_umask.so
+session     required      pam_unix.so

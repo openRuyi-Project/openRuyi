@@ -13,7 +13,17 @@ Summary:        A tool to select system authentication and identity sources
 License:        GPL-3.0-or-later
 URL:            https://github.com/authselect/authselect
 #!RemoteAsset
-Source:         https://github.com/authselect/authselect/archive/%{version}/authselect-%{version}.tar.gz
+Source0:        https://github.com/authselect/authselect/archive/%{version}/authselect-%{version}.tar.gz
+Source1:        openruyi-local-README
+Source2:        openruyi-local-REQUIREMENTS
+Source3:        openruyi-local-dconf-db
+Source4:        openruyi-local-dconf-locks
+Source5:        openruyi-local-fingerprint-auth
+Source6:        openruyi-local-nsswitch.conf
+Source7:        openruyi-local-password-auth
+Source8:        openruyi-local-postlogin
+Source9:        openruyi-local-smartcard-auth
+Source10:       openruyi-local-system-auth
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-rpath
@@ -45,6 +55,17 @@ Requires:       libpwquality
 Authselect is a tool to configure system authentication and identity sources
 from a list of supported profiles. It replaces the legacy authconfig tool.
 
+%package        -n openruyi-authselect-profiles
+Summary:        openRuyi vendor authselect profiles
+Requires:       authselect = %{version}-%{release}
+BuildArch:      noarch
+
+%description    -n openruyi-authselect-profiles
+This package ships the vendor-owned authselect profiles used by openRuyi.
+It provides the openruyi-local base profile under
+/usr/share/authselect/vendor and keeps the distro authentication policy
+separate from the authselect tool itself.
+
 %package        devel
 Summary:        Development files for the authselect library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -62,6 +83,18 @@ chrpath -d %{buildroot}%{_bindir}/authselect
 
 rm -fr %{buildroot}%{_datadir}/doc/%{name}
 
+install -d -m 0755 %{buildroot}%{_datadir}/authselect/vendor/openruyi-local
+install -m 0644 %{SOURCE1} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/README
+install -m 0644 %{SOURCE2} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/REQUIREMENTS
+install -m 0644 %{SOURCE3} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/dconf-db
+install -m 0644 %{SOURCE4} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/dconf-locks
+install -m 0644 %{SOURCE5} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/fingerprint-auth
+install -m 0644 %{SOURCE6} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/nsswitch.conf
+install -m 0644 %{SOURCE7} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/password-auth
+install -m 0644 %{SOURCE8} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/postlogin
+install -m 0644 %{SOURCE9} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/smartcard-auth
+install -m 0644 %{SOURCE10} %{buildroot}%{_datadir}/authselect/vendor/openruyi-local/system-auth
+
 %preun
 # This script must be executed before any files are removed.
 if [ $1 == 0 ] ; then
@@ -72,14 +105,34 @@ if [ $1 == 0 ] ; then
     %{_bindir}/authselect opt-out || exit 1
 fi
 
-%posttrans
-# If this is a new installation select the default configuration.
-if [ $1 == 1 ] ; then
-    %{_bindir}/authselect select local --force --nobackup &> /dev/null
-    exit 0
+%preun -n openruyi-authselect-profiles
+if [ $1 == 0 ] ; then
+    current_profile="$("%{_bindir}/authselect" current --raw 2>/dev/null || :)"
+    case "$current_profile" in
+        openruyi-*)
+            %{_bindir}/authselect opt-out || exit 1
+            ;;
+    esac
 fi
-# Apply any changes to profiles (validates configuration first internally)
-%{_bindir}/authselect apply-changes &> /dev/null
+
+%posttrans -n openruyi-authselect-profiles
+current_profile="$("%{_bindir}/authselect" current --raw 2>/dev/null || :)"
+
+case "$current_profile" in
+    ""|local|local\ *)
+        # Fresh system or legacy default profile: migrate to distro-owned profile
+        %{_bindir}/authselect select openruyi-local --force --nobackup >/dev/null 2>&1 || :
+        ;;
+    openruyi-* )
+        # Already on an openRuyi-owned profile: regenerate managed files
+        %{_bindir}/authselect apply-changes >/dev/null 2>&1 || :
+        ;;
+    * )
+        # sssd / winbind / custom profile: do not override user choice
+        :
+        ;;
+esac
+
 exit 0
 
 %files
@@ -110,6 +163,10 @@ exit 0
 %{_datadir}/authselect/default/*
 %{_bindir}/authselect
 %{_libdir}/libauthselect.so.*
+
+%files -n openruyi-authselect-profiles
+%dir %{_datadir}/authselect/vendor/openruyi-local
+%{_datadir}/authselect/vendor/openruyi-local/*
 
 %files devel
 %{_includedir}/authselect.h
