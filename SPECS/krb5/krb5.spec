@@ -10,15 +10,18 @@
 %bcond systemd 0
 
 Name:           krb5
-Version:        1.22.1
+Version:        1.22.2
 Release:        %autorelease
 Summary:        The Kerberos 5 network authentication system
 License:        MIT
 URL:            https://web.mit.edu/kerberos/
 VCS:            git:https://github.com/krb5/krb5
-#!RemoteAsset
+#!RemoteAsset:  sha256:3243ffbc8ea4d4ac22ddc7dd2a1dc54c57874c40648b60ff97009763554eaf13
 Source:         https://kerberos.org/dist/krb5/1.22/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+# From https://github.com/krb5/krb5/pull/1471
+Patch0:         Fix-strchr-conformance-to-C23.patch
 
 BuildOption(conf):  --without-ldap
 BuildOption(conf):  --disable-static
