@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           podman
-Version:        5.7.1
+Version:        5.8.1
 Release:        %autorelease
 Summary:        Manage containers, images, pods, and their volumes
 License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT AND MPL-2.0
 URL:            https://podman.io/
 VCS:            git:https://github.com/containers/podman
-#!RemoteAsset:  sha256:c04c12f90d1bf410ccc4d27a30cff188d6a9361bddb5fceb19659ae08257cc6f
+#!RemoteAsset:  sha256:b9540ecb19cfcbcfc40e1b81d39930f688c537d8fd6f11ae56be41f2bf9e97a4
 Source0:        https://github.com/containers/podman/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -43,6 +44,11 @@ BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  python
 BuildRequires:  systemd-rpm-macros
+
+Requires:       containers-common
+Requires:       conmon
+Requires:       crun
+Requires:       passt
 
 %description
 Podman (the POD MANager) is a tool for managing containers and images,
@@ -76,4 +82,4 @@ containers.
 %{_userunitdir}/podman*
 
 %changelog
-%{?autochangelog}
+%autochangelog
