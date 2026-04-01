@@ -19,6 +19,8 @@ BuildSystem:    autotools
 
 # skip some tests need grub2 as we have no grub2 yet.
 Patch0:         0001-skip-some-tests.patch
+# From https://github.com/rhboot/efivar/pull/292
+Patch1:         fix-build-failure-with-glibc-2.43.patch
 
 BuildOption(install):  libdir=%{_libdir}
 
