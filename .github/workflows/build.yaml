@@ -50,6 +50,9 @@ jobs:
         echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
         wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
         sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
+    - name: apply pbuild patch
+      run: |
+        sudo patch --directory=/usr/lib/build --strip=1 -i $(pwd)/.github/build/pbuild.patch
     - name: Limit the number of compilations
       if: steps.changed-files.outputs.specs_any_changed == 'true'
       run: |
