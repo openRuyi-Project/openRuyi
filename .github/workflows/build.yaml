@@ -62,3 +62,22 @@ jobs:
         done
     - name: Build package(s)
       run: (cp .github/build/* SPECS && cd SPECS && (sudo pbuild --vm-type=chroot --preset x86_64 --showlog --root=/tmp/b || (sudo pbuild --preset x86_64 --result && exit 1)))
+    - name: get result
+      id: result
+      if: steps.changed-files.outputs.specs_any_changed == 'true'
+      run: |
+        set -x
+        all_file="${{ steps.changed-files.outputs.specs_all_changed_files }}"
+        {
+          echo 'paths<<EOF'
+          for i in $all_file; do
+           p=$(basename $(dirname $i))
+           echo "SPECS/_build.x86_64/$p"
+          done
+          echo 'EOF'
+        } >> "$GITHUB_OUTPUT"
+    - uses: actions/upload-artifact@v4
+      with:
+       name: PR${{ github.event.pull_request.number }}-build-packages-results
+       path: ${{ steps.result.outputs.paths }}
+       if-no-files-found: error
