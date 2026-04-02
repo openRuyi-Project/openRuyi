@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           lxcfs
-Version:        6.0.5
+Version:        6.0.6
 Release:        %autorelease
 Summary:        FUSE based filesystem for LXC
 License:        Apache-2.0
 URL:            https://linuxcontainers.org/lxcfs
 VCS:            git:https://github.com/lxc/lxcfs
-#!RemoteAsset
+#!RemoteAsset:  sha256:386339ba4cde289b0f6df4fe7a614caa1e45dd91bc0200b4aff6c51bf9d5ef9e
 Source:         https://linuxcontainers.org/downloads/lxcfs/lxcfs-%{version}.tar.gz
 BuildSystem:    meson
 
