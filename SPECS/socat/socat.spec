@@ -5,14 +5,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           socat
-Version:        1.8.0.3
+Version:        1.8.1.1
 Release:        %autorelease
 Summary:        Bidirectional data relay between two data channels
 License:        GPL-2.0-only
 URL:            http://www.dest-unreach.org/socat/
 VCS:            git:https://repo.or.cz/socat.git
-#!RemoteAsset
-Source:         http://www.dest-unreach.org/socat/download/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:f68b602c80e94b4b7498d74ec408785536fe33534b39467977a82ab2f7f01ddb
+Source:         http://www.dest-unreach.org/socat/download/socat-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(conf):  --enable-help
