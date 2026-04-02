@@ -39,6 +39,8 @@ BuildSystem:    autotools
 # Because the way we build this pacakge, so we need
 # to change the make targets
 Patch0:         0001-make_targets.patch
+# From https://github.com/SELinuxProject/selinux/pull/507
+Patch1:         fix-discarded-qualifiers-warning-with-glib-2.43.patch
 
 BuildOption(install):  SBINDIR="%{_sbindir}"
 
@@ -136,6 +138,7 @@ or level of a logged in user.
 setools_python_pwd="$PWD/selinux-python-%{version}"
 semodule_utils_pwd="$PWD/semodule-utils-%{version}"
 %patch -P 0 -p1
+%patch -P 1 -p2
 mv ${setools_python_pwd}/audit2allow ${setools_python_pwd}/chcat ${setools_python_pwd}/semanage ${setools_python_pwd}/sepolgen ${setools_python_pwd}/sepolicy .
 mv ${semodule_utils_pwd}/semodule_expand ${semodule_utils_pwd}/semodule_link ${semodule_utils_pwd}/semodule_package .
 

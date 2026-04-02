@@ -1,0 +1,40 @@
+From fe074290a6eff8f12345350ea2938bb0e5e5bc5a Mon Sep 17 00:00:00 2001
+From: Dustin Kirkland <dustin.kirkland@chainguard.dev>
+Date: Thu, 12 Mar 2026 09:55:17 -0500
+Subject: [PATCH] policycoreutils/secon: fix discarded-qualifiers warning with
+ glibc 2.43
+
+In my_getXcon_raw(), ptr is declared as const char * but is assigned
+from fgets(), which returns char *. With glibc 2.43, strchr(const char
+*, int) now returns const char *, so the subsequent assignment to
+char *tmp triggers:
+
+  secon.c:365:18: error: initialization discards 'const' qualifier
+  from pointer target type [-Werror=discarded-qualifiers]
+
+The const on ptr was always incorrect: fgets() returns a mutable
+pointer into buf (a char[4096]), and the result of strchr() through
+ptr is written to via *tmp = 0. Remove the erroneous const.
+
+This is the same class of bug reported in issue #506
+(libselinux/src/selinux_config.c:284). The fix here is analogous:
+the variable should not have been const-qualified in the first place.
+
+Signed-off-by: Dustin Kirkland <dustin.kirkland@chainguard.dev>
+---
+ policycoreutils/secon/secon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/policycoreutils/secon/secon.c b/policycoreutils/secon/secon.c
+index d624fa136f..9a05cf1959 100644
+--- a/policycoreutils/secon/secon.c
++++ b/policycoreutils/secon/secon.c
+@@ -348,7 +348,7 @@ static int my_getXcon_raw(pid_t pid, char  **con, const char *val)
+ {
+ 	char buf[4096];
+ 	FILE *fp = NULL;
+-	const char *ptr = NULL;
++	char *ptr = NULL;
+ 
+ 	snprintf(buf, sizeof(buf), "%s/%ld/attr/%s", "/proc", (long int)pid,
+ 		 val);
