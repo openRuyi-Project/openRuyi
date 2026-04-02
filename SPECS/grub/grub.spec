@@ -31,6 +31,9 @@ Patch0:         skip-efi_uga.patch
 # https://gitlab.freedesktop.org/gnu-grub/grub/-/merge_requests/14
 Patch1:         blsuki-append-version.patch
 
+# https://lists.gnu.org/archive/html/grub-devel/2026-02/msg00078.html
+Patch2:         grub-c23-string-func-handling-updates.patch
+
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  bison

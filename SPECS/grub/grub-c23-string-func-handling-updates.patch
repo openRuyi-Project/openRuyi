@@ -1,0 +1,226 @@
+From 675d8581037dc8996cf6db21a61d26e28f7d44c1 Mon Sep 17 00:00:00 2001
+From: Nicholas Vinson <nvinson234@gmail.com>
+Date: Tue, 24 Feb 2026 19:48:39 -0500
+Subject: [PATCH 1/4] osdep/linux/ofpath: Update strstr() calls
+
+With C23, strstr() returns a "const char *" if its first argument is
+"const char *", and these changes are implemented in glibc-2.43.
+
+As a result, the first strstr() call in check_sas() now returns a "const
+char *" instead of "char *" because sysfs_path is a "const char *". This
+triggers a "discards qualifiers" warning, that is later promoted to an
+error and ultimately causes the build to fail.
+
+To fix the issue, this patch converts "ed", the pointer that stores
+strstr()'s return value, to a "const char *". Removes the xstrdup()
+call and cleans up the rest of the function by updating the *printf()
+calls and using pointer arithmetic to compute lengths instead of strlen().
+
+Signed-off-by: Nicholas Vinson <nvinson234@gmail.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ grub-core/osdep/linux/ofpath.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/grub-core/osdep/linux/ofpath.c b/grub-core/osdep/linux/ofpath.c
+index 24a4d5c8d..0ebfea44c 100644
+--- a/grub-core/osdep/linux/ofpath.c
++++ b/grub-core/osdep/linux/ofpath.c
+@@ -488,8 +488,11 @@ check_hba_identifiers (const char *sysfs_path, int *vendor, int *device_id)
+ static void
+ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+ {
+-  char *ed = strstr (sysfs_path, "end_device");
+-  char *p, *q, *path;
++  const char *ed = strstr (sysfs_path, "end_device");
++  int p_len;
++  int ed_len;
++  const char *q;
++  char *path;
+   char phy[21];
+   int fd;
+   size_t path_size;
+@@ -498,20 +501,16 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+     return;
+ 
+   /* SAS devices are identified using disk@$PHY_ID */
+-  p = xstrdup (sysfs_path);
+-  ed = strstr(p, "end_device");
+-  if (!ed)
+-    return;
+-
+   q = ed;
+   while (*q && *q != '/')
+     q++;
+-  *q = '\0';
++  p_len = (int) (q - sysfs_path);
++  ed_len = (int) (q - ed);
+ 
+-  path_size = (strlen (p) + strlen (ed)
+-	       + sizeof ("%s/sas_device/%s/phy_identifier"));
++  path_size = (p_len + ed_len + sizeof ("%s/sas_device/%s/phy_identifier"));
+   path = xmalloc (path_size);
+-  snprintf (path, path_size, "%s/sas_device/%s/phy_identifier", p, ed);
++  snprintf (path, path_size, "%.*s/sas_device/%.*s/phy_identifier", p_len,
++	    sysfs_path, ed_len, ed);
+   fd = open (path, O_RDONLY);
+   if (fd < 0)
+     grub_util_error (_("cannot open `%s': %s"), path, strerror (errno));
+@@ -524,7 +523,8 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+ 
+   sscanf (phy, "%d", tgt);
+ 
+-  snprintf (path, path_size, "%s/sas_device/%s/sas_address", p, ed);
++  snprintf (path, path_size, "%.*s/sas_device/%.*s/sas_address", p_len,
++	    sysfs_path, ed_len, ed);
+   fd = open (path, O_RDONLY);
+   if (fd < 0)
+     grub_util_error (_("cannot open `%s': %s"), path, strerror (errno));
+@@ -535,7 +535,6 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+   sscanf (phy, "%lx", sas_address);
+ 
+   free (path);
+-  free (p);
+   close (fd);
+ }
+ 
+-- 
+2.52.0
+
+From b71ae6db282fa25ca4ea6f8169161a2131ee6b9a Mon Sep 17 00:00:00 2001
+From: Nicholas Vinson <nvinson234@gmail.com>
+Date: Tue, 24 Feb 2026 19:48:40 -0500
+Subject: [PATCH 2/4] osdep/linux/ofpath: Correct path_size calculation
+
+path_size is computed in part by taking the size of the format string.
+However, the format string contains conversion specifiers. These
+conversion specifiers are included in the size calculation resulting in
+a size calculation that is larger than it needs to be. This patch
+corrects that error by removing the conversion specifiers when computing
+path_size.
+
+Signed-off-by: Nicholas Vinson <nvinson234@gmail.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ grub-core/osdep/linux/ofpath.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/grub-core/osdep/linux/ofpath.c b/grub-core/osdep/linux/ofpath.c
+index 0ebfea44c..38d9bb5bf 100644
+--- a/grub-core/osdep/linux/ofpath.c
++++ b/grub-core/osdep/linux/ofpath.c
+@@ -507,7 +507,7 @@ check_sas (const char *sysfs_path, int *tgt, unsigned long int *sas_address)
+   p_len = (int) (q - sysfs_path);
+   ed_len = (int) (q - ed);
+ 
+-  path_size = (p_len + ed_len + sizeof ("%s/sas_device/%s/phy_identifier"));
++  path_size = (p_len + ed_len + sizeof ("/sas_device//phy_identifier"));
+   path = xmalloc (path_size);
+   snprintf (path, path_size, "%.*s/sas_device/%.*s/phy_identifier", p_len,
+ 	    sysfs_path, ed_len, ed);
+-- 
+2.52.0
+
+From 9f4a586f1227a8287e1d6acd95893f6098756ee2 Mon Sep 17 00:00:00 2001
+From: Nicholas Vinson <nvinson234@gmail.com>
+Date: Tue, 24 Feb 2026 19:48:41 -0500
+Subject: [PATCH 3/4] util/probe: Save strrchr() ret val to const data ptr
+
+With glibc-2.43 implementing the C23 standard, strrchr() now returns
+"const char *" when its first argument is "const char *".
+
+The fix is update all pointers receiving strrchr()'s return value so
+that they are now "const char *" instead of "char *".
+
+Signed-off-by: Nicholas Vinson <nvinson234@gmail.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ util/probe.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/util/probe.c b/util/probe.c
+index 81d91cf59..a9158d640 100644
+--- a/util/probe.c
++++ b/util/probe.c
+@@ -70,7 +70,7 @@ char *
+ grub_util_guess_bios_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+@@ -99,7 +99,7 @@ char *
+ grub_util_guess_efi_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+@@ -128,7 +128,7 @@ char *
+ grub_util_guess_baremetal_drive (const char *orig_path)
+ {
+   char *canon;
+-  char *ptr;
++  const char *ptr;
+   canon = grub_canonicalize_file_name (orig_path);
+   if (!canon)
+     return NULL;
+-- 
+2.52.0
+
+From ce6f2b57f5450a8239022dcbfb2d750f273b83cb Mon Sep 17 00:00:00 2001
+From: Nicholas Vinson <nvinson234@gmail.com>
+Date: Tue, 24 Feb 2026 19:48:42 -0500
+Subject: [PATCH 4/4] util/resolve: Save str[r]chr() ret val to const data ptr
+
+With glibc-2.43 implementing the C23 standard, strrchr() and strchr()
+now return "const char *" when its first argument is "const char *".
+
+The fix is update all pointers receiving strrchr() and strchr()'s return
+values so that they are now "const char *" instead of "char *".
+
+Signed-off-by: Nicholas Vinson <nvinson234@gmail.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ util/resolve.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/util/resolve.c b/util/resolve.c
+index b6e26312f..254379195 100644
+--- a/util/resolve.c
++++ b/util/resolve.c
+@@ -138,12 +138,12 @@ read_dep_list (FILE *fp)
+ static char *
+ get_module_name (const char *str)
+ {
+-  char *base;
+-  char *ext;
++  const char *base;
++  const char *ext;
+ 
+   base = strrchr (str, '/');
+   if (! base)
+-    base = (char *) str;
++    base = str;
+   else
+     base++;
+ 
+@@ -164,9 +164,9 @@ get_module_name (const char *str)
+ static char *
+ get_module_path (const char *prefix, const char *str)
+ {
+-  char *dir;
++  const char *dir;
+   char *base;
+-  char *ext;
++  const char *ext;
+   char *ret;
+ 
+   ext = strrchr (str, '.');
+-- 
+2.52.0
+
