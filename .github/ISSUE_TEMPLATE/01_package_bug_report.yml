@@ -1,0 +1,84 @@
+name: "Bug report"
+description: "Create a generic bug report against a package."
+title: "PACKAGENAME: BUG TITLE"
+labels: ["Type: Bug", "Target: Rolling"]
+body:
+  - type: "markdown"
+    attributes:
+      value: |
+        Welcome to openRuyi. Please replace the **`PACKAGENAME: BUG TITLE`** template above with the correct package name and a short title summarising what the bug entails.
+        ---
+  - type: "input"
+    id: "name"
+    attributes:
+      label: "Package name"
+      description: "Please indicate the name of the package."
+    validations:
+      required: true
+  - type: "input"
+    id: "openruyi-version"
+    attributes:
+      label: "openRuyi version"
+      description: |
+        Please indicate the version number of this package on which you encountered this bug.
+    validations:
+      required: true
+  - type: "textarea"
+    id: "description"
+    attributes:
+      label: "Describe the bug"
+      description: "Please include a clear and concise description of what the issue is."
+    validations:
+      required: true
+  - type: "textarea"
+    id: "how-to-reproduce"
+    attributes:
+      label: "Steps to reproduce"
+      description: "Please include a step-by-step guide for reproducing this issue. Consider writing in concise, numbered bullet points to ensure that openRuyi developers can retrace your steps."
+    validations:
+      required: true
+  - type: "textarea"
+    id: "expected-behaviour"
+    attributes:
+      label: "Expected behaviour"
+      description: "Please write a concise description of what was supposed to happen."
+    validations:
+      required: true
+  - type: "textarea"
+    id: "screenshots"
+    attributes:
+      label: "Screenshots"
+      description: |
+        If applicable, add screenshots to help explain your problem.
+        If you need help uploading images to GitHub, please review the [relevant documentation](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#uploading-assets).
+    validations:
+      required: false
+  - type: "textarea"
+    id: "logs"
+    attributes:
+      label: "Relevant log output"
+      description: |
+        If applicable, copy and paste any relevant log output.
+        This will be automatically formatted into code, so no need for backticks.
+      render: "console"
+    validations:
+      required: false
+  - type: "textarea"
+    id: "additional-context"
+    attributes:
+      label: "Additional context"
+      description: "Add any other context about the problem here."
+    validations:
+      required: false
+  - type: "checkboxes"
+    id: "sanity-check"
+    attributes:
+      label: "I assert that this issue is relevant for openRuyi"
+      description: |
+        This bug tracker is for actionable issues that are not the result of user error. If you need help using your system and are unsure if this is a bug with openRuyi, please consider asking for help on the [openRuyi Discord Server](https://discord.gg/ycDafzwsud) before opening an issue.
+      options:
+        - label: "I assert that this is a bug and not a support request."
+          required: true
+        - label: "I assert that this is not a duplicate of an existing issue."
+          required: true
+        - label: "I assert that I have read the [openRuyi Code of Conduct](https://openruyi.cn/governance/legal/code-of-conduct) and agree to abide by it."
