@@ -17,6 +17,9 @@ URL:            https://github.com/opensvc/multipath-tools
 Source0:        %{url}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
+# From https://github.com/opensvc/multipath-tools/commit/9f611e2f10a4456477b6447641eea041ecee1019
+Patch0:         multipath-tools-fix-c23-errors-with-strchr.patch
+
 BuildOption(conf):  LIB=%{_lib}
 BuildOption(install):  bindir=%{_sbindir}
 BuildOption(install):  syslibdir=%{_libdir}
