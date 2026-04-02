@@ -15,6 +15,9 @@ VCS:            git:https://github.com/skarnet/mdevd
 Source0:        %{url}/mdevd-%{version}.tar.gz
 BuildSystem:    autotools
 
+# from https://github.com/skarnet/mdevd/commit/4594ed03e4ced04cb914c8fccad1ffab41cc4ee5
+Patch0:         some-libcs-have-a-char-const-strchr-need-to-investigate.patch
+
 BuildOption(conf):  --with-pkgconfig
 BuildOption(conf):  --with-sysdeps=%{_libdir}/skalibs/sysdeps
 BuildOption(conf):  --disable-allstatic
