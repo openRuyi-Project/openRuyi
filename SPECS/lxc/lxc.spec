@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           lxc
-Version:        6.0.5
+Version:        6.0.6
 Release:        %autorelease
 Summary:        Linux Resource Containers
 License:        LGPL-2.1-or-later AND GPL-2.0-only
 URL:            https://linuxcontainers.org/lxc
 VCS:            git:https://github.com/lxc/lxc
-#!RemoteAsset
+#!RemoteAsset:  sha256:b0ba4537258d2b848fd07dedb1044dab132de3fb3f1976d240da40a7dee1b8cf
 Source0:        https://linuxcontainers.org/downloads/lxc/lxc-%{version}.tar.gz
 Source1:        lxc-net
 BuildSystem:    meson
