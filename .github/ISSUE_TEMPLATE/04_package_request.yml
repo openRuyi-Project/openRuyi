@@ -9,6 +9,7 @@ body:
         Welcome to openRuyi. Please replace the **`PACKAGENAME: Package request`** template above with the correct package name.
 
         We invite you to submit a pull request to contribute new packages to openRuyi. If you are interested in doing so, please check out our [docs](https://openruyi.cn/docs/intro) and feel free to ask for help on the [openRuyi Discord Server](https://discord.gg/ycDafzwsud).
+
         ---
   - type: "input"
     id: "name"

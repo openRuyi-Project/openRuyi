@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         Welcome to openRuyi. Please replace the **`PACKAGENAME: Build failure`** template above with the correct package name.
+
         ---
   - type: "input"
     id: "name"

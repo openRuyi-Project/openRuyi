@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         Welcome to openRuyi. Please replace the **`PACKAGENAME: BUG TITLE`** template above with the correct package name and a short title summarising what the bug entails.
+
         ---
   - type: "input"
     id: "name"
