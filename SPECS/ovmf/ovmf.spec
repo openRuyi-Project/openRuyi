@@ -41,6 +41,7 @@ BuildRequires:  util-linux-devel
 BuildRequires:  acpica
 BuildRequires:  make
 BuildRequires:  python3
+BuildRequires:  coreutils
 
 %description
  UEFI firmware for ${arch_s} virtual machines. Open Virtual Machine Firmware
@@ -60,6 +61,8 @@ build -t GCC5 -b RELEASE -a %{targetarch} -p %{platformfile}
 install -D -m 644 Build/OvmfX64/RELEASE_GCC5/FV/OVMF.fd %{buildroot}%{_datadir}/ovmf/OVMF.fd
 %endif
 %ifarch riscv64
+truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd
+truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd
 install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd %{buildroot}%{_datadir}/ovmf/virt_code.fd
 install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{buildroot}%{_datadir}/ovmf/virt_vars.fd
 %endif
