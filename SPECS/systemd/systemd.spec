@@ -1146,6 +1146,10 @@ fi
 %exclude %{_sysconfdir}/systemd/journal-upload.conf
 %exclude %{_localstatedir}/lib/systemd/journal-upload
 %endif
+%exclude %{system_unit_dir}/systemd-boot-update.service
+%exclude %{system_unit_dir}/systemd-bootctl.socket
+%exclude %{system_unit_dir}/systemd-bootctl@.service
+%exclude %{system_unit_dir}/sockets.target.wants/systemd-bootctl.socket
 %exclude %{bash_completions_dir}/bootctl
 %exclude %{_datadir}/zsh/site-functions/_bootctl
 
@@ -1339,7 +1343,10 @@ fi
 %{_bindir}/bootctl
 %{bash_completions_dir}/bootctl
 %{_datadir}/zsh/site-functions/_bootctl
+%{pkgdir}/system/systemd-bootctl.socket
+%{pkgdir}/system/systemd-bootctl@.service
 %{pkgdir}/system/systemd-boot-update.service
+%{pkgdir}/system/sockets.target.wants/systemd-bootctl.socket
 
 %files container
 %ghost %dir %attr(0700,-,-) /var/lib/machines
