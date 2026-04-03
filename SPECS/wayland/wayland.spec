@@ -3,17 +3,18 @@
 # SPDX-FileContributor: Icenowy Zheng <uwu@icenowy.me>
 # SPDX-FileContributor: jingyupu <pujingyu@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           wayland
-Version:        1.24.0
+Version:        1.25.0
 Release:        %autorelease
 Summary:        Wayland base protocol library
 License:        MIT
 URL:            https://wayland.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/wayland/wayland
-#!RemoteAsset
+#!RemoteAsset:  sha256:c065f040afdff3177680600f249727e41a1afc22fccf27222f15f5306faa1f03
 Source:         https://gitlab.freedesktop.org/wayland/wayland/-/releases/%{version}/downloads/wayland-%{version}.tar.xz
 BuildSystem:    meson
 
