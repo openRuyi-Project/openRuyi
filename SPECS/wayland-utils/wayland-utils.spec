@@ -5,16 +5,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           wayland-utils
-Version:        1.2.0
+Version:        1.3.0
 Release:        %autorelease
 Summary:        Wayland diagnostic utilities
 License:        MIT
 URL:            https://wayland.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/wayland/wayland-utils
-#!RemoteAsset
-Source:         https://gitlab.freedesktop.org/wayland/wayland-utils/-/releases/%{version}/downloads/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://gitlab.freedesktop.org/wayland/wayland-utils/-/releases/%{version}/downloads/%{name}-%{version}.tar.xz.sig
+#!RemoteAsset:  sha256:a39d0e65617c6ae186d768c223f57060a3a435f6f9f02d03074f945313bfcf0d
+Source:         https://gitlab.freedesktop.org/wayland/wayland-utils/-/releases/%{version}/downloads/wayland-utils-%{version}.tar.xz
 BuildSystem:    meson
 
 BuildRequires:  meson
