@@ -46,7 +46,7 @@ applications against %{name}.
 %{_libdir}/libgeos.so.*
 %{_libdir}/libgeos_c.so.*
 
-%files devel
+%files          devel
 %{_bindir}/geos-config
 %{_includedir}/geos.h
 %{_includedir}/geos_c.h
@@ -58,4 +58,4 @@ applications against %{name}.
 %{_libdir}/cmake/GEOS/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

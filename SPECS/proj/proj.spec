@@ -28,11 +28,11 @@ PROJ is a generic coordinate transformation software that transforms
 geospatial coordinates from one coordinate reference system (CRS) to
 another.
 
-%package devel
+%package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description devel
+%description    devel
 Header files, development libraries, and pkg-config files for developing
 applications against %{name}.
 
@@ -51,7 +51,7 @@ applications against %{name}.
 %{_libdir}/libproj.so.*
 %{_datadir}/proj/
 
-%files devel
+%files          devel
 %{_includedir}/geodesic.h
 %{_includedir}/proj.h
 %{_includedir}/proj_constants.h
@@ -64,4 +64,4 @@ applications against %{name}.
 %{_libdir}/pkgconfig/proj.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
