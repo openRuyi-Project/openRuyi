@@ -572,7 +572,7 @@ if [ $1 -ge 2 ]; then
   systemd-tmpfiles --create &>/dev/null || :
 fi
 
-%systemd_posttrans_with_restart systemd-timedated.service systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
+%systemd_posttrans_with_restart systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
 
 # FIXME: systemd-logind.service is excluded (https://github.com/systemd/systemd/pull/17558)
 
@@ -662,7 +662,6 @@ fi
                         systemd-suspend-then-hibernate.service
                         systemd-suspend.service
                         systemd-sysctl.service
-                        systemd-timesyncd.service
                         systemd-tmpfiles-setup-dev-early.service
                         systemd-tmpfiles-setup-dev.service
                         systemd-udev-load-credentials.service
@@ -690,12 +689,20 @@ systemd-hwdb update &>/dev/null
 %posttrans udev
 # Restart some services.
 # Others are either oneshot services, or sockets, and restarting them causes issues (#1378974)
-%systemd_posttrans_with_restart systemd-udevd.service systemd-timesyncd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
+%systemd_posttrans_with_restart systemd-udevd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
 
+%global timesyncd_units %{shrink:
+                          systemd-time-wait-sync.service
+                          systemd-timedated.service
+                          systemd-timesyncd.service
+                         }
+
+%post timesyncd
+%systemd_post %timesyncd_units
 %preun timesyncd
-%systemd_preun systemd-timesyncd.service
+%systemd_preun %timesyncd_units
 %posttrans timesyncd
-%systemd_posttrans_with_restart systemd-timesyncd.service
+%systemd_posttrans_with_restart systemd-timedated.service systemd-timesyncd.service
 
 %if %{with journal_remote}
 %global journal_remote_units_restart systemd-journal-gatewayd.service systemd-journal-remote.service systemd-journal-upload.service
@@ -1152,6 +1159,13 @@ fi
 %exclude %{system_unit_dir}/sockets.target.wants/systemd-bootctl.socket
 %exclude %{system_unit_dir}/systemd-sysusers.service
 %exclude %{system_unit_dir}/sysinit.target.wants/systemd-sysusers.service
+%exclude %{system_unit_dir}/dbus-org.freedesktop.timedate1.service
+%exclude %{system_unit_dir}/systemd-time-wait-sync.service
+%exclude %{system_unit_dir}/systemd-timedated.service
+%exclude %{system_unit_dir}/systemd-timesyncd.service
+%exclude %{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
+%exclude %{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%exclude %{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %exclude %{bash_completions_dir}/bootctl
 %exclude %{_datadir}/zsh/site-functions/_bootctl
 
@@ -1312,16 +1326,23 @@ fi
 
 %files timesyncd
 %dir %{pkgdir}
+%{pkgdir}/system/dbus-org.freedesktop.timedate1.service
 %{pkgdir}/systemd-time-wait-sync
 %{pkgdir}/systemd-timedated
 %{pkgdir}/systemd-timesyncd
+%{pkgdir}/system/systemd-time-wait-sync.service
+%{pkgdir}/system/systemd-timedated.service
+%{pkgdir}/system/systemd-timesyncd.service
 %{pkgdir}/ntp-units.d/80-systemd-timesync.list
 %{pkgdir}/timesyncd.conf
 %{_prefix}/lib/sysusers.d/systemd-timesync.conf
 %{_sysconfdir}/systemd/timesyncd.conf
 %{_localstatedir}/lib/systemd/timesync/clock
 %{_datadir}/dbus-1/system-services/org.freedesktop.timesync1.service
+%{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.timesync1.conf
+%{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.timesync1.policy
 
 %if %{with ukify}
