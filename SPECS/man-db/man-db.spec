@@ -35,6 +35,7 @@ BuildRequires:  pkgconfig(zlib)
 Provides:       man = %{version}-%{release}
 Provides:       man-pages-reader = %{version}-%{release}
 
+Requires:       groff
 Requires(post): %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
 Requires(preun): %{_sbindir}/update-alternatives
