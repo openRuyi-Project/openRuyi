@@ -1,0 +1,2435 @@
+From d77d9775046e62946ad84f7995243b9c1ce8c8e3 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Wed, 1 Apr 2026 18:16:22 +0800
+Subject: [PATCH] add support for openRuyi
+
+Add openRuyi Product to provide security configuration baseline scanning capability for openRuyi.
+1. Build the openRuyi-related support framework
+2. Add common openRuyi check items
+---
+ CMakeLists.txt                                |    5 +
+ build_product                                 |    1 +
+ controls/std_openruyi.yml                     | 1799 +++++++++++++++++
+ .../obsolete/service_rsyncd_disabled/rule.yml |    1 +
+ .../guide/services/ssh/sshd_strong_kex.var    |    1 +
+ .../oval/shared.xml                           |    2 +-
+ .../require_emergency_target_auth/rule.yml    |    2 +-
+ .../tests/invalid_username.fail.sh            |    2 +-
+ .../oval/shared.xml                           |   32 +
+ product_properties/10-grub.yml                |    5 +
+ products/openruyi/CMakeLists.txt              |    6 +
+ products/openruyi/product.yml                 |   24 +
+ products/openruyi/profiles/standard.profile   |   14 +
+ shared/applicability/bootc.yml                |    2 +
+ shared/applicability/oval/bootc.xml           |    2 +
+ .../oval/installed_env_has_grub2_package.xml  |    4 +-
+ ...proc_sys_kernel_osrelease_arch_riscv64.xml |    1 +
+ .../applicability/oval/system_with_kernel.xml |    2 +
+ shared/applicability/package.yml              |    4 +-
+ shared/applicability/riscv64_arch.yml         |    5 +
+ shared/applicability/system_with_kernel.yml   |    4 +
+ shared/checks/oval/bootc.xml                  |    2 +
+ .../checks/oval/installed_OS_is_openruyi.xml  |   25 +
+ .../oval/sysctl_kernel_ipv6_disable.xml       |    1 +
+ .../oval/system_info_architecture_64bit.xml   |    2 +
+ .../system_info_architecture_riscv_64.xml     |   29 +
+ shared/macros/01-general.jinja                |    2 +
+ shared/macros/10-ansible.jinja                |    6 +
+ ssg/constants.py                              |    6 +-
+ tests/shared/grub2.sh                         |    4 +-
+ 30 files changed, 1987 insertions(+), 8 deletions(-)
+ create mode 100644 controls/std_openruyi.yml
+ create mode 100644 products/openruyi/CMakeLists.txt
+ create mode 100644 products/openruyi/product.yml
+ create mode 100644 products/openruyi/profiles/standard.profile
+ create mode 100644 shared/applicability/oval/proc_sys_kernel_osrelease_arch_riscv64.xml
+ create mode 100644 shared/applicability/riscv64_arch.yml
+ create mode 100644 shared/checks/oval/installed_OS_is_openruyi.xml
+ create mode 100644 shared/checks/oval/system_info_architecture_riscv_64.xml
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 48b206911b..a62ff25915 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -104,6 +104,7 @@ option(SSG_PRODUCT_OL9 "If enabled, the Oracle Linux 9 SCAP content will be buil
+ option(SSG_PRODUCT_OL10 "If enabled, the Oracle Linux 10 SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+ option(SSG_PRODUCT_OPENEMBEDDED "If enabled, the OpenEmbedded SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+ option(SSG_PRODUCT_OPENEULER2203 "If enabled, the openEuler 22.03 LTS content will be built" ${SSG_PRODUCT_DEFAULT})
++option(SSG_PRODUCT_OPENRUYI "If enabled, the openRuyi SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+ option(SSG_PRODUCT_OPENSUSE "If enabled, the openSUSE SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+ option(SSG_PRODUCT_RHCOS4 "If enabled, the RHCOS4 SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+ option(SSG_PRODUCT_RHEL8 "If enabled, the RHEL8 SCAP content will be built" ${SSG_PRODUCT_DEFAULT})
+@@ -342,6 +343,7 @@ message(STATUS "Oracle Linux 9: ${SSG_PRODUCT_OL9}")
+ message(STATUS "Oracle Linux 10: ${SSG_PRODUCT_OL10}")
+ message(STATUS "OpenEmbedded: ${SSG_PRODUCT_OPENEMBEDDED}")
+ message(STATUS "openEuler 22.03 LTS: ${SSG_PRODUCT_OPENEULER2203}")
++message(STATUS "openRuyi: ${SSG_PRODUCT_OPENRUYI}")
+ message(STATUS "openSUSE: ${SSG_PRODUCT_OPENSUSE}")
+ message(STATUS "RHEL 8: ${SSG_PRODUCT_RHEL8}")
+ message(STATUS "RHEL 9: ${SSG_PRODUCT_RHEL9}")
+@@ -445,6 +447,9 @@ endif()
+ if(SSG_PRODUCT_OPENEULER2203)
+     add_subdirectory("products/openeuler2203" "openeuler2203")
+ endif()
++if(SSG_PRODUCT_OPENRUYI)
++    add_subdirectory("products/openruyi" "openruyi")
++endif()
+ if(SSG_PRODUCT_OPENSUSE)
+     add_subdirectory("products/opensuse" "opensuse")
+ endif()
+diff --git a/build_product b/build_product
+index 76e3d3a698..49b1a9fd4f 100755
+--- a/build_product
++++ b/build_product
+@@ -348,6 +348,7 @@ all_cmake_products=(
+ 	OL10
+ 	OPENEMBEDDED
+ 	OPENEULER2203
++	OPENRUYI
+ 	OPENSUSE
+ 	RHCOS4
+ 	RHEL8
+diff --git a/controls/std_openruyi.yml b/controls/std_openruyi.yml
+new file mode 100644
+index 0000000000..e138af4593
+--- /dev/null
++++ b/controls/std_openruyi.yml
+@@ -0,0 +1,1799 @@
++---
++policy: 'Standard Benchmark for openRuyi'
++title: 'Standard Benchmark for openRuyi'
++id: std_openruyi
++version: '1.0'
++source: https://gitee.com/openeuler/security-committee/blob/master/sub-projects/secure-configuration-benchmark/release/
++
++levels:
++    - id: l1_server
++    - id: l2_server
++      inherits_from:
++          - l1_server
++
++controls:
++    - id: 1.1.1
++      title: Ensure All Files Have Owner And Group
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - no_files_unowned_by_user
++          - no_files_unowned_by_user.severity=high
++          - file_permissions_ungroupowned
++          - file_permissions_ungroupowned.severity=high
++
++    - id: 1.1.2
++      title: Ensure No Empty Symlink
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.3
++      title: Ensure No Hidden Executable Files
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.4
++      title: Ensure Sticky Set On Global Writable Folder
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - dir_perms_world_writable_sticky_bits
++          - dir_perms_world_writable_sticky_bits.severity=high
++
++    - id: 1.1.5
++      title: Ensure UMASK Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_umask_etc_bashrc
++          - accounts_umask_etc_bashrc.severity=high
++          - var_accounts_user_umask=077
++
++    - id: 1.1.6
++      title: Ensure No Global Writable File
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - file_permissions_unauthorized_world_writable
++          - file_permissions_unauthorized_world_writable.severity=high
++
++    - id: 1.1.7
++      title: Umount Unnecessary File System
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.8
++      title: Ensure Mount As Readonly If No Need To Write
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.9
++      title: Ensure Mount As Nodev
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.10
++      title: Ensure Mount As Noexec
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.11
++      title: Ensure Mount As Noexec And Nodev For Removable Device
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - mount_option_noexec_removable_partitions
++          - mount_option_noexec_removable_partitions.severity=high
++          - mount_option_nodev_removable_partitions
++          - mount_option_nodev_removable_partitions.severity=high
++
++    - id: 1.1.12
++      title: Ensure Mount As Nosuid
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.13
++      title: Ensure Remove Unnecessary SUID And SGID
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - file_permissions_unauthorized_suid
++          - file_permissions_unauthorized_suid.severity=high
++          - file_permissions_unauthorized_sgid
++          - file_permissions_unauthorized_sgid.severity=high
++
++    - id: 1.1.14
++      title: Ensure File Permission Minimize
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.15
++      title: Ensure Ulinmit Correctly
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.16
++      title: Ensure Symlinks And Hardlinks Protected
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_fs_protected_symlinks
++          - sysctl_fs_protected_symlinks.severity=high
++          - sysctl_fs_protected_hardlinks
++          - sysctl_fs_protected_hardlinks.severity=high
++
++    - id: 1.1.17
++      title: Ensure Different Data Store In Different Partitions
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 1.1.18
++      title: Ensure LD_LIBRARY_PATH Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.1.19
++      title: Ensure User PATH Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.2.1
++      title: Ensure FTP Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_ftp_removed
++          - package_ftp_removed.severity=high
++
++    - id: 1.2.2
++      title: Ensure TFTP Server Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_tftp_removed
++          - package_tftp_removed.severity=high
++          - package_tftp-server_removed
++          - package_tftp-server_removed.severity=high
++
++    - id: 1.2.3
++      title: Ensure Telnet Server Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_telnet_removed
++          - package_telnet_removed.severity=high
++          - package_telnet-server_removed
++          - package_telnet-server_removed.severity=high
++
++    - id: 1.2.4
++      title: Ensure SNMP Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_net-snmp_removed
++          - package_net-snmp_removed.severity=high
++
++    - id: 1.2.5
++      title: Ensure Python2 Not Installed
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.2.6
++      title: Ensure GPG Check Configured
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - ensure_gpgcheck_globally_activated
++          - ensure_gpgcheck_globally_activated.severity=high
++          - ensure_gpgcheck_never_disabled
++          - ensure_gpgcheck_never_disabled.severity=high
++
++    - id: 1.2.7
++      title: Ensure Debug-Shell Disabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_debug-shell_disabled
++          - service_debug-shell_disabled.severity=high
++
++    - id: 1.2.8
++      title: Ensure Rsync Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_rsyncd_disabled
++          - service_rsyncd_disabled.severity=high
++
++    - id: 1.2.9
++      title: Ensure Avahi Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_avahi-daemon_disabled
++          - service_avahi-daemon_disabled.severity=high
++
++    - id: 1.2.10
++      title: Ensure LDAP Server Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_openldap-servers_removed
++          - package_openldap-servers_removed.severity=high
++
++    - id: 1.2.11
++      title: Ensure CUPS Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_cups_removed
++          - package_cups_removed.severity=high
++
++    - id: 1.2.12
++      title: Ensure NIS Server Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_ypserv_removed
++          - package_ypserv_removed.severity=high
++
++    - id: 1.2.13
++      title: Ensure NIS Client Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_ypbind_removed
++          - package_ypbind_removed.severity=high
++
++    - id: 1.2.14
++      title: Ensure LDAP Client Not Installed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - package_openldap-clients_removed
++          - package_openldap-clients_removed.severity=high
++
++    - id: 1.2.15
++      title: Ensure Network Sniffing Software Removed
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.2.16
++      title: Ensure Debug Tools Removed
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.2.17
++      title: Ensure Compiler Tools Removed
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 1.2.18
++      title: Ensure X Window Not Installed
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - xwindows_remove_packages
++          - xwindows_remove_packages.severity=low
++
++    - id: 1.2.19
++      title: Ensure Http Service Not Installed
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - package_httpd_removed
++          - package_httpd_removed.severity=low
++
++    - id: 1.2.20
++      title: Ensure Samba Service Not Installed
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - package_samba_removed
++          - package_samba_removed.severity=low
++
++    - id: 1.2.21
++      title: Ensure DNS Service Disabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_named_disabled
++          - service_named_disabled.severity=low
++
++    - id: 1.2.22
++      title: Ensure NFS Service Disabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_nfs_disabled
++          - service_nfs_disabled.severity=low
++
++    - id: 1.2.23
++      title: Ensure RPC Service Disabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_rpcbind_disabled
++          - service_rpcbind_disabled.severity=low
++
++    - id: 1.2.24
++      title: Ensure DHCP Service Disabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_dhcpd_disabled
++          - service_dhcpd_disabled.severity=low
++
++    - id: 2.1.1
++      title: Ensure All Login Accounts Are Necessary
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.1.2
++      title: Ensure No Unused Accounts
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.1.3
++      title: Ensure Different Accounts Have Different GroupID
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.1.4
++      title: Ensure Only Root's UID Is 0
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_no_uid_except_zero
++          - accounts_no_uid_except_zero.severity=high
++
++    - id: 2.1.5
++      title: Ensure Account Related Files Have Correct Permission
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - file_owner_etc_passwd
++          - file_owner_etc_passwd.severity=high
++          - file_groupowner_etc_passwd
++          - file_groupowner_etc_passwd.severity=high
++          - file_owner_etc_shadow
++          - file_owner_etc_shadow.severity=high
++          - file_groupowner_etc_shadow
++          - file_groupowner_etc_shadow.severity=high
++          - file_owner_etc_group
++          - file_owner_etc_group.severity=high
++          - file_groupowner_etc_group
++          - file_groupowner_etc_group.severity=high
++          - file_owner_etc_gshadow
++          - file_owner_etc_gshadow.severity=high
++          - file_groupowner_etc_gshadow
++          - file_groupowner_etc_gshadow.severity=high
++          - file_owner_backup_etc_passwd
++          - file_owner_backup_etc_passwd.severity=high
++          - file_groupowner_backup_etc_passwd
++          - file_groupowner_backup_etc_passwd.severity=high
++          - file_owner_backup_etc_shadow
++          - file_owner_backup_etc_shadow.severity=high
++          - file_groupowner_backup_etc_shadow
++          - file_groupowner_backup_etc_shadow.severity=high
++          - file_owner_backup_etc_group
++          - file_owner_backup_etc_group.severity=high
++          - file_groupowner_backup_etc_group
++          - file_groupowner_backup_etc_group.severity=high
++          - file_owner_backup_etc_gshadow
++          - file_owner_backup_etc_gshadow.severity=high
++          - file_groupowner_backup_etc_gshadow
++          - file_groupowner_backup_etc_gshadow.severity=high
++          - file_permissions_etc_passwd
++          - file_permissions_etc_passwd.severity=high
++          - file_permissions_etc_shadow
++          - file_permissions_etc_shadow.severity=high
++          - file_permissions_etc_group
++          - file_permissions_etc_group.severity=high
++          - file_permissions_etc_gshadow
++          - file_permissions_etc_gshadow.severity=high
++          - file_permissions_backup_etc_passwd
++          - file_permissions_backup_etc_passwd.severity=high
++          - file_permissions_backup_etc_shadow
++          - file_permissions_backup_etc_shadow.severity=high
++          - file_permissions_backup_etc_group
++          - file_permissions_backup_etc_group.severity=high
++          - file_permissions_backup_etc_gshadow
++          - file_permissions_backup_etc_gshadow.severity=high
++
++    - id: 2.1.6
++      title: Ensure All Accounts Have Own Home Folder
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_user_interactive_home_directory_exists
++          - accounts_user_interactive_home_directory_exists.severity=high
++
++    - id: 2.1.7
++      title: Ensure All Groups Existed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - gid_passwd_group_same
++          - gid_passwd_group_same.severity=high
++
++    - id: 2.1.8
++      title: Ensure UID Unique
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - account_unique_id
++          - account_unique_id.severity=high
++
++    - id: 2.1.9
++      title: Ensure Account Name Unique
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - account_unique_name
++          - account_unique_name.severity=high
++
++    - id: 2.1.10
++      title: Ensure Group Unique ID
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - group_unique_id
++          - group_unique_id.severity=high
++
++    - id: 2.1.11
++      title: Ensure Group Unique Name
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - group_unique_name
++          - group_unique_name.severity=high
++
++    - id: 2.1.12
++      title: Ensure Account Expire Date Correct
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - account_temp_expire_date
++          - account_temp_expire_date.severity=low
++
++    - id: 2.1.13
++      title: Ensure No .forward Files In Home Folder
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - no_forward_files
++          - no_forward_files.severity=low
++
++    - id: 2.1.14
++      title: Ensure No .netrc Files In Home Folder
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - no_netrc_files
++          - no_netrc_files.severity=low
++
++    - id: 2.2.1
++      title: Ensure Set Correct Password Complexity
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_password_pam_minlen
++          - accounts_password_pam_minlen.severity=high
++          - var_password_pam_minlen=8
++          - accounts_password_pam_minclass
++          - accounts_password_pam_minclass.severity=high
++          - var_password_pam_minclass=3
++          - accounts_password_pam_retry
++          - accounts_password_pam_retry.severity=high
++          - var_password_pam_retry=3
++          - accounts_password_pam_dcredit
++          - accounts_password_pam_dcredit.severity=high
++          - var_password_pam_dcredit=0
++          - accounts_password_pam_ucredit
++          - accounts_password_pam_ucredit.severity=high
++          - var_password_pam_ucredit=0
++          - accounts_password_pam_lcredit
++          - accounts_password_pam_lcredit.severity=high
++          - var_password_pam_lcredit=0
++          - accounts_password_pam_ocredit
++          - accounts_password_pam_ocredit.severity=high
++          - var_password_pam_ocredit=0
++          - accounts_password_pam_enforce_root
++          - accounts_password_pam_enforce_root.severity=high
++
++    - id: 2.2.2
++      title: Ensure No History Password Used
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_password_pam_unix_remember
++          - accounts_password_pam_unix_remember.severity=high
++          - var_password_pam_unix_remember=5
++
++    - id: 2.2.3
++      title: Ensure Old Password Verified
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.2.4
++      title: Ensure Password Not Contain User Name
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.2.5
++      title: Ensure Using Strong Hash Algorithm To Encipher Password
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - set_password_hashing_algorithm_systemauth
++          - set_password_hashing_algorithm_systemauth.severity=high
++          - set_password_hashing_algorithm_passwordauth
++          - set_password_hashing_algorithm_passwordauth.severity=high
++          - var_password_hashing_algorithm_pam=sha512
++
++    - id: 2.2.6
++      title: Ensure Password Dictionary Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_password_pam_dictcheck
++          - accounts_password_pam_dictcheck.severity=high
++
++    - id: 2.2.7
++      title: Ensure Password Expire Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_maximum_age_login_defs
++          - accounts_maximum_age_login_defs.severity=high
++          - var_accounts_maximum_age_login_defs=90
++          - accounts_password_warn_age_login_defs
++          - accounts_password_warn_age_login_defs.severity=high
++          - var_accounts_password_warn_age_login_defs=7
++          - accounts_minimum_age_login_defs
++          - accounts_minimum_age_login_defs.severity=high
++          - var_accounts_minimum_age_login_defs=0
++
++    - id: 2.2.8
++      title: Ensure No Empty Password
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_empty_passwords
++          - sshd_disable_empty_passwords.severity=high
++
++    - id: 2.2.9
++      title: Ensure Grub Password Set
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - grub2_password
++          - grub2_password.severity=high
++          - grub2_uefi_password
++          - grub2_uefi_password.severity=high
++
++    - id: 2.2.10
++      title: Ensure Password Set In Single User Mode
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - require_emergency_target_auth
++          - require_emergency_target_auth.severity=high
++
++    - id: 2.2.11
++      title: Ensure Password Changed At First Login
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.3.1
++      title: Ensure Account Locked After Accessing Fail
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_passwords_pam_faillock_deny
++          - accounts_passwords_pam_faillock_deny.severity=high
++          - var_accounts_passwords_pam_faillock_deny=3
++          - accounts_passwords_pam_faillock_unlock_time
++          - accounts_passwords_pam_faillock_unlock_time.severity=high
++          - var_accounts_passwords_pam_faillock_unlock_time=300
++
++    - id: 2.3.2
++      title: Ensure TIMOUT Set Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - accounts_tmout
++          - accounts_tmout.severity=high
++          - var_accounts_tmout=5_min
++
++    - id: 2.3.3
++      title: Ensure Warning Banners Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - file_groupowner_etc_issue
++          - file_groupowner_etc_issue.severity=high
++          - file_groupowner_etc_issue_net
++          - file_groupowner_etc_issue_net.severity=high
++          - file_groupowner_etc_motd
++          - file_groupowner_etc_motd.severity=high
++          - file_owner_etc_issue
++          - file_owner_etc_issue.severity=high
++          - file_owner_etc_issue_net
++          - file_owner_etc_issue_net.severity=high
++          - file_owner_etc_motd
++          - file_owner_etc_motd.severity=high
++          - file_permissions_etc_issue
++          - file_permissions_etc_issue.severity=high
++          - file_permissions_etc_issue_net
++          - file_permissions_etc_issue_net.severity=high
++          - file_permissions_etc_motd
++          - file_permissions_etc_motd.severity=high
++
++    - id: 2.3.4
++      title: Ensure Warning Path Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_enable_warning_banner_net
++          - sshd_enable_warning_banner_net.severity=high
++
++    - id: 2.4.1
++      title: Ensure HISTSIZE Limited
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 2.4.2
++      title: Ensure SELinux Enforce
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - selinux_state
++          - selinux_state.severity=low
++
++    - id: 2.4.3
++      title: Ensure SELinux Configurate Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - selinux_policytype
++          - selinux_policytype.severity=low
++
++    - id: 2.4.4
++      title: Ensure SU Usage Limited
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - use_pam_wheel_for_su
++          - use_pam_wheel_for_su.severity=high
++
++    - id: 2.4.5
++      title: Ensure Use Sudo To Run
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sudo_restrict_privilege_elevation_to_authorized
++          - sudo_restrict_privilege_elevation_to_authorized.severity=high
++
++    - id: 2.4.6
++      title: Ensure No Files In /etc/sudoers Can Be Write By Low-privilege User
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.4.7
++      title: Ensure Low-privilege User Cannot Escalate By Pkexec
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.4.8
++      title: Ensure ALWAYS_SET_PATH Configurated
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 2.4.9
++      title: Ensure Root Can Not Login Local
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 2.4.10
++      title: Ensure Not Run Files wiht unconfined_service_t Flag
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - selinux_confinement_of_daemons
++          - selinux_confinement_of_daemons.severity=low
++
++    - id: 2.5.1
++      title: Ensure IMA Enabled
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 2.5.2
++      title: Ensure AIDE Enabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - package_aide_installed
++          - package_aide_installed.severity=low
++          - aide_build_database
++          - aide_build_database.severity=low
++
++    - id: 2.6.1
++      title: Ensure Haveged Enabled
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.1.1
++      title: Ensure No Unusual Network Service
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - kernel_module_sctp_disabled
++          - kernel_module_sctp_disabled.severity=low
++          - kernel_module_tipc_disabled
++          - kernel_module_tipc_disabled.severity=low
++
++    - id: 3.1.2
++      title: Ensure No WIFI
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - wireless_disable_interfaces
++          - wireless_disable_interfaces.severity=low
++
++    - id: 3.2.1
++      title: Ensure Firewalld Enabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_firewalld_enabled
++          - service_firewalld_enabled.severity=low
++
++    - id: 3.2.2
++      title: Ensure Firewalld Set Default Zone Correctly
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.2.3
++      title: Ensure Firewalld Set Correct Interface Zone
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - set_firewalld_appropriate_zone
++          - set_firewalld_appropriate_zone.severity=low
++
++    - id: 3.2.4
++      title: Ensure Unnecessary Service And Port Disabled
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - unnecessary_firewalld_services_ports_disabled
++          - unnecessary_firewalld_services_ports_disabled.severity=low
++
++    - id: 3.2.5
++      title: Ensure Iptables Enabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_iptables_enabled
++          - service_iptables_enabled.severity=low
++          - service_ip6tables_enabled
++          - service_ip6tables_enabled.severity=low
++
++    - id: 3.2.6
++      title: Ensure Iptables Default Refuse Rules Set
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - set_iptables_default_rule
++          - set_iptables_default_rule.severity=low
++
++    - id: 3.2.7
++      title: Ensure Iptables Loopback Rules Set
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - set_loopback_traffic
++          - set_loopback_traffic.severity=low
++          - set_ipv6_loopback_traffic
++          - set_ipv6_loopback_traffic.severity=low
++
++    - id: 3.2.8
++      title: Ensure Iptables Input Rules Set
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.2.9
++      title: Ensure Iptables Output Rules Set
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.2.10
++      title: Ensure Iptables Input Output Connection Rules Set
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - set_iptables_outbound_n_established
++          - set_iptables_outbound_n_established.severity=low
++
++    - id: 3.2.11
++      title: Ensure Nftables Enabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_nftables_enabled
++          - service_nftables_enabled.severity=low
++
++    - id: 3.2.12
++      title: Ensure Nftables Default Refuse Rules Set
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - nftables_ensure_default_deny_policy
++          - nftables_ensure_default_deny_policy.severity=low
++
++    - id: 3.2.13
++      title: Ensure Nftables Loopback Rules Set
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - set_nftables_loopback_traffic
++          - set_nftables_loopback_traffic.severity=low
++
++    - id: 3.2.14
++      title: Ensure Nftables Input Rules Set
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.2.15
++      title: Ensure Nftables Output Rules Set
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.2.16
++      title: Ensure Nftables Input Output Connection Rules Set
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - set_nftables_new_connections
++          - set_nftables_new_connections.severity=low
++
++    - id: 3.3.1
++      title: Ensure SSHd Protocol Version Is 2
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_allow_only_protocol2
++          - sshd_allow_only_protocol2.severity=high
++
++    - id: 3.3.2
++      title: Ensure SSHd Authentication Setting Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_rhosts
++          - sshd_disable_rhosts.severity=high
++          - disable_host_auth
++          - disable_host_auth.severity=high
++
++    - id: 3.3.3
++      title: Ensure SSHd Key Exchange Algorithm Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_use_strong_kex
++          - sshd_use_strong_kex.severity=high
++          - sshd_strong_kex=std_openruyi
++
++    - id: 3.3.4
++      title: Ensure SSHd Pubkey Algorithm Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.3.5
++      title: Ensure SSHd PAM Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_enable_pam
++          - sshd_enable_pam.severity=high
++
++    - id: 3.3.6
++      title: Ensure SSHd MACs Algorithm Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_use_strong_macs
++          - sshd_use_strong_macs.severity=high
++
++    - id: 3.3.7
++      title: Ensure SSHd Ciphers Algorithm Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_use_strong_ciphers
++          - sshd_use_strong_ciphers.severity=high
++
++    - id: 3.3.8
++      title: Ensure SSHd Ciphers Algorithm Not Overwritten
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.3.9
++      title: Ensure SSHd Forbid Root Login From Remote
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_root_login
++          - sshd_disable_root_login.severity=low
++
++    - id: 3.3.10
++      title: Ensure SSHd Log Level Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sshd_set_loglevel_verbose
++          - sshd_set_loglevel_verbose.severity=low
++
++    - id: 3.3.11
++      title: Ensure SSHd Listen Address Set Correct
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.3.12
++      title: Ensure SSHd MaxStartups Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sshd_set_maxstartups
++          - sshd_set_maxstartups.severity=low
++          - var_sshd_set_maxstartups=10:30:60
++
++    - id: 3.3.13
++      title: Ensure SSHd Maxsessions Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sshd_set_max_sessions
++          - sshd_set_max_sessions.severity=low
++          - var_sshd_max_sessions=10
++
++    - id: 3.3.14
++      title: Ensure SSHd X11 Forwarding Forbidden
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_x11_forwarding
++          - sshd_disable_x11_forwarding.severity=high
++
++    - id: 3.3.15
++      title: Ensure SSHd MaxAuthTries Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sshd_set_max_auth_tries
++          - sshd_set_max_auth_tries.severity=low
++          - sshd_max_auth_tries_value=3
++
++    - id: 3.3.16
++      title: Ensure SSHd PermitUserEnvironment Forbidden
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_do_not_permit_user_env
++          - sshd_do_not_permit_user_env.severity=high
++
++    - id: 3.3.17
++      title: Ensure SSHd LoginGraceTime Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sshd_set_login_grace_time
++          - sshd_set_login_grace_time.severity=low
++          - var_sshd_set_login_grace_time=60
++
++    - id: 3.3.18
++      title: Ensure SSHd Authorized Keys Not Set
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.3.19
++      title: Ensure SSHd Known Hosts Not Set
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_user_known_hosts
++          - sshd_disable_user_known_hosts.severity=high
++
++    - id: 3.3.20
++      title: Ensure SSHd Has No Obsolete Configurations
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.3.21
++      title: Ensure SSHd TCP Forward Disabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sshd_disable_tcp_forwarding
++          - sshd_disable_tcp_forwarding.severity=high
++
++    - id: 3.3.22
++      title: Ensure SSHd Has Correct White and Black Access List
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.4.1
++      title: Ensure Cron Not Run Low Privilege User Writable Bash
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.4.2
++      title: Ensure Cron Deamon Running
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_crond_enabled
++          - service_crond_enabled.severity=high
++
++    - id: 3.4.3
++      title: Ensure AT And Cron Set Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - file_groupowner_cron_d
++          - file_groupowner_cron_d.severity=high
++          - file_groupowner_cron_daily
++          - file_groupowner_cron_daily.severity=high
++          - file_groupowner_cron_hourly
++          - file_groupowner_cron_hourly.severity=high
++          - file_groupowner_cron_monthly
++          - file_groupowner_cron_monthly.severity=high
++          - file_groupowner_cron_weekly
++          - file_groupowner_cron_weekly.severity=high
++          - file_groupowner_crontab
++          - file_groupowner_crontab.severity=high
++          - file_owner_cron_d
++          - file_owner_cron_d.severity=high
++          - file_owner_cron_daily
++          - file_owner_cron_daily.severity=high
++          - file_owner_cron_hourly
++          - file_owner_cron_hourly.severity=high
++          - file_owner_cron_monthly
++          - file_owner_cron_monthly.severity=high
++          - file_owner_cron_weekly
++          - file_owner_cron_weekly.severity=high
++          - file_owner_crontab
++          - file_owner_crontab.severity=high
++          - file_permissions_cron_d
++          - file_permissions_cron_d.severity=high
++          - file_permissions_cron_daily
++          - file_permissions_cron_daily.severity=high
++          - file_permissions_cron_hourly
++          - file_permissions_cron_hourly.severity=high
++          - file_permissions_cron_monthly
++          - file_permissions_cron_monthly.severity=high
++          - file_permissions_cron_weekly
++          - file_permissions_cron_weekly.severity=high
++          - file_permissions_crontab
++          - file_permissions_crontab.severity=high
++          - file_at_deny_not_exist
++          - file_at_deny_not_exist.severity=high
++          - file_cron_deny_not_exist
++          - file_cron_deny_not_exist.severity=high
++          - file_groupowner_at_allow
++          - file_groupowner_at_allow.severity=high
++          - file_groupowner_cron_allow
++          - file_groupowner_cron_allow.severity=high
++          - file_owner_at_allow
++          - file_owner_at_allow.severity=high
++          - file_owner_cron_allow
++          - file_owner_cron_allow.severity=high
++          - file_permissions_at_allow
++          - file_permissions_at_allow.severity=high
++          - file_permissions_cron_allow
++          - file_permissions_cron_allow.severity=high
++
++    - id: 3.5.1
++      title: Ensure KASLR Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_kernel_randomize_va_space
++          - sysctl_kernel_randomize_va_space.severity=high
++
++    - id: 3.5.2
++      title: Ensure Dmesg Access Permission Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_kernel_dmesg_restrict
++          - sysctl_kernel_dmesg_restrict.severity=high
++
++    - id: 3.5.3
++      title: Ensure Kptr_restrict Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_kernel_kptr_restrict
++          - sysctl_kernel_kptr_restrict.severity=high
++          - sysctl_kernel_kptr_restrict_value=1
++
++    - id: 3.5.4
++      title: Ensure Kernel SMAP Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - grub2_nosmap_argument_absent
++          - grub2_nosmap_argument_absent.severity=high
++
++    - id: 3.5.5
++      title: Ensure Kernel SMEP Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - grub2_nosmep_argument_absent
++          - grub2_nosmep_argument_absent.severity=high
++
++    - id: 3.5.6
++      title: Ensure ICMP Broadcast Package Not Responsed
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_icmp_echo_ignore_broadcasts
++          - sysctl_net_ipv4_icmp_echo_ignore_broadcasts.severity=high
++
++    - id: 3.5.7
++      title: Ensure ICMP Redirect Package Not Received
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_conf_all_accept_redirects
++          - sysctl_net_ipv4_conf_all_accept_redirects.severity=high
++          - sysctl_net_ipv4_conf_all_accept_redirects_value=disabled
++          - sysctl_net_ipv4_conf_all_secure_redirects
++          - sysctl_net_ipv4_conf_all_secure_redirects.severity=high
++          - sysctl_net_ipv4_conf_all_secure_redirects_value=disabled
++          - sysctl_net_ipv4_conf_default_secure_redirects
++          - sysctl_net_ipv4_conf_default_secure_redirects.severity=high
++          - sysctl_net_ipv4_conf_default_secure_redirects_value=disabled
++          - sysctl_net_ipv6_conf_all_accept_redirects
++          - sysctl_net_ipv6_conf_all_accept_redirects.severity=high
++          - sysctl_net_ipv6_conf_all_accept_redirects_value=disabled
++
++    - id: 3.5.8
++      title: Ensure No ICMP Redirect Package Forwarded
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_conf_all_send_redirects
++          - sysctl_net_ipv4_conf_all_send_redirects.severity=high
++          - sysctl_net_ipv4_conf_default_send_redirects
++          - sysctl_net_ipv4_conf_default_send_redirects.severity=high
++
++    - id: 3.5.9
++      title: Ensure Ignore All ICMP Request
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 3.5.10
++      title: Ensure Ignore Bogus Error ICMP Package
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_icmp_ignore_bogus_error_responses
++          - sysctl_net_ipv4_icmp_ignore_bogus_error_responses.severity=high
++          - sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value=enabled
++
++    - id: 3.5.11
++      title: Ensure Reverse Proxy Filter Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_conf_all_rp_filter
++          - sysctl_net_ipv4_conf_all_rp_filter.severity=high
++          - sysctl_net_ipv4_conf_all_rp_filter_value=enabled
++          - sysctl_net_ipv4_conf_default_rp_filter
++          - sysctl_net_ipv4_conf_default_rp_filter.severity=high
++          - sysctl_net_ipv4_conf_default_rp_filter_value=enabled
++
++    - id: 3.5.12
++      title: Ensure IP Forwarding Disabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_ip_forward
++          - sysctl_net_ipv4_ip_forward.severity=high
++          - sysctl_net_ipv6_conf_all_forwarding
++          - sysctl_net_ipv6_conf_all_forwarding.severity=high
++          - sysctl_net_ipv6_conf_all_forwarding_value=disabled
++
++    - id: 3.5.13
++      title: Ensure Source Route Disabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_conf_all_accept_source_route
++          - sysctl_net_ipv4_conf_all_accept_source_route.severity=high
++          - sysctl_net_ipv4_conf_all_accept_source_route_value=disabled
++          - sysctl_net_ipv4_conf_default_accept_source_route
++          - sysctl_net_ipv4_conf_default_accept_source_route.severity=high
++          - sysctl_net_ipv4_conf_default_accept_source_route_value=disabled
++          - sysctl_net_ipv6_conf_all_accept_source_route
++          - sysctl_net_ipv6_conf_all_accept_source_route.severity=high
++          - sysctl_net_ipv6_conf_all_accept_source_route_value=disabled
++          - sysctl_net_ipv6_conf_default_accept_source_route
++          - sysctl_net_ipv6_conf_default_accept_source_route.severity=high
++          - sysctl_net_ipv6_conf_default_accept_source_route_value=disabled
++
++    - id: 3.5.14
++      title: Ensure TCP-SYN Cookie Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_tcp_syncookies
++          - sysctl_net_ipv4_tcp_syncookies.severity=high
++
++    - id: 3.5.15
++      title: Ensure Source Route And Redirectly Logged
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_net_ipv4_conf_all_log_martians
++          - sysctl_net_ipv4_conf_all_log_martians.severity=high
++          - sysctl_net_ipv4_conf_default_log_martians
++          - sysctl_net_ipv4_conf_default_log_martians.severity=high
++
++    - id: 3.5.16
++      title: Ensure tcp_timestamps Disabled
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.5.17
++      title: Ensure TCP Time Wait Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.5.18
++      title: Ensure SYN Recv Set Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.5.19
++      title: Ensure No ARP Proxy
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.5.20
++      title: Ensure Core Dump Set Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 3.5.21
++      title: Ensure SysRq Key Disabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - sysctl_kernel_sysrq
++          - sysctl_kernel_sysrq.severity=high
++
++    - id: 3.5.22
++      title: Ensure ptrace_scope Set Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - sysctl_kernel_yama_ptrace_scope
++          - sysctl_kernel_yama_ptrace_scope.severity=low
++
++    - id: 3.5.23
++      title: Ensure Seccomp Enabled
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - kernel_config_seccomp
++          - kernel_config_seccomp.severity=low
++
++    - id: 3.6.1
++      title: Ensure a single time synchronization daemon is in use (Automated)
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - var_timesync_service=systemd-timesyncd
++          - package_timesyncd_installed
++          - service_timesyncd_enabled
++          - service_chronyd_disabled
++      notes: |
++          To select which timesync daemon to install and configure, use the
++          profile variable var_timesync_service.
++
++    - id: 3.6.2
++      title: Ensure Chrony Configuration Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - service_chronyd_enabled
++          - service_chronyd_enabled.severity=low
++          - chronyd_specify_remote_server
++          - chronyd_specify_remote_server.severity=low
++
++    - id: 4.1.1
++      title: Ensure Auditd Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_auditd_enabled
++          - service_auditd_enabled.severity=high
++
++    - id: 4.1.2
++      title: Ensure Auditd Rotate Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - auditd_data_retention_max_log_file_action
++          - auditd_data_retention_max_log_file_action.severity=high
++          - var_auditd_max_log_file_action=rotate
++          - auditd_data_retention_num_logs
++          - auditd_data_retention_num_logs.severity=high
++          - var_auditd_num_logs=5
++
++    - id: 4.1.3
++      title: Ensure Lastlog Recorded
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_login_events_lastlog
++          - audit_rules_login_events_lastlog.severity=low
++
++    - id: 4.1.4
++      title: Ensure Account Info Changing Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_usergroup_modification_group
++          - audit_rules_usergroup_modification_group.severity=low
++          - audit_rules_usergroup_modification_gshadow
++          - audit_rules_usergroup_modification_gshadow.severity=low
++          - audit_rules_usergroup_modification_opasswd
++          - audit_rules_usergroup_modification_opasswd.severity=low
++          - audit_rules_usergroup_modification_passwd
++          - audit_rules_usergroup_modification_passwd.severity=low
++          - audit_rules_usergroup_modification_shadow
++          - audit_rules_usergroup_modification_shadow.severity=low
++
++    - id: 4.1.5
++      title: Ensure Escalation Audited
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 4.1.6
++      title: Ensure Module Changes Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_privileged_commands_modprobe
++          - audit_rules_privileged_commands_modprobe.severity=low
++          - audit_rules_privileged_commands_insmod
++          - audit_rules_privileged_commands_insmod.severity=low
++          - audit_rules_privileged_commands_rmmod
++          - audit_rules_privileged_commands_rmmod.severity=low
++          - audit_rules_kernel_module_loading
++          - audit_rules_kernel_module_loading.severity=low
++
++    - id: 4.1.7
++      title: Ensure Sudo Operation Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_privileged_commands_sudo
++          - audit_rules_privileged_commands_sudo.severity=low
++
++    - id: 4.1.8
++      title: Ensure Auditd Enabled During Boot
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - grub2_audit_argument
++          - grub2_audit_argument.severity=low
++
++    - id: 4.1.9
++      title: Ensure Audit Backlog Limit Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - grub2_audit_backlog_limit_argument
++          - var_audit_backlog_limit=8192
++          - grub2_audit_backlog_limit_argument.severity=low
++
++    - id: 4.1.10
++      title: Ensure Auditctl Not Used
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_immutable
++          - audit_rules_immutable.severity=low
++
++    - id: 4.1.11
++      title: Ensure Audit Log Size Set Correct
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - auditd_data_retention_max_log_file
++          - auditd_data_retention_max_log_file.severity=high
++          - auditd_data_retention_max_log_file_action
++          - auditd_data_retention_max_log_file_action.severity=high
++
++    - id: 4.1.12
++      title: Ensure Audit Disk Space Set Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - auditd_data_retention_space_left
++          - auditd_data_retention_space_left.severity=low
++          - auditd_data_retention_space_left_action
++          - auditd_data_retention_space_left_action.severity=low
++          - var_auditd_space_left_action=syslog
++          - auditd_data_retention_admin_space_left_percentage
++          - auditd_data_retention_admin_space_left_percentage.severity=low
++          - var_auditd_admin_space_left_percentage=50pc
++          - auditd_data_retention_admin_space_left_action
++          - auditd_data_retention_admin_space_left_action.severity=low
++          - var_auditd_admin_space_left_action=suspend
++          - auditd_audispd_disk_full_action
++          - auditd_audispd_disk_full_action.severity=low
++          - auditd_data_disk_full_action
++          - auditd_data_disk_full_action.severity=low
++          - var_auditd_disk_full_action=suspend
++          - auditd_data_disk_error_action
++          - auditd_data_disk_error_action.severity=low
++          - var_auditd_disk_error_action=suspend
++
++    - id: 4.1.13
++      title: Ensure Sudoers Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_sudoers
++          - audit_rules_sudoers.severity=low
++
++    - id: 4.1.14
++      title: Ensure Session Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_session_events
++          - audit_rules_session_events.severity=low
++
++    - id: 4.1.15
++      title: Ensure Time Changing Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_time_adjtimex
++          - audit_rules_time_adjtimex.severity=low
++          - audit_rules_time_settimeofday
++          - audit_rules_time_settimeofday.severity=low
++          - audit_rules_time_clock_settime
++          - audit_rules_time_clock_settime.severity=low
++
++    - id: 4.1.16
++      title: Ensure SELinux Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_mac_modification
++          - audit_rules_mac_modification.severity=low
++          - audit_rules_mac_modification_usr_share
++          - audit_rules_mac_modification_usr_share.severity=low
++
++    - id: 4.1.17
++      title: Ensure Network Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_networkconfig_modification
++          - audit_rules_networkconfig_modification.severity=low
++
++    - id: 4.1.18
++      title: Ensure Successful File Access Audited
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - audit_rules_successful_file_modification_chmod
++          - audit_rules_successful_file_modification_chmod.severity=low
++          - audit_rules_successful_file_modification_fchmod
++          - audit_rules_successful_file_modification_fchmod.severity=low
++          - audit_rules_successful_file_modification_fchmodat
++          - audit_rules_successful_file_modification_fchmodat.severity=low
++          - audit_rules_successful_file_modification_chown
++          - audit_rules_successful_file_modification_chown.severity=low
++          - audit_rules_successful_file_modification_fchown
++          - audit_rules_successful_file_modification_fchown.severity=low
++          - audit_rules_successful_file_modification_fchownat
++          - audit_rules_successful_file_modification_fchownat.severity=low
++          - audit_rules_successful_file_modification_setxattr
++          - audit_rules_successful_file_modification_setxattr.severity=low
++          - audit_rules_successful_file_modification_lsetxattr
++          - audit_rules_successful_file_modification_lsetxattr.severity=low
++          - audit_rules_successful_file_modification_fsetxattr
++          - audit_rules_successful_file_modification_fsetxattr.severity=low
++          - audit_rules_successful_file_modification_removexattr
++          - audit_rules_successful_file_modification_removexattr.severity=low
++          - audit_rules_successful_file_modification_lremovexattr
++          - audit_rules_successful_file_modification_lremovexattr.severity=low
++          - audit_rules_successful_file_modification_fremovexattr
++          - audit_rules_successful_file_modification_fremovexattr.severity=low
++
++    - id: 4.1.19
++      title: Ensure Unsuccessful File Access Audited
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - audit_rules_unsuccessful_file_modification
++          - audit_rules_unsuccessful_file_modification.severity=low
++
++    - id: 4.1.20
++      title: Ensure File Delete Audited
++      levels:
++          - l2_server
++      status: manual
++      rules:
++          - audit_rules_successful_file_modification_rename
++          - audit_rules_successful_file_modification_rename.severity=low
++          - audit_rules_successful_file_modification_renameat
++          - audit_rules_successful_file_modification_renameat.severity=low
++          - audit_rules_successful_file_modification_unlink
++          - audit_rules_successful_file_modification_unlink.severity=low
++          - audit_rules_successful_file_modification_unlinkat
++          - audit_rules_successful_file_modification_unlinkat.severity=low
++
++    - id: 4.1.21
++      title: Ensure Mount Audited
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 4.2.1
++      title: Ensure Rsyslog Enabled
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - service_rsyslog_enabled
++          - service_rsyslog_enabled.severity=high
++
++    - id: 4.2.2
++      title: Ensure Authentication Logged
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - rsyslog_remote_access_monitoring
++          - rsyslog_remote_access_monitoring.severity=high
++
++    - id: 4.2.3
++      title: Ensure Cron Logged
++      levels:
++          - l1_server
++      status: automated
++      rules:
++          - rsyslog_cron_logging
++          - rsyslog_cron_logging.severity=high
++
++    - id: 4.2.4
++      title: Ensure Rsyslog's Files Permission Correct
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - rsyslog_filecreatemode
++          - rsyslog_filecreatemode.severity=low
++
++    - id: 4.2.5
++      title: Ensure Important Services Logged
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - rsyslog_logging_configured
++          - rsyslog_logging_configured.severity=low
++
++    - id: 4.2.6
++      title: Ensure Journald Transfer Set Correct
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 4.2.7
++      title: Ensure Rotate Setting In Rsyslog
++      levels:
++          - l1_server
++      status: planned
++
++    - id: 4.2.8
++      title: Ensure Remote Log Server Correct
++      levels:
++          - l2_server
++      status: planned
++
++    - id: 4.2.9
++      title: Ensure Only Specified Server Can Receive Logs
++      levels:
++          - l2_server
++      status: automated
++      rules:
++          - rsyslog_accept_remote_messages_tcp
++          - rsyslog_accept_remote_messages_tcp.severity=low
++          - rsyslog_accept_remote_messages_udp
++          - rsyslog_accept_remote_messages_udp.severity=low
+diff --git a/linux_os/guide/services/obsolete/service_rsyncd_disabled/rule.yml b/linux_os/guide/services/obsolete/service_rsyncd_disabled/rule.yml
+index 1db77bb04a..d2bc832377 100644
+--- a/linux_os/guide/services/obsolete/service_rsyncd_disabled/rule.yml
++++ b/linux_os/guide/services/obsolete/service_rsyncd_disabled/rule.yml
+@@ -43,5 +43,6 @@ template:
+         packagename@sle15: rsync
+         packagename@slmicro5: rsync
+         packagename@openeuler2203: rsync
++        packagename@openruyi: rsync
+         servicename@ubuntu2404: rsync
+         packagename@ubuntu2404: rsync
+diff --git a/linux_os/guide/services/ssh/sshd_strong_kex.var b/linux_os/guide/services/ssh/sshd_strong_kex.var
+index d4a78a3fe4..373ef2ff49 100644
+--- a/linux_os/guide/services/ssh/sshd_strong_kex.var
++++ b/linux_os/guide/services/ssh/sshd_strong_kex.var
+@@ -21,4 +21,5 @@ options:
+     cis_ubuntu2204: curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+     cis_ubuntu2404: sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+     std_openeuler: curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
++    std_openruyi: curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+     cis_debian12: sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+diff --git a/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/oval/shared.xml b/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/oval/shared.xml
+index b359d976e0..ec09a7b47a 100644
+--- a/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/oval/shared.xml
++++ b/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/oval/shared.xml
+@@ -35,7 +35,7 @@
+   </ind:textfilecontent54_test>
+   <ind:textfilecontent54_object id="obj_require_emergency_service" version="1">
+     <ind:filepath>/usr/lib/systemd/system/emergency.service</ind:filepath>
+-    {{%- if product in ["fedora", "ol8", "ol9", "kylinserver10", "openeuler2203", "sle12", "sle15", "sle16", "slmicro5"] or 'rhel' in product -%}}
++    {{%- if product in ["fedora", "ol8", "ol9", "kylinserver10", "openeuler2203", "openruyi", "sle12", "sle15", "sle16", "slmicro5"] or 'rhel' in product -%}}
+     <ind:pattern operation="pattern match">^ExecStart=\-/usr/lib/systemd/systemd-sulogin-shell[\s]+emergency</ind:pattern>
+     {{%- else -%}}
+     <ind:pattern operation="pattern match">^ExecStart=\-/bin/sh[\s]+-c[\s]+\"(/usr)?/sbin/sulogin;[\s]+/usr/bin/systemctl[\s]+--fail[\s]+--no-block[\s]+default\"</ind:pattern>
+diff --git a/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/rule.yml b/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/rule.yml
+index 00553417e3..1ecbf61cc2 100644
+--- a/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/rule.yml
++++ b/linux_os/guide/system/accounts/accounts-physical/require_emergency_target_auth/rule.yml
+@@ -77,7 +77,7 @@ fixtext: |-
+     Configure {{{ full_name }}} to require authentication for system emergency mode.
+ 
+     Add or edit the following line in "/usr/lib/systemd/system/emergency.service":
+-    {{% if product in ["fedora", "ol8", "ol9", "kylinserver10", "openeuler2203", "rhel8", "rhel9", "sle12", "sle15", "sle16", "slmicro5"] -%}}
++    {{% if product in ["fedora", "ol8", "ol9", "kylinserver10", "openeuler2203", "openruyi", "rhel8", "rhel9", "sle12", "sle15", "sle16", "slmicro5"] -%}}
+     ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency
+     {{%- else -%}}
+     ExecStart=-/bin/sh -c "/sbin/sulogin; /usr/bin/systemctl --fail --no-block default"
+diff --git a/linux_os/guide/system/bootloader-grub2/non-uefi/grub2_password/tests/invalid_username.fail.sh b/linux_os/guide/system/bootloader-grub2/non-uefi/grub2_password/tests/invalid_username.fail.sh
+index 663a3282cf..b6f05c2bc1 100644
+--- a/linux_os/guide/system/bootloader-grub2/non-uefi/grub2_password/tests/invalid_username.fail.sh
++++ b/linux_os/guide/system/bootloader-grub2/non-uefi/grub2_password/tests/invalid_username.fail.sh
+@@ -7,7 +7,7 @@
+ 
+ make_grub_password
+ 
+-{{% if 'ubuntu' in product %}}
++{{% if 'ubuntu' in product or product == 'openruyi' %}}
+ test -n "$GRUB_CFG_ROOT" || GRUB_CFG_ROOT=/boot/grub
+ {{% else %}}
+ test -n "$GRUB_CFG_ROOT" || GRUB_CFG_ROOT=/boot/grub2
+diff --git a/linux_os/guide/system/kernel_build_config/kernel_config_default_mmap_min_addr/oval/shared.xml b/linux_os/guide/system/kernel_build_config/kernel_config_default_mmap_min_addr/oval/shared.xml
+index 7f2f865631..475fdd2893 100644
+--- a/linux_os/guide/system/kernel_build_config/kernel_config_default_mmap_min_addr/oval/shared.xml
++++ b/linux_os/guide/system/kernel_build_config/kernel_config_default_mmap_min_addr/oval/shared.xml
+@@ -16,6 +16,12 @@
+           <criterion comment="Check presence of build configuration of installed kernels"
+           test_ref="test_kernel_config_default_mmap_min_addr_aarch64" />
+         </criteria>
++        <criteria operator="AND">
++          <criterion comment="Check architecture is riscv64"
++          test_ref="test_proc_sys_kernel_osrelease_arch_riscv64" />
++          <criterion comment="Check presence of build configuration of installed kernels"
++          test_ref="test_kernel_config_default_mmap_min_addr_riscv64" />
++        </criteria>
+       </criteria>
+       <criterion comment="Ensure all kernels have the config"
+       test_ref="test_kernel_config_default_mmap_min_addr_all_kernels" />
+@@ -34,6 +40,12 @@
+     <ind:object object_ref="object_kernel_config_default_mmap_min_addr" />
+     <ind:state state_ref="state_kernel_config_default_mmap_min_addr_aarch64" />
+   </ind:textfilecontent54_test>
++  <ind:textfilecontent54_test check="all"
++  comment="Check /boot/config-.* files for CONFIG_DEFAULT_MMAP_MIN_ADDR=32768"
++  id="test_kernel_config_default_mmap_min_addr_riscv64" version="1">
++    <ind:object object_ref="object_kernel_config_default_mmap_min_addr" />
++    <ind:state state_ref="state_kernel_config_default_mmap_min_addr_riscv64" />
++  </ind:textfilecontent54_test>
+ 
+   <ind:textfilecontent54_object id="object_kernel_config_default_mmap_min_addr" version="1">
+     <ind:filepath operation="pattern match">^/boot/config-.*$</ind:filepath>
+@@ -47,6 +59,9 @@
+   <ind:textfilecontent54_state id="state_kernel_config_default_mmap_min_addr_aarch64" version="1">
+     <ind:subexpression operation="equals" datatype="string">32768</ind:subexpression>
+   </ind:textfilecontent54_state>
++  <ind:textfilecontent54_state id="state_kernel_config_default_mmap_min_addr_riscv64" version="1">
++    <ind:subexpression operation="equals" datatype="string">32768</ind:subexpression>
++  </ind:textfilecontent54_state>
+ 
+   <ind:variable_test check="all" check_existence="all_exist"
+   comment="Check if all installed kernels are compliant"
+@@ -89,6 +104,23 @@
+       <unix:filename operation="pattern match">^config-.*$</unix:filename>
+   </unix:file_object>
+ 
++  <ind:textfilecontent54_test check="all" check_existence="all_exist"
++      comment="proc_sys_kernel is for riscv64 architecture"
++      id="test_proc_sys_kernel_osrelease_arch_riscv64"
++  version="1">
++    <ind:object object_ref="object_proc_sys_kernel_osrelease_arch_riscv64" />
++    <ind:state state_ref="state_proc_sys_kernel_osrelease_arch_riscv64" />
++  </ind:textfilecontent54_test>
++
++  <ind:textfilecontent54_object id="object_proc_sys_kernel_osrelease_arch_riscv64" version="1">
++    <ind:filepath>/proc/sys/kernel/osrelease</ind:filepath>
++    <ind:pattern operation="pattern match">^.*\.(.*)$</ind:pattern>
++    <ind:instance datatype="int" operation="greater than or equal">1</ind:instance>
++  </ind:textfilecontent54_object>
++
++  <ind:textfilecontent54_state id="state_proc_sys_kernel_osrelease_arch_riscv64" version="1">
++    <ind:subexpression datatype="string" operation="pattern match">^riscv64$</ind:subexpression>
++  </ind:textfilecontent54_state>
+ 
+   <ind:textfilecontent54_test check="all" check_existence="all_exist"
+       comment="proc_sys_kernel is for aarch64 architecture"
+diff --git a/product_properties/10-grub.yml b/product_properties/10-grub.yml
+index b2c17c2335..f406274e58 100644
+--- a/product_properties/10-grub.yml
++++ b/product_properties/10-grub.yml
+@@ -29,3 +29,8 @@ overrides:
+   grub2_uefi_boot_path: "/boot/grub"
+ {{% endif %}}
+ {{% endif %}}
++{{% if product == "openruyi" %}}
++  grub2_boot_path: "/boot/grub"
++  grub2_uefi_boot_path: "/boot/grub"
++  grub_helper_executable: "grub-mkconfig"
++{{% endif %}}
+diff --git a/products/openruyi/CMakeLists.txt b/products/openruyi/CMakeLists.txt
+new file mode 100644
+index 0000000000..bb9c6b7b62
+--- /dev/null
++++ b/products/openruyi/CMakeLists.txt
+@@ -0,0 +1,6 @@
++# Sometimes our users will try to do: "cd openruyi; cmake ." That needs to error in a nice way.
++if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
++    message(FATAL_ERROR "cmake has to be used on the root CMakeLists.txt, see the Building ComplianceAsCode section in the Developer Guide!")
++endif()
++
++ssg_build_product("openruyi")
+diff --git a/products/openruyi/product.yml b/products/openruyi/product.yml
+new file mode 100644
+index 0000000000..670940419c
+--- /dev/null
++++ b/products/openruyi/product.yml
+@@ -0,0 +1,24 @@
++product: openruyi
++full_name: openRuyi
++arch: riscv64
++type: platform
++
++benchmark_id: OPENRUYI
++benchmark_root: "../../linux_os/guide"
++
++profiles_root: "./profiles"
++
++pkg_manager: "dnf"
++pkg_manager_config_file: "/etc/yum.conf"
++
++init_system: "systemd"
++
++cpes_root: "../../shared/applicability"
++cpes:
++  - openruyi:
++      name: "cpe:/o:openruyi:openruyi:creek"
++      title: "openRuyi Creek"
++      check_id: installed_OS_is_openruyi
++
++reference_uris:
++  cis: 'https://workbench.cisecurity.org/communities/101'
+\ No newline at end of file
+diff --git a/products/openruyi/profiles/standard.profile b/products/openruyi/profiles/standard.profile
+new file mode 100644
+index 0000000000..5cc01a4388
+--- /dev/null
++++ b/products/openruyi/profiles/standard.profile
+@@ -0,0 +1,14 @@
++documentation_complete: true
++
++metadata:
++    version: 1.0
++
++title: 'Standard System Security Profile for openRuyi'
++
++description: |-
++    This profile contains rules to ensure standard security baseline
++    of an openRuyi system. Regardless of your system's workload
++    all of these checks should pass.
++
++selections:
++    - std_openruyi:all:l2_server
+\ No newline at end of file
+diff --git a/shared/applicability/bootc.yml b/shared/applicability/bootc.yml
+index 1b7cabf533..38969bc682 100644
+--- a/shared/applicability/bootc.yml
++++ b/shared/applicability/bootc.yml
+@@ -17,6 +17,8 @@ title: Bootable containers
+ check_id: bootc
+ {{% if product == "fedora" or "rhel" in product %}}
+ {{% set kernel_package = "kernel-core" %}}
++{{% elif product == "openruyi" %}}
++{{% set kernel_package = "linux-core" %}}
+ {{% else %}}
+ {{% set kernel_package = "kernel" %}}
+ {{% endif %}}
+diff --git a/shared/applicability/oval/bootc.xml b/shared/applicability/oval/bootc.xml
+index 4eaf3009bf..4de544308c 100644
+--- a/shared/applicability/oval/bootc.xml
++++ b/shared/applicability/oval/bootc.xml
+@@ -14,6 +14,8 @@
+   </definition>
+ {{% if product == "fedora" or "rhel" in product %}}
+ {{% set kernel_package = "kernel-core" %}}
++{{% elif product == "openruyi" %}}
++{{% set kernel_package = "linux-core" %}}
+ {{% else %}}
+ {{% set kernel_package = "kernel" %}}
+ {{% endif %}}
+diff --git a/shared/applicability/oval/installed_env_has_grub2_package.xml b/shared/applicability/oval/installed_env_has_grub2_package.xml
+index 827ea9f193..1845b99354 100644
+--- a/shared/applicability/oval/installed_env_has_grub2_package.xml
++++ b/shared/applicability/oval/installed_env_has_grub2_package.xml
+@@ -11,6 +11,7 @@
+     </metadata>
+     <criteria operator="AND">
+       <criterion comment="Package grub2-common is installed" test_ref="test_env_has_grub2_installed" />
++      {{% if product != "openruyi" %}}
+       <criteria operator="OR">
+         <!-- On ppc64le systems, OF (Grub2) or OPAL (petitboot) can be used,
+         and unfortunately the package set installed is the same in both cases.
+@@ -21,6 +22,7 @@
+         <!-- or when grub2-common is installed, arch is a ppc64le but OPAL is not used -->
+         <criterion comment="Test if OPAL is not used" test_ref="test_system_using_opal" negate="true" />
+       </criteria>
++      {{% endif %}}
+     </criteria>
+   </definition>
+ 
+@@ -31,7 +33,7 @@
+     <linux:object object_ref="obj_env_has_grub2_installed" />
+   </linux:rpminfo_test>
+   <linux:rpminfo_object id="obj_env_has_grub2_installed" version="1">
+-    <linux:name>{{% if product in ["sle12", "sle15", "slmicro5", "slmicro6"] %}}grub2{{% else %}}grub2-common{{% endif %}}</linux:name>
++    <linux:name>{{% if product in ["sle12", "sle15", "slmicro5", "slmicro6"] %}}grub2{{% elif product == "openruyi" %}}grub{{% else %}}grub2-common{{% endif %}}</linux:name>
+   </linux:rpminfo_object>
+ {{% elif pkg_system == "dpkg" %}}
+   <linux:dpkginfo_test check="all" check_existence="all_exist"
+diff --git a/shared/applicability/oval/proc_sys_kernel_osrelease_arch_riscv64.xml b/shared/applicability/oval/proc_sys_kernel_osrelease_arch_riscv64.xml
+new file mode 100644
+index 0000000000..128ca33f2c
+--- /dev/null
++++ b/shared/applicability/oval/proc_sys_kernel_osrelease_arch_riscv64.xml
+@@ -0,0 +1 @@
++{{{ oval_check_proc_sys_kernel_osrelease_arch("riscv64") }}}
+diff --git a/shared/applicability/oval/system_with_kernel.xml b/shared/applicability/oval/system_with_kernel.xml
+index d1cbf79c4d..202ff63a79 100644
+--- a/shared/applicability/oval/system_with_kernel.xml
++++ b/shared/applicability/oval/system_with_kernel.xml
+@@ -16,6 +16,8 @@
+ {{% elif 'sle' in product or 'slmicro' in product %}}
+ {{{ oval_test_package_installed(package="kernel-default", test_id="inventory_test_kernel_installed") }}}
+ {{{ oval_test_package_installed(package="kernel-default-base", test_id="inventory_test_kernel_default_base_installed") }}}
++{{% elif product == 'openruyi' %}}
++{{{ oval_test_package_installed(package="linux-core", test_id="inventory_test_kernel_installed") }}}
+ {{% else %}}
+ {{{ oval_test_package_installed(package="kernel-core", test_id="inventory_test_kernel_installed") }}}
+ {{% endif %}}
+diff --git a/shared/applicability/package.yml b/shared/applicability/package.yml
+index 75cd60e08c..52e5d19f12 100644
+--- a/shared/applicability/package.yml
++++ b/shared/applicability/package.yml
+@@ -35,7 +35,7 @@ args:
+   chrony:
+     pkgname: chrony
+   dnf:
+-    {{% if product == "fedora" %}}
++    {{% if product in ["fedora", "openruyi"] %}}
+     pkgname: dnf5
+     {{% else %}}
+     pkgname: dnf
+@@ -113,7 +113,7 @@ args:
+     pkgname: rsh-server
+   shadow-utils:
+     {{% if pkg_system == "rpm" %}}
+-    {{% if 'sle' in product or 'slmicro' in product or product in ["kylinserver10", "openeuler2203"] %}}
++    {{% if 'sle' in product or 'slmicro' in product or product in ["kylinserver10", "openeuler2203", "openruyi"] %}}
+       pkgname: shadow
+     {{% else %}}
+       pkgname: shadow-utils
+diff --git a/shared/applicability/riscv64_arch.yml b/shared/applicability/riscv64_arch.yml
+new file mode 100644
+index 0000000000..a1da619758
+--- /dev/null
++++ b/shared/applicability/riscv64_arch.yml
+@@ -0,0 +1,5 @@
++name: cpe:/a:riscv64_arch
++title: System architecture is RISCV64
++check_id: proc_sys_kernel_osrelease_arch_riscv64
++bash_conditional: {{{ bash_arch_conditional("riscv64") }}}
++ansible_conditional: 'ansible_architecture == "riscv64"'
+diff --git a/shared/applicability/system_with_kernel.yml b/shared/applicability/system_with_kernel.yml
+index 07793b1a1a..98c8f50627 100644
+--- a/shared/applicability/system_with_kernel.yml
++++ b/shared/applicability/system_with_kernel.yml
+@@ -22,6 +22,8 @@ bash_conditional: "rpm --quiet -q kernel-default || rpm --quiet -q kernel-defaul
+ bash_conditional: "rpm --quiet -q kernel || rpm --quiet -q kernel-uek"
+ {{% elif product == "fedora" or "rhel" in product %}}
+ bash_conditional: "rpm --quiet -q kernel-core"
++{{% elif product == "openruyi" %}}
++bash_conditional: "rpm --quiet -q linux-core"
+ {{% else %}}
+ bash_conditional: "rpm --quiet -q kernel"
+ {{% endif %}}
+@@ -40,6 +42,8 @@ ansible_conditional: '("kernel-default" in ansible_facts.packages or "kernel-def
+ ansible_conditional: '("kernel" in ansible_facts.packages or "kernel-uek" in ansible_facts.packages)'
+ {{% elif product == "fedora" or "rhel" in product %}}
+ ansible_conditional: '"kernel-core" in ansible_facts.packages'
++{{% elif product == "openruyi" %}}
++ansible_conditional: '"linux-core" in ansible_facts.packages'
+ {{% else %}}
+ ansible_conditional: '"kernel" in ansible_facts.packages'
+ {{% endif %}}
+diff --git a/shared/checks/oval/bootc.xml b/shared/checks/oval/bootc.xml
+index 4eaf3009bf..4de544308c 100644
+--- a/shared/checks/oval/bootc.xml
++++ b/shared/checks/oval/bootc.xml
+@@ -14,6 +14,8 @@
+   </definition>
+ {{% if product == "fedora" or "rhel" in product %}}
+ {{% set kernel_package = "kernel-core" %}}
++{{% elif product == "openruyi" %}}
++{{% set kernel_package = "linux-core" %}}
+ {{% else %}}
+ {{% set kernel_package = "kernel" %}}
+ {{% endif %}}
+diff --git a/shared/checks/oval/installed_OS_is_openruyi.xml b/shared/checks/oval/installed_OS_is_openruyi.xml
+new file mode 100644
+index 0000000000..1e60088c71
+--- /dev/null
++++ b/shared/checks/oval/installed_OS_is_openruyi.xml
+@@ -0,0 +1,25 @@
++<def-group>
++  <definition class="inventory" id="installed_OS_is_openruyi" version="3">
++    <metadata>
++      <title>Installed operating system is openRuyi</title>
++      <affected family="unix">
++        <platform>multi_platform_all</platform>
++      </affected>
++      <reference ref_id="cpe:/o:openruyi:openruyi:creek" source="CPE" />
++      <description>The operating system installed on the system is openRuyi</description>
++    </metadata>
++    <criteria operator="AND">
++      <extend_definition comment="Installed OS is part of the Unix family" definition_ref="installed_OS_is_part_of_Unix_family" />
++      <criterion comment="openruyi-release RPM packages are installed" test_ref="test_openruyi_release_rpm" />
++      <extend_definition comment="Architecture is riscv64" definition_ref="proc_sys_kernel_osrelease_arch_riscv64" />
++    </criteria>
++  </definition>
++
++  <linux:rpminfo_test check="all" check_existence="at_least_one_exists" comment="openruyi-release RPM packages are installed" id="test_openruyi_release_rpm" version="1">
++    <linux:object object_ref="object_openruyi_release_rpm" />
++  </linux:rpminfo_test>
++  <linux:rpminfo_object id="object_openruyi_release_rpm" version="1">
++    <linux:name operation="pattern match">open[rR]uyi-release.*</linux:name>
++  </linux:rpminfo_object>
++
++</def-group>
+diff --git a/shared/checks/oval/sysctl_kernel_ipv6_disable.xml b/shared/checks/oval/sysctl_kernel_ipv6_disable.xml
+index b718ded260..9cf1aee4e7 100644
+--- a/shared/checks/oval/sysctl_kernel_ipv6_disable.xml
++++ b/shared/checks/oval/sysctl_kernel_ipv6_disable.xml
+@@ -12,6 +12,7 @@
+ 	<platform>multi_platform_kylinserver</platform>
+ 	<platform>multi_platform_openembedded</platform>
+ 	<platform>multi_platform_openeuler</platform>
++	<platform>multi_platform_openruyi</platform>
+ 	<platform>multi_platform_opensuse</platform>
+ 	<platform>multi_platform_ol</platform>
+ 	<platform>multi_platform_rhcos</platform>
+diff --git a/shared/checks/oval/system_info_architecture_64bit.xml b/shared/checks/oval/system_info_architecture_64bit.xml
+index b6dac63f0d..c46797f414 100644
+--- a/shared/checks/oval/system_info_architecture_64bit.xml
++++ b/shared/checks/oval/system_info_architecture_64bit.xml
+@@ -19,6 +19,8 @@
+       definition_ref="system_info_architecture_aarch_64" />
+       <extend_definition comment="Generic test for s390x architecture"
+       definition_ref="system_info_architecture_s390_64" />
++      <extend_definition comment="Generic test for riscv64 architecture"
++      definition_ref="system_info_architecture_riscv_64" />
+     </criteria>
+   </definition>
+ 
+diff --git a/shared/checks/oval/system_info_architecture_riscv_64.xml b/shared/checks/oval/system_info_architecture_riscv_64.xml
+new file mode 100644
+index 0000000000..26e2498a3e
+--- /dev/null
++++ b/shared/checks/oval/system_info_architecture_riscv_64.xml
+@@ -0,0 +1,29 @@
++<def-group>
++  <definition class="compliance" id="system_info_architecture_riscv_64"
++  version="1">
++    <!-- Note that this does not meet requirements for class=inventory as
++         that only tests for patches per 5.10.1 Revision 1 -->
++    <metadata>
++      <title>Test for riscv_64 Architecture</title>
++      <affected family="unix">
++        <platform>multi_platform_all</platform>
++      </affected>
++      <description>Generic test for riscv_64 architecture to be used by other tests</description>
++    </metadata>
++    <criteria>
++      <criterion comment="Generic test for riscv_64 architecture"
++      test_ref="test_system_info_architecture_riscv_64" />
++    </criteria>
++  </definition>
++  <unix:uname_test check="all" comment="64 bit architecture"
++  id="test_system_info_architecture_riscv_64" version="1">
++    <unix:object object_ref="object_system_info_architecture_riscv_64" />
++    <unix:state state_ref="state_system_info_architecture_riscv_64" />
++  </unix:uname_test>
++  <unix:uname_object comment="64 bit architecture"
++  id="object_system_info_architecture_riscv_64" version="1" />
++  <unix:uname_state comment="64 bit architecture"
++  id="state_system_info_architecture_riscv_64" version="1">
++    <unix:processor_type operation="equals">riscv64</unix:processor_type>
++  </unix:uname_state>
++</def-group>
+diff --git a/shared/macros/01-general.jinja b/shared/macros/01-general.jinja
+index 80dc6eeca5..d8336855c3 100644
+--- a/shared/macros/01-general.jinja
++++ b/shared/macros/01-general.jinja
+@@ -1262,6 +1262,8 @@ Part of the grub2_bootloader_argument(_absent) templates.
+ {{% macro grub_command(action, arg_name_value=None) -%}}
+ {{%- if "update-grub" in grub_helper_executable -%}}
+     {{%- set grub_helper_args = [] -%}}
++{{%- elif "grub-mkconfig" in grub_helper_executable -%}}
++    {{%- set grub_helper_args = ["-o " ~ grub2_boot_path ~ "/grub.cfg"] -%}}
+ {{%- elif "grub2-mkconfig" in grub_helper_executable -%}}
+     {{%- if 'suse' in families -%}}
+     {{%- set grub_helper_args = ["-o " ~ grub2_boot_path ~ "/grub.cfg"] -%}}
+diff --git a/shared/macros/10-ansible.jinja b/shared/macros/10-ansible.jinja
+index 33417159b0..12a5053c9c 100644
+--- a/shared/macros/10-ansible.jinja
++++ b/shared/macros/10-ansible.jinja
+@@ -1637,6 +1637,9 @@ Part of the grub2_bootloader_argument template.
+ {{% if product in ['sle12', 'sle15', 'sle16', 'slmicro5'] %}}
+ - name: Update grub defaults and the bootloader menu
+   ansible.builtin.command: /usr/sbin/grub2-mkconfig -o {{{ grub2_boot_path }}}/grub.cfg
++{{% elif product == 'openruyi' %}}
++- name: Update grub defaults and the bootloader menu
++  ansible.builtin.command: /usr/sbin/grub-mkconfig -o {{{ grub2_boot_path }}}/grub.cfg
+ {{% elif 'debian' in product %}}
+ - name: Update grub defaults and the bootloader menu
+   ansible.builtin.command: /usr/sbin/update-grub
+@@ -1693,6 +1696,9 @@ Part of the grub2_bootloader_argument_absent template.
+ {{% if product in ['sle12', 'sle15', 'sle16'] %}}
+ - name: Update grub defaults and the bootloader menu
+   ansible.builtin.command: /usr/sbin/grub2-mkconfig -o {{{ grub2_boot_path }}}/grub.cfg
++{{% elif product == 'openruyi' %}}
++- name: Update grub defaults and the bootloader menu
++  ansible.builtin.command: /usr/sbin/grub-mkconfig -o {{{ grub2_boot_path }}}/grub.cfg
+ {{% elif 'debian' in product %}}
+ - name: Update grub defaults and the bootloader menu
+   ansible.builtin.command: /usr/sbin/update-grub
+diff --git a/ssg/constants.py b/ssg/constants.py
+index f104ecec2c..63bcdf287f 100644
+--- a/ssg/constants.py
++++ b/ssg/constants.py
+@@ -53,6 +53,7 @@ product_directories = [
+     'rhcos4',
+     'ol7', 'ol8', 'ol9', 'ol10',
+     'openeuler2203',
++    'openruyi',
+     'opensuse',
+     'openembedded',
+     'rhel8', 'rhel9', 'rhel10',
+@@ -228,6 +229,7 @@ FULL_NAME_TO_PRODUCT_MAPPING = {
+     "Oracle Linux 9": "ol9",
+     "Oracle Linux 10": "ol10",
+     "openEuler 2203": "openeuler2203",
++    "openRuyi": "openruyi",
+     "openSUSE": "opensuse",
+     "Red Hat Enterprise Linux 8": "rhel8",
+     "Red Hat Enterprise Linux 9": "rhel9",
+@@ -289,7 +291,7 @@ REFERENCES = dict(
+ 
+ 
+ MULTI_PLATFORM_LIST = ["rhel", "fedora", "rhv", "debian", "ubuntu",
+-                       "openeuler", "kylinserver",
++                       "openeuler", "openruyi", "kylinserver",
+                        "opensuse", "sle", "tencentos", "ol", "ocp", "rhcos",
+                        "example", "eks", "alinux", "anolis", "openembedded", "al",
+                        "slmicro", "almalinux"]
+@@ -304,6 +306,7 @@ MULTI_PLATFORM_MAPPING = {
+     "multi_platform_fedora": ["fedora"],
+     "multi_platform_kylinserver": ["kylinserver10"],
+     "multi_platform_openeuler": ["openeuler2203"],
++    "multi_platform_openruyi": ["openruyi"],
+     "multi_platform_opensuse": ["opensuse"],
+     "multi_platform_ol": ["ol7", "ol8", "ol9", "ol10"],
+     "multi_platform_ocp": ["ocp4"],
+@@ -434,6 +437,7 @@ MAKEFILE_ID_TO_PRODUCT_MAP = {
+     'eap': 'JBoss Enterprise Application Platform',
+     'fuse': 'JBoss Fuse',
+     'openeuler': 'openEuler',
++    'openruyi': 'openRuyi',
+     'opensuse': 'openSUSE',
+     'sle': 'SUSE Linux Enterprise',
+     'slmicro': 'SUSE Linux Enterprise Micro',
+diff --git a/tests/shared/grub2.sh b/tests/shared/grub2.sh
+index 10df2e2ad0..4d6dbae077 100644
+--- a/tests/shared/grub2.sh
++++ b/tests/shared/grub2.sh
+@@ -1,4 +1,4 @@
+-{{% if 'ubuntu' in product %}}
++{{% if 'ubuntu' in product or product == 'openruyi' %}}
+ test -n "$GRUB_CFG_ROOT" || GRUB_CFG_ROOT=/boot/grub
+ {{% else %}}
+ test -n "$GRUB_CFG_ROOT" || GRUB_CFG_ROOT=/boot/grub2
+@@ -7,6 +7,8 @@ test -n "$GRUB_CFG_ROOT" || GRUB_CFG_ROOT=/boot/grub2
+ function set_grub_uefi_root {
+ 	if grep NAME /etc/os-release | grep -iq fedora; then
+ 		GRUB_CFG_ROOT=/boot/grub2
++	elif grep NAME /etc/os-release | grep -iq "openruyi"; then
++		GRUB_CFG_ROOT=/boot/grub
+ 	elif grep NAME /etc/os-release | grep -iq "Red Hat"; then
+ 		if grep VERSION /etc/os-release | grep -q '9\.'; then
+ 			GRUB_CFG_ROOT=/boot/grub2
+-- 
+2.34.1
+
