@@ -12,36 +12,30 @@
 %bcond xorg 0
 
 Name:           openssh
-Version:        10.2p1
+Version:        10.3p1
 Release:        %autorelease
 Summary:        An open source implementation of SSH protocol version 2
 License:        BSD-3-Clause AND BSD-2-Clause AND ISC AND SSH-OpenSSH AND ssh-keyscan AND sprintf AND LicenseRef-openRuyi-Public-Domain AND X11-distribute-modifications-variant
 URL:            http://www.openssh.com/portable.html
 VCS:            git:https://anongit.mindrot.org/openssh.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:56682a36bb92dcf4b4f016fd8ec8e74059b79a8de25c15d670d731e7d18e45f4
 Source0:        https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz.asc
-Source2:        sshd.pam
-Source3:        sshd.service
-Source4:        sshd@.service
-Source5:        sshd.socket
-Source6:        ssh-agent.service
-Source7:        ssh-agent.socket
-Source8:        sshd.sysconfig
-Source9:        sshd-keygen
-Source10:       sshd-keygen@.service
-Source11:       sshd-keygen.target
-Source12:       openssh-server-systemd-sysusers.conf
-Source13:       50-openruyi-sshd.conf
+Source1:        sshd.pam
+Source2:        sshd.service
+Source3:        sshd@.service
+Source4:        sshd.socket
+Source5:        ssh-agent.service
+Source6:        ssh-agent.socket
+Source7:        sshd.sysconfig
+Source8:        sshd-keygen
+Source9:        sshd-keygen@.service
+Source10:       sshd-keygen.target
+Source11:       openssh-server-systemd-sysusers.conf
+Source12:       50-openruyi-sshd.conf
 BuildSystem:    autotools
 
-# Fix seccomp failure termination because of zlib-ng calling hwprobe
-# See: https://github.com/openssh/openssh-portable/pull/644
-Patch0:         0001-seccomp-sandbox-allow-riscv_hwprobe-syscall-if-prese.patch
-
 # Lets us ship distro config in /etc/ssh/{ssh,sshd}_config.d/*.conf
-Patch1:         2000-ssh-sshd-_config-Include-_config.d-.conf.patch
+Patch0:         2000-ssh-sshd-_config-Include-_config.d-.conf.patch
 
 BuildOption(conf):  --sysconfdir=%{_sysconfdir}/ssh
 BuildOption(conf):  --libexecdir=%{_libexecdir}/openssh
@@ -200,20 +194,20 @@ mkdir -p -m755 %{buildroot}%{_libexecdir}/openssh
 install -d %{buildroot}/etc/pam.d/
 install -d %{buildroot}/etc/sysconfig/
 install -d %{buildroot}%{_libexecdir}/openssh
-install -m644 %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/sshd
-install -m644 %{SOURCE8} $RPM_BUILD_ROOT/etc/sysconfig/sshd
+install -m644 %{SOURCE1} $RPM_BUILD_ROOT/etc/pam.d/sshd
+install -m644 %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/sshd
 
 install -d -m755 $RPM_BUILD_ROOT/%{_unitdir}
-install -m644 %{SOURCE3} $RPM_BUILD_ROOT/%{_unitdir}/sshd.service
-install -m644 %{SOURCE4} $RPM_BUILD_ROOT/%{_unitdir}/sshd@.service
-install -m644 %{SOURCE5} $RPM_BUILD_ROOT/%{_unitdir}/sshd.socket
-install -m644 %{SOURCE10} $RPM_BUILD_ROOT/%{_unitdir}/sshd-keygen@.service
-install -m644 %{SOURCE11} $RPM_BUILD_ROOT/%{_unitdir}/sshd-keygen.target
+install -m644 %{SOURCE2} $RPM_BUILD_ROOT/%{_unitdir}/sshd.service
+install -m644 %{SOURCE3} $RPM_BUILD_ROOT/%{_unitdir}/sshd@.service
+install -m644 %{SOURCE4} $RPM_BUILD_ROOT/%{_unitdir}/sshd.socket
+install -m644 %{SOURCE9} $RPM_BUILD_ROOT/%{_unitdir}/sshd-keygen@.service
+install -m644 %{SOURCE10} $RPM_BUILD_ROOT/%{_unitdir}/sshd-keygen.target
 
 install -d -m755 $RPM_BUILD_ROOT/%{_userunitdir}
-install -m644 %{SOURCE6} $RPM_BUILD_ROOT/%{_userunitdir}/ssh-agent.service
-install -m644 %{SOURCE7} $RPM_BUILD_ROOT/%{_userunitdir}/ssh-agent.socket
-install -m744 %{SOURCE9} $RPM_BUILD_ROOT/%{_libexecdir}/openssh/sshd-keygen
+install -m644 %{SOURCE5} $RPM_BUILD_ROOT/%{_userunitdir}/ssh-agent.service
+install -m644 %{SOURCE6} $RPM_BUILD_ROOT/%{_userunitdir}/ssh-agent.socket
+install -m744 %{SOURCE8} $RPM_BUILD_ROOT/%{_libexecdir}/openssh/sshd-keygen
 
 install -m755 contrib/ssh-copy-id $RPM_BUILD_ROOT%{_bindir}/
 install contrib/ssh-copy-id.1 $RPM_BUILD_ROOT%{_mandir}/man1/
@@ -221,9 +215,9 @@ install contrib/ssh-copy-id.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 install -m755 contrib/ssh-copy-id $RPM_BUILD_ROOT%{_bindir}/
 install contrib/ssh-copy-id.1 $RPM_BUILD_ROOT%{_mandir}/man1/
 install -d -m711 ${RPM_BUILD_ROOT}/%{_datadir}/empty.sshd
-install -p -D -m 0644 %{SOURCE12} %{buildroot}%{_sysusersdir}/openssh-server.conf
+install -p -D -m 0644 %{SOURCE11} %{buildroot}%{_sysusersdir}/openssh-server.conf
 
-install -m644 %{SOURCE13} %{buildroot}%{_sysconfdir}/ssh/sshd_config.d/50-openruyi.conf
+install -m644 %{SOURCE12} %{buildroot}%{_sysconfdir}/ssh/sshd_config.d/50-openruyi.conf
 
 # TODO: We don't need these now but maybe in the future
 rm -f $RPM_BUILD_ROOT/etc/profile.d/gnome-ssh-askpass.*
@@ -238,7 +232,7 @@ make
 popd
 
 %pre server
-%sysusers_create_package %{name} %{SOURCE12}
+%sysusers_create_package %{name} %{SOURCE11}
 
 %post server
 %systemd_post sshd.service sshd.socket
