@@ -159,7 +159,7 @@ CLANG_VERSION=%llvm_maj_ver
 LLVM_BINDIR=`%{_libdir}/llvm%{llvm_maj_ver}/bin/llvm-config --bindir`
 LLVM_CMAKEDIR=`%{_libdir}/llvm%{llvm_maj_ver}/bin/llvm-config --cmakedir`
 # Only enable one target to accelerate build
-GPU_TARGET="gfx1100"
+GPU_TARGET="gfx1100;gfx1101;gfx1200;gfx1201"
 
 echo "%%rocmllvm_version $CLANG_VERSION"    >  macros.rocmcompiler
 echo "%%rocmllvm_bindir $LLVM_BINDIR"       >> macros.rocmcompiler
