@@ -9,21 +9,19 @@
 %bcond nls 1
 
 Name:           gettext
-Version:        0.26
+Version:        1.0
 Release:        %autorelease
 Summary:        GNU Internationalization (i18n) and Localization (l10n) library and tools
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnu.org/software/gettext/
 VCS:            git:https://git.savannah.gnu.org/git/gettext.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:71132a3fb71e68245b8f2ac4e9e97137d3e5c02f415636eb508ae607bc01add7
 Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
-Patch0:         gettext-fix-nls-stub.patch
-
 BuildOption(conf):  --disable-csharp
+BuildOption(conf):  --disable-static
 BuildOption(conf):  --with-xz
-BuildOption(conf):  --without-included-gettext
 BuildOption(conf):  --without-included-libunistring
 BuildOption(conf):  --enable-shared
 BuildOption(conf):  --disable-rpath
@@ -40,7 +38,7 @@ BuildRequires:  flex
 BuildRequires:  gcc-c++
 BuildRequires:  libtool
 BuildRequires:  make
-BuildRequires:  libunistring-devel
+BuildRequires:  libunistring-devel >= 1.4
 BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  pkgconfig(libacl)
 BuildRequires:  libxml2-devel
@@ -99,12 +97,7 @@ Contains detailed documentation (info, html) and extensive examples.
 autoreconf -fiv
 
 %install -a
-rm -f %{buildroot}%{_infodir}/dir
-rm -f %{buildroot}%{_libdir}/*.a
-
 %if %{with nls}
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --all-name --generate-subpackages
 %endif
 
@@ -132,6 +125,8 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_bindir}/printf_gettext
 %{_bindir}/printf_ngettext
 %{_bindir}/recode-sr-latin
+%{_bindir}/po-fetch
+%{_bindir}/spit
 %{_libdir}/libgettextlib-%{version}.so
 %{_libdir}/libgettextsrc-%{version}.so
 %{_libdir}/libgettextpo.so.*
@@ -145,6 +140,8 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man1/recode*.1*
 %{_mandir}/man1/printf_gettext.1*
 %{_mandir}/man1/printf_ngettext.1*
+%{_mandir}/man1/po-fetch.1*
+%{_mandir}/man1/spit.1*
 
 %files devel
 # Development files for gettext-runtime
@@ -175,4 +172,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_infodir}/*.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog

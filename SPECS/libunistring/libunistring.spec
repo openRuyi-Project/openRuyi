@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libunistring
-Version:        1.3
+Version:        1.4.2
 Release:        %autorelease
 Summary:        GNU Unicode string library
 License:        GPL-3.0-or-later OR LGPL-3.0-or-later
 URL:            https://www.gnu.org/software/libunistring/
 VCS:            git:https://https.git.savannah.gnu.org/git/libunistring.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:5b46e74377ed7409c5b75e7a96f95377b095623b689d8522620927964a41499c
 Source0:        http://ftpmirror.gnu.org/gnu/libunistring/libunistring-%{version}.tar.xz
-#!RemoteAsset
-Source1:        http://ftpmirror.gnu.org/gnu/libunistring/libunistring-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
 %description
@@ -57,4 +55,4 @@ Static library for the %{name} library
 %{_libdir}/libunistring.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
