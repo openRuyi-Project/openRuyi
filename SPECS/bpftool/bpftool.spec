@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           bpftool
-Version:        7.6.0
+Version:        7.7.0
 Release:        %autorelease
 Summary:        Tool for inspection and manipulation of BPF programs and maps
 License:        GPL-2.0-only OR BSD-2-Clause
 URL:            https://github.com/libbpf/bpftool
-#!RemoteAsset
+#!RemoteAsset:  sha256:7d46a381f607432bdb5201a08b889924b6a4883bf09e8efca82a86a7d122cc97
 Source0:        https://github.com/libbpf/bpftool/releases/download/v%{version}/bpftool-libbpf-v%{version}-sources.tar.gz
 BuildSystem:    autotools
 
@@ -34,6 +34,7 @@ BuildRequires:  clang
 BuildRequires:  python3-docutils
 BuildRequires:  llvm-devel
 BuildRequires:  pkgconfig(bash-completion)
+BuildRequires:  pkgconfig(libssl)
 
 %description
 bpftool allows for inspection and simple modification of BPF objects (programs
@@ -60,4 +61,4 @@ mv %{buildroot}%{_prefix}/sbin %{buildroot}%{_bindir}
 %{_mandir}/man8/bpftool*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
