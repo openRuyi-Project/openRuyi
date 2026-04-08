@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,18 +19,13 @@
 %endif
 
 Name:           ovmf
-Version:        202508
+Version:        202602
 Release:        %autorelease
 Summary:        UEFI firmware for %{arch_s} virtual machines.
 License:        BSD-2-Clause-Patent
 URL:            https://github.com/tianocore/edk2
 #!RemoteAsset:  git+https://github.com/tianocore/edk2.git#edk2-stable%{version}
 Source0:        edk2-stable-%{version}.tar.gz
-
-%ifarch x86_64
-# https://github.com/tianocore/edk2/commit/9ccf8751a74f26142e584c7b7c7572a182b67997
-Patch1000:      1000-fixup-X64-ExceptionHandlerAsm.patch
-%endif
 
 BuildRequires:  gcc
 %ifarch x86_64
@@ -77,4 +73,4 @@ install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{build
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
