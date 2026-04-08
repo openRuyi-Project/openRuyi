@@ -3,19 +3,23 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libwebsockets
-Version:        4.3.3
+Version:        4.5.8
 Release:        %autorelease
 Summary:        A lightweight C library for Websockets
 License:        LGPL-2.1-or-later and LicenseRef-openRuyi-Public-Domain and BSD-3-Clause and MIT and Zlib
 URL:            https://libwebsockets.org
 VCS:            git:https://github.com/warmcat/libwebsockets
-#!RemoteAsset
+#!RemoteAsset:  sha256:b6ade658f4af3a823d0dc806ae5ef0623f0f4f5e2aeb895a0f77c4783840c30e
 Source0:        https://github.com/warmcat/libwebsockets/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
+
+# https://github.com/warmcat/libwebsockets/pull/3570
+Patch0:         0001-core-net-Fix-ISO-C23-errors-with-strchr.patch
 
 BuildOption(conf):  -DLWS_WITH_HTTP2:BOOL=ON
 BuildOption(conf):  -DLWS_IPV6:BOOL=ON
@@ -79,4 +83,4 @@ develop applications that use libwebsockets.
 %{_libdir}/cmake/libwebsockets/
 
 %changelog
-%{?autochangelog}
+%autochangelog
