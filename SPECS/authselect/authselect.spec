@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A tool to select system authentication and identity sources
 License:        GPL-3.0-or-later
 URL:            https://github.com/authselect/authselect
-#!RemoteAsset
+#!RemoteAsset:  sha256:514eff30f1e2dcfde979b56a1d9700a09f1dfd9e90a2518a995726d86657495e
 Source0:        https://github.com/authselect/authselect/archive/%{version}/authselect-%{version}.tar.gz
 Source1:        openruyi-local-README
 Source2:        openruyi-local-REQUIREMENTS
@@ -44,12 +44,9 @@ BuildRequires:  chrpath
 
 Requires:       grep
 Requires:       sed
-Requires:       systemd
 Requires:       gawk
 Requires:       coreutils
 Requires:       findutils
-Requires:       pam
-Requires:       libpwquality
 
 %description
 Authselect is a tool to configure system authentication and identity sources
@@ -58,6 +55,8 @@ from a list of supported profiles. It replaces the legacy authconfig tool.
 %package        -n openruyi-authselect-profiles
 Summary:        openRuyi vendor authselect profiles
 Requires:       authselect = %{version}-%{release}
+Requires:       libpwquality
+Requires:       systemd-pam
 BuildArch:      noarch
 
 %description    -n openruyi-authselect-profiles
@@ -116,19 +115,30 @@ if [ $1 == 0 ] ; then
 fi
 
 %posttrans -n openruyi-authselect-profiles
-current_profile="$("%{_bindir}/authselect" current --raw 2>/dev/null || :)"
+current_profile="$("%{_bindir}/authselect" current --raw 2>/dev/null)"
+case "$?" in
+    0)
+        current_profile=${current_profile%% *}
+        ;;
+    2)
+        current_profile=
+        ;;
+    *)
+        exit 0
+        ;;
+esac
 
 case "$current_profile" in
-    ""|local|local\ *)
-        # Fresh system or legacy default profile: migrate to distro-owned profile
+    ""|local)
+        # Fresh system or legacy default profile: activate the vendor policy.
         %{_bindir}/authselect select openruyi-local --force --nobackup >/dev/null 2>&1 || :
         ;;
-    openruyi-* )
-        # Already on an openRuyi-owned profile: regenerate managed files
+    openruyi-*)
+        # Already on an openRuyi-owned profile: regenerate managed files.
         %{_bindir}/authselect apply-changes >/dev/null 2>&1 || :
         ;;
-    * )
-        # sssd / winbind / custom profile: do not override user choice
+    *)
+        # sssd / winbind / custom profile: do not override user choice.
         :
         ;;
 esac
@@ -174,4 +184,4 @@ exit 0
 %{_libdir}/pkgconfig/authselect.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
