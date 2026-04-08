@@ -27,6 +27,9 @@ URL:            https://github.com/tianocore/edk2
 #!RemoteAsset:  git+https://github.com/tianocore/edk2.git#edk2-stable%{version}
 Source0:        edk2-stable-%{version}.tar.gz
 
+# https://github.com/tianocore/edk2/commit/a1abc3032cd271671ee3aa488725305e45a17724
+Patch0:         0001-OvmfPkg-RiscVVirt-Make-SecureBootDefaultKeysInit-dri.patch
+
 BuildRequires:  gcc
 %ifarch x86_64
 BuildRequires:  nasm
@@ -40,8 +43,8 @@ BuildRequires:  python3
 BuildRequires:  coreutils
 
 %description
- UEFI firmware for ${arch_s} virtual machines. Open Virtual Machine Firmware
- is a build of EDK II for %{arch_s} virtual machines.
+UEFI firmware for ${arch_s} virtual machines. Open Virtual Machine Firmware
+is a build of EDK II for %{arch_s} virtual machines.
 
 %prep
 %autosetup -p1 -n edk2-stable-%{version}
@@ -50,17 +53,17 @@ BuildRequires:  coreutils
 export PACKAGES_PATH=$PWD
 source edksetup.sh
 make -C $EDK_TOOLS_PATH
-build -t GCC5 -b RELEASE -a %{targetarch} -p %{platformfile}
+build -t GCC -b RELEASE -a %{targetarch} -p %{platformfile} -D SECURE_BOOT_ENABLE
 
 %install
 %ifarch x86_64
-install -D -m 644 Build/OvmfX64/RELEASE_GCC5/FV/OVMF.fd %{buildroot}%{_datadir}/ovmf/OVMF.fd
+install -D -m 644 Build/OvmfX64/RELEASE_GCC/FV/OVMF.fd %{buildroot}%{_datadir}/ovmf/OVMF.fd
 %endif
 %ifarch riscv64
-truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd
-truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd
-install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd %{buildroot}%{_datadir}/ovmf/virt_code.fd
-install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{buildroot}%{_datadir}/ovmf/virt_vars.fd
+truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC/FV/RISCV_VIRT_CODE.fd
+truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC/FV/RISCV_VIRT_VARS.fd
+install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC/FV/RISCV_VIRT_CODE.fd %{buildroot}%{_datadir}/ovmf/virt_code.fd
+install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC/FV/RISCV_VIRT_VARS.fd %{buildroot}%{_datadir}/ovmf/virt_vars.fd
 %endif
 
 %files
