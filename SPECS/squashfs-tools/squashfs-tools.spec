@@ -59,4 +59,4 @@ sed -i -e "s|-O2|%{optflags}|" squashfs-tools/Makefile
 %{_mandir}/*.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
