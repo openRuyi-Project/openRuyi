@@ -156,4 +156,4 @@ rm -rf %{buildroot}%{_datadir}/et/
 %{_mandir}/man5/.k5login.5.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
