@@ -1,0 +1,67 @@
+From 5bbeb3732be76fed2582d507fcacb8ae86929473 Mon Sep 17 00:00:00 2001
+From: Callum Farmer <gmbr3@opensuse.org>
+Date: Sun, 12 Jan 2025 17:12:40 +0000
+Subject: [PATCH 07/19] Avoid misuse of Print sys_va_list funcs
+
+Signed-off-by: Callum Farmer <gmbr3@opensuse.org>
+---
+ errlog.c      | 6 +++---
+ lib/console.c | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/errlog.c b/errlog.c
+index 6971e80..49028f0 100644
+--- a/errlog.c
++++ b/errlog.c
+@@ -19,7 +19,7 @@ vdprint_(const CHAR16 *fmt, const char *file, int line, const char *func,
+ 	if (verbose) {
+ 		ms_va_copy(args2, args);
+ 		console_print(L"%a:%d:%a() ", file, line, func);
+-		efi_status = VPrint(fmt, args2);
++		efi_status = MS_VPrint(fmt, args2);
+ 		ms_va_end(args2);
+ 	}
+ 	return efi_status;
+@@ -45,7 +45,7 @@ VLogError(const char *file, int line, const char *func, const CHAR16 *fmt,
+ 	if (!newerrs[nerrs])
+ 		return EFI_OUT_OF_RESOURCES;
+ 	ms_va_copy(args2, args);
+-	newerrs[nerrs+1] = VPoolPrint(fmt, args2);
++	newerrs[nerrs+1] = MS_VPoolPrint(fmt, args2);
+ 	if (!newerrs[nerrs+1])
+ 		return EFI_OUT_OF_RESOURCES;
+ 	ms_va_end(args2);
+@@ -135,7 +135,7 @@ log_debug_print(const CHAR16 *fmt, ...)
+ 	UINTN ret = 0;
+ 
+ 	ms_va_start(args, fmt);
+-	buf = VPoolPrint(fmt, args);
++	buf = MS_VPoolPrint(fmt, args);
+ 	if (!buf)
+ 		return 0;
+ 	ms_va_end(args);
+diff --git a/lib/console.c b/lib/console.c
+index f603832..991dcee 100644
+--- a/lib/console.c
++++ b/lib/console.c
+@@ -96,7 +96,7 @@ console_print(const CHAR16 *fmt, ...)
+ 		setup_console(1);
+ 
+ 	ms_va_start(args, fmt);
+-	ret = VPrint(fmt, args);
++	ret = MS_VPrint(fmt, args);
+ 	ms_va_end(args);
+ 
+ 	return ret;
+@@ -116,7 +116,7 @@ console_print_at(UINTN col, UINTN row, const CHAR16 *fmt, ...)
+ 		co->SetCursorPosition(co, col, row);
+ 
+ 	ms_va_start(args, fmt);
+-	ret = VPrint(fmt, args);
++	ret = MS_VPrint(fmt, args);
+ 	ms_va_end(args);
+ 
+ 	return ret;
+-- 
+2.47.3
+

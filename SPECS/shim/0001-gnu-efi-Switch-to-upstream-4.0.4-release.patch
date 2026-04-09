@@ -1,0 +1,36 @@
+From 8fabb3ee87907f1bc39e7cde2a74d9127f3387f4 Mon Sep 17 00:00:00 2001
+From: Andrea Bolognani <abologna@redhat.com>
+Date: Wed, 18 Jun 2025 15:28:55 +0200
+Subject: [PATCH 01/19] gnu-efi: Switch to upstream 4.0.4 release
+
+Replace the shim-specific fork with the upstream version,
+specifically the most recent release. Some adjustment to
+shim's code are necessary to adapt to this change.
+
+Signed-off-by: Andrea Bolognani <abologna@redhat.com>
+---
+ .gitmodules | 4 ++--
+ gnu-efi     | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/.gitmodules b/.gitmodules
+index 756c2c5..232a932 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -1,4 +1,4 @@
+ [submodule "gnu-efi"]
+ 	path = gnu-efi
+-	url = https://github.com/rhboot/gnu-efi.git
+-	branch = shim-16.1
++	url = https://github.com/ncroxon/gnu-efi.git
++	branch = master
+diff --git a/gnu-efi b/gnu-efi
+index dc7fd96..37cd8f0 160000
+--- a/gnu-efi
++++ b/gnu-efi
+@@ -1 +1 @@
+-Subproject commit dc7fd96f23d6b582416f672844362d776d175cf4
++Subproject commit 37cd8f069bde6715eebdc5e38a8f15ee6de5edcf
+-- 
+2.47.3
+

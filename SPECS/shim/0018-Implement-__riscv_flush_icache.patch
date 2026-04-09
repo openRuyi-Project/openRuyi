@@ -1,0 +1,55 @@
+From 60eb64e65e57b3f43e912a93b9194f0ccaa4eb21 Mon Sep 17 00:00:00 2001
+From: Jason Montleon <jmontleo@redhat.com>
+Date: Tue, 25 Jun 2024 23:11:38 -0400
+Subject: [PATCH 18/19] Implement __riscv_flush_icache
+
+Signed-off-by: Jason Montleon <jmontleo@redhat.com>
+---
+ lib/Makefile        |  1 +
+ lib/edk2asm.h       |  4 ++++
+ lib/riscv64_cache.S | 10 ++++++++++
+ 3 files changed, 15 insertions(+)
+ create mode 100644 lib/edk2asm.h
+ create mode 100644 lib/riscv64_cache.S
+
+diff --git a/lib/Makefile b/lib/Makefile
+index 0b79246..80178f8 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -32,6 +32,7 @@ DEFINES		+= -DMDE_CPU_ARM
+ endif
+ ifeq ($(ARCH),riscv64)
+ DEFINES		+= -DMDE_CPU_RISCV64
++LIBFILES	+= riscv64_cache.o
+ endif
+ 
+ LDFLAGS		= -nostdlib -znocombreloc
+diff --git a/lib/edk2asm.h b/lib/edk2asm.h
+new file mode 100644
+index 0000000..f713b89
+--- /dev/null
++++ b/lib/edk2asm.h
+@@ -0,0 +1,4 @@
++#define ASM_PFX(x)			x
++#define GCC_ASM_EXPORT(x)		\
++	.globl		x		; \
++	.type		x, %function
+diff --git a/lib/riscv64_cache.S b/lib/riscv64_cache.S
+new file mode 100644
+index 0000000..cf219cc
+--- /dev/null
++++ b/lib/riscv64_cache.S
+@@ -0,0 +1,10 @@
++#include "edk2asm.h"
++
++       .file   "riscv64_cache.S"
++       .text
++
++GCC_ASM_EXPORT(__riscv_flush_icache)
++
++ASM_PFX(__riscv_flush_icache):
++       fence.i
++       ret
+-- 
+2.47.3
+

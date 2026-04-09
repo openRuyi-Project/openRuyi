@@ -1,0 +1,28 @@
+From 5826f7f738a6b7bf8c710ae586daa3000a331879 Mon Sep 17 00:00:00 2001
+From: Callum Farmer <gmbr3@opensuse.org>
+Date: Tue, 14 Jan 2025 09:37:59 +0000
+Subject: [PATCH 08/19] avoid conflicting CompareGuid
+
+Signed-off-by: Callum Farmer <gmbr3@opensuse.org>
+---
+ include/test.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/test.h b/include/test.h
+index bffad7d..4b717dd 100644
+--- a/include/test.h
++++ b/include/test.h
+@@ -185,6 +185,10 @@ guidcmp(const EFI_GUID * const guid0, const EFI_GUID * const guid1)
+ 	return ret;
+ }
+ 
++#if defined(CompareGuid)
++#undef CompareGuid
++#endif
++
+ #define CompareGuid(a, b) (guidcmp(a, b) == 0)
+ 
+ #define CompareGuidForSorting(a, b) guidcmp(a, b)
+-- 
+2.47.3
+

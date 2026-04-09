@@ -1,0 +1,130 @@
+From d12d4a18276629d460ed2af37c197919b5411c3a Mon Sep 17 00:00:00 2001
+From: Callum Farmer <gmbr3@opensuse.org>
+Date: Sat, 11 Jan 2025 20:26:09 +0000
+Subject: [PATCH 06/19] Remove GNU_EFI_USE_EXTERNAL_STDARG
+
+Signed-off-by: Callum Farmer <gmbr3@opensuse.org>
+---
+ Cryptlib/Include/OpenSslSupport.h |  3 ---
+ Cryptlib/Library/BaseLib.h        |  4 ----
+ Makefile                          |  1 -
+ include/system/efistdarg.h        |  4 ----
+ include/system/stdarg.h           | 16 ----------------
+ shim.h                            |  4 ----
+ 6 files changed, 32 deletions(-)
+
+diff --git a/Cryptlib/Include/OpenSslSupport.h b/Cryptlib/Include/OpenSslSupport.h
+index 0c2fb8b..54f53fd 100644
+--- a/Cryptlib/Include/OpenSslSupport.h
++++ b/Cryptlib/Include/OpenSslSupport.h
+@@ -18,9 +18,6 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+ #if defined(__x86_64__)
+ /* shim.h will check if the compiler is new enough in some other CU */
+ 
+-#if !defined(GNU_EFI_USE_EXTERNAL_STDARG)
+-#define GNU_EFI_USE_EXTERNAL_STDARG
+-#endif
+ 
+ #if !defined(GNU_EFI_USE_MS_ABI)
+ #define GNU_EFI_USE_MS_ABI
+diff --git a/Cryptlib/Library/BaseLib.h b/Cryptlib/Library/BaseLib.h
+index 94b25c9..5e07239 100644
+--- a/Cryptlib/Library/BaseLib.h
++++ b/Cryptlib/Library/BaseLib.h
+@@ -1,10 +1,6 @@
+ #if defined(__x86_64__)
+ /* shim.h will check if the compiler is new enough in some other CU */
+ 
+-#if !defined(GNU_EFI_USE_EXTERNAL_STDARG)
+-#define GNU_EFI_USE_EXTERNAL_STDARG
+-#endif
+-
+ #if !defined(GNU_EFI_USE_MS_ABI)
+ #define GNU_EFI_USE_MS_ABI
+ #endif
+diff --git a/Makefile b/Makefile
+index 6b93e7d..7c5ebcc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -166,7 +166,6 @@ MokManager.o: $(MOK_SOURCES)
+ $(MMSONAME): $(MOK_OBJS) $(LIBS)
+ 	$(LD) -o $@ $(LDFLAGS) $^ $(EFI_LIBS) lib/lib.a
+ 
+-gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a: CFLAGS+=-DGNU_EFI_USE_EXTERNAL_STDARG
+ gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a:
+ 	mkdir -p gnu-efi/lib gnu-efi/gnuefi
+ 	$(MAKE) -C gnu-efi \
+diff --git a/include/system/efistdarg.h b/include/system/efistdarg.h
+index 034977c..837c4f2 100644
+--- a/include/system/efistdarg.h
++++ b/include/system/efistdarg.h
+@@ -8,10 +8,6 @@
+ #ifndef _EFISTDARG_H_
+ #define _EFISTDARG_H_
+ 
+-#ifndef GNU_EFI_USE_EXTERNAL_STDARG
+-#define GNU_EFI_USE_EXTERNAL_STDARG
+-#endif
+-
+ #include <stdarg.h>
+ 
+ #endif /* !_EFISTDARG_H_ */
+diff --git a/include/system/stdarg.h b/include/system/stdarg.h
+index 68c171b..813edd7 100644
+--- a/include/system/stdarg.h
++++ b/include/system/stdarg.h
+@@ -15,10 +15,6 @@ typedef __builtin_va_list __builtin_sysv_va_list;
+ #pragma GCC diagnostic pop
+ #endif
+ 
+-#ifndef GNU_EFI_USE_EXTERNAL_STDARG
+-#define GNU_EFI_USE_EXTERNAL_STDARG
+-#endif
+-
+ #ifdef SHIM_UNIT_TEST
+ #include_next <stdarg.h>
+ #endif
+@@ -26,13 +22,6 @@ typedef __builtin_va_list __builtin_sysv_va_list;
+ #if defined(__aarch64__) || defined(__arm__) || defined(__i386__) || \
+ 	defined(__i486__) || defined(__i686__) || defined(__COVERITY__)
+ 
+-typedef __builtin_va_list ms_va_list;
+-typedef __builtin_va_list __builtin_ms_va_list;
+-#define ms_va_copy(dest, start)  __builtin_va_copy(dest, start)
+-#define ms_va_start(marker, arg) __builtin_va_start(marker, arg)
+-#define ms_va_arg(marker, type)  __builtin_va_arg(marker, type)
+-#define ms_va_end(marker)        __builtin_va_end(marker)
+-
+ typedef __builtin_va_list sysv_va_list;
+ #define sysv_va_copy(dest, start)  __builtin_va_copy(dest, start)
+ #define sysv_va_start(marker, arg) __builtin_va_start(marker, arg)
+@@ -49,11 +38,6 @@ typedef __builtin_va_list VA_LIST;
+ 
+ #elif defined(__x86_64__)
+ 
+-typedef __builtin_ms_va_list ms_va_list;
+-#define ms_va_copy(dest, start)  __builtin_ms_va_copy(dest, start)
+-#define ms_va_start(marker, arg) __builtin_ms_va_start(marker, arg)
+-#define ms_va_arg(marker, type)  __builtin_va_arg(marker, type)
+-#define ms_va_end(marker)        __builtin_ms_va_end(marker)
+ typedef __builtin_sysv_va_list sysv_va_list;
+ #define sysv_va_copy(dest, start)  __builtin_sysv_va_copy(dest, start)
+ #define sysv_va_start(marker, arg) __builtin_sysv_va_start(marker, arg)
+diff --git a/shim.h b/shim.h
+index 8b52ce7..b76c16d 100644
+--- a/shim.h
++++ b/shim.h
+@@ -31,10 +31,6 @@
+ #pragma GCC diagnostic ignored "-Wpointer-bool-conversion"
+ #endif
+ 
+-#if !defined(GNU_EFI_USE_EXTERNAL_STDARG)
+-#define GNU_EFI_USE_EXTERNAL_STDARG
+-#endif
+-
+ #if !defined(GNU_EFI_USE_MS_ABI)
+ #define GNU_EFI_USE_MS_ABI
+ #endif
+-- 
+2.47.3
+

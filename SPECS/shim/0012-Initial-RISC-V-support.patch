@@ -1,0 +1,332 @@
+From f2f9fe82240a3d63bf7b8172ee26ad7a4335d7b4 Mon Sep 17 00:00:00 2001
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Date: Mon, 5 Apr 2021 12:14:44 +0200
+Subject: [PATCH 12/19] Initial RISC-V support
+
+Add what is needed to build on riscv64.
+
+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+---
+ Cryptlib/Include/OpenSslSupport.h |   3 +-
+ Cryptlib/Makefile                 |   3 +
+ Cryptlib/OpenSSL/Makefile         |   3 +
+ Make.defaults                     |  10 +++
+ elf_riscv64_efi.lds               | 111 ++++++++++++++++++++++++++++++
+ include/asm.h                     |   2 +
+ include/peimage.h                 |   2 +
+ include/system/stdarg.h           |  12 +++-
+ lib/Makefile                      |   3 +
+ pe-relocate.c                     |   6 ++
+ shim.h                            |  15 ++++
+ 11 files changed, 168 insertions(+), 2 deletions(-)
+ create mode 100644 elf_riscv64_efi.lds
+
+diff --git a/Cryptlib/Include/OpenSslSupport.h b/Cryptlib/Include/OpenSslSupport.h
+index 54f53fd..a0a60bf 100644
+--- a/Cryptlib/Include/OpenSslSupport.h
++++ b/Cryptlib/Include/OpenSslSupport.h
+@@ -58,7 +58,8 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+ 
+ #define CONFIG_HEADER_BN_H
+ 
+-#if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) || defined(MDE_CPU_IA64)
++#if defined(MDE_CPU_X64) || defined(MDE_CPU_AARCH64) || \
++    defined(MDE_CPU_IA64) || defined(MDE_CPU_RISCV64)
+ //
+ // With GCC we would normally use SIXTY_FOUR_BIT_LONG, but MSVC needs
+ // SIXTY_FOUR_BIT, because 'long' is 32-bit and only 'long long' is
+diff --git a/Cryptlib/Makefile b/Cryptlib/Makefile
+index 68a9395..39c3e8d 100644
+--- a/Cryptlib/Makefile
++++ b/Cryptlib/Makefile
+@@ -40,6 +40,9 @@ endif
+ ifeq ($(ARCH),arm)
+ DEFINES		+= -DMDE_CPU_ARM
+ endif
++ifeq ($(ARCH),riscv64)
++DEFINES		+= -DMDE_CPU_RISCV64
++endif
+ ifeq ($(ENABLE_CODESIGN_EKU),1)
+ DEFINES += -DENABLE_CODESIGN_EKU
+ endif
+diff --git a/Cryptlib/OpenSSL/Makefile b/Cryptlib/OpenSSL/Makefile
+index e517bcf..2f18b2f 100644
+--- a/Cryptlib/OpenSSL/Makefile
++++ b/Cryptlib/OpenSSL/Makefile
+@@ -52,6 +52,9 @@ endif
+ ifeq ($(ARCH),arm)
+ DEFINES		+= -DMDE_CPU_ARM
+ endif
++ifeq ($(ARCH),riscv64)
++DEFINES		+= -DMDE_CPU_RISCV64
++endif
+ 
+ LDFLAGS		= -nostdlib -znocombreloc
+ 
+diff --git a/Make.defaults b/Make.defaults
+index b9c3f4a..37027c8 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -100,6 +100,16 @@ ifeq ($(ARCH),arm)
+ 	ARCH_LDFLAGS		+= --defsym=EFI_SUBSYSTEM=$(SUBSYSTEM)
+ 	ARCH_SECTION_ALIGNMENT	?= 0x1000
+ endif
++ifeq ($(ARCH),riscv64)
++	ARCH_CFLAGS		?= -DMDE_CPU_RISCV64 -DPAGE_SIZE=4096
++	ARCH_GNUEFI		?= riscv64
++	ARCH_SUFFIX		?= riscv64
++	ARCH_SUFFIX_UPPER	?= RISCV64
++	FORMAT			:= -O binary
++	SUBSYSTEM		:= 0xa
++	ARCH_LDFLAGS		+= --defsym=EFI_SUBSYSTEM=$(SUBSYSTEM)
++	TIMESTAMP_LOCATION	:= 72
++endif
+ 
+ DEFINES		= -DDEFAULT_LOADER='L"$(DEFAULT_LOADER)"' \
+ 		  -DDEFAULT_LOADER_CHAR='"$(DEFAULT_LOADER)"'
+diff --git a/elf_riscv64_efi.lds b/elf_riscv64_efi.lds
+new file mode 100644
+index 0000000..82bf118
+--- /dev/null
++++ b/elf_riscv64_efi.lds
+@@ -0,0 +1,111 @@
++OUTPUT_FORMAT("elf64-littleriscv", "elf64-littleriscv", "elf64-littleriscv")
++OUTPUT_ARCH(riscv)
++ENTRY(_start)
++SECTIONS
++{
++  .text 0x0 : {
++    _text = .;
++    *(.text.head)
++    *(.text)
++    *(.text.*)
++    *(.gnu.linkonce.t.*)
++    _evtext = .;
++    . = ALIGN(4096);
++  }
++  _etext = .;
++  _text_size = . - _text;
++  _text_vsize = _evtext - _text;
++
++  . = ALIGN(4096);
++  .data :
++  {
++   _data = .;
++   *(.sdata)
++   *(.data)
++   *(.data1)
++   *(.data.*)
++   *(.got.plt)
++   *(.got)
++
++   *(.dynamic)
++
++   /* the EFI loader doesn't seem to like a .bss section, so we stick
++      it all into .data: */
++   . = ALIGN(16);
++   _bss = .;
++   *(.sbss)
++   *(.scommon)
++   *(.dynbss)
++   *(.bss)
++   *(COMMON)
++   _evdata = .;
++   . = ALIGN(4096);
++   _bss_end = .;
++  }
++  _edata = .;
++  _data_vsize = _evdata - _data;
++  _data_size = . - _data;
++
++  /*
++   * Note that _sbat must be the beginning of the data, and _esbat must be the
++   * end and must be before any section padding.  The sbat self-check uses
++   * _esbat to find the bounds of the data, and if the padding is included, the
++   * CSV parser (correctly) rejects the data as having NUL values in one of the
++   * required columns.
++   */
++  . = ALIGN(4096);
++  .sbat :
++  {
++    _sbat = .;
++    *(.sbat)
++    *(.sbat.*)
++    _esbat = .;
++    . = ALIGN(4096);
++    _epsbat = .;
++  }
++  _sbat_size = _epsbat - _sbat;
++  _sbat_vsize = _esbat - _sbat;
++
++  . = ALIGN(4096);
++  .rodata :
++  {
++    _rodata = .;
++    *(.rodata*)
++    *(.srodata)
++    . = ALIGN(16);
++    *(.note.gnu.build-id)
++    . = ALIGN(4096);
++    *(.vendor_cert)
++    *(.data.ident)
++    . = ALIGN(4096);
++  }
++  . = ALIGN(4096);
++  .rela :
++  {
++    *(.rela.dyn)
++    *(.rela.plt)
++    *(.rela.got)
++    *(.rela.data)
++    *(.rela.data*)
++  }
++  . = ALIGN(4096);
++  .dyn :
++  {
++    *(.dynsym)
++    *(.dynstr)
++    _evrodata = .;
++    . = ALIGN(4096);
++  }
++  _erodata = .;
++  _rodata_size = . - _rodata;
++  _rodata_vsize = _evrodata - _rodata;
++  _alldata_size = . - _data;
++
++  /DISCARD/ :
++  {
++    *(.rel.reloc)
++    *(.eh_frame)
++    *(.note.GNU-stack)
++  }
++  .comment 0 : { *(.comment) }
++}
+diff --git a/include/asm.h b/include/asm.h
+index f5118b2..5596d93 100644
+--- a/include/asm.h
++++ b/include/asm.h
+@@ -19,6 +19,8 @@ static inline uint64_t read_counter(void)
+         __asm__ __volatile__ ("mrs %0, pmccntr_el0" : "=r" (val));
+ #elif defined(__arm__)
+         __asm__ __volatile__ ("mrc p15, 0, %0, c9, c13, 0" : "=r" (val));
++#elif defined(__riscv) && __riscv_xlen == 64
++	__asm__ __volatile__ ("csrr %0, 0xc01" : "=r" (val) : : "memory");
+ #else
+ #error unsupported arch
+ #endif
+diff --git a/include/peimage.h b/include/peimage.h
+index 8c84d18..293ec1a 100644
+--- a/include/peimage.h
++++ b/include/peimage.h
+@@ -50,6 +50,8 @@
+ #define IMAGE_FILE_MACHINE_X64             0x8664
+ #define IMAGE_FILE_MACHINE_ARMTHUMB_MIXED  0x01c2
+ #define IMAGE_FILE_MACHINE_ARM64	   0xaa64
++#define IMAGE_FILE_MACHINE_RISCV32	   0x5032
++#define IMAGE_FILE_MACHINE_RISCV64	   0x5064
+ 
+ //
+ // EXE file formats
+diff --git a/include/system/stdarg.h b/include/system/stdarg.h
+index 813edd7..591c8df 100644
+--- a/include/system/stdarg.h
++++ b/include/system/stdarg.h
+@@ -20,13 +20,23 @@ typedef __builtin_va_list __builtin_sysv_va_list;
+ #endif
+ 
+ #if defined(__aarch64__) || defined(__arm__) || defined(__i386__) || \
+-	defined(__i486__) || defined(__i686__) || defined(__COVERITY__)
++	defined(__i486__) || defined(__i686__) || defined(__COVERITY__) || defined(__riscv)
+ 
+ typedef __builtin_va_list sysv_va_list;
+ #define sysv_va_copy(dest, start)  __builtin_va_copy(dest, start)
+ #define sysv_va_start(marker, arg) __builtin_va_start(marker, arg)
+ #define sysv_va_arg(marker, type)  __builtin_va_arg(marker, type)
+ #define sysv_va_end(marker)        __builtin_va_end(marker)
++
++/*
++ * gnu-efi needs this.
++ */
++typedef __builtin_va_list va_list;
++# define va_start(v,l)	__builtin_va_start(v,l)
++# define va_end(v)	__builtin_va_end(v)
++# define va_arg(v,l)	__builtin_va_arg(v,l)
++# define va_copy(d,s)	__builtin_va_copy(d,s)
++
+ /*
+  * OpenSSL's X509ConstructCertificateStack needs this.
+  */
+diff --git a/lib/Makefile b/lib/Makefile
+index f81c5c9..0b79246 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -30,6 +30,9 @@ endif
+ ifeq ($(ARCH),arm)
+ DEFINES		+= -DMDE_CPU_ARM
+ endif
++ifeq ($(ARCH),riscv64)
++DEFINES		+= -DMDE_CPU_RISCV64
++endif
+ 
+ LDFLAGS		= -nostdlib -znocombreloc
+ 
+diff --git a/pe-relocate.c b/pe-relocate.c
+index 1f82d78..464ac38 100644
+--- a/pe-relocate.c
++++ b/pe-relocate.c
+@@ -280,6 +280,8 @@ allow_64_bit(void)
+ 	if (in_protocol)
+ 		return 1;
+ 	return 0;
++#elif defined (__riscv) && __riscv_xlen == 64
++	return 1;
+ #else /* assuming everything else is 32-bit... */
+ 	return 0;
+ #endif
+@@ -300,6 +302,8 @@ allow_32_bit(void)
+ 	return 1;
+ #elif defined(__aarch64__)
+ 	return 0;
++#elif defined (__riscv) && __riscv_xlen == 64
++	return 0;
+ #else /* assuming everything else is 32-bit... */
+ 	return 1;
+ #endif
+@@ -326,6 +330,8 @@ static const UINT16 machine_type =
+ 	IMAGE_FILE_MACHINE_I386;
+ #elif defined(__ia64__)
+ 	IMAGE_FILE_MACHINE_IA64;
++#elif defined(__riscv) && __riscv_xlen == 64
++	IMAGE_FILE_MACHINE_RISCV64;
+ #else
+ #error this architecture is not supported by shim
+ #endif
+diff --git a/shim.h b/shim.h
+index b76c16d..88f5043 100644
+--- a/shim.h
++++ b/shim.h
+@@ -125,6 +125,21 @@
+ #endif
+ #endif
+ 
++#if defined(__riscv) && __riscv_xlen == 64
++#ifndef DEFAULT_LOADER
++#define DEFAULT_LOADER L"\\grubriscv64.efi"
++#endif
++#ifndef DEFAULT_LOADER_CHAR
++#define DEFAULT_LOADER_CHAR "\\grubriscv64.efi"
++#endif
++#ifndef EFI_ARCH
++#define EFI_ARCH L"riscv64"
++#endif
++#ifndef DEBUGDIR
++#define DEBUGDIR L"/usr/lib/debug/usr/share/shim/riscv64/"
++#endif
++#endif
++
+ #ifndef DEBUGSRC
+ #define DEBUGSRC L"/usr/src/debug/shim-" VERSIONSTR "." EFI_ARCH
+ #endif
+-- 
+2.47.3
+

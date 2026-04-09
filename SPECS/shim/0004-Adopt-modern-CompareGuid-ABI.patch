@@ -1,0 +1,537 @@
+From 4147abf1c8175c8b91215598df36c6a47e3a302a Mon Sep 17 00:00:00 2001
+From: Andrea Bolognani <abologna@redhat.com>
+Date: Tue, 31 Mar 2026 09:32:06 +0200
+Subject: [PATCH 04/19] Adopt modern CompareGuid() ABI
+
+We could theoretically set GNU_EFI_USE_COMPARE_ABI=0 to keep
+using the legacy ABI, but since gnu-efi uses the modern ABI
+internally and we call into its build systemd directly, doing
+that messes things up.
+
+In a very small handful of cases we actually rely on the
+behavior of the old ABI because we don't just need to know
+whether or not the two GUIDs are identical, but also their
+relative sorting order. CompareGuidForSorting(), which retains
+the old behavior, is introduced to deal with those scenarios.
+
+Signed-off-by: Andrea Bolognani <abologna@redhat.com>
+---
+ MokManager.c          | 44 +++++++++++++++++-----------------
+ errlog.c              |  2 +-
+ fallback.c            |  2 +-
+ include/test.h        |  4 +++-
+ lib/configtable.c     |  2 +-
+ lib/variables.c       |  2 +-
+ load-options.c        |  2 +-
+ mock-variables.c      | 10 ++++----
+ test-mock-variables.c | 56 +++++++++++++++++++++----------------------
+ test-mok-mirror.c     |  8 +++----
+ tpm.c                 |  2 +-
+ verify.c              |  4 ++--
+ 12 files changed, 70 insertions(+), 68 deletions(-)
+
+diff --git a/MokManager.c b/MokManager.c
+index 010180f..7fa3d92 100644
+--- a/MokManager.c
++++ b/MokManager.c
+@@ -89,13 +89,13 @@ done:
+ 
+ static BOOLEAN is_sha2_hash(EFI_GUID Type)
+ {
+-	if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID) == 0)
++	if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID))
+ 		return TRUE;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID))
+ 		return TRUE;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID))
+ 		return TRUE;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID))
+ 		return TRUE;
+ 
+ 	return FALSE;
+@@ -103,15 +103,15 @@ static BOOLEAN is_sha2_hash(EFI_GUID Type)
+ 
+ static UINT32 sha_size(EFI_GUID Type)
+ {
+-	if (CompareGuid(&Type, &EFI_CERT_SHA1_GUID) == 0)
++	if (CompareGuid(&Type, &EFI_CERT_SHA1_GUID))
+ 		return SHA1_DIGEST_SIZE;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID))
+ 		return SHA224_DIGEST_LENGTH;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID))
+ 		return SHA256_DIGEST_SIZE;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID))
+ 		return SHA384_DIGEST_LENGTH;
+-	else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID) == 0)
++	else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID))
+ 		return SHA512_DIGEST_LENGTH;
+ 
+ 	return 0;
+@@ -121,7 +121,7 @@ static BOOLEAN is_valid_siglist(EFI_GUID Type, UINT32 SigSize)
+ {
+ 	UINT32 hash_sig_size;
+ 
+-	if (CompareGuid (&Type, &X509_GUID) == 0 && SigSize != 0)
++	if (CompareGuid (&Type, &X509_GUID) && SigSize != 0)
+ 		return TRUE;
+ 
+ 	if (!is_sha2_hash(Type))
+@@ -206,7 +206,7 @@ static MokListNode *build_mok_list(UINT32 num, void *Data, UINTN DataSize)
+ 		}
+ 
+ 		list[count].Type = CertList->SignatureType;
+-		if (CompareGuid (&CertList->SignatureType, &X509_GUID) == 0) {
++		if (CompareGuid (&CertList->SignatureType, &X509_GUID)) {
+ 			list[count].MokSize = CertList->SignatureSize -
+ 			    sizeof(EFI_GUID);
+ 			list[count].Mok = (void *)Cert->SignatureData;
+@@ -463,19 +463,19 @@ static void show_sha_digest(EFI_GUID Type, UINT8 * hash)
+ 	int i;
+ 	int length;
+ 
+-	if (CompareGuid(&Type, &EFI_CERT_SHA1_GUID) == 0) {
++	if (CompareGuid(&Type, &EFI_CERT_SHA1_GUID)) {
+ 		length = SHA1_DIGEST_SIZE;
+ 		text[0] = L"SHA1 hash";
+-	} else if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID) == 0) {
++	} else if (CompareGuid(&Type, &EFI_CERT_SHA224_GUID)) {
+ 		length = SHA224_DIGEST_LENGTH;
+ 		text[0] = L"SHA224 hash";
+-	} else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID) == 0) {
++	} else if (CompareGuid(&Type, &EFI_CERT_SHA256_GUID)) {
+ 		length = SHA256_DIGEST_SIZE;
+ 		text[0] = L"SHA256 hash";
+-	} else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID) == 0) {
++	} else if (CompareGuid(&Type, &EFI_CERT_SHA384_GUID)) {
+ 		length = SHA384_DIGEST_LENGTH;
+ 		text[0] = L"SHA384 hash";
+-	} else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID) == 0) {
++	} else if (CompareGuid(&Type, &EFI_CERT_SHA512_GUID)) {
+ 		length = SHA512_DIGEST_LENGTH;
+ 		text[0] = L"SHA512 hash";
+ 	} else {
+@@ -564,7 +564,7 @@ static void show_mok_info(EFI_GUID Type, void *Mok, UINTN MokSize)
+ 	if (!Mok || MokSize == 0)
+ 		return;
+ 
+-	if (CompareGuid (&Type, &X509_GUID) == 0) {
++	if (CompareGuid (&Type, &X509_GUID)) {
+ 		UINT8 hash[SHA1_DIGEST_SIZE];
+ 		X509 *X509Cert;
+ 
+@@ -1062,7 +1062,7 @@ static EFI_STATUS write_back_mok_list(MokListNode * list, INTN key_num,
+ 
+ 		DataSize += sizeof(EFI_SIGNATURE_LIST);
+ 		type = list[i].Type; /* avoid -Werror=address-of-packed-member */
+-		if (CompareGuid(&type, &X509_GUID) == 0)
++		if (CompareGuid(&type, &X509_GUID))
+ 			DataSize += sizeof(EFI_GUID);
+ 		DataSize += list[i].MokSize;
+ 	}
+@@ -1093,7 +1093,7 @@ static EFI_STATUS write_back_mok_list(MokListNode * list, INTN key_num,
+ 		CertList->SignatureType = list[i].Type;
+ 		CertList->SignatureHeaderSize = 0;
+ 
+-		if (CompareGuid(&(CertList->SignatureType), &X509_GUID) == 0) {
++		if (CompareGuid(&(CertList->SignatureType), &X509_GUID)) {
+ 			CertList->SignatureListSize = list[i].MokSize +
+ 			    sizeof(EFI_SIGNATURE_LIST) + sizeof(EFI_GUID);
+ 			CertList->SignatureSize =
+@@ -1136,7 +1136,7 @@ static void delete_cert(void *key, UINT32 key_size,
+ 
+ 	for (i = 0; i < mok_num; i++) {
+ 		type = mok[i].Type; /* avoid -Werror=address-of-packed-member */
+-		if (CompareGuid(&type, &X509_GUID) != 0)
++		if (!CompareGuid(&type, &X509_GUID))
+ 			continue;
+ 
+ 		if (mok[i].MokSize == key_size &&
+@@ -1189,7 +1189,7 @@ static void delete_hash_in_list(EFI_GUID Type, UINT8 * hash, UINT32 hash_size,
+ 
+ 	for (i = 0; i < mok_num; i++) {
+ 		type = mok[i].Type; /* avoid -Werror=address-of-packed-member */
+-		if ((CompareGuid(&type, &Type) != 0) ||
++		if ((!CompareGuid(&type, &Type)) ||
+ 		    (mok[i].MokSize < sig_size))
+ 			continue;
+ 
+@@ -1360,7 +1360,7 @@ static EFI_STATUS delete_keys(void *MokDel, UINTN MokDelSize, BOOLEAN MokX)
+ 	dprint(L"deleting certs from %a\n", MokX ? "MokListX" : "MokList");
+ 	for (i = 0; i < del_num; i++) {
+ 		type = del_key[i].Type; /* avoid -Werror=address-of-packed-member */
+-		if (CompareGuid(&type, &X509_GUID) == 0) {
++		if (CompareGuid(&type, &X509_GUID)) {
+ 			dprint(L"deleting key %d (total %d):\n", i, mok_num);
+ 			dhexdumpat(del_key[i].Mok, del_key[i].MokSize, 0);
+ 			delete_cert(del_key[i].Mok, del_key[i].MokSize,
+diff --git a/errlog.c b/errlog.c
+index c29db0b..6455b77 100644
+--- a/errlog.c
++++ b/errlog.c
+@@ -223,7 +223,7 @@ save_logs(void)
+ 		EFI_CONFIGURATION_TABLE *CT;
+ 		CT = &ST->ConfigurationTable[i];
+ 
+-		if (CompareGuid(&MOK_VARIABLE_STORE, &CT->VendorGuid) == 0) {
++		if (CompareGuid(&MOK_VARIABLE_STORE, &CT->VendorGuid)) {
+ 			cfg_table = CT->VendorTable;
+ 			break;
+ 		}
+diff --git a/fallback.c b/fallback.c
+index 71e3382..c73094c 100644
+--- a/fallback.c
++++ b/fallback.c
+@@ -260,7 +260,7 @@ check_masked_boot_option(CHAR8 *candidate, unsigned int candidate_size,
+ 	    DevicePathType(dp) != HARDWARE_DEVICE_PATH ||
+ 	    DevicePathSubType(dp) != HW_VENDOR_DP ||
+ 	    node_size != sizeof(ami_masked_device_path_guid) ||
+-	    CompareGuid((EFI_GUID *)(cursor + sizeof(EFI_DEVICE_PATH)),
++	    !CompareGuid((EFI_GUID *)(cursor + sizeof(EFI_DEVICE_PATH)),
+ 		        &ami_masked_device_path_guid))
+ 		return 1;
+ 
+diff --git a/include/test.h b/include/test.h
+index ccb6114..bffad7d 100644
+--- a/include/test.h
++++ b/include/test.h
+@@ -185,7 +185,9 @@ guidcmp(const EFI_GUID * const guid0, const EFI_GUID * const guid1)
+ 	return ret;
+ }
+ 
+-#define CompareGuid(a, b) guidcmp(a, b)
++#define CompareGuid(a, b) (guidcmp(a, b) == 0)
++
++#define CompareGuidForSorting(a, b) guidcmp(a, b)
+ 
+ static inline char *
+ efi_strerror(EFI_STATUS status)
+diff --git a/lib/configtable.c b/lib/configtable.c
+index 66e97f6..60a28d6 100644
+--- a/lib/configtable.c
++++ b/lib/configtable.c
+@@ -14,7 +14,7 @@ configtable_get_table(EFI_GUID *guid)
+ 	for (i = 0; i < ST->NumberOfTableEntries; i++) {
+ 		EFI_CONFIGURATION_TABLE *CT = &ST->ConfigurationTable[i];
+ 
+-		if (CompareGuid(guid, &CT->VendorGuid) == 0) {
++		if (CompareGuid(guid, &CT->VendorGuid)) {
+ 			return CT->VendorTable;
+ 		}
+ 	}
+diff --git a/lib/variables.c b/lib/variables.c
+index 1a2c7d4..b2e9901 100644
+--- a/lib/variables.c
++++ b/lib/variables.c
+@@ -449,7 +449,7 @@ variable_enroll_hash(const CHAR16 * const var, EFI_GUID owner,
+ 	CopyMem(&d->SignatureData, hash, SHA256_DIGEST_SIZE);
+ 	d->SignatureOwner = SHIM_LOCK_GUID;
+ 
+-	if (CompareGuid(&owner, &SIG_DB) == 0)
++	if (CompareGuid(&owner, &SIG_DB))
+ 		efi_status = SetSecureVariable(var, sig, sizeof(sig), owner,
+ 					       EFI_VARIABLE_APPEND_WRITE, 0);
+ 	else
+diff --git a/load-options.c b/load-options.c
+index 660eaa9..7316a6f 100644
+--- a/load-options.c
++++ b/load-options.c
+@@ -404,7 +404,7 @@ parse_load_options(EFI_LOADED_IMAGE *li)
+ 	if (li->LoadOptionsSize > 16) {
+ 		if (CompareGuid((EFI_GUID *)(li->LoadOptions
+ 					     + (li->LoadOptionsSize - 16)),
+-				&BDS_GUID) == 0)
++				&BDS_GUID))
+ 			li->LoadOptionsSize -= 16;
+ 	}
+ 
+diff --git a/mock-variables.c b/mock-variables.c
+index 736171c..a7919d8 100644
+--- a/mock-variables.c
++++ b/mock-variables.c
+@@ -161,7 +161,7 @@ variable_cmp(const struct mock_variable * const v0,
+ 	if (v0 == NULL || v1 == NULL)
+ 		return (uintptr_t)v0 - (uintptr_t)v1;
+ 
+-	ret = CompareGuid(&v0->guid, &v1->guid);
++	ret = CompareGuidForSorting(&v0->guid, &v1->guid);
+ 	ret <<= 8ul;
+ #if (defined(SHIM_DEBUG) && SHIM_DEBUG > 3)
+ 	printf("%s:%d:%s():  "GUID_FMT" %s "GUID_FMT" (0x%011"PRIx64" %"PRId64")\n",
+@@ -361,7 +361,7 @@ mock_get_next_variable_name(UINTN *size, CHAR16 *name, EFI_GUID *guid)
+ # endif
+ #endif
+ 		if (name[0] == 0) {
+-			if (CompareGuid(&var->guid, guid) == 0) {
++			if (CompareGuid(&var->guid, guid)) {
+ #if (defined(SHIM_DEBUG) && SHIM_DEBUG != 0)
+ 				printf("%s:%d:%s():  found guid in entry var:%p var->name:%p\n",
+ 				       __FILE__, __LINE__-1, __func__, var, var->name);
+@@ -372,7 +372,7 @@ mock_get_next_variable_name(UINTN *size, CHAR16 *name, EFI_GUID *guid)
+ 			}
+ 		} else {
+ 			if (found) {
+-				if (CompareGuid(&var->guid, guid) == 0) {
++				if (CompareGuid(&var->guid, guid)) {
+ 					result = var;
+ 					break;
+ 				}
+@@ -1235,7 +1235,7 @@ mock_config_table_cmp(const void *p0, const void *p1)
+ #if (defined(SHIM_DEBUG) && SHIM_DEBUG != 0)
+ 		printf("comparing %p to %p\n", p0, p1);
+ #endif
+-		cmp = CompareGuid(&entry0->VendorGuid, &entry1->VendorGuid);
++		cmp = CompareGuidForSorting(&entry0->VendorGuid, &entry1->VendorGuid);
+ 	}
+ 
+ 	if (mock_config_table_sort_policy == MOCK_SORT_DESCENDING) {
+@@ -1259,7 +1259,7 @@ mock_install_configuration_table(EFI_GUID *guid, VOID *table)
+ 	for (UINTN i = 0; i < ST->NumberOfTableEntries; i++) {
+ 		EFI_CONFIGURATION_TABLE *entry = &ST->ConfigurationTable[i];
+ 
+-		if (CompareGuid(guid, &entry->VendorGuid) == 0) {
++		if (CompareGuid(guid, &entry->VendorGuid)) {
+ 			found = true;
+ 			if (table) {
+ 				// replace it
+diff --git a/test-mock-variables.c b/test-mock-variables.c
+index dd4a9eb..98baa5f 100644
+--- a/test-mock-variables.c
++++ b/test-mock-variables.c
+@@ -448,7 +448,7 @@ dump_config_table_if_wrong(const char * const func, int line, ...)
+ 		}
+ 
+ 		entry = &ST->ConfigurationTable[idx];
+-		if (CompareGuid(guid, &entry->VendorGuid) != 0)
++		if (!CompareGuid(guid, &entry->VendorGuid))
+ 			okay = false;
+ 
+ nexta:
+@@ -479,7 +479,7 @@ nexta:
+ 			printf("\t[%d]: %p ", idx, entry);
+ 			printf("{.VendorGuid:" GUID_FMT ",", GUID_ARGS(entry->VendorGuid));
+ 			printf("&.VendorTable:%p}\n", entry->VendorTable);
+-			if (CompareGuid(guid, &entry->VendorGuid) != 0)
++			if (!CompareGuid(guid, &entry->VendorGuid))
+ 				printf("\t\t\t  expected:" GUID_FMT "\n", GUID_ARGS(*guid));
+ 		}
+ next:
+@@ -549,8 +549,8 @@ test_install_config_table_0(void)
+ 	assert_equal_goto(ST->NumberOfTableEntries, 1, err, "%lu != %lu\n");
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[0].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[0].VendorGuid, &bguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[0].VendorGuid, &bguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 	assert_equal_goto(ST->ConfigurationTable[0].VendorTable,
+ 			  bstrp, err, "%p != %p\n");
+ 
+@@ -562,8 +562,8 @@ test_install_config_table_0(void)
+ 	assert_equal_goto(ST->NumberOfTableEntries, 1, err, "%lu != %lu\n");
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[0].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[0].VendorGuid, &bguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[0].VendorGuid, &bguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 	assert_equal_goto(ST->ConfigurationTable[0].VendorTable,
+ 			  bstrp, err, "%p != %p\n");
+ 
+@@ -602,14 +602,14 @@ test_install_config_table_0(void)
+ 				   -1, NULL);
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[aidx].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, astr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, astr);
+ 	assert_equal_goto(ST->ConfigurationTable[aidx].VendorTable, astrp,
+ 			  err, "%p != %p\n");
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[bidx].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 	assert_equal_goto(ST->ConfigurationTable[bidx].VendorTable, bstrp,
+ 			  err, "%p != %p\n");
+ 
+@@ -652,22 +652,22 @@ test_install_config_table_0(void)
+ 				   -1, NULL);
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[aidx].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, astr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, astr);
+ 	assert_equal_goto(ST->ConfigurationTable[aidx].VendorTable, astrp,
+ 			  err, "%p != %p\n");
+ 	memcpy(&guids[aidx], &aguid, sizeof(EFI_GUID));
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[bidx].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 	assert_equal_goto(ST->ConfigurationTable[bidx].VendorTable, bstrp,
+ 			  err, "%p != %p\n");
+ 	memcpy(&guids[bidx], &bguid, sizeof(EFI_GUID));
+ 
+ 	sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[cidx].VendorGuid));
+-	assert_zero_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
+-			 err, "%d != 0 (%s != %s)\n", tmpstr, cstr);
++	assert_equal_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
++			 true, err, "%d != true (%s != %s)\n", tmpstr, cstr);
+ 	assert_equal_goto(ST->ConfigurationTable[cidx].VendorTable, cstrp,
+ 			  err, "%p != %p\n");
+ 	memcpy(&guids[cidx], &cguid, sizeof(EFI_GUID));
+@@ -726,8 +726,8 @@ test_install_config_table_0(void)
+ 
+ 	if (aidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[aidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, astr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, astr);
+ 		assert_equal_goto(ST->ConfigurationTable[aidx].VendorTable, astrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[aidx], &aguid, sizeof(EFI_GUID));
+@@ -735,8 +735,8 @@ test_install_config_table_0(void)
+ 
+ 	if (bidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[bidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 		assert_equal_goto(ST->ConfigurationTable[bidx].VendorTable, bstrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[bidx], &bguid, sizeof(EFI_GUID));
+@@ -744,8 +744,8 @@ test_install_config_table_0(void)
+ 
+ 	if (cidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[cidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, cstr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, cstr);
+ 		assert_equal_goto(ST->ConfigurationTable[cidx].VendorTable, cstrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[cidx], &cguid, sizeof(EFI_GUID));
+@@ -791,8 +791,8 @@ test_install_config_table_0(void)
+ 
+ 	if (aidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[aidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, astr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[aidx].VendorGuid, &aguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, astr);
+ 		assert_equal_goto(ST->ConfigurationTable[aidx].VendorTable, astrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[aidx], &aguid, sizeof(EFI_GUID));
+@@ -800,8 +800,8 @@ test_install_config_table_0(void)
+ 
+ 	if (bidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[bidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, bstr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[bidx].VendorGuid, &bguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, bstr);
+ 		assert_equal_goto(ST->ConfigurationTable[bidx].VendorTable, bstrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[bidx], &bguid, sizeof(EFI_GUID));
+@@ -809,8 +809,8 @@ test_install_config_table_0(void)
+ 
+ 	if (cidx >= 0) {
+ 		sprintf(tmpstr, GUID_FMT, GUID_ARGS(ST->ConfigurationTable[cidx].VendorGuid));
+-		assert_zero_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
+-				 err, "%d != 0 (%s != %s)\n", tmpstr, cstr);
++		assert_equal_goto(CompareGuid(&ST->ConfigurationTable[cidx].VendorGuid, &cguid),
++				 true, err, "%d != true (%s != %s)\n", tmpstr, cstr);
+ 		assert_equal_goto(ST->ConfigurationTable[cidx].VendorTable, cstrp,
+ 				  err, "%p != %p\n");
+ 		memcpy(&guids[cidx], &cguid, sizeof(EFI_GUID));
+diff --git a/test-mok-mirror.c b/test-mok-mirror.c
+index 38b7ed9..66e7fc2 100644
+--- a/test-mok-mirror.c
++++ b/test-mok-mirror.c
+@@ -82,7 +82,7 @@ setvar_post(CHAR16 *name, EFI_GUID *guid, UINT32 attrs,
+ 	for (UINTN i = 0; test_vars[i].name != NULL; i++) {
+ 		struct test_var *tv = &test_vars[i];
+ 
+-		if (CompareGuid(&tv->guid, guid) != 0 ||
++		if (!CompareGuid(&tv->guid, guid) ||
+ 		    StrCmp(tv->name, name) != 0)
+ 			continue;
+ 		tv->ops[tv->n_ops] = op;
+@@ -116,7 +116,7 @@ getvar_post(CHAR16 *name, EFI_GUID *guid,
+ 	for (UINTN i = 0; test_vars[i].name != NULL; i++) {
+ 		struct test_var *tv = &test_vars[i];
+ 
+-		if (CompareGuid(&tv->guid, guid) != 0 ||
++		if (!CompareGuid(&tv->guid, guid) ||
+ 		    StrCmp(tv->name, name) != 0)
+ 			continue;
+ 		tv->ops[tv->n_ops] = GET;
+@@ -144,7 +144,7 @@ check_variables(struct test_var *vars)
+ 			int gets = 0;
+ 
+ 			var = list_entry(pos, struct mock_variable, list);
+-			if (CompareGuid(&tv->guid, &var->guid) != 0 ||
++			if (!CompareGuid(&tv->guid, &var->guid) ||
+ 			    StrCmp(var->name, tv->name) != 0)
+ 				continue;
+ 			found = true;
+@@ -292,7 +292,7 @@ test_mok_mirror(struct test_var *vars,
+ 	for (size_t i = 0; i < ST->NumberOfTableEntries; i++) {
+ 		EFI_CONFIGURATION_TABLE *ct = &ST->ConfigurationTable[i];
+ 
+-		if (CompareGuid(&ct->VendorGuid, &mok_config_guid) != 0)
++		if (!CompareGuid(&ct->VendorGuid, &mok_config_guid))
+ 			continue;
+ 
+ 		pos = (void *)ct->VendorTable;
+diff --git a/tpm.c b/tpm.c
+index 75c733f..2514d46 100644
+--- a/tpm.c
++++ b/tpm.c
+@@ -348,7 +348,7 @@ static BOOLEAN tpm_data_measured(CHAR16 *VarName, EFI_GUID VendorGuid, UINTN Var
+ 
+ 	for (i=0; i<measuredcount; i++) {
+ 		if ((StrCmp (VarName, measureddata[i].VariableName) == 0) &&
+-		    (CompareGuid (&VendorGuid, measureddata[i].VendorGuid) == 0) &&
++		    (CompareGuid (&VendorGuid, measureddata[i].VendorGuid)) &&
+ 		    (VarSize == measureddata[i].Size) &&
+ 		    (CompareMem (VarData, measureddata[i].Data, VarSize) == 0)) {
+ 			return TRUE;
+diff --git a/verify.c b/verify.c
+index 351b3e0..31d476c 100644
+--- a/verify.c
++++ b/verify.c
+@@ -145,7 +145,7 @@ check_db_cert_in_ram(EFI_SIGNATURE_LIST *CertList, UINTN dbsize,
+ 	int i = 0;
+ 
+ 	while ((dbsize > 0) && (dbsize >= CertList->SignatureListSize)) {
+-		if (CompareGuid (&CertList->SignatureType, &EFI_CERT_TYPE_X509_GUID) == 0) {
++		if (CompareGuid (&CertList->SignatureType, &EFI_CERT_TYPE_X509_GUID)) {
+ 			Cert = (EFI_SIGNATURE_DATA *) ((UINT8 *) CertList + sizeof (EFI_SIGNATURE_LIST) + CertList->SignatureHeaderSize);
+ 			CertSize = CertList->SignatureSize - sizeof(EFI_GUID);
+ 			dprint(L"trying to verify cert %d (%s)\n", i++, dbname);
+@@ -218,7 +218,7 @@ check_db_hash_in_ram(EFI_SIGNATURE_LIST *CertList, UINTN dbsize, UINT8 *data,
+ 	while ((dbsize > 0) && (dbsize >= CertList->SignatureListSize)) {
+ 		CertCount = (CertList->SignatureListSize -sizeof (EFI_SIGNATURE_LIST) - CertList->SignatureHeaderSize) / CertList->SignatureSize;
+ 		Cert = (EFI_SIGNATURE_DATA *) ((UINT8 *) CertList + sizeof (EFI_SIGNATURE_LIST) + CertList->SignatureHeaderSize);
+-		if (CompareGuid(&CertList->SignatureType, &CertType) == 0) {
++		if (CompareGuid(&CertList->SignatureType, &CertType)) {
+ 			for (Index = 0; Index < CertCount; Index++) {
+ 				if (CompareMem (Cert->SignatureData, data, SignatureSize) == 0) {
+ 					//
+-- 
+2.47.3
+
