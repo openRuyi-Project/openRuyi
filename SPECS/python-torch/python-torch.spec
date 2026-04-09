@@ -571,4 +571,4 @@ export PYTORCH_ROCM_ARCH=%{rocm_gpu_list_default}
 %{python3_sitearch}/functorch
 
 %changelog
-%{?autochangelog}
+%autochangelog
