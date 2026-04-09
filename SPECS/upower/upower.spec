@@ -98,4 +98,4 @@ mv %{buildroot}%{_libexecdir}/upower %{buildroot}%{_libexecdir}/installed-tests/
 %{_datadir}/gtk-doc/html/UPower/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
