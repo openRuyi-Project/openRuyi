@@ -46,4 +46,4 @@ Vega and Vega-Lite.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
