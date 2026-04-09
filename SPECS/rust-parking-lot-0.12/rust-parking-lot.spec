@@ -80,4 +80,4 @@ This metapackage enables feature "serde" for the Rust parking_lot crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
