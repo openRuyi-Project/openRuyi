@@ -55,4 +55,4 @@ rm -f %{buildroot}%{_libdir}/libck.a
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
