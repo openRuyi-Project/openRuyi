@@ -38,4 +38,4 @@ Python pathlib-style classes for cloud storage services such as Amazon S3, Azure
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
