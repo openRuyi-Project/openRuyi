@@ -57,4 +57,4 @@ EOF
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
