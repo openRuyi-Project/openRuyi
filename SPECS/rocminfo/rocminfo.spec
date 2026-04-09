@@ -54,4 +54,4 @@ chmod 755 %{buildroot}%{_bindir}/*
 %exclude %{_docdir}/*/License.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
