@@ -56,4 +56,4 @@ and was designed from day one to be used in real products.
 %{_bindir}/spacy
 
 %changelog
-%{?autochangelog}
+%autochangelog
