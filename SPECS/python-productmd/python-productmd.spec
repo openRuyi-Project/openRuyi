@@ -38,4 +38,4 @@ and installation media.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
