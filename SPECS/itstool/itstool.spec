@@ -47,4 +47,4 @@ export PYTHON=%{__python3}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
