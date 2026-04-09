@@ -58,4 +58,4 @@ done
 %{_mandir}/man8/sgdisk.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
