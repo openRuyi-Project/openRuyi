@@ -188,4 +188,4 @@ rm -rf %{buildroot}%{_datadir}/%{name}/tools/old/
 %{_sbindir}/bpf-*
 
 %changelog
-%{?autochangelog}
+%autochangelog
