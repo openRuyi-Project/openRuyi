@@ -63,4 +63,4 @@ tar --strip-components=1 -xvf %{SOURCE1} -C ext/libargparse
 %{_libdir}/pkgconfig/libavif.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
