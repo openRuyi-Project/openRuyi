@@ -61,4 +61,4 @@ export ACLOCAL_PATH=%{_datadir}/gettext/m4/
 %{_libdir}/pkgconfig/libmtp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
