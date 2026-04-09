@@ -48,4 +48,4 @@ rm -f lib/snprintf.c
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
