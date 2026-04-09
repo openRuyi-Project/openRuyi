@@ -97,4 +97,4 @@ rm -f %{buildroot}%{_libdir}/libseccomp.la
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
