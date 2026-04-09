@@ -55,4 +55,4 @@ find %{buildroot} -type f -name "*.a" -delete
 %{_datadir}/html/*.html
 
 %changelog
-%{?autochangelog}
+%autochangelog
