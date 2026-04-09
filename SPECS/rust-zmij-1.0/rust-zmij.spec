@@ -39,4 +39,4 @@ This metapackage enables feature "no-panic" for the Rust zmij crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
