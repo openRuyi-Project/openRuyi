@@ -55,4 +55,4 @@ rm -f %{buildroot}%{_bindir}/libotf-config
 %{_libdir}/pkgconfig/libotf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
