@@ -36,4 +36,4 @@ pure-Python, and fast as C-extensions.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
