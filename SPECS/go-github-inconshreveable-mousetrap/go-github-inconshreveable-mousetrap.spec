@@ -34,4 +34,4 @@ On a Windows machine, was the process invoked by someone double clicking on the 
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
