@@ -67,4 +67,4 @@ autoreconf -fvi
 %{_includedir}/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
