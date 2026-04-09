@@ -43,4 +43,4 @@ rm %{_builddir}/%{name}-%{version}/gast/ast2.py # No use of Python 2.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
