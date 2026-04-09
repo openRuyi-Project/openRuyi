@@ -40,4 +40,4 @@ This package provides Python bindings for the Clang C library.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
