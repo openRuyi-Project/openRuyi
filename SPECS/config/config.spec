@@ -50,4 +50,4 @@ install -m644 doc/config.sub.1   %{buildroot}%{_mandir}/man1/config.sub.1
 %{_mandir}/man1/config.sub.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
