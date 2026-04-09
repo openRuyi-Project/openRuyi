@@ -45,4 +45,4 @@ Cloud Storage paths, and Azure Blob Storage paths.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
