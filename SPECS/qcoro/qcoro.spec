@@ -65,4 +65,4 @@ Development files for QCoro (Qt 6).
 %{_libdir}/qt6/mkspecs/modules/qt_QCoro*.pri
 
 %changelog
-%{?autochangelog}
+%autochangelog
