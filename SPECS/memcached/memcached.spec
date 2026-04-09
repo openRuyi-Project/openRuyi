@@ -68,4 +68,4 @@ mkdir -p %{buildroot}/%{_localstatedir}/run/%{name}
 %dir %attr(750,nobody,nobody) %{_localstatedir}/run/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
