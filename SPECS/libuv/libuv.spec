@@ -57,4 +57,4 @@ Mozilla's Rust language, Luvit, Julia, pyuv, and others.
 %{_libdir}/pkgconfig/libuv.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
