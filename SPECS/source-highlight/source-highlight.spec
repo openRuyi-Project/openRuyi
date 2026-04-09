@@ -67,4 +67,4 @@ echo -e "\ncxx = cpp.lang" >> %{buildroot}%{_datadir}/source-highlight/lang.map
 %{_docdir}/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
