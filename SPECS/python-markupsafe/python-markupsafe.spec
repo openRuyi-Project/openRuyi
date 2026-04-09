@@ -57,4 +57,4 @@ sed -i '/setuptools/s/>=.*"/"/' pyproject.toml
 %doc CHANGES.rst README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
