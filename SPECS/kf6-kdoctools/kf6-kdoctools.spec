@@ -92,4 +92,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libKF6DocTools.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
