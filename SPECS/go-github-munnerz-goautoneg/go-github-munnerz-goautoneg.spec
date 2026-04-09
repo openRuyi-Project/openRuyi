@@ -42,4 +42,4 @@ http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
