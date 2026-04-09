@@ -45,4 +45,4 @@ WebSocket protocol.
 %{_bindir}/wsdump
 
 %changelog
-%{?autochangelog}
+%autochangelog
