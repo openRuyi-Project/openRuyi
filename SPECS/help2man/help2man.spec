@@ -53,4 +53,4 @@ still providing some useful information.
 %dir %{_mandir}/??/man1
 
 %changelog
-%{?autochangelog}
+%autochangelog
