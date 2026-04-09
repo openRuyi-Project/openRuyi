@@ -117,4 +117,4 @@ mkdir -p %{buildroot}%{_libexecdir}/keepalived
 %{_mandir}/man8/keepalived.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
