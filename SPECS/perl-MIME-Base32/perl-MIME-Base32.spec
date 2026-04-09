@@ -43,4 +43,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc ARTISTIC-1.0 Changes GPL-1 README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
