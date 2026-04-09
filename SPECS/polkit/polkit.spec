@@ -119,4 +119,4 @@ install -Dpm0644 %{SOURCE2} %{buildroot}%{_sysusersdir}/polkit.conf
 %{_includedir}/polkit-1/
 
 %changelog
-%{?autochangelog}
+%autochangelog
