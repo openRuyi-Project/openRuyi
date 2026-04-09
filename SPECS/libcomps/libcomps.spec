@@ -106,4 +106,4 @@ cp -a %{__cmake_builddir}/src/python/docs/html %{buildroot}%{_datadir}/doc/pytho
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
