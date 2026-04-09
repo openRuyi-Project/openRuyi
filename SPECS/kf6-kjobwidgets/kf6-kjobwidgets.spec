@@ -80,4 +80,4 @@ Development files.
 %{_kf6_libdir}/libKF6JobWidgets.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
