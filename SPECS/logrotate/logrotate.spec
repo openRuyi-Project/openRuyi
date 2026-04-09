@@ -81,4 +81,4 @@ fi
 %ghost %verify(not size md5 mtime) %attr(0640, root, root) %{_localstatedir}/lib/logrotate/logrotate.status
 
 %changelog
-%{?autochangelog}
+%autochangelog
