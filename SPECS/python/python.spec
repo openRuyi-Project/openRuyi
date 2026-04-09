@@ -711,4 +711,4 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %undefine _debuginfo_subpackages
 
 %changelog
-%{?autochangelog}
+%autochangelog
