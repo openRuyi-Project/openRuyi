@@ -37,4 +37,4 @@ is running in a virtual machine.
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
