@@ -47,4 +47,4 @@ rm -r %{buildroot}%{_datadir}/doc/libdvdnav/
 %{_libdir}/pkgconfig/dvdnav.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
