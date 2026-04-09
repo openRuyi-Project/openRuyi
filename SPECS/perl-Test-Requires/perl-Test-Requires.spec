@@ -44,4 +44,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes minil.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
