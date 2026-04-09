@@ -110,4 +110,4 @@ use tpm2-tss.
 %{_mandir}/man7/tss2*.7.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
