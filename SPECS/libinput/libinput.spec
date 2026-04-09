@@ -116,4 +116,4 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %{_mandir}/man1/libinput-replay.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
