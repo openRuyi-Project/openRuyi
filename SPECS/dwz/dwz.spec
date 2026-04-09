@@ -58,4 +58,4 @@ export CXX='g++ -gz=none'
 %{_mandir}/man1/dwz*
 
 %changelog
-%{?autochangelog}
+%autochangelog
