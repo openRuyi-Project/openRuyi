@@ -49,4 +49,4 @@ The X.Org X11 SM (Session Management) development package.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
