@@ -194,4 +194,4 @@ fi
 %{_pkgconfdir}/libdmmp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
