@@ -196,4 +196,4 @@ This package contains Weston demo program files.
 %{_datadir}/libweston-%{apiver}/protocols/
 
 %changelog
-%{?autochangelog}
+%autochangelog
