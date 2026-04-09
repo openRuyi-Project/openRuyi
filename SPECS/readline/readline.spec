@@ -76,4 +76,4 @@ rm -vf %{buildroot}%{_infodir}/dir*
 %{_libdir}/libhistory.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
