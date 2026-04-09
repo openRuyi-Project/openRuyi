@@ -102,4 +102,4 @@ rm -f %{buildroot}%{_datadir}/misc/enterprise-numbers
 %{_libexecdir}/bmc-snmp-proxy
 
 %changelog
-%{?autochangelog}
+%autochangelog
