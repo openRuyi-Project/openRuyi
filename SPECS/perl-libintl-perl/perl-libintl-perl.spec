@@ -84,4 +84,4 @@ rm MANIFEST
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
