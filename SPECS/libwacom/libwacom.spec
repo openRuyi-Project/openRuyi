@@ -95,4 +95,4 @@ Utilities to handle and/or debug libwacom devices.
 %{_mandir}/man1/libwacom-show-stylus.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
