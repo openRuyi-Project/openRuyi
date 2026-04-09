@@ -54,4 +54,4 @@ ln -s traceroute.8 %{buildroot}%{_mandir}/man8/tcptraceroute.8
 %{_mandir}/*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
