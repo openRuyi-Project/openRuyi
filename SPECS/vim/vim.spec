@@ -155,4 +155,4 @@ rm -rf %{buildroot}%{_mandir}/tr.UTF-8/
 %{_mandir}/man1/xxd.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
