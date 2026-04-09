@@ -49,4 +49,4 @@ sed -i -e '/^#!\//, 1d' CppHeaderParser/CppHeaderParser.py
 %doc README.txt README.html
 
 %changelog
-%{?autochangelog}
+%autochangelog
