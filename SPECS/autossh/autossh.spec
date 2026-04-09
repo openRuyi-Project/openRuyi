@@ -74,4 +74,4 @@ fi
 %{_sysusersdir}/autossh.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
