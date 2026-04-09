@@ -39,4 +39,4 @@ digitally signed and encrypted JSON objects.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
