@@ -62,4 +62,4 @@ rm -rf %{buildroot}%{_infodir}/dir
 %{_includedir}/gsl/
 
 %changelog
-%{?autochangelog}
+%autochangelog
