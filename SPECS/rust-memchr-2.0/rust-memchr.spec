@@ -55,4 +55,4 @@ This metapackage enables feature "logging" for the Rust memchr crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
