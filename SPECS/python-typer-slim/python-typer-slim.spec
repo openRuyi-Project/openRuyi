@@ -49,4 +49,4 @@ them to CLI applications.
 %{_bindir}/typer
 
 %changelog
-%{?autochangelog}
+%autochangelog
