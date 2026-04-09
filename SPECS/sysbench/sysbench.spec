@@ -57,4 +57,4 @@ autoreconf -vif
 %{_datadir}/sysbench/
 
 %changelog
-%{?autochangelog}
+%autochangelog
