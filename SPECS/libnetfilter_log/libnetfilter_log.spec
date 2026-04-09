@@ -57,4 +57,4 @@ libnetfilter_log.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
