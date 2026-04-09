@@ -34,4 +34,4 @@ A small filepath extension library that supports double star globbling.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
