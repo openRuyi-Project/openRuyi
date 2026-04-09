@@ -46,4 +46,4 @@ results in smaller source code developed in less time.
 %{_bindir}/cherryd
 
 %changelog
-%{?autochangelog}
+%autochangelog
