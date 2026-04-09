@@ -412,4 +412,4 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %_libdir/libldap*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
