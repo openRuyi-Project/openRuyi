@@ -59,4 +59,4 @@ APscheduler provides multiple job stores.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
