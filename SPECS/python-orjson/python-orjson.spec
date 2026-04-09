@@ -45,4 +45,4 @@ datetime, numpy, and UUID instances natively.
 %license LICENSE-APACHE LICENSE-MIT LICENSE-MPL-2.0
 
 %changelog
-%{?autochangelog}
+%autochangelog
