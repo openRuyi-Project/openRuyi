@@ -241,4 +241,4 @@ export LD_LIBRARY_PATH="%{buildroot}%{_libdir}"
 %{python3_sitearch}/shiboken6_generator-%{version}-py%{python3_version}.egg-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
