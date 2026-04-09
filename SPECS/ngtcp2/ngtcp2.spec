@@ -117,4 +117,4 @@ autoreconf -fsi
 %{_includedir}/ngtcp2/ngtcp2_crypto_ossl.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
