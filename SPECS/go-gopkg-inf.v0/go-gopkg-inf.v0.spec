@@ -33,4 +33,4 @@ Package inf (type inf.Dec) implements "infinite-precision" decimal arithmetic.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
