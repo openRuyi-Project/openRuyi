@@ -47,4 +47,4 @@ Marshmallow schemas can be used to:
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
