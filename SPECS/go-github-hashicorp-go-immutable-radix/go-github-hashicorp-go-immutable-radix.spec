@@ -56,4 +56,4 @@ For a mutable variant, see go-radix (https://github.com/armon/go-radix).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
