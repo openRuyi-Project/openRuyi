@@ -32,4 +32,4 @@ Random data generator written in go
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
