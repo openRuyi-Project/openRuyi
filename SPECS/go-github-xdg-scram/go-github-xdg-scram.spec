@@ -37,4 +37,4 @@ Challenge Response Authentication Mechanism (SCRAM) described in
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
