@@ -47,4 +47,4 @@ remote machine aside from an SSH connection.
 %{python3_sitelib}/ansible_%{srcname}
 
 %changelog
-%{?autochangelog}
+%autochangelog
