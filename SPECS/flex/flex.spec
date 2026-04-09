@@ -65,4 +65,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libfl.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
