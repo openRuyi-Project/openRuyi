@@ -49,4 +49,4 @@ Bison is a parser generator similar to yacc(1).
 %{_mandir}/man1/yacc.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
