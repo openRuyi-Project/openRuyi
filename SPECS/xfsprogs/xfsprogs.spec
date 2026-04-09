@@ -74,4 +74,4 @@ rm -rf %{buildroot}%{_datadir}/doc/xfsprogs/
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
