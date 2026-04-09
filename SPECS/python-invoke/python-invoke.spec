@@ -42,4 +42,4 @@ instead of servers and network commands.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
