@@ -49,4 +49,4 @@ needed to build applications that use LittleCMS.
 %{_libdir}/pkgconfig/lcms2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
