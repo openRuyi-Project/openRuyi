@@ -93,4 +93,4 @@ needed to generate introspection data for other GObject-based libraries.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
