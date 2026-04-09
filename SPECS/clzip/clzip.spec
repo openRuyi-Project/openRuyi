@@ -39,4 +39,4 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_infodir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
