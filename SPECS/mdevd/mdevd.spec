@@ -50,4 +50,4 @@ rm -rf %{buildroot}%{_includedir}/%{name}
 %{_bindir}/mdevd-coldplug
 
 %changelog
-%{?autochangelog}
+%autochangelog
