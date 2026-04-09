@@ -155,4 +155,4 @@ bin/ctest %{?_smp_mflags} -V -E "$NO_TEST" --output-on-failure
 %{_rpmmacrodir}/macros.buildsystem.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
