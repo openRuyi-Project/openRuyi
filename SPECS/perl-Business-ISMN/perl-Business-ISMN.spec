@@ -46,4 +46,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes INSTALL.SKIP ismns.txt SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
