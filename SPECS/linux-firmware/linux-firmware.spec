@@ -673,4 +673,4 @@ end
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
-%{?autochangelog}
+%autochangelog
