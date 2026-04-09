@@ -40,4 +40,4 @@ WSGI.  This package includes libraries for implementing ASGI servers.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
