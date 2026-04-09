@@ -43,4 +43,4 @@ when the object is garbage collected.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
