@@ -42,4 +42,4 @@ polling resources for externally generated content.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
