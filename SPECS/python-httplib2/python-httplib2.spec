@@ -63,4 +63,4 @@ other HTTP libraries.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
