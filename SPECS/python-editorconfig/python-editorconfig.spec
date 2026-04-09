@@ -42,4 +42,4 @@ styles between different editors and IDEs.
 %{_bindir}/editorconfig
 
 %changelog
-%{?autochangelog}
+%autochangelog
