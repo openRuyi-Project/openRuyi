@@ -37,4 +37,4 @@ instruction mnemonics and syntax.
 %{_mandir}/man1/ndisasm*
 
 %changelog
-%{?autochangelog}
+%autochangelog
