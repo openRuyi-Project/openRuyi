@@ -48,4 +48,4 @@ contouring algorithms without having to include Matplotlib as a dependency.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
