@@ -32,4 +32,4 @@ Go container/list but with generics.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
