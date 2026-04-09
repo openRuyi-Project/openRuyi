@@ -34,4 +34,4 @@ It was originally developed by Sean Treadway.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
