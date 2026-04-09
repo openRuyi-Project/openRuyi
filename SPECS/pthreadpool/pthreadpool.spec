@@ -50,4 +50,4 @@ Development files for pthreadpool.
 %{_libdir}/libpthreadpool.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
