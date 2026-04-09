@@ -43,4 +43,4 @@ devices and create uinput devices.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
