@@ -117,4 +117,4 @@ rm -Rf %{buildroot}%{_datadir}/grpc/*.pem
 %{_libdir}/cmake/grpc/
 
 %changelog
-%{?autochangelog}
+%autochangelog
