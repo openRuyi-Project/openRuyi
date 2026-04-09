@@ -47,4 +47,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes findrule
 
 %changelog
-%{?autochangelog}
+%autochangelog
