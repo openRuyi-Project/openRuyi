@@ -45,4 +45,4 @@ to a file or stream.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
