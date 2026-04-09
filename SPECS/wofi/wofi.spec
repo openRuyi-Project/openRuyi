@@ -47,4 +47,4 @@ Files for development with %{name}.
 %{_mandir}/man3/wofi*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
