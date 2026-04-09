@@ -36,4 +36,4 @@ comments, seq/map flow style, and map key order.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
