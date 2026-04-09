@@ -36,4 +36,4 @@ make source code patches, for instance.
 %{_mandir}/man1/*.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
