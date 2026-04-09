@@ -62,4 +62,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocm-cmake/LICENSE
 %{_datadir}/rocmcmakebuildtools/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
