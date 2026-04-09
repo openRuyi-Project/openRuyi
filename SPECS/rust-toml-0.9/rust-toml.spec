@@ -137,4 +137,4 @@ This metapackage enables feature "std" for the Rust toml crate, by pulling in an
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
