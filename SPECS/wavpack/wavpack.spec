@@ -53,4 +53,4 @@ needed to develop applications that use the WavPack library.
 %{_libdir}/pkgconfig/wavpack.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
