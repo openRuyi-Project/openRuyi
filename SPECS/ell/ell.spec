@@ -50,4 +50,4 @@ files for the Embedded Linux Library (ELL).
 %{_includedir}/ell/
 
 %changelog
-%{?autochangelog}
+%autochangelog
