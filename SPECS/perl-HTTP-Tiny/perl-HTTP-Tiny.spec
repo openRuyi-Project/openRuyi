@@ -70,4 +70,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
