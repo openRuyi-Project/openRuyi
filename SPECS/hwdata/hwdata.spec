@@ -42,4 +42,4 @@ such as the pci.ids and usb.ids databases.
 %{_datadir}/pkgconfig/hwdata.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
