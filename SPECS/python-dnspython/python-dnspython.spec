@@ -43,4 +43,4 @@ manipulation of DNS zones, messages, names, and records.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
