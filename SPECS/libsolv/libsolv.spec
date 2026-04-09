@@ -122,4 +122,4 @@ Python bindings for the %{name} library.
 %{python3_sitearch}/solv-%{version}.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
