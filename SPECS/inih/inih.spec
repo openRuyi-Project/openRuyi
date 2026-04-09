@@ -49,4 +49,4 @@ symlinks for the inih library.
 %{_libdir}/pkgconfig/INIReader.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
