@@ -143,4 +143,4 @@ alternatives --remove java %{_jvmdir}/java-21-openjdk/bin/java
 %{_jvmdir}/java-21-openjdk
 
 %changelog
-%{?autochangelog}
+%autochangelog
