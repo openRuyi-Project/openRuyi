@@ -111,4 +111,4 @@ install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/libssh/libssh_server.config
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/libssh/libssh_server.config
 
 %changelog
-%{?autochangelog}
+%autochangelog
