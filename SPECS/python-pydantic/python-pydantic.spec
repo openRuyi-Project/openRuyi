@@ -54,4 +54,4 @@ Define how data should be in pure, canonical Python 3.9+; validate it with Pydan
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
