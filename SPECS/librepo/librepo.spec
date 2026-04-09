@@ -71,4 +71,4 @@ export PKG_CONFIG_PATH=%{_libdir}/pkgconfig:%{_datadir}/pkgconfig
 %{_includedir}/librepo/
 
 %changelog
-%{?autochangelog}
+%autochangelog
