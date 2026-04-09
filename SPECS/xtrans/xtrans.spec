@@ -40,4 +40,4 @@ X.Org X11 developmental X transport library
 %{_datadir}/pkgconfig/xtrans.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
