@@ -110,4 +110,4 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_sysusersdir}/pesign.conf
 %{python3_sitelib}/mockbuild/plugins/pesign.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
