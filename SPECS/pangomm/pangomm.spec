@@ -45,4 +45,4 @@ developing applications that use %{name}.
 %{_libdir}/pangomm-*/
 
 %changelog
-%{?autochangelog}
+%autochangelog
