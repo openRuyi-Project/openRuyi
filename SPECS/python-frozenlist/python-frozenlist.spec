@@ -39,4 +39,4 @@ collections.abc.MutableSequence, and which can be made immutable.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
