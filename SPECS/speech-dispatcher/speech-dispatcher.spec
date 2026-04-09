@@ -153,4 +153,4 @@ desktop-file-validate %{buildroot}%{_datadir}/speech-dispatcher/conf/desktop/spe
 %{python3_sitearch}/speechd*
 
 %changelog
-%{?autochangelog}
+%autochangelog
