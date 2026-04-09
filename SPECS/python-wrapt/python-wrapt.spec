@@ -61,4 +61,4 @@ For further information on the **wrapt** module see:
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
