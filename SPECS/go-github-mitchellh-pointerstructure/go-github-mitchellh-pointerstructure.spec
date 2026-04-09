@@ -39,4 +39,4 @@ pointerstructure is based on JSON Pointer (RFC 6901)
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
