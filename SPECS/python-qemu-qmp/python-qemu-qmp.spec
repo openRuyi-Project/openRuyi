@@ -86,4 +86,4 @@ install -Dpm 0644 man/*.1 -t %{buildroot}%{_mandir}/man1/
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
