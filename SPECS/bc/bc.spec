@@ -53,4 +53,4 @@ and "pushes" its results back onto the stack.
 %{_mandir}/man1/dc.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
