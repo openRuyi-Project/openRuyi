@@ -35,4 +35,4 @@ Source code for takopackized Rust crate "anstyle-wincon"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
