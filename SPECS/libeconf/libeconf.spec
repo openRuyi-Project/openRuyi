@@ -65,4 +65,4 @@ This package contains tools for handling configuration files.
 %{_mandir}/man8/econftool.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
