@@ -46,4 +46,4 @@ behavior.
 %{_libdir}/mergerfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
