@@ -38,4 +38,4 @@ bitarray provides an object type which efficiently represents an array of boolea
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
