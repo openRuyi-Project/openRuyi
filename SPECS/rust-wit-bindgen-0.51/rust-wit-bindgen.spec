@@ -102,4 +102,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust wit-bindgen cra
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
