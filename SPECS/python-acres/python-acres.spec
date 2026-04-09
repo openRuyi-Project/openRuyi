@@ -42,4 +42,4 @@ export PDM_BUILD_SCM_VERSION='%{version}'
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
