@@ -65,4 +65,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 %{bash_completions_dir}/lsbtr
 
 %changelog
-%{?autochangelog}
+%autochangelog
