@@ -62,4 +62,4 @@ rm -r %{buildroot}%{_datadir}/common-lisp
 %{_mandir}/man1/gpgrt-config.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
