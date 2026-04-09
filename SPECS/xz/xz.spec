@@ -159,4 +159,4 @@ rm -vf %{buildroot}%{_docdir}/%{name}/{COPYING,COPYING.GPLv2}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
