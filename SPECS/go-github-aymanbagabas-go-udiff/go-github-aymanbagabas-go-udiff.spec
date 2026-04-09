@@ -43,4 +43,4 @@ authors (https://go.dev/AUTHORS).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
