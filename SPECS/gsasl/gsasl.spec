@@ -62,4 +62,4 @@ that use the GNU SASL library.
 %{_mandir}/man3/gsasl*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
