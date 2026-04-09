@@ -90,4 +90,4 @@ export WITH_CYTHON=true
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
