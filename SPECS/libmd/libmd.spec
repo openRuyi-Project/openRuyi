@@ -55,4 +55,4 @@ Digests supported: MD2/4/5, RIPEMD160, SHA1, SHA2-256/384/512.
 %{_mandir}/man7/libmd.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
