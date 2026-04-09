@@ -35,4 +35,4 @@ protocols.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
