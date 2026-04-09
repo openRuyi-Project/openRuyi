@@ -45,4 +45,4 @@ automatically enable features like auto-resizing when the system supports it.
 %{_bindir}/progressbar
 
 %changelog
-%{?autochangelog}
+%autochangelog
