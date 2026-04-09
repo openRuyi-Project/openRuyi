@@ -82,4 +82,4 @@ sed -i '/.po$/d' %{pyproject_files}
 %{bash_completions_dir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
