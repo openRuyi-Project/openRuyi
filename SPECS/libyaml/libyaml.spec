@@ -45,4 +45,4 @@ a YAML parser and emitter written in C.
 %{_libdir}/pkgconfig/yaml-0.1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
