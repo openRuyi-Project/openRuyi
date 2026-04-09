@@ -48,4 +48,4 @@ for developing applications that use the fmt library.
 %{_libdir}/pkgconfig/fmt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
