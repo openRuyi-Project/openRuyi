@@ -125,4 +125,4 @@ fi
 %ghost %{_libdir}/libfakeroot/libfakeroot-0.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
