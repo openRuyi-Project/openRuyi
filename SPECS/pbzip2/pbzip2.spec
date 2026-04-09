@@ -48,4 +48,4 @@ ln -sf pbzip2 %{buildroot}%{_bindir}/pbzcat
 %{_mandir}/man1/pbzip2.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
