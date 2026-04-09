@@ -58,4 +58,4 @@ make %{?_smp_mflags} check || { cat tests/testsuite.log; exit 1; }
 %{_infodir}/tar.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
