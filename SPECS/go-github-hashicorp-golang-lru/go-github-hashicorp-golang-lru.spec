@@ -33,4 +33,4 @@ LRU cache. It is based on the cache in Groupcache.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
