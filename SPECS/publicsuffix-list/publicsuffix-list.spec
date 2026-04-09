@@ -46,4 +46,4 @@ ln -s public_suffix_list.dat %{buildroot}%{_datadir}/publicsuffix/effective_tld_
 %{_datadir}/publicsuffix/index.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
