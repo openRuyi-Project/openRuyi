@@ -52,4 +52,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust redox_syscall c
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
