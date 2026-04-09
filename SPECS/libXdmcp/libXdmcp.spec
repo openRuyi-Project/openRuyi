@@ -65,4 +65,4 @@ autoreconf -fi
 %{_docdir}/libXdmcp
 
 %changelog
-%{?autochangelog}
+%autochangelog
