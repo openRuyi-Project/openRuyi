@@ -1906,4 +1906,4 @@ popd
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
