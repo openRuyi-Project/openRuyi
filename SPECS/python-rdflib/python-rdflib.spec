@@ -53,4 +53,4 @@ Queries and Update statements - and SPARQL function extension mechanisms.
 %{_bindir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
