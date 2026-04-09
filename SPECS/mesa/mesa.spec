@@ -251,4 +251,4 @@ non-Mesa drivers.
 %{_bindir}/mesa-*-control.py
 
 %changelog
-%{?autochangelog}
+%autochangelog
