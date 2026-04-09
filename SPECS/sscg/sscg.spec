@@ -38,4 +38,4 @@ the machine to a risk of false signatures from the service certificate.
 %{_mandir}/man8/sscg.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
