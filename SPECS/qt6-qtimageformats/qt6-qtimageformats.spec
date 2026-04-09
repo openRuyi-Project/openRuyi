@@ -51,4 +51,4 @@ rm -rv src/3rdparty
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %changelog
-%{?autochangelog}
+%autochangelog
