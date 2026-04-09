@@ -84,4 +84,4 @@ Python bindings for the %{name} library.
 %{python3_sitearch}/libpkgmanifest-*.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
