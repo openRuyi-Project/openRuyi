@@ -52,4 +52,4 @@ cp NotoColorEmoji.ttf %{buildroot}%{_datadir}/fonts/truetype
 %{_datadir}/fonts/truetype/NotoColorEmoji.ttf
 
 %changelog
-%{?autochangelog}
+%autochangelog
