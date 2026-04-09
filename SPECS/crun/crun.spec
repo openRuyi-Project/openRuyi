@@ -81,4 +81,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
