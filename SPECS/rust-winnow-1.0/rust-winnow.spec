@@ -91,4 +91,4 @@ This metapackage enables feature "unstable-doc" for the Rust winnow crate, by pu
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
