@@ -153,4 +153,4 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_bindir}/spdk-sma
 
 %changelog
-%{?autochangelog}
+%autochangelog
