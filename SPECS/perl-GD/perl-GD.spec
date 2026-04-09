@@ -60,4 +60,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc ChangeLog const-c.inc const-xs.inc README README.QUICKDRAW testcpan.sh testlibs.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
