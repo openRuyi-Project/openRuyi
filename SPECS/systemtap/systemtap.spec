@@ -325,4 +325,4 @@ install -D -m 644 macros.systemtap %{buildroot}%{_rpmmacrodir}/macros.systemtap
 %{_mandir}/man1/dtrace.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
