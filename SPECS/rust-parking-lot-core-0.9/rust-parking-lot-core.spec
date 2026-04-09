@@ -64,4 +64,4 @@ This metapackage enables feature "petgraph" for the Rust parking_lot_core crate,
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
