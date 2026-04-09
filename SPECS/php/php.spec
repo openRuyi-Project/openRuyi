@@ -74,4 +74,4 @@ rm -r %{buildroot}%{_libdir}/build
 %{_includedir}/php/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
