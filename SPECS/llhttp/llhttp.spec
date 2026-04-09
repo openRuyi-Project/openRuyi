@@ -44,4 +44,4 @@ developing applications that use llhttp.
 %{_libdir}/cmake/llhttp/
 
 %changelog
-%{?autochangelog}
+%autochangelog
