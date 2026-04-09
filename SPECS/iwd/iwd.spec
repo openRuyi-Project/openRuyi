@@ -68,4 +68,4 @@ rm -f %{buildroot}%{_systemd_util_dir}/network/80-iwd.link
 %dir %{_sharedstatedir}/ead
 
 %changelog
-%{?autochangelog}
+%autochangelog
