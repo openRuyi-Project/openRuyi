@@ -50,4 +50,4 @@ with middlewares and pluggable routing.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
