@@ -60,4 +60,4 @@ applications that use the libass library.
 %{_libdir}/pkgconfig/libass.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
