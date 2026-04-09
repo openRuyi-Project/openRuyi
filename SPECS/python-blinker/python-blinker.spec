@@ -36,4 +36,4 @@ of interested parties to subscribe to events, or "signals".
 %doc CHANGES.rst LICENSE.txt README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
