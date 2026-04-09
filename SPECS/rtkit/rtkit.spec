@@ -77,4 +77,4 @@ mv %{buildroot}%{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf 
 %{_sysusersdir}/rtkit.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
