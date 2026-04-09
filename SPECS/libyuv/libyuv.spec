@@ -69,4 +69,4 @@ install -p -D -m 0644 %{name}.pc %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 %{_libdir}/pkgconfig/libyuv.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
