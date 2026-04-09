@@ -43,4 +43,4 @@ generates stubs for python extensions to make them less opaque.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
