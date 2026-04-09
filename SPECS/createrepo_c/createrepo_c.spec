@@ -113,4 +113,4 @@ ln -sr %{buildroot}%{_bindir}/modifyrepo_c %{buildroot}%{_bindir}/modifyrepo
 %{python3_sitearch}/createrepo_c-*-py%{python3_version}.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
