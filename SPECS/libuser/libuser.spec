@@ -116,4 +116,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{python3_sitearch}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
