@@ -41,4 +41,4 @@ consortium is supported in addition to a bunch of aliases.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
