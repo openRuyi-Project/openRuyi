@@ -44,4 +44,4 @@ implementation has been adapted, improved, and fixed from Molten.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
