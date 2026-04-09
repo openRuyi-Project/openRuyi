@@ -88,4 +88,4 @@ install -p -m 755 scripts/fc_wwpn_id %{buildroot}%{_udevrulesdir}/..
 %{_libdir}/libsgutils2.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
