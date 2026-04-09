@@ -55,4 +55,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gir-1.0/GDesktopEnums-3.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
