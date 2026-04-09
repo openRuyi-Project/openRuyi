@@ -48,4 +48,4 @@ export SODIUM_INSTALL=system
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
