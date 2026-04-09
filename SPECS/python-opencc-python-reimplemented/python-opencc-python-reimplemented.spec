@@ -39,4 +39,4 @@ Open Chinese convert (OpenCC) in pure Python
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
