@@ -37,4 +37,4 @@ rm -fr %{buildroot}/usr/doc
 %{_mandir}/man1/chrpath.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
