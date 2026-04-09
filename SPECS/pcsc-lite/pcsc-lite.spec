@@ -98,4 +98,4 @@ install -d %{buildroot}%{_sysconfdir}/reader.conf.d
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
