@@ -50,4 +50,4 @@ via commands such as @command{rst2man}, as well as supporting Python code.
 %{_bindir}/rst2xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
