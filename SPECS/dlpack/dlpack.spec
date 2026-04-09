@@ -31,4 +31,4 @@ DLPack is an open in-memory tensor structure to for sharing tensor among framewo
 %{_libdir}/cmake/dlpack/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
