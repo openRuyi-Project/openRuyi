@@ -46,4 +46,4 @@ make cython
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
