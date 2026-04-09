@@ -36,4 +36,4 @@ applications/services in Golang.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
