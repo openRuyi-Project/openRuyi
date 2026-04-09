@@ -38,4 +38,4 @@ NFSv4 client.
 %{_mandir}/man5/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
