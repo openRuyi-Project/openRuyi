@@ -79,4 +79,4 @@ develop applications that use libwebsockets.
 %{_libdir}/cmake/libwebsockets/
 
 %changelog
-%{?autochangelog}
+%autochangelog
