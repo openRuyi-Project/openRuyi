@@ -74,4 +74,4 @@ cp NotoSansCJK-*.ttc %{buildroot}%{_datadir}/fonts/truetype
 %{_datadir}/fonts/truetype/NotoSansCJK-*.ttc
 
 %changelog
-%{?autochangelog}
+%autochangelog
