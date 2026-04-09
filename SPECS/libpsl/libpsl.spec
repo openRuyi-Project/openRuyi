@@ -92,4 +92,4 @@ ln -sv %{_datadir}/publicsuffix list
 %{_bindir}/psl-make-dafsa
 
 %changelog
-%{?autochangelog}
+%autochangelog
