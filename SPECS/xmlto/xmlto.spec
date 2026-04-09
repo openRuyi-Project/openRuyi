@@ -51,4 +51,4 @@ install -d %{buildroot}%{_datadir}/xmlto/xsl
 %{_datadir}/xmlto
 
 %changelog
-%{?autochangelog}
+%autochangelog
