@@ -50,4 +50,4 @@ individual fields based on tags.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
