@@ -44,4 +44,4 @@ Iterative JSON parser with standard Python iterator interfaces.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
