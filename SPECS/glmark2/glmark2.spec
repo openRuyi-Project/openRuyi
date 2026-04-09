@@ -50,4 +50,4 @@ properly weighted.
 %{_mandir}/man1/glmark*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
