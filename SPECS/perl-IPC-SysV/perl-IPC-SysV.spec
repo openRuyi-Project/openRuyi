@@ -43,4 +43,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes const-c.inc const-xs.inc README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
