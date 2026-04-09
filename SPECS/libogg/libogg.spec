@@ -51,4 +51,4 @@ cp -pr ogg.m4 %{buildroot}%{_datadir}/aclocal/
 %{_libdir}/cmake/Ogg/
 
 %changelog
-%{?autochangelog}
+%autochangelog
