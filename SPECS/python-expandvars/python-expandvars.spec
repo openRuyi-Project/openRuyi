@@ -41,4 +41,4 @@ value if some variable is not defined.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
