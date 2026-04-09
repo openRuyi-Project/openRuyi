@@ -34,4 +34,4 @@ An golang log lib, supports tracing and level, wrap by standard log lib
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
