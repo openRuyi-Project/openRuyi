@@ -66,4 +66,4 @@ sed -i '/-sonline/s/^/#/' tests/libgit2/CMakeLists.txt
 %{_includedir}/git2/
 
 %changelog
-%{?autochangelog}
+%autochangelog
