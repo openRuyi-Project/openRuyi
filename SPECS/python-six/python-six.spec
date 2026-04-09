@@ -10,47 +10,34 @@
 Name:           python-%{srcname}
 Version:        1.17.0
 Release:        %autorelease
-Summary:        Python 2 and 3 compatibility utilities
+Summary:        Python compatibility utilities
 License:        MIT
 URL:            https://github.com/benjaminp/six
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
 
-BuildRequires:  python3-devel
+BuildOption(install):  -l six
+
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  expat
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
-Six is a Python 2 and 3 compatibility library. It provides utility functions
+Six is a Python compatibility library. It provides utility functions
 for smoothing over the differences between the Python versions with the goal
 of writing Python code that is compatible on both Python versions.
-
-%package     -n python3-six
-Summary:        %{summary}
-
-%description -n python3-six
-Six is a Python 2 and 3 compatibility library. It provides utility functions
-for smoothing over the differences between the Python versions with the goal
-of writing Python code that is compatible on both Python versions.
-
-%prep
-%autosetup -p1 -n six-%{version}
 
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-
-%install
-%pyproject_install
-%pyproject_save_files -l six
-
-%files -n python3-six -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.rst documentation/index.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
