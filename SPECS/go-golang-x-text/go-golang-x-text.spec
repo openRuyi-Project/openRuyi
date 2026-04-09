@@ -47,4 +47,4 @@ encodings, text transformations, and locale-specific text handling.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
