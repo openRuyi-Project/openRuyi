@@ -43,4 +43,4 @@ Requires:       pkgconfig
 %{_libdir}/libxshmfence.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
