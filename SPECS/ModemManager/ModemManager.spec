@@ -113,4 +113,4 @@ CDMA).
 %{_libdir}/girepository-1.0/*.typelib
 
 %changelog
-%{?autochangelog}
+%autochangelog
