@@ -43,4 +43,4 @@ install -p -D pigz.1 -m 0644 $RPM_BUILD_ROOT%{_datadir}/man/man1/pigz.1
 %{_datadir}/man/man1/pigz.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
