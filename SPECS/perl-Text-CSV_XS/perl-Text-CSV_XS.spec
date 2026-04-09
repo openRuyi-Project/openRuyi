@@ -50,4 +50,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc ChangeLog CONTRIBUTING.md LOVE_LETTER.md README SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
