@@ -60,4 +60,4 @@ install -p -m 644 numad.logrotate %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 %systemd_postun numad.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
