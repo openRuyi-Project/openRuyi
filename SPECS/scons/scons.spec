@@ -42,4 +42,4 @@ to Autoconf/Automake and compiler caches such as ccache.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
