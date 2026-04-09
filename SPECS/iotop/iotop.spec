@@ -51,4 +51,4 @@ possible.
 %{_mandir}/man8/iotop.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
