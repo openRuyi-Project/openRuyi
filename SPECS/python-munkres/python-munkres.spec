@@ -41,4 +41,4 @@ Assignment Problem.
 %license LICENSE.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
