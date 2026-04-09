@@ -52,4 +52,4 @@ applications that use qrencode.
 %{_libdir}/pkgconfig/libqrencode.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
