@@ -45,4 +45,4 @@ and related clients, as shown below.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
