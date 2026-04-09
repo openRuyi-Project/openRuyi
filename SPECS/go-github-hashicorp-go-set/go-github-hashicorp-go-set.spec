@@ -45,4 +45,4 @@ is also possible if shallow equality is acceptable.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
