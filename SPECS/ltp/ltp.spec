@@ -155,4 +155,4 @@ find %{buildroot} -type f -perm 775 -exec chmod 755 \{\} \;
 %{ltp_prefix}
 
 %changelog
-%{?autochangelog}
+%autochangelog
