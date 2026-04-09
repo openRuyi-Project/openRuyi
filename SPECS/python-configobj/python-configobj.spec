@@ -37,4 +37,4 @@ straightforward programmers interface and a simple syntax for config files.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
