@@ -62,4 +62,4 @@ sed -i 's|/usr/etc/default/irqbalance.env|/etc/sysconfig/irqbalance|g' %{buildro
 %exclude %{_sbindir}/irqbalance-ui
 
 %changelog
-%{?autochangelog}
+%autochangelog
