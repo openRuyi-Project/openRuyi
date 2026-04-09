@@ -42,4 +42,4 @@ sed -i 's|codeberg\.org/go-fonts/xonolonium|codeberg.org/go-fonts/xolonium|g' $(
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
