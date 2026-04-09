@@ -40,4 +40,4 @@ All maintained versions of PostgreSQL are supported. Older versions may work, bu
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
