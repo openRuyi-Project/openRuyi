@@ -42,4 +42,4 @@ a child application and control it as if a human were typing commands.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
