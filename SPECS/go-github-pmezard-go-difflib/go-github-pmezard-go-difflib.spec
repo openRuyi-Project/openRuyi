@@ -43,4 +43,4 @@ The following class and functions (and related tests) have be ported:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
