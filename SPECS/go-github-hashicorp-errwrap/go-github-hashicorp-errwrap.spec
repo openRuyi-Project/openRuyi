@@ -49,4 +49,4 @@ specific error is wrapped, and extracting that error.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
