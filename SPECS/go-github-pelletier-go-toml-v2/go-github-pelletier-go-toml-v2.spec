@@ -37,4 +37,4 @@ This library supports TOML v1.0.0 (https://toml.io/en/v1.0.0).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
