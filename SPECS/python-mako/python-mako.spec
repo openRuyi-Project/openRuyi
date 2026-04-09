@@ -77,4 +77,4 @@ ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render
 %{_bindir}/mako-render-%{python3_version}
 
 %changelog
-%{?autochangelog}
+%autochangelog
