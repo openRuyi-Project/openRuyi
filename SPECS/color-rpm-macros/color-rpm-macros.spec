@@ -43,4 +43,4 @@ EOF
 %{_rpmconfigdir}/macros.d/macros.color
 
 %changelog
-%{?autochangelog}
+%autochangelog
