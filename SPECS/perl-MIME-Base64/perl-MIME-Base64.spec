@@ -51,4 +51,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc benchmark benchmark-qp Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
