@@ -59,4 +59,4 @@ in libxcb-icccm4/ewmh2.
 %{_libdir}/pkgconfig/xcb-icccm.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
