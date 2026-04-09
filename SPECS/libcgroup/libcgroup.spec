@@ -92,4 +92,4 @@ rm -rf %{buildroot}%{_unitdir}/cgrules.service
 %{_libdir}/pkgconfig/libcgroup.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
