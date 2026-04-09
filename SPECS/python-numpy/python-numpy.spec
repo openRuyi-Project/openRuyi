@@ -55,4 +55,4 @@ It contains among other things:
 %{_bindir}/numpy-config
 
 %changelog
-%{?autochangelog}
+%autochangelog
