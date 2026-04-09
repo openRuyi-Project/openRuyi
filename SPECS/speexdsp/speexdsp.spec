@@ -49,4 +49,4 @@ This package contains development files for %{name}.
 %{_libdir}/libspeexdsp.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
