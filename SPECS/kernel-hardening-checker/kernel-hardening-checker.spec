@@ -39,4 +39,4 @@ security hardening recommendations.
 %{_bindir}/kernel-hardening-checker
 
 %changelog
-%{?autochangelog}
+%autochangelog
