@@ -36,4 +36,4 @@ unmarshaling functions based on encoding/json Unmarshal().
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
