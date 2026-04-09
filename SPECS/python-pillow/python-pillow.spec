@@ -57,4 +57,4 @@ install -m 644 src/libImaging/*.h %{buildroot}/%{_includedir}/python%{python3_ve
 %{_includedir}/python%{python3_version}/Imaging/
 
 %changelog
-%{?autochangelog}
+%autochangelog
