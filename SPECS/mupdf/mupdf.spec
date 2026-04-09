@@ -150,4 +150,4 @@ LD_LIBRARY_PATH='%{buildroot}%{_libdir}' %{py3_test_envvars} %{python3} scripts/
 %{python3_sitearch}/libmupdfcpp.so.27*
 
 %changelog
-%{?autochangelog}
+%autochangelog
