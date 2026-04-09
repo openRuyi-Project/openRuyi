@@ -47,4 +47,4 @@ IPython provides a rich toolkit to help you make the most out of using Python in
 %{_mandir}/man1/ipython.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
