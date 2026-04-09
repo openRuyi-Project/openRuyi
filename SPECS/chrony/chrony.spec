@@ -124,4 +124,4 @@ fi
 %ghost %dir %attr(750,chrony,chrony) %{_localstatedir}/log/chrony
 
 %changelog
-%{?autochangelog}
+%autochangelog
