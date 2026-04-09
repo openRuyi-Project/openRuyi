@@ -177,4 +177,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gst-plugins-base/%{majorminor}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
