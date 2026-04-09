@@ -52,4 +52,4 @@ file. However, if the timezone name is readily available it will be used.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
