@@ -49,4 +49,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc ChangeLog MailTools.ppd README README.demos README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
