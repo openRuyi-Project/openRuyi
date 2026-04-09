@@ -58,4 +58,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gir-1.0/MyPaint-1.6.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
