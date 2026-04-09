@@ -90,4 +90,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libexecdir}/dirmngr_ldap
 
 %changelog
-%{?autochangelog}
+%autochangelog
