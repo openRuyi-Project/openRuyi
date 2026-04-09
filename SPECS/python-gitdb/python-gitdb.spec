@@ -42,4 +42,4 @@ allowing to handle large objects with a small memory footprint.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
