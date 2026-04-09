@@ -57,4 +57,4 @@ hardware, particularly for wired Ethernet devices. It can be used to:
 %{_datadir}/metainfo/%{appstream_id}.metainfo.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
