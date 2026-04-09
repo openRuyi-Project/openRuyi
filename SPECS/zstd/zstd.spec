@@ -75,4 +75,4 @@ install -D -m644 programs/zstd.1 %{buildroot}%{_mandir}/man1/pzstd.1
 %{_libdir}/libzstd.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
