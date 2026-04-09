@@ -64,4 +64,4 @@ find %{buildroot}%{python3_sitelib} \
 %{_bindir}/py.test-%{python3_version}
 
 %changelog
-%{?autochangelog}
+%autochangelog
