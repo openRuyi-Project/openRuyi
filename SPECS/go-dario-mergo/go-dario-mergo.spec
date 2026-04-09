@@ -41,4 +41,4 @@ recursively any exported one. It also won't merge structs inside maps
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
