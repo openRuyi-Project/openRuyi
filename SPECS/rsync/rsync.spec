@@ -97,4 +97,4 @@ install -Dm644 %{SOURCE1} %{buildroot}%{_sysconfdir}/rsyncd.conf
 %{_unitdir}/rsync@.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
