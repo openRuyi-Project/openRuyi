@@ -48,4 +48,4 @@ block for doing data analysis in Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
