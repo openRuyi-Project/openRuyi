@@ -34,4 +34,4 @@ ipcalc provides a simple way to calculate IP information for a host or network.
 %{_bindir}/ipcalc
 
 %changelog
-%{?autochangelog}
+%autochangelog
