@@ -45,4 +45,4 @@ This metapackage enables feature "http-compat" for the Rust wasip3 crate, by pul
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
