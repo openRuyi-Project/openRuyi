@@ -48,4 +48,4 @@ Check pdf417_test.go (/pdf417_test.go) for an example.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
