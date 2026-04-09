@@ -42,4 +42,4 @@ For detailed usage information, read the primer at
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
