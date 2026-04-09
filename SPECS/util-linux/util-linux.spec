@@ -354,4 +354,4 @@ export TS_OPT_script_options_show_diff=yes
 
 
 %changelog
-%{?autochangelog}
+%autochangelog
