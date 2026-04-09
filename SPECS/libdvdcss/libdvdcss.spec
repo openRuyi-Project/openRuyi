@@ -44,4 +44,4 @@ applications that use the libdvdcss library.
 %{_libdir}/pkgconfig/libdvdcss.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
