@@ -37,4 +37,4 @@ for the original Xbox game console.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
