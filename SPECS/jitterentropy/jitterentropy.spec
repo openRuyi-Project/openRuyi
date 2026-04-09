@@ -57,4 +57,4 @@ sed -e 's/$(INSTALL_STRIP)/install/' -i Makefile
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
