@@ -49,4 +49,4 @@ Development files for libaec.
 %{_libdir}/cmake/libaec/
 
 %changelog
-%{?autochangelog}
+%autochangelog
