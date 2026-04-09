@@ -68,4 +68,4 @@ Python. Only the pieces that are extremely critical to performance
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
