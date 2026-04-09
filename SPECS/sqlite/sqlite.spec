@@ -208,4 +208,4 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %{_bindir}/sqlite3_analyzer
 
 %changelog
-%{?autochangelog}
+%autochangelog
