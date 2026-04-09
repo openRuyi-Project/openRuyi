@@ -232,4 +232,4 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %{_includedir}/isccfg
 
 %changelog
-%{?autochangelog}
+%autochangelog
