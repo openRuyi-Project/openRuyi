@@ -52,4 +52,4 @@ export PYTHONPATH=%{buildroot}%{python3_sitearch}
 %{python3_sitearch}/%{srcname}*.dist-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
