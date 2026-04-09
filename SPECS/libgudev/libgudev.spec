@@ -71,4 +71,4 @@ This package is necessary to build programs using %{name}.
 %{_libdir}/pkgconfig/gudev-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
