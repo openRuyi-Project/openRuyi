@@ -75,4 +75,4 @@ Development Files for the ksvg framework.
 %{_kf6_libdir}/libKF6Svg.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
