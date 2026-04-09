@@ -56,4 +56,4 @@ autoconf -fiv
 %{_mandir}/man3/Xft*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
