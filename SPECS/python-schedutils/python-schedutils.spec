@@ -39,4 +39,4 @@ functions and friends.
 %{_mandir}/man1/ptaskset.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
