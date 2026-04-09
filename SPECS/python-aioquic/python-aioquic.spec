@@ -37,4 +37,4 @@ A library for the QUIC network protocol in Python. It features a minimal TLS
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
