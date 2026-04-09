@@ -40,4 +40,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Calc.yp Changes README README.md yapp YappParse.yp
 
 %changelog
-%{?autochangelog}
+%autochangelog
