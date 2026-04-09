@@ -63,4 +63,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_mandir}/man1/json-glib-validate.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
