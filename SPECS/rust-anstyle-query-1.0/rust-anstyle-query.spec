@@ -33,4 +33,4 @@ Source code for takopackized Rust crate "anstyle-query"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
