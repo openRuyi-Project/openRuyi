@@ -54,4 +54,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc alienfile author.yml Changes perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
