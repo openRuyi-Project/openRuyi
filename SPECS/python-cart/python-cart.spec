@@ -50,4 +50,4 @@ sed -i '/#!\/usr\/bin\/env python/d' cart/cart.py
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
