@@ -33,4 +33,4 @@ dependency resolution logic.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
