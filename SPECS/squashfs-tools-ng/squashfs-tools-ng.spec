@@ -63,4 +63,4 @@ develop programs that use the squashfs-tools-ng libsquashfs library.
 %{_libdir}/pkgconfig/libsquashfs1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
