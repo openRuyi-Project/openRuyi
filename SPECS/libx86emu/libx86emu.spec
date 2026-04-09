@@ -57,4 +57,4 @@ Header files and libraries for developing with libx86emu.
 %{_libdir}/libx86emu.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
