@@ -101,4 +101,4 @@ fi
 %{_infodir}/*.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
