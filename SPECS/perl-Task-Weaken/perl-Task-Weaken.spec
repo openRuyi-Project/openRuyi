@@ -47,4 +47,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING Makefile.footer Makefile.header README
 
 %changelog
-%{?autochangelog}
+%autochangelog
