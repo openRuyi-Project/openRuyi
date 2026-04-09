@@ -44,4 +44,4 @@ already known.
 %license COPYING unicode-license.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
