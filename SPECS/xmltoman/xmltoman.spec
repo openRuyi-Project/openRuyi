@@ -45,4 +45,4 @@ to groff (man pages) or HTML.
 %{_datadir}/xmltoman/xmltoman.xsl
 
 %changelog
-%{?autochangelog}
+%autochangelog
