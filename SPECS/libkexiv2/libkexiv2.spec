@@ -45,4 +45,4 @@ Development files for libkexiv2-qt6.
 %{_libdir}/cmake/KExiv2Qt6/
 
 %changelog
-%{?autochangelog}
+%autochangelog
