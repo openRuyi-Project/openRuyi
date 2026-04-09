@@ -82,4 +82,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/OpenSP
 %{_libdir}/libosp.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
