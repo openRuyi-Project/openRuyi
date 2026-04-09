@@ -274,4 +274,4 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %dir %{_localstatedir}/lib/dracut/overlay
 
 %changelog
-%{?autochangelog}
+%autochangelog
