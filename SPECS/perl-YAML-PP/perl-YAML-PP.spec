@@ -68,4 +68,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.md etc examples Makefile.dev README.md test-suite xt
 
 %changelog
-%{?autochangelog}
+%autochangelog
