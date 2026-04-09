@@ -56,4 +56,4 @@ development of programs using libnotify.
 %{_datadir}/gir-1.0/Notify-0.7.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
