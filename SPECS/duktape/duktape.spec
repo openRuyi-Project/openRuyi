@@ -61,4 +61,4 @@ sed -i 's@/lib$@/%{_lib}@g' Makefile.sharedlibrary
 %{_libdir}/pkgconfig/duktape.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
