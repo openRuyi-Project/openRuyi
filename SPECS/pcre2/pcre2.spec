@@ -72,4 +72,4 @@ autoreconf -fiv
 %{_bindir}/pcre2-config
 
 %changelog
-%{?autochangelog}
+%autochangelog
