@@ -39,4 +39,4 @@ nice human-readable format.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
