@@ -77,4 +77,4 @@ Development files.
 %{_kf6_pkgconfigdir}/PlasmaActivities.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
