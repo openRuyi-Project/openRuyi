@@ -85,4 +85,4 @@ mkdir -p %{buildroot}%{_sysconfdir}/sasl2
 %{_libdir}/pkgconfig/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
