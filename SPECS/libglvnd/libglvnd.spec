@@ -113,4 +113,4 @@ mkdir -p %{buildroot}%{_datadir}/egl/egl_external_platform.d/
 %{_libdir}/pkgconfig/opengl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
