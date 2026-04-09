@@ -53,4 +53,4 @@ This metapackage enables feature "serde" for the Rust wit-bindgen-core crate, by
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
