@@ -37,4 +37,4 @@ fill the OS cache up with.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
