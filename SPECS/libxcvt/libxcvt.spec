@@ -42,4 +42,4 @@ developing applications that use %{name}.
 %{_libdir}/libxcvt.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
