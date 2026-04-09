@@ -45,4 +45,4 @@ terminal (pty) is the answer.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
