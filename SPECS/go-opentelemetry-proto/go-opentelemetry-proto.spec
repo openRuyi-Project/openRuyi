@@ -36,4 +36,4 @@ Generated Go code for the OpenTelemetry protobuf data model.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
