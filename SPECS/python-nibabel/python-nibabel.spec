@@ -47,4 +47,4 @@ MINC2, MGH and ECAT as well as Philips PAR/REC.
 %{_bindir}/nib-*
 
 %changelog
-%{?autochangelog}
+%autochangelog
