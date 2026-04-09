@@ -86,4 +86,4 @@ fi
 %{_mandir}/man1/nvme*
 
 %changelog
-%{?autochangelog}
+%autochangelog
