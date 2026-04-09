@@ -35,4 +35,4 @@ Reed-Solomon Erasure Coding in Go, with speeds exceeding 1GB/s/cpu core implemen
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
