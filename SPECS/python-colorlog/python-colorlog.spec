@@ -43,4 +43,4 @@ that outputs records using terminal colors.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
