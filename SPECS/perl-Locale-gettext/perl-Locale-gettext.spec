@@ -58,4 +58,4 @@ LANG=en_US.UTF-8 %{__make} test
 %doc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
