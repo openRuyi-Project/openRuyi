@@ -67,4 +67,4 @@ This package also contains the API documentation.
 %{_includedir}/libyang/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
