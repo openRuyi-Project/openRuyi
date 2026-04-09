@@ -49,4 +49,4 @@ applications that want to make use of libcerror.
 %{_mandir}/man3/libcerror.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
