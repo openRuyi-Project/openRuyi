@@ -35,4 +35,4 @@ to specify the color to print as.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
