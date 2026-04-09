@@ -161,4 +161,4 @@ exit 0
 %{_mandir}/man3/libi2c.3.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
