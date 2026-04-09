@@ -129,4 +129,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/cmake/Calamares/
 
 %changelog
-%{?autochangelog}
+%autochangelog
