@@ -62,4 +62,4 @@ autoreconf -fiv
 %{_includedir}/libqalculate/
 
 %changelog
-%{?autochangelog}
+%autochangelog
