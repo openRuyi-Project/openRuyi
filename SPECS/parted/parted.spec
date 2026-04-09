@@ -74,4 +74,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libparted*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
