@@ -111,4 +111,4 @@ install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/lxc-net
 %{_libdir}/liblxc.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
