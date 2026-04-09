@@ -32,4 +32,4 @@ Vulkan Header files and API registry.
 %{_datadir}/cmake/VulkanHeaders/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
