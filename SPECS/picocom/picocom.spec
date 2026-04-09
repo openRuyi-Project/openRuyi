@@ -55,4 +55,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/picocom.conf
 %{_sysusersdir}/picocom.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
