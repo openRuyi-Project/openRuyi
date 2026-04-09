@@ -80,4 +80,4 @@ cp -a %{buildroot}/%{_mandir}/man1/filan.1.gz %{buildroot}/%{_mandir}/man1/proca
 %{_docdir}/socat/*.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
