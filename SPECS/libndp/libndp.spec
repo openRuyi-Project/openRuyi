@@ -46,4 +46,4 @@ necessary for developing programs using libndp.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
