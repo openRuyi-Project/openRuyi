@@ -60,4 +60,4 @@ autoreconf -vfi
 %{_infodir}/ksba.info%{?ext_info}
 
 %changelog
-%{?autochangelog}
+%autochangelog
