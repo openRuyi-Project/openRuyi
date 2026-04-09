@@ -521,4 +521,4 @@ not_core_doc_re="(git-(cvs|gui|citool|daemon|instaweb|subtree))|p4|svn|email|git
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
