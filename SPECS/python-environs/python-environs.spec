@@ -43,4 +43,4 @@ The Twelve-Factor App methodology.
 %doc README.md CHANGELOG.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
