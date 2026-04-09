@@ -60,4 +60,4 @@ sed -i 's|test/bind_range test/checkaffinity test/checktopology|test/checkaffini
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
