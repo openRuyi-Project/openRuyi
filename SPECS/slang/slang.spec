@@ -83,4 +83,4 @@ ln -s ../slcurses.h %{buildroot}%{_includedir}/slang/slcurses.h
 /usr/share/doc/slsh
 
 %changelog
-%{?autochangelog}
+%autochangelog
