@@ -58,4 +58,4 @@ This package provides various compression algorithms.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
