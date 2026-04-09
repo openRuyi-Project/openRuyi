@@ -159,4 +159,4 @@ mkdir -p %{buildroot}%{_datadir}/%{name}/examples
 %{_mandir}/man3/gv.3python*
 
 %changelog
-%{?autochangelog}
+%autochangelog
