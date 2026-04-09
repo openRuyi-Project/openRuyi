@@ -77,4 +77,4 @@ install src/libFLAC++/libFLAC++.m4 %{buildroot}%{_datadir}/aclocal/
 %{_datadir}/aclocal/*.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
