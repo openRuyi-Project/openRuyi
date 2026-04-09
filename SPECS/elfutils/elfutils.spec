@@ -202,4 +202,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man7/debuginfod-client-config.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
