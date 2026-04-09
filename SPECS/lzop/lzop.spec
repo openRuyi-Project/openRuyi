@@ -40,4 +40,4 @@ lzop was designed with the following goals in mind:
 %doc %{_docdir}/lzop
 
 %changelog
-%{?autochangelog}
+%autochangelog
