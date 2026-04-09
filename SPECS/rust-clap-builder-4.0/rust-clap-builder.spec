@@ -128,4 +128,4 @@ This metapackage enables feature "wrap_help" for the Rust clap_builder crate, by
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
