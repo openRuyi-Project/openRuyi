@@ -41,4 +41,4 @@ a frame is currently doing, particularly the AST node being executed.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
