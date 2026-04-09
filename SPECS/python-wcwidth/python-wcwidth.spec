@@ -37,4 +37,4 @@ printable width of a string on a Terminal.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
