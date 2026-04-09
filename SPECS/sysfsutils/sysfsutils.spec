@@ -59,4 +59,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libsysfs.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
