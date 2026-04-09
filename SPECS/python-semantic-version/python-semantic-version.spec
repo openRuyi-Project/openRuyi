@@ -41,4 +41,4 @@ Python.
 %doc README.rst ChangeLog CREDITS
 
 %changelog
-%{?autochangelog}
+%autochangelog
