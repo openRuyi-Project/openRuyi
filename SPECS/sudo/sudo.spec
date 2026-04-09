@@ -147,4 +147,4 @@ install -p -c -m 0644 %{S:3} %{buildroot}/etc/pam.d/sudo-i
 %{_includedir}/sudo_plugin.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
