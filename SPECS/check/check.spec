@@ -57,4 +57,4 @@ autoreconf -fi
 %{_mandir}/man1/checkmk.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
