@@ -42,4 +42,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libdisplay-info.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
