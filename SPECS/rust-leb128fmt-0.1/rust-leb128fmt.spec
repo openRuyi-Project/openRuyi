@@ -32,4 +32,4 @@ Source code for takopackized Rust crate "leb128fmt"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
