@@ -176,4 +176,4 @@ exit 0
 %_libdir/pkgconfig/tcl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
