@@ -47,4 +47,4 @@ validation, delegation, notification, and visualization.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
