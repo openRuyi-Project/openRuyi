@@ -85,4 +85,4 @@ echo '%{python3_sitelib}/packaging*' > %{pyproject_files}
 %doc README.rst CHANGELOG.rst CONTRIBUTING.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
