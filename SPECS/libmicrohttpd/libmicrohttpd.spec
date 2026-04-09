@@ -65,4 +65,4 @@ rm -v %{buildroot}%{_infodir}/%{name}_performance_data.png
 %{_mandir}/man3/libmicrohttpd.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
