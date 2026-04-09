@@ -45,4 +45,4 @@ mkdir -p %{buildroot}%{_datadir}/icons/hicolor/symbolic/%{hicolor_dir_list}
 %{_datadir}/pkgconfig/default-icon-theme.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
