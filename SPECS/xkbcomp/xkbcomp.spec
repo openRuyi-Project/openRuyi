@@ -41,4 +41,4 @@ This package contains the pkg-config file for xkbcomp.
 %{_libdir}/pkgconfig/xkbcomp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
