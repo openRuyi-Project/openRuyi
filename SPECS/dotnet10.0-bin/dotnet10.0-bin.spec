@@ -333,4 +333,4 @@ rm %{buildroot}%{_libdir}/dotnet/dotnet
 %{_libdir}/dotnet/source-built-artifacts
 
 %changelog
-%{?autochangelog}
+%autochangelog
