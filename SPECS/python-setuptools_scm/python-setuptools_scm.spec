@@ -52,4 +52,4 @@ It also handles file finders for the supported SCMs.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
