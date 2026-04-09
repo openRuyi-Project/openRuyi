@@ -45,4 +45,4 @@ Portalocker is a library to provide an easy API to file locking.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
