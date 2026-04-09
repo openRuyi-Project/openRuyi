@@ -35,4 +35,4 @@ gofuzz is a library for populating go objects with random values.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
