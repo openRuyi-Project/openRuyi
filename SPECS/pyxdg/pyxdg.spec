@@ -41,4 +41,4 @@ PyXDG is a python library to access freedesktop.org standards.
 %doc AUTHORS ChangeLog README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
