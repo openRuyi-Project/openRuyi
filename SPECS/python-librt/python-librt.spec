@@ -37,4 +37,4 @@ This library contains efficient C implementations of various Python standard lib
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
