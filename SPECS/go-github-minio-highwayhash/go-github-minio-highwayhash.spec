@@ -49,4 +49,4 @@ implementations for Intel, ARM and ppc64le architectures.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
