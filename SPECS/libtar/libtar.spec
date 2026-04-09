@@ -62,4 +62,4 @@ autoreconf -fi
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
