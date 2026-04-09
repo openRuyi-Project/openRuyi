@@ -42,4 +42,4 @@ files for the pixman library.
 %{_libdir}/pkgconfig/pixman-1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
