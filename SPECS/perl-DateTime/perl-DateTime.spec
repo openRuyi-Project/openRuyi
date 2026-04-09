@@ -81,4 +81,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md CREDITS leaptab.txt perlcriticrc perltidyrc precious.toml README.md TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
