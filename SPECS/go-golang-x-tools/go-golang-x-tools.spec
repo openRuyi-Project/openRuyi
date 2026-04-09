@@ -116,4 +116,4 @@ install -m 0755 %{_builddir}/go/bin/* %{buildroot}%{_bindir}/
 %{_bindir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
