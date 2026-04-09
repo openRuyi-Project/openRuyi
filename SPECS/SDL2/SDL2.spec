@@ -97,4 +97,4 @@ sed -i -e 's/\r//g' TODO.txt README.md WhatsNew.txt BUGS.txt LICENSE.txt CREDITS
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
