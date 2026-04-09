@@ -44,4 +44,4 @@ does not support the symbol tables, but can ignore them gracefully.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
