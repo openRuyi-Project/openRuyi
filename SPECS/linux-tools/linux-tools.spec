@@ -145,4 +145,4 @@ find %{buildroot}%{_libdir} -type f -name "*.a" -delete -print
 %{_includedir}/perf/perf_dlfilter.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
