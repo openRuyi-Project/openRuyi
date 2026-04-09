@@ -39,4 +39,4 @@ rm %{buildroot}/%{_docdir}/%{name}/INSTALL
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
