@@ -33,4 +33,4 @@ parts of files defined using cut-off points or regular expressions.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
