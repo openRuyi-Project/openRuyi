@@ -52,4 +52,4 @@ relating to block layer io.
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
