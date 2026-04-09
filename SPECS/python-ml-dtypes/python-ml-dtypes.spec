@@ -43,4 +43,4 @@ used in machine learning libraries, including:
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
