@@ -91,4 +91,4 @@ Programming examples for %{name}.
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
