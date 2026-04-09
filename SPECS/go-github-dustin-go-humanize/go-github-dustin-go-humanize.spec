@@ -32,4 +32,4 @@ Just a few functions for helping humanize times and sizes.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
