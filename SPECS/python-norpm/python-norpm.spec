@@ -44,4 +44,4 @@ Python library and PLY (used for expression parsing).
 %{_bindir}/norpm-expand-specfile
 
 %changelog
-%{?autochangelog}
+%autochangelog
