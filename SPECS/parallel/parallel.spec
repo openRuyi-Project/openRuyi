@@ -61,4 +61,4 @@ autoreconf -ivf
 %{_datadir}/zsh/site-functions/_parallel
 
 %changelog
-%{?autochangelog}
+%autochangelog
