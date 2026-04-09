@@ -60,4 +60,4 @@ of samurai package.
 
 
 %changelog
-%{?autochangelog}
+%autochangelog
