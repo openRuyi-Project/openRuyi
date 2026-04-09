@@ -55,4 +55,4 @@ Development files for PolicyKit Qt bindings.
 %{_libdir}/cmake/PolkitQt6-1/
 
 %changelog
-%{?autochangelog}
+%autochangelog
