@@ -50,4 +50,4 @@ and making sure a string is in unicode or bytes format.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
