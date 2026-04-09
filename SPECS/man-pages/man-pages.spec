@@ -74,4 +74,4 @@ if [ $1 -ge 1 ]; then
 fi
 
 %changelog
-%{?autochangelog}
+%autochangelog
