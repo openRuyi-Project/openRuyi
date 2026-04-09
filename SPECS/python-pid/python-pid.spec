@@ -50,4 +50,4 @@ rm -rf %{srcname}.egg-info
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
