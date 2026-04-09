@@ -73,4 +73,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc azure-pipelines.yml bench Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
