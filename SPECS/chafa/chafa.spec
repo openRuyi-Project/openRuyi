@@ -71,4 +71,4 @@ autoreconf -fiv
 %doc %{_datadir}/gtk-doc/html/chafa
 
 %changelog
-%{?autochangelog}
+%autochangelog
