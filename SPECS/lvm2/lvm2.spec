@@ -491,4 +491,4 @@ fi
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
