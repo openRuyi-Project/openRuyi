@@ -52,4 +52,4 @@ Development files for libqaccessibilityclient-qt6.
 %{_libdir}/cmake/QAccessibilityClient6/
 
 %changelog
-%{?autochangelog}
+%autochangelog
