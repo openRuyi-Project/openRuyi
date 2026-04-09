@@ -92,4 +92,4 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/
 %{_includedir}/rpcsvc
 
 %changelog
-%{?autochangelog}
+%autochangelog
