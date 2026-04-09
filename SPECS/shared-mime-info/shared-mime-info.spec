@@ -81,4 +81,4 @@ update-mime-database -n %{_datadir}/mime &> /dev/null ||:
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
