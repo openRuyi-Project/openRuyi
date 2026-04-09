@@ -103,4 +103,4 @@ sed -i 's/^{$/{return 77;/' tests/hwloc/glibc-sched.c
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
