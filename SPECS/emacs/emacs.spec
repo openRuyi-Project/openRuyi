@@ -121,4 +121,4 @@ fi
 %{_libdir}/systemd/user/emacs.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
