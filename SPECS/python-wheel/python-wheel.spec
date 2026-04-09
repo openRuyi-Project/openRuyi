@@ -76,4 +76,4 @@ ln -s wheel-3 %{buildroot}%{_bindir}/wheel
 %{_bindir}/wheel
 
 %changelog
-%{?autochangelog}
+%autochangelog
