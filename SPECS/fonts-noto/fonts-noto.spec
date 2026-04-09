@@ -84,4 +84,4 @@ sort -u static.file -o static.file
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
