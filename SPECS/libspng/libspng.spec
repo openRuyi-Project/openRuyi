@@ -63,4 +63,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/spng.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
