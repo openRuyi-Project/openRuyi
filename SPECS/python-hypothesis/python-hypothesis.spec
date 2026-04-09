@@ -39,4 +39,4 @@ Flask-RESTful provides the building blocks for creating a REST API.
 %{_bindir}/hypothesis
 
 %changelog
-%{?autochangelog}
+%autochangelog
