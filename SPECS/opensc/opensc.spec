@@ -128,4 +128,4 @@ rm -rf %{buildroot}%{_mandir}/man1/opensc-notify.1*
 %{_libdir}/pkcs11/pkcs11-spy.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
