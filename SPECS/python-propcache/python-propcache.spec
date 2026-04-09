@@ -40,4 +40,4 @@ Module for fast property caching.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
