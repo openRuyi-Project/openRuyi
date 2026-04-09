@@ -41,4 +41,4 @@ user-friendly, high-level tool, use fscrypt (written in Go) instead.
 %{_bindir}/fscryptctl
 
 %changelog
-%{?autochangelog}
+%autochangelog
