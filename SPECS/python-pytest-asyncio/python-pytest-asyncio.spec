@@ -39,4 +39,4 @@ to make testing async code easier.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
