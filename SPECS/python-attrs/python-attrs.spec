@@ -34,4 +34,4 @@ object protocols.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
