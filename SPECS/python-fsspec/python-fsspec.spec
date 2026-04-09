@@ -41,4 +41,4 @@ filesystems.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
