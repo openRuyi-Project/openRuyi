@@ -32,4 +32,4 @@ This package provides relaxed test discovery for pytest.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
