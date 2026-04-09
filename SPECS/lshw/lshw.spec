@@ -53,4 +53,4 @@ This package provides the command-line interface only.
 %{_mandir}/man1/lshw.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
