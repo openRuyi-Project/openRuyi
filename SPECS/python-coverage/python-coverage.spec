@@ -57,4 +57,4 @@ popd
 %{_bindir}/coverage-3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
