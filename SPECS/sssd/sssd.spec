@@ -582,4 +582,4 @@ fi
 %{_mandir}/*/man5/sss-certmap.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
