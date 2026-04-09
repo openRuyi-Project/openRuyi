@@ -44,4 +44,4 @@ rm -rf %{buildroot}%{_docdir}/urlgrabber-%{version}
 %{_libexecdir}/urlgrabber-ext-down
 
 %changelog
-%{?autochangelog}
+%autochangelog
