@@ -42,4 +42,4 @@ files for jansson development
 %{_includedir}/jansson*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
