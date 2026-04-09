@@ -63,4 +63,4 @@ X.Org X11 libXi development package
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
