@@ -41,4 +41,4 @@ underlying native Go structure.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
