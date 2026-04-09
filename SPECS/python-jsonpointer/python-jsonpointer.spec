@@ -37,4 +37,4 @@ JSON Pointer is a Library to resolve JSON Pointers according to RFC 6901.
 %{_bindir}/jsonpointer
 
 %changelog
-%{?autochangelog}
+%autochangelog
