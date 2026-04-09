@@ -53,4 +53,4 @@ cp -p stb.pc %{buildroot}%{_datadir}/pkgconfig/
 %{_datadir}/pkgconfig/stb.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
