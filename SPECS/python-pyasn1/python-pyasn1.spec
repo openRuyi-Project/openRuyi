@@ -37,4 +37,4 @@ language.
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
