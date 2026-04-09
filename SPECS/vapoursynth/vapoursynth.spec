@@ -94,4 +94,4 @@ ln -sf .libs build
 %{python3_sitearch}/vsscript/
 
 %changelog
-%{?autochangelog}
+%autochangelog
