@@ -100,4 +100,4 @@ rm %{buildroot}%{_libdir}/libcap.a
 %{_mandir}/man7/*.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
