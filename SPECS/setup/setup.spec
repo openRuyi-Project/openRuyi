@@ -189,4 +189,4 @@ end
 /usr/share/dnf5/libdnf.conf.d/protect-setup.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
