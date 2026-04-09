@@ -225,4 +225,4 @@ rm -f %{buildroot}%{archlib}/CORE/libperl.a
 %{_rpmmacrodir}/macros.perl
 
 %changelog
-%{?autochangelog}
+%autochangelog
