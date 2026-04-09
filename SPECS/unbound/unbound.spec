@@ -311,4 +311,4 @@ echo ".so man8/unbound-control.8" > %{buildroot}/%{_mandir}/man8/unbound-control
 %{_mandir}/man1/unbound-*
 
 %changelog
-%{?autochangelog}
+%autochangelog
