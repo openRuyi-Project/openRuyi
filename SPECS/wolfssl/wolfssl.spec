@@ -72,4 +72,4 @@ dramatically better performance when using wolfSSL over OpenSSL.
 %{_libdir}/pkgconfig/wolfssl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
