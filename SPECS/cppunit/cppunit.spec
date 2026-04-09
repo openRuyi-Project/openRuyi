@@ -48,4 +48,4 @@ applications that use the CppUnit framework.
 %{_libdir}/pkgconfig/cppunit.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
