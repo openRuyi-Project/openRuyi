@@ -44,4 +44,4 @@ NetworkX is a Python package for the creation, manipulation, and study of the st
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
