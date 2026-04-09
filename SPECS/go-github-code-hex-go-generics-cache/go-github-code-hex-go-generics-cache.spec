@@ -38,4 +38,4 @@ in 1.18.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
