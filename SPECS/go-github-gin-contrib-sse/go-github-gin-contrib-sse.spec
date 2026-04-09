@@ -40,4 +40,4 @@ Events EventSource API is standardized as part of HTML5 by the W3C
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
