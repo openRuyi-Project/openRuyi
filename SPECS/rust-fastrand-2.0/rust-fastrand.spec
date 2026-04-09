@@ -52,4 +52,4 @@ This metapackage enables feature "js" for the Rust fastrand crate, by pulling in
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
