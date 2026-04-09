@@ -64,4 +64,4 @@ rm -f %{buildroot}%{_libdir}/libgif.a
 %{_libdir}/lib*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
