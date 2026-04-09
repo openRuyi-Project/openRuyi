@@ -44,4 +44,4 @@ textual content for output generation on the web.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
