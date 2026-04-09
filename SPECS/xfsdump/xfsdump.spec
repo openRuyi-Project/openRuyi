@@ -69,4 +69,4 @@ mkdir -p %{buildroot}/%{_sharedstatedir}/xfsdump/inventory
 %{_sharedstatedir}/xfsdump/inventory
 
 %changelog
-%{?autochangelog}
+%autochangelog
