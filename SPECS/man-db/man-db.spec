@@ -161,4 +161,4 @@ export LANG=C
 %lang(it) %{_datadir}/man/it/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
