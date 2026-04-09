@@ -48,4 +48,4 @@ net.Conn, both inbound (net.Listener) and outbound (net.Dialer).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
