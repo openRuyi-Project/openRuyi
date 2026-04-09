@@ -129,4 +129,4 @@ cd libbtrfsutil/python
 %license libbtrfsutil/COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
