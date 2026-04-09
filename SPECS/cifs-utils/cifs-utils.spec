@@ -104,4 +104,4 @@ fi
 %{_bindir}/smbinfo
 
 %changelog
-%{?autochangelog}
+%autochangelog
