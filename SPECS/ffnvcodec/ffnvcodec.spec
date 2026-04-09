@@ -42,4 +42,4 @@ FFmpeg to interface with NVIDIA codec APIs.
 %{_libdir}/pkgconfig/ffnvcodec.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
