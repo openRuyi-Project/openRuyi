@@ -44,4 +44,4 @@ cd %{_builddir}/%{name}-%{version}
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
