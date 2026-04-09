@@ -40,4 +40,4 @@ This metapackage enables feature "rayon" for the Rust id-arena crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
