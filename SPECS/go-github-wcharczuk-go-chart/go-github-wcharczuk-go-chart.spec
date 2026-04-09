@@ -36,4 +36,4 @@ Master should now be on the v3.x codebase, which overhauls the api significantly
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
