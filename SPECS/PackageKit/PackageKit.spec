@@ -137,4 +137,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/vala/vapi/packagekit-glib2.deps
 
 %changelog
-%{?autochangelog}
+%autochangelog
