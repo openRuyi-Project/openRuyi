@@ -67,4 +67,4 @@ Wayland-based applications, including the wayland-scanner tool.
 %{_datadir}/wayland/
 
 %changelog
-%{?autochangelog}
+%autochangelog
