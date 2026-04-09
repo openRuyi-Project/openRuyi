@@ -65,4 +65,4 @@ NOCONFIGURE=1 ./autogen.sh
 %{_libdir}/pkgconfig/ddcutil.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
