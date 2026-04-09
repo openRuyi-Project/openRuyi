@@ -68,4 +68,4 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/vlock
 %{_datadir}/keymaps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
