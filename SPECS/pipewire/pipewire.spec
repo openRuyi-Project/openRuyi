@@ -304,4 +304,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/libspa-%{spaversion}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
