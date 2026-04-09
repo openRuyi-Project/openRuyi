@@ -50,4 +50,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
