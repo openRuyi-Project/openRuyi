@@ -49,4 +49,4 @@ ln -s ../../%{go_import_path} %{buildroot}%{go_sys_gopath}/go.yaml.in/yaml/v2
 %{go_sys_gopath}/go.yaml.in/yaml/v2
 
 %changelog
-%{?autochangelog}
+%autochangelog
