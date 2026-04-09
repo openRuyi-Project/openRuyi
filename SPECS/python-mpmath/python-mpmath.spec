@@ -37,4 +37,4 @@ more advanced mathematics.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
