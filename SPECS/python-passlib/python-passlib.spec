@@ -41,4 +41,4 @@ cross-platform implementations of over 20 password hashing algorithms.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
