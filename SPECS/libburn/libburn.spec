@@ -78,4 +78,4 @@ fi
 %{_libdir}/pkgconfig/libburn*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
