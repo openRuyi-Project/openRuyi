@@ -48,4 +48,4 @@ MySQL-Driver for Go's database/sql package
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
