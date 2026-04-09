@@ -48,4 +48,4 @@ Development headers and libraries for glslang.
 %{_libdir}/cmake/glslang/
 
 %changelog
-%{?autochangelog}
+%autochangelog
