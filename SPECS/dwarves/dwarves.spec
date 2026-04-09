@@ -103,4 +103,4 @@ rm -Rf %{buildroot}
 %attr(0755,root,root) %{_datadir}/dwarves/runtime/python/ostra.py*
 
 %changelog
-%{?autochangelog}
+%autochangelog
