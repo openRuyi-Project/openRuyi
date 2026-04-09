@@ -63,4 +63,4 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
