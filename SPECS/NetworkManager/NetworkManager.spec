@@ -293,4 +293,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %doc %{_datadir}/gtk-doc/html/libnm/
 
 %changelog
-%{?autochangelog}
+%autochangelog
