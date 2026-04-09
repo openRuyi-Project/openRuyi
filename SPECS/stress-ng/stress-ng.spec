@@ -57,4 +57,4 @@ system kernel interfaces.
 %{bash_completions_dir}/stress-ng
 
 %changelog
-%{?autochangelog}
+%autochangelog
