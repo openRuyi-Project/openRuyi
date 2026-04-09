@@ -41,4 +41,4 @@ Django template systems, the filters can be used in any environment.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
