@@ -68,4 +68,4 @@ in libexpat.
 %exclude %{_libdir}/libexpat.la
 
 %changelog
-%{?autochangelog}
+%autochangelog
