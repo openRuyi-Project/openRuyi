@@ -60,4 +60,4 @@ mv %{buildroot}%{_prefix}/sbin %{buildroot}%{_bindir}
 %{_mandir}/man8/bpftool*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
