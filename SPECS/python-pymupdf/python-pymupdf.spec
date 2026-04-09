@@ -54,4 +54,4 @@ export PYMUPDF_SETUP_IMPLEMENTATIONS='b'
 %{_bindir}/pymupdf
 
 %changelog
-%{?autochangelog}
+%autochangelog
