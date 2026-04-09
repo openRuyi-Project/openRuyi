@@ -67,4 +67,4 @@ install -Dm0755 target/release/cbindgen %{buildroot}%{_bindir}/cbindgen
 %exclude %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
