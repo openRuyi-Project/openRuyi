@@ -48,4 +48,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc BUGS Changes FAQ.xml README XML-Parser-2.31.patch
 
 %changelog
-%{?autochangelog}
+%autochangelog
