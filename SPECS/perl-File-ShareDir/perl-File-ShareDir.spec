@@ -56,4 +56,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes README.md testrules.yml
 
 %changelog
-%{?autochangelog}
+%autochangelog
