@@ -32,4 +32,4 @@ from your version control system, then flit_core to build the package.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
