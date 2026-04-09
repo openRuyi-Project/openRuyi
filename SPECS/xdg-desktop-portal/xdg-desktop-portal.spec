@@ -118,4 +118,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/pkgconfig/xdg-desktop-portal.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
