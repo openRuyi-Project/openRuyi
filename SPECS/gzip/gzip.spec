@@ -65,4 +65,4 @@ times.
 %{_mandir}/man1/znew.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
