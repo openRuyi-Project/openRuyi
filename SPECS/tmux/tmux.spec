@@ -49,4 +49,4 @@ install -Dpm 644 %{S:1} %{buildroot}%{_datadir}/bash-completion/completions/tmux
 %{_datadir}/bash-completion/completions/tmux
 
 %changelog
-%{?autochangelog}
+%autochangelog
