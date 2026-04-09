@@ -41,4 +41,4 @@ on pyparsing and is tested with unit tests.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
