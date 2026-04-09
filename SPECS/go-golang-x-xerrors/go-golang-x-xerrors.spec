@@ -39,4 +39,4 @@ See golang.org/design/29934-error-values.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
