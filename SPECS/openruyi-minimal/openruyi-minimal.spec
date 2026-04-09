@@ -52,4 +52,4 @@ This meta package provides the minimal environment for openRuyi.
 %files
 
 %changelog
-%{?autochangelog}
+%autochangelog
