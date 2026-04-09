@@ -32,4 +32,4 @@ standards, which includes PEP 517, PEP 621 and PEP 660.
 %doc README*
 %license LICENSE
 %changelog
-%{?autochangelog}
+%autochangelog
