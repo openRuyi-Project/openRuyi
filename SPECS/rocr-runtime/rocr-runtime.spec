@@ -125,4 +125,4 @@ rm -f %{buildroot}%{_libdir}/pkgconfig/libhsakmt.pc
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
