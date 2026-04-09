@@ -48,4 +48,4 @@ Development files for %{name}. This package contains static libraries and header
 %{_libdir}/libVulkanSafeStruct.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
