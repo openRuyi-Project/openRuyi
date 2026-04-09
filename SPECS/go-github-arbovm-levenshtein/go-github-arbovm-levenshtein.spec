@@ -40,4 +40,4 @@ Go (http://golang.org) package to calculate the Levenshtein Distance
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
