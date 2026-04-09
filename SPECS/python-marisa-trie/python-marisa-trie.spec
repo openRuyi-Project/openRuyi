@@ -45,4 +45,4 @@ methods like prefix search.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
