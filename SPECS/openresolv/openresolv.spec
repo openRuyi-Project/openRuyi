@@ -68,4 +68,4 @@ fi
 %ghost %{_mandir}/man8/resolvconf.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
