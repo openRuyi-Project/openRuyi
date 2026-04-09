@@ -114,4 +114,4 @@ rm -f %{buildroot}%{_datadir}/doc/fontforge/{.buildinfo,.nojekyll}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
