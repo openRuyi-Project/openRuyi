@@ -70,4 +70,4 @@ rm -fv %{buildroot}%{_bindir}/accountstest
 %{_docdir}/accounts-qt
 
 %changelog
-%{?autochangelog}
+%autochangelog
