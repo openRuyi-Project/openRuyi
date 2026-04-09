@@ -81,4 +81,4 @@ make bdf
 %{_datadir}/bdf2psf/
 
 %changelog
-%{?autochangelog}
+%autochangelog
