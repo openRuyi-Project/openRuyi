@@ -48,4 +48,4 @@ install -m0644 templates/*.ovf %{buildroot}%{_datadir}/%{name}
 %config(noreplace) %{_sysconfdir}/open-vmdk.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
