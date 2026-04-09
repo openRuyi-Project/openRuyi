@@ -116,4 +116,4 @@ done
 %{_libdir}/libfftw3*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
