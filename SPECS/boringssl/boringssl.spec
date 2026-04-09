@@ -65,4 +65,4 @@ sed -i 's/\bAPI\b/API1/g' crypto/fipsmodule/ecdsa/ecdsa_test.cc
 %{_libdir}/cmake/OpenSSL/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
