@@ -59,4 +59,4 @@ Includes and definitions for developing with graphite2.
 %{_libdir}/pkgconfig/graphite2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
