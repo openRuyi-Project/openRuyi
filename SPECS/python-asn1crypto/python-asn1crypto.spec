@@ -36,4 +36,4 @@ PKCS#12, PKCS#5, X.509 and TSP.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
