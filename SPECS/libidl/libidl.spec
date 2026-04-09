@@ -74,4 +74,4 @@ cp -rp libIDL2.html/* '%{buildroot}%{_docdir}/%{name}/html/'
 %{_mandir}/man1/libIDL-config-2.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
