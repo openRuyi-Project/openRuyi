@@ -31,4 +31,4 @@ Source code for takopackized Rust crate "foldhash"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
