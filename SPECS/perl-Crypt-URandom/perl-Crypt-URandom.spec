@@ -53,4 +53,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes check_random.inc README README.md SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
