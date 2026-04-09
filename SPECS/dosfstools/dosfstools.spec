@@ -35,4 +35,4 @@ create, check and label FAT family file systems.
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
