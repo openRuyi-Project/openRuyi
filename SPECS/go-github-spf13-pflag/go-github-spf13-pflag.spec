@@ -45,4 +45,4 @@ language, which can be found in the LICENSE file.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
