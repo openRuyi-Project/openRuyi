@@ -35,4 +35,4 @@ This package provides RPM macros for packaging Rust software in openRuyi.
 %{_rpmconfigdir}/rust-rpm-macros/rustcrates-gen-feature-specparts.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
