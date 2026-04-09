@@ -40,4 +40,4 @@ This package enables OpenID Connect support for the golang.org/x/oauth2
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
