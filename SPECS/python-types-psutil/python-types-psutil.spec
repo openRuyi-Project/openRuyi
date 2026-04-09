@@ -43,4 +43,4 @@ Typeshed contains external type annotations for the Python standard library and 
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
