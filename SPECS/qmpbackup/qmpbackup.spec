@@ -39,4 +39,4 @@ It supports bitmap based incremental backups.
 %{_bindir}/qmprestore
 
 %changelog
-%{?autochangelog}
+%autochangelog
