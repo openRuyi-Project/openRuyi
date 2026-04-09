@@ -46,4 +46,4 @@ A lightweight python client to communicate with the etelemetry server.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
