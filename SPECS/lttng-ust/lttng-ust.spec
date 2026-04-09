@@ -65,4 +65,4 @@ autoreconf -vif
 %{_docdir}/lttng-ust/examples/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
