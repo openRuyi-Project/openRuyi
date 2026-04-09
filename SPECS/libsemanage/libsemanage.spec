@@ -107,4 +107,4 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/selinux
 %{_libexecdir}/selinux/semanage_migrate_store
 
 %changelog
-%{?autochangelog}
+%autochangelog
