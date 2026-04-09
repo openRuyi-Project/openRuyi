@@ -82,4 +82,4 @@ Development files for %{name}.
 %{_libdir}/pkgconfig/wlroots-*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
