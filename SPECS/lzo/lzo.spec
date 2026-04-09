@@ -50,4 +50,4 @@ compression ratio.
 %{_libdir}/pkgconfig/lzo2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
