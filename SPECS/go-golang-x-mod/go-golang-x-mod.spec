@@ -39,4 +39,4 @@ That is, it is for direct manipulation of Go modules themselves.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
