@@ -154,4 +154,4 @@ rm -rf %{buildroot}%{_pkgdocdir}/contrib/cmake*
 %{_includedir}/openvpn-msg.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
