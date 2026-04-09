@@ -134,4 +134,4 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_kf6_qchdir}/*.tags
 
 %changelog
-%{?autochangelog}
+%autochangelog
