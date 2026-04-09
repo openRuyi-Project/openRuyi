@@ -36,4 +36,4 @@ from Latin1 to UTF-8.
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
