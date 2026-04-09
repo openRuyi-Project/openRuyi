@@ -40,4 +40,4 @@ A lightweight console printing and formatting toolkit.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
