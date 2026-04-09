@@ -44,4 +44,4 @@ developing applications that use %{name}.
 %{_libdir}/atkmm-*/
 
 %changelog
-%{?autochangelog}
+%autochangelog
