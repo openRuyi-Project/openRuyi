@@ -73,4 +73,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/openconnect.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
