@@ -35,4 +35,4 @@ In version 0.30 of this utility, support was added to list NVMe namespaces
 %{_mandir}/man8/%{name}.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
