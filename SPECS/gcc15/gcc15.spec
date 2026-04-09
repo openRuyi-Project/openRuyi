@@ -1490,4 +1490,4 @@ cd ..
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
