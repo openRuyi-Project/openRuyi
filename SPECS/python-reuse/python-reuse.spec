@@ -48,4 +48,4 @@ generates a project's bill of materials.
 %{_bindir}/reuse
 
 %changelog
-%{?autochangelog}
+%autochangelog
