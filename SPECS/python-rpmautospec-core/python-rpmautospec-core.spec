@@ -40,4 +40,4 @@ sed -i -e 's|^\(.*/LICENSE\)|%%license \1|g' %{pyproject_files}
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
