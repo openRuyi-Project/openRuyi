@@ -36,4 +36,4 @@ and manipulating JSON data.
 %{_datadir}/pkgconfig/nlohmann_json.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
