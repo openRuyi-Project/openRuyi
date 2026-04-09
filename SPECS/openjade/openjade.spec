@@ -99,4 +99,4 @@ touch %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.soc
 %{_libdir}/lib*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
