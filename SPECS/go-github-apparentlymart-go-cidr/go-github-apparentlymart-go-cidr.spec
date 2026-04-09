@@ -31,4 +31,4 @@ Go library for various manipulations of CIDR netmasks and their associated addre
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
