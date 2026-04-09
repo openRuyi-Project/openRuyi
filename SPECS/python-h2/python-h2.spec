@@ -38,4 +38,4 @@ speak HTTP/2 regardless of your programming paradigm.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
