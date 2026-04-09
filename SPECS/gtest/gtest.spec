@@ -81,4 +81,4 @@ The package is libraries and head files for google mocking framework.
 %{_libdir}/pkgconfig/gmock*
 
 %changelog
-%{?autochangelog}
+%autochangelog
