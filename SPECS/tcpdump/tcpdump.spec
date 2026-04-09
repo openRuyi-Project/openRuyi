@@ -46,4 +46,4 @@ install -p -D -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/tcpdump.conf
 %{_mandir}/man1/
 
 %changelog
-%{?autochangelog}
+%autochangelog
