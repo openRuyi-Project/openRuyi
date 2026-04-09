@@ -34,4 +34,4 @@ BuildOption(install): -l sphinxcontrib +auto
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
