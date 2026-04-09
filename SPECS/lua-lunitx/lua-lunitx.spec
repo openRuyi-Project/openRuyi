@@ -42,4 +42,4 @@ LUA_PATH='%{buildroot}%{lua_pkgdir}/?.lua;;' %{buildroot}%{_bindir}/lunit --dont
 %{lua_pkgdir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
