@@ -50,4 +50,4 @@ and data streaming.
 %doc CHANGES AUTHORS
 
 %changelog
-%{?autochangelog}
+%autochangelog
