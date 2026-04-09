@@ -35,4 +35,4 @@ Go parallel gzip compression/decompression. This is a fully gzip compatible drop
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
