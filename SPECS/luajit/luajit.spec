@@ -87,4 +87,4 @@ This package contains static files for %{name}.
 %{_libdir}/libluajit-*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
