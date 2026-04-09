@@ -37,4 +37,4 @@ Provides:       python3-%{srcname}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
