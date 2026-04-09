@@ -43,4 +43,4 @@ definitions (with rules occasionally thrown in).  The generated
 %{_datadir}/automake-*
 
 %changelog
-%{?autochangelog}
+%autochangelog
