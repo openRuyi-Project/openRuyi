@@ -38,4 +38,4 @@ It supports all recent Linux wireless drivers.
 %{_mandir}/man8/iw.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
