@@ -42,4 +42,4 @@ specification.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
