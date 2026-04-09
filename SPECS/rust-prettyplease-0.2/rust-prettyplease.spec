@@ -42,4 +42,4 @@ This metapackage enables feature "verbatim" for the Rust prettyplease crate, by 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
