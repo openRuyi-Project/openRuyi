@@ -82,4 +82,4 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %{_datadir}/vim/vimfiles/after/syntax/beakerlib.vim
 
 %changelog
-%{?autochangelog}
+%autochangelog
