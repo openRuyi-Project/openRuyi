@@ -44,4 +44,4 @@ A utility library for mocking out the requests Python library.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
