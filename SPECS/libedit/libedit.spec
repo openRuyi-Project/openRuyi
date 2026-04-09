@@ -55,4 +55,4 @@ needed to develop applications that use the libedit library.
 %doc examples/*c THANKS
 
 %changelog
-%{?autochangelog}
+%autochangelog
