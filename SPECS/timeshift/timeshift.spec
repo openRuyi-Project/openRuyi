@@ -79,4 +79,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %attr(0750,root,root) %dir %{_localstatedir}/log/timeshift-btrfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
