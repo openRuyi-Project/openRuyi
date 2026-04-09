@@ -56,4 +56,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.md prereqs.yml README
 
 %changelog
-%{?autochangelog}
+%autochangelog
