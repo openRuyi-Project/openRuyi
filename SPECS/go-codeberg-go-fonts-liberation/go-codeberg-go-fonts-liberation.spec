@@ -37,4 +37,4 @@ This package provides the liberation fonts as importable Go packages.
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
