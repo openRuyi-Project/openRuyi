@@ -76,4 +76,4 @@ export PYTHON_COMMAND=python3
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
