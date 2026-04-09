@@ -462,4 +462,4 @@ rm -rf %{buildroot}/%{_sbindir}/srp_daemon.sh
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
