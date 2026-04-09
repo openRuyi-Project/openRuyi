@@ -60,4 +60,4 @@ develop programs which need to access web services using the SOAP protocol.
 %{_includedir}/KDSoapServer-Qt6/
 
 %changelog
-%{?autochangelog}
+%autochangelog
