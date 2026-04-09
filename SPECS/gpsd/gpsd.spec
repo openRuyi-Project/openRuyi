@@ -228,4 +228,4 @@ install -p -m 0755 gpsinit %{buildroot}%{_sbindir}
 %{_mandir}/man1/xgpsspeed.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
