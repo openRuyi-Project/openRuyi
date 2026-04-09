@@ -46,4 +46,4 @@ RuyiSDK Package Manager, the official package manager for RuyiSDK.
 %{_bindir}/ruyi
 
 %changelog
-%{?autochangelog}
+%autochangelog
