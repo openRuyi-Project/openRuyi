@@ -38,4 +38,4 @@ BuildRequires:      gcc-c++
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
