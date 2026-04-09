@@ -111,4 +111,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
 %{_datadir}/icons/hicolor/*/*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
