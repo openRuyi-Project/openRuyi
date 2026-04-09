@@ -65,4 +65,4 @@ in %{name}.
 %{_libdir}/pkgconfig/xcb-*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
