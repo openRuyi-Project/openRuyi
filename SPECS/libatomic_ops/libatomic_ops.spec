@@ -53,4 +53,4 @@ that involves minimum overhead across a variety of architectures.
 %{_docdir}/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
