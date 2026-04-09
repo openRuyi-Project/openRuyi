@@ -99,4 +99,4 @@ Executable and data files for installed tests.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
