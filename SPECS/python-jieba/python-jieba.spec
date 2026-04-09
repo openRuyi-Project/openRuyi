@@ -49,4 +49,4 @@ cp %{SOURCE2} LICENSE
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
