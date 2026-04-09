@@ -47,4 +47,4 @@ available.
 %{_libdir}/libsigsegv.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
