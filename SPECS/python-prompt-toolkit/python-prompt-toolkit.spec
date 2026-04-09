@@ -48,4 +48,4 @@ rm ./src/prompt_toolkit/output/windows10.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
