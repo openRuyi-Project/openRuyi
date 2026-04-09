@@ -42,4 +42,4 @@ Development files for FP16.
 %{_includedir}/fp16/
 
 %changelog
-%{?autochangelog}
+%autochangelog
