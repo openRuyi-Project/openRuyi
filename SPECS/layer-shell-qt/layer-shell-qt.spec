@@ -49,4 +49,4 @@ Developer files for layer-shell-qt.
 %{_libdir}/cmake/LayerShellQt/
 
 %changelog
-%{?autochangelog}
+%autochangelog
