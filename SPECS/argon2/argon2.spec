@@ -70,4 +70,4 @@ chmod -x %{buildroot}%{_includedir}/%{name}.h
 %{_libdir}/pkgconfig/libargon2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
