@@ -57,4 +57,4 @@ rm -f %{buildroot}/%{_libdir}/libeditorconfig_static.a
 %{_libdir}/pkgconfig/editorconfig.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
