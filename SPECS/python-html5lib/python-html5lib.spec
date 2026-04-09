@@ -54,4 +54,4 @@ specification for maximum compatibility with major desktop web browsers.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
