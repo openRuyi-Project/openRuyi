@@ -36,4 +36,4 @@ distribution.
 %{_datadir}/icons/whiteglass/
 
 %changelog
-%{?autochangelog}
+%autochangelog
