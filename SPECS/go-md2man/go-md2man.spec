@@ -51,4 +51,4 @@ This package contains the source for go-md2man version 2.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
