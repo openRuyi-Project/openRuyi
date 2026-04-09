@@ -40,4 +40,4 @@ osinfo-db-import --root %{buildroot} --dir %{_datadir}/osinfo %{SOURCE0}
 %{_datadir}/osinfo/schema
 
 %changelog
-%{?autochangelog}
+%autochangelog
