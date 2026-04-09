@@ -48,4 +48,4 @@ rm -rf %{buildroot}%{_docdir}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
