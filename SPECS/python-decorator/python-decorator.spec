@@ -43,4 +43,4 @@ etc.  The core of this module is a decorator factory.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
