@@ -64,4 +64,4 @@ fi
 %{_datadir}/pkgconfig/xkeyboard-config.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
