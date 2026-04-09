@@ -62,4 +62,4 @@ chmod +x %{buildroot}%{_libdir}/glibmm-*/proc/gmmproc
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
