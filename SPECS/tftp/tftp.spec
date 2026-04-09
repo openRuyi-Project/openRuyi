@@ -74,4 +74,4 @@ install -d -m 0755 %{buildroot}%{_localstatedir}/lib/tftpboot
 %{_unitdir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
