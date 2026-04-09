@@ -48,4 +48,4 @@ Development files for %{name}.
 %{_libdir}/libKDSoapWSDiscoveryClient.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
