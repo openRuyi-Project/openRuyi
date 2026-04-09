@@ -78,4 +78,4 @@ rm -rf %{buildroot}%{_docdir}
 %{_includedir}/iproute2/bpf_elf.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
