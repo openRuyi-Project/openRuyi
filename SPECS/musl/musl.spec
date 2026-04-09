@@ -159,4 +159,4 @@ EOF
 %{_bindir}/ld.musl-clang
 
 %changelog
-%{?autochangelog}
+%autochangelog
