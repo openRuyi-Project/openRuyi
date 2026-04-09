@@ -79,4 +79,4 @@ export PYTHONARCHDIR=%{python3_sitearch}
 %{python3_sitearch}/_tdb_text.py
 
 %changelog
-%{?autochangelog}
+%autochangelog
