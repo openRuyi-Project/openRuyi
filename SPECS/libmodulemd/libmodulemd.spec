@@ -85,4 +85,4 @@ Development files for %{name}.
 %{python3_sitearch}/gi/overrides/
 
 %changelog
-%{?autochangelog}
+%autochangelog
