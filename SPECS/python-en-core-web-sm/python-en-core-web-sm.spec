@@ -43,4 +43,4 @@ This is a spaCy language model for English, trained on OntoNotes 5 corpus.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
