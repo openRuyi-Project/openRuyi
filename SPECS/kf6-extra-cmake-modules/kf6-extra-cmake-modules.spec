@@ -43,4 +43,4 @@ Extra modules and scripts for CMake.
 %{_datadir}/ECM/
 
 %changelog
-%{?autochangelog}
+%autochangelog
