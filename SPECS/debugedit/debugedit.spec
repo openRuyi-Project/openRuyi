@@ -66,4 +66,4 @@ ln -s ../../bin/debugedit %{buildroot}/usr/lib/rpm
 %{_mandir}/man1/sepdebugcrcfix.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
