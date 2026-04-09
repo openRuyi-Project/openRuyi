@@ -36,4 +36,4 @@ function call, so that it can be passed around.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
