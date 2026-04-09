@@ -58,4 +58,4 @@ rm %{buildroot}%{_bindir}/tst_plugin
 %doc %{_datadir}/accounts-qml-module/
 
 %changelog
-%{?autochangelog}
+%autochangelog
