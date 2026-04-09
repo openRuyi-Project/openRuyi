@@ -52,4 +52,4 @@ development/testing.
 %{_mandir}/man1/uid_wrapper.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
