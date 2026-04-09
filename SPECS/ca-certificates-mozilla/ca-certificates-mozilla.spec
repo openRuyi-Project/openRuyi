@@ -91,4 +91,4 @@ update-ca-trust || true
 %{_datadir}/pki/trust/
 
 %changelog
-%{?autochangelog}
+%autochangelog
