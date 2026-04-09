@@ -88,4 +88,4 @@ rm -rf doc/Makefile.am doc/Makefile.in doc/Makefile
 %{_includedir}/ulockmgr.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
