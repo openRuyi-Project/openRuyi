@@ -179,4 +179,4 @@ Python3 bindings for libblockdev.
 %{python3_sitearch}/gi/overrides/BlockDev*
 
 %changelog
-%{?autochangelog}
+%autochangelog
