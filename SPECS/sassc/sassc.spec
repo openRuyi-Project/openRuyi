@@ -34,4 +34,4 @@ autoreconf -fiv
 %{_bindir}/sassc
 
 %changelog
-%{?autochangelog}
+%autochangelog
