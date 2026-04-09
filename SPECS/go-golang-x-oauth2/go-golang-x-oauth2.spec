@@ -60,4 +60,4 @@ authorization with Bearer JWT.
 %{go_sys_gopath}/%{go_import_path}/google
 
 %changelog
-%{?autochangelog}
+%autochangelog
