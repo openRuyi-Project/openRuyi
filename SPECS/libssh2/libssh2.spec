@@ -66,4 +66,4 @@ mv -v example example.%{_arch}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
