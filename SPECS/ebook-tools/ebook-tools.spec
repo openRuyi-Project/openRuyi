@@ -47,4 +47,4 @@ developing applications that use %{name}.
 %{_includedir}/epub*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
