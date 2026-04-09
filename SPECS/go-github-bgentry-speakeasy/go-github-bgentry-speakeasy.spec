@@ -35,4 +35,4 @@ and is therefore compatible with cross-compiling.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
