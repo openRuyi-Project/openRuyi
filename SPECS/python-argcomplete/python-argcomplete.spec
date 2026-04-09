@@ -40,4 +40,4 @@ arguments for your Python application.
 %{_bindir}/register-python-argcomplete
 
 %changelog
-%{?autochangelog}
+%autochangelog
