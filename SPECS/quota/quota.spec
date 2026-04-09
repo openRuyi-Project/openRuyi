@@ -120,4 +120,4 @@ install -D -p -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rpc-rquo
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
