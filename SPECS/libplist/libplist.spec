@@ -67,4 +67,4 @@ export PYTHON_VERSION="3"
 %{python3_sitearch}/plist.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
