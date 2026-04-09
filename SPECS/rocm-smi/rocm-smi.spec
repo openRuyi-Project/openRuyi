@@ -103,4 +103,4 @@ mv %{buildroot}%{_datadir}/doc/rocm-smi-lib %{buildroot}%{_datadir}/doc/rocm_smi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
