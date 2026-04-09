@@ -44,4 +44,4 @@ richer testing framework for libraries and applications to use.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
