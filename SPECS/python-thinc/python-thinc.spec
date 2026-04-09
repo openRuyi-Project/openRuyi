@@ -62,4 +62,4 @@ models built with their favorite framework.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
