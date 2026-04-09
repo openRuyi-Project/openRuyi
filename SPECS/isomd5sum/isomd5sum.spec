@@ -68,4 +68,4 @@ This package contains python bindings for isomd5sum.
 %{python3_sitearch}/pyisomd5sum.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
