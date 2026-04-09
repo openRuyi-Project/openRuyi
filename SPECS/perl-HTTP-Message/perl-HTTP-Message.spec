@@ -87,4 +87,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.md CONTRIBUTORS perlcriticrc perltidyrc README.md tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
