@@ -186,4 +186,4 @@ fi
 %{_libdir}/cmake/DBus1
 
 %changelog
-%{?autochangelog}
+%autochangelog
