@@ -152,4 +152,4 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
