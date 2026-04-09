@@ -323,4 +323,4 @@ end
 /var/yp
 
 %changelog
-%{?autochangelog}
+%autochangelog
