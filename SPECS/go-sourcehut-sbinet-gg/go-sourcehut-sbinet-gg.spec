@@ -53,4 +53,4 @@ seem to be maintained (as of January 2022).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
