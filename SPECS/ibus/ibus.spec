@@ -127,4 +127,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
