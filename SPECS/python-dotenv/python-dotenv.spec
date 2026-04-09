@@ -43,4 +43,4 @@ sed -i -e '/ipython/d' requirements.txt tox.ini
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
