@@ -60,4 +60,4 @@ to the reference implementation.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
