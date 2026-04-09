@@ -46,4 +46,4 @@ to compile and develop applications that use libsodium.
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
