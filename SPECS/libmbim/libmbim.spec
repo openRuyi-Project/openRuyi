@@ -56,4 +56,4 @@ applications using MBIM functionality.
 %{_datadir}/gir-1.0/Mbim-1.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
