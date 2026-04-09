@@ -102,4 +102,4 @@ Development Files for libcanberra Client Development.
 %{_datadir}/vala/vapi/libcanberra-gtk.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
