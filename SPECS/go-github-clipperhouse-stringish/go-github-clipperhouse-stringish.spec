@@ -36,4 +36,4 @@ slices without conversions.
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
