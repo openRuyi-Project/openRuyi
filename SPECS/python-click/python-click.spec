@@ -39,4 +39,4 @@ comes with good defaults out of the box.
 %doc README.rst CHANGES.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
