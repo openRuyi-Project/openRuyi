@@ -60,4 +60,4 @@ mv pyvex_c/LICENSE LICENSE-pyvex_c
 %license LICENSE-pyvex_c
 
 %changelog
-%{?autochangelog}
+%autochangelog
