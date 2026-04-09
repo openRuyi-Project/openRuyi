@@ -37,4 +37,4 @@ library to allow local file system access via file:// URLs.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
