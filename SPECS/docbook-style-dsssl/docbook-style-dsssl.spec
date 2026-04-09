@@ -70,4 +70,4 @@ exit 0
 %{_datadir}/sgml/docbook/dsssl-stylesheets
 
 %changelog
-%{?autochangelog}
+%autochangelog
