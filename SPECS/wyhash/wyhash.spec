@@ -38,4 +38,4 @@ install -p -m 0644 wyhash32.h %{buildroot}%{_includedir}/
 %{_includedir}/wyhash32.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
