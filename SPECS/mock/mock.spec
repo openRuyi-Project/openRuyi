@@ -219,4 +219,4 @@ getent group 'mock' >/dev/null || groupadd -f -g '135' -r 'mock' || :
 %dir %{_localstatedir}/lib/mock
 
 %changelog
-%{?autochangelog}
+%autochangelog
