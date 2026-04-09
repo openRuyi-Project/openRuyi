@@ -40,4 +40,4 @@ Provide development files for libfastjson
 %{_libdir}/pkgconfig/libfastjson.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
