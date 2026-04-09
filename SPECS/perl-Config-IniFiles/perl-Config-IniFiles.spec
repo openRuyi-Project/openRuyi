@@ -65,4 +65,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes OLD-Changes.txt README scripts weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
