@@ -53,4 +53,4 @@ of writing Python code that is compatible on both Python versions.
 %doc README.rst documentation/index.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
