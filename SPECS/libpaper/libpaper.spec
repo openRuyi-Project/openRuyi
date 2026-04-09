@@ -81,4 +81,4 @@ install -m0644 paperconf.1.gz %{buildroot}%{_mandir}/man1/paperconf.1
 %{_libdir}/libpaper.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
