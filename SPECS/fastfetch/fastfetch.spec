@@ -43,4 +43,4 @@ system distribution, akin to many similar tools.
 %{_mandir}/man1/fastfetch.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
