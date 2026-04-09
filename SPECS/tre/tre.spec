@@ -53,4 +53,4 @@ needed to develop applications that use the TRE library.
 %{_libdir}/pkgconfig/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
