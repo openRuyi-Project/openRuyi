@@ -494,4 +494,4 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
