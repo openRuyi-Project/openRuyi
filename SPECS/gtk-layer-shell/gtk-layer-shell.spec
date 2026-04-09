@@ -56,4 +56,4 @@ Development files for %{name}.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
