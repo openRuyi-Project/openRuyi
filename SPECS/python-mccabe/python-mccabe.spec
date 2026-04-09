@@ -32,4 +32,4 @@ complexity of Python source code.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
