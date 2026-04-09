@@ -43,4 +43,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes minil.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
