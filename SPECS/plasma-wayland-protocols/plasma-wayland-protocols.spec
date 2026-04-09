@@ -40,4 +40,4 @@ KDE Plasma.
 %{_kf6_cmakedir}/PlasmaWaylandProtocols/
 
 %changelog
-%{?autochangelog}
+%autochangelog
