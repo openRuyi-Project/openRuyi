@@ -36,4 +36,4 @@ parallelized, optimized mathematical functions.
 %{_libdir}/pkgconfig/xsimd.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
