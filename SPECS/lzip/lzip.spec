@@ -45,4 +45,4 @@ distribution and data archival.
 %{_mandir}/man1/%{name}.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
