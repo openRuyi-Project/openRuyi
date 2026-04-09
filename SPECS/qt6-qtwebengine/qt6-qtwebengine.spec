@@ -275,4 +275,4 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_examplesdir}/pdf*
 
 %changelog
-%{?autochangelog}
+%autochangelog
