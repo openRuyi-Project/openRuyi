@@ -58,4 +58,4 @@ done
 %{_libdir}/libdjvulibre.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
