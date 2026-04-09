@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %config(noreplace) %{_sysconfdir}/security/console.apps/config-util
 
 %changelog
-%{?autochangelog}
+%autochangelog
