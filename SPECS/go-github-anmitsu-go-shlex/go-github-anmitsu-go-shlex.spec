@@ -33,4 +33,4 @@ go-shlex is a library to make a lexical analyzer like Unix shell for Go.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
