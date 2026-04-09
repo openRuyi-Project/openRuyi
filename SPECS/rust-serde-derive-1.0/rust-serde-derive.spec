@@ -38,4 +38,4 @@ Source code for takopackized Rust crate "serde_derive"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
