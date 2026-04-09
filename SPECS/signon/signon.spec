@@ -90,4 +90,4 @@ developing applications that use %{name}.
 %{_docdir}/signon-plugins-dev/
 
 %changelog
-%{?autochangelog}
+%autochangelog
