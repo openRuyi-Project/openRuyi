@@ -64,4 +64,4 @@ developing applications that use %{name}.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
