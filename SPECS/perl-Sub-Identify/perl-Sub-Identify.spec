@@ -39,4 +39,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes README.mdown TODO.mdown
 
 %changelog
-%{?autochangelog}
+%autochangelog
