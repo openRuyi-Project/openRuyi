@@ -52,4 +52,4 @@ Development files for Highway.
 %{_libdir}/pkgconfig/libhwy-test.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
