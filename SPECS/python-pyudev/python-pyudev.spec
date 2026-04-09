@@ -72,4 +72,4 @@ The binding supports CPython 3 and PyPy.
 %exclude %{python3_sitelib}/pyudev/__pycache__/wx.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
