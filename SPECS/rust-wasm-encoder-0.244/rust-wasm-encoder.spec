@@ -69,4 +69,4 @@ This metapackage enables feature "wasmparser" for the Rust wasm-encoder crate, b
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
