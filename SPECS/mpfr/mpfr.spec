@@ -65,4 +65,4 @@ based on the GMP multiple-precision library.
 %{_libdir}/pkgconfig/mpfr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
