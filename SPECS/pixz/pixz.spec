@@ -41,4 +41,4 @@ autoreconf -fiv
 %{_bindir}/pixz
 
 %changelog
-%{?autochangelog}
+%autochangelog
