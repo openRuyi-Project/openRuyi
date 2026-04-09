@@ -93,4 +93,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
