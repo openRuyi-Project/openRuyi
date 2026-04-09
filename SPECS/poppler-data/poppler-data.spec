@@ -52,4 +52,4 @@ for detecting the installation of poppler-data.
 %{_datadir}/pkgconfig/poppler-data.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
