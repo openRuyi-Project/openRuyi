@@ -133,4 +133,4 @@ done
 %{_libdir}/pkgconfig/pppd.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
