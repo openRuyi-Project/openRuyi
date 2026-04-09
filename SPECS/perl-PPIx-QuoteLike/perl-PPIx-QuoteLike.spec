@@ -59,4 +59,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes CONTRIBUTING eg LICENSES README xt
 
 %changelog
-%{?autochangelog}
+%autochangelog
