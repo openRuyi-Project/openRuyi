@@ -33,4 +33,4 @@ Development files for concurrentqueue.
 %{_libdir}/cmake/concurrentqueue/
 
 %changelog
-%{?autochangelog}
+%autochangelog
