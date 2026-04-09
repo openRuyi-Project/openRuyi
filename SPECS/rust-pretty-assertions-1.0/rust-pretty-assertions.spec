@@ -35,4 +35,4 @@ Source code for takopackized Rust crate "pretty_assertions"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
