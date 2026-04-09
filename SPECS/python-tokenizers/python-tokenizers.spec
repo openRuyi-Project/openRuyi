@@ -56,4 +56,4 @@ EOF2
 %license tokenizers/LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
