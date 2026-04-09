@@ -80,4 +80,4 @@ install -D -m 644 lib/libpci.pc %{buildroot}%{_libdir}/pkgconfig/libpci.pc
 %{_libdir}/libpci.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
