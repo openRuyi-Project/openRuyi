@@ -67,4 +67,4 @@ mkdir -p %{buildroot}%{_qt6_pluginsdir}/phonon4qt6_backend
 %{_libdir}/pkgconfig/phonon4qt6.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
