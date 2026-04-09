@@ -57,4 +57,4 @@ autoreconf -fiv
 %{_includedir}/twolame.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
