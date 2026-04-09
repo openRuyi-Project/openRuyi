@@ -66,4 +66,4 @@ install -Dm644 $RPM_BUILD_DIR/iozone%{version}/docs/iozone.1 %{buildroot}%{_mand
 %{_docdir}/iozone/
 
 %changelog
-%{?autochangelog}
+%autochangelog
