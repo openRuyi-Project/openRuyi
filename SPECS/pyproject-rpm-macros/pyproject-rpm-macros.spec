@@ -101,4 +101,4 @@ install -pm 644 pyproject_wheel.py %{buildroot}%{_rpmconfigdir}/openruyi/
 %{_rpmmacrodir}/macros.aaa-pyproject-srpm
 
 %changelog
-%{?autochangelog}
+%autochangelog
