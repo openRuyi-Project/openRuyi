@@ -37,4 +37,4 @@ monitoring through two complementary packages: errors (core) and errmgr
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
