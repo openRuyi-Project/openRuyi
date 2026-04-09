@@ -57,4 +57,4 @@ autoreconf -ivf
 %{_mandir}/man3/opus_*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
