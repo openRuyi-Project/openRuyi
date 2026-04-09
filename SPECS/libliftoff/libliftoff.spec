@@ -47,4 +47,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libliftoff.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
