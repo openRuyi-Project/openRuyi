@@ -60,4 +60,4 @@ rmdir ruamel.yaml.clib
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
