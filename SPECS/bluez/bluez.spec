@@ -249,4 +249,4 @@ install emulator/btvirt %{buildroot}/%{_libexecdir}/bluetooth/
 %{_userunitdir}/obex.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
