@@ -45,4 +45,4 @@ This metapackage enables feature "default" for the Rust serde_core crate, by pul
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
