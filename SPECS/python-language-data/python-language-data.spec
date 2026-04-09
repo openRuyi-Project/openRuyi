@@ -43,4 +43,4 @@ It is a dependency for other libraries like langcodes.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
