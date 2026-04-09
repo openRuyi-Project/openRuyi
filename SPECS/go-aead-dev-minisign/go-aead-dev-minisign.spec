@@ -33,4 +33,4 @@ minisign is a dead simple tool to sign files and verify signatures.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
