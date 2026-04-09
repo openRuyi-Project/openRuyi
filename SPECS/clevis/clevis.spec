@@ -84,4 +84,4 @@ install -p -D -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/clevis.conf
 %{_prefix}/lib/dracut/modules.d/60clevis/module-setup.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
