@@ -59,4 +59,4 @@ rm -rf %{buildroot}%{_datadir}/locale
 %{_libdir}/libnewt.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
