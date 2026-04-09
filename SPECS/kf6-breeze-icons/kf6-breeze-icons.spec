@@ -90,4 +90,4 @@ ln -s yast-software-group.svg %{buildroot}%{_kf6_iconsdir}/breeze/preferences/32
 %{_kf6_libdir}/libKF6BreezeIcons.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
