@@ -38,4 +38,4 @@ been designed from the ground up to be lightweight and fast.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
