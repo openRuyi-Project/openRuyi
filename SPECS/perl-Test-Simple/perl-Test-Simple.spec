@@ -55,4 +55,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc appveyor.yml Changes examples perltidyrc README README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
