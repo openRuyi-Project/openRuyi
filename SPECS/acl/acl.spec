@@ -74,4 +74,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/libacl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
