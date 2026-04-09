@@ -53,4 +53,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/fontenc.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
