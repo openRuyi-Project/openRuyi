@@ -82,4 +82,4 @@ developing applications that use %{name}.
 %{_datadir}/gir-1.0/HarfBuzz-0.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
