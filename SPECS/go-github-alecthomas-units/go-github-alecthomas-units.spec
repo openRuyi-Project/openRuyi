@@ -41,4 +41,4 @@ The goal of this package is to have functionality similar to the time
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
