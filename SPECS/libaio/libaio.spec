@@ -76,4 +76,4 @@ install -p -m 0644 man/*.3 %{buildroot}%{_mandir}/man3/
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
