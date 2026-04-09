@@ -47,4 +47,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes constants.inc dbdimp_tokenizer.inc dbdimp_virtual_table.inc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
