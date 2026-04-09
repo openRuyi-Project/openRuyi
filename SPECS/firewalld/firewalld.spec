@@ -185,4 +185,4 @@ desktop-file-install --delete-original \
 %{_mandir}/man1/firewall-config*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
