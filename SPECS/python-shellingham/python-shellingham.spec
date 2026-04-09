@@ -42,4 +42,4 @@ Shellingham detects what shell the current Python executable is running in.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
