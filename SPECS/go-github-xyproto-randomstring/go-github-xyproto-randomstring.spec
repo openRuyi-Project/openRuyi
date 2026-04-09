@@ -35,4 +35,4 @@ This package provides generate random strings.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
