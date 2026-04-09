@@ -106,4 +106,4 @@ NOCONFIGURE=1 ./autogen.sh
 %{_libexecdir}/installed-tests/swtpm/
 
 %changelog
-%{?autochangelog}
+%autochangelog
