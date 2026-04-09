@@ -39,4 +39,4 @@ A caching library for Python.
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
