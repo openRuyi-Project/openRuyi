@@ -52,4 +52,4 @@ cp %{SOURCE1} .
 %{_libdir}/libhttp_parser_strict.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
