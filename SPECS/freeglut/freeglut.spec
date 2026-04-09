@@ -55,4 +55,4 @@ software which links to the freeglut library.
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
