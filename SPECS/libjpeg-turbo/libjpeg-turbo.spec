@@ -105,4 +105,4 @@ rm -f %{buildroot}/%{_bindir}/tjbench
 %{_libdir}/pkgconfig/libturbojpeg.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
