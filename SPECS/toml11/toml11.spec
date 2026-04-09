@@ -46,4 +46,4 @@ literal strings and multiline strings.
 %{_libdir}/cmake/toml11/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
