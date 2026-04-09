@@ -107,4 +107,4 @@ ln -sr %{buildroot}%{_bindir}/wget2 %{buildroot}%{_bindir}/wget
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
