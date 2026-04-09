@@ -98,4 +98,4 @@ autoreconf -fiv
 %{_datadir}/vala/vapi/gee-0.8.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
