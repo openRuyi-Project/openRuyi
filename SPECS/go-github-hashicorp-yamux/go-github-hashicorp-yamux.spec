@@ -37,4 +37,4 @@ multiplexing. It is inspired by SPDY but is not interoperable with it.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
