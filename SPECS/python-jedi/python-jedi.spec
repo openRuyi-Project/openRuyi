@@ -43,4 +43,4 @@ search and finding references.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
