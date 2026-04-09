@@ -82,4 +82,4 @@ touch %{_localstatedir}/cache/powertop/{saved_parameters.powertop,saved_results.
 %{_mandir}/man8/powertop.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
