@@ -156,4 +156,4 @@ popd
 %{_qt6_examplesdir}/wayland/
 
 %changelog
-%{?autochangelog}
+%autochangelog
