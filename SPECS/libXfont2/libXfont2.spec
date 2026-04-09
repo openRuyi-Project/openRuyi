@@ -66,4 +66,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/xfont2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
