@@ -42,4 +42,4 @@ occurrences of a string within a file.
 %{_infodir}/sed.info*%{ext_info}
 
 %changelog
-%{?autochangelog}
+%autochangelog
