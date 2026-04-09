@@ -38,4 +38,4 @@ This repository provides Go terminal and console support packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
