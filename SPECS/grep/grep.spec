@@ -44,4 +44,4 @@ match to a specified pattern.  By default, grep prints the matching lines.
 %{_infodir}/grep.info%{?ext_info}
 
 %changelog
-%{?autochangelog}
+%autochangelog
