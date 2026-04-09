@@ -42,4 +42,4 @@ Signatures (JWS).
 %doc CHANGES.rst README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
