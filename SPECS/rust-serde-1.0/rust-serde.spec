@@ -85,4 +85,4 @@ This metapackage enables feature "unstable" for the Rust serde crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
