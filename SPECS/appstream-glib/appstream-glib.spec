@@ -89,4 +89,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/asb-plugins-*/
 
 %changelog
-%{?autochangelog}
+%autochangelog
