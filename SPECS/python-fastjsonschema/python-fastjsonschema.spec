@@ -44,4 +44,4 @@ The main purpose is to have a really fast implementation.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
