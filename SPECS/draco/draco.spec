@@ -97,4 +97,4 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} help2man -N --version-string=%{version} \
 %{_libdir}/libdraco.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
