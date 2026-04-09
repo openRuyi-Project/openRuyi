@@ -34,4 +34,4 @@ Package pretty provides pretty-printing for Go values.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
