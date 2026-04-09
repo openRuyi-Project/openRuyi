@@ -44,4 +44,4 @@ Development files for libxkbfile.
 %{_libdir}/pkgconfig/xkbfile.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
