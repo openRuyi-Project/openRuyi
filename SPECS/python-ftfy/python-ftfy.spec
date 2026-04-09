@@ -40,4 +40,4 @@ ftfy fixes mojibake and other glitches in Unicode text, after the fact.
 %{_bindir}/ftfy
 
 %changelog
-%{?autochangelog}
+%autochangelog
