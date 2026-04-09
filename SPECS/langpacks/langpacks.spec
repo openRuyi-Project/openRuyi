@@ -303,4 +303,4 @@ This is a meta-package for language "Chinese".
 %files zh
 
 %changelog
-%{?autochangelog}
+%autochangelog
