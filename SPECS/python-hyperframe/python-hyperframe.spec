@@ -37,4 +37,4 @@ that is capable of decoding a binary stream into HTTP/2 frames.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
