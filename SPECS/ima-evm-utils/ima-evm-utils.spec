@@ -62,4 +62,4 @@ rm -rf %{buildroot}%{_datadir}/doc
 %{_libdir}/libimaevm.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
