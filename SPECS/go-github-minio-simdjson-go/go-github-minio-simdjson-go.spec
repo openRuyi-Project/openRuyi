@@ -44,4 +44,4 @@ simdjson-go is about 10x faster.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
