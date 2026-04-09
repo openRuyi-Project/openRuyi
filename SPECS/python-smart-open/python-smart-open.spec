@@ -44,4 +44,4 @@ HTTPS, SFTP, or local filesystem.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
