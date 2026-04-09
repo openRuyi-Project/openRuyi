@@ -41,4 +41,4 @@ and method calls.
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
