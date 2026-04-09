@@ -51,4 +51,4 @@ framerate-based renderer, mouse support, focus reporting and more.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
