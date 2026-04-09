@@ -262,4 +262,4 @@ rm -rf %{buildroot}%{perl_vendorlib}/leaktest.pl \
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
