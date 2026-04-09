@@ -47,4 +47,4 @@ that use %{name}.
 %{_libdir}/pkgconfig/simdjson.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
