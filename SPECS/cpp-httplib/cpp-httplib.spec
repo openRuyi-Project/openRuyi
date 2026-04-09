@@ -58,4 +58,4 @@ rm -rf %{buildroot}%{_licensedir}/httplib
 %{_libdir}/cmake/httplib/
 
 %changelog
-%{?autochangelog}
+%autochangelog
