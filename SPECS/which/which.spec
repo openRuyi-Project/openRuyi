@@ -34,4 +34,4 @@ specified program is in your PATH.
 %{_mandir}/man1/which.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
