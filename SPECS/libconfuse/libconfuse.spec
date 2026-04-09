@@ -62,4 +62,4 @@ rm -rf %{buildroot}%{_datadir}/doc/confuse
 %{_libdir}/pkgconfig/libconfuse.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
