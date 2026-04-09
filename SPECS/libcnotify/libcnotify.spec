@@ -49,4 +49,4 @@ applications that want to make use of libcnotify.
 %{_mandir}/man3/libcnotify.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
