@@ -63,4 +63,4 @@ rm -rfv %{buildroot}%{_datadir}/gc/
 %{_mandir}/man3/gc.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
