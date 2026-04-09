@@ -52,4 +52,4 @@ configuration files needed to develop applications using Log4cxx.
 %{_libdir}/cmake/log4cxx
 
 %changelog
-%{?autochangelog}
+%autochangelog
