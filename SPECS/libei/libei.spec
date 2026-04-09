@@ -58,4 +58,4 @@ Development files for libei.
 %{_libdir}/pkgconfig/liboeffis-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
