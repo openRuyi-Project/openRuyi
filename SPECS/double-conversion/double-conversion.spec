@@ -49,4 +49,4 @@ that use the double-conversion library.
 %{_includedir}/double-conversion/
 
 %changelog
-%{?autochangelog}
+%autochangelog
