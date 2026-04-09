@@ -58,4 +58,4 @@ touch %{buildroot}%{_localstatedir}/lib/mlocate/mlocate.db
 %ghost %attr(0640,root,mlocate) %{_localstatedir}/lib/mlocate/mlocate.db
 
 %changelog
-%{?autochangelog}
+%autochangelog
