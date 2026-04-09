@@ -49,4 +49,4 @@ developing applications that use %{name}.
 %{_datadir}/aclocal/%{name}.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
