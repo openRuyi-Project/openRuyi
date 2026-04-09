@@ -100,4 +100,4 @@ install -D -m 0644 -pv %{SOURCE1} \
 %{_libdir}/libseat.so.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
