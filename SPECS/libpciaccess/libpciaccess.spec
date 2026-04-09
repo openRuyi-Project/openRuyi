@@ -50,4 +50,4 @@ This package contains the header files and development library for libpciaccess.
 %{_libdir}/pkgconfig/pciaccess.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
