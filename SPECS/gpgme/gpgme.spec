@@ -67,4 +67,4 @@ rm -fv %{buildroot}%{_infodir}/dir
 %{_datadir}/common-lisp/source/gpgme/
 
 %changelog
-%{?autochangelog}
+%autochangelog
