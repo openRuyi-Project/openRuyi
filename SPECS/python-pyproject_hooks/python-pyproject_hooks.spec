@@ -33,4 +33,4 @@ write tooling that generates distribution files from Python projects.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
