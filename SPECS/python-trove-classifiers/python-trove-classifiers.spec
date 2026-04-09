@@ -58,4 +58,4 @@ sed -i 's/@@VERSION@@/%{version}/g' pyproject.toml
 %{_bindir}/trove-classifiers
 
 %changelog
-%{?autochangelog}
+%autochangelog
