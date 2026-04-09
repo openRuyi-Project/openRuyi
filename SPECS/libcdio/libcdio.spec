@@ -57,4 +57,4 @@ applications that use %{name}.
 %{_libdir}/pkgconfig/libudf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
