@@ -91,4 +91,4 @@ policies.
 %{_libdir}/libsepol.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
