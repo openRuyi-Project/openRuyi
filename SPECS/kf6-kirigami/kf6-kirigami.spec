@@ -108,4 +108,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_sharedir}/kdevappwizard/templates/kirigami6.tar.bz2
 
 %changelog
-%{?autochangelog}
+%autochangelog
