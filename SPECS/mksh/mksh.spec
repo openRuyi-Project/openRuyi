@@ -67,4 +67,4 @@ fi
 %{_mandir}/man1/lksh.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
