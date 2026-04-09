@@ -70,4 +70,4 @@ rm -f %{buildroot}%{_libdir}/libzstd*
 %{_libdir}/cmake/openzl/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
