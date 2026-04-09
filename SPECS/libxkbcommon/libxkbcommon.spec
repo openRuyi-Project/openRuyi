@@ -130,4 +130,4 @@ Development files for %{name}-x11.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
