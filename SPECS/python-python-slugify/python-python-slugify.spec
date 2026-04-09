@@ -41,4 +41,4 @@ A Python slugify application that handles Unicode.
 %{_bindir}/%{srcname}
 
 %changelog
-%{?autochangelog}
+%autochangelog
