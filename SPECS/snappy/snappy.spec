@@ -54,4 +54,4 @@ developing applications that use the Snappy library.
 %{_libdir}/cmake/Snappy/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
