@@ -110,4 +110,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %{_mandir}/man1/lua*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
