@@ -43,4 +43,4 @@ file (e.g. `PKG-INFO`).
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
