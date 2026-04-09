@@ -47,4 +47,4 @@ make install_system \
 %{perl_vendorlib}/skel.pl
 
 %changelog
-%{?autochangelog}
+%autochangelog
