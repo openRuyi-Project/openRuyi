@@ -56,4 +56,4 @@ that use the libnetfilter_cthelper library.
 %{_includedir}/libnetfilter_cthelper/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
