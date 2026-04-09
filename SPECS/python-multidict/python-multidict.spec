@@ -40,4 +40,4 @@ than once in the container.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
