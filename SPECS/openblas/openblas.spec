@@ -65,4 +65,4 @@ This package contains the development headers and libraries for OpenBLAS.
 %{_libdir}/cmake/openblas/
 
 %changelog
-%{?autochangelog}
+%autochangelog
