@@ -39,4 +39,4 @@ URL utilities for markdown-it parser.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
