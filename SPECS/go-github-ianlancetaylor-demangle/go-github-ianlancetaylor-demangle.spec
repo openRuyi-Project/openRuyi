@@ -34,4 +34,4 @@ A Go package that can be used to demangle C++ and Rust symbol names.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
