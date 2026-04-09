@@ -49,4 +49,4 @@ ideal for real-time web services.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
