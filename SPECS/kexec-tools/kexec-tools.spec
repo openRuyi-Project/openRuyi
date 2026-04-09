@@ -51,4 +51,4 @@ autoreconf -fvi
 %doc TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
