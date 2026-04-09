@@ -75,4 +75,4 @@ install -pm644 %{SOURCE2} %{buildroot}%{_unitdir}/dropbear-keygen.service
 %{_mandir}/man8/*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
