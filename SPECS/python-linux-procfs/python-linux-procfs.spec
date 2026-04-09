@@ -52,4 +52,4 @@ Abstractions to extract information from the Linux kernel /proc files.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
