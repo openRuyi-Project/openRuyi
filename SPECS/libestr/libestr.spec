@@ -47,4 +47,4 @@ rm -f %{buildroot}%{_libdir}/*.{a,la}
 %{_libdir}/pkgconfig/libestr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
