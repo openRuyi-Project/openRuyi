@@ -79,4 +79,4 @@ install -D -m 755 zic      %{buildroot}%{_bindir}/zic
 %{_bindir}/tzselect
 
 %changelog
-%{?autochangelog}
+%autochangelog
