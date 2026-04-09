@@ -57,4 +57,4 @@ rm -rf ext/_yaml.c
 %doc CHANGES README.md examples
 
 %changelog
-%{?autochangelog}
+%autochangelog
