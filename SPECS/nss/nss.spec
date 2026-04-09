@@ -114,4 +114,4 @@ EOF
 %{_libdir}/pkgconfig/nss.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
