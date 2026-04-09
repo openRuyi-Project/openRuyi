@@ -48,4 +48,4 @@ the appropriate backend.
 %{_bindir}/pyserial-ports
 
 %changelog
-%{?autochangelog}
+%autochangelog
