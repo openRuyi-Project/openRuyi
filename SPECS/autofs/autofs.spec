@@ -108,4 +108,4 @@ install -m 600 samples/autofs_ldap_auth.conf $RPM_BUILD_ROOT%{_sysconfdir}/autof
 %dir %{_sysconfdir}/auto.master.d
 
 %changelog
-%{?autochangelog}
+%autochangelog
