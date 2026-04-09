@@ -85,4 +85,4 @@ needed to develop applications that use libtraceevent.
 %{_libdir}/pkgconfig/libtraceevent.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
