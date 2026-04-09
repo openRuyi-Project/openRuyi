@@ -47,4 +47,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes effective_tld_names.dat README
 
 %changelog
-%{?autochangelog}
+%autochangelog
