@@ -44,4 +44,4 @@ sed -i '/-static/d' Makefile
 %{_datarootdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
