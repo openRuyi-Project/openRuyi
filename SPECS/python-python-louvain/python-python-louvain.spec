@@ -39,4 +39,4 @@ the Louvain method for identifying communities in large networks.
 %{_bindir}/community
 
 %changelog
-%{?autochangelog}
+%autochangelog
