@@ -155,4 +155,4 @@ _EOF
 %{python3_sitelib}/swig-%{version}.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
