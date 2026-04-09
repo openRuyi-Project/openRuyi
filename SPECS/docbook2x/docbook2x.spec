@@ -66,4 +66,4 @@ cp -p doc/*.html __dist_html/html
 %{_infodir}/docbook2*
 
 %changelog
-%{?autochangelog}
+%autochangelog
