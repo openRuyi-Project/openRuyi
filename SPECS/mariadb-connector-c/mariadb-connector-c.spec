@@ -79,4 +79,4 @@ ln -s mariadb_version.h %{buildroot}%{_includedir}/mysql/mysql_version.h
 %{_mandir}/man3/{mariadb,mysql}_*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
