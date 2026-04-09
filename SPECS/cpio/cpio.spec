@@ -77,4 +77,4 @@ fi
 %{_mandir}/man1/gnumt.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
