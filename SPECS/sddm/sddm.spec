@@ -142,4 +142,4 @@ mv %{buildroot}%{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager.conf \
 %{_datadir}/sddm/themes/maya/
 
 %changelog
-%{?autochangelog}
+%autochangelog
