@@ -35,4 +35,4 @@ platform-specific directories, e.g. the ``user data dir''.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
