@@ -62,4 +62,4 @@ rm -rfv %{buildroot}/%{_datadir}/signon-oauth2plugin-tests
 %{_libdir}/pkgconfig/signon-oauth2plugin.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
