@@ -364,4 +364,4 @@ fi
 %defattr(-,root,root)
 
 %changelog
-%{?autochangelog}
+%autochangelog
