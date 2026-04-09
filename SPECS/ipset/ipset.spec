@@ -91,4 +91,4 @@ install -c -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %{_mandir}/man3/libipset.3.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
