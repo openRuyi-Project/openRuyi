@@ -62,4 +62,4 @@ cmake support for developing with the cmocka unit testing library.
 %{_libdir}/cmake/cmocka
 
 %changelog
-%{?autochangelog}
+%autochangelog
