@@ -44,4 +44,4 @@ Requires:       pkgconfig
 %{_libdir}/libxcb-keysyms.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
