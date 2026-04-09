@@ -39,4 +39,4 @@ interfaces. It originates from the User Mode Linux project.
 %{_mandir}/man8/tunctl.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
