@@ -49,4 +49,4 @@ Development files for PackageKit-Qt6.
 %{_libdir}/pkgconfig/packagekitqt6.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
