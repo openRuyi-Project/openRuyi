@@ -36,4 +36,4 @@ of either asyncio or trio.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
