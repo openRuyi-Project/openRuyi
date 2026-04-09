@@ -52,4 +52,4 @@ export FC=gfortran
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
