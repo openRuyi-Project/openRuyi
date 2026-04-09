@@ -160,4 +160,4 @@ rm -f "%{buildroot}/etc/bash_completion.d/gluster.bash"
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
