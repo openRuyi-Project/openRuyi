@@ -334,4 +334,4 @@ taskset -c 1 ./runtest --clients 50 --skiptest "Active defrag - AOF loading"
 %{_includedir}/redismodule.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
