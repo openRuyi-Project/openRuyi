@@ -54,4 +54,4 @@ autoreconf -fi
 %{_libdir}/pkgconfig/libmspack.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
