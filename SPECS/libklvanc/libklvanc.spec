@@ -58,4 +58,4 @@ rm -fr %{buildroot}%{_bindir}
 %{_libdir}/libklvanc.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
