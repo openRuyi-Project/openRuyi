@@ -40,4 +40,4 @@ developing developing applications that use %{name}.
 %{_datadir}/pkgconfig/mobile-broadband-provider-info.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
