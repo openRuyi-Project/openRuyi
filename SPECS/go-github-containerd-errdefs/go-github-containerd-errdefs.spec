@@ -38,4 +38,4 @@ A Go package for defining and checking common containerd errors.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
