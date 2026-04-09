@@ -99,4 +99,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes codecov.yml CONTRIBUTING.md perlimports.toml README.SSL talk-to-ourself
 
 %changelog
-%{?autochangelog}
+%autochangelog
