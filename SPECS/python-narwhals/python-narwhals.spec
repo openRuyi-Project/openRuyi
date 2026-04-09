@@ -38,4 +38,4 @@ dataframe libraries!
 %license LICENSE.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
