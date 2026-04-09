@@ -70,4 +70,4 @@ rm -fr %{buildroot}%{_datadir}/doc
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
