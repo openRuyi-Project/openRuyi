@@ -66,4 +66,4 @@ cp -p defs.h %{buildroot}%{_includedir}/crash
 %{_includedir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
