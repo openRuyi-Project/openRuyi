@@ -71,4 +71,4 @@ Static library for the %{name} library
 %{_libdir}/liblz4.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
