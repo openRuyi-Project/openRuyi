@@ -86,4 +86,4 @@ rm -f %{buildroot}%{_bindir}/example
 %{_libdir}/pkgconfig/hunspell.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
