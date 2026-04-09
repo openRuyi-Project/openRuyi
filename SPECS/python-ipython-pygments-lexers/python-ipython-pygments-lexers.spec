@@ -40,4 +40,4 @@ A Pygments plugin for IPython code & console sessions.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
