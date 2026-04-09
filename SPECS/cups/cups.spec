@@ -190,4 +190,4 @@ rm -f %{buildroot}%{_datadir}/cups/data/testprint
 %{_rpmconfigdir}/macros.d/macros.cups
 
 %changelog
-%{?autochangelog}
+%autochangelog
