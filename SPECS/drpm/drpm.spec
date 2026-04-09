@@ -52,4 +52,4 @@ applications that want to make use of drpm.
 %{_includedir}/drpm.h
 %{_libdir}/pkgconfig/drpm.pc
 %changelog
-%{?autochangelog}
+%autochangelog
