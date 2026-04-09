@@ -87,4 +87,4 @@ cp %{SOURCE2} curl-8_7_1.tar.gz
 %{_libdir}/libcurl-impersonate-chrome.a*
 
 %changelog
-%{?autochangelog}
+%autochangelog
