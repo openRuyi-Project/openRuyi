@@ -271,4 +271,4 @@ exit 0
 %exclude /usr/share/initramfs-tools
 
 %changelog
-%{?autochangelog}
+%autochangelog
