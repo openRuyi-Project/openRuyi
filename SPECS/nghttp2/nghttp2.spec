@@ -69,4 +69,4 @@ rm -f %{buildroot}%{_docdir}/nghttp2/README.rst
 %{_libdir}/pkgconfig/libnghttp2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
