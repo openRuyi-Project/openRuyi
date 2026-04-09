@@ -84,4 +84,4 @@ install -m644   %{SOURCE1} %{buildroot}%{_unitdir}/
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
