@@ -55,4 +55,4 @@ Features
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
