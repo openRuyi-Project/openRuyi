@@ -37,4 +37,4 @@ autoreconf -fi
 %{_mandir}/man8/genext2fs.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
