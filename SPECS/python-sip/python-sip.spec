@@ -55,4 +55,4 @@ tools, and a runtime module.
 %{_bindir}/sip-wheel
 
 %changelog
-%{?autochangelog}
+%autochangelog
