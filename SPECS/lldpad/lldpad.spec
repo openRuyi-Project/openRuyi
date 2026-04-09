@@ -82,4 +82,4 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 %{_libdir}/liblldp_clif.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
