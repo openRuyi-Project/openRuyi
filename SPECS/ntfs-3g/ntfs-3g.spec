@@ -107,4 +107,4 @@ ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
 %{_libdir}/pkgconfig/libntfs-3g.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
