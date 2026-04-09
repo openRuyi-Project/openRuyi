@@ -105,4 +105,4 @@ gdk-pixbuf-query-loaders --update-cache
 %{_datadir}/installed-tests
 
 %changelog
-%{?autochangelog}
+%autochangelog
