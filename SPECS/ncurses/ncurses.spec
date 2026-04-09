@@ -107,4 +107,4 @@ xz NEWS
 %doc doc/html/
 
 %changelog
-%{?autochangelog}
+%autochangelog
