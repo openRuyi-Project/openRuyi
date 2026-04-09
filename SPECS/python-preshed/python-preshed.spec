@@ -43,4 +43,4 @@ pre-randomized keys to void* values. Inspired by Jeff Preshing.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
