@@ -58,4 +58,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/oniguruma.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
