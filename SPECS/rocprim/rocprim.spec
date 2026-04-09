@@ -66,4 +66,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocprim/LICENSE.md
 %{_libdir}/cmake/rocprim
 
 %changelog
-%{?autochangelog}
+%autochangelog
