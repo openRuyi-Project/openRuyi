@@ -143,4 +143,4 @@ export ARROW_TEST_DATA=%{_builddir}/arrow-testing/data
 %{_libdir}/pkgconfig/parquet.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
