@@ -48,4 +48,4 @@ in a top-like manner.
 %{_mandir}/man8/iptstate.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
