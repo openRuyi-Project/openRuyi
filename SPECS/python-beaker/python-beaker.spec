@@ -56,4 +56,4 @@ rm -fv tests/test.db
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
