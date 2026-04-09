@@ -38,4 +38,4 @@ astor is designed to allow easy manipulation of Python source via the AST.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
