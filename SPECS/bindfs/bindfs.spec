@@ -39,4 +39,4 @@ and altering permission bits in the mirror.
 %{_mandir}/man1/bindfs.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
