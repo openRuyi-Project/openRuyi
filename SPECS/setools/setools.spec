@@ -127,4 +127,4 @@ rm -rf setools setoolsgui
 %{_mandir}/ru/man1/apol*
 
 %changelog
-%{?autochangelog}
+%autochangelog
