@@ -102,4 +102,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_libdir}/libgpm.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
