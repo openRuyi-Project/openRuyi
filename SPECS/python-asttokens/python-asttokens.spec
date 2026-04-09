@@ -44,4 +44,4 @@ for example for automated refactoring or highlighting.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
