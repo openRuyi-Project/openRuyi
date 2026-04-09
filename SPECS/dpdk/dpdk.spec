@@ -109,4 +109,4 @@ meson test -C %{_vpath_builddir} --num-processes %{_smp_build_ncpus} --print-err
 %{_bindir}/dpdk-*.py
 
 %changelog
-%{?autochangelog}
+%autochangelog
