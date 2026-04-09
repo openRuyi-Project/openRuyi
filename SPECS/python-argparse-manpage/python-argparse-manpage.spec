@@ -39,4 +39,4 @@ This package provides tools to build manual pages from Python's
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
