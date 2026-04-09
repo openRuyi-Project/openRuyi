@@ -40,4 +40,4 @@ terminfo is meant as a replacement for ncurses in simple Go programs.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
