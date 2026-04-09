@@ -131,4 +131,4 @@ export LD_LIBRARY_PATH=%{_vpath_builddir}/library:$LD_LIBRARY_PATH
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
