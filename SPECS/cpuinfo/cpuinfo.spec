@@ -58,4 +58,4 @@ cpuinfo library.
 %{_datadir}/cpuinfo/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
