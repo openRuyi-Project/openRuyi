@@ -49,4 +49,4 @@ source packages can be checked.
 %{python3_sitelib}/rpmlint*
 
 %changelog
-%{?autochangelog}
+%autochangelog
