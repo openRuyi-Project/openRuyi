@@ -44,4 +44,4 @@ This is the extensible, standards compliant build backend used by Hatch.
 %{_bindir}/hatchling
 
 %changelog
-%{?autochangelog}
+%autochangelog
