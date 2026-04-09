@@ -45,4 +45,4 @@ applications that use cairomm.
 %{_libdir}/cairomm-*/
 
 %changelog
-%{?autochangelog}
+%autochangelog
