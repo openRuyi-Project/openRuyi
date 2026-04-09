@@ -42,4 +42,4 @@ that client code uses to construct the grammar directly in Python code.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
