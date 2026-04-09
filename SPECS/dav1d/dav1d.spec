@@ -46,4 +46,4 @@ applications that use the dav1d AV1 decoder library.
 %{_libdir}/pkgconfig/dav1d.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
