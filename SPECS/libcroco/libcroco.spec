@@ -50,4 +50,4 @@ files to allow you to develop with libcroco.
 %{_datadir}/gtk-doc/html/libcroco
 
 %changelog
-%{?autochangelog}
+%autochangelog
