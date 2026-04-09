@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_includedir}/X11/extensions/panoramiXext.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
