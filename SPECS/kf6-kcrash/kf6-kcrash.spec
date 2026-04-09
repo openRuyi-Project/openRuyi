@@ -72,4 +72,4 @@ Development files.
 %{_kf6_libdir}/libKF6Crash.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
