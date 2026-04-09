@@ -50,4 +50,4 @@ symbolic links needed to develop applications that use libtirpc.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
