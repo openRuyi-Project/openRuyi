@@ -41,4 +41,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc CHANGES rand.f
 
 %changelog
-%{?autochangelog}
+%autochangelog
