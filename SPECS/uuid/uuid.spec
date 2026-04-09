@@ -182,4 +182,4 @@ popd
 %{_libdir}/libossp-uuid_dce.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
