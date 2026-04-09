@@ -94,4 +94,4 @@ sed -i -e '/Libs.private/d' %{buildroot}%{_libdir}/pkgconfig/libarchive.pc
 %{_libdir}/pkgconfig/libarchive.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
