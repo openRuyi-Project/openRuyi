@@ -84,4 +84,4 @@ The %{name}-static package contains static libraries for zlib-ng-compat.
 %{_libdir}/libz.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
