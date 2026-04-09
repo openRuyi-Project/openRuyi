@@ -41,4 +41,4 @@ extracting base url, translating entities, encoding multipart/form-data, etc.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
