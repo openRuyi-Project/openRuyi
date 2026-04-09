@@ -62,4 +62,4 @@ Development files and utils for %{name}
 %{_libdir}/pkgconfig/libwoff2enc.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
