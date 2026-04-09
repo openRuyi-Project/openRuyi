@@ -43,4 +43,4 @@ chmod a-x include/spirv/1.2/spirv.py
 %{_datadir}/pkgconfig/SPIRV-Headers.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
