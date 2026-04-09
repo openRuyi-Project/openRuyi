@@ -53,4 +53,4 @@ math packages.
 %dir %{_datadir}/qalculate-qt/translations
 
 %changelog
-%{?autochangelog}
+%autochangelog
