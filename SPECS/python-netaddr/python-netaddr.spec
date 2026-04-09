@@ -77,4 +77,4 @@ rm -f python3/html/.buildinfo
 %{_bindir}/netaddr
 
 %changelog
-%{?autochangelog}
+%autochangelog
