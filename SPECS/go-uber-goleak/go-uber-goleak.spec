@@ -37,4 +37,4 @@ Goroutine leak detector to help avoid Goroutine leaks.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
