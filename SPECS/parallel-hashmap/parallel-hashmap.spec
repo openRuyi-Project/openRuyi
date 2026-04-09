@@ -41,4 +41,4 @@ table is filled up to 87.5%% capacity.
 %{_includedir}/parallel_hashmap
 
 %changelog
-%{?autochangelog}
+%autochangelog
