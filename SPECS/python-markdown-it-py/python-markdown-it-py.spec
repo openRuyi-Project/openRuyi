@@ -45,4 +45,4 @@ syntax, and is pluggable.
 %{_bindir}/markdown-it
 
 %changelog
-%{?autochangelog}
+%autochangelog
