@@ -38,4 +38,4 @@ tags, accessing DLL methods for Windows, cgo for Darwin, etc.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
