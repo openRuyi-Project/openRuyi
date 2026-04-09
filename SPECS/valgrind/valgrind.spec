@@ -133,4 +133,4 @@ Header files and libraries for development of valgrind tools.
 %{_libdir}/valgrind/*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
