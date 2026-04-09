@@ -77,4 +77,4 @@ install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/macros.d macros.*
 %{_rpmconfigdir}/find-supplements.ksyms
 
 %changelog
-%{?autochangelog}
+%autochangelog
