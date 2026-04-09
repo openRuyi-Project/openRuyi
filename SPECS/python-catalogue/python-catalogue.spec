@@ -48,4 +48,4 @@ for serialization, which has many drawbacks.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
