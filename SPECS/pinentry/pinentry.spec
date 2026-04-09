@@ -209,4 +209,4 @@ install -d %{buildroot}%{_datadir}/pixmaps
 %{_bindir}/pinentry-tty
 
 %changelog
-%{?autochangelog}
+%autochangelog
