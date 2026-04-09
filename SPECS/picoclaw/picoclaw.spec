@@ -60,4 +60,4 @@ go test -v ./... || :
 %{_bindir}/%{_name}-launcher-tui
 
 %changelog
-%{?autochangelog}
+%autochangelog
