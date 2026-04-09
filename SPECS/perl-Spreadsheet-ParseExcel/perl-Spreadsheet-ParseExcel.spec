@@ -48,4 +48,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CP932Excel.map README README_Japan.htm
 
 %changelog
-%{?autochangelog}
+%autochangelog
