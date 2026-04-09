@@ -80,4 +80,4 @@ autoreconf -fi
 %{_mandir}/man3/CUnit.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
