@@ -54,4 +54,4 @@ developing applications that use %{name}.
 %{_libdir}/cmake/minizip/
 
 %changelog
-%{?autochangelog}
+%autochangelog
