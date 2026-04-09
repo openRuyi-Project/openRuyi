@@ -40,4 +40,4 @@ fgprof is designed for analyzing applications with mixed I/O and CPU workloads. 
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
