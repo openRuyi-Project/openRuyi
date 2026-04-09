@@ -441,4 +441,4 @@ done
 %{_bindir}/kiwi-parse-verity
 
 %changelog
-%{?autochangelog}
+%autochangelog
