@@ -104,4 +104,4 @@ Currently the following packages are available:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
