@@ -103,4 +103,4 @@ This package provides the user-space support tools for VDO.
 %{_mandir}/man8/vdorecover.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
