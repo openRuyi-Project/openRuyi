@@ -50,4 +50,4 @@ Development Files for libatasmart Client Development.
 %{_datadir}/vala/vapi/atasmart.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
