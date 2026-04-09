@@ -33,4 +33,4 @@ supporters of the cause from all over the Internet.
 %{_docdir}/autoconf-archive
 
 %changelog
-%{?autochangelog}
+%autochangelog
