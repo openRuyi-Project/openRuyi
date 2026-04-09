@@ -59,4 +59,4 @@ rm -fr %{buildroot}%{_docdir}/%{name}
 %{_libdir}/pkgconfig/zimg.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
