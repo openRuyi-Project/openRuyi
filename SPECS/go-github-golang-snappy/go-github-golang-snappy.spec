@@ -34,4 +34,4 @@ The Snappy compression format in the Go programming language.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
