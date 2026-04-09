@@ -79,4 +79,4 @@ export LDFLAGS="$LDFLAGS -lpthread"
 %{_mandir}/man8/*.8%{ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
