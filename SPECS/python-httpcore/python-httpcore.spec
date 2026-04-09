@@ -36,4 +36,4 @@ one thing only: Sending HTTP requests.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
