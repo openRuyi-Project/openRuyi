@@ -44,4 +44,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes corelist identify-dependencies README
 
 %changelog
-%{?autochangelog}
+%autochangelog
