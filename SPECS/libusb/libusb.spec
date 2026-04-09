@@ -57,4 +57,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libusb-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
