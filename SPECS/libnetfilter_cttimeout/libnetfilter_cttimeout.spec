@@ -50,4 +50,4 @@ applications that use the libnetfilter_cttimeout library.
 %{_includedir}/libnetfilter_cttimeout/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
