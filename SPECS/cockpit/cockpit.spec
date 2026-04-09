@@ -243,4 +243,4 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %exclude %{_docdir}/cockpit/README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
