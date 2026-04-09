@@ -37,4 +37,4 @@ asyncio.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
