@@ -40,4 +40,4 @@ applications that use libsfdo.
 %{_libdir}/pkgconfig/libsfdo-*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
