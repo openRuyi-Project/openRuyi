@@ -322,4 +322,4 @@ rm -rf %{buildroot}/etc/httpd/conf/original \
 %exclude %{_mandir}/man1/dbmmanage.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
