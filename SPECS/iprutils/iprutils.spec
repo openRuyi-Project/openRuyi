@@ -78,4 +78,4 @@ autoreconf -ivf
 %{_sysconfdir}/bash_completion.d/*
 %{_mandir}/man8/*
 %changelog
-%{?autochangelog}
+%autochangelog
