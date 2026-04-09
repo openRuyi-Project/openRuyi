@@ -35,4 +35,4 @@ It also provides simple support for 128-bit RFC-4122 V4 UUID strings.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
