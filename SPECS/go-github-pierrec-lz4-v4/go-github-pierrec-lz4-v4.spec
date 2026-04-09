@@ -43,4 +43,4 @@ LZ4 data blocks. The implementation is based on the reference C one
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
