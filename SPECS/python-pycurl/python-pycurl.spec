@@ -42,4 +42,4 @@ rm -rf %{buildroot}%{_datadir}/doc/pycurl
 %doc ChangeLog README.rst examples doc
 
 %changelog
-%{?autochangelog}
+%autochangelog
