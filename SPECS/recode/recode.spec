@@ -67,4 +67,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_includedir}/recodext.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
