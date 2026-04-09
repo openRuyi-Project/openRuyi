@@ -97,4 +97,4 @@ export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %{python3_sitearch}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
