@@ -40,4 +40,4 @@ supports url redirection and retries, and also gzip and deflate decoding.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
