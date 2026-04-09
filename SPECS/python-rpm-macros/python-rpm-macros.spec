@@ -146,4 +146,4 @@ grep -E '^#[^%%]*%%[^%%]' %{buildroot}%{_rpmmacrodir}/macros.* && exit 1 || true
 %{_rpmmacrodir}/macros.python3
 
 %changelog
-%{?autochangelog}
+%autochangelog
