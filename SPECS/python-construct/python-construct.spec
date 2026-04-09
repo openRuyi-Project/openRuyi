@@ -42,4 +42,4 @@ parse data into Pythonic objects, and in the other direction, convert
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
