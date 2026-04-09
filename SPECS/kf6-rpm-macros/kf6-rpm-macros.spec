@@ -108,4 +108,4 @@ mkdir -p %{buildroot}%{_kf6_sharedir}/plasma/plasmoids
 %dir %{_kf6_sharedir}/krunner/dbusplugins
 
 %changelog
-%{?autochangelog}
+%autochangelog
