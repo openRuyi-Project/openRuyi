@@ -38,4 +38,4 @@ language.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
