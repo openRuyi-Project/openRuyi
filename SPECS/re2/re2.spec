@@ -51,4 +51,4 @@ needed to develop applications that use the re2 library.
 %{_libdir}/pkgconfig/re2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
