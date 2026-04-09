@@ -45,4 +45,4 @@ Joblib is a set of tools to provide lightweight pipelining in Python.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
