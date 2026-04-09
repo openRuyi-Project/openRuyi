@@ -67,4 +67,4 @@ This metapackage enables feature "std" for the Rust serde_spanned crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
