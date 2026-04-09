@@ -52,4 +52,4 @@ The libcbor-devel contains libraries and header files for libcbor.
 %{_libdir}/cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
