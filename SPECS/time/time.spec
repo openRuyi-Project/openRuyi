@@ -39,4 +39,4 @@ install -d %{buildroot}%{_mandir}/man1
 %{_infodir}/time.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
