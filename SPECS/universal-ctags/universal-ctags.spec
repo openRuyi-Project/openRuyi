@@ -64,4 +64,4 @@ fi
 %ghost %{_sysconfdir}/alternatives/ctags
 
 %changelog
-%{?autochangelog}
+%autochangelog
