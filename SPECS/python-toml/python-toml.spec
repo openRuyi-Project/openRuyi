@@ -34,4 +34,4 @@ Language (TOML) configuration files.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
