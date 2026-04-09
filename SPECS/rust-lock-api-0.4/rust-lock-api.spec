@@ -55,4 +55,4 @@ This metapackage enables feature "serde" for the Rust lock_api crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
