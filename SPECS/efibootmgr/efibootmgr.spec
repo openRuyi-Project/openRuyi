@@ -57,4 +57,4 @@ sed -e '/extern int efi_set_verbose/d' -i "src/efibootmgr.c"
 %{_mandir}/man8/*.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
