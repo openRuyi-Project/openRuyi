@@ -44,4 +44,4 @@ is Python’s.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
