@@ -53,4 +53,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/jbig2dec.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
