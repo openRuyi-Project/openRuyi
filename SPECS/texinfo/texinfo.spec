@@ -82,4 +82,4 @@ Development files for Texinfo
 %{_libdir}/texi2any/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
