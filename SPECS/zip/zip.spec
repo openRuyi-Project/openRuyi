@@ -78,4 +78,4 @@ mkdir -p $RPM_BULD_ROOT%{_mandir}/man1
 %{_mandir}/man1/zipsplit.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
