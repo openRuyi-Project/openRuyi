@@ -134,4 +134,4 @@ fi
 %doc %{_docdir}/%{name}/fontconfig-*.html
 
 %changelog
-%{?autochangelog}
+%autochangelog
