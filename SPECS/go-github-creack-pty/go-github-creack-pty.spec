@@ -34,4 +34,4 @@ Pty is a Go package for using unix pseudo-terminals.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
