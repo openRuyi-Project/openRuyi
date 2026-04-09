@@ -33,4 +33,4 @@ This package will allow you to add readhead to any reader. This means a separate
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
