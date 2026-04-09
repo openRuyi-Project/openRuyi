@@ -141,4 +141,4 @@ rm %{buildroot}%{_mandir}/man3/libnbd-ocaml.3*
 %{_mandir}/man3/libnbd-python.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
