@@ -59,4 +59,4 @@ fi
 %{_datadir}/pkgconfig/adwaita-icon-theme.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
