@@ -67,4 +67,4 @@ configured using "pkg-config --libs libbsd-ctor".
 %{_libdir}/pkgconfig/libbsd-ctor.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
