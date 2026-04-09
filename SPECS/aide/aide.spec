@@ -79,4 +79,4 @@ mkdir -p -m0700 %{buildroot}%{_localstatedir}/lib/aide
 %dir %attr(0700,root,root) %{_localstatedir}/log/aide
 
 %changelog
-%{?autochangelog}
+%autochangelog
