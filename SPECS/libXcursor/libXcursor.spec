@@ -61,4 +61,4 @@ install -d -m 755 %{buildroot}%{_datadir}/icons/default
 %{_mandir}/man3/Xcursor*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
