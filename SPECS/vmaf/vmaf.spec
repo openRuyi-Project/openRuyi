@@ -66,4 +66,4 @@ cd libvmaf
 %{_libdir}/pkgconfig/libvmaf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
