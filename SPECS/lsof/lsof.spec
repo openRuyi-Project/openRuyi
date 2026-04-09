@@ -46,4 +46,4 @@ rm -rf %{buildroot}%{_mandir}/man8/lsof.8*
 %{_mandir}/man1/lsof.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
