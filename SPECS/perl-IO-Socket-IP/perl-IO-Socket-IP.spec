@@ -47,4 +47,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes examples README
 
 %changelog
-%{?autochangelog}
+%autochangelog
