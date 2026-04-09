@@ -41,4 +41,4 @@ interface between the Linux kernel and userspace libraries and programs.
 %{_includedir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
