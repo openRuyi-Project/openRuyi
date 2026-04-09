@@ -106,4 +106,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocsolver/LICENSE.md
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
