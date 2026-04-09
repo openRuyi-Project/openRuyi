@@ -56,4 +56,4 @@ v2 server, but it uses it's own copy of libassuan.
 %{_datadir}/aclocal/libassuan.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
