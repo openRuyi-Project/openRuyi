@@ -30,4 +30,4 @@ Source code for takopackized Rust crate "once_cell_polyfill"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
