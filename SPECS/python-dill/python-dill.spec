@@ -48,4 +48,4 @@ and the inverse of which is converting a byte stream back to a Python object hie
 %{_bindir}/undill
 
 %changelog
-%{?autochangelog}
+%autochangelog
