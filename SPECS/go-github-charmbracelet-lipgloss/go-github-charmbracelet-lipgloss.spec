@@ -53,4 +53,4 @@ rendering. Users familiar with CSS will feel at home with Lip Gloss.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
