@@ -53,4 +53,4 @@ ln -s unrar-free.1 %{buildroot}%{_mandir}/man1/unrar.1
 %{_mandir}/man1/unrar.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
