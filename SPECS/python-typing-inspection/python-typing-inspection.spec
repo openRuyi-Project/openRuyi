@@ -41,4 +41,4 @@ typing-inspection provides tools to inspect type annotations at runtime.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
