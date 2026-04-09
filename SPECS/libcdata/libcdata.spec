@@ -50,4 +50,4 @@ applications that want to make use of libcdata.
 %{_mandir}/man3/libcdata.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
