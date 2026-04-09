@@ -41,4 +41,4 @@ This metapackage enables feature "serde" for the Rust semver crate, by pulling i
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
