@@ -79,4 +79,4 @@ rm -rf third-party/
 %{_libdir}/libheif.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
