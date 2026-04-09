@@ -60,4 +60,4 @@ developing applications that use %{name}.
 %{_libdir}/libbpf.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
