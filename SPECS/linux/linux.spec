@@ -381,4 +381,4 @@ fi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
