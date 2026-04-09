@@ -38,4 +38,4 @@ use of nghttp2 if it's available.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
