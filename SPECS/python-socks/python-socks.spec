@@ -44,4 +44,4 @@ httpx-socks packages.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
