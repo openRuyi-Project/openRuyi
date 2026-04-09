@@ -39,4 +39,4 @@ Protocol Buffers are Google's data interchange format.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
