@@ -85,4 +85,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust linux-raw-sys c
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
