@@ -55,4 +55,4 @@ install -m 644 systemd/target.service %{buildroot}%{_unitdir}/target.service
 %{_unitdir}/target.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
