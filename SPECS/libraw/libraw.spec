@@ -57,4 +57,4 @@ rm -f %{buildroot}%{_libdir}/*.a
 %doc doc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
