@@ -39,4 +39,4 @@ monospace font string width calculation similar to wcwidth
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
