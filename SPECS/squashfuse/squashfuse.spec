@@ -66,4 +66,4 @@ developing applications that use squashfuse.
 %{_libdir}/libsquashfuse_ll.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
