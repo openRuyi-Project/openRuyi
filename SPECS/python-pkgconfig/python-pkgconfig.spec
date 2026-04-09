@@ -47,4 +47,4 @@ If pkg-config is not on the path, raises EnvironmentError.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
