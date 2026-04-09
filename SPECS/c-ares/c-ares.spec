@@ -59,4 +59,4 @@ to build packages that depend on c-ares.
 %{_libdir}/cmake/c-ares/
 
 %changelog
-%{?autochangelog}
+%autochangelog
