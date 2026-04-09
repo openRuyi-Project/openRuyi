@@ -33,4 +33,4 @@ Philippe Aumasson and Daniel J. Bernstein
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
