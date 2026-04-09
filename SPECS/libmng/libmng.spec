@@ -61,4 +61,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libmng.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
