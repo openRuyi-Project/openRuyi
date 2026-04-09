@@ -132,4 +132,4 @@ rm -rf $RPM_BUILD_ROOT/tmp
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
