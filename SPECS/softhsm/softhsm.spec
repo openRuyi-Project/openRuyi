@@ -126,4 +126,4 @@ popd
 %{_includedir}/softhsm/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
