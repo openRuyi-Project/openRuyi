@@ -54,4 +54,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libbluray.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
