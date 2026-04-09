@@ -79,4 +79,4 @@ CFLAGS="%{optflags} -fPIC"
 %{_datadir}/doc/tiff
 
 %changelog
-%{?autochangelog}
+%autochangelog
