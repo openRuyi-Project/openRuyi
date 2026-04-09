@@ -50,4 +50,4 @@ Includes tools for balancing, duplication, consolidation, and more.
 %{_bindir}/mergerfs.mktrash
 
 %changelog
-%{?autochangelog}
+%autochangelog
