@@ -34,4 +34,4 @@ Source code for takopackized Rust crate "proc-macro2"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
