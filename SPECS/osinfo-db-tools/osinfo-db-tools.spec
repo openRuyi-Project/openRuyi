@@ -51,4 +51,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_mandir}/man1/osinfo-db-validate.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
