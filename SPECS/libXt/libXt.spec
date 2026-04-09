@@ -67,4 +67,4 @@ mkdir -p -m 0755 %{buildroot}%{_datadir}/X11/app-defaults
 %doc %{_datadir}/doc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
