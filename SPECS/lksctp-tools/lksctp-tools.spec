@@ -69,4 +69,4 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
