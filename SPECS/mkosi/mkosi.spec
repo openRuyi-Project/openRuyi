@@ -99,4 +99,4 @@ install -m 0644 -D mkosi.zsh %{buildroot}%{_datadir}/zsh/site-functions/_mkosi
 %ghost %dir %{_sysconfdir}/mkosi-addon
 
 %changelog
-%{?autochangelog}
+%autochangelog
