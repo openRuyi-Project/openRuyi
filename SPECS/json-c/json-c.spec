@@ -72,4 +72,4 @@ cp -R doc/html "%{buildroot}%{_docdir}/%{name}/"
 %{_libdir}/libjson-c.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
