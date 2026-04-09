@@ -47,4 +47,4 @@ This also gives us a way to find all the really gross unsafe packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
