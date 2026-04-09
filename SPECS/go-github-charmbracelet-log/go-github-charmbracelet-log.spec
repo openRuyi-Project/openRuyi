@@ -58,4 +58,4 @@ customizable colorful human readable logging with batteries included.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
