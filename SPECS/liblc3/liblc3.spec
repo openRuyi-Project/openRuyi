@@ -61,4 +61,4 @@ This package contains Python bindings for the LC3 codec library.
 %pycached %{python3_sitelib}/lc3.py
 
 %changelog
-%{?autochangelog}
+%autochangelog
