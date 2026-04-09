@@ -163,4 +163,4 @@ ln -s "../../../../libonnxruntime_providers_shared.so.%{version}" "%{buildroot}/
 %{python3_sitearch}/onnxruntime/capi/libonnxruntime_providers_shared.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
