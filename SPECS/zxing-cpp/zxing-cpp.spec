@@ -80,4 +80,4 @@ popd
 %files -n python-zxing-cpp -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
