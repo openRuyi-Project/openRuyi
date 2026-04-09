@@ -83,4 +83,4 @@ popd
 %{_mandir}/man8/wg-quick.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
