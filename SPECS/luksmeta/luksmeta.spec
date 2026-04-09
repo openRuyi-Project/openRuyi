@@ -47,4 +47,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/luksmeta.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
