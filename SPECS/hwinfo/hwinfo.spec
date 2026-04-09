@@ -74,4 +74,4 @@ mv %{buildroot}/usr/sbin  %{buildroot}%{_sbindir}
 %{_libdir}/libhd.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
