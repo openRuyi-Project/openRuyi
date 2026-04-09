@@ -47,4 +47,4 @@ the host's environment, and activated using a set of environment variables.
 %license license-apache
 
 %changelog
-%{?autochangelog}
+%autochangelog
