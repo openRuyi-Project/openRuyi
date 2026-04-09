@@ -48,4 +48,4 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 %{_bindir}/markdown_py
 
 %changelog
-%{?autochangelog}
+%autochangelog
