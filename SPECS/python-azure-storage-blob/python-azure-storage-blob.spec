@@ -45,4 +45,4 @@ Azure Storage Blobs client library for Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
