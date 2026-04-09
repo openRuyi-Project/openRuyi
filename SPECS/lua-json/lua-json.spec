@@ -41,4 +41,4 @@ install -p -m 0644 lua/*.lua %{buildroot}%{lua_pkgdir}/
 %{lua_pkgdir}/*.lua
 
 %changelog
-%{?autochangelog}
+%autochangelog
