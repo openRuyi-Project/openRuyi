@@ -47,4 +47,4 @@ those tests or marking them to @skip, they can be automatically retried.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
