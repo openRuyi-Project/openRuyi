@@ -34,4 +34,4 @@ A Go package striving to emulate the features of the BSD tail program.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
