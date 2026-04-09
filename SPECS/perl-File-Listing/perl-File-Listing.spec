@@ -46,4 +46,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc author.yml Changes Changes.original perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
