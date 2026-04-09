@@ -47,4 +47,4 @@ cuBLAS, or other specialized routines.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
