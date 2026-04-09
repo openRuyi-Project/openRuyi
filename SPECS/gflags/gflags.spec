@@ -58,4 +58,4 @@ This package contains development files for %{name}.
 %{_libdir}/cmake/gflags
 
 %changelog
-%{?autochangelog}
+%autochangelog
