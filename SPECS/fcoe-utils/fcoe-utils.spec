@@ -74,4 +74,4 @@ done
 %{_libexecdir}/fcoe/
 
 %changelog
-%{?autochangelog}
+%autochangelog
