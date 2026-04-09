@@ -147,4 +147,4 @@ This metapackage enables feature "serde" for the Rust hashbrown crate, by pullin
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
