@@ -40,4 +40,4 @@ license, so it may be used in open source or commercial projects.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
