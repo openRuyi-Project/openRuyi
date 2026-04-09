@@ -36,4 +36,4 @@ is used by the Requests library to verify HTTPS requests.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
