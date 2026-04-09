@@ -55,4 +55,4 @@ Parameterized testing with any Python test framework.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
