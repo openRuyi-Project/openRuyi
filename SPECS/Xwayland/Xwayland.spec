@@ -99,4 +99,4 @@ rm -Rf %{buildroot}%{_datadir}/aclocal
 %{_datadir}/xwayland/protocol.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
