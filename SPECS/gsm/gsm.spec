@@ -75,4 +75,4 @@ echo ".so toast.1" > %{buildroot}%{_mandir}/man1/untoast.1
 %{_mandir}/man3/gsm_print.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
