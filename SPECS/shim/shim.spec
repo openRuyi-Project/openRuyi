@@ -106,4 +106,4 @@ sed -e 's/-Werror\b//g' -i Makefile Make.defaults
 %{_prefix}/src/debug/%{name}-%{version}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
