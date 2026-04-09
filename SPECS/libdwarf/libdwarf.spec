@@ -81,4 +81,4 @@ to access DWARF debug information.
 %{_mandir}/man1/dwarfgen.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
