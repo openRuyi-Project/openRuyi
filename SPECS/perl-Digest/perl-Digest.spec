@@ -46,4 +46,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes digest-bench README
 
 %changelog
-%{?autochangelog}
+%autochangelog
