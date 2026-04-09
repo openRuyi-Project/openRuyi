@@ -50,4 +50,4 @@ globally on a machine as well as in a virtualenv.
 %{_bindir}/pipdeptree
 
 %changelog
-%{?autochangelog}
+%autochangelog
