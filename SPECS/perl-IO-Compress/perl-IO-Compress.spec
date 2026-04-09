@@ -54,4 +54,4 @@ mv %{buildroot}/usr/share/man/man1/zipdetails.1perl %{buildroot}/usr/share/man/m
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
