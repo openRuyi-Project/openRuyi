@@ -78,4 +78,4 @@ socket_wrapper_enabled().
 %{_libdir}/pkgconfig/socket_wrapper_noop.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
