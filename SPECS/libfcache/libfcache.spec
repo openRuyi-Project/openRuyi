@@ -54,4 +54,4 @@ applications that want to make use of libfcache.
 %{_mandir}/man3/libfcache.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
