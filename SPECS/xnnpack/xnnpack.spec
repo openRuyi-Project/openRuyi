@@ -88,4 +88,4 @@ ln -s libXNNPACK.so.24.08.14 libXNNPACK.so
 %{_libdir}/libXNNPACK.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
