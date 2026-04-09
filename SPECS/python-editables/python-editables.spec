@@ -36,4 +36,4 @@ Python, without needing a reinstall.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
