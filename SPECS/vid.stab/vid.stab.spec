@@ -48,4 +48,4 @@ sed -i 's|return units_failed==0;|return units_failed>0;|' tests/testframework.c
 %{_libdir}/pkgconfig/vidstab.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
