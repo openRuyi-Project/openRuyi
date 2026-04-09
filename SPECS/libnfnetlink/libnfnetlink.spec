@@ -49,4 +49,4 @@ that use the libnfnetlink library.
 %{_includedir}/%{name}/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
