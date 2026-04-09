@@ -55,4 +55,4 @@ Development files for LLVM to SPIRV Translator.
 %{_libdir}/pkgconfig/LLVMSPIRVLib.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
