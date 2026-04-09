@@ -72,4 +72,4 @@ LD_LIBRARY_PATH=$PWD/src/.libs make check
 %{_libdir}/pkgconfig/sndfile.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
