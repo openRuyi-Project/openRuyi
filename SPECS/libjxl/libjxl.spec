@@ -91,4 +91,4 @@ lossless compression.
 %{_libdir}/pkgconfig/libjxl_cms.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
