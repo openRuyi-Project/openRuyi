@@ -45,4 +45,4 @@ received by a process.
 %{_mandir}/man1/strace-log-merge.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
