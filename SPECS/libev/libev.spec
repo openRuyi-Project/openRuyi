@@ -77,4 +77,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/libev.pc
 %{_includedir}/event.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
