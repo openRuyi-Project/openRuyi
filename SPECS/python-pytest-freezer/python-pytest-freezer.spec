@@ -33,4 +33,4 @@ Pytest plugin providing a fixture interface for
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
