@@ -33,4 +33,4 @@ RFC for S3 Select CSV support.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
