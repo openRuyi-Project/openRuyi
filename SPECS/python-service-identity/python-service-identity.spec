@@ -40,4 +40,4 @@ relevant RFCs too.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
