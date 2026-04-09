@@ -41,4 +41,4 @@ touch %{buildroot}%{_sysconfdir}/motd
 %config(noreplace) %{_sysconfdir}/issue.net
 
 %changelog
-%{?autochangelog}
+%autochangelog
