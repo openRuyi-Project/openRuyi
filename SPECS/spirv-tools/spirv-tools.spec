@@ -51,4 +51,4 @@ Development files for %{name}.
 %{_libdir}/pkgconfig/SPIRV-Tools-shared.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
