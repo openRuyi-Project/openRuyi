@@ -38,4 +38,4 @@ rm -f %{buildroot}%{_datadir}/util-macros/INSTALL
 %{_datadir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
