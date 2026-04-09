@@ -118,4 +118,4 @@ The package contains the PySide6 bindings library for %{name}.
 # Python bindings disabled; package intentionally empty
 
 %changelog
-%{?autochangelog}
+%autochangelog
