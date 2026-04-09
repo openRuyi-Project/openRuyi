@@ -37,4 +37,4 @@ total size of the byte buffers in concurrent use.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
