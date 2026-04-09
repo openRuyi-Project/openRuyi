@@ -43,4 +43,4 @@ a refactoring tool based on the python tokenization.
 %{_bindir}/tokenize-rt
 
 %changelog
-%{?autochangelog}
+%autochangelog
