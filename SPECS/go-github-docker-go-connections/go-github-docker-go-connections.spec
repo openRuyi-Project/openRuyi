@@ -34,4 +34,4 @@ go-connections provides common package to work with network connections.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
