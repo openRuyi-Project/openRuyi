@@ -66,4 +66,4 @@ cd .. && make runtests
 %{_libdir}/pkgconfig/nspr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
