@@ -46,4 +46,4 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/emacs/site-lisp/desktop-entry-mode.el
 
 %changelog
-%{?autochangelog}
+%autochangelog
