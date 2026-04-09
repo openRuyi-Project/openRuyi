@@ -87,4 +87,4 @@ HDF5 development headers and libraries.
 %{_libdir}/pkgconfig/hdf5_hl_cpp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
