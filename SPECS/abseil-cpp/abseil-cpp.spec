@@ -211,4 +211,4 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
