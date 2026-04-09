@@ -111,4 +111,4 @@ export TMPDIR=/tmp
 %{_libdir}/pkgconfig/gdlib.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
