@@ -62,4 +62,4 @@ of these graphics APIs.
 %{_datadir}/mesa-demos/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
