@@ -45,4 +45,4 @@ PCI locations.
 %{_bindir}/pethtool
 
 %changelog
-%{?autochangelog}
+%autochangelog
