@@ -73,4 +73,4 @@ rm -f %{buildroot}%{_libdir}/libudev.a
 %{_libdir}/pkgconfig/libudev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
