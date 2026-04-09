@@ -38,4 +38,4 @@ autoreconf -fiv
 %{_mandir}/man1/bdfresize.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
