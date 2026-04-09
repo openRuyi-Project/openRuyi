@@ -170,4 +170,4 @@ install -m 0755 %{SOURCE3} %{buildroot}%{_sbindir}/selinux-ready
 %{python3_sitearch}/_selinux*
 
 %changelog
-%{?autochangelog}
+%autochangelog
