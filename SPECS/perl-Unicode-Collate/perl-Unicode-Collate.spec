@@ -45,4 +45,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes Collate.pmN disableXS enableXS MANIFEST.N mkheader mklocale README
 
 %changelog
-%{?autochangelog}
+%autochangelog
