@@ -51,4 +51,4 @@ must use at least version v1.4 of this one.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
