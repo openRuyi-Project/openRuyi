@@ -52,4 +52,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes
 
 %changelog
-%{?autochangelog}
+%autochangelog
