@@ -173,4 +173,4 @@ fi
 %{_libdir}/kea/hooks/lib*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
