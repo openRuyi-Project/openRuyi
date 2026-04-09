@@ -43,4 +43,4 @@ needed for development with %{name}.
 %{_libdir}/libsigc-2.0.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
