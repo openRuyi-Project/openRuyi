@@ -41,4 +41,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/hipblas-common/LICENSE.md
 %{_libdir}/cmake/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
