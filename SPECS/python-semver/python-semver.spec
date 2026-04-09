@@ -47,4 +47,4 @@ A Python module for semantic versioning. Simplifies comparing versions.
 %{_bindir}/pysemver
 
 %changelog
-%{?autochangelog}
+%autochangelog
