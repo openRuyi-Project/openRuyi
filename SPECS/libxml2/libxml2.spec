@@ -78,4 +78,4 @@ rm -f %{buildroot}%{_docdir}/%{name}/Copyright
 %{_datadir}/gtk-doc/
 
 %changelog
-%{?autochangelog}
+%autochangelog
