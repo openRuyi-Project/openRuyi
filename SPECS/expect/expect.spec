@@ -80,4 +80,4 @@ ln -s libexpect%{version}.so %{buildroot}%{_libdir}/libexpect.so
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
