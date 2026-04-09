@@ -88,4 +88,4 @@ for %{name}.
 %{bash_completions_dir}/augtool
 
 %changelog
-%{?autochangelog}
+%autochangelog
