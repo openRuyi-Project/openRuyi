@@ -60,4 +60,4 @@ Development files for OpenEXR.
 %{_libdir}/pkgconfig/OpenEXR.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
