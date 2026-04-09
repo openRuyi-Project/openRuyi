@@ -46,4 +46,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.ni
 %{_rpmconfigdir}/macros.d/macros.ninja
 
 %changelog
-%{?autochangelog}
+%autochangelog
