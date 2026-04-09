@@ -32,4 +32,4 @@ psimd is a header-only C/C++ library that provides a portable interface to
 %{_includedir}/psimd.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
