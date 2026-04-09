@@ -90,4 +90,4 @@ chrpath --delete %{buildroot}%{_bindir}/typelib-dump
 %{_datadir}/gtk-doc
 
 %changelog
-%{?autochangelog}
+%autochangelog
