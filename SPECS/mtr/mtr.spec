@@ -85,4 +85,4 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
