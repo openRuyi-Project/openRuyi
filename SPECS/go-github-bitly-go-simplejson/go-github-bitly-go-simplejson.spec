@@ -32,4 +32,4 @@ a Go package to interact with arbitrary JSON
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
