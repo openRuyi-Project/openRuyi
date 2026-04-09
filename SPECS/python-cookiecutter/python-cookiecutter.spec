@@ -66,4 +66,4 @@ EOF
 %{_bindir}/%{srcname}
 
 %changelog
-%{?autochangelog}
+%autochangelog
