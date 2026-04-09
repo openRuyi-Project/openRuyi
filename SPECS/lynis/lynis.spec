@@ -80,4 +80,4 @@ touch %{buildroot}%{_localstatedir}/log/lynis-report.dat
 %ghost %{_localstatedir}/log/lynis-report.dat
 
 %changelog
-%{?autochangelog}
+%autochangelog
