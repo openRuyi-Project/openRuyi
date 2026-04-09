@@ -77,4 +77,4 @@ Files for development with %{name}.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
