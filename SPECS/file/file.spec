@@ -65,4 +65,4 @@ autoreconf -fiv
 %doc README.DEVELOPER AUTHORS NEWS ChangeLog
 
 %changelog
-%{?autochangelog}
+%autochangelog
