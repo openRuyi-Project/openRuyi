@@ -54,4 +54,4 @@ export BLIS_ARCH="generic"
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
