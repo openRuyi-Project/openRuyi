@@ -44,4 +44,4 @@ tools dot, neato, twopi.
 %doc ChangeLog README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
