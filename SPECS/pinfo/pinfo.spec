@@ -59,4 +59,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_mandir}/man1/pinfo.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
