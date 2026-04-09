@@ -227,4 +227,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/info/grub-dev.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
