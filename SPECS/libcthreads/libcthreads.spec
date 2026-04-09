@@ -49,4 +49,4 @@ applications that want to make use of libcthreads.
 %{_mandir}/man3/libcthreads.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
