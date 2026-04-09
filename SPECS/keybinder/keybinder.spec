@@ -67,4 +67,4 @@ This package contains documentation for %{name}.
 %{_datadir}/gtk-doc/html/keybinder-3.0/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
