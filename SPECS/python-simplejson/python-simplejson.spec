@@ -58,4 +58,4 @@ Python 3.3+.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
