@@ -93,4 +93,4 @@ mkdir -p %{buildroot}%{gpstatedir}/clients
 %{_libdir}/gssproxy/proxymech.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
