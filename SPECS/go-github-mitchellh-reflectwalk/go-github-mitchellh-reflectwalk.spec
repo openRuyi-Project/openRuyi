@@ -35,4 +35,4 @@ manipulations on unknown structures such as those decoded from JSON.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
