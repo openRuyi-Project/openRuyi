@@ -35,4 +35,4 @@ order to make bootstrapping easier.
 %doc README*
 %license LICENSE
 %changelog
-%{?autochangelog}
+%autochangelog
