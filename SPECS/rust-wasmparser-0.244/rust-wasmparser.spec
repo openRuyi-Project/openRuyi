@@ -89,4 +89,4 @@ This metapackage enables feature "std" for the Rust wasmparser crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
