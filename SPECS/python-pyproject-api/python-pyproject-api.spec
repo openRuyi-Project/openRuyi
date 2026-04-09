@@ -39,4 +39,4 @@ sed -i "/covdefaults/d;/pytest-cov/d" pyproject.toml
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
