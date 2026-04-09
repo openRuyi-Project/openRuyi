@@ -73,4 +73,4 @@ Development package for kpmcore.
 %{_kf6_libdir}/libkpmcore.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
