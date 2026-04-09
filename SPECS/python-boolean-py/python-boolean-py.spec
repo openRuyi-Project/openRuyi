@@ -36,4 +36,4 @@ Expressions are constructed from parsed strings or directly in Python.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
