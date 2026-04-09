@@ -53,4 +53,4 @@ development with libepoxy.
 %{_includedir}/epoxy/
 
 %changelog
-%{?autochangelog}
+%autochangelog
