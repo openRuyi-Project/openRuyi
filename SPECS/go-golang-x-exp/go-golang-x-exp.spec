@@ -60,4 +60,4 @@ This package holds experimental and deprecated (in the old directory) packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
