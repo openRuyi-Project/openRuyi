@@ -52,4 +52,4 @@ cd %{__cmake_builddir}
 %{_libdir}/pkgconfig/md4c-html.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
