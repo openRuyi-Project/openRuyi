@@ -35,4 +35,4 @@ PLY is a straightforward lex/yacc implementation.
 %doc CHANGES README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
