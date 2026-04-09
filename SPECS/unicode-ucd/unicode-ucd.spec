@@ -48,4 +48,4 @@ cp %{SOURCE2} .
 %{_datadir}/unicode/ucd
 
 %changelog
-%{?autochangelog}
+%autochangelog
