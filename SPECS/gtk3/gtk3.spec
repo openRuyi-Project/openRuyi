@@ -176,4 +176,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
