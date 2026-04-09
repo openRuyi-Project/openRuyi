@@ -38,4 +38,4 @@ Light on deps and a simple API.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
