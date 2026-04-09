@@ -79,4 +79,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_mandir}/man8/*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
