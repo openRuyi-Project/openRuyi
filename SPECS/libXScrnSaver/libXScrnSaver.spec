@@ -53,4 +53,4 @@ autoreconf -fiv
 %{_includedir}/X11/extensions/scrnsaver.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
