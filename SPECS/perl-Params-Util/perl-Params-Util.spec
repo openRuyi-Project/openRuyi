@@ -48,4 +48,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc ARTISTIC-1.0 Changes GPL-1 README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
