@@ -41,4 +41,4 @@ Azure Core shared client library for Python.
 %doc CHANGELOG.md CLIENT_LIBRARY_DEVELOPER.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
