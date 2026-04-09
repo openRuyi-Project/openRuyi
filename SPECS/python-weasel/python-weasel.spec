@@ -50,4 +50,4 @@ custom pipelines.
 %{_bindir}/weasel
 
 %changelog
-%{?autochangelog}
+%autochangelog
