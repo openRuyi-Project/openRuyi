@@ -58,4 +58,4 @@ chmod +x %{buildroot}/%{_libdir}/mstflint/sdk/*.so 2>/dev/null || :
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
