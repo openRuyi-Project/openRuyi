@@ -64,4 +64,4 @@ rm -rf bin
 %{_libdir}/cmake/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
