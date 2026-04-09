@@ -83,4 +83,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_libdir}/libKF6Package.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
