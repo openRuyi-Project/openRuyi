@@ -46,4 +46,4 @@ import/export.
 %{_bindir}/prov-convert
 
 %changelog
-%{?autochangelog}
+%autochangelog
