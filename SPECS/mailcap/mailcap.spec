@@ -53,4 +53,4 @@ MIME type mappings for nginx.
 %config(noreplace) %{_sysconfdir}/nginx/mime.types
 
 %changelog
-%{?autochangelog}
+%autochangelog
