@@ -40,4 +40,4 @@ autoreconf -vif
 %{_mandir}/man1/rdfind.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
