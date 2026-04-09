@@ -42,4 +42,4 @@ following tools and modules:
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
