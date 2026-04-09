@@ -34,4 +34,4 @@ Python's @code{ctypes} foreign function interface (FFI).
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
