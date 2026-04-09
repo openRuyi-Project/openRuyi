@@ -220,4 +220,4 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_datadir}/strongswan/swidtag/*.swidtag
 
 %changelog
-%{?autochangelog}
+%autochangelog
