@@ -98,4 +98,4 @@ rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
