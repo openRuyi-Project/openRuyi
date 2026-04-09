@@ -36,4 +36,4 @@ This package provides a plugin for Setuptools for gettext.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
