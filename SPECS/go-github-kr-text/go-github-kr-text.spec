@@ -37,4 +37,4 @@ This is a Go package for manipulating paragraphs of text.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
