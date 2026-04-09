@@ -50,4 +50,4 @@ This package contains the header files and development libraries for leveldb.
 %{_libdir}/libleveldb.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
