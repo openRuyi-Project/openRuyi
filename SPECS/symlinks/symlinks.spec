@@ -42,4 +42,4 @@ change absolute links to relative within a given filesystem.
 %{_mandir}/man8/symlinks.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
