@@ -58,4 +58,4 @@ EOF
 %license safetensors/LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
