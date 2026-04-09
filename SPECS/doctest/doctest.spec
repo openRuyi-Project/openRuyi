@@ -30,4 +30,4 @@ has been designed to be fast, light and unintrusive.
 %{_libdir}/cmake/doctest/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
