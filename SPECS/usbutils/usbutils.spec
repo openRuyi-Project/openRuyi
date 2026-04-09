@@ -39,4 +39,4 @@ rm -rf %{buildroot}/%{_libdir}/pkgconfig/usbutils.pc
 %{_mandir}/man?/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
