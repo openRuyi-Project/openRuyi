@@ -68,4 +68,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.md perlimports.toml README uri-test
 
 %changelog
-%{?autochangelog}
+%autochangelog
