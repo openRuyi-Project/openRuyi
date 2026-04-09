@@ -37,4 +37,4 @@ colors, marker styles, etc.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
