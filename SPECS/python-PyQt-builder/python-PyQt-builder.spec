@@ -48,4 +48,4 @@ project.py.
 %{_bindir}/pyqt-qt-wheel
 
 %changelog
-%{?autochangelog}
+%autochangelog
