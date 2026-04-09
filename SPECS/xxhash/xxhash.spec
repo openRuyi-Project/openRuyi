@@ -69,4 +69,4 @@ rm -f %{buildroot}%{_libdir}/libxxhash.a
 %{_libdir}/pkgconfig/libxxhash.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
