@@ -79,4 +79,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust wasip2 crate, b
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
