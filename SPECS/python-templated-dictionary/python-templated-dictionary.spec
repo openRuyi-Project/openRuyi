@@ -47,4 +47,4 @@ version="%{version}" %pyproject_install
 %{python3_sitelib}/*.dist-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
