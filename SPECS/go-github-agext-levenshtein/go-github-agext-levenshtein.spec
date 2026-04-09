@@ -36,4 +36,4 @@ based on the Levenshtein measure, in Go (http://golang.org).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
