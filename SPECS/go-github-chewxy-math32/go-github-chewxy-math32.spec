@@ -40,4 +40,4 @@ governed by a BSD-style licence which can be found here:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
