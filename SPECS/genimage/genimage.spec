@@ -38,4 +38,4 @@ autoreconf -fiv
 %{_bindir}/genimage
 
 %changelog
-%{?autochangelog}
+%autochangelog
