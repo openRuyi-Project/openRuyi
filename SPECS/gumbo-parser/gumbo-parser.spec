@@ -89,4 +89,4 @@ install -m 644 doc/*.md %{buildroot}%{_pkgdocdir}
 %{python3_sitelib}/gumbo-*.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
