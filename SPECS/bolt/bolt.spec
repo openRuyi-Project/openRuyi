@@ -75,4 +75,4 @@ bolt is a system daemon to manage Thunderbolt devices via a D-BUS API.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
