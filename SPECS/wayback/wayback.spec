@@ -40,4 +40,4 @@ Requires:       Xwayland
 %{_mandir}/man1/*wayback*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
