@@ -48,4 +48,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc CHANGES README TODO VMS-notes
 
 %changelog
-%{?autochangelog}
+%autochangelog
