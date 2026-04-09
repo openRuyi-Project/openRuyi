@@ -37,4 +37,4 @@ Golang data model artifacts for Prometheus.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
