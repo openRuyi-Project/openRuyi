@@ -37,4 +37,4 @@ inter-process communication.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
