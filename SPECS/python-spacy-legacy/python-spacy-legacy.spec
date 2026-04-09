@@ -45,4 +45,4 @@ components and utilities.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
