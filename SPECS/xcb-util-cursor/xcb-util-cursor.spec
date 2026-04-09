@@ -62,4 +62,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/xcb-cursor.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
