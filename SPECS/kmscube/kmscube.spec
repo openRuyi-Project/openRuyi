@@ -40,4 +40,4 @@ for rendering content using OpenGL ES.
 %{_bindir}/texturator
 
 %changelog
-%{?autochangelog}
+%autochangelog
