@@ -49,4 +49,4 @@ Darwin-specific behavior that works around that bug.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
