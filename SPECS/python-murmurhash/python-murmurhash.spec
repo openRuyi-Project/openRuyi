@@ -41,4 +41,4 @@ Cython bindings for MurmurHash2.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
