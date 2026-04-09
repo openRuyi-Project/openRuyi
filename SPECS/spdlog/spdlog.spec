@@ -54,4 +54,4 @@ This package contains C++ header files and development libraries for spdlog.
 %{_libdir}/pkgconfig/spdlog.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
