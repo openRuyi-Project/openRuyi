@@ -40,4 +40,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc bitmaps Changes README recurse2txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
