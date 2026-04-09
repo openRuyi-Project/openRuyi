@@ -59,4 +59,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_userunitdir}/glib-pacrunner.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
