@@ -46,4 +46,4 @@ for dealing with JOSE messages in a shell.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
