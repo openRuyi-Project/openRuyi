@@ -1101,4 +1101,4 @@ fi
 %{_datadir}/snmp/mibs
 
 %changelog
-%{?autochangelog}
+%autochangelog
