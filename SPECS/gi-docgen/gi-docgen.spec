@@ -70,4 +70,4 @@ stable.
 %{_datadir}/pkgconfig/gi-docgen.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
