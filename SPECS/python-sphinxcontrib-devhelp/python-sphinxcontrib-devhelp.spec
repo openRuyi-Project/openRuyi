@@ -32,4 +32,4 @@ sphinxcontrib-devhelp is a sphinx extension which outputs Devhelp document.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
