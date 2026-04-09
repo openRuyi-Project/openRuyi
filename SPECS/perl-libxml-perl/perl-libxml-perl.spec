@@ -42,4 +42,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc ChangeLog Changes libxml-perl-0.08.spec libxml-perl.spec README
 
 %changelog
-%{?autochangelog}
+%autochangelog
