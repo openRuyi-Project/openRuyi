@@ -66,4 +66,4 @@ Development files for %{name}.
 %{_qt6_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
