@@ -61,4 +61,4 @@ autoconf -fiv
 %{_docdir}/%{name}-devel/*.{html,css,png,js,svg}
 
 %changelog
-%{?autochangelog}
+%autochangelog
