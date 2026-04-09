@@ -66,4 +66,4 @@ files needed to develop applications that use the libzip library.
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
