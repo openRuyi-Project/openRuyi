@@ -47,4 +47,4 @@ file; this file is duplicated in each module.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
