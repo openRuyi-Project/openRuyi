@@ -54,4 +54,4 @@ This metapackage enables feature "simd" for the Rust toml_parser crate, by pulli
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
