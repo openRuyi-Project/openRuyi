@@ -77,4 +77,4 @@ install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{build
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
