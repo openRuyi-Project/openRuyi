@@ -177,4 +177,4 @@ sed -i \
 %{python3_sitearch}/PyQt6/bindings/
 
 %changelog
-%{?autochangelog}
+%autochangelog
