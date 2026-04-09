@@ -78,4 +78,4 @@ compositors.
 %{_mandir}/man5/waybar*
 
 %changelog
-%{?autochangelog}
+%autochangelog
