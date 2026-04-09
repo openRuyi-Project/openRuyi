@@ -46,4 +46,4 @@ goal of the API was to make it as simple as using net/http,
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
