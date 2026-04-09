@@ -44,4 +44,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes HACKERS README soak TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
