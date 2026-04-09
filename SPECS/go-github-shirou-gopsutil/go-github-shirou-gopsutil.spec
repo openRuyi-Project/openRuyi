@@ -47,4 +47,4 @@ The challenge is porting all psutil functions on some architectures.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
