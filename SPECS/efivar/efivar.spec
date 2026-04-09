@@ -56,4 +56,4 @@ make -j1 V=1 test
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
