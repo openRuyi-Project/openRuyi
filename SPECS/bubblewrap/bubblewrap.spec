@@ -37,4 +37,4 @@ technologies like Flatpak.
 %{_datadir}/zsh/site-functions/_bwrap
 
 %changelog
-%{?autochangelog}
+%autochangelog
