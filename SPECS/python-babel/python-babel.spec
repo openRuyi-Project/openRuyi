@@ -52,4 +52,4 @@ export TZ=UTC
 %{_bindir}/pybabel
 
 %changelog
-%{?autochangelog}
+%autochangelog
