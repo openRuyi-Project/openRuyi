@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/fdk-aac.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
