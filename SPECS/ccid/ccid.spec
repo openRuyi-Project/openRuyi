@@ -48,4 +48,4 @@ cp -p src/openct/LICENSE LICENSE.openct
 %{_udevrulesdir}/92_pcscd_ccid.rules
 
 %changelog
-%{?autochangelog}
+%autochangelog
