@@ -110,4 +110,4 @@ rm %{buildroot}%{_datadir}/opensbi/lp64/generic/firmware/payloads/test.elf
 %{_includedir}/sbi/sbi_visibility.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
