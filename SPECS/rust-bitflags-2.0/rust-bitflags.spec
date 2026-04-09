@@ -62,4 +62,4 @@ Additionally, this package also provides the "serde" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
