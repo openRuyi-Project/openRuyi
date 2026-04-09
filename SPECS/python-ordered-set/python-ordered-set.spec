@@ -37,4 +37,4 @@ entry has an index that can be looked up.
 %license MIT-LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
