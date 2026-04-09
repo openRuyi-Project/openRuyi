@@ -118,4 +118,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes CONTRIBUTING.md examples extras perlcriticrc README README.md tools xt
 
 %changelog
-%{?autochangelog}
+%autochangelog
