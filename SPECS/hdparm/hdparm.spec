@@ -40,4 +40,4 @@ mkdir -p "%{buildroot}%{_mandir}/man8"
 %{_mandir}/man8/hdparm.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
