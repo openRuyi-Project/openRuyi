@@ -91,4 +91,4 @@ Python 3 bindings for deltarpm.
 %{python3_sitearch}/_deltarpmmodule.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
