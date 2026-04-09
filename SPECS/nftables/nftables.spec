@@ -127,4 +127,4 @@ cd py
 %{_unitdir}/nftables.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
