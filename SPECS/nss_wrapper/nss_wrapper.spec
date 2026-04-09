@@ -68,4 +68,4 @@ sed -i '1 s|/usr/bin/env\ perl|/usr/bin/perl|' %{buildroot}%{_bindir}/nss_wrappe
 %{_libdir}/libnss_wrapper.so*
 
 %changelog
-%{?autochangelog}
+%autochangelog
