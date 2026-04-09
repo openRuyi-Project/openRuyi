@@ -109,4 +109,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/atk-bridge-2.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
