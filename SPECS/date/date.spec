@@ -76,4 +76,4 @@ export CTEST_OUTPUT_ON_FAILURE=ON
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
