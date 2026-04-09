@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Json library for Python
 License:        AFL-2.1 OR MIT
 URL:            https://simplejson.readthedocs.io/en/latest
-#!RemoteAsset
+#!RemoteAsset:  sha256:cf98038d2abf63a1ada5730e91e84c642ba6c225b0198c3684151b1f80c5f8a6
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -22,23 +22,15 @@ BuildOption(install):  -l %{srcname}
 # skip the tests which use python2.
 BuildOption(check):  -e simplejson.ordered_dict
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
 
 %description
-JSON (JavaScript Object Notation) is a subset of JavaScript
-syntax (ECMA-262 3rd edition) used as a lightweight data interchange
-format.
-
-%package     -n python3-%{srcname}
-Summary:        Json library for Python
-
-%description -n python3-%{srcname}
 JSON (JavaScript Object Notation) is a subset of JavaScript
 syntax (ECMA-262 3rd edition) used as a lightweight data interchange
 format.
@@ -53,9 +45,9 @@ Python 3.3+.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%files -n python3-%{srcname}  -f %{pyproject_files}
+%files -f %{pyproject_files}
 %license LICENSE*
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
