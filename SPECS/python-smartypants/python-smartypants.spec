@@ -34,4 +34,4 @@ entities.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
