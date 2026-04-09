@@ -39,4 +39,4 @@ install -D -m644 macros.buildsystem.golangmodules %{buildroot}%{_rpmmacrodir}/ma
 %{_rpmmacrodir}/macros.buildsystem.golangmodules
 
 %changelog
-%{?autochangelog}
+%autochangelog
