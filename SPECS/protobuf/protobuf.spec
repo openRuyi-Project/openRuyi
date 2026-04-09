@@ -96,4 +96,4 @@ RPC protocols and file formats.
 %{_libdir}/libupb.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
