@@ -41,4 +41,4 @@ possible to handle escape sequence for ansi color on windows.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
