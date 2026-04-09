@@ -82,4 +82,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
