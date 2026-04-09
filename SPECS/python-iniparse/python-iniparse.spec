@@ -41,4 +41,4 @@ rm -vfr %{buildroot}%{_docdir}/*
 %doc README.md Changelog
 
 %changelog
-%{?autochangelog}
+%autochangelog
