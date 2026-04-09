@@ -54,4 +54,4 @@ almost completely POSIX 1003.2 compliant.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
