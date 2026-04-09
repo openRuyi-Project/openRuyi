@@ -118,4 +118,4 @@ Development files for libndctl,libdaxctl and libcx.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
