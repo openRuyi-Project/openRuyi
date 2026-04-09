@@ -42,4 +42,4 @@ system letting you conveniently describe arbitrary trees of objects.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
