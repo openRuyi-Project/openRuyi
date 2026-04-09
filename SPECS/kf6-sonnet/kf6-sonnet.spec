@@ -103,4 +103,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_plugindir}/kf6/sonnet/sonnet_voikko.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
