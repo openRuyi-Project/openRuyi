@@ -195,4 +195,4 @@ install -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 %{_mandir}/man8/nginx.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
