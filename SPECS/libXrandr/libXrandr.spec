@@ -50,4 +50,4 @@ X.Org X11 libXrandr development package
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
