@@ -39,4 +39,4 @@ Beniget provides a static over-approximation of the global and local definitions
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
