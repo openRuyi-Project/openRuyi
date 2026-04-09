@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/icons/hicolor/*/*/labwc*.svg
 
 %changelog
-%{?autochangelog}
+%autochangelog
