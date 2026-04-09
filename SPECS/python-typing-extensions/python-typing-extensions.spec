@@ -46,4 +46,4 @@ equivalent forms in typing.
 %doc CHANGELOG.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
