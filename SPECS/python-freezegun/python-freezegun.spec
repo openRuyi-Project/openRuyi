@@ -32,4 +32,4 @@ time by mocking the datetime module.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
