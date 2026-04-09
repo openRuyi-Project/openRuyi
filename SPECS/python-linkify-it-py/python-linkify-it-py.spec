@@ -45,4 +45,4 @@ plain text.
 %doc CHANGELOG.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
