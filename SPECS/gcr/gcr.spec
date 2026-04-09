@@ -104,4 +104,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/doc/gcr-4/
 
 %changelog
-%{?autochangelog}
+%autochangelog
