@@ -98,4 +98,4 @@ rm -f %{buildroot}%{_libdir}/libapr-1.a
 %{_datadir}/aclocal/*.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
