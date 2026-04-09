@@ -64,4 +64,4 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications --vendor="qt6" %
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
