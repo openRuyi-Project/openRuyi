@@ -96,4 +96,4 @@ install -Dm644 raid6check.man %{buildroot}/%{_mandir}/man8/raid6check.man
 %{_datadir}/mdadm/
 
 %changelog
-%{?autochangelog}
+%autochangelog
