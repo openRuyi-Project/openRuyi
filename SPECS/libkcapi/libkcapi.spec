@@ -105,4 +105,4 @@ done
 %{_libdir}/pkgconfig/libkcapi.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
