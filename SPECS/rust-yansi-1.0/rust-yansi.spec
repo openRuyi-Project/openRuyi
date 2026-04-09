@@ -54,4 +54,4 @@ This metapackage enables feature "is-terminal" for the Rust yansi crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
