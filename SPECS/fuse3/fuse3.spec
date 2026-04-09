@@ -102,4 +102,4 @@ rm -f %{buildroot}%{_udevrulesdir}/99-fuse3.rules
 %config(noreplace) %{_sysconfdir}/fuse.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
