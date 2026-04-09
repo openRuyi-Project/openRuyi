@@ -96,4 +96,4 @@ fi
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
