@@ -39,4 +39,4 @@ abstractions for handling wheels and installing packages from wheels.
 %doc CONTRIBUTING.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
