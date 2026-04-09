@@ -69,4 +69,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_infodir}/indent.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
