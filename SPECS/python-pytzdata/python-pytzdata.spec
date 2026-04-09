@@ -50,4 +50,4 @@ bindings to the database provided by the system tzdata package.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
