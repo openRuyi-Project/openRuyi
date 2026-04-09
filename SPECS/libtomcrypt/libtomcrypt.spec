@@ -71,4 +71,4 @@ sed -i \
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
