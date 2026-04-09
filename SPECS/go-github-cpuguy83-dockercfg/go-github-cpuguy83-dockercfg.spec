@@ -33,4 +33,4 @@ far the only deps are on the stdlib.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
