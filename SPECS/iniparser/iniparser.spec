@@ -46,4 +46,4 @@ Development files for iniparser.
 %{_libdir}/pkgconfig/iniparser.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
