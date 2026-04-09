@@ -35,4 +35,4 @@ This package provides reflect api that avoids runtime reflect.Value cost
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
