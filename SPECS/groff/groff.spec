@@ -431,4 +431,4 @@ fi
 %doc %{_docdir}/groff*
 
 %changelog
-%{?autochangelog}
+%autochangelog
