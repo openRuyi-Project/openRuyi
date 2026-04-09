@@ -44,4 +44,4 @@ developing applications that use %{name}.
 %{_libdir}/cmake/plog/
 
 %changelog
-%{?autochangelog}
+%autochangelog
