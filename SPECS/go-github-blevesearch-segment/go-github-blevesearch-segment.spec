@@ -35,4 +35,4 @@ Unicode Standard Annex #29 (http://www.unicode.org/reports/tr29/)
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
