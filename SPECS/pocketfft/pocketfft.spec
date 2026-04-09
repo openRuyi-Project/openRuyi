@@ -73,4 +73,4 @@ install -p -m 644 pocketfft_hdronly.h %{buildroot}%{_includedir}
 %{_includedir}/pocketfft_hdronly.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
