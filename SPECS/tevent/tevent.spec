@@ -74,4 +74,4 @@ export PYTHONARCHDIR=%{python3_sitearch}
 %{python3_sitearch}/_tevent.cpython*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
