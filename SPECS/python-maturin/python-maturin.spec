@@ -58,4 +58,4 @@ EOF
 %{_bindir}/maturin
 
 %changelog
-%{?autochangelog}
+%autochangelog
