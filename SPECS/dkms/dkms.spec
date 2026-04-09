@@ -79,4 +79,4 @@ sed -i \
 %{_unitdir}/dkms.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
