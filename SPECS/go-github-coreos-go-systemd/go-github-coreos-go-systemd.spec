@@ -48,4 +48,4 @@ Go bindings to systemd. The project has several packages:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
