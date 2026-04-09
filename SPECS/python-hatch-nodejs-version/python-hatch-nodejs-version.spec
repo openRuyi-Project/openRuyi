@@ -41,4 +41,4 @@ Node.js build metadata.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
