@@ -226,4 +226,4 @@ sed -i 's/enabled = host-only/enabled = false/g' %{buildroot}%{_sysconfdir}/dnf/
 %{_libdir}/pkgconfig/libdnf5-cli.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
