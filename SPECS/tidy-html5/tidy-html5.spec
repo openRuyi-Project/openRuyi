@@ -54,4 +54,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_libdir}/pkgconfig/tidy.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
