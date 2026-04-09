@@ -86,4 +86,4 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6ShaderTools.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
