@@ -35,4 +35,4 @@ Smithy code generators for Go and the accompanying smithy-go runtime.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
