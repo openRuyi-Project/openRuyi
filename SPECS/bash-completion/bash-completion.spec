@@ -51,4 +51,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.ba
 %{_datadir}/pkgconfig/bash-completion.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
