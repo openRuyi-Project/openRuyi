@@ -84,4 +84,4 @@ rm -rf html/.{doctrees,buildinfo}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
