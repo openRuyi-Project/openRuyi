@@ -49,4 +49,4 @@ autoreconf -vif
 %{_mandir}/man8/tune.exfat.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
