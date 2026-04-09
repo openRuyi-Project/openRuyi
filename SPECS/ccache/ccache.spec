@@ -66,4 +66,4 @@ ln -sf ../../bin/ccache nvcc
 %{_libdir}/ccache
 
 %changelog
-%{?autochangelog}
+%autochangelog
