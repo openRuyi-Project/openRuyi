@@ -44,4 +44,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes prereqs.yml README TODO weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
