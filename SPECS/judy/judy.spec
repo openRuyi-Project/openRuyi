@@ -62,4 +62,4 @@ This package contains the development libraries and header files for %{name}.
 %{_mandir}/man3/J*
 
 %changelog
-%{?autochangelog}
+%autochangelog
