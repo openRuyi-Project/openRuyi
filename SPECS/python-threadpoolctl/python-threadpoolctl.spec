@@ -40,4 +40,4 @@ oversubscription issues.
 %doc README.md multiple_openmp.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
