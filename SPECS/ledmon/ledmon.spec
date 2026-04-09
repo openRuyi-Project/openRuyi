@@ -79,4 +79,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/ledmon.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
