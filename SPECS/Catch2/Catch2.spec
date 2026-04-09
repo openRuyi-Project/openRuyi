@@ -54,4 +54,4 @@ including header files, CMake integration files, and pkg-config files.
 %{_datadir}/Catch2/
 
 %changelog
-%{?autochangelog}
+%autochangelog
