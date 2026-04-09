@@ -42,4 +42,4 @@ labwc-tweaks is a GUI configuration application for the labwc Wayland compositor
 %{_datadir}/metainfo/*.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
