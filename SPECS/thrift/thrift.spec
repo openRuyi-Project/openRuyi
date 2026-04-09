@@ -66,4 +66,4 @@ Development headers and pkg-config files for Apache Thrift.
 %{_libdir}/pkgconfig/thrift-z.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
