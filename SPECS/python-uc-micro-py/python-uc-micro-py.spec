@@ -45,4 +45,4 @@ Python port of uc.micro (JavaScript).
 %doc CHANGELOG.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
