@@ -118,4 +118,4 @@ Development files.
 %{_kf6_pkgconfigdir}/KF6WindowSystem.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
