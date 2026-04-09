@@ -48,4 +48,4 @@ rm -f  %{buildroot}%{_libdir}/libisl.so.*-gdb.py
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
