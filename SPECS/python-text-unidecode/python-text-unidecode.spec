@@ -36,4 +36,4 @@ text-unidecode is the most basic port of the Text::Unidecode Perl library.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
