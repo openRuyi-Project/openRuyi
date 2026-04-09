@@ -86,4 +86,4 @@ autoreconf -fi
 %{_mandir}/man1/psutils.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
