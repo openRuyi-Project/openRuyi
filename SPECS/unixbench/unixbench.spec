@@ -69,4 +69,4 @@ cp -rp pgms/* %{buildroot}%{unixbench_prefix}/pgms/
 %{unixbench_prefix}
 
 %changelog
-%{?autochangelog}
+%autochangelog
