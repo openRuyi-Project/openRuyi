@@ -55,4 +55,4 @@ autoreconf -fiv
 %doc %{_docdir}/libXmu
 
 %changelog
-%{?autochangelog}
+%autochangelog
