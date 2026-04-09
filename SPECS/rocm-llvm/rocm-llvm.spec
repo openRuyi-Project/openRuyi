@@ -295,4 +295,4 @@ rm -f %{buildroot}%{_datadir}/doc/hipcc/README.md
 %{_bindir}/hipvars.pm
 
 %changelog
-%{?autochangelog}
+%autochangelog
