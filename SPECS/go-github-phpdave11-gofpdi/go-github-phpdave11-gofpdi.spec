@@ -37,4 +37,4 @@ gofpdi allows you to import an existing PDF into a new PDF.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
