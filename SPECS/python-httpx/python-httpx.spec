@@ -37,4 +37,4 @@ Python HTTP client with async support.
 %{_bindir}/httpx
 
 %changelog
-%{?autochangelog}
+%autochangelog
