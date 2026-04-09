@@ -36,4 +36,4 @@ generating RSA, ECDSA, and Ed25519 keys.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
