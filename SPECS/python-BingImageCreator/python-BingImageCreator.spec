@@ -44,4 +44,4 @@ Image Creator service.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
