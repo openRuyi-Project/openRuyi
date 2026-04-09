@@ -35,4 +35,4 @@ multierr allows combining one or more Go errors together.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
