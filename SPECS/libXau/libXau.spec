@@ -52,4 +52,4 @@ X.Org X11 libXau development package
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
