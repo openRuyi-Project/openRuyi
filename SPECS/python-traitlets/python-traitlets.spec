@@ -37,4 +37,4 @@ This package powers the config system of IPython and Jupyter.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
