@@ -34,4 +34,4 @@ editor.org/rfc/rfc6455.txt) protocol. The package API is stable.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
