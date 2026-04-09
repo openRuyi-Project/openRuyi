@@ -86,4 +86,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/dialog.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
