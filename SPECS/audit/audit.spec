@@ -105,4 +105,4 @@ install -d -m 750 %{buildroot}%{_sysconfdir}/audisp/plugins.d
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
