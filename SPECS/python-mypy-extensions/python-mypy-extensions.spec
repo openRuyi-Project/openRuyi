@@ -39,4 +39,4 @@ The `mypy_extensions` module defines extensions to the Python standard library `
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
