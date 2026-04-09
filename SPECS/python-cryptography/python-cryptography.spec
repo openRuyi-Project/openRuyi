@@ -62,4 +62,4 @@ find . -name .keep -print -delete
 %license LICENSE LICENSE.APACHE LICENSE.BSD
 
 %changelog
-%{?autochangelog}
+%autochangelog
