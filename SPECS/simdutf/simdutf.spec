@@ -48,4 +48,4 @@ to develop applications that use the simdutf library.
 %{_libdir}/pkgconfig/simdutf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
