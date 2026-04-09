@@ -61,4 +61,4 @@ applications using QMI functionality.
 %{_datadir}/gir-1.0/Qmi-1.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
