@@ -88,4 +88,4 @@ mv %{buildroot}%{_datadir}/cmake/Tensile/*.cmake %{buildroot}%{python3_sitelib}/
 %{_bindir}/TensileRetuneLibrary
 
 %changelog
-%{?autochangelog}
+%autochangelog
