@@ -38,4 +38,4 @@ start an editor at any time from within less.
 %{_bindir}/lesskey
 
 %changelog
-%{?autochangelog}
+%autochangelog
