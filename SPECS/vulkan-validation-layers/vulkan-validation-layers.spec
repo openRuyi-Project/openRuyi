@@ -65,4 +65,4 @@ Vulkan validation layers.
 %{_libdir}/libVkLayer_*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
