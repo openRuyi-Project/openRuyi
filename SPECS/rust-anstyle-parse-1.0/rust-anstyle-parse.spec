@@ -50,4 +50,4 @@ Additionally, this package also provides the "default" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
