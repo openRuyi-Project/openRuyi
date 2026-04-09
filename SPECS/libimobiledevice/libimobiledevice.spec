@@ -67,4 +67,4 @@ echo %{version} > .tarball-version
 %{_includedir}/libimobiledevice/
 
 %changelog
-%{?autochangelog}
+%autochangelog
