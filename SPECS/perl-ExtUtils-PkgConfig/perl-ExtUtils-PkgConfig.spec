@@ -40,4 +40,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes perl-ExtUtils-PkgConfig.doap README
 
 %changelog
-%{?autochangelog}
+%autochangelog
