@@ -68,4 +68,4 @@ install -p -m 0644 nis-domainname.service %{buildroot}%{_unitdir}
 %{_libexecdir}/hostname/
 
 %changelog
-%{?autochangelog}
+%autochangelog
