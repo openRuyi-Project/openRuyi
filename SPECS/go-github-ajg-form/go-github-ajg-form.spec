@@ -37,4 +37,4 @@ both of which natively employ said format.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
