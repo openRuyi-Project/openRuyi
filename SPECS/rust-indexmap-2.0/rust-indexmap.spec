@@ -89,4 +89,4 @@ This metapackage enables feature "sval" for the Rust indexmap crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
