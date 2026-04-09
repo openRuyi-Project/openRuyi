@@ -40,4 +40,4 @@ and Jython.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
