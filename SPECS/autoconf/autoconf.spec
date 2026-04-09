@@ -50,4 +50,4 @@ only required for the generation of the scripts, not their use.
 %{_mandir}/man1/*.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
