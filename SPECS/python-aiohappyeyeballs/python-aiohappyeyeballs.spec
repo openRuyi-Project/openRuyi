@@ -42,4 +42,4 @@ names via another method such as zeroconf.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
