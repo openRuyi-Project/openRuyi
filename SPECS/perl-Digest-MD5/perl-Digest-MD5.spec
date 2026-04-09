@@ -46,4 +46,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes README rfc1321.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
