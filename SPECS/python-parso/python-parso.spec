@@ -41,4 +41,4 @@ is also able to list multiple syntax errors in your python file.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
