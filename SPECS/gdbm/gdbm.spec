@@ -100,4 +100,4 @@ GROUP ( %{_libdir}/libgdbm.so %{_libdir}/libgdbm_compat.so )" > %{buildroot}/%{_
 %{_mandir}/man3/gdbm.3%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
