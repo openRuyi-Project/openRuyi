@@ -54,4 +54,4 @@ Pytest plugin to randomly order tests and control random.seed.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
