@@ -48,4 +48,4 @@ sed -i 's/^LDFLAGS = .*$/LDFLAGS = -Wl,-z,relro,-z,now/' tests/Makefile
 %{_datadir}/zsh/site-functions/_patchelf
 
 %changelog
-%{?autochangelog}
+%autochangelog
