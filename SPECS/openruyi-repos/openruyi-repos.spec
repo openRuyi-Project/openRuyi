@@ -46,4 +46,4 @@ install -c -m 644 %{_vendor}.repo %{buildroot}%{_sysconfdir}/yum.repos.d/%{_vend
 %config(noreplace) %{_sysconfdir}/yum.repos.d/%{_vendor}.repo
 
 %changelog
-%{?autochangelog}
+%autochangelog
