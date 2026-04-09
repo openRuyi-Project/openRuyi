@@ -56,4 +56,4 @@ development/testing.
 %{_mandir}/man1/priv_wrapper.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
