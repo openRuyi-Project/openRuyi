@@ -56,4 +56,4 @@ EOF2
 %license hf_xet/LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
