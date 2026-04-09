@@ -34,4 +34,4 @@ single Tree implementation, optimized for sparse nodes.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
