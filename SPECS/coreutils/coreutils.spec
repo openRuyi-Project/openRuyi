@@ -56,4 +56,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_infodir}/coreutils.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
