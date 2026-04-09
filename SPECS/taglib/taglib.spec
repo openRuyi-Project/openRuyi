@@ -86,4 +86,4 @@ cp -a %{_vpath_builddir}/doc/html/* %{buildroot}%{_docdir}/%{name}/html/
 %{_libdir}/pkgconfig/taglib_c.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
