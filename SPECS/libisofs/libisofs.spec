@@ -54,4 +54,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libisofs*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
