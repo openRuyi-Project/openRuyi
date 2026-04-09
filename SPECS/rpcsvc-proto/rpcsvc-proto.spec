@@ -55,4 +55,4 @@ autoreconf -fiv
 %{_includedir}/rpcsvc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
