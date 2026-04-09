@@ -42,4 +42,4 @@ needed to develop applications that use the tinyxml2 library.
 %{_libdir}/pkgconfig/tinyxml2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
