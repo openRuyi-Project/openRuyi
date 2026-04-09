@@ -37,4 +37,4 @@ text, using a heuristic similar to Perl's pp_fttext.
 %{_bindir}/binaryornot
 
 %changelog
-%{?autochangelog}
+%autochangelog
