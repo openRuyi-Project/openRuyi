@@ -30,4 +30,4 @@ use the more secure public key authentication method instead.
 %{_mandir}/man1/sshpass.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
