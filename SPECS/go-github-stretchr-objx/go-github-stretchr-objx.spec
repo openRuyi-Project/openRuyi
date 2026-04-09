@@ -37,4 +37,4 @@ too much about type assertions, missing data, default values etc.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
