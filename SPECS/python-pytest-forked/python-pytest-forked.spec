@@ -39,4 +39,4 @@ C++ libraries that might crash the process. To use the plugin, simply use the
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
