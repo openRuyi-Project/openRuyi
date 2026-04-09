@@ -35,4 +35,4 @@ Tempita is a small templating language for text substitution.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
