@@ -44,4 +44,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes CITATION.cff INSTALL.SKIP SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
