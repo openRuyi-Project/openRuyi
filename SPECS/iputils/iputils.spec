@@ -56,4 +56,4 @@ echo ".so man8/tracepath.8" > ${RPM_BUILD_ROOT}%{_mandir}/man8/tracepath6.8
 %{_mandir}/man8/tracepath6.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
