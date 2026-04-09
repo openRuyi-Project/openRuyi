@@ -37,4 +37,4 @@ BFloat16 conversion utilities for Go/Golang
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
