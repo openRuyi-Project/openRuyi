@@ -79,4 +79,4 @@ about a point.
 %{_libdir}/pkgconfig/qhullstatic*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
