@@ -48,4 +48,4 @@ rm ./tests/sspi_stub.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
