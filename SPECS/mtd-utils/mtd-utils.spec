@@ -76,4 +76,4 @@ autoreconf -fiv
 %{_sbindir}/fsck.ubifs
 
 %changelog
-%{?autochangelog}
+%autochangelog
