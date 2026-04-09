@@ -34,4 +34,4 @@ directories, e.g. a "user data dir".
 %doc  README.rst CHANGES.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
