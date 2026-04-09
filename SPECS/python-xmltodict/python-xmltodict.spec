@@ -39,4 +39,4 @@ Wikipedia.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
