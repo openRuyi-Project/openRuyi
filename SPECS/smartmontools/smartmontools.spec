@@ -87,4 +87,4 @@ mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
 %{_sharedstatedir}/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
