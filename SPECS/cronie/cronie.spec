@@ -146,4 +146,4 @@ install -m 644 -D contrib/cronie.systemd $RPM_BUILD_ROOT/usr/lib/systemd/system/
 %{_sbindir}/anacron
 
 %changelog
-%{?autochangelog}
+%autochangelog
