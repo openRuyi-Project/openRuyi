@@ -37,4 +37,4 @@ Filesystem event notification library on steroids.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
