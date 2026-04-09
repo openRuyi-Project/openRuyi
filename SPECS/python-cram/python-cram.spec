@@ -47,4 +47,4 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} PYTHON=%{__python3} scripts/cram -v te
 %{_bindir}/cram
 
 %changelog
-%{?autochangelog}
+%autochangelog
