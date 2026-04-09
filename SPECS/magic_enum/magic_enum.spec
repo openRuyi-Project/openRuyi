@@ -33,4 +33,4 @@ rm -f %{buildroot}%{_datadir}/%{name}/package.xml
 %{_datadir}/pkgconfig/magic_enum.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
