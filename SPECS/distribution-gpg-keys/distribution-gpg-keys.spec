@@ -36,4 +36,4 @@ rm -rf %{buildroot}%{_datadir}/%{name}/copr
 %{_datadir}/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
