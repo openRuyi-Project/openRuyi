@@ -43,4 +43,4 @@ Requires:       curl-impersonate-chrome
 %{_bindir}/curl-cffi
 
 %changelog
-%{?autochangelog}
+%autochangelog
