@@ -79,4 +79,4 @@ install -D -m0644 %{SOURCE1} %{buildroot}%{_mandir}/man1/xslt-config.1
 %doc doc/*.html doc/tutorial doc/tutorial2
 
 %changelog
-%{?autochangelog}
+%autochangelog
