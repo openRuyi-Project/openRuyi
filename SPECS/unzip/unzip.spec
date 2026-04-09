@@ -101,4 +101,4 @@ export RPM_OPT_FLAGS="%{optflags} \
 %{_mandir}/*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
