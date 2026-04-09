@@ -81,4 +81,4 @@ This metapackage enables feature "serde" for the Rust wasm-metadata crate, by pu
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
