@@ -39,4 +39,4 @@ the core of Git.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
