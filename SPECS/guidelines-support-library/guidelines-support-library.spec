@@ -46,4 +46,4 @@ it is simplest to just include gsl/gsl and gain access to the entire library.
 %{_includedir}/gsl/
 
 %changelog
-%{?autochangelog}
+%autochangelog
