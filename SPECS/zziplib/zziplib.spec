@@ -55,4 +55,4 @@ zziplib library.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
