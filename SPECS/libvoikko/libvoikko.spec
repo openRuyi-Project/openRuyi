@@ -82,4 +82,4 @@ install -pm 0644 python/libvoikko.py %{buildroot}/%{python3_sitelib}/
 %{python3_sitelib}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
