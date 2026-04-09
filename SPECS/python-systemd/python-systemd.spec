@@ -41,4 +41,4 @@ provided by systemd. Other functionality provided the library is also wrapped.
 %doc README*
 %license LICENSE.txt
 %changelog
-%{?autochangelog}
+%autochangelog
