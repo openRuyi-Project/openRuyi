@@ -81,4 +81,4 @@ to iSCSI servers without having to set up the Linux iSCSI initiator.
 %{_mandir}/man1/iscsi-md5sum.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
