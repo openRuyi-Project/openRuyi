@@ -86,4 +86,4 @@ This package contains CLI tools.
 %{_mandir}/man1/igzip.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
