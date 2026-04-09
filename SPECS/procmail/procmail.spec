@@ -61,4 +61,4 @@ find examples -type f | xargs chmod 644
 %{_mandir}/man[15]/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
