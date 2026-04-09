@@ -51,4 +51,4 @@ autoreconf -fiv
 %{_datadir}/doc/%{name}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
