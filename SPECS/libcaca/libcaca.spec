@@ -102,4 +102,4 @@ This package contains the python bindings for using libcaca from python.
 %{python3_sitelib}/caca/
 
 %changelog
-%{?autochangelog}
+%autochangelog
