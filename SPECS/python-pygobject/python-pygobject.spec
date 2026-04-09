@@ -67,4 +67,4 @@ This package contains files required to embed PyGObject
 %{_libdir}/pkgconfig/pygobject-3.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
