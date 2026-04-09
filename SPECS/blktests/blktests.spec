@@ -63,4 +63,4 @@ framework.
 %{_prefix}/lib/blktests
 
 %changelog
-%{?autochangelog}
+%autochangelog
