@@ -65,4 +65,4 @@ end
 %{_libdir}/sysusers.d/system-user-root.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
