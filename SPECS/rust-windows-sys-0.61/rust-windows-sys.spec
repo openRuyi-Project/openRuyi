@@ -277,4 +277,4 @@ Source code for takopackized Rust crate "windows-sys"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
