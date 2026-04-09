@@ -54,4 +54,4 @@ autoreconf -fiv
 %{_docdir}/libXrender/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
