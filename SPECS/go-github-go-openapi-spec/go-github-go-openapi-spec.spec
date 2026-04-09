@@ -43,4 +43,4 @@ The object model for OpenAPI v2 specification documents.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
