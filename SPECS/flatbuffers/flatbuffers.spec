@@ -77,4 +77,4 @@ cd python
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
