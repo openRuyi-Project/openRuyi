@@ -40,4 +40,4 @@ and zh-hant. It also fully supports MediaWiki's manual conversion syntax.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
