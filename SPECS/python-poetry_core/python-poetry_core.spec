@@ -35,4 +35,4 @@ compatible build front-ends to build Poetry managed projects.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
