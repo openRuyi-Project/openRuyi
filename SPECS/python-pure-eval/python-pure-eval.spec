@@ -42,4 +42,4 @@ arbitrary code that may have unwanted side effects.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
