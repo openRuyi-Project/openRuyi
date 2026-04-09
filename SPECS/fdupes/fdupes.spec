@@ -41,4 +41,4 @@ install -D -m755 fdupes_wrapper  %{buildroot}%{_prefix}/lib/rpm/fdupes_wrapper
 %{_prefix}/lib/rpm/fdupes_wrapper
 
 %changelog
-%{?autochangelog}
+%autochangelog
