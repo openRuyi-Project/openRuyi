@@ -53,4 +53,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libva*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
