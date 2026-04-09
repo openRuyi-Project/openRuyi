@@ -59,4 +59,4 @@ mv NEWS.new NEWS
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
