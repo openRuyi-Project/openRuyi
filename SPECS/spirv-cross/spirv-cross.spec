@@ -55,4 +55,4 @@ done
 %_datadir/spirv*/cmake/
 
 %changelog
-%{?autochangelog}
+%autochangelog
