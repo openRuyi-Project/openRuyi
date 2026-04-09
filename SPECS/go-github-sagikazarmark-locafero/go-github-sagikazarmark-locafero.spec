@@ -38,4 +38,4 @@ from go-finder (https://github.com/sagikazarmark/go-finder).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
