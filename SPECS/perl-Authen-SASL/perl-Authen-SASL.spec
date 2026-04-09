@@ -48,4 +48,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc api.txt Changes eg README
 
 %changelog
-%{?autochangelog}
+%autochangelog
