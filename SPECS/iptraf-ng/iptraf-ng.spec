@@ -55,4 +55,4 @@ install -d -m 0755 %{buildroot}/run/%{name}/
 %dir /run/iptraf-ng/
 
 %changelog
-%{?autochangelog}
+%autochangelog
