@@ -94,4 +94,4 @@ This metapackage enables feature "unty" for the Rust smallvec crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
