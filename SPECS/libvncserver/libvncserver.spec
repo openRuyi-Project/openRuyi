@@ -69,4 +69,4 @@ done
 %{_libdir}/cmake/LibVNCServer/
 
 %changelog
-%{?autochangelog}
+%autochangelog
