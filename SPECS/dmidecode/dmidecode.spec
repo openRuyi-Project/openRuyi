@@ -46,4 +46,4 @@ version, and asset tag.
 %{_mandir}/man8/*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
