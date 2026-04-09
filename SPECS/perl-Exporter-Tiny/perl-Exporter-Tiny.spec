@@ -45,4 +45,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CREDITS doap.ttl NEWS README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
