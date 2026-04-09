@@ -43,4 +43,4 @@ Development files for GPGME++.
 %{_libdir}/cmake/Gpgmepp/
 
 %changelog
-%{?autochangelog}
+%autochangelog
