@@ -133,4 +133,4 @@ popd
 %doc docs/libcurl/symbols-in-versions
 
 %changelog
-%{?autochangelog}
+%autochangelog
