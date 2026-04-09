@@ -72,4 +72,4 @@ rm %{buildroot}%{_prefix}/lib/rustlib/manifest-*
 %endif
 %exclude %{_sysconfdir}/target-spec-json-schema.json
 %changelog
-%{?autochangelog}
+%autochangelog
