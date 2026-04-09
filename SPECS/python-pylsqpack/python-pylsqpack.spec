@@ -35,4 +35,4 @@ Python wrapper for the ls-qpack QPACK library.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
