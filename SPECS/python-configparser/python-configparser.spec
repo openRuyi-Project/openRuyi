@@ -40,4 +40,4 @@ enhanced ConfigParser from later Python versions.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
