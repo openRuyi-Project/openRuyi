@@ -39,4 +39,4 @@ and MIME-type output.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
