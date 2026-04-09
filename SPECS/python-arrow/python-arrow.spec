@@ -46,4 +46,4 @@ sed -i 's/tzdata;python_version/pytzdata;python_version/' pyproject.toml
 %doc README.rst CHANGELOG.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
