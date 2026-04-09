@@ -230,4 +230,4 @@ fi
 %{_infodir}/gdb.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
