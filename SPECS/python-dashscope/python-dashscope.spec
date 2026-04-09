@@ -52,4 +52,4 @@ sed -i 's/version=get_version(),/version="%{version}",/' setup.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
