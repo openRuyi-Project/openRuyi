@@ -40,4 +40,4 @@ use with the awesome Requests Python library.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
