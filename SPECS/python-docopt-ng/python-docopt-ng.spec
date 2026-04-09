@@ -34,4 +34,4 @@ programmatically with command-line parsers like @code{getopt} and
 %doc README*
 %license LICENSE-MIT
 %changelog
-%{?autochangelog}
+%autochangelog
