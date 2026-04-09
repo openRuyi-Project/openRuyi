@@ -112,4 +112,4 @@ strip --remove-section=.note.gnu.build-id %{buildroot}%{_prefix}/lib/rustlib/%{r
 %exclude %{_sysconfdir}/target-spec-json-schema.json
 
 %changelog
-%{?autochangelog}
+%autochangelog
