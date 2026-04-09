@@ -33,4 +33,4 @@ Development files for tllist.
 %{_docdir}/tllist
 
 %changelog
-%{?autochangelog}
+%autochangelog
