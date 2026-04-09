@@ -47,4 +47,4 @@ authentication technologies and more.
 %{_bindir}/flask
 
 %changelog
-%{?autochangelog}
+%autochangelog
