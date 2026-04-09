@@ -56,4 +56,4 @@ cd %{_builddir}/go/src/%{go_import_path}
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
