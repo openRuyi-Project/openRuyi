@@ -406,4 +406,4 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
 %doc %{_mandir}/man8/rpm-plugin-unshare*
 
 %changelog
-%{?autochangelog}
+%autochangelog
