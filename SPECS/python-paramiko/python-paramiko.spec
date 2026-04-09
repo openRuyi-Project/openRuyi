@@ -44,4 +44,4 @@ machines.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
