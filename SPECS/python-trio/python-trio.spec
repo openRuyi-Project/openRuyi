@@ -43,4 +43,4 @@ has an obsessive focus on usability and correctness.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
