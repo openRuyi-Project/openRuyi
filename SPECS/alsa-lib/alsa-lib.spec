@@ -109,4 +109,4 @@ rm -f %{buildroot}%{_includedir}/asoundlib.h
 %{_datadir}/aclocal/alsa.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
