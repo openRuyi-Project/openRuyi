@@ -40,4 +40,4 @@ High-level wrapper around a subset of the OpenSSL library, includes among others
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
