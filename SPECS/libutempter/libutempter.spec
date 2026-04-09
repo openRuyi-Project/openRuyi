@@ -52,4 +52,4 @@ Development files for %{name}.
 %{_libdir}/libutempter.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
