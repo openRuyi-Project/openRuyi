@@ -85,4 +85,4 @@ rm src/virtualenv/seed/wheels/embed/wheel-*
 %{_bindir}/virtualenv
 
 %changelog
-%{?autochangelog}
+%autochangelog
