@@ -414,4 +414,4 @@ done
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
