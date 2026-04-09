@@ -59,4 +59,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_infodir}/m4.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
