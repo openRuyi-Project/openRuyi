@@ -45,4 +45,4 @@ find . -type f -name \*.c -print0 | xargs -0 sed -i 's/YYSTACKSIZE 500/YYSTACKSI
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
