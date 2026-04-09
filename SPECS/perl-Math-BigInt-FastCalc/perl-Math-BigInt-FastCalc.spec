@@ -46,4 +46,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc CHANGES CREDITS README README.md TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
