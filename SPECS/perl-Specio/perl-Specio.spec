@@ -82,4 +82,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CODE_OF_CONDUCT.md CONTRIBUTING.md dev-bin git GOVERNANCE.md mise.toml perlcriticrc perltidyrc precious.toml README.md SECURITY.md SUPPORT.md TODO.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
