@@ -395,4 +395,4 @@ make alltools
 %{_mandir}/man3/libswscale.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
