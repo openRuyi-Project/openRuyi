@@ -52,4 +52,4 @@ developing applications that use %{name}.
 %{_mandir}/man3/MMDB_*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
