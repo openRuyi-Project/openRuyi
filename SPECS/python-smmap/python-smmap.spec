@@ -41,4 +41,4 @@ to allow continued operation.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
