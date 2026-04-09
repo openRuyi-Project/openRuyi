@@ -152,4 +152,4 @@ fi
 %doc Doc/*.html
 
 %changelog
-%{?autochangelog}
+%autochangelog
