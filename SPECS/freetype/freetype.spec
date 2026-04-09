@@ -116,4 +116,4 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
