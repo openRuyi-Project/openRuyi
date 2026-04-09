@@ -72,4 +72,4 @@ Development headers and library for libvpx.
 %{_libdir}/libvpx.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
