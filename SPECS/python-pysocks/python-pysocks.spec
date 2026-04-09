@@ -37,4 +37,4 @@ drop-in replacement to the socket module.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
