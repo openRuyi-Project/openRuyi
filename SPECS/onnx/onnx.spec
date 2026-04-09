@@ -103,4 +103,4 @@ install -p "./onnx/"*.proto -t "%{buildroot}/%{_includedir}/onnx/"
 %{_bindir}/check-node
 
 %changelog
-%{?autochangelog}
+%autochangelog
