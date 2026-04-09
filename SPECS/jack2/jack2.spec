@@ -86,4 +86,4 @@ mv %{buildroot}%{_datadir}/jack-audio-connection-kit %{buildroot}%{_docdir}
 %{_libdir}/pkgconfig/jack.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
