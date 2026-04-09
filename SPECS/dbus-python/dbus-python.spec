@@ -58,4 +58,4 @@ hooking up custom mainloops to the D-Bus Python bindings.
 %{_libdir}/pkgconfig/dbus-python.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
