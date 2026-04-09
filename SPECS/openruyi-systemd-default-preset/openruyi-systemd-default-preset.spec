@@ -71,4 +71,4 @@ install -m 0644 %{SOURCE3} %{buildroot}%{_presetdir}/80-openruyi-desktop.preset
 %{_presetdir}/80-openruyi-desktop.preset
 
 %changelog
-%{?autochangelog}
+%autochangelog
