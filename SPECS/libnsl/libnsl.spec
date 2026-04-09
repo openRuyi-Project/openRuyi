@@ -52,4 +52,4 @@ rm %{buildroot}%{_libdir}/%{name}.la
 %{_libdir}/pkgconfig/libnsl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
