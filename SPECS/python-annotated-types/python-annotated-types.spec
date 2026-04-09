@@ -38,4 +38,4 @@ This package provides metadata objects which can be used to represent common con
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
