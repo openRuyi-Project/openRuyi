@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_mandir}/man3/X?omposite*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
