@@ -60,4 +60,4 @@ install -D -p -m 644 %{SOURCE1} \
 %{_userunitdir}/xdg-desktop-portal-wlr.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
