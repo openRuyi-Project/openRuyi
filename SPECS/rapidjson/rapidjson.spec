@@ -53,4 +53,4 @@ find . -type f -name CMakeLists.txt -print0 | xargs -0 sed -i -e "s/-march=nativ
 %{_includedir}/rapidjson/
 
 %changelog
-%{?autochangelog}
+%autochangelog
