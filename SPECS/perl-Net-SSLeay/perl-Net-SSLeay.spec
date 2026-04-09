@@ -58,4 +58,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes CONTRIBUTING.md Credits QuickRef README README.OSX README.VMS README.Win32
 
 %changelog
-%{?autochangelog}
+%autochangelog
