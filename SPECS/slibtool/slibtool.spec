@@ -69,4 +69,4 @@ that use functionality provided by slibtool.
 %{_datadir}/slibtool/
 
 %changelog
-%{?autochangelog}
+%autochangelog
