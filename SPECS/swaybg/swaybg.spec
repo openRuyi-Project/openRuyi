@@ -35,4 +35,4 @@ and other image formats supported by gdk-pixbuf, as well as solid colors.
 %{_mandir}/man1/swaybg.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
