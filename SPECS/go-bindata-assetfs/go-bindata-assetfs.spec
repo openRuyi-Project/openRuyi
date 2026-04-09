@@ -33,4 +33,4 @@ bindata) with net/http.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
