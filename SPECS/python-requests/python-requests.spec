@@ -32,4 +32,4 @@ than Python’s urllib2 library.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
