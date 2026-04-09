@@ -82,4 +82,4 @@ rm -rf %{buildroot}%{_datadir}/libtool
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
