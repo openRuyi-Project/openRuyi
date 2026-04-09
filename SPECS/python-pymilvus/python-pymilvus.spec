@@ -42,4 +42,4 @@ Python SDK for Milvus.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
