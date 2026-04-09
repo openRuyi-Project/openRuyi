@@ -73,4 +73,4 @@ install -d %{buildroot}%{_localstatedir}/lib/%{name}
 %attr(0644,root,dhcpcd) %dir %{_localstatedir}/lib/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
