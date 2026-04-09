@@ -41,4 +41,4 @@ same arguments.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
