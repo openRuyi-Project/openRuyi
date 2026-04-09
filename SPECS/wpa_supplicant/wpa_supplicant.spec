@@ -101,4 +101,4 @@ install -m 0644 wpa_supplicant/doc/docbook/*.5 %{buildroot}%{_mandir}/man5
 %{_mandir}/man5/wpa_supplicant.conf.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
