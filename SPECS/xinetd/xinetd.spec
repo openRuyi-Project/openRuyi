@@ -68,4 +68,4 @@ install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/xinetd
 %config(noreplace) %{_sysconfdir}/sysconfig/xinetd
 
 %changelog
-%{?autochangelog}
+%autochangelog
