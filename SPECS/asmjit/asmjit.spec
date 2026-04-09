@@ -50,4 +50,4 @@ Headers and libraries for asmjit
 %{_libdir}/cmake/asmjit/
 
 %changelog
-%{?autochangelog}
+%autochangelog
