@@ -42,4 +42,4 @@ different devices and distributed setups with minimal code changes.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
