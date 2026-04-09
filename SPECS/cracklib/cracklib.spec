@@ -138,4 +138,4 @@ fi
 %{_sbindir}/mkdict
 
 %changelog
-%{?autochangelog}
+%autochangelog
