@@ -41,4 +41,4 @@ which is the recommended way to use GLib from Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
