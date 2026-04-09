@@ -65,4 +65,4 @@ rm -f testsuite/taskset.tests
 %{_mandir}/man1/busybox.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
