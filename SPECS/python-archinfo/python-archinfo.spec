@@ -38,4 +38,4 @@ information. It is useful for cross-architecture tools.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
