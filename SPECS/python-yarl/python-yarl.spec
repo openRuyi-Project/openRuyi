@@ -43,4 +43,4 @@ The module provides handy URL class for URL parsing and changing.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
