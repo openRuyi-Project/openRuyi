@@ -57,4 +57,4 @@ Static library for the %{name} library
 %{_libdir}/libunistring.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
