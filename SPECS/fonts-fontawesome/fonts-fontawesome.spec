@@ -65,4 +65,4 @@ cp -pr */css */less */scss %{buildroot}%{_datadir}/fontawesome-web/
 %{_datadir}/webfonts/fontawesome/
 
 %changelog
-%{?autochangelog}
+%autochangelog
