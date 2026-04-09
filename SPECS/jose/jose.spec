@@ -57,4 +57,4 @@ rm -f %{buildroot}%{_licensedir}/%{name}/COPYING
 %{_mandir}/man3/jose*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
