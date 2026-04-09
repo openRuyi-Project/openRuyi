@@ -45,4 +45,4 @@ is derived from Rsync's wildmatch. Git uses wildmatch for its gitignore files.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
