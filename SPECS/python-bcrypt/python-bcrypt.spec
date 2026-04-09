@@ -42,4 +42,4 @@ Password Scheme"} by Niels Provos and David Mazieres.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
