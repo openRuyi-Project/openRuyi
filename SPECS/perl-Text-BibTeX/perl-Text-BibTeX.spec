@@ -56,4 +56,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_libdir}/libbtparse.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
