@@ -39,4 +39,4 @@ strings from various source files, and merging them back into template files.
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
