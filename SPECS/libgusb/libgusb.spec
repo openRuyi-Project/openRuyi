@@ -53,4 +53,4 @@ Development files for %{name}.
 %{_datadir}/vala/vapi/gusb.deps
 
 %changelog
-%{?autochangelog}
+%autochangelog
