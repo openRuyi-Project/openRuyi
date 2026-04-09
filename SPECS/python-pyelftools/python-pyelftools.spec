@@ -38,4 +38,4 @@ Format (DWARF).
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
