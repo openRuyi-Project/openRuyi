@@ -212,4 +212,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
