@@ -56,4 +56,4 @@ sed -e 's,/usr/local/lib/,%{_libdir}/,g' -i os/os-linux.h
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
