@@ -75,4 +75,4 @@ Development files for the python3-talloc bindings.
 %{_libdir}/libpytalloc-util.cpython*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
