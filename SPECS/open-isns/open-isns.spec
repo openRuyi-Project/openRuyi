@@ -85,4 +85,4 @@ applications that use the open-isns library.
 %{_libdir}/pkgconfig/libisns.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
