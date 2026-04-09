@@ -123,4 +123,4 @@ touch -r %{S:1} %{buildroot}%{_bindir}/rpmautospec
 %{_rpmmacrodir}/macros.rpmautospec
 
 %changelog
-%{?autochangelog}
+%autochangelog
