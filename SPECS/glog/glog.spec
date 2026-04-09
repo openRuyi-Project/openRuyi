@@ -53,4 +53,4 @@ developing applications that use %{name}.
 %{_includedir}/glog/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
