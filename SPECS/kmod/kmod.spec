@@ -108,4 +108,4 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/modprobe.d
 %{_libdir}/libkmod.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
