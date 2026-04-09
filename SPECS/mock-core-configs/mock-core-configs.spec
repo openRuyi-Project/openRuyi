@@ -91,4 +91,4 @@ fi
 %ghost %config(noreplace,missingok) %{_sysconfdir}/mock/default.cfg
 
 %changelog
-%{?autochangelog}
+%autochangelog
