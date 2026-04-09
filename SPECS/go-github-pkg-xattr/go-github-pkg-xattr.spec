@@ -37,4 +37,4 @@ Extended attribute support for Go (linux + darwin + freebsd + netbsd + solaris).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
