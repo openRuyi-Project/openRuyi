@@ -61,4 +61,4 @@ chmod -x %{buildroot}%{_sysconfdir}/bash_completion.d/dbus-bash-completion.sh
 %{_libexecdir}/dbus-bash-completion-helper
 
 %changelog
-%{?autochangelog}
+%autochangelog
