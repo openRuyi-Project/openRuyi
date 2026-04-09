@@ -65,4 +65,4 @@ rm -rf %{buildroot}%{_docdir}/speex*
 %{_datadir}/aclocal/speex.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
