@@ -305,4 +305,4 @@ fi
 %{_udevrulesdir}/90-scsi-ua.rules
 
 %changelog
-%{?autochangelog}
+%autochangelog
