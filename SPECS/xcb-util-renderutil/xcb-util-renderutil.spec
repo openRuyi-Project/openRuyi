@@ -54,4 +54,4 @@ in %lname.
 %{_libdir}/pkgconfig/xcb-renderutil.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
