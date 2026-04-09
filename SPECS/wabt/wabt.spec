@@ -77,4 +77,4 @@ Static libraries for %{name}.
 %{_libdir}/libwasm-rt-impl.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
