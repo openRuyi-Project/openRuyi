@@ -182,4 +182,4 @@ rm -f %{buildroot}%{_libdir}/e2initrd_helper
 %{_mandir}/man3/com_err.3.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
