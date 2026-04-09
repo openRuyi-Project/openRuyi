@@ -36,4 +36,4 @@ Implementation of various data structures and algorithms in Go.
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
