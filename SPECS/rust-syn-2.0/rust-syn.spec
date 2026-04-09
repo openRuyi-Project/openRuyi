@@ -72,4 +72,4 @@ This metapackage enables feature "proc-macro" for the Rust syn crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
