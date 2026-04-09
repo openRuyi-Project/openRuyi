@@ -38,4 +38,4 @@ not support windows but ts has full windows support.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
