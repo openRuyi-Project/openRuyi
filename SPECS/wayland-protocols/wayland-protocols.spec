@@ -45,4 +45,4 @@ available in the Wayland core protocol.
 %{_includedir}/wayland-protocols/
 
 %changelog
-%{?autochangelog}
+%autochangelog
