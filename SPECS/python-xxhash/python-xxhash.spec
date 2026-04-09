@@ -46,4 +46,4 @@ export XXHASH_LINK_SO=1
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
