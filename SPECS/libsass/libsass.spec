@@ -54,4 +54,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libsass.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
