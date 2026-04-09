@@ -50,4 +50,4 @@ libthai.
 %{_libdir}/pkgconfig/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
