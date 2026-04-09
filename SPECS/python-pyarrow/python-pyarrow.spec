@@ -64,4 +64,4 @@ export PYARROW_CXXFLAGS="-DXXH_VECTOR=0"
 %license LICENSE.txt NOTICE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
