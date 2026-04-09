@@ -56,4 +56,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
