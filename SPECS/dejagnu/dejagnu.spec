@@ -91,4 +91,4 @@ ln -s -f %{_sysconfdir}/dejagnu/site.exp %{buildroot}%{_datadir}/dejagnu/site.ex
 %{_datadir}/dejagnu/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
