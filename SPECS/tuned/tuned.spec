@@ -246,4 +246,4 @@ done
 %{_mandir}/man8/scomes.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
