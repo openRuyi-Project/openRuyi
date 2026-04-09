@@ -67,4 +67,4 @@ autoreconf -is
 %{_mandir}/man7/atf.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
