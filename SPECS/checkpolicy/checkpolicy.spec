@@ -50,4 +50,4 @@ install test/dispol %{buildroot}%{_bindir}/sedispol
 %{_mandir}/man?/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
