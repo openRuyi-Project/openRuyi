@@ -113,4 +113,4 @@ fi
 %{_tmpfilesdir}/openvswitch.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
