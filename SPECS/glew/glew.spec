@@ -74,4 +74,4 @@ find %{buildroot} -type f -name "*.a" -delete
 %doc doc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
