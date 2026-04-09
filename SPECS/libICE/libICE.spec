@@ -50,4 +50,4 @@ The X.Org X11 ICE (Inter-Client Exchange) development package.
 %{_docdir}/%{name}/*.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
