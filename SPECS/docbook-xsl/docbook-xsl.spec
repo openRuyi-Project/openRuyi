@@ -166,4 +166,4 @@ fi
 %{_datadir}/sgml/docbook/xsl-ns-stylesheets
 
 %changelog
-%{?autochangelog}
+%autochangelog
