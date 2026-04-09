@@ -36,4 +36,4 @@ inspired by hyper-h2.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
