@@ -80,4 +80,4 @@ install -Dpm 0755 %{SOURCE3} %{buildroot}%{_prefix}/lib/dracut/modules.d/98%{nam
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
