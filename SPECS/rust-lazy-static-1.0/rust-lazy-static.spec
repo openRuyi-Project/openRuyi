@@ -42,4 +42,4 @@ Additionally, this package also provides the "spin_no_std" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
