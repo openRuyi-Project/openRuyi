@@ -84,4 +84,4 @@ start (https://grpc.io/docs/languages/go/quickstart).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
