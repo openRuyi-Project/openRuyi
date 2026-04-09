@@ -44,4 +44,4 @@ SOCKS5. socksio is a sans-I/O library similar to h11 or h2.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
