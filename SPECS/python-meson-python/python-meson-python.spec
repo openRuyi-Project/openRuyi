@@ -42,4 +42,4 @@ Meson-python is a PEP 517 build backend for Meson projects.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
