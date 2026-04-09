@@ -75,4 +75,4 @@ rm -rf %{buildroot}%{_prefix}/share/doc/rocprofiler-register/LICENSE.md
 %{_libdir}/cmake/rocprofiler-register/
 
 %changelog
-%{?autochangelog}
+%autochangelog
