@@ -45,4 +45,4 @@ developing applications that use %{name}.
 %{_includedir}/libnftnl
 
 %changelog
-%{?autochangelog}
+%autochangelog
