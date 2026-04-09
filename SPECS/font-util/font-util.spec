@@ -44,4 +44,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/fontutil.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
