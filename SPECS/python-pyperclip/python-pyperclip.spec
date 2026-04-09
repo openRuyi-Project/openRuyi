@@ -38,4 +38,4 @@ Pyperclip is a cross-platform Python module for copy and paste clipboard functio
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
