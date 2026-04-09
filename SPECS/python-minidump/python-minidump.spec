@@ -47,4 +47,4 @@ rm -rf minidump/writer.py
 %{_bindir}/minidump
 
 %changelog
-%{?autochangelog}
+%autochangelog
