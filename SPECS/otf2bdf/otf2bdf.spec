@@ -49,4 +49,4 @@ chmod a+x mkinstalldirs
 %{_mandir}/man1/otf2bdf.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
