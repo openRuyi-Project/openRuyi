@@ -36,4 +36,4 @@ install -Dm0755 scripts/* %{buildroot}%{_rpmconfigdir}
 %{_rpmconfigdir}/perl.req
 
 %changelog
-%{?autochangelog}
+%autochangelog
