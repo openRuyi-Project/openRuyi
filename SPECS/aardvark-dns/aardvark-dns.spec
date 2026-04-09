@@ -58,4 +58,4 @@ EOF
 %{_libexecdir}/podman/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
