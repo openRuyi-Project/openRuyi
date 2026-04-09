@@ -85,4 +85,4 @@ export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig
 %{_libdir}/cmake/Qca-qt6/
 
 %changelog
-%{?autochangelog}
+%autochangelog
