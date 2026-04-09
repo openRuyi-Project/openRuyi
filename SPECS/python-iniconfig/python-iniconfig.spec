@@ -73,4 +73,4 @@ export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
