@@ -149,4 +149,4 @@ install -p %{_pyproject_wheeldir}/%{python_wheel_name} -t %{buildroot}%{python_w
 %{python_wheel_dir}/%{python_wheel_name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
