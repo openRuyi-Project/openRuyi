@@ -57,4 +57,4 @@ rm -rf src/lib/hash/sha*
 %{_includedir}/zck.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
