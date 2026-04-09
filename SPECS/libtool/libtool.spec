@@ -73,4 +73,4 @@ sed -i "/uname -n/d" %{buildroot}%{_datadir}/aclocal/libtool.m4
 %{_libdir}/libltdl.so.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
