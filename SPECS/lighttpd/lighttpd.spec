@@ -431,4 +431,4 @@ install -m0644 -D %{SOURCE4} %{buildroot}/usr/lib/tmpfiles.d/lighttpd.conf
 %{_sysusersdir}/lighttpd.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
