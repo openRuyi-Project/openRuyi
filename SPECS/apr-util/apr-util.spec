@@ -182,4 +182,4 @@ rm -f %{buildroot}%{_libdir}/apr-util-1/*.*a
 %{_datadir}/aclocal/*.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
