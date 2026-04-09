@@ -138,4 +138,4 @@ system memory, which is useful for headless automation processes.
 %{_mandir}/man1/Xvfb.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
