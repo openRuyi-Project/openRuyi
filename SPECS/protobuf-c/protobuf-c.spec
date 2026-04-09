@@ -64,4 +64,4 @@ This package contains protobuf-c headers and libraries.
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
