@@ -57,4 +57,4 @@ The following scripts are provided at this time:
 %{_bindir}/xdg-settings
 
 %changelog
-%{?autochangelog}
+%autochangelog
