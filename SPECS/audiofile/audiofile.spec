@@ -78,4 +78,4 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
