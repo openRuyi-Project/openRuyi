@@ -34,4 +34,4 @@ A simple CSS parser and inliner in Golang.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
