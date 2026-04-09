@@ -90,4 +90,4 @@ This metapackage enables feature "wat" for the Rust wit-parser crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
