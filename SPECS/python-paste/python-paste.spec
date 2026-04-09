@@ -52,4 +52,4 @@ interfaces.
 %{python3_sitelib}/Paste-%{version}-py*-nspkg.pth
 
 %changelog
-%{?autochangelog}
+%autochangelog
