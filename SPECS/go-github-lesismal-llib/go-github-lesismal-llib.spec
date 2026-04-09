@@ -44,4 +44,4 @@ Blocking/NonBlocking TLS interface(rewritten from a copy of golang
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
