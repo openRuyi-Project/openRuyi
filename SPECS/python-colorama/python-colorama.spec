@@ -41,4 +41,4 @@ Termcolor.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
