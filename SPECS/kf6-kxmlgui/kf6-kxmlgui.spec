@@ -101,4 +101,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_plugindir}/designer/kxmlgui6widgets.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
