@@ -49,4 +49,4 @@ streaming format is added, this limit may be lifted.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
