@@ -44,4 +44,4 @@ library by Dom Lachowicz.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
