@@ -59,4 +59,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CONTRIBUTING README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
