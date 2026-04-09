@@ -41,4 +41,4 @@ make check
 %{_mandir}/man1/libtree.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
