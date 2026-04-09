@@ -43,4 +43,4 @@ You may also use it standalone for your projects.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
