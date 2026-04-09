@@ -40,4 +40,4 @@ autoreconf -fiv
 %doc %{_docdir}/asn1c
 
 %changelog
-%{?autochangelog}
+%autochangelog
