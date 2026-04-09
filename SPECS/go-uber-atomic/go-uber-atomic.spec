@@ -35,4 +35,4 @@ Simple wrappers for primitive types to enforce atomic access.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
