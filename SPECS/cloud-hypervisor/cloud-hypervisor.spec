@@ -104,4 +104,4 @@ install -D -m755 target/%{rust_def_target}/release/vhost_user_net %{buildroot}%{
 %license LICENSES/CC-BY-4.0.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
