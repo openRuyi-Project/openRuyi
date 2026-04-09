@@ -91,4 +91,4 @@ Development files.
 %{_kf6_dbusinterfacesdir}/org.kde.kded6.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
