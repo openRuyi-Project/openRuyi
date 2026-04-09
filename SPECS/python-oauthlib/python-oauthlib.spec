@@ -40,4 +40,4 @@ very little effort.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
