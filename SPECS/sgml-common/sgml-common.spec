@@ -194,4 +194,4 @@ fi
 %{_datadir}/xml/datatypes.dtd
 
 %changelog
-%{?autochangelog}
+%autochangelog
