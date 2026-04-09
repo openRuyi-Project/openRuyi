@@ -68,4 +68,4 @@ This metapackage enables feature "wat" for the Rust wit-component crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
