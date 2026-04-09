@@ -49,4 +49,4 @@ autoreconf -fiv
 %{_mandir}/man5/ltrace.conf.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
