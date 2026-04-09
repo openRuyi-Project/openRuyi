@@ -53,4 +53,4 @@ install -m 0644 ./nanorc %{buildroot}%{_sysconfdir}/nanorc
 %{_datadir}/nano
 
 %changelog
-%{?autochangelog}
+%autochangelog
