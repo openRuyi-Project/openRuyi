@@ -49,4 +49,4 @@ as JSON output mode for production.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
