@@ -73,4 +73,4 @@ This metapackage enables feature "serde" for the Rust dashmap crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
