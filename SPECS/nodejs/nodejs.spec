@@ -258,4 +258,4 @@ touch %{SOURCE1} %{buildroot}%{_sysconfdir}/npmrc
 %{_pkgdocdir}/npm/docs
 
 %changelog
-%{?autochangelog}
+%autochangelog
