@@ -81,4 +81,4 @@ popd
 %attr(0644, root, root) %{_libdir}/pkgconfig/libkeyutils.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
