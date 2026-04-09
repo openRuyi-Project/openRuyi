@@ -37,4 +37,4 @@ SOCKS proxy connector for aiohttp. SOCKS4(a) and SOCKS5 are supported.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
