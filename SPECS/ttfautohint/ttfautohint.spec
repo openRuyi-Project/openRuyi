@@ -63,4 +63,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/ttfautohint.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
