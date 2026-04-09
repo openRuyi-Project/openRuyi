@@ -34,4 +34,4 @@ variables in the @file{pytest.ini} file.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
