@@ -56,4 +56,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc Changes entities.html mkhctype mkpfunc README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
