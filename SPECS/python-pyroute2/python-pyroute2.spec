@@ -45,4 +45,4 @@ IPQ.
 %{python3_sitelib}/pr2modules
 
 %changelog
-%{?autochangelog}
+%autochangelog
