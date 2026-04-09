@@ -35,4 +35,4 @@ as an ordered, mutable data structure.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
