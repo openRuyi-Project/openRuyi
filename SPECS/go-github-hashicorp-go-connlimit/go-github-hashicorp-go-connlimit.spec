@@ -45,4 +45,4 @@ impose limits on the resources that can be consumed by a single client.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
