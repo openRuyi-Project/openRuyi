@@ -51,4 +51,4 @@ rm -rf %{buildroot}%{_docdir}/*
 %{_libdir}/pkgconfig/soxr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
