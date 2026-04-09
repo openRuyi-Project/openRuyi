@@ -47,4 +47,4 @@ install -D -p safe_math_impl.h -t %{buildroot}%{_includedir}/SafeInt/
 %{_includedir}/SafeInt/safe_math_impl.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
