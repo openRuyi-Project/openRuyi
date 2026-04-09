@@ -37,4 +37,4 @@ one probe into the data structure.
 %{_mandir}/man1/gperf.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
