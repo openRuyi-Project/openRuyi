@@ -50,4 +50,4 @@ applications that want to make use of lzlib.
 %{_infodir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
