@@ -41,4 +41,4 @@ This repository holds supplementary Go image packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
