@@ -121,4 +121,4 @@ their changes to their respective configuration files. Development files.
 %{_kf6_libexecdir}/kconfig_compiler_kf6
 
 %changelog
-%{?autochangelog}
+%autochangelog
