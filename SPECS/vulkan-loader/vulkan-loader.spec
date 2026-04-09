@@ -84,4 +84,4 @@ mkdir -p %{buildroot}%{_sysconfdir}/vulkan/{explicit,implicit}_layer.d/ \
 %{_libdir}/cmake/VulkanLoader/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
