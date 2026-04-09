@@ -54,4 +54,4 @@ files needed to develop applications that use the sdbus-cpp library.
 %{_libdir}/cmake/sdbus-c++/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
