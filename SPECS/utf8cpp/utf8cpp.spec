@@ -53,4 +53,4 @@ popd
 %{_datadir}/cmake/utf8cpp
 
 %changelog
-%{?autochangelog}
+%autochangelog
