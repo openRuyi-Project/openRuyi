@@ -97,4 +97,4 @@ cd docs
 %{_unitdir}/netavark-nftables-reload.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
