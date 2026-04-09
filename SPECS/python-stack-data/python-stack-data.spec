@@ -42,4 +42,4 @@ than the default. It powers the tracebacks in IPython and futurecoder.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
