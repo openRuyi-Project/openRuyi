@@ -44,4 +44,4 @@ sed -i "s|#!%{_bindir}/env python|#!%__python3|" python3/examples/*py
 %doc ACKS README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
