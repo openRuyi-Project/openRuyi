@@ -46,4 +46,4 @@ inside a container.
 %{_bindir}/tini-static
 
 %changelog
-%{?autochangelog}
+%autochangelog
