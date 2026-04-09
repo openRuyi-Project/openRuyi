@@ -38,4 +38,4 @@ This package provides common functions and methods for slices of float64
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
