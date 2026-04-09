@@ -64,4 +64,4 @@ popd
 %{_bindir}/substrings.pl
 
 %changelog
-%{?autochangelog}
+%autochangelog
