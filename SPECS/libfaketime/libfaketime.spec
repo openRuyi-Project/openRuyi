@@ -48,4 +48,4 @@ having to change the system-wide time, using a preload library.
 %{_libdir}/lib*.so*
 
 %changelog
-%{?autochangelog}
+%autochangelog
