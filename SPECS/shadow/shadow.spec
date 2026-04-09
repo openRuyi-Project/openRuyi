@@ -199,4 +199,4 @@ install -Dm644 %{SOURCE4} %{buildroot}%{_unitdir}/shadow.service
 %{_libdir}/libsubid.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
