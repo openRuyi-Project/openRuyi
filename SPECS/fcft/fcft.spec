@@ -77,4 +77,4 @@ rm -f %{buildroot}%{_docdir}/%{name}/LICENSE
 %{_mandir}/man3/
 
 %changelog
-%{?autochangelog}
+%autochangelog
