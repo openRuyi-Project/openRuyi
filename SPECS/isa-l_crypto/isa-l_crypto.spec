@@ -72,4 +72,4 @@ This package contains the development files needed to build against the shared l
 %{_libdir}/pkgconfig/libisal_crypto.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
