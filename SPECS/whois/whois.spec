@@ -65,4 +65,4 @@ mv %{buildroot}%{_sysconfdir}/bash_completion.d/{mkpasswd,whois} %{buildroot}%{_
 %{_datadir}/bash-completion/completions/mkpasswd
 
 %changelog
-%{?autochangelog}
+%autochangelog
