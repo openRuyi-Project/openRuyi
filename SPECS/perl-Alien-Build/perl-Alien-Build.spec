@@ -66,4 +66,4 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %doc author.yml Changes Changes.Alien-Base Changes.Alien-Base-Wrapper Changes.Alien-Build-Decode-Mojo Changes.Test-Alien perlcriticrc README spellcheck.ini SUPPORT weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
