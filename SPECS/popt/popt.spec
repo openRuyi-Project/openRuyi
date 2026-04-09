@@ -62,4 +62,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/popt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
