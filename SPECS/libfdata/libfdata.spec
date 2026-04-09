@@ -52,4 +52,4 @@ applications that want to make use of libfdata.
 %{_mandir}/man3/libfdata.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
