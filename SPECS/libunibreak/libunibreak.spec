@@ -48,4 +48,4 @@ applications that use the libunibreak library.
 %{_libdir}/pkgconfig/libunibreak.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
