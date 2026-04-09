@@ -78,4 +78,4 @@ This package contains the Python 3 files for pybind11.
 %files -n python-%{srcname} -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
