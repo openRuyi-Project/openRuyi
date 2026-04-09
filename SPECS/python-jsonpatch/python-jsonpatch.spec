@@ -38,4 +38,4 @@ JSON Patch is a Library to apply JSON Patches according to RFC 6902.
 %{_bindir}/jsonpatch
 
 %changelog
-%{?autochangelog}
+%autochangelog
