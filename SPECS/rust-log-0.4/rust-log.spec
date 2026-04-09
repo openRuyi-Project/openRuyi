@@ -160,4 +160,4 @@ This metapackage enables feature "value-bag" for the Rust log crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
