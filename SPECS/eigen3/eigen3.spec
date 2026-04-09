@@ -46,4 +46,4 @@ header files needed for development.
 %{_libdir}/libeigen_*
 
 %changelog
-%{?autochangelog}
+%autochangelog
