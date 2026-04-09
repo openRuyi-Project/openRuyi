@@ -74,4 +74,4 @@ is highly discouraged.
 %{_libdir}/*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
