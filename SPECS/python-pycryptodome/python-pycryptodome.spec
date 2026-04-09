@@ -58,4 +58,4 @@ implemented as C extensions.
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
