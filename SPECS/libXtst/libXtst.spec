@@ -52,4 +52,4 @@ X.Org X11 libXtst development package
 %{_mandir}/man3/XTest*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
