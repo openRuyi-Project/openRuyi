@@ -57,4 +57,4 @@ related files. Currently handled are:
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
