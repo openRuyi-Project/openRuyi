@@ -42,4 +42,4 @@ This is a code generation tool and serialization library for MessagePack. You ca
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
