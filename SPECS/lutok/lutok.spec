@@ -56,4 +56,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/lutok.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
