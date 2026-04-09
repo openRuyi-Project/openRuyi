@@ -44,4 +44,4 @@ sed -i 's/"typer",/"typer-slim",/' setup.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
