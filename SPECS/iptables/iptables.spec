@@ -349,4 +349,4 @@ fi
 %{_libdir}/pkgconfig/libip{,4,6}tc.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
