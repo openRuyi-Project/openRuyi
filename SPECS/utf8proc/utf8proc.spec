@@ -68,4 +68,4 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_libdir}/pkgconfig/libutf8proc.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
