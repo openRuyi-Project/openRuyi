@@ -43,4 +43,4 @@ representations mentioned in the standard.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
