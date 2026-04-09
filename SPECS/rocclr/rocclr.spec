@@ -172,4 +172,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/hip/LICENSE.md
 %{_includedir}/hip_prof_str.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
