@@ -68,4 +68,4 @@ rm -f %{buildroot}/%{_libdir}/pkgconfig/haisrt.pc
 %{_libdir}/pkgconfig/srt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
