@@ -106,4 +106,4 @@ of colors, fonts, text, images, keyboard input. Development files.
 %{_kf6_pkgconfigdir}/KF6GuiAddons.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
