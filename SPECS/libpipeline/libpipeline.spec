@@ -46,4 +46,4 @@ API documentation needed for development with libpipeline.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
