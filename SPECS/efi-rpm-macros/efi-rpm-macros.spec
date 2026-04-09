@@ -71,4 +71,4 @@ machine bootloaders and tools.
 %dir /boot/efi/EFI/%{_efi_vendor_}
 
 %changelog
-%{?autochangelog}
+%autochangelog
