@@ -60,4 +60,4 @@ mv doc/README doc/README.docs
 %{_libdir}/cmake/GtkDoc/
 
 %changelog
-%{?autochangelog}
+%autochangelog
