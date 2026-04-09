@@ -237,4 +237,4 @@ This metapackage enables feature "use-libc" for the Rust rustix crate, by pullin
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
