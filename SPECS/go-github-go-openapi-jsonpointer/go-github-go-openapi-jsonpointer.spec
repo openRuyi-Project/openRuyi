@@ -37,4 +37,4 @@ An implementation of JSON Pointer for golang, which supports go struct.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
