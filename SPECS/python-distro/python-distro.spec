@@ -44,4 +44,4 @@ information in various formats.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
