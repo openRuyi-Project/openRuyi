@@ -39,4 +39,4 @@ This package is based on the fantastic work of Erik Geiser
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
