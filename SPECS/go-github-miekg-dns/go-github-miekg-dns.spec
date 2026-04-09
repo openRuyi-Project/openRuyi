@@ -41,4 +41,4 @@ We try to keep the "master" branch as sane as possible and at the bleeding edge 
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
