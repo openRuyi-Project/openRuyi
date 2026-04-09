@@ -84,4 +84,4 @@ rm -f %{buildroot}%{_docdir}/*/*.{html,svg}
 %dir %{_docdir}/xorgproto/
 
 %changelog
-%{?autochangelog}
+%autochangelog
