@@ -36,4 +36,4 @@ QtTranslations contains the translation files for the Qt libraries.
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %changelog
-%{?autochangelog}
+%autochangelog
