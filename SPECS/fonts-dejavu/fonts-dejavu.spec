@@ -54,4 +54,4 @@ install -D -m 644 %{_builddir}/dejavu-fonts-version_%{majver}_%{minver}/fontconf
 %{_datadir}/fontconfig/conf.avail/*.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
