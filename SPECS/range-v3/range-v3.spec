@@ -46,4 +46,4 @@ Summary:        Development files for %{name}
 %{_libdir}/cmake/range-v3
 
 %changelog
-%{?autochangelog}
+%autochangelog
