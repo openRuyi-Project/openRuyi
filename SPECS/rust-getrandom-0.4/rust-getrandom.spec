@@ -55,4 +55,4 @@ This metapackage enables feature "wasm_js" for the Rust getrandom crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
