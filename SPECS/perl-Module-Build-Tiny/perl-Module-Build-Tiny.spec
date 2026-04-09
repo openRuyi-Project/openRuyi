@@ -80,4 +80,4 @@ perl Build.PL --installdirs=vendor
 %doc Changes README Todo
 
 %changelog
-%{?autochangelog}
+%autochangelog
