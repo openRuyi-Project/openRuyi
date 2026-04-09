@@ -76,4 +76,4 @@ install -D -p -m 0644 alsoftrc.sample %{buildroot}%{_sysconfdir}/openal/alsoft.c
 %{_libdir}/pkgconfig/openal.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
