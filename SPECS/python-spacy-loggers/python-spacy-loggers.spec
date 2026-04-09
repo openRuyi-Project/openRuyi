@@ -44,4 +44,4 @@ independently from the core spaCy library.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
