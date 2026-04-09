@@ -84,4 +84,4 @@ create KDED modules. Development files.
 %{_kf6_libdir}/libKF6DBusAddons.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
