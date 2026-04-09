@@ -38,4 +38,4 @@ a front-end for C compilers or analysis tools.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
