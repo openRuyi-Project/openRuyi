@@ -40,4 +40,4 @@ versa. It is reminiscent of Boost.Python and pybind11.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
