@@ -127,4 +127,4 @@ rm -f %{buildroot}%{_bindir}/cloud-publish-*
 %{_mandir}/man1/growpart.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
