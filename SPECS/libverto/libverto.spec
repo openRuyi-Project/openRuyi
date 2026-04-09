@@ -145,4 +145,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/%{name}-libev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
