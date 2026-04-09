@@ -63,4 +63,4 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/zsh/site-functions/ data/shell-compl
 %{_datadir}/zsh/site-functions/_meson
 
 %changelog
-%{?autochangelog}
+%autochangelog
