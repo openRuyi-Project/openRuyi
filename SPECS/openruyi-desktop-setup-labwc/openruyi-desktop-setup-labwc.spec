@@ -62,4 +62,4 @@ install -m 0644 %{_datadir}/openruyi-desktop-setup-labwc/waybar/power_menu.xml %
 %{_sysconfdir}/xdg/labwc/autostart
 
 %changelog
-%{?autochangelog}
+%autochangelog
