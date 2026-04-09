@@ -36,4 +36,4 @@ with TOML v1.0.0.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
