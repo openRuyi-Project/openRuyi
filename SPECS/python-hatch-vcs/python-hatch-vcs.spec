@@ -46,4 +46,4 @@ system (like Git) to determine project versions.
 %doc HISTORY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
