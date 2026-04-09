@@ -43,4 +43,4 @@ interface are provided.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
