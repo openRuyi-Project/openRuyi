@@ -55,4 +55,4 @@ make PREFIX=%{buildroot}%{_prefix} -C docs install
 %{_mandir}/man8/conmon.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
