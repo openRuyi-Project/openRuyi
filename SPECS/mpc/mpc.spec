@@ -54,4 +54,4 @@ MPC multiple-precision complex library development files.
 %{_includedir}/mpc.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
