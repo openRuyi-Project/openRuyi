@@ -881,4 +881,4 @@ rm -f %{buildroot}%{_mandir}/man8/vfs_glusterfs.8*
 %{_libdir}/samba/libpyldb-util.cpython-*-private-samba.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
