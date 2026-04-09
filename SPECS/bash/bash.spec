@@ -106,4 +106,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
