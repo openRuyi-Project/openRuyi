@@ -82,4 +82,4 @@ rm %{buildroot}%{_docdir}/%{name}/COPYRIGHT.txt
 %{_mandir}/man3/mpdecimal*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
