@@ -56,4 +56,4 @@ rm -rf %{_builddir}/python-%{srcname}-%{version}/mypyc/test
 %{_bindir}/stubtest
 
 %changelog
-%{?autochangelog}
+%autochangelog
