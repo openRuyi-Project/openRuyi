@@ -56,4 +56,4 @@ in %lname.
 %{_libdir}/pkgconfig/xcb-image.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
