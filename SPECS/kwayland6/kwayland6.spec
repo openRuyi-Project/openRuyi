@@ -77,4 +77,4 @@ libraries.
 %{_kf6_pkgconfigdir}/KWaylandClient.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
