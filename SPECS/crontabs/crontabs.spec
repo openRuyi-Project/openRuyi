@@ -54,4 +54,4 @@ touch %{buildroot}%{_sysconfdir}/sysconfig/run-parts
 %{_mandir}/man4/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
