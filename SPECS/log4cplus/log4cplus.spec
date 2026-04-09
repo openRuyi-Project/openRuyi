@@ -48,4 +48,4 @@ using log4cplus.
 %{_libdir}/pkgconfig/log4cplus.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
