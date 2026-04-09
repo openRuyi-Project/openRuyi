@@ -37,4 +37,4 @@ This package provides the DejaVu fonts as importable Go packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
