@@ -43,4 +43,4 @@ append and delete rules; create, clear and delete chains.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
