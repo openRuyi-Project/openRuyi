@@ -52,4 +52,4 @@ autoreconf -vif
 %{_libdir}/pkgconfig/liburcu*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
