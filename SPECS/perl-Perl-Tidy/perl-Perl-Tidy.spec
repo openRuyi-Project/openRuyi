@@ -43,4 +43,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc BUGS.md CHANGES.md INSTALL.md pm2pl README.md SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
