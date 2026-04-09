@@ -36,4 +36,4 @@ Python3 module for character encoding auto-detection
 %{_bindir}/chardetect
 
 %changelog
-%{?autochangelog}
+%autochangelog
