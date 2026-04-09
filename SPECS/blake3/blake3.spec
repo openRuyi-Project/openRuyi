@@ -65,4 +65,4 @@ export ASMFLAGS="%{build_cflags}"
 %{_libdir}/pkgconfig/libblake3.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
