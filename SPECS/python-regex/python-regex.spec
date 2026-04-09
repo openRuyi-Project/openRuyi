@@ -44,4 +44,4 @@ An alternate regex implementation. It differs from "re" in that
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
