@@ -81,4 +81,4 @@ sed 's,@libdir@,%{_libdir},;s,@prefix@,%{_prefix},;s,@exec_prefix@,%{_exec_prefi
 %doc %{_datadir}/doc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
