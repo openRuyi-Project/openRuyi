@@ -69,4 +69,4 @@ install -m 644 mkfs/f2fs_format_utils.h %{buildroot}%{_includedir}
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
