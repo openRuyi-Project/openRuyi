@@ -99,4 +99,4 @@ Development files.
 %{_kf6_libdir}/libKF6I18nQml.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
