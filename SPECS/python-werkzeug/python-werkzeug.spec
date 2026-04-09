@@ -41,4 +41,4 @@ routing system and a bunch of community contributed addon modules.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
