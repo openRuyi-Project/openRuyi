@@ -62,4 +62,4 @@ applications with nettle.
 %{_libdir}/pkgconfig/nettle.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
