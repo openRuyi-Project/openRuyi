@@ -46,4 +46,4 @@ autoreconf -fiv
 %{_datadir}/pkgconfig/mypaint-brushes-2.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
