@@ -41,4 +41,4 @@ websocket is a minimal and idiomatic WebSocket library for Go.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
