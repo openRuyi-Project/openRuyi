@@ -39,4 +39,4 @@ common object operations.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
