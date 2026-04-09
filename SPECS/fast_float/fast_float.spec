@@ -34,4 +34,4 @@ from_chars functions for float and double types as well as integer types.
 %{_datadir}/cmake/
 
 %changelog
-%{?autochangelog}
+%autochangelog
