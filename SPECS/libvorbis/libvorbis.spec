@@ -60,4 +60,4 @@ rm -f %{buildroot}%{_docdir}/%{name}-%{version}/doxygen-build.stamp
 %{_datadir}/aclocal/vorbis.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog
