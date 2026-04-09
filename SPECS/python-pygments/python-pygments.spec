@@ -38,4 +38,4 @@ Pygments is a syntax highlighting package written in Python.
 %{_bindir}/pygmentize
 
 %changelog
-%{?autochangelog}
+%autochangelog
