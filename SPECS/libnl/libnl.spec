@@ -107,4 +107,4 @@ popd
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
