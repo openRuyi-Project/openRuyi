@@ -167,4 +167,4 @@ mv examples docs
 %{_bindir}/db*_tuner
 
 %changelog
-%{?autochangelog}
+%autochangelog
