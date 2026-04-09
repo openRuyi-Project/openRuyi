@@ -88,4 +88,4 @@ install -Dpm 0644 -t %{buildroot}%{_libdir}/pkgconfig lmdb.pc
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
