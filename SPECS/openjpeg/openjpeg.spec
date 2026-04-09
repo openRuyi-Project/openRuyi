@@ -65,4 +65,4 @@ Development files for OpenJPEG 2.
 %{_datadir}/doc/
 
 %changelog
-%{?autochangelog}
+%autochangelog
