@@ -55,4 +55,4 @@ Development files for %{name}.
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %changelog
-%{?autochangelog}
+%autochangelog
