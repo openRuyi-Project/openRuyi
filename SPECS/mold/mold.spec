@@ -61,4 +61,4 @@ fi
 %{_mandir}/man1/mold.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
