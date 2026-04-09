@@ -115,4 +115,4 @@ Development files needed for building things which link against %{name}-glib.
 %{_datadir}/vala/vapi/libical-glib.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
