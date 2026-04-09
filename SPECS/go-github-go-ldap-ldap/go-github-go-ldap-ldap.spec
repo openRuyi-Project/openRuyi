@@ -52,4 +52,4 @@ The library implements the following specifications:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
