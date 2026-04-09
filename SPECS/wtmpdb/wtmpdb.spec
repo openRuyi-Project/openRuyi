@@ -89,4 +89,4 @@ ln -sf ../man8/wtmpdb.8 %{buildroot}%{_mandir}/man1/last.1
 %{_libdir}/pkgconfig/libwtmpdb.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
