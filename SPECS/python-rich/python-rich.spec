@@ -49,4 +49,4 @@ The Rich API makes it easy to add color and style to terminal output.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
