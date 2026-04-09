@@ -70,4 +70,4 @@ chrpath -d %{buildroot}%{_bindir}/%{name}
 %{_mandir}/man1/jq.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
