@@ -37,4 +37,4 @@ install -d "%{buildroot}%{_docdir}/%{name}"
 %doc %{_docdir}/tclap/
 
 %changelog
-%{?autochangelog}
+%autochangelog
