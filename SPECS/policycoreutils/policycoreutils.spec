@@ -316,4 +316,4 @@ rm -f %{buildroot}/etc/pam.d/run_init*
 %config(noreplace) %{_sysconfdir}/pam.d/newrole
 
 %changelog
-%{?autochangelog}
+%autochangelog
