@@ -42,4 +42,4 @@ The dnscache package provides a DNS cache layer to Go's net.Resolver.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
