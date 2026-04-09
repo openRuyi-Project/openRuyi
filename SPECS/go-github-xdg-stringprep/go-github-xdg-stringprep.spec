@@ -36,4 +36,4 @@ A pre-built SASLprep (RFC-4013) profile is provided as well.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
