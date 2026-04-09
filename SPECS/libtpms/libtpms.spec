@@ -54,4 +54,4 @@ NOCONFIGURE=1 ./autogen.sh
 %{_mandir}/man3/TPM*
 
 %changelog
-%{?autochangelog}
+%autochangelog
