@@ -55,4 +55,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libdecor-0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
