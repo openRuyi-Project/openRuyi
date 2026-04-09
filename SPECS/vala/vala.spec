@@ -161,4 +161,4 @@ autoreconf -fiv
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
