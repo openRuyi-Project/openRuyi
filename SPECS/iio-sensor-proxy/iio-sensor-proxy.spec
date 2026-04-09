@@ -85,4 +85,4 @@ This package contains the documentation for %{name}.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
