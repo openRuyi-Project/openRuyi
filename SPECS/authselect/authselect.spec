@@ -174,4 +174,4 @@ exit 0
 %{_libdir}/pkgconfig/authselect.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
