@@ -43,4 +43,4 @@ Includes a test-function decorator that sets time to an arbitrary value.
 %{python3_sitearch}/time_machine-%{version}.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
