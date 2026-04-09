@@ -38,4 +38,4 @@ provides support for parsing, splitting and formatting SQL statements.
 %{_bindir}/sqlformat
 
 %changelog
-%{?autochangelog}
+%autochangelog
