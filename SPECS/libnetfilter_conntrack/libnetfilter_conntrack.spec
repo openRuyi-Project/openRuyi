@@ -55,4 +55,4 @@ autoreconf -fiv
 %{_includedir}/libnetfilter_conntrack/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
