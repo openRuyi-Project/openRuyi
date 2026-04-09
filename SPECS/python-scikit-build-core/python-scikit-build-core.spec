@@ -62,4 +62,4 @@ cp -p src/scikit_build_core/_vendor/pyproject_metadata/LICENSE LICENSE-pyproject
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
