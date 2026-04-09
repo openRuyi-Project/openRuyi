@@ -40,4 +40,4 @@ entering their PIDs.
 %{_mandir}/man1/htop.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
