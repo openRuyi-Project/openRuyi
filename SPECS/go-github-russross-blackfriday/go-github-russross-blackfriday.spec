@@ -39,4 +39,4 @@ safe for all utf-8 (unicode) input.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
