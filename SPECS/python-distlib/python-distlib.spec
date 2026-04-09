@@ -39,4 +39,4 @@ rm distlib/*.exe
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
