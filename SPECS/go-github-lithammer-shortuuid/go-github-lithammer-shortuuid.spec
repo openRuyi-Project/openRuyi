@@ -36,4 +36,4 @@ Often, one needs to use non-sequential IDs in places where users will see them, 
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
