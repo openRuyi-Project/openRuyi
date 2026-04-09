@@ -64,4 +64,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
