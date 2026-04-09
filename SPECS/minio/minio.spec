@@ -53,4 +53,4 @@ go test -v ./... || :
 %{_bindir}/%{_name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
