@@ -151,4 +151,4 @@ fi
 %ghost %{_sysconfdir}/pki/ca-trust/extracted/edk2/cacerts.bin
 
 %changelog
-%{?autochangelog}
+%autochangelog
