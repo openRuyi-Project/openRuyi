@@ -51,4 +51,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_mandir}/man?/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
