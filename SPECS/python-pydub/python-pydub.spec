@@ -46,4 +46,4 @@ A Python module to manipulate audio with a high level interface.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
