@@ -92,4 +92,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_dbusinterfacesdir}/kf6_org.kde.kglobalaccel.Component.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog
