@@ -87,4 +87,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_datadir}/vala/vapi/libosinfo-1.0.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
