@@ -72,4 +72,4 @@ cp OTC/NotoSerifCJK-*.ttc %{buildroot}%{_datadir}/fonts/truetype
 %{_datadir}/fonts/truetype/NotoSerifCJK-*.ttc
 
 %changelog
-%{?autochangelog}
+%autochangelog
