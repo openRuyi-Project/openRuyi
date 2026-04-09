@@ -39,5 +39,4 @@ and on RFC 8141 (https://datatracker.ietf.org/doc/html/rfc8141).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
-
+%autochangelog
