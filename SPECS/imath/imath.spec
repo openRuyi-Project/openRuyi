@@ -85,4 +85,4 @@ Development files for Imath.
 %{_libdir}/libPyImath_Python*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
