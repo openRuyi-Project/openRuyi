@@ -69,4 +69,4 @@ developing applications that use libproxy.
 %{_datadir}/vala/vapi/libproxy-1.0.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog
