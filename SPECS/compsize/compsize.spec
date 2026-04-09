@@ -41,4 +41,4 @@ install -D -m 0644 %{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
 %{_mandir}/man8/compsize.8%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
