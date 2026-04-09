@@ -45,4 +45,4 @@ This package contains the header files and development libraries for %{name}.
 %{_libdir}/pkgconfig/xerces-c.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
