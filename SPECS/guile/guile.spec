@@ -74,4 +74,4 @@ linked in as a library when building extensible programs.
 %{_libdir}/pkgconfig/guile-*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
