@@ -63,4 +63,4 @@ This metapackage enables feature "wincon" for the Rust anstream crate, by pullin
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
