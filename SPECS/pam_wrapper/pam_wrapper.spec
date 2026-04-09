@@ -114,4 +114,4 @@ sed -i -e 's/assertRaisesRegexp/assertRaisesRegex/' tests/pypamtest_test.py
 %{python3_sitearch}/pypamtest.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
