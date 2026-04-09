@@ -122,4 +122,4 @@ sed -i '3i # PYTHON_ARGCOMPLETE_OK'  %{buildroot}%{_bindir}/git-obs
 %{_rpmconfigdir}/macros.d/macros.osc
 
 %changelog
-%{?autochangelog}
+%autochangelog
