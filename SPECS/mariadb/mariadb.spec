@@ -545,4 +545,4 @@ chmod 4755 %{_libdir}/mysql/plugin/auth_pam_tool_dir/auth_pam_tool 2>/dev/null |
 %files tools -f mariadb-tools.files
 
 %changelog
-%{?autochangelog}
+%autochangelog
