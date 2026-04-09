@@ -40,4 +40,4 @@ It does NOT try to match files on non-magic string.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
