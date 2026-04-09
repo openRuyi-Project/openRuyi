@@ -49,4 +49,4 @@ Lowercase "float16" refers to IEEE 754 binary16. And capitalized
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
