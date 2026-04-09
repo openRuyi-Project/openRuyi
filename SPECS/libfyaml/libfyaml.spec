@@ -56,4 +56,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libfyaml.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
