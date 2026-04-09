@@ -41,4 +41,4 @@ autoreconf -fiv
 %{_mandir}/man1/bdftopcf.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
