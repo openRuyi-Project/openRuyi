@@ -41,4 +41,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CITATION.cff INSTALL.SKIP SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
