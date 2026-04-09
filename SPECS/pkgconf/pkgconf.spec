@@ -195,4 +195,4 @@ rm -rf %{buildroot}%{_mandir}/man7
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
