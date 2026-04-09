@@ -75,4 +75,4 @@ done
 %{_localstatedir}/lib/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
