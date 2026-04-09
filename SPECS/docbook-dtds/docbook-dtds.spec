@@ -448,4 +448,4 @@ done
 %ghost %config(noreplace) %{_sysconfdir}/sgml/*ml-docbook-*.cat
 
 %changelog
-%{?autochangelog}
+%autochangelog
