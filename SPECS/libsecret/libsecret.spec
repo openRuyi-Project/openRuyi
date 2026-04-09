@@ -74,4 +74,4 @@ developing applications that use %{name}.
 %doc %{_docdir}/libsecret-1/
 
 %changelog
-%{?autochangelog}
+%autochangelog
