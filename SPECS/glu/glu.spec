@@ -44,4 +44,4 @@ find %{buildroot} -name '*.a' -delete
 %{_libdir}/pkgconfig/glu.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
