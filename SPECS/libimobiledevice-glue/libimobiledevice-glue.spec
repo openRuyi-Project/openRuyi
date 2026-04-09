@@ -52,4 +52,4 @@ echo "%{version}" > .tarball-version
 %{_libdir}/pkgconfig/libimobiledevice-glue-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
