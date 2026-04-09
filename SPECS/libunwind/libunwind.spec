@@ -61,4 +61,4 @@ rm -rf %{buildroot}%{_libexecdir}
 %{_includedir}/libunwind*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
