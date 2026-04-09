@@ -138,4 +138,4 @@ disk integrity protection using dm-integrity kernel module.
 %{_sbindir}/cryptsetup-ssh
 
 %changelog
-%{?autochangelog}
+%autochangelog
