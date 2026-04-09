@@ -69,4 +69,4 @@ install -Dm 755 test/probe.t %{buildroot}%{_bindir}/io_uring_probe
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
