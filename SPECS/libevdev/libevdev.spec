@@ -53,4 +53,4 @@ Development files for libevdev.
 %{_libdir}/pkgconfig/libevdev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
