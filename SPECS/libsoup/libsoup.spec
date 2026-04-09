@@ -81,4 +81,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_docdir}/libsoup-3.0/
 
 %changelog
-%{?autochangelog}
+%autochangelog
