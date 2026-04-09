@@ -63,4 +63,4 @@ within a single workflow.
 %{_bindir}/nipypecli
 
 %changelog
-%{?autochangelog}
+%autochangelog
