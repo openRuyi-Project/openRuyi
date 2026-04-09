@@ -36,4 +36,4 @@ retained. The buffer implements the io.Writer interface.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
