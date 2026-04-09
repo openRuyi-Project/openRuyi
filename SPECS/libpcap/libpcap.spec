@@ -72,4 +72,4 @@ export CFLAGS="%{optflags} -fno-strict-aliasing"
 %{_mandir}/man7/pcap-tstamp.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
