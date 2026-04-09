@@ -42,4 +42,4 @@ current Continuous Integration environment.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
