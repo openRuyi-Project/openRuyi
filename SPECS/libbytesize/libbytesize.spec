@@ -94,4 +94,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{python3_sitearch}/bytesize/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
