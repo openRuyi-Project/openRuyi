@@ -50,4 +50,4 @@ chmod a+x %{buildroot}%{_libexecdir}/%{name}/privs.sh
 %{_mandir}/man1/trinity.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
