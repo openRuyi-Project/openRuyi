@@ -46,4 +46,4 @@ Data validation using Python type hints.
 %{_bindir}/pythran-config
 
 %changelog
-%{?autochangelog}
+%autochangelog
