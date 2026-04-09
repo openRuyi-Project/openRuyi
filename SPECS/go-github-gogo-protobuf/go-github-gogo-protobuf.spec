@@ -51,4 +51,4 @@ This code generation is used to achieve:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
