@@ -46,4 +46,4 @@ applications that use the libdvdread library.
 %{_libdir}/pkgconfig/dvdread.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
