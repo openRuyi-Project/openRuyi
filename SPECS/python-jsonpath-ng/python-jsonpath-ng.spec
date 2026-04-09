@@ -42,4 +42,4 @@ original JSONPath proposal.
 %{_bindir}/jsonpath_ng
 
 %changelog
-%{?autochangelog}
+%autochangelog
