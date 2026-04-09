@@ -92,4 +92,4 @@ libraries, and for fast C modules that speed up the execution of Python code.
 %{_bindir}/cythonize
 
 %changelog
-%{?autochangelog}
+%autochangelog
