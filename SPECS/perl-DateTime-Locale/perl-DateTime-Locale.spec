@@ -77,4 +77,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes CODE_OF_CONDUCT.md CONTRIBUTING.md LICENSE.cldr mise.toml perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
