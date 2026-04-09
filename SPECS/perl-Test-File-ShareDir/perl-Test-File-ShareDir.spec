@@ -62,4 +62,4 @@ perl Makefile.PL INSTALLDIRS=vendor
 %doc Changes dist.ini.meta perlcritic.rc README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
