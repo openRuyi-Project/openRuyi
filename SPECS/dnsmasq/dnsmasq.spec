@@ -125,4 +125,4 @@ install -p -Dpm 644 %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 %{_mandir}/man8/dnsmasq*
 
 %changelog
-%{?autochangelog}
+%autochangelog
