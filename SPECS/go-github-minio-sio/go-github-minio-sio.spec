@@ -46,4 +46,4 @@ to manipulate the data - even if the data is encrypted.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
