@@ -41,4 +41,4 @@ original structure is left untouched.
 %doc CHANGES.txt README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
