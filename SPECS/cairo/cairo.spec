@@ -155,4 +155,4 @@ This package contains tools for working with the cairo graphics library.
 %{_libdir}/cairo/
 
 %changelog
-%{?autochangelog}
+%autochangelog
