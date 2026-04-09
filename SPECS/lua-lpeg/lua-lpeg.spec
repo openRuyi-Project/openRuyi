@@ -48,4 +48,4 @@ install -p -m 0644 re.lua %{buildroot}%{lua_pkgdir}/
 %{lua_pkgdir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
