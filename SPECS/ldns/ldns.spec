@@ -87,4 +87,4 @@ Python extensions for ldns
 %{python3_sitearch}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
