@@ -72,4 +72,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
