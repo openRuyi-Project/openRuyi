@@ -63,4 +63,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_libdir}/cmake/LibJWT/
 
 %changelog
-%{?autochangelog}
+%autochangelog
