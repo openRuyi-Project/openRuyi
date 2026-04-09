@@ -69,4 +69,4 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_infodir}/libffi.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
