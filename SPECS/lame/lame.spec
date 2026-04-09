@@ -62,4 +62,4 @@ rm -rf %{buildroot}%{_docdir}/%{name}
 
 
 %changelog
-%{?autochangelog}
+%autochangelog
