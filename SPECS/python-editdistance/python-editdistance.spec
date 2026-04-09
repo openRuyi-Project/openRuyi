@@ -47,4 +47,4 @@ find %{buildroot}%{python3_sitearch} -type f \( \
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
