@@ -47,4 +47,4 @@ Requires:       pkgconfig
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
