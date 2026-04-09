@@ -58,4 +58,4 @@ mv libnop-%{libnop_commit}/* third_party/libnop
 %{_datadir}/cmake/Tensorpipe/
 
 %changelog
-%{?autochangelog}
+%autochangelog
