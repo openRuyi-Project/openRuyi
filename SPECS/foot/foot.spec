@@ -71,4 +71,4 @@ Fast, lightweight and minimalistic Wayland terminal emulator.
 %{_datadir}/terminfo/f/%{foot_terminfo}-direct
 
 %changelog
-%{?autochangelog}
+%autochangelog
