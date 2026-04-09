@@ -94,4 +94,4 @@ install -m 755 %{__cmake_builddir}/tools/sst_dump %{buildroot}%{_bindir}/sst_dum
 %{_includedir}/rocksdb
 
 %changelog
-%{?autochangelog}
+%autochangelog
