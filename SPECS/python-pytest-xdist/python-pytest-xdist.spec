@@ -71,4 +71,4 @@ export CI=true
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
