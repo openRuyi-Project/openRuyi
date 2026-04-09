@@ -75,4 +75,4 @@ rm -f %{buildroot}%{_sysconfdir}/pkcs11/pkcs11.conf.example
 %{_libdir}/pkgconfig/p11-kit-1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
