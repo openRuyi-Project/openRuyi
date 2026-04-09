@@ -38,4 +38,4 @@ cryptographic Hash algorithm, working at speeds close to RAM limits.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
