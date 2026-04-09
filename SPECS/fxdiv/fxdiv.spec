@@ -44,4 +44,4 @@ Development files for fxdiv.
 %{_includedir}/fxdiv.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
