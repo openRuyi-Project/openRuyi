@@ -60,4 +60,4 @@ that simplifies development without sacrificing performance:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
