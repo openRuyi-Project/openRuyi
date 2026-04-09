@@ -112,4 +112,4 @@ sed -e "s|#!/usr/bin/python|#!%{__python3}|" \
 %{_libdir}/build/mkdrpms
 
 %changelog
-%{?autochangelog}
+%autochangelog
