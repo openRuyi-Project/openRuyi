@@ -109,4 +109,4 @@ export ac_cv_func_select=no
 %{_libdir}/%{name}_pthreads.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
