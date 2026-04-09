@@ -118,4 +118,4 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_rpmconfigdir}/fileattrs/gstreamer.at
 %{_datadir}/cmake/FindGStreamer.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
