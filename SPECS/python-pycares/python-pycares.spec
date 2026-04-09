@@ -49,4 +49,4 @@ export PYCARES_USE_SYSTEM_LIB=1
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
