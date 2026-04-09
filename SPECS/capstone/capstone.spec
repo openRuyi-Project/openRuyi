@@ -103,4 +103,4 @@ sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
 %{_docdir}/%{srcname}-doc/docs/
 
 %changelog
-%{?autochangelog}
+%autochangelog
