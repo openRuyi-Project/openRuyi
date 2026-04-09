@@ -51,4 +51,4 @@ which are the subset required for upstream Mesa OpenCL support with RustiCL.
 %{_datadir}/clc/*.bc
 
 %changelog
-%{?autochangelog}
+%autochangelog
