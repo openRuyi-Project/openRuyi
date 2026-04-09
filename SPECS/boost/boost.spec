@@ -144,4 +144,4 @@ rm -rf %{buildroot}%{_datadir}/boost_predef
 %{_libdir}/cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
