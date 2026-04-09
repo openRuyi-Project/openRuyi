@@ -47,4 +47,4 @@ developing applications that use libmnl.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
