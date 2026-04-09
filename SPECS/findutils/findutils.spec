@@ -68,4 +68,4 @@ rm %{buildroot}%{_mandir}/man5/locatedb.5*
 %{_mandir}/man1/xargs.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
