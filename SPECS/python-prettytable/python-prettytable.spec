@@ -40,4 +40,4 @@ a row range.
 %doc README.md CHANGELOG.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
