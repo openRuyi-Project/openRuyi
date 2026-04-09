@@ -43,4 +43,4 @@ LS_COLORS environment variable is set and output is to tty.
 %{_mandir}/man1/tree.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
