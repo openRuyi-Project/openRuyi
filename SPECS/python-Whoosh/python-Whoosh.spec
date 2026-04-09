@@ -42,4 +42,4 @@ needs.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
