@@ -50,4 +50,4 @@ autoreconf -fiv
 %{_mandir}/man5/kyua*.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
