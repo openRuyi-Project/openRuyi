@@ -54,4 +54,4 @@ install -m 644 doc/doxygen.1 %{buildroot}%{_mandir}/man1/
 %attr(755,root,root) %{_bindir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
