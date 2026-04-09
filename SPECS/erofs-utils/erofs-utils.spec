@@ -43,4 +43,4 @@ autoreconf -fiv
 %{_mandir}/man1/*erofs*
 
 %changelog
-%{?autochangelog}
+%autochangelog
