@@ -34,4 +34,4 @@ Foreign Function Interface for Python calling C code.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
