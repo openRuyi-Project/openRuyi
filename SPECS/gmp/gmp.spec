@@ -65,4 +65,4 @@ export LD_LIBRARY_PATH=`pwd`/.libs
 %{_libdir}/pkgconfig/gmpxx.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
