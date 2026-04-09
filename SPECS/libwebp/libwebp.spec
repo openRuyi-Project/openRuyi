@@ -79,4 +79,4 @@ developing applications that use %{name}.
 %{_libdir}/cmake/WebP/
 
 %changelog
-%{?autochangelog}
+%autochangelog
