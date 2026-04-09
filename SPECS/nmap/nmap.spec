@@ -125,4 +125,4 @@ ln -s ncat %{buildroot}%{_bindir}/nc
 %{_mandir}/man1/*.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
