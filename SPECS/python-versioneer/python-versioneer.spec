@@ -41,4 +41,4 @@ by asking the version control system about the current tree.
 %{_bindir}/versioneer
 
 %changelog
-%{?autochangelog}
+%autochangelog
