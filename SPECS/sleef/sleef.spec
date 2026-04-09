@@ -204,4 +204,4 @@ find docs/ -type f -name .nojekyll -print -delete
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
