@@ -48,4 +48,4 @@ develop applications that use the JsonCpp library.
 %{_includedir}/json/
 
 %changelog
-%{?autochangelog}
+%autochangelog
