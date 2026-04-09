@@ -93,4 +93,4 @@ install -t '%{buildroot}%{_mandir}/man1' -p -m 0644 '%{SOURCE1}' '%{SOURCE2}'
 %files -n python-%{name} -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
