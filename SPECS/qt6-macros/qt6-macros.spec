@@ -29,4 +29,4 @@ install -D -m644 %{SOURCE0} %{buildroot}%{_rpmmacrodir}/macros.qt6
 %{_rpmmacrodir}/macros.qt6
 
 %changelog
-%{?autochangelog}
+%autochangelog
