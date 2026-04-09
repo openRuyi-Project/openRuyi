@@ -116,4 +116,4 @@ install -D -p -m 644 tools/21-cloudinit.conf %{buildroot}%{_sysconfdir}/rsyslog.
 %dir /var/lib/cloud
 
 %changelog
-%{?autochangelog}
+%autochangelog
