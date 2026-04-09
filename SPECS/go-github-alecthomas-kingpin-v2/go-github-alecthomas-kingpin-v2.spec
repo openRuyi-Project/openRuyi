@@ -43,4 +43,4 @@ parser. It supports flags, nested commands, and positional arguments.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
