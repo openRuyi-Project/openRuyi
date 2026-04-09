@@ -44,4 +44,4 @@ won't find in the ISO standard.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
