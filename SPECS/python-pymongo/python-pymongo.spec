@@ -130,4 +130,4 @@ export PYMONGO_C_EXT_MUST_BUILD=1
 %{python3_sitearch}/gridfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
