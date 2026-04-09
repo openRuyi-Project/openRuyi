@@ -33,4 +33,4 @@ logger written in Go Programming Language (https://go.dev).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
