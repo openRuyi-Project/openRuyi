@@ -62,4 +62,4 @@ install -D -m0644 -t %{buildroot}%{_udevrulesdir} %{SOURCE1}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
