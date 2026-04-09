@@ -53,4 +53,4 @@ rm -rfv %{buildroot}%{_libdir}/xeve*
 %{_libdir}/pkgconfig/xeve*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
