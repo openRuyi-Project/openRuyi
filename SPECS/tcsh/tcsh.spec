@@ -88,4 +88,4 @@ fi
 %{_mandir}/man1/*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
