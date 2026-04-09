@@ -75,4 +75,4 @@ install -p -D -m 0600 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/%{name}-co
 %{_mandir}/man8/ipvsadm-save.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
