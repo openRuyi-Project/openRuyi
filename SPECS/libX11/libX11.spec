@@ -80,4 +80,4 @@ rm -rf %{buildroot}%{_docdir}
 %{_mandir}/man5/*.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
