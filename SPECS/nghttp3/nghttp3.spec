@@ -51,4 +51,4 @@ This package contains the header files and development libraries for nghttp3.
 %{_libdir}/cmake/
 
 %changelog
-%{?autochangelog}
+%autochangelog
