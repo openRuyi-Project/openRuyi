@@ -77,4 +77,4 @@ rm -rf %{buildroot}%{_includedir}
 %{_libexecdir}/hipify
 
 %changelog
-%{?autochangelog}
+%autochangelog
