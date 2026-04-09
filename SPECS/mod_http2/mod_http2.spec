@@ -49,4 +49,4 @@ make check
 %{_httpd_moddir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
