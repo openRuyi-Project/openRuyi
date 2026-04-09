@@ -65,4 +65,4 @@ rm -rf %{buildroot}%{_docdir}/JasPer
 %{_libdir}/pkgconfig/jasper.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
