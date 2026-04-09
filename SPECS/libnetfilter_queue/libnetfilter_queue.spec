@@ -54,4 +54,4 @@ that use the libnetfilter_queue library.
 %{_includedir}/libnetfilter_queue/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
