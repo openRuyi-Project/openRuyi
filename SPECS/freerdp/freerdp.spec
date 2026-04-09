@@ -196,4 +196,4 @@ find %{buildroot} -name "*.a" -delete
 %{_mandir}/man1/freerdp-shadow-cli.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
