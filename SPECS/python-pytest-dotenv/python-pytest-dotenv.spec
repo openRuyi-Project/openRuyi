@@ -32,4 +32,4 @@ from a .env file before running tests.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
