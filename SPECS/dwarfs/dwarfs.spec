@@ -92,4 +92,4 @@ This package contains the development files for DwarFS.
 %{_libdir}/cmake/dwarfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
