@@ -64,4 +64,4 @@ sed -i 's@cmake_minimum_required(VERSION 3.1@cmake_minimum_required(VERSION 3.5@
 %{_libdir}/libfoxi_loader.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
