@@ -186,4 +186,4 @@ install -pm 755 %{SOURCE6} %{buildroot}%{_libexecdir}/%{name}/sensord-service-wr
 %{_mandir}/man8/sensord.8.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog
