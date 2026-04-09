@@ -101,4 +101,4 @@ ln -s bzgrep.1 $RPM_BUILD_ROOT%{_mandir}/man1/bzfgrep.1
 %{_libdir}/libbz2.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
