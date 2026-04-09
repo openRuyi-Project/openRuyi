@@ -146,4 +146,4 @@ fi;
 %{_libdir}/libsframe.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
