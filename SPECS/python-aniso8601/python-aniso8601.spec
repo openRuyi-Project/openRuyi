@@ -39,4 +39,4 @@ datetime format.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
