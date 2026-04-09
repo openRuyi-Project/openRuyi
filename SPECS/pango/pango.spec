@@ -78,4 +78,4 @@ The pango-devel package includes the header files for the pango package.
 %{_datadir}/gir-1.0/PangoXft-1.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
