@@ -57,4 +57,4 @@ echo "%{version}" > .tarball-version
 %{_libdir}/pkgconfig/libusbmuxd-2.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
