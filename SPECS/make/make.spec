@@ -77,4 +77,4 @@ fi
 %{_infodir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
