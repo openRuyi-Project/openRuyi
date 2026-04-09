@@ -47,4 +47,4 @@ tqdm(iterable), and you’re done!
 %license LICENCE
 
 %changelog
-%{?autochangelog}
+%autochangelog
