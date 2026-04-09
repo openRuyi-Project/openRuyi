@@ -53,4 +53,4 @@ is a standardized data description and serialization language.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
