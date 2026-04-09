@@ -84,4 +84,4 @@ make test -j1
 %{_includedir}/jbig*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
