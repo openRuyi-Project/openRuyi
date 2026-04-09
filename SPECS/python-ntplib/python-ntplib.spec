@@ -38,4 +38,4 @@ modules, it should work on any platform with a Python implementation.
 %doc CHANGELOG
 
 %changelog
-%{?autochangelog}
+%autochangelog
