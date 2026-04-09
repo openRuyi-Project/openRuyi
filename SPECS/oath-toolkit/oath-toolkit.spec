@@ -93,4 +93,4 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
 %{_libdir}/security/pam_oath.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
