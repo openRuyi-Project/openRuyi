@@ -81,4 +81,4 @@ This package contains Python binding for libnvme.
 %{python3_sitearch}/libnvme/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
