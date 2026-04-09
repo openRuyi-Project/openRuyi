@@ -56,4 +56,4 @@ jsonschema is an implementation of JSON Schema for Python (supporting
 %{_bindir}/jsonschema
 
 %changelog
-%{?autochangelog}
+%autochangelog
