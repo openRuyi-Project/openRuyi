@@ -44,4 +44,4 @@ better introspection with the same interface as the pdb module.
 %{_bindir}/ipdb3
 
 %changelog
-%{?autochangelog}
+%autochangelog
