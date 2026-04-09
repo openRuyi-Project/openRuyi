@@ -40,4 +40,4 @@ saving time.  Almost all of the Olson timezones are supported.
 %license LICENSE.txt
 %doc README*
 %changelog
-%{?autochangelog}
+%autochangelog
