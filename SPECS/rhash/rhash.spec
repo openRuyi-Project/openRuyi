@@ -105,4 +105,4 @@ sed -i "s|-fomit-frame-pointer|%{optflags}|g" configure
 %{_libdir}/librhash.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
