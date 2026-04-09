@@ -60,4 +60,4 @@ mkdir -p %{buildroot}%{_sharedstatedir}/%{name}
 %dir %{_sharedstatedir}/lxcfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
