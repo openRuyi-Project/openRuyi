@@ -118,4 +118,4 @@ rm -rf /dev/shm/srsub_*
 %dir %{_libdir}/sysrepo-plugind/plugins
 
 %changelog
-%{?autochangelog}
+%autochangelog
