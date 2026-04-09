@@ -55,4 +55,4 @@ and sysdeps data needed to build software against skalibs.
 %{_libdir}/skalibs/sysdeps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
