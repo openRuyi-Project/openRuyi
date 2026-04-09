@@ -37,4 +37,4 @@ superseded by full-screen editors such as GNU Emacs or GNU Moe.
 %{_mandir}/man1/r%{name}.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
