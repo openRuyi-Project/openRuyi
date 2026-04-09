@@ -51,4 +51,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/yaml-cpp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
