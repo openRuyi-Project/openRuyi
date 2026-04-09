@@ -61,4 +61,4 @@ rm %{buildroot}%{_libdir}/libflite*.a
 %{_includedir}/flite/
 
 %changelog
-%{?autochangelog}
+%autochangelog
