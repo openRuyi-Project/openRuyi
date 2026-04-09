@@ -36,4 +36,4 @@ WebSocket (http://www.rfc-editor.org/rfc/rfc6455.txt) protocol.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
