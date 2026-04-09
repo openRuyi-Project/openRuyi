@@ -81,4 +81,4 @@ go test -vet=off -v %{go_path}/codec %{go_path}/codec/codecgen
 %{_bindir}/codecgen
 
 %changelog
-%{?autochangelog}
+%autochangelog
