@@ -77,4 +77,4 @@ mkdir -p %{buildroot}%{_datadir}/accounts/{applications,providers,services,servi
 %doc %{_datadir}/gtk-doc/html/libaccounts-glib/
 
 %changelog
-%{?autochangelog}
+%autochangelog
