@@ -51,4 +51,4 @@ Development libraries and headers for developing software against libconfig.
 %{_libdir}/pkgconfig/libconfig*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
