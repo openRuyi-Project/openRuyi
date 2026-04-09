@@ -51,4 +51,4 @@ developing applications that use the mtdev library.
 %{_libdir}/pkgconfig/mtdev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
