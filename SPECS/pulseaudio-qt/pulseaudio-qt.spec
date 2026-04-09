@@ -47,4 +47,4 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %{_kf6_libdir}/pkgconfig/KF6PulseAudioQt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
