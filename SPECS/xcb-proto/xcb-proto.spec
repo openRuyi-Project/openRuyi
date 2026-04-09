@@ -43,4 +43,4 @@ the protocol.
 %{python3_sitelib}/xcbgen
 
 %changelog
-%{?autochangelog}
+%autochangelog
