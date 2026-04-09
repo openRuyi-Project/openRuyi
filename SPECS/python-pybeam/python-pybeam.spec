@@ -37,4 +37,4 @@ chunks in pretty python format.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
