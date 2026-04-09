@@ -71,4 +71,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
