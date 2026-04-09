@@ -72,4 +72,4 @@ SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
