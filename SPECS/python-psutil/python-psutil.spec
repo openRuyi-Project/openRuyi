@@ -45,4 +45,4 @@ iotop, uptime, pidof, tty, taskset, pmap.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
