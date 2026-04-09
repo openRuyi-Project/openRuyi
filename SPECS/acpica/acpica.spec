@@ -65,4 +65,4 @@ ACPICA tools for the development and debug of ACPI tables
 %{_bindir}/acpibin
 
 %changelog
-%{?autochangelog}
+%autochangelog
