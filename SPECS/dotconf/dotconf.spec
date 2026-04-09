@@ -56,4 +56,4 @@ done
 %{_libdir}/pkgconfig/dotconf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
