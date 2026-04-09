@@ -44,4 +44,4 @@ LooseVersion.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
