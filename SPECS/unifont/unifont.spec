@@ -98,4 +98,4 @@ find %{buildroot}/usr/share/unifont/ -type f \! -name %{name}.hex -delete
 %{_datadir}/fonts/opentype/unifont/unifont*.otf
 
 %changelog
-%{?autochangelog}
+%autochangelog
