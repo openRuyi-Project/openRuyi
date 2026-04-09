@@ -54,4 +54,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/vdpau.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
