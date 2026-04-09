@@ -54,4 +54,4 @@ rm -rfv %{buildroot}%{_libdir}/xevd*
 %{_libdir}/pkgconfig/xevd*.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
