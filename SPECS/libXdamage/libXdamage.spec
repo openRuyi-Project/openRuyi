@@ -49,4 +49,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/xdamage.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
