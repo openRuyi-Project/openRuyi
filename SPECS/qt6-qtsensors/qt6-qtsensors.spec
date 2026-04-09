@@ -98,4 +98,4 @@ popd
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
