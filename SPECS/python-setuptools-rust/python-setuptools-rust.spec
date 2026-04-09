@@ -40,4 +40,4 @@ extensions written in Rust as easily as if they were written in C.
 %doc README.md CHANGELOG.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
