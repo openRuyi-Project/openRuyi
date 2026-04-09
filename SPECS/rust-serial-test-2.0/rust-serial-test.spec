@@ -98,4 +98,4 @@ Additionally, this package also provides the "logging" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
