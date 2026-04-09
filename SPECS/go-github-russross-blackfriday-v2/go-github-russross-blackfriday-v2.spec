@@ -43,4 +43,4 @@ Currently maintained and recommended version of Blackfriday is v2.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
