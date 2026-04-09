@@ -42,4 +42,4 @@ faster than anything in the Go standard library.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
