@@ -41,4 +41,4 @@ cChardet is high speed universal character encoding detector.
 %{_bindir}/cchardetect
 
 %changelog
-%{?autochangelog}
+%autochangelog
