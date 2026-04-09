@@ -34,4 +34,4 @@ This is a helper package intended to help with testing golang packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
