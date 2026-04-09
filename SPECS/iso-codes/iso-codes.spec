@@ -52,4 +52,4 @@ Territory code list, and ISO-3166-2 sub-territory lists, and all their
 %{_datadir}/pkgconfig/iso-codes.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
