@@ -164,4 +164,4 @@ find demos -type f -perm /111 -exec chmod 644 {} +
 %{_datadir}/doc/openssl/html/
 
 %changelog
-%{?autochangelog}
+%autochangelog
