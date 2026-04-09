@@ -51,4 +51,4 @@ MessagePack, Pickle and YAML.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
