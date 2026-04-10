@@ -49,6 +49,7 @@ Requires:       containers-common
 Requires:       conmon
 Requires:       crun
 Requires:       passt
+Requires:       netavark
 
 %description
 Podman (the POD MANager) is a tool for managing containers and images,
