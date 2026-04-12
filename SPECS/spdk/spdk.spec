@@ -10,10 +10,10 @@ Name:           spdk
 Version:        25.09
 Release:        %autorelease
 Summary:        Set of libraries and utilities for high performance user-mode storage
-License:        BSD and MIT
+License:        BSD-3-Clause AND BSD-2-Clause
 URL:            http://spdk.io
 VCS:            git:https://github.com/spdk/spdk
-#!RemoteAsset
+#!RemoteAsset:  sha256:f2abbd321a8140c908d6a197e2f6e263e6ae3a42beb6e4aee2b1c62def1afd25
 Source0:        https://github.com/spdk/spdk/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -43,15 +43,13 @@ BuildRequires:  util-linux-devel
 BuildRequires:  patchelf
 BuildRequires:  pkgconfig(libisal)
 BuildRequires:  pkgconfig(libisal_crypto)
+BuildRequires:  pkgconfig(libibverbs)
+BuildRequires:  pkgconfig(librdmacm)
+BuildRequires:  pkgconfig(libiscsi)
 
 Requires:       dpdk
 Requires:       numactl
 Requires:       openssl
-
-# TODO: Enable it when we have these two BuildRequires
-# NVMe over Fabrics
-#Requires:       librdmacm
-#Requires:       libiscsi
 Requires:       libaio
 Requires:       libuuid
 Requires:       fuse3
@@ -95,6 +93,8 @@ export CXX="g++ -fuse-ld=bfd"
 ./configure --prefix=%{_usr} \
     --libdir=%{_libdir} \
     --with-dpdk \
+    --with-rdma \
+    --with-iscsi-initiator \
     --disable-examples \
     --disable-tests \
     --disable-unit-tests \
@@ -153,4 +153,4 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_bindir}/spdk-sma
 
 %changelog
-%{?autochangelog}
+%autochangelog
