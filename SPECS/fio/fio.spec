@@ -15,7 +15,7 @@ Summary:        Multithreaded IO generation tool
 License:        GPL-2.0-only
 URL:            https://fio.readthedocs.io/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/axboe/fio.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:ba95867d541a680b0e743b1ecb385e0874a88e422566a1a27eb15f1edf703a30
 Source0:        http://brick.kernel.dk/snaps/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -33,6 +33,10 @@ BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(libibverbs)
+BuildRequires:  pkgconfig(librdmacm)
+BuildRequires:  pkgconfig(libnl-3.0)
+BuildRequires:  pkgconfig(libnl-route-3.0)
 
 %description
 fio is an I/O tool that will spawn a number of threads or processes doing
@@ -56,4 +60,4 @@ sed -e 's,/usr/local/lib/,%{_libdir}/,g' -i os/os-linux.h
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
