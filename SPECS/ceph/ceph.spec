@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond rdma 0
+%bcond rdma 1
 %bcond make_check 0
 %bcond ceph_test_package 1
 %bcond rbd_ssd_cache 1
@@ -21,7 +21,7 @@ Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
 URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
-#!RemoteAsset
+#!RemoteAsset:  sha256:8de064d69831ef327339539f233c78ec827fa351c40ced9a9916f0b4174c6685
 Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -137,7 +137,8 @@ BuildRequires:  pkgconfig(libutf8proc)
 BuildRequires:  pkgconfig(nss)
 BuildRequires:  pkgconfig(libkeyutils)
 %if %{with rdma}
-BuildRequires:  libibverbs-devel
+BuildRequires:  pkgconfig(libibverbs)
+BuildRequires:  pkgconfig(librdmacm)
 %endif
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(ldap)
@@ -1101,4 +1102,4 @@ fi
 %{_datadir}/snmp/mibs
 
 %changelog
-%{?autochangelog}
+%autochangelog
