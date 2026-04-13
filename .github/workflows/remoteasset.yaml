@@ -1,0 +1,109 @@
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Vivian Wang <wangruikang@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+name: Check RemoteAsset
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches: [main, ci-test]
+    types: [opened, synchronize]
+    paths:
+     - 'SPECS/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-remoteasset
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt install -y rpm curl util-linux util-linux-extra
+
+    - uses: actions/checkout@v6
+      with:
+        fetch-depth: 2
+
+    - name: Find changed remote assets
+      id: find-changed
+      run: |
+        git diff --name-only HEAD^1...HEAD SPECS/ | grep '.spec$' > changed-files
+
+        touch changed-remoteassets
+
+        while IFS= read -r file; do
+          [ -f "$file" ] || continue
+
+          echo "::group::Processing $file" >&2
+          if git cat-file -e "HEAD^1:$file" ; then
+            # Changed file
+            git cat-file blob "HEAD^1:$file" | scripts/remoteassetify.py --unsafe-optional-enosys --dry-run > old.tmp
+            scripts/remoteassetify.py --unsafe-optional-enosys --dry-run "$file" > new.tmp
+            diff -u old.tmp new.tmp >&2 || echo "$file" >> changed-remoteassets
+          else
+            # New file
+            scripts/remoteassetify.py --unsafe-optional-enosys --dry-run "$file" > new.tmp
+            diff -u /dev/null new.tmp >&2 || true
+            echo "$file" >> changed-remoteassets
+          fi
+          echo "::endgroup::" >&2
+        done < changed-files
+
+        echo "# Spec files with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        sed -e 's/^/    /' changed-remoteassets >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+
+        echo "num=$(wc -l < changed-remoteassets)" > "$GITHUB_OUTPUT"
+
+    - name: Check remote assets
+      id: check-changed
+      if: steps.find-changed.outputs.num != '0'
+      run: |
+        touch needs-update changes.diff
+
+        while IFS= read -r file; do
+          echo "::group::Processing $file" >&2
+          scripts/remoteassetify.py --unsafe-optional-enosys --workflow "$file" >> changes.diff || echo "$file" >> needs-update
+          echo "::endgroup::" >&2
+        done < changed-remoteassets
+
+        echo "# Specs requiring update" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        sed -e 's/^/    /' needs-update >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+
+        echo "num=$(wc -l < needs-update)" > "$GITHUB_OUTPUT"
+
+        mv changes.diff "pr-${{ github.event.pull_request.number }}-remoteassets.diff"
+
+    - name: Print patch
+      if: steps.check-changed.outputs.num != '0'
+      run: |
+        echo "# Patch" >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+        echo '```diff' >> "$GITHUB_STEP_SUMMARY"
+        cat "pr-${{ github.event.pull_request.number }}-remoteassets.diff" >> "$GITHUB_STEP_SUMMARY"
+        echo '```' >> "$GITHUB_STEP_SUMMARY"
+        echo "" >> "$GITHUB_STEP_SUMMARY"
+
+    - uses: actions/upload-artifact@v7
+      if: steps.check-changed.outputs.num != '0'
+      with:
+       archive: false
+       path: pr-${{ github.event.pull_request.number }}-remoteassets.diff
+
+    - name: Fail if update required
+      if: steps.check-changed.outputs.num != '0'
+      run: |
+        echo "::error::Updates required for some #!RemoteAsset lines"
+        exit 1
