@@ -5,6 +5,8 @@
 # - rpm: rpmspec
 # - curl
 
+from typing import *
+
 import argparse
 import hashlib
 import pathlib
@@ -29,10 +31,27 @@ arg_parser.add_argument('filename', metavar='SPECS/pkg/pkg.spec', nargs='?', hel
 arg_parser.add_argument('--dry-run', action='store_true', help='Print found remote assets only, do not download')
 arg_parser.add_argument('--verbose', action='store_true', help='Generate more debug output')
 arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
+arg_parser.add_argument('--workflow', action='store_true', help='Generate some messages as workflow commands')
 
 CURL_DOWNLOAD = shlex.split("""curl --location --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
 
 CHECKSUM_TYPES = { 'sha256' }
+
+def message(prefix: str, text: str, line_num: Optional[int] = None, line_text: Optional[str] = None):
+    PREFIX_MAP = { 'WARN': 'warning', 'INFO': 'notice' }
+
+    if line_num is not None:
+        append_msg = f' in line {line_num + 1}:\n    > {line_text if line_text else '(empty)'}'
+        additional_tags = f',line={line_num + 1}'
+    else:
+        append_msg = ''
+        additional_tags = ''
+
+    print(f'{prefix}: {text}{append_msg}', file=sys.stderr)
+
+    if args.workflow:
+        workflow_prefix = PREFIX_MAP.get(prefix, 'notice')
+        print(f'::{workflow_prefix} file={args.filename}{additional_tags}::{text}', file=sys.stderr)
 
 def spec_filter(text: str) -> str:
     GOOD = [
@@ -119,7 +138,7 @@ def get_sources(text: str) -> str:
             continue
 
         if re.search(r'%[a-z_{]', value, re.IGNORECASE):
-            print(f'WARN: Possible unexpanded RPM macro in:\n> {line}', file=sys.stderr)
+            message('WARN', f'Possible unexpanded RPM macro in:\n    > {line}')
 
         result[key] = value.strip()
 
@@ -146,24 +165,26 @@ def get_remoteasset_lines(text: str) -> str:
                 checksum_type = parts[1].split(':', 1)[0]
                 checksum = parts[1].split(':', 1)[1]
             else:
-                print(f'WARN: Unhandled #!RemoteAsset format ignored in line {i + 1}:\n    > {line}', file=sys.stderr)
+                message('INFO', f'Unhandled #!RemoteAsset format ignored', i, line)
                 continue
 
         else:
             continue
 
         if i == len(lines) - 1:
-            raise ValueError(f'Unexpected #!RemoteAsset line at end of file in line {i + 1}:\n    > {line}')
+            message('WARN', 'Unexpected #!RemoteAsset line at end of file', i, line)
+            continue
 
         next_line = lines[i + 1].strip()
         if ':' not in next_line:
-            raise ValueError(f'Unexpected Source line format in line {i + 2}:\n    > {next_line}')
+            message('WARN', 'Unexpected Source line format', i + 1, next_line)
+            continue
 
         key, value = next_line.split(':', 1)
         m = re.match(r'^Source\d*$', key, re.IGNORECASE)
 
         if not m:
-            print(f'WARN: Unhandled remote asset with key {key} in line {i + 2}:\n    > {next_line}', file=sys.stderr)
+            message('WARN', f'Unhandled remote asset with key {key}', i + 1, next_line)
             continue
 
         result[key] = {
@@ -284,8 +305,12 @@ def main():
                 print(f'WARN: Checksum changed for {key}, was {checksum_type}:{old_checksum}, now {checksum_type}:{new_checksum}', file=sys.stderr)
 
             new_remoteasset_line = f'#!RemoteAsset:  {checksum_type}:{new_checksum}'
+
             print(f'INFO: New #!RemoteAsset line for {key}:', file=sys.stderr)
             print(f'    > {new_remoteasset_line}', file=sys.stderr)
+
+            if args.workflow:
+                print(f"::warning file={args.filename},line={data['lineno'] + 1}::{new_remoteasset_line}", file=sys.stderr)
 
             patch_lines.append(f'diff --git a/{args.filename} b/{args.filename}')
             patch_lines.append(f'--- a/{args.filename}')
