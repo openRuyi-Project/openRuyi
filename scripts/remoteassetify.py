@@ -57,8 +57,7 @@ def spec_filter(text: str) -> str:
     GOOD = [
         r'^Source\d*:',
         r'^(Name|Version|Release|Summary|License|URL|VCS|Description):',
-        r'^%(description|package)(\s+|$)',
-        r'^%(global|define)\s+',
+        r'^%(description|package|global|define|if\w*|else|endif)(\s+|$)',
     ]
 
     BAD = [
@@ -72,6 +71,9 @@ def spec_filter(text: str) -> str:
     for line in text.splitlines():
         if not any(re.search(r, line, re.IGNORECASE) for r in GOOD):
             continue
+
+        if line.startswith('%if'):
+            line = '%if 1'
 
         if any(re.search(r, line, re.IGNORECASE) for r in BAD):
             continue
