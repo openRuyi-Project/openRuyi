@@ -11,7 +11,7 @@ Summary:        A firewall daemon with D-Bus interface providing a dynamic firew
 License:        GPL-2.0-or-later
 URL:            https://firewalld.org/
 VCS:            git:https://github.com/firewalld/firewalld
-#!RemoteAsset
+#!RemoteAsset:  sha256:992853451a58d229068c0ed10c3e007b2032c0fb654f27d656bfa3c120a2f132
 Source0:        https://github.com/firewalld/firewalld/releases/download/v%{version}/firewalld-%{version}.tar.bz2
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -47,9 +47,9 @@ firewall with a D-Bus interface.
 Summary:        Python bindings for firewalld
 Provides:       python3-firewall
 %{?python_provide:%python_provide python3-firewall}
-Requires:       python3-dbus
-Requires:       python3-pygobject
-Requires:       python3-nftables
+Requires:       python3dist(dbus-python)
+Requires:       python3dist(pygobject)
+Requires:       python3dist(nftables)
 
 %description -n python-firewall
 Python3 bindings for firewalld.
@@ -58,8 +58,8 @@ Python3 bindings for firewalld.
 Summary:        Firewall panel applet
 Requires:       firewall-config = %{version}-%{release}
 Requires:       hicolor-icon-theme
-Requires:       python3-PyQt6
-Requires:       python3-pygobject
+Requires:       python3dist(pyqt6)
+Requires:       python3dist(pygobject)
 
 %description -n firewall-applet
 The firewall panel applet provides a status information of firewalld and also
@@ -69,7 +69,7 @@ the firewall settings.
 Summary:        Firewall configuration application
 Requires:       %{name} = %{version}-%{release}
 Requires:       hicolor-icon-theme
-Requires:       python3-pygobject
+Requires:       python3dist(pygobject)
 
 %description -n firewall-config
 The firewall configuration application provides an configuration interface for
@@ -89,7 +89,6 @@ desktop-file-install --delete-original \
 
 # TODO: Fix tests.
 %check
-
 
 %post
 %systemd_post firewalld.service
@@ -185,4 +184,4 @@ desktop-file-install --delete-original \
 %{_mandir}/man1/firewall-config*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
