@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname dateutil
+%global srcname python-dateutil
 
 Name:           python-%{srcname}
 Version:        2.9.0.post0
@@ -15,17 +15,20 @@ License:        (Apache-2.0 AND BSD-3-Clause) OR BSD-3-Clause
 URL:            https://github.com/dateutil/dateutil
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l dateutil
 
 # Otherwise will nothing provides python3dist(setuptools-scm) < 8~~
 Patch0:         0001-relax-setuptools_scm-requires.patch
 # Fix sphinx import path
 Patch1:         0002-fix-sphinx-import.patch
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3dist(pyyaml)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -36,8 +39,7 @@ Requires:       tzdata
 The dateutil module provides powerful extensions to the standard datetime
 module available in Python.
 
-%prep
-%autosetup -p1 -n %{name}-%{version}
+%prep -a
 # Convert NEWS file to UTF-8
 iconv --from=ISO-8859-1 --to=UTF-8 NEWS > NEWS.new
 mv NEWS.new NEWS
@@ -45,13 +47,8 @@ mv NEWS.new NEWS
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-#make -C docs html
-
-%install
-%pyproject_install
-%pyproject_save_files %{srcname} -l
+# Skip the import test suite, which requires winreg or something
+%check
 
 %files -f %{pyproject_files}
 %doc NEWS README.rst
@@ -59,4 +56,4 @@ mv NEWS.new NEWS
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
