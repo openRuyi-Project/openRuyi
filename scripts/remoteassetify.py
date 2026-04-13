@@ -33,7 +33,7 @@ arg_parser.add_argument('--verbose', action='store_true', help='Generate more de
 arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
 arg_parser.add_argument('--workflow', action='store_true', help='Generate some messages as workflow commands')
 
-CURL_DOWNLOAD = shlex.split("""curl --location --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
+CURL_DOWNLOAD = shlex.split("""curl --fail --location --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
 
 CHECKSUM_TYPES = { 'sha256' }
 
@@ -208,9 +208,12 @@ def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path:
     command = [*CURL_DOWNLOAD, str(out_path), url]
 
     print(f'$ {shlex.join(command)}', file=sys.stderr)
-    proc = subprocess.run(command, check=True)
+    proc = subprocess.run(command)
 
-    return out_path
+    if proc.returncode == 0:
+        return out_path
+    else:
+        return None
 
 def main():
     global args
@@ -278,6 +281,7 @@ def main():
     outdir = pathlib.Path('_assets') / pkg_name
 
     any_changed = False
+    failed = []
     differ = []
     patch_lines = []
 
@@ -292,6 +296,12 @@ def main():
 
         print(f'INFO: Downloading {key}', file=sys.stderr)
         out_path = download_asset(outdir, sources[key])
+
+        if out_path is None:
+            message('WARN', f'Failed to download {key} from {sources[key]}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+            failed.append(key)
+            continue
+
         with out_path.open('rb') as out_file:
             new_checksum = hashlib.file_digest(out_file, checksum_type).hexdigest()
             print(f'$ cksum --untagged -a {shlex.join([checksum_type, str(out_path)])}', file=sys.stderr)
@@ -323,6 +333,8 @@ def main():
                 patch_lines.append('\\ No newline at end of file')
             patch_lines.append('')
 
+    exit_code = 0
+
     if any_changed:
         if sys.stdout.isatty():
             print(f'INFO: Patch for {args.filename}:', file=sys.stderr)
@@ -334,9 +346,16 @@ def main():
             print(f"WARN: Checksums differ for: {', '.join(differ)}", file=sys.stderr)
         print(f'WARN: #!RemoteAsset lines for {args.filename} requires updating', file=sys.stderr)
 
-        sys.exit(1)
+        exit_code = 1
     else:
         print(f'INFO: #!RemoteAsset lines for {args.filename} are up to date', file=sys.stderr)
+
+    if failed:
+        print(f'WARN: Downloads have failed for: {', '.join(failed)}', file=sys.stderr)
+        exit_code = 1
+
+    if exit_code != 0:
+        sys.exit(exit_code)
 
 if __name__ == '__main__':
     main()
