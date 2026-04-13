@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Required utilities:
-# - util-linux: enosys
+# - util-linux: enosys (optional with --unsafe-optional-enosys)
 # - rpm: rpmspec
 # - curl
 
@@ -10,6 +10,7 @@ import hashlib
 import pathlib
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 
@@ -27,9 +28,7 @@ $ {sys.argv[0]} SPECS/<package>/<package>.py | git apply
 arg_parser.add_argument('filename', metavar='SPECS/pkg/pkg.spec', nargs='?', help='Path to spec file to process')
 arg_parser.add_argument('--dry-run', action='store_true', help='Print found remote assets only, do not download')
 arg_parser.add_argument('--verbose', action='store_true', help='Generate more debug output')
-
-# Block executing other programs
-RPMSPEC_PARSE = shlex.split("""enosys -s execve -s execveat -- rpmspec -D '%autorelease 0' -D '%_lto_cflags %nil' --parse /dev/stdin""")
+arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
 
 CURL_DOWNLOAD = shlex.split("""curl --location --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
 
@@ -62,8 +61,19 @@ def spec_filter(text: str) -> str:
 
     return ''.join(l + '\n' for l in result)
 
+def rpmspec_parse_command() -> list[str]:
+    if shutil.which('enosys') is not None:
+        # Block executing other programs
+        return shlex.split("""enosys -s execve -s execveat -- rpmspec -D '%autorelease 0' -D '%_lto_cflags %nil' --parse /dev/stdin""")
+    else:
+        if not args.unsafe_optional_enosys:
+            raise RuntimeError('Unable to find enosys. To allow running rpmspec without enosys, use --unsafe-optional-enosys')
+
+        print('WARN: enosys not found, running rpmspec without blocking command execution', file=sys.stderr)
+        return shlex.split("""rpmspec -D '%autorelease 0' -D '%_lto_cflags %nil' --parse /dev/stdin""")
+
 def rpmspec_parse(text: str) -> str:
-    proc = subprocess.run(RPMSPEC_PARSE, capture_output=True, input=text.encode())
+    proc = subprocess.run(rpmspec_parse_command(), capture_output=True, input=text.encode())
     msg = proc.stderr.decode('utf-8', errors='replace').strip()
 
     try:
