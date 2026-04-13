@@ -12,15 +12,12 @@ Release:        %autorelease
 Summary:        Module metadata manipulation library
 License:        MIT
 URL:            https://github.com/fedora-modularity/libmodulemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:6fb926e270ba44d1981d1abadaa6728c5e357636eee3b3bb533e95b92d104970
 Source0:        %{url}/releases/download/%{version}/modulemd-%{version}.tar.xz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/modulemd-%{version}.tar.xz.asc
-# Key exported from Petr Pisar's keyring
-#Source2:        gpgkey-E3F42FCE156830A80358E6E94FD1AEC3365AF7BF.gpg
 BuildSystem:    meson
 
 Patch0:         0001-tests-Adapt-to-glib-2.87.0.patch
+Patch1:         0002-tests-Adapt-to-pygobject-3.55.0.patch
 
 BuildOption(conf):  -Drpmio=enabled
 BuildOption(conf):  -Dskip_introspection=false
@@ -28,9 +25,7 @@ BuildOption(conf):  -Dtest_installed_lib=false
 BuildOption(conf):  -Dwith_docs=false
 BuildOption(conf):  -Dwith_manpages=enabled
 
-#BuildRequires:  gnupg2
 BuildRequires:  meson
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(gobject-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
@@ -40,7 +35,7 @@ BuildRequires:  pkgconfig(yaml-0.1)
 #BuildRequires:  glib2-doc
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pygobject
+BuildRequires:  python3dist(pygobject)
 
 %description
 C library for manipulating module metadata files.
@@ -52,8 +47,8 @@ Summary:        Python bindings for %{name}
 Provides:       python3-%{name} = %{version}-%{release}
 %python_provide python3-%{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       python%{python3_pkgversion}-pygobject
-Requires:       python-six
+Requires:       python3dist(pygobject)
+Requires:       python3dist(six)
 
 %description -n python-%{name}
 Python bindings for %{name}.
@@ -85,4 +80,4 @@ Development files for %{name}.
 %{python3_sitearch}/gi/overrides/
 
 %changelog
-%{?autochangelog}
+%autochangelog
