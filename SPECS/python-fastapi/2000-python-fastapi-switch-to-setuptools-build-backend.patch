@@ -1,0 +1,33 @@
+From 1fbdef822e5d88650d599c774e88a00d8502bc36 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 14 Apr 2026 18:30:52 +0800
+Subject: [PATCH] python-fastapi: switch to setuptools backend
+
+---
+ pyproject.toml | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index c3b7c77..8643e65 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,8 +1,14 @@
+ [build-system]
+ requires = [
+-    "pdm-backend",
++    "setuptools>=69",
+ ]
+-build-backend = "pdm.backend"
++build-backend = "setuptools.build_meta"
++
++[tool.setuptools.packages.find]
++include = ["fastapi*"]
++
++[tool.setuptools.package-data]
++fastapi = ["py.typed"]
+ 
+ [project]
+ name = "fastapi"
+-- 
+2.43.0
+
