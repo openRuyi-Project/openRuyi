@@ -13,7 +13,6 @@ permissions:
 on:
   pull_request:
     branches: [main, ci-test]
-    types: [opened, synchronize]
     paths:
      - 'SPECS/**'
 
