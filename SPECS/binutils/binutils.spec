@@ -19,7 +19,7 @@ Version:        2.45
 Release:        %autorelease
 URL:            https://www.gnu.org/software/binutils/
 VCS:            git:https://sourceware.org/git/binutils-gdb.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:1393f90db70c2ebd785fb434d6127f8888c559d5eeb9c006c354b203bab3473e
 Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -124,6 +124,8 @@ fi;
 
 %files
 %defattr(-,root,root)
+%dir %{_prefix}/%{_host}
+%dir %{_prefix}/%{_host}/lib
 %{_prefix}/%{_host}/bin/*
 %{_prefix}/%{_host}/lib/ldscripts
 %{_libdir}/libsframe.so.*
@@ -146,4 +148,4 @@ fi;
 %{_libdir}/libsframe.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
