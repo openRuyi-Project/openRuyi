@@ -1,0 +1,37 @@
+From e7088bf9695e8fc6705614582c663c00cabe335d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 14 Apr 2026 18:30:46 +0800
+Subject: [PATCH] python-annotated-doc: switch to setuptools backend
+
+---
+ pyproject.toml | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index ffe9d5d..f8f9411 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -44,11 +44,18 @@ Repository = "https://github.com/fastapi/annotated-doc"
+ Issues = "https://github.com/fastapi/annotated-doc/issues"
+ Changelog = "https://github.com/fastapi/annotated-doc/release-notes.md"
+ 
++[tool.setuptools.package-dir]
++"" = "src"
++
++[tool.setuptools.packages.find]
++where = ["src"]
++include = ["annotated_doc*"]
++
+ [build-system]
+ requires = [
+-    "pdm-backend",
++    "setuptools>=69",
+ ]
+-build-backend = "pdm.backend"
++build-backend = "setuptools.build_meta"
+ 
+ [tool.mypy]
+ strict = true
+-- 
+2.43.0
+
