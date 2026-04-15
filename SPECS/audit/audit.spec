@@ -8,15 +8,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           audit
-Version:        4.0.2
+Version:        4.1.4
 Release:        %autorelease
 Summary:        Linux kernel audit subsystem utilities
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://people.redhat.com/sgrubb/audit/
 VCS:            git:https://github.com/linux-audit/audit-userspace
-#!RemoteAsset
-Source:         https://people.redhat.com/sgrubb/audit/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:8396544ea08c69b39f5c00027549394f2149b31c4a9e693097d6ce134f3ffe3d
+Source:         https://github.com/linux-audit/audit-userspace/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+# Backport from https://github.com/linux-audit/audit-userspace/commit/13e79b7d2c4aa833129487c4cb5837df08e94e77
+Patch0:         0001-put-bash-completions-in-bash-completions-dir.patch
 
 BuildOption(conf):  --libexecdir=%{_libexecdir}/%{name}
 BuildOption(conf):  --with-apparmor
@@ -29,6 +32,8 @@ BuildRequires:  autoconf >= 2.12
 BuildRequires:  linux-headers >= 2.6.30
 BuildRequires:  libtool
 BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(bash-completion)
+
 Requires:       gawk
 
 %description
@@ -45,7 +50,7 @@ The audit-devel package contains the header files and development libraries
 needed for developing applications that use the audit framework.
 
 %conf -p
-autoreconf -fi
+autoreconf -fiv
 export CFLAGS="%{optflags} -fno-strict-aliasing"
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-Wl,-z,relro,-z,now"
@@ -58,51 +63,51 @@ install -m 0644 init.d/libaudit.conf %{buildroot}%{_sysconfdir}
 install -D -m 0644 ./m4/audit.m4  %{buildroot}%{_datadir}/aclocal/audit.m4
 
 install -d -m 750 %{buildroot}%{_sysconfdir}/audisp/plugins.d
-
-# TODO: make test pass.
-%check
+# Better naming
+mv %{buildroot}%{bash_completions_dir}/audit.bash_completion %{buildroot}%{bash_completions_dir}/audit
 
 %files
 %license COPYING
+%{_bindir}/aulast
+%{_bindir}/aulastlog
+%{_bindir}/ausyscall
+%{_sbindir}/*
 # Merged files from libaudit1
 %{_libdir}/libaudit.so.1
 %{_libdir}/libaudit.so.1.*
 %config(noreplace) %attr(640,root,root) %{_sysconfdir}/libaudit.conf
 %{_libdir}/libauparse.so.0
 %{_libdir}/libauparse.so.0.*
-
-%{_sbindir}/*
+%{_libdir}/libauplugin.so.1
+%{_libdir}/libauplugin.so.1.*
 %{_libexecdir}/%{name}/*
+%{_tmpfilesdir}/audit.conf
 %config(noreplace) %{_sysconfdir}/audit/*
 %attr(750,root,root) %dir %{_sysconfdir}/audisp
 %attr(750,root,root) %dir %{_sysconfdir}/audisp/plugins.d
-
-%{_bindir}/aulast
-%{_bindir}/aulastlog
-%{_bindir}/ausyscall
-
 %{_unitdir}/audit-rules.service
 %{_unitdir}/auditd.service
-
 %dir %{_datadir}/audit-rules
 %{_datadir}/audit-rules/*.rules
 %{_datadir}/audit-rules/README-rules
-
+%{bash_completions_dir}/audit
 %{_mandir}/man*/*
 
 %files devel
 %doc contrib/plugin
 %{_libdir}/libaudit.so
 %{_libdir}/libauparse.so
+%{_libdir}/libauplugin.so
 %{_includedir}/libaudit.h
 %{_includedir}/audit_logging.h
 %{_includedir}/audit-records.h
 %{_includedir}/auparse.h
 %{_includedir}/auparse-defs.h
+%{_includedir}/auplugin.h
 %{_datadir}/aclocal/audit.m4
 %{_libdir}/pkgconfig/audit.pc
 %{_libdir}/pkgconfig/auparse.pc
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
