@@ -5,14 +5,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-Name:           python-pyqt6
+%global srcname PyQt6
+%global pypi_name pyqt6
+
+Name:           python-PyQt6
 Version:        6.10.1
 Release:        %autorelease
 Summary:        PyQt6 is Python bindings for Qt6
 License:        GPL-3.0-only
 URL:            http://www.riverbankcomputing.com/software/pyqt/
-#!RemoteAsset
-Source0:        https://pypi.python.org/packages/source/P/PyQt6/pyqt6-%{version}.tar.gz
+#!RemoteAsset:  sha256:d733a6c712c0b7a7b99e4ad59b211ea25a5d1b9d1131e47a1f50b5e524266e57
+Source0:        https://pypi.python.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 Source1:        macros.pyqt6
 BuildSystem:    autotools
 
@@ -43,9 +46,15 @@ BuildRequires:  pkgconfig(Qt6WebSockets)
 BuildRequires:  pkgconfig(Qt6Quick3D)
 BuildRequires:  pkgconfig(Qt6RemoteObjects)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-dbus
 BuildRequires:  python3-PyQt-builder
-BuildRequires:  python3-sip
+BuildRequires:  python3dist(dbus-python)
+BuildRequires:  python3dist(sip)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+Provides:       PyQt6 = %{version}-%{release}
+
+Requires:       %{name}-rpm-macros = %{version}-%{release}
 
 %description
 PyQt6 is Python bindings for Qt6.
@@ -57,33 +66,15 @@ BuildArch:      noarch
 %description    rpm-macros
 RPM macros for PyQt6.
 
-%package     -n python3-pyqt6
-Summary:        Python 3 bindings for Qt6
-Provides:       PyQt6 = %{version}-%{release}
-Requires:       python3-pyqt6-base = %{version}-%{release}
-
-%description -n python3-pyqt6
-Python 3 bindings for Qt6.
-
-%package        base
-Summary:        Python 3 bindings for Qt6 base
-Requires:       %{name}-rpm-macros = %{version}-%{release}
-Requires:       python3-dbus
-Provides:       python3-pyqt6-base
-%python_provide python3-pyqt6-base
-
-%description    base
-Python 3 bindings for Qt6 base.
-
 %package        devel
-Summary:        Development files for python3-pyqt6
-Requires:       python3-pyqt6 = %{version}-%{release}
+Summary:        Development files for python3-PyQt6
+Requires:       python3-PyQt6 = %{version}-%{release}
 Requires:       pkgconfig(Qt6Core)
-Provides:       python3-pyqt6-devel
-%python_provide python3-pyqt6-devel
+Provides:       python3-PyQt6-devel
+%python_provide python3-PyQt6-devel
 
 %description    devel
-Development files for python3-pyqt6.
+Development files for python3-PyQt6.
 
 # No configure.
 %conf
@@ -120,10 +111,10 @@ sed -i \
 %check
 # No tests.
 
-%files rpm-macros
-%{_rpmmacrodir}/macros.pyqt6
-
-%files -n python3-pyqt6
+%files
+%doc NEWS
+%license LICENSE
+%dir %{python3_sitearch}/PyQt6/
 %{python3_sitearch}/PyQt6/QtMultimedia.*
 %{python3_sitearch}/PyQt6/QtMultimediaWidgets.*
 %{python3_sitearch}/PyQt6/QtPositioning.*
@@ -140,17 +131,6 @@ sed -i \
 %{python3_sitearch}/PyQt6/QtQuick3D.*
 %{python3_sitearch}/PyQt6/QtRemoteObjects.*
 %{python3_sitearch}/PyQt6/QtSpatialAudio.*
-%doc examples/
-%dir %{_qt6_datadir}/qsci/
-%dir %{_qt6_datadir}/qsci/api/
-%dir %{_qt6_datadir}/qsci/api/python/
-%doc %{_qt6_datadir}/qsci/api/python/PyQt6.api
-
-%files base
-%doc NEWS
-%license LICENSE
-%{python3_sitearch}/dbus/mainloop/pyqt6.abi3.so
-%dir %{python3_sitearch}/PyQt6/
 %{python3_sitearch}/pyqt6-*.dist-info
 %{python3_sitearch}/PyQt6/__pycache__/__init__.*
 %{python3_sitearch}/PyQt6/__init__.py*
@@ -164,6 +144,7 @@ sed -i \
 %{python3_sitearch}/PyQt6/QtTest.*
 %{python3_sitearch}/PyQt6/QtWidgets.*
 %{python3_sitearch}/PyQt6/QtXml.*
+%{python3_sitearch}/dbus/mainloop/pyqt6.abi3.so
 # plugins
 %{_qt6_pluginsdir}/PyQt6/
 %{python3_sitearch}/PyQt6/uic/
@@ -172,9 +153,17 @@ sed -i \
 %{_bindir}/pyuic6
 %{python3_sitearch}/PyQt6/py.typed
 %{python3_sitearch}/PyQt6/sip.pyi
+%doc examples/
+%dir %{_qt6_datadir}/qsci/
+%dir %{_qt6_datadir}/qsci/api/
+%dir %{_qt6_datadir}/qsci/api/python/
+%doc %{_qt6_datadir}/qsci/api/python/PyQt6.api
+
+%files rpm-macros
+%{_rpmmacrodir}/macros.pyqt6
 
 %files devel
 %{python3_sitearch}/PyQt6/bindings/
 
 %changelog
-%{?autochangelog}
+%autochangelog
