@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           beakerlib
-Version:        1.33.2
+Version:        1.33.3
 Release:        %autorelease
 Summary:        A shell-level integration testing library
 License:        GPL-2.0-only
 URL:            https://github.com/beakerlib/beakerlib
-#!RemoteAsset
+#!RemoteAsset:  sha256:87a054194ddd2e073d50c15b0c4f7cf1373b1a5a82e78d9a8f16f13ade7ee00e
 Source0:        https://github.com/beakerlib/beakerlib/archive/refs/tags/%{version}.tar.gz
 Source1:        beakerlib.tmpfiles
 BuildSystem:    autotools
@@ -24,8 +24,7 @@ BuildRequires:  perl
 BuildRequires:  util-linux
 BuildRequires:  make
 
-Requires:       /bin/bash
-Requires:       /bin/sh
+Requires:       bash
 Requires:       coreutils
 Requires:       grep
 Requires:       gzip
@@ -34,13 +33,14 @@ Requires:       sed
 Requires:       tar
 Requires:       util-linux
 Requires:       which
-Requires:       /usr/bin/bc /usr/bin/time
+Requires:       bc
+Requires:       time
 Requires:       (wget or curl)
-Requires:       nfs-utils
+Requires:       nfs-kernel-server
 
-Recommends:     /usr/bin/perl
-Recommends:     python3-lxml
-Recommends:     /usr/bin/xmllint
+Recommends:     perl
+Recommends:     python3dist(lxml)
+Recommends:     libxml2
 
 %description
 The BeakerLib project provides a library of shell functions to be used for
@@ -51,7 +51,6 @@ Summary:        Files for syntax highlighting BeakerLib tests in VIM editor
 BuildRequires:  vim
 BuildRequires:  make
 Requires:       vim
-
 
 %description    vim-syntax
 Files for syntax highlighting BeakerLib tests in VIM editor
@@ -82,4 +81,4 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 %{_datadir}/vim/vimfiles/after/syntax/beakerlib.vim
 
 %changelog
-%{?autochangelog}
+%autochangelog
