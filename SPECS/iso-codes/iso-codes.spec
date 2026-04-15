@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        ISO Code Lists and Translations
 License:        LGPL-2.1-or-later
 URL:            https://salsa.debian.org/iso-codes-team/iso-codes
-#!RemoteAsset
+#!RemoteAsset:  sha256:511f67bf4b51aa77f17c45adbff533242b50f1e370fe49a5706b6341902fac87
 Source0:        https://salsa.debian.org/iso-codes-team/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -44,6 +44,7 @@ Territory code list, and ISO-3166-2 sub-territory lists, and all their
 %files -f %{name}.lang
 %doc CHANGELOG.md README.md
 %license COPYING
+%dir %{_datadir}/xml
 %dir %{_datadir}/xml/iso-codes
 %{_datadir}/xml/iso-codes/*.xml
 %{_datadir}/iso-codes
@@ -52,4 +53,4 @@ Territory code list, and ISO-3166-2 sub-territory lists, and all their
 %{_datadir}/pkgconfig/iso-codes.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
