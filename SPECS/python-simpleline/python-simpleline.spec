@@ -50,7 +50,7 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %check
 make test
 
-%files -f %{srcname}.files
+%files -f %{name}.lang
 %doc ChangeLog README.md
 %license LICENSE.md
 %{python3_sitelib}/*
