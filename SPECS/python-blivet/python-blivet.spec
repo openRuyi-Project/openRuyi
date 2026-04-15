@@ -56,7 +56,7 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 # TODO: check needs ton of other dependencies - 251
 %check
 
-%files -f %{srcname}.files
+%files -f %{srcname}.lang
 %doc README.md ChangeLog examples
 %license COPYING
 %{python3_sitelib}/*
