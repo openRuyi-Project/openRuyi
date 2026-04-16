@@ -6,7 +6,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define __os_install_post %{nil}
+%define __spec_install_post %{nil}
+%global debug_package %{nil}
 
 %ifarch riscv64
 %global rust_arch riscv64gc
@@ -15,14 +16,14 @@
 %endif
 
 Name:           rust-bin
-Version:        1.91.1
+Version:        1.94.1
 Release:        %autorelease
 Summary:        A systems programming language
 License:        Apache-2.0 OR MIT
 URL:            https://forge.rust-lang.org/infra/other-installation-methods.html#standalone
-#!RemoteAsset
+#!RemoteAsset:  sha256:58038bca429819cc4cd52b9c364983c2e8a4c1dade8beaa0e4edd767e952ebf8
 Source0:        https://static.rust-lang.org/dist/rust-%{version}-riscv64gc-unknown-linux-gnu.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:ea7866c5cab0d8c99e7416bcc5f9ecf0e122d396b85c7e7dee5669f10ee80194
 Source1:        https://static.rust-lang.org/dist/rust-%{version}-x86_64-unknown-linux-gnu.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
@@ -72,4 +73,4 @@ rm %{buildroot}%{_prefix}/lib/rustlib/manifest-*
 %endif
 %exclude %{_sysconfdir}/target-spec-json-schema.json
 %changelog
-%{?autochangelog}
+%autochangelog
