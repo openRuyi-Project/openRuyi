@@ -9,13 +9,13 @@
 %global cups_serverbin %{_exec_prefix}/lib/cups
 
 Name:           cups
-Version:        2.4.14
+Version:        2.4.16
 Release:        %autorelease
 Summary:        Standards-based, open source printing system for Linux
 License:        Apache-2.0
 URL:            https://openprinting.github.io/cups/
 VCS:            git:https://github.com/OpenPrinting/cups
-#!RemoteAsset
+#!RemoteAsset:  sha256:0339587204b4f9428dd0592eb301dec0bf9ea6ea8dce5d9690d56be585aba92d
 Source0:        https://github.com/OpenPrinting/cups/releases/download/v%{version}/cups-%{version}-source.tar.gz
 Source1:        macros.cups
 BuildSystem:    autotools
@@ -59,17 +59,18 @@ Requires(post): grep
 Requires(post): sed
 
 %patchlist
-cups-system-auth.patch
-cups-multilib.patch
-cups-banners.patch
-cups-direct-usb.patch
-cups-driverd-timeout.patch
-cups-usb-paperout.patch
-cups-uri-compat.patch
-cups-freebind.patch
-cups-ipp-multifile.patch
-cups-web-devices-timeout.patch
-fix-httpAddrGetList-test-case-fail.patch
+0001-cups-system-auth.patch
+0002-cups-multilib.patch
+0003-cups-banners.patch
+0004-cups-direct-usb.patch
+0005-cups-driverd-timeout.patch
+0006-cups-usb-paperout.patch
+0007-cups-uri-compat.patch
+0008-cups-freebind.patch
+0009-cups-ipp-multifile.patch
+0010-cups-web-devices-timeout.patch
+# https://github.com/OpenPrinting/cups/issues/1450
+0011-cups-fix-check-logging-issue.patch
 
 %description
 CUPS is the standards-based, open source printing system developed by
@@ -148,9 +149,6 @@ rm -rf %{buildroot}%{_unitdir}/cups-lpd@.service
 rm -rf %{buildroot}%{_datadir}/cups/banners
 rm -f %{buildroot}%{_datadir}/cups/data/testprint
 
-# TODO: Fix tests.
-%check
-
 %files -f %{name}.lang
 %license LICENSE NOTICE
 %doc README.md CREDITS.md CHANGES.md
@@ -190,4 +188,4 @@ rm -f %{buildroot}%{_datadir}/cups/data/testprint
 %{_rpmconfigdir}/macros.d/macros.cups
 
 %changelog
-%{?autochangelog}
+%autochangelog
