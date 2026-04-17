@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname jmespath
-%global pkgname jmespath
 
 Name:           python-%{srcname}
 Version:        1.0.1
@@ -14,16 +13,17 @@ Summary:        JSON Matching Expressions
 License:        MIT
 URL:            https://github.com/jmespath/jmespath.py
 #!RemoteAsset:  sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe
-Source0:        https://files.pythonhosted.org/packages/source/j/jmespath/%{pkgname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{pypi_name}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildSystem:    pyproject
-BuildOption(install):  -l %{pkgname}
+
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides: python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -34,9 +34,10 @@ extract elements from a JSON document.
 %pyproject_buildrequires
 
 %prep
-%autosetup -n %{pkgname}-%{version}
+%autosetup -n %{srcname}-%{version}
 
 %files -f %{pyproject_files}
+%{_bindir}/jp.py
 %license LICENSE.txt
 %doc README.rst
 
