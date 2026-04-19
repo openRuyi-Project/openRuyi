@@ -16,7 +16,7 @@ Summary:        Qt6 - Mqtt module
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtmqtt
-#!RemoteAsset
+#!RemoteAsset:  sha256:4c0f246daa2009c8b3b9fb0172970fbb6452a0c2846ed5fe4de87ed4b884f9f9
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -68,10 +68,10 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_datadir}/modules/*.json
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Mqtt.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
