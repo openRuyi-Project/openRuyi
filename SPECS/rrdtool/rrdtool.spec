@@ -14,8 +14,8 @@ Summary:        Round Robin Database Tool to store and display time-series data
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            https://oss.oetiker.ch/rrdtool
 VCS:            git:https://github.com/oetiker/rrdtool-1.x
-#!RemoteAsset
-Source0:        https://github.com/oetiker/rrdtool-1.x/releases/download/v%{version}/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:5e65385e51f4a7c4b42aa09566396c20e7e1a0a30c272d569ed029a81656e56b
+Source0:        https://github.com/oetiker/rrdtool-1.x/releases/download/v%{version}/rrdtool-%{version}.tar.gz
 
 BuildRequires:  make
 BuildRequires:  gcc-c++
@@ -229,7 +229,7 @@ rm -rf %{buildroot}%{perl_vendorlib}/leaktest.pl \
 %files devel
 %{_includedir}/*.h
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/librrd.pc
 
 %files tcl
 %doc bindings/tcl/README
@@ -262,4 +262,4 @@ rm -rf %{buildroot}%{perl_vendorlib}/leaktest.pl \
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
