@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A modular Wayland compositor library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wlroots/wlroots
-#!RemoteAsset
+#!RemoteAsset:  sha256:f0530ecaa8739d15f97bd1e1edddb77e281d57e42d4263fccb67157f71730d17
 Source0:        https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/%{version}/wlroots-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -79,7 +79,7 @@ Development files for %{name}.
 
 %files devel
 %{_includedir}/wlroots-*/
-%{_libdir}/pkgconfig/wlroots-*.pc
+%{_libdir}/pkgconfig/wlroots-0.19.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
