@@ -16,7 +16,7 @@ Summary:        Qt6 - Charts component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtcharts
-#!RemoteAsset
+#!RemoteAsset:  sha256:17992278017cfb8fafef74b61e35559d29482df959ba469327a45b3bb66e2af4
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -80,10 +80,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Charts.pc
+%{_qt6_libdir}/pkgconfig/Qt6ChartsQml.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
