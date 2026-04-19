@@ -13,8 +13,8 @@ Summary:        Middleware to access a smart card using SCard API (PC/SC)
 License:        BSD-3-Clause
 URL:            https://pcsclite.apdu.fr/
 VCS:            git:https://github.com/LudovicRousseau/PCSC.git
-#!RemoteAsset
-Source:         https://pcsclite.apdu.fr/files/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:cdff7d7153a0b37aa74e26dfec89ec7dc5c5286aa21b91b903e38739d227e8e7
+Source:         https://pcsclite.apdu.fr/files/pcsc-lite-%{version}.tar.xz
 BuildSystem:    meson
 
 BuildOption(conf):  -Dpolkit=true
@@ -94,8 +94,8 @@ install -d %{buildroot}%{_sysconfdir}/reader.conf.d
 %{_includedir}/PCSC/
 %{_libdir}/lib*.a
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libpcsclite.pc
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
