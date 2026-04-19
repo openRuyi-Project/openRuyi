@@ -20,7 +20,7 @@ Summary:        PostgreSQL client programs
 License:        PostgreSQL
 Url:            http://www.postgresql.org/
 VCS:            git:https://git.postgresql.org/git/postgresql.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff86675c336c46e98ac991ebb306d1b67621ece1d06787beaade312c2c915d54
 Source0:        https://ftp.postgresql.org/pub/source/v%{version}/postgresql-%{version}.tar.bz2
 Source1:        Makefile.regress
 Source2:        postgresql.pam
@@ -480,7 +480,7 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %{_includedir}/pgsql/internal/libpq/protocol.h
 
 %{_includedir}/libpq/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libpq.pc
 %{_libdir}/libpq.so
 %{_includedir}/pg_config*.h
 
@@ -494,4 +494,4 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
