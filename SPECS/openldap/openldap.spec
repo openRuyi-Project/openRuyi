@@ -17,9 +17,9 @@ Summary:        An implementation of the Lightweight Directory Access Protocol
 License:        OLDAP-2.8
 URL:            https://www.openldap.org
 VCS:            git:https://git.openldap.org/openldap/openldap.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:1716ad779e85d743694c3e3b05277fb71b6a5eadca43c7a958aa62683b22208e
 Source0:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz
-#!RemoteAsset
+#!RemoteAsset:  sha256:0b5033258e50291486480c551aad10823d662d723037954042b14a360da48d2f
 Source1:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz.asc
 Source2:        slapd.conf
 Source3:        sasl-slapd.conf
@@ -405,11 +405,12 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %{_includedir}/*.h
 %{_libdir}/liblber.so
 %{_libdir}/libldap*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/lber.pc
+%{_libdir}/pkgconfig/ldap.pc
 
 %files static
 %_libdir/liblber.a
 %_libdir/libldap*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
