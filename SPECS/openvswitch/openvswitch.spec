@@ -13,8 +13,8 @@ Summary:        Production Quality, Multilayer Open Virtual Switch
 License:        Apache-2.0
 URL:            https://www.openvswitch.org/
 VCS:            git:https://github.com/openvswitch/ovs.git
-#!RemoteAsset
-Source0:        https://www.openvswitch.org/releases/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:a47024f8c10d03a9984f598cf09b31768b6c88b9f9a4448e0565f65afac122aa
+Source0:        https://www.openvswitch.org/releases/openvswitch-%{version}.tar.gz
 Source1:        openvswitch.sysusers
 Source2:        ovsdb-server.service
 Source3:        ovs-vswitchd.service
@@ -102,7 +102,10 @@ fi
 %{_bindir}/*
 %{_sbindir}/*
 %{_libdir}/*.a
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libofproto.pc
+%{_libdir}/pkgconfig/libopenvswitch.pc
+%{_libdir}/pkgconfig/libovsdb.pc
+%{_libdir}/pkgconfig/libsflow.pc
 %{_includedir}/openvswitch/
 %{_includedir}/openflow/
 %{_datadir}/openvswitch/
@@ -113,4 +116,4 @@ fi
 %{_tmpfilesdir}/openvswitch.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
