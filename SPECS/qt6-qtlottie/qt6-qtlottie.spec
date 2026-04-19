@@ -16,7 +16,7 @@ Summary:        Qt6 - Lottie Animation
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlottie
-#!RemoteAsset
+#!RemoteAsset:  sha256:bc9c363c48486d790a998d25119bc0e7d2499266c3be96e61e3032422b0457c2
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -85,10 +85,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Lottie.pc
+%{_qt6_libdir}/pkgconfig/Qt6LottieVectorImageHelpers.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
