@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        To provide a high-level device independent layer for speech synthesis
 License:        GPL-2.0-or-later AND LGPL-2.1-only
 URL:            https://github.com/brailcom/speechd
-#!RemoteAsset
+#!RemoteAsset:  sha256:b14a5238d287d2dcce4dd42bbd66ca65fa228e7e683708267f7b34036f7ba4b4
 Source0:        https://github.com/brailcom/speechd/releases/download/%{version}/speech-dispatcher-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -147,10 +147,10 @@ desktop-file-validate %{buildroot}%{_datadir}/speech-dispatcher/conf/desktop/spe
 %files devel
 %{_includedir}/*
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/speech-dispatcher.pc
 
 %files -n python-speechd
 %{python3_sitearch}/speechd*
 
 %changelog
-%{?autochangelog}
+%autochangelog
