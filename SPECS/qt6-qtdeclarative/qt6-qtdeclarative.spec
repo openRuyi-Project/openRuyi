@@ -16,7 +16,7 @@ Summary:        Qt6 - QtDeclarative component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtdeclarative
-#!RemoteAsset
+#!RemoteAsset:  sha256:4fb4efb894e0b96288543505d69794d684bcfbe4940ce181d3e6817bda54843e
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -143,7 +143,49 @@ popd
 %{_qt6_descriptionsdir}/*.json
 %{_qt6_metatypesdir}/*.json
 %{_qt6_mkspecsdir}/modules/qt_lib_*.pri
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsAnimation.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsFolderListModel.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsPlatform.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsQmlModels.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsSettings.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsSharedImage.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsSynchronizer.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsWavefrontMesh.pc
+%{_qt6_libdir}/pkgconfig/Qt6Qml.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlCompiler.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlCore.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlIntegration.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlLocalStorage.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlMeta.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlModels.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlNetwork.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlWorkerScript.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlXmlListModel.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Basic.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2BasicStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2FluentWinUI3StyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Fusion.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2FusionStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Imagine.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2ImagineStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Impl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Material.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2MaterialStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Universal.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2UniversalStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickDialogs2.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickDialogs2QuickImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickDialogs2Utils.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickEffects.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickLayouts.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickShapes.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickTemplates2.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickTest.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickVectorImage.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickVectorImageHelpers.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickWidgets.pc
 
 %files static
 %{_qt6_libdir}/*.a
@@ -154,4 +196,4 @@ popd
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
