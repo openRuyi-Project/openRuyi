@@ -13,7 +13,7 @@ Summary:        Utility Macro Headers for X.Org development
 License:        MIT
 URL:            https://xorg.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/util/macros.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:9ac269eba24f672d7d7b3574e4be5f333d13f04a7712303b1821b2a51ac82e8e
 Source:         https://www.x.org/releases/individual/util/util-macros-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -35,7 +35,7 @@ rm -f %{buildroot}%{_datadir}/util-macros/INSTALL
 %license COPYING
 %dir %{_datadir}/aclocal
 %{_datadir}/aclocal/*.m4
-%{_datadir}/pkgconfig/*.pc
+%{_datadir}/pkgconfig/xorg-macros.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
