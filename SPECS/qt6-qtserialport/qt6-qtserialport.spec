@@ -16,7 +16,7 @@ Summary:        Qt6 - SerialPort component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtserialport
-#!RemoteAsset
+#!RemoteAsset:  sha256:17b2f68435f67785a0c75fd70125f3e1892282efdab2098dcdac02d1d70f4c4c
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -79,10 +79,10 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_serialport*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6SerialPort.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
