@@ -16,7 +16,7 @@ Summary:        Qt6 - CoAP component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtcoap
-#!RemoteAsset
+#!RemoteAsset:  sha256:de077e00ef5a938ee3e86e093ca860e564dcdd00c13f62a8df98515a6a5cf782
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -66,10 +66,10 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Coap.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
