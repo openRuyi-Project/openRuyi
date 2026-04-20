@@ -15,12 +15,14 @@
 Name:           binutils
 Summary:        GNU Binutils
 License:        GFDL-1.3-only AND GPL-3.0-or-later
-Version:        2.45
+Version:        2.46.0
 Release:        %autorelease
 URL:            https://www.gnu.org/software/binutils/
 VCS:            git:https://sourceware.org/git/binutils-gdb.git
 #!RemoteAsset:  sha256:1393f90db70c2ebd785fb434d6127f8888c559d5eeb9c006c354b203bab3473e
 Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
+Patch0:         binutils-Wdiscarded-qualifers-1.patch
+Patch1:         binutils-Wdiscarded-qualifers-2.patch
 BuildSystem:    autotools
 
 BuildOption(build):  -C build-dir
@@ -57,7 +59,7 @@ build programs which use the GNU BFD library, which is part of
 binutils.
 
 %conf
-%define _configure ../configure
+%define _configure CFLAGS="-Wno-error" LDFLAGS="-Wno-error" ../configure
 mkdir build-dir
 cd build-dir
 %configure --with-bugurl=%{_vendor_bug_url} \

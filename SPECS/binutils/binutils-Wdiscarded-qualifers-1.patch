@@ -1,0 +1,102 @@
+From 9cb12adfb54bc3dabf4ee00296064245eb7660ef Mon Sep 17 00:00:00 2001
+From: Simon Marchi <simon.marchi@polymtl.ca>
+Date: Fri, 13 Feb 2026 14:17:40 -0500
+Subject: [PATCH] binutils: fix C23 -Wdiscarded-qualifiers errors
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When compiling with gcc 15, I get these:
+
+      CC       prdbg.o
+    /home/simark/src/binutils-gdb/binutils/prdbg.c: In function â€˜tg_start_functionâ€™:
+    /home/simark/src/binutils-gdb/binutils/prdbg.c:2658:11: error: assignment discards â€˜constâ€™ qualifier from pointer target type [-Werror=discarded-qualifiers]
+     2658 |       sep = strchr (name, '(');
+          |           ^
+    cc1: all warnings being treated as errors
+    make[2]: *** [Makefile:1220: prdbg.o] Error 1
+      CC       addr2line.o
+    /home/simark/src/binutils-gdb/binutils/addr2line.c: In function â€˜translate_addressesâ€™:
+    /home/simark/src/binutils-gdb/binutils/addr2line.c:390:21: error: assignment discards â€˜constâ€™ qualifier from pointer target type [-Werror=discarded-qualifiers]
+      390 |                   h = strrchr (filename, '/');
+          |                     ^
+    cc1: all warnings being treated as errors
+    make[2]: *** [Makefile:1220: addr2line.o] Error 1
+      CC       nm.o
+    /home/simark/src/binutils-gdb/binutils/nm.c: In function â€˜print_symnameâ€™:
+    /home/simark/src/binutils-gdb/binutils/nm.c:689:21: error: initialization discards â€˜constâ€™ qualifier from pointer target type [-Werror=discarded-qualifiers]
+      689 |       char *atver = strchr (name, '@');
+          |                     ^~~~~~
+    cc1: all warnings being treated as errors
+
+I think they are related to the fact that strchr having changed to
+return const when passed a const.
+
+Change-Id: Idb829916378f0a18e717d1e80414aaa5eba4f7f0
+---
+ binutils/addr2line.c | 2 +-
+ binutils/nm.c        | 2 +-
+ binutils/prdbg.c     | 8 +++++---
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/binutils/addr2line.c b/binutils/addr2line.c
+index 141a7099de4..f8c110f532f 100644
+--- a/binutils/addr2line.c
++++ b/binutils/addr2line.c
+@@ -385,7 +385,7 @@ translate_addresses (bfd *abfd, asection *section)
+ 
+               if (base_names && filename != NULL)
+                 {
+-                  char *h;
++                  const char *h;
+ 
+                   h = strrchr (filename, '/');
+                   if (h != NULL)
+diff --git a/binutils/nm.c b/binutils/nm.c
+index 3aef8ebe098..c5f7e68e9df 100644
+--- a/binutils/nm.c
++++ b/binutils/nm.c
+@@ -686,7 +686,7 @@ print_symname (const char *form, struct extended_symbol_info *info,
+   if (!with_symbol_versions
+       && bfd_get_flavour (abfd) == bfd_target_elf_flavour)
+     {
+-      char *atver = strchr (name, '@');
++      const char *atver = strchr (name, '@');
+ 
+       if (atver)
+ 	{
+diff --git a/binutils/prdbg.c b/binutils/prdbg.c
+index 287083df1b9..ff24eac54fb 100644
+--- a/binutils/prdbg.c
++++ b/binutils/prdbg.c
+@@ -2642,22 +2642,24 @@ tg_start_function (void *p, const char *name, bool global)
+   if (dname != NULL)
+     {
+       char *sep;
++      char *mutable_name;
+       sep = strstr (dname, "::");
+       if (sep)
+ 	{
+ 	  info->stack->method = dname;
+ 	  dname = NULL;
+ 	  *sep = 0;
+-	  name = sep + 2;
++	  mutable_name = sep + 2;
+ 	}
+       else
+ 	{
+ 	  info->stack->method = xstrdup ("");
+-	  name = dname;
++	  mutable_name = dname;
+ 	}
+-      sep = strchr (name, '(');
++      sep = strchr (mutable_name, '(');
+       if (sep)
+ 	*sep = 0;
++      name = mutable_name;
+       /* Obscure functions as type_info function.  */
+     }
+ 
+-- 
+2.47.3
+

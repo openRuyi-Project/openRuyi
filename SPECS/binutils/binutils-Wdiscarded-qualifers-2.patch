@@ -1,0 +1,143 @@
+From 36974d77e95efb1b640e8005a6bea6a6bed64aa7 Mon Sep 17 00:00:00 2001
+From: Keith Seitz <keiths@redhat.com>
+Date: Wed, 25 Feb 2026 06:24:53 -0800
+Subject: [PATCH] Fix even more -Wdiscarded-qualifers issues
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fedora Rawhide is failing to build due to new glibc header changes
+enforcing const-correctness in functions like strchr and memchr.
+For example:
+
+../../opcodes/aarch64-dis.c: In function ‘remove_dot_suffix’:
+../../opcodes/aarch64-dis.c:4027:7: error: assignment discards ‘const’ qualifier from po
+inter target type [-Werror=discarded-qualifiers]
+ 4027 |   ptr = strchr (inst->opcode->name, '.');
+      |       ^
+cc1: all warnings being treated as errors
+
+This patch addresses all the discovered issues with --enable-targets=all
+and regenerates a few cgen files along the way.
+---
+ cpu/ip2k.opc          | 2 +-
+ opcodes/aarch64-dis.c | 2 +-
+ opcodes/ia64-opc.c    | 2 +-
+ opcodes/ip2k-asm.c    | 2 +-
+ opcodes/riscv-dis.c   | 4 ++--
+ opcodes/tilegx-opc.c  | 2 +-
+ opcodes/tilepro-opc.c | 4 ++--
+ 7 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/cpu/ip2k.opc b/cpu/ip2k.opc
+index 512c3f3aea8..c89f61d8942 100644
+--- a/cpu/ip2k.opc
++++ b/cpu/ip2k.opc
+@@ -94,7 +94,7 @@ parse_fr (CGEN_CPU_DESC cd,
+ {
+   const char *errmsg;
+   const char *old_strp;
+-  char *afteroffset; 
++  const char *afteroffset;
+   enum cgen_parse_operand_result result_type;
+   bfd_vma value;
+   extern CGEN_KEYWORD ip2k_cgen_opval_register_names;
+diff --git a/opcodes/aarch64-dis.c b/opcodes/aarch64-dis.c
+index 8cc2eb3f3c2..f09307847e6 100644
+--- a/opcodes/aarch64-dis.c
++++ b/opcodes/aarch64-dis.c
+@@ -4087,7 +4087,7 @@ print_operands (bfd_vma pc, const aarch64_opcode *opcode,
+ static void
+ remove_dot_suffix (char *name, const aarch64_inst *inst)
+ {
+-  char *ptr;
++  const char *ptr;
+   size_t len;
+ 
+   ptr = strchr (inst->opcode->name, '.');
+diff --git a/opcodes/ia64-opc.c b/opcodes/ia64-opc.c
+index 5d79cf3d041..79c12a840a7 100644
+--- a/opcodes/ia64-opc.c
++++ b/opcodes/ia64-opc.c
+@@ -66,7 +66,7 @@ const struct ia64_templ_desc ia64_templ_desc[16] =
+ static void
+ get_opc_prefix (const char **ptr, char *dest)
+ {
+-  char *c = strchr (*ptr, '.');
++  const char *c = strchr (*ptr, '.');
+   if (c != NULL)
+     {
+       memcpy (dest, *ptr, c - *ptr);
+diff --git a/opcodes/ip2k-asm.c b/opcodes/ip2k-asm.c
+index 18bd98a2846..3adbd1546a3 100644
+--- a/opcodes/ip2k-asm.c
++++ b/opcodes/ip2k-asm.c
+@@ -59,7 +59,7 @@ parse_fr (CGEN_CPU_DESC cd,
+ {
+   const char *errmsg;
+   const char *old_strp;
+-  char *afteroffset;
++  const char *afteroffset;
+   enum cgen_parse_operand_result result_type;
+   bfd_vma value;
+   extern CGEN_KEYWORD ip2k_cgen_opval_register_names;
+diff --git a/opcodes/riscv-dis.c b/opcodes/riscv-dis.c
+index 03c8cf1e344..eda802ff420 100644
+--- a/opcodes/riscv-dis.c
++++ b/opcodes/riscv-dis.c
+@@ -110,7 +110,7 @@ parse_riscv_dis_option_without_args (const char *option,
+ /* Parse RISC-V disassembler option (possibly with arguments).  */
+ 
+ static void
+-parse_riscv_dis_option (const char *option, struct disassemble_info *info)
++parse_riscv_dis_option (char *option, struct disassemble_info *info)
+ {
+   char *equal, *value;
+ 
+@@ -1140,7 +1140,7 @@ riscv_update_map_state (int n,
+ 
+       /* ISA mapping string may be numbered, suffixed with '.n'. Do not
+ 	 consider this as part of the ISA string.  */
+-      char *suffix = strchr (name, '.');
++      const char *suffix = strchr (name, '.');
+       if (suffix)
+ 	{
+ 	  int suffix_index = (int)(suffix - name);
+diff --git a/opcodes/tilegx-opc.c b/opcodes/tilegx-opc.c
+index db762e22493..a1d42d6e18d 100644
+--- a/opcodes/tilegx-opc.c
++++ b/opcodes/tilegx-opc.c
+@@ -8003,7 +8003,7 @@ tilegx_spr_compare (const void *a_ptr, const void *b_ptr)
+ const char *
+ get_tilegx_spr_name (int num)
+ {
+-  void *result;
++  const void *result;
+   struct tilegx_spr key;
+ 
+   key.number = num;
+diff --git a/opcodes/tilepro-opc.c b/opcodes/tilepro-opc.c
+index 664122b05d5..d3d580fae9d 100644
+--- a/opcodes/tilepro-opc.c
++++ b/opcodes/tilepro-opc.c
+@@ -10119,7 +10119,7 @@ tilepro_spr_compare (const void *a_ptr, const void *b_ptr)
+ const char *
+ get_tilepro_spr_name (int num)
+ {
+-  void *result;
++  const void *result;
+   struct tilepro_spr key;
+ 
+   key.number = num;
+@@ -10131,7 +10131,7 @@ get_tilepro_spr_name (int num)
+     return NULL;
+ 
+   {
+-    struct tilepro_spr *result_ptr = (struct tilepro_spr *) result;
++    const struct tilepro_spr *result_ptr = (const struct tilepro_spr *) result;
+ 
+     return result_ptr->name;
+   }
+-- 
+2.47.3
+
