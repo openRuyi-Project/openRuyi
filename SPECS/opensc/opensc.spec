@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           opensc
-Version:        0.26.1
+Version:        0.27.1
 Release:        %autorelease
 Summary:        Smart card library and applications
 License:        LGPL-2.1-or-later AND BSD-3-Clause
 URL:            https://github.com/OpenSC/OpenSC
-#!RemoteAsset
+#!RemoteAsset:  sha256:9b72f1b5d92569de67a42bf0edb21ecdc685ad03378343416362a99b90b1fad1
 Source0:        https://github.com/OpenSC/OpenSC/archive/refs/tags/%{version}.tar.gz
 Source1:        opensc.module
 BuildSystem:    autotools
@@ -20,10 +20,6 @@ BuildSystem:    autotools
 Patch0:         0001-opensc-0.19.0-pinpad.patch
 # Disable cache bacause cache brings trouble.
 Patch1:         0002-opensc-0.22.0-file-cache.patch
-# Fix C23 and GCC 14 build errors.
-Patch2:         0003-opensc-0.26.1-compiler.patch
-# Fix bash completion function name.
-Patch3:         0004-opensc-0.26.1-bash-completion.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-autostart-items
@@ -128,4 +124,4 @@ rm -rf %{buildroot}%{_mandir}/man1/opensc-notify.1*
 %{_libdir}/pkcs11/pkcs11-spy.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
