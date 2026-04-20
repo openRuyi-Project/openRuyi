@@ -135,13 +135,6 @@ def get_sources(text: str) -> str:
         if not m:
             continue
 
-        if ':' not in value:
-            # Probably not URL
-            continue
-
-        if re.search(r'%[a-z_{]', value, re.IGNORECASE):
-            message('WARN', f'Possible unexpanded RPM macro in:\n    > {line}')
-
         result[key] = value.strip()
 
     return result
@@ -251,9 +244,16 @@ def main():
         print('INFO: No supported #!RemoteAsset found', file=sys.stderr)
         return
 
-    for key in assets:
+    for key, data in assets.items():
         if key not in sources:
             raise ValueError(f'{key} key not found in parsed spec, that is odd')
+
+        url = sources[key]
+
+        if ':' not in url:
+            message('WARN', f'Unrecognized URL: {url}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+        elif re.search(r'%[a-z_{]', url, re.IGNORECASE):
+            message('WARN', f'Possible unexpanded RPM macro in URL: {url}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
 
     if args.dry_run:
         if sys.stdout.isatty():
