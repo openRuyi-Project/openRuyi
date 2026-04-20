@@ -21,7 +21,7 @@ Summary:        Bootloader with support for Linux, Multiboot and more
 License:        GPL-3.0-or-later
 URL:            http://www.gnu.org/software/grub/
 VCS:            git:https://https.git.savannah.gnu.org/git/grub.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:bc8d3c73535b8838d8c8e2654d73edc4e6ae8c8acdb45d5df5dc9a1547446d43
 Source0:        https://ftpmirror.gnu.org/gnu/grub/grub-%{version}.tar.xz
 Source1:        grub.default
 
@@ -55,6 +55,18 @@ The GRand Unified Bootloader (GRUB) is a highly configurable and
 customizable bootloader with modular architecture.  It supports a rich
 variety of kernel formats, file systems, computer architectures and
 hardware devices.
+
+%package       unsigned
+Summary:       GRand Unified Bootloader unsigned monolithic efi image
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description unsigned
+The GRand Unified Bootloader (GRUB) is a highly configurable and
+customizable bootloader with modular architecture.  It supports a rich
+variety of kernel formats, file systems, computer architectures and
+hardware devices.
+
+This package contains an unsigned monolithic EFI image.
 
 %prep
 %autosetup -n %{name}-%{version} -p1
@@ -135,14 +147,19 @@ for plat in %{grub_platforms}; do
         fi
     done
 
-    ./grub-mkimage \
+    mkdir monolithic
+    echo configfile \${cmdpath}/grub.cfg > grub.cfg
+    case "$plat" in
+        x86_64-efi) arch=x64 ;;
+        riscv64-efi) arch=riscv64 ;;
+    esac
+    ./grub-mkstandalone \
         -O "$plat" \
-        -o grub.efi \
-        --memdisk=./memdisk.sqsh \
-        --prefix= \
+        -o monolithic/grub${arch}.efi \
         --sbat sbat.csv \
         -d grub-core \
-        ${GRUB_MODULES}
+        --modules="${GRUB_MODULES}" \
+        "/boot/grub/grub.cfg=./grub.cfg"
     popd
 done
 
@@ -154,6 +171,9 @@ for plat in %{grub_platforms}; do
     rm -f %{buildroot}%{_libdir}/grub/$plat/*.module
     rm -f %{buildroot}%{_libdir}/grub/$plat/*.image
     rm -f %{buildroot}%{_libdir}/grub/$plat/{kernel.exec,gdb_grub,gmodule.pl}
+    for efi_file in $(ls monolithic/*.efi); do
+        install -D -m 644 $efi_file %{buildroot}%{_libdir}/grub/$plat/$efi_file
+    done
     popd
 done
 
@@ -226,5 +246,8 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/info/%{name}.info*
 %{_datadir}/info/grub-dev.info*
 
+%files unsigned
+%{_libdir}/%{name}/%{grub_platforms}/monolithic/*.efi
+
 %changelog
-%{?autochangelog}
+%autochangelog
