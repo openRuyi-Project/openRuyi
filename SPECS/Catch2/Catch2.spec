@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <wtest108@gmail.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           Catch2
-Version:        3.10.0
+Version:        3.14.0
 Release:        %autorelease
 Summary:        A modern, C++-native test framework for TDD and BDD
 License:        BSL-1.0
 URL:            https://github.com/catchorg/Catch2
-#!RemoteAsset
+#!RemoteAsset:  sha256:ba2a939efead3c833c499cf487e185762f419a71d30158cd1b43c6079c586490
 Source0:        https://github.com/catchorg/Catch2/archive/refs/tags/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -54,4 +55,4 @@ including header files, CMake integration files, and pkg-config files.
 %{_datadir}/Catch2/
 
 %changelog
-%{?autochangelog}
+%autochangelog
