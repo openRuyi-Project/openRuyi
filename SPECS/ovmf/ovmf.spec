@@ -27,6 +27,8 @@ URL:            https://github.com/tianocore/edk2
 #!RemoteAsset:  git+https://github.com/tianocore/edk2.git#edk2-stable%{version}
 Source0:        edk2-stable-%{version}.tar.gz
 
+Patch0:         backport-secure-boot-default-keys.patch
+
 BuildRequires:  gcc
 %ifarch x86_64
 BuildRequires:  nasm
@@ -59,8 +61,8 @@ install -D -m 644 Build/OvmfX64/RELEASE_GCC5/FV/OVMF.fd %{buildroot}%{_datadir}/
 %ifarch riscv64
 truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd
 truncate -s 32M Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd
-install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd %{buildroot}%{_datadir}/ovmf/virt_code.fd
-install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{buildroot}%{_datadir}/ovmf/virt_vars.fd
+install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd %{buildroot}%{_datadir}/ovmf/
+install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{buildroot}%{_datadir}/ovmf/
 %endif
 
 %files
@@ -68,8 +70,8 @@ install -D -m 644 Build/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd %{build
 %{_datadir}/ovmf/OVMF.fd
 %endif
 %ifarch riscv64
-%{_datadir}/ovmf/virt_code.fd
-%{_datadir}/ovmf/virt_vars.fd
+%{_datadir}/ovmf/RISCV_VIRT_CODE.fd
+%{_datadir}/ovmf/RISCV_VIRT_VARS.fd
 %endif
 
 %changelog
