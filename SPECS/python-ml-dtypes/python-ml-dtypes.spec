@@ -6,13 +6,13 @@
 
 %global srcname ml_dtypes
 
-Name:           python-%{srcname}
+Name:           python-ml-dtypes
 Version:        0.5.4
 Release:        %autorelease
 Summary:        A stand-alone implementation of several NumPy dtype extensions
 License:        Apache-2.0
 URL:            https://github.com/jax-ml/ml_dtypes
-#!RemoteAsset
+#!RemoteAsset:  sha256:8ab06a50fb9bf9666dd0fe5dfb4676fa2b0ac0f31ecff72a6c3af8e22c063453
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -26,7 +26,8 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  gcc-c++
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +44,4 @@ used in machine learning libraries, including:
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
