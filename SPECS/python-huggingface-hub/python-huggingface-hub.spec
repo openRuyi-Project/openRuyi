@@ -13,7 +13,7 @@ Summary:        Client library for the Hugging Face Hub
 License:        Apache-2.0
 URL:            https://pypi.org/project/huggingface-hub/
 VCS:            git:https://github.com/huggingface/huggingface_hub
-#!RemoteAsset
+#!RemoteAsset:  sha256:f281838db29265880fb543de7a23b0f81d3504675de82044307ea3c6c62f799d
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -44,4 +44,4 @@ sed -i 's/"typer",/"typer-slim",/' setup.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

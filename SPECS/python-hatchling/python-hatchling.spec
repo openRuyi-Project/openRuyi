@@ -30,11 +30,11 @@ BuildRequires:  python3dist(pathspec)
 BuildRequires:  python3dist(pluggy)
 BuildRequires:  python3dist(trove-classifiers)
 
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 This is the extensible, standards compliant build backend used by Hatch.
-
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 
 %files -f %{pyproject_files}
 %doc README.md

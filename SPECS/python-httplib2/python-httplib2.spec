@@ -32,7 +32,7 @@ BuildRequires:  python3dist(six)
 BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3dist(pyparsing)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,7 +42,7 @@ other HTTP libraries.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -k "not test_unknown_server \
     and not test_socks5_auth \
     and not test_server_not_found_error_is_raised_for_invalid_hostname \
@@ -64,4 +64,4 @@ other HTTP libraries.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

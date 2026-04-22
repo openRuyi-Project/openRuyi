@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        A python based HTML parser/tokenizer
 License:        MIT
 URL:            https://github.com/html5lib/html5lib-python
-#!RemoteAsset
+#!RemoteAsset:  sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f
 Source:         https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -28,13 +28,15 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(six) >= 1.9
 BuildRequires:  python3dist(webencodings)
+# For tests
+BuildRequires:  python3dist(genshi)
+BuildRequires:  python3dist(lxml)
 %if %{with tests}
-# for tests
 BuildRequires:  python3(pytest)
 BuildRequires:  python3(pytest-expect)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,8 +46,8 @@ specification for maximum compatibility with major desktop web browsers.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
 %if %{with tests}
+%check -a
 %pytest
 %endif
 
@@ -54,4 +56,4 @@ specification for maximum compatibility with major desktop web browsers.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
