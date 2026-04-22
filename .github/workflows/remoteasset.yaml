@@ -112,5 +112,6 @@ jobs:
     - name: Fail if update required
       if: steps.check-changed.outputs.num != '0'
       run: |
-        echo "::error::Updates required for some #!RemoteAsset lines"
+        url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        echo "::error::Updates required for some #!RemoteAsset lines. Please see $url"
         exit 1
