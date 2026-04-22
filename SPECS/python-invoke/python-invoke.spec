@@ -12,17 +12,19 @@ Release:        %autorelease
 Summary:        Pythonic task execution
 License:        BSD-3-Clause
 URL:            https://www.pyinvoke.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:515bf49b4a48932b79b024590348da22f39c4942dff991ad1fb8b8baea1be707
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} +auto
+# No modules named 'yaml'
+BuildOption(check):  -e invoke.vendor.yaml.cyaml
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -34,11 +36,8 @@ instead of servers and network commands.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# TODO: Enable tests.
-%check
-
 %files -f %{pyproject_files}
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

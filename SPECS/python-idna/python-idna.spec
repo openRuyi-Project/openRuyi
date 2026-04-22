@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Internationalized domain names in applications
 License:        BSD-3-Clause
 URL:            https://github.com/kjd/idna
-#!RemoteAsset
+#!RemoteAsset:  sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ specification.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

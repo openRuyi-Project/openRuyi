@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Installer library for Python wheels
 License:        MIT
 URL:            https://installer.rtfd.io/
-#!RemoteAsset
+#!RemoteAsset:  sha256:a26d3e3116289bb08216e0d0f7d925fcef0b0194eedfa0c944bcaaa106c4b631
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,9 +21,9 @@ BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ abstractions for handling wheels and installing packages from wheels.
 %doc CONTRIBUTING.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

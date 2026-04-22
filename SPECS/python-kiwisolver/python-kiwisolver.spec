@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A fast implementation of the Cassowary constraint solver
 License:        BSD-3-Clause AND HPND-sell-variant
 URL:            https://github.com/nucleic/kiwi
-#!RemoteAsset
+#!RemoteAsset:  sha256:c3b22c26c6fd6811b0ae8363b95ca8ce4ea3c202d3d0975b2914310ceb1bcc4d
 Source0:        https://files.pythonhosted.org/packages/source/k/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -21,7 +21,8 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +39,4 @@ been designed from the ground up to be lightweight and fast.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

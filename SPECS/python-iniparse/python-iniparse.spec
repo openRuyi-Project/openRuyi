@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Accessing and Modifying INI files
 License:        MIT
 URL:            https://github.com/candlepin/python-iniparse
-#!RemoteAsset
+#!RemoteAsset:  sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ rm -vfr %{buildroot}%{_docdir}/*
 %doc README.md Changelog
 
 %changelog
-%{?autochangelog}
+%autochangelog
