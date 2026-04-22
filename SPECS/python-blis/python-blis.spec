@@ -34,7 +34,8 @@ BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(hypothesis)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -54,4 +55,4 @@ export BLIS_ARCH="generic"
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
