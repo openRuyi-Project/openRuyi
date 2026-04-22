@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
