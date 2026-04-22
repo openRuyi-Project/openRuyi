@@ -57,12 +57,16 @@ jobs:
           echo "::endgroup::" >&2
         done < changed-files
 
+        num_changed="$(wc -l < changed-remoteassets)"
+        echo "num=$num_changed" > "$GITHUB_OUTPUT"
+
         echo "# Specs with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
         sed -e 's/^/    /' changed-remoteassets >> "$GITHUB_STEP_SUMMARY"
+        if [ "$num_changed" -eq 0 ]; then
+          echo "*(None)*" >> "$GITHUB_STEP_SUMMARY"
+        fi
         echo "" >> "$GITHUB_STEP_SUMMARY"
-
-        echo "num=$(wc -l < changed-remoteassets)" > "$GITHUB_OUTPUT"
 
     - name: Check remote assets
       id: check-changed
@@ -76,12 +80,16 @@ jobs:
           echo "::endgroup::" >&2
         done < changed-remoteassets
 
+        num_needs_update="$(wc -l < needs-update)"
+        echo "num=$num_needs_update" > "$GITHUB_OUTPUT"
+
         echo "# Specs requiring update" >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
         sed -e 's/^/    /' needs-update >> "$GITHUB_STEP_SUMMARY"
+        if [ "$num_needs_update" -eq 0 ]; then
+          echo "*(None)*" >> "$GITHUB_STEP_SUMMARY"
+        fi
         echo "" >> "$GITHUB_STEP_SUMMARY"
-
-        echo "num=$(wc -l < needs-update)" > "$GITHUB_OUTPUT"
 
         mv changes.diff "pr-${{ github.event.pull_request.number }}-remoteassets.diff"
 
