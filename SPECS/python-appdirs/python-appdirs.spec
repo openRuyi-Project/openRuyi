@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Determine platform-specific dirs, e.g. a "user data dir"
 License:        MIT
 URL:            https://github.com/ActiveState/appdirs
-#!RemoteAsset
+#!RemoteAsset:  sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,4 +36,4 @@ directories, e.g. a "user data dir".
 %doc README.rst CHANGES.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
