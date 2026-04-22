@@ -28,7 +28,7 @@ BuildRequires:  python3dist(jsonschema)
 BuildRequires:  python3dist(narwhals)
 BuildRequires:  python3dist(typing-extensions)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,4 +46,4 @@ Vega and Vega-Lite.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
