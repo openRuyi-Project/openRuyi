@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ A Pygments plugin for IPython code & console sessions.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
