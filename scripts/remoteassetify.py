@@ -324,7 +324,6 @@ def main():
             if args.workflow:
                 print(f"::warning file={args.filename},line={data['lineno'] + 1}::{new_remoteasset_line}", file=sys.stderr)
 
-            patch_lines.append(f'diff --git a/{args.filename} b/{args.filename}')
             patch_lines.append(f'--- a/{args.filename}')
             patch_lines.append(f'+++ b/{args.filename}')
             patch_lines.append(f"@@ -{data['lineno'] + 1},2 +{data['lineno'] + 1},2 @@")
