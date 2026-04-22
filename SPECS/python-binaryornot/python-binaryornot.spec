@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/binaryornot/binaryornot
 #!RemoteAsset:  sha256:cc8d57cfa71d74ff8c28a7726734d53a851d02fad9e3a5581fb807f989f702f0
 Source:         https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -24,6 +25,9 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(hatchling)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 Ultra-lightweight pure Python package to guess whether a file is binary or
@@ -37,4 +41,4 @@ text, using a heuristic similar to Perl's pp_fttext.
 %{_bindir}/binaryornot
 
 %changelog
-%{?autochangelog}
+%autochangelog
