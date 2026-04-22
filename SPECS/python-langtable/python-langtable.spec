@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        guess reasonable defaults for locale, keyboard, territory, ...
 License:        GPL-3.0-or-later
 URL:            https://github.com/mike-fabian/langtable
-#!RemoteAsset
+#!RemoteAsset:  sha256:725b94121856a3b76d2345e8596954b82ed1eda78513e55ac55fbe4a4823e66e
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  perl
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ already known.
 %license COPYING unicode-license.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
