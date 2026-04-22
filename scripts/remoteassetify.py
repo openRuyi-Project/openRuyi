@@ -23,7 +23,7 @@ arg_parser = argparse.ArgumentParser(
     epilog = f'''{sys.argv[0]} does not edit spec files directly.
 Pipe the output into 'git apply' to apply the patch:
 
-$ {sys.argv[0]} SPECS/<package>/<package>.py | git apply
+$ {sys.argv[0]} SPECS/<package>/<package>.spec | git apply
 ''',
 )
 
