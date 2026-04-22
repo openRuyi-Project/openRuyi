@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ is used by the Requests library to verify HTTPS requests.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
