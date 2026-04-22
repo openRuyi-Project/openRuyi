@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        HTTP/2 State-Machine based protocol implementation
 License:        MIT
 URL:            https://github.com/python-hyper/hyper-h2
-#!RemoteAsset
+#!RemoteAsset:  sha256:6c59efe4323fa18b47a632221a1888bd7fde6249819beda254aeca909f221bf1
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ speak HTTP/2 regardless of your programming paradigm.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
