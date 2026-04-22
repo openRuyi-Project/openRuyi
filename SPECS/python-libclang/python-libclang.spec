@@ -25,7 +25,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       clang
@@ -41,4 +41,4 @@ This package provides Python bindings for the Clang C library.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
