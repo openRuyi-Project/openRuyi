@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Config file reading, writing, and validation
 License:        BSD-3-Clause
 URL:            https://github.com/DiffSK/configobj
-#!RemoteAsset
+#!RemoteAsset:  sha256:03c881bbf23aa07bccf1b837005975993c4ab4427ba57f959afdd9d1a2386848
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} validate
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +37,4 @@ straightforward programmers interface and a simple syntax for config files.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
