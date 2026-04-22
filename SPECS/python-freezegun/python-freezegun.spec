@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Test utility for mocking the datetime module
 License:        Apache-2.0
 URL:            https://github.com/spulec/freezegun
-#!RemoteAsset
+#!RemoteAsset:  sha256:ac7742a6cc6c25a2c35e9292dfd554b897b517d2dec26891a2e8debf205cb94a
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,4 +36,4 @@ time by mocking the datetime module.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
