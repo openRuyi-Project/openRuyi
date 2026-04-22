@@ -12,9 +12,9 @@ Release:        %autorelease
 Summary:        Build and publish Rust crates as Python packages
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/PyO3/maturin
-#!RemoteAsset
+#!RemoteAsset:  sha256:2c2ae37144811d365509889ed7220b0598487f1278c2441829c3abf56cc6324a
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:1f1d31f07dc2715e7d3eef9f2c4875690f5e40d7b8e7de4aff778a759d0b9414
 Source1:        https://github.com/TakoPack/python-%{srcname}-vendor/releases/download/vendor-%{version}/%{srcname}-%{version}-vendor.tar.bz2
 BuildSystem:    pyproject
 
@@ -29,7 +29,8 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  rust
 BuildRequires:  cargo
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -58,4 +59,4 @@ EOF
 %{_bindir}/maturin
 
 %changelog
-%{?autochangelog}
+%autochangelog
