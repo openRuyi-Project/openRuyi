@@ -13,8 +13,9 @@ Summary:        Simple testing framework for command line applications
 License:        GPL-2.0-or-later
 URL:            https://bitheap.org/cram/
 VCS:            git:https://github.com/aiiie/cram
-#!RemoteAsset
+#!RemoteAsset:  sha256:7da7445af2ce15b90aad5ec4792f857cef5786d71f14377e9eb994d8b8337f2f
 Source:         https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -24,7 +25,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,7 +39,7 @@ and compares the command output in the test with the command's actual output.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 PYTHONPATH=%{buildroot}%{python3_sitelib} PYTHON=%{__python3} scripts/cram -v tests
 
 %files -f %{pyproject_files}
@@ -47,4 +48,4 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} PYTHON=%{__python3} scripts/cram -v te
 %{_bindir}/cram
 
 %changelog
-%{?autochangelog}
+%autochangelog
