@@ -10,7 +10,7 @@ Name:           python-%{srcname}
 Version:        2.1.19
 Release:        %autorelease
 Summary:        High speed universal character encoding detector
-License:        MPLv1.1 or GPLv2 or LGPLv2
+License:        MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later
 URL:            https://github.com/faust-streaming/cchardet
 #!RemoteAsset:  sha256:f89386297cde0c8e0f5e21464bc2d6d0e4a4fc1b1d77cdb238ca24d740d872e0
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -26,12 +26,11 @@ BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pkgconfig)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
 cChardet is high speed universal character encoding detector.
-%{?python_provide:%python_provide python3-%{pypi_name}}
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -41,4 +40,4 @@ cChardet is high speed universal character encoding detector.
 %{_bindir}/cchardetect
 
 %changelog
-%{?autochangelog}
+%autochangelog
