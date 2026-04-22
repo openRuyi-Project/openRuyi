@@ -13,10 +13,10 @@ Summary:        Fast transfer layer for large files on Hugging Face Hub
 License:        Apache-2.0
 URL:            https://pypi.org/project/hf-xet/
 VCS:            git:https://github.com/huggingface/xet-core
-#!RemoteAsset
+#!RemoteAsset:  sha256:e130ee08984783d12717444e538587fa2119385e5bd8fc2bb9f930419b73a7af
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 # TODO(vendor): if OBS cannot access GitHub release directly, switch to _service(download_url) as fallback.
-#!RemoteAsset
+#!RemoteAsset:  sha256:3700b275ebb7f821fcf8ff7b3943670c3d5820f98a292881ae9e1f5d8fb8a252
 Source1:        https://github.com/software-vendor/python-hf-xet/releases/download/vendor-%{version}/hf_xet-%{version}-vendor.tar.zst
 BuildSystem:    pyproject
 
@@ -32,6 +32,7 @@ BuildRequires:  rust
 BuildRequires:  cargo
 
 Provides:       python3-hf-xet = %{version}-%{release}
+Provides:       python3-hf-xet%{?_isa} = %{version}-%{release}
 %python_provide python3-hf-xet
 
 %description
@@ -56,4 +57,4 @@ EOF2
 %license hf_xet/LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
