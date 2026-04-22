@@ -28,7 +28,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(ordered-set)
 BuildRequires:  python3dist(simplejson)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +48,4 @@ Marshmallow schemas can be used to:
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
