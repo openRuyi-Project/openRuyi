@@ -32,7 +32,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(ci-info)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,4 +46,4 @@ A lightweight python client to communicate with the etelemetry server.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
