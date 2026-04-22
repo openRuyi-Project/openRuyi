@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check:
+  check_remoteasset:
     runs-on: ubuntu-latest
     steps:
     - name: Install dependencies
