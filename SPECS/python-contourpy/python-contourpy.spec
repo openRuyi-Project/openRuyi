@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python library for calculating contours in 2D quadrilateral grids
 License:        BSD-3-Clause
 URL:            https://contourpy.readthedocs.io/
-#!RemoteAsset
+#!RemoteAsset:  sha256:083e12155b210502d0bca491432bb04d56dc3432f95a979b429f2848c3dbe880
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -28,7 +28,8 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  gcc-c++
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ contouring algorithms without having to include Matplotlib as a dependency.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
