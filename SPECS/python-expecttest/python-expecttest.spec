@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/ezyang/expecttest
 #!RemoteAsset:  sha256:6e8512fb86523ada1f94fd1b14e280f924e379064bb8a29ee399950e513eeccd
 Source:         https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} -L
@@ -24,7 +25,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-scm)
 BuildRequires:  python3dist(poetry-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
