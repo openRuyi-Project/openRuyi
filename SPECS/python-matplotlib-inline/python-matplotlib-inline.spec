@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,12 +38,12 @@ and related clients, as shown below.
 %generate_buildrequires
 %pyproject_buildrequires
 
+# We don't have python-matplotlib
 %check
-# Skip all tests, as they require matplotlib on runtime
 
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
