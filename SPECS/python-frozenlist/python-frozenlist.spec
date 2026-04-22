@@ -25,7 +25,8 @@ BuildRequires:  python3dist(expandvars)
 BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +40,4 @@ collections.abc.MutableSequence, and which can be made immutable.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
