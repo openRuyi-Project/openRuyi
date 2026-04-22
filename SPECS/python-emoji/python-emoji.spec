@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ consortium is supported in addition to a bunch of aliases.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
