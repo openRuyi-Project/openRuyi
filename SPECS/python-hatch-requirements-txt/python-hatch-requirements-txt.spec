@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname hatch-requirements-txt
+%global pypi_name hatch_requirements_txt
 
 Name:           python-hatch-requirements-txt
 Version:        0.4.1
@@ -12,19 +13,19 @@ Release:        %autorelease
 Summary:        Hatchling plugin to read project dependencies from requirements.txt
 License:        MIT
 URL:            https://github.com/repo-helper/hatch-requirements-txt
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/hatch_requirements_txt-%{version}.tar.gz
+#!RemoteAsset:  sha256:2c686e5758fd05bb55fa7d0c198fdd481f8d3aaa3c693260f5c0d74ce3547d20
+Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l hatch_requirements_txt
+BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +38,4 @@ Provides:       python3-%{srcname}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
