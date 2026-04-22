@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python Git Library
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/GitPython
-#!RemoteAsset
+#!RemoteAsset:  sha256:400124c7d0ef4ea03f7310ac2fbf7151e09ff97f2a3288d64a440c584a29c37f
 Source0:        https://files.pythonhosted.org/packages/source/g/gitpython/gitpython-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  python3dist(gitdb)
 # used for check
 BuildRequires:  git
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +50,4 @@ and data streaming.
 %doc CHANGES AUTHORS
 
 %changelog
-%{?autochangelog}
+%autochangelog
