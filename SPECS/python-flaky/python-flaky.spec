@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Plugin for pytest that automatically reruns flaky tests
 License:        Apache-2.0
 URL:            https://github.com/box/flaky
-#!RemoteAsset
+#!RemoteAsset:  sha256:47204a81ec905f3d5acfbd61daeabcada8f9d4031616d9bcb0618461729699f5
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 # Tests
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,7 +36,7 @@ those tests or marking them to @skip, they can be automatically retried.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 # adapted from upstream's tox.ini
 %pytest -v -k 'example and not options' --doctest-modules test/test_pytest/
 %pytest -v -k 'example and not options' test/test_pytest/
@@ -47,4 +47,4 @@ those tests or marking them to @skip, they can be automatically retried.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
