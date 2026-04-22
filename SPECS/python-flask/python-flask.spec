@@ -13,7 +13,7 @@ Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good
 License:        BSD-3-Clause
 URL:            https://flask.palletsprojects.com/
 VCS:            git:https://github.com/pallets/flask
-#!RemoteAsset
+#!RemoteAsset:  sha256:bf656c15c80190ed628ad08cdfd3aaa35beb087855e2f494910aa3774cc4fd87
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  make
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +47,4 @@ authentication technologies and more.
 %{_bindir}/flask
 
 %changelog
-%{?autochangelog}
+%autochangelog
