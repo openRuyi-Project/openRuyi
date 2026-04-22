@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/dgilland/cacheout
 #!RemoteAsset:  sha256:ee264897cbaa089ae5f406da11952697d99fa7f3583cfab69fe8a00ff8e1952d
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +40,4 @@ A caching library for Python.
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
