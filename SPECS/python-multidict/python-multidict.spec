@@ -26,7 +26,8 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(psutil)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +41,4 @@ than once in the container.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
