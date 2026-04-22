@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Distribution utilities
 License:        Python-2.0
 URL:            https://github.com/pypa/distlib
-#!RemoteAsset
+#!RemoteAsset:  sha256:9dafe54b34a028eafd95039d5e5d4851a13734540f1331060d31c9916e7147a8
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ rm distlib/*.exe
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
