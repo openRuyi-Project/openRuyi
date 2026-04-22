@@ -57,7 +57,7 @@ jobs:
           echo "::endgroup::" >&2
         done < changed-files
 
-        echo "# Spec files with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
+        echo "# Specs with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
         sed -e 's/^/    /' changed-remoteassets >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
