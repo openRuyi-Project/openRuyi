@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Simple wrapper around optparse for powerful command line utilities
 License:        BSD-3-Clause
 URL:            https://github.com/pallets/click
-#!RemoteAsset
+#!RemoteAsset:  sha256:ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b9ca6de
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ comes with good defaults out of the box.
 %doc README.rst CHANGES.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
