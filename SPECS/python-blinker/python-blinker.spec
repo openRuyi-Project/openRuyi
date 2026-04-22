@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Fast, simple object-to-object and broadcast signaling
 License:        MIT
 URL:            https://github.com/pallets-eco/blinker
-#!RemoteAsset
+#!RemoteAsset:  sha256:b4ce2265a7abece45e7cc896e98dbebe6cead56bcf805a3d23136d145f5445bf
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,4 +36,4 @@ of interested parties to subscribe to events, or "signals".
 %doc CHANGES.rst LICENSE.txt README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
