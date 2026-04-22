@@ -31,7 +31,8 @@ BuildRequires:  python3dist(attrs)
 BuildRequires:  python3dist(frozenlist)
 BuildRequires:  python3dist(propcache)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +51,4 @@ with middlewares and pluggable routing.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
