@@ -13,10 +13,10 @@ Summary:        PyCA's cryptography library
 License:        Apache-2.0 OR BSD-3-Clause
 URL:            https://cryptography.io/en/latest/
 VCS:            git:https://github.com/pyca/cryptography
-#!RemoteAsset
+#!RemoteAsset:  sha256:a8b17438104fed022ce745b362294d9ce35b4c2e45c1d958ad4a4b019285f4a1
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 # TODO: Remove the vendor source after
-#!RemoteAsset
+#!RemoteAsset:  sha256:07bef086335518cee7a8dee01ded2718ce09911b639fbb257ea0fac1820291a7
 Source1:        https://github.com/TakoPack/%{name}-vendor/releases/download/vendor-%{version}/%{srcname}-%{version}-vendor.tar.bz2
 BuildSystem:    pyproject
 
@@ -32,7 +32,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(maturin)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       openssl
@@ -63,4 +63,4 @@ find . -name .keep -print -delete
 %license LICENSE LICENSE.APACHE LICENSE.BSD
 
 %changelog
-%{?autochangelog}
+%autochangelog
