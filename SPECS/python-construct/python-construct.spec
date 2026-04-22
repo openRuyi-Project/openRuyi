@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A powerful declarative parser/builder for binary data
 License:        MIT
 URL:            https://github.com/construct/construct
-#!RemoteAsset
+#!RemoteAsset:  sha256:4d2472f9684731e58cc9c56c463be63baa1447d674e0d66aeb5627b22f512c29
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ parse data into Pythonic objects, and in the other direction, convert
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
