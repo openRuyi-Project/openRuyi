@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Implementation of JSONPath for Python
 License:        Apache-2.0 AND WTFPL
 URL:            https://github.com/h2non/jsonpath-ng
-#!RemoteAsset
+#!RemoteAsset:  sha256:f6f5f7fd4e5ff79c785f1573b394043b39849fb2bb47bcead935d12b00beab3c
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(ply)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ original JSONPath proposal.
 %{_bindir}/jsonpath_ng
 
 %changelog
-%{?autochangelog}
+%autochangelog
