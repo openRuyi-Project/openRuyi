@@ -19,13 +19,19 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
+# We don't have python-lingua
+BuildOption(check):  -e mako.ext.linguaplugin
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(markupsafe)
+# For tests
+BuildRequires:  python3dist(babel)
+BuildRequires:  python3dist(pygments)
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       python3dist(six)
@@ -51,9 +57,6 @@ sed -i '/tag_build = dev/d' setup.cfg
 mv %{buildroot}/%{_bindir}/mako-render %{buildroot}/%{_bindir}/mako-render-%{python3_version}
 ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render-3
 ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render
-
-# Skip the import test suite, which requires lingua or something
-%check
 
 %files -f %{pyproject_files}
 %license LICENSE
