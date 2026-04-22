@@ -13,7 +13,7 @@ Summary:        DNS toolkit for Python
 License:        ISC
 URL:            https://www.dnspython.org/
 VCS:            git:https://github.com/rthalley/dnspython
-#!RemoteAsset
+#!RemoteAsset:  sha256:181d3c6996452cb1189c4046c61599b84a5a86e099562ffde77d26984ff26d0f
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildOption(install):  dns
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ manipulation of DNS zones, messages, names, and records.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
