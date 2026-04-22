@@ -29,40 +29,33 @@ License:        BSD-3-Clause AND BSD-2-Clause
 URL:            https://flit.pypa.io/
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:18f63100d6f94385c6ed57a72073443e1a71a4acb4339491615d0f16d6ff01b2
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  pkgconfig(python3)
 %if %{without bootstrap}
-BuildRequires:  python3-packaging
+BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 %endif
-BuildRequires:  expat
+
+# RPM generators are not yet available when we bootstrap
+%if %{with bootstrap}
+Provides:       python3dist(flit-core) = %{version}-%{release}
+
+Requires:       python(abi) = %{python3_version}
+%else
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+%endif
 
 %description
 This provides a PEP 517 build backend for packages using Flit.
 The only public interface is the API specified by PEP 517,
 at flit_core.buildapi.
 
-%package     -n python3-flit-core
-Summary:        %{summary}
-
-# RPM generators are not yet available when we bootstrap
-%if %{with bootstrap}
-Provides:       python3dist(flit-core) = %{version}
-Provides:       python%{python3_version}dist(flit-core) = %{version}
-Requires:       python(abi) = %{python3_version}
-%endif
-
-%description -n python3-flit-core
-This provides a PEP 517 build backend for packages using Flit.
-The only public interface is the API specified by PEP 517,
-at flit_core.buildapi.
-
 %prep
 %autosetup -p1 -n flit_core-%{version}
-
 # Remove vendored tomli that flit_core includes to solve the circular dependency on older Pythons
 # (flit_core requires tomli, but flit_core is needed to build tomli).
 # We don't use this, as tomllib is a part of standard library since Python 3.11.
@@ -92,11 +85,11 @@ rm %{buildroot}%{python3_sitelib}/flit_core-%{version}.dist-info/RECORD
 %pyproject_install
 %endif
 
-%files -n python3-flit-core
+%files
 %doc README.rst
-%{python3_sitelib}/flit_core-*.dist-info/
 %license %{python3_sitelib}/flit_core-*.dist-info/licenses/LICENSE
+%{python3_sitelib}/flit_core-*.dist-info/
 %{python3_sitelib}/flit_core/
 
 %changelog
-%{?autochangelog}
+%autochangelog
