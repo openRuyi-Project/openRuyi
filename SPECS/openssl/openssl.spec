@@ -29,17 +29,17 @@ BuildSystem:    autotools
 
 # Use the shared jitterentropy library instead of static
 Patch0000:      0001-openssl-shared-jitterentropy.patch
-
 # https://github.com/openssl/openssl/pull/28684
 Patch0001:      0002-Fix-riscv64-chacha-crash-due-to-unalign.patch
-
 # https://github.com/openssl/openssl/pull/29242
 # Since openssl have a lot of code, we only apply clang-format to
 # the files that we will modified in the patch.
 Patch0002:      0003-openssl-4.0-POST-CLANG-FORMAT-WEBKIT.patch
-
 # https://github.com/openssl/openssl/pull/30787
 Patch0003:      0004-RISC-V-Port-dot-asm-ChaCha20-assembly-implementation.patch
+# Unsubmit PR: GHASH multi-block aggregation for RISC-V with Zbc/Zvbc/Zvkg
+# Currently we only finish Zbc part, and not ready for upstream yet.
+Patch0004:      0005-RISC-V-GHASH-multi-block-aggregation.patch
 
 BuildOption(check):  LD_LIBRARY_PATH="$PWD"
 
