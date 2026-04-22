@@ -4,24 +4,24 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global file_name python-debian
-
-%global srcname debian
+%global srcname python-debian
+%global pypi_name python_debian
 
 Name:           python-%{srcname}
-Version:        1.0.1
+Version:        1.1.0
 Release:        %autorelease
 Summary:        Modules for Debian-related data formats
 License:        GPL-2.0-or-later AND GPL-3.0-or-later
 URL:            https://salsa.debian.org/python-debian-team/python-debian
-#!RemoteAsset
-Source:         https://files.pythonhosted.org/packages/source/p/%{file_name}/%{file_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:afe3c7267d81c29c79ab44d803a0756d0796b0e41bb0a05c5cafcdd2b980d4e6
+Source:         https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # set version to build.
-Patch:          0001-fix-version.patch
+Patch0:         0001-fix-version.patch
 
-BuildOption(install):  -l %{srcname} -L
+BuildOption(install):  -l debian -L
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -31,7 +31,7 @@ BuildRequires:  python3dist(wheel)
 # for tests.
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -49,12 +49,12 @@ related files. Currently handled are:
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 # skip some tests as we don't have dpkg.
-%pytest --ignore=src/debian/_arch_table.py
+%pytest --ignore=src/debian/_arch_table.py --ignore=src/debian/deb822.py
 
 %files -f %{pyproject_files}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
