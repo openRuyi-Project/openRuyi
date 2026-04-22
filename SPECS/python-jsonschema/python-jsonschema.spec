@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Implementation of JSON Schema validation for Python
 License:        MIT
 URL:            https://github.com/Julian/jsonschema
-#!RemoteAsset
+#!RemoteAsset:  sha256:0f864437ab8b6076ba6707453ef8f98a6a0d512a80e93f8abdb676f737ecb60d
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -32,8 +32,9 @@ BuildRequires:  python3dist(hatch-fancy-pypi-readme)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(attrs)
 BuildRequires:  python3dist(pyrsistent)
+BuildRequires:  python3dist(hypothesis)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,7 +49,7 @@ jsonschema is an implementation of JSON Schema for Python (supporting
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
@@ -57,4 +58,4 @@ jsonschema is an implementation of JSON Schema for Python (supporting
 %{_bindir}/jsonschema
 
 %changelog
-%{?autochangelog}
+%autochangelog
