@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(dbus-python)
 
-Provides:       python3-meh
+Provides:       python3-meh = %{version}-%{release}
 %python_provide python3-meh
 
 Requires:       python3dist(dbus-python)
