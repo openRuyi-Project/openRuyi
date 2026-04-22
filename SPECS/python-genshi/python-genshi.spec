@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Toolkit for stream-based generation of output for the web
 License:        BSD-3-Clause
 URL:            https://genshi.edgewall.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:85b0db113625314f0f44f3fe6ef0eb2564d6c34dd2ee5677b495d15142bb4973
 Source:         https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -25,7 +25,8 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,7 +37,7 @@ textual content for output generation on the web.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
@@ -44,4 +45,4 @@ textual content for output generation on the web.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog
