@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Platform independent file lock
 License:        Unlicense
 URL:            https://github.com/tox-dev/py-filelock
-#!RemoteAsset
+#!RemoteAsset:  sha256:711e943b4ec6be42e1d4e6690b48dc175c822967466bb31c0c293f34334c13f4
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,11 +22,11 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-@code{filelock} contains a single module implementing
+filelock contains a single module implementing
 a platform independent file lock in Python, which provides a simple way of
 inter-process communication.
 
@@ -37,4 +37,4 @@ inter-process communication.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
