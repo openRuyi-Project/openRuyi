@@ -32,8 +32,8 @@ A Python implementation of RFC 3986 including validation and authority parsing.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
 %autochangelog
