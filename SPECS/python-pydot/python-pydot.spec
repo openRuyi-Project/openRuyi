@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pyparsing)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ tools dot, neato, twopi.
 %doc ChangeLog README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
