@@ -3,17 +3,18 @@
 # SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           acpica
-Version:        20251212
+Version:        20260408
 Release:        %autorelease
 Summary:        ACPICA tools for the development and debug of ACPI tables
 License:        GPL-2.0-only
 URL:            https://www.acpica.org
 VCS:            git:https://github.com/acpica/acpica
-#!RemoteAsset:  sha256:6f77bd550655183c63f0a307fb0f29ef6140b1f522d61783a16b2af8d9149a0d
+#!RemoteAsset:  sha256:ddc5d3e0f54030e2348484fff681861a161efb4e388e20631209574e7884ad39
 Source0:        https://github.com/acpica/acpica/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -65,4 +66,4 @@ ACPICA tools for the development and debug of ACPI tables
 %{_bindir}/acpibin
 
 %changelog
-%{?autochangelog}
+%autochangelog
