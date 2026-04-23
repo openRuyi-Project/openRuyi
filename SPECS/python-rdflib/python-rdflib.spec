@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python library for working with RDF
 License:        BSD-3-Clause
 URL:            https://github.com/RDFLib/rdflib
-#!RemoteAsset
+#!RemoteAsset:  sha256:663083443908b1830e567350d72e74d9948b310f827966358d76eebdc92bf592
 Source:         https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,6 +21,9 @@ BuildSystem:    pyproject
 Patch0:         0001-Fix-py3.14-test-failure-due-to-NotImplemented-change.patch
 
 BuildOption(install):  %{srcname}
+# If we add python3dist(httpx) here, then the tests will fail.
+BuildOption(check):  -e rdflib.contrib.graphdb.client
+BuildOption(check):  -e rdflib.contrib.rdf4j.client
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python)
@@ -28,7 +31,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(poetry-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,14 +46,14 @@ Queries and Update statements - and SPARQL function extension mechanisms.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -k "not test_sparqleval and not test_parser"\
         -m "not webtest"
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 %{_bindir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
