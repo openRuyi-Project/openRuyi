@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python library to mock out calls with Python requests
 License:        Apache-2.0
 URL:            https://github.com/getsentry/responses
-#!RemoteAsset
+#!RemoteAsset:  sha256:9374d047a575c8f781b94454db5cab590b6029505f488d12899ddb10a4af1cf4
 Source:         https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -30,7 +30,7 @@ BuildRequires:  python3dist(pytest-asyncio)
 BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(pyyaml)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,8 +40,8 @@ A utility library for mocking out the requests Python library.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
