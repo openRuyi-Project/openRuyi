@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Character encoding aliases for legacy web content
 License:        BSD-3-Clause
 URL:            https://github.com/SimonSapin/python-webencodings
-#!RemoteAsset
+#!RemoteAsset:  sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,17 +22,17 @@ BuildOption(install):  %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
 In order to be compatible with legacy web content when interpreting
-something like @code{Content-Type: text/html; charset=latin1}, tools need
+something like Content-Type: text/html; charset=latin1, tools need
 to use a particular set of aliases for encoding labels as well as some
-overriding rules.  For example, @code{US-ASCII} and @code{iso-8859-1} on
-the web are actually aliases for @code{windows-1252}, and a @code{UTF-8}
-or @code{UTF-16} BOM takes precedence over any other encoding declaration.
-The WHATWG @url{https://encoding.spec.whatwg.org/,Encoding} standard
+overriding rules.  For example, US-ASCII and iso-8859-1 on
+the web are actually aliases for windows-1252, and a UTF-8
+or UTF-16 BOM takes precedence over any other encoding declaration.
+The WHATWG https://encoding.spec.whatwg.org/,Encoding standard
 defines all such details so that implementations do not have to
 reverse-engineer each other.
 
@@ -47,4 +47,4 @@ is Python’s.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
