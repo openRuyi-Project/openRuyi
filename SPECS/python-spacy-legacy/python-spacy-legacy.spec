@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -35,15 +35,15 @@ This package includes outdated registered functions
 for spaCy v3.x, for example model architectures, pipeline
 components and utilities.
 
-%check
-# Skip the check; it depends on the spacy
-
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check
+# Skip the check; it depends on the spacy
 
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
