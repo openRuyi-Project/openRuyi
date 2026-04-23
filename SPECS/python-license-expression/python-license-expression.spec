@@ -6,8 +6,8 @@
 
 %bcond doc 0
 
-%global pypi_name license_expression
 %global srcname license-expression
+%global pypi_name license_expression
 
 Name:           python-%{srcname}
 Version:        30.4.4
@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Library to parse, compare, simplify and normalize license expressions
 License:        Apache-2.0
 URL:            https://github.com/nexB/license-expression
-#!RemoteAsset
+#!RemoteAsset:  sha256:73448f0aacd8d0808895bdc4b2c8e01a8d67646e4188f887375398c761f340fd
 Source:         https://files.pythonhosted.org/packages/source/l/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -36,7 +36,7 @@ BuildRequires:  python3dist(sphinxcontrib-apidoc)
 BuildRequires:  python3dist(sphinx-rtd-theme)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -51,7 +51,7 @@ conventions and license identifiers aliases to resolve and normalize licenses.
 Summary:        Documentation for python-license-expression
 License:        Apache-2.0 AND BSD-2-Clause AND MIT
 BuildArch:      noarch
-Requires:       python3-license-expression = %{version}-%{release}
+Requires:       python3dist(license-expression) = %{version}-%{release}
 
 %description    doc
 Documentation for license-expression.
@@ -84,4 +84,4 @@ rm -rf html/.{doctrees,buildinfo}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

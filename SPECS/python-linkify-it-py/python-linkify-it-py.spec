@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Link recognition library with full Unicode support
 License:        MIT
 URL:            https://github.com/tsutsu3/linkify-it-py
-#!RemoteAsset
+#!RemoteAsset:  sha256:68cda27e162e9215c17d786649d1da0021a451bdc436ef9e0fa0ba5234b9b048
 Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(uc-micro-py)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,7 +38,7 @@ plain text.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -v
 
 %files -f %{pyproject_files}
@@ -46,4 +46,4 @@ plain text.
 %doc CHANGELOG.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

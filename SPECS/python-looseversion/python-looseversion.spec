@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-core)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ LooseVersion.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
