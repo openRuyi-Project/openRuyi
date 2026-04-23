@@ -18,13 +18,18 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# No module named 'curio'
+BuildOption(check):  -e python_socks.async_.curio
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
+# For tests
+BuildRequires:  python3dist(anyio)
+BuildRequires:  python3dist(trio)
 
-Provides:       python3-socks
+Provides:       python3-socks = %{version}-%{release}
 %python_provide python3-socks
 
 %description
@@ -33,16 +38,13 @@ Supports SOCKS4(a), SOCKS5, HTTP (tunneling) proxy and provides sync and async
 (asyncio, trio) APIs. It is used internally by aiohttp-socks and
 httpx-socks packages.
 
-%pyproject_extras_subpkg -n python3-socks asyncio trio curio
+%pyproject_extras_subpkg -n python-socks asyncio trio curio
 
 %generate_buildrequires
 %pyproject_buildrequires -x asyncio
-
-%check
-# skip tests as some deps we don't have yet.
 
 %files -f %{pyproject_files}
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
