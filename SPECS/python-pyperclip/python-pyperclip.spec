@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A cross-platform clipboard module for Python
 License:        BSD-3-Clause
 URL:            https://github.com/asweigart/pyperclip
-#!RemoteAsset
+#!RemoteAsset:  sha256:244035963e4428530d9e3a6101a1ef97209c6825edab1567beac148ccc1db1b6
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,11 +24,12 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-Pyperclip is a cross-platform Python module for copy and paste clipboard functions. It works with Python 2 and 3.
+Pyperclip is a cross-platform Python module for copy and paste
+clipboard functions. It works with Python 2 and 3.
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -38,4 +39,4 @@ Pyperclip is a cross-platform Python module for copy and paste clipboard functio
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
