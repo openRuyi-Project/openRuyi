@@ -13,7 +13,7 @@ Summary:        Model-definition framework for state-of-the-art machine learning
 License:        Apache-2.0
 URL:            https://pypi.org/project/transformers/
 VCS:            git:https://github.com/huggingface/transformers
-#!RemoteAsset
+#!RemoteAsset:  sha256:0088b8b46ccc9eff1a1dca72b5d618a5ee3b1befc3e418c9512b35dea9f9a650
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,9 +39,9 @@ training.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%{_bindir}/transformers
 %doc README.md
 %license LICENSE
+%{_bindir}/transformers
 
 %changelog
-%{?autochangelog}
+%autochangelog
