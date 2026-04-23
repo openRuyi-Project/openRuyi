@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A small and easy workflow system
 License:        MIT
 URL:            https://github.com/explosion/weasel
-#!RemoteAsset
+#!RemoteAsset:  sha256:f293d6174398e8f478c78481e00c503ee4b82ea7a3e6d0d6a01e46a6b1396845
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -33,7 +33,7 @@ BuildRequires:  python3dist(srsly)
 BuildRequires:  python3dist(typer-slim)
 BuildRequires:  python3dist(wasabi)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +50,4 @@ custom pipelines.
 %{_bindir}/weasel
 
 %changelog
-%{?autochangelog}
+%autochangelog
