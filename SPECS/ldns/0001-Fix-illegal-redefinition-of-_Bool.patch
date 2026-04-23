@@ -1,0 +1,82 @@
+From 9484018bcf9070810593842a2bd760d19c73425d Mon Sep 17 00:00:00 2001
+From: Jan Engelhardt <jengelh@inai.de>
+Date: Fri, 27 Mar 2026 22:07:33 +0100
+Subject: [PATCH] Fix illegal redefinition of _Bool
+
+ldns does not build under gcc-15/glibc-2.43. The error is:
+
+.. code-block:
+
+	./libtool --tag=CC --quiet --mode=compile gcc -I. -I.  -DHAVE_CONFIG_H -DLDNS_TRUST_ANCHOR_FILE="\"/etc/unbound/root.key\"" -DOPENSSL_API_COMPAT=10100 -fno-strict-aliasing -Wunused-function -Wstrict-prototypes -Wwrite-strings -W -Wall -O2 -Wall -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -fstack-protector-strong -funwind-tables -fasynchronous-unwind-tables -fstack-clash-protection -Werror=return-type -flto=auto -g -fno-strict-aliasing -D_GNU_SOURCE -I./include/ldns  -I/usr/include/python3.13 -Wno-unused-variable -Wno-unused-parameter -Wno-missing-field-initializers -fno-strict-aliasing -c ./contrib/python/ldns_wrapper.c -o ldns_wrapper.lo
+	In file included from ./ldns/buffer.h:16,
+			 from ./include/ldns/ldns.h:96,
+			 from ./contrib/python/ldns_wrapper.c:3547:
+	/usr/include/assert.h:114:14: error: conflicting types for '__assert_single_arg'; have 'signed char(signed char)'
+	  114 | extern _Bool __assert_single_arg (_Bool);
+	      |              ^~~~~~~~~~~~~~~~~~~
+	In file included from /usr/include/python3.13/Python.h:20,
+			 from ./contrib/python/ldns_wrapper.c:203:
+	/usr/include/assert.h:114:14: note: previous declaration of '__assert_single_arg' with type '_Bool(_Bool)'
+	  114 | extern _Bool __assert_single_arg (_Bool);
+	      |              ^~~~~~~~~~~~~~~~~~~
+
+The reduced test case is:
+
+.. code-block:: c
+
+	#include <assert.h>
+	#define _Bool signed char
+	#include <assert.h>
+	// gcc-15 -c -std=c23 1.c
+
+Identifiers starting with an underscore are reserved for the
+implementation. Redefinining them can break compilation in funny ways
+(like this).
+
+Stop redefinining/redeclaring internal identifiers. Delete references
+to the autoconf manual, because they too have removed that ugly
+snippet in commit v2.72a-68-g6f2aadd7 .
+---
+ ldns/common.h.in | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
+
+diff --git a/ldns/common.h.in b/ldns/common.h.in
+index db559608..c3ea5441 100644
+--- a/ldns/common.h.in
++++ b/ldns/common.h.in
+@@ -32,26 +32,22 @@
+ #define LDNS_BUILD_CONFIG_USE_ED448        @ldns_build_config_use_ed448@
+ 
+ /*
+- * HAVE_STDBOOL_H is not available when distributed as a library, but no build 
+- * configuration variables may be used (like those above) because the header
+- * is sometimes only available when using special compiler flags to enable the
+- * c99 environment. Because we cannot force the usage of this flag, we have to
+- * provide a default type. Below what is suggested by the autoconf manual.
++ * HAVE_* macros are a recipe for name clashes, and the ldns build does not
++ * produce reasonably namespaced macro definitions for library use. Until that
++ * is addressed, do something resembling a snippet from an older autoconf
++ * manual.
+  */
+ /*@ignore@*/
+ /* splint barfs on this construct */
+ #ifndef __bool_true_false_are_defined
+-# ifdef HAVE_STDBOOL_H
++# if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199900L) || defined(HAVE_STDBOOL_H)
+ #  include <stdbool.h>
+ # else
+-#  ifndef HAVE__BOOL
+-#   ifdef __cplusplus
+-typedef bool _Bool;
+-#   else
+-#    define _Bool signed char
+-#   endif
++#  ifdef HAVE__BOOL
++#    define bool _Bool
++#  else
++#    define bool signed char
+ #  endif
+-#  define bool _Bool
+ #  define false 0
+ #  define true 1
+ #  define __bool_true_false_are_defined 1
