@@ -1,0 +1,39 @@
+From 8e40a4f168436a3345697d01f163738a247d3c3f Mon Sep 17 00:00:00 2001
+From: Dominique Leuenberger <dimstar@opensuse.org>
+Date: Thu, 5 Feb 2026 15:43:29 +0100
+Subject: [PATCH] Fix build against glibc 2.43
+
+When strrchar gets a const char * to work on, it returns a pointer
+into the same string; with glibc 2.43 it is being enforced to retain
+the const attribute in this case
+---
+ lib/fcoe_utils.c | 2 +-
+ lib/sysfs_hba.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/lib/fcoe_utils.c b/lib/fcoe_utils.c
+index 4d13dd7ecf9..5ea713679a5 100644
+--- a/lib/fcoe_utils.c
++++ b/lib/fcoe_utils.c
+@@ -161,7 +161,7 @@ int fcoe_checkdir(char *dir)
+  */
+ char *get_ifname_from_symbolic_name(const char *symbolic_name)
+ {
+-	char *last_space = strrchr(symbolic_name, ' ');
++	const char *last_space = strrchr(symbolic_name, ' ');
+ 
+ 	if (!last_space || strlen(last_space) == 1)
+ 		return NULL;
+diff --git a/lib/sysfs_hba.c b/lib/sysfs_hba.c
+index 381f335d7ea..302ce634954 100644
+--- a/lib/sysfs_hba.c
++++ b/lib/sysfs_hba.c
+@@ -441,7 +441,7 @@ char *get_pci_dev_from_netdev(const char *netdev)
+ 	free(path);
+ 	if (ret == -1) {
+ 		char realdev[256];
+-		char *subif;
++		const char *subif;
+ 		size_t len;
+ 
+ 		subif = strchr(netdev, '.');

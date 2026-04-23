@@ -23,6 +23,7 @@ BuildSystem:    autotools
 
 Patch0:         0001-fcoemon-add-snprintf-string-precision-modifiers-in-f.patch
 Patch1:         0002-Don-t-attempt-to-memcpy-zero-bytes.patch
+Patch2:         0003-Fix-build-against-glibc-2.43.patch
 
 BuildOption(conf):  --with-systemdsystemunitdir=%{_unitdir}
 
@@ -74,4 +75,4 @@ done
 %{_libexecdir}/fcoe/
 
 %changelog
-%{?autochangelog}
+%autochangelog
