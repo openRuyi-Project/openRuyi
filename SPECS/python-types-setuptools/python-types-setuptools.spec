@@ -4,29 +4,29 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname types_setuptools
-%global pypi_name types-setuptools
+%global srcname types-setuptools
+%global pypi_name types_setuptools
 
-Name:           python-%{pypi_name}
+Name:           python-types-setuptools
 Version:        80.10.0.20260124
 Release:        %autorelease
 Summary:        Typing stubs for setuptools
 License:        Apache-2.0
 URL:            https://github.com/python/typeshed
 #!RemoteAsset:  sha256:1b86d9f0368858663276a0cbe5fe5a9722caf94b5acde8aba0399a6e90680f20
-Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/t/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): setuptools-stubs distutils-stubs
+BuildOption(install):  setuptools-stubs distutils-stubs
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-types-setuptools = %{version}-%{release}
+%python_provide python3-types-setuptools
 
 %description
 Typeshed contains external type annotations for the Python standard library and Python builtins, as well as third-party packages that are contributed by people external to those projects.
@@ -42,4 +42,4 @@ Typeshed contains external type annotations for the Python standard library and 
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
