@@ -32,6 +32,9 @@ sphinxcontrib-serializinghtml is a Sphinx extension which outputs
 %generate_buildrequires
 %pyproject_buildrequires
 
+# We don't have sphinx at all...
+%check
+
 %files -f %{pyproject_files}
 %doc README*
 
