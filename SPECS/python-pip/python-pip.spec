@@ -43,20 +43,12 @@ Release:        %autorelease
 Summary:        A tool for installing and managing Python packages
 License:        MIT AND Python-2.0.1 AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MPL-2.0 AND (Apache-2.0 OR BSD-2-Clause)
 URL:            https://pip.pypa.io/
-#!RemoteAsset
+#!RemoteAsset:  sha256:6f4d5c31324f7f998ec7c626c3a1543b5db5fb82c941c2b2952eeee183340d8f
 Source0:        https://github.com/pypa/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
 %undefine _py3_shebang_s
 
-%description
-pip is a package management system used to install and manage software packages
-written in Python. Many packages can be found in the Python Package Index
-(PyPI). pip is a recursive acronym that can stand for either "Pip Installs
-Packages" or "Pip Installs Python".
-
-%package     -n python3-%{srcname}
-Summary:        A tool for installing and managing Python3 packages
 BuildRequires:  pkgconfig(python3)
 # python3 bootstrap: this is rebuilt before the final build of python3, which
 # adds the dependency on python3-rpm-generators, so we require it manually
@@ -69,12 +61,16 @@ BuildRequires:  python3dist(flit-core)
 BuildRequires:  bash-completion
 %endif
 BuildRequires:  ca-certificates
+
+Provides:       pip = %{version}-%{release}
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 Requires:       ca-certificates
 # Virtual provides for the packages bundled by pip:
 %{bundled 3}
-Provides:       pip = %{version}-%{release}
 
-%description -n python3-%{srcname}
+%description
 pip is a package management system used to install and manage software packages
 written in Python. Many packages can be found in the Python Package Index
 (PyPI). pip is a recursive acronym that can stand for either "Pip Installs
@@ -130,7 +126,7 @@ sed -i -e "s/^\\(complete.*\\) pip%{python3_version}\$/\\1 pip%{python3_version}
 mkdir -p %{buildroot}%{python_wheel_dir}
 install -p %{_pyproject_wheeldir}/%{python_wheel_name} -t %{buildroot}%{python_wheel_dir}
 
-%files -n python3-%{srcname} -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.rst
 %{_bindir}/pip
 %{_bindir}/pip3
@@ -149,4 +145,4 @@ install -p %{_pyproject_wheeldir}/%{python_wheel_name} -t %{buildroot}%{python_w
 %{python_wheel_dir}/%{python_wheel_name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
