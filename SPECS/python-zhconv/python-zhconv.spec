@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ and zh-hant. It also fully supports MediaWiki's manual conversion syntax.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
