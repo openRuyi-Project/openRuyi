@@ -29,7 +29,8 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pycares)
 BuildRequires:  python3dist(pycurl)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -49,4 +50,4 @@ ideal for real-time web services.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
