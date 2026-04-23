@@ -24,7 +24,8 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pygobject)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       python3dist(rpm)
