@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Filters to transform text into typographically-improved HTML
 License:        BSD-3-Clause
 URL:            https://github.com/justinmayer/typogrify
-#!RemoteAsset
+#!RemoteAsset:  sha256:f0aa004e98032a6e6be4c9da65e7eb7150e36ca3bf508adbcda82b4d003e61ee
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -26,11 +26,11 @@ BuildRequires:  pytest
 BuildRequires:  python3dist(jinja2)
 BuildRequires:  python3dist(django)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-@code{typogrify} provides a set of custom filters that automatically
+typogrify provides a set of custom filters that automatically
 apply various transformations to plain text in order to yield
 typographically-improved HTML.  While often used in conjunction with Jinja and
 Django template systems, the filters can be used in any environment.
@@ -42,4 +42,4 @@ Django template systems, the filters can be used in any environment.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
