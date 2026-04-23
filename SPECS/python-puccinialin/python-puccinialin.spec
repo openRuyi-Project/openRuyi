@@ -30,7 +30,7 @@ BuildRequires:  python3dist(platformdirs)
 BuildRequires:  python3dist(tqdm)
 BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,8 +44,7 @@ the host's environment, and activated using a set of environment variables.
 %files -f %{pyproject_files}
 %{_bindir}/puccinialize
 %doc README.md
-%license license-mit
-%license license-apache
+%license license-mit license-apache
 
 %changelog
-%{?autochangelog}
+%autochangelog
