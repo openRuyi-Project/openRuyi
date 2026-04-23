@@ -4,9 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global pypi_name pyqt_builder
-
 %global srcname PyQt-builder
+%global pypi_name pyqt_builder
 
 Name:           python-%{srcname}
 Version:        1.19.1
@@ -14,7 +13,7 @@ Release:        %autorelease
 Summary:        The PEP 517 compliant PyQt build system
 License:        BSD-2-Clause
 URL:            https://www.riverbankcomputing.com/software/pyqt/
-#!RemoteAsset
+#!RemoteAsset:  sha256:6af6646ba29668751b039bfdced51642cb510e300796b58a4d68b7f956a024d8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -32,14 +31,14 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(setuptools-scm) >= 8
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
 PyQt-builder is the PEP 517 compliant build system for PyQt and projects that
 extend PyQt. It extends the sip build system and uses Qt's qmake to perform the
-actual compilation and installation of extension modules.Projects that use
-PyQt- builder provide an appropriate pyproject.toml file and an optional
+actual compilation and installation of extension modules. Projects that use
+PyQt-builder provide an appropriate pyproject.toml file and an optional
 project.py.
 
 %generate_buildrequires
@@ -51,4 +50,4 @@ project.py.
 %{_bindir}/pyqt-qt-wheel
 
 %changelog
-%{?autochangelog}
+%autochangelog
