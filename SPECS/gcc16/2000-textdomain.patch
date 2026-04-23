@@ -1,0 +1,115 @@
+#! /bin/sh -e
+
+# DP: Set gettext's domain and textdomain to the versioned package name.
+
+dir=
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+    dir="$3/"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch)
+        patch $pdir -f --no-backup-if-mismatch -p0 < $0
+        ;;
+    -unpatch)
+        patch $pdir -f --no-backup-if-mismatch -R -p0 < $0
+        ;;
+    *)
+        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+        exit 1
+esac
+exit 0
+
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 0fe2ba241..86e5fb9e7 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -4303,8 +4303,8 @@ install-po:
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+ 	  echo $(mkinstalldirs) $(DESTDIR)$$dir; \
+ 	  $(mkinstalldirs) $(DESTDIR)$$dir || exit 1; \
+-	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc.mo; \
+-	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc.mo; \
++	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc-16.mo; \
++	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/gcc-16.mo; \
+ 	done
+ 
+ # Rule for regenerating the message template (gcc.pot).
+diff --git a/gcc/intl.cc b/gcc/intl.cc
+index e8108b7dc..62895c11f 100644
+--- a/gcc/intl.cc
++++ b/gcc/intl.cc
+@@ -55,8 +55,8 @@ gcc_init_libintl (void)
+   setlocale (LC_ALL, "");
+ #endif
+ 
+-  (void) bindtextdomain ("gcc", LOCALEDIR);
+-  (void) textdomain ("gcc");
++  (void) bindtextdomain ("gcc-16", LOCALEDIR);
++  (void) textdomain ("gcc-16");
+ 
+   /* Opening quotation mark.  */
+   open_quote = _("`");
+diff --git a/libcpp/Makefile.in b/libcpp/Makefile.in
+index 5fbba9b9c..c37bc6bcf 100644
+--- a/libcpp/Makefile.in
++++ b/libcpp/Makefile.in
+@@ -49,6 +49,7 @@ LDFLAGS = @LDFLAGS@
+ LIBICONV = @LIBICONV@
+ LIBINTL = @LIBINTL@
+ PACKAGE = @PACKAGE@
++PACKAGE_SUFFIX = -16
+ RANLIB = @RANLIB@
+ SHELL = @SHELL@
+ USED_CATALOGS = @USED_CATALOGS@
+@@ -76,8 +77,10 @@ INCLUDES = -I$(srcdir) -I. -I$(srcdir)/../include @INCINTL@ \
+ 
+ ALL_CFLAGS = $(CFLAGS) $(WARN_CFLAGS) $(INCLUDES) $(CPPFLAGS) $(PICFLAG) \
+ 	$(CET_HOST_FLAGS)
++ALL_CFLAGS += -DPACKAGE_SUFFIX=\"$(strip $(PACKAGE_SUFFIX))\"
+ ALL_CXXFLAGS = $(CXXFLAGS) $(WARN_CXXFLAGS) $(NOEXCEPTION_FLAGS) $(INCLUDES) \
+ 	$(CPPFLAGS) $(PICFLAG) $(CET_HOST_FLAGS)
++ALL_CXXFLAGS += -DPACKAGE_SUFFIX=\"$(strip $(PACKAGE_SUFFIX))\"
+ 
+ # The name of the compiler to use.
+ COMPILER = $(CXX)
+@@ -166,8 +169,8 @@ install-strip install: all installdirs
+ 	  else continue; \
+ 	  fi; \
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+-	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/$(PACKAGE).mo; \
+-	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/$(PACKAGE).mo; \
++	  echo $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/$(PACKAGE)$(PACKAGE_SUFFIX).mo; \
++	  $(INSTALL_DATA) $$cat $(DESTDIR)$$dir/$(PACKAGE)$(PACKAGE_SUFFIX).mo; \
+ 	done
+ 
+ mostlyclean:
+diff --git a/libcpp/init.cc b/libcpp/init.cc
+index 63124c816..4471ff358 100644
+--- a/libcpp/init.cc
++++ b/libcpp/init.cc
+@@ -167,7 +167,7 @@ init_library (void)
+       init_trigraph_map ();
+ 
+ #ifdef ENABLE_NLS
+-       (void) bindtextdomain (PACKAGE, LOCALEDIR);
++       (void) bindtextdomain (PACKAGE PACKAGE_SUFFIX, LOCALEDIR);
+ #endif
+     }
+ }
+diff --git a/libcpp/system.h b/libcpp/system.h
+index 0a0629d55..6fc28a651 100644
+--- a/libcpp/system.h
++++ b/libcpp/system.h
+@@ -284,7 +284,7 @@ extern int errno;
+ #endif
+ 
+ #ifndef _
+-# define _(msgid) dgettext (PACKAGE, msgid)
++# define _(msgid) dgettext (PACKAGE PACKAGE_SUFFIX, msgid)
+ #endif
+ 
+ #ifndef N_
