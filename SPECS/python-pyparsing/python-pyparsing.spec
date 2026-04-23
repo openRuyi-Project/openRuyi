@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Python parsing class library
 License:        MIT
 URL:            https://github.com/pyparsing/pyparsing
-#!RemoteAsset
+#!RemoteAsset:  sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ that client code uses to construct the grammar directly in Python code.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
