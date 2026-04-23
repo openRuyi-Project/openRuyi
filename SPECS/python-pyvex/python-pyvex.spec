@@ -14,9 +14,9 @@ Release:        %autorelease
 Summary:        A Python interface to libvex and VEX IR
 License:        BSD-2-Clause AND GPL-3.0-or-later AND LGPL-2.0-only
 URL:            https://github.com/angr/pyvex
-#!RemoteAsset
-Source0:        https://github.com/angr/pyvex/archive/v%{version}/pyvex-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:f097bf9aac73cc7e9d1fa1480375b11300bfa9f6b7740a953d3a036ea1b7a944
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:535900642805fa8795196a0f9b1e1cb22c663c6d1dac828d8f3e404605ff2468
 Source1:        https://github.com/angr/vex/archive/%{libvexversion}/vex-%{libvexversion}.tar.gz
 BuildSystem:    pyproject
 
@@ -33,7 +33,8 @@ BuildRequires:  python3dist(cffi) >= 1.0.3
 BuildRequires:  python3dist(bitstring)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -56,8 +57,7 @@ mv pyvex_c/LICENSE LICENSE-pyvex_c
 
 %files -f %{pyproject_files}
 %doc README.md
-%license LICENSE
-%license LICENSE-pyvex_c
+%license LICENSE LICENSE-pyvex_c
 
 %changelog
-%{?autochangelog}
+%autochangelog
