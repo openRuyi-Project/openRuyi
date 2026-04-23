@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-service-identity
+Provides:       python3-service-identity = %{version}-%{release}
 %python_provide python3-service-identity
 
 %description
