@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Minimum functionality for rpmautospec
 License:        MIT
 URL:            https://github.com/fedora-infra/rpmautospec-core
-#!RemoteAsset
+#!RemoteAsset:  sha256:c0acf19ed013355d02c1e28220ad9d6f9088f7f61b4a29d16d5364298bc6e6f3
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-rpmautospec-core
+Provides:       python3-rpmautospec-core = %{version}-%{release}
 %python_provide python3-rpmautospec-core
 
 %description
@@ -40,4 +40,4 @@ sed -i -e 's|^\(.*/LICENSE\)|%%license \1|g' %{pyproject_files}
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
