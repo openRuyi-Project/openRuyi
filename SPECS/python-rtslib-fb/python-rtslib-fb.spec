@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname rtslib-fb
+%global pypi_name rtslib_fb
 
 Name:           python-%{srcname}
 Version:        2.2.3
@@ -12,9 +13,8 @@ Release:        %autorelease
 Summary:        API for Linux kernel LIO SCSI target
 License:        Apache-2.0
 URL:            https://github.com/open-iscsi/rtslib-fb
-# This is a mess - 251
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/r/rtslib_fb/rtslib_fb-%{version}.tar.gz
+#!RemoteAsset:  sha256:c1053889b572fde4c0a9b468b508e4e838781364a60f4746e9c5f92aef459de6
+Source0:        https://files.pythonhosted.org/packages/source/r/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -24,7 +24,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(systemd)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -56,4 +56,4 @@ install -m 644 systemd/target.service %{buildroot}%{_unitdir}/target.service
 %{_unitdir}/target.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
