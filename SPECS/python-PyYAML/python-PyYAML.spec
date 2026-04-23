@@ -5,23 +5,29 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-Name:           python-PyYAML
+%global srcname PyYAML
+%global pypi_name pyyaml
+
+Name:           python-%{srcname}
 Version:        6.0.2
 Release:        %autorelease
 Summary:        YAML parser and emitter for Python
 License:        MIT
 URL:            https://github.com/yaml/pyyaml
-#!RemoteAsset
-Source:         https://github.com/yaml/pyyaml/archive/%{version}.tar.gz
+#!RemoteAsset:  sha256:d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e
+Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildSystem:    pyproject
 
-BuildRequires:  libyaml-devel
+BuildOption(install):  yaml _yaml
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(yaml-0.1)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
-BuildRequires:  expat
 
-%py_provides    python3-yaml
-# For lazy people - 251
-%py_provides    python3-pyyaml
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 YAML is a data serialization format designed for human readability and
@@ -36,8 +42,7 @@ allow to represent an arbitrary Python object.
 PyYAML is applicable for a broad range of tasks from complex
 configuration files to object serialization and persistence.
 
-%prep
-%autosetup -p1 -n pyyaml-%{version}
+%prep -a
 chmod a-x examples/yaml-highlight/yaml_hl.py
 
 # remove pre-generated file
@@ -46,15 +51,8 @@ rm -rf ext/_yaml.c
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-
-%install
-%pyproject_install
-%pyproject_save_files yaml _yaml
-
 %files -f %{pyproject_files}
 %doc CHANGES README.md examples
 
 %changelog
-%{?autochangelog}
+%autochangelog
