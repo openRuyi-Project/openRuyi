@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python module to customize a process title
 License:        BSD-3-Clause
 URL:            http://pypi.python.org/pypi/setproctitle
-#!RemoteAsset
+#!RemoteAsset:  sha256:6283b7a58477dd8478fbb9e76defb37968ee4ba47b05ec1c053cb39638bd7398
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -22,7 +22,8 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -52,4 +53,4 @@ export PYTHONPATH=%{buildroot}%{python3_sitearch}
 %{python3_sitearch}/%{srcname}*.dist-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
