@@ -28,7 +28,7 @@ BuildRequires:  python3dist(flit-core)
 BuildRequires:  python3dist(python-dotenv)
 BuildRequires:  python3dist(marshmallow)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ The Twelve-Factor App methodology.
 %doc README.md CHANGELOG.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -14,20 +14,21 @@ Release:        %autorelease
 Summary:        Python module to interface with ethtool
 License:        GPL-2.0-or-later
 URL:            https://github.com/fedora-python/python-ethtool
-#!RemoteAsset
+#!RemoteAsset:  sha256:567260ea5805063bbcff71dabd6fb820f89bc84f720e9ebe315c7eef1449d908
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(libnl-3.0)
 %if %{with doc}
 BuildRequires:  asciidoc
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +46,4 @@ PCI locations.
 %{_bindir}/pethtool
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ a frame is currently doing, particularly the AST node being executed.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

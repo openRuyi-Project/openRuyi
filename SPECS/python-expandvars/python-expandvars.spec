@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(hatchling)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ value if some variable is not defined.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

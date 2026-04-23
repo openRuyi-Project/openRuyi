@@ -28,7 +28,8 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  gcc-c++
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +48,4 @@ find %{buildroot}%{python3_sitearch} -type f \( \
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

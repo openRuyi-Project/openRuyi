@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Editable installations
 License:        MIT
 URL:            https://github.com/pfmoore/editables
-#!RemoteAsset
+#!RemoteAsset:  sha256:309627d9b5c4adc0e668d8c6fa7bac1ba7c8c5d415c2d27f60f081f8e80d1de2
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ Python, without needing a reinstall.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
