@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        An implementation of the OAuth request-signing logic
 License:        BSD-3-Clause
 URL:            https://github.com/oauthlib/oauthlib
-#!RemoteAsset
+#!RemoteAsset:  sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918
 Source0:        https://files.pythonhosted.org/packages/source/o/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ very little effort.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
