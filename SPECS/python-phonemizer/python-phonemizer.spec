@@ -36,8 +36,8 @@ The phonemizer allows simple phonemization of words and texts in many languages.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 %{_bindir}/phonemize
 
 %changelog
