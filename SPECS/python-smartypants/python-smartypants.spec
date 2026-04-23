@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Translate punctuation characters into smart quotes
 License:        BSD-3-Clause AND BSD-2-Clause
 URL:            https://github.com/leohemsted/smartypants.py
-#!RemoteAsset
+#!RemoteAsset:  sha256:39d64ce1d7cc6964b698297bdf391bc12c3251b7f608e6e55d857cd7c5f800c6
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ entities.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
