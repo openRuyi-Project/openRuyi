@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        C parser in Python
 License:        BSD-3-Clause
 URL:            https://github.com/eliben/pycparser
-#!RemoteAsset
+#!RemoteAsset:  sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -34,8 +34,8 @@ a front-end for C compilers or analysis tools.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README*
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
