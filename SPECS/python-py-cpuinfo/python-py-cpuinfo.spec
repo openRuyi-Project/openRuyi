@@ -36,8 +36,8 @@ systems and reports vendor, architecture, cache, and feature data.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 %{_bindir}/cpuinfo
 
 %changelog
