@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        py.test plugin for running tests in isolated forked subprocesses
 License:        MIT
 URL:            https://github.com/pytest-dev/pytest-forked
-#!RemoteAsset
+#!RemoteAsset:  sha256:4dafd46a9a600f65d822b8f605133ecf5b3e1941ebb3588e943b4e3eb71a5a3f
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  pytest_forked
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ C++ libraries that might crash the process. To use the plugin, simply use the
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
