@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A lightweight derivative of Enthought Traits for configuring Python objects
 License:        BSD-3-Clause
 URL:            https://github.com/ipython/traitlets
-#!RemoteAsset
+#!RemoteAsset:  sha256:9ed0579d3502c94b4b3732ac120375cda96f923114522847de4b3bb98b96b6b7
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +37,4 @@ This package powers the config system of IPython and Jupyter.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
