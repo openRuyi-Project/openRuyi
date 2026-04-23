@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Tool to create isolated Python environments
 License:        MIT
 URL:            https://github.com/pypa/virtualenv
-#!RemoteAsset
+#!RemoteAsset:  sha256:643d3914d73d3eeb0c552cbb12d7e82adf0e504dbf86a3182f8771a153a1971c
 Source0:        https://files.pythonhosted.org/packages/source/v/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,6 +21,8 @@ BuildSystem:    pyproject
 Patch2000:      2000-use-system-wheels.patch
 
 BuildOption(install):  -l %{srcname}
+# Exclude broken modules from import tests
+BuildOption(check):  -e '*activate_this' -e '*windows*'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -31,7 +33,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(flaky)
 BuildRequires:  python3dist(pytest-mock)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 # For convenience
 Provides:       virtualenv = %{version}-%{release}
@@ -61,9 +63,7 @@ rm src/virtualenv/seed/wheels/embed/wheel-*
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# Exclude broken modules from import tests
-%pyproject_check_import -e '*activate_this' -e '*windows*'
+%check -a
 # Skip tests that require internet access & bundled wheels & automatic updates
 %pytest -W ignore::DeprecationWarning \
     -vv -k "not test_download_ and \
@@ -85,4 +85,4 @@ rm src/virtualenv/seed/wheels/embed/wheel-*
 %{_bindir}/virtualenv
 
 %changelog
-%{?autochangelog}
+%autochangelog
