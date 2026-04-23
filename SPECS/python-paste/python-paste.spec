@@ -12,19 +12,29 @@ Release:        %autorelease
 Summary:        Tools for using a Web Server Gateway Interface stack
 License:        MIT
 URL:            https://github.com/pasteorg/paste
-#!RemoteAsset
+#!RemoteAsset:  sha256:1c3d12065a5e8a7a18c0c7be1653a97cf38cc3e9a5a0c8334a9dd992d3a05e4a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
+# Exclude broken modules from import tests
+# Also exclude paste.deploy, paste.auth.open_id & paste.mod
+# As it requires additional dependencies
+BuildOption(check):  -e 'paste.debug.*'
+BuildOption(check):  -e paste.flup_session
+BuildOption(check):  -e paste.transaction
+BuildOption(check):  -e paste.util.scgiserver
+BuildOption(check):  -e paste.deploy
+BuildOption(check):  -e paste.auth.open_id
+BuildOption(check):  -e paste.modpython
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 # Tests
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,11 +46,7 @@ interfaces.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# Exclude broken modules from import tests
-# Also exclude paste.deploy, paste.auth.open_id & paste.mod
-# As it requires additional dependencies
-%pyproject_check_import -e 'paste.debug.*' -e paste.flup_session -e paste.transaction -e paste.util.scgiserver -e paste.deploy -e paste.auth.open_id -e paste.modpython
+%check -a
 # No internet access during tests
 %pytest -W ignore::DeprecationWarning \
     --deselect tests/test_cgiapp.py::test_form \
@@ -52,4 +58,4 @@ interfaces.
 %{python3_sitelib}/Paste-%{version}-py*-nspkg.pth
 
 %changelog
-%{?autochangelog}
+%autochangelog
