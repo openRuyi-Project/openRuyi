@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ than the default. It powers the tracebacks in IPython and futurecoder.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
