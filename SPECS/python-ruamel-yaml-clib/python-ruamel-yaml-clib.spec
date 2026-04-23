@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname ruamel.yaml.clib
+%global pypi_name ruamel_yaml_clib
 
 Name:           python-ruamel-yaml-clib
 Version:        0.2.15
@@ -12,9 +13,9 @@ Release:        %autorelease
 Summary:        C version of reader, parser and emitter for ruamel.yaml derived from libyaml
 License:        MIT
 URL:            https://sourceforge.net/projects/ruamel-yaml-clib/
-#Source0:        https://files.pythonhosted.org/packages/source/r/%%{srcname}/%%{srcname}-%{version}.tar.gz
-#!RemoteAsset
-Source0:        https://yaml.dev/ruamel-dl-tagged-releases/%{srcname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:46e4cc8c43ef6a94885f72512094e482114a8a706d3c555a34ed4b0d20200600
+Source0:        https://files.pythonhosted.org/packages/source/r/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+#Source0:        https://yaml.dev/ruamel-dl-tagged-releases/%{srcname}-%{version}.tar.xz
 BuildSystem:    pyproject
 
 BuildOption(install):  -l _ruamel_yaml
@@ -26,7 +27,8 @@ BuildRequires:  python3dist(cython)
 # For %check
 BuildRequires:  python3dist(ruamel-yaml)
 
-Provides:       python3-ruamel-yaml-clib
+Provides:       python3-ruamel-yaml-clib = %{version}-%{release}
+Provides:       python3-ruamel-yaml-clib%{?_isa} = %{version}-%{release}
 %python_provide python3-ruamel-yaml-clib
 
 Requires:       python3dist(ruamel-yaml)
@@ -60,4 +62,4 @@ rmdir ruamel.yaml.clib
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
