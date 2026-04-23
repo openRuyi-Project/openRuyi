@@ -26,7 +26,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(botocore)
 BuildRequires:  python3dist(awscrt)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,8 +36,8 @@ S3transfer is a Python library for managing Amazon S3 transfers.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.rst
+%license LICENSE.txt
 
 %changelog
 %autochangelog
