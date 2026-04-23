@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Cryptographic library for Python
 License:        BSD-2-Clause
 URL:            https://github.com/Legrandin/pycryptodome
-#!RemoteAsset
+#!RemoteAsset:  sha256:71909758f010c82bc99b0abf4ea12012c98962fbf0583c2164f8b84533c2e4da
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -21,7 +21,8 @@ BuildOption(install):  Cryptodome
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -68,4 +69,4 @@ Python. Only the pieces that are extremely critical to performance
 %license LICENSE.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
