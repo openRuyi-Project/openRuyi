@@ -29,7 +29,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(colorama)
 BuildRequires:  python3dist(rich)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,9 +43,9 @@ tqdm(iterable), and you’re done!
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%{_bindir}/tqdm
 %doc README.rst
 %license LICENCE
+%{_bindir}/tqdm
 
 %changelog
-%{?autochangelog}
+%autochangelog
