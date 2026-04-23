@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Library for building powerful interactive command lines in Python
 License:        BSD-3-Clause
 URL:            https://github.com/prompt-toolkit/python-prompt-toolkit
-#!RemoteAsset
+#!RemoteAsset:  sha256:28cde192929c8e7321de85de1ddbe736f1375148b02f2e17edd840042b1be855
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,8 +24,8 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(asyncssh)
 BuildRequires:  python3dist(pyperclip)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-prompt-toolkit = %{version}-%{release}
+%python_provide python3-prompt-toolkit
 
 %description
 `prompt_toolkit` is a library for building powerful interactive command line applications in Python.
@@ -48,4 +48,4 @@ rm ./src/prompt_toolkit/output/windows10.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
