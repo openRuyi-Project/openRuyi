@@ -4,9 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global pypi_name pytest_randomly
-
 %global srcname pytest-randomly
+%global pypi_name pytest_randomly
 
 %bcond tests 0
 
@@ -16,7 +15,7 @@ Release:        %autorelease
 Summary:        Pytest plugin to randomly order tests and control random.seed
 License:        MIT
 URL:            https://github.com/pytest-dev/pytest-randomly
-#!RemoteAsset
+#!RemoteAsset:  sha256:174e57bb12ac2c26f3578188490bd333f0e80620c3f47340158a86eca0593cd8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -35,7 +34,7 @@ BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(pytest-xdist)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,14 +43,14 @@ Pytest plugin to randomly order tests and control random.seed.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
 %if %{with tests}
+%check -a
 %pytest -p no:randomly -k 'not test_it_runs_before_stepwise and not test_model_bakery'
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
