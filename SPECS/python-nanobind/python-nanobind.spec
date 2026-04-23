@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  cmake
 BuildRequires:  ninja
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ versa. It is reminiscent of Boost.Python and pybind11.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

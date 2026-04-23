@@ -26,8 +26,10 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(numpy)
+# For tests
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,9 +40,6 @@ MINC2, MGH and ECAT as well as Philips PAR/REC.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as some deps we don't have yet.
-
 %files -f %{pyproject_files}
 %license COPYING
 %doc README.rst
@@ -48,4 +47,4 @@ MINC2, MGH and ECAT as well as Philips PAR/REC.
 %{_bindir}/nib-*
 
 %changelog
-%{?autochangelog}
+%autochangelog

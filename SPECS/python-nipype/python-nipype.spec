@@ -20,6 +20,12 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# We don't have sphinx
+BuildOption(check):  -e nipype.sphinxext.apidoc
+BuildOption(check):  -e 'nipype.sphinxext.apidoc.*'
+BuildOption(check):  -e nipype.sphinxext.documenter
+# Something is wrong with this import
+BuildOption(check):  -e nipype.sphinxext.plot_workflow
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -42,8 +48,10 @@ BuildRequires:  python3dist(scipy)
 BuildRequires:  python3dist(traits)
 BuildRequires:  python3dist(looseversion)
 BuildRequires:  python3dist(nibabel)
+# For tests
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 Provides:       nipypecli = %{version}-%{release}
 
@@ -55,13 +63,10 @@ within a single workflow.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as some deps we don't have yet. like pandas.
-
 %files -f %{pyproject_files}
 %doc README.rst
 %license LICENSE
 %{_bindir}/nipypecli
 
 %changelog
-%{?autochangelog}
+%autochangelog

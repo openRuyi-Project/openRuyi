@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        A pure Python network address representation and manipulation library
 License:        BSD-3-Clause
 URL:            https://github.com/netaddr/netaddr
-#!RemoteAsset
+#!RemoteAsset:  sha256:5c3c3d9895b551b763779ba7db7a03487dc1f8e3b385af819af341ae9ef6e48a
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -29,7 +29,7 @@ BuildRequires:  python3dist(sphinx-issues)
 BuildRequires:  python3dist(furo)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -61,8 +61,8 @@ find netaddr -name "*.py" | xargs sed -i -e '1 {/^#!\//d}'
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build -a
 %if %{with doc}
+%build -a
 #docs
 cd docs
 PYTHONPATH='../' sphinx-build-%{python3_version} -b html -d build/doctrees source python3/html
@@ -70,12 +70,12 @@ rm -f python3/html/.buildinfo
 %endif
 
 %files -f %{pyproject_files}
-%license COPYRIGHT.rst
 %doc AUTHORS.rst CHANGELOG.rst README.rst THANKS.rst
-%if %{with docs}
+%if %{with doc}
 %doc docs/python3/html
 %endif
+%license COPYRIGHT.rst
 %{_bindir}/netaddr
 
 %changelog
-%{?autochangelog}
+%autochangelog

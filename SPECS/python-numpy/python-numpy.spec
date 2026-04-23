@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        NumPy: array processing for numbers, strings, records, and objects
 License:        BSD-3-Clause
 URL:            https://github.com/numpy/numpy
-#!RemoteAsset
+#!RemoteAsset:  sha256:6e504f7b16118198f138ef31ba24d985b124c2c469fe8467007cf30fd992f934
 Source:         https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -32,9 +32,11 @@ BuildRequires:  openblas-devel
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(hypothesis)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
-Provides:       python3-%{srcname}-f2py
+Provides:       python3-%{srcname}-f2py = %{version}-%{release}
+Provides:       python3-%{srcname}-f2py%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}-f2py
 
 %description
@@ -49,10 +51,10 @@ It contains among other things:
 %pyproject_buildrequires -R
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.md THANKS.txt
+%license LICENSE.txt
 %{_bindir}/f2py
 %{_bindir}/numpy-config
 
 %changelog
-%{?autochangelog}
+%autochangelog

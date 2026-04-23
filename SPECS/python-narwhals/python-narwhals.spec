@@ -24,6 +24,9 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 Extremely lightweight and extensible compatibility layer between
 dataframe libraries!
@@ -31,12 +34,9 @@ dataframe libraries!
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as there are some deps we don't have yet.
-
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
