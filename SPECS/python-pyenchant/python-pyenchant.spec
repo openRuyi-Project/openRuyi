@@ -12,18 +12,22 @@ Release:        %autorelease
 Summary:        Python bindings for Enchant spellchecking library
 License:        MIT
 URL:            https://github.com/pyenchant/pyenchant
-#!RemoteAsset
+#!RemoteAsset:  sha256:1cf830c6614362a78aab78d50eaf7c6c93831369c52e1bb64ffae1df0341e637
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -L enchant
+# No module named 'gtk'
+BuildOption(check):  -e enchant.checker.GtkSpellCheckerDialog
+# No module named 'wx'
+BuildOption(check):  -e enchant.checker.wxSpellCheckerDialog
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  enchant
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       enchant
@@ -35,12 +39,9 @@ library by Dom Lachowicz.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# TODO: Fix tests
-%check
-
 %files -f %{pyproject_files}
 %doc README.rst
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
