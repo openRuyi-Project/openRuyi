@@ -38,7 +38,8 @@ BuildRequires:  python3dist(wheel)
 # For compatibility
 Provides:       dbus-python
 # Pypi name is dbus-python
-Provides:       python3-dbus-python
+Provides:       python3-dbus-python = %{version}-%{release}
+Provides:       python3-dbus-python%{?_isa} = %{version}-%{release}
 %python_provide python3-dbus-python
 
 %description
