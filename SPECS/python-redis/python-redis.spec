@@ -28,7 +28,7 @@ BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3dist(requests)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,8 +38,8 @@ The Python interface to the Redis key-value store.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog
