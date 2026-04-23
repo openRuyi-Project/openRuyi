@@ -3,16 +3,17 @@
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           blake3
-Version:        1.8.2
+Version:        1.8.4
 Release:        %autorelease
 Summary:        Official C implementation of the BLAKE3 cryptographic hash function
 License:        Apache-2.0
 URL:            https://github.com/BLAKE3-team/BLAKE3
-#!RemoteAsset
+#!RemoteAsset:  sha256:b5ee5f5c5e025eb2733ae3af8d4c0e53bb66dff35095decfd377f1083e8ac9be
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -65,4 +66,4 @@ export ASMFLAGS="%{build_cflags}"
 %{_libdir}/pkgconfig/libblake3.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
