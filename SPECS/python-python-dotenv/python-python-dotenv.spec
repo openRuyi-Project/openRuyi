@@ -19,27 +19,28 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l dotenv +auto
+# It seems python-dotenv is not installed with cli option.
+BuildOption(check):  -e dotenv.cli
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+# For tests
+BuildRequires:  python3dist(ipython)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-This package provides the @code{python-dotenv} Python module to read
-key-value pairs from a @code{.env} file and set them as environment variables.
+This package provides the python-dotenv Python module to read
+key-value pairs from a .env file and set them as environment variables.
 
-%pyproject_extras_subpkg -n python%{python3_pkgversion}-dotenv cli
+%pyproject_extras_subpkg -n python-dotenv cli
 
 %prep -a
 sed -i -e '/ipython/d' requirements.txt tox.ini
 
 %generate_buildrequires
 %pyproject_buildrequires
-
-# No check
-%check
 
 %files -f %{pyproject_files}
 %doc README*
