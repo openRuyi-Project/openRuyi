@@ -6,13 +6,13 @@
 
 %global srcname pyproject_hooks
 
-Name:           python-%{srcname}
+Name:           python-pyproject-hooks
 Version:        1.2.0
 Release:        %autorelease
-Summary:        Low-level library for calling @file{pyproject.toml} backends
+Summary:        Low-level library for calling pyproject.toml backends
 License:        MIT
 URL:            https://github.com/pypa/pyproject-hooks
-#!RemoteAsset
+#!RemoteAsset:  sha256:1e859bd5c40fae9448642dd871adf459e5e2084186e8d2c2a79a824c970da1f8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,12 +22,12 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-pyproject-hooks = %{version}-%{release}
+%python_provide python3-pyproject-hooks
 
 %description
-@code{pyproject-hooks} is a low-level library for calling build backends
-in @file{pyproject.toml}-based projects.  It provides basic functionality to
+pyproject-hooks is a low-level library for calling build backends
+in pyproject.toml-based projects.  It provides basic functionality to
 write tooling that generates distribution files from Python projects.
 
 %generate_buildrequires
@@ -37,4 +37,4 @@ write tooling that generates distribution files from Python projects.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
