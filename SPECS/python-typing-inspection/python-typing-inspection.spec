@@ -4,7 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname typing_inspection
+%global srcname typing-inspection
+%global pypi_name typing_inspection
 
 Name:           python-typing-inspection
 Version:        0.4.2
@@ -13,11 +14,11 @@ Summary:        Runtime typing introspection tools
 License:        MIT
 URL:            https://github.com/pydantic/typing-inspection
 #!RemoteAsset:  sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464
-Source0:        https://files.pythonhosted.org/packages/source/t/typing-inspection/%{srcname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -28,7 +29,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(typing-extensions)
 BuildRequires:  python3dist(hatchling)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ typing-inspection provides tools to inspect type annotations at runtime.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
