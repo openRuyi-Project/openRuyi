@@ -25,6 +25,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,8 +38,8 @@ objects provide or implement them.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt COPYRIGHT.txt
 %doc README.rst CHANGES.rst
+%license LICENSE.txt COPYRIGHT.txt
 
 %changelog
 %autochangelog
