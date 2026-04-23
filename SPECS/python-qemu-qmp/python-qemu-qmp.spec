@@ -71,8 +71,8 @@ install -Dpm 0644 man/*.1 -t %{buildroot}%{_mandir}/man1/
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE LICENSE_GPL2
 %doc README.rst
+%license LICENSE LICENSE_GPL2
 %{_bindir}/qmp-shell
 %{_bindir}/qmp-shell-wrap
 %if %{with doc}
@@ -82,8 +82,8 @@ install -Dpm 0644 man/*.1 -t %{buildroot}%{_mandir}/man1/
 
 %if %{with doc}
 %files doc
-%license LICENSE LICENSE_GPL2
 %doc html
+%license LICENSE LICENSE_GPL2
 %endif
 
 %changelog
