@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(poetry-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +47,4 @@ If pkg-config is not on the path, raises EnvironmentError.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
