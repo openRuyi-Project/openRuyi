@@ -15,12 +15,12 @@ Release:        %autorelease
 Summary:        Image and video datasets for torch deep learning
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT
 URL:            https://github.com/pytorch/vision
-#!RemoteAsset
+#!RemoteAsset:  sha256:a7ac1b3ab489d71f6e27edfad1e27616e4b8a9b1517e60fce4a950600d3510e8
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    pyproject
 
 Patch0:         0001-python-torchvision-ffmpeg8.patch
-Patch1:         2001-Add-HIP-detect-logic.patch
+Patch2000:      2000-Add-HIP-detect-logic.patch
 
 BuildOption(install):  %{srcname}
 
@@ -42,7 +42,6 @@ BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(torch)
 BuildRequires:  python3dist(wheel)
-
 %if %{with rocm}
 BuildRequires:  cmake(hipblas)
 BuildRequires:  cmake(hipblaslt)
@@ -53,12 +52,13 @@ BuildRequires:  cmake(rocprim)
 BuildRequires:  cmake(rocthrust)
 %endif
 
-Requires:      python3dist(numpy)
-Requires:      python3dist(pillow)
-Requires:      python3dist(requests)
-Requires:      python3dist(torch)
+Requires:       python3dist(numpy)
+Requires:       python3dist(pillow)
+Requires:       python3dist(requests)
+Requires:       python3dist(torch)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -95,8 +95,8 @@ done
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog
