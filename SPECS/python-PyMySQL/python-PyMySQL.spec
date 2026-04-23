@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Pure-Python MySQL client library
 License:        MIT
 URL:            https://github.com/PyMySQL/PyMySQL
-#!RemoteAsset
+#!RemoteAsset:  sha256:4961d3e165614ae65014e361811a724e2044ad3ea3739de9903ae7c21f539f03
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-1.1.2.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,8 +24,8 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-PyMySQL = %{version}-%{release}
+%python_provide python3-PyMySQL
 
 %description
 This package contains a pure-Python MySQL client library. The goal of PyMySQL is
@@ -40,4 +40,4 @@ and Jython.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
