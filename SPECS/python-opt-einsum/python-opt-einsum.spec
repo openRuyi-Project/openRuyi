@@ -4,20 +4,21 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname opt_einsum
+%global srcname opt-einsum
+%global pypi_name opt_einsum
 
-Name:           python-opt-einsum
+Name:           python-%{srcname}
 Version:        3.4.0
 Release:        %autorelease
 Summary:        Path optimization of einsum functions
 License:        MIT
 URL:            https://github.com/dgasmith/opt_einsum
 #!RemoteAsset:  sha256:96ca72f1b886d148241348783498194c577fa30a8faac108586b14f1ba4473ac
-Source0:        https://files.pythonhosted.org/packages/source/o/opt-einsum/%{srcname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/o/opt-einsum/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -30,7 +31,7 @@ BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  python3dist(hatch-fancy-pypi-readme)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ cuBLAS, or other specialized routines.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
