@@ -50,7 +50,8 @@ BuildRequires:  python3-PyQt-builder
 BuildRequires:  python3dist(dbus-python)
 BuildRequires:  python3dist(sip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 Provides:       PyQt6 = %{version}-%{release}
 
@@ -68,7 +69,7 @@ RPM macros for PyQt6.
 
 %package        devel
 Summary:        Development files for python3-PyQt6
-Requires:       python3-PyQt6 = %{version}-%{release}
+Requires:       python3-PyQt6%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(Qt6Core)
 Provides:       python3-PyQt6-devel
 %python_provide python3-PyQt6-devel
