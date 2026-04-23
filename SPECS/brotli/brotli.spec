@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           brotli
-Version:        1.1.0
+Version:        1.2.0
 Release:        %autorelease
 Summary:        Lossless Compression Algorithm
 License:        MIT
 URL:            https://github.com/google/brotli
-#!RemoteAsset
+#!RemoteAsset:  sha256:816c96e8e8f193b40151dad7e8ff37b1221d019dbcb9c35cd3fadbfe6477dfec
 Source:         https://github.com/google/brotli/archive/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -72,4 +73,4 @@ install -pm0644 docs/*.3 "%{buildroot}/%{_mandir}/man3/"
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
