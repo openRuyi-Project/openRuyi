@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Determine the appropriate platform-specific directories
 License:        MIT
 URL:            https://github.com/platformdirs/platformdirs
-#!RemoteAsset
+#!RemoteAsset:  sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ platform-specific directories, e.g. the ``user data dir''.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog
