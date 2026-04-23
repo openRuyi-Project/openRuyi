@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           Xwayland
-Version:        24.1.9
+Version:        24.1.10
 Release:        %autorelease
 Summary:        Xwayland is an X server for running X clients under Wayland.
 License:        MIT
 URL:            http://www.x.org
 VCS:            git:https://gitlab.freedesktop.org/xorg/xserver
-#!RemoteAsset
+#!RemoteAsset:  sha256:459762be8ea046c94386687d77a87add6073868bee14f02913eafebb945b7aa0
 Source0:        https://www.x.org/pub/individual/xserver/xwayland-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -99,4 +100,4 @@ rm -Rf %{buildroot}%{_datadir}/aclocal
 %{_datadir}/xwayland/protocol.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
