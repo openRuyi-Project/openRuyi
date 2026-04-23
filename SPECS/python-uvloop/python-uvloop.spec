@@ -25,6 +25,7 @@ BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(setuptools)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -35,8 +36,8 @@ uvloop is implemented in Cython and uses libuv under the hood.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE-APACHE LICENSE-MIT
 %doc README.rst
+%license LICENSE-APACHE LICENSE-MIT
 
 %changelog
 %autochangelog
