@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Cloud instance init scripts
 License:        Apache-2.0 OR GPL-3.0-only
 URL:            https://github.com/canonical/cloud-init
-#!RemoteAsset
+#!RemoteAsset:  sha256:a6c0a28a4055d5cde35ac9249ad0596ee6aa10f0a29bd88a6e197d29adee0a3c
 Source0:        https://github.com/canonical/cloud-init/archive/refs/tags/%{version}.tar.gz
 Source1:        cloud-init.tmpfiles
 BuildSystem:    meson
@@ -27,24 +27,24 @@ BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  python3dist(jinja2)
-BuildRequires:  python3-pyyaml
-BuildRequires:  python3-requests
+BuildRequires:  python3dist(pyyaml)
+BuildRequires:  python3dist(requests)
 # for tests
-BuildRequires:  python3-pytest
-BuildRequires:  python3-pytest-mock
-BuildRequires:  python3-configobj
-BuildRequires:  python3-responses
-BuildRequires:  python3-jsonpatch
-BuildRequires:  python3-pyserial
-BuildRequires:  python3-jsonschema
-BuildRequires:  python3-passlib
-BuildRequires:  python3-packaging
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(pytest-mock)
+BuildRequires:  python3dist(configobj)
+BuildRequires:  python3dist(responses)
+BuildRequires:  python3dist(jsonpatch)
+BuildRequires:  python3dist(pyserial)
+BuildRequires:  python3dist(jsonschema)
+BuildRequires:  python3dist(passlib)
+BuildRequires:  python3dist(packaging)
 
 Requires:       python3
-Requires:       python3-jinja2
-Requires:       python3-pyyaml
-Requires:       python3-requests
-Requires:       python3-libselinux
+Requires:       python3dist(jinja2)
+Requires:       python3dist(pyyaml)
+Requires:       python3dist(requests)
+Requires:       python3dist(selinux)
 Requires:       python-policycoreutils
 Requires:       dhcpcd
 Requires:       iproute2
@@ -54,11 +54,11 @@ Requires:       shadow
 Requires:       util-linux
 Requires:       xfsprogs
 Requires:       openssl
-Requires:       python3-configobj
-Requires:       python3-jsonpatch
-Requires:       python3-jsonschema
-Requires:       python3-oauthlib
-Requires:       python3-pyserial
+Requires:       python3dist(configobj)
+Requires:       python3dist(jsonpatch)
+Requires:       python3dist(jsonschema)
+Requires:       python3dist(oauthlib)
+Requires:       python3dist(pyserial)
 %{?systemd_requires}
 
 %description
@@ -116,4 +116,4 @@ install -D -p -m 644 tools/21-cloudinit.conf %{buildroot}%{_sysconfdir}/rsyslog.
 %dir /var/lib/cloud
 
 %changelog
-%{?autochangelog}
+%autochangelog
