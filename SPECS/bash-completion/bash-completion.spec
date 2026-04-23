@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           bash-completion
-Version:        2.16.0
+Version:        2.17.0
 Release:        %autorelease
 Summary:        Programmable completion for Bash
 License:        GPL-2.0-or-later
 URL:            https://github.com/scop/bash-completion
-#!RemoteAsset
+#!RemoteAsset:  sha256:dd9d825e496435fb3beba3ae7bea9f77e821e894667d07431d1d4c8c570b9e58
 Source0:        https://github.com/scop/bash-completion/releases/download/%{version}/%{name}-%{version}.tar.xz
 Source1:        macros.bash-completion
 BuildArch:      noarch
@@ -51,4 +52,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.ba
 %{_datadir}/pkgconfig/bash-completion.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
