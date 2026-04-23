@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip) >= 19
 BuildRequires:  python3dist(ply)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ Python library and PLY (used for expression parsing).
 %{_bindir}/norpm-expand-specfile
 
 %changelog
-%{?autochangelog}
+%autochangelog
