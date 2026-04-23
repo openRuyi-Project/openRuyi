@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Render rich text and beautiful formatting in the terminal
 License:        MIT
 URL:            https://github.com/Textualize/rich
-#!RemoteAsset
+#!RemoteAsset:  sha256:73ff50c7c0c1c77c8243079283f4edb376f0f6442433aecb8ce7e6d0b92d1fe4
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -30,7 +30,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(attrs)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,14 +40,14 @@ The Rich API makes it easy to add color and style to terminal output.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
 %if %{with tests}
+%check -a
 %pytest -vv
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
