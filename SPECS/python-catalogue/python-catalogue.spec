@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/explosion/catalogue
 #!RemoteAsset:  sha256:4f56daa940913d3f09d589c191c74e5a6d51762b3a9e37dd53b7437afd6cda15
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ for serialization, which has many drawbacks.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

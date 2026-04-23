@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Colored terminal text rendering for Python
 License:        BSD-3-Clause
 URL:            https://pypi.org/project/colorama
-#!RemoteAsset
+#!RemoteAsset:  sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ Termcolor.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

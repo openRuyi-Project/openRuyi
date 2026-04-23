@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Extensible memoizing collections and decorators
 License:        MIT
 URL:            https://github.com/tkem/cachetools
-#!RemoteAsset
+#!RemoteAsset:  sha256:8e6d266b25e539df852251cfd6f990b4bc3a141db73b939058d809ebd2590fc6
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ and method calls.
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

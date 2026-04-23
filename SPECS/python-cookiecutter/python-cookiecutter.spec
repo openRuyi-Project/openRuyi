@@ -33,7 +33,7 @@ BuildRequires:  python3dist(pyyaml)
 BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(rich)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       pythondist(binaryornot)
@@ -66,4 +66,4 @@ EOF
 %{_bindir}/%{srcname}
 
 %changelog
-%{?autochangelog}
+%autochangelog

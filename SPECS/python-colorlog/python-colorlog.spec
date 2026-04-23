@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Colored formatter for the Python logging module
 License:        MIT
 URL:            https://github.com/borntyping/python-colorlog
-#!RemoteAsset
+#!RemoteAsset:  sha256:eb4ae5cb65fe7fec7773c2306061a8e63e02efc2c72eba9d27b0fa23c94f1321
 Source:         https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -36,7 +36,7 @@ that outputs records using terminal colors.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -v
 
 %files -f %{pyproject_files}
@@ -44,4 +44,4 @@ that outputs records using terminal colors.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

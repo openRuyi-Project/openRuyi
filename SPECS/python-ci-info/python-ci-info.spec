@@ -28,7 +28,7 @@ BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ current Continuous Integration environment.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
