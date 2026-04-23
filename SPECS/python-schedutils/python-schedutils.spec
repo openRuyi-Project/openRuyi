@@ -21,11 +21,12 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-Python interface for the Linux scheduler sched_{get,set}{affinity,scheduler}\
+Python interface for the Linux scheduler sched_{get,set}{affinity,scheduler}
 functions and friends.
 
 %generate_buildrequires
