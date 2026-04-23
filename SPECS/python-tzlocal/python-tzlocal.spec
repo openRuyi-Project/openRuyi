@@ -14,16 +14,20 @@ License:        MIT
 URL:            https://github.com/regebro/tzlocal
 #!RemoteAsset:  sha256:cceffc7edecefea1f595541dbd6e990cb1ea3d19bf01b2809f362a03dd7921fd
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# No windows stuff
+BuildOption(check):  -e tzlocal.win32
+BuildOption(check):  -e tzlocal.windows_tz
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,11 +49,8 @@ file. However, if the timezone name is readily available it will be used.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as some deps we won't have. like winreg.
-
 %files -f %{pyproject_files}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
