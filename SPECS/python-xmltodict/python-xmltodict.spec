@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python to transform XML to JSON
 License:        MIT
 URL:            https://github.com/martinblech/xmltodict
-#!RemoteAsset
+#!RemoteAsset:  sha256:6d94c9f834dd9e44514162799d344d815a3a4faec913717a9ecbfa5be1bb8e61
 Source0:        https://files.pythonhosted.org/packages/source/x/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ Wikipedia.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
