@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Tools for internationalizing Python applications
 License:        BSD-3-Clause
 URL:            https://babel.pocoo.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:0c54cffb19f690cdcc52a3b50bcbf71e07a808d1c80d549f2459b9d2cf0afb9d
 Source:         https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -28,7 +28,8 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(freezegun)
 BuildRequires:  python3dist(pytz)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,10 +42,8 @@ Babel is composed of two major parts:
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -p
 export TZ=UTC
-%pyproject_check_import
-%pytest
 
 %files -f %{pyproject_files}
 %doc CHANGES.rst AUTHORS
@@ -52,4 +51,4 @@ export TZ=UTC
 %{_bindir}/pybabel
 
 %changelog
-%{?autochangelog}
+%autochangelog

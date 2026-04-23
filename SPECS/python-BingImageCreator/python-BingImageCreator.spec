@@ -17,7 +17,7 @@ Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l BingImageCreator
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -28,7 +28,7 @@ BuildRequires:  python3dist(httpx)
 BuildRequires:  python3dist(regex)
 BuildRequires:  python3dist(requests)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ Image Creator service.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
