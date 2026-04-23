@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Style-preserving TOML library
 License:        MIT
 URL:            https://github.com/sdispater/tomlkit
-#!RemoteAsset
+#!RemoteAsset:  sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,9 +22,9 @@ BuildOption(install):  %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pyyaml)
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,12 +37,12 @@ implementation has been adapted, improved, and fixed from Molten.
 %generate_buildrequires
 %pyproject_buildrequires -r
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
