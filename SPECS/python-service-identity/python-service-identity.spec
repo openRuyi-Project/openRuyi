@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Service identity verification for pyOpenSSL
 License:        MIT
 URL:            https://github.com/pyca/service-identity
-#!RemoteAsset
+#!RemoteAsset:  sha256:b8683ba13f0d39c6cd5d625d2c5f65421d6d707b013b375c355751557cbe8e09
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -40,4 +40,4 @@ relevant RFCs too.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
