@@ -12,17 +12,19 @@ Release:        %autorelease
 Summary:        Python PAM module using ctypes, py3
 License:        MIT
 URL:            https://github.com/FirefighterBlu3/python-pam
-#!RemoteAsset
+#!RemoteAsset:  sha256:97235235ba9b82dbae8068d1099508455949b275f77273ca22fdbd8b1fb5d950
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l pam
+# No module named '__internals'
+BuildOption(check):  -e pam.pam
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -32,12 +34,9 @@ authenticate a given username / password against the PAM system on Linux.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# No check for this
-%check
-
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
