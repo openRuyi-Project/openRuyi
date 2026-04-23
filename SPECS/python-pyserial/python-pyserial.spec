@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python serial port access library
 License:        BSD-3-Clause
 URL:            http://pypi.python.org/pypi/pyserial
-#!RemoteAsset
+#!RemoteAsset:  sha256:3c77e014170dfffbd816e6ffc205e9842efb10be9f58ec16d3e8675b4925cddb
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -31,7 +31,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -49,4 +49,4 @@ the appropriate backend.
 %{_bindir}/pyserial-ports
 
 %changelog
-%{?autochangelog}
+%autochangelog
