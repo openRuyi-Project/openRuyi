@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Pretty-print tabular data in Python, a library and a command-line utility
 License:        MIT
 URL:            https://github.com/astanin/python-tabulate
-#!RemoteAsset
+#!RemoteAsset:  sha256:e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(numpy)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,8 +40,7 @@ The main use cases of the library are:
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc CHANGELOG
-%doc README.md
+%doc CHANGELOG README.md
 %{_bindir}/tabulate
 
 %changelog
