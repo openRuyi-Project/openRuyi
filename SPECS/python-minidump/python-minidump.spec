@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python library to parse Windows minidump file format
 License:        MIT
 URL:            https://github.com/skelsec/minidump
-#!RemoteAsset
+#!RemoteAsset:  sha256:f7ae09b944f3b17ccf5cecc66f9ff5a7a45b053474a13aeb012f4c9204470437
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +48,4 @@ rm -rf minidump/writer.py
 %{_bindir}/minidump
 
 %changelog
-%{?autochangelog}
+%autochangelog

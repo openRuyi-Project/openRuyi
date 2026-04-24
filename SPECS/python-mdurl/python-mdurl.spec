@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Markdown URL utilities
 License:        MIT
 URL:            https://github.com/executablebooks/mdurl
-#!RemoteAsset
+#!RemoteAsset:  sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -26,7 +26,7 @@ BuildRequires:  python3dist(flit-core)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-randomly)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ URL utilities for markdown-it parser.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

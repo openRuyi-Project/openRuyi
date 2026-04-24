@@ -12,8 +12,8 @@ Release:        %autorelease
 Summary:        Python MessagePack (de)serializer
 License:        Apache-2.0
 URL:            https://msgpack.org/
-#!RemoteAsset
-Source0:        https://github.com/msgpack/msgpack-python/archive/v%{version}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:3b60763c1373dd60f398488069bcdc703cd08a711477b5d480eecc9f9626f47e
+Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -21,9 +21,12 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  gcc-c++
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 MessagePack is a binary-based efficient data interchange format that is
@@ -37,12 +40,9 @@ rm -rf test/test_timestamp.py
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build -p
-make cython
-
 %files -f %{pyproject_files}
 %doc README.md
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

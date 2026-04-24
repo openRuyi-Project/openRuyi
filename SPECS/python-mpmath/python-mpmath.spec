@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Arbitrary-precision floating-point arithmetic in python
 License:        BSD-3-Clause
 URL:            https://mpmath.org
-#!RemoteAsset
+#!RemoteAsset:  sha256:7a28eb2a9774d00c7bc92411c19a89209d5da7c4c9a9e227be8330a23a25b91f
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,16 +21,16 @@ BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools) >= 40.8
 BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-@code{mpmath} can be used as an arbitrary-precision substitute for
+mpmath can be used as an arbitrary-precision substitute for
 Python's float/complex types and math/cmath modules, but also does much
 more advanced mathematics.
 
@@ -41,4 +41,4 @@ more advanced mathematics.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

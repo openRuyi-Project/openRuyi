@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname meson-python
+%global pypi_name meson_python
 
 Name:           python-%{srcname}
 Version:        0.18.0
@@ -12,8 +13,8 @@ Release:        %autorelease
 License:        MIT
 URL:            https://github.com/mesonbuild/meson-python
 Summary:        Meson-based build backend for Python
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/meson_python-%{version}.tar.gz
+#!RemoteAsset:  sha256:c56a99ec9df669a40662fe46960321af6e4b14106c14db228709c1628e23848d
+Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -29,7 +30,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pyproject-metadata)
 BuildRequires:  meson
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       meson
@@ -45,4 +46,4 @@ Meson-python is a PEP 517 build backend for Meson projects.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
