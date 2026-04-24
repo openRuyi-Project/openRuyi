@@ -2,17 +2,18 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           PackageKit
-Version:        1.3.3
+Version:        1.3.5
 Release:        %autorelease
 Summary:        Package management service
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND FSFAP
 URL:            http://www.freedesktop.org/software/PackageKit/
 VCS:            git:https://github.com/PackageKit/PackageKit
-#!RemoteAsset:  sha256:d41d7bed865f827588e89727594d12a8059ed67fff50c7f323147dc11e7d0eb1
+#!RemoteAsset:  sha256:6020dbed2ffb4304a91bb2e8ab27c8c26a24b1a3bea2d1a7b2d7610ef316ef1e
 Source:         https://github.com/PackageKit/PackageKit/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -46,6 +47,7 @@ BuildRequires:  pkgconfig(appstream)
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  pkgconfig(fontconfig)
 BuildRequires:  pkgconfig(pangoft2)
+BuildRequires:  pkgconfig(jansson)
 
 Requires:       glib
 Requires:       shared-mime-info
@@ -71,6 +73,12 @@ mkdir -p %{buildroot}%{_localstatedir}/cache/app-info/{icons,xmls}
 # GStreamer compatibility link
 ln -s pk-gstreamer-install %{buildroot}%{_libexecdir}/gst-install-plugins-helper
 
+# pkcon compatibility link
+ln -s pkgcli %{buildroot}%{_bindir}/pkcon
+
+# pkmon compatibility link
+ln -s pkgcli %{buildroot}%{_bindir}/pkmon
+
 # todo: fix the name error.
 # Avoid illegal package names
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
@@ -92,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %dir %{_localstatedir}/cache/app-info/icons
 %dir %{_localstatedir}/cache/app-info/xmls
 %dir %{_localstatedir}/cache/PackageKit
-%{_datadir}/bash-completion/completions/pkcon
+%{_datadir}/bash-completion/completions/pkgcli
 %dir %{_libdir}/packagekit-backend
 %config(noreplace) %{_sysconfdir}/PackageKit/PackageKit.conf
 %config(noreplace) %{_sysconfdir}/PackageKit/Vendor.conf
@@ -103,6 +111,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/metainfo/org.freedesktop.packagekit.metainfo.xml
 %{_libexecdir}/packagekitd
 %{_libexecdir}/packagekit-direct
+%{_bindir}/pkgcli
 %{_bindir}/pkmon
 %{_bindir}/pkcon
 %{_libdir}/packagekit-backend/libpk_backend_dummy.so
@@ -137,4 +146,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/vala/vapi/packagekit-glib2.deps
 
 %changelog
-%{?autochangelog}
+%autochangelog
