@@ -4,8 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define gcc_version 15
-%define gcc_suffix 15
+%define gcc_version 16
+%define gcc_suffix 16
 
 # Set to 1 to build the Ada compiler
 %define build_ada 0
@@ -364,4 +364,4 @@ fi
 %defattr(-,root,root)
 
 %changelog
-%{?autochangelog}
+%autochangelog
