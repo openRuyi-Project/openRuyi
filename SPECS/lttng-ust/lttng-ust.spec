@@ -41,6 +41,9 @@ needed to develop applications that use the lttng-ust library.
 %conf -p
 autoreconf -vif
 
+%install -a
+sed -i 's|^#!/usr/bin/env python$|#!/usr/bin/env python3|' %{buildroot}%{_bindir}/lttng-gen-tp
+
 %files
 %{_libdir}/lib*.so.*
 %{_mandir}/man3/*

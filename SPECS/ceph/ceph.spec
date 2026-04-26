@@ -11,6 +11,8 @@
 %bcond cephadm_pip_deps 1
 %bcond system_utf8proc 1
 %bcond system_arrow 0
+%bcond lttng 1
+%bcond libradosstriper 1
 
 %define _lto_cflags %{nil}
 
@@ -139,6 +141,10 @@ BuildRequires:  pkgconfig(libkeyutils)
 %if %{with rdma}
 BuildRequires:  pkgconfig(libibverbs)
 BuildRequires:  pkgconfig(librdmacm)
+%endif
+%if %{with lttng}
+BuildRequires:  pkgconfig(lttng-ust)
+BuildRequires:  pkgconfig(babeltrace)
 %endif
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(ldap)
