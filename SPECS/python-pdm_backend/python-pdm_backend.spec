@@ -6,13 +6,13 @@
 
 %global srcname pdm_backend
 
-Name:           python-%{srcname}
+Name:           python-pdm-backend
 Version:        2.4.3
 Release:        %autorelease
 License:        MIT
 URL:            https://pdm-backend.fming.dev/
 Summary:        PEP 517 build backend for PDM
-#!RemoteAsset
+#!RemoteAsset:  sha256:dbd9047a7ac10d11a5227e97163b617ad5d665050476ff63867d971758200728
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,8 +22,8 @@ BuildOption(install):  pdm +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-pdm-backend = %{version}-%{release}
+%python_provide python3-pdm-backend
 
 %description
 PDM-Backend is a build backend that supports the latest packaging
@@ -35,5 +35,6 @@ standards, which includes PEP 517, PEP 621 and PEP 660.
 %files -f %{pyproject_files}
 %doc README*
 %license LICENSE
+
 %changelog
-%{?autochangelog}
+%autochangelog
