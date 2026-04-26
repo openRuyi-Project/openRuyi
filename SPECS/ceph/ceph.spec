@@ -13,6 +13,7 @@
 %bcond system_arrow 0
 %bcond lttng 1
 %bcond libradosstriper 1
+%bcond cephfs_shell 1
 
 %define _lto_cflags %{nil}
 
@@ -62,6 +63,9 @@ BuildOption(conf):  -DWITH_SYSTEM_BOOST:BOOL=OFF
 BuildOption(conf):  -DWITH_LIBRADOSSTRIPER:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_LIBRADOSSTRIPER:BOOL=OFF
+%endif
+%if 0%{with cephfs_shell}
+BuildOption(conf):  -DWITH_CEPHFS_SHELL:BOOL=ON
 %endif
 %if 0%{with amqp_endpoint}
 BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=ON
@@ -240,6 +244,19 @@ Requires:       python3dist(pyyaml)
 %description -n cephadm
 Utility to bootstrap a Ceph cluster and manage Ceph daemons deployed
 with systemd and podman.
+
+%if 0%{with cephfs_shell}
+%package     -n cephfs-shell
+Summary:        Interactive shell for Ceph file system
+Requires:       python3dist(cmd2)
+Requires:       python3dist(colorama)
+Requires:       python-cephfs%{?_isa} = %{version}-%{release}
+
+%description -n cephfs-shell
+This package contains an interactive tool that allows accessing a Ceph
+file system without mounting it by providing a nice pseudo-shell which
+works like an FTP client.
+%endif
 
 %package        common
 Summary:        Ceph Common
@@ -723,6 +740,12 @@ fi
 # cephfs-top (merged)
 %{python3_sitelib}/cephfs_top-*.egg-info
 %{_bindir}/cephfs-top
+
+%if 0%{with cephfs_shell}
+%files -n cephfs-shell
+%{python3_sitelib}/cephfs_shell-*.egg-info
+%{_bindir}/cephfs-shell
+%endif
 
 %pre common
 CEPH_GROUP_ID=167
