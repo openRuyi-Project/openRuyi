@@ -22,7 +22,8 @@ VCS:            git:https://github.com/php/php-src
 #!RemoteAsset:  sha256:276279f637a875a514346b332bba6d8b06c036cf7979a858e5c55f72c4874884
 Source0:        https://www.php.net/distributions/%{name}-%{version}.tar.gz
 # Upstream fix for expired SNI certificates in bug74796 and bug80770 tests.
-Patch0:         0001-Fix-SNI-tests-for-bugs-80770-and-74796.patch
+# This patch will merge in future version
+Patch0001:         0001-Fix-SNI-tests-for-bugs-80770-and-74796.patch
 BuildSystem:    autotools
 
 BuildOption(conf):  --enable-re2c-cgoto
@@ -119,8 +120,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This package provides the PHP extension for zlib compression support.
 
 %check -p
-# Reason: these tests depend on OBS worker environment details, unavailable
-# optional extensions, or file-cache paths rather than extension build success.
+# These tests can't run on OBS worker, disabled
 find . -type f -name '*.phpt' \
     ! -path './ext/curl/tests/curl_setopt_ssl.phpt' \
     ! -path './ext/opcache/tests/bug78185.phpt' \
