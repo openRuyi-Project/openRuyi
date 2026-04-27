@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        Package and CLI tool to generate release fields and changelogs
 License:        MIT AND GPL-2.0-only WITH GCC-exception-2.0 AND (MIT OR GPL-2.0-or-later WITH GCC-exception-2.0)
 URL:            https://github.com/fedora-infra/rpmautospec
-#!RemoteAsset
+#!RemoteAsset:  sha256:66fa5540871c1140ed051c89b0624f14eaf59609452448360fa58cd7211e7a41
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 Source1:        rpmautospec.in
 BuildArch:      noarch
@@ -37,7 +37,7 @@ BuildRequires:  bash-completion
 Requires:       rpm-build
 Requires:       python-click
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -124,4 +124,4 @@ touch -r %{S:1} %{buildroot}%{_bindir}/rpmautospec
 %{_rpmmacrodir}/macros.rpmautospec
 
 %changelog
-%{?autochangelog}
+%autochangelog

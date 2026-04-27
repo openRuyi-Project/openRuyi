@@ -32,7 +32,7 @@ BuildRequires:  python3dist(python-debian)
 BuildRequires:  python3dist(click)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,9 +44,9 @@ generates a project's bill of materials.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSES/*.txt
 %doc README.md CHANGELOG.md
+%license LICENSES/*.txt
 %{_bindir}/reuse
 
 %changelog
-%{?autochangelog}
+%autochangelog

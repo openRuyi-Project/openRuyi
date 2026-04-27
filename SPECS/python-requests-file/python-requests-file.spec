@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Transport adapter for using file:// URLs with python-requests
 License:        Apache-2.0
 URL:            https://codeberg.org/dashea/requests-file
-#!RemoteAsset
+#!RemoteAsset:  sha256:f14243d7796c588f3521bd423c5dea2ee4cc730e54a3cac9574d78aca1272576
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python)
 
-Provides:       python3-requests-file
+Provides:       python3-requests-file = %{version}-%{release}
 %python_provide python3-requests-file
 
 %description
@@ -37,4 +37,4 @@ library to allow local file system access via file:// URLs.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
