@@ -1,0 +1,49 @@
+From 726c9aef71dc55cb97a2e7101945f72a8f50a176 Mon Sep 17 00:00:00 2001
+From: Nirmoy Das <nirmoyd@nvidia.com>
+Date: Wed, 17 Dec 2025 07:45:28 -0800
+Subject: [PATCH 173/369] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h
+
+Add PCI_VENDOR_ID_ASPEED to the shared pci_ids.h header and remove the
+duplicate local definition from ehci-pci.c.
+
+This prepares for adding a PCI quirk for ASPEED devices.
+
+Signed-off-by: Nirmoy Das <nirmoyd@nvidia.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://patch.msgid.link/20251217154529.377586-1-nirmoyd@nvidia.com
+(cherry picked from commit eeb95c07d5fcaafb1829d5307ce4290cf1dc3190)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/usb/host/ehci-pci.c | 1 -
+ include/linux/pci_ids.h     | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+index 889dc4426271..bd3a63555594 100644
+--- a/drivers/usb/host/ehci-pci.c
++++ b/drivers/usb/host/ehci-pci.c
+@@ -21,7 +21,6 @@ static const char hcd_name[] = "ehci-pci";
+ /* defined here to avoid adding to pci_ids.h for single instance use */
+ #define PCI_DEVICE_ID_INTEL_CE4100_USB	0x2e70
+ 
+-#define PCI_VENDOR_ID_ASPEED		0x1a03
+ #define PCI_DEVICE_ID_ASPEED_EHCI	0x2603
+ 
+ /*-------------------------------------------------------------------------*/
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 03b7c0380f71..2b6692a5005f 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2583,6 +2583,8 @@
+ #define PCI_DEVICE_ID_NETRONOME_NFP3800_VF	0x3803
+ #define PCI_DEVICE_ID_NETRONOME_NFP6000_VF	0x6003
+ 
++#define PCI_VENDOR_ID_ASPEED		0x1a03
++
+ #define PCI_VENDOR_ID_QMI		0x1a32
+ 
+ #define PCI_VENDOR_ID_AZWAVE		0x1a3b
+-- 
+2.53.0
+

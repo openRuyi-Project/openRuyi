@@ -1,7 +1,7 @@
-From 49427d16cc8c485e442cd7f4e1981a070ef66431 Mon Sep 17 00:00:00 2001
+From 9663269203053c722a4a0abd7f6b7847b1f4412d Mon Sep 17 00:00:00 2001
 From: Thierry Reding <treding@nvidia.com>
 Date: Wed, 29 Oct 2025 17:33:30 +0100
-Subject: [PATCH 163/292] UPSTREAM: syscore: Pass context data to callbacks
+Subject: [PATCH 163/369] UPSTREAM: syscore: Pass context data to callbacks
 
 Several drivers can benefit from registering per-instance data along
 with the syscore operations. To achieve this, move the modifiable fields
@@ -2903,10 +2903,10 @@ index b19bc60cc627..3372e1f90561 100644
  
  static void psci_idle_init_cpuhp(void)
 diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 52060b3ec745..d7666fe9dbf8 100644
+index 441ba95b38cf..647b6f4861b7 100644
 --- a/drivers/gpio/gpio-mxc.c
 +++ b/drivers/gpio/gpio-mxc.c
-@@ -667,7 +667,7 @@ static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
+@@ -675,7 +675,7 @@ static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
  	RUNTIME_PM_OPS(mxc_gpio_runtime_suspend, mxc_gpio_runtime_resume, NULL)
  };
  
@@ -2915,7 +2915,7 @@ index 52060b3ec745..d7666fe9dbf8 100644
  {
  	struct mxc_gpio_port *port;
  	int ret;
-@@ -684,7 +684,7 @@ static int mxc_gpio_syscore_suspend(void)
+@@ -692,7 +692,7 @@ static int mxc_gpio_syscore_suspend(void)
  	return 0;
  }
  
@@ -2924,7 +2924,7 @@ index 52060b3ec745..d7666fe9dbf8 100644
  {
  	struct mxc_gpio_port *port;
  	int ret;
-@@ -701,11 +701,15 @@ static void mxc_gpio_syscore_resume(void)
+@@ -709,11 +709,15 @@ static void mxc_gpio_syscore_resume(void)
  	}
  }
  
@@ -2941,7 +2941,7 @@ index 52060b3ec745..d7666fe9dbf8 100644
  static struct platform_driver mxc_gpio_driver = {
  	.driver		= {
  		.name	= "gpio-mxc",
-@@ -718,7 +722,7 @@ static struct platform_driver mxc_gpio_driver = {
+@@ -726,7 +730,7 @@ static struct platform_driver mxc_gpio_driver = {
  
  static int __init gpio_mxc_init(void)
  {
@@ -4839,7 +4839,7 @@ index c7dcccc5f3d6..c07e562ee4c1 100644
  }
  device_initcall(timekeeping_init_ops);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 7fea6ba91c1e..88928d40aace 100644
+index 46581554abfb..3ec22d034e73 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
 @@ -5629,7 +5629,7 @@ static int kvm_offline_cpu(unsigned int cpu)

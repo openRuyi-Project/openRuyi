@@ -1,7 +1,7 @@
-From 4c26130994d2f1e56a7f5dc3ba35c3674e9f2b72 Mon Sep 17 00:00:00 2001
+From 8c54cb9f3d066bd3169762b1fb05b88847a8e9d6 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Mon, 3 Nov 2025 11:18:13 -0500
-Subject: [PATCH 141/292] UPSTREAM: irqchip/sifive-plic: Fix call to
+Subject: [PATCH 141/369] UPSTREAM: irqchip/sifive-plic: Fix call to
  __plic_toggle() in M-Mode code path
 
 The code path for M-Mode linux that disables interrupts for other contexts

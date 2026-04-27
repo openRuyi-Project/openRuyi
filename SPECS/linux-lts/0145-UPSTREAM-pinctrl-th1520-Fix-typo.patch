@@ -1,7 +1,7 @@
-From d413cf36d42d95bbb05408daabf8c61f619a6cef Mon Sep 17 00:00:00 2001
+From d37accec505be4c79fb0404d13976af4e336de7e Mon Sep 17 00:00:00 2001
 From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
 Date: Tue, 20 Jan 2026 09:59:26 +0100
-Subject: [PATCH 145/292] UPSTREAM: pinctrl: th1520: Fix typo
+Subject: [PATCH 145/369] UPSTREAM: pinctrl: th1520: Fix typo
 
 This fixes a simple typo in the TH1520 SPI0 for group3 pins:
 QSPI0 is misspelled QSPI1.

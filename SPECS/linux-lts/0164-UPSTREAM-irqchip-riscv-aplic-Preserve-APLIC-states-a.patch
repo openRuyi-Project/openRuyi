@@ -1,7 +1,7 @@
-From 82c5aa3ff8242f70d2a70c28451ef8bf4b212857 Mon Sep 17 00:00:00 2001
+From 09d1fb1b2c8ac7491288742f57c73afe2c08ebc8 Mon Sep 17 00:00:00 2001
 From: Nick Hu <nick.hu@sifive.com>
 Date: Tue, 2 Dec 2025 14:07:41 +0800
-Subject: [PATCH 164/292] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states
+Subject: [PATCH 164/369] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states
  across suspend/resume
 
 The APLIC states might be reset when the platform enters a low power

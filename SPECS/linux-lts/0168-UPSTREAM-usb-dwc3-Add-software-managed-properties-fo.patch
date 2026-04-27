@@ -1,7 +1,7 @@
-From 6f7850db16ac600e06c3fe61be98e1b1dc4870d9 Mon Sep 17 00:00:00 2001
+From f9b55de9ac5c88856662d9017cba67e05d2ff338 Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:15 -0400
-Subject: [PATCH 168/292] UPSTREAM: usb: dwc3: Add software-managed properties
+Subject: [PATCH 168/369] UPSTREAM: usb: dwc3: Add software-managed properties
  for flattened model
 
 Add software-managed properties for the flattened model, which does not

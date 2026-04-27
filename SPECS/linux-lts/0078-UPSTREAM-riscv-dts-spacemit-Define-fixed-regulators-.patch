@@ -1,7 +1,7 @@
-From 7b334b8e5f66f32306821788dc9da0e1b1dcb8d6 Mon Sep 17 00:00:00 2001
+From fd1875bae8b065b07df60707a72ddfc195456784 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:54 +0100
-Subject: [PATCH 078/292] UPSTREAM: riscv: dts: spacemit: Define fixed
+Subject: [PATCH 078/369] UPSTREAM: riscv: dts: spacemit: Define fixed
  regulators for Milk-V Jupiter
 
 Define the DC power input and the 4v power as fixed regulator supplies.

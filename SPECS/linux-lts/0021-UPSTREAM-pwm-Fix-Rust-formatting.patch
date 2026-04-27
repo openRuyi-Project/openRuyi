@@ -1,7 +1,7 @@
-From 467c6de44150eb64758942775baf0f8e3af0d76b Mon Sep 17 00:00:00 2001
+From 8b1480f66e93d9aab41ac0373a9971dcf07f769e Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 29 Oct 2025 19:25:02 +0100
-Subject: [PATCH 021/292] UPSTREAM: pwm: Fix Rust formatting
+Subject: [PATCH 021/369] UPSTREAM: pwm: Fix Rust formatting
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

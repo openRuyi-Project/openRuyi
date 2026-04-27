@@ -1,7 +1,7 @@
-From 32773c5a6ed8b9d0b9718eb880848beffffc3dad Mon Sep 17 00:00:00 2001
+From 6f305bbd4f4e9fbf3504418049406e5577f80786 Mon Sep 17 00:00:00 2001
 From: Lucas Zampieri <lzampier@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:40 +0100
-Subject: [PATCH 030/292] UPSTREAM: dt-bindings: vendor-prefixes: Add UltraRISC
+Subject: [PATCH 030/369] UPSTREAM: dt-bindings: vendor-prefixes: Add UltraRISC
 
 Add vendor prefix for UltraRISC Technology Co., Ltd.
 

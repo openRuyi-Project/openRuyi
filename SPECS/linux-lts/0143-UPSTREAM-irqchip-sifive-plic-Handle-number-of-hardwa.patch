@@ -1,7 +1,7 @@
-From f801595f6534466bffea05f7e6174bde53de661d Mon Sep 17 00:00:00 2001
+From 41d258b3d4398201e432a7be065faedeb4ba5fe2 Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@kernel.org>
 Date: Tue, 3 Feb 2026 20:16:12 +0100
-Subject: [PATCH 143/292] UPSTREAM: irqchip/sifive-plic: Handle number of
+Subject: [PATCH 143/369] UPSTREAM: irqchip/sifive-plic: Handle number of
  hardware interrupts correctly
 
 The driver is handling the number of hardware interrupts inconsistently.

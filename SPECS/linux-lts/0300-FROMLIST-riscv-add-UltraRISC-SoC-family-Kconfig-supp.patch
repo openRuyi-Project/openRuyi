@@ -1,0 +1,37 @@
+From ddd093009a76cd50ad1522b92054a746638af463 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Mon, 27 Apr 2026 09:32:10 +0800
+Subject: [PATCH 300/369] FROMLIST: riscv: add UltraRISC SoC family Kconfig
+ support
+
+The first SoC in the UltraRISC series is UR-DP1000, containing octa
+UltraRISC CP100 cores.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/r/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Kconfig.socs | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+index 848e7149e443..98c70e2ae958 100644
+--- a/arch/riscv/Kconfig.socs
++++ b/arch/riscv/Kconfig.socs
+@@ -71,6 +71,12 @@ config ARCH_THEAD
+ 	help
+ 	  This enables support for the RISC-V based T-HEAD SoCs.
+ 
++config ARCH_ULTRARISC
++	bool "UltraRISC RISC-V SoCs"
++	help
++	  This enables support for UltraRISC SoC platform hardware,
++	  including boards based on the UR-DP1000.
++
+ config ARCH_VIRT
+ 	bool "QEMU Virt Machine"
+ 	select POWER_RESET
+-- 
+2.53.0
+

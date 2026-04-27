@@ -1,7 +1,7 @@
-From 27d24611ad66a719e820474faa4e1bfa09e4c95a Mon Sep 17 00:00:00 2001
+From ebe5e86dae1143e5bf26f62f066f149b3bc736b6 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:39 +0800
-Subject: [PATCH 098/292] UPSTREAM: pinctrl: spacemit: support I/O power domain
+Subject: [PATCH 098/369] UPSTREAM: pinctrl: spacemit: support I/O power domain
  configuration
 
 Dual-voltage GPIO banks default to 3.3V operation. Even when a bank is

@@ -1,7 +1,7 @@
-From cb104decea6da0d6a60073073b155b7652c328e3 Mon Sep 17 00:00:00 2001
+From 77d9cb89a8e23a5dc8026e09bb92e82c891da739 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Sun, 11 Jan 2026 14:41:02 +0800
-Subject: [PATCH 090/292] UPSTREAM: riscv: dts: spacemit: Add USB2 PHY node for
+Subject: [PATCH 090/369] UPSTREAM: riscv: dts: spacemit: Add USB2 PHY node for
  K1
 
 K1's DWC3 USB 3.0 controller requires two separate PHYs to function:

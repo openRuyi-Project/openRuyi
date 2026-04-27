@@ -1,7 +1,7 @@
-From bb6b06324a1c086ef37971f5bb2dfddf0ef9e24d Mon Sep 17 00:00:00 2001
+From 54da37d6a545b73e2d7603d037772fc3fa5f1542 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:06 +0800
-Subject: [PATCH 070/292] UPSTREAM: PCI/MSI: Convert the boolean no_64bit_msi
+Subject: [PATCH 070/369] UPSTREAM: PCI/MSI: Convert the boolean no_64bit_msi
  flag to a DMA address mask
 
 Some PCI devices have PCI_MSI_FLAGS_64BIT in the MSI capability, but
@@ -183,7 +183,7 @@ index 05aeee8c8844..528e31ed5bea 100644
  	unsigned int	broken_parity_status:1;	/* Generates false positive parity */
  	unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
 diff --git a/sound/hda/controllers/intel.c b/sound/hda/controllers/intel.c
-index 9306e7a31f02..083b652cd033 100644
+index 98367b87d801..44781b87d58e 100644
 --- a/sound/hda/controllers/intel.c
 +++ b/sound/hda/controllers/intel.c
 @@ -1907,7 +1907,7 @@ static int azx_first_init(struct azx *chip)

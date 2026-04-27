@@ -1,7 +1,7 @@
-From a88642a2ede915abbe0d2436d843514f4888d88e Mon Sep 17 00:00:00 2001
+From 2425ebda669a44bd0cb4f7b4e780bfb9a0b8aba3 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:40 +0800
-Subject: [PATCH 107/292] UPSTREAM: dt-bindings: riscv: add SpacemiT X100 CPU
+Subject: [PATCH 107/369] UPSTREAM: dt-bindings: riscv: add SpacemiT X100 CPU
  compatible
 
 Add compatible string for the SpacemiT X100 core. [1]

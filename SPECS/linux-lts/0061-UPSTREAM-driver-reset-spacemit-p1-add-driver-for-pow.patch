@@ -1,7 +1,7 @@
-From 3e6079dbccf43febe9ec92f671aeb16078e402e2 Mon Sep 17 00:00:00 2001
+From 2b94ac2c786a90f4378a2a2cd15792684e61265d Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:01:59 +0100
-Subject: [PATCH 061/292] UPSTREAM: driver: reset: spacemit-p1: add driver for
+Subject: [PATCH 061/369] UPSTREAM: driver: reset: spacemit-p1: add driver for
  poweroff/reboot
 
 This driver implements poweroff/reboot support for the SpacemiT P1 PMIC

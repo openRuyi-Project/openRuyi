@@ -1,7 +1,7 @@
-From 466d48b897a26be8ad9bad47c1359fb2f456d591 Mon Sep 17 00:00:00 2001
+From c380b8ab3a3d032602b786eae0220caa6ec775fe Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:08 +0800
-Subject: [PATCH 072/292] UPSTREAM: drm/radeon: Make MSI address limit based on
+Subject: [PATCH 072/369] UPSTREAM: drm/radeon: Make MSI address limit based on
  the device DMA limit
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

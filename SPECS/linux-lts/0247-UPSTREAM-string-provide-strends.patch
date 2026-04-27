@@ -1,0 +1,79 @@
+From 5df2975de313db88077b3d9a8fa806ca5a8fa2a4 Mon Sep 17 00:00:00 2001
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 12 Nov 2025 14:55:30 +0100
+Subject: [PATCH 247/369] UPSTREAM: string: provide strends()
+
+Implement a function for checking if a string ends with a different
+string and add its kunit test cases.
+
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20251112-gpio-shared-v4-1-b51f97b1abd8@linaro.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+(cherry picked from commit 197b3f3c70d61ff1c7ca24f66d567e06fe8ed3d9)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/linux/string.h   | 18 ++++++++++++++++++
+ lib/tests/string_kunit.c | 13 +++++++++++++
+ 2 files changed, 31 insertions(+)
+
+diff --git a/include/linux/string.h b/include/linux/string.h
+index fdd3442c6bcb..929d05d1247c 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, const char *prefix)
+ 	return strncmp(str, prefix, strlen(prefix)) == 0;
+ }
+ 
++/**
++ * strends - Check if a string ends with another string.
++ * @str - NULL-terminated string to check against @suffix
++ * @suffix - NULL-terminated string defining the suffix to look for in @str
++ *
++ * Returns:
++ * True if @str ends with @suffix. False in all other cases.
++ */
++static inline bool strends(const char *str, const char *suffix)
++{
++	unsigned int str_len = strlen(str), suffix_len = strlen(suffix);
++
++	if (str_len < suffix_len)
++		return false;
++
++	return !(strcmp(str + str_len - suffix_len, suffix));
++}
++
+ #endif /* _LINUX_STRING_H_ */
+diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
+index 0ed7448a26d3..f9a8e557ba77 100644
+--- a/lib/tests/string_kunit.c
++++ b/lib/tests/string_kunit.c
+@@ -602,6 +602,18 @@ static void string_test_memtostr(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, dest[7], '\0');
+ }
+ 
++static void string_test_strends(struct kunit *test)
++{
++	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "bar"));
++	KUNIT_EXPECT_TRUE(test, strends("foo-bar", "-bar"));
++	KUNIT_EXPECT_TRUE(test, strends("foobar", "foobar"));
++	KUNIT_EXPECT_TRUE(test, strends("foobar", ""));
++	KUNIT_EXPECT_FALSE(test, strends("bar", "foobar"));
++	KUNIT_EXPECT_FALSE(test, strends("", "foo"));
++	KUNIT_EXPECT_FALSE(test, strends("foobar", "ba"));
++	KUNIT_EXPECT_TRUE(test, strends("", ""));
++}
++
+ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_memset16),
+ 	KUNIT_CASE(string_test_memset32),
+@@ -623,6 +635,7 @@ static struct kunit_case string_test_cases[] = {
+ 	KUNIT_CASE(string_test_strlcat),
+ 	KUNIT_CASE(string_test_strtomem),
+ 	KUNIT_CASE(string_test_memtostr),
++	KUNIT_CASE(string_test_strends),
+ 	{}
+ };
+ 
+-- 
+2.53.0
+

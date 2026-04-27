@@ -1,7 +1,7 @@
-From 8c0395f234c6759110b8face14eef8408aef5c92 Mon Sep 17 00:00:00 2001
+From d9ffe32f410b116ddd6e86b950f0a2e8a41f8d71 Mon Sep 17 00:00:00 2001
 From: Zixian Zeng <sycamoremoon376@gmail.com>
 Date: Tue, 16 Sep 2025 21:22:51 +0800
-Subject: [PATCH 007/292] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for
+Subject: [PATCH 007/369] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for
  PioneerBox
 
 Enable SPI NOR node for PioneerBox device tree

@@ -1,7 +1,7 @@
-From c9a2d0fbd6bc4fad0cbc1a2d8579eb64f0791bf7 Mon Sep 17 00:00:00 2001
+From 4ddb946075319037b4cc73723d3a6cb69db62d6d Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 21:52:08 +0800
-Subject: [PATCH 115/292] UPSTREAM: clk: spacemit: prepare common ccu header
+Subject: [PATCH 115/369] UPSTREAM: clk: spacemit: prepare common ccu header
 
 In order to prepare adding clock driver for new K3 SoC, extract generic
 code to a separate common ccu header file, so they are not defined

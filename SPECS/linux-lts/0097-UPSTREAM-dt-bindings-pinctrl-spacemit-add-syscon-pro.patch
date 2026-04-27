@@ -1,7 +1,7 @@
-From 830055c9399712703cb2e2c9ecb653928742da06 Mon Sep 17 00:00:00 2001
+From ea72c0839fdd0993b61e2fd13082707094d9f8fb Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:38 +0800
-Subject: [PATCH 097/292] UPSTREAM: dt-bindings: pinctrl: spacemit: add syscon
+Subject: [PATCH 097/369] UPSTREAM: dt-bindings: pinctrl: spacemit: add syscon
  property
 
 In order to access the protected IO power domain registers, a valid

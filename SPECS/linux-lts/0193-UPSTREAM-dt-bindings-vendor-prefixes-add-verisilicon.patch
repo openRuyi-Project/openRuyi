@@ -1,0 +1,38 @@
+From 60f9f89a62c93331882c0fa4fba39471612e2506 Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <uwu@icenowy.me>
+Date: Thu, 29 Jan 2026 10:39:15 +0800
+Subject: [PATCH 193/369] UPSTREAM: dt-bindings: vendor-prefixes: add
+ verisilicon
+
+VeriSilicon is a Silicon IP vendor, which is the current owner of
+Vivante series video-related IPs and Hantro series video codec IPs.
+
+Add a vendor prefix for this company.
+
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
+Link: https://patch.msgid.link/20260129023922.1527729-2-zhengxingda@iscas.ac.cn
+(cherry picked from commit c131d78840d7487e41c3afdc52bb74fd3f8861ef)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 647746e6f75f..d03f700d178e 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1723,6 +1723,8 @@ patternProperties:
+     description: Variscite Ltd.
+   "^vdl,.*":
+     description: Van der Laan b.v.
++  "^verisilicon,.*":
++    description: VeriSilicon Microelectronics (Shanghai) Co., Ltd.
+   "^vertexcom,.*":
+     description: Vertexcom Technologies, Inc.
+   "^via,.*":
+-- 
+2.53.0
+

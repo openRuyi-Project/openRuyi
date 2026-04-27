@@ -1,7 +1,7 @@
-From 71b328321c592ce8e879ed089dca971412a9d128 Mon Sep 17 00:00:00 2001
+From 10ec92d97783f2e2c99264d33c9c5a901baf9602 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:37 +0200
-Subject: [PATCH 050/292] UPSTREAM: riscv: dts: spacemit: enable the i2c2
+Subject: [PATCH 050/369] UPSTREAM: riscv: dts: spacemit: enable the i2c2
  adapter on BPI-F3
 
 Define properties for the I2C adapter, and enable it on the BPI-F3. It

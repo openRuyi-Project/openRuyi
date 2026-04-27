@@ -1,7 +1,7 @@
-From 19f73c93b9a08308d254d0e841c4a82820fbad58 Mon Sep 17 00:00:00 2001
+From ffb60fbe1e179d6193b77a51483dcceab3c3972b Mon Sep 17 00:00:00 2001
 From: Jessica Liu <liu.xuemei1@zte.com.cn>
 Date: Tue, 10 Mar 2026 14:17:31 +0800
-Subject: [PATCH 166/292] UPSTREAM: irqchip/riscv-aplic: Register syscore
+Subject: [PATCH 166/369] UPSTREAM: irqchip/riscv-aplic: Register syscore
  operations only once
 
 Since commit 95a8ddde3660 ("irqchip/riscv-aplic: Preserve APLIC

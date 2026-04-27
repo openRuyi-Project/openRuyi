@@ -1,7 +1,7 @@
-From 8ea6a9d572dc1ae322a68b22a332114587fe535b Mon Sep 17 00:00:00 2001
+From f634cb23a016289114eecddb16b53149f628d9b0 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:35 -0600
-Subject: [PATCH 042/292] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe
+Subject: [PATCH 042/369] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe
  host controller
 
 Add the Devicetree binding for the PCIe Root Complex found on the SpacemiT

@@ -1,7 +1,7 @@
-From 10065fd3cfe4900057f71fed13183f1bd5f85582 Mon Sep 17 00:00:00 2001
+From f7eafd4a0e47d112626a24975ad97a5107fe693e Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:21 +0800
-Subject: [PATCH 104/292] UPSTREAM: dt-bindings: riscv: Add Sha and its
+Subject: [PATCH 104/369] UPSTREAM: dt-bindings: riscv: Add Sha and its
  comprised extensions
 
 Add descriptions for the Sha extension and the seven extensions it

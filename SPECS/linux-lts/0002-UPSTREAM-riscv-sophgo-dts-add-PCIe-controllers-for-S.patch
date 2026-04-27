@@ -1,7 +1,7 @@
-From b52e0b1a24acfc23a8dc065a2cdbeb7bace3841e Mon Sep 17 00:00:00 2001
+From 2f0b4dce56f81b4ba36e5f98668b7f2a4c89e727 Mon Sep 17 00:00:00 2001
 From: Chen Wang <unicorn_wang@outlook.com>
 Date: Mon, 20 Oct 2025 11:33:43 +0800
-Subject: [PATCH 002/292] UPSTREAM: riscv: sophgo: dts: add PCIe controllers
+Subject: [PATCH 002/369] UPSTREAM: riscv: sophgo: dts: add PCIe controllers
  for SG2042
 
 Add PCIe controller nodes in DTS for Sophgo SG2042.

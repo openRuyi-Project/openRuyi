@@ -1,7 +1,7 @@
-From 83f5c47d4ef747459d580ae08f058b3c8b48839f Mon Sep 17 00:00:00 2001
+From f079b1cd61a08907f1267be37d520463adbe8d02 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:15 +0000
-Subject: [PATCH 154/292] UPSTREAM: net: stmmac: add support for configuring
+Subject: [PATCH 154/369] UPSTREAM: net: stmmac: add support for configuring
  the phy_intf_sel inputs
 
 When dwmac is synthesised with support for multiple PHY interfaces, the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 35 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index fe4534af038c..00bd9297a309 100644
+index 4bf387a5432e..3d80e2bac47f 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 @@ -3051,6 +3051,36 @@ int stmmac_get_phy_intf_sel(phy_interface_t interface)
