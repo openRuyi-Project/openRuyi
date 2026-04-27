@@ -18,6 +18,18 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# Core install_requires only; modules below need optional dependencies not present:
+#   No module named 'flax' / 'jax' — all *_flax modules - extra[flax]
+#   No module named 'transformers' — all pipelines / modular_pipelines - extra[test]
+#   No module named 'tokenizers' — loaders.textual_inversion - extra[test]
+#   No module named 'gguf' — quantizers.gguf.utils  - extras[gguf]
+#   No module named 'torchsde' — schedulers.scheduling_dpmsolver_sde (and cosine variant) - extra[test]
+BuildOption(check):  -e '*flax*'
+BuildOption(check):  -e 'diffusers.*pipelines*'
+BuildOption(check):  -e 'diffusers.loaders.textual_inversion'
+BuildOption(check):  -e 'diffusers.quantizers.gguf.utils'
+BuildOption(check):  -e 'diffusers.schedulers.scheduling_dpmsolver_sde'
+BuildOption(check):  -e 'diffusers.schedulers.scheduling_cosine_dpmsolver_multistep'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -48,9 +60,6 @@ Diffusers offers three core components:
 
 %generate_buildrequires
 %pyproject_buildrequires -x torch
-
-%check
-# Lack of some extra pkgs on openRuyi, e.g training and test
 
 %files -f %{pyproject_files}
 %doc README.md
