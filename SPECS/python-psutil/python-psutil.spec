@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Library for retrieving information on running processes
 License:        BSD-3-Clause
 URL:            https://github.com/giampaolo/psutil
-#!RemoteAsset
+#!RemoteAsset:  sha256:0746f5f8d406af344fd547f1c8daa5f5c33dbc293bb8d6a16d80b4bb88f59372
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -24,11 +24,12 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(pip) >= 19
 BuildRequires:  python3dist(setuptools) >= 43
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-@code{psutil} (Python system and process utilities) is a library for
+Psutil (Python system and process utilities) is a library for
 retrieving information on running processes and system utilization (CPU,
 memory, disks, network) in Python.  It is useful mainly for system monitoring,
 profiling and limiting process resources and management of running processes.
@@ -39,11 +40,8 @@ iotop, uptime, pidof, tty, taskset, pmap.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# TODO: Our OBS has some limits and some tests are flaky.
-%check
-
 %files -f %{pyproject_files}
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

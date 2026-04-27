@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python bindings for Protocol Buffers
 License:        BSD-3-Clause
 URL:            https://developers.google.com/protocol-buffers/
-#!RemoteAsset
+#!RemoteAsset:  sha256:56dc370c91fbb8ac85bc13582c9e373569668a290aa2e66a590c2a0d35ddb9e4
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -26,7 +26,8 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(protobuf)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +40,4 @@ Protocol Buffers are Google's data interchange format.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

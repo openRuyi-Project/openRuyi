@@ -37,8 +37,8 @@ sed -i 's/starlette (>=0.30.0,<1.0.0)/starlette >= 0.30.0/g' pyproject.toml
 A configurable and modular Prometheus Instrumentator for your FastAPI.
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog

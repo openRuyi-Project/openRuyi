@@ -10,7 +10,7 @@ Name:           python-%{srcname}
 Version:        4.9.0
 Release:        %autorelease
 Summary:        Pexpect allows easy control of interactive console applications.
-License:        ISCL
+License:        ISC
 URL:            https://pexpect.readthedocs.io
 #!RemoteAsset:  sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(ptyprocess)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ a child application and control it as if a human were typing commands.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

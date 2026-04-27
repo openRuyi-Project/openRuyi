@@ -31,7 +31,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-mock)
 BuildRequires:  python3dist(virtualenv)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,7 +42,7 @@ globally on a machine as well as in a virtualenv.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -vvv -k "not test_console and not test_custom_interpreter"
 
 %files -f %{pyproject_files}
@@ -51,4 +51,4 @@ globally on a machine as well as in a virtualenv.
 %{_bindir}/pipdeptree
 
 %changelog
-%{?autochangelog}
+%autochangelog

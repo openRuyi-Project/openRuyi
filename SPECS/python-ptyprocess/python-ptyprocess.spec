@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,4 +46,4 @@ terminal (pty) is the answer.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

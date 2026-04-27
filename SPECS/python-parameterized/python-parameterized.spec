@@ -14,12 +14,14 @@ Release:        %autorelease
 Summary:        Parameterized testing with any Python test framework
 License:        BSD-2-Clause
 URL:            https://github.com/wolever/parameterized
-#!RemoteAsset
+#!RemoteAsset:  sha256:7fc905272cefa4f364c1a3429cbbe9c0f98b793988efb5bf90aac80f08db09b1
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l parameterized
+# No module named 'mock'
+BuildOption(check):  -e parameterized.test
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -31,7 +33,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(nose2)
 %endif
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,16 +42,16 @@ Parameterized testing with any Python test framework.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
 %if %{with tests}
+%check -a
 %{python3} -m nose2 -v
 %pytest parameterized/test.py
 %{python3} -m unittest -v parameterized.test
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.rst
+%license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
