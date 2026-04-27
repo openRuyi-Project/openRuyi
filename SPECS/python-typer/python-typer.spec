@@ -6,7 +6,7 @@
 
 %global srcname typer
 
-Name:           python-typer-slim
+Name:           python-typer
 Version:        0.21.1
 Release:        %autorelease
 Summary:        Typer, build great CLIs. Easy to code. Based on Python type hints
@@ -32,7 +32,7 @@ BuildRequires:  python3dist(rich)
 BuildRequires:  python3dist(shellingham)
 BuildRequires:  python3dist(typing-extensions)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +50,4 @@ them to CLI applications.
 %{_bindir}/typer
 
 %changelog
-%{?autochangelog}
+%autochangelog
