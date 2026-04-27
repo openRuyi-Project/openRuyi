@@ -1,7 +1,7 @@
-From 29bd11f7100a5f45addcb064501bd67e77823e76 Mon Sep 17 00:00:00 2001
+From 3c1b4ac5726a5692f35cfe62fb6aafe15d8663c5 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:55 +0100
-Subject: [PATCH 094/197] FROMLIST: rust: generate a fatal error if
+Subject: [PATCH 094/189] FROMLIST: rust: generate a fatal error if
  BINDGEN_TARGET is undefined
 
 Generate a friendly fatal error if the target triplet is undefined for
@@ -40,10 +40,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+)
 
 diff --git a/rust/Makefile b/rust/Makefile
-index 0639b7630dd1..2255ce89f095 100644
+index b8813ec123e8..314329e6bc46 100644
 --- a/rust/Makefile
 +++ b/rust/Makefile
-@@ -386,6 +386,12 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+@@ -404,6 +404,12 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
  	-fdiagnostics-show-context -fdiagnostics-show-context=% \
  	--param=% --param asan-% -fno-isolate-erroneous-paths-dereference
  

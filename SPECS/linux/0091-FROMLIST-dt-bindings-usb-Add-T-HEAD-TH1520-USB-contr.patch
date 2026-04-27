@@ -1,7 +1,7 @@
-From e8b9becb2aa8e55d525a316d5b4ddf8b781c4874 Mon Sep 17 00:00:00 2001
+From 3ee2b6dd6402b177073c2d068d797271ca564287 Mon Sep 17 00:00:00 2001
 From: Jisheng Zhang <jszhang@kernel.org>
 Date: Thu, 28 Sep 2023 00:42:21 +0800
-Subject: [PATCH 091/197] FROMLIST: dt-bindings: usb: Add T-HEAD TH1520 USB
+Subject: [PATCH 091/189] FROMLIST: dt-bindings: usb: Add T-HEAD TH1520 USB
  controller
 
 T-HEAD TH1520 platform's USB has a wrapper module around

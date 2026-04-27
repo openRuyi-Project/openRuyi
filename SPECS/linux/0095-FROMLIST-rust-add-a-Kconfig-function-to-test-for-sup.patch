@@ -1,7 +1,7 @@
-From 32ffe963cdf33bef5b88e685bba6122dcb2c68cd Mon Sep 17 00:00:00 2001
+From 021e1548ef4760e4153a0181a3ab79aac7501b59 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:56 +0100
-Subject: [PATCH 095/197] FROMLIST: rust: add a Kconfig function to test for
+Subject: [PATCH 095/189] FROMLIST: rust: add a Kconfig function to test for
  support of bindgen options
 
 Add a new `bindgen-backend-option` Kconfig function to test whether the
@@ -18,10 +18,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+)
 
 diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index d42042b6c9e2..9954b8093fab 100644
+index fc10671c297c..ea5be3c622a8 100644
 --- a/scripts/Kconfig.include
 +++ b/scripts/Kconfig.include
-@@ -78,3 +78,8 @@ rustc-llvm-version := $(shell,$(srctree)/scripts/rustc-llvm-version.sh $(RUSTC))
+@@ -76,3 +76,8 @@ rustc-llvm-version := $(shell,$(srctree)/scripts/rustc-llvm-version.sh $(RUSTC))
  # If you are testing for unstable features, consider testing RUSTC_VERSION
  # instead, as features may have different completeness while available.
  rustc-option = $(success,trap "rm -rf .tmp_$$" EXIT; mkdir .tmp_$$; $(RUSTC) $(1) --crate-type=rlib /dev/null --out-dir=.tmp_$$ -o .tmp_$$/tmp.rlib)

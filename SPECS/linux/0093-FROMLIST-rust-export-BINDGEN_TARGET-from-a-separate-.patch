@@ -1,7 +1,7 @@
-From 77920f5a1b4cbbbbc6983ef4c7dcd44081076f39 Mon Sep 17 00:00:00 2001
+From a716589a941311783277e1d99794ef4902ef0a01 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:54 +0100
-Subject: [PATCH 093/197] FROMLIST: rust: export BINDGEN_TARGET from a separate
+Subject: [PATCH 093/189] FROMLIST: rust: export BINDGEN_TARGET from a separate
  Makefile
 
 A subsequent commit will add a new function `bindgen-option` to
@@ -29,10 +29,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 scripts/Makefile.rust
 
 diff --git a/Makefile b/Makefile
-index 96640a9632ef..3e6302675d01 100644
+index b17ca865bcee..67d0f5729adc 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -719,9 +719,10 @@ ifneq ($(findstring clang,$(CC_VERSION_TEXT)),)
+@@ -723,9 +723,10 @@ ifneq ($(findstring clang,$(CC_VERSION_TEXT)),)
  include $(srctree)/scripts/Makefile.clang
  endif
  
@@ -45,10 +45,10 @@ index 96640a9632ef..3e6302675d01 100644
  endif
  
 diff --git a/rust/Makefile b/rust/Makefile
-index 066c194c23b9..0639b7630dd1 100644
+index 9801af2e1e02..b8813ec123e8 100644
 --- a/rust/Makefile
 +++ b/rust/Makefile
-@@ -386,14 +386,6 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+@@ -404,14 +404,6 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
  	-fdiagnostics-show-context -fdiagnostics-show-context=% \
  	--param=% --param asan-% -fno-isolate-erroneous-paths-dereference
  

@@ -1,7 +1,7 @@
-From 59cb008b4129a59c2b089512b598026fdbd9df82 Mon Sep 17 00:00:00 2001
+From 1a75e54e42e9639865f7f1abb6e9be406ed0d1ad Mon Sep 17 00:00:00 2001
 From: Jisheng Zhang <jszhang@kernel.org>
 Date: Thu, 28 Sep 2023 00:42:22 +0800
-Subject: [PATCH 092/197] FROMLIST: usb: dwc3: add T-HEAD TH1520 usb driver
+Subject: [PATCH 092/189] FROMLIST: usb: dwc3: add T-HEAD TH1520 usb driver
 
 Adds TH1520 Glue layer to support USB controller on T-HEAD TH1520 SoC.
 There is a DesignWare USB3 DRD core in TH1520 SoCs, the dwc3 core is
@@ -20,10 +20,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/usb/dwc3/dwc3-thead.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index aa713e970db3..3149fb9f2ab9 100644
+index 08394b6c2f87..89e3defc41c8 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -22608,6 +22608,7 @@ F:	drivers/power/reset/th1520-aon-reboot.c
+@@ -22849,6 +22849,7 @@ F:	drivers/power/reset/th1520-aon-reboot.c
  F:	drivers/power/sequencing/pwrseq-thead-gpu.c
  F:	drivers/pwm/pwm_th1520.rs
  F:	drivers/reset/reset-th1520.c
@@ -32,12 +32,12 @@ index aa713e970db3..3149fb9f2ab9 100644
  F:	include/dt-bindings/power/thead,th1520-power.h
  F:	include/dt-bindings/reset/thead,th1520-reset.h
 diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index bf3e04635131..36b31fe2abef 100644
+index 240b15bc52cb..4bb61a0976bd 100644
 --- a/drivers/usb/dwc3/Kconfig
 +++ b/drivers/usb/dwc3/Kconfig
-@@ -211,4 +211,13 @@ config USB_DWC3_APPLE
- 	  mode on these machines.
- 	  Say 'Y' or 'M' if you have such device.
+@@ -222,4 +222,13 @@ config USB_DWC3_GOOGLE
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called dwc3-google.ko.
  
 +config USB_DWC3_THEAD
 +	tristate "T-HEAD Platform"
@@ -50,13 +50,13 @@ index bf3e04635131..36b31fe2abef 100644
 +
  endif
 diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-index 89d46ab50068..e025bb6f68f2 100644
+index 073bef5309b5..6f7419c4cba0 100644
 --- a/drivers/usb/dwc3/Makefile
 +++ b/drivers/usb/dwc3/Makefile
-@@ -59,3 +59,4 @@ obj-$(CONFIG_USB_DWC3_XILINX)		+= dwc3-xilinx.o
- obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
+@@ -60,3 +60,4 @@ obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
  obj-$(CONFIG_USB_DWC3_RTK)		+= dwc3-rtk.o
  obj-$(CONFIG_USB_DWC3_GENERIC_PLAT)	+= dwc3-generic-plat.o
+ obj-$(CONFIG_USB_DWC3_GOOGLE)		+= dwc3-google.o
 +obj-$(CONFIG_USB_DWC3_THEAD)		+= dwc3-thead.o
 diff --git a/drivers/usb/dwc3/dwc3-thead.c b/drivers/usb/dwc3/dwc3-thead.c
 new file mode 100644
