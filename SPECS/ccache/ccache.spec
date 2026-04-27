@@ -80,4 +80,4 @@ done
 %{_libdir}/ccache
 
 %changelog
-%{?autochangelog}
+%autochangelog
