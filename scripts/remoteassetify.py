@@ -33,6 +33,9 @@ arg_parser.add_argument('--verbose', action='store_true', help='Generate more de
 arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
 arg_parser.add_argument('--workflow', action='store_true', help='Generate some messages as workflow commands')
 
+# Initialized in main()
+args: argparse.Namespace
+
 CURL_DOWNLOAD = shlex.split("""curl --fail --location --proto '=http,https' --user-agent 'scripts/remoteassetify.py openruyi.cn' -o""")
 
 CHECKSUM_TYPES = { 'sha256' }
@@ -123,7 +126,12 @@ def get_name(text: str) -> str:
 
     raise ValueError('No Name found in spec')
 
-def get_sources(text: str) -> str:
+class RemoteAssetData(NamedTuple):
+    lineno: int
+    checksum_type: str | None
+    checksum: str | None
+
+def get_sources(text: str) -> dict[str, str]:
     result = {}
 
     for line in text.splitlines():
@@ -139,7 +147,7 @@ def get_sources(text: str) -> str:
 
     return result
 
-def get_remoteasset_lines(text: str) -> str:
+def get_remoteasset_lines(text: str) -> dict[str, RemoteAssetData]:
     lines = text.splitlines()
 
     result = {}
@@ -182,15 +190,15 @@ def get_remoteasset_lines(text: str) -> str:
             message('WARN', f'Unhandled remote asset with key {key}', i + 1, next_line)
             continue
 
-        result[key] = {
-            'lineno': i,
-            'checksum_type': checksum_type,
-            'checksum': checksum
-        }
+        result[key] = RemoteAssetData(
+            lineno=i,
+            checksum_type=checksum_type,
+            checksum=checksum
+        )
 
     return result
 
-def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path:
+def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path | None:
     outdir.mkdir(parents=True, exist_ok=True)
     orig_base = url.rsplit('/', 1)[-1]
     base = re.sub(r'[^\w.-]', '_', orig_base)
@@ -251,9 +259,9 @@ def main():
         url = sources[key]
 
         if ':' not in url:
-            message('WARN', f'Unrecognized URL: {url}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+            message('WARN', f'Unrecognized URL: {url}', data.lineno + 1, spec_lines[data.lineno + 1])
         elif re.search(r'%[a-z_{]', url, re.IGNORECASE):
-            message('WARN', f'Possible unexpanded RPM macro in URL: {url}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+            message('WARN', f'Possible unexpanded RPM macro in URL: {url}', data.lineno + 1, spec_lines[data.lineno + 1])
 
     if args.dry_run:
         if sys.stdout.isatty():
@@ -261,8 +269,8 @@ def main():
             print(file=sys.stderr)
 
         for key, data in assets.items():
-            if data['checksum_type']:
-                checksum_type, checksum = data['checksum_type'], data['checksum']
+            if data.checksum_type:
+                checksum_type, checksum = data.checksum_type, data.checksum
                 print(f'{key}: {sources[key]} {checksum_type}:{checksum}')
             else:
                 print(f'{key}: {sources[key]}')
@@ -272,10 +280,10 @@ def main():
         print('INFO: Found remote assets:', file=sys.stderr)
 
         for key, data in assets.items():
-            lineno = data['lineno']
+            lineno = data.lineno
 
-            if data['checksum_type']:
-                checksum_type, checksum = data['checksum_type'], data['checksum']
+            if data.checksum_type:
+                checksum_type, checksum = data.checksum_type, data.checksum
                 print(f'{lineno + 1:4}: {key}: {sources[key]} {checksum_type}:{checksum}', file=sys.stderr)
             else:
                 print(f'{lineno + 1:4}: {key}: {sources[key]} (Unknown checksum)', file=sys.stderr)
@@ -288,19 +296,19 @@ def main():
     patch_lines = []
 
     for key, data in assets.items():
-        if data['checksum_type'] not in CHECKSUM_TYPES:
+        if data.checksum_type not in CHECKSUM_TYPES:
             checksum_type = 'sha256'
-            if data['checksum_type'] is not None:
-                print(f"WARN: Unknown checksum type {data['checksum_type']}, using {checksum_type}", file=sys.stderr)
+            if data.checksum_type is not None:
+                print(f"WARN: Unknown checksum type {data.checksum_type}, using {checksum_type}", file=sys.stderr)
         else:
-            checksum_type = data['checksum_type']
-            old_checksum = data['checksum']
+            checksum_type = data.checksum_type
+            old_checksum = data.checksum
 
         print(f'INFO: Downloading {key}', file=sys.stderr)
         out_path = download_asset(outdir, sources[key])
 
         if out_path is None:
-            message('WARN', f'Failed to download {key} from {sources[key]}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+            message('WARN', f'Failed to download {key} from {sources[key]}', data.lineno + 1, spec_lines[data.lineno + 1])
             failed.append(key)
             continue
 
@@ -309,10 +317,10 @@ def main():
             print(f'$ cksum --untagged -a {shlex.join([checksum_type, str(out_path)])}', file=sys.stderr)
             print(f'{new_checksum}  {out_path}', file=sys.stderr)
 
-        if checksum_type != data['checksum_type'] or new_checksum != old_checksum:
+        if checksum_type != data.checksum_type or new_checksum != old_checksum:
             any_changed = True
 
-            if checksum_type == data['checksum_type']:
+            if checksum_type == data.checksum_type:
                 differ.append(key)
                 print(f'WARN: Checksum changed for {key}, was {checksum_type}:{old_checksum}, now {checksum_type}:{new_checksum}', file=sys.stderr)
 
@@ -322,15 +330,15 @@ def main():
             print(f'    > {new_remoteasset_line}', file=sys.stderr)
 
             if args.workflow:
-                print(f"::warning file={args.filename},line={data['lineno'] + 1}::{new_remoteasset_line}", file=sys.stderr)
+                print(f"::warning file={args.filename},line={data.lineno + 1}::{new_remoteasset_line}", file=sys.stderr)
 
             patch_lines.append(f'--- a/{args.filename}')
             patch_lines.append(f'+++ b/{args.filename}')
-            patch_lines.append(f"@@ -{data['lineno'] + 1},2 +{data['lineno'] + 1},2 @@")
-            patch_lines.append(f"-{spec_lines[data['lineno']]}")
+            patch_lines.append(f"@@ -{data.lineno + 1},2 +{data.lineno + 1},2 @@")
+            patch_lines.append(f"-{spec_lines[data.lineno]}")
             patch_lines.append(f'+{new_remoteasset_line}')
-            patch_lines.append(f" {spec_lines[data['lineno'] + 1]}")
-            if data['lineno'] == len(spec_lines) - 2 and spec_noeol:
+            patch_lines.append(f" {spec_lines[data.lineno + 1]}")
+            if data.lineno == len(spec_lines) - 2 and spec_noeol:
                 patch_lines.append('\\ No newline at end of file')
             patch_lines.append('')
 
