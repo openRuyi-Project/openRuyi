@@ -160,7 +160,7 @@ def get_remoteasset_lines(text: str) -> str:
                 checksum_type = parts[1].split(':', 1)[0]
                 checksum = parts[1].split(':', 1)[1]
             else:
-                message('INFO', f'Unhandled #!RemoteAsset format ignored', i, line)
+                message('INFO', 'Unhandled #!RemoteAsset format ignored', i, line)
                 continue
 
         else:
@@ -257,7 +257,7 @@ def main():
 
     if args.dry_run:
         if sys.stdout.isatty():
-            print(f'INFO: Found remote assets:', file=sys.stderr)
+            print('INFO: Found remote assets:', file=sys.stderr)
             print(file=sys.stderr)
 
         for key, data in assets.items():
