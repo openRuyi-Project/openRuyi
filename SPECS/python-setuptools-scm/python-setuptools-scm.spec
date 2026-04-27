@@ -25,14 +25,14 @@ BuildOption(install):  setuptools_scm
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
 Setuptools_scm handles managing your Python package versions in SCM metadata.
 It also handles file finders for the supported SCMs.
 
-%pyproject_extras_subpkg -n python%{python3_pkgversion}-setuptools_scm toml,rich
+%pyproject_extras_subpkg -n python-setuptools_scm toml,rich
 
 %prep
 %autosetup -p1 -n setuptools_scm-%{version}
