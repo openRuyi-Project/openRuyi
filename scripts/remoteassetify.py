@@ -228,7 +228,7 @@ def main():
 
         if sys.stdin.isatty():
             print('WARN: Reading spec file from stdin...', file=sys.stderr)
-        spec = sys.stdin.read().strip()
+        spec = sys.stdin.read()
     else:
         if args.filename[0] == '/':
             print('WARN: Absolute path specified, patch will probably not work', file=sys.stderr)
