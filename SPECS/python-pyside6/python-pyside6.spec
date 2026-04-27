@@ -103,7 +103,8 @@ BuildRequires:  cmake(Qt6RemoteObjects)
 BuildRequires:  cmake(Qt6UiPlugin)
 BuildRequires:  qt6-designer
 
-Provides:       python3-%{pypi_name}
+Provides:       python3-%{pypi_name} = %{version}-%{release}
+Provides:       python3-%{pypi_name}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{pypi_name}
 
 %description
@@ -114,8 +115,8 @@ provides access to the complete Qt 6+ framework.
 Summary:        Development files related to %{name}
 Requires:       pyside6-tools
 Requires:       shiboken6
-Provides:       python3-%{pypi_name}-devel
-
+Provides:       python3-%{pypi_name}-devel = %{version}-%{release}
+Provides:       python3-%{pypi_name}-devel%{?_isa} = %{version}-%{release}
 %description -n python-%{pypi_name}-devel
 Development files for PySide6.
 
@@ -134,7 +135,8 @@ Shiboken binding generator.
 
 %package     -n python-shiboken6
 Summary:        Python / C++ bindings libraries for %camel_name
-Provides:       python3-shiboken6
+Provides:       python3-shiboken6 = %{version}-%{release}
+Provides:       python3-shiboken6%{?_isa} = %{version}-%{release}
 %python_provide python3-shiboken6
 
 %description -n python-shiboken6
@@ -144,7 +146,8 @@ Shiboken Python libraries.
 Summary:        Python / C++ bindings helper module for %camel_name
 Requires:       shiboken6
 Requires:       python-shiboken6
-Provides:       python3-shiboken6-devel
+Provides:       python3-shiboken6-devel = %{version}-%{release}
+Provides:       python3-shiboken6-devel%{?_isa} = %{version}-%{release}
 
 %description -n python-shiboken6-devel
 Shiboken development files.
@@ -241,4 +244,4 @@ export LD_LIBRARY_PATH="%{buildroot}%{_libdir}"
 %{python3_sitearch}/shiboken6_generator-%{version}-py%{python3_version}.egg-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog

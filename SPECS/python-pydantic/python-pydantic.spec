@@ -35,7 +35,7 @@ BuildRequires:  python3dist(typing-extensions)
 BuildRequires:  python3dist(typing-inspection)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 # use the pydantic-core provided by the system
@@ -55,4 +55,4 @@ Define how data should be in pure, canonical Python 3.9+; validate it with Pydan
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

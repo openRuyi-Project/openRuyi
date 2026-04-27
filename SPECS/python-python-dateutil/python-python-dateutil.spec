@@ -21,6 +21,9 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l dateutil
+# ImportError: cannot import name 'winreg' from 'six.moves' (unknown location)
+BuildOption(check):  -e dateutil.tz.win
+BuildOption(check):  -e dateutil.tzwin
 
 # Otherwise will nothing provides python3dist(setuptools-scm) < 8~~
 Patch0:         0001-relax-setuptools_scm-requires.patch
@@ -30,7 +33,7 @@ Patch1:         0002-fix-sphinx-import.patch
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       tzdata
@@ -46,9 +49,6 @@ mv NEWS.new NEWS
 
 %generate_buildrequires
 %pyproject_buildrequires
-
-# Skip the import test suite, which requires winreg or something
-%check
 
 %files -f %{pyproject_files}
 %doc NEWS README.rst

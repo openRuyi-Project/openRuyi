@@ -28,7 +28,8 @@ BuildRequires:  python3dist(idna)
 BuildRequires:  python3dist(cffi)
 BuildRequires:  pkgconfig(libcares)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -49,4 +50,4 @@ export PYCARES_USE_SYSTEM_LIB=1
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

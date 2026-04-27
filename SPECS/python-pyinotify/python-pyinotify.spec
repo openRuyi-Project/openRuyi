@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Monitor filesystem events with Python under Linux
 License:        MIT
 URL:            https://github.com/seb-m/pyinotify
-#!RemoteAsset
+#!RemoteAsset:  sha256:9c998a5d7606ca835065cdabc013ae6c66eb9ea76a00a1e3bc6e0cfe2b4f71f4
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ sed -i "s|#!%{_bindir}/env python|#!%__python3|" python3/examples/*py
 %doc ACKS README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

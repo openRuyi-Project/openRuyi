@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A Python interface to libcurl
 License:        LGPL-2.1-only OR MIT
 URL:            https://github.com/pycurl/pycurl
-#!RemoteAsset
+#!RemoteAsset:  sha256:9d43013002eab2fd6d0dcc671cd1e9149e2fc1c56d5e796fad94d076d6cb69ef
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -23,7 +23,8 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(libcurl)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ rm -rf %{buildroot}%{_datadir}/doc/pycurl
 %doc ChangeLog README.rst examples doc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -6,13 +6,13 @@
 
 %global srcname Pygments
 
-Name:           python-pygments
+Name:           python-%{srcname}
 Version:        2.15.1
 Release:        %autorelease
 Summary:        Syntax highlighting
-License:        BSD-2-clause
+License:        BSD-2-Clause
 URL:            https://pygments.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:8ace4d3c1dd481894b2005f560ead0f9f19ee64fe983366be1a21e171d12775c
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,8 +24,8 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(docutils)
 
-Provides:       python3-pygments
-%python_provide python3-pygments
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 Pygments is a syntax highlighting package written in Python.
@@ -39,4 +39,4 @@ Pygments is a syntax highlighting package written in Python.
 %{_bindir}/pygmentize
 
 %changelog
-%{?autochangelog}
+%autochangelog

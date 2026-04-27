@@ -37,8 +37,8 @@ used by web frameworks to process multipart form uploads.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.md
+%license LICENSE.txt
 
 %changelog
 %autochangelog

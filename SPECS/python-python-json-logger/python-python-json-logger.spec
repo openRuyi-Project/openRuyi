@@ -38,9 +38,8 @@ It helps applications emit structured log records for machines and people.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
+%doc README.md NOTICE
 %license LICENSE
-%doc README.md
-%doc NOTICE
 
 %changelog
 %autochangelog

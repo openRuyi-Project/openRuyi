@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Pythonic DBus library
 License:        LGPL-2.0-or-later
 URL:            https://github.com/LEW21/pydbus
-#!RemoteAsset
+#!RemoteAsset:  sha256:4207162eff54223822c185da06c1ba8a34137a9602f3da5a528eedf3f78d0f2c
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -33,7 +33,7 @@ which is the recommended way to use GLib from Python.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# No tests available
+# No module named 'gi'
 %check
 
 %files -f %{pyproject_files}
@@ -41,4 +41,4 @@ which is the recommended way to use GLib from Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

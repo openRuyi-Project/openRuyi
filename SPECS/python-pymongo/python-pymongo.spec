@@ -13,11 +13,13 @@ Summary:        Python driver for MongoDB
 License:        Apache-2.0
 URL:            https://pymongo.readthedocs.io/en/stable/
 VCS:            git:https://github.com/mongodb/mongo-python-driver
-#!RemoteAsset
+#!RemoteAsset:  sha256:8ba8405065f6e258a6f872fe62d797a28f383a12178c7153c01ed04e845c600c
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# No module named 'service_identity' even I installed python3dist(service-identity)
+BuildOption(check):  -e pymongo.pyopenssl_context
 
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
@@ -27,8 +29,12 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-asyncio)
 BuildRequires:  python3dist(setuptools)
+# For tests
+BuildRequires:  python3dist(cryptography)
+BuildRequires:  python3dist(requests)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,7 +44,8 @@ The Python driver for MongoDB.
 # All code is Apache-2.0 except bson/time64*.{c,h} which is MIT
 License:        Apache-2.0 AND MIT
 Summary:        Python bson library
-Provides:       python3-bson
+Provides:       python3-bson = %{version}-%{release}
+Provides:       python3-bson%{?_isa} = %{version}-%{release}
 %python_provide python3-bson
 
 %description -n python-bson
@@ -49,11 +56,13 @@ embedding of objects and arrays within other objects and arrays.
 %package     -n python-pymongo-gridfs
 Summary:        Python GridFS driver for MongoDB
 Requires:       python-pymongo%{?_isa} = %{version}-%{release}
-Provides:       python3-pymongo-gridfs
+Provides:       python3-pymongo-gridfs = %{version}-%{release}
+Provides:       python3-pymongo-gridfs%{?_isa} = %{version}-%{release}
 %python_provide python3-pymongo-gridfs
 
 %description -n python-pymongo-gridfs
 GridFS is a storage specification for large objects in MongoDB.
+
 # TODO: enable submodule in the future
 # pyproject_extras_subpkg -n python3-pymongo ocsp snappy zstd
 
@@ -64,7 +73,7 @@ GridFS is a storage specification for large objects in MongoDB.
 %build -p
 export PYMONGO_C_EXT_MUST_BUILD=1
 
-%check
+%check -a
 # Skip tests that require network/nameservers and tests that cause segfaults
 %pytest -v \
     --deselect=test/asynchronous/test_client.py::AsyncClientUnitTest::test_connection_timeout_ms_propagates_to_DNS_resolver \
@@ -127,4 +136,4 @@ export PYMONGO_C_EXT_MUST_BUILD=1
 %{python3_sitearch}/gridfs
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -28,7 +28,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-xdist)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -49,8 +49,6 @@ pytest-cov’s command line options or through coverage’s config file.
 # Disable tests
 %generate_buildrequires
 %pyproject_buildrequires -r -x testing
-
-%check
 
 %files -f %{pyproject_files}
 %license LICENSE

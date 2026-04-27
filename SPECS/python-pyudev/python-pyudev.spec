@@ -21,11 +21,23 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# No module named 'gi'
+BuildOption(check):  -e pyudev.glib
+# No module named 'PyQt4'
+BuildOption(check):  -e pyudev.pyqt4
+# No module named 'PyQt5'
+BuildOption(check):  -e pyudev.pyqt5
+# No module named 'PySide'
+BuildOption(check):  -e pyudev.pyside
+# No module named 'PySide6'
+BuildOption(check):  -e pyudev.pyside6
+# No module named 'wx'
+BuildOption(check):  -e pyudev.wx
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 # Needed for libudev, loaded through ctypes
@@ -42,13 +54,9 @@ The binding supports CPython 3 and PyPy.
 %generate_buildrequires
 %pyproject_buildrequires
 
-# Do not run the declarative default import smoke test
-# Because we exclude some modules
-%check
-
 %files -f %{pyproject_files}
-%license COPYING
 %doc README.rst
+%license COPYING
 %exclude %{python3_sitelib}/pyudev/glib.py
 %exclude %{python3_sitelib}/pyudev/__pycache__/glib.*
 %exclude %{python3_sitelib}/pyudev/pyqt4.py

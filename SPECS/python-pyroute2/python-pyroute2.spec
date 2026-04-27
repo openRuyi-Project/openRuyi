@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python netlink library
 License:        Apache-2.0 OR GPL-2.0-or-later
 URL:            https://github.com/svinota/pyroute2
-#!RemoteAsset
+#!RemoteAsset:  sha256:54d226fc3ff2732f49bac9b26853c50c9d05be05a4d9daf09c7cf6d77301eff3
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,7 +25,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(mitogen)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,4 +46,4 @@ IPQ.
 %{python3_sitelib}/pr2modules
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,18 +12,18 @@ Release:        %autorelease
 Summary:        Python bindings for GNU parted
 License:        GPL-2.0-or-later
 URL:            https://github.com/dcantrell/pyparted
-#!RemoteAsset
+#!RemoteAsset:  sha256:443b59eb9ac63b8ca87094e02376646e172c7ea075f955f105889ca3485b06fd
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildRequires:  make
-BuildRequires:  gcc
 BuildRequires:  pkgconfig(libparted)
 BuildRequires:  e2fsprogs
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +47,4 @@ make test
 %{python3_sitearch}/%{srcname}-%{version}-*.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
