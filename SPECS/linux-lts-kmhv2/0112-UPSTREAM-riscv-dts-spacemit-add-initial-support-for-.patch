@@ -1,7 +1,7 @@
-From 39b96e9338ff3c00531beb95927ee3549cf2aa60 Mon Sep 17 00:00:00 2001
+From ab201d128f266b2e635902c48d05393904b1d6f2 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:45 +0800
-Subject: [PATCH 112/292] UPSTREAM: riscv: dts: spacemit: add initial support
+Subject: [PATCH 112/369] UPSTREAM: riscv: dts: spacemit: add initial support
  for K3 SoC
 
 SpacemiT K3 is equipped with 8 X100 cores, which are RVA23 compliant.

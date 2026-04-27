@@ -1,7 +1,7 @@
-From 4c266506fd8edacde454045bc2cfed3e6e8bc051 Mon Sep 17 00:00:00 2001
+From c8c294ecc31b48d430833a1bae1b635e3eeec1a1 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:21 +0000
-Subject: [PATCH 155/292] UPSTREAM: net: stmmac: imx: convert to
+Subject: [PATCH 155/369] UPSTREAM: net: stmmac: imx: convert to
  PHY_INTF_SEL_xxx
 
 Convert dwmac-imx to use the PHY_INTF_SEL_xxx definitions rather than

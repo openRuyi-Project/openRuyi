@@ -1,7 +1,7 @@
-From 7a11db301721945b8f1a5ef9ec457caedce04ebd Mon Sep 17 00:00:00 2001
+From 9506db19165924300b30232e3a1d6b9fcf385f12 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:05 +0000
-Subject: [PATCH 152/292] UPSTREAM: net: stmmac: add phy_intf_sel and ACTPHYIF
+Subject: [PATCH 152/369] UPSTREAM: net: stmmac: add phy_intf_sel and ACTPHYIF
  definitions
 
 Add definitions for the active PHY interface found in DMA hardware

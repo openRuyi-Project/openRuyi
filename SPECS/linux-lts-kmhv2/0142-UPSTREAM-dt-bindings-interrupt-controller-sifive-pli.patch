@@ -1,7 +1,7 @@
-From 849a9b67df56581d6092da855a69370d84fac404 Mon Sep 17 00:00:00 2001
+From ca83a148af3d31c4f40145b38a6c223c556b349f Mon Sep 17 00:00:00 2001
 From: Yangyu Chen <cyy@cyyself.name>
 Date: Wed, 4 Feb 2026 01:21:48 +0800
-Subject: [PATCH 142/292] UPSTREAM: dt-bindings: interrupt-controller:
+Subject: [PATCH 142/369] UPSTREAM: dt-bindings: interrupt-controller:
  sifive,plic: Clarify the riscv,ndev meaning in PLIC
 
 In PLIC, interrupt source 0 is reserved and should not be used.

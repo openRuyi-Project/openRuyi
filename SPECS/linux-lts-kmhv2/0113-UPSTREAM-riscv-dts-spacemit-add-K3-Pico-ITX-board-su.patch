@@ -1,7 +1,7 @@
-From aed2d8eecb85bdc80b344fb5ae3068e54ff46565 Mon Sep 17 00:00:00 2001
+From d452d642faa25601572542b2594ea85c09c14e35 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:46 +0800
-Subject: [PATCH 113/292] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board
+Subject: [PATCH 113/369] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board
  support
 
 K3 Pico-ITX is a 2.5-inch single-board computer equipted with a SpacemiT

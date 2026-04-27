@@ -1,7 +1,7 @@
-From 6fa5c872d80a290284322089e0f276889f650538 Mon Sep 17 00:00:00 2001
+From 284e578b90d2ae2fb69a067871fd123d57169a8a Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:16 -0400
-Subject: [PATCH 169/292] UPSTREAM: usb: dwc3: dwc3-generic-plat: Add
+Subject: [PATCH 169/369] UPSTREAM: usb: dwc3: dwc3-generic-plat: Add
  layerscape dwc3 support
 
 Add layerscape dwc3 support by using flatten dwc3 core library. Layerscape

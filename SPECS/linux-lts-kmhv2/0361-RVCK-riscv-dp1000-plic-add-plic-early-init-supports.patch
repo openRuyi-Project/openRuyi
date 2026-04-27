@@ -1,0 +1,78 @@
+From fe9cf02a38d913c0589811ea982ff7973d002e27 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Thu, 18 Sep 2025 10:44:01 +0800
+Subject: [PATCH 361/369] RVCK: riscv: dp1000: plic: add plic early init
+ supports
+
+community inclusion
+category: feature
+bugzilla: https://github.com/RVCK-Project/rvck/issues/71
+
+-------------------------------------------------
+
+Add PLIC early init supports and remove invalid
+timer nodes in dp1000.dts.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+From: https://github.com/RVCK-Project/rvck/commit/9e4cfbdf46fad772cc002c53b9e295cda600e9c5
+Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+---
+ arch/riscv/boot/dts/ultrarisc/dp1000.dts | 25 ++----------------------
+ drivers/irqchip/irq-sifive-plic.c        |  1 +
+ 2 files changed, 3 insertions(+), 23 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dts b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+index 23a983d6a4c8..4a2dae602693 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+@@ -164,6 +164,7 @@ device_clk: device_clk {
+ 				clock-frequency = <62500000>;
+ 				#clock-cells = <0>;
+ 			};
++
+ 			csr_clk: csr_clk {
+ 				compatible = "fixed-clock";
+ 				clock-frequency = <250000000>;
+@@ -333,29 +334,7 @@ wdt0: watchdog@20210000 {
+ 			interrupts = <33>;
+ 			clocks = <&device_clk>;
+ 		};
+-		
+-		timer0: timer@20220000 {
+-			compatible = "snps,dw-apb-timer";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			reg = <0x0 0x20220000 0x0 0x100>;
+-			clocks = <&device_clk>;
+-			interrupt-parent = <0x01>;
+-			interrupts = <35>;
+-			status = "okay";
+-		};
+-		
+-		timer1: timer@20230000 {
+-			compatible = "snps,dw-apb-timer";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			reg = <0x0 0x20230000 0x0 0x100>;
+-			clocks = <&device_clk>;
+-			interrupt-parent = <0x01>;
+-			interrupts = <36>;
+-			status = "okay";
+-		};
+-		
++
+ 		gpio: gpio@20200000 {
+ 			compatible = "snps,dw-apb-gpio";
+       			#address-cells = <1>;
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index 70058871d2fb..007a4668f9e5 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -846,3 +846,4 @@ static int __init plic_early_probe(struct device_node *node,
+ }
+ 
+ IRQCHIP_DECLARE(riscv, "allwinner,sun20i-d1-plic", plic_early_probe);
++IRQCHIP_DECLARE(ultrarisc_dp1000_plic, "ultrarisc,dp1000-plic", plic_early_probe);
+-- 
+2.53.0
+

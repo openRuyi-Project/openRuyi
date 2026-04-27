@@ -1,7 +1,7 @@
-From a1a5af373541fe0c5d68090c6c9b9e2068a3d707 Mon Sep 17 00:00:00 2001
+From fc386445c297d4c6d9dfcc7125b1d5b35063e692 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 05:34:39 +0800
-Subject: [PATCH 118/292] UPSTREAM: reset: spacemit: fix auxiliary device id
+Subject: [PATCH 118/369] UPSTREAM: reset: spacemit: fix auxiliary device id
 
 Due to the auxiliary register procedure moved to ccu common module where
 the module name changed to spacemit_ccu, then the reset auxiliary device

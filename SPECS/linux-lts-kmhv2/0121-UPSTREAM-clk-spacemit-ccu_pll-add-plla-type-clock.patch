@@ -1,7 +1,7 @@
-From f64c4e64a61e6b6b3bddf14fd941b5f453aebafb Mon Sep 17 00:00:00 2001
+From 603872477883a4036ce0c03891be49aab83d6bc1 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Mon, 27 Oct 2025 21:41:24 +0800
-Subject: [PATCH 121/292] UPSTREAM: clk: spacemit: ccu_pll: add plla type clock
+Subject: [PATCH 121/369] UPSTREAM: clk: spacemit: ccu_pll: add plla type clock
 
 Introduce a new clock PLLA for SpacemiT's K3 SoC which has a different
 register layout comparing to previous PPL type. And, It is configured

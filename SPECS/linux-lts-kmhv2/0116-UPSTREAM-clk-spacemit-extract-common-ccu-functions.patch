@@ -1,7 +1,7 @@
-From 89780c7016dd5672883bf6afedd3407287998dc7 Mon Sep 17 00:00:00 2001
+From deca895f0c12b6c52e98784a3ada6caf84d4e1d0 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 08:07:23 +0800
-Subject: [PATCH 116/292] UPSTREAM: clk: spacemit: extract common ccu functions
+Subject: [PATCH 116/369] UPSTREAM: clk: spacemit: extract common ccu functions
 
 Refactor the probe function of SpacemiT's clock, and extract a common ccu
 file, so new clock driver added in the future can share the same code,

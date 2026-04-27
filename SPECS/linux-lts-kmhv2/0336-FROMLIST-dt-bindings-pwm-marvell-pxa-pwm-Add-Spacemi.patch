@@ -1,0 +1,105 @@
+From d8aecbb1784869a7e8513fda7870312c717ecbb1 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Thu, 9 Apr 2026 00:45:11 +0000
+Subject: [PATCH 336/369] FROMLIST: dt-bindings: pwm: marvell,pxa-pwm: Add
+ SpacemiT K3 PWM support
+
+The PWM controller in SpacemiT K3 SoC reuse the same IP as previous K1
+generation, while the difference is that one additional bus clock is
+added.
+
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+Link: https://lore.kernel.org/r/20260409-03-k3-pwm-drv-v1-1-1307a06fba38@kernel.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../bindings/pwm/marvell,pxa-pwm.yaml         | 53 +++++++++++++++++--
+ 1 file changed, 50 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+index 8df327e52810..3427c8ef3945 100644
+--- a/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/marvell,pxa-pwm.yaml
+@@ -15,7 +15,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: spacemit,k1-pwm
++            enum:
++              - spacemit,k1-pwm
++              - spacemit,k3-pwm
+     then:
+       properties:
+         "#pwm-cells":
+@@ -26,6 +28,38 @@ allOf:
+           const: 1
+           description: |
+             Used for specifying the period length in nanoseconds.
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - spacemit,k3-pwm
++    then:
++      properties:
++        clock-names:
++          items:
++            - const: func
++            - const: bus
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - spacemit,k3-pwm
++    then:
++      required:
++        - clock-names
++      properties:
++        clocks:
++          minItems: 2
++        clock-names:
++          minItems: 2
++    else:
++      properties:
++        clocks:
++          maxItems: 1
++        clock-names:
++          maxItems: 1
+ 
+ properties:
+   compatible:
+@@ -36,7 +70,9 @@ properties:
+           - marvell,pxa168-pwm
+           - marvell,pxa910-pwm
+       - items:
+-          - const: spacemit,k1-pwm
++          - enum:
++              - spacemit,k1-pwm
++              - spacemit,k3-pwm
+           - const: marvell,pxa910-pwm
+ 
+   reg:
+@@ -47,7 +83,18 @@ properties:
+     description: Number of cells in a pwm specifier.
+ 
+   clocks:
+-    maxItems: 1
++    minItems: 1
++    items:
++      - description: The function clock
++      - description: An optional bus clock
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    oneOf:
++      - items:
++          - const: func
++          - const: bus
+ 
+   resets:
+     maxItems: 1
+-- 
+2.53.0
+

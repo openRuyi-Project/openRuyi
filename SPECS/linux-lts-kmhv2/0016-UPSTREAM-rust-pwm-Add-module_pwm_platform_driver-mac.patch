@@ -1,7 +1,7 @@
-From 7f70a18793140ad3371da42fa5d22a7f3c842602 Mon Sep 17 00:00:00 2001
+From b6a849f780d8eab2a68f2e859caeb68daca40207 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 28 Oct 2025 13:22:33 +0100
-Subject: [PATCH 016/292] UPSTREAM: rust: pwm: Add module_pwm_platform_driver!
+Subject: [PATCH 016/369] UPSTREAM: rust: pwm: Add module_pwm_platform_driver!
  macro
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

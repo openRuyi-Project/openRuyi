@@ -1,7 +1,7 @@
-From 67f721808d7a2ea96f2a763d0178554a4a40063a Mon Sep 17 00:00:00 2001
+From 5b46f581e873f8b626f1f70e21bcd7175e2400cb Mon Sep 17 00:00:00 2001
 From: Jessica Liu <liu.xuemei1@zte.com.cn>
 Date: Tue, 10 Mar 2026 14:16:00 +0800
-Subject: [PATCH 165/292] UPSTREAM: irqchip/riscv-aplic: Do not clear ACPI
+Subject: [PATCH 165/369] UPSTREAM: irqchip/riscv-aplic: Do not clear ACPI
  dependencies on probe failure
 
 aplic_probe() calls acpi_dev_clear_dependencies() unconditionally at the

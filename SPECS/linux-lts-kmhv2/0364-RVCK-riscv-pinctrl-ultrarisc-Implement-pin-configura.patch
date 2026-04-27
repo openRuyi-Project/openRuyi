@@ -1,0 +1,166 @@
+From a3473f01704fc0c73a10d6b7fad167199c29ee02 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Wed, 12 Nov 2025 15:43:27 +0800
+Subject: [PATCH 364/369] RVCK: riscv: pinctrl: ultrarisc: Implement pin
+ configuration support
+
+community inclusion
+category: feature
+bugzilla: https://github.com/RVCK-Project/rvck/issues/71
+
+--------------------------------
+
+Update ur_pin_config_set() to use the new configuration handling logic.
+This allows the driver to properly handle standard Linux kernel pin
+configuration parameters such as PIN_CONFIG_BIAS_PULL_UP,
+PIN_CONFIG_BIAS_PULL_DOWN, etc.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/d094389a972a4b03d04b77a47c19f5c9c9fb0627
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../ultrarisc/pinctrl-ultrarisc-dp1000.c      |  1 +
+ drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c | 83 +++++++++++++++++--
+ drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h |  2 +-
+ 3 files changed, 77 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+index 217f671fe63a..6a7496a465d8 100644
+--- a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+@@ -86,6 +86,7 @@ static struct ur_pinctrl_match_data ur_dp1000_match_data = {
+ 	.pins = ur_dp1000_pins,
+ 	.npins = ARRAY_SIZE(ur_dp1000_pins),
+ 	.offset = 0x2c0,
++	.num_ports = 5,
+ 	.ports = {
+ 		{"A", 16, 0x2c0, 0x310},
+ 		{"B", 8, 0x2c4, 0x318},
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+index 667d59e0ac6e..edaeca881af7 100644
+--- a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+@@ -326,6 +326,58 @@ static const struct pinmux_ops ur_pinmux_ops = {
+ 
+ #define UR_CONF_BIT_PER_PIN	(4)
+ #define UR_CONF_PIN_PER_REG	(32/UR_CONF_BIT_PER_PIN)
++
++static int ur_pin_num_to_port_pin(const struct ur_pinctrl_match_data *match_data,
++				  struct ur_pin_val *pin_val, u32 pin_num)
++{
++	const struct ur_port_desc *port_desc;
++
++	for (int i = 0; i < match_data->num_ports; i++) {
++		port_desc = &match_data->ports[i];
++		if (pin_num < port_desc->npins) {
++			pin_val->port = i;
++			pin_val->pin = pin_num;
++			pin_val->conf = 0;
++			return 0;
++		}
++		pin_num -= port_desc->npins;
++	}
++	return -EINVAL;
++}
++
++static int ur_config_to_pin_val(struct ur_pinctrl *pin_ctrl,
++				struct ur_pin_val *pin_vals,
++				unsigned long *config)
++{
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	u32 arg = pinconf_to_config_argument(*config);
++
++	dev_dbg(pin_ctrl->dev, "%s(%d): config_to_pin_val: param=%d, arg=0x%x\n",
++		__func__, __LINE__, param, arg);
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		pin_vals->conf &= ~UR_BIAS_MASK;
++		break;
++	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
++		pin_vals->conf &= ~(UR_PULL_DOWN | UR_PULL_UP);
++		break;
++	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		pin_vals->conf |= UR_PULL_DOWN;
++		break;
++	case PIN_CONFIG_BIAS_PULL_UP:
++		pin_vals->conf |= UR_PULL_UP;
++		break;
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++	case PIN_CONFIG_PERSIST_STATE:
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++	return 0;
++}
++
+ static int ur_set_pin_conf(struct ur_pinctrl *pin_ctrl, struct ur_pin_val *pin_vals)
+ {
+ 	const struct ur_port_desc *port_desc;
+@@ -334,8 +386,11 @@ static int ur_set_pin_conf(struct ur_pinctrl *pin_ctrl, struct ur_pin_val *pin_v
+ 	u32 val, conf;
+ 
+ 	port_desc = &pin_ctrl->match_data->ports[pin_vals->port];
++	dev_dbg(pin_ctrl->dev, "set pinconf port=%d pin=%d conf=0x%x\n",
++		pin_vals->port, pin_vals->pin, pin_vals->conf);
+ 	reg = pin_ctrl->base + port_desc->conf_offset;
+-	dev_dbg(pin_ctrl->dev, "pinconf base=0x%llx, reg=0x%llx\n", (u64)pin_ctrl->base, (u64)reg);
++	dev_dbg(pin_ctrl->dev, "pinconf base=0x%llx, conf_offset=0x%x, reg=0x%llx\n",
++		(u64)pin_ctrl->base, port_desc->conf_offset, (u64)reg);
+ 	reg += (pin_vals->pin / UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN;
+ 	dev_dbg(pin_ctrl->dev, "pinconf pin=0x%llx\n", (u64)reg);
+ 
+@@ -367,16 +422,28 @@ static int ur_pin_config_set(struct pinctrl_dev *pctldev,
+ 			unsigned long *configs,
+ 			unsigned int num_configs)
+ {
+-	struct ur_pin_val *pin_conf;
++	struct ur_pin_val pin_val;
+ 	struct ur_pinctrl *ur_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	int ret;
++
++	ret = ur_pin_num_to_port_pin(ur_pinctrl->match_data, &pin_val, pin);
++	if (ret < 0) {
++		dev_err(pctldev->dev, "invalid pin number %d\n", pin);
++		return ret;
++	}
++	dev_dbg(pctldev->dev, "%s(%d): pin=%d, num_configs=%d, port=%d, pin=%d\n",
++		__func__, __LINE__, pin, num_configs, pin_val.port, pin_val.pin);
+ 
+-	dev_dbg(pctldev->dev, "%s(%d): pin=%d, num_configs=%d\n",
+-		__func__, __LINE__, pin, num_configs);
+-	pin_conf = (struct ur_pin_val *)configs;
+ 	for (int i = 0; i < num_configs; i++) {
+-		dev_dbg(pctldev->dev, "pinconf[%d], port=%d, pin=%d, conf=0x%x\n",
+-			i, pin_conf[i].port, pin_conf[i].pin, pin_conf[i].conf);
+-		ur_set_pin_conf(ur_pinctrl, &pin_conf[i]);
++		ret = ur_config_to_pin_val(ur_pinctrl, &pin_val, &configs[i]);
++		if (ret < 0) {
++			dev_err(pctldev->dev, "invalid config 0x%lx\n", configs[i]);
++			return ret;
++		}
++
++		dev_dbg(pctldev->dev, "%s(%d): port=%d, pin=%d, conf=0x%x\n",
++			__func__, __LINE__, pin_val.port, pin_val.pin, pin_val.conf);
++		ur_set_pin_conf(ur_pinctrl, &pin_val);
+ 	}
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
+index eec621bf8b05..728b2111def0 100644
+--- a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
+@@ -50,7 +50,7 @@ struct ur_pinctrl_match_data {
+ 	const struct pinctrl_pin_desc *pins;
+ 	u32 npins;
+ 	u32 offset;
+-	//u32 conf_offset[];
++	u32 num_ports;
+ 	struct ur_port_desc ports[];
+ };
+ 
+-- 
+2.53.0
+

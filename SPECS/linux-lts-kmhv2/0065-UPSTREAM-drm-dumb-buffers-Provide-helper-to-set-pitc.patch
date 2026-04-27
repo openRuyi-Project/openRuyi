@@ -1,7 +1,7 @@
-From c3f4471fa7ca975295b74990bd5708d47050babe Mon Sep 17 00:00:00 2001
+From c0956b07ed7a9858692827df4e279fc71717ce81 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:09 +0200
-Subject: [PATCH 065/292] UPSTREAM: drm/dumb-buffers: Provide helper to set
+Subject: [PATCH 065/369] UPSTREAM: drm/dumb-buffers: Provide helper to set
  pitch and size
 
 Add drm_modes_size_dumb(), a helper to calculate the dumb-buffer

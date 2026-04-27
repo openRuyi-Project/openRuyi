@@ -1,4 +1,4 @@
-From 7755e6b40c67d90da7eca74763e29da514f43171 Mon Sep 17 00:00:00 2001
+From 9cf22077c234cf35a41adef07d4bbc83517f4ac0 Mon Sep 17 00:00:00 2001
 From: Ran Wang <wangran@bosc.ac.cn>
 Date: Fri, 20 Mar 2026 15:50:27 +0800
 Subject: [PATCH 3/3] XIANGSHAN: Add workaround to retry when access fault

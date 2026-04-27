@@ -1,7 +1,7 @@
-From e4418b650d17ea6f4b5e1437c4dd7b0cd0141e78 Mon Sep 17 00:00:00 2001
+From 0f570c6ff095ac3370b90fbf236573804668e205 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:46 +0000
-Subject: [PATCH 160/292] UPSTREAM: net: stmmac: imx: use ->set_phy_intf_sel()
+Subject: [PATCH 160/369] UPSTREAM: net: stmmac: imx: use ->set_phy_intf_sel()
 
 Rather than placing the phy_intf_sel() setup in the ->init() method,
 move it to the new ->set_phy_intf_sel() method.

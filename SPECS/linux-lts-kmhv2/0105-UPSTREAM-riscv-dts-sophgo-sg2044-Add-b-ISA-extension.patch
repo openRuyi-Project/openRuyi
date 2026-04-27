@@ -1,7 +1,7 @@
-From 1334e1e759550871f5e05a5aba07239d0c906267 Mon Sep 17 00:00:00 2001
+From 7607b33f5a631737e1842fe57d63f8857467f6a4 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 07:18:59 +0800
-Subject: [PATCH 105/292] UPSTREAM: riscv: dts: sophgo: sg2044: Add "b" ISA
+Subject: [PATCH 105/369] UPSTREAM: riscv: dts: sophgo: sg2044: Add "b" ISA
  extension
 
 "b" is ratified (Apr/2024) much later than its components zba/zbb/zbs

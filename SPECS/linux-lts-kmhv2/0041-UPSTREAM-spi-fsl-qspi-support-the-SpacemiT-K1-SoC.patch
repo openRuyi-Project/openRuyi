@@ -1,7 +1,7 @@
-From 046678efb667309ae5a33aa185163b234986e6e2 Mon Sep 17 00:00:00 2001
+From cb09cb1610221e3a9c0d8babc7b70d3bb6a327ff Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:05 -0500
-Subject: [PATCH 041/292] UPSTREAM: spi: fsl-qspi: support the SpacemiT K1 SoC
+Subject: [PATCH 041/369] UPSTREAM: spi: fsl-qspi: support the SpacemiT K1 SoC
 
 Allow the SPI_FSL_QUADSPI Kconfig option to be selected if ARCH_SPACEMIT
 enabled.

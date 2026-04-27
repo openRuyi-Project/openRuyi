@@ -1,7 +1,7 @@
-From d5554348d2da3b2245893374cf5d7a83e74db145 Mon Sep 17 00:00:00 2001
+From a18d8689f58f55ea6c604315815d7b7bf8306b30 Mon Sep 17 00:00:00 2001
 From: Hang Cao <caohang@eswincomputing.com>
 Date: Wed, 12 Nov 2025 13:53:45 +0800
-Subject: [PATCH 171/292] UPSTREAM: usb: dwc3: eic7700: Add EIC7700 USB driver
+Subject: [PATCH 171/369] UPSTREAM: usb: dwc3: eic7700: Add EIC7700 USB driver
 
 The EIC7700 instantiates two USB 3.0 DWC3 IPs, each of which is backward
 compatible with USB interfaces. It supports Super-speed (5Gb/s), DRD mode,

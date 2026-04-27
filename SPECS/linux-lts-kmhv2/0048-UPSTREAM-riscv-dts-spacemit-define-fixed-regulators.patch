@@ -1,7 +1,7 @@
-From 7da972b8a029dc920fa104a864e583560c2ae98c Mon Sep 17 00:00:00 2001
+From dc8b55a1f37b571777583c1f2c94124c599254ce Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:55 -0500
-Subject: [PATCH 048/292] UPSTREAM: riscv: dts: spacemit: define fixed
+Subject: [PATCH 048/369] UPSTREAM: riscv: dts: spacemit: define fixed
  regulators
 
 Define the DC power input and the 4v power as fixed supplies in the

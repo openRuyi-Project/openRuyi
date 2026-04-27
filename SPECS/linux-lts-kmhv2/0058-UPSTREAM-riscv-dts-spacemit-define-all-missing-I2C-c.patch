@@ -1,7 +1,7 @@
-From 22ffbac5a5d2401b3a03a17029b750e91b4a1cc7 Mon Sep 17 00:00:00 2001
+From 4915cd379c63359b1c53885b5dc1bcaebf971232 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 5 Nov 2025 11:37:44 +0800
-Subject: [PATCH 058/292] UPSTREAM: riscv: dts: spacemit: define all missing
+Subject: [PATCH 058/369] UPSTREAM: riscv: dts: spacemit: define all missing
  I2C controller nodes
 
 SpacemiT K1 SoC is equipped with a total of nine I2C controllers,

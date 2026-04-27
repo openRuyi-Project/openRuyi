@@ -1,0 +1,677 @@
+From 8ffa0a5370a1ce4c40b1a7fbd2035163688d1f49 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Tue, 11 Nov 2025 17:03:37 +0800
+Subject: [PATCH 363/369] RVCK: dts: riscv: ultrarisc: Refactor DP1000 device
+ tree files
+
+community inclusion
+category: feature
+bugzilla: https://github.com/RVCK-Project/rvck/issues/71
+
+--------------------------------
+
+Add gpio-ranges property to all gpio/portX nodes.
+This property maps GPIO lines to pin controller pins,
+ensuring proper GPIO pin allocation and management.
+
+Convert dp1000.dts to a common include file (dp1000.dtsi) and update
+the board-specific DTS files to include it. This refactoring allows
+for better code reuse across different DP1000-based boards (EVB, MO,
+and Titan variants) while maintaining board-specific configurations.
+
+The changes include:
+- Renaming dp1000.dts to dp1000.dtsi
+- Updating board-specific DTS files to include the common .dtsi
+- Adjusting Makefile to reflect these changes
+- Updating pinctrl files for all board variants
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/f9d4926fccee70f72d11e11dfa11b99f59caa947
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/ultrarisc/Makefile        |   1 -
+ .../dts/ultrarisc/dp1000-evb-pinctrl.dtsi     | 261 +++++++++---------
+ .../boot/dts/ultrarisc/dp1000-evb-v1.dts      |   1 -
+ .../boot/dts/ultrarisc/dp1000-mo-pinctrl.dtsi | 261 +++++++++---------
+ .../riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts |   1 -
+ .../dts/ultrarisc/{dp1000.dts => dp1000.dtsi} |  15 +
+ 6 files changed, 263 insertions(+), 277 deletions(-)
+ rename arch/riscv/boot/dts/ultrarisc/{dp1000.dts => dp1000.dtsi} (96%)
+
+diff --git a/arch/riscv/boot/dts/ultrarisc/Makefile b/arch/riscv/boot/dts/ultrarisc/Makefile
+index 9eac56549340..22c03b44b2f8 100644
+--- a/arch/riscv/boot/dts/ultrarisc/Makefile
++++ b/arch/riscv/boot/dts/ultrarisc/Makefile
+@@ -1,4 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000.dtb
+ dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000-evb-v1.dtb
+ dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000-mo-v1.dtb
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-pinctrl.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-pinctrl.dtsi
+index e82fcf2901ab..e2c09d5bdb20 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-pinctrl.dtsi
+@@ -4,143 +4,130 @@
+  */
+ 
+ #include <dt-bindings/pinctrl/ur-dp1000-pinctrl.h>
++#include "dp1000.dtsi"
++
++&pmx0 {
++	i2c0_pins: i2c0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  12  UR_FUNC0
++		UR_DP1000_IOMUX_A  13  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  12  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  13  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c1_pins: i2c1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_B  6  UR_FUNC0
++		UR_DP1000_IOMUX_B  7  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_B  6   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_B  7   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c2_pins: i2c2_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  0  UR_FUNC0
++		UR_DP1000_IOMUX_C  1  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  0   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  1   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c3_pins: i2c3_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  2  UR_FUNC0
++		UR_DP1000_IOMUX_C  3  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  2   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  3   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart0_pins: uart0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  8  UR_FUNC1
++		UR_DP1000_IOMUX_A  9  UR_FUNC1
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  8   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  9   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart1_pins: uart1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_B  4  UR_FUNC0
++		UR_DP1000_IOMUX_B  5  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_B  4   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_B  5   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart2_pins: uart2_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  4  UR_FUNC0
++		UR_DP1000_IOMUX_C  5  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  4   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  5   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	spi0_pins: spi0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_D  0  UR_FUNC1
++		UR_DP1000_IOMUX_D  1  UR_FUNC1
++		UR_DP1000_IOMUX_D  2  UR_FUNC1
++		UR_DP1000_IOMUX_D  3  UR_FUNC1
++		UR_DP1000_IOMUX_D  4  UR_FUNC1
++		UR_DP1000_IOMUX_D  5  UR_FUNC1
++		UR_DP1000_IOMUX_D  6  UR_FUNC1
++		UR_DP1000_IOMUX_D  7  UR_FUNC1
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_D  0   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  1   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  2   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  3   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  4   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  5   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  6   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  7   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
+ 
+-/ {
+-
+-	soc {
+-		pmx0: pinmux@11081000 {
+-			compatible = "ultrarisc,dp1000-pinctrl";
+-			reg = <0x0 0x11081000  0x0 0x1000>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			#pinctrl-cells = <2>;
+-			pinctrl-single,register-width = <32>;
+-			pinctrl-single,function-mask = <0x3ff>;
+-			pinctrl-use-default;
+-
+-			i2c0_pins: i2c0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 12, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 13, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 12, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 13, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c1_pins: i2c1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 6, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 7, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 6, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 7, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c2_pins: i2c2_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 0, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 1, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c3_pins: i2c3_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 2, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 3, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart0_pins: uart0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 8, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 9, UR_FUNC1)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 8, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 9, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart1_pins: uart1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 4, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 5, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart2_pins: uart2_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 4, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 5, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			spi0_pins: spi0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 0, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 1, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 2, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 3, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 4, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 5, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 6, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 7, UR_FUNC1)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 6, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 7, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			spi1_pins: spi1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 0, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 1, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 2, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 3, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-		};
++	spi1_pins: spi1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  0  UR_FUNC0
++		UR_DP1000_IOMUX_A  1  UR_FUNC0
++		UR_DP1000_IOMUX_A  2  UR_FUNC0
++		UR_DP1000_IOMUX_A  3  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  0   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  1   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  2   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  3   UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
+index 34d024a083fc..46fe457b5f52 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
+@@ -3,7 +3,6 @@
+  * Copyright(C) 2025 UltraRISC Technology (Shanghai) Co., Ltd.
+  */
+ 
+-#include "dp1000.dts"
+ #include "dp1000-evb-pinctrl.dtsi"
+ #include <dt-bindings/iio/temperature/thermocouple.h>
+ 
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-pinctrl.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-pinctrl.dtsi
+index e82fcf2901ab..85b013f66bbd 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-pinctrl.dtsi
+@@ -4,143 +4,130 @@
+  */
+ 
+ #include <dt-bindings/pinctrl/ur-dp1000-pinctrl.h>
++#include "dp1000.dtsi"
++
++&pmx0 {
++	i2c0_pins: i2c0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  12  UR_FUNC0
++		UR_DP1000_IOMUX_A  13  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  12  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  13  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c1_pins: i2c1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_B  6  UR_FUNC0
++		UR_DP1000_IOMUX_B  7  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_B  6  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_B  7  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c2_pins: i2c2_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  0  UR_FUNC0
++		UR_DP1000_IOMUX_C  1  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  0  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  1  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	i2c3_pins: i2c3_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  2  UR_FUNC0
++		UR_DP1000_IOMUX_C  3  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  2  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  3  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart0_pins: uart0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  8  UR_FUNC1
++		UR_DP1000_IOMUX_A  9  UR_FUNC1
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  8  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  9  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart1_pins: uart1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_B  4  UR_FUNC0
++		UR_DP1000_IOMUX_B  5  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_B  4  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_B  5  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	uart2_pins: uart2_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_C  4  UR_FUNC0
++		UR_DP1000_IOMUX_C  5  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_C  4  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_C  5  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
++
++	spi0_pins: spi0_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_D  0  UR_FUNC1
++		UR_DP1000_IOMUX_D  1  UR_FUNC1
++		UR_DP1000_IOMUX_D  2  UR_FUNC1
++		UR_DP1000_IOMUX_D  3  UR_FUNC1
++		UR_DP1000_IOMUX_D  4  UR_FUNC1
++		UR_DP1000_IOMUX_D  5  UR_FUNC1
++		UR_DP1000_IOMUX_D  6  UR_FUNC1
++		UR_DP1000_IOMUX_D  7  UR_FUNC1
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_D  0  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  1  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  2  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  3  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  4  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  5  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  6  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_D  7  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
++	};
+ 
+-/ {
+-
+-	soc {
+-		pmx0: pinmux@11081000 {
+-			compatible = "ultrarisc,dp1000-pinctrl";
+-			reg = <0x0 0x11081000  0x0 0x1000>;
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			#pinctrl-cells = <2>;
+-			pinctrl-single,register-width = <32>;
+-			pinctrl-single,function-mask = <0x3ff>;
+-			pinctrl-use-default;
+-
+-			i2c0_pins: i2c0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 12, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 13, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 12, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 13, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c1_pins: i2c1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 6, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 7, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 6, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 7, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c2_pins: i2c2_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 0, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 1, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			i2c3_pins: i2c3_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 2, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 3, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart0_pins: uart0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 8, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 9, UR_FUNC1)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 8, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 9, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart1_pins: uart1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 4, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_B, 5, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_B, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			uart2_pins: uart2_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 4, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_C, 5, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_C, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			spi0_pins: spi0_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 0, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 1, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 2, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 3, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 4, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 5, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 6, UR_FUNC1)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_D, 7, UR_FUNC1)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 4, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 5, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 6, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_D, 7, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-
+-			spi1_pins: spi1_pins {
+-				pinctrl-pins = <
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 0, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 1, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 2, UR_FUNC0)
+-					UR_DP1000_IOPAD(UR_DP1000_IOMUX_A, 3, UR_FUNC0)
+-				>;
+-
+-				pinconf-pins = <
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 0, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 1, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 2, UR_PULL_UP, UR_DRIVE_DEF)
+-					UR_DP1000_BIAS(UR_DP1000_IOMUX_A, 3, UR_PULL_UP, UR_DRIVE_DEF)
+-				>;
+-			};
+-		};
++	spi1_pins: spi1_pins {
++		pinctrl-pins = <
++		UR_DP1000_IOMUX_A  0  UR_FUNC0
++		UR_DP1000_IOMUX_A  1  UR_FUNC0
++		UR_DP1000_IOMUX_A  2  UR_FUNC0
++		UR_DP1000_IOMUX_A  3  UR_FUNC0
++		>;
++
++		pinconf-pins = <
++		UR_DP1000_IOMUX_A  0  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  1  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  2  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		UR_DP1000_IOMUX_A  3  UR_DP1000_BIAS(UR_PULL_UP, UR_DRIVE_DEF)
++		>;
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
+index 8c532e5b71a3..dc057cbaf59b 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
+@@ -3,7 +3,6 @@
+  * Copyright(C) 2025 UltraRISC Technology (Shanghai) Co., Ltd.
+  */
+ 
+-#include "dp1000.dts"
+ #include "dp1000-mo-pinctrl.dtsi"
+ #include <dt-bindings/iio/temperature/thermocouple.h>
+ 
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dts b/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
+similarity index 96%
+rename from arch/riscv/boot/dts/ultrarisc/dp1000.dts
+rename to arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
+index 128293c0af1f..a25e87e15553 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
+@@ -330,6 +330,17 @@ wdt0: watchdog@20210000 {
+ 			clocks = <&device_clk>;
+ 		};
+ 
++		pmx0: pinmux@11081000 {
++			compatible = "ultrarisc,dp1000-pinctrl";
++			reg = <0x0 0x11081000  0x0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#pinctrl-cells = <2>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <0x3ff>;
++			pinctrl-use-default;
++		};
++
+ 		gpio: gpio@20200000 {
+ 			compatible = "snps,dw-apb-gpio";
+       			#address-cells = <1>;
+@@ -349,6 +360,7 @@ porta: gpio-port@0 {
+ 				#interrupt-cells = <2>;
+ 				interrupt-parent = <0x01>;
+ 				interrupts = <34>;
++				gpio-ranges = <&pmx0 0 0 16>;
+ 			};
+ 
+ 			portb: gpio-port@1 {
+@@ -357,6 +369,7 @@ portb: gpio-port@1 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 				snps,nr-gpios = <8>;
++				gpio-ranges = <&pmx0 16 0 8>;
+ 			};
+ 
+ 			portc: gpio-port@2 {
+@@ -365,6 +378,7 @@ portc: gpio-port@2 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 				snps,nr-gpios = <8>;
++				gpio-ranges = <&pmx0 24 0 8>;
+ 			};
+ 
+ 			portd: gpio-port@3 {
+@@ -373,6 +387,7 @@ portd: gpio-port@3 {
+ 				gpio-controller;
+ 				#gpio-cells = <2>;
+ 				snps,nr-gpios = <8>;
++				gpio-ranges = <&pmx0 32 0 8>;
+ 			};
+ 		};
+ 		
+-- 
+2.53.0
+

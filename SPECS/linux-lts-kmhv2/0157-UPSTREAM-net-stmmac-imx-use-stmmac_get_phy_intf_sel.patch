@@ -1,7 +1,7 @@
-From 45ee5f222f1b383b153667393d27922eab8ebc8e Mon Sep 17 00:00:00 2001
+From 4a70164a4845e83809a88cef88fcc05fcd0aa05d Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:31 +0000
-Subject: [PATCH 157/292] UPSTREAM: net: stmmac: imx: use
+Subject: [PATCH 157/369] UPSTREAM: net: stmmac: imx: use
  stmmac_get_phy_intf_sel()
 
 i.MX implementations other than IMX8DXL involve setting the dwmac core

@@ -1,7 +1,7 @@
-From a088ab32c1c59ab6c7e22961c50a00d7d42e11b0 Mon Sep 17 00:00:00 2001
+From 0cf3d0be243441ede07017df941ce8ec3c094ab2 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sun, 2 Nov 2025 21:17:17 +0800
-Subject: [PATCH 123/292] UPSTREAM: clk: spacemit: k3: add the clock tree
+Subject: [PATCH 123/369] UPSTREAM: clk: spacemit: k3: add the clock tree
 
 Add clock support to SpacemiT K3 SoC, the clock tree consist of several
 blocks which are APBC, APBS, APMU, DCIU, MPUM.

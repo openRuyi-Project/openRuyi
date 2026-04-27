@@ -1,0 +1,51 @@
+From d512a5657b913cff2552068ea3054aef68fd2a25 Mon Sep 17 00:00:00 2001
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Date: Tue, 20 Jan 2026 23:17:44 +0530
+Subject: [PATCH 176/369] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
+ dw_pcie_wait_for_link() returns -ETIMEDOUT
+
+The dw_pcie_wait_for_link() API now distinguishes link failures more
+precisely:
+
+-ENODEV: Device not found on the bus.
+-EIO: Device found but inactive.
+-ETIMEDOUT: Link failed to come up.
+
+Out of these three errors, only -ETIMEDOUT represents a definitive link
+failure since it signals that something is wrong with the link. For the
+other two errors, there is a possibility that the link might come up later.
+So fail dw_pcie_host_init() if -ETIMEDOUT is returned and skip the failure
+otherwise.
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Link: https://patch.msgid.link/20260120-pci-dwc-suspend-rework-v4-5-2f32d5082549@oss.qualcomm.com
+(cherry picked from commit 86cbb7a81068434fdc1d5afb96d91ab971fb279e)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 3c099dff2d61..a75b193dc98b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -664,8 +664,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 			goto err_remove_edma;
+ 	}
+ 
+-	/* Ignore errors, the link may come up later */
+-	dw_pcie_wait_for_link(pci);
++	/*
++	 * Only fail on timeout error. Other errors indicate the device may
++	 * become available later, so continue without failing.
++	 */
++	ret = dw_pcie_wait_for_link(pci);
++	if (ret == -ETIMEDOUT)
++		goto err_stop_link;
+ 
+ 	ret = pci_host_probe(bridge);
+ 	if (ret)
+-- 
+2.53.0
+

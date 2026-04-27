@@ -1,7 +1,7 @@
-From 8d37df9c47751a4eebf24d84e00ac37fcacf9f1c Mon Sep 17 00:00:00 2001
+From a430f603186d0f1f5cd92266bc6f960244e7e910 Mon Sep 17 00:00:00 2001
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 Date: Fri, 2 Jan 2026 14:58:39 +0000
-Subject: [PATCH 034/292] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id()
+Subject: [PATCH 034/369] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id()
  returns int, not unsigned int
 
 The print in sbi_cpu_stop() assumes smp_processor_id() returns an
