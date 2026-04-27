@@ -44,7 +44,7 @@ def message(prefix: str, text: str, line_num: Optional[int] = None, line_text: O
     PREFIX_MAP = { 'WARN': 'warning', 'INFO': 'notice' }
 
     if line_num is not None:
-        append_msg = f' in line {line_num + 1}:\n    > {line_text if line_text else '(empty)'}'
+        append_msg = f" in line {line_num + 1}:\n    > {line_text if line_text else '(empty)'}"
         additional_tags = f',line={line_num + 1}'
     else:
         append_msg = ''
@@ -360,7 +360,7 @@ def main():
         print(f'INFO: #!RemoteAsset lines for {args.filename} are up to date', file=sys.stderr)
 
     if failed:
-        print(f'WARN: Downloads have failed for: {', '.join(failed)}', file=sys.stderr)
+        print(f"WARN: Downloads have failed for: {', '.join(failed)}", file=sys.stderr)
         exit_code = 1
 
     if exit_code != 0:
