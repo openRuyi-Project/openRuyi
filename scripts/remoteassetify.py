@@ -208,7 +208,7 @@ def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path | None:
     out_path = outdir / base
 
     # I know urllib exists, but having a copiable curl command is nicer
-    command = [*CURL_DOWNLOAD, str(out_path), url]
+    command = [*CURL_DOWNLOAD, str(out_path), '--', url]
 
     print(f'$ {shlex.join(command)}', file=sys.stderr)
     proc = subprocess.run(command)
