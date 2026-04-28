@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Asynchronous SSHv2 client and server library
 License:        EPL-2.0 OR GPL-2.0-or-later
 URL:            https://asyncssh.timeheart.net/
-#!RemoteAsset
+#!RemoteAsset:  sha256:c3ce72b01be4f97b40e62844dd384227e5ff5a401a3793007c42f86a5c8eb537
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,7 +27,7 @@ BuildRequires:  python3dist(pyopenssl)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(typing-extensions)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +48,4 @@ rm ./tests/sspi_stub.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

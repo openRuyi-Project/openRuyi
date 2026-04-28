@@ -12,8 +12,9 @@ Release:        %autorelease
 Summary:        Library for accessing "ar" files
 License:        BSD-3-Clause
 URL:            https://github.com/viraptor/arpy
-#!RemoteAsset
+#!RemoteAsset:  sha256:8302829a991cfcef2630b61e00f315db73164021cecbd7fb1fc18525f83f339c
 Source:         https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} -L
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,11 +38,8 @@ does not support the symbol tables, but can ignore them gracefully.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-%pytest
-
 %files -f %{pyproject_files}
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

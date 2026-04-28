@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Bash tab completion for argparse
 License:        Apache-2.0
 URL:            https://github.com/kislyuk/argcomplete
-#!RemoteAsset
+#!RemoteAsset:  sha256:62e8ed4fd6a45864acc8235409461b72c9a28ee785a2011cc5eb78318786c89c
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ arguments for your Python application.
 %{_bindir}/register-python-argcomplete
 
 %changelog
-%{?autochangelog}
+%autochangelog

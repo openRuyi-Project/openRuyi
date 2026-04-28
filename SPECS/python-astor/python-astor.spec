@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/berkerpeksag/astor
 #!RemoteAsset:  sha256:6a6effda93f4e1ce9f618779b2dd1d9d84f1e32812c23a29b3fff6fd7f63fa5e
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -24,7 +25,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +39,4 @@ astor is designed to allow easy manipulation of Python source via the AST.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

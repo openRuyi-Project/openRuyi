@@ -7,21 +7,24 @@
 
 %global srcname pytest
 
-Name:           %{srcname}
-Version:        9.0.1
+Name:           python-%{srcname}
+Version:        9.0.3
 Release:        %autorelease
 Summary:        Simple powerful testing with Python
 License:        MIT
 URL:            https://pytest.org
 VCS:            git:https://github.com/pytest-dev/pytest
-#!RemoteAsset
+#!RemoteAsset:  sha256:b86ada508af81d19edeb213c681b1d48246c1a91d304c6c81a427674c17eb91c
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
 
-BuildRequires:  python3-devel
+BuildOption(install):  _pytest pytest py
+
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -29,18 +32,12 @@ The pytest framework makes it easy to write small tests, yet scales to support
 complex functional testing for applications and libraries.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n %{srcname}-%{version}
 
 %generate_buildrequires
 %pyproject_buildrequires -r
 
-%build
-%pyproject_wheel
-
-%install
-%pyproject_install
-%pyproject_save_files _pytest pytest py
-
+%install -a
 mv %{buildroot}%{_bindir}/pytest %{buildroot}%{_bindir}/pytest-%{python3_version}
 ln -snf pytest-%{python3_version} %{buildroot}%{_bindir}/pytest-3
 mv %{buildroot}%{_bindir}/py.test %{buildroot}%{_bindir}/py.test-%{python3_version}
@@ -64,4 +61,4 @@ find %{buildroot}%{python3_sitelib} \
 %{_bindir}/py.test-%{python3_version}
 
 %changelog
-%{?autochangelog}
+%autochangelog
