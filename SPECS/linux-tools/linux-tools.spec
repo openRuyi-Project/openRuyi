@@ -6,14 +6,14 @@
 %bcond doc 0
 
 Name:           linux-tools
-Version:        6.18.8
+Version:        7.0.2
 Release:        %autorelease
 Summary:        Set of tools for the Linux kernel
 License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-only
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-#!RemoteAsset
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
+#!RemoteAsset:  sha256:53591a03294527a48ccb0b9e559e922df8a38554745a1206827ca751d2ca7662
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
 
 %if %{with doc}
 BuildRequires:  asciidoc
@@ -145,4 +145,4 @@ find %{buildroot}%{_libdir} -type f -name "*.a" -delete -print
 %{_includedir}/perf/perf_dlfilter.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
