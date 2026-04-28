@@ -20,6 +20,12 @@ repos:
        entry: '^Release:.*(%autorelease|%{autorelease}).*$'
        args: ["--negate"]
        files: \.spec$
+    -  id: check-files-pkgconfig-file
+       name: "check %files pkgconfig files is not *"
+       language: pygrep
+       entry: '^%{(_datadir|_libdir)}/pkgconfig/\*.*'
+       args: []
+       files: \.spec$
     -  id: autochangelog
        name: "check autochangelog macro"
        language: pygrep
