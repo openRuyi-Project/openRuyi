@@ -148,6 +148,7 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_bdev_error.pc
 %{_libdir}/pkgconfig/spdk_bdev_ftl.pc
 %{_libdir}/pkgconfig/spdk_bdev_gpt.pc
+%{_libdir}/pkgconfig/spdk_bdev_iscsi.pc
 %{_libdir}/pkgconfig/spdk_bdev_lvol.pc
 %{_libdir}/pkgconfig/spdk_bdev_malloc.pc
 %{_libdir}/pkgconfig/spdk_bdev_modules.pc
@@ -198,6 +199,8 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_notify.pc
 %{_libdir}/pkgconfig/spdk_nvme.pc
 %{_libdir}/pkgconfig/spdk_nvmf.pc
+%{_libdir}/pkgconfig/spdk_rdma_provider.pc
+%{_libdir}/pkgconfig/spdk_rdma_utils.pc
 %{_libdir}/pkgconfig/spdk_rpc.pc
 %{_libdir}/pkgconfig/spdk_scheduler_dpdk_governor.pc
 %{_libdir}/pkgconfig/spdk_scheduler_dynamic.pc
