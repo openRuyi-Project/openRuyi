@@ -40,7 +40,8 @@ BuildRequires:  python3dist(pydantic)
 BuildRequires:  python3dist(srsly)
 BuildRequires:  python3dist(wasabi)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -62,4 +63,4 @@ models built with their favorite framework.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

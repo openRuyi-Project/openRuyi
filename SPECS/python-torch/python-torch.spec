@@ -207,7 +207,9 @@ Requires:       amdsmi
 %endif
 
 # As convention
-Provides:       pytorch
+Provides:       pytorch = %{version}-%{release}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -564,11 +566,11 @@ export PYTORCH_ROCM_ARCH=%{rocm_gpu_list_default}
 # Not working yet
 
 %files
-%license LICENSE
 %doc README.md
+%license LICENSE
 %{_bindir}/torchrun
 %{python3_sitearch}/%{srcname}*
 %{python3_sitearch}/functorch
 
 %changelog
-%{?autochangelog}
+%autochangelog

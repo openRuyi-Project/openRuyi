@@ -32,8 +32,8 @@ ANSI color formatting for output in terminal.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license COPYING.txt
 %doc README.md
+%license COPYING.txt
 
 %changelog
 %autochangelog

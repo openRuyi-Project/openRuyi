@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A friendly Python library for async concurrency and I/O
 License:        MIT
 URL:            https://github.com/python-trio/trio
-#!RemoteAsset
+#!RemoteAsset:  sha256:f71d551ccaa79d0cb73017a33ef3264fde8335728eb4c6391451fe5d253a9d5b
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ has an obsessive focus on usability and correctness.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

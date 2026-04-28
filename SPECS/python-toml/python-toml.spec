@@ -14,7 +14,7 @@ License:        MIT
 URL:            https://github.com/uiri/toml
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,6 +24,9 @@ BuildOption(install):  -l %{srcname} +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 python-toml is a library for parsing and creating Tom's Obvious, Minimal
 Language (TOML) configuration files.
@@ -32,8 +35,8 @@ Language (TOML) configuration files.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

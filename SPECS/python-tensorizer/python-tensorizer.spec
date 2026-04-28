@@ -32,7 +32,7 @@ BuildRequires:  python3dist(psutil)
 BuildRequires:  python3dist(redis)
 BuildRequires:  python3dist(torch)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,8 +42,8 @@ Module, Model, and Tensor Serialization/Deserialization.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog

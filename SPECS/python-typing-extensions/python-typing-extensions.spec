@@ -4,7 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname typing_extensions
+%global srcname typing-extensions
+%global pypi_name typing_extensions
 
 Name:           python-typing-extensions
 Version:        4.15.0
@@ -12,17 +13,17 @@ Release:        %autorelease
 Summary:        Backported and Experimental Type Hints for Python
 License:        Python-2.0
 URL:            https://github.com/python/typing_extensions
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466
+Source0:        https://files.pythonhosted.org/packages/source/t/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-typing-extensions
+Provides:       python3-typing-extensions = %{version}-%{release}
 %python_provide python3-typing-extensions
 
 %description
@@ -46,4 +47,4 @@ equivalent forms in typing.
 %doc CHANGELOG.md README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
