@@ -14,7 +14,7 @@ on:
   pull_request:
     branches: [main, ci-test]
     paths:
-     - 'SPECS/**'
+     - 'SPECS/**.spec'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-remoteasset
