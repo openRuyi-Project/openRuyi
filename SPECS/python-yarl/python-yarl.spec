@@ -30,7 +30,8 @@ BuildRequires:  python3dist(idna)
 BuildRequires:  python3dist(multidict)
 BuildRequires:  python3dist(propcache)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +44,4 @@ The module provides handy URL class for URL parsing and changing.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog
