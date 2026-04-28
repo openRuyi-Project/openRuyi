@@ -50,6 +50,8 @@ BuildRequires:  fonts-unifont
 BuildRequires:  squashfs-tools
 BuildRequires:  bash-completion
 
+Recommends:     efibootmgr
+
 %description
 The GRand Unified Bootloader (GRUB) is a highly configurable and
 customizable bootloader with modular architecture.  It supports a rich
