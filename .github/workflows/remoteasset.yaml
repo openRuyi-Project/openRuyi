@@ -35,7 +35,7 @@ jobs:
     - name: Find changed remote assets
       id: find-changed
       run: |
-        git diff --name-only HEAD^1...HEAD SPECS/ | grep '.spec$' > changed-files
+        git diff --name-only HEAD^1...HEAD 'SPECS/**/*.spec' > changed-files
 
         touch changed-remoteassets
 
