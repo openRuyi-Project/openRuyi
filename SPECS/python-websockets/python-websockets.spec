@@ -36,8 +36,8 @@ performance.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 %{_bindir}/websockets
 
 %changelog

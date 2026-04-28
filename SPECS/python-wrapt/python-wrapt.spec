@@ -26,7 +26,8 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,19 +47,12 @@ is used for performance critical components. An automatic fallback to a
 pure Python implementation is also provided where a target system does not
 have a compiler to allow the C extension to be compiled.
 
-Documentation
--------------
-
-For further information on the **wrapt** module see:
-
-* http://wrapt.readthedocs.org/
-
 %generate_buildrequires
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

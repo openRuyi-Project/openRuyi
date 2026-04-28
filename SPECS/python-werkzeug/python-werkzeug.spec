@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Comprehensive WSGI web application library
 License:        BSD-3-Clause
 URL:            https://github.com/pallets/werkzeug
-#!RemoteAsset
+#!RemoteAsset:  sha256:60723ce945c19328679790e3282cc758aa4a6040e4bb330f53d30fa546d44746
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ routing system and a bunch of community contributed addon modules.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
