@@ -15,9 +15,19 @@ License:        BSD-3-Clause
 URL:            https://palletsprojects.com/p/jinja/
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d
 Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l jinja2
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pytest)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 Jinja2 is a template engine written in pure Python. It provides a
@@ -30,40 +40,13 @@ both designer and developer friendly by sticking to Python's
 principles and adding functionality useful for templating
 environments.
 
-%package     -n python3-jinja2
-Summary:        %{summary}
-BuildRequires:  python3-devel
-BuildRequires:  python3-pytest
-BuildRequires:  expat
-
-%description -n python3-jinja2
-Jinja2 is a template engine written in pure Python. It provides a
-Django inspired non-XML syntax but supports inline expressions and an
-optional sandboxed environment.
-
-If you have any exposure to other text-based template languages, such
-as Smarty or Django, you should feel right at home with Jinja2. It's
-both designer and developer friendly by sticking to Python's
-principles and adding functionality useful for templating
-environments.
-
-%prep
-%autosetup -p1 -n %{srcname}-%{version}
-
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-
-%install
-%pyproject_install
-%pyproject_save_files jinja2
-
-%files -n python3-jinja2 -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.md
 %doc docs/examples
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

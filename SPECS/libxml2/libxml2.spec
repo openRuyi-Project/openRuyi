@@ -72,7 +72,7 @@ rm -f %{buildroot}%{_docdir}/%{name}/Copyright
 %{_bindir}/xml2-config
 %{_includedir}/libxml*
 %{_libdir}/libxml2.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libxml-2.0.pc
 %{_libdir}/cmake/
 %{_mandir}/man1/xml2-config.1*
 %{_datadir}/gtk-doc/

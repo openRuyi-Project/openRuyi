@@ -6,30 +6,27 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global merged_sbin %["%{_sbindir}" == "%{_bindir}"]
-
 Name:           chkconfig
 Summary:        A system tool for maintaining the /etc/rc*.d hierarchy
 Version:        1.33
 Release:        %autorelease
 License:        GPL-2.0-only
 URL:            https://github.com/fedora-sysv/chkconfig
-#!RemoteAsset
+#!RemoteAsset:  sha256:c973a38d46d75ab2b411ab141e4c320a66dc4cc98832c3f2f6c5999531057861
 Source:         https://github.com/fedora-sysv/chkconfig/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(build):  RPM_OPT_FLAGS="%{build_cflags}"
 BuildOption(build):  LDFLAGS="%{build_ldflags}"
-BuildOption(build):  MERGED_SBIN=%{merged_sbin}
 BuildOption(install):  MANDIR=%{_mandir}
 BuildOption(install):  SBINDIR=%{_sbindir}
 
 BuildRequires:  pkgconfig(libnewt)
 BuildRequires:  pkgconfig(popt)
 BuildRequires:  pkgconfig(libselinux)
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  pkgconfig(systemd)
+BuildRequires:  beakerlib
 
 Provides:       update-alternatives
 Provides:       alternatives
@@ -42,9 +39,6 @@ of the drudgery of manually editing the symbolic links.
 
 # No configure
 %conf
-
-# TODO: enable test when we have beakerlib
-%check
 
 %install -a
 # Avoid illegal package names
@@ -64,4 +58,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

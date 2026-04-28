@@ -12,7 +12,7 @@ Summary:        Hash-based Predictive Lempel–Ziv compressor
 License:        BSD-2-Clause AND GPL-2.0-or-later
 URL:            https://lz4.github.io/lz4/
 VCS:            git:https://github.com/lz4/lz4
-#!RemoteAsset
+#!RemoteAsset:  sha256:537512904744b35e232912055ccf8ec66d768639ff3abe5788d90d792ec5f48b
 Source:         https://github.com/lz4/lz4/releases/download/v%{version}/lz4-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -65,10 +65,10 @@ Static library for the %{name} library
 %files devel
 %{_includedir}/lz4*.h
 %{_libdir}/liblz4.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/liblz4.pc
 
 %files static
 %{_libdir}/liblz4.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

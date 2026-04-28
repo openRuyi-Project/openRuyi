@@ -1,0 +1,95 @@
+from https://codeberg.org/guile/guile/pulls/142
+
+Generate using "git format-patch 6c2cd1832..79f40b106 --stdout --src-prefix=a/libguile/lightening/ --dst-prefix=b/libguile/lightening/"
+
+From 27270d0136fdf0d39e1d765d9d168a2c9768b234 Mon Sep 17 00:00:00 2001
+From: Ekaitz Zarraga <ekaitz@elenq.tech>
+Date: Wed, 25 Mar 2026 14:34:50 +0100
+Subject: [PATCH 1/2] riscv: Fix word sizes in load and store atomic.
+
+* lightening/riscv-cpu.c (ldr_atomic, str_atomic): Add ifdef for 64
+bits.
+(str_i): Rename duplicated prototype to `str_l`.
+---
+ lightening/riscv-cpu.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/libguile/lightening/lightening/riscv-cpu.c b/libguile/lightening/lightening/riscv-cpu.c
+index 101f7395b..a11429438 100644
+--- a/libguile/lightening/lightening/riscv-cpu.c
++++ b/libguile/lightening/lightening/riscv-cpu.c
+@@ -528,7 +528,7 @@ static void str_uc(jit_state_t *_jit, int32_t r0, int32_t r1);
+ static void str_s(jit_state_t *_jit, int32_t r0, int32_t r1);
+ static void str_i(jit_state_t *_jit, int32_t r0, int32_t r1);
+ #if __WORDSIZE == 64
+-static void str_i(jit_state_t *_jit, int32_t r0, int32_t r1);
++static void str_l(jit_state_t *_jit, int32_t r0, int32_t r1);
+ #endif
+ 
+ static void sti_c(jit_state_t *_jit, jit_word_t i0, int32_t r0);
+@@ -2352,7 +2352,11 @@ static void
+ ldr_atomic(jit_state_t *_jit, int32_t dst, int32_t loc)
+ {
+   em_wp(_jit, _FENCE(0xFF));
++#if __WORDSIZE == 64
++  ldr_l(_jit, dst, loc);
++#elif __WORDSIZE == 32
+   ldr_i(_jit, dst, loc);
++#endif
+   em_wp(_jit, _FENCE(0xFF));
+ }
+ 
+@@ -2360,7 +2364,11 @@ static void
+ str_atomic(jit_state_t *_jit, int32_t loc, int32_t val)
+ {
+   em_wp(_jit, _FENCE(0xFF));
++#if __WORDSIZE == 64
++  str_l(_jit, loc, val);
++#elif __WORDSIZE == 32
+   str_i(_jit, loc, val);
++#endif
+   em_wp(_jit, _FENCE(0xFF));
+ }
+ 
+-- 
+2.52.0
+
+
+From 79f40b1062520e019f0121b67e3dda2fe5311c63 Mon Sep 17 00:00:00 2001
+From: Ekaitz Zarraga <ekaitz@elenq.tech>
+Date: Wed, 25 Mar 2026 14:37:56 +0100
+Subject: [PATCH 2/2] riscv: Fix cas_atomic.
+
+* lightening/riscv-cpu.c (cas_atomic): Add fence. Fix argument order in
+store conditional.
+---
+ lightening/riscv-cpu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/libguile/lightening/lightening/riscv-cpu.c b/libguile/lightening/lightening/riscv-cpu.c
+index a11429438..4df0304cf 100644
+--- a/libguile/lightening/lightening/riscv-cpu.c
++++ b/libguile/lightening/lightening/riscv-cpu.c
+@@ -2391,6 +2391,7 @@ cas_atomic(jit_state_t *_jit, int32_t dst, int32_t loc, int32_t expected,
+ 
+   void *retry = jit_address(_jit);
+ 
++  em_wp(_jit, _FENCE(0xFF));
+ #if __WORDSIZE == 64
+   em_wp(_jit, _LR_D(t0, loc, 0,0));
+ #elif __WORDSIZE == 32
+@@ -2400,9 +2401,9 @@ cas_atomic(jit_state_t *_jit, int32_t dst, int32_t loc, int32_t expected,
+   jit_reloc_t fail = bner(_jit, t0, expected);
+ 
+ #if __WORDSIZE == 64
+-  em_wp(_jit, _SC_D(t1, desired, loc, 0,0));
++  em_wp(_jit, _SC_D(t1, loc, desired, 0,0));
+ #elif __WORDSIZE == 32
+-  em_wp(_jit, _SC_W(t1, desired, loc, 0,0));
++  em_wp(_jit, _SC_W(t1, loc, desired, 0,0));
+ #endif
+ 
+   jit_patch_there(_jit, bner(_jit, t1, jit_gpr_regno(_ZERO)), retry);
+-- 
+2.52.0
+

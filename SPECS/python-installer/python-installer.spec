@@ -9,20 +9,23 @@
 Name:           python-%{srcname}
 Version:        0.7.0
 Release:        %autorelease
+Summary:        Installer library for Python wheels
 License:        MIT
 URL:            https://installer.rtfd.io/
-Summary:        Installer library for Python wheels
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
-Source0:       https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  -l %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pytest
-BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 This package provides a low-level library for installing a Python
 package from a wheel distribution.  It provides basic functionality and

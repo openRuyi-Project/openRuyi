@@ -51,7 +51,7 @@ that use the libnetfilter_cthelper library.
 %files devel
 %doc examples
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_cthelper.pc
 %dir %{_includedir}/libnetfilter_cthelper
 %{_includedir}/libnetfilter_cthelper/*.h
 

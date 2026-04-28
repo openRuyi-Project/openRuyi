@@ -1,0 +1,67 @@
+From a1abc3032cd271671ee3aa488725305e45a17724 Mon Sep 17 00:00:00 2001
+From: Richard Lyu <richard.lyu@suse.com>
+Date: Thu, 26 Feb 2026 15:01:54 +0800
+Subject: [PATCH] OvmfPkg/RiscVVirt: Make SecureBootDefaultKeysInit driver
+ configurable
+
+When Secure Boot is enabled, the SecureBootDefaultKeysInit driver is
+not always required. There are alternative methods for enrollment,
+such as EnrollDefaultKeys.efi or virt-firmware. Therefore, make the
+SecureBootDefaultKeysInit driver an optional build component.
+
+Wrap SecureBootDefaultKeysInit.inf with the SECURE_BOOT_DEFAULT_KEYS
+condition, allowing builds to optionally configure the driver.
+
+Signed-off-by: Richard Lyu <richard.lyu@suse.com>
+---
+ OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc | 13 +++++++------
+ OvmfPkg/RiscVVirt/RiscVVirtQemu.fdf |  2 ++
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc b/OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc
+index db2efccab7..d3ae3aff70 100644
+--- a/OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc
++++ b/OvmfPkg/RiscVVirt/RiscVVirtQemu.dsc
+@@ -35,12 +35,13 @@
+   # Defines for default states.  These can be changed on the command line.
+   # -D FLAG=VALUE
+   #
+-  DEFINE TTY_TERMINAL            = FALSE
+-  DEFINE SECURE_BOOT_ENABLE      = FALSE
+-  DEFINE QEMU_PV_VARS            = FALSE
+-  DEFINE TPM2_ENABLE             = FALSE
+-  DEFINE TPM2_CONFIG_ENABLE      = FALSE
+-  DEFINE DEBUG_ON_SERIAL_PORT    = TRUE
++  DEFINE TTY_TERMINAL             = FALSE
++  DEFINE SECURE_BOOT_ENABLE       = FALSE
++  DEFINE SECURE_BOOT_DEFAULT_KEYS = FALSE
++  DEFINE QEMU_PV_VARS             = FALSE
++  DEFINE TPM2_ENABLE              = FALSE
++  DEFINE TPM2_CONFIG_ENABLE       = FALSE
++  DEFINE DEBUG_ON_SERIAL_PORT     = TRUE
+ 
+   #
+   # Shell can be useful for debugging but should not be enabled for production
+diff --git a/OvmfPkg/RiscVVirt/RiscVVirtQemu.fdf b/OvmfPkg/RiscVVirt/RiscVVirtQemu.fdf
+index eebab647fa..cd3f768ae9 100644
+--- a/OvmfPkg/RiscVVirt/RiscVVirtQemu.fdf
++++ b/OvmfPkg/RiscVVirt/RiscVVirtQemu.fdf
+@@ -89,6 +89,7 @@ INF  MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
+ !endif
+ !if $(SECURE_BOOT_ENABLE) == TRUE
+   INF  SecurityPkg/VariableAuthenticated/SecureBootConfigDxe/SecureBootConfigDxe.inf
++  !if $(SECURE_BOOT_DEFAULT_KEYS) == TRUE
+   INF  OvmfPkg/RiscVVirt/Feature/SecureBoot/SecureBootDefaultKeysInit/SecureBootDefaultKeysInit.inf
+ 
+   FILE FREEFORM = 85254ea7-4759-4fc4-82d4-5eed5fb0a4a0 {
+@@ -107,6 +108,7 @@ INF  MdeModulePkg/Universal/FaultTolerantWriteDxe/FaultTolerantWriteDxe.inf
+   FILE FREEFORM = 5740766a-718e-4dc0-9935-c36f7d3f884f {
+     SECTION RAW = OvmfPkg/RiscVVirt/Feature/SecureBoot/SecureBootKeys/dbx/dbxupdate_x64.bin
+   }
++  !endif
+ !endif
+ INF  MdeModulePkg/Universal/MonotonicCounterRuntimeDxe/MonotonicCounterRuntimeDxe.inf
+ INF  MdeModulePkg/Universal/ResetSystemRuntimeDxe/ResetSystemRuntimeDxe.inf
+-- 
+2.47.3
+

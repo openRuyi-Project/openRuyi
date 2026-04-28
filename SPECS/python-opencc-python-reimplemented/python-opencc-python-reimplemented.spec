@@ -15,6 +15,7 @@ License:        Apache-2.0
 URL:            https://github.com/yichen0831/opencc-python
 #!RemoteAsset:  sha256:4f777ea3461a25257a7b876112cfa90bb6acabc6dfb843bf4d11266e43579dee
 Source0:        https://files.pythonhosted.org/packages/source/o/%{packagename}/%{packagename}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

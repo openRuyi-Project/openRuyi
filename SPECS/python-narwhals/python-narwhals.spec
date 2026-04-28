@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/narwhals-dev/narwhals
 #!RemoteAsset:  sha256:a9585975b99d95084268445a1fdd881311fa26ef1caa18020d959d5b2ff9a965
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

@@ -90,7 +90,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/enchant-2
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/enchant-2.pc
 
 %changelog
 %{?autochangelog}

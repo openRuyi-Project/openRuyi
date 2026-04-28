@@ -13,7 +13,7 @@ Version:        17.0
 Release:        %autorelease
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.freedesktop.org/pulseaudio/pulseaudio
-#!RemoteAsset
+#!RemoteAsset:  sha256:053794d6671a3e397d849e478a80b82a63cb9d8ca296bd35b73317bb5ceb87b5
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
 Source1:        pulseaudio.sysusers
 BuildSystem:    meson
@@ -189,7 +189,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libpulse.so
 %{_libdir}/libpulse-mainloop-glib.so
 %{_libdir}/libpulse-simple.so
-%{_libdir}/pkgconfig/libpulse*.pc
+%{_libdir}/pkgconfig/libpulse-mainloop-glib.pc
+%{_libdir}/pkgconfig/libpulse-simple.pc
+%{_libdir}/pkgconfig/libpulse.pc
 %dir %{_datadir}/vala
 %dir %{_datadir}/vala/vapi
 %{_datadir}/vala/vapi/libpulse*.vapi
@@ -197,4 +199,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/cmake/PulseAudio/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -57,8 +57,8 @@ export PYTHON_VERSION="3"
 %{_mandir}/man1/plistutil.*
 
 %files devel
-%{_libdir}/pkgconfig/libplist-*.pc
-%{_libdir}/pkgconfig/libplist++-*.pc
+%{_libdir}/pkgconfig/libplist-2.0.pc
+%{_libdir}/pkgconfig/libplist++-2.0.pc
 %{_libdir}/libplist-*.so
 %{_libdir}/libplist++-*.so
 %{_includedir}/plist

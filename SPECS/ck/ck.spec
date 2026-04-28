@@ -14,6 +14,9 @@ URL:            https://github.com/concurrencykit/ck
 Source0:        https://github.com/concurrencykit/ck/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
+# 4+ CORES take quite long, so we limit it to 4.
+BuildOption(check):  CORES=4
+
 BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  sed
@@ -41,8 +44,11 @@ export CFLAGS="%{optflags}"
 %install -a
 rm -f %{buildroot}%{_libdir}/libck.a
 
-%check
-# TODO: skip tests for now.
+%ifarch riscv64
+%check -p
+# epoch test ends up in a very long/infinite loop on riscv64, so we skip it.
+sed -e '/^\s*epoch\s/ d' -i regressions/Makefile
+%endif
 
 %files
 %license LICENSE
@@ -55,4 +61,4 @@ rm -f %{buildroot}%{_libdir}/libck.a
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

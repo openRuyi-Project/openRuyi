@@ -140,7 +140,7 @@
 %bcond have_usb 0
 
 # All modules should be listed here.
-%bcond have_block_rbd 0
+%bcond have_block_rbd 1
 
 # Not supported on x86_64 and riscv64
 %bcond have_block_iscsi 0
@@ -233,7 +233,7 @@ BuildRequires:  pkgconfig(libseccomp)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(libssh)
 %if %{with have_block_rbd}
-BuildRequires:  librbd-devel
+BuildRequires:  ceph-devel
 %endif
 
 %if %{with have_systemtap}
@@ -1906,4 +1906,4 @@ popd
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

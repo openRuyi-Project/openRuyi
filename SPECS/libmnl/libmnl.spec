@@ -44,7 +44,7 @@ developing applications that use libmnl.
 %doc examples
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libmnl.pc
 
 %changelog
 %{?autochangelog}

@@ -13,7 +13,7 @@ Summary:        The GNU disk partition manipulation program
 License:        GPLv3+
 URL:            https://www.gnu.org/software/parted/
 VCS:            git:https://https.git.savannah.gnu.org/git/parted.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:3b43dbe33cca0f9a18601ebab56b7852b128ec1a3df3a9b30ccde5e73359e612
 Source0:        https://ftpmirror.gnu.org/gnu/parted/parted-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -71,7 +71,8 @@ autoreconf -fiv
 %files devel
 %{_includedir}/parted
 %{_libdir}/libparted*.so
-%{_libdir}/pkgconfig/libparted*.pc
+%{_libdir}/pkgconfig/libparted-fs-resize.pc
+%{_libdir}/pkgconfig/libparted.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

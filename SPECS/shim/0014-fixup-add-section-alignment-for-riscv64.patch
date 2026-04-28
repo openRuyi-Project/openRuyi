@@ -1,0 +1,25 @@
+From 4290de9b1c76caaa2b6294365045d8b4f468aa3f Mon Sep 17 00:00:00 2001
+From: Andrea Bolognani <abologna@redhat.com>
+Date: Tue, 31 Mar 2026 14:20:38 +0200
+Subject: [PATCH 14/19] fixup! add section alignment for riscv64
+
+Signed-off-by: Andrea Bolognani <abologna@redhat.com>
+---
+ Make.defaults | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Make.defaults b/Make.defaults
+index 931fbc8..32ad1bb 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -105,6 +105,7 @@ ifeq ($(ARCH),riscv64)
+ 	ARCH_GNUEFI		?= riscv64
+ 	ARCH_SUFFIX		?= riscv64
+ 	ARCH_SUFFIX_UPPER	?= RISCV64
++	ARCH_SECTION_ALIGNMENT	?= 0x1000
+ endif
+ 
+ DEFINES		= -DDEFAULT_LOADER='L"$(DEFAULT_LOADER)"' \
+-- 
+2.47.3
+

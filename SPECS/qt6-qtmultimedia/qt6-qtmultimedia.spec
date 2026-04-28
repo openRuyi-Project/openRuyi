@@ -18,7 +18,7 @@ Summary:        Qt6 - Multimedia support
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtmultimedia.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:f7a4f9bc2840d4f0f9f7329f0dcb3d3500c54177b8e368091a3727c7320e67b8
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -146,10 +146,12 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Multimedia.pc
+%{_qt6_libdir}/pkgconfig/Qt6MultimediaWidgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6SpatialAudio.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

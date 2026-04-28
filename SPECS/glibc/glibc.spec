@@ -29,7 +29,6 @@ Release:        %autorelease
 URL:            https://www.gnu.org/software/libc/libc.html
 #!RemoteAsset:  sha256:d9c86c6b5dbddb43a3e08270c5844fc5177d19442cf5b8df4be7c07cd5fa3831
 Source0:        https://ftpmirror.gnu.org/gnu/glibc/glibc-%{version}.tar.xz
-Source1:        nsswitch.conf
 %if %{with nscd}
 Source2:        nscd.tmpfiles
 Source3:        nscd.service
@@ -283,8 +282,6 @@ cd ..
 
 %find_lang libc --generate-subpackages
 
-install -m 644 %{SOURCE1} %{buildroot}/etc/nsswitch.conf
-
 %if %{with nscd}
 cp nscd/nscd.conf %{buildroot}/etc
 mkdir -p %{buildroot}/run/nscd
@@ -403,7 +400,6 @@ rpm.spawn({"%{_sbindir}/ldconfig"})
 %config(noreplace) /etc/ld.so.conf
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/ld.so.cache
 %config(noreplace) /etc/rpc
-%verify(not md5 size mtime) %config(noreplace) /etc/nsswitch.conf
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /etc/gai.conf
 %doc posix/gai.conf
 %{_bindir}/ld.so

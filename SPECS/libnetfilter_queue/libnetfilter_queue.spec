@@ -50,7 +50,7 @@ that use the libnetfilter_queue library.
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_queue.pc
 %{_includedir}/libnetfilter_queue/*.h
 
 %changelog

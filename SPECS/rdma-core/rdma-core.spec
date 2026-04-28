@@ -15,8 +15,8 @@ Release:        %autorelease
 Summary:        RDMA core userspace libraries and daemons
 License:        BSD-2-Clause OR GPL-2.0-only
 URL:            https://github.com/linux-rdma/rdma-core
-#!RemoteAsset
-Source:         https://github.com/linux-rdma/rdma-core/archive/v%{version}/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:aa9ca1f5a9e356f770441f52254ddc70ff0a4df76a25383e422075eb730efb4b
+Source:         https://github.com/linux-rdma/rdma-core/archive/v%{version}/rdma-core-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DCMAKE_MODULE_LINKER_FLAGS="-Wl,--as-needed -Wl,-z,now"
@@ -356,7 +356,16 @@ rm -rf %{buildroot}/%{_sbindir}/srp_daemon.sh
 %{_includedir}/infiniband/*
 %{_includedir}/rdma/*
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libefa.pc
+%{_libdir}/pkgconfig/libhns.pc
+%{_libdir}/pkgconfig/libibmad.pc
+%{_libdir}/pkgconfig/libibnetdisc.pc
+%{_libdir}/pkgconfig/libibumad.pc
+%{_libdir}/pkgconfig/libibverbs.pc
+%{_libdir}/pkgconfig/libmana.pc
+%{_libdir}/pkgconfig/libmlx4.pc
+%{_libdir}/pkgconfig/libmlx5.pc
+%{_libdir}/pkgconfig/librdmacm.pc
 
 %files -n libibverbs-utils
 %{_bindir}/ibv_*
@@ -462,4 +471,4 @@ rm -rf %{buildroot}/%{_sbindir}/srp_daemon.sh
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

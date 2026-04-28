@@ -177,7 +177,8 @@ find %{buildroot} -name "*.a" -delete
 %{_libdir}/cmake/FreeRDP-Proxy3/
 %{_libdir}/cmake/FreeRDP-Server3/
 %{_libdir}/cmake/FreeRDP-Shadow3/
-%{_libdir}/pkgconfig/freerdp-server*.pc
+%{_libdir}/pkgconfig/freerdp-server-proxy3.pc
+%{_libdir}/pkgconfig/freerdp-server3.pc
 %{_libdir}/pkgconfig/freerdp-shadow3.pc
 %{_libdir}/libfreerdp-server*.so
 %{_libdir}/libfreerdp-shadow*.so

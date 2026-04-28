@@ -16,7 +16,7 @@ Summary:        Qt6 - Qt Data Visualization component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtdatavis3d
-#!RemoteAsset
+#!RemoteAsset:  sha256:601c7cfafd6ae525258fe5bc0f759c67237a0aa61f91fb71db2a9c5eaa50bb07
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -79,10 +79,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*
 %{_qt6_datadir}/modules/*.json
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6DataVisualization.pc
+%{_qt6_libdir}/pkgconfig/Qt6DataVisualizationQml.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

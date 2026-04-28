@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %files devel
 %{_includedir}/pwquality.h
 %{_libdir}/libpwquality.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/pwquality.pc
 %{_mandir}/man3/*
 
 %files -n python-pwquality

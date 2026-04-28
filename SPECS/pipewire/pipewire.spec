@@ -23,27 +23,28 @@ BuildOption(conf):  -Ddocs=enabled
 BuildOption(conf):  -Dman=enabled
 BuildOption(conf):  -Dgstreamer=enabled
 BuildOption(conf):  -Dsystemd-user-service=enabled
-BuildOption(conf):  -Dsdl2=disabled
-BuildOption(conf):  -Daudiotestsrc=disabled
-BuildOption(conf):  -Dvideotestsrc=disabled
-BuildOption(conf):  -Dvolume=disabled
+BuildOption(conf):  -Dsdl2=enabled
+BuildOption(conf):  -Daudiotestsrc=enabled
+BuildOption(conf):  -Dvideotestsrc=enabled
+BuildOption(conf):  -Dvolume=enabled
 BuildOption(conf):  -Dbluez5-codec-aptx=disabled
 BuildOption(conf):  -Dbluez5-codec-lc3plus=disabled
 BuildOption(conf):  -Dbluez5-codec-lc3=enabled
 BuildOption(conf):  -Dsession-managers=[]
-BuildOption(conf):  -Davahi=disabled
-BuildOption(conf):  -Dx11=disabled
+BuildOption(conf):  -Davahi=enabled
+BuildOption(conf):  -Dx11=enabled
 BuildOption(conf):  -Dx11-xfixes=disabled
-BuildOption(conf):  -Dlibcanberra=disabled
-BuildOption(conf):  -Dgstreamer-device-provider=disabled
+BuildOption(conf):  -Dlibcanberra=enabled
+BuildOption(conf):  -Dgstreamer-device-provider=enabled
 BuildOption(conf):  -Decho-cancel-webrtc=disabled
 BuildOption(conf):  -Dbluez5=disabled
 BuildOption(conf):  -Dsnap=disabled
 BuildOption(conf):  -Decho-cancel-webrtc=disabled
 BuildOption(conf):  -Debur128=disabled
 BuildOption(conf):  -Donnxruntime=disabled
-BuildOption(conf):  -Dpipewire-jack=disabled -Djack-devel=false
-BuildOption(conf):  -Djack=disabled
+BuildOption(conf):  -Dpipewire-jack=enabled
+BuildOption(conf):  -Djack-devel=false
+BuildOption(conf):  -Djack=enabled
 BuildOption(conf):  -Dlibcamera=disabled
 BuildOption(conf):  -Dpipewire-alsa=enabled
 BuildOption(conf):  -Dvulkan=enabled
@@ -84,6 +85,10 @@ BuildRequires:  python3-docutils
 BuildRequires:  graphviz
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(vulkan)
+BuildRequires:  pkgconfig(jack)
+BuildRequires:  pkgconfig(avahi-core)
+BuildRequires:  pkgconfig(sdl2)
+BuildRequires:  pkgconfig(libcanberra)
 
 Requires:       systemd
 Requires:       rtkit
@@ -160,6 +165,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_sysusersdir}/pipewire.conf
 # libs
 %{_libdir}/libpipewire-%{apiversion}.so.*
+%{_libdir}/pipewire-%{apiversion}/jack/libjack*.so.*
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-access.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-adapter.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-avb.so
@@ -194,6 +200,13 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-spa-node.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-vban-send.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-vban-recv.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-jack-tunnel.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-jackdbus-detect.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-raop-discover.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-rtp-session.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-snapcast-discover.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-x11-bell.so
+%{_libdir}/pipewire-%{apiversion}/libpipewire-module-zeroconf-discover.so
 %dir %{_datadir}/alsa-card-profile/
 %dir %{_datadir}/alsa-card-profile/mixer/
 %{_datadir}/alsa-card-profile/mixer/paths/
@@ -206,9 +219,13 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/spa-%{spaversion}/audiomixer/
 %{_libdir}/spa-%{spaversion}/avb/
 %{_libdir}/spa-%{spaversion}/control/
+%{_libdir}/spa-%{spaversion}/audiotestsrc/
+%{_libdir}/spa-%{spaversion}/videotestsrc/
+%{_libdir}/spa-%{spaversion}/volume/
 %{_libdir}/spa-%{spaversion}/filter-graph/libspa-filter-graph.so
 %{_libdir}/spa-%{spaversion}/filter-graph/libspa-filter-graph-plugin-builtin.so
 %{_libdir}/spa-%{spaversion}/filter-graph/libspa-filter-graph-plugin-ladspa.so
+%{_libdir}/spa-%{spaversion}/jack/libspa-jack.so
 %{_libdir}/spa-%{spaversion}/support/
 %{_libdir}/spa-%{spaversion}/v4l2/
 %{_libdir}/spa-%{spaversion}/videoconvert/
@@ -222,6 +239,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/doc/pipewire/html
 # utils
 %{_bindir}/pw-cat
+%{_bindir}/pw-jack
 %{_bindir}/pw-cli
 %{_bindir}/pw-config
 %{_bindir}/pw-container
@@ -279,6 +297,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libpipewire-%{apiversion}.so
 %{_includedir}/pipewire-%{apiversion}/
 %{_includedir}/spa-%{spaversion}/
+%{_libdir}/pipewire-%{apiversion}/jack/libjack.so
+%{_libdir}/pipewire-%{apiversion}/jack/libjacknet.so
+%{_libdir}/pipewire-%{apiversion}/jack/libjackserver.so
 %{_libdir}/pkgconfig/libpipewire-%{apiversion}.pc
 %{_libdir}/pkgconfig/libspa-%{spaversion}.pc
 

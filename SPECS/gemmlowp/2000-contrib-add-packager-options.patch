@@ -1,0 +1,52 @@
+--- a/contrib/CMakeLists.txt
++++ b/contrib/CMakeLists.txt
+@@ -10,6 +10,9 @@
+ include(CTest) # option(BUILD_TESTING). ON by default.
+ include(GNUInstallDirs)
+ 
++option(GEMMLOWP_INSTALL_LEGACY_EIGHT_BIT_INT_GEMM
++       "Install the deprecated eight_bit_int_gemm target and headers" ON)
++
+ # Set C++11 as default standard
+ set(CMAKE_CXX_STANDARD 11)
+ 
+@@ -59,9 +62,15 @@
+ target_include_directories(gemmlowp INTERFACE
+     $<BUILD_INTERFACE:${gemmlowp_src}>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp>)
+-target_link_libraries(gemmlowp INTERFACE eight_bit_int_gemm)
++if(GEMMLOWP_INSTALL_LEGACY_EIGHT_BIT_INT_GEMM)
++  target_link_libraries(gemmlowp INTERFACE eight_bit_int_gemm)
++else()
++  target_link_libraries(gemmlowp INTERFACE $<BUILD_INTERFACE:eight_bit_int_gemm>)
++endif()
+ 
+-install(FILES ${eight_bit_int_gemm_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/eight_bit_int_gemm)
++if(GEMMLOWP_INSTALL_LEGACY_EIGHT_BIT_INT_GEMM)
++  install(FILES ${eight_bit_int_gemm_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/eight_bit_int_gemm)
++endif()
+ file(GLOB meta_headers "${gemmlowp_src}/meta/*.h")
+ install(FILES ${meta_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/meta)
+ file(GLOB public_headers "${gemmlowp_src}/public/*.h")
+@@ -73,11 +82,16 @@
+ file(GLOB fixedpoint_headers "${gemmlowp_src}/fixedpoint/*.h")
+ install(FILES ${fixedpoint_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gemmlowp/fixedpoint)
+ 
+-install(TARGETS gemmlowp eight_bit_int_gemm
+-        EXPORT  gemmlowp-config # support find_package(gemmlowp CONFIG)
+-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++if(GEMMLOWP_INSTALL_LEGACY_EIGHT_BIT_INT_GEMM)
++  install(TARGETS gemmlowp eight_bit_int_gemm
++          EXPORT  gemmlowp-config # support find_package(gemmlowp CONFIG)
++          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
++else()
++  install(TARGETS gemmlowp
++          EXPORT  gemmlowp-config)
++endif()
+ 
+ install(EXPORT  gemmlowp-config  # export gemmlowp::gemmlowp
+         NAMESPACE gemmlowp::     #        gemmlowp::eight_bit_int_gemm

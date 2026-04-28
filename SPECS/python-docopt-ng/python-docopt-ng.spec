@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        0.9.0
 Release:        %autorelease
+Summary:        Jazzband-maintained fork of docopt, the humane command line arguments parser.
 License:        MIT
 URL:            https://github.com/jazzband/docopt-ng
-Summary:        Jazzband-maintained fork of docopt, the humane command line arguments parser.
+#!RemoteAsset
+Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/docopt_ng-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  docopt +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
-#!RemoteAsset
-Source0:       https://files.pythonhosted.org/packages/source/d/%{srcname}/docopt_ng-%{version}.tar.gz
-BuildArch:      noarch
 
-BuildRequires:  python3-devel
-BuildSystem:    pyproject
-BuildOption(install): docopt +auto
 %description
 This library allows the user to define a command-line
 interface from a program's help message rather than specifying it
@@ -33,5 +37,6 @@ programmatically with command-line parsers like @code{getopt} and
 %files -f %{pyproject_files}
 %doc README*
 %license LICENSE-MIT
+
 %changelog
 %{?autochangelog}

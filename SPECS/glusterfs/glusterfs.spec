@@ -157,7 +157,8 @@ rm -f "%{buildroot}/etc/bash_completion.d/gluster.bash"
 %{_libdir}/libgfrpc.so
 %{_libdir}/libgfxdr.so
 %{_libdir}/libglusterfs.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/glusterfs-api.pc
+%{_libdir}/pkgconfig/libgfchangelog.pc
 
 %changelog
 %{?autochangelog}

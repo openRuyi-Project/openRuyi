@@ -16,7 +16,7 @@ Summary:        Qt6 - Positioning component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtpositioning
-#!RemoteAsset
+#!RemoteAsset:  sha256:abb311ef1bd6e39f090d22480e265d13f8537d2e2f4c88f22d6519547f46be23
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -95,10 +95,11 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Positioning.pc
+%{_qt6_libdir}/pkgconfig/Qt6PositioningQuick.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

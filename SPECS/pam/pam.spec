@@ -22,23 +22,16 @@ Summary:        An extensible library which provides authentication for applicat
 License:        BSD-3-Clause AND GPL-2.0-or-later
 URL:            http://www.linux-pam.org/
 VCS:            git:https://github.com/linux-pam/linux-pam
-#!RemoteAsset
+#!RemoteAsset:  sha256:21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0
 Source0:        https://github.com/linux-pam/linux-pam/releases/download/v%{version}/Linux-PAM-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:6971f4793e38f01c644de0da24f4ab2c2afb934b02b7c273fa1e53b859d36529
 Source1:        https://github.com/linux-pam/linux-pam/releases/download/v%{version}/Linux-PAM-%{version}.tar.xz.asc
 # Macros for us
 Source2:        macros.pam
 Source3:        pam.conf
 # Other essential files
 Source4:        other.pamd
-Source5:        common-auth.pamd
-Source6:        common-account.pamd
-Source7:        common-password.pamd
-Source8:        common-session.pamd
-Source9:        common-session-nonlogin.pamd
-Source10:       su.pamd
-Source11:       system-auth.pamd
-Source12:       password-auth.pamd
+Source5:        su.pamd
 BuildSystem:    meson
 
 # Backport upstream fixes
@@ -93,7 +86,7 @@ BuildRequires:  meson
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig
 
-Requires:       setup
+Requires:       openruyi-authselect-profiles
 
 %description
 PAM (Pluggable Authentication Modules) is a system security tool that
@@ -146,14 +139,7 @@ rm -rf %{buildroot}%{_datadir}/doc/Linux-PAM
 install -d -m 755 %{buildroot}%{_pam_confdir}
 install -d -m 755 %{buildroot}%{_pam_vendordir}
 install -m 644 %{SOURCE4} %{buildroot}%{_pam_confdir}/other
-install -m 644 %{SOURCE5} %{buildroot}%{_pam_confdir}/common-auth
-install -m 644 %{SOURCE6} %{buildroot}%{_pam_confdir}/common-account
-install -m 644 %{SOURCE7} %{buildroot}%{_pam_confdir}/common-password
-install -m 644 %{SOURCE8} %{buildroot}%{_pam_confdir}/common-session
-install -m 644 %{SOURCE9} %{buildroot}%{_pam_confdir}/common-session-nonlogin
-install -m 644 %{SOURCE10} %{buildroot}%{_pam_confdir}/su
-install -m 644 %{SOURCE11} %{buildroot}%{_pam_confdir}/system-auth
-install -m 644 %{SOURCE12} %{buildroot}%{_pam_confdir}/password-auth
+install -m 644 %{SOURCE5} %{buildroot}%{_pam_confdir}/su
 
 for phase in auth acct passwd session ; do
   ln -sf pam_unix.so %{buildroot}%{_pam_moduledir}/pam_unix_${phase}.so
@@ -216,14 +202,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %dir %{_pam_confdir}
 %dir %{_pam_vendordir}
 %config(noreplace) %{_pam_confdir}/other
-%config(noreplace) %{_pam_confdir}/common-auth
-%config(noreplace) %{_pam_confdir}/common-account
-%config(noreplace) %{_pam_confdir}/common-password
-%config(noreplace) %{_pam_confdir}/common-session
-%config(noreplace) %{_pam_confdir}/common-session-nonlogin
 %config(noreplace) %{_pam_confdir}/su
-%config(noreplace) %{_pam_confdir}/system-auth
-%config(noreplace) %{_pam_confdir}/password-auth
 %{_rpmconfigdir}/macros.d/macros.%{name}
 %{_sbindir}/pam_namespace_helper
 %{_sbindir}/faillock
@@ -329,4 +308,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

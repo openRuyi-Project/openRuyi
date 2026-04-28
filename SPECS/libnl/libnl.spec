@@ -104,7 +104,13 @@ popd
 %files devel
 %{_includedir}/libnl3/
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnl-3.0.pc
+%{_libdir}/pkgconfig/libnl-cli-3.0.pc
+%{_libdir}/pkgconfig/libnl-genl-3.0.pc
+%{_libdir}/pkgconfig/libnl-idiag-3.0.pc
+%{_libdir}/pkgconfig/libnl-nf-3.0.pc
+%{_libdir}/pkgconfig/libnl-route-3.0.pc
+%{_libdir}/pkgconfig/libnl-xfrm-3.0.pc
 
 %changelog
 %{?autochangelog}

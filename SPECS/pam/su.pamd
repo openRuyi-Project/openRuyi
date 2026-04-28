@@ -1,10 +1,12 @@
 #%PAM-1.0
+# Keep su self-contained so buildroots can bootstrap before authselect
+# generates the managed PAM stack.
 auth     sufficient   pam_rootok.so
 auth     required     pam_env.so
-auth     sufficient   pam_unix.so try_first_pass nullok
+auth     sufficient   pam_unix.so try_first_pass
 auth     required     pam_deny.so
 
 account  required     pam_unix.so
 
-session  required     pam_unix.so
 session  optional     pam_xauth.so
+session  required     pam_unix.so

@@ -12,8 +12,8 @@ Summary:        Userspace RCU (read-copy-update) library
 License:        LGPL-2.1-or-later
 URL:            https://liburcu.org/
 VCS:            git:https://git.liburcu.org/userspace-rcu.git
-#!RemoteAsset
-Source:         https://lttng.org/files/urcu/%{name}-%{version}.tar.bz2
+#!RemoteAsset:  sha256:26687ec84e3e114759454c884a08abeaf79dec09b041895ddf4c45ec150acb6d
+Source:         https://lttng.org/files/urcu/userspace-rcu-%{version}.tar.bz2
 BuildSystem:    autotools
 
 BuildRequires:  pkgconfig
@@ -49,7 +49,12 @@ autoreconf -vif
 %{_includedir}/urcu*
 %{_libdir}/lib*.so
 %{_libdir}/lib*.a
-%{_libdir}/pkgconfig/liburcu*.pc
+%{_libdir}/pkgconfig/liburcu-bp.pc
+%{_libdir}/pkgconfig/liburcu-cds.pc
+%{_libdir}/pkgconfig/liburcu-mb.pc
+%{_libdir}/pkgconfig/liburcu-memb.pc
+%{_libdir}/pkgconfig/liburcu-qsbr.pc
+%{_libdir}/pkgconfig/liburcu.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

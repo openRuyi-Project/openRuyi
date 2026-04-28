@@ -8,12 +8,12 @@
 %global default_terminfo foot
 
 Name:           foot
-Version:        1.25.0
+Version:        1.26.1
 Release:        %autorelease
 Summary:        Fast, lightweight and minimalistic Wayland terminal emulator
 License:        MIT AND CC-BY-SA-4.0
 URL:            https://codeberg.org/dnkl/foot
-#!RemoteAsset:  sha256:6572595658c81dde9dd1697a475fceaa2e46fbe8989bed989822643578a2ebe2
+#!RemoteAsset:  sha256:4beb43f2d80719f53eb427f2185d43fe65bb82a763e25b3b1fe088d8947c2d73
 Source0:        https://codeberg.org/dnkl/foot/releases/download/%{version}/foot-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -42,9 +42,6 @@ Requires:       hicolor-icon-theme
 
 %description
 Fast, lightweight and minimalistic Wayland terminal emulator.
-
-%install -a
-install -D -pv -m0644 -t %{buildroot}%{_metainfodir} org.codeberg.dnkl.foot.metainfo.xml
 
 %post
 %systemd_user_post %{name}-server.{service,socket}

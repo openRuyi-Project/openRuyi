@@ -20,8 +20,8 @@ Summary:        Bandwidth test for ROCm
 # License mismatch
 # https://github.com/ROCm/rocm_bandwidth_test/issues/127
 License:        NCSA AND MIT
-#!RemoteAsset
 URL:            https://github.com/ROCm/rocm_bandwidth_test
+#!RemoteAsset:  sha256:70cd7918dd07564241576e4ae8a4c5d007f87aa3d93589baded49022dc2cf27b
 Source0:        %{url}/archive/rocm-%{version}.tar.gz
 # From base_test.cpp
 Source1:        LICENSE.NCSA.txt
@@ -71,4 +71,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocm-bandwidth-test/LICENSE.txt
 %{_bindir}/rocm-bandwidth-test
 
 %changelog
-%{?autochangelog}
+%autochangelog

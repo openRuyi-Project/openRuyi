@@ -16,7 +16,7 @@ Summary:        Qt6 - QuickTimeline plugin
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquicktimeline
-#!RemoteAsset
+#!RemoteAsset:  sha256:882ed289b4c229ace324e2545a71d7611c201626bc007d50e514bfd2f6e251b7
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -63,7 +63,8 @@ Development files for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickTimeline.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickTimelineBlendTrees.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

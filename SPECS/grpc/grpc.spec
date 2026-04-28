@@ -112,7 +112,12 @@ rm -Rf %{buildroot}%{_datadir}/grpc/*.pem
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gpr.pc
+%{_libdir}/pkgconfig/grpc++.pc
+%{_libdir}/pkgconfig/grpc++_unsecure.pc
+%{_libdir}/pkgconfig/grpc.pc
+%{_libdir}/pkgconfig/grpc_unsecure.pc
+%{_libdir}/pkgconfig/grpcpp_otel_plugin.pc
 %dir %{_libdir}/cmake
 %{_libdir}/cmake/grpc/
 

@@ -50,7 +50,7 @@ autoreconf -fiv
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_conntrack.pc
 %dir %{_includedir}/libnetfilter_conntrack
 %{_includedir}/libnetfilter_conntrack/*.h
 

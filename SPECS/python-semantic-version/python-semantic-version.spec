@@ -21,11 +21,12 @@ BuildSystem:    pyproject
 BuildOption(install):  -l %{srcname}
 # skip the tests as we have no django yet.
 BuildOption(check):  -e semantic_version.django_fields
+
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 
 # We provide these for compatibility
 Provides:       python3-%{srcname}

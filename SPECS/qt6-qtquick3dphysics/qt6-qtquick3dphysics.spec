@@ -16,7 +16,7 @@ Summary:        Qt6 - Quick3D Physics Libraries and utilities
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquick3dphysics
-#!RemoteAsset
+#!RemoteAsset:  sha256:d973847df1be6ee711e771df923537fb62fcac5bf57100f2ebc6f7742c8d2fee
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -82,10 +82,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DPhysics.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DPhysicsHelpers.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

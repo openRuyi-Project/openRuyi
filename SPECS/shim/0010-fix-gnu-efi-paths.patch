@@ -1,0 +1,78 @@
+From 6a980e286a28fb004a5aacfd1a20bbcfe4573f4b Mon Sep 17 00:00:00 2001
+From: Callum Farmer <gmbr3@opensuse.org>
+Date: Mon, 13 Jan 2025 15:23:03 +0000
+Subject: [PATCH 10/19] fix gnu-efi paths
+
+Signed-off-by: Callum Farmer <gmbr3@opensuse.org>
+---
+ Make.defaults | 6 +++---
+ Makefile      | 8 +++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/Make.defaults b/Make.defaults
+index afbf44d..b9c3f4a 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -160,8 +160,8 @@ endif
+ LIB_GCC		= $(shell $(CC) $(ARCH_CFLAGS) -print-libgcc-file-name)
+ EFI_LIBS	= -lefi -lgnuefi --start-group Cryptlib/libcryptlib.a Cryptlib/OpenSSL/libopenssl.a --end-group $(LIB_GCC)
+ FORMAT		?= --output-target efi-app-$(ARCH)
+-LOCAL_EFI_PATH	= gnu-efi/$(ARCH_GNUEFI)/gnuefi
+-LIBDIR		= gnu-efi/$(ARCH_GNUEFI)/lib
++LOCAL_EFI_PATH	= $(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/gnuefi
++LIBDIR		= $(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/lib
+ 
+ MMSTEM		?= mm$(ARCH_SUFFIX)
+ MMNAME		= $(MMSTEM).efi
+@@ -192,7 +192,7 @@ ifneq ($(origin SBAT_AUTOMATIC_DATE), undefined)
+ DEFINES		+= -DSBAT_AUTOMATIC_DATE=$(SBAT_AUTOMATIC_DATE)
+ endif
+ 
+-LDFLAGS		= --hash-style=sysv -nostdlib -znocombreloc -T $(EFI_LDS) -shared -Bsymbolic -L$(LOCAL_EFI_PATH) -L$(LIBDIR) -LCryptlib -LCryptlib/OpenSSL $(EFI_CRT_OBJS) --build-id=sha1 $(ARCH_LDFLAGS) --no-undefined
++LDFLAGS		= --hash-style=sysv -nostdlib -znocombreloc -T $(EFI_LDS) -shared -Bsymbolic -L$(LIBDIR) -L$(LOCAL_EFI_PATH) -LCryptlib -LCryptlib/OpenSSL $(EFI_CRT_OBJS) --build-id=sha1 $(ARCH_LDFLAGS) --no-undefined
+ 
+ ifneq ($(DEBUG),)
+ export DEBUG
+diff --git a/Makefile b/Makefile
+index 7c5ebcc..5531845 100644
+--- a/Makefile
++++ b/Makefile
+@@ -150,8 +150,8 @@ $(SHIMNAME) $(MMNAME) $(FBNAME) : | post-process-pe
+ LIBS = Cryptlib/libcryptlib.a \
+        Cryptlib/OpenSSL/libopenssl.a \
+        lib/lib.a \
+-       gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a \
+-       gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a
++       $(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a \
++       $(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a
+ 
+ $(SHIMSONAME): $(OBJS) $(LIBS)
+ 	$(LD) -o $@ $(LDFLAGS) $^ $(EFI_LIBS) lib/lib.a
+@@ -166,7 +166,7 @@ MokManager.o: $(MOK_SOURCES)
+ $(MMSONAME): $(MOK_OBJS) $(LIBS)
+ 	$(LD) -o $@ $(LDFLAGS) $^ $(EFI_LIBS) lib/lib.a
+ 
+-gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a:
++$(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a $(TOPDIR)/gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a:
+ 	mkdir -p gnu-efi/lib gnu-efi/gnuefi
+ 	$(MAKE) -C gnu-efi \
+ 		COMPILER="$(COMPILER)" \
+@@ -175,6 +175,7 @@ gnu-efi/$(ARCH_GNUEFI)/gnuefi/libgnuefi.a gnu-efi/$(ARCH_GNUEFI)/lib/libefi.a:
+ 		ARCH=$(ARCH_GNUEFI) \
+ 		NO_GLIBC=1 \
+ 		TOPDIR=$(TOPDIR)/gnu-efi \
++		VPATH=$(TOPDIR)/gnu-efi \
+ 		-f $(TOPDIR)/gnu-efi/Makefile \
+ 		lib gnuefi inc $(IGNORE_COMPILER_ERRORS)
+ 
+@@ -358,6 +359,7 @@ clean-gnu-efi:
+ 			COMPILER="$(COMPILER)" \
+ 			ARCH=$(ARCH_GNUEFI) \
+ 			TOPDIR=$(TOPDIR)/gnu-efi \
++			VPATH=$(TOPDIR)/gnu-efi \
+ 			-f $(TOPDIR)/gnu-efi/Makefile \
+ 			clean ; \
+ 	fi
+-- 
+2.47.3
+

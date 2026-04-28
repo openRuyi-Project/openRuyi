@@ -43,7 +43,7 @@ necessary for developing programs using libndp.
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libndp.pc
 
 %changelog
 %{?autochangelog}

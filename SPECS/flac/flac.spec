@@ -73,7 +73,8 @@ install src/libFLAC++/libFLAC++.m4 %{buildroot}%{_datadir}/aclocal/
 %{_libdir}/cmake/FLAC/
 %{_libdir}/libFLAC.so
 %{_libdir}/libFLAC++.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/flac++.pc
+%{_libdir}/pkgconfig/flac.pc
 %{_datadir}/aclocal/*.m4
 
 %changelog

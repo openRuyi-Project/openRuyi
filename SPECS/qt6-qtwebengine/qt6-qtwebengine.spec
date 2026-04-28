@@ -15,7 +15,7 @@ Summary:        Qt6 - QtWebEngine components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwebengine
-#!RemoteAsset
+#!RemoteAsset:  sha256:77b5ea6186a0429a6b8e656faedd5cd3e8019d33856ee59637698ab578ead1e3
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -256,7 +256,10 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/cmake/Qt6WebEngine*/
 %{_qt6_libdir}/cmake/Qt6/*.cmake
 %{_qt6_libdir}/cmake/Qt6BuildInternals/StandaloneTests/QtWebEngine*
-%{_qt6_libdir}/pkgconfig/Qt6WebEngine*.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineCore.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineQuickDelegatesQml.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineWidgets.pc
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_webengine*.pri
 %{_qt6_pluginsdir}/designer/libqwebengineview.so
 %{_qt6_includedir}/QtPdf*/
@@ -267,7 +270,9 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/cmake/Qt6Gui/Qt6QPdf*.cmake
 %{_qt6_libdir}/cmake/Qt6Pdf*/
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6Pdf*.cmake
-%{_qt6_libdir}/pkgconfig/Qt6Pdf*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Pdf.pc
+%{_qt6_libdir}/pkgconfig/Qt6PdfQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt6PdfWidgets.pc
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_pdf*.pri
 
 %files examples
@@ -275,4 +280,4 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_examplesdir}/pdf*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -15,9 +15,9 @@ Summary:        Powerful, efficient, lightweight, embeddable scripting language
 License:        MIT
 URL:            https://www.lua.org/
 VCS:            git:https://github.com/lua/lua.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:4f18ddae154e793e46eeab727c59ef1c0c0c2b744e7b94219710d76f530629ae
 Source0:        https://www.lua.org/ftp/lua-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:9581d5a7c39ffbf29b8ccde2709083c380f7bbddbd968dcb15712d2f2e33f4e5
 Source1:        https://www.lua.org/tests/lua-%{version}-tests.tar.gz
 Source2:        luaconf.h
 Source3:        mit.txt
@@ -101,7 +101,7 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %defattr(-,root,root)
 %{_includedir}/l*.h
 %{_includedir}/l*.hpp
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/lua.pc
 %{_rpmmacrodir}/macros.lua
 
 %files help
@@ -110,4 +110,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %{_mandir}/man1/lua*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

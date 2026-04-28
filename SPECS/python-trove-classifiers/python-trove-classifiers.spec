@@ -15,7 +15,7 @@ License:        Apache-2.0
 URL:            https://github.com/pypa/trove-classifiers
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:e73efff317c492a7990092f9c12676c705bf6cfe40a258a93f63f4b4c9941432
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -27,21 +27,16 @@ Patch0:          0001-Move-to-PEP-621-declarative-metadata.patch
 
 BuildOption(install):  trove_classifiers
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  expat
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(packaging)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
-Canonical source for classifiers on PyPI.
-Classifiers categorize projects per PEP 301. Use this package to validate
-classifiers in packages for PyPI upload or download.
-
-%package     -n python3-trove-classifiers
-Summary:        %{summary}
-
-%description -n python3-trove-classifiers
 Canonical source for classifiers on PyPI.
 Classifiers categorize projects per PEP 301. Use this package to validate
 classifiers in packages for PyPI upload or download.
@@ -53,9 +48,9 @@ sed -i 's/@@VERSION@@/%{version}/g' pyproject.toml
 %generate_buildrequires
 %pyproject_buildrequires
 
-%files -n python3-trove-classifiers -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.*
 %{_bindir}/trove-classifiers
 
 %changelog
-%{?autochangelog}
+%autochangelog

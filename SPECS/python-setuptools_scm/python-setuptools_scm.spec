@@ -15,21 +15,20 @@ License:        MIT
 URL:            https://github.com/pypa/setuptools_scm/
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:3d555e92b75dacd037d32bafdf94f97af51ea29ae8c7b234cf94b7a5bd242a63
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
 
-BuildRequires:  python3-devel
-BuildRequires:  expat
+BuildOption(install):  setuptools_scm
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
-Setuptools_scm handles managing your Python package versions in SCM metadata.
-It also handles file finders for the supported SCMs.
-
-%package     -n python3-setuptools_scm
-Summary:        %{summary}
-
-%description -n python3-setuptools_scm
 Setuptools_scm handles managing your Python package versions in SCM metadata.
 It also handles file finders for the supported SCMs.
 
@@ -41,15 +40,8 @@ It also handles file finders for the supported SCMs.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-
-%install
-%pyproject_install
-%pyproject_save_files setuptools_scm
-
-%files -n python3-setuptools_scm -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

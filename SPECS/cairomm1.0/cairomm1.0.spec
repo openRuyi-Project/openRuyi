@@ -41,7 +41,14 @@ applications that use cairomm.
 %files devel
 %{_includedir}/cairomm-*/
 %{_libdir}/libcairomm-*.so
-%{_libdir}/pkgconfig/cairomm-*.pc
+%{_libdir}/pkgconfig/cairomm-1.0.pc
+%{_libdir}/pkgconfig/cairomm-ft-1.0.pc
+%{_libdir}/pkgconfig/cairomm-pdf-1.0.pc
+%{_libdir}/pkgconfig/cairomm-png-1.0.pc
+%{_libdir}/pkgconfig/cairomm-ps-1.0.pc
+%{_libdir}/pkgconfig/cairomm-svg-1.0.pc
+%{_libdir}/pkgconfig/cairomm-xlib-1.0.pc
+%{_libdir}/pkgconfig/cairomm-xlib-xrender-1.0.pc
 %{_libdir}/cairomm-*/
 
 %changelog

@@ -14,6 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/milvus-io/pymilvus
 #!RemoteAsset:  sha256:c53a3d84ff15814e251be13edda70a98a1c8a6090d7597a908387cbb94a9504a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # Skip bulk_writer, don't need it for now

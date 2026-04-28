@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        Qt6 - QtTool components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
-#!RemoteAsset
+#!RemoteAsset:  sha256:8148408380ffea03101a26305c812b612ea30dbc07121e58707601522404d49b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        assistant.desktop
 Source2:        designer.desktop
@@ -214,10 +214,14 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Designer.pc
+%{_qt6_libdir}/pkgconfig/Qt6Help.pc
+%{_qt6_libdir}/pkgconfig/Qt6Linguist.pc
+%{_qt6_libdir}/pkgconfig/Qt6UiPlugin.pc
+%{_qt6_libdir}/pkgconfig/Qt6UiTools.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

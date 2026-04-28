@@ -20,10 +20,10 @@ Summary:        Library that implements an embeddable SQL database engine
 License:        GPL-3.0-or-later
 URL:            https://www.sqlite.org/
 VCS:            git:https://github.com/sqlite/sqlite.git
-#!RemoteAsset
-Source0:        http://www.sqlite.org/%{year}/%{name}-src-%{download_version}.zip
-#!RemoteAsset
-Source1:        http://www.sqlite.org/%{year}/%{name}-doc-%{doc_version}.zip
+#!RemoteAsset:  sha256:b7b4dc060f36053902fb65b344bbbed592e64b2291a26ac06fe77eec097850e9
+Source0:        http://www.sqlite.org/%{year}/sqlite-src-%{download_version}.zip
+#!RemoteAsset:  sha256:f8a03cf461500310c7a785c9d6f86121ac9465601982cdcac6de0c5987dbfc2f
+Source1:        http://www.sqlite.org/%{year}/sqlite-doc-%{doc_version}.zip
 BuildSystem:    autotools
 
 # Support system-wide template (located at /usr/share/lemon/lempar.c) in lemon.
@@ -100,7 +100,7 @@ www.sqlite.org website, including all of the SQL Syntax and the
 C/C++ interface specs and other miscellaneous documentation.
 
 %package     -n lemon
-Summary: A parser generator
+Summary:        A parser generator
 
 %description -n lemon
 Lemon is an LALR(1) parser generator for C or C++. It does the same
@@ -192,10 +192,10 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/*.so.0
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/sqlite3.pc
 
 %files doc
-%doc %{name}-doc-%{doc_version}/*
+%doc sqlite-doc-%{doc_version}/*
 
 %files -n lemon
 %{_bindir}/lemon
@@ -208,4 +208,4 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %{_bindir}/sqlite3_analyzer
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -55,7 +55,8 @@ the libpng package.
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/libpng*.so
-%{_libdir}/pkgconfig/libpng*.pc
+%{_libdir}/pkgconfig/libpng.pc
+%{_libdir}/pkgconfig/libpng16.pc
 %{_libdir}/cmake/PNG/
 %{_libdir}/libpng
 %{_mandir}/man3/*

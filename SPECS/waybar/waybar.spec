@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           waybar
-Version:        0.14.0
+Version:        0.15.0
 Release:        %autorelease
 Summary:        Highly customizable Wayland bar for Sway and Wlroots based compositors
 License:        MIT AND BSL-1.0 AND ISC
 URL:            https://github.com/Alexays/Waybar
-#!RemoteAsset:  sha256:7f3859779bb3a5028a7215b2000c2e476c03453a52289164ba60a4bf1bb3772f
+#!RemoteAsset:  sha256:21c2bbef88c40473c355003582f9331d2f9b8a01efdcce0935edfc5f6b023a3e
 Source0:        https://github.com/Alexays/Waybar/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 

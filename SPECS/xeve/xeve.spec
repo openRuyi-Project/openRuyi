@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Reference MPEG-5 Part 1 (EVC) encoder
 License:        BSD-3-Clause
 URL:            https://github.com/mpeg5/xeve
-#!RemoteAsset
+#!RemoteAsset:  sha256:238c95ddd1a63105913d9354045eb329ad9002903a407b5cf1ab16bad324c245
 Source:         https://github.com/mpeg5/xeve/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -50,7 +50,7 @@ rm -rfv %{buildroot}%{_libdir}/xeve*
 %files devel
 %{_libdir}/libxeve*.so
 %{_includedir}/xeve*/
-%{_libdir}/pkgconfig/xeve*.pc
+%{_libdir}/pkgconfig/xeveb.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

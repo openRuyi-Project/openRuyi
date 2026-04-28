@@ -1,0 +1,28 @@
+From 375a3710010c8bf930644b15cce721ad97a4cb05 Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Wed, 8 Apr 2026 20:58:16 +0800
+Subject: [PATCH] pesum: strrchr() should be of type const
+
+Since glibc 2.43, under ISO C23, `strrchr` will return a `const` type.
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+---
+ src/pesum.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/pesum.c b/src/pesum.c
+index e4ddaf8..5d7dcb9 100644
+--- a/src/pesum.c
++++ b/src/pesum.c
+@@ -141,7 +141,7 @@ main(int argc, char *argv[])
+ 	while ((infile = poptGetArg(optCon)) != NULL) {
+ 		pesign_context *ctxp = NULL;
+ 
+-		char *ext = strrchr(infile, '.');
++		const char *ext = strrchr(infile, '.');
+ 		if (ext && strcmp(ext, ".ko") == 0)
+ 			fmt = FORMAT_KERNEL_MODULE;
+ 
+-- 
+2.53.0
+

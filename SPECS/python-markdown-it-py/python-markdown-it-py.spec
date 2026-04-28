@@ -16,15 +16,16 @@ License:        MIT
 URL:            https://github.com/executablebooks/markdown-it-py
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/m/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l markdown_it
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-flit-core
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(flit-core)
+BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}

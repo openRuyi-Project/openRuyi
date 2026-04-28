@@ -16,7 +16,7 @@ Summary:        Standard Linux network configuration tool suite
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://networkmanager.dev/
 VCS:            git:https://gitlab.freedesktop.org/NetworkManager/NetworkManager
-#!RemoteAsset
+#!RemoteAsset:  sha256:16c1e954a8598a0afc71c9936a7e4f0ad949522438d96fec63aa1abb6f2207fe
 Source0:        https://gitlab.freedesktop.org/NetworkManager/NetworkManager/-/archive/%{version}/downloads/%{name}-%{version}.tar.gz
 Source1:        NetworkManager.conf
 Source2:        connectivity.conf
@@ -77,8 +77,8 @@ BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(udev)
 BuildRequires:  pkgconfig(uuid)
 BuildRequires:  python3
-BuildRequires:  python3-dbus
-BuildRequires:  python3-pygobject
+BuildRequires:  python3dist(dbus-python)
+BuildRequires:  python3dist(pygobject)
 BuildRequires:  vala
 
 %description
@@ -293,4 +293,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %doc %{_datadir}/gtk-doc/html/libnm/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Linux iSCSI Software Initiator
 License:        GPL-2.0-or-later
 URL:            https://github.com/open-iscsi/open-iscsi
-#!RemoteAsset
+#!RemoteAsset:  sha256:f288d1823b15782432608e5f53723159562e2c44e9a72b40fe15a5ca064ac86a
 Source:         https://github.com/open-iscsi/open-iscsi/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
@@ -133,7 +133,7 @@ fi
 %{_includedir}/libopeniscsiusr*.h
 %{_mandir}/man3/*.3*
 %{_libdir}/libopeniscsiusr.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libopeniscsiusr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

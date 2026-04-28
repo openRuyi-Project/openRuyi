@@ -4,6 +4,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,7 @@ Release:        %autorelease
 Summary:        Signing utility for UEFI binaries
 License:        GPL-2.0-only
 URL:            https://github.com/rhboot/pesign
-#!RemoteAsset
+#!RemoteAsset:  sha256:35331f75689863e5be595f2bb04a8bc934ce734b8d76fa5d6aeb4d85424e8996
 Source0:        https://github.com/rhboot/pesign/releases/download/%{version}/pesign-%{version}.tar.bz2
 Source1:        pesign.py
 Source2:        pesign.sysusers
@@ -23,6 +24,7 @@ Patch0:         0001-cms_common-Fixed-Segmentation-fault.patch
 Patch1:         0002-Fix-reversed-calloc-arguments.patch
 Patch2:         0003-Work-around-OpenSC-changing-token-names-on-fedora-bu.patch
 Patch3:         0004-cms_common-skip-authentication-on-the-Friendly-slot.patch
+Patch4:         0005-pesum-strrchr-should-be-of-type-const.patch
 
 BuildOption(build):  PREFIX=%{_prefix}
 BuildOption(build):  LIBDIR=%{_libdir}
@@ -110,4 +112,4 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_sysusersdir}/pesign.conf
 %{python3_sitelib}/mockbuild/plugins/pesign.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

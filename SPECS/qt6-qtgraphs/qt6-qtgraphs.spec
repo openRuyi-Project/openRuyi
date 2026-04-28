@@ -16,7 +16,7 @@ Summary:        The Qt Graphs module enables you to visualize data in 3D
 License:        BSD-3-Clause AND GFDL-1.3-no-invariants-only AND GPL-3.0-only
 URL:            https://doc.qt.io/qt-6/qtgraphs-index.html
 VCS:            git:https://code.qt.io/qt/qtgraphs.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:4d4fa0b21fa3c6b72ad5056e2a06e96e4bfda651e0a824d1f8e896c9ce5e576e
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -86,7 +86,8 @@ popd
 %{_qt6_libdir}/cmake/Qt6GraphsWidgets/
 %{_qt6_libdir}/cmake/Qt6GraphsWidgetsPrivate/
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6Graphsplugin*.cmake
-%{_qt6_libdir}/pkgconfig/Qt6Graphs*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Graphs.pc
+%{_qt6_libdir}/pkgconfig/Qt6GraphsWidgets.pc
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_graphs*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
@@ -95,4 +96,4 @@ popd
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

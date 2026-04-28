@@ -13,14 +13,14 @@ Summary:        PEP 621 metadata parsing
 License:        MIT
 URL:            https://github.com/FFY00/python-pyproject-metadata
 #!RemoteAsset
-Source0:         https://github.com/FFY00/python-pyproject-metadata/archive/refs/tags/%{version}.tar.gz#/pyproject-metadata-%{version}.tar.gz
-
+Source0:        https://github.com/FFY00/python-pyproject-metadata/archive/refs/tags/%{version}.tar.gz#/pyproject-metadata-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
+
 BuildOption(install):  -l pyproject_metadata  +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}

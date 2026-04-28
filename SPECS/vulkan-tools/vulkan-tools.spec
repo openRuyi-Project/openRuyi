@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond x11 0
+%bcond x11 1
 
 Name:           vulkan-tools
 Version:        1.4.335
@@ -29,17 +29,14 @@ BuildOption(conf):  -DBUILD_WSI_XLIB_SUPPORT=OFF
 BuildOption(conf):  -DBUILD_CUBE=ON
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  vulkan-loader-devel
-
+BuildRequires:  cmake(VulkanLoader)
 BuildRequires:  pkgconfig(wayland-protocols)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-cursor)
 BuildRequires:  pkgconfig(wayland-server)
 BuildRequires:  pkgconfig(wayland-egl)
-
 %if %{with x11}
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(xrandr)
@@ -48,7 +45,6 @@ BuildRequires:  pkgconfig(xcb)
 
 # Vulkan-Tools dlopen's libvulkan.so.1 from this package
 Requires:       vulkan-loader
-
 Provides:       vulkan-demos = %{version}-%{release}
 
 %description
@@ -62,4 +58,4 @@ Vulkan tools, including vulkaninfo and vkcube.
 %{_bindir}/vkcubepp
 
 %changelog
-%{?autochangelog}
+%autochangelog

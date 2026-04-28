@@ -15,9 +15,11 @@ Release:        %autorelease
 Summary:        FakeTime Preload Library
 License:        GPL-2.0-only
 URL:            https://github.com/wolfcw/libfaketime
-#!RemoteAsset
+#!RemoteAsset:  sha256:4fc32218697c052adcdc5ee395581f2554ca56d086ac817ced2be0d6f1f8a9fa
 Source:         https://github.com/wolfcw/libfaketime/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+Patch0:         0001-Add-const-qualifiers-to-fix-build-with-ISO-C23.patch
 
 BuildOption(build):  PREFIX=%{_prefix}
 BuildOption(build):  LIBDIRNAME=%{_libdir}/%{name}
@@ -48,4 +50,4 @@ having to change the system-wide time, using a preload library.
 %{_libdir}/lib*.so*
 
 %changelog
-%{?autochangelog}
+%autochangelog

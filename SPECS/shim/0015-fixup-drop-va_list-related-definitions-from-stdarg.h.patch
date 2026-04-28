@@ -1,0 +1,36 @@
+From cff3f26afed9fd9a6b45365fca8429d86d057bb3 Mon Sep 17 00:00:00 2001
+From: Andrea Bolognani <abologna@redhat.com>
+Date: Thu, 11 Dec 2025 01:27:31 +0100
+Subject: [PATCH 15/19] fixup! drop va_list related definitions from stdarg.h
+
+They don't seem to be necessary when building against the
+latest upstream version of gnu-efi.
+
+Signed-off-by: Andrea Bolognani <abologna@redhat.com>
+---
+ include/system/stdarg.h | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/include/system/stdarg.h b/include/system/stdarg.h
+index 591c8df..3d080ac 100644
+--- a/include/system/stdarg.h
++++ b/include/system/stdarg.h
+@@ -28,15 +28,6 @@ typedef __builtin_va_list sysv_va_list;
+ #define sysv_va_arg(marker, type)  __builtin_va_arg(marker, type)
+ #define sysv_va_end(marker)        __builtin_va_end(marker)
+ 
+-/*
+- * gnu-efi needs this.
+- */
+-typedef __builtin_va_list va_list;
+-# define va_start(v,l)	__builtin_va_start(v,l)
+-# define va_end(v)	__builtin_va_end(v)
+-# define va_arg(v,l)	__builtin_va_arg(v,l)
+-# define va_copy(d,s)	__builtin_va_copy(d,s)
+-
+ /*
+  * OpenSSL's X509ConstructCertificateStack needs this.
+  */
+-- 
+2.47.3
+

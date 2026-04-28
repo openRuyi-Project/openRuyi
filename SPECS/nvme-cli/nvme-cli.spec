@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        NVMe management command line interface
 License:        GPL-2.0-only
 URL:            https://github.com/linux-nvme/nvme-cli
-#!RemoteAsset
+#!RemoteAsset:  sha256:989682ed7b250a2c7a8127e362ffc5d29f5c370127abe405be09c73216da2b97
 Source0:        https://github.com/linux-nvme/nvme-cli/archive/v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -30,7 +30,7 @@ BuildRequires:  pkgconfig(libnvme-mi)
 BuildRequires:  pkgconfig(libudev)
 %{?systemd_requires}
 
-%%description
+%description
 nvme-cli provides NVM-Express user space tooling for Linux.
 
 %install -a
@@ -86,4 +86,4 @@ fi
 %{_mandir}/man1/nvme*
 
 %changelog
-%{?autochangelog}
+%autochangelog

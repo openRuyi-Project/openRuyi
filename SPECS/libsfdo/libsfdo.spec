@@ -37,7 +37,10 @@ applications that use libsfdo.
 %files devel
 %{_includedir}/sfdo-*.h
 %{_libdir}/libsfdo-*.so
-%{_libdir}/pkgconfig/libsfdo-*.pc
+%{_libdir}/pkgconfig/libsfdo-basedir.pc
+%{_libdir}/pkgconfig/libsfdo-desktop-file.pc
+%{_libdir}/pkgconfig/libsfdo-desktop.pc
+%{_libdir}/pkgconfig/libsfdo-icon.pc
 
 %changelog
 %{?autochangelog}

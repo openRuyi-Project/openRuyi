@@ -11,7 +11,7 @@ Summary:        Mobile broadband modem management service
 License:        GPL-2.0-or-later
 URL:            https://modemmanager.org/
 VCS:            git:https://gitlab.freedesktop.org/mobile-broadband/ModemManager
-#!RemoteAsset
+#!RemoteAsset:  sha256:fbc75adcc0d7b0565f256e7ff4e8872b0a37c4413ff576665f7470932d9c1b68
 Source0:        https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/archive/%{version}/downloads/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -43,8 +43,8 @@ BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(udev)
 BuildRequires:  vala
 # Tests
-BuildRequires:  python3-pygobject
-BuildRequires:  python3-dbus
+BuildRequires:  python3dist(pygobject)
+BuildRequires:  python3dist(dbus-python)
 
 %description
 The ModemManager service manages WWAN modems and provides a consistent API for
@@ -113,4 +113,4 @@ CDMA).
 %{_libdir}/girepository-1.0/*.typelib
 
 %changelog
-%{?autochangelog}
+%autochangelog

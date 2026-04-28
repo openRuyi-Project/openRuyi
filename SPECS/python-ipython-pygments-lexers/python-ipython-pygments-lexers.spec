@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/ipython/ipython-pygments-lexers
 #!RemoteAsset:  sha256:09c0138009e56b6854f9535736f4171d855c8c08a563a0dcd8022f78355c7e81
 Source0:        https://files.pythonhosted.org/packages/source/i/ipython-pygments-lexers/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

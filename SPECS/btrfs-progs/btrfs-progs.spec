@@ -3,17 +3,18 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           btrfs-progs
-Version:        6.17.1
+Version:        6.19.1
 Release:        %autorelease
 Summary:        Userspace programs for btrfs
 License:        GPL-2.0-only AND LGPL-2.1-or-later
 URL:            https://btrfs.wiki.kernel.org/index.php/Main_Page
 VCS:            git:https://github.com/kdave/btrfs-progs
-#!RemoteAsset
+#!RemoteAsset:  sha256:bb27e1ec54e7c3c0b7b2e596f853a73c07a3d72f21bc94042073c24dbf045796
 Source:         https://www.kernel.org/pub/linux/kernel/people/kdave/btrfs-progs/btrfs-progs-v%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -129,4 +130,4 @@ cd libbtrfsutil/python
 %license libbtrfsutil/COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -112,7 +112,8 @@ Python bindings for the %{name} library.
 %files devel
 %{_libdir}/lib*.so
 %{_includedir}/solv/
-%{_libdir}/pkgconfig/lib*.pc
+%{_libdir}/pkgconfig/libsolv.pc
+%{_libdir}/pkgconfig/libsolvext.pc
 %dir %{_datadir}/cmake/Modules/
 %{_datadir}/cmake/Modules/FindLibSolv.cmake
 

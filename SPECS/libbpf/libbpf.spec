@@ -8,12 +8,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libbpf
-Version:        1.6.2
+Version:        1.7.0
 Release:        %autorelease
 Summary:        C library for managing eBPF programs and maps
 License:        LGPL-2.1-only OR BSD-2-Clause
 URL:            https://github.com/libbpf/libbpf
-#!RemoteAsset
+#!RemoteAsset:  sha256:7ab5feffbf78557f626f2e3e3204788528394494715a30fc2070fcddc2051b7b
 Source:         https://github.com/libbpf/libbpf/archive/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -60,4 +60,4 @@ developing applications that use %{name}.
 %{_libdir}/libbpf.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

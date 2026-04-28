@@ -16,7 +16,7 @@ Summary:        Qt6 - Support for rendering and displaying SVG
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtsvg.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:c02f355a58f3bbcf404a628bf488b6aeb2d84a94c269afdb86f6e529343ab01f
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -88,11 +88,12 @@ popd
 %{_qt6_libdir}/cmake/Qt6SvgWidgets/
 %{_qt6_descriptionsdir}/*.json
 %{_qt6_metatypesdir}/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Svg.pc
+%{_qt6_libdir}/pkgconfig/Qt6SvgWidgets.pc
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

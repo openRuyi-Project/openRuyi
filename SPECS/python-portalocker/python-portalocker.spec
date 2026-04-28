@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/WoLpH/portalocker
 #!RemoteAsset:  sha256:1f3002956a54a8c3730586c5c77bf18fae4149e07eaf1c29fc3faf4d5a3f89ac
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

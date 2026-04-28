@@ -1,0 +1,39 @@
+From 3baaf8829844f6499b26ae952b2b64c38f27f48a Mon Sep 17 00:00:00 2001
+From: Andrea Bolognani <abologna@redhat.com>
+Date: Tue, 31 Mar 2026 14:32:56 +0200
+Subject: [PATCH 19/19] CI: Add riscv64 cross-build jobs
+
+Signed-off-by: Andrea Bolognani <abologna@redhat.com>
+---
+ .github/workflows/pullrequest.yml | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/.github/workflows/pullrequest.yml b/.github/workflows/pullrequest.yml
+index d74b6ea..693d0ba 100644
+--- a/.github/workflows/pullrequest.yml
++++ b/.github/workflows/pullrequest.yml
+@@ -78,6 +78,21 @@ jobs:
+             gccarch: x86_64
+             makearch: ia32
+             distro: f43
++          - arch: amd64
++            efiarch: riscv64
++            gccarch: riscv64
++            makearch: riscv64
++            distro: f45
++          - arch: amd64
++            efiarch: riscv64
++            gccarch: riscv64
++            makearch: riscv64
++            distro: f44
++          - arch: amd64
++            efiarch: riscv64
++            gccarch: riscv64
++            makearch: riscv64
++            distro: f43
+ 
+     steps:
+       - name: Checkout
+-- 
+2.47.3
+

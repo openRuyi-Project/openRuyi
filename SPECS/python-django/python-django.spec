@@ -19,10 +19,11 @@ BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-asgiref
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(asgiref)
 # Tests?
-BuildRequires:  python3-jinja2
+BuildRequires:  python3dist(jinja2)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -33,12 +34,12 @@ development and a clean, pragmatic design. It focuses on automating as
 much as possible and adhering to the DRY (Don't Repeat Yourself)
 principle.
 
-%package -n %{srcname}-bash-completion
+%package        bash-completion
 Summary:        Bash completion files for Django
 BuildRequires:  bash-completion
 Requires:       bash-completion
 
-%description -n %{srcname}-bash-completion
+%description    bash-completion
 This package contains the Bash completion files form Django high-level
 Python Web framework.
 
@@ -78,7 +79,7 @@ sed -i '/.po$/d' %{pyproject_files}
 %{_bindir}/django-admin
 %{_mandir}/man1/django-admin.1*
 
-%files -n %{srcname}-bash-completion
+%files bash-completion
 %{bash_completions_dir}/*
 
 %changelog

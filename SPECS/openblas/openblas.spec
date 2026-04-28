@@ -27,6 +27,9 @@ BuildOption(build):  USE_OPENMP=0
 BuildOption(build):  NO_STATIC=1
 BuildOption(build):  DYNAMIC_ARCH=1
 BuildOption(build):  NO_TEST=1
+%ifarch riscv64
+BuildOption(build):  TARGET=RISCV64_GENERIC
+%endif
 BuildOption(install):  PREFIX=%{_prefix}
 BuildOption(install):  OPENBLAS_LIBRARY_DIR=%{_libdir}
 BuildOption(install):  NO_STATIC=1
@@ -34,10 +37,6 @@ BuildOption(install):  NO_STATIC=1
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  perl-devel
-
-%ifarch riscv64
-BuildOption(build): TARGET=RISCV64_GENERIC
-%endif
 
 %description
 OpenBLAS is an optimized BLAS library based on GotoBLAS2, providing a high-performance
@@ -61,8 +60,8 @@ This package contains the development headers and libraries for OpenBLAS.
 %files devel
 %{_includedir}/*
 %{_libdir}/libopenblas*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/openblas64.pc
 %{_libdir}/cmake/openblas/
 
 %changelog
-%{?autochangelog}
+%autochangelog

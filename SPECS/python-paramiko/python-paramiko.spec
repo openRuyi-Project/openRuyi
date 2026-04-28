@@ -14,6 +14,7 @@ License:        LGPL-2.1-or-later
 URL:            https://github.com/paramiko/paramiko
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l paramiko
@@ -21,9 +22,9 @@ BuildOption(install):  -l paramiko
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pytest
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}

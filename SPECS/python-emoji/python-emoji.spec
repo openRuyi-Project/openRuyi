@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/carpedm20/emoji
 #!RemoteAsset:  sha256:eae4ab7d86456a70a00a985125a03263a5eac54cd55e51d7e184b1ed3b6757e4
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

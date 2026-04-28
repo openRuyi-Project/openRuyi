@@ -45,7 +45,7 @@ applications that use the libnetfilter_cttimeout library.
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_cttimeout.pc
 %dir %{_includedir}/libnetfilter_cttimeout
 %{_includedir}/libnetfilter_cttimeout/*.h
 

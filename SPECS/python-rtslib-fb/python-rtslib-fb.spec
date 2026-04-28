@@ -15,12 +15,13 @@ URL:            https://github.com/open-iscsi/rtslib-fb
 # This is a mess - 251
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/r/rtslib_fb/rtslib_fb-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l 'rtslib*'
+BuildOption(install):  -l 'rtslib*'
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(systemd)
 
 Provides:       python3-%{srcname}

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
+# SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,14 +14,16 @@ Summary:        The Linux Test Project
 License:        GPL-2.0-or-later
 URL:            http://linux-test-project.github.io
 VCS:            git:https://github.com/linux-test-project/ltp
-#!RemoteAsset
+#!RemoteAsset:  sha256:5effc9d3eb3f5cd45d47e8ac3d78f59cb8f3f73c8598a2f182ef5b40ddfff311
 Source0:        https://github.com/linux-test-project/ltp/releases/download/%{version}/%{name}-full-%{version}.tar.xz
 BuildSystem:    autotools
 
 # Enable fsstress test in runtest/fs
-Patch0001:      add-fsstress.patch
+Patch0001:      0001-enable-fsstress-test-in-runtest-fs.patch
 # fix output dir for cpuctl_* tests
-Patch0002:      fix-cpuctl-tests-output-dir.patch
+Patch0002:      0002-fix-cpuctl-tests-output-dir.patch
+# https://github.com/linux-test-project/ltp/commit/767b3e519e85095dfee3a47d15a373a403fe3dab
+Patch0003:      0003-openat2-define-GNU_SOURCE-and-include-fcntl.patch
 
 BuildOption(conf):  --prefix=%{ltp_prefix}
 BuildOption(conf):  --bindir=%{ltp_prefix}/bin
@@ -155,4 +158,4 @@ find %{buildroot} -type f -perm 775 -exec chmod 755 \{\} \;
 %{ltp_prefix}
 
 %changelog
-%{?autochangelog}
+%autochangelog

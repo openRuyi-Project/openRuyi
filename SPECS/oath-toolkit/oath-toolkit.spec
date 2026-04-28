@@ -5,18 +5,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           oath-toolkit
-Version:        2.6.13
+Version:        2.6.14
 Release:        %autorelease
 Summary:        One-time password components
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.nongnu.org/oath-toolkit/
 VCS:            git:https://git.savannah.nongnu.org/git/oath-toolkit.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8b1da365759f1249be57a82aec6e107f7b57dc77d813f96dc0aaf81624f28971
 Source0:        https://download.savannah.nongnu.org/releases/%{name}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
-
-# Add oath_set_lockfile_path() API to allow custom lock file location for pam_oath
-Patch0:         oath-toolkit-2.6.12-lockfile.patch
 
 BuildOption(conf):  --with-pam-dir=%{_libdir}/security
 BuildOption(conf):  --disable-gtk-doc
@@ -26,7 +23,6 @@ BuildOption(conf):  --without-xmlsec
 
 BuildRequires:  make
 BuildRequires:  pkgconfig(pam)
-BuildRequires:  gtk-doc
 BuildRequires:  libtool
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -93,4 +89,4 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
 %{_libdir}/security/pam_oath.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

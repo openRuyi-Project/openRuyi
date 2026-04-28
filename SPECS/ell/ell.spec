@@ -46,7 +46,7 @@ files for the Embedded Linux Library (ELL).
 
 %files devel
 %{_libdir}/libell.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/ell.pc
 %{_includedir}/ell/
 
 %changelog

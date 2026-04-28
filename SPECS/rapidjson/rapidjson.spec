@@ -15,7 +15,7 @@ Summary:        Fast JSON parser and generator for C++
 License:        MIT AND BSD-3-Clause
 URL:            https://rapidjson.org/
 VCS:            git:https://github.com/Tencent/rapidjson
-#!RemoteAsset
+#!RemoteAsset:  sha256:2d2601a82d2d3b7e143a3c8d43ef616671391034bc46891a9816b79cf2d3e7a8
 Source:         https://github.com/Tencent/rapidjson/archive/%{commit}.tar.gz
 BuildSystem:    cmake
 
@@ -49,8 +49,8 @@ find . -type f -name CMakeLists.txt -print0 | xargs -0 sed -i -e "s/-march=nativ
 %license license.txt
 %doc %{_docdir}/RapidJSON/
 %{_libdir}/cmake/RapidJSON/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/RapidJSON.pc
 %{_includedir}/rapidjson/
 
 %changelog
-%{?autochangelog}
+%autochangelog

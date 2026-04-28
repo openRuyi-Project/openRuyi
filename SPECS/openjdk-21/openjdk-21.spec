@@ -9,8 +9,8 @@
 
 %global majorver        21
 %global minorver        0
-%global securityver     8
-%global buildver        9
+%global securityver     11
+%global buildver        10
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -23,16 +23,14 @@ Summary:        OpenJDK 21 Runtime Environment
 License:        GPL-2.0-with-classpath-exception
 URL:            https://openjdk.org
 VCS:            git:https://github.com/openjdk/jdk21u
-#!RemoteAsset
+#!RemoteAsset:  sha256:18edf62aa95c99325725475c0ad5621d8de61f4c84fdb8d2b7efd015a6de8e42
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
-#!RemoteAsset
+#!RemoteAsset:  sha256:8171d95189e675e297b5cb96c7ac6247ab4e9f48da82b13f491fc46ef5d97836
 Source1:        https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_riscv64_linux_hotspot_21.0.8_9.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:f2dc5418092c43003db8f9005c4a286e1c0104fea96ccdd49e8ebd037cac9219
 Source2:        https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz
 %endif
-
-Patch0:         8354941-Build-failure-with-glibc-2.42-due-to-uabs-na.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -143,4 +141,4 @@ alternatives --remove java %{_jvmdir}/java-21-openjdk/bin/java
 %{_jvmdir}/java-21-openjdk
 
 %changelog
-%{?autochangelog}
+%autochangelog

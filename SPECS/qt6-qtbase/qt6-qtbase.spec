@@ -22,7 +22,7 @@ Summary:        Qt 6 core components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtbase.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:5a6226f7e23db51fdc3223121eba53f3f5447cf0cc4d6cb82a3a2df7a65d265d
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        macros.qt6-qtbase
 BuildSystem:    cmake
@@ -366,7 +366,20 @@ sed -i \
 %{_qt6_libdir}/cmake/Qt6Xml/*.cmake
 %{_qt6_descriptionsdir}/*.json
 %{_qt6_metatypesdir}/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Concurrent.pc
+%{_qt6_libdir}/pkgconfig/Qt6Core.pc
+%{_qt6_libdir}/pkgconfig/Qt6DBus.pc
+%{_qt6_libdir}/pkgconfig/Qt6Gui.pc
+%{_qt6_libdir}/pkgconfig/Qt6Network.pc
+%{_qt6_libdir}/pkgconfig/Qt6OpenGL.pc
+%{_qt6_libdir}/pkgconfig/Qt6OpenGLWidgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6Platform.pc
+%{_qt6_libdir}/pkgconfig/Qt6PrintSupport.pc
+%{_qt6_libdir}/pkgconfig/Qt6Sql.pc
+%{_qt6_libdir}/pkgconfig/Qt6Test.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandClient.pc
+%{_qt6_libdir}/pkgconfig/Qt6Widgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6Xml.pc
 %{_qt6_mkspecsdir}/*
 %{_qt6_includedir}/QtInputSupport
 %{_qt6_includedir}/QtFbSupport
@@ -432,4 +445,4 @@ sed -i \
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

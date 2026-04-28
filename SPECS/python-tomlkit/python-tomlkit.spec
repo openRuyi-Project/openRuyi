@@ -9,23 +9,24 @@
 Name:           python-%{srcname}
 Version:        0.13.2
 Release:        %autorelease
+Summary:        Style-preserving TOML library
 License:        MIT
 URL:            https://github.com/sdispater/tomlkit
-Summary:        Style-preserving TOML library
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
-
-BuildRequires:  pytest
-BuildRequires:  python3dist(pyyaml)
-
 BuildSystem:    pyproject
-BuildOption(install): %{srcname} +auto
+
+BuildOption(install):  %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pyyaml)
+BuildRequires:  pytest
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 TOML Kit is a 1.0.0rc1-compliant TOML library.  It includes a parser that
 preserves all comments, indentations, whitespace and internal element ordering,

@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Reference MPEG-5 Part 1 (EVC) decoder
 License:        BSD-3-Clause
 URL:            https://github.com/mpeg5/xevd
-#!RemoteAsset
+#!RemoteAsset:  sha256:8d55c7ec1a9ad4e70fe91fbe129a1d4dd288bce766f466cba07a29452b3cecd8
 Source:         https://github.com/mpeg5/xevd/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -51,7 +51,7 @@ rm -rfv %{buildroot}%{_libdir}/xevd*
 %files devel
 %{_libdir}/libxevd*.so
 %{_includedir}/xevd*/
-%{_libdir}/pkgconfig/xevd*.pc
+%{_libdir}/pkgconfig/xevdb.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -8,12 +8,12 @@
 %bcond test 1
 
 Name:           wayland-protocols
-Version:        1.46
+Version:        1.48
 Release:        %autorelease
 Summary:        Wayland protocols that add functionality not available in the core protocol
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wayland/wayland-protocols
-#!RemoteAsset
+#!RemoteAsset:  sha256:598e3a51125d0e3cab02303fef39e801604dd4a458d077aacdf318f4910b3f5c
 Source0:        https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/%{version}/wayland-protocols-%{version}.tar.bz2
 BuildSystem:    meson
 

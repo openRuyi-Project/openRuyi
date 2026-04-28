@@ -1,0 +1,147 @@
+From 799a755120dfa052cbda687f0daa21df4756dcca Mon Sep 17 00:00:00 2001
+From: Brian Redbeard <redbeard@dead-city.org>
+Date: Thu, 9 Apr 2026 00:41:14 -0700
+Subject: [PATCH 17/19] elf_riscv64_efi.lds: Fix section layout to match shim
+ conventions
+
+The riscv64 linker script was derived from gnu-efi 4.0.4 and carried
+over several layout decisions that conflict with how shim's PE/COFF
+post-processing and runtime expect sections to be arranged.  This
+brings it in line with the x86_64, ia32, and aarch64 linker scripts.
+
+Add missing output sections that shim relies on:
+
+  - .vendor_cert: holds vendor certificates emitted by cert.S.  Without
+    this section the linker treats it as an orphan and places it
+    unpredictably, breaking vendor certificate verification at runtime.
+
+  - .sbatlevel: holds the SBAT variable payload (sbat_var_payload_header)
+    emitted by sbat_var.S.  Without it the symbol lands at an arbitrary
+    address and SBAT automatic/latest variable parsing reads garbage.
+
+  - .data.ident: holds shim version/build identification emitted by
+    version.c.  All other 64-bit architectures place this in its own
+    section so it can be inspected in the PE binary.
+
+Merge .rodata into the .data output section.  On x86_64, ia32, and
+aarch64, .rodata* is placed inside .data.  Having .rodata as a
+standalone output section creates a separate PE/COFF section that
+post-process-pe may not handle correctly.
+
+Move .note.gnu.build-id before .data (matching x86_64/ia32/aarch64)
+instead of after .dynstr where it was appended without alignment.
+
+Place .reloc, .vendor_cert, and .dynamic between .data and .rela,
+matching the section ordering used by every other architecture.
+
+Fix _edata alignment from ALIGN(512) to implicit section alignment.
+512 is the PE file alignment, not the section alignment, and every
+other architecture relies on the preceding section's page alignment
+rather than inserting a sub-page alignment here.
+
+Remove manual '_DYNAMIC = .' definition before the .dynamic section.
+No other architecture defines this symbol manually; the linker
+provides it automatically from the .dynamic section.
+
+Remove KEEP() around .reloc contents.  No other architecture uses
+KEEP for this section, and shim does not link with --gc-sections,
+making it a no-op.
+
+Fix inconsistent indentation on ALIGN(16) directives within .data.
+
+Signed-off-by: Brian Redbeard <redbeard@dead-city.org>
+---
+ elf_riscv64_efi.lds | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/elf_riscv64_efi.lds b/elf_riscv64_efi.lds
+index ca0e2c2..ec7fe64 100644
+--- a/elf_riscv64_efi.lds
++++ b/elf_riscv64_efi.lds
+@@ -25,13 +25,25 @@ SECTIONS
+   }
+   _etext = .;
+   _text_size = _etext - _text;
+-  . = ALIGN(65536);
+-  _DYNAMIC = .;
+-  .dynamic  : { *(.dynamic) }
++  . = ALIGN(4096);
++  .note.gnu.build-id : {
++    *(.note.gnu.build-id)
++  }
++
++  . = ALIGN(4096);
++  .data.ident : {
++    *(.data.ident)
++  }
++  . = ALIGN(4096);
++  .sbatlevel : {
++    *(.sbatlevel)
++  }
++
+   . = ALIGN(4096);
+   .data :
+   {
+    _data = .;
++   *(.rodata*)
+    *(.sdata)
+    *(.data)
+    *(.data1)
+@@ -50,12 +62,12 @@ SECTIONS
+    *(SORT(.init_array.*))
+    *(.init_array)
+    __init_array_end = .;
+-  . = ALIGN(16);
++   . = ALIGN(16);
+    __CTOR_LIST__ = .;
+    *(SORT(.ctors.*))
+    *(.ctors)
+    __CTOR_END__ = .;
+-  . = ALIGN(16);
++   . = ALIGN(16);
+    __DTOR_LIST__ = .;
+    *(SORT(.dtors.*))
+    *(.dtors)
+@@ -83,9 +95,16 @@ SECTIONS
+   . = ALIGN(4096);
+   .reloc :
+   {
+-    KEEP (*(.reloc))
++    *(.reloc)
+   }
+ 
++  . = ALIGN(4096);
++  .vendor_cert :
++  {
++    *(.vendor_cert)
++  }
++  . = ALIGN(4096);
++  .dynamic  : { *(.dynamic) }
+   . = ALIGN(4096);
+   .rela :
+   {
+@@ -98,13 +117,9 @@ SECTIONS
+     *(.rela.fini_array*)
+     *(.rela.ctors*)
+     *(.rela.dtors*)
+-
+   }
+   . = ALIGN(4096);
+   .rela.plt : { *(.rela.plt) }
+-  . = ALIGN(4096);
+-  .rodata : { *(.rodata*) }
+-  . = ALIGN(512);
+   _edata = .;
+   _data_size = _edata - _data;
+ 
+@@ -126,7 +141,6 @@ SECTIONS
+   . = ALIGN(4096);
+   .dynstr   : { *(.dynstr) }
+   . = ALIGN(4096);
+-  .note.gnu.build-id : { *(.note.gnu.build-id) }
+   .ignored.reloc :
+   {
+     *(.rela.reloc)
+-- 
+2.47.3
+

@@ -62,7 +62,7 @@ mkdir -p -m 0755 %{buildroot}%{_datadir}/X11/app-defaults
 %if %{with static}
 %{_libdir}/*.a
 %endif
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xt.pc
 %{_mandir}/man3/*.3*
 %doc %{_datadir}/doc/*
 

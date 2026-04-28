@@ -1,0 +1,67 @@
+From 49e374a2b5592b24ae34db9b0620afbeefde45b0 Mon Sep 17 00:00:00 2001
+From: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+Date: Thu, 16 Apr 2026 14:02:51 +0800
+Subject: [PATCH] rpmuncompress: handle top-level dir entries without trailing
+ slash.
+
+Signed-off-by: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+---
+ tools/rpmuncompress.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/tools/rpmuncompress.c b/tools/rpmuncompress.c
+index c664444..1604dd6 100644
+--- a/tools/rpmuncompress.c
++++ b/tools/rpmuncompress.c
+@@ -100,6 +100,7 @@ static char * singleRoot(const char *path)
+ 	struct archive *a;
+ 	struct archive_entry *entry;
+ 	int r, ret = -1, rootLen;
++	int rootNoSlash = 0;
+ 	char *rootName = NULL;
+ 
+ 	a = archive_read_new();
+@@ -115,21 +116,32 @@ static char * singleRoot(const char *path)
+ 	rootName = xstrdup(archive_entry_pathname(entry));
+ 	char *sep = strchr(rootName, '/');
+ 	if (sep == NULL) {
+-	    /* No directories in the pathname */
+-	    ret = 0;
+-	    goto afree;
++	    if (archive_entry_filetype(entry) != AE_IFDIR) {
++			/* No directories in the pathname */
++			ret = 0;
++			goto afree;
++	    }
++	    rootLen = strlen(rootName);
++	    rootNoSlash = 1;
++	} else {
++	    rootLen = sep - rootName + 1;
+ 	}
+ 
+ 	/* Do all entries in the archive start with the same lead directory? */
+-	rootLen = sep - rootName + 1;
+ 	while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
+ 	    const char *p = archive_entry_pathname(entry);
+-	    if (strncmp(rootName, p, rootLen)) {
+-		ret = 0;
+-		goto afree;
++	    if (rootNoSlash) {
++			if (strncmp(rootName, p, rootLen) || (p[rootLen] != '/' && p[rootLen] != '\0')) {
++				ret = 0;
++				goto afree;
++			}
++	    } else if (strncmp(rootName, p, rootLen)) {
++			ret = 0;
++			goto afree;
+ 	    }
+ 	}
+-	*sep = '\0';
++	if (sep)
++	    *sep = '\0';
+ 	ret = 1;
+ 
+ afree:
+-- 
+2.43.0
+

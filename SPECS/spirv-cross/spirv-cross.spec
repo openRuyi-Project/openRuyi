@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Tool and library for SPIR-V reflection and disassembly
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/KhronosGroup/SPIRV-Cross
-#!RemoteAsset
+#!RemoteAsset:  sha256:c3e935cb19e2dda8e2e03fcfcbe451131595fec2cfbc73ab79a6f4c4cd43eb16
 Source0:        https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/vulkan-sdk-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -49,10 +49,11 @@ done
 
 %files devel
 %{_libdir}/libspirv-cross-*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/spirv-cross-c-shared.pc
+%{_libdir}/pkgconfig/spirv-cross-c.pc
 %{_includedir}/spirv_cross/
 %dir %_datadir/spirv*
 %_datadir/spirv*/cmake/
 
 %changelog
-%{?autochangelog}
+%autochangelog

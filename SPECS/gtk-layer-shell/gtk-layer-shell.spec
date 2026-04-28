@@ -53,7 +53,7 @@ Development files for %{name}.
 %{_datadir}/vala/vapi/gtk-layer-shell-*.vapi
 %{_includedir}/gtk-layer-shell/
 %{_libdir}/libgtk-layer-shell.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gtk-layer-shell-0.pc
 
 %changelog
 %{?autochangelog}

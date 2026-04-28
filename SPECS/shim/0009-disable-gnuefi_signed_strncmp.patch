@@ -1,0 +1,35 @@
+From 8e434c0f64a2dbb89dacd7571020d2cc4be32146 Mon Sep 17 00:00:00 2001
+From: Callum Farmer <gmbr3@opensuse.org>
+Date: Tue, 11 Feb 2025 12:55:25 +0000
+Subject: [PATCH 09/19] disable gnuefi_signed_strncmp
+
+Signed-off-by: Callum Farmer <gmbr3@opensuse.org>
+---
+ test-str.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test-str.c b/test-str.c
+index 30f8dd0..9218a8e 100644
+--- a/test-str.c
++++ b/test-str.c
+@@ -484,7 +484,7 @@ gnuefi_strncmp (
+  * This is still broken, and fails the test case as written on arm.
+  * We no longer use this, so we do not strictly need to run it.
+  */
+-#if !defined(__arm__) && !defined(__aarch64__)
++#if 0
+ static inline INTN
+ gnuefi_signed_strncmp (
+     IN CONST CHAR8    *s1,
+@@ -719,7 +719,7 @@ test_strncmp(void)
+ 	 * This is still broken, and fails the test case as written on arm.
+ 	 * We no longer use this, so we do not strictly need to run it.
+ 	 */
+-#if !defined(__arm__) && !defined(__aarch64__)
++#if 0
+ 	/*
+ 	 * gnu-efi's broken strncmpa with the return type fixed
+ 	 */
+-- 
+2.47.3
+

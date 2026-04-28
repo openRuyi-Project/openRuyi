@@ -13,7 +13,7 @@ Summary:        Reference implementation of the iCalendar data type and serializ
 License:        LGPL-2.1-only OR MPL-2.0
 URL:            https://libical.github.io/libical/
 VCS:            git:https://github.com/libical/libical
-#!RemoteAsset
+#!RemoteAsset:  sha256:e73de92f5a6ce84c1b00306446b290a2b08cdf0a80988eca0a2c9d5c3510b4c2
 Source:         https://github.com/libical/libical/archive/v%{version}/libical-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -39,9 +39,9 @@ BuildRequires:  pkgconfig(icu-uc)
 BuildRequires:  perl(Getopt::Std)
 BuildRequires:  perl(lib)
 BuildRequires:  python3
-BuildRequires:  python3-pip
-BuildRequires:  python3-pygobject
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(pygobject)
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  vala
 
 Requires:       tzdata
@@ -115,4 +115,4 @@ Development files needed for building things which link against %{name}-glib.
 %{_datadir}/vala/vapi/libical-glib.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog

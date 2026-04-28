@@ -113,9 +113,9 @@ Release:        %autorelease
 Summary:        Python 3 Interpreter
 License:        Python-2.0.1
 URL:            https://www.python.org
-#!RemoteAsset
+#!RemoteAsset:  sha256:b9910730526b298299b46b35595ced9055722df60c06ad6301f6a4e2c728a252
 Source0:        %{url}/ftp/python/%{version}/Python-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:741978566e632b39ba64d522f5e2356e0fca96b0517186a7db64658f38634f8e
 Source1:        %{url}/ftp/python/%{version}/Python-%{version}.tar.xz.asc
 BuildSystem:    autotools
 
@@ -671,7 +671,11 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{_bindir}/msgfmt%{pybasever}.py
 
 %{_bindir}/python*-config
-%{_libdir}/pkgconfig/python*.pc
+%{_libdir}/pkgconfig/python-3.13-embed.pc
+%{_libdir}/pkgconfig/python-3.13.pc
+%{_libdir}/pkgconfig/python.pc
+%{_libdir}/pkgconfig/python3-embed.pc
+%{_libdir}/pkgconfig/python3.pc
 
 %files -n %{pkgname}-idle
 %{_bindir}/idle*
@@ -711,4 +715,4 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %undefine _debuginfo_subpackages
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -178,7 +178,7 @@ rm -f %{buildroot}%{_libdir}/apr-util-1/*.*a
 %{_libdir}/libaprutil-1.so
 %{_libdir}/aprutil.exp
 %{_includedir}/apr-1/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/apr-util-1.pc
 %{_datadir}/aclocal/*.m4
 
 %changelog

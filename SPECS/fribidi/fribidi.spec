@@ -41,7 +41,7 @@ FriBidi.
 %files devel
 %{_includedir}/fribidi
 %{_libdir}/libfribidi.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/fribidi.pc
 
 %changelog
 %{?autochangelog}

@@ -59,7 +59,14 @@ install -D -m0644 -t %{buildroot}%{_udevrulesdir} %{SOURCE1}
 %{_includedir}/*
 %{_libdir}/libdrm.so
 %{_libdir}/libdrm_*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libdrm.pc
+%{_libdir}/pkgconfig/libdrm_amdgpu.pc
+%{_libdir}/pkgconfig/libdrm_etnaviv.pc
+%{_libdir}/pkgconfig/libdrm_freedreno.pc
+%{_libdir}/pkgconfig/libdrm_intel.pc
+%{_libdir}/pkgconfig/libdrm_nouveau.pc
+%{_libdir}/pkgconfig/libdrm_radeon.pc
+%{_libdir}/pkgconfig/libdrm_vc4.pc
 
 %changelog
 %{?autochangelog}

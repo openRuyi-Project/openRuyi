@@ -13,7 +13,7 @@ Summary:        A hierarchical memory allocator with destructors
 License:        LGPL-3.0-or-later
 URL:            https://talloc.samba.org/
 VCS:            git:https://gitlab.com/samba-team/devel/samba.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:dc46c40b9f46bb34dd97fe41f548b0e8b247b77a918576733c528e83abd854dd
 Source:         https://www.samba.org/ftp/talloc/talloc-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -24,7 +24,6 @@ BuildOption(conf):  --builtin-libraries=replace
 BuildOption(conf):  --disable-silent-rules
 
 BuildRequires:  make
-BuildRequires:  gcc
 BuildRequires:  pkgconfig(python3)
 
 %description
@@ -42,19 +41,19 @@ link against the Talloc library.
 %package     -n python-talloc
 Summary:        Python bindings for the Talloc library
 Provides:       python3-talloc = %{version}-%{release}
+Provides:       python3-talloc%{?_isa} = %{version}-%{release}
 %python_provide python3-talloc
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n python-talloc
-Python 3 bindings and libraries for using Talloc in Python applications.
+Python bindings and libraries for using Talloc in Python applications.
 
-%package     -n python3-talloc-devel
+%package     -n python-talloc-devel
 Summary:        Development files for python3-talloc
-# I don't think we can use provides python3-xxx here - 251
-Requires:       python3-talloc = %{version}-%{release}
+Requires:       python3-talloc%{?_isa} = %{version}-%{release}
 
-%description -n python3-talloc-devel
-Development files for the python3-talloc bindings.
+%description -n python-talloc-devel
+Development files for the python-talloc bindings.
 
 %files
 %license LICENSE
@@ -69,10 +68,10 @@ Development files for the python3-talloc bindings.
 %{_libdir}/libpytalloc-util.cpython*.so.*
 %{python3_sitearch}/talloc.cpython*.so
 
-%files -n python3-talloc-devel
+%files -n python-talloc-devel
 %{_includedir}/pytalloc.h
-%{_libdir}/pkgconfig/pytalloc-util.cpython-*.pc
+%{_libdir}/pkgconfig/pytalloc-util.cpython-313-%{_arch}-linux-gnu.pc
 %{_libdir}/libpytalloc-util.cpython*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

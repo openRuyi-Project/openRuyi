@@ -15,35 +15,31 @@ License:        MIT
 URL:            https://github.com/ofek/hatch-vcs
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:0395fa126940340215090c344a2bf4e2a77bcbe7daab16f41b37b98c95809ff9
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l hatch_vcs
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-pluggy
-BuildRequires:  python3-setuptools_scm
-BuildRequires:  expat
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(packaging)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(pluggy)
+BuildRequires:  python3dist(setuptools-scm)
 
 %description
 This provides a plugin for Hatch that uses your preferred version control
 system (like Git) to determine project versions.
 
-%package     -n python3-hatch-vcs
-Summary:        %{summary}
+Provides:       python3-hatch-vcs
+%python_provide python3-hatch-vcs
 
-%description -n python3-hatch-vcs
-This provides a plugin for Hatch that uses your preferred version control
-system (like Git) to determine project versions.
-
-%files -n python3-hatch-vcs -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.md
 %doc HISTORY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

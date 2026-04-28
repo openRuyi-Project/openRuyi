@@ -9,19 +9,22 @@
 Name:           python-%{srcname}
 Version:        0.21.2
 Release:        %autorelease
+Summary:        Python Documentation Utilities
 License:        BSD-2-Clause AND Python-2.0 AND GPL-2.0-or-later AND GPL-3.0-or-later AND LicenseRef-openRuyi-Public-Domain
 URL:            https://docutils.sourceforge.net/
-Summary:        Python Documentation Utilities
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
 BuildSystem:    pyproject
-BuildRequires:  python3-devel
 
-BuildOption(install): -l %{srcname} +auto
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 Docutils is a modular system for processing documentation into useful
 formats, such as HTML, XML, and LaTeX.  It uses @dfn{reStructuredText}, an

@@ -1,0 +1,164 @@
+From e33ecf1cc15383b9563bc4cd9a6908277bf8039d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Tue, 24 Feb 2026 13:35:17 +0100
+Subject: [PATCH] tests: Adapt to pygobject 3.55.0
+
+After upgrading pygobject from 3.54.5 to 3.55.2, Python tests
+expecting a process failure on setting an immutable
+(G_PARAM_CONSTRUCT_ONLY) property started to fail like this:
+
+    Traceback (most recent call last):
+      File "/home/test/libmodulemd-devel/redhat-linux-build/../modulemd/tests/ModulemdTests/defaults.py", line 114, in test_module_name
+	self.assertProcessFailure(_set_module_name_to_none, defs)
+	~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/home/test/libmodulemd-devel/modulemd/tests/ModulemdTests/base.py", line 60, in assertProcessFailure
+	callable(*args)
+	~~~~~~~~^^^^^^^
+      File "/home/test/libmodulemd-devel/redhat-linux-build/../modulemd/tests/ModulemdTests/defaults.py", line 43, in _set_module_name_to_none
+	defs.props.module_name = None
+	^^^^^^^^^^^^^^^^^^^^^^
+    TypeError: property 'module-name' can only be set in constructor
+
+The cause was that pygobject-3.55.0 started to raise a Python
+TypeError exception instead of calling Glib functions which would fail
+on its own depending on Glib warning fatality and Glib version. An example:
+
+    cat /tmp/test.py
+    #!/usr/bin/python3
+
+    import gi
+    gi.require_version("Modulemd", "2.0")
+    from gi.repository import Modulemd
+
+    object = Modulemd.Defaults.new(Modulemd.DefaultsVersionEnum.LATEST, "foo")
+    object.props.module_name = "bar"
+
+Before:
+
+    $ /tmp/test.py
+    /tmp/test.py:8: Warning: g_object_set_is_valid_property: construct property "module-name" for object 'ModulemdDefaultsV1' can't be set after construction
+      object.props.module_name = "bar"
+
+After:
+
+    $ /tmp/test.py
+    Traceback (most recent call last):
+      File "/tmp/test.py", line 8, in <module>
+	object.props.module_name = "bar"
+	^^^^^^^^^^^^^^^^^^^^^^^^
+    TypeError: property 'module-name' can only be set in constructor
+
+That was an intentional change in pygobject
+3b6e4804de4f26cfb9472666f18f44ac731d874c commit (gi: Factor out
+pygi_set_property_gvalue_from_property_info). Probably an
+optimization.
+
+This patch adjusts the tests to pass if TypeError exception is raised
+regardless of Glib warning fatality.
+
+Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=2440570
+---
+ modulemd/tests/ModulemdTests/base.py          | 30 +++++++++++++++++++
+ modulemd/tests/ModulemdTests/defaults.py      |  4 ++-
+ modulemd/tests/ModulemdTests/profile.py       |  4 ++-
+ modulemd/tests/ModulemdTests/servicelevel.py  |  2 +-
+ .../tests/ModulemdTests/translationentry.py   |  2 +-
+ 5 files changed, 38 insertions(+), 4 deletions(-)
+
+diff --git a/modulemd/tests/ModulemdTests/base.py b/modulemd/tests/ModulemdTests/base.py
+index 55ac742b..16b90e0f 100644
+--- a/modulemd/tests/ModulemdTests/base.py
++++ b/modulemd/tests/ModulemdTests/base.py
+@@ -67,6 +67,36 @@ def assertProcessFailure(self, callable, *args):
+             if os.WIFSIGNALED(status):
+                 raise AssertionError("Child process was unexpectedly aborted")
+ 
++    def assertTypeExceptionOrProcessFailure(self, callable, *args):
++        """Calls the callable in a subprocess and checks that the process
++        raised a TypeError exception, or was killed depending on Glib warning
++        fatality.
++
++        Since pygobject-3.55.0 setting a G_PARAM_CONSTRUCT_ONLY property
++        raises a Python exception. Old pygobject continues down to Glib
++        which kills the process if Glib warnings a fatal, otherwise Glib
++        warning is printed and the code continues.
++        """
++        pid = os.fork()
++        if pid == 0:
++            try:
++                callable(*args)
++            except TypeError:
++                os._exit(1)
++            os._exit(0)
++        _, status = os.waitpid(pid, 0)
++        if os.WIFEXITED(status) and os.WEXITSTATUS(status) == 1:
++            return
++        if self.warnings_fatal:
++            if not os.WIFSIGNALED(status):
++                raise AssertionError(
++                    "Child process did not raise TypeError "
++                    "exception or was not aborted"
++                )
++        else:
++            if os.WIFSIGNALED(status):
++                raise AssertionError("Child process was unexpectedly aborted")
++
+     @property
+     def warnings_fatal(self):
+         gdebug = os.getenv("G_DEBUG", "").split(",")
+diff --git a/modulemd/tests/ModulemdTests/defaults.py b/modulemd/tests/ModulemdTests/defaults.py
+index 3a1b9fe5..2f2ec023 100644
+--- a/modulemd/tests/ModulemdTests/defaults.py
++++ b/modulemd/tests/ModulemdTests/defaults.py
+@@ -111,7 +111,9 @@ def test_module_name(self):
+         assert defs.get_module_name() == "foo"
+ 
+         # Ensure we cannot set the module_name
+-        self.assertProcessFailure(_set_module_name_to_none, defs)
++        self.assertTypeExceptionOrProcessFailure(
++            _set_module_name_to_none, defs
++        )
+ 
+     def test_modified(self):
+         defs = Modulemd.Defaults.new(
+diff --git a/modulemd/tests/ModulemdTests/profile.py b/modulemd/tests/ModulemdTests/profile.py
+index 765c57d4..f8c7b931 100644
+--- a/modulemd/tests/ModulemdTests/profile.py
++++ b/modulemd/tests/ModulemdTests/profile.py
+@@ -94,7 +94,9 @@ def test_get_name(self):
+         assert p.get_name() == "testprofile"
+         assert p.props.name == "testprofile"
+ 
+-        self.assertProcessFailure(_set_props_name, p, "notadrill")
++        self.assertTypeExceptionOrProcessFailure(
++            _set_props_name, p, "notadrill"
++        )
+ 
+     def test_get_set_description(self):
+         p = Modulemd.Profile(name="testprofile")
+diff --git a/modulemd/tests/ModulemdTests/servicelevel.py b/modulemd/tests/ModulemdTests/servicelevel.py
+index fc9c648b..71289eb3 100644
+--- a/modulemd/tests/ModulemdTests/servicelevel.py
++++ b/modulemd/tests/ModulemdTests/servicelevel.py
+@@ -103,7 +103,7 @@ def test_get_name(self):
+         assert sl.props.name == "foo"
+ 
+         # This property is not writable, make sure it fails to attempt it
+-        self.assertProcessFailure(_set_props_name, sl, "bar")
++        self.assertTypeExceptionOrProcessFailure(_set_props_name, sl, "bar")
+ 
+     def test_get_set_eol(self):
+         sl = Modulemd.ServiceLevel.new("foo")
+diff --git a/modulemd/tests/ModulemdTests/translationentry.py b/modulemd/tests/ModulemdTests/translationentry.py
+index 9fce4435..685349e2 100644
+--- a/modulemd/tests/ModulemdTests/translationentry.py
++++ b/modulemd/tests/ModulemdTests/translationentry.py
+@@ -172,7 +172,7 @@ def test_get_locale(self):
+         assert te.get_locale() == "en_US"
+         assert te.props.locale == "en_US"
+ 
+-        self.assertProcessFailure(_set_locale, te)
++        self.assertTypeExceptionOrProcessFailure(_set_locale, te)
+ 
+     def test_get_set_summary(self):
+         te = Modulemd.TranslationEntry(locale="en_US")

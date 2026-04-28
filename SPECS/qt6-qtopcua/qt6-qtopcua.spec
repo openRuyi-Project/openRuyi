@@ -16,7 +16,7 @@ Summary:        Qt6 - OPC UA component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtopcua
-#!RemoteAsset
+#!RemoteAsset:  sha256:15b70b358d7ffefe8693539505c8ef5b03641d3744d1d3ef728f6646119d0d58
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -78,10 +78,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6DeclarativeOpcua.pc
+%{_qt6_libdir}/pkgconfig/Qt6OpcUa.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

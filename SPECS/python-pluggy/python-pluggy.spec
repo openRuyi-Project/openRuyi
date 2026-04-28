@@ -15,32 +15,29 @@ License:        MIT
 URL:            https://github.com/pytest-dev/pluggy
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  pluggy
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-setuptools_scm
-BuildRequires:  python3-setuptools_scm+toml
-BuildRequires:  expat
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(packaging)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(setuptools-scm[toml])
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 The plugin manager stripped of pytest specific details.
 
-%package     -n python3-pluggy
-Summary:        %{summary}
-
-%description -n python3-pluggy
-The plugin manager stripped of pytest specific details.
-
-%files -n python3-pluggy -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -19,13 +19,13 @@ Source1:        https://github.com/TakoPack/python-%{srcname}-vendor/releases/do
 BuildSystem:    pyproject
 
 BuildOption(prep):  -a1
-BuildOption(install): %{srcname}
+BuildOption(install):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-setuptools-rust
-BuildRequires:  python3-pip
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools-rust)
+BuildRequires:  python3dist(pip)
 BuildRequires:  rust
 BuildRequires:  cargo
 

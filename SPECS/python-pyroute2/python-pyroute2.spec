@@ -21,9 +21,10 @@ BuildOption(install):  %{srcname}
 BuildOption(check):  -e 'pyroute2.cli.auth.*'
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(mitogen)
+
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
 

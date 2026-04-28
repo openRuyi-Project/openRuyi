@@ -1,0 +1,12 @@
+openruyi-local
+================
+
+openruyi-local is the vendor-owned base authselect profile for openRuyi.
+
+It is intentionally local-first, systemd-aware, and minimal:
+- local UNIX accounts remain the default identity source
+- nss-systemd is enabled for systemd-managed dynamic users
+- PAM policy lives in authselect-managed system-auth/password-auth/postlogin files
+
+Service-specific PAM entry points are expected to stay thin and defer shared
+policy to this profile.

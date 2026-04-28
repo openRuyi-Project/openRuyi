@@ -11,7 +11,7 @@
 %global samba_modules  %{idmap_modules},%{pdb_modules},%{auth_modules},%{vfs_modules}
 
 # Change to 1 to enable these
-%bcond ceph 0
+%bcond ceph 1
 %bcond pmda 0
 %bcond glusterfs 0
 
@@ -25,9 +25,9 @@ Summary:        Server and Client software to interoperate with Windows machines
 License:        GPL-3.0-or-later
 URL:            https://www.samba.org
 VCS:            git:https://git.samba.org/samba.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:2de330647e1486683597e261285d04a9b7514ab5c7da27711736e22c7f2b9c2e
 Source0:        https://download.samba.org/pub/samba/stable/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:c514f0a0aa41c351e08eb05925e10653546c4f3f582181ba851dd81e470cb439
 Source1:        https://download.samba.org/pub/samba/stable/%{name}-%{version}.tar.asc
 Source2:        samba-systemd.sysusers
 Source3:        samba-winbind-systemd.sysusers
@@ -62,6 +62,9 @@ BuildOption(conf):  --enable-fhs
 BuildOption(conf):  --with-profiling-data
 %if %{without glusterfs}
 BuildOption(conf):  --disable-glusterfs
+%endif
+%if %{without ceph}
+BuildOption(conf):  --without-cephfs
 %endif
 BuildOption(check):  TEST_OPTIONS=--quick
 
@@ -121,7 +124,7 @@ BuildRequires:  glusterfs-devel
 %endif
 %if %{with ceph}
 BuildRequires:  pkgconfig(cephfs)
-BuildRequires:  librados-devel
+BuildRequires:  ceph-devel
 %endif
 BuildRequires:  pkgconfig(liburing)
 %if %{with pmda}
@@ -222,6 +225,17 @@ Requires:       ldb%{?_isa} = %{version}-%{release}
 
 %description -n python-ldb
 Python bindings for the LDB library
+
+%if %{with ceph}
+%package        cephfs
+Summary:        Samba SMB gateway for CephFS
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+
+%description    cephfs
+Expose CephFS (and RADOS) as SMB/CIFS shares directly via libcephfs,
+without an intermediate kernel mount.
+%endif
 
 %conf -p
 # https://gitlab.com/ita1024/waf/-/issues/2472
@@ -880,5 +894,12 @@ rm -f %{buildroot}%{_mandir}/man8/vfs_glusterfs.8*
 %{python3_sitearch}/ldb.cpython-*.so
 %{_libdir}/samba/libpyldb-util.cpython-*-private-samba.so
 
+%if %{with ceph}
+%files cephfs
+%{_libdir}/samba/vfs/ceph.so
+%{_libdir}/samba/vfs/ceph_new.so
+%{_libdir}/samba/vfs/ceph_snapshots.so
+%endif
+
 %changelog
-%{?autochangelog}
+%autochangelog

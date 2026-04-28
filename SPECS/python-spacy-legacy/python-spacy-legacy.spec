@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/explosion/spacy-loggers
 #!RemoteAsset:  sha256:b37d6e0c9b6e1d7ca1cf5bc7152ab64a4c4671f59c85adaf7a3fcb870357a774
 Source0:        https://files.pythonhosted.org/packages/source/s/spacy_legacy/spacy-legacy-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}

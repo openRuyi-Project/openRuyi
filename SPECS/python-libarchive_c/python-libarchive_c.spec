@@ -9,19 +9,24 @@
 Name:           python-%{srcname}
 Version:        5.3
 Release:        %autorelease
-License:        public-domain
-URL:            https://github.com/Changaco/python-libarchive-c
 Summary:        Python interface to libarchive
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+License:        LicenseRef-openRuyi-Public-Domain
+URL:            https://github.com/Changaco/python-libarchive-c
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    pyproject
 
-BuildRequires:  python3-devel
+BuildOption(install):  -l libarchive +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 Requires:       libarchive
 
-BuildSystem:    pyproject
-BuildOption(install): -l libarchive +auto
 %description
 This package provides Python bindings to libarchive, a C library to
 access possibly compressed archives in many different formats.  It uses

@@ -4,8 +4,8 @@
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
-
 #
+
 # avoid bootstrapping problem
 %define _binary_payload w9.bzdio
 
@@ -18,7 +18,7 @@ Version:        4.20.1
 Release:        %autorelease
 URL:            https://rpm.org/
 VCS:            git:https://github.com/rpm-software-management/rpm.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:52647e12638364533ab671cbc8e485c96f9f08889d93fe0ed104a6632661124f
 Source:         https://ftp.osuosl.org/pub/rpm/releases/rpm-4.20.x/rpm-%{version}.tar.bz2
 #!RemoteAsset:  git+https://github.com/rpm-software-management/rpmpgp_legacy#1.1
 #!CreateArchive
@@ -68,6 +68,9 @@ Patch157:       cmake_fhardened.diff
 Patch158:       archcheck.diff
 Patch159:       emptypw.diff
 Patch160:       buildsysprep.diff
+# Fix rpmuncompress single-root archive detection for top-level directory
+# entries stored without a trailing slash.
+Patch2000:      2000-fix-rpmuncompress-handle-dir-without-slash.patch
 Patch6464:      auto-config-update-aarch64-ppc64le.diff
 
 BuildRequires:  binutils
@@ -209,6 +212,7 @@ rm -rf sqlite
 %patch -P 141 -P 142
 %patch -P 150 -P 151 -P 154 -P 155 -P 156 -P 157 -P 158 -P 159
 %patch -P 160
+%patch 2000 -p1
 
 %ifarch riscv64
 %patch -P 6464
@@ -406,4 +410,4 @@ sed -e '/^%%__systemd_sysusers/s/^/#/' -i %{buildroot}%{_prefix}/lib/rpm/macros
 %doc %{_mandir}/man8/rpm-plugin-unshare*
 
 %changelog
-%{?autochangelog}
+%autochangelog

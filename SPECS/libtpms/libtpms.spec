@@ -6,14 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libtpms
-Version:        0.10.1
+Version:        0.10.2
 Release:        %autorelease
 Summary:        Library providing Trusted Platform Module (TPM) functionality
 License:        BSD-3-Clause
 URL:            https://github.com/stefanberger/libtpms
-#!RemoteAsset
+#!RemoteAsset:  sha256:edac03680f8a4a1c5c1d609a10e3f41e1a129e38ff5158f0c8deaedc719fb127
 Source:         https://github.com/stefanberger/libtpms/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
+
+# Fix const-qualifier build failure with newer GCC/glibc toolchains.
+Patch2000:      2000-fix-const-qualifier-build-error.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --with-tpm2
@@ -54,4 +57,4 @@ NOCONFIGURE=1 ./autogen.sh
 %{_mandir}/man3/TPM*
 
 %changelog
-%{?autochangelog}
+%autochangelog

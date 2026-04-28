@@ -16,22 +16,22 @@ License:        MIT
 URL:            https://github.com/html5lib/html5lib-python
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(six) >= 1.9
 BuildRequires:  python3dist(webencodings)
-
 %if %{with tests}
 # for tests
-BuildRequires:  python3-pytest
-BuildRequires:  python3-pytest-expect
+BuildRequires:  python3(pytest)
+BuildRequires:  python3(pytest-expect)
 %endif
 
 Provides:       python3-%{srcname}

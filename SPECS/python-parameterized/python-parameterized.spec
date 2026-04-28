@@ -16,26 +16,23 @@ License:        BSD-2-Clause
 URL:            https://github.com/wolever/parameterized
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l parameterized
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+%if %{with tests}
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(nose2)
+%endif
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
-
-%if %{with tests}
-BuildRequires:  python3-pytest
-BuildRequires:  python3-nose2
-%endif
-
-Provides:       python3-parameterized = %{version}-%{release}
-%python_provide python3-parameterized
 
 %description
 Parameterized testing with any Python test framework.

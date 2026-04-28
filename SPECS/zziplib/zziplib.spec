@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Lightweight library to extract data from zip files
 License:        LGPL-2.0-or-later OR MPL-1.1
 URL:            https://github.com/gdraheim/zziplib
-#!RemoteAsset
+#!RemoteAsset:  sha256:21f40d111c0f7a398cfee3b0a30b20c5d92124b08ea4290055fbfe7bdd53a22c
 Source0:        https://github.com/gdraheim/zziplib/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -50,9 +50,12 @@ zziplib library.
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/cmake/zziplib/*.cmake
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/zzipfseeko.pc
+%{_libdir}/pkgconfig/zziplib.pc
+%{_libdir}/pkgconfig/zzipmmapped.pc
+%{_libdir}/pkgconfig/zzipwrap.pc
 %{_datadir}/aclocal/*.m4
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

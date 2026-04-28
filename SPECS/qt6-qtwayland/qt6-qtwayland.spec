@@ -16,7 +16,7 @@ Summary:        Qt6 - Wayland platform support and QtCompositor module
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwayland
-#!RemoteAsset
+#!RemoteAsset:  sha256:49bf6db800227a6b2c971f4c5d03dd1e81297e7ffb296ce4a96437304f27cb13
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -145,7 +145,11 @@ popd
 %{_qt6_libdir}/cmake/Qt6WaylandClient/*.cmake
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositor.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorIviapplication.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorPresentationTime.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorWLShell.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorXdgShell.pc
 %exclude %{_qt6_libdir}/cmake/Qt6WaylandClient/Qt6QWaylandAdwaitaDecoration*.cmake
 
 %files adwaita-decoration
@@ -156,4 +160,4 @@ popd
 %{_qt6_examplesdir}/wayland/
 
 %changelog
-%{?autochangelog}
+%autochangelog

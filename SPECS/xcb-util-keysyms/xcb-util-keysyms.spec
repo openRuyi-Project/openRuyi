@@ -13,8 +13,8 @@ Summary:        X Fixes library
 License:        MIT
 URL:            https://www.x.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxcb-keysyms.git
-#!RemoteAsset
-Source0:        https://www.x.org/archive/individual/lib/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:7c260a5294412aed429df1da2f8afd3bd07b7cba3fec772fba15a613a6d5c638
+Source0:        https://www.x.org/archive/individual/lib/xcb-util-keysyms-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -40,8 +40,8 @@ Requires:       pkgconfig
 
 %files devel
 %{_includedir}/xcb/xcb_keysyms.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xcb-keysyms.pc
 %{_libdir}/libxcb-keysyms.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

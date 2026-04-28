@@ -114,7 +114,11 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_rpmconfigdir}/fileattrs/gstreamer.at
 %{_datadir}/aclocal/gst-element-check-%{majorminor}.m4
 %{_datadir}/gstreamer-%{majorminor}/gdb/
 %{_datadir}/gdb/auto-load/
-%{_libdir}/pkgconfig/gstreamer*-%{majorminor}.pc
+%{_libdir}/pkgconfig/gstreamer-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-base-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-check-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-controller-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-net-1.0.pc
 %{_datadir}/cmake/FindGStreamer.cmake
 
 %changelog

@@ -56,7 +56,9 @@ rm -f %{buildroot}%{_docdir}/%{name}-%{version}/doxygen-build.stamp
 %{_libdir}/libvorbis.so
 %{_libdir}/libvorbisfile.so
 %{_libdir}/libvorbisenc.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/vorbis.pc
+%{_libdir}/pkgconfig/vorbisenc.pc
+%{_libdir}/pkgconfig/vorbisfile.pc
 %{_datadir}/aclocal/vorbis.m4
 
 %changelog

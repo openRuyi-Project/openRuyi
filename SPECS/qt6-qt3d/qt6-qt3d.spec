@@ -18,7 +18,7 @@ Summary:        Qt6 - Qt3D QML bindings and C++ APIs
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qt3d.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:60593fd54f7b1e48dc67ddce0f1113e4593878872539677104c92926ef039c9a
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -101,10 +101,23 @@ popd
 %{_qt6_libdir}/libQt63D*.so
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt63DAnimation.pc
+%{_qt6_libdir}/pkgconfig/Qt63DCore.pc
+%{_qt6_libdir}/pkgconfig/Qt63DExtras.pc
+%{_qt6_libdir}/pkgconfig/Qt63DInput.pc
+%{_qt6_libdir}/pkgconfig/Qt63DLogic.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickAnimation.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickExtras.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickInput.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickLogic.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickRender.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickScene2D.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickScene3D.pc
+%{_qt6_libdir}/pkgconfig/Qt63DRender.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -14,17 +14,18 @@ License:        Apache-2.0 AND WTFPL
 URL:            https://github.com/h2non/jsonpath-ng
 #!RemoteAsset
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l jsonpath_ng
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
-BuildRequires:  python3-ply
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(ply)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}

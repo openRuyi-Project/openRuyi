@@ -9,18 +9,22 @@
 Name:           python-%{srcname}
 Version:        1.7.0
 Release:        %autorelease
+Summary:        PEP 518 build backend that uses setuptools_scm and flit
 License:        MIT
 URL:            https://gitlab.com/WillDaSilva/flit_scm
-Summary:        PEP 518 build backend that uses setuptools_scm and flit
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 A PEP 518 build backend that uses setuptools_scm to generate a version file
 from your version control system, then flit_core to build the package.

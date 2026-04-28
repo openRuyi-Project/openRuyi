@@ -17,10 +17,12 @@ License:        MIT
 URL:            https://github.com/ROCm/Tensile
 #!RemoteAsset
 Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{upstreamname}
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
 Requires:       cmake-filesystem

@@ -172,7 +172,23 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/gstreamer-%{majorminor}/include/gst/gl/
 %{_datadir}/gir-1.0/Gst*-%{majorminor}.gir
 %{_libdir}/libgst*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gstreamer-allocators-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-app-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-audio-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-fft-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-gl-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-gl-egl-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-gl-prototypes-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-gl-wayland-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-gl-x11-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-pbutils-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-plugins-base-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-riff-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-rtp-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-rtsp-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-sdp-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-tag-1.0.pc
+%{_libdir}/pkgconfig/gstreamer-video-1.0.pc
 %dir %{_datadir}/gst-plugins-base
 %{_datadir}/gst-plugins-base/%{majorminor}/
 

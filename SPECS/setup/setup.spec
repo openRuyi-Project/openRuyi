@@ -31,8 +31,9 @@ Source22:       lang.sh
 Source31:       COPYING
 Source32:       uidgid
 # Single source of truth for base identities.
-# Used in %build to seed packaged /etc/{passwd,group,shadow,gshadow},
-# and shipped as the runtime vendor sysusers config.
+# Used in %build to seed packaged /etc/{passwd,group,shadow,gshadow}.
+# The runtime vendor sysusers config is derived from this file with
+# identities already owned by systemd basic.conf filtered out.
 Source33:       setup.sysusers
 Source34:       uidgidlint
 Source35:       serviceslint
@@ -67,7 +68,9 @@ cp %SOURCE31 %SOURCE32 docs/
 
 %build
 # This produces ./etc/{passwd,group,shadow,gshadow}
-systemd-sysusers --root=./ /usr/lib/sysusers.d/basic.conf %SOURCE33
+# Keep the packaged base identities fully repo-controlled.
+# Do not mix in the builder's systemd basic.conf here.
+systemd-sysusers --root=./ %SOURCE33
 # Allow the user to copy the file
 chmod 0400 ./etc/{shadow,gshadow}
 
@@ -84,7 +87,10 @@ bash %SOURCE34 docs/uidgid
 mkdir -p %{buildroot}/etc
 cp -ar etc/* %{buildroot}/etc/
 
-install -D -m0644 %SOURCE33 %{buildroot}%{_sysusersdir}/setup.conf
+mkdir -p %{buildroot}%{_sysusersdir}
+grep -Ev '^(g[[:space:]]+(root|adm|wheel|tty|users|nobody|utmp|audio|cdrom|dialout|disk|input|kmem|kvm|lp|render|sgx|tape|video)|u[[:space:]]+(root|nobody))[[:space:]]' \
+    %SOURCE33 > %{buildroot}%{_sysusersdir}/setup.conf
+chmod 0644 %{buildroot}%{_sysusersdir}/setup.conf
 
 mkdir -p %{buildroot}/var/log
 touch %{buildroot}/etc/environment
@@ -189,4 +195,4 @@ end
 /usr/share/dnf5/libdnf.conf.d/protect-setup.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog

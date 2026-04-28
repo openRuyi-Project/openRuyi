@@ -32,7 +32,7 @@ Summary:        Package compiler and linker metadata toolkit
 License:        ISC
 URL:            https://pkgconf.org/
 VCS:            git:https://github.com/pkgconf/pkgconf.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:b06ff63a83536aa8c2f6422fa80ad45e4833f590266feb14eaddfe1d4c853c69
 Source0:        https://distfiles.dereferenced.org/%{name}/%{name}-%{version}.tar.xz
 # Simple wrapper script to offer platform versions of pkgconfig from Fedora
 Source1:        platform-pkg-config.in
@@ -165,6 +165,8 @@ rm -rf %{buildroot}%{_mandir}/man7
 %{_mandir}/man5/pc.5*
 %{_mandir}/man5/pkgconf-personality.5*
 %{_rpmmacrodir}/macros.pkgconf
+%dir %{_libdir}/pkgconfig
+%dir %{_datadir}/pkgconfig
 %dir %{_sysconfdir}/pkgconfig
 %dir %{_sysconfdir}/pkgconfig/personality.d
 %dir %{_datadir}/pkgconfig/personality.d
@@ -195,4 +197,4 @@ rm -rf %{buildroot}%{_mandir}/man7
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,17 +12,17 @@ Release:        %autorelease
 Summary:        Another ISO 8601 parser for Python
 License:        BSD-3-Clause
 URL:            https://bitbucket.org/nielsenb/aniso8601
-#!RemoteAsset
+#!RemoteAsset:  sha256:72e3117667eedf66951bb2d93f4296a56b94b078a8a95905a052611fb3f1b973
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-dateutil
-BuildRequires:  python3-setuptools
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(python-dateutil)
+BuildRequires:  python3dist(setuptools)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -39,4 +39,4 @@ datetime format.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

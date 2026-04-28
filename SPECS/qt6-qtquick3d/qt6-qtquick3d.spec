@@ -19,7 +19,7 @@ Summary:        Qt6 - Quick3D Libraries and utilities
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquick3d
-#!RemoteAsset
+#!RemoteAsset:  sha256:17d40272becef0dab71b60333bcf0c23d1d25dcf1df16ee9bf0daa7e4de403e6
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -158,10 +158,21 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3D.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DAssetImport.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DAssetUtils.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DEffects.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DHelpers.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DHelpersImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DIblBaker.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DParticleEffects.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DParticles.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DRuntimeRender.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DUtils.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DXr.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

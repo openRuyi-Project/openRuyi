@@ -39,7 +39,7 @@ Requires:       pkgconfig
 
 %files devel
 %{_includedir}/X11/xshmfence.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xshmfence.pc
 %{_libdir}/libxshmfence.so
 
 %changelog

@@ -16,7 +16,7 @@ Summary:        Qt6 - Qt Remote Objects
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtremoteobjects
-#!RemoteAsset
+#!RemoteAsset:  sha256:7c9e56dbe2c400e33d13626a27d822a7c95b7d95f2272b198a788c2b4a9b8a0d
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -82,10 +82,12 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6RemoteObjects.pc
+%{_qt6_libdir}/pkgconfig/Qt6RemoteObjectsQml.pc
+%{_qt6_libdir}/pkgconfig/Qt6RepParser.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

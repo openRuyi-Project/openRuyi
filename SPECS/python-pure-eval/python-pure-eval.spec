@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname pure_eval
+%global pypi_name pure-eval
 
 Name:           python-pure-eval
 Version:        0.2.3
@@ -13,7 +14,8 @@ Summary:        Safely evaluate AST nodes without side effects
 License:        MIT
 URL:            http://github.com/alexmojaki/pure_eval
 #!RemoteAsset:  sha256:5f4e983f40564c576c7c8635ae88db5956bb2229d7e9237d03b3c0b0190eaf42
-Source0:        https://files.pythonhosted.org/packages/source/p/pure-eval/%{srcname}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -26,8 +28,8 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-%{pypi_name}
+%python_provide python3-%{pypi_name}
 
 %description
 This is a Python package that lets you safely

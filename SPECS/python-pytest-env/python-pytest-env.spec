@@ -9,19 +9,22 @@
 Name:           python-pytest-env
 Version:        1.1.5
 Release:        %autorelease
+Summary:        Pytest plugin that allows you to add environment variables
 License:        MIT
 URL:            https://github.com/MobileDynasty/pytest-env
-Summary:        Pytest plugin that allows you to add environment variables
-Provides:       python3-pytest-env
-%python_provide python3-pytest-env
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
+
+BuildOption(install):  %{srcname} +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildSystem:    pyproject
-BuildOption(install): %{srcname} +auto
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-pytest-env
+%python_provide python3-pytest-env
+
 %description
 This is a @code{py.test} plugin that enables you to set environment
 variables in the @file{pytest.ini} file.

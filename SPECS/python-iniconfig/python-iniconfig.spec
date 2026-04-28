@@ -13,19 +13,25 @@ Release:        %autorelease
 Summary:        Brain-dead simple parsing of ini files
 License:        MIT
 URL:            http://github.com/RonnyPfannschmidt/iniconfig
-#!RemoteAsset
-Source0:        %{url}/archive/v%{version}/iniconfig-%{version}.tar.gz
+#!RemoteAsset:  sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7
+Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-pluggy
-BuildRequires:  python3-hatch-vcs
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-setuptools_scm
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-packaging
-BuildRequires:  python3-pip
-BuildRequires:  expat
+BuildOption(install):  -l %{srcname}
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pluggy)
+BuildRequires:  python3dist(hatch-vcs)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(packaging)
+BuildRequires:  python3dist(pip)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
 
 %description
 iniconfig is a small and simple INI-file parser module
@@ -39,38 +45,15 @@ having a unique set of features:
 * no bells and whistles like automatic substitutions
 * iniconfig raises an Error if two sections have the same name.
 
-%package     -n python3-iniconfig
-Summary:        %{summary}
-
-%description -n python3-iniconfig
-iniconfig is a small and simple INI-file parser module
-having a unique set of features:
-
-* tested against Python2.4 across to Python3.2, Jython, PyPy
-* maintains order of sections and entries
-* supports multi-line values with or without line-continuations
-* supports "#" comments everywhere
-* raises errors with proper line-numbers
-* no bells and whistles like automatic substitutions
-* iniconfig raises an Error if two sections have the same name.
-
-%prep
-%autosetup -p1 -n iniconfig-%{version}
-
 %generate_buildrequires
 export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %pyproject_buildrequires
 
-%build
+%build -p
 export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
-%pyproject_wheel
 
-%install
-%pyproject_install
-%pyproject_save_files -l iniconfig
-
-%files -n python3-iniconfig -f %{pyproject_files}
+%files -f %{pyproject_files}
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

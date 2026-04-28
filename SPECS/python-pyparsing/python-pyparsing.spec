@@ -10,21 +10,22 @@
 Name:           python-%{srcname}
 Version:        3.2.1
 Release:        %autorelease
+Summary:        Python parsing class library
 License:        MIT
 URL:            https://github.com/pyparsing/pyparsing
-Summary:        Python parsing class library
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
-BuildSystem:    pyproject
 BuildArch:      noarch
+BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} +auto
 # skip the part of the tests,as we have no railroad yet.
 BuildOption(check):  -e pyparsing.diagram
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-flit-core
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(flit-core)
 
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}

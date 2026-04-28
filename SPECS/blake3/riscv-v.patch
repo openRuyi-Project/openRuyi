@@ -1,21 +1,33 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index 693ae87..5a7d17d 100644
+index f8f006d..55a0909 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -18,6 +18,11 @@ default = ["std"]
+@@ -18,6 +18,15 @@ default = ["std"]
  # implementation uses C intrinsics and requires a C compiler.
  neon = []
  
-+# The RVV (RISC-V Vector) implementation does not participate in dynamic feature
-+# detection. If "rvv" is on, RVV support is assumed. The RVV implementation uses
-+# C intrinsics and requires a C compiler with RVV support.
++# The RVV (RISC-V Vector) implementation participates in dynamic feature
++# detection on Linux and FreeBSD (via getauxval/elf_aux_info). On riscv64
++# little-endian targets, RVV code is compiled automatically if the C compiler
++# supports it; runtime detection then determines whether to use it. Enabling
++# "rvv" will aussume that the compiler supports it and the compilation output 
++# will explicitly skip runtime detection and assume RVV is available, which
++# is useful for bare-metal targets.
 +rvv = []
 +
  # The Wasm SIMD implementation does not participate in dynamic feature detection,
  # which is currently x86-only. If "wasm_simd" is on, Wasm SIMD support is assumed.
  # Note that not all Wasm implementations support the Wasm SIMD specification.
+@@ -106,6 +115,7 @@ no_sse41 = []
+ no_avx2 = []
+ no_avx512 = []
+ no_neon = []
++no_rvv = []
+ 
+ [package.metadata.docs.rs]
+ # Document the rayon/mmap methods and the Serialize/Deserialize/Zeroize impls on docs.rs.
 diff --git a/b3sum/Cargo.toml b/b3sum/Cargo.toml
-index cd98c69..9f5fb29 100644
+index 418bde9..3091ee0 100644
 --- a/b3sum/Cargo.toml
 +++ b/b3sum/Cargo.toml
 @@ -10,6 +10,7 @@ edition = "2024"
@@ -27,28 +39,37 @@ index cd98c69..9f5fb29 100644
  pure = ["blake3/pure"]
  
 diff --git a/build.rs b/build.rs
-index 01b692f..dd71755 100644
+index 01b692f..f25ef13 100644
 --- a/build.rs
 +++ b/build.rs
-@@ -99,6 +99,26 @@ fn is_wasm32() -> bool {
+@@ -99,6 +99,35 @@ fn is_wasm32() -> bool {
      target_components()[0] == "wasm32"
  }
  
 +fn is_riscv64() -> bool {
-+    let arch = &target_components()[0];
-+    arch == "riscv64gc" || arch == "riscv64a23"
++    target_components()[0].starts_with("riscv64")
++}
++
++// Test whether the C compiler supports -march=rv64imfdv (i.e. has RVV support).
++fn test_rvv_compile_support() -> bool {
++    let build = new_build();
++    build.is_flag_supported("-march=rv64imfdv").unwrap_or(false)
 +}
 +
 +fn is_rvv() -> bool {
-+    // Explicit RVV feature flag
 +    if defined("CARGO_FEATURE_RVV") {
 +        return true;
 +    }
 +
-+    // riscv64a23 target has built-in RVV support
-+    let arch = &target_components()[0];
-+    if arch == "riscv64a23" {
-+        return true;
++    if is_pure() {
++        return false;
++    }
++
++    // Auto-enable on riscv64 little-endian if the compiler supports RVV,
++    // similar to how NEON is auto-enabled on aarch64. Runtime detection
++    // in platform.rs handles the case where the hardware lacks V extension.
++    if is_riscv64() && is_little_endian() {
++        return test_rvv_compile_support();
 +    }
 +
 +    false
@@ -57,33 +78,34 @@ index 01b692f..dd71755 100644
  fn endianness() -> String {
      let endianness = env::var("CARGO_CFG_TARGET_ENDIAN").unwrap();
      assert!(endianness == "little" || endianness == "big");
-@@ -300,6 +320,25 @@ fn build_wasm32_simd() {
+@@ -300,6 +329,26 @@ fn build_wasm32_simd() {
      println!("cargo:rustc-cfg=blake3_wasm32_simd");
  }
  
 +fn build_rvv_c_intrinsics() {
 +    let mut build = new_build();
-+    // Note that blake3_rvv.c normally depends on the blake3_portable.c
-+    // for the single-instance compression function, but we expose
-+    // portable.rs over FFI instead. See ffi_rvv.rs.
++    // Note that blake3_rvv.c depends on blake3_portable.c for the single-instance
++    // compression function. On the Rust side, we expose portable.rs over FFI
++    // instead. See ffi_rvv.rs.
 +    build.file("c/blake3_rvv.c");
-+
-+    // Try rva23u64 first (RVA23 profile includes RVV 1.0), then fall back to rv64gcv.
-+    // This matches the priority in CMakeLists.txt.
-+    let march_flag = if build.is_flag_supported("-march=rva23u64").unwrap_or(false) {
-+        "-march=rva23u64"
-+    } else {
-+        "-march=rv64gcv"
-+    };
-+    build.flag(march_flag);
-+
++    // blake3_rvv.c requires: I (base) + M (VLA stack mul) + V (vector).
++    // F+D are not used by our code but required by the lp64d ABI of all
++    // riscv64gc Rust targets. We spell out each extension explicitly
++    // rather than using 'g' (= imafd_zicsr_zifencei) to document the
++    // minimal set: A, C, Zicsr, Zifencei are not needed.
++    build.flag("-march=rv64imfdv");
++    // Workaround: cc crate infers -mabi=lp64 (soft-float) for bare-metal
++    // riscv64gc targets, but Rust uses lp64d. Override to avoid ABI mismatch.
++    if env::var("CARGO_CFG_TARGET_OS").unwrap_or_default() == "none" {
++        build.flag("-mabi=lp64d");
++    }
 +    build.compile("blake3_rvv");
 +}
 +
  fn main() -> Result<(), Box<dyn std::error::Error>> {
      // As of Rust 1.80, unrecognized config names are warnings. Give Cargo all of our config names.
      let all_cfgs = [
-@@ -312,6 +351,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -312,6 +361,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          "blake3_avx512_ffi",
          "blake3_neon",
          "blake3_wasm32_simd",
@@ -91,7 +113,7 @@ index 01b692f..dd71755 100644
      ];
      for cfg_name in all_cfgs {
          // TODO: Switch this whole file to the new :: syntax when our MSRV reaches 1.77.
-@@ -327,6 +367,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -327,6 +377,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          panic!("It doesn't make sense to enable both \"no_neon\" and \"neon\".");
      }
  
@@ -102,7 +124,7 @@ index 01b692f..dd71755 100644
      if is_x86_64() || is_x86_32() {
          let support = c_compiler_support();
          if is_x86_32() || should_prefer_intrinsics() || is_pure() || support == NoCompiler {
-@@ -361,6 +405,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -361,6 +415,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          build_wasm32_simd();
      }
  
@@ -110,7 +132,9 @@ index 01b692f..dd71755 100644
 +        panic!("The RVV implementation doesn't support big-endian RISC-V.")
 +    }
 +
-+    // Enable RVV if explicitly requested via feature flag
++    // Auto-enable RVV on riscv64 when the compiler supports it (similar to
++    // NEON on aarch64). Runtime detection in platform.rs will check for actual
++    // V extension support before using the RVV code path.
 +    if is_riscv64() && is_rvv() {
 +        println!("cargo:rustc-cfg=blake3_rvv");
 +        build_rvv_c_intrinsics();
@@ -120,7 +144,7 @@ index 01b692f..dd71755 100644
      // environment variables it supports, in particular for $CC. We expect to
      // do a lot of benchmarking across different compilers, so we explicitly
 diff --git a/c/CMakeLists.txt b/c/CMakeLists.txt
-index 28127d4..ddfc0e5 100644
+index 30d83c8..0d70dc8 100644
 --- a/c/CMakeLists.txt
 +++ b/c/CMakeLists.txt
 @@ -31,6 +31,7 @@ add_subdirectory(dependencies)
@@ -131,43 +155,25 @@ index 28127d4..ddfc0e5 100644
  # default SIMD compiler flag configuration (can be overriden by toolchains or CLI)
  if(MSVC)
    set(BLAKE3_CFLAGS_SSE2 "/arch:SSE2" CACHE STRING "the compiler flags to enable SSE2")
-@@ -76,9 +77,45 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU"
+@@ -76,9 +77,27 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU"
      # 32-bit ARMv8 needs NEON to be enabled explicitly
      set(BLAKE3_CFLAGS_NEON "-mfpu=neon" CACHE STRING "the compiler flags to enable NEON")
    endif()
 +  
 +  if (CMAKE_SYSTEM_PROCESSOR IN_LIST BLAKE3_RISCV64_NAMES)
-+    # RISC-V Vector Extension (RVV 1.0) - check if compiler supports it
-+    # Try rva23u64 first (RVA23 profile with RVV), then rv64gcv
-+    include(CheckCSourceCompiles)
-+    
-+    # Try rva23u64 first (RVA23 profile includes RVV 1.0)
-+    set(CMAKE_REQUIRED_FLAGS "-march=rva23u64")
-+    check_c_source_compiles("
-+#include <riscv_vector.h>
-+int main() {
-+  size_t vl = __riscv_vsetvlmax_e32m1();
-+  return 0;
-+}
-+" BLAKE3_COMPILER_SUPPORTS_RVA23U64)
-+    set(CMAKE_REQUIRED_FLAGS)
-+    
-+    if(BLAKE3_COMPILER_SUPPORTS_RVA23U64)
-+      set(BLAKE3_CFLAGS_RVV "-march=rva23u64" CACHE STRING "the compiler flags to enable RVV")
++    if(DEFINED BLAKE3_CFLAGS_RVV)
++      message(STATUS "Using user-specified RVV flags: ${BLAKE3_CFLAGS_RVV}")
 +    else()
-+      # Fall back to rv64gcv
-+      set(CMAKE_REQUIRED_FLAGS "-march=rv64gcv")
-+      check_c_source_compiles("
-+#include <riscv_vector.h>
-+int main() {
-+  size_t vl = __riscv_vsetvlmax_e32m1();
-+  return 0;
-+}
-+" BLAKE3_COMPILER_SUPPORTS_RV64GCV)
-+      set(CMAKE_REQUIRED_FLAGS)
-+      
-+      if(BLAKE3_COMPILER_SUPPORTS_RV64GCV)
-+        set(BLAKE3_CFLAGS_RVV "-march=rv64gcv" CACHE STRING "the compiler flags to enable RVV")
++      message(STATUS "Testing RVV compiler support...")
++
++      include(CheckCCompilerFlag)
++      check_c_compiler_flag("-march=rv64imfdv" BLAKE3_RVV_SUPPORTED)
++
++      if(BLAKE3_RVV_SUPPORTED)
++        set(BLAKE3_CFLAGS_RVV "-march=rv64imfdv" CACHE STRING "the compiler flags to enable RVV")
++        message(STATUS "RVV compiler support verified")
++      else()
++        message(STATUS "RVV not supported (compiler does not accept -march=rv64imfdv)")
 +      endif()
 +    endif()
 +  endif()
@@ -178,7 +184,7 @@ index 28127d4..ddfc0e5 100644
  mark_as_advanced(BLAKE3_AMD64_ASM_SOURCES)
  
  message(STATUS "BLAKE3 SIMD configuration: ${CMAKE_C_COMPILER_ARCHITECTURE_ID}")
-@@ -113,6 +150,10 @@ elseif((CMAKE_SYSTEM_PROCESSOR IN_LIST BLAKE3_ARMv8_NAMES
+@@ -113,6 +132,10 @@ elseif((CMAKE_SYSTEM_PROCESSOR IN_LIST BLAKE3_ARMv8_NAMES
            OR CMAKE_SIZEOF_VOID_P EQUAL 8))
    set(BLAKE3_SIMD_TYPE "neon-intrinsics" CACHE STRING "the SIMD acceleration type to use")
  
@@ -189,7 +195,7 @@ index 28127d4..ddfc0e5 100644
  else()
    set(BLAKE3_SIMD_TYPE "none" CACHE STRING "the SIMD acceleration type to use")
  endif()
-@@ -205,9 +246,26 @@ elseif(BLAKE3_SIMD_TYPE STREQUAL "neon-intrinsics")
+@@ -205,9 +228,24 @@ elseif(BLAKE3_SIMD_TYPE STREQUAL "neon-intrinsics")
      set_source_files_properties(blake3_neon.c PROPERTIES COMPILE_FLAGS "${BLAKE3_CFLAGS_NEON}")
    endif()
  
@@ -200,23 +206,21 @@ index 28127d4..ddfc0e5 100644
 +    blake3_rvv.c
 +  )
 +  target_compile_definitions(blake3 PRIVATE
-+    BLAKE3_USE_RVV=1
++    BLAKE3_BUILD_RVV=1
 +  )
 +
 +  if (DEFINED BLAKE3_CFLAGS_RVV)
 +    set_source_files_properties(blake3_rvv.c PROPERTIES COMPILE_FLAGS "${BLAKE3_CFLAGS_RVV}")
-+    # blake3_dispatch.c also needs RVV flags to call __riscv_vsetvlmax_e32m1()
-+    set_source_files_properties(blake3_dispatch.c PROPERTIES COMPILE_FLAGS "${BLAKE3_CFLAGS_RVV}")
 +  endif()
 +
  elseif(BLAKE3_SIMD_TYPE STREQUAL "none")
    target_compile_definitions(blake3 PRIVATE
      BLAKE3_USE_NEON=0
-+    BLAKE3_USE_RVV=0
++    BLAKE3_BUILD_RVV=0
      BLAKE3_NO_SSE2
      BLAKE3_NO_SSE41
      BLAKE3_NO_AVX2
-@@ -365,6 +423,7 @@ install(FILES "${CMAKE_BINARY_DIR}/libblake3.pc"
+@@ -365,6 +403,7 @@ install(FILES "${CMAKE_BINARY_DIR}/libblake3.pc"
  add_feature_info("AMD64 assembly" BLAKE3_SIMD_AMD64_ASM "The library uses hand written amd64 SIMD assembly.")
  add_feature_info("x86 SIMD intrinsics" BLAKE3_SIMD_X86_INTRINSICS "The library uses x86 SIMD intrinsics.")
  add_feature_info("NEON SIMD intrinsics" BLAKE3_SIMD_NEON_INTRINSICS "The library uses NEON SIMD intrinsics.")
@@ -224,68 +228,176 @@ index 28127d4..ddfc0e5 100644
  add_feature_info("oneTBB parallelism" BLAKE3_USE_TBB "The library uses oneTBB parallelism.")
  feature_summary(WHAT ENABLED_FEATURES)
  
+diff --git a/c/blake3_c_rust_bindings/Cargo.toml b/c/blake3_c_rust_bindings/Cargo.toml
+index e82c34c..59389e5 100644
+--- a/c/blake3_c_rust_bindings/Cargo.toml
++++ b/c/blake3_c_rust_bindings/Cargo.toml
+@@ -16,6 +16,8 @@ prefer_intrinsics = []
+ # Activate NEON bindings. We don't currently do any CPU feature detection for
+ # this. If this Cargo feature is on, the NEON gets used.
+ neon = []
++# Force-enable RVV (RISC-V Vector). Skips runtime detection.
++rvv = []
+ # Enable TBB-based multithreading.
+ tbb = []
+ 
+diff --git a/c/blake3_c_rust_bindings/build.rs b/c/blake3_c_rust_bindings/build.rs
+index 0236df4..015ce03 100644
+--- a/c/blake3_c_rust_bindings/build.rs
++++ b/c/blake3_c_rust_bindings/build.rs
+@@ -110,6 +110,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+     if cfg!(feature = "tbb") {
+         base_build.define("BLAKE3_USE_TBB", "1");
+     }
++    if cfg!(feature = "rvv") {
++        base_build.define("BLAKE3_USE_RVV", "1");
++    }
+     base_build.compile("blake3_base");
+ 
+     if cfg!(feature = "tbb") {
+@@ -223,6 +226,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+         neon_build.compile("blake3_neon");
+     }
+ 
++    if defined("CARGO_FEATURE_RVV") {
++        let mut rvv_build = new_build();
++        rvv_build.file(c_dir_path("blake3_rvv.c"));
++        rvv_build.flag("-march=rv64imfdv");
++        rvv_build.compile("blake3_rvv");
++    }
++
+     // The `cc` crate does not automatically emit rerun-if directives for the
+     // environment variables it supports, in particular for $CC. We expect to
+     // do a lot of benchmarking across different compilers, so we explicitly
+diff --git a/c/blake3_c_rust_bindings/cross_test.sh b/c/blake3_c_rust_bindings/cross_test.sh
+index 94d50af..e4507f4 100755
+--- a/c/blake3_c_rust_bindings/cross_test.sh
++++ b/c/blake3_c_rust_bindings/cross_test.sh
+@@ -26,6 +26,7 @@ cat > Cross.toml << EOF
+ [build.env]
+ passthrough = [
+     "BLAKE3_C_DIR_OVERRIDE",
++    "QEMU_CPU",
+ ]
+ EOF
+ cross test "$@"
 diff --git a/c/blake3_dispatch.c b/c/blake3_dispatch.c
-index 14dfbbe..7336e5a 100644
+index 14dfbbe..8f2a5e9 100644
 --- a/c/blake3_dispatch.c
 +++ b/c/blake3_dispatch.c
-@@ -18,6 +18,10 @@
+@@ -18,6 +18,38 @@
  #endif
  #endif
  
++#if BLAKE3_BUILD_RVV == 1
++#if defined(__linux__)
++#include <sys/auxv.h>
++#elif defined(__FreeBSD__)
++#include <sys/auxv.h>
++#endif
++
++// Runtime detection of RISC-V V extension.
++static bool blake3_rvv_detected(void) {
 +#if BLAKE3_USE_RVV == 1
-+#include <riscv_vector.h>
++  // User explicitly forced RVV via BLAKE3_USE_RVV=1, skip detection.
++  return true;
++#elif defined(__linux__)
++  // RISC-V HWCAP bit for V extension (bit 21, letter 'V' - 'A')
++  const unsigned long COMPAT_HWCAP_ISA_V = 1UL << ('V' - 'A');
++  return (getauxval(AT_HWCAP) & COMPAT_HWCAP_ISA_V) != 0;
++#elif defined(__FreeBSD__)
++  const unsigned long COMPAT_HWCAP_ISA_V = 1UL << ('V' - 'A');
++  unsigned long hwcap = 0;
++  if (elf_aux_info(AT_HWCAP, &hwcap, sizeof(hwcap)) == 0) {
++    return (hwcap & COMPAT_HWCAP_ISA_V) != 0;
++  }
++  return false;
++#else
++  // Bare-metal / unknown OS: no safe way to detect V extension at runtime.
++  // Use BLAKE3_USE_RVV=1 to force-enable when the hardware is known to
++  // support it.
++  return false;
++#endif
++}
 +#endif
 +
  #if !defined(BLAKE3_ATOMICS)
  #if defined(__has_include)
  #if __has_include(<stdatomic.h>) && !defined(_MSC_VER)
-@@ -294,6 +298,12 @@ void blake3_hash_many(const uint8_t *const *inputs, size_t num_inputs,
+@@ -294,6 +326,14 @@ void blake3_hash_many(const uint8_t *const *inputs, size_t num_inputs,
    return;
  #endif
  
-+#if BLAKE3_USE_RVV == 1
-+  blake3_hash_many_rvv(inputs, num_inputs, blocks, key, counter,
-+                       increment_counter, flags, flags_start, flags_end, out);
-+  return;
++#if BLAKE3_BUILD_RVV == 1
++  if (blake3_rvv_detected()) {
++    blake3_hash_many_rvv(inputs, num_inputs, blocks, key, counter,
++                         increment_counter, flags, flags_start, flags_end, out);
++    return;
++  }
 +#endif
 +
    blake3_hash_many_portable(inputs, num_inputs, blocks, key, counter,
                              increment_counter, flags, flags_start, flags_end,
                              out);
-@@ -327,6 +337,10 @@ size_t blake3_simd_degree(void) {
+@@ -327,6 +367,11 @@ size_t blake3_simd_degree(void) {
  #endif
  #if BLAKE3_USE_NEON == 1
    return 4;
 +#endif
-+#if BLAKE3_USE_RVV == 1
-+  // RVV vector length is dynamic, query it at runtime.
-+  return __riscv_vsetvlmax_e32m1();
++#if BLAKE3_BUILD_RVV == 1
++  if (blake3_rvv_detected()) {
++    return blake3_rvv_simd_degree();
++  }
  #endif
    return 1;
  }
 diff --git a/c/blake3_impl.h b/c/blake3_impl.h
-index 88e71e4..5df79a4 100644
+index 88e71e4..17a839b 100644
 --- a/c/blake3_impl.h
 +++ b/c/blake3_impl.h
-@@ -75,6 +75,8 @@ enum blake3_flags {
+@@ -71,10 +71,31 @@ enum blake3_flags {
+   #endif
+ #endif
+ 
++#if !defined(BLAKE3_USE_RVV)
++  #define BLAKE3_USE_RVV 0
++#endif
++
++// BLAKE3_USE_RVV implies BLAKE3_BUILD_RVV.
++#if BLAKE3_USE_RVV == 1 && !defined(BLAKE3_BUILD_RVV)
++  #define BLAKE3_BUILD_RVV 1
++#endif
++
++#if !defined(BLAKE3_BUILD_RVV)
++  // If BLAKE3_BUILD_RVV not manually set, autodetect based on __riscv_vector
++  // (defined by the compiler when V or Zve* extensions are enabled).
++  #if defined(__riscv_vector) && defined(__riscv) && (__riscv_xlen == 64)
++    #define BLAKE3_BUILD_RVV 1
++  #else
++    #define BLAKE3_BUILD_RVV 0
++  #endif
++#endif
++
+ #if defined(IS_X86)
  #define MAX_SIMD_DEGREE 16
  #elif BLAKE3_USE_NEON == 1
  #define MAX_SIMD_DEGREE 4
-+#elif BLAKE3_USE_RVV == 1
-+#define MAX_SIMD_DEGREE 16
++#elif BLAKE3_BUILD_RVV == 1
++#define MAX_SIMD_DEGREE 64
  #else
  #define MAX_SIMD_DEGREE 1
  #endif
-@@ -326,6 +328,14 @@ void blake3_hash_many_neon(const uint8_t *const *inputs, size_t num_inputs,
+@@ -326,6 +347,15 @@ void blake3_hash_many_neon(const uint8_t *const *inputs, size_t num_inputs,
                             uint8_t flags_end, uint8_t *out);
  #endif
  
-+#if BLAKE3_USE_RVV == 1
++#if BLAKE3_BUILD_RVV == 1
 +void blake3_hash_many_rvv(const uint8_t *const *inputs, size_t num_inputs,
 +                          size_t blocks, const uint32_t key[8],
 +                          uint64_t counter, bool increment_counter,
 +                          uint8_t flags, uint8_t flags_start,
 +                          uint8_t flags_end, uint8_t *out);
++size_t blake3_rvv_simd_degree(void);
 +#endif
 +
  #ifdef __cplusplus
@@ -293,10 +405,10 @@ index 88e71e4..5df79a4 100644
  #endif
 diff --git a/c/blake3_rvv.c b/c/blake3_rvv.c
 new file mode 100644
-index 0000000..6f4003b
+index 0000000..be9f087
 --- /dev/null
 +++ b/c/blake3_rvv.c
-@@ -0,0 +1,301 @@
+@@ -0,0 +1,310 @@
 +#include "blake3_impl.h"
 +#include <riscv_vector.h>
 +
@@ -428,71 +540,80 @@ index 0000000..6f4003b
 +
 +  uint8_t block_flags = flags | flags_start;
 +
++  // Copy each input's block into an aligned buffer before gather loading.
++  // Input pointers are byte-aligned (&[u8]) and may not satisfy the u32
++  // alignment required by vluxei64_v_u32m1 on hardware without misaligned
++  // vector support (e.g. T-Head C920).
++  uint8_t aligned_blocks[vl][BLAKE3_BLOCK_LEN];
++
 +  for (size_t block = 0; block < blocks; block++) {
 +    if (block + 1 == blocks) {
 +      block_flags |= flags_end;
 +    }
 +
-+    // Load message words from vl different inputs using indexed load
-+    // This uses RVV's vluxei64 instruction to gather data from multiple addresses
 +    size_t offset = block * BLAKE3_BLOCK_LEN;
-+    
-+    // Construct base address vector: addresses of each input's message block
++
++    // Copy vl input blocks into the aligned buffer
++    for (size_t i = 0; i < vl; i++) {
++      memcpy(aligned_blocks[i], &inputs[i][offset], BLAKE3_BLOCK_LEN);
++    }
++
++    // Construct base address vector from aligned buffer
 +    uint64_t base_addrs[vl];
 +    for (size_t i = 0; i < vl; i++) {
-+      base_addrs[i] = (uint64_t)&inputs[i][offset];
++      base_addrs[i] = (uint64_t)aligned_blocks[i];
 +    }
 +    vuint64m2_t base_vec = __riscv_vle64_v_u64m2(base_addrs, vl);
-+    
-+    // Use indexed load to gather each message word from all inputs
-+    // Fully unrolled for maximum performance
-+    vuint64m2_t addr0 = base_vec;
-+    vuint32m1_t m0 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr0, vl);
-+    
-+    vuint64m2_t addr1 = __riscv_vadd_vx_u64m2(base_vec, 1 * sizeof(uint32_t), vl);
-+    vuint32m1_t m1 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr1, vl);
-+    
-+    vuint64m2_t addr2 = __riscv_vadd_vx_u64m2(base_vec, 2 * sizeof(uint32_t), vl);
-+    vuint32m1_t m2 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr2, vl);
-+    
-+    vuint64m2_t addr3 = __riscv_vadd_vx_u64m2(base_vec, 3 * sizeof(uint32_t), vl);
-+    vuint32m1_t m3 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr3, vl);
-+    
-+    vuint64m2_t addr4 = __riscv_vadd_vx_u64m2(base_vec, 4 * sizeof(uint32_t), vl);
-+    vuint32m1_t m4 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr4, vl);
-+    
-+    vuint64m2_t addr5 = __riscv_vadd_vx_u64m2(base_vec, 5 * sizeof(uint32_t), vl);
-+    vuint32m1_t m5 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr5, vl);
-+    
-+    vuint64m2_t addr6 = __riscv_vadd_vx_u64m2(base_vec, 6 * sizeof(uint32_t), vl);
-+    vuint32m1_t m6 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr6, vl);
-+    
-+    vuint64m2_t addr7 = __riscv_vadd_vx_u64m2(base_vec, 7 * sizeof(uint32_t), vl);
-+    vuint32m1_t m7 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr7, vl);
-+    
-+    vuint64m2_t addr8 = __riscv_vadd_vx_u64m2(base_vec, 8 * sizeof(uint32_t), vl);
-+    vuint32m1_t m8 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr8, vl);
-+    
-+    vuint64m2_t addr9 = __riscv_vadd_vx_u64m2(base_vec, 9 * sizeof(uint32_t), vl);
-+    vuint32m1_t m9 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr9, vl);
-+    
-+    vuint64m2_t addr10 = __riscv_vadd_vx_u64m2(base_vec, 10 * sizeof(uint32_t), vl);
-+    vuint32m1_t m10 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr10, vl);
-+    
-+    vuint64m2_t addr11 = __riscv_vadd_vx_u64m2(base_vec, 11 * sizeof(uint32_t), vl);
-+    vuint32m1_t m11 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr11, vl);
-+    
-+    vuint64m2_t addr12 = __riscv_vadd_vx_u64m2(base_vec, 12 * sizeof(uint32_t), vl);
-+    vuint32m1_t m12 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr12, vl);
-+    
-+    vuint64m2_t addr13 = __riscv_vadd_vx_u64m2(base_vec, 13 * sizeof(uint32_t), vl);
-+    vuint32m1_t m13 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr13, vl);
-+    
-+    vuint64m2_t addr14 = __riscv_vadd_vx_u64m2(base_vec, 14 * sizeof(uint32_t), vl);
-+    vuint32m1_t m14 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr14, vl);
-+    
-+    vuint64m2_t addr15 = __riscv_vadd_vx_u64m2(base_vec, 15 * sizeof(uint32_t), vl);
-+    vuint32m1_t m15 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr15, vl);
++
++    vuint64m2_t addr_vec;
++
++    addr_vec = base_vec;
++    vuint32m1_t m0 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 1 * sizeof(uint32_t), vl);
++    vuint32m1_t m1 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 2 * sizeof(uint32_t), vl);
++    vuint32m1_t m2 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 3 * sizeof(uint32_t), vl);
++    vuint32m1_t m3 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 4 * sizeof(uint32_t), vl);
++    vuint32m1_t m4 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 5 * sizeof(uint32_t), vl);
++    vuint32m1_t m5 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 6 * sizeof(uint32_t), vl);
++    vuint32m1_t m6 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 7 * sizeof(uint32_t), vl);
++    vuint32m1_t m7 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 8 * sizeof(uint32_t), vl);
++    vuint32m1_t m8 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 9 * sizeof(uint32_t), vl);
++    vuint32m1_t m9 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 10 * sizeof(uint32_t), vl);
++    vuint32m1_t m10 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 11 * sizeof(uint32_t), vl);
++    vuint32m1_t m11 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 12 * sizeof(uint32_t), vl);
++    vuint32m1_t m12 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 13 * sizeof(uint32_t), vl);
++    vuint32m1_t m13 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 14 * sizeof(uint32_t), vl);
++    vuint32m1_t m14 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
++
++    addr_vec = __riscv_vadd_vx_u64m2(base_vec, 15 * sizeof(uint32_t), vl);
++    vuint32m1_t m15 = __riscv_vluxei64_v_u32m1((const uint32_t *)0, addr_vec, vl);
 +
 +    vuint32m1_t v0 = h0;
 +    vuint32m1_t v1 = h1;
@@ -600,13 +721,13 @@ index 0000000..6f4003b
 +}
 diff --git a/src/ffi_rvv.rs b/src/ffi_rvv.rs
 new file mode 100644
-index 0000000..e3d6572
+index 0000000..5739609
 --- /dev/null
 +++ b/src/ffi_rvv.rs
-@@ -0,0 +1,85 @@
+@@ -0,0 +1,81 @@
 +use crate::{CVWords, IncrementCounter, BLOCK_LEN, OUT_LEN};
 +
-+// Unsafe because this may only be called on platforms supporting RVV.
++// Unsafe because this may only be called after runtime detection confirms RVV support.
 +pub unsafe fn hash_many<const N: usize>(
 +    inputs: &[&[u8; N]],
 +    key: &CVWords,
@@ -637,10 +758,6 @@ index 0000000..e3d6572
 +    }
 +}
 +
-+// blake3_rvv.c normally depends on blake3_portable.c, because the RVV
-+// implementation only provides 4x compression, and it relies on the portable
-+// implementation for 1x compression. However, we expose the portable Rust
-+// implementation here instead, to avoid linking in unnecessary code.
 +#[unsafe(no_mangle)]
 +pub extern "C" fn blake3_compress_in_place_portable(
 +    cv: *mut u32,
@@ -704,7 +821,7 @@ index f27f903..30036b8 100644
  #[path = "rust_sse2.rs"]
  mod sse2;
 diff --git a/src/platform.rs b/src/platform.rs
-index 3a05420..addec00 100644
+index 3a05420..4bfe7c1 100644
 --- a/src/platform.rs
 +++ b/src/platform.rs
 @@ -12,6 +12,16 @@ cfg_if::cfg_if! {
@@ -715,12 +832,12 @@ index 3a05420..addec00 100644
 +        // RVV is a variable-length vector architecture. The actual degree depends
 +        // on VLEN (vector register length in bits):
 +        // - VLEN=128: degree=4 (minimum required by spec)
-+        // - VLEN=256: degree=8 (common in current implementations)
-+        // - VLEN=512: degree=16 (high-performance implementations)
-+        // - VLEN=1024+: degree=32+ (future implementations)
-+        // We use 16 as the upper bound, when future hardwares with degree > 8 released
-+        // alter this constant
-+        pub const MAX_SIMD_DEGREE: usize = 16;
++        // - VLEN=256: degree=8
++        // - VLEN=512: degree=16
++        // - VLEN=1024: degree=32
++        // - VLEN=2048: degree=64 (maximum allowed by spec)
++        // We use 64 as the upper bound to cover all possible implementations.
++        pub const MAX_SIMD_DEGREE: usize = 64;
      } else if #[cfg(blake3_wasm32_simd)] {
          pub const MAX_SIMD_DEGREE: usize = 4;
      } else {
@@ -729,7 +846,7 @@ index 3a05420..addec00 100644
      } else if #[cfg(blake3_neon)] {
          pub const MAX_SIMD_DEGREE_OR_2: usize = 4;
 +    } else if #[cfg(blake3_rvv)] {
-+        pub const MAX_SIMD_DEGREE_OR_2: usize = 16;
++        pub const MAX_SIMD_DEGREE_OR_2: usize = 64;
      } else if #[cfg(blake3_wasm32_simd)] {
          pub const MAX_SIMD_DEGREE_OR_2: usize = 4;
      } else {
@@ -742,20 +859,22 @@ index 3a05420..addec00 100644
      #[cfg(blake3_wasm32_simd)]
      #[allow(non_camel_case_types)]
      WASM32_SIMD,
-@@ -92,6 +106,12 @@ impl Platform {
+@@ -92,6 +106,14 @@ impl Platform {
          {
              return Platform::NEON;
          }
-+        // We don't use dynamic feature detection for RVV. If the "rvv"
-+        // feature is on, RVV is assumed to be supported.
++        // Runtime detection for RVV. The V extension may or may not be present
++        // on the current hardware, even though the binary includes RVV code.
 +        #[cfg(blake3_rvv)]
 +        {
-+            return Platform::RVV;
++            if rvv_detected() {
++                return Platform::RVV;
++            }
 +        }
          #[cfg(blake3_wasm32_simd)]
          {
              return Platform::WASM32_SIMD;
-@@ -113,6 +133,8 @@ impl Platform {
+@@ -113,6 +135,8 @@ impl Platform {
              Platform::AVX512 => 16,
              #[cfg(blake3_neon)]
              Platform::NEON => 4,
@@ -764,7 +883,7 @@ index 3a05420..addec00 100644
              #[cfg(blake3_wasm32_simd)]
              Platform::WASM32_SIMD => 4,
          };
-@@ -149,6 +171,9 @@ impl Platform {
+@@ -149,6 +173,9 @@ impl Platform {
              // No NEON compress_in_place() implementation yet.
              #[cfg(blake3_neon)]
              Platform::NEON => portable::compress_in_place(cv, block, block_len, counter, flags),
@@ -774,7 +893,7 @@ index 3a05420..addec00 100644
              #[cfg(blake3_wasm32_simd)]
              Platform::WASM32_SIMD => {
                  crate::wasm32_simd::compress_in_place(cv, block, block_len, counter, flags)
-@@ -185,6 +210,9 @@ impl Platform {
+@@ -185,6 +212,9 @@ impl Platform {
              // No NEON compress_xof() implementation yet.
              #[cfg(blake3_neon)]
              Platform::NEON => portable::compress_xof(cv, block, block_len, counter, flags),
@@ -784,7 +903,7 @@ index 3a05420..addec00 100644
              #[cfg(blake3_wasm32_simd)]
              Platform::WASM32_SIMD => {
                  crate::wasm32_simd::compress_xof(cv, block, block_len, counter, flags)
-@@ -295,6 +323,20 @@ impl Platform {
+@@ -295,6 +325,20 @@ impl Platform {
                      out,
                  )
              },
@@ -805,3 +924,96 @@ index 3a05420..addec00 100644
              // Assumed to be safe if the "wasm32_simd" feature is on.
              #[cfg(blake3_wasm32_simd)]
              Platform::WASM32_SIMD => unsafe {
+@@ -396,6 +440,15 @@ impl Platform {
+         Some(Self::NEON)
+     }
+ 
++    #[cfg(blake3_rvv)]
++    pub fn rvv() -> Option<Self> {
++        if rvv_detected() {
++            Some(Self::RVV)
++        } else {
++            None
++        }
++    }
++
+     #[cfg(blake3_wasm32_simd)]
+     pub fn wasm32_simd() -> Option<Self> {
+         // Assumed to be safe if the "wasm32_simd" feature is on.
+@@ -470,6 +523,76 @@ pub fn sse2_detected() -> bool {
+     has_sse2::get()
+ }
+ 
++// Detect RVV support at runtime. The detection method depends on the target OS:
++// - Linux: getauxval(AT_HWCAP) checks the 'V' bit
++// - FreeBSD: elf_aux_info(AT_HWCAP) checks the 'V' bit
++// - Other (bare-metal, unknown OS): returns false; use --features=rvv to override
++#[cfg(blake3_rvv)]
++#[inline(always)]
++pub fn rvv_detected() -> bool {
++    if cfg!(miri) {
++        return false;
++    }
++
++    // A testing-only short-circuit.
++    if cfg!(feature = "no_rvv") {
++        return false;
++    }
++
++    // The "rvv" Cargo feature means "assume RVV is available, skip detection".
++    // This is useful when the user knows their hardware supports V.
++    if cfg!(feature = "rvv") {
++        return true;
++    }
++
++    rvv_detected_impl()
++}
++
++#[cfg(blake3_rvv)]
++#[cfg(target_os = "linux")]
++fn rvv_detected_impl() -> bool {
++    // RISC-V HWCAP bit for V extension (bit 21, corresponding to letter 'V')
++    const COMPAT_HWCAP_ISA_V: u64 = 1 << (b'V' - b'A');
++    const AT_HWCAP: u64 = 16;
++
++    unsafe extern "C" {
++        fn getauxval(type_: u64) -> u64;
++    }
++
++    let hwcap = unsafe { getauxval(AT_HWCAP) };
++    (hwcap & COMPAT_HWCAP_ISA_V) != 0
++}
++
++#[cfg(blake3_rvv)]
++#[cfg(target_os = "freebsd")]
++fn rvv_detected_impl() -> bool {
++    const COMPAT_HWCAP_ISA_V: u64 = 1 << (b'V' - b'A');
++    const AT_HWCAP: i32 = 16;
++
++    unsafe extern "C" {
++        fn elf_aux_info(aux: i32, buf: *mut core::ffi::c_void, buf_len: i32) -> i32;
++    }
++
++    let mut hwcap: u64 = 0;
++    let ret = unsafe {
++        elf_aux_info(
++            AT_HWCAP,
++            &mut hwcap as *mut _ as *mut core::ffi::c_void,
++            core::mem::size_of::<u64>() as i32,
++        )
++    };
++    ret == 0 && (hwcap & COMPAT_HWCAP_ISA_V) != 0
++}
++
++// For bare-metal or unknown OS: no safe way to detect V extension at runtime.
++// Reading misa requires M-mode; doing so from S/U-mode is an illegal instruction.
++// Use --features=rvv to force-enable when you know the hardware supports it.
++#[cfg(blake3_rvv)]
++#[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
++fn rvv_detected_impl() -> bool {
++    false
++}
++
+ #[inline(always)]
+ pub fn words_from_le_bytes_32(bytes: &[u8; 32]) -> [u32; 8] {
+     let mut out = [0; 8];

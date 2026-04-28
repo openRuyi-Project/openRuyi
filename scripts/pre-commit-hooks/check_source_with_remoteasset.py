@@ -18,8 +18,8 @@ def check_file(file_path):
 
     # 步骤2: 如果存在，检查每一个 Source\d+ 行是否有注释
     for idx in sourcelines:
-        if not re.match(r'^#!RemoteAsset(: +sha256:[0-9a-f]{64})?$', lines[idx - 1]):
-            errors.append(f'\033[33m{file_path}:{idx}-{idx+1}\033[0m: \033[1;31mError\033[0m - The source line is missing the required #!RemoteAsset comment.\n{lines[idx-1]}\n{lines[idx]}\n---')
+        if not re.match(r'^#!RemoteAsset:  sha256:[0-9a-f]{64}$', lines[idx - 1]):
+            errors.append(f'\033[33m{file_path}:{idx}-{idx+1}\033[0m: \033[1;31mError\033[0m - The source line is missing the required #!RemoteAsset:  sha256:xxx comment.\n{lines[idx-1]}\n{lines[idx]}\n---')
 
     return errors
 

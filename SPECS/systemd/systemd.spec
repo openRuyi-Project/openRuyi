@@ -53,7 +53,7 @@ Summary:        System and service manager
 License:        LGPL-2.1-or-later AND MIT AND GPL-2.0-or-later
 URL:            https://systemd.io
 VCS:            git:https://github.com/systemd/systemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:a84123692d1add7f9c48fd11cdf5f901393008c2d2ade667c18f25a20bf1290d
 Source0:        https://github.com/systemd/systemd/archive/v%{version}/%{name}-%{version}.tar.gz
 # These are essential files
 Source1:        systemd-user.pam
@@ -572,7 +572,7 @@ if [ $1 -ge 2 ]; then
   systemd-tmpfiles --create &>/dev/null || :
 fi
 
-%systemd_posttrans_with_restart systemd-timedated.service systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
+%systemd_posttrans_with_restart systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
 
 # FIXME: systemd-logind.service is excluded (https://github.com/systemd/systemd/pull/17558)
 
@@ -662,7 +662,6 @@ fi
                         systemd-suspend-then-hibernate.service
                         systemd-suspend.service
                         systemd-sysctl.service
-                        systemd-timesyncd.service
                         systemd-tmpfiles-setup-dev-early.service
                         systemd-tmpfiles-setup-dev.service
                         systemd-udev-load-credentials.service
@@ -690,12 +689,20 @@ systemd-hwdb update &>/dev/null
 %posttrans udev
 # Restart some services.
 # Others are either oneshot services, or sockets, and restarting them causes issues (#1378974)
-%systemd_posttrans_with_restart systemd-udevd.service systemd-timesyncd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
+%systemd_posttrans_with_restart systemd-udevd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
 
+%global timesyncd_units %{shrink:
+                          systemd-time-wait-sync.service
+                          systemd-timedated.service
+                          systemd-timesyncd.service
+                         }
+
+%post timesyncd
+%systemd_post %timesyncd_units
 %preun timesyncd
-%systemd_preun systemd-timesyncd.service
+%systemd_preun %timesyncd_units
 %posttrans timesyncd
-%systemd_posttrans_with_restart systemd-timesyncd.service
+%systemd_posttrans_with_restart systemd-timedated.service systemd-timesyncd.service
 
 %if %{with journal_remote}
 %global journal_remote_units_restart systemd-journal-gatewayd.service systemd-journal-remote.service systemd-journal-upload.service
@@ -1146,6 +1153,26 @@ fi
 %exclude %{_sysconfdir}/systemd/journal-upload.conf
 %exclude %{_localstatedir}/lib/systemd/journal-upload
 %endif
+%if %{with journal_remote}
+%exclude %{system_unit_dir}/systemd-journal-gatewayd.service
+%exclude %{system_unit_dir}/systemd-journal-gatewayd.socket
+%exclude %{system_unit_dir}/systemd-journal-remote.service
+%exclude %{system_unit_dir}/systemd-journal-remote.socket
+%exclude %{system_unit_dir}/systemd-journal-upload.service
+%endif
+%exclude %{system_unit_dir}/systemd-boot-update.service
+%exclude %{system_unit_dir}/systemd-bootctl.socket
+%exclude %{system_unit_dir}/systemd-bootctl@.service
+%exclude %{system_unit_dir}/sockets.target.wants/systemd-bootctl.socket
+%exclude %{system_unit_dir}/systemd-sysusers.service
+%exclude %{system_unit_dir}/sysinit.target.wants/systemd-sysusers.service
+%exclude %{system_unit_dir}/dbus-org.freedesktop.timedate1.service
+%exclude %{system_unit_dir}/systemd-time-wait-sync.service
+%exclude %{system_unit_dir}/systemd-timedated.service
+%exclude %{system_unit_dir}/systemd-timesyncd.service
+%exclude %{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
+%exclude %{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%exclude %{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %exclude %{bash_completions_dir}/bootctl
 %exclude %{_datadir}/zsh/site-functions/_bootctl
 
@@ -1160,8 +1187,10 @@ fi
 
 %files libs
 %license LICENSE.LGPL2.1
-%{_libdir}/lib*.so.*
-%exclude %{_libdir}/libudev.so*
+%{_libdir}/libnss_myhostname.so.2*
+%{_libdir}/libnss_mymachines.so.2*
+%{_libdir}/libnss_systemd.so.2*
+%{_libdir}/libsystemd.so.0*
 
 %files shared
 %license LICENSE.LGPL2.1
@@ -1207,6 +1236,7 @@ fi
 %{_mandir}/man8/systemd-sysusers.service.8.gz
 %endif
 %{pkgdir}/system/systemd-sysusers.service
+%{pkgdir}/system/sysinit.target.wants/systemd-sysusers.service
 
 %if %{with network}
 %files resolved
@@ -1303,16 +1333,23 @@ fi
 
 %files timesyncd
 %dir %{pkgdir}
+%{pkgdir}/system/dbus-org.freedesktop.timedate1.service
 %{pkgdir}/systemd-time-wait-sync
 %{pkgdir}/systemd-timedated
 %{pkgdir}/systemd-timesyncd
+%{pkgdir}/system/systemd-time-wait-sync.service
+%{pkgdir}/system/systemd-timedated.service
+%{pkgdir}/system/systemd-timesyncd.service
 %{pkgdir}/ntp-units.d/80-systemd-timesync.list
 %{pkgdir}/timesyncd.conf
 %{_prefix}/lib/sysusers.d/systemd-timesync.conf
 %{_sysconfdir}/systemd/timesyncd.conf
 %{_localstatedir}/lib/systemd/timesync/clock
 %{_datadir}/dbus-1/system-services/org.freedesktop.timesync1.service
+%{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.timesync1.conf
+%{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.timesync1.policy
 
 %if %{with ukify}
@@ -1339,7 +1376,10 @@ fi
 %{_bindir}/bootctl
 %{bash_completions_dir}/bootctl
 %{_datadir}/zsh/site-functions/_bootctl
+%{pkgdir}/system/systemd-bootctl.socket
+%{pkgdir}/system/systemd-bootctl@.service
 %{pkgdir}/system/systemd-boot-update.service
+%{pkgdir}/system/sockets.target.wants/systemd-bootctl.socket
 
 %files container
 %ghost %dir %attr(0700,-,-) /var/lib/machines
@@ -1401,6 +1441,11 @@ fi
 %{pkgdir}/systemd-journal-gatewayd
 %{pkgdir}/systemd-journal-remote
 %{pkgdir}/systemd-journal-upload
+%{pkgdir}/system/systemd-journal-gatewayd.service
+%{pkgdir}/system/systemd-journal-gatewayd.socket
+%{pkgdir}/system/systemd-journal-remote.service
+%{pkgdir}/system/systemd-journal-remote.socket
+%{pkgdir}/system/systemd-journal-upload.service
 %{pkgdir}/journal-remote.conf
 %{_sysconfdir}/systemd/journal-remote.conf
 %{_sysconfdir}/systemd/journal-upload.conf
@@ -1514,4 +1559,4 @@ fi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

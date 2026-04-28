@@ -17,10 +17,10 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l socks sockshandler
+BuildOption(install):  -l socks sockshandler
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       python3-pysocks
 %python_provide python3-pysocks

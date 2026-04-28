@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun114 <ziyu.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
@@ -14,13 +14,13 @@ Summary:        GNU's Ubiquitous Intelligent Language for Extension
 License:        GFDL-1.3-only AND GPL-3.0-or-later AND LGPL-3.0-or-later
 URL:            https://www.gnu.org/software/guile/
 VCS:            git:https://codeberg.org/guile/guile.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:818c79d236657a7fa96fb364137cc7b41b3bdee0d65c6174ca03769559579460
 Source0:        https://ftpmirror.gnu.org/gnu/guile/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/guile/%{name}-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
+
+Patch0:         guile-fix-riscv64-jit.patch
 
 BuildRequires:  pkgconfig(bdw-gc)
 BuildRequires:  pkgconfig(gmp)
@@ -71,7 +71,7 @@ linked in as a library when building extensible programs.
 %{_datadir}/aclocal/guile.m4
 %{_infodir}/*.info*
 %{_libdir}/libguile-*.so
-%{_libdir}/pkgconfig/guile-*.pc
+%{_libdir}/pkgconfig/guile-3.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

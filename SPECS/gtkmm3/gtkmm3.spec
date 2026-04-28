@@ -52,7 +52,8 @@ developing applications that use %{name}.
 %{_libdir}/libgtkmm-*.so
 %{_libdir}/gtkmm-*/
 %{_libdir}/gdkmm-*/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gdkmm-3.0.pc
+%{_libdir}/pkgconfig/gtkmm-3.0.pc
 
 %changelog
 %{?autochangelog}

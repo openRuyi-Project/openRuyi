@@ -11,12 +11,11 @@ Version:        2.15
 Release:        %autorelease
 Summary:        Library for Handling Page Faults in User Mode
 License:        GPL-2.0-or-later
-#!RemoteAsset
 URL:            https://www.gnu.org/software/libsigsegv/
 VCS:            git:https://git.savannah.gnu.org/git/libsigsegv.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:036855660225cb3817a190fc00e6764ce7836051bacb48d35e26444b8c1729d9
 Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:72a772fbea15850a1dac43bf4a05822367fb29725d8e0d69ae4759953874f3fe
 Source1:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz.sig
 BuildSystem:    autotools
 
@@ -47,4 +46,4 @@ available.
 %{_libdir}/libsigsegv.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

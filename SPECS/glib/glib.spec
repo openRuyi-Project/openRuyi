@@ -186,7 +186,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/glib-2.0/include/glibconfig.h
 %{_includedir}/glib-2.0/
 %{_includedir}/gio-unix-2.0/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gio-2.0.pc
+%{_libdir}/pkgconfig/gio-unix-2.0.pc
+%{_libdir}/pkgconfig/girepository-2.0.pc
+%{_libdir}/pkgconfig/glib-2.0.pc
+%{_libdir}/pkgconfig/gmodule-2.0.pc
+%{_libdir}/pkgconfig/gmodule-export-2.0.pc
+%{_libdir}/pkgconfig/gmodule-no-export-2.0.pc
+%{_libdir}/pkgconfig/gobject-2.0.pc
+%{_libdir}/pkgconfig/gthread-2.0.pc
 %{_datadir}/aclocal/*.m4
 # Added: GDB helper scripts for better debugging experience
 %dir %{_datadir}/gdb

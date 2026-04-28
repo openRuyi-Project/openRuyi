@@ -4,13 +4,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond rdma 0
+%bcond rdma 1
 %bcond make_check 0
 %bcond ceph_test_package 1
 %bcond rbd_ssd_cache 1
 %bcond cephadm_pip_deps 1
 %bcond system_utf8proc 1
 %bcond system_arrow 0
+%bcond lttng 1
+%bcond libradosstriper 1
+%bcond cephfs_shell 1
 
 %define _lto_cflags %{nil}
 
@@ -21,7 +24,7 @@ Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
 URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
-#!RemoteAsset
+#!RemoteAsset:  sha256:8de064d69831ef327339539f233c78ec827fa351c40ced9a9916f0b4174c6685
 Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -41,7 +44,7 @@ BuildOption(conf):  -DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir}
 BuildOption(conf):  -DWITH_MANPAGE:BOOL=OFF
 BuildOption(conf):  -DWITH_PYTHON3:STRING=3
 BuildOption(conf):  -DWITH_MGR_DASHBOARD_FRONTEND:BOOL=OFF
-%if 0%{without ceph_test_package}
+%if %{without ceph_test_package}
 BuildOption(conf):  -DWITH_TESTS:BOOL=OFF
 %endif
 %if %{with lttng}
@@ -51,30 +54,33 @@ BuildOption(conf):  -DWITH_BABELTRACE:BOOL=ON
 BuildOption(conf):  -DWITH_LTTNG:BOOL=OFF
 BuildOption(conf):  -DWITH_BABELTRACE:BOOL=OFF
 %endif
-%if 0%{with ocf}
+%if %{with ocf}
 BuildOption(conf):  -DWITH_OCF:BOOL=ON
 %endif
 BuildOption(conf):  -DWITH_SYSTEM_LIBURING:BOOL=ON
 BuildOption(conf):  -DWITH_SYSTEM_BOOST:BOOL=OFF
-%if 0%{with libradosstriper}
+%if %{with libradosstriper}
 BuildOption(conf):  -DWITH_LIBRADOSSTRIPER:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_LIBRADOSSTRIPER:BOOL=OFF
 %endif
-%if 0%{with amqp_endpoint}
+%if %{with cephfs_shell}
+BuildOption(conf):  -DWITH_CEPHFS_SHELL:BOOL=ON
+%endif
+%if %{with amqp_endpoint}
 BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=OFF
 %endif
-%if 0%{with kafka_endpoint}
+%if %{with kafka_endpoint}
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=OFF
 %endif
-%if 0%{without lua_packages}
+%if %{without lua_packages}
 BuildOption(conf):  -DWITH_RADOSGW_LUA_PACKAGES:BOOL=OFF
 %endif
-%if 0%{with rbd_ssd_cache}
+%if %{with rbd_ssd_cache}
 BuildOption(conf):  -DWITH_RBD_SSD_CACHE:BOOL=ON
 %endif
 BuildOption(conf):  -DBOOST_J:STRING=%{_smp_build_ncpus}
@@ -126,10 +132,10 @@ BuildRequires:  xfsprogs-devel
 BuildRequires:  nasm
 BuildRequires:  pkgconfig(lua)
 BuildRequires:  pkgconfig(lmdb)
-%if 0%{with amqp_endpoint}
+%if %{with amqp_endpoint}
 BuildRequires:  librabbitmq-devel
 %endif
-%if 0%{with kafka_endpoint}
+%if %{with kafka_endpoint}
 BuildRequires:  pkgconfig(rdkafka)
 %endif
 BuildRequires:  pkgconfig(re2)
@@ -137,7 +143,12 @@ BuildRequires:  pkgconfig(libutf8proc)
 BuildRequires:  pkgconfig(nss)
 BuildRequires:  pkgconfig(libkeyutils)
 %if %{with rdma}
-BuildRequires:  libibverbs-devel
+BuildRequires:  pkgconfig(libibverbs)
+BuildRequires:  pkgconfig(librdmacm)
+%endif
+%if %{with lttng}
+BuildRequires:  pkgconfig(lttng-ust)
+BuildRequires:  pkgconfig(babeltrace)
 %endif
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(ldap)
@@ -155,7 +166,7 @@ Requires:       ceph-mgr%{?_isa} = %{version}-%{release}
 Requires:       ceph-mon%{?_isa} = %{version}-%{release}
 Requires:       systemd
 Requires(post): binutils
-%if 0%{with lua_packages}
+%if %{with lua_packages}
 Requires:       %{luarocks_package_name}
 %endif
 
@@ -233,6 +244,19 @@ Requires:       python3dist(pyyaml)
 %description -n cephadm
 Utility to bootstrap a Ceph cluster and manage Ceph daemons deployed
 with systemd and podman.
+
+%if %{with cephfs_shell}
+%package     -n cephfs-shell
+Summary:        Interactive shell for Ceph file system
+Requires:       python3dist(cmd2)
+Requires:       python3dist(colorama)
+Requires:       python-cephfs%{?_isa} = %{version}-%{release}
+
+%description -n cephfs-shell
+This package contains an interactive tool that allows accessing a Ceph
+file system without mounting it by providing a nice pseudo-shell which
+works like an FTP client.
+%endif
 
 %package        common
 Summary:        Ceph Common
@@ -454,7 +478,7 @@ This package contains data structures, classes and functions used by Ceph.
 It also contains utilities used for the cephadm orchestrator, as well as
 types and routines for the Ceph CLI and RESTful interface.
 
-%if 0%{with ceph_test_package}
+%if %{with ceph_test_package}
 %package     -n ceph-test
 Summary:        Ceph benchmarks and test tools
 Requires:       ceph-common%{?_isa} = %{version}-%{release}
@@ -704,7 +728,7 @@ fi
 # libcephfsd daemon (merged from libcephfs-daemon)
 %{_sbindir}/libcephfsd
 # libradosstriper runtime libs (merged from libradosstriper1)
-%if 0%{with libradosstriper}
+%if %{with libradosstriper}
 %{_libdir}/libradosstriper.so.*
 %endif
 # rbd-fuse (merged)
@@ -716,6 +740,12 @@ fi
 # cephfs-top (merged)
 %{python3_sitelib}/cephfs_top-*.egg-info
 %{_bindir}/cephfs-top
+
+%if %{with cephfs_shell}
+%files -n cephfs-shell
+%{python3_sitelib}/cephfs_shell-*.egg-info
+%{_bindir}/cephfs-shell
+%endif
 
 %pre common
 CEPH_GROUP_ID=167
@@ -1031,7 +1061,7 @@ fi
 %{_includedir}/libcephsqlite.h
 # rados objclass headers
 %{_includedir}/rados/objclass.h
-%if 0%{with libradosstriper}
+%if %{with libradosstriper}
 # libradosstriper headers and unversioned symlink
 %dir %{_includedir}/radosstriper
 %{_includedir}/radosstriper/libradosstriper.h
@@ -1062,7 +1092,7 @@ fi
 %{python3_sitelib}/ceph_argparse.py
 %{python3_sitelib}/ceph_daemon.py
 
-%if 0%{with ceph_test_package}
+%if %{with ceph_test_package}
 %files -n ceph-test
 %{_bindir}/ceph-client-debug
 %{_bindir}/ceph_bench_log
@@ -1101,4 +1131,4 @@ fi
 %{_datadir}/snmp/mibs
 
 %changelog
-%{?autochangelog}
+%autochangelog

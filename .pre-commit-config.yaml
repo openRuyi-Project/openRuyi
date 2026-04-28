@@ -23,7 +23,7 @@ repos:
     -  id: autochangelog
        name: "check autochangelog macro"
        language: pygrep
-       entry: '%changelog\s+(%autochangelog|%\{\?autochangelog\})'
+       entry: '%changelog\s+%autochangelog'
        args: ["--negate", "--multiline"]
        files: \.spec$
     -  id: format-spacing

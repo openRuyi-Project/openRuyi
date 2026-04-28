@@ -14,7 +14,7 @@ Summary:        Terminal control library
 License:        MIT
 URL:            https://invisible-island.net/ncurses/ncurses.html
 VCS:            git:git://ncurses.scripts.mit.edu/ncurses.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6
 Source:         https://invisible-mirror.net/archives/ncurses/ncurses-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -100,11 +100,21 @@ xz NEWS
 %files devel
 %{_bindir}/ncurses*-config
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/form.pc
+%{_libdir}/pkgconfig/formw.pc
+%{_libdir}/pkgconfig/menu.pc
+%{_libdir}/pkgconfig/menuw.pc
+%{_libdir}/pkgconfig/ncurses++.pc
+%{_libdir}/pkgconfig/ncurses++w.pc
+%{_libdir}/pkgconfig/ncurses.pc
+%{_libdir}/pkgconfig/ncursesw.pc
+%{_libdir}/pkgconfig/panel.pc
+%{_libdir}/pkgconfig/panelw.pc
+%{_libdir}/pkgconfig/tinfo.pc
 %{_includedir}/*.h
 %{_mandir}/man1/ncurses*-config*
 %{_mandir}/man3/*
 %doc doc/html/
 
 %changelog
-%{?autochangelog}
+%autochangelog

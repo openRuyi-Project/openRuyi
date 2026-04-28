@@ -89,7 +89,7 @@ rm -f %{buildroot}%{_libdir}/libapr-1.a
 %doc docs/APRDesign.html docs/canonical_filenames.html docs/incomplete_types docs/non_apr_programs
 %{_bindir}/apr-1-config
 %{_libdir}/libapr-1.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/apr-1.pc
 %dir %{_libdir}/apr-1
 %dir %{_libdir}/apr-1/build
 %{_libdir}/apr-1/build/*

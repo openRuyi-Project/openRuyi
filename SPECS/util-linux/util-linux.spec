@@ -6,31 +6,31 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-Name:          util-linux
-Version:       2.41.3
-Release:       %autorelease
-Summary:       A collection of basic system utilities
-License:       GPL-2.0-or-later and others
-URL:           https://www.kernel.org/pub/linux/utils/util-linux/
-VCS:           git:https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
-#!RemoteAsset
-Source0:       https://www.kernel.org/pub/linux/utils/util-linux/v2.41/%{name}-%{version}.tar.xz
+Name:           util-linux
+Version:        2.41.3
+Release:        %autorelease
+Summary:        A collection of basic system utilities
+License:        GPL-2.0-or-later and others
+URL:            https://www.kernel.org/pub/linux/utils/util-linux/
+VCS:            git:https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
+#!RemoteAsset:  sha256:3330d873f0fceb5560b89a7dc14e4f3288bbd880e96903ed9b50ec2b5799e58b
+Source0:        https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-%{version}.tar.xz
 # These files define the default behavior for openRuyi.
-Source10:      login.pam
-Source11:      su-l.pam
-Source12:      runuser.pam
-Source13:      runuser-l.pam
-Source14:      chfn.pam
-Source15:      60-rfkill.rules
-BuildSystem:   autotools
+Source10:       login.pam
+Source11:       su-l.pam
+Source12:       runuser.pam
+Source13:       runuser-l.pam
+Source14:       chfn.pam
+Source15:       60-rfkill.rules
+BuildSystem:    autotools
 
 # --- Essential Patches ---
 # Ensures /var/log/lastlog is created correctly.
-Patch0:        login-lastlog-create.patch
+Patch0:         login-lastlog-create.patch
 # Integrates with systemd's motd.d directory.
-Patch1:        login-default-motd-file.patch
+Patch1:         login-default-motd-file.patch
 # Fixes an issue with the EROFS filesystem.
-Patch2:        0001-libmount-disable-EROFS-backing-file-support.patch
+Patch2:         0001-libmount-disable-EROFS-backing-file-support.patch
 
 # Configure options for a modern, feature-rich build.
 BuildOption(conf):  --with-systemdsystemunitdir=%{_unitdir}
@@ -71,21 +71,21 @@ BuildRequires:  pkgconfig(libcryptsetup)
 BuildRequires:  pkgconfig(libeconf)
 BuildRequires:  pkgconfig(systemd)
 
-Provides:      eject
-Provides:      rfkill
-Provides:      hardlink
+Provides:       eject
+Provides:       rfkill
+Provides:       hardlink
 
-Requires:      libuuid%{?_isa} = %{version}-%{release}
-Requires:      libblkid%{?_isa} = %{version}-%{release}
-Requires:      libmount%{?_isa} = %{version}-%{release}
-Requires:      libsmartcols%{?_isa} = %{version}-%{release}
-Requires:      libfdisk%{?_isa} = %{version}-%{release}
-Requires:      liblastlog2%{?_isa} = %{version}-%{release}
-Requires:      audit
-Requires:      ncurses
-Requires:      pam
-Requires:      readline
-Requires:      zlib
+Requires:       libuuid%{?_isa} = %{version}-%{release}
+Requires:       libblkid%{?_isa} = %{version}-%{release}
+Requires:       libmount%{?_isa} = %{version}-%{release}
+Requires:       libsmartcols%{?_isa} = %{version}-%{release}
+Requires:       libfdisk%{?_isa} = %{version}-%{release}
+Requires:       liblastlog2%{?_isa} = %{version}-%{release}
+Requires:       audit
+Requires:       ncurses
+Requires:       pam
+Requires:       readline
+Requires:       zlib
 
 %description
 The util-linux package contains a large variety of low-level system
@@ -211,7 +211,7 @@ export TS_OPT_script_options_show_diff=yes
 %files
 %license COPYING
 %doc NEWS
-%doc %{_docdir}/%{name}/*
+%doc %{_docdir}/util-linux/*
 # Core tools and their man pages
 
 %{_bindir}/bits
@@ -349,9 +349,13 @@ export TS_OPT_script_options_show_diff=yes
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/*.a
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/blkid.pc
+%{_libdir}/pkgconfig/fdisk.pc
+%{_libdir}/pkgconfig/lastlog2.pc
+%{_libdir}/pkgconfig/mount.pc
+%{_libdir}/pkgconfig/smartcols.pc
+%{_libdir}/pkgconfig/uuid.pc
 %{_mandir}/man3/*
 
-
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -9,20 +9,23 @@
 Name:           python-%{srcname}
 Version:        0.5.3
 Release:        %autorelease
+Summary:        Non-validating SQL parser
 License:        BSD-3-Clause
 URL:            https://github.com/andialbrecht/sqlparse
-Summary:        Non-validating SQL parser
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
 #!RemoteAsset
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  python3-pytest
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pytest)
+
+Provides:       python3-%{srcname}
+%python_provide python3-%{srcname}
+
 %description
 Sqlparse is a non-validating SQL parser for Python.  It
 provides support for parsing, splitting and formatting SQL statements.

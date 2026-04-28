@@ -75,7 +75,7 @@ fi
 %files devel
 %{_includedir}/libburn
 %{_libdir}/libburn*.so
-%{_libdir}/pkgconfig/libburn*.pc
+%{_libdir}/pkgconfig/libburn-1.pc
 
 %changelog
 %{?autochangelog}
