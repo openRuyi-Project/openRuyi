@@ -32,8 +32,8 @@ Simple python library to deal with URI Templates.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
 %autochangelog
