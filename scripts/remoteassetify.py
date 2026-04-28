@@ -33,7 +33,7 @@ arg_parser.add_argument('--verbose', action='store_true', help='Generate more de
 arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
 arg_parser.add_argument('--workflow', action='store_true', help='Generate some messages as workflow commands')
 
-CURL_DOWNLOAD = shlex.split("""curl --fail --location --proto '=http,https' --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
+CURL_DOWNLOAD = shlex.split("""curl --fail --location --proto '=http,https' --user-agent 'scripts/remoteassetify.py openruyi.cn' -o""")
 
 CHECKSUM_TYPES = { 'sha256' }
 
