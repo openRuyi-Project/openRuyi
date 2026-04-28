@@ -21,3 +21,15 @@ diff --color -aNru a/Make.rules b/Make.rules
  ifeq ($(ARCH),x86_64)
    CFLAGS += -DEFI_FUNCTION_WRAPPER -mno-red-zone
  endif
+diff --color -aNru a/Make.rules b/Make.rules
+--- a/Make.rules	2026-04-28 17:35:44.888106424 +0800
++++ b/Make.rules	2026-04-28 17:44:06.888109251 +0800
+@@ -10,6 +10,8 @@
+ ARCH3264 =
+ else ifeq ($(ARCH),arm)
+ ARCH3264 =
++else ifeq ($(ARCH),riscv64)
++ARCH3264 =
+ else
+ $(error unknown architecture $(ARCH))
+ endif
