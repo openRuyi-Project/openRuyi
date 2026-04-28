@@ -49,7 +49,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Python bindings and libraries for using Talloc in Python applications.
 
 %package     -n python-talloc-devel
-Summary:        Development files for python3-talloc
+Summary:        Development files for python-talloc
+Provides:       python3-talloc-devel = %{version}-%{release}
+Provides:       python3-talloc-devel%{?_isa} = %{version}-%{release}
 Requires:       python3-talloc%{?_isa} = %{version}-%{release}
 
 %description -n python-talloc-devel
