@@ -1,0 +1,94 @@
+From ea6ab5365a7c4e07ac865e4f379ebbf4fd4c9192 Mon Sep 17 00:00:00 2001
+From: YunQiang Su <yunqiang@isrc.iscas.ac.cn>
+Date: Wed, 15 Apr 2026 15:48:55 +0800
+Subject: [PATCH] Support Vendor openruyi
+
+openRuyi is a rolling release focusing on RISC-V support, which is
+launched by Institute of Software, CAS.
+
+The default ISA level is set to RVA23U64.
+
+See: https://openruyi.cn/
+---
+ clang/lib/Driver/ToolChains/Arch/RISCV.cpp | 4 ++++
+ llvm/include/llvm/TargetParser/Triple.h    | 3 ++-
+ llvm/lib/TargetParser/Triple.cpp           | 3 +++
+ llvm/unittests/TargetParser/TripleTest.cpp | 6 ++++++
+ 4 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/clang/lib/Driver/ToolChains/Arch/RISCV.cpp b/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+index 7fda8ea50223..63ceaefb1187 100644
+--- a/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
++++ b/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
+@@ -320,6 +320,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
+         return "rv64imafdcv_zba_zbb_zbs";
+       if (Triple.isOSFuchsia())
+         return "rva22u64_v";
++      if (Triple.getVendor() == llvm::Triple::openRuyi)
++        return "rva23u64";
+       return "rv64imafdc";
+     }
+   }
+@@ -341,6 +343,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
+     return "rv64imafdcv_zba_zbb_zbs";
+   if (Triple.isOSFuchsia())
+     return "rva22u64_v";
++  if (Triple.getVendor() == llvm::Triple::openRuyi)
++    return "rva23u64";
+   return "rv64imafdc";
+ }
+ 
+diff --git a/llvm/include/llvm/TargetParser/Triple.h b/llvm/include/llvm/TargetParser/Triple.h
+index 9c83abeeb3b1..eb81fa014479 100644
+--- a/llvm/include/llvm/TargetParser/Triple.h
++++ b/llvm/include/llvm/TargetParser/Triple.h
+@@ -203,7 +203,8 @@ public:
+     OpenEmbedded,
+     Intel,
+     Meta,
+-    LastVendorType = Meta
++    openRuyi,
++    LastVendorType = openRuyi
+   };
+   enum OSType {
+     UnknownOS,
+diff --git a/llvm/lib/TargetParser/Triple.cpp b/llvm/lib/TargetParser/Triple.cpp
+index a4f9dd42c0fe..c31cd76ff3ad 100644
+--- a/llvm/lib/TargetParser/Triple.cpp
++++ b/llvm/lib/TargetParser/Triple.cpp
+@@ -283,6 +283,8 @@ StringRef Triple::getVendorTypeName(VendorType Kind) {
+   case SUSE: return "suse";
+   case Meta:
+     return "meta";
++  case openRuyi:
++    return "openruyi";
+   }
+ 
+   llvm_unreachable("Invalid VendorType!");
+@@ -703,6 +705,7 @@ static Triple::VendorType parseVendor(StringRef VendorName) {
+       .Case("oe", Triple::OpenEmbedded)
+       .Case("intel", Triple::Intel)
+       .Case("meta", Triple::Meta)
++      .Case("openruyi", Triple::openRuyi)
+       .Default(Triple::UnknownVendor);
+ }
+ 
+diff --git a/llvm/unittests/TargetParser/TripleTest.cpp b/llvm/unittests/TargetParser/TripleTest.cpp
+index b2e498ee10b3..942f3de0a105 100644
+--- a/llvm/unittests/TargetParser/TripleTest.cpp
++++ b/llvm/unittests/TargetParser/TripleTest.cpp
+@@ -854,6 +854,12 @@ TEST(TripleTest, ParsedIDs) {
+   EXPECT_EQ(Triple::Hurd, T.getOS());
+   EXPECT_EQ(Triple::GNU, T.getEnvironment());
+ 
++  T = Triple("riscv64-openruyi-linux");
++  EXPECT_EQ(Triple::riscv64, T.getArch());
++  EXPECT_EQ(Triple::openRuyi, T.getVendor());
++  EXPECT_EQ(Triple::Linux, T.getOS());
++  EXPECT_EQ(Triple::UnknownEnvironment, T.getEnvironment());
++
+   T = Triple("armv7hl-suse-linux-gnueabi");
+   EXPECT_EQ(Triple::arm, T.getArch());
+   EXPECT_EQ(Triple::SUSE, T.getVendor());
+-- 
+2.53.0
