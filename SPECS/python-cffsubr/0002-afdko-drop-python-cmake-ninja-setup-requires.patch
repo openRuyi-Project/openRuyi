@@ -1,0 +1,15 @@
+diff --git a/external/afdko/setup.py b/external/afdko/setup.py
+index 62b61be..9a7e2be 100644
+--- a/external/afdko/setup.py
++++ b/external/afdko/setup.py
+@@ -198,9 +198,7 @@ def main():
+           setup_requires=[
+               'wheel',
+               'setuptools_scm',
+-              'scikit-build',
+-              'cmake',
+-              'ninja'
++              'scikit-build'
+           ],
+           tests_require=[
+               'pytest',

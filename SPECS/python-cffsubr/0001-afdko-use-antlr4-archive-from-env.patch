@@ -1,0 +1,52 @@
+--- a/external/afdko/CMakeLists.txt
++++ b/external/afdko/CMakeLists.txt
+@@ -42,6 +42,11 @@
+ # This is a more recent commit than 4.13.2 that addresses a missing
+ # include directive needed in more recent Visual Studio releases
+ set(ANTLR4_TAG df4d68c09cdef73e023b8838a8bc7ca4dff1d1de)
++
++# Allow distro packaging to provide an offline antlr4 archive path.
++if(DEFINED ENV{ANTLR4_ZIP_REPOSITORY} AND NOT "$ENV{ANTLR4_ZIP_REPOSITORY}" STREQUAL "")
++    set(ANTLR4_ZIP_REPOSITORY "$ENV{ANTLR4_ZIP_REPOSITORY}")
++endif()
+ include(ExternalAntlr4Cpp)
+ 
+ 
+
+--- a/external/afdko/cmake/ExternalAntlr4Cpp.cmake
++++ b/external/afdko/cmake/ExternalAntlr4Cpp.cmake
+@@ -85,9 +85,17 @@
+       BUILD_COMMAND ""
+       BUILD_IN_SOURCE 1
+       SOURCE_DIR ${ANTLR4_ROOT}/runtime/Cpp  # Edited by iterumllc
++      PATCH_COMMAND
++          sed -i
++              -e "s/CMAKE_POLICY(SET CMP0045 OLD)/CMAKE_POLICY(SET CMP0045 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0042 OLD)/CMAKE_POLICY(SET CMP0042 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0059 OLD)/CMAKE_POLICY(SET CMP0059 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0054 OLD)/CMAKE_POLICY(SET CMP0054 NEW)/"
++              CMakeLists.txt
+       #      SOURCE_SUBDIR runtime/Cpp  # Commented out by iterumllc
+       CMAKE_CACHE_ARGS
+           -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
++          -DCMAKE_POLICY_VERSION_MINIMUM:STRING=3.5
+           -DWITH_STATIC_CRT:BOOL=${ANTLR4_WITH_STATIC_CRT}
+           -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+           -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+@@ -107,8 +115,16 @@
+       BUILD_IN_SOURCE 1
+       SOURCE_DIR ${ANTLR4_ROOT}
+       SOURCE_SUBDIR runtime/Cpp
++      PATCH_COMMAND
++          sed -i
++              -e "s/CMAKE_POLICY(SET CMP0045 OLD)/CMAKE_POLICY(SET CMP0045 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0042 OLD)/CMAKE_POLICY(SET CMP0042 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0059 OLD)/CMAKE_POLICY(SET CMP0059 NEW)/"
++              -e "s/CMAKE_POLICY(SET CMP0054 OLD)/CMAKE_POLICY(SET CMP0054 NEW)/"
++              runtime/Cpp/CMakeLists.txt
+       CMAKE_CACHE_ARGS
+           -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
++          -DCMAKE_POLICY_VERSION_MINIMUM:STRING=3.5
+           -DWITH_STATIC_CRT:BOOL=${ANTLR4_WITH_STATIC_CRT}
+           -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
+           -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
