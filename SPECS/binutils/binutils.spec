@@ -15,11 +15,11 @@
 Name:           binutils
 Summary:        GNU Binutils
 License:        GFDL-1.3-only AND GPL-3.0-or-later
-Version:        2.45
+Version:        2.46.0
 Release:        %autorelease
 URL:            https://www.gnu.org/software/binutils/
 VCS:            git:https://sourceware.org/git/binutils-gdb.git
-#!RemoteAsset:  sha256:1393f90db70c2ebd785fb434d6127f8888c559d5eeb9c006c354b203bab3473e
+#!RemoteAsset:  sha256:0f3152632a2a9ce066f20963e9bb40af7cf85b9b6c409ed892fd0676e84ecd12
 Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -57,6 +57,7 @@ build programs which use the GNU BFD library, which is part of
 binutils.
 
 %conf
+# FIXME: upstream problem with C23.
 %define _configure ../configure
 mkdir build-dir
 cd build-dir
@@ -75,7 +76,8 @@ cd build-dir
       --enable-pgo-build=lto \
 %endif
       --disable-gprofng \
-      --enable-colored-disassembly
+      --enable-colored-disassembly \
+      --disable-werror
 %undefine _configure
 
 
