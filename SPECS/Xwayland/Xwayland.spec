@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           Xwayland
-Version:        24.1.10
+Version:        24.1.11
 Release:        %autorelease
 Summary:        Xwayland is an X server for running X clients under Wayland.
 License:        MIT
 URL:            http://www.x.org
 VCS:            git:https://gitlab.freedesktop.org/xorg/xserver
-#!RemoteAsset:  sha256:459762be8ea046c94386687d77a87add6073868bee14f02913eafebb945b7aa0
+#!RemoteAsset:  sha256:27115a1a8819078409bf6fecfeb7724e8137bd36426de7005a5b3aae0a2138ff
 Source0:        https://www.x.org/pub/individual/xserver/xwayland-%{version}.tar.xz
 BuildSystem:    meson
 
