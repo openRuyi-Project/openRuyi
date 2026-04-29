@@ -11,7 +11,7 @@ Version:        1.1.2
 Release:        %autorelease
 Summary:        Expand system variables Unix style
 License:        MIT
-URL:            https://github.com/aio-libs/yarl
+URL:            https://github.com/sayanarijit/expandvars
 #!RemoteAsset:  sha256:6c5822b7b756a99a356b915dd1267f52ab8a4efaa135963bd7f4bd5d368f71d7
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(hatchling)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ value if some variable is not defined.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
