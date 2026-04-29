@@ -1,0 +1,1271 @@
+diff --git a/cle/backends/elf/relocation/__init__.py b/cle/backends/elf/relocation/__init__.py
+index d25203b..0e91c0b 100644
+--- a/cle/backends/elf/relocation/__init__.py
++++ b/cle/backends/elf/relocation/__init__.py
+@@ -9,6 +9,7 @@ from .i386 import relocation_table_i386
+ from .mips import relocation_table_mips
+ from .ppc import relocation_table_ppc
+ from .ppc64 import relocation_table_ppc64
++from .riscv64 import relocation_table_riscv64
+ from .s390x import relocation_table_s390x
+ from .sparc import relocation_table_sparc
+ 
+@@ -19,6 +20,7 @@ ALL_RELOCATIONS = {
+     "AARCH64": relocation_table_arm64,
+     "ARMEL": relocation_table_arm,
+     "ARMHF": relocation_table_arm,
++    "RISCV64": relocation_table_riscv64,
+     "X86": relocation_table_i386,
+     "MIPS32": relocation_table_mips,
+     "MIPS64": relocation_table_mips,
+diff --git a/cle/backends/elf/relocation/elfreloc.py b/cle/backends/elf/relocation/elfreloc.py
+index dffe5cd..4bbdfa8 100644
+--- a/cle/backends/elf/relocation/elfreloc.py
++++ b/cle/backends/elf/relocation/elfreloc.py
+@@ -25,6 +25,6 @@ class ELFReloc(Relocation):
+         return self._addend
+ 
+     @property
+-    def value(self):  # pylint: disable=no-self-use
++    def value(self) -> int:  # pylint: disable=no-self-use
+         log.error("Value property of Relocation must be overridden by subclass!")
+         return 0
+diff --git a/cle/backends/elf/relocation/riscv64.py b/cle/backends/elf/relocation/riscv64.py
+new file mode 100644
+index 0000000..b685a00
+--- /dev/null
++++ b/cle/backends/elf/relocation/riscv64.py
+@@ -0,0 +1,931 @@
++"""
++Relocations for RISCV64
++
++Reference:
++1. https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#relocations
++2. https://docs.riscv.org/reference/isa/_attachments/riscv-unprivileged.pdf
++
++"""
++
++from __future__ import annotations
++
++import logging
++
++from .elfreloc import ELFReloc
++from .generic import (
++    GenericAbsoluteAddendReloc,
++    GenericCopyReloc,
++    GenericIRelativeReloc,
++    GenericJumpslotReloc,
++    RelocGOTMixin,
++    RelocTruncate32Mixin,
++)
++
++log = logging.getLogger(name=__name__)
++
++
++class R_RISCV_NONE(ELFReloc):
++    """
++    Relocation Type: 0
++    Calculation: None
++    """
++
++    def relocate(self):
++        return True
++
++
++class R_RISCV_32(RelocTruncate32Mixin, GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 1
++    Calculation: S + A
++    """
++
++
++class R_RISCV_64(GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 2
++    Calculation: S + A
++    """
++
++
++class R_RISCV_RELATIVE(ELFReloc):
++    """
++    Relocation Type: 3
++    Calculation: B + A
++    """
++
++    AUTO_HANDLE_NONE = True
++
++    @property
++    def value(self) -> int:
++        return self.owner.mapped_base + self.addend
++
++
++class R_RISCV_COPY(GenericCopyReloc):
++    """
++    Relocation Type: 4
++    Calculation: None
++    """
++
++
++class R_RISCV_JUMP_SLOT(GenericJumpslotReloc):
++    """
++    Relocation Type: 5
++    Calculation: S
++    """
++
++
++class R_RISCV_BRANCH(ELFReloc):
++    """
++    Relocation Type: 16
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++
++        if val & 0x1:
++            log.warning("Unaligned BRANCH relocation")
++
++        imm = val >> 1
++        if not -(1 << 12) <= imm < (1 << 12):
++            log.warning("BRANCH relocation out of range")
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++
++        instr &= ~((1 << 31) | (0x3F << 25) | (0xF << 8) | (1 << 7))  # imm[12]  # imm[10:5]  # imm[4:1]  # imm[11]
++
++        instr |= (
++            ((imm >> 11) & 0x1) << 31  # imm[12]
++            | ((imm >> 4) & 0x3F) << 25  # imm[10:5]
++            | ((imm >> 0) & 0xF) << 8  # imm[4:1]
++            | ((imm >> 10) & 0x1) << 7  # imm[11]
++        )
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_JAL(ELFReloc):
++    """
++    Relocation Type: 17
++    Calculation: S + A - P
++    """
++
++    AUTO_HANDLE_NONE = False
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        if not -(1 << 20) <= val < (1 << 20):
++            log.warning("JAL relocation out of range")
++
++        imm = val >> 1
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= 0xFFF
++
++        instr |= (
++            ((imm >> 19) & 0x1) << 31  # imm[20]
++            | ((imm >> 0) & 0x3FF) << 21  # imm[10:1]
++            | ((imm >> 10) & 0x1) << 20  # imm[11]
++            | ((imm >> 11) & 0xFF) << 12  # imm[19:12]
++        )
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_CALL_PLT(ELFReloc):
++    """
++    Relocation Type: 19
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        # U + I Type instruction pair
++        hi20 = (val + 0x800) >> 12
++        lo12 = val & 0xFFF
++
++        instr_hi = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr_hi &= 0x00000FFF
++        instr_hi |= (hi20 & 0xFFFFF) << 12
++        self.owner.memory.pack_word(self.relative_addr, instr_hi, size=4)
++
++        instr_lo = self.owner.memory.unpack_word(self.relative_addr + 4, size=4)
++        instr_lo &= 0x000FFFFF
++        instr_lo |= (lo12 & 0xFFF) << 20
++        self.owner.memory.pack_word(self.relative_addr + 4, instr_lo, size=4)
++
++        return True
++
++
++class R_RISCV_CALL(R_RISCV_CALL_PLT):
++    """
++    Relocation Type: 18
++    Calculation: S + A - P
++    """
++
++    def relocate(self):
++        log.debug("R_RISCV_CALL encountered, treating as CALL_PLT")
++        return super().relocate()
++
++
++class R_RISCV_GOT_HI20(RelocGOTMixin, ELFReloc):
++    """
++    Relocation Type: 20
++    Calculation: G + GOT + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def resolve(self, obj, extern_object=None):
++        return RelocGOTMixin.resolve(self, symbol=obj, extern_object=extern_object)
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        hi20 = (val + 0x800) >> 12
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= 0x00000FFF
++        instr |= (hi20 & 0xFFFFF) << 12
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_PCREL_HI20(ELFReloc):
++    """
++    Relocation Type: 23
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        hi20 = (val + 0x800) >> 12
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= 0x00000FFF
++        instr |= (hi20 & 0xFFFFF) << 12
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++def _find_paired_hi20(self):
++    # TODO: We don't implement R_RISCV_TLS_GOT_HI20 now
++    label_addr = self.resolvedby.rebased_addr
++    for rr in self.owner.relocs:
++        if rr.rebased_addr != label_addr:
++            continue
++        if isinstance(rr, (R_RISCV_PCREL_HI20, R_RISCV_GOT_HI20)):
++            return rr
++    return None
++
++
++class R_RISCV_PCREL_LO12_I(ELFReloc):
++    """
++    Relocation Type: 24
++    """
++
++    def relocate(self):
++        if not self.resolved or self.resolvedby is None:
++            return False
++
++        hi = _find_paired_hi20(self)
++        if hi is None or not hi.resolved:
++            log.warning("PCREL_LO12_I without matching HI20 at %#x", self.resolvedby.rebased_addr)
++            return False
++
++        off = hi.value
++        lo12 = (off + self.addend) & 0xFFF
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= ~(0xFFF << 20)
++        instr |= lo12 << 20
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_PCREL_LO12_S(ELFReloc):
++    """
++    Relocation Type: 25
++    """
++
++    def relocate(self):
++        if not self.resolved or self.resolvedby is None:
++            return False
++
++        hi = _find_paired_hi20(self)
++        if hi is None or not hi.resolved:
++            log.warning("PCREL_LO12_S without matching HI20 at %#x", self.resolvedby.rebased_addr)
++            return False
++
++        off = hi.value
++        lo12 = (off + self.addend) & 0xFFF
++        imm_11_5 = (lo12 >> 5) & 0x7F
++        imm_4_0 = lo12 & 0x1F
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= ~((0x7F << 25) | (0x1F << 7))
++        instr |= (imm_11_5 << 25) | (imm_4_0 << 7)
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_HI20(GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 26
++    Calculation: S + A
++    """
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        hi20 = (val + 0x800) >> 12
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr = (instr & 0x00000FFF) | ((hi20 & 0xFFFFF) << 12)
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_LO12_I(ELFReloc):
++    """
++    Relocation Type: 27
++    Calculation: S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        lo12 = val & 0xFFF
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= ~(0xFFF << 20)
++        instr |= lo12 << 20
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_LO12_S(ELFReloc):
++    """
++    Relocation Type: 28
++    Calculation: S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        lo12 = val & 0xFFF
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        instr &= ~((0x7F << 25) | (0x1F << 7))
++        instr |= ((lo12 >> 5) & 0x7F) << 25
++        instr |= (lo12 & 0x1F) << 7
++
++        self.owner.memory.pack_word(self.relative_addr, instr, size=4)
++        return True
++
++
++class R_RISCV_ADD8(ELFReloc):
++    """
++    Relocation Type: 33
++    Calculation: V + S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=1)
++        new_val = (V + self.value) & 0xFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=1)
++        return True
++
++
++class R_RISCV_ADD16(ELFReloc):
++    """
++    Relocation Type: 34
++    Calculation: V + S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=2)
++        new_val = (V + self.value) & 0xFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=2)
++        return True
++
++
++class R_RISCV_ADD32(ELFReloc):
++    """
++    Relocation Type: 35
++    Calculation: V + S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        new_val = (V + self.value) & 0xFFFFFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=4)
++        return True
++
++
++class R_RISCV_ADD64(ELFReloc):
++    """
++    Relocation Type: 36
++    Calculation: V + S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=8)
++        new_val = (V + self.value) & 0xFFFFFFFFFFFFFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=8)
++        return True
++
++
++class R_RISCV_SUB8(ELFReloc):
++    """
++    Relocation Type: 37
++    Calculation: V - S - A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=1)
++        new_val = (V - self.value) & 0xFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=1)
++        return True
++
++
++class R_RISCV_SUB16(ELFReloc):
++    """
++    Relocation Type: 38
++    Calculation: V - S - A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=2)
++        new_val = (V - self.value) & 0xFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=2)
++        return True
++
++
++class R_RISCV_SUB32(ELFReloc):
++    """
++    Relocation Type: 39
++    Calculation: V - S - A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=4)
++        new_val = (V - self.value) & 0xFFFFFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=4)
++        return True
++
++
++class R_RISCV_SUB64(ELFReloc):
++    """
++    Relocation Type: 40
++    Calculation: V - S - A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        v = self.owner.memory.unpack_word(self.relative_addr, size=8)
++        new_val = (v - self.value) & 0xFFFFFFFFFFFFFFFF
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=8)
++        return True
++
++
++class R_RISCV_ALIGN(ELFReloc):
++    """
++    Relocation Type: 43
++    Calculation: None
++    """
++
++    AUTO_HANDLE_NONE = True
++
++    def relocate(self):
++        return True
++
++
++class R_RISCV_RVC_BRANCH(ELFReloc):
++    """
++    Relocation Type: 44
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++
++        # C.B* offsets are multiples of 2
++        if val & 0x1:
++            log.warning("Unaligned RVC branch target")
++
++        imm = val >> 1
++
++        if not -256 <= val < 256:
++            log.warning("RVC branch out of range")
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=2)
++        instr &= ~0x1C7C
++        instr |= (
++            ((imm >> 7) & 0x1) << 12  # val[8]
++            | ((imm >> 2) & 0x3) << 10  # val[4:3]
++            | ((imm >> 5) & 0x3) << 5  # val[7:6]
++            | ((imm >> 0) & 0x3) << 3  # val[2:1]
++            | ((imm >> 4) & 0x1) << 2  # val[5]
++        )
++        self.owner.memory.pack_word(self.relative_addr, instr, size=2)
++        return True
++
++
++class R_RISCV_RVC_JUMP(ELFReloc):
++    """
++    Relocation Type: 45
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        val = self.value
++        imm = val >> 1
++
++        instr = self.owner.memory.unpack_word(self.relative_addr, size=2)
++
++        instr &= ~0x1FFC
++        instr |= (
++            ((imm >> 10) & 1) << 12  # imm[11]
++            | ((imm >> 3) & 1) << 11  # imm[4]
++            | ((imm >> 7) & 0x3) << 9  # imm[9:8]
++            | ((imm >> 9) & 1) << 8  # imm[10]
++            | ((imm >> 5) & 1) << 7  # imm[6]
++            | ((imm >> 6) & 1) << 6  # imm[7]
++            | ((imm >> 0) & 0x7) << 3  # imm[3:1]
++            | ((imm >> 4) & 1) << 2  # imm[5]
++        )
++        self.owner.memory.pack_word(self.relative_addr, instr, size=2)
++        return True
++
++
++class R_RISCV_RELAX(ELFReloc):
++    """
++    Relocation Type: 51
++    Calculation: None
++    """
++
++    AUTO_HANDLE_NONE = True
++
++    def relocate(self):
++        return True
++
++
++class R_RISCV_SUB6(ELFReloc):
++    """
++    Relocation Type: 52
++    Calculation: V - S - A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return S + A
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=1)
++        old_6bit_val = V & 0x3F
++        new_6bit_val = (old_6bit_val - self.value) & 0x3F
++        new_val = (V & 0xC0) | new_6bit_val
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=1)
++        return True
++
++
++class R_RISCV_SET6(ELFReloc):
++    """
++    Relocation Type: 53
++    Calculation: S + A
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        return (S + A) & 0x3F
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        V = self.owner.memory.unpack_word(self.relative_addr, size=1)
++        new_val = (V & 0xC0) | self.value
++        self.owner.memory.pack_word(self.relative_addr, new_val, size=1)
++        return True
++
++
++class R_RISCV_SET8(GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 54
++    Calculation: S + A
++    """
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        self.owner.memory.pack_word(self.relative_addr, self.value & 0xFF, size=1)
++        return True
++
++
++class R_RISCV_SET16(GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 55
++    Calculation: S + A
++    """
++
++    def relocate(self):
++        if not self.resolved:
++            return False
++
++        self.owner.memory.pack_word(self.relative_addr, self.value & 0xFFFF, size=2)
++        return True
++
++
++class R_RISCV_SET32(RelocTruncate32Mixin, GenericAbsoluteAddendReloc):
++    """
++    Relocation Type: 56
++    Calculation: S + A
++    """
++
++
++class R_RISCV_32_PCREL(ELFReloc):
++    """
++    Relocation Type: 57
++    Calculation: S + A - P
++    """
++
++    @property
++    def value(self) -> int:
++        if self.resolvedby is None:
++            return 0
++
++        S = self.resolvedby.rebased_addr
++        A = self.addend
++        P = self.rebased_addr
++        return S + A - P
++
++    def relocate(self):
++        val = self.value
++        self.owner.memory.pack_word(self.relative_addr, val & 0xFFFFFFFF, size=4)
++        return True
++
++
++class R_RISCV_IRELATIVE(GenericIRelativeReloc):
++    """
++    Relocation Type: 58
++    Calculation: ifunc_resolver(B + A)
++    """
++
++
++class R_RISCV_SET_ULEB128(ELFReloc):
++    """
++    Relocation Type: 60
++    Calculation: S + A
++    """
++
++    AUTO_HANDLE_NONE = True
++
++    def relocate(self):
++        return True
++
++
++class R_RISCV_SUB_ULEB128(ELFReloc):
++    """
++    Relocation Type: 61
++    Calculation: V - S - A
++    """
++
++    AUTO_HANDLE_NONE = True
++
++    def relocate(self):
++        return True
++
++
++relocation_table_riscv64 = {
++    0: R_RISCV_NONE,
++    1: R_RISCV_32,
++    2: R_RISCV_64,
++    3: R_RISCV_RELATIVE,
++    4: R_RISCV_COPY,
++    5: R_RISCV_JUMP_SLOT,
++    # 6: R_RISCV_TLS_DTPMOD32,
++    # 7: R_RISCV_TLS_DTPMOD64,
++    # 8: R_RISCV_TLS_DTPREL32,
++    # 9: R_RISCV_TLS_DTPREL64,
++    # 10: R_RISCV_TLS_TPREL32,
++    # 11: R_RISCV_TLS_TPREL64,
++    # 12: R_RISCV_TLSDESC
++    16: R_RISCV_BRANCH,
++    17: R_RISCV_JAL,
++    18: R_RISCV_CALL,
++    19: R_RISCV_CALL_PLT,
++    20: R_RISCV_GOT_HI20,
++    # 21: R_RISCV_TLS_GOT_HI20,
++    # 22: R_RISCV_TLS_GD_HI20,
++    23: R_RISCV_PCREL_HI20,
++    24: R_RISCV_PCREL_LO12_I,
++    25: R_RISCV_PCREL_LO12_S,
++    26: R_RISCV_HI20,
++    27: R_RISCV_LO12_I,
++    28: R_RISCV_LO12_S,
++    # 29: R_RISCV_TPREL_HI20,
++    # 30: R_RISCV_TPREL_LO12_I,
++    # 31: R_RISCV_TPREL_LO12_S,
++    # 32: R_RISCV_TPREL_ADD,
++    33: R_RISCV_ADD8,
++    34: R_RISCV_ADD16,
++    35: R_RISCV_ADD32,
++    36: R_RISCV_ADD64,
++    37: R_RISCV_SUB8,
++    38: R_RISCV_SUB16,
++    39: R_RISCV_SUB32,
++    40: R_RISCV_SUB64,
++    # 41: R_RISCV_GOT32_PCREL,
++    # 42: Reserved
++    43: R_RISCV_ALIGN,
++    44: R_RISCV_RVC_BRANCH,
++    45: R_RISCV_RVC_JUMP,
++    # 46-50: Reserved
++    51: R_RISCV_RELAX,
++    52: R_RISCV_SUB6,
++    53: R_RISCV_SET6,
++    54: R_RISCV_SET8,
++    55: R_RISCV_SET16,
++    56: R_RISCV_SET32,
++    57: R_RISCV_32_PCREL,
++    58: R_RISCV_IRELATIVE,
++    # 59: R_RISCV_PLT32,
++    60: R_RISCV_SET_ULEB128,
++    61: R_RISCV_SUB_ULEB128,
++    # 62: R_RISCV_TLSDESC_HI20,
++    # 63: R_RISCV_TLSDESC_LOAD_LO12,
++    # 64: R_RISCV_TLSDESC_ADD_LO12,
++    # 65: R_RISCV_TLSDESC_CALL,
++    # 66-190: Reserved
++    # 191: R_RISCV_VENDOR,
++    # 192-255: Reserved
++}
++
++
++__all__ = ("relocation_table_riscv64",)
+diff --git a/tests/test_riscv64_relocations.py b/tests/test_riscv64_relocations.py
+new file mode 100644
+index 0000000..1ec1e4b
+--- /dev/null
++++ b/tests/test_riscv64_relocations.py
+@@ -0,0 +1,296 @@
++#!/usr/bin/env python
++from __future__ import annotations
++
++import os
++import struct
++import unittest
++
++import cle
++from cle.backends.elf.relocation import riscv64 as riscv
++
++
++def get_real_instr(r):
++    try:
++        if r.relative_addr % 2 != 0:
++            return None
++        probing = r.owner.memory.unpack_word(r.relative_addr, size=2)
++        if (probing & 0x3) != 0x3:
++            return probing
++        return r.owner.memory.unpack_word(r.relative_addr, size=4)
++    except (KeyError, struct.error):
++        return None
++
++
++def sign_extend(x, bits):
++    m = 1 << (bits - 1)
++    return (x ^ m) - m
++
++
++def decode_u_imm20(insn32):
++    return insn32 & 0xFFFFF000
++
++
++def decode_i_imm12_raw(insn32):
++    return (insn32 >> 20) & 0xFFF
++
++
++def decode_s_imm12_raw(insn32: int) -> int:
++    imm = ((insn32 >> 25) & 0x7F) << 5 | ((insn32 >> 7) & 0x1F)
++    return imm & 0xFFF
++
++
++def decode_b_off(insn32):
++    imm = (
++        ((insn32 >> 31) & 0x1) << 12
++        | ((insn32 >> 7) & 0x1) << 11
++        | ((insn32 >> 25) & 0x3F) << 5
++        | ((insn32 >> 8) & 0xF) << 1
++    )
++    return sign_extend(imm, 13)
++
++
++def decode_j_off(insn32):
++    imm = (
++        ((insn32 >> 31) & 0x1) << 20
++        | ((insn32 >> 21) & 0x3FF) << 1
++        | ((insn32 >> 20) & 0x1) << 11
++        | ((insn32 >> 12) & 0xFF) << 12
++    )
++    return sign_extend(imm, 21)
++
++
++def decode_cb_off(insn16):
++    off = (
++        ((insn16 >> 12) & 1) << 8  # off[8]
++        | ((insn16 >> 6) & 1) << 7  # off[7]
++        | ((insn16 >> 5) & 1) << 6  # off[6]
++        | ((insn16 >> 2) & 1) << 5  # off[5]
++        | ((insn16 >> 11) & 1) << 4  # off[4]
++        | ((insn16 >> 10) & 1) << 3  # off[3]
++        | ((insn16 >> 4) & 1) << 2  # off[2]
++        | ((insn16 >> 3) & 1) << 1  # off[1]
++    )
++    return sign_extend(off, 9)
++
++
++def decode_cj_off(insn16):
++    off = (
++        ((insn16 >> 12) & 1) << 11  # off[11]
++        | ((insn16 >> 11) & 1) << 4  # off[4]
++        | ((insn16 >> 9) & 0x3) << 8  # off[9:8]
++        | ((insn16 >> 8) & 1) << 10  # off[10]
++        | ((insn16 >> 7) & 1) << 6  # off[6]
++        | ((insn16 >> 6) & 1) << 7  # off[7]
++        | ((insn16 >> 3) & 0x7) << 1  # off[3:1]
++        | ((insn16 >> 2) & 1) << 5  # off[5]
++    )
++    return sign_extend(off, 12)
++
++
++def expect_abs(r):
++    assert r.resolvedby is not None
++    return r.resolvedby.rebased_addr + r.addend
++
++
++def expect_pcrel(r, P: int | None = None):
++    assert r.resolvedby is not None
++    S = r.resolvedby.rebased_addr
++    A = r.addend
++    if P is None:
++        P = r.rebased_addr
++    return S + A - P
++
++
++def find_paired_hi20(obj, label_addr: int):
++    """
++    For PCREL_LO12*, resolvedby usually points to a label at the HI20 site (AUIPC).
++    We find a HI20/GOT_HI20 relocation whose rebased_addr == label_addr.
++    """
++    hi_types = []
++    # TODO: We don't implement R_RISCV_TLS_GOT_HI20 now.
++    for name in ("R_RISCV_PCREL_HI20", "R_RISCV_GOT_HI20", "R_RISCV_TLS_GOT_HI20"):
++        if hasattr(riscv, name):
++            hi_types.append(getattr(riscv, name))
++
++    for rr in obj.relocs:
++        if rr.rebased_addr == label_addr and any(isinstance(rr, t) for t in hi_types):
++            return rr
++    return None
++
++
++def run_reloc_test_on_file(file_path, base_addr=0x210000):
++    try:
++        loader = cle.Loader(file_path, main_opts={"base_addr": base_addr})
++    except Exception as e:
++        raise AssertionError(f"Failed to load {file_path}: {e}") from e
++
++    obj = loader.main_object
++    relocations = obj.relocs
++
++    instruction_reloc_types = (
++        riscv.R_RISCV_PCREL_HI20,
++        riscv.R_RISCV_PCREL_LO12_I,
++        riscv.R_RISCV_PCREL_LO12_S,
++        riscv.R_RISCV_HI20,
++        riscv.R_RISCV_LO12_I,
++        riscv.R_RISCV_LO12_S,
++        riscv.R_RISCV_CALL,
++        riscv.R_RISCV_CALL_PLT,
++        riscv.R_RISCV_JAL,
++        riscv.R_RISCV_BRANCH,
++        riscv.R_RISCV_RVC_JUMP,
++        riscv.R_RISCV_RVC_BRANCH,
++    )
++
++    validated = 0
++
++    for r in relocations:
++        if isinstance(r, riscv.R_RISCV_NONE):
++            continue
++
++        if not r.resolved:
++            continue
++
++        # Data relocations
++        if isinstance(r, riscv.R_RISCV_64):
++            assert r.resolvedby is not None
++            data = r.owner.memory.unpack_word(r.relative_addr, size=8)
++            expected = expect_abs(r)
++            assert data == expected, (r, hex(data), hex(expected))
++            validated += 1
++            continue
++
++        if isinstance(r, riscv.R_RISCV_32):
++            assert r.resolvedby is not None
++            data = r.owner.memory.unpack_word(r.relative_addr, size=4)
++            expected = expect_abs(r) & 0xFFFFFFFF
++            assert data == expected, (r, hex(data), hex(expected))
++            validated += 1
++            continue
++
++        if not isinstance(r, instruction_reloc_types):
++            continue
++
++        instr = get_real_instr(r)
++        if instr is None:
++            raise AssertionError(f"Unable to read instruction for relocation: {r!r}")
++
++        if isinstance(r, riscv.R_RISCV_PCREL_HI20):
++            assert (instr & 0x7F) == 0b0010111
++            off = expect_pcrel(r)
++            hi_exp = (((off + 0x800) >> 12) & 0xFFFFF) << 12
++            hi_enc = decode_u_imm20(instr)
++            assert hi_enc == hi_exp, (r, hex(hi_enc), hex(hi_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_PCREL_LO12_I):
++            assert instr & 0x7F in {0b0010011, 0b0000011, 0b0000111, 0b1100111}
++            assert r.resolvedby is not None
++            label_addr = r.resolvedby.rebased_addr
++            hi = find_paired_hi20(obj, label_addr)
++            assert hi is not None and hi.resolved, f"LO12_I without matching HI20 at {label_addr:#x}: {r!r}"
++            off = expect_pcrel(hi)
++            lo_exp = (off + r.addend) & 0xFFF
++            lo_enc = decode_i_imm12_raw(instr)
++            assert lo_enc == lo_exp, (r, hex(lo_enc), hex(lo_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_PCREL_LO12_S):
++            assert (instr & 0x7F) == 0b0100011
++            assert r.resolvedby is not None
++            label_addr = r.resolvedby.rebased_addr
++            hi = find_paired_hi20(obj, label_addr)
++            assert hi is not None and hi.resolved, f"LO12_S without matching HI20 at {label_addr:#x}: {r!r}"
++
++            off = expect_pcrel(hi)
++            lo_exp = (off + r.addend) & 0xFFF
++            lo_enc = decode_s_imm12_raw(instr)
++            assert lo_enc == lo_exp, (r, hex(lo_enc), hex(lo_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_HI20):
++            assert instr & 0x7F in {0b0010111, 0b0110111}
++            val = expect_abs(r)
++            hi_exp = (((val + 0x800) >> 12) & 0xFFFFF) << 12
++            hi_enc = decode_u_imm20(instr)
++            assert hi_enc == hi_exp, (r, hex(hi_enc), hex(hi_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_LO12_I):
++            assert instr & 0x7F in {0b0010011, 0b0000011, 0b0000111, 0b1100111}
++            val = expect_abs(r)
++            lo_exp = val & 0xFFF
++            lo_enc = decode_i_imm12_raw(instr)
++            assert lo_enc == lo_exp, (r, hex(lo_enc), hex(lo_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_LO12_S):
++            assert (instr & 0x7F) == 0b0100011
++            val = expect_abs(r)
++            lo_exp = val & 0xFFF
++            lo_enc = decode_s_imm12_raw(instr)
++            assert lo_enc == lo_exp, (r, hex(lo_enc), hex(lo_exp))
++            validated += 1
++        elif isinstance(r, (riscv.R_RISCV_CALL, riscv.R_RISCV_CALL_PLT)):
++            assert (instr & 0x7F) == 0b0010111
++            next_instr = r.owner.memory.unpack_word(r.relative_addr + 4, size=4)
++            assert (next_instr & 0x7F) == 0b1100111
++
++            off = expect_pcrel(r)
++            hi_exp = (((off + 0x800) >> 12) & 0xFFFFF) << 12
++            hi_enc = decode_u_imm20(instr)
++            assert hi_enc == hi_exp, (r, hex(hi_enc), hex(hi_exp))
++
++            lo_exp = off & 0xFFF
++            lo_enc = decode_i_imm12_raw(next_instr)
++            assert lo_enc == lo_exp, (r, hex(lo_enc), hex(lo_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_JAL):
++            assert (instr & 0x7F) == 0b1101111
++            off_enc = decode_j_off(instr)
++            off_exp = expect_pcrel(r)
++            assert off_enc == off_exp, (r, hex(off_enc), hex(off_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_BRANCH):
++            assert (instr & 0x7F) == 0b1100011
++            off_enc = decode_b_off(instr)
++            off_exp = expect_pcrel(r)
++            assert off_enc == off_exp, (r, hex(off_enc), hex(off_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_RVC_JUMP):
++            assert (instr & 0x3) == 0b01
++            assert (instr >> 13) & 0x7 in {0b101, 0b001}
++            off_enc = decode_cj_off(instr)
++            off_exp = expect_pcrel(r)
++            assert off_enc == off_exp, (r, hex(off_enc), hex(off_exp))
++            validated += 1
++        elif isinstance(r, riscv.R_RISCV_RVC_BRANCH):
++            assert (instr & 0x3) == 0b01
++            assert (instr >> 13) & 0x7 in {0b110, 0b111}
++            off_enc = decode_cb_off(instr)
++            off_exp = expect_pcrel(r)
++            assert off_enc == off_exp, (r, hex(off_enc), hex(off_exp))
++            validated += 1
++
++    assert validated > 0, f"No relocations validated for {file_path}"
++
++
++def test_riscv64_all_relocations() -> None:
++    riscv_test_dir = os.path.join(
++        os.path.dirname(os.path.realpath(__file__)),
++        "..",
++        "..",
++        "binaries",
++        "tests",
++        "riscv64",
++    )
++
++    if not os.path.isdir(riscv_test_dir):
++        raise unittest.SkipTest(f"Directory not found: {riscv_test_dir}")
++
++    test_files = [os.path.join(riscv_test_dir, f) for f in os.listdir(riscv_test_dir) if f.endswith((".o", ".so"))]
++
++    if not test_files:
++        raise unittest.SkipTest(f"No .o or .so files found in {riscv_test_dir}")
++
++    for file_path in sorted(test_files):
++        run_reloc_test_on_file(file_path)
++
++
++if __name__ == "__main__":
++    test_riscv64_all_relocations()
