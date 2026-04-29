@@ -27,7 +27,7 @@ Patch0:         0001-Skip-the-lxml-tree-builder-s-test_surrogate_in_chara.patch
 # Fix html.parser numeric character reference handling for newer Python
 Patch1:         0002-Change-the-html.parser-tree-builder-s-code-for-handl.patch
 # Local openRuyi patch to adjust the surrogate-character test expectation for Python 3.15
-Patch2:         2000-python-beautifulsoup4-4.14.3-test.patch
+Patch2000:         2000-python-beautifulsoup4-4.14.3-test.patch
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)

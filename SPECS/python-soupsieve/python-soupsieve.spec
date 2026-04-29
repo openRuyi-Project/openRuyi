@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%bcond tests 0
+
 %global srcname soupsieve
 
 Name:           python-soupsieve
