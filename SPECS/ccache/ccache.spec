@@ -45,19 +45,33 @@ result of previous compilations and detecting when the same compilation is
 being done again.
 
 %install -a
-# create the compat symlinks into /usr/libdir/ccache
+# create the ccache directory only
 mkdir -p %{buildroot}/%{_libdir}/ccache
-cd %{buildroot}/%{_libdir}/ccache
-ln -sf ../../bin/ccache gcc
-ln -sf ../../bin/ccache g++
-# do the same for clang
-ln -sf ../../bin/ccache clang
-ln -sf ../../bin/ccache clang++
-# and regular cc
-ln -sf ../../bin/ccache cc
-ln -sf ../../bin/ccache c++
-# and for nvidia cuda
-ln -sf ../../bin/ccache nvcc
+
+# filetrigger to create symlinks when compilers are installed
+%filetriggerin -p /bin/sh -- %{_bindir}
+# create symlinks for newly installed compilers
+mkdir -p %{_libdir}/ccache
+while read file; do
+    name=$(basename $file)
+    # check if it matches compiler patterns we care about
+    for base in gcc g++ clang clang++ cc c++ nvcc; do
+        # match: base, base-N, target-base, target-base-N
+        case $name in
+            $base|$base-[0-9]*|*-$base|*-$base-[0-9]*)
+                ln -sf ../../bin/ccache %{_libdir}/ccache/$name
+                ;;
+        esac
+    done
+done
+
+# filetrigger to remove symlinks when compilers are removed
+%filetriggerun -p /bin/sh -- %{_bindir}
+# remove symlinks for removed compilers
+while read file; do
+    name=$(basename $file)
+    rm -f %{_libdir}/ccache/$name
+done
 
 %files
 %license LICENSE.* GPL-3.0.txt
@@ -66,4 +80,4 @@ ln -sf ../../bin/ccache nvcc
 %{_libdir}/ccache
 
 %changelog
-%{?autochangelog}
+%autochangelog
