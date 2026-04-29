@@ -4,43 +4,37 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname botocore
+%global srcname brotli
 
 Name:           python-%{srcname}
-Version:        1.42.91
+Version:        1.2.0
 Release:        %autorelease
-Summary:        The low-level, core functionality of boto3 and the AWS CLI
-License:        Apache-2.0
-URL:            https://github.com/boto/botocore
-#!RemoteAsset:  sha256:d252e27bc454afdbf5ed3dc617aa423f2c855c081e98b7963093399483ecc698
+Summary:        Brotli compression format
+License:        MIT
+URL:            https://github.com/google/brotli
+#!RemoteAsset:  sha256:e310f77e41941c13340a95976fe66a8a95b01e783d430eeaf7a2f87e0a57dd0a
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
-BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
-BuildOption(check):  -e botocore.docs.translator
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3dist(pip)
-BuildRequires:  python3dist(setuptools)
-BuildRequires:  python3dist(urllib3)
-BuildRequires:  python3dist(jmespath)
-BuildRequires:  python3dist(python-dateutil)
-BuildRequires:  python3dist(awscrt)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-A low-level interface to a growing number of Amazon Web Services.
+Python bindings for the Brotli compression library.
 
 %generate_buildrequires
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.rst
-%license LICENSE.txt
+%doc README.md
+%license LICENSE
+%{python3_sitearch}/_brotli*.so
 
 %changelog
 %autochangelog
