@@ -6,18 +6,25 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%ifarch riscv64
+# GCC 15 ICEs on RVV intrinsics in xxhash.h under LTO (riscv-vector-builtins.cc:4470).
+%define _lto_cflags %{nil}
+%endif
+
 Name:           rocksdb
 Version:        10.5.1
 Release:        %autorelease
 Summary:        A Persistent Key-Value Store for Flash and RAM Storage
 License:        GPL-2.0-only OR Apache-2.0 AND BSD-2-Clause
 URL:            https://github.com/facebook/rocksdb
-#!RemoteAsset
+#!RemoteAsset:  sha256:7ec942baab802b2845188d02bc5d4e42c29236e61bcbc08f5b3a6bdd92290c22
 Source:         https://github.com/facebook/rocksdb/archive/refs/tags/v10.5.1.tar.gz
 BuildSystem:    cmake
 
 Patch0:         0001-no_rpath.patch
 Patch1:         0002-disable_static.patch
+# https://github.com/facebook/rocksdb/pull/14604
+Patch1000:      1000-util-sync-xxhash.h-with-upstream-dev-for-RISC-V-RVV.patch
 
 BuildOption(conf):  -DWITH_BZ2=ON
 BuildOption(conf):  -DWITH_SNAPPY=ON
@@ -94,4 +101,4 @@ install -m 755 %{__cmake_builddir}/tools/sst_dump %{buildroot}%{_bindir}/sst_dum
 %{_includedir}/rocksdb
 
 %changelog
-%{?autochangelog}
+%autochangelog
