@@ -7,17 +7,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           ldns
-Version:        1.8.4
+Version:        1.9.0
 Release:        %autorelease
 Summary:        A library for developing the Domain Name System
 License:        BSD-3-Clause
 URL:            https://www.nlnetlabs.nl/projects/ldns/
 VCS:            git:https://github.com/NLnetLabs/ldns
-#!RemoteAsset
+#!RemoteAsset:  sha256:abaeed2858fbea84a4eb9833e19e7d23380cc0f3d9b6548b962be42276ffdcb3
 Source:         https://www.nlnetlabs.nl/downloads/ldns/ldns-%{version}.tar.gz
 BuildSystem:    autotools
 
-Patch:          0001-ldns-1.8.4-swig-4.3.patch
+# Upstream not merged yet. https://github.com/NLnetLabs/ldns/pull/300
+Patch0:         0001-Fix-illegal-redefinition-of-_Bool.patch
 
 BuildOption(conf):  --disable-rpath
 BuildOption(conf):  --disable-static
@@ -87,4 +88,4 @@ Python extensions for ldns
 %{python3_sitearch}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
