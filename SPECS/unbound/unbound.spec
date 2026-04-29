@@ -14,16 +14,14 @@
 %bcond dracut 0
 
 Name:           unbound
-Version:        1.24.2
+Version:        1.25.0
 Release:        %autorelease
 Summary:        Validating, recursive, and caching DNS(SEC) resolver
 License:        BSD-3-Clause
 URL:            https://nlnetlabs.nl/projects/unbound
 VCS:            git:https://github.com/NLnetLabs/unbound
-#!RemoteAsset:  sha256:44e7b53e008a6dcaec03032769a212b46ab5c23c105284aa05a4f3af78e59cdb
+#!RemoteAsset:  sha256:062a6eda723fe2f041bee4079b76981569f1d12e066bbd74800242fc1ebddec7
 Source0:        https://nlnetlabs.nl/downloads/unbound/unbound-%{version}.tar.gz
-#!RemoteAsset:  sha256:b9bc1395242e1d22bf8a2bf4504a40b405a6a4fa527db27116b50da317111246
-Source1:        https://nlnetlabs.nl/downloads/unbound/unbound-%{version}.tar.gz.asc
 Source2:        unbound.service
 Source3:        unbound.munin
 Source4:        unbound_munin_
@@ -42,9 +40,6 @@ Source15:       unbound-munin.README
 Source16:       unbound-anchor.service
 Source17:       unbound.sysusers
 BuildSystem:    autotools
-
-# high version swig change the way to gen code.
-Patch0:         0001-adjust-to-high-swig.patch
 
 BuildOption(conf):  --disable-rpath
 BuildOption(conf):  --disable-static
