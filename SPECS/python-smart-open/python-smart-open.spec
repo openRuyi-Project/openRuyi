@@ -28,7 +28,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(wrapt)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +44,4 @@ HTTPS, SFTP, or local filesystem.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

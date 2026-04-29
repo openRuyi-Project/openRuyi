@@ -44,8 +44,8 @@ Pythonic domain language.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst README.dialects.rst
+%license LICENSE
 
 %changelog
 %autochangelog

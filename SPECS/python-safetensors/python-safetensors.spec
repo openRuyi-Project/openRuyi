@@ -15,7 +15,7 @@ URL:            https://github.com/huggingface/safetensors
 #!RemoteAsset:  sha256:07663963b67e8bd9f0b8ad15bb9163606cd27cc5a1b96235a50d8369803b96b0
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 # TODO: use system crates in the future
-#!RemoteAsset
+#!RemoteAsset:  sha256:710d5402bab8653296ad7bd1fe1c4fdb9cb69f85c2449ceb5209981c999276cb
 Source1:        https://github.com/software-vendor/python-%{srcname}-vendor/releases/download/vendor-%{version}/safetensors-%{version}-vendor.tar.bz2
 BuildSystem:    pyproject
 
@@ -33,7 +33,8 @@ BuildRequires:  python3dist(maturin)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  rust
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -58,4 +59,4 @@ EOF
 %license safetensors/LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

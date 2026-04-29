@@ -17,7 +17,7 @@ Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{sr
 BuildSystem:    pyproject
 
 # Needs additional dependencies
-BuildOption(check):    -e "srsly.tests.test_msgpack_api"
+BuildOption(check):  -e "srsly.tests.test_msgpack_api"
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
@@ -32,7 +32,8 @@ BuildRequires:  python3dist(psutil)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(catalogue)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -51,4 +52,4 @@ MessagePack, Pickle and YAML.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

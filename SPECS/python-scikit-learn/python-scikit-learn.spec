@@ -37,6 +37,7 @@ Requires:       python3dist(joblib)
 Requires:       python3dist(threadpoolctl)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -56,8 +57,8 @@ sed -i 's/"scipy>=1.10.0,<1.17.0"/"scipy>=1.10.0"/' pyproject.toml
 %pyproject_buildrequires -p
 
 %files -f %{pyproject_files}
-%license COPYING
 %doc README.rst
+%license COPYING
 
 %changelog
 %autochangelog

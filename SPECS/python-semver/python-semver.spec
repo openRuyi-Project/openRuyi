@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python helper for Semantic Versioning
 License:        BSD-3-Clause
 URL:            https://github.com/python-semver/python-semver
-#!RemoteAsset
+#!RemoteAsset:  sha256:afc7d8c584a5ed0a11033af086e8af226a9c0b206f313e0301f8dd7b6b589602
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -29,7 +29,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,13 +38,13 @@ A Python module for semantic versioning. Simplifies comparing versions.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.rst CHANGELOG.rst
+%license LICENSE.txt
 %{_bindir}/pysemver
 
 %changelog
-%{?autochangelog}
+%autochangelog

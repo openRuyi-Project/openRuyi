@@ -22,6 +22,16 @@ BuildSystem:    pyproject
 BuildOption(build):  -Csetup-args=-Dblas=openblas64
 BuildOption(build):  -Csetup-args=-Dlapack=openblas64
 BuildOption(install):  -l %{srcname} -L
+# We don't have python3dist(pooch)
+BuildOption(check):  -e scipy.datasets.tests.test_data
+# We have python3dist(hypothesis), but will it cause circular dependencies?
+BuildOption(check):  -e scipy.integrate.tests.test_quadrature
+BuildOption(check):  -e scipy.ndimage.tests.test_filters
+BuildOption(check):  -e scipy.special.tests.test_support_alternative_backends
+BuildOption(check):  -e scipy.stats.tests.test_continuous
+BuildOption(check):  -e scipy.stats.tests.test_stats
+# No module named 'marray'
+BuildOption(check):  -e scipy.stats.tests.test_marray
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -33,8 +43,11 @@ BuildRequires:  python3dist(pybind11)
 BuildRequires:  python3dist(pythran)
 BuildRequires:  python3dist(pip)
 BuildRequires:  pkgconfig(openblas64)
+# For tests
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,10 +59,7 @@ Data validation using Python type hints.
 %build -p
 export FC=gfortran
 
-%check
-# skip tests as some deps we don't have yet.
-
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -29,7 +29,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ Shellingham detects what shell the current Python executable is running in.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

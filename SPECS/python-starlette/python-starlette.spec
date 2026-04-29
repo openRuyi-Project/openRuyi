@@ -41,8 +41,8 @@ high-performance web applications.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.md
 %doc README.md
+%license LICENSE.md
 
 %changelog
 %autochangelog

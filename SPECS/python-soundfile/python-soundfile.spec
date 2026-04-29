@@ -41,8 +41,8 @@ Full documentation is available on https://python-soundfile.readthedocs.io/.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
 %autochangelog

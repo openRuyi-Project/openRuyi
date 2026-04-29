@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Python module wrapping libsystemd functionality
 License:        LGPL-2.1-or-later
 URL:            https://github.com/systemd/python-systemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:38181dbd451fd418d316a92a34bc2118967930684cdd62c3e979fe8c8ebacffa
 Source0:        %{url}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -23,10 +23,11 @@ BuildOption(install):  systemd +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pkgconfig(libsystemd)
 
-Provides:       python3-systemd
+Provides:       python3-systemd = %{version}-%{release}
+Provides:       python3-systemd%{?_isa} = %{version}-%{release}
 %python_provide python3-systemd
 
 %description
@@ -41,5 +42,6 @@ provided by systemd. Other functionality provided the library is also wrapped.
 %files -f %{pyproject_files}
 %doc README*
 %license LICENSE.txt
+
 %changelog
-%{?autochangelog}
+%autochangelog

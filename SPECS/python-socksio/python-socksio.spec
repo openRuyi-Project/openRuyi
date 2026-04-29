@@ -30,7 +30,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ SOCKS5. socksio is a sans-I/O library similar to h11 or h2.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog
