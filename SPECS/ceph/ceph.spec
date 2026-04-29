@@ -14,6 +14,13 @@
 %bcond lttng 1
 %bcond libradosstriper 1
 %bcond cephfs_shell 1
+%bcond amqp_endpoint 1
+%bcond kafka_endpoint 1
+%bcond tcmalloc 1
+%bcond lua_packages 1
+%bcond jaeger 1
+%bcond manpages 1
+%bcond ocf 1
 
 %define _lto_cflags %{nil}
 
@@ -29,7 +36,11 @@ Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DWITH_SYSTEM_ZSTD:BOOL=ON
-BuildOption(conf):  -DWITH_JAEGER=OFF
+%if %{with jaeger}
+BuildOption(conf):  -DWITH_JAEGER:BOOL=ON
+%else
+BuildOption(conf):  -DWITH_JAEGER:BOOL=OFF
+%endif
 BuildOption(conf):  -DWITH_RADOSGW_SELECT_PARQUET=OFF
 BuildOption(conf):  -DWITH_RADOSGW_ARROW_FLIGHT=OFF
 %if %{with rdma}
@@ -41,7 +52,11 @@ BuildOption(conf):  -GNinja
 BuildOption(conf):  -DBUILD_CONFIG=rpmbuild
 BuildOption(conf):  -DSYSTEMD_SYSTEM_UNIT_DIR:PATH=%{_unitdir}
 BuildOption(conf):  -DCMAKE_INSTALL_SYSCONFDIR:PATH=%{_sysconfdir}
+%if %{with manpages}
+BuildOption(conf):  -DWITH_MANPAGE:BOOL=ON
+%else
 BuildOption(conf):  -DWITH_MANPAGE:BOOL=OFF
+%endif
 BuildOption(conf):  -DWITH_PYTHON3:STRING=3
 BuildOption(conf):  -DWITH_MGR_DASHBOARD_FRONTEND:BOOL=OFF
 %if %{without ceph_test_package}
@@ -76,6 +91,11 @@ BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=OFF
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=OFF
+%endif
+%if %{with tcmalloc}
+BuildOption(conf):  -DALLOCATOR:STRING=tcmalloc
+%else
+BuildOption(conf):  -DALLOCATOR:STRING=libc
 %endif
 %if %{without lua_packages}
 BuildOption(conf):  -DWITH_RADOSGW_LUA_PACKAGES:BOOL=OFF
@@ -133,10 +153,23 @@ BuildRequires:  nasm
 BuildRequires:  pkgconfig(lua)
 BuildRequires:  pkgconfig(lmdb)
 %if %{with amqp_endpoint}
-BuildRequires:  librabbitmq-devel
+BuildRequires:  pkgconfig(librabbitmq)
 %endif
 %if %{with kafka_endpoint}
 BuildRequires:  pkgconfig(rdkafka)
+%endif
+%if %{with tcmalloc}
+BuildRequires:  pkgconfig(libtcmalloc) >= 2.6.2
+%endif
+%if %{with jaeger}
+BuildRequires:  bison
+BuildRequires:  flex
+BuildRequires:  pkgconfig(libevent)
+BuildRequires:  pkgconfig(nlohmann_json)
+BuildRequires:  pkgconfig(thrift)
+%endif
+%if %{with manpages}
+BuildRequires:  python3dist(sphinx)
 %endif
 BuildRequires:  pkgconfig(re2)
 BuildRequires:  pkgconfig(libutf8proc)
@@ -167,7 +200,7 @@ Requires:       ceph-mon%{?_isa} = %{version}-%{release}
 Requires:       systemd
 Requires(post): binutils
 %if %{with lua_packages}
-Requires:       %{luarocks_package_name}
+Requires:       luarocks
 %endif
 
 %patchlist
@@ -213,6 +246,8 @@ Requires:       %{luarocks_package_name}
 0020-src-CMakeLists.txt.patch
 # C++20/23 compatibility: replace deprecated <ciso646> with <iso646.h> in opentelemetry
 0021-iso646.patch
+# Bump bundled opentelemetry-cpp cmake_minimum_required from 3.1 to 3.5 (CMake 4.x dropped <3.5 compat)
+0022-src-jaegertracing-opentelemetry-cpp-CMakeLists.txt.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
@@ -629,6 +664,15 @@ mv %{buildroot}%{_exec_prefix}/sbin/ceph-create-keys %{buildroot}%{_bindir}/
 %dir %{python3_sitelib}/ceph_node_proxy
 %{python3_sitelib}/ceph_node_proxy/*
 %{python3_sitelib}/ceph_node_proxy-*
+%if %{with manpages}
+%{_mandir}/man8/ceph-create-keys.8*
+%{_mandir}/man8/ceph-run.8*
+%{_mandir}/man8/crushtool.8*
+%{_mandir}/man8/osdmaptool.8*
+%{_mandir}/man8/monmaptool.8*
+%{_mandir}/man8/ceph-kvstore-tool.8*
+%{_mandir}/man8/ceph-immutable-object-cache.8*
+%endif
 
 %post base
 %systemd_post ceph.target ceph-crash.service ceph-exporter.service ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
@@ -654,6 +698,9 @@ fi
 %attr(0700,cephadm,cephadm) %dir %{_sharedstatedir}/cephadm/.ssh
 %config(noreplace) %attr(0600,cephadm,cephadm) %{_sharedstatedir}/cephadm/.ssh/authorized_keys
 %{_sysusersdir}/cephadm.conf
+%if %{with manpages}
+%{_mandir}/man8/cephadm.8*
+%endif
 
 %preun common
 %systemd_preun ceph.target ceph-crash.service
@@ -740,11 +787,38 @@ fi
 # cephfs-top (merged)
 %{python3_sitelib}/cephfs_top-*.egg-info
 %{_bindir}/cephfs-top
+%if %{with manpages}
+%{_mandir}/man8/ceph-authtool.8*
+%{_mandir}/man8/ceph-conf.8*
+%{_mandir}/man8/ceph-dencoder.8*
+%{_mandir}/man8/ceph-rbdnamer.8*
+%{_mandir}/man8/ceph-syn.8*
+%{_mandir}/man8/ceph-post-file.8*
+%{_mandir}/man8/ceph.8*
+%{_mandir}/man8/crushdiff.8*
+%{_mandir}/man8/mount.ceph.8*
+%{_mandir}/man8/rados.8*
+%{_mandir}/man8/radosgw-admin.8*
+%{_mandir}/man8/rbd.8*
+%{_mandir}/man8/rbdmap.8*
+%{_mandir}/man8/rbd-replay.8*
+%{_mandir}/man8/rbd-replay-many.8*
+%{_mandir}/man8/rbd-replay-prep.8*
+%{_mandir}/man8/rgw-orphan-list.8*
+%{_mandir}/man8/rgw-gap-list.8*
+%{_mandir}/man8/rgw-restore-bucket-index.8*
+%{_mandir}/man8/rbd-fuse.8*
+%{_mandir}/man8/rbd-nbd.8*
+%{_mandir}/man8/cephfs-top.8*
+%endif
 
 %if %{with cephfs_shell}
 %files -n cephfs-shell
 %{python3_sitelib}/cephfs_shell-*.egg-info
 %{_bindir}/cephfs-shell
+%if %{with manpages}
+%{_mandir}/man8/cephfs-shell.8*
+%endif
 %endif
 
 %pre common
@@ -773,6 +847,10 @@ fi
 %{_bindir}/cephfs-mirror
 %{_unitdir}/cephfs-mirror@.service
 %{_unitdir}/cephfs-mirror.target
+%if %{with manpages}
+%{_mandir}/man8/ceph-mds.8*
+%{_mandir}/man8/cephfs-mirror.8*
+%endif
 
 %post mds
 %systemd_post ceph-mds@.service ceph-mds.target cephfs-mirror@.service cephfs-mirror.target
@@ -872,6 +950,9 @@ fi
 %{_unitdir}/ceph-mon@.service
 %{_unitdir}/ceph-mon.target
 %attr(750,ceph,ceph) %dir %{_localstatedir}/lib/ceph/mon
+%if %{with manpages}
+%{_mandir}/man8/ceph-mon.8*
+%endif
 
 %post mon
 %systemd_post ceph-mon@.service ceph-mon.target
@@ -898,11 +979,18 @@ fi
 %{_sbindir}/mount.fuse.ceph
 %{_unitdir}/ceph-fuse@.service
 %{_unitdir}/ceph-fuse.target
+%if %{with manpages}
+%{_mandir}/man8/ceph-fuse.8*
+%{_mandir}/man8/mount.fuse.ceph.8*
+%endif
 
 %files -n rbd-mirror
 %{_bindir}/rbd-mirror
 %{_unitdir}/ceph-rbd-mirror@.service
 %{_unitdir}/ceph-rbd-mirror.target
+%if %{with manpages}
+%{_mandir}/man8/rbd-mirror.8*
+%endif
 
 %post -n rbd-mirror
 %systemd_post ceph-rbd-mirror@.service ceph-rbd-mirror.target
@@ -939,6 +1027,11 @@ fi
 %if %{with lttng}
 %{_libdir}/librgw_op_tp.so.*
 %{_libdir}/librgw_rados_tp.so.*
+%endif
+%if %{with manpages}
+%{_mandir}/man8/ceph-diff-sorted.8*
+%{_mandir}/man8/radosgw.8*
+%{_mandir}/man8/rgw-policy-check.8*
 %endif
 
 %post radosgw
@@ -979,6 +1072,13 @@ fi
 %{python3_sitelib}/ceph_volume/*
 %{python3_sitelib}/ceph_volume-*
 %{_unitdir}/ceph-volume@.service
+%if %{with manpages}
+%{_mandir}/man8/ceph-clsinfo.8*
+%{_mandir}/man8/ceph-osd.8*
+%{_mandir}/man8/ceph-bluestore-tool.8*
+%{_mandir}/man8/ceph-volume.8*
+%{_mandir}/man8/ceph-volume-systemd.8*
+%endif
 
 %post osd
 %systemd_post ceph-osd@.service ceph-osd.target ceph-volume@.service
@@ -1068,6 +1168,9 @@ fi
 %{_includedir}/radosstriper/libradosstriper.hpp
 %{_libdir}/libradosstriper.so
 %endif
+%if %{with manpages}
+%{_mandir}/man8/librados-config.8*
+%endif
 
 %files -n python-rados
 %{python3_sitearch}/rados.cpython*.so
@@ -1117,6 +1220,9 @@ fi
 %{_bindir}/ceph-dedup-daemon
 %dir %{_libdir}/ceph
 %{_libdir}/ceph/ceph-monstore-update-crush.sh
+%if %{with manpages}
+%{_mandir}/man8/ceph-debugpack.8*
+%endif
 %endif
 
 %files monitoring
