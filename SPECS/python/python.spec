@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -38,6 +39,10 @@
 # Explore the sources tarball (you need the version before %%prep is executed):
 #  $ tar -tf Python-%%{upstream_version}.tar.xz | grep whl
 %global pip_version 25.2
+# Upstream Python comes bundled with a specific pip version.
+# However, to comply with distribution standards, we "unbundle" these wheels
+# and use the system-wide versions provided by the environment.
+%global system_pip_version 25.3
 %global setuptools_version 79.0.1
 # All of those also include a list of indirect bundled libs:
 # pip
@@ -361,6 +366,11 @@ rm -r Modules/_decimal/libmpdec
 # (This is after patching, so that we can use patches directly from upstream)
 rm configure pyconfig.h.in
 
+# Automatically synchronize internal Python constants with the system pip version.
+%if %{with rpmwheels}
+sed -i 's/_PIP_VERSION = .*/_PIP_VERSION = "%{system_pip_version}"/' Lib/ensurepip/__init__.py
+%endif
+
 %conf -p
 # Tell configure to not use git.
 export HAS_GIT=not-found
@@ -448,6 +458,12 @@ find %{buildroot} -name \*.bat -exec rm {} \;
 # Get rid of backup files:
 find %{buildroot}/ -name "*~" -exec rm -f {} \;
 find . -name "*~" -exec rm -f {} \;
+
+# If the rpmwheels condition is enabled, we will use the wheel packages provided by the system.
+%if %{with rpmwheels}
+mkdir -p %{buildroot}%{pylibdir}/ensurepip/_bundled
+cp -p %{_datadir}/python-wheels/pip-%{system_pip_version}-py3-none-any.whl %{buildroot}%{pylibdir}/ensurepip/_bundled/
+%endif
 
 # compileall CMD line options:
 # -f - force rebuild even if timestamps are up to date
@@ -560,10 +576,12 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %dir %{pylibdir}/ensurepip/__pycache__/
 %{pylibdir}/ensurepip/*.py
 %{pylibdir}/ensurepip/__pycache__/*%{bytecode_suffixes}
-%if %{with rpmwheels}
-%exclude %{pylibdir}/ensurepip/_bundled
-%else
 %dir %{pylibdir}/ensurepip/_bundled
+# If the rpmwheels option is enabled, we will use the wheel package provided by the system;
+# otherwise, we will use the wheel package that comes with Python.
+%if %{with rpmwheels}
+%{pylibdir}/ensurepip/_bundled/pip-%{system_pip_version}-py3-none-any.whl
+%else
 %{pylibdir}/ensurepip/_bundled/pip-%{pip_version}-py3-none-any.whl
 %endif
 # This will be in the tkinter package
