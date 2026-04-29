@@ -1,0 +1,30 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 29 Apr 2026 20:42:21 +0800
+Subject: [PATCH] Force system libraries in isolated environments.
+
+---
+ setup.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/setup.py b/setup.py
+index f02499a..44b10d1 100644
+--- a/setup.py
++++ b/setup.py
+@@ -39,6 +39,14 @@ import sysconfig
+ from setuptools import Extension
+ from setuptools.command import egg_info
+ 
++# Force system libraries in isolated environments.
++os.environ["GRPC_PYTHON_BUILD_SYSTEM_ABSL"] = "1"
++os.environ["GRPC_PYTHON_BUILD_SYSTEM_OPENSSL"] = "1"
++os.environ["GRPC_PYTHON_BUILD_SYSTEM_ZLIB"] = "1"
++os.environ["GRPC_PYTHON_BUILD_SYSTEM_RE2"] = "1"
++os.environ["GRPC_PYTHON_BUILD_SYSTEM_CARES"] = "1"
++os.environ["GRPC_PYTHON_BUILD_WITH_CYTHON"] = "1"
++
+ # Redirect the manifest template from MANIFEST.in to PYTHON-MANIFEST.in.
+ egg_info.manifest_maker.template = "PYTHON-MANIFEST.in"
+ 
+-- 
+2.53.0
+
