@@ -49,8 +49,8 @@ sed -i 's/hatchling==1.26.3/hatchling>=1.26.3/' pyproject.toml
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md CHANGELOG.md
+%license LICENSE
 
 %changelog
 %autochangelog

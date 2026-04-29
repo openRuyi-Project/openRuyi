@@ -24,7 +24,7 @@ BuildOption(check):  jiter
 BuildOption(install):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  rust
 
 Provides:       python3-%{srcname} = %{version}-%{release}
@@ -50,8 +50,8 @@ components.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog

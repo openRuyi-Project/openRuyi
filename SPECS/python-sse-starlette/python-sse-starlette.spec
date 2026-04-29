@@ -38,8 +38,8 @@ applications.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog

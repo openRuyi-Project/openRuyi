@@ -6,7 +6,7 @@
 
 %global srcname mcp
 
-Name:           python-mcp
+Name:           python-%{srcname}
 Version:        1.26.0
 Release:        %autorelease
 Summary:        Model Context Protocol SDK
@@ -14,14 +14,14 @@ License:        MIT
 URL:            https://github.com/modelcontextprotocol/python-sdk
 #!RemoteAsset:  sha256:db6e2ef491eecc1a0d93711a76f28dec2e05999f93afd48795da1c1137142c66
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    pyproject
 
 # Patches
 # Disable uv-dynamic-versioning to keep the build fully source-tarball based
 Patch2000:      2000-python-mcp-drop-uv-dynamic-versioning.patch
-BuildArch:      noarch
-BuildSystem:    pyproject
 
-BuildOption(check):  mcp
+BuildOption(check):  %{srcname}
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
@@ -52,8 +52,8 @@ components for MCP-based integrations.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
 %autochangelog

@@ -37,8 +37,8 @@ or Numpydoc style into a structured representation.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.md
 %doc README.md CHANGELOG.md
+%license LICENSE.md
 
 %changelog
 %autochangelog

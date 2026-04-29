@@ -15,12 +15,12 @@ License:        MIT
 URL:            https://github.com/florimondmanca/httpx-sse
 #!RemoteAsset:  sha256:9b1ed0127459a66014aec3c56bebd93da3c1bc8bb6618c8082039a44889a755d
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    pyproject
 
 # Patches
 # Drop setuptools-scm to build with distro-provided static version metadata
 Patch2000:      2000-python-httpx-sse-drop-setuptools-scm-build-requirement.patch
-BuildArch:      noarch
-BuildSystem:    pyproject
 
 BuildOption(check):  %{pypi_name}
 BuildOption(install):  -l %{pypi_name}
@@ -43,8 +43,8 @@ HTTPX clients.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md CHANGELOG.md
+%license LICENSE
 
 %changelog
 %autochangelog

@@ -36,8 +36,8 @@ for web upload handling.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.md CHANGELOG.md
+%license LICENSE.txt
 
 %changelog
 %autochangelog
