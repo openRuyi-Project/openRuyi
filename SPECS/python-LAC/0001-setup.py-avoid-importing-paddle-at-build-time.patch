@@ -1,0 +1,31 @@
+--- orig/setup.py	2021-05-24 14:53:16.000000000 +0800
++++ new/setup.py	2026-03-06 22:00:57.486917665 +0800
+@@ -24,26 +24,8 @@
+ import pkg_resources
+ from io import open
+ 
+-# 判断paddle安装版本，对版本进行设置
+-install_requires = []
+-try:
+-    import paddle
+-
+-    # 若版本太低，设置版本的更新
+-    if paddle.__version__ < '1.6.0':
+-        installed_packages = pkg_resources.working_set
+-        paddle_pkgs = [i.key for i in installed_packages if "paddle" in i.key]
+-
+-        if "paddlepaddle-gpu" in paddle_pkgs:
+-            install_requires = ['paddlepaddle-gpu>=1.6']
+-        elif "paddlepaddle-tiny" in paddle_pkgs:
+-            install_requires = ['paddlepaddle-tiny>=1.6']
+-        else:
+-            install_requires = ['paddlepaddle>=1.6']
+-
+-
+-except ImportError:
+-    install_requires = ['paddlepaddle>=1.6']
++# Keep dependency declaration deterministic in isolated build environments.
++install_requires = ['paddlepaddle>=1.6']
+ 
+ 
+ with open("README.md", "r", encoding='utf8') as fh:
