@@ -5,15 +5,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname Pygments
+%global pypi_name pygments
 
 Name:           python-pygments
-Version:        2.15.1
+Version:        2.20.0
 Release:        %autorelease
 Summary:        Syntax highlighting
 License:        BSD-2-Clause
 URL:            https://pygments.org/
-#!RemoteAsset:  sha256:8ace4d3c1dd481894b2005f560ead0f9f19ee64fe983366be1a21e171d12775c
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
