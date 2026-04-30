@@ -3,25 +3,23 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dnf5
-Version:        5.3.0.0
+Version:        5.4.2.0
 Release:        %autorelease
 Summary:        Command-line package manager
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/dnf5
-#!RemoteAsset:  sha256:c7e744773dd300e539cd5285344810a9aee4c934f716722c42cafc383945b0e8
+#!RemoteAsset:  sha256:fd37bad6c772bd0cc784a7a8808d530dfc06782f8dc7b225752eb296fcd1b7ad
 Source0:        https://github.com/rpm-software-management/dnf5/archive/%{version}/dnf5-%{version}.tar.gz
 BuildSystem:    cmake
 
-# Adjust from https://github.com/rpm-software-management/dnf5/pull/2638
-Patch0:         libdnf5-cli-handle-C-or-POSIX-locale-gracefully.patch
-
 BuildOption(conf):  -DVERSION_PRIME:STRING=5
-BuildOption(conf):  -DVERSION_MAJOR:STRING=3
-BuildOption(conf):  -DVERSION_MINOR:STRING=0
+BuildOption(conf):  -DVERSION_MAJOR:STRING=4
+BuildOption(conf):  -DVERSION_MINOR:STRING=2
 BuildOption(conf):  -DVERSION_MICRO:STRING=0
 BuildOption(conf):  -DPACKAGE_VERSION:STRING=%{version}
 BuildOption(conf):  -DWITH_LIBDNF5_CLI:BOOL=ON
@@ -47,18 +45,19 @@ BuildRequires:  pkgconfig(json-c)
 BuildRequires:  pkgconfig(libcrypto)
 BuildRequires:  pkgconfig(sdbus-c++)
 BuildRequires:  pkgconfig(librepo) >= 1.20.0
-BuildRequires:  pkgconfig(libsolv) >= 0.7.25
+BuildRequires:  pkgconfig(libsolv) >= 0.7.36
 BuildRequires:  pkgconfig(libsolvext) >= 0.7.25
-BuildRequires:  pkgconfig(rpm) >= 4.17.0
+BuildRequires:  pkgconfig(rpm) >= 4.19.0
 BuildRequires:  pkgconfig(sqlite3) >= 3.35.0
 BuildRequires:  pkgconfig(libpkgmanifest)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  toml11
-BuildRequires:  zlib-devel
+BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(smartcols)
 BuildRequires:  pkgconfig(libcurl)
+BuildRequires:  pkgconfig(libacl)
 BuildRequires:  swig
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
 Provides:       dnf
 
@@ -127,7 +126,7 @@ Summary:        Development files for dnf5, libdnf5 and libdnf5-cli
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       libdnf5%{?_isa} = %{version}-%{release}
 Requires:       libdnf5-cli%{?_isa} = %{version}-%{release}
-Requires:       pkgconfig(libsolv)
+Requires:       pkgconfig(libsolv) >= 0.7.36
 
 %description    devel
 Development files for dnf5.
@@ -153,6 +152,7 @@ sed -i 's/enabled = host-only/enabled = false/g' %{buildroot}%{_sysconfdir}/dnf/
 %dir %{_sysconfdir}/dnf/dnf5-plugins
 %dir %{_libdir}/libdnf5/plugins
 %{_sysconfdir}/bash_completion.d/dnf5
+%{_datadir}/zsh/site-functions/_dnf5
 %{_bindir}/dnf-automatic
 %{_unitdir}/dnf-automatic.service
 %{_unitdir}/dnf-automatic.timer
@@ -170,7 +170,10 @@ sed -i 's/enabled = host-only/enabled = false/g' %{buildroot}%{_sysconfdir}/dnf/
 %dir %{_sysconfdir}/dnf/protected.d
 %ghost %attr(0644, root, root) %{_sysconfdir}/dnf/versionlock.toml
 %dir %{_datadir}/dnf5/libdnf.conf.d
+%dir %{_datadir}/dnf5/libdnf.plugins.conf.d
+%dir %{_datadir}/dnf5/vendors.d
 %dir %{_sysconfdir}/dnf/libdnf5.conf.d
+%dir %{_sysconfdir}/dnf/vendors.d
 %dir %{_datadir}/dnf5/repos.override.d
 %dir %{_sysconfdir}/dnf/repos.override.d
 %dir %{_datadir}/dnf5/repos.d
@@ -185,6 +188,8 @@ sed -i 's/enabled = host-only/enabled = false/g' %{buildroot}%{_sysconfdir}/dnf/
 
 %files plugins
 %dir %{_sysconfdir}/dnf/libdnf5-plugins
+%dir %{_sysconfdir}/dnf/libdnf5-plugins/actions.d
+%dir %{_sysconfdir}/dnf/libdnf5-plugins/python_plugins_loader.d
 %config(noreplace) %{_sysconfdir}/dnf/libdnf5-plugins/actions.conf
 %config(noreplace) %{_sysconfdir}/dnf/libdnf5-plugins/expired-pgp-keys.conf
 %config(noreplace) %{_sysconfdir}/dnf/libdnf5-plugins/local.conf
@@ -226,4 +231,4 @@ sed -i 's/enabled = host-only/enabled = false/g' %{buildroot}%{_sysconfdir}/dnf/
 %{_libdir}/pkgconfig/libdnf5-cli.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

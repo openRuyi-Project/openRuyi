@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,6 +17,9 @@ VCS:            git:https://github.com/abseil/abseil-cpp
 #!RemoteAsset:  sha256:4c124408da902be896a2f368042729655709db5e3004ec99f57e3e14439bc1b2
 Source:         https://github.com/abseil/abseil-cpp/archive/%{version}/abseil-cpp-%{version}.tar.gz
 BuildSystem:    cmake
+
+# Fix std::bind-backed absl::Condition with GCC 16's libstdc++.
+Patch0:         0001-synchronization-accept-general-nullary-functors.patch
 
 BuildRequires:  cmake
 BuildRequires:  ninja

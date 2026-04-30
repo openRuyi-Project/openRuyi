@@ -4,16 +4,17 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libsolv
-Version:        0.7.35
+Version:        0.7.37
 Release:        %autorelease
 Summary:        A free package dependency solver using a satisfiability algorithm
 License:        BSD-3-Clause
 URL:            https://github.com/openSUSE/libsolv
-#!RemoteAsset
+#!RemoteAsset:  sha256:ad6a38624dde26fc59c41427608536c443b76f90dcb6bb96c2e70b8e3ee20419
 Source:         https://github.com/openSUSE/libsolv/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -53,7 +54,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(rpm)
 BuildRequires:  pkgconfig(zlib)
-BuildRequires:  libxml2-devel
+BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(liblzma)
 BuildRequires:  pkgconfig(bzip2)
 BuildRequires:  swig
@@ -123,4 +124,4 @@ Python bindings for the %{name} library.
 %{python3_sitearch}/solv-%{version}.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
