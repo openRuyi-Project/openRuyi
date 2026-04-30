@@ -12,18 +12,14 @@
 %bcond_with openssl
 
 Name:           curl
-Version:        8.15.0
+Version:        8.20.0
 Release:        %autorelease
 Summary:        A Tool for Transferring Data from URLs
 License:        curl
 URL:            https://curl.se
 VCS:            git:https://github.com/curl/curl
-#!RemoteAsset
+#!RemoteAsset:  sha256:63fe2dc148ba0ceae89922ef838f7e5c946272c2e78b7c59fab4b79d3ce2b896
 Source0:        https://curl.se/download/curl-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://curl.se/download/curl-%{version}.tar.xz.asc
-#!RemoteAsset
-Source2:        https://daniel.haxx.se/mykey.asc#/curl.keyring
 BuildSystem:    autotools
 
 %if %{with openssl}
@@ -133,4 +129,4 @@ popd
 %doc docs/libcurl/symbols-in-versions
 
 %changelog
-%{?autochangelog}
+%autochangelog
