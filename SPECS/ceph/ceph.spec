@@ -14,6 +14,11 @@
 %bcond lttng 1
 %bcond libradosstriper 1
 %bcond cephfs_shell 1
+%bcond amqp_endpoint 1
+%bcond kafka_endpoint 1
+%bcond tcmalloc 1
+%bcond lua_packages 1
+%bcond jaeger 1
 
 %define _lto_cflags %{nil}
 
@@ -29,7 +34,11 @@ Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DWITH_SYSTEM_ZSTD:BOOL=ON
-BuildOption(conf):  -DWITH_JAEGER=OFF
+%if %{with jaeger}
+BuildOption(conf):  -DWITH_JAEGER:BOOL=ON
+%else
+BuildOption(conf):  -DWITH_JAEGER:BOOL=OFF
+%endif
 BuildOption(conf):  -DWITH_RADOSGW_SELECT_PARQUET=OFF
 BuildOption(conf):  -DWITH_RADOSGW_ARROW_FLIGHT=OFF
 %if %{with rdma}
@@ -76,6 +85,11 @@ BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=OFF
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=OFF
+%endif
+%if %{with tcmalloc}
+BuildOption(conf):  -DALLOCATOR:STRING=tcmalloc
+%else
+BuildOption(conf):  -DALLOCATOR:STRING=libc
 %endif
 %if %{without lua_packages}
 BuildOption(conf):  -DWITH_RADOSGW_LUA_PACKAGES:BOOL=OFF
@@ -133,10 +147,20 @@ BuildRequires:  nasm
 BuildRequires:  pkgconfig(lua)
 BuildRequires:  pkgconfig(lmdb)
 %if %{with amqp_endpoint}
-BuildRequires:  librabbitmq-devel
+BuildRequires:  pkgconfig(librabbitmq)
 %endif
 %if %{with kafka_endpoint}
 BuildRequires:  pkgconfig(rdkafka)
+%endif
+%if %{with tcmalloc}
+BuildRequires:  pkgconfig(libtcmalloc) >= 2.6.2
+%endif
+%if %{with jaeger}
+BuildRequires:  bison
+BuildRequires:  flex
+BuildRequires:  pkgconfig(libevent)
+BuildRequires:  pkgconfig(nlohmann_json)
+BuildRequires:  pkgconfig(thrift)
 %endif
 BuildRequires:  pkgconfig(re2)
 BuildRequires:  pkgconfig(libutf8proc)
@@ -167,7 +191,7 @@ Requires:       ceph-mon%{?_isa} = %{version}-%{release}
 Requires:       systemd
 Requires(post): binutils
 %if %{with lua_packages}
-Requires:       %{luarocks_package_name}
+Requires:       luarocks
 %endif
 
 %patchlist
@@ -213,6 +237,8 @@ Requires:       %{luarocks_package_name}
 0020-src-CMakeLists.txt.patch
 # C++20/23 compatibility: replace deprecated <ciso646> with <iso646.h> in opentelemetry
 0021-iso646.patch
+# Bump bundled opentelemetry-cpp cmake_minimum_required from 3.1 to 3.5 (CMake 4.x dropped <3.5 compat)
+0022-src-jaegertracing-opentelemetry-cpp-CMakeLists.txt.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
