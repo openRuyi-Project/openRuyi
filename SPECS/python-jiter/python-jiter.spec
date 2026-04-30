@@ -20,8 +20,8 @@ Source1:        https://github.com/MahnoKropotkinvich/python-jiter-vendor/releas
 BuildSystem:    pyproject
 
 BuildOption(prep):  -a1
-BuildOption(check):  jiter
 BuildOption(install):  %{srcname}
+BuildOption(check):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)

@@ -18,8 +18,8 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{py
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(check):  %{pypi_name} multipart
 BuildOption(install):  -l %{pypi_name} +auto
+BuildOption(check):  %{pypi_name} multipart
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)

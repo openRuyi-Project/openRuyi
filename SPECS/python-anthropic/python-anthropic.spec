@@ -17,8 +17,8 @@ Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(check):  -e anthropic.lib.tools.mcp anthropic
 BuildOption(install):  -l %{srcname} -L
+BuildOption(check):  -e anthropic.lib.tools.mcp anthropic
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)

@@ -22,8 +22,8 @@ BuildSystem:    pyproject
 # Drop setuptools-scm to build with distro-provided static version metadata
 Patch2000:      2000-python-httpx-sse-drop-setuptools-scm-build-requirement.patch
 
-BuildOption(check):  %{pypi_name}
 BuildOption(install):  -l %{pypi_name}
+BuildOption(check):  %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)

@@ -21,8 +21,8 @@ BuildSystem:    pyproject
 # Disable uv-dynamic-versioning to keep the build fully source-tarball based
 Patch2000:      2000-python-mcp-drop-uv-dynamic-versioning.patch
 
-BuildOption(check):  %{srcname}
 BuildOption(install):  -l %{srcname}
+BuildOption(check):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
