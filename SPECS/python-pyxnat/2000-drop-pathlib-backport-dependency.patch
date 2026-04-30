@@ -1,0 +1,12 @@
+--- a/setup.py
++++ b/setup.py
+@@ -50,8 +50,7 @@
+                  platforms='any',
+                  scripts=['bin/sessionmirror.py'],
+                  install_requires=['lxml>=4.3',
+-                                   'requests>=2.20',
+-                                   'pathlib>=1.0'],
++                                   'requests>=2.20'],
+                  package_data={'pyxnat': ['README.rst'], },
+
+                  )
