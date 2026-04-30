@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 14 Apr 2026 16:30:00 +0800
+Subject: [PATCH] python-beautifulsoup4: adjust surrogate-character test for
+ Python 3.15
+
+---
+ bs4/tests/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bs4/tests/__init__.py b/bs4/tests/__init__.py
+index 3650371..2b16f8a 100644
+--- a/bs4/tests/__init__.py
++++ b/bs4/tests/__init__.py
+@@ -1125,7 +1125,7 @@ Hello, world!
+         soup = self.soup(BAD_DOCUMENT)
+         self.linkage_validator(soup)
+ 
+-    @pytest.mark.skipif("sys.version_info < (3, 8)")
++    @pytest.mark.skipif("sys.version_info < (3, 15)")
+     def test_surrogate_in_character_reference(self):
+        # These character references are invalid and should be replaced with REPLACEMENT CHARACTER.
+        soup = self.soup("<html><body>&#55357;&#56551;</body></html>")
+--
+2.51.0
