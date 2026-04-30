@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 30 Apr 2026 21:00:00 +0800
+Subject: [PATCH] python-mcp: use static version and distro dependency names
+
+---
+ pyproject.toml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/pyproject.toml	2026-04-30 20:40:34.672705599 +0800
++++ b/pyproject.toml	2026-04-30 20:40:34.680705600 +0800
+@@ -1,6 +1,6 @@
+ [project]
+ name = "mcp"
+-dynamic = ["version"]
++version = "1.26.0"
+ description = "Model Context Protocol SDK"
+ readme = "README.md"
+ requires-python = ">=3.10"
+@@ -31,9 +31,9 @@
+     "sse-starlette>=1.6.1",
+     "pydantic-settings>=2.5.2",
+     "uvicorn>=0.31.1; sys_platform != 'emscripten'",
+-    "jsonschema>=4.20.0",
++    "jsonschema>=4.17.3",
+     "pywin32>=310; sys_platform == 'win32'",
+-    "pyjwt[crypto]>=2.10.1",
++    "pyjwt>=2.10.1",
+     "typing-extensions>=4.9.0",
+     "typing-inspection>=0.4.1",
+ ]
+@@ -72,7 +72,7 @@
+ ]
+ 
+ [build-system]
+-requires = ["hatchling", "uv-dynamic-versioning"]
++requires = ["hatchling"]
+ build-backend = "hatchling.build"
+ 
+ [tool.hatch.version]
+-- 
+2.51.0
