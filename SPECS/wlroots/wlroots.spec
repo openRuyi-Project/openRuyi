@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
@@ -7,12 +8,12 @@
 %bcond xwayland 0
 
 Name:           wlroots
-Version:        0.19.2
+Version:        0.19.3
 Release:        %autorelease
 Summary:        A modular Wayland compositor library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wlroots/wlroots
-#!RemoteAsset:  sha256:f0530ecaa8739d15f97bd1e1edddb77e281d57e42d4263fccb67157f71730d17
+#!RemoteAsset:  sha256:a6ff89b64ea15e424d1b0db4a22145fccf5ec2ff2e7b8af0fa35e2ac8975986f
 Source0:        https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/%{version}/wlroots-%{version}.tar.gz
 BuildSystem:    meson
 

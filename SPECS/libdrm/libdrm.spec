@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributer: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
@@ -7,13 +8,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libdrm
-Version:        2.4.125
+Version:        2.4.131
 Release:        %autorelease
 License:        MIT
 Summary:        Library for Direct Rendering Manager
 URL:            https://dri.freedesktop.org
 VCS:            git:https://gitlab.freedesktop.org/mesa/libdrm
-#!RemoteAsset
+#!RemoteAsset:  sha256:45ba9983b51c896406a3d654de81d313b953b76e6391e2797073d543c5f617d5
 Source0:        https://dri.freedesktop.org/libdrm/%{name}-%{version}.tar.xz
 Source1:        91-drm-modeset.rules
 BuildSystem:    meson
@@ -69,4 +70,4 @@ install -D -m0644 -t %{buildroot}%{_udevrulesdir} %{SOURCE1}
 %{_libdir}/pkgconfig/libdrm_vc4.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
