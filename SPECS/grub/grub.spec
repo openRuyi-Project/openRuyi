@@ -123,7 +123,7 @@ for plat in %{grub_platforms}; do
     tar --sort=name -cf - ./fonts | mksquashfs - memdisk.sqsh -tar -comp xz -quiet -no-progress
 
     FS_MODULES="btrfs ext2 xfs jfs reiserfs"
-    CD_MODULES="all_video boot cat configfile echo true \
+    CD_MODULES="all_video blsuki boot cat configfile echo true \
             font gfxmenu gfxterm gzio halt iso9660 \
             jpeg minicmd normal part_apple part_msdos part_gpt \
             password password_pbkdf2 png reboot search search_fs_uuid \
