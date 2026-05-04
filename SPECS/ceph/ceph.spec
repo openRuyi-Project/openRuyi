@@ -25,13 +25,13 @@
 %define _lto_cflags %{nil}
 
 Name:           ceph
-Version:        20.2.0
+Version:        20.2.1
 Release:        %autorelease
 Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
 URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
-#!RemoteAsset:  sha256:8de064d69831ef327339539f233c78ec827fa351c40ced9a9916f0b4174c6685
+#!RemoteAsset:  sha256:de779aa0141839388bb201e0a9d622b8433982e1c4d7bfc3ac6117b763972542
 Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -204,32 +204,14 @@ Requires:       luarocks
 %endif
 
 %patchlist
-# Fix CRC32C Intel fast assembly: update copyright and add prefetch optimization
-0001-src-common-crc32c_intel_fast.patch
 # Add missing <ostream> include in bit_str.h for std::ostream support
 0002-src-common-bitstr.h.patch
-# Add CET (Control-flow Enforcement Technology) marker to crc32c_intel_fast_zero_asm.s for IBT/SHSTK compatibility
-0003-CET-Add-CET-marker-to-crc32c_intel_fast_zero_asm.s.patch
-# Add CET marker to isa-l x86-64 CRC32 assembly codes for IBT/SHSTK compatibility
-0004-isa-l-CET-Add-CET-marker-to-x86-64-crc32-assembly-co.patch
-# Add CET marker to spdk/isa-l x86-64 CRC32 assembly codes for IBT/SHSTK compatibility
-0005-spdk-isa-l-CET-Add-CET-marker-to-x86-64-crc32-assemb.patch
-# Fix tracing on x86_64: define STAP_SDT_ARG_CONSTRAINT to workaround SystemTap constraint issue
-0006-src-tracing.patch
 # Fix dbstore CMakeLists: make dbstore_lib a STATIC library and add global link dependency
 0007-src-rgw-store-dbstore-CMakeLists.txt.patch
-# GCC 13 compatibility: fix std::uint8_t/uint32_t qualified name issues in templates
-0008-gcc-13.patch
-# Add -fcf-protection compiler flag for x86_64 in Boost build configuration
-0009-cmake-modules-BuildBoost.cmake.patch
-# Add CET .note.gnu.property section to Boost context x86_64 assembly for IBT/SHSTK compatibility
-0010-boost-asm.patch
 # Cython 3 compatibility: add noexcept specifier to callback functions in rbd.pyx
 0011-src-pybind-rbd-rbd.pyx.patch
 # Python 3.13 compatibility: add extern declaration for removed PySys_SetPath API
 0012-src-mgr-PyModule.cc.patch
-# Fix PPC CRC32C assembly: use __ASSEMBLY__ define instead of CRC32_CONSTANTS_HEADER
-0013_src_common_crc32c_ppc_asm.S.patch
 # OpenSSL 3.x compatibility: conditionally include deprecated engine.h header
 0014-openssl-no-engine.patch
 # Add missing <cstdint> include in RocksDB headers for uint64_t type
