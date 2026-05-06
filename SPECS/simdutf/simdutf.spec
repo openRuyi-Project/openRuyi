@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           simdutf
-Version:        7.4.0
+Version:        9.0.0
 Release:        %autorelease
 Summary:        High-speed Unicode validation and transcoding library
 License:        Apache-2.0 AND BSD-3-Clause
 URL:            https://github.com/simdutf/simdutf
-#!RemoteAsset
+#!RemoteAsset:  sha256:fd2ce975f29809a975a8da8843cfb3a7265af3f71be548f199d23cf65e101764
 Source0:        https://github.com/simdutf/simdutf/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -41,6 +41,7 @@ to develop applications that use the simdutf library.
 
 %files devel
 %{_includedir}/simdutf.h
+%{_includedir}/simdutf_c.h
 %{_includedir}/simdutf
 %dir %{_libdir}/cmake
 %{_libdir}/cmake/simdutf
@@ -48,4 +49,4 @@ to develop applications that use the simdutf library.
 %{_libdir}/pkgconfig/simdutf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
