@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,7 @@ Summary:        A Library to Manipulate XML Files
 License:        MIT
 URL:            https://gitlab.gnome.org/GNOME/libxml2
 VCS:            git:https://gitlab.gnome.org/nwellnhof/libxml2.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:03d006f3537616833c16c53addcdc32a0eb20e55443cba4038307e3fa7d8d44b
 Source:         https://download.gnome.org/sources/libxml2/2.14/libxml2-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -30,7 +31,7 @@ BuildOption(conf):  --with-reader
 BuildOption(conf):  --with-ftp
 BuildOption(conf):  --with-http
 BuildOption(conf):  --with-legacy
-BuildOption(conf):  --without-python
+BuildOption(conf):  --with-python=%{__python3}
 
 BuildRequires:  fdupes
 BuildRequires:  pkgconfig
@@ -53,6 +54,24 @@ Requires:       pkgconfig(zlib)
 %description    devel
 This subpackage contains header files for developing applications that
 want to make use of libxml2.
+
+%package     -n python-%{name}
+Summary:        Python bindings for the libxml2 library
+BuildRequires:  pkgconfig(python3)
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Provides:       python3-%{name} = %{version}-%{release}
+Provides:       python3-%{name}%{?_isa} = %{version}-%{release}
+Provides:       %{name}-python3 = %{version}-%{release}
+
+%description -n python-%{name}
+The python-%{name} package contains a Python module that permits
+applications written in the Python programming language to use the
+interface supplied by the libxml2 library to manipulate XML files.
+
+This library allows to manipulate XML files. It includes support
+to read, modify and write XML and HTML files. There is DTDs support
+this includes parsing and validation even with complex DTDs, either
+at parse time or later once the document has been modified.
 
 %install -a
 ln -s libxml2/libxml %{buildroot}%{_includedir}/libxml
@@ -77,5 +96,11 @@ rm -f %{buildroot}%{_docdir}/%{name}/Copyright
 %{_mandir}/man1/xml2-config.1*
 %{_datadir}/gtk-doc/
 
+%files -n python-libxml2
+%doc doc/*.py
+%{python3_sitearch}/*.so
+%{python3_sitelib}/*.py
+%{python3_sitelib}/__pycache__/*.pyc
+
 %changelog
-%{?autochangelog}
+%autochangelog
