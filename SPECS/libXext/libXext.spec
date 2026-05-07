@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libXext
-Version:        1.3.6
+Version:        1.3.7
 Release:        %autorelease
 Summary:        X.Org X11 libXext runtime library
 License:        MIT
 URL:            https://xorg.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxext.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6564608dc3b816b0cfddf0c7ddc62bc579055dd70b2f28113a618df2acb64189
 Source0:        https://xorg.freedesktop.org/releases/individual/lib/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -66,4 +66,4 @@ autoreconf -fiv
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
