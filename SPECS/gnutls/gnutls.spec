@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gnutls
-Version:        3.8.10
+Version:        3.8.13
 Release:        %autorelease
 Summary:        A TLS protocol implementation
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnutls.org/
 VCS:            git:https://gitlab.com/gnutls/gnutls
-#!RemoteAsset
+#!RemoteAsset:  sha256:ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e
 Source0:        https://www.gnupg.org/ftp/gcrypt/%{name}/v3.8/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -94,4 +94,4 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_infodir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
