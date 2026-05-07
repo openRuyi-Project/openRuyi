@@ -1,5 +1,5 @@
 diff --git a/Cargo.toml b/Cargo.toml
-index f8f006d..55a0909 100644
+index 3ea000e..4dead10 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -18,6 +18,15 @@ default = ["std"]
@@ -27,7 +27,7 @@ index f8f006d..55a0909 100644
  [package.metadata.docs.rs]
  # Document the rayon/mmap methods and the Serialize/Deserialize/Zeroize impls on docs.rs.
 diff --git a/b3sum/Cargo.toml b/b3sum/Cargo.toml
-index 418bde9..3091ee0 100644
+index 04e4a38..89d40bc 100644
 --- a/b3sum/Cargo.toml
 +++ b/b3sum/Cargo.toml
 @@ -10,6 +10,7 @@ edition = "2024"
@@ -39,7 +39,7 @@ index 418bde9..3091ee0 100644
  pure = ["blake3/pure"]
  
 diff --git a/build.rs b/build.rs
-index 01b692f..f25ef13 100644
+index 9466739..8ef5b75 100644
 --- a/build.rs
 +++ b/build.rs
 @@ -99,6 +99,35 @@ fn is_wasm32() -> bool {
@@ -103,9 +103,9 @@ index 01b692f..f25ef13 100644
 +}
 +
  fn main() -> Result<(), Box<dyn std::error::Error>> {
-     // As of Rust 1.80, unrecognized config names are warnings. Give Cargo all of our config names.
-     let all_cfgs = [
-@@ -312,6 +361,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+     // If CFLAGS is set, make sure LTO is disabled by appending -fno-lto. (We can't do this with
+     // .flag() later on, because CFLAGS takes precedence.) Any mismatch between the C compiler and
+@@ -326,6 +375,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          "blake3_avx512_ffi",
          "blake3_neon",
          "blake3_wasm32_simd",
@@ -113,7 +113,7 @@ index 01b692f..f25ef13 100644
      ];
      for cfg_name in all_cfgs {
          // TODO: Switch this whole file to the new :: syntax when our MSRV reaches 1.77.
-@@ -327,6 +377,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -341,6 +391,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          panic!("It doesn't make sense to enable both \"no_neon\" and \"neon\".");
      }
  
@@ -124,7 +124,7 @@ index 01b692f..f25ef13 100644
      if is_x86_64() || is_x86_32() {
          let support = c_compiler_support();
          if is_x86_32() || should_prefer_intrinsics() || is_pure() || support == NoCompiler {
-@@ -361,6 +415,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
+@@ -375,6 +429,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
          build_wasm32_simd();
      }
  
@@ -144,7 +144,7 @@ index 01b692f..f25ef13 100644
      // environment variables it supports, in particular for $CC. We expect to
      // do a lot of benchmarking across different compilers, so we explicitly
 diff --git a/c/CMakeLists.txt b/c/CMakeLists.txt
-index 30d83c8..0d70dc8 100644
+index 09c7ffb..d0ad913 100644
 --- a/c/CMakeLists.txt
 +++ b/c/CMakeLists.txt
 @@ -31,6 +31,7 @@ add_subdirectory(dependencies)
@@ -154,8 +154,8 @@ index 30d83c8..0d70dc8 100644
 +set(BLAKE3_RISCV64_NAMES riscv64 RISCV64 rv64)
  # default SIMD compiler flag configuration (can be overriden by toolchains or CLI)
  if(MSVC)
-   set(BLAKE3_CFLAGS_SSE2 "/arch:SSE2" CACHE STRING "the compiler flags to enable SSE2")
-@@ -76,9 +77,27 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU"
+   if (CMAKE_C_COMPILER_ID STREQUAL "Clang")
+@@ -83,9 +84,27 @@ elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU"
      # 32-bit ARMv8 needs NEON to be enabled explicitly
      set(BLAKE3_CFLAGS_NEON "-mfpu=neon" CACHE STRING "the compiler flags to enable NEON")
    endif()
@@ -184,7 +184,7 @@ index 30d83c8..0d70dc8 100644
  mark_as_advanced(BLAKE3_AMD64_ASM_SOURCES)
  
  message(STATUS "BLAKE3 SIMD configuration: ${CMAKE_C_COMPILER_ARCHITECTURE_ID}")
-@@ -113,6 +132,10 @@ elseif((CMAKE_SYSTEM_PROCESSOR IN_LIST BLAKE3_ARMv8_NAMES
+@@ -120,6 +139,10 @@ elseif((CMAKE_SYSTEM_PROCESSOR IN_LIST BLAKE3_ARMv8_NAMES
            OR CMAKE_SIZEOF_VOID_P EQUAL 8))
    set(BLAKE3_SIMD_TYPE "neon-intrinsics" CACHE STRING "the SIMD acceleration type to use")
  
@@ -195,7 +195,7 @@ index 30d83c8..0d70dc8 100644
  else()
    set(BLAKE3_SIMD_TYPE "none" CACHE STRING "the SIMD acceleration type to use")
  endif()
-@@ -205,9 +228,24 @@ elseif(BLAKE3_SIMD_TYPE STREQUAL "neon-intrinsics")
+@@ -212,9 +235,24 @@ elseif(BLAKE3_SIMD_TYPE STREQUAL "neon-intrinsics")
      set_source_files_properties(blake3_neon.c PROPERTIES COMPILE_FLAGS "${BLAKE3_CFLAGS_NEON}")
    endif()
  
@@ -220,7 +220,7 @@ index 30d83c8..0d70dc8 100644
      BLAKE3_NO_SSE2
      BLAKE3_NO_SSE41
      BLAKE3_NO_AVX2
-@@ -365,6 +403,7 @@ install(FILES "${CMAKE_BINARY_DIR}/libblake3.pc"
+@@ -372,6 +410,7 @@ install(FILES "${CMAKE_BINARY_DIR}/libblake3.pc"
  add_feature_info("AMD64 assembly" BLAKE3_SIMD_AMD64_ASM "The library uses hand written amd64 SIMD assembly.")
  add_feature_info("x86 SIMD intrinsics" BLAKE3_SIMD_X86_INTRINSICS "The library uses x86 SIMD intrinsics.")
  add_feature_info("NEON SIMD intrinsics" BLAKE3_SIMD_NEON_INTRINSICS "The library uses NEON SIMD intrinsics.")
@@ -807,7 +807,7 @@ index 0000000..5739609
 +    }
 +}
 diff --git a/src/lib.rs b/src/lib.rs
-index f27f903..30036b8 100644
+index 3becf1f..43e6ef5 100644
 --- a/src/lib.rs
 +++ b/src/lib.rs
 @@ -115,6 +115,9 @@ mod avx512;
@@ -821,7 +821,7 @@ index f27f903..30036b8 100644
  #[path = "rust_sse2.rs"]
  mod sse2;
 diff --git a/src/platform.rs b/src/platform.rs
-index 3a05420..4bfe7c1 100644
+index 4152f04..5753e98 100644
 --- a/src/platform.rs
 +++ b/src/platform.rs
 @@ -12,6 +12,16 @@ cfg_if::cfg_if! {

@@ -8,12 +8,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           blake3
-Version:        1.8.4
+Version:        1.8.5
 Release:        %autorelease
 Summary:        Official C implementation of the BLAKE3 cryptographic hash function
 License:        Apache-2.0
 URL:            https://github.com/BLAKE3-team/BLAKE3
-#!RemoteAsset:  sha256:b5ee5f5c5e025eb2733ae3af8d4c0e53bb66dff35095decfd377f1083e8ac9be
+#!RemoteAsset:  sha256:220bd81286e2a0585beac66d41ac3f4c2c33ae8a4e339fc88cf22d5e00514fe9
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -25,7 +25,6 @@ BuildOption(conf):  -S c
 BuildOption(conf):  -DBLAKE3_USE_TBB=ON
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(tbb)
 
