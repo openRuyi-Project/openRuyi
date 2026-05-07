@@ -7,12 +7,12 @@
 %global srcname idna
 
 Name:           python-%{srcname}
-Version:        3.10
+Version:        3.13
 Release:        %autorelease
 Summary:        Internationalized domain names in applications
 License:        BSD-3-Clause
 URL:            https://github.com/kjd/idna
-#!RemoteAsset:  sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9
+#!RemoteAsset:  sha256:585ea8fe5d69b9181ec1afba340451fba6ba764af97026f92a91d4eef164a242
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
