@@ -7,12 +7,12 @@
 %global srcname asgiref
 
 Name:           python-%{srcname}
-Version:        3.8.1
+Version:        3.11.1
 Release:        %autorelease
 Summary:        ASGI specs, helper code, and adapters
 License:        BSD-3-Clause AND Apache-2.0
 URL:            https://github.com/django/asgiref
-#!RemoteAsset:  sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590
+#!RemoteAsset:  sha256:5f184dc43b7e763efe848065441eac62229c9f7b0475f41f80e207a114eda4ce
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
