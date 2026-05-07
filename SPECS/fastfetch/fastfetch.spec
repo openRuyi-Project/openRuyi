@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fastfetch
-Version:        2.61.0
+Version:        2.62.1
 Release:        %autorelease
 Summary:        Display system information in a stylized manner
 License:        MIT
 URL:            https://github.com/fastfetch-cli/fastfetch
-#!RemoteAsset:  sha256:b05b95bcc0915431cf732382813261497fa4412c3967904c1a9f207d5c946c65
+#!RemoteAsset:  sha256:8c4833e55b8b445a32c7cb7570007b5e10a9ee4cee74a494004ba61e88b12b26
 Source:         https://github.com/fastfetch-cli/fastfetch/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -43,4 +43,4 @@ system distribution, akin to many similar tools.
 %{_mandir}/man1/fastfetch.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

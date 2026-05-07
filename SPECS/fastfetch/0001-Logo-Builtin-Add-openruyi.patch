@@ -28,28 +28,28 @@ index 0000000..2da1322
 +$1 ⠙⣿⣿⣶⣤⣀⣀⣀$3⣀⣀⣰⣿⡇$2  ⠙⢿⣿⣦⣀⣀$1⣀⣀⣤⣶⣿⣿⠋
 +$1   ⠙⠿⢿⣿⣿⣿$3⣿⣿⣿⠟ $2    ⠉⠻⣿⣿$1⣿⣿⡿⠟⠋
 diff --git a/src/logo/builtin.c b/src/logo/builtin.c
-index 4feb551..8188b0f 100644
+index 0cd83ef..d839951 100644
 --- a/src/logo/builtin.c
 +++ b/src/logo/builtin.c
-@@ -3519,6 +3519,18 @@ static const FFlogo O[] = {
+@@ -3525,6 +3525,18 @@ static const FFlogo O[] = {
              FF_COLOR_FG_GREEN,
          },
      },
 +    // openruyi
 +    {
-+        .names = {"openruyi"},
++        .names = { "openruyi" },
 +        .lines = FASTFETCH_DATATEXT_LOGO_OPENRUYI,
 +        .colors = {
 +            FF_COLOR_FG_BLUE,
 +            FF_COLOR_FG_YELLOW,
 +            FF_COLOR_FG_LIGHT_YELLOW,
 +        },
-+	.colorKeys = FF_COLOR_FG_BLUE,
++        .colorKeys = FF_COLOR_FG_BLUE,
 +        .colorTitle = FF_COLOR_FG_DEFAULT,
 +    },
      // OpenStage
      {
-         .names = {"OpenStage"},
+         .names = { "OpenStage" },
 -- 
 2.52.0
 
