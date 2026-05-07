@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fltk
-Version:        1.4.4
+Version:        1.4.5
 Release:        %autorelease
 Summary:        C++ user interface toolkit
 License:        LGPL-2.0-or-later WITH FLTK-exception
 URL:            https://github.com/fltk/fltk
-#!RemoteAsset
+#!RemoteAsset:  sha256:7715e69ce081fa9ce6da48bb0dd3b07a4cf2cf937813814c04272f36fff593ea
 Source0:        https://github.com/fltk/fltk/archive/refs/tags/release-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -111,4 +111,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
 %{_datadir}/icons/hicolor/*/*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
