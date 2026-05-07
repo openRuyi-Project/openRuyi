@@ -7,12 +7,12 @@
 %global srcname werkzeug
 
 Name:           python-%{srcname}
-Version:        3.1.3
+Version:        3.1.8
 Release:        %autorelease
 Summary:        Comprehensive WSGI web application library
 License:        BSD-3-Clause
 URL:            https://github.com/pallets/werkzeug
-#!RemoteAsset:  sha256:60723ce945c19328679790e3282cc758aa4a6040e4bb330f53d30fa546d44746
+#!RemoteAsset:  sha256:9bad61a4268dac112f1c5cd4630a56ede601b6ed420300677a869083d70a4c44
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
