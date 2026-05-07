@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           mold
-Version:        2.40.4
+Version:        2.41.0
 Release:        %autorelease
 Summary:        A Modern Linker
 License:        MIT AND (Apache-2.0 OR MIT)
 URL:            https://github.com/rui314/mold
-#!RemoteAsset
+#!RemoteAsset:  sha256:0a61abac85d818437b425df856822e9d6e9982baeae5a93bcb02fe6c0060c61a
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -61,4 +61,4 @@ fi
 %{_mandir}/man1/mold.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
