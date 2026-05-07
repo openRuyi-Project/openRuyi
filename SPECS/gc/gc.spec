@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gc
-Version:        8.2.8
+Version:        8.2.12
 Release:        %autorelease
 Summary:        A garbage collector for C and C++
 # This is a special MIT-style-License
 License:        LicenseRef-GC-MIT
 URL:            http://www.hboehm.info/gc/
 VCS:            git:https://github.com/bdwgc/bdwgc/
-#!RemoteAsset
+#!RemoteAsset:  sha256:42e5194ad06ab6ffb806c83eb99c03462b495d979cda782f3c72c08af833cd4e
 Source0:        https://github.com/bdwgc/bdwgc/releases/download/v%{version}/gc-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -24,9 +24,8 @@ BuildOption(conf):  --enable-cplusplus
 BuildOption(conf):  --enable-large-config
 BuildOption(conf):  --enable-threads=posix
 
-BuildRequires: gcc
-BuildRequires: gcc-c++
-BuildRequires: libtool
+BuildRequires:  gcc-c++
+BuildRequires:  libtool
 
 %description
 The Boehm-Demers-Weiser conservative garbage collector can be
@@ -63,4 +62,4 @@ rm -rfv %{buildroot}%{_datadir}/gc/
 %{_mandir}/man3/gc.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
