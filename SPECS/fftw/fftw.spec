@@ -15,12 +15,12 @@
 %endif
 
 Name:           fftw
-Version:        3.3.10
+Version:        3.3.11
 Release:        %autorelease
 Summary:        A Fast Fourier Transform library
 License:        GPL-2.0-or-later AND MIT AND BSD-2-Clause
 URL:            https://github.com/FFTW/fftw3
-#!RemoteAsset:  sha256:56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467
+#!RemoteAsset:  sha256:5630c24cdeb33b131612f7eb4b1a9934234754f9f388ff8617458d0be6f239a1
 Source0:        http://www.fftw.org/fftw-%{version}.tar.gz
 BuildSystem:    autotools
 
