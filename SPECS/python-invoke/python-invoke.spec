@@ -7,12 +7,12 @@
 %global srcname invoke
 
 Name:           python-%{srcname}
-Version:        2.2.1
+Version:        3.0.3
 Release:        %autorelease
 Summary:        Pythonic task execution
 License:        BSD-3-Clause
 URL:            https://www.pyinvoke.org/
-#!RemoteAsset:  sha256:515bf49b4a48932b79b024590348da22f39c4942dff991ad1fb8b8baea1be707
+#!RemoteAsset:  sha256:437b6a622223824380bfb4e64f612711a6b648c795f565efc8625af66fb57f0c
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
