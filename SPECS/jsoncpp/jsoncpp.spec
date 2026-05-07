@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           jsoncpp
-Version:        1.9.6
+Version:        1.9.7
 Release:        %autorelease
 Summary:        A C++ library for manipulating JSON values
 License:        MIT
 URL:            https://github.com/open-source-parsers/jsoncpp
-#!RemoteAsset
+#!RemoteAsset:  sha256:830bf352d822d8558e9d0eb19d640d2e38536b4b6699c30a4488da09d5b1df18
 Source0:        https://github.com/open-source-parsers/%{name}/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -48,4 +48,4 @@ develop applications that use the JsonCpp library.
 %{_includedir}/json/
 
 %changelog
-%{?autochangelog}
+%autochangelog
