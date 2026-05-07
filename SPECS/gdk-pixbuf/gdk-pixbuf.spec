@@ -8,12 +8,12 @@
 %global glib_version 2.56.0
 
 Name:           gdk-pixbuf
-Version:        2.44.4
+Version:        2.44.6
 Release:        %autorelease
 Summary:        An image loading library
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.gnome.org/GNOME/gdk-pixbuf
-#!RemoteAsset
+#!RemoteAsset:  sha256:140c2d0b899fcf853ee92b26373c9dc228dbcde0820a4246693f4328a27466fa
 Source0:        https://download.gnome.org/sources/gdk-pixbuf/2.44/gdk-pixbuf-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -105,4 +105,4 @@ gdk-pixbuf-query-loaders --update-cache
 %{_datadir}/installed-tests
 
 %changelog
-%{?autochangelog}
+%autochangelog
