@@ -5,19 +5,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           jansson
-Version:        2.14.1
+Version:        2.15.0
 Release:        %autorelease
 Summary:        A C library for encoding, decoding and manipulating JSON data
 License:        MIT
 URL:            https://www.digip.org/jansson/
 VCS:            git:https://github.com/akheron/jansson
-#!RemoteAsset
+#!RemoteAsset:  sha256:a7eac7765000373165f9373eb748be039c10b2efc00be9af3467ec92357d8954
 Source0:        https://github.com/akheron/jansson/releases/download/v%{version}/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
 BuildRequires:  bzip2
 
 %description
@@ -42,4 +41,4 @@ files for jansson development
 %{_includedir}/jansson*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
