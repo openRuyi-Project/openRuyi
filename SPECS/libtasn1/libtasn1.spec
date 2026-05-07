@@ -6,15 +6,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libtasn1
-Version:        4.20.0
+Version:        4.21.0
 Release:        %autorelease
 Summary:        ASN.1 parsing library
 License:        GFDL-1.3-or-later AND GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnu.org/software/libtasn1/
 VCS:            git:https://gitlab.com/gnutls/libtasn1
-#!RemoteAsset
+#!RemoteAsset:  sha256:1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87
 Source0:        http://ftpmirror.gnu.org/gnu/libtasn1/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:a81037649b953c9ecb2e8f8fa24cb5c79456fd9af31499d6b753fa6569656807
 Source1:        http://ftpmirror.gnu.org/gnu/libtasn1/%{name}-%{version}.tar.gz.sig
 BuildSystem:    autotools
 
@@ -53,4 +53,4 @@ is a standardized data description and serialization language.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
