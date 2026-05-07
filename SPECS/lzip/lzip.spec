@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           lzip
-Version:        1.25
+Version:        1.26
 Release:        %autorelease
 Summary:        Lossless file compressor based on the LZMA algorithm
 License:        GPL-3.0-or-later
 URL:            https://www.nongnu.org/lzip/lzip.html
 # VCS: TODO: cvs -z3 -d:pserver:anonymous@cvs.savannah.nongnu.org:/sources/lzip co lzip
-#!RemoteAsset
+#!RemoteAsset:  sha256:641cf30961525cbe3b340cc883436c8854e9f5032f459f444de4782b621e6572
 Source:         https://download.savannah.nongnu.org/releases/lzip/lzip-%{version}.tar.gz
 Buildsystem:    autotools
 
@@ -45,4 +45,4 @@ distribution and data archival.
 %{_mandir}/man1/%{name}.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog
