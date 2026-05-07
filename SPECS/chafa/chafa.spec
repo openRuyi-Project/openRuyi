@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           chafa
-Version:        1.18.0
+Version:        1.18.2
 Release:        %autorelease
 Summary:        Image-to-text converter for terminal
 License:        LGPL-3.0-or-later
 URL:            https://hpjansson.org/chafa/
 VCS:            git:https://github.com/hpjansson/chafa
-#!RemoteAsset:  sha256:cd7475441ab8042e89dad706124999dd0aa3dc64653cdc20d49338549b9fcadb
+#!RemoteAsset:  sha256:0b8d9ba9f347e8b6c0c71878217c9b0e478b4a42aa4babea0bf20840567239c2
 Source0:        https://github.com/hpjansson/chafa/releases/download/%{version}/chafa-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -21,7 +21,8 @@ BuildOption(conf):  --disable-static
 BuildOption(conf):  --enable-gtk-doc
 
 BuildRequires:  make
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  pkgconfig(libjpeg)
 BuildRequires:  pkgconfig(libtiff-4)
@@ -71,4 +72,4 @@ autoreconf -fiv
 %doc %{_datadir}/gtk-doc/html/chafa
 
 %changelog
-%{?autochangelog}
+%autochangelog
