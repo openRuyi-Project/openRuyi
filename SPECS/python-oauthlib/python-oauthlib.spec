@@ -7,12 +7,12 @@
 %global srcname oauthlib
 
 Name:           python-%{srcname}
-Version:        3.2.2
+Version:        3.3.1
 Release:        %autorelease
 Summary:        An implementation of the OAuth request-signing logic
 License:        BSD-3-Clause
 URL:            https://github.com/oauthlib/oauthlib
-#!RemoteAsset:  sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918
+#!RemoteAsset:  sha256:0f0f8aa759826a193cf66c12ea1af1637f87b9b4622d46e866952bb022e538c9
 Source0:        https://files.pythonhosted.org/packages/source/o/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
