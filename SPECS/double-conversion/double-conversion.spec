@@ -7,19 +7,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           double-conversion
-Version:        3.3.1
+Version:        3.4.0
 Release:        %autorelease
 Summary:        Library for binary-decimal conversions of IEEE doubles
 License:        BSD-3-Clause
 URL:            https://github.com/google/double-conversion
-#!RemoteAsset
+#!RemoteAsset:  sha256:42fd4d980ea86426e457b24bdfa835a6f5ad9517ddb01cdb42b99ab9c8dd5dc9
 Source:         https://github.com/google/double-conversion/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING:BOOL=ON
 BuildOption(conf):  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
 
@@ -44,9 +43,10 @@ that use the double-conversion library.
 
 %files devel
 %{_libdir}/libdouble-conversion.so
+%{_libdir}/pkgconfig/double-conversion.pc
 %dir %{_libdir}/cmake/double-conversion
 %{_libdir}/cmake/double-conversion/*
 %{_includedir}/double-conversion/
 
 %changelog
-%{?autochangelog}
+%autochangelog
