@@ -7,12 +7,12 @@
 %global srcname editables
 
 Name:           python-%{srcname}
-Version:        0.5
+Version:        0.6
 Release:        %autorelease
 Summary:        Editable installations
 License:        MIT
 URL:            https://github.com/pfmoore/editables
-#!RemoteAsset:  sha256:309627d9b5c4adc0e668d8c6fa7bac1ba7c8c5d415c2d27f60f081f8e80d1de2
+#!RemoteAsset:  sha256:1163834902381c4613787951c5914800fdf155ae08848a373b8ea5006780977c
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
