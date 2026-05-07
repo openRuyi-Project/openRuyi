@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           magic_enum
-Version:        0.9.7
+Version:        0.9.8
 Release:        %autorelease
 Summary:        Static reflection for enums for modern C++
 License:        MIT
 URL:            https://github.com/Neargye/magic_enum
-#!RemoteAsset
+#!RemoteAsset:  sha256:88709dc8a9697168a75e039470d73ed0cffbc17567976eb5e096f946a2c0d521
 Source0:        https://github.com/Neargye/magic_enum/releases/download/v%{version}/magic_enum-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -33,4 +33,4 @@ rm -f %{buildroot}%{_datadir}/%{name}/package.xml
 %{_datadir}/pkgconfig/magic_enum.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
