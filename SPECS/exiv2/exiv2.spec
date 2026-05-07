@@ -7,12 +7,12 @@
 %bcond doc 0
 
 Name:           exiv2
-Version:        0.28.7
+Version:        0.28.8
 Release:        %autorelease
 Summary:        Exif, IPTC and XMP metadata manipulation library
 License:        GPL-2.0-or-later AND BSD-3-Clause
 URL:            https://github.com/Exiv2/exiv2
-#!RemoteAsset
+#!RemoteAsset:  sha256:ea51b0609f58a9afa063b60daa1539948b62247721e154f4fff0ad3aec9f9756
 Source0:        https://github.com/Exiv2/exiv2/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -80,4 +80,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
