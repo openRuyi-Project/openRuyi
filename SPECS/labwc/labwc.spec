@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           labwc
-Version:        0.9.6
+Version:        0.9.7
 Release:        %autorelease
 Summary:        A Wayland window-stacking compositor
 License:        GPL-2.0-only
 URL:            https://github.com/labwc/labwc
-#!RemoteAsset:  sha256:77530137f637814a6eeb709a634eb88905d5ba3e66333d10519deb437537cd5e
+#!RemoteAsset:  sha256:4ad4e5e7f29e0d0704fadb4a072037173d850b46f12122b79168879b922e0f43
 Source0:        https://github.com/labwc/labwc/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/icons/hicolor/*/*/labwc*.svg
 
 %changelog
-%{?autochangelog}
+%autochangelog
