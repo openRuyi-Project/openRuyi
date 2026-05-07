@@ -7,12 +7,12 @@
 %global srcname cachetools
 
 Name:           python-%{srcname}
-Version:        6.2.2
+Version:        7.1.1
 Release:        %autorelease
 Summary:        Extensible memoizing collections and decorators
 License:        MIT
 URL:            https://github.com/tkem/cachetools
-#!RemoteAsset:  sha256:8e6d266b25e539df852251cfd6f990b4bc3a141db73b939058d809ebd2590fc6
+#!RemoteAsset:  sha256:27bdf856d68fd3c71c26c01b5edc312124ed427524d1ddb31aa2b7746fe20d4b
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
