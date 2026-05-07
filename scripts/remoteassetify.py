@@ -58,7 +58,7 @@ def message(prefix: str, text: str, line_num: Optional[int] = None, line_text: O
 
 def spec_filter(text: str) -> str:
     GOOD = [
-        r'^Source\d*:',
+        r'^(Source|Patch)\d*:',
         r'^(Name|Version|Release|Summary|License|URL|VCS|Description):',
         r'^%(description|package|global|define|if\w*|else|endif)(\s+|$)',
     ]
@@ -139,7 +139,7 @@ def get_sources(text: str) -> dict[str, str]:
             continue
 
         key, value = line.split(':', 1)
-        m = re.match(r'^Source\d*$', key, re.IGNORECASE)
+        m = re.match(r'^(Source|Patch)\d*$', key, re.IGNORECASE)
         if not m:
             continue
 
@@ -184,7 +184,7 @@ def get_remoteasset_lines(text: str) -> dict[str, RemoteAssetData]:
             continue
 
         key, value = next_line.split(':', 1)
-        m = re.match(r'^Source\d*$', key, re.IGNORECASE)
+        m = re.match(r'^(Source|Patch)\d*$', key, re.IGNORECASE)
 
         if not m:
             message('WARN', f'Unhandled remote asset with key {key}', i + 1, next_line)
