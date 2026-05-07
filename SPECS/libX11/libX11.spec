@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libX11
-Version:        1.8.12
+Version:        1.8.13
 Release:        %autorelease
 Summary:        Core X11 protocol client library
 License:        MIT
 URL:            https://www.x.org
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libx11.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:69606f485c2c07c14ef64f75b7bb326d48587af33795d9ab3e607c0b5f94f11c
 Source0:        https://www.x.org/releases/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -81,4 +81,4 @@ rm -rf %{buildroot}%{_docdir}
 %{_mandir}/man5/*.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
