@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           doctest
-Version:        2.4.12
+Version:        2.5.2
 Release:        %autorelease
 Summary:        C++ test framework
 License:        MIT
 URL:            https://github.com/doctest/doctest
-#!RemoteAsset
+#!RemoteAsset:  sha256:9189960c2bbbc4f3382ce0773b2bb5f13e3afd8fed47f55f193e11e85a4f9854
 Source0:        https://github.com/doctest/doctest/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -28,6 +28,7 @@ has been designed to be fast, light and unintrusive.
 %{_includedir}/doctest/*.h
 %{_includedir}/doctest/extensions/*.h
 %{_libdir}/cmake/doctest/*.cmake
+%{_libdir}/pkgconfig/doctest.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
