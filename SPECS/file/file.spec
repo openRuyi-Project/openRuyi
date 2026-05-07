@@ -6,24 +6,23 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           file
-Version:        5.46
+Version:        5.47
 Release:        %autorelease
 Summary:        A Tool to Determine File Types
 License:        BSD-2-Clause
 URL:            http://www.darwinsys.com/file/
 VCS:            git:https://github.com/file/file
-#!RemoteAsset
+#!RemoteAsset:  sha256:45672fec165cb4cc1358a2d76b5d57d22876dcb97ab169427ac385cbe1d5597a
 Source0:        https://www.astron.com/pub/file/file-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://www.astron.com/pub/file/file-%{version}.tar.gz.asc
-Buildsystem:    autotools
+BuildSystem:    autotools
 
 BuildOption(conf):  --disable-silent-rules
 BuildOption(conf):  --enable-fsect-man5
 
 BuildRequires:  bash
-BuildRequires:  libtool
 BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
 BuildRequires:  make
 
 %description
@@ -65,4 +64,4 @@ autoreconf -fiv
 %doc README.DEVELOPER AUTHORS NEWS ChangeLog
 
 %changelog
-%{?autochangelog}
+%autochangelog
