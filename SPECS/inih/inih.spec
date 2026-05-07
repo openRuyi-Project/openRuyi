@@ -7,19 +7,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           inih
-Version:        61
+Version:        62
 Release:        %autorelease
 Summary:        Simple INI file parser library
 License:        BSD-3-Clause
 URL:            https://github.com/benhoyt/inih
-#!RemoteAsset
+#!RemoteAsset:  sha256:9c15fa751bb8093d042dae1b9f125eb45198c32c6704cd5481ccde460d4f8151
 Source0:        https://github.com/benhoyt/inih/archive/refs/tags/r%{version}.tar.gz#/%{name}-r%{version}.tar.gz
 BuildSystem:    meson
 
 BuildOption(conf):  -Ddefault_library=shared
 BuildOption(conf):  -Ddistro_install=true
 
-BuildRequires:  gcc
 BuildRequires:  meson
 
 %description
@@ -49,4 +48,4 @@ symlinks for the inih library.
 %{_libdir}/pkgconfig/INIReader.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
