@@ -5,13 +5,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gsettings-desktop-schemas
-Version:        49.1
+Version:        50.1
 Release:        %autorelease
 Summary:        A collection of GSettings schemas
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas
-#!RemoteAsset:  sha256:777a7f83d5e5a8076b9bf809cb24101b1b1ba9c230235e3c3de8e13968ed0e63
-Source0:        https://download.gnome.org/sources/gsettings-desktop-schemas/49/gsettings-desktop-schemas-%{version}.tar.xz
+#!RemoteAsset:  sha256:0a2aa25082672585d16fcdab61c7b0e33f035fb87476505c794f29565afa485b
+Source0:        https://download.gnome.org/sources/gsettings-desktop-schemas/50/gsettings-desktop-schemas-%{version}.tar.xz
 BuildSystem:    meson
 
 BuildRequires:  meson
@@ -55,4 +55,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gir-1.0/GDesktopEnums-3.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog
