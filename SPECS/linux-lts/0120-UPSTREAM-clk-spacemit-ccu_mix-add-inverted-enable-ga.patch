@@ -1,7 +1,7 @@
-From ed708f2f024f0f30a98f8b130451deee8f5a244f Mon Sep 17 00:00:00 2001
+From fb2611b9bca44f091c646034f9a47b09f4efeacb Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 31 Oct 2025 20:40:46 +0800
-Subject: [PATCH 120/369] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable
+Subject: [PATCH 120/408] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable
  gate clock
 
 K3 SoC has the clock IP which support to write value 0 for enabling the
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu_mix.c b/drivers/clk/spacemit/ccu_mix.c
-index 67f8b12b4f5b..9578366e9746 100644
+index 67f8b12b4f5b7..9578366e97466 100644
 --- a/drivers/clk/spacemit/ccu_mix.c
 +++ b/drivers/clk/spacemit/ccu_mix.c
 @@ -16,17 +16,19 @@
@@ -57,7 +57,7 @@ index 67f8b12b4f5b..9578366e9746 100644
  
  static unsigned long ccu_factor_recalc_rate(struct clk_hw *hw,
 diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
-index 54d40cd39b27..8a70cf151461 100644
+index 54d40cd39b275..8a70cf151461c 100644
 --- a/drivers/clk/spacemit/ccu_mix.h
 +++ b/drivers/clk/spacemit/ccu_mix.h
 @@ -16,9 +16,11 @@
@@ -97,5 +97,5 @@ index 54d40cd39b27..8a70cf151461 100644
  			       _mul, _flags)					\
  static struct ccu_mix _name = {							\
 -- 
-2.53.0
+2.52.0
 

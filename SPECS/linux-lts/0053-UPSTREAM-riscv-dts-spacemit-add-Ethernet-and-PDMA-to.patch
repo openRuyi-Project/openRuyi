@@ -1,7 +1,7 @@
-From 2e3af2a2cafa742a64a7ed1ee95920fccdc953a6 Mon Sep 17 00:00:00 2001
+From b637afb6afb49c252ce853e92635a11875a09d76 Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 22 Oct 2025 20:18:38 +0000
-Subject: [PATCH 053/369] UPSTREAM: riscv: dts: spacemit: add Ethernet and PDMA
+Subject: [PATCH 053/408] UPSTREAM: riscv: dts: spacemit: add Ethernet and PDMA
  to OrangePi RV2
 
 The OrangePi RV2 board ships two RGMII ethernet ports.
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 52 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
-index 337240ebb7b7..41dc8e35e6eb 100644
+index 337240ebb7b79..41dc8e35e6ebe 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
 @@ -15,6 +15,8 @@ / {
@@ -91,5 +91,5 @@ index 337240ebb7b7..41dc8e35e6eb 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 -- 
-2.53.0
+2.52.0
 

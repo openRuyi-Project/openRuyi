@@ -1,7 +1,7 @@
-From 4915cd379c63359b1c53885b5dc1bcaebf971232 Mon Sep 17 00:00:00 2001
+From 84f71b0032bf9f0380bc1d020baf481a6d30d450 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 5 Nov 2025 11:37:44 +0800
-Subject: [PATCH 058/369] UPSTREAM: riscv: dts: spacemit: define all missing
+Subject: [PATCH 058/408] UPSTREAM: riscv: dts: spacemit: define all missing
  I2C controller nodes
 
 SpacemiT K1 SoC is equipped with a total of nine I2C controllers,
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 80 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index e3de4815e811..7818ca4979b6 100644
+index e3de4815e811c..7818ca4979b6a 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -358,6 +358,32 @@ syscon_rcpu2: system-controller@c0888000 {
@@ -146,5 +146,5 @@ index e3de4815e811..7818ca4979b6 100644
  			compatible = "simple-bus";
  			ranges;
 -- 
-2.53.0
+2.52.0
 

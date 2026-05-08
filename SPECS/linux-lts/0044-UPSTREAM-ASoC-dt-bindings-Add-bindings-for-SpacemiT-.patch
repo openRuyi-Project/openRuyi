@@ -1,7 +1,7 @@
-From a628413858f87d8725187eca633cb7785def3725 Mon Sep 17 00:00:00 2001
+From 1b4904c65a0d8c243dcb32858622eaf6624fe57e Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 17 Oct 2025 11:16:17 +0800
-Subject: [PATCH 044/369] UPSTREAM: ASoC: dt-bindings: Add bindings for
+Subject: [PATCH 044/408] UPSTREAM: ASoC: dt-bindings: Add bindings for
  SpacemiT K1
 
 Add dt-binding for the i2s driver of SpacemiT's K1 SoC.
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml b/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml
 new file mode 100644
-index 000000000000..55bd0b307d22
+index 0000000000000..55bd0b307d22b
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml
 @@ -0,0 +1,87 @@
@@ -111,5 +111,5 @@ index 000000000000..55bd0b307d22
 +      #sound-dai-cells = <0>;
 +    };
 -- 
-2.53.0
+2.52.0
 

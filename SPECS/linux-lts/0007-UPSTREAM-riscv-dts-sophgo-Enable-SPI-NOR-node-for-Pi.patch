@@ -1,7 +1,7 @@
-From d9ffe32f410b116ddd6e86b950f0a2e8a41f8d71 Mon Sep 17 00:00:00 2001
+From 08b6e273a5ee21130e76e1df97d418e64a7eb30e Mon Sep 17 00:00:00 2001
 From: Zixian Zeng <sycamoremoon376@gmail.com>
 Date: Tue, 16 Sep 2025 21:22:51 +0800
-Subject: [PATCH 007/369] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for
+Subject: [PATCH 007/408] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for
  PioneerBox
 
 Enable SPI NOR node for PioneerBox device tree
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 24 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-index c4d5f8d7d4ad..54d8386bf9c0 100644
+index c4d5f8d7d4ad3..54d8386bf9c0f 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
 +++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
 @@ -150,6 +150,30 @@ &sd {
@@ -58,5 +58,5 @@ index c4d5f8d7d4ad..54d8386bf9c0 100644
  	pinctrl-0 = <&uart0_cfg>;
  	pinctrl-names = "default";
 -- 
-2.53.0
+2.52.0
 

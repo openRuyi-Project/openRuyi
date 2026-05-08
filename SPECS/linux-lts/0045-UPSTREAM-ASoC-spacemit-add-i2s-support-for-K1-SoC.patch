@@ -1,7 +1,7 @@
-From fd286c94647d0d76f7b896e54a8fcc3ee9e0fd19 Mon Sep 17 00:00:00 2001
+From f52e48e473dfdfb383fe2ae651bfc1d580f98fea Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 17 Oct 2025 11:16:18 +0800
-Subject: [PATCH 045/369] UPSTREAM: ASoC: spacemit: add i2s support for K1 SoC
+Subject: [PATCH 045/408] UPSTREAM: ASoC: spacemit: add i2s support for K1 SoC
 
 Add ASoC platform driver for the SpacemiT K1 SoC full-duplex I2S
 controller.
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 sound/soc/spacemit/k1_i2s.c
 
 diff --git a/sound/soc/Kconfig b/sound/soc/Kconfig
-index ce74818bd715..36e0d443ba0e 100644
+index ce74818bd7152..36e0d443ba0eb 100644
 --- a/sound/soc/Kconfig
 +++ b/sound/soc/Kconfig
 @@ -127,6 +127,7 @@ source "sound/soc/renesas/Kconfig"
@@ -37,7 +37,7 @@ index ce74818bd715..36e0d443ba0e 100644
  source "sound/soc/sprd/Kconfig"
  source "sound/soc/starfive/Kconfig"
 diff --git a/sound/soc/Makefile b/sound/soc/Makefile
-index 462322c38aa4..8c0480e6484e 100644
+index 462322c38aa42..8c0480e6484e7 100644
 --- a/sound/soc/Makefile
 +++ b/sound/soc/Makefile
 @@ -70,6 +70,7 @@ obj-$(CONFIG_SND_SOC)	+= rockchip/
@@ -50,7 +50,7 @@ index 462322c38aa4..8c0480e6484e 100644
  obj-$(CONFIG_SND_SOC)	+= starfive/
 diff --git a/sound/soc/spacemit/Kconfig b/sound/soc/spacemit/Kconfig
 new file mode 100644
-index 000000000000..2179f94f3f17
+index 0000000000000..2179f94f3f179
 --- /dev/null
 +++ b/sound/soc/spacemit/Kconfig
 @@ -0,0 +1,16 @@
@@ -72,7 +72,7 @@ index 000000000000..2179f94f3f17
 +endmenu
 diff --git a/sound/soc/spacemit/Makefile b/sound/soc/spacemit/Makefile
 new file mode 100644
-index 000000000000..9069de8ef89c
+index 0000000000000..9069de8ef89c8
 --- /dev/null
 +++ b/sound/soc/spacemit/Makefile
 @@ -0,0 +1,5 @@
@@ -83,7 +83,7 @@ index 000000000000..9069de8ef89c
 +obj-$(CONFIG_SND_SOC_K1_I2S) += snd-soc-k1-i2s.o
 diff --git a/sound/soc/spacemit/k1_i2s.c b/sound/soc/spacemit/k1_i2s.c
 new file mode 100644
-index 000000000000..abc439b53e3d
+index 0000000000000..abc439b53e3d4
 --- /dev/null
 +++ b/sound/soc/spacemit/k1_i2s.c
 @@ -0,0 +1,458 @@
@@ -546,5 +546,5 @@ index 000000000000..abc439b53e3d
 +MODULE_LICENSE("GPL");
 +MODULE_DESCRIPTION("I2S bus driver for SpacemiT K1 SoC");
 -- 
-2.53.0
+2.52.0
 

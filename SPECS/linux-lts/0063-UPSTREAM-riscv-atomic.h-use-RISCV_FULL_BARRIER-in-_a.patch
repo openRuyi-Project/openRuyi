@@ -1,7 +1,7 @@
-From 0bb6699cc496c2f6201a1438779e70525750e623 Mon Sep 17 00:00:00 2001
+From 015625b861d87dcbd9fa53d5119eca09616f3522 Mon Sep 17 00:00:00 2001
 From: Zongmin Zhou <zhouzongmin@kylinos.cn>
 Date: Thu, 20 Nov 2025 17:58:31 +0800
-Subject: [PATCH 063/369] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in
+Subject: [PATCH 063/408] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in
  _arch_atomic* function.
 
 Replace the same code with the pre-defined macro
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/include/asm/atomic.h b/arch/riscv/include/asm/atomic.h
-index 5b96c2f61adb..3f33dc54f94b 100644
+index 5b96c2f61adb5..3f33dc54f94b2 100644
 --- a/arch/riscv/include/asm/atomic.h
 +++ b/arch/riscv/include/asm/atomic.h
 @@ -203,7 +203,7 @@ ATOMIC_OPS(xor, xor, i)
@@ -57,5 +57,5 @@ index 5b96c2f61adb..3f33dc54f94b 100644
  		: [p]"=&r" (_prev), [rc]"=&r" (_rc), [c]"+A" (counter)	\
  		:							\
 -- 
-2.53.0
+2.52.0
 

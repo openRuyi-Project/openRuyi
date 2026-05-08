@@ -1,7 +1,7 @@
-From 4ddb946075319037b4cc73723d3a6cb69db62d6d Mon Sep 17 00:00:00 2001
+From 7e291e4b65d629a56b51fb9b24ceb163117c3baf Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 21:52:08 +0800
-Subject: [PATCH 115/369] UPSTREAM: clk: spacemit: prepare common ccu header
+Subject: [PATCH 115/408] UPSTREAM: clk: spacemit: prepare common ccu header
 
 In order to prepare adding clock driver for new K3 SoC, extract generic
 code to a separate common ccu header file, so they are not defined
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/include/soc/spacemit/ccu.h b/include/soc/spacemit/ccu.h
 new file mode 100644
-index 000000000000..84dcdecccc05
+index 0000000000000..84dcdecccc053
 --- /dev/null
 +++ b/include/soc/spacemit/ccu.h
 @@ -0,0 +1,21 @@
@@ -46,7 +46,7 @@ index 000000000000..84dcdecccc05
 +
 +#endif /* __SOC_SPACEMIT_CCU_H__ */
 diff --git a/include/soc/spacemit/k1-syscon.h b/include/soc/spacemit/k1-syscon.h
-index 354751562c55..0be7a2e8d445 100644
+index 354751562c555..0be7a2e8d445e 100644
 --- a/include/soc/spacemit/k1-syscon.h
 +++ b/include/soc/spacemit/k1-syscon.h
 @@ -5,17 +5,7 @@
@@ -69,5 +69,5 @@ index 354751562c55..0be7a2e8d445 100644
  /* APBS register offset */
  #define APBS_PLL1_SWCR1			0x100
 -- 
-2.53.0
+2.52.0
 

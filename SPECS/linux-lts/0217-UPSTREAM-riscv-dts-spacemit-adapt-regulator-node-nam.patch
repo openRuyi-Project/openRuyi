@@ -1,7 +1,7 @@
-From 8d8dc014b877a37d152bdfdce488bc0f43e66d88 Mon Sep 17 00:00:00 2001
+From 714951a45141303ccc50a133c675650f2d17a078 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 09:35:00 +0000
-Subject: [PATCH 217/369] UPSTREAM: riscv: dts: spacemit: adapt regulator node
+Subject: [PATCH 217/408] UPSTREAM: riscv: dts: spacemit: adapt regulator node
  name to preferred form
 
 The preferred node name for fixed-regulators has changed to pattern [1]:
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index ed88507b84e9..404b69c47b91 100644
+index ed88507b84e98..404b69c47b91f 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -33,7 +33,7 @@ led1 {
@@ -70,7 +70,7 @@ index ed88507b84e9..404b69c47b91 100644
  		regulator-name = "USB30_HUB";
  		regulator-min-microvolt = <5000000>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index e2702a781734..9959c8023ece 100644
+index e2702a781734b..9959c8023ece0 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -21,7 +21,7 @@ chosen {
@@ -92,5 +92,5 @@ index e2702a781734..9959c8023ece 100644
  		regulator-name = "vcc_4v";
  		regulator-min-microvolt = <4000000>;
 -- 
-2.53.0
+2.52.0
 

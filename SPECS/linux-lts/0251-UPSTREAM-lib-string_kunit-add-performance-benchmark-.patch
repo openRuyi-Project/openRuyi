@@ -1,7 +1,7 @@
-From f5592e0ee55b3628b777b8c1671c4ec0ba82595b Mon Sep 17 00:00:00 2001
+From 0e366311845283fb5a759ef7602a534e062e213a Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 251/369] UPSTREAM: lib/string_kunit: add performance benchmark
+Subject: [PATCH 251/408] UPSTREAM: lib/string_kunit: add performance benchmark
  for strlen()
 
 Introduce a benchmarking framework to the string_kunit test suite to
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 171 insertions(+)
 
 diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 21cd68084e46..a4d1ce2f4600 100644
+index 21cd68084e468..a4d1ce2f46003 100644
 --- a/lib/Kconfig.debug
 +++ b/lib/Kconfig.debug
 @@ -2446,6 +2446,17 @@ config STRING_HELPERS_KUNIT_TEST
@@ -55,7 +55,7 @@ index 21cd68084e46..a4d1ce2f4600 100644
  	tristate "KUnit test ffs-family functions at runtime" if !KUNIT_ALL_TESTS
  	depends on KUNIT
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 2bed641e1eae..cd5837373427 100644
+index 2bed641e1eaeb..cd58373734277 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -6,11 +6,17 @@
@@ -252,5 +252,5 @@ index 2bed641e1eae..cd5837373427 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

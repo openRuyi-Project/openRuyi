@@ -1,7 +1,7 @@
-From 461112135bd742f3a5555871480b2cf2b3b94f4d Mon Sep 17 00:00:00 2001
+From 18f36ba4f7a25eb10ffffcce01b6d480fab1a797 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:55 +0100
-Subject: [PATCH 079/369] UPSTREAM: riscv: dts: spacemit: Define the P1 PMIC
+Subject: [PATCH 079/408] UPSTREAM: riscv: dts: spacemit: Define the P1 PMIC
  regulators for Milk-V Jupiter
 
 Define the SpacemiT P1 PMIC voltage regulators and their constraints.
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 110 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 5babed4d7094..800a112d5d70 100644
+index 5babed4d70944..800a112d5d705 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -95,6 +95,116 @@ &i2c8 {
@@ -141,5 +141,5 @@ index 5babed4d7094..800a112d5d70 100644
  
  &uart0 {
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From c2385820d0f239d764feee71ce1386257217e31e Mon Sep 17 00:00:00 2001
+From dc599168162fbdd60eaa9230e1118c28b47797cf Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:37 +0800
-Subject: [PATCH 183/369] UPSTREAM: dt-bindings: net: Add support for Spacemit
+Subject: [PATCH 183/408] UPSTREAM: dt-bindings: net: Add support for Spacemit
  K3 dwmac
 
 The GMAC IP on Spacemit K3 is almost a standard Synopsys DesignWare
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 Documentation/devicetree/bindings/net/spacemit,k3-dwmac.yaml
 
 diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 658c004e6a5c..eb36cb36a57a 100644
+index 658c004e6a5c8..eb36cb36a57a4 100644
 --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
 +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
 @@ -104,6 +104,7 @@ properties:
@@ -43,7 +43,7 @@ index 658c004e6a5c..eb36cb36a57a 100644
                  - st,spear600-gmac
 diff --git a/Documentation/devicetree/bindings/net/spacemit,k3-dwmac.yaml b/Documentation/devicetree/bindings/net/spacemit,k3-dwmac.yaml
 new file mode 100644
-index 000000000000..678eccf044f9
+index 0000000000000..678eccf044f97
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/net/spacemit,k3-dwmac.yaml
 @@ -0,0 +1,102 @@
@@ -150,5 +150,5 @@ index 000000000000..678eccf044f9
 +      spacemit,apmu = <&syscon_apmu 0x384 0x38c>;
 +    };
 -- 
-2.53.0
+2.52.0
 

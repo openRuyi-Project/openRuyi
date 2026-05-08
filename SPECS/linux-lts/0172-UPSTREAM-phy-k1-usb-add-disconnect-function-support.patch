@@ -1,7 +1,7 @@
-From aeae6aa66f552630869ca20fa7e049c3e33e6584 Mon Sep 17 00:00:00 2001
+From 21504c2befe857d9f0561ad2e8d0905dfdd8ca2f Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 16 Feb 2026 23:26:53 +0800
-Subject: [PATCH 172/369] UPSTREAM: phy: k1-usb: add disconnect function
+Subject: [PATCH 172/408] UPSTREAM: phy: k1-usb: add disconnect function
  support
 
 A disconnect status BIT of USB2 PHY need to be cleared, otherwise
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 14 insertions(+)
 
 diff --git a/drivers/phy/spacemit/phy-k1-usb2.c b/drivers/phy/spacemit/phy-k1-usb2.c
-index 342061380012..9215d0b223b2 100644
+index 3420613800125..9215d0b223b2d 100644
 --- a/drivers/phy/spacemit/phy-k1-usb2.c
 +++ b/drivers/phy/spacemit/phy-k1-usb2.c
 @@ -48,6 +48,9 @@
@@ -55,5 +55,5 @@ index 342061380012..9215d0b223b2 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

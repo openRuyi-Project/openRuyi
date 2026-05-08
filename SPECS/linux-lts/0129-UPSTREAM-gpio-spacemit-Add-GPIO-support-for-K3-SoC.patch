@@ -1,7 +1,7 @@
-From 1b4ec4d9f5b63083f35209d8a2b18d82a3cf09fa Mon Sep 17 00:00:00 2001
+From 9a066e5eb48c7a091dff43f3c57de6c3dea56fc3 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:33 +0800
-Subject: [PATCH 129/369] UPSTREAM: gpio: spacemit: Add GPIO support for K3 SoC
+Subject: [PATCH 129/408] UPSTREAM: gpio: spacemit: Add GPIO support for K3 SoC
 
 SpacemiT K3 SoC has changed gpio register layout while comparing
 with previous generation, the register offset and bank offset
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 117 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index eb66a15c002f..8f570a1a4894 100644
+index eb66a15c002fc..8f570a1a48944 100644
 --- a/drivers/gpio/gpio-spacemit-k1.c
 +++ b/drivers/gpio/gpio-spacemit-k1.c
 @@ -15,29 +15,37 @@
@@ -312,5 +312,5 @@ index eb66a15c002f..8f570a1a4894 100644
 +MODULE_DESCRIPTION("GPIO driver for SpacemiT K1/K3 SoC");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

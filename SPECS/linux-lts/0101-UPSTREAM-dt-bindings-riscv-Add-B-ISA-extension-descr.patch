@@ -1,7 +1,7 @@
-From a9b77aac9d5598b936982806cf819bf38d71a543 Mon Sep 17 00:00:00 2001
+From ecc4dae385ef270b809cdd11da704d32db75bf05 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:18 +0800
-Subject: [PATCH 101/369] UPSTREAM: dt-bindings: riscv: Add B ISA extension
+Subject: [PATCH 101/408] UPSTREAM: dt-bindings: riscv: Add B ISA extension
  description
 
 Add description of the single-letter B extension for Bit Manipulation.
@@ -38,7 +38,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 31 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index aa38809ecf06..36afd1cc42cf 100644
+index aa38809ecf066..36afd1cc42cf8 100644
 --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
 +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
 @@ -109,6 +109,13 @@ properties:
@@ -87,5 +87,5 @@ index aa38809ecf06..36afd1cc42cf 100644
        - if:
            contains:
 -- 
-2.53.0
+2.52.0
 

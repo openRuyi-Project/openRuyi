@@ -1,7 +1,7 @@
-From cc262386ba8a25d597075ab4b9f581f83ce5eea1 Mon Sep 17 00:00:00 2001
+From 736c4e3288d04cfc2136196a1402b1b63639c2a5 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:36 +0000
-Subject: [PATCH 158/369] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()
+Subject: [PATCH 158/408] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()
  implementations
 
 Simplify the set_intf_mode() implementations, testing the phy_intf_sel
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 19 insertions(+), 48 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index dc28486a7af0..d69be9de4468 100644
+index dc28486a7af05..d69be9de44682 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -67,29 +67,15 @@ static int imx8mp_set_intf_mode(struct plat_stmmacenet_data *plat_dat,
@@ -110,5 +110,5 @@ index dc28486a7af0..d69be9de4468 100644
  
  	val = FIELD_PREP(MX93_GPR_ENET_QOS_INTF_SEL_MASK, phy_intf_sel) |
 -- 
-2.53.0
+2.52.0
 

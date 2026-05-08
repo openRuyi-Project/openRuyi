@@ -1,7 +1,7 @@
-From b30c4fb9b5f6abc3f7d9bab6348ce9e715a497e1 Mon Sep 17 00:00:00 2001
+From 8eb9e52b640cbc9cc289f9ed3ba9e4ec9146b880 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:41 +0100
-Subject: [PATCH 031/369] UPSTREAM: dt-bindings: interrupt-controller: Add
+Subject: [PATCH 031/408] UPSTREAM: dt-bindings: interrupt-controller: Add
  UltraRISC DP1000 PLIC
 
 Add compatible strings for the PLIC found in UltraRISC DP1000 SoC.
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-index f683d696909b..234cdc2a1a26 100644
+index f683d696909b9..234cdc2a1a26c 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
 @@ -75,6 +75,9 @@ properties:
@@ -35,5 +35,5 @@ index f683d696909b..234cdc2a1a26 100644
            - const: sifive,plic-1.0.0
            - const: riscv,plic0
 -- 
-2.53.0
+2.52.0
 

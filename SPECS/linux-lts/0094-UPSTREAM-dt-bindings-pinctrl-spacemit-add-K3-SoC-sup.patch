@@ -1,7 +1,7 @@
-From 5c41679a4a63a67c6cc61e50f01e6780e5d9191f Mon Sep 17 00:00:00 2001
+From 025b75697c1e28ffb90d32cdd9a6545b2aa4370d Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:23 +0800
-Subject: [PATCH 094/369] UPSTREAM: dt-bindings: pinctrl: spacemit: add K3 SoC
+Subject: [PATCH 094/408] UPSTREAM: dt-bindings: pinctrl: spacemit: add K3 SoC
  support
 
 Add new compatible string for SpacemiT K3 SoC, the pinctrl IP shares
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-index 609d7db97822..9a76cffcbaee 100644
+index 609d7db97822d..9a76cffcbaee8 100644
 --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 @@ -11,7 +11,9 @@ maintainers:
@@ -47,5 +47,5 @@ index 609d7db97822..9a76cffcbaee 100644
              description: |
                typical threshold for schmitt trigger.
 -- 
-2.53.0
+2.52.0
 

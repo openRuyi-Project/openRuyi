@@ -1,7 +1,7 @@
-From 273c771d3cc5178ee077c1247276a398d8188b27 Mon Sep 17 00:00:00 2001
+From 783b41399f06edd93d2f50781b8e14b176e93c9a Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:53 +0800
-Subject: [PATCH 087/369] UPSTREAM: riscv: dts: spacemit: add reset property
+Subject: [PATCH 087/408] UPSTREAM: riscv: dts: spacemit: add reset property
 
 Add resets property to K1 I2C node.
 
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 86d1db14e2ee..4c045da95d72 100644
+index 86d1db14e2ee4..4c045da95d72d 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -368,6 +368,7 @@ i2c0: i2c@d4010800 {
@@ -83,5 +83,5 @@ index 86d1db14e2ee..4c045da95d72 100644
  			status = "disabled";
  		};
 -- 
-2.53.0
+2.52.0
 

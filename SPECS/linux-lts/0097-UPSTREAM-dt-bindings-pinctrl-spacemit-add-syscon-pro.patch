@@ -1,7 +1,7 @@
-From ea72c0839fdd0993b61e2fd13082707094d9f8fb Mon Sep 17 00:00:00 2001
+From 3f6551e0d0f2776f717299b773a9694b90591b9c Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:38 +0800
-Subject: [PATCH 097/369] UPSTREAM: dt-bindings: pinctrl: spacemit: add syscon
+Subject: [PATCH 097/408] UPSTREAM: dt-bindings: pinctrl: spacemit: add syscon
  property
 
 In order to access the protected IO power domain registers, a valid
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-index 9a76cffcbaee..141dcedb81fb 100644
+index 9a76cffcbaee8..141dcedb81fba 100644
 --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 @@ -32,6 +32,10 @@ properties:
@@ -45,5 +45,5 @@ index 9a76cffcbaee..141dcedb81fb 100644
              uart0_2_cfg: uart0-2-cfg {
                  uart0-2-pins {
 -- 
-2.53.0
+2.52.0
 

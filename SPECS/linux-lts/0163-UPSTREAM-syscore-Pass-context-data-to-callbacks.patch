@@ -1,7 +1,7 @@
-From 9663269203053c722a4a0abd7f6b7847b1f4412d Mon Sep 17 00:00:00 2001
+From 737995780e4290726d876051b8f3e944b8a2fbde Mon Sep 17 00:00:00 2001
 From: Thierry Reding <treding@nvidia.com>
 Date: Wed, 29 Oct 2025 17:33:30 +0100
-Subject: [PATCH 163/369] UPSTREAM: syscore: Pass context data to callbacks
+Subject: [PATCH 163/408] UPSTREAM: syscore: Pass context data to callbacks
 
 Several drivers can benefit from registering per-instance data along
 with the syscore operations. To achieve this, move the modifiable fields
@@ -126,7 +126,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  109 files changed, 898 insertions(+), 470 deletions(-)
 
 diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-index fd0dbeb93357..cb7d8a7b14e0 100644
+index fd0dbeb93357d..cb7d8a7b14e0d 100644
 --- a/arch/arm/mach-exynos/mcpm-exynos.c
 +++ b/arch/arm/mach-exynos/mcpm-exynos.c
 @@ -215,7 +215,7 @@ static const struct of_device_id exynos_dt_mcpm_match[] = {
@@ -167,7 +167,7 @@ index fd0dbeb93357..cb7d8a7b14e0 100644
  	return ret;
  }
 diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
-index 150a1e56dcae..22d723553f62 100644
+index 150a1e56dcae9..22d723553f627 100644
 --- a/arch/arm/mach-exynos/suspend.c
 +++ b/arch/arm/mach-exynos/suspend.c
 @@ -53,9 +53,9 @@ struct exynos_pm_data {
@@ -311,7 +311,7 @@ index 150a1e56dcae..22d723553f62 100644
  
  	/*
 diff --git a/arch/arm/mach-pxa/generic.h b/arch/arm/mach-pxa/generic.h
-index c9c2c46ecead..caad4fca8de3 100644
+index c9c2c46ecead0..caad4fca8de3e 100644
 --- a/arch/arm/mach-pxa/generic.h
 +++ b/arch/arm/mach-pxa/generic.h
 @@ -34,9 +34,9 @@ extern void __init pxa27x_map_io(void);
@@ -328,7 +328,7 @@ index c9c2c46ecead..caad4fca8de3 100644
  void __init pxa_set_ffuart_info(void *info);
  void __init pxa_set_btuart_info(void *info);
 diff --git a/arch/arm/mach-pxa/irq.c b/arch/arm/mach-pxa/irq.c
-index 5bfce8aa4102..99acebbbf065 100644
+index 5bfce8aa4102d..99acebbbf0653 100644
 --- a/arch/arm/mach-pxa/irq.c
 +++ b/arch/arm/mach-pxa/irq.c
 @@ -178,7 +178,7 @@ void __init pxa_init_irq(int irq_nr, int (*fn)(struct irq_data *, unsigned int))
@@ -367,7 +367,7 @@ index 5bfce8aa4102..99acebbbf065 100644
  static const struct of_device_id intc_ids[] __initconst = {
  	{ .compatible = "marvell,pxa-intc", },
 diff --git a/arch/arm/mach-pxa/mfp-pxa2xx.c b/arch/arm/mach-pxa/mfp-pxa2xx.c
-index f5a3d890f682..d1347055fbe4 100644
+index f5a3d890f682e..d1347055fbe4f 100644
 --- a/arch/arm/mach-pxa/mfp-pxa2xx.c
 +++ b/arch/arm/mach-pxa/mfp-pxa2xx.c
 @@ -346,7 +346,7 @@ static unsigned long saved_gpdr[4];
@@ -406,7 +406,7 @@ index f5a3d890f682..d1347055fbe4 100644
  {
  	int i;
 diff --git a/arch/arm/mach-pxa/mfp-pxa3xx.c b/arch/arm/mach-pxa/mfp-pxa3xx.c
-index d16ab7451efe..fe7498fbb62b 100644
+index d16ab7451efef..fe7498fbb62b3 100644
 --- a/arch/arm/mach-pxa/mfp-pxa3xx.c
 +++ b/arch/arm/mach-pxa/mfp-pxa3xx.c
 @@ -27,13 +27,13 @@
@@ -439,7 +439,7 @@ index d16ab7451efe..fe7498fbb62b 100644
 +	.ops = &pxa3xx_mfp_syscore_ops,
 +};
 diff --git a/arch/arm/mach-pxa/pxa25x.c b/arch/arm/mach-pxa/pxa25x.c
-index 03e34841fc00..70509a599814 100644
+index 03e34841fc004..70509a5998142 100644
 --- a/arch/arm/mach-pxa/pxa25x.c
 +++ b/arch/arm/mach-pxa/pxa25x.c
 @@ -235,8 +235,8 @@ static int __init pxa25x_init(void)
@@ -454,7 +454,7 @@ index 03e34841fc00..70509a599814 100644
  		if (!of_have_populated_dt()) {
  			software_node_register(&pxa2xx_gpiochip_node);
 diff --git a/arch/arm/mach-pxa/pxa27x.c b/arch/arm/mach-pxa/pxa27x.c
-index f8382477d629..ff6361979038 100644
+index f8382477d629e..ff63619790383 100644
 --- a/arch/arm/mach-pxa/pxa27x.c
 +++ b/arch/arm/mach-pxa/pxa27x.c
 @@ -337,8 +337,8 @@ static int __init pxa27x_init(void)
@@ -469,7 +469,7 @@ index f8382477d629..ff6361979038 100644
  		if (!of_have_populated_dt()) {
  			software_node_register(&pxa2xx_gpiochip_node);
 diff --git a/arch/arm/mach-pxa/pxa3xx.c b/arch/arm/mach-pxa/pxa3xx.c
-index 1d1e5713464d..06c578ea658e 100644
+index 1d1e5713464dc..06c578ea658e3 100644
 --- a/arch/arm/mach-pxa/pxa3xx.c
 +++ b/arch/arm/mach-pxa/pxa3xx.c
 @@ -424,8 +424,8 @@ static int __init pxa3xx_init(void)
@@ -484,7 +484,7 @@ index 1d1e5713464d..06c578ea658e 100644
  
  	return ret;
 diff --git a/arch/arm/mach-pxa/smemc.c b/arch/arm/mach-pxa/smemc.c
-index 2d2a321d82f8..fb93a8f28356 100644
+index 2d2a321d82f81..fb93a8f28356e 100644
 --- a/arch/arm/mach-pxa/smemc.c
 +++ b/arch/arm/mach-pxa/smemc.c
 @@ -18,7 +18,7 @@ static unsigned long msc[2];
@@ -532,7 +532,7 @@ index 2d2a321d82f8..fb93a8f28356 100644
  
  	return 0;
 diff --git a/arch/arm/mach-s3c/irq-pm-s3c64xx.c b/arch/arm/mach-s3c/irq-pm-s3c64xx.c
-index 4a1e935bada1..ab726c595001 100644
+index 4a1e935bada19..ab726c595001d 100644
 --- a/arch/arm/mach-s3c/irq-pm-s3c64xx.c
 +++ b/arch/arm/mach-s3c/irq-pm-s3c64xx.c
 @@ -58,7 +58,7 @@ static struct irq_grp_save {
@@ -579,7 +579,7 @@ index 4a1e935bada1..ab726c595001 100644
  	return 0;
  }
 diff --git a/arch/arm/mach-s5pv210/pm.c b/arch/arm/mach-s5pv210/pm.c
-index 6fa70f787df4..fa270750364c 100644
+index 6fa70f787df4e..fa270750364cf 100644
 --- a/arch/arm/mach-s5pv210/pm.c
 +++ b/arch/arm/mach-s5pv210/pm.c
 @@ -195,20 +195,24 @@ static const struct platform_suspend_ops s5pv210_suspend_ops = {
@@ -611,7 +611,7 @@ index 6fa70f787df4..fa270750364c 100644
  	suspend_set_ops(&s5pv210_suspend_ops);
  }
 diff --git a/arch/arm/mach-versatile/integrator_ap.c b/arch/arm/mach-versatile/integrator_ap.c
-index 4bd6712e9f52..ee90d6619d0d 100644
+index 4bd6712e9f525..ee90d6619d0db 100644
 --- a/arch/arm/mach-versatile/integrator_ap.c
 +++ b/arch/arm/mach-versatile/integrator_ap.c
 @@ -63,13 +63,13 @@ static void __init ap_map_io(void)
@@ -652,7 +652,7 @@ index 4bd6712e9f52..ee90d6619d0d 100644
  	return 0;
  }
 diff --git a/arch/arm/mm/cache-b15-rac.c b/arch/arm/mm/cache-b15-rac.c
-index 6f63b90f9e1a..e7807356dfab 100644
+index 6f63b90f9e1ac..e7807356dfab0 100644
 --- a/arch/arm/mm/cache-b15-rac.c
 +++ b/arch/arm/mm/cache-b15-rac.c
 @@ -256,7 +256,7 @@ static int b15_rac_dead_cpu(unsigned int cpu)
@@ -700,7 +700,7 @@ index 6f63b90f9e1a..e7807356dfab 100644
  	spin_lock(&rac_lock);
  	reg = __raw_readl(b15_rac_base + RAC_CONFIG0_REG);
 diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 46036d98da75..8b2fcb3fb874 100644
+index 46036d98da75b..8b2fcb3fb874c 100644
 --- a/arch/loongarch/kernel/smp.c
 +++ b/arch/loongarch/kernel/smp.c
 @@ -535,28 +535,32 @@ int hibernate_resume_nonboot_cpu_disable(void)
@@ -741,7 +741,7 @@ index 46036d98da75..8b2fcb3fb874 100644
  }
  
 diff --git a/arch/mips/alchemy/common/dbdma.c b/arch/mips/alchemy/common/dbdma.c
-index 6a3c890f7bbf..6c2c2010bbae 100644
+index 6a3c890f7bbfe..6c2c2010bbaee 100644
 --- a/arch/mips/alchemy/common/dbdma.c
 +++ b/arch/mips/alchemy/common/dbdma.c
 @@ -982,7 +982,7 @@ u32 au1xxx_dbdma_put_dscr(u32 chanid, au1x_ddma_desc_t *dscr)
@@ -789,7 +789,7 @@ index 6a3c890f7bbf..6c2c2010bbae 100644
  
  	return ret;
 diff --git a/arch/mips/alchemy/common/irq.c b/arch/mips/alchemy/common/irq.c
-index da9f9220048f..2403afcd2fb9 100644
+index da9f9220048fc..2403afcd2fb95 100644
 --- a/arch/mips/alchemy/common/irq.c
 +++ b/arch/mips/alchemy/common/irq.c
 @@ -758,7 +758,7 @@ static inline void alchemy_ic_resume_one(void __iomem *base, unsigned long *d)
@@ -874,7 +874,7 @@ index da9f9220048f..2403afcd2fb9 100644
  
  	/* disable & ack all possible interrupt sources */
 diff --git a/arch/mips/alchemy/common/usb.c b/arch/mips/alchemy/common/usb.c
-index 5d618547ebf0..a55f32bf517c 100644
+index 5d618547ebf01..a55f32bf517cd 100644
 --- a/arch/mips/alchemy/common/usb.c
 +++ b/arch/mips/alchemy/common/usb.c
 @@ -580,22 +580,26 @@ static void alchemy_usb_pm(int susp)
@@ -917,7 +917,7 @@ index 5d618547ebf0..a55f32bf517c 100644
  	return ret;
  }
 diff --git a/arch/mips/pci/pci-alchemy.c b/arch/mips/pci/pci-alchemy.c
-index 58625d1b6465..6bfee0f71803 100644
+index 58625d1b64658..6bfee0f71803e 100644
 --- a/arch/mips/pci/pci-alchemy.c
 +++ b/arch/mips/pci/pci-alchemy.c
 @@ -304,7 +304,7 @@ static int alchemy_pci_def_idsel(unsigned int devsel, int assert)
@@ -965,7 +965,7 @@ index 58625d1b6465..6bfee0f71803 100644
  
  	dev_info(&pdev->dev, "PCI controller at %ld MHz\n",
 diff --git a/arch/powerpc/platforms/cell/spu_base.c b/arch/powerpc/platforms/cell/spu_base.c
-index 2c07387201d0..2ddb93df4817 100644
+index 2c07387201d0d..2ddb93df4817f 100644
 --- a/arch/powerpc/platforms/cell/spu_base.c
 +++ b/arch/powerpc/platforms/cell/spu_base.c
 @@ -726,7 +726,7 @@ static inline void crash_register_spus(struct list_head *list)
@@ -1003,7 +1003,7 @@ index 2c07387201d0..2ddb93df4817 100644
  	spu_init_affinity();
  
 diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index c37783a03d25..1959cc13438f 100644
+index c37783a03d254..1959cc13438f5 100644
 --- a/arch/powerpc/platforms/powermac/pic.c
 +++ b/arch/powerpc/platforms/powermac/pic.c
 @@ -600,7 +600,7 @@ static int pmacpic_find_viaint(void)
@@ -1047,7 +1047,7 @@ index c37783a03d25..1959cc13438f 100644
  }
  
 diff --git a/arch/powerpc/sysdev/fsl_lbc.c b/arch/powerpc/sysdev/fsl_lbc.c
-index 217cea150987..7ed07232a69a 100644
+index 217cea150987d..7ed07232a69a4 100644
 --- a/arch/powerpc/sysdev/fsl_lbc.c
 +++ b/arch/powerpc/sysdev/fsl_lbc.c
 @@ -350,7 +350,7 @@ static int fsl_lbc_ctrl_probe(struct platform_device *dev)
@@ -1094,7 +1094,7 @@ index 217cea150987..7ed07232a69a 100644
  	return platform_driver_register(&fsl_lbc_ctrl_driver);
  }
 diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-index ef7707ea0db7..4e501654cb41 100644
+index ef7707ea0db7b..4e501654cb41b 100644
 --- a/arch/powerpc/sysdev/fsl_pci.c
 +++ b/arch/powerpc/sysdev/fsl_pci.c
 @@ -1258,7 +1258,7 @@ static void fsl_pci_syscore_do_suspend(struct pci_controller *hose)
@@ -1141,7 +1141,7 @@ index ef7707ea0db7..4e501654cb41 100644
  	return platform_driver_register(&fsl_pci_driver);
  }
 diff --git a/arch/powerpc/sysdev/ipic.c b/arch/powerpc/sysdev/ipic.c
-index 70be2105865d..290ba8427239 100644
+index 70be2105865db..290ba8427239f 100644
 --- a/arch/powerpc/sysdev/ipic.c
 +++ b/arch/powerpc/sysdev/ipic.c
 @@ -817,7 +817,7 @@ static struct {
@@ -1188,7 +1188,7 @@ index 70be2105865d..290ba8427239 100644
  	return 0;
  }
 diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-index ad7310bba00b..67e51998d1ae 100644
+index ad7310bba00bc..67e51998d1aea 100644
 --- a/arch/powerpc/sysdev/mpic.c
 +++ b/arch/powerpc/sysdev/mpic.c
 @@ -1944,7 +1944,7 @@ static void mpic_suspend_one(struct mpic *mpic)
@@ -1237,7 +1237,7 @@ index ad7310bba00b..67e51998d1ae 100644
  		return rc;
  	}
 diff --git a/arch/powerpc/sysdev/mpic_timer.c b/arch/powerpc/sysdev/mpic_timer.c
-index 7166e2e0baaf..60f5b3934b51 100644
+index 7166e2e0baaf6..60f5b3934b511 100644
 --- a/arch/powerpc/sysdev/mpic_timer.c
 +++ b/arch/powerpc/sysdev/mpic_timer.c
 @@ -519,7 +519,7 @@ static void __init timer_group_init(struct device_node *np)
@@ -1275,7 +1275,7 @@ index 7166e2e0baaf..60f5b3934b51 100644
  	if (list_empty(&timer_group_list))
  		return -ENODEV;
 diff --git a/arch/sh/mm/pmb.c b/arch/sh/mm/pmb.c
-index 68eb7cc6e564..482eec50f404 100644
+index 68eb7cc6e5643..482eec50f404e 100644
 --- a/arch/sh/mm/pmb.c
 +++ b/arch/sh/mm/pmb.c
 @@ -857,7 +857,7 @@ static int __init pmb_debugfs_init(void)
@@ -1308,7 +1308,7 @@ index 68eb7cc6e564..482eec50f404 100644
  }
  subsys_initcall(pmb_sysdev_init);
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 112f43b23ebf..aca89f23d2e0 100644
+index 112f43b23ebf8..aca89f23d2e00 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
 @@ -1718,26 +1718,30 @@ static int x86_pmu_amd_ibs_starting_cpu(unsigned int cpu)
@@ -1347,7 +1347,7 @@ index 112f43b23ebf..aca89f23d2e0 100644
  
  #else
 diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index e890fd37e9c2..085ef4f2e73a 100644
+index e890fd37e9c2d..085ef4f2e73a9 100644
 --- a/arch/x86/hyperv/hv_init.c
 +++ b/arch/x86/hyperv/hv_init.c
 @@ -351,7 +351,7 @@ static int __init hv_pci_init(void)
@@ -1395,7 +1395,7 @@ index e890fd37e9c2..085ef4f2e73a 100644
  	if (ms_hyperv.priv_high & HV_ACCESS_PARTITION_ID)
  		hv_get_partition_id();
 diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index 3485d419c2f5..e6e68a31634c 100644
+index 3485d419c2f5e..e6e68a31634cb 100644
 --- a/arch/x86/kernel/amd_gart_64.c
 +++ b/arch/x86/kernel/amd_gart_64.c
 @@ -591,7 +591,7 @@ static void gart_fixup_northbridges(void)
@@ -1434,7 +1434,7 @@ index 3485d419c2f5..e6e68a31634c 100644
  	flush_gart();
  
 diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index aa1b0ef5e931..a4431f0d2580 100644
+index aa1b0ef5e9314..a4431f0d25805 100644
 --- a/arch/x86/kernel/apic/apic.c
 +++ b/arch/x86/kernel/apic/apic.c
 @@ -2382,7 +2382,7 @@ static struct {
@@ -1482,7 +1482,7 @@ index aa1b0ef5e931..a4431f0d2580 100644
  	return 0;
  }
 diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 5ba2feb2c04c..84e200662ce6 100644
+index 5ba2feb2c04c6..84e200662ce6a 100644
 --- a/arch/x86/kernel/apic/io_apic.c
 +++ b/arch/x86/kernel/apic/io_apic.c
 @@ -2308,7 +2308,12 @@ static void resume_ioapic_id(int ioapic_idx)
@@ -1522,7 +1522,7 @@ index 5ba2feb2c04c..84e200662ce6 100644
  	return 0;
  }
 diff --git a/arch/x86/kernel/cpu/aperfmperf.c b/arch/x86/kernel/cpu/aperfmperf.c
-index a315b0627dfb..7ffc78d5ebf2 100644
+index a315b0627dfb1..7ffc78d5ebf21 100644
 --- a/arch/x86/kernel/cpu/aperfmperf.c
 +++ b/arch/x86/kernel/cpu/aperfmperf.c
 @@ -37,7 +37,7 @@ static DEFINE_PER_CPU_SHARED_ALIGNED(struct aperfmperf, cpu_samples) = {
@@ -1585,7 +1585,7 @@ index a315b0627dfb..7ffc78d5ebf2 100644
 +		init_counter_refs(NULL);
  }
 diff --git a/arch/x86/kernel/cpu/intel_epb.c b/arch/x86/kernel/cpu/intel_epb.c
-index bc7671f920a7..2c56f8730f59 100644
+index bc7671f920a7e..2c56f8730f596 100644
 --- a/arch/x86/kernel/cpu/intel_epb.c
 +++ b/arch/x86/kernel/cpu/intel_epb.c
 @@ -75,7 +75,7 @@ static u8 energ_perf_values[] = {
@@ -1651,7 +1651,7 @@ index bc7671f920a7..2c56f8730f59 100644
  
  err_out_online:
 diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 460e90a1a0b1..23bfbc7dfb8e 100644
+index 460e90a1a0b17..23bfbc7dfb8e4 100644
 --- a/arch/x86/kernel/cpu/mce/core.c
 +++ b/arch/x86/kernel/cpu/mce/core.c
 @@ -2410,13 +2410,13 @@ static void vendor_disable_error_reporting(void)
@@ -1707,7 +1707,7 @@ index 460e90a1a0b1..23bfbc7dfb8e 100644
  	return 0;
  
 diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 539edd6d6dc8..81aa079fad26 100644
+index 539edd6d6dc8c..81aa079fad269 100644
 --- a/arch/x86/kernel/cpu/microcode/core.c
 +++ b/arch/x86/kernel/cpu/microcode/core.c
 @@ -812,8 +812,17 @@ void microcode_bsp_resume(void)
@@ -1740,7 +1740,7 @@ index 539edd6d6dc8..81aa079fad26 100644
  			  mc_cpu_online, mc_cpu_down_prep);
  
 diff --git a/arch/x86/kernel/cpu/mtrr/legacy.c b/arch/x86/kernel/cpu/mtrr/legacy.c
-index d25882fcf181..2415ffaaf02c 100644
+index d25882fcf181d..2415ffaaf02c0 100644
 --- a/arch/x86/kernel/cpu/mtrr/legacy.c
 +++ b/arch/x86/kernel/cpu/mtrr/legacy.c
 @@ -41,7 +41,7 @@ struct mtrr_value {
@@ -1786,7 +1786,7 @@ index d25882fcf181..2415ffaaf02c 100644
 +	register_syscore(&mtrr_syscore);
  }
 diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 933fcd7ff250..e4a31c536642 100644
+index 933fcd7ff2502..e4a31c5366427 100644
 --- a/arch/x86/kernel/cpu/umwait.c
 +++ b/arch/x86/kernel/cpu/umwait.c
 @@ -86,15 +86,19 @@ static int umwait_cpu_offline(unsigned int cpu)
@@ -1821,7 +1821,7 @@ index 933fcd7ff250..e4a31c536642 100644
  	/*
  	 * Add umwait control interface. Ignore failure, so at least the
 diff --git a/arch/x86/kernel/i8237.c b/arch/x86/kernel/i8237.c
-index 2cd124ad9380..896d46b44284 100644
+index 2cd124ad9380c..896d46b442848 100644
 --- a/arch/x86/kernel/i8237.c
 +++ b/arch/x86/kernel/i8237.c
 @@ -19,7 +19,7 @@
@@ -1859,7 +1859,7 @@ index 2cd124ad9380..896d46b44284 100644
  }
  device_initcall(i8237A_init_ops);
 diff --git a/arch/x86/kernel/i8259.c b/arch/x86/kernel/i8259.c
-index 2bade73f49e3..f67063df6723 100644
+index 2bade73f49e33..f67063df67235 100644
 --- a/arch/x86/kernel/i8259.c
 +++ b/arch/x86/kernel/i8259.c
 @@ -247,19 +247,19 @@ static void save_ELCR(char *trigger)
@@ -1913,7 +1913,7 @@ index 2bade73f49e3..f67063df6723 100644
  	return 0;
  }
 diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index b67d7c59dca0..1500852ba03c 100644
+index b67d7c59dca0b..1500852ba03ca 100644
 --- a/arch/x86/kernel/kvm.c
 +++ b/arch/x86/kernel/kvm.c
 @@ -720,7 +720,7 @@ static int kvm_cpu_down_prepare(unsigned int cpu)
@@ -1961,7 +1961,7 @@ index b67d7c59dca0..1500852ba03c 100644
  	/*
  	 * Hard lockup detection is enabled by default. Disable it, as guests
 diff --git a/drivers/acpi/pci_link.c b/drivers/acpi/pci_link.c
-index e4560b33b8ad..bed7dc85612e 100644
+index e4560b33b8ad1..bed7dc85612e3 100644
 --- a/drivers/acpi/pci_link.c
 +++ b/drivers/acpi/pci_link.c
 @@ -761,7 +761,7 @@ static int acpi_pci_link_resume(struct acpi_pci_link *link)
@@ -1998,7 +1998,7 @@ index e4560b33b8ad..bed7dc85612e 100644
  	acpi_scan_add_handler(&pci_link_handler);
  }
 diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-index 0b7fa4a8c379..1b9579bb97c2 100644
+index 0b7fa4a8c379c..1b9579bb97c27 100644
 --- a/drivers/acpi/sleep.c
 +++ b/drivers/acpi/sleep.c
 @@ -892,13 +892,13 @@ bool acpi_s2idle_wakeup(void)
@@ -2039,7 +2039,7 @@ index 0b7fa4a8c379..1b9579bb97c2 100644
  #else
  static inline void acpi_sleep_syscore_init(void) {}
 diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 6942c62fa59d..8191dbab92c4 100644
+index 6942c62fa59d1..8191dbab92c49 100644
 --- a/drivers/base/firmware_loader/main.c
 +++ b/drivers/base/firmware_loader/main.c
 @@ -1585,16 +1585,20 @@ static int fw_pm_notify(struct notifier_block *notify_block,
@@ -2083,7 +2083,7 @@ index 6942c62fa59d..8191dbab92c4 100644
  }
  #else
 diff --git a/drivers/base/syscore.c b/drivers/base/syscore.c
-index 13db1f78d2ce..483adb796654 100644
+index 13db1f78d2ce9..483adb796654f 100644
 --- a/drivers/base/syscore.c
 +++ b/drivers/base/syscore.c
 @@ -11,32 +11,32 @@
@@ -2233,7 +2233,7 @@ index 13db1f78d2ce..483adb796654 100644
 +	mutex_unlock(&syscore_lock);
  }
 diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 00cb792bda18..dd94145c9b22 100644
+index 00cb792bda18b..dd94145c9b222 100644
 --- a/drivers/bus/mvebu-mbus.c
 +++ b/drivers/bus/mvebu-mbus.c
 @@ -1006,7 +1006,7 @@ static __init int mvebu_mbus_debugfs_init(void)
@@ -2281,7 +2281,7 @@ index 00cb792bda18..dd94145c9b22 100644
  	return 0;
  }
 diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-index acf780a81589..2310f6f73162 100644
+index acf780a815890..2310f6f731627 100644
 --- a/drivers/clk/at91/pmc.c
 +++ b/drivers/clk/at91/pmc.c
 @@ -115,7 +115,7 @@ struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
@@ -2329,7 +2329,7 @@ index acf780a81589..2310f6f73162 100644
  	return 0;
  }
 diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 9e11f1c7c397..41eb38552a9c 100644
+index 9e11f1c7c397e..41eb38552a9c7 100644
 --- a/drivers/clk/imx/clk-vf610.c
 +++ b/drivers/clk/imx/clk-vf610.c
 @@ -139,7 +139,7 @@ static struct clk * __init vf610_get_fixed_clock(
@@ -2377,7 +2377,7 @@ index 9e11f1c7c397..41eb38552a9c 100644
  	/* Add the clocks to provider list */
  	clk_data.clks = clk;
 diff --git a/drivers/clk/ingenic/jz4725b-cgu.c b/drivers/clk/ingenic/jz4725b-cgu.c
-index 590e9c85cb25..94cee44c854f 100644
+index 590e9c85cb25b..94cee44c854f9 100644
 --- a/drivers/clk/ingenic/jz4725b-cgu.c
 +++ b/drivers/clk/ingenic/jz4725b-cgu.c
 @@ -268,6 +268,6 @@ static void __init jz4725b_cgu_init(struct device_node *np)
@@ -2389,7 +2389,7 @@ index 590e9c85cb25..94cee44c854f 100644
  }
  CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-cgu", jz4725b_cgu_init);
 diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 3e0a30574ebb..2def3aedc8dd 100644
+index 3e0a30574ebb3..2def3aedc8dd2 100644
 --- a/drivers/clk/ingenic/jz4740-cgu.c
 +++ b/drivers/clk/ingenic/jz4740-cgu.c
 @@ -266,6 +266,6 @@ static void __init jz4740_cgu_init(struct device_node *np)
@@ -2401,7 +2401,7 @@ index 3e0a30574ebb..2def3aedc8dd 100644
  }
  CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-cgu", jz4740_cgu_init);
 diff --git a/drivers/clk/ingenic/jz4755-cgu.c b/drivers/clk/ingenic/jz4755-cgu.c
-index f2c2d848dab7..17cf5dcaece9 100644
+index f2c2d848dab7a..17cf5dcaece99 100644
 --- a/drivers/clk/ingenic/jz4755-cgu.c
 +++ b/drivers/clk/ingenic/jz4755-cgu.c
 @@ -337,7 +337,7 @@ static void __init jz4755_cgu_init(struct device_node *np)
@@ -2414,7 +2414,7 @@ index f2c2d848dab7..17cf5dcaece9 100644
  /*
   * CGU has some children devices, this is useful for probing children devices
 diff --git a/drivers/clk/ingenic/jz4760-cgu.c b/drivers/clk/ingenic/jz4760-cgu.c
-index e407f00bd594..372fe4b07992 100644
+index e407f00bd5942..372fe4b079927 100644
 --- a/drivers/clk/ingenic/jz4760-cgu.c
 +++ b/drivers/clk/ingenic/jz4760-cgu.c
 @@ -436,7 +436,7 @@ static void __init jz4760_cgu_init(struct device_node *np)
@@ -2427,7 +2427,7 @@ index e407f00bd594..372fe4b07992 100644
  
  /* We only probe via devicetree, no need for a platform driver */
 diff --git a/drivers/clk/ingenic/jz4770-cgu.c b/drivers/clk/ingenic/jz4770-cgu.c
-index 6ae1740367f9..58f1d3bad677 100644
+index 6ae1740367f9e..58f1d3bad6774 100644
 --- a/drivers/clk/ingenic/jz4770-cgu.c
 +++ b/drivers/clk/ingenic/jz4770-cgu.c
 @@ -456,7 +456,7 @@ static void __init jz4770_cgu_init(struct device_node *np)
@@ -2440,7 +2440,7 @@ index 6ae1740367f9..58f1d3bad677 100644
  
  /* We only probe via devicetree, no need for a platform driver */
 diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index 07e2f3c5c454..1e88aef7ac0f 100644
+index 07e2f3c5c4549..1e88aef7ac0f3 100644
 --- a/drivers/clk/ingenic/jz4780-cgu.c
 +++ b/drivers/clk/ingenic/jz4780-cgu.c
 @@ -803,6 +803,6 @@ static void __init jz4780_cgu_init(struct device_node *np)
@@ -2452,7 +2452,7 @@ index 07e2f3c5c454..1e88aef7ac0f 100644
  }
  CLK_OF_DECLARE_DRIVER(jz4780_cgu, "ingenic,jz4780-cgu", jz4780_cgu_init);
 diff --git a/drivers/clk/ingenic/pm.c b/drivers/clk/ingenic/pm.c
-index 341752b640d2..206d5cf2872f 100644
+index 341752b640d2b..206d5cf2872f6 100644
 --- a/drivers/clk/ingenic/pm.c
 +++ b/drivers/clk/ingenic/pm.c
 @@ -15,7 +15,7 @@
@@ -2496,7 +2496,7 @@ index 341752b640d2..206d5cf2872f 100644
  	}
  }
 diff --git a/drivers/clk/ingenic/pm.h b/drivers/clk/ingenic/pm.h
-index fa7540407b6b..0dcb57dc64cb 100644
+index fa7540407b6b7..0dcb57dc64cb4 100644
 --- a/drivers/clk/ingenic/pm.h
 +++ b/drivers/clk/ingenic/pm.h
 @@ -7,6 +7,6 @@
@@ -2508,7 +2508,7 @@ index fa7540407b6b..0dcb57dc64cb 100644
  
  #endif /* DRIVERS_CLK_INGENIC_PM_H */
 diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-index 7d04ef40b7cf..bc6a51da2072 100644
+index 7d04ef40b7cf9..bc6a51da20725 100644
 --- a/drivers/clk/ingenic/tcu.c
 +++ b/drivers/clk/ingenic/tcu.c
 @@ -455,7 +455,7 @@ static int __init ingenic_tcu_probe(struct device_node *np)
@@ -2556,7 +2556,7 @@ index 7d04ef40b7cf..bc6a51da2072 100644
  
  CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
 diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
-index d80886caf393..d89bdfb7c219 100644
+index d80886caf3933..d89bdfb7c219a 100644
 --- a/drivers/clk/ingenic/x1000-cgu.c
 +++ b/drivers/clk/ingenic/x1000-cgu.c
 @@ -556,7 +556,7 @@ static void __init x1000_cgu_init(struct device_node *np)
@@ -2569,7 +2569,7 @@ index d80886caf393..d89bdfb7c219 100644
  /*
   * CGU has some children devices, this is useful for probing children devices
 diff --git a/drivers/clk/ingenic/x1830-cgu.c b/drivers/clk/ingenic/x1830-cgu.c
-index 0fd46e50a513..acf856e5009e 100644
+index 0fd46e50a513f..acf856e5009e0 100644
 --- a/drivers/clk/ingenic/x1830-cgu.c
 +++ b/drivers/clk/ingenic/x1830-cgu.c
 @@ -463,7 +463,7 @@ static void __init x1830_cgu_init(struct device_node *np)
@@ -2582,7 +2582,7 @@ index 0fd46e50a513..acf856e5009e 100644
  /*
   * CGU has some children devices, this is useful for probing children devices
 diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-index 785dbede4835..5adbbd91a6db 100644
+index 785dbede48354..5adbbd91a6db3 100644
 --- a/drivers/clk/mvebu/common.c
 +++ b/drivers/clk/mvebu/common.c
 @@ -215,22 +215,26 @@ static struct clk *clk_gating_get_src(
@@ -2625,7 +2625,7 @@ index 785dbede4835..5adbbd91a6db 100644
  	return;
  gates_out:
 diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 0a1e017df7c6..9cf3e1e43b78 100644
+index 0a1e017df7c66..9cf3e1e43b781 100644
 --- a/drivers/clk/rockchip/clk-rk3288.c
 +++ b/drivers/clk/rockchip/clk-rk3288.c
 @@ -871,7 +871,7 @@ static const int rk3288_saved_cru_reg_ids[] = {
@@ -2673,7 +2673,7 @@ index 0a1e017df7c6..9cf3e1e43b78 100644
  	rockchip_clk_of_add_provider(np, ctx);
  }
 diff --git a/drivers/clk/samsung/clk-s5pv210-audss.c b/drivers/clk/samsung/clk-s5pv210-audss.c
-index b1fd8fac3a4c..c9fcb23de183 100644
+index b1fd8fac3a4c0..c9fcb23de183e 100644
 --- a/drivers/clk/samsung/clk-s5pv210-audss.c
 +++ b/drivers/clk/samsung/clk-s5pv210-audss.c
 @@ -36,7 +36,7 @@ static unsigned long reg_save[][2] = {
@@ -2720,7 +2720,7 @@ index b1fd8fac3a4c..c9fcb23de183 100644
  
  	return 0;
 diff --git a/drivers/clk/samsung/clk.c b/drivers/clk/samsung/clk.c
-index dbc9925ca8f4..c149ca6c2217 100644
+index dbc9925ca8f46..c149ca6c22172 100644
 --- a/drivers/clk/samsung/clk.c
 +++ b/drivers/clk/samsung/clk.c
 @@ -271,7 +271,7 @@ void __init samsung_clk_of_register_fixed_ext(struct samsung_clk_provider *ctx,
@@ -2768,7 +2768,7 @@ index dbc9925ca8f4..c149ca6c2217 100644
  	reg_cache->reg_base = reg_base;
  	reg_cache->rd_num = nr_rdump;
 diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index 412902f573b5..504d0ea997a5 100644
+index 412902f573b54..504d0ea997a51 100644
 --- a/drivers/clk/tegra/clk-tegra210.c
 +++ b/drivers/clk/tegra/clk-tegra210.c
 @@ -3444,7 +3444,7 @@ static void tegra210_disable_cpu_clock(u32 cpu)
@@ -2817,7 +2817,7 @@ index 412902f573b5..504d0ea997a5 100644
  }
  CLK_OF_DECLARE(tegra210, "nvidia,tegra210-car", tegra210_clock_init);
 diff --git a/drivers/clocksource/timer-armada-370-xp.c b/drivers/clocksource/timer-armada-370-xp.c
-index 54284c1c0651..f2b4cc40db93 100644
+index 54284c1c06514..f2b4cc40db93a 100644
 --- a/drivers/clocksource/timer-armada-370-xp.c
 +++ b/drivers/clocksource/timer-armada-370-xp.c
 @@ -207,14 +207,14 @@ static int armada_370_xp_timer_dying_cpu(unsigned int cpu)
@@ -2864,7 +2864,7 @@ index 54284c1c0651..f2b4cc40db93 100644
  	return 0;
  }
 diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index b19bc60cc627..3372e1f90561 100644
+index b19bc60cc627b..3372e1f90561a 100644
 --- a/drivers/cpuidle/cpuidle-psci.c
 +++ b/drivers/cpuidle/cpuidle-psci.c
 @@ -177,26 +177,30 @@ static void psci_idle_syscore_switch(bool suspend)
@@ -2903,7 +2903,7 @@ index b19bc60cc627..3372e1f90561 100644
  
  static void psci_idle_init_cpuhp(void)
 diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 441ba95b38cf..647b6f4861b7 100644
+index 441ba95b38cf9..647b6f4861b74 100644
 --- a/drivers/gpio/gpio-mxc.c
 +++ b/drivers/gpio/gpio-mxc.c
 @@ -675,7 +675,7 @@ static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
@@ -2951,7 +2951,7 @@ index 441ba95b38cf..647b6f4861b7 100644
  	return platform_driver_register(&mxc_gpio_driver);
  }
 diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-index fa22f3faa163..664cf1eef494 100644
+index fa22f3faa163c..664cf1eef494c 100644
 --- a/drivers/gpio/gpio-pxa.c
 +++ b/drivers/gpio/gpio-pxa.c
 @@ -747,7 +747,7 @@ static int __init pxa_gpio_dt_init(void)
@@ -2994,7 +2994,7 @@ index fa22f3faa163..664cf1eef494 100644
  }
  postcore_initcall(pxa_gpio_sysinit);
 diff --git a/drivers/gpio/gpio-sa1100.c b/drivers/gpio/gpio-sa1100.c
-index 7f6a62f5d1ee..1938ffa2f4f3 100644
+index 7f6a62f5d1eeb..1938ffa2f4f33 100644
 --- a/drivers/gpio/gpio-sa1100.c
 +++ b/drivers/gpio/gpio-sa1100.c
 @@ -256,7 +256,7 @@ static void sa1100_gpio_handler(struct irq_desc *desc)
@@ -3034,7 +3034,7 @@ index 7f6a62f5d1ee..1938ffa2f4f3 100644
  }
  
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 3ab62277b6be..7000e2a5511f 100644
+index 3ab62277b6be6..7000e2a5511fa 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
 @@ -2861,7 +2861,7 @@ static void hv_crash_handler(struct pt_regs *regs)
@@ -3091,7 +3091,7 @@ index 3ab62277b6be..7000e2a5511f 100644
  	hv_remove_kexec_handler();
  	hv_remove_crash_handler();
 diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 76efd74124b3..4aa09660804b 100644
+index 76efd74124b33..4aa09660804b9 100644
 --- a/drivers/iommu/amd/init.c
 +++ b/drivers/iommu/amd/init.c
 @@ -3050,7 +3050,7 @@ static void disable_iommus(void)
@@ -3154,7 +3154,7 @@ index 76efd74124b3..4aa09660804b 100644
  	return 0;
  }
 diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 49e83c8566a3..7510471283f1 100644
+index 49e83c8566a32..7510471283f10 100644
 --- a/drivers/iommu/intel/iommu.c
 +++ b/drivers/iommu/intel/iommu.c
 @@ -2305,7 +2305,7 @@ static void iommu_flush_all(void)
@@ -3197,7 +3197,7 @@ index 49e83c8566a3..7510471283f1 100644
  
  #else
 diff --git a/drivers/irqchip/exynos-combiner.c b/drivers/irqchip/exynos-combiner.c
-index e7dfcf0cda43..495848442b35 100644
+index e7dfcf0cda438..495848442b355 100644
 --- a/drivers/irqchip/exynos-combiner.c
 +++ b/drivers/irqchip/exynos-combiner.c
 @@ -200,12 +200,13 @@ static void __init combiner_init(void __iomem *combiner_base,
@@ -3257,7 +3257,7 @@ index e7dfcf0cda43..495848442b35 100644
  	return 0;
  }
 diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
-index a44c49e985b7..a4d03a2d1569 100644
+index a44c49e985b75..a4d03a2d15699 100644
 --- a/drivers/irqchip/irq-armada-370-xp.c
 +++ b/drivers/irqchip/irq-armada-370-xp.c
 @@ -726,7 +726,7 @@ static void __exception_irq_entry mpic_handle_irq(struct pt_regs *regs)
@@ -3305,7 +3305,7 @@ index a44c49e985b7..a4d03a2d1569 100644
  	return 0;
  }
 diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 821b288587ca..674138668f1c 100644
+index 821b288587cab..674138668f1c6 100644
 --- a/drivers/irqchip/irq-bcm7038-l1.c
 +++ b/drivers/irqchip/irq-bcm7038-l1.c
 @@ -291,7 +291,7 @@ static int bcm7038_l1_init_one(struct device_node *dn, unsigned int idx,
@@ -3353,7 +3353,7 @@ index 821b288587ca..674138668f1c 100644
  
  	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 23158fc8d392..a51e8e6a8181 100644
+index 23158fc8d3921..a51e8e6a81819 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
 @@ -4996,7 +4996,7 @@ static void its_enable_quirks(struct its_node *its)
@@ -3401,7 +3401,7 @@ index 23158fc8d392..a51e8e6a8181 100644
  	return 0;
  }
 diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-index 91b2f587119c..cca77f9948a3 100644
+index 91b2f587119ce..cca77f9948a38 100644
 --- a/drivers/irqchip/irq-i8259.c
 +++ b/drivers/irqchip/irq-i8259.c
 @@ -202,13 +202,13 @@ static void mask_and_ack_8259A(struct irq_data *d)
@@ -3447,7 +3447,7 @@ index 91b2f587119c..cca77f9948a3 100644
  }
  
 diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index b91f5c14b405..04f7ba0657be 100644
+index b91f5c14b4057..04f7ba0657be7 100644
 --- a/drivers/irqchip/irq-imx-gpcv2.c
 +++ b/drivers/irqchip/irq-imx-gpcv2.c
 @@ -33,7 +33,7 @@ static void __iomem *gpcv2_idx_to_reg(struct gpcv2_irqchip_data *cd, int i)
@@ -3495,7 +3495,7 @@ index b91f5c14b405..04f7ba0657be 100644
  	/*
  	 * Clear the OF_POPULATED flag set in of_irq_init so that
 diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 39e5a72ccd3c..ad2105685b48 100644
+index 39e5a72ccd3c8..ad2105685b48b 100644
 --- a/drivers/irqchip/irq-loongson-eiointc.c
 +++ b/drivers/irqchip/irq-loongson-eiointc.c
 @@ -407,21 +407,25 @@ static struct irq_domain *acpi_get_vec_parent(int node, struct acpi_vector_group
@@ -3537,7 +3537,7 @@ index 39e5a72ccd3c..ad2105685b48 100644
  					  "irqchip/loongarch/eiointc:starting",
  					  eiointc_router_init, NULL);
 diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
-index f4abdf156de7..1c691c4be989 100644
+index f4abdf156de71..1c691c4be9894 100644
 --- a/drivers/irqchip/irq-loongson-htpic.c
 +++ b/drivers/irqchip/irq-loongson-htpic.c
 @@ -71,15 +71,19 @@ static void htpic_reg_init(void)
@@ -3572,7 +3572,7 @@ index f4abdf156de7..1c691c4be989 100644
  	return 0;
  
 diff --git a/drivers/irqchip/irq-loongson-htvec.c b/drivers/irqchip/irq-loongson-htvec.c
-index d8558eb35044..d2be8e954e92 100644
+index d8558eb350445..d2be8e954e92f 100644
 --- a/drivers/irqchip/irq-loongson-htvec.c
 +++ b/drivers/irqchip/irq-loongson-htvec.c
 @@ -159,7 +159,7 @@ static void htvec_reset(struct htvec *priv)
@@ -3620,7 +3620,7 @@ index d8558eb35044..d2be8e954e92 100644
  	return 0;
  
 diff --git a/drivers/irqchip/irq-loongson-pch-lpc.c b/drivers/irqchip/irq-loongson-pch-lpc.c
-index 912bf50a5c7c..3a125f3e4287 100644
+index 912bf50a5c7ca..3a125f3e42873 100644
 --- a/drivers/irqchip/irq-loongson-pch-lpc.c
 +++ b/drivers/irqchip/irq-loongson-pch-lpc.c
 @@ -151,7 +151,7 @@ static int pch_lpc_disabled(struct pch_lpc *priv)
@@ -3667,7 +3667,7 @@ index 912bf50a5c7c..3a125f3e4287 100644
  	return 0;
  
 diff --git a/drivers/irqchip/irq-loongson-pch-pic.c b/drivers/irqchip/irq-loongson-pch-pic.c
-index 62e6bf3a0611..c6b369a974a7 100644
+index 62e6bf3a0611a..c6b369a974a7d 100644
 --- a/drivers/irqchip/irq-loongson-pch-pic.c
 +++ b/drivers/irqchip/irq-loongson-pch-pic.c
 @@ -278,7 +278,7 @@ static void pch_pic_reset(struct pch_pic *priv)
@@ -3715,7 +3715,7 @@ index 62e6bf3a0611..c6b369a974a7 100644
  	return 0;
  
 diff --git a/drivers/irqchip/irq-mchp-eic.c b/drivers/irqchip/irq-mchp-eic.c
-index 979bb86929f8..31093a8ab67c 100644
+index 979bb86929f8e..31093a8ab67c3 100644
 --- a/drivers/irqchip/irq-mchp-eic.c
 +++ b/drivers/irqchip/irq-mchp-eic.c
 @@ -109,7 +109,7 @@ static int mchp_eic_irq_set_wake(struct irq_data *d, unsigned int on)
@@ -3763,7 +3763,7 @@ index 979bb86929f8..31093a8ab67c 100644
  	pr_info("%pOF: EIC registered, nr_irqs %u\n", node, MCHP_EIC_NIRQ);
  
 diff --git a/drivers/irqchip/irq-mst-intc.c b/drivers/irqchip/irq-mst-intc.c
-index 9643cc3a77d7..7f760f555a76 100644
+index 9643cc3a77d77..7f760f555a76a 100644
 --- a/drivers/irqchip/irq-mst-intc.c
 +++ b/drivers/irqchip/irq-mst-intc.c
 @@ -143,7 +143,7 @@ static void mst_intc_polarity_restore(struct mst_intc_chip_data *cd)
@@ -3806,7 +3806,7 @@ index 9643cc3a77d7..7f760f555a76 100644
  }
  late_initcall(mst_irq_pm_init);
 diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-index de481ba340f8..9571f622774e 100644
+index de481ba340f83..9571f622774e3 100644
 --- a/drivers/irqchip/irq-mtk-cirq.c
 +++ b/drivers/irqchip/irq-mtk-cirq.c
 @@ -199,7 +199,7 @@ static const struct irq_domain_ops cirq_domain_ops = {
@@ -3849,7 +3849,7 @@ index de481ba340f8..9571f622774e 100644
  #else
  static inline void mtk_cirq_syscore_init(void) {}
 diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-index 1bf19deb02c4..e73d426cea6d 100644
+index 1bf19deb02c4e..e73d426cea6d3 100644
 --- a/drivers/irqchip/irq-renesas-rzg2l.c
 +++ b/drivers/irqchip/irq-renesas-rzg2l.c
 @@ -398,7 +398,7 @@ static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
@@ -3897,7 +3897,7 @@ index 1bf19deb02c4..e73d426cea6d 100644
  	return 0;
  }
 diff --git a/drivers/irqchip/irq-sa11x0.c b/drivers/irqchip/irq-sa11x0.c
-index d8d4dff16276..e5f24c5f3f41 100644
+index d8d4dff16276b..e5f24c5f3f416 100644
 --- a/drivers/irqchip/irq-sa11x0.c
 +++ b/drivers/irqchip/irq-sa11x0.c
 @@ -85,7 +85,7 @@ static struct sa1100irq_state {
@@ -3940,7 +3940,7 @@ index d8d4dff16276..e5f24c5f3f41 100644
  }
  
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index f255fa044764..70058871d2fb 100644
+index f255fa044764f..70058871d2fb6 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -268,7 +268,7 @@ static int plic_irq_set_type(struct irq_data *d, unsigned int type)
@@ -3988,7 +3988,7 @@ index f255fa044764..70058871d2fb 100644
  		}
  	}
 diff --git a/drivers/irqchip/irq-sun6i-r.c b/drivers/irqchip/irq-sun6i-r.c
-index 37d4b29763bc..23251831c06e 100644
+index 37d4b29763bc4..23251831c06e2 100644
 --- a/drivers/irqchip/irq-sun6i-r.c
 +++ b/drivers/irqchip/irq-sun6i-r.c
 @@ -268,7 +268,7 @@ static const struct irq_domain_ops sun6i_r_intc_domain_ops = {
@@ -4048,7 +4048,7 @@ index 37d4b29763bc..23251831c06e 100644
  	return 0;
  }
 diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
-index 66cbb9f77ff3..b6382cf6359a 100644
+index 66cbb9f77ff30..b6382cf6359ad 100644
 --- a/drivers/irqchip/irq-tegra.c
 +++ b/drivers/irqchip/irq-tegra.c
 @@ -132,7 +132,7 @@ static int tegra_set_wake(struct irq_data *d, unsigned int enable)
@@ -4091,7 +4091,7 @@ index 66cbb9f77ff3..b6382cf6359a 100644
  #else
  #define tegra_set_wake	NULL
 diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
-index 2bcdf216a000..e38104c5064e 100644
+index 2bcdf216a0003..e38104c5064e6 100644
 --- a/drivers/irqchip/irq-vic.c
 +++ b/drivers/irqchip/irq-vic.c
 @@ -120,7 +120,7 @@ static void resume_one_vic(struct vic_device *vic)
@@ -4139,7 +4139,7 @@ index 2bcdf216a000..e38104c5064e 100644
  	return 0;
  }
 diff --git a/drivers/leds/trigger/ledtrig-cpu.c b/drivers/leds/trigger/ledtrig-cpu.c
-index 05848a2fecff..679323c2ccda 100644
+index 05848a2fecff6..679323c2ccda0 100644
 --- a/drivers/leds/trigger/ledtrig-cpu.c
 +++ b/drivers/leds/trigger/ledtrig-cpu.c
 @@ -94,28 +94,32 @@ void ledtrig_cpu(enum cpu_led_event ledevt)
@@ -4189,7 +4189,7 @@ index 05848a2fecff..679323c2ccda 100644
  	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "leds/trigger:starting",
  				ledtrig_online_cpu, ledtrig_prepare_down_cpu);
 diff --git a/drivers/macintosh/via-pmu.c b/drivers/macintosh/via-pmu.c
-index b0f09c70f1ff..5fe47e784d43 100644
+index b0f09c70f1ff8..5fe47e784d437 100644
 --- a/drivers/macintosh/via-pmu.c
 +++ b/drivers/macintosh/via-pmu.c
 @@ -2600,7 +2600,7 @@ void pmu_blink(int n)
@@ -4232,7 +4232,7 @@ index b0f09c70f1ff..5fe47e784d43 100644
  	return 0;
  }
 diff --git a/drivers/power/reset/sc27xx-poweroff.c b/drivers/power/reset/sc27xx-poweroff.c
-index 90287c31992c..393bd1c33b73 100644
+index 90287c31992c4..393bd1c33b73b 100644
 --- a/drivers/power/reset/sc27xx-poweroff.c
 +++ b/drivers/power/reset/sc27xx-poweroff.c
 @@ -28,7 +28,7 @@ static struct regmap *regmap;
@@ -4270,7 +4270,7 @@ index 90287c31992c..393bd1c33b73 100644
  }
  
 diff --git a/drivers/sh/clk/core.c b/drivers/sh/clk/core.c
-index 7a73f5e4a1fc..f02e12dfa5f6 100644
+index 7a73f5e4a1fc7..f02e12dfa5f64 100644
 --- a/drivers/sh/clk/core.c
 +++ b/drivers/sh/clk/core.c
 @@ -569,7 +569,7 @@ long clk_round_rate(struct clk *clk, unsigned long rate)
@@ -4303,7 +4303,7 @@ index 7a73f5e4a1fc..f02e12dfa5f6 100644
  	return 0;
  }
 diff --git a/drivers/sh/intc/core.c b/drivers/sh/intc/core.c
-index ea571eeb3078..3dde703b7766 100644
+index ea571eeb30787..3dde703b77668 100644
 --- a/drivers/sh/intc/core.c
 +++ b/drivers/sh/intc/core.c
 @@ -394,7 +394,7 @@ int __init register_intc_controller(struct intc_desc *desc)
@@ -4351,7 +4351,7 @@ index ea571eeb3078..3dde703b7766 100644
  	error = subsys_system_register(&intc_subsys, NULL);
  	if (!error) {
 diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index 364ddbe365c2..bd830649b60d 100644
+index 364ddbe365c24..bd830649b60dd 100644
 --- a/drivers/soc/bcm/brcmstb/biuctrl.c
 +++ b/drivers/soc/bcm/brcmstb/biuctrl.c
 @@ -298,7 +298,7 @@ static int __init setup_hifcpubiuctrl_regs(struct device_node *np)
@@ -4398,7 +4398,7 @@ index 364ddbe365c2..bd830649b60d 100644
  	ret = 0;
  out_put:
 diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 034a2a535a1e..93bbebd68001 100644
+index 034a2a535a1e1..93bbebd680017 100644
 --- a/drivers/soc/tegra/pmc.c
 +++ b/drivers/soc/tegra/pmc.c
 @@ -466,7 +466,7 @@ struct tegra_pmc {
@@ -4454,7 +4454,7 @@ index 034a2a535a1e..93bbebd68001 100644
  
  static void tegra186_pmc_setup_irq_polarity(struct tegra_pmc *pmc,
 diff --git a/drivers/thermal/intel/intel_hfi.c b/drivers/thermal/intel/intel_hfi.c
-index bd2fca7dc017..8a2f441cd2ec 100644
+index bd2fca7dc0176..8a2f441cd2ecf 100644
 --- a/drivers/thermal/intel/intel_hfi.c
 +++ b/drivers/thermal/intel/intel_hfi.c
 @@ -592,7 +592,7 @@ static void hfi_disable_instance(void *ptr)
@@ -4502,7 +4502,7 @@ index bd2fca7dc017..8a2f441cd2ec 100644
  	return;
  
 diff --git a/drivers/xen/xen-acpi-processor.c b/drivers/xen/xen-acpi-processor.c
-index 520756159d3d..8d1860bd5d57 100644
+index 520756159d3d3..8d1860bd5d578 100644
 --- a/drivers/xen/xen-acpi-processor.c
 +++ b/drivers/xen/xen-acpi-processor.c
 @@ -492,7 +492,7 @@ static void xen_acpi_processor_resume_worker(struct work_struct *dummy)
@@ -4549,7 +4549,7 @@ index 520756159d3d..8d1860bd5d57 100644
  	bitmap_free(acpi_id_present);
  	bitmap_free(acpi_id_cst_present);
 diff --git a/include/linux/syscore_ops.h b/include/linux/syscore_ops.h
-index ae4d48e4c970..ac6d71be5c38 100644
+index ae4d48e4c970a..ac6d71be5c382 100644
 --- a/include/linux/syscore_ops.h
 +++ b/include/linux/syscore_ops.h
 @@ -11,14 +11,19 @@
@@ -4578,7 +4578,7 @@ index ae4d48e4c970..ac6d71be5c38 100644
  extern int syscore_suspend(void);
  extern void syscore_resume(void);
 diff --git a/kernel/cpu_pm.c b/kernel/cpu_pm.c
-index b0f0d15085db..7481fbb947d3 100644
+index b0f0d15085db1..7481fbb947d32 100644
 --- a/kernel/cpu_pm.c
 +++ b/kernel/cpu_pm.c
 @@ -173,7 +173,7 @@ int cpu_cluster_pm_exit(void)
@@ -4619,7 +4619,7 @@ index b0f0d15085db..7481fbb947d3 100644
  }
  core_initcall(cpu_pm_init);
 diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index bf59e37d650a..3cd0c40282c0 100644
+index bf59e37d650ad..3cd0c40282c0d 100644
 --- a/kernel/irq/generic-chip.c
 +++ b/kernel/irq/generic-chip.c
 @@ -650,7 +650,7 @@ static struct irq_data *irq_gc_get_irq_data(struct irq_chip_generic *gc)
@@ -4672,7 +4672,7 @@ index bf59e37d650a..3cd0c40282c0 100644
  }
  device_initcall(irq_gc_init_ops);
 diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
-index f7394729cedc..99ff65466d87 100644
+index f7394729cedc3..99ff65466d871 100644
 --- a/kernel/irq/pm.c
 +++ b/kernel/irq/pm.c
 @@ -211,21 +211,26 @@ void rearm_wake_irq(unsigned int irq)
@@ -4706,7 +4706,7 @@ index f7394729cedc..99ff65466d87 100644
  }
  
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index c27fc7fc64eb..70a97290ad90 100644
+index c27fc7fc64eb5..70a97290ad90b 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
 @@ -3660,12 +3660,13 @@ static bool legacy_kthread_create(void)
@@ -4750,7 +4750,7 @@ index c27fc7fc64eb..70a97290ad90 100644
  	console_list_lock();
  	printk_kthreads_ready = true;
 diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index 425d429906d0..f3aaef695b8c 100644
+index 425d429906d0d..f3aaef695b8cd 100644
 --- a/kernel/time/sched_clock.c
 +++ b/kernel/time/sched_clock.c
 @@ -296,6 +296,11 @@ int sched_clock_suspend(void)
@@ -4794,7 +4794,7 @@ index 425d429906d0..f3aaef695b8c 100644
  	return 0;
  }
 diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index c7dcccc5f3d6..c07e562ee4c1 100644
+index c7dcccc5f3d6b..c07e562ee4c1a 100644
 --- a/kernel/time/timekeeping.c
 +++ b/kernel/time/timekeeping.c
 @@ -1994,6 +1994,11 @@ void timekeeping_resume(void)
@@ -4839,7 +4839,7 @@ index c7dcccc5f3d6..c07e562ee4c1 100644
  }
  device_initcall(timekeeping_init_ops);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 46581554abfb..3ec22d034e73 100644
+index 46581554abfb2..3ec22d034e737 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
 @@ -5629,7 +5629,7 @@ static int kvm_offline_cpu(unsigned int cpu)
@@ -4915,5 +4915,5 @@ index 46581554abfb..3ec22d034e73 100644
  	kvm_arch_disable_virtualization();
  }
 -- 
-2.53.0
+2.52.0
 

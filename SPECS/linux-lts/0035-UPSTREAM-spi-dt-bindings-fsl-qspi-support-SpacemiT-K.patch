@@ -1,7 +1,7 @@
-From 1c0ce037e0d184d21da3cb667a079d06c86fe944 Mon Sep 17 00:00:00 2001
+From 2304f35b5faa524b8c6093d2f1c434a32f0efaca Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:29:59 -0500
-Subject: [PATCH 035/369] UPSTREAM: spi: dt-bindings: fsl-qspi: support
+Subject: [PATCH 035/408] UPSTREAM: spi: dt-bindings: fsl-qspi: support
  SpacemiT K1
 
 Add the SpacemiT K1 SoC QSPI IP to the list of supported hardware.  This
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
-index f2dd20370dbb..5e6aff1bc2ed 100644
+index f2dd20370dbb3..5e6aff1bc2ed3 100644
 --- a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 +++ b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 @@ -22,6 +22,7 @@ properties:
@@ -32,5 +32,5 @@ index f2dd20370dbb..5e6aff1bc2ed 100644
            - enum:
                - fsl,ls1043a-qspi
 -- 
-2.53.0
+2.52.0
 

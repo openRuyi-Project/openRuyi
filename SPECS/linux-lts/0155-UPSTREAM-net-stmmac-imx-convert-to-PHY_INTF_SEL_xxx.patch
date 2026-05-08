@@ -1,7 +1,7 @@
-From c8c294ecc31b48d430833a1bae1b635e3eeec1a1 Mon Sep 17 00:00:00 2001
+From 00b95e7ec74c287be4f0773f7c386851b97bb8c5 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:21 +0000
-Subject: [PATCH 155/369] UPSTREAM: net: stmmac: imx: convert to
+Subject: [PATCH 155/408] UPSTREAM: net: stmmac: imx: convert to
  PHY_INTF_SEL_xxx
 
 Convert dwmac-imx to use the PHY_INTF_SEL_xxx definitions rather than
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index 147fa08d5b6e..4fbee59e7337 100644
+index 147fa08d5b6e7..4fbee59e7337c 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -23,18 +23,25 @@
@@ -67,5 +67,5 @@ index 147fa08d5b6e..4fbee59e7337 100644
  		return;
  
 -- 
-2.53.0
+2.52.0
 

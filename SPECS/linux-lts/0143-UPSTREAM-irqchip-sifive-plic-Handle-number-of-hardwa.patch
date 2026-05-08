@@ -1,7 +1,7 @@
-From 41d258b3d4398201e432a7be065faedeb4ba5fe2 Mon Sep 17 00:00:00 2001
+From a1cc9810528c3a5dbf5eda78d009a33c710b00dc Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@kernel.org>
 Date: Tue, 3 Feb 2026 20:16:12 +0100
-Subject: [PATCH 143/369] UPSTREAM: irqchip/sifive-plic: Handle number of
+Subject: [PATCH 143/408] UPSTREAM: irqchip/sifive-plic: Handle number of
  hardware interrupts correctly
 
 The driver is handling the number of hardware interrupts inconsistently.
@@ -55,7 +55,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 45 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 53e446117599..f255fa044764 100644
+index 53e4461175998..f255fa044764f 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -68,15 +68,17 @@
@@ -225,5 +225,5 @@ index 53e446117599..f255fa044764 100644
  		error = -ENOMEM;
  		goto fail_cleanup_contexts;
 -- 
-2.53.0
+2.52.0
 

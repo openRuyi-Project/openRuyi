@@ -1,7 +1,7 @@
-From 34cb0600a8d7fe0cd67a9ed49bc9532a1af9411d Mon Sep 17 00:00:00 2001
+From 5afa30bb918451c8499933f8497aca0d14a8e0a0 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 248/369] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [PATCH 248/408] UPSTREAM: lib/string_kunit: add correctness test for
  strlen()
 
 Add a KUnit test for strlen() to verify correctness across
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 30 insertions(+)
 
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index f9a8e557ba77..26962118768e 100644
+index f9a8e557ba773..26962118768e3 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -6,10 +6,12 @@
@@ -87,5 +87,5 @@ index f9a8e557ba77..26962118768e 100644
  	KUNIT_CASE(string_test_strnchr),
  	KUNIT_CASE(string_test_strspn),
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From d097571ec6246465aecd6008026a00c3446e9027 Mon Sep 17 00:00:00 2001
+From 22a2bfb0ac11c050241e4d8024ce30ffeb499bfd Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:28 -0600
-Subject: [PATCH 081/369] UPSTREAM: dt-bindings: phy: spacemit: Introduce PCIe
+Subject: [PATCH 081/408] UPSTREAM: dt-bindings: phy: spacemit: Introduce PCIe
  PHY
 
 Add the Device Tree binding for two PCIe PHYs present on the SpacemiT
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml
 new file mode 100644
-index 000000000000..019b28349be7
+index 0000000000000..019b28349be75
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml
 @@ -0,0 +1,71 @@
@@ -100,5 +100,5 @@ index 000000000000..019b28349be7
 +        #phy-cells = <0>;
 +    };
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 62b2a11a9c64cb938be7e79e2e2e2ffef5e36479 Mon Sep 17 00:00:00 2001
+From 69f2bcffed9fa12ca507af535f4dc3dfe666eb9d Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:49:55 +0000
-Subject: [PATCH 150/369] UPSTREAM: net: stmmac: imx: use phylink's interface
+Subject: [PATCH 150/408] UPSTREAM: net: stmmac: imx: use phylink's interface
  mode for set_clk_tx_rate()
 
 imx_dwmac_set_clk_tx_rate() is passed the interface mode from phylink
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index 4268b9987237..147fa08d5b6e 100644
+index 4268b99872372..147fa08d5b6e7 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -195,9 +195,6 @@ static void imx_dwmac_exit(struct platform_device *pdev, void *priv)
@@ -34,5 +34,5 @@ index 4268b9987237..147fa08d5b6e 100644
  	    interface == PHY_INTERFACE_MODE_MII)
  		return 0;
 -- 
-2.53.0
+2.52.0
 

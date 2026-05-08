@@ -1,7 +1,7 @@
-From d9dd125786097bc36923e83e9e63c45d7f4baaa2 Mon Sep 17 00:00:00 2001
+From b09d5a7ed8403db3ef5bb9827b5f8576720b78ea Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:21 +0800
-Subject: [PATCH 211/369] UPSTREAM: i2c: spacemit: move i2c_xfer_msg()
+Subject: [PATCH 211/408] UPSTREAM: i2c: spacemit: move i2c_xfer_msg()
 
 The upcoming PIO support requires a wait_pio_xfer() helper, which is
 invoked from xfer_msg().
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 31 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-index d0948a16de3e..6787a51e7391 100644
+index d0948a16de3ef..6787a51e73914 100644
 --- a/drivers/i2c/busses/i2c-k1.c
 +++ b/drivers/i2c/busses/i2c-k1.c
 @@ -305,37 +305,6 @@ static void spacemit_i2c_start(struct spacemit_i2c_dev *i2c)
@@ -103,5 +103,5 @@ index d0948a16de3e..6787a51e7391 100644
  {
  	struct spacemit_i2c_dev *i2c = devid;
 -- 
-2.53.0
+2.52.0
 

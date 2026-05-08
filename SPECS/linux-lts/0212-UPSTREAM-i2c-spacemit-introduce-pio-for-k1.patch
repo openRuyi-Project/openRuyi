@@ -1,7 +1,7 @@
-From 06848f1d0985333acef3221396fc23e2eaae6981 Mon Sep 17 00:00:00 2001
+From 2c16e5389270499dcc4bce9b45b037203cb57de7 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:22 +0800
-Subject: [PATCH 212/369] UPSTREAM: i2c: spacemit: introduce pio for k1
+Subject: [PATCH 212/408] UPSTREAM: i2c: spacemit: introduce pio for k1
 
 This patch introduces I2C PIO functionality for the Spacemit K1 SoC,
 enabling the use of I2C in atomic context.
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 228 insertions(+), 72 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-index 6787a51e7391..afc6bdd68bd4 100644
+index 6787a51e73914..afc6bdd68bd4a 100644
 --- a/drivers/i2c/busses/i2c-k1.c
 +++ b/drivers/i2c/busses/i2c-k1.c
 @@ -98,6 +98,10 @@
@@ -483,5 +483,5 @@ index 6787a51e7391..afc6bdd68bd4 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

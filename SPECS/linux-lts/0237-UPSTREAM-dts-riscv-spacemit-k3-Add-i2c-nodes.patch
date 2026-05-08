@@ -1,7 +1,7 @@
-From 74a1f5a02c3d8b04cc8b48b7a73a463abd72c846 Mon Sep 17 00:00:00 2001
+From f6cb94b70a184d8659490b15e627e993c5acd385 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 27 Mar 2026 11:40:40 +0000
-Subject: [PATCH 237/369] UPSTREAM: dts: riscv: spacemit: k3: Add i2c nodes
+Subject: [PATCH 237/408] UPSTREAM: dts: riscv: spacemit: k3: Add i2c nodes
 
 Populate all I2C devicetree nodes for SpacemiT K3 SoC. The controller of
 i2c3 is reserved for secure domain, and not available from Linux. The
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 100 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index 5f4818cd5d6d..815debd16409 100644
+index 5f4818cd5d6d8..815debd16409b 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -555,6 +555,76 @@ gmac2_axi_setup: stmmac-axi-config {
@@ -150,5 +150,5 @@ index 5f4818cd5d6d..815debd16409 100644
  			compatible = "spacemit,k3-imsics", "riscv,imsics";
  			reg = <0x0 0xf1000000 0x0 0x10000>;
 -- 
-2.53.0
+2.52.0
 

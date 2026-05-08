@@ -1,7 +1,7 @@
-From 4f06c1f3a788d4084a44daaa7caf0a687a52a2b5 Mon Sep 17 00:00:00 2001
+From c3cf741b2526334d4d9491e5e8b276f0ca77815d Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:06 +0200
-Subject: [PATCH 028/369] UPSTREAM: riscv: dts: thead: Add PWM controller node
+Subject: [PATCH 028/408] UPSTREAM: riscv: dts: thead: Add PWM controller node
 
 Add the Device Tree node for the T-HEAD TH1520 SoC's PWM controller.
 
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index dfc868e5b19a..c24d6b779fa4 100644
+index dfc868e5b19aa..c24d6b779fa44 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -514,6 +514,13 @@ uart2: serial@ffec010000 {
@@ -35,5 +35,5 @@ index dfc868e5b19a..c24d6b779fa4 100644
  			compatible = "thead,th1520-clk-ap";
  			reg = <0xff 0xef010000 0x0 0x1000>;
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From a9bf87c4dc867966dee0a43b3cb6160d3e67f1d7 Mon Sep 17 00:00:00 2001
+From 400f31aab06452802f561ea3b8b90b93592244fa Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:54 +0000
-Subject: [PATCH 204/369] UPSTREAM: PCI: sg2042: Avoid L0s and L1 on Sophgo
+Subject: [PATCH 204/408] UPSTREAM: PCI: sg2042: Avoid L0s and L1 on Sophgo
  2042 PCIe Root Ports
 
 Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pci/controller/cadence/pcie-sg2042.c b/drivers/pci/controller/cadence/pcie-sg2042.c
-index 0c50c74d03ee..4a2af4d0713e 100644
+index 0c50c74d03eeb..4a2af4d0713e6 100644
 --- a/drivers/pci/controller/cadence/pcie-sg2042.c
 +++ b/drivers/pci/controller/cadence/pcie-sg2042.c
 @@ -48,6 +48,8 @@ static int sg2042_pcie_probe(struct platform_device *pdev)
@@ -43,5 +43,5 @@ index 0c50c74d03ee..4a2af4d0713e 100644
  	pcie->dev = dev;
  
 -- 
-2.53.0
+2.52.0
 

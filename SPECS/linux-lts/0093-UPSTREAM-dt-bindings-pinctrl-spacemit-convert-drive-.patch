@@ -1,7 +1,7 @@
-From 084cf9504b6e36cc907b24c34ab3a5da90c707de Mon Sep 17 00:00:00 2001
+From c698c9b0e8b8b94e591f4a92cf94111b31b8435e Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:22 +0800
-Subject: [PATCH 093/369] UPSTREAM: dt-bindings: pinctrl: spacemit: convert
+Subject: [PATCH 093/408] UPSTREAM: dt-bindings: pinctrl: spacemit: convert
  drive strength to schema format
 
 In order to better extend the pinctrl support for future new SoC, convert
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
-index d80e88aa07b4..609d7db97822 100644
+index d80e88aa07b45..609d7db97822d 100644
 --- a/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/spacemit,k1-pinctrl.yaml
 @@ -72,10 +72,14 @@ patternProperties:
@@ -40,5 +40,5 @@ index d80e88aa07b4..609d7db97822 100644
            input-schmitt:
              description: |
 -- 
-2.53.0
+2.52.0
 

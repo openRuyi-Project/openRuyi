@@ -1,7 +1,7 @@
-From f634cb23a016289114eecddb16b53149f628d9b0 Mon Sep 17 00:00:00 2001
+From 11614f89036e241d79129c388ccfdb9780ff5333 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:35 -0600
-Subject: [PATCH 042/369] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe
+Subject: [PATCH 042/408] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe
  host controller
 
 Add the Devicetree binding for the PCIe Root Complex found on the SpacemiT
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 new file mode 100644
-index 000000000000..c4c00b5fcdc0
+index 0000000000000..c4c00b5fcdc0c
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 @@ -0,0 +1,157 @@
@@ -188,5 +188,5 @@ index 000000000000..c4c00b5fcdc0
 +        };
 +    };
 -- 
-2.53.0
+2.52.0
 

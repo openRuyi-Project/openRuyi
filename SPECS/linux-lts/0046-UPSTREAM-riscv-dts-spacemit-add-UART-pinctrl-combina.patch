@@ -1,7 +1,7 @@
-From ee7ba4fc20f1800227e05a7962b2ef435b559b2d Mon Sep 17 00:00:00 2001
+From 452246c2c6d9ef7924ddbceb9e755c11c18da846 Mon Sep 17 00:00:00 2001
 From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
 Date: Wed, 17 Sep 2025 08:59:07 +0200
-Subject: [PATCH 046/369] UPSTREAM: riscv: dts: spacemit: add UART pinctrl
+Subject: [PATCH 046/408] UPSTREAM: riscv: dts: spacemit: add UART pinctrl
  combinations
 
 Add UART pinctrl configurations based on the SoC datasheet and the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 428 insertions(+), 2 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index aff19c86d5ff..ce7b899d4dd9 100644
+index aff19c86d5ff3..ce7b899d4dd9b 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -59,11 +59,437 @@ gmac1-pins {
@@ -466,5 +466,5 @@ index aff19c86d5ff..ce7b899d4dd9 100644
  			drive-strength = <32>;
  		};
 -- 
-2.53.0
+2.52.0
 

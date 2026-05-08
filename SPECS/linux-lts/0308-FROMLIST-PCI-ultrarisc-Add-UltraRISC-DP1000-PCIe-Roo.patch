@@ -1,0 +1,292 @@
+From c9209d0754160c7cef7608ea47068836a8719ede Mon Sep 17 00:00:00 2001
+From: Xincheng Zhang <zhangxincheng@ultrarisc.com>
+Date: Mon, 27 Apr 2026 09:32:12 +0800
+Subject: [PATCH 308/408] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
+ Root Complex driver
+
+Add DP1000 SoC PCIe Root Complex driver.
+
+The controller only supports 32-bit aligned configuration space accesses.
+
+Signed-off-by: Xincheng Zhang <zhangxincheng@ultrarisc.com>
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Link: https://lore.kernel.org/r/20260427-ultrarisc-pcie-v4-3-98935f6cdfb5@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ MAINTAINERS                                  |   1 +
+ drivers/pci/controller/dwc/Kconfig           |  12 ++
+ drivers/pci/controller/dwc/Makefile          |   1 +
+ drivers/pci/controller/dwc/pcie-designware.h |  22 +++
+ drivers/pci/controller/dwc/pcie-ultrarisc.c  | 175 +++++++++++++++++++
+ 5 files changed, 211 insertions(+)
+ create mode 100644 drivers/pci/controller/dwc/pcie-ultrarisc.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7fbf16e564826..8869d1530d426 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20082,6 +20082,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/ultrarisc,dp1000-pcie.yaml
++F:	drivers/pci/controller/dwc/pcie-ultrarisc.c
+ 
+ PCIE ENDPOINT DRIVER FOR QUALCOMM
+ M:	Manivannan Sadhasivam <mani@kernel.org>
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 718bb54e943f6..5e0656eea7187 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -531,4 +531,16 @@ config PCIE_VISCONTI_HOST
+ 	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
+ 	  This driver supports TMPV7708 SoC.
+ 
++config PCIE_ULTRARISC
++	tristate "UltraRISC PCIe host controller"
++	depends on ARCH_ULTRARISC || COMPILE_TEST
++	select PCIE_DW_HOST
++	select PCI_MSI
++	default y if ARCH_ULTRARISC
++	help
++	  Enables support for the PCIe controller in the UltraRISC SoC.
++	  This driver supports UR-DP1000 SoC.
++	  By default, this symbol is enabled when ARCH_ULTRARISC is active,
++	  requiring no further configuration on that platform.
++
+ endmenu
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index 662b0a219ddc4..39087e7a06d5b 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
+ obj-$(CONFIG_PCIE_SPACEMIT_K1) += pcie-spacemit-k1.o
+ obj-$(CONFIG_PCIE_STM32_HOST) += pcie-stm32.o
+ obj-$(CONFIG_PCIE_STM32_EP) += pcie-stm32-ep.o
++obj-$(CONFIG_PCIE_ULTRARISC) += pcie-ultrarisc.o
+ 
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 1d7af225d3b73..87fc527bde7f2 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -69,6 +69,8 @@
+ 
+ /* Synopsys-specific PCIe configuration registers */
+ #define PCIE_PORT_FORCE			0x708
++/* Bit[7:0] LINK_NUM: Link Number. Not used for endpoint */
++#define PORT_LINK_NUM_MASK		GENMASK(7, 0)
+ #define PORT_FORCE_DO_DESKEW_FOR_SRIS	BIT(23)
+ 
+ #define PCIE_PORT_AFR			0x70C
+@@ -96,6 +98,26 @@
+ #define PCIE_PORT_LANE_SKEW		0x714
+ #define PORT_LANE_SKEW_INSERT_MASK	GENMASK(23, 0)
+ 
++/*
++ * PCIE_TIMER_CTRL_MAX_FUNC_NUM: Timer Control and Max Function Number
++ * Register.
++ * This register holds the ack frequency, latency, replay, fast link
++ * scaling timers, and max function number values.
++ * Bit[30:29] FAST_LINK_SCALING_FACTOR: Fast Link Timer Scaling Factor.
++ *   0x0 (SF_1024):Scaling Factor is 1024 (1ms is 1us).
++ *     When the LTSSM is in Config or L12 Entry State, 1ms
++ *     timer is 2us, 2ms timer is 4us and 3ms timer is 6us.
++ *   0x1 (SF_256): Scaling Factor is 256 (1ms is 4us)
++ *   0x2 (SF_64): Scaling Factor is 64 (1ms is 16us)
++ *   0x3 (SF_16): Scaling Factor is 16 (1ms is 64us)
++ */
++#define PCIE_TIMER_CTRL_MAX_FUNC_NUM	0x718
++#define PORT_FLT_SF_MASK	GENMASK(30, 29)
++#define PORT_FLT_SF_VAL_1024	0x0
++#define PORT_FLT_SF_VAL_256	0x1
++#define PORT_FLT_SF_VAL_64	0x2
++#define PORT_FLT_SF_VAL_16	0x3
++
+ #define PCIE_PORT_DEBUG0		0x728
+ #define PORT_LOGIC_LTSSM_STATE_MASK	0x3f
+ #define PORT_LOGIC_LTSSM_STATE_L0	0x11
+diff --git a/drivers/pci/controller/dwc/pcie-ultrarisc.c b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+new file mode 100644
+index 0000000000000..7326bd446590d
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-ultrarisc.c
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DWC PCIe RC driver for UltraRISC SoCs
++ *
++ * Copyright (C) 2026 UltraRISC Technology (Shanghai) Co., Ltd.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/resource.h>
++
++#include "pcie-designware.h"
++
++#define PCIE_CUS_CORE          0x400000
++
++#define LTSSM_ENABLE           BIT(7)
++#define FAST_LINK_MODE         BIT(12)
++#define HOLD_PHY_RST           BIT(14)
++#define L1SUB_DISABLE          BIT(15)
++
++#define ULTRARISC_PCIE_COMP_TIMEOUT_65_210MS	0x6
++
++static struct pci_ops ultrarisc_pci_ops = {
++	.map_bus = dw_pcie_own_conf_map_bus,
++	.read = pci_generic_config_read32,
++	.write = pci_generic_config_write32,
++};
++
++static int ultrarisc_pcie_host_init(struct dw_pcie_rp *pp)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
++	struct pci_host_bridge *bridge = pp->bridge;
++	u8 cap_exp;
++	u32 val;
++
++	bridge->ops = &ultrarisc_pci_ops;
++
++	if (dw_pcie_link_up(pci))
++		return 0;
++
++	val = dw_pcie_readl_dbi(pci, PCIE_CUS_CORE);
++	val &= ~FAST_LINK_MODE;
++	dw_pcie_writel_dbi(pci, PCIE_CUS_CORE, val);
++
++	val = dw_pcie_readl_dbi(pci, PCIE_TIMER_CTRL_MAX_FUNC_NUM);
++	FIELD_MODIFY(PORT_FLT_SF_MASK, &val, PORT_FLT_SF_VAL_64);
++	dw_pcie_writel_dbi(pci, PCIE_TIMER_CTRL_MAX_FUNC_NUM, val);
++
++	cap_exp = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
++	val = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_LNKCTL2);
++	FIELD_MODIFY(PCI_EXP_LNKCTL2_TLS, &val, PCI_EXP_LNKCTL2_TLS_16_0GT);
++	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_LNKCTL2, val);
++
++	val = dw_pcie_readl_dbi(pci, PCIE_PORT_FORCE);
++	FIELD_MODIFY(PORT_LINK_NUM_MASK, &val, 0);
++	dw_pcie_writel_dbi(pci, PCIE_PORT_FORCE, val);
++
++	val = dw_pcie_readl_dbi(pci, cap_exp + PCI_EXP_DEVCTL2);
++	FIELD_MODIFY(PCI_EXP_DEVCTL2_COMP_TIMEOUT, &val,
++		     ULTRARISC_PCIE_COMP_TIMEOUT_65_210MS);
++	dw_pcie_writel_dbi(pci, cap_exp + PCI_EXP_DEVCTL2, val);
++
++	val = dw_pcie_readl_dbi(pci, PCIE_CUS_CORE);
++	val &= ~(HOLD_PHY_RST | L1SUB_DISABLE);
++	dw_pcie_writel_dbi(pci, PCIE_CUS_CORE, val);
++
++	return 0;
++}
++
++static void ultrarisc_pcie_pme_turn_off(struct dw_pcie_rp *pp)
++{
++	/*
++	 * DP1000 does not support sending PME_Turn_Off from the RC.
++	 * Keep this callback empty to skip the generic MSG TLP path.
++	 */
++}
++
++static const struct dw_pcie_host_ops ultrarisc_pcie_host_ops = {
++	.init = ultrarisc_pcie_host_init,
++	.pme_turn_off = ultrarisc_pcie_pme_turn_off,
++};
++
++static int ultrarisc_pcie_start_link(struct dw_pcie *pci)
++{
++	u32 val;
++
++	val = dw_pcie_readl_dbi(pci, PCIE_CUS_CORE);
++	val |= LTSSM_ENABLE;
++	dw_pcie_writel_dbi(pci, PCIE_CUS_CORE, val);
++
++	return 0;
++}
++
++static const struct dw_pcie_ops dw_pcie_ops = {
++	.start_link = ultrarisc_pcie_start_link,
++};
++
++static int ultrarisc_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct dw_pcie_rp *pp;
++	struct dw_pcie *pci;
++	int ret;
++
++	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
++	if (!pci)
++		return -ENOMEM;
++
++	pci->dev = dev;
++	pci->ops = &dw_pcie_ops;
++
++	/* Set a default value suitable for at most 16 in and 16 out windows */
++	pci->atu_size = SZ_8K;
++
++	pp = &pci->pp;
++
++	platform_set_drvdata(pdev, pci);
++
++	pp->num_vectors = MAX_MSI_IRQS;
++	/* No L2/L3 Ready indication is available on this platform. */
++	pp->skip_l23_ready = true;
++	pp->ops = &ultrarisc_pcie_host_ops;
++
++	ret = dw_pcie_host_init(pp);
++	if (ret) {
++		dev_err(dev, "Failed to initialize host\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ultrarisc_pcie_suspend_noirq(struct device *dev)
++{
++	struct dw_pcie *pci = dev_get_drvdata(dev);
++
++	return dw_pcie_suspend_noirq(pci);
++}
++
++static int ultrarisc_pcie_resume_noirq(struct device *dev)
++{
++	struct dw_pcie *pci = dev_get_drvdata(dev);
++
++	return dw_pcie_resume_noirq(pci);
++}
++
++static const struct dev_pm_ops ultrarisc_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(ultrarisc_pcie_suspend_noirq,
++				  ultrarisc_pcie_resume_noirq)
++};
++
++static const struct of_device_id ultrarisc_pcie_of_match[] = {
++	{
++		.compatible = "ultrarisc,dp1000-pcie",
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, ultrarisc_pcie_of_match);
++
++static struct platform_driver ultrarisc_pcie_driver = {
++	.driver = {
++		.name	= "ultrarisc-pcie",
++		.of_match_table = ultrarisc_pcie_of_match,
++		.suppress_bind_attrs = true,
++		.pm = &ultrarisc_pcie_pm_ops,
++	},
++	.probe = ultrarisc_pcie_probe,
++};
++module_platform_driver(ultrarisc_pcie_driver);
++
++MODULE_DESCRIPTION("UltraRISC DP1000 DWC PCIe host controller");
++MODULE_LICENSE("GPL");
+-- 
+2.52.0
+

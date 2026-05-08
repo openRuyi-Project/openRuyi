@@ -1,7 +1,7 @@
-From 1061896b8d1e999781f26fea4b26b20302bdd57a Mon Sep 17 00:00:00 2001
+From 2c1f30842c816dae42d35d5d0f43966a9b2f3c81 Mon Sep 17 00:00:00 2001
 From: Zixian Zeng <sycamoremoon376@gmail.com>
 Date: Tue, 16 Sep 2025 21:22:50 +0800
-Subject: [PATCH 006/369] UPSTREAM: riscv: dts: sophgo: Add SPI NOR node for
+Subject: [PATCH 006/408] UPSTREAM: riscv: dts: sophgo: Add SPI NOR node for
  SG2042
 
 Add SPI NOR controller node for SG2042
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 24 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-index 85d8b89cf9fc..ec99da39150f 100644
+index 85d8b89cf9fc9..ec99da39150f7 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
 +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
 @@ -68,6 +68,30 @@ soc: soc {
@@ -55,5 +55,5 @@ index 85d8b89cf9fc..ec99da39150f 100644
  			compatible = "snps,designware-i2c";
  			reg = <0x70 0x30005000 0x0 0x1000>;
 -- 
-2.53.0
+2.52.0
 

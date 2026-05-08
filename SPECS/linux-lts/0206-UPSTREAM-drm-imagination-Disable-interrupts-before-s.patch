@@ -1,7 +1,7 @@
-From dc2c875cbb072a30397fd02717f4eb355a9531ed Mon Sep 17 00:00:00 2001
+From 35b94d265abc1e6d3bcdf99c0388d5f2e6f352a8 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Tue, 10 Mar 2026 11:41:12 +0000
-Subject: [PATCH 206/369] UPSTREAM: drm/imagination: Disable interrupts before
+Subject: [PATCH 206/408] UPSTREAM: drm/imagination: Disable interrupts before
  suspending the GPU
 
 This is an additional safety layer to ensure no accesses to the GPU
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 23 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_power.c b/drivers/gpu/drm/imagination/pvr_power.c
-index a7994457900d..c03bbf139562 100644
+index a7994457900d0..c03bbf1395625 100644
 --- a/drivers/gpu/drm/imagination/pvr_power.c
 +++ b/drivers/gpu/drm/imagination/pvr_power.c
 @@ -91,9 +91,9 @@ pvr_power_request_pwr_off(struct pvr_device *pvr_dev)
@@ -112,5 +112,5 @@ index a7994457900d..c03bbf139562 100644
  
  		if (err && hard_reset)
 -- 
-2.53.0
+2.52.0
 

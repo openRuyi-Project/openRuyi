@@ -1,7 +1,7 @@
-From d9c04a2846ed57982d898e40bf54d2d29fdfd875 Mon Sep 17 00:00:00 2001
+From e8ed0480e2763be9db7967eac1e5d8ef99ef09d2 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:00 +0000
-Subject: [PATCH 151/369] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
+Subject: [PATCH 151/408] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
  definitions out of the way
 
 S32's PHY_INTF_SEL_x definitions conflict with those for the dwmac
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
-index ee095ac13203..2b7ad64bfdf7 100644
+index ee095ac132037..2b7ad64bfdf74 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
 @@ -24,10 +24,10 @@
@@ -48,5 +48,5 @@ index ee095ac13203..2b7ad64bfdf7 100644
  	dev_dbg(gmac->dev, "PHY mode set to %s\n", phy_modes(*gmac->intf_mode));
  
 -- 
-2.53.0
+2.52.0
 

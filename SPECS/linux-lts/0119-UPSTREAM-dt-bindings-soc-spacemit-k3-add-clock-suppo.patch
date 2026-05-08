@@ -1,7 +1,7 @@
-From a97bc750c595658d27121220c0da099d5de61f99 Mon Sep 17 00:00:00 2001
+From 9dcad1ed335f01f51a3d3ac5b1f03d56bf09fb7d Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 1 Nov 2025 20:56:42 +0800
-Subject: [PATCH 119/369] UPSTREAM: dt-bindings: soc: spacemit: k3: add clock
+Subject: [PATCH 119/408] UPSTREAM: dt-bindings: soc: spacemit: k3: add clock
  support
 
 Add compatible strings for clock drivers to support Spacemit K3 SoC,
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 include/dt-bindings/clock/spacemit,k3-clocks.h
 
 diff --git a/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
-index 06bafd68c00a..cddf6a56dac0 100644
+index 06bafd68c00a0..cddf6a56dac03 100644
 --- a/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
 +++ b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
 @@ -4,14 +4,16 @@
@@ -66,7 +66,7 @@ index 06bafd68c00a..cddf6a56dac0 100644
  required:
    - compatible
 diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
-index 133a391ee68c..d87131da30bc 100644
+index 133a391ee68cd..d87131da30bc8 100644
 --- a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
 +++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
 @@ -4,7 +4,7 @@
@@ -120,7 +120,7 @@ index 133a391ee68c..d87131da30bc 100644
          - clocks
 diff --git a/include/dt-bindings/clock/spacemit,k3-clocks.h b/include/dt-bindings/clock/spacemit,k3-clocks.h
 new file mode 100644
-index 000000000000..b22336f3ae40
+index 0000000000000..b22336f3ae407
 --- /dev/null
 +++ b/include/dt-bindings/clock/spacemit,k3-clocks.h
 @@ -0,0 +1,390 @@
@@ -515,5 +515,5 @@ index 000000000000..b22336f3ae40
 +
 +#endif /* _DT_BINDINGS_CLOCK_SPACEMIT_K3_CLOCKS_H_ */
 -- 
-2.53.0
+2.52.0
 

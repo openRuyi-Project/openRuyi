@@ -1,7 +1,7 @@
-From 48262d828972233cf48d225939504073e5c6c346 Mon Sep 17 00:00:00 2001
+From 522bf52aa77a01d7da9b0faa5ac9657e2bad4ff4 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:20 +0200
-Subject: [PATCH 067/369] UPSTREAM: drm/vblank: Add CRTC helpers for simple use
+Subject: [PATCH 067/408] UPSTREAM: drm/vblank: Add CRTC helpers for simple use
  cases
 
 Implement atomic_flush, atomic_enable and atomic_disable of struct
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 103 insertions(+)
 
 diff --git a/drivers/gpu/drm/drm_vblank_helper.c b/drivers/gpu/drm/drm_vblank_helper.c
-index f94d1e706191..a04a6ba1b0ca 100644
+index f94d1e706191b..a04a6ba1b0ca0 100644
 --- a/drivers/gpu/drm/drm_vblank_helper.c
 +++ b/drivers/gpu/drm/drm_vblank_helper.c
 @@ -1,5 +1,6 @@
@@ -134,7 +134,7 @@ index f94d1e706191..a04a6ba1b0ca 100644
   * VBLANK timer
   */
 diff --git a/include/drm/drm_vblank_helper.h b/include/drm/drm_vblank_helper.h
-index 74a971d0cfba..fcd8a9b35846 100644
+index 74a971d0cfba0..fcd8a9b358463 100644
 --- a/include/drm/drm_vblank_helper.h
 +++ b/include/drm/drm_vblank_helper.h
 @@ -6,8 +6,31 @@
@@ -170,5 +170,5 @@ index 74a971d0cfba..fcd8a9b35846 100644
   * VBLANK timer
   */
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 1929e5bf73a80ee4ea3929026125c458dd5cf451 Mon Sep 17 00:00:00 2001
+From 9cfe158fad47b682a76f186440bbd3c0f738e94b Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:03 +0800
-Subject: [PATCH 199/369] UPSTREAM: regulator: spacemit-p1: Update supply names
+Subject: [PATCH 199/408] UPSTREAM: regulator: spacemit-p1: Update supply names
 
 Update supply names to match the P1 PMIC's actual hardware pinout where
 each buck has an individual VIN pin (vin1-vin6) and LDO groups have
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/regulator/spacemit-p1.c b/drivers/regulator/spacemit-p1.c
-index 2b585ba01a93..57e6e00a73fa 100644
+index 2b585ba01a93d..57e6e00a73fa4 100644
 --- a/drivers/regulator/spacemit-p1.c
 +++ b/drivers/regulator/spacemit-p1.c
 @@ -87,13 +87,16 @@ static const struct linear_range p1_ldo_ranges[] = {
@@ -71,5 +71,5 @@ index 2b585ba01a93..57e6e00a73fa 100644
  
  static int p1_regulator_probe(struct platform_device *pdev)
 -- 
-2.53.0
+2.52.0
 

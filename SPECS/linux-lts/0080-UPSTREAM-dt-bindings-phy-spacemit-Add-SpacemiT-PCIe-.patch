@@ -1,7 +1,7 @@
-From 6bae61350de6a02b3ec4a222ab6c6d2bb27ba900 Mon Sep 17 00:00:00 2001
+From 758792fe2f1381a87d6507ed81913bb8a7ae884f Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:27 -0600
-Subject: [PATCH 080/369] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT
+Subject: [PATCH 080/408] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT
  PCIe/combo PHY
 
 Add the Device Tree binding for the PCIe/USB 3.0 combo PHY found in
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
 new file mode 100644
-index 000000000000..b59476cd78b5
+index 0000000000000..b59476cd78b57
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
 @@ -0,0 +1,114 @@
@@ -148,5 +148,5 @@ index 000000000000..b59476cd78b5
 +        #phy-cells = <1>;
 +    };
 -- 
-2.53.0
+2.52.0
 

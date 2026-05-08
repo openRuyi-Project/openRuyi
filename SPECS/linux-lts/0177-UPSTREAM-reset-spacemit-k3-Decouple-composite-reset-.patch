@@ -1,7 +1,7 @@
-From 9ebcd0346739ad262e015ac8c4f0fe287b6c2182 Mon Sep 17 00:00:00 2001
+From 30dcfbc8625f2e58b8b0d7626578a1c43e1d99e4 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 11:06:17 +0000
-Subject: [PATCH 177/369] UPSTREAM: reset: spacemit: k3: Decouple composite
+Subject: [PATCH 177/408] UPSTREAM: reset: spacemit: k3: Decouple composite
  reset lines
 
 Instead of grouping several different reset lines into one composite
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 72 insertions(+), 36 deletions(-)
 
 diff --git a/drivers/reset/spacemit/reset-spacemit-k3.c b/drivers/reset/spacemit/reset-spacemit-k3.c
-index e9e32e4c1ba5..9841f5e057b2 100644
+index e9e32e4c1ba56..9841f5e057b2a 100644
 --- a/drivers/reset/spacemit/reset-spacemit-k3.c
 +++ b/drivers/reset/spacemit/reset-spacemit-k3.c
 @@ -112,16 +112,21 @@ static const struct ccu_reset_data k3_apmu_resets[] = {
@@ -118,7 +118,7 @@ index e9e32e4c1ba5..9841f5e057b2 100644
  	[RESET_APMU_EMAC1]	= RESET_DATA(APMU_EMAC1_CLK_RES_CTRL,	0, BIT(1)),
  	[RESET_APMU_EMAC2]	= RESET_DATA(APMU_EMAC2_CLK_RES_CTRL,	0, BIT(1)),
 diff --git a/include/dt-bindings/reset/spacemit,k3-resets.h b/include/dt-bindings/reset/spacemit,k3-resets.h
-index 79ac1c22b7b5..dc1ef009ba79 100644
+index 79ac1c22b7b54..dc1ef009ba797 100644
 --- a/include/dt-bindings/reset/spacemit,k3-resets.h
 +++ b/include/dt-bindings/reset/spacemit,k3-resets.h
 @@ -97,11 +97,11 @@
@@ -196,5 +196,5 @@ index 79ac1c22b7b5..dc1ef009ba79 100644
  /* DCIU resets*/
  #define RESET_DCIU_HDMA          0
 -- 
-2.53.0
+2.52.0
 

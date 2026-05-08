@@ -1,7 +1,7 @@
-From 768dbbe2476231f7182a734a89d35747c88bd351 Mon Sep 17 00:00:00 2001
+From ad75e0987f37ab6e2f7ab8284bf93ab2852538c4 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:50 +0800
-Subject: [PATCH 200/369] UPSTREAM: mmc: sdhci-of-k1: add reset support
+Subject: [PATCH 200/408] UPSTREAM: mmc: sdhci-of-k1: add reset support
 
 The SDHCI controller of SpacemiT K1 SoC requires two resets, add
 support to explicitly request the reset line and deassert during
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 20 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
-index 0cc97e23a2f9..a160e1d5d9bd 100644
+index 0cc97e23a2f9c..a160e1d5d9bde 100644
 --- a/drivers/mmc/host/sdhci-of-k1.c
 +++ b/drivers/mmc/host/sdhci-of-k1.c
 @@ -15,6 +15,7 @@
@@ -63,5 +63,5 @@ index 0cc97e23a2f9..a160e1d5d9bd 100644
  	if (ret)
  		goto err_pltfm;
 -- 
-2.53.0
+2.52.0
 

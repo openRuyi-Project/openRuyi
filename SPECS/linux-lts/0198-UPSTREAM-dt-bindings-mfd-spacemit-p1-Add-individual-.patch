@@ -1,7 +1,7 @@
-From 294b709e931de3bcb108e2912ba5706aa3a31d27 Mon Sep 17 00:00:00 2001
+From ed2f6078e524c40b546bf08b9484196442a29b11 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:02 +0800
-Subject: [PATCH 198/369] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add
+Subject: [PATCH 198/408] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add
  individual regulator supply properties
 
 Add supply properties that match the P1 PMIC's actual hardware topology
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 47 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml b/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
-index c6593ac6ef6a..c67b1c6e4e4f 100644
+index c6593ac6ef6ad..c67b1c6e4e4f9 100644
 --- a/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
 +++ b/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
 @@ -27,8 +27,41 @@ properties:
@@ -99,5 +99,5 @@ index c6593ac6ef6a..c67b1c6e4e4f 100644
                      regulator-name = "aldo1";
                      regulator-min-microvolt = <500000>;
 -- 
-2.53.0
+2.52.0
 

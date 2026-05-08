@@ -1,7 +1,7 @@
-From ae272cd22d8f621c754161f1cb8f93735d466395 Mon Sep 17 00:00:00 2001
+From 78dc5f8a52dbab6f6b01c4ffa6103a1f7bf64081 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 252/369] UPSTREAM: lib/string_kunit: extend benchmarks to
+Subject: [PATCH 252/408] UPSTREAM: lib/string_kunit: extend benchmarks to
  strnlen() and chr searches
 
 Extend the string benchmarking suite to include strnlen(), strchr(),
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 18 insertions(+)
 
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index cd5837373427..0819ace5b027 100644
+index cd58373734277..0819ace5b0275 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -866,6 +866,21 @@ static void string_bench_strlen(struct kunit *test)
@@ -62,5 +62,5 @@ index cd5837373427..0819ace5b027 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

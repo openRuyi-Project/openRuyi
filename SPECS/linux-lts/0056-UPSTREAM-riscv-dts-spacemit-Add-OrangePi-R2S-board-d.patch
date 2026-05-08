@@ -1,7 +1,7 @@
-From f2a0bc82cd89e88741488647accdc2f3081ff7c4 Mon Sep 17 00:00:00 2001
+From a6295ae8d9cae8715818d3ca311153b2fe3e65f3 Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 12 Nov 2025 04:44:42 +0000
-Subject: [PATCH 056/369] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S
+Subject: [PATCH 056/408] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S
  board device tree
 
 Add initial device tree support for the OrangePi RV2 board [1], which is
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 
 diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-index 942ecb38bea0..95889e7269d1 100644
+index 942ecb38bea03..95889e7269d1b 100644
 --- a/arch/riscv/boot/dts/spacemit/Makefile
 +++ b/arch/riscv/boot/dts/spacemit/Makefile
 @@ -2,4 +2,5 @@
@@ -44,7 +44,7 @@ index 942ecb38bea0..95889e7269d1 100644
  dtb-$(CONFIG_ARCH_SPACEMIT) += k1-orangepi-rv2.dtb
 diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 new file mode 100644
-index 000000000000..58098c4a2aab
+index 0000000000000..58098c4a2aabd
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 @@ -0,0 +1,90 @@
@@ -139,5 +139,5 @@ index 000000000000..58098c4a2aab
 +	status = "okay";
 +};
 -- 
-2.53.0
+2.52.0
 

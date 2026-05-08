@@ -1,7 +1,7 @@
-From 60f9f89a62c93331882c0fa4fba39471612e2506 Mon Sep 17 00:00:00 2001
+From 9d4ea624eb2053fc8117269dcec2e77fe146ee6a Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:15 +0800
-Subject: [PATCH 193/369] UPSTREAM: dt-bindings: vendor-prefixes: add
+Subject: [PATCH 193/408] UPSTREAM: dt-bindings: vendor-prefixes: add
  verisilicon
 
 VeriSilicon is a Silicon IP vendor, which is the current owner of
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 647746e6f75f..d03f700d178e 100644
+index 647746e6f75f6..d03f700d178e2 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
 @@ -1723,6 +1723,8 @@ patternProperties:
@@ -34,5 +34,5 @@ index 647746e6f75f..d03f700d178e 100644
      description: Vertexcom Technologies, Inc.
    "^via,.*":
 -- 
-2.53.0
+2.52.0
 

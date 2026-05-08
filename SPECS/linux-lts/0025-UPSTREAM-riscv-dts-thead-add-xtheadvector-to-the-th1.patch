@@ -1,7 +1,7 @@
-From 5cbf1704be09a9b59369a4926f53332510c98628 Mon Sep 17 00:00:00 2001
+From c445d9aa844e7cda2325a4fe2e2772cbf419b228 Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:47 +0800
-Subject: [PATCH 025/369] UPSTREAM: riscv: dts: thead: add xtheadvector to the
+Subject: [PATCH 025/408] UPSTREAM: riscv: dts: thead: add xtheadvector to the
  th1520 devicetree
 
 The th1520 support xtheadvector [1] so it can be included in the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index e680d1a7c821..0b57699ba398 100644
+index e680d1a7c821f..0b57699ba398d 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -25,7 +25,8 @@ c910_0: cpu@0 {
@@ -66,5 +66,5 @@ index e680d1a7c821..0b57699ba398 100644
  			i-cache-block-size = <64>;
  			i-cache-size = <65536>;
 -- 
-2.53.0
+2.52.0
 

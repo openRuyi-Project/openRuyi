@@ -1,7 +1,7 @@
-From 0b5ba5120705ed0aece8beef5f776889a3b3af94 Mon Sep 17 00:00:00 2001
+From 149d9a02a37f14624a1d1977f76fbdf400e1e3fc Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:43 +0000
-Subject: [PATCH 221/369] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl
+Subject: [PATCH 221/408] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl
  support
 
 Populate pinctrl node in Device Tree for SpacemiT K3 SoC, So devices
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index e3d7f3102fd5..6449ab056293 100644
+index e3d7f3102fd57..6449ab0562938 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -536,6 +536,14 @@ uart9: serial@d4017800 {
@@ -35,5 +35,5 @@ index e3d7f3102fd5..6449ab056293 100644
  			compatible = "spacemit,k3-uart", "intel,xscale-uart";
  			reg = <0x0 0xd401f000 0x0 0x100>;
 -- 
-2.53.0
+2.52.0
 

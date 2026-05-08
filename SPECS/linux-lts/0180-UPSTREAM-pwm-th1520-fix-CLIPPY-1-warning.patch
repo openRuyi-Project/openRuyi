@@ -1,7 +1,7 @@
-From 28ef00ecee2b78efd4dd95b159a2732e72f7a1e4 Mon Sep 17 00:00:00 2001
+From 88a049e002044228712e0c4d95d93f4a142459ae Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 21 Jan 2026 19:37:19 +0100
-Subject: [PATCH 180/369] UPSTREAM: pwm: th1520: fix `CLIPPY=1` warning
+Subject: [PATCH 180/408] UPSTREAM: pwm: th1520: fix `CLIPPY=1` warning
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -52,7 +52,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index 955c359b07fb..571db5928356 100644
+index 955c359b07fb4..571db59283566 100644
 --- a/drivers/pwm/pwm_th1520.rs
 +++ b/drivers/pwm/pwm_th1520.rs
 @@ -62,10 +62,7 @@ const fn th1520_pwm_fp(n: u32) -> usize {
@@ -68,5 +68,5 @@ index 955c359b07fb..571db5928356 100644
  
  fn cycles_to_ns(cycles: u64, rate_hz: u64) -> u64 {
 -- 
-2.53.0
+2.52.0
 

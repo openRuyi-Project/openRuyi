@@ -1,7 +1,7 @@
-From 0cf3d0be243441ede07017df941ce8ec3c094ab2 Mon Sep 17 00:00:00 2001
+From e8892592d7871ce6319c890bff545a66b80d752a Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sun, 2 Nov 2025 21:17:17 +0800
-Subject: [PATCH 123/369] UPSTREAM: clk: spacemit: k3: add the clock tree
+Subject: [PATCH 123/408] UPSTREAM: clk: spacemit: k3: add the clock tree
 
 Add clock support to SpacemiT K3 SoC, the clock tree consist of several
 blocks which are APBC, APBS, APMU, DCIU, MPUM.
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/clk/spacemit/ccu-k3.c
 
 diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
-index 3351e8bc801d..4ebe6aaa1980 100644
+index 3351e8bc801d5..4ebe6aaa1980d 100644
 --- a/drivers/clk/spacemit/Kconfig
 +++ b/drivers/clk/spacemit/Kconfig
 @@ -14,4 +14,10 @@ config SPACEMIT_K1_CCU
@@ -33,7 +33,7 @@ index 3351e8bc801d..4ebe6aaa1980 100644
 +
  endmenu
 diff --git a/drivers/clk/spacemit/Makefile b/drivers/clk/spacemit/Makefile
-index ad2bf315109b..0925eda384b4 100644
+index ad2bf315109b8..0925eda384b46 100644
 --- a/drivers/clk/spacemit/Makefile
 +++ b/drivers/clk/spacemit/Makefile
 @@ -8,3 +8,6 @@ spacemit-ccu-y			+= ccu_ddn.o
@@ -45,7 +45,7 @@ index ad2bf315109b..0925eda384b4 100644
 +spacemit-ccu-k3-y		+= ccu-k3.o
 diff --git a/drivers/clk/spacemit/ccu-k3.c b/drivers/clk/spacemit/ccu-k3.c
 new file mode 100644
-index 000000000000..e98afd59f05c
+index 0000000000000..e98afd59f05c6
 --- /dev/null
 +++ b/drivers/clk/spacemit/ccu-k3.c
 @@ -0,0 +1,1487 @@
@@ -1537,5 +1537,5 @@ index 000000000000..e98afd59f05c
 +MODULE_DESCRIPTION("SpacemiT K3 CCU driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

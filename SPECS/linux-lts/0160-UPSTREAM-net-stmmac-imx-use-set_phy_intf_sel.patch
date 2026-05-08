@@ -1,7 +1,7 @@
-From 0f570c6ff095ac3370b90fbf236573804668e205 Mon Sep 17 00:00:00 2001
+From 1f795fb09cffc6cc18d47c8459d9063bcc033e87 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:46 +0000
-Subject: [PATCH 160/369] UPSTREAM: net: stmmac: imx: use ->set_phy_intf_sel()
+Subject: [PATCH 160/408] UPSTREAM: net: stmmac: imx: use ->set_phy_intf_sel()
 
 Rather than placing the phy_intf_sel() setup in the ->init() method,
 move it to the new ->set_phy_intf_sel() method.
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 10 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index ae1b73e1bcb2..db288fbd5a4d 100644
+index ae1b73e1bcb2f..db288fbd5a4df 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -134,36 +134,19 @@ static int imx_dwmac_clks_config(void *priv, bool enabled)
@@ -76,5 +76,5 @@ index ae1b73e1bcb2..db288fbd5a4d 100644
  	plat_dat->bsp_priv = dwmac;
  	dwmac->plat_dat = plat_dat;
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 0d1b1b8b2afbab9d556db02da5142a187d8cfdba Mon Sep 17 00:00:00 2001
+From e6dec2e1bce92233b7dc4648464d55f0dc98c5df Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:22 +0200
-Subject: [PATCH 069/369] UPSTREAM: drm/hypervdrm: Use vblank timer
+Subject: [PATCH 069/408] UPSTREAM: drm/hypervdrm: Use vblank timer
 
 HyperV's virtual hardware does not provide vblank interrupts. Use a
 vblank timer to simulate the interrupt. Rate-limits the display's
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+)
 
 diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 945b9482bcb3..6e6eb1c12a68 100644
+index 945b9482bcb3a..6e6eb1c12a687 100644
 --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 @@ -19,6 +19,8 @@
@@ -68,5 +68,5 @@ index 945b9482bcb3..6e6eb1c12a68 100644
  
  	return 0;
 -- 
-2.53.0
+2.52.0
 

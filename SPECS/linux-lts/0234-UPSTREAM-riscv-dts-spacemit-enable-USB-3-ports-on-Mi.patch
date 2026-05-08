@@ -1,7 +1,7 @@
-From ea17ea9be9570e62ee8430a1255830fed049805d Mon Sep 17 00:00:00 2001
+From 160fcc8d9cbaf67716607a48512b73a04af8f143 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:33 +0100
-Subject: [PATCH 234/369] UPSTREAM: riscv: dts: spacemit: enable USB 3 ports on
+Subject: [PATCH 234/408] UPSTREAM: riscv: dts: spacemit: enable USB 3 ports on
  Milk-V Jupiter
 
 Enable the DWC3 USB 3.0 controller (USB#2 port in the K1 datasheet) and
@@ -31,7 +31,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 62 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index bac6438c6753..8eeaf2631b71 100644
+index bac6438c67532..8eeaf2631b719 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -58,6 +58,41 @@ reg_vcc_4v: regulator-vcc-4v {
@@ -108,5 +108,5 @@ index bac6438c6753..8eeaf2631b71 100644
 +	};
 +};
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 210e6a17b4af7796b097dc2e0c558e4a5a2f20f6 Mon Sep 17 00:00:00 2001
+From c7492ead6ad4ad0e77bdbcdf6b1157eaf4470275 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:43 +0800
-Subject: [PATCH 110/369] UPSTREAM: dt-bindings: interrupt-controller: add
+Subject: [PATCH 110/408] UPSTREAM: dt-bindings: interrupt-controller: add
  SpacemiT K3 IMSIC
 
 Add compatible string for SpacemiT K3 IMSIC.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
-index c23b5c09fdb9..feec122bddde 100644
+index c23b5c09fdb90..feec122bddde1 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,imsics.yaml
 @@ -48,6 +48,7 @@ properties:
@@ -29,5 +29,5 @@ index c23b5c09fdb9..feec122bddde 100644
  
    reg:
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 49f1a222b61f667fed9a23d017bbe4012f0a870f Mon Sep 17 00:00:00 2001
+From 26b0f3fbb494242ae541d7ad9d2e9e794ce42d60 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 9 Dec 2025 21:06:03 +0100
-Subject: [PATCH 024/369] UPSTREAM: pwm: th1520: Fix missing Kconfig
+Subject: [PATCH 024/408] UPSTREAM: pwm: th1520: Fix missing Kconfig
  dependencies
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 0b47456e2d57..a2e5b7379951 100644
+index 0b47456e2d57b..a2e5b73799513 100644
 --- a/drivers/pwm/Kconfig
 +++ b/drivers/pwm/Kconfig
 @@ -750,7 +750,9 @@ config PWM_TEGRA
@@ -42,5 +42,5 @@ index 0b47456e2d57..a2e5b7379951 100644
  	help
  	  This option enables the driver for the PWM controller found on the
 -- 
-2.53.0
+2.52.0
 

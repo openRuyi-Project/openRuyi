@@ -1,0 +1,52 @@
+From ed9cf58158afcf3dfcb3d287538ddefc4c32f098 Mon Sep 17 00:00:00 2001
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 21 Nov 2025 17:49:18 +0100
+Subject: [PATCH 256/408] UPSTREAM: PCI: dwc: Add register and bitfield
+ definitions
+
+Add register and bitfield definitions:
+
+  - GEN3_RELATED_OFF_EQ_PHASE_2_3 field of GEN3_RELATED_OFF
+
+  - Coherency control registers
+
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Link: https://patch.msgid.link/20251121164920.2008569-3-vincent.guittot@linaro.org
+(cherry picked from commit 045ad2c623d607f2c7720e2b8fcda675d96f7381)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/controller/dwc/pcie-designware.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index d32ee1fa3cf85..1d7af225d3b73 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -121,6 +121,7 @@
+ 
+ #define GEN3_RELATED_OFF			0x890
+ #define GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL	BIT(0)
++#define GEN3_RELATED_OFF_EQ_PHASE_2_3		BIT(9)
+ #define GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS	BIT(13)
+ #define GEN3_RELATED_OFF_GEN3_EQ_DISABLE	BIT(16)
+ #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+@@ -138,6 +139,13 @@
+ #define GEN3_EQ_FMDC_MAX_PRE_CURSOR_DELTA	GENMASK(13, 10)
+ #define GEN3_EQ_FMDC_MAX_POST_CURSOR_DELTA	GENMASK(17, 14)
+ 
++#define COHERENCY_CONTROL_1_OFF			0x8E0
++#define CFG_MEMTYPE_BOUNDARY_LOW_ADDR_MASK	GENMASK(31, 2)
++#define CFG_MEMTYPE_VALUE			BIT(0)
++
++#define COHERENCY_CONTROL_2_OFF			0x8E4
++#define COHERENCY_CONTROL_3_OFF			0x8E8
++
+ #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+ #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+ 
+-- 
+2.52.0
+

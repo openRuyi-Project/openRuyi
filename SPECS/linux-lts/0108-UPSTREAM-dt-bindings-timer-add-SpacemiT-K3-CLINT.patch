@@ -1,7 +1,7 @@
-From 99ebd66131566ec80cea3c2f27cc21d89b6e94c1 Mon Sep 17 00:00:00 2001
+From 6004961657b2f19a7c8b3dc368d7900209f2b9f3 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:41 +0800
-Subject: [PATCH 108/369] UPSTREAM: dt-bindings: timer: add SpacemiT K3 CLINT
+Subject: [PATCH 108/408] UPSTREAM: dt-bindings: timer: add SpacemiT K3 CLINT
 
 Add compatible string for SpacemiT K3 CLINT.
 
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-index d85a1a088b35..63165939465a 100644
+index d85a1a088b35d..63165939465a9 100644
 --- a/Documentation/devicetree/bindings/timer/sifive,clint.yaml
 +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
 @@ -33,6 +33,7 @@ properties:
@@ -28,5 +28,5 @@ index d85a1a088b35..63165939465a 100644
                - starfive,jh7110-clint   # StarFive JH7110
                - starfive,jh8100-clint   # StarFive JH8100
 -- 
-2.53.0
+2.52.0
 

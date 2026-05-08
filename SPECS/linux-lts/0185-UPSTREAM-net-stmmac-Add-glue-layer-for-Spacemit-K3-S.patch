@@ -1,7 +1,7 @@
-From f567e53b1a61fe99ccaf17afb82bed002bf6ca37 Mon Sep 17 00:00:00 2001
+From 44344e4f8d383060fe673521a0b2353b5ffd0c44 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:39 +0800
-Subject: [PATCH 185/369] UPSTREAM: net: stmmac: Add glue layer for Spacemit K3
+Subject: [PATCH 185/408] UPSTREAM: net: stmmac: Add glue layer for Spacemit K3
  SoC
 
 The ethernet controller on Spacemit K3 SoC is Synopsys DesignWare
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-spacemit.c
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 9507131875b2..3209353b7659 100644
+index 9507131875b2c..3209353b76594 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
 +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
 @@ -206,6 +206,18 @@ config DWMAC_SOPHGO
@@ -51,7 +51,7 @@ index 9507131875b2..3209353b7659 100644
  	tristate "StarFive dwmac support"
  	depends on OF && (ARCH_STARFIVE || COMPILE_TEST)
 diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 51e068e26ce4..2a24934f5c43 100644
+index 51e068e26ce49..2a24934f5c43b 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
 +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
 @@ -26,6 +26,7 @@ obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
@@ -64,7 +64,7 @@ index 51e068e26ce4..2a24934f5c43 100644
  obj-$(CONFIG_DWMAC_STM32)	+= dwmac-stm32.o
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-spacemit.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-spacemit.c
 new file mode 100644
-index 000000000000..223754cc5c79
+index 0000000000000..223754cc5c79b
 --- /dev/null
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-spacemit.c
 @@ -0,0 +1,227 @@
@@ -296,5 +296,5 @@ index 000000000000..223754cc5c79
 +MODULE_DESCRIPTION("Spacemit DWMAC platform driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

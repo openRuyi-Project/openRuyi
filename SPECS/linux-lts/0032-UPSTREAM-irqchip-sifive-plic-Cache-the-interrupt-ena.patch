@@ -1,7 +1,7 @@
-From d7fffc6d284c7a5d3344a8aae1eb95cb0d10030a Mon Sep 17 00:00:00 2001
+From f187b1ed755b742b45a46b7e16cc3d98d70fd84f Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:42 +0100
-Subject: [PATCH 032/369] UPSTREAM: irqchip/sifive-plic: Cache the interrupt
+Subject: [PATCH 032/408] UPSTREAM: irqchip/sifive-plic: Cache the interrupt
  enable state
 
 Optimize the PLIC driver by maintaining the interrupt enable state in the
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 13 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 0799c15c745d..96e46a3ba4bf 100644
+index 0799c15c745d4..96e46a3ba4bfd 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -94,15 +94,22 @@ static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
@@ -104,5 +104,5 @@ index 0799c15c745d..96e46a3ba4bf 100644
  }
  
 -- 
-2.53.0
+2.52.0
 

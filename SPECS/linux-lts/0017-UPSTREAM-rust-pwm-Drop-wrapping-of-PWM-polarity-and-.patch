@@ -1,7 +1,7 @@
-From 8bfd1aea52d0143a4aec7a79257cc54472783e76 Mon Sep 17 00:00:00 2001
+From 2cc36bbe3dfdfdac59aa8027c4a0e20bdbdc2a0a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 Date: Sat, 25 Oct 2025 14:23:56 +0200
-Subject: [PATCH 017/369] UPSTREAM: rust: pwm: Drop wrapping of PWM polarity
+Subject: [PATCH 017/408] UPSTREAM: rust: pwm: Drop wrapping of PWM polarity
  and state
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 55 deletions(-)
 
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 6f2f78c687d5..b19661b83b0f 100644
+index 6f2f78c687d5b..b19661b83b0f3 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
 @@ -15,38 +15,7 @@
@@ -104,5 +104,5 @@ index 6f2f78c687d5..b19661b83b0f 100644
      pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
          let c_wf = bindings::pwm_waveform::from(*wf);
 -- 
-2.53.0
+2.52.0
 

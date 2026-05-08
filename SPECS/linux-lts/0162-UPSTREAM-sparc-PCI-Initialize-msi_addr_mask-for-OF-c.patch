@@ -1,7 +1,7 @@
-From 57d6353a1e1c57438328ab69fe74dee7bde00793 Mon Sep 17 00:00:00 2001
+From 7d34d43cd1bfd5882c51e155208a3b400d136971 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:28 +0530
-Subject: [PATCH 162/369] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for
+Subject: [PATCH 162/408] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for
  OF-created PCI devices
 
 Recent changes replaced the use of no_64bit_msi with msi_addr_mask, which
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index b290107170e9..a4815d544781 100644
+index b290107170e94..a4815d544781e 100644
 --- a/arch/sparc/kernel/pci.c
 +++ b/arch/sparc/kernel/pci.c
 @@ -355,6 +355,13 @@ static struct pci_dev *of_create_pci_dev(struct pci_pbm_info *pbm,
@@ -47,5 +47,5 @@ index b290107170e9..a4815d544781 100644
  		/* a PCI-PCI bridge */
  		dev->hdr_type = PCI_HEADER_TYPE_BRIDGE;
 -- 
-2.53.0
+2.52.0
 

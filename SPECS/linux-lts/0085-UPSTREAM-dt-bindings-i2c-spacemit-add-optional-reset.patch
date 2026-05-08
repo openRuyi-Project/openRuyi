@@ -1,7 +1,7 @@
-From efcfee277772f8fa6866b3fe75945451423cbbbe Mon Sep 17 00:00:00 2001
+From 671c68b8fabf418f38f59b300d1a0ad84569a807 Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:51 +0800
-Subject: [PATCH 085/369] UPSTREAM: dt-bindings: i2c: spacemit: add optional
+Subject: [PATCH 085/408] UPSTREAM: dt-bindings: i2c: spacemit: add optional
  resets
 
 The I2C controller requires a reset to ensure it starts from a clean state.
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
-index b7220fff2235..5896fb120501 100644
+index b7220fff22350..5896fb1205011 100644
 --- a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 +++ b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 @@ -41,6 +41,9 @@ properties:
@@ -34,5 +34,5 @@ index b7220fff2235..5896fb120501 100644
    - compatible
    - reg
 -- 
-2.53.0
+2.52.0
 

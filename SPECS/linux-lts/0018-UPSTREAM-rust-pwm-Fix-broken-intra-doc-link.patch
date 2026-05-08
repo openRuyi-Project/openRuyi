@@ -1,7 +1,7 @@
-From 4e1b644b3b9bb6b6b864fe9f047575549b7d8811 Mon Sep 17 00:00:00 2001
+From d6e635acf802cae1f31304153c6196d555598a33 Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 29 Oct 2025 19:19:40 +0100
-Subject: [PATCH 018/369] UPSTREAM: rust: pwm: Fix broken intra-doc link
+Subject: [PATCH 018/408] UPSTREAM: rust: pwm: Fix broken intra-doc link
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index b19661b83b0f..e6d1278d8316 100644
+index b19661b83b0f3..e6d1278d83169 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
 @@ -660,7 +660,7 @@ unsafe impl<T: PwmOps + Sync> Sync for Chip<T> {}
@@ -43,5 +43,5 @@ index b19661b83b0f..e6d1278d8316 100644
  pub struct Registration<T: PwmOps> {
      chip: ARef<Chip<T>>,
 -- 
-2.53.0
+2.52.0
 

@@ -1,0 +1,43 @@
+From 44bf4d3a0def385351223c86b54819893a1ac01d Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Tue, 14 Oct 2025 13:10:28 +0000
+Subject: [PATCH 259/408] UPSTREAM: dt-bindings: reset: thead,th1520-reset:
+ Remove non-VO-subsystem resets
+
+Registers in control of TH1520_RESET_ID_{NPU,WDT0,WDT1} belong to AP
+reset controller, not the VO one which is documented as
+"thead,th1520-reset" and is the only reset controller supported for
+TH1520 for now.
+
+Let's remove the IDs, leaving them to be implemented by AP-subsystem
+reset controller in the future.
+
+Fixes: 30e7573babdc ("dt-bindings: reset: Add T-HEAD TH1520 SoC Reset Controller")
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Drew Fustini <fustini@kernel.org>
+Acked-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+(cherry picked from commit 5334eb9de76c74e24821aae89e111e27398b5add)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/dt-bindings/reset/thead,th1520-reset.h | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/include/dt-bindings/reset/thead,th1520-reset.h b/include/dt-bindings/reset/thead,th1520-reset.h
+index ee799286c1754..e51d6314d1316 100644
+--- a/include/dt-bindings/reset/thead,th1520-reset.h
++++ b/include/dt-bindings/reset/thead,th1520-reset.h
+@@ -9,9 +9,6 @@
+ 
+ #define TH1520_RESET_ID_GPU		0
+ #define TH1520_RESET_ID_GPU_CLKGEN	1
+-#define TH1520_RESET_ID_NPU		2
+-#define TH1520_RESET_ID_WDT0		3
+-#define TH1520_RESET_ID_WDT1		4
+ #define TH1520_RESET_ID_DPU_AHB		5
+ #define TH1520_RESET_ID_DPU_AXI		6
+ #define TH1520_RESET_ID_DPU_CORE	7
+-- 
+2.52.0
+

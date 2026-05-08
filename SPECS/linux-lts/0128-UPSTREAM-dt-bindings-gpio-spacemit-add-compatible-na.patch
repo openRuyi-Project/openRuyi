@@ -1,7 +1,7 @@
-From df2ae89581e8a83536b58a0b6f054dd0fb6d60ff Mon Sep 17 00:00:00 2001
+From 628f0bd09943eaf6ba7b44de88455f7b4e0d0284 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:32 +0800
-Subject: [PATCH 128/369] UPSTREAM: dt-bindings: gpio: spacemit: add compatible
+Subject: [PATCH 128/408] UPSTREAM: dt-bindings: gpio: spacemit: add compatible
  name for K3 SoC
 
 Add new compatible string for SpacemiT K3 SoC's GPIO controller.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
-index 83e0b2d14c9f..24d22d95665f 100644
+index 83e0b2d14c9f8..24d22d95665f5 100644
 --- a/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
 +++ b/Documentation/devicetree/bindings/gpio/spacemit,k1-gpio.yaml
 @@ -19,7 +19,9 @@ properties:
@@ -32,5 +32,5 @@ index 83e0b2d14c9f..24d22d95665f 100644
    reg:
      maxItems: 1
 -- 
-2.53.0
+2.52.0
 

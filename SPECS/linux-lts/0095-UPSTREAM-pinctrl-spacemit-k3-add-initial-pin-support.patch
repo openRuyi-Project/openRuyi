@@ -1,7 +1,7 @@
-From ca9c6db4e2007953bbe9184e2e59325678a47d9e Mon Sep 17 00:00:00 2001
+From 854a9a6aeccb9d2433f437526ffa85e5e7d13932 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:24 +0800
-Subject: [PATCH 095/369] UPSTREAM: pinctrl: spacemit: k3: add initial pin
+Subject: [PATCH 095/408] UPSTREAM: pinctrl: spacemit: k3: add initial pin
  support
 
 For the pinctrl IP of SpacemiT's K3 SoC, it has different register offset
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 352 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-index d6f6017fd097..c021d51033d1 100644
+index d6f6017fd097d..c021d51033d16 100644
 --- a/drivers/pinctrl/spacemit/Kconfig
 +++ b/drivers/pinctrl/spacemit/Kconfig
 @@ -4,7 +4,7 @@
@@ -40,7 +40,7 @@ index d6f6017fd097..c021d51033d1 100644
  	  each pin. This driver can also be built as a module called
  	  pinctrl-k1.
 diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 33af9b5791c1..441817f539e3 100644
+index 33af9b5791c11..441817f539e35 100644
 --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
 +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
 @@ -66,6 +66,7 @@ struct spacemit_pinctrl_data {
@@ -445,5 +445,5 @@ index 33af9b5791c1..441817f539e3 100644
 +MODULE_DESCRIPTION("Pinctrl driver for the SpacemiT K1/K3 SoC");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

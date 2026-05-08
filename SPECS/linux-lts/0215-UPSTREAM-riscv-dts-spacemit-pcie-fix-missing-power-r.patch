@@ -1,7 +1,7 @@
-From 975972fe5a450787adfb52726f8c100663e596f6 Mon Sep 17 00:00:00 2001
+From 177f1e2cfafcddcbb3af19e9f48ea1a1116c8f5a Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 08:17:55 +0000
-Subject: [PATCH 215/369] UPSTREAM: riscv: dts: spacemit: pcie: fix missing
+Subject: [PATCH 215/408] UPSTREAM: riscv: dts: spacemit: pcie: fix missing
  power regulator
 
 The PCIe port require 3.3v power regulator for device to work properly, So
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 5971605754b3..51f6c6a774b0 100644
+index 5971605754b35..51f6c6a774b0d 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -305,6 +305,7 @@ &pcie1_phy {
@@ -41,5 +41,5 @@ index 5971605754b3..51f6c6a774b0 100644
  
  &pcie2 {
 -- 
-2.53.0
+2.52.0
 

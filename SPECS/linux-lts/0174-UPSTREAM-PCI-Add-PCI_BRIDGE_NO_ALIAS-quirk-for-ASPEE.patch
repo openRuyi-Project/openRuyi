@@ -1,7 +1,7 @@
-From b0a7aa7b4596f2a71b88647170a8fc8d2a67a01f Mon Sep 17 00:00:00 2001
+From 093f069927839c26ee81d7f6ddeb9225109c5da1 Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:29 -0800
-Subject: [PATCH 174/369] UPSTREAM: PCI: Add PCI_BRIDGE_NO_ALIAS quirk for
+Subject: [PATCH 174/408] UPSTREAM: PCI: Add PCI_BRIDGE_NO_ALIAS quirk for
  ASPEED AST1150
 
 ASPEED BMC controllers have VGA and USB functions behind a PCIe-to-PCI
@@ -35,7 +35,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 17 insertions(+)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index d32a47e81fcf..481e4186a5c1 100644
+index d32a47e81fcf3..481e4186a5c1b 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
 @@ -4481,6 +4481,16 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_BROADCOM, 0x9000,
@@ -56,7 +56,7 @@ index d32a47e81fcf..481e4186a5c1 100644
   * Intersil/Techwell TW686[4589]-based video capture cards have an empty (zero)
   * class code.  Fix it.
 diff --git a/drivers/pci/search.c b/drivers/pci/search.c
-index 53840634fbfc..b3c9e3d82201 100644
+index 53840634fbfc2..b3c9e3d82201f 100644
 --- a/drivers/pci/search.c
 +++ b/drivers/pci/search.c
 @@ -86,6 +86,8 @@ int pci_for_each_dma_alias(struct pci_dev *pdev,
@@ -69,7 +69,7 @@ index 53840634fbfc..b3c9e3d82201 100644
  					 PCI_DEVID(tmp->subordinate->number,
  						   PCI_DEVFN(0, 0)), data);
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 528e31ed5bea..8073a1812cab 100644
+index 528e31ed5bea7..8073a1812cab0 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
 @@ -248,6 +248,11 @@ enum pci_dev_flags {
@@ -85,5 +85,5 @@ index 528e31ed5bea..8073a1812cab 100644
  
  enum pci_irq_reroute_variant {
 -- 
-2.53.0
+2.52.0
 

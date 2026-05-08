@@ -1,7 +1,7 @@
-From 74f80254197b5d3531dec4b81a0973b3075df19c Mon Sep 17 00:00:00 2001
+From f0577147f026abd9f3510ca59651d00e0a6df10e Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Fri, 5 Dec 2025 10:42:07 +0800
-Subject: [PATCH 001/369] UPSTREAM: drm/ttm: add pgprot handling for RISC-V
+Subject: [PATCH 001/408] UPSTREAM: drm/ttm: add pgprot handling for RISC-V
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/ttm/ttm_module.c b/drivers/gpu/drm/ttm/ttm_module.c
-index b3fffe7b5062..aa137ead5cc5 100644
+index b3fffe7b5062a..aa137ead5cc59 100644
 --- a/drivers/gpu/drm/ttm/ttm_module.c
 +++ b/drivers/gpu/drm/ttm/ttm_module.c
 @@ -74,7 +74,8 @@ pgprot_t ttm_prot_from_caching(enum ttm_caching caching, pgprot_t tmp)
@@ -40,5 +40,5 @@ index b3fffe7b5062..aa137ead5cc5 100644
  		tmp = pgprot_writecombine(tmp);
  	else
 -- 
-2.53.0
+2.52.0
 

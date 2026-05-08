@@ -1,0 +1,77 @@
+From b62f0d4389bdcbba9366566f05eb02b0bb2ec0fc Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Mon, 23 Feb 2026 14:35:29 +0800
+Subject: [PATCH 405/408] REVYSR: pinctrl: ultrarisc: cleanup probe&remove
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../ultrarisc/pinctrl-ultrarisc-dp1000.c      |  1 -
+ drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c | 22 +++----------------
+ 2 files changed, 3 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+index 6a7496a465d81..0ead138c9d1f2 100644
+--- a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+@@ -117,7 +117,6 @@ static struct platform_driver ur_pinctrl_driver = {
+ 		.of_match_table = ur_pinctrl_of_match,
+ 	},
+ 	.probe = ur_pinctrl_probe,
+-	.remove = ur_pinctrl_remove,
+ };
+ 
+ module_platform_driver(ur_pinctrl_driver);
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+index edaeca881af72..cdd7160f3183a 100644
+--- a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+@@ -514,8 +514,7 @@ int ur_pinctrl_probe(struct platform_device *pdev)
+ 	ur_pinctrl = devm_kzalloc(&pdev->dev, sizeof(*ur_pinctrl), GFP_KERNEL);
+ 	if (!ur_pinctrl) {
+ 		dev_err(&pdev->dev, "pinctrl alloc failed\n");
+-		ret = -ENOMEM;
+-		goto free_pinctrl_desc;
++		return -ENOMEM;
+ 	}
+ 	struct resource *res;
+ 
+@@ -524,8 +523,7 @@ int ur_pinctrl_probe(struct platform_device *pdev)
+ 	ur_pinctrl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(ur_pinctrl->base)) {
+ 		dev_err(&pdev->dev, "get ioremap resource failed\n");
+-		ret = -EINVAL;
+-		goto free_pinctrl_desc;
++		return -EINVAL;
+ 	}
+ 	dev_dbg(&pdev->dev, "pinctrl base=0x%p\n", ur_pinctrl->base);
+ 	ur_pinctrl_desc->name = dev_name(&pdev->dev);
+@@ -546,25 +544,11 @@ int ur_pinctrl_probe(struct platform_device *pdev)
+ 			ur_pinctrl, &ur_pinctrl->pctl_dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "pinctrl register failed\n");
+-		goto free_pinctrl;
++		return ret;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, ur_pinctrl);
+ 
+ 	return pinctrl_enable(ur_pinctrl->pctl_dev);
+-
+-free_pinctrl:
+-	devm_kfree(&pdev->dev, ur_pinctrl);
+-free_pinctrl_desc:
+-	devm_kfree(&pdev->dev, ur_pinctrl_desc);
+-	return ret;
+ }
+ 
+-
+-void ur_pinctrl_remove(struct platform_device *pdev)
+-{
+-	struct ur_pinctrl *ur_pinctrl = platform_get_drvdata(pdev);
+-
+-	if (ur_pinctrl->pctl_dev)
+-		devm_pinctrl_unregister(&pdev->dev, ur_pinctrl->pctl_dev);
+-}
+-- 
+2.52.0
+

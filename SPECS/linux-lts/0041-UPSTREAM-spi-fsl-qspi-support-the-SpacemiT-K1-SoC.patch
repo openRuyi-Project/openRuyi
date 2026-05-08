@@ -1,7 +1,7 @@
-From cb09cb1610221e3a9c0d8babc7b70d3bb6a327ff Mon Sep 17 00:00:00 2001
+From 564a0916dc1fb193f20f8bc0c994542d13681a77 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:05 -0500
-Subject: [PATCH 041/369] UPSTREAM: spi: fsl-qspi: support the SpacemiT K1 SoC
+Subject: [PATCH 041/408] UPSTREAM: spi: fsl-qspi: support the SpacemiT K1 SoC
 
 Allow the SPI_FSL_QUADSPI Kconfig option to be selected if ARCH_SPACEMIT
 enabled.
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 1872f9d54a5c..a63fb0a40be5 100644
+index 1872f9d54a5cc..a63fb0a40be5e 100644
 --- a/drivers/spi/Kconfig
 +++ b/drivers/spi/Kconfig
 @@ -435,7 +435,8 @@ config SPI_FSL_LPSPI
@@ -34,7 +34,7 @@ index 1872f9d54a5c..a63fb0a40be5 100644
  	help
  	  This enables support for the Quad SPI controller in master mode.
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 46a3187b3354..a223b4bc6e63 100644
+index 46a3187b33548..a223b4bc6e637 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -268,6 +268,16 @@ static const struct fsl_qspi_devtype_data ls2080a_data = {
@@ -63,5 +63,5 @@ index 46a3187b3354..a223b4bc6e63 100644
  };
  MODULE_DEVICE_TABLE(of, fsl_qspi_dt_ids);
 -- 
-2.53.0
+2.52.0
 

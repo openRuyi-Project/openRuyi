@@ -1,7 +1,7 @@
-From 87bed08f1ccb632028a5702c0de09c67750fc05e Mon Sep 17 00:00:00 2001
+From 9a81ed3be1666df76c3bb71a96245462080d048f Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:31 -0600
-Subject: [PATCH 084/369] UPSTREAM: riscv: dts: spacemit: PCIe and PHY-related
+Subject: [PATCH 084/408] UPSTREAM: riscv: dts: spacemit: PCIe and PHY-related
  updates
 
 Define PCIe and PHY-related Device Tree nodes for the SpacemiT K1 SoC.
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 245 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 71f48454ba47..3f10efd925dc 100644
+index 71f48454ba47c..3f10efd925dc8 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -61,6 +61,12 @@ reg_vcc_4v: vcc-4v {
@@ -82,7 +82,7 @@ index 71f48454ba47..3f10efd925dc 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index e922e05ff856..b13dcb10f4d6 100644
+index e922e05ff856d..b13dcb10f4d66 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -530,6 +530,39 @@ uart9-2-pins {
@@ -126,7 +126,7 @@ index e922e05ff856..b13dcb10f4d6 100644
  		pwm14-1-pins {
  			pinmux = <K1_PADCONF(44, 4)>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 7818ca4979b6..86d1db14e2ee 100644
+index 7818ca4979b6a..86d1db14e2ee4 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -4,6 +4,7 @@
@@ -327,5 +327,5 @@ index 7818ca4979b6..86d1db14e2ee 100644
  
  		storage-bus {
 -- 
-2.53.0
+2.52.0
 

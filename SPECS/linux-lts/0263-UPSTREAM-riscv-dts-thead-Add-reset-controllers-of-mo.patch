@@ -1,0 +1,91 @@
+From 46a126b414f5a007606218d4cf462e25e644c5d9 Mon Sep 17 00:00:00 2001
+From: Yao Zi <ziyao@disroot.org>
+Date: Tue, 14 Oct 2025 13:10:32 +0000
+Subject: [PATCH 263/408] UPSTREAM: riscv: dts: thead: Add reset controllers of
+ more subsystems for TH1520
+
+Describe reset controllers for VI, MISC, AP, DSP and AO subsystems. The
+one for AO subsystem is marked as reserved, since it may be used by AON
+firmware.
+
+Reviewed-by: Drew Fustini <fustini@kernel.org>
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+Signed-off-by: Drew Fustini <fustini@kernel.org>
+(cherry picked from commit d8a174babf649346b6dad6784ae1e9bc8417af71)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/thead/th1520.dtsi | 37 +++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+index c65b71d9a1b8c..5e91dc1d2b9b7 100644
+--- a/arch/riscv/boot/dts/thead/th1520.dtsi
++++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+@@ -289,6 +289,12 @@ clint: timer@ffdc000000 {
+ 					      <&cpu3_intc 3>, <&cpu3_intc 7>;
+ 		};
+ 
++		rst_vi: reset-controller@ffe4040100 {
++			compatible = "thead,th1520-reset-vi";
++			reg = <0xff 0xe4040100 0x0 0x8>;
++			#reset-cells = <1>;
++		};
++
+ 		spi0: spi@ffe700c000 {
+ 			compatible = "thead,th1520-spi", "snps,dw-apb-ssi";
+ 			reg = <0xff 0xe700c000 0x0 0x1000>;
+@@ -521,6 +527,18 @@ pwm: pwm@ffec01c000 {
+ 			#pwm-cells = <3>;
+ 		};
+ 
++		rst_misc: reset-controller@ffec02c000 {
++			compatible = "thead,th1520-reset-misc";
++			reg = <0xff 0xec02c000 0x0 0x18>;
++			#reset-cells = <1>;
++		};
++
++		rst_vp: reset-controller@ffecc30000 {
++			compatible = "thead,th1520-reset-vp";
++			reg = <0xff 0xecc30000 0x0 0x14>;
++			#reset-cells = <1>;
++		};
++
+ 		clk: clock-controller@ffef010000 {
+ 			compatible = "thead,th1520-clk-ap";
+ 			reg = <0xff 0xef010000 0x0 0x1000>;
+@@ -528,6 +546,18 @@ clk: clock-controller@ffef010000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		rst_ap: reset-controller@ffef014000 {
++			compatible = "thead,th1520-reset-ap";
++			reg = <0xff 0xef014000 0x0 0x1000>;
++			#reset-cells = <1>;
++		};
++
++		rst_dsp: reset-controller@ffef040028 {
++			compatible = "thead,th1520-reset-dsp";
++			reg = <0xff 0xef040028 0x0 0x4>;
++			#reset-cells = <1>;
++		};
++
+ 		gpu: gpu@ffef400000 {
+ 			compatible = "thead,th1520-gpu", "img,img-bxm-4-64",
+ 				     "img,img-rogue";
+@@ -766,6 +796,13 @@ aogpio: gpio-controller@0 {
+ 			};
+ 		};
+ 
++		rst_ao: reset-controller@fffff44000 {
++			compatible = "thead,th1520-reset-ao";
++			reg = <0xff 0xfff44000 0x0 0x2000>;
++			#reset-cells = <1>;
++			status = "reserved";
++		};
++
+ 		padctrl_aosys: pinctrl@fffff4a000 {
+ 			compatible = "thead,th1520-pinctrl";
+ 			reg = <0xff 0xfff4a000 0x0 0x2000>;
+-- 
+2.52.0
+

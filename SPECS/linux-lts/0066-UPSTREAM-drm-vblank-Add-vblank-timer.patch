@@ -1,7 +1,7 @@
-From d41fe7cfc501aa15cf7c400508abc363db286de2 Mon Sep 17 00:00:00 2001
+From 7e4d572fd2bf65018bc2a2d81ab536e11b6fd9a9 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:19 +0200
-Subject: [PATCH 066/369] UPSTREAM: drm/vblank: Add vblank timer
+Subject: [PATCH 066/408] UPSTREAM: drm/vblank: Add vblank timer
 
 The vblank timer simulates a vblank interrupt for hardware without
 support. Rate-limits the display update frequency.
@@ -70,7 +70,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 include/drm/drm_vblank_helper.h
 
 diff --git a/Documentation/gpu/drm-kms-helpers.rst b/Documentation/gpu/drm-kms-helpers.rst
-index 5139705089f2..781129f78b06 100644
+index 5139705089f20..781129f78b06b 100644
 --- a/Documentation/gpu/drm-kms-helpers.rst
 +++ b/Documentation/gpu/drm-kms-helpers.rst
 @@ -92,6 +92,18 @@ GEM Atomic Helper Reference
@@ -93,7 +93,7 @@ index 5139705089f2..781129f78b06 100644
  ===========================
  
 diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 742f0d590c5a..b248e64587ed 100644
+index 742f0d590c5af..b248e64587ed4 100644
 --- a/drivers/gpu/drm/Makefile
 +++ b/drivers/gpu/drm/Makefile
 @@ -152,7 +152,8 @@ drm_kms_helper-y := \
@@ -107,7 +107,7 @@ index 742f0d590c5a..b248e64587ed 100644
  drm_kms_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fb_helper.o
  obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
 diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index 46f59883183d..61e211fd3c9c 100644
+index 46f59883183d9..61e211fd3c9c8 100644
 --- a/drivers/gpu/drm/drm_vblank.c
 +++ b/drivers/gpu/drm/drm_vblank.c
 @@ -136,8 +136,17 @@
@@ -302,7 +302,7 @@ index 46f59883183d..61e211fd3c9c 100644
 +EXPORT_SYMBOL(drm_crtc_vblank_get_vblank_timeout);
 diff --git a/drivers/gpu/drm/drm_vblank_helper.c b/drivers/gpu/drm/drm_vblank_helper.c
 new file mode 100644
-index 000000000000..f94d1e706191
+index 0000000000000..f94d1e706191b
 --- /dev/null
 +++ b/drivers/gpu/drm/drm_vblank_helper.c
 @@ -0,0 +1,96 @@
@@ -403,7 +403,7 @@ index 000000000000..f94d1e706191
 +}
 +EXPORT_SYMBOL(drm_crtc_vblank_helper_get_vblank_timestamp_from_timer);
 diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-index ce7c7aeac887..fe32854b7ffe 100644
+index ce7c7aeac887b..fe32854b7ffec 100644
 --- a/include/drm/drm_modeset_helper_vtables.h
 +++ b/include/drm/drm_modeset_helper_vtables.h
 @@ -490,6 +490,18 @@ struct drm_crtc_helper_funcs {
@@ -426,7 +426,7 @@ index ce7c7aeac887..fe32854b7ffe 100644
  
  /**
 diff --git a/include/drm/drm_vblank.h b/include/drm/drm_vblank.h
-index 151ab1e85b1b..ffa564d79638 100644
+index 151ab1e85b1b7..ffa564d796384 100644
 --- a/include/drm/drm_vblank.h
 +++ b/include/drm/drm_vblank.h
 @@ -25,6 +25,7 @@
@@ -491,7 +491,7 @@ index 151ab1e85b1b..ffa564d79638 100644
   */
 diff --git a/include/drm/drm_vblank_helper.h b/include/drm/drm_vblank_helper.h
 new file mode 100644
-index 000000000000..74a971d0cfba
+index 0000000000000..74a971d0cfba0
 --- /dev/null
 +++ b/include/drm/drm_vblank_helper.h
 @@ -0,0 +1,33 @@
@@ -529,5 +529,5 @@ index 000000000000..74a971d0cfba
 +
 +#endif
 -- 
-2.53.0
+2.52.0
 

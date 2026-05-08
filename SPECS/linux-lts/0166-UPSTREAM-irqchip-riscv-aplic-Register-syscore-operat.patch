@@ -1,7 +1,7 @@
-From ffb60fbe1e179d6193b77a51483dcceab3c3972b Mon Sep 17 00:00:00 2001
+From feb21df4a4821c0e84629b53a429737934c7d1eb Mon Sep 17 00:00:00 2001
 From: Jessica Liu <liu.xuemei1@zte.com.cn>
 Date: Tue, 10 Mar 2026 14:17:31 +0800
-Subject: [PATCH 166/369] UPSTREAM: irqchip/riscv-aplic: Register syscore
+Subject: [PATCH 166/408] UPSTREAM: irqchip/riscv-aplic: Register syscore
  operations only once
 
 Since commit 95a8ddde3660 ("irqchip/riscv-aplic: Preserve APLIC
@@ -31,7 +31,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-riscv-aplic-main.c b/drivers/irqchip/irq-riscv-aplic-main.c
-index 8775f188ea4f..9f53979b6962 100644
+index 8775f188ea4fc..9f53979b69625 100644
 --- a/drivers/irqchip/irq-riscv-aplic-main.c
 +++ b/drivers/irqchip/irq-riscv-aplic-main.c
 @@ -116,6 +116,16 @@ static struct syscore aplic_syscore = {
@@ -61,5 +61,5 @@ index 8775f188ea4f..9f53979b6962 100644
  #ifdef CONFIG_ACPI
  	if (!acpi_disabled)
 -- 
-2.53.0
+2.52.0
 

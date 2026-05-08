@@ -1,7 +1,7 @@
-From 4a70164a4845e83809a88cef88fcc05fcd0aa05d Mon Sep 17 00:00:00 2001
+From a69382f38cf2bfc75c9847f290633542304ad794 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:31 +0000
-Subject: [PATCH 157/369] UPSTREAM: net: stmmac: imx: use
+Subject: [PATCH 157/408] UPSTREAM: net: stmmac: imx: use
  stmmac_get_phy_intf_sel()
 
 i.MX implementations other than IMX8DXL involve setting the dwmac core
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 25 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index f1cfccd4269c..dc28486a7af0 100644
+index f1cfccd4269c3..dc28486a7af05 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -45,7 +45,8 @@ struct imx_dwmac_ops {
@@ -136,5 +136,5 @@ index f1cfccd4269c..dc28486a7af0 100644
  			return ret;
  	}
 -- 
-2.53.0
+2.52.0
 

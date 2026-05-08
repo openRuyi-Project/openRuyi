@@ -1,7 +1,7 @@
-From fb68066272e9fcd47325f2e79da34182554524d6 Mon Sep 17 00:00:00 2001
+From c17a593ebb534d539a2c9af794a5fd7f08c8f918 Mon Sep 17 00:00:00 2001
 From: Osama Abdelkader <osama.abdelkader@gmail.com>
 Date: Mon, 16 Mar 2026 16:16:11 +0100
-Subject: [PATCH 239/369] UPSTREAM: riscv: kvm: fix vector context allocation
+Subject: [PATCH 239/408] UPSTREAM: riscv: kvm: fix vector context allocation
  leak
 
 When the second kzalloc (host_context.vector.datap) fails in
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/kvm/vcpu_vector.c b/arch/riscv/kvm/vcpu_vector.c
-index 05f3cc2d8e31..5b6ad82d47be 100644
+index 05f3cc2d8e311..5b6ad82d47beb 100644
 --- a/arch/riscv/kvm/vcpu_vector.c
 +++ b/arch/riscv/kvm/vcpu_vector.c
 @@ -80,8 +80,11 @@ int kvm_riscv_vcpu_alloc_vector_context(struct kvm_vcpu *vcpu)
@@ -38,5 +38,5 @@ index 05f3cc2d8e31..5b6ad82d47be 100644
  	return 0;
  }
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From a6ebdcbfaa5dd6f66c8a7328ebb16080842f0624 Mon Sep 17 00:00:00 2001
+From a22a15b337e21c99290c94851201a79fc20a7ba7 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:44 +0800
-Subject: [PATCH 111/369] UPSTREAM: dt-bindings: riscv: spacemit: add K3 and
+Subject: [PATCH 111/408] UPSTREAM: dt-bindings: riscv: spacemit: add K3 and
  Pico-ITX board bindings
 
 Add DT binding documentation for the SpacemiT K3 SoC and the board Pico-ITX
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/spacemit.yaml b/Documentation/devicetree/bindings/riscv/spacemit.yaml
-index c56b62a6299a..eca403a8e49e 100644
+index c56b62a6299ac..eca403a8e49ef 100644
 --- a/Documentation/devicetree/bindings/riscv/spacemit.yaml
 +++ b/Documentation/devicetree/bindings/riscv/spacemit.yaml
 @@ -7,6 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
@@ -42,5 +42,5 @@ index c56b62a6299a..eca403a8e49e 100644
  additionalProperties: true
  
 -- 
-2.53.0
+2.52.0
 

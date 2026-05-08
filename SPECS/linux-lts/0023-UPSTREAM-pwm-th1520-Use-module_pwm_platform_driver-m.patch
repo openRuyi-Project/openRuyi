@@ -1,7 +1,7 @@
-From 457c066858e440a279fed26db8ff1209a75227b7 Mon Sep 17 00:00:00 2001
+From e8447548810cd95863ef8e17e873c04e58d8cd81 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 28 Oct 2025 13:22:34 +0100
-Subject: [PATCH 023/369] UPSTREAM: pwm: th1520: Use
+Subject: [PATCH 023/408] UPSTREAM: pwm: th1520: Use
  module_pwm_platform_driver! macro
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index b2d83c121c5c..955c359b07fb 100644
+index b2d83c121c5c7..955c359b07fb4 100644
 --- a/drivers/pwm/pwm_th1520.rs
 +++ b/drivers/pwm/pwm_th1520.rs
 @@ -378,7 +378,7 @@ fn probe(
@@ -42,5 +42,5 @@ index b2d83c121c5c..955c359b07fb 100644
      name: "pwm-th1520",
      authors: ["Michal Wilczynski <m.wilczynski@samsung.com>"],
 -- 
-2.53.0
+2.52.0
 
