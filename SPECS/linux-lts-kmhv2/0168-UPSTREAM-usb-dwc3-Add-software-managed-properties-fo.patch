@@ -1,7 +1,7 @@
-From f9b55de9ac5c88856662d9017cba67e05d2ff338 Mon Sep 17 00:00:00 2001
+From 1a2e9dd80c7a043a1b4d5c926639cb26365385e4 Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:15 -0400
-Subject: [PATCH 168/369] UPSTREAM: usb: dwc3: Add software-managed properties
+Subject: [PATCH 168/411] UPSTREAM: usb: dwc3: Add software-managed properties
  for flattened model
 
 Add software-managed properties for the flattened model, which does not
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c6b7df5682b4..7f74a196871d 100644
+index c6b7df5682b4e..7f74a196871db 100644
 --- a/drivers/usb/dwc3/core.c
 +++ b/drivers/usb/dwc3/core.c
 @@ -1669,7 +1669,8 @@ static void dwc3_core_exit_mode(struct dwc3 *dwc)
@@ -71,7 +71,7 @@ index c6b7df5682b4..7f74a196871d 100644
  	return dwc3_core_probe(&probe_data);
  }
 diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
-index f8ad79c08c4e..ba3aec4cb963 100644
+index f8ad79c08c4e5..ba3aec4cb9631 100644
 --- a/drivers/usb/dwc3/dwc3-generic-plat.c
 +++ b/drivers/usb/dwc3/dwc3-generic-plat.c
 @@ -75,6 +75,7 @@ static int dwc3_generic_probe(struct platform_device *pdev)
@@ -83,7 +83,7 @@ index f8ad79c08c4e..ba3aec4cb963 100644
  	if (ret)
  		return dev_err_probe(dev, ret, "failed to register DWC3 Core\n");
 diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index ded2ca86670c..9ac75547820d 100644
+index ded2ca86670c0..9ac75547820d9 100644
 --- a/drivers/usb/dwc3/dwc3-qcom.c
 +++ b/drivers/usb/dwc3/dwc3-qcom.c
 @@ -704,6 +704,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
@@ -95,7 +95,7 @@ index ded2ca86670c..9ac75547820d 100644
  	if (ret)  {
  		ret = dev_err_probe(dev, ret, "failed to register DWC3 Core\n");
 diff --git a/drivers/usb/dwc3/glue.h b/drivers/usb/dwc3/glue.h
-index 2efd00e763be..cc6e138bd9ef 100644
+index 2efd00e763be4..cc6e138bd9ef2 100644
 --- a/drivers/usb/dwc3/glue.h
 +++ b/drivers/usb/dwc3/glue.h
 @@ -9,17 +9,31 @@
@@ -131,5 +131,5 @@ index 2efd00e763be..cc6e138bd9ef 100644
  
  int dwc3_core_probe(const struct dwc3_probe_data *data);
 -- 
-2.53.0
+2.52.0
 

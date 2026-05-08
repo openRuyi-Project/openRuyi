@@ -1,7 +1,7 @@
-From f4abfa84cd8bc4bc54299ff41365a86b8a2958ac Mon Sep 17 00:00:00 2001
+From 1c05e9f117ac756a9caee2daa37bc34753ea57be Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Sun, 22 Mar 2026 21:25:01 +0100
-Subject: [PATCH 228/369] UPSTREAM: riscv: dts: spacemit: drop incorrect
+Subject: [PATCH 228/411] UPSTREAM: riscv: dts: spacemit: drop incorrect
  pinctrl for combo PHY
 
 The combo PHY on the Banana Pi F3 is used for the USB 3.0 port. The high
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 404b69c47b91..5790d927b93d 100644
+index 404b69c47b91f..5790d927b93db 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -81,8 +81,6 @@ usb3_hub_5v: regulator-usb3-hub-5v {
@@ -38,5 +38,5 @@ index 404b69c47b91..5790d927b93d 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From e2aecfbf74be9baa2b31425c9e0bd6e354b4b58e Mon Sep 17 00:00:00 2001
+From ba68faea802db75bb2786ca78cea68fec89c8c3b Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 27 Jan 2026 10:58:49 +0800
-Subject: [PATCH 137/369] UPSTREAM: gpio: spacemit-k1: Use PDR for pin
+Subject: [PATCH 137/411] UPSTREAM: gpio: spacemit-k1: Use PDR for pin
  direction, not SDR/CDR
 
 On the SpacemiT GPIO controller, the direction control register PDR is
@@ -35,7 +35,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index 8f570a1a4894..dbd2e81094b9 100644
+index 8f570a1a48944..dbd2e81094b93 100644
 --- a/drivers/gpio/gpio-spacemit-k1.c
 +++ b/drivers/gpio/gpio-spacemit-k1.c
 @@ -199,7 +199,7 @@ static int spacemit_gpio_add_bank(struct spacemit_gpio *sg,
@@ -69,5 +69,5 @@ index 8f570a1a4894..dbd2e81094b9 100644
  
  	/* This registers 32 GPIO lines per bank */
 -- 
-2.53.0
+2.52.0
 

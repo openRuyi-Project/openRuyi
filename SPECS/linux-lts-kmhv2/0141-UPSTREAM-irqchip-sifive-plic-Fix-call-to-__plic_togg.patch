@@ -1,7 +1,7 @@
-From 8c54cb9f3d066bd3169762b1fb05b88847a8e9d6 Mon Sep 17 00:00:00 2001
+From edea966cf51e90303caf2587d09f04a4300b5dcb Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Mon, 3 Nov 2025 11:18:13 -0500
-Subject: [PATCH 141/369] UPSTREAM: irqchip/sifive-plic: Fix call to
+Subject: [PATCH 141/411] UPSTREAM: irqchip/sifive-plic: Fix call to
  __plic_toggle() in M-Mode code path
 
 The code path for M-Mode linux that disables interrupts for other contexts
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index b6ea38e24af3..53e446117599 100644
+index b6ea38e24af3d..53e4461175998 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -684,12 +684,11 @@ static int plic_probe(struct fwnode_handle *fwnode)
@@ -48,5 +48,5 @@ index b6ea38e24af3..53e446117599 100644
  			continue;
  		}
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From c380b8ab3a3d032602b786eae0220caa6ec775fe Mon Sep 17 00:00:00 2001
+From ade70b9d1c999b3865874e8d10fdcf94ae1a1c16 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:08 +0800
-Subject: [PATCH 072/369] UPSTREAM: drm/radeon: Make MSI address limit based on
+Subject: [PATCH 072/411] UPSTREAM: drm/radeon: Make MSI address limit based on
  the device DMA limit
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -37,7 +37,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 1 insertion(+), 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
-index 9e35b14e2bf0..92a3e3ee673c 100644
+index 9e35b14e2bf0e..92a3e3ee673c7 100644
 --- a/drivers/gpu/drm/radeon/radeon_device.c
 +++ b/drivers/gpu/drm/radeon/radeon_device.c
 @@ -1374,6 +1374,7 @@ int radeon_device_init(struct radeon_device *rdev,
@@ -49,7 +49,7 @@ index 9e35b14e2bf0..92a3e3ee673c 100644
  
  	/* Registers mapping */
 diff --git a/drivers/gpu/drm/radeon/radeon_irq_kms.c b/drivers/gpu/drm/radeon/radeon_irq_kms.c
-index d550554a6f3f..839d619e5602 100644
+index d550554a6f3f2..839d619e5602b 100644
 --- a/drivers/gpu/drm/radeon/radeon_irq_kms.c
 +++ b/drivers/gpu/drm/radeon/radeon_irq_kms.c
 @@ -245,16 +245,6 @@ static bool radeon_msi_ok(struct radeon_device *rdev)
@@ -70,5 +70,5 @@ index d550554a6f3f..839d619e5602 100644
  	if (radeon_msi == 1)
  		return true;
 -- 
-2.53.0
+2.52.0
 

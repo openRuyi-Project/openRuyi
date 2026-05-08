@@ -1,0 +1,54 @@
+From 914a88008d295bb7bcebdb2882705e8b20031f49 Mon Sep 17 00:00:00 2001
+From: Inochi Amaoto <inochiama@gmail.com>
+Date: Thu, 5 Dec 2024 13:24:13 +0800
+Subject: [PATCH 390/411] SOPHGO: riscv: dts: sophgo: sg2044: Add eFUSE device
+
+Add eFUSE controller node for SG2044.
+
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
+ arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts |  4 ++++
+ arch/riscv/boot/dts/sophgo/sg2044.dtsi               | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+index fed3d9a384a00..1b506972d4653 100644
+--- a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
++++ b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+@@ -36,6 +36,10 @@ &emmc {
+ 	status = "okay";
+ };
+ 
++&efuse0 {
++	status = "okay";
++};
++
+ &gmac0 {
+ 	phy-handle = <&phy0>;
+ 	phy-mode = "rgmii-id";
+diff --git a/arch/riscv/boot/dts/sophgo/sg2044.dtsi b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
+index 320c4d1d08e69..9577aae08f7f3 100644
+--- a/arch/riscv/boot/dts/sophgo/sg2044.dtsi
++++ b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
+@@ -408,6 +408,18 @@ sd: mmc@703000b000 {
+ 			status = "disabled";
+ 		};
+ 
++		efuse0: efuse@7040000000 {
++			compatible = "sophgo,sg2044-efuse";
++			reg = <0x70 0x40000000 0x0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&clk CLK_GATE_EFUSE>,
++				 <&clk CLK_GATE_APB_EFUSE>;
++			clock-names = "core", "apb";
++			resets = <&rst RST_EFUSE0>;
++			status = "disabled";
++		};
++
+ 		i2c0: i2c@7040005000 {
+ 			compatible = "sophgo,sg2044-i2c", "snps,designware-i2c";
+ 			reg = <0x70 0x40005000 0x0 0x1000>;
+-- 
+2.52.0
+

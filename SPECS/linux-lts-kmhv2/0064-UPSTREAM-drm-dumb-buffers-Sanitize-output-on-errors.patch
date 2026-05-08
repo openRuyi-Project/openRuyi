@@ -1,7 +1,7 @@
-From eda43515025251e88ee74ef5dccde50611e3caa5 Mon Sep 17 00:00:00 2001
+From 92560b67f995b3e21d215f685a6aec53158339ef Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:08 +0200
-Subject: [PATCH 064/369] UPSTREAM: drm/dumb-buffers: Sanitize output on errors
+Subject: [PATCH 064/411] UPSTREAM: drm/dumb-buffers: Sanitize output on errors
 
 The ioctls MODE_CREATE_DUMB and MODE_MAP_DUMB return results into a
 memory buffer supplied by user space. On errors, it is possible that
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 29 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dumb_buffers.c b/drivers/gpu/drm/drm_dumb_buffers.c
-index 70032bba1c97..9916aaf5b3f2 100644
+index 70032bba1c97e..9916aaf5b3f22 100644
 --- a/drivers/gpu/drm/drm_dumb_buffers.c
 +++ b/drivers/gpu/drm/drm_dumb_buffers.c
 @@ -99,7 +99,30 @@ int drm_mode_create_dumb(struct drm_device *dev,
@@ -79,5 +79,5 @@ index 70032bba1c97..9916aaf5b3f2 100644
  
  int drm_mode_destroy_dumb(struct drm_device *dev, u32 handle,
 -- 
-2.53.0
+2.52.0
 

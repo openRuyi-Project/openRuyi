@@ -1,0 +1,188 @@
+From f2675a644e84bf16d616e230f616e4c5ad8254b7 Mon Sep 17 00:00:00 2001
+From: Andre Heider <a.heider@gmail.com>
+Date: Tue, 5 May 2026 18:06:15 +0200
+Subject: [PATCH 324/411] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add
+ PMIC and power infrastructure
+
+Enable i2c8 and add the connected SpacemiT P1 PMIC with its related regulators
+for the board's power infrastructure and voltage regulation support.
+
+Signed-off-by: Andre Heider <a.heider@gmail.com>
+Link: https://lore.kernel.org/r/20260505160623.1369347-2-a.heider@gmail.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../riscv/boot/dts/spacemit/k1-musepi-pro.dts | 144 ++++++++++++++++++
+ 1 file changed, 144 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts b/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
+index 29e333b670cf0..07eef3274192c 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
+@@ -17,6 +17,7 @@ / {
+ 	aliases {
+ 		ethernet0 = &eth0;
+ 		serial0 = &uart0;
++		i2c8 = &i2c8;
+ 	};
+ 
+ 	chosen {
+@@ -33,6 +34,25 @@ led1 {
+ 			default-state = "on";
+ 		};
+ 	};
++
++	reg_usb_vbus: regulator-usb-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "USBVBUS";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_vcc_5v0_sys: regulator-vcc5v0-sys {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC5V0_SYS";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		regulator-always-on;
++		vin-supply = <&reg_usb_vbus>;
++	};
+ };
+ 
+ &emmc {
+@@ -72,6 +92,130 @@ &pdma {
+ 	status = "okay";
+ };
+ 
++&i2c8 {
++	pinctrl-0 = <&i2c8_cfg>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	pmic@41 {
++		compatible = "spacemit,p1";
++		reg = <0x41>;
++		interrupts = <64>;
++		vin1-supply = <&reg_vcc_5v0_sys>;
++		vin2-supply = <&reg_vcc_5v0_sys>;
++		vin3-supply = <&reg_vcc_5v0_sys>;
++		vin4-supply = <&reg_vcc_5v0_sys>;
++		vin5-supply = <&reg_vcc_5v0_sys>;
++		vin6-supply = <&reg_vcc_5v0_sys>;
++		aldoin-supply = <&reg_vcc_5v0_sys>;
++		dldoin1-supply = <&buck5>;
++		dldoin2-supply = <&buck5>;
++
++		regulators {
++			buck1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck5: buck5 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			buck6 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3450000>;
++				regulator-ramp-delay = <5000>;
++				regulator-always-on;
++			};
++
++			aldo1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++			};
++
++			aldo2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			aldo3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			aldo4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo1 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++			};
++
++			dldo2 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo3 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo4 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-always-on;
++			};
++
++			dldo5 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++
++			dldo6 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-always-on;
++			};
++
++			dldo7 {
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <3400000>;
++			};
++		};
++	};
++};
++
+ &uart0 {
+ 	pinctrl-0 = <&uart0_2_cfg>;
+ 	pinctrl-names = "default";
+-- 
+2.52.0
+

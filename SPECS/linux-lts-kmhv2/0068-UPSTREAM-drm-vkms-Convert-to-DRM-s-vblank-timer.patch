@@ -1,7 +1,7 @@
-From 8e89e736930001b6cc433ffe6dd5f786cdc67b49 Mon Sep 17 00:00:00 2001
+From 29970c606a037f0b2e05784757ac09b45170ecca Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:21 +0200
-Subject: [PATCH 068/369] UPSTREAM: drm/vkms: Convert to DRM's vblank timer
+Subject: [PATCH 068/411] UPSTREAM: drm/vkms: Convert to DRM's vblank timer
 
 Replace vkms' vblank timer with the DRM implementation. The DRM
 code is identical in concept, but differs in implementation.
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 7 insertions(+), 78 deletions(-)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
-index e60573e0f3e9..bd79f24686dc 100644
+index e60573e0f3e95..bd79f24686dce 100644
 --- a/drivers/gpu/drm/vkms/vkms_crtc.c
 +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
 @@ -7,25 +7,18 @@
@@ -155,7 +155,7 @@ index e60573e0f3e9..bd79f24686dc 100644
  
  struct vkms_output *vkms_crtc_init(struct drm_device *dev, struct drm_plane *primary,
 diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index 8013c31efe3b..fb9711e1c6fb 100644
+index 8013c31efe3b1..fb9711e1c6fbd 100644
 --- a/drivers/gpu/drm/vkms/vkms_drv.h
 +++ b/drivers/gpu/drm/vkms/vkms_drv.h
 @@ -215,8 +215,6 @@ struct vkms_output {
@@ -168,5 +168,5 @@ index 8013c31efe3b..fb9711e1c6fb 100644
  	spinlock_t lock;
  
 -- 
-2.53.0
+2.52.0
 

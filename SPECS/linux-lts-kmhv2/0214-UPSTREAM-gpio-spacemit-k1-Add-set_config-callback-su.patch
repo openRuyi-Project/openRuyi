@@ -1,7 +1,7 @@
-From a3509415787268b0dcb3bf03216cf48938d21edb Mon Sep 17 00:00:00 2001
+From 84dd511056a91c4010ae49da48658a7e57c87ad3 Mon Sep 17 00:00:00 2001
 From: Junhui Liu <junhui.liu@pigmoral.tech>
 Date: Thu, 12 Mar 2026 16:42:43 +0800
-Subject: [PATCH 214/369] UPSTREAM: gpio: spacemit-k1: Add set_config callback
+Subject: [PATCH 214/411] UPSTREAM: gpio: spacemit-k1: Add set_config callback
  support
 
 Assign gpiochip_generic_config() to the set_config() callback to support
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index dbd2e81094b9..5fe813b7f9bb 100644
+index dbd2e81094b93..5fe813b7f9bb5 100644
 --- a/drivers/gpio/gpio-spacemit-k1.c
 +++ b/drivers/gpio/gpio-spacemit-k1.c
 @@ -228,6 +228,7 @@ static int spacemit_gpio_add_bank(struct spacemit_gpio *sg,
@@ -33,5 +33,5 @@ index dbd2e81094b9..5fe813b7f9bb 100644
  	gc->base		= -1;
  	gc->of_gpio_n_cells	= 3;
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 65b99030d5e5568509b5690cefccf5d390cddc13 Mon Sep 17 00:00:00 2001
+From 539cd3b0a13f178031994077245d8981418dac12 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:30 +0800
-Subject: [PATCH 201/369] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add
+Subject: [PATCH 201/411] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add
  support for K3 SoC
 
 The SDHCI controller found on SpacemiT K3 SoC share the same IP with
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml b/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
-index 13d9382058fb..383841369fb2 100644
+index 13d9382058fbc..383841369fb20 100644
 --- a/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
 +++ b/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
 @@ -14,7 +14,9 @@ allOf:
@@ -33,5 +33,5 @@ index 13d9382058fb..383841369fb2 100644
    reg:
      maxItems: 1
 -- 
-2.53.0
+2.52.0
 

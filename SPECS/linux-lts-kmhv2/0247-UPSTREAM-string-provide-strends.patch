@@ -1,7 +1,7 @@
-From 5df2975de313db88077b3d9a8fa806ca5a8fa2a4 Mon Sep 17 00:00:00 2001
+From 7859c1abf35945be25ab39a4775de700c1401dca Mon Sep 17 00:00:00 2001
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Date: Wed, 12 Nov 2025 14:55:30 +0100
-Subject: [PATCH 247/369] UPSTREAM: string: provide strends()
+Subject: [PATCH 247/411] UPSTREAM: string: provide strends()
 
 Implement a function for checking if a string ends with a different
 string and add its kunit test cases.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 31 insertions(+)
 
 diff --git a/include/linux/string.h b/include/linux/string.h
-index fdd3442c6bcb..929d05d1247c 100644
+index fdd3442c6bcbd..929d05d1247c7 100644
 --- a/include/linux/string.h
 +++ b/include/linux/string.h
 @@ -562,4 +562,22 @@ static inline bool strstarts(const char *str, const char *prefix)
@@ -44,7 +44,7 @@ index fdd3442c6bcb..929d05d1247c 100644
 +
  #endif /* _LINUX_STRING_H_ */
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 0ed7448a26d3..f9a8e557ba77 100644
+index 0ed7448a26d3a..f9a8e557ba773 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -602,6 +602,18 @@ static void string_test_memtostr(struct kunit *test)
@@ -75,5 +75,5 @@ index 0ed7448a26d3..f9a8e557ba77 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

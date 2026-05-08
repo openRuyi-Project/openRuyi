@@ -1,7 +1,7 @@
-From 6078b06c3e7e692f30f4050d4f3d20d3e50d79c5 Mon Sep 17 00:00:00 2001
+From ac383b0eb6278a342f5adfba9980bb0d4530b1c9 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:42 +0800
-Subject: [PATCH 109/369] UPSTREAM: dt-bindings: interrupt-controller: add
+Subject: [PATCH 109/411] UPSTREAM: dt-bindings: interrupt-controller: add
  SpacemiT K3 APLIC
 
 Add compatible string for SpacemiT K3 APLIC.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-index bef00521d5da..0718071444d2 100644
+index bef00521d5dac..0718071444d29 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
 @@ -28,6 +28,7 @@ properties:
@@ -29,5 +29,5 @@ index bef00521d5da..0718071444d2 100644
  
    reg:
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From d37accec505be4c79fb0404d13976af4e336de7e Mon Sep 17 00:00:00 2001
+From 7f2076da15a4cca93c6f314ad98f2d77933da01d Mon Sep 17 00:00:00 2001
 From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
 Date: Tue, 20 Jan 2026 09:59:26 +0100
-Subject: [PATCH 145/369] UPSTREAM: pinctrl: th1520: Fix typo
+Subject: [PATCH 145/411] UPSTREAM: pinctrl: th1520: Fix typo
 
 This fixes a simple typo in the TH1520 SPI0 for group3 pins:
 QSPI0 is misspelled QSPI1.
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
-index e641bad6728c..83e9c9f77370 100644
+index e641bad6728cc..83e9c9f77370c 100644
 --- a/drivers/pinctrl/pinctrl-th1520.c
 +++ b/drivers/pinctrl/pinctrl-th1520.c
 @@ -287,7 +287,7 @@ static const struct pinctrl_pin_desc th1520_group3_pins[] = {
@@ -28,5 +28,5 @@ index e641bad6728c..83e9c9f77370 100644
  	TH1520_PAD(10, I2C2_SDA,      I2C,  UART, ____, GPIO, ____, ____, 0),
  	TH1520_PAD(11, I2C3_SCL,      I2C,  ____, ____, GPIO, ____, ____, 0),
 -- 
-2.53.0
+2.52.0
 

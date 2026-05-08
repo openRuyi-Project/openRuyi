@@ -1,7 +1,7 @@
-From e0f63738b8995f2a007f729dbdb8a6fb7e668330 Mon Sep 17 00:00:00 2001
+From c1bb2fa222d42242506f3ccac96896562cf0128a Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:25 +0000
-Subject: [PATCH 178/369] UPSTREAM: rust: clk: implement Send and Sync
+Subject: [PATCH 178/411] UPSTREAM: rust: clk: implement Send and Sync
 
 These traits are required for drivers to embed the Clk type in their own
 data structures because driver data structures are usually required to
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 1e6c8c42fb3a..0a290202da69 100644
+index 1e6c8c42fb3a3..0a290202da696 100644
 --- a/rust/kernel/clk.rs
 +++ b/rust/kernel/clk.rs
 @@ -129,6 +129,13 @@ mod common_clk {
@@ -42,5 +42,5 @@ index 1e6c8c42fb3a..0a290202da69 100644
          /// Gets [`Clk`] corresponding to a [`Device`] and a connection id.
          ///
 -- 
-2.53.0
+2.52.0
 

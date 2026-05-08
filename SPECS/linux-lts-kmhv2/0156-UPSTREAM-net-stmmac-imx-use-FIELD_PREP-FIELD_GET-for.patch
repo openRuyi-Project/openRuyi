@@ -1,7 +1,7 @@
-From 6a56941e561647e118d8be22502c992fbd86e9ec Mon Sep 17 00:00:00 2001
+From 94799274d901c700e4525212ec5421f9670385a0 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:26 +0000
-Subject: [PATCH 156/369] UPSTREAM: net: stmmac: imx: use
+Subject: [PATCH 156/411] UPSTREAM: net: stmmac: imx: use
  FIELD_PREP()/FIELD_GET() for PHY_INTF_SEL_x
 
 Use FIELD_PREP()/FIELD_GET() in the functions to construct the PHY
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 20 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index 4fbee59e7337..f1cfccd4269c 100644
+index 4fbee59e7337c..f1cfccd4269c3 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -24,24 +24,12 @@
@@ -147,5 +147,5 @@ index 4fbee59e7337..f1cfccd4269c 100644
  	regmap_update_bits(dwmac->intf_regmap, dwmac->intf_reg_off,
  			   MX93_GPR_ENET_QOS_INTF_MODE_MASK, iface);
 -- 
-2.53.0
+2.52.0
 

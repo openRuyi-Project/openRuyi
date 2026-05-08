@@ -1,7 +1,7 @@
-From 5cf10e90ffe4ebb224636c1ceeb260c218144f06 Mon Sep 17 00:00:00 2001
+From 25640c62eddaadc6468d1c23869cde9c586e40dc Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:52 +0800
-Subject: [PATCH 127/369] UPSTREAM: reset: spacemit: Add SpacemiT K3 reset
+Subject: [PATCH 127/411] UPSTREAM: reset: spacemit: Add SpacemiT K3 reset
  driver
 
 Add support for the SpacemiT K3 SoC reset controller. The K3 reset
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/reset/spacemit/reset-spacemit-k3.c
 
 diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
-index 56a4858b30e1..545d6b41c6ca 100644
+index 56a4858b30e13..545d6b41c6caf 100644
 --- a/drivers/reset/spacemit/Kconfig
 +++ b/drivers/reset/spacemit/Kconfig
 @@ -22,4 +22,15 @@ config RESET_SPACEMIT_K1
@@ -48,7 +48,7 @@ index 56a4858b30e1..545d6b41c6ca 100644
 +
  endmenu
 diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
-index 0b056e8661ec..00669132c6ac 100644
+index 0b056e8661ec5..00669132c6ac5 100644
 --- a/drivers/reset/spacemit/Makefile
 +++ b/drivers/reset/spacemit/Makefile
 @@ -2,3 +2,4 @@
@@ -58,7 +58,7 @@ index 0b056e8661ec..00669132c6ac 100644
 +obj-$(CONFIG_RESET_SPACEMIT_K3)		+= reset-spacemit-k3.o
 diff --git a/drivers/reset/spacemit/reset-spacemit-k3.c b/drivers/reset/spacemit/reset-spacemit-k3.c
 new file mode 100644
-index 000000000000..e9e32e4c1ba5
+index 0000000000000..e9e32e4c1ba56
 --- /dev/null
 +++ b/drivers/reset/spacemit/reset-spacemit-k3.c
 @@ -0,0 +1,233 @@
@@ -296,5 +296,5 @@ index 000000000000..e9e32e4c1ba5
 +MODULE_DESCRIPTION("SpacemiT K3 reset controller driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

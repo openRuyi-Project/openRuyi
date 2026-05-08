@@ -1,7 +1,7 @@
-From f99ea24ca51d99fa8aedf5a26df5c8526a55cc90 Mon Sep 17 00:00:00 2001
+From d8a32c563554c44bf438a24aed802377072d745d Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 18 Mar 2026 18:00:00 +0800
-Subject: [PATCH 227/369] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for
+Subject: [PATCH 227/411] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for
  K1
 
 Reorder the PHY nodes of USB and PCIe to the correct positions based on
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 54 insertions(+), 54 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index d2015201f8e5..f0bad6855c97 100644
+index d2015201f8e5a..f0bad6855c970 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -359,6 +359,60 @@ syscon_rcpu2: system-controller@c0888000 {
@@ -145,5 +145,5 @@ index d2015201f8e5..f0bad6855c97 100644
  			compatible = "spacemit,k1-syscon-apbc";
  			reg = <0x0 0xd4015000 0x0 0x1000>;
 -- 
-2.53.0
+2.52.0
 

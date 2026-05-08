@@ -1,7 +1,7 @@
-From a430f603186d0f1f5cd92266bc6f960244e7e910 Mon Sep 17 00:00:00 2001
+From 6f11eb9fbdb97e92547e7bfaeabfc75e70ee5921 Mon Sep 17 00:00:00 2001
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 Date: Fri, 2 Jan 2026 14:58:39 +0000
-Subject: [PATCH 034/369] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id()
+Subject: [PATCH 034/411] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id()
  returns int, not unsigned int
 
 The print in sbi_cpu_stop() assumes smp_processor_id() returns an
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-index 87d655944803..00aff669f5f2 100644
+index 87d6559448039..00aff669f5f2f 100644
 --- a/arch/riscv/kernel/cpu_ops_sbi.c
 +++ b/arch/riscv/kernel/cpu_ops_sbi.c
 @@ -85,7 +85,7 @@ static void sbi_cpu_stop(void)
@@ -31,5 +31,5 @@ index 87d655944803..00aff669f5f2 100644
  
  static int sbi_cpu_is_stopped(unsigned int cpuid)
 -- 
-2.53.0
+2.52.0
 

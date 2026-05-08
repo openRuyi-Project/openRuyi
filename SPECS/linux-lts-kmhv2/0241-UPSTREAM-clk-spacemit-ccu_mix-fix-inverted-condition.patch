@@ -1,7 +1,7 @@
-From 10b31a5567d5fcf90e71bf771f830167e8574c62 Mon Sep 17 00:00:00 2001
+From 44162eea68e9bf32760c675f94c12b24f1c2a6ae Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Thu, 5 Mar 2026 20:46:08 +0800
-Subject: [PATCH 241/369] UPSTREAM: clk: spacemit: ccu_mix: fix inverted
+Subject: [PATCH 241/411] UPSTREAM: clk: spacemit: ccu_mix: fix inverted
  condition in ccu_mix_trigger_fc()
 
 Fix inverted condition that skips frequency change trigger,
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/spacemit/ccu_mix.c b/drivers/clk/spacemit/ccu_mix.c
-index 9578366e9746..a8b407049bf4 100644
+index 9578366e97466..a8b407049bf4d 100644
 --- a/drivers/clk/spacemit/ccu_mix.c
 +++ b/drivers/clk/spacemit/ccu_mix.c
 @@ -73,7 +73,7 @@ static int ccu_mix_trigger_fc(struct clk_hw *hw)
@@ -32,5 +32,5 @@ index 9578366e9746..a8b407049bf4 100644
  
  	ccu_update(common, fc, common->mask_fc, common->mask_fc);
 -- 
-2.53.0
+2.52.0
 

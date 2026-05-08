@@ -1,7 +1,7 @@
-From a6bc8700e3a8597968974c2e2111bb742cb3514b Mon Sep 17 00:00:00 2001
+From d2b043a15a23392da351621be5bdbddb94417fd2 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:27 +0530
-Subject: [PATCH 161/369] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for
+Subject: [PATCH 161/411] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for
  OF-created PCI devices
 
 Recent changes replaced the use of no_64bit_msi with msi_addr_mask.  As a
@@ -37,7 +37,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 756043dd06e9..fb9fbf0d1796 100644
+index 756043dd06e9a..fb9fbf0d1796e 100644
 --- a/arch/powerpc/kernel/pci_of_scan.c
 +++ b/arch/powerpc/kernel/pci_of_scan.c
 @@ -212,6 +212,13 @@ struct pci_dev *of_create_pci_dev(struct device_node *node,
@@ -55,5 +55,5 @@ index 756043dd06e9..fb9fbf0d1796 100644
  	pci_fixup_device(pci_fixup_early, dev);
  
 -- 
-2.53.0
+2.52.0
 

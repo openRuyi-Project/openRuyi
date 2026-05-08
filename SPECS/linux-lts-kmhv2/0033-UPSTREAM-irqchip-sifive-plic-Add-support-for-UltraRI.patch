@@ -1,7 +1,7 @@
-From 1d4ce7c9c91dc879ce6585684c130261b97ce450 Mon Sep 17 00:00:00 2001
+From 55b23a17dcc28d6262f2678006276a5a8a89f4d0 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:43 +0100
-Subject: [PATCH 033/369] UPSTREAM: irqchip/sifive-plic: Add support for
+Subject: [PATCH 033/411] UPSTREAM: irqchip/sifive-plic: Add support for
  UltraRISC DP1000 PLIC
 
 Add a new compatible for the plic found in UltraRISC DP1000 with a quirk to
@@ -42,7 +42,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 103 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 96e46a3ba4bf..b6ea38e24af3 100644
+index 96e46a3ba4bfd..b6ea38e24af3d 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -49,6 +49,8 @@
@@ -190,5 +190,5 @@ index 96e46a3ba4bf..b6ea38e24af3 100644
  			cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
  					  "irqchip/sifive/plic:starting",
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 6c5cccaa2b2778d8a0900ec2e3ebeeaf5726ea1e Mon Sep 17 00:00:00 2001
+From a59090c9084448e07fa4d44eb6604541ce697228 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:02 -0500
-Subject: [PATCH 038/369] UPSTREAM: spi: fsl-qspi: switch predicates to bool
+Subject: [PATCH 038/411] UPSTREAM: spi: fsl-qspi: switch predicates to bool
 
 Change all the needs_*() functions so they are no longer inline, and return
 bool rather than int.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 1e27647dd2a0..1944e63169d3 100644
+index 1e27647dd2a09..1944e63169d36 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -276,34 +276,34 @@ struct fsl_qspi {
@@ -67,5 +67,5 @@ index 1e27647dd2a0..1944e63169d3 100644
  
  /*
 -- 
-2.53.0
+2.52.0
 

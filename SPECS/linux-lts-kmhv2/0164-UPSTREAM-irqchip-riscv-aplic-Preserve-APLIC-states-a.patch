@@ -1,7 +1,7 @@
-From 09d1fb1b2c8ac7491288742f57c73afe2c08ebc8 Mon Sep 17 00:00:00 2001
+From ea7efd3821f1a33fa0295b9986058e132473071b Mon Sep 17 00:00:00 2001
 From: Nick Hu <nick.hu@sifive.com>
 Date: Tue, 2 Dec 2025 14:07:41 +0800
-Subject: [PATCH 164/369] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states
+Subject: [PATCH 164/411] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states
  across suspend/resume
 
 The APLIC states might be reset when the platform enters a low power
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 198 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-riscv-aplic-direct.c b/drivers/irqchip/irq-riscv-aplic-direct.c
-index c2a75bf3d20c..5a9650225dd8 100644
+index c2a75bf3d20c6..5a9650225dd80 100644
 --- a/drivers/irqchip/irq-riscv-aplic-direct.c
 +++ b/drivers/irqchip/irq-riscv-aplic-direct.c
 @@ -8,6 +8,7 @@
@@ -56,7 +56,7 @@ index c2a75bf3d20c..5a9650225dd8 100644
  {
  	if (aplic_direct_parent_irq)
 diff --git a/drivers/irqchip/irq-riscv-aplic-main.c b/drivers/irqchip/irq-riscv-aplic-main.c
-index 93e7c51f944a..4495ca26abf5 100644
+index 93e7c51f944ab..4495ca26abf57 100644
 --- a/drivers/irqchip/irq-riscv-aplic-main.c
 +++ b/drivers/irqchip/irq-riscv-aplic-main.c
 @@ -12,10 +12,169 @@
@@ -283,7 +283,7 @@ index 93e7c51f944a..4495ca26abf5 100644
  #ifdef CONFIG_ACPI
  	if (!acpi_disabled)
 diff --git a/drivers/irqchip/irq-riscv-aplic-main.h b/drivers/irqchip/irq-riscv-aplic-main.h
-index b0ad8cde69b1..2d8ad7138541 100644
+index b0ad8cde69b13..2d8ad7138541a 100644
 --- a/drivers/irqchip/irq-riscv-aplic-main.h
 +++ b/drivers/irqchip/irq-riscv-aplic-main.h
 @@ -23,7 +23,25 @@ struct aplic_msicfg {
@@ -321,5 +321,5 @@ index b0ad8cde69b1..2d8ad7138541 100644
  #ifdef CONFIG_RISCV_APLIC_MSI
  int aplic_msi_setup(struct device *dev, void __iomem *regs);
 -- 
-2.53.0
+2.52.0
 

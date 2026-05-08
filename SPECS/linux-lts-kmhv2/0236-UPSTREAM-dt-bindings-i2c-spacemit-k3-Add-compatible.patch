@@ -1,7 +1,7 @@
-From 2e2d4cf9fc80093740c56c43ad5bfd508f2d867d Mon Sep 17 00:00:00 2001
+From 750b397836a1873ae489cdebdbcddc7af02b10e3 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 25 Mar 2026 09:49:24 +0000
-Subject: [PATCH 236/369] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add
+Subject: [PATCH 236/411] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add
  compatible
 
 Add a compatible string for the I2C controller found in SpacemiT K3 SoC
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
-index 5896fb120501..8c04c675b25e 100644
+index 5896fb1205011..8c04c675b25ec 100644
 --- a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 +++ b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 @@ -14,7 +14,11 @@ allOf:
@@ -36,5 +36,5 @@ index 5896fb120501..8c04c675b25e 100644
    reg:
      maxItems: 1
 -- 
-2.53.0
+2.52.0
 

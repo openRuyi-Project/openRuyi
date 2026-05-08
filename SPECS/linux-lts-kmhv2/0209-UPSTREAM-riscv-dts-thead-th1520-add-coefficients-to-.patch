@@ -1,7 +1,7 @@
-From cf735fe09f27d8b4d8c4c9284dbab5cf35c06cb2 Mon Sep 17 00:00:00 2001
+From 9f198edceeb8aa8c199316eb801777a347a7bab3 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:57 +0800
-Subject: [PATCH 209/369] UPSTREAM: riscv: dts: thead: th1520: add coefficients
+Subject: [PATCH 209/411] UPSTREAM: riscv: dts: thead: th1520: add coefficients
  to the PVT node
 
 The manual of TH1520 contains a set of coefficients a little different
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index aa6c9afa1a20..c65b71d9a1b8 100644
+index aa6c9afa1a20b..c65b71d9a1b8c 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -782,6 +782,10 @@ pvt: pvt@fffff4e000 {
@@ -35,5 +35,5 @@ index aa6c9afa1a20..c65b71d9a1b8 100644
  
  		gpio@fffff52000 {
 -- 
-2.53.0
+2.52.0
 

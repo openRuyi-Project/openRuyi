@@ -1,7 +1,7 @@
-From 03ce49d11c1110f3969087c3f93b0affc1589647 Mon Sep 17 00:00:00 2001
+From 671e2d763620f0037822f32606c5f7ffc522f95d Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:30 +0200
-Subject: [PATCH 192/369] UPSTREAM: drm/imagination: Implement handling of
+Subject: [PATCH 192/411] UPSTREAM: drm/imagination: Implement handling of
  context reset notification
 
 The firmware will send the context reset notification message as
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/gpu/drm/imagination/pvr_dump.h
 
 diff --git a/drivers/gpu/drm/imagination/Makefile b/drivers/gpu/drm/imagination/Makefile
-index 7cca66f00a38..d94a8f592c74 100644
+index 7cca66f00a38a..d94a8f592c746 100644
 --- a/drivers/gpu/drm/imagination/Makefile
 +++ b/drivers/gpu/drm/imagination/Makefile
 @@ -8,6 +8,7 @@ powervr-y := \
@@ -39,7 +39,7 @@ index 7cca66f00a38..d94a8f592c74 100644
  	pvr_fw.o \
  	pvr_fw_meta.o \
 diff --git a/drivers/gpu/drm/imagination/pvr_ccb.c b/drivers/gpu/drm/imagination/pvr_ccb.c
-index da281b5c7055..8e8e7c1e0b03 100644
+index da281b5c7055d..8e8e7c1e0b035 100644
 --- a/drivers/gpu/drm/imagination/pvr_ccb.c
 +++ b/drivers/gpu/drm/imagination/pvr_ccb.c
 @@ -4,6 +4,7 @@
@@ -63,7 +63,7 @@ index da281b5c7055..8e8e7c1e0b03 100644
  		drm_info(drm_dev, "Received unknown FWCCB command (type=%d)\n",
 diff --git a/drivers/gpu/drm/imagination/pvr_dump.c b/drivers/gpu/drm/imagination/pvr_dump.c
 new file mode 100644
-index 000000000000..52e95fce2817
+index 0000000000000..52e95fce28178
 --- /dev/null
 +++ b/drivers/gpu/drm/imagination/pvr_dump.c
 @@ -0,0 +1,113 @@
@@ -182,7 +182,7 @@ index 000000000000..52e95fce2817
 +}
 diff --git a/drivers/gpu/drm/imagination/pvr_dump.h b/drivers/gpu/drm/imagination/pvr_dump.h
 new file mode 100644
-index 000000000000..3c0728c05596
+index 0000000000000..3c0728c05596b
 --- /dev/null
 +++ b/drivers/gpu/drm/imagination/pvr_dump.h
 @@ -0,0 +1,17 @@
@@ -204,5 +204,5 @@ index 000000000000..3c0728c05596
 +
 +#endif /* PVR_DUMP_H */
 -- 
-2.53.0
+2.52.0
 

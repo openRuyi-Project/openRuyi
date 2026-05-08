@@ -1,7 +1,7 @@
-From 0da492da2c279d9ecdb287c851642b4c5354267c Mon Sep 17 00:00:00 2001
+From d7c4f0858adb75ea551422dc8901d0b005968349 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Tue, 20 Jan 2026 18:00:01 +0800
-Subject: [PATCH 130/369] UPSTREAM: riscv: dts: spacemit: Disable ETH PHY sleep
+Subject: [PATCH 130/411] UPSTREAM: riscv: dts: spacemit: Disable ETH PHY sleep
  mode for OrangePi
 
 On the SpacemiT K1 platform, the MAC can't read statistics when the PHY
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 4 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
-index 58098c4a2aab..de75f6aac740 100644
+index 58098c4a2aabd..de75f6aac7405 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 @@ -52,6 +52,7 @@ mdio-bus {
@@ -40,7 +40,7 @@ index 58098c4a2aab..de75f6aac740 100644
  	};
  };
 diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
-index 41dc8e35e6eb..7b7331cb3c72 100644
+index 41dc8e35e6ebe..7b7331cb3c726 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-rv2.dts
 @@ -54,6 +54,7 @@ mdio-bus {
@@ -60,5 +60,5 @@ index 41dc8e35e6eb..7b7331cb3c72 100644
  	};
  };
 -- 
-2.53.0
+2.52.0
 

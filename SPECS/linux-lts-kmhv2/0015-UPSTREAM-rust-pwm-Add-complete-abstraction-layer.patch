@@ -1,7 +1,7 @@
-From 09bbee0a75c98319a73797259a41c413d8bfbc93 Mon Sep 17 00:00:00 2001
+From f1790358c20e3d6353a0a0d8f17a318c3d1b02a8 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:03 +0200
-Subject: [PATCH 015/369] UPSTREAM: rust: pwm: Add complete abstraction layer
+Subject: [PATCH 015/411] UPSTREAM: rust: pwm: Add complete abstraction layer
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -43,7 +43,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 662 insertions(+), 2 deletions(-)
 
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index beabf0086a2f..79fbb13cd47f 100644
+index beabf0086a2f1..79fbb13cd47f7 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
 @@ -8,10 +8,14 @@
@@ -724,5 +724,5 @@ index beabf0086a2f..79fbb13cd47f 100644
 +    }
 +}
 -- 
-2.53.0
+2.52.0
 

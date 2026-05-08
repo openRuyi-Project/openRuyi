@@ -1,7 +1,7 @@
-From b5eeb5cc0c8db942731ddd32b8ca97a0552ca24c Mon Sep 17 00:00:00 2001
+From 180a62cfe22860db567e747d7513d2ddfad3ed85 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:29 -0600
-Subject: [PATCH 082/369] UPSTREAM: phy: spacemit: Introduce PCIe/combo PHY
+Subject: [PATCH 082/411] UPSTREAM: phy: spacemit: Introduce PCIe/combo PHY
 
 Introduce a driver that supports three PHYs found on the SpacemiT
 K1 SoC.  The first PHY is a combo PHY that can be configured for
@@ -44,7 +44,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/phy/phy-spacemit-k1-pcie.c
 
 diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 678dd0452f0a..1984c2e56122 100644
+index 678dd0452f0aa..1984c2e56122e 100644
 --- a/drivers/phy/Kconfig
 +++ b/drivers/phy/Kconfig
 @@ -101,6 +101,17 @@ config PHY_NXP_PTN3222
@@ -66,7 +66,7 @@ index 678dd0452f0a..1984c2e56122 100644
  source "drivers/phy/amlogic/Kconfig"
  source "drivers/phy/broadcom/Kconfig"
 diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index bfb27fb5a494..a206133a3515 100644
+index bfb27fb5a4942..a206133a35151 100644
 --- a/drivers/phy/Makefile
 +++ b/drivers/phy/Makefile
 @@ -13,6 +13,7 @@ obj-$(CONFIG_PHY_SNPS_EUSB2)		+= phy-snps-eusb2.o
@@ -79,7 +79,7 @@ index bfb27fb5a494..a206133a3515 100644
  					   broadcom/	\
 diff --git a/drivers/phy/phy-spacemit-k1-pcie.c b/drivers/phy/phy-spacemit-k1-pcie.c
 new file mode 100644
-index 000000000000..75477bea7f70
+index 0000000000000..75477bea7f700
 --- /dev/null
 +++ b/drivers/phy/phy-spacemit-k1-pcie.c
 @@ -0,0 +1,670 @@
@@ -754,5 +754,5 @@ index 000000000000..75477bea7f70
 +MODULE_DESCRIPTION("SpacemiT K1 PCIe and USB 3 PHY driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

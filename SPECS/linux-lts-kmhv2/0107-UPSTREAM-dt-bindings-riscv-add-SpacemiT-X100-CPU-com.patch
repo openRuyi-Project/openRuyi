@@ -1,7 +1,7 @@
-From 2425ebda669a44bd0cb4f7b4e780bfb9a0b8aba3 Mon Sep 17 00:00:00 2001
+From b5f8f5471b2dc740dd2a02a15e6a166ff533ce1a Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:40 +0800
-Subject: [PATCH 107/369] UPSTREAM: dt-bindings: riscv: add SpacemiT X100 CPU
+Subject: [PATCH 107/411] UPSTREAM: dt-bindings: riscv: add SpacemiT X100 CPU
  compatible
 
 Add compatible string for the SpacemiT X100 core. [1]
@@ -32,7 +32,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index 153d0dac57fb..a86819565394 100644
+index 153d0dac57fb3..a868195653945 100644
 --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
 +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
 @@ -60,6 +60,7 @@ properties:
@@ -44,5 +44,5 @@ index 153d0dac57fb..a86819565394 100644
                - thead,c906
                - thead,c908
 -- 
-2.53.0
+2.52.0
 

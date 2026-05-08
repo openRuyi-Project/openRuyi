@@ -1,7 +1,7 @@
-From 9d8787aa5d410cfd693537f9de925a95c5a153d7 Mon Sep 17 00:00:00 2001
+From 21449a177c8c186cc93917cf0ed4f678d7b96219 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 16 Dec 2025 09:47:19 +0800
-Subject: [PATCH 062/369] UPSTREAM: riscv: remove irqflags.h inclusion in
+Subject: [PATCH 062/411] UPSTREAM: riscv: remove irqflags.h inclusion in
  asm/bitops.h
 
 The arch/riscv/include/asm/bitops.h does not functionally require
@@ -48,7 +48,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 deletion(-)
 
 diff --git a/arch/riscv/include/asm/bitops.h b/arch/riscv/include/asm/bitops.h
-index 77880677b06e..6a344f791d4c 100644
+index 77880677b06e0..6a344f791d4c1 100644
 --- a/arch/riscv/include/asm/bitops.h
 +++ b/arch/riscv/include/asm/bitops.h
 @@ -11,7 +11,6 @@
@@ -60,5 +60,5 @@ index 77880677b06e..6a344f791d4c 100644
  #include <asm/bitsperlong.h>
  
 -- 
-2.53.0
+2.52.0
 

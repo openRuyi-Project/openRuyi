@@ -1,7 +1,7 @@
-From 782decdffe855bb105f451572f8f9c1dc7f38df5 Mon Sep 17 00:00:00 2001
+From e4d01450b5d27b93c10071c5b9b44a5afadbba82 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:04 +0800
-Subject: [PATCH 216/369] UPSTREAM: riscv: dts: spacemit: Update PMIC supply
+Subject: [PATCH 216/411] UPSTREAM: riscv: dts: spacemit: Update PMIC supply
  properties for BPI-F3 and Jupiter
 
 Use per-regulator supply names in pmic "spacemit,p1" node to specify
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 51f6c6a774b0..ed88507b84e9 100644
+index 51f6c6a774b0d..ed88507b84e98 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -190,7 +190,15 @@ pmic@41 {
@@ -49,7 +49,7 @@ index 51f6c6a774b0..ed88507b84e9 100644
  				regulator-max-microvolt = <3450000>;
  				regulator-ramp-delay = <5000>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 800a112d5d70..e2702a781734 100644
+index 800a112d5d705..e2702a781734b 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -100,7 +100,15 @@ pmic@41 {
@@ -79,5 +79,5 @@ index 800a112d5d70..e2702a781734 100644
  				regulator-max-microvolt = <3450000>;
  				regulator-ramp-delay = <5000>;
 -- 
-2.53.0
+2.52.0
 

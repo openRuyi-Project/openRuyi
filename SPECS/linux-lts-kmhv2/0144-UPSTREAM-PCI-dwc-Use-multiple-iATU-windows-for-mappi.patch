@@ -1,7 +1,7 @@
-From 31e91608b34b7dd2fbae0817483fb62aad619e46 Mon Sep 17 00:00:00 2001
+From 411146deedd10fbd4b3790447fa5a5ea79fc462c Mon Sep 17 00:00:00 2001
 From: Samuel Holland <samuel.holland@sifive.com>
 Date: Fri, 9 Jan 2026 19:34:30 +0800
-Subject: [PATCH 144/369] UPSTREAM: PCI: dwc: Use multiple iATU windows for
+Subject: [PATCH 144/411] UPSTREAM: PCI: dwc: Use multiple iATU windows for
  mapping large bridge windows and DMA ranges
 
 The DWC driver tries to use a single iATU region for mapping the individual
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 57 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 894bf23529df..3c099dff2d61 100644
+index 894bf23529df5..3c099dff2d611 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
 @@ -887,29 +887,50 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
@@ -141,5 +141,5 @@ index 894bf23529df..3c099dff2d61 100644
  	}
  
 -- 
-2.53.0
+2.52.0
 

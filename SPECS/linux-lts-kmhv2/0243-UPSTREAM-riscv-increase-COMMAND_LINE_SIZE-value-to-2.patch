@@ -1,7 +1,7 @@
-From 434b3a1bc54bc87741b141c14fc2e79e17227574 Mon Sep 17 00:00:00 2001
+From 7d13f25ddc655590c212c13dd9d71b2a20bbb774 Mon Sep 17 00:00:00 2001
 From: Austin Kim <austin.kim@lge.com>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 243/369] UPSTREAM: riscv: increase COMMAND_LINE_SIZE value to
+Subject: [PATCH 243/411] UPSTREAM: riscv: increase COMMAND_LINE_SIZE value to
  2048
 
 SoC people may send many parameters to configure the drivers via kernel
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/include/uapi/asm/setup.h b/arch/riscv/include/uapi/asm/setup.h
-index 66b13a522880..eb4f0209c696 100644
+index 66b13a5228808..eb4f0209c6960 100644
 --- a/arch/riscv/include/uapi/asm/setup.h
 +++ b/arch/riscv/include/uapi/asm/setup.h
 @@ -3,6 +3,6 @@
@@ -32,5 +32,5 @@ index 66b13a522880..eb4f0209c696 100644
  
  #endif /* _UAPI_ASM_RISCV_SETUP_H */
 -- 
-2.53.0
+2.52.0
 

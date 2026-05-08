@@ -1,7 +1,7 @@
-From 2486b32bb2ee880484d427aead12598edb145c17 Mon Sep 17 00:00:00 2001
+From d0f639168c8c419b086a3d9e011a905f4725a5dc Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 13 Jan 2026 10:38:26 +0800
-Subject: [PATCH 075/369] UPSTREAM: riscv: dts: sophgo: Move PLIC and CLINT
+Subject: [PATCH 075/411] UPSTREAM: riscv: dts: sophgo: Move PLIC and CLINT
  node into CPU dtsi
 
 As we have a separate CPU dtsi file, move the PLIC and CLINT
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 305 insertions(+), 303 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
-index 94a4b71acad3..509488eee432 100644
+index 94a4b71acad32..509488eee4321 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
 +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
 @@ -2189,4 +2189,309 @@ l2_cache15: cache-controller-15 {
@@ -336,7 +336,7 @@ index 94a4b71acad3..509488eee432 100644
 +	};
  };
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-index ec99da39150f..e6891f95d479 100644
+index ec99da39150f7..e6891f95d479b 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
 +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
 @@ -352,309 +352,6 @@ pcie_rc3: pcie@7062800000 {
@@ -650,5 +650,5 @@ index ec99da39150f..e6891f95d479 100644
  			compatible = "sophgo,sg2042-reset";
  			reg = <0x00000070 0x30013000 0x00000000 0x0000000c>;
 -- 
-2.53.0
+2.52.0
 

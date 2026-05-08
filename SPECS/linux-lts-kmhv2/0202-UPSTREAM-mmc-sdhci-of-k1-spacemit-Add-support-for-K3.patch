@@ -1,7 +1,7 @@
-From f8716945a43450e2fea7629fd68cdf3a5f0883bd Mon Sep 17 00:00:00 2001
+From d450b2a4a94c37c535adb4ec63fd05bdc027b156 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:31 +0800
-Subject: [PATCH 202/369] UPSTREAM: mmc: sdhci-of-k1: spacemit: Add support for
+Subject: [PATCH 202/411] UPSTREAM: mmc: sdhci-of-k1: spacemit: Add support for
  K3 SoC
 
 The SDHCI controller found on SpacemiT K3 SoC share the same IP with K1
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
-index a160e1d5d9bd..455656f9842d 100644
+index a160e1d5d9bde..455656f9842df 100644
 --- a/drivers/mmc/host/sdhci-of-k1.c
 +++ b/drivers/mmc/host/sdhci-of-k1.c
 @@ -259,8 +259,20 @@ static const struct sdhci_pltfm_data spacemit_sdhci_k1_pdata = {
@@ -58,5 +58,5 @@ index a160e1d5d9bd..455656f9842d 100644
  		return PTR_ERR(host);
  
 -- 
-2.53.0
+2.52.0
 

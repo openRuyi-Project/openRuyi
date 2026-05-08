@@ -1,7 +1,7 @@
-From dc7be77fbf78898bfc954e091ac5749e1d96a525 Mon Sep 17 00:00:00 2001
+From 29fbce54f5486211851d0c765c3f76c32e7cabba Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 25 Dec 2025 15:46:32 +0800
-Subject: [PATCH 139/369] UPSTREAM: mfd: Kconfig: Default MFD_SPACEMIT_P1 to
+Subject: [PATCH 139/411] UPSTREAM: mfd: Kconfig: Default MFD_SPACEMIT_P1 to
  'm' if ARCH_SPACEMIT
 
 The default value of the P1 sub-device depends on the value
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index b0264352790e..8295e7871d70 100644
+index b0264352790e3..8295e7871d709 100644
 --- a/drivers/mfd/Kconfig
 +++ b/drivers/mfd/Kconfig
 @@ -1270,6 +1270,7 @@ config MFD_SPACEMIT_P1
@@ -30,5 +30,5 @@ index b0264352790e..8295e7871d70 100644
  	  This option supports the I2C-based SpacemiT P1 PMIC, which
  	  contains regulators, a power switch, GPIOs, an RTC, and more.
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From d5428bdfe99055b8d87886fc933ace9b00bd8144 Mon Sep 17 00:00:00 2001
+From 26ded9b475ac4f29da64116c84100f84ae9806c1 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:52 +0800
-Subject: [PATCH 088/369] UPSTREAM: dt-bindings: phy: spacemit: add K1 USB2 PHY
+Subject: [PATCH 088/411] UPSTREAM: dt-bindings: phy: spacemit: add K1 USB2 PHY
 
 Add support for USB2 PHY found on SpacemiT K1 SoC.
 
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
 new file mode 100644
-index 000000000000..43eaca90d88c
+index 0000000000000..43eaca90d88c0
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
 @@ -0,0 +1,40 @@
@@ -65,5 +65,5 @@ index 000000000000..43eaca90d88c
 +        #phy-cells = <0>;
 +    };
 -- 
-2.53.0
+2.52.0
 

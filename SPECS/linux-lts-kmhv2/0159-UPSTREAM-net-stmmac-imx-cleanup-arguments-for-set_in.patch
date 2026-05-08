@@ -1,7 +1,7 @@
-From 7a4d685e27fd5ae64560360935763a6fdd916843 Mon Sep 17 00:00:00 2001
+From c2c069a347f84b1029bf5e22ba3187046b8c5ab2 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:41 +0000
-Subject: [PATCH 159/369] UPSTREAM: net: stmmac: imx: cleanup arguments for
+Subject: [PATCH 159/411] UPSTREAM: net: stmmac: imx: cleanup arguments for
  set_intf_mode() method
 
 Pass the imx_priv_data instead of the plat_stmmacenet_data into the
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index d69be9de4468..ae1b73e1bcb2 100644
+index d69be9de44682..ae1b73e1bcb2f 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -39,14 +39,15 @@
@@ -96,5 +96,5 @@ index d69be9de4468..ae1b73e1bcb2 100644
  			return ret;
  	}
 -- 
-2.53.0
+2.52.0
 

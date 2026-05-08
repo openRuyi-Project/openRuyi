@@ -1,7 +1,7 @@
-From 726c9aef71dc55cb97a2e7101945f72a8f50a176 Mon Sep 17 00:00:00 2001
+From 2c010198a4434c05705dc8677d3fd9fb32c5c1cd Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:28 -0800
-Subject: [PATCH 173/369] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h
+Subject: [PATCH 173/411] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h
 
 Add PCI_VENDOR_ID_ASPEED to the shared pci_ids.h header and remove the
 duplicate local definition from ehci-pci.c.
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
-index 889dc4426271..bd3a63555594 100644
+index 889dc44262711..bd3a635555942 100644
 --- a/drivers/usb/host/ehci-pci.c
 +++ b/drivers/usb/host/ehci-pci.c
 @@ -21,7 +21,6 @@ static const char hcd_name[] = "ehci-pci";
@@ -32,7 +32,7 @@ index 889dc4426271..bd3a63555594 100644
  
  /*-------------------------------------------------------------------------*/
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 03b7c0380f71..2b6692a5005f 100644
+index 03b7c0380f71c..2b6692a5005f5 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
 @@ -2583,6 +2583,8 @@
@@ -45,5 +45,5 @@ index 03b7c0380f71..2b6692a5005f 100644
  
  #define PCI_VENDOR_ID_AZWAVE		0x1a3b
 -- 
-2.53.0
+2.52.0
 

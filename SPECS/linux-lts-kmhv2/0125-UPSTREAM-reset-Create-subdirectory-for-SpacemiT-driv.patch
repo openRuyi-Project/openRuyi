@@ -1,7 +1,7 @@
-From 0558c96c3e4f998eceb72e8114c7bcd5b703839c Mon Sep 17 00:00:00 2001
+From fbafb5268b0a7b6f0527466ed03b374c719e6672 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:50 +0800
-Subject: [PATCH 125/369] UPSTREAM: reset: Create subdirectory for SpacemiT
+Subject: [PATCH 125/411] UPSTREAM: reset: Create subdirectory for SpacemiT
  drivers
 
 Create a dedicated subdirectory for SpacemiT reset drivers to allow
@@ -36,7 +36,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  rename drivers/reset/{reset-spacemit.c => spacemit/reset-spacemit-k1.c} (100%)
 
 diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index b3b9e0f9d8c4..096f57fb7ccf 100644
+index b3b9e0f9d8c48..096f57fb7ccf0 100644
 --- a/drivers/reset/Kconfig
 +++ b/drivers/reset/Kconfig
 @@ -286,15 +286,6 @@ config RESET_SOCFPGA
@@ -68,7 +68,7 @@ index b3b9e0f9d8c4..096f57fb7ccf 100644
  
  endif
 diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index f7934f9fb90b..e0934ab7153c 100644
+index f7934f9fb90bb..e0934ab7153c3 100644
 --- a/drivers/reset/Makefile
 +++ b/drivers/reset/Makefile
 @@ -2,6 +2,7 @@
@@ -89,7 +89,7 @@ index f7934f9fb90b..e0934ab7153c 100644
  obj-$(CONFIG_RESET_TH1520) += reset-th1520.o
 diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
 new file mode 100644
-index 000000000000..552884e8b72a
+index 0000000000000..552884e8b72af
 --- /dev/null
 +++ b/drivers/reset/spacemit/Kconfig
 @@ -0,0 +1,14 @@
@@ -109,7 +109,7 @@ index 000000000000..552884e8b72a
 +
 diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
 new file mode 100644
-index 000000000000..34e3350136bb
+index 0000000000000..34e3350136bb9
 --- /dev/null
 +++ b/drivers/reset/spacemit/Makefile
 @@ -0,0 +1,2 @@
@@ -120,5 +120,5 @@ similarity index 100%
 rename from drivers/reset/reset-spacemit.c
 rename to drivers/reset/spacemit/reset-spacemit-k1.c
 -- 
-2.53.0
+2.52.0
 

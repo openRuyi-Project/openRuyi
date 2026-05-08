@@ -1,7 +1,7 @@
-From 9e366a629037d17921bb4e82b8696c2878a71247 Mon Sep 17 00:00:00 2001
+From c858a48b2e52dcf66d8974b8e04c9e45bbf69ff9 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:56 -0500
-Subject: [PATCH 049/369] UPSTREAM: riscv: dts: spacemit: define regulator
+Subject: [PATCH 049/411] UPSTREAM: riscv: dts: spacemit: define regulator
  constraints
 
 Define basic constraints for the regulators in the SpacemiT P1 PMIC,
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 104 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 42762f22ceb1..b3322dcac31a 100644
+index 42762f22ceb14..b3322dcac31a5 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -120,6 +120,110 @@ pmic@41 {
@@ -132,5 +132,5 @@ index 42762f22ceb1..b3322dcac31a 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 8e4631a6d5ffbdf6731f50be8e7b36c7ec1e0403 Mon Sep 17 00:00:00 2001
+From fcd445d3048f8511137942d553aacb91a9adb986 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:10 +0000
-Subject: [PATCH 153/369] UPSTREAM: net: stmmac: add stmmac_get_phy_intf_sel()
+Subject: [PATCH 153/411] UPSTREAM: net: stmmac: add stmmac_get_phy_intf_sel()
 
 Provide a function to translate the PHY interface mode to the
 phy_intf_sel pin configuration for dwmac1000 and dwmac4 cores that
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 21 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index 865531d6cd3b..a628b5039448 100644
+index 865531d6cd3b8..a628b50394480 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
 @@ -395,6 +395,7 @@ void stmmac_ptp_register(struct stmmac_priv *priv);
@@ -33,7 +33,7 @@ index 865531d6cd3b..a628b5039448 100644
  int stmmac_suspend(struct device *dev);
  void stmmac_dvr_remove(struct device *dev);
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index f8df0609e0e6..4bf387a5432e 100644
+index f8df0609e0e69..4bf387a5432e3 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 @@ -3031,6 +3031,26 @@ static void stmmac_check_ether_addr(struct stmmac_priv *priv)
@@ -64,5 +64,5 @@ index f8df0609e0e6..4bf387a5432e 100644
   * stmmac_init_dma_engine - DMA init.
   * @priv: driver private structure
 -- 
-2.53.0
+2.52.0
 

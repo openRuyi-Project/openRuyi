@@ -1,7 +1,7 @@
-From 4a00b3380ce6aac00e3f2d0343cc421629a94cfe Mon Sep 17 00:00:00 2001
+From 9258b29bc7acc90f2fb03e818481cf504d91b850 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:19:39 +0000
-Subject: [PATCH 219/369] UPSTREAM: dt-bindings: serial: 8250: spacemit: fix
+Subject: [PATCH 219/411] UPSTREAM: dt-bindings: serial: 8250: spacemit: fix
  clock property for K3 SoC
 
 The UART of SpacemiT K3 SoC has same clock property as K1 generation which
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
-index b243afa69a1a..0d4ae9a62f4c 100644
+index b243afa69a1ae..0d4ae9a62f4c2 100644
 --- a/Documentation/devicetree/bindings/serial/8250.yaml
 +++ b/Documentation/devicetree/bindings/serial/8250.yaml
 @@ -63,7 +63,9 @@ allOf:
@@ -42,5 +42,5 @@ index b243afa69a1a..0d4ae9a62f4c 100644
      then:
        required:
 -- 
-2.53.0
+2.52.0
 

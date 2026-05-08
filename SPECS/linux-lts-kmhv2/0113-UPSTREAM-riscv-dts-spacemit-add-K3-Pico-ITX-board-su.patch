@@ -1,7 +1,7 @@
-From d452d642faa25601572542b2594ea85c09c14e35 Mon Sep 17 00:00:00 2001
+From 4c47975e5499007172e4153a5d1b4cfdcfb6b2e7 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:46 +0800
-Subject: [PATCH 113/369] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board
+Subject: [PATCH 113/411] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board
  support
 
 K3 Pico-ITX is a 2.5-inch single-board computer equipted with a SpacemiT
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 
 diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-index 95889e7269d1..7e2b87702571 100644
+index 95889e7269d1b..7e2b877025718 100644
 --- a/arch/riscv/boot/dts/spacemit/Makefile
 +++ b/arch/riscv/boot/dts/spacemit/Makefile
 @@ -4,3 +4,4 @@ dtb-$(CONFIG_ARCH_SPACEMIT) += k1-milkv-jupiter.dtb
@@ -32,7 +32,7 @@ index 95889e7269d1..7e2b87702571 100644
 +dtb-$(CONFIG_ARCH_SPACEMIT) += k3-pico-itx.dtb
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 new file mode 100644
-index 000000000000..b691304d4b74
+index 0000000000000..b691304d4b746
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 @@ -0,0 +1,29 @@
@@ -66,5 +66,5 @@ index 000000000000..b691304d4b74
 +	status = "okay";
 +};
 -- 
-2.53.0
+2.52.0
 

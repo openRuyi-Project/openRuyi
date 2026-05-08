@@ -1,7 +1,7 @@
-From f7eafd4a0e47d112626a24975ad97a5107fe693e Mon Sep 17 00:00:00 2001
+From 12af47ceb588646de0693463c1f3e8a9fbeb501e Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:21 +0800
-Subject: [PATCH 104/369] UPSTREAM: dt-bindings: riscv: Add Sha and its
+Subject: [PATCH 104/411] UPSTREAM: dt-bindings: riscv: Add Sha and its
  comprised extensions
 
 Add descriptions for the Sha extension and the seven extensions it
@@ -39,7 +39,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 57 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 81cff2e5b06f..abe72eaa6c59 100644
+index 81cff2e5b06f9..abe72eaa6c593 100644
 --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
 +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
 @@ -129,6 +129,57 @@ properties:
@@ -114,5 +114,5 @@ index 81cff2e5b06f..abe72eaa6c59 100644
            description: |
              The standard Sstc supervisor-level extension for time compare as
 -- 
-2.53.0
+2.52.0
 

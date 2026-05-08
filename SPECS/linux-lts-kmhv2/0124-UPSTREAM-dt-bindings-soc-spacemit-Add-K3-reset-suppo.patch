@@ -1,7 +1,7 @@
-From 2cbba0cba5621c4682c224135ea86bad1c1997dc Mon Sep 17 00:00:00 2001
+From 19bb9117e21a51d05fe8ae397e8586b72528f5fe Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:49 +0800
-Subject: [PATCH 124/369] UPSTREAM: dt-bindings: soc: spacemit: Add K3 reset
+Subject: [PATCH 124/411] UPSTREAM: dt-bindings: soc: spacemit: Add K3 reset
  support and IDs
 
 Update the spacemit,k1-syscon.yaml binding to document K3 SoC reset
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 include/dt-bindings/reset/spacemit,k3-resets.h
 
 diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
-index d87131da30bc..d3a7c93c3c54 100644
+index d87131da30bc8..d3a7c93c3c54f 100644
 --- a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
 +++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
 @@ -10,7 +10,7 @@ maintainers:
@@ -55,7 +55,7 @@ index d87131da30bc..d3a7c93c3c54 100644
    - compatible
 diff --git a/include/dt-bindings/reset/spacemit,k3-resets.h b/include/dt-bindings/reset/spacemit,k3-resets.h
 new file mode 100644
-index 000000000000..79ac1c22b7b5
+index 0000000000000..79ac1c22b7b54
 --- /dev/null
 +++ b/include/dt-bindings/reset/spacemit,k3-resets.h
 @@ -0,0 +1,171 @@
@@ -231,5 +231,5 @@ index 000000000000..79ac1c22b7b5
 +
 +#endif /* _DT_BINDINGS_RESET_SPACEMIT_K3_H_ */
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From bbc594fb09c904a5e61bf557941fca668e6ec7a4 Mon Sep 17 00:00:00 2001
+From 8a6c770d88e3a346fcb6ff54a7cc64448c44f54c Mon Sep 17 00:00:00 2001
 From: Michael Orlitzky <michael@orlitzky.com>
 Date: Wed, 7 Jan 2026 06:29:22 -0500
-Subject: [PATCH 074/369] UPSTREAM: riscv: dts: sophgo: enable hardware clock
+Subject: [PATCH 074/411] UPSTREAM: riscv: dts: sophgo: enable hardware clock
  (RTC) on the Milk-V Pioneer
 
 These boards have a working hardware clock if you put a CR-1220
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 21 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-index 54d8386bf9c0..ecf8c1e29079 100644
+index 54d8386bf9c0f..ecf8c1e290792 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
 +++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
 @@ -52,6 +52,17 @@ &emmc {
@@ -60,5 +60,5 @@ index 54d8386bf9c0..ecf8c1e29079 100644
  		i2c1-pins {
  			pinmux = <PINMUX(PIN_IIC1_SDA, 0)>,
 -- 
-2.53.0
+2.52.0
 

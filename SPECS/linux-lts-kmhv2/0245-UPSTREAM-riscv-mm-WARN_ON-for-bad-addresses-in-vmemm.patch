@@ -1,7 +1,7 @@
-From d339b27c671d0cc720f05d60c3db54448d186687 Mon Sep 17 00:00:00 2001
+From 0d922ba650118a43f3444da2a4a57c7878a7cbf0 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 245/369] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
+Subject: [PATCH 245/411] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
  vmemmap_populate()
 
 Similarly to the same check in arch/arm64/mm/mmu.c, in
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index d85efe74a4b6..a7d0cde6536b 100644
+index d85efe74a4b69..a7d0cde6536bb 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
 @@ -1461,6 +1461,8 @@ int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
@@ -31,5 +31,5 @@ index d85efe74a4b6..a7d0cde6536b 100644
  	 * Note that SPARSEMEM_VMEMMAP is only selected for rv64 and that we
  	 * can't use hugepage mappings for 2-level page table because in case of
 -- 
-2.53.0
+2.52.0
 

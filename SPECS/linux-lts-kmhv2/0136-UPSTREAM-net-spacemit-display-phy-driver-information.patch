@@ -1,7 +1,7 @@
-From 00b0666654f35903d45ae2e691585a9f58e4ca7e Mon Sep 17 00:00:00 2001
+From 54d381ac803f6d4ee6569a6395c3c9a77a99ef50 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sun, 1 Feb 2026 18:00:01 +0800
-Subject: [PATCH 136/369] UPSTREAM: net: spacemit: display phy driver
+Subject: [PATCH 136/411] UPSTREAM: net: spacemit: display phy driver
  information
 
 Print the PHY driver used and interrupt status after connection.
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
-index d64ca7bbda9e..52c0c00a471f 100644
+index d64ca7bbda9ea..52c0c00a471f4 100644
 --- a/drivers/net/ethernet/spacemit/k1_emac.c
 +++ b/drivers/net/ethernet/spacemit/k1_emac.c
 @@ -1757,6 +1757,8 @@ static int emac_phy_connect(struct net_device *ndev)
@@ -30,5 +30,5 @@ index d64ca7bbda9e..52c0c00a471f 100644
  	of_node_put(np);
  	return ret;
 -- 
-2.53.0
+2.52.0
 

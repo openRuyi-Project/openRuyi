@@ -1,7 +1,7 @@
-From 3a70486916e924d0186965dce80b8666d5ec1c6f Mon Sep 17 00:00:00 2001
+From 59aed37b89161bf297d12f1192d9ef4be3d7ace4 Mon Sep 17 00:00:00 2001
 From: Yufeng Wang <wangyufeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 246/369] UPSTREAM: riscv: enable HAVE_IOREMAP_PROT
+Subject: [PATCH 246/411] UPSTREAM: riscv: enable HAVE_IOREMAP_PROT
 
 RISC-V has implemented pte_pgprot() and selects GENERIC_IOREMAP,
 which provides a generic ioremap_prot() implementation. Enable
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/features/vm/ioremap_prot/arch-support.txt b/Documentation/features/vm/ioremap_prot/arch-support.txt
-index 1638c2cb17f1..c0a2d8f56046 100644
+index 1638c2cb17f15..c0a2d8f560468 100644
 --- a/Documentation/features/vm/ioremap_prot/arch-support.txt
 +++ b/Documentation/features/vm/ioremap_prot/arch-support.txt
 @@ -20,7 +20,7 @@
@@ -34,7 +34,7 @@ index 1638c2cb17f1..c0a2d8f56046 100644
      |          sh: |  ok  |
      |       sparc: | TODO |
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index fadec20b87a8..9c43346fabcd 100644
+index fadec20b87a8e..9c43346fabcd5 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
 @@ -113,6 +113,7 @@ config RISCV
@@ -46,5 +46,5 @@ index fadec20b87a8..9c43346fabcd 100644
  	select GENERIC_IRQ_IPI_MUX if SMP
  	select GENERIC_IRQ_MULTI_HANDLER
 -- 
-2.53.0
+2.52.0
 

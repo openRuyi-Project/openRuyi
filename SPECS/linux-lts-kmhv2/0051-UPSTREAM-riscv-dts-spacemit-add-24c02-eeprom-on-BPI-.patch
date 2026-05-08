@@ -1,7 +1,7 @@
-From 8ef4daef4298218d78850cdd3e636a768aba57ca Mon Sep 17 00:00:00 2001
+From 47442436c3a7a0aa878088229c19c33dbd7c6329 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:38 +0200
-Subject: [PATCH 051/369] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on
+Subject: [PATCH 051/411] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on
  BPI-F3
 
 The BPI-F3 board includes a 24c02 eeprom, that stores the MAC addresses
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 4113e68b8490..487278ea9273 100644
+index 4113e68b84909..487278ea92734 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -115,6 +115,29 @@ &i2c2 {
@@ -67,5 +67,5 @@ index 4113e68b8490..487278ea9273 100644
  				regulator-max-microvolt = <1800000>;
  				regulator-ramp-delay = <5000>;
 -- 
-2.53.0
+2.52.0
 

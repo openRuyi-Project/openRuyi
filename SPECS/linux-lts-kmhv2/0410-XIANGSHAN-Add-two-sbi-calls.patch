@@ -1,0 +1,60 @@
+From e5674fe93b29c03c52105722374878ff76821d64 Mon Sep 17 00:00:00 2001
+From: Ran Wang <wangran@bosc.ac.cn>
+Date: Fri, 20 Mar 2026 15:36:58 +0800
+Subject: [PATCH 410/411] XIANGSHAN: Add two sbi calls
+
+Signed-off-by: Ran Wang <wangran@bosc.ac.cn>
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/sbi.h |  4 ++++
+ arch/riscv/kernel/sbi.c      | 12 ++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index ccc77a89b1e22..189956420b4ca 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -55,6 +55,8 @@ enum sbi_ext_base_fid {
+ 	SBI_EXT_BASE_GET_MVENDORID,
+ 	SBI_EXT_BASE_GET_MARCHID,
+ 	SBI_EXT_BASE_GET_MIMPID,
++	SBI_EXT_BASE_GET_MHARTID,
++	SBI_EXT_BASE_FLUSH_L2CACHE,
+ };
+ 
+ enum sbi_ext_time_fid {
+@@ -664,6 +666,8 @@ unsigned long riscv_get_marchid(void);
+ unsigned long riscv_cached_mvendorid(unsigned int cpu_id);
+ unsigned long riscv_cached_marchid(unsigned int cpu_id);
+ unsigned long riscv_cached_mimpid(unsigned int cpu_id);
++long sbi_get_mhartid(void);
++long sbi_flush_l2cache(void);
+ 
+ #if IS_ENABLED(CONFIG_SMP) && IS_ENABLED(CONFIG_RISCV_SBI)
+ DECLARE_STATIC_KEY_FALSE(riscv_sbi_for_rfence);
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index c443337056ab7..05c27dd1e3975 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -646,6 +646,18 @@ int sbi_debug_console_read(char *bytes, unsigned int num_bytes)
+ 	return ret.error ? sbi_err_map_linux_errno(ret.error) : ret.value;
+ }
+ 
++long sbi_get_mhartid(void)
++{
++	return __sbi_base_ecall(SBI_EXT_BASE_GET_MHARTID);
++}
++EXPORT_SYMBOL(sbi_get_mhartid);
++
++long sbi_flush_l2cache(void)
++{
++	return __sbi_base_ecall(SBI_EXT_BASE_FLUSH_L2CACHE);
++}
++EXPORT_SYMBOL(sbi_flush_l2cache);
++
+ void __init sbi_init(void)
+ {
+ 	bool srst_power_off = false;
+-- 
+2.52.0
+

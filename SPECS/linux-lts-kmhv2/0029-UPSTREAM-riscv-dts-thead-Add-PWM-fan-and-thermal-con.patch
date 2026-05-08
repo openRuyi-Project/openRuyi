@@ -1,7 +1,7 @@
-From 6186770fac88703f14822340d3f42cc496239383 Mon Sep 17 00:00:00 2001
+From fce1f60a7aad9e1156dd24f76c9dd1c30929b43a Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:07 +0200
-Subject: [PATCH 029/369] UPSTREAM: riscv: dts: thead: Add PWM fan and thermal
+Subject: [PATCH 029/411] UPSTREAM: riscv: dts: thead: Add PWM fan and thermal
  control
 
 Add Device Tree nodes to enable a PWM controlled fan and it's associated
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 67 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index 4020c727f09e..c58c2085ca92 100644
+index 4020c727f09e8..c58c2085ca92a 100644
 --- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
 +++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
 @@ -28,9 +28,76 @@ aliases {
@@ -103,5 +103,5 @@ index 4020c727f09e..c58c2085ca92 100644
  		tx-pins {
  			pins = "UART0_TXD";
 -- 
-2.53.0
+2.52.0
 

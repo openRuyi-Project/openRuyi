@@ -1,7 +1,7 @@
-From cfaa95b467b3f3a796ea641c22a640d9747ab52c Mon Sep 17 00:00:00 2001
+From 723e5d1befb67b1b829716f7f6f978284dc562a5 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:53 +0800
-Subject: [PATCH 089/369] UPSTREAM: phy: spacemit: support K1 USB2.0 PHY
+Subject: [PATCH 089/411] UPSTREAM: phy: spacemit: support K1 USB2.0 PHY
  controller
 
 The SpacemiT K1 SoC includes three USB ports:
@@ -36,7 +36,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/phy/spacemit/phy-k1-usb2.c
 
 diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 1984c2e56122..95ee47f0fbc7 100644
+index 1984c2e56122e..95ee47f0fbc73 100644
 --- a/drivers/phy/Kconfig
 +++ b/drivers/phy/Kconfig
 @@ -134,6 +134,7 @@ source "drivers/phy/rockchip/Kconfig"
@@ -48,7 +48,7 @@ index 1984c2e56122..95ee47f0fbc7 100644
  source "drivers/phy/starfive/Kconfig"
  source "drivers/phy/sunplus/Kconfig"
 diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index a206133a3515..950dd4f14372 100644
+index a206133a35151..950dd4f143726 100644
 --- a/drivers/phy/Makefile
 +++ b/drivers/phy/Makefile
 @@ -37,6 +37,7 @@ obj-y					+= allwinner/	\
@@ -61,7 +61,7 @@ index a206133a3515..950dd4f14372 100644
  					   sunplus/	\
 diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
 new file mode 100644
-index 000000000000..0136aee2e8a2
+index 0000000000000..0136aee2e8a2f
 --- /dev/null
 +++ b/drivers/phy/spacemit/Kconfig
 @@ -0,0 +1,13 @@
@@ -80,7 +80,7 @@ index 000000000000..0136aee2e8a2
 +	  enabling and clock setup and will be used by K1 udc/ehci/otg/xhci driver.
 diff --git a/drivers/phy/spacemit/Makefile b/drivers/phy/spacemit/Makefile
 new file mode 100644
-index 000000000000..fec0b425a948
+index 0000000000000..fec0b425a9485
 --- /dev/null
 +++ b/drivers/phy/spacemit/Makefile
 @@ -0,0 +1,2 @@
@@ -88,7 +88,7 @@ index 000000000000..fec0b425a948
 +obj-$(CONFIG_PHY_SPACEMIT_K1_USB2)		+= phy-k1-usb2.o
 diff --git a/drivers/phy/spacemit/phy-k1-usb2.c b/drivers/phy/spacemit/phy-k1-usb2.c
 new file mode 100644
-index 000000000000..342061380012
+index 0000000000000..3420613800125
 --- /dev/null
 +++ b/drivers/phy/spacemit/phy-k1-usb2.c
 @@ -0,0 +1,200 @@
@@ -293,5 +293,5 @@ index 000000000000..342061380012
 +MODULE_DESCRIPTION("Spacemit USB 2.0 PHY driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 9b89f82bfe17727e871352577723d894d74ae490 Mon Sep 17 00:00:00 2001
+From efdae238e63ebf27b5808947f6f1fdd21e1a2892 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:54 -0500
-Subject: [PATCH 047/369] UPSTREAM: riscv: dts: spacemit: enable the i2c8
+Subject: [PATCH 047/411] UPSTREAM: riscv: dts: spacemit: enable the i2c8
  adapter
 
 Define properties for the I2C adapter that provides access to the
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 32 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 2aaaff77831e..b33ac47fc6bd 100644
+index 2aaaff77831e1..b33ac47fc6bd8 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -92,6 +92,18 @@ &pdma {
@@ -42,7 +42,7 @@ index 2aaaff77831e..b33ac47fc6bd 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index ce7b899d4dd9..b71a65ca66fc 100644
+index ce7b899d4dd9b..b71a65ca66fc7 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -59,6 +59,13 @@ gmac1-pins {
@@ -60,7 +60,7 @@ index ce7b899d4dd9..b71a65ca66fc 100644
  	uart0_0_cfg: uart0-0-cfg {
  		uart0-0-pins {
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 6cdcd80a7c83..3de35077731c 100644
+index 6cdcd80a7c83b..3de35077731c7 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -459,6 +459,19 @@ pwm7: pwm@d401bc00 {
@@ -84,5 +84,5 @@ index 6cdcd80a7c83..3de35077731c 100644
  			compatible = "spacemit,k1-pinctrl";
  			reg = <0x0 0xd401e000 0x0 0x400>;
 -- 
-2.53.0
+2.52.0
 

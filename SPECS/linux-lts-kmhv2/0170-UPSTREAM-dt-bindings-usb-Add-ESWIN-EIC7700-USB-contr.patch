@@ -1,7 +1,7 @@
-From d10a943315b106d9e7378c338be48c2e6a86cee7 Mon Sep 17 00:00:00 2001
+From 28ace44dbecbb29efff7f76702ecfc097acff2f5 Mon Sep 17 00:00:00 2001
 From: Hang Cao <caohang@eswincomputing.com>
 Date: Wed, 12 Nov 2025 13:53:21 +0800
-Subject: [PATCH 170/369] UPSTREAM: dt-bindings: usb: Add ESWIN EIC7700 USB
+Subject: [PATCH 170/411] UPSTREAM: dt-bindings: usb: Add ESWIN EIC7700 USB
  controller
 
 Add Device Tree binding documentation for the ESWIN EIC7700
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml b/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml
 new file mode 100644
-index 000000000000..41c3b1b98991
+index 0000000000000..41c3b1b989911
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml
 @@ -0,0 +1,94 @@
@@ -120,5 +120,5 @@ index 000000000000..41c3b1b98991
 +        eswin,hsp-sp-csr = <&hsp_sp_csr 0x800 0x818>;
 +    };
 -- 
-2.53.0
+2.52.0
 

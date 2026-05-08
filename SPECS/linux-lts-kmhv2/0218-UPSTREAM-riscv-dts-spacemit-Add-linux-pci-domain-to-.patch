@@ -1,7 +1,7 @@
-From dcc52178a8d9c944487d3fcefa5cb381937459dd Mon Sep 17 00:00:00 2001
+From a91c9ac1c14039e2fb58c06a35cd0e41fa1f99b7 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Mon, 9 Mar 2026 11:00:00 +0800
-Subject: [PATCH 218/369] UPSTREAM: riscv: dts: spacemit: Add
+Subject: [PATCH 218/411] UPSTREAM: riscv: dts: spacemit: Add
  'linux,pci-domain' to PCIe nodes for K1
 
 The SpacemiT K1 SoC has 3 PCIe EP controller nodes. Add the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 529ec68e9c23..d2015201f8e5 100644
+index 529ec68e9c23e..d2015201f8e5a 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -1033,6 +1033,7 @@ pcie-bus {
@@ -58,5 +58,5 @@ index 529ec68e9c23..d2015201f8e5 100644
  				#size-cells = <2>;
  				ranges = <0x01000000 0x0 0x00000000 0x0 0xb7002000 0x0 0x00100000>,
 -- 
-2.53.0
+2.52.0
 

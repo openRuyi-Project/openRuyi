@@ -1,7 +1,7 @@
-From a864391d5ea824e5be4fc11998abfb17df179b1f Mon Sep 17 00:00:00 2001
+From 19ddea45858206fe5b07782600ea2d72b0eab0f4 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:00 -0500
-Subject: [PATCH 036/369] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional
+Subject: [PATCH 036/411] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional
  resets
 
 Allow two resets to be defined to support the SpacemiT K1 SoC QSPI IP.
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
-index 5e6aff1bc2ed..1d10cfbad86c 100644
+index 5e6aff1bc2ed3..1d10cfbad86c7 100644
 --- a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 +++ b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 @@ -9,9 +9,6 @@ title: Freescale Quad Serial Peripheral Interface (QuadSPI)
@@ -64,5 +64,5 @@ index 5e6aff1bc2ed..1d10cfbad86c 100644
  
  examples:
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From d6df1ac7658b0a6615ec7fde1c19376075aef305 Mon Sep 17 00:00:00 2001
+From fae2d6d6a99f028be14e669d6573233555ab6a23 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:51 +0800
-Subject: [PATCH 126/369] UPSTREAM: reset: spacemit: Extract common K1 reset
+Subject: [PATCH 126/411] UPSTREAM: reset: spacemit: Extract common K1 reset
  code
 
 Extract the common reset controller code from the K1 driver into
@@ -40,7 +40,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/reset/spacemit/reset-spacemit-common.h
 
 diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
-index 552884e8b72a..56a4858b30e1 100644
+index 552884e8b72af..56a4858b30e13 100644
 --- a/drivers/reset/spacemit/Kconfig
 +++ b/drivers/reset/spacemit/Kconfig
 @@ -1,10 +1,20 @@
@@ -73,7 +73,7 @@ index 552884e8b72a..56a4858b30e1 100644
  
 +endmenu
 diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
-index 34e3350136bb..0b056e8661ec 100644
+index 34e3350136bb9..0b056e8661ec5 100644
 --- a/drivers/reset/spacemit/Makefile
 +++ b/drivers/reset/spacemit/Makefile
 @@ -1,2 +1,4 @@
@@ -83,7 +83,7 @@ index 34e3350136bb..0b056e8661ec 100644
  obj-$(CONFIG_RESET_SPACEMIT_K1)		+= reset-spacemit-k1.o
 diff --git a/drivers/reset/spacemit/reset-spacemit-common.c b/drivers/reset/spacemit/reset-spacemit-common.c
 new file mode 100644
-index 000000000000..0626633a5e7d
+index 0000000000000..0626633a5e7db
 --- /dev/null
 +++ b/drivers/reset/spacemit/reset-spacemit-common.c
 @@ -0,0 +1,77 @@
@@ -166,7 +166,7 @@ index 000000000000..0626633a5e7d
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/reset/spacemit/reset-spacemit-common.h b/drivers/reset/spacemit/reset-spacemit-common.h
 new file mode 100644
-index 000000000000..ffaf2f86eb39
+index 0000000000000..ffaf2f86eb39d
 --- /dev/null
 +++ b/drivers/reset/spacemit/reset-spacemit-common.h
 @@ -0,0 +1,42 @@
@@ -213,7 +213,7 @@ index 000000000000..ffaf2f86eb39
 +
 +#endif /* _RESET_SPACEMIT_COMMON_H_ */
 diff --git a/drivers/reset/spacemit/reset-spacemit-k1.c b/drivers/reset/spacemit/reset-spacemit-k1.c
-index cc7fd1f8750d..8f3b5329ea5f 100644
+index cc7fd1f8750d4..8f3b5329ea5f6 100644
 --- a/drivers/reset/spacemit/reset-spacemit-k1.c
 +++ b/drivers/reset/spacemit/reset-spacemit-k1.c
 @@ -1,41 +1,13 @@
@@ -360,5 +360,5 @@ index cc7fd1f8750d..8f3b5329ea5f 100644
 +MODULE_DESCRIPTION("SpacemiT K1 reset controller driver");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

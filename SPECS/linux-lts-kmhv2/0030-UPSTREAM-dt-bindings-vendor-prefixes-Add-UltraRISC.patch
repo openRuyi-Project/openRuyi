@@ -1,7 +1,7 @@
-From 6f305bbd4f4e9fbf3504418049406e5577f80786 Mon Sep 17 00:00:00 2001
+From 56ec2bcb0764f9d39734b43068977f0b0f251200 Mon Sep 17 00:00:00 2001
 From: Lucas Zampieri <lzampier@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:40 +0100
-Subject: [PATCH 030/369] UPSTREAM: dt-bindings: vendor-prefixes: Add UltraRISC
+Subject: [PATCH 030/411] UPSTREAM: dt-bindings: vendor-prefixes: Add UltraRISC
 
 Add vendor prefix for UltraRISC Technology Co., Ltd.
 
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index f1d1882009ba..647746e6f75f 100644
+index f1d1882009ba9..647746e6f75f6 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
 @@ -1705,6 +1705,8 @@ patternProperties:
@@ -29,5 +29,5 @@ index f1d1882009ba..647746e6f75f 100644
      description: Ultratronik GmbH
    "^utoo,.*":
 -- 
-2.53.0
+2.52.0
 

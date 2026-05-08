@@ -1,7 +1,7 @@
-From f8352ca1aa755055fa7b8e1c1fa72745515c1d3d Mon Sep 17 00:00:00 2001
+From 6dcab42c38dd5057b7e8a0f1a8cadef9494868d8 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:30 +0100
-Subject: [PATCH 231/369] UPSTREAM: riscv: dts: spacemit: add 24c04 eeprom on
+Subject: [PATCH 231/411] UPSTREAM: riscv: dts: spacemit: add 24c04 eeprom on
  Milk-V Jupiter
 
 The Milk-V Jupiter board includes a 24c04 eeprom on the i2c2 bus. The
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 22 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 3cd83c5924e4..bd48208a370c 100644
+index 3cd83c5924e4f..bd48208a370cf 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -108,6 +108,28 @@ &pdma {
@@ -57,5 +57,5 @@ index 3cd83c5924e4..bd48208a370c 100644
  	pinctrl-0 = <&i2c8_cfg>;
  	pinctrl-names = "default";
 -- 
-2.53.0
+2.52.0
 

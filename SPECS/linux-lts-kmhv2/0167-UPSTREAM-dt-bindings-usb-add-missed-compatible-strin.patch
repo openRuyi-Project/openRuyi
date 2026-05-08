@@ -1,7 +1,7 @@
-From 87544a29d20f952b63264b0388256cb4807ef3b0 Mon Sep 17 00:00:00 2001
+From 2fff63976963c71d79d90269aa930dbe6fa27590 Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:14 -0400
-Subject: [PATCH 167/369] UPSTREAM: dt-bindings: usb: add missed compatible
+Subject: [PATCH 167/411] UPSTREAM: dt-bindings: usb: add missed compatible
  string for arm64 layerscape
 
 Add missed compatible string for arm64 layerscape platform. Allow these
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 18 insertions(+), 15 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml b/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
-index a44bdf391887..4784f057264a 100644
+index a44bdf391887f..4784f057264ac 100644
 --- a/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
 +++ b/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
 @@ -9,21 +9,19 @@ title: Freescale layerscape SuperSpeed DWC3 USB SoC controller
@@ -92,5 +92,5 @@ index a44bdf391887..4784f057264a 100644
          interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
      };
 -- 
-2.53.0
+2.52.0
 

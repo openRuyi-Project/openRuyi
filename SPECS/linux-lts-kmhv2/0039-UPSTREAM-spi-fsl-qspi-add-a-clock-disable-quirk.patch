@@ -1,7 +1,7 @@
-From 019a86e0434488111622b7c9b144e392bb48c7c8 Mon Sep 17 00:00:00 2001
+From e65ade90c80a9f2f2b8463d9bbef478e4fac92fc Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:03 -0500
-Subject: [PATCH 039/369] UPSTREAM: spi: fsl-qspi: add a clock disable quirk
+Subject: [PATCH 039/411] UPSTREAM: spi: fsl-qspi: add a clock disable quirk
 
 The SpacemiT K1 SoC QSPI implementation needs to avoid shutting off the
 clock when changing its rate.  Add a new quirk to indicate that disabling
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 1944e63169d3..2c030dd6facc 100644
+index 1944e63169d36..2c030dd6facc7 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -197,6 +197,11 @@
@@ -69,5 +69,5 @@ index 1944e63169d3..2c030dd6facc 100644
  	q->selected = spi_get_chipselect(spi, 0);
  
 -- 
-2.53.0
+2.52.0
 
