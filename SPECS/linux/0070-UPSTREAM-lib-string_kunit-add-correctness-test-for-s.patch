@@ -1,7 +1,7 @@
-From 333b37c70b8dc075c01a34ad8935c928ad2e4217 Mon Sep 17 00:00:00 2001
+From b7a68e1a64c0a006eb280086e2b916c076da746c Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 070/189] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [PATCH 070/222] UPSTREAM: lib/string_kunit: add correctness test for
  strrchr()
 
 Add a KUnit test for strrchr() to verify correctness across
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 31 insertions(+)
 
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 1c2d57e05624..2bed641e1eae 100644
+index 1c2d57e056249..2bed641e1eaeb 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -190,6 +190,36 @@ static void string_test_strchr(struct kunit *test)
@@ -70,5 +70,5 @@ index 1c2d57e05624..2bed641e1eae 100644
  	KUNIT_CASE(string_test_strcmp),
  	KUNIT_CASE(string_test_strcmp_long_strings),
 -- 
-2.53.0
+2.52.0
 

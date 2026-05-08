@@ -1,7 +1,7 @@
-From 4e57988c0c96470ddf00d5f76748ab8ab950cca8 Mon Sep 17 00:00:00 2001
+From 98450af5814fb9fadeb6f870e11b9f1b0b0fac68 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Date: Mon, 9 Mar 2026 16:53:02 +0800
-Subject: [PATCH 119/189] FROMLIST: drm: verisilicon: add support for cursor
+Date: Thu, 7 May 2026 01:56:10 +0800
+Subject: [PATCH 119/222] FROMLIST: drm: verisilicon: add support for cursor
  planes
 
 Verisilicon display controllers support hardware cursors per output
@@ -10,21 +10,22 @@ port.
 Add support for them as cursor planes.
 
 Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Link: https://lore.kernel.org/r/20260309085302.3132732-3-zhengxingda@iscas.ac.cn
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Link: https://lore.kernel.org/r/20260506175610.2542888-3-zhengxingda@iscas.ac.cn
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  drivers/gpu/drm/verisilicon/Makefile          |   3 +-
  drivers/gpu/drm/verisilicon/vs_crtc.c         |  11 +-
- drivers/gpu/drm/verisilicon/vs_cursor_plane.c | 273 ++++++++++++++++++
+ drivers/gpu/drm/verisilicon/vs_cursor_plane.c | 272 ++++++++++++++++++
  .../drm/verisilicon/vs_cursor_plane_regs.h    |  44 +++
  drivers/gpu/drm/verisilicon/vs_plane.h        |   1 +
- .../drm/verisilicon/vs_primary_plane_regs.h   |   5 +-
- 6 files changed, 333 insertions(+), 4 deletions(-)
+ 5 files changed, 328 insertions(+), 3 deletions(-)
  create mode 100644 drivers/gpu/drm/verisilicon/vs_cursor_plane.c
  create mode 100644 drivers/gpu/drm/verisilicon/vs_cursor_plane_regs.h
 
 diff --git a/drivers/gpu/drm/verisilicon/Makefile b/drivers/gpu/drm/verisilicon/Makefile
-index fd8d805fbcde..426f4bcaa834 100644
+index fd8d805fbcde1..426f4bcaa834d 100644
 --- a/drivers/gpu/drm/verisilicon/Makefile
 +++ b/drivers/gpu/drm/verisilicon/Makefile
 @@ -1,5 +1,6 @@
@@ -36,7 +37,7 @@ index fd8d805fbcde..426f4bcaa834 100644
  
  obj-$(CONFIG_DRM_VERISILICON_DC) += verisilicon-dc.o
 diff --git a/drivers/gpu/drm/verisilicon/vs_crtc.c b/drivers/gpu/drm/verisilicon/vs_crtc.c
-index f49401713000..5c9714a3e69a 100644
+index f494017130006..5c9714a3e69a7 100644
 --- a/drivers/gpu/drm/verisilicon/vs_crtc.c
 +++ b/drivers/gpu/drm/verisilicon/vs_crtc.c
 @@ -159,7 +159,7 @@ struct vs_crtc *vs_crtc_init(struct drm_device *drm_dev, struct vs_dc *dc,
@@ -68,10 +69,10 @@ index f49401713000..5c9714a3e69a 100644
  	if (ret) {
 diff --git a/drivers/gpu/drm/verisilicon/vs_cursor_plane.c b/drivers/gpu/drm/verisilicon/vs_cursor_plane.c
 new file mode 100644
-index 000000000000..4c8651945807
+index 0000000000000..acb9854fa67ed
 --- /dev/null
 +++ b/drivers/gpu/drm/verisilicon/vs_cursor_plane.c
-@@ -0,0 +1,273 @@
+@@ -0,0 +1,272 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
@@ -80,6 +81,7 @@ index 000000000000..4c8651945807
 + * Icenowy Zheng <zhengxingda@iscas.ac.cn>
 + */
 +
++#include <linux/log2.h>
 +#include <linux/regmap.h>
 +
 +#include <drm/drm_atomic.h>
@@ -97,6 +99,9 @@ index 000000000000..4c8651945807
 +#include "vs_dc.h"
 +#include "vs_hwdb.h"
 +#include "vs_cursor_plane_regs.h"
++
++#define VSDC_MIN_CURSOR_SIZE 32
++#define VSDC_MAX_CURSOR_SIZE 256
 +
 +#define VSDC_CURSOR_LOCATION_MAX_POSITIVE BIT_MASK(15)
 +#define VSDC_CURSOR_LOCATION_MAX_NEGATIVE BIT_MASK(5)
@@ -132,24 +137,16 @@ index 000000000000..4c8651945807
 +	if (ret)
 +		return ret;
 +
-+	if (!crtc)
++	if (!new_plane_state->visible)
 +		return 0; /* Skip validity check */
 +
 +	vcrtc = drm_crtc_to_vs_crtc(crtc);
 +	dc = vcrtc->dc;
 +
-+	/* Only certain square sizes is supported */
-+	switch (new_plane_state->crtc_w) {
-+	case 32:
-+	case 64:
-+	case 128:
-+	case 256:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (new_plane_state->crtc_w > dc->identity.max_cursor_size)
++	/* Only certain PoT square sizes is supported. */
++	if (!is_power_of_2(new_plane_state->crtc_w) ||
++	    new_plane_state->crtc_w < VSDC_MIN_CURSOR_SIZE ||
++	    new_plane_state->crtc_w > dc->identity.max_cursor_size)
 +		return -EINVAL;
 +
 +	if (new_plane_state->crtc_w != new_plane_state->crtc_h)
@@ -160,18 +157,10 @@ index 000000000000..4c8651945807
 +	    !vs_cursor_plane_check_coord(new_plane_state->crtc_y))
 +		return -EINVAL;
 +
-+	if (fb) {
-+		/* Only ARGB8888 is supported */
-+		if (drm_WARN_ON_ONCE(plane->dev,
-+				     fb->format->format != DRM_FORMAT_ARGB8888))
-+			return -EINVAL;
-+
-+		/* Extra line padding isn't supported */
-+		if (fb->pitches[0] !=
-+		    drm_format_info_min_pitch(fb->format, 0,
-+					      new_plane_state->crtc_w))
-+			return -EINVAL;
-+	}
++	/* Extra line padding isn't supported */
++	if (fb->pitches[0] !=
++	    drm_format_info_min_pitch(fb->format, 0, new_plane_state->crtc_w))
++		return -EINVAL;
 +
 +	return 0;
 +}
@@ -238,6 +227,7 @@ index 000000000000..4c8651945807
 +	output = vcrtc->id;
 +	dc = vcrtc->dc;
 +
++	/* Other sizes should be rejected by atomic_check */
 +	switch (state->crtc_w) {
 +	case 32:
 +		regmap_update_bits(dc->regs, VSDC_CURSOR_CONFIG(output),
@@ -325,16 +315,26 @@ index 000000000000..4c8651945807
 +	DRM_FORMAT_ARGB8888,
 +};
 +
++static const u64 vs_cursor_plane_modifiers[] = {
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID, /* sentinel */
++};
++
 +struct drm_plane *vs_cursor_plane_init(struct drm_device *drm_dev,
 +				       struct vs_dc *dc)
 +{
++	int32_t max_cursor_size = dc->identity.max_cursor_size;
 +	struct drm_plane *plane;
++
++	if (drm_WARN_ON_ONCE(drm_dev, max_cursor_size < VSDC_MIN_CURSOR_SIZE ||
++				      max_cursor_size > VSDC_MAX_CURSOR_SIZE))
++		return ERR_PTR(-EINVAL);
 +
 +	plane = drmm_universal_plane_alloc(drm_dev, struct drm_plane, dev, 0,
 +					   &vs_cursor_plane_funcs,
 +					   vs_cursor_plane_formats,
 +					   ARRAY_SIZE(vs_cursor_plane_formats),
-+					   NULL,
++					   vs_cursor_plane_modifiers,
 +					   DRM_PLANE_TYPE_CURSOR,
 +					   NULL);
 +
@@ -347,7 +347,7 @@ index 000000000000..4c8651945807
 +}
 diff --git a/drivers/gpu/drm/verisilicon/vs_cursor_plane_regs.h b/drivers/gpu/drm/verisilicon/vs_cursor_plane_regs.h
 new file mode 100644
-index 000000000000..99693f2c95b9
+index 0000000000000..99693f2c95b94
 --- /dev/null
 +++ b/drivers/gpu/drm/verisilicon/vs_cursor_plane_regs.h
 @@ -0,0 +1,44 @@
@@ -396,7 +396,7 @@ index 000000000000..99693f2c95b9
 +
 +#endif /* _VS_CURSOR_PLANE_REGS_H_ */
 diff --git a/drivers/gpu/drm/verisilicon/vs_plane.h b/drivers/gpu/drm/verisilicon/vs_plane.h
-index 41875ea3d66a..60b5b3a1bc22 100644
+index 41875ea3d66a5..60b5b3a1bc22a 100644
 --- a/drivers/gpu/drm/verisilicon/vs_plane.h
 +++ b/drivers/gpu/drm/verisilicon/vs_plane.h
 @@ -68,5 +68,6 @@ dma_addr_t vs_fb_get_dma_addr(struct drm_framebuffer *fb,
@@ -406,24 +406,6 @@ index 41875ea3d66a..60b5b3a1bc22 100644
 +struct drm_plane *vs_cursor_plane_init(struct drm_device *dev, struct vs_dc *dc);
  
  #endif /* _VS_PLANE_H_ */
-diff --git a/drivers/gpu/drm/verisilicon/vs_primary_plane_regs.h b/drivers/gpu/drm/verisilicon/vs_primary_plane_regs.h
-index cbb125c46b39..61a48c2faa1b 100644
---- a/drivers/gpu/drm/verisilicon/vs_primary_plane_regs.h
-+++ b/drivers/gpu/drm/verisilicon/vs_primary_plane_regs.h
-@@ -1,9 +1,12 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Copyright (C) 2025 Icenowy Zheng <uwu@icenowy.me>
-+ * Copyright (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
-  *
-  * Based on vs_dc_hw.h, which is:
-  *   Copyright (C) 2023 VeriSilicon Holdings Co., Ltd.
-+ *
-+ * Authors:
-+ * Icenowy Zheng <zhengxingda@iscas.ac.cn>
-  */
- 
- #ifndef _VS_PRIMARY_PLANE_REGS_H_
 -- 
-2.53.0
+2.52.0
 

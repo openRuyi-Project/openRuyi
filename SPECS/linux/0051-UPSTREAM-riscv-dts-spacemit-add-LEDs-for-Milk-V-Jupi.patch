@@ -1,7 +1,7 @@
-From 1fce6ba2a4128aaf7a80511ce755feb90dc2ac83 Mon Sep 17 00:00:00 2001
+From 8d57ae919656440b8b4d82aadfdf54ed850d8829 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:29 +0100
-Subject: [PATCH 051/189] UPSTREAM: riscv: dts: spacemit: add LEDs for Milk-V
+Subject: [PATCH 051/222] UPSTREAM: riscv: dts: spacemit: add LEDs for Milk-V
  Jupiter board
 
 The Milk-V Jupiter board provides support for two LEDs through the front
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 9959c8023ece..3cd83c5924e4 100644
+index 9959c8023ece0..3cd83c5924e4f 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -21,6 +21,23 @@ chosen {
@@ -56,5 +56,5 @@ index 9959c8023ece..3cd83c5924e4 100644
  		compatible = "regulator-fixed";
  		regulator-name = "dc_in_12v";
 -- 
-2.53.0
+2.52.0
 

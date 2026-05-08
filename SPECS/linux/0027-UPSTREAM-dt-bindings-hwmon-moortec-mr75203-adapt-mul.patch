@@ -1,7 +1,7 @@
-From 14f66de8b55d16c248186c60646e0e99175dace6 Mon Sep 17 00:00:00 2001
+From ba282cacd4202f72078bee4bbc58d3c3eed10d50 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:56 +0800
-Subject: [PATCH 027/189] UPSTREAM: dt-bindings: hwmon: moortec,mr75203: adapt
+Subject: [PATCH 027/222] UPSTREAM: dt-bindings: hwmon: moortec,mr75203: adapt
  multipleOf for T-Head TH1520
 
 The G and J coefficients provided by T-Head TH1520 manual (which calls
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml b/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
-index 56db2292f062..7d57c2934a8a 100644
+index 56db2292f062d..7d57c2934a8a1 100644
 --- a/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
 +++ b/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
 @@ -105,7 +105,7 @@ properties:
@@ -47,5 +47,5 @@ index 56db2292f062..7d57c2934a8a 100644
      $ref: /schemas/types.yaml#/definitions/int32
  
 -- 
-2.53.0
+2.52.0
 

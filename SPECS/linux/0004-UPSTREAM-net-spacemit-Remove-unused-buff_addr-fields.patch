@@ -1,7 +1,7 @@
-From 449c3654235a6f4213741bf0b3a0fcde8a17d1da Mon Sep 17 00:00:00 2001
+From ad50b4d96f05747281b96e37fd8efb6dda7eb007 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 5 Mar 2026 15:00:29 +0800
-Subject: [PATCH 004/189] UPSTREAM: net: spacemit: Remove unused buff_addr
+Subject: [PATCH 004/222] UPSTREAM: net: spacemit: Remove unused buff_addr
  fields
 
 These were never used. Just remove them.
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
-index 15d43e4a748b..f7f16397a2c2 100644
+index 15d43e4a748bb..f7f16397a2c2a 100644
 --- a/drivers/net/ethernet/spacemit/k1_emac.c
 +++ b/drivers/net/ethernet/spacemit/k1_emac.c
 @@ -57,7 +57,6 @@
@@ -46,5 +46,5 @@ index 15d43e4a748b..f7f16397a2c2 100644
  
  	if (tx_buf->skb) {
 -- 
-2.53.0
+2.52.0
 

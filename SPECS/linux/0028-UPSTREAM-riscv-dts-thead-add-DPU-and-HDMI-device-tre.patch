@@ -1,7 +1,7 @@
-From a8352604a5480a6e9e683297580d5c1c248167ba Mon Sep 17 00:00:00 2001
+From 3e7f5f0a16cc733d1145720212335bfc73ed354d Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:20 +0800
-Subject: [PATCH 028/189] UPSTREAM: riscv: dts: thead: add DPU and HDMI device
+Subject: [PATCH 028/222] UPSTREAM: riscv: dts: thead: add DPU and HDMI device
  tree nodes
 
 T-Head TH1520 SoC contains a Verisilicon DC8200 display controller
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 66 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index bd5d33840884..b66307742894 100644
+index bd5d33840884e..b663077428940 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -585,6 +585,72 @@ clk_vo: clock-controller@ffef528050 {
@@ -100,5 +100,5 @@ index bd5d33840884..b66307742894 100644
  			compatible = "snps,axi-dma-1.01a";
  			reg = <0xff 0xefc00000 0x0 0x1000>;
 -- 
-2.53.0
+2.52.0
 

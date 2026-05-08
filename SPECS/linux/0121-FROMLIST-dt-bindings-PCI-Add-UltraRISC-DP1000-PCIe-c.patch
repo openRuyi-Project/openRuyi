@@ -1,7 +1,7 @@
-From c08c71b8a73101925551d234a25b86503488a408 Mon Sep 17 00:00:00 2001
+From 999d8fded9e0076b24dc727f6988cfca4f8830df Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:11 +0800
-Subject: [PATCH 121/189] FROMLIST: dt-bindings: PCI: Add UltraRISC DP1000 PCIe
+Subject: [PATCH 121/222] FROMLIST: dt-bindings: PCI: Add UltraRISC DP1000 PCIe
  controller
 
 Add UltraRISC DP1000 SoC PCIe controller devicetree bindings.
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/pci/ultrarisc,dp1000-pcie.yaml b/Documentation/devicetree/bindings/pci/ultrarisc,dp1000-pcie.yaml
 new file mode 100644
-index 000000000000..512b935bf5d1
+index 0000000000000..512b935bf5d1e
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/pci/ultrarisc,dp1000-pcie.yaml
 @@ -0,0 +1,93 @@
@@ -116,7 +116,7 @@ index 000000000000..512b935bf5d1
 +      };
 +    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 89e3defc41c8..11eb4469600a 100644
+index 08394b6c2f87a..791e6d801ca1d 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -20591,6 +20591,13 @@ S:	Maintained
@@ -134,5 +134,5 @@ index 89e3defc41c8..11eb4469600a 100644
  M:	Manivannan Sadhasivam <mani@kernel.org>
  L:	linux-pci@vger.kernel.org
 -- 
-2.53.0
+2.52.0
 

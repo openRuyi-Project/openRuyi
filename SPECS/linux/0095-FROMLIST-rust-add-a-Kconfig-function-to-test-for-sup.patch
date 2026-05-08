@@ -1,7 +1,7 @@
-From 021e1548ef4760e4153a0181a3ab79aac7501b59 Mon Sep 17 00:00:00 2001
+From 155cfd4ff5a9f11871de15816d2d8df74529f869 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:56 +0100
-Subject: [PATCH 095/189] FROMLIST: rust: add a Kconfig function to test for
+Subject: [PATCH 095/222] FROMLIST: rust: add a Kconfig function to test for
  support of bindgen options
 
 Add a new `bindgen-backend-option` Kconfig function to test whether the
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+)
 
 diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index fc10671c297c..ea5be3c622a8 100644
+index fc10671c297cf..ea5be3c622a82 100644
 --- a/scripts/Kconfig.include
 +++ b/scripts/Kconfig.include
 @@ -76,3 +76,8 @@ rustc-llvm-version := $(shell,$(srctree)/scripts/rustc-llvm-version.sh $(RUSTC))
@@ -31,5 +31,5 @@ index fc10671c297c..ea5be3c622a8 100644
 +# For now, the backend refers only to libclang, so more specifically, this function tests whether the given flag is recognized by the libclang used by bindgen.
 +bindgen-backend-option = $(success,$(BINDGEN) /dev/null -- -x c --target=$(BINDGEN_TARGET) $(1))
 -- 
-2.53.0
+2.52.0
 

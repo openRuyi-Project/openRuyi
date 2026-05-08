@@ -1,7 +1,7 @@
-From 931cd12835a83873f114827eec919335181df7af Mon Sep 17 00:00:00 2001
+From 790caa83d3fdec9869fc8ac19a42281542a1f0ee Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:37 +0000
-Subject: [PATCH 045/189] UPSTREAM: dt-bindings: usb: dwc3: spacemit: add
+Subject: [PATCH 045/222] UPSTREAM: dt-bindings: usb: dwc3: spacemit: add
  support for K3 SoC
 
 Add compatible string for DWC3 USB controller found in SpacemiT K3 SoC.
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
-index 0f0b5e061ca1..cc27b363ca79 100644
+index 0f0b5e061ca17..cc27b363ca79d 100644
 --- a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
 +++ b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
 @@ -27,7 +27,9 @@ allOf:
@@ -55,5 +55,5 @@ index 0f0b5e061ca1..cc27b363ca79 100644
        - const: usb2-phy
        - const: usb3-phy
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From d3426e5bf2821bc42492ad2d1e04c79c9a5f8ff6 Mon Sep 17 00:00:00 2001
+From 0a333862abdaf618721ccc6e1a620102b21e4b71 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
-Date: Fri, 14 Nov 2025 12:57:44 -0600
-Subject: [PATCH 103/189] FROMLIST: riscv: dts: spacemit: define a SPI
+Date: Sat, 2 May 2026 21:30:53 -0400
+Subject: [PATCH 103/222] FROMLIST: riscv: dts: spacemit: define a SPI
  controller node
 
 Define a node for the fourth SoC SPI controller (number 3) on the
@@ -20,7 +20,8 @@ Define pincontrol configurations for the pins as used on that board.
 
 Reviewed-by: Yixun Lan <dlan@gentoo.org>
 Signed-off-by: Alex Elder <elder@riscstar.com>
-Link: https://lore.kernel.org/r/20251114185745.2838358-4-elder@riscstar.com
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260502-spi-spacemit-k1-v10-3-f412e1ae8a34@riscstar.com
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  .../boot/dts/spacemit/k1-bananapi-f3.dts      |  7 +++++++
@@ -29,17 +30,17 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 42 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 5790d927b93d..77e8ca7e96f3 100644
+index 5790d927b93db..9429189354d6a 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -16,6 +16,7 @@ aliases {
+@@ -14,6 +14,7 @@ aliases {
+ 		ethernet0 = &eth0;
+ 		ethernet1 = &eth1;
  		serial0 = &uart0;
++		spi3 = &spi3;
  		i2c2 = &i2c2;
  		i2c8 = &i2c8;
-+		spi3 = &spi3;
  	};
- 
- 	chosen {
 @@ -335,6 +336,12 @@ &pcie2 {
  	status = "okay";
  };
@@ -54,7 +55,7 @@ index 5790d927b93d..77e8ca7e96f3 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index b13dcb10f4d6..34d88334e95e 100644
+index b13dcb10f4d66..34d88334e95e4 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -570,4 +570,24 @@ pwm14-1-pins {
@@ -83,7 +84,7 @@ index b13dcb10f4d6..34d88334e95e 100644
 +	};
  };
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index f0bad6855c97..f8747190d2e1 100644
+index f0bad6855c970..f8747190d2e12 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -983,6 +983,21 @@ qspi: spi@d420c000 {
@@ -109,5 +110,5 @@ index f0bad6855c97..f8747190d2e1 100644
  		};
  
 -- 
-2.53.0
+2.52.0
 

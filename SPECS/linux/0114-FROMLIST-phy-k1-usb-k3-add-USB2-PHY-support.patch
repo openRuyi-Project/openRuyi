@@ -1,7 +1,7 @@
-From 451f924bcb4d0532653fb08030cc0ea893c25198 Mon Sep 17 00:00:00 2001
+From 35151a044d4fa5c9ae5154504c3950e0b99653b8 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 5 Mar 2026 01:00:52 +0000
-Subject: [PATCH 114/189] FROMLIST: phy: k1-usb: k3: add USB2 PHY support
+Subject: [PATCH 114/222] FROMLIST: phy: k1-usb: k3: add USB2 PHY support
 
 Add USB2 PHY support for SpacemiT K3 SoC.
 
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 29 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/phy/spacemit/phy-k1-usb2.c b/drivers/phy/spacemit/phy-k1-usb2.c
-index 9215d0b223b2..87b943d9111f 100644
+index 9215d0b223b2d..87b943d9111ff 100644
 --- a/drivers/phy/spacemit/phy-k1-usb2.c
 +++ b/drivers/phy/spacemit/phy-k1-usb2.c
 @@ -51,6 +51,9 @@
@@ -105,5 +105,5 @@ index 9215d0b223b2..87b943d9111f 100644
  };
  MODULE_DEVICE_TABLE(of, spacemit_usb2phy_dt_match);
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From dae38869a8aef12bbdde3ffba297c9828bfe0978 Mon Sep 17 00:00:00 2001
+From 993c1bc7e3c25bc2e3e0acd21019fe1609981414 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Thu, 26 Mar 2026 09:46:17 +0800
-Subject: [PATCH 050/189] UPSTREAM: riscv: dts: spacemit: Add ethernet device
+Subject: [PATCH 050/222] UPSTREAM: riscv: dts: spacemit: Add ethernet device
  for K3
 
 Add all ethernet device nodes for K3 SoC.
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 171 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
-index b098dbd0e7a1..504fe6bd46b2 100644
+index b098dbd0e7a15..504fe6bd46b25 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 @@ -3,6 +3,7 @@
@@ -64,7 +64,7 @@ index b098dbd0e7a1..504fe6bd46b2 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_0_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
-index efb0f1572188..a7b5d10c332e 100644
+index efb0f15721887..a7b5d10c332e7 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 @@ -11,6 +11,40 @@
@@ -109,7 +109,7 @@ index efb0f1572188..a7b5d10c332e 100644
  	uart0_0_cfg: uart0-0-cfg {
  		uart0-0-pins {
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index a3a8ceddabec..5f4818cd5d6d 100644
+index a3a8ceddabec4..5f4818cd5d6d8 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -438,6 +438,123 @@ soc: soc {
@@ -237,5 +237,5 @@ index a3a8ceddabec..5f4818cd5d6d 100644
  			compatible = "spacemit,k3-syscon-apbc";
  			reg = <0x0 0xd4015000 0x0 0x1000>;
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From 50deee38ad989c10e5b55ec23352b639d1c64f5e Mon Sep 17 00:00:00 2001
+From 9563eb03c23d302a87d4fc8f8cf718504e58e2f0 Mon Sep 17 00:00:00 2001
 From: Junhui Liu <junhui.liu@pigmoral.tech>
 Date: Thu, 12 Mar 2026 16:42:42 +0800
-Subject: [PATCH 034/189] UPSTREAM: pinctrl: spacemit: return -ENOTSUPP for
+Subject: [PATCH 034/222] UPSTREAM: pinctrl: spacemit: return -ENOTSUPP for
  unsupported pin configurations
 
 Return -ENOTSUPP instead of -EINVAL when encountering unsupported pin
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 62cab6f6cd0a..b0be62b1c816 100644
+index 62cab6f6cd0a8..b0be62b1c8161 100644
 --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
 +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
 @@ -674,7 +674,7 @@ static int spacemit_pinconf_get(struct pinctrl_dev *pctldev,
@@ -82,5 +82,5 @@ index 62cab6f6cd0a..b0be62b1c816 100644
  	for (i = 0; i < group->grp.npins; i++)
  		spacemit_pin_set_config(pctrl, group->grp.pins[i], value);
 -- 
-2.53.0
+2.52.0
 

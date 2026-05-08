@@ -1,7 +1,7 @@
-From d3b9764cf49d49557f0ee9c7edfca5e3949f267a Mon Sep 17 00:00:00 2001
+From 11889a77e218ea256324d5d588e22ee9033d24ab Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Fri, 10 Apr 2026 15:58:22 +0800
-Subject: [PATCH 115/189] FROMLIST: cpufreq: dt-platdev: Add SpacemiT K1 SoC to
+Subject: [PATCH 115/222] FROMLIST: cpufreq: dt-platdev: Add SpacemiT K1 SoC to
  the allowlist
 
 The SpacemiT K1 SoC uses standard device tree based CPU frequency
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 25fd3b191b7e..31a64739df25 100644
+index 25fd3b191b7e7..31a64739df251 100644
 --- a/drivers/cpufreq/cpufreq-dt-platdev.c
 +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
 @@ -81,6 +81,7 @@ static const struct of_device_id allowlist[] __initconst = {
@@ -27,5 +27,5 @@ index 25fd3b191b7e..31a64739df25 100644
  	{ .compatible = "st-ericsson,u8540", },
  	{ .compatible = "st-ericsson,u9500", },
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From f4a43fa5f1010e9c8da4cb329d787912527357a3 Mon Sep 17 00:00:00 2001
+From 1fe728baa585806a3396efea625b4855ebedea5d Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:32 +0100
-Subject: [PATCH 054/189] UPSTREAM: riscv: dts: spacemit: enable QSPI and add
+Subject: [PATCH 054/222] UPSTREAM: riscv: dts: spacemit: enable QSPI and add
  SPI NOR on Milk-V Jupiter
 
 Add the QSPI controller node for the Milk-V Jupiter board and describe
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 836311c3f035..bac6438c6753 100644
+index 836311c3f035c..bac6438c67532 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -173,7 +173,7 @@ buck3_1v8: buck3 {
@@ -91,5 +91,5 @@ index 836311c3f035..bac6438c6753 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 -- 
-2.53.0
+2.52.0
 

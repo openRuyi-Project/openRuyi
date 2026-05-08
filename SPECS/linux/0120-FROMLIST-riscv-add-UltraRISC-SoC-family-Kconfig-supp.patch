@@ -1,7 +1,7 @@
-From 6ddb7098f1c03b6d2f4f43b821e760b1081675ad Mon Sep 17 00:00:00 2001
+From 20000af38faf6bea76227937ed2697562eabeebb Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:10 +0800
-Subject: [PATCH 120/189] FROMLIST: riscv: add UltraRISC SoC family Kconfig
+Subject: [PATCH 120/222] FROMLIST: riscv: add UltraRISC SoC family Kconfig
  support
 
 The first SoC in the UltraRISC series is UR-DP1000, containing octa
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+)
 
 diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index d621b85dd63b..0b4d06a7b4bf 100644
+index d621b85dd63bd..0b4d06a7b4bf4 100644
 --- a/arch/riscv/Kconfig.socs
 +++ b/arch/riscv/Kconfig.socs
 @@ -84,6 +84,12 @@ config ARCH_THEAD
@@ -33,5 +33,5 @@ index d621b85dd63b..0b4d06a7b4bf 100644
  	bool "QEMU Virt Machine"
  	select POWER_RESET
 -- 
-2.53.0
+2.52.0
 

@@ -1,7 +1,7 @@
-From c17c6f71e4345878ab59b1339fb12ba92567d659 Mon Sep 17 00:00:00 2001
+From c6e18a69dbeeb7fc6ee27e43d4c092eeb74bf671 Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:53 +0000
-Subject: [PATCH 025/189] UPSTREAM: PCI: cadence: Add flags for disabling ASPM
+Subject: [PATCH 025/222] UPSTREAM: PCI: cadence: Add flags for disabling ASPM
  capability for broken Root Ports
 
 Add flags for disabling the ASPM L0s/L1 capability for broken Root Ports
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 26 insertions(+)
 
 diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index db3154c1eccb..0bc9e6e90e0e 100644
+index db3154c1eccbf..0bc9e6e90e0e0 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
 +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
 @@ -147,6 +147,13 @@ static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
@@ -42,7 +42,7 @@ index db3154c1eccb..0bc9e6e90e0e 100644
  }
  
 diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 443033c607d7..efbda0b3ec2c 100644
+index 277f3706a4f47..574e9cf4d003f 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence.h
 +++ b/drivers/pci/controller/cadence/pcie-cadence.h
 @@ -115,6 +115,8 @@ struct cdns_pcie {
@@ -63,7 +63,7 @@ index 443033c607d7..efbda0b3ec2c 100644
  };
  
  /**
-@@ -344,6 +348,21 @@ static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
+@@ -338,6 +342,21 @@ static inline u16 cdns_pcie_rp_readw(struct cdns_pcie *pcie, u32 reg)
  	return cdns_pcie_read_sz(addr, 0x2);
  }
  
@@ -86,5 +86,5 @@ index 443033c607d7..efbda0b3ec2c 100644
  					   u32 reg, u8 value)
  {
 -- 
-2.53.0
+2.52.0
 

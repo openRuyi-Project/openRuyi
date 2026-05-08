@@ -1,0 +1,72 @@
+From 11825669d62b5cc29334d05d5ba329b5eecadab5 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Tue, 28 Apr 2026 13:26:27 +0800
+Subject: [PATCH 124/222] FROMLIST: serial: 8250_dw: build Renesas RZN1 CPR
+ value from DW_UART_CPR_* definitions
+
+Replace the magic CPR value for Renesas RZ/N1 with a composition using
+DW_UART_CPR_* bit/field definitions and FIELD_PREP_CONST().
+
+Introduce a helper macro to convert a FIFO size (bytes) into the CPR
+FIFO_MODE field value, with BUILD_BUG_ON_ZERO() checks for alignment and
+bounds. Use it to replace the literal FIFO_MODE values in the RZN1.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20260428-ultrarisc-serial-v5-2-97de63b1e3eb@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/tty/serial/8250/8250_dw.c    | 11 ++++++++++-
+ drivers/tty/serial/8250/8250_dwlib.h |  7 +++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 467755bf00927..5cf3bb74b2850 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -937,7 +937,16 @@ static const struct dw8250_platform_data dw8250_armada_38x_data = {
+ 
+ static const struct dw8250_platform_data dw8250_renesas_rzn1_data = {
+ 	.usr_reg = DW_UART_USR,
+-	.cpr_value = 0x00012f32,
++	.cpr_value = FIELD_PREP_CONST(DW_UART_CPR_ABP_DATA_WIDTH, 2) |
++		     DW_UART_CPR_AFCE_MODE |
++		     DW_UART_CPR_THRE_MODE |
++		     DW_UART_CPR_ADDITIONAL_FEATURES |
++		     DW_UART_CPR_FIFO_ACCESS |
++		     DW_UART_CPR_FIFO_STAT |
++		     DW_UART_CPR_SHADOW |
++		     DW_UART_CPR_DMA_EXTRA |
++		     FIELD_PREP_CONST(DW_UART_CPR_FIFO_MODE,
++				      DW_UART_CPR_FIFO_MODE_FROM_SIZE(16)),
+ 	.quirks = DW_UART_QUIRK_CPR_VALUE | DW_UART_QUIRK_IS_DMA_FC,
+ };
+ 
+diff --git a/drivers/tty/serial/8250/8250_dwlib.h b/drivers/tty/serial/8250/8250_dwlib.h
+index 2f26f9ecacbec..c1f87cd42eccf 100644
+--- a/drivers/tty/serial/8250/8250_dwlib.h
++++ b/drivers/tty/serial/8250/8250_dwlib.h
+@@ -6,6 +6,8 @@
+ 
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
++#include <linux/build_bug.h>
++#include <linux/align.h>
+ #include <linux/io.h>
+ #include <linux/types.h>
+ 
+@@ -70,6 +72,11 @@
+ 
+ /* Helper for FIFO size calculation */
+ #define DW_UART_CPR_FIFO_SIZE(a)	(FIELD_GET(DW_UART_CPR_FIFO_MODE, (a)) * 16)
++#define DW_UART_CPR_FIFO_MODE_MAX	0x80
++#define DW_UART_CPR_FIFO_MODE_FROM_SIZE(size)				\
++	(BUILD_BUG_ON_ZERO(!IS_ALIGNED((size), 16)) +			\
++	 BUILD_BUG_ON_ZERO(((size) / 16) > DW_UART_CPR_FIFO_MODE_MAX) +	\
++	 ((size) / 16))
+ 
+ struct dw8250_port_data {
+ 	/* Port properties */
+-- 
+2.52.0
+

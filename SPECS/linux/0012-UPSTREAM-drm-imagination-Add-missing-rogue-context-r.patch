@@ -1,7 +1,7 @@
-From 20f1468fdda61c059c28a62158efa377b7196e64 Mon Sep 17 00:00:00 2001
+From 2beabdab9da14ddd6ce6d1812eec97f3ce0c2e2a Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:28 +0200
-Subject: [PATCH 012/189] UPSTREAM: drm/imagination: Add missing rogue context
+Subject: [PATCH 012/222] UPSTREAM: drm/imagination: Add missing rogue context
  reset reasons
 
 Update the context reset reason enum with the missing reset reasons in
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
-index 6c09c15bf9bd..f622553cdc11 100644
+index 6c09c15bf9bd8..f622553cdc110 100644
 --- a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 +++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 @@ -236,6 +236,18 @@ enum rogue_context_reset_reason {
@@ -49,5 +49,5 @@ index 6c09c15bf9bd..f622553cdc11 100644
  	ROGUE_CONTEXT_RESET_REASON_FW_WATCHDOG = 12,
  	/* FW page fault (no HWR) */
 -- 
-2.53.0
+2.52.0
 

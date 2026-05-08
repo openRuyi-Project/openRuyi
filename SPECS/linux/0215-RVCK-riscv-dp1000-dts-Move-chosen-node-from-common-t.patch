@@ -1,0 +1,85 @@
+From 0229892d084ac36b5290852521ccefd1465dadfa Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Mon, 10 Nov 2025 16:11:12 +0800
+Subject: [PATCH 215/222] RVCK: riscv: dp1000: dts: Move chosen node from
+ common to board-specific DTS
+
+community inclusion
+category: feature
+bugzilla: https://github.com/RVCK-Project/rvck/issues/71
+
+--------------------------------
+
+This commit moves the chosen node configuration from the
+common dp1000.dts file to the respective board-specific
+DTS files.
+
+This change allows each board to specify its own console
+configuration while keeping the common SoC definitions clean.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+FROM: https://github.com/RVCK-Project/rvck/commit/db5745be89ee881ff18a7ded0bcff1c2f495becf
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts | 7 +++++++
+ arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts  | 7 +++++++
+ arch/riscv/boot/dts/ultrarisc/dp1000.dts        | 7 +------
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
+index 34622a33e63b3..34d024a083fc2 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-evb-v1.dts
+@@ -7,6 +7,13 @@
+ #include "dp1000-evb-pinctrl.dtsi"
+ #include <dt-bindings/iio/temperature/thermocouple.h>
+ 
++/ {
++	chosen {
++		bootargs = "earlycon=sbi console=ttyS1,115200";
++		stdout-path = &uart1;
++	};
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins>;
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
+index a74714629566e..8c532e5b71a36 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000-mo-v1.dts
+@@ -7,6 +7,13 @@
+ #include "dp1000-mo-pinctrl.dtsi"
+ #include <dt-bindings/iio/temperature/thermocouple.h>
+ 
++/ {
++	chosen {
++		bootargs = "earlycon=sbi console=ttyS0,115200";
++		stdout-path = &uart0;
++	};
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins>;
+diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dts b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+index 4a2dae6026937..128293c0af1fe 100644
+--- a/arch/riscv/boot/dts/ultrarisc/dp1000.dts
++++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dts
+@@ -10,12 +10,7 @@ / {
+ 	#size-cells = <0x02>;
+ 	compatible = "ultrarisc,dp1000";
+ 	model = "ultrarisc,dp1000";
+-	
+-	chosen {
+-		bootargs = "earlycon=sbi console=ttyS1,115200";
+-		stdout-path = &uart1;
+-	};
+-	
++
+ 	cpus {
+ 		#address-cells = <0x01>;
+ 		#size-cells = <0x00>;
+-- 
+2.52.0
+

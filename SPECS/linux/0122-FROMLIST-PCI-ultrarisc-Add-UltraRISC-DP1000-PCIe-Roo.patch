@@ -1,7 +1,7 @@
-From 645303da6dc025992620cf7174bccde4276621dd Mon Sep 17 00:00:00 2001
+From ac3605ba6e7250e79a6ca95b45cd1fd23bbc4ecd Mon Sep 17 00:00:00 2001
 From: Xincheng Zhang <zhangxincheng@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:12 +0800
-Subject: [PATCH 122/189] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
+Subject: [PATCH 122/222] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
  Root Complex driver
 
 Add DP1000 SoC PCIe Root Complex driver.
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/pci/controller/dwc/pcie-ultrarisc.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 11eb4469600a..e5c3e086ab19 100644
+index 791e6d801ca1d..9e4ce740727fb 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -20597,6 +20597,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
@@ -34,7 +34,7 @@ index 11eb4469600a..e5c3e086ab19 100644
  PCIE ENDPOINT DRIVER FOR QUALCOMM
  M:	Manivannan Sadhasivam <mani@kernel.org>
 diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index d0aa031397fa..06f7d98259cd 100644
+index d0aa031397fab..06f7d98259cd5 100644
 --- a/drivers/pci/controller/dwc/Kconfig
 +++ b/drivers/pci/controller/dwc/Kconfig
 @@ -548,4 +548,16 @@ config PCIE_VISCONTI_HOST
@@ -55,7 +55,7 @@ index d0aa031397fa..06f7d98259cd 100644
 +
  endmenu
 diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 67ba59c02038..884c46b78e01 100644
+index 67ba59c02038c..884c46b78e01f 100644
 --- a/drivers/pci/controller/dwc/Makefile
 +++ b/drivers/pci/controller/dwc/Makefile
 @@ -38,6 +38,7 @@ obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
@@ -67,7 +67,7 @@ index 67ba59c02038..884c46b78e01 100644
  # The following drivers are for devices that use the generic ACPI
  # pci_root.c driver but don't support standard ECAM config access.
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index ae6389dd9caa..88dcb0e7943a 100644
+index ae6389dd9caa5..88dcb0e7943a6 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
 @@ -69,6 +69,8 @@
@@ -108,7 +108,7 @@ index ae6389dd9caa..88dcb0e7943a 100644
  #define PORT_LOGIC_LTSSM_STATE_L0	0x11
 diff --git a/drivers/pci/controller/dwc/pcie-ultrarisc.c b/drivers/pci/controller/dwc/pcie-ultrarisc.c
 new file mode 100644
-index 000000000000..7326bd446590
+index 0000000000000..7326bd446590d
 --- /dev/null
 +++ b/drivers/pci/controller/dwc/pcie-ultrarisc.c
 @@ -0,0 +1,175 @@
@@ -288,5 +288,5 @@ index 000000000000..7326bd446590
 +MODULE_DESCRIPTION("UltraRISC DP1000 DWC PCIe host controller");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.52.0
 

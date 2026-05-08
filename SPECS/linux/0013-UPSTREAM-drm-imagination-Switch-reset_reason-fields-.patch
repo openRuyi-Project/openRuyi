@@ -1,7 +1,7 @@
-From 693dcd6c8f6c34dabf4588377969b088b7d4a9ee Mon Sep 17 00:00:00 2001
+From 78fde15a085cd8797e2eee0ad8660cbf31872f3b Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:29 +0200
-Subject: [PATCH 013/189] UPSTREAM: drm/imagination: Switch reset_reason fields
+Subject: [PATCH 013/222] UPSTREAM: drm/imagination: Switch reset_reason fields
  from enum to u32
 
 Update the reset_reason fwif structure fields from enum to u32 to remove
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif.h
-index 172886be4c82..5d590c4c2566 100644
+index 172886be4c820..5d590c4c25663 100644
 --- a/drivers/gpu/drm/imagination/pvr_rogue_fwif.h
 +++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif.h
 @@ -1347,8 +1347,12 @@ struct rogue_fwif_fwccb_cmd_freelists_reconstruction_data {
@@ -40,7 +40,7 @@ index 172886be4c82..5d590c4c2566 100644
  	u32 dm;
  	/* Job ref running at the time of reset */
 diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
-index f622553cdc11..869d904e3649 100644
+index f622553cdc110..869d904e3649f 100644
 --- a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 +++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 @@ -261,7 +261,11 @@ enum rogue_context_reset_reason {
@@ -57,5 +57,5 @@ index f622553cdc11..869d904e3649 100644
  };
  
 -- 
-2.53.0
+2.52.0
 

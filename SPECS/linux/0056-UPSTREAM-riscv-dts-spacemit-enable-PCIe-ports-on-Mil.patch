@@ -1,7 +1,7 @@
-From 13064020e3638829bd2c55d5f015632927d6b40d Mon Sep 17 00:00:00 2001
+From c1e88a20e142b89b2c9666acead59717cb0a528c Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:34 +0100
-Subject: [PATCH 056/189] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on
+Subject: [PATCH 056/222] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on
  Milk-V Jupiter
 
 Enable the two PCIe controller along with and their associated PHY. They
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 42 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 8eeaf2631b71..afaad59e6bce 100644
+index 8eeaf2631b719..afaad59e6bce2 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -40,6 +40,16 @@ led2 {
@@ -82,5 +82,5 @@ index 8eeaf2631b71..afaad59e6bce 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&qspi_cfg>;
 -- 
-2.53.0
+2.52.0
 

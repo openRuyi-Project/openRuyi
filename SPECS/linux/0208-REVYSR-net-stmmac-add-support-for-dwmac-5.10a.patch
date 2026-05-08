@@ -1,0 +1,27 @@
+From f04fdc74620a3b9aefd605f832e6b7b1d60d85c1 Mon Sep 17 00:00:00 2001
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Fri, 24 Oct 2025 17:00:37 +0800
+Subject: [PATCH 208/222] REVYSR: net: stmmac: add support for dwmac 5.10a
+
+Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+FROM: https://github.com/RevySR/linux/commit/5bc2d2af06ccd13675b8d4751226fb56bc8ee6df
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+index b9218c07eb6b8..a27b2bc177af2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+@@ -59,6 +59,7 @@ static const struct of_device_id dwmac_generic_match[] = {
+ 	{ .compatible = "snps,dwmac-3.72a"},
+ 	{ .compatible = "snps,dwmac-4.00"},
+ 	{ .compatible = "snps,dwmac-4.10a"},
++        { .compatible = "snps,dwmac-5.10a"},
+ 	{ .compatible = "snps,dwmac"},
+ 	{ .compatible = "snps,dwxgmac-2.10"},
+ 	{ .compatible = "snps,dwxgmac"},
+-- 
+2.52.0
+

@@ -1,0 +1,32 @@
+From 75711262c9b326f9068dca5a0c6fbac0ebc057d3 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Tue, 28 Apr 2026 13:26:28 +0800
+Subject: [PATCH 125/222] FROMLIST: dt-bindings: serial: snps-dw-apb-uart: Add
+ UltraRISC DP1000 UART
+
+UltraRISC DP1000 integrates a Synopsys DesignWare APB UART, but it does
+not provide the standard CPR and UCV registers.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/r/20260428-ultrarisc-serial-v5-3-97de63b1e3eb@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+index 6efe43089a74d..f84600f66df84 100644
+--- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
++++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
+@@ -77,6 +77,7 @@ properties:
+               - starfive,jh7100-hsuart
+               - starfive,jh7100-uart
+               - starfive,jh7110-uart
++              - ultrarisc,dp1000-uart
+           - const: snps,dw-apb-uart
+       - const: snps,dw-apb-uart
+ 
+-- 
+2.52.0
+

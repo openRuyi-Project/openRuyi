@@ -1,7 +1,7 @@
-From 3c1b4ac5726a5692f35cfe62fb6aafe15d8663c5 Mon Sep 17 00:00:00 2001
+From be752f98893e678d4da9ae277014aa6666fc3bb7 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:55 +0100
-Subject: [PATCH 094/189] FROMLIST: rust: generate a fatal error if
+Subject: [PATCH 094/222] FROMLIST: rust: generate a fatal error if
  BINDGEN_TARGET is undefined
 
 Generate a friendly fatal error if the target triplet is undefined for
@@ -40,7 +40,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+)
 
 diff --git a/rust/Makefile b/rust/Makefile
-index b8813ec123e8..314329e6bc46 100644
+index b8813ec123e86..314329e6bc46b 100644
 --- a/rust/Makefile
 +++ b/rust/Makefile
 @@ -404,6 +404,12 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
@@ -57,5 +57,5 @@ index b8813ec123e8..314329e6bc46 100644
  # many GCC warnings are not supported by Clang, they may only appear in
  # some configurations, with new GCC versions, etc.
 -- 
-2.53.0
+2.52.0
 

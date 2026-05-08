@@ -1,0 +1,41 @@
+From af04017c6f0e3dcc266b7b54797e55a7dc7dbf98 Mon Sep 17 00:00:00 2001
+From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Date: Sun, 3 May 2026 23:05:02 -0700
+Subject: [PATCH 184/222] FROMLIST: irqchip/riscv-imsic: sync-up state before
+ CPU offline
+
+The "move_prev" pointer in struct imsic_vector on the new CPU is
+cleared only after the old CPU has cleared "move_next". But when
+migrating all the interrupts out from an offling CPU, since the CPU
+is already marked as "offlined", the IMSIC driver skip to sync-up the
+interrupt vector in __imsic_remote_sync(). The "move_pre" pointer of
+these interrupts can only be cleared after the old CPU backs to online.
+Therefore the affinity of an interrupt that are orignally target an
+offlined CPU can't be changed.
+
+This patch force to clear the "move_pre" pointers before the CPU goes
+offline.
+
+Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Link: https://lore.kernel.org/r/20260503-imsic-v1-1-aa8330bd1c34@sifive.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/irqchip/irq-riscv-imsic-early.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index ba903fa689bd5..a7a1852b548c4 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -158,6 +158,8 @@ static int imsic_dying_cpu(unsigned int cpu)
+ 	/* Cleanup IPIs */
+ 	imsic_ipi_dying_cpu();
+ 
++	imsic_local_sync_all(false);
++
+ 	/* Mark per-CPU IMSIC state as offline */
+ 	imsic_state_offline();
+ 
+-- 
+2.52.0
+

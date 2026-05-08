@@ -1,7 +1,7 @@
-From ed5a8e4f7467acf07ddfa577267b419196568dc4 Mon Sep 17 00:00:00 2001
+From 4a3b6cdb8e4e960cbb0c09c9355211ae9e687660 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Thu, 26 Mar 2026 18:00:10 +0800
-Subject: [PATCH 047/189] UPSTREAM: usb: dwc3: Add optional VBUS regulator
+Subject: [PATCH 047/222] UPSTREAM: usb: dwc3: Add optional VBUS regulator
  support to SpacemiT K1
 
 Some SpacemiT K1 boards (like OrangePi R2S) provide USB VBUS
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
-index 28219968b8b0..69b7e6227b3b 100644
+index 28219968b8b09..69b7e6227b3ba 100644
 --- a/drivers/usb/dwc3/dwc3-generic-plat.c
 +++ b/drivers/usb/dwc3/dwc3-generic-plat.c
 @@ -12,6 +12,8 @@
@@ -80,5 +80,5 @@ index 28219968b8b0..69b7e6227b3b 100644
  	{ .compatible = "fsl,ls1028a-dwc3", &fsl_ls1028_dwc3},
  	{ .compatible = "eswin,eic7700-dwc3", &eic7700_dwc3},
 -- 
-2.53.0
+2.52.0
 

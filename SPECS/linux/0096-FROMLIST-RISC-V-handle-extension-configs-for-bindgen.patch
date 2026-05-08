@@ -1,7 +1,7 @@
-From 053c51a61ca2a7f974d940232044dfb4f0a7d584 Mon Sep 17 00:00:00 2001
+From 511338946cbd2c7aa7354f8d95742a2a1ca776c1 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:57 +0100
-Subject: [PATCH 096/189] FROMLIST: RISC-V: handle extension configs for
+Subject: [PATCH 096/222] FROMLIST: RISC-V: handle extension configs for
  bindgen, re-enable gcc + rust builds
 
 Commit 33549fcf37ec ("RISC-V: disallow gcc + rust builds") disabled GCC
@@ -38,7 +38,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  4 files changed, 38 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/rust/arch-support.rst b/Documentation/rust/arch-support.rst
-index 6e6a515d0899..5282e0e174e8 100644
+index 6e6a515d08991..5282e0e174e8d 100644
 --- a/Documentation/rust/arch-support.rst
 +++ b/Documentation/rust/arch-support.rst
 @@ -18,7 +18,7 @@ Architecture   Level of support  Constraints
@@ -51,7 +51,7 @@ index 6e6a515d0899..5282e0e174e8 100644
  ``x86``        Maintained        ``x86_64`` only.
  =============  ================  ==============================================
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 32b6aa8dece7..602b84e2b05b 100644
+index 32b6aa8dece75..602b84e2b05bf 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
 @@ -196,7 +196,7 @@ config RISCV
@@ -153,7 +153,7 @@ index 32b6aa8dece7..602b84e2b05b 100644
  	bool "FPU support"
  	default y
 diff --git a/rust/Makefile b/rust/Makefile
-index 314329e6bc46..a64cdd92ef03 100644
+index 314329e6bc46b..a64cdd92ef03c 100644
 --- a/rust/Makefile
 +++ b/rust/Makefile
 @@ -402,7 +402,8 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
@@ -167,7 +167,7 @@ index 314329e6bc46..a64cdd92ef03 100644
  # Because scripts/Makefile.rust is included regardless of whether Rust is enabled,
  # we perform this check here to avoid breaking targets that do not yet support Rust builds.
 diff --git a/scripts/Makefile.rust b/scripts/Makefile.rust
-index 5c12b4b8c8b6..bfdad4a0a3ce 100644
+index 5c12b4b8c8b65..bfdad4a0a3cee 100644
 --- a/scripts/Makefile.rust
 +++ b/scripts/Makefile.rust
 @@ -3,6 +3,7 @@ BINDGEN_TARGET_x86	:= x86_64-linux-gnu
@@ -179,5 +179,5 @@ index 5c12b4b8c8b6..bfdad4a0a3ce 100644
  BINDGEN_TARGET		:= $(BINDGEN_TARGET_$(SRCARCH))
  
 -- 
-2.53.0
+2.52.0
 

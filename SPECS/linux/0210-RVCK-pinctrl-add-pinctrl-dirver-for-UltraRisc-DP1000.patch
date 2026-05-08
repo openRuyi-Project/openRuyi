@@ -1,0 +1,881 @@
+From 5762ff239e09ef5a78944563e9ea9fb3445a8018 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Fri, 17 Jan 2025 19:34:48 +0800
+Subject: [PATCH 210/222] RVCK: pinctrl: add pinctrl dirver for UltraRisc
+ DP1000
+
+support pinmux and pinconf for UltraRisc DP1000 SoC
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Signed-off-by: Yanteng Si <si.yanteng@linux.dev>
+FROM: https://github.com/RVCK-Project/rvck/commit/2fdd7d95fb0408b67353ea82e378773ebfe39ade
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pinctrl/Kconfig                       |   1 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/ultrarisc/Kconfig             |  20 +
+ drivers/pinctrl/ultrarisc/Makefile            |   4 +
+ .../ultrarisc/pinctrl-ultrarisc-dp1000.c      | 122 +++++
+ drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c | 503 ++++++++++++++++++
+ drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h |  78 +++
+ .../dt-bindings/pinctrl/ur-dp1000-pinctrl.h   |  65 +++
+ 8 files changed, 794 insertions(+)
+ create mode 100644 drivers/pinctrl/ultrarisc/Kconfig
+ create mode 100644 drivers/pinctrl/ultrarisc/Makefile
+ create mode 100644 drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+ create mode 100644 drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+ create mode 100644 drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
+ create mode 100644 include/dt-bindings/pinctrl/ur-dp1000-pinctrl.h
+
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index afecd9407f535..bf65ef30394a3 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -720,5 +720,6 @@ source "drivers/pinctrl/ti/Kconfig"
+ source "drivers/pinctrl/uniphier/Kconfig"
+ source "drivers/pinctrl/visconti/Kconfig"
+ source "drivers/pinctrl/vt8500/Kconfig"
++source "drivers/pinctrl/ultrarisc/Kconfig"
+ 
+ endif
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index f7d5d5f76d0c8..4df3e52518ea2 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -98,3 +98,4 @@ obj-y				+= ti/
+ obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
+ obj-$(CONFIG_PINCTRL_VISCONTI)	+= visconti/
+ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
++obj-$(CONFIG_ARCH_ULTRARISC)	+= ultrarisc/
+diff --git a/drivers/pinctrl/ultrarisc/Kconfig b/drivers/pinctrl/ultrarisc/Kconfig
+new file mode 100644
+index 0000000000000..e4db80843bea0
+--- /dev/null
++++ b/drivers/pinctrl/ultrarisc/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++config PINCTRL_ULTRARISC
++	bool
++	depends on OF
++	select PINMUX
++	select GENERIC_PINCTRL_GROUPS
++	select GENERIC_PINCONF
++	select GENERIC_PINMUX_FUNCTIONS
++	select GPIOLIB
++	select IRQ_DOMAIN_HIERARCHY
++	select MFD_SYSCON
++
++config PINCTRL_ULTRARISC_DP1000
++	tristate "Pinctrl driver of UltraRisc DP1000"
++	select PINCTRL_ULTRARISC
++	depends on OF && HAS_IOMEM
++	help
++	  This driver configures the UltraRisc DP1000 SoC's pinctrl
++	  subsystem.
+diff --git a/drivers/pinctrl/ultrarisc/Makefile b/drivers/pinctrl/ultrarisc/Makefile
+new file mode 100644
+index 0000000000000..5bf3f449d59b8
+--- /dev/null
++++ b/drivers/pinctrl/ultrarisc/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_PINCTRL_ULTRARISC) += pinctrl-ultrarisc.o
++obj-$(CONFIG_PINCTRL_ULTRARISC_DP1000)	+= pinctrl-ultrarisc-dp1000.o
+\ No newline at end of file
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+new file mode 100644
+index 0000000000000..217f671fe63a1
+--- /dev/null
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc-dp1000.c
+@@ -0,0 +1,122 @@
++// SPDX-License-Identifier: GPL-2.0
++/* UltraRisc DP1000 pinctrl driver
++ *
++ * Copyright(C) 2025 UltraRisc Technology Co., Ltd.
++ *
++ *  Author:  wangjia <wangjia@ultrarisc.com>
++ */
++
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/machine.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++
++#include "../pinctrl-utils.h"
++#include "../pinmux.h"
++#include "../core.h"
++#include "../devicetree.h"
++
++#include "pinctrl-ultrarisc.h"
++
++static const struct pinctrl_pin_desc ur_dp1000_pins[] = {
++	// PA
++	PINCTRL_PIN(0, "PA0"),
++	PINCTRL_PIN(1, "PA1"),
++	PINCTRL_PIN(2, "PA2"),
++	PINCTRL_PIN(3, "PA3"),
++	PINCTRL_PIN(4, "PA4"),
++	PINCTRL_PIN(5, "PA5"),
++	PINCTRL_PIN(6, "PA6"),
++	PINCTRL_PIN(7, "PA7"),
++	PINCTRL_PIN(8, "PA8"),
++	PINCTRL_PIN(9, "PA9"),
++	PINCTRL_PIN(10, "PA10"),
++	PINCTRL_PIN(11, "PA11"),
++	PINCTRL_PIN(12, "PA12"),
++	PINCTRL_PIN(13, "PA13"),
++	PINCTRL_PIN(14, "PA14"),
++	PINCTRL_PIN(15, "PA15"),
++	// PB
++	PINCTRL_PIN(16, "PB0"),
++	PINCTRL_PIN(17, "PB1"),
++	PINCTRL_PIN(18, "PB2"),
++	PINCTRL_PIN(19, "PB3"),
++	PINCTRL_PIN(20, "PB4"),
++	PINCTRL_PIN(21, "PB5"),
++	PINCTRL_PIN(22, "PB6"),
++	PINCTRL_PIN(23, "PB7"),
++	// PC
++	PINCTRL_PIN(24, "PC0"),
++	PINCTRL_PIN(25, "PC1"),
++	PINCTRL_PIN(26, "PC2"),
++	PINCTRL_PIN(27, "PC3"),
++	PINCTRL_PIN(28, "PC4"),
++	PINCTRL_PIN(29, "PC5"),
++	PINCTRL_PIN(30, "PC6"),
++	PINCTRL_PIN(31, "PC7"),
++	// PD
++	PINCTRL_PIN(32, "PD0"),
++	PINCTRL_PIN(33, "PD1"),
++	PINCTRL_PIN(34, "PD2"),
++	PINCTRL_PIN(35, "PD3"),
++	PINCTRL_PIN(36, "PD4"),
++	PINCTRL_PIN(37, "PD5"),
++	PINCTRL_PIN(38, "PD6"),
++	PINCTRL_PIN(39, "PD7"),
++	// LPC
++	PINCTRL_PIN(40, "LPC0"),
++	PINCTRL_PIN(41, "LPC1"),
++	PINCTRL_PIN(42, "LPC2"),
++	PINCTRL_PIN(43, "LPC3"),
++	PINCTRL_PIN(44, "LPC4"),
++	PINCTRL_PIN(45, "LPC5"),
++	PINCTRL_PIN(46, "LPC6"),
++	PINCTRL_PIN(47, "LPC7"),
++	PINCTRL_PIN(48, "LPC8"),
++	PINCTRL_PIN(49, "LPC9"),
++	PINCTRL_PIN(50, "LPC10"),
++	PINCTRL_PIN(51, "LPC11"),
++	PINCTRL_PIN(52, "LPC12"),
++};
++
++static struct ur_pinctrl_match_data ur_dp1000_match_data = {
++	.pins = ur_dp1000_pins,
++	.npins = ARRAY_SIZE(ur_dp1000_pins),
++	.offset = 0x2c0,
++	.ports = {
++		{"A", 16, 0x2c0, 0x310},
++		{"B", 8, 0x2c4, 0x318},
++		{"C", 8, 0x2c8, 0x31c},
++		{"D", 8, 0x2cc, 0x320},
++		{"LPC", 13, 0x2d0, 0x324},
++	},
++};
++
++enum ur_dp1000_port_list {
++	PORT_A = 0,
++	PORT_B,
++	PORT_C,
++	PORT_D,
++	PORT_LPC
++};
++
++
++static const struct of_device_id ur_pinctrl_of_match[] = {
++	{ .compatible = "ultrarisc,dp1000-pinctrl", .data = &ur_dp1000_match_data, },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ur_pinctrl_of_match);
++
++static struct platform_driver ur_pinctrl_driver = {
++	.driver = {
++		.name = "ultrarisc-pinctrl-dp1000",
++		.of_match_table = ur_pinctrl_of_match,
++	},
++	.probe = ur_pinctrl_probe,
++	.remove = ur_pinctrl_remove,
++};
++
++module_platform_driver(ur_pinctrl_driver);
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+new file mode 100644
+index 0000000000000..667d59e0ac6e6
+--- /dev/null
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.c
+@@ -0,0 +1,503 @@
++// SPDX-License-Identifier: GPL-2.0
++/* UltraRisc pinctrl driver
++ *
++ * Copyright(C) 2025 UltraRisc Technology Co., Ltd.
++ *
++ *  Author:  wangjia <wangjia@ultrarisc.com>
++ */
++
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/machine.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/seq_file.h>
++
++#include "../pinctrl-utils.h"
++#include "../pinmux.h"
++#include "../core.h"
++#include "../devicetree.h"
++
++#include "pinctrl-ultrarisc.h"
++
++static int ur_pin_to_desc(struct pinctrl_dev *pctldev, struct ur_pin_val *pin_val)
++{
++	int index = 0;
++	struct ur_pinctrl *ur_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	const struct ur_pinctrl_match_data *ur_match_data = ur_pinctrl->match_data;
++
++	for (int i = 0; i < pin_val->port; i++)
++		index += ur_match_data->ports[i].npins;
++	index += pin_val->pin;
++	dev_dbg(pctldev->dev, "port %d pin %d index %d\n", pin_val->port, pin_val->pin, index);
++	return index;
++}
++
++static int ur_subnode_to_pin(struct pinctrl_dev *pctldev,
++			const char *name,
++			enum pinctrl_map_type type,
++			struct device_node *np,
++			int **pins,
++			struct ur_pin_val **pin_val,
++			int *pin_num)
++{
++	struct ur_pin_val *pin_vals;
++	int rows;
++	int ret = -EINVAL;
++	int *group_pins;
++	const char **pgnames;
++
++	dev_dbg(pctldev->dev, "pinctrl node %s\n", np->name);
++	rows = pinctrl_count_index_with_args(np, name);
++	if (rows < 0) {
++		dev_err(pctldev->dev, "%s count is invalid %d\n", name, rows);
++		return rows;
++	}
++
++	pin_vals = devm_kcalloc(pctldev->dev, rows, sizeof(*pin_vals), GFP_KERNEL);
++	if (!pin_vals) {
++		return -ENOMEM;
++	}
++
++	group_pins = devm_kcalloc(pctldev->dev, rows, sizeof(*group_pins), GFP_KERNEL);
++	if (!group_pins) {
++		ret = -ENOMEM;
++		goto free_pin_vals;
++	}
++
++	pgnames = devm_kzalloc(pctldev->dev, sizeof(*pgnames), GFP_KERNEL);
++	if (!pgnames) {
++		ret = -ENOMEM;
++		goto free_pins;
++	}
++
++	for (int i = 0; i < rows; i++) {
++		struct of_phandle_args pin_args;
++
++		ret = pinctrl_parse_index_with_args(np, name, i, &pin_args);
++		if (ret) {
++			dev_err(pctldev->dev, "parse args of %s index %d failed\n", name, i);
++			goto free_pgnames;
++		}
++
++		if (pin_args.args_count < 3) {
++			dev_err(pctldev->dev, "invalid args_count(%d) of %s index %d/%d\n",
++				pin_args.args_count, name, i, rows);
++			ret = -EINVAL;
++			goto free_pgnames;
++		}
++		pin_vals[i].port = pin_args.args[0];
++		pin_vals[i].pin = pin_args.args[1];
++		pin_vals[i].mode = pin_args.args[2];
++
++		dev_dbg(pctldev->dev, "found a pinctrl: port=%d pin=%d val=0x%x\n",
++			pin_vals[i].port, pin_vals[i].pin, pin_vals[i].mode);
++
++		group_pins[i] = ur_pin_to_desc(pctldev, &pin_vals[i]);
++	}
++
++	dev_dbg(pctldev->dev, "get an pinmux of %s\n", np->name);
++
++	ret = pinctrl_generic_add_group(pctldev, np->name, group_pins, rows, pin_vals);
++	if (ret < 0) {
++		dev_err(pctldev->dev, "add group %s failed\n", np->name);
++		goto free_pgnames;
++	}
++
++	*pgnames = np->name;
++	ret = pinmux_generic_add_function(pctldev, np->name, pgnames, 1, NULL);
++	if (ret < 0) {
++		dev_err(pctldev->dev, "add function %s failed\n", np->name);
++		goto free_group;
++	}
++
++	dev_dbg(pctldev->dev, "add group and function of %s\n", np->name);
++
++	*pins = group_pins;
++	*pin_val = pin_vals;
++	*pin_num = rows;
++
++	return 0;
++
++free_group:
++	pinctrl_generic_remove_group(pctldev, ret);
++free_pgnames:
++	devm_kfree(pctldev->dev, pgnames);
++free_pins:
++	devm_kfree(pctldev->dev, group_pins);
++free_pin_vals:
++	devm_kfree(pctldev->dev, pin_vals);
++	return ret;
++}
++
++static int ur_pinmux_to_map(struct pinctrl_dev *pctldev,
++			struct device_node *np,
++			struct pinctrl_map *map)
++{
++	int ret;
++	int *pins;
++	struct ur_pin_val *pin_vals;
++	int pin_num;
++
++	ret = ur_subnode_to_pin(pctldev, PINMUX_PROP_NAME, PIN_MAP_TYPE_MUX_GROUP,
++				np, &pins, &pin_vals, &pin_num);
++	if (ret) {
++		dev_err(pctldev->dev, "get pinmux data %s failed\n", np->name);
++		return ret;
++	}
++
++	map->type = PIN_MAP_TYPE_MUX_GROUP;
++	map->data.mux.group = np->name;
++	map->data.mux.function = np->name;
++
++	dev_dbg(pctldev->dev, "type=%d, mux.group=%s, mux.function=%s\n",
++		map->type, map->data.mux.group, map->data.mux.function);
++
++	return 0;
++}
++
++static int ur_pinconf_to_map(struct pinctrl_dev *pctldev,
++			struct device_node *np,
++			struct pinctrl_map *map)
++{
++	int ret;
++	int *pins;
++	struct ur_pin_val *pin;
++	int pin_num;
++
++	ret = ur_subnode_to_pin(pctldev, PINCONF_PROP_NAME, PIN_MAP_TYPE_CONFIGS_GROUP,
++				np, &pins, &pin, &pin_num);
++	if (ret) {
++		dev_err(pctldev->dev, "get pinconf data %s failed\n", np->name);
++		return ret;
++	}
++
++	dev_dbg(pctldev->dev, "get an pinconf of %s\n", np->name);
++	map->type = PIN_MAP_TYPE_CONFIGS_GROUP;
++	map->data.configs.group_or_pin = np->name;
++	map->data.configs.configs = (unsigned long *)pin;
++	map->data.configs.num_configs = pin_num;
++
++	dev_dbg(pctldev->dev, "type=%d, config.group_or_pin=%s, configs.num_config=%d\n",
++		map->type, map->data.configs.group_or_pin, map->data.configs.num_configs);
++
++	return 0;
++}
++
++static int ur_dt_node_to_map(struct pinctrl_dev *pctldev,
++			struct device_node *np,
++			struct pinctrl_map **map,
++			unsigned int *num_maps)
++{
++	int ret;
++	bool mux_present = false, conf_present = false;
++	struct pinctrl_map *new_map;
++	unsigned int map_num = 0, prop_count = 0;
++
++	//device_get_named_child_node(pctldev->dev, np->name);
++	if (of_property_present(np, PINMUX_PROP_NAME)) {
++		mux_present = true;
++		prop_count++;
++	}
++	if (of_property_present(np, PINCONF_PROP_NAME)) {
++		conf_present = true;
++		prop_count++;
++	}
++
++	if (!prop_count) {
++		dev_err(pctldev->dev, "no pinctrl node(%d) in %s\n", prop_count, np->name);
++		return -EINVAL;
++	}
++
++	new_map = devm_kmalloc_array(pctldev->dev, prop_count, sizeof(**map), GFP_KERNEL);
++	if (!new_map)
++		return -ENOMEM;
++
++	*map = new_map;
++	if (mux_present) {
++		ret = ur_pinmux_to_map(pctldev, np, new_map);
++		if (!ret) {
++			new_map++;
++			map_num++;
++		}
++	}
++	if (conf_present) {
++		ret = ur_pinconf_to_map(pctldev, np, new_map);
++		if (!ret)
++			map_num++;
++	}
++
++	if (!map_num) {
++		dev_err(pctldev->dev, "no pinctrl info of %s failed\n", np->name);
++		goto free_map;
++	}
++	*num_maps = map_num;
++
++	return 0;
++
++free_map:
++	devm_kfree(pctldev->dev, new_map);
++	return ret;
++}
++
++static void ur_dt_free_map(struct pinctrl_dev *pctldev,
++			struct pinctrl_map *map, unsigned int num_maps)
++{
++	if (map)
++		devm_kfree(pctldev->dev, map);
++}
++
++static void ur_pin_dbg_show(struct pinctrl_dev *pctldev,
++			struct seq_file *s, unsigned int offset)
++{
++	seq_printf(s, "%s", dev_name(pctldev->dev));
++}
++
++static const struct pinctrl_ops ur_pinctrl_ops = {
++	.get_groups_count = pinctrl_generic_get_group_count,
++	.get_group_name = pinctrl_generic_get_group_name,
++	.get_group_pins = pinctrl_generic_get_group_pins,
++	.dt_node_to_map = ur_dt_node_to_map,
++	.dt_free_map = ur_dt_free_map,
++	.pin_dbg_show = ur_pin_dbg_show,
++};
++
++static int ur_set_pin_mux(struct ur_pinctrl *pin_ctrl, struct ur_pin_val *pin_vals)
++{
++	unsigned long flag;
++	//bool clear_mode = false;
++	void __iomem *reg;
++	u32 val;
++	const struct ur_port_desc *port;
++
++	port = &pin_ctrl->match_data->ports[pin_vals->port];
++
++	reg = pin_ctrl->base + port->func_offset;
++
++	raw_spin_lock_irqsave(&pin_ctrl->lock, flag);
++	val = readl_relaxed(reg);
++	val &= ~((UR_FUNC0 | UR_FUNC1)<<pin_vals->pin);
++	val |= (pin_vals->mode << pin_vals->pin);
++	writel_relaxed(val, reg);
++	raw_spin_unlock_irqrestore(&pin_ctrl->lock, flag);
++
++	return 0;
++}
++
++static int ur_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
++		unsigned int group_selector)
++{
++	struct ur_pinctrl *ur_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	struct group_desc *ur_group;
++	struct ur_pin_val *pin_vals;
++
++	dev_dbg(pctldev->dev, "set mux: func_selector=%d, group_selector=%d\n",
++		func_selector, group_selector);
++	ur_group = pinctrl_generic_get_group(pctldev, group_selector);
++	if (!ur_group) {
++		dev_err(pctldev->dev, "get group %d failed\n", group_selector);
++		return -EINVAL;
++	}
++
++	dev_dbg(pctldev->dev, "get group %s, num_pins=%zu\n", ur_group->grp.name, ur_group->grp.npins);
++	pin_vals = ur_group->data;
++	if (!pin_vals) {
++		dev_err(pctldev->dev, "data of %s is invalid\n", ur_group->grp.name);
++		return -EINVAL;
++	}
++
++	for (int i = 0; i < ur_group->grp.npins; i++)
++		ur_set_pin_mux(ur_pinctrl, &pin_vals[i]);
++
++	return 0;
++}
++
++static const struct pinmux_ops ur_pinmux_ops = {
++	.get_functions_count = pinmux_generic_get_function_count,
++	.get_function_name   = pinmux_generic_get_function_name,
++	.get_function_groups = pinmux_generic_get_function_groups,
++	.set_mux = ur_set_mux,
++	.strict = true,
++};
++
++#define UR_CONF_BIT_PER_PIN	(4)
++#define UR_CONF_PIN_PER_REG	(32/UR_CONF_BIT_PER_PIN)
++static int ur_set_pin_conf(struct ur_pinctrl *pin_ctrl, struct ur_pin_val *pin_vals)
++{
++	const struct ur_port_desc *port_desc;
++	unsigned long flag;
++	void __iomem *reg;
++	u32 val, conf;
++
++	port_desc = &pin_ctrl->match_data->ports[pin_vals->port];
++	reg = pin_ctrl->base + port_desc->conf_offset;
++	dev_dbg(pin_ctrl->dev, "pinconf base=0x%llx, reg=0x%llx\n", (u64)pin_ctrl->base, (u64)reg);
++	reg += (pin_vals->pin / UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN;
++	dev_dbg(pin_ctrl->dev, "pinconf pin=0x%llx\n", (u64)reg);
++
++	conf = pin_vals->conf << ((pin_vals->pin % UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN);
++	dev_dbg(pin_ctrl->dev, "pinconf conf=0x%x\n", conf);
++
++	raw_spin_lock_irqsave(&pin_ctrl->lock, flag);
++	val = readl_relaxed(reg);
++	val &= ~(UR_BIAS_MASK << ((pin_vals->pin % UR_CONF_PIN_PER_REG) * UR_CONF_BIT_PER_PIN));
++	val |= conf;
++	writel_relaxed(val, reg);
++	raw_spin_unlock_irqrestore(&pin_ctrl->lock, flag);
++	dev_dbg(pin_ctrl->dev, "pinconf val=0x%x\n", val);
++
++	return 0;
++}
++
++static int ur_pin_config_get(struct pinctrl_dev *pctldev,
++			unsigned int pin,
++			unsigned long *config)
++{
++	dev_dbg(pctldev->dev, "%s(%d): pin=%d\n", __func__, __LINE__, pin);
++	// TODO: this is call by pinconf-generic
++	return -EOPNOTSUPP;
++}
++
++static int ur_pin_config_set(struct pinctrl_dev *pctldev,
++			unsigned int pin,
++			unsigned long *configs,
++			unsigned int num_configs)
++{
++	struct ur_pin_val *pin_conf;
++	struct ur_pinctrl *ur_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	dev_dbg(pctldev->dev, "%s(%d): pin=%d, num_configs=%d\n",
++		__func__, __LINE__, pin, num_configs);
++	pin_conf = (struct ur_pin_val *)configs;
++	for (int i = 0; i < num_configs; i++) {
++		dev_dbg(pctldev->dev, "pinconf[%d], port=%d, pin=%d, conf=0x%x\n",
++			i, pin_conf[i].port, pin_conf[i].pin, pin_conf[i].conf);
++		ur_set_pin_conf(ur_pinctrl, &pin_conf[i]);
++	}
++	return 0;
++}
++
++static int ur_pin_config_group_get(struct pinctrl_dev *pctldev,
++				unsigned selector,
++				unsigned long *config)
++{
++	dev_dbg(pctldev->dev, "%s(%d): selector=%d, config=0x%lx\n",
++		__func__, __LINE__, selector, *config);
++	return -EOPNOTSUPP;
++}
++
++static int ur_pin_config_group_set(struct pinctrl_dev *pctldev,
++			unsigned int selector,
++			unsigned long *configs,
++			unsigned int num_configs)
++{
++	struct group_desc *ur_group;
++	struct ur_pin_val *pin_conf;
++	struct ur_pinctrl *ur_pinctrl = pinctrl_dev_get_drvdata(pctldev);
++
++	dev_dbg(pctldev->dev, "%s(%d): selector=%d, num_configs=%d\n",
++		__func__, __LINE__, selector, num_configs);
++	ur_group = pinctrl_generic_get_group(pctldev, selector);
++	if (!ur_group) {
++		dev_err(pctldev->dev, "Cannot get group by selector %d\n", selector);
++		return -EINVAL;
++	}
++
++	dev_dbg(pctldev->dev, "get pinconf group %s\n", ur_group->grp.name);
++	pin_conf = (struct ur_pin_val *)configs;
++	for (int i = 0; i < num_configs; i++) {
++		dev_dbg(pctldev->dev, "pinconf[%d], port=%d, pin=%d, conf=0x%x\n",
++			i, pin_conf[i].port, pin_conf[i].pin, pin_conf[i].conf);
++		ur_set_pin_conf(ur_pinctrl, &pin_conf[i]);
++	}
++	return 0;
++}
++
++static const struct pinconf_ops ur_pinconf_ops = {
++	.pin_config_get = ur_pin_config_get,
++	.pin_config_set = ur_pin_config_set,
++	.pin_config_group_get = ur_pin_config_group_get,
++	.pin_config_group_set = ur_pin_config_group_set,
++#ifdef CONFIG_GENERIC_PINCONF
++	.is_generic = true,
++#endif
++};
++
++int ur_pinctrl_probe(struct platform_device *pdev)
++{
++	struct pinctrl_desc *ur_pinctrl_desc;
++	const struct ur_pinctrl_match_data *pins_data;
++	struct ur_pinctrl *ur_pinctrl;
++	int ret;
++
++	pins_data = of_device_get_match_data(&pdev->dev);
++	if (!pins_data)
++		return -ENODEV;
++
++	ur_pinctrl_desc = devm_kzalloc(&pdev->dev, sizeof(*ur_pinctrl_desc), GFP_KERNEL);
++	if (!ur_pinctrl_desc) {
++		dev_err(&pdev->dev, "pinctrl desc alloc failed\n");
++		return -ENOMEM;
++	}
++
++	ur_pinctrl = devm_kzalloc(&pdev->dev, sizeof(*ur_pinctrl), GFP_KERNEL);
++	if (!ur_pinctrl) {
++		dev_err(&pdev->dev, "pinctrl alloc failed\n");
++		ret = -ENOMEM;
++		goto free_pinctrl_desc;
++	}
++	struct resource *res;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	dev_dbg(&pdev->dev, "iomem start=0x%llx\n", res->start);
++	ur_pinctrl->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ur_pinctrl->base)) {
++		dev_err(&pdev->dev, "get ioremap resource failed\n");
++		ret = -EINVAL;
++		goto free_pinctrl_desc;
++	}
++	dev_dbg(&pdev->dev, "pinctrl base=0x%p\n", ur_pinctrl->base);
++	ur_pinctrl_desc->name = dev_name(&pdev->dev);
++	ur_pinctrl_desc->owner = THIS_MODULE;
++	ur_pinctrl_desc->pins = pins_data->pins;
++	ur_pinctrl_desc->npins = pins_data->npins;
++	ur_pinctrl_desc->pctlops = &ur_pinctrl_ops;
++	ur_pinctrl_desc->pmxops = &ur_pinmux_ops;
++	ur_pinctrl_desc->confops = &ur_pinconf_ops;
++
++	ur_pinctrl->dev = &pdev->dev;
++	ur_pinctrl->match_data = pins_data;
++	ur_pinctrl->pctl_desc = ur_pinctrl_desc;
++	raw_spin_lock_init(&ur_pinctrl->lock);
++	mutex_init(&ur_pinctrl->mutex);
++	
++	ret = devm_pinctrl_register_and_init(&pdev->dev, ur_pinctrl_desc,
++			ur_pinctrl, &ur_pinctrl->pctl_dev);
++	if (ret) {
++		dev_err(&pdev->dev, "pinctrl register failed\n");
++		goto free_pinctrl;
++	}
++
++	platform_set_drvdata(pdev, ur_pinctrl);
++
++	return pinctrl_enable(ur_pinctrl->pctl_dev);
++
++free_pinctrl:
++	devm_kfree(&pdev->dev, ur_pinctrl);
++free_pinctrl_desc:
++	devm_kfree(&pdev->dev, ur_pinctrl_desc);
++	return ret;
++}
++
++
++void ur_pinctrl_remove(struct platform_device *pdev)
++{
++	struct ur_pinctrl *ur_pinctrl = platform_get_drvdata(pdev);
++
++	if (ur_pinctrl->pctl_dev)
++		devm_pinctrl_unregister(&pdev->dev, ur_pinctrl->pctl_dev);
++}
+diff --git a/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
+new file mode 100644
+index 0000000000000..eec621bf8b050
+--- /dev/null
++++ b/drivers/pinctrl/ultrarisc/pinctrl-ultrarisc.h
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
++/* UltraRisc pinctrl driver
++ *
++ * Copyright(C) 2025 UltraRisc Technology Co., Ltd.
++ *
++ *  Author:  wangjia <wangjia@ultrarisc.com>
++ */
++
++#ifndef __PINCTRL_ULTRARISC_H__
++#define __PINCTRL_ULTRARISC_H__
++
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinconf-generic.h>
++
++#define PINMUX_PROP_NAME	"pinctrl-pins"
++#define PINCONF_PROP_NAME	"pinconf-pins"
++
++struct ur_pin_conf {
++	u16 pull;
++	u16 drive;
++};
++
++struct ur_pin_val {
++	u32 port;
++	u32 pin;
++	union {
++		u32 mode;
++		u32 conf;
++	};
++#define UR_FUNC_DEF			0
++#define UR_FUNC0			1
++#define UR_FUNC1			0x10000
++
++#define UR_BIAS_MASK		0x0000000F
++#define UR_PULL_MASK		0x0C
++#define UR_PULL_DIS		0
++#define UR_PULL_UP		1
++#define UR_PULL_DOWN		2
++#define UR_DRIVE_MASK		0x03
++};
++
++struct ur_port_desc {
++	char *name;
++	u32 npins;
++	u32 func_offset;
++	u32 conf_offset;
++};
++
++struct ur_pinctrl_match_data {
++	const struct pinctrl_pin_desc *pins;
++	u32 npins;
++	u32 offset;
++	//u32 conf_offset[];
++	struct ur_port_desc ports[];
++};
++
++
++struct ur_pinctrl {
++	struct device *dev;
++	struct pinctrl_dev *pctl_dev;
++	struct pinctrl_desc *pctl_desc;
++	void __iomem *base;
++	unsigned int ngroups;
++	const char **grp_names;
++	unsigned int nbanks;
++	const struct ur_pinctrl_match_data *match_data;
++	struct regmap		*regmap;
++	raw_spinlock_t lock;
++	struct mutex mutex;
++	struct pinctrl_pin_desc *pins;
++	u32 npins;
++	u32 pkg;
++};
++
++int ur_pinctrl_probe(struct platform_device *pdev);
++void ur_pinctrl_remove(struct platform_device *pdev);
++
++#endif
+diff --git a/include/dt-bindings/pinctrl/ur-dp1000-pinctrl.h b/include/dt-bindings/pinctrl/ur-dp1000-pinctrl.h
+new file mode 100644
+index 0000000000000..5bec446e2411f
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/ur-dp1000-pinctrl.h
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/* UltraRisc DP1000 pinctrl header
++ *
++ * Copyright(C) 2025 UltraRisc Technology Co., Ltd.
++ *
++ *  Author:  wangjia <wangjia@ultrarisc.com>
++ */
++
++#ifndef __UR_DP1000_PINCTRL_H__
++#define __UR_DP1000_PINCTRL_H__
++
++#define UR_DP1000_IOMUX_A		0x0
++#define UR_DP1000_IOMUX_B		0x1
++#define UR_DP1000_IOMUX_C		0x2
++#define UR_DP1000_IOMUX_D		0x3
++#define UR_DP1000_IOMUX_LPC		0x4
++
++#define UR_FUNC_DEF				0
++#define UR_FUNC0			1
++#define UR_FUNC1			0x10000
++
++/**
++ * port: 'A' 'B' 'C'
++ *     Pin in the port
++ * pin:
++ *     PA: 0 - 15
++ *     PB-PD: 0 - 7
++ * func:
++ *     UR_FUNC_DEF: default
++ *     UR_FUNC0: func0
++ *     UR_FUNC1: func1
++ */
++#define UR_DP1000_IOPAD(port, pin, func)	(port) (pin) (func)
++
++/**
++ * Configure pull up/down resistor of the IO pin
++ * UR_PULL_DIS: disable pull-up and pull-down
++ * UR_PULL_UP: enable pull-up
++ * UR_PULL_DOWN: enable pull-down
++ */
++#define UR_PULL_DIS		0
++#define UR_PULL_UP		1
++#define UR_PULL_DOWN		2
++/**
++ * Configure drive strength of the IO pin
++ * UR_DRIVE_DEF: default value, reset value is 2
++ * UR_DRIVE_0: 20mA
++ * UR_DRIVE_1: 27mA
++ * UR_DIRVE_2: 33mA
++ * UR_DRIVE_3: 40mA
++ */
++#define UR_DRIVE_DEF		2
++#define UR_DRIVE_0		0
++#define UR_DRIVE_1		1
++#define UR_DRIVE_2		2
++#define UR_DRIVE_3		3
++
++/**
++ * Combine the pull-up/down resistor and drive strength
++ * pull: UR_PULL_DIS, UR_PULL_UP, UR_PULL_DOWN
++ * drive: UR_DRIVE_DEF, UR_DRIVE_0, UR_DRIVE_1, UR_DRIVE_2, UR_DRIVE_3
++ */
++#define UR_DP1000_BIAS(pull, drive)		(((pull)<<2) + (drive))
++
++#endif
+-- 
+2.52.0
+

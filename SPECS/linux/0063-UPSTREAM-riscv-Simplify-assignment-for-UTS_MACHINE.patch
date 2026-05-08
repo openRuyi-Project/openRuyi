@@ -1,7 +1,7 @@
-From 74d2af9b2e6a82a343f1f56df21b02922ea4a7d3 Mon Sep 17 00:00:00 2001
+From 930cf847fe1e632a3613aaf6817c7f92848fec9e Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 Date: Sat, 4 Apr 2026 18:42:40 -0600
-Subject: [PATCH 063/189] UPSTREAM: riscv: Simplify assignment for UTS_MACHINE
+Subject: [PATCH 063/222] UPSTREAM: riscv: Simplify assignment for UTS_MACHINE
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 371da75a47f9..87102314103c 100644
+index 371da75a47f96..87102314103c2 100644
 --- a/arch/riscv/Makefile
 +++ b/arch/riscv/Makefile
 @@ -28,7 +28,6 @@ endif
@@ -47,5 +47,5 @@ index 371da75a47f9..87102314103c 100644
  # Ensure it is aware of linker relaxation with LTO, otherwise relocations may
  # be incorrect: https://github.com/llvm/llvm-project/issues/65090
 -- 
-2.53.0
+2.52.0
 

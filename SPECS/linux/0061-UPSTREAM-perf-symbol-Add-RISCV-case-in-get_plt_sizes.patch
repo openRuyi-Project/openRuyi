@@ -1,7 +1,7 @@
-From 008cced0578e98816a1b721a9221a5299a418acf Mon Sep 17 00:00:00 2001
+From 86c1b2856ed9b824a9e0fe1f9a13e3df84c9aad5 Mon Sep 17 00:00:00 2001
 From: Chen Pei <cp0613@linux.alibaba.com>
 Date: Tue, 17 Mar 2026 11:48:47 +0800
-Subject: [PATCH 061/189] UPSTREAM: perf symbol: Add RISCV case in
+Subject: [PATCH 061/222] UPSTREAM: perf symbol: Add RISCV case in
  get_plt_sizes
 
 According to RISC-V psABI specification, the PLT (Program Linkage Table)
@@ -31,7 +31,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 76912c62b6a0..806936d95523 100644
+index 76912c62b6a07..806936d95523f 100644
 --- a/tools/perf/util/symbol-elf.c
 +++ b/tools/perf/util/symbol-elf.c
 @@ -372,10 +372,8 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr *ehdr, GElf_Shdr *shdr_plt,
@@ -47,5 +47,5 @@ index 76912c62b6a0..806936d95523 100644
  		*plt_entry_size = 16;
  		return true;
 -- 
-2.53.0
+2.52.0
 

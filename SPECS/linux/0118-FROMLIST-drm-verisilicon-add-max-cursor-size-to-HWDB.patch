@@ -1,7 +1,7 @@
-From ca1cee984a17a9b68dee828cc4061cdbc7662491 Mon Sep 17 00:00:00 2001
+From 3781abfcd9507e1e3c6b85e631d0057015403cc5 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Date: Mon, 9 Mar 2026 16:53:01 +0800
-Subject: [PATCH 118/189] FROMLIST: drm: verisilicon: add max cursor size to
+Date: Thu, 7 May 2026 01:56:09 +0800
+Subject: [PATCH 118/222] FROMLIST: drm: verisilicon: add max cursor size to
  HWDB
 
 Different display controller variants support different maximum cursor
@@ -13,15 +13,17 @@ The minimum size is fixed at 32 and only PoT square sizes are supported.
 Add the max cursor size field to HWDB and fill all entries with 64.
 
 Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Link: https://lore.kernel.org/r/20260309085302.3132732-2-zhengxingda@iscas.ac.cn
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Link: https://lore.kernel.org/r/20260506175610.2542888-2-zhengxingda@iscas.ac.cn
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  drivers/gpu/drm/verisilicon/vs_hwdb.c | 4 ++++
- drivers/gpu/drm/verisilicon/vs_hwdb.h | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/verisilicon/vs_hwdb.h | 5 +++++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/drivers/gpu/drm/verisilicon/vs_hwdb.c b/drivers/gpu/drm/verisilicon/vs_hwdb.c
-index 09336af0900a..2a0f7c59afa3 100644
+index 09336af0900ae..2a0f7c59afa3a 100644
 --- a/drivers/gpu/drm/verisilicon/vs_hwdb.c
 +++ b/drivers/gpu/drm/verisilicon/vs_hwdb.c
 @@ -95,6 +95,7 @@ static struct vs_chip_identity vs_chip_identities[] = {
@@ -57,17 +59,21 @@ index 09336af0900a..2a0f7c59afa3 100644
  	},
  };
 diff --git a/drivers/gpu/drm/verisilicon/vs_hwdb.h b/drivers/gpu/drm/verisilicon/vs_hwdb.h
-index 92192e4fa086..c54c9326c168 100644
+index 92192e4fa0862..2065ecb730437 100644
 --- a/drivers/gpu/drm/verisilicon/vs_hwdb.h
 +++ b/drivers/gpu/drm/verisilicon/vs_hwdb.h
-@@ -20,6 +20,7 @@ struct vs_chip_identity {
+@@ -20,6 +20,11 @@ struct vs_chip_identity {
  	u32 customer_id;
  
  	u32 display_count;
++	/*
++	 * The hardware only supports square cursor planes, so this field
++	 * is both the maximum width and height in pixels.
++	 */
 +	int32_t max_cursor_size;
  	const struct vs_formats *formats;
  };
  
 -- 
-2.53.0
+2.52.0
 
