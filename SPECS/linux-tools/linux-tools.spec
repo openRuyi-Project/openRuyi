@@ -6,13 +6,13 @@
 %bcond doc 0
 
 Name:           linux-tools
-Version:        7.0.2
+Version:        7.0.5
 Release:        %autorelease
 Summary:        Set of tools for the Linux kernel
 License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-only
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-#!RemoteAsset:  sha256:53591a03294527a48ccb0b9e559e922df8a38554745a1206827ca751d2ca7662
+#!RemoteAsset:  sha256:965fb0a1c1675399fc60c6063b227c0523041b5f9a662b66462f1212c438ac3c
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
 
 %if %{with doc}
