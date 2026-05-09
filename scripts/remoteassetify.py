@@ -203,7 +203,7 @@ def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path | None:
     orig_base = url.rsplit('/', 1)[-1]
     base = re.sub(r'[^\w.-]', '_', orig_base)
     if base != orig_base:
-        print(f'WARN: Sanitized file name to {base}')
+        message('WARN', f'Sanitized file name to {base}')
 
     out_path = outdir / base
 
