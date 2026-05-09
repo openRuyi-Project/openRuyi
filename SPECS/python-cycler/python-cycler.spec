@@ -7,12 +7,12 @@
 %global srcname cycler
 
 Name:           python-%{srcname}
-Version:        0.11.0
+Version:        0.12.1
 Release:        %autorelease
 Summary:        Cycle through lists in various ways (used by matplotlib)
 License:        BSD-3-Clause
 URL:            https://github.com/matplotlib/cycler
-#!RemoteAsset:  sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f
+#!RemoteAsset:  sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
