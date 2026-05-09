@@ -8,14 +8,14 @@
 %global srcname pathspec
 
 Name:           python-%{srcname}
-Version:        0.12.1
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Utility library for gitignore style pattern matching of file paths
 License:        MIT
 URL:            https://github.com/cpburnz/python-path-specification
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset:  sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712
+#!RemoteAsset:  sha256:17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
