@@ -8,12 +8,12 @@
 %global pypi_name language_tags
 
 Name:           python-%{srcname}
-Version:        1.2.0
+Version:        1.3.1
 Release:        %autorelease
 Summary:        Dealing with IANA language tags in Python
 License:        MIT
 URL:            https://github.com/OnroerendErfgoed/language-tags
-#!RemoteAsset:  sha256:e934acba3e3dc85f867703eca421847a9ab7b7679b11b5d5cfd096febbf8bde6
+#!RemoteAsset:  sha256:b15f05505dad3ad296a1782d5a6083fd141309186094d1ab08095348f4203f37
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
