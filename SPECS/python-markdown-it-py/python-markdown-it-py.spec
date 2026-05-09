@@ -8,12 +8,12 @@
 %global pypi_name markdown_it_py
 
 Name:           python-%{srcname}
-Version:        4.0.0
+Version:        4.2.0
 Release:        %autorelease
 Summary:        Python port of markdown-it
 License:        MIT
 URL:            https://github.com/executablebooks/markdown-it-py
-#!RemoteAsset:  sha256:cb0a2b4aa34f932c007117b194e945bd74e0ec24133ceb5bac59009cda1cb9f3
+#!RemoteAsset:  sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49
 Source0:        https://files.pythonhosted.org/packages/source/m/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,6 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-core)
-BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
