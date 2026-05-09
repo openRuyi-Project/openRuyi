@@ -7,12 +7,12 @@
 %global srcname pyjwt
 
 Name:           python-%{srcname}
-Version:        2.10.1
+Version:        2.12.1
 Release:        %autorelease
 Summary:        Implementation of JSON Web Token validation for Python
 License:        MIT
 URL:            https://github.com/jpadilla/pyjwt
-#!RemoteAsset:  sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953
+#!RemoteAsset:  sha256:c74a7a2adf861c04d002db713dd85f84beb242228e671280bf709d765b03672b
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
