@@ -8,13 +8,13 @@
 %global pypi_name zope_event
 
 Name:           python-%{srcname}
-Version:        6.1
+Version:        6.2
 Release:        %autorelease
 Summary:        Very basic event publishing system
 License:        ZPL-2.1
 URL:            https://github.com/zopefoundation/zope.event
 VCS:            git:https://github.com/zopefoundation/zope.event.git
-#!RemoteAsset:  sha256:6052a3e0cb8565d3d4ef1a3a7809336ac519bc4fe38398cb8d466db09adef4f0
+#!RemoteAsset:  sha256:b97d5d6327067ee6b9dfcbdf606ade9ade70991e19c162e808ea39e5fcf0f8d3
 Source:         https://files.pythonhosted.org/packages/source/z/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
