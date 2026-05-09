@@ -7,12 +7,12 @@
 %global srcname zipp
 
 Name:           python-%{srcname}
-Version:        3.23.0
+Version:        3.23.1
 Release:        %autorelease
 Summary:        Backport of pathlib-compatible object wrapper for zip files
 License:        MIT
 URL:            https://github.com/jaraco/zipp
-#!RemoteAsset:  sha256:a07157588a12518c9d4034df3fbbee09c814741a33ff63c05fa29d26a2404166
+#!RemoteAsset:  sha256:32120e378d32cd9714ad503c1d024619063ec28aad2248dc6672ad13edfa5110
 Source:         https://files.pythonhosted.org/packages/source/z/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
