@@ -7,12 +7,12 @@
 %global srcname distlib
 
 Name:           python-%{srcname}
-Version:        0.3.7
+Version:        0.4.0
 Release:        %autorelease
 Summary:        Distribution utilities
 License:        Python-2.0
 URL:            https://github.com/pypa/distlib
-#!RemoteAsset:  sha256:9dafe54b34a028eafd95039d5e5d4851a13734540f1331060d31c9916e7147a8
+#!RemoteAsset:  sha256:feec40075be03a04501a973d81f633735b4b69f98b05450592310c0f401a4e0d
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
