@@ -7,12 +7,12 @@
 %global srcname chardet
 
 Name:           python-%{srcname}
-Version:        5.2.0
+Version:        7.4.3
 Release:        %autorelease
 Summary:        Python character encoding detector
 License:        LGPL-2.0-or-later
 URL:            https://github.com/chardet/chardet
-#!RemoteAsset:  sha256:1b3b6ff479a8c414bc3fa2c0852995695c4a026dcd6d0633b2dd092ca39c1cf7
+#!RemoteAsset:  sha256:cc1d4eb92a4ec1c2df3b490836ffa46922e599d34ce0bb75cf41fd2bf6303d56
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -32,7 +32,7 @@ Python module for character encoding auto-detection.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.rst
+%doc README.md
 %{_bindir}/chardetect
 
 %changelog
