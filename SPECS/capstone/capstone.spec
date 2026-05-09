@@ -15,7 +15,7 @@ Summary:        A multi-platform, multi-architecture disassembly framework
 License:        BSD-3-Clause
 URL:            https://www.capstone-engine.org
 VCS:            git:https://github.com/capstone-engine/capstone
-#!RemoteAsset
+#!RemoteAsset:  sha256:3970c63ca1f8755f2c8e69b41432b710ff634f1b45ee4e5351defec4ec8e1753
 Source0:        https://github.com/capstone-engine/%{srcname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -90,7 +90,7 @@ sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/capstone.pc
 %{_libdir}/cmake/%{srcname}/
 
 %files -n python-%{srcname}
@@ -103,4 +103,4 @@ sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
 %{_docdir}/%{srcname}-doc/docs/
 
 %changelog
-%{?autochangelog}
+%autochangelog

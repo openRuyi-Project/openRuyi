@@ -15,7 +15,7 @@ Summary:        A user and group account administration library
 License:        LGPL-2.0-or-later
 URL:            https://pagure.io/libuser
 VCS:            git:https://pagure.io/libuser
-#!RemoteAsset
+#!RemoteAsset:  sha256:17448006338dbf4fa19dd561335a75193b64ff58ac93cfb6ee7d8504f3f9bd64
 Source:         https://pagure.io/libuser/archive/libuser-%{version}/libuser-libuser-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -106,7 +106,7 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %files devel
 %{_includedir}/libuser/
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/libuser.pc
 %if %{with doc}
 %{_datadir}/gtk-doc/html/*
 %endif
@@ -116,4 +116,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{python3_sitearch}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

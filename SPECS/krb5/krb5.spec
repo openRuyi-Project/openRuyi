@@ -148,7 +148,14 @@ rm -rf %{buildroot}%{_datadir}/et/
 %{_includedir}/gssapi.h
 %{_includedir}/profile.h
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gssrpc.pc
+%{_libdir}/pkgconfig/kadm-client.pc
+%{_libdir}/pkgconfig/kadm-server.pc
+%{_libdir}/pkgconfig/kdb.pc
+%{_libdir}/pkgconfig/krb5-gssapi.pc
+%{_libdir}/pkgconfig/krb5.pc
+%{_libdir}/pkgconfig/mit-krb5-gssapi.pc
+%{_libdir}/pkgconfig/mit-krb5.pc
 %{_bindir}/krb5-config
 %{_datadir}/aclocal/ac_check_krb5.m4
 %{_mandir}/man1/krb5-config.1*
@@ -156,4 +163,4 @@ rm -rf %{buildroot}%{_datadir}/et/
 %{_mandir}/man5/.k5login.5.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

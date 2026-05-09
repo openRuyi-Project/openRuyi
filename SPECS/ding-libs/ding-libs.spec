@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        'Ding is not GLib' utility libraries
 License:        GPL-3.0-or-later AND LGP-3.0-or-later
 URL:            https://github.com/SSSD/ding-libs
-#!RemoteAsset
+#!RemoteAsset:  sha256:e5f07f34f5921bcb5ccccfe3751c28497879a6451cd7b395e99e24d9b5728e8d
 Source0:        https://github.com/SSSD/ding-libs/releases/download/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -47,7 +47,12 @@ autoreconf -fiv
 %doc COPYING COPYING.LESSER README*
 %{_includedir}/*
 %{_libdir}/lib*.{a,la,so}
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/basicobjects.pc
+%{_libdir}/pkgconfig/collection.pc
+%{_libdir}/pkgconfig/dhash.pc
+%{_libdir}/pkgconfig/ini_config.pc
+%{_libdir}/pkgconfig/path_utils.pc
+%{_libdir}/pkgconfig/ref_array.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        A framework for authentication and security in network protocols
 License:        BSD-4-Clause AND (GPL-2.0-or-later OR MPL-1.1)
 URL:            https://github.com/cyrusimap/cyrus-sasl/
-#!RemoteAsset
+#!RemoteAsset:  sha256:7ccfc6abd01ed67c1a0924b353e526f1b766b21f42d4562ee635a8ebfc5bb38c
 Source:         https://github.com/cyrusimap/cyrus-sasl/releases/download/%{name}-%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -82,7 +82,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/sasl2
 %{_includedir}/sasl/
 %{_mandir}/man3/sasl*.3*
 %{_libdir}/libsasl2.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/libsasl2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

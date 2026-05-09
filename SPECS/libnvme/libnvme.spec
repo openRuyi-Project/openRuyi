@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Linux-native nvme device management library
 License:        LGPL-2.1-or-later
 URL:            https://github.com/linux-nvme/libnvme
-#!RemoteAsset
+#!RemoteAsset:  sha256:ce1d9d393feb84c4e82ca096db2bdb7dd4a5fd1997d711cc1904796944f2c579
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -71,7 +71,8 @@ This package contains Python binding for libnvme.
 %{_includedir}/libnvme-mi.h
 %dir %{_includedir}/nvme
 %{_includedir}/nvme/*
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/libnvme-mi.pc
+%{_libdir}/pkgconfig/libnvme.pc
 
 %files help
 %{_mandir}/man2/*
@@ -81,4 +82,4 @@ This package contains Python binding for libnvme.
 %{python3_sitearch}/libnvme/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

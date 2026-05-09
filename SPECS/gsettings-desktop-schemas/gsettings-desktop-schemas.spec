@@ -51,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %files devel
 %doc HACKING
 %{_includedir}/*
-%{_datadir}/pkgconfig/*
+%{_datadir}/pkgconfig/gsettings-desktop-schemas.pc
 %{_datadir}/gir-1.0/GDesktopEnums-3.0.gir
 
 %changelog

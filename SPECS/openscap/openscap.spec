@@ -157,7 +157,7 @@ ctest -V -E sce/test_sce_in_ds.sh
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libopenscap.pc
 %{_includedir}/*
 
 %changelog

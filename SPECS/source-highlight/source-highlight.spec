@@ -12,7 +12,7 @@ Summary:        Source Code Highlighter with Support for Many Languages
 License:        GPL-3.0-or-later
 URL:            http://www.gnu.org/software/src-highlite
 VCS:            git:https://https.git.savannah.gnu.org/git/src-highlite.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:3a7fd28378cb5416f8de2c9e77196ec915145d44e30ff4e0ee8beb3fe6211c91
 Source:         https://ftpmirror.gnu.org/gnu/src-highlite/source-highlight-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -63,8 +63,8 @@ echo -e "\ncxx = cpp.lang" >> %{buildroot}%{_datadir}/source-highlight/lang.map
 
 %files devel
 %{_includedir}/srchilite/*
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/source-highlight.pc
 %{_docdir}/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

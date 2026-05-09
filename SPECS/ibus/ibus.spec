@@ -77,7 +77,7 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 
 %files devel
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/ibus-1.0.pc
 %{_includedir}/ibus-1.0/*
 %dir %{_libdir}/girepository-1.0
 %{_libdir}/girepository-1.0/IBus*-1.0.typelib
@@ -127,4 +127,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
