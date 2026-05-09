@@ -32,6 +32,17 @@ repos:
        entry: '^(((BuildOption\(.*\)|BuildRequires):(?! {2}))|(%files {2,}(?=\S)))'
        args: []
        files: \.spec$
+    -  id: python-name
+       name: "python spec name should follow PEP 503"
+       language: fail
+       entry: |
+         only valid characters in a name are the ASCII alphabet, ASCII numbers, ., -,
+         and _. The name should be lowercased with all runs of the characters ., -,
+         or _ replaced with a single - character.
+
+         see https://peps.python.org/pep-0503/#normalized-names
+         see https://openruyi.cn/docs/guide/packaging-guidelines/languages/Python
+       files: python-(?!([a-z0-9]|[a-z0-9][a-z0-9._-]*[a-z0-9])).*\.spec$
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
