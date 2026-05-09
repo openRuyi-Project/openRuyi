@@ -7,12 +7,12 @@
 %global srcname jsonpointer
 
 Name:           python-%{srcname}
-Version:        2.4
+Version:        3.1.1
 Release:        %autorelease
 Summary:        JSON Pointer implementation in Python
 License:        BSD-3-Clause
 URL:            https://github.com/stefankoegl/python-json-pointer
-#!RemoteAsset:  sha256:585cee82b70211fa9e6043b7bb89db6e1aa49524340dde8ad6b63206ea689d88
+#!RemoteAsset:  sha256:0b801c7db33a904024f6004d526dcc53bbb8a4a0f4e32bfd10beadf60adf1900
 Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
