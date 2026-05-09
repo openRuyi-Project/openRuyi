@@ -7,12 +7,12 @@
 %global srcname tomlkit
 
 Name:           python-%{srcname}
-Version:        0.13.2
+Version:        0.15.0
 Release:        %autorelease
 Summary:        Style-preserving TOML library
 License:        MIT
 URL:            https://github.com/sdispater/tomlkit
-#!RemoteAsset:  sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79
+#!RemoteAsset:  sha256:7d1a9ecba3086638211b13814ea79c90dd54dd11993564376f3aa92271f5c7a3
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
