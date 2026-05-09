@@ -6,15 +6,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname python-dotenv
+%global pypi_name python_dotenv
 
-Name:           python-python-dotenv
-Version:        1.1.1
+Name:           python-%{srcname}
+Version:        1.2.2
 Release:        %autorelease
 License:        BSD-3-Clause
 URL:            https://saurabh-kumar.com/python-dotenv/
 Summary:        Setup environment variables according to .env files
-#!RemoteAsset:  sha256:a8a6399716257f45be6a007360200409fce5cda2661e3dec71d23dc15f6189ab
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/python_dotenv-%{version}.tar.gz
+#!RemoteAsset:  sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
