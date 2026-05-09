@@ -7,12 +7,12 @@
 %global srcname platformdirs
 
 Name:           python-%{srcname}
-Version:        4.4.0
+Version:        4.9.6
 Release:        %autorelease
 Summary:        Determine the appropriate platform-specific directories
 License:        MIT
 URL:            https://github.com/platformdirs/platformdirs
-#!RemoteAsset:  sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf
+#!RemoteAsset:  sha256:3bfa75b0ad0db84096ae777218481852c0ebc6c727b3168c1b9e0118e458cf0a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
