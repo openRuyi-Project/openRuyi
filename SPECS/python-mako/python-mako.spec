@@ -8,29 +8,26 @@
 %global srcname mako
 
 Name:           python-%{srcname}
-Version:        1.3.10
+Version:        1.3.12
 Release:        %autorelease
 Summary:        Mako template library for Python
 License:        MIT AND Python-2.0.1 AND BSD-3-Clause
 URL:            https://www.makotemplates.org/
-#!RemoteAsset:  sha256:99579a6f39583fa7e5630a28c3c1f440e4e97a414b80372649c0ce338da2ea28
+#!RemoteAsset:  sha256:9f778e93289bd410bb35daadeb4fc66d95a746f0b75777b942088b7fd7af550a
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
-# We don't have python-lingua
-BuildOption(check):  -e mako.ext.linguaplugin
+# We don't have python-lingua; pytest-only helper is excluded from import smoke test.
+BuildOption(check):  -e mako.ext.linguaplugin -e mako.testing.exclusions
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(markupsafe)
-# For tests
 BuildRequires:  python3dist(babel)
 BuildRequires:  python3dist(pygments)
-BuildRequires:  python3dist(pytest)
-
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
