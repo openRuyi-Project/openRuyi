@@ -7,12 +7,12 @@
 %global srcname pyasn1
 
 Name:           python-%{srcname}
-Version:        0.6.1
+Version:        0.6.3
 Release:        %autorelease
 Summary:        ASN.1 tools for Python
 License:        BSD-2-Clause
 URL:            https://github.com/pyasn1/pyasn1
-#!RemoteAsset:  sha256:6f580d2bdd84365380830acf45550f2511469f673cb4a5ae3857a3170128b034
+#!RemoteAsset:  sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
