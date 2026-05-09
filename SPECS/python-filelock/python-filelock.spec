@@ -7,12 +7,12 @@
 %global srcname filelock
 
 Name:           python-%{srcname}
-Version:        3.20.0
+Version:        3.29.0
 Release:        %autorelease
 Summary:        Platform independent file lock
 License:        Unlicense
 URL:            https://github.com/tox-dev/py-filelock
-#!RemoteAsset:  sha256:711e943b4ec6be42e1d4e6690b48dc175c822967466bb31c0c293f34334c13f4
+#!RemoteAsset:  sha256:69974355e960702e789734cb4871f884ea6fe50bd8404051a3530bc07809cf90
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
