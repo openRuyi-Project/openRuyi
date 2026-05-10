@@ -7,12 +7,12 @@
 %global srcname paramiko
 
 Name:           python-%{srcname}
-Version:        4.0.0
+Version:        5.0.0
 Release:        %autorelease
 Summary:        SSH2 protocol library for python
 License:        LGPL-2.1-or-later
 URL:            https://github.com/paramiko/paramiko
-#!RemoteAsset:  sha256:6a25f07b380cc9c9a88d2b920ad37167ac4667f8d9886ccebd8f90f654b5d69f
+#!RemoteAsset:  sha256:36763b5b95c2a0dcfdf1abc48e48156ee425b21efe2f0e787c2dd5a95c0e5e79
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
