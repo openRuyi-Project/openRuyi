@@ -5,15 +5,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname linkify-it-py
+%global pypi_name linkify_it_py
 
 Name:           python-%{srcname}
-Version:        2.0.3
+Version:        2.1.0
 Release:        %autorelease
 Summary:        Link recognition library with full Unicode support
 License:        MIT
 URL:            https://github.com/tsutsu3/linkify-it-py
-#!RemoteAsset:  sha256:68cda27e162e9215c17d786649d1da0021a451bdc436ef9e0fa0ba5234b9b048
-Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:43360231720999c10e9328dc3691160e27a718e280673d444c38d7d3aaa3b98b
+Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
