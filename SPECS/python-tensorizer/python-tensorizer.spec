@@ -7,12 +7,12 @@
 %global srcname tensorizer
 
 Name:           python-%{srcname}
-Version:        2.12.0
+Version:        2.12.1
 Release:        %autorelease
 Summary:        Module, Model, and Tensor Serialization/Deserialization
 License:        MIT
 URL:            https://github.com/coreweave/tensorizer
-#!RemoteAsset:  sha256:1c724b4ba1c7f057530ccdbe7694efcbbf36f3e836ddf696eae35c9dc3e28132
+#!RemoteAsset:  sha256:8af9b3be54f31d08d1928e3f25bfaaa963cdc8d716d09559c68ec014f8beb440
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
