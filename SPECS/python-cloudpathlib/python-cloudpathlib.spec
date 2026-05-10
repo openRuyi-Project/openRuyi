@@ -7,12 +7,12 @@
 %global srcname cloudpathlib
 
 Name:           python-%{srcname}
-Version:        0.23.0
+Version:        0.24.0
 Release:        %autorelease
 Summary:        Python pathlib-style classes for cloud storage services such as Amazon S3, Azure Blob Storage, and Google Cloud Storage
 License:        MIT
 URL:            https://github.com/drivendataorg/cloudpathlib
-#!RemoteAsset:  sha256:eb38a34c6b8a048ecfd2b2f60917f7cbad4a105b7c979196450c2f541f4d6b4b
+#!RemoteAsset:  sha256:c521a984e77b47e656fe78e20a7e3e260e0ab45fc69e33ac01094227c979e34a
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
