@@ -8,12 +8,12 @@
 %global pypi_name smart_open
 
 Name:           python-%{srcname}
-Version:        7.5.0
+Version:        7.6.1
 Release:        %autorelease
 Summary:        Python utils for streaming large files
 License:        MIT
 URL:            https://github.com/piskvorky/smart_open
-#!RemoteAsset:  sha256:f394b143851d8091011832ac8113ea4aba6b92e6c35f6e677ddaaccb169d7cb9
+#!RemoteAsset:  sha256:4347996e7ba21db7cd1e059632e0b30395407e4f6c660d2ddffc8f2a9ae5f990
 Source0:        https://files.pythonhosted.org/packages/source/s/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
