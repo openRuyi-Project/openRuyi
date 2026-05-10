@@ -4,16 +4,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname GitPython
+%global srcname gitpython
 
 Name:           python-%{srcname}
-Version:        3.1.46
+Version:        3.1.50
 Release:        %autorelease
 Summary:        Python Git Library
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/GitPython
-#!RemoteAsset:  sha256:400124c7d0ef4ea03f7310ac2fbf7151e09ff97f2a3288d64a440c584a29c37f
-Source0:        https://files.pythonhosted.org/packages/source/g/gitpython/gitpython-%{version}.tar.gz
+#!RemoteAsset:  sha256:80da2d12504d52e1f998772dc5baf6e553f8d2fcfe1fcc226c9d9a2ee3372dcc
+Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
