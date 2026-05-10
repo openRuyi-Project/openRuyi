@@ -7,13 +7,13 @@
 %global srcname fastapi
 
 Name:           python-%{srcname}
-Version:        0.135.3
+Version:        0.136.1
 Release:        %autorelease
 Summary:        High-performance async web framework for building APIs
 License:        MIT
 URL:            https://github.com/fastapi/fastapi
 VCS:            git:https://github.com/fastapi/fastapi.git
-#!RemoteAsset:  sha256:bd6d7caf1a2bdd8d676843cdcd2287729572a1ef524fc4d65c17ae002a1be654
+#!RemoteAsset:  sha256:7af665ad7acfa0a3baf8983d393b6b471b9da10ede59c60045f49fbc89a0fa7f
 Source:         https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
