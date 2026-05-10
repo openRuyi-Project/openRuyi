@@ -10,12 +10,12 @@
 %bcond test 0
 
 Name:           python-%{srcname}
-Version:        0.11.6
+Version:        0.12.2
 Release:        %autorelease
 Summary:        Build backend for CMake based projects
 License:        Apache-2.0 AND MIT
 URL:            https://github.com/scikit-build/scikit-build-core
-#!RemoteAsset:  sha256:5982ccd839735be99cfd3b92a8847c6c196692f476c215da84b79d2ad12f9f1b
+#!RemoteAsset:  sha256:562e0bbc9de1a354c87825ccf732080268d6582a0200f648e8c4a2dcb1e3736d
 Source:         https://files.pythonhosted.org/packages/source/s/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
