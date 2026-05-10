@@ -7,12 +7,12 @@
 %global srcname asyncssh
 
 Name:           python-%{srcname}
-Version:        2.22.0
+Version:        2.23.0
 Release:        %autorelease
 Summary:        Asynchronous SSHv2 client and server library
 License:        EPL-2.0 OR GPL-2.0-or-later
 URL:            https://asyncssh.timeheart.net/
-#!RemoteAsset:  sha256:c3ce72b01be4f97b40e62844dd384227e5ff5a401a3793007c42f86a5c8eb537
+#!RemoteAsset:  sha256:8c54760953c1f2cf282591bcba5c8c70efc48d645bbf26bd2307a9c66a0ed1a7
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
