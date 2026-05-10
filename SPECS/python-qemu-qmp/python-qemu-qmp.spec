@@ -11,12 +11,12 @@
 %global pypi_name qemu.qmp
 
 Name:           python-%{srcname}
-Version:        0.0.5
+Version:        0.0.6
 Release:        %autorelease
 Summary:        QEMU Monitor Protocol library
 License:        GPL-2.0-only AND LGPL-2.0-or-later
 URL:            https://pypi.org/project/qemu.qmp
-#!RemoteAsset:  sha256:1d1b9a9a5d57edfe2de3a1d888612823b09aff946951a902e79e9655a2aabbfd
+#!RemoteAsset:  sha256:a3c25d871fab549122b2340810de1f99481002c942a2132476b062aacdbf6e92
 Source:         https://files.pythonhosted.org/packages/source/q/%{pypi_name}/qemu_qmp-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
