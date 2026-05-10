@@ -3,19 +3,20 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond test 0
 
 Name:           ccache
-Version:        4.13.1
+Version:        4.13.6
 Release:        %autorelease
 Summary:        A Fast C/C++ Compiler Cache
 License:        GPL-3.0-or-later
 URL:            https://ccache.dev/
 VCS:            git:https://github.com/ccache/ccache
-#!RemoteAsset:  sha256:5923c712764b80dd45ed261da4bd8d3908a553615fb5d7ec2512c0c46ed1e9c3
+#!RemoteAsset:  sha256:b0688da07593d481ed1901ec39739a770469090c8feff32522256d48077aaf9b
 Source:         https://github.com/ccache/ccache/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
