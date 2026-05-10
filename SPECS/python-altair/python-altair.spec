@@ -7,12 +7,12 @@
 %global srcname altair
 
 Name:           python-%{srcname}
-Version:        6.0.0
+Version:        6.1.0
 Release:        %autorelease
 Summary:        Declarative statistical visualization library for Python
 License:        BSD-3-Clause
 URL:            https://github.com/vega/altair
-#!RemoteAsset:  sha256:614bf5ecbe2337347b590afb111929aa9c16c9527c4887d96c9bc7f6640756b4
+#!RemoteAsset:  sha256:dda699216cf85b040d968ae5a569ad45957616811e38760a85e5118269daca67
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
