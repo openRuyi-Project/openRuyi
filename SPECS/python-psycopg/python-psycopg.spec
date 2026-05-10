@@ -7,13 +7,13 @@
 %global srcname psycopg
 
 Name:           python-%{srcname}
-Version:        3.3.3
+Version:        3.3.4
 Release:        %autorelease
 Summary:        PostgreSQL database adapter for Python
 License:        LGPL-3.0-only
 URL:            https://psycopg.org
 VCS:            git:https://github.com/psycopg/psycopg.git
-#!RemoteAsset:  sha256:5e9a47458b3c1583326513b2556a2a9473a1001a56c9efe9e587245b43148dd9
+#!RemoteAsset:  sha256:e21207764952cff81b6b8bdacad9a3939f2793367fdac2987b3aac36a651b5bc
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
