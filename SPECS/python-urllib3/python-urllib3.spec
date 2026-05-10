@@ -7,12 +7,12 @@
 %global srcname urllib3
 
 Name:           python-%{srcname}
-Version:        2.5.0
+Version:        2.7.0
 Release:        %autorelease
 Summary:        HTTP library with thread-safe connection pooling
 License:        MIT
 URL:            https://urllib3.readthedocs.io/
-#!RemoteAsset:  sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760
+#!RemoteAsset:  sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c
 Source0:        https://files.pythonhosted.org/packages/source/u/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
