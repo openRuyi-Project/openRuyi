@@ -7,12 +7,12 @@
 %global srcname anyio
 
 Name:           python-%{srcname}
-Version:        4.11.0
+Version:        4.13.0
 Release:        %autorelease
 Summary:        Compatibility layer for multiple asynchronous event loop implementations
 License:        MIT
 URL:            https://github.com/agronholm/anyio
-#!RemoteAsset:  sha256:82a8d0b81e318cc5ce71a5f1f8b5c4e63619620b63141ef8c995fa0db95a57c4
+#!RemoteAsset:  sha256:334b70e641fd2221c1505b3890c69882fe4a2df910cba14d97019b90b24439dc
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
