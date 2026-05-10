@@ -7,13 +7,13 @@
 %global srcname uvicorn
 
 Name:           python-%{srcname}
-Version:        0.44.0
+Version:        0.46.0
 Release:        %autorelease
 Summary:        The lightning-fast ASGI server
 License:        BSD-3-Clause
 URL:            https://github.com/Kludex/uvicorn
 VCS:            git:https://github.com/Kludex/uvicorn.git
-#!RemoteAsset:  sha256:6c942071b68f07e178264b9152f1f16dfac5da85880c4ce06366a96d70d4f31e
+#!RemoteAsset:  sha256:fb9da0926999cc6cb22dc7cd71a94a632f078e6ae47ff683c5c420750fb7413d
 Source:         https://files.pythonhosted.org/packages/source/u/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
