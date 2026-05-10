@@ -8,13 +8,13 @@
 %global pypi_name pydantic_settings
 
 Name:           python-%{srcname}
-Version:        2.13.1
+Version:        2.14.1
 Release:        %autorelease
 Summary:        Settings management using Pydantic
 License:        MIT
 URL:            https://github.com/pydantic/pydantic-settings
 VCS:            git:https://github.com/pydantic/pydantic-settings.git
-#!RemoteAsset:  sha256:b4c11847b15237fb0171e1462bf540e294affb9b86db4d9aa5c01730bdbe4025
+#!RemoteAsset:  sha256:e874d3bec7e787b0c9958277956ed9b4dd5de6a80e162188fdaff7c5e26fd5fa
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
