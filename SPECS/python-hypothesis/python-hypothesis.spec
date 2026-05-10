@@ -7,12 +7,12 @@
 %global srcname hypothesis
 
 Name:           python-%{srcname}
-Version:        6.148.6
+Version:        6.152.4
 Release:        %autorelease
 Summary:        Library for property based testing
 License:        MPL-2.0
 URL:            https://github.com/HypothesisWorks/hypothesis
-#!RemoteAsset
+#!RemoteAsset:  sha256:31c8f9ce619716f543e2710b489b1633c833586641d9e6c94cee03f109a5afc4
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -39,4 +39,4 @@ Flask-RESTful provides the building blocks for creating a REST API.
 %{_bindir}/hypothesis
 
 %changelog
-%{?autochangelog}
+%autochangelog
