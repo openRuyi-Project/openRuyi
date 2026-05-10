@@ -6,12 +6,12 @@
 %global srcname nltk
 
 Name:           python-%{srcname}
-Version:        3.9.2
+Version:        3.9.4
 Release:        %autorelease
 Summary:        Natural Language Toolkit
 License:        Apache-2.0
 URL:            https://www.nltk.org/
-#!RemoteAsset:  sha256:0f409e9b069ca4177c1903c3e843eef90c7e92992fa4931ae607da6de49e1419
+#!RemoteAsset:  sha256:ed03bc098a40481310320808b2db712d95d13ca65b27372f8a403949c8b523d0
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
