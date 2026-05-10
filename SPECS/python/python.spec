@@ -123,6 +123,7 @@ BuildSystem:    autotools
 Patch0:        0001-change-user-install-location.patch
 
 BuildOption(conf):  --without-ensurepip
+BuildOption(conf):  --with-wheel-pkg-dir=%{python_wheel_dir}
 BuildOption(conf):  --with-platlibdir=%{_lib}
 BuildOption(conf):  --enable-ipv6
 BuildOption(conf):  --enable-shared
