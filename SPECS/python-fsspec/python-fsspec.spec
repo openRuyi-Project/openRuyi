@@ -7,13 +7,13 @@
 %global srcname fsspec
 
 Name:           python-%{srcname}
-Version:        2026.2.0
+Version:        2026.4.0
 Release:        %autorelease
 Summary:        File-system specification for Python
 License:        BSD-3-Clause
 URL:            https://pypi.org/project/fsspec/
 VCS:            git:https://github.com/fsspec/filesystem_spec
-#!RemoteAsset:  sha256:6544e34b16869f5aacd5b90bdf1a71acb37792ea3ddf6125ee69a22a53fb8bff
+#!RemoteAsset:  sha256:301d8ac70ae90ef3ad05dcf94d6c3754a097f9b5fe4667d2787aa359ec7df7e4
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
