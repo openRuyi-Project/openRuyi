@@ -7,12 +7,12 @@
 %global srcname confection
 
 Name:           python-%{srcname}
-Version:        0.1.5
+Version:        1.3.3
 Release:        %autorelease
 Summary:        The sweetest config system for Python
 License:        MIT
 URL:            https://github.com/explosion/confection
-#!RemoteAsset:  sha256:8e72dd3ca6bd4f48913cd220f10b8275978e740411654b6e8ca6d7008c590f0e
+#!RemoteAsset:  sha256:f0f6810d567ff73993fe74d218ca5e1ffb6a44fb03f391257fc5d033546cbfaa
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
