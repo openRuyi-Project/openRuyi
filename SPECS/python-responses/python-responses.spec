@@ -7,12 +7,12 @@
 %global srcname responses
 
 Name:           python-%{srcname}
-Version:        0.25.8
+Version:        0.26.0
 Release:        %autorelease
 Summary:        Python library to mock out calls with Python requests
 License:        Apache-2.0
 URL:            https://github.com/getsentry/responses
-#!RemoteAsset:  sha256:9374d047a575c8f781b94454db5cab590b6029505f488d12899ddb10a4af1cf4
+#!RemoteAsset:  sha256:c7f6923e6343ef3682816ba421c006626777893cb0d5e1434f674b649bac9eb4
 Source:         https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
