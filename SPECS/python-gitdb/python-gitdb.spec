@@ -7,12 +7,12 @@
 %global srcname gitdb
 
 Name:           python-%{srcname}
-Version:        4.0.11
+Version:        4.0.12
 Release:        %autorelease
 Summary:        Git Object Database
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/gitdb
-#!RemoteAsset:  sha256:bf5421126136d6d0af55bc1e7c1af1c397a34f5b7bd79e776cd3e89785c2b04b
+#!RemoteAsset:  sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
