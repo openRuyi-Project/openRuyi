@@ -7,12 +7,12 @@
 %global srcname boto3
 
 Name:           python-%{srcname}
-Version:        1.42.89
+Version:        1.43.6
 Release:        %autorelease
 Summary:        Boto3, an AWS SDK for Python
 License:        Apache-2.0
 URL:            https://github.com/boto/boto3
-#!RemoteAsset:  sha256:3e43aacc0801bba9bcd23a8c271c089af297a69565f783fcdd357ae0e330bf1e
+#!RemoteAsset:  sha256:e6315effaf12b890b99956e6f8e2c3000a3f64e4ee91943cec3895ce9a836afb
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
