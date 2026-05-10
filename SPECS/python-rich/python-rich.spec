@@ -9,12 +9,12 @@
 %bcond tests 0
 
 Name:           python-%{srcname}
-Version:        14.2.0
+Version:        15.0.0
 Release:        %autorelease
 Summary:        Render rich text and beautiful formatting in the terminal
 License:        MIT
 URL:            https://github.com/Textualize/rich
-#!RemoteAsset:  sha256:73ff50c7c0c1c77c8243079283f4edb376f0f6442433aecb8ce7e6d0b92d1fe4
+#!RemoteAsset:  sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
