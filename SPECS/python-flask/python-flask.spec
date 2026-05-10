@@ -7,13 +7,13 @@
 %global srcname flask
 
 Name:           python-%{srcname}
-Version:        3.1.2
+Version:        3.1.3
 Release:        %autorelease
 Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good intentions
 License:        BSD-3-Clause
 URL:            https://flask.palletsprojects.com/
 VCS:            git:https://github.com/pallets/flask
-#!RemoteAsset:  sha256:bf656c15c80190ed628ad08cdfd3aaa35beb087855e2f494910aa3774cc4fd87
+#!RemoteAsset:  sha256:0ef0e52b8a9cd932855379197dd8f94047b359ca0a78695144304cb45f87c9eb
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
