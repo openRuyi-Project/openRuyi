@@ -7,13 +7,13 @@
 %global srcname gunicorn
 
 Name:           python-%{srcname}
-Version:        25.3.0
+Version:        26.0.0
 Release:        %autorelease
 Summary:        WSGI HTTP server for UNIX
 License:        MIT
 URL:            https://gunicorn.org
 VCS:            git:https://github.com/benoitc/gunicorn.git
-#!RemoteAsset:  sha256:f74e1b2f9f76f6cd1ca01198968bd2dd65830edc24b6e8e4d78de8320e2fe889
+#!RemoteAsset:  sha256:ca9346f85e3a4aeeb64d491045c16b9a35647abd37ea15efe53080eb8b090baf
 Source:         https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
