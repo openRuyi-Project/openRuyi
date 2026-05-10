@@ -8,12 +8,12 @@
 %global srcname pyparsing
 
 Name:           python-%{srcname}
-Version:        3.2.1
+Version:        3.3.2
 Release:        %autorelease
 Summary:        Python parsing class library
 License:        MIT
 URL:            https://github.com/pyparsing/pyparsing
-#!RemoteAsset:  sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a
+#!RemoteAsset:  sha256:c777f4d763f140633dcb6d8a3eda953bf7a214dc4eff598413c070bcdc117cbc
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
