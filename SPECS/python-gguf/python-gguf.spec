@@ -7,13 +7,13 @@
 %global srcname gguf
 
 Name:           python-%{srcname}
-Version:        0.18.0
+Version:        0.19.0
 Release:        %autorelease
 Summary:        Read and write ML models in GGUF for GGML
 License:        MIT
 URL:            https://ggml.ai
 VCS:            git:https://github.com/ggml-org/llama.cpp.git
-#!RemoteAsset:  sha256:b4659093d5d0dccdb5902a904d54b327f4052879fe5e90946ad5fce9f8018c2e
+#!RemoteAsset:  sha256:dbadcd6cc7ccd44256f2229fe7c2dff5e8aa5cf0612ab987fd2b1a57e428923f
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
