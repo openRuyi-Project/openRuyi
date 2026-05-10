@@ -9,12 +9,12 @@
 %bcond tests 0
 
 Name:           python-%{srcname}
-Version:        1.10.0
+Version:        1.11.0
 Release:        %autorelease
 Summary:        Neuroimaging in Python: Pipelines and Interfaces
 License:        Apache-2.0
 URL:            https://github.com/nipy/nipype
-#!RemoteAsset:  sha256:19e5d6cefa70997198f78bc665ef4d3d3cb53325b5b98a72e51aefadaf6b3e0e
+#!RemoteAsset:  sha256:6707ec4c3cf8e1983aef7f8eea79627ee7b7ab4aa49649991550e129c165b7a7
 Source:         https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
