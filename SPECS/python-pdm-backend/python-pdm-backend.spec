@@ -4,16 +4,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname pdm_backend
+%global srcname pdm-backend
+%global pypi_name pdm_backend
 
-Name:           python-pdm-backend
-Version:        2.4.3
+Name:           python-%{srcname}
+Version:        2.4.8
 Release:        %autorelease
 License:        MIT
 URL:            https://pdm-backend.fming.dev/
 Summary:        PEP 517 build backend for PDM
-#!RemoteAsset:  sha256:dbd9047a7ac10d11a5227e97163b617ad5d665050476ff63867d971758200728
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:d8ef85d2c4306ee67195412d701fae9983e84ec6574598e26798ae26b7b3c7e0
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -22,8 +23,8 @@ BuildOption(install):  pdm +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-pdm-backend = %{version}-%{release}
-%python_provide python3-pdm-backend
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 PDM-Backend is a build backend that supports the latest packaging
