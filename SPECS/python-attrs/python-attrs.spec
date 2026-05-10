@@ -7,12 +7,12 @@
 %global srcname attrs
 
 Name:           python-%{srcname}
-Version:        25.4.0
+Version:        26.1.0
 Release:        %autorelease
 Summary:        Attributes without boilerplate
 License:        MIT
 URL:            https://github.com/python-attrs/attrs
-#!RemoteAsset:  sha256:16d5969b87f0859ef33a48b35d55ac1be6e42ae49d5e853b597db70c35c57e11
+#!RemoteAsset:  sha256:d03ceb89cb322a8fd706d4fb91940737b6642aa36998fe130a9bc96c985eff32
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
