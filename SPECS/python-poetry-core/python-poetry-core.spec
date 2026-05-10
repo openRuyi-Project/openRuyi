@@ -4,16 +4,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname poetry_core
+%global srcname poetry-core
+%global pypi_name poetry_core
 
-Name:           python-poetry-core
-Version:        2.1.2
+Name:           python-%{srcname}
+Version:        2.4.0
 Release:        %autorelease
 Summary:        Poetry PEP 517 build back-end
 License:        MIT
 URL:            https://github.com/python-poetry/poetry-core
-#!RemoteAsset:  sha256:f9dbbbd0ebf9755476a1d57f04b30e9aecf71ca9dc2fcd4b17aba92c0002aa04
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:4e8c7496cf797998ffc493f2e23eba4b038c894c08eadacdcdf688945de6b43a
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -22,8 +23,8 @@ BuildOption(install):  poetry +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-poetry-core = %{version}-%{release}
-%python_provide python3-poetry-core
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 The poetry-core module provides a PEP 517 build back-end
