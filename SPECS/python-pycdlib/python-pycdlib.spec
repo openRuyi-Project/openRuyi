@@ -7,12 +7,12 @@
 %global srcname pycdlib
 
 Name:           python-%{srcname}
-Version:        1.14.0
+Version:        1.16.0
 Release:        %autorelease
 Summary:        A pure python ISO9660 read and write library
 License:        LGPL-2.0-only
 URL:            https://github.com/clalancette/pycdlib
-#!RemoteAsset:  sha256:8ec306b31d9c850f28c5fda52438d904edd1e8fcf862c5ffd756272efac9f422
+#!RemoteAsset:  sha256:da02ce3d3a7cc1f879cd84db7bb39427a082cee0dbf0730fec89604039344058
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
