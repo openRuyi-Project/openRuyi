@@ -7,12 +7,12 @@
 %global srcname python_socks
 
 Name:           python-socks
-Version:        2.8.0
+Version:        2.8.1
 Release:        %autorelease
 Summary:        Core proxy (SOCKS4, SOCKS5, HTTP tunneling) functionality for Python
 License:        Apache-2.0
 URL:            https://github.com/romis2012/python-socks
-#!RemoteAsset:  sha256:340f82778b20a290bdd538ee47492978d603dff7826aaf2ce362d21ad9ee6f1b
+#!RemoteAsset:  sha256:698daa9616d46dddaffe65b87db222f2902177a2d2b2c0b9a9361df607ab3687
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
