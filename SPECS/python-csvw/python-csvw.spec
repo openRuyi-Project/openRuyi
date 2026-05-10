@@ -7,12 +7,12 @@
 %global srcname csvw
 
 Name:           python-%{srcname}
-Version:        3.7.0
+Version:        4.0.0
 Release:        %autorelease
 Summary:        CSV on the web
 License:        Apache-2.0
 URL:            https://github.com/cldf/csvw
-#!RemoteAsset:  sha256:869b5c761481e52c01a99fb4749b278a4b8b0db4e0fa1965a33a3441c703465b
+#!RemoteAsset:  sha256:060e9bedf3c274d0fce6d6f7f892a16cc8c72f39c2bc49b69b5f0858fb2f6217
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
