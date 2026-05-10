@@ -7,12 +7,12 @@
 %global srcname environs
 
 Name:           python-%{srcname}
-Version:        14.5.0
+Version:        15.0.1
 Release:        %autorelease
 Summary:        Python library for parsing environment variables
 License:        MIT
 URL:            https://github.com/sloria/environs
-#!RemoteAsset:  sha256:f7b8f6fcf3301bc674bc9c03e39b5986d116126ffb96764efd34c339ed9464ee
+#!RemoteAsset:  sha256:638106bfb5d8c9a13ee51c23a9f2416baf9a748c8e537fec771102927cd02aa8
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
