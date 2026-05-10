@@ -7,12 +7,12 @@
 %global srcname puccinialin
 
 Name:           python-%{srcname}
-Version:        0.1.8
+Version:        0.1.11
 Release:        %autorelease
 Summary:        Install rust into a temporary directory for boostrapping a rust-based build backend
 License:        MIT OR Apache-2.0
 URL:            https://github.com/konstin/puccinialin
-#!RemoteAsset:  sha256:e19f6316967ae100bf3fb92d8af95e3cec11ce0de58acd2f1a0bca835403a394
+#!RemoteAsset:  sha256:593df24ba95e7f7c0dcd03afaab666119d1744236ef1b84d56387e76853da020
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
