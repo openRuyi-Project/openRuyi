@@ -140,9 +140,9 @@ BuildRequires:  perl
 BuildRequires:  pkgconfig
 BuildRequires:  procps
 BuildRequires:  python3
-BuildRequires:  pkgconfig(python)
-BuildRequires:  python-setuptools
-BuildRequires:  python-Cython
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(cython)
 BuildRequires:  snappy-devel
 BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  sudo
@@ -187,8 +187,8 @@ BuildRequires:  ninja
 BuildRequires:  pkgconfig(ldap)
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  pkgconfig(openssl)
-BuildRequires:  python-prettytable
-BuildRequires:  python-pyyaml
+BuildRequires:  python3dist(prettytable)
+BuildRequires:  python3dist(pyyaml)
 BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:  python-rpm-macros
