@@ -7,13 +7,13 @@
 %global srcname Pygments
 
 Name:           python-pygments
-Version:        2.15.1
+Version:        2.20.0
 Release:        %autorelease
 Summary:        Syntax highlighting
 License:        BSD-2-clause
 URL:            https://pygments.org/
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f
+Source0:        https://files.pythonhosted.org/packages/source/p/Pygments/pygments-2.20.0.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -39,4 +39,4 @@ Pygments is a syntax highlighting package written in Python.
 %{_bindir}/pygmentize
 
 %changelog
-%{?autochangelog}
+%autochangelog
