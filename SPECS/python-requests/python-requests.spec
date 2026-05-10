@@ -7,12 +7,12 @@
 %global srcname requests
 
 Name:           python-%{srcname}
-Version:        2.32.5
+Version:        2.33.1
 Release:        %autorelease
 Summary:        Python HTTP library
 License:        Apache-2.0
 URL:            https://requests.readthedocs.io/
-#!RemoteAsset:  sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf
+#!RemoteAsset:  sha256:18817f8c57c6263968bc123d237e3b8b08ac046f5456bd1e307ee8f4250d3517
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
