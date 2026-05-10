@@ -7,12 +7,12 @@
 %global srcname sqlparse
 
 Name:           python-%{srcname}
-Version:        0.5.3
+Version:        0.5.5
 Release:        %autorelease
 Summary:        Non-validating SQL parser
 License:        BSD-3-Clause
 URL:            https://github.com/andialbrecht/sqlparse
-#!RemoteAsset:  sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272
+#!RemoteAsset:  sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
