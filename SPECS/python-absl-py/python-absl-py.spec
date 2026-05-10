@@ -7,12 +7,12 @@
 %global pypi_name absl_py
 
 Name:           python-%{srcname}
-Version:        2.3.1
+Version:        2.4.0
 Release:        %autorelease
 Summary:        Abseil Python common libraries
 License:        Apache-2.0
 URL:            https://github.com/abseil/abseil-py
-#!RemoteAsset:  sha256:a97820526f7fbfd2ec1bce83f3f25e3a14840dac0d8e02a0b71cd75db3f77fc9
+#!RemoteAsset:  sha256:8c6af82722b35cf71e0f4d1d47dcaebfff286e27110a99fc359349b247dfb5d4
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
