@@ -7,12 +7,12 @@
 %global srcname pyenchant
 
 Name:           python-%{srcname}
-Version:        3.2.2
+Version:        3.3.0
 Release:        %autorelease
 Summary:        Python bindings for Enchant spellchecking library
 License:        MIT
 URL:            https://github.com/pyenchant/pyenchant
-#!RemoteAsset
+#!RemoteAsset:  sha256:825288246b5debc9436f91967650974ef0d5636458502619e322c476f1283891
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -43,4 +43,4 @@ library by Dom Lachowicz.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog
