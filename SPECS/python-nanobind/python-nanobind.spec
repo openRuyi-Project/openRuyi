@@ -7,12 +7,12 @@
 %global srcname nanobind
 
 Name:           python-%{srcname}
-Version:        2.10.2
+Version:        2.12.0
 Release:        %autorelease
 Summary:        Tiny and efficient C++/Python bindings
 License:        BSD-3-Clause
 URL:            https://nanobind.readthedocs.org/
-#!RemoteAsset:  sha256:08509910ce6d1fadeed69cb0880d4d4fcb77739c6af9bd8fb4419391a3ca4c6b
+#!RemoteAsset:  sha256:0ae77c1a88f27153fa57045ee00f7b0a7b06b1cd3df942e95a34b38c5d0a5bee
 Source:         https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
