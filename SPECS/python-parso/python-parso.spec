@@ -7,12 +7,12 @@
 %global srcname parso
 
 Name:           python-%{srcname}
-Version:        0.8.5
+Version:        0.8.7
 Release:        %autorelease
 Summary:        Python Parser
 License:        MIT
 URL:            https://github.com/davidhalter/parso
-#!RemoteAsset:  sha256:034d7354a9a018bdce352f48b2a8a450f05e9d6ee85db84764e9b6bd96dafe5a
+#!RemoteAsset:  sha256:eaaac4c9fdd5e9e8852dc778d2d7405897ec510f2a298071453e5e3a07914bb1
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
