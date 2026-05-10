@@ -8,14 +8,14 @@
 %global srcname pyudev
 
 Name:           python-%{srcname}
-Version:        0.24.3
+Version:        0.24.4
 Release:        %autorelease
 Summary:        A libudev binding
 License:        LGPL-2.1-or-later
 URL:            https://pypi.python.org/pypi/pyudev
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset:  sha256:2e945427a21674893bb97632401db62139d91cea1ee96137cc7b07ad22198fc7
+#!RemoteAsset:  sha256:e788bb983700b1a84efc2e88862b0a51af2a995d5b86bc9997546505cf7b36bc
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
