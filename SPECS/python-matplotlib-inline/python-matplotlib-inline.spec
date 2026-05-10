@@ -4,20 +4,21 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname matplotlib_inline
+%global srcname matplotlib-inline
+%global pypi_name matplotlib_inline
 
-Name:           python-matplotlib-inline
-Version:        0.2.1
+Name:           python-%{srcname}
+Version:        0.2.2
 Release:        %autorelease
 Summary:        Inline Matplotlib backend for Jupyter
 License:        BSD-3-Clause
 URL:            https://github.com/ipython/matplotlib-inline
-#!RemoteAsset:  sha256:e1ee949c340d771fc39e241ea75683deb94762c8fa5f2927ec57c83c4dffa9fe
-Source0:        https://files.pythonhosted.org/packages/source/m/matplotlib-inline/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:72f3fe8fce36b70d4a5b612f899090cd0401deddc4ea90e1572b9f4bfb058c79
+Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
