@@ -7,13 +7,13 @@
 %define srcname pymysql
 
 Name:           python-pymysql
-Version:        1.1.2
+Version:        1.1.3
 Release:        %autorelease
 Summary:        Pure-Python MySQL client library
 License:        MIT
 URL:            https://github.com/PyMySQL/PyMySQL
-#!RemoteAsset:  sha256:4961d3e165614ae65014e361811a724e2044ad3ea3739de9903ae7c21f539f03
-Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-1.1.2.tar.gz
+#!RemoteAsset:  sha256:e70ebf2047a4edf6138cf79c68ad418ef620af65900aa585c5e8bfc95044d43a
+Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-1.1.3.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
