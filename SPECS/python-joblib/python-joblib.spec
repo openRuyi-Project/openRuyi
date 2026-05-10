@@ -7,12 +7,12 @@
 %global srcname joblib
 
 Name:           python-%{srcname}
-Version:        1.5.2
+Version:        1.5.3
 Release:        %autorelease
 Summary:        Lightweight pipelining: using Python functions as pipeline jobs
 License:        BSD-3-Clause
 URL:            https://github.com/joblib/joblib
-#!RemoteAsset:  sha256:3faa5c39054b2f03ca547da9b2f52fde67c06240c31853f306aea97f13647b55
+#!RemoteAsset:  sha256:8561a3269e6801106863fd0d6d84bb737be9e7631e33aaed3fb9ce5953688da3
 Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
