@@ -7,12 +7,12 @@
 %global srcname smmap
 
 Name:           python-%{srcname}
-Version:        5.0.2
+Version:        5.0.3
 Release:        %autorelease
 Summary:        Sliding window memory map manager
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/smmap
-#!RemoteAsset:  sha256:26ea65a03958fa0c8a1c7e8c7a58fdc77221b8910f6be2131affade476898ad5
+#!RemoteAsset:  sha256:4d9debb8b99007ae47165abc08670bd74cb74b5227dda7f643eccc4e9eb5642c
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
