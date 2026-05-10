@@ -8,12 +8,12 @@
 %global pypi_name sse_starlette
 
 Name:           python-%{srcname}
-Version:        3.3.3
+Version:        3.4.2
 Release:        %autorelease
 Summary:        Server-Sent Events plugin for Starlette
 License:        BSD-3-Clause
 URL:            https://github.com/sysid/sse-starlette
-#!RemoteAsset:  sha256:72a95d7575fd5129bd0ae15275ac6432bb35ac542fdebb82889c24bb9f3f4049
+#!RemoteAsset:  sha256:2f9a7f51ed84395a0427fb9f66cb1ec11f7899d977a72cbc9070b962a2e14489
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
