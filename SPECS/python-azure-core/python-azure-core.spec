@@ -8,12 +8,12 @@
 %global pypi_name azure_core
 
 Name:           python-%{srcname}
-Version:        1.38.0
+Version:        1.41.0
 Release:        %autorelease
 Summary:        Azure Core shared client library for Python
 License:        MIT
 URL:            https://pypi.org/project/azure-core/
-#!RemoteAsset:  sha256:8194d2682245a3e4e3151a667c686464c3786fed7918b394d035bdcd61bb5993
+#!RemoteAsset:  sha256:f46ff5dfcd230f25cf1c19e8a34b8dc08a337b2503e268bb600a16c00db8ad5a
 Source0:        https://files.pythonhosted.org/packages/source/a/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
