@@ -5,15 +5,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname uc-micro-py
+%global pypi_name uc_micro_py
 
 Name:           python-%{srcname}
-Version:        1.0.3
+Version:        2.0.0
 Release:        %autorelease
 Summary:        Micro subset of Unicode data files for linkify-it.py
 License:        MIT
 URL:            https://github.com/tsutsu3/uc.micro-py
-#!RemoteAsset:  sha256:d321b92cff673ec58027c04015fcaa8bb1e005478643ff4a500882eaab88c48a
-Source0:        https://files.pythonhosted.org/packages/source/u/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:c53691e495c8db60e16ffc4861a35469b0ba0821fe409a8a7a0a71864d33a811
+Source0:        https://files.pythonhosted.org/packages/source/u/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
