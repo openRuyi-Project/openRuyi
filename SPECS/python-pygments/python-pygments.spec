@@ -4,21 +4,21 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname Pygments
-%global pypi_name pygments
+%global srcname pygments
+%global pypi_name Pygments
 
-Name:           python-pygments
+Name:           python-%{srcname}
 Version:        2.20.0
 Release:        %autorelease
 Summary:        Syntax highlighting
 License:        BSD-2-Clause
 URL:            https://pygments.org/
 #!RemoteAsset:  sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f
-Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l pygments
+BuildOption(install):  -l %{srcname}
 BuildOption(check):  -e 'pygments.sphinxext*'
 
 BuildRequires:  pyproject-rpm-macros
@@ -35,8 +35,8 @@ Pygments is a syntax highlighting package written in Python.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{_bindir}/pygmentize
 
 %changelog
