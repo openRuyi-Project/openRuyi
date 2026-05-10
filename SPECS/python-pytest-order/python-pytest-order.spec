@@ -8,13 +8,13 @@
 %global pypi_name pytest_order
 
 Name:           python-%{srcname}
-Version:        1.3.0
+Version:        1.4.0
 Release:        %autorelease
 Summary:        Run pytest tests in a specific order
 License:        MIT
 URL:            https://github.com/pytest-dev/pytest-order
 VCS:            git:https://github.com/pytest-dev/pytest-order.git
-#!RemoteAsset:  sha256:51608fec3d3ee9c0adaea94daa124a5c4c1d2bb99b00269f098f414307f23dde
+#!RemoteAsset:  sha256:327fb6eee1ae771051da13d2a0d9306d947e87f9ab8f4d6302e5d122c7472691
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
