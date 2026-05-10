@@ -8,13 +8,13 @@
 %global pypi_name tox_current_env
 
 Name:           python-%{srcname}
-Version:        0.0.16
+Version:        0.0.17
 Release:        %autorelease
 Summary:        Tox plugin to run tests in current Python environment
 License:        MIT
 URL:            https://github.com/fedora-python/tox-current-env
 VCS:            git:https://github.com/fedora-python/tox-current-env.git
-#!RemoteAsset:  sha256:2e453c3e82e837d35846004a678db4504e24e5c0419d6e42aa07ca8294fad1bd
+#!RemoteAsset:  sha256:97d99d041d71e3b1831b6713db74ea24ac6e5bfa18eb481598b81d624cad16d2
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
