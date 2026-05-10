@@ -8,12 +8,12 @@
 %global pypi_name meson_python
 
 Name:           python-%{srcname}
-Version:        0.18.0
+Version:        0.19.0
 Release:        %autorelease
 License:        MIT
 URL:            https://github.com/mesonbuild/meson-python
 Summary:        Meson-based build backend for Python
-#!RemoteAsset:  sha256:c56a99ec9df669a40662fe46960321af6e4b14106c14db228709c1628e23848d
+#!RemoteAsset:  sha256:9959d198aa69b57fcfd354a34518c6f795b781a73ed0656f4d01660160cc2553
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
