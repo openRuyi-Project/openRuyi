@@ -7,12 +7,12 @@
 %global srcname jedi
 
 Name:           python-%{srcname}
-Version:        0.19.2
+Version:        0.20.0
 Release:        %autorelease
 Summary:        Autocompletion tool for Python that can be used for text editors
 License:        MIT
 URL:            https://github.com/davidhalter/jedi
-#!RemoteAsset:  sha256:4770dc3de41bde3966b02eb84fbcf557fb33cce26ad23da12c742fb50ecb11f0
+#!RemoteAsset:  sha256:c3f4ccbd276696f4b19c54618d4fb18f9fc24b0aef02acf704b23f487daa1011
 Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
