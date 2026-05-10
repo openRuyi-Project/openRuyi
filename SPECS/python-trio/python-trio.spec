@@ -7,12 +7,12 @@
 %global srcname trio
 
 Name:           python-%{srcname}
-Version:        0.31.0
+Version:        0.33.0
 Release:        %autorelease
 Summary:        A friendly Python library for async concurrency and I/O
 License:        MIT
 URL:            https://github.com/python-trio/trio
-#!RemoteAsset:  sha256:f71d551ccaa79d0cb73017a33ef3264fde8335728eb4c6391451fe5d253a9d5b
+#!RemoteAsset:  sha256:a29b92b73f09d4b48ed249acd91073281a7f1063f09caba5dc70465b5c7aa970
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
