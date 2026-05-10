@@ -7,12 +7,12 @@
 %global srcname pycparser
 
 Name:           python-%{srcname}
-Version:        2.21
+Version:        3.0
 Release:        %autorelease
 Summary:        C parser in Python
 License:        BSD-3-Clause
 URL:            https://github.com/eliben/pycparser
-#!RemoteAsset:  sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206
+#!RemoteAsset:  sha256:600f49d217304a5902ac3c37e1281c9fe94e4d0489de643a9504c5cdfdfc6b29
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
