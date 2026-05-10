@@ -8,12 +8,12 @@
 %global pypi_name docstring_parser
 
 Name:           python-%{srcname}
-Version:        0.17.0
+Version:        0.18.0
 Release:        %autorelease
 Summary:        Parse Python docstrings in reST, Google and Numpydoc format
 License:        MIT
 URL:            https://github.com/rr-/docstring_parser
-#!RemoteAsset:  sha256:583de4a309722b3315439bb31d64ba3eebada841f2e2cee23b99df001434c912
+#!RemoteAsset:  sha256:292510982205c12b1248696f44959db3cdd1740237a968ea1e2e7a900eeb2015
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
