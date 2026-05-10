@@ -8,13 +8,13 @@
 %global pypi_name python_multipart
 
 Name:           python-%{srcname}
-Version:        0.0.22
+Version:        0.0.28
 Release:        %autorelease
 Summary:        Streaming multipart parser for Python
 License:        Apache-2.0
 URL:            https://github.com/Kludex/python-multipart
 VCS:            git:https://github.com/Kludex/python-multipart.git
-#!RemoteAsset:  sha256:7340bef99a7e0032613f56dc36027b959fd3b30a787ed62d310e951f7c3a3a58
+#!RemoteAsset:  sha256:8550da197eac0f7ab748961fc9509b999fa2662ea25cef857f05249f6893c0f8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
