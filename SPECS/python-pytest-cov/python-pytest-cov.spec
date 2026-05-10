@@ -8,12 +8,12 @@
 %global pypi_name pytest_cov
 
 Name:           python-%{srcname}
-Version:        7.0.0
+Version:        7.1.0
 Release:        %autorelease
 Summary:        Pytest plugin for measuring coverage.
 License:        GPL-2.0-only
 URL:            https://github.com/pytest-dev/pytest-cov
-#!RemoteAsset:  sha256:33c97eda2e049a0c5298e91f519302a1334c26ac65c1a483d6206fd458361af1
+#!RemoteAsset:  sha256:30674f2b5f6351aa09702a9c8c364f6a01c27aae0c1366ae8016160d1efc56b2
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
