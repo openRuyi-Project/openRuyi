@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           cifs-utils
-Version:        7.4
+Version:        7.5
 Release:        %autorelease
 Summary:        Utilities for mounting and managing CIFS mounts
 License:        GPL-3.0-only
 URL:            http://linux-cifs.samba.org/cifs-utils/
 VCS:            git:git://git.samba.org/cifs-utils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:7face85e3d2d5eb5e7adbd181adee6759097f135b10d6fb30be8e070af7e7054
 Source:         https://download.samba.org/pub/linux-cifs/cifs-utils/cifs-utils-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -104,4 +105,4 @@ fi
 %{_bindir}/smbinfo
 
 %changelog
-%{?autochangelog}
+%autochangelog
