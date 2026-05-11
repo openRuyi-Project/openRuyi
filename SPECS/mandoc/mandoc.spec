@@ -16,11 +16,9 @@ Summary:        UNIX manpage compiler
 License:        ISC
 URL:            https://mandoc.bsd.lv/
 # VCS: TODO: This project use CVS
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bf0d570f01e70a6e124884088870cbed7537f36328d512909eb10cd53179d9c
 Source:         https://mandoc.bsd.lv/snapshots/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
-
-BuildOption(check):  -C %{name}-%{version}
 
 BuildRequires:  pkgconfig(zlib)
 
@@ -34,8 +32,6 @@ It includes a man(1) manual viewer and additional tools.
 For general information, see <http://mandoc.bsd.lv/>.
 
 %conf -p
-cd %{name}-%{version}
-
 cat > configure.local << 'EOF'
 PREFIX=%{_prefix}
 BINDIR=%{_bindir}
@@ -53,17 +49,11 @@ INSTALL_LIBMANDOC=1
 CFLAGS="%{optflags} -fPIC"
 EOF
 
-%build -p
-cd %{name}-%{version}
-
-%install -p
-cd %{name}-%{version}
-
 %install -a
 find %{buildroot} -type f -name "*.a" -delete -print
 
 %files
-%license mandoc-%{version}/LICENSE
+%license LICENSE
 %{_includedir}/*.h
 %{_bindir}/apropos
 %{_bindir}/demandoc
@@ -79,4 +69,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_mandir}/man8/*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
