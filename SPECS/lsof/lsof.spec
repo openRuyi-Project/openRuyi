@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
@@ -13,7 +14,7 @@ Summary:       A tool for listing open files
 License:       Sendmail and LGPL-2.1-or-later and Zlib
 URL:           https://lsof.readthedocs.io/en/latest/
 VCS:           git:https://github.com/lsof-org/lsof
-#!RemoteAsset
+#!RemoteAsset:  sha256:6081dedf841cd61f8a022ff7cbe04ed78918a47dea3c39528c8571474167aa0f
 Source0:       https://github.com/lsof-org/lsof/releases/download/%{version}/lsof-%{version}.tar.gz
 BuildSystem:   autotools
 
@@ -35,6 +36,9 @@ open to processes. It runs on many Unix dialects.
 %build -a
 soelim -r Lsof.8 > lsof.1
 
+%check
+%make_build check
+
 %install -a
 install -m 0644 lsof.1 -D %{buildroot}%{_mandir}/man1/lsof.1
 rm -rf %{buildroot}%{_mandir}/man8/lsof.8*
@@ -46,4 +50,4 @@ rm -rf %{buildroot}%{_mandir}/man8/lsof.8*
 %{_mandir}/man1/lsof.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
