@@ -19,13 +19,12 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
-# We don't have python-lingua
-BuildOption(check):  -e mako.ext.linguaplugin
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(markupsafe)
+BuildRequires:  python3dist(lingua)
 # For tests
 BuildRequires:  python3dist(babel)
 BuildRequires:  python3dist(pygments)
@@ -35,6 +34,7 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       python3dist(six)
+Requires:       python3dist(lingua)
 
 %description
 Mako is a template library written in Python. It provides a familiar, non-XML
@@ -59,8 +59,8 @@ ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render-3
 ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc CHANGES README.rst examples
+%license LICENSE
 %{_bindir}/mako-render
 %{_bindir}/mako-render-3
 %{_bindir}/mako-render-%{python3_version}
