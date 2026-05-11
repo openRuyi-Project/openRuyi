@@ -6,132 +6,45 @@
 Type: spec
 Repotype: rpm-md sha512:rsyncable:zchunk:compression-zstd:filelists-ex
 
+ExpandFlags: preinstallexpand
+
 Release: <CI_CNT>.<B_CNT>%%{?dist}
+
 PublishFilter: .*-bootstrap.*
 
-Prefer: rust
+Preinstall: rpm-build
+Preinstall: gcc-c++
+
+Required: rpm-config-openruyi
+
+Support: perl-rpm-packaging
+Support: glibc-gconv-modules-extra
+Support: mold
+
 Prefer: systemd-udev
-Prefer: zlib-ng-compat-devel zlib-ng-compat pytest
-# use ninja, not samurai-ninja
 Prefer: ninja
 Prefer: shadow
-# use openssl, not libressl
-Prefer: openssl-devel
-# use libevent, not libev-event
 Prefer: libevent
 Prefer: glib-devel glib
-
 Prefer: python3-libs python3-devel
-Prefer: python3  python3-packaging  python3-pip python3-wheel
-Keep: setup systemd
-Preinstall: systemd-sysusers
-Preinstall: setup
-Preinstall: gcc gcc-c++ expat ncurses filesystem popt
-Preinstall: acl pam elfutils libxml2 gawk attr
-Preinstall: linux-headers
-Preinstall: audit
-Preinstall: rpm-build file rpm glibc libxml2 libeconf
-Preinstall: gmp
+Prefer: python3 python3-packaging python3-pip python3-wheel
+Prefer: rust
 
-Preinstall: libselinux pcre2 util-linux libcap zlib-ng-compat lua bzip2 libgcrypt
-Preinstall: bash coreutils cpio rpm-config-openruyi 
-Preinstall: zstd xz libgomp-gcc15 libgpg-error gzip tar patch
-Preinstall: lz4
-
-
-Support: glibc-gconv-modules-extra
-Support: systemd-rpm-macros
-Support: mold filesystem
-Support: perl file 
-Support: gcc cpp gcc15-c++
-Support: gcc15 cpp15 libgomp-gcc15
-Support: rpm-config-openruyi attr coreutils 
-Support: gcc sed xz grep patch diffutils bash findutils m4 
-Support: systemd-sysusers
-Support: perl-rpm-packaging
-Support: make lz4 xz libcap bzip2 gawk tzdata binutils 
-# gcc15-c++ 
-
-
-Keep: systemd-rpm-macros systemd-udev systemd-devel
-Keep: mold libtasn1 libmount libblkid systemd-sysusers
-Keep: systemd-shared systemd-libs
-Keep: libseccomp
-Keep: ncurses-devel make findutils elfutils libxml2
-Keep: gawk sed gcc15 binutils perl python3 glibc libxcrypt gcc cpp-15
-Keep: grep ncurses libatomic1 
-Keep: libstdc++-gcc15 gcc15-lib gmp libgfortran-gcc15
-Keep: libasan-gcc15 libgomp-gcc15 libubsan-gcc15 libitm-gcc15 liblsan-gcc15 libtsan-gcc15
-Keep: libelf isl
-Keep: libxcrypt mpc mpfr gcc-c++ gcc15-c++ perl-rpm-packaging 
-Keep: cpp15 pkgconf pkgconf-m4 attr popt pam elfutils libarchive
-Keep: libunistring libstdc++ libstdc++-devel-gcc15
-Keep: libgfortran-gcc15
-Keep: isl mpc3 gdbm-libs gmp libxcrypt libxcrypt-static libxcrypt-devel
-Keep: mpfr-devel isl-devel libmpfr6 mpfr-devel gmp-c++ gmp-devel gmp debugedit
-Keep: python-setuptools-wheel libffi python3-setuptools python3-wheel pam pam-devel
-Keep: glib glib-devel ccache gpm jitterentropy openssl
-Keep: sqlite sqlite-devel python3-libs python3
-Keep: gettext-tools
-Keep: cmake m4 diffutils attr texinfo
-Keep: gcc15-fortran gcc15-go libgo-gcc15
-
-
-Order:  mold:binutils
-Order:  chkconfig:mold
-Order:  filesystem:cmake-filesystem
-Order:  filesystem:linux-headers
-Order:  filesystem:systemd-rpm-macros
-
-Order: filesystem:glibc
-Order: filesystem:vim-filesystem
-Order: filesystem:emacs-filesystem
-Order: filesystem:acl
-Order: filesystem:attr
-Order: filesystem:tcl
-Order: filesystem:libgcc
-Order: xz:rpm-build
-
-Order: filesystem:ncurses
-Order: filesystem:coreutils
-Order: filesystem:unzip
-Order: filesystem:system-user-root
-Order: filesystem:pkgconf-m4
-Order: filesystem:permctl
-Order: filesystem:lua
-Order: filesystem:bzip2
-Order: glibc:patch
-Order: filesystem:perl-rpm-packaging
-Order: filesystem:terminfo-base
-Order: filesystem:filesystem
-
-Order: filesystem:perl
-
-Ignore: gettext:texinfo
-Ignore: p11-kit:python3
-Ignore: dbus:dbus-broker
-Ignore: pciutils:pciutils-ids
-Ignore: postfix:iproute2
-Ignore: gpm:systemd
-Ignore: openssh:systemd
-Ignore: cronie:systemd
-Ignore: cyrus-sasl:krb5-devel
-Ignore: pesign:systemd
-Ignore: texlive-filesystem:cron
+Prefer: gcc15-lib
+Prefer: libstdc++-gcc15
+Prefer: libgomp-gcc15
+Prefer: libatomic-gcc15
+Prefer: libquadmath-gcc15
+Prefer: libgfortran-gcc15
 
 Macros:
-%_empty_manifest_terminate_build 0
-%_unpackaged_files_terminate_build 1
 %dist .or
 %_vendor openruyi
 %ext_info .gz
-
-
+%gcc_version 15
 %bcond_override_default_systemd 1
 %_with_systemd 1
 %ext_man .gz
-%gcc_version 15
-
 %__python /usr/bin/python3
 %bcond_override_default_acl_tests 1
 %__systemd_sysusers /usr/bin/systemd-sysusers
@@ -140,8 +53,6 @@ Macros:
 %_sbindir %_bindir
 %_vendor_repo_url https://repo.build.openruyi.cn/openruyi/\\$basearch/
 :Macros
-
-
 
 FileProvides: /usr/bin/passwd busybox-adduser shadow
 FileProvides: /usr/bin/useradd shadow
