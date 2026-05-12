@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        GTK+ graphical user interface library
 License:        LGPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/gtk
-#!RemoteAsset
+#!RemoteAsset:  sha256:0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f
 Source0:        https://download.gnome.org/sources/gtk/3.24/gtk-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -174,7 +174,6 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_datadir}/gir-1.0
 %{_datadir}/gtk-3.0/gtkbuilder.rng
 %{_datadir}/gtk-3.0/valgrind/
-%{_libdir}/gtk-3.0/%{bin_version}/immodules/im-xim.so
 
 %if %{with tests}
 %files tests
@@ -183,4 +182,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
