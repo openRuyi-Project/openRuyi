@@ -94,14 +94,9 @@ BuildRequires:  systemtap-sdt-devel
 BuildRequires:  pkgconfig(isl)
 
 %if %{build_ada}
-%if 0%{?gcc_version:%{gcc_version}} > 14
 %define hostsuffix %{binsuffix}
 BuildRequires:  gcc16-ada
 BuildRequires:  gcc16-c++
-%else
-%define hostsuffix %{nil}
-BuildRequires:  gcc-ada
-%endif
 %endif
 %if %{build_d}
 BuildRequires:  gcc-d
