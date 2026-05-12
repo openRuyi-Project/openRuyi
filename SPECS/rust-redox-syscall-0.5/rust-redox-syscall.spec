@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://gitlab.redox-os.org/redox-os/syscall
 #!RemoteAsset:  sha256:ed2bf2547551a7053d6fdfafda3f938979645c44812fbfcda098faae3f1a362d
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -52,4 +53,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust redox_syscall c
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

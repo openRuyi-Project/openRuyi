@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/cfg-if
 #!RemoteAsset:  sha256:9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -44,4 +45,4 @@ Additionally, this package also provides the "rustc-dep-of-std" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

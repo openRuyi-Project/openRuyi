@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://github.com/xacrimon/dashmap
 #!RemoteAsset:  sha256:978747c1d849a7d2ee5e8adc0159961c48fb7e5db2f06af6723b80123bb53856
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -73,4 +74,4 @@ This metapackage enables feature "serde" for the Rust dashmap crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

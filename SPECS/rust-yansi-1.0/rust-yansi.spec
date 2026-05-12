@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/SergioBenitez/yansi
 #!RemoteAsset:  sha256:cfe53a6657fd280eaa890a3bc59152892ffa3e30101319d168b781ed6529b049
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -54,4 +55,4 @@ This metapackage enables feature "is-terminal" for the Rust yansi crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

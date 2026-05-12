@@ -16,6 +16,7 @@ License:        Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 URL:            https://github.com/bytecodealliance/wasi-rs
 #!RemoteAsset:  sha256:9517f9239f02c069db75e65f174b3da828fe5f5b945c4dd26bd25d89c03ebcf5
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -79,4 +80,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust wasip2 crate, b
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

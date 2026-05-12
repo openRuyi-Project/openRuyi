@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
 #!RemoteAsset:  sha256:f17aaa1c6e3dc22b1da4b6bba97d066e354c7945cac2f7852d4e4e7ca7a6b56d
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -32,4 +33,4 @@ Source code for takopackized Rust crate "toml_writer"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

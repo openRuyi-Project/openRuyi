@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/microsoft/windows-rs
 #!RemoteAsset:  sha256:ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -277,4 +278,4 @@ Source code for takopackized Rust crate "windows-sys"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

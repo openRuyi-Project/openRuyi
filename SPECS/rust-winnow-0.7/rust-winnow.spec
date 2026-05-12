@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://github.com/winnow-rs/winnow
 #!RemoteAsset:  sha256:df79d97927682d2fd8adb29682d1140b343be4ac0f08fd68b7765d9c059d3945
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -78,4 +79,4 @@ This metapackage enables feature "unstable-doc" for the Rust winnow crate, by pu
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

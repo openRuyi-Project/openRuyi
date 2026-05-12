@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/log
 #!RemoteAsset:  sha256:5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -160,4 +161,4 @@ This metapackage enables feature "value-bag" for the Rust log crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

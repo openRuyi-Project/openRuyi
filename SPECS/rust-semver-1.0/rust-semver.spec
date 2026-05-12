@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/dtolnay/semver
 #!RemoteAsset:  sha256:d767eb0aabc880b29956c35734170f26ed551a859dbd361d140cdbeca61ab1e2
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -41,4 +42,4 @@ This metapackage enables feature "serde" for the Rust semver crate, by pulling i
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
 #!RemoteAsset:  sha256:f8bbf91e5a4d6315eee45e704372590b30e260ee83af6639d64557f51b067776
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -67,4 +68,4 @@ This metapackage enables feature "std" for the Rust serde_spanned crate, by pull
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

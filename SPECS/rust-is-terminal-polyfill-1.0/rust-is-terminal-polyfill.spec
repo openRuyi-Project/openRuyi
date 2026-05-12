@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/polyfill-rs/is_terminal_polyfill
 #!RemoteAsset:  sha256:a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -30,4 +31,4 @@ Source code for takopackized Rust crate "is_terminal_polyfill"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

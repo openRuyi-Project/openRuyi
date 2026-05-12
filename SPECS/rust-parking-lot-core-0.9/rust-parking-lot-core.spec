@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/Amanieu/parking_lot
 #!RemoteAsset:  sha256:2621685985a2ebf1c516881c026032ac7deafcda1a2c9b7850dc81e3dfcb64c1
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -64,4 +65,4 @@ This metapackage enables feature "petgraph" for the Rust parking_lot_core crate,
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

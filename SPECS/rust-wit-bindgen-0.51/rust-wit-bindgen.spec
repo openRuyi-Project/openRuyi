@@ -16,6 +16,7 @@ License:        Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 URL:            https://github.com/bytecodealliance/wit-bindgen
 #!RemoteAsset:  sha256:d7249219f66ced02969388cf2bb044a09756a083d0fab1e566056b04d9fbcaa5
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -102,4 +103,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust wit-bindgen cra
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/lambda-fairy/rust-errno
 #!RemoteAsset:  sha256:39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -45,4 +46,4 @@ Additionally, this package also provides the "default" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

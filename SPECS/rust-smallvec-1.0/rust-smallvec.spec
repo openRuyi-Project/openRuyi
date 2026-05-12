@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/servo/rust-smallvec
 #!RemoteAsset:  sha256:67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -94,4 +95,4 @@ This metapackage enables feature "unty" for the Rust smallvec crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

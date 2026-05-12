@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://github.com/dtolnay/zmij
 #!RemoteAsset:  sha256:b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -39,4 +40,4 @@ This metapackage enables feature "no-panic" for the Rust zmij crate, by pulling 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

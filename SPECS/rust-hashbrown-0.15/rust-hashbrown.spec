@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/hashbrown
 #!RemoteAsset:  sha256:9229cfe53dfd69f0609a49f65461bd93001ea1ef889cd5529dd176593f5338a1
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -121,4 +122,4 @@ This metapackage enables feature "serde" for the Rust hashbrown crate, by pullin
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

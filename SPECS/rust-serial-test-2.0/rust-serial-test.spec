@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://github.com/palfrey/serial_test/
 #!RemoteAsset:  sha256:0e56dd856803e253c8f298af3f4d7eb0ae5e23a737252cd90bb4f3b435033b2d
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -98,4 +99,4 @@ Additionally, this package also provides the "logging" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

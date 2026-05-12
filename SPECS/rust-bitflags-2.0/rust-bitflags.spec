@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/bitflags/bitflags
 #!RemoteAsset:  sha256:843867be96c8daad0d758b57df9392b6d8d271134fce549de6ce169ff98a92af
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -62,4 +63,4 @@ Additionally, this package also provides the "serde" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

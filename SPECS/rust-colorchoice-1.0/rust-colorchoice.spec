@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-cli/anstyle.git
 #!RemoteAsset:  sha256:1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -30,4 +31,4 @@ Source code for takopackized Rust crate "colorchoice"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

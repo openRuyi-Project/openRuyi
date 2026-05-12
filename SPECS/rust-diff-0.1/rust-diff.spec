@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/utkarshkukreti/diff.rs
 #!RemoteAsset:  sha256:56254986775e3233ffa9c4d7d3faaf6d36a2c09d30b20687e9f88bc8bafc16c8
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -30,4 +31,4 @@ Source code for takopackized Rust crate "diff"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

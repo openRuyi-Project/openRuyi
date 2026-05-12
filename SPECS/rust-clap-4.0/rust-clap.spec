@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/clap-rs/clap
 #!RemoteAsset:  sha256:b193af5b67834b676abd72466a96c1024e6a6ad978a1f484bd90b85c94041351
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -221,4 +222,4 @@ This metapackage enables feature "wrap_help" for the Rust clap crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

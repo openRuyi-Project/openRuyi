@@ -16,6 +16,7 @@ License:        Apache-2.0 OR MIT
 URL:            https://github.com/alacritty/vte
 #!RemoteAsset:  sha256:06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -31,4 +32,4 @@ Source code for takopackized Rust crate "utf8parse"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

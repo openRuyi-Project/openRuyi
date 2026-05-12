@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
 #!RemoteAsset:  sha256:92e1cfed4a3038bc5a127e35a2d360f145e1f4b971b551a2ba5fd7aedf7e1347
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -60,4 +61,4 @@ Additionally, this package also provides the "default" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

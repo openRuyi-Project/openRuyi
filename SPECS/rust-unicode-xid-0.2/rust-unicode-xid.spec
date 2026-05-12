@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/unicode-rs/unicode-xid
 #!RemoteAsset:  sha256:ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -32,4 +33,4 @@ Source code for takopackized Rust crate "unicode-xid"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

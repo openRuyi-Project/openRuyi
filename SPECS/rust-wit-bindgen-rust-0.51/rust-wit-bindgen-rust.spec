@@ -16,6 +16,7 @@ License:        Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 URL:            https://github.com/bytecodealliance/wit-bindgen
 #!RemoteAsset:  sha256:b7c566e0f4b284dd6561c786d9cb0142da491f46a9fbed79ea69cdad5db17f21
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -61,4 +62,4 @@ This metapackage enables feature "serde" for the Rust wit-bindgen-rust crate, by
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

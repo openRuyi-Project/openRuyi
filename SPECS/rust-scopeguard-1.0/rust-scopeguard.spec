@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/bluss/scopeguard
 #!RemoteAsset:  sha256:94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -32,4 +33,4 @@ Source code for takopackized Rust crate "scopeguard"
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

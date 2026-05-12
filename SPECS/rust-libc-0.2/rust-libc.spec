@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/libc
 #!RemoteAsset:  sha256:b5b646652bf6661599e1da8901b3b9522896f01e736bad5f723fe7a3a27f899d
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -54,4 +55,4 @@ This metapackage enables feature "rustc-std-workspace-core" for the Rust libc cr
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

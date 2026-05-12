@@ -16,6 +16,7 @@ License:        Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 URL:            https://github.com/bytecodealliance/wasm-tools/tree/main/crates/wit-parser
 #!RemoteAsset:  sha256:ecc8ac4bc1dc3381b7f59c34f00b67e18f910c2c0f50015669dde7def656a736
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -90,4 +91,4 @@ This metapackage enables feature "wat" for the Rust wit-parser crate, by pulling
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

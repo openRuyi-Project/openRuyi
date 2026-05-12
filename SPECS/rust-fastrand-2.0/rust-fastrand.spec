@@ -16,6 +16,7 @@ License:        Apache-2.0 OR MIT
 URL:            https://github.com/smol-rs/fastrand
 #!RemoteAsset:  sha256:37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -52,4 +53,4 @@ This metapackage enables feature "js" for the Rust fastrand crate, by pulling in
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

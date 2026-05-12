@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-cli/anstyle.git
 #!RemoteAsset:  sha256:824a212faf96e9acacdbd09febd34438f8f711fb84e09a8916013cd7815ca28d
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -63,4 +64,4 @@ This metapackage enables feature "wincon" for the Rust anstream crate, by pullin
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

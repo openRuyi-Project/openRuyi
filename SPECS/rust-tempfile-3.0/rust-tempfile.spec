@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://stebalien.com/projects/tempfile-rs/
 #!RemoteAsset:  sha256:32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -49,4 +50,4 @@ Additionally, this package also provides the "default" feature.
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

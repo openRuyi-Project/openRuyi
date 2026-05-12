@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/dtolnay/prettyplease
 #!RemoteAsset:  sha256:479ca8adacdd7ce8f1fb39ce9ecccbfe93a3f1344b3d0d97f20bc0196208f62b
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -42,4 +43,4 @@ This metapackage enables feature "verbatim" for the Rust prettyplease crate, by 
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

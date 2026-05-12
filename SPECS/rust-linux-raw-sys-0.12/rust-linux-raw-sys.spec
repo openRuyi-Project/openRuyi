@@ -16,6 +16,7 @@ License:        Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT
 URL:            https://github.com/sunfishcode/linux-raw-sys
 #!RemoteAsset:  sha256:32a66949e030da00e8c7d4434b251670a91556f4144941d37452769c25d58a53
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -85,4 +86,4 @@ This metapackage enables feature "rustc-dep-of-std" for the Rust linux-raw-sys c
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

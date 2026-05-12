@@ -16,6 +16,7 @@ License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
 #!RemoteAsset:  sha256:cf92845e79fc2e2def6a5d828f0801e29a2f8acc037becc5ab08595c7d5e9863
 Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
@@ -137,4 +138,4 @@ This metapackage enables feature "std" for the Rust toml crate, by pulling in an
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
