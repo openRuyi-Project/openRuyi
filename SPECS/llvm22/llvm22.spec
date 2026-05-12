@@ -1216,4 +1216,4 @@ fi
 %{install_libdir}/cmake/polly
 
 %changelog
-%{?autochangelog}
+%autochangelog
