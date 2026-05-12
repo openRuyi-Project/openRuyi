@@ -52,6 +52,16 @@
 %global build_install_prefix %{buildroot}%{install_prefix}
 %global llvm_triple %{_target_platform}
 
+# enabled projects and runtimes
+%global projects clang;clang-tools-extra;lld
+%global runtimes compiler-rt;openmp
+%global projects %{projects};lldb
+%global projects %{projects};mlir
+%global projects %{projects};bolt
+%global projects %{projects};polly
+%global projects %{projects};flang
+%global runtimes %{runtimes};libcxx;libcxxabi;libunwind
+
 # clang
 
 # compiler-rt
@@ -503,14 +513,6 @@ program.
 %py3_shebang_fix libcxx/utils/
 
 %build
-%global projects clang;clang-tools-extra;lld
-%global runtimes compiler-rt;openmp
-%global projects %{projects};lldb
-%global projects %{projects};mlir
-%global projects %{projects};bolt
-%global projects %{projects};polly
-%global projects %{projects};flang
-%global runtimes %{runtimes};libcxx;libcxxabi;libunwind
 export ASMFLAGS="%{build_cflags}"
 export FFLAGS=`echo %{build_fflags} | sed -e "s/-pipe//g" -e "s/-funwind-tables//g" -e "s/-fasynchronous-unwind-tables//g" -e "s/-fstack-protector-strong//g" -e "s/-fstack-clash-protection//g" -e "s/-Wformat//g" -e "s/-Werror=format-security//g"`
 export FCFLAGS=${FFLAGS}
