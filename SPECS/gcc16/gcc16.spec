@@ -56,19 +56,21 @@
 
 %define hostsuffix %{nil}
 
-%define binsuffix -16
+%define vermajor 16
+%define binsuffix -%{vermajor}
 # libFOO runtime package suffix
-%define libsuffix -gcc16
+%define libsuffix -gcc%{vermajor}
 # libFOO-devel package suffix
-%define libdevel_suffix -gcc16
+%define libdevel_suffix -gcc%{vermajor}
 %define biarch_targets x86_64
 
 %define gcc_dir_version %(echo %version |  sed 's/+.*//' | cut -d '.' -f 1)
 %define gcc_snapshot_revision %(echo %version | sed 's/[3-9]\.[0-9]\.[0-6]//' | sed 's/+/-/')
 
 
-Name:           gcc16
+Name:           gcc%{vermajor}
 URL:            https://gcc.gnu.org/
+# Note: Major version updates requires a new package
 Version:        16.1.0
 Release:        %autorelease
 License:        GPL-3.0-or-later
@@ -95,8 +97,8 @@ BuildRequires:  pkgconfig(isl)
 
 %if %{build_ada}
 %define hostsuffix %{binsuffix}
-BuildRequires:  gcc16-ada
-BuildRequires:  gcc16-c++
+BuildRequires:  gcc%{vermajor}-ada
+BuildRequires:  gcc%{vermajor}-c++
 %endif
 %if %{build_d}
 BuildRequires:  gcc-d
@@ -112,7 +114,7 @@ BuildRequires:  gcc-d
 
 # TODO: Revisit here
 Requires:       binutils
-Requires:       cpp16 = %{version}-%{release}
+Requires:       cpp%{vermajor} = %{version}-%{release}
 Requires:       glibc-devel
 Requires:       libgomp%{libsuffix} >= %{version}-%{release}
 %ifarch %{asan_arch}
@@ -143,7 +145,7 @@ Requires:       libubsan%{libsuffix} >= %{version}-%{release}
 %ifarch %{vtv_arch}
 Requires:       libvtv%{libsuffix} >= %{version}-%{release}
 %endif
-Suggests:       gcc16-doc
+Suggests:       gcc%{vermajor}-doc
 
 Patch2000:      2000-textdomain.patch
 Patch2001:      2001-rename-info-files.patch
@@ -158,7 +160,7 @@ gcc-rust and gcc-m2.
 
 %package        devel
 Summary:        GCC plugins development enviroment
-Requires:       gcc16 = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
 Requires:       pkgconfig(gmp)
 Requires:       mpc-devel
 
@@ -167,8 +169,8 @@ Files required for developing and compiling GCC plugins.
 
 %package        c++
 Summary:        The GNU C++ Compiler
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-c++ = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-c++ = %{version}-%{release}
 Requires:       libstdc++-devel%{libdevel_suffix} = %{version}-%{release}
 
 %description    c++
@@ -224,8 +226,8 @@ and internals documentation.
 %package        objc
 Summary:        GNU Objective C Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-objc = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-objc = %{version}-%{release}
 Requires:       libobjc%{libsuffix} >= %{version}-%{release}
 
 %description    objc
@@ -243,28 +245,28 @@ The library for the GNU Objective C compiler.
 %package        obj-c++
 Summary:        GNU Objective C++ Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16-c++ = %{version}-%{release}
-Requires:       gcc16-obj-c++ = %{version}-%{release}
-Requires:       gcc16-objc = %{version}-%{release}
+Requires:       gcc%{vermajor}-c++ = %{version}-%{release}
+Requires:       gcc%{vermajor}-obj-c++ = %{version}-%{release}
+Requires:       gcc%{vermajor}-objc = %{version}-%{release}
 
 %description    obj-c++
 This package contains the GNU Objective C++ compiler. Objective C++ is an
 object oriented language, created by Next Inc. and used in their
 Nextstep OS. The source code is available in the gcc package.
 
-%package     -n cpp16
+%package     -n cpp%{vermajor}
 Summary:        The GCC Preprocessor
 License:        GPL-3.0-or-later
 
-%description -n cpp16
+%description -n cpp%{vermajor}
 This Package contains just the preprocessor that is used by the X11
 packages.
 
 %package        ada
 Summary:        GNU Ada Compiler Based on GCC (GNAT)
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-ada = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-ada = %{version}-%{release}
 
 %description    ada
 This package contains an Ada compiler and associated development
@@ -273,8 +275,8 @@ tools based on the GNU GCC technology.
 %package        fortran
 Summary:        The GNU Fortran Compiler and Support Files
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-fortran = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-fortran = %{version}-%{release}
 Requires:       libgfortran%{libsuffix} >= %{version}-%{release}
 %ifarch %{quadmath_arch}
 Requires:       libquadmath-devel%{libdevel_suffix} = %{version}-%{release}
@@ -377,8 +379,8 @@ The runtime library needed to run programs compiled with the
 %package        go
 Summary:        GNU Go Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-go = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-go = %{version}-%{release}
 Requires:       libgo%{libsuffix} >= %{version}-%{release}
 
 %description    go
@@ -395,8 +397,8 @@ Runtime library for the GNU Go language.
 %package        d
 Summary:        GNU D Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-d = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-d = %{version}-%{release}
 
 %description   d
 This package contains a D compiler and associated development
@@ -409,7 +411,7 @@ License:        GPL-3.0-or-later
 # linker and find startfiles and libgcc.  The built-in driver knows
 # the compilers version install directory only so we require the
 # respective compiler libgccjit was built from.
-Requires:       gcc16
+Requires:       gcc%{vermajor}
 
 %description -n libgccjit%{libsuffix}
 Support for embedding GCC inside programs and libraries
@@ -425,8 +427,8 @@ Package contains header files and documentation for GCC JIT front-end.
 %package        rust
 Summary:        GNU Rust Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-rust = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-rust = %{version}-%{release}
 
 %description    rust
 This package contains a Rust compiler.
@@ -434,8 +436,8 @@ This package contains a Rust compiler.
 %package        m2
 Summary:        GNU Modula-2 Compiler
 License:        GPL-3.0-or-later
-Requires:       gcc16 = %{version}-%{release}
-Requires:       gcc16-m2 = %{version}-%{release}
+Requires:       gcc%{vermajor} = %{version}-%{release}
+Requires:       gcc%{vermajor}-m2 = %{version}-%{release}
 Requires:       libm2%{libsuffix} >= %{version}-%{release}
 Requires:       libstdc++-devel%{libdevel_suffix} = %{version}-%{release}
 
@@ -888,7 +890,7 @@ mv %{buildroot}/%{_infodir}/m2.info %{buildroot}/%{_infodir}/m2%{binsuffix}.info
 
 cd ..
 %find_lang gcc%{binsuffix} --generate-subpackages
-# Will output gcc16-langpack-be already exists error
+# Will output gcc%%{vermajor}-langpack-be already exists error
 %find_lang cpplib%{binsuffix}
 %find_lang libstdc++
 
@@ -1304,7 +1306,7 @@ cd ..
 %doc %{_infodir}/m2%{binsuffix}.info*gz
 %endif
 
-%files -n cpp16 -f cpplib%{binsuffix}.lang
+%files -n cpp%{vermajor} -f cpplib%{binsuffix}.lang
 %defattr(-,root,root)
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/%{GCCDIST}
