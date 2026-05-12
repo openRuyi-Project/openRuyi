@@ -561,7 +561,7 @@ OLD_CWD="$PWD"
 
 # compiler-rt options
 %global cmake_config_args %{cmake_config_args} \\\
-    -DCOMPILER_RT_INCLUDE_TESTS:BOOL=OFF 
+    -DCOMPILER_RT_INCLUDE_TESTS:BOOL=OFF
 
 # docs options
 %global cmake_config_args %{cmake_config_args} \\\
