@@ -6,7 +6,7 @@
 
 %global srcname Beaker
 
-Name:           python-%{srcname}
+Name:           python-beaker
 Version:        1.13.0
 Release:        %autorelease
 Summary:        WSGI middleware layer to provide sessions
