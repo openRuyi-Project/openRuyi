@@ -107,6 +107,7 @@ BuildRequires:  python3dist(nanobind)
 # for python buildrequires
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(psutil)
 BuildRequires:  pyproject-rpm-macros
 # for tests
 BuildRequires:  perl(Digest::MD5)
