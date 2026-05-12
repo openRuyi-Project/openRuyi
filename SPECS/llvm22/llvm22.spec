@@ -70,8 +70,6 @@ URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
 #!RemoteAsset:  sha256:7972b87b705a003ce70ab55f9f0fb495d156887cba0eb296d284731139118e2c
 Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz
-#!RemoteAsset:  sha256:bf9b4d2c3a0772222ce1af8c59d5de71ee9f243a332a56d561d99c570924c067
-Source1:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz.sig
 
 # please keep the patches in different groups for easier maintenance
 Patch0:         0001-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
