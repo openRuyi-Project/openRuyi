@@ -481,8 +481,7 @@ on integer polyhedron to analyze and optimize the memory access pattern of a
 program.
 
 %prep
-%autosetup -N -T -b 0 -n %{src_tarball_dir}
-%autopatch -p1
+%autosetup -p1 -T -b 0 -n %{src_tarball_dir}
 
 %py3_shebang_fix \
     llvm/test/BugPoint/compile-custom.ll.py \
