@@ -1,15 +1,16 @@
-From b1c9ad9ff21df41438d99f5a0693fb54a18ce6b5 Mon Sep 17 00:00:00 2001
+From ce9cc0730f886e96dd28a96e1b086cc039d83a68 Mon Sep 17 00:00:00 2001
 From: YunQiang Su <yunqiang@isrc.iscas.ac.cn>
 Date: Fri, 30 Jan 2026 11:39:07 +0800
-Subject: [PATCH] Add riscv64-openruyi-linux triple and set it to rva23u64
+Subject: [PATCH] Add *-openruyi-linux triples and set to rva23u64 on riscv64
 
+[ Vivian: Also add entry to X86_64Triples. Adjust subject. ]
 ---
  clang/lib/Driver/ToolChains/Arch/RISCV.cpp | 4 ++++
- clang/lib/Driver/ToolChains/Gnu.cpp        | 1 +
+ clang/lib/Driver/ToolChains/Gnu.cpp        | 4 +++-
  llvm/include/llvm/TargetParser/Triple.h    | 1 +
  llvm/lib/TargetParser/Triple.cpp           | 2 ++
  llvm/unittests/TargetParser/TripleTest.cpp | 6 ++++++
- 5 files changed, 14 insertions(+)
+ 5 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/clang/lib/Driver/ToolChains/Arch/RISCV.cpp b/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
 index baa2c8c0bcfb..e44d79053c7a 100644
@@ -34,10 +35,20 @@ index baa2c8c0bcfb..e44d79053c7a 100644
  }
  
 diff --git a/clang/lib/Driver/ToolChains/Gnu.cpp b/clang/lib/Driver/ToolChains/Gnu.cpp
-index f5e265585743..b8c3dd409a4b 100644
+index f5e265585743..7b3b46de47a3 100644
 --- a/clang/lib/Driver/ToolChains/Gnu.cpp
 +++ b/clang/lib/Driver/ToolChains/Gnu.cpp
-@@ -2437,6 +2437,7 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+@@ -2367,7 +2367,8 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
+       "x86_64-pc-linux-gnu",    "x86_64-redhat-linux6E",
+       "x86_64-redhat-linux",    "x86_64-suse-linux",
+       "x86_64-manbo-linux-gnu", "x86_64-slackware-linux",
+-      "x86_64-unknown-linux",   "x86_64-amazon-linux"};
++      "x86_64-unknown-linux",   "x86_64-amazon-linux",
++      "x86_64-openruyi-linux"};
+   static const char *const X32Triples[] = {"x86_64-linux-gnux32",
+                                            "x86_64-pc-linux-gnux32"};
+   static const char *const X32LibDirs[] = {"/libx32", "/lib"};
+@@ -2437,6 +2438,7 @@ void Generic_GCC::GCCInstallationDetector::AddDefaultGCCPrefixes(
                                                 "riscv32-unknown-elf"};
    static const char *const RISCV64LibDirs[] = {"/lib64", "/lib"};
    static const char *const RISCV64Triples[] = {"riscv64-unknown-linux-gnu",
@@ -95,5 +106,5 @@ index 36408de7802c..125858028525 100644
    EXPECT_EQ(Triple::riscv64, T.getArch());
    EXPECT_EQ(Triple::SUSE, T.getVendor());
 -- 
-2.52.0
+2.53.0
 
