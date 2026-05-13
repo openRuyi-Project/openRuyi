@@ -4,16 +4,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname PyNaCl
+%global srcname pynacl
+%global pypi_name PyNaCl
 
-Name:           python-pynacl
-Version:        1.5.0
+Name:           python-%{srcname}
+Version:        1.6.2
 Release:        %autorelease
 License:        Apache-2.0
 URL:            https://github.com/pyca/pynacl/
 Summary:        Python bindings to libsodium
-#!RemoteAsset:  sha256:8ac7448f09ab85811607bdd21ec2464495ac8b7c66d146bf545b0f08fb9220ba
-Source0:        https://files.pythonhosted.org/packages/source/P/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:018494d6d696ae03c7e656e5e74cdfd8ea1326962cc401bcf018f1ed8436811c
+Source0:        https://files.pythonhosted.org/packages/source/P/%{pypi_name}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
 BuildOption(install):  -l nacl +auto
@@ -24,9 +25,9 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(hypothesis)
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-pynacl = %{version}-%{release}
-Provides:       python3-pynacl%{?_isa} = %{version}-%{release}
-%python_provide python3-pynacl
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 PyNaCl is a Python binding to libsodium, which is a fork of the
