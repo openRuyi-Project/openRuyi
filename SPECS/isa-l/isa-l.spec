@@ -13,9 +13,12 @@ Release:        %autorelease
 Summary:        Intelligent Storage Acceleration Library
 License:        BSD-3-Clause
 URL:            https://github.com/intel/isa-l
-#!RemoteAsset
+#!RemoteAsset:  sha256:7a194ff80d0f7e20615c497654e8a51b0184d0c79e2e265c7f555f52a26a05a4
 Source0:        https://github.com/intel/isa-l/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+# https://github.com/intel/isa-l/pull/412
+Patch0:         0001-raid-riscv64-fix-in-place-aliasing-in-xor_gen-and-pq_gen.patch
 
 BuildOption(conf):  --disable-static
 
@@ -86,4 +89,4 @@ This package contains CLI tools.
 %{_mandir}/man1/igzip.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

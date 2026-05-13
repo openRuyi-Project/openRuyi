@@ -1,0 +1,192 @@
+From 1c3c7a7a340c2fc566006d82af12f4da4aee2499 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Tue, 12 May 2026 19:28:27 +0800
+Subject: [PATCH] raid/riscv64: fix in-place aliasing in xor_gen and pq_gen
+
+sg2044:
+      new: xor_gen_warm: runtime = 3062177 usecs, bandwidth 50580 MB in 3.0622 sec = 16517.82 MB/s
+      old: xor_gen_warm: runtime = 3062535 usecs, bandwidth 31581 MB in 3.0625 sec = 10312.11 MB/s
+      new: pq_gen_warm:  runtime = 3062480 usecs, bandwidth 16152 MB in 3.0625 sec = 5274.26 MB/s
+      old: pq_gen_warm:  runtime = 3062583 usecs, bandwidth 14800 MB in 3.0626 sec = 4832.70 MB/s
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ raid/riscv64/raid_pq_gen_rvv.S  | 69 +++++++++++++++------------------
+ raid/riscv64/raid_xor_gen_rvv.S | 56 +++++++++++++-------------
+ 2 files changed, 57 insertions(+), 68 deletions(-)
+
+diff --git a/raid/riscv64/raid_pq_gen_rvv.S b/raid/riscv64/raid_pq_gen_rvv.S
+index be2a7c22..69fcc13a 100644
+--- a/raid/riscv64/raid_pq_gen_rvv.S
++++ b/raid/riscv64/raid_pq_gen_rvv.S
+@@ -33,7 +33,7 @@
+ pq_gen_rvv:
+     srli        a1, a1, 3                  // blocks = len / 8
+     beqz        a1, ret0                   // blocks <= 0
+-    addi        a6, a0, -3                 // j = vects - 4
++    addi        a6, a0, -3                 // vects - 3
+     blez        a6, ret1                   // vects < 4
+ 
+     slli        t0, a0, 3                  // t0 = vects * 8
+@@ -41,36 +41,24 @@ pq_gen_rvv:
+     li          t1, 0x8080808080808080     // bit7
+     li          t2, 0xfefefefefefefefe     // notbit0
+     li          t3, 0x1d1d1d1d1d1d1d1d     // gf8poly
++    li          a7, 0                      // byte offset
++
++outer_strip:
++    vsetvli     t4, a1, e64, m4, ta, ma
++
+     ld          a3, -24(t0)                // src[vects-3]
+-    ld          a4, -16(t0)                // p
+-    ld          a5, -8(t0)                 // q
+-    mv          t6, a1                     // save blocks
+-    mv          t5, a4                     // save p
+-    mv          a7, a5                     // save q
++    add         a3, a3, a7
++    vle64.v     v0, (a3)                   // p
++    vmv.v.v     v4, v0                     // q
+ 
+-init_pq:
+-    vsetvli     t4, t6, e64, m4, ta, ma
+-    vle64.v     v0, (a3)
+-    vse64.v     v0, (a4)                   // init p
+-    vse64.v     v0, (a5)                   // init q
+-    sub         t6, t6, t4
+-    slli        t4, t4, 3
+-    add         a3, a3, t4
+-    add         a4, a4, t4
+-    add         a5, a5, t4
+-    bnez        t6, init_pq
++    addi        a4, t0, -32                // &array[vects-4]
++    mv          a5, a6                     // inner source count
+ 
+-outer_j:
+-    mv          a4, t5                     // restore p
+-    mv          a5, a7                     // restore q
+-    mv          t6, a1                     // restore blocks
+-    ld          a0, -32(t0)                // src[j]
++inner_src:
++    ld          a3, 0(a4)                  // src[j]
++    add         a3, a3, a7
++    vle64.v     v8, (a3)                   // s
+ 
+-inner_block:
+-    vsetvli     t4, t6, e64, m4, ta, ma
+-    vle64.v     v8, (a0)                   // s
+-    vle64.v     v0, (a4)                   // p
+-    vle64.v     v4, (a5)                   // q
+     vxor.vv     v0, v0, v8                 // p ^= s
+     vand.vx     v20, v4, t1                // q & bit7
+     vsll.vi     v24, v4, 1                 // (q << 1)
+@@ -81,18 +69,23 @@ inner_block:
+     vand.vx     v20, v20, t3               // ((q & bit7)<<1 - (q & bit7)>>7) & gf8poly
+     vxor.vv     v4, v24, v20               // ((q << 1) & notbit0) ^
+     vxor.vv     v4, v4, v8                 // s^
+-    vse64.v     v0, (a4)                   // p
+-    vse64.v     v4, (a5)                   // q
+-    sub         t6, t6, t4                 // blocks
+-    slli        t4, t4, 3
+-    add         a4, a4, t4                 // p+=
+-    add         a5, a5, t4                 // q+=
+-    add         a0, a0, t4                 // s+=
+-    bnez        t6, inner_block
+ 
+-    addi        a6, a6, -1
+-    addi        t0, t0, -8
+-    bnez        a6, outer_j
++    addi        a4, a4, -8
++    addi        a5, a5, -1
++    bnez        a5, inner_src
++
++    ld          a3, -16(t0)                // p
++    add         a3, a3, a7
++    vse64.v     v0, (a3)
++
++    ld          a3, -8(t0)                 // q
++    add         a3, a3, a7
++    vse64.v     v4, (a3)
++
++    sub         a1, a1, t4
++    slli        t5, t4, 3
++    add         a7, a7, t5
++    bnez        a1, outer_strip
+ 
+ ret0:
+     li a0, 0
+diff --git a/raid/riscv64/raid_xor_gen_rvv.S b/raid/riscv64/raid_xor_gen_rvv.S
+index e4754fa1..dc73d000 100644
+--- a/raid/riscv64/raid_xor_gen_rvv.S
++++ b/raid/riscv64/raid_xor_gen_rvv.S
+@@ -31,45 +31,41 @@
+ .global         xor_gen_rvv
+ .type           xor_gen_rvv, %function
+ xor_gen_rvv:
+-    beqz        a1, ret0                 # len <= 0, return 0
+-    addi        t1, a0, -2               # vects - 3
++    beqz        a1, ret0                 # len == 0, return 0
++    addi        t1, a0, -2               # vects - 2
+     blez        t1, ret1                 # vects < 3, return 1
+ 
+     slli        t0, a0, 3                # t0 = vects * 8
+     add         t0, a2, t0               # array + vects * 8
+-    ld          a4, 0(a2)                # src[0]
+-    ld          a3, -8(t0)               # dest = array[vects - 1]
+-    mv          t5, a3                   # save dest
+-    mv          t6, a1                   # save len
++    li          t2, 0                    # byte offset
++    mv          t6, a1                   # remaining length
+ 
+-init_dest:
++outer_strip:
+     vsetvli     t4, t6, e8, m8, ta, ma
+-    vle8.v      v0, (a4)                 # load src[0]
+-    vse8.v      v0, (a3)                 # dest
+-    sub         t6, t6, t4
+-    add         a4, a4, t4
+-    add         a3, a3, t4
+-    bnez        t6, init_dest
+ 
+-outer_j:
+-    mv          a3, t5                   # restore dest
+-    mv          t6, a1                   # restore length
+-    ld          a4, -16(t0)
++    ld          a3, 0(a2)                # array[0]
++    add         a3, a3, t2
++    vle8.v      v0, (a3)
+ 
+-inner_len:
+-    vsetvli     t4, t6, e8, m8, ta, ma
+-    vle8.v      v0, (a4)                 # src[j]
+-    vle8.v      v8, (a3)                 # dest
+-    vxor.vv     v8, v8, v0               # dest ^= src[j]
+-    vse8.v      v8, (a3)
+-    sub         t6, t6, t4
+-    add         a4, a4, t4
+-    add         a3, a3, t4
+-    bnez        t6, inner_len
++    addi        t3, a2, 8                # &array[1]
++    mv          t5, t1                   # inner source count
+ 
+-    addi        t1, t1, -1
+-    addi        t0, t0, -8
+-    bnez        t1, outer_j
++inner_src:
++    ld          a3, 0(t3)                # array[j]
++    add         a3, a3, t2
++    vle8.v      v8, (a3)
++    vxor.vv     v0, v0, v8
++    addi        t3, t3, 8
++    addi        t5, t5, -1
++    bnez        t5, inner_src
++
++    ld          a3, -8(t0)               # dest = array[vects-1]
++    add         a3, a3, t2
++    vse8.v      v0, (a3)
++
++    sub         t6, t6, t4
++    add         t2, t2, t4
++    bnez        t6, outer_strip
+ 
+ ret0:
+     li a0, 0
