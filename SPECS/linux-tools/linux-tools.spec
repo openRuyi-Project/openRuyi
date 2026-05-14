@@ -47,7 +47,7 @@ BuildRequires:  pkgconfig(libdebuginfod)
 BuildRequires:  systemtap-sdt-devel
 BuildRequires:  clang
 BuildRequires:  pkgconfig(slang)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  llvm-devel
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  systemd-rpm-macros
