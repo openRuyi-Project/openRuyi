@@ -16,33 +16,33 @@ Release:        %autorelease
 Summary:        Builds packages inside chroots
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/mock
-#!RemoteAsset
+#!RemoteAsset:  sha256:c3672842b68f0e58f331ec6280be516a830afbbb607edfdd5dee09847fbde687
 Source0:        %{url}/releases/download/%{name}-%{version}-1/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  bash-completion
 BuildRequires:  perl
-BuildRequires:  python3-backoff
+BuildRequires:  python3dist(backoff)
 BuildRequires:  python3-devel
 BuildRequires:  python3-rpm
 BuildRequires:  python3-rpmautospec-core
-BuildRequires:  python3-argparse-manpage
-BuildRequires:  python3-requests
+BuildRequires:  python3dist(argparse-manpage)
+BuildRequires:  python3dist(requests)
 %if %{with lint}
-BuildRequires:  python3-pylint
+BuildRequires:  python3dist(pylint)
 %endif
 
 Recommends:     dnf-utils
 Recommends:     dnf5
 Recommends:     dnf5-plugins
 
-Requires:       python3-distro
-Requires:       python3-jinja2
-Requires:       python3-requests
+Requires:       python3dist(distro)
+Requires:       python3dist(jinja2)
+Requires:       python3dist(requests)
 Requires:       python3-rpm
-Requires:       python3-pyroute2
-Requires:       python3-templated-dictionary
-Requires:       python3-backoff
+Requires:       python3dist(pyroute2)
+Requires:       python3dist(templated-dictionary)
+Requires:       python3dist(backoff)
 Requires:       mock-configs
 Requires:       %{name}-filesystem = %{version}-%{release}
 Requires:       tar
@@ -219,4 +219,4 @@ getent group 'mock' >/dev/null || groupadd -f -g '135' -r 'mock' || :
 %dir %{_localstatedir}/lib/mock
 
 %changelog
-%{?autochangelog}
+%autochangelog
