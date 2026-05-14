@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Wrapper library for the Video Decode and Presentation API
 License:        MIT
 URL:            https://gitlab.freedesktop.org/vdpau/libvdpau
-#!RemoteAsset
+#!RemoteAsset:  sha256:a5d50a42b8c288febc07151ab643ac8de06a18446965c7241f89b4e810821913
 Source:         https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/%{version}/libvdpau-%{version}.tar.bz2
 BuildSystem:    meson
 
@@ -22,7 +22,6 @@ BuildOption(conf):  -Ddocumentation=false
 BuildRequires:  meson >= 0.41
 BuildRequires:  doxygen
 BuildRequires:  gcc-c++
-BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(xext)
 
@@ -54,4 +53,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/vdpau.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
