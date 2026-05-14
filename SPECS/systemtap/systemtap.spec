@@ -16,9 +16,9 @@ Summary:        Programmable system-wide instrumentation system
 License:        GPL-2.0-or-later
 URL:            https://sourceware.org/systemtap/
 VCS:            git:https://sourceware.org/git/systemtap.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:966a360fb73a4b65a8d0b51b389577b3c4f92a327e84aae58682103e8c65a69a
 Source0:        https://sourceware.org/%{name}/ftp/releases/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:81bfd0b93d864f973942bab687713d58dd9b117a354ccfaef7747f058ba01983
 Source1:        https://sourceware.org/%{name}/ftp/releases/%{name}-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
@@ -44,7 +44,7 @@ BuildRequires:  sqlite-devel
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  python3
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 
 Requires:       %{name}-client = %{version}-%{release}
 Requires:       %{name}-devel = %{version}-%{release}
@@ -148,7 +148,7 @@ instrumentation compiled into userspace programs.
 Summary:        Static probe support dtrace tool
 License:        GPL-2.0-or-later AND CC0-1.0
 Provides:       dtrace = %{version}-%{release}
-Requires:       python3-pyparsing
+Requires:       python3dist(pyparsing)
 
 %description    sdt-dtrace
 This package includes the dtrace-compatibility preprocessor
@@ -325,4 +325,4 @@ install -D -m 644 macros.systemtap %{buildroot}%{_rpmmacrodir}/macros.systemtap
 %{_mandir}/man1/dtrace.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
