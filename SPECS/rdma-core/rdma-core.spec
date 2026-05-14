@@ -57,7 +57,7 @@ BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(udev)
 %if %{with pyverbs}
 BuildRequires:  libdrm-devel
-BuildRequires:  python3-Cython
+BuildRequires:  python3dist(cython)
 BuildRequires:  pkgconfig(python3)
 %endif
 BuildRequires:  systemd-rpm-macros
