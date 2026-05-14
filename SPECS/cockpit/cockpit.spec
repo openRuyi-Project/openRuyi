@@ -13,7 +13,7 @@ Summary:        Web Console for Linux servers
 License:        LGPL-2.1-or-later
 URL:            https://cockpit-project.org/
 VCS:            git:https://github.com/cockpit-project/cockpit
-#!RemoteAsset
+#!RemoteAsset:  sha256:72098a51f85c4a63f2e276af119920a5faca978b57652df562b409b5941b5146
 Source:         https://github.com/cockpit-project/cockpit/releases/download/%{version}/cockpit-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -31,7 +31,7 @@ BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  pkgconfig
 BuildRequires:  appstream
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(pip)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(polkit-agent-1) >= 0.105
@@ -243,4 +243,4 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %exclude %{_docdir}/cockpit/README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
