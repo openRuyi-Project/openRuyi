@@ -35,7 +35,7 @@ BuildRequires:  libxslt
 BuildRequires:  meson
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  shared-mime-info
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 
 %description
 gdk-pixbuf is an image loading library that can be extended by loadable
