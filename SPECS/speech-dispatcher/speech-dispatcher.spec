@@ -44,7 +44,7 @@ BuildRequires:  pkgconfig(sndfile)
 BuildRequires:  pulseaudio-devel
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  desktop-file-utils
