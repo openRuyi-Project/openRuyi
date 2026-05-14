@@ -91,13 +91,13 @@ BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  python3
-BuildRequires:  python3-html5lib
+BuildRequires:  python3dist(html5lib)
 BuildRequires:  gperf
 BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  perl
 BuildRequires:  nodejs
-BuildRequires:  python3-six
+BuildRequires:  python3dist(six)
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  qt6-macros
 BuildRequires:  qt6-qtbase-private-devel
