@@ -20,9 +20,9 @@ Summary:        Fast Version Control System
 License:        BSD-3-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
 URL:            https://git-scm.com/
 VCS:            git:https://github.com/git/git
-#!RemoteAsset
+#!RemoteAsset:  sha256:60a7c2251cc2e588d5cd87bae567260617c6de0c22dca9cdbfc4c7d2b8990b62
 Source0:        https://www.kernel.org/pub/software/scm/git/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:e4387e847e9113bc1764b1ad1bfd915b3e97c0f75faf91fb287c6ed0df0bb148
 Source1:        https://www.kernel.org/pub/software/scm/git/%{name}-%{version}.tar.sign
 Source2:        gitweb-httpd.conf
 Source3:        gitweb.conf.in
@@ -51,7 +51,6 @@ BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(python)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(expat)
-BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(bash-completion)
 %if %{with docs}
 BuildRequires:  docbook-style-dsssl
@@ -188,7 +187,6 @@ Graphical interface to Git.
 %package        p4
 Summary:        Git tools for working with Perforce depots
 BuildArch:      noarch
-BuildRequires:  pkgconfig(python)
 Requires:       git = %{version}-%{release}
 
 %description    p4
@@ -521,4 +519,4 @@ not_core_doc_re="(git-(cvs|gui|citool|daemon|instaweb|subtree))|p4|svn|email|git
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
