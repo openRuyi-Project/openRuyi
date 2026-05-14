@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A data templating language based on JSON
 License:        Apache-2.0 AND MIT AND CC0-1.0
 URL:            https://github.com/google/jsonnet
-#!RemoteAsset
+#!RemoteAsset:  sha256:a12ebca72e43e7061ffe4ef910e572b95edd7778a543d6bf85f6355bd290300e
 Source0:        https://github.com/google/jsonnet/archive/refs/tags/v%{version}.tar.gz
 Source1:        jsonnet.1
 Source2:        jsonnetfmt.1
@@ -35,7 +35,7 @@ BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  make
 BuildRequires:  nlohmann-json
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(pip)
 
 %description
 A data templating language for app and tool developers based on JSON.
@@ -85,7 +85,7 @@ install -t '%{buildroot}%{_mandir}/man1' -p -m 0644 '%{SOURCE1}' '%{SOURCE2}'
 %{_libdir}/libjsonnet.so.*
 %{_libdir}/libjsonnet++.so.*
 
-%files    devel
+%files devel
 %{_includedir}/libjsonnet*
 %{_libdir}/libjsonnet.so
 %{_libdir}/libjsonnet++.so
@@ -93,4 +93,4 @@ install -t '%{buildroot}%{_mandir}/man1' -p -m 0644 '%{SOURCE1}' '%{SOURCE2}'
 %files -n python-%{name} -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog
