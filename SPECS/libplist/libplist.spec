@@ -12,16 +12,16 @@ Summary:        Library for manipulating Apple Binary and XML Property Lists
 License:        LGPL-2.0-or-later
 URL:            https://www.libimobiledevice.org/
 VCS:            git:https://github.com/libimobiledevice/libplist
-#!RemoteAsset
+#!RemoteAsset:  sha256:7ac42301e896b1ebe3c654634780c82baa7cb70df8554e683ff89f7c2643eb8b
 Source:         https://github.com/libimobiledevice/libplist/releases/download/%{version}/libplist-%{version}.tar.bz2
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
 BuildRequires:  gcc-c++
-BuildRequires:  python3-Cython
+BuildRequires:  python3dist(cython)
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  make
 
 %description
@@ -67,4 +67,4 @@ export PYTHON_VERSION="3"
 %{python3_sitearch}/plist.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
