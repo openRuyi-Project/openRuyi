@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Tool for checking the security hardening options of the Linux kernel
 License:        GPL-3.0-only
 URL:            https://github.com/a13xp0p0v/kernel-hardening-checker
-#!RemoteAsset
+#!RemoteAsset:  sha256:2383e851b44fe74c9a5db32919b897af05f022e676e8d1184cc53594bb9b344c
 Source0:        https://github.com/a13xp0p0v/kernel-hardening-checker/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -21,9 +21,9 @@ BuildOption(install):  -l %{modname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 
 %description
 A tool for checking the security hardening options of the Linux kernel.
@@ -39,4 +39,4 @@ security hardening recommendations.
 %{_bindir}/kernel-hardening-checker
 
 %changelog
-%{?autochangelog}
+%autochangelog
