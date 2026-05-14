@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Media Sharing Server
 License:        MIT
 URL:            https://gitlab.freedesktop.org/pipewire/pipewire
-#!RemoteAsset
+#!RemoteAsset:  sha256:b9d137dcf18ff228d67312f9a205e3ea8766a13d9a841a029832568ea8928efe
 Source0:        https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/%{version}/pipewire-%{version}.tar.gz
 Source1:        pipewire.sysusers
 BuildSystem:    meson
@@ -81,7 +81,7 @@ BuildRequires:  pkgconfig(sndfile)
 BuildRequires:  pkgconfig(speexdsp)
 BuildRequires:  pkgconfig(fftw3)
 BuildRequires:  doxygen
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  graphviz
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(vulkan)
@@ -304,4 +304,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/libspa-%{spaversion}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
