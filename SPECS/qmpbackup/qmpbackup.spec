@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Backup utility for QEMU using QMP
 License:        GPL-3.0-only
 URL:            https://github.com/abbbi/qmpbackup
-#!RemoteAsset
+#!RemoteAsset:  sha256:17374068cc83c0ac7d49fd5f6a5c671646bd34a237a8c9829246c876b3b1c60d
 Source:         https://github.com/abbbi/qmpbackup/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -18,11 +18,11 @@ BuildOption(install):  -l libqmpbackup
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-qemu-qmp
-BuildRequires:  python3-colorlog
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(qemu-qmp)
+BuildRequires:  python3dist(colorlog)
 
 %description
 qmpbackup is a tool to create backups of QEMU virtual machines using the
@@ -39,4 +39,4 @@ It supports bitmap based incremental backups.
 %{_bindir}/qmprestore
 
 %changelog
-%{?autochangelog}
+%autochangelog
