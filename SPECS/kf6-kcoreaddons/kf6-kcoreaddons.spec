@@ -18,7 +18,7 @@ Summary:        Utilities for core application functionality and accessing the O
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            https://invent.kde.org/frameworks/kcoreaddons
-#!RemoteAsset
+#!RemoteAsset:  sha256:843d27cd76ca890c4f352d6f29d2e2b8747883602b63119106b1eb229b95e649
 Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
 
 BuildRequires:  fdupes
@@ -35,9 +35,9 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
@@ -118,4 +118,4 @@ The package contains the PySide6 bindings library for %{name}.
 # Python bindings disabled; package intentionally empty
 
 %changelog
-%{?autochangelog}
+%autochangelog
