@@ -71,7 +71,7 @@ BuildRequires:  meson
 BuildRequires:  ninja
 BuildRequires:  perl
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  systemtap-sdt-devel
 BuildRequires:  systemtap-sdt-dtrace
