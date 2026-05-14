@@ -359,8 +359,6 @@ BuildRequires:  pkgconfig(liburing)
 %endif
 # zstd compression support
 BuildRequires:  pkgconfig(libzstd)
-# `hostname` used by test suite
-BuildRequires:  hostname
 %if %{with have_daxctl}
 # nvdimm dax
 BuildRequires:  pkgconfig(libdaxctl)
@@ -1755,19 +1753,35 @@ popd
 %if %{with have_man}
 %{_mandir}/man1/qemu-system-aarch64.1*
 %{_mandir}/man1/qemu-system-alpha.1*
+%{_mandir}/man1/qemu-system-arm.1*
+%{_mandir}/man1/qemu-system-avr.1*
 %{_mandir}/man1/qemu-system-hppa.1*
+%{_mandir}/man1/qemu-system-i386.1*
 %{_mandir}/man1/qemu-system-loongarch64.1*
 %{_mandir}/man1/qemu-system-m68k.1*
-%{_mandir}/man1/qemu-system-mips64el.1*
+%{_mandir}/man1/qemu-system-microblaze.1*
+%{_mandir}/man1/qemu-system-microblazeel.1*
+%{_mandir}/man1/qemu-system-mips.1*
 %{_mandir}/man1/qemu-system-mips64.1*
+%{_mandir}/man1/qemu-system-mips64el.1*
+%{_mandir}/man1/qemu-system-mipsel.1*
 %{_mandir}/man1/qemu-system-or1k.1*
 %{_mandir}/man1/qemu-system-ppc.1*
 %{_mandir}/man1/qemu-system-ppc64.1*
 %{_mandir}/man1/qemu-system-riscv*.1*
 %{_mandir}/man1/qemu-system-rx.1*
 %{_mandir}/man1/qemu-system-s390x.1*
+%{_mandir}/man1/qemu-system-sh4.1*
+%{_mandir}/man1/qemu-system-sh4eb.1*
+%{_mandir}/man1/qemu-system-sparc.1*
 %{_mandir}/man1/qemu-system-sparc64.1*
+%{_mandir}/man1/qemu-system-tricore.1*
 %{_mandir}/man1/qemu-system-x86_64.1*
+%{_mandir}/man1/qemu-system-xtensa.1*
+%{_mandir}/man1/qemu-system-xtensaeb.1*
+%if %{with need_qemu_kvm}
+%{_mandir}/man1/qemu-kvm.1*
+%endif
 %endif
 %{_bindir}/qemu-system-arm
 %{_bindir}/qemu-system-avr
@@ -1873,33 +1887,6 @@ popd
 %{_datadir}/systemtap/tapset/qemu-system-xtensaeb.stp
 %{_datadir}/systemtap/tapset/qemu-system-xtensaeb-log.stp
 %{_datadir}/systemtap/tapset/qemu-system-xtensaeb-simpletrace.stp
-%endif
-%if %{with have_man}
-%{_mandir}/man1/qemu-system-alpha.1*
-%{_mandir}/man1/qemu-system-arm.1*
-%{_mandir}/man1/qemu-system-avr.1*
-%{_mandir}/man1/qemu-system-hppa.1*
-%{_mandir}/man1/qemu-system-m68k.1*
-%{_mandir}/man1/qemu-system-microblaze.1*
-%{_mandir}/man1/qemu-system-microblazeel.1*
-%{_mandir}/man1/qemu-system-mips.1*
-%{_mandir}/man1/qemu-system-mipsel.1*
-%{_mandir}/man1/qemu-system-mips64el.1*
-%{_mandir}/man1/qemu-system-mips64.1*
-%{_mandir}/man1/qemu-system-or1k.1*
-%{_mandir}/man1/qemu-system-ppc.1*
-%{_mandir}/man1/qemu-system-riscv*.1*
-%{_mandir}/man1/qemu-system-rx.1*
-%{_mandir}/man1/qemu-system-sh4.1*
-%{_mandir}/man1/qemu-system-sh4eb.1*
-%{_mandir}/man1/qemu-system-sparc.1*
-%{_mandir}/man1/qemu-system-tricore.1*
-%{_mandir}/man1/qemu-system-i386.1*
-%{_mandir}/man1/qemu-system-xtensa.1*
-%{_mandir}/man1/qemu-system-xtensaeb.1*
-%if %{with need_qemu_kvm}
-%{_mandir}/man1/qemu-kvm.1*
-%endif
 %endif
 
 # endif !tools_only
