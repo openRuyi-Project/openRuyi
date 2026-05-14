@@ -49,7 +49,6 @@ writing operating system level integration tests.
 %package        vim-syntax
 Summary:        Files for syntax highlighting BeakerLib tests in VIM editor
 BuildRequires:  vim
-BuildRequires:  make
 Requires:       vim
 
 %description    vim-syntax
