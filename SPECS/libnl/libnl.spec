@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        A suite of libraries for interacting with Linux Netlink sockets
 License:        LGPL-2.1-only
 URL:            https://github.com/thom311/libnl
-#!RemoteAsset
+#!RemoteAsset:  sha256:871d8f9f05b86dab080988bb994748384c1416a5d03de1f9f5e811f265094b04
 Source0:        https://github.com/thom311/libnl/archive/refs/tags/%{name}3_11_0.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -26,7 +26,7 @@ BuildRequires:  bison
 BuildRequires:  libtool
 %if %{with python}
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  swig
 %endif
 
@@ -113,4 +113,4 @@ popd
 %{_libdir}/pkgconfig/libnl-xfrm-3.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
