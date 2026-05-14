@@ -29,7 +29,6 @@ BuildRequires:  duktape
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(polkit-gobject-1)
-BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(mount)
 
