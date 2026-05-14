@@ -30,7 +30,7 @@ Summary:        A core application building block and utility library
 License:        LGPL-2.1-or-later
 URL:            https://docs.gtk.org/glib/
 VCS:            git:https://gitlab.gnome.org/GNOME/glib.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:fc2ce0f948ee163f8adc5bdde2f38612b8a3f270022aa1b0d087cb9f1f0ac5c2
 Source0:        https://download.gnome.org/sources/glib/2.87/glib-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -80,7 +80,7 @@ BuildRequires:  dbus-daemon
 BuildRequires:  shared-mime-info
 %endif
 %if %{with man}
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 %endif
 # For %check
 BuildRequires:  systemd
@@ -249,4 +249,4 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
