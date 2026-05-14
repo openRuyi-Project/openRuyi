@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        API documentation generation tool for GTK+ and GNOME
 License:        GPL-2.0-or-later AND GFDL-1.1-no-invariants-or-later
 URL:            https://gitlab.gnome.org/GNOME/gtk-doc/
-#!RemoteAsset
+#!RemoteAsset:  sha256:611c9f24edd6d88a8ae9a79d73ab0dc63c89b81e90ecc31d6b9005c5f05b25e2
 Source:         http://download.gnome.org/sources/gtk-doc/1.35/gtk-doc-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -23,9 +23,9 @@ BuildRequires:  gcc
 BuildRequires:  gettext
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pygments
-BuildRequires:  python3-lxml
-BuildRequires:  python3-parameterized
+BuildRequires:  python3dist(pygments)
+BuildRequires:  python3dist(lxml)
+BuildRequires:  python3dist(parameterized)
 BuildRequires:  itstool
 BuildRequires:  docbook-utils
 BuildRequires:  libxslt
@@ -34,8 +34,8 @@ BuildRequires:  docbook-xsl
 Requires:       docbook-utils
 Requires:       libxslt
 Requires:       docbook-xsl
-Requires:       python3-pygments
-Requires:       python3-lxml
+Requires:       python3dist(pygments)
+Requires:       python3dist(lxml)
 Requires:       cmake-filesystem
 
 %description
@@ -60,4 +60,4 @@ mv doc/README doc/README.docs
 %{_libdir}/cmake/GtkDoc/
 
 %changelog
-%{?autochangelog}
+%autochangelog
