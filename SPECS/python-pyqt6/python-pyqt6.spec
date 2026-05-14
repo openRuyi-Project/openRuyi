@@ -46,7 +46,7 @@ BuildRequires:  pkgconfig(Qt6WebSockets)
 BuildRequires:  pkgconfig(Qt6Quick3D)
 BuildRequires:  pkgconfig(Qt6RemoteObjects)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-PyQt-builder
+BuildRequires:  python3dist(pyqt-builder)
 BuildRequires:  python3dist(dbus-python)
 BuildRequires:  python3dist(sip)
 
