@@ -18,7 +18,7 @@ Summary:        Large set of desktop widgets
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kwidgetsaddons
-#!RemoteAsset
+#!RemoteAsset:  sha256:e8832ac697054ed3241e8299ba71b8d766579b7e6cb0fd8dd176cad10aec754b
 Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
 
 BuildRequires:  fdupes
@@ -31,9 +31,9 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
@@ -85,4 +85,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_plugindir}/designer/kwidgetsaddons6widgets.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
