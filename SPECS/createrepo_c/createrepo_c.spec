@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Creates a common metadata repository
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/createrepo_c
-#!RemoteAsset
+#!RemoteAsset:  sha256:5252911bb5ab0732922e298348a94f0e348e0891935ff0876042ac1bd8c5eeed
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -68,7 +68,7 @@ These development files are for easy manipulation with a repodata.
 Summary:        Python bindings for the createrepo_c library
 %{?python_provide:%python_provide python3-%{name}}
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description -n python-%{name}
@@ -113,4 +113,4 @@ ln -sr %{buildroot}%{_bindir}/modifyrepo_c %{buildroot}%{_bindir}/modifyrepo
 %{python3_sitearch}/createrepo_c-*-py%{python3_version}.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog
