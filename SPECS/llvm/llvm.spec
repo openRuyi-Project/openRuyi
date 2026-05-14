@@ -157,17 +157,17 @@ Summary:        The Low Level Virtual Machine
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:e5b65fd79c95c343bb584127114cb2d252306c1ada1e057899b6aacdd445899e
 Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:49361da0eb11cf08762d112e02b7523e68a1cac8eac9d667bba15ec8a9e945d3
 Source1:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz.sig
 %if %{without compat_build}
 Source2:        macros.%{pkg_name_clang}
 %endif
 %if %{with bundle_compat_lib}
-#!RemoteAsset
+#!RemoteAsset:  sha256:6898f963c8e938981e6c4a302e83ec5beb4630147c7311183cf61069af16333d
 Source3000:     https://github.com/llvm/llvm-project/releases/download/llvmorg-%{compat_ver}/llvm-project-%{compat_ver}.src.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:ceb97d827cfd2e517b7d486381cb6e3183d8aee71947e7022c389259bb260696
 Source3001:     https://github.com/llvm/llvm-project/releases/download/llvmorg-%{compat_ver}/llvm-project-%{compat_ver}.src.tar.xz.sig
 %endif
 
@@ -224,7 +224,6 @@ BuildRequires:  doxygen
 BuildRequires:  perl
 BuildRequires:  perl-Data-Dumper
 BuildRequires:  perl-Encode
-BuildRequires:  pkgconfig(libffi)
 %endif
 BuildRequires:  libatomic
 %if %{with mlir}
@@ -2156,4 +2155,4 @@ fi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
