@@ -1,7 +1,7 @@
-From ce40aec415eccc5865b2e876ddde3302d9668674 Mon Sep 17 00:00:00 2001
+From a78e6b3ce39fa993c0b716d661341854d6df0396 Mon Sep 17 00:00:00 2001
 From: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
 Date: Tue, 11 Nov 2025 15:29:43 -0300
-Subject: [PATCH 4/6] hw/riscv/server_platform_ref.c: add riscv-iommu-sys
+Subject: [PATCH 4/8] hw/riscv/server_platform_ref.c: add riscv-iommu-sys
 
 Add an always present IOMMU platform device for the rvsp-ref board.
 
@@ -16,7 +16,7 @@ Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
  2 files changed, 75 insertions(+), 4 deletions(-)
 
 diff --git a/hw/riscv/Kconfig b/hw/riscv/Kconfig
-index 6a5085c7a5..4f8cbfe77f 100644
+index b1f84fb202..cf882fdc91 100644
 --- a/hw/riscv/Kconfig
 +++ b/hw/riscv/Kconfig
 @@ -82,6 +82,7 @@ config SERVER_PLATFORM_REF
@@ -179,5 +179,5 @@ index ef2891a9d7..dc6caf72a6 100644
      qemu_add_machine_init_done_notifier(&s->machine_done);
  }
 -- 
-2.52.0
+2.50.1 (Apple Git-155)
 

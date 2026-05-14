@@ -1,0 +1,39 @@
+From 8596249e28dd1d913b8d84f6bf1a62acc8e87d11 Mon Sep 17 00:00:00 2001
+From: isrc-riscv-port <riscv-port@isrc.iscas.ac.cn>
+Date: Wed, 13 May 2026 03:14:49 +0000
+Subject: [PATCH 7/8] target/riscv: Return virtual fault for VS AIA stateen
+
+When a guest is running with virtualization enabled, CSR accesses made by
+VS-mode code should report a virtual instruction fault for stateen blocks
+that are controlled by the hypervisor.
+
+Handle the RISC-V AIA stateen0 bits in the mstateen check so nested guests
+see a virtual instruction fault instead of a plain illegal instruction for
+AIA, IMSIC and SVSLCT state.
+
+Signed-off-by: isrc-riscv-port <riscv-port@isrc.iscas.ac.cn>
+---
+ target/riscv/csr.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/target/riscv/csr.c b/target/riscv/csr.c
+index a75281539b..cd1bbd3739 100644
+--- a/target/riscv/csr.c
++++ b/target/riscv/csr.c
+@@ -54,6 +54,13 @@ RISCVException smstateen_acc_ok(CPURISCVState *env, int index, uint64_t bit)
+     }
+ 
+     if (!(env->mstateen[index] & bit)) {
++        if (virt && index == 0 &&
++            (bit == SMSTATEEN0_AIA ||
++             bit == SMSTATEEN0_IMSIC ||
++             bit == SMSTATEEN0_SVSLCT)) {
++            return RISCV_EXCP_VIRT_INSTRUCTION_FAULT;
++        }
++
+         return RISCV_EXCP_ILLEGAL_INST;
+     }
+ 
+-- 
+2.50.1 (Apple Git-155)
+

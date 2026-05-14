@@ -1,0 +1,36 @@
+From 2f6af02ebcf0ab1761e364e0a10cd654f1d35939 Mon Sep 17 00:00:00 2001
+From: isrc-riscv-port <riscv-port@isrc.iscas.ac.cn>
+Date: Wed, 13 May 2026 03:14:49 +0000
+Subject: [PATCH 8/8] target/riscv: Allow VS AIA stateen checks
+
+Nested RISC-V guests can access the AIA CSR state through the VS path when
+AIA interrupt virtualization is exposed by the host. Treat the AIA, IMSIC
+and SVSLCT stateen0 bits as accessible in virtual mode so the nested guest
+can complete AIA initialization.
+
+Signed-off-by: isrc-riscv-port <riscv-port@isrc.iscas.ac.cn>
+---
+ target/riscv/csr.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/target/riscv/csr.c b/target/riscv/csr.c
+index cd1bbd3739..36979c48ff 100644
+--- a/target/riscv/csr.c
++++ b/target/riscv/csr.c
+@@ -53,6 +53,13 @@ RISCVException smstateen_acc_ok(CPURISCVState *env, int index, uint64_t bit)
+         return RISCV_EXCP_NONE;
+     }
+ 
++    if (virt && index == 0 &&
++        (bit == SMSTATEEN0_AIA ||
++         bit == SMSTATEEN0_IMSIC ||
++         bit == SMSTATEEN0_SVSLCT)) {
++        return RISCV_EXCP_NONE;
++    }
++
+     if (!(env->mstateen[index] & bit)) {
+         if (virt && index == 0 &&
+             (bit == SMSTATEEN0_AIA ||
+-- 
+2.50.1 (Apple Git-155)
+

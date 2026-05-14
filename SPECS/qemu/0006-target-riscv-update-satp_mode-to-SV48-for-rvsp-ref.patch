@@ -1,7 +1,7 @@
-From 1cb69d9dd96ac8e315e1cf97e3f4c282cd2e6de1 Mon Sep 17 00:00:00 2001
+From ce6d162eeb472e73222a599a3aca3d709ed98cd8 Mon Sep 17 00:00:00 2001
 From: Chao Liu <chao.liu.riscv@isrc.iscas.ac.cn>
 Date: Mon, 5 Jan 2026 22:23:15 +0800
-Subject: [PATCH 6/6] target/riscv: update satp_mode to SV48 for rvsp-ref
+Subject: [PATCH 6/8] target/riscv: update satp_mode to SV48 for rvsp-ref
 
 Signed-off-by: Chao Liu <chao.liu.riscv@isrc.iscas.ac.cn>
 ---
@@ -9,10 +9,10 @@ Signed-off-by: Chao Liu <chao.liu.riscv@isrc.iscas.ac.cn>
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/target/riscv/cpu.c b/target/riscv/cpu.c
-index 3ddb249970..f62c4f1a8e 100644
+index 65592b2bdd..a49bda83dd 100644
 --- a/target/riscv/cpu.c
 +++ b/target/riscv/cpu.c
-@@ -2182,11 +2182,24 @@ static RISCVCPUProfile RVA23S64 = {
+@@ -2189,11 +2189,24 @@ static RISCVCPUProfile RVA23S64 = {
      }
  };
  
@@ -37,7 +37,7 @@ index 3ddb249970..f62c4f1a8e 100644
      NULL,
  };
  
-@@ -3307,7 +3320,7 @@ static const TypeInfo riscv_cpu_type_infos[] = {
+@@ -3314,7 +3327,7 @@ static const TypeInfo riscv_cpu_type_infos[] = {
  
      DEFINE_RISCV_CPU(TYPE_RISCV_CPU_RVSP_REF, TYPE_RISCV_BARE_CPU,
          .misa_mxl_max = MXL_RV64,
@@ -47,5 +47,5 @@ index 3ddb249970..f62c4f1a8e 100644
          /*
           * ISA extensions
 -- 
-2.52.0
+2.50.1 (Apple Git-155)
 

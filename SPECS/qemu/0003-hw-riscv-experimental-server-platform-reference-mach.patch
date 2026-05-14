@@ -1,7 +1,7 @@
-From 5d4c7e415d87a6f7ab674112f11ed6bbb0b0c564 Mon Sep 17 00:00:00 2001
+From 54ee6a320cd2e1c6eda925be64ef484c5fe8263e Mon Sep 17 00:00:00 2001
 From: Fei Wu <wu.fei9@sanechips.com.cn>
 Date: Tue, 11 Nov 2025 15:29:42 -0300
-Subject: [PATCH 3/6] hw/riscv: experimental server platform reference machine
+Subject: [PATCH 3/8] hw/riscv: experimental server platform reference machine
 
 The RISC-V Server Platform specification [1] defines a standardized set
 of hardware and software capabilities, that portable system software,
@@ -42,7 +42,7 @@ Signed-off-by: Daniel Henrique Barboza <dbarboza@ventanamicro.com>
  create mode 100644 hw/riscv/server_platform_ref.c
 
 diff --git a/configs/devices/riscv64-softmmu/default.mak b/configs/devices/riscv64-softmmu/default.mak
-index e485bbd1a3..e6075a7113 100644
+index a8e4d0ab33..9c791bb1c5 100644
 --- a/configs/devices/riscv64-softmmu/default.mak
 +++ b/configs/devices/riscv64-softmmu/default.mak
 @@ -9,6 +9,7 @@
@@ -54,7 +54,7 @@ index e485bbd1a3..e6075a7113 100644
  # CONFIG_SHAKTI_C=n
  # CONFIG_XIANGSHAN_KUNMINGHU=n
 diff --git a/hw/riscv/Kconfig b/hw/riscv/Kconfig
-index fc9c35bd98..6a5085c7a5 100644
+index 0222c93f87..b1f84fb202 100644
 --- a/hw/riscv/Kconfig
 +++ b/hw/riscv/Kconfig
 @@ -69,6 +69,20 @@ config RISCV_VIRT
@@ -79,7 +79,7 @@ index fc9c35bd98..6a5085c7a5 100644
      bool
      default y
 diff --git a/hw/riscv/meson.build b/hw/riscv/meson.build
-index 2a8d5b136c..0daf77e887 100644
+index 533472e22a..c89ea49d9f 100644
 --- a/hw/riscv/meson.build
 +++ b/hw/riscv/meson.build
 @@ -4,6 +4,7 @@ riscv_ss.add(when: 'CONFIG_RISCV_NUMA', if_true: files('numa.c'))
@@ -1373,5 +1373,5 @@ index 0000000000..ef2891a9d7
 +
 +type_init(rvsp_ref_init_register_types)
 -- 
-2.52.0
+2.50.1 (Apple Git-155)
 

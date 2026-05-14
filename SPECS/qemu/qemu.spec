@@ -177,13 +177,13 @@
 %global qemudocdir %{_docdir}/%{name}
 
 Name:           qemu
-Version:        10.2.0
+Version:        11.0.0
 Release:        %autorelease
 Summary:        Machine emulator and virtualizer
 License:        BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
 URL:            http://www.qemu.org/
 VCS:            git:https://gitlab.com/qemu-project/qemu
-#!RemoteAsset:  sha256:9e30ad1b8b9f7b4463001582d1ab297f39cfccea5d08540c0ca6d6672785883a
+#!RemoteAsset:  sha256:c04ca36012653f32d11c674d370cf52a710e7d3f18c2d8b63e4932052a4854d6
 Source0:        https://download.qemu.org/%{name}-%{version}.tar.xz
 Source1:        qemu-guest-agent.service
 Source2:        qemu-ga.sysconfig
@@ -193,13 +193,16 @@ Source5:        kvm-x86.conf
 Source6:        kvm-riscv.conf
 BuildSystem:    autotools
 
-# QEMU RISC-V rvsp-ref upstream patch
+# QEMU RISC-V rvsp-ref upstream patch series refreshed for v11.0.0.
 Patch1:         0001-target-riscv-cpu.c-remove-bare-condition-for-.profil.patch
 Patch2:         0002-target-riscv-Add-server-platform-reference-cpu.patch
 Patch3:         0003-hw-riscv-experimental-server-platform-reference-mach.patch
 Patch4:         0004-hw-riscv-server_platform_ref.c-add-riscv-iommu-sys.patch
 Patch5:         0005-docs-add-rvsp-ref.rst.patch
 Patch6:         0006-target-riscv-update-satp_mode-to-SV48-for-rvsp-ref.patch
+# RISC-V nested AIA stateen fixes validated with Kata + Cloud Hypervisor.
+Patch7:         0007-target-riscv-Return-virtual-fault-for-VS-AIA-stateen.patch
+Patch8:         0008-target-riscv-Allow-VS-AIA-stateen-checks.patch
 
 BuildRequires:  hostname
 BuildRequires:  meson
