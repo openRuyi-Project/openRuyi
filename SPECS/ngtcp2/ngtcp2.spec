@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Implementation of RFC 9000 QUIC protocol
 License:        MIT
 URL:            https://github.com/ngtcp2/ngtcp2
-#!RemoteAsset
+#!RemoteAsset:  sha256:367cbcecaca539f76453c49454d8e7b38ecb162acf89cd571535ac4acf82a2b4
 Source:         https://github.com/ngtcp2/ngtcp2/releases/download/v%{version}/ngtcp2-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -35,8 +35,8 @@ BuildRequires:  pkgconfig(libev)
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(openssl)
 %if %{with doc}
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-sphinx_rtd_theme
+BuildRequires:  python3dist(sphinx)
+BuildRequires:  python3dist(sphinx-rtd-theme)
 %endif
 
 %description
@@ -117,4 +117,4 @@ autoreconf -fsi
 %{_includedir}/ngtcp2/ngtcp2_crypto_ossl.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
