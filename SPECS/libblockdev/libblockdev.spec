@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A library for low-level manipulation with block devices
 License:        LGPL-2.1-or-later
 URL:            https://github.com/storaged-project/libblockdev
-#!RemoteAsset
+#!RemoteAsset:  sha256:7cb0b4018600ab82d1d1f00e46c1b1d7a0cdab8f4682952dd9dba1ce7f6ebed4
 Source0:        https://github.com/storaged-project/libblockdev/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -47,7 +47,7 @@ BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  autoconf-archive
 BuildRequires:  automake
 BuildRequires:  libtool
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(ext2fs)
 BuildRequires:  pkgconfig(e2p)
 BuildRequires:  pkgconfig(bytesize)
@@ -179,4 +179,4 @@ Python3 bindings for libblockdev.
 %{python3_sitearch}/gi/overrides/BlockDev*
 
 %changelog
-%{?autochangelog}
+%autochangelog
