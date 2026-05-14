@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Tablet Information Client Library
 License:        HPND
 URL:            https://github.com/linuxwacom/libwacom
-#!RemoteAsset
+#!RemoteAsset:  sha256:e8654bb748a5c51f2c61d81b999760719bffa77d4b280cfeba3330de7a66388d
 Source:         https://github.com/linuxwacom/libwacom/archive/refs/tags/libwacom-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -55,8 +55,8 @@ Data files describing Wacom tablets and styli.
 %package        utils
 Summary:        Utilities for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       python3-libevdev
-Requires:       python3-pyudev
+Requires:       python3dist(libevdev)
+Requires:       python3dist(pyudev)
 
 %description    utils
 Utilities to handle and/or debug libwacom devices.
@@ -95,4 +95,4 @@ Utilities to handle and/or debug libwacom devices.
 %{_mandir}/man1/libwacom-show-stylus.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
