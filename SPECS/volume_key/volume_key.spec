@@ -11,7 +11,7 @@ Summary:        An utility for manipulating storage encryption keys and passphra
 License:        GPL-2.0-only AND (MPL-1.1 OR GPL-2.0-or-later OR LGPL-2.1-or-later)
 URL:            https://pagure.io/volume_key/
 VCS:            git:https://pagure.io/volume_key.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6ca3748fc1dad22c450bbf6601d4e706cb11c5e662d11bb4aeb473a9cd77309b
 Source0:        https://releases.pagure.org/volume_key/volume_key-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -30,7 +30,7 @@ BuildRequires:  pkgconfig(gpgme)
 BuildRequires:  pkgconfig(blkid)
 BuildRequires:  pkgconfig(nss)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 
 %description
 The main goal of the software is to allow restoring access to an encrypted
@@ -83,4 +83,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{python3_sitearch}/__pycache__/volume_key.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
