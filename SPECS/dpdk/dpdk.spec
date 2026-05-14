@@ -23,7 +23,7 @@ Summary:        Set of libraries and drivers for fast packet processing
 License:        BSD-3-Clause AND GPL-2.0-only AND LGPL-2.1-only
 URL:            http://dpdk.org
 VCS:            git:https://github.com/DPDK/dpdk
-#!RemoteAsset
+#!RemoteAsset:  sha256:6886cbedc350bb8cbef347d10367d6259e36435627fbb27d578adbdc0d3b410d
 Source:         https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -31,7 +31,7 @@ BuildOption(prep):  -p1 -n dpdk%{version_suffix}-%{version}
 BuildOption(conf):  -Dmachine=generic
 
 BuildRequires:  meson
-BuildRequires:  python3-pyelftools
+BuildRequires:  python3dist(pyelftools)
 BuildRequires:  gcc
 BuildRequires:  linux-headers
 BuildRequires:  libpcap-devel
@@ -72,7 +72,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       kmod
 Requires:       pciutils
 Requires:       iproute2
-Requires:       python3-pyelftools
+Requires:       python3dist(pyelftools)
 
 %description    tools
 %{summary}
@@ -109,4 +109,4 @@ meson test -C %{_vpath_builddir} --num-processes %{_smp_build_ncpus} --print-err
 %{_bindir}/dpdk-*.py
 
 %changelog
-%{?autochangelog}
+%autochangelog
