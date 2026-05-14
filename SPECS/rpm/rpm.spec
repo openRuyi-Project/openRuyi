@@ -174,7 +174,6 @@ Requires:       which
 Requires:       xz
 Requires:       debugedit
 Requires:       cpio
-Requires:       file
 
 %description    build
 If you want to build a rpm, you need this package. It provides rpmbuild
