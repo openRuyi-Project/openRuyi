@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Enhanced library for the Linux syscall filtering mechanism
 License:        LGPL-2.1-only
 URL:            https://github.com/seccomp/libseccomp
-#!RemoteAsset
+#!RemoteAsset:  sha256:83b6085232d1588c379dc9b9cae47bb37407cf262e6e74993c61ba72d2a784dc
 Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -41,7 +41,7 @@ BuildRequires:  gcc
 BuildRequires:  gperf
 %if %{with python}
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  cython
 %endif
 
@@ -97,4 +97,4 @@ rm -f %{buildroot}%{_libdir}/libseccomp.la
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
