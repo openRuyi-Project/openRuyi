@@ -16,7 +16,7 @@ Summary:        Outline and bitmap font editor
 License:        GPL-3.0-or-later
 URL:            https://fontforge.org/
 VCS:            git:https://github.com/fontforge/fontforge
-#!RemoteAsset
+#!RemoteAsset:  sha256:69046500185a5581b58139dfad30c0b3d8128f00ebbfddc31f2fcf877e329e52
 Source0:        https://github.com/fontforge/fontforge/releases/download/%{version}/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -53,7 +53,7 @@ BuildRequires:  pkgconfig(gtk+-3.0)
 BuildRequires:  pkgconfig(gtkmm-3.0)
 %endif
 %if %{with doc}
-BuildRequires:  python3-sphinx
+BuildRequires:  python3dist(sphinx)
 %endif
 
 %description
@@ -114,4 +114,4 @@ rm -f %{buildroot}%{_datadir}/doc/fontforge/{.buildinfo,.nojekyll}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
