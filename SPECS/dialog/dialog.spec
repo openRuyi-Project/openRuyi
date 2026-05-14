@@ -2,10 +2,11 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global dialogsubversion 20251001
+%global dialogsubversion 20260107
 
 Name:           dialog
 Version:        1.3
@@ -14,7 +15,7 @@ Summary:        A utility for creating TTY dialog boxes
 License:        LGPL-2.1-only
 URL:            https://invisible-island.net/dialog/dialog.html
 VCS:            git:https://github.com/ThomasDickey/dialog-snapshots
-#!RemoteAsset
+#!RemoteAsset:  sha256:78b3dd18d95e50f0be8f9b9c1e7cffe28c9bf1cdf20d5b3ef17279c4da35c5b5
 Source:         https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz
 BuildSystem:    autotools
 
@@ -86,4 +87,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/dialog.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
