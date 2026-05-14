@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Jvle <keke.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,13 +10,13 @@
 %global srcname capstone
 
 Name:           %{srcname}
-Version:        5.0.3
+Version:        5.0.7
 Release:        %autorelease
 Summary:        A multi-platform, multi-architecture disassembly framework
 License:        BSD-3-Clause
 URL:            https://www.capstone-engine.org
 VCS:            git:https://github.com/capstone-engine/capstone
-#!RemoteAsset:  sha256:3970c63ca1f8755f2c8e69b41432b710ff634f1b45ee4e5351defec4ec8e1753
+#!RemoteAsset:  sha256:6427a724726d161d1e05fb49fff8cd0064f67836c04ffca3c11d6d859e719caa
 Source0:        https://github.com/capstone-engine/%{srcname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -69,6 +70,7 @@ popd
 %install -a
 install -m 755 -d %{buildroot}%{_docdir}/%{name}-doc/docs
 install -m 644 -t %{buildroot}%{_docdir}/%{name}-doc/docs docs/README docs/*.pdf
+rm -f %{_libdir}/libcapstone.a
 
 pushd bindings/python
 %{__python3} -m pip install --root=%{buildroot} --no-deps --ignore-installed dist/*.whl
