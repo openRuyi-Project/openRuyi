@@ -14,7 +14,7 @@ Summary:        Input device library
 License:        MIT
 URL:            http://www.freedesktop.org/wiki/Software/libinput/
 VCS:            git:https://gitlab.freedesktop.org/libinput/libinput.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:594d970cab7b3738ad99218e7dafc253780f58a7600ab0823d2fcc3941a04e86
 Source:         https://gitlab.freedesktop.org/libinput/libinput/-/archive/%{version}/libinput-%{version}.tar.bz2
 BuildSystem:    meson
 
@@ -56,8 +56,8 @@ developing applications that use %{name}.
 %package        utils
 Summary:        Utilities and tools for debugging %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       python3-pyudev
-Requires:       python3-libevdev
+Requires:       python3dist(pyudev)
+Requires:       python3dist(libevdev)
 
 %description    utils
 The %{name}-utils package contains tools to debug hardware and analyze
@@ -116,4 +116,4 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %{_mandir}/man1/libinput-replay.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
