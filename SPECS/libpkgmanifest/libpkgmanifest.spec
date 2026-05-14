@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Library for working with RPM manifests
 License:        LGPL-2.1-or-later
 URL:            https://github.com/rpm-software-management/libpkgmanifest
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b268f9c12f06137493def0d18bb7d8f59f2af0d26c1f9c0d531dabb80ae2854
 Source0:        https://github.com/rpm-software-management/libpkgmanifest/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -46,7 +46,7 @@ BuildRequires:  pkgconfig(gtest)
 %endif
 %if %{with docs}
 BuildRequires:  doxygen
-BuildRequires:  python3-sphinx
+BuildRequires:  python3dist(sphinx)
 %endif
 
 %description
@@ -84,4 +84,4 @@ Python bindings for the %{name} library.
 %{python3_sitearch}/libpkgmanifest-*.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog
