@@ -19,7 +19,7 @@ Summary:        Utilities for graphical user interfaces
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kguiaddons
-#!RemoteAsset
+#!RemoteAsset:  sha256:b7652bcebebfc8c1fda2893c1aeff4136c586ee77ffc6e589e3634f0e5539eef
 Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
 
 BuildRequires:  fdupes
@@ -40,9 +40,9 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
@@ -106,4 +106,4 @@ of colors, fonts, text, images, keyboard input. Development files.
 %{_kf6_pkgconfigdir}/KF6GuiAddons.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
