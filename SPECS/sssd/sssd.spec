@@ -13,9 +13,9 @@ Release:        %autorelease
 Summary:        System Security Services Daemon
 License:        GPL-3.0-or-later
 URL:            https://github.com/SSSD/sssd
-#!RemoteAsset
+#!RemoteAsset:  sha256:80935c9f0cffde6e74b2751398c8677c90d31644d2474dade2d336c56ab76d35
 Source0:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:d972568557dd66dcffc43b9a3a44907f33fe796a7fb734edba3e48fd510c01b5
 Source1:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
 Source2:        sssd.sysusers
 BuildSystem:    autotools
@@ -46,7 +46,7 @@ BuildRequires:  libxml2
 BuildRequires:  libxslt
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  pkgconfig(augeas)
 BuildRequires:  pkgconfig(check)
@@ -582,4 +582,4 @@ fi
 %{_mandir}/*/man5/sss-certmap.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
