@@ -21,7 +21,7 @@ BuildOption(install):  INSTALL="%{__install} -p"
 
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-lxml
+BuildRequires:  python3dist(lxml)
 
 Provides:       iso-codes-lang = %{version}
 
