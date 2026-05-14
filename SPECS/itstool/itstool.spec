@@ -12,7 +12,7 @@ Summary:        ITS-based XML translation tool
 License:        GPL-3.0-or-later
 URL:            http://itstool.org/
 VCS:            git:https://github.com/itstool/itstool
-#!RemoteAsset
+#!RemoteAsset:  sha256:6b9a7cd29a12bb95598f5750e8763cee78836a1a207f85b74d8b3275b27e87ca
 Source0:        http://files.itstool.org/itstool/%{name}-%{version}.tar.bz2
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -22,13 +22,13 @@ Patch0002:      0002-Switch-from-libxml2-to-lxml.patch
 
 BuildOption(prep):  -n %{name}-%{version} -p1
 
-BuildRequires:  python3-lxml
+BuildRequires:  python3dist(lxml)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 
-Requires:       python3-lxml
+Requires:       python3dist(lxml)
 
 %description
 ITS Tool allows you to translate XML documents with PO files, using rules from
@@ -47,4 +47,4 @@ export PYTHON=%{__python3}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
