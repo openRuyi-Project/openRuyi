@@ -39,8 +39,8 @@ BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libgcrypt) >= 1.8.0
 BuildRequires:  pkgconfig(libzstd) >= 1.0.0
 BuildRequires:  python3-devel >= 3.4
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
 
 %description
 The btrfs-progs package provides userspace programs needed to create,
