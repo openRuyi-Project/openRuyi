@@ -29,7 +29,6 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(setuptools-scm)
 BuildRequires:  python3dist(pip)
-BuildRequires:  pkgconfig(python3)
 
 %description
 Unicorn is a lightweight multi-platform, multi-architecture CPU emulator
