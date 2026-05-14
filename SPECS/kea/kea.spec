@@ -13,9 +13,9 @@ Summary:        DHCPv4, DHCPv6 and DDNS server from ISC
 License:        MPL-2.0 AND BSL-1.0
 URL:            http://kea.isc.org
 VCS:            git:https://gitlab.isc.org/isc-projects/kea.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:a299c976c26b44a51738746fc30584c5ebb174030ef6451aeed0a2d37f9c1dad
 Source0:        https://downloads.isc.org/isc/kea/%{version}/kea-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:2478a7259b4eb1899ffc7360bd3c1de4820f543cfebf60087ff95f236adf076b
 Source1:        https://downloads.isc.org/isc/kea/%{version}/kea-%{version}.tar.xz.asc
 Source2:        kea-dhcp4.service
 Source3:        kea-dhcp6.service
@@ -53,8 +53,8 @@ BuildRequires:  flex
 BuildRequires:  systemd
 BuildRequires:  systemd-rpm-macros
 %if %{with doc}
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-sphinx_rtd_theme
+BuildRequires:  python3dist(sphinx)
+BuildRequires:  python3dist(sphinx-rtd-theme)
 %endif
 
 Requires:       coreutils
@@ -173,4 +173,4 @@ fi
 %{_libdir}/kea/hooks/lib*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
