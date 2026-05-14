@@ -99,8 +99,6 @@ Command line tools for BPF Compiler Collection (BCC)
 
 %package     -n libbpf-tools
 Summary:        Command line libbpf tools for BPF Compiler Collection (BCC)
-BuildRequires:  libbpf-devel
-BuildRequires:  libbpf-static
 BuildRequires:  bpftool
 
 %description -n libbpf-tools
