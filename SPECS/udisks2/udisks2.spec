@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Disk Manager
 License:        GPL-2.0-or-later
 URL:            https://github.com/storaged-project/udisks
-#!RemoteAsset
+#!RemoteAsset:  sha256:0bf30151fe8d9d2fb59b57f6630739dfbbd16417dee69ec57d43b37335bd649a
 Source0:        https://github.com/storaged-project/udisks/releases/download/udisks-%{version}/udisks-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -41,7 +41,7 @@ BuildOption(conf):  --disable-lsm
 
 BuildRequires:  make
 BuildRequires:  gcc
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(gudev-1.0)
@@ -165,4 +165,4 @@ fi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
