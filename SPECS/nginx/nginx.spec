@@ -10,17 +10,18 @@
 %global nginx_moduleconfdir %{_datadir}/nginx/modules
 
 Name:           nginx
-Version:        1.28.0
+Version:        1.31.0
 Release:        %autorelease
 Summary:        High performance web server and reverse proxy server
 License:        BSD-2-Clause
 URL:            https://nginx.org
 VCS:            git:https://github.com/nginx/nginx.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6d5b00d45393af2e4e7c52a442d2a198f0ccbc7678ed062a46f403edd833ebaa
 Source0:        https://nginx.org/download/nginx-%{version}.tar.gz
 Source1:        nginx.service
 Source2:        nginx.logrotate
 Source3:        nginx.sysusers
+BuildSystem:    autotools
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -51,11 +52,8 @@ BuildArch:      noarch
 This package contains documentation, man pages, vim syntax files, and
 example HTML files for nginx web server.
 
-%prep
-%autosetup -n nginx-%{version}
-
-# nginx does not utilize a standard configure script.
 %conf
+# nginx does not utilize a standard configure script.
 ./configure \
     --prefix=/etc/nginx \
     --conf-path=/etc/nginx/nginx.conf \
@@ -99,13 +97,7 @@ example HTML files for nginx web server.
     --with-cc-opt="%{optflags}" \
     --with-ld-opt="%{build_ldflags}"
 
-%build
-
-%make_build
-
-%install
-%make_install
-
+%install -a
 # Install systemd service file
 install -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/nginx.service
 
@@ -146,6 +138,9 @@ install -p -d -m 0755 %{buildroot}%{nginx_moduledir}
 
 # install sysusers file
 install -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
+
+%check
+# Upstream does not provide a make check target.
 
 %pre
 %sysusers_create_package %{name} %{SOURCE3}
@@ -195,4 +190,4 @@ install -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 %{_mandir}/man8/nginx.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog
