@@ -108,9 +108,6 @@ libraries can be used by python.
 Summary:        Perl bindings for %{name}
 BuildRequires:  coreutils
 BuildRequires:  findutils
-BuildRequires:  make
-BuildRequires:  perl-devel
-BuildRequires:  perl-macros
 BuildRequires:  perl(XML::Parser)
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Provides:       %{name}-perl = %{version}-%{release}
