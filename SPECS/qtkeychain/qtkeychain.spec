@@ -25,7 +25,6 @@ BuildRequires:  qt6-macros
 BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6DBus)
 BuildRequires:  qt6-linguist
-BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6LinguistTools)
 
 %description
