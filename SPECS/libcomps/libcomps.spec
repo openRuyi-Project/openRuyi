@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Comps XML file manipulation library
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/libcomps
-#!RemoteAsset
+#!RemoteAsset:  sha256:0f41c042ff672ce5b30769c0bf2066c8ecc3db4b14bd26a8e5ed80a4fb0963ef
 Source:         %{url}/archive/%{version}/libcomps-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -50,7 +50,7 @@ Documentation files for libcomps library.
 %package -n python-%{name}
 Summary:        Python bindings for libcomps library
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  make
 Provides:       python3-%{srcname}
 %python_provide python3-%{srcname}
@@ -64,7 +64,7 @@ Python3 bindings for libcomps library.
 Summary:        Documentation files for python bindings libcomps library
 Requires:       %{name} = %{version}-%{release}
 BuildArch:      noarch
-BuildRequires:  python3-sphinx
+BuildRequires:  python3dist(sphinx)
 
 %description -n python-%{name}-doc
 Documentation files for python bindings libcomps library.
@@ -106,4 +106,4 @@ cp -a %{__cmake_builddir}/src/python/docs/html %{buildroot}%{_datadir}/doc/pytho
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
