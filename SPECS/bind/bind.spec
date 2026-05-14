@@ -16,9 +16,9 @@ Summary:        Domain Name System (DNS) Server
 License:        MPL-2.0
 URL:            https://www.isc.org/bind/
 VCS:            git:https://gitlab.isc.org/isc-projects/bind9.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d62b38fae48ba83fca6181112d0c71018d8b0f2ce285dc79dc6a0367722ccabb
 Source0:        https://downloads.isc.org/isc/bind9/%{version}/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:2e9215f01c68734fd03b207dc1dd62fe32af79d02fe8182002529faaca6c9361
 Source1:        https://downloads.isc.org/isc/bind9/%{version}/%{name}-%{version}.tar.xz.asc
 Source2:        bind.sysusers
 Source3:        bind.tmpfiles
@@ -72,7 +72,7 @@ BuildRequires:  pkgconfig(liburcu)
 BuildRequires:  pkgconfig(libuv)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(lmdb)
-BuildRequires:  python3-dnspython
+BuildRequires:  python3dist(dnspython)
 BuildRequires:  pytest
 
 %description
@@ -232,4 +232,4 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %{_includedir}/isccfg
 
 %changelog
-%{?autochangelog}
+%autochangelog
