@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname typer
 
-Name:           python-typer
-Version:        0.21.1
+Name:           python-%{srcname}
+Version:        0.25.1
 Release:        %autorelease
 Summary:        Typer, build great CLIs. Easy to code. Based on Python type hints
 License:        MIT
 URL:            https://github.com/fastapi/typer
-#!RemoteAsset:  sha256:73495dd08c2d0940d611c5a8c04e91c2a0a98600cbd4ee19192255a233b6dbfd
-Source0:        https://files.pythonhosted.org/packages/source/t/typer-slim/typer_slim-%{version}.tar.gz
+#!RemoteAsset:  sha256:9616eb8853a09ffeabab1698952f33c6f29ffdbceb4eaeecf571880e8d7664cc
+Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -33,6 +34,11 @@ BuildRequires:  python3dist(shellingham)
 BuildRequires:  python3dist(typing-extensions)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
+# Upstream deprecated typer-slim and merged it into the main typer package.
+# Provide python3dist(typer-slim) here to maintain backward compatibility
+# for numerous packages that still depend on the old name.
+Provides:       python3dist(typer-slim) = %{version}
+Provides:       python3.13dist(typer-slim) = %{version}
 %python_provide python3-%{srcname}
 
 %description
