@@ -40,8 +40,8 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(numpy)
 %if %{with doc}
 BuildRequires:  doxygen
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-breathe
+BuildRequires:  python3dist(sphinx)
+BuildRequires:  python3dist(breathe)
 %endif
 
 %description
@@ -85,4 +85,4 @@ Development files for Imath.
 %{_libdir}/libPyImath_Python*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
