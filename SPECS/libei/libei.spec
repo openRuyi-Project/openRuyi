@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Library for Emulated Input
 License:        MIT
 URL:            http://gitlab.freedesktop.org/libinput/libei
-#!RemoteAsset
+#!RemoteAsset:  sha256:da1fba92daccd0667bc46c3ee952d4ae8cfc6bdb4c0bb4d34df26528fb240618
 Source0:        https://gitlab.freedesktop.org/libinput/libei/-/archive/%{version}/libei-%{version}.tar.bz2
 BuildSystem:    meson
 
@@ -24,8 +24,8 @@ BuildRequires:  pkgconfig
 BuildRequires:  libxml2
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  python3-rpm-macros
-BuildRequires:  python3-attrs
-BuildRequires:  python3-jinja2
+BuildRequires:  python3dist(attrs)
+BuildRequires:  python3dist(jinja2)
 
 %description
 libei is a library to Emulate Input. It allows clients to talk to an EIS
@@ -58,4 +58,4 @@ Development files for libei.
 %{_libdir}/pkgconfig/liboeffis-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
