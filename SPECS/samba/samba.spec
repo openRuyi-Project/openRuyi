@@ -102,12 +102,12 @@ BuildRequires:  pkgconfig(pam)
 BuildRequires:  perl(Parse::Yapp)
 BuildRequires:  perl(JSON)
 BuildRequires:  pkgconfig(popt)
-BuildRequires:  python3-cryptography
+BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3-devel
-BuildRequires:  python3-dnspython
-BuildRequires:  python3-requests
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-markdown
+BuildRequires:  python3dist(dnspython)
+BuildRequires:  python3dist(requests)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(markdown)
 BuildRequires:  python3-tdb
 BuildRequires:  python3-talloc-devel
 BuildRequires:  python3-tevent
