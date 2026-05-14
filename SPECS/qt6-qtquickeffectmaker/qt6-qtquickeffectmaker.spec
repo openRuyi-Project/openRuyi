@@ -16,7 +16,7 @@ Summary:        Tool for creating shader effects for Qt Quick
 License:        GPL-3.0-only
 URL:            https://doc.qt.io/qt-6/qtquickeffectmaker-index.html
 VCS:            git:https://github.com/qt/qtquickeffectmaker
-#!RemoteAsset
+#!RemoteAsset:  sha256:3036984cc55054f59c4a7c7d30d9b9a2dd7491344b3201c5a133cc3cdf12acc9
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        quickeffectmaker.desktop
 BuildSystem:    cmake
@@ -30,7 +30,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  qt6-qtbase-private-devel
-BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
 BuildRequires:  pkgconfig(Qt6Quick)
 BuildRequires:  pkgconfig(Qt6ShaderTools)
@@ -64,4 +63,4 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications --vendor="qt6" %
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
