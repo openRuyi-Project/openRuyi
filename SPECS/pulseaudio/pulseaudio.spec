@@ -87,7 +87,6 @@ BuildRequires:  pkgconfig(gstreamer-1.0) >= 1.16.0
 BuildRequires:  pkgconfig(gstreamer-app-1.0) >= 1.16.0
 BuildRequires:  pkgconfig(gstreamer-rtp-1.0) >= 1.16.0
 BuildRequires:  doxygen
-BuildRequires:  xmltoman
 BuildRequires:  pkgconfig(check)
 %if %{with webrtc}
 BuildRequires:  pkgconfig(webrtc-audio-processing-1) >= 1.0
