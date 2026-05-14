@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,12 +11,12 @@
 %bcond system_yajl 0
 
 Name:           crun
-Version:        1.26
+Version:        1.27.1
 Release:        %autorelease
 Summary:        OCI runtime written in C
 License:        GPL-2.0-only
 URL:            https://github.com/containers/crun
-#!RemoteAsset:  sha256:32211d0160ac092a71d1b0623232342d627dd601913a1fbb552d7d7d5b99bcc1
+#!RemoteAsset:  sha256:be7a71c455c918bbab0c03de64cf5ce4693c7164821ab3dce0bb0f579216e8f0
 Source0:        https://github.com/containers/crun/releases/download/%{version}/crun-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -81,4 +82,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
