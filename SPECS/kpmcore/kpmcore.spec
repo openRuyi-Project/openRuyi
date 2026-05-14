@@ -14,7 +14,7 @@ Summary:        KDE Partition Manager core library
 License:        GPL-3.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/system/kpmcore
-#!RemoteAsset
+#!RemoteAsset:  sha256:3220fe4b3095b2df6d2381f8adf3dd2f50af085ebf3bdf8dee97f7c3db7b4933
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
@@ -65,7 +65,6 @@ Development package for kpmcore.
 %{_kf6_libdir}/libkpmcore.so.*
 %{_datadir}/locale/*/LC_MESSAGES/kpmcore.mo
 %{_datadir}/locale/*/LC_MESSAGES/kpmcore._policy_.mo
-%{_datadir}/locale/*/LC_MESSAGES/kpmcore.mo
 
 %files devel
 %{_includedir}/kpmcore/
@@ -73,4 +72,4 @@ Development package for kpmcore.
 %{_kf6_libdir}/libkpmcore.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
