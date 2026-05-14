@@ -55,7 +55,7 @@ BuildRequires:  pkgconfig(python3)
 # Note that the package prefix is always python3-, even if we build for 3.X
 BuildRequires:  python3-rpm-generators
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(flit-core)
 %if %{without bash}
 BuildRequires:  bash-completion
