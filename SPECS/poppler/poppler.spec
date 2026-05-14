@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        PDF rendering library
 License:        (GPL-2.0-only OR GPL-3.0-only) AND GPL-2.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
 URL:            https://gitlab.freedesktop.org/poppler/poppler
-#!RemoteAsset
+#!RemoteAsset:  sha256:ea43da328887e99943c7939712d8bd4019e98e0c7b7156d58c057debdc5df0e6
 Source:         https://gitlab.freedesktop.org/poppler/poppler/-/archive/poppler-%{version}/poppler-poppler-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -43,7 +43,7 @@ BuildRequires:  pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gobject-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(lcms2)
 BuildRequires:  pkgconfig(libjpeg)
 BuildRequires:  pkgconfig(libpng)
@@ -115,4 +115,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_includedir}/poppler/cpp
 
 %changelog
-%{?autochangelog}
+%autochangelog
