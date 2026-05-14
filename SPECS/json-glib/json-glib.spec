@@ -12,7 +12,7 @@ Summary:        Library for JavaScript Object Notation (JSON) format
 License:        LGPL-2.1-or-later
 URL:            https://wiki.gnome.org/Projects/JsonGlib
 VCS:            git:https://gitlab.gnome.org/GNOME/json-glib
-#!RemoteAsset
+#!RemoteAsset:  sha256:55c5c141a564245b8f8fbe7698663c87a45a7333c2a2c56f06f811ab73b212dd
 Source:         https://download.gnome.org/sources/json-glib/1.10/json-glib-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -25,7 +25,7 @@ BuildRequires:  gettext-devel
 BuildRequires:  gi-docgen
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 
 %description
 json-glib is a library providing serialization and deserialization support
@@ -63,4 +63,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_mandir}/man1/json-glib-validate.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
