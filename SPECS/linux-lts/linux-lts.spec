@@ -39,7 +39,6 @@ BuildRequires:  glibc-devel
 BuildRequires:  make
 BuildRequires:  perl
 BuildRequires:  flex
-BuildRequires:  bison
 BuildRequires:  bc
 BuildRequires:  cpio
 BuildRequires:  dwarves
