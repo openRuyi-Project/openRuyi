@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Policy analysis tools for SELinux
 License:        GPL-2.0-only AND LGPL-2.1-only
 URL:            https://github.com/SELinuxProject/setools
-#!RemoteAsset
+#!RemoteAsset:  sha256:d143da7c0f155a67590983c7ff7f7c181c0ebaf350b37a28b34198c6b4b9a5d2
 Source0:        https://github.com/SELinuxProject/setools/archive/refs/tags/%{version}.tar.gz
 Source1:        setools.pam
 Source2:        apol.desktop
@@ -21,10 +21,10 @@ BuildOption(install):  -l setools setoolsgui
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
-BuildRequires:  python3-Cython
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(cython)
 BuildRequires:  gcc
 BuildRequires:  bison
 BuildRequires:  flex
@@ -34,7 +34,7 @@ BuildRequires:  swig
 # For tests.
 BuildRequires:  pytest
 BuildRequires:  checkpolicy
-BuildRequires:  python3-networkx >= 2.6
+BuildRequires:  python3dist(networkx) >= 2.6
 
 Requires:       %{name}-console = %{version}-%{release}
 Requires:       %{name}-console-analyses = %{version}-%{release}
@@ -58,7 +58,7 @@ Summary:        Policy analysis command-line tools for SELinux
 License:        GPL-2.0-only
 Requires:       python3-setools = %{version}-%{release}
 Requires:       libselinux
-Requires:       python3-networkx
+Requires:       python3dist(networkx)
 
 %description    console-analyses
 Advanced analysis tools: sedta, seinfoflow.
@@ -78,7 +78,7 @@ Summary:        Policy analysis graphical tools for SELinux
 License:        GPL-2.0-only
 Requires:       python3-setools = %{version}-%{release}
 Requires:       python3-qt6
-Requires:       python3-networkx
+Requires:       python3dist(networkx)
 
 %description    gui
 Graphical tools for SELinux policy analysis (apol).
@@ -127,4 +127,4 @@ rm -rf setools setoolsgui
 %{_mandir}/ru/man1/apol*
 
 %changelog
-%{?autochangelog}
+%autochangelog
