@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        QML-based display manager (Qt6)
 License:        GPL-2.0-or-later
 URL:            https://github.com/sddm/sddm
-#!RemoteAsset
+#!RemoteAsset:  sha256:f895de2683627e969e4849dbfbbb2b500787481ca5ba0de6d6dfdae5f1549abf
 Source0:        https://github.com/sddm/sddm/archive/refs/tags/v%{version}.tar.gz
 Source1:        sddm.conf
 Source2:        sddm-greeter.pam
@@ -46,7 +46,7 @@ BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig
 BuildRequires:  shadow
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  qt6-macros
 BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6DBus)
@@ -142,4 +142,4 @@ mv %{buildroot}%{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager.conf \
 %{_datadir}/sddm/themes/maya/
 
 %changelog
-%{?autochangelog}
+%autochangelog
