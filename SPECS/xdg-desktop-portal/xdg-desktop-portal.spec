@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Portal frontend service to flatpak
 License:        LGPL-2.1-or-later
 URL:            https://github.com/flatpak/xdg-desktop-portal
-#!RemoteAsset
+#!RemoteAsset:  sha256:4bfb164937f59107eb1a3cc21abaa948d903c76f3b99fac210cea38ce1da9edc
 Source0:        https://github.com/flatpak/xdg-desktop-portal/releases/download/%{version}/xdg-desktop-portal-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -52,9 +52,9 @@ BuildRequires:  pkgconfig(libpipewire-0.3)
 BuildRequires:  pkgconfig(umockdev-1.0)
 %endif
 %if %{with docs}
-BuildRequires:  python3-furo
-BuildRequires:  python3-sphinx-copybutton
-BuildRequires:  python3-sphinxext-opengraph
+BuildRequires:  python3dist(furo)
+BuildRequires:  python3dist(sphinx-copybutton)
+BuildRequires:  python3dist(sphinxext-opengraph)
 BuildRequires:  /usr/bin/sphinx-build
 BuildRequires:  /usr/bin/rst2man
 %endif
@@ -118,4 +118,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/pkgconfig/xdg-desktop-portal.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
