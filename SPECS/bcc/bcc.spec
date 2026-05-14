@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        BPF Compiler Collection (BCC)
 License:        Apache-2.0
 URL:            https://github.com/iovisor/bcc
-#!RemoteAsset
+#!RemoteAsset:  sha256:3b16f1eb6a5b90a5a68686c0f4195455f1c58da5ae40f004e931c19e98fa8d98
 Source0:        https://github.com/iovisor/bcc/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -27,7 +27,7 @@ BuildRequires:  cmake >= 2.8.7
 BuildRequires:  flex
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libelf)
 BuildRequires:  pkgconfig(libdebuginfod)
 BuildRequires:  llvm-devel
@@ -92,7 +92,7 @@ Standalone tool to run BCC tracers written in Lua
 Summary:        Command line tools for BPF Compiler Collection (BCC)
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       python3-%{name} = %{version}-%{release}
-Requires:       python3-netaddr
+Requires:       python3dist(netaddr)
 
 %description    tools
 Command line tools for BPF Compiler Collection (BCC)
@@ -188,4 +188,4 @@ rm -rf %{buildroot}%{_datadir}/%{name}/tools/old/
 %{_sbindir}/bpf-*
 
 %changelog
-%{?autochangelog}
+%autochangelog
