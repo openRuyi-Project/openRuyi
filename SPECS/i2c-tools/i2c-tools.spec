@@ -13,9 +13,9 @@ Summary:        A heterogeneous set of I2C tools for Linux
 License:        GPL-2.0-or-later
 URL:            https://archive.kernel.org/oldwiki/i2c.wiki.kernel.org/index.php/I2C_Tools.html
 VCS:            git:https://git.kernel.org/pub/scm/utils/i2c-tools/i2c-tools.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8b15f0a880ab87280c40cfd7235cfff28134bf14d5646c07518b1ff6642a2473
 Source0:        https://www.kernel.org/pub/software/utils/i2c-tools/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:7d37f37baf4555fc4e3bbcd2e94bafe264d64141ad49395540b8335f8cfe3694
 Source1:        https://www.kernel.org/pub/software/utils/i2c-tools/%{name}-%{version}.tar.sign
 BuildSystem:    autotools
 
@@ -30,7 +30,7 @@ BuildRequires:  make
 BuildRequires:  perl-devel
 BuildRequires:  perl-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 
 Requires:       systemd-udev
 Requires:       kmod
@@ -161,4 +161,4 @@ exit 0
 %{_mandir}/man3/libi2c.3.*
 
 %changelog
-%{?autochangelog}
+%autochangelog
