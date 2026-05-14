@@ -13,7 +13,7 @@ Summary:        Sample Authorization Protocol for X
 License:        MIT-open-group
 URL:            http://www.x.org
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxau
-#!RemoteAsset
+#!RemoteAsset:  sha256:74d0e4dfa3d39ad8939e99bda37f5967aba528211076828464d2777d477fc0fb
 Source0:        https://www.x.org/pub/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -33,7 +33,6 @@ called a "magic cookie".
 
 %package        devel
 Summary:        Development files for %{name}
-BuildRequires:  xorgproto
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       xorgproto
 Requires:       pkgconfig
@@ -52,4 +51,4 @@ X.Org X11 libXau development package
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
