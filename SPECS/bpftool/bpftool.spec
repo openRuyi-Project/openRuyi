@@ -31,7 +31,7 @@ BuildRequires:  pkgconfig(libelf)
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  binutils-devel
 BuildRequires:  clang
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  llvm-devel
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  pkgconfig(libssl)
