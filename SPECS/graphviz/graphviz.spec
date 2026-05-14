@@ -46,12 +46,10 @@ BuildOption(conf):  --disable-lefty
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
-BuildRequires:  automake
 BuildRequires:  gcc-c++
 BuildRequires:  make
 BuildRequires:  bison
 BuildRequires:  flex
-BuildRequires:  libtool
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libpng)
