@@ -8,12 +8,12 @@
 %define go_import_path  github.com/minio/highwayhash
 
 Name:           go-github-minio-highwayhash
-Version:        1.0.3
+Version:        1.0.4
 Release:        %autorelease
 Summary:        Native Go version of HighwayHash with optimized assembly implementations on Intel and ARM. Able to process over 10 GB/sec on a single core on Intel CPUs - https://en.wikipedia.org/wiki/HighwayHash
 License:        Apache-2.0
 URL:            https://github.com/minio/highwayhash
-#!RemoteAsset
+#!RemoteAsset:  sha256:bdc2b6ea7fb1e389f8f4e5c0783a0b414dd09ca4f4813ac592f6f9ed581126d7
 Source0:        https://github.com/minio/highwayhash/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -49,4 +49,4 @@ implementations for Intel, ARM and ppc64le architectures.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
