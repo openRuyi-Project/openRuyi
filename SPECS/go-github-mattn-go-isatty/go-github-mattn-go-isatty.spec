@@ -8,12 +8,12 @@
 %define go_import_path  github.com/mattn/go-isatty
 
 Name:           go-github-mattn-go-isatty
-Version:        0.0.20
+Version:        0.0.22
 Release:        %autorelease
 Summary:        isatty for golang
 License:        MIT
 URL:            https://github.com/mattn/go-isatty
-#!RemoteAsset
+#!RemoteAsset:  sha256:b99e23171c0a990b47a0057c093fdfcf5a32bf242ba47485cf45971960093951
 Source0:        https://github.com/mattn/go-isatty/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildSystem:    golangmodules
 
@@ -36,4 +36,4 @@ Golang library to implementation isatty interface
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
