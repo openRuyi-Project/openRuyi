@@ -8,13 +8,13 @@
 %define go_import_path  golang.org/x/time
 
 Name:           go-golang-x-time
-Version:        0.14.0
+Version:        0.15.0
 Release:        %autorelease
 Summary:        Go supplementary time packages
 License:        BSD-3-Clause
 URL:            https://golang.org/x/time
 VCS:            git:https://github.com/golang/time
-#!RemoteAsset
+#!RemoteAsset:  sha256:32a60b8633619084bc18ac9bce6c722608472cccfe760a671898a84ea7573782
 Source0:        https://github.com/golang/time/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -33,4 +33,4 @@ Supplementary Go time packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
