@@ -92,6 +92,7 @@ The server provides several database backends and overlays.
 %package        back-perl
 Summary:        OpenLDAP Perl backend
 Requires:       %{name} = %{version}-%{release}
+BuildRequires:  perl-devel
 Requires:       perl
 
 %description    back-perl
