@@ -8,12 +8,12 @@
 %define go_import_path  filippo.io/edwards25519
 
 Name:           go-filippo-edwards25519
-Version:        1.1.0
+Version:        1.2.0
 Release:        %autorelease
 Summary:        filippo.io/edwards25519 — A safer, faster, and more powerful low-level edwards25519 Go implementation.
 License:        BSD-3-Clause
 URL:            https://github.com/FiloSottile/edwards25519
-#!RemoteAsset
+#!RemoteAsset:  sha256:f77655cabfb1b5e599f32fc81459540c20743613c687961a173efe4e9f6c917f
 Source0:        https://github.com/FiloSottile/edwards25519/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -56,4 +56,4 @@ or reviewable performance improvements.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
