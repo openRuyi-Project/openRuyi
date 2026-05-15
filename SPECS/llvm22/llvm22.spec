@@ -83,12 +83,12 @@ Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%
 
 # please keep the patches in different groups for easier maintenance
 Patch0:         0001-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
+Patch1:         0001-Add-openruyi-linux-to-X86_64Triples-and-RISCV64Tripl.patch
 
 # clang patches
 
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
-BuildRequires:  chrpath
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libzstd)
@@ -185,7 +185,6 @@ Summary:        A C language family front-end for LLVM (%{maj_ver})
 Requires:       clang%{maj_ver}-libs%{?_isa} = %{version}-%{release}
 # clang requires gcc, clang++ requires libstdc++-devel
 Requires:       libstdc++-devel
-Requires:       gcc-c++
 Provides:       clang(major) = %{maj_ver}
 
 %description -n clang%{maj_ver}
