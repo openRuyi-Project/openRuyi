@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-fsnotify-fsnotify
-Version:        1.9.0
+Version:        1.10.1
 Release:        %autorelease
 Summary:        Cross-platform filesystem notifications for Go.
 License:        BSD-3-Clause
 URL:            https://github.com/fsnotify/fsnotify
-#!RemoteAsset
+#!RemoteAsset:  sha256:6ed0c5a0c62a89ec4bc3efdec255be3f61f0d78f89cc394d03999b82e07ab94d
 Source0:        https://github.com/fsnotify/fsnotify/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ notifications on Windows, Linux, macOS, BSD, and illumos.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
