@@ -128,7 +128,7 @@
 %bcond have_dtrace 0
 
 # openRuyi: SLIRP networking backend not supported yet
-%bcond have_slirp 0
+%bcond have_slirp 1
 
 # openRuyi: QEMU Audio support not ready yet
 %bcond have_audio 0
