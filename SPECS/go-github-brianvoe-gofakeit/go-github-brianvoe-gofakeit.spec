@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-brianvoe-gofakeit
-Version:        7.14.0
+Version:        7.14.1
 Release:        %autorelease
 Summary:        Random fake data generator written in go
 License:        MIT
 URL:            https://github.com/brianvoe/gofakeit
-#!RemoteAsset
+#!RemoteAsset:  sha256:47ca51df117de6f4995d586c2b30aa691c5d7f6aa6c42763c6341ae8b6cfa024
 Source0:        https://github.com/brianvoe/gofakeit/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -32,4 +32,4 @@ Random data generator written in go
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
