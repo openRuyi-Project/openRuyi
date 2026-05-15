@@ -9,12 +9,12 @@
 %define go_test_exclude_glob github.com/buger/jsonparser/benchmark
 
 Name:           go-github-buger-jsonparser
-Version:        1.1.1
+Version:        1.2.0
 Release:        %autorelease
 Summary:        One of the fastest alternative JSON parser for Go that does not require schema
 License:        MIT
 URL:            https://github.com/buger/jsonparser
-#!RemoteAsset
+#!RemoteAsset:  sha256:55270827650090f856d89c51e0e3213ca3f9ff33d0b4dd24c944151fd5e9d746
 Source0:        https://github.com/buger/jsonparser/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -39,4 +39,4 @@ benchmarks below.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
