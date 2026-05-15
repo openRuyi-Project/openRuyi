@@ -8,12 +8,12 @@
 %define go_import_path  cel.dev/expr
 
 Name:           go-cel-expr
-Version:        0.25.1
+Version:        0.25.2
 Release:        %autorelease
 Summary:        Common Expression Language -- specification and binary representation
 License:        Apache-2.0
 URL:            https://github.com/google/cel-spec
-#!RemoteAsset
+#!RemoteAsset:  sha256:6bd7bbf973c6cd56136e7a5ec8efe61b7656fc52813350bc2807224551f515e7
 Source0:        https://github.com/google/cel-spec/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ interoperate.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
