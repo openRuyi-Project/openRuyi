@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-jose/go-jose
 
 Name:           go-github-go-jose-go-jose-v4
-Version:        4.1.3
+Version:        4.1.4
 Release:        %autorelease
 Summary:        An implementation of JOSE standards (JWE, JWS, JWT) in Go
 License:        Apache-2.0
 URL:            https://github.com/go-jose/go-jose
-#!RemoteAsset
+#!RemoteAsset:  sha256:a8c9fade9971831045e8b7d78f641546639f9f0088477e8d9717a637320c8004
 Source0:        https://github.com/go-jose/go-jose/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -46,4 +46,4 @@ for dealing with JOSE messages in a shell.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
