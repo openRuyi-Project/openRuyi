@@ -1,0 +1,12 @@
+diff -urN efitools-1.9.2.orig/Make.rules efitools-1.9.2/Make.rules
+--- efitools-1.9.2.orig/Make.rules	2019-01-09 06:13:13.000000000 +0800
++++ efitools-1.9.2/Make.rules	2026-05-15 22:26:30.705948460 +0800
+@@ -26,7 +26,7 @@
+ LDSCRIPT	= elf_$(ARCH)_efi.lds
+ LDFLAGS		+= -shared -Bsymbolic $(CRTOBJS) -L $(CRTPATH) -L /usr/lib -L /usr/lib64 -T $(LDSCRIPT)
+ LOADLIBES	= -lefi -lgnuefi $(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
+-FORMAT		= --target=efi-app-$(ARCH)
++FORMAT		= --output-target=efi-app-$(ARCH)
+ OBJCOPY		= objcopy
+ MYGUID		= 11111111-2222-3333-4444-123456789abc
+ INSTALL		= install

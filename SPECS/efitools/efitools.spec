@@ -18,6 +18,9 @@ BuildSystem:    autotools
 # fix building error
 Patch2000:      2000-fix-build-error.diff
 
+# binutils >= 2.46 requires --output-target instead of --target when converting between different target formats
+Patch2001:      2001-fix-build-error-with-binutils-2.46.patch
+
 BuildOption(build):  LD=ld.bfd
 BuildOption(install):  DESTDIR=%{buildroot}
 
