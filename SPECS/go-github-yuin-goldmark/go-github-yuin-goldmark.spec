@@ -8,12 +8,12 @@
 %define go_import_path  github.com/yuin/goldmark
 
 Name:           go-github-yuin-goldmark
-Version:        1.7.14
+Version:        1.8.2
 Release:        %autorelease
 Summary:        A markdown parser written in Go. Easy to extend, standard(CommonMark) compliant, well structured.
 License:        MIT
 URL:            https://github.com/yuin/goldmark
-#!RemoteAsset
+#!RemoteAsset:  sha256:e0079add618f633e639f50fc5d03708d552741ca817667a1660b53c357e2b2cd
 Source0:        https://github.com/yuin/goldmark/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -55,4 +55,4 @@ Features
 %{_datadir}/gocode/src/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
