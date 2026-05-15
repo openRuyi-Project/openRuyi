@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-go-redis-redis
-Version:        9.18.0
+Version:        9.19.0
 Release:        %autorelease
 Summary:        Redis Go client
 License:        BSD-2-Clause
 URL:            https://github.com/go-redis/redis
-#!RemoteAsset
+#!RemoteAsset:  sha256:7d6d9800b920a15ed61e4ca4d3558b067811b135bdcd816fb1c3e27624aaf5e6
 Source0:        https://github.com/go-redis/redis/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -36,4 +36,4 @@ interface for interacting with Redis servers.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
