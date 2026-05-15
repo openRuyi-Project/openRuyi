@@ -13,12 +13,12 @@
 }
 
 Name:           go-github-tinylib-msgp
-Version:        1.6.3
+Version:        1.6.4
 Release:        %autorelease
 Summary:        A Go code generator for MessagePack / msgpack.org
 License:        MIT
 URL:            https://github.com/tinylib/msgp
-#!RemoteAsset
+#!RemoteAsset:  sha256:1da18b32bb80d663c2a7343987acbde7396253c326f1dc9d52178512e658cb5a
 Source0:        https://github.com/tinylib/msgp/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -42,4 +42,4 @@ This is a code generation tool and serialization library for MessagePack. You ca
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
