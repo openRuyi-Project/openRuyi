@@ -1,0 +1,63 @@
+From 74dd4d42b8f2a7bcb57da2c0737d1b3ac2ce609e Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Fri, 15 May 2026 23:28:39 +0800
+Subject: [PATCH] fix: build error with gcc 16: unused-but-set-variable
+
+Since GCC 16, -Wunused-but-set-* warning options have been extended to
+have multiple levels controlling what kinds of uses disable the warnings
+for variables which are otherwise unused. Older versions of GCC only
+implemented what has become -Wunused-but-set-variable=1 or
+-Wunused-but-set-parameter=1, while the new default for
+-Wunused-but-set-variable or -Wunused-but-set-parameter is =3 (the new
+defaults are also used when these warnings are enabled by -Wall or
+-Wextra, respectively). =2 ignores pre/post inc/decrements on the
+variable, =3 also ignores compound assignments if the LHS variable is
+not also used on the RHS.
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+---
+ source/components/namespace/nsaccess.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/source/components/namespace/nsaccess.c b/source/components/namespace/nsaccess.c
+index 077aa9375..04703d087 100644
+--- a/source/components/namespace/nsaccess.c
++++ b/source/components/namespace/nsaccess.c
+@@ -449,7 +449,11 @@ AcpiNsLookup (
+     ACPI_NAMESPACE_NODE     *CurrentNode = NULL;
+     ACPI_NAMESPACE_NODE     *ThisNode = NULL;
+     UINT32                  NumSegments;
++
++#ifdef ACPI_DEBUG_OUTPUT
+     UINT32                  NumCarats;
++#endif
++
+     ACPI_NAME               SimpleName;
+     ACPI_OBJECT_TYPE        TypeToCheckFor;
+     ACPI_OBJECT_TYPE        ThisSearchType;
+@@ -573,7 +577,11 @@ AcpiNsLookup (
+              * the parent node for each prefix instance.
+              */
+             ThisNode = PrefixNode;
++
++#ifdef ACPI_DEBUG_OUTPUT
+             NumCarats = 0;
++#endif
++
+             while (*Path == (UINT8) AML_PARENT_PREFIX)
+             {
+                 /* Name is fully qualified, no search rules apply */
+@@ -588,7 +596,10 @@ AcpiNsLookup (
+ 
+                 /* Backup to the parent node */
+ 
++#ifdef ACPI_DEBUG_OUTPUT
+                 NumCarats++;
++#endif
++
+                 ThisNode = ThisNode->Parent;
+                 if (!ThisNode)
+                 {
+-- 
+2.53.0
+

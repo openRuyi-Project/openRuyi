@@ -18,6 +18,9 @@ VCS:            git:https://github.com/acpica/acpica
 Source0:        https://github.com/acpica/acpica/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
+# https://github.com/acpica/acpica/pull/1187
+Patch0:         0001-fix-build-error-with-gcc-16-unused-but-set-variable.patch
+
 BuildOption(install):  PREFIX=%{_prefix}
 
 BuildRequires:  gcc
