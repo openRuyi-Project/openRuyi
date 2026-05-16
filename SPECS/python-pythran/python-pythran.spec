@@ -18,6 +18,9 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
+# Relax generated dependencies for repository-provided gast 0.7 and beniget 0.5.
+Patch2000:         2000-relax-gast-beniget-upper-bounds.patch
+
 BuildOption(install):  -l %{srcname} omp
 
 BuildRequires:  pyproject-rpm-macros
