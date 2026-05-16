@@ -1,0 +1,30 @@
+From 189ca1293e1550742b05a4afd7bfe8760fdd194d Mon Sep 17 00:00:00 2001
+From: Athos Ribeiro <athos@ar.dev.br>
+Date: Thu, 23 Apr 2026 11:31:00 -0300
+Subject: [PATCH] libbpf-tools/opensnoop: hint on unused variable
+
+GCC-16 changed the default of the unused-but-set-variable warnings,
+which now throws an error when -Wall or -Wextra is enabled.
+
+sps_cnt is only used when USE_BLAZESYM is defined. This patch does a
+void cast to hint the compiler to ignore sps_cnt being unused in those
+cases.
+
+* https://gcc.gnu.org/gcc-16/porting_to.html#changes-to-wunused
+---
+ libbpf-tools/opensnoop.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libbpf-tools/opensnoop.c b/libbpf-tools/opensnoop.c
+index f98fd8af5662..0ca0e3d1a9b3 100644
+--- a/libbpf-tools/opensnoop.c
++++ b/libbpf-tools/opensnoop.c
+@@ -289,6 +289,8 @@ int handle_event(void *ctx, void *data, size_t data_sz)
+ 
+ 	blaze_syms_free(syms);
+ #endif
++	/* avoid compiler warnings on sps_cnt not being used */
++	(void) sps_cnt;
+ 	return 0;
+ }
+ 

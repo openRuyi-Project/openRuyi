@@ -14,6 +14,9 @@ URL:            https://github.com/iovisor/bcc
 Source0:        https://github.com/iovisor/bcc/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
+# https://github.com/iovisor/bcc/pull/5502
+Patch0:         0001-Fix-variable-sps_cnt-set-but-not-used.patch
+
 BuildOption(conf):  -DREVISION_LAST=%{version}
 BuildOption(conf):  -DREVISION=%{version}
 BuildOption(conf):  -DPYTHON_CMD=python3
