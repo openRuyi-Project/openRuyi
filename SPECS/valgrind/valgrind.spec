@@ -22,13 +22,13 @@
 %endif
 
 Name:           valgrind
-Version:        3.26.0
+Version:        3.27.0
 Release:        %autorelease
 Summary:        Dynamic analysis tools to detect memory or thread bugs
 License:        GPL-2.0-or-later
 URL:            https://www.valgrind.org/
 VCS:            git:https://sourceware.org/git/valgrind.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:5b5937de8257ee8f51698ea71b9711adce98061aa07daa4a685efc3af9215bef
 Source0:        https://sourceware.org/pub/valgrind/valgrind-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -133,4 +133,4 @@ Header files and libraries for development of valgrind tools.
 %{_libdir}/valgrind/*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
