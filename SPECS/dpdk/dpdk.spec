@@ -52,6 +52,8 @@ BuildRequires:  rdma-core-devel
 0007-node-lookup-with-RISC-V-vector-extension.patch
 # https://patches.dpdk.org/project/dpdk/patch/20251130200810.879556-1-sunyuechi@iscas.ac.cn/
 0008-acl-add-RISC-V-vector-extension-implementation.patch
+# https://git.dpdk.org/dpdk/commit/?id=2b403dd8fb37d0ba13723e44ffc7ee2c2795f838
+1000-test-debug-fix-crash-with-mlx5-devices.patch
 
 %description
 The Data Plane Development Kit is a set of libraries and drivers for
