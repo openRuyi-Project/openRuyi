@@ -21,6 +21,9 @@ BuildSystem:    cmake
 # https://github.com/warmcat/libwebsockets/pull/3570
 Patch0:         0001-core-net-Fix-ISO-C23-errors-with-strchr.patch
 
+# https://github.com/warmcat/libwebsockets/pull/3591
+Patch1:         0002-fops-zip-Fix-ramount-may-be-used-uninitialized.patch
+
 BuildOption(conf):  -DLWS_WITH_HTTP2:BOOL=ON
 BuildOption(conf):  -DLWS_IPV6:BOOL=ON
 BuildOption(conf):  -DLWS_WITH_ZIP_FOPS:BOOL=ON
