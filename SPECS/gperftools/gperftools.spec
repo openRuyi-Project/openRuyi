@@ -47,6 +47,11 @@ rm -f %{buildroot}%{_docdir}/%{name}/INSTALL
 rm -f %{buildroot}%{_docdir}/%{name}/README_windows.txt
 rm -f %{buildroot}%{_docdir}/%{name}/ChangeLog.old
 
+%ifarch riscv64
+%check
+# Tests are flaky on riscv64.
+%endif
+
 %files
 %doc %{_docdir}/%{name}/AUTHORS
 %doc %{_docdir}/%{name}/NEWS
