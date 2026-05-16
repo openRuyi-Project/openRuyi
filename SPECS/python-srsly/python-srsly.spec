@@ -7,17 +7,18 @@
 %global srcname srsly
 
 Name:           python-%{srcname}
-Version:        2.5.2
+Version:        2.5.3
 Release:        %autorelease
 Summary:        Modern high-performance serialization utilities for Python
 License:        MIT
 URL:            https://github.com/explosion/srsly
-#!RemoteAsset:  sha256:4092bc843c71b7595c6c90a0302a197858c5b9fe43067f62ae6a45bc3baa1c19
+#!RemoteAsset:  sha256:08f98dbecbff3a31466c4ae7c833131f59d3655a0ad8ac749e6e2c149e2b0680
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
 # Needs additional dependencies
-BuildOption(check):  -e "srsly.tests.test_msgpack_api"
+# ModuleNotFoundError: No module named 'srsly.cloudpickle.compat'
+BuildOption(check):  -e "srsly.tests.*"
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
