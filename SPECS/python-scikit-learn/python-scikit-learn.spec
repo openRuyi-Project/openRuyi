@@ -18,6 +18,9 @@ VCS:            git:https://github.com/scikit-learn/scikit-learn.git
 Source:         https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
+# Allow repository-provided meson-python 0.19.x.
+Patch2000:         2000-relax-meson-python-upper-bound.patch
+
 BuildOption(install):  -l sklearn
 BuildOption(check):  -e "sklearn.*.tests*" -e "sklearn.tests*" -e "sklearn.conftest" -e "sklearn.externals.array_api_compat.cupy*" -e "sklearn.externals.array_api_compat.dask*"
 
