@@ -7,12 +7,12 @@
 %global srcname weasel
 
 Name:           python-%{srcname}
-Version:        0.4.3
+Version:        1.0.0
 Release:        %autorelease
 Summary:        A small and easy workflow system
 License:        MIT
 URL:            https://github.com/explosion/weasel
-#!RemoteAsset:  sha256:f293d6174398e8f478c78481e00c503ee4b82ea7a3e6d0d6a01e46a6b1396845
+#!RemoteAsset:  sha256:7b129b44c90cc543b760532974ca1e4eb30dad2aa2026f57bdce66354ae610fc
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
