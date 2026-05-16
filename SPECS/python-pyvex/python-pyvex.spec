@@ -16,6 +16,9 @@ URL:            https://github.com/angr/pyvex
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
+# Allow repository-provided scikit-build-core 0.12.x.
+Patch2000:         2000-relax-scikit-build-core-upper-bound.patch
+
 BuildOption(install):  -l %{srcname}
 BuildOption(check):  -e "pyvex.lib.libpyvex"
 
