@@ -65,6 +65,7 @@ BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(xt)
 BuildRequires:  pkgconfig(xext)
 BuildRequires:  python3-devel
+BuildRequires:  perl-devel
 BuildRequires:  swig >= 1.3.33
 
 %description
