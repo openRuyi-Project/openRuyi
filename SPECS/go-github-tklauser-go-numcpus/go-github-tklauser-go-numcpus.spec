@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-tklauser-go-numcpus
-Version:        0.11.0
+Version:        0.12.0
 Release:        %autorelease
 Summary:        Go package providing information about the number of CPUs in the system
 License:        Apache-2.0
 URL:            https://github.com/tklauser/numcpus
-#!RemoteAsset
+#!RemoteAsset:  sha256:ec8142d986b81b734f2da0c9952a36be3bb1e4e3073951adf770c2fc4cd3a00e
 Source0:        https://github.com/tklauser/numcpus/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -50,4 +50,4 @@ function is not supported on a particular platform.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
