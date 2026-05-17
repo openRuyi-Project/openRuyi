@@ -264,6 +264,8 @@ Requires:       luarocks
 # Enable ISA-L on RISC-V via HAVE_RISCV_RVV; wires bundled ISA-L v2.32 riscv64 sources.
 # https://github.com/ceph/ceph/pull/68098
 2006-isa-l-enable-on-riscv.patch
+# librbd PWL: cancel periodic_stats timer before perf_stop() in shut_down() to avoid UAF.
+2007-librbd-pwl-cancel-timer-before-perf-stop.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs

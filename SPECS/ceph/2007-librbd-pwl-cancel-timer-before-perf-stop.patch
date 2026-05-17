@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 10 May 2026 16:06:17 +0800
+Subject: [PATCH] librbd/cache/pwl: cancel periodic_stats timer before
+ perf_stop()
+
+AbstractWriteLog::shut_down()'s outermost lambda calls perf_stop() which
+deletes m_perfcounter, but the periodic_stats timer (re-armed every 5s)
+is only canceled later in ~AbstractWriteLog().  If the timer fires in
+between, periodic_stats -> update_image_cache_state dereferences the
+freed m_perfcounter.
+
+Reproduces deterministically on riscv64 (sg2044) running
+TestMockCacheSSDWriteLog.compare_and_write_compare_failed, whose
+write/cmp/read sequence finishes in well under 5s.  Upstream main HEAD
+has the same code.
+
+Cancel m_timer_ctx under m_timer_lock before perf_stop(), mirroring the
+destructor's cleanup.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/librbd/cache/pwl/AbstractWriteLog.cc | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/librbd/cache/pwl/AbstractWriteLog.cc b/src/librbd/cache/pwl/AbstractWriteLog.cc
+index e407d1a5d..e37ed7f75 100644
+--- a/src/librbd/cache/pwl/AbstractWriteLog.cc
++++ b/src/librbd/cache/pwl/AbstractWriteLog.cc
+@@ -649,6 +649,11 @@ void AbstractWriteLog<I>::shut_down(Context *on_finish) {
+
+   Context *ctx = new LambdaContext(
+     [this, on_finish](int r) {
++      {
++        std::lock_guard timer_locker(*m_timer_lock);
++        m_timer->cancel_event(m_timer_ctx);
++        m_timer_ctx = nullptr;
++      }
+       if (m_perfcounter) {
+         perf_stop();
+       }
