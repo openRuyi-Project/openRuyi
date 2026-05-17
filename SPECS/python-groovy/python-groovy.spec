@@ -26,8 +26,7 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-A small Python library created to help developers protect their
-applications from Server Side Request Forgery (SSRF) attacks.
+Groovy is a Python-to-JavaScript transpiler.
 
 %generate_buildrequires
 %pyproject_buildrequires
