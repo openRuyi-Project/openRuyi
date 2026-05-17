@@ -245,6 +245,8 @@ Requires:       luarocks
 
 # riscv64: bump jsonnet-bundler JSONNET_VERSION v0.4.0 -> v0.5.1 for x/sys riscv64 stubs.
 2001-monitoring-ceph-mixin-jsonnet-bundler-version.patch
+# monitoring/ceph-mixin: bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
+2002-monitoring-ceph-mixin-bump-pylint.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
