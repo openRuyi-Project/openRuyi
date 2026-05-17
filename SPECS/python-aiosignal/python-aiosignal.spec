@@ -29,8 +29,9 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-FrozenList is a list-like structure which implements
-collections.abc.MutableSequence, and which can be made immutable.
+aiosignal is a library that provides a Signal class for registering
+and dispatching asynchronous callbacks. It is used by aiohttp and
+other asyncio-based projects to manage lists of callable handlers.
 
 %generate_buildrequires
 %pyproject_buildrequires
