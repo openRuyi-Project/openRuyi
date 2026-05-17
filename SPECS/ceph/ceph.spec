@@ -270,6 +270,8 @@ Requires:       luarocks
 2008-cephadm-tests-pyfakefs-5.7-compat.patch
 # mgr tox: drop two git ls-files refcount checks from flake8 env (no .git in tarball).
 2009-mgr-tox-skip-git-ls-files.patch
+# rgw: move SWIFT error_handler overrides out-of-line to fix gcc 16 cross-archive link error.
+2010-rgw-rest-swift-error-handler-out-of-line.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
