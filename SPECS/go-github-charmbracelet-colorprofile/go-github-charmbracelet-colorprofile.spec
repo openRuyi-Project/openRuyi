@@ -8,12 +8,12 @@
 %define go_import_path  github.com/charmbracelet/colorprofile
 
 Name:           go-github-charmbracelet-colorprofile
-Version:        0.4.2
+Version:        0.4.3
 Release:        %autorelease
 Summary:        Magical terminal color handling 🪄
 License:        MIT
 URL:            https://github.com/charmbracelet/colorprofile
-#!RemoteAsset
+#!RemoteAsset:  sha256:6198c13d091c917ee808038b87a4cf6994d7eeafcf98a9ef9dc5849fe7c76444
 Source0:        https://github.com/charmbracelet/colorprofile/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -44,4 +44,4 @@ color profiles and performing color (and CSI) degradation.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
