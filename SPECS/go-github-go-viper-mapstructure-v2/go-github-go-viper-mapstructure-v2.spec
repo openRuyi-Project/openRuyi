@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-viper/mapstructure/v2
 
 Name:           go-github-go-viper-mapstructure-v2
-Version:        2.4.0
+Version:        2.5.0
 Release:        %autorelease
 Summary:        Go library for decoding generic map values into native Go structures and vice versa.
 License:        MIT
 URL:            https://github.com/go-viper/mapstructure
-#!RemoteAsset
+#!RemoteAsset:  sha256:3cb4682ff64e76c28afea172743d0a37bf45e97eac09d9e44ef15ee1cefbfde3
 Source0:        https://github.com/go-viper/mapstructure/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,4 +41,4 @@ underlying native Go structure.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
