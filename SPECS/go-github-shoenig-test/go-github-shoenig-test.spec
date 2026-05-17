@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-shoenig-test
-Version:        1.12.2
+Version:        1.13.2
 Release:        %autorelease
 Summary:        A modern generic testing assertions library for Go
 License:        MPL-2.0
 URL:            https://github.com/shoenig/test
-#!RemoteAsset
+#!RemoteAsset:  sha256:df22c27b144f7aa9b86d9ea7b80de7fad3160b9cd5d6f0edcc2399bf22d86426
 Source0:        https://github.com/shoenig/test/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -50,4 +50,4 @@ There are five key packages,
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
