@@ -266,6 +266,8 @@ Requires:       luarocks
 2006-isa-l-enable-on-riscv.patch
 # librbd PWL: cancel periodic_stats timer before perf_stop() in shut_down() to avoid UAF.
 2007-librbd-pwl-cancel-timer-before-perf-stop.patch
+# cephadm tests: add pyfakefs 5.7 root-bypass; fix find_executable->find_program mock site.
+2008-cephadm-tests-pyfakefs-5.7-compat.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
