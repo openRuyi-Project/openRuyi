@@ -11,7 +11,7 @@ Version:        1.9.0
 Release:        %autorelease
 Summary:        Python text UI framework
 License:        MIT
-URL:            https://github.com/janpipek/iso639-python
+URL:            https://github.com/rhinstaller/python-simpleline
 #!RemoteAsset:  sha256:7645e29a83df27a46defa1dc1e7e84f6adf91645e03cdd06b4384079bc89aef1
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    autotools
