@@ -8,12 +8,12 @@
 %define go_import_path  github.com/hashicorp/go-version
 
 Name:           go-github-hashicorp-go-version
-Version:        1.8.0
+Version:        1.9.0
 Release:        %autorelease
 Summary:        A Go (golang) library for parsing and verifying versions and version constraints.
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-version
-#!RemoteAsset
+#!RemoteAsset:  sha256:e75b7bef8da7ac8e26a8dd488f7b473766f3db6ed16693737fdc99522a26156a
 Source0:        https://github.com/hashicorp/go-version/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -36,4 +36,4 @@ increment versions, etc.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
