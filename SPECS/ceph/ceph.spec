@@ -247,6 +247,8 @@ Requires:       luarocks
 2001-monitoring-ceph-mixin-jsonnet-bundler-version.patch
 # monitoring/ceph-mixin: bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2002-monitoring-ceph-mixin-bump-pylint.patch
+# cephadm tox: bump pyfakefs to >=5.7,<6 and drop git ls-files refcount checks (no .git in tarball).
+2003-cephadm-tox-py313-compat.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
