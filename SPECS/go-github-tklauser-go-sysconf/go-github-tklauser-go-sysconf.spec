@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-tklauser-go-sysconf
-Version:        0.3.16
+Version:        0.4.0
 Release:        %autorelease
 Summary:        sysconf for Go, without using cgo
 License:        BSD-3-Clause
 URL:            https://github.com/tklauser/go-sysconf
-#!RemoteAsset
+#!RemoteAsset:  sha256:641ca4116e106d546383a5b92d543b7039015553013576055867a416fed92b31
 Source0:        https://github.com/tklauser/go-sysconf/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -45,4 +45,4 @@ complete list.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
