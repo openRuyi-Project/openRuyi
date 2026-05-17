@@ -251,6 +251,8 @@ Requires:       luarocks
 2003-cephadm-tox-py313-compat.patch
 # unittest_mds_quiesce_agent: evaluate await_idle_v outside assert() so -DNDEBUG keeps it.
 2004-test-mds-quiesce-agent-evaluate-await-idle.patch
+# pg_fast_info_t generate_test_instances: value-init so check-generated.sh dump is deterministic.
+2005-osd-osd_types-pg_fast_info_t-value-init.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
