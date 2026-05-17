@@ -249,6 +249,8 @@ Requires:       luarocks
 2002-monitoring-ceph-mixin-bump-pylint.patch
 # cephadm tox: bump pyfakefs to >=5.7,<6 and drop git ls-files refcount checks (no .git in tarball).
 2003-cephadm-tox-py313-compat.patch
+# unittest_mds_quiesce_agent: evaluate await_idle_v outside assert() so -DNDEBUG keeps it.
+2004-test-mds-quiesce-agent-evaluate-await-idle.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
