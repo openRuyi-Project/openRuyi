@@ -8,12 +8,12 @@
 %define go_import_path  github.com/spaolacci/murmur3
 
 Name:           go-github-spaolacci-murmur3
-Version:        1.0.0
+Version:        1.1.0
 Release:        %autorelease
 Summary:        Native MurmurHash3 Go implementation
 License:        BSD-3-Clause
 URL:            https://github.com/spaolacci/murmur3
-#!RemoteAsset
+#!RemoteAsset:  sha256:73e99fdaadf177427cefb2aff93e4c35d8b1fcf20a4eac6feab73b5d55a9d243
 Source0:        https://github.com/spaolacci/murmur3/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ mode required by Go's standard Hash interface
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
