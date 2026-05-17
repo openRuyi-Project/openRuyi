@@ -32,7 +32,15 @@ License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0
 URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
 #!RemoteAsset:  sha256:de779aa0141839388bb201e0a9d622b8433982e1c4d7bfc3ac6117b763972542
-Source:         https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
+Source0:        https://download.ceph.com/tarballs/ceph-%{version}.tar.gz
+# Bundled isa-l v2.29 has no riscv64 support; v2.32.0 onwards ships
+# riscv64 RVV sources.
+#!RemoteAsset:  sha256:7a194ff80d0f7e20615c497654e8a51b0184d0c79e2e265c7f555f52a26a05a4
+Source1:        https://github.com/intel/isa-l/archive/refs/tags/v2.32.0.tar.gz#/isa-l-2.32.0.tar.gz
+# In-place aliasing fix for the bundled isa-l v2.32.0 riscv64 RVV
+# raid sources. Applied manually to src/isa-l in prep -a after the
+# Source1 swap, so it is shipped as a Source rather than via patchlist.
+Source2:        isa-l-riscv64-rvv-raid-aliasing.patch
 BuildSystem:    cmake
 
 BuildOption(conf):  -DWITH_SYSTEM_ZSTD:BOOL=ON
@@ -253,6 +261,9 @@ Requires:       luarocks
 2004-test-mds-quiesce-agent-evaluate-await-idle.patch
 # pg_fast_info_t generate_test_instances: value-init so check-generated.sh dump is deterministic.
 2005-osd-osd_types-pg_fast_info_t-value-init.patch
+# Enable ISA-L on RISC-V via HAVE_RISCV_RVV; wires bundled ISA-L v2.32 riscv64 sources.
+# https://github.com/ceph/ceph/pull/68098
+2006-isa-l-enable-on-riscv.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
@@ -540,6 +551,17 @@ This package provides Grafana dashboards, Prometheus alerts, and
 SNMP MIB for monitoring Ceph clusters.
 
 %prep -a
+# Replace bundled isa-l v2.29 with v2.32.0 only on riscv64: upstream v2.32 dropped
+# the legacy crc32_iscsi_00.asm and other x86 source names that ceph's
+# src/common/CMakeLists.txt still references on x86_64.
+%ifarch riscv64
+rm -rf src/isa-l
+tar -xf %{SOURCE1} -C src
+mv src/isa-l-2.32.0 src/isa-l
+
+patch -p1 -i %{SOURCE2}
+%endif
+
 # Create two sysusers.d config files
 cat >ceph.sysusers.conf <<EOF
 g ceph 167

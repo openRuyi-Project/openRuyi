@@ -1,0 +1,195 @@
+From 975121604eebb8da38d26a7a91e0f85e243f4903 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 29 Mar 2026 21:47:47 +0800
+Subject: [PATCH] isa-l: enable on RISC-V
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/CMakeLists.txt                          |  2 +-
+ src/arch/riscv.c                            |  6 +++++
+ src/arch/riscv.h                            |  1 +
+ src/compressor/zlib/CMakeLists.txt          | 30 +++++++++++++++++++++
+ src/compressor/zlib/CompressionPluginZlib.h |  6 +++++
+ src/compressor/zlib/ZlibCompressor.cc       |  6 ++---
+ src/test/compressor/test_compression.cc     |  6 ++---
+ 7 files changed, 50 insertions(+), 7 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4cc9f4a726ce5..2270a90671134 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -236,7 +236,7 @@ endif()
+
+ # Set WITH_EC_ISA_PLUGIN early so it's available when processing common/options
+ # This must be set before add_subdirectory(common) is called
+-if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD)
++if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD OR HAVE_RISCV_RVV)
+   set(WITH_EC_ISA_PLUGIN TRUE CACHE BOOL "")
+ endif()
+
+diff --git a/src/arch/riscv.c b/src/arch/riscv.c
+index 90ab9cb872c70..5dc54acfd8690 100644
+--- a/src/arch/riscv.c
++++ b/src/arch/riscv.c
+@@ -6,9 +6,14 @@
+ #include <sys/syscall.h>
+ #include <unistd.h>
+
++int ceph_arch_riscv_rvv = 0;
+ int ceph_arch_riscv_zbc = 0;
+ int ceph_arch_riscv_zvbc = 0;
+
++#ifndef RISCV_HWPROBE_IMA_V
++#define RISCV_HWPROBE_IMA_V (1ULL << 2)
++#endif
++
+ #ifndef RISCV_HWPROBE_EXT_ZBC
+ #define RISCV_HWPROBE_EXT_ZBC (1ULL << 7)
+ #endif
+@@ -30,6 +35,7 @@ void ceph_arch_riscv_probe(void)
+
+     if (do_hwprobe(pairs, 1) == 0) {
+         unsigned long long ext = pairs[0].value;
++        ceph_arch_riscv_rvv  = (ext & RISCV_HWPROBE_IMA_V);
+         ceph_arch_riscv_zbc  = (ext & RISCV_HWPROBE_EXT_ZBC);
+         ceph_arch_riscv_zvbc = (ext & RISCV_HWPROBE_EXT_ZVBC);
+     }
+diff --git a/src/arch/riscv.h b/src/arch/riscv.h
+index 2f90cb24c1d9e..495f94018217c 100644
+--- a/src/arch/riscv.h
++++ b/src/arch/riscv.h
+@@ -13,6 +13,7 @@
+ extern "C" {
+ #endif
+
++extern int ceph_arch_riscv_rvv;
+ extern int ceph_arch_riscv_zbc;
+ extern int ceph_arch_riscv_zvbc;
+
+diff --git a/src/compressor/zlib/CMakeLists.txt b/src/compressor/zlib/CMakeLists.txt
+index 3266025464997..4bacb5b18152a 100644
+--- a/src/compressor/zlib/CMakeLists.txt
++++ b/src/compressor/zlib/CMakeLists.txt
+@@ -82,6 +82,36 @@ elseif(HAVE_ARMV8_SIMD)
+     COMPILE_DEFINITIONS "__ASSEMBLY__"
+     INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/src/isa-l/igzip;${PROJECT_SOURCE_DIR}/src/isa-l/igzip/aarch64"
+   )
++elseif(HAVE_RISCV_RVV)
++  set(zlib_asm_sources
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/riscv64/igzip_multibinary_riscv64.S
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/riscv64/igzip_isal_adler32_rvv.S
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/riscv64/igzip_isal_adler32_rvv128.S
++  )
++  set(zlib_sources
++    CompressionPluginZlib.cc
++    ZlibCompressor.cc
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/igzip.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/hufftables_c.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/igzip_base.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/igzip_icf_base.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/adler32_base.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/flatten_ll.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/encode_df.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/igzip_icf_body.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/igzip_inflate.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/huff_codes.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/proc_heap_base.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/igzip/riscv64/igzip_multibinary_riscv64_dispatcher.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/crc/crc_base_aliases.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/crc/crc_base.c
++    ${CMAKE_SOURCE_DIR}/src/isa-l/crc/crc64_base.c
++    ${zlib_asm_sources}
++  )
++  set_source_files_properties(${zlib_asm_sources} PROPERTIES
++    COMPILE_DEFINITIONS "__ASSEMBLY__"
++    INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/src/isa-l/igzip;${PROJECT_SOURCE_DIR}/src/isa-l/igzip/riscv64"
++  )
+ else()
+   set(zlib_sources
+     CompressionPluginZlib.cc
+diff --git a/src/compressor/zlib/CompressionPluginZlib.h b/src/compressor/zlib/CompressionPluginZlib.h
+index 597bc02a5d9a3..155345c937e1b 100644
+--- a/src/compressor/zlib/CompressionPluginZlib.h
++++ b/src/compressor/zlib/CompressionPluginZlib.h
+@@ -19,6 +19,7 @@
+ #include "arch/probe.h"
+ #include "arch/intel.h"
+ #include "arch/arm.h"
++#include "arch/riscv.h"
+ #include "common/ceph_context.h"
+ #include "compressor/CompressionPlugin.h"
+ #include "ZlibCompressor.h"
+@@ -47,6 +48,11 @@ class CompressionPluginZlib : public ceph::CompressionPlugin {
+       ceph_arch_probe();
+       isal = (ceph_arch_aarch64_pmull && ceph_arch_neon);
+     }
++#elif defined(HAVE_RISCV_RVV)
++    if (cct->_conf->compressor_zlib_isal) {
++      ceph_arch_probe();
++      isal = ceph_arch_riscv_rvv;
++    }
+ #endif
+     if (compressor == 0 || has_isal != isal) {
+       compressor = std::make_shared<ZlibCompressor>(cct, isal);
+diff --git a/src/compressor/zlib/ZlibCompressor.cc b/src/compressor/zlib/ZlibCompressor.cc
+index 685b7fc432010..ec2fb55e6b7cf 100644
+--- a/src/compressor/zlib/ZlibCompressor.cc
++++ b/src/compressor/zlib/ZlibCompressor.cc
+@@ -70,7 +70,7 @@ ZlibCompressor::ZlibCompressor(CephContext *cct, bool isal)
+   : Compressor(COMP_ALG_ZLIB, "zlib"), isal_enabled(isal), cct(cct)
+ {
+
+-#if !(__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__)
++#if !((__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__) || defined(HAVE_RISCV_RVV))
+   if (isal_enabled) {
+     derr << "WARN: ISA-L enabled (compressor_zlib_isal=true) but not supported"
+          << dendl;
+@@ -152,7 +152,7 @@ int ZlibCompressor::zlib_compress(const bufferlist &in, bufferlist &out, std::op
+   return 0;
+ }
+
+-#if (__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__)
++#if (__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__) || defined(HAVE_RISCV_RVV)
+ int ZlibCompressor::isal_compress(const bufferlist &in, bufferlist &out, std::optional<int32_t> &compressor_message)
+ {
+   int ret;
+@@ -217,7 +217,7 @@ int ZlibCompressor::compress(const bufferlist &in, bufferlist &out, std::optiona
+   if (uadk_enabled)
+     return uadk_accel.compress(in, out);
+ #endif
+-#if (__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__)
++#if (__x86_64__ && defined(HAVE_NASM_X64_AVX2)) || defined(__aarch64__) || defined(HAVE_RISCV_RVV)
+   if (isal_enabled)
+     return isal_compress(in, out, compressor_message);
+   else
+diff --git a/src/test/compressor/test_compression.cc b/src/test/compressor/test_compression.cc
+index 2fb5176264c27..7bf8071e3c361 100644
+--- a/src/test/compressor/test_compression.cc
++++ b/src/test/compressor/test_compression.cc
+@@ -402,7 +402,7 @@ INSTANTIATE_TEST_SUITE_P(
+ #ifdef HAVE_LZ4
+     "lz4",
+ #endif
+-#if defined(__x86_64__) || defined(__aarch64__)
++#if defined(__x86_64__) || defined(__aarch64__) || defined(HAVE_RISCV_RVV)
+     "zlib/isal",
+ #endif
+     "zlib/noisal",
+@@ -412,7 +412,7 @@ INSTANTIATE_TEST_SUITE_P(
+ #endif
+     "zstd"));
+
+-#if defined(__x86_64__) || defined(__aarch64__)
++#if defined(__x86_64__) || defined(__aarch64__) || defined(HAVE_RISCV_RVV)
+
+ TEST(ZlibCompressor, zlib_isal_compatibility)
+ {
+@@ -477,7 +477,7 @@ TEST(CompressionPlugin, all)
+   }
+ }
+
+-#if defined(__x86_64__) || defined(__aarch64__)
++#if defined(__x86_64__) || defined(__aarch64__) || defined(HAVE_RISCV_RVV)
+
+ TEST(ZlibCompressor, isal_compress_zlib_decompress_random)
+ {
