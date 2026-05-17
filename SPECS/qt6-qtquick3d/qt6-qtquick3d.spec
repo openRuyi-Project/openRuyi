@@ -62,7 +62,6 @@ The Qt 6 Quick3D library.
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(Qt6Gui)
-Requires:       qt6-qtquick3d
 Requires:       pkgconfig(Qt6Quick)
 
 %description    devel
