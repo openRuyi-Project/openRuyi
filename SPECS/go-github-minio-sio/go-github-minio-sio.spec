@@ -8,12 +8,12 @@
 %define go_import_path  github.com/minio/sio
 
 Name:           go-github-minio-sio
-Version:        0.4.3
+Version:        0.5.1
 Release:        %autorelease
 Summary:        Go implementation of the Data At Rest Encryption (DARE) format.
 License:        Apache-2.0
 URL:            https://github.com/minio/sio
-#!RemoteAsset
+#!RemoteAsset:  sha256:673012fb71ec9170d8d5a8ae21ac34f083b3fab832d5c23b4b734b7e298371f8
 Source0:        https://github.com/minio/sio/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -46,4 +46,4 @@ to manipulate the data - even if the data is encrypted.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
