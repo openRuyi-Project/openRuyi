@@ -268,6 +268,8 @@ Requires:       luarocks
 2007-librbd-pwl-cancel-timer-before-perf-stop.patch
 # cephadm tests: add pyfakefs 5.7 root-bypass; fix find_executable->find_program mock site.
 2008-cephadm-tests-pyfakefs-5.7-compat.patch
+# mgr tox: drop two git ls-files refcount checks from flake8 env (no .git in tarball).
+2009-mgr-tox-skip-git-ls-files.patch
 
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
