@@ -8,12 +8,12 @@
 %define go_import_path  github.com/ncw/directio
 
 Name:           go-github-ncw-directio
-Version:        1.0.4
+Version:        1.0.5
 Release:        %autorelease
 Summary:        This is library for the Go language to enable use of Direct IO under all OSes
 License:        MIT
 URL:            https://github.com/ncw/directio
-#!RemoteAsset
+#!RemoteAsset:  sha256:d21504ec4d2d13b708454388ac877f5ac7e8a60333da07e98b38626bcf4dadcd
 Source0:        https://github.com/ncw/directio/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +37,4 @@ fill the OS cache up with.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
