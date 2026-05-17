@@ -243,6 +243,9 @@ Requires:       luarocks
 # mgr/diskprediction_local: backport upstream 848abacfc7b (v21.0.0) to silence mypy on numpy 2.x.
 1004-mgr-diskprediction-disable-mypy-error.patch
 
+# riscv64: bump jsonnet-bundler JSONNET_VERSION v0.4.0 -> v0.5.1 for x/sys riscv64 stubs.
+2001-monitoring-ceph-mixin-jsonnet-bundler-version.patch
+
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
 on commodity hardware and delivers object, block and file system storage.
