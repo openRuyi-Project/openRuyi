@@ -8,12 +8,12 @@
 %define go_import_path  github.com/gin-contrib/sse
 
 Name:           go-github-gin-contrib-sse
-Version:        1.1.0
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Server-Sent Events implementation in Go. Used by the Gin Framework.
 License:        MIT
 URL:            https://github.com/gin-contrib/sse
-#!RemoteAsset
+#!RemoteAsset:  sha256:77284a8d4afcb74060dbef914d818b20b4355d894073c073b96e76e5818dcc8a
 Source0:        https://github.com/gin-contrib/sse/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ Events EventSource API is standardized as part of HTML5 by the W3C
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
