@@ -231,6 +231,18 @@ Requires:       luarocks
 # Bump bundled opentelemetry-cpp cmake_minimum_required from 3.1 to 3.5 (CMake 4.x dropped <3.5 compat)
 0022-src-jaegertracing-opentelemetry-cpp-CMakeLists.txt.patch
 
+# https://github.com/ceph/ceph/commit/01dc12ad
+1000-arch-add-riscv-crc32c-support.patch
+# https://github.com/ceph/ceph/commit/3ccfff1a
+1001-arch-riscv-fix-hwprobe.patch
+# gcc 16: add missing <cstdint> in src/common/Formatter.h.
+1002-src-common-Formatter.h-cstdint.patch
+# gcc 16: fully qualify make_message<...> in src/mds/* with ceph:: to resolve ADL ambiguity.
+# https://github.com/ceph/ceph/commit/ea218daf73965fdaee54693bbfcd675c031992f9
+1003-mds-qualify-make_message.patch
+# mgr/diskprediction_local: backport upstream 848abacfc7b (v21.0.0) to silence mypy on numpy 2.x.
+1004-mgr-diskprediction-disable-mypy-error.patch
+
 %description
 Ceph is a massively scalable, open-source, distributed storage system that runs
 on commodity hardware and delivers object, block and file system storage.
