@@ -11,7 +11,7 @@ Version:        3.18
 Release:        %autorelease
 Summary:        The basic directory layout for a Linux system
 License:        LicenseRef-openRuyi-Public-Domain
-URL:            https://pagure.io/filesystem
+URL:            https://github.com/openRuyi-Project/openRuyi/tree/main/SPECS/filesystem
 Source0:        lang-exceptions
 Source1:        iso_639.sed
 Source2:        iso_3166.sed
