@@ -82,8 +82,8 @@ VCS:            git:https://github.com/llvm/llvm-project.git
 Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz
 
 # please keep the patches in different groups for easier maintenance
-Patch0:         0001-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
-Patch1:         0001-Add-openruyi-linux-to-X86_64Triples-and-RISCV64Tripl.patch
+Patch0:         2000-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
+Patch1:         2001-Add-openruyi-linux-to-X86_64Triples-and-RISCV64Tripl.patch
 
 # clang patches
 
@@ -153,8 +153,6 @@ Requires:       pkgconfig(libzstd)
 # llvm-gtest.
 Requires:       llvm%{maj_ver}-static = %{version}-%{release}
 Provides:       llvm-devel(major) = %{maj_ver}
-Requires(post): chkconfig
-Requires(postun): chkconfig
 
 %description -n llvm%{maj_ver}-devel
 This package contains library and header files needed to develop new native
@@ -718,6 +716,7 @@ rm -rf %{buildroot}/%{install_prefix}/src
 rm -f %{buildroot}/%{install_libdir}/libllvm_gtest*
 
 %check
+# it takes days to complete the testing. Let's just disable it for now.
 
 %post -n lld%{maj_ver}
 update-alternatives --install %{_bindir}/ld ld %{_bindir}/ld.lld 1
@@ -1145,8 +1144,8 @@ fi
 %{install_python3mod}/mlir
 
 %files -n libcxx%{maj_ver}
-%license libcxx/LICENSE.TXT
 %doc libcxx/CREDITS.TXT libcxx/TODO.TXT
+%license libcxx/LICENSE.TXT
 %{install_libdir}/%{llvm_triple}/libc++.so.*
 
 %files -n libcxx%{maj_ver}-devel
@@ -1164,8 +1163,8 @@ fi
 %{install_libdir}/%{llvm_triple}/libc++experimental.a
 
 %files -n libcxxabi%{maj_ver}
-%license libcxxabi/LICENSE.TXT
 %doc libcxxabi/CREDITS.TXT
+%license libcxxabi/LICENSE.TXT
 %{install_libdir}/%{llvm_triple}/libc++abi.so.*
 
 %files -n libcxxabi%{maj_ver}-devel
