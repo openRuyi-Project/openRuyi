@@ -116,34 +116,35 @@ BuildRequires:  gcc-d
 Requires:       binutils
 Requires:       cpp%{vermajor} = %{version}-%{release}
 Requires:       glibc-devel
-Requires:       libgomp%{libsuffix} >= %{version}-%{release}
+Requires:       libgomp >= %{version}-%{release}
+Requires:       libgcc-s >= %{version}-%{release}
 %ifarch %{asan_arch}
-Requires:       libasan%{libsuffix} >= %{version}-%{release}
+Requires:       libasan >= %{version}-%{release}
 %endif
 %ifarch %{tsan_arch}
 %if %{build_primary_64bit}
-Requires:       libtsan%{libsuffix} >= %{version}-%{release}
+Requires:       libtsan >= %{version}-%{release}
 %endif
 %endif
 %ifarch %{hwasan_arch}
-Requires:       libhwasan%{libsuffix} >= %{version}-%{release}
+Requires:       libhwasan >= %{version}-%{release}
 %endif
 %ifarch %{atomic_arch}
-Requires:       libatomic%{libsuffix} >= %{version}-%{release}
+Requires:       libatomic >= %{version}-%{release}
 %endif
 %ifarch %{itm_arch}
-Requires:       libitm%{libsuffix} >= %{version}-%{release}
+Requires:       libitm >= %{version}-%{release}
 %endif
 %ifarch %{lsan_arch}
 %if %{build_primary_64bit}
-Requires:       liblsan%{libsuffix} >= %{version}-%{release}
+Requires:       liblsan >= %{version}-%{release}
 %endif
 %endif
 %ifarch %{ubsan_arch}
-Requires:       libubsan%{libsuffix} >= %{version}-%{release}
+Requires:       libubsan >= %{version}-%{release}
 %endif
 %ifarch %{vtv_arch}
-Requires:       libvtv%{libsuffix} >= %{version}-%{release}
+Requires:       libvtv >= %{version}-%{release}
 %endif
 Suggests:       gcc%{vermajor}-doc
 
@@ -176,38 +177,54 @@ Requires:       libstdc++-devel%{libdevel_suffix} = %{version}-%{release}
 %description    c++
 This package contains the GNU compiler for C++.
 
-%package        lib
+%package        -n libgcc-s
 Summary:        C compiler runtime library
+License:        GPL-3.0-or-later WITH GCC-exception-3.1
+Provides:       libgcc-s%{libsuffix} = %{version}-%{release}
+Obsoletes:      gcc15-lib < 15.2.0-12.8
+Obsoletes:      gcc16-lib < 16.1.0-2.7
+Conflicts:      gcc15-lib < 15.2.0-12.8
+Conflicts:      gcc16-lib < 16.1.0-2.7
 
-%description    lib
+%description    -n libgcc-s
 This package is needed for dynamically linked C programs.
 
-%package     -n libstdc++%{libsuffix}
+%package     -n libstdc++
 Summary:        The standard C++ shared library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
+Provides:       libstdc++%{libsuffix} = %{version}-%{release}
+Obsoletes:      libstdc++-gcc15 < 15.2.0-12.8
+Obsoletes:      libstdc++-gcc16 < 16.1.0-2.7
+Conflicts:      libstdc++-gcc15 < 15.2.0-12.8
+Conflicts:      libstdc++-gcc16 < 16.1.0-2.7
 # The std::chrono timezone database is provided by timezone
 # (/usr/share/zoneinfo/tzdata.zi), without that the tzdb is empty and
 # will only provide UTC.  We don't want a Requires here though, instead
 # the overall product needs to decide what to provide,
 
-%description -n libstdc++%{libsuffix}
+%description -n libstdc++
 The standard C++ library, needed for dynamically linked C++ programs.
 
 %package     -n libstdc++-devel%{libdevel_suffix}
 Summary:        Include Files and Libraries mandatory for Development
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Requires:       glibc-devel
-Requires:       libstdc++%{libsuffix} >= %{version}-%{release}
+Requires:       libstdc++ >= %{version}-%{release}
 
 %description -n libstdc++-devel%{libdevel_suffix}
 This package contains all the headers and libraries of the standard C++
 library. It is needed for compiling C++ code.
 
-%package     -n libgomp%{libsuffix}
+%package     -n libgomp
 Summary:        The GNU compiler collection OpenMP runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
+Provides:       libgomp{libsuffix} = %{version}-%{release}
+Obsoletes:      libgomp-gcc15 < 15.2.0-12.8
+Obsoletes:      libgomp-gcc16 < 16.1.0-2.7
+Conflicts:      libgomp-gcc15 < 15.2.0-12.8
+Conflicts:      libgomp-gcc16 < 16.1.0-2.7
 
-%description -n libgomp%{libsuffix}
+%description -n libgomp
 This is the OpenMP runtime library needed by OpenMP enabled programs
 that were built with the -fopenmp compiler option and by programs that
 were auto-parallelized via the -ftree-parallelize-loops compiler
@@ -235,11 +252,16 @@ This package contains the GNU Objective C compiler. Objective C is an
 object oriented language, created by Next Inc. and used in their
 Nextstep OS. The source code is available in the gcc package.
 
-%package     -n libobjc%{libsuffix}
+%package     -n libobjc
 Summary:        Library for the GNU Objective C Compiler
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
+Provides:       libobjc%{libsuffix} = %{version}-%{release}
+Obsoletes:      libobjc-gcc15 < 15.2.0-12.8
+Obsoletes:      libobjc-gcc16 < 16.1.0-2.7
+Conflicts:      libobjc-gcc15 < 15.2.0-12.8
+Conflicts:      libobjc-gcc16 < 16.1.0-2.7
 
-%description -n libobjc%{libsuffix}
+%description -n libobjc
 The library for the GNU Objective C compiler.
 
 %package        obj-c++
@@ -277,7 +299,7 @@ Summary:        The GNU Fortran Compiler and Support Files
 License:        GPL-3.0-or-later
 Requires:       gcc%{vermajor} = %{version}-%{release}
 Requires:       gcc%{vermajor}-fortran = %{version}-%{release}
-Requires:       libgfortran%{libsuffix} >= %{version}-%{release}
+Requires:       libgfortran >= %{version}-%{release}
 %ifarch %{quadmath_arch}
 Requires:       libquadmath-devel%{libdevel_suffix} = %{version}-%{release}
 %endif
@@ -285,22 +307,32 @@ Requires:       libquadmath-devel%{libdevel_suffix} = %{version}-%{release}
 %description    fortran
 This is the Fortran compiler of the GNU Compiler Collection (GCC).
 
-%package     -n libgfortran%{libsuffix}
+%package     -n libgfortran
 Summary:        The GNU Fortran Compiler Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 %ifarch %{quadmath_arch}
-Requires:       libquadmath%{libsuffix} >= %{version}-%{release}
+Requires:       libquadmath >= %{version}-%{release}
 %endif
+Provides:       libgfortran%{libsuffix} = %{version}-%{release}
+Obsoletes:      libgfortran-gcc15 < 15.2.0-12.8
+Obsoletes:      libgfortran-gcc16 < 16.1.0-2.7
+Conflicts:      libgfortran-gcc15 < 15.2.0-12.8
+Conflicts:      libgfortran-gcc16 < 16.1.0-2.7
 
-%description -n libgfortran%{libsuffix}
+%description -n libgfortran
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC).
 
-%package     -n libquadmath%{libsuffix}
+%package     -n libquadmath
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library
 License:        LGPL-2.1-only
+Provides:       libquadmath%{libsuffix} = %{version}-%{release}
+Obsoletes:      libquadmath-gcc15 < 15.2.0-12.8
+Obsoletes:      libquadmath-gcc16 < 16.1.0-2.7
+Conflicts:      libquadmath-gcc15 < 15.2.0-12.8
+Conflicts:      libquadmath-gcc16 < 16.1.0-2.7
 
-%description -n libquadmath%{libsuffix}
+%description -n libquadmath
 The runtime library needed to run programs compiled with the Fortran compiler
 of the GNU Compiler Collection (GCC) and quadruple precision floating point
 operations.
@@ -308,71 +340,111 @@ operations.
 %package     -n libquadmath-devel%{libdevel_suffix}
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library Development Files
 License:        LGPL-2.1-only
-Requires:       libquadmath%{libsuffix} >= %{version}-%{release}
+Requires:       libquadmath >= %{version}-%{release}
 
 %description -n libquadmath-devel%{libdevel_suffix}
 The libquadmatah runtime library development files.
 
-%package     -n libitm%{libsuffix}
+%package     -n libitm
 Summary:        The GNU Compiler Transactional Memory Runtime Library
 License:        MIT
+Provides:       libitm%{libsuffix} = %{version}-%{release}
+Obsoletes:      libitm-gcc15 < 15.2.0-12.8
+Obsoletes:      libitm-gcc16 < 16.1.0-2.7
+Conflicts:      libitm-gcc15 < 15.2.0-12.8
+Conflicts:      libitm-gcc16 < 16.1.0-2.7
 
-%description -n libitm%{libsuffix}
+%description -n libitm
 The runtime library needed to run programs compiled with the
 -fgnu-tm option of the GNU Compiler Collection (GCC).
 
-%package     -n libasan%{libsuffix}
+%package     -n libasan
 Summary:        The GNU Compiler Address Sanitizer Runtime Library
 License:        MIT
+Provides:       libasan%{libsuffix} = %{version}-%{release}
+Obsoletes:      libasan-gcc15 < 15.2.0-12.8
+Obsoletes:      libasan-gcc16 < 16.1.0-2.7
+Conflicts:      libasan-gcc15 < 15.2.0-12.8
+Conflicts:      libasan-gcc16 < 16.1.0-2.7
 
-%description -n libasan%{libsuffix}
+%description -n libasan
 The runtime library needed to run programs compiled with the
 -fsanitize=address option of the GNU Compiler Collection (GCC).
 
-%package     -n libtsan%{libsuffix}
+%package     -n libtsan
 Summary:        The GNU Compiler Thread Sanitizer Runtime Library
 License:        MIT
+Provides:       libtsan%{libsuffix} = %{version}-%{release}
+Obsoletes:      libtsan-gcc15 < 15.2.0-12.8
+Obsoletes:      libtsan-gcc16 < 16.1.0-2.7
+Conflicts:      libtsan-gcc15 < 15.2.0-12.8
+Conflicts:      libtsan-gcc16 < 16.1.0-2.7
 
-%description -n libtsan%{libsuffix}
+%description -n libtsan
 The runtime library needed to run programs compiled with the
 -fsanitize=thread option of the GNU Compiler Collection (GCC).
 
-%package     -n libhwasan%{libsuffix}
+%package     -n libhwasan
 Summary:        The GNU Compiler Hardware-assisted Address Sanitizer Runtime Library
 License:        MIT
+Provides:       libhwasan%{libsuffix} = %{version}-%{release}
+Obsoletes:      libhwasan-gcc15 < 15.2.0-12.8
+Obsoletes:      libhwasan-gcc16 < 16.1.0-2.7
+Conflicts:      libhwasan-gcc15 < 15.2.0-12.8
+Conflicts:      libhwasan-gcc16 < 16.1.0-2.7
 
-%description -n libhwasan%{libsuffix}
+%description -n libhwasan
 The runtime library needed to run programs compiled with the
 -fsanitize=hwaddress option of the GNU Compiler Collection (GCC).
 
-%package     -n libatomic%{libsuffix}
+%package     -n libatomic
 Summary:        The GNU Compiler Atomic Operations Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
+Provides:       libatomic%{libsuffix} = %{version}-%{release}
+Obsoletes:      libatomic-gcc15 < 15.2.0-12.8
+Obsoletes:      libatomic-gcc16 < 16.1.0-2.7
+Conflicts:      libatomic-gcc15 < 15.2.0-12.8
+Conflicts:      libatomic-gcc16 < 16.1.0-2.7
 
-%description -n libatomic%{libsuffix}
+%description -n libatomic
 The runtime library for atomic operations of the GNU Compiler Collection (GCC).
 
-%package     -n liblsan%{libsuffix}
+%package     -n liblsan
 Summary:        The GNU Compiler Leak Sanitizer Runtime Library
 License:        MIT
+Provides:       liblsan%{libsuffix} = %{version}-%{release}
+Obsoletes:      liblsan-gcc15 < 15.2.0-12.8
+Obsoletes:      liblsan-gcc16 < 16.1.0-2.7
+Conflicts:      liblsan-gcc15 < 15.2.0-12.8
+Conflicts:      liblsan-gcc16 < 16.1.0-2.7
 
-%description -n liblsan%{libsuffix}
+%description -n liblsan
 The runtime library needed to run programs compiled with the
 -fsanitize=leak option of the GNU Compiler Collection (GCC).
 
-%package     -n libubsan%{libsuffix}
+%package     -n libubsan
 Summary:        The GNU Compiler Undefined Sanitizer Runtime Library
 License:        MIT
+Provides:       libubsan%{libsuffix} = %{version}-%{release}
+Obsoletes:      libubsan-gcc15 < 15.2.0-12.8
+Obsoletes:      libubsan-gcc16 < 16.1.0-2.7
+Conflicts:      libubsan-gcc15 < 15.2.0-12.8
+Conflicts:      libubsan-gcc16 < 16.1.0-2.7
 
-%description -n libubsan%{libsuffix}
+%description -n libubsan
 The runtime library needed to run programs compiled with the
 -fsanitize=undefined option of the GNU Compiler Collection (GCC).
 
-%package     -n libvtv%{libsuffix}
+%package     -n libvtv
 Summary:        The GNU Compiler Vtable Verifier Runtime Library
 License:        MIT
+Provides:       libvtv%{libsuffix} = %{version}-%{release}
+Obsoletes:      libvtv-gcc15 < 15.2.0-12.8
+Obsoletes:      libvtv-gcc16 < 16.1.0-2.7
+Conflicts:      libvtv-gcc15 < 15.2.0-12.8
+Conflicts:      libvtv-gcc16 < 16.1.0-2.7
 
-%description -n libvtv%{libsuffix}
+%description -n libvtv
 The runtime library needed to run programs compiled with the
 -fvtable-verify option of the GNU Compiler Collection (GCC).
 
@@ -404,7 +476,7 @@ Requires:       gcc%{vermajor}-d = %{version}-%{release}
 This package contains a D compiler and associated development
 files based on the GNU GCC technology.
 
-%package     -n libgccjit%{libsuffix}
+%package     -n libgccjit
 Summary:        The GNU Compiler Collection JIT library
 License:        GPL-3.0-or-later
 # At runtime the JIT needs to be able to invoke the assembler and
@@ -412,14 +484,19 @@ License:        GPL-3.0-or-later
 # the compilers version install directory only so we require the
 # respective compiler libgccjit was built from.
 Requires:       gcc%{vermajor}
+Provides:       libgccjit%{libsuffix} = %{version}-%{release}
+Obsoletes:      libgccjit-gcc15 < 15.2.0-12.8
+Obsoletes:      libgccjit-gcc16 < 16.1.0-2.7
+Conflicts:      libgccjit-gcc15 < 15.2.0-12.8
+Conflicts:      libgccjit-gcc16 < 16.1.0-2.7
 
-%description -n libgccjit%{libsuffix}
+%description -n libgccjit
 Support for embedding GCC inside programs and libraries
 
 %package     -n libgccjit-devel%{libdevel_suffix}
 Summary:        Support for embedding GCC inside programs and libraries
 License:        GPL-3.0-or-later
-Requires:       libgccjit%{libsuffix} >= %{version}-%{release}
+Requires:       libgccjit >= %{version}-%{release}
 
 %description -n libgccjit-devel%{libdevel_suffix}
 Package contains header files and documentation for GCC JIT front-end.
@@ -620,6 +697,9 @@ export CARGO=/bin/true
 %endif
 %if "%{TARGET_ARCH}" == "riscv64"
   --disable-multilib \
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+  --with-arch=rva23u64 \
+%endif
 %endif
 %if %{with bootstrap}
 %if %{use_lto_bootstrap} && !0%{?building_testsuite:1}
@@ -769,7 +849,8 @@ for libname in \
     mv $lib %{buildroot}/%{mainlibdir}/
   done
   if test -L %{buildroot}/%{versmainlibdir}/$libname.so; then
-    ln -sf %{mainlibdir}/`readlink %{buildroot}/%{versmainlibdir}/$libname.so | sed -e 's/\(.*\.so\.[^\.]*\).*/\1/'`  \
+    libnameV=`readlink %{buildroot}/%{versmainlibdir}/$libname.so | sed -e 's/\(.*\.so\.[^\.]*\).*/\1/'`
+    ln -sf ../../../$libnameV  \
          %{buildroot}/%{versmainlibdir}/$libname.so
   fi
 done
@@ -1142,11 +1223,9 @@ cd ..
 %if %{enable_plugins}
 %files devel
 %defattr(-,root,root)
-%dir %{libsubdir}/plugin
-%{libsubdir}/plugin
-%if %{build_m2}
-%exclude %{libsubdir}/plugin/m2rte.so
-%endif
+%{libsubdir}/plugin/include
+%{libsubdir}/plugin/gengtype
+%{libsubdir}/plugin/gtype.state
 %endif
 
 %if %{build_cp}
@@ -1160,7 +1239,7 @@ cd ..
 %{libsubdir}/cc1plus
 %{libsubdir}/g++-mapper-server
 
-%files -n libstdc++%{libsuffix} -f libstdc++.lang
+%files -n libstdc++ -f libstdc++.lang
 %defattr(-,root,root)
 %{mainlibdir}/libstdc++.so.*
 %dir %{_datadir}/gdb
@@ -1170,7 +1249,7 @@ cd ..
 %{_datadir}/gdb/auto-load/%{mainlibdir}/libstdc++.so.*-gdb.py
 %{_datadir}/gcc%{binsuffix}
 
-%files lib
+%files -n libgcc-s
 %defattr(-,root,root)
 %{_slibdir}/libgcc_s.so.1
 %{_slibdir}/libgcc_s_asneeded.so
@@ -1189,19 +1268,19 @@ cd ..
 %{_prefix}/include/c++
 %endif
 
-%files -n libgomp%{libsuffix}
+%files -n libgomp
 %defattr(-,root,root)
 %{mainlibdir}/libgomp.so.*
 
 %ifarch %{asan_arch}
-%files -n libasan%{libsuffix}
+%files -n libasan
 %defattr(-,root,root)
 %{mainlibdir}/libasan.so.*
 %endif
 
 %ifarch %{lsan_arch}
 %if %{build_primary_64bit}
-%files -n liblsan%{libsuffix}
+%files -n liblsan
 %defattr(-,root,root)
 %{mainlibdir}/liblsan.so.*
 %endif
@@ -1209,38 +1288,38 @@ cd ..
 
 %ifarch %{tsan_arch}
 %if %{build_primary_64bit}
-%files -n libtsan%{libsuffix}
+%files -n libtsan
 %defattr(-,root,root)
 %{mainlibdir}/libtsan.so.*
 %endif
 %endif
 
 %ifarch %{hwasan_arch}
-%files -n libhwasan%{libsuffix}
+%files -n libhwasan
 %defattr(-,root,root)
 %{mainlibdir}/libhwasan.so.*
 %endif
 
 %ifarch %{atomic_arch}
-%files -n libatomic%{libsuffix}
+%files -n libatomic
 %defattr(-,root,root)
 %{mainlibdir}/libatomic.so.*
 %endif
 
 %ifarch %{itm_arch}
-%files -n libitm%{libsuffix}
+%files -n libitm
 %defattr(-,root,root)
 %{mainlibdir}/libitm.so.*
 %endif
 
 %ifarch %{ubsan_arch}
-%files -n libubsan%{libsuffix}
+%files -n libubsan
 %defattr(-,root,root)
 %{mainlibdir}/libubsan.so.*
 %endif
 
 %ifarch %{vtv_arch}
-%files -n libvtv%{libsuffix}
+%files -n libvtv
 %defattr(-,root,root)
 %{mainlibdir}/libvtv.so.*
 %endif
@@ -1259,13 +1338,13 @@ cd ..
 %{versmainlibdir}/libcaf_shmem.a
 %doc %{_mandir}/man1/gfortran%{binsuffix}.1.gz
 
-%files -n libgfortran%{libsuffix}
+%files -n libgfortran
 %defattr(-,root,root)
 %{mainlibdir}/libgfortran.so.*
 %endif
 
 %ifarch %{quadmath_arch}
-%files -n libquadmath%{libsuffix}
+%files -n libquadmath
 %defattr(-,root,root)
 %{mainlibdir}/libquadmath.so.*
 
@@ -1323,7 +1402,7 @@ cd ..
 %{versmainlibdir}/libobjc.a
 %{versmainlibdir}/libobjc.so
 
-%files -n libobjc%{libsuffix}
+%files -n libobjc
 %defattr(-,root,root)
 %{mainlibdir}/libobjc.so.*
 %endif
@@ -1395,7 +1474,7 @@ cd ..
 %endif
 
 %if %{build_jit}
-%files -n libgccjit%{libsuffix}
+%files -n libgccjit
 %defattr(-,root,root)
 %{_prefix}/%{_lib}/libgccjit.so.*
 
