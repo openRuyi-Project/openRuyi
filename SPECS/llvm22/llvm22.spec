@@ -83,9 +83,9 @@ Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%
 
 # please keep the patches in different groups for easier maintenance
 %if "%{openruyi_riscv_arch}" == "-march=rva23u64"
-Patch0:         2000-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
+Patch2000:         2000-Add-riscv64-openruyi-linux-triple-and-set-it-to-rva2.patch
 %endif
-Patch1:         2001-Add-openruyi-linux-to-X86_64Triples-and-RISCV64Tripl.patch
+Patch2001:         2001-Add-openruyi-linux-to-X86_64Triples-and-RISCV64Tripl.patch
 
 # clang patches
 
