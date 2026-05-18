@@ -12,8 +12,7 @@ Release:        %autorelease
 Summary:        The basic directory layout for a Linux system
 License:        LicenseRef-openRuyi-Public-Domain
 URL:            https://pagure.io/filesystem
-#!RemoteAsset
-Source0:        https://pagure.io/filesystem/raw/master/f/lang-exceptions
+Source0:        lang-exceptions
 Source1:        iso_639.sed
 Source2:        iso_3166.sed
 
@@ -323,4 +322,4 @@ end
 /var/yp
 
 %changelog
-%{?autochangelog}
+%autochangelog
