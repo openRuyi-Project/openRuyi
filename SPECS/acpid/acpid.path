@@ -1,0 +1,10 @@
+[Unit]
+Description=ACPI Events Check
+ConditionVirtualization=!container
+
+[Path]
+DirectoryNotEmpty=/etc/acpi/events/
+
+[Install]
+WantedBy=paths.target
+
