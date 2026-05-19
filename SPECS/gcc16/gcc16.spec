@@ -181,6 +181,7 @@ This package contains the GNU compiler for C++.
 Summary:        C compiler runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libgcc-s%{libsuffix} = %{version}-%{release}
+Provides:       gcc%{vermajor}-lib = %{version}-%{release}
 Obsoletes:      gcc15-lib < 15.2.0-12.8
 Conflicts:      gcc15-lib < 15.2.0-12.8
 
