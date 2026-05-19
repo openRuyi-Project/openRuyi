@@ -1,0 +1,58 @@
+From 9cf969b9c8c58a82090e42291e95791394c02e17 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Fri, 15 May 2026 23:47:49 +0800
+Subject: [PATCH 251/255] RUYI: riscv: dts: k3: expose APBC syscon for pinctrl
+ IO voltage
+
+The K3 pinctrl driver uses the APBC ASAR unlock sequence at offset 0x50
+to write the IO power domain register that switches a pin group between
+1.8V and 3.3V. It obtains the APBC regmap via:
+
+	syscon_regmap_lookup_by_phandle(np, "spacemit,apbc");
+
+which ultimately calls syscon_node_to_regmap() and requires the target
+node to advertise the generic "syscon" compatible. Without that, the
+driver logs:
+
+	k1-pinctrl d401e000.pinctrl: no syscon found,
+	    disable power voltage switch functionality
+
+and spacemit_set_io_pwr_domain() becomes a no-op. As a result every
+"power-source = <1800>" in DT is silently ignored, leaving pin groups
+(notably the GMAC0 RGMII pins) running at the default IO voltage and
+causing the PHY MDIO transactions to fail on cold boot.
+
+Add the "syscon" fallback compatible to syscon_apbc so the mfd/syscon
+core will lazily create an mmio regmap for it (the existing K3 CCU
+driver still binds via the primary compatible), and wire it up from the
+pinctrl node with the now-functional spacemit,apbc phandle.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
+index 26c4d04f80b2..ae77cf8ee61e 100644
+--- a/arch/riscv/boot/dts/spacemit/k3.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
+@@ -669,7 +669,7 @@ usb2_phy: phy@c0a20000 {
+ 		};
+ 
+ 		syscon_apbc: system-controller@d4015000 {
+-			compatible = "spacemit,k3-syscon-apbc";
++			compatible = "spacemit,k3-syscon-apbc", "syscon";
+ 			reg = <0x0 0xd4015000 0x0 0x1000>;
+ 			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>, <&vctcxo_24m>;
+ 			clock-names = "osc", "vctcxo_1m", "vctcxo_3m", "vctcxo_24m";
+@@ -1066,6 +1066,7 @@ pinctrl: pinctrl@d401e000 {
+ 			clocks = <&syscon_apbc CLK_APBC_AIB>,
+ 				 <&syscon_apbc CLK_APBC_AIB_BUS>;
+ 			clock-names = "func", "bus";
++			spacemit,apbc = <&syscon_apbc>;
+ 		};
+ 
+ 		uart10: serial@d401f000 {
+-- 
+2.53.0
+

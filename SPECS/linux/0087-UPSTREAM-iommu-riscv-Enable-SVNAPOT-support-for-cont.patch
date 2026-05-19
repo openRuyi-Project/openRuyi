@@ -1,0 +1,51 @@
+From 08b88c5bcb688bb0bd6a7506c09ad48ba20baf00 Mon Sep 17 00:00:00 2001
+From: Jason Gunthorpe <jgg@nvidia.com>
+Date: Fri, 27 Feb 2026 11:25:39 -0400
+Subject: [PATCH 087/255] UPSTREAM: iommu/riscv: Enable SVNAPOT support for
+ contiguous ptes
+
+This turns on a 64k page size. The "RISC-V IOMMU Architecture
+Specification" states:
+
+  6.4 IOMMU capabilities
+  [..]
+  IOMMU implementations must support the Svnapot standard extension for
+  NAPOT Translation Contiguity.
+
+So just switch it on unconditionally.
+
+Cc: Xu Lu <luxu.kernel@bytedance.com>
+Tested-by: Vincent Chen <vincent.chen@sifive.com>
+Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+Reviewed-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+Tested-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+(cherry picked from commit 69541898b71a8cb8a06706c67a2f756623598aa0)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iommu/riscv/iommu.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+index 3e34253e1e6b..fd2a9b5c0f45 100644
+--- a/drivers/iommu/riscv/iommu.c
++++ b/drivers/iommu/riscv/iommu.c
+@@ -1258,8 +1258,13 @@ static struct iommu_domain *riscv_iommu_alloc_paging_domain(struct device *dev)
+ 
+ 	INIT_LIST_HEAD_RCU(&domain->bonds);
+ 	spin_lock_init(&domain->lock);
++	/*
++	 * 6.4 IOMMU capabilities [..] IOMMU implementations must support the
++	 * Svnapot standard extension for NAPOT Translation Contiguity.
++	 */
+ 	cfg.common.features = BIT(PT_FEAT_SIGN_EXTEND) |
+-			      BIT(PT_FEAT_FLUSH_RANGE);
++			      BIT(PT_FEAT_FLUSH_RANGE) |
++			      BIT(PT_FEAT_RISCV_SVNAPOT_64K);
+ 	domain->riscvpt.iommu.nid = dev_to_node(iommu->dev);
+ 	domain->domain.ops = &riscv_iommu_paging_domain_ops;
+ 
+-- 
+2.53.0
+
