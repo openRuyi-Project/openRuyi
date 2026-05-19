@@ -25,6 +25,7 @@ Prefer: systemd-udev
 Prefer: ninja
 Prefer: shadow
 Prefer: libevent
+Prefer: libomp
 Prefer: glib-devel glib
 Prefer: python3-libs python3-devel
 Prefer: python3 python3-packaging python3-pip python3-wheel
