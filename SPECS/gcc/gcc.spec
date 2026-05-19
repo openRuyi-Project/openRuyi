@@ -144,50 +144,6 @@ Requires:       libquadmath-devel-gcc%{gcc_version}
 %description -n libquadmath-devel
 Development files for the quadprecision math library.
 
-%package     -n libatomic
-Summary:        The GNU Compiler Atomic Operations Runtime Library
-License:        GPL-3.0-or-later WITH GCC-exception-3.1
-Requires:       libatomic-gcc%{gcc_version}
-# Only one of the symlink packages can be installed at the same time
-Provides:       libatomic = %{version}-%{release}
-Conflicts:      libatomic
-
-%description -n libatomic
-The system GNU Compiler Atomic Operations Runtime Library.
-
-%package     -n libgomp
-Summary:        The GNU Compiler OpenMP Runtime Library
-License:        GPL-3.0-or-later WITH GCC-exception-3.1
-Requires:       libgomp-gcc%{gcc_version}
-# Only one of the symlink packages can be installed at the same time
-Provides:       libgomp = %{version}-%{release}
-Conflicts:      libgomp
-
-%description -n libgomp
-The system GNU Compiler OpenMP Runtime Library.
-
-%package     -n libgfortran
-Summary:        The GNU Fortran Compiler Runtime Library
-License:        GPL-3.0-or-later WITH GCC-exception-3.1
-Requires:       libgfortran-gcc%{gcc_version}
-# Only one of the symlink packages can be installed at the same time
-Provides:       libgfortran = %{version}-%{release}
-Conflicts:      libgfortran
-
-%description -n libgfortran
-The system GNU Fortran Compiler Runtime Library.
-
-%package     -n libobjc
-Summary:        The GNU Objective C Compiler Runtime Library
-License:        GPL-3.0-or-later WITH GCC-exception-3.1
-Requires:       libobjc-gcc%{gcc_version}
-# Only one of the symlink packages can be installed at the same time
-Provides:       libobjc = %{version}-%{release}
-Conflicts:      libobjc
-
-%description -n libobjc
-The system GNU Objective C Compiler Runtime Library.
-
 %prep
 
 %install
@@ -350,18 +306,6 @@ fi
 %defattr(-,root,root)
 %endif
 %endif
-
-%files -n libatomic
-%defattr(-,root,root)
-
-%files -n libgomp
-%defattr(-,root,root)
-
-%files -n libgfortran
-%defattr(-,root,root)
-
-%files -n libobjc
-%defattr(-,root,root)
 
 %changelog
 %autochangelog
