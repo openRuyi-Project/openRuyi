@@ -182,8 +182,8 @@ Summary:        C compiler runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libgcc-s%{libsuffix} = %{version}-%{release}
 Provides:       gcc%{vermajor}-lib = %{version}-%{release}
-Obsoletes:      gcc15-lib < 15.2.0-12.8
-Conflicts:      gcc15-lib < 15.2.0-12.8
+Obsoletes:      gcc15-lib < 16
+Conflicts:      gcc15-lib < 16
 
 %description    -n libgcc-s
 This package is needed for dynamically linked C programs.
@@ -192,8 +192,8 @@ This package is needed for dynamically linked C programs.
 Summary:        The standard C++ shared library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libstdc++%{libsuffix} = %{version}-%{release}
-Obsoletes:      libstdc++-gcc15 < 15.2.0-12.8
-Conflicts:      libstdc++-gcc15 < 15.2.0-12.8
+Obsoletes:      libstdc++-gcc15 < 16
+Conflicts:      libstdc++-gcc15 < 16
 # The std::chrono timezone database is provided by timezone
 # (/usr/share/zoneinfo/tzdata.zi), without that the tzdb is empty and
 # will only provide UTC.  We don't want a Requires here though, instead
@@ -216,8 +216,8 @@ library. It is needed for compiling C++ code.
 Summary:        The GNU compiler collection OpenMP runtime library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libgomp{libsuffix} = %{version}-%{release}
-Obsoletes:      libgomp-gcc15 < 15.2.0-12.8
-Conflicts:      libgomp-gcc15 < 15.2.0-12.8
+Obsoletes:      libgomp-gcc15 < 16
+Conflicts:      libgomp-gcc15 < 16
 
 %description -n libgomp
 This is the OpenMP runtime library needed by OpenMP enabled programs
@@ -251,8 +251,8 @@ Nextstep OS. The source code is available in the gcc package.
 Summary:        Library for the GNU Objective C Compiler
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libobjc%{libsuffix} = %{version}-%{release}
-Obsoletes:      libobjc-gcc15 < 15.2.0-12.8
-Conflicts:      libobjc-gcc15 < 15.2.0-12.8
+Obsoletes:      libobjc-gcc15 < 16
+Conflicts:      libobjc-gcc15 < 16
 
 %description -n libobjc
 The library for the GNU Objective C compiler.
@@ -307,8 +307,8 @@ License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Requires:       libquadmath >= %{version}-%{release}
 %endif
 Provides:       libgfortran%{libsuffix} = %{version}-%{release}
-Obsoletes:      libgfortran-gcc15 < 15.2.0-12.8
-Conflicts:      libgfortran-gcc15 < 15.2.0-12.8
+Obsoletes:      libgfortran-gcc15 < 16
+Conflicts:      libgfortran-gcc15 < 16
 
 %description -n libgfortran
 The runtime library needed to run programs compiled with the Fortran compiler
@@ -318,8 +318,8 @@ of the GNU Compiler Collection (GCC).
 Summary:        The GNU Fortran Compiler Quadmath Runtime Library
 License:        LGPL-2.1-only
 Provides:       libquadmath%{libsuffix} = %{version}-%{release}
-Obsoletes:      libquadmath-gcc15 < 15.2.0-12.8
-Conflicts:      libquadmath-gcc15 < 15.2.0-12.8
+Obsoletes:      libquadmath-gcc15 < 16
+Conflicts:      libquadmath-gcc15 < 16
 
 %description -n libquadmath
 The runtime library needed to run programs compiled with the Fortran compiler
@@ -338,8 +338,8 @@ The libquadmatah runtime library development files.
 Summary:        The GNU Compiler Transactional Memory Runtime Library
 License:        MIT
 Provides:       libitm%{libsuffix} = %{version}-%{release}
-Obsoletes:      libitm-gcc15 < 15.2.0-12.8
-Conflicts:      libitm-gcc15 < 15.2.0-12.8
+Obsoletes:      libitm-gcc15 < 16
+Conflicts:      libitm-gcc15 < 16
 
 %description -n libitm
 The runtime library needed to run programs compiled with the
@@ -349,8 +349,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Address Sanitizer Runtime Library
 License:        MIT
 Provides:       libasan%{libsuffix} = %{version}-%{release}
-Obsoletes:      libasan-gcc15 < 15.2.0-12.8
-Conflicts:      libasan-gcc15 < 15.2.0-12.8
+Obsoletes:      libasan-gcc15 < 16
+Conflicts:      libasan-gcc15 < 16
 
 %description -n libasan
 The runtime library needed to run programs compiled with the
@@ -360,8 +360,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Thread Sanitizer Runtime Library
 License:        MIT
 Provides:       libtsan%{libsuffix} = %{version}-%{release}
-Obsoletes:      libtsan-gcc15 < 15.2.0-12.8
-Conflicts:      libtsan-gcc15 < 15.2.0-12.8
+Obsoletes:      libtsan-gcc15 < 16
+Conflicts:      libtsan-gcc15 < 16
 
 %description -n libtsan
 The runtime library needed to run programs compiled with the
@@ -371,8 +371,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Hardware-assisted Address Sanitizer Runtime Library
 License:        MIT
 Provides:       libhwasan%{libsuffix} = %{version}-%{release}
-Obsoletes:      libhwasan-gcc15 < 15.2.0-12.8
-Conflicts:      libhwasan-gcc15 < 15.2.0-12.8
+Obsoletes:      libhwasan-gcc15 < 16
+Conflicts:      libhwasan-gcc15 < 16
 
 %description -n libhwasan
 The runtime library needed to run programs compiled with the
@@ -382,8 +382,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Atomic Operations Runtime Library
 License:        GPL-3.0-or-later WITH GCC-exception-3.1
 Provides:       libatomic%{libsuffix} = %{version}-%{release}
-Obsoletes:      libatomic-gcc15 < 15.2.0-12.8
-Conflicts:      libatomic-gcc15 < 15.2.0-12.8
+Obsoletes:      libatomic-gcc15 < 16
+Conflicts:      libatomic-gcc15 < 16
 
 %description -n libatomic
 The runtime library for atomic operations of the GNU Compiler Collection (GCC).
@@ -392,8 +392,8 @@ The runtime library for atomic operations of the GNU Compiler Collection (GCC).
 Summary:        The GNU Compiler Leak Sanitizer Runtime Library
 License:        MIT
 Provides:       liblsan%{libsuffix} = %{version}-%{release}
-Obsoletes:      liblsan-gcc15 < 15.2.0-12.8
-Conflicts:      liblsan-gcc15 < 15.2.0-12.8
+Obsoletes:      liblsan-gcc15 < 16
+Conflicts:      liblsan-gcc15 < 16
 
 %description -n liblsan
 The runtime library needed to run programs compiled with the
@@ -403,8 +403,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Undefined Sanitizer Runtime Library
 License:        MIT
 Provides:       libubsan%{libsuffix} = %{version}-%{release}
-Obsoletes:      libubsan-gcc15 < 15.2.0-12.8
-Conflicts:      libubsan-gcc15 < 15.2.0-12.8
+Obsoletes:      libubsan-gcc15 < 16
+Conflicts:      libubsan-gcc15 < 16
 
 %description -n libubsan
 The runtime library needed to run programs compiled with the
@@ -414,8 +414,8 @@ The runtime library needed to run programs compiled with the
 Summary:        The GNU Compiler Vtable Verifier Runtime Library
 License:        MIT
 Provides:       libvtv%{libsuffix} = %{version}-%{release}
-Obsoletes:      libvtv-gcc15 < 15.2.0-12.8
-Conflicts:      libvtv-gcc15 < 15.2.0-12.8
+Obsoletes:      libvtv-gcc15 < 16
+Conflicts:      libvtv-gcc15 < 16
 
 %description -n libvtv
 The runtime library needed to run programs compiled with the
@@ -458,8 +458,8 @@ License:        GPL-3.0-or-later
 # respective compiler libgccjit was built from.
 Requires:       gcc%{vermajor}
 Provides:       libgccjit%{libsuffix} = %{version}-%{release}
-Obsoletes:      libgccjit-gcc15 < 15.2.0-12.8
-Conflicts:      libgccjit-gcc15 < 15.2.0-12.8
+Obsoletes:      libgccjit-gcc15 < 16
+Conflicts:      libgccjit-gcc15 < 16
 
 %description -n libgccjit
 Support for embedding GCC inside programs and libraries
