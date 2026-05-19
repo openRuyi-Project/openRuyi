@@ -30,7 +30,7 @@ creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/flang -> flang-22, e
 # ============================================================================
 # llvm subpackage
 # ============================================================================
-%package -n llvm
+%package     -n llvm
 Summary:        Default symlinks for LLVM tools
 Requires:       llvm%{maj_ver} > %{maj_ver}
 
@@ -41,7 +41,7 @@ creating symlinks like /usr/bin/llc -> llc-22, /usr/bin/opt -> opt-22, etc.
 # ============================================================================
 # clang subpackage
 # ============================================================================
-%package -n clang
+%package     -n clang
 Summary:        Default symlinks for clang
 Requires:       clang%{maj_ver} > %{maj_ver}
 
@@ -52,7 +52,7 @@ creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/clang++ -> clang++-2
 # ============================================================================
 # clang-tools-extra subpackage
 # ============================================================================
-%package -n clang-tools-extra
+%package     -n clang-tools-extra
 Summary:        Default symlinks for extra clang tools
 Requires:       clang%{maj_ver}-tools-extra > %{maj_ver}
 
@@ -62,7 +62,7 @@ This package provides default unversioned symlinks for extra clang tools %{maj_v
 # ============================================================================
 # clang-analyzer subpackage
 # ============================================================================
-%package -n clang-analyzer
+%package     -n clang-analyzer
 Summary:        Default symlinks for clang static analyzer
 Requires:       clang%{maj_ver}-analyzer > %{maj_ver}
 
@@ -72,7 +72,7 @@ This package provides default unversioned symlinks for clang static analyzer %{m
 # ============================================================================
 # flang subpackage
 # ============================================================================
-%package -n flang
+%package     -n flang
 Summary:        Default symlinks for flang (Fortran frontend)
 Requires:       llvm%{maj_ver} > %{maj_ver}
 
@@ -83,7 +83,7 @@ the Fortran frontend for LLVM.
 # ============================================================================
 # llvm-bolt subpackage
 # ============================================================================
-%package -n llvm-bolt
+%package     -n llvm-bolt
 Summary:        Default symlinks for LLVM BOLT (Binary Optimization and Layout Tool)
 Requires:       llvm-bolt%{maj_ver} > %{maj_ver}
 
@@ -94,7 +94,7 @@ a post-link optimizer developed to speed up large applications.
 # ============================================================================
 # lld subpackage
 # ============================================================================
-%package -n lld
+%package     -n lld
 Summary:        Default symlinks for LLVM lld linker
 Requires:       lld%{maj_ver} > %{maj_ver}
 
@@ -104,7 +104,7 @@ This package provides default unversioned symlinks for LLVM lld linker %{maj_ver
 # ============================================================================
 # lldb subpackage
 # ============================================================================
-%package -n lldb
+%package     -n lldb
 Summary:        Default symlinks for LLVM lldb debugger
 Requires:       lldb%{maj_ver} > %{maj_ver}
 
