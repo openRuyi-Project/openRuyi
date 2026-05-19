@@ -312,3 +312,4 @@ ln -sf lldb-mcp-%{maj_ver} %{buildroot}%{_bindir}/lldb-mcp
 
 %changelog
 %autochangelog
+
