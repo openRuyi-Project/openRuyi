@@ -1,0 +1,36 @@
+From e63db54ff3a4f36fedd2e46dd948fea98f0ced1f Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:33:51 +0100
+Subject: [PATCH 268/451] UPSTREAM: EDAC/ie31200: #undef field_get() before
+ local definition
+
+Prepare for the advent of a globally available common field_get() macro
+by undefining the symbol before defining a local variant.  This prevents
+redefinition warnings from the C preprocessor when introducing the common
+macro later.
+
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit d51b09a0feb63029be64226502cbcf53adc434b0)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/edac/ie31200_edac.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index 5a080ab65476..72290f430126 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -140,6 +140,7 @@
+ #define IE31200_CAPID0_ECC		BIT(1)
+ 
+ /* Non-constant mask variant of FIELD_GET() */
++#undef field_get
+ #define field_get(_mask, _reg)  (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+ 
+ static int nr_channels;
+-- 
+2.53.0
+

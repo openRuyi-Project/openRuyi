@@ -1,0 +1,36 @@
+From 55c6cbb1129cd9b46eb2f9419400fb3873fbce85 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:33:56 +0100
+Subject: [PATCH 273/451] UPSTREAM: soc: renesas: rz-sysc: #undef field_get()
+ before local definition
+
+Prepare for the advent of a globally available common field_get() macro
+by undefining the symbol before defining a local variant.  This prevents
+redefinition warnings from the C preprocessor when introducing the common
+macro later.
+
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit 138ab44108fad96c22b381ebfb6936ab9787aedc)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/soc/renesas/rz-sysc.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
+index 19c1e666279b..a1487195dc87 100644
+--- a/drivers/soc/renesas/rz-sysc.c
++++ b/drivers/soc/renesas/rz-sysc.c
+@@ -16,6 +16,7 @@
+ 
+ #include "rz-sysc.h"
+ 
++#undef field_get
+ #define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+ 
+ /**
+-- 
+2.53.0
+
