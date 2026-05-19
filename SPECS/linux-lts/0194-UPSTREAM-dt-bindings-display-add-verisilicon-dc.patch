@@ -1,7 +1,7 @@
-From dcf58f7b558d3d2a70de8638b883f7b4731ff223 Mon Sep 17 00:00:00 2001
+From 7dc82ddb03b13a8febbc52d0a137dd37b73480c8 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:16 +0800
-Subject: [PATCH 194/408] UPSTREAM: dt-bindings: display: add verisilicon,dc
+Subject: [PATCH 194/451] UPSTREAM: dt-bindings: display: add verisilicon,dc
 
 Verisilicon has a series of display controllers prefixed with DC and
 with self-identification facility like their GC series GPUs.
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/display/verisilicon,dc.yaml b/Documentation/devicetree/bindings/display/verisilicon,dc.yaml
 new file mode 100644
-index 0000000000000..9dc35ab973f20
+index 000000000000..9dc35ab973f2
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/display/verisilicon,dc.yaml
 @@ -0,0 +1,122 @@
@@ -153,5 +153,5 @@ index 0000000000000..9dc35ab973f20
 +      };
 +    };
 -- 
-2.52.0
+2.53.0
 

@@ -1,7 +1,7 @@
-From 32f1bc82f93e35bf5ffdeae8bc4dcf25e7bb5158 Mon Sep 17 00:00:00 2001
+From cc5916410a997a7fd91cf978e1b08f97bbde9fd6 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Mon, 27 Oct 2025 13:48:05 +0800
-Subject: [PATCH 060/408] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1
+Subject: [PATCH 060/451] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1
  from MFD_SPACEMIT_P1
 
 select will force a symbol to a specific value without considering
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 deletion(-)
 
 diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 55a9fea95195b..b0264352790e3 100644
+index 55a9fea95195..b0264352790e 100644
 --- a/drivers/mfd/Kconfig
 +++ b/drivers/mfd/Kconfig
 @@ -1269,7 +1269,6 @@ config MFD_SPACEMIT_P1
@@ -37,5 +37,5 @@ index 55a9fea95195b..b0264352790e3 100644
  	help
  	  This option supports the I2C-based SpacemiT P1 PMIC, which
 -- 
-2.52.0
+2.53.0
 

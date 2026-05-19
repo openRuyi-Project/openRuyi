@@ -1,0 +1,46 @@
+From eed8158ce7c75640b7338569d474bd1826eaf286 Mon Sep 17 00:00:00 2001
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Date: Fri, 26 Dec 2025 16:31:59 +0800
+Subject: [PATCH 265/451] UPSTREAM: i2c: spacemit: drop useless spaces
+
+Previously, the I2C driver had an extra leading space in column 0 of
+included header lines. This commit removes the redundant whitespace.
+
+Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Reviewed-by: Alex Elder <elder@riscstar.com>
+Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
+Link: https://lore.kernel.org/r/20251226-k1-i2c-ilcr-v5-1-b5807b7dd0e6@linux.spacemit.com
+(cherry picked from commit 7b5073f9897f67af58b5bf17232bf60fc42e7ecd)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/i2c/busses/i2c-k1.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
+index afc6bdd68bd4..9152cf436bea 100644
+--- a/drivers/i2c/busses/i2c-k1.c
++++ b/drivers/i2c/busses/i2c-k1.c
+@@ -4,13 +4,13 @@
+  */
+ 
+ #include <linux/bitfield.h>
+- #include <linux/clk.h>
+- #include <linux/i2c.h>
+- #include <linux/iopoll.h>
+- #include <linux/module.h>
+- #include <linux/of_address.h>
+- #include <linux/platform_device.h>
+- #include <linux/reset.h>
++#include <linux/clk.h>
++#include <linux/i2c.h>
++#include <linux/iopoll.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ /* spacemit i2c registers */
+ #define SPACEMIT_ICR		 0x0		/* Control register */
+-- 
+2.53.0
+

@@ -1,0 +1,36 @@
+From 07556dc542bb844e3ebc5dfd7fb0a1feaefd0cc7 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:34:06 +0100
+Subject: [PATCH 281/451] UPSTREAM: iio: dac: Convert to common field_prep()
+ helper
+
+Drop the driver-specific field_prep() macro, in favor of the globally
+available variant from <linux/bitfield.h>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit 54bfd90ca3b41567cbfdac2f633ae329eb3a665a)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iio/dac/ad3530r.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
+index 5684d11137f2..b97b46090d80 100644
+--- a/drivers/iio/dac/ad3530r.c
++++ b/drivers/iio/dac/ad3530r.c
+@@ -53,10 +53,6 @@
+ #define AD3530R_MAX_CHANNELS			8
+ #define AD3531R_MAX_CHANNELS			4
+ 
+-/* Non-constant mask variant of FIELD_PREP() */
+-#undef field_prep
+-#define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ enum ad3530r_mode {
+ 	AD3530R_NORMAL_OP,
+ 	AD3530R_POWERDOWN_1K,
+-- 
+2.53.0
+

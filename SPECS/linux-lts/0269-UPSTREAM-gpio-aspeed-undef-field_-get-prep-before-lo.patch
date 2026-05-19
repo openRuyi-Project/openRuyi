@@ -1,0 +1,38 @@
+From 66f8da127bd9a9691dd0884eb10915456da88c9b Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:33:52 +0100
+Subject: [PATCH 269/451] UPSTREAM: gpio: aspeed: #undef field_{get,prep}()
+ before local definition
+
+Prepare for the advent of globally available common field_get() and
+field_prep() macros by undefining the symbols before defining local
+variants.  This prevents redefinition warnings from the C preprocessor
+when introducing the common macros later.
+
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit d1e1a7271e97bf679d355777a10fa8c0dc259b86)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/gpio/gpio-aspeed.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 3da37a0fda3f..6255b2080a41 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -32,7 +32,9 @@
+ #include "gpiolib.h"
+ 
+ /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
++#undef field_get
+ #define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
++#undef field_prep
+ #define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+ 
+ #define GPIO_G7_IRQ_STS_BASE 0x100
+-- 
+2.53.0
+
