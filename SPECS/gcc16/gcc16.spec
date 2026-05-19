@@ -1194,6 +1194,7 @@ cd ..
 %if %{enable_plugins}
 %files devel
 %defattr(-,root,root)
+%dir %{libsubdir}/plugin
 %{libsubdir}/plugin/include
 %{libsubdir}/plugin/gengtype
 %{libsubdir}/plugin/gtype.state
