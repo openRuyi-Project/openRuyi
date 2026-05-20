@@ -6,6 +6,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+"""Report net package changes from local Git SPECS history."""
+
 # Requires Python 3.10+.
 # Required utilities:
 # - git
@@ -25,20 +27,35 @@ from datetime import date
 from typing import NamedTuple
 
 SPEC_ROOT = "SPECS"
+# Only package-local spec files are report inputs.
 SPEC_FILES_PATHSPEC = ":(glob)SPECS/*/*.spec"
 GIT_EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
 GIT_TIMEOUT_SECONDS = 60
 ACTIONS = ("updated", "added", "removed")
+
+# Strip trailing comments from simple spec values.
 COMMENT_RE = re.compile(r"\s+#.*$")
+
+# Capture simple `%global name value` and `%define name value`.
 MACRO_RE = re.compile(r"^\s*%(?:global|define)\s+([A-Za-z0-9_]+)\s+(.*?)\s*$")
+
+# Expand `%{?name:value}` when `name` is known.
 CONDITIONAL_VALUE_RE = re.compile(
     r"%\{\?([A-Za-z0-9_]+):([^{}]*(?:%\{[A-Za-z0-9_]+\}[^{}]*)*)\}"
 )
+
+# Match `%{name}` after conditional macros have been handled.
 BRACED_MACRO_RE = re.compile(r"%\{([^{}]+)\}")
+
+# Match bare `%name` while leaving escaped `%%` alone.
 BARE_MACRO_RE = re.compile(r"(?<!%)%([A-Za-z_][A-Za-z0-9_]*)")
+
+# Allowlisted `%(... ${c:0:N} ...)` version expressions.
 SHELL_SLICE_RE = re.compile(
     r"%\(c=([A-Za-z0-9._+-]+);\s*echo\s+\$\{c:0:(\d+)\}\)"
 )
+
+# Allowlisted `%(... | tr 'a' 'b')` version expressions.
 SHELL_TR_RE = re.compile(
     r"%\(echo\s+([A-Za-z0-9._+-]+)\s+\|\s+tr\s+'(.)'\s+'(.)'\)"
 )
@@ -65,6 +82,8 @@ SHELL_SLICE_PACKAGES = frozenset(
     )
 )
 SHELL_TR_PACKAGES = frozenset(("libtar", "lm_sensors"))
+
+# Values still containing placeholders are intentionally kept unresolved.
 UNRESOLVED_VALUE_RE = re.compile(r"@[^@\s]+@|%\{|%\(")
 
 EPILOG = (
@@ -197,6 +216,8 @@ class SpecChange(NamedTuple):
 
 @dataclass(slots=True)
 class PackageReport:
+    """Net package state across the selected range."""
+
     package: str
     old: Spec | None
     new: Spec | None
@@ -227,6 +248,8 @@ class PackageReport:
 
 
 def run(argv: list[str], *, cwd: pathlib.Path) -> str:
+    """Run Git and return stdout, raising RuntimeError with stderr."""
+
     try:
         # Git argv is constructed internally and shell=False.
         proc = subprocess.run(  # nosec B603
@@ -251,6 +274,8 @@ def run(argv: list[str], *, cwd: pathlib.Path) -> str:
 
 
 def package_dir(path: str | None, *, spec_only: bool = True) -> str | None:
+    """Return the package directory for an openRuyi SPECS path."""
+
     if not path:
         return None
     parts = path.split("/", 2)
@@ -273,6 +298,8 @@ def expand_braced_macro(
     macros: dict[str, str],
     package: str | None,
 ) -> str:
+    """Resolve one braced RPM macro match."""
+
     body = match.group(1)
     if body.startswith(("?", "!?")):
         inverted = body.startswith("!?")
@@ -281,6 +308,7 @@ def expand_braced_macro(
             return clean_value(value) if (name in macros) != inverted else ""
         if inverted or name not in macros:
             return ""
+        # Resolve `%{?name}` without feeding `name` back into itself.
         scoped = macros.copy()
         scoped.pop(name, None)
         value = resolve_macros(macros[name], scoped, package) or ""
@@ -289,12 +317,9 @@ def expand_braced_macro(
 
 
 def expand_shell_macros(value: str, package: str | None) -> str:
-    # Shell macro expansion is allowlisted by package. Do not execute shell.
-    #
-    # SHELL_SLICE_PACKAGES is the package whitelist for short commit macros.
-    # SHELL_TR_PACKAGES is the package whitelist for simple delimiter rewrites.
-    #
-    # This is not a shell parser.
+    """Resolve allowlisted shell-like macros without running a shell."""
+
+    # SHELL_*_PACKAGES scope these regex rules; this is not a shell parser.
     if package in SHELL_SLICE_PACKAGES:
         value = SHELL_SLICE_RE.sub(
             lambda m: m.group(1)[: int(m.group(2))], value
@@ -309,6 +334,9 @@ def expand_shell_macros(value: str, package: str | None) -> str:
 def resolve_macros(
     value: str, macros: dict[str, str], package: str | None = None
 ) -> str:
+    """Expand the simple RPM macros needed for Version values."""
+
+    # Bound recursion; unsupported RPM forms are left visible.
     for _ in range(20):
         old = value
         value = CONDITIONAL_VALUE_RE.sub(
@@ -335,6 +363,8 @@ def resolve_macros(
 def parse_spec(
     text: str | None, package_hint: str | None = None
 ) -> Spec | None:
+    """Extract the Version field from a spec file."""
+
     if text is None:
         return None
 
@@ -362,6 +392,8 @@ def parse_spec(
 
 
 def parse_name_status(output: str) -> list[SpecChange]:
+    """Parse `git diff --name-status -z` output for spec changes."""
+
     if not output:
         return []
 
@@ -369,6 +401,7 @@ def parse_name_status(output: str) -> list[SpecChange]:
     fields = iter(output.rstrip("\0").split("\0"))
     for status in fields:
         path = next(fields)
+        # Added and deleted files have only one side in name-status output.
         old_path, new_path = (
             None if status == "A" else path,
             None if status == "D" else path,
@@ -387,6 +420,8 @@ def parse_name_status(output: str) -> list[SpecChange]:
 
 
 def parse_renames(output: str) -> list[tuple[str, str]]:
+    """Parse `git log --name-status -M -z` rename records."""
+
     if not output:
         return []
 
@@ -406,6 +441,8 @@ def parse_renames(output: str) -> list[tuple[str, str]]:
 
 
 def collapsed_renames(renames: list[tuple[str, str]]) -> dict[str, str]:
+    """Collapse chained directory renames to first source and final target."""
+
     result: dict[str, str] = {}
     for old_dir, new_dir in renames:
         source = next(
@@ -416,6 +453,8 @@ def collapsed_renames(renames: list[tuple[str, str]]) -> dict[str, str]:
 
 
 class GitRepo:
+    """Small local Git wrapper for package history queries."""
+
     def __init__(self, repo_root: str) -> None:
         self.root = pathlib.Path(repo_root).resolve()
         git = shutil.which("git")
@@ -431,6 +470,8 @@ class GitRepo:
         *,
         name_only: bool = False,
     ) -> list[str]:
+        """Build the shared `git log` command for date and ref ranges."""
+
         cmd = [self.git, "log", "--reverse"]
         if name_only:
             cmd.append("--name-only")
@@ -452,11 +493,14 @@ class GitRepo:
     def range_refs(
         self, args: argparse.Namespace
     ) -> tuple[str | None, str | None]:
+        """Return endpoint refs for the selected range."""
+
         if args.from_ref is not None:
             return args.from_ref, args.to_ref or "HEAD"
 
         base_ref: str | None = None
         head_ref: str | None = None
+        # For date ranges, the first matching commit's parent is the base.
         for line in run(
             self.log_command(args, "%H%x1f%P", [SPEC_FILES_PATHSPEC]),
             cwd=self.root,
@@ -470,11 +514,14 @@ class GitRepo:
     def range_changes(
         self, base_ref: str | None, head_ref: str
     ) -> list[SpecChange]:
+        """Return net spec file changes between endpoint trees."""
+
         cmd = [
             self.git,
             "diff",
             "--name-status",
             "-r",
+            # Treat renames as delete/add; range_renames restores them.
             "--no-renames",
             "-z",
             base_ref or GIT_EMPTY_TREE,
@@ -486,6 +533,8 @@ class GitRepo:
     def range_renames(
         self, base_ref: str | None, head_ref: str
     ) -> dict[str, str]:
+        """Return package directory renames seen inside the range."""
+
         if not base_ref:
             return {}
         cmd = [
@@ -506,10 +555,13 @@ class GitRepo:
     def read_files(
         self, ref: str | None, paths: set[str]
     ) -> dict[str, str | None]:
+        """Read many files at one ref using one Git subprocess."""
+
         if not ref or not paths:
             return {}
         sorted_paths = sorted(paths)
 
+        # `cat-file --batch` avoids one `git show` per spec.
         requests = "".join(f"{ref}:{path}\n" for path in sorted_paths).encode()
         try:
             # Git argv is constructed internally and shell=False.
@@ -537,6 +589,7 @@ class GitRepo:
         offset = 0
         output = proc.stdout
         for path in sorted_paths:
+            # Batch records are `<oid> blob <size>\n<body>\n`.
             if (line_end := output.find(b"\n", offset)) < 0:
                 raise RuntimeError(
                     "git cat-file --batch returned truncated output"
@@ -565,6 +618,8 @@ class GitRepo:
         args: argparse.Namespace,
         dirs: set[str],
     ) -> dict[str, list[Commit]]:
+        """Group range commits by touched package directory."""
+
         if not dirs:
             return {}
 
@@ -598,6 +653,8 @@ class GitRepo:
 
 
 def git_time(value: str, *, end: bool) -> str:
+    """Convert ISO dates to Git date expressions."""
+
     try:
         day = date.fromisoformat(value)
     except ValueError:
@@ -608,6 +665,8 @@ def git_time(value: str, *, end: bool) -> str:
 
 
 def month_bounds(value: str) -> tuple[str, str]:
+    """Return first and last ISO dates for a YYYY-MM value."""
+
     try:
         first = date.fromisoformat(f"{value}-01")
     except ValueError:
@@ -623,6 +682,8 @@ def collect(
     head_ref: str | None,
     action_filters: tuple[str, ...],
 ) -> list[PackageReport]:
+    """Build package reports by comparing endpoint spec versions."""
+
     if not head_ref:
         return []
 
@@ -653,6 +714,7 @@ def collect(
             new_dir=change.new_dir,
         )
 
+    # Rejoin endpoint delete/add pairs that were real path renames.
     for old_dir, new_dir in repo.range_renames(base_ref, head_ref).items():
         old_report = reports.get(old_dir)
         new_report = reports.get(new_dir)
@@ -681,6 +743,8 @@ def attach_commits(
     reports: list[PackageReport],
     args: argparse.Namespace,
 ) -> None:
+    """Attach package-directory commit summaries to reports."""
+
     # TODO: Track intermediate dirs for packages renamed more than once.
     dirs: set[str] = set()
     for report in reports:
@@ -738,6 +802,8 @@ def render_text(
     actions: tuple[str, ...],
     include_commits: bool,
 ) -> str:
+    """Render a text report for people."""
+
     lines = [
         "Package Change Report",
         f"Range: {range_text}",
@@ -781,6 +847,8 @@ def render_json(
     actions: tuple[str, ...],
     include_commits: bool,
 ) -> str:
+    """Render a stable JSON report for automation."""
+
     return json.dumps(
         {
             "schema_version": 1,
@@ -797,6 +865,8 @@ def render_json(
 
 
 def describe_range(args: argparse.Namespace) -> str:
+    """Describe the selected range for report metadata."""
+
     if args.from_ref is not None:
         return f"{args.from_ref}..{args.to_ref or 'HEAD'}"
     if args.month is not None:
@@ -809,6 +879,8 @@ def describe_range(args: argparse.Namespace) -> str:
 def validate(
     args: argparse.Namespace, parser: argparse.ArgumentParser
 ) -> None:
+    """Validate mutually exclusive range modes and empty values."""
+
     for option, value in (
         ("--month", args.month),
         ("--since", args.since),
@@ -836,6 +908,8 @@ def validate(
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run the command-line interface."""
+
     args = arg_parser.parse_args(argv)
     validate(args, arg_parser)
 
