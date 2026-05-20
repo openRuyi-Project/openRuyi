@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Recursive Hasher
 License:        0BSD
 URL:            https://github.com/rhash/RHash
-#!RemoteAsset
+#!RemoteAsset:  sha256:9f6019cfeeae8ace7067ad22da4e4f857bb2cfa6c2deaa2258f55b2227ec937a
 Source:         https://github.com/rhash/RHash/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -105,4 +105,4 @@ sed -i "s|-fomit-frame-pointer|%{optflags}|g" configure
 %{_libdir}/librhash.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
