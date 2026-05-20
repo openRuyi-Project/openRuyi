@@ -7,12 +7,12 @@
 %global srcname botocore
 
 Name:           python-%{srcname}
-Version:        1.43.6
+Version:        1.43.11
 Release:        %autorelease
 Summary:        The low-level, core functionality of boto3 and the AWS CLI
 License:        Apache-2.0
 URL:            https://github.com/boto/botocore
-#!RemoteAsset:  sha256:b1e395b347356860398da42e61c808cf1e34b6fa7180cf2b9d87d986e1a06ba0
+#!RemoteAsset:  sha256:d7d479cc2809ec2728f2898521003adfb79bfe6a4615c59dfd222ec52b0cee6b
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -39,8 +39,8 @@ A low-level interface to a growing number of Amazon Web Services.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README.rst
+%license LICENSE.txt
 
 %changelog
 %autochangelog
