@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        A Script to Build Linux RPMs
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            https://github.com/openSUSE/obs-build
-#!RemoteAsset
+#!RemoteAsset:  sha256:618585b222bb6d4cc7e40d267bdb186e30f6116a5ccaf070806244c688319822
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
@@ -31,6 +31,7 @@ Requires:       bash
 Requires:       binutils
 Requires:       perl
 Requires:       tar
+Requires:       perl(Try::Tiny)
 
 Recommends:     %{name}-mkdrpms = %{version}-%{release}
 Recommends:     perl(Config::IniFiles)
@@ -42,6 +43,7 @@ Recommends:     perl(Time::Zone)
 Recommends:     perl(URI)
 Recommends:     perl(XML::Parser)
 Recommends:     perl(YAML::LibYAML)
+Recommends:     perl(LWP::Protocol::https)
 
 %description
 This package provides a script for building RPMs in a chroot environment.
@@ -112,4 +114,4 @@ sed -e "s|#!/usr/bin/python|#!%{__python3}|" \
 %{_libdir}/build/mkdrpms
 
 %changelog
-%{?autochangelog}
+%autochangelog
