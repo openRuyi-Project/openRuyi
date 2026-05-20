@@ -1,7 +1,7 @@
 From a1876550f566c4176d61390a6656754b9d84893e Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:18 +0800
-Subject: [PATCH 101/451] UPSTREAM: dt-bindings: riscv: Add B ISA extension
+Subject: [PATCH 101/469] UPSTREAM: dt-bindings: riscv: Add B ISA extension
  description
 
 Add description of the single-letter B extension for Bit Manipulation.

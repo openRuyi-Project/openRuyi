@@ -1,7 +1,7 @@
 From a97061c456ce31883ed51ae24c870d1b21a67bd4 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:52 -0400
-Subject: [PATCH 317/451] FROMLIST: spi: spacemit: introduce SpacemiT K1 SPI
+Subject: [PATCH 317/469] FROMLIST: spi: spacemit: introduce SpacemiT K1 SPI
  controller driver
 
 This patch introduces the driver for the SPI controller found in the

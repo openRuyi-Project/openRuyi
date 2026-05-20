@@ -1,7 +1,7 @@
 From 03d6d341a4d1a95e8e601be56c86ec0d4fe25adf Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:05 +0100
-Subject: [PATCH 280/451] UPSTREAM: gpio: aspeed: Convert to common
+Subject: [PATCH 280/469] UPSTREAM: gpio: aspeed: Convert to common
  field_{get,prep}() helpers
 
 Drop the driver-specific field_get() and field_prep() macros, in favor

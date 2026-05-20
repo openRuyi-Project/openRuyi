@@ -1,7 +1,7 @@
 From 9241e55754040fef9f5b6f87a899df1dded339fc Mon Sep 17 00:00:00 2001
 From: Thierry Reding <treding@nvidia.com>
 Date: Wed, 29 Oct 2025 17:33:30 +0100
-Subject: [PATCH 163/451] UPSTREAM: syscore: Pass context data to callbacks
+Subject: [PATCH 163/469] UPSTREAM: syscore: Pass context data to callbacks
 
 Several drivers can benefit from registering per-instance data along
 with the syscore operations. To achieve this, move the modifiable fields

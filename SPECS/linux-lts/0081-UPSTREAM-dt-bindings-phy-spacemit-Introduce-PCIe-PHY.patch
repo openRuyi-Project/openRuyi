@@ -1,7 +1,7 @@
 From ef67b8bf5f7c2185b28f4cfa1ec5c6b7cf587291 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:28 -0600
-Subject: [PATCH 081/451] UPSTREAM: dt-bindings: phy: spacemit: Introduce PCIe
+Subject: [PATCH 081/469] UPSTREAM: dt-bindings: phy: spacemit: Introduce PCIe
  PHY
 
 Add the Device Tree binding for two PCIe PHYs present on the SpacemiT

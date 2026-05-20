@@ -1,7 +1,7 @@
 From 9c7ba8e8309591522d09ed9185c72d032c5c74b9 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:43 +0800
-Subject: [PATCH 110/451] UPSTREAM: dt-bindings: interrupt-controller: add
+Subject: [PATCH 110/469] UPSTREAM: dt-bindings: interrupt-controller: add
  SpacemiT K3 IMSIC
 
 Add compatible string for SpacemiT K3 IMSIC.

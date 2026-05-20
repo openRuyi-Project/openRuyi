@@ -1,7 +1,7 @@
 From e836a4194fcca8aa40d5f82a6754e8a75f18869c Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:14 +0100
-Subject: [PATCH 287/451] UPSTREAM: soc: renesas: Use bitfield helpers
+Subject: [PATCH 287/469] UPSTREAM: soc: renesas: Use bitfield helpers
 
 Use the field_get() helper, instead of open-coding the same operation.
 

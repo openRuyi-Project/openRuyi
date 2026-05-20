@@ -1,7 +1,7 @@
 From 788b58f11d4dc1ecc5097ee70e6f8a6d92fd74d7 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:48 +0800
-Subject: [PATCH 257/451] UPSTREAM: ASoC: spacemit: adjust FIFO trigger
+Subject: [PATCH 257/469] UPSTREAM: ASoC: spacemit: adjust FIFO trigger
  threshold to half FIFO size
 
 Set both TX and RX FIFO trigger thresholds (TFT/RFT) to 0xF (half of

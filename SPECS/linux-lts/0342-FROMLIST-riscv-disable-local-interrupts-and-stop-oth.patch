@@ -1,7 +1,7 @@
 From 51d55c3e9ce622d1a1c2abf715714befcb08ed2d Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.dev>
 Date: Tue, 17 Mar 2026 16:48:06 +0800
-Subject: [PATCH 342/451] FROMLIST: riscv: disable local interrupts and stop
+Subject: [PATCH 342/469] FROMLIST: riscv: disable local interrupts and stop
  other CPUs before reboot/shutdown
 
 Currently, the RISC-V implementation of machine_restart(), machine_halt(),

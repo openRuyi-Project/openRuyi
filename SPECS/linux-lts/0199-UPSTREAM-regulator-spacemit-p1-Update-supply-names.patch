@@ -1,7 +1,7 @@
 From 9652e470c9414eadc090332894ede35497593520 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:03 +0800
-Subject: [PATCH 199/451] UPSTREAM: regulator: spacemit-p1: Update supply names
+Subject: [PATCH 199/469] UPSTREAM: regulator: spacemit-p1: Update supply names
 
 Update supply names to match the P1 PMIC's actual hardware pinout where
 each buck has an individual VIN pin (vin1-vin6) and LDO groups have

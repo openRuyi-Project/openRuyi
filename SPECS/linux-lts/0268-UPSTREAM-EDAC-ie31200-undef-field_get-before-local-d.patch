@@ -1,7 +1,7 @@
 From e63db54ff3a4f36fedd2e46dd948fea98f0ced1f Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:51 +0100
-Subject: [PATCH 268/451] UPSTREAM: EDAC/ie31200: #undef field_get() before
+Subject: [PATCH 268/469] UPSTREAM: EDAC/ie31200: #undef field_get() before
  local definition
 
 Prepare for the advent of a globally available common field_get() macro

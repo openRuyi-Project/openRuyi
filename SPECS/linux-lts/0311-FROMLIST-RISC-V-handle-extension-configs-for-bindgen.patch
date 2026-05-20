@@ -1,7 +1,7 @@
 From e718a801a2df0d281f109b85fb0e62220b47f289 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:57 +0100
-Subject: [PATCH 311/451] FROMLIST: RISC-V: handle extension configs for
+Subject: [PATCH 311/469] FROMLIST: RISC-V: handle extension configs for
  bindgen, re-enable gcc + rust builds
 
 Commit 33549fcf37ec ("RISC-V: disallow gcc + rust builds") disabled GCC

@@ -1,7 +1,7 @@
 From 572b9f2d0c2197d0821520e370186f33ca308aee Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:42 +0000
-Subject: [PATCH 220/451] UPSTREAM: riscv: dts: spacemit: k3: add clock tree
+Subject: [PATCH 220/469] UPSTREAM: riscv: dts: spacemit: k3: add clock tree
 
 Add clock support to SpacemiT K3 SoC, the clock tree consist of several
 blocks which are APBC, APMU, DCIU, MPUM.

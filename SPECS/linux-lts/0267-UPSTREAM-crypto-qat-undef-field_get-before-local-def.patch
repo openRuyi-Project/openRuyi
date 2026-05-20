@@ -1,7 +1,7 @@
 From ab47170f1ab36fb1baf09217e1ec5501da65eeb2 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:50 +0100
-Subject: [PATCH 267/451] UPSTREAM: crypto: qat - #undef field_get() before
+Subject: [PATCH 267/469] UPSTREAM: crypto: qat - #undef field_get() before
  local definition
 
 Prepare for the advent of a globally available common field_get() macro

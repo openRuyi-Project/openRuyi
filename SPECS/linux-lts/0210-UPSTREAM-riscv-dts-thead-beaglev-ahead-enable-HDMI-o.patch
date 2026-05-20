@@ -1,7 +1,7 @@
 From 9b94587fe2d708272b4c00011f71db6f964e2352 Mon Sep 17 00:00:00 2001
 From: Robert Mazur <robert.mazur@imgtec.com>
 Date: Wed, 25 Mar 2026 09:18:59 +0100
-Subject: [PATCH 210/451] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable
+Subject: [PATCH 210/469] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable
  HDMI output
 
 The BeagleV Ahead board includes a micro HDMI connector (Type-D)

@@ -1,7 +1,7 @@
 From f656a7b36b46369c082e24305f073b36450f64ec Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:54 +0100
-Subject: [PATCH 271/451] UPSTREAM: iio: mlx90614: #undef field_{get,prep}()
+Subject: [PATCH 271/469] UPSTREAM: iio: mlx90614: #undef field_{get,prep}()
  before local definition
 
 Prepare for the advent of globally available common field_get() and

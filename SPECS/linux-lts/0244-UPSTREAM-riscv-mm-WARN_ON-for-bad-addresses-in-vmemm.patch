@@ -1,7 +1,7 @@
 From 6a30583e0febba7a8186c5a4ceb9b16b3899bbd6 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 244/451] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
+Subject: [PATCH 244/469] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
  vmemmap_populate()
 
 Similarly to the same check in arch/arm64/mm/mmu.c, in

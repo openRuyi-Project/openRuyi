@@ -1,7 +1,7 @@
 From 81881f7c267f760c8f90bb41cd87d0923c9fbc58 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Tue, 18 Nov 2025 14:08:06 +0800
-Subject: [PATCH 059/451] UPSTREAM: rtc: spacemit: MFD_SPACEMIT_P1 as
+Subject: [PATCH 059/469] UPSTREAM: rtc: spacemit: MFD_SPACEMIT_P1 as
  dependencies
 
 RTC_DRV_SPACEMIT_P1 is a subdevice of P1 and should depend on

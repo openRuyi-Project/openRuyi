@@ -1,7 +1,7 @@
 From 238eea6a8f3a16735211088c44e9ca708429e113 Mon Sep 17 00:00:00 2001
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Date: Wed, 12 Nov 2025 14:55:30 +0100
-Subject: [PATCH 246/451] UPSTREAM: string: provide strends()
+Subject: [PATCH 246/469] UPSTREAM: string: provide strends()
 
 Implement a function for checking if a string ends with a different
 string and add its kunit test cases.

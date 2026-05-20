@@ -1,7 +1,7 @@
 From df08c7eec105590cf07a89cefd10b14d7861e9c9 Mon Sep 17 00:00:00 2001
 From: Matt Coster <matt.coster@imgtec.com>
 Date: Fri, 6 Feb 2026 16:02:12 +0000
-Subject: [PATCH 186/451] UPSTREAM: drm/imagination: Improve handling of
+Subject: [PATCH 186/469] UPSTREAM: drm/imagination: Improve handling of
  unknown FWCCB commands
 
 A couple small changes:

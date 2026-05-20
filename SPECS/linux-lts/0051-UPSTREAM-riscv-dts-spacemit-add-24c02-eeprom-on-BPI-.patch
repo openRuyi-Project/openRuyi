@@ -1,7 +1,7 @@
 From f134a93a3101bb2abe9c321a830e90d9fbebb045 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:38 +0200
-Subject: [PATCH 051/451] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on
+Subject: [PATCH 051/469] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on
  BPI-F3
 
 The BPI-F3 board includes a 24c02 eeprom, that stores the MAC addresses

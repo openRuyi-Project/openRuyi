@@ -1,7 +1,7 @@
 From 0aca08e894f3c98b50faea73a5c4a4257798f498 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Tue, 10 Mar 2026 11:41:12 +0000
-Subject: [PATCH 206/451] UPSTREAM: drm/imagination: Disable interrupts before
+Subject: [PATCH 206/469] UPSTREAM: drm/imagination: Disable interrupts before
  suspending the GPU
 
 This is an additional safety layer to ensure no accesses to the GPU

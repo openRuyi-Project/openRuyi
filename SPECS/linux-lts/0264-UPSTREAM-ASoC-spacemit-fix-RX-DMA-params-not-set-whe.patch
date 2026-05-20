@@ -1,7 +1,7 @@
 From b3bc62dfb98a1beb1cf069801303aa7b940bd682 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 17:00:50 +0800
-Subject: [PATCH 264/451] UPSTREAM: ASoC: spacemit: fix RX DMA params not set
+Subject: [PATCH 264/469] UPSTREAM: ASoC: spacemit: fix RX DMA params not set
  when TX is running
 
 When TX is already running (SSCR_SSE is set), the hw_params callback

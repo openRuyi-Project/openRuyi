@@ -1,7 +1,7 @@
 From 1c0e424b62203ae4ba4868871079e1632ffba08a Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:28 +0000
-Subject: [PATCH 258/451] UPSTREAM: dt-bindings: reset: thead,th1520-reset:
+Subject: [PATCH 258/469] UPSTREAM: dt-bindings: reset: thead,th1520-reset:
  Remove non-VO-subsystem resets
 
 Registers in control of TH1520_RESET_ID_{NPU,WDT0,WDT1} belong to AP

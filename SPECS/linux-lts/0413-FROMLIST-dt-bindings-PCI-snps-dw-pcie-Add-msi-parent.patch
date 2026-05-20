@@ -1,7 +1,7 @@
 From 163b604673c0b1023cb929ccac9fa3a0f26103a7 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 17 May 2026 09:48:38 +0800
-Subject: [PATCH 413/451] FROMLIST: dt-bindings: PCI: snps,dw-pcie: Add
+Subject: [PATCH 413/469] FROMLIST: dt-bindings: PCI: snps,dw-pcie: Add
  msi-parent for MSI handle check
 
 The IMSIC device on RISC-V based system does not require ID

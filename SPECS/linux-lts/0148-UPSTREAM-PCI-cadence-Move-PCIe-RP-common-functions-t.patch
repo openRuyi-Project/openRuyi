@@ -1,7 +1,7 @@
 From 3f23afee81ea4b616431091fa0bf6d1df0555c4e Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:58 +0800
-Subject: [PATCH 148/451] UPSTREAM: PCI: cadence: Move PCIe RP common functions
+Subject: [PATCH 148/469] UPSTREAM: PCI: cadence: Move PCIe RP common functions
  to a separate file
 
 Move the Cadence PCIe controller RP common functions into a separate file.

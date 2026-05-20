@@ -1,7 +1,7 @@
 From 0d63049048f3bce014a012df3ba873233de263a8 Mon Sep 17 00:00:00 2001
 From: Austin Kim <austin.kim@lge.com>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 242/451] UPSTREAM: riscv: increase COMMAND_LINE_SIZE value to
+Subject: [PATCH 242/469] UPSTREAM: riscv: increase COMMAND_LINE_SIZE value to
  2048
 
 SoC people may send many parameters to configure the drivers via kernel

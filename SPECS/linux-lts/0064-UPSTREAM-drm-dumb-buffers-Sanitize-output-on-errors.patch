@@ -1,7 +1,7 @@
 From 325697e01596213b66fda1096b00d2d6b484c4fd Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:08 +0200
-Subject: [PATCH 064/451] UPSTREAM: drm/dumb-buffers: Sanitize output on errors
+Subject: [PATCH 064/469] UPSTREAM: drm/dumb-buffers: Sanitize output on errors
 
 The ioctls MODE_CREATE_DUMB and MODE_MAP_DUMB return results into a
 memory buffer supplied by user space. On errors, it is possible that

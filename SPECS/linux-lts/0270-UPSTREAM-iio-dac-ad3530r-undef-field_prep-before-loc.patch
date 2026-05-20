@@ -1,7 +1,7 @@
 From d10bd0fa9866efe83bb86027cdd2c96efe6071a2 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:53 +0100
-Subject: [PATCH 270/451] UPSTREAM: iio: dac: ad3530r: #undef field_prep()
+Subject: [PATCH 270/469] UPSTREAM: iio: dac: ad3530r: #undef field_prep()
  before local definition
 
 Prepare for the advent of a globally available common field_prep() macro

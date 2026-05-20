@@ -1,7 +1,7 @@
 From 89fcec39460e542f1aecdcce9fe902314b53cbec Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 16:38:56 +0800
-Subject: [PATCH 315/451] FROMLIST: rtc: spacemit: default module when
+Subject: [PATCH 315/469] FROMLIST: rtc: spacemit: default module when
  MFD_SPACEMIT_P1 is enabled
 
 The RTC driver defaulted to the same value as MFD_SPACEMIT_P1, which

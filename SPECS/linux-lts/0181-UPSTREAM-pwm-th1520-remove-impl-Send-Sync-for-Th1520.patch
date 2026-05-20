@@ -1,7 +1,7 @@
 From b94a0b62974e7840efcdafc3949b16b8c3ad4e10 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:27 +0000
-Subject: [PATCH 181/451] UPSTREAM: pwm: th1520: remove impl Send/Sync for
+Subject: [PATCH 181/469] UPSTREAM: pwm: th1520: remove impl Send/Sync for
  Th1520PwmDriverData
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

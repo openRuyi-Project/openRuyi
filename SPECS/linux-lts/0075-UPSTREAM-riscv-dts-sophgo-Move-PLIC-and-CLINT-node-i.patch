@@ -1,7 +1,7 @@
 From a8f59b5ba58795f277079633c81b59704301beaa Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 13 Jan 2026 10:38:26 +0800
-Subject: [PATCH 075/451] UPSTREAM: riscv: dts: sophgo: Move PLIC and CLINT
+Subject: [PATCH 075/469] UPSTREAM: riscv: dts: sophgo: Move PLIC and CLINT
  node into CPU dtsi
 
 As we have a separate CPU dtsi file, move the PLIC and CLINT

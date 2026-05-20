@@ -1,7 +1,7 @@
 From 6477e1d63fa4f83996827f19a9d7e9f458690453 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Thu, 5 Mar 2026 20:46:08 +0800
-Subject: [PATCH 240/451] UPSTREAM: clk: spacemit: ccu_mix: fix inverted
+Subject: [PATCH 240/469] UPSTREAM: clk: spacemit: ccu_mix: fix inverted
  condition in ccu_mix_trigger_fc()
 
 Fix inverted condition that skips frequency change trigger,

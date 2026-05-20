@@ -1,7 +1,7 @@
 From f28f18b998c702840268af5c70bfeb05e2691204 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:30 +0000
-Subject: [PATCH 260/451] UPSTREAM: reset: th1520: Prepare for supporting
+Subject: [PATCH 260/469] UPSTREAM: reset: th1520: Prepare for supporting
  multiple controllers
 
 TH1520 SoC is divided into several subsystems, shipping distinct reset

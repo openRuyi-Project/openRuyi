@@ -1,7 +1,7 @@
 From 2e129f9bcb061e1a67432df29df4a7792cfaaa04 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:43 +0100
-Subject: [PATCH 300/451] FROMGIT: drm/imagination: Minor improvements to job
+Subject: [PATCH 300/469] FROMGIT: drm/imagination: Minor improvements to job
  submission code documentation
 
 Mixed list of clarifications and typo fixes.

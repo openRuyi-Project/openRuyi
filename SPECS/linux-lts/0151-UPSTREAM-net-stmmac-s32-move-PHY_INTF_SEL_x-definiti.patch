@@ -1,7 +1,7 @@
 From d77ee4fdef7acf7bf15e5e9668714a6f860ff97e Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:00 +0000
-Subject: [PATCH 151/451] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
+Subject: [PATCH 151/469] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
  definitions out of the way
 
 S32's PHY_INTF_SEL_x definitions conflict with those for the dwmac

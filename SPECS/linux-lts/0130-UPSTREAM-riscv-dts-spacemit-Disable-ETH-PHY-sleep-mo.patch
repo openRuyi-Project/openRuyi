@@ -1,7 +1,7 @@
 From 3bc960759c6a45ea8852d043c7641536295e3fc6 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Tue, 20 Jan 2026 18:00:01 +0800
-Subject: [PATCH 130/451] UPSTREAM: riscv: dts: spacemit: Disable ETH PHY sleep
+Subject: [PATCH 130/469] UPSTREAM: riscv: dts: spacemit: Disable ETH PHY sleep
  mode for OrangePi
 
 On the SpacemiT K1 platform, the MAC can't read statistics when the PHY

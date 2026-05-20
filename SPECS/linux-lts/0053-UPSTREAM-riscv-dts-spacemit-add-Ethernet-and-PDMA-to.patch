@@ -1,7 +1,7 @@
 From 30a7a719ca3079a0167e5548e95dd0d634c025cb Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 22 Oct 2025 20:18:38 +0000
-Subject: [PATCH 053/451] UPSTREAM: riscv: dts: spacemit: add Ethernet and PDMA
+Subject: [PATCH 053/469] UPSTREAM: riscv: dts: spacemit: add Ethernet and PDMA
  to OrangePi RV2
 
 The OrangePi RV2 board ships two RGMII ethernet ports.

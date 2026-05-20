@@ -1,7 +1,7 @@
 From a57b8f5e4e212cbacc5be42cbf7cba8f7ce90433 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 7 May 2026 18:31:43 +0800
-Subject: [PATCH 370/451] FROMLIST: ASoC: soc-pcm: constrain hw_params when
+Subject: [PATCH 370/469] FROMLIST: ASoC: soc-pcm: constrain hw_params when
  DAIs share the same BCLK
 
 When multiple CPU DAIs on the same sound card share the same physical

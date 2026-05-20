@@ -1,7 +1,7 @@
 From 609f67b63bbc0248d410bab5b6d80280957c298e Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:41 +0800
-Subject: [PATCH 108/451] UPSTREAM: dt-bindings: timer: add SpacemiT K3 CLINT
+Subject: [PATCH 108/469] UPSTREAM: dt-bindings: timer: add SpacemiT K3 CLINT
 
 Add compatible string for SpacemiT K3 CLINT.
 

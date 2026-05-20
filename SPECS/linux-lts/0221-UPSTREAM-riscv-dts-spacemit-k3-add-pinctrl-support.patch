@@ -1,7 +1,7 @@
 From 6f2dc6d47524fd012f56ce2a513c18261b55b702 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:43 +0000
-Subject: [PATCH 221/451] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl
+Subject: [PATCH 221/469] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl
  support
 
 Populate pinctrl node in Device Tree for SpacemiT K3 SoC, So devices

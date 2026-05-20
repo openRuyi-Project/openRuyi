@@ -1,7 +1,7 @@
 From 691ccb9e639f91b51d764dbb9b556259ee834d5b Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:20 +0200
-Subject: [PATCH 067/451] UPSTREAM: drm/vblank: Add CRTC helpers for simple use
+Subject: [PATCH 067/469] UPSTREAM: drm/vblank: Add CRTC helpers for simple use
  cases
 
 Implement atomic_flush, atomic_enable and atomic_disable of struct

@@ -1,7 +1,7 @@
 From 55c6cbb1129cd9b46eb2f9419400fb3873fbce85 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:56 +0100
-Subject: [PATCH 273/451] UPSTREAM: soc: renesas: rz-sysc: #undef field_get()
+Subject: [PATCH 273/469] UPSTREAM: soc: renesas: rz-sysc: #undef field_get()
  before local definition
 
 Prepare for the advent of a globally available common field_get() macro

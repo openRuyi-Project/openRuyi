@@ -1,7 +1,7 @@
 From 01f090ace29bd5deb4bc0fa72a8059f8249b69f6 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 8 May 2026 15:25:24 +0800
-Subject: [PATCH 398/451] FROMLIST: i2c: spacemit: configure ILCR/IWCR for
+Subject: [PATCH 398/469] FROMLIST: i2c: spacemit: configure ILCR/IWCR for
  accurate SCL frequency
 
 The SpacemiT I2C controller's SCL (Serial Clock Line) frequency for

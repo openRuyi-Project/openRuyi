@@ -1,7 +1,7 @@
 From cde741eb239911f464204858c6df5536b28c273e Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 248/451] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [PATCH 248/469] UPSTREAM: lib/string_kunit: add correctness test for
  strnlen()
 
 Add a KUnit test for strnlen() to verify correctness across

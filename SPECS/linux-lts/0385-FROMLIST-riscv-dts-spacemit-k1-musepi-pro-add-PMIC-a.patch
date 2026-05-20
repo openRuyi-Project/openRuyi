@@ -1,7 +1,7 @@
 From 0f0c9a96318f15107268b84d84bd49334727b226 Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:08 +0200
-Subject: [PATCH 385/451] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add
+Subject: [PATCH 385/469] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add
  PMIC and power infrastructure
 
 Enable i2c8 and add the connected SpacemiT P1 PMIC with its related regulators

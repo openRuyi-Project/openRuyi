@@ -1,7 +1,7 @@
 From 1d89870d6d7f6884523fdc301936bdd85cbd8dc9 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 3 Jan 2026 14:14:36 +0800
-Subject: [PATCH 117/451] UPSTREAM: clk: spacemit: add platform SoC prefix to
+Subject: [PATCH 117/469] UPSTREAM: clk: spacemit: add platform SoC prefix to
  reset name
 
 This change is needed for adding future new SpacemiT K3 reset driver.

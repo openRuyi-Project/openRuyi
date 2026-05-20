@@ -1,7 +1,7 @@
 From 7013b87a28846cbc88ac5e0197c1c645a6ac41a7 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:13 +0100
-Subject: [PATCH 286/451] UPSTREAM: clk: renesas: Use bitfield helpers
+Subject: [PATCH 286/469] UPSTREAM: clk: renesas: Use bitfield helpers
 
 Use the FIELD_{GET,PREP}() and field_{get,prep}() helpers for const
 respective non-const bitfields, instead of open-coding the same

@@ -1,7 +1,7 @@
 From 98de5530ade712447c8b48d3502d35df5b9079a6 Mon Sep 17 00:00:00 2001
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 Date: Mon, 11 May 2026 10:53:56 +0200
-Subject: [PATCH 400/451] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add
+Subject: [PATCH 400/469] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add
  pinctrl support for voltage switching
 
 Document pinctrl properties to support voltage-dependent pin

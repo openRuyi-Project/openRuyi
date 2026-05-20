@@ -1,7 +1,7 @@
 From 2eff7f55dfc2e56b8086b6eb38a61859338c4ead Mon Sep 17 00:00:00 2001
 From: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
 Date: Thu, 7 May 2026 16:17:08 +0800
-Subject: [PATCH 382/451] FROMLIST: riscv: dts: thead: Add TH1520 I2C nodes
+Subject: [PATCH 382/469] FROMLIST: riscv: dts: thead: Add TH1520 I2C nodes
 
 Add nodes for the six I2C on the T-Head TH1520 RISCV SoC.
 

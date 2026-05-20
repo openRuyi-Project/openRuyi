@@ -1,7 +1,7 @@
 From 1ca046343149ed7acc518c5b1d5b390059586eda Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:51 +0800
-Subject: [PATCH 140/451] UPSTREAM: riscv: dts: spacemit: sdhci: add reset
+Subject: [PATCH 140/469] UPSTREAM: riscv: dts: spacemit: sdhci: add reset
  support
 
 Request two reset line explicitly for SDHCI controller.

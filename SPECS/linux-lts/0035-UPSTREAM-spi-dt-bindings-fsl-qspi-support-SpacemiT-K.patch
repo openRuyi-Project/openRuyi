@@ -1,7 +1,7 @@
 From 9be2851c95998255029b5408f517179d8083f21a Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:29:59 -0500
-Subject: [PATCH 035/451] UPSTREAM: spi: dt-bindings: fsl-qspi: support
+Subject: [PATCH 035/469] UPSTREAM: spi: dt-bindings: fsl-qspi: support
  SpacemiT K1
 
 Add the SpacemiT K1 SoC QSPI IP to the list of supported hardware.  This

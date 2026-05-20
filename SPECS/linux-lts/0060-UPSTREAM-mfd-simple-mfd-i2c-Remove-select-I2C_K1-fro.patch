@@ -1,7 +1,7 @@
 From cc5916410a997a7fd91cf978e1b08f97bbde9fd6 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Mon, 27 Oct 2025 13:48:05 +0800
-Subject: [PATCH 060/451] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1
+Subject: [PATCH 060/469] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1
  from MFD_SPACEMIT_P1
 
 select will force a symbol to a specific value without considering

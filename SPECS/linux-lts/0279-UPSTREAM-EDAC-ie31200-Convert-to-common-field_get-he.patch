@@ -1,7 +1,7 @@
 From e70e74da8c93f05cd5ba8603619e0e9ad1f42054 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:04 +0100
-Subject: [PATCH 279/451] UPSTREAM: EDAC/ie31200: Convert to common field_get()
+Subject: [PATCH 279/469] UPSTREAM: EDAC/ie31200: Convert to common field_get()
  helper
 
 Drop the driver-specific field_get() macro, in favor of the globally

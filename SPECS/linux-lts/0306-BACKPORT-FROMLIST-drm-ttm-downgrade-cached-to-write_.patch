@@ -1,7 +1,7 @@
 From 4edd211d0cffd4157ce74f227873d8fa3aa44a5c Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Sat, 29 Jun 2024 13:22:47 +0800
-Subject: [PATCH 306/451] BACKPORT: FROMLIST: drm/ttm: downgrade cached to
+Subject: [PATCH 306/469] BACKPORT: FROMLIST: drm/ttm: downgrade cached to
  write_combined when snooping not available
 
 As we can now acquire the presence of the full DMA coherency (snooping

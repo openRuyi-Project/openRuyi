@@ -1,7 +1,7 @@
 From 46050981e1c0ecdbf6044c7c69bf92549e55f642 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:41 +0000
-Subject: [PATCH 159/451] UPSTREAM: net: stmmac: imx: cleanup arguments for
+Subject: [PATCH 159/469] UPSTREAM: net: stmmac: imx: cleanup arguments for
  set_intf_mode() method
 
 Pass the imx_priv_data instead of the plat_stmmacenet_data into the

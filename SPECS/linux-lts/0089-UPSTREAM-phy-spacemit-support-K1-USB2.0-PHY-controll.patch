@@ -1,7 +1,7 @@
 From 3498360f3fdd7e77c017ddd4b76f49c52b0220e4 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:53 +0800
-Subject: [PATCH 089/451] UPSTREAM: phy: spacemit: support K1 USB2.0 PHY
+Subject: [PATCH 089/469] UPSTREAM: phy: spacemit: support K1 USB2.0 PHY
  controller
 
 The SpacemiT K1 SoC includes three USB ports:

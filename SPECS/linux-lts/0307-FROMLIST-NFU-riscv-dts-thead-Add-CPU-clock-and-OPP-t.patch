@@ -1,7 +1,7 @@
 From ba5d1a3aecfc7ea9ac253c688f310edefb3ccefd Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:16 +0000
-Subject: [PATCH 307/451] FROMLIST: NFU: riscv: dts: thead: Add CPU clock and
+Subject: [PATCH 307/469] FROMLIST: NFU: riscv: dts: thead: Add CPU clock and
  OPP table for TH1520
 
 Add operating point table for CPU cores, and wire up clocks for CPU

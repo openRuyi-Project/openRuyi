@@ -1,7 +1,7 @@
 From 779555fa146bcf0fb25aa0f952bfd58ef01c4ba3 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Mon, 18 May 2026 18:00:30 +0800
-Subject: [PATCH 365/451] FROMLIST: riscv: dts: spacemit: enable USB3 on
+Subject: [PATCH 365/469] FROMLIST: riscv: dts: spacemit: enable USB3 on
  OrangePi R2S
 
 Enable the DWC3 USB3.0 controller and its associated PHY on the

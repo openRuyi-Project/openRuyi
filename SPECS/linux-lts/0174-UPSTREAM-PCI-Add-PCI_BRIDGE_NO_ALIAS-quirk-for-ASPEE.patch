@@ -1,7 +1,7 @@
 From 4aeda82d08baef1c082317a004fa7c2f68a06fd1 Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:29 -0800
-Subject: [PATCH 174/451] UPSTREAM: PCI: Add PCI_BRIDGE_NO_ALIAS quirk for
+Subject: [PATCH 174/469] UPSTREAM: PCI: Add PCI_BRIDGE_NO_ALIAS quirk for
  ASPEED AST1150
 
 ASPEED BMC controllers have VGA and USB functions behind a PCIe-to-PCI

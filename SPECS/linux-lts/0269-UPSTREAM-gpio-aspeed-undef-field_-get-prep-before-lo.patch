@@ -1,7 +1,7 @@
 From 66f8da127bd9a9691dd0884eb10915456da88c9b Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:52 +0100
-Subject: [PATCH 269/451] UPSTREAM: gpio: aspeed: #undef field_{get,prep}()
+Subject: [PATCH 269/469] UPSTREAM: gpio: aspeed: #undef field_{get,prep}()
  before local definition
 
 Prepare for the advent of globally available common field_get() and

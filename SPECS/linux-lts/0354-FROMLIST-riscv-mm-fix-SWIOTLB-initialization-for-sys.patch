@@ -1,7 +1,7 @@
 From 948d0dc7af4eba4a3a2ded1c2799751396fd5c50 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.dev>
 Date: Tue, 31 Mar 2026 15:37:22 +0800
-Subject: [PATCH 354/451] FROMLIST: riscv: mm: fix SWIOTLB initialization for
+Subject: [PATCH 354/469] FROMLIST: riscv: mm: fix SWIOTLB initialization for
  systems with DRAM above 4GB
 
 On RISC-V platforms where the entire physical memory (DRAM) resides

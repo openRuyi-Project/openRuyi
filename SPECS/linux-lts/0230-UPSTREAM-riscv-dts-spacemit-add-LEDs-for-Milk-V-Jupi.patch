@@ -1,7 +1,7 @@
 From af7dd347cbca9edceca0ee9a5c81b6a896ca70fc Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:29 +0100
-Subject: [PATCH 230/451] UPSTREAM: riscv: dts: spacemit: add LEDs for Milk-V
+Subject: [PATCH 230/469] UPSTREAM: riscv: dts: spacemit: add LEDs for Milk-V
  Jupiter board
 
 The Milk-V Jupiter board provides support for two LEDs through the front

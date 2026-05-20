@@ -1,7 +1,7 @@
 From b14a416889eb4ae534b85e215d7e17984831218a Mon Sep 17 00:00:00 2001
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 Date: Fri, 15 May 2026 12:49:00 +0200
-Subject: [PATCH 405/451] FROMLIST: riscv: dts: spacemit: k1-orangepi-rv2: add
+Subject: [PATCH 405/469] FROMLIST: riscv: dts: spacemit: k1-orangepi-rv2: add
  SD card support with UHS modes
 
 Add complete SD card controller support with UHS high-speed modes.

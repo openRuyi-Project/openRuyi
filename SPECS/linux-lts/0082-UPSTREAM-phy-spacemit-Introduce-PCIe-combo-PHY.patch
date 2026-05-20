@@ -1,7 +1,7 @@
 From 0a901ad8f88d4db05fe05df8fe71f2f3531e985f Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:29 -0600
-Subject: [PATCH 082/451] UPSTREAM: phy: spacemit: Introduce PCIe/combo PHY
+Subject: [PATCH 082/469] UPSTREAM: phy: spacemit: Introduce PCIe/combo PHY
 
 Introduce a driver that supports three PHYs found on the SpacemiT
 K1 SoC.  The first PHY is a combo PHY that can be configured for

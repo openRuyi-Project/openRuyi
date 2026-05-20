@@ -1,7 +1,7 @@
 From 2fe62b6fe52ac50e187f2c034de581035982feac Mon Sep 17 00:00:00 2001
 From: Chen Pei <cp0613@linux.alibaba.com>
 Date: Thu, 9 Apr 2026 19:47:36 +0800
-Subject: [PATCH 364/451] FROMLIST: riscv: ftrace: select
+Subject: [PATCH 364/469] FROMLIST: riscv: ftrace: select
  HAVE_BUILDTIME_MCOUNT_SORT
 
 RISC-V already satisfies all prerequisites for build-time mcount sorting:

@@ -1,7 +1,7 @@
 From b8d83a41b6d2fad8a24742e58b9cea1045d47d32 Mon Sep 17 00:00:00 2001
 From: Matt Coster <matt.coster@imgtec.com>
 Date: Fri, 6 Feb 2026 16:02:13 +0000
-Subject: [PATCH 187/451] UPSTREAM: drm/imagination: Mark
+Subject: [PATCH 187/469] UPSTREAM: drm/imagination: Mark
  FWCCB_CMD_UPDATE_STATS as known
 
 Suppress the "unknown type" warning when processing a FWCCB command of

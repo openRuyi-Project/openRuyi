@@ -1,7 +1,7 @@
 From eed8158ce7c75640b7338569d474bd1826eaf286 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 26 Dec 2025 16:31:59 +0800
-Subject: [PATCH 265/451] UPSTREAM: i2c: spacemit: drop useless spaces
+Subject: [PATCH 265/469] UPSTREAM: i2c: spacemit: drop useless spaces
 
 Previously, the I2C driver had an extra leading space in column 0 of
 included header lines. This commit removes the redundant whitespace.

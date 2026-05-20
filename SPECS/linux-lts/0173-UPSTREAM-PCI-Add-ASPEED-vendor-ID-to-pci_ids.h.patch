@@ -1,7 +1,7 @@
 From cca1287394adc7d44a628f8e58d3df2b02f2d9fd Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:28 -0800
-Subject: [PATCH 173/451] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h
+Subject: [PATCH 173/469] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h
 
 Add PCI_VENDOR_ID_ASPEED to the shared pci_ids.h header and remove the
 duplicate local definition from ehci-pci.c.

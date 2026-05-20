@@ -1,7 +1,7 @@
 From de3b933b9c35449f2e549ae485da076c75c08ce7 Mon Sep 17 00:00:00 2001
 From: Zongmin Zhou <zhouzongmin@kylinos.cn>
 Date: Thu, 20 Nov 2025 17:58:31 +0800
-Subject: [PATCH 063/451] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in
+Subject: [PATCH 063/469] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in
  _arch_atomic* function.
 
 Replace the same code with the pre-defined macro

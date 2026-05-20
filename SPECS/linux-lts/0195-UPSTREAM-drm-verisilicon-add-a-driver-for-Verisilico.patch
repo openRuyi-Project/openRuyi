@@ -1,7 +1,7 @@
 From 2358e57ce047bc49d1a423735c9ac01f7c407592 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:17 +0800
-Subject: [PATCH 195/451] UPSTREAM: drm: verisilicon: add a driver for
+Subject: [PATCH 195/469] UPSTREAM: drm: verisilicon: add a driver for
  Verisilicon display controllers
 
 This is a from-scratch driver targeting Verisilicon DC-series display

@@ -1,7 +1,7 @@
 From 61639203445910409f7468dcfc6ddeeb7190bf85 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:25 +0800
-Subject: [PATCH 096/451] UPSTREAM: pinctrl: spacemit: k3: adjust drive
+Subject: [PATCH 096/469] UPSTREAM: pinctrl: spacemit: k3: adjust drive
  strength and schmitter trigger
 
 K3 SoC expand drive strength to 4 bits which support even larger
