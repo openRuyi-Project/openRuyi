@@ -10,13 +10,13 @@
 %global _firmwarepath /usr/lib/firmware
 
 Name:           linux-firmware
-Version:        20260410
+Version:        20260519
 Release:        %autorelease
 Summary:        Firmware files used by the Linux kernel
 License:        GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-#!RemoteAsset:  sha256:b7812ed6d59f6b09ecceddaa0be842a7e82a79cc0e46ca60478a4ebf02f1e178
+#!RemoteAsset:  sha256:b14e7197a290a7e5569f5ef790cde289bddc47e32126f2eb262a8e677fc39727
 Source0:        https://cdn.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
 
 BuildRequires:  make
@@ -599,6 +599,7 @@ end
 %files -n mediatek-firmware
 %license LICENCE.mediatek
 %dir %{_firmwarepath}/mediatek
+%{_firmwarepath}/mediatek/mt7927/
 %{_firmwarepath}/mediatek/mt798?*
 %{_firmwarepath}/mediatek/mt8173/
 %{_firmwarepath}/mediatek/mt8183/
