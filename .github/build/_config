@@ -31,12 +31,12 @@ Prefer: python3-libs python3-devel
 Prefer: python3 python3-packaging python3-pip python3-wheel
 Prefer: rust
 
-Prefer: gcc16-lib
-Prefer: libstdc++-gcc16
-Prefer: libgomp-gcc16
-Prefer: libatomic-gcc16
-Prefer: libquadmath-gcc16
-Prefer: libgfortran-gcc16
+Prefer: libgcc-s
+Prefer: libstdc++
+Prefer: libgomp
+Prefer: libatomic
+Prefer: libquadmath
+Prefer: libgfortran
 
 Macros:
 %dist .or
