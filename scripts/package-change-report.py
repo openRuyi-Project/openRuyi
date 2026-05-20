@@ -31,11 +31,17 @@ GIT_TIMEOUT_SECONDS = 60
 ACTIONS = ("updated", "added", "removed")
 COMMENT_RE = re.compile(r"\s+#.*$")
 MACRO_RE = re.compile(r"^\s*%(?:global|define)\s+([A-Za-z0-9_]+)\s+(.*?)\s*$")
-CONDITIONAL_VALUE_RE = re.compile(r"%\{\?([A-Za-z0-9_]+):([^{}]*(?:%\{[A-Za-z0-9_]+\}[^{}]*)*)\}")
+CONDITIONAL_VALUE_RE = re.compile(
+    r"%\{\?([A-Za-z0-9_]+):([^{}]*(?:%\{[A-Za-z0-9_]+\}[^{}]*)*)\}"
+)
 BRACED_MACRO_RE = re.compile(r"%\{([^{}]+)\}")
 BARE_MACRO_RE = re.compile(r"(?<!%)%([A-Za-z_][A-Za-z0-9_]*)")
-SHELL_SLICE_RE = re.compile(r"%\(c=([A-Za-z0-9._+-]+);\s*echo\s+\$\{c:0:(\d+)\}\)")
-SHELL_TR_RE = re.compile(r"%\(echo\s+([A-Za-z0-9._+-]+)\s+\|\s+tr\s+'(.)'\s+'(.)'\)")
+SHELL_SLICE_RE = re.compile(
+    r"%\(c=([A-Za-z0-9._+-]+);\s*echo\s+\$\{c:0:(\d+)\}\)"
+)
+SHELL_TR_RE = re.compile(
+    r"%\(echo\s+([A-Za-z0-9._+-]+)\s+\|\s+tr\s+'(.)'\s+'(.)'\)"
+)
 SHELL_SLICE_PACKAGES = frozenset(
     (
         "accounts-qml-module",
@@ -61,7 +67,9 @@ SHELL_SLICE_PACKAGES = frozenset(
 SHELL_TR_PACKAGES = frozenset(("libtar", "lm_sensors"))
 UNRESOLVED_VALUE_RE = re.compile(r"@[^@\s]+@|%\{|%\(")
 
-EPILOG = f"""{sys.argv[0]} reads local Git history only and writes the report to stdout.
+EPILOG = (
+    f"{sys.argv[0]} reads local Git history only and writes the report to "
+    f"""stdout.
 
 Examples:
 $ {sys.argv[0]} --month 2026-05 --all
@@ -76,10 +84,13 @@ date, or ref. --since and --from may omit their end boundary, which defaults to
 the latest commit. DATE accepts Git date expressions such as "yesterday" and
 "2 weeks ago". Requires Python 3.10+.
 """
+)
 
 arg_parser = argparse.ArgumentParser(
     prog=sys.argv[0],
-    description="Generate an openRuyi package change report from SPECS history",
+    description=(
+        "Generate an openRuyi package change report from SPECS history"
+    ),
     epilog=EPILOG,
     formatter_class=argparse.RawDescriptionHelpFormatter,
     allow_abbrev=False,
@@ -90,20 +101,29 @@ arg_parser.add_argument(
     default=".",
     help="Path to local repository; default: current directory",
 )
-arg_parser.add_argument("--month", metavar="YYYY-MM", help="Scan a single month")
+arg_parser.add_argument(
+    "--month", metavar="YYYY-MM", help="Scan a single month"
+)
 arg_parser.add_argument(
     "--since",
     metavar="DATE",
     help="Start Git date expression; omit --until to use the latest commit",
 )
-arg_parser.add_argument("--until", metavar="DATE", help="End Git date expression; requires --since")
+arg_parser.add_argument(
+    "--until", metavar="DATE", help="End Git date expression; requires --since"
+)
 arg_parser.add_argument(
     "--from",
     metavar="REF",
     dest="from_ref",
     help="Start commit/ref, excluded; omit --to to use HEAD",
 )
-arg_parser.add_argument("--to", metavar="REF", dest="to_ref", help="End commit/ref; requires --from")
+arg_parser.add_argument(
+    "--to",
+    metavar="REF",
+    dest="to_ref",
+    help="End commit/ref; requires --from",
+)
 arg_parser.add_argument(
     "--package",
     metavar="PACKAGE",
@@ -124,7 +144,10 @@ action_group.add_argument(
     dest="actions",
     action="store_const",
     const=("updated",),
-    help="Show existing packages whose Version changed or directory was renamed; default",
+    help=(
+        "Show existing packages whose Version changed or directory was "
+        "renamed; default"
+    ),
 )
 action_group.add_argument(
     "--added",
@@ -196,7 +219,11 @@ class PackageReport:
             return "added" if self.new is not None else "unchanged"
         if self.new is None:
             return "removed"
-        return "updated" if self.old_package or self.old_version != self.new_version else "unchanged"
+        return (
+            "updated"
+            if self.old_package or self.old_version != self.new_version
+            else "unchanged"
+        )
 
 
 def run(argv: list[str], *, cwd: pathlib.Path) -> str:
@@ -212,7 +239,9 @@ def run(argv: list[str], *, cwd: pathlib.Path) -> str:
             timeout=GIT_TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"{shlex.join(argv)} timed out after {GIT_TIMEOUT_SECONDS}s") from exc
+        raise RuntimeError(
+            f"{shlex.join(argv)} timed out after {GIT_TIMEOUT_SECONDS}s"
+        ) from exc
     except OSError as exc:
         raise RuntimeError(f"failed to start {argv[0]}: {exc}") from exc
     if proc.returncode == 0:
@@ -247,7 +276,7 @@ def expand_braced_macro(
     body = match.group(1)
     if body.startswith(("?", "!?")):
         inverted = body.startswith("!?")
-        name, sep, value = body[2 if inverted else 1 :].partition(":")
+        name, sep, value = body[2 if inverted else 1:].partition(":")
         if sep:
             return clean_value(value) if (name in macros) != inverted else ""
         if inverted or name not in macros:
@@ -267,23 +296,35 @@ def expand_shell_macros(value: str, package: str | None) -> str:
     #
     # This is not a shell parser.
     if package in SHELL_SLICE_PACKAGES:
-        value = SHELL_SLICE_RE.sub(lambda m: m.group(1)[: int(m.group(2))], value)
+        value = SHELL_SLICE_RE.sub(
+            lambda m: m.group(1)[: int(m.group(2))], value
+        )
     if package in SHELL_TR_PACKAGES:
-        value = SHELL_TR_RE.sub(lambda m: m.group(1).replace(m.group(2), m.group(3)), value)
+        value = SHELL_TR_RE.sub(
+            lambda m: m.group(1).replace(m.group(2), m.group(3)), value
+        )
     return value
 
 
-def resolve_macros(value: str, macros: dict[str, str], package: str | None = None) -> str:
+def resolve_macros(
+    value: str, macros: dict[str, str], package: str | None = None
+) -> str:
     for _ in range(20):
         old = value
         value = CONDITIONAL_VALUE_RE.sub(
-            lambda m: resolve_macros(m.group(2), macros, package)
-            if m.group(1) in macros
-            else "",
+            lambda m: (
+                resolve_macros(m.group(2), macros, package)
+                if m.group(1) in macros
+                else ""
+            ),
             value,
         )
-        value = BRACED_MACRO_RE.sub(lambda m: expand_braced_macro(m, macros, package), value)
-        value = BARE_MACRO_RE.sub(lambda m: macros.get(m.group(1), m.group(0)), value)
+        value = BRACED_MACRO_RE.sub(
+            lambda m: expand_braced_macro(m, macros, package), value
+        )
+        value = BARE_MACRO_RE.sub(
+            lambda m: macros.get(m.group(1), m.group(0)), value
+        )
         value = expand_shell_macros(value, package)
         value = value.replace("%%", "%")
         if value == old:
@@ -291,7 +332,9 @@ def resolve_macros(value: str, macros: dict[str, str], package: str | None = Non
     return value
 
 
-def parse_spec(text: str | None, package_hint: str | None = None) -> Spec | None:
+def parse_spec(
+    text: str | None, package_hint: str | None = None
+) -> Spec | None:
     if text is None:
         return None
 
@@ -326,7 +369,10 @@ def parse_name_status(output: str) -> list[SpecChange]:
     fields = iter(output.rstrip("\0").split("\0"))
     for status in fields:
         path = next(fields)
-        old_path, new_path = None if status == "A" else path, None if status == "D" else path
+        old_path, new_path = (
+            None if status == "A" else path,
+            None if status == "D" else path,
+        )
         old_dir, new_dir = package_dir(old_path), package_dir(new_path)
         if old_dir or new_dir:
             changes.append(
@@ -362,7 +408,9 @@ def parse_renames(output: str) -> list[tuple[str, str]]:
 def collapsed_renames(renames: list[tuple[str, str]]) -> dict[str, str]:
     result: dict[str, str] = {}
     for old_dir, new_dir in renames:
-        source = next((old for old, new in result.items() if new == old_dir), old_dir)
+        source = next(
+            (old for old, new in result.items() if new == old_dir), old_dir
+        )
         result[source] = new_dir
     return result
 
@@ -401,7 +449,9 @@ class GitRepo:
         cmd.extend(["--", *paths])
         return cmd
 
-    def range_refs(self, args: argparse.Namespace) -> tuple[str | None, str | None]:
+    def range_refs(
+        self, args: argparse.Namespace
+    ) -> tuple[str | None, str | None]:
         if args.from_ref is not None:
             return args.from_ref, args.to_ref or "HEAD"
 
@@ -417,7 +467,9 @@ class GitRepo:
             head_ref = sha
         return base_ref, head_ref
 
-    def range_changes(self, base_ref: str | None, head_ref: str) -> list[SpecChange]:
+    def range_changes(
+        self, base_ref: str | None, head_ref: str
+    ) -> list[SpecChange]:
         cmd = [
             self.git,
             "diff",
@@ -431,7 +483,9 @@ class GitRepo:
         cmd.extend(["--", SPEC_FILES_PATHSPEC])
         return parse_name_status(run(cmd, cwd=self.root))
 
-    def range_renames(self, base_ref: str | None, head_ref: str) -> dict[str, str]:
+    def range_renames(
+        self, base_ref: str | None, head_ref: str
+    ) -> dict[str, str]:
         if not base_ref:
             return {}
         cmd = [
@@ -449,7 +503,9 @@ class GitRepo:
         ]
         return collapsed_renames(parse_renames(run(cmd, cwd=self.root)))
 
-    def read_files(self, ref: str | None, paths: set[str]) -> dict[str, str | None]:
+    def read_files(
+        self, ref: str | None, paths: set[str]
+    ) -> dict[str, str | None]:
         if not ref or not paths:
             return {}
         sorted_paths = sorted(paths)
@@ -465,32 +521,42 @@ class GitRepo:
                 timeout=GIT_TIMEOUT_SECONDS,
             )
         except subprocess.TimeoutExpired as exc:
-            raise RuntimeError(f"git cat-file --batch timed out after {GIT_TIMEOUT_SECONDS}s") from exc
+            raise RuntimeError(
+                f"git cat-file --batch timed out after {GIT_TIMEOUT_SECONDS}s"
+            ) from exc
         except OSError as exc:
             raise RuntimeError(f"failed to start git: {exc}") from exc
         if proc.returncode != 0:
-            message = (
-                proc.stderr.decode("utf-8", errors="replace").strip()
-                or f"exit code {proc.returncode}"
+            stderr = proc.stderr.decode("utf-8", errors="replace").strip()
+            message = stderr if stderr else f"exit code {proc.returncode}"
+            raise RuntimeError(
+                f"git cat-file --batch failed: {message}"
             )
-            raise RuntimeError(f"git cat-file --batch failed: {message}")
 
         result: dict[str, str | None] = {}
         offset = 0
         output = proc.stdout
         for path in sorted_paths:
             if (line_end := output.find(b"\n", offset)) < 0:
-                raise RuntimeError("git cat-file --batch returned truncated output")
-            fields = output[offset:line_end].decode("utf-8", errors="replace").split()
+                raise RuntimeError(
+                    "git cat-file --batch returned truncated output"
+                )
+            fields = (
+                output[offset:line_end]
+                .decode("utf-8", errors="replace")
+                .split()
+            )
             offset = line_end + 1
             if len(fields) != 3 or fields[1] != "blob":
                 result[path] = None
                 continue
 
             size = int(fields[2])
-            result[path] = output[offset : offset + size].decode("utf-8", errors="replace")
+            result[path] = output[offset: offset + size].decode(
+                "utf-8", errors="replace"
+            )
             offset += size
-            if output[offset : offset + 1] == b"\n":
+            if output[offset: offset + 1] == b"\n":
                 offset += 1
         return result
 
@@ -561,14 +627,21 @@ def collect(
         return []
 
     changes = repo.range_changes(base_ref, head_ref)
-    old_files = repo.read_files(base_ref, {change.old_path for change in changes if change.old_path})
-    new_files = repo.read_files(head_ref, {change.new_path for change in changes if change.new_path})
+    old_files = repo.read_files(
+        base_ref, {change.old_path for change in changes if change.old_path}
+    )
+    new_files = repo.read_files(
+        head_ref, {change.new_path for change in changes if change.new_path}
+    )
 
     reports: dict[str, PackageReport] = {}
     for change in changes:
         old_text = old_files.get(change.old_path) if change.old_path else None
         new_text = new_files.get(change.new_path) if change.new_path else None
-        old_spec, new_spec = parse_spec(old_text, change.old_dir), parse_spec(new_text, change.new_dir)
+        old_spec, new_spec = (
+            parse_spec(old_text, change.old_dir),
+            parse_spec(new_text, change.new_dir),
+        )
         package = change.new_dir or change.old_dir
         if package is None:
             continue
@@ -633,7 +706,9 @@ def display_version(version: str | None) -> str:
     return version if version is not None else "-"
 
 
-def report_data(report: PackageReport, include_commits: bool) -> dict[str, object]:
+def report_data(
+    report: PackageReport, include_commits: bool
+) -> dict[str, object]:
     item = {
         "action": report.action,
         "package": report.package,
@@ -649,6 +724,12 @@ def report_data(report: PackageReport, include_commits: bool) -> dict[str, objec
             for commit in report.commits
         ]
     return item
+
+
+def package_matches(report: PackageReport, filters: set[str]) -> bool:
+    if not filters:
+        return True
+    return report.package in filters or report.old_package in filters
 
 
 def render_text(
@@ -679,7 +760,11 @@ def render_text(
         for report in groups[action]:
             old_version = display_version(report.old_version)
             new_version = display_version(report.new_version)
-            package = f"{report.old_package} -> {report.package}" if report.old_package else report.package
+            package = (
+                f"{report.old_package} -> {report.package}"
+                if report.old_package
+                else report.package
+            )
             lines.append(f"  {package}: {old_version} -> {new_version}")
             if include_commits:
                 lines.extend(
@@ -702,7 +787,9 @@ def render_json(
             "range": range_text,
             "actions": list(actions),
             "packages_changed": len(reports),
-            "packages": [report_data(report, include_commits) for report in reports],
+            "packages": [
+                report_data(report, include_commits) for report in reports
+            ],
         },
         ensure_ascii=False,
         indent=2,
@@ -719,7 +806,9 @@ def describe_range(args: argparse.Namespace) -> str:
     return f"since {args.since}"
 
 
-def validate(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+def validate(
+    args: argparse.Namespace, parser: argparse.ArgumentParser
+) -> None:
     for option, value in (
         ("--month", args.month),
         ("--since", args.since),
@@ -760,11 +849,7 @@ def main(argv: list[str] | None = None) -> int:
         reports = [
             report
             for report in collect(repo, base_ref, head_ref, actions)
-            if (
-                not package_filters
-                or report.package in package_filters
-                or report.old_package in package_filters
-            )
+            if package_matches(report, package_filters)
         ]
         if args.commits:
             attach_commits(repo, reports, args)
