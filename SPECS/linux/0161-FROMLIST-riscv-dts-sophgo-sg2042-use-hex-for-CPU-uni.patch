@@ -1,7 +1,7 @@
 From d7e5f9690c9987f1dea5f6e929a707291b34a660 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 26 Apr 2026 09:34:49 +0800
-Subject: [PATCH 161/255] FROMLIST: riscv: dts: sophgo: sg2042: use hex for CPU
+Subject: [PATCH 161/273] FROMLIST: riscv: dts: sophgo: sg2042: use hex for CPU
  unit address
 
 Previous the CPU unit address cpu of sg2042 use decimal, it is

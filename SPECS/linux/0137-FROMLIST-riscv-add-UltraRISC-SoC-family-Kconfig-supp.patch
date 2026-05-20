@@ -1,7 +1,7 @@
 From 274e238b5d3e2a94807e553c8cf9d79d686bc3dc Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:10 +0800
-Subject: [PATCH 137/255] FROMLIST: riscv: add UltraRISC SoC family Kconfig
+Subject: [PATCH 137/273] FROMLIST: riscv: add UltraRISC SoC family Kconfig
  support
 
 The first SoC in the UltraRISC series is UR-DP1000, containing octa

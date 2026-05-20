@@ -1,7 +1,7 @@
 From 1d650d796333e07cecae9c5f1fe655cb7aa533bd Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sat, 16 May 2026 16:00:30 +0800
-Subject: [PATCH 220/255] FROMLIST: riscv: dts: spacemit: enable QSPI for
+Subject: [PATCH 220/273] FROMLIST: riscv: dts: spacemit: enable QSPI for
  OrangePi RV2
 
 Enable the QSPI controller and the XM25QU128C SPI NOR flash on the

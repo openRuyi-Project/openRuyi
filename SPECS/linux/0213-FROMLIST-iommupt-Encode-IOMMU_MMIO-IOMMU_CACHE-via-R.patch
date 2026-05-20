@@ -1,7 +1,7 @@
 From 70b83f8a1496ea03c725e25ccf77445e4168e0ed Mon Sep 17 00:00:00 2001
 From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 Date: Tue, 12 May 2026 15:41:42 +0800
-Subject: [PATCH 213/255] FROMLIST: iommupt: Encode IOMMU_MMIO/IOMMU_CACHE via
+Subject: [PATCH 213/273] FROMLIST: iommupt: Encode IOMMU_MMIO/IOMMU_CACHE via
  RISC-V Svpbmt bits
 
 When the RISC-V IOMMU page table format support Svpbmt, PBMT provides

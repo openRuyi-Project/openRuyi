@@ -1,7 +1,7 @@
 From d88158ce1a00d3e2c49f34db77b37e0458d34ed9 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:36 +0100
-Subject: [PATCH 095/255] FROMGIT: drm/imagination: Count paired job fence as
+Subject: [PATCH 095/273] FROMGIT: drm/imagination: Count paired job fence as
  dependency in prepare_job()
 
 The DRM scheduler's prepare_job() callback counts the remaining

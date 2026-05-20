@@ -1,7 +1,7 @@
 From 5bd5f43c12fae772718534c5a78bdc616e0c3440 Mon Sep 17 00:00:00 2001
 From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 Date: Tue, 12 May 2026 15:41:41 +0800
-Subject: [PATCH 212/255] FROMLIST: iommu/riscv: Advertise Svpbmt support to
+Subject: [PATCH 212/273] FROMLIST: iommu/riscv: Advertise Svpbmt support to
  generic page table
 
 The RISC-V IOMMU can optionally support Svpbmt page-based memory types

@@ -1,7 +1,7 @@
 From 1e5518c0ed98409b66e3d41969457c6c8c7c5934 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 08:17:55 +0000
-Subject: [PATCH 036/255] UPSTREAM: riscv: dts: spacemit: pcie: fix missing
+Subject: [PATCH 036/273] UPSTREAM: riscv: dts: spacemit: pcie: fix missing
  power regulator
 
 The PCIe port require 3.3v power regulator for device to work properly, So

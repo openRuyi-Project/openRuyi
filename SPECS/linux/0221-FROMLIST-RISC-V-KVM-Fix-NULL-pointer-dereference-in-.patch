@@ -1,7 +1,7 @@
 From 79a12560e927292d96a0966194c54f3cc30e3f04 Mon Sep 17 00:00:00 2001
 From: Jiakai Xu <xujiakai2025@iscas.ac.cn>
 Date: Sun, 17 May 2026 12:44:14 +0000
-Subject: [PATCH 221/255] FROMLIST: RISC-V: KVM: Fix NULL pointer dereference
+Subject: [PATCH 221/273] FROMLIST: RISC-V: KVM: Fix NULL pointer dereference
  in SBI v0.1 SEND_IPI handler
 
 The SBI v0.1 SEND_IPI handler iterates over the hart mask and calls

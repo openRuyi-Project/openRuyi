@@ -1,7 +1,7 @@
 From b37ca57757be5e3eda3e8d6ab8715926c8211cf7 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:25 +0000
-Subject: [PATCH 001/255] UPSTREAM: rust: clk: implement Send and Sync
+Subject: [PATCH 001/273] UPSTREAM: rust: clk: implement Send and Sync
 
 These traits are required for drivers to embed the Clk type in their own
 data structures because driver data structures are usually required to

@@ -1,7 +1,7 @@
 From 89d8af249294493e6ff8533ee394f6a3a798ecf3 Mon Sep 17 00:00:00 2001
 From: Felix Gu <ustc.gu@gmail.com>
 Date: Sat, 21 Mar 2026 03:12:10 +0800
-Subject: [PATCH 145/255] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix error check
+Subject: [PATCH 145/273] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix error check
  on dw_hdmi_probe() return value
 
 The error check after calling dw_hdmi_probe() was incorrectly checking

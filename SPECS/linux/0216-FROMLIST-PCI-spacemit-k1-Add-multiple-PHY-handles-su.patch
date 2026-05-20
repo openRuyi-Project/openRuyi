@@ -1,7 +1,7 @@
 From 1f49e47e0c9ffb062e030ef134b8315ed1848e63 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 17 May 2026 09:48:37 +0800
-Subject: [PATCH 216/255] FROMLIST: PCI: spacemit-k1: Add multiple PHY handles
+Subject: [PATCH 216/273] FROMLIST: PCI: spacemit-k1: Add multiple PHY handles
  support
 
 The PCIe controller on Spacemit K3 may use multiple PHYs at the

@@ -1,7 +1,7 @@
 From 05eb88c8937c7f6f2fdd7993e6a3dc14f5b02891 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:02 +0800
-Subject: [PATCH 178/255] FROMLIST: dt-bindings: phy: add binding for T-Head
+Subject: [PATCH 178/273] FROMLIST: dt-bindings: phy: add binding for T-Head
  TH1520 USB PHY
 
 The TH1520 SoC features a Synopsys USB 3.0 FemtoPHY with some custom

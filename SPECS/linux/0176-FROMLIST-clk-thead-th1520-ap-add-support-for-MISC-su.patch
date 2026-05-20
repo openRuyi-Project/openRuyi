@@ -1,7 +1,7 @@
 From c52caae21cd12584211a1951ed2667df8340680d Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:00 +0800
-Subject: [PATCH 176/255] FROMLIST: clk: thead: th1520-ap: add support for MISC
+Subject: [PATCH 176/273] FROMLIST: clk: thead: th1520-ap: add support for MISC
  subsys clocks
 
 The TH1520 SoC contains a MISC_SUBSYS clock controller, which allows

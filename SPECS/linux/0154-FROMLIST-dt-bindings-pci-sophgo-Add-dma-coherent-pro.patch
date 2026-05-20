@@ -1,7 +1,7 @@
 From db584b72fd7f51fde9cc2556223f471c9875912a Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 1 Apr 2026 01:12:47 +0800
-Subject: [PATCH 154/255] FROMLIST: dt-bindings: pci: sophgo: Add dma-coherent
+Subject: [PATCH 154/273] FROMLIST: dt-bindings: pci: sophgo: Add dma-coherent
  property for SG2042
 
 Add dma-coherent as an allowed property in the SG2042 PCIe host

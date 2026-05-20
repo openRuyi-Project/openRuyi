@@ -1,7 +1,7 @@
 From baac32d245d58f72b9155ed3bbfd11bbef0ce6da Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 7 May 2026 18:31:44 +0800
-Subject: [PATCH 173/255] FROMLIST: ASoC: spacemit: declare shared BCLK for
+Subject: [PATCH 173/273] FROMLIST: ASoC: spacemit: declare shared BCLK for
  cross-DAI rate constraint
 
 On SpacemiT K3, multiple I2S controllers share the same physical BCLK

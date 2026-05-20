@@ -1,7 +1,7 @@
 From 1b8782a08a7f11199436cb089ed61cbf9a9c8a57 Mon Sep 17 00:00:00 2001
 From: Junhui Liu <junhui.liu@pigmoral.tech>
 Date: Thu, 12 Mar 2026 16:42:42 +0800
-Subject: [PATCH 034/255] UPSTREAM: pinctrl: spacemit: return -ENOTSUPP for
+Subject: [PATCH 034/273] UPSTREAM: pinctrl: spacemit: return -ENOTSUPP for
  unsupported pin configurations
 
 Return -ENOTSUPP instead of -EINVAL when encountering unsupported pin

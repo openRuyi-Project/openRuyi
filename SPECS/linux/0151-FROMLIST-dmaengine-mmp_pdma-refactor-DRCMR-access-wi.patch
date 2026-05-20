@@ -1,7 +1,7 @@
 From 0efd5cef7933c090e56713b51c9e5e745eb1c715 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Mon, 18 May 2026 11:32:42 +0800
-Subject: [PATCH 151/255] FROMLIST: dmaengine: mmp_pdma: refactor DRCMR access
+Subject: [PATCH 151/273] FROMLIST: dmaengine: mmp_pdma: refactor DRCMR access
  with helper function
 
 Refactor the DRCMR macro into a helper function mmp_pdma_get_drcmr()

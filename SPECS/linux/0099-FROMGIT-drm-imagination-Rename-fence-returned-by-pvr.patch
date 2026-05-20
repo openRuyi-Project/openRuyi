@@ -1,7 +1,7 @@
 From 8ffaa9bcd1a605ed428fd88d69d6f03627bcbf6e Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:40 +0100
-Subject: [PATCH 099/255] FROMGIT: drm/imagination: Rename fence returned by
+Subject: [PATCH 099/273] FROMGIT: drm/imagination: Rename fence returned by
  pvr_queue_job_arm()
 
 Rename from done_fence to finished_fence, both because the function

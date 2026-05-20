@@ -1,7 +1,7 @@
 From 5a764806855528c7411cebb5177b773cd98dff01 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:57 +0800
-Subject: [PATCH 030/255] UPSTREAM: riscv: dts: thead: th1520: add coefficients
+Subject: [PATCH 030/273] UPSTREAM: riscv: dts: thead: th1520: add coefficients
  to the PVT node
 
 The manual of TH1520 contains a set of coefficients a little different

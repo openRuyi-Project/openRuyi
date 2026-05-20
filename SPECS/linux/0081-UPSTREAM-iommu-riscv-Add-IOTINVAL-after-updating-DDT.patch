@@ -1,7 +1,7 @@
 From d35d9206b869fc80935b81dc9fec00af0a3a62ab Mon Sep 17 00:00:00 2001
 From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 Date: Thu, 22 Jan 2026 22:32:24 +0800
-Subject: [PATCH 081/255] UPSTREAM: iommu/riscv: Add IOTINVAL after updating
+Subject: [PATCH 081/273] UPSTREAM: iommu/riscv: Add IOTINVAL after updating
  DDT/PDT entries
 
 Add riscv_iommu_iodir_iotinval() to perform required TLB and context cache

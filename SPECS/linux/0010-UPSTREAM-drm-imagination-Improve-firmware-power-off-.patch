@@ -1,7 +1,7 @@
 From b0cb68cea558ccb6db48f3605520b5fc0693dc9f Mon Sep 17 00:00:00 2001
 From: Brajesh Gupta <brajesh.gupta@imgtec.com>
 Date: Fri, 13 Mar 2026 06:38:24 +0000
-Subject: [PATCH 010/255] UPSTREAM: drm/imagination: Improve firmware power off
+Subject: [PATCH 010/273] UPSTREAM: drm/imagination: Improve firmware power off
  for layout_mars config
 
 In layout_mars HW config, Firmware MCU moved from Sidekick to new Mars

@@ -1,7 +1,7 @@
 From 8a08b0e4b7d5051aa16e12fcc9bd875e18fdef86 Mon Sep 17 00:00:00 2001
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 Date: Mon, 11 May 2026 10:53:57 +0200
-Subject: [PATCH 203/255] FROMLIST: mmc: sdhci-of-k1: enable essential clock
+Subject: [PATCH 203/273] FROMLIST: mmc: sdhci-of-k1: enable essential clock
  infrastructure for SD operation
 
 Ensure SD card pins receive clock signals by enabling pad clock

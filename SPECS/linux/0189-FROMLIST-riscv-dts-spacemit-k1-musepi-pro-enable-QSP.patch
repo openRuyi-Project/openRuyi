@@ -1,7 +1,7 @@
 From 089ddd89f07ddf9d2c9799ceb7afd11b0a7ac807 Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:10 +0200
-Subject: [PATCH 189/255] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
+Subject: [PATCH 189/273] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
  QSPI and add SPI NOR
 
 Add the QSPI controller node and describe the attached SPI NOR flash

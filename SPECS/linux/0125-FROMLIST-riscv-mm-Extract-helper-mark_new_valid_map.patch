@@ -1,7 +1,7 @@
 From bd166be70e8dd6e625dcd37b349fa8be6ab2eb08 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:45 +0800
-Subject: [PATCH 125/255] FROMLIST: riscv: mm: Extract helper
+Subject: [PATCH 125/273] FROMLIST: riscv: mm: Extract helper
  mark_new_valid_map()
 
 In preparation of a future patch using the same mechanism for

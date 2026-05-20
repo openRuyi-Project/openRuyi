@@ -1,7 +1,7 @@
 From 62803d9425e210ec2de0414f648f9646c052188b Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Thu, 26 Mar 2026 09:46:17 +0800
-Subject: [PATCH 050/255] UPSTREAM: riscv: dts: spacemit: Add ethernet device
+Subject: [PATCH 050/273] UPSTREAM: riscv: dts: spacemit: Add ethernet device
  for K3
 
 Add all ethernet device nodes for K3 SoC.

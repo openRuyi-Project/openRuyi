@@ -1,7 +1,7 @@
 From 0923858563a9a281f3d1b46d4009d2a001d460c0 Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:53 +0000
-Subject: [PATCH 025/255] UPSTREAM: PCI: cadence: Add flags for disabling ASPM
+Subject: [PATCH 025/273] UPSTREAM: PCI: cadence: Add flags for disabling ASPM
  capability for broken Root Ports
 
 Add flags for disabling the ASPM L0s/L1 capability for broken Root Ports

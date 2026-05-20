@@ -1,7 +1,7 @@
 From af828b5283911828bbef93e4ab9bf41af3fc45af Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:15 +0800
-Subject: [PATCH 121/255] FROMLIST: dt-bindings: thermal: Add SpacemiT K1
+Subject: [PATCH 121/273] FROMLIST: dt-bindings: thermal: Add SpacemiT K1
  thermal sensor
 
 Document the SpacemiT K1 Thermal Sensor, which supports

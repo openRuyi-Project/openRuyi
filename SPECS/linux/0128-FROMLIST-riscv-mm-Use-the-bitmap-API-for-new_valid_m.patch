@@ -1,7 +1,7 @@
 From acba92ab77b0b56d0ef5a38ac0a3aef1412ef184 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:48 +0800
-Subject: [PATCH 128/255] FROMLIST: riscv: mm: Use the bitmap API for
+Subject: [PATCH 128/273] FROMLIST: riscv: mm: Use the bitmap API for
  new_valid_map_cpus
 
 The bitmap was defined with incorrect size. Fix it by using the proper

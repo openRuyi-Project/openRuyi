@@ -1,7 +1,7 @@
 From 9132c8b88bf4ca50a8b12e8572e188b042d959c5 Mon Sep 17 00:00:00 2001
 From: Nam Cao <namcao@linutronix.de>
 Date: Tue, 7 Apr 2026 14:06:39 +0200
-Subject: [PATCH 162/255] FROMLIST: riscv: Fix fast_unaligned_access_speed_key
+Subject: [PATCH 162/273] FROMLIST: riscv: Fix fast_unaligned_access_speed_key
  not getting initialized
 
 The static key fast_unaligned_access_speed_key is supposed to be

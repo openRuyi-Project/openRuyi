@@ -1,7 +1,7 @@
 From 0ce418f4a022c732f24b28478375e7b458d51acd Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:38 +0100
-Subject: [PATCH 097/255] FROMGIT: drm/imagination: Skip check on paired job
+Subject: [PATCH 097/273] FROMGIT: drm/imagination: Skip check on paired job
  fence during job submission
 
 While submitting a paired fragment job, there is no need to manually

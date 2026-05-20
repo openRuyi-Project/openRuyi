@@ -1,7 +1,7 @@
 From 7ed529b165caa8c0629b7182a12f4804eb28eca0 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 17 May 2026 09:48:40 +0800
-Subject: [PATCH 219/255] FROMLIST: PCI: spacemit-k1: Add Spacemit K3 PCIe host
+Subject: [PATCH 219/273] FROMLIST: PCI: spacemit-k1: Add Spacemit K3 PCIe host
  controller support
 
 The PCIe controller on Spacemit K3 is almost a standard Synopsys

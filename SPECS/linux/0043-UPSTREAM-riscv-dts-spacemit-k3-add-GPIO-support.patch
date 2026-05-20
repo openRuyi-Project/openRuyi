@@ -1,7 +1,7 @@
 From 313085034a66697b82c4e35c1d0b202a36486cd7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:44 +0000
-Subject: [PATCH 043/255] UPSTREAM: riscv: dts: spacemit: k3: add GPIO support
+Subject: [PATCH 043/273] UPSTREAM: riscv: dts: spacemit: k3: add GPIO support
 
 Add GPIO node in the Device Tree, so devices are able to request GPIO
 resource properly.

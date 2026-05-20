@@ -1,7 +1,7 @@
 From 597c22f4a129ccdd112e5c689f9a0de948a3ee3c Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:30 +0200
-Subject: [PATCH 014/255] UPSTREAM: drm/imagination: Implement handling of
+Subject: [PATCH 014/273] UPSTREAM: drm/imagination: Implement handling of
  context reset notification
 
 The firmware will send the context reset notification message as

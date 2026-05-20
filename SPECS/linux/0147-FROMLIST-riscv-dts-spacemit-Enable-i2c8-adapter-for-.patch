@@ -1,7 +1,7 @@
 From 5bafffefeb7f08e587a35d51bac41271a000b8a1 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Tue, 7 Apr 2026 23:28:14 +0800
-Subject: [PATCH 147/255] FROMLIST: riscv: dts: spacemit: Enable i2c8 adapter
+Subject: [PATCH 147/273] FROMLIST: riscv: dts: spacemit: Enable i2c8 adapter
  for OrangePi RV2
 
 The adapter is used to access the SpacemiT P1 PMIC present in this board.

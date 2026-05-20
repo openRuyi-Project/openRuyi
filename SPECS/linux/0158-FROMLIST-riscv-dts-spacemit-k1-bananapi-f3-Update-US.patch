@@ -1,7 +1,7 @@
 From 38fbce6ada227b4fe18d4bc27381b045d2b77845 Mon Sep 17 00:00:00 2001
 From: Anand Moon <linux.amoon@gmail.com>
 Date: Wed, 25 Mar 2026 13:46:09 +0530
-Subject: [PATCH 158/255] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3:
+Subject: [PATCH 158/273] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3:
  Update USB regulator on onboard usb and lable
 
 Update the USB regulator labels to align with the board schematics and

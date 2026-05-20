@@ -1,7 +1,7 @@
 From 49f7f75679bfa54c1de18f7be60d35a57d59436b Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Mar 2026 12:22:10 -0300
-Subject: [PATCH 091/255] UPSTREAM: iommu/riscv: Remove overflows on the
+Subject: [PATCH 091/273] UPSTREAM: iommu/riscv: Remove overflows on the
  invalidation path
 
 Since RISC-V supports a sign extended page table it should support

@@ -1,7 +1,7 @@
 From 6394a385ba19725f7109761c88ae588831cdd557 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 11 May 2026 02:59:12 +0000
-Subject: [PATCH 198/255] FROMLIST: clk: spacemit: k3: Add PCIe DBI clock
+Subject: [PATCH 198/273] FROMLIST: clk: spacemit: k3: Add PCIe DBI clock
 
 Add PCIe DBI (Data Bus Interface) clock which was missing, This will
 support PCIe driver to explicitly request and enable all clocks that

@@ -1,7 +1,7 @@
 From 40eebf3ba48f0e0be7334a3dd0132a23a6072799 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:01 +0800
-Subject: [PATCH 177/255] FROMLIST: riscv: dts: thead: add device tree node for
+Subject: [PATCH 177/273] FROMLIST: riscv: dts: thead: add device tree node for
  MISC clock controller
 
 The MISC_SUBSYS clock controller on TH1520 SoC is a clock controller

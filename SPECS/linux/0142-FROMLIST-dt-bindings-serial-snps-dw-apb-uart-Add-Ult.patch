@@ -1,7 +1,7 @@
 From e6966ebe247b9d9cc81c1a73af6b76fd515c42e9 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Tue, 28 Apr 2026 13:26:28 +0800
-Subject: [PATCH 142/255] FROMLIST: dt-bindings: serial: snps-dw-apb-uart: Add
+Subject: [PATCH 142/273] FROMLIST: dt-bindings: serial: snps-dw-apb-uart: Add
  UltraRISC DP1000 UART
 
 UltraRISC DP1000 integrates a Synopsys DesignWare APB UART, but it does

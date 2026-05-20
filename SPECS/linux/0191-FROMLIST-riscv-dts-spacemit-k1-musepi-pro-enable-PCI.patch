@@ -1,7 +1,7 @@
 From 103c72164f8e74376f31a7b961e87fc7645dccab Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:12 +0200
-Subject: [PATCH 191/255] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
+Subject: [PATCH 191/273] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
  PCIe ports
 
 Enable the two PCIe controller along with and their associated PHYs. They

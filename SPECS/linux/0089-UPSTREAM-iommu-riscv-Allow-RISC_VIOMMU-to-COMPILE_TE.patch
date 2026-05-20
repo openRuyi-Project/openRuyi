@@ -1,7 +1,7 @@
 From 5f7c8c2d61e9a92bc8f48b40eaf3a5f6bad410b1 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:41 -0400
-Subject: [PATCH 089/255] UPSTREAM: iommu/riscv: Allow RISC_VIOMMU to
+Subject: [PATCH 089/273] UPSTREAM: iommu/riscv: Allow RISC_VIOMMU to
  COMPILE_TEST
 
 This driver used to use a lot of page table constants from the architecture

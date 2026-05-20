@@ -1,7 +1,7 @@
 From 37034b6f8bc8d53bce268cfecaed416200b5d5a2 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Tue, 28 Apr 2026 13:26:27 +0800
-Subject: [PATCH 141/255] FROMLIST: serial: 8250_dw: build Renesas RZN1 CPR
+Subject: [PATCH 141/273] FROMLIST: serial: 8250_dw: build Renesas RZN1 CPR
  value from DW_UART_CPR_* definitions
 
 Replace the magic CPR value for Renesas RZ/N1 with a composition using

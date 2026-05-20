@@ -1,7 +1,7 @@
 From 376a1adc4d99cb796b8e191f7ceee98726ca6131 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:38 -0400
-Subject: [PATCH 086/255] UPSTREAM: iommu/riscv: Use the generic iommu page
+Subject: [PATCH 086/273] UPSTREAM: iommu/riscv: Use the generic iommu page
  table
 
 This is a fairly straightforward conversion of the RISC-V iommu driver to

@@ -1,7 +1,7 @@
 From 1447b72c349d9850526e616ae91bc64ef407fbfe Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:47 +0800
-Subject: [PATCH 127/255] FROMLIST: riscv: mm: Rename new_vmalloc into
+Subject: [PATCH 127/273] FROMLIST: riscv: mm: Rename new_vmalloc into
  new_valid_map_cpus
 
 Since this mechanism is now used for the kfence pool, which comes from

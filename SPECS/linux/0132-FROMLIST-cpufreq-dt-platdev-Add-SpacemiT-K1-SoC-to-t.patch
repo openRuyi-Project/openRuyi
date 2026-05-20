@@ -1,7 +1,7 @@
 From 11853bf04519ab9c9477fbf323a5f54ecd938dfb Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Fri, 10 Apr 2026 15:58:22 +0800
-Subject: [PATCH 132/255] FROMLIST: cpufreq: dt-platdev: Add SpacemiT K1 SoC to
+Subject: [PATCH 132/273] FROMLIST: cpufreq: dt-platdev: Add SpacemiT K1 SoC to
  the allowlist
 
 The SpacemiT K1 SoC uses standard device tree based CPU frequency

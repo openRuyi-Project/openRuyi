@@ -1,7 +1,7 @@
 From f886823d4504467a4ab1f0881fc8575e4f057d67 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:30 +0800
-Subject: [PATCH 023/255] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add
+Subject: [PATCH 023/273] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add
  support for K3 SoC
 
 The SDHCI controller found on SpacemiT K3 SoC share the same IP with

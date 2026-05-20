@@ -1,7 +1,7 @@
 From 3b0095ce6c96ba5be4943e544118c4ae528c66b3 Mon Sep 17 00:00:00 2001
 From: Trevor Gamblin <tgamblin@baylibre.com>
 Date: Fri, 15 May 2026 12:49:02 +0200
-Subject: [PATCH 209/255] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add SD
+Subject: [PATCH 209/273] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add SD
  card support with UHS modes
 
 Update the Muse Pi Pro devicetree with SD card support to match what

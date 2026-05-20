@@ -1,7 +1,7 @@
 From 0c41fae70e2fef1638251eb3140fcad9f1f451e1 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Mon, 18 May 2026 11:32:41 +0800
-Subject: [PATCH 150/255] FROMLIST: dt-bindings: dmaengine: Add SpacemiT K3 DMA
+Subject: [PATCH 150/273] FROMLIST: dt-bindings: dmaengine: Add SpacemiT K3 DMA
  compatible string
 
 Add the "spacemit,k3-pdma" compatible string for the SpacemiT K3 SoC.

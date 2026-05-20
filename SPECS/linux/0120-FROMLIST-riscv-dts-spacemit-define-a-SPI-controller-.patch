@@ -1,7 +1,7 @@
 From 066a49704ef158f47b3cce2b7d73ff8df3e53bb6 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:53 -0400
-Subject: [PATCH 120/255] FROMLIST: riscv: dts: spacemit: define a SPI
+Subject: [PATCH 120/273] FROMLIST: riscv: dts: spacemit: define a SPI
  controller node
 
 Define a node for the fourth SoC SPI controller (number 3) on the

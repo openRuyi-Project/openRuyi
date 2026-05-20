@@ -1,7 +1,7 @@
 From 17ed710c8ba0f3b54b0de304db636de52cb27280 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:04 +0800
-Subject: [PATCH 037/255] UPSTREAM: riscv: dts: spacemit: Update PMIC supply
+Subject: [PATCH 037/273] UPSTREAM: riscv: dts: spacemit: Update PMIC supply
  properties for BPI-F3 and Jupiter
 
 Use per-regulator supply names in pmic "spacemit,p1" node to specify

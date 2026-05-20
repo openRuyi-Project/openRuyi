@@ -1,7 +1,7 @@
 From 40bd7dc81105a3f4ac733472339a036d0e872524 Mon Sep 17 00:00:00 2001
 From: Anand Moon <linux.amoon@gmail.com>
 Date: Wed, 25 Mar 2026 13:46:08 +0530
-Subject: [PATCH 157/255] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3: Add
+Subject: [PATCH 157/273] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3: Add
  vcc5v0_sys regulator for Banana Pi F3
 
 Define the system 5V fixed regulator (vcc5v0_sys) supplied by the

@@ -1,7 +1,7 @@
 From 1efe2d2c3460bd38b652ac40e70bdfb21070a8cb Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 1 Apr 2026 01:56:58 +0800
-Subject: [PATCH 105/255] FROMLIST: PCI: Add quirk to disable PCIe port
+Subject: [PATCH 105/273] FROMLIST: PCI: Add quirk to disable PCIe port
  services on Sophgo SG2042
 
 SG2042's PCIe root ports [1f1c:2042] fail to deliver MSI interrupts to

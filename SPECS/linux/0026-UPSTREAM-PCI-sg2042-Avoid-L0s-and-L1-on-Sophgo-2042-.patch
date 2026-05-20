@@ -1,7 +1,7 @@
 From 1a99ddadb8ec0481157d22627060249c2536be51 Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:54 +0000
-Subject: [PATCH 026/255] UPSTREAM: PCI: sg2042: Avoid L0s and L1 on Sophgo
+Subject: [PATCH 026/273] UPSTREAM: PCI: sg2042: Avoid L0s and L1 on Sophgo
  2042 PCIe Root Ports
 
 Since commit f3ac2ff14834 ("PCI/ASPM: Enable all ClockPM and ASPM states

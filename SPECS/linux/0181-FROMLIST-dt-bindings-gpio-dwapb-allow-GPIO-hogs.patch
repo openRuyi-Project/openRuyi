@@ -1,7 +1,7 @@
 From f4e43af8bab59a8912b472ec6ac6413be9711fc6 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:05 +0800
-Subject: [PATCH 181/255] FROMLIST: dt-bindings: gpio: dwapb: allow GPIO hogs
+Subject: [PATCH 181/273] FROMLIST: dt-bindings: gpio: dwapb: allow GPIO hogs
 
 GPIO hogs are described in the gpio.txt binding as automatic default
 GPIO configuration items.

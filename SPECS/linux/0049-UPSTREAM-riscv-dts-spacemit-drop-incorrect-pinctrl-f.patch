@@ -1,7 +1,7 @@
 From 1d44ccb08dec29eafd59338335bbfae7b106a8a1 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Sun, 22 Mar 2026 21:25:01 +0100
-Subject: [PATCH 049/255] UPSTREAM: riscv: dts: spacemit: drop incorrect
+Subject: [PATCH 049/273] UPSTREAM: riscv: dts: spacemit: drop incorrect
  pinctrl for combo PHY
 
 The combo PHY on the Banana Pi F3 is used for the USB 3.0 port. The high

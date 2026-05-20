@@ -1,7 +1,7 @@
 From 68744faae31b6811c842c207a62ba8c1fead45af Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sun, 21 Dec 2025 16:20:26 +0800
-Subject: [PATCH 114/255] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add reset
+Subject: [PATCH 114/273] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add reset
  support
 
 The SpacemiT SDHCI controller has two reset lines, one connect to AXI bus

@@ -1,7 +1,7 @@
 From 0626c406427a7d83eafcd873507f5ba35124fc1f Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 1 Apr 2026 01:56:57 +0800
-Subject: [PATCH 104/255] FROMLIST: PCI: Add per-device flag to disable native
+Subject: [PATCH 104/273] FROMLIST: PCI: Add per-device flag to disable native
  PCIe port services
 
 Add PCI_DEV_FLAGS_NO_PORT_SERVICES to allow quirks to prevent the PCIe

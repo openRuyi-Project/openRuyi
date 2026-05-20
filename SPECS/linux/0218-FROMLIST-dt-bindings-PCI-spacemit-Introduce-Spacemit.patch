@@ -1,7 +1,7 @@
 From 18d46ac6a9ac5209e7b43b418036d5908dda7d21 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 17 May 2026 09:48:39 +0800
-Subject: [PATCH 218/255] FROMLIST: dt-bindings: PCI: spacemit: Introduce
+Subject: [PATCH 218/273] FROMLIST: dt-bindings: PCI: spacemit: Introduce
  Spacemit K3 PCIe host controller
 
 Add binding support for the PCIe controller on the SpacemiT K3 SoC.

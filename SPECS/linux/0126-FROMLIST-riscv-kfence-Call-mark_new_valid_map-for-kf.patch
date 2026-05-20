@@ -1,7 +1,7 @@
 From 01b2329b3172bf1305ffce7649e3fe833b4957e4 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:46 +0800
-Subject: [PATCH 126/255] FROMLIST: riscv: kfence: Call mark_new_valid_map()
+Subject: [PATCH 126/273] FROMLIST: riscv: kfence: Call mark_new_valid_map()
  for kfence_unprotect()
 
 In kfence_protect_page(), which kfence_unprotect() calls, we cannot send

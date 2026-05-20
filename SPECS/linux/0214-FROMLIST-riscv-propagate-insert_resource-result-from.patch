@@ -1,7 +1,7 @@
 From 0c2cead3c4a89be1121351709c4b5d47ad74dc57 Mon Sep 17 00:00:00 2001
 From: Thorsten Blum <thorsten.blum@linux.dev>
 Date: Tue, 12 May 2026 19:20:35 +0200
-Subject: [PATCH 214/255] FROMLIST: riscv: propagate insert_resource result
+Subject: [PATCH 214/273] FROMLIST: riscv: propagate insert_resource result
  from add_resource
 
 Currently, add_resource() returns 1 on success, even though its callers
