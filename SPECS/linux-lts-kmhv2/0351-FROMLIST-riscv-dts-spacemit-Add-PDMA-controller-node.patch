@@ -1,7 +1,7 @@
 From 929d5488015ffa8fc60555122b76b9a26d5d071c Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Mon, 18 May 2026 11:32:44 +0800
-Subject: [PATCH 351/451] FROMLIST: riscv: dts: spacemit: Add PDMA controller
+Subject: [PATCH 351/469] FROMLIST: riscv: dts: spacemit: Add PDMA controller
  node for K3 SoC
 
 Add the Peripheral DMA (PDMA) controller node for the SpacemiT K3 SoC.

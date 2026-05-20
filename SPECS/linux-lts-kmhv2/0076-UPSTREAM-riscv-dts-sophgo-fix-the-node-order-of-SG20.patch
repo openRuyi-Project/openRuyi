@@ -1,7 +1,7 @@
 From 70c8d5ae1eb0232396941efc3017faf22f621a10 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 13 Jan 2026 10:38:27 +0800
-Subject: [PATCH 076/451] UPSTREAM: riscv: dts: sophgo: fix the node order of
+Subject: [PATCH 076/469] UPSTREAM: riscv: dts: sophgo: fix the node order of
  SG2042 peripheral
 
 In sg2042.dtsi, some peripheral device node does not follow the

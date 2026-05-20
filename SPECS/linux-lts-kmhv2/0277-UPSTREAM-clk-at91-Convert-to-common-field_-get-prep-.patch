@@ -1,7 +1,7 @@
 From d0fdc0099ea748b64acfb364f6ce4f8f5ec2b81d Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:02 +0100
-Subject: [PATCH 277/451] UPSTREAM: clk: at91: Convert to common
+Subject: [PATCH 277/469] UPSTREAM: clk: at91: Convert to common
  field_{get,prep}() helpers
 
 Drop the driver-specific field_get() and field_prep() macros, in favor

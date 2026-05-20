@@ -1,7 +1,7 @@
 From e55d401e17424f6d73049a7cec5800d0e3fcfa51 Mon Sep 17 00:00:00 2001
 From: Xincheng Zhang <zhangxincheng@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:12 +0800
-Subject: [PATCH 337/451] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
+Subject: [PATCH 337/469] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
  Root Complex driver
 
 Add DP1000 SoC PCIe Root Complex driver.

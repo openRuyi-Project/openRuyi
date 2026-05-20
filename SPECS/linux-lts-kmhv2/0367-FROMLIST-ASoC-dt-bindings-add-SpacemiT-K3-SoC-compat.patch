@@ -1,7 +1,7 @@
 From 30e46863b6ef5fe9c1088b7623148f218884af19 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 7 May 2026 15:33:09 +0800
-Subject: [PATCH 367/451] FROMLIST: ASoC: dt-bindings: add SpacemiT K3 SoC
+Subject: [PATCH 367/469] FROMLIST: ASoC: dt-bindings: add SpacemiT K3 SoC
  compatible
 
 Add the spacemit,k3-i2s compatible string for the K3 SoC I2S

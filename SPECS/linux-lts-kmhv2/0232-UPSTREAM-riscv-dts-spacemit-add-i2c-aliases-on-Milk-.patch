@@ -1,7 +1,7 @@
 From 6811789ffc0512732b7e4481208b4534363c9418 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:31 +0100
-Subject: [PATCH 232/451] UPSTREAM: riscv: dts: spacemit: add i2c aliases on
+Subject: [PATCH 232/469] UPSTREAM: riscv: dts: spacemit: add i2c aliases on
  Milk-V Jupiter
 
 Add i2c aliases for i2c2 and i2c8 on Milk-V Jupiter. This is useful to

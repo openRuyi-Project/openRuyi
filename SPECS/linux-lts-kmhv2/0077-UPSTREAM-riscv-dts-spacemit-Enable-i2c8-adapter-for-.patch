@@ -1,7 +1,7 @@
 From 0702c1459ff5f746d90e55f5b4ec88cae223318c Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:53 +0100
-Subject: [PATCH 077/451] UPSTREAM: riscv: dts: spacemit: Enable i2c8 adapter
+Subject: [PATCH 077/469] UPSTREAM: riscv: dts: spacemit: Enable i2c8 adapter
  for Milk-V Jupiter
 
 The adapter is used to access the SpacemiT P1 PMIC present in this board.

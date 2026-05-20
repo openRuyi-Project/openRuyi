@@ -1,7 +1,7 @@
 From 5fe558c7bb2bb5830a91f17fb20deb9b9e67788e Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 17 Oct 2025 11:16:18 +0800
-Subject: [PATCH 045/451] UPSTREAM: ASoC: spacemit: add i2s support for K1 SoC
+Subject: [PATCH 045/469] UPSTREAM: ASoC: spacemit: add i2s support for K1 SoC
 
 Add ASoC platform driver for the SpacemiT K1 SoC full-duplex I2S
 controller.

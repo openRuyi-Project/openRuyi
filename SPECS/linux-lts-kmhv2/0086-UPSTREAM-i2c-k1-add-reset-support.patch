@@ -1,7 +1,7 @@
 From 69127889b32f08491933d1caf68282bf1bcc4c15 Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:52 +0800
-Subject: [PATCH 086/451] UPSTREAM: i2c: k1: add reset support
+Subject: [PATCH 086/469] UPSTREAM: i2c: k1: add reset support
 
 The K1 I2C controller provides a reset line that needs to be deasserted
 before the controller can be accessed.

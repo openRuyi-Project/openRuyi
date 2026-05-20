@@ -1,7 +1,7 @@
 From 5be2b92e5c28d556c68f310f041ddea599b1f770 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 27 Jan 2026 10:58:49 +0800
-Subject: [PATCH 137/451] UPSTREAM: gpio: spacemit-k1: Use PDR for pin
+Subject: [PATCH 137/469] UPSTREAM: gpio: spacemit-k1: Use PDR for pin
  direction, not SDR/CDR
 
 On the SpacemiT GPIO controller, the direction control register PDR is

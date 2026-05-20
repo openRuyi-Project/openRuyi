@@ -1,7 +1,7 @@
 From 3c63c96b55f0c562e8d00858782484bfccee0658 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 254/451] UPSTREAM: riscv: lib: add strrchr() implementation
+Subject: [PATCH 254/469] UPSTREAM: riscv: lib: add strrchr() implementation
 
 Add an assembly implementation of strrchr() for RISC-V.
 

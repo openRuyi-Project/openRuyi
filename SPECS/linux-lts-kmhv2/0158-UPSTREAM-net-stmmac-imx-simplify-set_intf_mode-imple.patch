@@ -1,7 +1,7 @@
 From c9130c765052d010619bfc9f12e91fa0915d585a Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:36 +0000
-Subject: [PATCH 158/451] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()
+Subject: [PATCH 158/469] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()
  implementations
 
 Simplify the set_intf_mode() implementations, testing the phy_intf_sel

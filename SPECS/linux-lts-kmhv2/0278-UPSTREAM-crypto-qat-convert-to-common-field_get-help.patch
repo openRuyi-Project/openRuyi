@@ -1,7 +1,7 @@
 From 917bed96072c671bd65be59cde44241a12c5e93e Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:03 +0100
-Subject: [PATCH 278/451] UPSTREAM: crypto: qat - convert to common field_get()
+Subject: [PATCH 278/469] UPSTREAM: crypto: qat - convert to common field_get()
  helper
 
 Drop the driver-specific field_get() macro, in favor of the globally

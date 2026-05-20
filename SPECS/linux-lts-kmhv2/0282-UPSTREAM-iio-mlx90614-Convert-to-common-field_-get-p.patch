@@ -1,7 +1,7 @@
 From 343cb248b07160806b4d67cad39e3758d5e21001 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:07 +0100
-Subject: [PATCH 282/451] UPSTREAM: iio: mlx90614: Convert to common
+Subject: [PATCH 282/469] UPSTREAM: iio: mlx90614: Convert to common
  field_{get,prep}() helpers
 
 Drop the driver-specific field_get() and field_prep() macros, in favor

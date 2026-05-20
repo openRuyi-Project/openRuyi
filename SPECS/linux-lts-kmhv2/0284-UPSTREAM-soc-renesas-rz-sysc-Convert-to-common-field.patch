@@ -1,7 +1,7 @@
 From a4dc8ef34cae3b2d390454c5f5b793e355f5d98d Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:09 +0100
-Subject: [PATCH 284/451] UPSTREAM: soc: renesas: rz-sysc: Convert to common
+Subject: [PATCH 284/469] UPSTREAM: soc: renesas: rz-sysc: Convert to common
  field_get() helper
 
 Drop the driver-specific field_get() macro, in favor of the globally

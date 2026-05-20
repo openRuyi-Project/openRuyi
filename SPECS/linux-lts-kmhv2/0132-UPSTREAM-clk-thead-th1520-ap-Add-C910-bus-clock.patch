@@ -1,7 +1,7 @@
 From c64b09b56a405dda98e10c17f179d1a563386bdb Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:12 +0000
-Subject: [PATCH 132/451] UPSTREAM: clk: thead: th1520-ap: Add C910 bus clock
+Subject: [PATCH 132/469] UPSTREAM: clk: thead: th1520-ap: Add C910 bus clock
 
 This divider takes c910_clk as parent and is essential for the C910
 cluster to operate, thus is marked as CLK_IS_CRITICAL.

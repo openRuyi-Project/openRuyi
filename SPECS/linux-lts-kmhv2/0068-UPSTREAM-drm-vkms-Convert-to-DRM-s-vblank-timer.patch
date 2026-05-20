@@ -1,7 +1,7 @@
 From 392584b1d2f1c61bcac9727a2d25c2a6ecff7bcb Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:21 +0200
-Subject: [PATCH 068/451] UPSTREAM: drm/vkms: Convert to DRM's vblank timer
+Subject: [PATCH 068/469] UPSTREAM: drm/vkms: Convert to DRM's vblank timer
 
 Replace vkms' vblank timer with the DRM implementation. The DRM
 code is identical in concept, but differs in implementation.

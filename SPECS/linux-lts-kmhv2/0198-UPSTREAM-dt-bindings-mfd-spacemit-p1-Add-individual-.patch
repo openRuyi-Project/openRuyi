@@ -1,7 +1,7 @@
 From 2025b3874717e679e1016608a5f9ec89ac3cf34a Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:02 +0800
-Subject: [PATCH 198/451] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add
+Subject: [PATCH 198/469] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add
  individual regulator supply properties
 
 Add supply properties that match the P1 PMIC's actual hardware topology

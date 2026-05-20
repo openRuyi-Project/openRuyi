@@ -1,7 +1,7 @@
 From 4240cc63f01f9a48240cdd62493814d015414350 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 16 Feb 2026 23:26:53 +0800
-Subject: [PATCH 172/451] UPSTREAM: phy: k1-usb: add disconnect function
+Subject: [PATCH 172/469] UPSTREAM: phy: k1-usb: add disconnect function
  support
 
 A disconnect status BIT of USB2 PHY need to be cleared, otherwise

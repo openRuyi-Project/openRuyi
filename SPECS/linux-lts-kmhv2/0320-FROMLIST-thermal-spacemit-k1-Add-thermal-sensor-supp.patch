@@ -1,7 +1,7 @@
 From 4bfa77c3320488a07facf6e9d9b4ad739fb1ba4b Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:16 +0800
-Subject: [PATCH 320/451] FROMLIST: thermal: spacemit: k1: Add thermal sensor
+Subject: [PATCH 320/469] FROMLIST: thermal: spacemit: k1: Add thermal sensor
  support
 
 The thermal sensor on K1 supports monitoring five temperature zones.

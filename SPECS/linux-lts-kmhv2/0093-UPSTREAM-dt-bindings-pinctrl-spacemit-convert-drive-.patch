@@ -1,7 +1,7 @@
 From af226f243035af220aeeabdd30b8e4f8f343c565 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:22 +0800
-Subject: [PATCH 093/451] UPSTREAM: dt-bindings: pinctrl: spacemit: convert
+Subject: [PATCH 093/469] UPSTREAM: dt-bindings: pinctrl: spacemit: convert
  drive strength to schema format
 
 In order to better extend the pinctrl support for future new SoC, convert

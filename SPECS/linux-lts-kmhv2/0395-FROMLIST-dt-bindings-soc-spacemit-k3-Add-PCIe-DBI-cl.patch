@@ -1,7 +1,7 @@
 From f6b8fbaa5a35b4444f6a95cbb37942bc29a8d239 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 11 May 2026 02:59:11 +0000
-Subject: [PATCH 395/451] FROMLIST: dt-bindings: soc: spacemit: k3: Add PCIe
+Subject: [PATCH 395/469] FROMLIST: dt-bindings: soc: spacemit: k3: Add PCIe
  DBI clock IDs
 
 Add clock IDs of PCIe DBI (Data Bus Interface) clock.

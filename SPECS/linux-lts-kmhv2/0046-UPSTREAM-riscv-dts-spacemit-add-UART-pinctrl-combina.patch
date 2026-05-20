@@ -1,7 +1,7 @@
 From 8bf868b16ffd7df3798eeaca314664946ceeff48 Mon Sep 17 00:00:00 2001
 From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
 Date: Wed, 17 Sep 2025 08:59:07 +0200
-Subject: [PATCH 046/451] UPSTREAM: riscv: dts: spacemit: add UART pinctrl
+Subject: [PATCH 046/469] UPSTREAM: riscv: dts: spacemit: add UART pinctrl
  combinations
 
 Add UART pinctrl configurations based on the SoC datasheet and the

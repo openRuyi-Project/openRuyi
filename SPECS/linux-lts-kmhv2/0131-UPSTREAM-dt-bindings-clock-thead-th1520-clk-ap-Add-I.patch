@@ -1,7 +1,7 @@
 From 1452c05dfc9e6b30655dbb036941b60f07f2a141 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:10 +0000
-Subject: [PATCH 131/451] UPSTREAM: dt-bindings: clock: thead,th1520-clk-ap:
+Subject: [PATCH 131/469] UPSTREAM: dt-bindings: clock: thead,th1520-clk-ap:
  Add ID for C910 bus clock
 
 Add binding ID for C910 bus clock, which takes CLK_C910 as parent and is

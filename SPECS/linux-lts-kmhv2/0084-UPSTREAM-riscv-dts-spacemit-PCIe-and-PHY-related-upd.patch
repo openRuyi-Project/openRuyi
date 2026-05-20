@@ -1,7 +1,7 @@
 From 57726a720c3c66c0832db356902292df49cae583 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:31 -0600
-Subject: [PATCH 084/451] UPSTREAM: riscv: dts: spacemit: PCIe and PHY-related
+Subject: [PATCH 084/469] UPSTREAM: riscv: dts: spacemit: PCIe and PHY-related
  updates
 
 Define PCIe and PHY-related Device Tree nodes for the SpacemiT K1 SoC.

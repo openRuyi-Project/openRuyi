@@ -1,7 +1,7 @@
 From 29d7865d3f2039d10d1d2e269a1d4de020bf7deb Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:07 +0800
-Subject: [PATCH 381/451] FROMLIST: riscv: dts: thead: lpi4a: sort nodes
+Subject: [PATCH 381/469] FROMLIST: riscv: dts: thead: lpi4a: sort nodes
 
 Although "D" and "H" are earlier in the alphabet than "P", the DPU and
 HDMI nodes were added after PADCTRL node in the Lichee Pi 4A device tree.

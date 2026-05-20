@@ -1,7 +1,7 @@
 From 31ad4a784fd1f9e903782496202c9298fa8cc745 Mon Sep 17 00:00:00 2001
 From: Anand Moon <linux.amoon@gmail.com>
 Date: Wed, 25 Mar 2026 13:46:10 +0530
-Subject: [PATCH 357/451] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3:
+Subject: [PATCH 357/469] FROMLIST: riscv: dts: spacemit: k1-bananapi-f3:
  Correct USB hub power hierarchy
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

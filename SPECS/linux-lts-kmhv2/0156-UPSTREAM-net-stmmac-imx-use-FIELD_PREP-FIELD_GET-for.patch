@@ -1,7 +1,7 @@
 From ee98e139c8c47b7d34fb2ef2cc2f140fe206a99f Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:26 +0000
-Subject: [PATCH 156/451] UPSTREAM: net: stmmac: imx: use
+Subject: [PATCH 156/469] UPSTREAM: net: stmmac: imx: use
  FIELD_PREP()/FIELD_GET() for PHY_INTF_SEL_x
 
 Use FIELD_PREP()/FIELD_GET() in the functions to construct the PHY

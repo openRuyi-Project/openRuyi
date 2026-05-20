@@ -1,7 +1,7 @@
 From 5d921cbb2dda5ee31b4f2e34a39a6350e70d7aef Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:33 +0100
-Subject: [PATCH 234/451] UPSTREAM: riscv: dts: spacemit: enable USB 3 ports on
+Subject: [PATCH 234/469] UPSTREAM: riscv: dts: spacemit: enable USB 3 ports on
  Milk-V Jupiter
 
 Enable the DWC3 USB 3.0 controller (USB#2 port in the K1 datasheet) and

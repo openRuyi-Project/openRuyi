@@ -1,7 +1,7 @@
 From 2e5556079441f8d2efdd2c83903101a4f4df1e48 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 251/451] UPSTREAM: lib/string_kunit: extend benchmarks to
+Subject: [PATCH 251/469] UPSTREAM: lib/string_kunit: extend benchmarks to
  strnlen() and chr searches
 
 Extend the string benchmarking suite to include strnlen(), strchr(),

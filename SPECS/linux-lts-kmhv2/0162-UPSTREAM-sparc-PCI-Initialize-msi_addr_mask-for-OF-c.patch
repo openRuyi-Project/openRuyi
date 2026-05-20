@@ -1,7 +1,7 @@
 From 616264927d2d7c000af26d7c9423e941e15c134a Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:28 +0530
-Subject: [PATCH 162/451] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for
+Subject: [PATCH 162/469] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for
  OF-created PCI devices
 
 Recent changes replaced the use of no_64bit_msi with msi_addr_mask, which

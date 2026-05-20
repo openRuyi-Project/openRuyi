@@ -1,7 +1,7 @@
 From 07556dc542bb844e3ebc5dfd7fb0a1feaefd0cc7 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:06 +0100
-Subject: [PATCH 281/451] UPSTREAM: iio: dac: Convert to common field_prep()
+Subject: [PATCH 281/469] UPSTREAM: iio: dac: Convert to common field_prep()
  helper
 
 Drop the driver-specific field_prep() macro, in favor of the globally

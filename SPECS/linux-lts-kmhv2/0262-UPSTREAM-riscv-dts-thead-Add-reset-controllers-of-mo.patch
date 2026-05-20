@@ -1,7 +1,7 @@
 From da3024872215d1a776fe9d5a033a9fa1e1f070c1 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:32 +0000
-Subject: [PATCH 262/451] UPSTREAM: riscv: dts: thead: Add reset controllers of
+Subject: [PATCH 262/469] UPSTREAM: riscv: dts: thead: Add reset controllers of
  more subsystems for TH1520
 
 Describe reset controllers for VI, MISC, AP, DSP and AO subsystems. The

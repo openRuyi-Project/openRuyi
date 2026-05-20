@@ -1,7 +1,7 @@
 From 1aaa98fe35d494c62b4ef3138259921cc872deb7 Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:11 +0200
-Subject: [PATCH 388/451] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
+Subject: [PATCH 388/469] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: enable
  USB 3 ports
 
 Enable the DWC3 USB 3.0 controller, its associated combo_phy (USB 3 PHY)

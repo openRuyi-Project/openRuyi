@@ -1,7 +1,7 @@
 From 3661fa49ffd2670e6b82611cbbc78027dee0df23 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:44 +0800
-Subject: [PATCH 111/451] UPSTREAM: dt-bindings: riscv: spacemit: add K3 and
+Subject: [PATCH 111/469] UPSTREAM: dt-bindings: riscv: spacemit: add K3 and
  Pico-ITX board bindings
 
 Add DT binding documentation for the SpacemiT K3 SoC and the board Pico-ITX

@@ -1,7 +1,7 @@
 From 74965b51806622c95b4af5be34a1623f176acc4e Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:14 -0400
-Subject: [PATCH 167/451] UPSTREAM: dt-bindings: usb: add missed compatible
+Subject: [PATCH 167/469] UPSTREAM: dt-bindings: usb: add missed compatible
  string for arm64 layerscape
 
 Add missed compatible string for arm64 layerscape platform. Allow these

@@ -1,7 +1,7 @@
 From ec89eecd48b497f35ac91a48a1a928a05544b21c Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 5 May 2026 09:53:34 -0400
-Subject: [PATCH 372/451] FROMLIST: spi: spacemit: add u64 cast to NSEC_PER_SEC
+Subject: [PATCH 372/469] FROMLIST: spi: spacemit: add u64 cast to NSEC_PER_SEC
  to avoid 32-bit overflow
 
 NSEC_PER_SEC expands to the long constant 1000000000L, so NSEC_PER_SEC *

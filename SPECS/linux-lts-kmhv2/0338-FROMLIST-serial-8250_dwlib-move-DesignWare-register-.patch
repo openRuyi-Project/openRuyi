@@ -1,7 +1,7 @@
 From 99e3d7932ccc70e8f1f25278bd7a74014ce3cf86 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Tue, 28 Apr 2026 13:26:26 +0800
-Subject: [PATCH 338/451] FROMLIST: serial: 8250_dwlib: move DesignWare
+Subject: [PATCH 338/469] FROMLIST: serial: 8250_dwlib: move DesignWare
  register definitions to header
 
 Move the DW_UART_* register offsets and CPR bit/field definitions from

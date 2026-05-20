@@ -1,7 +1,7 @@
 From e1d496f2593cb9bde370adf9ea25bf5c4d47cc45 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:37 -0600
-Subject: [PATCH 043/451] UPSTREAM: PCI: spacemit: Add SpacemiT PCIe host
+Subject: [PATCH 043/469] UPSTREAM: PCI: spacemit: Add SpacemiT PCIe host
  driver
 
 Introduce a driver for the PCIe host controller found in the SpacemiT K1

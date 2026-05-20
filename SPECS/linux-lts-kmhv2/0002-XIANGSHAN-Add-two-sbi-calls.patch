@@ -1,4 +1,4 @@
-From aa5e6ca1966c4d037a8095d4e61b973d35669e35 Mon Sep 17 00:00:00 2001
+From 7308aa5e818ac966ad3caa74d8a1a58738bc622d Mon Sep 17 00:00:00 2001
 From: Ran Wang <wangran@bosc.ac.cn>
 Date: Fri, 20 Mar 2026 15:36:58 +0800
 Subject: [PATCH 2/3] XIANGSHAN: Add two sbi calls

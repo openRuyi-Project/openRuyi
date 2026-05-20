@@ -1,7 +1,7 @@
 From ffc90bb218a9a125c439c07838ab2c0a5f1090cc Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:10 +0100
-Subject: [PATCH 285/451] UPSTREAM: ALSA: usb-audio: Convert to common
+Subject: [PATCH 285/469] UPSTREAM: ALSA: usb-audio: Convert to common
  field_{get,prep}() helpers
 
 Drop the driver-specific field_get() and field_prep() macros, in favor

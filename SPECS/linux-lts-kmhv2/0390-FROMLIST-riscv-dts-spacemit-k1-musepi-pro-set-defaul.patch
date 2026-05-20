@@ -1,7 +1,7 @@
 From 44e4aad8bfc301dda24f67b9c0f91a5a4fb6785e Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:13 +0200
-Subject: [PATCH 390/451] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: set
+Subject: [PATCH 390/469] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: set
  default console baud rate
 
 Allow serial output with the same uboot/opensbi settings so the

@@ -1,7 +1,7 @@
 From 0fae8c2c46e834e6840eb6a871ac73083d317a7d Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:01 +0100
-Subject: [PATCH 276/451] UPSTREAM: bitfield: Add non-constant
+Subject: [PATCH 276/469] UPSTREAM: bitfield: Add non-constant
  field_{prep,get}() helpers
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

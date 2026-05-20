@@ -1,7 +1,7 @@
 From 7a1d15393bb8bd2c4084807bdb233b6fe9f0aa40 Mon Sep 17 00:00:00 2001
 From: Hang Cao <caohang@eswincomputing.com>
 Date: Wed, 12 Nov 2025 13:53:21 +0800
-Subject: [PATCH 170/451] UPSTREAM: dt-bindings: usb: Add ESWIN EIC7700 USB
+Subject: [PATCH 170/469] UPSTREAM: dt-bindings: usb: Add ESWIN EIC7700 USB
  controller
 
 Add Device Tree binding documentation for the ESWIN EIC7700

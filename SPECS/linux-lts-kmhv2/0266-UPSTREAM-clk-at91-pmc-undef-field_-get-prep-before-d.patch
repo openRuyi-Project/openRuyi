@@ -1,7 +1,7 @@
 From 848d8188e88e5220b9793385d2ae9a843796a1bf Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:49 +0100
-Subject: [PATCH 266/451] UPSTREAM: clk: at91: pmc: #undef field_{get,prep}()
+Subject: [PATCH 266/469] UPSTREAM: clk: at91: pmc: #undef field_{get,prep}()
  before definition
 
 Prepare for the advent of globally available common field_get() and

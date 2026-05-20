@@ -1,7 +1,7 @@
 From a03b95d1bd5837eda1039d9b71af6084e3d45eba Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:11 +0800
-Subject: [PATCH 336/451] FROMLIST: dt-bindings: PCI: Add UltraRISC DP1000 PCIe
+Subject: [PATCH 336/469] FROMLIST: dt-bindings: PCI: Add UltraRISC DP1000 PCIe
  controller
 
 Add UltraRISC DP1000 SoC PCIe controller devicetree bindings.

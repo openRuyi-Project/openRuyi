@@ -1,7 +1,7 @@
 From 6b1fe496c4ae138511d712108c072914b10a7285 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:29 +0000
-Subject: [PATCH 259/451] UPSTREAM: dt-bindings: reset: thead,th1520-reset: Add
+Subject: [PATCH 259/469] UPSTREAM: dt-bindings: reset: thead,th1520-reset: Add
  controllers for more subsys
 
 TH1520 SoC is divided into several subsystems, most of them have

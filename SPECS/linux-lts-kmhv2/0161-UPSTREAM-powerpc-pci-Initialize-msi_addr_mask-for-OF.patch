@@ -1,7 +1,7 @@
 From 21011c42758c50abb6a37ce89380679af4382c5b Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:27 +0530
-Subject: [PATCH 161/451] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for
+Subject: [PATCH 161/469] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for
  OF-created PCI devices
 
 Recent changes replaced the use of no_64bit_msi with msi_addr_mask.  As a

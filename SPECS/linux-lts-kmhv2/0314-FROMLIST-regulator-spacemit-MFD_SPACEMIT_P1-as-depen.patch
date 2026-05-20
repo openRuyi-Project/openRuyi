@@ -1,7 +1,7 @@
 From 8a12b05352238784d7f65d588dbee28ef9f34e7c Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 16:38:54 +0800
-Subject: [PATCH 314/451] FROMLIST: regulator: spacemit: MFD_SPACEMIT_P1 as
+Subject: [PATCH 314/469] FROMLIST: regulator: spacemit: MFD_SPACEMIT_P1 as
  dependencies
 
 REGULATOR_SPACEMIT_P1 is a subdevice of P1 and should depend on

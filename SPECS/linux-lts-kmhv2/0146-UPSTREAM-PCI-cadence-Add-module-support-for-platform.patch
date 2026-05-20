@@ -1,7 +1,7 @@
 From 32f95c618a57570475bd777068cb90e99c697277 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:56 +0800
-Subject: [PATCH 146/451] UPSTREAM: PCI: cadence: Add module support for
+Subject: [PATCH 146/469] UPSTREAM: PCI: cadence: Add module support for
  platform controller driver
 
 Add support for building PCI cadence platforms as a module.

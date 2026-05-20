@@ -1,7 +1,7 @@
 From ec7a7d57e591957a2fd1b8a9b15c78ab5ca3638e Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 249/451] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [PATCH 249/469] UPSTREAM: lib/string_kunit: add correctness test for
  strrchr()
 
 Add a KUnit test for strrchr() to verify correctness across

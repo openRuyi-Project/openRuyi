@@ -1,7 +1,7 @@
 From 238db0e87043d5764326f71e7c0fb173da7d944e Mon Sep 17 00:00:00 2001
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Date: Tue, 20 Jan 2026 23:17:44 +0530
-Subject: [PATCH 176/451] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
+Subject: [PATCH 176/469] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
  dw_pcie_wait_for_link() returns -ETIMEDOUT
 
 The dw_pcie_wait_for_link() API now distinguishes link failures more

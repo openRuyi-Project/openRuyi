@@ -1,7 +1,7 @@
 From 3d9fe4924bc7650f943d454b20bb348c7b9b27e6 Mon Sep 17 00:00:00 2001
 From: Florian Schmaus <florian.schmaus@codasip.com>
 Date: Tue, 12 May 2026 08:32:31 +0200
-Subject: [PATCH 409/451] FROMLIST: riscv: module: Use generic cmp_int()
+Subject: [PATCH 409/469] FROMLIST: riscv: module: Use generic cmp_int()
  instead of custom cmp_3way()
 
 The module-sections.c file defines a custom cmp_3way() macro to perform

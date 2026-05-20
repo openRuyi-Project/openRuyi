@@ -1,7 +1,7 @@
 From 252f19906a2b6fd456a61a50f907e5af7cc46781 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:31 +0000
-Subject: [PATCH 261/451] UPSTREAM: reset: th1520: Support reset controllers in
+Subject: [PATCH 261/469] UPSTREAM: reset: th1520: Support reset controllers in
  more subsystems
 
 Introduce reset controllers for AP, MISC, VI, VP and DSP subsystems and

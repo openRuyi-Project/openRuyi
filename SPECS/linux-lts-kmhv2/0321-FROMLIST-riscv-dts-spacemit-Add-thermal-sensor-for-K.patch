@@ -1,7 +1,7 @@
 From d314ed3f29d09ce1a675a2634fc7bb11a375a119 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:17 +0800
-Subject: [PATCH 321/451] FROMLIST: riscv: dts: spacemit: Add thermal sensor
+Subject: [PATCH 321/469] FROMLIST: riscv: dts: spacemit: Add thermal sensor
  for K1 SoC
 
 Include the Thermal Sensor node in the SpacemiT K1 dtsi

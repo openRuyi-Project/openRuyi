@@ -1,7 +1,7 @@
 From 64280724be1cc7709cad01da160df2acb5a0db0e Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 23 Oct 2025 15:28:30 +0800
-Subject: [PATCH 054/451] UPSTREAM: riscv: dts: spacemit: add MusePi Pro board
+Subject: [PATCH 054/469] UPSTREAM: riscv: dts: spacemit: add MusePi Pro board
  device tree
 
 Add initial device tree support for the MusePi Pro board [1].

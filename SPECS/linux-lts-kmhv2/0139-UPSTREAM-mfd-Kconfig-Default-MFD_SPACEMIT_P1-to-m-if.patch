@@ -1,7 +1,7 @@
 From 5c695d56e0dc5f5e48239889a7587037dc2bcc1f Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 25 Dec 2025 15:46:32 +0800
-Subject: [PATCH 139/451] UPSTREAM: mfd: Kconfig: Default MFD_SPACEMIT_P1 to
+Subject: [PATCH 139/469] UPSTREAM: mfd: Kconfig: Default MFD_SPACEMIT_P1 to
  'm' if ARCH_SPACEMIT
 
 The default value of the P1 sub-device depends on the value

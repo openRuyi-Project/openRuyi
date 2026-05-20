@@ -1,7 +1,7 @@
 From f32d609e47c304f37e831133e6224c7d333fd392 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sun, 1 Feb 2026 18:00:01 +0800
-Subject: [PATCH 136/451] UPSTREAM: net: spacemit: display phy driver
+Subject: [PATCH 136/469] UPSTREAM: net: spacemit: display phy driver
  information
 
 Print the PHY driver used and interrupt status after connection.

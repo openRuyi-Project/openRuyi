@@ -1,7 +1,7 @@
 From 5f9138a38b0b06d69707812005aabb4a5430c378 Mon Sep 17 00:00:00 2001
 From: Yufeng Wang <wangyufeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 245/451] UPSTREAM: riscv: enable HAVE_IOREMAP_PROT
+Subject: [PATCH 245/469] UPSTREAM: riscv: enable HAVE_IOREMAP_PROT
 
 RISC-V has implemented pte_pgprot() and selects GENERIC_IOREMAP,
 which provides a generic ioremap_prot() implementation. Enable
