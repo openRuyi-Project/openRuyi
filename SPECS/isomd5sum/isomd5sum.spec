@@ -4,13 +4,18 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+# Parallel builds can race while multiple ar commands update
+# libimplantisomd5.a, corrupting the archive with
+# "file format not recognized". Build serially.
+%global _smp_mflags -j1
+
 Name:           isomd5sum
 Version:        1.2.5
 Release:        %autorelease
 Summary:        Utilities for working with md5sum implanted in ISO images
 License:        GPL-2.0-or-later
 URL:            https://github.com/rhinstaller/isomd5sum
-#!RemoteAsset
+#!RemoteAsset:  sha256:b4ffe78a8277b28f7c4528989c55af3eec87d48245f362229c213c704b8c2b97
 Source0:        https://github.com/rhinstaller/isomd5sum/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -40,7 +45,7 @@ implanting and checking.
 
 %package     -n python-isomd5sum
 Summary:        Python bindings for isomd5sum
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Provides:       python3-isomd5sum
 %python_provide python3-isomd5sum
 
@@ -68,4 +73,4 @@ This package contains python bindings for isomd5sum.
 %{python3_sitearch}/pyisomd5sum.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
