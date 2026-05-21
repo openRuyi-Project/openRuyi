@@ -5,17 +5,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           cpp-httplib
-Version:        0.30.1
+Version:        0.45.0
 Release:        %autorelease
 Summary:        A C++11 single-file header-only cross platform HTTP/HTTPS library
 License:        MIT
 URL:            https://github.com/yhirose/cpp-httplib
-#!RemoteAsset:  sha256:2818b183757e29dd52b47a185f0cea9ef2d0fba377d8710b450a26328e51c2fe
+#!RemoteAsset:  sha256:03121ca28d210ac8014021c2f2deda4a181f215b1638c493c40a4c7e6056495f
 Source0:        https://github.com/yhirose/cpp-httplib/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
-
-# https://github.com/yhirose/cpp-httplib/issues/2324
-Patch0:         0001-cpp-httplib-test-issue2301-online.patch
 
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
 BuildOption(conf):  -DHTTPLIB_COMPILE=ON
@@ -58,4 +55,4 @@ rm -rf %{buildroot}%{_licensedir}/httplib
 %{_libdir}/cmake/httplib/
 
 %changelog
-%{?autochangelog}
+%autochangelog
