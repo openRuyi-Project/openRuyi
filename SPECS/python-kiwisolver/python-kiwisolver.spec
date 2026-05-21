@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun <ziyu.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -33,6 +34,9 @@ been designed from the ground up to be lightweight and fast.
 
 %generate_buildrequires
 %pyproject_buildrequires
+
+%install -a
+rm -rf %{buildroot}%{python3_sitearch}/src/version.h
 
 %files -f %{pyproject_files}
 %doc README.rst
