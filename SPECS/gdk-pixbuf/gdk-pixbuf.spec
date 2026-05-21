@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -69,9 +70,6 @@ gdk-pixbuf-query-loaders --update-cache
 
 %transfiletriggerpostun -- %{_libdir}/gdk-pixbuf-2.0/2.10.0/loaders
 gdk-pixbuf-query-loaders --update-cache
-
-# TODO: Fix tests
-%check
 
 %files -f %{name}.lang
 %license COPYING
