@@ -14,13 +14,13 @@
 %bcond dracut 0
 
 Name:           unbound
-Version:        1.25.0
+Version:        1.25.1
 Release:        %autorelease
 Summary:        Validating, recursive, and caching DNS(SEC) resolver
 License:        BSD-3-Clause
 URL:            https://nlnetlabs.nl/projects/unbound
 VCS:            git:https://github.com/NLnetLabs/unbound
-#!RemoteAsset:  sha256:062a6eda723fe2f041bee4079b76981569f1d12e066bbd74800242fc1ebddec7
+#!RemoteAsset:  sha256:0fe8b6277b0959cfd17562debac0aa5f71e0b02dc4ffa9c60271c583edab586f
 Source0:        https://nlnetlabs.nl/downloads/unbound/unbound-%{version}.tar.gz
 Source2:        unbound.service
 Source3:        unbound.munin
