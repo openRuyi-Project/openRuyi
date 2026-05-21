@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dwarfs
-Version:        0.14.1
+Version:        0.15.3
 Release:        %autorelease
 Summary:        Deduplicating compressed read-only file system
 License:        GPL-3.0-or-later AND MIT
 URL:            https://github.com/mhx/dwarfs
-#!RemoteAsset
+#!RemoteAsset:  sha256:2a9c6b7cb2841f3c7b75839da9326724a2817e4467b20e79e3e24c3eefc13eca
 Source0:        https://github.com/mhx/dwarfs/releases/download/v%{version}/dwarfs-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -19,7 +20,8 @@ BuildOption(conf):  -DCMAKE_EXE_LINKER_FLAGS="-lboost_filesystem -lboost_process
 BuildOption(conf):  -DWITH_TESTS=ON
 BuildOption(conf):  -DPREFER_SYSTEM_GTEST=ON
 
-BuildRequires:  bison flex
+BuildRequires:  bison
+BuildRequires:  flex
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
 BuildRequires:  ninja
@@ -92,4 +94,4 @@ This package contains the development files for DwarFS.
 %{_libdir}/cmake/dwarfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
