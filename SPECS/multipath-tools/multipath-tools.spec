@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,7 @@ Release:        %autorelease
 Summary:        Tools to manage multipath devices using device-mapper
 License:        GPL-2.0-only AND GPL-3.0-or-later
 URL:            https://github.com/opensvc/multipath-tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:6cc57e33894ea2cd4c3bf1cbb9e4e8e7250d0699163b2907fcab1cd2e0123d85
 Source0:        %{url}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -30,8 +31,9 @@ BuildOption(install):  unitdir=%{_unitdir}
 BuildOption(install):  includedir=%{_includedir}
 BuildOption(install):  pkgconfigdir=%{_pkgconfdir}
 BuildOption(install):  tmpfilesdir=%{_tmpfilesdir}
+BuildOption(check):  CFLAGS="%{optflags} -fPIC -Wno-error=format-truncation"
 
-BuildRequires:  libaio-devel
+BuildRequires:  pkgconfig(libaio)
 BuildRequires:  readline-devel
 BuildRequires:  pkgconfig(json-c)
 BuildRequires:  pkgconfig(devmapper)
@@ -73,7 +75,7 @@ This package contains the files need to develop applications that use
 device-mapper-multipath's lbmpathpersist and libmpathcmd libraries.
 
 %package     -n kpartx
-Summary: Partition device manager for device-mapper devices
+Summary:        Partition device manager for device-mapper devices
 
 %description -n kpartx
 kpartx manages partition creation and removal for device-mapper devices.
@@ -194,4 +196,4 @@ fi
 %{_pkgconfdir}/libdmmp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
