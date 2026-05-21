@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,7 +15,7 @@ Summary:        Shared MIME information database
 License:        GPL-2.0-or-later
 URL:            http://freedesktop.org/Software/shared-mime-info
 VCS:            git:https://gitlab.freedesktop.org/xdg/shared-mime-info
-#!RemoteAsset
+#!RemoteAsset:  sha256:531291d0387eb94e16e775d7e73788d06d2b2fdd8cd2ac6b6b15287593b6a2de
 Source0:        https://gitlab.freedesktop.org/xdg/shared-mime-info/-/archive/%{version}/shared-mime-info-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -67,7 +68,7 @@ update-mime-database -n %{_datadir}/mime &> /dev/null ||:
 %transfiletriggerpostun -- %{_datadir}/mime
 update-mime-database -n %{_datadir}/mime &> /dev/null ||:
 
-%files
+%files -f %{name}.files
 %license COPYING
 %doc README.md NEWS HACKING.md data/shared-mime-info-spec.xml
 %{_bindir}/update-mime-database
@@ -81,4 +82,4 @@ update-mime-database -n %{_datadir}/mime &> /dev/null ||:
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
