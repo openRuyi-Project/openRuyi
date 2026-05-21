@@ -1,7 +1,7 @@
 From e6ba6b69d04095e908249474bf222779d2fc3427 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:40 -0400
-Subject: [PATCH 088/273] UPSTREAM: iommu/riscv: Add missing GENERIC_MSI_IRQ
+Subject: [PATCH 088/281] UPSTREAM: iommu/riscv: Add missing GENERIC_MSI_IRQ
 
 The commit below added MSI related calls to the driver that depends on
 GENERIC_MSI_IRQ. It is possible to build RISC-V without this selected.

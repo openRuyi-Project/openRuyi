@@ -1,7 +1,7 @@
 From 8ec7526664dbcae08c186d46c96b450f7ca85803 Mon Sep 17 00:00:00 2001
 From: Nathan Chancellor <nathan@kernel.org>
 Date: Wed, 29 Apr 2026 20:38:17 -0600
-Subject: [PATCH 092/273] UPSTREAM: riscv: Define
+Subject: [PATCH 092/281] UPSTREAM: riscv: Define
  __riscv_copy_{,vec_}{words,bytes}_unaligned() using SYM_TYPED_FUNC_START
 
 After commit 67bdd7b01387 ("riscv: Split out measure_cycles() for

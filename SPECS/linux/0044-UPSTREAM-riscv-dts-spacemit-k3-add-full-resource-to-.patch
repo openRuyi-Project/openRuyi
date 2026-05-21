@@ -1,7 +1,7 @@
 From aad141b545e0b0ff39df1b8dcd426b5fa34824c5 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:45 +0000
-Subject: [PATCH 044/273] UPSTREAM: riscv: dts: spacemit: k3: add full resource
+Subject: [PATCH 044/281] UPSTREAM: riscv: dts: spacemit: k3: add full resource
  to UART
 
 Previously the UART rely on external bootloader to initialize clock,

@@ -1,7 +1,7 @@
 From 07a3fb86e261508898b3c80bc0d1d147a6f5fb10 Mon Sep 17 00:00:00 2001
 From: Ethan Tidmore <ethantidmore06@gmail.com>
 Date: Thu, 19 Mar 2026 13:26:44 -0500
-Subject: [PATCH 090/273] UPSTREAM: iommu/riscv: Fix signedness bug
+Subject: [PATCH 090/281] UPSTREAM: iommu/riscv: Fix signedness bug
 
 The function platform_irq_count() returns negative error codes and
 iommu->irqs_count is an unsigned integer, so the check

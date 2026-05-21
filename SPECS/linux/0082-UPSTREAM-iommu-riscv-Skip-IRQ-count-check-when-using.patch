@@ -1,7 +1,7 @@
 From b6a7dbc224aeda532f5be4e4aed0c4e5a4fc2c3f Mon Sep 17 00:00:00 2001
 From: Yaxing Guo <guoyaxing@bosc.ac.cn>
 Date: Fri, 30 Jan 2026 14:54:20 +0800
-Subject: [PATCH 082/273] UPSTREAM: iommu/riscv: Skip IRQ count check when
+Subject: [PATCH 082/281] UPSTREAM: iommu/riscv: Skip IRQ count check when
  using MSI interrupts
 
 In RISC-V IOMMU platform devices that use MSI interrupts (indicated by the

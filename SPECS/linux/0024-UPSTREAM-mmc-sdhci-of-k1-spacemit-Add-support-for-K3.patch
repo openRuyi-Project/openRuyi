@@ -1,7 +1,7 @@
 From bb6e4019bdef87db0aebeb1e450f9388f478403e Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:31 +0800
-Subject: [PATCH 024/273] UPSTREAM: mmc: sdhci-of-k1: spacemit: Add support for
+Subject: [PATCH 024/281] UPSTREAM: mmc: sdhci-of-k1: spacemit: Add support for
  K3 SoC
 
 The SDHCI controller found on SpacemiT K3 SoC share the same IP with K1

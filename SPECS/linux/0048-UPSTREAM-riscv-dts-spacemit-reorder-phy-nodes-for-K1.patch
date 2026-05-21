@@ -1,7 +1,7 @@
 From a27a099d64aee0b72c1519cb45a6ce80bb23bd65 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 18 Mar 2026 18:00:00 +0800
-Subject: [PATCH 048/273] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for
+Subject: [PATCH 048/281] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for
  K1
 
 Reorder the PHY nodes of USB and PCIe to the correct positions based on

@@ -1,7 +1,7 @@
 From dca6e745b118758bc3c0f16dc19760da809dc40a Mon Sep 17 00:00:00 2001
 From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
 Date: Fri, 27 Feb 2026 19:26:40 +0800
-Subject: [PATCH 083/273] UPSTREAM: iommu/riscv: Stop polling when CQCSR
+Subject: [PATCH 083/281] UPSTREAM: iommu/riscv: Stop polling when CQCSR
  reports an error
 
 The cmdq wait loop busy-polls the consumer index until it advances

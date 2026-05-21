@@ -1,7 +1,7 @@
 From 874d16bb92acdda3b888f3b24dd1fa9dffee7c99 Mon Sep 17 00:00:00 2001
 From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
 Date: Fri, 8 May 2026 02:31:21 -0700
-Subject: [PATCH 093/273] UPSTREAM: irqchip/riscv-imsic: Clear interrupt move
+Subject: [PATCH 093/281] UPSTREAM: irqchip/riscv-imsic: Clear interrupt move
  state during CPU offlining
 
 Affinity changes of IMSIC interrupts have to be careful to not lose an

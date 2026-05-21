@@ -1,7 +1,7 @@
 From 719eab9fb91186d53896164912187622684bd9fe Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:29 +0200
-Subject: [PATCH 013/273] UPSTREAM: drm/imagination: Switch reset_reason fields
+Subject: [PATCH 013/281] UPSTREAM: drm/imagination: Switch reset_reason fields
  from enum to u32
 
 Update the reset_reason fwif structure fields from enum to u32 to remove

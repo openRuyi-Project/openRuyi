@@ -1,7 +1,7 @@
 From f0a3c400e81bbed2186075b13b921d5ef3a4ae12 Mon Sep 17 00:00:00 2001
 From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
 Date: Sun, 25 Jan 2026 00:52:12 -0500
-Subject: [PATCH 094/273] UPSTREAM: riscv: mm: Fixup no5lvl failure when vaddr
+Subject: [PATCH 094/281] UPSTREAM: riscv: mm: Fixup no5lvl failure when vaddr
  is invalid
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

@@ -1,7 +1,7 @@
 From ab98f4e1c820ca1adb9a7ae736b56c8e770d05a6 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:39 +0800
-Subject: [PATCH 007/273] UPSTREAM: net: stmmac: Add glue layer for Spacemit K3
+Subject: [PATCH 007/281] UPSTREAM: net: stmmac: Add glue layer for Spacemit K3
  SoC
 
 The ethernet controller on Spacemit K3 SoC is Synopsys DesignWare
