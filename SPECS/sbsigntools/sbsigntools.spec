@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -37,6 +38,7 @@ BuildSystem:    autotools
 Patch2000:      2000-fix-lto-uninitialized.diff
 
 BuildOption(build):  LD=ld.bfd
+BuildOption(conf):  CFLAGS="%{optflags} -Wno-error=unused-but-set-variable"
 
 BuildRequires:  autoconf
 BuildRequires:  automake
