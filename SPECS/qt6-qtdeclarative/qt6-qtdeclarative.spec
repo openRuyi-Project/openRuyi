@@ -26,9 +26,11 @@ Patch0:         qtdeclarative-quickshapes-make-module-public.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
+BuildOption(conf):  -GNinja
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
+BuildRequires:  ninja
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  qt6-qtbase-private-devel
