@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           firewalld
-Version:        2.4.0
+Version:        2.4.1
 Release:        %autorelease
 Summary:        A firewall daemon with D-Bus interface providing a dynamic firewall
 License:        GPL-2.0-or-later
 URL:            https://firewalld.org/
 VCS:            git:https://github.com/firewalld/firewalld
-#!RemoteAsset:  sha256:992853451a58d229068c0ed10c3e007b2032c0fb654f27d656bfa3c120a2f132
+#!RemoteAsset:  sha256:453230c49b961853144dd7614d59e82fafbcc52c314c39ec66d1316274a33001
 Source0:        https://github.com/firewalld/firewalld/releases/download/v%{version}/firewalld-%{version}.tar.bz2
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -178,7 +179,7 @@ desktop-file-install --delete-original \
 %attr(0755,root,root) %{_datadir}/firewalld/gtk3_chooserbutton.py*
 %attr(0755,root,root) %{_datadir}/firewalld/gtk3_niceexpander.py*
 %{_datadir}/applications/firewall-config.desktop
-%{_datadir}/metainfo/firewall-config.appdata.xml
+%{_datadir}/metainfo/org.firewalld.firewall-config.metainfo.xml
 %{_datadir}/icons/hicolor/*/apps/firewall-config*.*
 %{_datadir}/glib-2.0/schemas/org.fedoraproject.FirewallConfig.gschema.xml
 %{_mandir}/man1/firewall-config*.1*
