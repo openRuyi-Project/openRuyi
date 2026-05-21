@@ -212,6 +212,14 @@ ln -sf lldb-instr-%{maj_ver} %{buildroot}%{_bindir}/lldb-instr
 ln -sf lldb-server-%{maj_ver} %{buildroot}%{_bindir}/lldb-server
 ln -sf lldb-mcp-%{maj_ver} %{buildroot}%{_bindir}/lldb-mcp
 
+%post -n lld
+update-alternatives --install %{_bindir}/ld ld %{_bindir}/ld.lld 1
+
+%postun -n lld
+if [ $1 -eq 0 ] ; then
+  update-alternatives --remove ld %{_bindir}/ld.lld
+fi
+
 # ============================================================================
 # Files section
 # ============================================================================
