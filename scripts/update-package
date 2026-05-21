@@ -4,6 +4,7 @@ export REPO=openruyi
 export OSC="$DRYRUN osc"
 export BEFORE_COMMIT=$1
 export AFTER_COMMIT=$2
+export DATE="$(LC_ALL=en_US.UTF-8 date --utc '+%a %b %_d %T %Z %Y')"
 for P in $(git diff --no-renames --max-depth=1 --name-only $BEFORE_COMMIT..$AFTER_COMMIT --diff-filter=AM -- SPECS/)
 do
 PKG=$(basename $P)
@@ -13,6 +14,19 @@ $OSC api -X PUT /source/$REPO/$PKG/_meta -d "<?xml version=\"1.0\" encoding=\"UT
 <title/>
 <description/>
 </package>
+"
+$OSC api -X PUT /source/$REPO/$PKG/$PKG.changes -d \
+"----------------------------------------
+$DATE - openRuyi <update-package-v1@noreply.openruyi.cn>
+
+Automatic update from Git repository
+
+See changes at https://github.com/openRuyi-Project/openRuyi/commits/$AFTER_COMMIT/$P
+
+[metadata]
+version=1
+commit=$AFTER_COMMIT
+subdir=$P
 "
 $OSC api -X PUT /source/$REPO/$PKG/_service -d \
 "<services>
