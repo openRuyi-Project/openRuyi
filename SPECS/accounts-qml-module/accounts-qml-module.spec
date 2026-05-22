@@ -23,9 +23,9 @@ BuildOption(install):  INSTALL_ROOT=%{buildroot}
 BuildRequires:  make
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
-BuildRequires:  cmake(AccountsQt6)
-BuildRequires:  cmake(Qt6Qml)
-BuildRequires:  cmake(SignOnQt6)
+BuildRequires:  pkgconfig(accounts-qt6)
+BuildRequires:  pkgconfig(Qt6Qml)
+BuildRequires:  pkgconfig(libsignon-qt6)
 BuildRequires:  qt6-doctools
 
 %description
