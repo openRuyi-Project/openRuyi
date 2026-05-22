@@ -19,6 +19,11 @@ URL:            https://github.com/hughsie/libxmlb
 Source:         https://github.com/hughsie/libxmlb/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
+%if %{with stemmer}
+BuildOption(conf):  -Dstemmer=true
+%else
+BuildOption(conf):  -Dstemmer=false
+%endif
 %if %{with doc}
 BuildOption(conf):  -Dgtkdoc=true
 %else
