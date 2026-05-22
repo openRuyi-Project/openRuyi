@@ -26,6 +26,11 @@ BuildOption(conf):  --with-libkrun
 %if %{with wasm}
 BuildOption(conf):  --with-wasmedge
 %endif
+%if %{with criu}
+BuildOption(conf):  --enable-criu
+%else
+BuildOption(conf):  --disable-criu
+%endif
 %if %{without system_yajl}
 BuildOption(conf):  --enable-embedded-yajl
 %endif
