@@ -47,7 +47,7 @@ BuildRequires:  automake
 BuildRequires:  pkgconfig(libseccomp)
 %endif
 %if %{with sasl} || %{with sasl_pwdb}
-BuildRequires:  cyrus-sasl-devel
+BuildRequires:  pkgconfig(libsasl2)
 %endif
 
 %description
