@@ -21,12 +21,10 @@ Summary:        Collection of simple PIN or passphrase entry dialogs
 License:        GPL-2.0-or-later
 URL:            https://gnupg.org/
 VCS:            git:https://git.gnupg.org/pinentry.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8e986ed88561b4da6e9efe0c54fa4ca8923035c99264df0b0464497c5fb94e9e
 Source0:        %{url}/ftp/gcrypt/%{name}/%{name}-%{version}.tar.bz2
-#!RemoteAsset
-Source1:        %{url}/ftp/gcrypt/%{name}/%{name}-%{version}.tar.bz2.sig
 # We need this wrapper
-Source2:        pinentry
+Source1:        pinentry
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-rpath
@@ -165,7 +163,7 @@ ln -s pinentry-gtk-2 $RPM_BUILD_ROOT%{_bindir}/pinentry-gtk
 ln -s pinentry-qt $RPM_BUILD_ROOT%{_bindir}/pinentry-qt4
 ln -s pinentry-qt $RPM_BUILD_ROOT%{_bindir}/pinentry-qt5
 %endif
-install -p -m755 -D %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/pinentry
+install -p -m755 -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/pinentry
 # unpackaged files
 rm -fv $RPM_BUILD_ROOT%{_infodir}/dir
 %if %{with qt6}
@@ -209,4 +207,4 @@ install -d %{buildroot}%{_datadir}/pixmaps
 %{_bindir}/pinentry-tty
 
 %changelog
-%{?autochangelog}
+%autochangelog
