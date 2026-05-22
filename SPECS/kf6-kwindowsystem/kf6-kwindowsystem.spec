@@ -21,7 +21,6 @@ BuildSystem:    cmake
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
-BuildRequires:  meson
 BuildRequires:  fdupes
 BuildRequires:  xz
 BuildRequires:  doxygen
