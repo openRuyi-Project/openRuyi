@@ -60,12 +60,16 @@ BuildOption(conf):  --with-kerberos5${krb5_prefix:+=${krb5_prefix}}
 %else
 BuildOption(conf):  --without-kerberos5
 %endif
+%if %{with fido2}
+BuildOption(conf):  --with-security-key-builtin
+%else
+BuildOption(conf):  --without-security-key-builtin
+%endif
 BuildOption(conf):  --with-libedit
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  pkgconfig(zlib)
-BuildRequires:  pkgconfig(audit)
 BuildRequires:  util-linux
 BuildRequires:  groff
 BuildRequires:  pkgconfig(pam)
@@ -78,12 +82,13 @@ BuildRequires:  make
 BuildRequires:  pkgconfig(libfido2)
 %endif
 BuildRequires:  pkgconfig(libxcrypt)
-%if %{with kerberos}
+%if %{with kerberos5}
 BuildRequires:  pkgconfig(krb5)
 %endif
 BuildRequires:  pkgconfig(libedit)
 BuildRequires:  pkgconfig(ncurses)
 %if %{with selinux}
+BuildRequires:  pkgconfig(audit)
 BuildRequires:  pkgconfig(libselinux)
 %endif
 %if %{with xorg}
