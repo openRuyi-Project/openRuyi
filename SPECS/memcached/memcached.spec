@@ -18,7 +18,7 @@ Summary:        In-memory caching service
 License:        BSD-3-Clause
 URL:            https://memcached.org/
 VCS:            git:https://github.com/memcached/memcached.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:b1d02d7e9887d80f4885a024931c8bbe9c16d333200d2dcadde8597892c54855
 Source:         https://memcached.org/files/memcached-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -68,4 +68,4 @@ mkdir -p %{buildroot}/%{_localstatedir}/run/%{name}
 %dir %attr(750,nobody,nobody) %{_localstatedir}/run/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog
