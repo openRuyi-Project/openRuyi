@@ -24,7 +24,6 @@ BuildOption(conf):  -Dman=false
 
 BuildRequires:  meson
 BuildRequires:  python3
-BuildRequires:  cmake
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(libffi) >= 3.0.0
 BuildRequires:  pkgconfig(libsystemd)
