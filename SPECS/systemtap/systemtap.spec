@@ -22,6 +22,16 @@ BuildSystem:    autotools
 
 BuildOption(conf):  --disable-docs
 BuildOption(conf):  --with-python3
+%if %{with avahi}
+BuildOption(conf):  --with-avahi
+%else
+BuildOption(conf):  --without-avahi
+%endif
+%if %{with dyninst}
+BuildOption(conf):  --with-dyninst
+%else
+BuildOption(conf):  --without-dyninst
+%endif
 
 BuildRequires:  config
 BuildRequires:  make
