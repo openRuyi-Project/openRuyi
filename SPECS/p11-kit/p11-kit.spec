@@ -13,7 +13,7 @@ Summary:        Library and tools for working with PKCS#11 modules
 License:        BSD-3-Clause
 URL:            https://p11-glue.freedesktop.org/p11-kit.html
 VCS:            git:https://github.com/p11-glue/p11-kit
-#!RemoteAsset
+#!RemoteAsset:  sha256:04d0a86450cdb1be018f26af6699857171a188ac6d5b8c90786a60854e1198e5
 Source:         https://github.com/p11-glue/%{name}/releases/download/%{version}/%{name}-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -75,4 +75,4 @@ rm -f %{buildroot}%{_sysconfdir}/pkcs11/pkcs11.conf.example
 %{_libdir}/pkgconfig/p11-kit-1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
