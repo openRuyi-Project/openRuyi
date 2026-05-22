@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Desktop-neutral metadata database and search tool
 License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/tinysparql
-#!RemoteAsset
+#!RemoteAsset:  sha256:5a7f3e789db6671a550ed6280ed4f60a60bea77368da92be68dc7d8d7e230265
 Source0:        https://download.gnome.org/sources/tinysparql/3.10/tinysparql-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -138,4 +138,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
