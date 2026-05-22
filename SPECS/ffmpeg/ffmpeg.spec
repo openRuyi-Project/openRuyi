@@ -110,7 +110,7 @@ BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libopenjp2)
 BuildRequires:  texinfo
 %if %{with librtmp}
-BuildRequires:  librtmp-devel
+BuildRequires:  pkgconfig(librtmp)
 %endif
 BuildRequires:  pkgconfig(xevdb)
 BuildRequires:  pkgconfig(xeveb)
