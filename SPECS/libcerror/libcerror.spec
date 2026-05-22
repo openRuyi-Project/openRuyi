@@ -18,7 +18,6 @@ BuildSystem:    autotools
 BuildOption(conf):  --disable-static
 
 BuildRequires:  gcc
-BuildRequires:  doxygen
 
 %description
 libcerror is a library for cross-platform C error functions.
