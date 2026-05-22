@@ -21,6 +21,13 @@ BuildSystem:    autotools
 
 %if %{with aspell}
 BuildOption(conf):  --with-aspell
+%else
+BuildOption(conf):  --without-aspell
+%endif
+%if %{with nuspell}
+BuildOption(conf):  --with-nuspell
+%else
+BuildOption(conf):  --without-nuspell
 %endif
 BuildOption(conf):  --disable-static
 
