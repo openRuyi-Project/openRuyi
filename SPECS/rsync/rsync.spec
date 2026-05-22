@@ -4,23 +4,21 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           rsync
-Version:        3.4.1
+Version:        3.4.3
 Release:        %autorelease
 Summary:        Fast and versatile file copying tool for remote and local files
 License:        GPL-3.0-or-later
 URL:            https://rsync.samba.org/
 VCS:            git:https://github.com/RsyncProject/rsync.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:c72e63ca3021cbc80ba86ec30102773f4c5631fbc492b52e773b3958f82a53d3
 Source0:        https://rsync.samba.org/ftp/rsync/src/rsync-%{version}.tar.gz
 Source1:        rsyncd.conf
 BuildSystem:    autotools
-
-# include stdbool for compiler check
-Patch0:         0001-fix-include.patch
 
 BuildOption(conf):  --enable-ipv6
 BuildOption(conf):  --disable-debug
@@ -82,8 +80,8 @@ install -Dm644 %{SOURCE1} %{buildroot}%{_sysconfdir}/rsyncd.conf
 %systemd_postun daemon rsync.service
 
 %files
-%license COPYING
 %doc README.md NEWS.md tech_report.tex support/
+%license COPYING
 %{_bindir}/rsync
 %{_bindir}/rsync-ssl
 %{_mandir}/man1/rsync.1.gz
@@ -97,4 +95,4 @@ install -Dm644 %{SOURCE1} %{buildroot}%{_sysconfdir}/rsyncd.conf
 %{_unitdir}/rsync@.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
