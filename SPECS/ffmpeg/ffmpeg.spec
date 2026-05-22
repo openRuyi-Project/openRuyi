@@ -15,12 +15,12 @@
 %bcond lv2 0
 
 %if %{with all_codecs}
-%bcond rtmp 1
+%bcond librtmp 1
 %bcond vvc 1
 %bcond x264 1
 %bcond x265 1
 %else
-%bcond rtmp 0
+%bcond librtmp 0
 %bcond vvc 0
 %bcond x264 0
 %bcond x265 0
@@ -109,7 +109,7 @@ BuildRequires:  pkgconfig(zlib)
 # BuildRequires:  pkgconfig(openh264)
 BuildRequires:  pkgconfig(libopenjp2)
 BuildRequires:  texinfo
-%if %{with rtmp}
+%if %{with librtmp}
 BuildRequires:  librtmp-devel
 %endif
 BuildRequires:  pkgconfig(xevdb)
