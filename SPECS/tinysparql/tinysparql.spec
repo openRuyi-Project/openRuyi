@@ -43,6 +43,7 @@ BuildRequires:  gcc
 BuildRequires:  gettext
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  vala
+BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(icu-i18n)
