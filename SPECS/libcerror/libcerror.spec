@@ -11,10 +11,8 @@ Release:        %autorelease
 Summary:        Library for cross-platform C error functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libcerror
-#!RemoteAsset
+#!RemoteAsset:  sha256:e42461065f4ba06f8f3116849471795d24b927c72e00cce0b5b7b8ddfe9b2806
 Source0:        %{url}/releases/download/%{version}/%{name}-beta-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/%{name}-beta-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -49,4 +47,4 @@ applications that want to make use of libcerror.
 %{_mandir}/man3/libcerror.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
