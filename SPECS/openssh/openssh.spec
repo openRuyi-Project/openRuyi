@@ -35,7 +35,7 @@ Source12:       50-openruyi-sshd.conf
 BuildSystem:    autotools
 
 # Lets us ship distro config in /etc/ssh/{ssh,sshd}_config.d/*.conf
-Patch0:         2000-ssh-sshd-_config-Include-_config.d-.conf.patch
+Patch2000:      2000-ssh-sshd-_config-Include-_config.d-.conf.patch
 
 BuildOption(conf):  --sysconfdir=%{_sysconfdir}/ssh
 BuildOption(conf):  --libexecdir=%{_libexecdir}/openssh
@@ -48,7 +48,6 @@ BuildOption(conf):  --without-zlib-version-check
 BuildOption(conf):  --without-ipaddr-display
 BuildOption(conf):  --with-pie=no
 BuildOption(conf):  --without-hardening
-BuildOption(conf):  --with-systemd
 BuildOption(conf):  --with-pam
 %if %{with selinux}
 BuildOption(conf):  --with-selinux
@@ -74,7 +73,6 @@ BuildRequires:  util-linux
 BuildRequires:  groff
 BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig(openssl)
-BuildRequires:  pkgconfig(systemd)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  make
 #BuildRequires:  pkgconfig(p11-kit-1)
