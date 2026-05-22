@@ -31,12 +31,18 @@ BuildOption(conf):  --with-jpeg
 BuildOption(conf):  --with-png
 %if %{with avif}
 BuildOption(conf):  --with-avif
+%else
+BuildOption(conf):  --without-avif
 %endif
 %if %{with webp}
 BuildOption(conf):  --with-webp
+%else
+BuildOption(conf):  --without-webp
 %endif
 %if %{with xpm}
 BuildOption(conf):  --with-xpm
+%else
+BuildOption(conf):  --without-xpm
 %endif
 
 BuildRequires:  automake
