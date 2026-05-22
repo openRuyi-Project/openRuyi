@@ -48,7 +48,7 @@ BuildRequires:  pkgconfig(json-c)
 BuildRequires:  dyninst-devel
 BuildRequires:  pkgconfig(libselinux)
 %endif
-BuildRequires:  sqlite-devel
+BuildRequires:  pkgconfig(sqlite3)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  python3
 BuildRequires:  python3-devel
@@ -97,9 +97,6 @@ subpackage instead.
 
 %package        server
 Summary:        Instrumentation System Server
-%if %{with avahi}
-BuildRequires:  avahi-devel
-%endif
 Requires:       %{name}-devel = %{version}-%{release}
 Requires:       openssl
 Requires:       systemd
