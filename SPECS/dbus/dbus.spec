@@ -53,7 +53,6 @@ BuildRequires:  pkgconfig(audit)
 BuildRequires:  pkgconfig(libcap-ng)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:  pkgconfig
-BuildRequires:  xmlto
 %if %{with systemd}
 BuildRequires:  pkgconfig(libsystemd) >= 209
 %endif
