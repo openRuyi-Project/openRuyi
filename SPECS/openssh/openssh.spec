@@ -101,7 +101,6 @@ Recommends:     p11-kit
 Requires:       openssl
 %if %{with selinux}
 Requires:       libselinux
-Requires:       pkgconfig(audit)
 %endif
 
 %description
