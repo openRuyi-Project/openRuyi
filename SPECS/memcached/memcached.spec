@@ -32,7 +32,7 @@ BuildOption(conf):  --enable-seccomp
 BuildOption(conf):  --enable-sasl
 %endif
 %if %{with sasl_pwdb}
-BuildOption(conf):  --enable-pwdb
+BuildOption(conf):  --enable-sasl-pwdb
 %endif
 %if %{with dtrace}
 BuildOption(conf):  --enable-dtrace
@@ -43,7 +43,10 @@ BuildRequires:  pkgconfig(libevent)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  autoconf
 BuildRequires:  automake
-%if %{with sasl}
+%if %{with seccomp}
+BuildRequires:  pkgconfig(libseccomp)
+%endif
+%if %{with sasl} || %{with sasl_pwdb}
 BuildRequires:  cyrus-sasl-devel
 %endif
 
