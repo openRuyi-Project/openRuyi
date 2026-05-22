@@ -24,6 +24,9 @@ Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{versi
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
+%if %{without ffmpeg}
+BuildOption(conf):  -DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON
+%endif
 
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  attr-devel
