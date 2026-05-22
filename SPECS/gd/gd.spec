@@ -16,7 +16,7 @@ Summary:        A Drawing Library for Programs That Use PNG and JPEG Output
 License:        MIT
 URL:            http://libgd.github.io/
 VCS:            git:https://github.com/libgd/libgd
-#!RemoteAsset
+#!RemoteAsset:  sha256:3fe822ece20796060af63b7c60acb151e5844204d289da0ce08f8fdf131e5a61
 Source0:        https://github.com/libgd/libgd/releases/download/%{name}-%{version}/libgd-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -111,4 +111,4 @@ export TMPDIR=/tmp
 %{_libdir}/pkgconfig/gdlib.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
