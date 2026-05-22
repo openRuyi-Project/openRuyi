@@ -29,7 +29,11 @@ BuildSystem:    autotools
 
 BuildOption(conf):  --disable-rpath
 BuildOption(conf):  --disable-dependency-tracking
+%if %{with gnome}
 BuildOption(conf):  --enable-pinentry-gnome3
+%else
+BuildOption(conf):  --disable-pinentry-gnome3
+%endif
 %if %{with gtk2}
 BuildOption(conf):  --enable-pinentry-gtk2
 %else
