@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Library for querying compressed XML metadata
 License:        LGPL-2.1-or-later
 URL:            https://github.com/hughsie/libxmlb
-#!RemoteAsset
+#!RemoteAsset:  sha256:45245a5ebe8a3598449f4d53a576801bdb6489aae03ff2206ad4fc7799611014
 Source:         https://github.com/hughsie/libxmlb/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
@@ -99,4 +99,4 @@ Executable and data files for installed tests.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
