@@ -22,7 +22,6 @@ BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-werror
-BuildOption(conf):  --disable-slient-rules
 BuildOption(conf):  --without-liq
 BuildOption(conf):  --without-x
 BuildOption(conf):  --with-fontconfig
