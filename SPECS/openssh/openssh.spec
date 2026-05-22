@@ -313,4 +313,4 @@ popd
 %attr(0644,root,root) %{_sysusersdir}/openssh-server.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
