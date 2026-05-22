@@ -21,7 +21,6 @@ BuildSystem:    autotools
 BuildOption(install):  INSTALL_ROOT=%{buildroot}
 
 BuildRequires:  make
-BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  cmake(AccountsQt6)
