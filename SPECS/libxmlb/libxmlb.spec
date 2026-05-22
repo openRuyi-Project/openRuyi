@@ -37,7 +37,7 @@ BuildOption(conf):  -Dtests=false
 
 BuildRequires:  meson
 BuildRequires:  gcc
-BuildRequires:  glib-devel
+BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(liblzma)
 BuildRequires:  pkgconfig(libzstd)
