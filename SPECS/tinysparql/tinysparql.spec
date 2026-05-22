@@ -7,6 +7,7 @@
 
 %bcond doc 0
 %bcond tests 0
+%bcond libstemmer 0
 
 Name:           tinysparql
 Version:        3.10.1
