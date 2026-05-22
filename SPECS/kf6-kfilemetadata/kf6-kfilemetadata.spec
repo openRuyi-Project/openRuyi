@@ -30,7 +30,7 @@ BuildOption(conf):  -DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON
 
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  pkgconfig(libattr)
-BuildRequires:  ebook-tools
+BuildRequires:  ebook-tools-devel
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(exiv2)
 BuildRequires:  cmake(KF6Archive) >= %{_kf6_version}
