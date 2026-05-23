@@ -1,0 +1,24 @@
+diff --git a/src/3rdparty/chromium/base/strings/to_string.h b/src/3rdparty/chromium/base/strings/to_string.h
+index 96e61da..5d09794 100644
+--- a/src/3rdparty/chromium/base/strings/to_string.h
++++ b/src/3rdparty/chromium/base/strings/to_string.h
+@@ -6,6 +6,7 @@
+ #define BASE_STRINGS_TO_STRING_H_
+ 
+ #include <concepts>
++#include <cstdint>
+ #include <iomanip>
+ #include <ios>
+ #include <memory>
+diff --git a/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h b/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
+index 8690a96..8988836 100644
+--- a/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
++++ b/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
+@@ -6,6 +6,7 @@
+ #define SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SECCOMP_H_
+ 
+ #include <stdint.h>
++#include <signal.h>
+ #include <sys/ioctl.h>
+ 
+ #include "build/build_config.h"

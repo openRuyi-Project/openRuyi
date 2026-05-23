@@ -33,6 +33,7 @@ Patch3:         0004-riscv-sandbox.patch
 Patch4:         0005-riscv-v8.patch
 Patch5:         0006-riscv-enable-v8-webasm.patch
 %endif
+Patch6:         0007-fix-misc-build-error.patch
 
 BuildOption(conf):  -DCMAKE_TOOLCHAIN_FILE="%{_libdir}/cmake/Qt6/qt.toolchain.cmake"
 BuildOption(conf):  -DFEATURE_webengine_build_gn=ON
