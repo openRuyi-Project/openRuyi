@@ -1,0 +1,78 @@
+From 6af1a859468c2cf9697e23fb428b24f49fe74e74 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 30 May 2026 14:15:12 +0800
+Subject: [PATCH] cmake: add WITH_SYSTEM_SPDK to link a system-installed SPDK
+
+By default ceph builds the bundled src/spdk fork via BuildSPDK. Add a
+WITH_SYSTEM_SPDK option that instead locates a distro-provided SPDK
+through a new Findspdk.cmake (pkg-config based, modelled on
+Finddpdk.cmake), exposing the same spdk::spdk target.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ CMakeLists.txt               | 11 ++++++++---
+ cmake/modules/Findspdk.cmake | 26 ++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 3 deletions(-)
+ create mode 100644 cmake/modules/Findspdk.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3c7b3b579c1..8aefd36e16b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -326,13 +326,18 @@ if(WITH_BLUESTORE_PMEM)
+ endif()
+ 
+ CMAKE_DEPENDENT_OPTION(WITH_SPDK "Enable SPDK" OFF
+-  "CMAKE_SYSTEM_PROCESSOR MATCHES i386|i686|amd64|x86_64|AMD64|aarch64" OFF)
++  "CMAKE_SYSTEM_PROCESSOR MATCHES i386|i686|amd64|x86_64|AMD64|aarch64|riscv64" OFF)
++option(WITH_SYSTEM_SPDK "Require a system SPDK instead of building bundled src/spdk" OFF)
+ if(WITH_SPDK)
+   if(NOT WITH_BLUESTORE)
+     message(SEND_ERROR "Please enable WITH_BLUESTORE for using SPDK")
+   endif()
+-  include(BuildSPDK)
+-  build_spdk()
++  if(WITH_SYSTEM_SPDK)
++    find_package(spdk REQUIRED)
++  else()
++    include(BuildSPDK)
++    build_spdk()
++  endif()
+   set(HAVE_SPDK TRUE)
+ endif(WITH_SPDK)
+ 
+diff --git a/cmake/modules/Findspdk.cmake b/cmake/modules/Findspdk.cmake
+new file mode 100644
+index 00000000000..eef8275798c
+--- /dev/null
++++ b/cmake/modules/Findspdk.cmake
+@@ -0,0 +1,26 @@
++# Findspdk.cmake -- locate a system-installed SPDK via pkg-config.
++#
++# Paired with WITH_SYSTEM_SPDK: link a distro-provided spdk-devel instead of
++# building the bundled src/spdk fork. Modelled on Finddpdk.cmake.
++#
++# Provides: spdk::spdk, spdk_FOUND, SPDK_INCLUDE_DIRS
++
++find_package(PkgConfig REQUIRED QUIET)
++
++pkg_check_modules(SPDK IMPORTED_TARGET spdk_nvme spdk_env_dpdk)
++
++# spdk's .so leave ISA-L symbols (crc32_iscsi, xor_gen, ...) undefined for the
++# final link and don't Require isa-l in their .pc; pull it in explicitly.
++pkg_check_modules(ISAL REQUIRED IMPORTED_TARGET libisal)
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(spdk
++  REQUIRED_VARS SPDK_FOUND SPDK_INCLUDE_DIRS)
++
++if(spdk_FOUND AND NOT TARGET spdk::spdk)
++  add_library(spdk::spdk INTERFACE IMPORTED)
++  # SPDK/DPDK register drivers via C constructors; keep the libs in DT_NEEDED
++  # (shared-lib equivalent of the bundled target's --whole-archive).
++  set_target_properties(spdk::spdk PROPERTIES
++    INTERFACE_LINK_LIBRARIES "-Wl,--no-as-needed;PkgConfig::SPDK;PkgConfig::ISAL")
++endif()
+-- 
+2.54.0
+

@@ -1,0 +1,35 @@
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Subject: [PATCH] test/crimson: bump unittest-seastar-messenger-thrash --memory to 1G
+
+unittest-seastar-messenger-thrash runs with `--memory 256M --smp 1`, which
+is just enough for upstream x86_64 CI but too tight on riscv64: the test
+runs on seastar's per-shard allocator, hits the strict 256M cap mid-run,
+and aborts with:
+
+  Reactor stalled for 66 ms on shard 0, in scheduling group main.
+  Reactor stalled for 124 ms on shard 0, in scheduling group main.
+  ERROR ... test - Test failed: got exception
+    ceph::buffer::v15_2_0::bad_alloc (Bad allocation [buffer:1])
+
+Bumping the budget to 1G lets the test run to completion on riscv64
+(97 sec wall on sg2044).  The sister test unittest-seastar-messenger keeps
+the upstream 256M --smp 4 invocation since it passes unchanged.
+
+This is environment-specific tuning rather than a bug fix, so the bump is
+not proposed upstream.
+
+---
+ src/test/crimson/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/src/test/crimson/CMakeLists.txt
++++ b/src/test/crimson/CMakeLists.txt
+@@ -92,7 +92,7 @@
+
+ add_executable(unittest-seastar-messenger-thrash test_messenger_thrash.cc)
+ add_ceph_unittest(unittest-seastar-messenger-thrash
+-  --memory 256M --smp 1)
++  --memory 1G --smp 1)
+ target_link_libraries(unittest-seastar-messenger-thrash crimson)
+
+ add_subdirectory(seastore)

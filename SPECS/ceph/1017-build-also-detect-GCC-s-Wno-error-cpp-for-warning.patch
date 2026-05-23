@@ -1,0 +1,40 @@
+From ee21591831379c43f0d6f55bdf0f1b1b77cbb3f5 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 30 May 2026 22:21:11 +0800
+Subject: [PATCH] build: also detect GCC's -Wno-error=cpp for #warning
+
+The existing check only tries clang's "-Wno-error=#warnings" spelling,
+which GCC rejects, so an advisory #warning (e.g. from core/dpdk_rte.hh
+when DPDK has atomic mbuf refcnt) becomes fatal under -Werror.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ CMakeLists.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/seastar/CMakeLists.txt b/src/seastar/CMakeLists.txt
+index b69e7264..797f4ef4 100644
+--- a/src/seastar/CMakeLists.txt
++++ b/src/seastar/CMakeLists.txt
+@@ -1169,11 +1169,18 @@ if (ErrorUnused_FOUND)
+   endif ()
+ endif ()
+ 
++# clang
+ check_cxx_compiler_flag ("-Wno-error=#warnings" ErrorWarnings_FOUND)
+ if (ErrorWarnings_FOUND)
+   target_compile_options (seastar
+       PRIVATE "-Wno-error=#warnings")
+ endif ()
++# gcc
++check_cxx_compiler_flag ("-Wno-error=cpp" ErrorCpp_FOUND)
++if (ErrorCpp_FOUND)
++  target_compile_options (seastar
++      PRIVATE "-Wno-error=cpp")
++endif ()
+ 
+ foreach (definition
+     SEASTAR_DEBUG
+-- 
+2.54.0
+

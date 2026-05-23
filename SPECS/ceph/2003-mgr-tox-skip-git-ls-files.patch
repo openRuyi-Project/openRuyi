@@ -4,7 +4,7 @@ Date: Sun, 10 May 2026 16:06:17 +0800
 Subject: [PATCH] mgr/tox: drop `git ls-files cephadm` assertions from flake8
  env
 
-Same root cause as 2003-cephadm-tox-py313-compat.patch hunk 2: the
+Same root cause as 2017-cephadm-tox-drop-git-lsfiles-checks.patch: the
 flake8 env asserts the exact count of `docker.io` / `quay.io`
 references in cephadm/*.py via `git ls-files`, which fails on the
 release tarball (no .git, zero matches, assertion trips).  The

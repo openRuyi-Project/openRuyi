@@ -1,0 +1,57 @@
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Subject: [PATCH] os/memstore: declare memstore as STATIC
+
+v21 split the monolithic libos into an `os` static library plus
+per-backend sublibraries linked back into it.  `os` STATIC takes
+`PRIVATE memstore` (src/os/CMakeLists.txt) while `memstore` itself
+takes `PRIVATE os` (src/os/memstore/CMakeLists.txt), forming a cycle.
+
+CMake allows such cycles only between STATIC libraries.  Upstream
+builds leave BUILD_SHARED_LIBS undefined (CMake default OFF) so
+memstore ends up STATIC and the cycle is accepted.
+
+openRuyi's %cmake macro presets BUILD_SHARED_LIBS=ON, which turns
+memstore into a SHARED library and trips the cmake error:
+
+  CMake Error: The inter-target dependency graph contains the following
+  strongly connected component (cycle):
+    "os" of type STATIC_LIBRARY
+      depends on "memstore" (weak)
+    "memstore" of type SHARED_LIBRARY
+      depends on "os" (weak)
+  At least one of these targets is not a STATIC_LIBRARY.
+
+Declare memstore as STATIC unconditionally so the type matches `os`
+regardless of BUILD_SHARED_LIBS.  bluestore (the sibling backend) is
+already OBJECT and is unaffected.
+
+STATIC (not OBJECT) is required here: CMake allows dependency cycles
+only among STATIC libraries, so an OBJECT memstore trips the exact same
+"At least one of these targets is not a STATIC_LIBRARY" error as a
+SHARED one (verified with a minimal repro).  The bluestore comparison is
+not a counter-example: bluestore is OBJECT but does not link `os`, so it
+is not part of any cycle.  memstore's cycle comes from its own
+`target_link_libraries(memstore PRIVATE os)`.
+
+Not proposed upstream: upstream builds with BUILD_SHARED_LIBS unset
+(default OFF) and does not support/test the ON build, so this is
+downstream config tuning.  The clean upstream fix would be to break the
+cycle at its source -- drop memstore's link dependency on `os` (mirroring
+bluestore, which gets by without it) rather than change the library type
+-- but that needs verifying memstore still builds without linking `os`,
+which is out of scope here.
+---
+ src/os/memstore/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/os/memstore/CMakeLists.txt b/src/os/memstore/CMakeLists.txt
+--- a/src/os/memstore/CMakeLists.txt
++++ b/src/os/memstore/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ include(CheckCXXCompilerFlag)
+
+-add_library(memstore
++add_library(memstore STATIC
+   MemStore.cc)
+ target_link_libraries(memstore PRIVATE os)
+ check_cxx_compiler_flag("-Wno-maybe-uninitialized"

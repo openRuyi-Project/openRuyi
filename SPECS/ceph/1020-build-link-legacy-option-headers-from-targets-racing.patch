@@ -1,0 +1,75 @@
+From 9ccc85023b61f44ad40a997911a6bce8214a5d2b Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 1 Jun 2026 14:52:03 +0800
+Subject: [PATCH] build: link legacy-option-headers from targets racing option
+ generation
+
+The *_legacy_options.h headers backing the legacy ConfigValues members
+are generated at build time by y2c.py. Object libraries that link the
+legacy-option-headers INTERFACE target get an ordering dependency on that
+generation; a few that reference legacy members but don't link it can be
+compiled before the headers exist under a parallel build, failing with
+"class ConfigValues has no member ...":
+
+  neorados_objs, neorados_api_obj - ms_die_on_unhandled_msg,
+      objecter_inflight_ops via Messenger.h / Objecter.h
+  ceph_zstd - compressor_zstd_level
+  heap_profiler - log_file
+
+Link legacy-option-headers from them, as ceph_lz4, ceph_snappy and
+jerasure_utils already do.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/compressor/zstd/CMakeLists.txt | 4 +++-
+ src/neorados/CMakeLists.txt        | 2 ++
+ src/perfglue/CMakeLists.txt        | 1 +
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/compressor/zstd/CMakeLists.txt b/src/compressor/zstd/CMakeLists.txt
+index 5a522840acf..fe964003022 100644
+--- a/src/compressor/zstd/CMakeLists.txt
++++ b/src/compressor/zstd/CMakeLists.txt
+@@ -13,7 +13,9 @@ set(zstd_sources
+   CompressionPluginZstd.cc)
+ 
+ add_library(ceph_zstd SHARED ${zstd_sources})
+-target_link_libraries(ceph_zstd PRIVATE Zstd::Zstd $<$<PLATFORM_ID:Windows>:ceph-common>)
++target_link_libraries(ceph_zstd PRIVATE
++  legacy-option-headers
++  Zstd::Zstd $<$<PLATFORM_ID:Windows>:ceph-common>)
+ set_target_properties(ceph_zstd PROPERTIES
+   VERSION 2.0.0
+   SOVERSION 2
+diff --git a/src/neorados/CMakeLists.txt b/src/neorados/CMakeLists.txt
+index cc03ce61165..7421085f5ee 100644
+--- a/src/neorados/CMakeLists.txt
++++ b/src/neorados/CMakeLists.txt
+@@ -2,10 +2,12 @@ add_library(neorados_objs OBJECT
+   RADOSImpl.cc)
+ target_compile_definitions(neorados_objs PRIVATE
+   $<TARGET_PROPERTY:${FMT_LIB},INTERFACE_COMPILE_DEFINITIONS>)
++target_link_libraries(neorados_objs legacy-option-headers)
+ add_library(neorados_api_obj OBJECT
+   RADOS.cc)
+ target_compile_definitions(neorados_api_obj PRIVATE
+   $<TARGET_PROPERTY:${FMT_LIB},INTERFACE_COMPILE_DEFINITIONS>)
++target_link_libraries(neorados_api_obj legacy-option-headers)
+ 
+ add_library(libneorados STATIC
+   $<TARGET_OBJECTS:neorados_api_obj>
+diff --git a/src/perfglue/CMakeLists.txt b/src/perfglue/CMakeLists.txt
+index 9ad73d576e4..d64665d5005 100644
+--- a/src/perfglue/CMakeLists.txt
++++ b/src/perfglue/CMakeLists.txt
+@@ -2,6 +2,7 @@ if(ALLOCATOR STREQUAL "tcmalloc")
+   add_library(heap_profiler STATIC
+     heap_profiler.cc)
+   target_link_libraries(heap_profiler
++    legacy-option-headers
+     gperftools::tcmalloc)
+ else()
+   add_library(heap_profiler STATIC
+-- 
+2.54.0
+

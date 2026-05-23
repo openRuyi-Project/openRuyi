@@ -1,0 +1,462 @@
+From b5dd4dca8f75990c2e93c4d74a7225b87172934e Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 1 Jun 2026 11:03:59 +0800
+Subject: [PATCH] cmake: rename Finddpdk module to FindDPDK
+
+Name the package "DPDK" to match the CMake convention and upstream's
+own spelling. Rename Finddpdk.cmake to FindDPDK.cmake and the
+dpdk::dpdk target to DPDK::dpdk, updating BuildDPDK, BuildSPDK and the
+msg consumers accordingly.
+
+This drops the DPDK::dpdk alias shim added in the previous version and
+fixes linking for the Seastar (Seastar_DPDK=ON) build.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ CMakeLists.txt                |   2 +-
+ cmake/modules/BuildDPDK.cmake |  26 +++----
+ cmake/modules/BuildSPDK.cmake |   2 +-
+ cmake/modules/FindDPDK.cmake  | 143 ++++++++++++++++++++++++++++++++++
+ cmake/modules/Finddpdk.cmake  | 143 ----------------------------------
+ cmake/modules/Findspdk.cmake  |   2 +-
+ src/CMakeLists.txt            |   2 +-
+ src/msg/CMakeLists.txt        |   4 +-
+ 8 files changed, 162 insertions(+), 162 deletions(-)
+ create mode 100644 cmake/modules/FindDPDK.cmake
+ delete mode 100644 cmake/modules/Finddpdk.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8aefd36e16b..4c20f673219 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -506,7 +506,7 @@ set(CRYPTO_LIBS OpenSSL::Crypto)
+ 
+ option(WITH_DPDK "Enable DPDK messaging" OFF)
+ if(WITH_DPDK)
+-  find_package(dpdk)
++  find_package(DPDK)
+   if(NOT DPDK_FOUND)
+     include(BuildDPDK)
+     build_dpdk(${CMAKE_BINARY_DIR}/src/dpdk)
+diff --git a/cmake/modules/BuildDPDK.cmake b/cmake/modules/BuildDPDK.cmake
+index f2e3d2186ab..a5f36984702 100644
+--- a/cmake/modules/BuildDPDK.cmake
++++ b/cmake/modules/BuildDPDK.cmake
+@@ -120,10 +120,10 @@ function(do_export_dpdk dpdk_dir)
+   # target
+   file(MAKE_DIRECTORY ${DPDK_INCLUDE_DIR})
+ 
+-  if(NOT TARGET dpdk::cflags)
+-    add_library(dpdk::cflags INTERFACE IMPORTED)
++  if(NOT TARGET DPDK::cflags)
++    add_library(DPDK::cflags INTERFACE IMPORTED)
+     if (dpdk_rte_CFLAGS)
+-      set_target_properties(dpdk::cflags PROPERTIES
++      set_target_properties(DPDK::cflags PROPERTIES
+         INTERFACE_COMPILE_OPTIONS "${dpdk_rte_CFLAGS}")
+     endif()
+   endif()
+@@ -159,31 +159,31 @@ function(do_export_dpdk dpdk_dir)
+   endif()
+ 
+   foreach(c ${dpdk_components})
+-    add_library(dpdk::${c} STATIC IMPORTED)
+-    add_dependencies(dpdk::${c} dpdk-ext)
++    add_library(DPDK::${c} STATIC IMPORTED)
++    add_dependencies(DPDK::${c} dpdk-ext)
+     set(dpdk_${c}_LIBRARY
+       "${dpdk_dir}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}rte_${c}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+-    set_target_properties(dpdk::${c} PROPERTIES
++    set_target_properties(DPDK::${c} PROPERTIES
+       INTERFACE_INCLUDE_DIRECTORIES ${DPDK_INCLUDE_DIR}
+-      INTERFACE_LINK_LIBRARIES dpdk::cflags
++      INTERFACE_LINK_LIBRARIES DPDK::cflags
+       IMPORTED_LOCATION "${dpdk_${c}_LIBRARY}")
+-    list(APPEND DPDK_LIBRARIES dpdk::${c})
++    list(APPEND DPDK_LIBRARIES DPDK::${c})
+     list(APPEND DPDK_ARCHIVES "${dpdk_${c}_LIBRARY}")
+   endforeach()
+ 
+   if(NUMA_FOUND)
+     set(dpdk_numa " -Wl,-lnuma")
+   endif()
+-  add_library(dpdk::dpdk INTERFACE IMPORTED)
+-  add_dependencies(dpdk::dpdk
++  add_library(DPDK::dpdk INTERFACE IMPORTED)
++  add_dependencies(DPDK::dpdk
+     ${DPDK_LIBRARIES})
+   # workaround for https://gitlab.kitware.com/cmake/cmake/issues/16947
+-  set_target_properties(dpdk::dpdk PROPERTIES
++  set_target_properties(DPDK::dpdk PROPERTIES
+     INTERFACE_INCLUDE_DIRECTORIES ${DPDK_INCLUDE_DIR}
+     INTERFACE_LINK_LIBRARIES
+     "-Wl,--whole-archive $<JOIN:${DPDK_ARCHIVES}, > -Wl,--no-whole-archive ${dpdk_numa} -Wl,-lpthread,-ldl")
+   if(dpdk_rte_CFLAGS)
+-    set_target_properties(dpdk::dpdk PROPERTIES
++    set_target_properties(DPDK::dpdk PROPERTIES
+       INTERFACE_COMPILE_OPTIONS "${dpdk_rte_CFLAGS}")
+   endif()
+ endfunction()
+@@ -193,7 +193,7 @@ function(build_dpdk dpdk_dir)
+   if(NOT TARGET dpdk-ext)
+     do_build_dpdk(${dpdk_dir})
+   endif()
+-  if(NOT TARGET dpdk::dpdk)
++  if(NOT TARGET DPDK::dpdk)
+     do_export_dpdk(${dpdk_dir})
+   endif()
+ endfunction()
+diff --git a/cmake/modules/BuildSPDK.cmake b/cmake/modules/BuildSPDK.cmake
+index d6ce97e1d2e..98e6cf3a35a 100644
+--- a/cmake/modules/BuildSPDK.cmake
++++ b/cmake/modules/BuildSPDK.cmake
+@@ -76,6 +76,6 @@ macro(build_spdk)
+   set_target_properties(spdk::spdk PROPERTIES
+     INTERFACE_INCLUDE_DIRECTORIES ${SPDK_INCLUDE_DIR}
+     INTERFACE_LINK_LIBRARIES
+-    "-Wl,--whole-archive $<JOIN:${spdk_libs}, > -Wl,--no-whole-archive;dpdk::dpdk;rt;${UUID_LIBRARIES}")
++    "-Wl,--whole-archive $<JOIN:${spdk_libs}, > -Wl,--no-whole-archive;DPDK::dpdk;rt;${UUID_LIBRARIES}")
+   unset(source_dir)
+ endmacro()
+diff --git a/cmake/modules/FindDPDK.cmake b/cmake/modules/FindDPDK.cmake
+new file mode 100644
+index 00000000000..ee2359882af
+--- /dev/null
++++ b/cmake/modules/FindDPDK.cmake
+@@ -0,0 +1,143 @@
++# Try to find DPDK
++#
++# Once done, this will define
++#
++# DPDK::dpdk
++# DPDK_FOUND
++# DPDK_INCLUDE_DIRS
++# DPDK_LIBRARIES
++
++find_package(PkgConfig QUIET)
++if(PKG_CONFIG_FOUND)
++  pkg_check_modules(DPDK QUIET libdpdk)
++endif()
++
++if(DPDK_INCLUDE_DIRS)
++  # good
++elseif(TARGET DPDK::dpdk)
++  get_target_property(DPDK_INCLUDE_DIRS
++     DPDK::dpdk INTERFACE_INCLUDE_DIRECTORIES)
++else()
++  find_path(DPDK_config_INCLUDE_DIR rte_config.h
++    HINTS
++      ENV DPDK_DIR
++    PATH_SUFFIXES
++      dpdk
++      include)
++  find_path(DPDK_common_INCLUDE_DIR rte_common.h
++    HINTS
++      ENV DPDK_DIR
++    PATH_SUFFIXES
++      dpdk
++      include)
++  set(DPDK_INCLUDE_DIRS "${DPDK_config_INCLUDE_DIR}")
++  if(DPDK_common_INCLUDE_DIR AND NOT DPDK_config_INCLUDE_DIR STREQUAL DPDK_common_INCLUDE_DIR)
++    list(APPEND DPDK_INCLUDE_DIRS "${DPDK_common_INCLUDE_DIR}")
++  endif()
++endif()
++
++set(components
++  bus_pci
++  bus_vdev
++  cfgfile
++  cmdline
++  eal
++  ethdev
++  hash
++  kvargs
++  mbuf
++  mempool
++  mempool_ring
++  net
++  pci
++  pmd_af_packet
++  pmd_bnxt
++  pmd_bond
++  pmd_cxgbe
++  pmd_e1000
++  pmd_ena
++  pmd_enic
++  pmd_i40e
++  pmd_ixgbe
++  pmd_mlx5
++  pmd_nfp
++  pmd_qede
++  pmd_ring
++  pmd_sfc_efx
++  pmd_vmxnet3_uio
++  pmd_hns3
++  pmd_hinic
++  ring
++  timer)
++
++# for collecting DPDK library targets, it will be used when defining DPDK::dpdk
++set(_DPDK_libs)
++# for list of DPDK library archive paths
++set(DPDK_LIBRARIES "")
++foreach(c ${components})
++  set(DPDK_lib DPDK::${c})
++  if(TARGET ${DPDK_lib})
++    get_target_property(DPDK_rte_${c}_LIBRARY
++      ${DPDK_lib} IMPORTED_LOCATION)
++  else()
++    find_library(DPDK_rte_${c}_LIBRARY rte_${c}
++      HINTS
++        ENV DPDK_DIR
++        ${DPDK_LIBRARY_DIRS}
++        PATH_SUFFIXES lib)
++  endif()
++  if(DPDK_rte_${c}_LIBRARY)
++    if (NOT TARGET ${DPDK_lib})
++      add_library(${DPDK_lib} UNKNOWN IMPORTED)
++      set_target_properties(${DPDK_lib} PROPERTIES
++        INTERFACE_INCLUDE_DIRECTORIES "${DPDK_INCLUDE_DIRS}"
++        IMPORTED_LOCATION "${DPDK_rte_${c}_LIBRARY}")
++      if(c STREQUAL pmd_mlx5)
++        find_package(verbs QUIET)
++        if(verbs_FOUND)
++          target_link_libraries(${DPDK_lib} INTERFACE IBVerbs::verbs)
++        endif()
++      endif()
++    endif()
++    list(APPEND _DPDK_libs ${DPDK_lib})
++    list(APPEND DPDK_LIBRARIES ${DPDK_rte_${c}_LIBRARY})
++  endif()
++endforeach()
++
++mark_as_advanced(DPDK_INCLUDE_DIRS ${DPDK_LIBRARIES})
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(DPDK DEFAULT_MSG
++  DPDK_INCLUDE_DIRS
++  DPDK_LIBRARIES)
++
++if(DPDK_FOUND)
++  if(NOT TARGET DPDK::cflags)
++     if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64|x86_64|AMD64")
++      set(rte_cflags "-march=core2")
++    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "arm|ARM")
++      set(rte_cflags "-march=armv7-a")
++    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|AARCH64")
++      set(rte_cflags "-march=armv8-a+crc")
++    endif()
++    add_library(DPDK::cflags INTERFACE IMPORTED)
++    if (rte_cflags)
++      set_target_properties(DPDK::cflags PROPERTIES
++        INTERFACE_COMPILE_OPTIONS "${rte_cflags}")
++    endif()
++  endif()
++
++  if(NOT TARGET DPDK::dpdk)
++    add_library(DPDK::dpdk INTERFACE IMPORTED)
++    find_package(Threads QUIET)
++    list(APPEND _DPDK_libs
++      Threads::Threads
++      DPDK::cflags
++      numa)
++    set_target_properties(DPDK::dpdk PROPERTIES
++      INTERFACE_LINK_LIBRARIES "${_DPDK_libs}"
++      INTERFACE_INCLUDE_DIRECTORIES "${DPDK_INCLUDE_DIRS}")
++  endif()
++endif()
++
++unset(_DPDK_libs)
+diff --git a/cmake/modules/Finddpdk.cmake b/cmake/modules/Finddpdk.cmake
+deleted file mode 100644
+index ad2ec2548c1..00000000000
+--- a/cmake/modules/Finddpdk.cmake
++++ /dev/null
+@@ -1,143 +0,0 @@
+-# Try to find dpdk
+-#
+-# Once done, this will define
+-#
+-# dpdk::dpdk
+-# dpdk_FOUND
+-# dpdk_INCLUDE_DIR
+-# dpdk_LIBRARIES
+-
+-find_package(PkgConfig QUIET)
+-if(PKG_CONFIG_FOUND)
+-  pkg_check_modules(dpdk QUIET libdpdk)
+-endif()
+-
+-if(dpdk_INCLUDE_DIRS)
+-  # good
+-elseif(TARGET dpdk::dpdk)
+-  get_target_property(dpdk_INCLUDE_DIRS
+-     dpdk::dpdk INTERFACE_INCLUDE_DIRECTORIES)
+-else()
+-  find_path(dpdk_config_INCLUDE_DIR rte_config.h
+-    HINTS
+-      ENV DPDK_DIR
+-    PATH_SUFFIXES
+-      dpdk
+-      include)
+-  find_path(dpdk_common_INCLUDE_DIR rte_common.h
+-    HINTS
+-      ENV DPDK_DIR
+-    PATH_SUFFIXES
+-      dpdk
+-      include)
+-  set(dpdk_INCLUDE_DIRS "${dpdk_config_INCLUDE_DIR}")
+-  if(dpdk_common_INCLUDE_DIR AND NOT dpdk_config_INCLUDE_DIR STREQUAL dpdk_common_INCLUDE_DIR)
+-    list(APPEND dpdk_INCLUDE_DIRS "${dpdk_common_INCLUDE_DIR}")
+-  endif()
+-endif()
+-
+-set(components
+-  bus_pci
+-  bus_vdev
+-  cfgfile
+-  cmdline
+-  eal
+-  ethdev
+-  hash
+-  kvargs
+-  mbuf
+-  mempool
+-  mempool_ring
+-  net
+-  pci
+-  pmd_af_packet
+-  pmd_bnxt
+-  pmd_bond
+-  pmd_cxgbe
+-  pmd_e1000
+-  pmd_ena
+-  pmd_enic
+-  pmd_i40e
+-  pmd_ixgbe
+-  pmd_mlx5
+-  pmd_nfp
+-  pmd_qede
+-  pmd_ring
+-  pmd_sfc_efx
+-  pmd_vmxnet3_uio
+-  pmd_hns3
+-  pmd_hinic
+-  ring
+-  timer)
+-
+-# for collecting dpdk library targets, it will be used when defining dpdk::dpdk
+-set(_dpdk_libs)
+-# for list of dpdk library archive paths
+-set(dpdk_LIBRARIES "")
+-foreach(c ${components})
+-  set(dpdk_lib dpdk::${c})
+-  if(TARGET ${dpdk_lib})
+-    get_target_property(DPDK_rte_${c}_LIBRARY
+-      ${dpdk_lib} IMPORTED_LOCATION)
+-  else()
+-    find_library(DPDK_rte_${c}_LIBRARY rte_${c}
+-      HINTS
+-        ENV DPDK_DIR
+-        ${dpdk_LIBRARY_DIRS}
+-        PATH_SUFFIXES lib)
+-  endif()
+-  if(DPDK_rte_${c}_LIBRARY)
+-    if (NOT TARGET ${dpdk_lib})
+-      add_library(${dpdk_lib} UNKNOWN IMPORTED)
+-      set_target_properties(${dpdk_lib} PROPERTIES
+-        INTERFACE_INCLUDE_DIRECTORIES "${dpdk_INCLUDE_DIRS}"
+-        IMPORTED_LOCATION "${DPDK_rte_${c}_LIBRARY}")
+-      if(c STREQUAL pmd_mlx5)
+-        find_package(verbs QUIET)
+-        if(verbs_FOUND)
+-          target_link_libraries(${dpdk_lib} INTERFACE IBVerbs::verbs)
+-        endif()
+-      endif()
+-    endif()
+-    list(APPEND _dpdk_libs ${dpdk_lib})
+-    list(APPEND dpdk_LIBRARIES ${DPDK_rte_${c}_LIBRARY})
+-  endif()
+-endforeach()
+-
+-mark_as_advanced(dpdk_INCLUDE_DIRS ${dpdk_LIBRARIES})
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(dpdk DEFAULT_MSG
+-  dpdk_INCLUDE_DIRS
+-  dpdk_LIBRARIES)
+-
+-if(dpdk_FOUND)
+-  if(NOT TARGET dpdk::cflags)
+-     if(CMAKE_SYSTEM_PROCESSOR MATCHES "amd64|x86_64|AMD64")
+-      set(rte_cflags "-march=core2")
+-    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "arm|ARM")
+-      set(rte_cflags "-march=armv7-a")
+-    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|AARCH64")
+-      set(rte_cflags "-march=armv8-a+crc")
+-    endif()
+-    add_library(dpdk::cflags INTERFACE IMPORTED)
+-    if (rte_cflags)
+-      set_target_properties(dpdk::cflags PROPERTIES
+-        INTERFACE_COMPILE_OPTIONS "${rte_cflags}")
+-    endif()
+-  endif()
+-
+-  if(NOT TARGET dpdk::dpdk)
+-    add_library(dpdk::dpdk INTERFACE IMPORTED)
+-    find_package(Threads QUIET)
+-    list(APPEND _dpdk_libs
+-      Threads::Threads
+-      dpdk::cflags
+-      numa)
+-    set_target_properties(dpdk::dpdk PROPERTIES
+-      INTERFACE_LINK_LIBRARIES "${_dpdk_libs}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${dpdk_INCLUDE_DIRS}")
+-  endif()
+-endif()
+-
+-unset(_dpdk_libs)
+diff --git a/cmake/modules/Findspdk.cmake b/cmake/modules/Findspdk.cmake
+index eef8275798c..554bac5df19 100644
+--- a/cmake/modules/Findspdk.cmake
++++ b/cmake/modules/Findspdk.cmake
+@@ -1,7 +1,7 @@
+ # Findspdk.cmake -- locate a system-installed SPDK via pkg-config.
+ #
+ # Paired with WITH_SYSTEM_SPDK: link a distro-provided spdk-devel instead of
+-# building the bundled src/spdk fork. Modelled on Finddpdk.cmake.
++# building the bundled src/spdk fork. Modelled on FindDPDK.cmake.
+ #
+ # Provides: spdk::spdk, spdk_FOUND, SPDK_INCLUDE_DIRS
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0b312f4c914..c80e48b763b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -474,7 +474,7 @@ if(WITH_CRIMSON)
+   set(Seastar_IO_URING ${HAVE_LIBURING} CACHE BOOL "" FORCE)
+   set(Seastar_DEPRECATED_OSTREAM_FORMATTERS OFF CACHE BOOL "" FORCE)
+   if(Seastar_DPDK)
+-    find_package(dpdk QUIET)
++    find_package(DPDK QUIET)
+     if(NOT DPDK_FOUND)
+       include(BuildDPDK)
+       build_dpdk(${CMAKE_BINARY_DIR}/src/dpdk)
+diff --git a/src/msg/CMakeLists.txt b/src/msg/CMakeLists.txt
+index 20c2b9ff430..a80bcd3e165 100644
+--- a/src/msg/CMakeLists.txt
++++ b/src/msg/CMakeLists.txt
+@@ -69,8 +69,8 @@ if(WITH_DPDK)
+   add_library(common_async_dpdk STATIC
+     ${async_dpdk_srcs})
+   target_link_libraries(common_async_dpdk PRIVATE
+-    dpdk::dpdk)
++    DPDK::dpdk)
+   # Stack.cc includes DPDKStack.h, which includes rte_config.h indirectly
+   target_include_directories(common-msg-objs PRIVATE
+-    $<TARGET_PROPERTY:dpdk::dpdk,INTERFACE_INCLUDE_DIRECTORIES>)
++    $<TARGET_PROPERTY:DPDK::dpdk,INTERFACE_INCLUDE_DIRECTORIES>)
+ endif(WITH_DPDK)
+-- 
+2.54.0
+

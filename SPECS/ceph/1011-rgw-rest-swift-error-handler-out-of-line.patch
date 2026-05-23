@@ -1,24 +1,23 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 868fdd8120790ef453692604fff910e29c56cee1 Mon Sep 17 00:00:00 2001
 From: Sun Yuechi <sunyuechi@iscas.ac.cn>
-Date: Sun, 10 May 2026 16:06:17 +0800
-Subject: [PATCH] rgw: move RGWHandler_REST_{Bucket,Obj}_SWIFT::error_handler
- bodies out-of-line
+Date: Fri, 29 May 2026 18:39:51 +0800
+Subject: [PATCH] rgw: move SWIFT error_handler out-of-line to fix link failure
 
-The two `error_handler` overrides in rgw_rest_swift.h delegate to
-`RGWSwiftWebsiteHandler::error_handler`, which is non-virtual and
-defined in rgw_rest_swift.cc (librgw_a.a).  Because the header is
-included by rgw_rest.cc, the override bodies are instantiated in
-librgw_common.a.  Under gcc 16 -O2 the call is devirtualised into a
-direct reference, turning it into a cross-archive ODR-use.
+The two error_handler overrides are defined inline in rgw_rest_swift.h
+and delegate to RGWSwiftWebsiteHandler::error_handler, a non-virtual
+function defined in rgw_rest_swift.cc (librgw_a.a). Because the header
+is included by rgw_rest.cc, the inline bodies are emitted in
+librgw_common.a, which then ODR-uses that symbol across archives.
 
-The link command lists `librgw_a.a` before `librgw_common.a`, and GNU
-ld only extracts archive members on demand: when librgw_a.a is
-scanned, nothing yet references `RGWSwiftWebsiteHandler::error_handler`,
-so rgw_rest_swift.cc.o is skipped and the symbol can never be resolved.
+The link line lists librgw_a.a before librgw_common.a, and GNU ld only
+pulls archive members on demand: when librgw_a.a is scanned nothing yet
+references RGWSwiftWebsiteHandler::error_handler, so rgw_rest_swift.cc.o
+is dropped and the symbol is later unresolved. This shows up as a link
+failure with gcc 16 -O2.
 
-Move the two bodies into rgw_rest_swift.cc so they sit next to the
-function they call.  The cross-archive ODR-use disappears and the
-build no longer depends on archive scan order.  No functional change.
+Move the two bodies into rgw_rest_swift.cc next to the function they
+call, so the ODR-use stays within the same object and the build no
+longer depends on archive scan order. No functional change.
 
 Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
 ---

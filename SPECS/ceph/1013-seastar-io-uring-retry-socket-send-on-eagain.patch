@@ -1,0 +1,66 @@
+From 1a4e99145d3f2e59bea6dc26a103a945c00c6fdd Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 29 May 2026 19:48:15 +0800
+Subject: [PATCH] reactor: retry io_uring socket send on EAGAIN
+
+The io_uring backend submits socket writes as IORING_OP_SENDMSG/SEND.
+When the send buffer is full the kernel can complete the op with -EAGAIN,
+which io_completion::complete_with() turns into a thrown system_error
+handed to the caller. The aio/epoll backends instead go through
+do_sendmsg(), which waits for POLLOUT and resends, so they never leak
+EAGAIN.
+
+This is a gap in the kernel's io_uring error handling: disk I/O retries
+-EAGAIN internally via REQ_F_REISSUE (kernel commit d803d123948f), but
+socket I/O does not share that path, so -EAGAIN leaks to userspace.
+
+On an EAGAIN completion, fall back to the poll-based do_sendmsg()/
+do_send() like the other backends. recvmsg()/recv_some() share the same
+path but reads do not fill a buffer, so they are left unchanged.
+
+Observed under load on riscv64, where io_uring is the default backend:
+unittest-seastar-socket's test_preemptive_down() aborts with EAGAIN.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/seastar/src/core/reactor_backend.cc | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
+
+--- a/src/seastar/src/core/reactor_backend.cc
++++ b/src/seastar/src/core/reactor_backend.cc
+@@ -1755,7 +1755,18 @@
+         };
+         auto desc = std::make_unique<write_completion>(fd, iovs, len);
+         auto req = internal::io_request::make_sendmsg(fd.fd.get(), desc->msghdr(), MSG_NOSIGNAL);
+-        return submit_request(std::move(desc), std::move(req));
++        return submit_request(std::move(desc), std::move(req)).handle_exception_type(
++                [this, &fd, iovs, len] (const std::system_error& e) -> future<size_t> {
++            // An io_uring SENDMSG can complete with -EAGAIN when the socket send
++            // buffer is full; io_completion::complete_with() turns that into a
++            // thrown system_error instead of retrying. Fall back to the poll-based
++            // path (wait for POLLOUT, resend) like do_sendmsg() and the aio/epoll
++            // backends, which never leak EAGAIN to the caller.
++            if (e.code() == std::errc::resource_unavailable_try_again) {
++                return _r.do_sendmsg(fd, iovs, len);
++            }
++            return make_exception_future<size_t>(e);
++        });
+     }
+
+ #if SEASTAR_API_LEVEL < 9
+@@ -1797,7 +1808,15 @@
+         };
+         auto desc = std::make_unique<write_completion>(fd, len);
+         auto req = internal::io_request::make_send(fd.fd.get(), buffer, len, MSG_NOSIGNAL);
+-        return submit_request(std::move(desc), std::move(req));
++        return submit_request(std::move(desc), std::move(req)).handle_exception_type(
++                [this, &fd, buffer, len] (const std::system_error& e) -> future<size_t> {
++            // See sendmsg(): io_uring SEND can complete with -EAGAIN; retry via the
++            // poll-based path instead of surfacing it.
++            if (e.code() == std::errc::resource_unavailable_try_again) {
++                return _r.do_send(fd, buffer, len);
++            }
++            return make_exception_future<size_t>(e);
++        });
+     }
+ #endif

@@ -1,0 +1,37 @@
+From 66a775ae90fe74dcc9c4ab4d9645c2100f423e1f Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 29 May 2026 18:19:18 +0800
+Subject: [PATCH] cmake/AddCephTest: use namespaced Catch2 imported targets
+
+AddCephTest.cmake links the bare target names Catch2 / Catch2WithMain.
+With WITH_SYSTEM_CATCH2=ON, CPM resolves Catch2 via find_package(),
+which only exports the namespaced IMPORTED targets Catch2::Catch2 /
+Catch2::Catch2WithMain. CMake then treats the bare names as plain
+library names and the link fails with -lCatch2WithMain, since the
+physical library is named libCatch2Main (OUTPUT_NAME "Catch2Main").
+
+Use the namespaced names. Catch2 exports them as ALIASes in the bundled
+(CPM subproject) build too, so the default path keeps working.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ cmake/modules/AddCephTest.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/AddCephTest.cmake b/cmake/modules/AddCephTest.cmake
+--- a/cmake/modules/AddCephTest.cmake
++++ b/cmake/modules/AddCephTest.cmake
+@@ -184,9 +184,9 @@ if(DEFINED catch2_opt_EXTRA_INCS)
+ endif()
+
+ if(${catch2_opt_NO_CATCH2_MAIN})
+-  LIST(APPEND tl_libs Catch2)
++  LIST(APPEND tl_libs Catch2::Catch2)
+ else()
+-  LIST(APPEND tl_libs Catch2WithMain)
++  LIST(APPEND tl_libs Catch2::Catch2WithMain)
+ endif()
+
+ target_link_libraries(unittest_${test_name} 
+--
+2.43.0

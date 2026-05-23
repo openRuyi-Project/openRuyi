@@ -1,0 +1,31 @@
+From 3060480daf10aef52624c6ffe691c982f2ddf276 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 1 Jun 2026 15:53:21 +0800
+Subject: [PATCH] cmake: guard DPDK::dpdk against redefinition in Finddpdk
+
+The block guard tests `NOT (TARGET dpdk)`, but the shared-library
+branch only creates DPDK::dpdk, never `dpdk`, so a second
+find_package(dpdk) redefines DPDK::dpdk and errors out. Guard on
+DPDK::dpdk instead.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/seastar/cmake/Finddpdk.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/seastar/cmake/Finddpdk.cmake b/src/seastar/cmake/Finddpdk.cmake
+index e4529ed6..d2fa838e 100644
+--- a/src/seastar/cmake/Finddpdk.cmake
++++ b/src/seastar/cmake/Finddpdk.cmake
+@@ -151,7 +151,7 @@ endforeach ()
+ pkg_check_modules (libarchive_PC QUIET libarchive)
+ list(APPEND dpdk_dependencies ${libarchive_PC_LIBRARIES})
+ 
+-if (dpdk_FOUND AND NOT (TARGET dpdk))
++if (dpdk_FOUND AND NOT (TARGET DPDK::dpdk))
+   get_filename_component (library_suffix "${dpdk_EAL_LIBRARY}" LAST_EXT)
+   # strictly speaking, we should have being using check_c_compiler_flag()
+   # here, but we claim Seastar as a project written in CXX language, and
+-- 
+2.54.0
+

@@ -1,0 +1,82 @@
+From dc83077a2b4d515b591df76d8cbba35b2ccf9cb9 Mon Sep 17 00:00:00 2001
+From: Kefu Chai <tchaikov@gmail.com>
+Date: Tue, 26 May 2026 22:01:41 +0800
+Subject: [PATCH] crimson/seastore: make RecordSubmitter::wait_available()
+ idempotent
+
+Under sustained 4K randwrite workloads that roll journal segments
+frequently, crimson-osd hits
+```
+    crimson/os/seastore/journal/record_submitter.cc:198:
+    FAILED ceph_assert(!is_available())
+```
+and, in release builds without assertions, a downstream
+`boost::throw_exception<std::length_error>` from
+`seastar::shared_promise::get_shared_future()` called on a
+disengaged `std::optional` in the same code path.
+
+`RecordSubmitter::roll_segment()` arms wait_available_promise on entry,
+then chains `journal_allocator.roll().safe_then(...)` whose continuation
+sets the promise's value and resets the optional. The background
+continuation can resolve before the subsequent `wait_available()` call
+is entered -- the optional gets reset, `is_available()` becomes true
+again, and `wait_available()`'s `assert(!is_available())` fires. The
+brittle invariant being assumed
+
+> .safe_then's continuation will not run before its outer call returns
+
+is not part of seastar's contract.
+
+Honour the documented contract instead.  record_submitter.h
+says:
+
+> wait for available if cannot submit, should check
+> is_available() again when the future is resolved.
+
+The postcondition is "available when resolved"; the precondition
+"unavailable when called" was incidental.  Make `wait_available()`
+idempotent: if `is_available()` is already true on entry, return a
+ready future immediately. All three external callers
+- `RecordSubmitter::roll_segment`
+- `CircularBoundedJournal::submit_record`
+- `SegmentedOolWriter::do_write`
+
+re-check `is_available()` on the next iteration or in the chained
+continuation and dispatch correctly.
+
+Validated by runing a 96-job fio randwrite bench to confirm
+the fix in operation; pre-patch the assert fires within ~30 min
+and kills the OSD.
+
+Signed-off-by: Kefu Chai <k.chai@proxmox.com>
+---
+ src/crimson/os/seastore/journal/record_submitter.cc | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/src/crimson/os/seastore/journal/record_submitter.cc b/src/crimson/os/seastore/journal/record_submitter.cc
+index 63699e65a5044..b6d22de97e688 100644
+--- a/src/crimson/os/seastore/journal/record_submitter.cc
++++ b/src/crimson/os/seastore/journal/record_submitter.cc
+@@ -195,11 +195,21 @@ RecordSubmitter::wa_ertr::future<>
+ RecordSubmitter::wait_available()
+ {
+   LOG_PREFIX(RecordSubmitter::wait_available);
+-  assert(!is_available());
+   if (has_io_error) {
+     ERROR("{} I/O is failed before wait", get_name());
+     return crimson::ct_error::input_output_error::make();
+   }
++  if (is_available()) {
++    // The continuation that resolves wait_available_promise can
++    // run before this function is entered -- e.g. from
++    // roll_segment() after the chained
++    // journal_allocator.roll().safe_then(...) completes inline.
++    // In that case there is nothing left to wait for; honour the
++    // documented "check is_available() again when the future is
++    // resolved" contract by returning a successful no-op.
++    DEBUG("{} already available", get_name());
++    return wa_ertr::now();
++  }
+   return wait_available_promise->get_shared_future(
+   ).then([FNAME, this]() -> wa_ertr::future<> {
+     if (has_io_error) {

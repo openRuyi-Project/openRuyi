@@ -1,3 +1,15 @@
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Subject: [PATCH] rgw/dbstore: declare dbstore_lib STATIC and link global
+
+Same class of problem as 2005-os-memstore-static.patch.  Under openRuyi's
+%cmake (BUILD_SHARED_LIBS=ON) dbstore_lib becomes SHARED and forms a
+cmake-rejected dependency cycle with rgw_common; declare it STATIC so the
+build configures, and add `global` to its link libraries.
+
+openRuyi-specific, not for upstream.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
 --- ceph-18.0.0-3078-gc4847bf8/src/rgw/driver/dbstore/CMakeLists.txt.orig	2023-05-10 08:23:50.000000000 -0400
 +++ ceph-18.0.0-3078-gc4847bf8/src/rgw/driver/dbstore/CMakeLists.txt	2023-05-11 08:21:13.794152904 -0400
 @@ -24,7 +24,7 @@

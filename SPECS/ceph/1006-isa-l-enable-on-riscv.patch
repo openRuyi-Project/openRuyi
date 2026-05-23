@@ -1,7 +1,14 @@
-From 975121604eebb8da38d26a7a91e0f85e243f4903 Mon Sep 17 00:00:00 2001
+From fbcd8a4a37e02a67a29928160cfe79be116a94aa Mon Sep 17 00:00:00 2001
 From: Sun Yuechi <sunyuechi@iscas.ac.cn>
-Date: Sun, 29 Mar 2026 21:47:47 +0800
+Date: Mon, 25 May 2026 15:07:36 +0800
 Subject: [PATCH] isa-l: enable on RISC-V
+
+ISA-L v2.32.0 added RISC-V support. Enable the ISA-L erasure code
+plugin and the zlib compressor on RISC-V when RVV is available.
+
+RVV is detected via the existing ceph_arch_riscv_probe() path added
+in 01dc12ad565, so the same Linux 6.5+ requirement applies; on older
+kernels the RVV path stays disabled.
 
 Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
 ---
@@ -22,8 +29,8 @@ index 4cc9f4a726ce5..2270a90671134 100644
 
  # Set WITH_EC_ISA_PLUGIN early so it's available when processing common/options
  # This must be set before add_subdirectory(common) is called
--if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD)
-+if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD OR HAVE_RISCV_RVV)
+-if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD OR HAS_ALTIVEC)
++if(HAVE_NASM_X64_AVX2 OR HAVE_ARMV8_SIMD OR HAS_ALTIVEC OR HAVE_RISCV_RVV)
    set(WITH_EC_ISA_PLUGIN TRUE CACHE BOOL "")
  endif()
 

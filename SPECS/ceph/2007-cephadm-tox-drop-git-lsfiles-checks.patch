@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 10 May 2026 16:06:17 +0800
+Subject: [PATCH] cephadm: drop tox flake8 git ls-files registry assertions
+
+The flake8 env in src/cephadm/tox.ini runs two
+  test $(git ls-files ... | xargs grep docker.io/quay.io | wc -l) == N
+assertions. They need a .git dir, which a release tarball lacks, so
+run-tox-cephadm fails on a tarball build. The checks only guard against
+new container-registry refs in dev PRs and add no value on a frozen
+tarball -- the in-tree comment already anticipates downstream tweaks.
+Pure downstream-tarball issue, no upstream tracker.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/cephadm/tox.ini | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/cephadm/tox.ini b/src/cephadm/tox.ini
+index 13104797d..9d86aecf1 100644
+--- a/src/cephadm/tox.ini
++++ b/src/cephadm/tox.ini
+@@ -58,10 +58,6 @@ deps =
+     flake8-quotes
+ commands =
+     flake8 --config=tox.ini {posargs:cephadm.py cephadmlib}
+-    bash -c 'test $(git ls-files 'cephadm.py' 'cephadmlib/*.py' | sort -u | xargs grep "docker.io" | wc -l) == 1'
+-    bash -c 'test $(git ls-files 'cephadm.py' 'cephadmlib/*.py' | sort -u | xargs grep "quay.io" | wc -l) == 7'
+-# Downstream distributions may choose to alter this "docker.io" number,
+-# to make sure no new references to docker.io are creeping in unnoticed.
+
+ # coverage env is intentionally left out of the envlist. It is here for developers
+ # to run locally to generate and review test coverage of cephadm.

@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 10 May 2026 16:06:17 +0800
+Subject: [PATCH] monitoring/ceph-mixin: bump pylint to 2.17.7 for Python 3.11+
+
+pylint 2.6.0 pulls astroid 2.5 -> wrapt 1.12.1, whose decorators.py does
+`from inspect import ... formatargspec`.  formatargspec was removed in
+Python 3.11, so *importing* pylint (e.g. when `tox -e lint` runs it)
+aborts on 3.11+ with:
+
+  ImportError: cannot import name 'formatargspec' from 'inspect'
+
+pip install itself succeeds; the failure is at import time, not at venv
+setup.
+
+pylint 2.17.7 (last 2.x) pulls wrapt 1.17.x, which is Python 3.11+
+compatible, and avoids the checker renames pylint 3.x would force on
+.pylintrc.  A few removed python3-* porting options in .pylintrc now
+emit useless-option-value warnings but do not fail the run.
+
+Scope: this restores pylint usability on 3.11/3.12.  On 3.13 the astroid
+2.15 that 2.x pins still lacks PEP 695 `type` support, so fully clean
+linting there would need pylint 3.x.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ monitoring/ceph-mixin/requirements-lint.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/monitoring/ceph-mixin/requirements-lint.txt b/monitoring/ceph-mixin/requirements-lint.txt
+index 8c7219897..3c5b039f2 100644
+--- a/monitoring/ceph-mixin/requirements-lint.txt
++++ b/monitoring/ceph-mixin/requirements-lint.txt
+@@ -11,7 +11,7 @@ dataclasses==0.6
+ types-dataclasses==0.6.1
+ six==1.16.0
+ toml==0.10.2
+-pylint==2.6.0
++pylint==2.17.7
+ isort==5.10.0
+ mypy==0.910
+ mypy-extensions==0.4.3

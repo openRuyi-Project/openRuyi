@@ -1,0 +1,27 @@
+From 5a83c603876ad5b1fd8bd71044b624e9819a7832 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 29 May 2026 16:15:27 +0800
+Subject: [PATCH] test/mds: don't drop await_idle_v under NDEBUG
+
+await_idle_v() is wrapped in assert(), so with NDEBUG it is never
+called and the test reads a default-constructed ack, racing the agent
+thread. Use EXPECT_TRUE() like the rest of the file.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/test/mds/TestQuiesceAgent.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/test/mds/TestQuiesceAgent.cc b/src/test/mds/TestQuiesceAgent.cc
+index aa108075f..7940d8a50 100644
+--- a/src/test/mds/TestQuiesceAgent.cc
++++ b/src/test/mds/TestQuiesceAgent.cc
+@@ -192,7 +192,7 @@ class QuiesceAgentTest : public testing::Test {
+       if (WaitForAgent::No == wait) {
+         return std::nullopt;
+       } else {
+-        assert(await_idle_v(v.set_version));
++        EXPECT_TRUE(await_idle_v(v.set_version));
+         return async_ack;
+       }
+     }

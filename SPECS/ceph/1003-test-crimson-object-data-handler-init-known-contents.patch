@@ -1,0 +1,26 @@
+From 980177003c23fda412e07afa84524b5e990f9b8c Mon Sep 17 00:00:00 2001
+From: Xuehan Xu <xuxuehan@qianxin.com>
+Date: Thu, 2 Apr 2026 15:47:27 +0800
+Subject: [PATCH] test/crimson/seastore/test_object_data_handler: always
+ initialize the object's known_contents
+
+Signed-off-by: Xuehan Xu <xuxuehan@qianxin.com>
+---
+ src/test/crimson/seastore/test_object_data_handler.cc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/test/crimson/seastore/test_object_data_handler.cc b/src/test/crimson/seastore/test_object_data_handler.cc
+index 88a55e29b38..181c3b27ccb 100644
+--- a/src/test/crimson/seastore/test_object_data_handler.cc
++++ b/src/test/crimson/seastore/test_object_data_handler.cc
+@@ -136,6 +136,7 @@ struct object_data_handler_test_t:
+ 	DEFAULT_OBJECT_METADATA_RESERVATION);
+       size = 0;
+       known_contents = buffer::create(4<<20 /* 4MB */);
++      known_contents.zero(true);
+     }
+ 
+     void clear() {
+-- 
+2.54.0
+

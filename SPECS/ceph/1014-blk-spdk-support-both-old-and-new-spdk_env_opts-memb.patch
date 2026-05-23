@@ -1,0 +1,55 @@
+From d18ffa868fde6af02548404d95c7c0fe8947ddc6 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 30 May 2026 14:11:11 +0800
+Subject: [PATCH] blk/spdk: support both old and new spdk_env_opts member names
+
+SPDK 21.01 renamed two struct spdk_env_opts members: pci_whitelist ->
+pci_allowed and master_core -> main_core. Guard the assignments in
+NVMEDevice with SPDK_VERSION.
+
+pci_whitelist -> pci_allowed:  https://github.com/spdk/spdk/commit/4a6a2824119b
+master_core -> main_core:      https://github.com/spdk/spdk/commit/fe137c8970bf
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/blk/spdk/NVMEDevice.cc | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/blk/spdk/NVMEDevice.cc b/src/blk/spdk/NVMEDevice.cc
+index 1f1c285ed88..dea2312156c 100644
+--- a/src/blk/spdk/NVMEDevice.cc
++++ b/src/blk/spdk/NVMEDevice.cc
+@@ -31,6 +31,7 @@
+ #include <boost/intrusive/slist.hpp>
+ 
+ #include <spdk/nvme.h>
++#include <spdk/version.h>
+ 
+ #include "include/intarith.h"
+ #include "include/stringify.h"
+@@ -596,14 +597,22 @@ int NVMEManager::try_get(const spdk_nvme_transport_id& trid, SharedDriverData **
+         int rc = spdk_pci_addr_parse(&addr, trid.traddr);
+         if (!rc) {
+           local_pci_device = true;
++#if SPDK_VERSION >= SPDK_VERSION_NUM(21, 1, 0)
++          opts.pci_allowed = &addr;
++#else
+           opts.pci_whitelist = &addr;
++#endif
+           opts.num_pci_addr = 1;
+         }
+ 
+ 	spdk_env_opts_init(&opts);
+         opts.name = "nvme-device-manager";
+         opts.core_mask = coremask_arg.c_str();
++#if SPDK_VERSION >= SPDK_VERSION_NUM(21, 1, 0)
++        opts.main_core = m_core_arg;
++#else
+         opts.master_core = m_core_arg;
++#endif
+         opts.mem_size = mem_size_arg;
+         spdk_env_init(&opts);
+         spdk_unaffinitize_thread();
+-- 
+2.54.0
+

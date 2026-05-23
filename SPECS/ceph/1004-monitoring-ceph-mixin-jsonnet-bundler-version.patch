@@ -1,10 +1,9 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From dada074b3437b2696479496b93ab50f9da598662 Mon Sep 17 00:00:00 2001
 From: Sun Yuechi <sunyuechi@iscas.ac.cn>
-Date: Sun, 10 May 2026 16:06:17 +0800
-Subject: [PATCH] monitoring/ceph-mixin: bump jsonnet-bundler JSONNET_VERSION
- to v0.5.1
+Date: Fri, 29 May 2026 14:48:07 +0800
+Subject: [PATCH] monitoring/ceph-mixin: bump jsonnet-bundler to v0.6.0
 
-v0.4.0 lacks x/sys riscv64 stubs needed for `go install` on riscv64.
+v0.4.0 fails to build on riscv64; bump to v0.6.0 to fix it.
 
 Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
 ---
@@ -19,7 +18,7 @@ index d713cffb8..a6be64288 100755
  #!/bin/sh -ex
 
 -JSONNET_VERSION="v0.4.0"
-+JSONNET_VERSION="v0.5.1"
++JSONNET_VERSION="v0.6.0"
  OUTPUT_DIR=${1:-$(pwd)}
 
  git clone -b ${JSONNET_VERSION} --depth 1 https://github.com/jsonnet-bundler/jsonnet-bundler

@@ -1,0 +1,39 @@
+From 68204500490dc961d0f370b36487543af8458c8c Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 31 May 2026 17:04:09 +0800
+Subject: [PATCH] compressor/zstd: include <zstd.h> instead of the bundled path
+
+ZstdCompressor.h hard-codes #include "zstd/lib/zstd.h". That path only
+resolves because the top-level include_directories(src) puts the bundled
+submodule directory on the search path, so it silently depends on
+src/zstd being checked out. With -DWITH_SYSTEM_ZSTD=ON the bundled
+submodule is absent, the relative include fails and the build breaks.
+
+ceph_zstd already links Zstd::Zstd, and both backends export the
+directory holding zstd.h through INTERFACE_INCLUDE_DIRECTORIES:
+src/zstd/lib for the bundled build (BuildZstd.cmake) and
+${Zstd_INCLUDE_DIR} for the system one (FindZstd.cmake). Including
+<zstd.h> resolves through that interface in both modes and no longer
+depends on the bundled directory being present.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/compressor/zstd/ZstdCompressor.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/compressor/zstd/ZstdCompressor.h b/src/compressor/zstd/ZstdCompressor.h
+index 954691e1b48..831cabbe7f1 100644
+--- a/src/compressor/zstd/ZstdCompressor.h
++++ b/src/compressor/zstd/ZstdCompressor.h
+@@ -17,7 +17,7 @@
+ #define CEPH_ZSTDCOMPRESSOR_H
+ 
+ #define ZSTD_STATIC_LINKING_ONLY
+-#include "zstd/lib/zstd.h"
++#include <zstd.h>
+ 
+ #include "include/buffer.h"
+ #include "include/encoding.h"
+-- 
+2.54.0
+

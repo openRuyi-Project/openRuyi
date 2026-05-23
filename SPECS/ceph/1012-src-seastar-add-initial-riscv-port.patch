@@ -1,0 +1,80 @@
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Subject: [PATCH] src/seastar: add initial RISC-V port
+
+Rebased from the standalone seastar 25.05.0 patch onto ceph's
+bundled seastar fork (ceph/seastar @ 36c62083, 2024-07-07).
+
+The reactor.cc sigsegv_action hunk from the standalone patch is
+dropped because this older fork's signal handler does not extract
+the faulting PC from ucontext at all (the per-arch ip extraction
+landed in scylladb/seastar after the fork point).
+
+- cacheline: 64B (typical for current Linux-capable RV cores)
+- memory: huge_page_size = 2 MiB on RV64 Linux
+- spinlock: cpu_relax() emits the Zihintpause `pause` hint via raw
+  encoding so older assemblers still build (NOP on cores without it)
+- thread: .cfi_undefined ra so unwinders stop at thread bottoms
+
+---
+ src/seastar/include/seastar/core/cacheline.hh |  2 ++
+ src/seastar/include/seastar/core/memory.hh    |  2 ++
+ src/seastar/include/seastar/util/spinlock.hh  | 10 ++++++++++
+ src/seastar/src/core/thread.cc                |  2 ++
+ 4 files changed, 16 insertions(+)
+
+diff --git a/src/seastar/include/seastar/core/cacheline.hh b/src/seastar/include/seastar/core/cacheline.hh
+--- a/src/seastar/include/seastar/core/cacheline.hh
++++ b/src/seastar/include/seastar/core/cacheline.hh
+@@ -40,6 +40,8 @@ constexpr size_t cache_line_size =
+     128;
+ #elif defined(__aarch64__)
+     128; // from Linux, may vary among different microarchitetures?
++#elif defined(__riscv)
++    64; // typical for current Linux-capable RISC-V cores (SiFive U7x, T-Head C9xx, SG2042/SG2044)
+ #else
+ #error "cache_line_size not defined for this architecture"
+ #endif
+diff --git a/src/seastar/include/seastar/core/memory.hh b/src/seastar/include/seastar/core/memory.hh
+--- a/src/seastar/include/seastar/core/memory.hh
++++ b/src/seastar/include/seastar/core/memory.hh
+@@ -140,6 +140,8 @@ static constexpr size_t huge_page_size =
+     1 << 21; // 2M
+ #elif defined(__PPC__)
+     1 << 24; // 16M
++#elif defined(__riscv)
++    1 << 21; // 2M (Sv39/Sv48 PMD leaf on RV64 Linux)
+ #else
+ #error "Huge page size is not defined for this architecture"
+ #endif
+diff --git a/src/seastar/include/seastar/util/spinlock.hh b/src/seastar/include/seastar/util/spinlock.hh
+--- a/src/seastar/include/seastar/util/spinlock.hh
++++ b/src/seastar/include/seastar/util/spinlock.hh
+@@ -67,6 +67,16 @@ inline void cpu_relax() {
+     __asm__ volatile("yield");
+ }
+ 
++#elif defined(__riscv)
++
++[[gnu::always_inline]]
++inline void cpu_relax() {
++    // Zihintpause `pause` hint, encoded directly so old assemblers without
++    // Zihintpause support still build. On cores that don't implement the hint
++    // it decodes as a NOP (it's `fence w, 0` with rd=x0).
++    __asm__ volatile(".insn i 0x0F, 0, x0, x0, 0x010");
++}
++
+ #else
+ 
+ [[gnu::always_inline]]
+diff --git a/src/seastar/src/core/thread.cc b/src/seastar/src/core/thread.cc
+--- a/src/seastar/src/core/thread.cc
++++ b/src/seastar/src/core/thread.cc
+@@ -307,6 +307,8 @@ thread_context::main() {
+     asm(".cfi_undefined x30");
+ #elif defined(__s390x__)
+     asm(".cfi_undefined %r14");
++#elif defined(__riscv)
++    asm(".cfi_undefined ra");
+ #else
+     #warning "Backtracing from seastar threads may be broken"
+ #endif

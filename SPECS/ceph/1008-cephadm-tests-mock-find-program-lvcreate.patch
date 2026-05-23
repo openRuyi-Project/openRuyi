@@ -1,0 +1,34 @@
+From 4e4dd6b1cdfcccf57a2e3a1372dd640f33d56b26 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 29 May 2026 16:46:13 +0800
+Subject: [PATCH] cephadm/tests: mock find_program in test_container_engine
+
+test_container_engine mocks find_executable to keep command_check_host
+off the real host, but command_check_host looks up 'lvcreate' (and
+'systemctl') through find_program, which isn't mocked. So the test
+actually needs lvcreate installed and only passes where it is.
+
+Mock find_program too so the test doesn't depend on host binaries.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/cephadm/tests/test_cephadm.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/cephadm/tests/test_cephadm.py b/src/cephadm/tests/test_cephadm.py
+index ddb98c420..62305392b 100644
+--- a/src/cephadm/tests/test_cephadm.py
++++ b/src/cephadm/tests/test_cephadm.py
+@@ -2282,10 +2282,11 @@ exec /usr/bin/docker run --rm --ipc=host --stop-signal=SIGTERM --ulimit nofile=1
+
+ class TestCheckHost:
+
++    @mock.patch('cephadm.find_program', return_value='/usr/sbin/lvcreate')
+     @mock.patch('cephadm.find_executable', return_value='foo')
+     @mock.patch('cephadm.check_time_sync', return_value=True)
+     @mock.patch('cephadm.logger')
+-    def test_container_engine(self, _logger, _find_executable, _check_time_sync):
++    def test_container_engine(self, _logger, _find_executable, _check_time_sync, _find_program):
+         ctx = _cephadm.CephadmContext()
+
+         ctx.container_engine = None

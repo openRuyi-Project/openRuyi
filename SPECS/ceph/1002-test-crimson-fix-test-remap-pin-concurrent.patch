@@ -1,0 +1,41 @@
+From c82cd26ac4c64f7b307d5630a5bfb2204a8dc3b8 Mon Sep 17 00:00:00 2001
+From: Ronen Friedman <rfriedma@redhat.com>
+Date: Mon, 20 Apr 2026 15:32:32 +0000
+Subject: [PATCH] crimson/tests: fix test_remap_pin_concurrent
+
+The test failed in the following sequence:
+
+  1. 32 coroutines start in parallel, all calling try_get_pin(t, offset)
+     with the same offset
+  2. One coroutine succeeds in submit_transaction, which calls
+     test_mappings.consume(delta) and modifies the shared test_mappings
+  3. Other coroutines that haven't reached try_get_pin yet now hit the
+     assertion because offset no longer exists in test_mappings
+
+The fix is to add a guard before try_get_pin to check if test_mappings still
+contains the offset. If it doesn't, we can safely exit early since that
+means another coroutine already succeeded and modified the shared state.
+
+Signed-off-by: Ronen Friedman <rfriedma@redhat.com>
+---
+ src/test/crimson/seastore/test_transaction_manager.cc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/test/crimson/seastore/test_transaction_manager.cc b/src/test/crimson/seastore/test_transaction_manager.cc
+index dd54b77760f..c1ca8b5d3ba 100644
+--- a/src/test/crimson/seastore/test_transaction_manager.cc
++++ b/src/test/crimson/seastore/test_transaction_manager.cc
+@@ -1647,6 +1647,10 @@ struct transaction_manager_test_t :
+ 	    }
+ 
+ 	    auto t = create_transaction();
++	    if (!test_mappings.contains(offset, t.mapping_delta)) {
++	      early_exit++;
++	      return;
++	    }
+             auto last_pin = try_get_pin(t, offset);
+ 	    if (!last_pin || last_pin->get_length() != length) {
+ 	      early_exit++;
+-- 
+2.54.0
+
