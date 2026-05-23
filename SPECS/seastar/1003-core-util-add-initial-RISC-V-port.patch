@@ -1,0 +1,96 @@
+From 1078d9b506de0b4e5210eea9a2b96a7602700aa3 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 4 May 2026 20:55:01 +0800
+Subject: [PATCH] core, util: add initial RISC-V port
+
+- cacheline: 64B
+- memory: 2 MiB huge pages
+- spinlock: cpu_relax() emits Zihintpause `pause`
+- thread: .cfi_undefined ra to stop unwinders at thread bottom
+- reactor: read faulting PC from uc_mcontext.__gregs[REG_PC]
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ include/seastar/core/cacheline.hh |  2 ++
+ include/seastar/core/memory.hh    |  2 ++
+ include/seastar/util/spinlock.hh  | 10 ++++++++++
+ src/core/reactor.cc               |  2 ++
+ src/core/thread.cc                |  2 ++
+ 5 files changed, 18 insertions(+)
+
+diff --git a/include/seastar/core/cacheline.hh b/include/seastar/core/cacheline.hh
+index b4e72c85..402a73d6 100644
+--- a/include/seastar/core/cacheline.hh
++++ b/include/seastar/core/cacheline.hh
+@@ -36,6 +36,8 @@ constexpr size_t cache_line_size =
+     128;
+ #elif defined(__aarch64__)
+     128; // from Linux, may vary among different microarchitetures?
++#elif defined(__riscv)
++    64; // typical for current Linux-capable RISC-V cores (SiFive U7x, T-Head C9xx, SG2042/SG2044)
+ #else
+ #error "cache_line_size not defined for this architecture"
+ #endif
+diff --git a/include/seastar/core/memory.hh b/include/seastar/core/memory.hh
+index 05c66bcc..05dcf20a 100644
+--- a/include/seastar/core/memory.hh
++++ b/include/seastar/core/memory.hh
+@@ -137,6 +137,8 @@ constexpr inline size_t huge_page_size =
+     1 << 21; // 2M
+ #elif defined(__PPC__)
+     1 << 24; // 16M
++#elif defined(__riscv)
++    1 << 21; // 2M (Sv39/Sv48 PMD leaf on RV64 Linux)
+ #else
+ #error "Huge page size is not defined for this architecture"
+ #endif
+diff --git a/include/seastar/util/spinlock.hh b/include/seastar/util/spinlock.hh
+index c985b94a..c5468782 100644
+--- a/include/seastar/util/spinlock.hh
++++ b/include/seastar/util/spinlock.hh
+@@ -64,6 +64,16 @@ inline void cpu_relax() {
+     __asm__ volatile("yield");
+ }
+ 
++#elif defined(__riscv)
++
++[[gnu::always_inline]]
++inline void cpu_relax() {
++    // Zihintpause `pause` hint, encoded directly so old assemblers without
++    // Zihintpause support still build. On cores that don't implement the hint
++    // it decodes as a NOP (it's `fence w, 0` with rd=x0).
++    __asm__ volatile(".insn i 0x0F, 0, x0, x0, 0x010");
++}
++
+ #else
+ 
+ [[gnu::always_inline]]
+diff --git a/src/core/reactor.cc b/src/core/reactor.cc
+index f33fa666..723a8ab2 100644
+--- a/src/core/reactor.cc
++++ b/src/core/reactor.cc
+@@ -4260,6 +4260,8 @@ static void sigsegv_action(siginfo_t *info, ucontext_t* uc) noexcept {
+         ip = uc->uc_mcontext.gregs[REG_RIP];
+ #elif defined(__aarch64__)
+         ip = uc->uc_mcontext.pc;
++#elif defined(__riscv)
++        ip = uc->uc_mcontext.__gregs[REG_PC]; // REG_PC == 0 on Linux RV
+ #else
+         ip = 0xBAD;
+ #endif
+diff --git a/src/core/thread.cc b/src/core/thread.cc
+index 50edec80..ef35d9cc 100644
+--- a/src/core/thread.cc
++++ b/src/core/thread.cc
+@@ -300,6 +300,8 @@ thread_context::main() {
+     asm(".cfi_undefined x30");
+ #elif defined(__s390x__)
+     asm(".cfi_undefined %r14");
++#elif defined(__riscv)
++    asm(".cfi_undefined ra");
+ #else
+     #warning "Backtracing from seastar threads may be broken"
+ #endif
+-- 
+2.54.0
+

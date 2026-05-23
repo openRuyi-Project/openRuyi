@@ -1,0 +1,110 @@
+From 2cbe79c6622822082fb39ec5ee0346a1f9b24c32 Mon Sep 17 00:00:00 2001
+From: Travis Downs <travis.downs@redpanda.com>
+Date: Wed, 20 May 2026 14:31:04 -0400
+Subject: [PATCH] http: declare unsigned-char alphabet in ragel parsers
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+ragel 6.10 -G2 generates incorrect code for the obs_text = 0x80..0xff
+range when the build host's default `char` is unsigned (notably
+aarch64). The state machine collapses byte 127 (DEL) and the
+legitimately allowed obs_text range into a single forbidden interval
+(`127 <= *p -> goto error`), so any HTTP field value containing
+bytes 0x80..0xff is rejected even though RFC 7230 §3.2.6 permits
+them.
+
+x86_64 happens to produce correct code via a different range-merging
+path. The .rl source is identical; only the host's signed-or-
+unsigned-char default flips ragel's codegen.
+
+The fix uses two ragel directives per machine:
+
+  alphtype unsigned char;       # picks the correct codegen path
+  getkey ((unsigned char)(*p)); # forces fetched bytes unsigned
+
+`alphtype unsigned char;` is the load-bearing fix: it makes ragel
+treat the alphabet as 0..255 regardless of host, picking the
+correct emit that lists `case 127: goto st0` plus a 0..31 ctrl-range
+check while leaving 0x80..0xff fall through to the accept branch.
+
+`getkey ((unsigned char)(*p))` is required because ragel now emits
+character literals with the `u` suffix (e.g. `case 13u:`). On x86 the
+input pointer's `*p` is signed char, and comparing a signed-char to an
+unsigned literal triggers -Wsign-compare which seastar promotes to an
+error. The getkey directive casts the fetched byte to unsigned so the
+comparisons are unsigned on both sides.
+
+Affects seastar's HTTP server (http_request_parser via httpd.hh) and
+HTTP client (http_response_parser via client.cc) on arm64; the
+chunked-transfer trailer parser (http_chunk_trailer_parser) inherits
+the same fix.
+
+Unblocks three existing tests that fail on aarch64 once the obs_text
+input is exercised:
+  - tests/unit/chunk_parsers_test.cc :: test_trailer_headers_parsing
+  - tests/unit/request_parser_test.cc :: test_header_parsing
+  - tests/unit/httpd_test.cc :: test_full_chunk_format
+
+Fixes scylladb/seastar#3413.
+---
+ src/http/chunk_parsers.rl   | 6 ++++++
+ src/http/request_parser.rl  | 3 +++
+ src/http/response_parser.rl | 3 +++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/src/http/chunk_parsers.rl b/src/http/chunk_parsers.rl
+index 1a4d3c88..e5a25c51 100644
+--- a/src/http/chunk_parsers.rl
++++ b/src/http/chunk_parsers.rl
+@@ -32,6 +32,9 @@ namespace seastar {
+ %%{
+ 
+ access _fsm_;
++# alphtype + getkey: workaround for #3413
++alphtype unsigned char;
++getkey ((unsigned char)(*p));
+ 
+ action mark {
+     g.mark_start(p);
+@@ -152,6 +155,9 @@ public:
+ %%{
+ 
+ access _fsm_;
++# alphtype + getkey: workaround for #3413
++alphtype unsigned char;
++getkey ((unsigned char)(*p));
+ 
+ action mark {
+     g.mark_start(p);
+diff --git a/src/http/request_parser.rl b/src/http/request_parser.rl
+index 6265288e..2299839d 100644
+--- a/src/http/request_parser.rl
++++ b/src/http/request_parser.rl
+@@ -33,6 +33,9 @@ namespace seastar {
+ %%{
+ 
+ access _fsm_;
++# alphtype + getkey: workaround for #3413
++alphtype unsigned char;
++getkey ((unsigned char)(*p));
+ 
+ action mark {
+     g.mark_start(p);
+diff --git a/src/http/response_parser.rl b/src/http/response_parser.rl
+index 27b9b7f4..a9a9045b 100644
+--- a/src/http/response_parser.rl
++++ b/src/http/response_parser.rl
+@@ -35,6 +35,9 @@ namespace seastar {
+ %%{
+ 
+ access _fsm_;
++# alphtype + getkey: workaround for #3413
++alphtype unsigned char;
++getkey ((unsigned char)(*p));
+ 
+ action mark {
+     g.mark_start(p);
+-- 
+2.54.0
+

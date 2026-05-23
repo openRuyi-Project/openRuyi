@@ -1,0 +1,58 @@
+From 753236bff1babac6c2312d96c33e40907316bf1e Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 31 May 2026 11:03:01 +0800
+Subject: [PATCH] tests: avoid printing std::vector in BOOST_CHECK_EQUAL
+
+With -DSeastar_DEPRECATED_OSTREAM_FORMATTERS=OFF, std::vector has no
+operator<<, so BOOST_CHECK_EQUAL on a vector fails to build. Mark the
+types with BOOST_TEST_DONT_PRINT_LOG_VALUE.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ apps/memcached/tests/test_ascii_parser.cc | 2 ++
+ tests/unit/simple_stream_test.cc          | 2 ++
+ tests/unit/websocket_test.cc              | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/apps/memcached/tests/test_ascii_parser.cc b/apps/memcached/tests/test_ascii_parser.cc
+index 2a7fb935..7bd58a65 100644
+--- a/apps/memcached/tests/test_ascii_parser.cc
++++ b/apps/memcached/tests/test_ascii_parser.cc
+@@ -27,6 +27,8 @@
+ #include "ascii.hh"
+ #include <seastar/core/loop.hh>
+ 
++BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<seastar::sstring>)
++
+ using namespace seastar;
+ using namespace net;
+ using namespace memcache;
+diff --git a/tests/unit/simple_stream_test.cc b/tests/unit/simple_stream_test.cc
+index cb25f555..849978b9 100644
+--- a/tests/unit/simple_stream_test.cc
++++ b/tests/unit/simple_stream_test.cc
+@@ -24,6 +24,8 @@
+ #include <boost/test/unit_test.hpp>
+ #include <seastar/core/simple-stream.hh>
+ 
++BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<char>)
++
+ using namespace seastar;
+ 
+ template<typename Input, typename Output>
+diff --git a/tests/unit/websocket_test.cc b/tests/unit/websocket_test.cc
+index 2db1f8e1..9c3986a8 100644
+--- a/tests/unit/websocket_test.cc
++++ b/tests/unit/websocket_test.cc
+@@ -9,6 +9,8 @@
+ #include <seastar/util/defer.hh>
+ #include "loopback_socket.hh"
+ 
++BOOST_TEST_DONT_PRINT_LOG_VALUE(std::vector<seastar::sstring>)
++
+ using namespace seastar;
+ using namespace seastar::experimental;
+ using namespace std::literals::string_view_literals;
+-- 
+2.54.0
+
