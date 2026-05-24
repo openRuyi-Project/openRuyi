@@ -1,19 +1,22 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 %bcond doc 0
 
 Name:           linux-tools
-Version:        7.0.9
+Version:        7.0.10
 Release:        %autorelease
 Summary:        Set of tools for the Linux kernel
 License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-only
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-#!RemoteAsset:  sha256:ac07acdf76cf4621cc5187a2670270a1a699533c8a6b225e4878c416ad83f1c4
+#!RemoteAsset:  sha256:094977eb62c20e3d1939fe81a92958a1f987f339446e532fa86963b2804e32dc
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
+
+Patch0001:      0001-perf-riscv-Fix-discarded-const-qualifier-in-_get_.patch
 
 %if %{with doc}
 BuildRequires:  asciidoc
