@@ -55,7 +55,10 @@ functionality.
 autoreconf -fiv
 
 %install -a
-ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
+ln -sfn --relative "%{buildroot}%{_bindir}/ntfs-3g" "%{buildroot}%{_sbindir}/mount.ntfs-3g"
+ln -sfn --relative "%{buildroot}%{_bindir}/lowntfs-3g" "%{buildroot}%{_sbindir}/mount.lowntfs-3g"
+ln -sfn --relative "%{buildroot}%{_sbindir}/mkntfs" "%{buildroot}%{_sbindir}/mkfs.ntfs"
+ln -sfn mount.ntfs-3g "%{buildroot}%{_sbindir}/mount.ntfs"
 
 %files
 %doc AUTHORS ChangeLog CREDITS NEWS README
@@ -98,7 +101,7 @@ ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
 %{_mandir}/man8/ntfs-3g*
 %{_mandir}/man8/mkntfs.8*
 %{_mandir}/man8/mkfs.ntfs.8*
-%{_mandir}/man8/ntfs[^m][^o]*.8*
+%{_mandir}/man8/ntfs[^-m][^o]*.8*
 
 %files devel
 %{_includedir}/ntfs-3g/
