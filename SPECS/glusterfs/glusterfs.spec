@@ -38,7 +38,6 @@ BuildRequires:  python3
 BuildRequires:  pkgconfig(readline)
 BuildRequires:  rpcgen
 BuildRequires:  systemd-rpm-macros
-BuildRequires:  pkgconfig(fuse)
 BuildRequires:  pkgconfig(libcrypto)
 BuildRequires:  pkgconfig(libtirpc)
 BuildRequires:  pkgconfig(liburcu)
