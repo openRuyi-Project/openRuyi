@@ -17,12 +17,14 @@ VCS:            git:https://github.com/mpartel/bindfs
 Source:         https://bindfs.org/downloads/bindfs-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildRequires:  pkgconfig(fuse)
+BuildOption(conf):  --with-fuse3
+
+BuildRequires:  pkgconfig(fuse3)
 BuildRequires:  make
 BuildRequires:  autoconf
 BuildRequires:  automake
 
-Requires:       fuse
+Requires:       fuse3
 
 %description
 bindfs is a FUSE filesystem for mirroring a directory to another directory
