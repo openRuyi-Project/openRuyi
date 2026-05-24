@@ -24,7 +24,6 @@ BuildOption(install):  LIBDIR=%{_libdir}
 
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(libattr)
-BuildRequires:  pkgconfig(fuse)
 BuildRequires:  libtool
 
 %description
