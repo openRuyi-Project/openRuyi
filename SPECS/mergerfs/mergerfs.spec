@@ -11,7 +11,7 @@ Release:        %{autorelease}
 Summary:        A FUSE union filesystem
 License:        MIT
 URL:            https://github.com/trapexit/mergerfs
-#!RemoteAsset
+#!RemoteAsset:  sha256:d3ac8c07af0d0667f825bc50796896696d92734dafea962884eecd983f255dca
 Source0:        https://github.com/trapexit/mergerfs/releases/download/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -46,4 +46,4 @@ behavior.
 %{_libdir}/mergerfs
 
 %changelog
-%{?autochangelog}
+%autochangelog
