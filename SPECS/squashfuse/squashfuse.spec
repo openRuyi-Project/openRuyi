@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        FUSE filesystem to mount squashfs archives
 License:        BSD-2-Clause
 URL:            https://github.com/vasi/squashfuse
-#!RemoteAsset
+#!RemoteAsset:  sha256:7730066d1e9baf0084c71674d168331296921e0d7ae0f34de7307744be4ed568
 Source:         https://github.com/vasi/squashfuse/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -66,4 +66,4 @@ developing applications that use squashfuse.
 %{_libdir}/libsquashfuse_ll.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
