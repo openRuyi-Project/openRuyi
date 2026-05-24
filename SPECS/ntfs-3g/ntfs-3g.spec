@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        NTFS userspace driver for Linux
 License:        GPL-2.0-or-later
 URL:            https://github.com/tuxera/ntfs-3g
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bd7749ea9d8534c9f0664d48b576e90b96d45ec8803c9427f6ffaa2f0dde299
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz#%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -107,4 +107,4 @@ ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
 %{_libdir}/pkgconfig/libntfs-3g.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
