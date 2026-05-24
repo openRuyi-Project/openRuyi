@@ -40,7 +40,9 @@ behavior.
 %files
 %doc README.md
 %{_bindir}/*
+%if "%{_sbindir}" != "%{_bindir}"
 %{_sbindir}/*
+%endif
 %{_mandir}/man1/*.1*
 %{_libdir}/mergerfs
 
