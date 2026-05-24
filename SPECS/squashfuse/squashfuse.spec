@@ -24,7 +24,7 @@ BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  gcc
-BuildRequires:  fuse-devel
+BuildRequires:  pkgconfig(fuse3)
 BuildRequires:  pkgconfig(libattr)
 BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(libzstd)
