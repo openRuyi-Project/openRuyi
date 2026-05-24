@@ -24,14 +24,13 @@ BuildOption(conf):  --enable-extras
 BuildOption(conf):  --enable-crypto
 BuildOption(conf):  --enable-quarantined
 BuildOption(conf):  --exec-prefix=/
-BuildOption(conf):  --with-fuse=external
+BuildOption(conf):  --with-fuse=internal
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  pkgconfig
-BuildRequires:  pkgconfig(fuse)
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(hwinfo)
 BuildRequires:  pkgconfig(libgcrypt)
