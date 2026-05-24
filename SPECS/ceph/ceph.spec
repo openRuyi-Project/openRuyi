@@ -412,7 +412,7 @@ and Kubernetes events integration.
 
 %package        fuse
 Summary:        Ceph fuse-based client
-Requires:       fuse
+Requires:       fuse3
 Requires:       python3
 
 %description    fuse
