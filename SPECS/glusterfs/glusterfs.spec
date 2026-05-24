@@ -90,6 +90,18 @@ chmod -v u-s "%{buildroot}/%{_bindir}/fusermount-glusterfs"
 rm -fv "%{buildroot}/%{_bindir}/conf.py"
 rm -f "%{buildroot}/etc/bash_completion.d/gluster.bash"
 %fdupes %{buildroot}/%{_prefix}
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/gfind_missing_files/gfind_missing_files.sh" \
+    "%{buildroot}%{_bindir}/gfind_missing_files"
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/peer_eventsapi.py" \
+    "%{buildroot}%{_bindir}/gluster-eventsapi"
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/peer_georep-sshkey.py" \
+    "%{buildroot}%{_bindir}/gluster-georep-sshkey"
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/peer_mountbroker.py" \
+    "%{buildroot}%{_bindir}/gluster-mountbroker"
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/gfevents/glustereventsd.py" \
+    "%{buildroot}%{_bindir}/glustereventsd"
+ln -sfn --relative "%{buildroot}%{_libexecdir}/glusterfs/glusterfind/S57glusterfind-delete-post.py" \
+    "%{buildroot}%{_localstatedir}/lib/glusterd/hooks/1/delete/post/S57glusterfind-delete-post"
 %py3_shebang_fix .
 
 %post
