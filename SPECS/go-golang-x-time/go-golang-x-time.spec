@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,7 +15,7 @@ Summary:        Go supplementary time packages
 License:        BSD-3-Clause
 URL:            https://golang.org/x/time
 VCS:            git:https://github.com/golang/time
-#!RemoteAsset
+#!RemoteAsset:  sha256:beae412dac1d5dd931348f9c40c346b730330020172b12a8b529bf452a9da2fb
 Source0:        https://github.com/golang/time/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -23,14 +24,15 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/time) = %{version}
+Provides:       go(golang.org/x/time/rate) = %{version}
 
 %description
 Supplementary Go time packages.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
