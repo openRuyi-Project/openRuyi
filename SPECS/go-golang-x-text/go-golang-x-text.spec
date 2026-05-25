@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -20,7 +21,7 @@ Summary:        Go text processing support
 License:        BSD-3-Clause
 URL:            https://golang.org/x/text
 VCS:            git:https://github.com/golang/text
-#!RemoteAsset
+#!RemoteAsset:  sha256:593f4edcbb602157527fbe725ee5ca668cade3d33cd0d12d9f0b13ac1db50f7b
 Source0:        https://github.com/golang/text/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -36,15 +37,22 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/text) = %{version}
+Provides:       go(golang.org/x/text/encoding/charmap) = %{version}
+Provides:       go(golang.org/x/text/language) = %{version}
+Provides:       go(golang.org/x/text/message) = %{version}
+Provides:       go(golang.org/x/text/secure/bidirule) = %{version}
+Provides:       go(golang.org/x/text/transform) = %{version}
+Provides:       go(golang.org/x/text/unicode/bidi) = %{version}
+Provides:       go(golang.org/x/text/unicode/norm) = %{version}
 
 %description
 This repository provides text-related packages, such as character
 encodings, text transformations, and locale-specific text handling.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
