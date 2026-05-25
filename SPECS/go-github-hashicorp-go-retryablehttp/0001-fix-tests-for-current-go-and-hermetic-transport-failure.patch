@@ -1,0 +1,89 @@
+From 01ef9eb2d8aa20aff96930143430971dfae4f104 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 11 Jun 2026 17:11:35 +0800
+Subject: [PATCH] Fix tests for current Go and hermetic transport failure
+
+---
+ client_test.go       |  4 ++--
+ roundtripper_test.go | 30 ++++++++++++++----------------
+ 2 files changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/client_test.go b/client_test.go
+index c20dcb2..d62fbab 100644
+--- a/client_test.go
++++ b/client_test.go
+@@ -676,7 +676,7 @@ func testClientResponseLogHook(t *testing.T, l interface{}, buf *bytes.Buffer) {
+ 			successLog := "test_log_pass"
+ 			// Log something when we get a 200
+ 			if logger != nil {
+-				logger.Printf(successLog)
++				logger.Printf("%s", successLog)
+ 			} else {
+ 				buf.WriteString(successLog)
+ 			}
+@@ -688,7 +688,7 @@ func testClientResponseLogHook(t *testing.T, l interface{}, buf *bytes.Buffer) {
+ 			}
+ 			failLog := string(body)
+ 			if logger != nil {
+-				logger.Printf(failLog)
++				logger.Printf("%s", failLog)
+ 			} else {
+ 				buf.WriteString(failLog)
+ 			}
+diff --git a/roundtripper_test.go b/roundtripper_test.go
+index 8d468c9..4905201 100644
+--- a/roundtripper_test.go
++++ b/roundtripper_test.go
+@@ -11,7 +11,6 @@ import (
+ 	"net/http"
+ 	"net/http/httptest"
+ 	"net/url"
+-	"reflect"
+ 	"sync/atomic"
+ 	"testing"
+ )
+@@ -110,27 +109,26 @@ func TestRoundTripper_TransportFailureErrorHandling(t *testing.T) {
+ 
+ 	retryClient.ErrorHandler = PassthroughErrorHandler
+ 
+-	expectedError := &url.Error{
+-		Op:  "Get",
+-		URL: "http://999.999.999.999:999/",
+-		Err: &net.OpError{
+-			Op:  "dial",
+-			Net: "tcp",
+-			Err: &net.DNSError{
+-				Name:       "999.999.999.999",
+-				Err:        "no such host",
+-				IsNotFound: true,
+-			},
+-		},
++	ln, err := net.Listen("tcp", "127.0.0.1:0")
++	if err != nil {
++		t.Fatal(err)
++	}
++	targetURL := "http://" + ln.Addr().String() + "/"
++	if err := ln.Close(); err != nil {
++		t.Fatal(err)
+ 	}
+ 
+ 	// Get the standard client and execute the request.
+ 	client := retryClient.StandardClient()
+-	_, err := client.Get("http://999.999.999.999:999/")
++	_, err = client.Get(targetURL)
+ 
+ 	// assert expectations
+-	if !reflect.DeepEqual(expectedError, normalizeError(err)) {
+-		t.Fatalf("expected %q, got %q", expectedError, err)
++	var urlErr *url.Error
++	if !errors.As(err, &urlErr) {
++		t.Fatalf("expected url.Error, got %T: %v", err, err)
++	}
++	if urlErr.Op != "Get" || urlErr.URL != targetURL {
++		t.Fatalf("expected Get %q error, got %q %q", targetURL, urlErr.Op, urlErr.URL)
+ 	}
+ }
+ 
+-- 
+2.43.0
+
