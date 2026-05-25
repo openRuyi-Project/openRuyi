@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <HNO3Miracle@users.noreply.github.com>
+Date: Fri, 22 May 2026 23:35:00 +0800
+Subject: [PATCH] Force color for color snapshot tests
+
+Several snapshot golden files include ANSI color escapes. OBS runs
+without TERM and is not detected as CI by ciinfo, so go-snaps disables
+colors at package init time and those color snapshots fail. Force color
+for the snaps test package.
+---
+ snaps/color_test.go | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/snaps/color_test.go b/snaps/color_test.go
+new file mode 100644
+index 0000000..5608490
+--- /dev/null
++++ b/snaps/color_test.go
+@@ -0,0 +1,18 @@
++package snaps
++
++import (
++	"os"
++	"testing"
++
++	"github.com/gkampitakis/go-snaps/internal/colors"
++)
++
++func TestMain(m *testing.M) {
++	previousNoColor := colors.NOCOLOR
++	colors.NOCOLOR = false
++
++	code := m.Run()
++
++	colors.NOCOLOR = previousNoColor
++	os.Exit(code)
++}
