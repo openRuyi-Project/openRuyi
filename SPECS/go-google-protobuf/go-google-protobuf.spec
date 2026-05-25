@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,7 @@ Release:        %autorelease
 Summary:        Go support for Google's protocol buffers
 License:        BSD-3-Clause
 URL:            https://github.com/protocolbuffers/protobuf-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:517b935001f3d43640489cd1aab531a3ed5927fb34379fa6cb1c1a514e9cb8e8
 Source0:        https://github.com/protocolbuffers/protobuf-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -25,6 +26,27 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
 
 Provides:       go(google.golang.org/protobuf) = %{version}
+Provides:       go(google.golang.org/protobuf/encoding/prototext) = %{version}
+Provides:       go(google.golang.org/protobuf/proto) = %{version}
+Provides:       go(google.golang.org/protobuf/reflect/protodesc) = %{version}
+Provides:       go(google.golang.org/protobuf/reflect/protoreflect) = %{version}
+Provides:       go(google.golang.org/protobuf/reflect/protoregistry) = %{version}
+Provides:       go(google.golang.org/protobuf/runtime/protoimpl) = %{version}
+Provides:       go(google.golang.org/protobuf/testing/protocmp) = %{version}
+Provides:       go(google.golang.org/protobuf/types/descriptorpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/dynamicpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/gofeaturespb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/anypb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/apipb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/durationpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/emptypb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/fieldmaskpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/sourcecontextpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/structpb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/timestamppb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/typepb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/known/wrapperspb) = %{version}
+Provides:       go(google.golang.org/protobuf/types/pluginpb) = %{version}
 
 Requires:       pkgconfig(protobuf)
 
@@ -41,9 +63,9 @@ messages in Go. See the protocol buffer developer guide
 buffers themselves.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
