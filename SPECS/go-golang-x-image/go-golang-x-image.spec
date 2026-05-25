@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,12 +15,10 @@ Summary:        Go supplementary image libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/image
 VCS:            git:https://github.com/golang/image
-#!RemoteAsset
+#!RemoteAsset:  sha256:0fbd1db0308d71fb2fb642bf6dcee8ecde32a6f41df55c395fb2cf1613ee4609
 Source0:        https://github.com/golang/image/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -36,9 +35,9 @@ This repository holds supplementary Go image packages.
 %autosetup -n %{_name}-%{version}
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
