@@ -1,0 +1,34 @@
+From 75f406cab389d33b1e012b504bc992a6cba74cf6 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 20:28:29 +0800
+Subject: [PATCH] Fix Skipf test format for Go vet
+
+---
+ snaps/skip_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/snaps/skip_test.go b/snaps/skip_test.go
+index eff1c99..72f5b68 100644
+--- a/snaps/skip_test.go
++++ b/snaps/skip_test.go
+@@ -37,7 +37,7 @@ func TestSkip(t *testing.T) {
+ 
+ 		mockT := test.NewMockTestingT(t)
+ 		mockT.MockSkipf = func(format string, args ...any) {
+-			test.Equal(t, "mock", format)
++			test.Equal(t, "mock %d %d %d %d %d", format)
+ 			test.Equal(t, []any{1, 2, 3, 4, 5}, args)
+ 		}
+ 		mockT.MockLog = func(args ...any) {
+@@ -45,7 +45,7 @@ func TestSkip(t *testing.T) {
+ 		}
+ 		mockT.MockSkipf = func(string, ...any) {}
+ 
+-		Skipf(mockT, "mock", 1, 2, 3, 4, 5)
++		Skipf(mockT, "mock %d %d %d %d %d", 1, 2, 3, 4, 5)
+ 
+ 		test.Equal(t, []string{"mock-name"}, skippedTests.values)
+ 	})
+-- 
+2.43.0
+

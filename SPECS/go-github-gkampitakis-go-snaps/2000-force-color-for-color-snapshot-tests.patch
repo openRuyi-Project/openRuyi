@@ -1,0 +1,41 @@
+From 91d221041344c4e5ac8e848e51b834f8d3061ab0 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 21:35:26 +0800
+Subject: [PATCH] Force color for color snapshot tests
+
+---
+ snaps/diff_test.go | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/snaps/diff_test.go b/snaps/diff_test.go
+index c580c70..1b848d8 100644
+--- a/snaps/diff_test.go
++++ b/snaps/diff_test.go
+@@ -1,6 +1,7 @@
+ package snaps
+ 
+ import (
++	"os"
+ 	"strings"
+ 	"testing"
+ 
+@@ -8,6 +9,16 @@ import (
+ 	"github.com/gkampitakis/go-snaps/internal/test"
+ )
+ 
++func TestMain(m *testing.M) {
++	previousNoColor := colors.NOCOLOR
++	colors.NOCOLOR = false
++
++	code := m.Run()
++
++	colors.NOCOLOR = previousNoColor
++	os.Exit(code)
++}
++
+ var a = `Proin justo libero, pellentesque sit amet scelerisque ut, sollicitudin non tortor. 
+ 		Sed velit elit, accumsan sed porttitor nec, elementum quis sapien. 
+ 		Phasellus mattis purus in dui pretium, eu euismod metus feugiat. 
+-- 
+2.43.0
+
