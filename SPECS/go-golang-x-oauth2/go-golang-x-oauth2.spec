@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,7 +17,7 @@ Summary:        Go supplementary network libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/oauth2
 VCS:            git:https://github.com/golang/oauth2
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b5aa72ed4631661a3a8fafbc779724296b57d946bd2c0d5e513e48c8e83329f
 Source0:        https://github.com/golang/oauth2/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -28,6 +29,7 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
 
 Provides:       go(golang.org/x/oauth2) = %{version}
+Provides:       go(golang.org/x/oauth2/jwt) = %{version}
 
 Requires:       go(github.com/google/go-cmp)
 
@@ -42,6 +44,7 @@ Summary:        Google specific OAuth2 support
 #Requires:       go(google.golang.org/cloud/compute/metadata)
 
 Provides:       go(golang.org/x/oauth2/google) = %{version}
+Requires:       go(cloud.google.com/go/compute/metadata)
 
 %description    google
 This package provides support for making OAuth2 authorized and
@@ -49,15 +52,15 @@ authenticated HTTP requests against Google APIs. It can additionally grant
 authorization with Bearer JWT.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 %exclude %{go_sys_gopath}/%{go_import_path}/google
 
 %files google
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}/google
 
 %changelog
-%{?autochangelog}
+%autochangelog
