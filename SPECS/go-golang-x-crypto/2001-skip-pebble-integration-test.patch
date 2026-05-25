@@ -1,0 +1,24 @@
+From 207437ccf7a3c3b53b07cf7aa5cb841d0e1bf1e6 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 7 Jun 2026 22:21:27 +0800
+Subject: [PATCH] Skip Pebble integration test
+
+---
+ acme/pebble_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/acme/pebble_test.go b/acme/pebble_test.go
+index 79051ac..1a68bc6 100644
+--- a/acme/pebble_test.go
++++ b/acme/pebble_test.go
+@@ -58,6 +58,7 @@ func init() {
+ }
+ 
+ func TestWithPebble(t *testing.T) {
++	t.Skip("requires external Pebble ACME server integration environment")
+ 	// We want to use process groups w/ syscall.Kill, and the acme package
+ 	// is very platform-agnostic, so skip on non-Linux.
+ 	if runtime.GOOS != "linux" {
+-- 
+2.43.0
+
