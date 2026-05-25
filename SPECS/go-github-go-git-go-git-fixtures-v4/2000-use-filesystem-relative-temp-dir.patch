@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@outlook.com>
+Date: Sat, 23 May 2026 04:40:00 +0800
+Subject: [PATCH] internal/tgz: use filesystem-relative temp dirs
+
+go-billy 5.9 checks chroot boundaries when creating files through an
+osfs.New("") filesystem. util.TempDir's default /tmp path then crosses the
+empty-root chroot during extraction tests.
+
+Use a filesystem-relative temporary directory instead, matching the package's
+normal osfs.New(os.TempDir()) usage while keeping osfs.New("") tests valid.
+Remove it through billy as well, because the returned path is relative to the
+provided filesystem rather than the process working directory.
+---
+ internal/tgz/tgz.go | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/internal/tgz/tgz.go b/internal/tgz/tgz.go
+--- a/internal/tgz/tgz.go
++++ b/internal/tgz/tgz.go
+@@ -12,8 +12,12 @@
+ )
+ 
+ const (
+-	useDefaultTempDir = ""
+-	tmpPrefix         = "tmp-tgz-"
++	// go-billy 5.9 rejects absolute temporary paths such as /tmp/... when the
++	// supplied filesystem is rooted at "". Keep extraction directories relative
++	// to the supplied filesystem instead.
++	useFilesystemTempDir = "."
++
++	tmpPrefix = "tmp-tgz-"
+ )
+ 
+ // Extract decompress a gziped tarball into a new temporal directory
+@@ -31,7 +35,7 @@
+ 	dirName := ""
+ 	cleanup = func() {
+ 		if dirName != "" {
+-			_ = os.RemoveAll(dirName)
++			_ = util.RemoveAll(fs, dirName)
+ 		}
+ 	}
+ 
+@@ -47,7 +51,7 @@
+ 		}
+ 	}()
+ 
+-	dirName, err = util.TempDir(fs, useDefaultTempDir, tmpPrefix)
++	dirName, err = util.TempDir(fs, useFilesystemTempDir, tmpPrefix)
+ 	if err != nil {
+ 		return
+ 	}
+-- 
+2.51.0
