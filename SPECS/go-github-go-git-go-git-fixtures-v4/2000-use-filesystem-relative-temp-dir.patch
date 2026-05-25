@@ -1,0 +1,49 @@
+From 88a309214efe4fa4ec656383556bd2883c2545f9 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 7 Jun 2026 20:26:45 +0800
+Subject: [PATCH] internal/tgz: use filesystem-relative temp dirs
+
+---
+ internal/tgz/tgz.go | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/internal/tgz/tgz.go b/internal/tgz/tgz.go
+index a0c8506..140b223 100644
+--- a/internal/tgz/tgz.go
++++ b/internal/tgz/tgz.go
+@@ -12,8 +12,12 @@ import (
+ )
+ 
+ const (
+-	useDefaultTempDir = ""
+-	tmpPrefix         = "tmp-tgz-"
++	// go-billy 5.9 rejects absolute temporary paths such as /tmp/... when the
++	// supplied filesystem is rooted at "". Keep extraction directories relative
++	// to the supplied filesystem instead.
++	useFilesystemTempDir = "."
++
++	tmpPrefix = "tmp-tgz-"
+ )
+ 
+ // Extract decompress a gziped tarball into a new temporal directory
+@@ -31,7 +35,7 @@ func Extract(fs billy.Filesystem, tgz string) (d billy.Filesystem, err error, cl
+ 	dirName := ""
+ 	cleanup = func() {
+ 		if dirName != "" {
+-			_ = os.RemoveAll(dirName)
++			_ = util.RemoveAll(fs, dirName)
+ 		}
+ 	}
+ 
+@@ -47,7 +51,7 @@ func Extract(fs billy.Filesystem, tgz string) (d billy.Filesystem, err error, cl
+ 		}
+ 	}()
+ 
+-	dirName, err = util.TempDir(fs, useDefaultTempDir, tmpPrefix)
++	dirName, err = util.TempDir(fs, useFilesystemTempDir, tmpPrefix)
+ 	if err != nil {
+ 		return
+ 	}
+-- 
+2.43.0
+
