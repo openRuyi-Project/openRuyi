@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,7 +18,7 @@ Summary:        Go supplementary cryptography libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/arch
 VCS:            git:https://github.com/golang/arch
-#!RemoteAsset
+#!RemoteAsset:  sha256:28abd0bf38a7bb5d8b698e4149af579e21052bb983facd3e713bfea58c85eff0
 Source0:        https://github.com/golang/arch/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -32,6 +33,7 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(golang.org/x/term)
 
 Provides:       go(golang.org/x/arch) = %{version}
+Provides:       go(golang.org/x/arch/x86/x86csv) = %{version}
 
 Requires:       go(rsc.io/pdf)
 Requires:       go(golang.org/x/sys)
@@ -41,9 +43,9 @@ Requires:       go(golang.org/x/term)
 This repository holds supplementary Go cryptography packages.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
