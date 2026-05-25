@@ -1,7 +1,7 @@
-From 4e1bae744f2cd41af17f4394e69278129a2903d5 Mon Sep 17 00:00:00 2001
+From 5ee33dac7a10929555229bc766263ba35d9f130b Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:04 -0500
-Subject: [PATCH 040/469] UPSTREAM: spi: fsl-qspi: introduce sfa_size devtype
+Subject: [PATCH 040/467] UPSTREAM: spi: fsl-qspi: introduce sfa_size devtype
  data
 
 In fsl_qspi_default_setup(), four registers define the size of blocks of
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 2c030dd6facc..46a3187b3354 100644
+index d72828f7ac44..f30bf46064fc 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -207,6 +207,7 @@ struct fsl_qspi_devtype_data {

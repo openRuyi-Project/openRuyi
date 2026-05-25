@@ -1,7 +1,7 @@
-From e55d401e17424f6d73049a7cec5800d0e3fcfa51 Mon Sep 17 00:00:00 2001
+From 5bcc18d72b72bff66068705f1f27ce4557a42f48 Mon Sep 17 00:00:00 2001
 From: Xincheng Zhang <zhangxincheng@ultrarisc.com>
 Date: Mon, 27 Apr 2026 09:32:12 +0800
-Subject: [PATCH 337/469] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
+Subject: [PATCH 337/467] FROMLIST: PCI: ultrarisc: Add UltraRISC DP1000 PCIe
  Root Complex driver
 
 Add DP1000 SoC PCIe Root Complex driver.
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/pci/controller/dwc/pcie-ultrarisc.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 7fbf16e56482..8869d1530d42 100644
+index a6cbce2ebe1d..996aa3d41e95 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -20082,6 +20082,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
@@ -67,10 +67,10 @@ index 662b0a219ddc..39087e7a06d5 100644
  # The following drivers are for devices that use the generic ACPI
  # pci_root.c driver but don't support standard ECAM config access.
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 1d7af225d3b7..87fc527bde7f 100644
+index 295e113189b7..bd3d35354758 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -69,6 +69,8 @@
+@@ -71,6 +71,8 @@
  
  /* Synopsys-specific PCIe configuration registers */
  #define PCIE_PORT_FORCE			0x708
@@ -79,7 +79,7 @@ index 1d7af225d3b7..87fc527bde7f 100644
  #define PORT_FORCE_DO_DESKEW_FOR_SRIS	BIT(23)
  
  #define PCIE_PORT_AFR			0x70C
-@@ -96,6 +98,26 @@
+@@ -98,6 +100,26 @@
  #define PCIE_PORT_LANE_SKEW		0x714
  #define PORT_LANE_SKEW_INSERT_MASK	GENMASK(23, 0)
  

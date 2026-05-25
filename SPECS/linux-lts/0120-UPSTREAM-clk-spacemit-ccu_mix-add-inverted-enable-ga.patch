@@ -1,7 +1,7 @@
-From 46eb24d0df410df34106085648d65e19ef4c8a1a Mon Sep 17 00:00:00 2001
+From 963fb293372d266d46bee16fa3f3b74d277c8831 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 31 Oct 2025 20:40:46 +0800
-Subject: [PATCH 120/469] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable
+Subject: [PATCH 120/467] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable
  gate clock
 
 K3 SoC has the clock IP which support to write value 0 for enabling the
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu_mix.c b/drivers/clk/spacemit/ccu_mix.c
-index 67f8b12b4f5b..9578366e9746 100644
+index 9a3fc9ea1ce5..a8b407049bf4 100644
 --- a/drivers/clk/spacemit/ccu_mix.c
 +++ b/drivers/clk/spacemit/ccu_mix.c
 @@ -16,17 +16,19 @@

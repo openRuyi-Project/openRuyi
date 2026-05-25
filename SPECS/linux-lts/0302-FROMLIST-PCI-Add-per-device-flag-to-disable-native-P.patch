@@ -1,7 +1,7 @@
-From 5432e0252d3eaafa63a4c64e4b2fa3ce30a12bb6 Mon Sep 17 00:00:00 2001
+From f8ed95adec720bc723ed825f8d90a76e3b3b0a12 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 1 Apr 2026 01:56:57 +0800
-Subject: [PATCH 302/469] FROMLIST: PCI: Add per-device flag to disable native
+Subject: [PATCH 302/467] FROMLIST: PCI: Add per-device flag to disable native
  PCIe port services
 
 Add PCI_DEV_FLAGS_NO_PORT_SERVICES to allow quirks to prevent the PCIe
@@ -37,7 +37,7 @@ index a0991da48213..315a8d9cb440 100644
  	int status;
  
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 8073a1812cab..952ca4459da7 100644
+index cdf67f5aa239..daf7f2363658 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
 @@ -253,6 +253,8 @@ enum pci_dev_flags {
