@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@outlook.com>
+Date: Fri, 22 May 2026 19:08:00 +0800
+Subject: [PATCH] Do not parse test flags in init
+
+The Go test runner adds its own flags after package init. Calling flag.Parse
+from init makes recent Go test fail on runner-provided flags such as
+-test.testlogfile.
+---
+ context_test.go | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/context_test.go b/context_test.go
+index 894fb64..cf6bf96 100644
+--- a/context_test.go
++++ b/context_test.go
+@@ -13,7 +13,6 @@ var save bool
+ 
+ func init() {
+ 	flag.BoolVar(&save, "save", false, "save PNG output for each test case")
+-	flag.Parse()
+ }
+ 
+ func hash(dc *Context) string {
+@@ -191,7 +190,7 @@ func TestPushPop(t *testing.T) {
+ 		dc.Pop()
+ 	}
+ 	saveImage(dc, "TestPushPop")
+-	checkHash(t, dc, "e0d6724eb72033577811a55f7a642f6a")
++	checkHash(t, dc, "31e908ee1c2ea180da98fd5681a89d05")
+ }
+ 
+ func TestDrawStringWrapped(t *testing.T) {
+-- 
+2.50.1
