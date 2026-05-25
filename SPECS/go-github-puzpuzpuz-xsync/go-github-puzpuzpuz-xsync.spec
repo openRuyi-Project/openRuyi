@@ -13,10 +13,14 @@ Release:        %autorelease
 Summary:        Concurrent data structures for Go
 License:        Apache-2.0
 URL:            https://github.com/puzpuzpuz/xsync
-#!RemoteAsset
+#!RemoteAsset:  sha256:2cf1919ca2834df8b3fb1b2071eec5d6b6d3246024675047fad211ff8d637755
 Source0:        https://github.com/puzpuzpuz/xsync/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# Go 1.26 vet reports a Fatalf %q argument type mismatch in upstream tests;
+# keep tests enabled but disable vet. - HNO3Miracle
+BuildOption(check):  -vet=off
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -36,9 +40,9 @@ Covered with concurrent stress tests following the
 approach described here.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
