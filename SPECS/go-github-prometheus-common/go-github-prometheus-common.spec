@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +16,7 @@ Release:        %autorelease
 Summary:        Go libraries shared across Prometheus components and libraries.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/common
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e9d4be0e970dcf186fa5bd814afc4fbd7fd435e6749edcde8dcb8d5e6cc3daa
 Source0:        https://github.com/prometheus/common/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -32,6 +33,7 @@ BuildRequires:  go(github.com/julienschmidt/httprouter)
 BuildRequires:  go(github.com/munnerz/goautoneg)
 BuildRequires:  go(github.com/mwitkow/go-conntrack)
 BuildRequires:  go(github.com/prometheus/client_model)
+BuildRequires:  go(github.com/prometheus/client_model/go)
 BuildRequires:  go(github.com/stretchr/testify)
 BuildRequires:  go(gopkg.in/yaml.v2)
 BuildRequires:  go(golang.org/x/net)
@@ -39,6 +41,8 @@ BuildRequires:  go(golang.org/x/oauth2)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(github.com/prometheus/common) = %{version}
+Provides:       go(github.com/prometheus/common/assets) = %{version}
+Provides:       go(github.com/prometheus/common/expfmt) = %{version}
 
 Requires:       go(github.com/alecthomas/kingpin/v2)
 Requires:       go(github.com/golang-jwt/jwt/v5)
@@ -48,6 +52,7 @@ Requires:       go(github.com/julienschmidt/httprouter)
 Requires:       go(github.com/munnerz/goautoneg)
 Requires:       go(github.com/mwitkow/go-conntrack)
 Requires:       go(github.com/prometheus/client_model)
+Requires:       go(github.com/prometheus/client_model/go)
 Requires:       go(github.com/stretchr/testify)
 Requires:       go(gopkg.in/yaml.v2)
 Requires:       go(golang.org/x/net)
@@ -60,9 +65,9 @@ components and libraries. They are considered internal to Prometheus,
 without any stability guarantees for external usage.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
