@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,15 +13,16 @@
 Name:           go-github-golang-freetype
 Version:        0+git20260106.e2365df
 Release:        %autorelease
-Summary:        The Freetype font rasterizer in the Go programming language.
+Summary:        The Freetype font rasterizer in the Go programming language
 License:        FTL OR GPL-2.0-or-later
 URL:            https://github.com/golang/freetype
-#!RemoteAsset
+#!RemoteAsset:  sha256:00ce141869e009f102f51fb8f9c2a611decb67083e4c1de7842bc9eafad8676b
 Source0:        https://github.com/golang/freetype/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-BuildOption(prep):  -n %{_name}-%{commit_id}
+# Go vet reports a non-constant fmt.Fprint call in a generated-data test.
+# - HNO3Miracle
 BuildOption(check):  -vet=off
 
 BuildRequires:  go
@@ -40,9 +42,9 @@ Freetype-Go is copyright The Freetype-Go Authors, who are listed in the
 AUTHORS file.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
