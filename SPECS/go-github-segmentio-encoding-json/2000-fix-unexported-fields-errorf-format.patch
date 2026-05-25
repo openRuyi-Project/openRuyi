@@ -1,0 +1,25 @@
+From 896f669fb890f8469a59b16dea79405157b54294 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 20:51:38 +0800
+Subject: [PATCH] Fix unexportedFields Errorf format for Go vet
+
+---
+ json/golang_decode_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/json/golang_decode_test.go b/json/golang_decode_test.go
+index 5e419a2..d19c5d1 100644
+--- a/json/golang_decode_test.go
++++ b/json/golang_decode_test.go
+@@ -2039,7 +2039,7 @@ func TestUnmarshalUnexported(t *testing.T) {
+ 		t.Errorf("got error %v, expected nil", err)
+ 	}
+ 	if !reflect.DeepEqual(out, want) {
+-		t.Errorf("got %q, want %q", out, want)
++		t.Errorf("got %+v, want %+v", out, want)
+ 	}
+ }
+ 
+-- 
+2.43.0
+
