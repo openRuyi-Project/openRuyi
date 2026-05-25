@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -19,9 +20,9 @@ Summary:        Go supplementary cryptography libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/crypto
 VCS:            git:https://github.com/golang/crypto
-#!RemoteAsset
+#!RemoteAsset:  sha256:9dfbc96ebeb56e1bf71cd742c2a49494df9e68c4acf141bb6312e32b6c9e9ad1
 Source0:        https://github.com/golang/crypto/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:07079831acda4142a9eca62e3e989c2d86f956bac5365acf6a2dd3a8cfd73c26
 Source1:        https://github.com/golang/net/archive/v%{go_golang_x_net_version}.tar.gz#/net-%{go_golang_x_net_version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -42,6 +43,23 @@ BuildRequires:  go(golang.org/x/term)
 BuildRequires:  go(golang.org/x/text)
 
 Provides:       go(golang.org/x/crypto) = %{version}
+Provides:       go(golang.org/x/crypto/argon2) = %{version}
+Provides:       go(golang.org/x/crypto/blowfish) = %{version}
+Provides:       go(golang.org/x/crypto/blake2b) = %{version}
+Provides:       go(golang.org/x/crypto/blake2s) = %{version}
+Provides:       go(golang.org/x/crypto/cast5) = %{version}
+Provides:       go(golang.org/x/crypto/chacha20poly1305) = %{version}
+Provides:       go(golang.org/x/crypto/cryptobyte) = %{version}
+Provides:       go(golang.org/x/crypto/cryptobyte/asn1) = %{version}
+Provides:       go(golang.org/x/crypto/hkdf) = %{version}
+Provides:       go(golang.org/x/crypto/nacl/box) = %{version}
+Provides:       go(golang.org/x/crypto/ripemd160) = %{version}
+Provides:       go(golang.org/x/crypto/sha3) = %{version}
+Provides:       go(golang.org/x/crypto/ssh) = %{version}
+Provides:       go(golang.org/x/crypto/ssh/agent) = %{version}
+Provides:       go(golang.org/x/crypto/ssh/knownhosts) = %{version}
+Provides:       go(golang.org/x/crypto/ssh/terminal) = %{version}
+Provides:       go(golang.org/x/crypto/ssh/testdata) = %{version}
 
 Requires:       go(golang.org/x/sys)
 Requires:       go(golang.org/x/term)
@@ -64,9 +82,9 @@ golang.org/x/net/idna
 EOF
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
