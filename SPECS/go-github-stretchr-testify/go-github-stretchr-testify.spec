@@ -19,9 +19,8 @@ BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # https://sources.debian.org/src/golang-testify/1.10.0-1/debian/patches/do-not-use-race.patch
-Patch0:         2000-do-not-use-race.patch
+Patch2000:      2000-do-not-use-race.patch
 
-BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -vet=off
 
 BuildRequires:  go
@@ -49,8 +48,8 @@ Features include:
  * Testing suite interfaces and functions
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
