@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <HNO3Miracle@users.noreply.github.com>
+Date: Fri, 22 May 2026 23:20:00 +0800
+Subject: [PATCH] Fix test non-constant fmt.Errorf calls
+
+Go 1.25 vet rejects fmt.Errorf calls whose format string is not a
+constant. The tests only need an error carrying errText, so format it
+through a constant "%s" string.
+---
+ encode_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/encode_test.go b/encode_test.go
+index 85f5356..3c70675 100644
+--- a/encode_test.go
++++ b/encode_test.go
+@@ -991,11 +991,11 @@ func TestMarshalerError(t *testing.T) {
+ 		want string
+ 	}{
+ 		{
+-			json.NewMarshalerError(st, fmt.Errorf(errText), ""),
++			json.NewMarshalerError(st, fmt.Errorf("%s", errText), ""),
+ 			"json: error calling MarshalJSON for type " + st.String() + ": " + errText,
+ 		},
+ 		{
+-			json.NewMarshalerError(st, fmt.Errorf(errText), "TestMarshalerError"),
++			json.NewMarshalerError(st, fmt.Errorf("%s", errText), "TestMarshalerError"),
+ 			"json: error calling TestMarshalerError for type " + st.String() + ": " + errText,
+ 		},
+ 	}
