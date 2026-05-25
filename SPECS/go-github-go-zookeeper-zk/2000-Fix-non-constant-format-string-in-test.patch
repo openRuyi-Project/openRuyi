@@ -1,0 +1,42 @@
+From 21c3bdf1c453cb32a1012521ea2e9f7309300bf4 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 2 Jun 2026 14:43:25 +0800
+Subject: [PATCH] Fix tests for packaged builds
+
+Newer Go vet rejects non-constant format strings passed to Fatalf. Use Fatal so the preformatted message is emitted directly.
+
+Integration tests need an unpackaged Zookeeper server tree. Skip them when the server binary path is unavailable.
+---
+ server_java_test.go | 2 +-
+ zk_test.go          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/server_java_test.go b/server_java_test.go
+index a195636..f715a21 100644
+--- a/server_java_test.go
++++ b/server_java_test.go
+@@ -44,7 +44,7 @@ func NewIntegrationTestServer(t *testing.T, configPath string, stdout, stderr io
+ 	}
+ 	if _, err := os.Stat(zkPath); err != nil {
+ 		if os.IsNotExist(err) {
+-			return nil, fmt.Errorf("zk: could not find testing zookeeper bin path at %q: %v ", zkPath, err)
++			t.Skipf("zk: could not find testing zookeeper bin path at %q: %v", zkPath, err)
+ 		}
+ 	}
+ 	// password is 'test'
+diff --git a/zk_test.go b/zk_test.go
+index f633963..db76d1e 100644
+--- a/zk_test.go
++++ b/zk_test.go
+@@ -549,7 +549,7 @@ func TestIntegration_IfAuthdataSurvivesReconnect(t *testing.T) {
+ 		} else {
+ 			msg = fmt.Sprintf("Expecting ErrNoAuth, got `%+v` instead", err)
+ 		}
+-		t.Fatalf(msg)
++		t.Fatal(msg)
+ 	}
+ 
+ 	zk.AddAuth("digest", []byte("userfoo:passbar"))
+-- 
+2.43.0
+
