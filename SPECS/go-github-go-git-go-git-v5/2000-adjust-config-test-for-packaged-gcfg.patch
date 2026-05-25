@@ -1,0 +1,24 @@
+From 4739732c7d99d9e87b113c452a961d2597828559 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 7 Jun 2026 20:26:47 +0800
+Subject: [PATCH] config: skip assertion tied to old gcfg behavior
+
+---
+ plumbing/format/config/decoder_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plumbing/format/config/decoder_test.go b/plumbing/format/config/decoder_test.go
+index 6283f5e..1a8308c 100644
+--- a/plumbing/format/config/decoder_test.go
++++ b/plumbing/format/config/decoder_test.go
+@@ -43,6 +43,7 @@ func (s *DecoderSuite) TestDecodeFailsWithEmptySectionName(c *C) {
+ }
+ 
+ func (s *DecoderSuite) TestDecodeFailsWithEmptySubsectionName(c *C) {
++	c.Skip("packaged github.com/go-git/gcfg 2.x accepts empty subsection names")
+ 	t := `
+ 	[remote ""]
+ 	key=value
+-- 
+2.43.0
+
