@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <HNO3Miracle@users.noreply.github.com>
+Date: Sat, 23 May 2026 12:10:00 +0800
+Subject: [PATCH] Fix non-constant Fprintf in test
+
+Newer Go vet rejects non-constant format strings passed to fmt.Fprintf.
+Use fmt.Fprint because the test writes a prebuilt response body.
+---
+ s2a_e2e_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/s2a_e2e_test.go b/s2a_e2e_test.go
+index 1111111..2222222 100644
+--- a/s2a_e2e_test.go
++++ b/s2a_e2e_test.go
+@@ -683,7 +683,7 @@ func startHTTPServer(t *testing.T, resp string) string {
+ 	}
+ 	s := http.NewServeMux()
+ 	s.HandleFunc("/hello", func(w http.ResponseWriter, req *http.Request) {
+-		fmt.Fprintf(w, resp)
++		fmt.Fprint(w, resp)
+ 	})
+ 	lis, err := tls.Listen("tcp", ":0", &tlsConfig)
+ 	if err != nil {
+-- 
+2.51.0
