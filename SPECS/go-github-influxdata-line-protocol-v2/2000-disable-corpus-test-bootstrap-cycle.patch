@@ -1,0 +1,22 @@
+From 880288a23d391f0bd3bc9308c8f5d3bf2aacd106 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 15:57:55 +0800
+Subject: [PATCH] Skip corpus tests by default
+
+---
+ lineprotocol/corpus_test.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lineprotocol/corpus_test.go b/lineprotocol/corpus_test.go
+index db6e836..4b13870 100644
+--- a/lineprotocol/corpus_test.go
++++ b/lineprotocol/corpus_test.go
+@@ -1,3 +1,6 @@
++//go:build corpus
++// +build corpus
++
+ package lineprotocol
+ 
+ import (
+-- 
+2.43.0
