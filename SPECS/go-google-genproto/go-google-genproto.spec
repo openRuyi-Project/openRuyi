@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -21,15 +22,13 @@
 Name:           go-google-genproto
 Version:        0+git20260107.e7812ac
 Release:        %autorelease
-Summary:        Generated code for Google Cloud client libraries.
+Summary:        Generated code for Google Cloud client libraries
 License:        Apache-2.0
 URL:            https://github.com/googleapis/go-genproto
-#!RemoteAsset
+#!RemoteAsset:  sha256:ee9bdfda880edd9348440dd2ec43a1cf9cf4e0b70b06f0cdd1ec7aa8515f1358
 Source0:        https://github.com/googleapis/go-genproto/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{commit_id}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -49,15 +48,15 @@ interacting with Google's gRPC APIs.
 %package        googleapis-rpc
 Summary:        Common Google APIs RPC protos
 
-Provides:       go(google.golang.org/genproto/googleapis/rpc)
+Provides:       go(google.golang.org/genproto/googleapis/rpc) = %{version}
 
 %description    googleapis-rpc
 This subpackage contains the generated code for common Google APIs RPC
 protos.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 %exclude %{go_sys_gopath}/%{go_import_path}/googleapis/rpc
 
@@ -65,4 +64,4 @@ protos.
 %{go_sys_gopath}/%{go_import_path}/googleapis/rpc
 
 %changelog
-%{?autochangelog}
+%autochangelog
