@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@users.noreply.github.com>
+Date: Sat, 23 May 2026 11:00:00 +0800
+Subject: [PATCH] Use oasdiff import path
+
+---
+ yaml.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/yaml.go b/yaml.go
+index 47c7bcf..171195e 100644
+--- a/yaml.go
++++ b/yaml.go
+@@ -5,7 +5,7 @@
+ // uses json.Marshal and json.Unmarshal to convert to or from the struct. This
+ // means that it effectively reuses the JSON struct tags as well as the custom
+ // JSON methods MarshalJSON and UnmarshalJSON unlike go-yaml.
+-package yaml // import "github.com/invopop/yaml"
++package yaml // import "github.com/oasdiff/yaml"
+ 
+ import (
+ 	"bytes"
+-- 
+2.51.0
