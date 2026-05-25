@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +16,7 @@ Release:        %autorelease
 Summary:        Fast JSON serializer for golang.
 License:        MIT
 URL:            https://github.com/mailru/easyjson
-#!RemoteAsset
+#!RemoteAsset:  sha256:da0a4a187b0eada0b55eb47e17fcb086cb6073feaf20ad94ba77b9e9a2889be8
 Source0:        https://github.com/mailru/easyjson/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -25,6 +26,10 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/josharian/intern)
 
 Provides:       go(github.com/mailru/easyjson) = %{version}
+Provides:       go(github.com/mailru/easyjson/jlexer) = %{version}
+Provides:       go(github.com/mailru/easyjson/jwriter) = %{version}
+
+Requires:       go(github.com/josharian/intern)
 
 %description
 Package easyjson provides a fast and easy way to marshal/unmarshal Go
@@ -39,9 +44,9 @@ available with the standard encoding/json package, such as generating
 "snake_case" names or enabling omitempty behavior by default.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
