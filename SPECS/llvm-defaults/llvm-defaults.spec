@@ -320,4 +320,3 @@ fi
 
 %changelog
 %autochangelog
-
