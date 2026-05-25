@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@outlook.com>
+Date: Fri, 22 May 2026 22:34:00 +0800
+Subject: [PATCH] Fix 12-hour layout expectation in time format test
+
+Java SimpleDateFormat uses hh for a 12-hour clock. The implementation
+maps it to Go's 12-hour layout 03, so adjust the test expectation.
+---
+ time_format_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/time_format_test.go b/time_format_test.go
+index 20d442c..451c61d 100644
+--- a/time_format_test.go
++++ b/time_format_test.go
+@@ -27,7 +27,7 @@ func TestTimeFormat(t *testing.T) {
+ 
+ 	{
+ 		timeLayout := toolbox.DateFormatToLayout("yyyy-MM-dd hh:mm:ss")
+-		assert.EqualValues(t, "2006-01-02 15:04:05", timeLayout)
++		assert.EqualValues(t, "2006-01-02 03:04:05", timeLayout)
+ 	}
+ 
+ 	{
+-- 
+2.51.0
+

@@ -1,0 +1,60 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@outlook.com>
+Date: Fri, 22 May 2026 22:10:00 +0800
+Subject: [PATCH] Fix non-constant fmt.Errorf calls
+
+Go 1.25 vet rejects fmt.Errorf calls whose format string is built at
+runtime. These calls do not need formatting, so use a constant format
+string to keep the existing error text.
+---
+ context.go | 4 ++--
+ macro.go   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/context.go b/context.go
+index 33240d4..4dcce7c 100644
+--- a/context.go
++++ b/context.go
+@@ -57,7 +57,7 @@ func (c *contextImpl) getKey(targetType interface{}) string {
+ func (c *contextImpl) GetRequired(targetType interface{}) (interface{}, error) {
+ 	if !c.Contains(targetType) {
+ 		key := c.getKey(targetType)
+-		return nil, fmt.Errorf("failed to lookup key:" + key)
++		return nil, fmt.Errorf("%s", "failed to lookup key:"+key)
+ 	}
+ 	return c.GetOptional(targetType), nil
+ }
+@@ -86,7 +86,7 @@ func (c *contextImpl) GetInto(targetType, target interface{}) bool {
+ func (c *contextImpl) Put(targetType interface{}, value interface{}) error {
+ 	if c.Contains(targetType) {
+ 		key := c.getKey(targetType)
+-		return fmt.Errorf("failed to put key - already exist: " + key)
++		return fmt.Errorf("%s", "failed to put key - already exist: "+key)
+ 	}
+ 	return c.Replace(targetType, value)
+ }
+diff --git a/macro.go b/macro.go
+index 04b126e..ca7d2b9 100644
+--- a/macro.go
++++ b/macro.go
+@@ -32,7 +32,7 @@ func (e *MacroEvaluator) expandArguments(context Context, arguments *[]interface
+ 				if e.HasMacro(argumentAsText) {
+ 					expanded, err := e.Expand(context, argumentAsText)
+ 					if err != nil {
+-						return fmt.Errorf("failed to expand argument: " + argumentAsText + " due to:\n\t" + err.Error())
++						return fmt.Errorf("%s", "failed to expand argument: "+argumentAsText+" due to:\n\t"+err.Error())
+ 					}
+ 					(*arguments)[i] = expanded
+ 				}
+@@ -49,7 +49,7 @@ func (e *MacroEvaluator) decodeArguments(context Context, decodedArguments strin
+ 		decoder := json.NewDecoder(strings.NewReader(decodedArguments))
+ 		err := decoder.Decode(&arguments)
+ 		if err != nil && err != io.EOF {
+-			return nil, fmt.Errorf("failed to process macro arguments: " + decodedArguments + " due to:\n\t" + err.Error())
++			return nil, fmt.Errorf("%s", "failed to process macro arguments: "+decodedArguments+" due to:\n\t"+err.Error())
+ 		}
+ 		err = e.expandArguments(context, &arguments)
+ 		if err != nil {
+-- 
+2.51.0
+
