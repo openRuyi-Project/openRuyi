@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -38,9 +39,9 @@ Summary:        Various packages and tools that support the Go programming langu
 License:        BSD-3-Clause
 URL:            https://golang.org/x/tools
 VCS:            git:https://github.com/golang/tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:e39e3550f2881d7c54ca3fbba3ef1ad8901bd82135579b67412fd412ca7d05c2
 Source0:        https://github.com/golang/tools/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:10c8a43fdea21fe756b84db97f54dacfc67cb736ed1a2e8610aa0d8df9eed94b
 Source1:        https://github.com/golang/telemetry/archive/config/v0.80.0.tar.gz#/telemetry-config-v0.80.0.tar.gz
 BuildSystem:    golangmodules
 
@@ -61,6 +62,10 @@ BuildRequires:  go(golang.org/x/net)
 BuildRequires:  go(golang.org/x/sync)
 
 Provides:       go(golang.org/x/tools) = %{version}
+Provides:       go(golang.org/x/tools/cmd/goyacc) = %{version}
+Provides:       go(golang.org/x/tools/go/ast/inspector) = %{version}
+Provides:       go(golang.org/x/tools/godoc/vfs/httpfs) = %{version}
+Provides:       go(golang.org/x/tools/godoc/vfs/mapfs) = %{version}
 
 Requires:       go(github.com/yuin/goldmark)
 Requires:       go(golang.org/x/mod)
@@ -107,8 +112,8 @@ install -d %{buildroot}%{_bindir}
 install -m 0755 %{_builddir}/go/bin/* %{buildroot}%{_bindir}/
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %files -n go-tools
@@ -116,4 +121,4 @@ install -m 0755 %{_builddir}/go/bin/* %{buildroot}%{_bindir}/
 %{_bindir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
