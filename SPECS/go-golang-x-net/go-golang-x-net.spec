@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -19,7 +20,7 @@ Summary:        Go supplementary network libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/net
 VCS:            git:https://github.com/golang/net
-#!RemoteAsset
+#!RemoteAsset:  sha256:999b4eeae1b018ce0e2353cd656b47297c57fedcb9a419904ff856de0438898f
 Source0:        https://github.com/golang/net/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -34,6 +35,19 @@ BuildRequires:  go(golang.org/x/term)
 BuildRequires:  go(golang.org/x/text)
 
 Provides:       go(golang.org/x/net) = %{version}
+Provides:       go(golang.org/x/net/bpf) = %{version}
+Provides:       go(golang.org/x/net/context) = %{version}
+Provides:       go(golang.org/x/net/context/ctxhttp) = %{version}
+Provides:       go(golang.org/x/net/html/charset) = %{version}
+Provides:       go(golang.org/x/net/http/httpguts) = %{version}
+Provides:       go(golang.org/x/net/http2) = %{version}
+Provides:       go(golang.org/x/net/http2/hpack) = %{version}
+Provides:       go(golang.org/x/net/idna) = %{version}
+Provides:       go(golang.org/x/net/internal/httpcommon) = %{version}
+Provides:       go(golang.org/x/net/nettest) = %{version}
+Provides:       go(golang.org/x/net/proxy) = %{version}
+Provides:       go(golang.org/x/net/publicsuffix) = %{version}
+Provides:       go(golang.org/x/net/websocket) = %{version}
 
 Requires:       go(golang.org/x/crypto)
 Requires:       go(golang.org/x/sys)
@@ -44,9 +58,9 @@ Requires:       go(golang.org/x/text)
 This package provides supplementary Go networking libraries.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
