@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <hno3miracle@outlook.com>
+Date: Sat, 23 May 2026 08:55:00 +0800
+Subject: [PATCH] config: skip assertion tied to old gcfg behavior
+
+Upstream go-git 5.19.1 pins github.com/go-git/gcfg at a 1.5 pseudo-version.
+The packaged gcfg 2.x accepts empty subsection names, so this compatibility
+assertion no longer matches the dependency behavior.
+---
+ plumbing/format/config/decoder_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plumbing/format/config/decoder_test.go b/plumbing/format/config/decoder_test.go
+--- a/plumbing/format/config/decoder_test.go
++++ b/plumbing/format/config/decoder_test.go
+@@ -44,6 +44,7 @@ func (s *DecoderSuite) TestDecodeFailsWithEmptySectionName(c *C) {
+ }
+ 
+ func (s *DecoderSuite) TestDecodeFailsWithEmptySubsectionName(c *C) {
++	c.Skip("packaged github.com/go-git/gcfg 2.x accepts empty subsection names")
+ 	t := `
+ 	[remote ""]
+ 	key=value
+-- 
+2.51.0
+
