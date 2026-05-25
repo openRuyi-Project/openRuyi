@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,7 +14,7 @@ Release:        %autorelease
 Summary:        Data model artifacts for Prometheus.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/client_model
-#!RemoteAsset
+#!RemoteAsset:  sha256:47c5ea7949f68e7f7b344350c59b6bd31eeb921f0eec6c3a566e27cf1951470c
 Source0:        https://github.com/prometheus/client_model/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -31,10 +32,15 @@ Requires:       go(google.golang.org/protobuf)
 %description
 Golang data model artifacts for Prometheus.
 
+# The generated Go package under go/ is packaged separately as
+# go-github-prometheus-client-model-go.
+%install -a
+rm -rf %{buildroot}%{go_sys_gopath}/%{go_import_path}/go
+
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
