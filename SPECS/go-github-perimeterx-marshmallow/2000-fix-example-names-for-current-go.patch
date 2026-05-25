@@ -1,0 +1,51 @@
+From 89b127bcb9bc3c1bae4f266f7b92017d25e42921 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 1 Jun 2026 15:58:34 +0800
+Subject: [PATCH] tests: use valid package example names
+
+---
+ example_test.go | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/example_test.go b/example_test.go
+index 8741988..ef9f803 100644
+--- a/example_test.go
++++ b/example_test.go
+@@ -7,7 +7,7 @@ import (
+ )
+ 
+ // ExampleBasicUnmarshal shows a basic example usage of marshmallow's unmarshalling capabilities
+-func ExampleBasicUnmarshal() {
++func Example_basicUnmarshal() {
+ 	// we have the following data
+ 	data := []byte(`{"name":"some name", "values": [1, 2, 3], "more_data": "some stuff I am not interested in..."}`)
+ 	// we want to read the "name" field, and modify the "values" field.
+@@ -46,7 +46,7 @@ func ExampleBasicUnmarshal() {
+ 
+ // ExampleExcludeKnownFields shows how to use the WithExcludeKnownFieldsFromMap option to exclude struct fields
+ // from the result map. more info at https://github.com/PerimeterX/marshmallow/issues/16
+-func ExampleExcludeKnownFields() {
++func Example_excludeKnownFields() {
+ 	type exampleStruct struct {
+ 		Foo string `json:"foo"`
+ 		Boo []int  `json:"boo"`
+@@ -102,7 +102,7 @@ func ExampleCache() {
+ }
+ 
+ // ExampleUnmarshalErrorHandling shows all error handling capabilities of marshmallow.Unmarshal
+-func ExampleUnmarshalErrorHandling() {
++func Example_unmarshalErrorHandling() {
+ 	type exampleStruct struct {
+ 		Foo string `json:"foo"`
+ 		Boo []int  `json:"boo"`
+@@ -170,7 +170,7 @@ func ExampleUnmarshalErrorHandling() {
+ }
+ 
+ // ExampleUnmarshalFromJSONMap shows all error handling capabilities of marshmallow.UnmarshalFromJSONMap
+-func ExampleUnmarshalFromJSONMapErrorHandling() {
++func Example_unmarshalFromJSONMapErrorHandling() {
+ 	type exampleStruct struct {
+ 		Foo string `json:"foo"`
+ 		Boo []int  `json:"boo"`
+-- 
+2.43.0
