@@ -1,7 +1,7 @@
-From 238db0e87043d5764326f71e7c0fb173da7d944e Mon Sep 17 00:00:00 2001
+From 23cc45c1d179af7b48fdde28d5607b138fb0ca43 Mon Sep 17 00:00:00 2001
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Date: Tue, 20 Jan 2026 23:17:44 +0530
-Subject: [PATCH 176/469] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
+Subject: [PATCH 176/467] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
  dw_pcie_wait_for_link() returns -ETIMEDOUT
 
 The dw_pcie_wait_for_link() API now distinguishes link failures more
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 3c099dff2d61..a75b193dc98b 100644
+index 993858fd0529..dbd4b66934df 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
 @@ -664,8 +664,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)

@@ -1,7 +1,7 @@
-From 9241e55754040fef9f5b6f87a899df1dded339fc Mon Sep 17 00:00:00 2001
+From 3db4461f56317b6d1205c5f1aa79d971772b0d4d Mon Sep 17 00:00:00 2001
 From: Thierry Reding <treding@nvidia.com>
 Date: Wed, 29 Oct 2025 17:33:30 +0100
-Subject: [PATCH 163/469] UPSTREAM: syscore: Pass context data to callbacks
+Subject: [PATCH 163/467] UPSTREAM: syscore: Pass context data to callbacks
 
 Several drivers can benefit from registering per-instance data along
 with the syscore operations. To achieve this, move the modifiable fields
@@ -1308,10 +1308,10 @@ index 68eb7cc6e564..482eec50f404 100644
  }
  subsys_initcall(pmb_sysdev_init);
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 112f43b23ebf..aca89f23d2e0 100644
+index 56918cd91115..23d834e7b565 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -1718,26 +1718,30 @@ static int x86_pmu_amd_ibs_starting_cpu(unsigned int cpu)
+@@ -1719,26 +1719,30 @@ static int x86_pmu_amd_ibs_starting_cpu(unsigned int cpu)
  
  #ifdef CONFIG_PM
  
@@ -3154,7 +3154,7 @@ index 76efd74124b3..4aa09660804b 100644
  	return 0;
  }
 diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 49e83c8566a3..7510471283f1 100644
+index 79676188f60f..3d1cacad559b 100644
 --- a/drivers/iommu/intel/iommu.c
 +++ b/drivers/iommu/intel/iommu.c
 @@ -2305,7 +2305,7 @@ static void iommu_flush_all(void)
@@ -3849,7 +3849,7 @@ index de481ba340f8..9571f622774e 100644
  #else
  static inline void mtk_cirq_syscore_init(void) {}
 diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-index 1bf19deb02c4..e73d426cea6d 100644
+index c938ab159289..eb01d4c5aca7 100644
 --- a/drivers/irqchip/irq-renesas-rzg2l.c
 +++ b/drivers/irqchip/irq-renesas-rzg2l.c
 @@ -398,7 +398,7 @@ static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
