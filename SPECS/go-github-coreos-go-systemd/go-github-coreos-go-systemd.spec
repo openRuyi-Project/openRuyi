@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Go bindings to systemd socket activation, journal, D-Bus, and unit files
 License:        Apache-2.0
 URL:            https://github.com/coreos/go-systemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff64fccd64a70123d513f979ea7a97f42300d7af33303890c1ab491f57a311ea
 Source0:        https://github.com/coreos/go-systemd/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -43,9 +43,9 @@ Go bindings to systemd. The project has several packages:
  * unit - for (de)serialization and comparison of unit files
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
