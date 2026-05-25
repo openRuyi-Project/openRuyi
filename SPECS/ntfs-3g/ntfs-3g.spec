@@ -46,7 +46,7 @@ Windows 10, and Windows 11.
 
 %package        devel
 Summary:        Development files and libraries for ntfs-3g
-Requires:       %{name}{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Headers and libraries for developing applications that use ntfs-3g
