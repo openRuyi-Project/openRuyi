@@ -1,0 +1,25 @@
+From f1c8085b7fe8af359b74f022a75a5fe63f43d92e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 20:51:39 +0800
+Subject: [PATCH] Fix invalid code format for Go vet
+
+---
+ codes/codes.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/codes/codes.go b/codes/codes.go
+index d48847e..4e63f56 100644
+--- a/codes/codes.go
++++ b/codes/codes.go
+@@ -81,7 +81,7 @@ func (c *Code) UnmarshalJSON(b []byte) error {
+ 	case float64:
+ 		if ci, err := strconv.ParseUint(string(b), 10, 32); err == nil {
+ 			if ci >= maxCode {
+-				return fmt.Errorf("invalid code: %q", ci)
++				return fmt.Errorf("invalid code: %d", ci)
+ 			}
+ 
+ 			*c = Code(ci) // nolint: gosec  // Bit size of 32 check above.
+-- 
+2.43.0
+
