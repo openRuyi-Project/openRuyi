@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -20,12 +21,11 @@ Release:        %autorelease
 Summary:        Generate x86 Assembly with Go
 License:        BSD-3-Clause
 URL:            https://github.com/mmcloughlin/avo
-#!RemoteAsset
+#!RemoteAsset:  sha256:990471970acb01356b3cf7c22fd5c2707262bfa6e5c91f2e331d9dd0ab1f5743
 Source0:        https://github.com/mmcloughlin/avo/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -short
 
 BuildRequires:  go
@@ -55,9 +55,9 @@ that simplifies development without sacrificing performance:
  * **Generation of stub files** to interface with your Go package
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
