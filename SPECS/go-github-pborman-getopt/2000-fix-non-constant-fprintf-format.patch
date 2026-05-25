@@ -1,0 +1,26 @@
+From 8ded49abe532e491ee7e5d4235cac15cbe43700b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 16:46:11 +0800
+Subject: [PATCH] Fix non-constant Fprintf format string
+
+The message is already formatted by concatenation, so use fmt.Fprint for current Go vet.
+---
+ var.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/var.go b/var.go
+index fd816b9..f4d8cfc 100644
+--- a/var.go
++++ b/var.go
+@@ -55,7 +55,7 @@ func (s *Set) VarLong(p Value, name string, short rune, helpvalue ...string) Opt
+ 		opt.where = fmt.Sprintf("%s:%d", file, line)
+ 	}
+ 	if opt.short == 0 && opt.long == "" {
+-		fmt.Fprintf(stderr, opt.where+": no short or long option given")
++		fmt.Fprint(stderr, opt.where+": no short or long option given")
+ 		exit(1)
+ 	}
+ 	s.AddOption(opt)
+-- 
+2.43.0
+
