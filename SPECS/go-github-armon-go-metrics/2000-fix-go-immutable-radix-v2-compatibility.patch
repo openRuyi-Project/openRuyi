@@ -1,0 +1,48 @@
+From 02c77f4d11d6c629dd78bb0e1db92f0cee66234c Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 14:55:12 +0800
+Subject: [PATCH] Fix go-immutable-radix v2 compatibility
+
+---
+ metrics.go | 4 ++--
+ start.go   | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/metrics.go b/metrics.go
+index 3447886..9a7ae9c 100644
+--- a/metrics.go
++++ b/metrics.go
+@@ -200,7 +200,7 @@ func (m *Metrics) UpdateFilterAndLabels(allow, block, allowedLabels, blockedLabe
+ 	m.AllowedLabels = allowedLabels
+ 	m.BlockedLabels = blockedLabels
+ 
+-	m.filter = iradix.New()
++	m.filter = iradix.New[bool]()
+ 	for _, prefix := range m.AllowedPrefixes {
+ 		m.filter, _, _ = m.filter.Insert([]byte(prefix), true)
+ 	}
+@@ -264,7 +264,7 @@ func (m *Metrics) allowMetric(key []string, labels []Label) (bool, []Label) {
+ 		return m.Config.FilterDefault, m.filterLabels(labels)
+ 	}
+ 
+-	return allowed.(bool), m.filterLabels(labels)
++	return allowed, m.filterLabels(labels)
+ }
+ 
+ // Periodically collects runtime stats to publish
+diff --git a/start.go b/start.go
+index 0862fe7..bd0ca84 100644
+--- a/start.go
++++ b/start.go
+@@ -37,7 +37,7 @@ type Metrics struct {
+ 	Config
+ 	lastNumGC     uint32
+ 	sink          MetricSink
+-	filter        *iradix.Tree
++	filter        *iradix.Tree[bool]
+ 	allowedLabels map[string]bool
+ 	blockedLabels map[string]bool
+ 	filterLock    sync.RWMutex // Lock filters and allowedLabels/blockedLabels access
+-- 
+2.43.0
+
