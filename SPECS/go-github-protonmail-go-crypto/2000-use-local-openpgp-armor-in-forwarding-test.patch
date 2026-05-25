@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <41379556+HNO3Miracle@users.noreply.github.com>
+Date: Fri, 22 May 2026 18:50:00 +0000
+Subject: [PATCH] Use local OpenPGP armor package in forwarding test
+
+Current golang.org/x/crypto no longer ships golang.org/x/crypto/openpgp/armor.
+The package under test provides its own OpenPGP armor implementation, so use
+that import path in the forwarding test.
+---
+ openpgp/forwarding_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/openpgp/forwarding_test.go b/openpgp/forwarding_test.go
+index 1e5d867..5fe8a9a 100644
+--- a/openpgp/forwarding_test.go
++++ b/openpgp/forwarding_test.go
+@@ -10,7 +10,7 @@ import (
+ 	"testing"
+ 
+ 	"github.com/ProtonMail/go-crypto/openpgp/packet"
+-	"golang.org/x/crypto/openpgp/armor"
++	"github.com/ProtonMail/go-crypto/openpgp/armor"
+ )
+ 
+ const forwardeeKey = `-----BEGIN PGP PRIVATE KEY BLOCK-----
+-- 
+2.51.0
