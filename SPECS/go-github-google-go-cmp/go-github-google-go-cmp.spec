@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,12 +14,10 @@ Release:        %autorelease
 Summary:        Package for comparing Go values in tests
 License:        BSD-3-Clause
 URL:            https://github.com/google/go-cmp
-#!RemoteAsset
+#!RemoteAsset:  sha256:c98f4f998ad8134b26816500b5c4c5cd6329905c0610b0c1f031efe7fbb469af
 Source0:        https://github.com/google/go-cmp/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -55,9 +54,9 @@ The primary features of cmp are:
    compared using the AllowUnexported option.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
