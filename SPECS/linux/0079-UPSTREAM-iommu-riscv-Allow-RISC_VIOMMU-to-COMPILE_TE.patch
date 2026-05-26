@@ -1,0 +1,96 @@
+From 648ac33a730ff526540f0eccb16de8566029f9da Mon Sep 17 00:00:00 2001
+From: Jason Gunthorpe <jgg@nvidia.com>
+Date: Fri, 27 Feb 2026 11:25:41 -0400
+Subject: [PATCH 079/269] UPSTREAM: iommu/riscv: Allow RISC_VIOMMU to
+ COMPILE_TEST
+
+This driver used to use a lot of page table constants from the architecture
+code which prevented COMPILE_TEST on other architectures. Now that iommupt
+provides all of the constants internally there are only two small bumps
+preventing COMPILE_TEST.
+
+- Use the generic functions for the riscv specific phys_to_pfn() and
+  pfn_to_phys()
+
+- Use CONFIG_MMIOWB to block off the mmiowb() barrier
+
+- Require 64 bit because of writeq use failing compilation on 32 bit
+
+Tested-by: Vincent Chen <vincent.chen@sifive.com>
+Acked-by: Paul Walmsley <pjw@kernel.org> # arch/riscv
+Reviewed-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+Tested-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+(cherry picked from commit 7cd0c655f02f08a5de851059ac8360e5d10fae62)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iommu/riscv/Kconfig      | 4 ++--
+ drivers/iommu/riscv/iommu-bits.h | 4 +++-
+ drivers/iommu/riscv/iommu.c      | 4 +++-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/iommu/riscv/Kconfig b/drivers/iommu/riscv/Kconfig
+index 849e72321d8a..b86e5ab94183 100644
+--- a/drivers/iommu/riscv/Kconfig
++++ b/drivers/iommu/riscv/Kconfig
+@@ -3,9 +3,9 @@
+ 
+ config RISCV_IOMMU
+ 	bool "RISC-V IOMMU Support"
+-	depends on RISCV && 64BIT
++	default RISCV
+ 	depends on GENERIC_MSI_IRQ
+-	default y
++	depends on (RISCV || COMPILE_TEST) && 64BIT
+ 	select IOMMU_API
+ 	select GENERIC_PT
+ 	select IOMMU_PT
+diff --git a/drivers/iommu/riscv/iommu-bits.h b/drivers/iommu/riscv/iommu-bits.h
+index 98daf0e1a306..29a0040b1c32 100644
+--- a/drivers/iommu/riscv/iommu-bits.h
++++ b/drivers/iommu/riscv/iommu-bits.h
+@@ -17,6 +17,7 @@
+ #include <linux/types.h>
+ #include <linux/bitfield.h>
+ #include <linux/bits.h>
++#include <asm/page.h>
+ 
+ /*
+  * Chapter 5: Memory Mapped register interface
+@@ -718,7 +719,8 @@ static inline void riscv_iommu_cmd_inval_vma(struct riscv_iommu_command *cmd)
+ static inline void riscv_iommu_cmd_inval_set_addr(struct riscv_iommu_command *cmd,
+ 						  u64 addr)
+ {
+-	cmd->dword1 = FIELD_PREP(RISCV_IOMMU_CMD_IOTINVAL_ADDR, phys_to_pfn(addr));
++	cmd->dword1 =
++		FIELD_PREP(RISCV_IOMMU_CMD_IOTINVAL_ADDR, PHYS_PFN(addr));
+ 	cmd->dword0 |= RISCV_IOMMU_CMD_IOTINVAL_AV;
+ }
+ 
+diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+index ed6881d36e7b..a31f50bbad35 100644
+--- a/drivers/iommu/riscv/iommu.c
++++ b/drivers/iommu/riscv/iommu.c
+@@ -160,7 +160,7 @@ static int riscv_iommu_queue_alloc(struct riscv_iommu_device *iommu,
+ 	if (FIELD_GET(RISCV_IOMMU_PPN_FIELD, qb)) {
+ 		const size_t queue_size = entry_size << (logsz + 1);
+ 
+-		queue->phys = pfn_to_phys(FIELD_GET(RISCV_IOMMU_PPN_FIELD, qb));
++		queue->phys = PFN_PHYS(FIELD_GET(RISCV_IOMMU_PPN_FIELD, qb));
+ 		queue->base = devm_ioremap(iommu->dev, queue->phys, queue_size);
+ 	} else {
+ 		do {
+@@ -439,7 +439,9 @@ static unsigned int riscv_iommu_queue_send(struct riscv_iommu_queue *queue,
+ 	 * 6. Make sure the doorbell write to the device has finished before updating
+ 	 *    the shadow tail index in normal memory. 'fence o, w'
+ 	 */
++#ifdef CONFIG_MMIOWB
+ 	mmiowb();
++#endif
+ 	atomic_inc(&queue->tail);
+ 
+ 	/* 7. Complete submission and restore local interrupts */
+-- 
+2.53.0
+

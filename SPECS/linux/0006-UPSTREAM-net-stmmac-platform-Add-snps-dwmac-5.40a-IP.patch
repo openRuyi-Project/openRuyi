@@ -1,7 +1,7 @@
-From 12367ded958a82d0b502fe111d021bd22b3ddf09 Mon Sep 17 00:00:00 2001
+From 35042675e0055981bd4339b42933d010e151a97f Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:38 +0800
-Subject: [PATCH 006/281] UPSTREAM: net: stmmac: platform: Add snps,dwmac-5.40a
+Subject: [PATCH 006/269] UPSTREAM: net: stmmac: platform: Add snps,dwmac-5.40a
  IP compatible string
 
 Add compatible string for 5.40a version that can avoid to define some

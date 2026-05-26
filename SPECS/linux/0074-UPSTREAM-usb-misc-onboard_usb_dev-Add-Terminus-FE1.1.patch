@@ -1,0 +1,57 @@
+From 393a81ec066f3f0be02d736b35215e61fc39ed08 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Thu, 19 Mar 2026 07:51:04 +0000
+Subject: [PATCH 074/269] UPSTREAM: usb: misc: onboard_usb_dev: Add Terminus
+ FE1.1s USB2.0 Hub (1a40:0101)
+
+Terminus FE1.1s is USB2.0 protocol compliant 4-port USB HUB, It support
+MTT (Multiple Transaction Translator) mode, the upstream port supports
+high-speed 480MHz and full-speed 12MHz modes, also it has integrated 5V
+to 3.3V/1.8V regulator and Power-On-Reset circuit.
+
+Link: https://terminus-usa.com/wp-content/uploads/2024/06/FE1.1s-Product-Brief-Rev.-2.0-2023.pdf [1]
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+Link: https://patch.msgid.link/20260319-03-usb-hub-fe1-v2-2-e4e26809dd7d@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit 00b4fe5be06aecd6426930de86b7cffc2330f4b8)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/usb/misc/onboard_usb_dev.c | 2 ++
+ drivers/usb/misc/onboard_usb_dev.h | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
+index ba37eb99efba..5732843c6687 100644
+--- a/drivers/usb/misc/onboard_usb_dev.c
++++ b/drivers/usb/misc/onboard_usb_dev.c
+@@ -570,6 +570,7 @@ static struct platform_driver onboard_dev_driver = {
+ #define VENDOR_ID_MICROCHIP	0x0424
+ #define VENDOR_ID_PARADE	0x1da0
+ #define VENDOR_ID_REALTEK	0x0bda
++#define VENDOR_ID_TERMINUS	0x1a40
+ #define VENDOR_ID_TI		0x0451
+ #define VENDOR_ID_VIA		0x2109
+ #define VENDOR_ID_XMOS		0x20B1
+@@ -673,6 +674,7 @@ static const struct usb_device_id onboard_dev_id_table[] = {
+ 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0414) }, /* RTS5414 USB 3.2 HUB */
+ 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x5414) }, /* RTS5414 USB 2.1 HUB */
+ 	{ USB_DEVICE(VENDOR_ID_REALTEK, 0x0179) }, /* RTL8188ETV 2.4GHz WiFi */
++	{ USB_DEVICE(VENDOR_ID_TERMINUS, 0x0101) }, /* Terminus FE1.1s 2.0 HUB */
+ 	{ USB_DEVICE(VENDOR_ID_TI, 0x8025) }, /* TI USB8020B 3.0 HUB */
+ 	{ USB_DEVICE(VENDOR_ID_TI, 0x8027) }, /* TI USB8020B 2.0 HUB */
+ 	{ USB_DEVICE(VENDOR_ID_TI, 0x8140) }, /* TI USB8041 3.0 HUB */
+diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
+index 1a1e86e60e04..9284bc072f7c 100644
+--- a/drivers/usb/misc/onboard_usb_dev.h
++++ b/drivers/usb/misc/onboard_usb_dev.h
+@@ -153,6 +153,7 @@ static const struct of_device_id onboard_dev_match[] = {
+ 	{ .compatible = "usbbda,5411", .data = &realtek_rts5411_data, },
+ 	{ .compatible = "usbbda,414", .data = &realtek_rts5411_data, },
+ 	{ .compatible = "usbbda,5414", .data = &realtek_rts5411_data, },
++	{ .compatible = "usb1a40,0101", .data = &vialab_vl817_data, },
+ 	{ .compatible = "usb1a86,8091", .data = &wch_ch334_data, },
+ 	{ .compatible = "usb1da0,5511", .data = &parade_ps5511_data, },
+ 	{ .compatible = "usb1da0,55a1", .data = &parade_ps5511_data, },
+-- 
+2.53.0
+
