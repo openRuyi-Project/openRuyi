@@ -8,6 +8,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%bcond tools 1
+
 # Whether dtbs needed for arch
 %ifarch riscv64
 %global need_dtbs 1
@@ -73,6 +75,21 @@ BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  kmod
 BuildRequires:  rpm-config-openruyi
+%if %{with tools}
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  clang
+BuildRequires:  libtool
+BuildRequires:  pkgconfig(babeltrace)
+BuildRequires:  pkgconfig(capstone)
+BuildRequires:  pkgconfig(libpci)
+BuildRequires:  pkgconfig(liblzma)
+BuildRequires:  pkgconfig(libudev)
+BuildRequires:  pkgconfig(libtraceevent)
+BuildRequires:  pkgconfig(numa)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  systemtap-sdt-devel
+%endif
 
 # Meta-package: default installation
 Requires:       %{name}-core%{?_isa} = %{version}-%{release}
@@ -124,6 +141,27 @@ external kernel modules against the installed kernel. The development files are
 located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided under
 /lib/modules/%{kernel_full_version}/ for compatibility.
 
+%if %{with tools}
+%package        tools
+Summary:        Set of tools for the Linux kernel
+License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-only
+Provides:       perf = %{version}-%{release}
+Obsoletes:      perf < %{version}-%{release}
+
+%description    tools
+This package contains the tools/ directory from the kernel source
+and the supporting documentation.
+
+%package        tools-devel
+Summary:        Development files for %{name}
+License:        GPL-2.0-only
+Requires:       %{name}-tools%{?_isa} = %{version}-%{release}
+
+%description    tools-devel
+This package contains the libraries and header files for the
+tools/ directory from the kernel source.
+%endif
+
 %if %{need_dtbs}
 %package        dtbs
 Summary:        Devicetree blob files from Linux sources
@@ -143,6 +181,20 @@ echo "-%{kernel_local_version}" > localversion
 %make_build %{kernel_make_flags} olddefconfig
 
 %build
+%if %{with tools}
+# build tools
+%make_build -C tools EXTRA_CFLAGS="%{optflags}" bootconfig gpio iio spi tmon
+%make_build -C tools LD=ld.bfd EXTRA_CFLAGS="%{optflags} -Wno-array-bounds -Wno-maybe-uninitialized" perf
+%make_build -C tools/power/cpupower EXTRA_CFLAGS="%{optflags}" CPUFRQ_BENCH=false VERSION=%{version}
+
+pushd tools/usb/usbip
+./autogen.sh
+%configure --disable-static
+%make_build
+popd
+%endif
+
+# build kernel
 
 %make_build %{kernel_make_flags}
 
@@ -151,6 +203,19 @@ echo "-%{kernel_local_version}" > localversion
 %endif
 
 %install
+%if %{with tools}
+# install tools
+make -C tools/power/cpupower DESTDIR=%{buildroot} libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false VERSION=%{version} install
+make -C tools DESTDIR=%{buildroot} bootconfig_install gpio_install iio_install spi_install
+make -C tools INSTALL_ROOT=%{buildroot} tmon_install
+make -C tools/perf LD=ld.bfd EXTRA_CFLAGS="%{optflags} -Wno-array-bounds -Wno-maybe-uninitialized" DESTDIR=%{buildroot} prefix=%{_prefix} install-bin
+make -C tools/usb/usbip DESTDIR=%{buildroot} install
+find %{buildroot}%{_libdir} -type f -name "*.a" -delete -print
+%find_lang cpupower --generate-subpackages
+%endif
+
+# install kernel
+
 %define ksrcpath %{buildroot}%{_usrsrc}/kernels/%{kernel_full_version}
 install -d %{buildroot}%{modpath} %{ksrcpath}
 
@@ -215,6 +280,48 @@ rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_insta
 %if %{need_dtbs}
 %files dtbs
 %{modpath}/dtb
+%endif
+
+%if %{with tools}
+# linux tools
+%files tools -f cpupower.lang
+%license COPYING
+%config %{_sysconfdir}/cpupower-service.conf
+%{_bindir}/bootconfig
+%{_bindir}/cpupower
+%{_bindir}/gpio-*
+%{_bindir}/iio_event_monitor
+%{_bindir}/iio_generic_buffer
+%{_bindir}/lsgpio
+%{_bindir}/lsiio
+%{_bindir}/perf
+%{_bindir}/spidev_*
+%{_bindir}/tmon
+%{_bindir}/trace
+%{_datadir}/bash-completion/completions/cpupower
+%{_libdir}/libcpupower.so*.1
+%{_libdir}/libusbip.so.0*
+%{_libexecdir}/cpupower
+%{_libexecdir}/perf-core
+%{_mandir}/man1/cpupower*
+%{_mandir}/man8/usbip.8*
+%{_mandir}/man8/usbipd.8*
+%{_sbindir}/usbip
+%{_sbindir}/usbipd
+%{_sysconfdir}/bash_completion.d/perf
+%{_unitdir}/cpupower.service
+
+%files tools-devel
+%dir %{_includedir}/perf
+%dir %{_includedir}/usbip
+%{_docdir}/perf-tip/tips.txt
+%{_includedir}/cpufreq.h
+%{_includedir}/cpuidle.h
+%{_includedir}/perf/perf_dlfilter.h
+%{_includedir}/powercap.h
+%{_includedir}/usbip/*.h
+%{_libdir}/libcpupower.so
+%{_libdir}/libusbip.so
 %endif
 
 %changelog
