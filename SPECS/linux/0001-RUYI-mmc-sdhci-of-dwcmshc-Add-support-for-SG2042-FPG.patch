@@ -1,0 +1,61 @@
+From 30511272dcaccf22b5c421d030ecc5605477fcf9 Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Thu, 28 May 2026 14:18:23 +0800
+Subject: [PATCH] RUYI: mmc: sdhci-of-dwcmshc: Add support for SG2042 FPGA
+ variant
+
+Add support for a testing variant of the SG2042 SDHCI controller without
+PHY reset and without the "timer" clock.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+---
+ drivers/mmc/host/sdhci-of-dwcmshc.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+index bf2cb49ddd8196..b16d34c4c4c915 100644
+--- a/drivers/mmc/host/sdhci-of-dwcmshc.c
++++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+@@ -1743,6 +1743,16 @@ static const struct sdhci_ops sdhci_dwcmshc_sg2042_ops = {
+ 	.platform_execute_tuning = th1520_execute_tuning,
+ };
+ 
++static const struct sdhci_ops sdhci_dwcmshc_sg2042_fpga_ops = {
++	.set_clock		= sdhci_set_clock,
++	.set_bus_width		= sdhci_set_bus_width,
++	.set_uhs_signaling	= dwcmshc_set_uhs_signaling,
++	.get_max_clock		= dwcmshc_get_max_clock,
++	.reset			= sdhci_reset,
++	.adma_write_desc	= dwcmshc_adma_write_desc,
++	.platform_execute_tuning = th1520_execute_tuning,
++};
++
+ static const struct sdhci_ops sdhci_dwcmshc_eic7700_ops = {
+ 	.set_clock = sdhci_eic7700_set_clock,
+ 	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+@@ -1836,6 +1846,14 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_sg2042_pdata = {
+ 	.init = sg2042_init,
+ };
+ 
++static const struct dwcmshc_pltfm_data sdhci_dwcmshc_sg2042_fpga_pdata = {
++	.pdata = {
++		.ops = &sdhci_dwcmshc_sg2042_fpga_ops,
++		.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
++		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++	},
++};
++
+ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_eic7700_pdata = {
+ 	.pdata = {
+ 		.ops = &sdhci_dwcmshc_eic7700_ops,
+@@ -1951,6 +1969,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+ 		.compatible = "sophgo,sg2042-dwcmshc",
+ 		.data = &sdhci_dwcmshc_sg2042_pdata,
+ 	},
++	{
++		.compatible = "sophgo,sg2042-fpga-dwcmshc",
++		.data = &sdhci_dwcmshc_sg2042_fpga_pdata,
++	},
+ 	{
+ 		.compatible = "eswin,eic7700-dwcmshc",
+ 		.data = &sdhci_dwcmshc_eic7700_pdata,
