@@ -544,6 +544,7 @@ Requires(postun): kernel-install
 0001-XIANGSHAN-Flush-all-tlb-in-set_pte.patch
 0002-XIANGSHAN-Add-two-sbi-calls.patch
 0003-XIANGSHAN-Add-workaround-to-retry-when-access-fault.patch
+0001-RUYI-mmc-sdhci-of-dwcmshc-Add-support-for-SG2042-FPG.patch
 
 %description
 This is a meta-package that installs the core kernel image and modules.
