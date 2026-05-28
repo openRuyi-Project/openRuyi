@@ -539,6 +539,7 @@ Requires(postun): kernel-install
 0465-RUYI-wifi-rtw89-pci-add-SpacemiT-K3-to-36-bit-DMA-al.patch
 0466-RUYI-drm-amdgpu-disable-dynamic-PCIe-speed-switch-on.patch
 0467-RVCK-driver-clk-k3-keep-some-system-based-clock-alwa.patch
+0001-RUYI-mmc-sdhci-of-dwcmshc-Add-support-for-SG2042-FPG.patch
 
 %description
 This is a meta-package that installs the core kernel image and modules.
