@@ -6,7 +6,6 @@
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
-%global modpath %{_prefix}/lib/modules/%{kver}
 
 # Whether dtbs needed for arch
 %ifarch riscv64
@@ -15,8 +14,23 @@
 %global need_dtbs 0
 %endif
 
-%global kver %{version}-%{release}
-%global kernel_make_flags LD=ld.bfd KBUILD_BUILD_VERSION=%{release}
+#### About Versioning
+#
+# CONFIG_LOCALVERSION_AUTO must not be set.
+# This ensures kernel build system never injects hash value generated from commit id.
+# This also bypass the KBUILD_BUILD_VERSION logic.
+#
+
+# Making flavored kernels by setting this one.
+# This will be included into `uname -r` so that multiple kernels will co-exist
+# %%global variant_name
+
+# SHOULD NOT TOUCH
+%global kernel_local_version    %{?variant_name:%{variant_name}-}%{release}
+%global kernel_full_version     %{version}-%{kernel_local_version}
+
+%global kernel_make_flags LD=ld.bfd
+%global modpath %{_prefix}/lib/modules/%{kernel_full_version}
 
 Name:           linux
 Version:        7.0.10
@@ -366,8 +380,8 @@ Requires:       dwarves
 %description    devel
 This package provides the kernel headers and Makefiles necessary to build
 external kernel modules against the installed kernel. The development files are
-located at %{_usrsrc}/kernels/%{kver}, with symlinks provided under
-%{_prefix}/lib/modules/%{kver}/ for compatibility.
+located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided under
+%{_prefix}/lib/modules/%{kernel_full_version}/ for compatibility.
 
 %if %{need_dtbs}
 %package        dtbs
@@ -381,7 +395,7 @@ for booting.
 %prep
 %autosetup -p1
 cp %{SOURCE1} .config
-echo "-%{release}" > localversion
+echo "-%{kernel_local_version}" > localversion
 
 %conf
 %make_build %{kernel_make_flags} olddefconfig
@@ -395,7 +409,7 @@ echo "-%{release}" > localversion
 %endif
 
 %install
-%define ksrcpath %{buildroot}%{_usrsrc}/kernels/%{kver}
+%define ksrcpath %{buildroot}%{_usrsrc}/kernels/%{kernel_full_version}
 install -d %{buildroot}%{modpath} %{ksrcpath}
 
 %make_build %{kernel_make_flags} INSTALL_MOD_PATH=%{buildroot}%{_prefix} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
@@ -408,20 +422,20 @@ install -d %{buildroot}%{modpath} %{ksrcpath}
 
 pushd %{buildroot}%{modpath}
 rm -f build source
-ln -sf %{_usrsrc}/kernels/%{kver} build
-ln -sf %{_usrsrc}/kernels/%{kver} source
+ln -sf %{_usrsrc}/kernels/%{kernel_full_version} build
+ln -sf %{_usrsrc}/kernels/%{kernel_full_version} source
 popd
 
 install -Dm644 $(make %{kernel_make_flags} -s image_name) %{buildroot}%{modpath}/vmlinuz
 
-echo "Module signing would happen here for version %{kver}."
+echo "Module signing would happen here for version %{kernel_full_version}."
 
 %post
-%{_bindir}/kernel-install add %{kver} %{modpath}/vmlinuz
+%{_bindir}/kernel-install add %{kernel_full_version} %{modpath}/vmlinuz
 
 %postun
 if [ $1 -eq 0 ] ; then
-    %{_bindir}/kernel-install remove %{kver}
+    %{_bindir}/kernel-install remove %{kernel_full_version}
 fi
 
 %files
@@ -438,7 +452,7 @@ fi
 %exclude %{modpath}/source
 
 %files devel
-%{_usrsrc}/kernels/%{kver}/
+%{_usrsrc}/kernels/%{kernel_full_version}/
 %{modpath}/build
 %{modpath}/source
 
