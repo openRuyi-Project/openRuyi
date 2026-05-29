@@ -429,6 +429,7 @@ ln -sf %{_usrsrc}/kernels/%{kernel_full_version} source
 popd
 
 install -Dm644 $(make %{kernel_make_flags} -s image_name) %{buildroot}%{modpath}/vmlinuz
+zstd -f .config -o %{buildroot}%{modpath}/config.zst
 
 echo "Module signing would happen here for version %{kernel_full_version}."
 
@@ -446,10 +447,12 @@ fi
 
 %files core
 %{modpath}/vmlinuz
+%{modpath}/config.zst
 
 %files modules
 %{modpath}/*
 %exclude %{modpath}/vmlinuz
+%exclude %{modpath}/config.zst
 %exclude %{modpath}/build
 %exclude %{modpath}/source
 
