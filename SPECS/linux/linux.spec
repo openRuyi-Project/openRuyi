@@ -8,10 +8,6 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 %global modpath %{_prefix}/lib/modules/%{kver}
 
-%ifarch riscv64
-#!BuildConstraint: hardware:jobs 32
-%endif
-
 # Whether dtbs needed for arch
 %ifarch riscv64
 %global need_dtbs 1
