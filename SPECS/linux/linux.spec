@@ -446,15 +446,15 @@ fi
 %doc README
 
 %files core
+%dir %{modpath}
 %{modpath}/vmlinuz
 %{modpath}/config.zst
 
 %files modules
-%{modpath}/*
-%exclude %{modpath}/vmlinuz
-%exclude %{modpath}/config.zst
-%exclude %{modpath}/build
-%exclude %{modpath}/source
+%{modpath}/kernel
+%{modpath}/modules.builtin
+%{modpath}/modules.builtin.modinfo
+%{modpath}/modules.order
 
 %files devel
 %{_usrsrc}/kernels/%{kernel_full_version}/
