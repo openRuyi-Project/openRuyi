@@ -15,7 +15,6 @@
 %global need_dtbs 0
 %endif
 
-%global signmodules 1
 %global kver %{version}-%{release}
 %global kernel_make_flags LD=ld.bfd KBUILD_BUILD_VERSION=%{release}
 
