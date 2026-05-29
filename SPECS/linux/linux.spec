@@ -77,9 +77,10 @@ Requires:       %{name}-modules%{?_isa} = %{version}-%{release}
 %if %{need_dtbs}
 Requires:       %{name}-dtbs%{?_isa} = %{version}-%{release}
 %endif
+# TODO: kmod should be the dependencies of kernel-install
 Requires(post):   kmod
 Requires(post):   kernel-install
-Requires(postun): kernel-install
+Requires(preun):  kernel-install
 
 %patchlist
 0001-UPSTREAM-rust-clk-implement-Send-and-Sync.patch
@@ -433,7 +434,7 @@ echo "Module signing would happen here for version %{kernel_full_version}."
 %post
 %{_bindir}/kernel-install add %{kernel_full_version} %{modpath}/vmlinuz
 
-%postun
+%preun
 if [ $1 -eq 0 ] ; then
     %{_bindir}/kernel-install remove %{kernel_full_version}
 fi
