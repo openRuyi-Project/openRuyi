@@ -388,6 +388,7 @@ located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided und
 %if %{need_dtbs}
 %package        dtbs
 Summary:        Devicetree blob files from Linux sources
+Requires:       %{name}-core = %{version}-%{release}
 
 %description    dtbs
 This package provides the DTB files built from Linux sources that may be used
