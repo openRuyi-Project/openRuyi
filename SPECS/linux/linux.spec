@@ -368,7 +368,7 @@ providing the minimal set of files needed to boot the system.
 
 %package        modules
 Summary:        Kernel modules for the Linux kernel
-Requires:       %{name}-core = %{version}-%{release}
+Requires:       %{name}-core%{?_isa} = %{version}-%{release}
 
 %description    modules
 Contains all the kernel modules (.ko files) and associated metadata for
@@ -388,7 +388,7 @@ located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided und
 %if %{need_dtbs}
 %package        dtbs
 Summary:        Devicetree blob files from Linux sources
-Requires:       %{name}-core = %{version}-%{release}
+Requires:       %{name}-core%{?_isa} = %{version}-%{release}
 
 %description    dtbs
 This package provides the DTB files built from Linux sources that may be used
