@@ -31,7 +31,7 @@
 %global kernel_full_version     %{version}-%{kernel_local_version}
 
 %global kernel_make_flags LD=ld.bfd
-%global modpath %{_prefix}/lib/modules/%{kernel_full_version}
+%global modpath /lib/modules/%{kernel_full_version}
 
 Name:           linux
 Version:        7.0.10
@@ -383,7 +383,7 @@ Requires:       dwarves
 This package provides the kernel headers and Makefiles necessary to build
 external kernel modules against the installed kernel. The development files are
 located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided under
-%{_prefix}/lib/modules/%{kernel_full_version}/ for compatibility.
+/lib/modules/%{kernel_full_version}/ for compatibility.
 
 %if %{need_dtbs}
 %package        dtbs
@@ -415,7 +415,7 @@ echo "-%{kernel_local_version}" > localversion
 %define ksrcpath %{buildroot}%{_usrsrc}/kernels/%{kernel_full_version}
 install -d %{buildroot}%{modpath} %{ksrcpath}
 
-%make_build %{kernel_make_flags} INSTALL_MOD_PATH=%{buildroot}%{_prefix} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
+%make_build %{kernel_make_flags} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
 
 %if %{need_dtbs}
 %make_build %{kernel_make_flags} INSTALL_DTBS_PATH=%{buildroot}%{modpath}/dtb dtbs_install
