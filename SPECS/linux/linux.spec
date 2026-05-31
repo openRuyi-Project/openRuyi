@@ -73,11 +73,20 @@ BuildRequires:  pkgconfig(openssl)
 BuildRequires:  kmod
 BuildRequires:  rpm-config-openruyi
 
+# Meta-package: default installation
 Requires:       %{name}-core%{?_isa} = %{version}-%{release}
 Requires:       %{name}-modules%{?_isa} = %{version}-%{release}
 %if %{need_dtbs}
 Requires:       %{name}-dtbs%{?_isa} = %{version}-%{release}
 %endif
+
+# Meta-package: order of removal
+Requires(preun): %{name}-core%{?_isa} = %{version}-%{release}
+Requires(preun): %{name}-modules%{?_isa} = %{version}-%{release}
+%if %{need_dtbs}
+Requires(preun): %{name}-dtbs%{?_isa} = %{version}-%{release}
+%endif
+
 # TODO: kmod should be the dependencies of kernel-install
 Requires(post):   kmod
 Requires(post):   kernel-install
@@ -356,15 +365,15 @@ Requires(preun):  kernel-install
 0001-RUYI-mmc-sdhci-of-dwcmshc-Add-support-for-SG2042-FPG.patch
 
 %description
-This is a meta-package that installs the core kernel image and modules.
-For a minimal boot environment, install the 'linux-core' package instead.
+This is a meta-package that handles standard kernel installation.
+To avoid the execution of kernel service scriptlet, please install
+%{name}-core%{?_isa}, %{name}-modules%{?_isa} instead.
 
 %package        core
-Summary:        The core Linux kernel image and initrd
+Summary:        The core Linux kernel image
 
 %description    core
-Contains the bootable kernel image (vmlinuz) and a generic, pre-built initrd,
-providing the minimal set of files needed to boot the system.
+Contains the bootable kernel image (vmlinuz) and its Kconfig options.
 
 %package        modules
 Summary:        Kernel modules for the Linux kernel
