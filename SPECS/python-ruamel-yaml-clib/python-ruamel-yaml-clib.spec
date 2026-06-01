@@ -19,19 +19,16 @@ Source0:        https://files.pythonhosted.org/packages/source/r/%{pypi_name}/%{
 BuildSystem:    pyproject
 
 BuildOption(install):  -l _ruamel_yaml
-BuildOption(check):  _ruamel_yaml
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(cython)
 # For %check
-BuildRequires:  python3dist(ruamel-yaml)
+# BuildRequires:  python3dist(ruamel-yaml)
 
 Provides:       python3-ruamel-yaml-clib = %{version}-%{release}
 Provides:       python3-ruamel-yaml-clib%{?_isa} = %{version}-%{release}
 %python_provide python3-ruamel-yaml-clib
-
-Requires:       python3dist(ruamel-yaml)
 
 %description
 ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of
@@ -57,6 +54,10 @@ mv *.pyx ruamel.yaml.clib
 cythonize -j${RPM_BUILD_NCPUS} -3 ruamel.yaml.clib/*.pyx
 mv ruamel.yaml.clib/* .
 rmdir ruamel.yaml.clib
+
+# Here, we skip the test to avoid the dependency of python-ruamel-yaml-clib on
+# python-ruamel-yaml, which leads to a circular dependency.
+%check
 
 %files -f %{pyproject_files}
 %doc README.md
