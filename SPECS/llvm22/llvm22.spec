@@ -541,7 +541,8 @@ OLD_CWD="$PWD"
 
 %ifarch riscv64
 %global cmake_common_args %{cmake_common_args} \\\
-    -DLLVM_PARALLEL_LINK_JOBS=2
+    -DLLVM_PARALLEL_LINK_JOBS=2 \\\
+    -DLLVM_PARALLEL_COMPILE_JOBS=16
 %endif
 
 %global cmake_config_args %{cmake_common_args}
@@ -646,7 +647,6 @@ OLD_CWD="$PWD"
 # installation using the CMAKE_SKIP_INSTALL_RPATH option.
 %global cmake_config_args %{cmake_config_args} -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
 %global cmake_config_args %{cmake_config_args} -DLLVM_VERSION_SUFFIX=''
-%global cmake_config_args %{cmake_config_args} -DLLVM_RAM_PER_COMPILE_JOB=2048
 
 extra_cmake_args=''
 # https://github.com/llvm/llvm-project/issues/111492
