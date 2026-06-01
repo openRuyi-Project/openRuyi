@@ -443,13 +443,24 @@ zstd -f .config -o %{buildroot}%{modpath}/config.zst
 
 echo "Module signing would happen here for version %{kernel_full_version}."
 
+%pretrans
+# Cleanup state file ahead to avoid leftovers from previous failure.
+rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
+
 %post
+# Workaround reinstalling: let %%preun know that the same package is installed just before.
+touch "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
+
 %{_bindir}/kernel-install add %{kernel_full_version} %{modpath}/vmlinuz
 
 %preun
-if [ $1 -eq 0 ] ; then
+# Why not "if [ $1 -eq 0 ]"? It breaks kernel removal when multi versions were installed.
+if [ ! -e "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed" ]; then
     %{_bindir}/kernel-install remove %{kernel_full_version}
 fi
+
+%posttrans
+rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
 
 %files
 %license COPYING
