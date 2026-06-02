@@ -87,8 +87,6 @@ Requires(preun): %{name}-modules%{?_isa} = %{version}-%{release}
 Requires(preun): %{name}-dtbs%{?_isa} = %{version}-%{release}
 %endif
 
-# TODO: kmod should be the dependencies of kernel-install
-Requires(post):   kmod
 Requires(post):   kernel-install
 Requires(preun):  kernel-install
 

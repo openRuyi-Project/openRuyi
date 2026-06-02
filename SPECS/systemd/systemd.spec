@@ -433,6 +433,7 @@ This package provide mount.ddi and systemd-dissect.
 
 %package     -n kernel-install
 Summary:        This package provides kernel-install tool
+Requires:       kmod
 
 %description -n kernel-install
 This package provides kernel-install tool
