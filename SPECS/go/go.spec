@@ -45,31 +45,39 @@
   /usr/lib/rpm/brp-compress
 
 Name:           go
-Version:        1.25.8
+Version:        1.26.3
 Release:        %autorelease
 Summary:        The Go Programming Language toolchain
 License:        BSD-3-Clause
 URL:            https://go.dev/
 VCS:            git:https://github.com/golang/go
-#!RemoteAsset
+#!RemoteAsset:  sha256:1c646875d0aa8799133184ed57cf79ff24bdefe8c8820470602a9d3d6d9192b8
 Source0:        https://go.dev/dl/%{name}%{version}.src.tar.gz
 %if %{with bootstrap}
-#!RemoteAsset
-Source1:        https://go.dev/dl/%{name}%{version}.linux-%{gohostarch}.tar.gz
+%ifarch x86_64
+#!RemoteAsset:  sha256:2b2cfc7148493da5e73981bffbf3353af381d5f93e789c82c79aff64962eb556
+Source1:        https://go.dev/dl/%{name}%{version}.linux-amd64.tar.gz
 %endif
-
-# https://go-review.googlesource.com/c/go/+/732560
-Patch1:	0001-crypto-sha1-provide-optimised-assembly-for-riscv64.patch
+%ifarch riscv64
+#!RemoteAsset:  sha256:3b8fd5112340b72587e42c619f43270f1bc21f63cfdb587e6b72e0336580727c
+Source2:        https://go.dev/dl/%{name}%{version}.linux-riscv64.tar.gz
+%endif
+%endif
 
 # Bootstrap from a pre-existing Go compiler.
 %if %{without bootstrap}
 BuildRequires:  go
 %endif
-BuildRequires:  gcc, make
+BuildRequires:  gcc
+BuildRequires:  make
 
 Provides:       golang = %{version}-%{release}
 Recommends:     %{name}-cshared = %{version}-%{release}
 Requires:       glibc
+
+%patchlist
+# https://go-review.googlesource.com/c/go/+/732560
+0001-crypto-sha1-provide-optimised-assembly-for-riscv64.patch
 
 %description
 The Go Programming Language. This package contains the compiler, tools,
@@ -112,7 +120,12 @@ Contains the Go standard library pre-compiled with race detector support.
 
 %if %{with bootstrap}
 mkdir -p %{_builddir}/%{name}-bootstrap
+%ifarch x86_64
 tar -xf %{SOURCE1} -C %{_builddir}/%{name}-bootstrap --strip-components=1
+%endif
+%ifarch riscv64
+tar -xf %{SOURCE2} -C %{_builddir}/%{name}-bootstrap --strip-components=1
+%endif
 %endif
 
 %build
@@ -212,4 +225,4 @@ popd
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
