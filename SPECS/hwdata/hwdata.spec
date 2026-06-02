@@ -21,17 +21,14 @@ BuildSystem:    autotools
 BuildOption(install):  libdir=%{_libdir}
 
 BuildRequires:  make
-BuildRequires:  pciutils
-# for tests fix.
-BuildRequires:  python3
-BuildRequires:  python3-rpm-macros
 
 %description
 hwdata contains various hardware identification and configuration data,
 such as the pci.ids and usb.ids databases.
 
-%check -p
-%py3_shebang_fix .
+# we skip testing of hwdata because the test relies on pciutils,
+# but pciutils in turn depends on hwdata.
+%check
 
 %files
 %license COPYING
