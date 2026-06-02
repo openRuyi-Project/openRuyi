@@ -21,11 +21,15 @@ BuildOption(install):  -l %{srcname} +auto
 # TODO: No python-recommonmark for now
 BuildOption(check):  -e docutils.parsers.commonmark_wrapper
 BuildOption(check):  -e docutils.parsers.recommonmark_wrapper
+# Don't include pygments, avoid circular dependency.
+BuildOption(check):  -e docutils.writers.odf_odt.pygmentsformatter
+
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+
 # Tests
-BuildRequires:  python3dist(pygments)
+# BuildRequires:  python3dist(pygments)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
