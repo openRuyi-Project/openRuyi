@@ -5,45 +5,45 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global gitver 51.0
-%global gitnum 0
-
-%global obs_packaging_commit 29a097e3e793e0f88053fa9b090a15c1333aa2cc
+%global upstream_commit 1e18716fbdc01df4538bb1604f6019d95ed29da3
+%global vendor_dir %{name}-%{version}-vendor
 
 Name:           cloud-hypervisor
-Url:            https://github.com/cloud-hypervisor/cloud-hypervisor
-Summary:        Cloud Hypervisor is a Virtual Machine Monitor (VMM) that runs on top of KVM
-Version:        %{gitver}.%{gitnum}
+Version:        52.0.0+git20260602.1e18716
 Release:        %autorelease
-License:        ASL 2.0 or BSD-3-clause
-#!RemoteAsset:  sha256:66e2a1b45d1463aab22d763c02bbf8fff5a4c9833c4612a0b717867cd1ebdbbc
-Source0:        https://github.com/cloud-hypervisor/obs-packaging/raw/%{obs_packaging_commit}/cloud-hypervisor/src/%{name}-%{version}.tar.gz
-#!RemoteAsset:  sha256:47e97b583ab92503cd588c38ecc92d4fd217012a97ab0748709e16b791bdee65
-Source1:        https://github.com/cloud-hypervisor/obs-packaging/raw/%{obs_packaging_commit}/cloud-hypervisor/src/%{name}-%{version}-vendor.tar.gz
-#!RemoteAsset:  sha256:9ffccf72f43efaa6e6434be68da53e7ad6ffbe332149f44a4d99405d58da1dc2
-Source2:        https://github.com/cloud-hypervisor/obs-packaging/raw/%{obs_packaging_commit}/cloud-hypervisor/src/config.toml
+Summary:        Virtual Machine Monitor that runs on top of KVM
+License:        (Apache-2.0 OR BSD-3-Clause) AND CC-BY-4.0
+URL:            https://github.com/cloud-hypervisor/cloud-hypervisor
+#!RemoteAsset:  sha256:c65f8ca029c5f84d305fd1e5bb5a540fc1a0c178111bd0a1d817985c457014c9
+Source0:        https://codeload.github.com/cloud-hypervisor/cloud-hypervisor/tar.gz/%{upstream_commit}#/%{name}-%{version}.tar.gz
+# Generated from Source0 with `cargo vendor --locked --versioned-dirs`.
+#!RemoteAsset:  sha256:442624c499f0ee7c41d00f2645161c31cd55bc963c54354a3ed50090f92ace5b
+Source1:        https://github.com/wangyf0611/cloud-hypervisor/releases/download/openruyi-vendor-52.0.0-git20260602-1e18716/%{name}-%{version}-vendor.tar.zst
 
-BuildRequires:  gcc
-BuildRequires:  glibc-devel
+BuildSystem:    rust
+
 BuildRequires:  binutils
-BuildRequires:  openssl-devel
+BuildRequires:  cargo >= 1.89.0
+BuildRequires:  glibc-devel
+BuildRequires:  make
+BuildRequires:  pkgconfig(openssl)
+BuildRequires:  rust >= 1.89.0
+BuildRequires:  rust-rpm-macros
+BuildRequires:  zstd
 
-BuildRequires:  rust >= 1.88.0
-BuildRequires:  cargo >= 1.88.0
-
-Requires: bash
-Requires: glibc
-Requires: libcap
+Requires:       bash
+Requires:       glibc
+Requires:       libcap
 
 %ifarch x86_64
+%define rust_def_target x86_64-unknown-linux-gnu
 %define cargo_pkg_feature_opts --no-default-features --features "mshv,kvm" -p cloud-hypervisor
 %endif
 
 %ifarch riscv64
+%define rust_def_target riscv64gc-unknown-linux-gnu
 %define cargo_pkg_feature_opts --no-default-features --features "kvm" -p cloud-hypervisor
 %endif
-
-%define cargo_offline --offline
 
 %description
 Cloud Hypervisor is an open source Virtual Machine Monitor (VMM) that runs on
@@ -55,50 +55,51 @@ handled by paravirtualised devices (i.e. virtio), no requirement for legacy
 devices and recent CPUs and KVM.
 
 %prep
-
-%setup -q
-tar xf %{SOURCE1}
+%autosetup -n %{name}-%{upstream_commit}
+tar -I zstd -xf %{SOURCE1}
 mkdir -p .cargo
-cp %{SOURCE2} .cargo/
+cat > .cargo/config.toml <<EOF
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source."git+https://github.com/firecracker-microvm/micro-http?branch=main"]
+git = "https://github.com/firecracker-microvm/micro-http"
+branch = "main"
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "%{vendor_dir}"
+
+[net]
+offline = true
+EOF
 
 %build
-cargo_version=$(cargo --version)
-if [[ $? -ne 0 ]]; then
-      echo "Cargo not found, please install cargo. exiting"
-      exit 0
-fi
-
 export OPENSSL_NO_VENDOR=1
-cargo build --release %{cargo_pkg_feature_opts} %{cargo_offline}
-cargo build --release --package vhost_user_net %{cargo_offline}
-cargo build --release --package vhost_user_block %{cargo_offline}
+cargo build --release --locked --offline --target=%{rust_def_target} %{cargo_pkg_feature_opts}
+cargo build --release --locked --offline --target=%{rust_def_target} --package vhost_user_net
+cargo build --release --locked --offline --target=%{rust_def_target} --package vhost_user_block
 
 %install
-rm -rf %{buildroot}
-install -d %{buildroot}%{_bindir}
-install -D -m755  ./target/release/cloud-hypervisor %{buildroot}%{_bindir}
-install -D -m755  ./target/release/ch-remote %{buildroot}%{_bindir}
-install -d %{buildroot}%{_libdir}
-install -d %{buildroot}%{_libdir}/cloud-hypervisor
-install -D -m755 target/release/vhost_user_block %{buildroot}%{_libdir}/cloud-hypervisor
-install -D -m755 target/release/vhost_user_net %{buildroot}%{_libdir}/cloud-hypervisor
+install -Dpm0755 target/%{rust_def_target}/release/cloud-hypervisor %{buildroot}%{_bindir}/cloud-hypervisor
+install -Dpm0755 target/%{rust_def_target}/release/ch-remote %{buildroot}%{_bindir}/ch-remote
+install -Dpm0755 target/%{rust_def_target}/release/vhost_user_block %{buildroot}%{_libdir}/cloud-hypervisor/vhost_user_block
+install -Dpm0755 target/%{rust_def_target}/release/vhost_user_net %{buildroot}%{_libdir}/cloud-hypervisor/vhost_user_net
+
+%check
+# The upstream test suite requires KVM-capable hosts and is not suitable for
+# the generic OBS build workers.
 
 %files
-%defattr(-,root,root,-)
+%doc README.md
+%license LICENSES/Apache-2.0.txt
+%license LICENSES/BSD-3-Clause.txt
+%license LICENSES/CC-BY-4.0.txt
 %{_bindir}/ch-remote
 %caps(cap_net_admin=ep) %{_bindir}/cloud-hypervisor
 %dir %{_libdir}/cloud-hypervisor
 %{_libdir}/cloud-hypervisor/vhost_user_block
 %caps(cap_net_admin=ep) %{_libdir}/cloud-hypervisor/vhost_user_net
-%if 0%{?using_musl_libc}
-%{_libdir}/cloud-hypervisor/static/ch-remote
-%caps(cap_net_admim=ep) %{_libdir}/cloud-hypervisor/static/cloud-hypervisor
-%{_libdir}/cloud-hypervisor/static/vhost_user_block
-%caps(cap_net_admin=ep) %{_libdir}/cloud-hypervisor/static/vhost_user_net
-%endif
-%license LICENSES/Apache-2.0.txt
-%license LICENSES/BSD-3-Clause.txt
-%license LICENSES/CC-BY-4.0.txt
 
 %changelog
 %autochangelog
