@@ -19,6 +19,9 @@ VCS:            git:https://git.kernel.org/pub/scm/bluetooth/bluez.git
 Source:         https://www.kernel.org/pub/linux/bluetooth/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
+# https://git.kernel.org/pub/scm/bluetooth/bluez.git/commit/?id=b8d42b282b3c17f1f4838039fa23ba24f07db723
+Patch0:         0001-test-mesh-crypto-dont-run-test-if-not-AF_ALG.patch
+
 BuildOption(conf):  --enable-tools
 BuildOption(conf):  --enable-library
 BuildOption(conf):  --enable-external-ell
