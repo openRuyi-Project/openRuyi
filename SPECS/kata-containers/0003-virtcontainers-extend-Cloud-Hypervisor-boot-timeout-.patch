@@ -1,0 +1,64 @@
+From 8c32a6a33446233db7d5251f8c8b3347594441e2 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Wed, 13 May 2026 03:15:56 +0000
+Subject: [PATCH 3/6] virtcontainers: extend Cloud Hypervisor boot timeout on
+ RISC-V
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ src/runtime/virtcontainers/clh.go | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/src/runtime/virtcontainers/clh.go b/src/runtime/virtcontainers/clh.go
+index 51e3577ab..c9a4020e2 100644
+--- a/src/runtime/virtcontainers/clh.go
++++ b/src/runtime/virtcontainers/clh.go
+@@ -76,9 +76,10 @@ const (
+ 	clhTimeout                     = 10
+ 	clhAPITimeout                  = 1
+ 	clhAPITimeoutConfidentialGuest = 20
+-	// Minimum timout for calling CreateVM followed by BootVM. Executing these two APIs
++	// Minimum timeout for calling CreateVM followed by BootVM. Executing these two APIs
+ 	// might take longer than the value returned by getClhAPITimeout().
+-	clhCreateAndBootVMMinimumTimeout = 10
++	clhCreateAndBootVMMinimumTimeout        = 10
++	clhRiscv64CreateAndBootVMMinimumTimeout = 60
+ 	// Timeout for hot-plug - hotplug devices can take more time, than usual API calls
+ 	// Use longer time timeout for it.
+ 	clhHotPlugAPITimeout                   = 5
+@@ -318,6 +319,20 @@ func (clh *cloudHypervisor) getClhAPITimeout() time.Duration {
+ 	return clhAPITimeout
+ }
+ 
++func (clh *cloudHypervisor) getClhCreateAndBootVMTimeout() time.Duration {
++	minimumTimeout := time.Duration(clhCreateAndBootVMMinimumTimeout)
++	if runtime.GOARCH == "riscv64" {
++		minimumTimeout = time.Duration(clhRiscv64CreateAndBootVMMinimumTimeout)
++	}
++
++	apiTimeout := clh.getClhAPITimeout()
++	if apiTimeout < minimumTimeout {
++		return minimumTimeout
++	}
++
++	return apiTimeout
++}
++
+ func (clh *cloudHypervisor) getClhStopSandboxTimeout() time.Duration {
+ 	// Increase the StopSandboxTimeout when dealing with a Confidential Guest.
+ 	// The value has been chosen based on tests using `ctr`, and hopefully
+@@ -764,10 +779,7 @@ func (clh *cloudHypervisor) StartVM(ctx context.Context, timeout int) error {
+ 		return fmt.Errorf("failed to launch cloud-hypervisor: %q", err)
+ 	}
+ 
+-	bootTimeout := clh.getClhAPITimeout()
+-	if bootTimeout < clhCreateAndBootVMMinimumTimeout {
+-		bootTimeout = clhCreateAndBootVMMinimumTimeout
+-	}
++	bootTimeout := clh.getClhCreateAndBootVMTimeout()
+ 	ctx, cancel := context.WithTimeout(ctx, bootTimeout*time.Second)
+ 	defer cancel()
+ 
+-- 
+2.50.1 (Apple Git-155)
+
