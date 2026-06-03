@@ -1,0 +1,12 @@
+diff -urN pyscard-2.1.1.orig/smartcard/scard/PcscTypemaps.i pyscard-2.1.1/smartcard/scard/PcscTypemaps.i
+--- pyscard-2.1.1.orig/smartcard/scard/PcscTypemaps.i	2022-10-23 00:00:00.000000000 +0800
++++ pyscard-2.1.1/smartcard/scard/PcscTypemaps.i	2026-06-03 00:00:00.000000000 +0800
+@@ -23,7 +23,7 @@
+ %exception
+ {
+     Py_BEGIN_ALLOW_THREADS;
+-    $function
++    $action
+     Py_END_ALLOW_THREADS;
+ }
+ 
