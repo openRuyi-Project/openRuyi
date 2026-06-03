@@ -8,12 +8,12 @@
 %global pypi_name opentelemetry_sdk
 
 Name:           python-%{srcname}
-Version:        1.42.0
+Version:        1.42.1
 Release:        %autorelease
 Summary:        OpenTelemetry Python SDK
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-python
-#!RemoteAsset:  sha256:2479e462cc69357825c2c847ce4a601bc1b17e1279aa7f80d3490f0ae614d0e5
+#!RemoteAsset:  sha256:8c834e8f8c9ba4171d4ec843d0cb8a67e4c7394d3f9e9297e582cbd9456ddbf7
 Source0:        https://files.pythonhosted.org/packages/source/o/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
