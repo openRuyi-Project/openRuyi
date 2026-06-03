@@ -30,12 +30,14 @@ BuildOption(check):  -e hypothesis.extra.lark
 BuildOption(check):  -e hypothesis.extra.django
 BuildOption(check):  -e hypothesis.extra.pandas
 BuildOption(check):  -e 'hypothesis.extra.pandas.*'
+# Don't include numpy, avoid circular dependency.
+BuildOption(check):  -e hypothesis.extra.numpy
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 # For tests
 BuildRequires:  python3dist(python-dateutil)
-BuildRequires:  python3dist(numpy)
+# BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytz)
 BuildRequires:  python3dist(redis)
