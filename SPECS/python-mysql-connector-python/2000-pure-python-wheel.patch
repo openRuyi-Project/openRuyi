@@ -1,0 +1,13 @@
+diff -urN mysql_connector_python-9.7.0.orig/cpydist/bdist_wheel.py mysql_connector_python-9.7.0/cpydist/bdist_wheel.py
+--- mysql_connector_python-9.7.0.orig/cpydist/bdist_wheel.py	2025-01-01 00:00:00.000000000 +0000
++++ mysql_connector_python-9.7.0/cpydist/bdist_wheel.py	2026-01-01 00:00:00.000000000 +0000
+@@ -54,8 +54,7 @@
+         """Finalize the options."""
+         bdist_wheel.finalize_options(self)
+         BaseCommand.finalize_options(self)
+-        if self.universal:
+-            self.root_is_pure = True
++        self.root_is_pure = True
+ 
+     def run(self):
+         """Run the command."""
