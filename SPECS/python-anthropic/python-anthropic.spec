@@ -7,12 +7,12 @@
 %global srcname anthropic
 
 Name:           python-%{srcname}
-Version:        0.102.0
+Version:        0.105.2
 Release:        %autorelease
 Summary:        Official Python library for the Anthropic API
 License:        MIT
 URL:            https://github.com/anthropics/anthropic-sdk-python
-#!RemoteAsset:  sha256:96f747cad11886c4ae12d4080131b94eebd68b202bd2190fe27959031bb1fa9c
+#!RemoteAsset:  sha256:0e26b90841c2dced7cc6e98d21d5517d0be33f1876b8e779f478202e28bcaa07
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
