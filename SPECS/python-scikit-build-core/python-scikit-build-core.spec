@@ -35,7 +35,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(virtualenv)
 BuildRequires:  python3dist(numpy)
-BuildRequires:  python3dist(pybind11)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
