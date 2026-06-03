@@ -8,13 +8,13 @@
 %global pypi_name opentelemetry_semantic_conventions
 
 Name:           python-%{srcname}
-Version:        0.63b0
+Version:        0.63b1
 Release:        %autorelease
 Summary:        OpenTelemetry Semantic Conventions
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-python
 VCS:            git:https://github.com/open-telemetry/opentelemetry-python.git
-#!RemoteAsset:  sha256:cfea295264654fa324fcef24aa56fb1836fdc0da27db128645dc6aa76115cc6c
+#!RemoteAsset:  sha256:3daf963611334b365e98a57438183eb012d3bfb40b2d931a9af613476b8701a9
 Source:         https://files.pythonhosted.org/packages/source/o/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
