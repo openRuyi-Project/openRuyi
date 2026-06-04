@@ -159,6 +159,8 @@ Source33:       https://github.com/Tencent/rapidjson/archive/%{sub_s3select_rapi
 #                                                           (needs OTLP/ZIPKIN/ELASTICSEARCH/ZPAGES/ETW exporter)
 BuildSystem:    cmake
 
+# ceph requires STATIC internal libs
+BuildOption(conf):  -DBUILD_SHARED_LIBS:BOOL=OFF
 BuildOption(conf):  -DWITH_SYSTEM_ZSTD:BOOL=ON
 %if %{with jaeger}
 BuildOption(conf):  -DWITH_JAEGER:BOOL=ON
@@ -463,10 +465,6 @@ Requires:       luarocks
 2003-mgr-tox-skip-git-ls-files.patch
 # unittest-seastar-messenger-thrash --memory 256M -> 1G (too tight on riscv64).
 2004-test-crimson-messenger-thrash-bump-memory.patch
-# memstore STATIC: avoid os<->memstore cycle under BUILD_SHARED_LIBS=ON.
-2005-os-memstore-static.patch
-# dbstore_lib STATIC + link global: avoid SHARED cycle under BUILD_SHARED_LIBS=ON.
-2006-src-rgw-store-dbstore-CMakeLists.txt.patch
 # cephadm tox: drop flake8 git ls-files registry assertions (no .git in tarball).
 2007-cephadm-tox-drop-git-lsfiles-checks.patch
 
