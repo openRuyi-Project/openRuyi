@@ -22,9 +22,9 @@ BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3dist(ruamel-yaml-clib)
+BuildRequires:  python3dist(ruamel-yaml)
 
-Requires:       python3dist(ruamel-yaml-clib)
+Requires:       python3dist(ruamel-yaml)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
