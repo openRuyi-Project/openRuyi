@@ -1,31 +1,29 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global debug_package %{nil}
-%global __debug_install_post %{nil}
-
 %global crate_name web-sys
-%global full_version 0.3.95
+%global full_version 0.3.98
 %global pkgname web-sys-0.3
 
 Name:           rust-web-sys-0.3
-Version:        0.3.95
+Version:        0.3.98
 Release:        %autorelease
 Summary:        Rust crate "web-sys"
 License:        MIT OR Apache-2.0
 URL:            https://wasm-bindgen.github.io/wasm-bindgen/web-sys/index.html
-#!RemoteAsset:  sha256:4f2dfbb17949fa2088e5d39408c48368947b86f7834484e87b73de55bc14d97d
-Source:         https://crates.io/api/v1/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:4b572dff8bcf38bad0fa19729c89bb5748b2b9b1d8be70cf90df697e3a8f32aa
+Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(js-sys-0.3) >= 0.3.95
-Requires:       crate(wasm-bindgen-0.2) >= 0.2.118
+Requires:       crate(js-sys-0.3) >= 0.3.98
+Requires:       crate(wasm-bindgen-0.2) >= 0.2.121
 Provides:       crate(%{pkgname})
 Provides:       crate(%{pkgname}/abortcontroller)
 Provides:       crate(%{pkgname}/abortsignal)
@@ -258,6 +256,7 @@ Provides:       crate(%{pkgname}/cssstyledeclaration)
 Provides:       crate(%{pkgname}/cssstylerule)
 Provides:       crate(%{pkgname}/cssstylesheet)
 Provides:       crate(%{pkgname}/cssstylesheetparsingmode)
+Provides:       crate(%{pkgname}/cssviewtransitionrule)
 Provides:       crate(%{pkgname}/customelementregistry)
 Provides:       crate(%{pkgname}/customevent)
 Provides:       crate(%{pkgname}/customeventinit)
@@ -1160,6 +1159,7 @@ Provides:       crate(%{pkgname}/speechsynthesisevent)
 Provides:       crate(%{pkgname}/speechsynthesiseventinit)
 Provides:       crate(%{pkgname}/speechsynthesisutterance)
 Provides:       crate(%{pkgname}/speechsynthesisvoice)
+Provides:       crate(%{pkgname}/startviewtransitionoptions)
 Provides:       crate(%{pkgname}/staticrange)
 Provides:       crate(%{pkgname}/staticrangeinit)
 Provides:       crate(%{pkgname}/stereopanneroptions)
@@ -1350,6 +1350,7 @@ Provides:       crate(%{pkgname}/videotrack)
 Provides:       crate(%{pkgname}/videotracklist)
 Provides:       crate(%{pkgname}/videotransfercharacteristics)
 Provides:       crate(%{pkgname}/viewtransition)
+Provides:       crate(%{pkgname}/viewtransitiontypeset)
 Provides:       crate(%{pkgname}/visibilitystate)
 Provides:       crate(%{pkgname}/visualviewport)
 Provides:       crate(%{pkgname}/voidcallback)
@@ -2232,8 +2233,8 @@ This metapackage enables feature "XrWebGlLayer" for the Rust web-sys crate, by p
 %package     -n %{name}+std
 Summary:        Bindings for all Web APIs, a procedurally generated crate from WebIDL - feature "std" and 1 more
 Requires:       crate(%{pkgname})
-Requires:       crate(js-sys-0.3/std) >= 0.3.95
-Requires:       crate(wasm-bindgen-0.2/std) >= 0.2.118
+Requires:       crate(js-sys-0.3/std) >= 0.3.98
+Requires:       crate(wasm-bindgen-0.2/std) >= 0.2.121
 Provides:       crate(%{pkgname}/default)
 Provides:       crate(%{pkgname}/std)
 
