@@ -45,24 +45,18 @@
   /usr/lib/rpm/brp-compress
 
 Name:           go
-Version:        1.26.3
+Version:        1.26.4
 Release:        %autorelease
 Summary:        The Go Programming Language toolchain
 License:        BSD-3-Clause
 URL:            https://go.dev/
 VCS:            git:https://github.com/golang/go
-#!RemoteAsset:  sha256:1c646875d0aa8799133184ed57cf79ff24bdefe8c8820470602a9d3d6d9192b8
+#!RemoteAsset:  sha256:4f668a32fbfc1132e6a881fb968c2f1dada631492a339211735fbb255a42602d
 Source0:        https://go.dev/dl/%{name}%{version}.src.tar.gz
-%if %{with bootstrap}
-%ifarch x86_64
-#!RemoteAsset:  sha256:2b2cfc7148493da5e73981bffbf3353af381d5f93e789c82c79aff64962eb556
+#!RemoteAsset:  sha256:1153d3d50e0ac764b447adfe05c2bcf08e889d42a02e0fe0259bd47f6733ad7f
 Source1:        https://go.dev/dl/%{name}%{version}.linux-amd64.tar.gz
-%endif
-%ifarch riscv64
-#!RemoteAsset:  sha256:3b8fd5112340b72587e42c619f43270f1bc21f63cfdb587e6b72e0336580727c
+#!RemoteAsset:  sha256:2b9ba137baaa3031fd74330cb36ab54c5abe380867ca9fbab7c552f3db740555
 Source2:        https://go.dev/dl/%{name}%{version}.linux-riscv64.tar.gz
-%endif
-%endif
 
 # Bootstrap from a pre-existing Go compiler.
 %if %{without bootstrap}
