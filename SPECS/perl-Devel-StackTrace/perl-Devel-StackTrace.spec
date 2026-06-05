@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Object representing a stack trace
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Devel-StackTrace
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Devel-StackTrace-%{version}.tar.gz
+#!RemoteAsset:  sha256:63cb6196e986a7e578c4d28b3c780e7194835bfc78b68eeb8f00599d4444888c
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Devel-StackTrace-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -35,20 +39,8 @@ Devel::StackTrace::Frame. These objects encapsulate the information that
 can retrieved via Perl's caller function, as well as providing a simple
 interface to this data.
 
-%prep
-%setup -q -n Devel-StackTrace-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
