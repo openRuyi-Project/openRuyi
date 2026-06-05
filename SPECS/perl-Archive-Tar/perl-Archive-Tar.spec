@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Archive-Tar
-Version:        3.04
+Version:        3.12
 Release:        %autorelease
 Summary:        Module for manipulations of tar archives
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Archive-Tar
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Archive-Tar-%{version}.tar.gz
+#!RemoteAsset:  sha256:0114ef39b65f49f8968283ab47719d7e88f98d7360fe3649be331c7f53d5832c
+Source0:        https://www.cpan.org/authors/id/B/BI/BINGOS/Archive-Tar-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.5.30
 BuildRequires:  perl(Compress::Zlib) >= 2.015
@@ -45,20 +49,8 @@ allowing for the creation of tar file objects for custom manipulation. If
 you have the IO::Zlib module installed, Archive::Tar will also support
 compressed or gzipped tar files.
 
-%prep
-%setup -q -n Archive-Tar-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc CHANGES README
 
 %changelog
-%{?autochangelog}
+%autochangelog
