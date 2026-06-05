@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Simple API for XML
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-SAX
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-%{version}.tar.gz
+#!RemoteAsset:  sha256:4506c387043aa6a77b455f00f57409f3720aa7e553495ab2535263b4ed1ea12a
+Source0:        https://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Temp)
@@ -31,20 +35,8 @@ XML::SAX is a SAX parser access API for Perl. It includes classes and APIs
 required for implementing SAX drivers, along with a factory class for
 returning any SAX parser installed on the user's system.
 
-%prep
-%setup -q -n XML-SAX-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
