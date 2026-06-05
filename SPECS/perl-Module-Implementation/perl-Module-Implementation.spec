@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Loads one of several alternate underlying implementations for a module
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Module-Implementation
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Module-Implementation-%{version}.tar.gz
+#!RemoteAsset:  sha256:c15f1a12f0c2130c9efff3c2e1afe5887b08ccd033bd132186d1e7d5087fd66d
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Module-Implementation-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -42,20 +46,8 @@ implementations of a module, or it could be used to load an implementation
 for a given OS or any other case of needing to provide multiple
 implementations.
 
-%prep
-%setup -q -n Module-Implementation-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
