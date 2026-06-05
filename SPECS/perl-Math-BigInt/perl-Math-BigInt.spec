@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Arbitrary size integer math package
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Math-BigInt
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PJ/PJACKLAM/Math-BigInt-%{version}.tar.gz
+#!RemoteAsset:  sha256:c4adc1202349f7fcd14d01e6949fee0ec969049d45c9ca59aa29ec58a65966db
+Source0:        https://www.cpan.org/authors/id/P/PJ/PJACKLAM/Math-BigInt-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.1
 BuildRequires:  perl(Carp) >= 1.22
@@ -31,20 +35,8 @@ Requires:       perl(Math::Complex) >= 1.36
 Math::BigInt provides support for arbitrary precision integers. Overloading
 is also provided for Perl operators.
 
-%prep
-%setup -q -n Math-BigInt-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc BUGS CHANGES CREDITS GOALS HISTORY NEW README README.md TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
