@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Replace functions with ones that succeed or die with lexical scope
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/autodie
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/autodie-%{version}.tar.gz
+#!RemoteAsset:  sha256:4921d211b0cea63c2ca06dfc0c948a7203a3d48ad80a06f43b46104354f2c1c3
+Source0:        https://www.cpan.org/authors/id/T/TO/TODDR/autodie-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.4
 BuildRequires:  perl(B)
@@ -47,24 +51,10 @@ Requires:       perl(Exporter) >= 5.57
 Requires:       perl(IPC::System::Simple) >= 0.12
 
 %description
-The "autodie" and "Fatal" pragma provides a convenient way to replace
-functions that normally return false on failure with equivalents that throw an
-exception on failure.
-
-%prep
-%setup -q -n autodie-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
+bIlujDI' yIchegh()Qo'; yIHegh()!
 
 %files -f %{name}.files
 %doc AUTHORS Changes README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
