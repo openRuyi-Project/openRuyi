@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Checks if the documentation of a module is comprehensive
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Pod-Coverage
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RC/RCLAMP/Pod-Coverage-%{version}.tar.gz
+#!RemoteAsset:  sha256:30b7a0b0c942f44a7552c0d34e9b1f2e0ba0b67955c61e3b1589ec369074b107
+Source0:        https://www.cpan.org/authors/id/R/RC/RCLAMP/Pod-Coverage-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Devel::Symdump) >= 2.01
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -33,20 +37,8 @@ Developers hate writing documentation. They'd hate it even more if their
 computer tattled on them, but maybe they'll be even more thankful in the
 long run. Even if not, perlmodstyle tells you to, so you must obey.
 
-%prep
-%setup -q -n Pod-Coverage-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes
 
 %changelog
-%{?autochangelog}
+%autochangelog
