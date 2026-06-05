@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Parse and validate simple name/value option pairs
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Data-OptList
-#!RemoteAsset
-Source0:        http://www.cpan.org/CPAN/authors/id/R/RJ/RJBS/Data-OptList-%{version}.tar.gz
+#!RemoteAsset:  sha256:9fd1093b917a21fb79ae1607db53d113b4e0ad8fe0ae776cb077a7e50044fdf3
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Data-OptList-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.12.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -34,20 +38,8 @@ Hashes are great for storing named data, but if you want more than one
 entry for a name, you have to use a list of pairs. Even then, this is
 really boring to write:
 
-%prep
-%setup -q -n Data-OptList-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
