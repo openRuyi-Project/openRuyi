@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-HTTP-Tiny
-Version:        0.090
+Version:        0.094
 Release:        %autorelease
 Summary:        Small, simple, correct HTTP/1.1 client
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/H/HA/HAARG/HTTP-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:a6841e99fc1b55d15de95947ccbd7b767becc51c7102197fa8f044df7ddc0743
+Source0:        https://www.cpan.org/authors/id/H/HA/HAARG/HTTP-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(bytes)
@@ -42,6 +46,7 @@ BuildRequires:  perl(open)
 BuildRequires:  perl(Socket)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More) >= 0.96
+BuildRequires:  perl(Time::HiRes)
 BuildRequires:  perl(Time::Local)
 BuildRequires:  perl(warnings)
 
@@ -54,20 +59,8 @@ Requires:       perl(Net::SSLeay) >= 1.49
 This is a very simple HTTP/1.1 client, designed for doing simple requests
 without the overhead of a large framework like LWP::UserAgent.
 
-%prep
-%setup -q -n HTTP-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CONTRIBUTING.mkdn perlcritic.rc README
+%doc Changes CONTRIBUTING.mkdn corpus eg perlcritic.rc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
