@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        System V and POSIX timezone strings
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/DateTime-TimeZone-SystemV
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DateTime-TimeZone-SystemV-%{version}.tar.gz
+#!RemoteAsset:  sha256:827bce3c45c2777331cba201e31801945aeeb18c59aed3d94c2b2adb209d954a
+Source0:        https://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DateTime-TimeZone-SystemV-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -33,20 +38,8 @@ as that specified by POSIX). These can express a plain offset from
 Universal Time, or a system of two offsets (standard and daylight saving
 time) switching on a yearly cycle according to certain types of rule.
 
-%prep
-%setup -q -n DateTime-TimeZone-SystemV-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
