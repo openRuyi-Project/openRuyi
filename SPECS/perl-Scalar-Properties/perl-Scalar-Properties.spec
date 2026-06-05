@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Run-time properties on scalar variables
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Scalar-Properties
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MA/MARCEL/Scalar-Properties-%{version}.tar.gz
+#!RemoteAsset:  sha256:d1a7010d7871d8abfe72d4c1cf72e33780a6ef0ebc6acb0d2e6a44b9933f0a92
+Source0:        https://www.cpan.org/authors/id/M/MA/MARCEL/Scalar-Properties-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -35,20 +39,8 @@ Scalar::Properties attempts to make Perl more object-oriented by taking an
 idea from Ruby: Everything you manipulate is an object, and the results of
 those manipulations are objects themselves.
 
-%prep
-%setup -q -n Scalar-Properties-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
