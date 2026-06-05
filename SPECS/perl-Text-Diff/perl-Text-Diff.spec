@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Perform diffs on files and record sets
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Text-Diff
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/N/NE/NEILB/Text-Diff-%{version}.tar.gz
+#!RemoteAsset:  sha256:e8baa07b1b3f53e00af3636898bbf73aec9a0ff38f94536ede1dbe96ef086f04
+Source0:        https://www.cpan.org/authors/id/N/NE/NEILB/Text-Diff-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Algorithm::Diff) >= 1.19
@@ -31,20 +35,8 @@ integrated with Perl and available on all platforms. It is often faster
 than shelling out to a system's diff executable for small files, and
 generally slower on larger files.
 
-%prep
-%setup -q -n Text-Diff-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
