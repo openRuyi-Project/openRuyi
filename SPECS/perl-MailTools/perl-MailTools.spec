@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Bundle of ancient email modules
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/MailTools
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MA/MARKOV/MailTools-%{version}.tar.gz
+#!RemoteAsset:  sha256:3bf68bb212298fa699a52749dddff35583a74f36a92ca89c843b854f29d87c77
+Source0:        https://www.cpan.org/authors/id/M/MA/MARKOV/MailTools-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Date::Format)
 BuildRequires:  perl(Date::Parse)
@@ -33,20 +37,8 @@ MailTools is a bundle: an ancient form of combining packages into one
 distribution. Gladly, it can be distributed as if it is a normal
 distribution as well.
 
-%prep
-%setup -q -n MailTools-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ChangeLog MailTools.ppd README README.demos README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
