@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Read/Write .ini style files with as little code as possible
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Config-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RS/RSAVAGE/Config-Tiny-%{version}.tgz
+#!RemoteAsset:  sha256:b2f7345619b3b8e636dd39ea010731c9dc2bfb8f022bcbd86ae6ad17866e110d
+Source0:        https://www.cpan.org/authors/id/R/RS/RSAVAGE/Config-Tiny-%{version}.tgz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -34,20 +38,8 @@ Config::Tiny is a Perl class to read and write .ini style
 configuration files with as little code as possible, reducing load
 time and memory overhead.
 
-%prep
-%setup -q -n Config-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changelog.ini Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
