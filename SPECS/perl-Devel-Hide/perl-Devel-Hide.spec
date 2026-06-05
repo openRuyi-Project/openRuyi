@@ -6,42 +6,34 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Devel-Hide
-Version:        0.0015
+Version:        0.0016
 Release:        %autorelease
 Summary:        Forces the unavailability of specified Perl modules (for testing)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Devel-Hide
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DC/DCANTRELL/Devel-Hide-%{version}.tar.gz
+#!RemoteAsset:  sha256:7830b4a57f7ec7410620d6c0150185449d7b4c9964c39a7dc397056032c32a08
+Source0:        https://www.cpan.org/authors/id/D/DC/DCANTRELL/Devel-Hide-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl >= 5.6.1
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(Test::More) >= 0.82
+
+Requires:       perl(Test::More) >= 0.82
 
 %description
 Given a list of Perl modules/filenames, this module makes require and
 use statements fail (no matter the specified files/modules are
 installed or not).
 
-%prep
-%setup -q -n Devel-Hide-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
