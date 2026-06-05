@@ -10,14 +10,19 @@ Release:        %autorelease
 Summary:        SAX2 Driver for Expat (XML::Parser)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-SAX-Expat
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BJ/BJOERN/XML-SAX-Expat-%{version}.tar.gz
+#!RemoteAsset:  sha256:4c016213d0ce7db2c494e30086b59917b302db8c292dcd21f39deebd9780c83f
+Source0:        https://www.cpan.org/authors/id/B/BJ/BJOERN/XML-SAX-Expat-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::ShareDir)
 BuildRequires:  perl(XML::NamespaceSupport) >= 0.03
 BuildRequires:  perl(XML::Parser) >= 2.27
 BuildRequires:  perl(XML::SAX) >= 0.03
@@ -33,20 +38,8 @@ This is an implementation of a SAX2 driver sitting on top of Expat
 (XML::Parser) which Ken MacLeod posted to perl-xml and which I have
 updated.
 
-%prep
-%setup -q -n XML-SAX-Expat-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
