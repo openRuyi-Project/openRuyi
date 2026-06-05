@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Minimalist class construction
 License:        Apache-2.0
 URL:            https://metacpan.org/dist/Class-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Class-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:ee058a63912fa1fcb9a72498f56ca421a2056dc7f9f4b67837446d6421815615
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/Class-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -34,20 +38,8 @@ BuildRequires:  perl(warnings)
 This module offers a minimalist class construction kit in around 120 lines
 of code. Here is a list of features:
 
-%prep
-%setup -q -n Class-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
