@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Look up Perl documentation in Pod format
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Pod-Perldoc
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MA/MALLEN/Pod-Perldoc-%{version}.tar.gz
+#!RemoteAsset:  sha256:cc41e605b8e13c40a8ee6504ff46347b5ba7fbd92203b3bb055422051befc64d
+Source0:        https://www.cpan.org/authors/id/M/MA/MALLEN/Pod-Perldoc-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Config)
 BuildRequires:  perl(Encode)
@@ -41,25 +45,10 @@ Requires:       perl(Pod::Simple::RTF) >= 3.16
 Requires:       perl(Pod::Simple::XMLOutStream) >= 3.16
 
 %description
-perldoc looks up a piece of documentation in POD format that is embedded
-in the perl installation tree or in a Perl script, and displays it via
-"groff -man | $PAGER". This is primarily used for the documentation for
-the Perl library modules.
-
-%prep
-%setup -q -n Pod-Perldoc-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
+The guts of perldoc utility.
 
 %files -f %{name}.files
 %doc Changes perldoc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
