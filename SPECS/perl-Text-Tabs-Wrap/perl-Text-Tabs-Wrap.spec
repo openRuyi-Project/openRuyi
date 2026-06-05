@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Expand tabs and do simple line wrapping
 License:        TTWL
 URL:            https://metacpan.org/release/Text-Tabs%2BWrap
-#!RemoteAsset
-Source0:        https://cpan.metacpan.org/authors/id/A/AR/ARISTOTLE/Text-Tabs+Wrap-%{version}.tar.gz
+#!RemoteAsset:  sha256:fa83812ad59b111c543a3678115012aeb3e4ab3067c2261a38fdbcacf1b761cd
+Source0:        https://www.cpan.org/authors/id/A/AR/ARISTOTLE/Text-Tabs+Wrap-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl
 BuildRequires:  perl(Config)
@@ -34,20 +38,8 @@ commands do: adding or removing tabs from a document.
 Text::Wrap::wrap() will reformat lines into paragraphs. All it does is break
 up long lines, it will not join short lines together.
 
-%prep
-%setup -q -n Text-Tabs+Wrap-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
