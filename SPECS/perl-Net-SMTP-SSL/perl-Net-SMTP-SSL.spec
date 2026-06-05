@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        SSL support for Net::SMTP
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Net-SMTP-SSL
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Net-SMTP-SSL-%{version}.tar.gz
+#!RemoteAsset:  sha256:7b29c45add19d3d5084b751f7ba89a8e40479a446ce21cfd9cc741e558332a00
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Net-SMTP-SSL-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(IO::Socket::SSL)
@@ -31,20 +35,8 @@ overridden to make use of a default port for the SMTPS service. Perhaps
 future versions will be smart like that. Port 465 is usually what you want,
 and it's not a pain to specify that.
 
-%prep
-%setup -q -n Net-SMTP-SSL-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
