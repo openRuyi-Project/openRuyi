@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Read and write a subset of YAML for CPAN Meta files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/CPAN-Meta-YAML
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/CPAN-Meta-YAML-%{version}.tar.gz
+#!RemoteAsset:  sha256:36c45e0e954fb6d9e4b71ce3da4a244157439969a3af12c515909d7d6c053b2c
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/CPAN-Meta-YAML-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(B)
@@ -45,20 +49,8 @@ This module implements a subset of the YAML specification for use in
 reading and writing CPAN metadata files like META.yml and MYMETA.yml. It
 should not be used for any other general YAML parsing or generation task.
 
-%prep
-%setup -q -n CPAN-Meta-YAML-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
