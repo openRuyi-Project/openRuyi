@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Lexically scoped subroutine wrappers
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Hook-LexWrap
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Hook-LexWrap-%{version}.tar.gz
+#!RemoteAsset:  sha256:b60bdc5f98f94f9294b06adef82b1d996da192d5f183f9f434b610fd1137ec2d
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Hook-LexWrap-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -34,20 +38,8 @@ an existing subroutine. Unlike other modules that provide this capacity
 wrappers in such a way that the standard caller function works correctly
 within the wrapped subroutine.
 
-%prep
-%setup -q -n Hook-LexWrap-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README
 
 %changelog
-%{?autochangelog}
+%autochangelog
