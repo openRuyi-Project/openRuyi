@@ -1,7 +1,7 @@
-From a97ea68639336a5b8e0fdb9e4c6983351f80d0a9 Mon Sep 17 00:00:00 2001
+From e4498bef7d35202c1d4fff03e1f738c01c63141b Mon Sep 17 00:00:00 2001
 From: Felix Gu <ustc.gu@gmail.com>
 Date: Sat, 21 Mar 2026 03:12:11 +0800
-Subject: [PATCH 344/467] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix remove()
+Subject: [RUYI PATCH] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix remove()
  callback
 
 This driver stores struct th1520_hdmi * in platform drvdata, but

@@ -1,8 +1,8 @@
-From 3d02f5d734bb489dc5c101affd5ad99687ffaffd Mon Sep 17 00:00:00 2001
+From a276be6d58f16c9c62bd6c0f76f6b2133fcfff5b Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:37 +0200
-Subject: [PATCH 050/467] UPSTREAM: riscv: dts: spacemit: enable the i2c2
- adapter on BPI-F3
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable the i2c2 adapter
+ on BPI-F3
 
 Define properties for the I2C adapter, and enable it on the BPI-F3. It
 will be used by the 24c02 eeprom.

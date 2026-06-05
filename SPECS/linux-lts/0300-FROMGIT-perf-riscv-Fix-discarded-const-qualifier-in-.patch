@@ -1,7 +1,7 @@
-From 347d0feb0828177c85358f21ba7942d4d10abb3f Mon Sep 17 00:00:00 2001
+From d6e9674d63435e685b8f714dd05c6d76d0cd3383 Mon Sep 17 00:00:00 2001
 From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 Date: Thu, 14 May 2026 02:07:21 +0800
-Subject: [PATCH 300/467] FROMGIT: perf riscv: Fix discarded const qualifier in
+Subject: [RUYI PATCH] FROMGIT: perf riscv: Fix discarded const qualifier in
  _get_field()
 
 The assignment of strrchr() return values to non-const char * variables

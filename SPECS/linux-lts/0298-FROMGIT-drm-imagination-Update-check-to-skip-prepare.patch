@@ -1,7 +1,7 @@
-From 9f3709e29e576a8943a5c7b99d82d4a0293cc32f Mon Sep 17 00:00:00 2001
+From de6096b77f0bf0bf39ff10bd616f13c5e0945d58 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:42 +0100
-Subject: [PATCH 298/467] FROMGIT: drm/imagination: Update check to skip
+Subject: [RUYI PATCH] FROMGIT: drm/imagination: Update check to skip
  prepare_job() for fragment jobs
 
 By the time prepare_job() is called on a paired fragment job, the paired

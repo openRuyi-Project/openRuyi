@@ -1,7 +1,7 @@
-From 0ad076c041bad32acd43346053a2e901e8f92fe6 Mon Sep 17 00:00:00 2001
+From e42b13b733fe6bf35801da4dd939e98421377976 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 5 Mar 2026 01:00:52 +0000
-Subject: [PATCH 329/467] FROMLIST: phy: k1-usb: k3: add USB2 PHY support
+Subject: [RUYI PATCH] FROMLIST: phy: k1-usb: k3: add USB2 PHY support
 
 Add USB2 PHY support for SpacemiT K3 SoC.
 

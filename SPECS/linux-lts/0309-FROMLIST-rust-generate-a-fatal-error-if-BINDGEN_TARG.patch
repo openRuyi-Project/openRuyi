@@ -1,8 +1,8 @@
-From 68a1f8f93b448edbae9513aa35f8fdfd2d0c9d10 Mon Sep 17 00:00:00 2001
+From 22c8be25d1ed7a76f36d5f1d30f0c61faa68b951 Mon Sep 17 00:00:00 2001
 From: Asuna Yang <xinrui.riscv@isrc.iscas.ac.cn>
 Date: Tue, 30 Dec 2025 17:47:55 +0100
-Subject: [PATCH 309/467] FROMLIST: rust: generate a fatal error if
- BINDGEN_TARGET is undefined
+Subject: [RUYI PATCH] FROMLIST: rust: generate a fatal error if BINDGEN_TARGET
+ is undefined
 
 Generate a friendly fatal error if the target triplet is undefined for
 bindgen, rather than having the compiler generate obscure error messages

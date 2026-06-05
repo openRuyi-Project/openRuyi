@@ -1,8 +1,8 @@
-From 07a4233a04f77fea6255070d799f8158192c7896 Mon Sep 17 00:00:00 2001
+From 0bed1f7ddadef9191b85230b6f078bf48a1ddfc1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 Date: Sat, 25 Oct 2025 14:23:56 +0200
-Subject: [PATCH 017/467] UPSTREAM: rust: pwm: Drop wrapping of PWM polarity
- and state
+Subject: [RUYI PATCH] UPSTREAM: rust: pwm: Drop wrapping of PWM polarity and
+ state
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

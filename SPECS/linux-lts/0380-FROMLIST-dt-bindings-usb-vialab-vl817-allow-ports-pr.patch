@@ -1,7 +1,7 @@
-From 49426bc2f4eec81986cedeb4485276ce9681a724 Mon Sep 17 00:00:00 2001
+From d114c66e2f27fb7d5c538f14399ab98ce4960f83 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:06 +0800
-Subject: [PATCH 380/467] FROMLIST: dt-bindings: usb: vialab,vl817: allow ports
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: usb: vialab,vl817: allow ports
  property
 
 As a USB hub device, VL817 can surely be connected to external USB

@@ -1,8 +1,8 @@
-From 1c12aaa685ca33a5f2a5de71d4290b7374d1266c Mon Sep 17 00:00:00 2001
+From 53a9a6f9561ecf77c64e14e718b3c6677e450356 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.dev>
 Date: Tue, 17 Mar 2026 16:48:06 +0800
-Subject: [PATCH 342/467] FROMLIST: riscv: disable local interrupts and stop
- other CPUs before reboot/shutdown
+Subject: [RUYI PATCH] FROMLIST: riscv: disable local interrupts and stop other
+ CPUs before reboot/shutdown
 
 Currently, the RISC-V implementation of machine_restart(), machine_halt(),
 and machine_power_off() invokes the kernel teardown chains (e.g.,

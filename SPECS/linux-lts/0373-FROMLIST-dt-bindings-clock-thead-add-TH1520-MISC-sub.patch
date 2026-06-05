@@ -1,7 +1,7 @@
-From eb891952a841254f3564aa2b534dd235469daaa5 Mon Sep 17 00:00:00 2001
+From 70157c501907a5cde732fdf89f3f458d3aba2959 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:16:59 +0800
-Subject: [PATCH 373/467] FROMLIST: dt-bindings: clock: thead: add TH1520 MISC
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: clock: thead: add TH1520 MISC
  subsys clock controller
 
 TH1520 has a subsystem clock controller called MISC_SUBSYS in its

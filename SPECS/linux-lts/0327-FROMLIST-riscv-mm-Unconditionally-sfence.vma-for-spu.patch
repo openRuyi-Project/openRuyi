@@ -1,7 +1,7 @@
-From 4ffd4c28732d478d17dffb2e85279d7eca746271 Mon Sep 17 00:00:00 2001
+From 0236a57f077395bd67012bf4e9d33ba23ecdedd5 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:49 +0800
-Subject: [PATCH 327/467] FROMLIST: riscv: mm: Unconditionally sfence.vma for
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Unconditionally sfence.vma for
  spurious fault
 
 Svvptc does not guarantee that it's safe to just return here. Since we

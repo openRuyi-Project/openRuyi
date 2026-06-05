@@ -1,7 +1,7 @@
-From f0bf64c6e64658862d7fd2f298df04c873197db3 Mon Sep 17 00:00:00 2001
+From 66203a4e0eefa5812e80d8953dd2e958bbeaa89b Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 20 May 2026 23:45:27 +0000
-Subject: [PATCH 429/467] FROMLIST: dt-bindings: riscv: spacemit: Add K3
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: spacemit: Add K3
  CoM260-IFX board
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

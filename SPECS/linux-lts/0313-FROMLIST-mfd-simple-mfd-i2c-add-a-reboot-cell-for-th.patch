@@ -1,8 +1,8 @@
-From 8d7a4704394936b4c6294288c8ef99b5d613a2b5 Mon Sep 17 00:00:00 2001
+From e4c3413f71ca577a9344235a8e76978b9df6b41d Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:02:00 +0100
-Subject: [PATCH 313/467] FROMLIST: mfd: simple-mfd-i2c: add a reboot cell for
- the SpacemiT P1 chip
+Subject: [RUYI PATCH] FROMLIST: mfd: simple-mfd-i2c: add a reboot cell for the
+ SpacemiT P1 chip
 
 Add a "spacemit-p1-reboot" cell for the SpacemiT P1 chip.
 

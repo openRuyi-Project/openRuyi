@@ -1,8 +1,8 @@
-From 20deb98d0307212f2ae260f532f5c40944d5cfd4 Mon Sep 17 00:00:00 2001
+From 3c28d26c50aa548e866a1681ca068993386a91c3 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 20 May 2026 01:06:41 +0800
-Subject: [PATCH 428/467] FROMLIST: riscv: kexec_file: Constrain segment
- placement to direct map
+Subject: [RUYI PATCH] FROMLIST: riscv: kexec_file: Constrain segment placement
+ to direct map
 
 When kexec_file_load places segments with buf_max=ULONG_MAX and
 top_down=true, they land at the highest available physical addresses.

@@ -1,0 +1,96 @@
+From 362bcba652bd4b28531fbf93691ef6fba9a852a7 Mon Sep 17 00:00:00 2001
+From: Frank Li <Frank.Li@nxp.com>
+Date: Mon, 29 Sep 2025 10:24:14 -0400
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: add missed compatible string
+ for arm64 layerscape
+
+Add missed compatible string for arm64 layerscape platform. Allow these
+fallback to fsl,ls1028a-dwc3.
+
+Remove fallback snps,dwc3 because layerscape dwc3 is not full compatible
+with common snps,dwc3 device, a special value gsburstcfg0 need be set when
+dma coherence enabled.
+
+Allow iommus property.
+
+Change ref to snps,dwc3-common.yaml to use dwc3 flatten library.
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Link: https://lore.kernel.org/r/20250929-ls_dma_coherence-v5-1-2ebee578eb7e@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit b9f1c762a4de17d93017fbd12b9941caff6d3078)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/usb/fsl,ls1028a.yaml  | 33 ++++++++++---------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml b/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
+index a44bdf391887..4784f057264a 100644
+--- a/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
++++ b/Documentation/devicetree/bindings/usb/fsl,ls1028a.yaml
+@@ -9,21 +9,19 @@ title: Freescale layerscape SuperSpeed DWC3 USB SoC controller
+ maintainers:
+   - Frank Li <Frank.Li@nxp.com>
+ 
+-select:
+-  properties:
+-    compatible:
+-      contains:
+-        enum:
+-          - fsl,ls1028a-dwc3
+-  required:
+-    - compatible
+-
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - fsl,ls1028a-dwc3
+-      - const: snps,dwc3
++    oneOf:
++      - items:
++          - enum:
++              - fsl,ls1012a-dwc3
++              - fsl,ls1043a-dwc3
++              - fsl,ls1046a-dwc3
++              - fsl,ls1088a-dwc3
++              - fsl,ls208xa-dwc3
++              - fsl,lx2160a-dwc3
++          - const: fsl,ls1028a-dwc3
++      - const: fsl,ls1028a-dwc3
+ 
+   reg:
+     maxItems: 1
+@@ -31,6 +29,11 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  iommus:
++    maxItems: 1
++
++  dma-coherent: true
++
+ unevaluatedProperties: false
+ 
+ required:
+@@ -39,14 +42,14 @@ required:
+   - interrupts
+ 
+ allOf:
+-  - $ref: snps,dwc3.yaml#
++  - $ref: snps,dwc3-common.yaml#
+ 
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+     usb@fe800000 {
+-        compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
++        compatible = "fsl,ls1028a-dwc3";
+         reg = <0xfe800000 0x100000>;
+         interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
+     };
+-- 
+2.53.0
+

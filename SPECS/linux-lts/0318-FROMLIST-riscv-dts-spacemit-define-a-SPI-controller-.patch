@@ -1,8 +1,8 @@
-From 6d39268afdf29820170db1c0b7f7b3d785ed0795 Mon Sep 17 00:00:00 2001
+From e61e5b8803d80c43b4959f8e4b6e863d1730fe51 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:53 -0400
-Subject: [PATCH 318/467] FROMLIST: riscv: dts: spacemit: define a SPI
- controller node
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: define a SPI controller
+ node
 
 Define a node for the fourth SoC SPI controller (number 3) on the
 SpacemiT K1 SoC.

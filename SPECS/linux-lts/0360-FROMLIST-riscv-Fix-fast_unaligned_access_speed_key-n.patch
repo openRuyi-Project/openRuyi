@@ -1,8 +1,8 @@
-From 7874ddbe01ccbe13b5a4828243511becf3108c87 Mon Sep 17 00:00:00 2001
+From 344151a10b042115f283ccb3ceb2241243f4f16a Mon Sep 17 00:00:00 2001
 From: Nam Cao <namcao@linutronix.de>
 Date: Tue, 7 Apr 2026 14:06:39 +0200
-Subject: [PATCH 360/467] FROMLIST: riscv: Fix fast_unaligned_access_speed_key
- not getting initialized
+Subject: [RUYI PATCH] FROMLIST: riscv: Fix fast_unaligned_access_speed_key not
+ getting initialized
 
 The static key fast_unaligned_access_speed_key is supposed to be
 initialized after check_unaligned_access_all_cpus() has been completed.

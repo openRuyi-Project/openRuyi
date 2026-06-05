@@ -1,7 +1,7 @@
-From 604976f3e404c825a56845e3b4bd0137fc436656 Mon Sep 17 00:00:00 2001
+From 8a8b83695e5206dc768419823d357d36066dcc1a Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Tue, 7 Apr 2026 23:28:15 +0800
-Subject: [PATCH 346/467] FROMLIST: riscv: dts: spacemit: Define the P1 PMIC
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: Define the P1 PMIC
  regulators for OrangePi RV2
 
 Define the DC power input and the 4v power as fixed regulator supplies.

@@ -1,0 +1,65 @@
+From f0f6537007b57483923b71a9da409d7811b4a6a1 Mon Sep 17 00:00:00 2001
+From: Jessica Liu <liu.xuemei1@zte.com.cn>
+Date: Tue, 10 Mar 2026 14:17:31 +0800
+Subject: [RUYI PATCH] UPSTREAM: irqchip/riscv-aplic: Register syscore
+ operations only once
+
+Since commit 95a8ddde3660 ("irqchip/riscv-aplic: Preserve APLIC
+states across suspend/resume"), when multiple NUMA nodes exist
+and AIA is not configured as "none", aplic_probe() is called
+multiple times. This leads to register_syscore(&aplic_syscore)
+being invoked repeatedly, causing the following Oops:
+
+ list_add double add: new=ffffffffb91461f0, prev=ffffffffb91461f0, next=ffffffffb915c408.
+ [<ffffffffb7b5c8ca>] __list_add_valid_or_report+0x60/0xc0
+ [<ffffffffb7cc3236>] register_syscore+0x3e/0x70
+ [<ffffffffb7b8d61c>] aplic_probe+0xc6/0x112
+
+Fix this by registering syscore operations only once, using a static
+variable aplic_syscore_registered to track registration.
+
+[ tglx: Trim backtrace properly ]
+
+Fixes: 95a8ddde3660 ("irqchip/riscv-aplic: Preserve APLIC states across suspend/resume")
+Signed-off-by: Jessica Liu <liu.xuemei1@zte.com.cn>
+Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+Link: https://patch.msgid.link/20260310141731145xMwLsyvXl9Gw-m6A4VRYj@zte.com.cn
+(cherry picked from commit b330fbfd34d7624bec62b99ad88dba2614326a19)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/irqchip/irq-riscv-aplic-main.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/irq-riscv-aplic-main.c b/drivers/irqchip/irq-riscv-aplic-main.c
+index 8775f188ea4f..9f53979b6962 100644
+--- a/drivers/irqchip/irq-riscv-aplic-main.c
++++ b/drivers/irqchip/irq-riscv-aplic-main.c
+@@ -116,6 +116,16 @@ static struct syscore aplic_syscore = {
+ 	.ops = &aplic_syscore_ops,
+ };
+ 
++static bool aplic_syscore_registered __ro_after_init;
++
++static void aplic_syscore_init(void)
++{
++	if (!aplic_syscore_registered) {
++		register_syscore(&aplic_syscore);
++		aplic_syscore_registered = true;
++	}
++}
++
+ static int aplic_pm_notifier(struct notifier_block *nb, unsigned long action, void *data)
+ {
+ 	struct aplic_priv *priv = container_of(nb, struct aplic_priv, genpd_nb);
+@@ -379,7 +389,7 @@ static int aplic_probe(struct platform_device *pdev)
+ 		return rc;
+ 	}
+ 
+-	register_syscore(&aplic_syscore);
++	aplic_syscore_init();
+ 
+ #ifdef CONFIG_ACPI
+ 	if (!acpi_disabled)
+-- 
+2.53.0
+

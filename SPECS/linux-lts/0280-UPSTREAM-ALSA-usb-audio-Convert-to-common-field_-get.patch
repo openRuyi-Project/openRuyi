@@ -1,0 +1,38 @@
+From d565f3b6ace21a51f62812c86add16af8553952d Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:34:10 +0100
+Subject: [RUYI PATCH] UPSTREAM: ALSA: usb-audio: Convert to common
+ field_{get,prep}() helpers
+
+Drop the driver-specific field_get() and field_prep() macros, in favor
+of the globally available variants from <linux/bitfield.h>.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit b1cff2f4b2391a13bd3e9263502072df1ee5d035)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ sound/usb/mixer_quirks.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index bf8f97d43299..6069d9267c6c 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -3308,12 +3308,6 @@ static int snd_bbfpro_controls_create(struct usb_mixer_interface *mixer)
+ #define RME_DIGIFACE_REGISTER(reg, mask) (((reg) << 16) | (mask))
+ #define RME_DIGIFACE_INVERT BIT(31)
+ 
+-/* Nonconst helpers */
+-#undef field_get
+-#define field_get(_mask, _reg) (((_reg) & (_mask)) >> (ffs(_mask) - 1))
+-#undef field_prep
+-#define field_prep(_mask, _val) (((_val) << (ffs(_mask) - 1)) & (_mask))
+-
+ static int snd_rme_digiface_write_reg(struct snd_kcontrol *kcontrol, int item, u16 mask, u16 val)
+ {
+ 	struct usb_mixer_elem_list *list = snd_kcontrol_chip(kcontrol);
+-- 
+2.53.0
+

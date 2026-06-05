@@ -1,7 +1,7 @@
-From dcb5013bc09740ec69367c77d4a4947ec96f20ed Mon Sep 17 00:00:00 2001
+From 6836defb3d09054866bd4165ee60f3bcd6135b07 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:03 +0800
-Subject: [PATCH 377/467] FROMLIST: phy: add a driver for T-Head TH1520 USB PHY
+Subject: [RUYI PATCH] FROMLIST: phy: add a driver for T-Head TH1520 USB PHY
 
 The USB PHY on T-Head TH1520 SoC is a Synopsys USB 3.0 FemtoPHY, with
 some PHY parameters exported as another system controller along with it.

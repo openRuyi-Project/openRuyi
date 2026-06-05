@@ -1,8 +1,8 @@
-From d7f231111494d8c2ec36cad45aabe28d70c55167 Mon Sep 17 00:00:00 2001
+From 56ba1d8c335d661163b9d3b1d870a9e07dd575cc Mon Sep 17 00:00:00 2001
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 Date: Mon, 11 May 2026 10:53:56 +0200
-Subject: [PATCH 400/467] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add
- pinctrl support for voltage switching
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: mmc: spacemit,sdhci: add pinctrl
+ support for voltage switching
 
 Document pinctrl properties to support voltage-dependent pin
 configuration switching for UHS-I SD card modes.

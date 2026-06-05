@@ -1,8 +1,7 @@
-From 52f87bf6d6ba5fb8c57374827a76e0cfdaa332f4 Mon Sep 17 00:00:00 2001
+From 0615284b82b82ee1dc7ccbc7146e31afa8bbbc9f Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:45 +0800
-Subject: [PATCH 323/467] FROMLIST: riscv: mm: Extract helper
- mark_new_valid_map()
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Extract helper mark_new_valid_map()
 
 In preparation of a future patch using the same mechanism for
 non-vmalloc addresses, extract the mark_new_valid_map() helper from

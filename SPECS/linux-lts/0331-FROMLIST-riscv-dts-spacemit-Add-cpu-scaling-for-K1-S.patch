@@ -1,8 +1,8 @@
-From 2dd9746124535df6e29c3f1b6ac66084412c1e34 Mon Sep 17 00:00:00 2001
+From 76023519e9da3b79768d23f7ffe1a08e230674bd Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Fri, 10 Apr 2026 15:58:23 +0800
-Subject: [PATCH 331/467] FROMLIST: riscv: dts: spacemit: Add cpu scaling for
- K1 SoC
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: Add cpu scaling for K1
+ SoC
 
 Add Operating Performance Points (OPP) tables and CPU clock properties
 for the two clusters in the SpacemiT K1 SoC.

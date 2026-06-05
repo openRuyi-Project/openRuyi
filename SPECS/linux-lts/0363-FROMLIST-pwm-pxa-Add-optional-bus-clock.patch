@@ -1,7 +1,7 @@
-From 9f3707cb456d37931f9025ad6d4c4f1e44e27460 Mon Sep 17 00:00:00 2001
+From 2173dcb3b9c7cd083216f7561ca2c80cc779e6c3 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 28 Apr 2026 10:46:51 +0000
-Subject: [PATCH 363/467] FROMLIST: pwm: pxa: Add optional bus clock
+Subject: [RUYI PATCH] FROMLIST: pwm: pxa: Add optional bus clock
 
 Add one secondary optional bus clock for the PWM PXA driver, also keep it
 compatible with old single clock.

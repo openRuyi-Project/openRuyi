@@ -1,8 +1,8 @@
-From 7a0c2f9d8bc3d427aff7d62359f74e8a21ecb98f Mon Sep 17 00:00:00 2001
+From 88c16045a194f9da4ac3d1e41104c2bc67bef52f Mon Sep 17 00:00:00 2001
 From: Iker Pedrosa <ikerpedrosam@gmail.com>
 Date: Mon, 11 May 2026 10:53:59 +0200
-Subject: [PATCH 403/467] FROMLIST: mmc: sdhci-of-k1: add comprehensive SDR
- tuning support
+Subject: [RUYI PATCH] FROMLIST: mmc: sdhci-of-k1: add comprehensive SDR tuning
+ support
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

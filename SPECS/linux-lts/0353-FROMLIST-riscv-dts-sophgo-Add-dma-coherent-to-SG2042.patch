@@ -1,8 +1,8 @@
-From 14a4dab155f695a1b19f164b9eeee33c118daf70 Mon Sep 17 00:00:00 2001
+From 4edb2b9deb6868de278295f9df339eb66e2dc5e6 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 1 Apr 2026 01:12:48 +0800
-Subject: [PATCH 353/467] FROMLIST: riscv: dts: sophgo: Add dma-coherent to
- SG2042 PCIe controllers
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: sophgo: Add dma-coherent to SG2042
+ PCIe controllers
 
 SG2042's PCIe root complexes are cache-coherent with the CPU. Mark all
 four PCIe controller nodes (pcie_rc0 through pcie_rc3) as dma-coherent

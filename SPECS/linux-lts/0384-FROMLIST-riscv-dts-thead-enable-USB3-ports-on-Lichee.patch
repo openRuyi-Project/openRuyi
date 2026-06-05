@@ -1,8 +1,8 @@
-From e65c217e4f180a09599dcf963d7917ca8f2dce56 Mon Sep 17 00:00:00 2001
+From 0b1e399727d5ebc0f998864161be37205403f479 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 16:17:10 +0800
-Subject: [PATCH 384/467] FROMLIST: riscv: dts: thead: enable USB3 ports on
- Lichee Pi 4A
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: thead: enable USB3 ports on Lichee
+ Pi 4A
 
 The Lichee Pi 4A board features an onboard VIA VL817 hub connected to
 the SoC's USB3 as upstream and 4 USB-3.0-capable Type-A ports as

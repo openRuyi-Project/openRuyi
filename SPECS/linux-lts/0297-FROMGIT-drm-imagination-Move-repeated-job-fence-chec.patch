@@ -1,8 +1,8 @@
-From 24d18b49f8c07b709700ed96d89d8612d2fb5668 Mon Sep 17 00:00:00 2001
+From 03aa10e9329f54737669ec56c2b2ab66eac2f987 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:41 +0100
-Subject: [PATCH 297/467] FROMGIT: drm/imagination: Move repeated job fence
- check to its own function
+Subject: [RUYI PATCH] FROMGIT: drm/imagination: Move repeated job fence check
+ to its own function
 
 This should make the code slightly clearer.
 

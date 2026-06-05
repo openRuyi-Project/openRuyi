@@ -1,0 +1,32 @@
+From b88d7d9315cd6748d47a8ced520004d8f68ec0fc Mon Sep 17 00:00:00 2001
+From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
+Date: Tue, 20 Jan 2026 09:59:26 +0100
+Subject: [RUYI PATCH] UPSTREAM: pinctrl: th1520: Fix typo
+
+This fixes a simple typo in the TH1520 SPI0 for group3 pins:
+QSPI0 is misspelled QSPI1.
+
+Signed-off-by: Thomas Gerner <thomas.gerner@muenchen-mail.de>
+Signed-off-by: Linus Walleij <linusw@kernel.org>
+(cherry picked from commit 304c3ebcaff36560d76e3030ba0839e629635f47)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pinctrl/pinctrl-th1520.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-th1520.c b/drivers/pinctrl/pinctrl-th1520.c
+index e641bad6728c..83e9c9f77370 100644
+--- a/drivers/pinctrl/pinctrl-th1520.c
++++ b/drivers/pinctrl/pinctrl-th1520.c
+@@ -287,7 +287,7 @@ static const struct pinctrl_pin_desc th1520_group3_pins[] = {
+ 	TH1520_PAD(5,  QSPI0_D0_MOSI, QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(6,  QSPI0_D1_MISO, QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(7,  QSPI0_D2_WP,   QSPI, PWM,  I2S,  GPIO, ____, ____, 0),
+-	TH1520_PAD(8,  QSPI1_D3_HOLD, QSPI, ____, I2S,  GPIO, ____, ____, 0),
++	TH1520_PAD(8,  QSPI0_D3_HOLD, QSPI, ____, I2S,  GPIO, ____, ____, 0),
+ 	TH1520_PAD(9,  I2C2_SCL,      I2C,  UART, ____, GPIO, ____, ____, 0),
+ 	TH1520_PAD(10, I2C2_SDA,      I2C,  UART, ____, GPIO, ____, ____, 0),
+ 	TH1520_PAD(11, I2C3_SCL,      I2C,  ____, ____, GPIO, ____, ____, 0),
+-- 
+2.53.0
+

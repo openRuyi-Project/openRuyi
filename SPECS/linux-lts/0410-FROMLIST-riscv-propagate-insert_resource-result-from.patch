@@ -1,8 +1,8 @@
-From 2cba62c648b6d8eaad866c02dec48f863e787414 Mon Sep 17 00:00:00 2001
+From 41705cbe35101c7de961fb93f3c0d01b4f424bd3 Mon Sep 17 00:00:00 2001
 From: Thorsten Blum <thorsten.blum@linux.dev>
 Date: Tue, 12 May 2026 19:20:35 +0200
-Subject: [PATCH 410/467] FROMLIST: riscv: propagate insert_resource result
- from add_resource
+Subject: [RUYI PATCH] FROMLIST: riscv: propagate insert_resource result from
+ add_resource
 
 Currently, add_resource() returns 1 on success, even though its callers
 only check for negative values. Instead, propagate the insert_resource()

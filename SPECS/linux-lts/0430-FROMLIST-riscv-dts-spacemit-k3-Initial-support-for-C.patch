@@ -1,8 +1,8 @@
-From c7390a2a3f64b04ffd7c0a83d5e8e49be1607158 Mon Sep 17 00:00:00 2001
+From 204ddf86a80e19378811ebf324fd4e8474fa0834 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 20 May 2026 23:45:28 +0000
-Subject: [PATCH 430/467] FROMLIST: riscv: dts: spacemit: k3: Initial support
- for CoM260-IFX board
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Initial support for
+ CoM260-IFX board
 
 The K3 CoM260-IFX board combine with one 260 pins "Gold Finger" computer
 module with a carrier board. The module integrates the K3 SoC, LPDDR5,

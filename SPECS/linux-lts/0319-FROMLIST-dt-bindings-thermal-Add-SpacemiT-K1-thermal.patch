@@ -1,8 +1,8 @@
-From 28a0a1dcd7e90cf89bf17b18faf7da6856e72983 Mon Sep 17 00:00:00 2001
+From 7769d31e702d0f09a02488efb2a7b55c42255417 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:15 +0800
-Subject: [PATCH 319/467] FROMLIST: dt-bindings: thermal: Add SpacemiT K1
- thermal sensor
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: thermal: Add SpacemiT K1 thermal
+ sensor
 
 Document the SpacemiT K1 Thermal Sensor, which supports
 monitoring temperatures for five zones: soc, package, gpu, cluster0,

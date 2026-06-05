@@ -1,8 +1,8 @@
-From bba7975767efba6ca778e4283bcfd050aa140145 Mon Sep 17 00:00:00 2001
+From 1bee6d3eac2cd34b39a8ce2c3e590aaf2f4f38f1 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 5 Mar 2026 01:00:51 +0000
-Subject: [PATCH 328/467] FROMLIST: dt-bindings: phy: spacemit: k3: add USB2
- PHY support
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: phy: spacemit: k3: add USB2 PHY
+ support
 
 Introduce a compatible string for the USB2 PHY in SpacemiT K3 SoC. The IP
 of USB2 PHY mostly shares the same functionalities with K1 SoC, while has

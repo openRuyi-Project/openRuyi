@@ -1,0 +1,38 @@
+From a31ca7ca552212b34bea5cb3fcf52759dc2a28a0 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:33:54 +0100
+Subject: [RUYI PATCH] UPSTREAM: iio: mlx90614: #undef field_{get,prep}()
+ before local definition
+
+Prepare for the advent of globally available common field_get() and
+field_prep() macros by undefining the symbols before defining local
+variants.  This prevents redefinition warnings from the C preprocessor
+when introducing the common macros later.
+
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit 8a838dabf145818e67b304997c21a055dd5943dc)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iio/temperature/mlx90614.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/iio/temperature/mlx90614.c b/drivers/iio/temperature/mlx90614.c
+index 8a44a00bfd5e..de5615fdb396 100644
+--- a/drivers/iio/temperature/mlx90614.c
++++ b/drivers/iio/temperature/mlx90614.c
+@@ -69,7 +69,9 @@
+ #define MLX90614_CONST_FIR 0x7 /* Fixed value for FIR part of low pass filter */
+ 
+ /* Non-constant mask variant of FIELD_GET() and FIELD_PREP() */
++#undef field_get
+ #define field_get(_mask, _reg)	(((_reg) & (_mask)) >> (ffs(_mask) - 1))
++#undef field_prep
+ #define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+ 
+ struct mlx_chip_info {
+-- 
+2.53.0
+

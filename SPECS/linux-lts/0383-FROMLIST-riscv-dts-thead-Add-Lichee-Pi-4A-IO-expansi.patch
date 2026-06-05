@@ -1,7 +1,7 @@
-From b4e786b2f0c59be9a66614adc05dff50460e5292 Mon Sep 17 00:00:00 2001
+From e7621614a1d93b84b3994cc4e147e2f5f24e8b8c Mon Sep 17 00:00:00 2001
 From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 Date: Thu, 7 May 2026 16:17:09 +0800
-Subject: [PATCH 383/467] FROMLIST: riscv: dts: thead: Add Lichee Pi 4A IO
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: thead: Add Lichee Pi 4A IO
  expansions
 
 Lichee Pi 4A has 3 I2C IO expansion chips onboard, connected to the

@@ -1,7 +1,7 @@
-From df1020f14b967f34e7183e2820998cf3ae06f448 Mon Sep 17 00:00:00 2001
+From 513e5c7ca8e7b4847c1a9fa9328ecc1da6e03ca4 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:03 -0500
-Subject: [PATCH 039/467] UPSTREAM: spi: fsl-qspi: add a clock disable quirk
+Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: add a clock disable quirk
 
 The SpacemiT K1 SoC QSPI implementation needs to avoid shutting off the
 clock when changing its rate.  Add a new quirk to indicate that disabling

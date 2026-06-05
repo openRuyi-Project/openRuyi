@@ -1,0 +1,45 @@
+From eec5a961f5c9f3a5b4a99624544700e30ae02323 Mon Sep 17 00:00:00 2001
+From: Huan He <hehuan1@eswincomputing.com>
+Date: Wed, 14 Jan 2026 20:21:41 +0800
+Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Fix init for AXI clock
+ for Eswin EIC7700
+
+Accessing the High-Speed registers requires the AXI clock to be enabled.
+
+Signed-off-by: Huan He <hehuan1@eswincomputing.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: 32b2633219d3 ("mmc: sdhci-of-dwcmshc: Add support for Eswin EIC7700")
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+(cherry picked from commit fd9809ec6704db0c162b4510b11f877ec7b72065)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/mmc/host/sdhci-of-dwcmshc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+index dfad61f332c4..2ce2626a7993 100644
+--- a/drivers/mmc/host/sdhci-of-dwcmshc.c
++++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+@@ -1529,6 +1529,7 @@ static int eic7700_init(struct device *dev, struct sdhci_host *host, struct dwcm
+ {
+ 	u32 emmc_caps = MMC_CAP2_NO_SD | MMC_CAP2_NO_SDIO;
+ 	unsigned int val, hsp_int_status, hsp_pwr_ctrl;
++	static const char * const clk_ids[] = {"axi"};
+ 	struct of_phandle_args args;
+ 	struct eic7700_priv *priv;
+ 	struct regmap *hsp_regmap;
+@@ -1546,6 +1547,11 @@ static int eic7700_init(struct device *dev, struct sdhci_host *host, struct dwcm
+ 		return ret;
+ 	}
+ 
++	ret = dwcmshc_get_enable_other_clks(mmc_dev(host->mmc), dwc_priv,
++					    ARRAY_SIZE(clk_ids), clk_ids);
++	if (ret)
++		return ret;
++
+ 	ret = of_parse_phandle_with_fixed_args(dev->of_node, "eswin,hsp-sp-csr", 2, 0, &args);
+ 	if (ret) {
+ 		dev_err(dev, "Fail to parse 'eswin,hsp-sp-csr' phandle (%d)\n", ret);
+-- 
+2.53.0
+

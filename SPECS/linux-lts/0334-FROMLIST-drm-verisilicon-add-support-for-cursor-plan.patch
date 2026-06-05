@@ -1,7 +1,7 @@
-From 2bd08175bb99fd7bbb5cb6b7fdd965ec4ba85dc8 Mon Sep 17 00:00:00 2001
+From 5b2cb452135b05fe65a5440fa7f2e39d9b28d5f3 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 7 May 2026 01:56:10 +0800
-Subject: [PATCH 334/467] FROMLIST: drm: verisilicon: add support for cursor
+Subject: [RUYI PATCH] FROMLIST: drm: verisilicon: add support for cursor
  planes
 
 Verisilicon display controllers support hardware cursors per output

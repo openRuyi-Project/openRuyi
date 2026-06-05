@@ -1,0 +1,36 @@
+From 2fda7cbf1f4289cbb26b12faf98ad22cbbf1c6b6 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Thu, 6 Nov 2025 14:33:53 +0100
+Subject: [RUYI PATCH] UPSTREAM: iio: dac: ad3530r: #undef field_prep() before
+ local definition
+
+Prepare for the advent of a globally available common field_prep() macro
+by undefining the symbol before defining a local variant.  This prevents
+redefinition warnings from the C preprocessor when introducing the common
+macro later.
+
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+(cherry picked from commit 27856d2b2b0f259ba261a3e3e028cc75a70ae817)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iio/dac/ad3530r.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
+index 6134613777b8..5684d11137f2 100644
+--- a/drivers/iio/dac/ad3530r.c
++++ b/drivers/iio/dac/ad3530r.c
+@@ -54,6 +54,7 @@
+ #define AD3531R_MAX_CHANNELS			4
+ 
+ /* Non-constant mask variant of FIELD_PREP() */
++#undef field_prep
+ #define field_prep(_mask, _val)	(((_val) << (ffs(_mask) - 1)) & (_mask))
+ 
+ enum ad3530r_mode {
+-- 
+2.53.0
+

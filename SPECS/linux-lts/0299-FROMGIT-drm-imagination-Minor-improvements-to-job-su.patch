@@ -1,7 +1,7 @@
-From b1bc1325baa32b8ced34662415894d905572c0e3 Mon Sep 17 00:00:00 2001
+From fea5671abc67fb18ac13ed5ac838464e6ac1d034 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:43 +0100
-Subject: [PATCH 299/467] FROMGIT: drm/imagination: Minor improvements to job
+Subject: [RUYI PATCH] FROMGIT: drm/imagination: Minor improvements to job
  submission code documentation
 
 Mixed list of clarifications and typo fixes.

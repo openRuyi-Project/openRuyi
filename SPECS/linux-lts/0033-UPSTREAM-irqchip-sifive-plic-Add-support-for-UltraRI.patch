@@ -1,8 +1,8 @@
-From 47ff9167559df87c4792972c083b403e13935fed Mon Sep 17 00:00:00 2001
+From 4ef8a6c6a0ad3046bd79c8e7ba68b55f65faba37 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:43 +0100
-Subject: [PATCH 033/467] UPSTREAM: irqchip/sifive-plic: Add support for
- UltraRISC DP1000 PLIC
+Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Add support for UltraRISC
+ DP1000 PLIC
 
 Add a new compatible for the plic found in UltraRISC DP1000 with a quirk to
 work around a known hardware bug with IRQ claiming in the UR-CP100 cores.

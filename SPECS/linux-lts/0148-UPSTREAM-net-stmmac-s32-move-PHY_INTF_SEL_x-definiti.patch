@@ -1,0 +1,52 @@
+From 821bb874c9ee51f801501a53f0bfaff22992f2fb Mon Sep 17 00:00:00 2001
+From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Date: Mon, 3 Nov 2025 11:50:00 +0000
+Subject: [RUYI PATCH] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
+ definitions out of the way
+
+S32's PHY_INTF_SEL_x definitions conflict with those for the dwmac
+cores as they use a different bitmapping. Add a S32 prefix so that
+they are unique.
+
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Jan Petrous (OSS) <jan.petrous@oss.nxp.com>
+Link: https://patch.msgid.link/E1vFt4S-0000000ChoS-2Ahi@rmk-PC.armlinux.org.uk
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 553f23d1953527eb277efa902cd498131b2527e1)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
+index ee095ac13203..2b7ad64bfdf7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
+@@ -24,10 +24,10 @@
+ #define GMAC_INTF_RATE_125M	125000000	/* 125MHz */
+ 
+ /* SoC PHY interface control register */
+-#define PHY_INTF_SEL_MII	0x00
+-#define PHY_INTF_SEL_SGMII	0x01
+-#define PHY_INTF_SEL_RGMII	0x02
+-#define PHY_INTF_SEL_RMII	0x08
++#define S32_PHY_INTF_SEL_MII	0x00
++#define S32_PHY_INTF_SEL_SGMII	0x01
++#define S32_PHY_INTF_SEL_RGMII	0x02
++#define S32_PHY_INTF_SEL_RMII	0x08
+ 
+ struct s32_priv_data {
+ 	void __iomem *ioaddr;
+@@ -40,7 +40,7 @@ struct s32_priv_data {
+ 
+ static int s32_gmac_write_phy_intf_select(struct s32_priv_data *gmac)
+ {
+-	writel(PHY_INTF_SEL_RGMII, gmac->ctrl_sts);
++	writel(S32_PHY_INTF_SEL_RGMII, gmac->ctrl_sts);
+ 
+ 	dev_dbg(gmac->dev, "PHY mode set to %s\n", phy_modes(*gmac->intf_mode));
+ 
+-- 
+2.53.0
+

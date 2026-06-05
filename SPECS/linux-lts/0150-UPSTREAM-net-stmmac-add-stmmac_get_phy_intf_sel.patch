@@ -1,0 +1,68 @@
+From 624275e49ff1dc397c4e821f30d8afcc4c8f621e Mon Sep 17 00:00:00 2001
+From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Date: Mon, 3 Nov 2025 11:50:10 +0000
+Subject: [RUYI PATCH] UPSTREAM: net: stmmac: add stmmac_get_phy_intf_sel()
+
+Provide a function to translate the PHY interface mode to the
+phy_intf_sel pin configuration for dwmac1000 and dwmac4 cores that
+support multiple interfaces. We currently handle MII, GMII, RGMII,
+SGMII, RMII and REVMII, but not TBI, RTBI nor SMII as drivers do not
+appear to use these three and the driver doesn't currently support
+these.
+
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Link: https://patch.msgid.link/E1vFt4c-0000000Choe-3SII@rmk-PC.armlinux.org.uk
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit b459790d3fd6d7ead31182ae0cd8632fe79deed6)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h  |  1 +
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 20 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index 865531d6cd3b..a628b5039448 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -395,6 +395,7 @@ void stmmac_ptp_register(struct stmmac_priv *priv);
+ void stmmac_ptp_unregister(struct stmmac_priv *priv);
+ int stmmac_xdp_open(struct net_device *dev);
+ void stmmac_xdp_release(struct net_device *dev);
++int stmmac_get_phy_intf_sel(phy_interface_t interface);
+ int stmmac_resume(struct device *dev);
+ int stmmac_suspend(struct device *dev);
+ void stmmac_dvr_remove(struct device *dev);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 41b270a48630..efe313a59b33 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3035,6 +3035,26 @@ static void stmmac_check_ether_addr(struct stmmac_priv *priv)
+ 	}
+ }
+ 
++int stmmac_get_phy_intf_sel(phy_interface_t interface)
++{
++	int phy_intf_sel = -EINVAL;
++
++	if (interface == PHY_INTERFACE_MODE_MII ||
++	    interface == PHY_INTERFACE_MODE_GMII)
++		phy_intf_sel = PHY_INTF_SEL_GMII_MII;
++	else if (phy_interface_mode_is_rgmii(interface))
++		phy_intf_sel = PHY_INTF_SEL_RGMII;
++	else if (interface == PHY_INTERFACE_MODE_SGMII)
++		phy_intf_sel = PHY_INTF_SEL_SGMII;
++	else if (interface == PHY_INTERFACE_MODE_RMII)
++		phy_intf_sel = PHY_INTF_SEL_RMII;
++	else if (interface == PHY_INTERFACE_MODE_REVMII)
++		phy_intf_sel = PHY_INTF_SEL_REVMII;
++
++	return phy_intf_sel;
++}
++EXPORT_SYMBOL_GPL(stmmac_get_phy_intf_sel);
++
+ /**
+  * stmmac_init_dma_engine - DMA init.
+  * @priv: driver private structure
+-- 
+2.53.0
+

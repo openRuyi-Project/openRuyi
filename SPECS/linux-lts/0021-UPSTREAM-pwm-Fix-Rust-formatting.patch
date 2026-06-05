@@ -1,7 +1,7 @@
-From 16e23a75ada51fa0c1e922c0c532193c2465a324 Mon Sep 17 00:00:00 2001
+From d512570ff756b751d74f27121ccd6784be182855 Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 29 Oct 2025 19:25:02 +0100
-Subject: [PATCH 021/467] UPSTREAM: pwm: Fix Rust formatting
+Subject: [RUYI PATCH] UPSTREAM: pwm: Fix Rust formatting
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
