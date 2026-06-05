@@ -6,22 +6,26 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-YAML-PP
-Version:        0.39.0
+Version:        0.40.0
 Release:        %autorelease
 Summary:        YAML 1.2 processor
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/YAML-PP
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/T/TI/TINITA/YAML-PP-v%{version}.tar.gz
+#!RemoteAsset:  sha256:76c4d28d5c78f0a5cfec631f0032aff1baa68a705f21f6f4bfe70ad83dce2e33
+Source0:        https://www.cpan.org/authors/id/T/TI/TINITA/YAML-PP-v%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(B)
-BuildRequires:  perl(B::Deparse)
 BuildRequires:  perl(base)
+BuildRequires:  perl(B::Deparse)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
 BuildRequires:  perl(Data::Dumper)
@@ -52,20 +56,8 @@ Requires:       perl(Scalar::Util) >= 1.07
 %description
 YAML::PP is a modular YAML processor.
 
-%prep
-%setup -q -n YAML-PP-v%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CONTRIBUTING.md etc examples Makefile.dev README.md test-suite xt
+%doc Changes CONTRIBUTING.md Makefile.dev README.md SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
