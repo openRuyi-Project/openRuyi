@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Minimalistic HTML/XML DOM parser with CSS selectors
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Mojo-DOM58
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DB/DBOOK/Mojo-DOM58-%{version}.tar.gz
+#!RemoteAsset:  sha256:1b066035a33553296c9e970d4196b759842a4af1d727b195a60b5db0ac14e338
+Source0:        https://www.cpan.org/authors/id/D/DB/DBOOK/Mojo-DOM58-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -40,20 +44,8 @@ Markup Language (XML) 1.0, and matching based on CSS3 selectors. It will
 even try to interpret broken HTML and XML, so you should not use it for
 validation.
 
-%prep
-%setup -q -n Mojo-DOM58-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.md prereqs.yml README
 
 %changelog
-%{?autochangelog}
+%autochangelog
