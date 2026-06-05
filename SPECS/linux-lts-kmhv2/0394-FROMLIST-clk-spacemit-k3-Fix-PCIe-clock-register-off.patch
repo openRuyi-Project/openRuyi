@@ -1,7 +1,7 @@
-From e8eb8752ce8b21f83609892d2702ada2791d6878 Mon Sep 17 00:00:00 2001
+From e7889702a01dfeefc13f75527701150067033d27 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 11 May 2026 02:59:10 +0000
-Subject: [PATCH 394/467] FROMLIST: clk: spacemit: k3: Fix PCIe clock register
+Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: Fix PCIe clock register
  offset
 
 The offset of PCIe Clock CTRL register for port B and C controller was

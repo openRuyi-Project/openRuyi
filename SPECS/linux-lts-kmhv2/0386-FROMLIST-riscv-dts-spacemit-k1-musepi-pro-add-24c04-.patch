@@ -1,8 +1,8 @@
-From 46e98f453443e84d2c39d1a192493f63035cb983 Mon Sep 17 00:00:00 2001
+From 766c66afb264021498a9385a2332b05c2ab32653 Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Mon, 11 May 2026 13:11:09 +0200
-Subject: [PATCH 386/467] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add
- 24c04 eeprom
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add 24c04
+ eeprom
 
 Enable i2c2 and add the connected 24c04 EEPROM.
 

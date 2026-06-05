@@ -1,8 +1,8 @@
-From 9290d92ea555570942074fc606d13eb4d3bbf981 Mon Sep 17 00:00:00 2001
+From cc7e1eff70086b94e4cc0442c78e493d14ea2a91 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:37 +0100
-Subject: [PATCH 293/467] FROMGIT: drm/imagination: Fit paired fragment job in
- the correct CCCB
+Subject: [RUYI PATCH] FROMGIT: drm/imagination: Fit paired fragment job in the
+ correct CCCB
 
 For geometry jobs with a paired fragment job, at the moment, the
 DRM scheduler's prepare_job() callback:

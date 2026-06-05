@@ -1,8 +1,7 @@
-From 60174cdbef524e4485dec91e48413d76da328022 Mon Sep 17 00:00:00 2001
+From b0c37d9383e9fff2cfae5d13e29a5b2fd134e33b Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:55 -0500
-Subject: [PATCH 048/467] UPSTREAM: riscv: dts: spacemit: define fixed
- regulators
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define fixed regulators
 
 Define the DC power input and the 4v power as fixed supplies in the
 Banana Pi BPI-F3.

@@ -1,8 +1,8 @@
-From e4c393d2cacfe99846fc5b646d0e38cbe35f4d0b Mon Sep 17 00:00:00 2001
+From 629f9f3c4e0f9cca344b52a02ceedd2e91ab9756 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 19 May 2026 06:12:38 +0200
-Subject: [PATCH 423/467] FROMLIST: riscv: dts: spacemit: enable SD card
- support on Milk-V Jupiter
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable SD card support
+ on Milk-V Jupiter
 
 Add complete SD card controller support with UHS high-speed modes.
 

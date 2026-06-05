@@ -1,7 +1,7 @@
-From 4d5d4944086158dd4169828c2d3596f2ec8291f4 Mon Sep 17 00:00:00 2001
+From a42a4931c6355f9aec78b37eacf4e7f01afaa772 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 28 Apr 2026 10:46:50 +0000
-Subject: [PATCH 362/467] FROMLIST: dt-bindings: pwm: marvell,pxa-pwm: Add
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: pwm: marvell,pxa-pwm: Add
  SpacemiT K3 PWM support
 
 The PWM controller in SpacemiT K3 SoC reuse the same IP as previous K1

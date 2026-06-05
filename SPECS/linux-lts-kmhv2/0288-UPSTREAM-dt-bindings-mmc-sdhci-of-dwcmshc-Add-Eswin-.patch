@@ -1,0 +1,108 @@
+From bb40d8362ee33eb3d7341201cc0193113631e03c Mon Sep 17 00:00:00 2001
+From: Huan He <hehuan1@eswincomputing.com>
+Date: Sun, 19 Oct 2025 19:52:38 +0800
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mmc: sdhci-of-dwcmshc: Add Eswin
+ EIC7700
+
+EIC7700 use Synopsys dwcmshc IP for SD/eMMC controllers.
+Add Eswin EIC7700 support in sdhci-of-dwcmshc.yaml.
+
+Signed-off-by: Huan He <hehuan1@eswincomputing.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+(cherry picked from commit 30009a21f257a02feea7a7708ef3d0118e7f824a)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../bindings/mmc/snps,dwcmshc-sdhci.yaml      | 57 +++++++++++++++++--
+ 1 file changed, 51 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+index f882219a0a26..7e7c55dc2440 100644
+--- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+@@ -30,6 +30,7 @@ properties:
+           - sophgo,sg2002-dwcmshc
+           - sophgo,sg2042-dwcmshc
+           - thead,th1520-dwcmshc
++          - eswin,eic7700-dwcmshc
+ 
+   reg:
+     maxItems: 1
+@@ -52,17 +53,30 @@ properties:
+     maxItems: 5
+ 
+   reset-names:
+-    items:
+-      - const: core
+-      - const: bus
+-      - const: axi
+-      - const: block
+-      - const: timer
++    maxItems: 5
+ 
+   rockchip,txclk-tapnum:
+     description: Specify the number of delay for tx sampling.
+     $ref: /schemas/types.yaml#/definitions/uint8
+ 
++  eswin,hsp-sp-csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
++      - items:
++          - description: Phandle to HSP(High-Speed Peripheral) device
++          - description: Offset of the stability status register for internal
++                         clock.
++          - description: Offset of the stability register for host regulator
++                         voltage.
++    description:
++      HSP CSR is to control and get status of different high-speed peripherals
++      (such as Ethernet, USB, SATA, etc.) via register, which can tune
++      board-level's parameters of PHY, etc.
++
++  eswin,drive-impedance-ohms:
++    description: Specifies the drive impedance in Ohm.
++    enum: [33, 40, 50, 66, 100]
++
+ required:
+   - compatible
+   - reg
+@@ -110,6 +124,37 @@ allOf:
+             - const: block
+             - const: timer
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: eswin,eic7700-dwcmshc
++    then:
++      properties:
++        resets:
++          minItems: 4
++          maxItems: 4
++        reset-names:
++          items:
++            - const: axi
++            - const: phy
++            - const: prstn
++            - const: txrx
++      required:
++        - eswin,hsp-sp-csr
++        - eswin,drive-impedance-ohms
++    else:
++      properties:
++        resets:
++          maxItems: 5
++        reset-names:
++          items:
++            - const: core
++            - const: bus
++            - const: axi
++            - const: block
++            - const: timer
++
+   - if:
+       properties:
+         compatible:
+-- 
+2.53.0
+

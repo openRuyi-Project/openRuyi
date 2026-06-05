@@ -1,7 +1,7 @@
-From 6c4d84191d4a646424af4fd8f0bfa0cb6a8b88a5 Mon Sep 17 00:00:00 2001
+From 01d5441431b796aa0c7bef71294e87584b3a7ac2 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:02 -0500
-Subject: [PATCH 038/467] UPSTREAM: spi: fsl-qspi: switch predicates to bool
+Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: switch predicates to bool
 
 Change all the needs_*() functions so they are no longer inline, and return
 bool rather than int.

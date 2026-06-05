@@ -1,8 +1,8 @@
-From d2737c5027f8388399e5428feeb50be212faf26b Mon Sep 17 00:00:00 2001
+From 78d249e0f67dafbf778883d6990fcb4c34638969 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 20 May 2026 18:00:00 +0800
-Subject: [PATCH 431/467] FROMLIST: riscv: dts: spacemit: enable PMIC on
- OrangePi R2S
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable PMIC on OrangePi
+ R2S
 
 Enable the i2c8 interface and add the connected SpacemiT P1 PMIC and
 its associated regulators to support voltage regulation on the board.

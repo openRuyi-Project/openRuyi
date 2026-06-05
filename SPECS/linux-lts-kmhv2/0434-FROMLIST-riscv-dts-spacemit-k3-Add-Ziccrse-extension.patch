@@ -1,0 +1,99 @@
+From 39f4f9ff2f7384331b347a162c95587733dbc042 Mon Sep 17 00:00:00 2001
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 26 May 2026 15:22:58 -0400
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Add Ziccrse
+ extension for X100 cores
+
+Add the Ziccrse ISA extension to all eight X100 cores. Ziccrse
+provides a forward progress guarantee on LR/SC sequences in main
+memory regions with cacheability and coherence PMAs.
+
+The SpacemiT X100 core supports it per the SpacemiT K3 hardware
+specification.
+
+Signed-off-by: Guodong Xu <guodong@riscstar.com>
+Link: https://lore.kernel.org/r/20260526-k3-ziccrse-v1-1-c759792ca3a3@riscstar.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
+index 5b17612fe58e..ed046714a7ac 100644
+--- a/arch/riscv/boot/dts/spacemit/k3.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
+@@ -36,7 +36,7 @@ cpu_0: cpu@0 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -77,7 +77,7 @@ cpu_1: cpu@1 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -118,7 +118,7 @@ cpu_2: cpu@2 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -159,7 +159,7 @@ cpu_3: cpu@3 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -200,7 +200,7 @@ cpu_4: cpu@4 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -241,7 +241,7 @@ cpu_5: cpu@5 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -282,7 +282,7 @@ cpu_6: cpu@6 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+@@ -323,7 +323,7 @@ cpu_7: cpu@7 {
+ 					       "zawrs", "zba", "zbb", "zbc", "zbs", "zca",
+ 					       "zcb", "zcd", "zcmop", "zfa", "zfbfmin",
+ 					       "zfh", "zfhmin", "zicbom", "zicbop", "zicboz",
+-					       "ziccamoa", "ziccif", "zicclsm", "zicntr",
++					       "ziccamoa", "ziccif", "zicclsm", "ziccrse", "zicntr",
+ 					       "zicond", "zicsr", "zifencei", "zihintntl",
+ 					       "zihintpause", "zihpm", "zimop", "zkt", "zvbb",
+ 					       "zvbc", "zvfbfmin", "zvfbfwma", "zvfh",
+-- 
+2.53.0
+

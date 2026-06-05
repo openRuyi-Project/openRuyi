@@ -1,7 +1,7 @@
-From dbd9d83cae62b43735c4ed79553380f3d33cf666 Mon Sep 17 00:00:00 2001
+From 362a9bc03d8080d38e5ea64ba2c39884e945e945 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 8 May 2026 15:25:25 +0800
-Subject: [PATCH 399/467] FROMLIST: i2c: spacemit: drop warning when
+Subject: [RUYI PATCH] FROMLIST: i2c: spacemit: drop warning when
  clock-frequency property is absent
 
 The clock-frequency property is optional according to the DT binding.

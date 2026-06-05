@@ -1,8 +1,8 @@
-From bb2450948146eabe3ab427e20f97b58aca4b1d6c Mon Sep 17 00:00:00 2001
+From 24c1c297e0c77c81c2e3a9ed9690f3e133986a22 Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 12 Nov 2025 04:44:42 +0000
-Subject: [PATCH 056/467] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S
- board device tree
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S board
+ device tree
 
 Add initial device tree support for the OrangePi RV2 board [1], which is
 marketed as using the Ky X1 SoC but is identical in die and package

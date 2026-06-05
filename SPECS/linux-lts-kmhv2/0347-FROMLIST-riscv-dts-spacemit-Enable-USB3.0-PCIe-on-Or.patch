@@ -1,7 +1,7 @@
-From f555e0c21e1df43b0df0074068872e999f825c2b Mon Sep 17 00:00:00 2001
+From be6360dcda59815d23e91c2273c7af8ee688b197 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Tue, 7 Apr 2026 23:28:16 +0800
-Subject: [PATCH 347/467] FROMLIST: riscv: dts: spacemit: Enable USB3.0/PCIe on
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: Enable USB3.0/PCIe on
  OrangePi RV2
 
 Enable the DWC3 USB 3.0 controller and its associated usbphy2 on the

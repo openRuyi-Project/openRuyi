@@ -1,7 +1,7 @@
-From a366a6ddd2d146abfc8ac12c6d57701a94a7c725 Mon Sep 17 00:00:00 2001
+From 30f59c0f689a00390e4183a7b58ec3108d1d55a8 Mon Sep 17 00:00:00 2001
 From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
 Date: Thu, 14 May 2026 20:32:01 +0200
-Subject: [PATCH 408/467] FROMLIST: riscv: dts: thead: Enable wifi on the
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: thead: Enable wifi on the
  BeagleV-Ahead
 
 The BeagleV-Ahead board uses an AP6203BM WiFi chip from AMPAK Technology

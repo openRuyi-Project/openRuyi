@@ -1,8 +1,8 @@
-From eafa7c60eb86e4ce51877b8dedcc634a13188bcf Mon Sep 17 00:00:00 2001
+From 811d7e0186f2cec4b5ebbd7506439ef84e15a0ff Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 7 May 2026 18:31:43 +0800
-Subject: [PATCH 370/467] FROMLIST: ASoC: soc-pcm: constrain hw_params when
- DAIs share the same BCLK
+Subject: [RUYI PATCH] FROMLIST: ASoC: soc-pcm: constrain hw_params when DAIs
+ share the same BCLK
 
 When multiple CPU DAIs on the same sound card share the same physical
 BCLK, add a hw_rule during PCM open that constrains the sample rate so

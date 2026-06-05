@@ -1,7 +1,7 @@
-From 7601c632bcc8afe89b7f067eb31bec6b9ca6b2ca Mon Sep 17 00:00:00 2001
+From 221755ad22855e46ff06ad063bde801c81b4bb75 Mon Sep 17 00:00:00 2001
 From: Ran Wang <wangran@bosc.ac.cn>
 Date: Fri, 20 Mar 2026 15:50:27 +0800
-Subject: [PATCH 3/3] XIANGSHAN: Add workaround to retry when access fault
+Subject: [RUYI PATCH] XIANGSHAN: Add workaround to retry when access fault
 
 Signed-off-by: Ran Wang <wangran@bosc.ac.cn>
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>

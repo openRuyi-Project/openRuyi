@@ -1,8 +1,8 @@
-From 79d41f5abc296c99b6a3b3418eb3600e2082a9e3 Mon Sep 17 00:00:00 2001
+From 98c6ddea13512cec403705f0e1898daa262466b1 Mon Sep 17 00:00:00 2001
 From: Zhengyu He <hezhy472013@gmail.com>
 Date: Thu, 21 May 2026 22:44:46 +0800
-Subject: [PATCH 425/467] FROMLIST: riscv: dts: spacemit: add QSPI support for
- K3 Pico-ITX
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: add QSPI support for K3
+ Pico-ITX
 
 Add K3 QSPI controller node into k3.dtsi, and add related pinmux
 configuration.

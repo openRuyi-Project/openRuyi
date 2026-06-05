@@ -1,8 +1,8 @@
-From 32a650e4403e9cc5000554982cacf78cf1e8d147 Mon Sep 17 00:00:00 2001
+From 6f609eb72f740d3d3be5b596fca48b7d76f3a181 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Wed, 8 Apr 2026 00:01:43 +0800
-Subject: [PATCH 361/467] FROMLIST: riscv: dts: sophgo: reduce SG2042 MSI count
- to 16
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: sophgo: reduce SG2042 MSI count to
+ 16
 
 The SG2042 MSI controller has one 32-bit doorbell register, and each bit
 corresponds to an interrupt. At a glance, it seems that the MSI

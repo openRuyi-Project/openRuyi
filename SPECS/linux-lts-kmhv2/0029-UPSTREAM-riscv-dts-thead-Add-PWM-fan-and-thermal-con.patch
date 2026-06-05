@@ -1,7 +1,7 @@
-From 6e4ddc5ab60b81304d73eac230c5c2d9b641f114 Mon Sep 17 00:00:00 2001
+From 34e6c9de17b9ff861746760bfc9334e3fc3060cb Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:07 +0200
-Subject: [PATCH 029/467] UPSTREAM: riscv: dts: thead: Add PWM fan and thermal
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Add PWM fan and thermal
  control
 
 Add Device Tree nodes to enable a PWM controlled fan and it's associated

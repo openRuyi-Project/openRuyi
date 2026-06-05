@@ -1,8 +1,8 @@
-From 5eb58bc515879ba41b74f3e37a8bdc20196e4ed0 Mon Sep 17 00:00:00 2001
+From d02e702da21996ccb557b91e5cb594f6c76e0025 Mon Sep 17 00:00:00 2001
 From: Florian Schmaus <florian.schmaus@codasip.com>
 Date: Tue, 12 May 2026 08:32:31 +0200
-Subject: [PATCH 409/467] FROMLIST: riscv: module: Use generic cmp_int()
- instead of custom cmp_3way()
+Subject: [RUYI PATCH] FROMLIST: riscv: module: Use generic cmp_int() instead
+ of custom cmp_3way()
 
 The module-sections.c file defines a custom cmp_3way() macro to perform
 3-way comparisons during relocation sorting.

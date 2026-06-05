@@ -1,8 +1,7 @@
-From 70f112bf88bec82aeedec4c778bcd4f3232a0765 Mon Sep 17 00:00:00 2001
+From 915b04c620188a1aac7cc9e8481bd1dc3069817d Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Tue, 18 Nov 2025 14:08:06 +0800
-Subject: [PATCH 059/467] UPSTREAM: rtc: spacemit: MFD_SPACEMIT_P1 as
- dependencies
+Subject: [RUYI PATCH] UPSTREAM: rtc: spacemit: MFD_SPACEMIT_P1 as dependencies
 
 RTC_DRV_SPACEMIT_P1 is a subdevice of P1 and should depend on
 MFD_SPACEMIT_P1 rather than selecting it directly. Using 'select'

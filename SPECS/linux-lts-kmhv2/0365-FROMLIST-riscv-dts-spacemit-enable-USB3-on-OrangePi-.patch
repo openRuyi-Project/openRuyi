@@ -1,8 +1,8 @@
-From 198b6af6a42ee5ace108899f8074347faeed4504 Mon Sep 17 00:00:00 2001
+From 62c0719d1e7faf6136869e6f6da6b1f069f63523 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Mon, 18 May 2026 18:00:30 +0800
-Subject: [PATCH 365/467] FROMLIST: riscv: dts: spacemit: enable USB3 on
- OrangePi R2S
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable USB3 on OrangePi
+ R2S
 
 Enable the DWC3 USB3.0 controller and its associated PHY on the
 OrangePi R2S. The USB regulator provides VBUS for USB2 and USB3

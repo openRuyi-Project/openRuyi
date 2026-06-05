@@ -1,7 +1,7 @@
-From 84df59a45f81e8ef941f44d41c695a0186bc324d Mon Sep 17 00:00:00 2001
+From b71c8252ef37bceafb077b1ac8b79eb81f094356 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Mon, 9 Mar 2026 19:09:38 +0800
-Subject: [PATCH 332/467] FROMLIST: riscv: mm: Define DIRECT_MAP_PHYSMEM_END
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Define DIRECT_MAP_PHYSMEM_END
 
 On RISC-V, the actual mappable range of physical address space is
 dependent on the current MMU mode i.e. satp_mode (See

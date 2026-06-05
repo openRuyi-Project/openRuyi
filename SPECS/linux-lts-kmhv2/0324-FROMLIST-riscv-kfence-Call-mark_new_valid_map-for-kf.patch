@@ -1,8 +1,8 @@
-From 8417f8da2a6a1f07550805e452db0d0ebe5c568a Mon Sep 17 00:00:00 2001
+From a6ee02e2ad7a759a5906206b87b7525c1ac580e4 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:46 +0800
-Subject: [PATCH 324/467] FROMLIST: riscv: kfence: Call mark_new_valid_map()
- for kfence_unprotect()
+Subject: [RUYI PATCH] FROMLIST: riscv: kfence: Call mark_new_valid_map() for
+ kfence_unprotect()
 
 In kfence_protect_page(), which kfence_unprotect() calls, we cannot send
 IPIs to other CPUs to ask them to flush TLB. This may lead to those CPUs

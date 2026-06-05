@@ -1,8 +1,8 @@
-From 5a543b79cba1602b35c7bf4c272f6c1082403ec9 Mon Sep 17 00:00:00 2001
+From 5feeaceeac1d83b0bc4b52a476972edb0633b9b1 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 11 May 2026 02:59:09 +0000
-Subject: [PATCH 393/467] FROMLIST: clk: spacemit: k3: Switch to pll2_d6 as
- parent for PCIe clock
+Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: Switch to pll2_d6 as parent
+ for PCIe clock
 
 According to SpacemiT updated docs, the PCIe master and slave clock's
 parent is the pll2_d6 clock, so fix it.

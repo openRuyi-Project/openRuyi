@@ -1,8 +1,8 @@
-From b71db7acd338b565ebfa25fdafffccc306c3f667 Mon Sep 17 00:00:00 2001
+From f9aab33c4cd724380b176901c11e9b2d5dbe7b6f Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 17 May 2026 09:48:39 +0800
-Subject: [PATCH 414/467] FROMLIST: dt-bindings: PCI: spacemit: Introduce
- Spacemit K3 PCIe host controller
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: PCI: spacemit: Introduce Spacemit
+ K3 PCIe host controller
 
 Add binding support for the PCIe controller on the SpacemiT K3 SoC.
 This controller is almost a standard Synopsys DesignWare PCIe IP,

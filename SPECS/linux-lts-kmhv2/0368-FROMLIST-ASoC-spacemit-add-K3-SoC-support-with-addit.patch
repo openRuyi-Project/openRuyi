@@ -1,7 +1,7 @@
-From fdabd394ccbcb3a01600534aae7a6a5b2c4adf5d Mon Sep 17 00:00:00 2001
+From ff69086b4bd33d60ba9c418d37ac92992aae8876 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 7 May 2026 15:33:10 +0800
-Subject: [PATCH 368/467] FROMLIST: ASoC: spacemit: add K3 SoC support with
+Subject: [RUYI PATCH] FROMLIST: ASoC: spacemit: add K3 SoC support with
  additional clocks
 
 Add support for the SpacemiT K3 SoC I2S controller, which shares the

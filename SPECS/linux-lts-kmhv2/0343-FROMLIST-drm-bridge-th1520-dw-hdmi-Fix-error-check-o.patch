@@ -1,8 +1,8 @@
-From ccbeae62330c25b6ad110b82754b6ef592620f48 Mon Sep 17 00:00:00 2001
+From c3dbfd57b9930def2f6e386d4a107127d798a89e Mon Sep 17 00:00:00 2001
 From: Felix Gu <ustc.gu@gmail.com>
 Date: Sat, 21 Mar 2026 03:12:10 +0800
-Subject: [PATCH 343/467] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix error check
- on dw_hdmi_probe() return value
+Subject: [RUYI PATCH] FROMLIST: drm/bridge: th1520-dw-hdmi: Fix error check on
+ dw_hdmi_probe() return value
 
 The error check after calling dw_hdmi_probe() was incorrectly checking
 the struct pointer hdmi instead of the probe result hdmi->dw_hdmi.

@@ -1,8 +1,8 @@
-From db15fe493d454f8d6639f751b051418ca4ffa796 Mon Sep 17 00:00:00 2001
+From 6aa02cc299f6c36d323e193ab8c1f6118e33d3f9 Mon Sep 17 00:00:00 2001
 From: Jennifer Berringer <jberring@redhat.com>
 Date: Wed, 20 May 2026 07:11:50 -0400
-Subject: [PATCH 432/467] FROMLIST: riscv: dts: spacemit: set console baud rate
- on OrangePi RV2
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: set console baud rate on
+ OrangePi RV2
 
 Set the baud rate to 115200, matching what is used by U-Boot on this
 platform so that the console is usable even when console options are not

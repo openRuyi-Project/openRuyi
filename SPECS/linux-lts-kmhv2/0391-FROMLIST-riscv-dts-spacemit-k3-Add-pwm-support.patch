@@ -1,7 +1,7 @@
-From 17640c2f952d4636e28f6c91c28cad7c0cbcfeb5 Mon Sep 17 00:00:00 2001
+From 19e0459a70fb9e1c62f2eb097e72e73136997ccd Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 21 May 2026 00:24:41 +0000
-Subject: [PATCH 391/467] FROMLIST: riscv: dts: spacemit: k3: Add pwm support
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Add pwm support
 
 Populate all pwm device tree nodes for SpacemiT K3 SoC, also documents
 the pinctrl info which would easily help to enable them in future.

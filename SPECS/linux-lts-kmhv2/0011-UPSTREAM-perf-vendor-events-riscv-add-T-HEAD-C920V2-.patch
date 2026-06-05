@@ -1,7 +1,7 @@
-From 5d275d4fdc0ad5140b356cbcb753365217315b31 Mon Sep 17 00:00:00 2001
+From 97f62d7522d266af5df939fe3f50a0e365d78d37 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 14 Oct 2025 09:48:29 +0800
-Subject: [PATCH 011/467] UPSTREAM: perf vendor events riscv: add T-HEAD C920V2
+Subject: [RUYI PATCH] UPSTREAM: perf vendor events riscv: add T-HEAD C920V2
  JSON support
 
 T-HEAD C920 has a V2 iteration, which supports Sscompmf. The V2

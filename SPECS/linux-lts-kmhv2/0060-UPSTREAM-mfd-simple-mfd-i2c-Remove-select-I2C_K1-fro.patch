@@ -1,8 +1,8 @@
-From 5428e4b1551b578c73d4dbb8ca29e15132ed6cc3 Mon Sep 17 00:00:00 2001
+From 6069d468c347c12814556df14bbe53dade5799be Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Mon, 27 Oct 2025 13:48:05 +0800
-Subject: [PATCH 060/467] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1
- from MFD_SPACEMIT_P1
+Subject: [RUYI PATCH] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1 from
+ MFD_SPACEMIT_P1
 
 select will force a symbol to a specific value without considering
 its dependencies. As a result, the i2c-k1 driver will fail to build

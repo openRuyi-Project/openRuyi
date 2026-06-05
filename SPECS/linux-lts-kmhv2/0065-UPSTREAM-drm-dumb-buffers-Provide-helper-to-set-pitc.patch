@@ -1,8 +1,8 @@
-From ffc2daa0d4924fb2007651922cc6c14f597aff80 Mon Sep 17 00:00:00 2001
+From cf1dda8a91f6866dead5cfac3205be1ea706a065 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:09 +0200
-Subject: [PATCH 065/467] UPSTREAM: drm/dumb-buffers: Provide helper to set
- pitch and size
+Subject: [RUYI PATCH] UPSTREAM: drm/dumb-buffers: Provide helper to set pitch
+ and size
 
 Add drm_modes_size_dumb(), a helper to calculate the dumb-buffer
 scanline pitch and allocation size. Implementations of struct

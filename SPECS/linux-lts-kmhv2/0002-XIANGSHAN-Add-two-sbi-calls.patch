@@ -1,7 +1,7 @@
-From eb55ca6799bbf38ce108fc237284f10f279a1da7 Mon Sep 17 00:00:00 2001
+From 72813582d41500d578c0d5b500c4224f33824e91 Mon Sep 17 00:00:00 2001
 From: Ran Wang <wangran@bosc.ac.cn>
 Date: Fri, 20 Mar 2026 15:36:58 +0800
-Subject: [PATCH 2/3] XIANGSHAN: Add two sbi calls
+Subject: [RUYI PATCH] XIANGSHAN: Add two sbi calls
 
 Signed-off-by: Ran Wang <wangran@bosc.ac.cn>
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>

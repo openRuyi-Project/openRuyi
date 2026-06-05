@@ -1,7 +1,7 @@
-From e61fb83553f88a67832eb605add845486af0407c Mon Sep 17 00:00:00 2001
+From 82b7ff76828e1cb4e0a7b4cf12583f33f99e37bc Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Mon, 25 May 2026 12:23:29 +0800
-Subject: [PATCH 433/467] FROMLIST: riscv: mm: Call mark_new_valid_map() after
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Call mark_new_valid_map() after
  hotplugging vmemmap
 
 section_activate() creates new mappings in the vmemmap range without

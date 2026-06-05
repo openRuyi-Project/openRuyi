@@ -1,7 +1,7 @@
-From 1810a45e1f7eb932747edb129c2cc22f50a85617 Mon Sep 17 00:00:00 2001
+From 5d9676891cd5d6a9735391e8b346e75d7f6559c9 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 28 Apr 2026 10:57:29 +0000
-Subject: [PATCH 366/467] FROMLIST: dts: riscv: spacemit: correct 32k clock
+Subject: [RUYI PATCH] FROMLIST: dts: riscv: spacemit: correct 32k clock
  frequency
 
 The 32k oscillator's clock frequency is actually 32768Hz, so correct it.

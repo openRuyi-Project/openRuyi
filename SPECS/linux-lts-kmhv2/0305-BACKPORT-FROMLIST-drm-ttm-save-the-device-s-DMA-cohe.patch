@@ -1,7 +1,7 @@
-From 930af6ff12384f1fc15fbeaba533c8791537aafb Mon Sep 17 00:00:00 2001
+From 1f52ff4a8952f2dcd39f984b094e0d3ba4227bcd Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Sat, 29 Jun 2024 13:22:46 +0800
-Subject: [PATCH 305/467] BACKPORT: FROMLIST: drm/ttm: save the device's DMA
+Subject: [RUYI PATCH] BACKPORT: FROMLIST: drm/ttm: save the device's DMA
  coherency status in ttm_device
 
 Currently TTM utilizes cached memory regardless of whether the device

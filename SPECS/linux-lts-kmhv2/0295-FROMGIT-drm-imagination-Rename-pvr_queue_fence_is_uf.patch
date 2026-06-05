@@ -1,7 +1,7 @@
-From f20230f3dc06eafd26b5cd6d132c0cca76331d33 Mon Sep 17 00:00:00 2001
+From 37bce3dfda3d6bfd8120dd4ca4ce59da566ffd8c Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:39 +0100
-Subject: [PATCH 295/467] FROMGIT: drm/imagination: Rename
+Subject: [RUYI PATCH] FROMGIT: drm/imagination: Rename
  pvr_queue_fence_is_ufo_backed() to reflect usage
 
 This function is only used by the synchronization code to figure out if

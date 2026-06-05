@@ -1,7 +1,7 @@
-From 3ac3b07de446afd26f22edb65a08e995d1e10394 Mon Sep 17 00:00:00 2001
+From 10c6bee274527e1fa5cf933eade792a8269bfa6e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:00 -0500
-Subject: [PATCH 036/467] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional
+Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional
  resets
 
 Allow two resets to be defined to support the SpacemiT K1 SoC QSPI IP.

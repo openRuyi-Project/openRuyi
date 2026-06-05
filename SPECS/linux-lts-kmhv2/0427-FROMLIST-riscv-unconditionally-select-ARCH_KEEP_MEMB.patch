@@ -1,7 +1,7 @@
-From 9255f275eddde413b57b043618f6838db76a010c Mon Sep 17 00:00:00 2001
+From 2e0cced73e82d39a2fd99776f4972c20778cd27b Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Wed, 20 May 2026 00:55:46 +0800
-Subject: [PATCH 427/467] FROMLIST: riscv: unconditionally select
+Subject: [RUYI PATCH] FROMLIST: riscv: unconditionally select
  ARCH_KEEP_MEMBLOCK
 
 Select ARCH_KEEP_MEMBLOCK unconditionally. kexec requires memblock

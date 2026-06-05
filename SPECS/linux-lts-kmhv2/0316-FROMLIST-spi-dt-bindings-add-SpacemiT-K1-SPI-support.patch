@@ -1,8 +1,7 @@
-From a1ffb3d0ac5dd81cbe0345aa8213f747b7560145 Mon Sep 17 00:00:00 2001
+From 2a9661946f61c576e2b7534403eae881deb90a82 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:51 -0400
-Subject: [PATCH 316/467] FROMLIST: spi: dt-bindings: add SpacemiT K1 SPI
- support
+Subject: [RUYI PATCH] FROMLIST: spi: dt-bindings: add SpacemiT K1 SPI support
 
 Add support for the SPI controller implemented by the SpacemiT K1 SoC.
 

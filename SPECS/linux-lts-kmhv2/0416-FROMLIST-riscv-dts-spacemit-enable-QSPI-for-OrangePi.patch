@@ -1,8 +1,8 @@
-From 2d3f6de67eb533903d80677a6a462979c87143b9 Mon Sep 17 00:00:00 2001
+From e933fb1426b50978196a70b05655d5cb7a3bcb76 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sat, 16 May 2026 16:00:30 +0800
-Subject: [PATCH 416/467] FROMLIST: riscv: dts: spacemit: enable QSPI for
- OrangePi RV2
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable QSPI for OrangePi
+ RV2
 
 Enable the QSPI controller and the XM25QU128C SPI NOR flash on the
 OrangePi RV2 board. Add a flash partition layout from vendor UBoot.

@@ -1,7 +1,7 @@
-From a9788cf9dae7cfe18b553bd1ae42afe7ef003b45 Mon Sep 17 00:00:00 2001
+From d420aa127fcbe63635453a4103d4d013e9027703 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 18 May 2026 02:58:37 +0000
-Subject: [PATCH 418/467] FROMLIST: reset: spacemit: k3: fix USB2 ahb reset
+Subject: [RUYI PATCH] FROMLIST: reset: spacemit: k3: fix USB2 ahb reset
 
 According to SpacemiT K3's updated docs, the USB2 ahb reset and USB2 bus
 clock enable bit was wrongly swapped, the correct one should be:

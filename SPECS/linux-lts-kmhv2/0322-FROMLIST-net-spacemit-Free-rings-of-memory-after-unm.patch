@@ -1,7 +1,7 @@
-From 9b48aded2603c80a65f27877a0ac7d5d6c21f77b Mon Sep 17 00:00:00 2001
+From 83a04d13a39350e2059289ae74da6a837187c63e Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 17:24:21 +0800
-Subject: [PATCH 322/467] FROMLIST: net: spacemit: Free rings of memory after
+Subject: [RUYI PATCH] FROMLIST: net: spacemit: Free rings of memory after
  unmapping DMA
 
 In emac_free_{tx,rx}_resources, call dma_free_coherent() to unmap DMA

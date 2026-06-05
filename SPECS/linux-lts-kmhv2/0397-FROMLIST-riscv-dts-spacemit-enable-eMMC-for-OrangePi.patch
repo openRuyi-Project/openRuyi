@@ -1,8 +1,8 @@
-From 6ff2a06cb85f689598ffa5ccd38fc8fe6b494f5f Mon Sep 17 00:00:00 2001
+From 1e42639469619e69ed0fe533281513ebbf8fb45f Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sat, 9 May 2026 18:00:00 +0800
-Subject: [PATCH 397/467] FROMLIST: riscv: dts: spacemit: enable eMMC for
- OrangePi RV2
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable eMMC for OrangePi
+ RV2
 
 The OrangePi RV2 board has one eMMC slot, so enable eMMC.
 Tested using a 16 GiB AJTD4R eMMC module.

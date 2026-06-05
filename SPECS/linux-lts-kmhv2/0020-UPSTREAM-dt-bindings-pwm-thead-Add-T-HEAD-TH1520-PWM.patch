@@ -1,8 +1,8 @@
-From 75682c170513cae6790cdc8c45c039ae28ac86a8 Mon Sep 17 00:00:00 2001
+From 1ff5f22be0212ca408aa7b7fb452742a1c0e44d8 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:05 +0200
-Subject: [PATCH 020/467] UPSTREAM: dt-bindings: pwm: thead: Add T-HEAD TH1520
- PWM controller
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
+ controller
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

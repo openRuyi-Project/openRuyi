@@ -1,8 +1,8 @@
-From 430637bb4afb74146c8c8829d0da513b6bd4c91e Mon Sep 17 00:00:00 2001
+From 8422624a96d6035950f1902cc537f1e7d2a4c281 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 19 May 2026 06:12:36 +0200
-Subject: [PATCH 421/467] FROMLIST: riscv: dts: spacemit: sort aliases on
- Milk-V Jupiter
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: sort aliases on Milk-V
+ Jupiter
 
 Before adding more aliases, just sort them.
 
