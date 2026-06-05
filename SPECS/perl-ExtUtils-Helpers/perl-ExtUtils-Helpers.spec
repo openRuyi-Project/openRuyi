@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Various portability utilities for module builders
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/ExtUtils-Helpers
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-Helpers-%{version}.tar.gz
+#!RemoteAsset:  sha256:c8574875cce073e7dc5345a7b06d502e52044d68894f9160203fcaab379514fe
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-Helpers-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Cwd)
@@ -38,20 +42,8 @@ Requires:       perl(Text::ParseWords) >= 3.24
 This module provides various portable helper functions for module
 building modules.
 
-%prep
-%setup -q -n ExtUtils-Helpers-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
