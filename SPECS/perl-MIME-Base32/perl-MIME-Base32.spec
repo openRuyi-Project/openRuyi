@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Base32 encoder and decoder
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/MIME-Base32
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RE/REHSACK/MIME-Base32-%{version}.tar.gz
+#!RemoteAsset:  sha256:ab21fa99130e33a0aff6cdb596f647e5e565d207d634ba2ef06bdbef50424e99
+Source0:        https://www.cpan.org/authors/id/R/RE/REHSACK/MIME-Base32-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -27,20 +31,8 @@ BuildRequires:  perl(utf8)
 This module is for encoding/decoding data much the way that
 MIME::Base64 does.
 
-%prep
-%setup -q -n MIME-Base32-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ARTISTIC-1.0 Changes GPL-1 README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
