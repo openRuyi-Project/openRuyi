@@ -12,10 +12,14 @@ License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/TermReadKey
 #!RemoteAsset:  sha256:5a645878dc570ac33661581fbb090ff24ebce17d43ea53fd22e105a856a47290
 Source0:        http://www.cpan.org/authors/id/J/JS/JSTOWE/TermReadKey-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-devel
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -24,19 +28,6 @@ Term::ReadKey is a compiled perl module dedicated to providing simple
 control over terminal driver modes (cbreak, raw, cooked, etc.)
 support for non-blocking reads, if the architecture allows, and some
 generalized handy functions for working with terminals.
-
-%prep
-%setup -q -n TermReadKey-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes README
