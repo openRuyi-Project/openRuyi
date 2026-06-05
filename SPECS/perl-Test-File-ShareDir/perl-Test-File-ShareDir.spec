@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Create a Fake ShareDir for your modules for testing
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-File-ShareDir
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/K/KE/KENTNL/Test-File-ShareDir-%{version}.tar.gz
+#!RemoteAsset:  sha256:b33647cbb4b2f2fcfbde4f8bb4383d0ac95c2f89c4c5770eb691f1643a337aad
+Source0:        https://www.cpan.org/authors/id/K/KE/KENTNL/Test-File-ShareDir-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -46,20 +50,8 @@ Test::File::ShareDir is some low level plumbing to enable a distribution to
 perform tests while consuming its own share directories in a manner similar
 to how they will be once installed.
 
-%prep
-%setup -q -n Test-File-ShareDir-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes dist.ini.meta perlcritic.rc README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
