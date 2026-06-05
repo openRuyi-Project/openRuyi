@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Create or remove directory trees
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-Path
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/J/JK/JKEENAN/File-Path-%{version}.tar.gz
+#!RemoteAsset:  sha256:980f0a17edb353df46e9cd7b357f9f5929cde0f80c45fd7a06cf7e0e8bd6addd
+Source0:        https://www.cpan.org/authors/id/J/JK/JKEENAN/File-Path-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config)
@@ -34,20 +38,8 @@ BuildRequires:  perl(Test::Simple) >= 0.44
 This module provides a convenient way to create directories of arbitrary
 depth and to delete an entire directory subtree from the filesystem.
 
-%prep
-%setup -q -n File-Path-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
