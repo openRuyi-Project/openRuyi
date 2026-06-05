@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Track the number of times subs are called
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-SubCalls
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Test-SubCalls-%{version}.tar.gz
+#!RemoteAsset:  sha256:cbc1e9b35a05e71febc13e5ef547a31c8249899bb6011dbdc9d9ff366ddab6c2
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Test-SubCalls-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Exporter)
@@ -41,20 +45,8 @@ where you want to want to do a number of tests, and then verify that
 some underlying subroutine deep within the code was called a specific
 number of times.
 
-%prep
-%setup -q -n Test-SubCalls-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README
 
 %changelog
-%{?autochangelog}
+%autochangelog
