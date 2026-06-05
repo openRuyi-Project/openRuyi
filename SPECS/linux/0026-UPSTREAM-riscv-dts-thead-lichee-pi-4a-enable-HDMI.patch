@@ -1,8 +1,7 @@
-From 51696f7b0480c9f64849dc1c3f893da4dda2fc76 Mon Sep 17 00:00:00 2001
+From 5a28dc8e0e5728a367d1e79fe2703ce452c017f6 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 10:39:21 +0800
-Subject: [PATCH 026/269] UPSTREAM: riscv: dts: thead: lichee-pi-4a: enable
- HDMI
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: lichee-pi-4a: enable HDMI
 
 Lichee Pi 4A board features a HDMI Type-A connector connected to the
 HDMI TX controller of TH1520 SoC.

@@ -1,7 +1,7 @@
-From 547eed1c1fdf7efb31324f4c91f23f79921e4d85 Mon Sep 17 00:00:00 2001
+From 38c76b211a4eaf5b8c41d743248432b57c6b6d9b Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:03 +0000
-Subject: [PATCH 073/269] UPSTREAM: dt-bindings: usb: Add support for Terminus
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: Add support for Terminus
  FE1.1s USB2.0 Hub controller
 
 Terminus FE1.1s is USB2.0 protocol compliant 4-port USB HUB, It support

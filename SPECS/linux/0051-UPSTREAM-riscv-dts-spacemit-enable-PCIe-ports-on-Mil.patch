@@ -1,7 +1,7 @@
-From 6c69d39fdd805b24d6e022e57923a5f7ab0431eb Mon Sep 17 00:00:00 2001
+From 6774929b5a289c286924ed1fbccbc23ce4f6ac8f Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:34 +0100
-Subject: [PATCH 051/269] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on
  Milk-V Jupiter
 
 Enable the two PCIe controller along with and their associated PHY. They

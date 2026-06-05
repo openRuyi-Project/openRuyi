@@ -1,8 +1,8 @@
-From 38d25068d294339e76dd47a93aa9d99e760faf95 Mon Sep 17 00:00:00 2001
+From 992d53125289da2ed35b94d39033965633eeb01a Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:30 +0200
-Subject: [PATCH 013/269] UPSTREAM: drm/imagination: Implement handling of
- context reset notification
+Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Implement handling of context
+ reset notification
 
 The firmware will send the context reset notification message as
 part of handling hardware recovery (HWR) events deecoding the message

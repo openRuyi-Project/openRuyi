@@ -1,7 +1,7 @@
-From 4eccbb21ec7749e9a380a211cd492d8201790b3c Mon Sep 17 00:00:00 2001
+From da61e60d428f734608bb453fc37d49b1ce449afd Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:39 -0400
-Subject: [PATCH 078/269] UPSTREAM: iommu/riscv: Enable SVNAPOT support for
+Subject: [RUYI PATCH] UPSTREAM: iommu/riscv: Enable SVNAPOT support for
  contiguous ptes
 
 This turns on a 64k page size. The "RISC-V IOMMU Architecture

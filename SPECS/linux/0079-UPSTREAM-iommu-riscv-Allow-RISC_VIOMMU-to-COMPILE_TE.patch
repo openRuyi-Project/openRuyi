@@ -1,8 +1,7 @@
-From 648ac33a730ff526540f0eccb16de8566029f9da Mon Sep 17 00:00:00 2001
+From 469c466637a1ccb4ffed886b2d6667267a70c218 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:41 -0400
-Subject: [PATCH 079/269] UPSTREAM: iommu/riscv: Allow RISC_VIOMMU to
- COMPILE_TEST
+Subject: [RUYI PATCH] UPSTREAM: iommu/riscv: Allow RISC_VIOMMU to COMPILE_TEST
 
 This driver used to use a lot of page table constants from the architecture
 code which prevented COMPILE_TEST on other architectures. Now that iommupt

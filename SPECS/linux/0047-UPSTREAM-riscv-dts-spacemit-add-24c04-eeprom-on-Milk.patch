@@ -1,7 +1,7 @@
-From a40ad7fe714b297e95dcc53f1942fe61021d2603 Mon Sep 17 00:00:00 2001
+From 6cda85b74dcd76a96128ce64db0d23148a55a76a Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:30 +0100
-Subject: [PATCH 047/269] UPSTREAM: riscv: dts: spacemit: add 24c04 eeprom on
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add 24c04 eeprom on
  Milk-V Jupiter
 
 The Milk-V Jupiter board includes a 24c04 eeprom on the i2c2 bus. The

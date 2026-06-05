@@ -1,8 +1,8 @@
-From 89351aec08d522ddfbba5fb204ff212cf00ee26e Mon Sep 17 00:00:00 2001
+From f07e982850d3ae363adbd141b80108da63da642b Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:30 +0800
-Subject: [PATCH 022/269] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add
- support for K3 SoC
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add support
+ for K3 SoC
 
 The SDHCI controller found on SpacemiT K3 SoC share the same IP with
 K1 generation, while fixed the broken 64BIT DMA issue. Introduce a

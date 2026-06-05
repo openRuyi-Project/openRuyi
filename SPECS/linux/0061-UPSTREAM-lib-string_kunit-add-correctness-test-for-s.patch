@@ -1,7 +1,7 @@
-From a93839d7a5a7ce3fba6e6564ad126f5689b1ec64 Mon Sep 17 00:00:00 2001
+From afa22c63ff3a8e9a83984ead4323d920b10b0615 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 061/269] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add correctness test for
  strlen()
 
 Add a KUnit test for strlen() to verify correctness across

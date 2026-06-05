@@ -1,8 +1,7 @@
-From 8841400b98d1855c6b7147cfcffd9adb0072b8d0 Mon Sep 17 00:00:00 2001
+From 9f65d8563b908295c1b15c136d55bbdfc8404d41 Mon Sep 17 00:00:00 2001
 From: Yufeng Wang <wangyufeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 058/269] UPSTREAM: riscv: acpi: update FADT revision check to
- 6.6
+Subject: [RUYI PATCH] UPSTREAM: riscv: acpi: update FADT revision check to 6.6
 
 ACPI 6.6 is required for RISC-V as it introduces RISC-V specific
 tables such as RHCT (RISC-V Hart Capabilities Table) and

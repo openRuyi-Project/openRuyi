@@ -1,7 +1,7 @@
-From 99d654e69ac2fce074257e7df304c05145c96d7f Mon Sep 17 00:00:00 2001
+From 6f59c024e794c022c26891390ee88fa3281b75e2 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:22 +0800
-Subject: [PATCH 030/269] UPSTREAM: i2c: spacemit: introduce pio for k1
+Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: introduce pio for k1
 
 This patch introduces I2C PIO functionality for the Spacemit K1 SoC,
 enabling the use of I2C in atomic context.

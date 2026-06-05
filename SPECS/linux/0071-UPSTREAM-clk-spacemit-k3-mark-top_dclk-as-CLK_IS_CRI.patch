@@ -1,7 +1,7 @@
-From 4b49c6fe6de7cf7ee9fefc9a9c9fe76db69ecde6 Mon Sep 17 00:00:00 2001
+From d7f7e2d348dbab7a1ba91d441165e6b7adfa1110 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 24 Apr 2026 16:20:32 +0800
-Subject: [PATCH 071/269] UPSTREAM: clk: spacemit: k3: mark top_dclk as
+Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: mark top_dclk as
  CLK_IS_CRITICAL
 
 top_dclk is the DDR bus clock. If it is gated by clk_disable_unused,

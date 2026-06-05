@@ -1,8 +1,8 @@
-From 1e7406222abdb03a7abe502c45cac01ef23ee2fc Mon Sep 17 00:00:00 2001
+From 1aed9c9b5c8fc861ea231a94eb16317d1a189327 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:37 +0800
-Subject: [PATCH 005/269] UPSTREAM: dt-bindings: net: Add support for Spacemit
- K3 dwmac
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: net: Add support for Spacemit K3
+ dwmac
 
 The GMAC IP on Spacemit K3 is almost a standard Synopsys DesignWare
 MAC (version 5.40a) with some extra clock.

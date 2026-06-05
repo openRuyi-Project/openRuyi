@@ -1,8 +1,8 @@
-From 35042675e0055981bd4339b42933d010e151a97f Mon Sep 17 00:00:00 2001
+From b87eb6266c630ca14fc62950df92636440bbd3ac Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:38 +0800
-Subject: [PATCH 006/269] UPSTREAM: net: stmmac: platform: Add snps,dwmac-5.40a
- IP compatible string
+Subject: [RUYI PATCH] UPSTREAM: net: stmmac: platform: Add snps,dwmac-5.40a IP
+ compatible string
 
 Add compatible string for 5.40a version that can avoid to define some
 platform data in the glue layer.

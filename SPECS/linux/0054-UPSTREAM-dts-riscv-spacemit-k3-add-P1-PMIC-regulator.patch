@@ -1,7 +1,7 @@
-From f63fb7efe62ee0dc3da55c70cdc7c3e1846e261b Mon Sep 17 00:00:00 2001
+From fe739b7c392e7a882052c2179abf27223c04b38a Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 27 Mar 2026 11:51:18 +0000
-Subject: [PATCH 054/269] UPSTREAM: dts: riscv: spacemit: k3: add P1 PMIC
+Subject: [RUYI PATCH] UPSTREAM: dts: riscv: spacemit: k3: add P1 PMIC
  regulator tree
 
 Add the P1 PMIC's regulator topology tree for pico-itx board.

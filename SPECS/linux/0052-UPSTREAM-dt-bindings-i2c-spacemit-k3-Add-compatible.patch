@@ -1,8 +1,7 @@
-From 855990996aab9c1d81b8177a453308574d856865 Mon Sep 17 00:00:00 2001
+From d44c703213fa190bb7cd9048479aee6529f56b60 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 25 Mar 2026 09:49:24 +0000
-Subject: [PATCH 052/269] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add
- compatible
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add compatible
 
 Add a compatible string for the I2C controller found in SpacemiT K3 SoC
 which use same I2C IP as K1, so make it fallback to K1 compatible.

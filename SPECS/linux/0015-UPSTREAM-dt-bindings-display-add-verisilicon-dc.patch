@@ -1,7 +1,7 @@
-From da348c6ec0ee62a6ce3e8b4ef60eea6befa0eeab Mon Sep 17 00:00:00 2001
+From 2bee5931b9eb68b84da4bc4686476ead9489059c Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:16 +0800
-Subject: [PATCH 015/269] UPSTREAM: dt-bindings: display: add verisilicon,dc
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: display: add verisilicon,dc
 
 Verisilicon has a series of display controllers prefixed with DC and
 with self-identification facility like their GC series GPUs.

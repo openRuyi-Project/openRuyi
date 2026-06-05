@@ -1,8 +1,7 @@
-From ed50d3475f69d828a05b881a731b1852d092a1e8 Mon Sep 17 00:00:00 2001
+From 1715db28fd8764e226c22f04ef0788b8eeead1c3 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:38 -0400
-Subject: [PATCH 077/269] UPSTREAM: iommu/riscv: Use the generic iommu page
- table
+Subject: [RUYI PATCH] UPSTREAM: iommu/riscv: Use the generic iommu page table
 
 This is a fairly straightforward conversion of the RISC-V iommu driver to
 use the generic iommu page table code.

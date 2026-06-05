@@ -1,8 +1,7 @@
-From 13bee0d695478f82109006c9eba8e86c5a827181 Mon Sep 17 00:00:00 2001
+From 5766fc48be56acab88f1a50368573393fa0305a1 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 5 Mar 2026 15:00:29 +0800
-Subject: [PATCH 004/269] UPSTREAM: net: spacemit: Remove unused buff_addr
- fields
+Subject: [RUYI PATCH] UPSTREAM: net: spacemit: Remove unused buff_addr fields
 
 These were never used. Just remove them.
 

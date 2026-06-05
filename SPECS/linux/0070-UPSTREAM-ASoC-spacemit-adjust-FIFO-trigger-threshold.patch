@@ -1,8 +1,8 @@
-From d7f2529fa33a1b03694b1d36f7d1cd60ba258910 Mon Sep 17 00:00:00 2001
+From 3bc40b5fe7a89b0fefce7c8ef383f7ee85f075d1 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:48 +0800
-Subject: [PATCH 070/269] UPSTREAM: ASoC: spacemit: adjust FIFO trigger
- threshold to half FIFO size
+Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: adjust FIFO trigger threshold
+ to half FIFO size
 
 Set both TX and RX FIFO trigger thresholds (TFT/RFT) to 0xF (half of
 the 32-entry FIFO) instead of 5. This provides better DMA efficiency

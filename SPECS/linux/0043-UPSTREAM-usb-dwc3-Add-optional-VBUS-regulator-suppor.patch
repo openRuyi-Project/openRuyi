@@ -1,8 +1,8 @@
-From ce5ab7f33a42ca6bc5aa4b3e848c771896729f2f Mon Sep 17 00:00:00 2001
+From 75dc9853f472ebfe220d2ed5e6392a3e9662d664 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Thu, 26 Mar 2026 18:00:10 +0800
-Subject: [PATCH 043/269] UPSTREAM: usb: dwc3: Add optional VBUS regulator
- support to SpacemiT K1
+Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: Add optional VBUS regulator support
+ to SpacemiT K1
 
 Some SpacemiT K1 boards (like OrangePi R2S) provide USB VBUS
 through a controllable regulator. Add support for the optional

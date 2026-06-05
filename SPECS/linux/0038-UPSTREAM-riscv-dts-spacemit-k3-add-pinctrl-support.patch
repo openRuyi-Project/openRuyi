@@ -1,8 +1,7 @@
-From e25c40f1fbc03b6e608a4ccf8117faa35d8b90a3 Mon Sep 17 00:00:00 2001
+From 5edf743bb22da241fe3135105a0ec1162a3767a2 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:43 +0000
-Subject: [PATCH 038/269] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl
- support
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl support
 
 Populate pinctrl node in Device Tree for SpacemiT K3 SoC, So devices
 can request pinctrl resource properly.

@@ -1,8 +1,7 @@
-From b42be3aff8da85420e9ab0f6af7413aeaab5d0d7 Mon Sep 17 00:00:00 2001
+From dff58898a5a601b29fa554f766e8325afaf9bbe6 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 18 Mar 2026 18:00:00 +0800
-Subject: [PATCH 044/269] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for
- K1
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for K1
 
 Reorder the PHY nodes of USB and PCIe to the correct positions based on
 the register address. This improves the readability and maintainability

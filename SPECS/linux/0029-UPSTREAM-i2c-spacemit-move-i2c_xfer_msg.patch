@@ -1,7 +1,7 @@
-From ca8f0147958660e97976db95f3e8944992cb2b00 Mon Sep 17 00:00:00 2001
+From 5b234af9b55bdbb9547c37df8d28cdb8abfae6ae Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:21 +0800
-Subject: [PATCH 029/269] UPSTREAM: i2c: spacemit: move i2c_xfer_msg()
+Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: move i2c_xfer_msg()
 
 The upcoming PIO support requires a wait_pio_xfer() helper, which is
 invoked from xfer_msg().

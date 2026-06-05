@@ -1,7 +1,7 @@
-From 67145eb27fcf9d63cb376698b725d3152c12a344 Mon Sep 17 00:00:00 2001
+From 0d4f3d6072aa64dcf8264c20f390c5b3804e54b6 Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:37 -0400
-Subject: [PATCH 076/269] UPSTREAM: iommu/riscv: Disable SADE
+Subject: [RUYI PATCH] UPSTREAM: iommu/riscv: Disable SADE
 
 In terms of the iommu subystem the SADE/GADE feature "3.4. IOMMU updating
 of PTE accessed (A) and dirty (D) updates" is called dirty tracking.

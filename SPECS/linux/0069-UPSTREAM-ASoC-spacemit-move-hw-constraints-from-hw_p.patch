@@ -1,7 +1,7 @@
-From 694399354a2dca37e145726e522142fd92d5f3c7 Mon Sep 17 00:00:00 2001
+From df7dd57a3fddcaf65e709e99b459e1c78d2c91a8 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:47 +0800
-Subject: [PATCH 069/269] UPSTREAM: ASoC: spacemit: move hw constraints from
+Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: move hw constraints from
  hw_params to startup
 
 Hardware constraints should be applied in the startup callback rather

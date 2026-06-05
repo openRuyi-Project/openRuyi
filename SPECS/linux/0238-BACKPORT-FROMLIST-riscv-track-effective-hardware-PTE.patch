@@ -1,0 +1,179 @@
+From 9e3fb106ed67ad88ddac6a1ba596a75b965efb34 Mon Sep 17 00:00:00 2001
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+Date: Fri, 22 May 2026 22:23:57 +0800
+Subject: [RUYI PATCH] BACKPORT: FROMLIST: riscv: track effective hardware PTE
+ A/D updates
+
+Track the effective hardware PTE A/D update mode separately from
+Svadu capability discovery. When both Svade and Svadu are present,
+enable SBI FWFT PTE A/D hardware updating on each online CPU via
+CPUHP and use the resulting runtime state for arch_has_hw_pte_young().
+Fall back to software-managed A/D updates if enabling hardware updates
+fails.
+
+When Svadu is present without Svade, assume hardware PTE A/D updating
+is enabled from boot, and document that boot-time behavior in the DT
+binding.
+
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Reviewed-by: Qingwei Hu <qingwei.hu@bytedance.com>
+Link: https://lore.kernel.org/r/20260522142358.87589-1-cuiyunhui@bytedance.com
+[Han Gao: export riscv_hw_pte_ad_updating, it is referenced by the
+  arch_has_hw_pte_young() inline pulled into modules such as kvm.ko]
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/riscv/extensions.yaml |  6 +-
+ arch/riscv/include/asm/cpufeature.h           |  6 ++
+ arch/riscv/include/asm/pgtable.h              |  8 +--
+ arch/riscv/kernel/cpufeature.c                | 59 +++++++++++++++++--
+ 4 files changed, 66 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+index c6ec9290fe07..58a3a67032ed 100644
+--- a/Documentation/devicetree/bindings/riscv/extensions.yaml
++++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+@@ -277,10 +277,10 @@ properties:
+                of the PTE A/D bits or page faults when they need updated.
+             2) Only Svade present in DT => Supervisor must assume Svade to be
+                always enabled.
+-            3) Only Svadu present in DT => Supervisor must assume Svadu to be
+-               always enabled.
++            3) Only Svadu present in DT => Supervisor must assume Svadu is
++               enabled at boot.
+             4) Both Svade and Svadu present in DT => Supervisor must assume
+-               Svadu turned-off at boot time. To use Svadu, supervisor must
++               Svadu is disabled at boot time. To use Svadu, supervisor must
+                explicitly enable it using the SBI FWFT extension.
+ 
+         - const: svadu
+diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+index 739fcc84bf7b..ad9fad6eee55 100644
+--- a/arch/riscv/include/asm/cpufeature.h
++++ b/arch/riscv/include/asm/cpufeature.h
+@@ -128,6 +128,12 @@ struct riscv_isa_ext_data {
+ extern const struct riscv_isa_ext_data riscv_isa_ext[];
+ extern const size_t riscv_isa_ext_count;
+ extern bool riscv_isa_fallback;
++DECLARE_STATIC_KEY_FALSE(riscv_hw_pte_ad_updating);
++
++static __always_inline bool riscv_has_hw_pte_ad_updating(void)
++{
++	return static_branch_unlikely(&riscv_hw_pte_ad_updating);
++}
+ 
+ unsigned long riscv_isa_extension_base(const unsigned long *isa_bitmap);
+ static __always_inline bool riscv_cpu_has_extension_likely(int cpu, const unsigned long ext)
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 9c92a84e9755..103e8f92c326 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -757,14 +757,14 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ #define pgprot_dmacoherent pgprot_writecombine
+ 
+ /*
+- * Both Svade and Svadu control the hardware behavior when the PTE A/D bits need to be set. By
+- * default the M-mode firmware enables the hardware updating scheme when only Svadu is present in
+- * DT.
++ * Both Svade and Svadu control the hardware behavior when the PTE A/D bits
++ * need to be set. The core MM code only cares whether hardware updating of
++ * the accessed/dirty state is currently active.
+  */
+ #define arch_has_hw_pte_young arch_has_hw_pte_young
+ static inline bool arch_has_hw_pte_young(void)
+ {
+-	return riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU);
++	return riscv_has_hw_pte_ad_updating();
+ }
+ 
+ /*
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 1734f9a4c2fd..7d3aee0e89f7 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -35,6 +35,8 @@
+ static bool any_cpu_has_zicboz;
+ static bool any_cpu_has_zicbop;
+ static bool any_cpu_has_zicbom;
++DEFINE_STATIC_KEY_FALSE(riscv_hw_pte_ad_updating);
++EXPORT_SYMBOL(riscv_hw_pte_ad_updating);
+ 
+ unsigned long elf_hwcap __read_mostly;
+ 
+@@ -287,15 +289,60 @@ static int riscv_ext_zvfbfwma_validate(const struct riscv_isa_ext_data *data,
+ 	return -EPROBE_DEFER;
+ }
+ 
+-static int riscv_ext_svadu_validate(const struct riscv_isa_ext_data *data,
+-				    const unsigned long *isa_bitmap)
++static void riscv_set_hw_pte_ad_updating(void)
++{
++	static_branch_enable(&riscv_hw_pte_ad_updating);
++}
++
++static int riscv_hw_pte_ad_updating_starting(unsigned int cpu)
++{
++	int ret;
++
++	ret = sbi_fwft_set(SBI_FWFT_PTE_AD_HW_UPDATING, 1, 0);
++	if (ret) {
++		if (ret != -EOPNOTSUPP)
++			pr_err("CPU%u failed to enable hardware PTE A/D updating: %d\n",
++			       cpu, ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __init riscv_hw_pte_ad_updating_init(void)
+ {
+-	/* SVADE has already been detected, use SVADE only */
+-	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SVADE))
+-		return -EOPNOTSUPP;
++	bool has_svade, has_svadu;
++	int state;
+ 
++	has_svade = riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADE);
++	has_svadu = riscv_has_extension_unlikely(RISCV_ISA_EXT_SVADU);
++
++	if (!has_svadu)
++		return 0;
++
++	if (!has_svade)
++		goto enable;
++
++	state = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
++				  "riscv/pte-ad:starting",
++				  riscv_hw_pte_ad_updating_starting,
++				  NULL);
++	if (state < 0) {
++		pr_info("riscv: leave PTE A/D updates software-managed (%d)\n",
++			state);
++		return 0;
++	}
++
++	/*
++	 * A successful CPUHP_AP_ONLINE_DYN registration means the startup
++	 * callback has already succeeded on all online CPUs.
++	 */
++enable:
++	riscv_set_hw_pte_ad_updating();
++	pr_debug("riscv: hardware PTE A/D updating enabled\n");
+ 	return 0;
+ }
++arch_initcall(riscv_hw_pte_ad_updating_init);
+ 
+ static int riscv_cfilp_validate(const struct riscv_isa_ext_data *data,
+ 				const unsigned long *isa_bitmap)
+@@ -584,7 +631,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
+ 	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
+ 	__RISCV_ISA_EXT_DATA(svade, RISCV_ISA_EXT_SVADE),
+-	__RISCV_ISA_EXT_DATA_VALIDATE(svadu, RISCV_ISA_EXT_SVADU, riscv_ext_svadu_validate),
++	__RISCV_ISA_EXT_DATA(svadu, RISCV_ISA_EXT_SVADU),
+ 	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+ 	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+ 	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
+-- 
+2.53.0
+

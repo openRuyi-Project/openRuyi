@@ -1,7 +1,7 @@
-From 105db5672657eef3c6dedce14524f8d3d3123f4a Mon Sep 17 00:00:00 2001
+From eb1f1b88db85183b4e0d29b7d676929a87af9d3f Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 066/269] UPSTREAM: riscv: lib: add strnlen() implementation
+Subject: [RUYI PATCH] UPSTREAM: riscv: lib: add strnlen() implementation
 
 Add an optimized strnlen() implementation for RISC-V. This version
 includes a generic optimization and a Zbb-powered optimization using

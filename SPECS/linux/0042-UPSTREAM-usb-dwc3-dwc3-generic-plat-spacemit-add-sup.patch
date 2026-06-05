@@ -1,7 +1,7 @@
-From 73d26018437e56ff543a9ea2ba45b8e6aa83b4c1 Mon Sep 17 00:00:00 2001
+From caa5dc9da8f5f5ebdd4992b644a245ff29b456b4 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:38 +0000
-Subject: [PATCH 042/269] UPSTREAM: usb: dwc3: dwc3-generic-plat: spacemit: add
+Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: dwc3-generic-plat: spacemit: add
  support for K3 SoC
 
 Add support for the DWC3 USB controller which found in SpacemiT K3 SoC.

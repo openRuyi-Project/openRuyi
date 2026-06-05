@@ -1,7 +1,7 @@
-From 85bf2b20fd6fe1b4fee29c3f6a12f52206cdae78 Mon Sep 17 00:00:00 2001
+From c72a35372b822351a8ba9b1b87fd0eb71ee24e6d Mon Sep 17 00:00:00 2001
 From: Jason Gunthorpe <jgg@nvidia.com>
 Date: Fri, 27 Feb 2026 11:25:36 -0400
-Subject: [PATCH 075/269] UPSTREAM: iommupt: Add the RISC-V page table format
+Subject: [RUYI PATCH] UPSTREAM: iommupt: Add the RISC-V page table format
 
 The RISC-V format is a fairly simple 5 level page table not unlike the x86
 one. It has optional support for a single contiguous page size of 64k (16
@@ -486,10 +486,10 @@ index 6a9a1acb5aad..fc5d0b5edadc 100644
  	struct pt_common common;
  };
 diff --git a/include/linux/generic_pt/iommu.h b/include/linux/generic_pt/iommu.h
-index 9eefbb74efd0..49d9addb98c5 100644
+index 43cc98c9c55f..dd0edd02a48a 100644
 --- a/include/linux/generic_pt/iommu.h
 +++ b/include/linux/generic_pt/iommu.h
-@@ -275,6 +275,17 @@ struct pt_iommu_vtdss_hw_info {
+@@ -322,6 +322,17 @@ struct pt_iommu_vtdss_hw_info {
  
  IOMMU_FORMAT(vtdss, vtdss_pt);
  

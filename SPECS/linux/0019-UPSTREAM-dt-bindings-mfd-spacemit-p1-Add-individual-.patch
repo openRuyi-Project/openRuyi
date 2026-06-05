@@ -1,8 +1,8 @@
-From c27659adb8ff66b7d690aba80400f8996f00a247 Mon Sep 17 00:00:00 2001
+From cea0787ce8056c7b05f8654c6a768d950eea234f Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:02 +0800
-Subject: [PATCH 019/269] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add
- individual regulator supply properties
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add individual
+ regulator supply properties
 
 Add supply properties that match the P1 PMIC's actual hardware topology
 where each buck converter has its own VIN pin and LDO groups share

@@ -1,7 +1,7 @@
-From 35bc12c89250a27187edba752adca38c1658acd1 Mon Sep 17 00:00:00 2001
+From 45e5a04263c7675d5f42be7a9449c3a3126a1de5 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 063/269] UPSTREAM: lib/string_kunit: add correctness test for
+Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add correctness test for
  strrchr()
 
 Add a KUnit test for strrchr() to verify correctness across

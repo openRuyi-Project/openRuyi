@@ -1,7 +1,7 @@
-From e2ac3841583ad6b836c92211c5480be0a0a8567a Mon Sep 17 00:00:00 2001
+From e5ce3031ffa70c704a411387fe2093c26694de67 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 064/269] UPSTREAM: lib/string_kunit: add performance benchmark
+Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add performance benchmark
  for strlen()
 
 Introduce a benchmarking framework to the string_kunit test suite to

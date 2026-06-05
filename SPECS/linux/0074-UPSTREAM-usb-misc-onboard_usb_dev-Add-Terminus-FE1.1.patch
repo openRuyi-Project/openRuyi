@@ -1,7 +1,7 @@
-From 393a81ec066f3f0be02d736b35215e61fc39ed08 Mon Sep 17 00:00:00 2001
+From df5d3328d768f9db710c64dc3145300fbfe9a795 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:04 +0000
-Subject: [PATCH 074/269] UPSTREAM: usb: misc: onboard_usb_dev: Add Terminus
+Subject: [RUYI PATCH] UPSTREAM: usb: misc: onboard_usb_dev: Add Terminus
  FE1.1s USB2.0 Hub (1a40:0101)
 
 Terminus FE1.1s is USB2.0 protocol compliant 4-port USB HUB, It support

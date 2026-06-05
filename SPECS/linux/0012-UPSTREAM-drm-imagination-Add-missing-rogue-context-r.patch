@@ -1,7 +1,7 @@
-From 74e36a3e32847bbe65aa3a9a29a841e9a1a287ad Mon Sep 17 00:00:00 2001
+From 4bb20fb967b9fde691b582965e6481ad3422bd78 Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:28 +0200
-Subject: [PATCH 012/269] UPSTREAM: drm/imagination: Add missing rogue context
+Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Add missing rogue context
  reset reasons
 
 Update the context reset reason enum with the missing reset reasons in

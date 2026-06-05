@@ -1,8 +1,8 @@
-From 3751524813fc46f2b9cb044ed110fc489d5765a7 Mon Sep 17 00:00:00 2001
+From b77cd9567fbc0337667a601979b262a815c1e7c2 Mon Sep 17 00:00:00 2001
 From: Robert Mazur <robert.mazur@imgtec.com>
 Date: Wed, 25 Mar 2026 09:18:59 +0100
-Subject: [PATCH 028/269] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable
- HDMI output
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable HDMI
+ output
 
 The BeagleV Ahead board includes a micro HDMI connector (Type-D)
 wired to the TH1520 SoC's HDMI transmitter.

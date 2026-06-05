@@ -1,7 +1,7 @@
-From 6fcf52df0f09e8702771043b2309d24a592c6738 Mon Sep 17 00:00:00 2001
+From 2882b8c5d55e211d5a055174329abbbf006e052f Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
-Subject: [PATCH 059/269] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
+Subject: [RUYI PATCH] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in
  vmemmap_populate()
 
 Similarly to the same check in arch/arm64/mm/mmu.c, in
@@ -18,10 +18,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 811e03786c56..c12590ab3d0e 100644
+index 1b221c3fe275..31007b426d54 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
-@@ -1453,6 +1453,8 @@ int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
+@@ -1478,6 +1478,8 @@ int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
  int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
  			       struct vmem_altmap *altmap)
  {
