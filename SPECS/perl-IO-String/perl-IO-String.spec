@@ -9,14 +9,18 @@ Name:           perl-IO-String
 Version:        1.08
 Release:        %autorelease
 Summary:        Emulate file interface for in-core strings
-License:        CHECK(GPL-1.0-or-later OR Artistic-1.0-Perl)
+License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/IO-String
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/IO-String-%{version}.tar.gz
+#!RemoteAsset:  sha256:2a3f4ad8442d9070780e58ef43722d19d1ee21a803bf7c8206877a10482de5a0
+Source0:        https://www.cpan.org/authors/id/G/GA/GAAS/IO-String-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -28,20 +32,8 @@ seeking to various locations of the string. This is useful when you want to
 use a library module that only provides an interface to file handles on
 data that you have in a string variable.
 
-%prep
-%setup -q -n IO-String-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
