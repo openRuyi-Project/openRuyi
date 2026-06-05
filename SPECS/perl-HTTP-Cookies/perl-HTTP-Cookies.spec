@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        HTTP cookie jars
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Cookies
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Cookies-%{version}.tar.gz
+#!RemoteAsset:  sha256:8c9a541a4a39f6c0c7e3d0b700b05dfdb830bd490a1b1942a7dedd1b50d9a8c8
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Cookies-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -40,20 +44,8 @@ This class is for objects that represent a "cookie jar" -- that is, a
 database of all the HTTP cookies that a given LWP::UserAgent object
 knows about.
 
-%prep
-%setup -q -n HTTP-Cookies-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTORS perlcriticrc perlimports.toml perltidyrc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
