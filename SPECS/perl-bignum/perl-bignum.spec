@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Transparent big number support for Perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/bignum
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PJ/PJACKLAM/bignum-%{version}.tar.gz
+#!RemoteAsset:  sha256:1c9a824ab323e3e58d9808011c10ad27589dba1202806278215012ca7f522875
+Source0:        https://www.cpan.org/authors/id/P/PJ/PJACKLAM/bignum-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp) >= 1.22
@@ -31,20 +35,8 @@ Requires:       perl(Math::BigRat) >= 0.2623
 %description
 Literal numeric constants
 
-%prep
-%setup -q -n bignum-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc BUGS CHANGES README README.md TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
