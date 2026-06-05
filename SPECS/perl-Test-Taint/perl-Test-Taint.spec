@@ -12,12 +12,16 @@ Summary:        Tools to test taintedness
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Taint
 #!RemoteAsset:  sha256:5d594d4257352c93785024c63aa0a7b73d912ceca9611cd975ce83aab021a97d
-Source0:        http://www.cpan.org/authors/id/P/PE/PETDANCE/Test-Taint-%{version}.tar.gz
+Source0:        https://www.cpan.org/authors/id/P/PE/PETDANCE/Test-Taint-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
-BuildRequires:  perl-devel
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
+BuildRequires:  perl-devel
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(overload)
 BuildRequires:  perl(Scalar::Util)
@@ -32,19 +36,6 @@ Tainted data is data that comes from an unsafe source, such as the command
 line, or, in the case of web apps, any GET or POST transactions. Read the
 perlsec man page for details on why tainted data is bad, and how to
 untaint the data.
-
-%prep
-%setup -q -n Test-Taint-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes
