@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Low-level HTTP connection (client)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Net-HTTP
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/Net-HTTP-%{version}.tar.gz
+#!RemoteAsset:  sha256:290ed9a97b05c7935b048e6d2a356035871fca98ad72c01c5961726adf85c83c
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/Net-HTTP-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.2
 BuildRequires:  perl(base)
@@ -40,20 +44,8 @@ Net::HTTP class represents a connection to an HTTP server. The HTTP
 protocol is described in RFC 2616. The Net::HTTP class supports HTTP/1.0
 and HTTP/1.1.
 
-%prep
-%setup -q -n Net-HTTP-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTORS perlcriticrc perltidyrc README.md tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
