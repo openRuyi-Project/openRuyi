@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-CPAN-Meta
-Version:        2.150010
+Version:        2.150013
 Release:        %autorelease
 Summary:        Distribution metadata for a CPAN dist
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/CPAN-Meta
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/CPAN-Meta-%{version}.tar.gz
+#!RemoteAsset:  sha256:7c2bcbaf988d50ba8902a0d0cdf3c66b22aa7e968f5b67d1339a8995aff25dbd
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/CPAN-Meta-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -55,20 +59,8 @@ contents, and the requirements for building and installing the
 distribution. The data structure stored in the META.json file is described
 in CPAN::Meta::Spec.
 
-%prep
-%setup -q -n CPAN-Meta-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CONTRIBUTING.mkdn perlcritic.rc README Todo
+%doc Changes CONTRIBUTING.mkdn corpus history perlcritic.rc README Todo
 
 %changelog
-%{?autochangelog}
+%autochangelog
