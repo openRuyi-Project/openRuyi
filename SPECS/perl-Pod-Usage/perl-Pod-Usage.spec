@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Extracts POD documentation and shows usage information
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Pod-Usage
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MA/MAREKR/Pod-Usage-%{version}.tar.gz
+#!RemoteAsset:  sha256:100c27908757c56ebfeca8b7bf15a9867e449df663ff013de3855d183dfbea30
+Source0:        https://www.cpan.org/authors/id/M/MA/MAREKR/Pod-Usage-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(blib)
@@ -33,25 +37,13 @@ Requires:       perl(Pod::Perldoc) >= 3.28
 Requires:       perl(Pod::Simple) >= 3.40
 Requires:       perl(Pod::Text) >= 4.00
 
+# don't use cpan2spec's description.
 %description
 pod2usage will print a usage message for the invoking script (using its
-embedded POD documentation) and then exit the script with the desired exit
-status.
-
-%prep
-%setup -q -n Pod-Usage-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
+embedded POD documentation) and then exit the script with the desired exitstatus.
 
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
