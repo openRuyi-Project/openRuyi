@@ -14,9 +14,9 @@ URL:            https://gitlab.com/gpsd/gpsd
 Source0:        https://download-mirror.savannah.gnu.org/releases/gpsd/gpsd-%{version}.tar.gz
 Source1:        gpsd.sysconfig
 
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  pkgconfig(libudev)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(scons)
 BuildRequires:  python3dist(pyserial)
@@ -228,4 +228,4 @@ install -p -m 0755 gpsinit %{buildroot}%{_sbindir}
 %{_mandir}/man1/xgpsspeed.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
