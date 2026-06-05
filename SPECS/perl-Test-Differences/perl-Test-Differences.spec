@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Test strings and data structures and show differences if not ok
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Differences
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DC/DCANTRELL/Test-Differences-%{version}.tar.gz
+#!RemoteAsset:  sha256:648844b9dcb7dae6f9b5a15c9359d0f09de247a624b65c4620ebff249558f913
+Source0:        https://www.cpan.org/authors/id/D/DC/DCANTRELL/Test-Differences-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Capture::Tiny) >= 0.24
 BuildRequires:  perl(Data::Dumper) >= 2.126
@@ -35,20 +39,8 @@ utility may be just what's needed. Here's output from an example test
 script that checks two text documents and then two (trivial) data
 structures:
 
-%prep
-%setup -q -n Test-Differences-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
