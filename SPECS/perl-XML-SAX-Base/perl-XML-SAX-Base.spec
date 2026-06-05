@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Base class SAX Drivers and Filters
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-SAX-Base
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-Base-%{version}.tar.gz
+#!RemoteAsset:  sha256:66cb355ba4ef47c10ca738bd35999723644386ac853abbeb5132841f5e8a2ad0
+Source0:        https://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-Base-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -28,20 +32,8 @@ and filters. It's default behaviour is to pass the input directly to the
 output unchanged. It can be useful to use this module as a base class so
 you don't have to, for example, implement the characters() callback.
 
-%prep
-%setup -q -n XML-SAX-Base-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
