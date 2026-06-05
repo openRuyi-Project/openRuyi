@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Get information about a class and its structure
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Class-Inspector
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Class-Inspector-%{version}.tar.gz
+#!RemoteAsset:  sha256:cc295d23a472687c24489d58226ead23b9fdc2588e522f0b5f0747741700694e
+Source0:        https://www.cpan.org/authors/id/P/PL/PLICEASE/Class-Inspector-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(base)
@@ -33,20 +37,8 @@ always very friendly, and usually involve a relatively high level of Perl
 wizardry, or strange and unusual looking code. Class::Inspector attempts to
 provide an easier, more friendly interface to this information.
 
-%prep
-%setup -q -n Class-Inspector-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc author.yml Changes maint perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
