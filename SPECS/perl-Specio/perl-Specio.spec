@@ -6,17 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Specio
-Version:        0.52
+Version:        0.53
 Release:        %autorelease
 Summary:        Type constraints and coercions for Perl
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Specio
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Specio-%{version}.tar.gz
+#!RemoteAsset:  sha256:0d0eecfb9e89bd0f5f710fac42e1200a882d513a862f98497eaef5927ac6c183
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Specio-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(B)
@@ -66,20 +70,8 @@ Requires:       perl(version) >= 0.83
 The Specio distribution provides classes for representing type constraints
 and coercion, along with syntax sugar for declaring them.
 
-%prep
-%setup -q -n Specio-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CODE_OF_CONDUCT.md CONTRIBUTING.md dev-bin git GOVERNANCE.md mise.toml perlcriticrc perltidyrc precious.toml README.md SECURITY.md SUPPORT.md TODO.md
+%doc Changes CODE_OF_CONDUCT.md CONTRIBUTING.md GOVERNANCE.md mise.toml perlcriticrc perltidyrc precious.toml README.md SECURITY.md SUPPORT.md TODO.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
