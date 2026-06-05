@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Log4j implementation for Perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Log-Log4perl
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETJ/Log-Log4perl-%{version}.tar.gz
+#!RemoteAsset:  sha256:0f8fcb7638a8f3db4c797df94fdbc56013749142f2f94cbc95b43c9fca096a13
+Source0:        https://www.cpan.org/authors/id/E/ET/ETJ/Log-Log4perl-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(DBD::CSV) >= 0.33
@@ -44,20 +48,8 @@ Log::Log4perl lets you remote-control and fine-tune the logging behaviour
 of your system from the outside. It implements the widely popular (Java-
 based) Log4j logging package in pure Perl.
 
-%prep
-%setup -q -n Log-Log4perl-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
