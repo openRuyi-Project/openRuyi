@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Extremely flexible deep comparison
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Deep
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Test-Deep-%{version}.tar.gz
+#!RemoteAsset:  sha256:42781e9943a7a215e662c4973b9feafdc019fd16469bdb849a8537ee58956273
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Test-Deep-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.12.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -36,20 +40,8 @@ If you don't know anything about automated testing in Perl then you should
 probably read about Test::Simple and Test::More before preceding.
 Test::Deep uses the Test::Builder framework.
 
-%prep
-%setup -q -n Test-Deep-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
