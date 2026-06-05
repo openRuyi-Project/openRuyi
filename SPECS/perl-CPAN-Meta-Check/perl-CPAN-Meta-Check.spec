@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Verify requirements in a CPAN::Meta object
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/CPAN-Meta-Check
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/CPAN-Meta-Check-%{version}.tar.gz
+#!RemoteAsset:  sha256:f619d2df5ea0fd91c8cf83eb54acccb5e43d9e6ec1a3f727b3d0ac15d0cf378a
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/CPAN-Meta-Check-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -44,20 +48,8 @@ Requires:       perl(Module::Metadata) >= 1.000023
 This module verifies if requirements described in a CPAN::Meta object
 are present.
 
-%prep
-%setup -q -n CPAN-Meta-Check-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
