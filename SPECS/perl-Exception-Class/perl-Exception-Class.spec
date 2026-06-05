@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Module that allows you to declare real exception classes in Perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Exception-Class
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Exception-Class-%{version}.tar.gz
+#!RemoteAsset:  sha256:5482a77ef027ca1f9f39e1f48c558356e954936fc8fbbdee6c811c512701b249
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Exception-Class-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(base)
@@ -38,20 +42,8 @@ Requires:       perl(Devel::StackTrace) >= 2.00
 RECOMMENDATION 1: If you are writing modern Perl code with Moose or Moo I
 highly recommend using Throwable instead of this module.
 
-%prep
-%setup -q -n Exception-Class-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
