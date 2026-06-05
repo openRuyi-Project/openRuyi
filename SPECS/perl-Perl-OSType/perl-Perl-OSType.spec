@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Map Perl operating system names to generic types
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Perl-OSType
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Perl-OSType-%{version}.tar.gz
+#!RemoteAsset:  sha256:e7ed4994b5d547cb23aadb84dc6044c5eb085d5a67a6c5624f42542edd3403b2
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/Perl-OSType-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(constant)
@@ -32,20 +36,8 @@ current operating system matches a more generic type of operating systems.
 For example, 'linux' is a type of 'Unix' operating system and so is
 'freebsd'.
 
-%prep
-%setup -q -n Perl-OSType-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
