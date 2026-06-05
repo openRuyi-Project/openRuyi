@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Framework for more readable interactive test scripts
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Inter
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SB/SBECK/Test-Inter-%{version}.tar.gz
+#!RemoteAsset:  sha256:f2b1987ecef9f6c9223e8fba2e8e48854333896650aabea81bdc30e0c9656b63
+Source0:        https://www.cpan.org/authors/id/S/SB/SBECK/Test-Inter-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Cwd)
@@ -30,20 +34,8 @@ This is another framework for writing test scripts. Much of the syntax is
 loosely inspired by Test::More, and Test::Inter has most of it's
 functionality, but it is not a drop-in replacement.
 
-%prep
-%setup -q -n Test-Inter-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
