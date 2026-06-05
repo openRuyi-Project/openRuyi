@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Tzfile (zoneinfo) timezone files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/DateTime-TimeZone-Tzfile
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DateTime-TimeZone-Tzfile-%{version}.tar.gz
+#!RemoteAsset:  sha256:c79030436a84827ea68173b13c36ac951a5170a54f1dd8f523506b674f2b9e0e
+Source0:        https://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DateTime-TimeZone-Tzfile-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -40,20 +45,8 @@ in the tzfile(5) format. These can express arbitrary patterns of offsets
 from Universal Time, changing over time. Offsets and change times are
 limited to a resolution of one second.
 
-%prep
-%setup -q -n DateTime-TimeZone-Tzfile-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
