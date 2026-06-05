@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Lexically-scoped resource management
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Scope-Guard
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CH/CHOCOLATE/Scope-Guard-%{version}.tar.gz
+#!RemoteAsset:  sha256:8c9b1bea5c56448e2c3fadc65d05be9e4690a3823a80f39d2f10fdd8f777d278
+Source0:        https://www.cpan.org/authors/id/C/CH/CHOCOLATE/Scope-Guard-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.1
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -31,20 +35,8 @@ execution is aborted prematurely. This effectively allows lexically-scoped
 "promises" to be made that are automatically honoured by perl's garbage
 collector.
 
-%prep
-%setup -q -n Scope-Guard-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
