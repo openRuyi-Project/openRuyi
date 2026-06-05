@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Looking up module information / loading at runtime
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Load-Conditional
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Module-Load-Conditional-%{version}.tar.gz
+#!RemoteAsset:  sha256:54c354a9393820f1ebc2a095da084ea0392dcbccb0cb38a187a71831cc60a730
+Source0:        https://www.cpan.org/authors/id/B/BI/BINGOS/Module-Load-Conditional-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Locale::Maketext::Simple)
@@ -35,20 +39,8 @@ Requires:       perl(version) >= 0.69
 Module::Load::Conditional provides simple ways to query and possibly load
 any of the modules you have installed on your system during runtime.
 
-%prep
-%setup -q -n Module-Load-Conditional-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc CHANGES README
 
 %changelog
-%{?autochangelog}
+%autochangelog
