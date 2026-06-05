@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Write to a cross-platform Excel binary file
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Spreadsheet-WriteExcel
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/J/JM/JMCNAMARA/Spreadsheet-WriteExcel-%{version}.tar.gz
+#!RemoteAsset:  sha256:e356aad6866cf135731268ee0e979a197443c15a04878e9cf3e80d022ad6c07e
+Source0:        https://www.cpan.org/authors/id/J/JM/JMCNAMARA/Spreadsheet-WriteExcel-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Temp)
@@ -31,20 +35,8 @@ platform Excel binary file. Multiple worksheets can be added to a workbook
 and formatting can be applied to cells. Text, numbers, formulas,
 hyperlinks, images and charts can be written to the cells.
 
-%prep
-%setup -q -n Spreadsheet-WriteExcel-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
