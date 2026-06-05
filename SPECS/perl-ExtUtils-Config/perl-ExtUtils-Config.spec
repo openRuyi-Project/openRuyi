@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Wrapper for perl's configuration
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/ExtUtils-Config
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-Config-%{version}.tar.gz
+#!RemoteAsset:  sha256:82e7e4e90cbe380e152f5de6e3e403746982d502dd30197a123652e46610c66d
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-Config-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Data::Dumper)
@@ -34,20 +38,8 @@ ExtUtils::Config is an abstraction around the %Config hash. By itself it is
 not a particularly interesting module by any measure, however it ties
 together a family of modern toolchain modules.
 
-%prep
-%setup -q -n ExtUtils-Config-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
