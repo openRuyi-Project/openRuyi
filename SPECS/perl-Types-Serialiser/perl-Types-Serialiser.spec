@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Simple data types for common serialisation formats
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Types-Serialiser
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/ML/MLEHMANN/Types-Serialiser-%{version}.tar.gz
+#!RemoteAsset:  sha256:f8c7173b0914d0e3d957282077b366f0c8c70256715eaef3298ff32b92388a80
+Source0:        https://www.cpan.org/authors/id/M/ML/MLEHMANN/Types-Serialiser-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(common::sense)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -27,20 +31,8 @@ serialisation formats such as JSON or CBOR. The idea is to have a
 repository of simple/small constants and containers that can be shared by
 different implementations so they become interoperable between each other.
 
-%prep
-%setup -q -n Types-Serialiser-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
