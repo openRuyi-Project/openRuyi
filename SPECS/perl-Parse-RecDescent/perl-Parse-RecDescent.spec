@@ -11,10 +11,15 @@ Release:        %autorelease
 Summary:        Generate Recursive-Descent Parsers
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Parse-RecDescent
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/J/JT/JTBRAUN/Parse-RecDescent-%{version}.tar.gz
+#!RemoteAsset:  sha256:1943336a4cb54f1788a733f0827c0c55db4310d5eae15e542639c9dd85656e37
+Source0:        https://www.cpan.org/authors/id/J/JT/JTBRAUN/Parse-RecDescent-%{version}.tar.gz
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor optimize="%{optflags}"
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.5702
 BuildRequires:  perl(Module::Build)
@@ -26,21 +31,8 @@ Requires:       perl(Text::Balanced) >= 1.95
 %description
 Overview
 
-%prep
-%setup -q -n Parse-RecDescent-%{version}
-
-%build
-perl Build.PL --installdirs=vendor optimize="%{optflags}"
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README ToDo
 
 %changelog
-%{?autochangelog}
+%autochangelog
