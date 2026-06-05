@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-CPAN-Meta-Requirements
-Version:        2.143
+Version:        2.145
 Release:        %autorelease
 Summary:        Set of version requirements for a CPAN dist
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/CPAN-Meta-Requirements
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/CPAN-Meta-Requirements-%{version}.tar.gz
+#!RemoteAsset:  sha256:1557093e3ff0d650262a8340a1dafc5d033af986f98ee3e8a889d04b53e18019
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/CPAN-Meta-Requirements-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.10.0
 BuildRequires:  perl(B)
@@ -35,20 +39,8 @@ those specified in the META.yml or META.json files in CPAN distributions,
 and as defined by CPAN::Meta::Spec. It can be built up by adding more and
 more constraints, and it will reduce them to the simplest representation.
 
-%prep
-%setup -q -n CPAN-Meta-Requirements-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
