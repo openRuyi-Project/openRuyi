@@ -11,11 +11,15 @@ Release:        %autorelease
 Summary:        Recursively scan Perl code for dependencies
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-ScanDeps
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz
+#!RemoteAsset:  sha256:1f5e119cade1466c39c71e5bc35a8d4f4e672635db03d79a5a0dcf08c4e2b5a3
+Source0:        https://www.cpan.org/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.9
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -37,21 +41,8 @@ This module scans potential modules used by perl programs, and returns a
 hash reference; its keys are the module names as appears in %INC (e.g.
 Test/More.pm); the values are hash references with this structure:
 
-%prep
-%setup -q -n Module-ScanDeps-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc AUTHORS Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
