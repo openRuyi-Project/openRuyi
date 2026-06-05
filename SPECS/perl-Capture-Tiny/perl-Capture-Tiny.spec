@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Capture STDOUT and STDERR from Perl, XS or external programs
 License:        Apache-2.0
 URL:            https://metacpan.org/dist/Capture-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:ca6e8d7ce7471c2be54e1009f64c367d7ee233a2894cacf52ebe6f53b04e81e5
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/Capture-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -40,20 +44,8 @@ is captured while being passed through to the original filehandles. Yes, it
 even works on Windows (usually). Stop guessing which of a dozen capturing
 modules to use in any particular situation and just use this one.
 
-%prep
-%setup -q -n Capture-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README Todo
 
 %changelog
-%{?autochangelog}
+%autochangelog
