@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Alien::Build plugin to download from GitLab
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Alien-Build-Plugin-Download-GitLab
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-Plugin-Download-GitLab-%{version}.tar.gz
+#!RemoteAsset:  sha256:c1f089c8ea152a789909d48a83dbfcf2626f773daf30431c8622582b26aba902
+Source0:        https://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-Plugin-Download-GitLab-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.4
 BuildRequires:  perl(Alien::Build::Plugin)
@@ -30,20 +34,8 @@ BuildRequires:  perl(URI::Escape)
 %description
 This plugin is designed for downloading assets from a GitLab instance.
 
-%prep
-%setup -q -n Alien-Build-Plugin-Download-GitLab-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc author.yml Changes perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog
