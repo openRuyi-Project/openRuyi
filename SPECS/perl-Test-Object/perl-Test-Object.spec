@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Thoroughly testing objects via registered handlers
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Object
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Test-Object-%{version}.tar.gz
+#!RemoteAsset:  sha256:65278964147837313f4108e55b59676e8a364d6edf01b3dc198aee894ab1d0bb
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Test-Object-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -42,20 +46,8 @@ situation in which you test a module 4 or 5 subclasses down, which should
 follow the correct behaviour of not just the subclass, but of all the
 parent classes.
 
-%prep
-%setup -q -n Test-Object-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README
 
 %changelog
-%{?autochangelog}
+%autochangelog
