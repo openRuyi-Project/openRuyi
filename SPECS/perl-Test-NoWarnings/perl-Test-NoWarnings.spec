@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Make sure you didn't emit any warnings while testing
 License:        LGPL-2.0-or-later
 URL:            https://metacpan.org/dist/Test-NoWarnings
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/H/HA/HAARG/Test-NoWarnings-%{version}.tar.gz
+#!RemoteAsset:  sha256:c2dc51143b7eb63231210e27df20d2c8393772e0a333547ec8b7a205ed62f737
+Source0:        https://www.cpan.org/authors/id/H/HA/HAARG/Test-NoWarnings-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -34,20 +38,8 @@ If there were any warnings, the test will give a "not ok" and diagnostics
 of where, when and what the warning was, including a stack trace of what
 was going on when the it occurred.
 
-%prep
-%setup -q -n Test-NoWarnings-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
