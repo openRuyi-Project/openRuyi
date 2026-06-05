@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Implementation of a "Singleton" class
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Class-Singleton
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SH/SHAY/Class-Singleton-%{version}.tar.gz
+#!RemoteAsset:  sha256:27ba13f0d9512929166bbd8c9ef95d90d630fc80f0c9a1b7458891055e9282a4
+Source0:        https://www.cpan.org/authors/id/S/SH/SHAY/Class-Singleton-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(base)
@@ -35,20 +39,8 @@ instantiation of a single object. In deriving a class from
 Class::Singleton, your module will inherit the Singleton instantiation
 method and can implement whatever specific functionality is required.
 
-%prep
-%setup -q -n Class-Singleton-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
