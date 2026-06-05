@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        HTTP::Date - date conversion routines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Date
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Date-%{version}.tar.gz
+#!RemoteAsset:  sha256:7b685191c6acc3e773d1fc02c95ee1f9fae94f77783175f5e78c181cc92d2b52
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Date-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.2
 BuildRequires:  perl(Exporter)
@@ -37,20 +41,8 @@ This module provides functions that deal the date formats used by the HTTP
 protocol (and then some more). Only the first two functions, time2str() and
 str2time(), are exported by default.
 
-%prep
-%setup -q -n HTTP-Date-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTORS perlcriticrc perltidyrc README.md tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
