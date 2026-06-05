@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Provides function returning the equivalent of ${^GLOBAL_PHASE} eq 'DESTRUCT' for older perls
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Devel-GlobalDestruction
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/H/HA/HAARG/Devel-GlobalDestruction-%{version}.tar.gz
+#!RemoteAsset:  sha256:34b8a5f29991311468fe6913cadaba75fd5d2b0b3ee3bb41fe5b53efab9154ab
+Source0:        https://www.cpan.org/authors/id/H/HA/HAARG/Devel-GlobalDestruction-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -28,20 +32,8 @@ Requires:       perl(Sub::Exporter::Progressive) >= 0.001011
 Perl's global destruction is a little tricky to deal with WRT finalizers
 because it's not ordered and objects can sometimes disappear.
 
-%prep
-%setup -q -n Devel-GlobalDestruction-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
