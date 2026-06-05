@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        ExtUtils::LibBuilder Perl module
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/ExtUtils-LibBuilder
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/A/AM/AMBS/ExtUtils-LibBuilder-%{version}.tar.gz
+#!RemoteAsset:  sha256:dbfac85d015874189a704fa0a2f001d13b5a0c7d89f36c06ff32d569720a6cfb
+Source0:        https://www.cpan.org/authors/id/A/AM/AMBS/ExtUtils-LibBuilder-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::CBuilder) >= 0.23
@@ -30,20 +35,8 @@ Although there are mechanisms to compile and link (or glue) C code in your
 Perl programs, there isn't a clear method to compile standard, self-
 contained C libraries.
 
-%prep
-%setup -q -n ExtUtils-LibBuilder-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
