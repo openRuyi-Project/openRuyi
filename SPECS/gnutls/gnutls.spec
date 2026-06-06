@@ -43,14 +43,23 @@ BuildRequires:  texinfo
 # Tests
 BuildRequires:  ca-certificates-mozilla
 
+Recommends:     %{name}-dane
+
 %description
 GnuTLS is a secure communications library implementing the SSL, TLS and DTLS
 protocols. This package contains the essential shared libraries needed by
 applications, as well as the command-line tools for administration.
 
+%package        libs
+Summary:        Libraries used by the gnutls
+
+%description    libs
+Contains libraries used by the gnutls.
+
 %package        devel
 Summary:        Development files for GnuTLS
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}-dane%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(libtasn1)
 Requires:       pkgconfig(nettle)
 Requires:       pkgconfig(p11-kit-1)
@@ -58,6 +67,18 @@ Requires:       pkgconfig(p11-kit-1)
 %description    devel
 This package contains the header files, programming documentation, and
 development libraries for GnuTLS.
+
+# We have separated this package in order to avoid introducing unbound and all
+# related dependencies when using it in the basic way.
+%package        dane
+Summary:        The tools and libraries necessary to implement DANE.
+
+%description    dane
+GnuTLS DANE provides the tools and libraries necessary to implement DNS-based
+Authentication of Named Entities (DANE). DANE allows applications to verify TLS
+certificates securely via DNSSEC (DNS Security Extensions), reducing or
+completely bypassing reliance on traditional, third-party Certificate
+Authorities (CAs)
 
 %install -a
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
@@ -74,14 +95,13 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_bindir}/ocsptool
 %{_bindir}/psktool
 %{_bindir}/p11tool
-%{_bindir}/danetool
+%{_mandir}/man1/*
+
+%files libs
 %{_libdir}/libgnutls.so.30
 %{_libdir}/libgnutls.so.30.*
 %{_libdir}/libgnutlsxx.so.30
 %{_libdir}/libgnutlsxx.so.30.*
-%{_libdir}/libgnutls-dane.so.0
-%{_libdir}/libgnutls-dane.so.0.*
-%{_mandir}/man1/*
 
 %files devel
 %{_includedir}/gnutls/
@@ -92,6 +112,11 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_libdir}/pkgconfig/gnutls-dane.pc
 %{_mandir}/man3/*
 %{_infodir}/*
+
+%files dane
+%{_bindir}/danetool
+%{_libdir}/libgnutls-dane.so.0
+%{_libdir}/libgnutls-dane.so.0.*
 
 %changelog
 %autochangelog
