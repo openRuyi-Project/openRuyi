@@ -12,6 +12,7 @@ License:        MulanPSL-2.0
 URL:            https://www.openruyi.cn
 Source0:        issue.conf
 Source1:        os-release.conf
+Source2:        macros.openruyi
 
 Provides:       system-release
 Provides:       openRuyi-release
@@ -31,6 +32,8 @@ echo -e "openRuyi (%{_target_cpu}) - Kernel %%r (%%t)." > %{buildroot}%{_sysconf
 install -c -m 644 %{SOURCE1} %{buildroot}%{_prefix}/lib/os-release
 ln -s ../usr/lib/os-release %{buildroot}%{_sysconfdir}/os-release
 touch %{buildroot}%{_sysconfdir}/motd
+mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
+install -c -m 644 %{SOURCE2} %{buildroot}%{_rpmconfigdir}/macros.d/macros.openruyi
 
 %files
 %defattr(644,root,root,755)
@@ -39,6 +42,7 @@ touch %{buildroot}%{_sysconfdir}/motd
 %config(noreplace) %{_sysconfdir}/motd
 %config(noreplace) %{_sysconfdir}/issue
 %config(noreplace) %{_sysconfdir}/issue.net
+%{_rpmconfigdir}/macros.d/macros.openruyi
 
 %changelog
-%{?autochangelog}
+%autochangelog
