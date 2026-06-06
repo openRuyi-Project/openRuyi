@@ -149,6 +149,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Provides:       rpm:%_bindir/rpmbuild
 Provides:       rpmbuild
 # build essentials
+Requires:       bash
 Requires:       binutils
 Requires:       bzip2
 Requires:       coreutils
