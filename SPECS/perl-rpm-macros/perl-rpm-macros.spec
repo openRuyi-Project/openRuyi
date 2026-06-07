@@ -15,6 +15,8 @@ Source0:        https://github.com/openRuyi-Project/perl-rpm-macros/archive/refs
 BuildArch:      noarch
 BuildSystem:    autotools
 
+Requires:       perl-devel
+
 %description
 This package provides RPM macros for packaging perl software in openRuyi.
 
