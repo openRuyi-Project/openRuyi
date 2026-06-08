@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Extensions to PPI
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/PPIx-Utilities
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/EL/ELLIOTJS/PPIx-Utilities-%{version}.tar.gz
+#!RemoteAsset:  sha256:03a483386fd6a2c808f09778d44db06b02c3140fb24ba4bf12f851f46d3bcb9b
+Source0:        https://www.cpan.org/authors/id/E/EL/ELLIOTJS/PPIx-Utilities-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(base)
 BuildRequires:  perl(Data::Dumper)
@@ -30,6 +35,8 @@ BuildRequires:  perl(Readonly)
 BuildRequires:  perl(Readonly::XS)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(strict)
+BuildRequires:  perl(YAML::PP)
+BuildRequires:  perl(Safe::Isa)
 BuildRequires:  perl(Task::Weaken)
 BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::More)
@@ -45,20 +52,8 @@ kind of PPI class they relate to, by replacing the "PPI" at the front of
 the module name with "PPIx::Utilities", e.g. functionality related to
 PPI::Nodes is in PPIx::Utilities::Node.
 
-%prep
-%setup -q -n PPIx-Utilities-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README xt
 
 %changelog
-%{?autochangelog}
+%autochangelog
