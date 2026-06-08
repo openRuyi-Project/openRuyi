@@ -51,6 +51,8 @@ BuildRequires:  crate(serde-json-1.0/preserve-order) >= 1.0.0
 BuildRequires:  crate(tokenizers-0.22/onig) >= 0.22.2
 BuildRequires:  crate(hf-hub-0.4/ureq) = 0.4.1
 BuildRequires:  crate(hf-hub-0.4/rustls-tls) = 0.4.1
+BuildRequires:  crate(aws-lc-sys-0.41) = 0.41.0
+BuildRequires:  crate(aws-lc-rs-1.0) = 1.17.0
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
