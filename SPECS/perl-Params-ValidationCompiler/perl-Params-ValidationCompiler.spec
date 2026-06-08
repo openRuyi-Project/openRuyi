@@ -11,15 +11,20 @@ Release:        %autorelease
 Summary:        Build an optimized subroutine parameter validator once, use it forever
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Params-ValidationCompiler
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Params-ValidationCompiler-%{version}.tar.gz
+#!RemoteAsset:  sha256:7b6497173f1b6adb29f5d51d8cf9ec36d2f1219412b4b2410e9d77a901e84a6d
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Params-ValidationCompiler-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(B)
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Clone)
 BuildRequires:  perl(Class::XSAccessor) >= 1.17
 BuildRequires:  perl(Eval::Closure)
 BuildRequires:  perl(Exception::Class)
@@ -28,16 +33,19 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Hash::Util)
 BuildRequires:  perl(List::Util) >= 1.29
+BuildRequires:  perl(Module::Implementation)
+BuildRequires:  perl(MRO::Compat)
 BuildRequires:  perl(overload)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Specio) >= 0.14
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Sub::Util) >= 1.40
-BuildRequires:  perl(Test::More) >= 1.302015
-BuildRequires:  perl(Test::Without::Module)
 BuildRequires:  perl(Test2::Plugin::NoWarnings)
 BuildRequires:  perl(Test2::Require::Module)
 BuildRequires:  perl(Test2::V0)
+BuildRequires:  perl(Test::More) >= 1.302015
+BuildRequires:  perl(Test::Without::Module)
+BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(warnings)
 
 Requires:       perl(Class::XSAccessor) >= 1.17
@@ -49,20 +57,8 @@ This module creates a customized, highly efficient parameter checking
 subroutine. It can handle named or positional parameters, and can return
 the parameters as key/value pairs or a list of values.
 
-%prep
-%setup -q -n Params-ValidationCompiler-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md test-matrix.als
 
 %changelog
-%{?autochangelog}
+%autochangelog
