@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Localization support for DateTime.pm
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/DateTime-Locale
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/DateTime-Locale-%{version}.tar.gz
+#!RemoteAsset:  sha256:1bc56dc2ff4b3152612e1d474ca65071ae2c00912e3fa4bc6f5a99e5e7a1da68
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/DateTime-Locale-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.4
 BuildRequires:  perl(base)
@@ -40,15 +44,21 @@ BuildRequires:  perl(Specio::Library::String)
 BuildRequires:  perl(Storable)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Term::ANSIColor)
-BuildRequires:  perl(Test::File::ShareDir::Dist)
-BuildRequires:  perl(Test::More) >= 1.302015
 BuildRequires:  perl(Test2::Plugin::NoWarnings)
 BuildRequires:  perl(Test2::Plugin::UTF8)
 BuildRequires:  perl(Test2::Require::Module)
 BuildRequires:  perl(Test2::V0)
+BuildRequires:  perl(Test::File::ShareDir::Dist)
+BuildRequires:  perl(Test::More) >= 1.302015
 BuildRequires:  perl(utf8)
 BuildRequires:  perl(warnings)
-# Manual
+BuildRequires:  perl(Class::Tiny)
+BuildRequires:  perl(Try::Tiny)
+BuildRequires:  perl(Eval::Closure)
+BuildRequires:  perl(MRO::Compat)
+BuildRequires:  perl(Clone)
+BuildRequires:  perl(Exception::Class)
+BuildRequires:  perl(File::Copy::Recursive)
 BuildRequires:  perl(File::ShareDir::Install)
 
 Requires:       perl(Dist::CheckConflicts) >= 0.02
@@ -61,20 +71,8 @@ DateTime::Locale is primarily a factory for the various locale subclasses.
 It also provides some functions for getting information on all the
 available locales.
 
-%prep
-%setup -q -n DateTime-Locale-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CODE_OF_CONDUCT.md CONTRIBUTING.md LICENSE.cldr mise.toml perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog
