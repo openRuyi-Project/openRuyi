@@ -12,12 +12,16 @@ Summary:        Lexically disable autovivification
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/autovivification
 #!RemoteAsset:  sha256:2d99975685242980d0a9904f639144c059d6ece15899efde4acb742d3253f105
-Source0:        http://www.cpan.org/authors/id/V/VP/VPIT/autovivification-%{version}.tar.gz
+Source0:        https://www.cpan.org/authors/id/V/VP/VPIT/autovivification-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl-devel >= 5.8.3
+BuildRequires:  perl >= 5.8.3
 BuildRequires:  perl(Config)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -34,19 +38,6 @@ variables gets populated behind your back. This is especially true when
 several levels of dereferencing are involved, in which case all levels are
 vivified up to the last, or when it happens in intuitively read-only
 constructs like exists.
-
-%prep
-%setup -q -n autovivification-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes README
