@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Execute code after a scope finished compilation
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/B-Hooks-EndOfScope
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/B-Hooks-EndOfScope-%{version}.tar.gz
+#!RemoteAsset:  sha256:edac77a17fc36620c8324cc194ce1fad2f02e9fcbe72d08ad0b2c47f0c7fd8ef
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/B-Hooks-EndOfScope-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.1
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -30,6 +34,7 @@ BuildRequires:  perl(strict)
 BuildRequires:  perl(Sub::Exporter::Progressive) >= 0.001006
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(warnings)
+BuildRequires:  perl(Try::Tiny)
 
 Requires:       perl(Module::Implementation) >= 0.05
 Requires:       perl(Sub::Exporter::Progressive) >= 0.001006
@@ -38,20 +43,8 @@ Requires:       perl(Sub::Exporter::Progressive) >= 0.001006
 This module allows you to execute code when perl finished compiling the
 surrounding scope.
 
-%prep
-%setup -q -n B-Hooks-EndOfScope-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README
 
 %changelog
-%{?autochangelog}
+%autochangelog
