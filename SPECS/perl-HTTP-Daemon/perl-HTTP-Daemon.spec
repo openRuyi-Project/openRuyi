@@ -6,16 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-HTTP-Daemon
-Version:        6.16
+Version:        6.17
 Release:        %autorelease
 Summary:        Simple http server class
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Daemon
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Daemon-%{version}.tar.gz
+#!RemoteAsset:  sha256:16281580c40e23108d028434698b5d7d53637bf904c9df822481e253cbec920c
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Daemon-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -37,6 +42,7 @@ BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More) >= 0.98
 BuildRequires:  perl(Test::Needs)
 BuildRequires:  perl(warnings)
+BuildRequires:  perl(Module::Build::Tiny)
 
 Requires:       perl(HTTP::Date) >= 6
 Requires:       perl(HTTP::Request) >= 6
@@ -50,20 +56,8 @@ Instances of the HTTP::Daemon class are HTTP/1.1 servers that listen on a
 socket for incoming requests. The HTTP::Daemon is a subclass of
 IO::Socket::IP, so you can perform socket operations directly on it too.
 
-%prep
-%setup -q -n HTTP-Daemon-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CONTRIBUTING README
+%doc Changes CONTRIBUTING precious.toml README scripts
 
 %changelog
-%{?autochangelog}
+%autochangelog
