@@ -6,39 +6,31 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-DBI
-Version:        1.647
+Version:        1.648
 Release:        %autorelease
 Summary:        Database independent interface for Perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/DBI
-#!RemoteAsset:  sha256:0df16af8e5b3225a68b7b592ab531004ddb35a9682b50300ce50174ad867d9aa
-Source0:        http://www.cpan.org/authors/id/H/HM/HMBRAND/DBI-%{version}.tgz
+#!RemoteAsset:  sha256:ef266aad6010ce2eabb7e465ebd73ca3020bc58150f6989bd89c2b8f9bac6a86
+Source0:        https://www.cpan.org/authors/id/H/HM/HMBRAND/DBI-%{version}.tgz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl-devel >= 5.8.1
+BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Simple) >= 0.90
+BuildRequires:  perl-devel
 
 %description
 The DBI is a database access module for the Perl programming language.
 It defines a set of methods, variables, and conventions that provide a
 consistent database interface, independent of the actual database
 being used.
-
-%prep
-%setup -q -n DBI-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc ChangeLog Driver.xst README.md
