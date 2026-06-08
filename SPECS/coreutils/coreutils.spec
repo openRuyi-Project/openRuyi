@@ -17,6 +17,7 @@ Source0:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar
 BuildSystem:    autotools
 
 BuildOption(conf):  DEFAULT_POSIX2_VERSION=200112
+BuildOption(conf):  --enable-install-program=arch
 BuildOption(conf):  --enable-no-install-program=kill
 
 BuildRequires:  pkgconfig(gmp)
