@@ -12,12 +12,16 @@ Summary:        Fast and correct UTF-8 IO
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/PerlIO-utf8_strict
 #!RemoteAsset:  sha256:bcd2848b72df290b5e984fae8b1a6ca96f6d072003cf222389a8c9e8e1c570cd
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/PerlIO-utf8_strict-%{version}.tar.gz
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/PerlIO-utf8_strict-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl-devel >= 5.8.0
+BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -35,19 +39,6 @@ BuildRequires:  perl(XSLoader)
 %description
 This module provides a fast and correct UTF-8 PerlIO layer. Unlike perl's
 default :utf8 layer it checks the input for correctness.
-
-%prep
-%setup -q -n PerlIO-utf8_strict-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes corpus README
