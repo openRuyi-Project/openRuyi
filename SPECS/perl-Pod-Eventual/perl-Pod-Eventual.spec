@@ -10,19 +10,25 @@ Release:        %autorelease
 Summary:        Read a POD document as a series of trivial events
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Pod-Eventual
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Pod-Eventual-%{version}.tar.gz
+#!RemoteAsset:  sha256:7f060cc34d11656ce069db061e3d60edc0cabc8f89a4a2dc7eaae95dac856d2d
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Pod-Eventual-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.12.0
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Mixin::Linewise::Readers) >= 0.102
+BuildRequires:  perl(PerlIO::utf8_strict)
 BuildRequires:  perl(strict)
+BuildRequires:  perl(Sub::Exporter)
 BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::More) >= 0.96
 BuildRequires:  perl(warnings)
@@ -36,20 +42,8 @@ parsers care about semantics, like whether a =item occurred after an
 =over but before a back, figuring out how to link a L<>, and other things
 like that.
 
-%prep
-%setup -q -n Pod-Eventual-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog
