@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Critique Perl source code for best-practices
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Perl-Critic
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PE/PETDANCE/Perl-Critic-%{version}.tar.gz
+#!RemoteAsset:  sha256:572a7c8758ba1c0ab6daf0bd40297c4f0dcf1516f084522df2c2bf04d525e232
+Source0:        https://www.cpan.org/authors/id/P/PE/PETDANCE/Perl-Critic-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.10.1
 BuildRequires:  perl(B::Keywords) >= 1.23
@@ -40,6 +45,7 @@ BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Module::Pluggable) >= 3.1
 BuildRequires:  perl(overload)
 BuildRequires:  perl(parent)
+BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(Perl::Tidy)
 BuildRequires:  perl(Pod::PlainText)
 BuildRequires:  perl(Pod::Select)
@@ -58,6 +64,11 @@ BuildRequires:  perl(PPIx::Utils::Traversal) >= 0.003
 BuildRequires:  perl(Readonly) >= 2
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(strict)
+BuildRequires:  perl(File::ShareDir)
+BuildRequires:  perl(Class::Tiny)
+BuildRequires:  perl(Lingua::EN::Inflect)
+BuildRequires:  perl(Safe::Isa)
+BuildRequires:  perl(YAML::PP)
 BuildRequires:  perl(String::Format) >= 1.18
 BuildRequires:  perl(Term::ANSIColor) >= 2.02
 BuildRequires:  perl(Test::Builder) >= 0.92
@@ -65,8 +76,6 @@ BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Text::ParseWords) >= 3
 BuildRequires:  perl(version) >= 0.77
 BuildRequires:  perl(warnings)
-# Manual
-BuildRequires:  perl(Try::Tiny)
 
 Requires:       perl(B::Keywords) >= 1.23
 Requires:       perl(Config::Tiny) >= 2
@@ -102,20 +111,8 @@ support Policies that contradict Conway. You can enable, disable, and
 customize those Polices through the Perl::Critic interface. You can also
 create new Policy modules that suit your own tastes.
 
-%prep
-%setup -q -n Perl-Critic-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.md examples extras perlcriticrc README README.md tools xt
 
 %changelog
-%{?autochangelog}
+%autochangelog
