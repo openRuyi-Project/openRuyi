@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Module to implement some of AutoConf macros in pure perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Config-AutoConf
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/A/AM/AMBS/Config-AutoConf-%{version}.tar.gz
+#!RemoteAsset:  sha256:bb57a958ef49d3f7162276dae14a7bd5af43fd1d8513231af35d665459454023
+Source0:        https://www.cpan.org/authors/id/A/AM/AMBS/Config-AutoConf-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(base)
 BuildRequires:  perl(Capture::Tiny)
@@ -43,20 +47,8 @@ Requires:       perl(Scalar::Util) >= 1.18
 Config::AutoConf is intended to provide the same opportunities to Perl
 developers as GNU Autoconf does for Shell developers.
 
-%prep
-%setup -q -n Config-AutoConf-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ARTISTIC-1.0 Changes GPL-1 README.md testTc852_
 
 %changelog
-%{?autochangelog}
+%autochangelog
