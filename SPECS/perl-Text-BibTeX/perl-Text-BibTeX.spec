@@ -12,11 +12,17 @@ Summary:        Interface to read and parse BibTeX files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Text-BibTeX
 #!RemoteAsset:  sha256:3f0113cf8fe71dc7484636dc8e2a581637ecbcc82d0be29bbd46d0bf3f8cdb37
-Source0:        http://www.cpan.org/authors/id/A/AM/AMBS/Text-BibTeX-%{version}.tar.gz
+Source0:        https://www.cpan.org/authors/id/A/AM/AMBS/Text-BibTeX-%{version}.tar.gz
+BuildSystem:    perlbuild
 
-BuildRequires:  perl-devel
+BuildOption(build):  --installdirs=vendor optimize="%{optflags}"
+BuildOption(build):  CFLAGS="%{optflags} -Ibtparse/pccts"
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
+
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
+BuildRequires:  perl-devel
 BuildRequires:  perl(Capture::Tiny) >= 0.06
 BuildRequires:  perl(Config::AutoConf) >= 0.320
 BuildRequires:  perl(Cwd)
@@ -37,19 +43,6 @@ loads the two fundamental modules for processing BibTeX files
 (Text::BibTeX::File and Text::BibTeX::Entry), and this documentation gives
 a broad overview of the whole library that isn't available in the
 documentation for the individual modules that comprise it.
-
-%prep
-%setup -q -n Text-BibTeX-%{version}
-
-%build
-perl Build.PL --installdirs=vendor optimize="%{optflags}"
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc btparse Changes examples README README.OLD scripts THANKS xscode
