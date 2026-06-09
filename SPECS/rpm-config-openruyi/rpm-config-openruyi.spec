@@ -17,7 +17,6 @@ License:        GPL-2.0-or-later
 URL:            https://git.openruyi.cn/openruyi/openruyi-repo
 BuildArch:      noarch
 
-BuildRequires:  gzip
 #!BuildIgnore:  rpm-config-openruyi
 
 Provides:       rpm-config
