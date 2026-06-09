@@ -6,17 +6,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-WWW-Mechanize
-Version:        2.19
+Version:        2.20
 Release:        %autorelease
 Summary:        Handy web browsing in a Perl object
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/WWW-Mechanize
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/WWW-Mechanize-%{version}.tar.gz
+#!RemoteAsset:  sha256:5adce695f3968565d3c8e597b988525ee4c89f40ecb1a21ecee7a16532dbb668
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/WWW-Mechanize-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+# This raw non-ASCII link test is sensitive to charset handling differences.
+Patch2000:      2000-skip-some-tests.patch
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(bytes)
@@ -33,6 +40,7 @@ BuildRequires:  perl(HTML::TokeParser)
 BuildRequires:  perl(HTML::TreeBuilder) >= 5
 BuildRequires:  perl(HTTP::Cookies)
 BuildRequires:  perl(HTTP::Daemon) >= 6.12
+BuildRequires:  perl(HTTP::Message) >= 7.01
 BuildRequires:  perl(HTTP::Request) >= 1.30
 BuildRequires:  perl(HTTP::Request::Common)
 BuildRequires:  perl(lib)
@@ -42,14 +50,12 @@ BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(parent)
 BuildRequires:  perl(Path::Tiny)
 BuildRequires:  perl(Pod::Usage)
-BuildRequires:  perl(Scalar::Util) >= 1.14
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::Memory::Cycle)
 BuildRequires:  perl(Test::More) >= 0.96
 BuildRequires:  perl(Test::Output)
-BuildRequires:  perl(Test::Taint) >= 1.08
 BuildRequires:  perl(Test::Warnings)
 BuildRequires:  perl(Tie::RefHash)
 BuildRequires:  perl(URI)
@@ -60,27 +66,15 @@ BuildRequires:  perl(warnings)
 
 Requires:       perl(HTML::Form) >= 6.08
 Requires:       perl(HTML::TreeBuilder) >= 5
+Requires:       perl(HTTP::Message) >= 7.01
 Requires:       perl(HTTP::Request) >= 1.30
-Requires:       perl(Scalar::Util) >= 1.14
 
 %description
 WWW::Mechanize, or Mech for short, is a Perl module for stateful
 programmatic web browsing, used for automating interaction with websites.
 
-%prep
-%setup -q -n WWW-Mechanize-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes CONTRIBUTORS perlcriticrc perlimports.toml perltidyrc README.md tidyall.ini
+%doc Changes contrib CONTRIBUTORS etc perlcriticrc perlimports.toml perltidyrc precious.toml README.md script SECURITY.md tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog
