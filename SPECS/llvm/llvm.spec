@@ -297,8 +297,8 @@ Requires:       %{pkg_name_llvm}-static%{?_isa} = %{version}-%{release}
 Requires:       %{pkg_name_llvm}-test%{?_isa} = %{version}-%{release}
 Requires:       %{pkg_name_llvm}-googletest%{?_isa} = %{version}-%{release}
 Provides:       llvm-devel(major) = %{maj_ver}
-Requires(post): chkconfig
-Requires(postun): chkconfig
+Requires(post): update-alternatives
+Requires(postun): update-alternatives
 
 %description -n %{pkg_name_llvm}-devel
 This package contains library and header files needed to develop new native
@@ -474,8 +474,8 @@ OpenMP header files.
 
 %package      -n %{pkg_name_lld}
 Summary:         The LLVM Linker
-Requires(post):  chkconfig
-Requires(preun): chkconfig
+Requires(post):  update-alternatives
+Requires(preun): update-alternatives
 Requires:        %{pkg_name_lld}-libs = %{version}-%{release}
 Provides:        lld(major) = %{maj_ver}
 

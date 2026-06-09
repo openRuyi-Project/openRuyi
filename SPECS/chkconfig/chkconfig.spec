@@ -27,15 +27,21 @@ BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  make
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  beakerlib
-
-Provides:       update-alternatives
-Provides:       alternatives
+Recommends:     update-alternatives
 
 %description
 Chkconfig is a basic system utility.  It updates and queries runlevel
 information for system services.  Chkconfig manipulates the numerous
 symbolic links in /etc/rc.d, to relieve system administrators of some
 of the drudgery of manually editing the symbolic links.
+
+%package     -n update-alternatives
+Summary:        Multi-version software coexistence management tool
+Provides:       alternatives
+
+%description -n update-alternatives
+update-alternatives allows multiple versions of software to coexist and defines
+the default command path.
 
 # No configure
 %conf
@@ -47,15 +53,22 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %files -f %{name}.lang
 %license COPYING
-%dir %{_sysconfdir}/alternatives
-%ghost %dir %attr(755, root, root) /etc/alternatives.admindir
-%ghost %dir %attr(755, root, root) /var/lib/alternatives
 %{_sbindir}/ntsysv
-%{_sbindir}/update-alternatives
-%{_sbindir}/alternatives
 %{_sbindir}/chkconfig
 %{_prefix}/lib/systemd/systemd-sysv-install
 %{_mandir}/man8/*
+%exclude %{_mandir}/man8/update-alternatives*
+%exclude %{_mandir}/man8/alternatives*
+
+%files -n update-alternatives
+%license COPYING
+%dir %{_sysconfdir}/alternatives
+%ghost %dir %attr(755, root, root) /etc/alternatives.admindir
+%ghost %dir %attr(755, root, root) /var/lib/alternatives
+%{_sbindir}/update-alternatives
+%{_sbindir}/alternatives
+%{_mandir}/man8/update-alternatives*
+%{_mandir}/man8/alternatives*
 
 %changelog
 %autochangelog
