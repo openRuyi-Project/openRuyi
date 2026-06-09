@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname jsonschema
 
 Name:           python-%{srcname}
-Version:        4.17.3
+Version:        4.26.0
 Release:        %autorelease
 Summary:        Implementation of JSON Schema validation for Python
 License:        MIT
 URL:            https://github.com/Julian/jsonschema
-#!RemoteAsset:  sha256:0f864437ab8b6076ba6707453ef8f98a6a0d512a80e93f8abdb676f737ecb60d
+#!RemoteAsset:  sha256:0c26707e2efad8aa1bfc5b7ce170f3fccc2e4918ff85989ba9ffa9facb2be326
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -33,6 +34,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(attrs)
 BuildRequires:  python3dist(pyrsistent)
 BuildRequires:  python3dist(hypothesis)
+BuildRequires:  python3dist(jsonpath-ng)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
@@ -53,8 +55,8 @@ jsonschema is an implementation of JSON Schema for Python (supporting
 %pytest
 
 %files -f %{pyproject_files}
-%license COPYING json/LICENSE
 %doc README.rst
+%license COPYING json/LICENSE
 %{_bindir}/jsonschema
 
 %changelog
