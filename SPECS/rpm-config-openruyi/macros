@@ -1,6 +1,8 @@
 # directories
 %_infodir               %{_prefix}/share/info
 %_mandir                %{_prefix}/share/man
+# By default, we merge sbin and bin.
+%_sbindir               %{_bindir}
 %_sysconfdir            /etc
 %_localstatedir         /var
 %_defaultdocdir         %{_datadir}/doc
