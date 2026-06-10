@@ -30,8 +30,8 @@ Patch2:         mesa-26.1.1-zink-kmsro-for-img-blob.patch
 Patch3:         mesa-26.1.1-pvr-conformance.patch
 
 # nvk is blocked by Rust packaging
-BuildOption(conf):  -Dgallium-drivers=llvmpipe,softpipe,r300,r600,radeonsi,nouveau,virgl,iris,etnaviv,zink
-BuildOption(conf):  -Dvulkan-drivers=amd,intel,swrast,imagination,virtio,gfxstream
+BuildOption(conf):  -Dgallium-drivers=llvmpipe,softpipe,r300,r600,radeonsi,nouveau,virgl,iris,etnaviv,zink,crocus
+BuildOption(conf):  -Dvulkan-drivers=amd,intel,swrast,imagination,virtio,gfxstream,intel_hasvk
 BuildOption(conf):  -Dplatforms=x11,wayland
 
 BuildOption(conf):  -Degl=enabled
