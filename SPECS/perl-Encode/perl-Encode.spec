@@ -34,6 +34,18 @@ Requires:       perl(parent) >= 0.221
 The Encode module provides the interface between Perl strings and the rest
 of the system. Perl strings are sequences of characters.
 
+# do not use buildsystem to install.
+%install
+%perl_make_install
+%perl_process_packlist
+# Avoid file conflicts with perl core
+mv %{buildroot}%{_bindir}/enc2xs %{buildroot}%{_bindir}/enc2xs-%{version}
+mv %{buildroot}%{_bindir}/encguess %{buildroot}%{_bindir}/encguess-%{version}
+mv %{buildroot}%{_bindir}/piconv %{buildroot}%{_bindir}/piconv-%{version}
+mv %{buildroot}%{_mandir}/man1/enc2xs.1perl %{buildroot}%{_mandir}/man1/enc2xs-%{version}.1perl
+mv %{buildroot}%{_mandir}/man1/encguess.1perl %{buildroot}%{_mandir}/man1/encguess-%{version}.1perl
+mv %{buildroot}%{_mandir}/man1/piconv.1perl %{buildroot}%{_mandir}/man1/piconv-%{version}.1perl %perl_gen_filelist
+
 %files -f %{name}.files
 %doc AUTHORS Changes README
 
