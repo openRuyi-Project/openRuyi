@@ -304,6 +304,8 @@ Requires:       systemd = %{version}-%{release}
 Requires(post): grep
 Provides:       udev = %{version}
 Requires:       kbd
+Recommends:     kmod-libs
+Recommends:     libseccomp
 %{?systemd_requires}
 
 %description    udev
