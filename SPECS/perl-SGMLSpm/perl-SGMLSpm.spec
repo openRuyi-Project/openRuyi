@@ -8,43 +8,30 @@
 %global tar_name SGMLSpm
 
 Name:           perl-SGMLSpm
-Version:        1.03ii
+Version:        1.1
 Release:        %autorelease
-Summary:        Perl library for parsing the output of nsgmls
+Summary:        SGMLSpm Perl module
 License:        GPL-2.0-or-later
-URL:            https://metacpan.org/release/SGMLSpm
-#!RemoteAsset
-Source0:        https://cpan.metacpan.org/authors/id/D/DM/DMEGG/%{tar_name}-%{version}.tar.gz
+URL:            https://metacpan.org/dist/SGMLSpm
+#!RemoteAsset:  sha256:550c9245291c8df2242f7e88f7921a0f636c7eec92c644418e7d89cfea70b2bd
+Source0:        https://cpan.metacpan.org/authors/id/R/RA/RAAB/SGMLSpm-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
 
-BuildRequires:  make
-BuildRequires:  perl
-BuildRequires:  perl-devel
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
+
+BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-
-Requires:       openjade
+BuildRequires:  perl(Module::Build)
 
 %description
 Perl programs can use the SGMLSpm module to help convert SGML, HTML or XML
 documents into new formats.
 
-%prep
-%setup -q -n SGMLSpm
-
-%build
-# Daddy no build
-
-%install
-install -d -m 755 $RPM_BUILD_ROOT{%{_bindir},%{perl_vendorlib}}
-make install_system \
-    BINDIR=$RPM_BUILD_ROOT%{_bindir} \
-    PERL5DIR=$RPM_BUILD_ROOT%{perl_vendorlib}
-
-%files
-%doc README COPYING
-%{_bindir}/sgmlspl
-%{perl_vendorlib}/SGMLS*
-%{perl_vendorlib}/skel.pl
+%files -f %{name}.files
+%doc BUGS ChangeLog DOC elisp MYMETA.yml README script TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog
