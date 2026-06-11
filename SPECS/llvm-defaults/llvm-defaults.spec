@@ -16,12 +16,16 @@ License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 
 BuildRequires:  llvm%{maj_ver}
+BuildRequires:  llvm%{maj_ver}-devel
 BuildRequires:  clang%{maj_ver}
+BuildRequires:  clang%{maj_ver}-devel
 BuildRequires:  clang%{maj_ver}-tools-extra
 BuildRequires:  clang%{maj_ver}-analyzer
 BuildRequires:  llvm-bolt%{maj_ver}
 BuildRequires:  lld%{maj_ver}
 BuildRequires:  lldb%{maj_ver}
+# Generate virtual cmake(xx) provides
+BuildRequires:  cmake
 
 %description
 This package provides default unversioned symlinks for LLVM %{maj_ver} tools,
@@ -39,6 +43,18 @@ This package provides default unversioned symlinks for LLVM %{maj_ver} tools,
 creating symlinks like /usr/bin/llc -> llc-22, /usr/bin/opt -> opt-22, etc.
 
 # ============================================================================
+# llvm-devel subpackage
+# ============================================================================
+%package     -n llvm-devel
+Summary:        Default symlinks for LLVM development tools
+Requires:       llvm%{maj_ver}-devel > %{maj_ver}
+Provides:       cmake(LLVM) = %{maj_ver}
+
+%description -n llvm-devel
+This package provides default unversioned symlinks for LLVM %{maj_ver}
+development tools, creating symlinks like /usr/bin/llvm-config -> llvm-config-22.
+
+# ============================================================================
 # clang subpackage
 # ============================================================================
 %package     -n clang
@@ -48,6 +64,17 @@ Requires:       clang%{maj_ver} > %{maj_ver}
 %description -n clang
 This package provides default unversioned symlinks for clang %{maj_ver},
 creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/clang++ -> clang++-22, etc.
+
+# ============================================================================
+# clang-devel subpackage
+# ============================================================================
+%package     -n clang-devel
+Summary:        Default symlinks for clang development tools
+Requires:       clang%{maj_ver}-devel > %{maj_ver}
+
+%description -n clang-devel
+This package provides default unversioned symlinks for clang %{maj_ver}
+development tools, creating symlinks like /usr/bin/clang-tblgen -> clang-tblgen-22.
 
 # ============================================================================
 # clang-tools-extra subpackage
@@ -120,7 +147,6 @@ mkdir -p %{buildroot}%{_bindir}
 # LLVM tools symlinks
 ln -sf llc-%{maj_ver} %{buildroot}%{_bindir}/llc
 ln -sf opt-%{maj_ver} %{buildroot}%{_bindir}/opt
-ln -sf llvm-config-%{maj_ver} %{buildroot}%{_bindir}/llvm-config
 ln -sf llvm-ar-%{maj_ver} %{buildroot}%{_bindir}/llvm-ar
 ln -sf llvm-nm-%{maj_ver} %{buildroot}%{_bindir}/llvm-nm
 ln -sf llvm-objcopy-%{maj_ver} %{buildroot}%{_bindir}/llvm-objcopy
@@ -149,12 +175,21 @@ ln -sf llvm-lto2-%{maj_ver} %{buildroot}%{_bindir}/llvm-lto2
 ln -sf llvm-mc-%{maj_ver} %{buildroot}%{_bindir}/llvm-mc
 ln -sf llvm-mca-%{maj_ver} %{buildroot}%{_bindir}/llvm-mca
 
+# llvm-devel symlinks
+ln -sf llvm-config-%{maj_ver} %{buildroot}%{_bindir}/llvm-config
+# CMake config symlink
+mkdir -p %{buildroot}%{_libdir}/cmake
+ln -sf ../llvm%{maj_ver}/lib/cmake/llvm %{buildroot}%{_libdir}/cmake/llvm
+
 # clang symlinks
 ln -sf clang-%{maj_ver} %{buildroot}%{_bindir}/clang
 ln -sf clang++-%{maj_ver} %{buildroot}%{_bindir}/clang++
 ln -sf clang-cl-%{maj_ver} %{buildroot}%{_bindir}/clang-cl
 ln -sf clang-cpp-%{maj_ver} %{buildroot}%{_bindir}/clang-cpp
 ln -sf clang-scan-deps-%{maj_ver} %{buildroot}%{_bindir}/clang-scan-deps
+
+# clang-devel symlinks
+ln -sf clang-tblgen-%{maj_ver} %{buildroot}%{_bindir}/clang-tblgen
 
 # clang-tools-extra symlinks
 ln -sf clang-format-%{maj_ver} %{buildroot}%{_bindir}/clang-format
@@ -226,7 +261,6 @@ fi
 %files -n llvm
 %{_bindir}/llc
 %{_bindir}/opt
-%{_bindir}/llvm-config
 %{_bindir}/llvm-ar
 %{_bindir}/llvm-nm
 %{_bindir}/llvm-objcopy
@@ -255,12 +289,19 @@ fi
 %{_bindir}/llvm-mc
 %{_bindir}/llvm-mca
 
+%files -n llvm-devel
+%{_bindir}/llvm-config
+%{_libdir}/cmake/llvm
+
 %files -n clang
 %{_bindir}/clang
 %{_bindir}/clang++
 %{_bindir}/clang-cl
 %{_bindir}/clang-cpp
 %{_bindir}/clang-scan-deps
+
+%files -n clang-devel
+%{_bindir}/clang-tblgen
 
 %files -n clang-tools-extra
 %{_bindir}/clang-format
