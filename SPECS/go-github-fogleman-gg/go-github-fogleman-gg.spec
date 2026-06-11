@@ -18,11 +18,11 @@ License:        MIT
 URL:            https://github.com/fogleman/gg
 #!RemoteAsset:  sha256:483cb4454ca6a998cdc4d670d350976cfdaffa058897831f420486cda4b4f6d9
 Source0:        https://github.com/fogleman/gg/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    golangmodules
 
 # Avoid parsing rpm-injected go test flags in upstream test init. - HNO3Miracle
 Patch2000:      2000-do-not-parse-test-flags-in-init.patch
-BuildArch:      noarch
-BuildSystem:    golangmodules
 
 # Some raster hash tests differ across arches/current dependency versions; keep
 # the deterministic API tests that are stable in OBS. - HNO3Miracle
