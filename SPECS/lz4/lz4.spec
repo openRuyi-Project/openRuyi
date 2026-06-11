@@ -17,6 +17,8 @@ Source:         https://github.com/lz4/lz4/releases/download/v%{version}/lz4-%{v
 BuildSystem:    autotools
 
 Patch0:         lz4-export.diff
+# Submitted to upstream: https://github.com/lz4/lz4/pull/1739
+Patch1:         Enable-LZ4_FAST_DEC_LOOP-for-RISC-V.patch
 
 BuildOption(build):  PREFIX=%{_prefix}
 BuildOption(install):  PREFIX=%{_prefix} LIBDIR=%{_libdir}
