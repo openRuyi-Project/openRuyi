@@ -16,20 +16,16 @@
 %global bundled %{expand:
 Provides: bundled(python3dist(autocommand)) = 2.2.2
 Provides: bundled(python3dist(backports-tarfile)) = 1.2
-Provides: bundled(python3dist(importlib-metadata)) = 8
-Provides: bundled(python3dist(inflect)) = 7.3.1
-Provides: bundled(python3dist(jaraco-collections)) = 5.1
-Provides: bundled(python3dist(jaraco-context)) = 5.3
-Provides: bundled(python3dist(jaraco-functools)) = 4.0.1
-Provides: bundled(python3dist(jaraco-text)) = 3.12.1
-Provides: bundled(python3dist(more-itertools)) = 10.3
-Provides: bundled(python3dist(packaging)) = 24.2
-Provides: bundled(python3dist(platformdirs)) = 4.2.2
-Provides: bundled(python3dist(tomli)) = 2.0.1
-Provides: bundled(python3dist(typeguard)) = 4.3
-Provides: bundled(python3dist(typing-extensions)) = 4.12.2
-Provides: bundled(python3dist(wheel)) = 0.45.1
-Provides: bundled(python3dist(zipp)) = 3.19.2
+Provides: bundled(python3dist(importlib-metadata)) = 8.7.1
+Provides: bundled(python3dist(jaraco-context)) = 6.1
+Provides: bundled(python3dist(jaraco-functools)) = 4.4
+Provides: bundled(python3dist(jaraco-text)) = 4
+Provides: bundled(python3dist(more-itertools)) = 10.8
+Provides: bundled(python3dist(packaging)) = 26
+Provides: bundled(python3dist(platformdirs)) = 4.4
+Provides: bundled(python3dist(tomli)) = 2.4
+Provides: bundled(python3dist(wheel)) = 0.46.3
+Provides: bundled(python3dist(zipp)) = 3.23
 }
 
 # If it is set to 1, the bootstrap process will be included
@@ -44,23 +40,16 @@ Name:           python-%{srcname}-bootstrap
 %else
 Name:           python-%{srcname}
 %endif
-Version:        80.9.0
+Version:        82.0.1
 Release:        %autorelease
 Summary:        Easily build and distribute Python packages
 License:        MIT AND Apache-2.0 AND (BSD-2-Clause OR Apache-2.0) AND Python-2.0.1 AND LGPL-3.0-only
 URL:            https://pypi.python.org/pypi/setuptools
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset:  sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c
+#!RemoteAsset:  sha256:7d872682c5d01cfde07da7bccc7b65469d3dca203318515ada1de5eda35efbf9
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-# setuptools rewrites all shebangs to "#!python" which breaks workflows
-# where no external installers (usually rewriting this) are involved.
-# https://github.com/pypa/setuptools/issues/4883
-# - Resolution: deprecated functionality won't be fixed.
-# brp-mangle-shebang script cannot mangle this and fails for many pkgs.
-Patch0:         0001-Revert-Always-rewrite-a-Python-shebang-to-python.patch
 
 BuildRequires:  pkgconfig(python3)
 
@@ -84,18 +73,10 @@ BuildRequires:  python-setuptools
 # It can't self provide this...
 Provides:       python3-setuptools = %{version}-%{release}
 
-# For users who might see ModuleNotFoundError: No module named 'pkg_resoureces'
-# NB: Those are two different provides: one contains underscore, the other hyphen
-%py_provides    python3-pkg_resources
-%py_provides    python3-pkg-resources
-
 %description
 Setuptools is a collection of enhancements to the Python distutils that allow
 you to more easily build and distribute Python packages, especially ones that
 have dependencies on other packages.
-
-This package also contains the runtime components of setuptools, necessary to
-execute the software that requires pkg_resources.
 
 %package     -n %{python_wheel_pkg_prefix}-%{srcname}-wheel
 Summary:        The setuptools wheel
@@ -108,7 +89,7 @@ A Python wheel of setuptools to use with venv.
 %autosetup -p1 -n %{srcname}-%{version}
 
 # Strip shbang
-find setuptools pkg_resources -name \*.py | xargs sed -i -e '1 {/^#!\//d}'
+find setuptools -name \*.py | xargs sed -i -e '1 {/^#!\//d}'
 # Remove bundled exes
 rm -f setuptools/*.exe
 # Don't ship these
@@ -135,7 +116,7 @@ unzip %{_pyproject_wheeldir}/%{python_wheel_name} -d %{buildroot}%{python3_sitel
 echo rpm > %{buildroot}%{python3_sitelib}/setuptools-%{version}.dist-info/INSTALLER
 %else
 %pyproject_install
-%pyproject_save_files -l setuptools pkg_resources _distutils_hack
+%pyproject_save_files -l setuptools _distutils_hack
 sed -Ei '/\/tests\b/d' %{pyproject_files}
 %endif
 
@@ -152,7 +133,6 @@ install -p %{_pyproject_wheeldir}/%{python_wheel_name} -t %{buildroot}%{python_w
 %if %{with bootstrap}
 %{python3_sitelib}/setuptools-%{version}.dist-info/
 %license %{python3_sitelib}/setuptools-%{version}.dist-info/licenses/LICENSE
-%{python3_sitelib}/pkg_resources/
 %{python3_sitelib}/setuptools/
 %{python3_sitelib}/_distutils_hack/
 %endif
