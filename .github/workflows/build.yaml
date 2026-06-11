@@ -98,5 +98,7 @@ jobs:
         dnf update --assumeyes
     - name: Install all
       run: |
-        ls -lah **.rpm
-        dnf install --assumeyes **.rpm
+        rpms=$(find . -name '*.rpm')
+        [ -n "$rpms" ]
+        ls -lah $rpms
+        dnf install --assumeyes $rpms
