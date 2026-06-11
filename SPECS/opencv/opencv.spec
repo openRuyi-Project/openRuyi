@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           opencv
-Version:        4.13.0
+Version:        5.0.0
 Release:        %autorelease
 Summary:        Open Source Computer Vision Library
 License:        Apache-2.0
 URL:            https://opencv.org
 VCS:            git:https://github.com/opencv/opencv.git
-#!RemoteAsset:  sha256:1d40ca017ea51c533cf9fd5cbde5b5fe7ae248291ddf2af99d4c17cf8e13017d
+#!RemoteAsset:  sha256:b0528f5a1d379d59d4701cb28c36e22214cc51cf64594e5b56f2d3e6c0233095
 Source0:        https://github.com/opencv/opencv/archive/%{version}/opencv-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -28,7 +29,7 @@ BuildOption(conf):  -DBUILD_PNG=OFF
 BuildOption(conf):  -DBUILD_OPENEXR=OFF
 BuildOption(conf):  -DBUILD_WEBP=OFF
 BuildOption(conf):  -DBUILD_TBB=OFF
-BuildOption(conf):  -DBUILD_PROTOBUF=OFF
+BuildOption(conf):  -DBUILD_PROTOBUF=ON
 # Build options
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
 BuildOption(conf):  -DBUILD_TESTS=OFF
@@ -121,6 +122,9 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       python3dist(numpy)
 Provides:       python3-opencv-python = %{version}-%{release}
 %python_provide python3-opencv-python
+Conflicts:      python-opencv-python-headless
+Conflicts:      python3-opencv-python-headless
+Conflicts:      python3dist(opencv-python-headless)
 
 %description -n python-opencv-python
 This package provides the cv2 Python module that allows Python applications
@@ -148,18 +152,16 @@ cd %{__cmake_builddir}/python_loader/
 %doc README.md
 %{_bindir}/opencv_*
 %{_libdir}/libopencv_*.so.*
-%dir %{_datadir}/opencv4
-%{_datadir}/opencv4/haarcascades
-%{_datadir}/opencv4/lbpcascades
-%{_datadir}/opencv4/valgrind.supp
-%{_datadir}/opencv4/valgrind_3rdparty.supp
-%license %{_datadir}/licenses/opencv4/
+%dir %{_datadir}/opencv5
+%{_datadir}/opencv5/valgrind.supp
+%{_datadir}/opencv5/valgrind_3rdparty.supp
+%license %{_datadir}/licenses/opencv5/
 
 %files devel
-%{_includedir}/opencv4
+%{_includedir}/opencv5
 %{_libdir}/libopencv_*.so
-%{_libdir}/cmake/opencv4
-%{_libdir}/pkgconfig/opencv4.pc
+%{_libdir}/cmake/opencv5
+%{_libdir}/pkgconfig/opencv5.pc
 
 %files -n python-opencv-python
 %{python3_sitelib}/opencv*.dist-info
