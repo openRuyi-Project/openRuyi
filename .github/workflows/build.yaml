@@ -83,3 +83,20 @@ jobs:
        name: PR${{ github.event.pull_request.number }}-build-packages-results
        path: ${{ steps.result.outputs.paths }}
        if-no-files-found: error
+  install:
+    needs: build
+    runs-on: [ubuntu-latest]
+    container:
+      image: git.openruyi.cn/openruyi/creek-x86-64:latest
+    steps:
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v8
+      with:
+       name: PR${{ github.event.pull_request.number }}-build-packages-results
+    - name: dnf update
+      run: |
+        dnf update --assumeyes
+    - name: Install all
+      run: |
+        ls -lah **.rpm
+        dnf install --assumeyes **.rpm
