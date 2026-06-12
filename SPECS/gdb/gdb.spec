@@ -27,6 +27,7 @@ BuildOption(conf):  --with-system-readline
 BuildOption(conf):  --with-python=%{__python3}
 BuildOption(conf):  --with-gdb-datadir=%{_datadir}/gdb
 BuildOption(conf):  --with-system-gdbinit=%{_sysconfdir}/gdbinit
+BuildOption(conf):  --with-separate-debug-dir=/usr/lib/debug
 BuildOption(conf):  --enable-source-highlight
 BuildOption(conf):  --enable-tui
 BuildOption(conf):  --enable-languages=all
