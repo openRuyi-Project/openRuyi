@@ -71,7 +71,9 @@ Wayland protocols and features.
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Recommends:     pkgconfig(xcb-icccm)
+# wlr/xwayland/xwayland.h is installed even with xwayland disabled
+Requires:       pkgconfig(xcb-ewmh)
+Requires:       pkgconfig(xcb-icccm)
 
 %description    devel
 Development files for %{name}.
