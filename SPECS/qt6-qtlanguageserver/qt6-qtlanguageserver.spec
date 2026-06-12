@@ -15,7 +15,7 @@ Summary:        Qt6 - LanguageServer component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlanguageserver
-#!RemoteAsset
+#!RemoteAsset:  sha256:3360526b4f4d556673b31e29a49e15d02da52d5eaa53b0204d56a0ba160a556c
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -32,6 +32,7 @@ Server protocol.
 
 %package        devel
 Summary:        Development files for %{name}
+Requires:       pkgconfig(Qt6Core)
 
 %description    devel
 Development files for %{name}.
@@ -55,4 +56,4 @@ Development files for %{name}.
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %changelog
-%{?autochangelog}
+%autochangelog
