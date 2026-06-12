@@ -26,13 +26,8 @@ Requires:       rpm
 
 %sourcelist
 brp-openruyi
-find-provides.ksyms
-find-requires.ksyms
-find-supplements.ksyms
 firmware.attr
 firmware.prov
-kernel.attr
-kmp.attr
 macros
 macros.buildsystem
 macros.completions
@@ -40,7 +35,6 @@ macros.ldconfig
 macros.sbat
 macros.vendor
 macros.vpath
-modulesload.attr
 rpmrc
 
 %description
@@ -61,7 +55,6 @@ install -p -m 644 -t %{buildroot}%{_fileattrsdir} *.attr
 install -p -m 755 -t %{buildroot}%{_rpmconfigdir} brp-openruyi
 mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
 install -p -m 755 -t %{buildroot}%{_rpmconfigdir}/ *.prov
-install -p -m 755 -t %{buildroot}%{_rpmconfigdir}/ *.ksyms
 install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/macros.d macros.*
 
 %files
@@ -72,10 +65,6 @@ install -p -m 644 -t %{buildroot}%{_rpmconfigdir}/macros.d macros.*
 %{_rpmconfigdir}/fileattrs/*
 %{_rpmconfigdir}/brp-openruyi
 %{_rpmconfigdir}/firmware.prov
-# kmod deps
-%{_rpmconfigdir}/find-provides.ksyms
-%{_rpmconfigdir}/find-requires.ksyms
-%{_rpmconfigdir}/find-supplements.ksyms
 
 %changelog
 %autochangelog
