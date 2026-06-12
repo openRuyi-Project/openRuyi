@@ -57,6 +57,7 @@ notified upon idle time events, such as custom timeouts, or user activity.
 %package        devel
 Summary:        Build environment for kidletime, an idle time singleton
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       cmake(Qt6Core) >= %{qt6_version}
 
 %description    devel
 Development files for KIdleTime, which is a singleton reporting
