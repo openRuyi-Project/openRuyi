@@ -71,7 +71,8 @@ RPC protocols and file formats.
 %package        devel
 Summary:        Header files, libraries and development documentation for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Provides:       libprotobuf-devel
+Provides:       libprotobuf-devel = %{version}-%{release}
+Provides:       protobuf-compiler = %{version}-%{release}
 
 %description    devel
 Protocol Buffers are a way of encoding structured data in an efficient yet
