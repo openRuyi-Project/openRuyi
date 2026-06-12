@@ -44,6 +44,7 @@ for use in Python programs.
 %package        devel
 Summary:        Development files for embedding PyGObject introspection support
 Requires:       python3-gobject%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(python3)
 
 %description    devel
 This package contains files required to embed PyGObject introspection
