@@ -12,7 +12,7 @@ Summary:        Integer Set Library
 License:        MIT
 URL:            https://libisl.sourceforge.io/
 VCS:            git:https://repo.or.cz/isl.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6d8babb59e7b672e8cb7870e874f3f7b813b6e00e6af3f8b04f7579965643d5c
 Source:         https://libisl.sourceforge.io/isl-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -29,6 +29,7 @@ It is used by Cloog and the GCC Graphite optimization framework.
 %package        devel
 Summary:        Development tools for ISL
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(gmp)
 
 %description    devel
 Development tools and headers for the ISL.
@@ -48,4 +49,4 @@ rm -f  %{buildroot}%{_libdir}/libisl.so.*-gdb.py
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
