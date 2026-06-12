@@ -21,6 +21,7 @@ BuildRequires:  clang%{maj_ver}
 BuildRequires:  clang%{maj_ver}-devel
 BuildRequires:  clang%{maj_ver}-tools-extra
 BuildRequires:  clang%{maj_ver}-analyzer
+BuildRequires:  compiler-rt%{maj_ver}
 BuildRequires:  llvm-bolt%{maj_ver}
 BuildRequires:  lld%{maj_ver}
 BuildRequires:  lldb%{maj_ver}
@@ -106,6 +107,17 @@ Requires:       llvm%{maj_ver} > %{maj_ver}
 %description -n flang
 This package provides default unversioned symlinks for flang %{maj_ver},
 the Fortran frontend for LLVM.
+
+# ============================================================================
+# compiler-rt subpackage
+# ============================================================================
+%package     -n compiler-rt
+Summary:        Default LLVM compiler-rt runtime libraries
+Requires:       compiler-rt%{maj_ver} > %{maj_ver}
+
+%description -n compiler-rt
+This package depends on the default LLVM compiler-rt %{maj_ver} runtime
+libraries.
 
 # ============================================================================
 # llvm-bolt subpackage
@@ -335,6 +347,8 @@ fi
 %{_bindir}/bbc
 %{_bindir}/fir-opt
 %{_bindir}/tco
+
+%files -n compiler-rt
 
 %files -n llvm-bolt
 %{_bindir}/llvm-bolt
