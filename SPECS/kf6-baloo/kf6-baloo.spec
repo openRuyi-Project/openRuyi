@@ -78,6 +78,7 @@ package contains aditional command line utilities.
 Summary:        Development package for baloo6
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       lmdb-devel
+Requires:       cmake(KF6Config) >= %{_kf6_version}
 Requires:       cmake(KF6CoreAddons) >= %{_kf6_version}
 Requires:       cmake(KF6FileMetaData) >= %{_kf6_version}
 Requires:       cmake(Qt6Core) >= %{qt6_version}
