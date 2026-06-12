@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        ROCm BLAS marshalling library
 License:        MIT
 Url:            https://github.com/ROCm/hipBLAS
-#!RemoteAsset
+#!RemoteAsset:  sha256:4a77f19a6229a6135fc9e2ea8e7694efda984c654a11a8c650fa9480aaf1ca84
 Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
 BuildSystem:    cmake
 
@@ -49,6 +49,7 @@ hipBLAS supports rocBLAS and cuBLAS as backends.
 %package        devel
 Summary:        Libraries and headers for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       cmake(hip)
 Requires:       cmake(hipblas-common)
 
 %description    devel
@@ -72,4 +73,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/hipblas/LICENSE.md
 %{_libdir}/cmake/hipblas/
 
 %changelog
-%{?autochangelog}
+%autochangelog
