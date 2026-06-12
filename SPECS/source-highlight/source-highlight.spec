@@ -36,6 +36,7 @@ easily extended for handling new languages and output formats.
 %package        devel
 Summary:        Header files and development libraries for source-highlight
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       boost-devel
 
 %description    devel
 This package contains the header files, pkg-config files, and development libraries
