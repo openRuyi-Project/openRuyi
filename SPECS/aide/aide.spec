@@ -1,8 +1,11 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 # SPDX-FileContributor: BH1SCW <kongfanjun@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+%bcond selinux 1
 
 Name:           aide
 Version:        0.19.3
@@ -25,7 +28,11 @@ BuildOption(conf):  --with-nettle
 BuildOption(conf):  --with-zlib
 BuildOption(conf):  --with-curl
 BuildOption(conf):  --with-posix-acl
+%if %{with selinux}
 BuildOption(conf):  --with-selinux
+%else
+BuildOption(conf):  --without-selinux
+%endif
 BuildOption(conf):  --with-xattr
 BuildOption(conf):  --with-e2fsattrs
 BuildOption(conf):  --with-audit
@@ -40,7 +47,9 @@ BuildRequires:  pkgconfig(nettle)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(libacl)
+%if %{with selinux}
 BuildRequires:  pkgconfig(libselinux)
+%endif
 BuildRequires:  pkgconfig(libattr)
 BuildRequires:  pkgconfig(e2p)
 BuildRequires:  pkgconfig(audit)

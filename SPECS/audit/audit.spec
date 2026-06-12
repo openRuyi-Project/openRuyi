@@ -7,6 +7,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%bcond golang 1
+
 Name:           audit
 Version:        4.1.4
 Release:        %autorelease
@@ -26,6 +28,9 @@ BuildOption(conf):  --with-apparmor
 BuildOption(conf):  --with-libcap-ng=no
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --with-python3=no
+%if %{without golang}
+BuildOption(conf):  --with-golang=no
+%endif
 BuildOption(conf):  --disable-zos-remote
 
 BuildRequires:  autoconf >= 2.12

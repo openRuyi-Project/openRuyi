@@ -1,11 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+%bcond docs 1
+%bcond lto 1
+
+%if %{with lto}
+# Needed for symbol versioning.
+%global _lto_cflags -flto -ffat-lto-objects -flto-partition=none
+%endif
 
 Name:           alsa-lib
 Version:        1.2.15.3
@@ -27,7 +36,9 @@ BuildOption(conf):  --disable-alisp
 BuildOption(build):  V=1
 BuildOption(install):  DESTDIR=%{buildroot}
 
+%if %{with docs}
 BuildRequires:  doxygen
+%endif
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
@@ -61,15 +72,14 @@ against the ALSA libraries and interfaces.
 autoreconf -vif
 
 %build -p
-# Set custom LTO flags (needed for symbol versioning)
-%define _lto_cflags -flto -ffat-lto-objects -flto-partition=none
-
 # fix libtool rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool || :
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool || :
 
 %build -a
+%if %{with docs}
 %make_build doc
+%endif
 
 %install -a
 # Install global configuration files
@@ -100,7 +110,10 @@ rm -f %{buildroot}%{_includedir}/asoundlib.h
 %{_prefix}/lib/modprobe.d/dist-*
 
 %files devel
-%doc TODO doc/doxygen/
+%doc TODO
+%if %{with docs}
+%doc doc/doxygen/
+%endif
 %{_includedir}/alsa/
 %{_includedir}/sys/asoundlib.h
 %{_libdir}/libasound.so

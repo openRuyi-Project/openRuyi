@@ -1,11 +1,14 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+%bcond tests 1
 
 Name:           abseil-cpp
 Version:        20260107.0
@@ -31,12 +34,14 @@ BuildOption(conf):  -GNinja
 BuildOption(conf):  -DABSL_USE_EXTERNAL_GOOGLETEST:BOOL=ON
 BuildOption(conf):  -DABSL_FIND_GOOGLETEST:BOOL=ON
 BuildOption(conf):  -DABSL_ENABLE_INSTALL:BOOL=ON
-BuildOption(conf):  -DABSL_BUILD_TESTING:BOOL=ON
-BuildOption(conf):  -DABSL_BUILD_TEST_HELPERS:BOOL=ON
+BuildOption(conf):  -DABSL_BUILD_TESTING:BOOL=%{?with_tests:ON}%{!?with_tests:OFF}
+BuildOption(conf):  -DABSL_BUILD_TEST_HELPERS:BOOL=%{?with_tests:ON}%{!?with_tests:OFF}
 BuildOption(conf):  -DCMAKE_BUILD_TYPE:STRING=None
 BuildOption(conf):  -DCMAKE_CXX_STANDARD:STRING=17
+%if %{with tests}
 # TODO: Exclude flaky test. https://github.com/abseil/abseil-cpp/issues/1804
 BuildOption(check):  --exclude-regex absl_failure_signal_handler_test
+%endif
 
 # The contents of absl/time/internal/cctz are derived from
 # https://github.com/google/cctz (https://src.fedoraproject.org/rpms/cctz), but
@@ -65,6 +70,7 @@ Abseil is not meant to be a competitor to the standard library; we've just
 found that many of these utilities serve a purpose within our code base,
 and we now want to provide those resources to the C++ community as a whole.
 
+%if %{with tests}
 %package        testing
 Summary:        Libraries needed for running tests on the installed %{name}
 Requires:       %{name} = %{version}-%{release}
@@ -73,11 +79,14 @@ Provides:       bundled(cctz)
 
 %description    testing
 %{summary}.
+%endif
 
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if %{with tests}
 Requires:       %{name}-testing = %{version}-%{release}
+%endif
 
 # Some of the headers from CCTZ are part of the -devel subpackage. See the
 # corresponding virtual Provides in the base package for full details.
@@ -184,6 +193,7 @@ Development headers for %{name}
 %{_libdir}/libabsl_utf8_for_code_point.so.%{lib_version}
 %{_libdir}/libabsl_vlog_config_internal.so.%{lib_version}
 
+%if %{with tests}
 %files testing
 # TESTONLY libraries (that are actually installed):
 # absl/base/CMakeLists.txt
@@ -208,6 +218,7 @@ Development headers for %{name}
 %{_libdir}/libabsl_per_thread_sem_test_common.so.%{lib_version}
 # absl/time/CMakeLists.txt
 %{_libdir}/libabsl_time_internal_test_util.so.%{lib_version}
+%endif
 
 %files devel
 %{_includedir}/absl
@@ -221,7 +232,9 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_any.pc
 %{_libdir}/pkgconfig/absl_any_invocable.pc
 %{_libdir}/pkgconfig/absl_atomic_hook.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_atomic_hook_test_helper.pc
+%endif
 %{_libdir}/pkgconfig/absl_bad_any_cast.pc
 %{_libdir}/pkgconfig/absl_bad_optional_access.pc
 %{_libdir}/pkgconfig/absl_bad_variant_access.pc
@@ -232,7 +245,9 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_borrowed_fixup_buffer.pc
 %{_libdir}/pkgconfig/absl_bounded_utf8_length_sequence.pc
 %{_libdir}/pkgconfig/absl_btree.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_btree_test_common.pc
+%endif
 %{_libdir}/pkgconfig/absl_charset.pc
 %{_libdir}/pkgconfig/absl_check.pc
 %{_libdir}/pkgconfig/absl_chunked_queue.pc
@@ -249,14 +264,18 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_container_memory.pc
 %{_libdir}/pkgconfig/absl_cord.pc
 %{_libdir}/pkgconfig/absl_cord_internal.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_cord_rep_test_util.pc
 %{_libdir}/pkgconfig/absl_cord_test_helpers.pc
+%endif
 %{_libdir}/pkgconfig/absl_cordz_functions.pc
 %{_libdir}/pkgconfig/absl_cordz_handle.pc
 %{_libdir}/pkgconfig/absl_cordz_info.pc
 %{_libdir}/pkgconfig/absl_cordz_sample_token.pc
 %{_libdir}/pkgconfig/absl_cordz_statistics.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_cordz_test_helpers.pc
+%endif
 %{_libdir}/pkgconfig/absl_cordz_update_scope.pc
 %{_libdir}/pkgconfig/absl_cordz_update_tracker.pc
 %{_libdir}/pkgconfig/absl_core_headers.pc
@@ -274,8 +293,10 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_endian.pc
 %{_libdir}/pkgconfig/absl_errno_saver.pc
 %{_libdir}/pkgconfig/absl_examine_stack.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_exception_safety_testing.pc
 %{_libdir}/pkgconfig/absl_exception_testing.pc
+%endif
 %{_libdir}/pkgconfig/absl_exponential_biased.pc
 %{_libdir}/pkgconfig/absl_failure_signal_handler.pc
 %{_libdir}/pkgconfig/absl_fast_type_id.pc
@@ -302,10 +323,14 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_hash.pc
 %{_libdir}/pkgconfig/absl_hash_container_defaults.pc
 %{_libdir}/pkgconfig/absl_hash_function_defaults.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_hash_generator_testing.pc
 %{_libdir}/pkgconfig/absl_hash_policy_testing.pc
+%endif
 %{_libdir}/pkgconfig/absl_hash_policy_traits.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_hash_testing.pc
+%endif
 %{_libdir}/pkgconfig/absl_hashtable_control_bytes.pc
 %{_libdir}/pkgconfig/absl_hashtable_debug.pc
 %{_libdir}/pkgconfig/absl_hashtable_debug_hooks.pc
@@ -346,9 +371,11 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_log_internal_strip.pc
 %{_libdir}/pkgconfig/absl_log_internal_structured.pc
 %{_libdir}/pkgconfig/absl_log_internal_structured_proto.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_log_internal_test_actions.pc
 %{_libdir}/pkgconfig/absl_log_internal_test_helpers.pc
 %{_libdir}/pkgconfig/absl_log_internal_test_matchers.pc
+%endif
 %{_libdir}/pkgconfig/absl_log_internal_voidify.pc
 %{_libdir}/pkgconfig/absl_log_severity.pc
 %{_libdir}/pkgconfig/absl_log_sink.pc
@@ -370,10 +397,14 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_numeric_representation.pc
 %{_libdir}/pkgconfig/absl_optional.pc
 %{_libdir}/pkgconfig/absl_overload.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_per_thread_sem_test_common.pc
+%endif
 %{_libdir}/pkgconfig/absl_periodic_sampler.pc
 %{_libdir}/pkgconfig/absl_poison.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_pow10_helper.pc
+%endif
 %{_libdir}/pkgconfig/absl_prefetch.pc
 %{_libdir}/pkgconfig/absl_pretty_function.pc
 %{_libdir}/pkgconfig/absl_profile_builder.pc
@@ -382,14 +413,18 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_random_internal_distribution_caller.pc
 %{_libdir}/pkgconfig/absl_random_internal_distribution_test_util.pc
 %{_libdir}/pkgconfig/absl_random_internal_entropy_pool.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_random_internal_explicit_seed_seq.pc
+%endif
 %{_libdir}/pkgconfig/absl_random_internal_fast_uniform_bits.pc
 %{_libdir}/pkgconfig/absl_random_internal_fastmath.pc
 %{_libdir}/pkgconfig/absl_random_internal_generate_real.pc
 %{_libdir}/pkgconfig/absl_random_internal_iostream_state_saver.pc
 %{_libdir}/pkgconfig/absl_random_internal_mock_helpers.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_random_internal_mock_overload_set.pc
 %{_libdir}/pkgconfig/absl_random_internal_mock_validators.pc
+%endif
 %{_libdir}/pkgconfig/absl_random_internal_nonsecure_base.pc
 %{_libdir}/pkgconfig/absl_random_internal_pcg_engine.pc
 %{_libdir}/pkgconfig/absl_random_internal_platform.pc
@@ -400,11 +435,15 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_random_internal_randen_slow.pc
 %{_libdir}/pkgconfig/absl_random_internal_salted_seed_seq.pc
 %{_libdir}/pkgconfig/absl_random_internal_seed_material.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_random_internal_sequence_urbg.pc
+%endif
 %{_libdir}/pkgconfig/absl_random_internal_traits.pc
 %{_libdir}/pkgconfig/absl_random_internal_uniform_helper.pc
 %{_libdir}/pkgconfig/absl_random_internal_wide_multiply.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_random_mocking_bit_gen.pc
+%endif
 %{_libdir}/pkgconfig/absl_random_random.pc
 %{_libdir}/pkgconfig/absl_random_seed_gen_exception.pc
 %{_libdir}/pkgconfig/absl_random_seed_sequences.pc
@@ -414,16 +453,24 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_raw_logging_internal.pc
 %{_libdir}/pkgconfig/absl_requires_internal.pc
 %{_libdir}/pkgconfig/absl_sample_recorder.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_scoped_mock_log.pc
+%endif
 %{_libdir}/pkgconfig/absl_scoped_set_env.pc
 %{_libdir}/pkgconfig/absl_span.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_spinlock_test_common.pc
+%endif
 %{_libdir}/pkgconfig/absl_spinlock_wait.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_spy_hash_state.pc
 %{_libdir}/pkgconfig/absl_stack_consumption.pc
+%endif
 %{_libdir}/pkgconfig/absl_stacktrace.pc
 %{_libdir}/pkgconfig/absl_status.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_status_matchers.pc
+%endif
 %{_libdir}/pkgconfig/absl_statusor.pc
 %{_libdir}/pkgconfig/absl_str_format.pc
 %{_libdir}/pkgconfig/absl_str_format_internal.pc
@@ -435,16 +482,23 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_strings_resize_and_overwrite.pc
 %{_libdir}/pkgconfig/absl_symbolize.pc
 %{_libdir}/pkgconfig/absl_synchronization.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_test_allocator.pc
 %{_libdir}/pkgconfig/absl_test_instance_tracker.pc
 %{_libdir}/pkgconfig/absl_thread_pool.pc
+%endif
 %{_libdir}/pkgconfig/absl_throw_delegate.pc
 %{_libdir}/pkgconfig/absl_time.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_time_internal_test_util.pc
+%endif
 %{_libdir}/pkgconfig/absl_time_zone.pc
 %{_libdir}/pkgconfig/absl_tracing_internal.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_tracked.pc
+%endif
 %{_libdir}/pkgconfig/absl_type_traits.pc
+%if %{with tests}
 %{_libdir}/pkgconfig/absl_unordered_map_constructor_test.pc
 %{_libdir}/pkgconfig/absl_unordered_map_lookup_test.pc
 %{_libdir}/pkgconfig/absl_unordered_map_members_test.pc
@@ -453,6 +507,7 @@ Development headers for %{name}
 %{_libdir}/pkgconfig/absl_unordered_set_lookup_test.pc
 %{_libdir}/pkgconfig/absl_unordered_set_members_test.pc
 %{_libdir}/pkgconfig/absl_unordered_set_modifiers_test.pc
+%endif
 %{_libdir}/pkgconfig/absl_utf8_for_code_point.pc
 %{_libdir}/pkgconfig/absl_utility.pc
 %{_libdir}/pkgconfig/absl_variant.pc
