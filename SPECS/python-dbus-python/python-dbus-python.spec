@@ -48,6 +48,7 @@ This is a metapackage that requires the main Python 3 package.
 
 %package        devel
 Summary:        Libraries and headers for dbus-python
+Requires:       pkgconfig(python3)
 
 %description    devel
 This package contains the header files and static libraries needed for
