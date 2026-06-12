@@ -80,6 +80,8 @@ This package contains the libraries used by Dolphin and Konqueror.
 %package        devel
 Summary:        KDE File Manager
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       cmake(Qt6Core) >= %{qt6_version}
+Requires:       cmake(Qt6Gui) >= %{qt6_version}
 
 %description    devel
 This package contains the libraries used by Dolphin and Konqueror.
