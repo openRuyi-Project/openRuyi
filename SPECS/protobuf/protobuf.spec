@@ -71,6 +71,7 @@ RPC protocols and file formats.
 %package        devel
 Summary:        Header files, libraries and development documentation for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(zlib)
 Provides:       libprotobuf-devel = %{version}-%{release}
 Provides:       protobuf-compiler = %{version}-%{release}
 
