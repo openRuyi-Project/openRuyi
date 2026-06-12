@@ -66,6 +66,8 @@ BuildRequires:  pkgconfig(Qt6Xml)
 %package        devel
 Summary:        Libraries and headers for poppler
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(Qt6Core)
+Requires:       pkgconfig(Qt6Gui)
 
 %description    devel
 You should install the poppler-devel package if you would like to
