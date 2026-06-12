@@ -33,6 +33,7 @@ Python bindings for the cairo library.
 %package        devel
 Summary:        Development files for embedding pycairo
 Requires:       python3-%{srcname}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(python3)
 
 %description    devel
 This package contains files required to embed pycairo support
