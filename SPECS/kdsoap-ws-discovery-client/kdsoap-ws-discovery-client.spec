@@ -30,6 +30,7 @@ Library for finding WS-Discovery devices in the network using Qt6 and KDSoap.
 Summary:        Development libraries and header files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       cmake(KDSoap-qt6)
+Requires:       cmake(Qt6Core)
 
 %description    devel
 Development files for %{name}.
@@ -48,4 +49,4 @@ Development files for %{name}.
 %{_libdir}/libKDSoapWSDiscoveryClient.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
