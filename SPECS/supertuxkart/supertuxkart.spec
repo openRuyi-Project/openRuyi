@@ -19,6 +19,9 @@ BuildOption(conf):  -DBUILD_RECORDER=OFF
 BuildOption(conf):  -DUSE_SYSTEM_ANGELSCRIPT=ON
 BuildOption(conf):  -DUSE_SYSTEM_WIIUSE=ON
 BuildOption(conf):  -DOpenGL_GL_PREFERENCE=GLVND
+BuildOption(conf):  -DUSE_SYSTEM_SQUISH=ON
+BuildOption(conf):  -DSQUISH_LIBRARY=%{_libdir}/libsquish.so
+BuildOption(conf):  -DSQUISH_INCLUDEDIR=${PWD}/stk-squish-compat
 
 BuildRequires:  cmake
 BuildRequires:  pkgconfig
@@ -41,6 +44,7 @@ BuildRequires:  pkgconfig(sdl2)
 BuildRequires:  pkgconfig(shaderc)
 BuildRequires:  pkgconfig(vorbis)
 BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  cmake(libsquish)
 BuildRequires:  cmake(Angelscript)
 %ifnarch x86_64
 BuildRequires:  pkgconfig(egl)
@@ -60,6 +64,12 @@ BuildArch:      noarch
 
 %description    data
 Data files for SuperTuxKart a Free 3d kart racing game.
+
+%prep -a
+# supertuxkart expects <squish.h>, while this libsquish installs headers under /usr/include/squish/squish/.
+mkdir -p stk-squish-compat/squish
+ln -s %{_includedir}/squish/squish/squish.h stk-squish-compat/squish.h
+ln -s %{_includedir}/squish/squish/squish_export.h stk-squish-compat/squish/squish_export.h
 
 %files
 %doc CHANGELOG.md README.md
