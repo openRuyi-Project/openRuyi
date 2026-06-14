@@ -1,0 +1,81 @@
+From 71cbd79f8c541c091e1fc0a19c5b6ef1f17e8fc0 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 14 Jun 2026 23:45:46 +0800
+Subject: [PATCH] Don't let "local: *" hide a foo@@ default-versioned symbol
+
+A symbol exported with an empty default version (foo@@) was treated as a
+plain unversioned symbol, so a version script's "local: *" wildcard
+localized it and dropped it from the dynamic symbol table; GNU ld keeps
+it exported. Route foo@@ through parse_symbol_version() and assign it
+VER_NDX_GLOBAL so it overrides the wildcard.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/input-files.cc           |  5 +++++
+ src/passes.cc                |  7 +++++++
+ test/empty-default-symver.sh | 22 ++++++++++++++++++++++
+ 3 files changed, 34 insertions(+)
+ create mode 100755 test/empty-default-symver.sh
+
+diff --git a/src/input-files.cc b/src/input-files.cc
+index 4d5e35da82..aec3b95a9e 100644
+--- a/src/input-files.cc
++++ b/src/input-files.cc
+@@ -789,6 +789,11 @@ void ObjectFile<E>::initialize_symbols(Context<E> &ctx) {
+         if (ver.starts_with("@@"))
+           key = name;
+         has_symver[i - this->first_global] = true;
++      } else if (ver == "@@") {
++        // `foo@@` (default version, empty name): export as an unversioned
++        // global that overrides a `local: *` wildcard, as GNU ld does.
++        key = name;
++        has_symver[i - this->first_global] = true;
+       }
+     }
+ 
+diff --git a/src/passes.cc b/src/passes.cc
+index 8f9bb797f5..fb83625e7e 100644
+--- a/src/passes.cc
++++ b/src/passes.cc
+@@ -2196,6 +2196,13 @@ void parse_symbol_version(Context<E> &ctx) {
+         ver = ver.substr(1);
+       }
+ 
++      // Empty version (`foo@@`) is the unversioned default; export it
++      // globally, overriding any `local: *` from apply_version_script().
++      if (ver.empty()) {
++        sym->ver_idx = VER_NDX_GLOBAL;
++        continue;
++      }
++
+       auto it = verdefs.find(ver);
+       if (it == verdefs.end()) {
+         Error(ctx) << *file << ": symbol " << *sym <<  " has undefined version "
+diff --git a/test/empty-default-symver.sh b/test/empty-default-symver.sh
+new file mode 100755
+index 0000000000..ef81785f81
+--- /dev/null
++++ b/test/empty-default-symver.sh
+@@ -0,0 +1,22 @@
++#!/bin/bash
++. $(dirname $0)/common.inc
++
++# A symbol exported with the default version but an empty (base) version
++# name, i.e. `foo@@`, must be exported as a plain unversioned global even
++# when a version script hides everything else with `local: *`. The explicit
++# `@@` is an explicit export that takes precedence over the `local: *`
++# wildcard, just as GNU ld does. Ceph's librados depends on this: its
++# LIBRADOS_C_API_BASE_DEFAULT macro emits `.symver _fn, fn@@`.
++
++cat <<EOF | $CC -fPIC -c -o $t/a.o -xc -
++void _foo() {}
++__asm__(".symver _foo, foo@@");
++EOF
++
++echo '{ local: *; };' > $t/b.ver
++
++$CC -B. -shared -o $t/c.so $t/a.o \
++  -Wl,--version-script=$t/b.ver -Wl,--exclude-libs,ALL
++
++readelf --dyn-syms $t/c.so > $t/log
++grep -Eq ' FUNC +GLOBAL +DEFAULT +.*[0-9]+ foo$' $t/log

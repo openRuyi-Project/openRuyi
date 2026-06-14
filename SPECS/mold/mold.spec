@@ -16,9 +16,6 @@ URL:            https://github.com/rui314/mold
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
-# Allow building against the system-provided `xxhash.h`
-Patch0:         0001-Use-system-compatible-include-path-for-xxhash.h.patch
-
 BuildOption(conf):  -DMOLD_USE_SYSTEM_MIMALLOC=ON
 
 BuildRequires:  pkgconfig(libblake3)
@@ -33,6 +30,12 @@ BuildRequires:  pkgconfig(tbb)
 
 Requires(post): update-alternatives
 Requires(preun): update-alternatives
+
+%patchlist
+# Allow building against the system-provided `xxhash.h`
+1000-Use-system-compatible-include-path-for-xxhash.h.patch
+# https://github.com/rui314/mold/commit/71cbd79f8c541c091e1fc0a19c5b6ef1f17e8fc0
+1001-Don-t-let-local-hide-a-foo-default-versioned-symbol.patch
 
 %description
 mold is a faster drop-in replacement for existing Unix linkers.
