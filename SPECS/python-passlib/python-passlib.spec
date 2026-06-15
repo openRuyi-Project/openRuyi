@@ -17,6 +17,9 @@ Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
+# patch from https://src.fedoraproject.org/rpms/python-passlib/blob/cf445e70c3412153212988d45bcf8a3ebf3b208d/f/passlib-pkg_resources.patch
+Patch0:         0001-passlib-pkg_resources.patch
+
 BuildOption(install):  -l %{srcname} -L
 BuildOption(check):  -e passlib.ext.django.models
 
