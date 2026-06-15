@@ -6,21 +6,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           createrepo_c
-Version:        1.2.1
+Version:        1.2.4
 Release:        %autorelease
 Summary:        Creates a common metadata repository
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/createrepo_c
-#!RemoteAsset:  sha256:5252911bb5ab0732922e298348a94f0e348e0891935ff0876042ac1bd8c5eeed
+#!RemoteAsset:  sha256:4c980c2b5938694d36ab3117eb286b9ffa7187c768ac66e7805662a3dd22edf1
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
-# Part of https://github.com/rpm-software-management/createrepo_c/pull/438
-Patch0:         0001-fix-build-with-cmake-4.patch
-
 BuildOption(conf):  -DWITH_ZCHUNK=ON
 BuildOption(conf):  -DWITH_LIBMODULEMD=ON
-BuildOption(conf):  -DWITH_DRPM=ON
+BuildOption(conf):  -DENABLE_DRPM=ON
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
@@ -110,7 +107,7 @@ ln -sr %{buildroot}%{_bindir}/modifyrepo_c %{buildroot}%{_bindir}/modifyrepo
 %files -n python-%{name}
 %doc examples/python/*
 %{python3_sitearch}/createrepo_c/
-%{python3_sitearch}/createrepo_c-*-py%{python3_version}.egg-info
+%{python3_sitearch}/createrepo_c-*.dist-info/
 
 %changelog
 %autochangelog
