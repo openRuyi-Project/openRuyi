@@ -189,8 +189,7 @@ Patch200:       0001-20-polly-shared-libs.patch
 # to ignore it for these targets.
 Patch201:        0001-clang-Add-a-hack-to-fix-the-offload-build-with-the-m.patch
 
-BuildRequires:  gcc15
-BuildRequires:  gcc15-c++
+BuildRequires:  gcc-c++
 # %%if %%{defined host_clang_maj_ver}
 # BuildRequires:  clang(major) = %%{host_clang_maj_ver}
 # %%else
