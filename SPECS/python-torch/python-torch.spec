@@ -122,6 +122,8 @@ BuildRequires:  pkgconfig(nlohmann_json)
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  pkgconfig(openblas64)
 BuildRequires:  pkgconfig(protobuf)
+# Protobuf requires zlib, zlib RelWithDebInfo mode requires libz.a
+BuildRequires:  zlib-ng-compat-static
 BuildRequires:  pkgconfig(valgrind)
 BuildRequires:  pocketfft-devel
 BuildRequires:  pthreadpool-devel
