@@ -19,6 +19,9 @@ Source:         https://files.pythonhosted.org/packages/source/h/%{srcname}/%{sr
 BuildArch:      noarch
 BuildSystem:    pyproject
 
+# see https://github.com/html5lib/html5lib-python/pull/594
+Patch0:         0001-setup-py-except-importerror-for-missing-pkg.patch
+
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
