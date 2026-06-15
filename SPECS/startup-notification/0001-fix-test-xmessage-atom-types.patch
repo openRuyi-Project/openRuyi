@@ -1,0 +1,153 @@
+Fix type mismatch in test programs: intern atom names before broadcast
+
+The test programs test-send-xmessage.c and test-send-xmessage-xcb.c pass
+the command-line arguments argv[1]/argv[2] (atom *name* strings) straight
+to sn_internal_broadcast_xmessage(), whose corresponding parameters are
+xcb_atom_t (numeric atom IDs), not strings. Modern toolchains (GCC 14+
+treats implicit pointer-to-integer conversion as an error) therefore fail
+to compile the test directory, which breaks the whole package build.
+
+Add an intern_atom() helper that resolves each atom name to a real
+xcb_atom_t via xcb_intern_atom() before the broadcast call, pull in
+<stdlib.h>/<string.h> for strlen()/free(), and bail out on a NULL reply.
+
+These test sources are also installed as -devel examples (see %prep), so
+this keeps the shipped example code correct as well.
+
+Downstream fix: startup-notification 0.12 is the last upstream release and
+is effectively unmaintained, so there is no upstream commit to backport.
+
+Signed-off-by: yihong <yihong.or@isrc.iscas.ac.cn>
+---
+diff -ruN startup-notification-0.12.orig/test/test-send-xmessage-xcb.c startup-notification-0.12/test/test-send-xmessage-xcb.c
+--- startup-notification-0.12.orig/test/test-send-xmessage-xcb.c	2026-06-15 01:52:51
++++ startup-notification-0.12/test/test-send-xmessage-xcb.c	2026-06-15 01:52:51
+@@ -24,16 +24,42 @@
+  */
+ 
+ #include <config.h>
++#include <stdlib.h>
++#include <string.h>
+ #include <libsn/sn.h>
+ #include <libsn/sn-xmessages.h>
+ 
+ #include "test-boilerplate.h"
+ 
++static xcb_atom_t
++intern_atom (SnDisplay  *display,
++             const char *name)
++{
++  xcb_connection_t *xconnection;
++  xcb_intern_atom_cookie_t cookie;
++  xcb_intern_atom_reply_t *reply;
++  xcb_atom_t atom;
++
++  xconnection = sn_display_get_x_connection (display);
++  cookie = xcb_intern_atom (xconnection, 0, strlen (name), name);
++  reply = xcb_intern_atom_reply (xconnection, cookie, NULL);
++
++  if (reply == NULL)
++    return XCB_ATOM_NONE;
++
++  atom = reply->atom;
++  free (reply);
++
++  return atom;
++}
++
+ int
+ main (int argc, char **argv)
+ {
+   xcb_connection_t *xconnection;
+   SnDisplay *display;
++  xcb_atom_t message_type;
++  xcb_atom_t message_type_begin;
+ 
+   if (argc != 4)
+     {
+@@ -51,9 +77,17 @@
+ 
+   display = sn_xcb_display_new (xconnection, NULL, NULL);
+ 
++  message_type = intern_atom (display, argv[1]);
++  message_type_begin = intern_atom (display, argv[2]);
++  if (message_type == XCB_ATOM_NONE || message_type_begin == XCB_ATOM_NONE)
++    {
++      fprintf (stderr, "Could not intern message atoms\n");
++      return 1;
++    }
++
+   sn_internal_broadcast_xmessage (display, screen,
+-                                  argv[1],
+-                                  argv[2],
++                                  message_type,
++                                  message_type_begin,
+                                   argv[3]);
+ 
+   return 0;
+diff -ruN startup-notification-0.12.orig/test/test-send-xmessage.c startup-notification-0.12/test/test-send-xmessage.c
+--- startup-notification-0.12.orig/test/test-send-xmessage.c	2026-06-15 01:52:51
++++ startup-notification-0.12/test/test-send-xmessage.c	2026-06-15 01:52:51
+@@ -23,16 +23,42 @@
+  */
+ 
+ #include <config.h>
++#include <stdlib.h>
++#include <string.h>
+ #include <libsn/sn.h>
+ #include <libsn/sn-xmessages.h>
+ 
+ #include "test-boilerplate.h"
+ 
++static xcb_atom_t
++intern_atom (SnDisplay  *display,
++             const char *name)
++{
++  xcb_connection_t *xconnection;
++  xcb_intern_atom_cookie_t cookie;
++  xcb_intern_atom_reply_t *reply;
++  xcb_atom_t atom;
++
++  xconnection = sn_display_get_x_connection (display);
++  cookie = xcb_intern_atom (xconnection, 0, strlen (name), name);
++  reply = xcb_intern_atom_reply (xconnection, cookie, NULL);
++
++  if (reply == NULL)
++    return XCB_ATOM_NONE;
++
++  atom = reply->atom;
++  free (reply);
++
++  return atom;
++}
++
+ int
+ main (int argc, char **argv)
+ {
+   Display *xdisplay;
+   SnDisplay *display;
++  xcb_atom_t message_type;
++  xcb_atom_t message_type_begin;
+ 
+   if (argc != 4)
+     {
+@@ -56,9 +82,17 @@
+                             error_trap_push,
+                             error_trap_pop);
+   
++  message_type = intern_atom (display, argv[1]);
++  message_type_begin = intern_atom (display, argv[2]);
++  if (message_type == XCB_ATOM_NONE || message_type_begin == XCB_ATOM_NONE)
++    {
++      fprintf (stderr, "Could not intern message atoms\n");
++      return 1;
++    }
++
+   sn_internal_broadcast_xmessage (display, DefaultScreen (xdisplay),
+-                                  argv[1],
+-                                  argv[2],
++                                  message_type,
++                                  message_type_begin,
+                                   argv[3]);
+   
+   return 0;
