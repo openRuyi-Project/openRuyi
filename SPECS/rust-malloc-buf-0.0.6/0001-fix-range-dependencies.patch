@@ -1,0 +1,8 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -11,4 +11,4 @@
+ exclude = [".gitignore"]
+ 
+ [dependencies]
+-libc = ">= 0.1, < 0.3"
++libc = "0.2.186"

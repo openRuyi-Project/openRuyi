@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+%global crate_name id-arena
+%global full_version 2.3.0
+%global pkgname id-arena-2
+
+Name:           rust-id-arena-2
+Version:        2.3.0
+Release:        %autorelease
+Summary:        Rust crate "id-arena"
+License:        MIT OR Apache-2.0
+URL:            https://github.com/fitzgen/id-arena
+#!RemoteAsset:  sha256:3d3067d79b975e8844ca9eb072e16b31c3c1c36928edf9c6789548c524d0d954
+Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    rustcrates
+
+BuildRequires:  rust-rpm-macros
+
+Provides:       crate(%{pkgname}) = %{version}
+Provides:       crate(%{pkgname}/default) = %{version}
+Provides:       crate(%{pkgname}/std) = %{version}
+
+%description
+Source code for takopackized Rust crate "id-arena"
+
+%package     -n %{name}+rayon
+Summary:        Simple, id-based arena - feature "rayon"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(rayon-1/default) >= 1.0.3
+Provides:       crate(%{pkgname}/rayon) = %{version}
+
+%description -n %{name}+rayon
+This metapackage enables feature "rayon" for the Rust id-arena crate, by pulling in any additional dependencies needed by that feature.
+
+%files
+%{_datadir}/cargo/registry/%{crate_name}-%{version}/
+
+%changelog
+%autochangelog

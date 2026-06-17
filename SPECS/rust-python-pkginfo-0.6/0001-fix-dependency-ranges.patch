@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -78,7 +78,7 @@
+ package = "xz2"
+ 
+ [dependencies.zip]
+-version = ">=0.6,<9"
++version = "8.6.0"
+ features = ["deflate"]
+ default-features = false
+ 

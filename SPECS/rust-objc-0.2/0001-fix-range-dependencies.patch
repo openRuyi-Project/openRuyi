@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -22,7 +22,7 @@
+ license = "MIT"
+ repository = "http://github.com/SSheldon/rust-objc"
+ [dependencies.malloc_buf]
+-version = "0.0"
++version = "0.0.6"
+ 
+ [dependencies.objc_exception]
+ version = "0.1"

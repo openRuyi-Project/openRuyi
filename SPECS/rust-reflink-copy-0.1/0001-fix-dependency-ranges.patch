@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -113,7 +113,7 @@
+ version = "0.2.169"
+ 
+ [target."cfg(windows)".dependencies.windows]
+-version = ">=0.61.0,<0.63.0"
++version = "0.62.2"
+ features = [
+     "Win32_Storage_FileSystem",
+     "Win32_Foundation",
