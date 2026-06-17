@@ -55,6 +55,12 @@ repos:
        entry: scripts/pre-commit-hooks/check_source_with_remoteasset.py
        files: \.spec$
        pass_filenames: true
+    -  id: check-rust-cargo-toml
+       name: "Check Cargo.toml for crate related specs"
+       language: python
+       entry: scripts/pre-commit-hooks/check_rust_cargo_toml.py
+       files: ^SPECS/[^/]+/(Cargo\.toml|[^/]+\.spec)$
+       pass_filenames: true
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
