@@ -1,0 +1,18 @@
+[package]
+name = "rpds-py"
+version = "0.30.0"
+edition = "2021"
+
+[lib]
+name = "rpds"
+crate-type = ["cdylib"]
+
+[dependencies]
+rpds = "1.2.0"
+archery = "1.2.2"
+
+[dependencies.pyo3]
+version = "0.27.2"
+# To build extension for PyPy on Windows, "generate-import-lib" is needed:
+# https://github.com/PyO3/maturin-action/issues/267#issuecomment-2106844429
+features = ["extension-module", "generate-import-lib"]

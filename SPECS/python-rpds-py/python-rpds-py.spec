@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,12 +19,11 @@ BuildSystem:    pyproject
 
 BuildOption(install):  rpds
 
-BuildRequires:  cargo
-BuildRequires:  crate(archery-1.0/default) >= 1.2.2
+BuildRequires:  crate(archery-1/default) >= 1.2.2
 BuildRequires:  crate(pyo3-0.27/default) >= 0.27.2
 BuildRequires:  crate(pyo3-0.27/extension-module) >= 0.27.2
 BuildRequires:  crate(pyo3-0.27/generate-import-lib) >= 0.27.2
-BuildRequires:  crate(rpds-1.0/default) >= 1.2.0
+BuildRequires:  crate(rpds-1/default) >= 1.2.0
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(maturin)
@@ -39,19 +39,21 @@ Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 rpds-py provides Python bindings to Rust's persistent data structures.
 
 %prep -a
-mkdir -p ~/.cargo
-cat > ~/.cargo/config.toml <<EOF
-[source.crates-io]
-replace-with = "system-registry"
-
-[source.system-registry]
-directory = "/usr/share/cargo/registry"
-EOF
+%rust_setup_registry
 
 rm -f Cargo.lock
 sed -e '/^[[:space:]]*\\(rpds\\|archery\\)[[:space:]]*=/ s/= *"/= ">=/' \
   -e '/\\bpyo3\\b/ s/version *= *"/version = ">=/' \
   -i Cargo.toml
+
+%build -p
+%ifarch riscv64
+# Work around rustc SIGSEGV while compiling pyo3 under release optimization.
+export RUST_MIN_STACK=33554432
+export CARGO_BUILD_JOBS=1
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=1
+export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=256
+%endif
 
 %generate_buildrequires
 %pyproject_buildrequires
