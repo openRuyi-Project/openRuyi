@@ -13,7 +13,7 @@
 %bcond bootstrap 0
 %endif
 
-%bcond  static        0
+%bcond  static        1
 # For -tests subpackage.
 %bcond  tests         0
 %bcond  doc           0
@@ -94,6 +94,10 @@ This package contains the essential runtime libraries and tools.
 %package        devel
 Summary:        Development files for the GLib library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if %{with static}
+Provides:       %{name}-static = %{version}-%{release}
+Provides:       %{name}-static%{?_isa} = %{version}-%{release}
+%endif
 
 %description    devel
 This package contains the header files, libraries, and developer tools
@@ -180,6 +184,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/bash-completion/completions/gsettings
 
 %files devel
+%if %{with static}
+%{_libdir}/lib*.a
+%endif
 %{_libdir}/lib*.so
 %dir %{_libdir}/glib-2.0
 %dir %{_libdir}/glib-2.0/include
