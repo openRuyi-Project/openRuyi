@@ -40,6 +40,7 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(golang.org/x/text)
 BuildRequires:  go(google.golang.org/genproto/googleapis/rpc)
 BuildRequires:  go(google.golang.org/grpc)
+BuildRequires:  go(google.golang.org/grpc/examples)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc/security/advancedtls) = %{version}
