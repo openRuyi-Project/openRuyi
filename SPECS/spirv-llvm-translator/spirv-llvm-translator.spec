@@ -6,14 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           spirv-llvm-translator
-Version:        21.1.3
+Version:        22.1.3
 Release:        %autorelease
 Summary:        LLVM to SPIRV Translator
 License:        NCSA
 URL:            https://github.com/KhronosGroup/SPIRV-LLVM-Translator
-#!RemoteAsset
+#!RemoteAsset:  sha256:8d3d5c31c1ff355dbbf87046f1b94cd1ab5390439a817679ec71484df74cac18
 Source0:        https://github.com/KhronosGroup/SPIRV-LLVM-Translator/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
+
+# This change is not applicable in the SPIRV-Headers vulkan-sdk-1.4.350.0 version.
+Patch2000:      2000-Revert-Remove-internal-values-for-SPV_INTEL_predicat.patch
 
 BuildOption(conf):  -DLLVM_BUILD_TOOLS=ON
 BuildOption(conf):  -DCMAKE_INSTALL_RPATH:BOOL=";"
@@ -26,7 +29,7 @@ BuildRequires:  cmake
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  ninja
-BuildRequires:  llvm-devel
+BuildRequires:  (cmake(LLVM) >= 22 with cmake(LLVM) < 23)
 BuildRequires:  pkgconfig(SPIRV-Headers)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libxml-2.0)
@@ -55,4 +58,4 @@ Development files for LLVM to SPIRV Translator.
 %{_libdir}/pkgconfig/LLVMSPIRVLib.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
