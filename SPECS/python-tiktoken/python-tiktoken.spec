@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Yifan Xu <xuyifan@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,21 +24,24 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(setuptools-rust)
 BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(regex)
+BuildRequires:  python3dist(requests)
 BuildRequires:  rust-rpm-macros
 BuildRequires:  rust
-BuildRequires:  cargo
-BuildRequires:  crate(pyo3-0.28/extension-module)
-BuildRequires:  crate(pyo3-macros-0.28)
-BuildRequires:  crate(bstr-1.0)
+BuildRequires:  crate(pyo3-0.26/extension-module) >= 0.26.0
+BuildRequires:  crate(pyo3-0.26/macros) >= 0.26.0
+BuildRequires:  crate(pyo3-macros-0.26/default) >= 0.26.0
+BuildRequires:  crate(bstr-1)
 BuildRequires:  crate(fancy-regex-0.13)
 BuildRequires:  crate(bit-set-0.5)
-BuildRequires:  crate(regex-1.0)
-BuildRequires:  crate(rustc-hash-2.0)
+BuildRequires:  crate(regex-1)
+BuildRequires:  crate(rustc-hash-2)
 BuildRequires:  crate(regex-automata-0.4)
-BuildRequires:  crate(serde-1.0)
-BuildRequires:  crate(indoc-2.0)
+BuildRequires:  crate(serde-1)
+BuildRequires:  crate(indoc-2)
 BuildRequires:  crate(unindent-0.2)
-BuildRequires:  crate(aho-corasick-1.0)
+BuildRequires:  crate(aho-corasick-1)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
@@ -46,14 +50,8 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 tiktoken is a fast BPE tokeniser for use with OpenAI's models.
 
 %prep -a
-mkdir -p ~/.cargo
-cat > ~/.cargo/config.toml <<EOF
-[source.crates-io]
-replace-with = "system-registry"
-
-[source.system-registry]
-directory = "/usr/share/cargo/registry"
-EOF
+%rust_setup_registry
+rm -f Cargo.lock
 
 sed -e '/^[[:space:]]*\(fancy-regex\|regex\|rustc-hash\|bstr\)[[:space:]]*=/ s/= *"/= ">=/' \
   -e '/\bpyo3\b/ s/version *= *"/version = ">=/' \

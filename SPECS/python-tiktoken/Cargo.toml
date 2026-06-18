@@ -1,0 +1,26 @@
+[package]
+name = "tiktoken"
+version = "0.12.0"
+edition = "2024"
+
+[lib]
+name = "tiktoken"
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+python = [
+    "pyo3",
+]
+
+[dependencies]
+pyo3 = { version = "0.26.0", default-features = false, features = [
+    "extension-module",
+    "macros",
+], optional = true }
+
+# tiktoken dependencies
+fancy-regex = "0.13.0"
+regex = "1.10.3"
+rustc-hash = "2"
+bstr = "1.5.0"
