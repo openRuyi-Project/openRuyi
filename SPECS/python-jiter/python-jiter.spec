@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,17 +19,17 @@ BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
 
-BuildRequires:  cargo
 BuildRequires:  crate(ahash-0.8/default) >= 0.8.0
-BuildRequires:  crate(bitvec-1.0/default) >= 1.0.1
-BuildRequires:  crate(lexical-parse-float-1.0/format) >= 1.0.5
+BuildRequires:  crate(autocfg-1/default) >= 1.5.0
+BuildRequires:  crate(bitvec-1/default) >= 1.0.1
+BuildRequires:  crate(lexical-parse-float-1/format) >= 1.0.5
 BuildRequires:  crate(num-bigint-0.4/default) >= 0.4.4
 BuildRequires:  crate(num-traits-0.2/default) >= 0.2.16
 BuildRequires:  crate(pyo3-0.28/default) >= 0.28.2
 BuildRequires:  crate(pyo3-0.28/generate-import-lib) >= 0.28.2
 BuildRequires:  crate(pyo3-0.28/num-bigint) >= 0.28.2
 BuildRequires:  crate(pyo3-build-config-0.28/default) >= 0.28.2
-BuildRequires:  crate(smallvec-1.0/default) >= 1.11.0
+BuildRequires:  crate(smallvec-1/default) >= 1.11.0
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(maturin)
@@ -45,14 +46,7 @@ jiter is a high-performance iterable JSON parser used by pydantic ecosystem
 components.
 
 %prep -a
-mkdir -p ~/.cargo
-cat > ~/.cargo/config.toml <<EOF
-[source.crates-io]
-replace-with = "system-registry"
-
-[source.system-registry]
-directory = "/usr/share/cargo/registry"
-EOF
+%rust_setup_registry
 
 rm -f Cargo.lock
 # Cargo metadata resolves dev/bench dependencies even though this package only
