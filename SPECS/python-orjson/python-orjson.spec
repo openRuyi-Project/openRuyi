@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -37,6 +38,15 @@ orjson is a fast, correct JSON library for Python. It benchmarks as
 the fastest Python library for JSON and is more correct than the standard
 json library or other third-party libraries. It serializes dataclass,
 datetime, numpy, and UUID instances natively.
+
+%build -p
+%ifarch riscv64
+# Work around rustc SIGSEGV while compiling pyo3 under release optimization.
+export RUST_MIN_STACK=33554432
+export CARGO_BUILD_JOBS=1
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=1
+export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=256
+%endif
 
 %generate_buildrequires
 %pyproject_buildrequires
