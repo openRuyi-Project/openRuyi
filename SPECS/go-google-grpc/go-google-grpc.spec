@@ -34,7 +34,7 @@ Release:        %autorelease
 Summary:        The Go language implementation of gRPC. HTTP/2 based RPC
 License:        Apache-2.0
 URL:            https://github.com/grpc/grpc-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:e1ca23743f34564f85b2e67336deeb4fd6d466d2cf13f962dda25e9cda51f774
 Source0:        https://github.com/grpc/grpc-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -79,9 +79,14 @@ and HTTP/2 first. For more information see the Go gRPC docs
 start (https://grpc.io/docs/languages/go/quickstart).
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
+# These directories are standalone Go modules packaged separately; keep the
+# root grpc package from owning the same files. - HNO3Miracle
+%exclude %{go_sys_gopath}/%{go_import_path}/examples
+%exclude %{go_sys_gopath}/%{go_import_path}/gcp/observability
+%exclude %{go_sys_gopath}/%{go_import_path}/security/advancedtls
 
 %changelog
-%{?autochangelog}
+%autochangelog
