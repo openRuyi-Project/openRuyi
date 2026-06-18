@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -22,27 +23,33 @@ BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  cargo
 BuildRequires:  rust
 BuildRequires:  rust-rpm-macros
 BuildRequires:  python3dist(maturin)
 BuildRequires:  python3dist(pip)
 BuildRequires:  crate(ahash-0.8/default) >= 0.8.12
-BuildRequires:  crate(mac-address-1.0/default) >= 1.1.8
+BuildRequires:  crate(mac-address-1/default) >= 1.1.8
 BuildRequires:  crate(memoffset-0.9/default) >= 0.9.1
 BuildRequires:  crate(pyo3-0.28/default) >= 0.28.3
 BuildRequires:  crate(pyo3-0.28/extension-module) >= 0.28.3
 BuildRequires:  crate(pyo3-0.28/generate-import-lib) >= 0.28.3
 BuildRequires:  crate(rand-0.10/default) >= 0.10.1
-BuildRequires:  crate(uuid-1.0/default) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/fast-rng) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v1) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v3) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v4) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v5) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v6) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v7) >= 1.23.1
-BuildRequires:  crate(uuid-1.0/v8) >= 1.23.1
+BuildRequires:  crate(uuid-1/default) >= 1.23.1
+BuildRequires:  crate(uuid-1/fast-rng) >= 1.23.1
+BuildRequires:  crate(uuid-1/v1) >= 1.23.1
+BuildRequires:  crate(uuid-1/v3) >= 1.23.1
+BuildRequires:  crate(uuid-1/v4) >= 1.23.1
+BuildRequires:  crate(uuid-1/v5) >= 1.23.1
+BuildRequires:  crate(uuid-1/v6) >= 1.23.1
+BuildRequires:  crate(uuid-1/v7) >= 1.23.1
+BuildRequires:  crate(uuid-1/v8) >= 1.23.1
+BuildRequires:  crate(winapi-0.3) >= 0.3.9
+BuildRequires:  crate(winapi-0.3/default) >= 0.3.9
+BuildRequires:  crate(winapi-0.3/winerror) >= 0.3.9
+BuildRequires:  crate(winapi-0.3/ws2def) >= 0.3.9
+BuildRequires:  crate(winapi-0.3/iphlpapi) >= 0.3.9
+BuildRequires:  crate(winapi-i686-pc-windows-gnu-0.4/default) >= 0.4.0
+BuildRequires:  crate(winapi-x86-64-pc-windows-gnu-0.4/default) >= 0.4.0
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
@@ -53,14 +60,7 @@ uuid-utils is a fast replacement for Python's uuid module, implemented with
 Rust and exposed as a Python extension module.
 
 %prep -a
-mkdir -p ~/.cargo
-cat > ~/.cargo/config.toml <<EOF
-[source.crates-io]
-replace-with = "system-registry"
-
-[source.system-registry]
-directory = "/usr/share/cargo/registry"
-EOF
+%rust_setup_registry
 rm -rf Cargo.lock
 
 %generate_buildrequires
