@@ -4,32 +4,32 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name proptest
-%global full_version 1.0.0
+%global full_version 1.11.0
 %global pkgname proptest-1
 
 Name:           rust-proptest-1
-Version:        1.0.0
+Version:        1.11.0
 Release:        %autorelease
 Summary:        Rust crate "proptest"
 License:        MIT OR Apache-2.0
-URL:            https://altsysrq.github.io/proptest-book/proptest/index.html
-#!RemoteAsset:  sha256:1e0d9cc07f18492d879586c92b485def06bc850da3118075cd45d50e9c95b0e5
+URL:            https://proptest-rs.github.io/proptest/proptest/index.html
+#!RemoteAsset:  sha256:4b45fcc2344c680f5025fe57779faef368840d0bd1f42f216291f0dc4ace4744
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(bitflags-1/default) >= 1.0.1
-Requires:       crate(byteorder-1) >= 1.2.3
-Requires:       crate(num-traits-0.2) >= 0.2.2
-Requires:       crate(rand-0.8/alloc) >= 0.8.0
-Requires:       crate(rand-chacha-0.3) >= 0.3.0
-Requires:       crate(rand-xorshift-0.3/default) >= 0.3.0
+Requires:       crate(bitflags-2/default) >= 2.10.0
+Requires:       crate(num-traits-0.2) >= 0.2.15
+Requires:       crate(rand-0.9/alloc) >= 0.9.0
+Requires:       crate(rand-chacha-0.9) >= 0.9.0
+Requires:       crate(rand-xorshift-0.4/default) >= 0.4.0
+Requires:       crate(unarray-0.1/default) >= 0.1.4
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/atomic64bit) = %{version}
-Provides:       crate(%{pkgname}/break-dead-code) = %{version}
+Provides:       crate(%{pkgname}/f16) = %{version}
 Provides:       crate(%{pkgname}/unstable) = %{version}
 
 %description
@@ -38,36 +38,27 @@ Source code for takopackized Rust crate "proptest"
 %package     -n %{name}+bit-set
 Summary:        Hypothesis-like property-based testing and shrinking - feature "bit-set"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(bit-set-0.5/default) >= 0.5.0
+Requires:       crate(bit-set-0.8/default) >= 0.8.0
+Requires:       crate(bit-vec-0.8/default) >= 0.8.0
 Provides:       crate(%{pkgname}/bit-set) = %{version}
 
 %description -n %{name}+bit-set
 This metapackage enables feature "bit-set" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+default
-Summary:        Hypothesis-like property-based testing and shrinking - feature "default"
+Summary:        Hypothesis-like property-based testing and shrinking - feature "default" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/bit-set) = %{version}
-Requires:       crate(%{pkgname}/break-dead-code) = %{version}
 Requires:       crate(%{pkgname}/fork) = %{version}
 Requires:       crate(%{pkgname}/std) = %{version}
 Requires:       crate(%{pkgname}/timeout) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
+Provides:       crate(%{pkgname}/default-code-coverage) = %{version}
 
 %description -n %{name}+default
 This metapackage enables feature "default" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
 
-%package     -n %{name}+default-code-coverage
-Summary:        Hypothesis-like property-based testing and shrinking - feature "default-code-coverage"
-Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(%{pkgname}/bit-set) = %{version}
-Requires:       crate(%{pkgname}/fork) = %{version}
-Requires:       crate(%{pkgname}/std) = %{version}
-Requires:       crate(%{pkgname}/timeout) = %{version}
-Provides:       crate(%{pkgname}/default-code-coverage) = %{version}
-
-%description -n %{name}+default-code-coverage
-This metapackage enables feature "default-code-coverage" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
+Additionally, this package also provides the "default-code-coverage" feature.
 
 %package     -n %{name}+fork
 Summary:        Hypothesis-like property-based testing and shrinking - feature "fork"
@@ -80,28 +71,31 @@ Provides:       crate(%{pkgname}/fork) = %{version}
 %description -n %{name}+fork
 This metapackage enables feature "fork" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
 
-%package     -n %{name}+lazy-static
-Summary:        Hypothesis-like property-based testing and shrinking - feature "lazy_static"
+%package     -n %{name}+no-std
+Summary:        Hypothesis-like property-based testing and shrinking - feature "no_std"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(lazy-static-1/default) >= 1.2.0
-Provides:       crate(%{pkgname}/lazy-static) = %{version}
+Requires:       crate(num-traits-0.2/libm) >= 0.2.15
+Provides:       crate(%{pkgname}/no-std) = %{version}
 
-%description -n %{name}+lazy-static
-This metapackage enables feature "lazy_static" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
+%description -n %{name}+no-std
+This metapackage enables feature "no_std" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
 
-%package     -n %{name}+quick-error
-Summary:        Hypothesis-like property-based testing and shrinking - feature "quick-error"
+%package     -n %{name}+proptest-macro
+Summary:        Hypothesis-like property-based testing and shrinking - feature "proptest-macro" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(quick-error-2/default) >= 2.0.0
-Provides:       crate(%{pkgname}/quick-error) = %{version}
+Requires:       crate(proptest-macro-0.5/default) >= 0.5.0
+Provides:       crate(%{pkgname}/attr-macro) = %{version}
+Provides:       crate(%{pkgname}/proptest-macro) = %{version}
 
-%description -n %{name}+quick-error
-This metapackage enables feature "quick-error" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
+%description -n %{name}+proptest-macro
+This metapackage enables feature "proptest-macro" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
+
+Additionally, this package also provides the "attr-macro" feature.
 
 %package     -n %{name}+regex-syntax
 Summary:        Hypothesis-like property-based testing and shrinking - feature "regex-syntax"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(regex-syntax-0.6/default) >= 0.6.0
+Requires:       crate(regex-syntax-0.8/default) >= 0.8.0
 Provides:       crate(%{pkgname}/regex-syntax) = %{version}
 
 %description -n %{name}+regex-syntax
@@ -117,19 +111,20 @@ Provides:       crate(%{pkgname}/rusty-fork) = %{version}
 This metapackage enables feature "rusty-fork" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+std
-Summary:        Hypothesis-like property-based testing and shrinking - feature "std"
+Summary:        Hypothesis-like property-based testing and shrinking - feature "std" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(%{pkgname}/lazy-static) = %{version}
-Requires:       crate(%{pkgname}/quick-error) = %{version}
 Requires:       crate(%{pkgname}/regex-syntax) = %{version}
-Requires:       crate(byteorder-1/std) >= 1.2.3
-Requires:       crate(num-traits-0.2/std) >= 0.2.2
-Requires:       crate(rand-0.8/alloc) >= 0.8.0
-Requires:       crate(rand-0.8/std) >= 0.8.0
+Requires:       crate(num-traits-0.2/std) >= 0.2.15
+Requires:       crate(rand-0.9/alloc) >= 0.9.0
+Requires:       crate(rand-0.9/os-rng) >= 0.9.0
+Requires:       crate(rand-0.9/std) >= 0.9.0
+Provides:       crate(%{pkgname}/handle-panics) = %{version}
 Provides:       crate(%{pkgname}/std) = %{version}
 
 %description -n %{name}+std
 This metapackage enables feature "std" for the Rust proptest crate, by pulling in any additional dependencies needed by that feature.
+
+Additionally, this package also provides the "handle-panics" feature.
 
 %package     -n %{name}+tempfile
 Summary:        Hypothesis-like property-based testing and shrinking - feature "tempfile"
@@ -153,7 +148,7 @@ This metapackage enables feature "timeout" for the Rust proptest crate, by pulli
 %package     -n %{name}+x86
 Summary:        Hypothesis-like property-based testing and shrinking - feature "x86" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(x86-0.33/default) >= 0.33.0
+Requires:       crate(x86-0.52/default) >= 0.52.0
 Provides:       crate(%{pkgname}/hardware-rng) = %{version}
 Provides:       crate(%{pkgname}/x86) = %{version}
 
