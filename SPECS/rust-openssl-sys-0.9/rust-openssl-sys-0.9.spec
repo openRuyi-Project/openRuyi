@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name openssl-sys
-%global full_version 0.9.115
+%global full_version 0.9.117
 %global pkgname openssl-sys-0.9
 
 Name:           rust-openssl-sys-0.9
-Version:        0.9.115
+Version:        0.9.117
 Release:        %autorelease
 Summary:        Rust crate "openssl-sys"
 License:        MIT
 URL:            https://github.com/rust-openssl/rust-openssl
-#!RemoteAsset:  sha256:158fe5b292746440aa6e7a7e690e55aeb72d41505e2804c23c6973ad0e9c9781
+#!RemoteAsset:  sha256:b47e7e6bb2c38cd930d25a23b40fa52e068c10e85f3e03a7f5ba5aaca5713695
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -33,8 +33,8 @@ Source code for takopackized Rust crate "openssl-sys"
 %package     -n %{name}+aws-lc
 Summary:        FFI bindings to OpenSSL - feature "aws-lc"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(aws-lc-sys-0.39/default) >= 0.39.0
-Requires:       crate(aws-lc-sys-0.39/ssl) >= 0.39.0
+Requires:       crate(aws-lc-sys-0.41/default) >= 0.41.0
+Requires:       crate(aws-lc-sys-0.41/ssl) >= 0.41.0
 Provides:       crate(%{pkgname}/aws-lc) = %{version}
 
 %description -n %{name}+aws-lc
