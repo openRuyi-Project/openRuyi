@@ -11,9 +11,9 @@
 
 [package]
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.86"
 name = "cargo-platform"
-version = "0.3.2"
+version = "0.3.1"
 build = false
 autolib = false
 autobins = false
@@ -40,11 +40,8 @@ path = "examples/matches.rs"
 name = "test_cfg"
 path = "tests/test_cfg.rs"
 
-[dependencies.serde_core]
-version = "1.0.228"
-
-[target."cfg(any())".dependencies.serde]
-version = "1.0.228"
+[dependencies.serde]
+version = "1.0.219"
 
 [lints.clippy]
 dbg_macro = "warn"

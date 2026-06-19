@@ -4,24 +4,23 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name cargo-platform
-%global full_version 0.3.2
+%global full_version 0.3.1
 %global pkgname cargo-platform-0.3
 
 Name:           rust-cargo-platform-0.3
-Version:        0.3.2
+Version:        0.3.1
 Release:        %autorelease
 Summary:        Rust crate "cargo-platform"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/cargo
-#!RemoteAsset:  sha256:87a0c0e6148f11f01f32650a2ea02d532b2ad4e81d8bd41e6e565b5adc5e6082
+#!RemoteAsset:  sha256:122ec45a44b270afd1402f351b782c676b173e3c3fb28d86ff7ebfb4d86a4ee4
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(serde-1/default) >= 1.0.228
-Requires:       crate(serde-core-1/default) >= 1.0.228
+Requires:       crate(serde-1/default) >= 1.0.219
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 
