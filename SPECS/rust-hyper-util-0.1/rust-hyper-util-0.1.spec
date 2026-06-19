@@ -18,6 +18,8 @@ Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/do
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
+Patch0:         0001-fix-range-dependencies.patch
+
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(bytes-1/default) >= 1.7.1
@@ -86,7 +88,7 @@ This metapackage enables feature "client-proxy" for the Rust hyper-util crate, b
 Summary:        Hyper utilities - feature "client-proxy-system"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(system-configuration-0.7/default) >= 0.7.0
-Requires:       crate(windows-registry-0.3/default) >= 0.3.0
+Requires:       crate(windows-registry-0.6/default) >= 0.6.0
 Provides:       crate(%{pkgname}/client-proxy-system) = %{version}
 
 %description -n %{name}+client-proxy-system
