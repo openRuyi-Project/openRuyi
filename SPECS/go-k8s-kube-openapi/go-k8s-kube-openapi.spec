@@ -11,9 +11,12 @@
 # default {} in test/integration with "property S is missing". The
 # pkg/validation/spec tests also generate very large randomized OpenAPI
 # specimens; GitHub Actions stops the package build while running
-# TestGnosticConversionLargeDeterministic. Keep the rest of %check enabled.
+# TestGnosticConversionLargeDeterministic. The pkg/generators tests import
+# the removed golang.org/x/tools/go/packages/packagestest test helper. Keep
+# the rest of %check enabled.
 # - HNO3Miracle
 %define go_test_exclude %{shrink:
+    %{go_import_path}/pkg/generators
     %{go_import_path}/pkg/validation/spec
     %{go_import_path}/test/integration
 }
@@ -65,7 +68,6 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(golang.org/x/text)
 BuildRequires:  go(golang.org/x/tools)
 BuildRequires:  go(golang.org/x/tools/go/expect)
-BuildRequires:  go(golang.org/x/tools/go/packages/packagestest)
 BuildRequires:  go(google.golang.org/protobuf)
 BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go(k8s.io/gengo)
@@ -110,7 +112,6 @@ Requires:       go(golang.org/x/sys)
 Requires:       go(golang.org/x/text)
 Requires:       go(golang.org/x/tools)
 Requires:       go(golang.org/x/tools/go/expect)
-Requires:       go(golang.org/x/tools/go/packages/packagestest)
 Requires:       go(google.golang.org/protobuf)
 Requires:       go(gopkg.in/yaml.v3)
 Requires:       go(k8s.io/gengo)
