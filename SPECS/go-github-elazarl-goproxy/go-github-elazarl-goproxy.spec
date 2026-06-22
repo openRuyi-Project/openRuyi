@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,12 +18,12 @@
 }
 
 Name:           go-github-elazarl-goproxy
-Version:        1.8.3
+Version:        1.8.4
 Release:        %autorelease
 Summary:        Customizable HTTP/HTTPS proxy library for Go
 License:        BSD-3-Clause
 URL:            https://github.com/elazarl/goproxy
-#!RemoteAsset:  sha256:265928cc5d79b863f7c050f1807528e82e37a10f161dae866a5e1a6b40c63d2e
+#!RemoteAsset:  sha256:2b3cfa8105528451d44bd1a34c70095f9001642cd5c9195c0fc35b01c83d5b27
 Source0:        https://github.com/elazarl/goproxy/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
