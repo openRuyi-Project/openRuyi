@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/go-playground/validator/v10
 
 Name:           go-github-go-playground-validator-v10
-Version:        10.30.2
+Version:        10.30.3
 Release:        %autorelease
 Summary:        Go Struct and Field validation, including Cross Field, Cross Struct, Map, Slice and Array diving
 License:        MIT
 URL:            https://github.com/go-playground/validator
-#!RemoteAsset:  sha256:41015ce564a1ac935a30d8fd3282d4e3ae765e6445b3184802906e172c7a44ad
+#!RemoteAsset:  sha256:7dedb01374e766d34b63d9242c8407478ebcdba5802a2c66296a10a9316d58fe
 Source0:        https://github.com/go-playground/validator/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
