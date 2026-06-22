@@ -1,0 +1,9 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -51,5 +51,5 @@
+ path = "src/lib.rs"
+ 
+ [dependencies.wasi]
+-version = ">= 0.13, < 0.15"
++version = ">= 0.14, < 0.15"
+ default-features = false
