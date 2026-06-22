@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,12 +13,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-getkin-kin-openapi
-Version:        0.138.0
+Version:        0.140.0
 Release:        %autorelease
 Summary:        OpenAPI and Swagger implementation for Go
 License:        MIT
 URL:            https://github.com/getkin/kin-openapi
-#!RemoteAsset:  sha256:d50ea27d6e644012011135f15b8876b1db561dde4721a7ab28c8e0010633fc11
+#!RemoteAsset:  sha256:2bfcf8e28d5e25275abfe09b60a4b03e19f06e76a785c28a315684a04e141d8a
 Source0:        https://github.com/getkin/kin-openapi/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
