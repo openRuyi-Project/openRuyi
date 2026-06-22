@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,12 +13,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-github-googlecloudplatform-opentelemetry-operations-go-detectors-gcp
-Version:        1.32.0
+Version:        1.33.0
 Release:        %autorelease
 Summary:        GCP resource detector for OpenTelemetry
 License:        Apache-2.0
 URL:            https://github.com/GoogleCloudPlatform/opentelemetry-operations-go
-#!RemoteAsset:  sha256:1854804e4ae88e377cc847ab34d999a4501ca2754dd92b86729e4469f2db6f8b
+#!RemoteAsset:  sha256:83607c359c60844ea5b173c3ede557990936d7ed18fd9c13f10017638f8b1ee7
 Source0:        https://github.com/GoogleCloudPlatform/opentelemetry-operations-go/archive/refs/tags/detectors/gcp/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
