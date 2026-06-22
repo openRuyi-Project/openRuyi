@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-consumer-consumertest
-Version:        0.152.0
+Version:        0.154.0
 Release:        %autorelease
 Summary:        Test helpers for OpenTelemetry Collector consumers
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:96b37818813fd2d19dbb436cd345ec69976ec2cef2aae1aacc4efdc5ec514907
+#!RemoteAsset:  sha256:578939ed4eb93a48dba7e7b28429c40d8d5fa80954349e3aaa111b05ea0222bf
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/consumer/consumertest/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
