@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/mattn/go-runewidth
 
 Name:           go-github-mattn-go-runewidth
-Version:        0.0.23
+Version:        0.0.24
 Release:        %autorelease
 Summary:        wcwidth for golang
 License:        MIT
 URL:            https://github.com/mattn/go-runewidth
-#!RemoteAsset:  sha256:a224c045a32c51ecd08bb89171edc4e0e51cf796e5e55eb6a47b5c8e91fbdc14
+#!RemoteAsset:  sha256:c88b8da9811e94310db1d5b3f10aebb0d218af2084b548c1dc9a84a0c4daf983
 Source0:        https://github.com/mattn/go-runewidth/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
