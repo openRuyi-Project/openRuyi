@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: corestudy <2760018909@qq.com>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,51 +13,66 @@ License:        Apache-2.0 AND MIT AND Zlib
 Summary:        Authoritative DNS server for A/AAAA container records
 URL:            https://github.com/containers/aardvark-dns
 #!RemoteAsset:  sha256:25b39bfad079a03862825b2f9db8b71b82fc80aad5552a9c76ea912edc9b889e
-Source0:        %{url}/archive/v%{version}.tar.gz
-# TODO: use our own crates in the future
-#!RemoteAsset:  sha256:009198f042f150d42025c8a0456bb7a98293c9deeb012d37b2d364f44e52288f
-Source1:        %{url}/releases/download/v%{version}/%{name}-v%{version}-vendor.tar.gz
-# TODO: use build system cargo in the future
-BuildSystem:    autotools
+Source0:        https://github.com/containers/aardvark-dns/archive/v%{version}.tar.gz
+BuildSystem:    rust
 
-BuildOption(build):  CARGO="cargo --offline"
-BuildOption(install):  DESTDIR=%{buildroot}
-BuildOption(install):  PREFIX=%{_prefix}
+# Relax the clap requirement to allow compatible 4.x providers.
+Patch2000:      2000-fix-version.patch
+
+BuildOption(build):  -- --bin aardvark-dns
 
 BuildRequires:  cargo
-BuildRequires:  make
 BuildRequires:  rust
+BuildRequires:  rust-rpm-macros
+BuildRequires:  crate(arc-swap-1/default) >= 1.9.1
+BuildRequires:  crate(chrono-0.4/default) >= 0.4.44
+BuildRequires:  crate(clap-4/default) >= 4.6.1
+BuildRequires:  crate(clap-4/derive) >= 4.6.1
+BuildRequires:  crate(flume-0.11/default) >= 0.11.1
+BuildRequires:  crate(futures-0.3/default) >= 0.3.32
+BuildRequires:  crate(futures-util-0.3) >= 0.3.32
+BuildRequires:  crate(hickory-client-0.25/default) >= 0.25.2
+BuildRequires:  crate(hickory-proto-0.25/default) >= 0.25.2
+BuildRequires:  crate(hickory-proto-0.25/tokio) >= 0.25.2
+BuildRequires:  crate(hickory-server-0.25/default) >= 0.25.2
+BuildRequires:  crate(inotify-0.11/default) >= 0.11.1
+BuildRequires:  crate(libc-0.2/default) >= 0.2.186
+BuildRequires:  crate(log-0.4/default) >= 0.4.30
+BuildRequires:  crate(nix-0.30/default) >= 0.30.1
+BuildRequires:  crate(nix-0.30/fs) >= 0.30.1
+BuildRequires:  crate(nix-0.30/net) >= 0.30.1
+BuildRequires:  crate(nix-0.30/signal) >= 0.30.1
+BuildRequires:  crate(syslog-7/default) >= 7.0.0
+BuildRequires:  crate(tokio-1/default) >= 1.52.3
+BuildRequires:  crate(tokio-1/macros) >= 1.52.3
+BuildRequires:  crate(tokio-1/net) >= 1.52.3
+BuildRequires:  crate(tokio-1/rt-multi-thread) >= 1.52.3
+BuildRequires:  crate(tokio-1/signal) >= 1.52.3
 
 %description
 %{summary}
 
-Forwards other request to configured resolvers.
+Forwards other requests to configured resolvers.
 Read more about configuration in `src/backend/mod.rs`.
 
-%prep -a
-tar xzf %{SOURCE1}
-mkdir -p .cargo
-cat << EOF > .cargo/config.toml
-[target.'cfg(linux)']
-runner = 'unshare -rn'
+%build -p
+%ifarch riscv64
+export RUST_MIN_STACK=16777216
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=2
+%endif
 
-[source.crates-io]
-replace-with = "vendored-sources"
-
-[source.vendored-sources]
-directory = "vendor"
-EOF
-
-%conf
-# there's no configure
+%install
+install -Dm0755 target/release/aardvark-dns %{buildroot}%{_libexecdir}/podman/aardvark-dns
 
 %check
-# there's no check
+# Upstream's integration tests require network namespace setup, bats, and a
+# container-oriented environment. Keep the build check minimal here.
 
 %files
+%doc README.md
 %license LICENSE
 %dir %{_libexecdir}/podman
-%{_libexecdir}/podman/%{name}
+%{_libexecdir}/podman/aardvark-dns
 
 %changelog
 %autochangelog
