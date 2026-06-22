@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,12 +18,12 @@
 %define go_test_exclude_glob %{go_import_path}/internal/benchmarks
 
 Name:           go-googlecloud-go-storage
-Version:        1.62.2
+Version:        1.62.3
 Release:        %autorelease
 Summary:        Storage client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:38afa699c95151053154d1ab2605148a05768e41ade567c6dc15920562893a79
+#!RemoteAsset:  sha256:92812ab80e4f7886eb85670c7f9ab4d1985ed79e98df4affc4ed24acd8454304
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/storage/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
