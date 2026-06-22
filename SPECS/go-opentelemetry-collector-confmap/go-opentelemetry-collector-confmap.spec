@@ -57,9 +57,22 @@ Requires:       go(go.yaml.in/yaml/v3)
 %description
 This package provides the confmap module used by the OpenTelemetry Collector.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd confmap
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd confmap
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README*
 %license LICENSE*
+%exclude %{go_sys_gopath}/%{go_import_path}/xconfmap
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
