@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,12 +11,12 @@
 %define go_test_exclude_glob github.com/prometheus/common/config*
 
 Name:           go-github-prometheus-common
-Version:        0.67.5
+Version:        0.69.0
 Release:        %autorelease
 Summary:        Go libraries shared across Prometheus components and libraries.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/common
-#!RemoteAsset
+#!RemoteAsset:  sha256:327ca7a5df6d625e920e3f138d56e2b4e81e74be7b9b8f02a94f07ad025b0791
 Source0:        https://github.com/prometheus/common/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -65,4 +66,4 @@ without any stability guarantees for external usage.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
