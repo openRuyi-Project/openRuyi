@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-klauspost-reedsolomon
-Version:        1.14.0
+Version:        1.14.1
 Release:        %autorelease
 Summary:        Reed-Solomon Erasure Coding in Go
 License:        MIT
 URL:            https://github.com/klauspost/reedsolomon
-#!RemoteAsset:  sha256:b412deb6576daf24ad3c32d8051837a9b0986d578be54a00660404063cd47ee9
+#!RemoteAsset:  sha256:463e17215802eebc63f59c6598931cf001172556eb35f9042b0d43775aaf6bbd
 Source0:        https://github.com/klauspost/reedsolomon/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
