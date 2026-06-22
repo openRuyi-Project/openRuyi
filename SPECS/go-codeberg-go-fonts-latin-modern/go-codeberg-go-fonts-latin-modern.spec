@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  codeberg.org/go-fonts/latin-modern
 
 Name:           go-codeberg-go-fonts-latin-modern
-Version:        0.5.0
+Version:        0.6.0
 Release:        %autorelease
 Summary:        Latin Modern fonts for Go
 License:        BSD-3-Clause
 URL:            https://codeberg.org/go-fonts/latin-modern
-#!RemoteAsset
+#!RemoteAsset:  sha256:6642281f585cf6ce22eed052c3bd5d9dbd277b2b2079d1a17a771fd732494c9f
 Source0:        https://codeberg.org/go-fonts/latin-modern/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +38,4 @@ This package provides the Latin Modern fonts as importable Go packages.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
