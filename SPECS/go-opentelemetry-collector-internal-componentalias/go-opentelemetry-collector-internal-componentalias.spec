@@ -48,6 +48,18 @@ Requires:       go(go.opentelemetry.io/collector/component)
 %description
 This package provides the Go library go.opentelemetry.io/collector/internal/componentalias.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd internal/componentalias
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd internal/componentalias
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
