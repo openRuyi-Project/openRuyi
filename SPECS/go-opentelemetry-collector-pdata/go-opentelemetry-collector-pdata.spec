@@ -54,6 +54,18 @@ Requires:       go(google.golang.org/protobuf)
 %description
 This package provides the pdata module used by OpenTelemetry Collector.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd pdata
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd pdata
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
