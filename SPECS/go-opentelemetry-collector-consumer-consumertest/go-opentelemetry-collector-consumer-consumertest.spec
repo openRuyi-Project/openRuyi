@@ -45,6 +45,23 @@ Requires:       go(go.opentelemetry.io/collector/pdata)
 %description
 This package provides the Go library go.opentelemetry.io/collector/consumer/consumertest.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd consumer/consumertest
+%buildsystem_golangmodules_install
+popd
+
+%check
+# consumertest imports the parent consumer module while tests run from a nested
+# module, so copy the parent module into GOPATH first. - HNO3Miracle
+export GO111MODULE=off
+export GOPATH=%{_builddir}/go:%{_datadir}/gocode
+rm -rf "%{_builddir}/go/src/go.opentelemetry.io/collector/consumer"
+mkdir -p "%{_builddir}/go/src/go.opentelemetry.io/collector"
+cp -a consumer "%{_builddir}/go/src/go.opentelemetry.io/collector/consumer"
+go test -v %{go_test_include}
+
 %files
 %doc README.md
 %license LICENSE
