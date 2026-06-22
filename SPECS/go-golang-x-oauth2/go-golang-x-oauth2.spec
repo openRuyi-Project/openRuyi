@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,13 +11,13 @@
 %define go_test_exclude_glob golang.org/x/oauth2/google*
 
 Name:           go-golang-x-oauth2
-Version:        0.34.0
+Version:        0.36.0
 Release:        %autorelease
 Summary:        Go supplementary network libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/oauth2
 VCS:            git:https://github.com/golang/oauth2
-#!RemoteAsset:  sha256:7b5aa72ed4631661a3a8fafbc779724296b57d946bd2c0d5e513e48c8e83329f
+#!RemoteAsset:  sha256:77008e6b04072af4be6dd94027ab5667ebfd56e8798a20bc36f0b1bcf37a31ab
 Source0:        https://github.com/golang/oauth2/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
