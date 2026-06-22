@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,12 +11,12 @@
 %define go_test_exclude git.sr.ht/~sbinet/gg/examples
 
 Name:           go-sourcehut-sbinet-gg
-Version:        0.7.0
+Version:        0.8.0
 Release:        %autorelease
 Summary:        gg is a library for rendering 2D graphics in pure Go.
 License:        MIT
 URL:            https://git.sr.ht/~sbinet/gg
-#!RemoteAsset
+#!RemoteAsset:  sha256:98f484fe3a31394c22568d9531940c8c6d8e704aaee6ccdf5aae1100bf55406e
 Source0:        https://git.sr.ht/~sbinet/gg/archive/v%{version}.tar.gz#/%{_name}-v%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -53,4 +54,4 @@ seem to be maintained (as of January 2022).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
