@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/gkampitakis/go-snaps
 
 Name:           go-github-gkampitakis-go-snaps
-Version:        0.5.21
+Version:        0.5.22
 Release:        %autorelease
 Summary:        Snapshot testing library for Go
 License:        MIT
 URL:            https://github.com/gkampitakis/go-snaps
-#!RemoteAsset:  sha256:0247c0c438d88a86a5ef0baa2ab768c1644f5163d5696589586d60bc38a008f6
+#!RemoteAsset:  sha256:9d933869757da87b2e1897275c594945b746ce356abb25c58800af4c7a52e893
 Source0:        https://github.com/gkampitakis/go-snaps/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
