@@ -8,12 +8,12 @@
 %define go_import_path  github.com/ajg/form
 
 Name:           go-github-ajg-form
-Version:        1.6
+Version:        1.7.1
 Release:        %autorelease
 Summary:        A Form Encoding & Decoding Package for Go
 License:        BSD-3-Clause
 URL:            https://github.com/ajg/form
-#!RemoteAsset
+#!RemoteAsset:  sha256:a336ae5e7407ba63b099cd1fca4423fd7174e082c7ced9751b6faa06f9f16f69
 Source0:        https://github.com/ajg/form/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +37,4 @@ both of which natively employ said format.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
