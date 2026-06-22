@@ -9,6 +9,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond tools 1
+%bcond rust  1
 
 # Whether dtbs needed for arch
 %ifarch riscv64
@@ -16,6 +17,8 @@
 %else
 %global need_dtbs 0
 %endif
+
+%global _lto_cflags %{nil}
 
 #### About Versioning
 #
@@ -89,6 +92,11 @@ BuildRequires:  pkgconfig(libtraceevent)
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  systemtap-sdt-devel
+%endif
+%if %{with rust}
+BuildRequires:  bindgen
+BuildRequires:  cargo
+BuildRequires:  rust
 %endif
 
 # Meta-package: default installation
