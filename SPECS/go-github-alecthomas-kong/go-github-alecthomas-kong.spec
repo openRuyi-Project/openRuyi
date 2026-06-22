@@ -8,12 +8,12 @@
 %define go_import_path  github.com/alecthomas/kong
 
 Name:           go-github-alecthomas-kong
-Version:        1.13.0
+Version:        1.15.0
 Release:        %autorelease
 Summary:        Kong is a command-line parser for Go
 License:        MIT
 URL:            https://github.com/alecthomas/kong
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff69c50b4b62512665078c1ea3b5a01c29b1621e2240b8c3df4c610e1ca15dc6
 Source0:        https://github.com/alecthomas/kong/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,4 +41,4 @@ struct.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
