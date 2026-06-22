@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,7 +24,7 @@
 }
 
 Name:           go-k8s-client-go
-Version:        0.35.3
+Version:        0.36.2
 Release:        %autorelease
 Summary:        Kubernetes client libraries for Go
 License:        Apache-2.0
