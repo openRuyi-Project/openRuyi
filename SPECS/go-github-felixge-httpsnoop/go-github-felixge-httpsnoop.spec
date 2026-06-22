@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/felixge/httpsnoop
 
 Name:           go-github-felixge-httpsnoop
-Version:        1.0.4
+Version:        1.1.0
 Release:        %autorelease
 Summary:        Capture HTTP response metrics from Go handlers
 License:        MIT
 URL:            https://github.com/felixge/httpsnoop
-#!RemoteAsset:  sha256:ffb63ba081e4c2360342dea2079d08b8560c315b2f458885fd34639786a1aa3d
+#!RemoteAsset:  sha256:767c50ae2aed966409a2f6bb1db15ee4ab5938345a5170c6d783b164cdf62503
 Source0:        https://github.com/felixge/httpsnoop/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
