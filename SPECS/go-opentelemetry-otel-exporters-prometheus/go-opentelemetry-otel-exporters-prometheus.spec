@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,12 +10,12 @@
 %define go_source_subdir exporters/prometheus
 
 Name:           go-opentelemetry-otel-exporters-prometheus
-Version:        0.65.0
+Version:        0.66.0
 Release:        %autorelease
 Summary:        Prometheus exporter for OpenTelemetry Go
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-go
-#!RemoteAsset:  sha256:661e5fb88fe193071d43aae3fc4291bf1c5f92432ceb51431500effb6211756f
+#!RemoteAsset:  sha256:23ca11bd9c06a5e1c044a8e7097577e8739e8f699b2eb6a16544f23fa111cf74
 Source0:        https://github.com/open-telemetry/opentelemetry-go/archive/refs/tags/exporters/prometheus/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
