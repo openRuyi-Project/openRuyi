@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # set -x
+set -Eeuo pipefail
 export REPO=openruyi
 export OSC="$DRYRUN osc"
 export BEFORE_COMMIT=$1
