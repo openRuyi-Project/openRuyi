@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-confmap
-Version:        1.58.0
+Version:        1.60.0
 Release:        %autorelease
 Summary:        Configuration map module for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:26b3084cff71f916207af40d37ee0c4ac4d036e3831af1d58aae1b72f7a779be
+#!RemoteAsset:  sha256:552c821c50a3eac08d56e3b85623eec7e72283a36c38bbd0458b15d4905c911b
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/confmap/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
