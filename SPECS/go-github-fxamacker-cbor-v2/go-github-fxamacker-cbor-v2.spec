@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/fxamacker/cbor/v2
 
 Name:           go-github-fxamacker-cbor-v2
-Version:        2.9.0
+Version:        2.9.2
 Release:        %autorelease
 Summary:        CBOR codec for Go
 License:        MIT
 URL:            https://github.com/fxamacker/cbor
-#!RemoteAsset:  sha256:c7fb6ae1c3fb7628e88ba299f7bd0f89ad9ebc76294dde0a93305246c1895d67
+#!RemoteAsset:  sha256:90f3c51efe3b890da613f90e5a0aa5a41e600b576dbe8043fb55af9c89d688c0
 Source0:        https://github.com/fxamacker/cbor/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
