@@ -43,9 +43,22 @@ Requires:       go(go.opentelemetry.io/collector/pdata)
 %description
 This package provides the consumer module used by OpenTelemetry Collector.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd consumer
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd consumer
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
+%exclude %{go_sys_gopath}/%{go_import_path}/consumertest
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
