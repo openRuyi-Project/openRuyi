@@ -55,6 +55,13 @@ repos:
        entry: |
          There should only be subdirectories under SPECS
        files: '^SPECS/[^/]+$'
+    -  id: dont-add-constraints-to-repo
+       name: "Don't add _constraints to spec directory"
+       language: fail
+       entry: |
+         _constraints should not be placed in the git repository
+         It should be configured in the obs repository.
+       files: ^SPECS/.*/_constraints$
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
