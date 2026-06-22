@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,12 +10,12 @@
 %define go_source_subdir internal/resourcemapping
 
 Name:           go-github-googlecloudplatform-opentelemetry-operations-go-internal-resourcemapping
-Version:        0.56.0
+Version:        0.57.0
 Release:        %autorelease
 Summary:        Resource mapping helpers for OpenTelemetry Google Cloud exporters
 License:        Apache-2.0
 URL:            https://github.com/GoogleCloudPlatform/opentelemetry-operations-go
-#!RemoteAsset:  sha256:1fb2308d9aad853f7fba330f21b68ee45ab31a7f69add6a043c3ba9700ecb6fb
+#!RemoteAsset:  sha256:55bc2d1af36cf1434e0177649899e7a7f13658573bbf42d0dfbbd122c60c7bbd
 Source0:        https://github.com/GoogleCloudPlatform/opentelemetry-operations-go/archive/refs/tags/internal/resourcemapping/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
