@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-github-googlecloudplatform-opentelemetry-operations-go-internal-cloudmock
-Version:        0.56.0
+Version:        0.57.0
 Release:        %autorelease
 Summary:        Cloud mock helpers for OpenTelemetry Google Cloud tests
 License:        Apache-2.0
 URL:            https://github.com/GoogleCloudPlatform/opentelemetry-operations-go
-#!RemoteAsset:  sha256:7eab1e3f5395e12e19d2eaa7ae8a121918698ddd4ce74e640408343d785dffbe
+#!RemoteAsset:  sha256:aaa36606b4c3faa27e33fa6b97c1027dd4547f87c2edc1357044876e5f33b17d
 Source0:        https://github.com/GoogleCloudPlatform/opentelemetry-operations-go/archive/refs/tags/internal/cloudmock/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
