@@ -56,6 +56,24 @@ Requires:       go(go.opentelemetry.io/collector/pipeline)
 %description
 This package provides the processor module used by OpenTelemetry Collector.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd processor
+%buildsystem_golangmodules_install
+popd
+
+%check
+# processor imports collector/internal/componentalias from the same upstream
+# module tree, so copy the parent collector tree into GOPATH before testing
+# this module. - HNO3Miracle
+export GO111MODULE=off
+export GOPATH=%{_builddir}/go:%{_datadir}/gocode
+rm -rf "%{_builddir}/go/src/go.opentelemetry.io/collector"
+mkdir -p "%{_builddir}/go/src/go.opentelemetry.io"
+cp -a . "%{_builddir}/go/src/go.opentelemetry.io/collector"
+go test -v %{go_test_include}
+
 %files
 %doc README.md
 %license LICENSE
