@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-featuregate
-Version:        1.58.0
+Version:        1.60.0
 Release:        %autorelease
 Summary:        Feature gate module for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:3c5995207bd322d28cbd82643e8856fb20ee3fb63a959b7c048f8d11b088aa1f
+#!RemoteAsset:  sha256:ecdd56f1c46976a0621f7bf558d7dd3d8b7ba0ef85d95ad03b2d93bf4ef8a3b9
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/featuregate/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
