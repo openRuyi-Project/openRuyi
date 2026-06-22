@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  codeberg.org/go-latex/latex
 
 Name:           go-codeberg-go-latex-latex
-Version:        0.2.0
+Version:        0.3.0
 Release:        %autorelease
 Summary:        Go package for LaTeX
 License:        BSD-3-Clause
 URL:            https://codeberg.org/go-latex/latex
-#!RemoteAsset
+#!RemoteAsset:  sha256:84e97e9929c43a369e3b2f48106e0a77e0090f36f553b79dd83640efe4f532a0
 Source0:        https://codeberg.org/go-latex/latex/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -57,4 +58,4 @@ like LaTeX or TeX.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
