@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/mdlayher/socket
 
 Name:           go-github-mdlayher-socket
-Version:        0.6.0
+Version:        0.6.1
 Release:        %autorelease
 Summary:        Low-level network connection helpers for Go
 License:        MIT
 URL:            https://github.com/mdlayher/socket
-#!RemoteAsset:  sha256:4832cc911767d0a22f3b7c4288518d51c522ed43ee0b3128554952c1b9016c6e
+#!RemoteAsset:  sha256:a638875c80b00c1327586e58132f535c79383870b10636e1e95ad3421bb3c599
 Source0:        https://github.com/mdlayher/socket/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
