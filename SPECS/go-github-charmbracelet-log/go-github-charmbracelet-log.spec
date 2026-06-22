@@ -8,12 +8,12 @@
 %define go_import_path  github.com/charmbracelet/log
 
 Name:           go-github-charmbracelet-log
-Version:        0.4.2
+Version:        1.0.0
 Release:        %autorelease
 Summary:        A minimal, colorful Go logging library 🪵
 License:        MIT
 URL:            https://github.com/charmbracelet/log
-#!RemoteAsset
+#!RemoteAsset:  sha256:8aa793a2932ab2fa9a2ea276e4205aed262319b6097e952c533e35e545789834
 Source0:        https://github.com/charmbracelet/log/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -58,4 +58,4 @@ customizable colorful human readable logging with batteries included.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
