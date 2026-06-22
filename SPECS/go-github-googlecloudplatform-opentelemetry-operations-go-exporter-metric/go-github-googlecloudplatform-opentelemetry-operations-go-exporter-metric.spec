@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,12 +13,12 @@
 %define go_test_exclude %{go_import_path}
 
 Name:           go-github-googlecloudplatform-opentelemetry-operations-go-exporter-metric
-Version:        0.56.0
+Version:        0.57.0
 Release:        %autorelease
 Summary:        Google Cloud Monitoring metric exporter for OpenTelemetry
 License:        Apache-2.0
 URL:            https://github.com/GoogleCloudPlatform/opentelemetry-operations-go
-#!RemoteAsset:  sha256:6d1fdf539e4ac1b4942c288b1148098602dde4b3aac9e152831566b5661ca22f
+#!RemoteAsset:  sha256:cd7769b387d312bae444e31b86f372ca7e7146a0fbf229e6a26223776e4775ec
 Source0:        https://github.com/GoogleCloudPlatform/opentelemetry-operations-go/archive/refs/tags/exporter/metric/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
