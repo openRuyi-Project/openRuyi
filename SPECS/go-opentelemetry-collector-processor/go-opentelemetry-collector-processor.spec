@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-processor
-Version:        1.58.0
+Version:        1.60.0
 Release:        %autorelease
 Summary:        Processor APIs for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:07bd1e20ee2c5bbfc0a368dd7f114da35cabb6c937d58f557550056878bb6453
+#!RemoteAsset:  sha256:9dc3c8a05024e02d95f961cb89512141dba6f96eea9397449a4886d2f925a7ea
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/processor/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
