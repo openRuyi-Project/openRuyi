@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,12 +13,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-github-knadh-koanf-v2
-Version:        2.3.4
+Version:        2.3.5
 Release:        %autorelease
 Summary:        Lightweight extensible configuration management library for Go
 License:        MIT
 URL:            https://github.com/knadh/koanf
-#!RemoteAsset:  sha256:6d0673028357e83bb9ac1b54329763a8acdc13a717f69416f4859dce81f4e184
+#!RemoteAsset:  sha256:beafb4b58bbbf8446d71f10ff2c17681448318b9efc43bf98f34811e047aca4c
 Source0:        https://github.com/knadh/koanf/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
