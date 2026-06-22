@@ -30,6 +30,10 @@ Provides:       crate(%{pkgname}/unsupported) = %{version}
 %description
 Source code for takopackized Rust crate "xattr"
 
+%prep -a
+# Upstream helper scripts are packaged as source files only, not runtime executables.
+find . -type f -name '*.sh' -exec chmod a-x {} +
+
 %files
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
