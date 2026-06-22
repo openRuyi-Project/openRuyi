@@ -50,6 +50,18 @@ Requires:       go(go.uber.org/zap)
 %description
 This package provides the component module used by OpenTelemetry Collector.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd component
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd component
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
