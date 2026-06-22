@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,12 +17,12 @@
 }
 
 Name:           go-opentelemetry-otel
-Version:        1.43.0
+Version:        1.44.0
 Release:        %autorelease
 Summary:        OpenTelemetry API for Go
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-go
-#!RemoteAsset:  sha256:f8ce59f6705b718114124b234a5761a9e9141261faa9b31d4a2a86b14e988e52
+#!RemoteAsset:  sha256:fc1c8d58df26300576a8acbc6d53d07477784c656fd22018e86540a4392407d4
 Source0:        https://github.com/open-telemetry/opentelemetry-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
