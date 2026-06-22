@@ -49,6 +49,23 @@ Requires:       go(go.opentelemetry.io/collector/confmap)
 This package provides the xconfmap module for OpenTelemetry Collector.
 configuration validation helpers.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd confmap/xconfmap
+%buildsystem_golangmodules_install
+popd
+
+%check
+# xconfmap imports confmap/internal from the same upstream module tree, so copy
+# the parent module into GOPATH before testing this nested module. - HNO3Miracle
+export GO111MODULE=off
+export GOPATH=%{_builddir}/go:%{_datadir}/gocode
+rm -rf "%{_builddir}/go/src/go.opentelemetry.io/collector/confmap"
+mkdir -p "%{_builddir}/go/src/go.opentelemetry.io/collector"
+cp -a confmap "%{_builddir}/go/src/go.opentelemetry.io/collector/confmap"
+go test -v %{go_test_include}
+
 %files
 %doc README*
 %license LICENSE*
