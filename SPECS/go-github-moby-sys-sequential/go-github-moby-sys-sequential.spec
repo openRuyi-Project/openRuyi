@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,12 +10,12 @@
 %define go_source_subdir sequential
 
 Name:           go-github-moby-sys-sequential
-Version:        0.6.0
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Sequential file access helpers from Moby sys
 License:        Apache-2.0
 URL:            https://github.com/moby/sys
-#!RemoteAsset:  sha256:69582aa7672aed219b5b6f4c732c6c1fbe63612e5ab1301b8ad74e955b6cfed9
+#!RemoteAsset:  sha256:87fa39a6874627d7cea81c837bf2e5caf25b7a4bc4f0ea18057223cc85771393
 Source0:        https://github.com/moby/sys/archive/refs/tags/sequential/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
