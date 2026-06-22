@@ -42,6 +42,18 @@ Requires:       go(go.uber.org/multierr)
 %description
 This package provides the Go library go.opentelemetry.io/collector/featuregate.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd featuregate
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd featuregate
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
