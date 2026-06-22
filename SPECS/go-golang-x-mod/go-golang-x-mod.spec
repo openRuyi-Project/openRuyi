@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,13 +10,13 @@
 %define go_test_exclude golang.org/x/mod/zip
 
 Name:           go-golang-x-mod
-Version:        0.31.0
+Version:        0.37.0
 Release:        %autorelease
 Summary:        Go module mechanics libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/mod
 VCS:            git:https://github.com/golang/mod
-#!RemoteAsset
+#!RemoteAsset:  sha256:8a6e69bc7b05c616df5d6d6b41d8e798baf27db4da50f8f0e4d754150e4d625d
 Source0:        https://github.com/golang/mod/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -39,4 +40,4 @@ That is, it is for direct manipulation of Go modules themselves.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
