@@ -33,6 +33,18 @@ Provides:       go(go.opentelemetry.io/collector/pipeline) = %{version}
 %description
 This package provides the Go library go.opentelemetry.io/collector/pipeline.
 
+%install
+# The upstream module tag archive contains the whole collector repository, so
+# build this package from its module subdirectory. - HNO3Miracle
+pushd pipeline
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd pipeline
+%buildsystem_golangmodules_check
+popd
+
 %files
 %doc README.md
 %license LICENSE
