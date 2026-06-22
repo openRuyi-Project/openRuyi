@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: tangyihong <yihong.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,12 +13,12 @@
 %global go_test_ignore_failure 1
 
 Name:           go-github-hashicorp-go-sockaddr
-Version:        1.0.2
+Version:        1.0.7
 Release:        %autorelease
 Summary:        IP address and UNIX socket convenience functions for Go
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-sockaddr
-#!RemoteAsset:  sha256:ce70228b6c0ac432b97c2a98697600668bf7ac8b4cd21e7c6767bed1e755ae7f
+#!RemoteAsset:  sha256:a4cbf07256defca1489412cd5ce7d5fa064439b85bacb42b113ae97c61b17c93
 Source0:        https://github.com/hashicorp/go-sockaddr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
