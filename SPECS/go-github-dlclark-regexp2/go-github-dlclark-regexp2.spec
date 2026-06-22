@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/dlclark/regexp2
 
 Name:           go-github-dlclark-regexp2
-Version:        1.11.5
+Version:        1.12.0
 Release:        %autorelease
 Summary:        A full-featured regex engine in pure Go based on the .NET engine
 License:        MIT
 URL:            https://github.com/dlclark/regexp2
-#!RemoteAsset
+#!RemoteAsset:  sha256:89d6d7b9475e91f4dacc301bdd0cc7ad5828bb506a27901d6975efbd89680133
 Source0:        https://github.com/dlclark/regexp2/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -43,4 +44,4 @@ compatibility with .NET.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
