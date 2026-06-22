@@ -14,12 +14,12 @@
 }
 
 Name:           go-github-etcd-io-bbolt
-Version:        1.4.3
+Version:        1.5.0
 Release:        %autorelease
 Summary:        An embedded key/value database for Go.
 License:        MIT
 URL:            https://github.com/etcd-io/bbolt
-#!RemoteAsset
+#!RemoteAsset:  sha256:710561f7d7b75d244d69233fd32a4a27162a13151adb9d5e5add217da5bf68a7
 Source0:        https://github.com/etcd-io/bbolt/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -49,4 +49,4 @@ the Bolt API.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
