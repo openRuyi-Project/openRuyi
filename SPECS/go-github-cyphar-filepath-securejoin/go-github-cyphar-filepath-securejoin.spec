@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,12 +14,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-cyphar-filepath-securejoin
-Version:        0.6.1
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Secure path joining helpers for Go
 License:        BSD-3-Clause AND MPL-2.0
 URL:            https://github.com/cyphar/filepath-securejoin
-#!RemoteAsset:  sha256:3afa713f591b60e27e27e053e4ceba5c78657fbcf7bd1afc33f54436409a0f2e
+#!RemoteAsset:  sha256:f3bef272555f9ffefff504762ec92235cfe50891dedba1c2281d970323d7c367
 Source0:        https://github.com/cyphar/filepath-securejoin/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
