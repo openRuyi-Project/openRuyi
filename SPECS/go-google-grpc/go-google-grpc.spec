@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -29,12 +30,12 @@
 }
 
 Name:           go-google-grpc
-Version:        1.78.0
+Version:        1.81.1
 Release:        %autorelease
 Summary:        The Go language implementation of gRPC. HTTP/2 based RPC
 License:        Apache-2.0
 URL:            https://github.com/grpc/grpc-go
-#!RemoteAsset:  sha256:e1ca23743f34564f85b2e67336deeb4fd6d466d2cf13f962dda25e9cda51f774
+#!RemoteAsset:  sha256:cf93868b1243053559399325cdcd369948c4cefaefae35ac66b9630070c7a0a6
 Source0:        https://github.com/grpc/grpc-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
