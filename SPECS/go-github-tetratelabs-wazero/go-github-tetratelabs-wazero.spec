@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,12 +17,12 @@
 }
 
 Name:           go-github-tetratelabs-wazero
-Version:        1.11.0
+Version:        1.12.0
 Release:        %autorelease
 Summary:        Zero dependency WebAssembly runtime for Go developers
 License:        Apache-2.0
 URL:            https://github.com/tetratelabs/wazero
-#!RemoteAsset:  sha256:a785f0eabe510e454a01e0d187675a913f96814d0c7e38c4717e03f6d5420ed4
+#!RemoteAsset:  sha256:81afcc5576db589dda5403f71aa5ae2593222a7ba9671007484bf0ce6e21e7ba
 Source0:        https://github.com/tetratelabs/wazero/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
