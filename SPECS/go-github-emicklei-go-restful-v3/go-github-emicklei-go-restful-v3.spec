@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,12 +19,12 @@
 }
 
 Name:           go-github-emicklei-go-restful-v3
-Version:        3.12.2
+Version:        3.13.0
 Release:        %autorelease
 Summary:        Package for building REST-style web services in Go
 License:        MIT
 URL:            https://github.com/emicklei/go-restful
-#!RemoteAsset:  sha256:08f387a0aa862ed8698811189d6da92e28b894cc5a7ca45a3ae371d9f339e5a8
+#!RemoteAsset:  sha256:7536d8fcff10870d68662efaa4e583207e1a311509d589764c26264dccb4a241
 Source0:        https://github.com/emicklei/go-restful/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
