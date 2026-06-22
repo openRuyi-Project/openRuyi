@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name kvm-bindings
-%global full_version 0.14.0
+%global full_version 0.14.1
 %global pkgname kvm-bindings-0.14
 
 Name:           rust-kvm-bindings-0.14
-Version:        0.14.0
+Version:        0.14.1
 Release:        %autorelease
 Summary:        Rust crate "kvm-bindings"
 License:        Apache-2.0
 URL:            https://github.com/rust-vmm/kvm
-#!RemoteAsset:  sha256:4b3c06ff73c7ce03e780887ec2389d62d2a2a9ddf471ab05c2ff69207cd3f3b4
+#!RemoteAsset:  sha256:11cf0ca75d59e9d298647c59cf6c5286fa048120caa77972a7a504a0824d234f
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates

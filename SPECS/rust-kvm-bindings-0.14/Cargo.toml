@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "kvm-bindings"
-version = "0.14.0"
+version = "0.14.1"
 authors = ["Amazon firecracker team <firecracker-devel@amazon.com>"]
 build = false
 autolib = false
