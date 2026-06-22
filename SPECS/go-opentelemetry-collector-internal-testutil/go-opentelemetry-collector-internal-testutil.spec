@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-internal-testutil
-Version:        0.152.0
+Version:        0.154.0
 Release:        %autorelease
 Summary:        Test utilities for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:d881d6111e89cbc26d7661a9e2e15d1111bf05897824b6042f4dbe52f10b3fd6
+#!RemoteAsset:  sha256:7c8dc7b32766f01bc15c76a1239f64b415dfb27b4a5d1473426c65223d8de854
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/internal/testutil/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
