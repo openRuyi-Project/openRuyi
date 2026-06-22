@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -19,12 +20,12 @@
 %define go_test_exclude_glob %{go_import_path}/metadata*
 
 Name:           go-googlecloud-go-compute
-Version:        1.63.0
+Version:        1.64.0
 Release:        %autorelease
 Summary:        Compute client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:37ebaad13129a52e2914918aa03400407ad4f20dbdb81d81653fe8f37f1bc21b
+#!RemoteAsset:  sha256:194402239d2e344bec87401029b979903329a8f9d8fea7bcc47c981e84c2693b
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/compute/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
