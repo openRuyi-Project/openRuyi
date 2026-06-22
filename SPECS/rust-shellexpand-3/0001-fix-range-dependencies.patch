@@ -1,0 +1,19 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -61,13 +61,13 @@
+ path = "src/lib.rs"
+ 
+ [dependencies.bstr]
+-version = "1.0.0-pre.2"
++version = "1.0.0"
+ optional = true
+ 
+ [dependencies.dirs]
+-version = ">=4, <7"
++version = ">=6, <7"
+ optional = true
+ 
+ [dependencies.os_str_bytes]
+-version = ">=5, <7"
++version = ">=6, <7"
+ optional = true
