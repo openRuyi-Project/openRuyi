@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-sql-driver/mysql
 
 Name:           go-github-go-sql-driver-mysql
-Version:        1.9.2
+Version:        1.10.0
 Release:        %autorelease
 Summary:        Go MySQL Driver is a MySQL driver for Go's (golang) database/sql package
 License:        MPL-2.0
 URL:            https://github.com/go-sql-driver/mysql
-#!RemoteAsset:  sha256:c8aa24eb8b7e552b7c518215820dcc7865992e359358dd29f302d919106e95fc
+#!RemoteAsset:  sha256:b693438f9f59f89fdd5b356bbda8262aa5137be11c61d9e4ac89d869ae8c7a85
 Source0:        https://github.com/go-sql-driver/mysql/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
