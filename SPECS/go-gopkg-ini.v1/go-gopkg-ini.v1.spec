@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  gopkg.in/ini.v1
 
 Name:           go-gopkg-ini.v1
-Version:        1.67.2
+Version:        1.67.3
 Release:        %autorelease
 Summary:        Package ini provides INI file read and write functionality in Go
 License:        Apache-2.0
 URL:            https://github.com/go-ini/ini
-#!RemoteAsset:  sha256:0cf3ebc458c4fe0bf495759c9e3aafe668d3b9febbd91db7d52c852ad4d3875e
+#!RemoteAsset:  sha256:20564d725575a12e174a17f8d1d42a0a03503448fab8f3703dc64599d79ad79a
 Source0:        https://github.com/go-ini/ini/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
