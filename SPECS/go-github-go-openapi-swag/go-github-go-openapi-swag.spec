@@ -9,12 +9,12 @@
 %define go_import_path  github.com/go-openapi/swag
 
 Name:           go-github-go-openapi-swag
-Version:        0.25.4
+Version:        0.26.1
 Release:        %autorelease
 Summary:        Helper functions for go-openapi projects
 License:        Apache-2.0
 URL:            https://github.com/go-openapi/swag
-#!RemoteAsset:  sha256:d283d5dc2842d8d2376a1d815c82f1bf32acffc0640fa75cd8aaca0565ae8806
+#!RemoteAsset:  sha256:d61370667524f412f5d270d9170a26ebfa21de3211c3d4cfb4cc8be650303147
 Source0:        https://github.com/go-openapi/swag/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
