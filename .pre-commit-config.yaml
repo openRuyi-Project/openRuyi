@@ -49,6 +49,12 @@ repos:
          see https://peps.python.org/pep-0503/#normalized-names
          see https://openruyi.cn/docs/guide/packaging-guidelines/languages/Python
        files: python-(?!([a-z0-9]|[a-z0-9][a-z0-9._-]*[a-z0-9])).*\.spec$
+    -  id: no-entries-directly-under-SPECS
+       name: "SPECS may only containreal subdirectorys"
+       language: fail
+       entry: |
+         There should only be subdirectories under SPECS
+       files: '^SPECS/[^/]+$'
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
