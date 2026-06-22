@@ -459,6 +459,10 @@ Provides:       crate(%{pkgname}/uuid) = %{version}
 %description -n %{name}+uuid
 This metapackage enables feature "uuid" for the Rust pyo3 crate, by pulling in any additional dependencies needed by that feature.
 
+%prep -a
+# Upstream helper scripts are packaged as source files only, not runtime executables.
+find . -type f -name '*.py' -exec chmod a-x {} +
+
 %files
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
