@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -24,12 +25,12 @@
 }
 
 Name:           go-google-api
-Version:        0.280.0
+Version:        0.285.0
 Release:        %autorelease
 Summary:        Generated Google API clients for Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-api-go-client
-#!RemoteAsset:  sha256:bad3e08b3e0da8446e016077facf63927317079c1d5636a0dbe6d3a39b8e2a76
+#!RemoteAsset:  sha256:c85268bc160001abb5a439c02d4540b8475f91610d96eb014498399b841ea47f
 Source0:        https://github.com/googleapis/google-api-go-client/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
