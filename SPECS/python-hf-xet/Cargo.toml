@@ -1,0 +1,140 @@
+[workspace]
+resolver = "2"
+members = [
+    # Consolidated packages
+    "xet_runtime",
+    "xet_core_structures",
+    "xet_client",
+    "xet_data",
+    "xet_pkg",
+
+    # Top-level crates (not published as packages)
+]
+exclude = [
+    "simulation/chunk_cache_bench",
+    "hf_xet",
+    "wasm/hf_xet_wasm",
+    "wasm/hf_xet_thin_wasm",
+    "examples/xet_pkg_napi",
+]
+
+[workspace.package]
+version = "1.5.2"
+edition = "2024"
+license = "Apache-2.0"
+homepage = "https://github.com/huggingface/xet-core"
+repository = "https://github.com/huggingface/xet-core"
+
+[profile.release]
+opt-level = 3
+lto = true
+debug = 1
+
+[profile.opt-test]
+inherits = "dev"
+opt-level = 3
+debug = 1
+
+[profile.smoke-test]
+inherits = "dev"
+
+[workspace.dependencies]
+anyhow = "1"
+async-std = "1"
+async-trait = "0.1"
+axum = "0.8"
+base64 = "0.22"
+postcard = { version = "1.1", features = ["alloc"] }
+bitflags = { version = "2.10", features = ["serde"] }
+blake3 = "1.8"
+bytemuck = "1"
+bytes = "1.11"
+chrono = "0.4"
+clap = { version = "4", features = ["derive"] }
+colored = "3"
+console-subscriber = "0.5"
+countio = { version = "0.3", features = ["futures"] }
+crc32fast = "1.5"
+csv = "1"
+ctor = "1"
+dirs = "6.0"
+futures = "0.3"
+humantime = "2.1"
+futures-util = "0.3"
+gearhash = "0.1"
+getrandom = { version = "0.4", features = ["wasm_js"] }
+git-url-parse = "0.4"
+git-version = "0.3"
+git2 = "0.20"
+half = "2.7"
+heapify = "0.2"
+redb = "3.1"
+http = "1"
+human-bandwidth = "0.1"
+hyper = "1.8"
+hyper-util = "0.1"
+itertools = "0.14"
+lazy_static = "1.5"
+libc = "0.2"
+lz4_flex = "0.13"
+mockall = "0.14"
+more-asserts = "0.3"
+oneshot = "0.1"
+pin-project = "1"
+pyo3 = { version = "0.26", features = ["abi3-py37", "multiple-pymethods"] }
+rand = "0.10"
+rand_chacha = "0.10"
+regex = "1"
+reqwest = { version = "0.13.1", features = [
+    "json",
+    "stream",
+    "system-proxy",
+    "socks",
+], default-features = false }
+reqwest-middleware = "0.5"
+rust-netrc = "0.1"
+safe-transmute = "0.11"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_repr = "0.1"
+sha2 = "0.10"
+shell-words = "1.1"
+shellexpand = "3.1"
+smol = "2"
+static_assertions = "1.1"
+statrs = { version = "0.18", default-features = false }
+sysinfo = "0.38"
+tempfile = "3.25"
+thiserror = "2.0"
+tokio = { version = "1.49" }
+tokio-retry = "0.3"
+tokio-util = { version = "0.7" }
+tracing = "0.1"
+tracing-appender = "0.2"
+tracing-log = "0.2"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+url = "2.5"
+urlencoding = "2.1"
+uuid = "1"
+walkdir = "2"
+web-time = "1.1"
+whoami = "2"
+
+# windows
+winapi = { version = "0.3", features = [
+    "winerror",
+    "winnt",
+    "handleapi",
+    "processthreadsapi",
+    "securitybaseapi",
+] }
+
+# dev-deps
+approx = "0.5"
+httpmock = "0.8"
+rand_core = "0.10"
+rand_distr = "0.6"
+russh = "0.61"
+serial_test = "3"
+tracing-test = { version = "0.2", features = ["no-env-filter"] }
+wiremock = "0.6"

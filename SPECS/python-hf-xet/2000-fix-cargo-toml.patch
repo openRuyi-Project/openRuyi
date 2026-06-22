@@ -1,0 +1,13 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 7ed2500..3aca5c9 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -9,8 +9,6 @@ members = [
+     "xet_pkg",
+ 
+     # Top-level crates (not published as packages)
+-    "git_xet",
+-    "simulation",
+ ]
+ exclude = [
+     "simulation/chunk_cache_bench",
