@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,12 +14,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-onsi-gomega
-Version:        1.39.1
+Version:        1.42.0
 Release:        %autorelease
 Summary:        Matcher and assertion helpers for Go tests
 License:        MIT
 URL:            https://github.com/onsi/gomega
-#!RemoteAsset:  sha256:fe509b33154b7c69e9aa0c1546914a9fb0d04409aa01d55ffe91767ae11b3450
+#!RemoteAsset:  sha256:58c2a7739a41017255264c9bb929932305194d79228158f0eab8bf463dbc1204
 Source0:        https://github.com/onsi/gomega/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
