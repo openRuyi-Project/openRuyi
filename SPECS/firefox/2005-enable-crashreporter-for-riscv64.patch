@@ -1,0 +1,3028 @@
+From fe8d6d87fba3c5e7ea226d0c0f4de64bc555d4b7 Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Wed, 17 Jun 2026 22:20:13 +0800
+Subject: [PATCH] Enable crashreporter for RISC-V
+
+Because Firefox's crashreporter code is outdated,
+so I manually ported some code from upstream[1].
+
+[1] https://chromium.googlesource.com/breakpad/breakpad/+/main
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+---
+ .../dump_writer_common/raw_context_cpu.h      |  10 +-
+ .../linux/dump_writer_common/thread_info.cc   |  88 ++-
+ .../linux/dump_writer_common/thread_info.h    |   2 +-
+ .../dump_writer_common/ucontext_reader.cc     |  67 +++
+ .../linux/handler/exception_handler.cc        |   9 +-
+ .../microdump_writer/microdump_writer.cc      |  16 +-
+ .../minidump_writer/linux_core_dumper.cc      |  10 +-
+ .../linux/minidump_writer/linux_dumper.h      |   6 +-
+ .../minidump_writer/linux_ptrace_dumper.cc    |   5 +-
+ .../linux/minidump_writer/minidump_writer.cc  |  59 +-
+ .../src/common/linux/breakpad_getcontext.S    |  94 +++
+ .../src/common/linux/ucontext_constants.h     | 103 +++-
+ .../common/minidump_cpu_riscv.h               | 156 +++++
+ .../google_breakpad/common/minidump_format.h  |  39 +-
+ .../google_breakpad/processor/dump_context.h  |   6 +
+ .../processor/stack_frame_cpu.h               | 110 ++++
+ .../src/processor/dump_context.cc             | 148 +++++
+ .../google-breakpad/src/processor/minidump.cc | 153 +++++
+ .../src/processor/minidump_processor.cc       |  10 +
+ .../google-breakpad/src/processor/moz.build   |   2 +
+ .../src/processor/stackwalk_common.cc         | 160 ++++++
+ .../src/processor/stackwalker.cc              |  14 +
+ .../src/processor/stackwalker_riscv.cc        | 540 ++++++++++++++++++
+ .../src/processor/stackwalker_riscv.h         | 101 ++++
+ .../src/processor/stackwalker_riscv64.cc      | 540 ++++++++++++++++++
+ .../src/processor/stackwalker_riscv64.h       | 101 ++++
+ toolkit/moz.configure                         |   2 +-
+ 27 files changed, 2512 insertions(+), 39 deletions(-)
+ create mode 100644 toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_cpu_riscv.h
+ create mode 100644 toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.cc
+ create mode 100644 toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.h
+ create mode 100644 toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.cc
+ create mode 100644 toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.h
+
+diff --git a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/raw_context_cpu.h b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/raw_context_cpu.h
+index 07d9171a0a6e..739c167f096a 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/raw_context_cpu.h
++++ b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/raw_context_cpu.h
+@@ -44,8 +44,16 @@ typedef MDRawContextARM RawContextCPU;
+ typedef MDRawContextARM64_Old RawContextCPU;
+ #elif defined(__mips__)
+ typedef MDRawContextMIPS RawContextCPU;
++#elif defined(__riscv)
++#  if __riscv_xlen == 32
++typedef MDRawContextRISCV RawContextCPU;
++#  elif __riscv_xlen == 64
++typedef MDRawContextRISCV64 RawContextCPU;
++#  else
++#    error "Unexpected __riscv_xlen"
++#  endif
+ #else
+-#error "This code has not been ported to your platform yet."
++#  error "This code has not been ported to your platform yet."
+ #endif
+ 
+ }  // namespace google_breakpad
+diff --git a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.cc b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.cc
+index 5d9708c70c59..db7a092c2ee0 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.cc
+@@ -270,7 +270,69 @@ void ThreadInfo::FillCPUContext(RawContextCPU* out) const {
+   out->float_save.fir = mcontext.fpc_eir;
+ #endif
+ }
+-#endif  // __mips__
++#elif defined(__riscv)
++
++uintptr_t ThreadInfo::GetInstructionPointer() const {
++  return mcontext.__gregs[0];
++}
++
++void ThreadInfo::FillCPUContext(RawContextCPU* out) const {
++#  if __riscv__xlen == 32
++  out->context_flags = MD_CONTEXT_RISCV_FULL;
++#  elif __riscv_xlen == 64
++  out->context_flags = MD_CONTEXT_RISCV64_FULL;
++#  else
++#    error "Unexpected __riscv_xlen"
++#  endif
++
++  out->pc = mcontext.__gregs[0];
++  out->ra = mcontext.__gregs[1];
++  out->sp = mcontext.__gregs[2];
++  out->gp = mcontext.__gregs[3];
++  out->tp = mcontext.__gregs[4];
++  out->t0 = mcontext.__gregs[5];
++  out->t1 = mcontext.__gregs[6];
++  out->t2 = mcontext.__gregs[7];
++  out->s0 = mcontext.__gregs[8];
++  out->s1 = mcontext.__gregs[9];
++  out->a0 = mcontext.__gregs[10];
++  out->a1 = mcontext.__gregs[11];
++  out->a2 = mcontext.__gregs[12];
++  out->a3 = mcontext.__gregs[13];
++  out->a4 = mcontext.__gregs[14];
++  out->a5 = mcontext.__gregs[15];
++  out->a6 = mcontext.__gregs[16];
++  out->a7 = mcontext.__gregs[17];
++  out->s2 = mcontext.__gregs[18];
++  out->s3 = mcontext.__gregs[19];
++  out->s4 = mcontext.__gregs[20];
++  out->s5 = mcontext.__gregs[21];
++  out->s6 = mcontext.__gregs[22];
++  out->s7 = mcontext.__gregs[23];
++  out->s8 = mcontext.__gregs[24];
++  out->s9 = mcontext.__gregs[25];
++  out->s10 = mcontext.__gregs[26];
++  out->s11 = mcontext.__gregs[27];
++  out->t3 = mcontext.__gregs[28];
++  out->t4 = mcontext.__gregs[29];
++  out->t5 = mcontext.__gregs[30];
++  out->t6 = mcontext.__gregs[31];
++
++  // Breakpad only supports RISCV32 with 32 bit floating point.
++  // Breakpad only supports RISCV64 with 64 bit floating point.
++#  if __riscv_xlen == 32
++  for (int i = 0; i < MD_CONTEXT_RISCV_FPR_COUNT; i++)
++    out->fpregs[i] = mcontext.__fpregs.__f.__f[i];
++  out->fcsr = mcontext.__fpregs.__f.__fcsr;
++#  elif __riscv_xlen == 64
++  for (int i = 0; i < MD_CONTEXT_RISCV_FPR_COUNT; i++)
++    out->fpregs[i] = mcontext.__fpregs.__d.__f[i];
++  out->fcsr = mcontext.__fpregs.__d.__fcsr;
++#  else
++#    error "Unexpected __riscv_xlen"
++#  endif
++}
++#endif  // __riscv
+ 
+ void ThreadInfo::GetGeneralPurposeRegisters(void** gp_regs, size_t* size) {
+   assert(gp_regs || size);
+@@ -279,6 +341,11 @@ void ThreadInfo::GetGeneralPurposeRegisters(void** gp_regs, size_t* size) {
+     *gp_regs = mcontext.gregs;
+   if (size)
+     *size = sizeof(mcontext.gregs);
++#elif defined(__riscv)
++  if (gp_regs)
++    *gp_regs = mcontext.__gregs;
++  if (size)
++    *size = sizeof(mcontext.__gregs);
+ #else
+   if (gp_regs)
+     *gp_regs = &regs;
+@@ -294,6 +361,25 @@ void ThreadInfo::GetFloatingPointRegisters(void** fp_regs, size_t* size) {
+     *fp_regs = &mcontext.fpregs;
+   if (size)
+     *size = sizeof(mcontext.fpregs);
++#elif defined(__riscv)
++# if __riscv_flen == 32
++  if (fp_regs)
++    *fp_regs = &mcontext.__fpregs.__f.__f;
++  if (size)
++    *size = sizeof(mcontext.__fpregs.__f.__f);
++# elif __riscv_flen == 64
++  if (fp_regs)
++    *fp_regs = &mcontext.__fpregs.__d.__f;
++  if (size)
++    *size = sizeof(mcontext.__fpregs.__d.__f);
++# elif __riscv_flen == 128
++  if (fp_regs)
++    *fp_regs = &mcontext.__fpregs.__q.__f;
++  if (size)
++    *size = sizeof(mcontext.__fpregs.__q.__f);
++# else
++#  error "Unexpected __riscv_flen"
++# endif
+ #else
+   if (fp_regs)
+     *fp_regs = &fpregs;
+diff --git a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.h b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.h
+index 4173d239c4e3..8d03a6306dba 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.h
++++ b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/thread_info.h
+@@ -68,7 +68,7 @@ struct ThreadInfo {
+   // Use the structures defined in <sys/user.h>
+   struct user_regs_struct regs;
+   struct user_fpsimd_struct fpregs;
+-#elif defined(__mips__)
++#elif defined(__mips__) || defined(__riscv)
+   // Use the structure defined in <sys/ucontext.h>.
+   mcontext_t mcontext;
+ #endif
+diff --git a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/ucontext_reader.cc b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/ucontext_reader.cc
+index 5145ede3d810..83375aa91d9f 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/ucontext_reader.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/dump_writer_common/ucontext_reader.cc
+@@ -254,6 +254,73 @@ void UContextReader::FillCPUContext(RawContextCPU *out, const ucontext_t *uc) {
+   out->float_save.fir = uc->uc_mcontext.fpc_eir;  // Unused.
+ #endif
+ }
++
++#elif defined(__riscv)
++
++uintptr_t UContextReader::GetStackPointer(const ucontext_t* uc) {
++  return uc->uc_mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP];
++}
++
++uintptr_t UContextReader::GetInstructionPointer(const ucontext_t* uc) {
++  return uc->uc_mcontext.__gregs[MD_CONTEXT_RISCV_REG_PC];
++}
++
++void UContextReader::FillCPUContext(RawContextCPU* out, const ucontext_t* uc) {
++# if __riscv__xlen == 32
++  out->context_flags = MD_CONTEXT_RISCV_FULL;
++# elif __riscv_xlen == 64
++  out->context_flags = MD_CONTEXT_RISCV64_FULL;
++# else
++#  error "Unexpected __riscv_xlen"
++# endif
++
++  out->pc  = uc->uc_mcontext.__gregs[0];
++  out->ra  = uc->uc_mcontext.__gregs[1];
++  out->sp  = uc->uc_mcontext.__gregs[2];
++  out->gp  = uc->uc_mcontext.__gregs[3];
++  out->tp  = uc->uc_mcontext.__gregs[4];
++  out->t0  = uc->uc_mcontext.__gregs[5];
++  out->t1  = uc->uc_mcontext.__gregs[6];
++  out->t2  = uc->uc_mcontext.__gregs[7];
++  out->s0  = uc->uc_mcontext.__gregs[8];
++  out->s1  = uc->uc_mcontext.__gregs[9];
++  out->a0  = uc->uc_mcontext.__gregs[10];
++  out->a1  = uc->uc_mcontext.__gregs[11];
++  out->a2  = uc->uc_mcontext.__gregs[12];
++  out->a3  = uc->uc_mcontext.__gregs[13];
++  out->a4  = uc->uc_mcontext.__gregs[14];
++  out->a5  = uc->uc_mcontext.__gregs[15];
++  out->a6  = uc->uc_mcontext.__gregs[16];
++  out->a7  = uc->uc_mcontext.__gregs[17];
++  out->s2  = uc->uc_mcontext.__gregs[18];
++  out->s3  = uc->uc_mcontext.__gregs[19];
++  out->s4  = uc->uc_mcontext.__gregs[20];
++  out->s5  = uc->uc_mcontext.__gregs[21];
++  out->s6  = uc->uc_mcontext.__gregs[22];
++  out->s7  = uc->uc_mcontext.__gregs[23];
++  out->s8  = uc->uc_mcontext.__gregs[24];
++  out->s9  = uc->uc_mcontext.__gregs[25];
++  out->s10 = uc->uc_mcontext.__gregs[26];
++  out->s11 = uc->uc_mcontext.__gregs[27];
++  out->t3  = uc->uc_mcontext.__gregs[28];
++  out->t4  = uc->uc_mcontext.__gregs[29];
++  out->t5  = uc->uc_mcontext.__gregs[30];
++  out->t6  = uc->uc_mcontext.__gregs[31];
++
++  // Breakpad only supports RISCV32 with 32 bit floating point.
++  // Breakpad only supports RISCV64 with 64 bit floating point.
++#if __riscv_xlen == 32
++  for (int i = 0; i < MD_CONTEXT_RISCV_FPR_COUNT; i++)
++    out->fpregs[i] = uc->uc_mcontext.__fpregs.__f.__f[i];
++  out->fcsr = uc->uc_mcontext.__fpregs.__f.__fcsr;
++#elif __riscv_xlen == 64
++  for (int i = 0; i < MD_CONTEXT_RISCV_FPR_COUNT; i++)
++    out->fpregs[i] = uc->uc_mcontext.__fpregs.__d.__f[i];
++  out->fcsr = uc->uc_mcontext.__fpregs.__d.__fcsr;
++#else
++#error "Unexpected __riscv_xlen"
++#endif
++}
+ #endif
+ 
+ }  // namespace google_breakpad
+diff --git a/toolkit/crashreporter/breakpad-client/linux/handler/exception_handler.cc b/toolkit/crashreporter/breakpad-client/linux/handler/exception_handler.cc
+index aa0896bd4c30..bf592176ffb6 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/handler/exception_handler.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/handler/exception_handler.cc
+@@ -494,9 +494,9 @@ bool ExceptionHandler::HandleSignal(int /*sig*/, siginfo_t* info, void* uc) {
+     memcpy(&g_crash_context_.float_state, fp_ptr,
+            sizeof(g_crash_context_.float_state));
+   }
+-#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+   // FP state is not part of user ABI on ARM Linux.
+-  // In case of MIPS Linux FP state is already part of ucontext_t
++  // In case of MIPS and RISC-V Linux FP state is already part of ucontext_t
+   // and 'float_state' is not a member of CrashContext.
+   ucontext_t* uc_ptr = (ucontext_t*)uc;
+   if (uc_ptr->uc_mcontext.fpregs) {
+@@ -790,7 +790,7 @@ bool ExceptionHandler::WriteMinidump() {
+   }
+ #endif
+ 
+-#if !defined(__ARM_EABI__) && !defined(__aarch64__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__aarch64__) && !defined(__mips__) && !defined(__riscv)
+   // FPU state is not part of ARM EABI ucontext_t.
+   memcpy(&context.float_state, context.context.uc_mcontext.fpregs,
+          sizeof(context.float_state));
+@@ -815,6 +815,9 @@ bool ExceptionHandler::WriteMinidump() {
+ #elif defined(__mips__)
+   context.siginfo.si_addr =
+       reinterpret_cast<void*>(context.context.uc_mcontext.pc);
++#elif defined(__riscv)
++  context.siginfo.si_addr =
++      reinterpret_cast<void*>(context.context.uc_mcontext.__gregs[REG_PC]);
+ #else
+ #error "This code has not been ported to your platform yet."
+ #endif
+diff --git a/toolkit/crashreporter/breakpad-client/linux/microdump_writer/microdump_writer.cc b/toolkit/crashreporter/breakpad-client/linux/microdump_writer/microdump_writer.cc
+index 2c2e24e071d7..c95b035da5b7 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/microdump_writer/microdump_writer.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/microdump_writer/microdump_writer.cc
+@@ -138,7 +138,7 @@ class MicrodumpWriter {
+                   const MicrodumpExtraInfo& microdump_extra_info,
+                   LinuxDumper* dumper)
+       : ucontext_(context ? &context->context : NULL),
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+         float_state_(context ? &context->float_state : NULL),
+ #endif
+         dumper_(dumper),
+@@ -337,7 +337,15 @@ class MicrodumpWriter {
+ # else
+ #  error "This mips ABI is currently not supported (n32)"
+ #endif
+-#else
++#elif defined(__riscv)
++# if __riscv_xlen == 32
++    const char kArch[] = "riscv32";
++# elif __riscv_xlen == 64
++    const char kArch[] = "riscv64";
++# else
++#  error "Unexpected __riscv_xlen"
++# endif
++#else 
+ #error "This code has not been ported to your platform yet"
+ #endif
+ 
+@@ -409,7 +417,7 @@ class MicrodumpWriter {
+   void DumpCPUState() {
+     RawContextCPU cpu;
+     my_memset(&cpu, 0, sizeof(RawContextCPU));
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+     UContextReader::FillCPUContext(&cpu, ucontext_, float_state_);
+ #else
+     UContextReader::FillCPUContext(&cpu, ucontext_);
+@@ -605,7 +613,7 @@ class MicrodumpWriter {
+   void* Alloc(unsigned bytes) { return dumper_->allocator()->Alloc(bytes); }
+ 
+   const ucontext_t* const ucontext_;
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+   const google_breakpad::fpstate_t* const float_state_;
+ #endif
+   LinuxDumper* dumper_;
+diff --git a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_core_dumper.cc b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_core_dumper.cc
+index 38feb0aaa7e3..d0ca077e59f7 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_core_dumper.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_core_dumper.cc
+@@ -112,6 +112,9 @@ bool LinuxCoreDumper::GetThreadInfoByIndex(size_t index, ThreadInfo* info) {
+ #elif defined(__mips__)
+   stack_pointer =
+       reinterpret_cast<uint8_t*>(info->mcontext.gregs[MD_CONTEXT_MIPS_REG_SP]);
++#elif defined(__riscv)
++    stack_pointer = reinterpret_cast<uint8_t*>(
++        info->mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP]);
+ #else
+ #error "This code hasn't been ported to your platform yet."
+ #endif
+@@ -214,9 +217,12 @@ bool LinuxCoreDumper::EnumerateThreads() {
+         info.mcontext.mdlo = status->pr_reg[EF_LO];
+         info.mcontext.mdhi = status->pr_reg[EF_HI];
+         info.mcontext.pc = status->pr_reg[EF_CP0_EPC];
+-#else  // __mips__
++#elif defined(__riscv)
++        memcpy(&info.mcontext.__gregs, status->pr_reg,
++               sizeof(info.mcontext.__gregs));
++#else  // __riscv
+         memcpy(&info.regs, status->pr_reg, sizeof(info.regs));
+-#endif  // __mips__
++#endif
+         if (first_thread) {
+           crash_thread_ = pid;
+           crash_signal_ = status->pr_info.si_signo;
+diff --git a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_dumper.h b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_dumper.h
+index 7fd069396871..3d657557df9f 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_dumper.h
++++ b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_dumper.h
+@@ -64,10 +64,12 @@ namespace google_breakpad {
+ 
+ // Typedef for our parsing of the auxv variables in /proc/pid/auxv.
+ #if defined(__i386) || defined(__ARM_EABI__) || \
+- (defined(__mips__) && _MIPS_SIM == _ABIO32)
++     (defined(__mips__) && _MIPS_SIM == _ABIO32) || \
++     (defined(__riscv) && __riscv_xlen == 32)
+ typedef Elf32_auxv_t elf_aux_entry;
+ #elif defined(__x86_64) || defined(__aarch64__) || \
+-     (defined(__mips__) && _MIPS_SIM != _ABIO32)
++     (defined(__mips__) && _MIPS_SIM != _ABIO32) || \
++     (defined(__riscv) && __riscv_xlen == 64)
+ typedef Elf64_auxv_t elf_aux_entry;
+ #endif
+ 
+diff --git a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_ptrace_dumper.cc b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_ptrace_dumper.cc
+index 6ed70eeb6111..ba891a99e4ad 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_ptrace_dumper.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/linux_ptrace_dumper.cc
+@@ -298,8 +298,11 @@ bool LinuxPtraceDumper::GetThreadInfoByIndex(size_t index, ThreadInfo* info) {
+ #elif defined(__mips__)
+   stack_pointer =
+       reinterpret_cast<uint8_t*>(info->mcontext.gregs[MD_CONTEXT_MIPS_REG_SP]);
++#elif defined(__riscv)
++  stack_pointer = reinterpret_cast<uint8_t*>(
++      info->mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP]);
+ #else
+-#error "This code hasn't been ported to your platform yet."
++# error "This code hasn't been ported to your platform yet."
+ #endif
+   info->stack_pointer = reinterpret_cast<uintptr_t>(stack_pointer);
+ 
+diff --git a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/minidump_writer.cc b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/minidump_writer.cc
+index 60d1195949d9..cd5d3bfab1cc 100644
+--- a/toolkit/crashreporter/breakpad-client/linux/minidump_writer/minidump_writer.cc
++++ b/toolkit/crashreporter/breakpad-client/linux/minidump_writer/minidump_writer.cc
+@@ -136,7 +136,7 @@ class MinidumpWriter {
+       : fd_(minidump_fd),
+         path_(minidump_path),
+         ucontext_(context ? &context->context : NULL),
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+         float_state_(context ? &context->float_state : NULL),
+ #endif
+         dumper_(dumper),
+@@ -473,7 +473,7 @@ class MinidumpWriter {
+         if (!cpu.Allocate())
+           return false;
+         my_memset(cpu.get(), 0, sizeof(RawContextCPU));
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+         UContextReader::FillCPUContext(cpu.get(), ucontext_, float_state_);
+ #else
+         UContextReader::FillCPUContext(cpu.get(), ucontext_);
+@@ -1264,6 +1264,59 @@ class MinidumpWriter {
+       sys_close(fd);
+     }
+ 
++    return true;
++  }
++#elif defined(__riscv)
++  bool WriteCPUInformation(MDRawSystemInfo* sys_info) {
++    // processor_architecture should always be set, do this first
++# if __riscv_xlen == 32
++    sys_info->processor_architecture = MD_CPU_ARCHITECTURE_RISCV;
++# elif __riscv_xlen == 64
++    sys_info->processor_architecture = MD_CPU_ARCHITECTURE_RISCV64;
++# else
++#  error "Unexpected __riscv_xlen"
++# endif
++
++    // /proc/cpuinfo is not readable under various sandboxed environments
++    // (e.g. Android services with the android:isolatedProcess attribute)
++    // prepare for this by setting default values now, which will be
++    // returned when this happens.
++    //
++    // Note: Bogus values are used to distinguish between failures (to
++    //       read /sys and /proc files) and really badly configured kernels.
++    sys_info->number_of_processors = 0;
++    sys_info->processor_level = 0U;
++    sys_info->processor_revision = 42;
++    sys_info->cpu.other_cpu_info.processor_features[0] = 0;
++    sys_info->cpu.other_cpu_info.processor_features[1] = 0;
++
++    // Counting the number of CPUs involves parsing two sysfs files,
++    // because the content of /proc/cpuinfo will only mirror the number
++    // of 'online' cores, and thus will vary with time.
++    // See http://www.kernel.org/doc/Documentation/cputopology.txt
++    {
++      CpuSet cpus_present;
++      CpuSet cpus_possible;
++
++      int fd =
++          sys_open("/sys/devices/system/cpu/present", O_RDONLY | O_CLOEXEC, 0);
++      if (fd >= 0) {
++        cpus_present.ParseSysFile(fd);
++        sys_close(fd);
++
++        fd = sys_open("/sys/devices/system/cpu/possible", O_RDONLY | O_CLOEXEC,
++                      0);
++        if (fd >= 0) {
++          cpus_possible.ParseSysFile(fd);
++          sys_close(fd);
++
++          cpus_present.IntersectWith(cpus_possible);
++          int cpu_count = std::min(255, cpus_present.GetCount());
++          sys_info->number_of_processors = static_cast<uint8_t>(cpu_count);
++        }
++      }
++    }
++
+     return true;
+   }
+ #else
+@@ -1394,7 +1447,7 @@ class MinidumpWriter {
+   const char* path_;  // Path to the file where the minidum should be written.
+ 
+   const ucontext_t* const ucontext_;  // also from the signal handler
+-#if !defined(__ARM_EABI__) && !defined(__mips__)
++#if !defined(__ARM_EABI__) && !defined(__mips__) && !defined(__riscv)
+   const google_breakpad::fpstate_t* const float_state_;  // ditto
+ #endif
+   LinuxDumper* dumper_;
+diff --git a/toolkit/crashreporter/google-breakpad/src/common/linux/breakpad_getcontext.S b/toolkit/crashreporter/google-breakpad/src/common/linux/breakpad_getcontext.S
+index fea0109d1502..58339fa47b2f 100644
+--- a/toolkit/crashreporter/google-breakpad/src/common/linux/breakpad_getcontext.S
++++ b/toolkit/crashreporter/google-breakpad/src/common/linux/breakpad_getcontext.S
+@@ -481,6 +481,100 @@ breakpad_getcontext:
+   .cfi_endproc
+   .size breakpad_getcontext, . - breakpad_getcontext
+ 
++#elif defined(__riscv)
++
++# define SIG_BLOCK                     0
++# define _NSIG8                        8
++# define __NR_rt_sigprocmask         135
++
++  .text
++  .globl breakpad_getcontext
++  .type breakpad_getcontext, @function
++  .align 0
++  .cfi_startproc
++breakpad_getcontext:
++  REG_S ra,  MCONTEXT_GREGS_PC(a0)
++  REG_S ra,  MCONTEXT_GREGS_RA(a0)
++  REG_S sp,  MCONTEXT_GREGS_SP(a0)
++  REG_S gp,  MCONTEXT_GREGS_GP(a0)
++  REG_S tp,  MCONTEXT_GREGS_TP(a0)
++  REG_S t0,  MCONTEXT_GREGS_T0(a0)
++  REG_S t1,  MCONTEXT_GREGS_T1(a0)
++  REG_S t2,  MCONTEXT_GREGS_T2(a0)
++  REG_S s0,  MCONTEXT_GREGS_S0(a0)
++  REG_S s1,  MCONTEXT_GREGS_S1(a0)
++  REG_S a0,  MCONTEXT_GREGS_A0(a0)
++  REG_S a1,  MCONTEXT_GREGS_A1(a0)
++  REG_S a2,  MCONTEXT_GREGS_A2(a0)
++  REG_S a3,  MCONTEXT_GREGS_A3(a0)
++  REG_S a4,  MCONTEXT_GREGS_A4(a0)
++  REG_S a5,  MCONTEXT_GREGS_A5(a0)
++  REG_S a6,  MCONTEXT_GREGS_A6(a0)
++  REG_S a7,  MCONTEXT_GREGS_A7(a0)
++  REG_S s2,  MCONTEXT_GREGS_S2(a0)
++  REG_S s3,  MCONTEXT_GREGS_S3(a0)
++  REG_S s4,  MCONTEXT_GREGS_S4(a0)
++  REG_S s5,  MCONTEXT_GREGS_S5(a0)
++  REG_S s6,  MCONTEXT_GREGS_S6(a0)
++  REG_S s7,  MCONTEXT_GREGS_S7(a0)
++  REG_S s8,  MCONTEXT_GREGS_S8(a0)
++  REG_S s9,  MCONTEXT_GREGS_S9(a0)
++  REG_S s10, MCONTEXT_GREGS_S10(a0)
++  REG_S s11, MCONTEXT_GREGS_S11(a0)
++  REG_S t3,  MCONTEXT_GREGS_T3(a0)
++  REG_S t4,  MCONTEXT_GREGS_T4(a0)
++  REG_S t5,  MCONTEXT_GREGS_T5(a0)
++  REG_S t6 , MCONTEXT_GREGS_T6(a0)
++# ifndef __riscv_float_abi_soft
++  frsr a1
++
++  FREG_S ft0,  MCONTEXT_FPREGS_FT0(a0)
++  FREG_S ft1,  MCONTEXT_FPREGS_FT1(a0)
++  FREG_S ft2,  MCONTEXT_FPREGS_FT2(a0)
++  FREG_S ft3,  MCONTEXT_FPREGS_FT3(a0)
++  FREG_S ft4,  MCONTEXT_FPREGS_FT4(a0)
++  FREG_S ft5,  MCONTEXT_FPREGS_FT5(a0)
++  FREG_S ft6,  MCONTEXT_FPREGS_FT6(a0)
++  FREG_S ft7,  MCONTEXT_FPREGS_FT7(a0)
++  FREG_S fs0,  MCONTEXT_FPREGS_FS0(a0)
++  FREG_S fs1,  MCONTEXT_FPREGS_FS1(a0)
++  FREG_S fa0,  MCONTEXT_FPREGS_FA0(a0)
++  FREG_S fa1,  MCONTEXT_FPREGS_FA1(a0)
++  FREG_S fa2,  MCONTEXT_FPREGS_FA2(a0)
++  FREG_S fa3,  MCONTEXT_FPREGS_FA3(a0)
++  FREG_S fa4,  MCONTEXT_FPREGS_FA4(a0)
++  FREG_S fa5,  MCONTEXT_FPREGS_FA5(a0)
++  FREG_S fa6,  MCONTEXT_FPREGS_FA6(a0)
++  FREG_S fa7,  MCONTEXT_FPREGS_FA7(a0)
++  FREG_S fs2,  MCONTEXT_FPREGS_FS2(a0)
++  FREG_S fs3,  MCONTEXT_FPREGS_FS3(a0)
++  FREG_S fs4,  MCONTEXT_FPREGS_FS4(a0)
++  FREG_S fs5,  MCONTEXT_FPREGS_FS5(a0)
++  FREG_S fs6,  MCONTEXT_FPREGS_FS6(a0)
++  FREG_S fs7,  MCONTEXT_FPREGS_FS7(a0)
++  FREG_S fs8,  MCONTEXT_FPREGS_FS8(a0)
++  FREG_S fs9,  MCONTEXT_FPREGS_FS9(a0)
++  FREG_S fs10, MCONTEXT_FPREGS_FS10(a0)
++  FREG_S fs11, MCONTEXT_FPREGS_FS11(a0)
++  FREG_S ft8,  MCONTEXT_FPREGS_FT8(a0)
++  FREG_S ft9,  MCONTEXT_FPREGS_FT9(a0)
++  FREG_S ft10, MCONTEXT_FPREGS_FT10(a0)
++  FREG_S ft11, MCONTEXT_FPREGS_FT11(a0)
++
++  sw a1, MCONTEXT_FPC_CSR(a0)
++# endif // __riscv_float_abi_soft
++  mv a1, zero
++  add a2, a0, UCONTEXT_SIGMASK_OFFSET
++  li a3, _NSIG8
++  mv a0, zero
++  li a7, __NR_rt_sigprocmask
++  ecall
++  mv a0, zero
++  ret
++
++  .cfi_endproc
++  .size breakpad_getcontext, . - breakpad_getcontext
++
+ #else
+ #error "This file has not been ported for your CPU!"
+ #endif
+diff --git a/toolkit/crashreporter/google-breakpad/src/common/linux/ucontext_constants.h b/toolkit/crashreporter/google-breakpad/src/common/linux/ucontext_constants.h
+index c390508a1af7..7b05cb2ea2b1 100644
+--- a/toolkit/crashreporter/google-breakpad/src/common/linux/ucontext_constants.h
++++ b/toolkit/crashreporter/google-breakpad/src/common/linux/ucontext_constants.h
+@@ -146,8 +146,107 @@
+ #endif
+ #define FPREGS_OFFSET_MXCSR  24
+ 
++#elif defined(__riscv)
++
++#if __riscv_xlen == 32
++#define UCONTEXT_SIGMASK_OFFSET  20
++#define MCONTEXT_GREGS_OFFSET   148
++#define MCONTEXT_GREGS_SIZE       4
++#define REG_S sw
++#elif __riscv_xlen == 64
++#define UCONTEXT_SIGMASK_OFFSET  40
++#define MCONTEXT_GREGS_OFFSET   168
++#define MCONTEXT_GREGS_SIZE       8
++#define REG_S sd
+ #else
+-#error "This header has not been ported for your CPU"
++#error "Unexpected __riscv_xlen"
+ #endif
+ 
+-#endif  // GOOGLEBREAKPAD_COMMON_ANDROID_UCONTEXT_CONSTANTS_H
++#define MCONTEXT_GREGS_PC    MCONTEXT_GREGS_OFFSET + 0*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_RA    MCONTEXT_GREGS_OFFSET + 1*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_SP    MCONTEXT_GREGS_OFFSET + 2*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_GP    MCONTEXT_GREGS_OFFSET + 3*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_TP    MCONTEXT_GREGS_OFFSET + 4*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T0    MCONTEXT_GREGS_OFFSET + 5*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T1    MCONTEXT_GREGS_OFFSET + 6*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T2    MCONTEXT_GREGS_OFFSET + 7*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S0    MCONTEXT_GREGS_OFFSET + 8*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S1    MCONTEXT_GREGS_OFFSET + 9*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A0    MCONTEXT_GREGS_OFFSET + 10*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A1    MCONTEXT_GREGS_OFFSET + 11*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A2    MCONTEXT_GREGS_OFFSET + 12*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A3    MCONTEXT_GREGS_OFFSET + 13*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A4    MCONTEXT_GREGS_OFFSET + 14*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A5    MCONTEXT_GREGS_OFFSET + 15*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A6    MCONTEXT_GREGS_OFFSET + 16*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_A7    MCONTEXT_GREGS_OFFSET + 17*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S2    MCONTEXT_GREGS_OFFSET + 18*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S3    MCONTEXT_GREGS_OFFSET + 19*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S4    MCONTEXT_GREGS_OFFSET + 20*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S5    MCONTEXT_GREGS_OFFSET + 21*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S6    MCONTEXT_GREGS_OFFSET + 22*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S7    MCONTEXT_GREGS_OFFSET + 23*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S8    MCONTEXT_GREGS_OFFSET + 24*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S9    MCONTEXT_GREGS_OFFSET + 25*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S10   MCONTEXT_GREGS_OFFSET + 26*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_S11   MCONTEXT_GREGS_OFFSET + 27*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T3    MCONTEXT_GREGS_OFFSET + 28*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T4    MCONTEXT_GREGS_OFFSET + 29*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T5    MCONTEXT_GREGS_OFFSET + 30*MCONTEXT_GREGS_SIZE
++#define MCONTEXT_GREGS_T6    MCONTEXT_GREGS_OFFSET + 31*MCONTEXT_GREGS_SIZE
++
++#define MCONTEXT_FPREGS_OFFSET  MCONTEXT_GREGS_OFFSET + 32*MCONTEXT_GREGS_SIZE
++
++#if __riscv_flen == 32
++#define MCONTEXT_FPREGS_SIZE       4
++#define FREG_S fsw
++#elif __riscv_flen == 64
++#define MCONTEXT_FPREGS_SIZE       8
++#define FREG_S fsd
++#elif __riscv_flen == 128
++#define MCONTEXT_FPREGS_SIZE      16
++#define FREG_S fsq
++#else
++#error "Unexpected __riscv_flen"
++#endif
++
++#define MCONTEXT_FPREGS_FT0   MCONTEXT_FPREGS_OFFSET +  0*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT1   MCONTEXT_FPREGS_OFFSET +  1*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT2   MCONTEXT_FPREGS_OFFSET +  2*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT3   MCONTEXT_FPREGS_OFFSET +  3*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT4   MCONTEXT_FPREGS_OFFSET +  4*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT5   MCONTEXT_FPREGS_OFFSET +  5*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT6   MCONTEXT_FPREGS_OFFSET +  6*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT7   MCONTEXT_FPREGS_OFFSET +  7*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS0   MCONTEXT_FPREGS_OFFSET +  8*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS1   MCONTEXT_FPREGS_OFFSET +  9*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA0   MCONTEXT_FPREGS_OFFSET + 10*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA1   MCONTEXT_FPREGS_OFFSET + 11*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA2   MCONTEXT_FPREGS_OFFSET + 12*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA3   MCONTEXT_FPREGS_OFFSET + 13*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA4   MCONTEXT_FPREGS_OFFSET + 14*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA5   MCONTEXT_FPREGS_OFFSET + 15*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA6   MCONTEXT_FPREGS_OFFSET + 16*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FA7   MCONTEXT_FPREGS_OFFSET + 17*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS2   MCONTEXT_FPREGS_OFFSET + 18*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS3   MCONTEXT_FPREGS_OFFSET + 19*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS4   MCONTEXT_FPREGS_OFFSET + 20*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS5   MCONTEXT_FPREGS_OFFSET + 21*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS6   MCONTEXT_FPREGS_OFFSET + 22*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS7   MCONTEXT_FPREGS_OFFSET + 23*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS8   MCONTEXT_FPREGS_OFFSET + 24*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS9   MCONTEXT_FPREGS_OFFSET + 25*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS10  MCONTEXT_FPREGS_OFFSET + 26*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FS11  MCONTEXT_FPREGS_OFFSET + 27*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT8   MCONTEXT_FPREGS_OFFSET + 28*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT9   MCONTEXT_FPREGS_OFFSET + 29*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT10  MCONTEXT_FPREGS_OFFSET + 30*MCONTEXT_FPREGS_SIZE
++#define MCONTEXT_FPREGS_FT11  MCONTEXT_FPREGS_OFFSET + 31*MCONTEXT_FPREGS_SIZE
++
++#define MCONTEXT_FPC_CSR      MCONTEXT_FPREGS_OFFSET + 32*MCONTEXT_FPREGS_SIZE
++
++#else
++# error "This header has not been ported for your CPU"
++#endif
++
++#endif  // GOOGLEBREAKPAD_COMMON_ANDROID_UCONTEXT_CONSTANTS_H
+\ No newline at end of file
+diff --git a/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_cpu_riscv.h b/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_cpu_riscv.h
+new file mode 100644
+index 000000000000..812cf5fda0e1
+--- /dev/null
++++ b/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_cpu_riscv.h
+@@ -0,0 +1,156 @@
++/* minidump_format.h: A cross-platform reimplementation of minidump-related
++ * portions of DbgHelp.h from the Windows Platform SDK.
++ *
++ * (This is C99 source, please don't corrupt it with C++.)
++ *
++ * This file contains the necessary definitions to read minidump files
++ * produced on RISCV and RISCV64. These files may be read on any platform
++ * provided that the alignments of these structures on the processing system
++ * are identical to the alignments of these structures on the producing
++ * system. For this reason, precise-sized types are used. The structures
++ * defined by this file have been laid out to minimize alignment problems by
++ * ensuring that all members are aligned on their natural boundaries.
++ * In some cases, tail-padding may be significant when different ABIs specify
++ * different tail-padding behaviors. To avoid problems when reading or
++ * writing affected structures, MD_*_SIZE macros are provided where needed,
++ * containing the useful size of the structures without padding.
++ *
++ * Structures that are defined by Microsoft to contain a zero-length array
++ * are instead defined here to contain an array with one element, as
++ * zero-length arrays are forbidden by standard C and C++. In these cases,
++ * *_minsize constants are provided to be used in place of sizeof. For a
++ * cleaner interface to these sizes when using C++, see minidump_size.h.
++ *
++ * These structures are also sufficient to populate minidump files.
++ *
++ * Because precise data type sizes are crucial for this implementation to
++ * function properly and portably, a set of primitive types with known sizes
++ * are used as the basis of each structure defined by this file.
++ *
++ * Author: Iacopo Colonnelli
++ */
++
++/*
++ * RISCV and RISCV64 support
++ */
++
++#ifndef GOOGLE_BREAKPAD_COMMON_MINIDUMP_CPU_RISCV_H__
++#define GOOGLE_BREAKPAD_COMMON_MINIDUMP_CPU_RISCV_H__
++
++#include "google_breakpad/common/breakpad_types.h"
++
++#define MD_CONTEXT_RISCV_GPR_COUNT 32
++#define MD_CONTEXT_RISCV_FPR_COUNT 32
++
++enum MDRISCVRegisterNumbers {
++  MD_CONTEXT_RISCV_REG_PC     = 0,
++  MD_CONTEXT_RISCV_REG_RA     = 1,
++  MD_CONTEXT_RISCV_REG_SP     = 2,
++};
++
++/* For (MDRawContextRISCV).context_flags.  These values indicate the type of
++ * context stored in the structure. */
++#define MD_CONTEXT_RISCV 0x00800000
++#define MD_CONTEXT_RISCV_INTEGER (MD_CONTEXT_RISCV | 0x00000001)
++#define MD_CONTEXT_RISCV_FLOATING_POINT (MD_CONTEXT_RISCV | 0x00000002)
++#define MD_CONTEXT_RISCV_FULL (MD_CONTEXT_RISCV_INTEGER | \
++                               MD_CONTEXT_RISCV_FLOATING_POINT)
++
++typedef struct {
++  /* Determines which fields of this struct are populated */
++  uint32_t context_flags;
++  uint32_t version;
++
++  uint32_t pc;
++  uint32_t ra;
++  uint32_t sp;
++  uint32_t gp;
++  uint32_t tp;
++  uint32_t t0;
++  uint32_t t1;
++  uint32_t t2;
++  uint32_t s0;
++  uint32_t s1;
++  uint32_t a0;
++  uint32_t a1;
++  uint32_t a2;
++  uint32_t a3;
++  uint32_t a4;
++  uint32_t a5;
++  uint32_t a6;
++  uint32_t a7;
++  uint32_t s2;
++  uint32_t s3;
++  uint32_t s4;
++  uint32_t s5;
++  uint32_t s6;
++  uint32_t s7;
++  uint32_t s8;
++  uint32_t s9;
++  uint32_t s10;
++  uint32_t s11;
++  uint32_t t3;
++  uint32_t t4;
++  uint32_t t5;
++  uint32_t t6;
++
++  /* 32 floating point registers, f0 .. f31. Breakpad only supports RISCV32
++   * with 32 bit floating point. */
++  uint32_t fpregs[MD_CONTEXT_RISCV_FPR_COUNT];
++  uint32_t fcsr;
++} MDRawContextRISCV;
++
++/* For (MDRawContextRISCV64).context_flags.  These values indicate the type of
++ * context stored in the structure. */
++#define MD_CONTEXT_RISCV64 0x08000000
++#define MD_CONTEXT_RISCV64_INTEGER (MD_CONTEXT_RISCV64 | 0x00000001)
++#define MD_CONTEXT_RISCV64_FLOATING_POINT (MD_CONTEXT_RISCV64 | 0x00000002)
++#define MD_CONTEXT_RISCV64_FULL (MD_CONTEXT_RISCV64_INTEGER | \
++                                 MD_CONTEXT_RISCV64_FLOATING_POINT)
++
++typedef struct {
++  /* Determines which fields of this struct are populated */
++  uint32_t context_flags;
++  uint32_t version;
++
++  uint64_t pc;
++  uint64_t ra;
++  uint64_t sp;
++  uint64_t gp;
++  uint64_t tp;
++  uint64_t t0;
++  uint64_t t1;
++  uint64_t t2;
++  uint64_t s0;
++  uint64_t s1;
++  uint64_t a0;
++  uint64_t a1;
++  uint64_t a2;
++  uint64_t a3;
++  uint64_t a4;
++  uint64_t a5;
++  uint64_t a6;
++  uint64_t a7;
++  uint64_t s2;
++  uint64_t s3;
++  uint64_t s4;
++  uint64_t s5;
++  uint64_t s6;
++  uint64_t s7;
++  uint64_t s8;
++  uint64_t s9;
++  uint64_t s10;
++  uint64_t s11;
++  uint64_t t3;
++  uint64_t t4;
++  uint64_t t5;
++  uint64_t t6;
++
++  /* 32 floating point registers, f0 .. f31. Breakpad only supports RISCV64 with
++   * 64 bit floating point. */
++  uint64_t fpregs[MD_CONTEXT_RISCV_FPR_COUNT];
++  uint32_t fcsr;
++} MDRawContextRISCV64;
++
++
++#endif  /* GOOGLE_BREAKPAD_COMMON_MINIDUMP_CPU_RISCV_H__ */
+diff --git a/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_format.h b/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_format.h
+index 4155a202dd39..bffddb79cf98 100644
+--- a/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_format.h
++++ b/toolkit/crashreporter/google-breakpad/src/google_breakpad/common/minidump_format.h
+@@ -118,6 +118,7 @@ typedef struct {
+ #include "minidump_cpu_mips.h"
+ #include "minidump_cpu_ppc.h"
+ #include "minidump_cpu_ppc64.h"
++#include "minidump_cpu_riscv.h"
+ #include "minidump_cpu_sparc.h"
+ #include "minidump_cpu_x86.h"
+ 
+@@ -652,26 +653,28 @@ typedef struct {
+ 
+ /* For (MDRawSystemInfo).processor_architecture: */
+ typedef enum {
+-  MD_CPU_ARCHITECTURE_X86       =  0,  /* PROCESSOR_ARCHITECTURE_INTEL */
+-  MD_CPU_ARCHITECTURE_MIPS      =  1,  /* PROCESSOR_ARCHITECTURE_MIPS */
+-  MD_CPU_ARCHITECTURE_ALPHA     =  2,  /* PROCESSOR_ARCHITECTURE_ALPHA */
+-  MD_CPU_ARCHITECTURE_PPC       =  3,  /* PROCESSOR_ARCHITECTURE_PPC */
+-  MD_CPU_ARCHITECTURE_SHX       =  4,  /* PROCESSOR_ARCHITECTURE_SHX
+-                                        * (Super-H) */
+-  MD_CPU_ARCHITECTURE_ARM       =  5,  /* PROCESSOR_ARCHITECTURE_ARM */
+-  MD_CPU_ARCHITECTURE_IA64      =  6,  /* PROCESSOR_ARCHITECTURE_IA64 */
+-  MD_CPU_ARCHITECTURE_ALPHA64   =  7,  /* PROCESSOR_ARCHITECTURE_ALPHA64 */
+-  MD_CPU_ARCHITECTURE_MSIL      =  8,  /* PROCESSOR_ARCHITECTURE_MSIL
+-                                        * (Microsoft Intermediate Language) */
+-  MD_CPU_ARCHITECTURE_AMD64     =  9,  /* PROCESSOR_ARCHITECTURE_AMD64 */
++  MD_CPU_ARCHITECTURE_X86 = 0,     /* PROCESSOR_ARCHITECTURE_INTEL */
++  MD_CPU_ARCHITECTURE_MIPS = 1,    /* PROCESSOR_ARCHITECTURE_MIPS */
++  MD_CPU_ARCHITECTURE_ALPHA = 2,   /* PROCESSOR_ARCHITECTURE_ALPHA */
++  MD_CPU_ARCHITECTURE_PPC = 3,     /* PROCESSOR_ARCHITECTURE_PPC */
++  MD_CPU_ARCHITECTURE_SHX = 4,     /* PROCESSOR_ARCHITECTURE_SHX
++                                    * (Super-H) */
++  MD_CPU_ARCHITECTURE_ARM = 5,     /* PROCESSOR_ARCHITECTURE_ARM */
++  MD_CPU_ARCHITECTURE_IA64 = 6,    /* PROCESSOR_ARCHITECTURE_IA64 */
++  MD_CPU_ARCHITECTURE_ALPHA64 = 7, /* PROCESSOR_ARCHITECTURE_ALPHA64 */
++  MD_CPU_ARCHITECTURE_MSIL = 8,    /* PROCESSOR_ARCHITECTURE_MSIL
++                                    * (Microsoft Intermediate Language) */
++  MD_CPU_ARCHITECTURE_AMD64 = 9,   /* PROCESSOR_ARCHITECTURE_AMD64 */
+   MD_CPU_ARCHITECTURE_X86_WIN64 = 10,
+-      /* PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 (WoW64) */
+-  MD_CPU_ARCHITECTURE_ARM64     = 12,  /* PROCESSOR_ARCHITECTURE_ARM64 */
+-  MD_CPU_ARCHITECTURE_SPARC     = 0x8001, /* Breakpad-defined value for SPARC */
+-  MD_CPU_ARCHITECTURE_PPC64     = 0x8002, /* Breakpad-defined value for PPC64 */
++  /* PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 (WoW64) */
++  MD_CPU_ARCHITECTURE_ARM64 = 12,         /* PROCESSOR_ARCHITECTURE_ARM64 */
++  MD_CPU_ARCHITECTURE_SPARC = 0x8001,     /* Breakpad-defined value for SPARC */
++  MD_CPU_ARCHITECTURE_PPC64 = 0x8002,     /* Breakpad-defined value for PPC64 */
+   MD_CPU_ARCHITECTURE_ARM64_OLD = 0x8003, /* Breakpad-defined value for ARM64 */
+-  MD_CPU_ARCHITECTURE_MIPS64    = 0x8004, /* Breakpad-defined value for MIPS64 */
+-  MD_CPU_ARCHITECTURE_UNKNOWN   = 0xffff  /* PROCESSOR_ARCHITECTURE_UNKNOWN */
++  MD_CPU_ARCHITECTURE_MIPS64 = 0x8004,  /* Breakpad-defined value for MIPS64 */
++  MD_CPU_ARCHITECTURE_RISCV = 0x8005,   /* Breakpad-defined value for RISCV */
++  MD_CPU_ARCHITECTURE_RISCV64 = 0x8006, /* Breakpad-defined value for RISCV64 */
++  MD_CPU_ARCHITECTURE_UNKNOWN = 0xffff  /* PROCESSOR_ARCHITECTURE_UNKNOWN */
+ } MDCPUArchitecture;
+ 
+ /* For (MDRawSystemInfo).platform_id: */
+diff --git a/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/dump_context.h b/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/dump_context.h
+index df80bf7ef75f..764c390dce30 100644
+--- a/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/dump_context.h
++++ b/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/dump_context.h
+@@ -62,6 +62,8 @@ class DumpContext : public DumpObject {
+   const MDRawContextPPC64* GetContextPPC64() const;
+   const MDRawContextSPARC* GetContextSPARC() const;
+   const MDRawContextX86*   GetContextX86() const;
++  const MDRawContextRISCV* GetContextRISCV() const;
++  const MDRawContextRISCV64* GetContextRISCV64() const;
+ 
+   // A convenience method to get the instruction pointer out of the
+   // MDRawContext, since it varies per-CPU architecture.
+@@ -87,6 +89,8 @@ class DumpContext : public DumpObject {
+   void SetContextARM(MDRawContextARM* arm);
+   void SetContextARM64(MDRawContextARM64* arm64);
+   void SetContextMIPS(MDRawContextMIPS* ctx_mips);
++  void SetContextRISCV(MDRawContextRISCV* riscv);
++  void SetContextRISCV64(MDRawContextRISCV64* riscv64);
+ 
+   // Free the CPU-specific context structure.
+   void FreeContext();
+@@ -105,6 +109,8 @@ class DumpContext : public DumpObject {
+     MDRawContextARM*   arm;
+     MDRawContextARM64* arm64;
+     MDRawContextMIPS*  ctx_mips;
++    MDRawContextRISCV* riscv;
++    MDRawContextRISCV64* riscv64;
+   } context_;
+ 
+   // Store this separately because of the weirdo AMD64 context
+diff --git a/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/stack_frame_cpu.h b/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/stack_frame_cpu.h
+index dc5d8ae67391..dd7bbedbe3ac 100644
+--- a/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/stack_frame_cpu.h
++++ b/toolkit/crashreporter/google-breakpad/src/google_breakpad/processor/stack_frame_cpu.h
+@@ -400,6 +400,116 @@ struct StackFrameMIPS : public StackFrame {
+   int context_validity;
+ };
+ 
++struct StackFrameRISCV : public StackFrame {
++  enum ContextValidity {
++    CONTEXT_VALID_NONE = 0,
++    CONTEXT_VALID_PC = 1 << 0,
++    CONTEXT_VALID_RA = 1 << 1,
++    CONTEXT_VALID_SP = 1 << 2,
++    CONTEXT_VALID_GP = 1 << 3,
++    CONTEXT_VALID_TP = 1 << 4,
++    CONTEXT_VALID_T0 = 1 << 5,
++    CONTEXT_VALID_T1 = 1 << 6,
++    CONTEXT_VALID_T2 = 1 << 7,
++    CONTEXT_VALID_S0 = 1 << 8,
++    CONTEXT_VALID_S1 = 1 << 9,
++    CONTEXT_VALID_A0 = 1 << 10,
++    CONTEXT_VALID_A1 = 1 << 11,
++    CONTEXT_VALID_A2 = 1 << 12,
++    CONTEXT_VALID_A3 = 1 << 13,
++    CONTEXT_VALID_A4 = 1 << 14,
++    CONTEXT_VALID_A5 = 1 << 15,
++    CONTEXT_VALID_A6 = 1 << 16,
++    CONTEXT_VALID_A7 = 1 << 17,
++    CONTEXT_VALID_S2 = 1 << 18,
++    CONTEXT_VALID_S3 = 1 << 19,
++    CONTEXT_VALID_S4 = 1 << 20,
++    CONTEXT_VALID_S5 = 1 << 21,
++    CONTEXT_VALID_S6 = 1 << 22,
++    CONTEXT_VALID_S7 = 1 << 23,
++    CONTEXT_VALID_S8 = 1 << 24,
++    CONTEXT_VALID_S9 = 1 << 25,
++    CONTEXT_VALID_S10 = 1 << 26,
++    CONTEXT_VALID_S11 = 1 << 27,
++    CONTEXT_VALID_T3 = 1 << 28,
++    CONTEXT_VALID_T4 = 1 << 29,
++    CONTEXT_VALID_T5 = 1 << 30,
++    CONTEXT_VALID_T6 = 1 << 31,
++    CONTEXT_VALID_ALL = ~CONTEXT_VALID_NONE
++  };
++
++  StackFrameRISCV() : context(), context_validity(CONTEXT_VALID_NONE) {}
++
++  // Register state. This is only fully valid for the topmost frame in a
++  // stack. In other frames, which registers are present depends on what
++  // debugging information were available. Refer to 'context_validity' below.
++  MDRawContextRISCV context;
++
++  // For each register in context whose value has been recovered,
++  // the corresponding CONTEXT_VALID_ bit in 'context_validity' is set.
++  //
++  // context_validity's type should actually be ContextValidity, but
++  // type int is used instead because the bitwise inclusive or operator
++  // yields an int when applied to enum values, and C++ doesn't
++  // silently convert from ints to enums.
++  int context_validity;
++};
++
++struct StackFrameRISCV64 : public StackFrame {
++  enum ContextValidity {
++    CONTEXT_VALID_NONE = 0,
++    CONTEXT_VALID_PC = 1 << 0,
++    CONTEXT_VALID_RA = 1 << 1,
++    CONTEXT_VALID_SP = 1 << 2,
++    CONTEXT_VALID_GP = 1 << 3,
++    CONTEXT_VALID_TP = 1 << 4,
++    CONTEXT_VALID_T0 = 1 << 5,
++    CONTEXT_VALID_T1 = 1 << 6,
++    CONTEXT_VALID_T2 = 1 << 7,
++    CONTEXT_VALID_S0 = 1 << 8,
++    CONTEXT_VALID_S1 = 1 << 9,
++    CONTEXT_VALID_A0 = 1 << 10,
++    CONTEXT_VALID_A1 = 1 << 11,
++    CONTEXT_VALID_A2 = 1 << 12,
++    CONTEXT_VALID_A3 = 1 << 13,
++    CONTEXT_VALID_A4 = 1 << 14,
++    CONTEXT_VALID_A5 = 1 << 15,
++    CONTEXT_VALID_A6 = 1 << 16,
++    CONTEXT_VALID_A7 = 1 << 17,
++    CONTEXT_VALID_S2 = 1 << 18,
++    CONTEXT_VALID_S3 = 1 << 19,
++    CONTEXT_VALID_S4 = 1 << 20,
++    CONTEXT_VALID_S5 = 1 << 21,
++    CONTEXT_VALID_S6 = 1 << 22,
++    CONTEXT_VALID_S7 = 1 << 23,
++    CONTEXT_VALID_S8 = 1 << 24,
++    CONTEXT_VALID_S9 = 1 << 25,
++    CONTEXT_VALID_S10 = 1 << 26,
++    CONTEXT_VALID_S11 = 1 << 27,
++    CONTEXT_VALID_T3 = 1 << 28,
++    CONTEXT_VALID_T4 = 1 << 29,
++    CONTEXT_VALID_T5 = 1 << 30,
++    CONTEXT_VALID_T6 = 1 << 31,
++    CONTEXT_VALID_ALL = ~CONTEXT_VALID_NONE
++  };
++
++  StackFrameRISCV64() : context(), context_validity(CONTEXT_VALID_NONE) {}
++
++  // Register state. This is only fully valid for the topmost frame in a
++  // stack. In other frames, which registers are present depends on what
++  // debugging information were available. Refer to 'context_validity' below.
++  MDRawContextRISCV64 context;
++
++  // For each register in context whose value has been recovered,
++  // the corresponding CONTEXT_VALID_ bit in 'context_validity' is set.
++  //
++  // context_validity's type should actually be ContextValidity, but
++  // type int is used instead because the bitwise inclusive or operator
++  // yields an int when applied to enum values, and C++ doesn't
++  // silently convert from ints to enums.
++  int context_validity;
++};
++
+ }  // namespace google_breakpad
+ 
+ #endif  // GOOGLE_BREAKPAD_PROCESSOR_STACK_FRAME_CPU_H__
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/dump_context.cc b/toolkit/crashreporter/google-breakpad/src/processor/dump_context.cc
+index da531b74d0df..2bbd10777240 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/dump_context.cc
++++ b/toolkit/crashreporter/google-breakpad/src/processor/dump_context.cc
+@@ -140,6 +140,24 @@ const MDRawContextMIPS* DumpContext::GetContextMIPS() const {
+   return context_.ctx_mips;
+ }
+ 
++const MDRawContextRISCV* DumpContext::GetContextRISCV() const {
++  if (GetContextCPU() != MD_CONTEXT_RISCV) {
++    BPLOG(ERROR) << "DumpContext cannot get RISCV context";
++    return nullptr;
++  }
++
++  return context_.riscv;
++}
++
++const MDRawContextRISCV64* DumpContext::GetContextRISCV64() const {
++  if (GetContextCPU() != MD_CONTEXT_RISCV64) {
++    BPLOG(ERROR) << "DumpContext cannot get RISCV64 context";
++    return nullptr;
++  }
++
++  return context_.riscv64;
++}
++
+ bool DumpContext::GetInstructionPointer(uint64_t* ip) const {
+   BPLOG_IF(ERROR, !ip) << "DumpContext::GetInstructionPointer requires |ip|";
+   assert(ip);
+@@ -176,6 +194,12 @@ bool DumpContext::GetInstructionPointer(uint64_t* ip) const {
+   case MD_CONTEXT_MIPS64:
+     *ip = GetContextMIPS()->epc;
+     break;
++  case MD_CONTEXT_RISCV:
++    *ip = GetContextRISCV()->pc;
++    break;
++  case MD_CONTEXT_RISCV64:
++    *ip = GetContextRISCV64()->pc;
++    break;
+   default:
+     // This should never happen.
+     BPLOG(ERROR) << "Unknown CPU architecture in GetInstructionPointer";
+@@ -220,6 +244,12 @@ bool DumpContext::GetStackPointer(uint64_t* sp) const {
+   case MD_CONTEXT_MIPS64:
+     *sp = GetContextMIPS()->iregs[MD_CONTEXT_MIPS_REG_SP];
+     break;
++  case MD_CONTEXT_RISCV:
++    *sp = GetContextRISCV()->sp;
++    break;
++  case MD_CONTEXT_RISCV64:
++    *sp = GetContextRISCV64()->sp;
++    break;
+   default:
+     // This should never happen.
+     BPLOG(ERROR) << "Unknown CPU architecture in GetStackPointer";
+@@ -264,6 +294,14 @@ void DumpContext::SetContextMIPS(MDRawContextMIPS* ctx_mips) {
+   context_.ctx_mips = ctx_mips;
+ }
+ 
++void DumpContext::SetContextRISCV(MDRawContextRISCV* riscv) {
++  context_.riscv = riscv;
++}
++
++void DumpContext::SetContextRISCV64(MDRawContextRISCV64* riscv64) {
++  context_.riscv64 = riscv64;
++}
++
+ void DumpContext::FreeContext() {
+   switch (GetContextCPU()) {
+     case MD_CONTEXT_X86:
+@@ -299,6 +337,14 @@ void DumpContext::FreeContext() {
+       delete context_.ctx_mips;
+       break;
+ 
++    case MD_CONTEXT_RISCV:
++      delete context_.riscv;
++      break;
++
++    case MD_CONTEXT_RISCV64:
++      delete context_.riscv64;
++      break;
++
+     default:
+       // There is no context record (valid_ is false) or there's a
+       // context record for an unknown CPU (shouldn't happen, only known
+@@ -655,6 +701,108 @@ void DumpContext::Print() {
+       break;
+     }
+ 
++    case MD_CONTEXT_RISCV: {
++      const MDRawContextRISCV* context_riscv = GetContextRISCV();
++      printf("MDRawContextRISCV\n");
++      printf("  context_flags        = 0x%x\n", context_riscv->context_flags);
++
++      printf("  pc            = 0x%" PRIx32 "\n", context_riscv->pc);
++      printf("  ra            = 0x%" PRIx32 "\n", context_riscv->ra);
++      printf("  sp            = 0x%" PRIx32 "\n", context_riscv->sp);
++      printf("  gp            = 0x%" PRIx32 "\n", context_riscv->gp);
++      printf("  tp            = 0x%" PRIx32 "\n", context_riscv->tp);
++      printf("  t0            = 0x%" PRIx32 "\n", context_riscv->t0);
++      printf("  t1            = 0x%" PRIx32 "\n", context_riscv->t1);
++      printf("  t2            = 0x%" PRIx32 "\n", context_riscv->t2);
++      printf("  s0            = 0x%" PRIx32 "\n", context_riscv->s0);
++      printf("  s1            = 0x%" PRIx32 "\n", context_riscv->s1);
++      printf("  a0            = 0x%" PRIx32 "\n", context_riscv->a0);
++      printf("  a1            = 0x%" PRIx32 "\n", context_riscv->a1);
++      printf("  a2            = 0x%" PRIx32 "\n", context_riscv->a2);
++      printf("  a3            = 0x%" PRIx32 "\n", context_riscv->a3);
++      printf("  a4            = 0x%" PRIx32 "\n", context_riscv->a4);
++      printf("  a5            = 0x%" PRIx32 "\n", context_riscv->a5);
++      printf("  a6            = 0x%" PRIx32 "\n", context_riscv->a6);
++      printf("  a7            = 0x%" PRIx32 "\n", context_riscv->a7);
++      printf("  s2            = 0x%" PRIx32 "\n", context_riscv->s2);
++      printf("  s3            = 0x%" PRIx32 "\n", context_riscv->s3);
++      printf("  s4            = 0x%" PRIx32 "\n", context_riscv->s4);
++      printf("  s5            = 0x%" PRIx32 "\n", context_riscv->s5);
++      printf("  s6            = 0x%" PRIx32 "\n", context_riscv->s6);
++      printf("  s7            = 0x%" PRIx32 "\n", context_riscv->s7);
++      printf("  s8            = 0x%" PRIx32 "\n", context_riscv->s8);
++      printf("  s9            = 0x%" PRIx32 "\n", context_riscv->s9);
++      printf("  s10           = 0x%" PRIx32 "\n", context_riscv->s10);
++      printf("  s11           = 0x%" PRIx32 "\n", context_riscv->s11);
++      printf("  t3            = 0x%" PRIx32 "\n", context_riscv->t3);
++      printf("  t4            = 0x%" PRIx32 "\n", context_riscv->t4);
++      printf("  t5            = 0x%" PRIx32 "\n", context_riscv->t5);
++      printf("  t6            = 0x%" PRIx32 "\n", context_riscv->t6);
++
++#if defined(__riscv)
++      for (unsigned int freg_index = 0; freg_index < MD_CONTEXT_RISCV_FPR_COUNT;
++           ++freg_index) {
++        // Breakpad only supports RISCV32 with 32 bit floating point.
++        uint32_t fp_value = context_riscv->fpregs[freg_index];
++        printf("  fpregs[%2d]            = 0x%" PRIx32 "\n", freg_index,
++               fp_value);
++      }
++      printf("  fcsr     = 0x%" PRIx32 "\n", context_riscv->fcsr);
++#endif
++      break;
++    }
++
++    case MD_CONTEXT_RISCV64: {
++      const MDRawContextRISCV64* context_riscv64 = GetContextRISCV64();
++      printf("MDRawContextRISCV64\n");
++      printf("  context_flags        = 0x%x\n", context_riscv64->context_flags);
++
++      printf("  pc            = 0x%" PRIx64 "\n", context_riscv64->pc);
++      printf("  ra            = 0x%" PRIx64 "\n", context_riscv64->ra);
++      printf("  sp            = 0x%" PRIx64 "\n", context_riscv64->sp);
++      printf("  gp            = 0x%" PRIx64 "\n", context_riscv64->gp);
++      printf("  tp            = 0x%" PRIx64 "\n", context_riscv64->tp);
++      printf("  t0            = 0x%" PRIx64 "\n", context_riscv64->t0);
++      printf("  t1            = 0x%" PRIx64 "\n", context_riscv64->t1);
++      printf("  t2            = 0x%" PRIx64 "\n", context_riscv64->t2);
++      printf("  s0            = 0x%" PRIx64 "\n", context_riscv64->s0);
++      printf("  s1            = 0x%" PRIx64 "\n", context_riscv64->s1);
++      printf("  a0            = 0x%" PRIx64 "\n", context_riscv64->a0);
++      printf("  a1            = 0x%" PRIx64 "\n", context_riscv64->a1);
++      printf("  a2            = 0x%" PRIx64 "\n", context_riscv64->a2);
++      printf("  a3            = 0x%" PRIx64 "\n", context_riscv64->a3);
++      printf("  a4            = 0x%" PRIx64 "\n", context_riscv64->a4);
++      printf("  a5            = 0x%" PRIx64 "\n", context_riscv64->a5);
++      printf("  a6            = 0x%" PRIx64 "\n", context_riscv64->a6);
++      printf("  a7            = 0x%" PRIx64 "\n", context_riscv64->a7);
++      printf("  s2            = 0x%" PRIx64 "\n", context_riscv64->s2);
++      printf("  s3            = 0x%" PRIx64 "\n", context_riscv64->s3);
++      printf("  s4            = 0x%" PRIx64 "\n", context_riscv64->s4);
++      printf("  s5            = 0x%" PRIx64 "\n", context_riscv64->s5);
++      printf("  s6            = 0x%" PRIx64 "\n", context_riscv64->s6);
++      printf("  s7            = 0x%" PRIx64 "\n", context_riscv64->s7);
++      printf("  s8            = 0x%" PRIx64 "\n", context_riscv64->s8);
++      printf("  s9            = 0x%" PRIx64 "\n", context_riscv64->s9);
++      printf("  s10           = 0x%" PRIx64 "\n", context_riscv64->s10);
++      printf("  s11           = 0x%" PRIx64 "\n", context_riscv64->s11);
++      printf("  t3            = 0x%" PRIx64 "\n", context_riscv64->t3);
++      printf("  t4            = 0x%" PRIx64 "\n", context_riscv64->t4);
++      printf("  t5            = 0x%" PRIx64 "\n", context_riscv64->t5);
++      printf("  t6            = 0x%" PRIx64 "\n", context_riscv64->t6);
++
++#if defined(__riscv)
++      for (unsigned int freg_index = 0; freg_index < MD_CONTEXT_RISCV_FPR_COUNT;
++           ++freg_index) {
++        // Breakpad only supports RISCV64 with 64 bit floating point.
++        uint64_t fp_value = context_riscv64->fpregs[freg_index];
++        printf("  fpregs[%2d]            = 0x%" PRIx64 "\n", freg_index,
++               fp_value);
++      }
++      printf("  fcsr     = 0x%" PRIx32 "\n", context_riscv64->fcsr);
++#endif
++      break;
++    }
++
+     default: {
+       break;
+     }
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/minidump.cc b/toolkit/crashreporter/google-breakpad/src/processor/minidump.cc
+index 3ba2437af368..f4ad3e999e26 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/minidump.cc
++++ b/toolkit/crashreporter/google-breakpad/src/processor/minidump.cc
+@@ -1145,6 +1145,159 @@ bool MinidumpContext::Read(uint32_t expected_size) {
+         break;
+       }
+ 
++      case MD_CONTEXT_RISCV: {
++        if (expected_size != sizeof(MDRawContextRISCV)) {
++          BPLOG(ERROR) << "MinidumpContext RISCV size mismatch, "
++                       << expected_size << " != " << sizeof(MDRawContextRISCV);
++          return false;
++        }
++
++        scoped_ptr<MDRawContextRISCV> context_riscv(
++            new MDRawContextRISCV());
++
++        // Set the context_flags member, which has already been read, and
++        // read the rest of the structure beginning with the first member
++        // after context_flags.
++        context_riscv->context_flags = context_flags;
++
++        size_t flags_size = sizeof(context_riscv->context_flags);
++        uint8_t* context_after_flags =
++            reinterpret_cast<uint8_t*>(context_riscv.get()) + flags_size;
++        if (!minidump_->ReadBytes(context_after_flags,
++                                  sizeof(MDRawContextRISCV) - flags_size)) {
++          BPLOG(ERROR) << "MinidumpContext could not read RISCV context";
++          return false;
++        }
++
++        // Do this after reading the entire MDRawContext structure because
++        // GetSystemInfo may seek minidump to a new position.
++        if (!CheckAgainstSystemInfo(cpu_type)) {
++          BPLOG(ERROR) << "MinidumpContext RISCV does not match system info";
++          return false;
++        }
++
++        if (minidump_->swap()) {
++          Swap(&context_riscv->pc);
++          Swap(&context_riscv->ra);
++          Swap(&context_riscv->sp);
++          Swap(&context_riscv->gp);
++          Swap(&context_riscv->tp);
++          Swap(&context_riscv->t0);
++          Swap(&context_riscv->t1);
++          Swap(&context_riscv->t2);
++          Swap(&context_riscv->s0);
++          Swap(&context_riscv->s1);
++          Swap(&context_riscv->a0);
++          Swap(&context_riscv->a1);
++          Swap(&context_riscv->a2);
++          Swap(&context_riscv->a3);
++          Swap(&context_riscv->a4);
++          Swap(&context_riscv->a5);
++          Swap(&context_riscv->a6);
++          Swap(&context_riscv->a7);
++          Swap(&context_riscv->s2);
++          Swap(&context_riscv->s3);
++          Swap(&context_riscv->s4);
++          Swap(&context_riscv->s5);
++          Swap(&context_riscv->s6);
++          Swap(&context_riscv->s7);
++          Swap(&context_riscv->s8);
++          Swap(&context_riscv->s9);
++          Swap(&context_riscv->s10);
++          Swap(&context_riscv->s11);
++          Swap(&context_riscv->t3);
++          Swap(&context_riscv->t4);
++          Swap(&context_riscv->t5);
++          Swap(&context_riscv->t6);
++
++          for (int fpr_index = 0; fpr_index < MD_CONTEXT_RISCV_FPR_COUNT;
++               ++fpr_index) {
++            Swap(&context_riscv->fpregs[fpr_index]);
++          }
++          Swap(&context_riscv->fcsr);
++        }
++        SetContextRISCV(context_riscv.release());
++
++        break;
++      }
++
++      case MD_CONTEXT_RISCV64: {
++        if (expected_size != sizeof(MDRawContextRISCV64)) {
++          BPLOG(ERROR) << "MinidumpContext RISCV64 size mismatch, "
++                       << expected_size
++                       << " != " << sizeof(MDRawContextRISCV64);
++          return false;
++        }
++
++        scoped_ptr<MDRawContextRISCV64> context_riscv64(
++            new MDRawContextRISCV64());
++
++        // Set the context_flags member, which has already been read, and
++        // read the rest of the structure beginning with the first member
++        // after context_flags.
++        context_riscv64->context_flags = context_flags;
++
++        size_t flags_size = sizeof(context_riscv64->context_flags);
++        uint8_t* context_after_flags =
++            reinterpret_cast<uint8_t*>(context_riscv64.get()) + flags_size;
++        if (!minidump_->ReadBytes(context_after_flags,
++                                  sizeof(MDRawContextRISCV64) - flags_size)) {
++          BPLOG(ERROR) << "MinidumpContext could not read RISCV context";
++          return false;
++        }
++
++        // Do this after reading the entire MDRawContext structure because
++        // GetSystemInfo may seek minidump to a new position.
++        if (!CheckAgainstSystemInfo(cpu_type)) {
++          BPLOG(ERROR) << "MinidumpContext RISCV does not match system info";
++          return false;
++        }
++
++        if (minidump_->swap()) {
++          Swap(&context_riscv64->pc);
++          Swap(&context_riscv64->ra);
++          Swap(&context_riscv64->sp);
++          Swap(&context_riscv64->gp);
++          Swap(&context_riscv64->tp);
++          Swap(&context_riscv64->t0);
++          Swap(&context_riscv64->t1);
++          Swap(&context_riscv64->t2);
++          Swap(&context_riscv64->s0);
++          Swap(&context_riscv64->s1);
++          Swap(&context_riscv64->a0);
++          Swap(&context_riscv64->a1);
++          Swap(&context_riscv64->a2);
++          Swap(&context_riscv64->a3);
++          Swap(&context_riscv64->a4);
++          Swap(&context_riscv64->a5);
++          Swap(&context_riscv64->a6);
++          Swap(&context_riscv64->a7);
++          Swap(&context_riscv64->s2);
++          Swap(&context_riscv64->s3);
++          Swap(&context_riscv64->s4);
++          Swap(&context_riscv64->s5);
++          Swap(&context_riscv64->s6);
++          Swap(&context_riscv64->s7);
++          Swap(&context_riscv64->s8);
++          Swap(&context_riscv64->s9);
++          Swap(&context_riscv64->s10);
++          Swap(&context_riscv64->s11);
++          Swap(&context_riscv64->t3);
++          Swap(&context_riscv64->t4);
++          Swap(&context_riscv64->t5);
++          Swap(&context_riscv64->t6);
++
++          for (int fpr_index = 0; fpr_index < MD_CONTEXT_RISCV_FPR_COUNT;
++               ++fpr_index) {
++            Swap(&context_riscv64->fpregs[fpr_index]);
++          }
++          Swap(&context_riscv64->fcsr);
++        }
++        SetContextRISCV64(context_riscv64.release());
++
++        break;
++      }
++
+       default: {
+         // Unknown context type - Don't log as an error yet. Let the
+         // caller work that out.
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/minidump_processor.cc b/toolkit/crashreporter/google-breakpad/src/processor/minidump_processor.cc
+index bebac3ea4886..49e3da022fad 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/minidump_processor.cc
++++ b/toolkit/crashreporter/google-breakpad/src/processor/minidump_processor.cc
+@@ -605,6 +605,16 @@ bool MinidumpProcessor::GetCPUInfo(Minidump *dump, SystemInfo *info) {
+       break;
+     }
+ 
++    case MD_CPU_ARCHITECTURE_RISCV: {
++      info->cpu = "riscv";
++      break;
++    }
++
++    case MD_CPU_ARCHITECTURE_RISCV64: {
++      info->cpu = "riscv64";
++      break;
++    }
++
+     default: {
+       // Assign the numeric architecture ID into the CPU string.
+       char cpu_string[7];
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/moz.build b/toolkit/crashreporter/google-breakpad/src/processor/moz.build
+index 2fa76f1d6d6c..c851adf544a5 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/moz.build
++++ b/toolkit/crashreporter/google-breakpad/src/processor/moz.build
+@@ -55,6 +55,8 @@ UNIFIED_SOURCES += [
+     'stackwalker_mips.cc',
+     'stackwalker_ppc.cc',
+     'stackwalker_ppc64.cc',
++    'stackwalker_riscv.cc',
++    'stackwalker_riscv64.cc',
+     'stackwalker_sparc.cc',
+     'stackwalker_x86.cc',
+     'symbolic_constants_win.cc',
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalk_common.cc b/toolkit/crashreporter/google-breakpad/src/processor/stackwalk_common.cc
+index dc84352b6133..75863acf4609 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/stackwalk_common.cc
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalk_common.cc
+@@ -166,6 +166,28 @@ static void PrintStackContents(const string &indent,
+       stack_begin = frame_arm64->context.iregs[31];
+       stack_end = prev_frame_arm64->context.iregs[31];
+     }
++  } else if (cpu == "riscv") {
++    word_length = 4;
++    const StackFrameRISCV* frame_riscv =
++        static_cast<const StackFrameRISCV*>(frame);
++    const StackFrameRISCV *prev_frame_riscv =
++        static_cast<const StackFrameRISCV*>(prev_frame);
++    if ((frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_SP) &&
++        (prev_frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_SP)) {
++      stack_begin = frame_riscv->context.sp;
++      stack_end = prev_frame_riscv->context.sp;
++    }
++  } else if (cpu == "riscv64") {
++    word_length = 8;
++    const StackFrameRISCV64* frame_riscv64 =
++        static_cast<const StackFrameRISCV64*>(frame);
++    const StackFrameRISCV64 *prev_frame_riscv64 =
++        static_cast<const StackFrameRISCV64*>(prev_frame);
++    if ((frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_SP) &&
++        (prev_frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_SP)) {
++      stack_begin = frame_riscv64->context.sp;
++      stack_end = prev_frame_riscv64->context.sp;
++    }
+   }
+   if (!word_length || !stack_begin || !stack_end)
+     return;
+@@ -602,6 +624,144 @@ static void PrintStack(const CallStack *stack,
+         sequence = PrintRegister64("s7",
+                      frame_mips->context.iregs[MD_CONTEXT_MIPS_REG_S7],
+                      sequence);
++    } else if (cpu == "riscv") {
++      const StackFrameRISCV* frame_riscv =
++          reinterpret_cast<const StackFrameRISCV*>(frame);
++
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_PC)
++        sequence = PrintRegister("pc", frame_riscv->context.pc, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_RA)
++        sequence = PrintRegister("ra", frame_riscv->context.ra, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_SP)
++        sequence = PrintRegister("sp", frame_riscv->context.sp, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_GP)
++        sequence = PrintRegister("gp", frame_riscv->context.gp, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_TP)
++        sequence = PrintRegister("tp", frame_riscv->context.tp, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T0)
++        sequence = PrintRegister("t0", frame_riscv->context.t0, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T1)
++        sequence = PrintRegister("t1", frame_riscv->context.t1, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T2)
++        sequence = PrintRegister("t2", frame_riscv->context.t2, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S0)
++        sequence = PrintRegister("s0", frame_riscv->context.s0, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S1)
++        sequence = PrintRegister("s1", frame_riscv->context.s1, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A0)
++        sequence = PrintRegister("a0", frame_riscv->context.a0, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A1)
++        sequence = PrintRegister("a1", frame_riscv->context.a1, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A2)
++        sequence = PrintRegister("a2", frame_riscv->context.a2, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A3)
++        sequence = PrintRegister("a3", frame_riscv->context.a3, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A4)
++        sequence = PrintRegister("a4", frame_riscv->context.a4, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A5)
++        sequence = PrintRegister("a5", frame_riscv->context.a5, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A6)
++        sequence = PrintRegister("a6", frame_riscv->context.a6, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_A7)
++        sequence = PrintRegister("a7", frame_riscv->context.a7, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S2)
++        sequence = PrintRegister("s2", frame_riscv->context.s2, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S3)
++        sequence = PrintRegister("s3", frame_riscv->context.s3, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S4)
++        sequence = PrintRegister("s4", frame_riscv->context.s4, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S5)
++        sequence = PrintRegister("s5", frame_riscv->context.s5, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S6)
++        sequence = PrintRegister("s6", frame_riscv->context.s6, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S7)
++        sequence = PrintRegister("s7", frame_riscv->context.s7, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S8)
++        sequence = PrintRegister("s8", frame_riscv->context.s8, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S9)
++        sequence = PrintRegister("s9", frame_riscv->context.s9, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S10)
++        sequence = PrintRegister("s10", frame_riscv->context.s10, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_S11)
++        sequence = PrintRegister("s11", frame_riscv->context.s11, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T3)
++        sequence = PrintRegister("t3", frame_riscv->context.t3, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T4)
++        sequence = PrintRegister("t4", frame_riscv->context.t4, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T5)
++        sequence = PrintRegister("t5", frame_riscv->context.t5, sequence);
++      if (frame_riscv->context_validity & StackFrameRISCV::CONTEXT_VALID_T6)
++        sequence = PrintRegister("t6", frame_riscv->context.t6, sequence);
++    } else if (cpu == "riscv64") {
++      const StackFrameRISCV64* frame_riscv64 =
++          reinterpret_cast<const StackFrameRISCV64*>(frame);
++
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_PC)
++        sequence = PrintRegister64("pc", frame_riscv64->context.pc, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_RA)
++        sequence = PrintRegister64("ra", frame_riscv64->context.ra, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_SP)
++        sequence = PrintRegister64("sp", frame_riscv64->context.sp, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_GP)
++        sequence = PrintRegister64("gp", frame_riscv64->context.gp, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_TP)
++        sequence = PrintRegister64("tp", frame_riscv64->context.tp, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T0)
++        sequence = PrintRegister64("t0", frame_riscv64->context.t0, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T1)
++        sequence = PrintRegister64("t1", frame_riscv64->context.t1, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T2)
++        sequence = PrintRegister64("t2", frame_riscv64->context.t2, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S0)
++        sequence = PrintRegister64("s0", frame_riscv64->context.s0, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S1)
++        sequence = PrintRegister64("s1", frame_riscv64->context.s1, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A0)
++        sequence = PrintRegister64("a0", frame_riscv64->context.a0, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A1)
++        sequence = PrintRegister64("a1", frame_riscv64->context.a1, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A2)
++        sequence = PrintRegister64("a2", frame_riscv64->context.a2, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A3)
++        sequence = PrintRegister64("a3", frame_riscv64->context.a3, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A4)
++        sequence = PrintRegister64("a4", frame_riscv64->context.a4, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A5)
++        sequence = PrintRegister64("a5", frame_riscv64->context.a5, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A6)
++        sequence = PrintRegister64("a6", frame_riscv64->context.a6, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_A7)
++        sequence = PrintRegister64("a7", frame_riscv64->context.a7, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S2)
++        sequence = PrintRegister64("s2", frame_riscv64->context.s2, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S3)
++        sequence = PrintRegister64("s3", frame_riscv64->context.s3, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S4)
++        sequence = PrintRegister64("s4", frame_riscv64->context.s4, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S5)
++        sequence = PrintRegister64("s5", frame_riscv64->context.s5, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S6)
++        sequence = PrintRegister64("s6", frame_riscv64->context.s6, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S7)
++        sequence = PrintRegister64("s7", frame_riscv64->context.s7, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S8)
++        sequence = PrintRegister64("s8", frame_riscv64->context.s8, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_S9)
++        sequence = PrintRegister64("s9", frame_riscv64->context.s9, sequence);
++      if (frame_riscv64->context_validity &
++          StackFrameRISCV64::CONTEXT_VALID_S10)
++        sequence = PrintRegister64("s10", frame_riscv64->context.s10, sequence);
++      if (frame_riscv64->context_validity &
++          StackFrameRISCV64::CONTEXT_VALID_S11)
++        sequence = PrintRegister64("s11", frame_riscv64->context.s11, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T3)
++        sequence = PrintRegister64("t3", frame_riscv64->context.t3, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T4)
++        sequence = PrintRegister64("t4", frame_riscv64->context.t4, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T5)
++        sequence = PrintRegister64("t5", frame_riscv64->context.t5, sequence);
++      if (frame_riscv64->context_validity & StackFrameRISCV64::CONTEXT_VALID_T6)
++        sequence = PrintRegister64("t6", frame_riscv64->context.t6, sequence);
+     }
+     printf("\n    Found by: %s\n", frame->trust_description().c_str());
+ 
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker.cc b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker.cc
+index 4988ef1eb8b0..39160bea52d5 100644
+--- a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker.cc
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker.cc
+@@ -55,6 +55,8 @@
+ #include "processor/stackwalker_arm.h"
+ #include "processor/stackwalker_arm64.h"
+ #include "processor/stackwalker_mips.h"
++#include "processor/stackwalker_riscv.h"
++#include "processor/stackwalker_riscv64.h"
+ 
+ namespace google_breakpad {
+ 
+@@ -265,6 +267,18 @@ Stackwalker* Stackwalker::StackwalkerForCPU(
+                                              memory, modules,
+                                              frame_symbolizer);
+       break;
++
++    case MD_CONTEXT_RISCV:
++      cpu_stackwalker =
++          new StackwalkerRISCV(system_info, context->GetContextRISCV(), memory,
++                               modules, frame_symbolizer);
++      break;
++
++    case MD_CONTEXT_RISCV64:
++      cpu_stackwalker =
++          new StackwalkerRISCV64(system_info, context->GetContextRISCV64(),
++                                 memory, modules, frame_symbolizer);
++      break;
+   }
+ 
+   BPLOG_IF(ERROR, !cpu_stackwalker) << "Unknown CPU type " << HexString(cpu) <<
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.cc b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.cc
+new file mode 100644
+index 000000000000..d350fe54ff23
+--- /dev/null
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.cc
+@@ -0,0 +1,540 @@
++// Copyright 2013 Google LLC
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++// notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++// copyright notice, this list of conditions and the following disclaimer
++// in the documentation and/or other materials provided with the
++// distribution.
++//     * Neither the name of Google LLC nor the names of its
++// contributors may be used to endorse or promote products derived from
++// this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++/* stackwalker_riscv.cc: riscv-specific stackwalker.
++ *
++ * See stackwalker_riscv.h for documentation.
++ *
++ * Author: Iacopo Colonnelli
++ */
++
++#ifdef HAVE_CONFIG_H
++#include <config.h>  // Must come first
++#endif
++
++#include <memory>
++
++#include "google_breakpad/processor/call_stack.h"
++#include "google_breakpad/processor/code_modules.h"
++#include "google_breakpad/processor/memory_region.h"
++#include "google_breakpad/processor/stack_frame_cpu.h"
++#include "google_breakpad/processor/system_info.h"
++#include "processor/cfi_frame_info.h"
++#include "processor/logging.h"
++#include "processor/stackwalker_riscv.h"
++
++namespace google_breakpad {
++
++StackwalkerRISCV::StackwalkerRISCV(const SystemInfo* system_info,
++                                   const MDRawContextRISCV* context,
++                                   MemoryRegion* memory,
++                                   const CodeModules* modules,
++                                   StackFrameSymbolizer* resolver_helper)
++    : Stackwalker(system_info, memory, modules, resolver_helper),
++      context_(context),
++      context_frame_validity_(StackFrameRISCV::CONTEXT_VALID_ALL) {
++}
++
++
++StackFrame* StackwalkerRISCV::GetContextFrame() {
++  if (!context_) {
++    BPLOG(ERROR) << "Can't get context frame without context";
++    return nullptr;
++  }
++
++  StackFrameRISCV* frame = new StackFrameRISCV();
++
++  frame->context = *context_;
++  frame->context_validity = context_frame_validity_;
++  frame->trust = StackFrame::FRAME_TRUST_CONTEXT;
++  frame->instruction = frame->context.pc;
++
++  return frame;
++}
++
++StackFrameRISCV* StackwalkerRISCV::GetCallerByCFIFrameInfo(
++    const vector<StackFrame*>& frames,
++    CFIFrameInfo* cfi_frame_info) {
++  StackFrameRISCV* last_frame =
++      static_cast<StackFrameRISCV*>(frames.back());
++
++  // Populate a dictionary with the valid register values in last_frame.
++  CFIFrameInfo::RegisterValueMap<uint32_t> callee_registers;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_PC)
++    callee_registers["pc"] = last_frame->context.pc;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_RA)
++    callee_registers["ra"] = last_frame->context.ra;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_SP)
++    callee_registers["sp"] = last_frame->context.sp;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_GP)
++    callee_registers["gp"] = last_frame->context.gp;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_TP)
++    callee_registers["tp"] = last_frame->context.tp;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T0)
++    callee_registers["t0"] = last_frame->context.t0;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T1)
++    callee_registers["t1"] = last_frame->context.t1;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T2)
++    callee_registers["t2"] = last_frame->context.t2;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S0)
++    callee_registers["s0"] = last_frame->context.s0;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S1)
++    callee_registers["s1"] = last_frame->context.s1;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A0)
++    callee_registers["a0"] = last_frame->context.a0;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A1)
++    callee_registers["a1"] = last_frame->context.a1;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A2)
++    callee_registers["a2"] = last_frame->context.a2;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A3)
++    callee_registers["a3"] = last_frame->context.a3;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A4)
++    callee_registers["a4"] = last_frame->context.a4;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A5)
++    callee_registers["a5"] = last_frame->context.a5;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A6)
++    callee_registers["a6"] = last_frame->context.a6;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_A7)
++    callee_registers["a7"] = last_frame->context.a7;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S2)
++    callee_registers["s2"] = last_frame->context.s2;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S3)
++    callee_registers["s3"] = last_frame->context.s3;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S4)
++    callee_registers["s4"] = last_frame->context.s4;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S5)
++    callee_registers["s5"] = last_frame->context.s5;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S6)
++    callee_registers["s6"] = last_frame->context.s6;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S7)
++    callee_registers["s7"] = last_frame->context.s7;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S8)
++    callee_registers["s8"] = last_frame->context.s8;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S9)
++    callee_registers["s9"] = last_frame->context.s9;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S10)
++    callee_registers["s10"] = last_frame->context.s10;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_S11)
++    callee_registers["s11"] = last_frame->context.s11;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T3)
++    callee_registers["t3"] = last_frame->context.t3;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T4)
++    callee_registers["t4"] = last_frame->context.t4;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T5)
++    callee_registers["t5"] = last_frame->context.t5;
++  if (last_frame->context_validity & StackFrameRISCV::CONTEXT_VALID_T6)
++    callee_registers["t6"] = last_frame->context.t6;
++
++  // Use the STACK CFI data to recover the caller's register values.
++  CFIFrameInfo::RegisterValueMap<uint32_t> caller_registers;
++  if (!cfi_frame_info->FindCallerRegs(callee_registers, *memory_,
++                                      &caller_registers)) {
++    return nullptr;
++  }
++
++  // Construct a new stack frame given the values the CFI recovered.
++  CFIFrameInfo::RegisterValueMap<uint32_t>::iterator entry;
++  std::unique_ptr<StackFrameRISCV> frame(new StackFrameRISCV());
++  entry = caller_registers.find("pc");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_PC;
++    frame->context.pc = entry->second;
++  } else{
++    // If the CFI doesn't recover the PC explicitly, then use .ra.
++    entry = caller_registers.find(".ra");
++    if (entry != caller_registers.end()) {
++      frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_PC;
++      frame->context.pc = entry->second;
++    }
++  }
++  entry = caller_registers.find("ra");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_RA;
++    frame->context.ra = entry->second;
++  }
++  entry = caller_registers.find("sp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_SP;
++    frame->context.sp = entry->second;
++  } else {
++    // If the CFI doesn't recover the SP explicitly, then use .cfa.
++    entry = caller_registers.find(".cfa");
++    if (entry != caller_registers.end()) {
++      frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_SP;
++      frame->context.sp = entry->second;
++    }
++  }
++  entry = caller_registers.find("gp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_GP;
++    frame->context.gp = entry->second;
++  }
++  entry = caller_registers.find("tp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_TP;
++    frame->context.tp = entry->second;
++  }
++  entry = caller_registers.find("t0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T0;
++    frame->context.t0 = entry->second;
++  }
++  entry = caller_registers.find("t1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T1;
++    frame->context.t1 = entry->second;
++  }
++  entry = caller_registers.find("t2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T2;
++    frame->context.t2 = entry->second;
++  }
++  entry = caller_registers.find("s0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S0;
++    frame->context.s0 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S0) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S0;
++    frame->context.s0 = last_frame->context.s0;
++  }
++  entry = caller_registers.find("s1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S1;
++    frame->context.s1 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S1) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S1;
++    frame->context.s1 = last_frame->context.s1;
++  }
++  entry = caller_registers.find("a0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A0;
++    frame->context.a0 = entry->second;
++  }
++  entry = caller_registers.find("a1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A1;
++    frame->context.a1 = entry->second;
++  }
++  entry = caller_registers.find("a2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A2;
++    frame->context.a2 = entry->second;
++  }
++  entry = caller_registers.find("a3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A3;
++    frame->context.a3 = entry->second;
++  }
++  entry = caller_registers.find("a4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A4;
++    frame->context.a4 = entry->second;
++  }
++  entry = caller_registers.find("a5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A5;
++    frame->context.a5 = entry->second;
++  }
++  entry = caller_registers.find("a6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A6;
++    frame->context.a6 = entry->second;
++  }
++  entry = caller_registers.find("a7");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_A7;
++    frame->context.a7 = entry->second;
++  }
++  entry = caller_registers.find("s2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S2;
++    frame->context.s2 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S2) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S2;
++    frame->context.s2 = last_frame->context.s2;
++  }
++  entry = caller_registers.find("s3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S3;
++    frame->context.s3 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S3) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S3;
++    frame->context.s3 = last_frame->context.s3;
++  }
++  entry = caller_registers.find("s4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S4;
++    frame->context.s4 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S4) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S4;
++    frame->context.s4 = last_frame->context.s4;
++  }
++  entry = caller_registers.find("s5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S5;
++    frame->context.s5 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S5) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S5;
++    frame->context.s5 = last_frame->context.s5;
++  }
++  entry = caller_registers.find("s6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S6;
++    frame->context.s6 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S6) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S6;
++    frame->context.s6 = last_frame->context.s6;
++  }
++  entry = caller_registers.find("s7");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S7;
++    frame->context.s7 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S7) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S7;
++    frame->context.s7 = last_frame->context.s7;
++  }
++  entry = caller_registers.find("s8");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S8;
++    frame->context.s8 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S8) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S8;
++    frame->context.s8 = last_frame->context.s8;
++  }
++  entry = caller_registers.find("s9");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S9;
++    frame->context.s9 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S9) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S9;
++    frame->context.s9 = last_frame->context.s9;
++  }
++  entry = caller_registers.find("s10");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S10;
++    frame->context.s10 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S10) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S10;
++    frame->context.s10 = last_frame->context.s10;
++  }
++  entry = caller_registers.find("s11");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S11;
++    frame->context.s11 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV::CONTEXT_VALID_S11) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_S11;
++    frame->context.s11 = last_frame->context.s11;
++  }
++  entry = caller_registers.find("t3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T3;
++    frame->context.t3 = entry->second;
++  }
++  entry = caller_registers.find("t4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T4;
++    frame->context.t4 = entry->second;
++  }
++  entry = caller_registers.find("t5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T5;
++    frame->context.t5 = entry->second;
++  }
++  entry = caller_registers.find("t6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV::CONTEXT_VALID_T6;
++    frame->context.t6 = entry->second;
++  }
++
++  // If we didn't recover the PC and the SP, then the frame isn't very useful.
++  static const uint64_t essentials = (StackFrameRISCV::CONTEXT_VALID_SP
++                                      | StackFrameRISCV::CONTEXT_VALID_PC);
++  if ((frame->context_validity & essentials) != essentials)
++    return nullptr;
++
++  frame->trust = StackFrame::FRAME_TRUST_CFI;
++  return frame.release();
++}
++
++StackFrameRISCV* StackwalkerRISCV::GetCallerByStackScan(
++    const vector<StackFrame*>& frames) {
++  StackFrameRISCV* last_frame =
++      static_cast<StackFrameRISCV*>(frames.back());
++  uint32_t last_sp = last_frame->context.sp;
++  uint32_t caller_sp, caller_pc;
++
++  if (!ScanForReturnAddress(last_sp, &caller_sp, &caller_pc,
++      last_frame->trust == StackFrame::FRAME_TRUST_CONTEXT)) {
++    // No plausible return address was found.
++    return nullptr;
++  }
++
++  // ScanForReturnAddress found a reasonable return address. Advance
++  // sp to the location above the one where the return address was
++  // found.
++  caller_sp += 4;
++
++  // Create a new stack frame (ownership will be transferred to the caller)
++  // and fill it in.
++  StackFrameRISCV* frame = new StackFrameRISCV();
++
++  frame->trust = StackFrame::FRAME_TRUST_SCAN;
++  frame->context = last_frame->context;
++  frame->context.pc = caller_pc;
++  frame->context.sp = caller_sp;
++  frame->context_validity = StackFrameRISCV::CONTEXT_VALID_PC |
++                            StackFrameRISCV::CONTEXT_VALID_SP;
++
++  return frame;
++}
++
++  StackFrameRISCV* StackwalkerRISCV::GetCallerByFramePointer(
++    const vector<StackFrame*>& frames) {
++  StackFrameRISCV* last_frame =
++      static_cast<StackFrameRISCV*>(frames.back());
++
++  uint32_t last_fp = last_frame->context.s0;
++
++  uint32_t caller_fp = 0;
++  if (last_fp && !memory_->GetMemoryAtAddress(last_fp, &caller_fp)) {
++    BPLOG(ERROR) << "Unable to read caller_fp from last_fp: 0x"
++                 << std::hex << last_fp;
++    return nullptr;
++  }
++
++  uint32_t caller_ra = 0;
++  if (last_fp && !memory_->GetMemoryAtAddress(last_fp + 4, &caller_ra)) {
++    BPLOG(ERROR) << "Unable to read caller_ra from last_fp + 4: 0x"
++                 << std::hex << (last_fp + 4);
++    return nullptr;
++  }
++
++  uint32_t caller_sp = last_fp ? last_fp + 8 : last_frame->context.s0;
++
++  // Create a new stack frame (ownership will be transferred to the caller)
++  // and fill it in.
++  StackFrameRISCV* frame = new StackFrameRISCV();
++
++  frame->trust = StackFrame::FRAME_TRUST_FP;
++  frame->context = last_frame->context;
++  frame->context.s0 = caller_fp;
++  frame->context.sp = caller_sp;
++  frame->context.pc = last_frame->context.ra;
++  frame->context.ra = caller_ra;
++  frame->context_validity = StackFrameRISCV::CONTEXT_VALID_PC |
++                            StackFrameRISCV::CONTEXT_VALID_RA |
++                            StackFrameRISCV::CONTEXT_VALID_S0 |
++                            StackFrameRISCV::CONTEXT_VALID_SP;
++  return frame;
++}
++
++StackFrame* StackwalkerRISCV::GetCallerFrame(const CallStack* stack,
++                                             bool stack_scan_allowed) {
++  if (!memory_ || !stack) {
++    BPLOG(ERROR) << "Can't get caller frame without memory or stack";
++    return nullptr;
++  }
++
++  const vector<StackFrame*>& frames = *stack->frames();
++  StackFrameRISCV* last_frame =
++      static_cast<StackFrameRISCV*>(frames.back());
++  std::unique_ptr<StackFrameRISCV> frame;
++
++  // Try to recover caller information from CFI.
++  std::unique_ptr<CFIFrameInfo> cfi_frame_info(
++      frame_symbolizer_->FindCFIFrameInfo(last_frame));
++  if (cfi_frame_info.get())
++    frame.reset(GetCallerByCFIFrameInfo(frames, cfi_frame_info.get()));
++
++  // If CFI failed, or there wasn't CFI available, fall back to frame pointer.
++  if (!frame.get())
++    frame.reset(GetCallerByFramePointer(frames));
++
++  // If everything failed, fall back to stack scanning.
++  if (stack_scan_allowed && !frame.get())
++    frame.reset(GetCallerByStackScan(frames));
++
++  // If nothing worked, tell the caller.
++  if (!frame.get())
++    return nullptr;
++
++  // Should we terminate the stack walk? (end-of-stack or broken invariant)
++  if (TerminateWalk(frame->context.pc, frame->context.sp,
++                    last_frame->context.sp,
++                    last_frame->trust == StackFrame::FRAME_TRUST_CONTEXT)) {
++    return nullptr;
++  }
++
++  // The new frame's context's PC is the return address, which is one
++  // instruction past the instruction that caused us to arrive at the callee.
++  // RISCV instructions have a uniform 4-byte encoding, so subtracting 4 off
++  // the return address gets back to the beginning of the call instruction.
++  // Callers that require the exact return address value may access
++  // frame->context.pc.
++  frame->instruction = frame->context.pc - 4;
++
++  return frame.release();
++}
++
++}  // namespace google_breakpad
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.h b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.h
+new file mode 100644
+index 000000000000..bfbf54f5ce57
+--- /dev/null
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv.h
+@@ -0,0 +1,101 @@
++// Copyright 2013 Google LLC
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++// notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++// copyright notice, this list of conditions and the following disclaimer
++// in the documentation and/or other materials provided with the
++// distribution.
++//     * Neither the name of Google LLC nor the names of its
++// contributors may be used to endorse or promote products derived from
++// this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++/* stackwalker_riscv.h: riscv-specific stackwalker.
++ *
++ * Provides stack frames given riscv register context and a memory region
++ * corresponding to a riscv stack.
++ *
++ * Author: Iacopo Colonnelli
++ */
++
++#ifndef PROCESSOR_STACKWALKER_RISCV_H__
++#define PROCESSOR_STACKWALKER_RISCV_H__
++
++#include "google_breakpad/common/minidump_format.h"
++#include "google_breakpad/processor/stackwalker.h"
++#include "google_breakpad/processor/stack_frame_cpu.h"
++
++namespace google_breakpad {
++
++class CodeModules;
++
++class StackwalkerRISCV : public Stackwalker {
++public:
++  // Context is a riscv context object that gives access to riscv-specific
++  // register state corresponding to the innermost called frame to be
++  // included in the stack.  The other arguments are passed directly
++  // through to the base Stackwalker constructor.
++  StackwalkerRISCV(const SystemInfo* system_info,
++                   const MDRawContextRISCV* context,
++                   MemoryRegion* memory,
++                   const CodeModules* modules,
++                   StackFrameSymbolizer* frame_symbolizer);
++
++  // Change the context validity mask of the frame returned by
++  // GetContextFrame to VALID. This is only for use by unit tests; the
++  // default behavior is correct for all application code.
++  void SetContextFrameValidity(int valid) {
++    context_frame_validity_ = valid;
++  }
++
++private:
++  // Implementation of Stackwalker, using riscv context and stack conventions.
++  virtual StackFrame* GetContextFrame();
++  virtual StackFrame* GetCallerFrame(
++      const CallStack* stack, bool stack_scan_allowed);
++
++  // Use cfi_frame_info (derived from STACK CFI records) to construct
++  // the frame that called frames.back(). The caller takes ownership
++  // of the returned frame. Return NULL on failure.
++  StackFrameRISCV* GetCallerByCFIFrameInfo(
++      const vector<StackFrame*>& frames, CFIFrameInfo* cfi_frame_info);
++
++  // Use the frame pointer. The caller takes ownership of the returned frame.
++  // Return NULL on failure.
++  StackFrameRISCV* GetCallerByFramePointer(
++      const vector<StackFrame*>& frames);
++
++  // Scan the stack for plausible return addresses. The caller takes ownership
++  // of the returned frame. Return NULL on failure.
++  StackFrameRISCV* GetCallerByStackScan(
++      const vector<StackFrame*>& frames);
++
++  // Stores the CPU context corresponding to the innermost stack frame to
++  // be returned by GetContextFrame.
++  const MDRawContextRISCV* context_;
++
++  // Validity mask for youngest stack frame. This is always
++  // CONTEXT_VALID_ALL in real use; it is only changeable for the sake of
++  // unit tests.
++  int context_frame_validity_;
++};
++
++}  // namespace google_breakpad
++
++#endif // PROCESSOR_STACKWALKER_RISCV_H__
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.cc b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.cc
+new file mode 100644
+index 000000000000..3da914db9dcc
+--- /dev/null
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.cc
+@@ -0,0 +1,540 @@
++// Copyright 2013 Google LLC
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++// notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++// copyright notice, this list of conditions and the following disclaimer
++// in the documentation and/or other materials provided with the
++// distribution.
++//     * Neither the name of Google LLC nor the names of its
++// contributors may be used to endorse or promote products derived from
++// this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++/* stackwalker_riscv64.cc: riscv64-specific stackwalker.
++ *
++ * See stackwalker_riscv64.h for documentation.
++ *
++ * Author: Iacopo Colonnelli
++ */
++
++#ifdef HAVE_CONFIG_H
++#include <config.h>  // Must come first
++#endif
++
++#include <memory>
++
++#include "google_breakpad/processor/call_stack.h"
++#include "google_breakpad/processor/code_modules.h"
++#include "google_breakpad/processor/memory_region.h"
++#include "google_breakpad/processor/stack_frame_cpu.h"
++#include "google_breakpad/processor/system_info.h"
++#include "processor/cfi_frame_info.h"
++#include "processor/logging.h"
++#include "processor/stackwalker_riscv64.h"
++
++namespace google_breakpad {
++
++StackwalkerRISCV64::StackwalkerRISCV64(const SystemInfo* system_info,
++                                       const MDRawContextRISCV64* context,
++                                       MemoryRegion* memory,
++                                       const CodeModules* modules,
++                                       StackFrameSymbolizer* resolver_helper)
++    : Stackwalker(system_info, memory, modules, resolver_helper),
++      context_(context),
++      context_frame_validity_(StackFrameRISCV::CONTEXT_VALID_ALL) {
++}
++
++
++StackFrame* StackwalkerRISCV64::GetContextFrame() {
++  if (!context_) {
++    BPLOG(ERROR) << "Can't get context frame without context";
++    return nullptr;
++  }
++
++  StackFrameRISCV64* frame = new StackFrameRISCV64();
++
++  frame->context = *context_;
++  frame->context_validity = context_frame_validity_;
++  frame->trust = StackFrame::FRAME_TRUST_CONTEXT;
++  frame->instruction = frame->context.pc;
++
++  return frame;
++}
++
++StackFrameRISCV64* StackwalkerRISCV64::GetCallerByCFIFrameInfo(
++    const vector<StackFrame*>& frames,
++    CFIFrameInfo* cfi_frame_info) {
++  StackFrameRISCV64* last_frame =
++      static_cast<StackFrameRISCV64*>(frames.back());
++
++  // Populate a dictionary with the valid register values in last_frame.
++  CFIFrameInfo::RegisterValueMap<uint64_t> callee_registers;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_PC)
++    callee_registers["pc"] = last_frame->context.pc;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_RA)
++    callee_registers["ra"] = last_frame->context.ra;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_SP)
++    callee_registers["sp"] = last_frame->context.sp;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_GP)
++    callee_registers["gp"] = last_frame->context.gp;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_TP)
++    callee_registers["tp"] = last_frame->context.tp;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T0)
++    callee_registers["t0"] = last_frame->context.t0;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T1)
++    callee_registers["t1"] = last_frame->context.t1;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T2)
++    callee_registers["t2"] = last_frame->context.t2;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S0)
++    callee_registers["s0"] = last_frame->context.s0;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S1)
++    callee_registers["s1"] = last_frame->context.s1;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A0)
++    callee_registers["a0"] = last_frame->context.a0;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A1)
++    callee_registers["a1"] = last_frame->context.a1;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A2)
++    callee_registers["a2"] = last_frame->context.a2;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A3)
++    callee_registers["a3"] = last_frame->context.a3;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A4)
++    callee_registers["a4"] = last_frame->context.a4;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A5)
++    callee_registers["a5"] = last_frame->context.a5;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A6)
++    callee_registers["a6"] = last_frame->context.a6;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_A7)
++    callee_registers["a7"] = last_frame->context.a7;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S2)
++    callee_registers["s2"] = last_frame->context.s2;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S3)
++    callee_registers["s3"] = last_frame->context.s3;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S4)
++    callee_registers["s4"] = last_frame->context.s4;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S5)
++    callee_registers["s5"] = last_frame->context.s5;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S6)
++    callee_registers["s6"] = last_frame->context.s6;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S7)
++    callee_registers["s7"] = last_frame->context.s7;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S8)
++    callee_registers["s8"] = last_frame->context.s8;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S9)
++    callee_registers["s9"] = last_frame->context.s9;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S10)
++    callee_registers["s10"] = last_frame->context.s10;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_S11)
++    callee_registers["s11"] = last_frame->context.s11;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T3)
++    callee_registers["t3"] = last_frame->context.t3;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T4)
++    callee_registers["t4"] = last_frame->context.t4;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T5)
++    callee_registers["t5"] = last_frame->context.t5;
++  if (last_frame->context_validity & StackFrameRISCV64::CONTEXT_VALID_T6)
++    callee_registers["t6"] = last_frame->context.t6;
++
++  // Use the STACK CFI data to recover the caller's register values.
++  CFIFrameInfo::RegisterValueMap<uint64_t> caller_registers;
++  if (!cfi_frame_info->FindCallerRegs(callee_registers, *memory_,
++                                      &caller_registers)) {
++    return nullptr;
++  }
++
++  // Construct a new stack frame given the values the CFI recovered.
++  CFIFrameInfo::RegisterValueMap<uint64_t>::iterator entry;
++  std::unique_ptr<StackFrameRISCV64> frame(new StackFrameRISCV64());
++  entry = caller_registers.find("pc");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_PC;
++    frame->context.pc = entry->second;
++  } else{
++    // If the CFI doesn't recover the PC explicitly, then use .ra.
++    entry = caller_registers.find(".ra");
++    if (entry != caller_registers.end()) {
++      frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_PC;
++      frame->context.pc = entry->second;
++    }
++  }
++  entry = caller_registers.find("ra");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_RA;
++    frame->context.ra = entry->second;
++  }
++  entry = caller_registers.find("sp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_SP;
++    frame->context.sp = entry->second;
++  } else {
++    // If the CFI doesn't recover the SP explicitly, then use .cfa.
++    entry = caller_registers.find(".cfa");
++    if (entry != caller_registers.end()) {
++      frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_SP;
++      frame->context.sp = entry->second;
++    }
++  }
++  entry = caller_registers.find("gp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_GP;
++    frame->context.gp = entry->second;
++  }
++  entry = caller_registers.find("tp");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_TP;
++    frame->context.tp = entry->second;
++  }
++  entry = caller_registers.find("t0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T0;
++    frame->context.t0 = entry->second;
++  }
++  entry = caller_registers.find("t1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T1;
++    frame->context.t1 = entry->second;
++  }
++  entry = caller_registers.find("t2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T2;
++    frame->context.t2 = entry->second;
++  }
++  entry = caller_registers.find("s0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S0;
++    frame->context.s0 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S0) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S0;
++    frame->context.s0 = last_frame->context.s0;
++  }
++  entry = caller_registers.find("s1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S1;
++    frame->context.s1 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S1) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S1;
++    frame->context.s1 = last_frame->context.s1;
++  }
++  entry = caller_registers.find("a0");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A0;
++    frame->context.a0 = entry->second;
++  }
++  entry = caller_registers.find("a1");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A1;
++    frame->context.a1 = entry->second;
++  }
++  entry = caller_registers.find("a2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A2;
++    frame->context.a2 = entry->second;
++  }
++  entry = caller_registers.find("a3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A3;
++    frame->context.a3 = entry->second;
++  }
++  entry = caller_registers.find("a4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A4;
++    frame->context.a4 = entry->second;
++  }
++  entry = caller_registers.find("a5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A5;
++    frame->context.a5 = entry->second;
++  }
++  entry = caller_registers.find("a6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A6;
++    frame->context.a6 = entry->second;
++  }
++  entry = caller_registers.find("a7");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_A7;
++    frame->context.a7 = entry->second;
++  }
++  entry = caller_registers.find("s2");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S2;
++    frame->context.s2 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S2) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S2;
++    frame->context.s2 = last_frame->context.s2;
++  }
++  entry = caller_registers.find("s3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S3;
++    frame->context.s3 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S3) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S3;
++    frame->context.s3 = last_frame->context.s3;
++  }
++  entry = caller_registers.find("s4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S4;
++    frame->context.s4 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S4) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S4;
++    frame->context.s4 = last_frame->context.s4;
++  }
++  entry = caller_registers.find("s5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S5;
++    frame->context.s5 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S5) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S5;
++    frame->context.s5 = last_frame->context.s5;
++  }
++  entry = caller_registers.find("s6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S6;
++    frame->context.s6 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S6) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S6;
++    frame->context.s6 = last_frame->context.s6;
++  }
++  entry = caller_registers.find("s7");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S7;
++    frame->context.s7 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S7) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S7;
++    frame->context.s7 = last_frame->context.s7;
++  }
++  entry = caller_registers.find("s8");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S8;
++    frame->context.s8 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S8) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S8;
++    frame->context.s8 = last_frame->context.s8;
++  }
++  entry = caller_registers.find("s9");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S9;
++    frame->context.s9 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S9) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S9;
++    frame->context.s9 = last_frame->context.s9;
++  }
++  entry = caller_registers.find("s10");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S10;
++    frame->context.s10 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S10) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S10;
++    frame->context.s10 = last_frame->context.s10;
++  }
++  entry = caller_registers.find("s11");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S11;
++    frame->context.s11 = entry->second;
++  } else if (last_frame->context_validity &
++             StackFrameRISCV64::CONTEXT_VALID_S11) {
++    // Since the register is callee-saves, assume the callee
++    // has not yet changed it.
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_S11;
++    frame->context.s11 = last_frame->context.s11;
++  }
++  entry = caller_registers.find("t3");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T3;
++    frame->context.t3 = entry->second;
++  }
++  entry = caller_registers.find("t4");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T4;
++    frame->context.t4 = entry->second;
++  }
++  entry = caller_registers.find("t5");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T5;
++    frame->context.t5 = entry->second;
++  }
++  entry = caller_registers.find("t6");
++  if (entry != caller_registers.end()) {
++    frame->context_validity |= StackFrameRISCV64::CONTEXT_VALID_T6;
++    frame->context.t6 = entry->second;
++  }
++
++  // If we didn't recover the PC and the SP, then the frame isn't very useful.
++  static const uint64_t essentials = (StackFrameRISCV64::CONTEXT_VALID_SP
++                                      | StackFrameRISCV64::CONTEXT_VALID_PC);
++  if ((frame->context_validity & essentials) != essentials)
++    return nullptr;
++
++  frame->trust = StackFrame::FRAME_TRUST_CFI;
++  return frame.release();
++}
++
++StackFrameRISCV64* StackwalkerRISCV64::GetCallerByStackScan(
++    const vector<StackFrame*>& frames) {
++  StackFrameRISCV64* last_frame =
++      static_cast<StackFrameRISCV64*>(frames.back());
++  uint64_t last_sp = last_frame->context.sp;
++  uint64_t caller_sp, caller_pc;
++
++  if (!ScanForReturnAddress(last_sp, &caller_sp, &caller_pc,
++      last_frame->trust == StackFrame::FRAME_TRUST_CONTEXT)) {
++    // No plausible return address was found.
++    return nullptr;
++  }
++
++  // ScanForReturnAddress found a reasonable return address. Advance
++  // sp to the location above the one where the return address was
++  // found.
++  caller_sp += 8;
++
++  // Create a new stack frame (ownership will be transferred to the caller)
++  // and fill it in.
++  StackFrameRISCV64* frame = new StackFrameRISCV64();
++
++  frame->trust = StackFrame::FRAME_TRUST_SCAN;
++  frame->context = last_frame->context;
++  frame->context.pc = caller_pc;
++  frame->context.sp = caller_sp;
++  frame->context_validity = StackFrameRISCV64::CONTEXT_VALID_PC |
++                            StackFrameRISCV64::CONTEXT_VALID_SP;
++
++  return frame;
++}
++
++StackFrameRISCV64* StackwalkerRISCV64::GetCallerByFramePointer(
++    const vector<StackFrame*>& frames) {
++  StackFrameRISCV64* last_frame =
++      static_cast<StackFrameRISCV64*>(frames.back());
++
++  uint64_t last_fp = last_frame->context.s0;
++
++  uint64_t caller_fp = 0;
++  if (last_fp && !memory_->GetMemoryAtAddress(last_fp, &caller_fp)) {
++    BPLOG(ERROR) << "Unable to read caller_fp from last_fp: 0x"
++                 << std::hex << last_fp;
++    return nullptr;
++  }
++
++  uint64_t caller_ra = 0;
++  if (last_fp && !memory_->GetMemoryAtAddress(last_fp + 8, &caller_ra)) {
++    BPLOG(ERROR) << "Unable to read caller_ra from last_fp + 8: 0x"
++                 << std::hex << (last_fp + 8);
++    return nullptr;
++  }
++
++  uint64_t caller_sp = last_fp ? last_fp + 16 : last_frame->context.s0;
++
++  // Create a new stack frame (ownership will be transferred to the caller)
++  // and fill it in.
++  StackFrameRISCV64* frame = new StackFrameRISCV64();
++
++  frame->trust = StackFrame::FRAME_TRUST_FP;
++  frame->context = last_frame->context;
++  frame->context.s0 = caller_fp;
++  frame->context.sp = caller_sp;
++  frame->context.pc = last_frame->context.ra;
++  frame->context.ra = caller_ra;
++  frame->context_validity = StackFrameRISCV64::CONTEXT_VALID_PC |
++                            StackFrameRISCV64::CONTEXT_VALID_RA |
++                            StackFrameRISCV64::CONTEXT_VALID_S0 |
++                            StackFrameRISCV64::CONTEXT_VALID_SP;
++  return frame;
++}
++
++StackFrame* StackwalkerRISCV64::GetCallerFrame(const CallStack* stack,
++                                             bool stack_scan_allowed) {
++  if (!memory_ || !stack) {
++    BPLOG(ERROR) << "Can't get caller frame without memory or stack";
++    return nullptr;
++  }
++
++  const vector<StackFrame*>& frames = *stack->frames();
++  StackFrameRISCV64* last_frame =
++      static_cast<StackFrameRISCV64*>(frames.back());
++  std::unique_ptr<StackFrameRISCV64> frame;
++
++  // Try to recover caller information from CFI.
++  std::unique_ptr<CFIFrameInfo> cfi_frame_info(
++      frame_symbolizer_->FindCFIFrameInfo(last_frame));
++  if (cfi_frame_info.get())
++    frame.reset(GetCallerByCFIFrameInfo(frames, cfi_frame_info.get()));
++
++  // If CFI failed, or there wasn't CFI available, fall back to frame pointer.
++  if (!frame.get())
++    frame.reset(GetCallerByFramePointer(frames));
++
++  // If everything failed, fall back to stack scanning.
++  if (stack_scan_allowed && !frame.get())
++    frame.reset(GetCallerByStackScan(frames));
++
++  // If nothing worked, tell the caller.
++  if (!frame.get())
++    return nullptr;
++
++  // Should we terminate the stack walk? (end-of-stack or broken invariant)
++  if (TerminateWalk(frame->context.pc, frame->context.sp,
++                    last_frame->context.sp,
++                    last_frame->trust == StackFrame::FRAME_TRUST_CONTEXT)) {
++    return nullptr;
++  }
++
++  // The new frame's context's PC is the return address, which is one
++  // instruction past the instruction that caused us to arrive at the callee.
++  // RISCV instructions have a uniform 4-byte encoding, so subtracting 4 off
++  // the return address gets back to the beginning of the call instruction.
++  // Callers that require the exact return address value may access
++  // frame->context.pc.
++  frame->instruction = frame->context.pc - 4;
++
++  return frame.release();
++}
++
++}  // namespace google_breakpad
+diff --git a/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.h b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.h
+new file mode 100644
+index 000000000000..84c54860fb0b
+--- /dev/null
++++ b/toolkit/crashreporter/google-breakpad/src/processor/stackwalker_riscv64.h
+@@ -0,0 +1,101 @@
++// Copyright 2013 Google LLC
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++//     * Redistributions of source code must retain the above copyright
++// notice, this list of conditions and the following disclaimer.
++//     * Redistributions in binary form must reproduce the above
++// copyright notice, this list of conditions and the following disclaimer
++// in the documentation and/or other materials provided with the
++// distribution.
++//     * Neither the name of Google LLC nor the names of its
++// contributors may be used to endorse or promote products derived from
++// this software without specific prior written permission.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++/* stackwalker_riscv64.h: riscv64-specific stackwalker.
++ *
++ * Provides stack frames given riscv64 register context and a memory region
++ * corresponding to a riscv64 stack.
++ *
++ * Author: Iacopo Colonnelli
++ */
++
++#ifndef PROCESSOR_STACKWALKER_RISCV64_H__
++#define PROCESSOR_STACKWALKER_RISCV64_H__
++
++#include "google_breakpad/common/minidump_format.h"
++#include "google_breakpad/processor/stackwalker.h"
++#include "google_breakpad/processor/stack_frame_cpu.h"
++
++namespace google_breakpad {
++
++class CodeModules;
++
++class StackwalkerRISCV64 : public Stackwalker {
++public:
++  // Context is a riscv context object that gives access to riscv-specific
++  // register state corresponding to the innermost called frame to be
++  // included in the stack.  The other arguments are passed directly
++  // through to the base Stackwalker constructor.
++  StackwalkerRISCV64(const SystemInfo* system_info,
++                     const MDRawContextRISCV64* context,
++                     MemoryRegion* memory,
++                     const CodeModules* modules,
++                     StackFrameSymbolizer* frame_symbolizer);
++
++  // Change the context validity mask of the frame returned by
++  // GetContextFrame to VALID. This is only for use by unit tests; the
++  // default behavior is correct for all application code.
++  void SetContextFrameValidity(int valid) {
++    context_frame_validity_ = valid;
++  }
++
++private:
++  // Implementation of Stackwalker, using riscv context and stack conventions.
++  virtual StackFrame* GetContextFrame();
++  virtual StackFrame* GetCallerFrame(
++      const CallStack* stack, bool stack_scan_allowed);
++
++  // Use cfi_frame_info (derived from STACK CFI records) to construct
++  // the frame that called frames.back(). The caller takes ownership
++  // of the returned frame. Return NULL on failure.
++  StackFrameRISCV64* GetCallerByCFIFrameInfo(
++      const vector<StackFrame*>& frames, CFIFrameInfo* cfi_frame_info);
++
++  // Use the frame pointer. The caller takes ownership of the returned frame.
++  // Return NULL on failure.
++  StackFrameRISCV64* GetCallerByFramePointer(
++      const vector<StackFrame*>& frames);
++
++  // Scan the stack for plausible return addresses. The caller takes ownership
++  // of the returned frame. Return NULL on failure.
++  StackFrameRISCV64* GetCallerByStackScan(
++      const vector<StackFrame*>& frames);
++
++  // Stores the CPU context corresponding to the innermost stack frame to
++  // be returned by GetContextFrame.
++  const MDRawContextRISCV64* context_;
++
++  // Validity mask for youngest stack frame. This is always
++  // CONTEXT_VALID_ALL in real use; it is only changeable for the sake of
++  // unit tests.
++  int context_frame_validity_;
++};
++
++}  // namespace google_breakpad
++
++#endif // PROCESSOR_STACKWALKER_RISCV64_H__
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index c250f6a150d3..a0f35cbcd532 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -3407,7 +3407,7 @@ set_config(
+ @depends(target)
+ def oxidized_breakpad(target):
+     if target.kernel == "Linux":
+-        return target.cpu in ("aarch64", "arm", "x86", "x86_64")
++        return target.cpu in ("aarch64", "arm", "x86", "x86_64", "riscv64")
+     return False
+ 
+ 
+-- 
+2.54.0
+

@@ -308,6 +308,8 @@ Requires:       ffmpeg
 # https://phabricator.services.mozilla.com/D301784
 2002-riscv64-libyuv-add-RVV-sources-to-build.patch
 2003-blindly-set-rust-rva23-target-when-needed.patch
+2004-add-riscv64-support-for-crash-context.patch
+2005-enable-crashreporter-for-riscv64.patch
 
 %description
 Mozilla Firefox is a free, open-source web browser developed by
@@ -383,6 +385,7 @@ ac_add_options --without-wasm-sandboxed-libraries
 ac_add_options --with-google-safebrowsing-api-keyfile=%{SOURCE200}
 
 # Misc
+ac_add_options --enable-crashreporter
 ac_add_options --disable-bootstrap
 ac_add_options --disable-tests
 # Enable SpiderMonkey JS shell
@@ -396,14 +399,6 @@ echo "ac_add_options --enable-lto" >> .mozconfig
 
 %if %{with official_branding}
 echo "ac_add_options --enable-official-branding" >> .mozconfig
-%endif
-
-# Firefox crash reporter
-%ifarch riscv64
-# TODO: Porting needed, somebody save us :(
-echo "ac_add_options --disable-crashreporter" >> .mozconfig
-%else
-echo "ac_add_options --enable-crashreporter" >> .mozconfig
 %endif
 
 # Some libraries we don't have but i think we should? - 251
