@@ -43,8 +43,8 @@
 # By default build dynamic user-mode emulation
 %bcond user_dynamic 1
 
-# By default do not build static user-mode emulation
-%bcond user_static 0
+# By default build static user-mode emulation
+%bcond user_static 1
 
 # Disable compiler Werror by default
 %bcond enable_werror 0
@@ -404,7 +404,7 @@ BuildRequires:  igvm-devel
 %if %{with user_static}
 BuildRequires:  glib-static
 BuildRequires:  glibc-static
-BuildRequires:  zlib-devel-static
+BuildRequires:  zlib-ng-compat-static
 #BuildRequires:  libatomic-static
 %endif
 # Requires for the openRuyi 'qemu' metapackage
@@ -1541,6 +1541,7 @@ popd
 %{_bindir}/qemu-sparc32plus-static
 %{_bindir}/qemu-sparc64-static
 %{_bindir}/qemu-x86_64-static
+%{_bindir}/qemu-i386-static
 %if %{with have_systemtap}
 %{_datadir}/systemtap/tapset/qemu-aarch64-log-static.stp
 %{_datadir}/systemtap/tapset/qemu-aarch64-simpletrace-static.stp
@@ -1607,6 +1608,7 @@ popd
 %endif
 %ifnarch x86_64
 %{_exec_prefix}/lib/binfmt.d/qemu-x86_64-static.conf
+%{_exec_prefix}/lib/binfmt.d/qemu-i386-static.conf
 %{_exec_prefix}/lib/binfmt.d/qemu-i486-static.conf
 %endif
 %{_exec_prefix}/lib/binfmt.d/qemu-s390x-static.conf
