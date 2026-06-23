@@ -11,7 +11,7 @@
 
 %global maj_ver 22
 %global min_ver 1
-%global patch_ver 5
+%global patch_ver 8
 #global rc_ver rc3
 
 %bcond check 0
@@ -78,7 +78,7 @@ Summary:        The Low Level Virtual Machine (%{maj_ver})
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
-#!RemoteAsset:  sha256:7972b87b705a003ce70ab55f9f0fb495d156887cba0eb296d284731139118e2c
+#!RemoteAsset:  sha256:922f1817a0df7b1489272d18134ee0087a8b068828f87ac63b9861b1a9965888
 Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{maj_ver}.%{min_ver}.%{patch_ver}%{?rc_ver:-%{rc_ver}}/%{src_tarball_dir}.tar.xz
 
 # please keep the patches in different groups for easier maintenance
@@ -670,7 +670,7 @@ cd $OLD_CWD
 # Now let's build
 %cmake -G Ninja %{cmake_config_args} %{extra_cmake_opts} $extra_cmake_args
 # Build libLLVM.so first to avoid OOM errors.
-%cmake_build --target LLVM
+%cmake_build --target LLVM LLVMTestingSupport LLVMTestingAnnotations
 # Also build libclang-cpp.so separately to avoid OOM errors.
 %cmake_build --target libclang-cpp.so
 # Same for the three large MLIR dylibs.
@@ -864,8 +864,6 @@ rm -f %{buildroot}/%{install_libdir}/libllvm_gtest*
 %files -n llvm%{maj_ver}-static
 %license llvm/LICENSE.TXT
 %{install_libdir}/libLLVM*.a
-%exclude %{install_libdir}/libLLVMTestingSupport.a
-%exclude %{install_libdir}/libLLVMTestingAnnotations.a
 
 %files -n clang%{maj_ver}
 %license clang/LICENSE.TXT
