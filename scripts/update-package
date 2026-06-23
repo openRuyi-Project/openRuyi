@@ -2,7 +2,7 @@
 # set -x
 set -Eeuo pipefail
 export REPO=openruyi
-export OSC="$DRYRUN osc"
+export OSC="${DRYRUN:-} osc"
 export BEFORE_COMMIT=$1
 export AFTER_COMMIT=$2
 export DATE="$(LC_ALL=en_US.UTF-8 date --utc '+%a %b %_d %T %Z %Y')"
