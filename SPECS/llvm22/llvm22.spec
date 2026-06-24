@@ -713,10 +713,7 @@ mkdir -p %{buildroot}/%{install_python3mod}
 cp -a clang/bindings/python/clang %{buildroot}/%{install_python3mod}
 mv -f %{buildroot}/%{install_prefix}/python_packages/mlir_core/mlir %{buildroot}/%{install_python3mod}
 
-rm -rf %{buildroot}/%{install_includedir}/llvm-gtest
-rm -rf %{buildroot}/%{install_includedir}/llvm-gmock
 rm -rf %{buildroot}/%{install_prefix}/src
-rm -f %{buildroot}/%{install_libdir}/libllvm_gtest*
 
 %check
 # it takes days to complete the testing. Let's just disable it for now.
@@ -858,12 +855,15 @@ rm -f %{buildroot}/%{install_libdir}/libllvm_gtest*
 %{_bindir}/llvm-config-%{maj_ver}
 %{install_includedir}/llvm
 %{install_includedir}/llvm-c
+%{install_includedir}/llvm-gmock
+%{install_includedir}/llvm-gtest
 %{install_libdir}/libLLVM.so
 %{install_libdir}/cmake/llvm
 
 %files -n llvm%{maj_ver}-static
 %license llvm/LICENSE.TXT
 %{install_libdir}/libLLVM*.a
+%{install_libdir}/libllvm_gtest*.a
 
 %files -n clang%{maj_ver}
 %license clang/LICENSE.TXT
