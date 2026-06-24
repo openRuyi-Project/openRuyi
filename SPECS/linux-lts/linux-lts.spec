@@ -6,6 +6,9 @@
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+%bcond rust  1
+
 %global modpath %{_prefix}/lib/modules/%{kver}
 
 %ifarch riscv64
@@ -62,6 +65,12 @@ BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  kmod
 BuildRequires:  rpm-config-openruyi
+
+%if %{with rust}
+BuildRequires:  bindgen
+BuildRequires:  cargo
+BuildRequires:  rust
+%endif
 
 Requires:       %{name}-core%{?_isa} = %{version}-%{release}
 Requires:       %{name}-modules%{?_isa} = %{version}-%{release}
