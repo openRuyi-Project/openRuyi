@@ -24,7 +24,7 @@ BuildOption(conf):  -Dgtk_doc=false
 BuildOption(conf):  -Dman_pages=false
 BuildOption(conf):  -Dgtk_module=false
 BuildOption(conf):  -Dpython_backend=false
-BuildOption(conf):  -Dpackaging_backend=dnf
+BuildOption(conf):  -Dpackaging_backend=dnf5
 BuildOption(conf):  -Dlocal_checkout=true
 BuildOption(conf):  -Dgstreamer_plugin=false
 
@@ -57,6 +57,14 @@ Requires:       shared-mime-info
 PackageKit is a D-Bus abstraction layer that allows the session user
 to manage packages in a secure way using a cross-distro,
 cross-architecture API.
+
+%package        command-not-found
+Summary:        Ask the user to install command line programs automatically
+Requires:       %{name} = %{version}-%{release}
+
+%description    command-not-found
+simple helper that offers to install new packages on the command line
+using PackageKit.
 
 %package        devel
 Summary:        GLib Libraries and headers for PackageKit
@@ -116,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_bindir}/pkcon
 %{_libdir}/packagekit-backend/libpk_backend_dummy.so
 %{_libdir}/packagekit-backend/libpk_backend_test_*.so
+%{_libdir}/packagekit-backend/libpk_backend_dnf5.so
+%{_libdir}/rpm-plugins/notify_packagekit.so
+%{_rpmmacrodir}/macros.transaction_notify_packagekit
 %ghost %verify(not md5 size mtime) %attr(0644,-,-) %{_localstatedir}/lib/PackageKit/transactions.db
 %{_datadir}/dbus-1/system.d/*
 %{_datadir}/dbus-1/system-services/*.service
@@ -129,11 +140,11 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %config %{_sysconfdir}/cron.daily/packagekit-background.cron
 %config(noreplace) %{_sysconfdir}/sysconfig/packagekit-background
 %{_libexecdir}/gst-install-plugins-helper
+
+%files command-not-found
 %{_sysconfdir}/profile.d/*
 %{_libexecdir}/pk-command-not-found
 %config(noreplace) %{_sysconfdir}/PackageKit/CommandNotFound.conf
-%{_libdir}/libdnf5/plugins/notify_packagekit.so
-%config(noreplace) %{_sysconfdir}/dnf/libdnf5-plugins/notify_packagekit.conf
 
 %files devel
 %{_libdir}/libpackagekit-glib2.so
