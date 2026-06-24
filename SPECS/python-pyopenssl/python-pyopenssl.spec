@@ -7,12 +7,12 @@
 %global srcname pyopenssl
 
 Name:           python-%{srcname}
-Version:        26.2.0
+Version:        26.3.0
 Release:        %autorelease
 Summary:        pyopenssl is a wrapper around the OpenSSL library
 License:        Apache-2.0
 URL:            https://github.com/pyca/pyopenssl
-#!RemoteAsset:  sha256:8c6fcecd1183a7fc897548dfe388b0cdb7f37e018200d8409cf33959dbe35387
+#!RemoteAsset:  sha256:589de7fae1c9ea670d18422ed00fc04da787bbde8e1454aea872aa57b49ad341
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
