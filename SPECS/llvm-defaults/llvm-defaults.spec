@@ -14,6 +14,7 @@ Release:        %{autorelease}
 Summary:        Default symlinks for LLVM %{maj_ver} tools
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
+Source0:        macros.clang
 
 BuildRequires:  llvm%{maj_ver}
 BuildRequires:  llvm%{maj_ver}-devel
@@ -21,7 +22,10 @@ BuildRequires:  clang%{maj_ver}
 BuildRequires:  clang%{maj_ver}-devel
 BuildRequires:  clang%{maj_ver}-tools-extra
 BuildRequires:  clang%{maj_ver}-analyzer
+BuildRequires:  clang%{maj_ver}-static
 BuildRequires:  compiler-rt%{maj_ver}
+BuildRequires:  libomp%{maj_ver}
+BuildRequires:  libomp%{maj_ver}-devel
 BuildRequires:  llvm-bolt%{maj_ver}
 BuildRequires:  lld%{maj_ver}
 BuildRequires:  lldb%{maj_ver}
@@ -49,6 +53,7 @@ creating symlinks like /usr/bin/llc -> llc-22, /usr/bin/opt -> opt-22, etc.
 %package     -n llvm-devel
 Summary:        Default symlinks for LLVM development tools
 Requires:       llvm%{maj_ver}-devel > %{maj_ver}
+Requires:       llvm%{?_isa} = %{version}-%{release}
 Provides:       cmake(LLVM) = %{maj_ver}
 
 %description -n llvm-devel
@@ -61,6 +66,7 @@ development tools, creating symlinks like /usr/bin/llvm-config -> llvm-config-22
 %package     -n clang
 Summary:        Default symlinks for clang
 Requires:       clang%{maj_ver} > %{maj_ver}
+Requires:       clang-rpm-macros = %{version}-%{release}
 
 %description -n clang
 This package provides default unversioned symlinks for clang %{maj_ver},
@@ -71,7 +77,11 @@ creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/clang++ -> clang++-2
 # ============================================================================
 %package     -n clang-devel
 Summary:        Default symlinks for clang development tools
+Requires:       clang%{?_isa} = %{version}-%{release}
 Requires:       clang%{maj_ver}-devel > %{maj_ver}
+Requires:       llvm-devel = %{version}-%{release}
+Requires:       clang-static = %{version}-%{release}
+Provides:       cmake(Clang) = %{maj_ver}
 
 %description -n clang-devel
 This package provides default unversioned symlinks for clang %{maj_ver}
@@ -98,6 +108,27 @@ Requires:       clang%{maj_ver}-analyzer > %{maj_ver}
 This package provides default unversioned symlinks for clang static analyzer %{maj_ver}.
 
 # ============================================================================
+# clang-static subpackage
+# ============================================================================
+%package     -n clang-static
+Summary:        Default dependency package for Clang static libraries
+Requires:       clang%{maj_ver}-static > %{maj_ver}
+
+%description -n clang-static
+This package depends on the default Clang %{maj_ver} static libraries.
+
+# ============================================================================
+# clang-rpm-macros subpackage
+# ============================================================================
+%package     -n clang-rpm-macros
+Summary:        RPM macros for the default Clang toolchain
+BuildArch:      noarch
+
+%description -n clang-rpm-macros
+This package provides RPM macros for packages that build against the
+default Clang toolchain.
+
+# ============================================================================
 # flang subpackage
 # ============================================================================
 %package     -n flang
@@ -114,10 +145,35 @@ the Fortran frontend for LLVM.
 %package     -n compiler-rt
 Summary:        Default LLVM compiler-rt runtime libraries
 Requires:       compiler-rt%{maj_ver} > %{maj_ver}
+Requires:       clang-rpm-macros = %{version}-%{release}
 
 %description -n compiler-rt
 This package depends on the default LLVM compiler-rt %{maj_ver} runtime
 libraries.
+
+
+# ============================================================================
+# libomp subpackage
+# ============================================================================
+%package     -n libomp
+Summary:        Default LLVM OpenMP runtime libraries
+Requires:       libomp%{maj_ver} > %{maj_ver}
+
+%description -n libomp
+This package provides default unversioned symlinks for LLVM OpenMP runtime
+libraries %{maj_ver}.
+
+# ============================================================================
+# libomp-devel subpackage
+# ============================================================================
+%package     -n libomp-devel
+Summary:        Default LLVM OpenMP development files
+Requires:       libomp%{maj_ver}-devel > %{maj_ver}
+Requires:       libomp = %{version}-%{release}
+
+%description -n libomp-devel
+This package provides default unversioned symlinks for LLVM OpenMP development
+files %{maj_ver}.
 
 # ============================================================================
 # llvm-bolt subpackage
@@ -191,7 +247,7 @@ ln -sf llvm-mca-%{maj_ver} %{buildroot}%{_bindir}/llvm-mca
 ln -sf llvm-config-%{maj_ver} %{buildroot}%{_bindir}/llvm-config
 # CMake config symlink
 mkdir -p %{buildroot}%{_libdir}/cmake
-ln -sf ../llvm%{maj_ver}/lib/cmake/llvm %{buildroot}%{_libdir}/cmake/llvm
+ln -sfn ../llvm%{maj_ver}/lib/cmake/llvm %{buildroot}%{_libdir}/cmake/llvm
 
 # clang symlinks
 ln -sf clang-%{maj_ver} %{buildroot}%{_bindir}/clang
@@ -202,6 +258,20 @@ ln -sf clang-scan-deps-%{maj_ver} %{buildroot}%{_bindir}/clang-scan-deps
 
 # clang-devel symlinks
 ln -sf clang-tblgen-%{maj_ver} %{buildroot}%{_bindir}/clang-tblgen
+ln -sfn ../llvm%{maj_ver}/lib/cmake/clang %{buildroot}%{_libdir}/cmake/clang
+
+# compiler-rt / Clang resource directory compatibility symlink
+# This matches the old/common layout such as /usr/lib/clang/21,
+# while pointing to the versioned LLVM resource directory.
+mkdir -p %{buildroot}%{_prefix}/lib/clang
+ln -sfn ../../%{_lib}/llvm%{maj_ver}/lib/clang/%{maj_ver} \
+  %{buildroot}%{_prefix}/lib/clang/%{maj_ver}
+
+# libomp symlinks
+ln -sfn llvm%{maj_ver}/%{_lib}/libarcher.so %{buildroot}%{_libdir}/libarcher.so
+ln -sfn llvm%{maj_ver}/%{_lib}/libomp.so    %{buildroot}%{_libdir}/libomp.so
+ln -sfn llvm%{maj_ver}/%{_lib}/libompd.so   %{buildroot}%{_libdir}/libompd.so
+ln -sfn ../llvm%{maj_ver}/%{_lib}/cmake/openmp %{buildroot}%{_libdir}/cmake/openmp
 
 # clang-tools-extra symlinks
 ln -sf clang-format-%{maj_ver} %{buildroot}%{_bindir}/clang-format
@@ -259,6 +329,31 @@ ln -sf lldb-instr-%{maj_ver} %{buildroot}%{_bindir}/lldb-instr
 ln -sf lldb-server-%{maj_ver} %{buildroot}%{_bindir}/lldb-server
 ln -sf lldb-mcp-%{maj_ver} %{buildroot}%{_bindir}/lldb-mcp
 
+# Install macros
+# RPM macros for the default Clang toolchain.
+# Query the version from the installed clang package, so llvm-defaults
+# does not need to hardcode min_ver / patch_ver.
+mkdir -p %{buildroot}%{_rpmmacrodir}
+
+clang_full_ver="$("%{_bindir}/llvm-config-%{maj_ver}" --version)"
+
+clang_major="${clang_full_ver%%%%.*}"
+clang_rest="${clang_full_ver#*.}"
+clang_minor="${clang_rest%%%%.*}"
+clang_patch="${clang_rest#*.}"
+clang_patch="${clang_patch%%%%[!0-9]*}"
+
+test "${clang_major}" = "%{maj_ver}"
+test -n "${clang_minor}"
+test -n "${clang_patch}"
+
+install -p -m0644 -D %{SOURCE0} %{buildroot}%{_rpmmacrodir}/macros.clang
+sed -i -e "s|@@CLANG_MAJOR_VERSION@@|${clang_major}|" \
+       -e "s|@@CLANG_MINOR_VERSION@@|${clang_minor}|" \
+       -e "s|@@CLANG_PATCH_VERSION@@|${clang_patch}|" \
+       %{buildroot}%{_rpmmacrodir}/macros.clang
+echo "%%clang%{maj_ver}_resource_dir %%{_prefix}/lib/clang/%{maj_ver}" >> %{buildroot}%{_rpmmacrodir}/macros.clang
+
 %post -n lld
 update-alternatives --install %{_bindir}/ld ld %{_bindir}/ld.lld 1
 
@@ -314,6 +409,7 @@ fi
 
 %files -n clang-devel
 %{_bindir}/clang-tblgen
+%{_libdir}/cmake/clang
 
 %files -n clang-tools-extra
 %{_bindir}/clang-format
@@ -340,6 +436,11 @@ fi
 %{_bindir}/scan-view
 %{_bindir}/scan-build
 
+%files -n clang-static
+
+%files -n clang-rpm-macros
+%{_rpmmacrodir}/macros.clang
+
 %files -n flang
 %{_bindir}/flang
 %{_bindir}/flang-new
@@ -349,6 +450,16 @@ fi
 %{_bindir}/tco
 
 %files -n compiler-rt
+%dir %{_prefix}/lib/clang
+%{_prefix}/lib/clang/%{maj_ver}
+
+%files -n libomp
+%{_libdir}/libarcher.so
+%{_libdir}/libomp.so
+%{_libdir}/libompd.so
+
+%files -n libomp-devel
+%{_libdir}/cmake/openmp
 
 %files -n llvm-bolt
 %{_bindir}/llvm-bolt
