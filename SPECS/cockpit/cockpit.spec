@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond multihost 1
 
 Name:           cockpit
-Version:        352
+Version:        364
 Release:        %autorelease
 Summary:        Web Console for Linux servers
 License:        LGPL-2.1-or-later
 URL:            https://cockpit-project.org/
 VCS:            git:https://github.com/cockpit-project/cockpit
-#!RemoteAsset:  sha256:72098a51f85c4a63f2e276af119920a5faca978b57652df562b409b5941b5146
+#!RemoteAsset:  sha256:514cea072e1ef137323ab92bdb07a66bbb5106ecd584e7a046294cf0170cb690
 Source:         https://github.com/cockpit-project/cockpit/releases/download/%{version}/cockpit-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -84,6 +85,8 @@ Summary:        Cockpit admin interface package
 Requires:       cockpit-bridge >= %{version}-%{release}
 Requires:       grep
 Requires:       /usr/bin/date
+# cockpit-system includes the shell UI required by add-on packages.
+Provides:       cockpit-shell = %{version}-%{release}
 
 %description    system
 This package contains the Cockpit shell and system configuration interfaces.
@@ -145,7 +148,7 @@ autoreconf -fiv
 mkdir -p %{buildroot}%{_sysconfdir}/pam.d
 install -p -m 644 tools/cockpit.pam %{buildroot}%{_sysconfdir}/pam.d/cockpit
 
-install -D -p -m 644 AUTHORS COPYING README.md %{buildroot}%{_docdir}/cockpit/
+install -D -p -m 644 AUTHORS LICENSES/* README.md %{buildroot}%{_docdir}/cockpit/
 
 # disable selinux,so we delete files.
 rm -rf %{buildroot}%{_datadir}/cockpit/selinux
@@ -161,15 +164,14 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %systemd_postun_with_restart cockpit.socket cockpit.service
 
 %files
-%license COPYING
+%license LICENSES/*
 %doc %{_docdir}/cockpit/AUTHORS
-%doc %{_docdir}/cockpit/COPYING
 %doc %{_docdir}/cockpit/README.md
 %{_datadir}/metainfo/org.cockpit_project.cockpit.appdata.xml
 %{_datadir}/icons/hicolor/*/apps/cockpit.png
 
 %files bridge
-%license COPYING
+%license LICENSES/*
 %{_bindir}/cockpit-bridge
 %{_libexecdir}/cockpit-askpass
 %{python3_sitelib}/cockpit/
@@ -181,7 +183,7 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %{python3_sitelib}/cockpit-*.dist-info/
 
 %files ws
-%license COPYING
+%license LICENSES/*
 %{_libexecdir}/cockpit-desktop
 %{_libexecdir}/cockpit-ws
 %{_libexecdir}/cockpit-wsinstance-factory
@@ -202,14 +204,13 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %{_prefix}/lib/tmpfiles.d/cockpit-ws.conf
 # PAM modules
 %{_libdir}/security/pam_ssh_add.so
-%{_libdir}/security/pam_cockpit_cert.so
 # Ghost files
 %ghost %{_sysconfdir}/issue.d/cockpit.issue
 %ghost %{_sysconfdir}/motd.d/cockpit
 %ghost %{_sysconfdir}/cockpit/disallowed-users
 
 %files system
-%license COPYING
+%license LICENSES/*
 %{_datadir}/cockpit/shell/
 %{_datadir}/cockpit/systemd/
 %{_datadir}/cockpit/users/
@@ -239,7 +240,7 @@ rm -f %{buildroot}%{_datadir}/metainfo/*selinux*
 %files doc
 %doc %{_docdir}/cockpit/
 %exclude %{_docdir}/cockpit/AUTHORS
-%exclude %{_docdir}/cockpit/COPYING
+%exclude %{_docdir}/cockpit/LICENSES/*
 %exclude %{_docdir}/cockpit/README.md
 
 %changelog
