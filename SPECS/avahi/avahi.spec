@@ -1,24 +1,23 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global upstream_version 0.9-rc4
+
 Name:           avahi
-Version:        0.8
+Version:        0.9~rc4
 Release:        %autorelease
 Summary:        Local network service discovery
 License:        LGPL-2.1-or-later AND LGPL-2.0-or-later
 URL:            https://github.com/avahi/avahi
-#!RemoteAsset:  sha256:060309d7a333d38d951bc27598c677af1796934dbd98e1024e7ad8de798fedda
-Source0:        https://github.com/avahi/avahi/releases/download/v%{version}/avahi-%{version}.tar.gz
+#!RemoteAsset:  sha256:08fcc57377ed05416ec4b3d8a179da716a7a9376821551a5ae16f8276a1ef0b5
+Source0:        https://github.com/avahi/avahi/archive/refs/tags/v%{upstream_version}.tar.gz
 Source1:        avahi.sysusers
 Source2:        avahi-autoipd.sysusers
 BuildSystem:    autotools
-
-# https://github.com/avahi/avahi/pull/265
-# or nothing provides pkgconfig(libevent-2.1.5) needed by avahi-devel
-Patch0:         0001-fix-pc-file.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-silent-rules
@@ -127,11 +126,10 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %dir %{_sysconfdir}/avahi/services
 %ghost %attr(0755, avahi, avahi) %dir %{_localstatedir}/run/avahi-daemon
 %config(noreplace) %{_sysconfdir}/avahi/avahi-daemon.conf
-%config(noreplace) %{_sysconfdir}/dbus-1/system.d/avahi-dbus.conf
+%{_datadir}/dbus-1/system.d/avahi-dbus.conf
 %{_sbindir}/avahi-daemon
 %dir %{_datadir}/avahi
 %{_datadir}/avahi/*.dtd
-%dir %{_libdir}/avahi
 %{_mandir}/man5/*
 %{_mandir}/man8/avahi-daemon.*
 %{_unitdir}/avahi-daemon.service
@@ -151,6 +149,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_bindir}/bshell
 %{_bindir}/bssh
 %{_bindir}/bvnc
+%{_mandir}/man1/bshell.1*
+%{_mandir}/man1/bssh.1*
+%{_mandir}/man1/bvnc.1*
 %{_bindir}/avahi-discover-standalone
 %{_datadir}/applications/b*.desktop
 %{_datadir}/avahi/interfaces/
