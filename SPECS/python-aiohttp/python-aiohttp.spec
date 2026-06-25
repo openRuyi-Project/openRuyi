@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname aiohttp
 
 Name:           python-%{srcname}
-Version:        3.13.3
+Version:        3.14.1
 Release:        %autorelease
 Summary:        Python HTTP client/server for asyncio
 License:        Apache-2.0
 URL:            https://github.com/aio-libs/aiohttp
-#!RemoteAsset:  sha256:a949eee43d3782f2daae4f4a2819b2cb9b0c5d3b7f7a927067cc84dafdbb9f88
+#!RemoteAsset:  sha256:307f2cff90a764d329e77040603fa032db89c5c24fdad50c4c15334cba744035
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
