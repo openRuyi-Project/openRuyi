@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           cpp-httplib
-Version:        0.45.0
+Version:        0.48.0
 Release:        %autorelease
 Summary:        A C++11 single-file header-only cross platform HTTP/HTTPS library
 License:        MIT
 URL:            https://github.com/yhirose/cpp-httplib
-#!RemoteAsset:  sha256:03121ca28d210ac8014021c2f2deda4a181f215b1638c493c40a4c7e6056495f
+#!RemoteAsset:  sha256:d9ed142d319c6e19a961f477257e67f846909ce15288502188df2281941be84e
 Source0:        https://github.com/yhirose/cpp-httplib/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
