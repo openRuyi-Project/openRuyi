@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
@@ -79,6 +80,16 @@ The source code of UEFI shim loader
 %prep -a
 # We use our own gnu-efi
 tar --strip-components=1 -xvf %{SOURCE1} -C gnu-efi
+
+# Force RV64GC since Zifencei is not part of RVA23U64, but RVA23S64;
+# And Zifencei is part of RV64G (RV64IMAFD_Zicsr_Zifencei)
+# FIXME: Forcing RV64GC is only a temporary solution.
+# According to UEFI spec, we should only use `-march=rv64imac_zicsr_zifencei`, but right now this is causing FTBFS.
+# See https://github.com/openRuyi-Project/openRuyi/issues/762 for more info.
+
+%ifarch riscv64
+  echo 'override CC := $(CC) -march=rv64gc' >> Make.defaults
+%endif
 
 %conf
 # No Configure
