@@ -23,11 +23,14 @@ BuildOption(install):  -l %{pypi_name}
 BuildOption(check):  -e outlines_core.kernels.mlx
 # No module named 'numba'
 BuildOption(check):  -e outlines_core.kernels.numpy
+# ImportError: libomp.so: cannot open shared object file: No such file or directory
+BuildOption(check):  -e outlines_core.kernels.torch
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(torch)
 BuildRequires:  rust
+BuildRequires:  cmake
 BuildRequires:  rust-rpm-macros
 BuildRequires:  python3dist(maturin)
 BuildRequires:  python3dist(pip)
