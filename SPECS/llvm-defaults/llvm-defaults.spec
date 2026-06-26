@@ -23,6 +23,7 @@ BuildRequires:  clang%{maj_ver}-devel
 BuildRequires:  clang%{maj_ver}-tools-extra
 BuildRequires:  clang%{maj_ver}-analyzer
 BuildRequires:  clang%{maj_ver}-static
+BuildRequires:  llvm%{maj_ver}-static
 BuildRequires:  compiler-rt%{maj_ver}
 BuildRequires:  libomp%{maj_ver}
 BuildRequires:  libomp%{maj_ver}-devel
@@ -114,8 +115,22 @@ This package provides default unversioned symlinks for clang static analyzer %{m
 Summary:        Default dependency package for Clang static libraries
 Requires:       clang%{maj_ver}-static > %{maj_ver}
 
+# ============================================================================
+# clang-static subpackage
+# ============================================================================
 %description -n clang-static
 This package depends on the default Clang %{maj_ver} static libraries.
+
+# ============================================================================
+# llvm-static subpackage
+# ============================================================================
+
+%package     -n llvm-static
+Summary:        Default dependency package for LLVM static libraries
+Requires:       llvm%{maj_ver}-static > %{maj_ver}
+
+%description -n llvm-static
+This package depends on the default LLVM %{maj_ver} static libraries.
 
 # ============================================================================
 # clang-rpm-macros subpackage
@@ -432,6 +447,8 @@ fi
 %{_bindir}/scan-build
 
 %files -n clang-static
+
+%files -n llvm-static
 
 %files -n clang-rpm-macros
 %{_rpmmacrodir}/macros.clang
