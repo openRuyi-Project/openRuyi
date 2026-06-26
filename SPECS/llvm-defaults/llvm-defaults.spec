@@ -99,6 +99,16 @@ Requires:       clang%{maj_ver}-tools-extra > %{maj_ver}
 This package provides default unversioned symlinks for extra clang tools %{maj_ver}.
 
 # ============================================================================
+# clang-tools-extra-devel subpackage
+# ============================================================================
+%package     -n clang-tools-extra-devel
+Summary:        extra clang tools development tools
+Requires:       clang%{maj_ver}-tools-extra-devel > %{maj_ver}
+
+%description -n clang-tools-extra-devel
+This package provides for extra clang tools %{maj_ver} development tools.
+
+# ============================================================================
 # clang-analyzer subpackage
 # ============================================================================
 %package     -n clang-analyzer
@@ -441,6 +451,8 @@ fi
 %{_bindir}/git-clang-format
 %{_bindir}/clang-format-diff
 %{_bindir}/run-clang-tidy
+
+%files -n clang-tools-extra-devel
 
 %files -n clang-analyzer
 %{_bindir}/scan-view
