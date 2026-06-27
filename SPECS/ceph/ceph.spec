@@ -386,8 +386,6 @@ BuildRequires:  boost-devel
 %endif
 BuildRequires:  python-rpm-macros
 %if %{with make_check}
-# run-tox-mgr venv builds scipy from sdist (no riscv64 wheel): gcc-fortran + OpenBLAS.
-BuildRequires:  gcc-fortran
 # jsonnet-bundler-build.sh: go build at test time.
 BuildRequires:  git
 BuildRequires:  go
@@ -397,12 +395,33 @@ BuildRequires:  hostname
 BuildRequires:  jq
 # monitoring/ceph-mixin/lint-jsonnet.sh invokes jsonnet directly.
 BuildRequires:  jsonnet
-# scipy sdist; see gcc-fortran comment above.
-BuildRequires:  pkgconfig(openblas)
 # run-tox-alerts-{lint,check} invoke promtool.
 BuildRequires:  promtool
-# cryptography sdist; see gcc-fortran comment above.
-BuildRequires:  rust
+BuildRequires:  python3dist(cryptography)
+BuildRequires:  python3dist(jsonpatch)
+BuildRequires:  python3dist(jinja2)
+BuildRequires:  python3dist(pyopenssl)
+BuildRequires:  python3dist(werkzeug)
+BuildRequires:  python3dist(bcrypt)
+BuildRequires:  python3dist(requests)
+BuildRequires:  python3dist(mypy)
+BuildRequires:  python3dist(pecan)
+BuildRequires:  python3dist(requests-mock)
+BuildRequires:  python3dist(natsort)
+BuildRequires:  python3dist(kubernetes)
+BuildRequires:  python3dist(asyncmock)
+BuildRequires:  python3dist(types-pyyaml)
+BuildRequires:  python3dist(cherrypy)
+BuildRequires:  python3dist(routes)
+BuildRequires:  python3dist(scipy)
+BuildRequires:  python3dist(numpy)
+BuildRequires:  python3dist(tox)
+# 2002-cephadm-tox-pyfakefs-py313 relaxes the cephadm >=5.7,<6 pin, so the
+# system pyfakefs is accepted.
+BuildRequires:  python3dist(pyfakefs)
+# python xmlsec (dashboard SSO/SAML tests) builds against these.
+BuildRequires:  pkgconfig(xmlsec1)
+BuildRequires:  pkgconfig(xmlsec1-openssl)
 %endif
 
 Requires:       ceph-osd%{?_isa} = %{version}-%{release}
@@ -438,6 +457,8 @@ Requires:       luarocks
 1021-cmake-guard-DPDK-dpdk-against-redefinition-in-Finddp.patch
 # https://github.com/ceph/ceph/pull/69449
 1022-cmake-find-Protobuf-via-config-before-module.patch
+# https://github.com/ceph/ceph/pull/69316
+1023-tests-venv-system-site-packages.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
@@ -828,6 +849,7 @@ EOF
 
 %check
 %if %{with make_check}
+export CEPH_PYTHON_SYSTEM_SITE=true
 # unittest_* targets are EXCLUDE_FROM_ALL; build the `tests` aggregate before ctest.
 %cmake_build --target tests
 # Stale golden PromQL values pinned to an older prometheus
