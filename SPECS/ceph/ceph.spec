@@ -37,11 +37,11 @@
 %global _fortify_level 0
 %endif
 
-# Submodule SHAs pinned by ceph.git@v21.0.0 (.gitmodules + tree).
+# Submodule SHAs pinned by ceph.git@v21.3.0 (.gitmodules + tree).
 %global sub_ceph_object_corpus          44b11dd5aa8a2f965ea395f13cf4cbb4a61e9afe
 %global sub_ceph_erasure_code_corpus    2d7d78b9cc52e8a9529d8cc2d2954c7d375d5dd7
 %global sub_blake3                      92e4cd71be48fdf9a79e88ef37b8f415ec5ac210
-%global sub_arrow                       6a2e19a852b367c72d7b12da4d104456491ed8b7
+%global sub_arrow                       272715f6df2a042d69881ffa03d5078c58e4b345
 %global sub_blkin                       f24ceec055ea236a093988237a9821d145f5f7c8
 %global sub_c_ares                      fd6124c74da0801f23f9d324559d8b66fb83f533
 %global sub_isa_l_crypto                a6dc869666fca3eef9a0305b290e4e0fc8bac645
@@ -49,7 +49,7 @@
 %global sub_jerasure                    96c76b89d661c163f65a014b8042c9354ccf7f31
 %global sub_fmt                         123913715afeb8a437e6388b4473fcc4753e1c9a
 %global sub_googletest                  6910c9d9165801d8827d628cb72eb7ea9dd538c5
-%global sub_isa_l                       bee5180a1517f8b5e70b02fcd66790c623536c5d
+%global sub_isa_l                       c196241ae89b1aa4f62efeb849a937c011b3a926
 %global sub_opentelemetry_cpp           95fe422d56d74ded3640c5cdcaa3011bc9e18f68
 %global sub_libkmip                     c05329f82a1a0e6d9bc4bae6fb25ce3d8e733f6c
 %global sub_rook_client_python          82673cd7c7a3f4919b98706985ff27e57d2c1b94
@@ -65,13 +65,14 @@
 %global sub_seastar                     15b1ca1bec7e148df262343f57b160d0248c736b
 %global sub_utf8proc                    d7bf128df773c2a1a7242eb80e51e91a769fc985
 %global sub_xxhash                      bbb27a5efb85b92a0486cf361a8635715a53f6ba
+%global sub_nvmeof_gateway              e27436eddacf8d4b2eace77c5fbd250adf48a155
 # Boost is not a submodule; make-dist downloads 1.87.0 and concatenates the
 # tarball into the official release.
 %global boost_version       1.87.0
 %global boost_underscore    1_87_0
 
 Name:           ceph
-Version:        21.0.0
+Version:        21.3.0
 Release:        %autorelease
 Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
@@ -79,16 +80,13 @@ URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
 # GitHub archive tarball contains empty submodule placeholder dirs only.
 # download.ceph.com release tarball (which bundles all submodules + boost)
-# does not have v21.0.0 yet, so we reassemble from per-submodule archives below.
-#!RemoteAsset:  sha256:321f745b69bce0a4a9f78fe708d8c6a523ea249c07dde5f11cfa6f515565caca
+# does not have v21.3.0 yet, so we reassemble from per-submodule archives below.
+#!RemoteAsset:  sha256:89f72245fe99780f450f03f5c475bd0fc4cb02484300546bc1ec713d585c7cca
 Source0:        https://github.com/ceph/ceph/archive/refs/tags/v%{version}.tar.gz#/ceph-%{version}.tar.gz
-# Bundled isa-l v2.29 has no riscv64 support; v2.32.0 onwards ships
-# riscv64 RVV sources. Used only on riscv64 to replace src/isa-l after
-# the Source20 (submodule) extraction.
-#!RemoteAsset:  sha256:7a194ff80d0f7e20615c497654e8a51b0184d0c79e2e265c7f555f52a26a05a4
-Source1:        https://github.com/intel/isa-l/archive/refs/tags/v2.32.0.tar.gz#/isa-l-2.32.0.tar.gz
+# Bundled ceph/isa-l lacks the in-place aliasing fix for the raid xor_gen/pq_gen
+# RVV kernels; apply it on riscv64.
 # https://github.com/intel/isa-l/pull/412
-Source2:        isa-l-riscv64-rvv-raid-aliasing.patch
+Source1:        isa-l-riscv64-rvv-raid-aliasing.patch
 %if %{without system_boost}
 #!RemoteAsset:  sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89
 Source3:        https://archives.boost.io/release/%{boost_version}/source/boost_%{boost_underscore}.tar.bz2
@@ -101,7 +99,7 @@ Source10:       https://github.com/ceph/ceph-object-corpus/archive/%{sub_ceph_ob
 Source11:       https://github.com/ceph/ceph-erasure-code-corpus/archive/%{sub_ceph_erasure_code_corpus}.tar.gz#/ceph-erasure-code-corpus-%{sub_ceph_erasure_code_corpus}.tar.gz
 #!RemoteAsset:  sha256:88930a1b7f3f910eda85219d29197611ee8ef468b9617285233af885eab86533
 Source12:       https://github.com/BLAKE3-team/BLAKE3/archive/%{sub_blake3}.tar.gz#/BLAKE3-%{sub_blake3}.tar.gz
-#!RemoteAsset:  sha256:03fe1b971609bdec287c77a5c9c89928a32be19875cb1458c711c1b80e33a7b4
+#!RemoteAsset:  sha256:70c6c8c2736d6edfbe956c8249fc6baca2d11adf5bfc129f981c6f647382bb77
 Source13:       https://github.com/apache/arrow/archive/%{sub_arrow}.tar.gz#/arrow-%{sub_arrow}.tar.gz
 #!RemoteAsset:  sha256:0bc468fddd8d77c354ab9e04899d7333b8c0543616f37bec383634c8ed7e87cc
 Source14:       https://github.com/ceph/blkin/archive/%{sub_blkin}.tar.gz#/blkin-%{sub_blkin}.tar.gz
@@ -117,7 +115,7 @@ Source18:       https://github.com/ceph/jerasure/archive/%{sub_jerasure}.tar.gz#
 Source19:       https://github.com/ceph/fmt/archive/%{sub_fmt}.tar.gz#/fmt-%{sub_fmt}.tar.gz
 #!RemoteAsset:  sha256:bde221be7f3841fcbc3971665d77d717116394a42155d988ee6407dfc39f1f09
 Source20:       https://github.com/ceph/googletest/archive/%{sub_googletest}.tar.gz#/googletest-%{sub_googletest}.tar.gz
-#!RemoteAsset:  sha256:569dd67a430d33400a147177b4e8d970a353d5528bfafd57da08f1bcffa50c25
+#!RemoteAsset:  sha256:dbbc990d6a3f0f0c4959da0899c0d588d0cc95e7a0444a4e137bef2de227e576
 Source21:       https://github.com/ceph/isa-l/archive/%{sub_isa_l}.tar.gz#/isa-l-bundled-%{sub_isa_l}.tar.gz
 #!RemoteAsset:  sha256:4b20033029eb4e732f44428905ed71d024a3062e6936ce8112fc1bac8ef287e6
 Source22:       https://github.com/ceph/opentelemetry-cpp/archive/%{sub_opentelemetry_cpp}.tar.gz#/opentelemetry-cpp-%{sub_opentelemetry_cpp}.tar.gz
@@ -142,12 +140,14 @@ Source30:       https://github.com/ceph/xxHash/archive/%{sub_xxhash}.tar.gz#/xxH
 Source32:       https://github.com/ben-strasser/fast-cpp-csv-parser/archive/%{sub_s3select_csvparser}.tar.gz#/fast-cpp-csv-parser-%{sub_s3select_csvparser}.tar.gz
 #!RemoteAsset:  sha256:ced53d8e21e06b50a75e88b6bf8e2ef8ac1a21e2f30121a57b406648d247df4c
 Source33:       https://github.com/Tencent/rapidjson/archive/%{sub_s3select_rapidjson}.tar.gz#/rapidjson-%{sub_s3select_rapidjson}.tar.gz
+# Only control/proto/*.proto is consumed, to build ceph-nvmeof-monitor-client.
+#!RemoteAsset:  sha256:83e34889ee4ecb66916ed26eb3cbac0f1d0f174c9dafd4c6081c517abaf838d7
+Source34:       https://github.com/ceph/ceph-nvmeof/archive/%{sub_nvmeof_gateway}.tar.gz#/ceph-nvmeof-%{sub_nvmeof_gateway}.tar.gz
 # Skipped submodules (not required by the current build options):
 #   src/breakpad        (WITH_BREAKPAD=OFF below)
 #   src/lss             (transitive dep of breakpad)
 #   src/qatlib          (WITH_QATLIB=OFF)
 #   src/qatzip          (WITH_QATZIP=OFF)
-#   src/nvmeof/gateway  (only needed for nvmeof gateway client builds)
 # Also skipped: nested submodules of the populated tarballs above. Their
 # parent's build does not reference them under the current bcond set, but if
 # the matching option is ever turned on the corresponding nested archive(s)
@@ -277,7 +277,10 @@ BuildRequires:  cmake
 BuildRequires:  cmake(Catch2)
 %endif
 BuildRequires:  pkgconfig(fuse3)
+# grpc + protobuf build ceph-nvmeof-monitor-client: pkgconfig(grpc) pulls
+# grpc_cpp_plugin and the gRPC cmake config, pkgconfig(protobuf) pulls protoc.
 BuildRequires:  pkgconfig(grpc)
+BuildRequires:  pkgconfig(protobuf)
 BuildRequires:  pkgconfig(libaio)
 BuildRequires:  pkgconfig(blkid)
 BuildRequires:  pkgconfig(libcryptsetup)
@@ -339,7 +342,6 @@ BuildRequires:  pkgconfig(hwloc)
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(libsctp)
 BuildRequires:  pkgconfig(pciaccess)
-BuildRequires:  pkgconfig(protobuf)
 BuildRequires:  pkgconfig(valgrind)
 BuildRequires:  pkgconfig(yaml-cpp)
 BuildRequires:  systemtap-sdt-devel
@@ -414,46 +416,24 @@ Requires:       luarocks
 %endif
 
 %patchlist
-# https://github.com/ceph/ceph/commit/3ccfff1acd6fa5babc7de035271b7f91fccabb8c
-1001-arch-riscv-fix-hwprobe.patch
-# https://github.com/ceph/ceph/commit/c82cd26ac4c64f7b307d5630a5bfb2204a8dc3b8
-1002-test-crimson-fix-test-remap-pin-concurrent.patch
-# https://github.com/ceph/ceph/commit/980177003c23fda412e07afa84524b5e990f9b8c
-1003-test-crimson-object-data-handler-init-known-contents.patch
 # https://github.com/ceph/ceph/pull/69156
 1004-monitoring-ceph-mixin-jsonnet-bundler-version.patch
 # https://github.com/ceph/ceph/pull/69157
 1005-test-mds-quiesce-agent-evaluate-await-idle.patch
-# https://github.com/ceph/ceph/commit/fbcd8a4a37e02a67a29928160cfe79be116a94aa
-1006-isa-l-enable-on-riscv.patch
 # https://github.com/ceph/ceph/pull/69161
 1007-librbd-pwl-cancel-timer-before-perf-stop.patch
 # https://github.com/ceph/ceph/pull/69162
 1008-cephadm-tests-mock-find-program-lvcreate.patch
-# https://github.com/ceph/ceph/commit/82ff35794af071654368347426879519f3aff266
-1009-crimson-seastore-record-submitter-wait-available-idempotent.patch
-# https://github.com/ceph/ceph/pull/69165
-1010-cmake-AddCephTest-use-catch2-imported-target.patch
-# https://github.com/ceph/ceph/commit/868fdd8120790ef453692604fff910e29c56cee1
-1011-rgw-rest-swift-error-handler-out-of-line.patch
 # https://github.com/scylladb/seastar/commit/59225b1c6d2225b67dd2f2cebd3aa22be84b55d3
 1012-src-seastar-add-initial-riscv-port.patch
 # https://github.com/scylladb/seastar/pull/3435
 1013-seastar-io-uring-retry-socket-send-on-eagain.patch
-# https://github.com/ceph/ceph/commit/d18ffa868fde6af02548404d95c7c0fe8947ddc6
-1014-blk-spdk-support-both-old-and-new-spdk_env_opts-memb.patch
-# https://github.com/ceph/ceph/commit/6af1a859468c2cf9697e23fb428b24f49fe74e74
-1015-cmake-add-WITH_SYSTEM_SPDK-to-link-a-system-installe.patch
 # https://github.com/scylladb/seastar/pull/3436
 1016-cmake-don-t-require-i40e-sfc-DPDK-PMDs-on-RISC-V.patch
 # https://github.com/scylladb/seastar/pull/3437
 1017-build-also-detect-GCC-s-Wno-error-cpp-for-warning.patch
 # https://github.com/ceph/ceph/pull/69187
 1018-cmake-rename-Finddpdk-module-to-FindDPDK.patch
-# https://github.com/ceph/ceph/pull/69188
-1019-compressor-zstd-include-zstd.h-instead-of-the-bundle.patch
-# https://github.com/ceph/ceph/pull/69215
-1020-build-link-legacy-option-headers-from-targets-racing.patch
 # https://github.com/scylladb/seastar/pull/3441
 1021-cmake-guard-DPDK-dpdk-against-redefinition-in-Finddp.patch
 
@@ -547,6 +527,14 @@ ceph-mon is the cluster monitor daemon for the Ceph distributed file
 system. One or more instances of ceph-mon form a Paxos part-time
 parliament cluster that provides extremely reliable and durable storage
 of cluster membership, configuration, and state.
+
+%package        mon-client-nvmeof
+Summary:        Ceph NVMeoF Gateway Monitor Client
+Requires:       ceph-common%{?_isa} = %{version}-%{release}
+
+%description    mon-client-nvmeof
+ceph-nvmeof-monitor-client distributes Paxos ANA info to the NVMeoF
+gateway and provides beacons to the monitor daemon.
 
 %package        mgr
 Summary:        Ceph Manager Daemon
@@ -798,6 +786,7 @@ tar -xf %{SOURCE26} -C src/s3select                  --strip-components=1
 tar -xf %{SOURCE27} -C src/seastar                   --strip-components=1
 tar -xf %{SOURCE29} -C src/utf8proc                  --strip-components=1
 tar -xf %{SOURCE30} -C src/xxHash                    --strip-components=1
+tar -xf %{SOURCE34} -C src/nvmeof/gateway            --strip-components=1
 # Nested submodules under src/s3select. The s3select tarball ships its
 # include/csvparser and rapidjson dirs as empty submodule placeholders;
 # populate them after Source26 extraction above.
@@ -810,15 +799,10 @@ tar -xf %{SOURCE3} -C src
 mv src/boost_%{boost_underscore} src/boost
 %endif
 
-# Replace bundled isa-l (v2.x submodule head) with v2.32.0 only on riscv64:
-# v2.32+ ships the riscv64 RVV sources we need. Done AFTER the submodule
-# population above so we are overwriting a known state.
+# Bundled ceph/isa-l lacks the raid xor_gen/pq_gen in-place aliasing fix;
+# apply it on riscv64, after the Source21 (submodule) extraction above.
 %ifarch riscv64
-rm -rf src/isa-l
-tar -xf %{SOURCE1} -C src
-mv src/isa-l-2.32.0 src/isa-l
-
-patch -p1 -i %{SOURCE2}
+patch -p1 -i %{SOURCE1}
 %endif
 
 # Apply numbered patches now that all submodule placeholders (src/seastar,
@@ -955,7 +939,7 @@ mv %{buildroot}%{_exec_prefix}/sbin/ceph-create-keys %{buildroot}%{_bindir}/
 %{_sysconfdir}/sudoers.d/ceph-smartctl
 # ceph-exporter (merged)
 %{_bindir}/ceph-exporter
-%{_unitdir}/ceph-exporter.service
+%{_unitdir}/ceph-exporter@.service
 # immutable-object-cache (merged)
 %{_bindir}/ceph-immutable-object-cache
 %{_unitdir}/ceph-immutable-object-cache@.service
@@ -976,10 +960,10 @@ mv %{buildroot}%{_exec_prefix}/sbin/ceph-create-keys %{buildroot}%{_bindir}/
 %endif
 
 %post base
-%systemd_post ceph.target ceph-crash.service ceph-exporter.service ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
+%systemd_post ceph.target ceph-crash.service ceph-exporter@.service ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
 
 %preun base
-%systemd_preun ceph-exporter.service ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
+%systemd_preun ceph-exporter@.service ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
 
 %postun base
 %systemd_postun ceph.target ceph-immutable-object-cache@.service ceph-immutable-object-cache.target
@@ -1019,6 +1003,7 @@ fi
 %{_bindir}/cephfs-data-scan
 %{_bindir}/cephfs-journal-tool
 %{_bindir}/cephfs-table-tool
+%{_bindir}/cephfs-tool
 %{_bindir}/crushdiff
 %{_bindir}/rados
 %{_bindir}/radosgw-admin
@@ -1186,6 +1171,7 @@ fi
 %{_libdir}/libcephsqlite.so
 %{_datadir}/ceph/mgr/alerts
 %{_datadir}/ceph/mgr/balancer
+%{_datadir}/ceph/mgr/cli_api
 %{_datadir}/ceph/mgr/crash
 %{_datadir}/ceph/mgr/devicehealth
 %{_datadir}/ceph/mgr/influx
@@ -1256,6 +1242,9 @@ fi
 %if %{with manpages}
 %{_mandir}/man8/ceph-mon.8*
 %endif
+
+%files mon-client-nvmeof
+%{_bindir}/ceph-nvmeof-monitor-client
 
 %post mon
 %systemd_post ceph-mon@.service ceph-mon.target
@@ -1432,6 +1421,8 @@ fi
 # librados C++ headers
 %{_includedir}/rados/buffer.h
 %{_includedir}/rados/buffer_fwd.h
+%{_includedir}/rados/cls_flags.hpp
+%{_includedir}/rados/cls_traits.hpp
 %{_includedir}/rados/crc32c.h
 %{_includedir}/rados/inline_memory.h
 %{_includedir}/rados/librados.hpp
@@ -1520,7 +1511,6 @@ fi
 %{_bindir}/ceph_perf_msgr_client
 %{_bindir}/ceph_perf_msgr_server
 %{_bindir}/ceph_psim
-%{_bindir}/ceph_radosacl
 %{_bindir}/ceph_rgw_jsonparser
 %{_bindir}/ceph_rgw_multiparser
 %{_bindir}/ceph_scratchtool
