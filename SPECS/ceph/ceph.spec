@@ -436,6 +436,8 @@ Requires:       luarocks
 1018-cmake-rename-Finddpdk-module-to-FindDPDK.patch
 # https://github.com/scylladb/seastar/pull/3441
 1021-cmake-guard-DPDK-dpdk-against-redefinition-in-Finddp.patch
+# https://github.com/ceph/ceph/pull/69449
+1022-cmake-find-Protobuf-via-config-before-module.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch

@@ -1,0 +1,38 @@
+From ede8e34f61baf53d3bd516c4492c09c433cefbc0 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 12 Jun 2026 18:17:26 +0800
+Subject: [PATCH] cmake: find Protobuf via cmake config before module mode
+
+Module-mode FindProtobuf defines only the classic targets, so
+gRPCConfig.cmake's find_dependency(Protobuf) fails on the partial
+export set. Prefer config mode; fall back to module mode.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/CMakeLists.txt | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a93a38d7501..552dd7d760d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1023,10 +1023,12 @@ option(WITH_NVMEOF_GATEWAY_MONITOR_CLIENT "build nvmeof gateway monitor client"
+ 
+ if(WITH_NVMEOF_GATEWAY_MONITOR_CLIENT)
+ 
+-  # Find Protobuf installation
+-  # Looks for protobuf-config.cmake file installed by Protobuf's cmake installation.
+-  option(protobuf_MODULE_COMPATIBLE TRUE)
+-  find_package(Protobuf REQUIRED)
++  # Prefer config mode so gRPC sees protobuf's full target set
++  # (incl. upb); fall back to module mode.
++  find_package(Protobuf CONFIG)
++  if(NOT Protobuf_FOUND)
++    find_package(Protobuf REQUIRED)
++  endif()
+ 
+   set(_REFLECTION grpc++_reflection)
+   if(CMAKE_CROSSCOMPILING)
+-- 
+2.54.0
+
