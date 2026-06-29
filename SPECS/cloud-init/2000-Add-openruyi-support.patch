@@ -1,0 +1,239 @@
+From fa1b2179ca98479d8f060e0a707692de54c94ca4 Mon Sep 17 00:00:00 2001
+From: Z572 <z572@z572.online>
+Date: Mon, 29 Jun 2026 17:04:47 +0800
+Subject: [PATCH] Add openruyi support
+
+---
+ cloudinit/config/cc_yum_add_repo.py     |  1 +
+ cloudinit/distros/__init__.py           |  1 +
+ cloudinit/distros/openruyi.py           |  9 +++++++++
+ cloudinit/net/sysconfig.py              |  1 +
+ cloudinit/util.py                       |  1 +
+ config/cloud.cfg.tmpl                   | 10 +++++-----
+ doc/rtd/reference/availability.rst      |  1 +
+ doc/rtd/reference/network-config.rst    |  4 ++--
+ doc/rtd/spelling_word_list.txt          |  1 +
+ systemd/cloud-init-generator.tmpl       |  2 +-
+ systemd/cloud-init-network.service.tmpl |  2 +-
+ templates/hosts.openruyi.tmpl           | 24 ++++++++++++++++++++++++
+ 12 files changed, 48 insertions(+), 9 deletions(-)
+ create mode 100644 cloudinit/distros/openruyi.py
+ create mode 100644 templates/hosts.openruyi.tmpl
+
+diff --git a/cloudinit/config/cc_yum_add_repo.py b/cloudinit/config/cc_yum_add_repo.py
+index f20f7ea0..3920da60 100644
+--- a/cloudinit/config/cc_yum_add_repo.py
++++ b/cloudinit/config/cc_yum_add_repo.py
+@@ -30,6 +30,7 @@ meta: MetaSchema = {
+         "openeuler",
+         "OpenCloudOS",
+         "openmandriva",
++        "openruyi",
+         "photon",
+         "rhel",
+         "rocky",
+diff --git a/cloudinit/distros/__init__.py b/cloudinit/distros/__init__.py
+index 2c9daff2..afb5a832 100644
+--- a/cloudinit/distros/__init__.py
++++ b/cloudinit/distros/__init__.py
+@@ -97,6 +97,7 @@ OSFAMILIES = {
+         "suse",
+     ],
+     "openeuler": ["openeuler"],
++    "openruyi": ["openRuyi", "openruyi"],
+     "OpenCloudOS": ["OpenCloudOS", "TencentOS"],
+ }
+ 
+diff --git a/cloudinit/distros/openruyi.py b/cloudinit/distros/openruyi.py
+new file mode 100644
+index 00000000..b5dc985b
+--- /dev/null
++++ b/cloudinit/distros/openruyi.py
+@@ -0,0 +1,9 @@
++# This file is part of cloud-init. See LICENSE file for license information.
++
++from cloudinit.distros import rhel
++
++
++class Distro(rhel.Distro):
++    def __init__(self, name, cfg, paths):
++        super(Distro, self).__init__(name, cfg, paths)
++        self.osfamily = "openruyi"
+diff --git a/cloudinit/net/sysconfig.py b/cloudinit/net/sysconfig.py
+index 5d45babd..4f6d2283 100644
+--- a/cloudinit/net/sysconfig.py
++++ b/cloudinit/net/sysconfig.py
+@@ -30,6 +30,7 @@ KNOWN_DISTROS = [
+     "openeuler",
+     "OpenCloudOS",
+     "openmandriva",
++    "openruyi",
+     "rhel",
+     "rocky",
+     "suse",
+diff --git a/cloudinit/util.py b/cloudinit/util.py
+index 3e65c7ef..c7211111 100644
+--- a/cloudinit/util.py
++++ b/cloudinit/util.py
+@@ -626,6 +626,7 @@ def _get_variant(info):
+             "openeuler",
+             "opencloudos",
+             "openmandriva",
++            "openruyi",
+             "photon",
+             "raspberry-pi-os",
+             "rhel",
+diff --git a/config/cloud.cfg.tmpl b/config/cloud.cfg.tmpl
+index 96fe02ed..df0148d6 100644
+--- a/config/cloud.cfg.tmpl
++++ b/config/cloud.cfg.tmpl
+@@ -61,7 +61,7 @@ disable_root: false
+ disable_root: true
+ {% endif %}
+ 
+-{%- if variant in ["alpine", "amazon", "fedora", "OpenCloudOS", "openeuler",
++{%- if variant in ["alpine", "amazon", "fedora", "OpenCloudOS", "openeuler", "openruyi",
+                    "openmandriva", "photon", "TencentOS"] or is_rhel %}
+ 
+ {% if is_rhel %}
+@@ -171,7 +171,7 @@ cloud_config_modules:
+ {% if variant == "ubuntu" %}
+   - ubuntu_pro
+ {% endif %}
+-{% elif variant in ["azurelinux", "fedora", "mariner", "openeuler",
++{% elif variant in ["azurelinux", "fedora", "mariner", "openeuler", "openruyi",
+                     "openmandriva", "photon"] or is_rhel %}
+ {% if is_rhel %}
+   - rh_subscription
+@@ -235,7 +235,7 @@ system_info:
+   # This will affect which distro class gets used
+ {% if variant in ["alpine", "amazon", "aosc", "arch", "azurelinux", "debian", "fedora",
+                   "freebsd", "gentoo", "mariner", "netbsd", "openbsd",
+-                  "OpenCloudOS", "openeuler", "openmandriva", "photon",
++                  "OpenCloudOS", "openeuler", "openmandriva", "openruyi", "photon",
+                   "raspberry-pi-os", "suse", "TencentOS", "ubuntu"] or is_rhel %}
+   distro: {{ variant }}
+ {% elif variant == "dragonfly" %}
+@@ -252,7 +252,7 @@ system_info:
+     name: {{ variant }}
+ {% endif %}
+ {% if variant in ["alpine", "amazon", "aosc", "arch", "azurelinux", "debian", "fedora",
+-                  "gentoo", "mariner", "OpenCloudOS", "openeuler",
++                  "gentoo", "mariner", "OpenCloudOS", "openeuler", "openruyi",
+                   "openmandriva", "photon", "raspberry-pi-os",
+                   "suse", "TencentOS", "ubuntu", "unknown"]
+                  or is_bsd or is_rhel %}
+@@ -338,7 +338,7 @@ system_info:
+   ntp_client: auto
+ {% endif %}
+ {% if variant in ["alpine", "amazon", "aosc", "arch", "azurelinux", "debian", "fedora",
+-                  "gentoo", "mariner", "OpenCloudOS", "openeuler",
++                  "gentoo", "mariner", "OpenCloudOS", "openeuler", "openruyi",
+                   "openmandriva", "photon", "suse", "TencentOS", "ubuntu",
+                   "unknown"]
+                   or is_rhel %}
+diff --git a/doc/rtd/reference/availability.rst b/doc/rtd/reference/availability.rst
+index 5f6b983c..1d2b808e 100644
+--- a/doc/rtd/reference/availability.rst
++++ b/doc/rtd/reference/availability.rst
+@@ -38,6 +38,7 @@ NetBSD, OpenBSD and DragonFlyBSD:
+ - openEuler
+ - OpenCloudOS
+ - OpenMandriva
++- openRuyi
+ - Photon OS
+ - Raspberry Pi OS
+ - Red Hat Enterprise Linux (RHEL)
+diff --git a/doc/rtd/reference/network-config.rst b/doc/rtd/reference/network-config.rst
+index 5bd99c9a..0293c891 100644
+--- a/doc/rtd/reference/network-config.rst
++++ b/doc/rtd/reference/network-config.rst
+@@ -270,7 +270,7 @@ Example output:
+ .. code-block::
+ 
+    usage: /usr/bin/cloud-init devel net-convert [-h] -p PATH -k {eni,network_data.json,yaml,azure-imds,vmware-imc} -d PATH -D
+-                                                  {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openEuler,raspberry-pi-os}
++                                                  {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openEuler,raspberry-pi-os,openruyi}
+                                                   [-m name,mac] [--debug] -O {eni,netplan,networkd,sysconfig,network-manager}
+ 
+    options:
+@@ -281,7 +281,7 @@ Example output:
+                            The format of the given network config
+      -d PATH, --directory PATH
+                            directory to place output in
+-     -D {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openeuler}, --distro {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openEuler,raspberry-pi-os}
++     -D {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openeuler,openruyi}, --distro {alpine,arch,azurelinux,debian,ubuntu,freebsd,dragonfly,gentoo,cos,netbsd,openbsd,almalinux,amazon,centos,cloudlinux,eurolinux,fedora,mariner,miraclelinux,openmandriva,photon,rhel,rocky,virtuozzo,opensuse,sles,openEuler,raspberry-pi-os,openruyi}
+      -m name,mac, --mac name,mac
+                            interface name to mac mapping
+      --debug               enable debug logging to stderr.
+diff --git a/doc/rtd/spelling_word_list.txt b/doc/rtd/spelling_word_list.txt
+index 7cbf2973..9574256a 100644
+--- a/doc/rtd/spelling_word_list.txt
++++ b/doc/rtd/spelling_word_list.txt
+@@ -139,6 +139,7 @@ opendoas
+ openeuler
+ openmandriva
+ openntpd
++openruyi
+ openstack
+ opensuse
+ outscale
+diff --git a/systemd/cloud-init-generator.tmpl b/systemd/cloud-init-generator.tmpl
+index e55ece6d..e59ec1fc 100644
+--- a/systemd/cloud-init-generator.tmpl
++++ b/systemd/cloud-init-generator.tmpl
+@@ -21,7 +21,7 @@ CLOUD_SYSTEM_TARGET="/usr/lib/systemd/system/cloud-init.target"
+ CLOUD_SYSTEM_TARGET="/lib/systemd/system/cloud-init.target"
+ {% endif %}
+ {% if variant in ["almalinux", "centos", "cloudlinux", "eurolinux", "fedora",
+-                  "miraclelinux", "openeuler", "OpenCloudOS", "openmandriva", "rhel", "rocky", "TencentOS", "virtuozzo"] %}
++                  "miraclelinux", "openeuler", "openruyi", "OpenCloudOS", "openmandriva", "rhel", "rocky", "TencentOS", "virtuozzo"] %}
+     dsidentify="/usr/libexec/cloud-init/ds-identify"
+ {% elif variant == "benchmark" %}
+     dsidentify="/bin/true"
+diff --git a/systemd/cloud-init-network.service.tmpl b/systemd/cloud-init-network.service.tmpl
+index 9658af1d..e87df8d5 100644
+--- a/systemd/cloud-init-network.service.tmpl
++++ b/systemd/cloud-init-network.service.tmpl
+@@ -17,7 +17,7 @@ After=networking.service
+ {% endif %}
+ {% if variant in ["almalinux", "centos", "cloudlinux", "eurolinux", "fedora",
+                   "miraclelinux", "openeuler", "OpenCloudOS", "openmandriva", "raspberry-pi-os", 
+-                  "rhel", "rocky", "suse", "TencentOS", "virtuozzo"] %}
++                  "rhel", "rocky", "suse", "TencentOS", "virtuozzo", "openruyi"] %}
+ After=NetworkManager.service
+ After=NetworkManager-wait-online.service
+ {% endif %}
+diff --git a/templates/hosts.openruyi.tmpl b/templates/hosts.openruyi.tmpl
+new file mode 100644
+index 00000000..a7b45c77
+--- /dev/null
++++ b/templates/hosts.openruyi.tmpl
+@@ -0,0 +1,24 @@
++## template:jinja
++{#
++This file /etc/cloud/templates/hosts.openruyi.tmpl is only utilized
++if enabled in cloud-config.  Specifically, in order to enable it
++you need to add the following to config:
++  manage_etc_hosts: True
++-#}
++# Your system has configured 'manage_etc_hosts' as True.
++# As a result, if you wish for changes to this file to persist
++# then you will need to either
++# a.) make changes to the master file in /etc/cloud/templates/hosts.openruyi.tmpl
++# b.) change or remove the value of 'manage_etc_hosts' in
++#     /etc/cloud/cloud.cfg or cloud-config from user-data
++# 
++# The following lines are desirable for IPv4 capable hosts
++127.0.0.1 {{fqdn}} {{hostname}}
++127.0.0.1 localhost.localdomain localhost
++127.0.0.1 localhost4.localdomain4 localhost4
++
++# The following lines are desirable for IPv6 capable hosts
++::1 {{fqdn}} {{hostname}}
++::1 localhost.localdomain localhost
++::1 localhost6.localdomain6 localhost6
++
+-- 
+2.54.0
+

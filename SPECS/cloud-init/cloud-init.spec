@@ -17,6 +17,7 @@ BuildSystem:    meson
 
 # skip some tests not support in build environment
 Patch0:         0001-skip-crate-user-tests.patch
+Patch2000:      2000-Add-openruyi-support.patch
 
 BuildOption(conf):  -Dinit_system=systemd
 BuildOption(conf):  -Ddisable_sshd_keygen=true
