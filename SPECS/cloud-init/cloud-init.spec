@@ -54,6 +54,8 @@ Requires:       shadow
 Requires:       util-linux
 Requires:       xfsprogs
 Requires:       openssl
+Requires:       nmap
+Requires:       inetutils
 Requires:       python3dist(configobj)
 Requires:       python3dist(jsonpatch)
 Requires:       python3dist(jsonschema)
