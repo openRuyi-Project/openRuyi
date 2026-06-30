@@ -39,12 +39,12 @@
 %global modpath /lib/modules/%{kernel_full_version}
 
 Name:           linux
-Version:        7.0.11
+Version:        7.1.2
 Release:        %autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:e56c8356dda01136a6041c6ef832bd0ec99bd2d35dff97832aa5ec10ed014304
+#!RemoteAsset:  sha256:37198c93727be247c9fb5309bb86cd5e496c61e5322cd8c4eca9476bb0b5883f
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
 Source1:        config.%{_arch}
 Source2:        series

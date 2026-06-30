@@ -1,4 +1,4 @@
-From cc245f283a04934061e450ad020c5ef035bfd744 Mon Sep 17 00:00:00 2001
+From 38fee01a082792299443f2f3dc4680e7765dc6af Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 17:24:21 +0800
 Subject: [RUYI PATCH] FROMLIST: net: spacemit: Free rings of memory after
