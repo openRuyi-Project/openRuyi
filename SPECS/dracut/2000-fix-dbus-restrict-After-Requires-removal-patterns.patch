@@ -1,0 +1,57 @@
+From b9418ad1aab99bd91200a2c30bb42140d300103d Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Wed, 1 Jul 2026 11:12:19 +0800
+Subject: [PATCH] fix(dbus): restrict After/Requires removal patterns
+
+While the intention for removing all After= and Requires= lines on
+dbus.service and dbus.socket is to remove the dependency on
+sysinit.target, this unintentionally removes the Requires=dbus.socket
+dependency for dbus.service as well, which is present in both upstream
+dbus and dbus-broker.
+
+Restrict the pattern to only lines mentioning sysinit.target, to better
+match what Ubuntu has added downstream.
+---
+ modules.d/16dbus-broker/module-setup.sh | 3 ++-
+ modules.d/16dbus-daemon/module-setup.sh | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/modules.d/16dbus-broker/module-setup.sh b/modules.d/16dbus-broker/module-setup.sh
+index 2bc39249..cac53d96 100755
+--- a/modules.d/16dbus-broker/module-setup.sh
++++ b/modules.d/16dbus-broker/module-setup.sh
+@@ -55,7 +55,8 @@ install() {
+ 
+     # Remove After/Requires=sysinit.target for initramfs in the dbus socket unit.
+     sed -i -e \
+-        '/^\(After\|DefaultDependencies\|Requires\)=/d
++        '/^\(After\|Requires\)=.*sysinit\.target/d
++        /^DefaultDependencies=/d
+         /^\[Unit\]/aDefaultDependencies=no\nConflicts=shutdown.target\nBefore=shutdown.target sockets.target
+         /^\[Socket\]/aRemoveOnStop=yes' \
+         "$initdir$systemdsystemunitdir/dbus.socket"
+diff --git a/modules.d/16dbus-daemon/module-setup.sh b/modules.d/16dbus-daemon/module-setup.sh
+index 6758c52e..598154da 100755
+--- a/modules.d/16dbus-daemon/module-setup.sh
++++ b/modules.d/16dbus-daemon/module-setup.sh
+@@ -52,13 +52,15 @@ install() {
+ 
+     # Remove After/Requires=sysinit.target and After=basic.target for initramfs in the dbus service unit.
+     sed -i -e \
+-        '/^\(After\|DefaultDependencies\|Requires\)=/d
++        '/^\(After\|Requires\)=.*sysinit\.target/d
++        /^DefaultDependencies=/d
+         /^\[Unit\]/aDefaultDependencies=no\nConflicts=shutdown.target\nBefore=shutdown.target' \
+         "$initdir$systemdsystemunitdir/dbus.service"
+ 
+     # Remove After/Requires=sysinit.target for initramfs in the dbus socket unit.
+     sed -i -e \
+-        '/^\(After\|DefaultDependencies\|Requires\)=/d
++        '/^\(After\|Requires\)=.*sysinit\.target/d
++        /^DefaultDependencies=/d
+         /^\[Unit\]/aDefaultDependencies=no\nConflicts=shutdown.target\nBefore=shutdown.target sockets.target
+         /^\[Socket\]/aRemoveOnStop=yes' \
+         "$initdir$systemdsystemunitdir/dbus.socket"
+-- 
+2.54.0
+

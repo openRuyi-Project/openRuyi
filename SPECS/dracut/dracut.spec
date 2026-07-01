@@ -15,6 +15,9 @@ URL:            https://github.com/dracut-ng/dracut-ng
 Source:         %{url}/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
+# https://github.com/dracut-ng/dracut/pull/2482
+Patch2000:      2000-fix-dbus-restrict-After-Requires-removal-patterns.patch
+
 BuildOption(conf):  --systemdsystemunitdir=%{_unitdir}
 BuildOption(conf):  --bashcompletiondir=$(pkg-config --variable=completionsdir bash-completion)
 BuildOption(conf):  --libdir=%{_prefix}/lib
