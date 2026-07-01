@@ -196,10 +196,6 @@ BuildSystem:    autotools
 # Patch fixing ACPI table generation for KVM with PLIC emu
 Patch1:         0001-FROMLIST-hw-riscv-virt-acpi-build-Fix-RINTC-PLIC-con.patch
 
-# RISC-V KVM virt machine ACPI table fixes
-Patch7:         0007-hw-riscv-virt-acpi-build.c-Use-kvm-timer-fr.patch
-Patch8:         0008-hw-riscv-virt-acpi-build-Fix-RINTC-PLIC-con.patch
-
 BuildRequires:  hostname
 BuildRequires:  meson
 BuildRequires:  bison
@@ -481,6 +477,7 @@ This package provides the QEMU system emulator for multi-arch systems.
 
 %prep
 %setup -q -n qemu-%{version}
+%autopatch -p1 -q
 
 %global qemu_kvm_build qemu_kvm_build
 %global static_builddir static_builddir
