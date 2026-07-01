@@ -8,23 +8,22 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           isa-l
-Version:        2.32.0
+Version:        2.32.1
 Release:        %autorelease
 Summary:        Intelligent Storage Acceleration Library
 License:        BSD-3-Clause
 URL:            https://github.com/intel/isa-l
-#!RemoteAsset:  sha256:7a194ff80d0f7e20615c497654e8a51b0184d0c79e2e265c7f555f52a26a05a4
+#!RemoteAsset:  sha256:d9f7179ab0e14a3db9b610fac22793854a1435e8423ec9ce07f4cbedc5f92f5e
 Source0:        https://github.com/intel/isa-l/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-# https://github.com/intel/isa-l/pull/412
-Patch0:         0001-raid-riscv64-fix-in-place-aliasing-in-xor_gen-and-pq_gen.patch
-
 BuildOption(conf):  --disable-static
+BuildOption(conf):  --enable-programs
 
 BuildRequires:  make
 BuildRequires:  autoconf
 BuildRequires:  automake
+BuildRequires:  help2man
 BuildRequires:  libtool
 %ifarch x86_64
 BuildRequires:  nasm
