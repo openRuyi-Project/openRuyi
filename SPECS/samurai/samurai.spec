@@ -32,9 +32,6 @@ with a focus on simplicity, speed, and portability.
 # No test suite
 %check
 
-%install -a
-ln -s samu %{buildroot}%{_bindir}/ninja
-
 %files
 %license LICENSE
 %doc README.md
@@ -44,18 +41,28 @@ ln -s samu %{buildroot}%{_bindir}/ninja
 
 %package        ninja
 Summary:        samu as ninja
-Provides:       ninja
+Provides:       ninja = %{version}-%{release}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires(post): update-alternatives
+Requires(postun): update-alternatives
 
 
 %description ninja
 This package provides ninja command, implemented as a symbolic link to the samu command
 of samurai package.
 
+%post ninja
+update-alternatives --install %{_bindir}/ninja ninja %{_bindir}/samu 10
+
+%postun ninja
+if [ $1 -eq 0 ]; then
+    update-alternatives --remove ninja %{_bindir}/samu
+fi
+
 %files ninja
 %license LICENSE
 %doc README.md
-%{_bindir}/ninja
+%ghost %{_bindir}/ninja
 
 
 %changelog
