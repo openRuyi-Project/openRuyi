@@ -5,13 +5,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           sway
-Version:        1.11
+Version:        1.12
 Release:        %autorelease
 Summary:        i3-compatible Wayland compositor
 License:        MIT
 URL:            https://github.com/swaywm/sway
 VCS:            git:https://github.com/swaywm/sway.git
-#!RemoteAsset:  sha256:0e37a55b7c3379230e97e1ad982542b75016a0c7d6676198604e557f9b373dae
+#!RemoteAsset:  sha256:a7b1becc217433c11c6284d36bcea0687b87b77b0ed26a384565292ec321f2b1
 Source0:        https://github.com/swaywm/sway/releases/download/%{version}/sway-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -20,9 +20,6 @@ BuildOption(conf):  -Dman-pages=enabled
 BuildOption(conf):  -Dtray=enabled
 BuildOption(conf):  -Dsd-bus-provider=libsystemd
 BuildOption(conf):  -Dgdk-pixbuf=enabled
-
-%global fish_completions_dir %{_datadir}/fish/vendor_completions.d
-%global zsh_completions_dir %{_datadir}/zsh/site-functions
 
 BuildRequires:  meson >= 1.3
 BuildRequires:  pkgconfig(bash-completion)
@@ -44,7 +41,7 @@ BuildRequires:  pkgconfig(wayland-cursor)
 BuildRequires:  pkgconfig(wayland-protocols) >= 1.24
 BuildRequires:  pkgconfig(wayland-scanner)
 BuildRequires:  pkgconfig(wayland-server) >= 1.21.0
-BuildRequires:  pkgconfig(wlroots-0.19) >= 0.19.0
+BuildRequires:  pkgconfig(wlroots-0.20) >= 0.20.0
 BuildRequires:  pkgconfig(xkbcommon) >= 1.5.0
 
 Requires:       xkeyboard-config
