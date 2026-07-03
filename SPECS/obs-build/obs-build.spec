@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           obs-build
-Version:        20250829
+Version:        20260623
 Release:        %autorelease
 Summary:        A Script to Build Linux RPMs
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            https://github.com/openSUSE/obs-build
-#!RemoteAsset:  sha256:618585b222bb6d4cc7e40d267bdb186e30f6116a5ccaf070806244c688319822
+#!RemoteAsset:  sha256:2c3c070e35d886f087dbffa2a9a45a5d86d9bc32d0127da59d91248479e74493
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
