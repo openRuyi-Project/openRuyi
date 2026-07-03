@@ -1,0 +1,29 @@
+From 26d5fad373881e6599ba9a9af0d3b24d078249dc Mon Sep 17 00:00:00 2001
+From: YunQiang Su <yunqiang@isrc.iscas.ac.cn>
+Date: Wed, 1 Jul 2026 12:55:15 +0800
+Subject: [PATCH] Fix undefined behavior in gsl_pow_int
+
+I find this problem when I build gsl with clang, and run unit tests:
+
+FAIL: gsl_pow_int(1.0000001,-2147483648) (1 observed vs
+5.44471031785229506e-94 expected) [100]
+---
+ sys/pow_int.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys/pow_int.c b/sys/pow_int.c
+index 26c7fff7..0d25ce95 100644
+--- a/sys/pow_int.c
++++ b/sys/pow_int.c
+@@ -31,7 +31,7 @@ double gsl_pow_int(double x, int n)
+ 
+   if(n < 0) {
+     x = 1.0/x;
+-    un = -n;
++    un = -(unsigned int)n;
+   } else {
+     un = n;
+   }
+-- 
+2.47.3
+
