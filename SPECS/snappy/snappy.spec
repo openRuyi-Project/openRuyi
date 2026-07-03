@@ -18,6 +18,8 @@ BuildSystem:    cmake
 
 # https://sources.debian.org/patches/snappy/1.2.2-1/add_option_to_enable_rtti.patch/
 Patch2000:      2000-honor-SNAPPY_ENABLE_RTTI.patch
+# Re-add pkg-config support
+Patch2001:      2001-readd-pkgconfig-support.patch
 
 BuildOption(conf):  -DBUILD_SHARED_LIBS:BOOL=ON
 BuildOption(conf):  -DSNAPPY_ENABLE_RTTI:BOOL=ON
@@ -55,6 +57,7 @@ developing applications that use the Snappy library.
 %dir %{_libdir}/cmake
 %dir %{_libdir}/cmake/Snappy
 %{_libdir}/cmake/Snappy/*
+%{_libdir}/pkgconfig/snappy.pc
 
 %changelog
 %autochangelog
