@@ -1,0 +1,16 @@
+# alias primary-command
+# These are /usr/bin aliases to TeX Live script entry points.
+allec allcm
+fmtutil-sys fmtutil
+fmtutil-user fmtutil
+kanji-config-updmap-sys kanji-config-updmap
+kanji-config-updmap-user kanji-config-updmap
+kpsepath kpsetool
+kpsexpand kpsetool
+kpsewhere kpsetool
+mktexfmt fmtutil
+rpdfcrop pdfcrop
+repstopdf epstopdf
+texhash mktexlsr
+updmap-sys updmap
+updmap-user updmap
