@@ -1,0 +1,33 @@
+From 40988e030cefd2fef899f2f8c4c1177dc19dd5b9 Mon Sep 17 00:00:00 2001
+From: Shuwei Wu <shuwei.wu@mailbox.org>
+Date: Fri, 26 Jun 2026 16:10:23 +0800
+Subject: [RUYI PATCH] FROMLIST: cpufreq: dt-platdev: Add SpacemiT K1 SoC to
+ the allowlist
+
+Add the compatible string for supporting the generic
+cpufreq driver on the SpacemiT K1 SoC.
+
+Signed-off-by: Shuwei Wu <shuwei.wu@mailbox.org>
+Tested-by: Gong Shuai <gsh517025@gmail.com> # OrangePi-RV2
+Link: https://lore.kernel.org/r/20260626-shadow-deps-v4-1-bba9831f2f1d@mailbox.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index ff1204c666b1..26f81f4d56df 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -81,6 +81,8 @@ static const struct of_device_id allowlist[] __initconst = {
+ 		{ .have_governor_per_policy = true, },
+ 	},
+ 
++	{ .compatible = "spacemit,k1", },
++
+ 	{ .compatible = "st-ericsson,u8500", },
+ 	{ .compatible = "st-ericsson,u8540", },
+ 	{ .compatible = "st-ericsson,u9500", },
+-- 
+2.53.0
+

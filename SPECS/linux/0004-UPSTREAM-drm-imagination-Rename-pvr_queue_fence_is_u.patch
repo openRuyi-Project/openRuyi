@@ -1,4 +1,4 @@
-From 0f797907b90303cc3726a8573ee51eff99dc6513 Mon Sep 17 00:00:00 2001
+From 1ecf513cff828e2a5409070fc96c697eea9d11f0 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:39 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Rename

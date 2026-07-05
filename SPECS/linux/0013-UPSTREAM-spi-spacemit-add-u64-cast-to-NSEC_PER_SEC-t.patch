@@ -1,4 +1,4 @@
-From c7704e3943ca86f19ad5a6894f0bd37628cca98f Mon Sep 17 00:00:00 2001
+From b509f4f503d85095037c29850d13810eb87bfed0 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 5 May 2026 09:53:34 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: spacemit: add u64 cast to NSEC_PER_SEC to

@@ -1,0 +1,90 @@
+From cdaf3c7fd9d29a8d1bb95928c62cccd5f6f530fc Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Fri, 5 Jun 2026 13:23:22 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Avoid spurious fault after
+ hotplugging vmemmap
+
+section_activate() does not flush TLB after populating new vmemmap
+pages. On most architectures, this is okay. However it is a problem on
+RISC-V since there the TLB caching non-present entries is permitted,
+which causes spurious faults on some hardwares.
+
+This seems to be most easily reproduced with DEBUG_VM=y and
+PAGE_POISONING=y, which causes these newly mapped struct pages to be
+poisoned i.e. written to immediately after mapping.
+
+Add a hook vmemmap_populate_finalize() in __populate_section_memmap()
+after population, to allow architectures to handle such situations as
+needed. Then implement it on RISC-V to arrange for the existing
+exception handler code to deal with these faults if they happen.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260605-mark-after-vmemmap-populate-v3-1-a06001ac9264@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/pgtable.h | 4 ++++
+ arch/riscv/mm/init.c             | 6 ++++++
+ mm/sparse-vmemmap.c              | 8 ++++++++
+ 3 files changed, 18 insertions(+)
+
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 5d5756bda82e..6b000c990ba7 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -1253,6 +1253,10 @@ static inline pte_t pte_swp_clear_exclusive(pte_t pte)
+ #define TASK_SIZE	FIXADDR_START
+ #endif
+ 
++/* Needed on SPARSEMEM_VMEMMAP */
++#define vmemmap_populate_finalize vmemmap_populate_finalize
++void __meminit vmemmap_populate_finalize(void);
++
+ #else /* CONFIG_MMU */
+ 
+ #define PAGE_SHARED		__pgprot(0)
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index a430caf4d013..27bc48b4f491 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -1396,6 +1396,12 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
+ 	 */
+ 	return vmemmap_populate_hugepages(start, end, node, altmap);
+ }
++
++void __meminit vmemmap_populate_finalize(void)
++{
++	/* Avoid faults on cached non-present TLB entries. */
++	mark_new_valid_map();
++}
+ #endif
+ 
+ #if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 6eadb9d116e4..2a8b923fabe8 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -544,6 +544,12 @@ static int __meminit vmemmap_populate_compound_pages(unsigned long start_pfn,
+ 
+ #endif
+ 
++#ifndef vmemmap_populate_finalize
++static void __meminit vmemmap_populate_finalize(void)
++{
++}
++#endif
++
+ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap,
+ 		struct dev_pagemap *pgmap)
+@@ -564,6 +570,8 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 	if (r < 0)
+ 		return NULL;
+ 
++	vmemmap_populate_finalize();
++
+ 	return pfn_to_page(pfn);
+ }
+ 
+-- 
+2.53.0
+

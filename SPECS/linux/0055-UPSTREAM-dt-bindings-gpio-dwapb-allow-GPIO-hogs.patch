@@ -1,0 +1,44 @@
+From 0c5812876e5f058140ffb44b9a4d853ad8ec882f Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Thu, 7 May 2026 16:17:05 +0800
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: gpio: dwapb: allow GPIO hogs
+
+GPIO hogs are described in the gpio.txt binding as automatic default
+GPIO configuration items.
+
+Allow them for GPIO ports in DesignWare APB GPIO controller nodes.
+
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Linus Walleij <linusw@kernel.org>
+Cc: Bartosz Golaszewski <brgl@kernel.org>
+Cc: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://patch.msgid.link/20260507081710.4090814-8-zhengxingda@iscas.ac.cn
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+(cherry picked from commit f76c8be440e53465a306c95a7d50ca8675252f82)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+index bba6f5b6606f..55069533f6d9 100644
+--- a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+@@ -95,6 +95,12 @@ patternProperties:
+       '#interrupt-cells':
+         const: 2
+ 
++    patternProperties:
++      "^.+-hog(-[0-9]+)?$":
++        type: object
++        required:
++          - gpio-hog
++
+     required:
+       - compatible
+       - reg
+-- 
+2.53.0
+

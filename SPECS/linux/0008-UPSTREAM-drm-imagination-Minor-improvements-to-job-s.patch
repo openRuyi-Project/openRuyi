@@ -1,4 +1,4 @@
-From a316f782c3e6375d6f27dc6595fc951a81462b8e Mon Sep 17 00:00:00 2001
+From 66e60dabb0df73191dc4c07340f1889d963d8283 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:43 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Minor improvements to job

@@ -1,0 +1,36 @@
+From 5c2aa37ccbc77f6b3e155cc7b71b87f7eb4a6ff7 Mon Sep 17 00:00:00 2001
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Date: Fri, 22 May 2026 21:33:58 +0800
+Subject: [RUYI PATCH] UPSTREAM: ASoC: soc-pcm: add DEFINE_GUARD for
+ snd_soc_card_mutex
+
+Define a guard class wrapping snd_soc_card_mutex_lock() and
+snd_soc_card_mutex_unlock() so that scope-based locking can be used
+while still picking up the SND_SOC_CARD_CLASS_RUNTIME lockdep subclass.
+
+Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Link: https://patch.msgid.link/20260522-i2s-same-blk-v4-2-a71a86faaa20@linux.spacemit.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+(cherry picked from commit 2555c62275a10bb7dfb4476ebe73d48df11f3112)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ sound/soc/soc-pcm.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 9b12eedb77c3..25e494c4ed81 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -26,6 +26,9 @@
+ #include <sound/soc-link.h>
+ #include <sound/initval.h>
+ 
++
++DEFINE_GUARD(snd_soc_card_mutex, struct snd_soc_card *,
++	     snd_soc_card_mutex_lock(_T), snd_soc_card_mutex_unlock(_T))
+ #define soc_pcm_ret(rtd, ret) _soc_pcm_ret(rtd, __func__, ret)
+ static inline int _soc_pcm_ret(struct snd_soc_pcm_runtime *rtd,
+ 			       const char *func, int ret)
+-- 
+2.53.0
+

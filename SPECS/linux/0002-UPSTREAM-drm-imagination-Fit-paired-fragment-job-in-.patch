@@ -1,4 +1,4 @@
-From a02d4126e2db58330f3b48b4bbd759f766b092b3 Mon Sep 17 00:00:00 2001
+From e936715d3e6d367b41cf021daaace9cc464be89f Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:37 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Fit paired fragment job in

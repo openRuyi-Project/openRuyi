@@ -1,4 +1,4 @@
-From be0e397bb404f1ba886d31be02d402c91efdd610 Mon Sep 17 00:00:00 2001
+From f12f3431a034ff7f0018f566b21366b9c50b73fc Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add thermal sensor for

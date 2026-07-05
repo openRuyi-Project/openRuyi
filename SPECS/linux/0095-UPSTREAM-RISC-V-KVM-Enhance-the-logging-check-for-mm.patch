@@ -1,0 +1,55 @@
+From 3bb3fd31d4a03c5d269b6ea4fa83044decc75c7c Mon Sep 17 00:00:00 2001
+From: Inochi Amaoto <inochiama@gmail.com>
+Date: Thu, 28 May 2026 19:38:39 +0800
+Subject: [RUYI PATCH] UPSTREAM: RISC-V: KVM: Enhance the logging check for mmu
+ mapping
+
+When enabling dirty ring, the dirty bitmap is disable, and the logging
+check is always false as the RISC-V architecture does not select
+"NEED_KVM_DIRTY_RING_WITH_BITMAP". Although the dirty log is recorded
+since the write path already trying to add the dirty log, the logic for
+logging check is broken and some side effect will occurs.
+
+Enhance the logging check for mmu mapping so it can check both the dirty
+ring and the dirty bitmap.
+
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Link: https://lore.kernel.org/r/20260528113840.2629186-1-inochiama@gmail.com
+Signed-off-by: Anup Patel <anup@brainfault.org>
+(cherry picked from commit 851334760330dafa68ab8f371e804ea6ad56ff9a)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kvm/mmu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+index 2d3def024270..b5873bca9dce 100644
+--- a/arch/riscv/kvm/mmu.c
++++ b/arch/riscv/kvm/mmu.c
+@@ -142,9 +142,8 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				enum kvm_mr_change change)
+ {
+ 	/*
+-	 * At this point memslot has been committed and there is an
+-	 * allocated dirty_bitmap[], dirty pages will be tracked while
+-	 * the memory slot is write protected.
++	 * At this point memslot has been committed and dirty pages will be
++	 * tracked while the memory slot is write protected.
+ 	 */
+ 	if (change != KVM_MR_DELETE && new->flags & KVM_MEM_LOG_DIRTY_PAGES) {
+ 		if (kvm_dirty_log_manual_protect_and_init_set(kvm))
+@@ -433,8 +432,8 @@ int kvm_riscv_mmu_map(struct kvm_vcpu *vcpu, struct kvm_memory_slot *memslot,
+ 	struct vm_area_struct *vma;
+ 	struct kvm *kvm = vcpu->kvm;
+ 	struct kvm_mmu_memory_cache *pcache = &vcpu->arch.mmu_page_cache;
+-	bool logging = (memslot->dirty_bitmap &&
+-			!(memslot->flags & KVM_MEM_READONLY)) ? true : false;
++	bool logging = kvm_slot_dirty_track_enabled(memslot) &&
++		       !(memslot->flags & KVM_MEM_READONLY);
+ 	unsigned long vma_pagesize, mmu_seq;
+ 	struct kvm_gstage gstage;
+ 	struct page *page;
+-- 
+2.53.0
+

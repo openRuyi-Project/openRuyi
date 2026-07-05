@@ -1,4 +1,4 @@
-From 0a393e84ff729a51a91affaaaaaf6bffeb38be59 Mon Sep 17 00:00:00 2001
+From 74526b41d6a2fbbf55b7f3dcf93efdee1b2ebac8 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: thermal/drivers/spacemit/k1: Add thermal

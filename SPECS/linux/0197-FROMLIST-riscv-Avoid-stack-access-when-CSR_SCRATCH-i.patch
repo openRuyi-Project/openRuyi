@@ -1,0 +1,194 @@
+From 7a29b901599d9ce49475aa8e8d715a2b23d54907 Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Tue, 30 Jun 2026 14:36:24 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: Avoid stack access when CSR_SCRATCH is
+ incorrect
+
+The kernel exception handler unconditionally relies on the value in
+CSR_SCRATCH, whether it is 0 (meaning kernel mode) or the current
+pointer (meaning user mode). Therefore, any exception that happens while
+CSR_SCRATCH does not reflect the current privilege mode would be
+irrecoverable.
+
+When VMAP_STACK=y, spurious-seeming page faults can happen while
+accessing the stack if the processor has cached/still-in-pipeline
+non-valid PTEs. Therefore, it is unsafe to access the stack on entry
+before setting CSR_SCRATCH to 0, or on exit to user after setting
+CSR_SCRATCH to current.
+
+Therefore, instead of using the stack, make some scratch space in
+task_info for these fragile regions of code, and access them using
+offsets from tp. The scratch space for mark_new_valid_map is not reused
+because the page fault *can* nest in places where the scratch space is
+needed.
+
+Fixes: 503638e0babf ("riscv: Stop emitting preventive sfence.vma for new vmalloc mappings")
+Reported-by: Yaxing Guo <guoyaxing@bosc.ac.cn>
+Link: https://lore.kernel.org/linux-riscv/20260601084524.34584-1-guoyaxing@bosc.ac.cn/
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260630-riscv-no-stack-when-wrong-scratch-v1-1-0f9b9cb5cf67@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/csr.h         |  1 +
+ arch/riscv/include/asm/thread_info.h |  5 +++
+ arch/riscv/kernel/asm-offsets.c      |  2 +
+ arch/riscv/kernel/entry.S            | 65 +++++++++++++++++++++-------
+ 4 files changed, 58 insertions(+), 15 deletions(-)
+
+diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+index 050da6053800..0f69f389c96d 100644
+--- a/arch/riscv/include/asm/csr.h
++++ b/arch/riscv/include/asm/csr.h
+@@ -16,6 +16,7 @@
+ #define SR_MPIE		_AC(0x00000080, UL) /* Previous Machine IE */
+ #define SR_SPP		_AC(0x00000100, UL) /* Previously Supervisor */
+ #define SR_MPP		_AC(0x00001800, UL) /* Previously Machine */
++#define SR_MPP_SHIFT	11
+ #define SR_SUM		_AC(0x00040000, UL) /* Supervisor User Memory Access */
+ 
+ /* zicfilp landing pad status bit */
+diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+index 55019fdfa9ec..afa9c61d74c6 100644
+--- a/arch/riscv/include/asm/thread_info.h
++++ b/arch/riscv/include/asm/thread_info.h
+@@ -73,6 +73,11 @@ struct thread_info {
+ 	 */
+ 	unsigned long		a0, a1, a2;
+ #endif
++	/*
++	 * Used in ret_from_exception() and handle_exception() as scratch space
++	 * when CSR_SCRATCH does not reflect the current privilege mode.
++	 */
++	unsigned long		tp, t0;
+ #ifdef CONFIG_RISCV_USER_CFI
+ 	struct cfi_state	user_cfi_state;
+ #endif
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index af827448a609..2d617234bcdb 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -49,6 +49,8 @@ void asm_offsets(void)
+ 	OFFSET(TASK_TI_A1, task_struct, thread_info.a1);
+ 	OFFSET(TASK_TI_A2, task_struct, thread_info.a2);
+ #endif
++	OFFSET(TASK_TI_TP, task_struct, thread_info.tp);
++	OFFSET(TASK_TI_T0, task_struct, thread_info.t0);
+ 
+ 	OFFSET(TASK_TI_CPU_NUM, task_struct, thread_info.cpu);
+ #ifdef CONFIG_RISCV_USER_CFI
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 092f408edb7d..4bb0ea7186ae 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -128,6 +128,8 @@
+ .endm
+ 
+ SYM_CODE_START(handle_exception)
++	/* Caution: CSR_SCARTCH does not reflect privilege mode from now on. */
++
+ 	/*
+ 	 * If coming from userspace, preserve the user thread pointer and load
+ 	 * the kernel thread pointer.  If we came from the kernel, the scratch
+@@ -160,6 +162,19 @@ SYM_CODE_START(handle_exception)
+ #endif
+ 
+ .Lsave_context:
++	REG_S t0, TASK_TI_T0(tp)
++
++	/*
++	 * Grab the saved TP, and also set the scratch register back to 0, so
++	 * that if a recursive exception occurs, the exception vector knows it
++	 * came from the kernel.
++	 *
++	 * Caution: CSR_SCARTCH does not reflect privilege mode before this.
++	 */
++	csrrw t0, CSR_SCRATCH, zero
++	REG_S t0, TASK_TI_TP(tp)
++	REG_L t0, TASK_TI_T0(tp)
++
+ 	REG_S sp, TASK_TI_USER_SP(tp)
+ 	REG_L sp, TASK_TI_KERNEL_SP(tp)
+ 	addi sp, sp, -(PT_SIZE_ON_STACK)
+@@ -187,7 +202,7 @@ SYM_CODE_START(handle_exception)
+ 	csrr s2, CSR_EPC
+ 	csrr s3, CSR_TVAL
+ 	csrr s4, CSR_CAUSE
+-	csrr s5, CSR_SCRATCH
++	REG_L s5, TASK_TI_TP(tp)
+ 	REG_S s0, PT_SP(sp)
+ 	REG_S s1, PT_STATUS(sp)
+ 	REG_S s2, PT_EPC(sp)
+@@ -195,12 +210,6 @@ SYM_CODE_START(handle_exception)
+ 	REG_S s4, PT_CAUSE(sp)
+ 	REG_S s5, PT_TP(sp)
+ 
+-	/*
+-	 * Set the scratch register to 0, so that if a recursive exception
+-	 * occurs, the exception vector knows it came from the kernel
+-	 */
+-	csrw CSR_SCRATCH, x0
+-
+ 	/* Load the global pointer */
+ 	load_global_pointer
+ 
+@@ -268,11 +277,6 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+ 	/* Save the kernel shadow call stack pointer */
+ 	scs_save_current
+ 
+-	/*
+-	 * Save TP into the scratch register , so we can find the kernel data
+-	 * structures again.
+-	 */
+-	csrw CSR_SCRATCH, tp
+ 1:
+ #ifdef CONFIG_RISCV_ISA_V_PREEMPTIVE
+ 	move a0, sp
+@@ -305,11 +309,42 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+ 
+ 	REG_L x1,  PT_RA(sp)
+ 	REG_L x3,  PT_GP(sp)
+-	REG_L x4,  PT_TP(sp)
+-	REG_L x5,  PT_T0(sp)
+ 	restore_from_x6_to_x31
+ 
+-	REG_L x2,  PT_SP(sp)
++	/*
++	 * Stash t0 and tp in thread_info since we can't access the stack after
++	 * switching CSR_SCRATCH.
++	 */
++	REG_L t0,  PT_T0(sp)
++	REG_S t0,  TASK_TI_T0(tp)
++	REG_L t0,  PT_TP(sp)
++	REG_S t0,  TASK_TI_TP(tp)
++
++	REG_L sp,  PT_SP(sp)
++
++	/* If returning to user mode, set CSR_SCRATCH to tp, else 0 */
++	csrr t0, CSR_STATUS
++#if defined(CONFIG_RISCV_M_MODE)
++	/* the MPP value is too large to be used as an immediate arg for andi */
++	srli t0, t0, SR_MPP_SHIFT
++	andi t0, t0, SR_MPP >> SR_MPP_SHIFT
++	/* t0 = (mstatus & SR_MPP) >> SR_MPP_SHIFT */
++#else
++	andi t0, t0, SR_SPP
++	/* t0 = sstatus & SR_SPP */
++#endif
++	seqz t0, t0
++	/* t0 = !(status & SR_PP) */
++	neg t0, t0
++	/* t0 = (status & SR_PP) ? 0 : -1 */
++	and t0, t0, tp
++	/* t0 = (status & SR_PP) ? 0 : tp */
++	csrw CSR_SCRATCH, t0
++
++	/* Caution: CSR_SCARTCH does not reflect privilege mode from now on. */
++
++	REG_L t0,  TASK_TI_T0(tp)
++	REG_L tp,  TASK_TI_TP(tp)
+ 
+ #ifdef CONFIG_RISCV_M_MODE
+ 	mret
+-- 
+2.53.0
+

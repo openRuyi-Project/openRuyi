@@ -1,0 +1,59 @@
+From 46a0d87745f76a05b6e78a6ec687d6b9741935ea Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Tue, 23 Jun 2026 22:43:46 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable the i2c2 adapter
+ on K3 Pico-ITX board
+
+Define I2C2 pinctrl properties, and enable it on the K3 Pico-ITX board.
+It will be used by the 24c02 eeprom.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260623204431.498700-3-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts |  6 ++++++
+ arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi | 11 +++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index fcefc840672e..fcdd6e53d747 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -43,6 +43,12 @@ reg_aux_vcc5v: regulator-aux-vcc5v {
+ 	};
+ };
+ 
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_1_cfg>;
++	status = "okay";
++};
++
+ &i2c8 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c8_cfg>;
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
+index ee53ab2e7267..5b9045e01434 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
+@@ -78,6 +78,17 @@ gmac1-phy-0-pins {
+ 		};
+ 	};
+ 
++	/omit-if-no-ref/
++	i2c2_1_cfg: i2c2-1-cfg {
++		i2c2-1-pins {
++			pinmux = <K3_PADCONF(46, 5)>,	/* i2c2 scl */
++				 <K3_PADCONF(47, 5)>;	/* i2c2 sda */
++
++			bias-pull-up = <0>;
++			drive-strength = <25>;
++		};
++	};
++
+ 	/omit-if-no-ref/
+ 	i2c8_cfg: i2c8-cfg {
+ 		i2c8-pins {
+-- 
+2.53.0
+

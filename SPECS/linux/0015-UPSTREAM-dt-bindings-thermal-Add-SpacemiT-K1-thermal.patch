@@ -1,4 +1,4 @@
-From 191c6dc52b69eb1426bcc81cb2651bdb4fc248e3 Mon Sep 17 00:00:00 2001
+From 8fcd2a21be209c955bf953909637e2d0d05f4b4b Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:15 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: thermal: Add SpacemiT K1 thermal

@@ -1,4 +1,4 @@
-From dd9196c2c2313d10490d92351a62d14d01131542 Mon Sep 17 00:00:00 2001
+From dec6ceccdcc3a5d07857835e6c10035349dbdf06 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:52 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: spacemit: introduce SpacemiT K1 SPI

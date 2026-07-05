@@ -1,0 +1,49 @@
+From 5daff5a2ed3d215fc0624344b31587ee96a67836 Mon Sep 17 00:00:00 2001
+From: Hangfan Li <lihangfan@iscas.ac.cn>
+Date: Fri, 3 Jul 2026 17:29:21 +0800
+Subject: [RUYI PATCH] RUYI: riscv: dts: sophgo: sg2044: srd3: add spifmc node
+
+Signed-off-by: Hangfan Li <lihangfan@iscas.ac.cn>
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../boot/dts/sophgo/sg2044-sophgo-srd3-10.dts | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+index 1b506972d465..6003d92c50a7 100644
+--- a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
++++ b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-srd3-10.dts
+@@ -113,6 +113,30 @@ &sd {
+ 	status = "okay";
+ };
+ 
++&spifmc0 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <133000000>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <1>;
++	};
++};
++
++&spifmc1 {
++	status = "okay";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <133000000>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <1>;
++	};
++};
++
+ &uart0 {
+ 	/* for firmware */
+ 	status = "reserved";
+-- 
+2.53.0
+

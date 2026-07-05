@@ -1,4 +1,4 @@
-From 7740a038a0d18ad4acac1fdaa075ab730f0cb8a0 Mon Sep 17 00:00:00 2001
+From b5bd7b4a186be6ce3dce4c6d1173cf8c4c41f078 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:40 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Rename fence returned by

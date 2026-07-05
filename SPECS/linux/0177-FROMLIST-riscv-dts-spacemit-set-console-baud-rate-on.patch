@@ -1,0 +1,35 @@
+From 94ffebf7922448f7aa32329789ca077074328f67 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Tue, 23 Jun 2026 22:43:45 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: set console baud rate on
+ K3 Pico-ITX board
+
+Because the default console's baud rate is not set, defconfig kernels do
+not have any serial output on this platform. Set the baud rate to
+115200, matching what is used by U-Boot etc on this platform.
+
+Fixes: 7a6131804986 ("riscv: dts: spacemit: add K3 Pico-ITX board support")
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Reviewed-by: Guodong Xu <docular.xu@gmail.com>
+Link: https://lore.kernel.org/r/20260623204431.498700-2-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index e90e17895bb2..fcefc840672e 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -18,7 +18,7 @@ aliases {
+ 	};
+ 
+ 	chosen {
+-		stdout-path = "serial0";
++		stdout-path = "serial0:115200n8";
+ 	};
+ 
+ 	memory@100000000 {
+-- 
+2.53.0
+

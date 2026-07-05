@@ -1,4 +1,4 @@
-From 1a50b2c8c12ed518b6879029cf308dbd7210e429 Mon Sep 17 00:00:00 2001
+From 1f82f38a875484f6eceaa66b6bcc3dc48e98c5d4 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:36 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Count paired job fence as

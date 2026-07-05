@@ -1,4 +1,4 @@
-From b02817179536fecf8518219e16b32a7c0c1c97a3 Mon Sep 17 00:00:00 2001
+From 5c5a52131299c83f2c92c151fd5d4ed590189a51 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:42 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Update check to skip

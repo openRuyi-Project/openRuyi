@@ -1,4 +1,4 @@
-From 7323400152f146f485eee6fe2d9073c5e143e09b Mon Sep 17 00:00:00 2001
+From cd58a27ec226ce4bffdbad1a1d650c2dc5211491 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:38 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Skip check on paired job

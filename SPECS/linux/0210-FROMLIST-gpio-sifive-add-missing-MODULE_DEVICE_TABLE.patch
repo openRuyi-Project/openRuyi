@@ -1,0 +1,38 @@
+From daa6340391a00374156d621efa6df23ab60ab0fc Mon Sep 17 00:00:00 2001
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Date: Sat, 4 Jul 2026 20:22:30 +0800
+Subject: [RUYI PATCH] FROMLIST: gpio: sifive: add missing
+ MODULE_DEVICE_TABLE()
+
+The driver has an OF match table wired to .of_match_table, but does
+not export the table with MODULE_DEVICE_TABLE().
+
+Add the missing MODULE_DEVICE_TABLE(of, ...) entry so module alias
+information is generated for OF based module autoloading.
+
+This is a source-level fix.  It does not claim dynamic hardware
+reproduction; the evidence is the driver-owned match table, its use by
+the platform driver, and the missing module alias publication.
+
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260704122230.75964-1-pengpeng@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/gpio/gpio-sifive.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+index 94ef2efbd14f..e9a992cd4b9c 100644
+--- a/drivers/gpio/gpio-sifive.c
++++ b/drivers/gpio/gpio-sifive.c
+@@ -260,6 +260,7 @@ static const struct of_device_id sifive_gpio_match[] = {
+ 	{ .compatible = "sifive,fu540-c000-gpio" },
+ 	{ },
+ };
++MODULE_DEVICE_TABLE(of, sifive_gpio_match);
+ 
+ static struct platform_driver sifive_gpio_driver = {
+ 	.probe		= sifive_gpio_probe,
+-- 
+2.53.0
+

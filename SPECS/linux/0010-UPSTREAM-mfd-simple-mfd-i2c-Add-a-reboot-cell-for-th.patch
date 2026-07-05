@@ -1,4 +1,4 @@
-From 435845867746e07acbc84c7504fa9b71c470ca69 Mon Sep 17 00:00:00 2001
+From 0767fe1de0a27a6fa706a0e12ab1773f1a0ae293 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:02:00 +0100
 Subject: [RUYI PATCH] UPSTREAM: mfd: simple-mfd-i2c: Add a reboot cell for the

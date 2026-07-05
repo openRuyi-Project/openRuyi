@@ -1,0 +1,103 @@
+From 62cce0f581093dcd084f506e460edc70b13f6e2d Mon Sep 17 00:00:00 2001
+From: MoeLeak <i@leak.moe>
+Date: Fri, 8 May 2026 19:44:14 +0800
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Enable WiFi on Lichee Pi 4A
+
+The Lichee Pi 4A has an RTL8723DS WiFi module connected to the TH1520
+SDIO1 controller. The module reset line is driven through a PCA9557 GPIO
+expander on the I2C1 bus.
+
+Enable I2C1 for the GPIO expander and configure SDIO1 as a non-removable
+4-bit SDIO bus using an mmc-pwrseq-simple reset sequence so the WiFi
+device can be powered and enumerated.
+
+Signed-off-by: MoeLeak <i@leak.moe>
+Signed-off-by: Drew Fustini <fustini@kernel.org>
+(cherry picked from commit a20241c08385c875c4d0deb6c8ffc15f13f5b388)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../boot/dts/thead/th1520-lichee-pi-4a.dts    | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
+index 7cb7d28683bc..af6f25ebbf60 100644
+--- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
++++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include "th1520-lichee-module-4a.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "Sipeed Lichee Pi 4A";
+@@ -40,6 +41,12 @@ hdmi_con_in: endpoint {
+ 		};
+ 	};
+ 
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&ioexp2 4 GPIO_ACTIVE_LOW>;
++		post-power-on-delay-ms = <200>;
++	};
++
+ 	thermal-zones {
+ 		cpu-thermal {
+ 			polling-delay = <1000>;
+@@ -96,6 +103,20 @@ fan: pwm-fan {
+ 
+ };
+ 
++&padctrl1_apsys {
++	i2c1_pins: i2c1-0 {
++		i2c-pins {
++			pins = "I2C1_SCL", "I2C1_SDA";
++			function = "i2c";
++			bias-pull-up = <2100>;
++			drive-strength = <7>;
++			input-enable;
++			input-schmitt-enable;
++			slew-rate = <0>;
++		};
++	};
++};
++
+ &padctrl0_apsys {
+ 	fan_pins: fan-0 {
+ 		pwm1-pins {
+@@ -132,6 +153,32 @@ rx-pins {
+ 	};
+ };
+ 
++&i2c1 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++
++	ioexp2: gpio@18 {
++		compatible = "nxp,pca9557";
++		reg = <0x18>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
++&sdio1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	bus-width = <4>;
++	max-frequency = <198000000>;
++	cap-sdio-irq;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	non-removable;
++	status = "okay";
++};
++
+ &dpu {
+ 	status = "okay";
+ };
+-- 
+2.53.0
+

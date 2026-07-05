@@ -1,4 +1,4 @@
-From 6f18cf2fe93abf490a6a110aece3c3d60fdfa79a Mon Sep 17 00:00:00 2001
+From 84f7b15c151c775b2d1a75a1e75a62cce0aebc1c Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:51 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: add SpacemiT K1 SPI support

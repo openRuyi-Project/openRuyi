@@ -1,4 +1,4 @@
-From e267adcb64099b514ab7cc3f34eefe92ae211211 Mon Sep 17 00:00:00 2001
+From 7b8bc618ef98685187d221324362e0c8cb8955db Mon Sep 17 00:00:00 2001
 From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 Date: Thu, 14 May 2026 02:07:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: perf riscv: Fix discarded const qualifier in

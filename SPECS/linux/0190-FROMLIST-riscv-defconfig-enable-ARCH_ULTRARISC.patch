@@ -1,0 +1,33 @@
+From 2f30426abb5fd32a1ecb3ed9b0cc1df7e6cc3ea9 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Fri, 15 May 2026 09:18:05 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: defconfig: enable ARCH_ULTRARISC
+
+Enable `ARCH_ULTRARISC` in the default RISC-V defconfig.
+
+Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com/
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Link: tag in both the commit message and the cover letter. This defconfig
+Link: https://lore.kernel.org/lkml/20260427-ultrarisc-pcie-v4-1-98935f6cdfb5@ultrarisc.com/
+Link: https://lore.kernel.org/r/20260515-ultrarisc-pinctrl-v1-9-bf559589ea8a@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index c2c37327b987..9fdc4d1831ed 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -32,6 +32,7 @@ CONFIG_SOC_STARFIVE=y
+ CONFIG_ARCH_SUNXI=y
+ CONFIG_ARCH_TENSTORRENT=y
+ CONFIG_ARCH_THEAD=y
++CONFIG_ARCH_ULTRARISC=y
+ CONFIG_ARCH_VIRT=y
+ CONFIG_ARCH_CANAAN=y
+ CONFIG_SMP=y
+-- 
+2.53.0
+

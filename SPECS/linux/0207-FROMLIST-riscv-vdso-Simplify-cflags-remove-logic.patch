@@ -1,0 +1,49 @@
+From 1a60efb5509fbcc0c36676ed1a28f1281fa7e235 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Wed, 1 Jul 2026 11:21:23 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Simplify cflags remove logic
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Listing all flags for each object file is tedious and error-prone.
+
+Replace it with a simpler solution.
+
+Link: https://lore.kernel.org/all/20260630135316-f26f0e0f-c08c-4d4d-9963-10f9985a7689@linutronix.de/
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/20260701-riscv-vdso-lto-v1-2-89db0cd82077@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/vdso/Makefile | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index 43ee881f6c6f..8dbf2532a573 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -41,6 +41,8 @@ ccflags-y += $(CFI_FULL)
+ asflags-y += $(KBUILD_BASE_ISA)$(CFI_MARCH)
+ asflags-y += $(CFI_FULL)
+ 
++ccflags-remove-y += $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_LTO)
++
+ ifneq ($(c-gettimeofday-y),)
+   CFLAGS_vgettimeofday.o += -fPIC -include $(c-gettimeofday-y)
+ endif
+@@ -68,11 +70,6 @@ ifneq ($(filter vgettimeofday, $(vdso-syms)),)
+ CPPFLAGS_$(vdso_lds) += -DHAS_VGETTIMEOFDAY
+ endif
+ 
+-# Disable -pg to prevent insert call site
+-CFLAGS_REMOVE_vgettimeofday.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_LTO)
+-CFLAGS_REMOVE_getrandom.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_LTO)
+-CFLAGS_REMOVE_hwprobe.o = $(CC_FLAGS_FTRACE) $(CC_FLAGS_SCS) $(CC_FLAGS_LTO)
+-
+ # Force dependency
+ $(obj)/$(vdso_o): $(obj)/$(vdso_so)
+ 
+-- 
+2.53.0
+

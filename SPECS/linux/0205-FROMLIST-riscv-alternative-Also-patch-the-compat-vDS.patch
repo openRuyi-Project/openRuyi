@@ -1,0 +1,39 @@
+From ddec276c4d32521f73b2bccdd90dd5ed76302d85 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Tue, 30 Jun 2026 09:41:42 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: alternative: Also patch the compat vDSO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The vDSO for compat processes can also contain alternative entries.
+
+Patch those, too.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/20260630-riscv-vdso32-alternative-v1-3-a32fd89b7b1c@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/alternative.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
+index 6aba169fb213..c0c9306022c5 100644
+--- a/arch/riscv/kernel/alternative.c
++++ b/arch/riscv/kernel/alternative.c
+@@ -202,6 +202,11 @@ void __init apply_boot_alternatives(void)
+ 		apply_vdso_alternatives(vdso_cfi_start,
+ 					__vdso_alternatives_start_cfi_offset,
+ 					__vdso_alternatives_end_cfi_offset);
++
++	if (IS_ENABLED(CONFIG_COMPAT))
++		apply_vdso_alternatives(compat_vdso_start,
++					compat__vdso_alternatives_start_offset,
++					compat__vdso_alternatives_end_offset);
+ }
+ 
+ /*
+-- 
+2.53.0
+

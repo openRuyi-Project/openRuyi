@@ -1,0 +1,77 @@
+From eb353815cfe12ab8e073f64ab4f33de09aac2efe Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Tue, 30 Jun 2026 09:41:41 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: alternative: Use the statically
+ extracted vDSO section offsets
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Currently the alternative sections are extracted from the vDSO
+binaries at runtime. This has runtime overhead and also doesn't
+work for the compat vDSO.
+
+Use the offsets generated during the build instead, fixing both issues.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/20260630-riscv-vdso32-alternative-v1-2-a32fd89b7b1c@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/alternative.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
+
+diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
+index 104dc0862c5c..6aba169fb213 100644
+--- a/arch/riscv/kernel/alternative.c
++++ b/arch/riscv/kernel/alternative.c
+@@ -173,24 +173,14 @@ static void __init_or_module _apply_alternatives(struct alt_entry *begin,
+ 				stage);
+ }
+ 
+-static void __init apply_vdso_alternatives(void *start)
++static __always_inline
++void __init apply_vdso_alternatives(void *base, size_t alternatives_begin, size_t alternatives_end)
+ {
+-	const Elf_Ehdr *hdr;
+-	const Elf_Shdr *shdr;
+-	const Elf_Shdr *alt;
+-	struct alt_entry *begin, *end;
+-
+-	hdr = (Elf_Ehdr *)start;
+-	shdr = (void *)hdr + hdr->e_shoff;
+-	alt = find_section(hdr, shdr, ".alternative");
+-	if (!alt)
++	if (alternatives_begin == alternatives_end)
+ 		return;
+ 
+-	begin = (void *)hdr + alt->sh_offset,
+-	end = (void *)hdr + alt->sh_offset + alt->sh_size,
+-
+-	_apply_alternatives((struct alt_entry *)begin,
+-			    (struct alt_entry *)end,
++	_apply_alternatives(base + alternatives_begin,
++			    base + alternatives_end,
+ 			    RISCV_ALTERNATIVES_BOOT);
+ }
+ 
+@@ -204,10 +194,14 @@ void __init apply_boot_alternatives(void)
+ 			    RISCV_ALTERNATIVES_BOOT);
+ 
+ 	if (IS_ENABLED(CONFIG_MMU))
+-		apply_vdso_alternatives(vdso_start);
++		apply_vdso_alternatives(vdso_start,
++					__vdso_alternatives_start_offset,
++					__vdso_alternatives_end_offset);
+ 
+ 	if (IS_ENABLED(CONFIG_RISCV_USER_CFI))
+-		apply_vdso_alternatives(vdso_cfi_start);
++		apply_vdso_alternatives(vdso_cfi_start,
++					__vdso_alternatives_start_cfi_offset,
++					__vdso_alternatives_end_cfi_offset);
+ }
+ 
+ /*
+-- 
+2.53.0
+

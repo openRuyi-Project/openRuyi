@@ -1,0 +1,40 @@
+From 39338d45cc2f14d532996d763b4b547f5a75a2b8 Mon Sep 17 00:00:00 2001
+From: Bastian Blank <waldi@debian.org>
+Date: Thu, 18 Jun 2026 18:12:30 +0200
+Subject: [RUYI PATCH] UPSTREAM: riscv: Add build salt to the vDSO
+
+The vDSO needs to have a unique build id in a similar manner
+to the kernel and modules. Use the build salt macro.
+
+Signed-off-by: Bastian Blank <waldi@debian.org>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Link: https://patch.msgid.link/ajQY7n0an0YwQ--j@steamhammer.waldi.eu.org
+Signed-off-by: Paul Walmsley <pjw@kernel.org>
+(cherry picked from commit c8c5a7835f5c9e34c8a15190519a2cc9ecb9b5b5)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/vdso/note.S | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/riscv/kernel/vdso/note.S b/arch/riscv/kernel/vdso/note.S
+index 3d92cc956b95..69bfe48be037 100644
+--- a/arch/riscv/kernel/vdso/note.S
++++ b/arch/riscv/kernel/vdso/note.S
+@@ -4,6 +4,7 @@
+  * Here we can supply some information useful to userland.
+  */
+ 
++#include <linux/build-salt.h>
+ #include <linux/elfnote.h>
+ #include <linux/version.h>
+ #include <asm/assembler.h>
+@@ -12,4 +13,6 @@ ELFNOTE_START(Linux, 0, "a")
+ 	.long LINUX_VERSION_CODE
+ ELFNOTE_END
+ 
++BUILD_SALT
++
+ emit_riscv_feature_1_and
+-- 
+2.53.0
+

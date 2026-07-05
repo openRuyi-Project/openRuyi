@@ -1,0 +1,40 @@
+From 660de5c5f6ffff1d92222b0bd052e73b006597e8 Mon Sep 17 00:00:00 2001
+From: Iker Pedrosa <ikerpedrosam@gmail.com>
+Date: Tue, 26 May 2026 16:36:57 +0200
+Subject: [RUYI PATCH] UPSTREAM: i2c: busses: make K1 driver default for
+ SpacemiT platforms
+
+Enable I2C_K1 by default when ARCH_SPACEMIT is configured to ensure SD
+card functionality works out-of-the-box.
+
+SpacemiT K1 boards use I2C-controlled PMICs (like the P1 chip) to
+provide SD card power supplies. Without the I2C_K1 driver enabled,
+regulators cannot be controlled and SD card detection/operation fails.
+
+Suggested-by: Margherita Milani <margherita.milani@amarulasolutions.com>
+Suggested-by: Yixun Lan <dlan@kernel.org>
+Signed-off-by: Iker Pedrosa <ikerpedrosam@gmail.com>
+Reviewed-by: Yixun Lan <dlan@kernel.org>
+Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
+Link: https://lore.kernel.org/r/20260526-orangepi-sd-card-i2c-v1-1-b92268bfd467@gmail.com
+(cherry picked from commit d38e710fba1806974051972d69fbbd6c69b55734)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/i2c/busses/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 8c935f867a37..bfe191e50b49 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -794,6 +794,7 @@ config I2C_K1
+ 	tristate "SpacemiT K1 I2C adapter"
+ 	depends on ARCH_SPACEMIT || COMPILE_TEST
+ 	depends on OF
++	default ARCH_SPACEMIT
+ 	help
+ 	  This option enables support for the I2C interface on the SpacemiT K1
+ 	  platform.
+-- 
+2.53.0
+

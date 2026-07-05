@@ -1,0 +1,56 @@
+From 898fea6e66c558a60293a09c1248cab0b06a712e Mon Sep 17 00:00:00 2001
+From: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Date: Fri, 17 Apr 2026 22:07:45 +0800
+Subject: [RUYI PATCH] UPSTREAM: iommu/riscv: Advertise Svpbmt support to
+ generic page table
+
+The RISC-V IOMMU can optionally support Svpbmt page-based memory types
+in its page table format. When present,the generic page table code can
+use this capability to encode memory attributes (e.g. MMIO vs normal
+memory) in PTEs.
+
+Signed-off-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Reviewed-by: Guo Ren <guoren@kernel.org>
+Reviewed-by: Nutty Liu <nutty.liu@hotmail.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+(cherry picked from commit f196a86687974cfcc1e8cade99ffca4605141860)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/iommu/riscv/iommu.c       | 2 ++
+ include/linux/generic_pt/common.h | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+index a31f50bbad35..6c324f9fdc53 100644
+--- a/drivers/iommu/riscv/iommu.c
++++ b/drivers/iommu/riscv/iommu.c
+@@ -1268,6 +1268,8 @@ static struct iommu_domain *riscv_iommu_alloc_paging_domain(struct device *dev)
+ 	cfg.common.features = BIT(PT_FEAT_SIGN_EXTEND) |
+ 			      BIT(PT_FEAT_FLUSH_RANGE) |
+ 			      BIT(PT_FEAT_RISCV_SVNAPOT_64K);
++	if (iommu->caps & RISCV_IOMMU_CAPABILITIES_SVPBMT)
++		cfg.common.features |= BIT(PT_FEAT_RISCV_SVPBMT);
+ 	domain->riscvpt.iommu.nid = dev_to_node(iommu->dev);
+ 	domain->domain.ops = &riscv_iommu_paging_domain_ops;
+ 
+diff --git a/include/linux/generic_pt/common.h b/include/linux/generic_pt/common.h
+index fc5d0b5edadc..2683e5b38998 100644
+--- a/include/linux/generic_pt/common.h
++++ b/include/linux/generic_pt/common.h
+@@ -188,6 +188,10 @@ enum {
+ 	 * Support the 64k contiguous page size following the Svnapot extension.
+ 	 */
+ 	PT_FEAT_RISCV_SVNAPOT_64K = PT_FEAT_FMT_START,
++	/*
++	 * Support Svpbmt extension: encode page-based memory type (PBMT) in PTEs.
++	 */
++	PT_FEAT_RISCV_SVPBMT,
+ 
+ };
+ 
+-- 
+2.53.0
+

@@ -1,0 +1,79 @@
+From 5fa80f49e663b154bd2b10a438527f50e0a11899 Mon Sep 17 00:00:00 2001
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+Date: Tue, 23 Jun 2026 16:35:51 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: uaccess: Add a fast path for small
+ aligned copies
+
+The scalar user copy routine currently enters the word-copy path only
+for copies of at least 9 * SZREG - 1 bytes. On RV64 this is 71 bytes,
+so common 32-byte and 64-byte aligned user/kernel copies fall back to
+byte-by-byte copying.
+
+Add a small-copy word path for copies below that threshold when both
+source and destination are SZREG-aligned. Unaligned and sub-word copies
+keep using the existing byte-copy path, and larger copies keep using the
+existing large-copy paths.
+
+This is a generic usercopy improvement. One common case is Linux AIO:
+io_getevents() copies 32-byte struct io_event objects to userspace, and
+io_submit() copies 64-byte struct iocb objects from userspace.
+
+fio libaio randrw three-run averages improved:
+
+  baseline:   read 560k IOPS, write 240k IOPS, sys 68.60%
+  this patch: read 593k IOPS, write 254k IOPS, sys 69.03%
+
+This is about +5.8% read IOPS and +5.5% write IOPS.
+
+lmbench bw_pipe with small messages was also improved:
+
+  bw_pipe -m <size> -M 16m -W 1 -N 5
+
+  size   baseline MB/s   this patch MB/s   change
+   32       62.52            74.54         +19.2%
+   64      122.57           155.31         +26.7%
+
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Link: https://lore.kernel.org/r/20260623083551.86021-1-cuiyunhui@bytedance.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/lib/uaccess.S | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
+index 4efea1b3326c..2d78007f10d0 100644
+--- a/arch/riscv/lib/uaccess.S
++++ b/arch/riscv/lib/uaccess.S
+@@ -70,12 +70,27 @@ SYM_FUNC_START(fallback_scalar_usercopy_sum_enabled)
+ 	add	t0, a0, a2
+ 
+ 	/*
+-	 * Use byte copy only if too small.
+-	 * SZREG holds 4 for RV32 and 8 for RV64
++	 * For small copies below the large-copy threshold, use word-copy if
++	 * both src and dst are naturally aligned. Unaligned or sub-word copies
++	 * are left to the byte-copy tail.
+ 	 */
+ 	li	a3, 9*SZREG-1 /* size must >= (word_copy stride + SZREG-1) */
++	bgeu	a2, a3, .Llarge_copy_user
++	li	a3, SZREG
+ 	bltu	a2, a3, .Lbyte_copy_tail
++	or	a3, a0, a1
++	andi	a3, a3, SZREG-1
++	bnez	a3, .Lbyte_copy_tail
++	andi	t1, t0, ~(SZREG-1)
++5:
++	fixup REG_L   a5, 0(a1), 10f
++	addi	a1, a1, SZREG
++	fixup REG_S   a5, 0(a0), 10f
++	addi	a0, a0, SZREG
++	bltu	a0, t1, 5b
++	j	.Lbyte_copy_tail
+ 
++.Llarge_copy_user:
+ 	/*
+ 	 * Copy first bytes until dst is aligned to word boundary.
+ 	 * a0 - start of dst
+-- 
+2.53.0
+

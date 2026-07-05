@@ -1,4 +1,4 @@
-From 310c4ea2dc6e83502ebf20c09d1a3057d4955dc6 Mon Sep 17 00:00:00 2001
+From 775f535c56bd3577b4aea528cd4cd750cac2a4ff Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:41 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Move repeated job fence check

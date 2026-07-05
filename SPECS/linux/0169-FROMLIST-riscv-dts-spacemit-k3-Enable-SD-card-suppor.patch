@@ -1,0 +1,126 @@
+From 42cdca7f1213a50a8e35e523ee951489679aa225 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Wed, 10 Jun 2026 12:34:32 +0000
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Enable SD card
+ support
+
+Add the device tree node of SDHCI-0 controller which found on CoM260-IFX
+board, it's currenty used for Micro SD card slot, and one GPIO pin is
+configured as card insertion/removal detection pin, the slot use 4-bit
+data bus, and up support to SDR104 speed mode.
+
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+Link: https://lore.kernel.org/r/20260610-07-k3-enable-sd-v1-1-196ae29bd091@kernel.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../riscv/boot/dts/spacemit/k3-com260-ifx.dts | 18 ++++++++
+ arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi  | 44 +++++++++++++++++++
+ arch/riscv/boot/dts/spacemit/k3.dtsi          | 13 ++++++
+ 3 files changed, 75 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-com260-ifx.dts b/arch/riscv/boot/dts/spacemit/k3-com260-ifx.dts
+index 238bb03d0e9e..e7f76cd24b90 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-com260-ifx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-com260-ifx.dts
+@@ -19,3 +19,21 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
++
++&sdhci0 {
++	pinctrl-names = "default","uhs";
++	pinctrl-0 = <&mmc1_cfg>;
++	pinctrl-1 = <&mmc1_uhs_cfg>;
++	bus-width = <4>;
++	cd-gpios = <&gpio K3_GPIO(4) GPIO_ACTIVE_HIGH>;
++	no-mmc;
++	no-sdio;
++	disable-wp;
++	cap-sd-highspeed;
++	vmmc-supply = <&aldo4>;
++	vqmmc-supply = <&aldo1>;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	status = "okay";
++};
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
+index 846d5e8cc783..ee53ab2e7267 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
+@@ -710,4 +710,48 @@ uart0-0-pins {
+ 			drive-strength = <25>;
+ 		};
+ 	};
++
++	mmc1_cfg: mmc1-cfg {
++		mmc1-data-cmd-pins {
++			pinmux = <K3_PADCONF(132, 0)>,	/* mmc1 dat3 */
++				 <K3_PADCONF(133, 0)>,	/* mmc1 dat2 */
++				 <K3_PADCONF(134, 0)>,	/* mmc1 dat1 */
++				 <K3_PADCONF(135, 0)>,	/* mmc1 dat0 */
++				 <K3_PADCONF(136, 0)>;	/* mmc1 cmd */
++
++			bias-pull-up = <0>;
++			drive-strength = <25>;
++			power-source = <3300>;
++		};
++
++		mmc1-clk-pins {
++			pinmux = <K3_PADCONF(137, 0)>;	/* mmc1 clk */
++
++			bias-pull-down;
++			drive-strength = <25>;
++			power-source = <3300>;
++		};
++	};
++
++	mmc1_uhs_cfg: mmc1-uhs-cfg {
++		mmc1-uhs-data-cmd-pins {
++			pinmux = <K3_PADCONF(132, 0)>,	/* mmc1 dat3 */
++				 <K3_PADCONF(133, 0)>,	/* mmc1 dat2 */
++				 <K3_PADCONF(134, 0)>,	/* mmc1 dat1 */
++				 <K3_PADCONF(135, 0)>,	/* mmc1 dat0 */
++				 <K3_PADCONF(136, 0)>;	/* mmc1 cmd */
++
++			bias-pull-up = <0>;
++			drive-strength = <21>;
++			power-source = <1800>;
++		};
++
++		mmc1-uhs-clk-pins {
++			pinmux = <K3_PADCONF(137, 0)>;	/* mmc1 clk */
++
++			bias-pull-down;
++			drive-strength = <21>;
++			power-source = <1800>;
++		};
++	};
+ };
+diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
+index 9a49dd8032bf..fc46e34465e4 100644
+--- a/arch/riscv/boot/dts/spacemit/k3.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
+@@ -1116,6 +1116,19 @@ qspi: spi@d420c000 {
+ 			status = "disabled";
+ 		};
+ 
++		sdhci0: mmc@d4280000 {
++			compatible = "spacemit,k3-sdhci";
++			reg = <0x0 0xd4280000 0x0 0x200>;
++			clocks = <&syscon_apmu CLK_APMU_SDH_AXI>,
++				 <&syscon_apmu CLK_APMU_SDH0>;
++			clock-names = "core", "io";
++			resets = <&syscon_apmu RESET_APMU_SDH_AXI>,
++				 <&syscon_apmu RESET_APMU_SDH0>;
++			reset-names = "axi", "sdh";
++			interrupts = <99 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		syscon_apmu: system-controller@d4282800 {
+ 			compatible = "spacemit,k3-syscon-apmu";
+ 			reg = <0x0 0xd4282800 0x0 0x400>;
+-- 
+2.53.0
+

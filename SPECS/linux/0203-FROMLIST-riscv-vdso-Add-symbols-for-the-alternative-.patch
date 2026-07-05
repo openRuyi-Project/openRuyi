@@ -1,0 +1,74 @@
+From af803c3d1af88759e263347293c6406301a1b1ed Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Tue, 30 Jun 2026 09:41:40 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Add symbols for the alternative
+ section boundaries
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Currently the alternative sections are extracted from the vDSO
+binaries at runtime. This has runtime overhead and also doesn't
+work for the compat vDSO.
+
+Extract the offsets of the alternative section during the build with the
+existing symbol extraction machinery.
+
+Also add dummy symbols as fallback.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/20260630-riscv-vdso32-alternative-v1-1-a32fd89b7b1c@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/vdso.h     | 6 ++++++
+ arch/riscv/kernel/vdso/vdso.lds.S | 2 ++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/arch/riscv/include/asm/vdso.h b/arch/riscv/include/asm/vdso.h
+index f7998d9ad9b2..0259bbc98e93 100644
+--- a/arch/riscv/include/asm/vdso.h
++++ b/arch/riscv/include/asm/vdso.h
+@@ -19,10 +19,14 @@
+ 
+ #ifdef CONFIG_MMU
+ #include <generated/vdso-offsets.h>
++#else
++extern size_t __vdso_alternatives_start_offset, __vdso_alternatives_end_offset;
+ #endif
+ 
+ #ifdef CONFIG_RISCV_USER_CFI
+ #include <generated/vdso-cfi-offsets.h>
++#else
++extern size_t __vdso_alternatives_start_cfi_offset, __vdso_alternatives_end_cfi_offset;
+ #endif
+ 
+ #ifdef CONFIG_RISCV_USER_CFI
+@@ -41,6 +45,8 @@
+ #define COMPAT_VDSO_SYMBOL(base, name)						\
+ 	(void __user *)((unsigned long)(base) + compat__vdso_##name##_offset)
+ 
++#else
++extern size_t compat__vdso_alternatives_start_offset, compat__vdso_alternatives_end_offset;
+ #endif /* CONFIG_COMPAT */
+ 
+ extern char vdso_start[], vdso_end[];
+diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
+index c29ef12a63bb..5e9424df932b 100644
+--- a/arch/riscv/kernel/vdso/vdso.lds.S
++++ b/arch/riscv/kernel/vdso/vdso.lds.S
+@@ -45,9 +45,11 @@ SECTIONS
+ 	.text		: { *(.text .text.*) }		:text
+ 
+ 	. = ALIGN(4);
++	__vdso_alternatives_start = .;
+ 	.alternative : {
+ 		*(.alternative)
+ 	}
++	__vdso_alternatives_end = .;
+ }
+ 
+ /*
+-- 
+2.53.0
+

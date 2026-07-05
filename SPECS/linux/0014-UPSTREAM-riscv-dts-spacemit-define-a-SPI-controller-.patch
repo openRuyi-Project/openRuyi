@@ -1,4 +1,4 @@
-From 80d0705464c6f149b643cb7090b55f18a9a338cd Mon Sep 17 00:00:00 2001
+From aa8f507b8b8a7e294f7845e529c7f2bf45fb6344 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:53 -0400
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define a SPI controller

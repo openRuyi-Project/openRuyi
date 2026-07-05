@@ -1,0 +1,57 @@
+From 5a1fadcb8a390bd72382912a1a984cef211d2c5b Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Wed, 29 Apr 2026 17:13:28 +0800
+Subject: [RUYI PATCH] UPSTREAM: serial: 8250_dw: Use a fixed CPR value for
+ UltraRISC DP1000 UART
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The UltraRISC DP1000 UART does not provide the standard CPR register used
+by 8250_dw to discover port capabilities.
+
+Provide a fixed CPR value for the DP1000-specific compatible so the
+driver can configure the port correctly.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Link: https://patch.msgid.link/20260429-ultrarisc-serial-v7-4-e475cce9e274@ultrarisc.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+(cherry picked from commit 4a9a0b1a82a8b23eb68032dd19b120e82cd67004)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/tty/serial/8250/8250_dw.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index 9eeccf06da33..585e8114f2d4 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -961,6 +961,15 @@ static const struct dw8250_platform_data dw8250_intc10ee = {
+ 	.quirks = DW_UART_QUIRK_IER_KICK,
+ };
+ 
++static const struct dw8250_platform_data dw8250_ultrarisc_dp1000_data = {
++	.usr_reg = DW_UART_USR,
++	.cpr_value = FIELD_PREP_CONST(DW_UART_CPR_ABP_DATA_WIDTH, 2) |
++		     DW_UART_CPR_THRE_MODE |
++		     DW_UART_CPR_DMA_EXTRA |
++		     DW_UART_CPR_FIFO_MODE_FROM_SIZE(32),
++	.quirks = DW_UART_QUIRK_CPR_VALUE,
++};
++
+ static const struct of_device_id dw8250_of_match[] = {
+ 	{ .compatible = "snps,dw-apb-uart", .data = &dw8250_dw_apb },
+ 	{ .compatible = "cavium,octeon-3860-uart", .data = &dw8250_octeon_3860_data },
+@@ -968,6 +977,7 @@ static const struct of_device_id dw8250_of_match[] = {
+ 	{ .compatible = "renesas,rzn1-uart", .data = &dw8250_renesas_rzn1_data },
+ 	{ .compatible = "sophgo,sg2044-uart", .data = &dw8250_skip_set_rate_data },
+ 	{ .compatible = "starfive,jh7100-uart", .data = &dw8250_skip_set_rate_data },
++	{ .compatible = "ultrarisc,dp1000-uart", .data = &dw8250_ultrarisc_dp1000_data },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, dw8250_of_match);
+-- 
+2.53.0
+

@@ -1,0 +1,182 @@
+From f03a70c567bf78d56196b0824b9f14f97869b838 Mon Sep 17 00:00:00 2001
+From: Nam Cao <namcao@linutronix.de>
+Date: Wed, 17 Jun 2026 05:38:25 +0200
+Subject: [RUYI PATCH] FROMLIST: Revert "riscv: hwprobe: Fix stale vDSO data
+ for late-initialized keys at boot"
+
+This reverts commit 5d15d2ad36b0 ("riscv: hwprobe: Fix stale vDSO data for
+late-initialized keys at boot"). The commit ensures synchronization between
+the unaligned vector access speed probe kthread and vDSO data read. But now
+that the kthread has been removed, this commit can be reverted.
+
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/50ca78a649faf53f8941bc94c9cf8268b3644d38.1781666867.git.namcao@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/hwprobe.h        |  7 ---
+ arch/riscv/include/asm/vdso/arch_data.h |  6 ---
+ arch/riscv/kernel/sys_hwprobe.c         | 70 +++++--------------------
+ arch/riscv/kernel/vdso/hwprobe.c        |  2 +-
+ 4 files changed, 13 insertions(+), 72 deletions(-)
+
+diff --git a/arch/riscv/include/asm/hwprobe.h b/arch/riscv/include/asm/hwprobe.h
+index 8b9f5e1cf4cb..9b04377c0f98 100644
+--- a/arch/riscv/include/asm/hwprobe.h
++++ b/arch/riscv/include/asm/hwprobe.h
+@@ -43,11 +43,4 @@ static inline bool riscv_hwprobe_pair_cmp(struct riscv_hwprobe *pair,
+ 	return pair->value == other_pair->value;
+ }
+ 
+-#ifdef CONFIG_MMU
+-void riscv_hwprobe_register_async_probe(void);
+-void riscv_hwprobe_complete_async_probe(void);
+-#else
+-static inline void riscv_hwprobe_register_async_probe(void) {}
+-static inline void riscv_hwprobe_complete_async_probe(void) {}
+-#endif
+ #endif
+diff --git a/arch/riscv/include/asm/vdso/arch_data.h b/arch/riscv/include/asm/vdso/arch_data.h
+index 88b37af55175..da57a3786f7a 100644
+--- a/arch/riscv/include/asm/vdso/arch_data.h
++++ b/arch/riscv/include/asm/vdso/arch_data.h
+@@ -12,12 +12,6 @@ struct vdso_arch_data {
+ 
+ 	/* Boolean indicating all CPUs have the same static hwprobe values. */
+ 	__u8 homogeneous_cpus;
+-
+-	/*
+-	 * A gate to check and see if the hwprobe data is actually ready, as
+-	 * probing is deferred to avoid boot slowdowns.
+-	 */
+-	__u8 ready;
+ };
+ 
+ #endif /* __RISCV_ASM_VDSO_ARCH_DATA_H */
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index 1659d31fd288..2ce162f5cf7c 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -5,9 +5,6 @@
+  * more details.
+  */
+ #include <linux/syscalls.h>
+-#include <linux/completion.h>
+-#include <linux/atomic.h>
+-#include <linux/once.h>
+ #include <asm/cacheflush.h>
+ #include <asm/cpufeature.h>
+ #include <asm/hwprobe.h>
+@@ -504,32 +501,28 @@ static int hwprobe_get_cpus(struct riscv_hwprobe __user *pairs,
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_MMU
+-
+-static DECLARE_COMPLETION(boot_probes_done);
+-static atomic_t pending_boot_probes = ATOMIC_INIT(1);
+-
+-void riscv_hwprobe_register_async_probe(void)
++static int do_riscv_hwprobe(struct riscv_hwprobe __user *pairs,
++			    size_t pair_count, size_t cpusetsize,
++			    unsigned long __user *cpus_user,
++			    unsigned int flags)
+ {
+-	atomic_inc(&pending_boot_probes);
+-}
++	if (flags & RISCV_HWPROBE_WHICH_CPUS)
++		return hwprobe_get_cpus(pairs, pair_count, cpusetsize,
++					cpus_user, flags);
+ 
+-void riscv_hwprobe_complete_async_probe(void)
+-{
+-	if (atomic_dec_and_test(&pending_boot_probes))
+-		complete(&boot_probes_done);
++	return hwprobe_get_values(pairs, pair_count, cpusetsize,
++				  cpus_user, flags);
+ }
+ 
+-static int complete_hwprobe_vdso_data(void)
++#ifdef CONFIG_MMU
++
++static int __init init_hwprobe_vdso_data(void)
+ {
+ 	struct vdso_arch_data *avd = vdso_k_arch_data;
+ 	u64 id_bitsmash = 0;
+ 	struct riscv_hwprobe pair;
+ 	int key;
+ 
+-	if (unlikely(!atomic_dec_and_test(&pending_boot_probes)))
+-		wait_for_completion(&boot_probes_done);
+-
+ 	/*
+ 	 * Initialize vDSO data with the answers for the "all CPUs" case, to
+ 	 * save a syscall in the common case.
+@@ -557,52 +550,13 @@ static int complete_hwprobe_vdso_data(void)
+ 	 * vDSO should defer to the kernel for exotic cpu masks.
+ 	 */
+ 	avd->homogeneous_cpus = id_bitsmash != 0 && id_bitsmash != -1;
+-
+-	/*
+-	 * Make sure all the VDSO values are visible before we look at them.
+-	 * This pairs with the implicit "no speculativly visible accesses"
+-	 * barrier in the VDSO hwprobe code.
+-	 */
+-	smp_wmb();
+-	avd->ready = true;
+-	return 0;
+-}
+-
+-static int __init init_hwprobe_vdso_data(void)
+-{
+-	struct vdso_arch_data *avd = vdso_k_arch_data;
+-
+-	/*
+-	 * Prevent the vDSO cached values from being used, as they're not ready
+-	 * yet.
+-	 */
+-	avd->ready = false;
+ 	return 0;
+ }
+ 
+ arch_initcall_sync(init_hwprobe_vdso_data);
+ 
+-#else
+-
+-static int complete_hwprobe_vdso_data(void) { return 0; }
+-
+ #endif /* CONFIG_MMU */
+ 
+-static int do_riscv_hwprobe(struct riscv_hwprobe __user *pairs,
+-			    size_t pair_count, size_t cpusetsize,
+-			    unsigned long __user *cpus_user,
+-			    unsigned int flags)
+-{
+-	DO_ONCE_SLEEPABLE(complete_hwprobe_vdso_data);
+-
+-	if (flags & RISCV_HWPROBE_WHICH_CPUS)
+-		return hwprobe_get_cpus(pairs, pair_count, cpusetsize,
+-					cpus_user, flags);
+-
+-	return hwprobe_get_values(pairs, pair_count, cpusetsize,
+-				cpus_user, flags);
+-}
+-
+ SYSCALL_DEFINE5(riscv_hwprobe, struct riscv_hwprobe __user *, pairs,
+ 		size_t, pair_count, size_t, cpusetsize, unsigned long __user *,
+ 		cpus, unsigned int, flags)
+diff --git a/arch/riscv/kernel/vdso/hwprobe.c b/arch/riscv/kernel/vdso/hwprobe.c
+index 8f45500d0a6e..2ddeba6c68dd 100644
+--- a/arch/riscv/kernel/vdso/hwprobe.c
++++ b/arch/riscv/kernel/vdso/hwprobe.c
+@@ -27,7 +27,7 @@ static int riscv_vdso_get_values(struct riscv_hwprobe *pairs, size_t pair_count,
+ 	 * homogeneous, then this function can handle requests for arbitrary
+ 	 * masks.
+ 	 */
+-	if (flags != 0 || (!all_cpus && !avd->homogeneous_cpus) || unlikely(!avd->ready))
++	if ((flags != 0) || (!all_cpus && !avd->homogeneous_cpus))
+ 		return riscv_hwprobe(pairs, pair_count, cpusetsize, cpus, flags);
+ 
+ 	/* This is something we can handle, fill out the pairs. */
+-- 
+2.53.0
+
