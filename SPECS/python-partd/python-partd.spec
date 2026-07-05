@@ -18,11 +18,6 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
-# No module named 'zmq'
-# enable this testcase when PR merged:
-# https://github.com/openRuyi-Project/openRuyi/pull/168
-BuildOption(check):  -e 'partd.zmq'
-BuildOption(check):  -e 'partd.tests.test_zmq'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -30,6 +25,7 @@ BuildRequires:  python3dist(locket)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(pandas)
 BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(pyzmq)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(toolz)
 BuildRequires:  python3dist(versioneer[toml])
