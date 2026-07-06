@@ -13,7 +13,7 @@ on:
   push:
     branches: [dev]
   pull_request:
-    branches: [main, ci-test, dev]
+    branches: [main, ci-test]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
