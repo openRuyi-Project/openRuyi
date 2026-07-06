@@ -1,3 +1,8 @@
+
+# XXX: Under rpm6, signatures are required by default. In the future,
+# we should add signatures.
+%_pkgverify_level digest
+
 # directories
 %_infodir               %{_prefix}/share/info
 %_mandir                %{_prefix}/share/man
