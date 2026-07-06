@@ -1,0 +1,25 @@
+From ccb14ba83fd6bdc01423f71944b4676f740b97cc Mon Sep 17 00:00:00 2001
+From: Ron Lieberman <ron.lieberman@amd.com>
+Date: Wed, 26 Nov 2025 11:29:23 -0600
+Subject: [PATCH] comgr remove Driver::  from GetResourcesPath
+
+---
+ amd/comgr/src/comgr-compiler.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/amd/comgr/src/comgr-compiler.cpp b/amd/comgr/src/comgr-compiler.cpp
+index 822e4b3ce512..358e8af87f4c 100644
+--- a/amd/comgr/src/comgr-compiler.cpp
++++ b/amd/comgr/src/comgr-compiler.cpp
+@@ -1129,7 +1129,7 @@ amd_comgr_status_t AMDGPUCompiler::addDeviceLibraries() {
+   SmallString<256> ClangBinaryPath(env::getLLVMPath());
+   sys::path::append(ClangBinaryPath, "bin", "clang");
+ 
+-  std::string ClangResourceDir = Driver::GetResourcesPath(ClangBinaryPath);
++  std::string ClangResourceDir = GetResourcesPath(ClangBinaryPath);
+ 
+   SmallString<256> DeviceLibPath(ClangResourceDir);
+   sys::path::append(DeviceLibPath, "lib");
+-- 
+2.53.0
+

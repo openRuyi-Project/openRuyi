@@ -1,0 +1,39 @@
+From ebcaa3d9226921c8761a5291526291e54611e4a4 Mon Sep 17 00:00:00 2001
+From: Ron Lieberman <ron.lieberman@amd.com>
+Date: Tue, 11 Nov 2025 08:23:12 -0600
+Subject: [PATCH] [comgr]Options changes for comgr
+
+---
+ amd/comgr/src/comgr-compiler.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/amd/comgr/src/comgr-compiler.cpp b/amd/comgr/src/comgr-compiler.cpp
+index 9e53c75e0234..822e4b3ce512 100644
+--- a/amd/comgr/src/comgr-compiler.cpp
++++ b/amd/comgr/src/comgr-compiler.cpp
+@@ -27,12 +27,12 @@
+ #include "clang/Driver/DriverDiagnostic.h"
+ #include "clang/Driver/Job.h"
+ #include "clang/Driver/OffloadBundler.h"
+-#include "clang/Driver/Options.h"
+ #include "clang/Driver/Tool.h"
+ #include "clang/Frontend/CompilerInstance.h"
+ #include "clang/Frontend/FrontendDiagnostic.h"
+ #include "clang/Frontend/TextDiagnosticPrinter.h"
+ #include "clang/FrontendTool/Utils.h"
++#include "clang/Options/Options.h"
+ #include "llvm/ADT/StringExtras.h"
+ #include "llvm/Bitcode/BitcodeWriter.h"
+ #include "llvm/IR/Constants.h"
+@@ -79,7 +79,7 @@ using namespace llvm::opt;
+ using namespace llvm::sys;
+ using namespace clang;
+ using namespace clang::driver;
+-using namespace clang::driver::options;
++using namespace clang::options;
+ using namespace COMGR::TimeStatistics;
+ 
+ namespace COMGR {
+-- 
+2.53.0
+
