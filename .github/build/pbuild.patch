@@ -1,0 +1,17 @@
+--- a/usr/lib/build/build-pkg-rpm
++++ b/usr/lib/build/build-pkg-rpm
+@@ -236,12 +236,12 @@
+         esac
+     fi
+     if test "$PAYLOADDECOMPRESS" = "cat" ; then
+-        rpm2cpio "$BUILD_INIT_CACHE/rpms/$PKG.rpm" | $CPIO || cleanup_and_exit 1
++        rpm2archive -n "$BUILD_INIT_CACHE/rpms/$PKG.rpm" | $TAR -x || cleanup_and_exit 1
+     else
+ 	test "$PAYLOADDECOMPRESS" = "lzma -d" && check_rpm_decompressor lzma
+ 	test "$PAYLOADDECOMPRESS" = "xz -d"   && check_rpm_decompressor xz
+ 	test "$PAYLOADDECOMPRESS" = "zstd -d" && check_rpm_decompressor zstd
+-        rpm2cpio "$BUILD_INIT_CACHE/rpms/$PKG.rpm" | $PAYLOADDECOMPRESS | $CPIO || cleanup_and_exit 1
++        rpm2archive "$BUILD_INIT_CACHE/rpms/$PKG.rpm" | $PAYLOADDECOMPRESS | $TAR -x || cleanup_and_exit 1
+     fi
+     test -L "$BUILD_INIT_CACHE/scripts" && cleanup_and_exit 1
+     rm -rf "$BUILD_INIT_CACHE/scripts/$PKG.pre" "$BUILD_INIT_CACHE/scripts/$PKG.preprog" "$BUILD_INIT_CACHE/scripts/$PKG.post" "$BUILD_INIT_CACHE/scripts/$PKG.postprog"
