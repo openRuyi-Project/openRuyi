@@ -10,8 +10,10 @@ permissions:
   contents: read
   pull-requests: read
 on:
+  push:
+    branches: [dev]
   pull_request:
-    branches: [main, ci-test]
+    branches: [main, ci-test, dev]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
