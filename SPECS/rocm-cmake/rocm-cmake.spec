@@ -9,8 +9,8 @@
 # there is no debug package - this is just cmake modules
 %global debug_package %{nil}
 
-%global rocm_release 7.1
-%global rocm_patch 1
+%global rocm_release 7.2
+%global rocm_patch 4
 %global rocm_version %{rocm_release}.%{rocm_patch}
 
 Name:           rocm-cmake
@@ -19,7 +19,7 @@ Release:        %autorelease
 Summary:        CMake modules for common build and development tasks for ROCm
 License:        MIT
 URL:            https://github.com/ROCm/rocm-cmake
-#!RemoteAsset
+#!RemoteAsset:  sha256:e7a28cb4baf8afbc21204d37e132dae7e12b2d980a2600948fe35cc4d8ac8087
 Source:         %{url}/archive/rocm-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    cmake
@@ -62,4 +62,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocm-cmake/LICENSE
 %{_datadir}/rocmcmakebuildtools/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
