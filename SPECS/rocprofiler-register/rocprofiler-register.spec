@@ -5,16 +5,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global rocm_version 7.1.0
+%global rocm_version 7.2.4
 
 Name:           rocprofiler-register
 Version:        %{rocm_version}
 Release:        %autorelease
 Summary:        A rocprofiler helper library
 License:        MIT AND BSD-3-Clause
-Url:            https://github.com/ROCm/rocprofiler-register
-#!RemoteAsset
-Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+URL:            https://github.com/ROCm/rocprofiler-register
+#!RemoteAsset:  sha256:81c15210e5a797040469120c0522cab70834e38d4129dd18feb5b05bb00deaf7
+Source0:        %{url}/archive/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
 # Use system glog
@@ -75,4 +75,4 @@ rm -rf %{buildroot}%{_prefix}/share/doc/rocprofiler-register/LICENSE.md
 %{_libdir}/cmake/rocprofiler-register/
 
 %changelog
-%{?autochangelog}
+%autochangelog
