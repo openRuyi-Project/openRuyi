@@ -1,0 +1,38 @@
+From 6aa58ca1eca9d15febe4f1cbbd4d1004e35015ea Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 6 Jul 2026 01:06:09 -0700
+Subject: [PATCH] test/subprocess: add missing space in SubshellKilled
+ subcommand
+
+9abf2388f24 rewrote "sh -c cat" as SHELL "-c cat", which concatenates
+to "/bin/sh-c cat", so the subshell tries to execute a non-existent
+"/bin/sh-c". The test still passed because the SIGTERM sent by kill()
+usually wins the race against the shell startup; under CI load the
+shell occasionally prints
+
+  /bin/sh: line 1: /bin/sh-c: No such file or directory
+
+into the stderr pipe first, ASSERT_TRUE(buf.empty()) fails, and the
+skipped join() turns this into a SIGABRT in ~SubProcess().
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/test/test_subprocess.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/test/test_subprocess.cc b/src/test/test_subprocess.cc
+index c6415c4864a..6f2542895b0 100644
+--- a/src/test/test_subprocess.cc
++++ b/src/test/test_subprocess.cc
+@@ -258,7 +258,7 @@ TEST(SubProcessTimed, SubshellNoTimeout)
+ TEST(SubProcessTimed, SubshellKilled)
+ {
+   SubProcessTimed sh(SHELL, SubProcess::PIPE, SubProcess::PIPE, SubProcess::PIPE, 10);
+-  sh.add_cmd_args("-c", SHELL "-c cat", NULL);
++  sh.add_cmd_args("-c", SHELL " -c cat", NULL);
+   ASSERT_EQ(sh.spawn(), 0);
+   std::string msg("etaoin shrdlu");
+   int n = write(sh.get_stdin(), msg.c_str(), msg.size());
+-- 
+2.55.0
+

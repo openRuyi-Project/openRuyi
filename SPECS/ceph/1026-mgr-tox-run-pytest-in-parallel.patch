@@ -1,0 +1,85 @@
+From 2aabf864f3140c92cbdb4ef0606cc6f6dec59134 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Fri, 19 Jun 2026 03:06:06 +0800
+Subject: [PATCH] mgr/tox: run pytest in parallel
+
+The py3 and coverage tox environments run the full mgr pytest suite
+serially, which makes run-tox-mgr the longest test in CI. Add
+pytest-xdist and pass `-n auto` to both so the suite is distributed
+across the available CPUs.
+
+pytest-xdist is constrained to <2 to stay compatible with the pinned
+pytest-cov. Running in parallel also surfaced a hard-coded port in
+cephadm's test_node_proxy, which now allocates an ephemeral port per
+process.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/pybind/mgr/cephadm/tests/test_node_proxy.py | 12 +++++++++++-
+ src/pybind/mgr/requirements.txt                 |  1 +
+ src/pybind/mgr/tox.ini                          |  4 ++--
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/src/pybind/mgr/cephadm/tests/test_node_proxy.py b/src/pybind/mgr/cephadm/tests/test_node_proxy.py
+index dd5f99f508c..75fe7d6fab9 100644
+--- a/src/pybind/mgr/cephadm/tests/test_node_proxy.py
++++ b/src/pybind/mgr/cephadm/tests/test_node_proxy.py
+@@ -1,5 +1,6 @@
+ import cherrypy
+ import json
++import socket
+ from _pytest.monkeypatch import MonkeyPatch
+ from urllib.error import URLError
+ from cherrypy.test import helper
+@@ -9,7 +10,16 @@ from cephadm.inventory import AgentCache, NodeProxyCache, Inventory
+ from cephadm.ssl_cert_utils import SSLCerts
+ from . import node_proxy_data
+ 
+-PORT = 58585
++
++def _free_port() -> int:
++    # Pick an ephemeral port so the test server does not clash with other
++    # pytest-xdist workers running this module in parallel.
++    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
++        s.bind(('127.0.0.1', 0))
++        return s.getsockname()[1]
++
++
++PORT = _free_port()
+ fake_cert = """-----BEGIN CERTIFICATE-----\nMIICxjCCAa4CEQDIZSujNBlKaLJzmvntjukjMA0GCSqGSIb3DQEBDQUAMCExDTAL\nBgNVBAoMBENlcGgxEDAOBgNVBAMMB2NlcGhhZG0wHhcNMjIwNzEzMTE0NzA3WhcN\nMzIwNzEwMTE0NzA3WjAhMQ0wCwYDVQQKDARDZXBoMRAwDgYDVQQDDAdjZXBoYWRt\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyyMe4DMA+MeYK7BHZMHB\nq7zjliEOcNgxomjU8qbf5USF7Mqrf6+/87XWqj4pCyAW8x0WXEr6A56a+cmBVmt+\nqtWDzl020aoId6lL5EgLLn6/kMDCCJLq++Lg9cEofMSvcZh+lY2f+1p+C+00xent\nrLXvXGOilAZWaQfojT2BpRnNWWIFbpFwlcKrlg2G0cFjV5c1m6a0wpsQ9JHOieq0\nSvwCixajwq3CwAYuuiU1wjI4oJO4Io1+g8yB3nH2Mo/25SApCxMXuXh4kHLQr/T4\n4hqisvG4uJYgKMcSIrWj5o25mclByGi1UI/kZkCUES94i7Z/3ihx4Bad0AMs/9tw\nFwIDAQABMA0GCSqGSIb3DQEBDQUAA4IBAQAf+pwz7Gd7mDwU2LY0TQXsK6/8KGzh\nHuX+ErOb8h5cOAbvCnHjyJFWf6gCITG98k9nxU9NToG0WYuNm/max1y/54f0dtxZ\npUo6KSNl3w6iYCfGOeUIj8isi06xMmeTgMNzv8DYhDt+P2igN6LenqWTVztogkiV\nxQ5ZJFFLEw4sN0CXnrZX3t5ruakxLXLTLKeE0I91YJvjClSBGkVJq26wOKQNHMhx\npWxeydQ5EgPZY+Aviz5Dnxe8aB7oSSovpXByzxURSabOuCK21awW5WJCGNpmqhWK\nZzACBDEstccj57c4OGV0eayHJRsluVr2e9NHRINZA3qdB37e6gsI1xHo\n-----END CERTIFICATE-----\n"""
+ 
+ 
+diff --git a/src/pybind/mgr/requirements.txt b/src/pybind/mgr/requirements.txt
+index 044674f9be5..96712691c76 100644
+--- a/src/pybind/mgr/requirements.txt
++++ b/src/pybind/mgr/requirements.txt
+@@ -3,3 +3,4 @@ asyncssh==2.9
+ kubernetes
+ urllib3==1.26.15
+ pytest==7.4.4
++pytest-xdist <2
+diff --git a/src/pybind/mgr/tox.ini b/src/pybind/mgr/tox.ini
+index 647b9e45a93..1443659719b 100644
+--- a/src/pybind/mgr/tox.ini
++++ b/src/pybind/mgr/tox.ini
+@@ -61,7 +61,7 @@ deps =
+     -rrequirements.txt
+     -rrook/requirements.txt
+ commands =
+-    pytest --doctest-modules {posargs:}
++    pytest -n auto --doctest-modules {posargs:}
+ 
+ [testenv:nooptional]
+ setenv =
+@@ -87,7 +87,7 @@ deps =
+ #   COVERAGE_REPORT=html tox -e coverage -- <module>
+ #   <your-browser> htmlcov/index.html
+ commands =
+-    pytest --cov={posargs:.} --cov-report={env:COVERAGE_REPORT:term} {posargs:.}
++    pytest -n auto --cov={posargs:.} --cov-report={env:COVERAGE_REPORT:term} {posargs:.}
+ 
+ 
+ [testenv:{,py37-,py38-,py39-,py310-}mypy]
+-- 
+2.55.0
+

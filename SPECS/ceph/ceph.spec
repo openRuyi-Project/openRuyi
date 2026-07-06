@@ -459,6 +459,14 @@ Requires:       luarocks
 1022-cmake-find-Protobuf-via-config-before-module.patch
 # https://github.com/ceph/ceph/pull/69316
 1023-tests-venv-system-site-packages.patch
+# https://github.com/ceph/ceph/pull/69446
+1024-python-common-cryptotools-stop-using-the-removed-X50.patch
+# https://github.com/ceph/ceph/pull/69510
+1025-python-common-cryptotools-reimplement-on-top-of-cryp.patch
+# https://github.com/ceph/ceph/pull/69603
+1026-mgr-tox-run-pytest-in-parallel.patch
+# https://github.com/ceph/ceph/pull/69949
+1027-test-subprocess-add-missing-space-in-SubshellKilled-.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
