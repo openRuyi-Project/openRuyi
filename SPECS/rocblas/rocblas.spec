@@ -8,7 +8,9 @@
 # Tests consumes too much time and space
 %bcond test 0
 
-%global rocm_version 7.1.1
+%global rocm_version 7.2.4
+
+%global llvm_maj_ver 22
 
 Name:           rocblas
 Summary:        BLAS implementation for ROCm
@@ -16,15 +18,15 @@ Version:        %{rocm_version}
 Release:        %autorelease
 License:        MIT AND BSD-3-Clause
 URL:            https://github.com/ROCm/rocBLAS
-#!RemoteAsset
-Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+#!RemoteAsset:  sha256:39ccaf6a0009a131b7daf3b21e14517f864f7642f109fa2da6dec1127b4a85e0
+Source0:        %{url}/archive/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -G Ninja
 BuildOption(conf):  -DBLAS_INCLUDE_DIR=%{_includedir}/cblas
 BuildOption(conf):  -DBLAS_LIBRARY=cblas
 BuildOption(conf):  -DCMAKE_CXX_COMPILER=hipcc
-BuildOption(conf):  -DCMAKE_C_COMPILER=clang
+BuildOption(conf):  -DCMAKE_C_COMPILER=%{rocmllvm_bindir}/clang
 BuildOption(conf):  -DCMAKE_LINKER=%rocmllvm_bindir/ld.lld
 BuildOption(conf):  -DCMAKE_AR=%rocmllvm_bindir/llvm-ar
 BuildOption(conf):  -DCMAKE_RANLIB=%rocmllvm_bindir/llvm-ranlib
@@ -52,24 +54,25 @@ BuildOption(conf):  -DTensile_LOGIC=asm_full
 BuildOption(conf):  -DTensile_CODE_OBJECT_VERSION=default
 BuildOption(conf):  -DTensile_SEPARATE_ARCHITECTURES=ON
 BuildOption(conf):  -DTensile_LAZY_LIBRARY_LOADING=ON
-BuildOption(conf):  -DTensile_ASSEMBLER=clang++
+BuildOption(conf):  -DTensile_ASSEMBLER=%{rocmllvm_bindir}/clang++
+BuildOption(conf):  -DCMAKE_PROGRAM_PATH=%{rocmllvm_bindir}
 
 Patch0:         0001-fixup-install-of-tensile-output.patch
 # https://github.com/ROCm/rocm-libraries/commit/6221075881f3ea8e9dfa0d985f22005c74ae1f52
 Patch1:         0002-fix-nodiscard-return-value-ignored.patch
 
-BuildRequires:  clang
-BuildRequires:  clang-tools-extra
+BuildRequires:  clang(major) = %{llvm_maj_ver}
+BuildRequires:  clang%{llvm_maj_ver}-tools-extra
 BuildRequires:  cmake
 BuildRequires:  cmake(amd_comgr)
 BuildRequires:  cmake(hip)
 BuildRequires:  cmake(hsa-runtime64)
 BuildRequires:  cmake(msgpack)
-BuildRequires:  compiler-rt
+BuildRequires:  compiler-rt(major) = %{llvm_maj_ver}
 BuildRequires:  gcc-c++
 BuildRequires:  hipcc
-BuildRequires:  lld
-BuildRequires:  llvm
+BuildRequires:  lld(major) = %{llvm_maj_ver}
+BuildRequires:  llvm(major) = %{llvm_maj_ver}
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  python3dist(tensile)
@@ -86,9 +89,6 @@ BuildRequires:  pkgconfig(GTest)
 BuildRequires:  python3dist(pyyaml)
 BuildRequires:  rocminfo
 %endif
-
-Provides:       rocblas = %{version}-%{release}
-Requires:       python3dist(msgpack)
 
 %description
 rocBLAS is the AMD library for Basic Linear Algebra Subprograms
@@ -112,6 +112,9 @@ Requires:       diffutils
 %description    test
 %{summary}
 %endif
+
+%conf -p
+export PATH=%{rocmllvm_bindir}:$PATH
 
 %prep -a
 sed -i -e 's@target_link_libraries( rocblas-test PRIVATE ${BLAS_LIBRARY} ${GTEST_BOTH_LIBRARIES} roc::rocblas )@target_link_libraries( rocblas-test PRIVATE cblas ${GTEST_BOTH_LIBRARIES} roc::rocblas )@' clients/gtest/CMakeLists.txt
@@ -165,4 +168,4 @@ export LD_LIBRARY_PATH=%{_vpath_builddir}/library/src:$LD_LIBRARY_PATH
 %endif
 
 %changelog
-%{autochangelog}
+%autochangelog
