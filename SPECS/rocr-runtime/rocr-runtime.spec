@@ -8,8 +8,8 @@
 
 %global upstreamname ROCR-Runtime
 
-%global rocm_release 7.1
-%global rocm_patch 1
+%global rocm_release 7.2
+%global rocm_patch 4
 %global rocm_version %{rocm_release}.%{rocm_patch}
 
 #Image support is x86 only
@@ -27,8 +27,8 @@ Release:        %autorelease
 Summary:        ROCm Runtime Library
 License:        NCSA
 URL:            https://github.com/ROCm/ROCR-Runtime
-#!RemoteAsset
-Source0:        %{url}/archive/refs/tags/rocm-%{rocm_version}.tar.gz
+#!RemoteAsset:  sha256:60532cd86edce5a603aa18df406ec1f5a3d18f0663d79b3b7822ff721c5a04ec
+Source0:        %{url}/archive/refs/tags/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
 Patch0:         0001-Add-riscv64-support.patch
@@ -39,11 +39,12 @@ BuildOption(conf):  -DCMAKE_SHARED_LINKER_FLAGS=-ldrm_amdgpu
 BuildOption(conf):  -DINCLUDE_PATH_COMPATIBILITY=OFF
 BuildOption(conf):  -DCMAKE_PROGRAM_PATH=%{rocmllvm_bindir}
 
-BuildRequires:  clang-devel
+BuildRequires:  clang22-devel
+BuildRequires:  clang22-static
 BuildRequires:  cmake
-BuildRequires:  lld
-BuildRequires:  lld-devel
-BuildRequires:  llvm-devel
+BuildRequires:  lld22
+BuildRequires:  lld22-devel
+BuildRequires:  llvm22-devel
 BuildRequires:  pkgconfig(numa)
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(libelf)
@@ -99,6 +100,7 @@ cd libhsakmt/tests/kfdtest
 %endif
 
 rm -f %{buildroot}%{_prefix}/share/doc/hsa-runtime64/LICENSE.md
+rm -f %{buildroot}%{_prefix}/share/doc/hsa-rocr/LICENSE.md
 rm -f %{buildroot}%{_prefix}/share/doc/packages/%{name}/LICENSE.md
 rm -f %{buildroot}%{_libdir}/libhsakmt.*
 rm -rf %{buildroot}%{_libdir}/cmake/hsakmt
@@ -109,14 +111,14 @@ rm -f %{buildroot}%{_libdir}/pkgconfig/libhsakmt.pc
 %license    LICENSE.txt
 %{_libdir}/libhsa-runtime64.so.1{,.*}
 
-%files      devel
+%files devel
 %{_includedir}/hsa/
 %{_includedir}/hsakmt
 %{_libdir}/libhsa-runtime64.so
 %{_libdir}/cmake/hsa-runtime64/
 
 %if 0%{kfdtest}
-%files   -n kfdtest
+%files -n kfdtest
 %doc        libhsakmt/tests/kfdtest/README.txt
 %license    libhsakmt/tests/kfdtest/LICENSE.kfdtest
 %{_bindir}/kfdtest
@@ -125,4 +127,4 @@ rm -f %{buildroot}%{_libdir}/pkgconfig/libhsakmt.pc
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
