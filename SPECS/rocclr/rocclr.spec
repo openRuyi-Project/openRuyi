@@ -5,6 +5,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global llvm_maj_ver 22
+
 # ROCclr loads comgr at run time by soversion, so this needs to be checked when
 # updating this package as it's used for the comgr requires for opencl and hip:
 %global comgr_maj_api_ver 3
@@ -12,8 +14,8 @@
 # https://github.com/ROCm-Developer-Tools/ROCclr/blob/develop/device/comgrctx.cpp#L62
 
 %global rocm_major 7
-%global rocm_minor 1
-%global rocm_patch 1
+%global rocm_minor 2
+%global rocm_patch 4
 %global rocm_release %{rocm_major}.%{rocm_minor}
 %global rocm_version %{rocm_release}.%{rocm_patch}
 %global upstreamname clr
@@ -24,9 +26,9 @@ Release:        %autorelease
 Summary:        ROCm Compute Language Runtime
 License:        MIT
 URL:            https://github.com/ROCm/rocm-systems
-#!RemoteAsset:  sha256:18ac260d0e750fb2d576b857823f68725d47d6357ce82e6d2f0130303b59a638
+#!RemoteAsset:  sha256:c9670697ee47b2d33dde84e4c815a62f594061da9ff184b133b87a227a1a1f02
 Source0:        %{url}/releases/download/rocm-%{version}/%{upstreamname}.tar.gz
-#!RemoteAsset:  sha256:145457cead91d2f426a6926bbde1c0b9137fcd5f5dd35249b3b4836d4020980b
+#!RemoteAsset:  sha256:76c3d6909e531f30b84c908984891559d221d8c427d44abc88be5dbb123f9ad6
 Source1:        %{url}/releases/download/rocm-%{version}/hip.tar.gz
 BuildSystem:    cmake
 
@@ -35,6 +37,7 @@ BuildOption(conf):  -DCMAKE_C_COMPILER=%{rocmllvm_bindir}/clang
 BuildOption(conf):  -DCMAKE_AR=%{rocmllvm_bindir}/llvm-ar
 BuildOption(conf):  -DCMAKE_RANLIB=%{rocmllvm_bindir}/llvm-ranlib
 BuildOption(conf):  -DCMAKE_LINKER=%{rocmllvm_bindir}/ld.lld
+BuildOption(conf):  -DCMAKE_PROGRAM_PATH=%{rocmllvm_bindir}
 BuildOption(conf):  -DHIP_COMMON_DIR=%{_builddir}/%{buildsubdir}/hip
 BuildOption(conf):  -DHIPCC_BIN_DIR=%{_bindir}
 BuildOption(conf):  -DHIP_COMPILER=hipcc
@@ -48,14 +51,14 @@ BuildOption(conf):  -DHIP_ENABLE_ROCPROFILER_REGISTER=OFF
 BuildOption(conf):  -DUSE_PROF_API=ON
 BuildOption(conf):  -DCMAKE_PREFIX_PATH=%{rocmllvm_cmakedir}/..
 
-BuildRequires:  clang
+BuildRequires:  clang(major) = %{llvm_maj_ver}
 BuildRequires:  cmake
 BuildRequires:  cmake(amd_comgr)
 BuildRequires:  cmake(hsa-runtime64)
-BuildRequires:  cmake(LLVM)
+BuildRequires:  llvm22-devel
 BuildRequires:  cmake(rocprofiler-register)
 BuildRequires:  hipcc
-BuildRequires:  lld
+BuildRequires:  lld(major) = %{llvm_maj_ver}
 BuildRequires:  perl
 BuildRequires:  pkgconfig(libffi)
 BuildRequires:  pkgconfig(libzstd)
@@ -66,12 +69,9 @@ BuildRequires:  python3dist(cppheaderparser)
 BuildRequires:  rocm-llvm-macros
 
 %patchlist
-# https://github.com/ROCm/rocm-systems/commit/655fbae6a1a54e7267fff90a246f0b54cdfcc94a
-1001-fix-potential-data-race.patch
 # Add riscv64 support
 2001-fix-riscv64-abi.patch
-2002-Replace-sfence-and-mfence.patch
-2003-add-lp64d-target-to-llvm-mc.patch
+2002-add-lp64d-target-to-llvm-mc.patch
 
 %description
 ROCm Compute Language Runtime
@@ -172,4 +172,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/hip/LICENSE.md
 %{_includedir}/hip_prof_str.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
