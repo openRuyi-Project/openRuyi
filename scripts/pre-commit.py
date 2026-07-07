@@ -505,7 +505,7 @@ class CheckAutotoolsBuildRequires(BaseHook):
     hook_id = "check-autotools-buildrequires"
     description = "autoreconf requires BuildRequires: autoconf automake libtool"
 
-    AUTORECONF_RE = re.compile(r'\bautoreconf\b')
+    AUTORECONF_RE = re.compile(r'^\s*autoreconf\b', re.M)
     BUILDREQ_AUTOCONF_RE = re.compile(r'^BuildRequires:\s+autoconf\b', re.M)
     BUILDREQ_AUTOMAKE_RE = re.compile(r'^BuildRequires:\s+automake\b', re.M)
     BUILDREQ_LIBTOOL_RE = re.compile(r'^BuildRequires:\s+libtool\b', re.M)
