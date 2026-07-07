@@ -111,24 +111,18 @@ class PygrepHook(BaseHook):
 
         matches = list(re.finditer(self.pattern, content, flags))
 
+        fmt_kwargs = {"RED": RED, "YELLOW": YELLOW, "RESET": RESET}
+
         if self.negate:
             # negate: must have at least one match to pass
             if not matches:
-                self.errors.append(
-                    self.error_fmt.format(
-                        file=relpath, line="",
-                        msg=f"required pattern not found",
-                    )
-                )
+                fmt_kwargs.update(file=str(relpath), line="", msg="required pattern not found")
+                self.errors.append(self.error_fmt.format(**fmt_kwargs))
         else:
             for m in matches:
                 lineno = content[: m.start()].count("\n") + 1
-                self.errors.append(
-                    self.error_fmt.format(
-                        file=relpath, line=lineno,
-                        msg=m.group(0).strip(),
-                    )
-                )
+                fmt_kwargs.update(file=str(relpath), line=str(lineno), msg=m.group(0).strip())
+                self.errors.append(self.error_fmt.format(**fmt_kwargs))
 
 
 # =========================================================================
@@ -173,7 +167,6 @@ class Autorelease(PygrepHook):
     hook_id = "autorelease"
     description = "check autorelease macro"
     pattern = r'^Release:.*(%autorelease|%{autorelease}).*$'
-    negate = True
     error_fmt = "{file}:{line}: {RED}error{RESET} - %autorelease is not allowed"
 
 
@@ -215,7 +208,6 @@ class Autochangelog(PygrepHook):
     hook_id = "autochangelog"
     description = "check autochangelog macro"
     pattern = r'%changelog\s+%autochangelog'
-    negate = True
     multiline = True
     error_fmt = "{file}: {RED}error{RESET} - %autochangelog is not allowed"
 
