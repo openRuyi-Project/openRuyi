@@ -1,0 +1,35 @@
+[package]
+name = "clang-wrap"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+pathdiff = "0.2"
+
+[[bin]]
+name = "clang"
+path = "src/main.rs"
+
+[[bin]]
+name = "ar"
+path = "src/bin/ar-wrap.rs"
+
+[[bin]]
+name = "install"
+path = "src/bin/install-wrap.rs"
+
+[[bin]]
+name = "ln"
+path = "src/bin/ln-wrap.rs"
+
+[[bin]]
+name = "mv"
+path = "src/bin/mv-wrap.rs"
+
+[[bin]]
+name = "cp"
+path = "src/bin/cp-wrap.rs"
+
+[[bin]]
+name = "strip"
+path = "src/bin/strip-wrap.rs"
