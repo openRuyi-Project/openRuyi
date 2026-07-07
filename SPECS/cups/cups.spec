@@ -118,7 +118,7 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d
 install -d %{buildroot}%{_tmpfilesdir}
 cat > %{buildroot}%{_tmpfilesdir}/cups.conf <<EOF
 d /run/cups 0755 root lp -
-d /run/cups/certs 0511 lp sys -
+d /run/cups/certs 0511 nobody sys -
 d /var/spool/cups/tmp - - - 30d
 EOF
 
