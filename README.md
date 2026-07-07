@@ -7,4 +7,5 @@ This openRuyi Repo contains build configurations and scripts for all packages ma
 
 ## Further Readings
 
-Please check our project wiki.
+- [Developer Guide](docs/developer-guide.md) — Setting up local development environment and pre-commit hooks
+- Please check our project wiki.
