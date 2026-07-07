@@ -10,9 +10,6 @@ permissions:
   contents: read
   pull-requests: read
 on:
-  # push to dev for local CI debugging, remove before merge to main
-  push:
-    branches: [dev, feat-refactor]
   pull_request:
     branches: [main, ci-test]
 
