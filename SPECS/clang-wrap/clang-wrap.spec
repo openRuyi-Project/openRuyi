@@ -15,6 +15,7 @@ Summary:        clang-wrap to collect LLVM IR
 URL:            https://github.com/openRuyi-Project/clang-wrap
 #!RemoteAsset:  sha256:f6eeb35daec88135c047fe1d9c3e1960d69dfebb1d0041a336805f338807e76d
 Source0:        https://github.com/openRuyi-Project/clang-wrap/archive/%{git_commit}.tar.gz
+Source1:        macros.clang-wrap
 BuildSystem:    rust
 
 BuildRequires:  cargo
@@ -28,7 +29,10 @@ BuildRequires:  crate(pathdiff-0.2/default)
 This package contains wrap of clang, clang++, ar, cp, install, strip.
 These wrappers work on normal object and the IR files at the same time.
 
+%{load:%{SOURCE1}}
+
 %install
+install -p -m0644 -D %{SOURCE1} %{buildroot}%{_rpmmacrodir}/macros.clang-wrap
 cargo install --path=. --root=%{buildroot}/%{_libdir}/clang-wrap
 ln -sf clang %{buildroot}/%{_libdir}/clang-wrap/bin/clang++
 
@@ -36,12 +40,12 @@ ln -sf clang %{buildroot}/%{_libdir}/clang-wrap/bin/clang++
 # there's no check
 
 %filetriggerin -p /bin/sh -- %{_bindir}
-mkdir -p %{_var}/lib/clang-wrap
+mkdir -p %{clang_wrap_varlibdir}
 while read file; do
     name=$(basename $file)
     case $name in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-           ln -sf %{_libdir}/clang-wrap/bin/clang %{_var}/lib/clang-wrap/$name
+           ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
            ;;
     esac
 done
@@ -54,28 +58,29 @@ while read file; do
     name=$(basename $file)
     case $name in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-            rm -f %{_var}/lib/clang-wrap/$name
+            rm -f %{clang_wrap_varlibdir}/$name
             ;;
     esac
 done
 
 %post
-rm -rf %{_var}/lib/clang-wrap
-mkdir -p %{_var}/lib/clang-wrap
+rm -rf %{clang_wrap_varlibdir}
+mkdir -p %{clang_wrap_varlibdir}
 for file in `find %{_libdir}/clang-wrap/bin -type f,l | grep -v bin/clang`;do
-    ln -sf $file %{_var}/lib/clang-wrap
+    ln -sf $file %{clang_wrap_varlibdir}
 done
 for file in `ls %{_bindir}/clang* 2>/dev/null`;do
     name=$(basename $file)
     case $name in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-           ln -sf clang %{_var}/lib/clang-wrap/$name
+           ln -sf clang %{clang_wrap_varlibdir}/$name
            ;;
     esac
 done
 
 %files
 %{_libdir}/clang-wrap
+%{_rpmmacrodir}/macros.clang-wrap
 
 %changelog
 %autochangelog
