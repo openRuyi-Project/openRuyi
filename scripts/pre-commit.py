@@ -466,6 +466,87 @@ class CheckRustCargoToml(BaseHook):
 
 
 # ---------------------------------------------------------------------------
+# check-autotools-buildrequires — autotools / autoreconf deps
+# ---------------------------------------------------------------------------
+
+class CheckAutotoolsBuildRequires(BaseHook):
+    """
+    Verifies that any ``.spec`` calling ``autoreconf`` declares the
+    required ``BuildRequires``: ``autoconf``, ``automake``, and ``libtool``.
+
+    Per `openRuyi autotools packaging guidelines
+    <https://www.openruyi.cn/docs/guide/packaging-guidelines/BuildSystems/autotools>`_,
+    ``autoreconf`` depends on these tools at build time.  The check is
+    skipped when the spec uses ``BuildSystem: autotools`` (the declarative
+    build system provides them automatically).
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (missing deps)  | ``autoreconf -fiv`` in ``%prep`` but no ``BuildRequires: autoconf/automake/libtool`` |
+    | ✅ accepted (explicit deps) | has ``BuildRequires: autoconf / automake / libtool`` + ``autoreconf`` |
+    | ✅ accepted (declarative)   | ``BuildSystem: autotools`` → deps are implicit, no ``BuildRequires`` needed |
+    | ✅ accepted (no autoreconf) | spec does not call ``autoreconf`` at all |
+
+    检查调用 ``autoreconf`` 的 spec 是否声明了对应的 ``BuildRequires``:
+    ``autoconf`` / ``automake`` / ``libtool``。
+
+    根据 `openRuyi autotools 打包指南
+    <https://www.openruyi.cn/docs/guide/packaging-guidelines/BuildSystems/autotools>`_，
+    ``autoreconf`` 依赖这些构建工具。如已使用 ``BuildSystem: autotools``
+    （声明式构建系统自动提供），则无需手动声明。
+
+    | 情形 | 示例 |
+    |------|------|
+    | ❌ 拒绝（缺少依赖）        | ``%prep`` 中调用了 ``autoreconf -fiv`` 但缺少 ``BuildRequires`` |
+    | ✅ 通过（显式依赖）        | 有 ``BuildRequires: autoconf / automake / libtool`` |
+    | ✅ 通过（声明式）          | ``BuildSystem: autotools`` 自动提供依赖 |
+    | ✅ 通过（无 autoreconf）   | spec 中未调用 ``autoreconf`` |
+    """
+    hook_id = "check-autotools-buildrequires"
+    description = "autoreconf requires BuildRequires: autoconf automake libtool"
+
+    AUTORECONF_RE = re.compile(r'\bautoreconf\b')
+    BUILDREQ_AUTOCONF_RE = re.compile(r'^BuildRequires:\s+autoconf\b', re.M)
+    BUILDREQ_AUTOMAKE_RE = re.compile(r'^BuildRequires:\s+automake\b', re.M)
+    BUILDREQ_LIBTOOL_RE = re.compile(r'^BuildRequires:\s+libtool\b', re.M)
+    BUILDSYSTEM_AUTOTOOLS_RE = re.compile(r'^BuildSystem:\s+autotools\b', re.M)
+
+    def check_file(self, relpath: Path) -> None:
+        abspath = self.repo_root / relpath
+        if abspath.suffix != ".spec":
+            return
+
+        try:
+            content = abspath.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            return
+
+        # Only interested in specs that actually use autoreconf
+        if not self.AUTORECONF_RE.search(content):
+            return
+
+        # BuildSystem: autotools makes deps implicit — skip
+        if self.BUILDSYSTEM_AUTOTOOLS_RE.search(content):
+            return
+
+        missing: list[str] = []
+        if not self.BUILDREQ_AUTOCONF_RE.search(content):
+            missing.append("autoconf")
+        if not self.BUILDREQ_AUTOMAKE_RE.search(content):
+            missing.append("automake")
+        if not self.BUILDREQ_LIBTOOL_RE.search(content):
+            missing.append("libtool")
+
+        if missing:
+            self.errors.append(
+                f"{relpath}: {RED}error{RESET} - "
+                f"autoreconf is used but missing BuildRequires: "
+                f"{', '.join(missing)}. "
+                "See https://www.openruyi.cn/docs/guide/packaging-guidelines/BuildSystems/autotools"
+            )
+
+
+# ---------------------------------------------------------------------------
 # reuse-add-annotate — auto-add REUSE license headers to .spec files
 # ---------------------------------------------------------------------------
 

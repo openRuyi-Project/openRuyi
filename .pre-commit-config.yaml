@@ -94,3 +94,10 @@ repos:
         files: \.spec$
         pass_filenames: true
         additional_dependencies: ['reuse>=6.0.0']
+    -   id: check-autotools-buildrequires
+        name: "Check autotools BuildRequires"
+        language: python
+        entry: scripts/pre-commit.py check-autotools-buildrequires
+        files: \.spec$
+        pass_filenames: true
+        additional_dependencies: ['reuse>=6.0.0']
