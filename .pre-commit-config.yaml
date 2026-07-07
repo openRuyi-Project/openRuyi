@@ -9,69 +9,68 @@
 repos:
 -   repo: local
     hooks:
+    # ------------------------------------------------------------------
+    # All spec-file checks run through the unified pre-commit.py runner.
+    # Hook IDs must match the `hook_id` class variable in scripts/pre-commit.py.
+    # ------------------------------------------------------------------
     -  id: no-group-tag
        name: "check no Group tag"
-       language: pygrep
-       entry: '^Group:'
+       language: python
+       entry: scripts/pre-commit.py no-group-tag
        files: \.spec$
+       pass_filenames: true
     -  id: autorelease
        name: "check autorelease macro"
-       language: pygrep
-       entry: '^Release:.*(%autorelease|%{autorelease}).*$'
-       args: ["--negate"]
+       language: python
+       entry: scripts/pre-commit.py autorelease
        files: \.spec$
+       pass_filenames: true
     -  id: check-files-pkgconfig-file
        name: "check %files pkgconfig files is not *"
-       language: pygrep
-       entry: '^%{(_datadir|_libdir)}/pkgconfig/\*.*'
-       args: []
+       language: python
+       entry: scripts/pre-commit.py check-files-pkgconfig-file
        files: \.spec$
+       pass_filenames: true
     -  id: autochangelog
        name: "check autochangelog macro"
-       language: pygrep
-       entry: '%changelog\s+%autochangelog'
-       args: ["--negate", "--multiline"]
+       language: python
+       entry: scripts/pre-commit.py autochangelog
        files: \.spec$
+       pass_filenames: true
     -  id: format-spacing
        name: "Check format spacing"
-       language: pygrep
-       entry: '^(((BuildOption\(.*\)|BuildRequires):(?! {2}))|(%files {2,}(?=\S)))'
-       args: []
+       language: python
+       entry: scripts/pre-commit.py format-spacing
        files: \.spec$
+       pass_filenames: true
     -  id: python-name
        name: "python spec name should follow PEP 503"
-       language: fail
-       entry: |
-         only valid characters in a name are the ASCII alphabet, ASCII numbers, ., -,
-         and _. The name should be lowercased with all runs of the characters ., -,
-         or _ replaced with a single - character.
-
-         see https://peps.python.org/pep-0503/#normalized-names
-         see https://openruyi.cn/docs/guide/packaging-guidelines/languages/Python
+       language: python
+       entry: scripts/pre-commit.py python-name
        files: python-(?!([a-z0-9]|[a-z0-9][a-z0-9._-]*[a-z0-9])).*\.spec$
+       pass_filenames: true
     -  id: no-entries-directly-under-SPECS
-       name: "SPECS may only containreal subdirectorys"
-       language: fail
-       entry: |
-         There should only be subdirectories under SPECS
+       name: "SPECS may only contain subdirectories"
+       language: python
+       entry: scripts/pre-commit.py no-entries-directly-under-SPECS
        files: '^SPECS/[^/]+$'
+       pass_filenames: true
     -  id: dont-add-constraints-to-repo
        name: "Don't add _constraints to spec directory"
-       language: fail
-       entry: |
-         _constraints should not be placed in the git repository
-         It should be configured in the obs repository.
+       language: python
+       entry: scripts/pre-commit.py dont-add-constraints-to-repo
        files: ^SPECS/.*/_constraints$
+       pass_filenames: true
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
-       entry: scripts/pre-commit-hooks/check_source_with_remoteasset.py
+       entry: scripts/pre-commit.py sourcewithRemoteAsset
        files: \.spec$
        pass_filenames: true
     -  id: check-rust-cargo-toml
        name: "Check Cargo.toml for crate related specs"
        language: python
-       entry: scripts/pre-commit-hooks/check_rust_cargo_toml.py
+       entry: scripts/pre-commit.py check-rust-cargo-toml
        files: ^SPECS/[^/]+/(Cargo\.toml|[^/]+\.spec)$
        pass_filenames: true
 -   repo: https://github.com/pre-commit/pre-commit-hooks
