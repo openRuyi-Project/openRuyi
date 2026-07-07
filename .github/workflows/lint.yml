@@ -12,7 +12,7 @@ permissions:
 on:
   # push to dev for local CI debugging, remove before merge to main
   push:
-    branches: [dev]
+    branches: [dev, feat-refactor]
   pull_request:
     branches: [main, ci-test]
 
