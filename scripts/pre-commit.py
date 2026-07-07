@@ -134,6 +134,19 @@ class PygrepHook(BaseHook):
 # =========================================================================
 
 class NoGroupTag(PygrepHook):
+    """
+    Verifies that RPM spec files do NOT contain the deprecated ``Group:`` tag.
+
+    The Group tag was removed from modern RPM packaging guidelines.
+    openRuyi does not use it, and its presence indicates stale boilerplate.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (has Group tag) | ``Group: System/Libraries`` |
+    | ✅ accepted               | no ``Group:`` line anywhere in the spec |
+
+    检查是否使用了已废弃的 ``Group:`` 标签。openRuyi 不使用此标签，出现即表示老旧模板残留。
+    """
     hook_id = "no-group-tag"
     description = "check no Group tag"
     pattern = r'^Group:'
@@ -141,6 +154,20 @@ class NoGroupTag(PygrepHook):
 
 
 class Autorelease(PygrepHook):
+    """
+    Verifies that RPM spec files do NOT use the ``%autorelease`` macro.
+
+    openRuyi manages Release numbers via the build system (OBS) with
+    ``<CI_CNT>.<B_CNT>%{?dist}``, not via ``%autorelease``.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected               | ``Release: %autorelease`` |
+    | ❌ rejected               | ``Release: 1.%autorelease`` |
+    | ✅ accepted               | ``Release: <CI_CNT>.<B_CNT>%{?dist}`` |
+
+    检查 spec 是否使用了 ``%autorelease`` 宏。openRuyi 通过 OBS 构建系统管理 Release 号，不允许使用此宏。
+    """
     hook_id = "autorelease"
     description = "check autorelease macro"
     pattern = r'^Release:.*(%autorelease|%{autorelease}).*$'
@@ -149,6 +176,20 @@ class Autorelease(PygrepHook):
 
 
 class CheckFilesPkgconfigFile(PygrepHook):
+    """
+    Verifies that ``%files`` sections listing pkgconfig (``.pc``) files
+    use explicit filenames rather than wildcards.
+
+    Using ``*`` makes it impossible to audit which files a package ships.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (wildcard)    | ``%{_libdir}/pkgconfig/*`` |
+    | ✅ accepted (explicit)    | ``%{_libdir}/pkgconfig/foo.pc`` |
+    | ✅ accepted (explicit)    | ``%{_datadir}/pkgconfig/bar.pc`` |
+
+    检查 ``%files`` 中 pkgconfig 路径不能使用通配符 ``*``，必须明确列出 ``.pc`` 文件名，便于审计包内容。
+    """
     hook_id = "check-files-pkgconfig-file"
     description = "check %files pkgconfig files is not *"
     pattern = r'^%{(_datadir|_libdir)}/pkgconfig/\*.*'
@@ -156,6 +197,19 @@ class CheckFilesPkgconfigFile(PygrepHook):
 
 
 class Autochangelog(PygrepHook):
+    """
+    Verifies that RPM spec files do NOT use ``%autochangelog``.
+
+    openRuyi maintains changelogs manually to ensure accuracy and project-wide
+    consistency across all packages.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected               | ``%changelog`` followed by ``%autochangelog`` |
+    | ✅ accepted               | ``%changelog`` followed by manual entries |
+
+    检查 spec 是否使用了 ``%autochangelog`` 宏。openRuyi 手动维护 changelog，不允许自动生成。
+    """
     hook_id = "autochangelog"
     description = "check autochangelog macro"
     pattern = r'%changelog\s+%autochangelog'
@@ -165,6 +219,25 @@ class Autochangelog(PygrepHook):
 
 
 class FormatSpacing(PygrepHook):
+    """
+    Enforces consistent spacing in RPM spec files:
+
+    1. ``BuildRequires:``, ``BuildOption(...):`` — must have exactly **2 spaces**
+       between the colon and the value.
+    2. ``%files`` — must have **exactly 1 space** between the macro and the path
+       (no extra spaces).
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (1 space)     | ``BuildRequires: pkg`` |
+    | ❌ rejected (1 space)     | ``BuildOption(foo): bar`` |
+    | ❌ rejected (extra spaces)| ``%files   /path`` |
+    | ✅ accepted               | ``BuildRequires:  pkg`` |
+    | ✅ accepted               | ``BuildOption(foo):  bar`` |
+    | ✅ accepted               | ``%files /path`` |
+
+    检查 spec 格式空格：``BuildRequires:`` / ``BuildOption():`` 冒号后必须空 2 格，``%files`` 后只能空 1 格。
+    """
     hook_id = "format-spacing"
     description = "Check format spacing"
     pattern = r'^(((BuildOption\(.*\)|BuildRequires):(?! {2}))|(%files {2,}(?=\S)))'
@@ -187,6 +260,25 @@ class FailHook(BaseHook):
 
 
 class PythonName(FailHook):
+    """
+    Enforces that Python package spec files follow `PEP 503 Normalized Names
+    <https://peps.python.org/pep-0503/#normalized-names>`_.
+
+    The directory under ``SPECS/`` must be named ``python-<normalized-name>``
+    where the normalized name contains only ASCII lowercase letters, digits,
+    ``.``, ``-``, and ``_``, with runs of ``.`` / ``-`` / ``_`` collapsed
+    to a single ``-``.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected               | ``SPECS/python-My_Package.spec`` (uppercase) |
+    | ❌ rejected               | ``SPECS/python-my__pkg.spec`` (double underscore) |
+    | ❌ rejected               | ``SPECS/python-my..pkg.spec`` (double dot) |
+    | ✅ accepted               | ``SPECS/python-my-package/python-my-package.spec`` |
+
+    检查 Python 包 spec 文件名是否遵循 PEP 503 规范。目录名必须是 ``python-<标准化名称>``，
+    仅允许 ASCII 小写字母、数字、``.``、``-``、``_``，且连续分隔符合并为单个 ``-``。
+    """
     hook_id = "python-name"
     description = "python spec name should follow PEP 503"
     pattern = r'^SPECS/python-(?!([a-z0-9]|[a-z0-9][a-z0-9._-]*[a-z0-9])).*\.spec$'
@@ -199,6 +291,21 @@ class PythonName(FailHook):
 
 
 class NoEntriesUnderSpecs(FailHook):
+    """
+    Ensures that the ``SPECS/`` directory contains only subdirectories
+    (one per package), never loose files.
+
+    Each package must live in its own ``SPECS/<pkgname>/`` directory.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected               | ``SPECS/some-random-file.txt`` |
+    | ❌ rejected               | ``SPECS/my-package.spec`` (spec outside a dir) |
+    | ✅ accepted               | ``SPECS/acl/acl.spec`` |
+    | ✅ accepted               | ``SPECS/bash/bash.spec`` |
+
+    检查 ``SPECS/`` 下只能有子目录，不能直接放文件。每个包必须位于 ``SPECS/<包名>/`` 目录中。
+    """
     hook_id = "no-entries-directly-under-SPECS"
     description = "SPECS may only contain subdirectories"
     pattern = r'^SPECS/[^/]+$'
@@ -206,6 +313,20 @@ class NoEntriesUnderSpecs(FailHook):
 
 
 class DontAddConstraints(FailHook):
+    """
+    Prevents ``_constraints`` files from being added to the git repository.
+
+    ``_constraints`` define build-resource requirements (CPU, memory, disk)
+    and must be configured directly in the OBS project, not stored in git.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected               | ``SPECS/some-pkg/_constraints`` |
+    | ❌ rejected               | ``SPECS/some-pkg/subdir/_constraints`` |
+    | ✅ accepted               | any file not named ``_constraints`` |
+
+    禁止在 spec 目录中放置 ``_constraints`` 文件。构建资源约束应在 OBS 仓库中配置，不应纳入 git。
+    """
     hook_id = "dont-add-constraints-to-repo"
     description = "Don't add _constraints to spec directory"
     pattern = r'_constraints$'
@@ -220,6 +341,23 @@ class DontAddConstraints(FailHook):
 # ---------------------------------------------------------------------------
 
 class SourceWithRemoteAsset(BaseHook):
+    """
+    Verifies that every ``Source:`` / ``SourceN:`` line pointing to an HTTP(S)
+    URL or ``%{url}`` macro has a ``#!RemoteAsset:  sha256:...`` comment
+    immediately above it.
+
+    This ensures remote sources are pinned to a known checksum for
+    reproducibility and security.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (missing comment)  | ``Source: https://example.com/pkg-1.0.tar.gz`` (no ``#!RemoteAsset`` above) |
+    | ❌ rejected (no sha256)        | ``#!RemoteAsset:`` followed by ``Source: https://...`` |
+    | ✅ accepted                     | ``#!RemoteAsset:  sha256:abcd1234...`` (64 hex chars) above ``Source: https://...`` |
+
+    检查每个通过 HTTP(S) URL 或 ``%{url}`` 宏引入的 ``Source`` 行，其上一行必须有
+    ``#!RemoteAsset:  sha256:<64位hex>`` 注释，确保远程资源校验和可追溯。
+    """
     hook_id = "sourcewithRemoteAsset"
     description = "check Source with #!RemoteAsset"
 
@@ -246,6 +384,26 @@ class SourceWithRemoteAsset(BaseHook):
 
 
 class CheckRustCargoToml(BaseHook):
+    """
+    For Rust crate packages, validates two things:
+
+    1. Every ``Cargo.toml`` in a ``SPECS/<pkg>/`` directory is valid TOML.
+    2. If a spec uses ``crate(...)`` in ``BuildRequires`` / ``Requires`` /
+       ``Provides``, a ``Cargo.toml`` **must** exist in the same directory.
+
+    This ensures crate metadata is available for the build tooling.
+
+    | What | Example |
+    |------|---------|
+    | ❌ rejected (broken TOML)   | ``Cargo.toml`` with syntax errors |
+    | ❌ rejected (missing file) | ``SPECS/rust-foo/rust-foo.spec`` uses ``crate(foo)`` but no ``Cargo.toml`` |
+    | ✅ accepted                 | ``SPECS/rust-foo/rust-foo.spec`` uses ``crate(foo)`` and ``Cargo.toml`` exists |
+    | ✅ accepted                 | ``SPECS/rust-foo/rust-foo.spec`` does NOT use ``crate(...)`` (no Cargo.toml needed) |
+
+    对 Rust crate 包：
+    1) 验证 ``Cargo.toml`` 是合法的 TOML 文件；
+    2) 如果 spec 在 BuildRequires/Requires/Provides 中使用了 ``crate(...)``，同目录下必须存在 ``Cargo.toml``。
+    """
     hook_id = "check-rust-cargo-toml"
     description = "Check Cargo.toml for crate related specs"
 
