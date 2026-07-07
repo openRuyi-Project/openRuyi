@@ -19,8 +19,10 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
 import tomllib
+from datetime import datetime
 from pathlib import Path
 from typing import ClassVar, List, Optional
 
@@ -461,6 +463,115 @@ class CheckRustCargoToml(BaseHook):
             f"and {len(spec_files)} spec files"
         )
         return 0
+
+
+# ---------------------------------------------------------------------------
+# reuse-add-annotate — auto-add REUSE license headers to .spec files
+# ---------------------------------------------------------------------------
+
+class ReuseAddAnnotate(BaseHook):
+    """
+    Automatically adds REUSE-compliant SPDX license headers to ``.spec`` files
+    that do not already have them.
+
+    Uses the first git commit year + current year as the copyright year(s),
+    ``Institute of Software, Chinese Academy of Sciences (ISCAS)`` and
+    ``openRuyi Project Contributors`` as copyright holders, and
+    ``MulanPSL-2.0`` as the license identifier.
+
+    Requires ``reuse>=6.0.0`` to be installed in the pre-commit environment.
+
+    | What | Example |
+    |------|---------|
+    | ✅ (added header)    | ``acl.spec`` without SPDX header → header inserted |
+    | ✅ (already ok)      | ``bash.spec`` already has SPDX header → skipped |
+
+    自动为缺少 REUSE 许可证头的 ``.spec`` 文件添加 SPDX 头。
+
+    使用第一次 git 提交年份 + 当前年份作为版权年份，
+    持有者为 ``Institute of Software, Chinese Academy of Sciences (ISCAS)``
+    和 ``openRuyi Project Contributors``，许可证为 ``MulanPSL-2.0``。
+
+    需要 pre-commit 环境中安装 ``reuse>=6.0.0``。
+
+    | 情形 | 示例 |
+    |------|------|
+    | ✅（添加头部）       | ``acl.spec`` 无 SPDX 头 → 自动添加 |
+    | ✅（已有跳过）       | ``bash.spec`` 已有 SPDX 头 → 跳过 |
+    """
+    hook_id = "reuse-add-annotate"
+    description = "Add REUSE license headers to .spec files"
+
+    DEFAULT_HOLDERS: ClassVar[List[str]] = [
+        "Institute of Software, Chinese Academy of Sciences (ISCAS)",
+        "openRuyi Project Contributors",
+    ]
+    DEFAULT_LICENSE: ClassVar[str] = "MulanPSL-2.0"
+
+    @staticmethod
+    def _get_first_git_year(file_path: Path) -> int:
+        """Get the year of the first git commit for a file."""
+        try:
+            res = subprocess.run(
+                ["git", "log", "--reverse", "--format=%ad", "--date=format:%Y", "--", str(file_path)],
+                capture_output=True, text=True, timeout=3,
+            )
+            if res.returncode == 0:
+                first_year = res.stdout.strip().split("\n")[0]
+                if first_year.isdigit():
+                    return int(first_year)
+        except Exception:
+            pass
+        return datetime.now().year
+
+    def check_file(self, relpath: Path) -> None:
+        abspath = self.repo_root / relpath
+        if not abspath.exists() or abspath.suffix != ".spec":
+            return
+
+        try:
+            original = abspath.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            return
+
+        # Skip if already has REUSE header
+        try:
+            from reuse.extract import contains_reuse_info
+            if contains_reuse_info(original):
+                return
+        except ImportError:
+            print("Error: REUSE library not available. Install with: pip install reuse>=6.0.0", file=sys.stderr)
+            return
+
+        try:
+            from reuse.header import add_new_header
+            from reuse.comment import PythonCommentStyle
+            from reuse.copyright import CopyrightNotice, ReuseInfo, SpdxExpression, YearRange, CopyrightPrefix
+        except ImportError as e:
+            print(f"Error: REUSE API missing: {e}", file=sys.stderr)
+            return
+
+        year = self._get_first_git_year(abspath)
+        year_range = YearRange(start=str(year), separator=None, end=None)
+        new_notices = {
+            CopyrightNotice(name=holder, prefix=CopyrightPrefix.SPDX_C, years=(year_range,))
+            for holder in self.DEFAULT_HOLDERS
+        }
+        new_info = ReuseInfo(
+            copyright_notices=new_notices,
+            spdx_expressions={SpdxExpression(self.DEFAULT_LICENSE)},
+            contributor_lines=[],
+        )
+
+        try:
+            final_content = add_new_header(original, new_info, style=PythonCommentStyle)
+        except Exception as e:
+            print(f"Error adding header to {relpath}: {e}", file=sys.stderr)
+            return
+
+        if final_content.strip() != original.strip():
+            abspath.write_text(final_content, encoding="utf-8")
+            print(f"Added REUSE header to {relpath}")
 
 
 # ---------------------------------------------------------------------------

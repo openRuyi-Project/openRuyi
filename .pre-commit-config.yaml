@@ -90,7 +90,7 @@ repos:
     -   id: reuse-add-annotate
         name: "Add REUSE license headers"
         language: python
-        entry: scripts/pre-commit-hooks/reuse-add-annotate.py
+        entry: scripts/pre-commit.py reuse-add-annotate
         files: \.spec$
         pass_filenames: true
         additional_dependencies: ['reuse>=6.0.0']

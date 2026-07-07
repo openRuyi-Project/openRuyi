@@ -101,39 +101,26 @@ git commit -m "urgent fix" --no-verify
 
 ## Hook Types in This Project
 
-The `.pre-commit-config.yaml` uses four types of hooks:
-
-### `pygrep` — Regular expression grep
-
-No extra dependencies needed. Runs a Python regex against file content.
+All local hooks are defined in `.pre-commit-config.yaml` and routed through
+a single unified runner: `scripts/pre-commit.py <hook-id>`.
 
 ```yaml
+# Example — all local hooks follow this pattern:
 - id: no-group-tag
-  language: pygrep
-  entry: '^Group:'
-  files: \.spec$
-```
-
-### `python` — Custom Python scripts
-
-Runs a local Python script against matched files.
-
-```yaml
-- id: sourcewithRemoteAsset
+  name: "Check no Group tag"
   language: python
-  entry: scripts/pre-commit-hooks/check_source_with_remoteasset.py
+  entry: scripts/pre-commit.py no-group-tag
   files: \.spec$
+  pass_filenames: true
 ```
 
-### `fail` — Filename pattern match
+The `pre-commit.py` runner implements 11 checks across three internal categories:
 
-Fails if any staged file matches the filename pattern. No dependency required.
-
-```yaml
-- id: python-name
-  language: fail
-  files: python-(?!...).*\.spec$
-```
+| Category | Hooks | Description |
+|----------|-------|-------------|
+| **pygrep-style** | `no-group-tag`, `autorelease`, `check-files-pkgconfig-file`, `autochangelog`, `format-spacing` | Regex-based content checks on `.spec` files |
+| **fail-style** | `python-name`, `no-entries-directly-under-SPECS`, `dont-add-constraints-to-repo` | Filename/path pattern validation |
+| **python-script** | `sourcewithRemoteAsset`, `check-rust-cargo-toml`, `reuse-add-annotate` | Custom Python logic (checksum verification, TOML validation, license header injection) |
 
 ### Remote hooks
 
