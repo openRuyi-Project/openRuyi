@@ -54,6 +54,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 0005-RISC-V-GHASH-multi-block-aggregation.patch
 0006-RISC-V-GHASH-Zvbc-multi-block-aggregation.patch
 0007-RISC-V-GHASH-Zvkg-multi-block-aggregation.patch
+# https://github.com/openssl/openssl/pull/28673
+0008-Backport-Instruction-rearrangement-optimization-for-SHA256-on-RISCV.patch
 
 %description    devel
 This package contains the header files, pkgconfig/cmake files, development
