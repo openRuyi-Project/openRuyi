@@ -1,4 +1,4 @@
-From daa6340391a00374156d621efa6df23ab60ab0fc Mon Sep 17 00:00:00 2001
+From 13654870d6b6544411e6f829d919549b7b0ce22e Mon Sep 17 00:00:00 2001
 From: Pengpeng Hou <pengpeng@iscas.ac.cn>
 Date: Sat, 4 Jul 2026 20:22:30 +0800
 Subject: [RUYI PATCH] FROMLIST: gpio: sifive: add missing

@@ -1,6 +1,6 @@
-From 252855ddee20e7fa4a5ae56005cfa7e9393da4a1 Mon Sep 17 00:00:00 2001
+From 205ed3b8fc50821d681de6a4c9a820e71bd7bff8 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
-Date: Fri, 3 Jul 2026 09:59:57 +0800
+Date: Thu, 9 Jul 2026 12:00:21 +0800
 Subject: [RUYI PATCH] FROMLIST: PCI: spacemit-k1: Add device data support
 
 To reuse the K1 PCIe driver logic for K3 PCIe controller, add device
@@ -8,7 +8,7 @@ data to handle the K1 specific logic and make room for the incoming
 logic for K3.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Link: https://lore.kernel.org/r/20260703020003.485436-2-inochiama@gmail.com
+Link: https://lore.kernel.org/r/20260709040027.958400-2-inochiama@gmail.com
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  drivers/pci/controller/dwc/pcie-spacemit-k1.c | 30 ++++++++++++++++---

@@ -1,4 +1,4 @@
-From 593a6ece8da3eedcf905a64d616e49701cc5947d Mon Sep 17 00:00:00 2001
+From 764364653361aee580cf4c8e118bdb05640731f0 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 9 Jun 2026 21:00:20 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: preserve A/D and soft-dirty state

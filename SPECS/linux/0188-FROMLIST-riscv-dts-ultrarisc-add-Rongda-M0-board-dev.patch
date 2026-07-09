@@ -1,4 +1,4 @@
-From 4d08bae5fab952b0ca1dea9e9d0cfdd9dc1f0ea6 Mon Sep 17 00:00:00 2001
+From d8fb59210ca339ec595874e12fd4fad914212ad8 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:03 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: add Rongda M0 board

@@ -1,4 +1,4 @@
-From 2f30426abb5fd32a1ecb3ed9b0cc1df7e6cc3ea9 Mon Sep 17 00:00:00 2001
+From 0ad2dba8f4a75ad97725481f2545bffa730595d9 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:05 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: defconfig: enable ARCH_ULTRARISC

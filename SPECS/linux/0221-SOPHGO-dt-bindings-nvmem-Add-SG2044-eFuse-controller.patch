@@ -1,4 +1,4 @@
-From ed3640870a99f2141392d3ec1043749e7059cd6c Mon Sep 17 00:00:00 2001
+From 91106e12de223111b1b97c715e0982179e4e48a8 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 19 Nov 2023 21:13:31 +0800
 Subject: [RUYI PATCH] SOPHGO: dt-bindings: nvmem: Add SG2044 eFuse controller

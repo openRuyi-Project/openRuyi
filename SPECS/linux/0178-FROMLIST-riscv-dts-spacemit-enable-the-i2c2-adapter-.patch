@@ -1,4 +1,4 @@
-From 46a0d87745f76a05b6e78a6ec687d6b9741935ea Mon Sep 17 00:00:00 2001
+From 2a119826658680b24883346f9be19b9e52d939b6 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:43:46 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: enable the i2c2 adapter

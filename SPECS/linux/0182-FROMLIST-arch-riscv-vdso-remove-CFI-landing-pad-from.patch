@@ -1,4 +1,4 @@
-From 3fd92a4bfbbf2e2da3e1d9ee9b14e3f8267b6ef7 Mon Sep 17 00:00:00 2001
+From 702eb8d4ac5e35b3229438e745d9fd720ba8f64d Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:40:57 +0200
 Subject: [RUYI PATCH] FROMLIST: arch/riscv: vdso: remove CFI landing pad from

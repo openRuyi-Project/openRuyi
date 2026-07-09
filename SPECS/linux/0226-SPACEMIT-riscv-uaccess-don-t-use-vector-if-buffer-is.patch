@@ -1,4 +1,4 @@
-From 0121e10fd8b0f46919bec1ec1cf4bb48af53e841 Mon Sep 17 00:00:00 2001
+From b8bbadac2b8c8d35d2bc1d7110abe4830197063d Mon Sep 17 00:00:00 2001
 From: Zhang Meng <zhangmeng.kevin@spacemit.com>
 Date: Mon, 5 Jan 2026 20:05:04 +0800
 Subject: [RUYI PATCH] SPACEMIT: riscv: uaccess: don't use vector if buffer is

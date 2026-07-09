@@ -1,4 +1,4 @@
-From 53cfede6afab9a49811fc2817a8ad8cfb2060ca4 Mon Sep 17 00:00:00 2001
+From 5802ee534ca45a46b2b58ab3279b3041708a1451 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:17:58 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: cpus: Add UltraRISC CP100

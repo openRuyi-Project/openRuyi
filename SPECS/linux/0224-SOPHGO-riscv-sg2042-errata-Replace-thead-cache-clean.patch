@@ -1,4 +1,4 @@
-From 03c8f23e9fa852385e7959b843497a6200cb4d69 Mon Sep 17 00:00:00 2001
+From c3fc264be138d58bab05a87926efe3a563df6b71 Mon Sep 17 00:00:00 2001
 From: Xiaoguang Xing <xiaoguang.xing@sophgo.com>
 Date: Mon, 22 Jan 2024 10:31:30 +0800
 Subject: [RUYI PATCH] SOPHGO: riscv: sg2042: errata: Replace thead cache clean

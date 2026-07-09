@@ -1,0 +1,62 @@
+From 1575950113ee60e8334a0fe8262fff39d7abdc36 Mon Sep 17 00:00:00 2001
+From: Rui Qi <qirui.001@bytedance.com>
+Date: Mon, 6 Jul 2026 20:35:54 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: ftrace: only use pre-function NOPs with
+ call ops
+
+Commit c217157bcd1d ("riscv: Implement
+HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS") changed CC_FLAGS_FTRACE to use
+-fpatchable-function-entry=8,4 or -fpatchable-function-entry=4,2
+for all dynamic ftrace builds. That layout makes the compiler place an
+8-byte area before the function entry, which is used as the per-callsite
+ftrace_ops literal when CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS is enabled.
+
+RISC-V can still build with CONFIG_DYNAMIC_FTRACE=y and
+CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS=n, for example when
+CONFIG_CFI_CLANG is enabled because HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS
+is selected only when !CFI_CLANG. In that configuration
+ftrace_call_adjust() does not skip the pre-function literal area and
+only returns addr + MCOUNT_AUIPC_SIZE. With the pre-function layout,
+that points into the pre-entry padding instead of the callsite jalr, so
+dynamic ftrace records the wrong patch address.
+
+Use the pre-function literal layout only when call ops are enabled.
+Otherwise keep the previous patchable-function-entry counts so the
+recorded address matches ftrace_call_adjust() non-call-ops path.
+
+Fixes: c217157bcd1d ("riscv: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS")
+Cc: stable@vger.kernel.org
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+Link: https://lore.kernel.org/r/20260706123554.455065-1-qirui.001@bytedance.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Makefile | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index ce0cc737f870..afc418219c71 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -14,11 +14,19 @@ endif
+ ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
+ 	LDFLAGS_vmlinux += --no-relax
+ 	KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
++ifeq ($(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS),y)
+ ifeq ($(CONFIG_RISCV_ISA_C),y)
+ 	CC_FLAGS_FTRACE := -fpatchable-function-entry=8,4
+ else
+ 	CC_FLAGS_FTRACE := -fpatchable-function-entry=4,2
+ endif
++else
++ifeq ($(CONFIG_RISCV_ISA_C),y)
++	CC_FLAGS_FTRACE := -fpatchable-function-entry=4
++else
++	CC_FLAGS_FTRACE := -fpatchable-function-entry=2
++endif
++endif
+ endif
+ 
+ ifeq ($(CONFIG_CMODEL_MEDLOW),y)
+-- 
+2.53.0
+

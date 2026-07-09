@@ -1,4 +1,4 @@
-From 115b94873d58961abb43abd01f0454ee7f23b054 Mon Sep 17 00:00:00 2001
+From 1fdf8522fdb74d009e2f4c9e3f1bc92ada7a5df1 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:17:57 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: vendor-prefixes: add Rongda

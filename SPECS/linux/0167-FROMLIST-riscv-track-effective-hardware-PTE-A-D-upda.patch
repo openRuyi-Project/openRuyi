@@ -1,4 +1,4 @@
-From 4f8b337c190a515b8acb9ea4e330249d0a617bc1 Mon Sep 17 00:00:00 2001
+From 6754b3e891b81646ec8cd9d91ffab12188b202b9 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 9 Jun 2026 21:00:19 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: track effective hardware PTE A/D

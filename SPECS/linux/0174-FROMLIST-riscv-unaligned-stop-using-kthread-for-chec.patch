@@ -1,4 +1,4 @@
-From 83dfc9ea62d7146e79d9afe351aee4ddfc5f5803 Mon Sep 17 00:00:00 2001
+From e074ec84e96a8540f30ea30eeccac30b5b3c8ef6 Mon Sep 17 00:00:00 2001
 From: Nam Cao <namcao@linutronix.de>
 Date: Wed, 17 Jun 2026 05:38:24 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: unaligned: stop using kthread for

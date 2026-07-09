@@ -1,4 +1,4 @@
-From af803c3d1af88759e263347293c6406301a1b1ed Mon Sep 17 00:00:00 2001
+From e01f660e00fd32480050847b4417b78c2e2d5ad7 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Tue, 30 Jun 2026 09:41:40 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Add symbols for the alternative

@@ -1,4 +1,4 @@
-From 6cda59414a1878e4bff8ecd8747ccc45f07e623e Mon Sep 17 00:00:00 2001
+From 513a9a91f6c0eb38bed0ea121682812518b24ca9 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Mon, 29 Jun 2026 17:25:45 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: mm: Fix concurrency in

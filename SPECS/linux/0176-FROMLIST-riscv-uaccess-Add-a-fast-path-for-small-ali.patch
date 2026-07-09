@@ -1,4 +1,4 @@
-From 5fa80f49e663b154bd2b10a438527f50e0a11899 Mon Sep 17 00:00:00 2001
+From 255611e2e774bd4a5943b98fc6d4f6692062f097 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 23 Jun 2026 16:35:51 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: uaccess: Add a fast path for small

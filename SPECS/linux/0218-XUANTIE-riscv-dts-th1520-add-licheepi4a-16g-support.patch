@@ -1,4 +1,4 @@
-From e5278713e50605924ec3ed0dd91ebdcfa5ae5cff Mon Sep 17 00:00:00 2001
+From b2a850cb62cd3998b30e0da5e18c5f80f6550886 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Mon, 24 Nov 2025 20:38:44 +0800
 Subject: [RUYI PATCH] XUANTIE: riscv: dts: th1520: add licheepi4a 16g support

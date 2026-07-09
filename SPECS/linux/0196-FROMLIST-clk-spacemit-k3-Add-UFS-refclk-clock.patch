@@ -1,4 +1,4 @@
-From 3cfdfbb30f44763619713751a743e6540c3c8dad Mon Sep 17 00:00:00 2001
+From 33ab3b2ef62adf389cf7bc631abe82dff9f3ce96 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 12:52:47 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: Add UFS refclk clock

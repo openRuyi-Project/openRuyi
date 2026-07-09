@@ -1,4 +1,4 @@
-From 2e1f122dfb9b4a2cd874c5fd9901d85dc6c642f2 Mon Sep 17 00:00:00 2001
+From 8be69231d7d19aec2fa2b71f6b6087a88e02084a Mon Sep 17 00:00:00 2001
 From: Pengpeng Hou <pengpeng@iscas.ac.cn>
 Date: Sat, 4 Jul 2026 20:25:38 +0800
 Subject: [RUYI PATCH] FROMLIST: PCI: dwc: spacemit: add missing

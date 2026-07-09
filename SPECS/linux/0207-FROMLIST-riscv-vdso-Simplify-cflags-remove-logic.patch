@@ -1,4 +1,4 @@
-From 1a60efb5509fbcc0c36676ed1a28f1281fa7e235 Mon Sep 17 00:00:00 2001
+From 96ce8a7df5af5c362c41920df9871838c3e3c040 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Wed, 1 Jul 2026 11:21:23 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Simplify cflags remove logic

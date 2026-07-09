@@ -1,4 +1,4 @@
-From eb353815cfe12ab8e073f64ab4f33de09aac2efe Mon Sep 17 00:00:00 2001
+From 79a6812b4ccc455c28399bcc4dd123b93c79fb68 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Tue, 30 Jun 2026 09:41:41 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: alternative: Use the statically

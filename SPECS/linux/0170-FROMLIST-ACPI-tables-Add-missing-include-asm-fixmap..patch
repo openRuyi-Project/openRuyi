@@ -1,4 +1,4 @@
-From 521a4d4c9d046e3dc5e6b3d21b2f96d8c20958d7 Mon Sep 17 00:00:00 2001
+From 62ae2c5873e66900f8bcc027ff07a08f6050cdc1 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 16 Jun 2026 21:51:31 +0800
 Subject: [RUYI PATCH] FROMLIST: ACPI: tables: Add missing #include

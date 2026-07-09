@@ -1,4 +1,4 @@
-From 42cdca7f1213a50a8e35e523ee951489679aa225 Mon Sep 17 00:00:00 2001
+From 1cadf783f05da9b38d5925ce6678b215acc85347 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 10 Jun 2026 12:34:32 +0000
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Enable SD card

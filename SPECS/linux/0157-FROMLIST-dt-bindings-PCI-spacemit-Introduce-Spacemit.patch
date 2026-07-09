@@ -1,6 +1,6 @@
-From 41daef2e40e83306307dd4ba1257ae6ebad0a1dd Mon Sep 17 00:00:00 2001
+From 0c98c1536c327bad06238364dd47a2fd2bdfb3f4 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
-Date: Fri, 3 Jul 2026 10:00:01 +0800
+Date: Thu, 9 Jul 2026 12:00:25 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: PCI: spacemit: Introduce Spacemit
  K3 PCIe host controller
 
@@ -9,14 +9,14 @@ This controller is almost a standard Synopsys DesignWare PCIe IP,
 with some extra link and reset state control.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Link: https://lore.kernel.org/r/20260703020003.485436-6-inochiama@gmail.com
+Link: https://lore.kernel.org/r/20260709040027.958400-6-inochiama@gmail.com
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
- .../bindings/pci/spacemit,k1-pcie-host.yaml   | 46 ++++++++++++++++---
- 1 file changed, 39 insertions(+), 7 deletions(-)
+ .../bindings/pci/spacemit,k1-pcie-host.yaml   | 50 ++++++++++++++++---
+ 1 file changed, 43 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
-index c4c00b5fcdc0..720951b4ba77 100644
+index c4c00b5fcdc0..54817d6fd9af 100644
 --- a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 +++ b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 @@ -14,26 +14,29 @@ description: >
@@ -72,7 +72,7 @@ index c4c00b5fcdc0..720951b4ba77 100644
  
        vpcie3v3-supply:
          description:
-@@ -96,13 +102,39 @@ patternProperties:
+@@ -96,13 +102,43 @@ patternProperties:
  
      unevaluatedProperties: false
  
@@ -96,6 +96,10 @@ index c4c00b5fcdc0..720951b4ba77 100644
 +          properties:
 +            phys:
 +              maxItems: 1
++
++      required:
++        - interrupts
++        - interrupt-names
 +    else:
 +      properties:
 +        reg:

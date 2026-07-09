@@ -1,4 +1,4 @@
-From 37fc547701d55720546c8efe3d576ac751f70a72 Mon Sep 17 00:00:00 2001
+From 756965653e3426bc62495d0bd0333bee879a6dea Mon Sep 17 00:00:00 2001
 From: Andre Heider <a.heider@gmail.com>
 Date: Sun, 14 Jun 2026 14:28:11 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add cpu

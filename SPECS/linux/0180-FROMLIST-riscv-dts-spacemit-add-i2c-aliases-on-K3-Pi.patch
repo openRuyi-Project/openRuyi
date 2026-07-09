@@ -1,4 +1,4 @@
-From fe7364bb5bf3baf6664d629ba5302321679c9fd9 Mon Sep 17 00:00:00 2001
+From d6b8c5cb577b8d63242857f9456850694aaa2c05 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:43:48 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: add i2c aliases on K3

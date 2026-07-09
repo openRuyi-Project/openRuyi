@@ -1,4 +1,4 @@
-From 40b0994e7adf7484a06b90f3116b6adab221a5bc Mon Sep 17 00:00:00 2001
+From 4f0038029f2d446ec007544bd19586ef33e99592 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:43:49 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: improve RTL8211F PHY

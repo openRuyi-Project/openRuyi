@@ -1,4 +1,4 @@
-From 68f1ea37c8dad00ce5aa40703099747548bd21dc Mon Sep 17 00:00:00 2001
+From 3ba58362a67e55a83c279ffecc5568c3ec463470 Mon Sep 17 00:00:00 2001
 From: Felix Yan <felixonmars@archlinux.org>
 Date: Thu, 25 Jun 2026 06:04:34 +0800
 Subject: [RUYI PATCH] FROMLIST: clocksource/drivers/timer-sun4i: Advertise a

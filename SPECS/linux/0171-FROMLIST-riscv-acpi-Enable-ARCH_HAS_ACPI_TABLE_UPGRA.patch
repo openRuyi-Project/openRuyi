@@ -1,4 +1,4 @@
-From f5e1a11ff5139e16f999e5549af6bf438669afeb Mon Sep 17 00:00:00 2001
+From 6fafe1eeb7a859d4ce727c219121c529dc16e2a2 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 16 Jun 2026 21:51:32 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: acpi: Enable

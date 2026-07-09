@@ -1,4 +1,4 @@
-From 512671a94e840b1d9598a1b0910e33ad75016585 Mon Sep 17 00:00:00 2001
+From 210a42332aa29cadab5e645c9d1d1deecfa44b37 Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Wed, 14 May 2025 08:16:15 +0800
 Subject: [RUYI PATCH] REVYOS: riscv: dts: th1520: rename thead to xuantie

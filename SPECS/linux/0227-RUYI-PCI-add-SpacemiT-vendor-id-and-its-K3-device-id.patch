@@ -1,4 +1,4 @@
-From ff861ef339a81ee401a0d20b27be2712de3be902 Mon Sep 17 00:00:00 2001
+From ab5930aac5eea526acdf9a8101450383d60eafb9 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Wed, 20 May 2026 23:28:15 +0800
 Subject: [RUYI PATCH] RUYI: PCI: add SpacemiT vendor id and its K3 device id

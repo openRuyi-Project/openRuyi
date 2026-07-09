@@ -1,4 +1,4 @@
-From ba9db416d8c46ca2835f8106071e79038ee5d545 Mon Sep 17 00:00:00 2001
+From 9638ba77c6b48bd1653f5d9d1aa4f46795dc7517 Mon Sep 17 00:00:00 2001
 From: Tao Liu <ltao@redhat.com>
 Date: Sun, 28 Jun 2026 10:26:03 +1200
 Subject: [RUYI PATCH] FROMLIST: riscv: Fix a NULL pointer reference in

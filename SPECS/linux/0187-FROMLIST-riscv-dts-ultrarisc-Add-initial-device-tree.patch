@@ -1,4 +1,4 @@
-From 6cff9d5abafc21c51b12e4e7890abd1c399ad799 Mon Sep 17 00:00:00 2001
+From 19268a4cb7729ac4b9ce1acadbeb18ff30d4cf7d Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:01 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: Add initial device tree

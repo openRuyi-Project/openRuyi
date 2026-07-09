@@ -1,4 +1,4 @@
-From 94ffebf7922448f7aa32329789ca077074328f67 Mon Sep 17 00:00:00 2001
+From 71275c8ddeaeba3a82522f1777032574e622275d Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:43:45 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: set console baud rate on

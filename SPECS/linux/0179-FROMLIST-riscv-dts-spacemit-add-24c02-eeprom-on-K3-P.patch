@@ -1,4 +1,4 @@
-From 42a32aa216f691303b9e700f7a6f4ac3f272f5f1 Mon Sep 17 00:00:00 2001
+From 50b47bb69be391d91321ca0e3a65b575e3d242c4 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Tue, 23 Jun 2026 22:43:47 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: add 24c02 eeprom on K3

@@ -1,4 +1,4 @@
-From 67e63b14419b79966d30bcd6ceb06f129751d8c9 Mon Sep 17 00:00:00 2001
+From 3e5ece6a5321800fb2bc7ce5acaec83b17f335a4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Wed, 1 Jul 2026 11:21:22 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Do not use LTO for the vDSO

@@ -1,4 +1,4 @@
-From 3b730f77c636bf17a8594a6808310cab6c97f524 Mon Sep 17 00:00:00 2001
+From 1e3e23a7fb20083bac6c1fe50f1b9969a340a039 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Tue, 19 May 2026 19:57:52 +0800
 Subject: [RUYI PATCH] RUYI: drm/amdgpu: disable dynamic PCIe speed switch on

@@ -1,4 +1,4 @@
-From fd7c57b7d9a4fe5042d351598ebc9587c73eca56 Mon Sep 17 00:00:00 2001
+From 2cd7cf62641302546d823f7633d265d824d4cf1c Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:04 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: add Milk-V Titan board

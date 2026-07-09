@@ -1,11 +1,12 @@
-From ee4254f6fd2abeef0413d31e39785c4c69286d83 Mon Sep 17 00:00:00 2001
+From 0c3c8f2eaa48aaf4636ec766b48ce064225f95f5 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
-Date: Tue, 24 Mar 2026 11:06:24 +0800
-Subject: [RUYI PATCH] RUYI: riscv: dts: spacemit: k3: Add PCIe device node
+Date: Thu, 9 Jul 2026 12:04:14 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Add PCIe device node
 
 Add all PCIe device node for Spacemit K3.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+Link: https://lore.kernel.org/r/20260709040415.977784-3-inochiama@gmail.com
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  arch/riscv/boot/dts/spacemit/k3-pico-itx.dts |  38 ++++
@@ -14,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 266 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
-index 30ad295965f0..c804a5a64566 100644
+index 4a99db5f9cac..2fc6d7caf4fb 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 @@ -303,6 +303,44 @@ uboot@210000 {
@@ -63,14 +64,13 @@ index 30ad295965f0..c804a5a64566 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_0_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
-index 5b9045e01434..4e8df3073fa4 100644
+index 5b9045e01434..746eb2ee1799 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
-@@ -765,4 +765,37 @@ mmc1-uhs-clk-pins {
- 			power-source = <1800>;
+@@ -722,6 +722,39 @@ uart0-0-pins {
  		};
  	};
-+
+ 
 +	pcie0_0_cfg: pcie0-0-cfg {
 +		pcie0-0-pins {
 +			pinmux = <K3_PADCONF(79, 5)>,   /* pcie0 perst */
@@ -103,7 +103,10 @@ index 5b9045e01434..4e8df3073fa4 100644
 +			power-source = <1800>;
 +		};
 +	};
- };
++
+ 	mmc1_cfg: mmc1-cfg {
+ 		mmc1-data-cmd-pins {
+ 			pinmux = <K3_PADCONF(132, 0)>,	/* mmc1 dat3 */
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
 index ef75a70c94a0..d7beabc88d86 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi

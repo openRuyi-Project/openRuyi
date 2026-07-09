@@ -1,4 +1,4 @@
-From dfa4d71fd2f26ab0ceaceda5704c6c488224572a Mon Sep 17 00:00:00 2001
+From 1da888f86ec32f05bbfb3080b07e1f704c542bbf Mon Sep 17 00:00:00 2001
 From: Jennifer Berringer <jberring@redhat.com>
 Date: Wed, 20 May 2026 07:11:50 -0400
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: set console baud rate on

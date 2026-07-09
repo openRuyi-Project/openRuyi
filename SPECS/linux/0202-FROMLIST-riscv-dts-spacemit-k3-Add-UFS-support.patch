@@ -1,4 +1,4 @@
-From 6b37d932a0d6ffcd83b2b911863cdb93cda86f62 Mon Sep 17 00:00:00 2001
+From bb0685eff207ddfc5187e3fd08465036a992faa0 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 2 Jul 2026 02:31:37 +0000
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Add UFS support

@@ -1,4 +1,4 @@
-From cf2966e56bdd14eb48590abeaf24bca4dbc032a8 Mon Sep 17 00:00:00 2001
+From d338b552fac6bb3e52828161c61bc5523218e5f4 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 3 Jul 2026 10:10:23 +0800
 Subject: [RUYI PATCH] FROMLIST: phy: spacemit: Add USB3/PCIe comb PHY driver

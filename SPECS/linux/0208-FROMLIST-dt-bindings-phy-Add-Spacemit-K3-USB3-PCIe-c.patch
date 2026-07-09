@@ -1,4 +1,4 @@
-From 634e748be3dd54d31b0953e7c066dd68d88d389d Mon Sep 17 00:00:00 2001
+From 0fcf5f150dca9b6d102336ba50ab037916de65db Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 3 Jul 2026 10:10:22 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: phy: Add Spacemit K3 USB3/PCIe

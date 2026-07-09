@@ -1,4 +1,4 @@
-From c810910397e9fde28403eaacce51b817b9dcafaa Mon Sep 17 00:00:00 2001
+From e1c9802cc7c567e760cd45c95ed07cedf475f329 Mon Sep 17 00:00:00 2001
 From: Wang Yechao <wang.yechao255@zte.com.cn>
 Date: Tue, 9 Jun 2026 19:28:56 +0800
 Subject: [RUYI PATCH] FROMLIST: ACPI: RISC-V: Fix false warning in

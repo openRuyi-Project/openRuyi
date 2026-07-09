@@ -1,6 +1,6 @@
-From 5c68e382edc6f75a4bd3df91af35e528d381d957 Mon Sep 17 00:00:00 2001
+From 3617b8d7c216ffd4606e46434cbd8b1646563017 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
-Date: Fri, 3 Jul 2026 09:59:58 +0800
+Date: Thu, 9 Jul 2026 12:00:22 +0800
 Subject: [RUYI PATCH] FROMLIST: PCI: spacemit-k1: Add multiple PHY handles
  support
 
@@ -9,7 +9,7 @@ same time. The feature is not support by the current driver.
 So extend the PHY definition to support multiple PHY handles.
 
 Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-Link: https://lore.kernel.org/r/20260703020003.485436-3-inochiama@gmail.com
+Link: https://lore.kernel.org/r/20260709040027.958400-3-inochiama@gmail.com
 Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 ---
  drivers/pci/controller/dwc/pcie-spacemit-k1.c | 70 ++++++++++++++++---

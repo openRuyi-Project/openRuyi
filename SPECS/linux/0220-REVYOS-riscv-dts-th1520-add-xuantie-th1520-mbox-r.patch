@@ -1,4 +1,4 @@
-From 96fec82dfefac5fd011210ea61856c6225cf1a7b Mon Sep 17 00:00:00 2001
+From 8f6525009ad90f2f1f650bab6033fb70e2b6413e Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Wed, 14 May 2025 08:27:18 +0800
 Subject: [RUYI PATCH] REVYOS: riscv: dts: th1520: add xuantie,th1520-mbox-r

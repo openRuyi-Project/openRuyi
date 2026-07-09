@@ -1,4 +1,4 @@
-From f03a70c567bf78d56196b0824b9f14f97869b838 Mon Sep 17 00:00:00 2001
+From e4c24cf9b89ce2ec41af96ce1bf8763f6c058e99 Mon Sep 17 00:00:00 2001
 From: Nam Cao <namcao@linutronix.de>
 Date: Wed, 17 Jun 2026 05:38:25 +0200
 Subject: [RUYI PATCH] FROMLIST: Revert "riscv: hwprobe: Fix stale vDSO data

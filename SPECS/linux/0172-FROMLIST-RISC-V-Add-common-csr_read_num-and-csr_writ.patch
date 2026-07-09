@@ -1,4 +1,4 @@
-From 7160f48302731818b00f6bea5d9e9dd6658615fc Mon Sep 17 00:00:00 2001
+From 84e53626350b45554b71ed269806519b1dc8302b Mon Sep 17 00:00:00 2001
 From: Anup Patel <apatel@ventanamicro.com>
 Date: Wed, 4 Feb 2026 21:23:09 +0530
 Subject: [RUYI PATCH] FROMLIST: RISC-V: Add common csr_read_num() and

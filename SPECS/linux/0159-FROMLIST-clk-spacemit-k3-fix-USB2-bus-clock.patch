@@ -1,4 +1,4 @@
-From 775fbb492288f274cf44a6909ff530bbb4176c6a Mon Sep 17 00:00:00 2001
+From e29af8159c9d3a83818d41571bbb25e8de31a4c8 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 18 May 2026 02:58:36 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: fix USB2 bus clock

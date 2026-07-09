@@ -1,4 +1,4 @@
-From 66ea62f758fe81420766f067368d0a15183dbe34 Mon Sep 17 00:00:00 2001
+From 541f043e1ef7153c75f02119b7479258bd1f728c Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:17:59 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: Add UltraRISC DP1000

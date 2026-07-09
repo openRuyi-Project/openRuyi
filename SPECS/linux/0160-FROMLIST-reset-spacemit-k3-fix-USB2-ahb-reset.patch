@@ -1,4 +1,4 @@
-From 80dfb365d962387082f61e1f2b5b30340414bc76 Mon Sep 17 00:00:00 2001
+From b7524d2e3963710a05a9835e970d042afbb39c72 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 18 May 2026 02:58:37 +0000
 Subject: [RUYI PATCH] FROMLIST: reset: spacemit: k3: fix USB2 ahb reset

@@ -1,4 +1,4 @@
-From 91d6e8baf83eaa8b154dd1771a10796959daf3ed Mon Sep 17 00:00:00 2001
+From 4a504357b0a233d13991ece2eb973c6d2efc6782 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 9 Jun 2026 21:00:18 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: clarify Svadu boot-time
