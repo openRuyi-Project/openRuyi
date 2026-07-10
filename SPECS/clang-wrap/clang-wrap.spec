@@ -42,10 +42,17 @@ ln -sf clang %{buildroot}/%{_libdir}/clang-wrap/bin/clang++
 %filetriggerin -p /bin/sh -- %{_bindir}
 mkdir -p %{clang_wrap_varlibdir}
 while read file; do
-    name=$(basename $file)
-    case $name in
+    name=$(basename "$file")
+    case "$name" in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-           ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
+            ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
+            ;;
+        clang*)
+            ;;
+        *)
+            if [ -e "%{_libdir}/clang-wrap/bin/$name" ]; then
+                ln -sf %{_libdir}/clang-wrap/bin/$name %{clang_wrap_varlibdir}/$name
+            fi
            ;;
     esac
 done
@@ -55,10 +62,17 @@ if [ "$2" -ne 0 ];then
     exit 0
 fi
 while read file; do
-    name=$(basename $file)
-    case $name in
+    name=$(basename "$file")
+    case "$name" in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
             rm -f %{clang_wrap_varlibdir}/$name
+            ;;
+        clang*)
+            ;;
+        *)
+            if [ -e "%{_libdir}/clang-wrap/bin/$name" ]; then
+                rm -f %{clang_wrap_varlibdir}/$name
+            fi
             ;;
     esac
 done
@@ -66,17 +80,33 @@ done
 %post
 rm -rf %{clang_wrap_varlibdir}
 mkdir -p %{clang_wrap_varlibdir}
-for file in `find %{_libdir}/clang-wrap/bin -type f,l | grep -v bin/clang`;do
-    ln -sf $file %{clang_wrap_varlibdir}
+for file in %{_libdir}/clang-wrap/bin/*; do
+    [ -e "$file" ] || continue
+    name=$(basename "$file")
+    case "$name" in
+        clang*)
+            ;;
+        *)
+            if [ -e "%{_bindir}/$name" ]; then
+                ln -sf $file %{clang_wrap_varlibdir}/$name
+            fi
+            ;;
+    esac
 done
-for file in `ls %{_bindir}/clang* 2>/dev/null`;do
-    name=$(basename $file)
-    case $name in
+for file in %{_bindir}/clang*; do
+    [ -e "$file" ] || continue
+    name=$(basename "$file")
+    case "$name" in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-           ln -sf clang %{clang_wrap_varlibdir}/$name
+            ln -sf clang %{clang_wrap_varlibdir}/$name
            ;;
     esac
 done
+
+%postun
+if [ $1 -eq 0 ]; then
+    rm -rf %{clang_wrap_varlibdir}
+fi
 
 %files
 %{_libdir}/clang-wrap
