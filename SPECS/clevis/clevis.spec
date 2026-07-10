@@ -1,22 +1,27 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           clevis
-Version:        21
+Version:        23
 Release:        %autorelease
 Summary:        Automated decryption framework
 License:        GPL-3.0-or-later
 URL:            https://github.com/latchset/clevis
-#!RemoteAsset
+#!RemoteAsset:  sha256:a8a09f148d54d91aa0d21c5fa508dd1446c2a200be7679fbf6e7d19196aec164
 Source0:        https://github.com/latchset/clevis/archive/refs/tags/v%{version}.tar.gz
 Source1:        clevis.sysusers
 BuildSystem:    meson
 
 BuildOption(conf):  -Duser=clevis
 BuildOption(conf):  -Dgroup=clevis
+BuildOption(conf):  -Dtpm1=disabled
+%ifarch riscv64
+BuildOption(check):  --timeout-multiplier 2
+%endif
 
 BuildRequires:  meson
 BuildRequires:  gcc
@@ -33,6 +38,7 @@ BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(libcryptsetup)
 BuildRequires:  pkgconfig(luksmeta)
 BuildRequires:  cryptsetup
+BuildRequires:  curl
 
 Requires:       coreutils
 Requires:       jose >= 8
@@ -66,22 +72,21 @@ install -p -D -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/clevis.conf
 %{_bindir}/clevis*
 %{_sysusersdir}/clevis.conf
 %{_libexecdir}/clevis-luks-askpass
-%{_libexecdir}/clevis-luks-unlocker
 %{_unitdir}/clevis-luks-askpass.path
 %{_unitdir}/clevis-luks-askpass.service
-%dir %{_prefix}/lib/dracut/modules.d/60clevis*
-%{_prefix}/lib/dracut/modules.d/60clevis/clevis-hook.sh
+%dir %{_prefix}/lib/dracut/modules.d/50clevis*
+%{_prefix}/lib/dracut/modules.d/50clevis/*
 %{_sysconfdir}/xdg/autostart/clevis-luks-udisks2.desktop
 %attr(4755, root, root) %{_libexecdir}/%{name}-luks-udisks2
 %{_libexecdir}/clevis-luks-pkcs11-*
 %{_unitdir}/clevis-luks-pkcs11-askpass.service
 %{_unitdir}/clevis-luks-pkcs11-askpass.socket
-%{_prefix}/lib/dracut/modules.d/60clevis-pin-pkcs11/*
-%{_prefix}/lib/dracut/modules.d/60clevis-pin-null/module-setup.sh
-%{_prefix}/lib/dracut/modules.d/60clevis-pin-sss/module-setup.sh
-%{_prefix}/lib/dracut/modules.d/60clevis-pin-tang/module-setup.sh
-%{_prefix}/lib/dracut/modules.d/60clevis-pin-tpm2/module-setup.sh
-%{_prefix}/lib/dracut/modules.d/60clevis/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-pkcs11/*
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-null/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-sss/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-tang/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-tpm2/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/50clevis-pin-file/module-setup.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
