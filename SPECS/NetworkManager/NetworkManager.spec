@@ -81,6 +81,9 @@ BuildRequires:  python3dist(dbus-python)
 BuildRequires:  python3dist(pygobject)
 BuildRequires:  vala
 
+Recommends:     %{name}-tui%{?_isa} = %{version}-%{release}
+Recommends:     %{name}-plugins%{?_isa} = %{version}-%{release}
+
 %description
 NetworkManager is a system service that manages network interfaces and
 connections using either user-defined settings or automatic configuration.
