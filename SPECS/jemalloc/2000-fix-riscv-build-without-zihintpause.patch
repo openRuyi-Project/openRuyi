@@ -1,0 +1,21 @@
+diff --git a/configure.ac b/configure.ac
+index 8c2c3c5..69fc37e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -482,6 +482,16 @@ case "${host_cpu}" in
+ 	    CPU_SPINWAIT='__asm__ volatile("isb")'
+ 	fi
+ 	;;
++  riscv*)
++	HAVE_CPU_SPINWAIT=1
++	AC_CACHE_VAL([je_cv_pause_riscv],
++	  [JE_COMPILABLE([pause instruction RISC-V], [],
++			[[__asm__ volatile(".insn 0x0100000f"); return 0;]],
++			[je_cv_pause_riscv])])
++	if test "x${je_cv_pause_riscv}" = "xyes" ; then
++	    CPU_SPINWAIT='__asm__ volatile(".insn 0x0100000f")'
++	fi
++	;;
+   *)
+ 	HAVE_CPU_SPINWAIT=0
+ 	;;
