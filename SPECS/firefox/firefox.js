@@ -14,6 +14,3 @@ pref("browser.gnome-search-provider.enabled", true);
 
 // Use system-provided dictionaries
 pref("spellchecker.dictionary_path", "/usr/share/hunspell");
-
-// Branding
-pref("browser.startup.homepage", "data:text/plain,browser.startup.homepage=https://openruyi.cn/");
