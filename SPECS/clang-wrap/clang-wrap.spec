@@ -98,7 +98,7 @@ for file in %{_bindir}/clang*; do
     name=$(basename "$file")
     case "$name" in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-            ln -sf clang %{clang_wrap_varlibdir}/$name
+            ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
            ;;
     esac
 done
