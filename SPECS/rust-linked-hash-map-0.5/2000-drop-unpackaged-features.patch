@@ -1,0 +1,20 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -28,10 +28,6 @@
+ license = "MIT/Apache-2.0"
+ repository = "https://github.com/contain-rs/linked-hash-map"
+ 
+-[dependencies.heapsize]
+-version = "0.4"
+-optional = true
+-
+ [dependencies.serde]
+ version = "1.0"
+ optional = true
+@@ -40,6 +36,5 @@
+ version = "1.0"
+ 
+ [features]
+-heapsize_impl = ["heapsize"]
+ nightly = []
+ serde_impl = ["serde"]
