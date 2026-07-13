@@ -56,6 +56,17 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 0007-RISC-V-GHASH-Zvkg-multi-block-aggregation.patch
 # https://github.com/openssl/openssl/pull/28673
 0008-Backport-Instruction-rearrangement-optimization-for-SHA256-on-RISCV.patch
+# https://github.com/openssl/openssl/pull/30194
+0009-Backport-riscv-AES-XTS-Code-Comment-Correction.patch
+# https://github.com/openssl/openssl/pull/29134
+# https://github.com/openssl/openssl/pull/29137
+# https://github.com/openssl/openssl/pull/29451
+# https://github.com/openssl/openssl/pull/29544
+0010-Backport-riscv-Performance-Optimization-of-SM4-CBC-on-RISC-V-Architecture.patch
+# https://github.com/openssl/openssl/pull/31116
+0011-Backport-riscv-Further-improve-the-decryption-performance-of-AES-128-CBC-on-RISC-V.patch
+# https://github.com/openssl/openssl/pull/25918
+0012-Add-SM2-implementation-in-generic-riscv64-asm.patch
 
 %description    devel
 This package contains the header files, pkgconfig/cmake files, development

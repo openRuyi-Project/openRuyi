@@ -1,0 +1,44 @@
+From 3c2a99bef3204515031db7933398497fe6942c8d Mon Sep 17 00:00:00 2001
+From: Lu Zhou <zhou.lu1@zte.com.cn>
+Date: Wed, 8 Jul 2026 10:37:22 +0800
+Subject: [PATCH] Backport (riscv): AES-XTS Code Comment Correction
+
+Reference:https://github.com/openssl/openssl/commit/9d46f7f415349f3c445bca6b58fb10444bc79fd1
+Reviewed-by: Eugene Syromiatnikov <esyr@openssl.org>
+Reviewed-by: Paul Dale <paul.dale@oracle.com>
+MergeDate: Wed Mar  4 09:59:09 2026
+(Merged from https://github.com/openssl/openssl/pull/30194)
+
+The comments in the tail handling part of the AES-XTS decryption code were incorrect, which hindered understanding, and have now been fixed.
+
+Signed-off-by: Lu Zhou <zhou.lu1@zte.com.cn>
+Signed-off-by: Shangcheng Huang <huang.shangcheng@zte.com.cn>
+---
+ crypto/aes/asm/aes-riscv64-zvbb-zvkg-zvkned.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/crypto/aes/asm/aes-riscv64-zvbb-zvkg-zvkned.pl b/crypto/aes/asm/aes-riscv64-zvbb-zvkg-zvkned.pl
+index 5fb2cc3..a78b4d2 100644
+--- a/crypto/aes/asm/aes-riscv64-zvbb-zvkg-zvkned.pl
++++ b/crypto/aes/asm/aes-riscv64-zvbb-zvkg-zvkned.pl
+@@ -633,7 +633,7 @@ aes_xts_dec_128:
+     @{[aes_128_dec]}
+     @{[vxor_vv $V24, $V24, $V28]}
+ 
+-    # store second to last block plaintext
++    # store last block plaintext
+     @{[vse32_v $V24, $OUTPUT]}
+ 
+     ret
+@@ -697,7 +697,7 @@ aes_xts_dec_256:
+     @{[aes_256_dec]}
+     @{[vxor_vv $V24, $V24, $V28]}
+ 
+-    # store second to last block plaintext
++    # store last block plaintext
+     @{[vse32_v $V24, $OUTPUT]}
+ 
+     ret
+-- 
+2.27.0
+
