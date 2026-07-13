@@ -1,0 +1,87 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -46,24 +46,6 @@
+     "docsrs",
+ ]
+ 
+-[[example]]
+-name = "client"
+-required-features = [
+-    "bincode",
+-    "cbor",
+-    "json",
+-    "messagepack",
+-]
+-
+-[[example]]
+-name = "server"
+-required-features = [
+-    "bincode",
+-    "cbor",
+-    "json",
+-    "messagepack",
+-]
+-
+ [dependencies.bincode-crate]
+ version = "1"
+ optional = true
+@@ -72,11 +54,6 @@
+ [dependencies.bytes]
+ version = "1.0"
+ 
+-[dependencies.educe]
+-version = "0.5"
+-optional = true
+-default-features = false
+-
+ [dependencies.futures-core]
+ version = "0.3"
+ 
+@@ -86,18 +63,10 @@
+ [dependencies.pin-project]
+ version = "1"
+ 
+-[dependencies.rmp-serde]
+-version = "1"
+-optional = true
+-
+ [dependencies.serde]
+ version = "1"
+ optional = true
+ 
+-[dependencies.serde_cbor]
+-version = "0.11"
+-optional = true
+-
+ [dependencies.serde_json]
+ version = "1"
+ optional = true
+@@ -118,28 +87,3 @@
+ [dev-dependencies.tokio-util]
+ version = "0.7"
+ features = ["codec"]
+-
+-[features]
+-bincode = [
+-    "educe/Debug",
+-    "serde",
+-    "bincode-crate",
+-]
+-cbor = [
+-    "educe/Debug",
+-    "educe/Default",
+-    "serde",
+-    "serde_cbor",
+-]
+-json = [
+-    "educe/Debug",
+-    "educe/Default",
+-    "serde",
+-    "serde_json",
+-]
+-messagepack = [
+-    "educe/Debug",
+-    "educe/Default",
+-    "serde",
+-    "rmp-serde",
+-]
