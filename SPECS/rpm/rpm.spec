@@ -27,6 +27,8 @@ Source2:        rpmsort
 Source3:        rpmconfigcheck
 Source4:        rpmconfigcheck.service
 
+# https://github.com/rpm-software-management/rpm/pull/4192
+Patch0:         0001-find-lang.sh-Put-a-lang-variants-altogether-when-gen.patch
 # quilt patches start here
 Patch25:        brpcompress.diff
 Patch26:        checkfilesnoinfodir.diff
@@ -166,6 +168,7 @@ ln -s rpmpgp_legacy-* rpmpgp_legacy
 popd
 
 rm -rf sqlite
+%patch 0 -p1
 %patch 25 26 33 60 70 85 102 103 138 150 151
 %patch 2000 -p1
 rm -f m4/libtool.m4
