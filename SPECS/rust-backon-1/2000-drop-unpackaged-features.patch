@@ -1,0 +1,45 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -43,8 +43,6 @@
+     "tokio-sleep",
+     "gloo-timers-sleep",
+ ]
+-embassy-sleep = ["embassy-time"]
+-futures-timer-sleep = ["futures-timer"]
+ gloo-timers-sleep = ["gloo-timers/futures"]
+ std = ["fastrand/std"]
+ std-blocking-sleep = []
+@@ -54,10 +52,6 @@
+ name = "backon"
+ path = "src/lib.rs"
+ 
+-[dependencies.embassy-time]
+-version = "0.5"
+-optional = true
+-
+ [dependencies.fastrand]
+ version = "2"
+ default-features = false
+@@ -71,10 +65,6 @@
+ [dev-dependencies.spin]
+ version = "0.10.0"
+ 
+-[target.'cfg(not(target_arch = "wasm32"))'.dependencies.futures-timer]
+-version = "3.0.3"
+-optional = true
+-
+ [target.'cfg(not(target_arch = "wasm32"))'.dependencies.tokio]
+ version = "1"
+ optional = true
+@@ -96,11 +86,6 @@
+     "rt-multi-thread",
+ ]
+ 
+-[target.'cfg(target_arch = "wasm32")'.dependencies.futures-timer]
+-version = "3.0.3"
+-features = ["gloo-timers"]
+-optional = true
+-
+ [target.'cfg(target_arch = "wasm32")'.dependencies.gloo-timers]
+ version = "0.3"
+ optional = true
