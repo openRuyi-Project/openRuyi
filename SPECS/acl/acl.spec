@@ -13,10 +13,8 @@ Version:        2.3.2
 Release:        %autorelease
 URL:            https://savannah.nongnu.org/projects/acl
 VCS:            git:https://git.savannah.nongnu.org/git/acl.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:97203a72cae99ab89a067fe2210c1cbf052bc492b479eca7d226d9830883b0bd
 Source:         https://download.savannah.nongnu.org/releases/acl/acl-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://download.savannah.nongnu.org/releases/acl/acl-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -51,8 +49,6 @@ autoreconf -fiv
 rm -rvf %{buildroot}/%{_defaultdocdir}/%{name}
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -74,4 +70,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/libacl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

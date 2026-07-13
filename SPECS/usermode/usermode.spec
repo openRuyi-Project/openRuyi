@@ -11,7 +11,7 @@ Summary:        Tools for certain user account management tasks
 License:        GPL-2.0-or-later
 URL:            https://pagure.io/usermode
 VCS:            git:https://pagure.io/usermode
-#!RemoteAsset
+#!RemoteAsset:  sha256:e7f58712b12175965b3a21522052863a061f3f1a888df3ffbe713b434f80254f
 Source0:        https://releases.pagure.org/usermode/usermode-%{version}.tar.xz
 Source1:        config-util
 BuildSystem:    autotools
@@ -44,9 +44,6 @@ mkdir -p %{buildroot}/etc/security/console.apps
 install -p -m 644 %{SOURCE1} %{buildroot}/etc/security/console.apps/config-util
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -60,4 +57,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %config(noreplace) %{_sysconfdir}/security/console.apps/config-util
 
 %changelog
-%{?autochangelog}
+%autochangelog

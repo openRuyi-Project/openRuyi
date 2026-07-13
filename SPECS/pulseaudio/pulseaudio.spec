@@ -111,8 +111,6 @@ install -m0644 -D %{SOURCE1} %{buildroot}%{_sysusersdir}/pulseaudio.conf
 mkdir -p %{buildroot}%{_prefix}/lib/udev/rules.d
 mv -fv %{buildroot}/lib/udev/rules.d/90-pulseaudio.rules %{buildroot}%{_prefix}/lib/udev/rules.d
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %pre

@@ -71,8 +71,6 @@ This is a setup utility for IBus.
 make -C ui/gtk3 maintainer-clean-generic
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name}10 --generate-subpackages
 
 %files devel

@@ -82,9 +82,6 @@ Requires:       cmake(KF6CoreAddons) >= %{_kf6_version}
 This package contains development files needed to build applications which rely on the purpose framework.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

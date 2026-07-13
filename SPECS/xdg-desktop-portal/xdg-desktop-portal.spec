@@ -80,9 +80,6 @@ install -dm 755 %{buildroot}/%{_datadir}/xdg-desktop-portal/portals
 install -dm 755 %{buildroot}/%{_pkgdocdir}
 install -pm 644 README.md %{buildroot}/%{_pkgdocdir}
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %post

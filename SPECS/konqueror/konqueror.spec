@@ -87,10 +87,6 @@ Provides:       libkonq-devel = %{version}
 Development package for the konqueror libraries.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_kf6_htmldir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --with-html --all-name --generate-subpackages
 

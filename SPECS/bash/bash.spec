@@ -15,10 +15,8 @@ Summary:        The GNU Bourne Again shell
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/bash
 VCS:            git:https://git.savannah.gnu.org/git/bash.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba
 Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{baseversion}.tar.gz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{baseversion}.tar.gz.sig
 Source2:        dot.bashrc
 Source3:        dot.bash_profile
 Source4:        dot.bash_logout
@@ -82,8 +80,6 @@ install -m 640 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.bash_logout
 sed -ri '1{ s@/bin/sh@/bin/bash@ }' %{buildroot}%{_bindir}/bashbug
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -106,4 +102,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

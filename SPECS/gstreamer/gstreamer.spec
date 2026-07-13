@@ -14,7 +14,7 @@ Summary:        GStreamer streaming media framework runtime
 License:        LGPL-2.1-or-later
 URL:            http://gstreamer.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/gstreamer/
-#!RemoteAsset
+#!RemoteAsset:  sha256:f3506b97c867900ef2700ac33009c1e42b2b1dfc0caa94f2f07c4f23231e78ae
 Source0:        http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-%{version}.tar.xz
 Source1:        gstreamer.prov
 Source2:        gstreamer.attr
@@ -70,9 +70,6 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang gstreamer-%{majorminor} --generate-subpackages
 
 install -m0755 -D %{SOURCE1} %{buildroot}%{_rpmconfigdir}/gstreamer.prov
@@ -122,4 +119,4 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_rpmconfigdir}/fileattrs/gstreamer.at
 %{_datadir}/cmake/FindGStreamer.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

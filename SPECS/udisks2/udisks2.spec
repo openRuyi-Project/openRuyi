@@ -93,9 +93,6 @@ find %{buildroot} -name '*.a' -delete
 
 mkdir -p %{buildroot}%{_sysconfdir}/udisks2/modules.conf.d
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %post

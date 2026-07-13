@@ -60,8 +60,6 @@ for GnuPG. It is invoked internally by gpg and gpgsm.
 %install -a
 install -Dm 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-scdaemon.rules
 install -d -m 755 %{buildroot}%{_userunitdir}
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang gnupg2 --generate-subpackages
 

@@ -55,9 +55,6 @@ This is a tier1/functional version of the Kate syntax highlighting engine.
 It's not tied to a particular output format or editor engine.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

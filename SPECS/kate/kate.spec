@@ -75,11 +75,6 @@ plugins and data files for Kate and KWrite editors.
 # Remove exotic icon sizes
 rm -r %{buildroot}%{_kf6_iconsdir}/hicolor/{150x150,310x310,44x44}
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_kf6_htmldir}/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --with-man --with-html --all-name --generate-subpackages
 

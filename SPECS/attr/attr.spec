@@ -12,15 +12,15 @@ Summary:        Commands for Manipulating Extended Attributes
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://savannah.nongnu.org/projects/attr/
 VCS:            git:https://git.savannah.nongnu.org/git/attr.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:39bf67452fa41d0948c2197601053f48b3d78a029389734332a6309a680c6c87
 Source:         https://download-mirror.savannah.gnu.org/releases/attr/attr-%{version}.tar.gz
 BuildSystem:    autotools
 
 Patch1:         0001-bypass-wrong-output-when-enabled-selinux.patch
 Patch2:         0002-dont-skip-security.evm-when-copy-xattr.patch
 
-BuildOption(conf): --disable-static
-BuildOption(conf): --disable-silent-rules
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --disable-silent-rules
 
 BuildRequires:  pkgconfig
 BuildRequires:  perl
@@ -46,8 +46,6 @@ IRIX compatibility interface is also provided.
 %make_build check
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -71,4 +69,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

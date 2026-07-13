@@ -118,8 +118,6 @@ rm -f %{buildroot}%{_mandir}/man8/debuginfod*.8*
 rm -rf %{buildroot}/%{_datadir}/fish
 ls -lR %{buildroot}/%{_libdir}/libelf*
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files

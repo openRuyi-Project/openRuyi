@@ -56,9 +56,6 @@ It also provides transparent compression and decompression of data, like the
 GZip format, via a subclass of QIODevice. Development files
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

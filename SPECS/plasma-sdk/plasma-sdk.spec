@@ -77,9 +77,6 @@ cp -L %{_kf6_iconsdir}/breeze/apps/22/plasma-symbolic.svg %{buildroot}%{_kf6_ico
 cp -L %{_kf6_iconsdir}/breeze/apps/48/cuttlefish.svg %{buildroot}%{_kf6_iconsdir}/hicolor/scalable/apps/
 cp -L %{_kf6_iconsdir}/breeze/actions/22/tools-wizard.svg %{buildroot}%{_kf6_iconsdir}/hicolor/scalable/apps/
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

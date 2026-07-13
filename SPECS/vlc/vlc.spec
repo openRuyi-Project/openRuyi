@@ -198,8 +198,6 @@ fi
 # Drop an internal static archive that is not meant to be shipped.
 rm -f %{buildroot}%{_libdir}/vlc/libcompat.a
 
-# TODO: Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %check

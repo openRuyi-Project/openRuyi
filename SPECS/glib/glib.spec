@@ -125,8 +125,6 @@ rm -f %{buildroot}%{_bindir}/glib-compile-schemas
 ln -sf ../%{_lib}/glib-2.0/gio-querymodules %{buildroot}%{_bindir}/gio-querymodules
 ln -sf ../%{_lib}/glib-2.0/glib-compile-schemas %{buildroot}%{_bindir}/glib-compile-schemas
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang glib20 --generate-subpackages --all-name
 
 # handle GIO/GSettings cache updates.

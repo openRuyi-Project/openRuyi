@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Fast Lexical Analyzer Generator
 License:        BSD-3-Clause
 URL:            https://github.com/westes/flex
-#!RemoteAsset
+#!RemoteAsset:  sha256:e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995
 Source:         https://github.com/westes/flex/releases/download/v%{version}/flex-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -39,8 +39,6 @@ patterns in text.
 This package contains files required to build programs with flex libraries.
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -65,4 +63,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libfl.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

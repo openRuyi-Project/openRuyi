@@ -90,9 +90,6 @@ Conflicts:      plasma-framework-devel
 Plasma library and runtime components based upon KF6 and Qt6
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

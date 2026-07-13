@@ -184,8 +184,6 @@ done
 
 install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 
-# TODO: Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files

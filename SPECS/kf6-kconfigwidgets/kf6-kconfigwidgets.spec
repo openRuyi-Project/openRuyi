@@ -58,9 +58,6 @@ KConfigWidgets provides easy-to-use classes to create configuration dialogs, as
 well as a set of widgets which uses KConfig to store their settings. Development files.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

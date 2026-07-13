@@ -80,9 +80,6 @@ Python 3 module for speech-dispatcher.
 %install -a
 # install -p -m 0644 sound-icons-0.1/* %{buildroot}%{_datadir}/sounds/%{name}/
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 #Remove %{_infodir}/dir file

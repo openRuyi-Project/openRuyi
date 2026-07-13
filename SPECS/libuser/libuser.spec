@@ -82,10 +82,6 @@ Python 3 bindings for libuser.
 ./autogen.sh
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-# TODO: Avoid illegal locale package name
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %if %{without tests}

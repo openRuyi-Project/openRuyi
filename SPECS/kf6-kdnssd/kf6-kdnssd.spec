@@ -50,11 +50,6 @@ services, such as printers, to be discovered without any user intervention or
 centralized infrastructure. Development files.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
-rm -rf $RPM_BUILD_ROOT%{_kf6_htmldir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --without-mo --all-name --generate-subpackages
 

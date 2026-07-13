@@ -104,9 +104,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/gtk-3.0
 mkdir -p %{buildroot}%{_libdir}/gtk-3.0/modules
 mkdir -p %{buildroot}%{_libdir}/gtk-3.0/immodules
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang gtk30 --all-name --generate-subpackages
 
 %check

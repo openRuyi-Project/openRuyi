@@ -87,9 +87,6 @@ ln -s pkgcli %{buildroot}%{_bindir}/pkcon
 # pkmon compatibility link
 ln -s pkgcli %{buildroot}%{_bindir}/pkmon
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %check

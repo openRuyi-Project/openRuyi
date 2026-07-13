@@ -73,11 +73,6 @@ Konsole is a terminal emulator for the K Desktop Environment.
 This package provides KPart of the Konsole application.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
-rm -rf $RPM_BUILD_ROOT%{_kf6_htmldir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --with-man --with-html --generate-subpackages
 

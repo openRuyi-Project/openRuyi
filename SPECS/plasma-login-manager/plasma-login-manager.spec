@@ -82,9 +82,6 @@ mv %{buildroot}%{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager.conf \
 # Home/state directory of the plasmalogin user (also (re)created at boot by tmpfiles)
 mkdir -p %{buildroot}%{_localstatedir}/lib/plasmalogin
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

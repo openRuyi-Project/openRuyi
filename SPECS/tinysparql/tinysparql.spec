@@ -84,9 +84,6 @@ This package contains the documentation for %{name}.
 %endif
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang tinysparql3 --generate-subpackages
 
 %check

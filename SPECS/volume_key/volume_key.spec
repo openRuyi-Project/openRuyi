@@ -59,9 +59,6 @@ This package contains Python 3 bindings for libvolume_key.
 autoreconf -fiv
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 # todo: the tests should on the real machine,we skip here.

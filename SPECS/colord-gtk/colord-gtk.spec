@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        GTK+ 3 support library for colord
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.freedesktop.org/colord/colord-gtk
-#!RemoteAsset
+#!RemoteAsset:  sha256:c176b889b75630a17f4e3d7ef24c09a3e12368e633496087459c8b53ac3a122d
 Source0:        http://www.freedesktop.org/software/colord/releases/colord-gtk-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -67,9 +67,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Files for development with %{name}.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -100,4 +97,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

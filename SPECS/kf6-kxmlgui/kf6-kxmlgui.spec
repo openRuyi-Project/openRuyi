@@ -72,9 +72,6 @@ in the application code. The framework supports merging of multiple
 description for example for integrating actions from plugins. Development files.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

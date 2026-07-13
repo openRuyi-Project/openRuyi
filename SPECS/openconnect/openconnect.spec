@@ -54,9 +54,6 @@ NetworkManager etc.
 rm -f %{buildroot}/%{_libexecdir}/%{name}/tncc-wrapper.py
 rm -f %{buildroot}/%{_libexecdir}/%{name}/hipreport-android.sh
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -73,4 +70,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/openconnect.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

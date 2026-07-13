@@ -52,9 +52,6 @@ Development files for kbookmarks, a framework for accessing and
 manipulating bookmarks using the XBEL format
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

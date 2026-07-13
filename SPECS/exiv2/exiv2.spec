@@ -58,8 +58,6 @@ developing with exiv2.
 %endif
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files

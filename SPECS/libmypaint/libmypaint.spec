@@ -38,9 +38,6 @@ This package contains header files and libraries needed for development
 with libmypaint.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -58,4 +55,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gir-1.0/MyPaint-1.6.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog

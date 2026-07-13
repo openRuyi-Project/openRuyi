@@ -61,8 +61,6 @@ The %{name}-tests package contains tests that can be used to verify
 the functionality of the installed %{name} package.
 
 %install -a
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang %{name} --generate-subpackages
 
 %transfiletriggerin -- %{_libdir}/gdk-pixbuf-2.0/2.10.0/loaders

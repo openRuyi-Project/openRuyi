@@ -52,11 +52,6 @@ Additional CLI tools for KDE applications and workspaces.
 # For xdg-su
 ln -s %{_kf6_libexecdir}/kdesu %{buildroot}%{_kf6_bindir}/kdesu
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
-rm -rf $RPM_BUILD_ROOT%{_kf6_htmldir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --with-man --with-html --all-name --generate-subpackages
 

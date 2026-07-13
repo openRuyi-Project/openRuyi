@@ -33,9 +33,6 @@ This package provides tools for managing the osinfo database of
 information about operating systems for use with virtualization.
 
 %install -a
-# TODO: Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang %{name} --generate-subpackages
 
 %files

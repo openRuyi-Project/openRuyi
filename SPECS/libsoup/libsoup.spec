@@ -55,9 +55,6 @@ needed to develop applications that use the libsoup library.
 %install -a
 install -m 644 -D tests/libsoup.supp %{buildroot}%{_datadir}/libsoup-3.0/libsoup.supp
 
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang libsoup-3.0 --generate-subpackages
 
 %files -f libsoup-3.0.lang

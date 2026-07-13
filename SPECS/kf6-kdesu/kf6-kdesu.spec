@@ -53,9 +53,6 @@ kdessh use it to interface with su and ssh respectively.
 Development files.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --all-name --generate-subpackages
 

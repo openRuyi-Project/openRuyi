@@ -48,8 +48,6 @@ This package provides the header files for a recode library.
 
 %install -a
 rm -f %{buildroot}%{_infodir}/dir
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
 

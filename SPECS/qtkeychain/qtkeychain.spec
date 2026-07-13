@@ -44,9 +44,6 @@ Requires:       cmake(Qt6DBus)
 This package contains development files for qt6keychain.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages --with-qt
 
 %check

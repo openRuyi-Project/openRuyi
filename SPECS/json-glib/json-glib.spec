@@ -40,8 +40,6 @@ This package contains the header files, libraries, documentation, and tools
 needed to develop applications that use the json-glib library.
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang json-glib-1.0 --generate-subpackages
 
 %files -f json-glib-1.0.lang

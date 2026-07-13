@@ -19,7 +19,7 @@ Summary:        GStreamer streaming media framework base plugins
 License:        LGPL-2.1-or-later
 URL:            http://gstreamer.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/gstreamer/gstreamer/-/tree/main/subprojects/gst-plugins-base
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e88aaf672aa815469c0c0c84041d0a6ca6b2314790a6f3033ecb76d8309312a
 Source0:        http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -101,9 +101,6 @@ The %{name}-devel package contains libraries and header files for developing
 applications that use %{name}.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang gst-plugins-base-%{majorminor} --generate-subpackages
 
 %files -f gst-plugins-base-%{majorminor}.lang
@@ -193,4 +190,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/gst-plugins-base/%{majorminor}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

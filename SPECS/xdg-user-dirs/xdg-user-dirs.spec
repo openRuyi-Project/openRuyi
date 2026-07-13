@@ -30,8 +30,6 @@ homedirectory based on the defaults configured by the administrator.
 autoreconf -fiv -I ./m4
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %post
@@ -56,4 +54,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_userunitdir}/xdg-user-dirs.service
 
 %changelog
-%{?autochangelog}
+%autochangelog

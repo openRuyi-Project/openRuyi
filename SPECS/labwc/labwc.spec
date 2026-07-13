@@ -47,9 +47,6 @@ openbox. It is light-weight and independent with a focus on simply stacking
 windows well and rendering some window decorations.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang

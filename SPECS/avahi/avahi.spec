@@ -98,9 +98,6 @@ install -m0644 -D %{SOURCE2} %{buildroot}%{_sysusersdir}/avahi-autoipd.conf
 rm -fv %{buildroot}%{_sysconfdir}/rc.d/init.d/avahi-daemon
 rm -fv %{buildroot}%{_sysconfdir}/rc.d/init.d/avahi-dnsconfd
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %pre

@@ -88,9 +88,6 @@ install -D -m0644 %{SOURCE1} %{buildroot}%{_pam_confdir}/kde
 install -D -m0644 %{SOURCE2} %{buildroot}%{_pam_confdir}/kde-fingerprint
 install -D -m0644 %{SOURCE3} %{buildroot}%{_pam_confdir}/kde-smartcard
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

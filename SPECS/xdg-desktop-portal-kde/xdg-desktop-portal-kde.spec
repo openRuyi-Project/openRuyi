@@ -71,10 +71,6 @@ Requires:       xdg-desktop-portal
 A Qt/KF backend implementation for xdg-desktop-portal
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --with-man --all-name --generate-subpackages
 

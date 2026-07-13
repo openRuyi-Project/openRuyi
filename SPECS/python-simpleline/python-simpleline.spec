@@ -44,8 +44,6 @@ Printed lines are never rewritten!
 %conf
 
 %install -a
-# TODO: Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %check

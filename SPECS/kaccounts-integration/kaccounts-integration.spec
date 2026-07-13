@@ -57,10 +57,6 @@ Plasma desktop, including: Google, Facebook, Owncloud, IMAP, Jabber and others.
 This package provides development files.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
-rm -rf $RPM_BUILD_ROOT%{_mandir}/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --with-man --all-name --generate-subpackages
 

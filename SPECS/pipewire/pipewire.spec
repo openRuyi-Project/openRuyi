@@ -147,9 +147,6 @@ ln -s ../client.conf.avail/20-upmix.conf \
 # raop config
 ln -s ../pipewire.conf.avail/50-raop.conf \
         %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/50-raop.conf
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
 

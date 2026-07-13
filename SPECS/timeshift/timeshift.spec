@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        System restore utility
 License:        GPL-3.0-only
 URL:            https://github.com/linuxmint/timeshift
-#!RemoteAsset
+#!RemoteAsset:  sha256:7babff88c97da80ca0f6b1384d894a74a52474855ef3e854788b0dd6ad7b4504
 Source:         %{url}/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -56,9 +56,6 @@ rm -rf %{buildroot}%{_datadir}/appdata
 install -d %{buildroot}%{_localstatedir}/log/timeshift
 install -d %{buildroot}%{_localstatedir}/log/timeshift-btrfs
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 %fdupes %{buildroot}%{_datadir}
 
@@ -79,4 +76,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %attr(0750,root,root) %dir %{_localstatedir}/log/timeshift-btrfs
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -65,9 +65,6 @@ Requires:       xrdb
 KScreen handles screen management for both X11 and Wayland sessions, including rotation, size, refresh rate, and scaling.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

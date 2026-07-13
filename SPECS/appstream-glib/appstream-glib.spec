@@ -61,9 +61,6 @@ This library and command line tool is used for building AppStream metadata
 from a directory of packages.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang

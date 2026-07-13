@@ -77,9 +77,6 @@ compile applications based on poppler.
 chmod -x poppler/CairoFontEngine.cc
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang pdfsig --generate-subpackages
 
 # just skip now, or will segfault.

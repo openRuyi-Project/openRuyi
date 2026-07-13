@@ -193,8 +193,6 @@ find %{buildroot}%{_pkgdocdir} -type d | xargs chmod 755
 find %{buildroot}%{_pkgdocdir} -type f | xargs chmod 644
 %endif
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang Linux-PAM --generate-subpackages
 
 %files

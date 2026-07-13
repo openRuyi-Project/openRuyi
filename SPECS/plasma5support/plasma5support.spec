@@ -75,9 +75,6 @@ Requires:       cmake(Qt6Gui) >= %{qt6_version}
 Development Files for the plasma5support framework.
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 

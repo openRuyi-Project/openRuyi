@@ -49,8 +49,6 @@ storage configuration.
 %conf
 
 %install -a
-# TODO: Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{srcname} --generate-subpackages
 
 # TODO: check needs ton of other dependencies - 251

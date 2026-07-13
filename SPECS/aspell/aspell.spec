@@ -58,9 +58,6 @@ export LDFLAGS="`ncursesw6-config --libs`"
 %install -a
 ln -s ../%{_libdir}/aspell-0.60/ispell %{buildroot}%{_bindir}/ispell
 ln -s ../%{_libdir}/aspell-0.60/spell %{buildroot}%{_bindir}/spell
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang

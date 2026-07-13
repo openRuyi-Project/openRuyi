@@ -219,9 +219,6 @@ FortiGate SSL VPN plugin for plasma-nm components.
 rm -rf %{buildroot}%{_kf6_plugindir}/plasma/network/vpn/*
 %endif
 
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 
