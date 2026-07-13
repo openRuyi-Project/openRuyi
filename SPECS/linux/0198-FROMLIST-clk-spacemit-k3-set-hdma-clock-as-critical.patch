@@ -1,4 +1,4 @@
-From 72f6996085ae0d1d95e88b7c8685608d6379d432 Mon Sep 17 00:00:00 2001
+From ff40723c916dabf666d848756758068bb5c49f1f Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 08:53:19 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: set hdma clock as critical

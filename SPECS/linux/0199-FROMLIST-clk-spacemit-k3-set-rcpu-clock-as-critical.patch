@@ -1,4 +1,4 @@
-From f2c9eda3086a68a00b11199b6988e5d7d2864e30 Mon Sep 17 00:00:00 2001
+From 4f7566fb1fc027955ac68d04ee03b735415d1442 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 08:53:20 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: set rcpu clock as critical

@@ -1,4 +1,4 @@
-From bb0685eff207ddfc5187e3fd08465036a992faa0 Mon Sep 17 00:00:00 2001
+From 4599bfc67eb97c1b312e0c9f8553077878293aad Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 2 Jul 2026 02:31:37 +0000
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: Add UFS support
@@ -28,10 +28,10 @@ index e7f76cd24b90..91bc8c0a2ed9 100644
 +	status = "okay";
 +};
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
-index 0b6bc968502e..861beddc41e6 100644
+index 8b2a120b02d1..c7ecb2f5cb4d 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
-@@ -319,3 +319,7 @@ hub@1 {
+@@ -317,3 +317,7 @@ hub@1 {
  &usb2_phy {
  	status = "okay";
  };

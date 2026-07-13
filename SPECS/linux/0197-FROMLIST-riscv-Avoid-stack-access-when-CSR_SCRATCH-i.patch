@@ -1,4 +1,4 @@
-From bbba2cf170048760f4aef601ca62176234df4594 Mon Sep 17 00:00:00 2001
+From e7c0f48fa48ebd91f00556100b3e81dc77626862 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 30 Jun 2026 14:36:24 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: Avoid stack access when CSR_SCRATCH is

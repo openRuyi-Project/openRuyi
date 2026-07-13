@@ -1,4 +1,4 @@
-From 441008de8ddb1b3632793d514aa4bfa8276828c0 Mon Sep 17 00:00:00 2001
+From 37d03dbe9071178cca266a67afd494cf8a2bea68 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <docular.xu@gmail.com>
 Date: Sat, 20 Jun 2026 01:07:48 -0400
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: Use symbolic PDMA

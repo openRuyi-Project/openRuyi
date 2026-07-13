@@ -1,4 +1,4 @@
-From 6100f776591a2f88951810d1b381a955190cf1d2 Mon Sep 17 00:00:00 2001
+From eb25017945d64c96698c5f97946fb6a148ff7b6e Mon Sep 17 00:00:00 2001
 From: Anmeng Zhang <zhang.anmeng@zte.com.cn>
 Date: Wed, 8 Jul 2026 09:50:46 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: stacktrace: Fix NULL task pointer in

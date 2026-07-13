@@ -1,4 +1,4 @@
-From e82569619d8de432044318b915bdb4855d24da4c Mon Sep 17 00:00:00 2001
+From 641e18073789a0e1b29eb885e9468b41ed148832 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 12:52:46 +0000
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: soc: spacemit: k3: Add clock ID
