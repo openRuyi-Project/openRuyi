@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtconnectivity
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtconnectivity
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Connectivity components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtconnectivity
-#!RemoteAsset:  sha256:7baefd3a90c73820e33ddc59ded8c018e233d14d23eaa4eadbf332b5ac2154ff
+#!RemoteAsset:  sha256:2105289ea414b46ed5fa53ba8782230045b9e47cc8156b5940c9e31e3980e591
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
