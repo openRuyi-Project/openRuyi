@@ -6,22 +6,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtlocation
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtlocation
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Location Libraries
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlocation
-#!RemoteAsset:  sha256:2b9618f1b99cdc51d6697a79f3a57f4c2b629711549912067db8cd2b40794f09
+#!RemoteAsset:  sha256:3791ce77299e6f600a593d0fbfa5bd32fbcfc2d16104782b84acc489e382e41b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
-
-# Use public QuickShapes module
-Patch0:         qtlocation-search-for-public-quickshapes-target-instead-of-private.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
