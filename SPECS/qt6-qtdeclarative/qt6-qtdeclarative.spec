@@ -6,23 +6,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtdeclarative
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtdeclarative
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - QtDeclarative component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtdeclarative
-#!RemoteAsset:  sha256:4fb4efb894e0b96288543505d69794d684bcfbe4940ce181d3e6817bda54843e
+#!RemoteAsset:  sha256:52e670f670b0304f534b24f98c47ceb8a41bb710464414ebc9527ec71cc86aa4
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
-
-## upstream patches
-# https://codereview.qt-project.org/c/qt/qtdeclarative/+/678924
-Patch0:         qtdeclarative-quickshapes-make-module-public.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
@@ -188,6 +184,8 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6QuickVectorImage.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickVectorImageHelpers.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickWidgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsStyleKitImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6LabsStyleKit.pc
 
 %files static
 %{_qt6_libdir}/*.a
