@@ -1,21 +1,20 @@
 diff --git a/src/qdoc/cmake/QDocConfiguration.cmake b/src/qdoc/cmake/QDocConfiguration.cmake
-index 72d27db9e..8a3cba463 100644
 --- a/src/qdoc/cmake/QDocConfiguration.cmake
 +++ b/src/qdoc/cmake/QDocConfiguration.cmake
-@@ -5,6 +5,6 @@ set(QDOC_MINIMUM_CLANG_VERSION "17")
-
+@@ -8,7 +8,7 @@
+ 
  # List of explicitly supported Clang versions for QDoc
  set(QDOC_SUPPORTED_CLANG_VERSIONS
 -    "21.1" "20.1" "19.1" "18.1" "17.0.6"
 +    "22.1" "22.0" "21.1" "20.1" "19.1" "18.1" "17.0.6"
  )
-
+ 
+ # Check for QDoc coverage dependencies
 diff --git a/src/qdoc/qdoc/CMakeLists.txt b/src/qdoc/qdoc/CMakeLists.txt
-index 90f1d7c23..84ebc3a28 100644
 --- a/src/qdoc/qdoc/CMakeLists.txt
 +++ b/src/qdoc/qdoc/CMakeLists.txt
-@@ -97,6 +97,7 @@ qt_internal_add_tool(${target_name}
-     DEFINES
+@@ -107,6 +107,7 @@
+         QT_NO_KEYWORDS
          # To provide the ability to workaround version-specific Clang issues.
          # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
 +        QT_NO_EMIT
@@ -23,13 +22,12 @@ index 90f1d7c23..84ebc3a28 100644
  )
  qt_internal_return_unless_building_tools()
 diff --git a/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp b/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
-index 66a750a3d..3f54ddff5 100644
 --- a/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
 +++ b/src/qdoc/qdoc/src/qdoc/clangcodeparser.cpp
-@@ -43,7 +43,12 @@
+@@ -42,7 +42,12 @@
  #include <clang/Lex/Lexer.h>
  #include <llvm/Support/Casting.h>
-
+ 
 -#include "clang/AST/QualTypeNames.h"
 +#if LIBCLANG_VERSION_MAJOR >= 22
 +// LLVM 22 provides a compatible QualTypeNames implementation in libclang.
@@ -38,5 +36,5 @@ index 66a750a3d..3f54ddff5 100644
 +#  include "clang/AST/QualTypeNames.h"
 +#endif
  #include "template_declaration.h"
-
+ 
  #include <cstdio>

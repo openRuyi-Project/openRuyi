@@ -8,16 +8,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qttools
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qttools
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - QtTool components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
-#!RemoteAsset:  sha256:8148408380ffea03101a26305c812b612ea30dbc07121e58707601522404d49b
+#!RemoteAsset:  sha256:8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        assistant.desktop
 Source2:        designer.desktop
@@ -44,6 +44,7 @@ BuildRequires:  qt6-qtbase-static >= %{version}
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  qt6-qtdeclarative-static >= %{version}
 BuildRequires:  clang-devel
+BuildRequires:  clang-static
 BuildRequires:  llvm-devel
 BuildRequires:  libzstd-devel
 
@@ -139,6 +140,9 @@ for prl_file in libQt6*.prl ; do
 done
 popd
 
+# Drop CMake object files accidentally installed under objects-$CONFIG/
+find %{buildroot}%{_qt6_libdir} -type f -name "*.o" -delete -print
+
 %files
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 %{_bindir}/qdbus-qt6
@@ -186,9 +190,10 @@ popd
 %{_qt6_bindir}/lconvert*
 %{_qt6_bindir}/lrelease*
 %{_qt6_bindir}/lupdate*
-%{_qt6_libexecdir}/lprodump*
-%{_qt6_libexecdir}/lrelease*
-%{_qt6_libexecdir}/lupdate*
+%{_bindir}/lcheck*
+%{_bindir}/ltext2id*
+%{_qt6_bindir}/lcheck*
+%{_qt6_bindir}/ltext2id*
 
 %files -n qt6-qdbusviewer
 %{_bindir}/qdbusviewer*
