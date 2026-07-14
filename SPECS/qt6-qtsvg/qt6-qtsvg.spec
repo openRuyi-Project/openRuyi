@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtsvg
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtsvg
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Support for rendering and displaying SVG
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtsvg.git
-#!RemoteAsset:  sha256:c02f355a58f3bbcf404a628bf488b6aeb2d84a94c269afdb86f6e529343ab01f
+#!RemoteAsset:  sha256:7f3cf02f4824bf03c2c5859ea6db173bf1482a1daf24e6cdf7bc78cfa26a8a94
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
