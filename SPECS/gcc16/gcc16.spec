@@ -547,11 +547,7 @@ Runtime library for the GNU Modula-2 language.
 %define make_output_sync -Oline
 
 %prep
-%setup -q -n gcc-%{version}
-
-#test patching start
-%patch -p1 -P 2000 -P 2001
-#test patching end
+%autosetup -p1 -n gcc-%{version}
 
 %build
 %define _lto_cflags %{nil}
