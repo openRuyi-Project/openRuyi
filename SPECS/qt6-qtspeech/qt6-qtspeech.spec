@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtspeech
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtspeech
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Speech component
 License:        (GPL-2.0-only OR LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0) AND BSD-3-Clause
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtspeech
-#!RemoteAsset
+#!RemoteAsset:  sha256:c035c318012025875a653245701a23d3807e8e46b8bf7987877842219c273f14
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -94,4 +94,4 @@ popd
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
