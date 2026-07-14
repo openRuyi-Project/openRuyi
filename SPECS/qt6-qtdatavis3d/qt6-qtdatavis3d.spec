@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtdatavis3d
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtdatavis3d
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Qt Data Visualization component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtdatavis3d
-#!RemoteAsset:  sha256:601c7cfafd6ae525258fe5bc0f759c67237a0aa61f91fb71db2a9c5eaa50bb07
+#!RemoteAsset:  sha256:1e1a7b9c0a947731655334f5d79252d40cdaf58c1801074ea5e9e0821d6693ac
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
