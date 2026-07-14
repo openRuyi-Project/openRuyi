@@ -21,6 +21,7 @@ BuildOption(conf):  -S angelscript/projects/cmake
 BuildOption(conf):  -DBUILD_SHARED_LIBS:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  gcc-c++
 BuildRequires:  unzip
 BuildRequires:  dos2unix
 
