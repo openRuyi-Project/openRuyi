@@ -1,3 +1,18 @@
+From 1df4dd3ab929e33351a03b7783c51be193aa6313 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Wed, 15 Jul 2026 18:44:34 +0800
+Subject: [PATCH] feat: prefer system-installed zstd over bundled
+ dependency
+
+Check for a system-installed zstd via pkg-config or CMake
+find_package before falling back to the git submodule or
+FetchContent download. This avoids redundant bundled builds
+in environments where zstd is already available as a system
+package.
+---
+ build/cmake/openzl-deps.cmake | 134 ++++++++++++++++++++++------------
+ 1 file changed, 87 insertions(+), 47 deletions(-)
+
 diff --git a/build/cmake/openzl-deps.cmake b/build/cmake/openzl-deps.cmake
 index 59b691a..6b3a489 100644
 --- a/build/cmake/openzl-deps.cmake
@@ -167,3 +182,6 @@ index 59b691a..6b3a489 100644
  
  find_library(MATH_LIBRARY m)
  if(MATH_LIBRARY)
+-- 
+2.34.1
+

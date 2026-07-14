@@ -1,3 +1,33 @@
+From 7c246d077c2a495ca0148794f7d323cc0aa0f217 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Wed, 15 Jul 2026 18:43:25 +0800
+Subject: [PATCH] add install rules for CLI, tools, and parser targets
+
+Add conditional install rules for various build targets to support
+the OPENZL_INSTALL option. This ensures that executables and libraries
+are correctly installed to their respective bin and lib directories.
+
+Updated modules include:
+- cli: zli executable, args, commands, and utils libraries
+- custom_parsers: custom_parsers, csv_parser, parquet_graph,
+  sddl_profile, and shared_components libraries
+- tools: arg, logger, sddl_compiler_lib, and tools_training libraries
+---
+ cli/CMakeLists.txt                              | 7 +++++++
+ cli/args/CMakeLists.txt                         | 8 ++++++++
+ cli/commands/CMakeLists.txt                     | 8 ++++++++
+ cli/utils/CMakeLists.txt                        | 8 ++++++++
+ custom_parsers/CMakeLists.txt                   | 9 +++++++++
+ custom_parsers/csv/CMakeLists.txt               | 8 ++++++++
+ custom_parsers/parquet/CMakeLists.txt           | 8 ++++++++
+ custom_parsers/sddl/CMakeLists.txt              | 8 ++++++++
+ custom_parsers/shared_components/CMakeLists.txt | 8 ++++++++
+ tools/arg/CMakeLists.txt                        | 8 ++++++++
+ tools/logger/CMakeLists.txt                     | 8 ++++++++
+ tools/sddl/CMakeLists.txt                       | 8 ++++++++
+ tools/training/CMakeLists.txt                   | 9 +++++++++
+ 13 files changed, 105 insertions(+)
+
 diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 94831a2..7331d5f 100644
 --- a/cli/CMakeLists.txt
@@ -142,3 +172,75 @@ index 028512c..0a95695 100644
 +        ARCHIVE DESTINATION ${OPENZL_INSTALL_LIBDIR}
 +        COMPONENT runtime)
 +endif()
+diff --git a/tools/arg/CMakeLists.txt b/tools/arg/CMakeLists.txt
+index dfbdade..c6d6aea 100644
+--- a/tools/arg/CMakeLists.txt
++++ b/tools/arg/CMakeLists.txt
+@@ -24,4 +24,12 @@ if (OPENZL_BUILD_ARG_TOOLS)
+     )
+     target_include_directories(arg PUBLIC ${PROJECT_SOURCE_DIR})
+     apply_openzl_compile_options_to_target(arg)
++
++    # Install arg library
++    if (OPENZL_INSTALL)
++        install(TARGETS arg
++            LIBRARY DESTINATION ${OPENZL_INSTALL_LIBDIR}
++            ARCHIVE DESTINATION ${OPENZL_INSTALL_LIBDIR}
++            COMPONENT runtime)
++    endif()
+ endif()
+diff --git a/tools/logger/CMakeLists.txt b/tools/logger/CMakeLists.txt
+index b5bfb84..c3b5d73 100644
+--- a/tools/logger/CMakeLists.txt
++++ b/tools/logger/CMakeLists.txt
+@@ -16,4 +16,12 @@ add_library(logger
+ 
+ target_include_directories(logger PUBLIC ${PROJECT_SOURCE_DIR})
+ apply_openzl_compile_options_to_target(logger)
++
++# Install logger library
++if (OPENZL_INSTALL)
++    install(TARGETS logger
++        LIBRARY DESTINATION ${OPENZL_INSTALL_LIBDIR}
++        ARCHIVE DESTINATION ${OPENZL_INSTALL_LIBDIR}
++        COMPONENT runtime)
++endif()
+ endif()
+diff --git a/tools/sddl/CMakeLists.txt b/tools/sddl/CMakeLists.txt
+index 564bd62..8ba4e59 100644
+--- a/tools/sddl/CMakeLists.txt
++++ b/tools/sddl/CMakeLists.txt
+@@ -66,4 +66,12 @@ if (OPENZL_BUILD_SDDL_TOOLS)
+         apply_openzl_compile_options_to_target(test_sddl_compiler)
+         gtest_discover_tests(test_sddl_compiler)
+     endif()
++
++    # Install sddl_compiler_lib library
++    if (OPENZL_INSTALL)
++        install(TARGETS sddl_compiler_lib
++            LIBRARY DESTINATION ${OPENZL_INSTALL_LIBDIR}
++            ARCHIVE DESTINATION ${OPENZL_INSTALL_LIBDIR}
++            COMPONENT runtime)
++    endif()
+ endif()
+diff --git a/tools/training/CMakeLists.txt b/tools/training/CMakeLists.txt
+index 8096d34..34e1e4e 100644
+--- a/tools/training/CMakeLists.txt
++++ b/tools/training/CMakeLists.txt
+@@ -57,4 +57,13 @@ add_dependencies(tools_training openzl openzl_cpp tools_io custom_parsers logger
+     apply_openzl_compile_options_to_target(test_training)
+     gtest_discover_tests(test_training)
+   endif()
++
++  # Install tools_training library
++  if (OPENZL_INSTALL)
++    install(TARGETS tools_training
++        LIBRARY DESTINATION ${OPENZL_INSTALL_LIBDIR}
++        ARCHIVE DESTINATION ${OPENZL_INSTALL_LIBDIR}
++        COMPONENT runtime)
++  endif()
++
+ endif()
+-- 
+2.34.1
+

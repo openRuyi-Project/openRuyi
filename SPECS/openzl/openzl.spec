@@ -11,14 +11,12 @@ Release:        %autorelease
 Summary:        A specialized compressor optimized for specific data formats
 License:        BSD-3-Clause
 URL:            https://github.com/facebook/openzl
-#!RemoteAsset
+#!RemoteAsset:  sha256:3278546dcdbae3aef3887f07b435ebe0aa9f6943a5ac74cf9b7baeefe6526c2e
 Source0:        https://github.com/facebook/openzl/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
-# add install for some files.
-Patch0:         0001-fix_install_rules.patch
-# disable download form network.
-Patch1:         0002-fix-use-system-zstd.patch
+Patch2000:      2000-add-install-rules-for-CLI-tools-and-parser-targets.patch
+Patch2001:      2001-feat-prefer-system-installed-zstd-over-bundled-depen.patch
 
 BuildOption(conf):  -DOPENZL_BUILD_TESTS:BOOL=OFF
 BuildOption(conf):  -DOPENZL_BUILD_BENCHMARKS:BOOL=OFF
@@ -70,4 +68,4 @@ rm -f %{buildroot}%{_libdir}/libzstd*
 %{_libdir}/cmake/openzl/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog
