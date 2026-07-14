@@ -1,3 +1,4 @@
+diff --git a/src/3rdparty/chromium/base/strings/to_string.h b/src/3rdparty/chromium/base/strings/to_string.h
 --- a/src/3rdparty/chromium/base/strings/to_string.h
 +++ b/src/3rdparty/chromium/base/strings/to_string.h
 @@ -6,6 +6,7 @@
@@ -5,12 +6,13 @@
  
  #include <concepts>
 +#include <cstdint>
- #include <iomanip>
- #include <ios>
  #include <memory>
+ #include <sstream>
+ #include <string>
+diff --git a/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h b/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
 --- a/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
-+++ a/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
-@@ -214,8 +214,11 @@ struct seccomp_notif_addfd {
++++ b/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h
+@@ -215,8 +215,11 @@
  #define SECCOMP_RET_INVALID 0x00010000U  // Illegal return value
  #endif
  
@@ -22,10 +24,11 @@
 +#endif
  
  #endif  // SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SECCOMP_H_
---- a/src/3rdparty/chromium/v8/src/json/json-stringifier.cc     2025-11-14 07:55:10.000000000 +0000
-+++ b/src/3rdparty/chromium/v8/src/json/json-stringifier.cc     2026-06-18 05:56:31.648272572 +0000
-@@ -2902,9 +2902,11 @@
-
+diff --git a/src/3rdparty/chromium/v8/src/json/json-stringifier.cc b/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
+--- a/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
++++ b/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
+@@ -3391,9 +3391,11 @@
+ 
    for (; block + (stride - 1) < end; block += stride) {
      const auto input = hw::LoadU(tag, block);
 -    const auto has_lower_than_0x20 = input < mask_0x20;
@@ -37,27 +40,29 @@
 +    const auto has_0x22 = hw::Eq(input, mask_0x22);
 +    const auto has_0x5c = hw::Eq(input, mask_0x5c);
      const auto result = hw::Or(hw::Or(has_lower_than_0x20, has_0x22), has_0x5c);
-
+ 
      // No character that needs escaping found in block.
---- a/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc  2025-11-14 07:55:10.000000000 +0000
-+++ b/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc   2026-06-20 10:09:23.592876393 +0000
+diff --git a/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc b/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc
+--- a/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc
++++ b/src/3rdparty/chromium/third_party/libyuv/source/row_rvv.cc
 @@ -17,9 +17,7 @@
-
+ 
  #include "libyuv/row.h"
-
+ 
 -// This module is for clang rvv. GCC hasn't supported segment load & store.
 -#if !defined(LIBYUV_DISABLE_RVV) && defined(__riscv_vector) && \
 -    defined(__clang__)
 +#if !defined(LIBYUV_DISABLE_RVV) && defined(__riscv_vector)
  #include <assert.h>
  #include <riscv_vector.h>
-
---- a/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc   2025-11-14 07:55:10.000000000 +0000
-+++ b/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc   2026-06-20 10:11:59.024821956 +0000
+ 
+diff --git a/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc b/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc
+--- a/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc
++++ b/src/3rdparty/chromium/third_party/libyuv/source/scale_rvv.cc
 @@ -18,9 +18,7 @@
  #include "libyuv/row.h"
  #include "libyuv/scale_row.h"
-
+ 
 -// This module is for clang rvv. GCC hasn't supported segment load & store.
 -#if !defined(LIBYUV_DISABLE_RVV) && defined(__riscv_vector) && \
 -    defined(__clang__)

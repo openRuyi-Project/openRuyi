@@ -1,8 +1,7 @@
 diff --git a/src/pdf/CMakeLists.txt b/src/pdf/CMakeLists.txt
-index a318051eae..512568d078 100644
 --- a/src/pdf/CMakeLists.txt
 +++ b/src/pdf/CMakeLists.txt
-@@ -137,7 +137,7 @@ foreach(arch ${archs})
+@@ -139,7 +139,7 @@ foreach(arch ${archs})
            enable_web_speech=false
            chrome_pgo_phase=0
            strip_absolute_paths_from_debug_symbols=false

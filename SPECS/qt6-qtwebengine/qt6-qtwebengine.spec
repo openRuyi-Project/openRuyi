@@ -5,36 +5,31 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwebengine
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtwebengine
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - QtWebEngine components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwebengine
-#!RemoteAsset:  sha256:77b5ea6186a0429a6b8e656faedd5cd3e8019d33856ee59637698ab578ead1e3
+#!RemoteAsset:  sha256:679c66ccc6c158fc215e9c58ef160331ecd29974232e345c05161889f8667083
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
-# workaround FTBFS against kernel-headers-5.2.0+
-Patch0:         0001-qtwebengine-SIOCGSTAMP.patch
 # enable to link pipewire
-Patch1:         0002-qtwebengine-link-pipewire.patch
-## Upstreamable patches:
-Patch2:         0003-qtwebengine-add-missing-pipewire-headers.patch
+Patch0:         0001-qtwebengine-link-pipewire.patch
 %ifarch riscv64
 # Patches from https://build.opensuse.org/package/show/openSUSE:Factory:RISCV/qt6-webengine
-# At revision dd1924eb288d26a395e5cd4841bd51d6.
-# Nov 09, 2025
-Patch3:         0004-riscv-sandbox.patch
-Patch4:         0005-riscv-v8.patch
-Patch5:         0006-riscv-enable-v8-webasm.patch
+# Updated for Qt 6.11.1 (openSUSE Factory RISCV)
+Patch1:         0002-riscv-sandbox.patch
+Patch2:         0003-riscv-misc.patch
+Patch3:         0004-riscv-enable-v8-webasm.patch
 %endif
 # Based on various upstream commits.
-Patch6:         0007-adapt-chromium-to-gcc16-glibc2.43-and-rvv.patch
+Patch4:         0005-adapt-chromium-to-gcc16-glibc2.43-and-rvv.patch
 
 BuildOption(conf):  -DCMAKE_TOOLCHAIN_FILE="%{_libdir}/cmake/Qt6/qt.toolchain.cmake"
 BuildOption(conf):  -DFEATURE_webengine_build_gn=ON
