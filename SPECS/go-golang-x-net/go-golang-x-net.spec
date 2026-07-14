@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,13 +15,13 @@
 }
 
 Name:           go-golang-x-net
-Version:        0.48.0
+Version:        0.56.0
 Release:        %autorelease
 Summary:        Go supplementary network libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/net
 VCS:            git:https://github.com/golang/net
-#!RemoteAsset:  sha256:999b4eeae1b018ce0e2353cd656b47297c57fedcb9a419904ff856de0438898f
+#!RemoteAsset:  sha256:c2097a7d1043e482386bf71f4df9d4e269685809ad057e1c42fa58e5dd8ff4ec
 Source0:        https://github.com/golang/net/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,6 +42,11 @@ Requires:       go(golang.org/x/text)
 
 %description
 This package provides supplementary Go networking libraries.
+
+%check -p
+# GOPATH mode does not read the module's Go version, but synctest requires the
+# modern timer channel implementation selected by the upstream go directive.
+export GODEBUG=asynctimerchan=0
 
 %files
 %doc README*
