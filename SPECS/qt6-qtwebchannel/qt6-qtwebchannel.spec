@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwebchannel
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtwebchannel
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - WebChannel component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwebchannel
-#!RemoteAsset
+#!RemoteAsset:  sha256:69fbb50b71d6e6596c2d6863ee9a9c984a4d01378ee2b7b4163bb467a0158d82
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -69,6 +69,7 @@ popd
 %{_qt6_libdir}/libQt6WebChannel.so.6*
 %{_qt6_libdir}/libQt6WebChannelQuick.so.6*
 %{_qt6_qmldir}/QtWebChannel/
+%{_qt6_datadir}/webchannel/qwebchannel.js
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %files devel
@@ -94,4 +95,4 @@ popd
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog
