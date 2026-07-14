@@ -54,13 +54,13 @@ Release:        %autorelease
 Summary:        .NET %{dotnet_major} Runtime and SDK - Binary
 License:        0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND APSL-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND BSL-1.0 AND bzip2-1.0.6 AND CC0-1.0 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-PDDC AND CNRI-Python AND EPL-1.0 AND GPL-2.0-only AND (GPL-2.0-only WITH GCC-exception-2.0) AND GPL-2.0-or-later AND GPL-3.0-only AND ICU AND ISC AND LGPL-2.1-only AND LGPL-2.1-or-later AND LicenseRef-Fedora-Public-Domain AND LicenseRef-ISO-8879 AND MIT AND MIT-Wu AND MS-PL AND MS-RL AND NCSA AND OFL-1.1 AND OpenSSL AND Unicode-DFS-2015 AND Unicode-DFS-2016 AND W3C-19980720 AND X11 AND Zlib
 URL:            https://dotnet.microsoft.com
-#!RemoteAsset
+#!RemoteAsset:  sha256:08cc3c72f9c7b45a291af109b8a65abbd9b1b3a7aa70c458424042a8ad571e87
 Source0:        https://oerv.ac.cn/repo_dropout/dotnet-bin/dotnet-sdk-%{version}-linux-riscv64.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:32d9a9a4f08089a7a2528ff738e19e908ab913ba5fcb9eecfb97b8290584a061
 Source1:        https://oerv.ac.cn/repo_dropout/dotnet-bin/Private.SourceBuilt.Artifacts.%{version}-rtm.linux-riscv64.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:ec8db63b4c9a8040826a312f80b06752a2ed8f3fe852654d27a9ce46a8976ee7
 Source2:        https://oerv.ac.cn/repo_dropout/dotnet-bin/dotnet-sdk-%{version}-linux-x64.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:e10d096c2d825e2de68d448a902d3b06a1a72d143bdfaeda35adb2744ede7ec8
 Source3:        https://oerv.ac.cn/repo_dropout/dotnet-bin/Private.SourceBuilt.Artifacts.%{version}-rtm.linux-x64.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
@@ -159,8 +159,8 @@ Requires:       dotnet-sdk-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{r
 # -lbrotlidec -lz ...`.
 Requires:       brotli-devel%{?_isa}
 Requires:       clang%{?_isa}
-Requires:       openssl-devel%{?_isa}
-Requires:       zlib-ng-devel%{?_isa}
+Requires:       pkgconfig(openssl)
+Requires:       pkgconfig(zlib)
 Provides:       dotnet-sdk-aot-%{dotnet_major} = %{version}
 
 %description -n dotnet-sdk-aot-%{dotnet_major}-bin
@@ -333,4 +333,4 @@ rm %{buildroot}%{_libdir}/dotnet/dotnet
 %{_libdir}/dotnet/source-built-artifacts
 
 %changelog
-%{?autochangelog}
+%autochangelog
