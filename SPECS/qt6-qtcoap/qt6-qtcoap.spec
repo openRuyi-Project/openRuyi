@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtcoap
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtcoap
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - CoAP component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtcoap
-#!RemoteAsset:  sha256:de077e00ef5a938ee3e86e093ca860e564dcdd00c13f62a8df98515a6a5cf782
+#!RemoteAsset:  sha256:4fa5790a48fe98d6373b5b3d0d8ee34a990da8fb39305d37128b6a959fb24fbd
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
