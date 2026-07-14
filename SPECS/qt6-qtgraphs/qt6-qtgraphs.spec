@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtgraphs
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtgraphs
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        The Qt Graphs module enables you to visualize data in 3D
 License:        BSD-3-Clause AND GFDL-1.3-no-invariants-only AND GPL-3.0-only
 URL:            https://doc.qt.io/qt-6/qtgraphs-index.html
 VCS:            git:https://code.qt.io/qt/qtgraphs.git
-#!RemoteAsset:  sha256:4d4fa0b21fa3c6b72ad5056e2a06e96e4bfda651e0a824d1f8e896c9ce5e576e
+#!RemoteAsset:  sha256:84b1138ab68a8e2956439895a4b85eb68dda48ac169da673f67191873b1e0462
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
