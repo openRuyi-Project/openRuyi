@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qt5compat
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qt5compat
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Qt 5 Compatibility Libraries
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qt5compat
-#!RemoteAsset:  sha256:72396d160a153dee01b41cf0cae9ad46204cf613adb791b3ee85a7efeadffe24
+#!RemoteAsset:  sha256:cfcb9fdaa051aad54b0e61b24ac5693b4887a86e07609f665fea67328a6f161b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
