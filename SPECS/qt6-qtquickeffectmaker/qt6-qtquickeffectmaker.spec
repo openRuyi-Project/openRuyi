@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquickeffectmaker
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtquickeffectmaker
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Tool for creating shader effects for Qt Quick
 License:        GPL-3.0-only
 URL:            https://doc.qt.io/qt-6/qtquickeffectmaker-index.html
 VCS:            git:https://github.com/qt/qtquickeffectmaker
-#!RemoteAsset:  sha256:3036984cc55054f59c4a7c7d30d9b9a2dd7491344b3201c5a133cc3cdf12acc9
+#!RemoteAsset:  sha256:cfe63e70e88bdd126a175762d3eeb38eb336e45beceedcbd027bc5362744136b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        quickeffectmaker.desktop
 BuildSystem:    cmake
