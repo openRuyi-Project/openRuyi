@@ -6,19 +6,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtmultimedia
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 %bcond ffmpeg 0
 
 Name:           qt6-qtmultimedia
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Multimedia support
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtmultimedia.git
-#!RemoteAsset:  sha256:f7a4f9bc2840d4f0f9f7329f0dcb3d3500c54177b8e368091a3727c7320e67b8
+#!RemoteAsset:  sha256:390f8e52ddee3aca5c4de7eead900c84c4fa61ff6d1f0ebea9c7543365c09b0a
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
