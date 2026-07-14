@@ -1,0 +1,156 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Hangfan Li <lihangfan@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+%_kernel_local_version    %[ "%{?variant_name}" != "" ? "%{variant_name}-" : "" ]%{release}
+%_kernel_full_version    %{version}-%{_kernel_local_version}
+%_kernel_modpath /lib/modules/%{_kernel_full_version}
+%_kernel_make_flags LD=ld.bfd
+
+%buildsystem_linux_conf() %{expand:\
+    if [ -z "%1" ]; then
+        echo "Error: defconfig file must be provided to BuildOption(conf)" 1>&2
+        exit 1
+    fi
+    echo "-%%{_kernel_local_version}" > localversion
+    cp "%1" .config
+    %%make_build %%{_kernel_make_flags} olddefconfig
+    # CONFIG_LOCALVERSION_AUTO must not be set.
+    # This ensures kernel build system never injects hash value generated from commit id.
+    # This also bypass the KBUILD_BUILD_VERSION logic.
+    autolocalver="$(./scripts/config --state CONFIG_LOCALVERSION_AUTO)"
+    if [ "${autolocalver}" = "y" ]; then
+        echo "CONFIG_LOCALVERSION_AUTO should not be enabled!" 1>&2
+        exit 1
+    fi
+}
+
+%buildsystem_linux_build() %{expand:\
+    # build kernel
+    %%make_build %%{_kernel_make_flags}
+    %%if %%{with dtbs}
+    %%make_build %%{_kernel_make_flags} dtbs
+    %%endif
+}
+
+%buildsystem_linux_install() %{expand:\
+    # install Linux image
+    install -Dm644 $(make -s image_name) %%{buildroot}%%{_kernel_modpath}/vmlinuz
+    # install Linux modules
+    %%make_build %%{_kernel_make_flags} INSTALL_MOD_PATH=%%{buildroot} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
+    %%if %%{with dtbs}
+    %%make_build %%{_kernel_make_flags} INSTALL_DTBS_PATH=%%{buildroot}%%{_kernel_modpath}/dtb dtbs_install
+    %%endif
+    # install devel
+    %%make_build %%{_kernel_make_flags} run-command KBUILD_RUN_COMMAND="$(pwd)/scripts/package/install-extmod-build %%{ksrcpath}"
+    pushd %%{buildroot}%%{_kernel_modpath}
+    rm -f build source
+    ln -sf ../../..%%{_usrsrc}/kernels/%%{_kernel_full_version} build
+    ln -sf ../../..%%{_usrsrc}/kernels/%%{_kernel_full_version} source
+    popd
+    # install kernel source
+    %%define ksrcpath %%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}
+    install -d %%{buildroot}%%{_kernel_modpath} %%{ksrcpath}
+    # install config
+    zstd -f .config -o %%{buildroot}%%{_kernel_modpath}/config.zst
+}
+
+%linux_package_dependencies() %{expand:\
+# Meta-package: default installation
+Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
+Requires:       %%{name}-modules%%{?_isa} = %%{version}-%%{release}
+%%if %%{with dtbs}
+Requires:       %%{name}-dtbs%%{?_isa} = %%{version}-%%{release}
+%%endif
+# Meta-package: order of removal
+Requires(preun): %%{name}-core%%{?_isa} = %%{version}-%%{release}
+Requires(preun): %%{name}-modules%%{?_isa} = %%{version}-%%{release}
+%%if %%{with dtbs}
+Requires(preun): %%{name}-dtbs%%{?_isa} = %%{version}-%%{release}
+%%endif
+Requires(post):   kernel-install
+Requires(preun):  kernel-install
+}
+
+%linux_package_implementation() %{expand:\
+
+%%package        core
+Summary:        The core Linux kernel image
+
+%%description    core
+Contains the bootable %%{name} image (vmlinuz) and its Kconfig options.
+
+%%package        modules
+Summary:        Kernel modules for the %%{name} kernel
+Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
+
+%%description    modules
+Contains all the kernel modules (.ko files) and associated metadata for
+the hardware drivers and kernel features.
+
+%%package        devel
+Summary:        Development files for building external kernel modules
+Requires:       %%{name}%%{?_isa} = %%{version}-%%{release}
+Requires:       dwarves
+
+%%description    devel
+This package provides the kernel headers and Makefiles necessary to build
+external kernel modules against the installed kernel. The development files are
+located at %%{_usrsrc}/kernels/%%{_kernel_full_version}, with symlinks provided under
+/lib/modules/%%{_kernel_full_version}/ for compatibility.
+
+%%if %%{with dtbs}
+%%package        dtbs
+Summary:        Devicetree blob files from %%{name} sources
+Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
+
+%%description    dtbs
+This package provides the DTB files built from %%{name} sources that may be used
+for booting.
+%%endif
+
+%%pretrans
+# Cleanup state file ahead to avoid leftovers from previous failure.
+rm -f "%%{_localstatedir}/lib/rpm-state/%%{name}-%%{_kernel_full_version}.just_installed"
+
+%%post
+# Workaround reinstalling: let %%preun know that the same package is installed just before.
+touch "%%{_localstatedir}/lib/rpm-state/%%{name}-%%{_kernel_full_version}.just_installed"
+%%{_bindir}/kernel-install add %%{_kernel_full_version} %%{_kernel_modpath}/vmlinuz
+
+%%preun
+# Why not "if [ $1 -eq 0 ]"? It breaks kernel removal when multi versions were installed.
+if [ ! -e "%%{_localstatedir}/lib/rpm-state/%%{name}-%%{_kernel_full_version}.just_installed" ]; then
+    %%{_bindir}/kernel-install remove %%{_kernel_full_version}
+fi
+
+%%posttrans
+rm -f "%%{_localstatedir}/lib/rpm-state/%%{name}-%%{_kernel_full_version}.just_installed"
+
+%%files
+%%%%license COPYING
+%%%%doc README
+
+%%files core
+%%dir %%{_kernel_modpath}
+%%{_kernel_modpath}/vmlinuz
+%%{_kernel_modpath}/config.*
+
+%%files modules
+%%{_kernel_modpath}/kernel
+%%{_kernel_modpath}/modules.builtin
+%%{_kernel_modpath}/modules.builtin.modinfo
+%%{_kernel_modpath}/modules.order
+
+%%files devel
+%%{_usrsrc}/kernels/%%{_kernel_full_version}/
+%%{_kernel_modpath}/build
+%%{_kernel_modpath}/source
+
+%%if %%{with dtbs}
+%%files dtbs
+%%{_kernel_modpath}/dtb
+%%endif
+}
