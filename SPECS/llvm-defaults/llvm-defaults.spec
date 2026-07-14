@@ -81,7 +81,6 @@ Summary:        Default symlinks for clang development tools
 Requires:       clang%{?_isa} = %{version}-%{release}
 Requires:       clang%{maj_ver}-devel > %{maj_ver}
 Requires:       llvm-devel = %{version}-%{release}
-Requires:       clang-static = %{version}-%{release}
 Provides:       cmake(Clang) = %{maj_ver}
 
 %description -n clang-devel
@@ -123,6 +122,7 @@ This package provides default unversioned symlinks for clang static analyzer %{m
 # ============================================================================
 %package     -n clang-static
 Summary:        Default dependency package for Clang static libraries
+Requires:       clang-devel = %{version}-%{release}
 Requires:       clang%{maj_ver}-static > %{maj_ver}
 
 # ============================================================================
