@@ -1,0 +1,14 @@
+diff --git a/examples/grpc/magic8ball/CMakeLists.txt b/examples/grpc/magic8ball/CMakeLists.txt
+--- a/examples/grpc/magic8ball/CMakeLists.txt
++++ b/examples/grpc/magic8ball/CMakeLists.txt
+@@ -55,6 +55,10 @@ install(TARGETS magic8ball
+     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
+ )
+
++install(TARGETS magic8ball_plugin
++    LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
++)
++
+ add_subdirectory(server)
+ if(TARGET magic8ball_server)
+     add_dependencies(magic8ball magic8ball_server)

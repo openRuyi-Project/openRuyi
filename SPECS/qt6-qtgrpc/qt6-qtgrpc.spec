@@ -7,19 +7,22 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtgrpc
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtgrpc
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Support for using gRPC and Protobuf
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtgrpc
-#!RemoteAsset:  sha256:98138fb8633c4922ef7ef49b8301f7cbfb7beb7897d44d72e639120a29f4577f
+#!RemoteAsset:  sha256:437b04f0c550ccdb1739ca5f9119b73dfa0376564815e8bfc199890643e2a250
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
+
+#  nothing provides libmagic8ball_plugin.so()
+Patch0:         2000-install-magic8ball-plugin.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
