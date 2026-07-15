@@ -38,6 +38,12 @@
 %global kernel_make_flags LD=ld.bfd
 %global modpath /lib/modules/%{kernel_full_version}
 
+%if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
+    %global arch_suffix -rva20
+%else
+    %global arch_suffix %{nil}
+%endif
+
 Name:           linux
 Version:        7.1.3
 Release:        %autorelease
@@ -46,7 +52,7 @@ License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:be41c068e88f5242a19bccdbffbe077b18c47b45f627e2325504b4fab79dd1dc
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
-Source1:        config.%{_arch}
+Source1:        config.%{_arch}%{arch_suffix}
 Source2:        series
 
 BuildRequires:  gcc
