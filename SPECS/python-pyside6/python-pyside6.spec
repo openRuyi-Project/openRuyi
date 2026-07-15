@@ -7,16 +7,16 @@
 
 %global pypi_name pyside6
 %global camel_name PySide6
-%global qt6ver 6.10.1
+%global qt6ver 6.11.1
 
 Name:           python-%{pypi_name}
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Python bindings for the Qt 6 cross-platform application and UI framework
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://wiki.qt.io/Qt_for_Python
 VCS:            git:https://github.com/qtproject/pyside-pyside-setup
-#!RemoteAsset:  sha256:fd54f40853d61dfd845dbb40d4f89fbd63df5ed341b3d9a2c77bb5c947a0a838
+#!RemoteAsset:  sha256:6ffd9835bb0dd2c56f061d62f1616bb1707cfc0202b80e3165d6be087f3965e2
 Source0:        https://download.qt.io/official_releases/QtForPython/%{pypi_name}/%{camel_name}-%{qt6ver}-src/pyside-setup-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -28,7 +28,7 @@ Patch1:         0002-Always-link-to-python-libraries.patch
 Patch2:         0003-Fix-installation.patch
 
 BuildOption(conf):  -DCMAKE_BUILD_TYPE=Release
-BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_TESTS=OFF
 BuildOption(conf):  -DBUILD_DOCS=OFF
 BuildOption(conf):  -DNO_QT_TOOLS=yes
 BuildOption(conf):  -DCMAKE_SKIP_INSTALL_RPATH=ON
@@ -101,6 +101,7 @@ BuildRequires:  cmake(Qt63DAnimation)
 BuildRequires:  cmake(Qt63DExtras)
 BuildRequires:  cmake(Qt6RemoteObjects)
 BuildRequires:  cmake(Qt6UiPlugin)
+BuildRequires:  clang-static
 BuildRequires:  qt6-designer
 
 Provides:       python3-%{pypi_name} = %{version}-%{release}
@@ -117,6 +118,7 @@ Requires:       pyside6-tools
 Requires:       shiboken6
 Provides:       python3-%{pypi_name}-devel = %{version}-%{release}
 Provides:       python3-%{pypi_name}-devel%{?_isa} = %{version}-%{release}
+
 %description -n python-%{pypi_name}-devel
 Development files for PySide6.
 
@@ -156,11 +158,6 @@ Shiboken development files.
 sed -i 's#${base}/../shiboken6/##' sources/pyside6/CMakeLists.txt
 
 %build -p
-# fix can't find stddef.h
-CLANG_INC=$(ls -d /usr/lib/clang/*/include | head -n 1)
-echo "Injecting CPATH=$CLANG_INC into shiboken_wrapper.sh"
-find . -name "shiboken_wrapper.sh" -exec sed -i "2i export CPATH=\"$CLANG_INC:\$CPATH\"" {} +
-
 export PYTHONPATH="$PWD/%{_vpath_builddir}/sources:$PYTHONPATH"
 
 %install -a

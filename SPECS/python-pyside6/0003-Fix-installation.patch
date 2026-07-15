@@ -2,14 +2,14 @@ From c069622d35a00485742b125caf9439b31b1b972f Mon Sep 17 00:00:00 2001
 From: Christophe Marin <christophe@krop.fr>
 Date: Tue, 7 Oct 2025 15:54:32 +0200
 Subject: [PATCH] Fix installation
- 
+
 Upstream decided to install files in non-standard locations.
 ---
- sources/pyside6/CMakeLists.txt               | 2 +-
- sources/shiboken6/generator/CMakeLists.txt   | 4 ++--
- sources/shiboken6/libshiboken/CMakeLists.txt | 2 +-
+ sources/pyside6/CMakeLists.txt                           | 2 +-
+ sources/shiboken6_generator/generator/CMakeLists.txt     | 4 ++--
+ sources/shiboken6/libshiboken/CMakeLists.txt             | 2 +-
  3 files changed, 4 insertions(+), 4 deletions(-)
- 
+
 diff --git a/sources/pyside6/CMakeLists.txt b/sources/pyside6/CMakeLists.txt
 index 6b73d70..74aaba5 100644
 --- a/sources/pyside6/CMakeLists.txt
@@ -23,10 +23,10 @@ index 6b73d70..74aaba5 100644
              FILE PySide6Targets.cmake)
  endif()
  
-diff --git a/sources/shiboken6/generator/CMakeLists.txt b/sources/shiboken6/generator/CMakeLists.txt
+diff --git a/sources/shiboken6_generator/generator/CMakeLists.txt b/sources/shiboken6_generator/generator/CMakeLists.txt
 index 997468f..d0948d9 100644
---- a/sources/shiboken6/generator/CMakeLists.txt
-+++ b/sources/shiboken6/generator/CMakeLists.txt
+--- a/sources/shiboken6_generator/generator/CMakeLists.txt
++++ b/sources/shiboken6_generator/generator/CMakeLists.txt
 @@ -73,11 +73,11 @@ install(EXPORT "${package_name}Targets"
  if(NOT is_pyside6_superproject_build)
      install(TARGETS shiboken6
@@ -45,7 +45,7 @@ diff --git a/sources/shiboken6/libshiboken/CMakeLists.txt b/sources/shiboken6/li
 index 973d14b..c4235f8 100644
 --- a/sources/shiboken6/libshiboken/CMakeLists.txt
 +++ b/sources/shiboken6/libshiboken/CMakeLists.txt
-@@ -217,6 +217,6 @@ if(NOT is_pyside6_superproject_build)
+@@ -224,6 +224,6 @@ if(NOT is_pyside6_superproject_build)
  
      install(EXPORT Shiboken6WheelTargets
              NAMESPACE Shiboken6::
