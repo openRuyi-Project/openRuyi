@@ -22,7 +22,7 @@ Summary:        Get up and running with OpenAI gpt-oss, DeepSeek-R1, Gemma 3 and
 License:        MIT
 URL:            https://ollama.com/
 VCS:            git:https://github.com/ollama/ollama
-#!RemoteAsset
+#!RemoteAsset:  sha256:6b6bc20a52c11341aa296eecce5ee6782f05815224a4196983b0aa2f1453c19f
 Source0:        https://github.com/ollama/ollama/archive/refs/tags/v%{version}.tar.gz
 Source1:        ollama.service
 Source2:        ollama.sysusers
@@ -68,7 +68,6 @@ BuildRequires:  cmake(Clang)
 BuildRequires:  cmake(hip)
 BuildRequires:  cmake(hipblas)
 BuildRequires:  cmake(hsa-runtime64)
-BuildRequires:  cmake(LLD)
 BuildRequires:  cmake(LLVM)
 BuildRequires:  cmake(rocblas)
 BuildRequires:  cmake(rocsolver)
@@ -177,4 +176,4 @@ mkdir -p %{buildroot}%{_var}/lib/ollama
 %{_sysusersdir}/ollama.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
