@@ -52,8 +52,10 @@ License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:be41c068e88f5242a19bccdbffbe077b18c47b45f627e2325504b4fab79dd1dc
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
-Source1:        config.%{_arch}%{arch_suffix}
-Source2:        series
+Source1:        series
+Source2:        config.x86_64
+Source3:        config.riscv64
+Source4:        config.riscv64-rva20
 
 BuildRequires:  gcc
 BuildRequires:  bison
@@ -123,7 +125,7 @@ Requires(post):   kernel-install
 Requires(preun):  kernel-install
 
 %patchlist
-%include %{SOURCE2}
+%include %{SOURCE1}
 
 %description
 This is a meta-package that handles standard kernel installation.
@@ -188,7 +190,7 @@ for booting.
 
 %prep
 %autosetup -p1
-cp %{SOURCE1} .config
+cp -v %{_sourcedir}/config.%{_arch}%{arch_suffix} .config
 echo "-%{kernel_local_version}" > localversion
 
 %conf
