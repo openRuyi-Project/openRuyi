@@ -1,0 +1,25 @@
+From 1f6fe03724c6716c30b074d30db338e6eb5a0b34 Mon Sep 17 00:00:00 2001
+From: Z572 <z572@z572.online>
+Date: Thu, 16 Jul 2026 10:22:25 +0800
+Subject: [PATCH] macros.in: fallback to rpmformat 4
+
+---
+ macros.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/macros.in b/macros.in
+index 3d146520c..92c87b53c 100644
+--- a/macros.in
++++ b/macros.in
+@@ -266,7 +266,7 @@ Supplements:   (%{name} = %{version}-%{release} and langpacks-%{1})\
+ %_rpmfilename		%{_build_name_fmt}
+ 
+ #	Which rpm format go generate (4 or 6)
+-%_rpmformat 6
++%_rpmformat 4
+ 
+ #	The directory where sources/patches from a source package will be
+ #	installed. This is also where sources/patches are found when building.
+-- 
+2.54.0
+
