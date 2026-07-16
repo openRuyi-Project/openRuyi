@@ -50,7 +50,7 @@ Macros:
 %__python /usr/bin/python3
 %bcond_override_default_acl_tests 1
 %__systemd_sysusers /usr/bin/systemd-sysusers
-%autorelease 1%{?dist}
+%autorelease 999%{?dist}
 %autochangelog %{nil}
 %_sbindir %_bindir
 %_vendor_repo_url https://repo.build.openruyi.cn/openruyi/\\$basearch/
