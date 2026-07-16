@@ -48,6 +48,7 @@ Requires:       %{name}-filesystem = %{version}-%{release}
 Requires:       tar
 Requires:       createrepo_c
 Requires:       systemd
+Requires:       usermode
 Requires:       coreutils
 Requires:       util-linux
 Requires:       procps-ng
