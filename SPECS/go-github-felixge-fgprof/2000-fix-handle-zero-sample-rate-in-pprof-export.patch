@@ -1,0 +1,53 @@
+From fd4bae0691ebd6018e53948a0ebe761c93652bdb Mon Sep 17 00:00:00 2001
+From: Jvle <keke.oerv@isrc.iscas.ac.cn>
+Date: Wed, 15 Jul 2026 21:28:51 +0800
+Subject: [PATCH] fix: handle zero sample rate in pprof export
+
+Signed-off-by: Jvle <keke.oerv@isrc.iscas.ac.cn>
+---
+ fgprof.go      |  6 +++++-
+ fgprof_test.go | 11 +++++++++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/fgprof.go b/fgprof.go
+index 459787b..5e0b1cc 100644
+--- a/fgprof.go
++++ b/fgprof.go
+@@ -70,7 +70,11 @@ func Start(w io.Writer, format Format) func() error {
+ 		// direction and improves the correctness of times in profiles.
+ 		duration := endTime.Sub(startTime)
+ 		actualHz := float64(sampleCount) / (float64(duration) / 1e9)
+-		return profile.Export(w, format, int(math.Round(actualHz)), startTime, endTime)
++		measuredHz := int(math.Round(actualHz))
++		if measuredHz < 1 {
++			measuredHz = hz
++		}
++		return profile.Export(w, format, measuredHz, startTime, endTime)
+ 	}
+ }
+ 
+diff --git a/fgprof_test.go b/fgprof_test.go
+index 855e1b2..fb10276 100644
+--- a/fgprof_test.go
++++ b/fgprof_test.go
+@@ -61,6 +61,17 @@ func TestStart(t *testing.T) {
+ 	}
+ }
+ 
++func TestStartPprofWithoutSamples(t *testing.T) {
++	prof := &bytes.Buffer{}
++	stop := Start(prof, FormatPprof)
++	require.NoError(t, stop())
++
++	pprof, err := profile.ParseData(prof.Bytes())
++	require.NoError(t, err)
++	require.NoError(t, pprof.CheckValid())
++	require.NotZero(t, pprof.Period)
++}
++
+ func Test_toPprof(t *testing.T) {
+ 	foo := &runtime.Frame{PC: 1, Function: "foo", File: "foo.go", Line: 23}
+ 	bar := &runtime.Frame{PC: 2, Function: "bar", File: "bar.go", Line: 42}
+-- 
+2.43.0
+
