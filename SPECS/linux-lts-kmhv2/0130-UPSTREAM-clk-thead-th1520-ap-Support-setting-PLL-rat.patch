@@ -1,4 +1,4 @@
-From 00eda1e45b3379884782a9a27d245fcff13f8772 Mon Sep 17 00:00:00 2001
+From 45fffc60883bc1f85479379c30d0c9771bf2d73b Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:13 +0000
 Subject: [RUYI PATCH] UPSTREAM: clk: thead: th1520-ap: Support setting PLL

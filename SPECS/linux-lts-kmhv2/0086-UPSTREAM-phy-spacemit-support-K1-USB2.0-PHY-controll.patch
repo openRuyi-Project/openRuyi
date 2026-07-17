@@ -1,4 +1,4 @@
-From 6fe75e59d1834ffff41681bcd52b6a1a83446f3e Mon Sep 17 00:00:00 2001
+From 978937fc8ad0698573d5ac3329dbeda4e1271432 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:53 +0800
 Subject: [RUYI PATCH] UPSTREAM: phy: spacemit: support K1 USB2.0 PHY

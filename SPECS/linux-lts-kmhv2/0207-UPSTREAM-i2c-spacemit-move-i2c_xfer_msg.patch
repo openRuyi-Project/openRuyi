@@ -1,4 +1,4 @@
-From d2ce0203a4d1455b03013278280f7ac698fce115 Mon Sep 17 00:00:00 2001
+From 383020d47e926f8e6e10db7f404c0f22f4ac37b7 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: move i2c_xfer_msg()

@@ -1,0 +1,61 @@
+From eaadc023345ed1e272a0f77cdd4cc7f503116a3d Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:08 +0100
+Subject: [RUYI PATCH] UPSTREAM: cpufreq: qcom-nvmem: Convert to
+ of_machine_get_match()
+
+Use the of_machine_get_match() helper instead of open-coding the same
+operation.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/886a603a7a1de6c8cb14ee0783ee0bceea4d914a.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 8cd94ead5184c5bdde74dc0afc316c6f3c41fdd7)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/cpufreq/qcom-cpufreq-nvmem.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+index d5af74bf71c6..be06a4762e35 100644
+--- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
++++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
+@@ -290,17 +290,9 @@ static int qcom_cpufreq_ipq8064_name_version(struct device *cpu_dev,
+ 	ret = qcom_smem_get_soc_id(&msm_id);
+ 	if (ret == -ENODEV) {
+ 		const struct of_device_id *match;
+-		struct device_node *root;
+-
+-		root = of_find_node_by_path("/");
+-		if (!root) {
+-			ret = -ENODEV;
+-			goto exit;
+-		}
+ 
+ 		/* Fallback to compatible match with no SMEM initialized */
+-		match = of_match_node(qcom_cpufreq_ipq806x_match_list, root);
+-		of_node_put(root);
++		match = of_machine_get_match(qcom_cpufreq_ipq806x_match_list);
+ 		if (!match) {
+ 			ret = -ENODEV;
+ 			goto exit;
+@@ -646,14 +638,10 @@ MODULE_DEVICE_TABLE(of, qcom_cpufreq_match_list);
+  */
+ static int __init qcom_cpufreq_init(void)
+ {
+-	struct device_node *np __free(device_node) = of_find_node_by_path("/");
+ 	const struct of_device_id *match;
+ 	int ret;
+ 
+-	if (!np)
+-		return -ENODEV;
+-
+-	match = of_match_node(qcom_cpufreq_match_list, np);
++	match = of_machine_get_match(qcom_cpufreq_match_list);
+ 	if (!match)
+ 		return -ENODEV;
+ 
+-- 
+2.53.0
+

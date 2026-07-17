@@ -1,4 +1,4 @@
-From 09f0d19162ff660efb7b93fd764ae93f6d004129 Mon Sep 17 00:00:00 2001
+From 4ec2ef8d7b9dde2c8f044bead5b65d4e39e3fd8c Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Sun, 19 Oct 2025 19:53:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Add support for Eswin

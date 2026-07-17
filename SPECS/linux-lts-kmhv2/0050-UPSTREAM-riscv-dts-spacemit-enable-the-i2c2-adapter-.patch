@@ -1,4 +1,4 @@
-From a276be6d58f16c9c62bd6c0f76f6b2133fcfff5b Mon Sep 17 00:00:00 2001
+From 26663ffe8f0db3a92cf070903f9191745b97444f Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:37 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable the i2c2 adapter

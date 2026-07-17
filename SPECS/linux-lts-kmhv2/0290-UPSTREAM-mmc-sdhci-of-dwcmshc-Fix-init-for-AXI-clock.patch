@@ -1,4 +1,4 @@
-From eec5a961f5c9f3a5b4a99624544700e30ae02323 Mon Sep 17 00:00:00 2001
+From 956564167124dc4f8549d22339a980eaf7730bf0 Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Wed, 14 Jan 2026 20:21:41 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Fix init for AXI clock

@@ -1,4 +1,4 @@
-From 186d384a785aeb3b664585647bd06ee2009145dd Mon Sep 17 00:00:00 2001
+From 44eedf0908b4e6c2893a89cb94053d973411abab Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:45 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add full resource to

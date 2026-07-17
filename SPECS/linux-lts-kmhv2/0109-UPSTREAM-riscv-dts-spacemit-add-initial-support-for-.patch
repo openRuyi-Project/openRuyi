@@ -1,4 +1,4 @@
-From b4a0b52d7cdbe329b44301f63847faf1c8631060 Mon Sep 17 00:00:00 2001
+From d8089feae87ad613be7fe448ae79b3f785e8744b Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:45 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add initial support for

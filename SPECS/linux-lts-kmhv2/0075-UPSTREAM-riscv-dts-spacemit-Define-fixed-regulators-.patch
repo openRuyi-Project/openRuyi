@@ -1,4 +1,4 @@
-From 4274a55a8dac98543297e2416ea7c7f40c4f641a Mon Sep 17 00:00:00 2001
+From 0c38553b279ac02b2a359a7b4819fb73a88ea124 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:54 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Define fixed regulators

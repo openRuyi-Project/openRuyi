@@ -1,4 +1,4 @@
-From 1928fc1030c03e43f009ef60762dac1829c39b0c Mon Sep 17 00:00:00 2001
+From b2aa1a3066056632c7182ef5ac38340b5b14f5f9 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: reset: spacemit: Extract common K1 reset code

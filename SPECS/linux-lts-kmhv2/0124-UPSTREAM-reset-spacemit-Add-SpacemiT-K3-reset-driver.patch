@@ -1,4 +1,4 @@
-From ba7026a22c43e830be9a0dccce75c3867b2bcaad Mon Sep 17 00:00:00 2001
+From 4c225ec987cb2053efdd142d8abf8bb02ebb1121 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:52 +0800
 Subject: [RUYI PATCH] UPSTREAM: reset: spacemit: Add SpacemiT K3 reset driver

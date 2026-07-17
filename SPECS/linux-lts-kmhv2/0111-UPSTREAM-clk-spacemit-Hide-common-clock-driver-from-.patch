@@ -1,4 +1,4 @@
-From 2503ec0c2acbeba44796cf9a39cd65176b1b41b8 Mon Sep 17 00:00:00 2001
+From 75570444f9b7f29881d04479bc6f1727d37f53b6 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 19 Dec 2025 09:28:18 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: Hide common clock driver from

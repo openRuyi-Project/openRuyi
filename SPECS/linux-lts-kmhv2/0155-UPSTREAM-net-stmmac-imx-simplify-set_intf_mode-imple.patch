@@ -1,4 +1,4 @@
-From 38044c901de858463843f7c8cfab808a34627f56 Mon Sep 17 00:00:00 2001
+From 316608f6a973202aecff9d544c0c8df73b28974f Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:36 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()

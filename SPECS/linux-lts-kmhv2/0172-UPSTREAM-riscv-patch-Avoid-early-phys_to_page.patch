@@ -1,4 +1,4 @@
-From 9b54a8b4866b22ba764ced5eadb4df836758c46b Mon Sep 17 00:00:00 2001
+From e3d9fb3bd8c7d99e6f808702d5335a99df089451 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Mon, 23 Mar 2026 17:43:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: patch: Avoid early phys_to_page()

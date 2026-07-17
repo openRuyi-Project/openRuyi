@@ -1,4 +1,4 @@
-From 01d5441431b796aa0c7bef71294e87584b3a7ac2 Mon Sep 17 00:00:00 2001
+From e1c8bcfee6e779f426c1daae2fb82866708e10a9 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:02 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: switch predicates to bool

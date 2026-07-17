@@ -1,4 +1,4 @@
-From 3c89184f3302aafeabc618409bf916aa970f4f16 Mon Sep 17 00:00:00 2001
+From 7c1bcafe332511c19de7c7ac676bb3858d39410c Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:41 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: cleanup arguments for

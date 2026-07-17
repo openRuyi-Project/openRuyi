@@ -1,4 +1,4 @@
-From d25027971bf83bf11dd914b3ce914fa9ada558c4 Mon Sep 17 00:00:00 2001
+From 01c7afb37293f8274d577acd592a1c6f97b8fbef Mon Sep 17 00:00:00 2001
 From: Yangyu Chen <cyy@cyyself.name>
 Date: Wed, 4 Feb 2026 01:21:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: interrupt-controller:

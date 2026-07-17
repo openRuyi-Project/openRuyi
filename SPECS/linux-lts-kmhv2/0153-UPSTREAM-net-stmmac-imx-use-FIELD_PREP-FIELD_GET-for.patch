@@ -1,4 +1,4 @@
-From cc8ade8e3e83180c2b2c2458f61161c29f310f53 Mon Sep 17 00:00:00 2001
+From 9115a394b543402831d6296170c8473755216a9b Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:26 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: use FIELD_PREP()/FIELD_GET()

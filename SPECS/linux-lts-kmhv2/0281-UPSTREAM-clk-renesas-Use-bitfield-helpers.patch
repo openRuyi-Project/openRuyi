@@ -1,4 +1,4 @@
-From 019a7bd0c854f0ec67ae6e379c46f05ccf4be4dd Mon Sep 17 00:00:00 2001
+From fbba92fc24439fb25b3afc63b3bc7576193ba10f Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:13 +0100
 Subject: [RUYI PATCH] UPSTREAM: clk: renesas: Use bitfield helpers

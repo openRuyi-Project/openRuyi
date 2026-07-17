@@ -1,4 +1,4 @@
-From 0443b117c46d5530b02f66cefa36882031ef8c7f Mon Sep 17 00:00:00 2001
+From b493426d9cce7da21f2865b6e67975ecb05db09f Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:50 +0100
 Subject: [RUYI PATCH] UPSTREAM: crypto: qat - #undef field_get() before local

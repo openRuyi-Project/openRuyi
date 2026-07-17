@@ -1,4 +1,4 @@
-From 9d8fbb22b0d4fc7ec75661abcee3d71ca556f67a Mon Sep 17 00:00:00 2001
+From ad6fa0373403bcbf2e3a081de0862952e93bf85a Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:52 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: phy: spacemit: add K1 USB2 PHY

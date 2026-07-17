@@ -1,4 +1,4 @@
-From f58dcbda59da2a11300427e92f4c1abb7c6898f7 Mon Sep 17 00:00:00 2001
+From e0766e7503cd6e4f874013061c4df306cf4a9540 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:50 +0800
 Subject: [RUYI PATCH] UPSTREAM: reset: Create subdirectory for SpacemiT

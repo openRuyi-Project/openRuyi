@@ -1,4 +1,4 @@
-From f461f20d8d5d33bdf1d9fa07acf5a6337f03e57c Mon Sep 17 00:00:00 2001
+From 7c8f2552576b5ef6a1ae9a1bd2b110a50dcf3633 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 31 Oct 2025 20:40:46 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable

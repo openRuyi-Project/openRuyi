@@ -1,4 +1,4 @@
-From 8c3cf0715b0fdf641d78f56c2a4a207b6fb93525 Mon Sep 17 00:00:00 2001
+From 2aa0cd948f924b6efe91a62370729599c711b60c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@kernel.org>
 Date: Tue, 3 Feb 2026 20:16:12 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Handle number of hardware

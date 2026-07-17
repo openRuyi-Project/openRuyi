@@ -1,4 +1,4 @@
-From ec3144e3a9c21e5c60712fe8b72eb68e9f8c120f Mon Sep 17 00:00:00 2001
+From b7b89bae19eacd45891217afe462435355afe7c4 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:29 -0600
 Subject: [RUYI PATCH] UPSTREAM: phy: spacemit: Introduce PCIe/combo PHY

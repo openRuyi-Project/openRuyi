@@ -1,4 +1,4 @@
-From 27133a501e88e5b271c1a5c98f2013d1f8dc931a Mon Sep 17 00:00:00 2001
+From 7d4a17760463805b041533b09751e181e870e5e4 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:38 +0000
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: dwc3-generic-plat: spacemit: add

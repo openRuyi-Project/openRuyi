@@ -1,4 +1,4 @@
-From 323a18dcdb57c3c4a56d687fff097af3249b0fe3 Mon Sep 17 00:00:00 2001
+From bd117df72465a339cb37c8f8f294b14b31cfff74 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:04 +0200
 Subject: [RUYI PATCH] UPSTREAM: pwm: Add Rust driver for T-HEAD TH1520 SoC

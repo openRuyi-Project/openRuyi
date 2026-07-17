@@ -1,4 +1,4 @@
-From 729fb80f40c116319af3f00f273cb56718995e42 Mon Sep 17 00:00:00 2001
+From 0a037ecaecd5d3d6451db6da957486d31735aa89 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:29 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: reset: thead,th1520-reset: Add

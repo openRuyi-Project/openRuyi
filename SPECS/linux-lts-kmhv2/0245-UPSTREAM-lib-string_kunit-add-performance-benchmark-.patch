@@ -1,4 +1,4 @@
-From 3157c725cd7a5774a6e772aee7c537b7bc65a90e Mon Sep 17 00:00:00 2001
+From d032a3bac6de0685705b92695173bf82d6eeb886 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add performance benchmark

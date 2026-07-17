@@ -1,4 +1,4 @@
-From f43d3afeb48fc78d1fa9aec7aaaefdf6964e4b6c Mon Sep 17 00:00:00 2001
+From 3de69d18d8eb1ecf72128605e7f0f320f0504078 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:56 +0100
 Subject: [RUYI PATCH] UPSTREAM: soc: renesas: rz-sysc: #undef field_get()

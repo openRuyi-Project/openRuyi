@@ -1,4 +1,4 @@
-From 7a1bef3a9306a7c4cd45d233b4965356c86f23d4 Mon Sep 17 00:00:00 2001
+From c9a314cc16c1422c4922b0a902f8f01ef17ad06f Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: lib: add strrchr() implementation

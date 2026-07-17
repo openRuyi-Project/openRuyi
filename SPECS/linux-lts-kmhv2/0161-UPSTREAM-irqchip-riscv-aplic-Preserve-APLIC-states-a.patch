@@ -1,4 +1,4 @@
-From dc079d2d3ef26e7fc9ba38e7af9c67873ed5fc55 Mon Sep 17 00:00:00 2001
+From 6dc6cd1f8b082a07a30cb10ffb8a1403350e506b Mon Sep 17 00:00:00 2001
 From: Nick Hu <nick.hu@sifive.com>
 Date: Tue, 2 Dec 2025 14:07:41 +0800
 Subject: [RUYI PATCH] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states

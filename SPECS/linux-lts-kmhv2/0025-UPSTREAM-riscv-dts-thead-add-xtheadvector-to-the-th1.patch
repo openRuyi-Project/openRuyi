@@ -1,4 +1,4 @@
-From c413ed4426b184f8cb2304ff2897825e2a215871 Mon Sep 17 00:00:00 2001
+From 1cfd24d0ebea3fd30addd6ab38dfb349a1ec08be Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add xtheadvector to the

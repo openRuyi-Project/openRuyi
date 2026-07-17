@@ -1,4 +1,4 @@
-From 5f50d2a328f7b2daa106bafdb1d4a794f52fbdb4 Mon Sep 17 00:00:00 2001
+From 9a05689ddb515469b8dd3b3c86c6e461cb930936 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 24 Apr 2026 16:20:32 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: mark top_dclk as

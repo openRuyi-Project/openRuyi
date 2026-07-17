@@ -1,0 +1,39 @@
+From 2fc2775dc1e08879e18a10daa482189df2a84adc Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:45 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: core: Add UFS_HS_G6 and
+ UFS_HS_GEAR_MAX to enum ufs_hs_gear_tag
+
+Add UFS_HS_G6 to enum ufs_hs_gear_tag. In addition, add UFS_HS_GEAR_MAX to
+enum ufs_hs_gear_tag to facilitate iteration over valid High Speed Gears.
+
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-4-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 6669ab18c2238299a685ada1acea1c7d4f1da1d5)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/ufs/unipro.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/ufs/unipro.h b/include/ufs/unipro.h
+index 59de737490ca..71a5f643400c 100644
+--- a/include/ufs/unipro.h
++++ b/include/ufs/unipro.h
+@@ -233,7 +233,9 @@ enum ufs_hs_gear_tag {
+ 	UFS_HS_G2,		/* HS Gear 2 */
+ 	UFS_HS_G3,		/* HS Gear 3 */
+ 	UFS_HS_G4,		/* HS Gear 4 */
+-	UFS_HS_G5		/* HS Gear 5 */
++	UFS_HS_G5,		/* HS Gear 5 */
++	UFS_HS_G6,		/* HS Gear 6 */
++	UFS_HS_GEAR_MAX = UFS_HS_G6,
+ };
+ 
+ enum ufs_lanes {
+-- 
+2.53.0
+

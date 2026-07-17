@@ -1,4 +1,4 @@
-From 34e6c9de17b9ff861746760bfc9334e3fc3060cb Mon Sep 17 00:00:00 2001
+From 7df49938ca1e4c3188674cf01b6d943ceea80c9b Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:07 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Add PWM fan and thermal

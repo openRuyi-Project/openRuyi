@@ -1,4 +1,4 @@
-From 34f41ea98d21a5605f1d5973259656f6e6557de0 Mon Sep 17 00:00:00 2001
+From db019f57db04d4ece4511823ca49186776ac1572 Mon Sep 17 00:00:00 2001
 From: Zongmin Zhou <zhouzongmin@kylinos.cn>
 Date: Thu, 20 Nov 2025 17:58:31 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv/atomic.h: use RISCV_FULL_BARRIER in

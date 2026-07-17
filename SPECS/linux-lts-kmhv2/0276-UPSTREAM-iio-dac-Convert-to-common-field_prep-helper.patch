@@ -1,4 +1,4 @@
-From 8c762e56b97e2dfa47081feffdf43f03d3f977e5 Mon Sep 17 00:00:00 2001
+From f9bc08e080dccd44f22a6dcd7d0cb5ee72455eb5 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:06 +0100
 Subject: [RUYI PATCH] UPSTREAM: iio: dac: Convert to common field_prep()
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 deletions(-)
 
 diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
-index 5684d11137f2..b97b46090d80 100644
+index 84ce89dd76a4..d9db3226ecd6 100644
 --- a/drivers/iio/dac/ad3530r.c
 +++ b/drivers/iio/dac/ad3530r.c
 @@ -53,10 +53,6 @@

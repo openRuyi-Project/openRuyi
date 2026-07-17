@@ -1,4 +1,4 @@
-From 4f4b809bc01cd7d00cf117b7e99a2a2b18a9d9f9 Mon Sep 17 00:00:00 2001
+From 9442e52784b43c32211b4e810635c32d91c7d43c Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:07 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI/MSI: Check the device specific address

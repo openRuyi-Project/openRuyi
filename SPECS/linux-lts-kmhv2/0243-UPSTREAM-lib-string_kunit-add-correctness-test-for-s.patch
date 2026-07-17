@@ -1,4 +1,4 @@
-From 902bdb8bb0a0f55816f458cf513b52da08e503fb Mon Sep 17 00:00:00 2001
+From 1dd18b43a3cfbc4596a549638d881be3fb39fe5f Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add correctness test for

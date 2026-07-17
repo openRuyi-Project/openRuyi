@@ -1,0 +1,42 @@
+From 17fc1a4886108c056f9d0729bbd97965fcb74e37 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:06 +0100
+Subject: [RUYI PATCH] UPSTREAM: of: Convert to of_machine_get_match()
+
+Use the of_machine_get_match() helper instead of open-coding the same
+operation.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/83ed49314b94dab7781e1d74236af72dd5c349c6.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 57814f2e0cd7960fc8bbe097c05fdf2c3f8c67e4)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/of/base.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index aca156128e3e..ff142b650732 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -464,15 +464,8 @@ EXPORT_SYMBOL(of_machine_get_match);
+ const void *of_machine_get_match_data(const struct of_device_id *matches)
+ {
+ 	const struct of_device_id *match;
+-	struct device_node *root;
+-
+-	root = of_find_node_by_path("/");
+-	if (!root)
+-		return NULL;
+-
+-	match = of_match_node(matches, root);
+-	of_node_put(root);
+ 
++	match = of_machine_get_match(matches);
+ 	if (!match)
+ 		return NULL;
+ 
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From d591170d2ed25e8716eb3db09e686e859c5c318b Mon Sep 17 00:00:00 2001
+From c74eeb3e1afb91310fa36cfdf25bd8dccaf5dc72 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:04 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Update PMIC supply

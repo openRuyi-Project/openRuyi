@@ -1,0 +1,44 @@
+From e2e5cd5b291fd8acdb66195ec90de58a96638242 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:10 +0100
+Subject: [RUYI PATCH] UPSTREAM: soc: qcom: pd-mapper: Convert to
+ of_machine_get_match()
+
+Use the of_machine_get_match() helper instead of open-coding the same
+operation.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/0d23a449e62ac85f04ff07bc2758efbaa709c9d1.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 3ee3d8a44976ac7e39584637ee4c840d70ab2ad1)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/soc/qcom/qcom_pd_mapper.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd_mapper.c
+index 6384f271953d..56d2377fb8b1 100644
+--- a/drivers/soc/qcom/qcom_pd_mapper.c
++++ b/drivers/soc/qcom/qcom_pd_mapper.c
+@@ -605,15 +605,9 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+ 	const struct qcom_pdm_domain_data * const *domains;
+ 	const struct of_device_id *match;
+ 	struct qcom_pdm_data *data;
+-	struct device_node *root;
+ 	int ret, i;
+ 
+-	root = of_find_node_by_path("/");
+-	if (!root)
+-		return ERR_PTR(-ENODEV);
+-
+-	match = of_match_node(qcom_pdm_domains, root);
+-	of_node_put(root);
++	match = of_machine_get_match(qcom_pdm_domains);
+ 	if (!match) {
+ 		pr_notice("PDM: no support for the platform, userspace daemon might be required.\n");
+ 		return ERR_PTR(-ENODEV);
+-- 
+2.53.0
+

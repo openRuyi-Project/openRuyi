@@ -1,4 +1,4 @@
-From f38cd0cdcf8e8fecf3db47eb57caf5849e92aa36 Mon Sep 17 00:00:00 2001
+From 60ab55f64eb13e9141c5bcfb1ff3cc4e60bb4da3 Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Sun, 11 Jan 2026 14:41:03 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add DWC3 USB 3.0

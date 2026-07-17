@@ -1,4 +1,4 @@
-From 92ba8033d4f60d619ebeb8f1f465e68d66004e81 Mon Sep 17 00:00:00 2001
+From 9d7dbecad1fa5819d037808617b077ceccfaf798 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:55 +0100
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: ma35: #undef field_{get,prep}()

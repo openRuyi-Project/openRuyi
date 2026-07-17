@@ -1,4 +1,4 @@
-From b88d7d9315cd6748d47a8ced520004d8f68ec0fc Mon Sep 17 00:00:00 2001
+From 1474b5e2b184b4ebd68e60bf501ee8c8940bbfc2 Mon Sep 17 00:00:00 2001
 From: Thomas Gerner <thomas.gerner@muenchen-mail.de>
 Date: Tue, 20 Jan 2026 09:59:26 +0100
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: th1520: Fix typo

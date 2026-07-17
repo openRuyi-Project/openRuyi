@@ -1,4 +1,4 @@
-From 878e4e3217cc3b8b51d6d5480b8c6c8120d47144 Mon Sep 17 00:00:00 2001
+From dab0ffb790023615ccdc8e736b12d107c416cc83 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sun, 2 Nov 2025 21:17:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: add the clock tree

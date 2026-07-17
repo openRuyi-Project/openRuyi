@@ -1,4 +1,4 @@
-From cf1dda8a91f6866dead5cfac3205be1ea706a065 Mon Sep 17 00:00:00 2001
+From 3b06167014830657863b7333d0ed9be00567cf8f Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:09 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/dumb-buffers: Provide helper to set pitch

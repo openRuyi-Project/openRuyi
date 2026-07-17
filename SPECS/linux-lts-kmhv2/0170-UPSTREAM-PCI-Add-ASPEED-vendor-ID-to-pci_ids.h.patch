@@ -1,4 +1,4 @@
-From 8aba9c8ffd6f7bf33950abcc2bb276254f6749cf Mon Sep 17 00:00:00 2001
+From c6a6a28a720c061231c7672505fe6b1692dc0c55 Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:28 -0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: Add ASPEED vendor ID to pci_ids.h

@@ -1,4 +1,4 @@
-From cca8801247fe6e5967002d5519f537917e6a9bf5 Mon Sep 17 00:00:00 2001
+From 8ebfab2105d336f53b29a5971f076b60a2ee5e69 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:31 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: PCIe and PHY-related

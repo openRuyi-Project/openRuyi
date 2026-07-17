@@ -1,4 +1,4 @@
-From 821bb874c9ee51f801501a53f0bfaff22992f2fb Mon Sep 17 00:00:00 2001
+From 43f0647cb3c08ebc84b841e37b0d55747e913beb Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:00 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x

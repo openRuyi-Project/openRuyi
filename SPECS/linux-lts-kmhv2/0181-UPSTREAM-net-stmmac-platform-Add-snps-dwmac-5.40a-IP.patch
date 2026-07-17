@@ -1,4 +1,4 @@
-From 415d3b3b2a8fe07f5d9c84225c47c6f3be8fd827 Mon Sep 17 00:00:00 2001
+From 2587e7c305cdac8ba52da0a37169d1b9c8064588 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:38 +0800
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: platform: Add snps,dwmac-5.40a IP

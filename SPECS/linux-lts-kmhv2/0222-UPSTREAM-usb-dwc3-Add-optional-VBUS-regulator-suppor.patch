@@ -1,4 +1,4 @@
-From ec33bc462214da036d45ea0a3822c34e9f3d422b Mon Sep 17 00:00:00 2001
+From 395f6faa5c6eaee1206ab83d69d671da8d8bf5e3 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Thu, 26 Mar 2026 18:00:10 +0800
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: Add optional VBUS regulator support

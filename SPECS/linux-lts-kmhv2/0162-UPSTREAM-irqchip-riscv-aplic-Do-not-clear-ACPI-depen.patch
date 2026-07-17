@@ -1,4 +1,4 @@
-From 9030f2dc70b9b4bd8e20de88dcbbd8afa905d20e Mon Sep 17 00:00:00 2001
+From b767d9568f3b66f92d69207f325a2b16a652c531 Mon Sep 17 00:00:00 2001
 From: Jessica Liu <liu.xuemei1@zte.com.cn>
 Date: Tue, 10 Mar 2026 14:16:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: irqchip/riscv-aplic: Do not clear ACPI

@@ -1,4 +1,4 @@
-From 1df92e173f9dd68d0498d92fb07c15a5b2ddf8eb Mon Sep 17 00:00:00 2001
+From 09fc6e652c8500c58d3fe27c7be9bebf2b59bc5b Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:54 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable the i2c8 adapter

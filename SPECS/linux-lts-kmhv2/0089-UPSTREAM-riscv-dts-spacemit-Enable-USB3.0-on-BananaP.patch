@@ -1,4 +1,4 @@
-From 35bdc15291717adfaa52c4c9d060b5da8fac5ddf Mon Sep 17 00:00:00 2001
+From 10b5f752d64626320eaaf74011f5529216f78b0c Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Sun, 11 Jan 2026 14:41:04 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Enable USB3.0 on

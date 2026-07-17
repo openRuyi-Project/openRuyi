@@ -1,4 +1,4 @@
-From 3a49674fb8ec24236b9a789e322ccc05b66c4d65 Mon Sep 17 00:00:00 2001
+From da3921d821fb8fc226467e03f7c4e9547f1bebef Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:40 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: add SpacemiT X100 CPU

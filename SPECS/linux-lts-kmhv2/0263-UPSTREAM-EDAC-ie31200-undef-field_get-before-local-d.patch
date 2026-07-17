@@ -1,4 +1,4 @@
-From 8d1903d76c78fd4c3f54ccb47a84b23de8c65c5a Mon Sep 17 00:00:00 2001
+From 55c96fbd859895ac18ef19bf2cb66a79be5a441b Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:51 +0100
 Subject: [RUYI PATCH] UPSTREAM: EDAC/ie31200: #undef field_get() before local

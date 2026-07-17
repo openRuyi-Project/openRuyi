@@ -1,4 +1,4 @@
-From 2038df152864bcab073a9afa519466c854b79d21 Mon Sep 17 00:00:00 2001
+From 5faf2537137da89b63a6dd0f45db560e43884bb2 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:23 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pinctrl: spacemit: add K3 SoC

@@ -1,4 +1,4 @@
-From 6069d468c347c12814556df14bbe53dade5799be Mon Sep 17 00:00:00 2001
+From 22786d133cae491a4a2d7486ced9707305762fd1 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Mon, 27 Oct 2025 13:48:05 +0800
 Subject: [RUYI PATCH] UPSTREAM: mfd: simple-mfd-i2c: Remove select I2C_K1 from

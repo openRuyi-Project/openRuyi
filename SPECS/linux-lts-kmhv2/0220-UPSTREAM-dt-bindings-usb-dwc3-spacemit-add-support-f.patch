@@ -1,4 +1,4 @@
-From 8ded8df1d9dccc63760629834a87ae2c8615e042 Mon Sep 17 00:00:00 2001
+From bae97e71f9ca4558461de9dd135102ef2c5a4f0b Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:37 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: dwc3: spacemit: add support

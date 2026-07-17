@@ -1,4 +1,4 @@
-From 9e9a5cb4c3cd15b6b321a0ec71d41d8318cfd254 Mon Sep 17 00:00:00 2001
+From 2b9cdafd6924c78f840a81079b9b3460ca015f62 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:28 +0530
 Subject: [RUYI PATCH] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for

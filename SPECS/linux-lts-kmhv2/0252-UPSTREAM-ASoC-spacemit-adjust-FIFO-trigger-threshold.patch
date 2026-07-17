@@ -1,4 +1,4 @@
-From b81d7e8285e49c07fa31cdb599fdeedddec0fb3c Mon Sep 17 00:00:00 2001
+From 0b445558d4400c7c06a9225f92fc58434d9c4d63 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: adjust FIFO trigger threshold

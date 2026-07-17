@@ -1,4 +1,4 @@
-From 2e5ff84331e9d469cf732e06694632b4d7f0a64e Mon Sep 17 00:00:00 2001
+From dc51053b1e9c63bf238c7324e2bfb06cacd96efd Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 27 Mar 2026 11:40:40 +0000
 Subject: [RUYI PATCH] UPSTREAM: dts: riscv: spacemit: k3: Add i2c nodes

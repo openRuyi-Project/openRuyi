@@ -1,4 +1,4 @@
-From 0cb6f99b1dee1c78c2cb66de8612480e505be4b7 Mon Sep 17 00:00:00 2001
+From 2b6a2bbdc6760821fd7a9064c53288bc35c8aef3 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:27 -0600
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT

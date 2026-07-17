@@ -1,4 +1,4 @@
-From fd2ed2a093642f9ae52054344b23d1c512e4d4b6 Mon Sep 17 00:00:00 2001
+From 395317c0c69e903fa5a663ebf87b3f57ee0c3aa7 Mon Sep 17 00:00:00 2001
 From: Samuel Holland <samuel.holland@sifive.com>
 Date: Fri, 9 Jan 2026 19:34:30 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Use multiple iATU windows for

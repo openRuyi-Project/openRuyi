@@ -1,4 +1,4 @@
-From 4887997f9fc66c19a62763d21f3beb9036a5470b Mon Sep 17 00:00:00 2001
+From 49261bf8d197d630f32c6a54165fcbe3aad3c5cc Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 1 Nov 2025 20:56:42 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: soc: spacemit: k3: add clock

@@ -1,0 +1,103 @@
+From 148e741934cb1a6081d7f61769f15d4b34bdebcc Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:05 +0100
+Subject: [RUYI PATCH] UPSTREAM: of: Add of_machine_get_match() helper
+
+Currently, there are two helpers to match the root compatible value
+against an of_device_id array:
+  - of_machine_device_match() returns true if a match is found,
+  - of_machine_get_match_data() returns the match data if a match is
+    found.
+However, there is no helper that returns the actual of_device_id
+structure corresponding to the match, leading to code duplication in
+various drivers.
+
+Fix this by reworking of_machine_device_match() to return the actual
+match structure, and renaming it to of_machine_get_match().
+Retain the old of_machine_device_match() functionality using a cheap
+static inline wrapper around the new of_machine_get_match() helper.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/14e1c03d443b1a5f210609ec3a1ebbaeab8fb3d9.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 82b6c1b542ea0530318c6f2a880d884eb4dce49f)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/of/base.c  | 11 +++++------
+ include/linux/of.h | 11 ++++++++---
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 8d1972e18161..aca156128e3e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -435,13 +435,12 @@ bool of_machine_compatible_match(const char *const *compats)
+ EXPORT_SYMBOL(of_machine_compatible_match);
+ 
+ /**
+- * of_machine_device_match - Test root of device tree against a of_device_id array
++ * of_machine_get_match - Test root of device tree against an of_device_id array
+  * @matches:	NULL terminated array of of_device_id match structures to search in
+  *
+- * Returns true if the root node has any of the given compatible values in its
+- * compatible property.
++ * Returns matched entry or NULL
+  */
+-bool of_machine_device_match(const struct of_device_id *matches)
++const struct of_device_id *of_machine_get_match(const struct of_device_id *matches)
+ {
+ 	struct device_node *root;
+ 	const struct of_device_id *match = NULL;
+@@ -452,9 +451,9 @@ bool of_machine_device_match(const struct of_device_id *matches)
+ 		of_node_put(root);
+ 	}
+ 
+-	return match != NULL;
++	return match;
+ }
+-EXPORT_SYMBOL(of_machine_device_match);
++EXPORT_SYMBOL(of_machine_get_match);
+ 
+ /**
+  * of_machine_get_match_data - Tell if root of device tree has a matching of_match structure
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 01bb3affcd49..698f42670c51 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -407,7 +407,7 @@ extern int of_alias_get_id(const struct device_node *np, const char *stem);
+ extern int of_alias_get_highest_id(const char *stem);
+ 
+ bool of_machine_compatible_match(const char *const *compats);
+-bool of_machine_device_match(const struct of_device_id *matches);
++const struct of_device_id *of_machine_get_match(const struct of_device_id *matches);
+ const void *of_machine_get_match_data(const struct of_device_id *matches);
+ 
+ /**
+@@ -857,9 +857,9 @@ static inline bool of_machine_compatible_match(const char *const *compats)
+ 	return false;
+ }
+ 
+-static inline bool of_machine_device_match(const struct of_device_id *matches)
++static inline const struct of_device_id *of_machine_get_match(const struct of_device_id *matches)
+ {
+-	return false;
++	return NULL;
+ }
+ 
+ static inline const void *
+@@ -967,6 +967,11 @@ static inline int of_numa_init(void)
+ }
+ #endif
+ 
++static inline bool of_machine_device_match(const struct of_device_id *matches)
++{
++	return of_machine_get_match(matches) != NULL;
++}
++
+ static inline struct device_node *of_find_matching_node(
+ 	struct device_node *from,
+ 	const struct of_device_id *matches)
+-- 
+2.53.0
+

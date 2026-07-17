@@ -1,0 +1,43 @@
+From 1040b342d286dc0a6a7e0ae1d58ba8702ed96d32 Mon Sep 17 00:00:00 2001
+From: Han Gao <gaohan@iscas.ac.cn>
+Date: Wed, 1 Apr 2026 01:12:47 +0800
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: PCI: sophgo: Add dma-coherent
+ property for SG2042
+
+Add dma-coherent as an allowed property in the SG2042 PCIe host controller
+binding. SG2042's PCIe Root Complexes are cache-coherent with the CPU.
+
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Link: https://patch.msgid.link/20260331171248.973014-2-gaohan@iscas.ac.cn
+(cherry picked from commit c6d51515ee0b79a52b7e532b6b20067fa0cec96f)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml       | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+index f8b7ca57fff1..ab482488b047 100644
+--- a/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/sophgo,sg2042-pcie-host.yaml
+@@ -30,6 +30,8 @@ properties:
+   device-id:
+     const: 0x2042
+ 
++  dma-coherent: true
++
+   msi-parent: true
+ 
+ allOf:
+@@ -60,5 +62,6 @@ examples:
+       vendor-id = <0x1f1c>;
+       device-id = <0x2042>;
+       cdns,no-bar-match-nbits = <48>;
++      dma-coherent;
+       msi-parent = <&msi>;
+     };
+-- 
+2.53.0
+

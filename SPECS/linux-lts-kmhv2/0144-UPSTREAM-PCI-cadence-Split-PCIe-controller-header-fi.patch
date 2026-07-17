@@ -1,4 +1,4 @@
-From 3918539e5418b2d1151b2a2e086601ded67796a3 Mon Sep 17 00:00:00 2001
+From 0bece09cf85e2707fde8ad276dd6c46b150d6097 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:57 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Split PCIe controller header

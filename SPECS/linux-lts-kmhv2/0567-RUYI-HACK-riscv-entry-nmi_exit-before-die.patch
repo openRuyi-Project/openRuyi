@@ -1,0 +1,45 @@
+From 0cbaf29b9b337231c6c786852d96d9ecc6d9038d Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Tue, 7 Jul 2026 09:35:50 +0800
+Subject: [RUYI PATCH] RUYI: HACK: riscv: entry: nmi_exit() before die()
+
+Breakpoint exceptions are handled in_nmi() since they could be kernel
+breakpoints. As such, nmi_exit() before die() to give the kernel a
+chance to recover instead of having make_task_dead() generate a
+full-machine panic.
+
+This is similar to how some exceptions are handled in powerpc.
+
+This is a bit of a hack. A better solution was being discussed [1] but
+no concrete conclusion has been arrived to yet.
+
+Link: https://lore.kernel.org/linux-riscv/20230702025708.784106-1-guoren@kernel.org/ # [1]
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/traps.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+index 47afea4ff1a8..65172f072f37 100644
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -298,10 +298,13 @@ void handle_break(struct pt_regs *regs)
+ 		return;
+ #endif
+ 	else if (report_bug(regs->epc, regs) == BUG_TRAP_TYPE_WARN ||
+-		 handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN)
++		 handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+ 		regs->epc += get_break_insn_length(regs->epc);
+-	else
++	} else {
++		/* Avoid a panic, since we're in_nmi(). */
++		nmi_exit();
+ 		die(regs, "Kernel BUG");
++	}
+ }
+ 
+ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
+-- 
+2.53.0
+

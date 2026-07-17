@@ -1,4 +1,4 @@
-From a21ca9741cdf655d806097dd0285fc759b7550dd Mon Sep 17 00:00:00 2001
+From 50e513b530f9e8ff4e5efaa0d2a9c1ddf0ed96fe Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 11:06:17 +0000
 Subject: [RUYI PATCH] UPSTREAM: reset: spacemit: k3: Decouple composite reset

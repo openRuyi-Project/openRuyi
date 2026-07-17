@@ -1,4 +1,4 @@
-From 21223e48716232b52be9719f8d4361bc9f82af59 Mon Sep 17 00:00:00 2001
+From bf80711365ff96f172a52b4e8ccac4322a7a3b48 Mon Sep 17 00:00:00 2001
 From: Yufeng Wang <wangyufeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: enable HAVE_IOREMAP_PROT

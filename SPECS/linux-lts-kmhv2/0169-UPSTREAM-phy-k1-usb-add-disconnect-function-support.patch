@@ -1,4 +1,4 @@
-From 9acac5b146b312ddb8525d13c2ba273dff6508a0 Mon Sep 17 00:00:00 2001
+From e2c5643e1715c990fc07ce560139625f2edd5827 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Mon, 16 Feb 2026 23:26:53 +0800
 Subject: [RUYI PATCH] UPSTREAM: phy: k1-usb: add disconnect function support

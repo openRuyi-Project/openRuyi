@@ -1,0 +1,228 @@
+From 64b849ace44e88370c33ba1e12ad636feaa2a9c8 Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:44 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: core: Pass force_pmc to
+ ufshcd_config_pwr_mode() as a parameter
+
+Currently, callers must manually toggle hba->force_pmc before and after
+calling ufshcd_config_pwr_mode() to force a Power Mode change. Introduce
+enum ufshcd_pmc_policy and refactor ufshcd_config_pwr_mode() to accept
+pmc_policy as a parameter to force a Power Mode change.
+
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-3-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit c91c83671642d6140b703e999e2aff2d7ad57c74)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/core/ufshcd.c     | 35 ++++++++++++++++++++++-------------
+ drivers/ufs/host/ufshcd-pci.c |  3 ++-
+ include/ufs/ufshcd.h          | 19 +++++++++++++++----
+ 3 files changed, 39 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 5c7b48664147..25ff3629df99 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -1406,7 +1406,8 @@ static int ufshcd_scale_gear(struct ufs_hba *hba, u32 target_gear, bool scale_up
+ 
+ config_pwr_mode:
+ 	/* check if the power mode needs to be changed or not? */
+-	ret = ufshcd_config_pwr_mode(hba, &new_pwr_info);
++	ret = ufshcd_config_pwr_mode(hba, &new_pwr_info,
++				     UFSHCD_PMC_POLICY_DONT_FORCE);
+ 	if (ret)
+ 		dev_err(hba->dev, "%s: failed err %d, old gear: (tx %d rx %d), new gear: (tx %d rx %d)",
+ 			__func__, ret,
+@@ -4260,7 +4261,8 @@ int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			pwr_mode_change = true;
+ 		}
+ 		if (pwr_mode_change) {
+-			ret = ufshcd_change_power_mode(hba, &temp_pwr_info);
++			ret = ufshcd_change_power_mode(hba, &temp_pwr_info,
++						       UFSHCD_PMC_POLICY_DONT_FORCE);
+ 			if (ret)
+ 				goto out;
+ 		}
+@@ -4284,7 +4286,8 @@ int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 
+ 	if (peer && (hba->quirks & UFSHCD_QUIRK_DME_PEER_ACCESS_AUTO_MODE)
+ 	    && pwr_mode_change)
+-		ufshcd_change_power_mode(hba, &orig_pwr_info);
++		ufshcd_change_power_mode(hba, &orig_pwr_info,
++					 UFSHCD_PMC_POLICY_DONT_FORCE);
+ out:
+ 	return ret;
+ }
+@@ -4668,6 +4671,7 @@ static int ufshcd_get_max_pwr_mode(struct ufs_hba *hba)
+  * ufshcd_dme_change_power_mode() - UniPro DME Power Mode change sequence
+  * @hba: per-adapter instance
+  * @pwr_mode: pointer to the target power mode (gear/lane) attributes
++ * @pmc_policy: Power Mode change policy
+  *
+  * This function handles the low-level DME (Device Management Entity)
+  * configuration required to transition the UFS link to a new power mode. It
+@@ -4683,12 +4687,13 @@ static int ufshcd_get_max_pwr_mode(struct ufs_hba *hba)
+  * Return: 0 on success, non-zero error code on failure.
+  */
+ static int ufshcd_dme_change_power_mode(struct ufs_hba *hba,
+-					struct ufs_pa_layer_attr *pwr_mode)
++					struct ufs_pa_layer_attr *pwr_mode,
++					enum ufshcd_pmc_policy pmc_policy)
+ {
+ 	int ret;
+ 
+ 	/* if already configured to the requested pwr_mode */
+-	if (!hba->force_pmc &&
++	if (pmc_policy == UFSHCD_PMC_POLICY_DONT_FORCE &&
+ 	    pwr_mode->gear_rx == hba->pwr_info.gear_rx &&
+ 	    pwr_mode->gear_tx == hba->pwr_info.gear_tx &&
+ 	    pwr_mode->lane_rx == hba->pwr_info.lane_rx &&
+@@ -4771,6 +4776,7 @@ static int ufshcd_dme_change_power_mode(struct ufs_hba *hba,
+  * ufshcd_change_power_mode() - Change UFS Link Power Mode
+  * @hba: per-adapter instance
+  * @pwr_mode: pointer to the target power mode (gear/lane) attributes
++ * @pmc_policy: Power Mode change policy
+  *
+  * This function handles the high-level sequence for changing the UFS link
+  * power mode. It triggers vendor-specific pre-change notification,
+@@ -4780,13 +4786,14 @@ static int ufshcd_dme_change_power_mode(struct ufs_hba *hba,
+  * Return: 0 on success, non-zero error code on failure.
+  */
+ int ufshcd_change_power_mode(struct ufs_hba *hba,
+-			     struct ufs_pa_layer_attr *pwr_mode)
++			     struct ufs_pa_layer_attr *pwr_mode,
++			     enum ufshcd_pmc_policy pmc_policy)
+ {
+ 	int ret;
+ 
+ 	ufshcd_vops_pwr_change_notify(hba, PRE_CHANGE, pwr_mode);
+ 
+-	ret = ufshcd_dme_change_power_mode(hba, pwr_mode);
++	ret = ufshcd_dme_change_power_mode(hba, pwr_mode, pmc_policy);
+ 
+ 	if (!ret)
+ 		ufshcd_vops_pwr_change_notify(hba, POST_CHANGE, pwr_mode);
+@@ -4799,11 +4806,13 @@ EXPORT_SYMBOL_GPL(ufshcd_change_power_mode);
+  * ufshcd_config_pwr_mode - configure a new power mode
+  * @hba: per-adapter instance
+  * @desired_pwr_mode: desired power configuration
++ * @pmc_policy: Power Mode change policy
+  *
+  * Return: 0 upon success; < 0 upon failure.
+  */
+ int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+-		struct ufs_pa_layer_attr *desired_pwr_mode)
++			   struct ufs_pa_layer_attr *desired_pwr_mode,
++			   enum ufshcd_pmc_policy pmc_policy)
+ {
+ 	struct ufs_pa_layer_attr final_params = { 0 };
+ 	int ret;
+@@ -4818,7 +4827,7 @@ int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+ 		memcpy(&final_params, desired_pwr_mode, sizeof(final_params));
+ 	}
+ 
+-	return ufshcd_change_power_mode(hba, &final_params);
++	return ufshcd_change_power_mode(hba, &final_params, pmc_policy);
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_config_pwr_mode);
+ 
+@@ -6857,14 +6866,13 @@ static void ufshcd_err_handler(struct work_struct *work)
+ 		 * are sent via bsg and/or sysfs.
+ 		 */
+ 		down_write(&hba->clk_scaling_lock);
+-		hba->force_pmc = true;
+-		pmc_err = ufshcd_config_pwr_mode(hba, &(hba->pwr_info));
++		pmc_err = ufshcd_config_pwr_mode(hba, &hba->pwr_info,
++						 UFSHCD_PMC_POLICY_FORCE);
+ 		if (pmc_err) {
+ 			needs_reset = true;
+ 			dev_err(hba->dev, "%s: Failed to restore power mode, err = %d\n",
+ 					__func__, pmc_err);
+ 		}
+-		hba->force_pmc = false;
+ 		ufshcd_print_pwr_info(hba);
+ 		up_write(&hba->clk_scaling_lock);
+ 		spin_lock_irqsave(hba->host->host_lock, flags);
+@@ -9107,7 +9115,8 @@ static int ufshcd_post_device_init(struct ufs_hba *hba)
+ 	if (hba->dev_ref_clk_freq != REF_CLK_FREQ_INVAL)
+ 		ufshcd_set_dev_ref_clk(hba);
+ 	/* Gear up to HS gear. */
+-	ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info);
++	ret = ufshcd_config_pwr_mode(hba, &hba->max_pwr_info.info,
++				     UFSHCD_PMC_POLICY_DONT_FORCE);
+ 	if (ret) {
+ 		dev_err(hba->dev, "%s: Failed setting power mode, err = %d\n",
+ 			__func__, ret);
+diff --git a/drivers/ufs/host/ufshcd-pci.c b/drivers/ufs/host/ufshcd-pci.c
+index 8a4f2381a32e..38d458711c99 100644
+--- a/drivers/ufs/host/ufshcd-pci.c
++++ b/drivers/ufs/host/ufshcd-pci.c
+@@ -145,7 +145,8 @@ static int ufs_intel_set_lanes(struct ufs_hba *hba, u32 lanes)
+ 
+ 	pwr_info.lane_rx = lanes;
+ 	pwr_info.lane_tx = lanes;
+-	ret = ufshcd_change_power_mode(hba, &pwr_info);
++	ret = ufshcd_change_power_mode(hba, &pwr_info,
++				       UFSHCD_PMC_POLICY_DONT_FORCE);
+ 	if (ret)
+ 		dev_err(hba->dev, "%s: Setting %u lanes, err = %d\n",
+ 			__func__, lanes, ret);
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index eb6e8e9b6433..c33060f24dfd 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -534,6 +534,17 @@ enum ufshcd_state {
+ 	UFSHCD_STATE_ERROR,
+ };
+ 
++/**
++ * enum ufshcd_pmc_policy - Power Mode change policy
++ * @UFSHCD_PMC_POLICY_DONT_FORCE: Do not force a Power Mode change.
++ * @UFSHCD_PMC_POLICY_FORCE: Force a Power Mode change even if current Power
++ *	Mode is same as target Power Mode.
++ */
++enum ufshcd_pmc_policy {
++	UFSHCD_PMC_POLICY_DONT_FORCE,
++	UFSHCD_PMC_POLICY_FORCE,
++};
++
+ enum ufshcd_quirks {
+ 	/* Interrupt aggregation support is broken */
+ 	UFSHCD_QUIRK_BROKEN_INTR_AGGR			= 1 << 0,
+@@ -888,7 +899,6 @@ enum ufshcd_mcq_opr {
+  * @saved_uic_err: sticky UIC error mask
+  * @ufs_stats: various error counters
+  * @force_reset: flag to force eh_work perform a full reset
+- * @force_pmc: flag to force a power mode change
+  * @silence_err_logs: flag to silence error logs
+  * @dev_cmd: ufs device management command information
+  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
+@@ -1045,7 +1055,6 @@ struct ufs_hba {
+ 	u32 saved_uic_err;
+ 	struct ufs_stats ufs_stats;
+ 	bool force_reset;
+-	bool force_pmc;
+ 	bool silence_err_logs;
+ 
+ 	/* Device management request data */
+@@ -1372,9 +1381,11 @@ extern int ufshcd_dme_set_attr(struct ufs_hba *hba, u32 attr_sel,
+ extern int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u32 *mib_val, u8 peer);
+ extern int ufshcd_change_power_mode(struct ufs_hba *hba,
+-				    struct ufs_pa_layer_attr *pwr_mode);
++				    struct ufs_pa_layer_attr *pwr_mode,
++				    enum ufshcd_pmc_policy pmc_policy);
+ extern int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+-			struct ufs_pa_layer_attr *desired_pwr_mode);
++				  struct ufs_pa_layer_attr *desired_pwr_mode,
++				  enum ufshcd_pmc_policy pmc_policy);
+ extern int ufshcd_uic_change_pwr_mode(struct ufs_hba *hba, u8 mode);
+ 
+ /* UIC command interfaces for DME primitives */
+-- 
+2.53.0
+

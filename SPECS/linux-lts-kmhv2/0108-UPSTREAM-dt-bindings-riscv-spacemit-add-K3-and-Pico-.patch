@@ -1,4 +1,4 @@
-From 90385ee4dee92d3b318cb4a03b5de245c87b06f2 Mon Sep 17 00:00:00 2001
+From 8e6028a04fddc05779e162a8306ec8f0e290946a Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:44 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: spacemit: add K3 and

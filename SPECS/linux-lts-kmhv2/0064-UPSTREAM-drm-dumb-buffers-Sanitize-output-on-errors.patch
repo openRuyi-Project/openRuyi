@@ -1,4 +1,4 @@
-From 8030689f50a72fc225dd6c31ad77d6b868549463 Mon Sep 17 00:00:00 2001
+From 476b5a142396e7b932e3fd2d8af5632718cfb3d4 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Thu, 21 Aug 2025 10:17:08 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/dumb-buffers: Sanitize output on errors

@@ -1,4 +1,4 @@
-From 83865522aaf93ce13b4bf32daff035cc0ffb1875 Mon Sep 17 00:00:00 2001
+From 656a7926c150505d9e7116c44047cb98b9b144ac Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:26 +0000
 Subject: [RUYI PATCH] UPSTREAM: tyr: remove impl Send/Sync for TyrData

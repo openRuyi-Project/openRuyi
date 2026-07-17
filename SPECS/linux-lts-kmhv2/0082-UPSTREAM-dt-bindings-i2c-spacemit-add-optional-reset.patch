@@ -1,4 +1,4 @@
-From f388858d4abee4592cdb3e48a66ed3c681b5801f Mon Sep 17 00:00:00 2001
+From 2b4b7b00547de7db090321cbe060f0785bbe1c2b Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: i2c: spacemit: add optional

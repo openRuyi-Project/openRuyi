@@ -1,4 +1,4 @@
-From fc08e30c489223facf41c8c180c1d3685bad9ee9 Mon Sep 17 00:00:00 2001
+From bc39dc8773ca6dc48b317957a658017dbde02f04 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:15 +0000
 Subject: [RUYI PATCH] UPSTREAM: clk: thead: th1520-ap: Support CPU frequency

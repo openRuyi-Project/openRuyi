@@ -1,4 +1,4 @@
-From a31ca7ca552212b34bea5cb3fcf52759dc2a28a0 Mon Sep 17 00:00:00 2001
+From 56a0c498eb7202b1712b5d25176fd0f45ba6ab53 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:54 +0100
 Subject: [RUYI PATCH] UPSTREAM: iio: mlx90614: #undef field_{get,prep}()

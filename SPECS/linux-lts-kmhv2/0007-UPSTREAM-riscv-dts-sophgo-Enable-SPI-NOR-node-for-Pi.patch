@@ -1,4 +1,4 @@
-From 9e5ebf3bb03d5951a1ac6273a557a7d3b42aaf5d Mon Sep 17 00:00:00 2001
+From 43537896ac9425049eb19027394a36723e71fa30 Mon Sep 17 00:00:00 2001
 From: Zixian Zeng <sycamoremoon376@gmail.com>
 Date: Tue, 16 Sep 2025 21:22:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for

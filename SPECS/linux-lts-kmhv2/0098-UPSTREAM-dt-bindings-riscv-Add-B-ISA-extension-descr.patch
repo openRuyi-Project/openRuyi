@@ -1,4 +1,4 @@
-From 8b082ec91bd4cfaf11f3a1b69d1b66ea599ba3f1 Mon Sep 17 00:00:00 2001
+From 8425255e16de969339af85fd2795543cf2be9c01 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:18 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: Add B ISA extension

@@ -1,4 +1,4 @@
-From fa80698856016bcd983f8ac31a38e4f108170879 Mon Sep 17 00:00:00 2001
+From 0889d1b742e0a98a0d7f090055580115acf747e6 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:49 +0100
 Subject: [RUYI PATCH] UPSTREAM: clk: at91: pmc: #undef field_{get,prep}()

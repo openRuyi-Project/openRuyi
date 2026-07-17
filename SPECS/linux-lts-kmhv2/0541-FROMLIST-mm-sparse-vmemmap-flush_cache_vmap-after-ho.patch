@@ -1,0 +1,65 @@
+From 0c338eb602e2a4922a7c4f5c6ddc9f58bf0fc53f Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Mon, 13 Jul 2026 14:15:21 +0800
+Subject: [RUYI PATCH] FROMLIST: mm/sparse-vmemmap: flush_cache_vmap() after
+ hotplugging vmemmap
+
+section_activate() does not flush TLB after populating new vmemmap
+pages. On most architectures, this is okay. However it is a problem on
+RISC-V since there the TLB caching non-present entries is permitted,
+which causes spurious faults on some hardwares.
+
+This seems to be most easily reproduced with DEBUG_VM=y and
+PAGE_POISONING=y, which causes these newly mapped struct pages to be
+poisoned i.e. written to immediately after mapping.
+
+Extend the RISC-V flush_cache_vmap() to also handle the vmemmap range,
+and call it after hotplugging vmemmap, which gets the possible spurious
+fault handled in the exception handler.
+
+At least for now, the only other architecture with both
+SPARSEMEM_VMEMMAP and flush_cache_vmap() is PowerPC, which has a similar
+problem with newly valid PTEs. But there flush_cache_vmap() is just a
+ptesync. So it should be safe to do this for generic code while having
+minimal performance impact.
+
+Suggested-by: Muchun Song <muchun.song@linux.dev>
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Reviewed-by: Muchun Song <muchun.song@linux.dev>
+Link: https://lore.kernel.org/r/20260713-mark-after-vmemmap-populate-v6-2-b945ceba29d4@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/cacheflush.h | 3 ++-
+ mm/sparse-vmemmap.c                 | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+index 939ac3b61ff2..c6297a1d2645 100644
+--- a/arch/riscv/include/asm/cacheflush.h
++++ b/arch/riscv/include/asm/cacheflush.h
+@@ -69,7 +69,8 @@ static inline void mark_new_valid_map(void)
+ #define flush_cache_vmap flush_cache_vmap
+ static inline void flush_cache_vmap(unsigned long start, unsigned long end)
+ {
+-	if (is_vmalloc_or_module_addr((void *)start))
++	if (is_vmalloc_or_module_addr((void *)start) ||
++	    (start >= VMEMMAP_START && end <= VMEMMAP_END))
+ 		mark_new_valid_map();
+ }
+ #define flush_cache_vmap_early(start, end)	local_flush_tlb_kernel_range(start, end)
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 37522d6cb398..c9328cc59f52 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -578,6 +578,8 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 	if (r < 0)
+ 		return NULL;
+ 
++	flush_cache_vmap(start, end);
++
+ 	return pfn_to_page(pfn);
+ }
+ 
+-- 
+2.53.0
+

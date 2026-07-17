@@ -1,4 +1,4 @@
-From affb820dfce75897605fbf89105fc1537a97d75b Mon Sep 17 00:00:00 2001
+From d14c1a3674a4d257ec1714aeb83e0c890a87e6fe Mon Sep 17 00:00:00 2001
 From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
 Date: Wed, 17 Sep 2025 08:59:07 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add UART pinctrl

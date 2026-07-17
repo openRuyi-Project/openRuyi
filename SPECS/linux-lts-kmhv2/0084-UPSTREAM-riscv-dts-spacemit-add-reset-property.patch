@@ -1,4 +1,4 @@
-From 3aa8e6c84101edb3c499478758e4a82cc230af36 Mon Sep 17 00:00:00 2001
+From 657d162bba66c43fc3a57fcd6e53ed141c7625ef Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:53 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add reset property

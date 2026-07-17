@@ -1,4 +1,4 @@
-From 00020f3b46c3943b6ce714ac17de5fd1573b399b Mon Sep 17 00:00:00 2001
+From 8e3494bc849eb33a26b0fc1e3c0662ecc6cbdaba Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:57 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: th1520: add coefficients to

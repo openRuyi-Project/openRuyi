@@ -1,4 +1,4 @@
-From a6af60e5b4b61218cbfe45507b2a9c0740b13741 Mon Sep 17 00:00:00 2001
+From 008e9161472e33b735cabb897a883483eb1d62ce Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:34 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on

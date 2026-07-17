@@ -1,4 +1,4 @@
-From ebc23bfadb5fbe0d0f28b65fd9c6837238e6e941 Mon Sep 17 00:00:00 2001
+From a642f8bcf0cf62d7cf1642f8f24b2fbcfe80fc37 Mon Sep 17 00:00:00 2001
 From: Nirmoy Das <nirmoyd@nvidia.com>
 Date: Wed, 17 Dec 2025 07:45:29 -0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: Add PCI_BRIDGE_NO_ALIAS quirk for ASPEED

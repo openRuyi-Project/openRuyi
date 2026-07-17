@@ -1,4 +1,4 @@
-From a2ce6ee9f23da731a7f30c0869f5b48c66d727e1 Mon Sep 17 00:00:00 2001
+From f9fb0523e8826c570898c56b50bf9779f894ce26 Mon Sep 17 00:00:00 2001
 From: Hang Cao <caohang@eswincomputing.com>
 Date: Wed, 12 Nov 2025 13:53:45 +0800
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: eic7700: Add EIC7700 USB driver

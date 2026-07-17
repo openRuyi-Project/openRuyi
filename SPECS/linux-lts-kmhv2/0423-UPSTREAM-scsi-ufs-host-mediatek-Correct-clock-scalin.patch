@@ -1,0 +1,101 @@
+From ef9429eda550c8a92b95a1a698364f2bf497f3bc Mon Sep 17 00:00:00 2001
+From: Peter Wang <peter.wang@mediatek.com>
+Date: Wed, 24 Sep 2025 17:43:23 +0800
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: host: mediatek: Correct clock
+ scaling with PM QoS flow
+
+Correct clock scaling with PM QoS during suspend and resume.  Ensure PM
+QoS is released during suspend if scaling up and re-applied after
+resume. This prevents performance issues and maintains proper power
+management.
+
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Link: https://patch.msgid.link/20250924094527.2992256-2-peter.wang@mediatek.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 7162536410768ec6b219524c36d3a871ff97adf8)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/core/ufshcd.c       |  3 ++-
+ drivers/ufs/host/ufs-mediatek.c | 10 ++++++++++
+ include/ufs/ufshcd.h            |  1 +
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 707f3243dda3..80c504e270b6 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -1076,7 +1076,7 @@ void ufshcd_pm_qos_exit(struct ufs_hba *hba)
+  * @hba: per adapter instance
+  * @on: If True, vote for perf PM QoS mode otherwise power save mode
+  */
+-static void ufshcd_pm_qos_update(struct ufs_hba *hba, bool on)
++void ufshcd_pm_qos_update(struct ufs_hba *hba, bool on)
+ {
+ 	guard(mutex)(&hba->pm_qos_mutex);
+ 
+@@ -1085,6 +1085,7 @@ static void ufshcd_pm_qos_update(struct ufs_hba *hba, bool on)
+ 
+ 	cpu_latency_qos_update_request(&hba->pm_qos_req, on ? 0 : PM_QOS_DEFAULT_VALUE);
+ }
++EXPORT_SYMBOL_GPL(ufshcd_pm_qos_update);
+ 
+ /**
+  * ufshcd_set_clk_freq - set UFS controller clock frequencies
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index 3c63adca561d..27418ea618ed 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -1744,6 +1744,7 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
+ {
+ 	int err;
+ 	struct arm_smccc_res res;
++	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+ 
+ 	if (status == PRE_CHANGE) {
+ 		if (ufshcd_is_auto_hibern8_supported(hba))
+@@ -1773,6 +1774,10 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
+ 
+ 	ufs_mtk_sram_pwr_ctrl(false, res);
+ 
++	/* Release pm_qos if in scale-up mode during suspend */
++	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up))
++		ufshcd_pm_qos_update(hba, false);
++
+ 	return 0;
+ fail:
+ 	/*
+@@ -1788,6 +1793,7 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ {
+ 	int err;
+ 	struct arm_smccc_res res;
++	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+ 
+ 	if (hba->ufshcd_state != UFSHCD_STATE_OPERATIONAL)
+ 		ufs_mtk_dev_vreg_set_lpm(hba, false);
+@@ -1798,6 +1804,10 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	if (err)
+ 		goto fail;
+ 
++	/* Request pm_qos if in scale-up mode after resume */
++	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up))
++		ufshcd_pm_qos_update(hba, true);
++
+ 	if (ufshcd_is_link_hibern8(hba)) {
+ 		err = ufs_mtk_link_set_hpm(hba);
+ 		if (err)
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index e59e37753ad7..9f2160829d80 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -1488,5 +1488,6 @@ int ufshcd_write_ee_control(struct ufs_hba *hba);
+ int ufshcd_update_ee_control(struct ufs_hba *hba, u16 *mask,
+ 			     const u16 *other_mask, u16 set, u16 clr);
+ void ufshcd_force_error_recovery(struct ufs_hba *hba);
++void ufshcd_pm_qos_update(struct ufs_hba *hba, bool on);
+ 
+ #endif /* End of Header */
+-- 
+2.53.0
+

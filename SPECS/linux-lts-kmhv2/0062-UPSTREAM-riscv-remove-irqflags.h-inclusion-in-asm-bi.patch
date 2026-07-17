@@ -1,4 +1,4 @@
-From a33608232c9c99d13d018635c30ee0ff1983de7e Mon Sep 17 00:00:00 2001
+From 719033a111f6554842d971b2a40a5ef67c69d4d3 Mon Sep 17 00:00:00 2001
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 Date: Tue, 16 Dec 2025 09:47:19 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: remove irqflags.h inclusion in

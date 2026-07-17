@@ -1,0 +1,35 @@
+From 09ea1f8afcd909a41d34782732f100b787f25a8c Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Tue, 30 Jun 2026 08:53:19 +0000
+Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: set hdma clock as critical
+
+HDMA clock is responsible for the internal TCM access path of X100 RISC-V
+core, so set the clock flag as critical to prevent it from being shut off,
+otherwise the Linux system will hang.
+
+Fixes: e371a77255b8 ("clk: spacemit: k3: add the clock tree")
+Reported-by: Han Gao <gaohan@iscas.ac.cn>
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+Tested-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260630-06-clk-hdma-critial-v1-1-443c0ac88c5f@kernel.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/clk/spacemit/ccu-k3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/spacemit/ccu-k3.c b/drivers/clk/spacemit/ccu-k3.c
+index 092446590e41..aca61ea76019 100644
+--- a/drivers/clk/spacemit/ccu-k3.c
++++ b/drivers/clk/spacemit/ccu-k3.c
+@@ -1027,7 +1027,7 @@ CCU_MUX_DIV_GATE_DEFINE(isim_vclk_out3, isim_vclk_parents, APMU_SNR_ISIM_VCLK_CT
+ /* APMU clocks end */
+ 
+ /* DCIU clocks start */
+-CCU_GATE_DEFINE(hdma_clk, CCU_PARENT_HW(axi_clk), DCIU_DMASYS_CLK_EN, BIT(0), 0);
++CCU_GATE_DEFINE(hdma_clk, CCU_PARENT_HW(axi_clk), DCIU_DMASYS_CLK_EN, BIT(0), CLK_IS_CRITICAL);
+ CCU_GATE_DEFINE(dma350_clk, CCU_PARENT_HW(axi_clk), DCIU_DMASYS_SDMA_CLK_EN, BIT(0), 0);
+ CCU_GATE_DEFINE(c2_tcm_pipe_clk, CCU_PARENT_HW(axi_clk), DCIU_C2_TCM_PIPE_CLK, BIT(0), 0);
+ CCU_GATE_DEFINE(c3_tcm_pipe_clk, CCU_PARENT_HW(axi_clk), DCIU_C3_TCM_PIPE_CLK, BIT(0), 0);
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From ea4a0e0935587b36a14380693c67c8cd0a9b30f1 Mon Sep 17 00:00:00 2001
+From 95eff11a4892693dbe633e1582a8e9359fcd79f7 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:02 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add individual

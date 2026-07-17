@@ -1,4 +1,4 @@
-From c8b8aab18243d5ad3ee4a6b980f1448aee344adb Mon Sep 17 00:00:00 2001
+From 566fcedda50493fdac4cf1d88354555164577b90 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:49 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: soc: spacemit: Add K3 reset

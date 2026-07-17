@@ -1,4 +1,4 @@
-From 698e2cf6a0e40c6a445aeefa403bb4ac1b28919a Mon Sep 17 00:00:00 2001
+From 4588a083d35aa5e2e2c1c4ad364eb4de88d6a7ad Mon Sep 17 00:00:00 2001
 From: Junhui Liu <junhui.liu@pigmoral.tech>
 Date: Thu, 12 Mar 2026 16:42:43 +0800
 Subject: [RUYI PATCH] UPSTREAM: gpio: spacemit-k1: Add set_config callback

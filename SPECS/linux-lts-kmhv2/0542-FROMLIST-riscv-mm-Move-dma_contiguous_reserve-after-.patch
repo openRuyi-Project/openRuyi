@@ -1,0 +1,73 @@
+From f895bb784a54d2b918908ac5c9e04f01ae403ed5 Mon Sep 17 00:00:00 2001
+From: Eder Zulian <ezulian@redhat.com>
+Date: Tue, 14 Jul 2026 20:56:48 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Move dma_contiguous_reserve() after
+ NUMA initialization
+
+Move the dma_contiguous_reserve() call from setup_bootmem() to
+misc_mem_init(), placing it after arch_numa_init(). This ensures that
+NUMA topology is initialized when reserving contiguous memory for DMA.
+
+Tested with CMA_SIZE_PERNUMA enabled and two NUMA nodes on QEMU:
+
+qemu-system-riscv64 \
+	-machine virt \
+	-nographic \
+	-smp 2 -m 512M \
+	-numa node,nodeid=0,cpus=0,memdev=m0 \
+	-numa node,nodeid=1,cpus=1,memdev=m1 \
+	-object memory-backend-ram,id=m0,size=256M \
+	-object memory-backend-ram,id=m1,size=256M \
+	-kernel arch/riscv/boot/Image \
+	-append "console=ttyS0 earlycon loglevel=7 cma=16M"
+
+Unpatched kernel's log (one global CMA pool and no per-nodepools, 16 MiB
+cma-reserved):
+
+	[    0.000000] cma: Reserved 16 MiB at 0x000000009ee00000
+	...
+	[    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x000000008fffffff]
+	[    0.000000] Initmem setup node 1 [mem 0x0000000090000000-0x000000009fffffff]
+	...
+	[    0.056397] smp: Brought up 2 nodes, 2 CPUs
+	[    0.066135] Memory: 449288K/524288K available (12279K kernel code, 5980K rwdata, 6144K rodata, 2467K init, 482K bss, 54504K reserved, 16384K cma-reserved)
+
+Patched kernel's log (three CMA pools are created, 48 MiB total),
+
+	[    0.000000] cma: Reserved 16 MiB at 0x000000009ee00000
+	[    0.000000] cma: Reserved 16 MiB at 0x000000008ee00000
+	[    0.000000] cma: Reserved 16 MiB at 0x000000009de00000
+	...
+	[    0.054251] smp: Brought up 2 nodes, 2 CPUs
+	[    0.064082] Memory: 416520K/524288K available (12279K kernel code, 5980K rwdata, 6144K rodata, 2467K init, 482K bss, 54504K reserved, 49152K cma-reserved)
+
+Signed-off-by: Eder Zulian <ezulian@redhat.com>
+Link: https://lore.kernel.org/r/20260714185648.1082483-1-ezulian@redhat.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 715575f68c69..6b5be15b941c 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -322,7 +322,6 @@ static void __init setup_bootmem(void)
+ 	if (!IS_ENABLED(CONFIG_BUILTIN_DTB))
+ 		memblock_reserve(dtb_early_pa, fdt_totalsize(dtb_early_va));
+ 
+-	dma_contiguous_reserve(dma32_phys_limit);
+ 	if (IS_ENABLED(CONFIG_64BIT))
+ 		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+ }
+@@ -1472,6 +1471,7 @@ void __init misc_mem_init(void)
+ {
+ 	early_memtest(min_low_pfn << PAGE_SHIFT, max_low_pfn << PAGE_SHIFT);
+ 	arch_numa_init();
++	dma_contiguous_reserve(dma32_phys_limit);
+ 	sparse_init();
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+ 	/* The entire VMEMMAP region has been populated. Flush TLB for this region */
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From 597e2f7d18294ec1b59dc52d5be6ac61f4ef6075 Mon Sep 17 00:00:00 2001
+From 1dadb848fd39698b7cecc8d424161d3a1652a452 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 3 Jan 2026 14:14:36 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: add platform SoC prefix to

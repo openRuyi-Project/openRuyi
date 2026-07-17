@@ -1,4 +1,4 @@
-From c242a53cab013ff50b42785236d0b703b63c9e37 Mon Sep 17 00:00:00 2001
+From a3036bb05f0f0ba49141f757e8a9c682124b897f Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:31 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: use

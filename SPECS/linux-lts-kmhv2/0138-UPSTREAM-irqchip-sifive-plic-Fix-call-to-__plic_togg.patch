@@ -1,4 +1,4 @@
-From cbbdae1821a5dd4f90a95e88d5c536f2421da1b6 Mon Sep 17 00:00:00 2001
+From f2ab06c62c043be194f5704ea040192c919d5ab1 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Mon, 3 Nov 2025 11:18:13 -0500
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Fix call to

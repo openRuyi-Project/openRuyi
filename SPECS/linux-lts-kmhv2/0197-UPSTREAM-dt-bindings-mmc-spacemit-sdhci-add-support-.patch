@@ -1,4 +1,4 @@
-From 3661bb1bda184323b7f27ca11c4f6aa2453a891b Mon Sep 17 00:00:00 2001
+From 34f466edac754bd7fcecd9a421744a5f4ad5280a Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:30 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add support

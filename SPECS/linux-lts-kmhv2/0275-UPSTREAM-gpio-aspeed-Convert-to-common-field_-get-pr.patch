@@ -1,4 +1,4 @@
-From d812b182981498ab3054a3c64531710d096f4e8a Mon Sep 17 00:00:00 2001
+From 99f9fe7759f561b8b37477c015e1186da1e3b182 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:05 +0100
 Subject: [RUYI PATCH] UPSTREAM: gpio: aspeed: Convert to common

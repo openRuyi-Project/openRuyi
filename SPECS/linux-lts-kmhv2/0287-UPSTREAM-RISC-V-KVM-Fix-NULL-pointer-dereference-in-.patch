@@ -1,4 +1,4 @@
-From 4f4bff270953588decae0547de96ac02939beaad Mon Sep 17 00:00:00 2001
+From b7da1d402e48e261c72ea3f0b3cd368e88cd0731 Mon Sep 17 00:00:00 2001
 From: Jiakai Xu <xujiakai2025@iscas.ac.cn>
 Date: Sun, 17 May 2026 12:44:14 +0000
 Subject: [RUYI PATCH] UPSTREAM: RISC-V: KVM: Fix NULL pointer dereference in

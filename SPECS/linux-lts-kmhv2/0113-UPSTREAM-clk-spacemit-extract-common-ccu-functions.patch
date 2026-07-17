@@ -1,4 +1,4 @@
-From 882ae01390f0d71acbaa666ad62660f1690558cb Mon Sep 17 00:00:00 2001
+From c52fe85b94bae057810710b424cbb6f7497aa8d7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 08:07:23 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: extract common ccu functions

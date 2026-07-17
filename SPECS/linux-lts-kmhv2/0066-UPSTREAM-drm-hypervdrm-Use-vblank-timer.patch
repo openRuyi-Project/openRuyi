@@ -1,4 +1,4 @@
-From 5a54ac19c87347a2165595055cab86383cefac4f Mon Sep 17 00:00:00 2001
+From 8050563879938dc6a528fb8e06da2fa438e114f5 Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:22 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/hypervdrm: Use vblank timer
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+)
 
 diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 945b9482bcb3..6e6eb1c12a68 100644
+index 86696a9a32c5..208fb14e837a 100644
 --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 @@ -19,6 +19,8 @@
@@ -56,7 +56,7 @@ index 945b9482bcb3..6e6eb1c12a68 100644
  };
  
  static int hyperv_plane_atomic_check(struct drm_plane *plane,
-@@ -321,6 +328,10 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
+@@ -322,6 +329,10 @@ int hyperv_mode_config_init(struct hyperv_drm_device *hv)
  		return ret;
  	}
  

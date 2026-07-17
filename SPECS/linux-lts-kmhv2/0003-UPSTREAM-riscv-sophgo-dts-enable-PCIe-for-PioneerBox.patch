@@ -1,4 +1,4 @@
-From eb8e783adc4036ef80be48cfc8469b4be20fb577 Mon Sep 17 00:00:00 2001
+From 3690d132b79814fcc0c66ab440226e50704d3483 Mon Sep 17 00:00:00 2001
 From: Chen Wang <unicorn_wang@outlook.com>
 Date: Mon, 20 Oct 2025 11:34:05 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: sophgo: dts: enable PCIe for PioneerBox

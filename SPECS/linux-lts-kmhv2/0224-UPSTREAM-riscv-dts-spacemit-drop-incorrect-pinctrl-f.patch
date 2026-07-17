@@ -1,4 +1,4 @@
-From 9c90526d6c53498c2b0fce296ea54822274f4e03 Mon Sep 17 00:00:00 2001
+From cc73195bc241ce392226f27e718ad6bb23c7dc33 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Sun, 22 Mar 2026 21:25:01 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: drop incorrect pinctrl

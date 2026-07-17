@@ -1,4 +1,4 @@
-From d0197dc9c7ce0b6d04f508db631f06668553d958 Mon Sep 17 00:00:00 2001
+From 67a9dfd22c5cefa5860160d30c1b5bce5719c5a6 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:44 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add GPIO support

@@ -1,0 +1,70 @@
+From be85392e7c5d19687473ddf28227aa6780bec969 Mon Sep 17 00:00:00 2001
+From: Wang Yechao <wang.yechao255@zte.com.cn>
+Date: Tue, 9 Jun 2026 19:28:56 +0800
+Subject: [RUYI PATCH] FROMLIST: ACPI: RISC-V: Fix false warning in
+ cppc_read_ffh() for same-CPU reads
+
+Commit 997c021abc6e ("cpufreq: CPPC: Update FIE arch_freq_scale in
+ticks for non-PCC regs") changed the CPPC Frequency Invariance Engine
+to read AMU counters directly from the scheduler tick for non-PCC
+register spaces (like FFH), instead of deferring to a kthread. This
+means cppc_read_ffh() is now called with IRQs disabled from the tick
+handler, triggering the warning.
+
+This is the same fix as commit df6e4ab654dc ("arm64: topology: Fix
+false warning in counters_read_on_cpu() for same-CPU reads").
+
+Fixes: 997c021abc6e ("cpufreq: CPPC: Update FIE arch_freq_scale in ticks for non-PCC regs")
+Signed-off-by: Wang Yechao <wang.yechao255@zte.com.cn>
+Link: https://lore.kernel.org/r/20260609192856874Y8AaPpKL5TnmbgiWI8DI3@zte.com.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/acpi/riscv/cppc.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/acpi/riscv/cppc.c b/drivers/acpi/riscv/cppc.c
+index fe491937ed25..41c23db0223a 100644
+--- a/drivers/acpi/riscv/cppc.c
++++ b/drivers/acpi/riscv/cppc.c
+@@ -93,16 +93,19 @@ int cpc_read_ffh(int cpu, struct cpc_reg *reg, u64 *val)
+ {
+ 	struct sbi_cppc_data data;
+ 
+-	if (WARN_ON_ONCE(irqs_disabled()))
+-		return -EPERM;
+-
+ 	if (FFH_CPPC_TYPE(reg->address) == FFH_CPPC_SBI) {
+ 		if (!cppc_ext_present)
+ 			return -EINVAL;
+ 
+ 		data.reg = FFH_CPPC_SBI_REG(reg->address);
+ 
+-		smp_call_function_single(cpu, sbi_cppc_read, &data, 1);
++		if (irqs_disabled()) {
++			if (WARN_ON_ONCE(cpu != smp_processor_id()))
++				return -EPERM;
++			sbi_cppc_read(&data);
++		} else {
++			smp_call_function_single(cpu, sbi_cppc_read, &data, 1);
++		}
+ 
+ 		*val = data.ret.value;
+ 
+@@ -110,7 +113,13 @@ int cpc_read_ffh(int cpu, struct cpc_reg *reg, u64 *val)
+ 	} else if (FFH_CPPC_TYPE(reg->address) == FFH_CPPC_CSR) {
+ 		data.reg = FFH_CPPC_CSR_NUM(reg->address);
+ 
+-		smp_call_function_single(cpu, cppc_ffh_csr_read, &data, 1);
++		if (irqs_disabled()) {
++			if (WARN_ON_ONCE(cpu != smp_processor_id()))
++				return -EPERM;
++			cppc_ffh_csr_read(&data);
++		} else {
++			smp_call_function_single(cpu, cppc_ffh_csr_read, &data, 1);
++		}
+ 
+ 		*val = data.ret.value;
+ 
+-- 
+2.53.0
+

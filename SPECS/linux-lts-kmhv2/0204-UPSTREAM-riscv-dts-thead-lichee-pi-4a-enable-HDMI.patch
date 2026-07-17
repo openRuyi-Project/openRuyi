@@ -1,4 +1,4 @@
-From 4633a7a2c68426c3f3fc28382fd6cba7df6134d8 Mon Sep 17 00:00:00 2001
+From 81676c69d6cf6b645944ad1e96c72e35e483f069 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 10:39:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: lichee-pi-4a: enable HDMI

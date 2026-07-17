@@ -1,4 +1,4 @@
-From 1c4786d466085bd7d5e793bc432f8d9d77048fb9 Mon Sep 17 00:00:00 2001
+From 3c81b0118a1dae65d34dd8ccfcc3c139756498ab Mon Sep 17 00:00:00 2001
 From: Brajesh Gupta <brajesh.gupta@imgtec.com>
 Date: Fri, 13 Mar 2026 06:38:25 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Skip 2nd thread DM

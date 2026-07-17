@@ -1,4 +1,4 @@
-From 3cd03e009502a385f88e1102cb0517e2f25f455c Mon Sep 17 00:00:00 2001
+From b96b065a3520d9551fc5a976f91c53ad36374536 Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Wed, 14 Jan 2026 20:22:56 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Fix DMA 128MB boundary

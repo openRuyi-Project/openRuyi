@@ -1,4 +1,4 @@
-From 815614b3265facda28aaa4572e120d8f049a9c79 Mon Sep 17 00:00:00 2001
+From 6c758ac967a8de6127491a395f361b7031c10667 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 07:18:59 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: sg2044: Add "b" ISA

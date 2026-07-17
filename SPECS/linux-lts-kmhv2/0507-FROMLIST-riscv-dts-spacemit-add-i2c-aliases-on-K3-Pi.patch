@@ -1,0 +1,33 @@
+From 843267f7efa94a4497127b96b58f4b4b7460a459 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Tue, 23 Jun 2026 22:43:48 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: add i2c aliases on K3
+ Pico-ITX board
+
+Add i2c aliases for i2c2 and i2c8 on K3 Pico-ITX board. This is useful
+to keep a stable number for the /dev entries after loading the i2c-dev
+module.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260623204431.498700-5-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index 85dd87a4381e..a07db9853ad8 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -14,6 +14,8 @@ / {
+ 
+ 	aliases {
+ 		ethernet0 = &eth0;
++		i2c2 = &i2c2;
++		i2c8 = &i2c8;
+ 		serial0 = &uart0;
+ 	};
+ 
+-- 
+2.53.0
+

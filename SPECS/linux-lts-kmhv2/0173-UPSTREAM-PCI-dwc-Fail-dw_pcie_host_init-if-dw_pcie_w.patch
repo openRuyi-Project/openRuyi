@@ -1,4 +1,4 @@
-From 6727a0a8b7add2ff9543cd2e8e0f4e29a5a9b89a Mon Sep 17 00:00:00 2001
+From ee641316ba28b407fa3c0e2e30ff68676b24911c Mon Sep 17 00:00:00 2001
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Date: Tue, 20 Jan 2026 23:17:44 +0530
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if

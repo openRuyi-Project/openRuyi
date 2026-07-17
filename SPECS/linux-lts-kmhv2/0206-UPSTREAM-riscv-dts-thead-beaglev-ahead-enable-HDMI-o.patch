@@ -1,4 +1,4 @@
-From 1cce6a25c0cf7aab271eb21e6d8b9ed58ed13b84 Mon Sep 17 00:00:00 2001
+From dceaa01db9088494f93a2bc9dd7fd5887f44e60e Mon Sep 17 00:00:00 2001
 From: Robert Mazur <robert.mazur@imgtec.com>
 Date: Wed, 25 Mar 2026 09:18:59 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable HDMI

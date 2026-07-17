@@ -1,4 +1,4 @@
-From 9714f16b48717549d0332bbcd37661290bf0a765 Mon Sep 17 00:00:00 2001
+From 890f73d1b5c1319a9308842d0a118a23799701a6 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:20 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add DPU and HDMI device

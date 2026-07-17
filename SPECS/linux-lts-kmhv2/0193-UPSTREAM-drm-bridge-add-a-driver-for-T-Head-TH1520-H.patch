@@ -1,4 +1,4 @@
-From 58ad5626c4911a37f2e711c60ae825d55251511b Mon Sep 17 00:00:00 2001
+From b4768d8979f02ad4d17b11a4bd4a0c97b33d5fbc Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:19 +0800
 Subject: [RUYI PATCH] UPSTREAM: drm/bridge: add a driver for T-Head TH1520

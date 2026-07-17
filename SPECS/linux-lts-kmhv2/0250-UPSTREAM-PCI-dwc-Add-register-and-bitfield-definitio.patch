@@ -1,4 +1,4 @@
-From 0bd7f056d6569dc61e0cc65e7eaab3c9d9d1e879 Mon Sep 17 00:00:00 2001
+From 51dd8eef5e0f89c2b72fd1f0b6c6bc8177438545 Mon Sep 17 00:00:00 2001
 From: Vincent Guittot <vincent.guittot@linaro.org>
 Date: Fri, 21 Nov 2025 17:49:18 +0100
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Add register and bitfield

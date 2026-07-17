@@ -1,4 +1,4 @@
-From d4f3b19d0ba9850b6052f6adfda81bdd61650371 Mon Sep 17 00:00:00 2001
+From 11b6137f31389cecbf4ac42f2cd0da5955d5509e Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: extend benchmarks to

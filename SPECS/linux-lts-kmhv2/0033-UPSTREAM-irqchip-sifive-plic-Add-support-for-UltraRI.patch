@@ -1,4 +1,4 @@
-From 4ef8a6c6a0ad3046bd79c8e7ba68b55f65faba37 Mon Sep 17 00:00:00 2001
+From d347e2130641f7e7091dd8afbe67c9619baf88f0 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:43 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Add support for UltraRISC

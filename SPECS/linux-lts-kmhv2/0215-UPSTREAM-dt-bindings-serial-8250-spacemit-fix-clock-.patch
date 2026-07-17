@@ -1,4 +1,4 @@
-From e6fddcb8065f3568285549e732cda7618b1e5065 Mon Sep 17 00:00:00 2001
+From 88d533f1c6bfb3181035649386387a8d59f75318 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:19:39 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: serial: 8250: spacemit: fix clock

@@ -1,4 +1,4 @@
-From e140a5124e38afd1d68eb3c9da0a96a9bc0c1fd8 Mon Sep 17 00:00:00 2001
+From 030a12284f19a1cb1f1e7f9b99be40c5f772e430 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 28 Oct 2025 13:22:32 +0100
 Subject: [RUYI PATCH] UPSTREAM: rust: macros: Add support for 'imports_ns' to

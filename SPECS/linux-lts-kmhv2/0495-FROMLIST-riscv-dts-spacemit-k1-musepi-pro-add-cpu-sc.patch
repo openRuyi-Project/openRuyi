@@ -1,0 +1,79 @@
+From 87828fa45efba06d39fec25170189b42e8678691 Mon Sep 17 00:00:00 2001
+From: Andre Heider <a.heider@gmail.com>
+Date: Sun, 14 Jun 2026 14:28:11 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k1-musepi-pro: add cpu
+ scaling
+
+Enable CPU DVFS by including the OPP table and wiring the CPU nodes to the
+CPU regulator supply.
+
+Signed-off-by: Andre Heider <a.heider@gmail.com>
+Link: https://lore.kernel.org/r/20260614122812.2287506-1-a.heider@gmail.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ .../riscv/boot/dts/spacemit/k1-musepi-pro.dts | 35 ++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts b/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
+index 0d809e4ad3b1..1b425011f123 100644
+--- a/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
++++ b/arch/riscv/boot/dts/spacemit/k1-musepi-pro.dts
+@@ -9,6 +9,7 @@
+ 
+ #include "k1.dtsi"
+ #include "k1-pinctrl.dtsi"
++#include "k1-opp.dtsi"
+ 
+ / {
+ 	model = "SpacemiT MusePi Pro";
+@@ -99,6 +100,38 @@ &combo_phy {
+ 	status = "okay";
+ };
+ 
++&cpu_0 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_1 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_2 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_3 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_4 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_5 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_6 {
++	cpu-supply = <&buck1_0v9>;
++};
++
++&cpu_7 {
++	cpu-supply = <&buck1_0v9>;
++};
++
+ &eth0 {
+ 	phy-handle = <&rgmii0>;
+ 	phy-mode = "rgmii-id";
+@@ -178,7 +211,7 @@ pmic@41 {
+ 		dldoin2-supply = <&buck5>;
+ 
+ 		regulators {
+-			buck1 {
++			buck1_0v9: buck1 {
+ 				regulator-min-microvolt = <500000>;
+ 				regulator-max-microvolt = <3450000>;
+ 				regulator-ramp-delay = <5000>;
+-- 
+2.53.0
+

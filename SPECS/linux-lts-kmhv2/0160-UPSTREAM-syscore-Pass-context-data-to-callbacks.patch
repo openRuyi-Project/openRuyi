@@ -1,4 +1,4 @@
-From 94993ae18a9db8b1a6f5939a8bfc465712f0e760 Mon Sep 17 00:00:00 2001
+From a2a523e92eddce6fd85a0553540d59423a4b779d Mon Sep 17 00:00:00 2001
 From: Thierry Reding <treding@nvidia.com>
 Date: Wed, 29 Oct 2025 17:33:30 +0100
 Subject: [RUYI PATCH] UPSTREAM: syscore: Pass context data to callbacks
@@ -700,7 +700,7 @@ index 6f63b90f9e1a..e7807356dfab 100644
  	spin_lock(&rac_lock);
  	reg = __raw_readl(b15_rac_base + RAC_CONFIG0_REG);
 diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 46036d98da75..8b2fcb3fb874 100644
+index 5d6a60294fb2..24f947e4b219 100644
 --- a/arch/loongarch/kernel/smp.c
 +++ b/arch/loongarch/kernel/smp.c
 @@ -535,28 +535,32 @@ int hibernate_resume_nonboot_cpu_disable(void)
@@ -2903,7 +2903,7 @@ index b19bc60cc627..3372e1f90561 100644
  
  static void psci_idle_init_cpuhp(void)
 diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 441ba95b38cf..647b6f4861b7 100644
+index dbdf0f41b6bb..12f11a6c9665 100644
 --- a/drivers/gpio/gpio-mxc.c
 +++ b/drivers/gpio/gpio-mxc.c
 @@ -675,7 +675,7 @@ static const struct dev_pm_ops mxc_gpio_dev_pm_ops = {
@@ -3034,10 +3034,10 @@ index 7f6a62f5d1ee..1938ffa2f4f3 100644
  }
  
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 3ab62277b6be..7000e2a5511f 100644
+index 137cf82e2292..40646ddaf3fe 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -2861,7 +2861,7 @@ static void hv_crash_handler(struct pt_regs *regs)
+@@ -2907,7 +2907,7 @@ static void hv_crash_handler(struct pt_regs *regs)
  	hv_synic_disable_regs(cpu);
  };
  
@@ -3046,7 +3046,7 @@ index 3ab62277b6be..7000e2a5511f 100644
  {
  	/*
  	 * When we reach here, all the non-boot CPUs have been offlined.
-@@ -2888,7 +2888,7 @@ static int hv_synic_suspend(void)
+@@ -2934,7 +2934,7 @@ static int hv_synic_suspend(void)
  	return 0;
  }
  
@@ -3055,7 +3055,7 @@ index 3ab62277b6be..7000e2a5511f 100644
  {
  	hv_synic_enable_regs(0);
  
-@@ -2900,11 +2900,15 @@ static void hv_synic_resume(void)
+@@ -2946,11 +2946,15 @@ static void hv_synic_resume(void)
  }
  
  /* The callbacks run only on CPU0, with irqs_disabled. */
@@ -3072,7 +3072,7 @@ index 3ab62277b6be..7000e2a5511f 100644
  static int __init hv_acpi_init(void)
  {
  	int ret;
-@@ -2947,7 +2951,7 @@ static int __init hv_acpi_init(void)
+@@ -2993,7 +2997,7 @@ static int __init hv_acpi_init(void)
  	hv_setup_kexec_handler(hv_kexec_handler);
  	hv_setup_crash_handler(hv_crash_handler);
  
@@ -3081,7 +3081,7 @@ index 3ab62277b6be..7000e2a5511f 100644
  
  	return 0;
  
-@@ -2961,7 +2965,7 @@ static void __exit vmbus_exit(void)
+@@ -3007,7 +3011,7 @@ static void __exit vmbus_exit(void)
  {
  	int cpu;
  
@@ -4839,10 +4839,10 @@ index c7dcccc5f3d6..c07e562ee4c1 100644
  }
  device_initcall(timekeeping_init_ops);
 diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 46581554abfb..3ec22d034e73 100644
+index 8d55bbc6f34a..c75fea0c9bad 100644
 --- a/virt/kvm/kvm_main.c
 +++ b/virt/kvm/kvm_main.c
-@@ -5629,7 +5629,7 @@ static int kvm_offline_cpu(unsigned int cpu)
+@@ -5630,7 +5630,7 @@ static int kvm_offline_cpu(unsigned int cpu)
  	return 0;
  }
  
@@ -4851,7 +4851,7 @@ index 46581554abfb..3ec22d034e73 100644
  {
  	/*
  	 * Disable hardware virtualization and set kvm_rebooting to indicate
-@@ -5647,7 +5647,7 @@ static void kvm_shutdown(void)
+@@ -5648,7 +5648,7 @@ static void kvm_shutdown(void)
  	on_each_cpu(kvm_disable_virtualization_cpu, NULL, 1);
  }
  
@@ -4860,7 +4860,7 @@ index 46581554abfb..3ec22d034e73 100644
  {
  	/*
  	 * Secondary CPUs and CPU hotplug are disabled across the suspend/resume
-@@ -5664,7 +5664,7 @@ static int kvm_suspend(void)
+@@ -5665,7 +5665,7 @@ static int kvm_suspend(void)
  	return 0;
  }
  
@@ -4869,7 +4869,7 @@ index 46581554abfb..3ec22d034e73 100644
  {
  	lockdep_assert_not_held(&kvm_usage_lock);
  	lockdep_assert_irqs_disabled();
-@@ -5672,12 +5672,16 @@ static void kvm_resume(void)
+@@ -5673,12 +5673,16 @@ static void kvm_resume(void)
  	WARN_ON_ONCE(kvm_enable_virtualization_cpu());
  }
  
@@ -4887,7 +4887,7 @@ index 46581554abfb..3ec22d034e73 100644
  int kvm_enable_virtualization(void)
  {
  	int r;
-@@ -5694,7 +5698,7 @@ int kvm_enable_virtualization(void)
+@@ -5695,7 +5699,7 @@ int kvm_enable_virtualization(void)
  	if (r)
  		goto err_cpuhp;
  
@@ -4896,7 +4896,7 @@ index 46581554abfb..3ec22d034e73 100644
  
  	/*
  	 * Undo virtualization enabling and bail if the system is going down.
-@@ -5716,7 +5720,7 @@ int kvm_enable_virtualization(void)
+@@ -5717,7 +5721,7 @@ int kvm_enable_virtualization(void)
  	return 0;
  
  err_rebooting:
@@ -4905,7 +4905,7 @@ index 46581554abfb..3ec22d034e73 100644
  	cpuhp_remove_state(CPUHP_AP_KVM_ONLINE);
  err_cpuhp:
  	kvm_arch_disable_virtualization();
-@@ -5732,7 +5736,7 @@ void kvm_disable_virtualization(void)
+@@ -5733,7 +5737,7 @@ void kvm_disable_virtualization(void)
  	if (--kvm_usage_count)
  		return;
  

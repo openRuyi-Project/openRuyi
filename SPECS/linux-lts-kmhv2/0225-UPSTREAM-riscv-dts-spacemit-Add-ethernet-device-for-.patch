@@ -1,4 +1,4 @@
-From f1fd9849a3a86e6e7567394bcfbd7e80314e1925 Mon Sep 17 00:00:00 2001
+From 8199942289fa74a51c30bec529cab134501ee2be Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Thu, 26 Mar 2026 09:46:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add ethernet device for

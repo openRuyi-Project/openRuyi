@@ -1,4 +1,4 @@
-From eaea87333b8ad51ffef8e8e2939c8aedc0c6f5f5 Mon Sep 17 00:00:00 2001
+From 89f93eb859e29528753f46b119d8e592d8df98b4 Mon Sep 17 00:00:00 2001
 From: Matt Coster <matt.coster@imgtec.com>
 Date: Fri, 6 Feb 2026 16:02:12 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Improve handling of unknown

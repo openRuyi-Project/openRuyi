@@ -1,4 +1,4 @@
-From 42b7ba3e5273fbdc3ca27c1fb551be6f0eccab97 Mon Sep 17 00:00:00 2001
+From b190e35d2b5d27e768e7b1ab0e227d0a768a2159 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:03 +0800
 Subject: [RUYI PATCH] UPSTREAM: regulator: spacemit-p1: Update supply names

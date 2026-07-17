@@ -1,4 +1,4 @@
-From 377151dae3f25558fd27556e52c4f0854c988c8b Mon Sep 17 00:00:00 2001
+From 61e63997cecc9eb549744cbe7688cd6f77265382 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:46 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board

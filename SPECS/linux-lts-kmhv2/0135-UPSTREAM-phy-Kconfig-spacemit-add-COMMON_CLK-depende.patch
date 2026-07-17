@@ -1,4 +1,4 @@
-From 9a9a68a7eddae8077db583fd6db0e31a7e837eab Mon Sep 17 00:00:00 2001
+From aa414e48229dc861d14cbbc8f68b96518d390f55 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Fri, 26 Dec 2025 11:32:27 -0600
 Subject: [RUYI PATCH] UPSTREAM: phy: Kconfig: spacemit: add COMMON_CLK

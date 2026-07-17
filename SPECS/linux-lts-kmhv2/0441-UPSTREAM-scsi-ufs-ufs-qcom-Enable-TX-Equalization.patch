@@ -1,0 +1,45 @@
+From 7d50836efe2ea050d9fc54df1cd274bdb7883a2b Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:54 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: ufs-qcom: Enable TX Equalization
+
+Enable TX Equalization for hosts with HW version 0x7 and onwards.
+
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-13-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 57b7943fd87f086a3497ecbecc502b7418ed4ab8)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-qcom.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index c0112ad1db53..9f9c0e5adc2a 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -1338,6 +1338,8 @@ static void ufs_qcom_set_host_caps(struct ufs_hba *hba)
+ 
+ static void ufs_qcom_set_caps(struct ufs_hba *hba)
+ {
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++
+ 	hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
+ 	hba->caps |= UFSHCD_CAP_CLK_SCALING | UFSHCD_CAP_WB_WITH_CLK_SCALING;
+ 	hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
+@@ -1345,6 +1347,9 @@ static void ufs_qcom_set_caps(struct ufs_hba *hba)
+ 	hba->caps |= UFSHCD_CAP_AGGR_POWER_COLLAPSE;
+ 	hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
+ 
++	if (host->hw_ver.major >= 0x7)
++		hba->caps |= UFSHCD_CAP_TX_EQUALIZATION;
++
+ 	ufs_qcom_set_host_caps(hba);
+ }
+ 
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From 4a0cc33492f3fc8e642380ddcf6f355a4ec6cfc1 Mon Sep 17 00:00:00 2001
+From d16888fafcae066525f88c792e413cc3400018cc Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 13 Jan 2026 10:38:26 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: Move PLIC and CLINT node

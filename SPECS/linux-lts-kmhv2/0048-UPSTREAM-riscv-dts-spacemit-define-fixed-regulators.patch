@@ -1,4 +1,4 @@
-From b0c37d9383e9fff2cfae5d13e29a5b2fd134e33b Mon Sep 17 00:00:00 2001
+From 7aec3f89f4115172f971713a137996eabfdc10bb Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:55 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define fixed regulators

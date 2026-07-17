@@ -1,4 +1,4 @@
-From 26584036220607376da285b0c0cf42306e1dc824 Mon Sep 17 00:00:00 2001
+From 6cefb7d0dcc59b4d29c4b66e52d86a7e80d4db06 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:43 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add pinctrl support

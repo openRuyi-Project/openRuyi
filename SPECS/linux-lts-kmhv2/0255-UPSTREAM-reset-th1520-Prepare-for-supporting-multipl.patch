@@ -1,4 +1,4 @@
-From 822ec8590fdd9c6e8152814eca6d64a56660f962 Mon Sep 17 00:00:00 2001
+From b7535d42730ac17d83ccbadc8307100224b35705 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:30 +0000
 Subject: [RUYI PATCH] UPSTREAM: reset: th1520: Prepare for supporting multiple

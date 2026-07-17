@@ -1,4 +1,4 @@
-From 8572451bc96b2e6e3f43ce554e3806a5b1c7778c Mon Sep 17 00:00:00 2001
+From 3972df874b39a17accecea4ef294937b0b4db42d Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 08:17:55 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: pcie: fix missing power
