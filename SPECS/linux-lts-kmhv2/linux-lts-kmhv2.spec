@@ -25,6 +25,12 @@
 %global kver %{version}-%{release}
 %global kernel_make_flags LD=ld.bfd KBUILD_BUILD_VERSION=%{release}
 
+%if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
+    %global arch_suffix -rva20
+%else
+    %global arch_suffix %{nil}
+%endif
+
 Name:           linux-lts-kmhv2
 Version:        6.18.38
 Release:        %autorelease
@@ -33,8 +39,10 @@ License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:ac26e508abd56e9f8b89872b6e10c49fc823bcc70d8068a5d8504c1a7c4ff045
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
-Source1:        config.%{_arch}
-Source2:        series
+Source1:        series
+Source2:        config.x86_64
+Source3:        config.riscv64
+Source4:        config.riscv64-rva20
 
 ExclusiveArch:  riscv64
 
@@ -84,7 +92,7 @@ Requires(post):   kernel-install
 Requires(postun): kernel-install
 
 %patchlist
-%include %{SOURCE2}
+%include %{SOURCE1}
 
 %description
 This is a meta-package that installs the core kernel image and modules.
@@ -127,7 +135,7 @@ for booting.
 
 %prep
 %autosetup -p1 -n linux-%{version}
-cp %{SOURCE1} .config
+cp -v %{_sourcedir}/config.%{_arch}%{arch_suffix} .config
 echo "-%{release}" > localversion
 
 %conf
