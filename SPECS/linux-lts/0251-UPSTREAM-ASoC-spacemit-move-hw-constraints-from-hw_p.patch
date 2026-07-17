@@ -1,4 +1,4 @@
-From 22c3a93bf61eb47e3b47fd1cbfb9bed064b5de81 Mon Sep 17 00:00:00 2001
+From 5f7beedf8c1e1cf4cc2d8915cd12d47296a9f445 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: move hw constraints from

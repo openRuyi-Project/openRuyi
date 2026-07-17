@@ -1,4 +1,4 @@
-From 9f1f119c5d51420861951a5660e8714b87fcf2ce Mon Sep 17 00:00:00 2001
+From d0ef39b0cd8f2f7fdd998909bc6ee021fe3ac16c Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:20 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: Add Ssccptr, Sscounterenw,

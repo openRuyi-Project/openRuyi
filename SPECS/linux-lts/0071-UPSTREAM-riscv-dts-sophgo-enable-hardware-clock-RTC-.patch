@@ -1,4 +1,4 @@
-From f4bd9635e84e4d37d8e56a08bbd43581faeddc96 Mon Sep 17 00:00:00 2001
+From e2b86dfca9b04a702a70dd90f7c6af620e01f74e Mon Sep 17 00:00:00 2001
 From: Michael Orlitzky <michael@orlitzky.com>
 Date: Wed, 7 Jan 2026 06:29:22 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: enable hardware clock

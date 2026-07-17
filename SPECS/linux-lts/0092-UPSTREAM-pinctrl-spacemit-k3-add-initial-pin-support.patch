@@ -1,4 +1,4 @@
-From fa64b4a9c989f85c6522c5cb06ef127c6dab3d27 Mon Sep 17 00:00:00 2001
+From 2ca77029c54bb4a4d9a85faca5542299e38f0282 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:24 +0800
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: spacemit: k3: add initial pin support

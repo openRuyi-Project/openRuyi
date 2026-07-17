@@ -1,4 +1,4 @@
-From e8197b44ac58d76565180793e59b2ff39d0ff8a1 Mon Sep 17 00:00:00 2001
+From 97ce2bdaf4b2f91ebc9016642d5cc671eabce12f Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Fri, 5 Dec 2025 10:42:07 +0800
 Subject: [RUYI PATCH] UPSTREAM: drm/ttm: add pgprot handling for RISC-V

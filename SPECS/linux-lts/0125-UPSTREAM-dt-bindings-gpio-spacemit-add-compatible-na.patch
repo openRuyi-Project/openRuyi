@@ -1,4 +1,4 @@
-From 69b50555993d0e015534df599be1be5f756f84ea Mon Sep 17 00:00:00 2001
+From 404eff5e632be9663a75c9d1c490d8f56b121d6b Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:32 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: gpio: spacemit: add compatible

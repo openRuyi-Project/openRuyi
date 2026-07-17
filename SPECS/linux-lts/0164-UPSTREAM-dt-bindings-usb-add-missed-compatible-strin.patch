@@ -1,4 +1,4 @@
-From 362bcba652bd4b28531fbf93691ef6fba9a852a7 Mon Sep 17 00:00:00 2001
+From a6f845b2f096257348eb1751bb207a536f04a311 Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:14 -0400
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: add missed compatible string

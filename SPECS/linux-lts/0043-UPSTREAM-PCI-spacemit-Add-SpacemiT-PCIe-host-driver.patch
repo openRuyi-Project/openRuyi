@@ -1,4 +1,4 @@
-From e886894eecb01fde7c6d687a520c00f8f8c6577b Mon Sep 17 00:00:00 2001
+From a27cebcdff7f78becf2072cae2b951e1e7f41b1e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:37 -0600
 Subject: [RUYI PATCH] UPSTREAM: PCI: spacemit: Add SpacemiT PCIe host driver

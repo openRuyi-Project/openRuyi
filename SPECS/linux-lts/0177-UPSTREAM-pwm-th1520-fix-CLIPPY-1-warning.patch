@@ -1,4 +1,4 @@
-From 196de3c6b4e75a74ef0157f0c59ca867711beb1f Mon Sep 17 00:00:00 2001
+From c8b2cc93f304e121425f8ab08537d10ae2a5110a Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 21 Jan 2026 19:37:19 +0100
 Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: fix `CLIPPY=1` warning

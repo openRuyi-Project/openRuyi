@@ -1,4 +1,4 @@
-From f3c9d099748a9f334530dc8d3b829667282a09e2 Mon Sep 17 00:00:00 2001
+From 6274472f0a7aacec6bf75732549eb8801ce79364 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:18 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: display/bridge: add binding for

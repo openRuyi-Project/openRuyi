@@ -1,4 +1,4 @@
-From bb40d8362ee33eb3d7341201cc0193113631e03c Mon Sep 17 00:00:00 2001
+From 6c7ef4de721d3b9e0965553bfc8242f28e0f350b Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Sun, 19 Oct 2025 19:52:38 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mmc: sdhci-of-dwcmshc: Add Eswin

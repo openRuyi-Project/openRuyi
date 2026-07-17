@@ -1,4 +1,4 @@
-From 527bf47071201cafeeb74ad89ac94e5d61eb3691 Mon Sep 17 00:00:00 2001
+From c96326e9beaa6d43dee68a3d895b432c6d47151c Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: mm: WARN_ON() for bad addresses in

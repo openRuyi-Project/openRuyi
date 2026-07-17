@@ -1,4 +1,4 @@
-From 4b1c4f9c84bda4bcf482c0efe496c3a6648372ca Mon Sep 17 00:00:00 2001
+From 0b176d28630308e769098ac5e29e0edf51a0b398 Mon Sep 17 00:00:00 2001
 From: Hang Cao <caohang@eswincomputing.com>
 Date: Wed, 12 Nov 2025 13:53:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: Add ESWIN EIC7700 USB

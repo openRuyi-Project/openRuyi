@@ -1,4 +1,4 @@
-From e7cc1307805b330990170342cd2e17a4790cae37 Mon Sep 17 00:00:00 2001
+From 9434386120d19e42a43e97baa0574d3919723bda Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:03 +0100
 Subject: [RUYI PATCH] UPSTREAM: crypto: qat - convert to common field_get()

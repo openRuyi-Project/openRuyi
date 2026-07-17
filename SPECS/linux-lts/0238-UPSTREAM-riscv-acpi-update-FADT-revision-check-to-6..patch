@@ -1,4 +1,4 @@
-From 50da2d0c20ed5daeac5e56fc3b173a315118dc29 Mon Sep 17 00:00:00 2001
+From 55bd39f8dbbb10df72d54d5154629679a7c26d5b Mon Sep 17 00:00:00 2001
 From: Yufeng Wang <wangyufeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: acpi: update FADT revision check to 6.6

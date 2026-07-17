@@ -1,4 +1,4 @@
-From 169a3b6c0054a1a90e9a56316ce2530a6e1d21ad Mon Sep 17 00:00:00 2001
+From 3a5a11f7bc5c3ab8c769fc5b75f92bd4c1da3788 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:59 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Add support for High Perf

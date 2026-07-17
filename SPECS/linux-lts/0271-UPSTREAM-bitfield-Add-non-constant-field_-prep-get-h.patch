@@ -1,4 +1,4 @@
-From 9508a0e99753a0d15b30509ead3b2314fe5d2572 Mon Sep 17 00:00:00 2001
+From 29093ed6a42705c11d9aad5ea6ad64a74dc62910 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:01 +0100
 Subject: [RUYI PATCH] UPSTREAM: bitfield: Add non-constant field_{prep,get}()

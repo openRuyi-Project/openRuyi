@@ -1,0 +1,65 @@
+From af4a9c8c6fd1ae4bd0153f3136b839aa54e274d5 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Tue, 23 Jun 2026 22:43:47 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: add 24c02 eeprom on K3
+ Pico-ITX board
+
+The K3 Pico-ITX board includes a 24c02 eeprom, that stores the product
+name, the part name, the MAC address of the network interfaces and the
+board's serial number. These values are also exposed via an
+onie,tlv-layout nvmem layout.
+
+The eeprom is marked as read-only since its contents are not supposed to
+be modified.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260623204431.498700-4-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 30 ++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index 20848a5d2f9c..85dd87a4381e 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -47,6 +47,36 @@ &i2c2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c2_1_cfg>;
+ 	status = "okay";
++
++	eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <8>;
++		read-only;
++		size = <256>;
++		status = "okay";
++
++		nvmem-layout {
++			compatible = "onie,tlv-layout";
++
++			mac-address {
++				#nvmem-cell-cells = <1>;
++			};
++
++			num-macs {
++			};
++
++			part-number {
++			};
++
++			product-name {
++			};
++
++			serial-number {
++			};
++
++		};
++	};
+ };
+ 
+ &i2c8 {
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From c37e910069a44317c77ac4d11b37028e5c7a3473 Mon Sep 17 00:00:00 2001
+From a4fc20e9548ce112196421b63ebe0ae151978397 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: sdhci: add reset support

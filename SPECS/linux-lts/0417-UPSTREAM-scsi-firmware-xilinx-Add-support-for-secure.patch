@@ -1,0 +1,137 @@
+From 37ad30b40e9c272af82adac50f530c09b367a610 Mon Sep 17 00:00:00 2001
+From: Izhar Ameer Shaikh <izhar.ameer.shaikh@amd.com>
+Date: Tue, 21 Oct 2025 17:00:01 +0530
+Subject: [RUYI PATCH] UPSTREAM: scsi: firmware: xilinx: Add support for secure
+ read/write ioctl interface
+
+Add support for a generic ioctl read/write interface using which users
+can request firmware to perform read/write operations on a protected and
+secure address space.
+
+The functionality is introduced through the means of two new IOCTL IDs
+which extend the existing PM_IOCTL EEMI API:
+
+ - IOCTL_READ_REG
+ - IOCTL_MASK_WRITE_REG
+
+The caller only passes the node id of the given device and an offset.
+The base address is not exposed to the caller and internally retrieved
+by the firmware. Firmware will enforce an access policy on the incoming
+read/write request.
+
+Signed-off-by: Izhar Ameer Shaikh <izhar.ameer.shaikh@amd.com>
+Reviewed-by: Tanmay Shah <tanmay.shah@amd.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Signed-off-by: Ajay Neeli <ajay.neeli@amd.com>
+Acked-by: Senthil Nathan Thangaraj <senthilnathan.thangaraj@amd.com>
+Acked-by: Michal Simek <michal.simek@amd.com>
+Acked-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://patch.msgid.link/20251021113003.13650-3-ajay.neeli@amd.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 00b3e8480be7a49203594bd1fdb4fd46f3b69d59)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h | 15 +++++++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 02da3e48bc8f..b7cd0eca9eaa 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -1616,6 +1616,52 @@ int zynqmp_pm_get_feature_config(enum pm_feature_config_id id,
+ 	return zynqmp_pm_invoke_fn(PM_IOCTL, payload, 3, 0, IOCTL_GET_FEATURE_CONFIG, id);
+ }
+ 
++/**
++ * zynqmp_pm_sec_read_reg - PM call to securely read from given offset
++ *		of the node
++ * @node_id:	Node Id of the device
++ * @offset:	Offset to be used (20-bit)
++ * @ret_value:	Output data read from the given offset after
++ *		firmware access policy is successfully enforced
++ *
++ * Return:	Returns 0 on success or error value on failure
++ */
++int zynqmp_pm_sec_read_reg(u32 node_id, u32 offset, u32 *ret_value)
++{
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	u32 count = 1;
++	int ret;
++
++	if (!ret_value)
++		return -EINVAL;
++
++	ret = zynqmp_pm_invoke_fn(PM_IOCTL, ret_payload, 4, node_id, IOCTL_READ_REG,
++				  offset, count);
++
++	*ret_value = ret_payload[1];
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_sec_read_reg);
++
++/**
++ * zynqmp_pm_sec_mask_write_reg - PM call to securely write to given offset
++ *		of the node
++ * @node_id:	Node Id of the device
++ * @offset:	Offset to be used (20-bit)
++ * @mask:	Mask to be used
++ * @value:	Value to be written
++ *
++ * Return:	Returns 0 on success or error value on failure
++ */
++int zynqmp_pm_sec_mask_write_reg(const u32 node_id, const u32 offset, u32 mask,
++				 u32 value)
++{
++	return zynqmp_pm_invoke_fn(PM_IOCTL, NULL, 5, node_id, IOCTL_MASK_WRITE_REG,
++				   offset, mask, value);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_sec_mask_write_reg);
++
+ /**
+  * zynqmp_pm_set_sd_config - PM call to set value of SD config registers
+  * @node:	SD node ID
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index ae48d619c4e0..b161f37de5cc 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -241,6 +241,7 @@ enum pm_ioctl_id {
+ 	IOCTL_GET_FEATURE_CONFIG = 27,
+ 	/* IOCTL for Secure Read/Write Interface */
+ 	IOCTL_READ_REG = 28,
++	IOCTL_MASK_WRITE_REG = 29,
+ 	/* Dynamic SD/GEM configuration */
+ 	IOCTL_SET_SD_CONFIG = 30,
+ 	IOCTL_SET_GEM_CONFIG = 31,
+@@ -619,6 +620,9 @@ int zynqmp_pm_feature(const u32 api_id);
+ int zynqmp_pm_is_function_supported(const u32 api_id, const u32 id);
+ int zynqmp_pm_set_feature_config(enum pm_feature_config_id id, u32 value);
+ int zynqmp_pm_get_feature_config(enum pm_feature_config_id id, u32 *payload);
++int zynqmp_pm_sec_read_reg(u32 node_id, u32 offset, u32 *ret_value);
++int zynqmp_pm_sec_mask_write_reg(const u32 node_id, const u32 offset,
++				 u32 mask, u32 value);
+ int zynqmp_pm_register_sgi(u32 sgi_num, u32 reset);
+ int zynqmp_pm_force_pwrdwn(const u32 target,
+ 			   const enum zynqmp_pm_request_ack ack);
+@@ -916,6 +920,17 @@ static inline int zynqmp_pm_request_wake(const u32 node,
+ 	return -ENODEV;
+ }
+ 
++static inline int zynqmp_pm_sec_read_reg(u32 node_id, u32 offset, u32 *ret_value)
++{
++	return -ENODEV;
++}
++
++static inline int zynqmp_pm_sec_mask_write_reg(const u32 node_id, const u32 offset,
++					       u32 mask, u32 value)
++{
++	return -ENODEV;
++}
++
+ static inline int zynqmp_pm_get_rpu_mode(u32 node_id, enum rpu_oper_mode *rpu_mode)
+ {
+ 	return -ENODEV;
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From e3974191639e3270eddc65bb437b729a750e5dc7 Mon Sep 17 00:00:00 2001
+From 3925d60ee24f34a9cdb4d9014b867388be990164 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:56 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Add module support for platform

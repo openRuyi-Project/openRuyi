@@ -1,4 +1,4 @@
-From 3f8b27c28b0516d4675130d799e52fe0e47cc190 Mon Sep 17 00:00:00 2001
+From 370b8af4c2f631e8d3a0e7984d878a7c80ed6d18 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:42 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Cache the interrupt

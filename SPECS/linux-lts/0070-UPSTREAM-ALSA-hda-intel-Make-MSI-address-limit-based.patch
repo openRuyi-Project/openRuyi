@@ -1,4 +1,4 @@
-From ed396d380559185d5e0dfad4f40fc5cd8c0382d1 Mon Sep 17 00:00:00 2001
+From e9d1d6424ea9a52e0ce1580012d17aa48ebc283a Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:09 +0800
 Subject: [RUYI PATCH] UPSTREAM: ALSA: hda/intel: Make MSI address limit based

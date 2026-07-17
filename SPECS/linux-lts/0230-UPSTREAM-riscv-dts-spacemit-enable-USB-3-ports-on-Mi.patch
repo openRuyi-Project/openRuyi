@@ -1,4 +1,4 @@
-From 7c97859e0dc8e3a13976fbd8fa3512d2a6469e32 Mon Sep 17 00:00:00 2001
+From 16315cf1d62e428f4ffd7477fe748a579e08c767 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:33 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable USB 3 ports on

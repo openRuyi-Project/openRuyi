@@ -1,0 +1,43 @@
+From 0fee0e576719e3ba3b9977be709f64a2e4dd6957 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:07 +0100
+Subject: [RUYI PATCH] UPSTREAM: cpufreq: airoha: Convert to
+ of_machine_get_match()
+
+Use the of_machine_get_match() helper instead of open-coding the same
+operation.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/cc76137755d93af982bf255095adafc7d523692c.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 1838e0924e508eb30e140ad8f037863ee53be3c6)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/cpufreq/airoha-cpufreq.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/cpufreq/airoha-cpufreq.c b/drivers/cpufreq/airoha-cpufreq.c
+index b6b1cdc4d11d..3e7770860d13 100644
+--- a/drivers/cpufreq/airoha-cpufreq.c
++++ b/drivers/cpufreq/airoha-cpufreq.c
+@@ -115,15 +115,10 @@ MODULE_DEVICE_TABLE(of, airoha_cpufreq_match_list);
+ 
+ static int __init airoha_cpufreq_init(void)
+ {
+-	struct device_node *np = of_find_node_by_path("/");
+ 	const struct of_device_id *match;
+ 	int ret;
+ 
+-	if (!np)
+-		return -ENODEV;
+-
+-	match = of_match_node(airoha_cpufreq_match_list, np);
+-	of_node_put(np);
++	match = of_machine_get_match(airoha_cpufreq_match_list);
+ 	if (!match)
+ 		return -ENODEV;
+ 
+-- 
+2.53.0
+

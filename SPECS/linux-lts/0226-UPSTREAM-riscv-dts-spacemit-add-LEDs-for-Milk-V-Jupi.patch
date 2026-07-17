@@ -1,4 +1,4 @@
-From 22e068c1b0db347abe57240b5f4e6aea284b400a Mon Sep 17 00:00:00 2001
+From 9350d479493c039562a167931c2a148bb2257368 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:29 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add LEDs for Milk-V

@@ -1,0 +1,33 @@
+From e1f510725851ec21d732d9546f8faa3e98c53bce Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Fri, 15 May 2026 09:17:58 +0800
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: cpus: Add UltraRISC CP100
+ compatible
+
+Update Documentation for supporting UltraRISC CP100 based CPU.
+
+CP100 is used in UltraRISC DP1000 SoC.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/r/20260515-ultrarisc-pinctrl-v1-2-bf559589ea8a@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index a86819565394..3fdd3571436d 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -66,6 +66,7 @@ properties:
+               - thead,c908
+               - thead,c910
+               - thead,c920
++              - ultrarisc,cp100
+           - const: riscv
+       - items:
+           - enum:
+-- 
+2.53.0
+

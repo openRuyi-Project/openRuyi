@@ -1,0 +1,52 @@
+From 9cd245b383317da14e142085b8c2bc2e39f8874e Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Date: Mon, 2 Mar 2026 17:29:09 +0100
+Subject: [RUYI PATCH] UPSTREAM: cpufreq: ti-cpufreq: Convert to
+ of_machine_get_match()
+
+Use the of_machine_get_match() helper instead of open-coding the same
+operation.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://patch.msgid.link/bba0631aea78b6db7d453a9f9e98ea16b7e2c269.1772468323.git.geert+renesas@glider.be
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+(cherry picked from commit 951318c4651a646f4835ae33abe7c4cb232e7c6e)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/cpufreq/ti-cpufreq.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
+
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index 6ee76f5fe9c5..0c27c89b7853 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -470,16 +470,6 @@ static const struct of_device_id ti_cpufreq_of_match[]  __maybe_unused = {
+ 	{},
+ };
+ 
+-static const struct of_device_id *ti_cpufreq_match_node(void)
+-{
+-	struct device_node *np __free(device_node) = of_find_node_by_path("/");
+-	const struct of_device_id *match;
+-
+-	match = of_match_node(ti_cpufreq_of_match, np);
+-
+-	return match;
+-}
+-
+ static int ti_cpufreq_probe(struct platform_device *pdev)
+ {
+ 	u32 version[VERSION_COUNT];
+@@ -564,7 +554,7 @@ static int __init ti_cpufreq_init(void)
+ 	const struct of_device_id *match;
+ 
+ 	/* Check to ensure we are on a compatible platform */
+-	match = ti_cpufreq_match_node();
++	match = of_machine_get_match(ti_cpufreq_of_match);
+ 	if (match)
+ 		platform_device_register_data(NULL, "ti-cpufreq", -1, match,
+ 					      sizeof(*match));
+-- 
+2.53.0
+

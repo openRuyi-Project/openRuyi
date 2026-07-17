@@ -1,4 +1,4 @@
-From d068a8147daedba4965fc79a896ad7dcaa91b9e4 Mon Sep 17 00:00:00 2001
+From 706c6c7d0a2819ecb157351bcb6b9d3c85c72f8a Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 09:35:00 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: adapt regulator node

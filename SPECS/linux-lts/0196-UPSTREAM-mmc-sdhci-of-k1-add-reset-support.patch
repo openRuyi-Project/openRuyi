@@ -1,4 +1,4 @@
-From a16a762a96646468762203524a13847057523875 Mon Sep 17 00:00:00 2001
+From dd2cc43099815a13549008e14bc55ac63e84a1c7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:50 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-k1: add reset support

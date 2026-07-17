@@ -1,0 +1,46 @@
+From 9cc01243978429e6a17c49ccfeaa9840edf79858 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Thu, 16 Jul 2026 14:47:10 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: require vmemmap for NUMA balancing
+
+RISC-V randconfig can enable NUMA balancing while selecting
+SPARSEMEM_EXTREME without SPARSEMEM_VMEMMAP. In that layout, the
+section and node fields can consume enough page flag bits that
+LAST_CPUPID cannot fit in page->flags.
+
+The generic MM code then stores last_cpupid in struct page and emits
+the "Unfortunate NUMA and NUMA Balancing config" warning from
+mm/memory.c.
+
+NUMA balancing needs LAST_CPUPID storage, but this fallback grows
+struct page for a configuration that randconfig can select
+accidentally. Keep NUMA support available, but advertise RISC-V NUMA
+balancing support only when SPARSEMEM_VMEMMAP is enabled, where the
+page flag layout leaves room for LAST_CPUPID.
+
+This was originally seen with a RISC-V randconfig generated from
+KCONFIG_SEED=550012.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Link: https://lore.kernel.org/r/20260716-numa_kconfig-v1-1-b0cd6d29accb@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index afdd6f6a05f6..8832a62b356d 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -486,7 +486,7 @@ endchoice
+ config NUMA
+ 	bool "NUMA Memory Allocation and Scheduler Support"
+ 	depends on SMP && MMU
+-	select ARCH_SUPPORTS_NUMA_BALANCING
++	select ARCH_SUPPORTS_NUMA_BALANCING if SPARSEMEM_VMEMMAP
+ 	select GENERIC_ARCH_NUMA
+ 	select HAVE_SETUP_PER_CPU_AREA
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+-- 
+2.53.0
+

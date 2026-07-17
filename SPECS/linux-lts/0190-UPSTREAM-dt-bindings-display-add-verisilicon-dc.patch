@@ -1,4 +1,4 @@
-From 0097108abfd8e7e0526f283feef46f9ff85d3019 Mon Sep 17 00:00:00 2001
+From cc17be16d91b62778ed9f985371b1e03411d8938 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: display: add verisilicon,dc

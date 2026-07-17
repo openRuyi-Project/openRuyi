@@ -1,4 +1,4 @@
-From 2eae98ea7476677c8119a80ff9bf50c8a3600315 Mon Sep 17 00:00:00 2001
+From b950709b055b0574ff76824bfdb674410a09112d Mon Sep 17 00:00:00 2001
 From: Zhengyu He <hezhy472013@gmail.com>
 Date: Thu, 21 May 2026 22:44:45 +0800
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: support SpacemiT

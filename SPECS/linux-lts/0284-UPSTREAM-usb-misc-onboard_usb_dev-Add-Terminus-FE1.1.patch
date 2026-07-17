@@ -1,4 +1,4 @@
-From 7cc16fe69696bb942fb6f1b9a227fd74082707ae Mon Sep 17 00:00:00 2001
+From 08f28ce8702a79a701c3eac1b17da588327be574 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:04 +0000
 Subject: [RUYI PATCH] UPSTREAM: usb: misc: onboard_usb_dev: Add Terminus

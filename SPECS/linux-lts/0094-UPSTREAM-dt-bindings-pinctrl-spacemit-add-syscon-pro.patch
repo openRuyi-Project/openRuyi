@@ -1,4 +1,4 @@
-From f3a4b85d5279965fc53d7163a005b2e64ff1327a Mon Sep 17 00:00:00 2001
+From 4d3f2ca4b8bf03c8f5764bd4e3a4755a87d96507 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:38 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pinctrl: spacemit: add syscon

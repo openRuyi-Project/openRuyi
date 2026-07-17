@@ -1,4 +1,4 @@
-From ffb258a6f70ad79ca6c7b0a4c04cd38fbdd33471 Mon Sep 17 00:00:00 2001
+From eaf94de0b17a7f2c6c983d703f6f3bd8dbd4db38 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 25 Mar 2026 09:49:24 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add compatible

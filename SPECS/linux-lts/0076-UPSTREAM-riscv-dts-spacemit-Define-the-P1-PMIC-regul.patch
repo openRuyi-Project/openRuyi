@@ -1,4 +1,4 @@
-From 0af31fdff636f13c96b48c14fe2dce73dbf55dfd Mon Sep 17 00:00:00 2001
+From 0158a4cea182893db9285ae888a490568bfb0c99 Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:55 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Define the P1 PMIC

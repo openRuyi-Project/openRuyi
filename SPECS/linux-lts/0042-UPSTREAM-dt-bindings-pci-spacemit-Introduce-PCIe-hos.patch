@@ -1,4 +1,4 @@
-From 0d6c9d0a071fcea507cb2b62195d329fbfd4e3fa Mon Sep 17 00:00:00 2001
+From f77dddee6ad705b31db5dd8e1d46b89de99b5994 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:35 -0600
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe

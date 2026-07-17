@@ -1,4 +1,4 @@
-From f64acae7865de9be5e3490b46bc253b9e0d8464e Mon Sep 17 00:00:00 2001
+From a3b19f0358177e3a9a105a429a45332a53464e30 Mon Sep 17 00:00:00 2001
 From: Austin Kim <austin.kim@lge.com>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: increase COMMAND_LINE_SIZE value to

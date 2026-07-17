@@ -1,4 +1,4 @@
-From 8833c4b417190dce1a91dbf31da82221a266f133 Mon Sep 17 00:00:00 2001
+From 9d7b112b2c4bd1ec0fa4fefeb7dd17be7100c322 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:09 +0100
 Subject: [RUYI PATCH] UPSTREAM: soc: renesas: rz-sysc: Convert to common

@@ -1,4 +1,4 @@
-From 1fce0749e1bf54d192dde74d2c105f51a35ab4d4 Mon Sep 17 00:00:00 2001
+From cb491457b06017d38dedbedfb07cdec5c77a8aeb Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:30 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add a PCIe regulator

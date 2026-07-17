@@ -1,4 +1,4 @@
-From 22c56093a5cbcc8d011f81d4523ee8160d5caa5f Mon Sep 17 00:00:00 2001
+From c5d576f1d3fffff794dcb2f9bfce1fd8afbbef56 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 20 Dec 2025 21:28:15 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: extract common header

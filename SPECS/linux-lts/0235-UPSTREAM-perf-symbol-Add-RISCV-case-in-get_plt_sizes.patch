@@ -1,4 +1,4 @@
-From e2f15b90c20c9acc8b6524640ad61e8dd279261b Mon Sep 17 00:00:00 2001
+From 852e5e193c12e0e5eb26b24e0eb9517eaeaf46b9 Mon Sep 17 00:00:00 2001
 From: Chen Pei <cp0613@linux.alibaba.com>
 Date: Tue, 17 Mar 2026 11:48:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: perf symbol: Add RISCV case in get_plt_sizes

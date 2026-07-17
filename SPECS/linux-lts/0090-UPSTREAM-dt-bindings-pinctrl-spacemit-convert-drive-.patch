@@ -1,4 +1,4 @@
-From 58100bb2e0beb94bf6f7d14ee1fbc0ba755686ab Mon Sep 17 00:00:00 2001
+From 478df24a60b0581f53a916963c82d8343aafd642 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:22 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pinctrl: spacemit: convert drive

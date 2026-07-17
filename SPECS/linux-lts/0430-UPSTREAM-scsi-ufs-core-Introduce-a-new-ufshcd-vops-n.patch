@@ -1,0 +1,583 @@
+From d68daa72d4d5317e8a3494174341147459848a9f Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:43 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: core: Introduce a new ufshcd vops
+ negotiate_pwr_mode()
+
+Most vendor specific implemenations of vops pwr_change_notify(PRE_CHANGE)
+are fulfilling two things at once:
+
+ - Vendor specific target power mode negotiation
+
+ - Vendor specific power mode change preparation
+
+When TX Equalization is added into consideration, before power mode change
+to a target power mode, TX Equalization Training (EQTR) needs be done for
+that target power mode. In addition, UFSHCI spec requires to start TX EQTR
+from HS-G1 (the most reliable High Speed Gear).
+
+Adding TX EQTR before pwr_change_notify(PRE_CHANGE) is not applicable
+because we don't know the negotiated power mode yet.
+
+Adding TX EQTR post pwr_change_notify(PRE_CHANGE) is inappropriate because
+pwr_change_notify(PRE_CHANGE) has finished preparation for a power mode
+change to negotiated power mode, yet we are changing power mode to HS-G1
+for TX EQTR.
+
+Add a new vops negotiate_pwr_mode() so that vendor specific power mode
+negotiation can be fulfilled in its vendor specific implementations.  Later
+on, TX EQTR can be added post vops negotiate_pwr_mode() and before vops
+pwr_change_notify(PRE_CHANGE).
+
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-2-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit d3eba21c71708746672587f1de2cc33e6a10d61a)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/core/ufshcd-priv.h     | 14 +++++-
+ drivers/ufs/core/ufshcd.c          | 70 ++++++++++++++++++++++++------
+ drivers/ufs/host/ufs-amd-versal2.c |  3 --
+ drivers/ufs/host/ufs-exynos.c      | 34 +++++++--------
+ drivers/ufs/host/ufs-hisi.c        | 23 +++++-----
+ drivers/ufs/host/ufs-mediatek.c    | 40 ++++++++---------
+ drivers/ufs/host/ufs-qcom.c        | 24 +++++-----
+ drivers/ufs/host/ufs-sprd.c        |  3 --
+ drivers/ufs/host/ufshcd-pci.c      |  6 +--
+ include/ufs/ufshcd.h               | 17 +++++---
+ 10 files changed, 143 insertions(+), 91 deletions(-)
+
+diff --git a/drivers/ufs/core/ufshcd-priv.h b/drivers/ufs/core/ufshcd-priv.h
+index 3ccbbdb18a24..087ebf43b09d 100644
+--- a/drivers/ufs/core/ufshcd-priv.h
++++ b/drivers/ufs/core/ufshcd-priv.h
+@@ -168,14 +168,24 @@ static inline int ufshcd_vops_link_startup_notify(struct ufs_hba *hba,
+ 	return 0;
+ }
+ 
++static inline int ufshcd_vops_negotiate_pwr_mode(struct ufs_hba *hba,
++						 const struct ufs_pa_layer_attr *dev_max_params,
++						 struct ufs_pa_layer_attr *dev_req_params)
++{
++	if (hba->vops && hba->vops->negotiate_pwr_mode)
++		return hba->vops->negotiate_pwr_mode(hba, dev_max_params,
++					dev_req_params);
++
++	return -ENOTSUPP;
++}
++
+ static inline int ufshcd_vops_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	if (hba->vops && hba->vops->pwr_change_notify)
+ 		return hba->vops->pwr_change_notify(hba, status,
+-					dev_max_params, dev_req_params);
++					dev_req_params);
+ 
+ 	return -ENOTSUPP;
+ }
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 80c504e270b6..5c7b48664147 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -333,8 +333,6 @@ static void ufshcd_suspend_clkscaling(struct ufs_hba *hba);
+ static int ufshcd_scale_clks(struct ufs_hba *hba, unsigned long freq,
+ 			     bool scale_up);
+ static irqreturn_t ufshcd_intr(int irq, void *__hba);
+-static int ufshcd_change_power_mode(struct ufs_hba *hba,
+-			     struct ufs_pa_layer_attr *pwr_mode);
+ static int ufshcd_setup_hba_vreg(struct ufs_hba *hba, bool on);
+ static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on);
+ static inline int ufshcd_config_vreg_hpm(struct ufs_hba *hba,
+@@ -4666,8 +4664,26 @@ static int ufshcd_get_max_pwr_mode(struct ufs_hba *hba)
+ 	return 0;
+ }
+ 
+-static int ufshcd_change_power_mode(struct ufs_hba *hba,
+-			     struct ufs_pa_layer_attr *pwr_mode)
++/**
++ * ufshcd_dme_change_power_mode() - UniPro DME Power Mode change sequence
++ * @hba: per-adapter instance
++ * @pwr_mode: pointer to the target power mode (gear/lane) attributes
++ *
++ * This function handles the low-level DME (Device Management Entity)
++ * configuration required to transition the UFS link to a new power mode. It
++ * performs the following steps:
++ * 1. Checks if the requested mode matches the current state.
++ * 2. Sets M-PHY and UniPro attributes including Gear (PA_RXGEAR/TXGEAR),
++ *    Lanes, Termination, and HS Series (PA_HSSERIES).
++ * 3. Configures default UniPro timeout values (DL_FC0, etc.) unless
++ *    explicitly skipped via quirks.
++ * 4. Triggers the actual hardware mode change via ufshcd_uic_change_pwr_mode().
++ * 5. Updates the HBA's cached power information on success.
++ *
++ * Return: 0 on success, non-zero error code on failure.
++ */
++static int ufshcd_dme_change_power_mode(struct ufs_hba *hba,
++					struct ufs_pa_layer_attr *pwr_mode)
+ {
+ 	int ret;
+ 
+@@ -4751,6 +4767,34 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
+ 	return ret;
+ }
+ 
++/**
++ * ufshcd_change_power_mode() - Change UFS Link Power Mode
++ * @hba: per-adapter instance
++ * @pwr_mode: pointer to the target power mode (gear/lane) attributes
++ *
++ * This function handles the high-level sequence for changing the UFS link
++ * power mode. It triggers vendor-specific pre-change notification,
++ * executes the DME (Device Management Entity) power mode change sequence,
++ * and, upon success, triggers vendor-specific post-change notification.
++ *
++ * Return: 0 on success, non-zero error code on failure.
++ */
++int ufshcd_change_power_mode(struct ufs_hba *hba,
++			     struct ufs_pa_layer_attr *pwr_mode)
++{
++	int ret;
++
++	ufshcd_vops_pwr_change_notify(hba, PRE_CHANGE, pwr_mode);
++
++	ret = ufshcd_dme_change_power_mode(hba, pwr_mode);
++
++	if (!ret)
++		ufshcd_vops_pwr_change_notify(hba, POST_CHANGE, pwr_mode);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ufshcd_change_power_mode);
++
+ /**
+  * ufshcd_config_pwr_mode - configure a new power mode
+  * @hba: per-adapter instance
+@@ -4764,19 +4808,17 @@ int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+ 	struct ufs_pa_layer_attr final_params = { 0 };
+ 	int ret;
+ 
+-	ret = ufshcd_vops_pwr_change_notify(hba, PRE_CHANGE,
+-					desired_pwr_mode, &final_params);
++	ret = ufshcd_vops_negotiate_pwr_mode(hba, desired_pwr_mode,
++					     &final_params);
++	if (ret) {
++		if (ret != -ENOTSUPP)
++			dev_err(hba->dev, "Failed to negotiate power mode: %d, use desired as is\n",
++				ret);
+ 
+-	if (ret)
+ 		memcpy(&final_params, desired_pwr_mode, sizeof(final_params));
++	}
+ 
+-	ret = ufshcd_change_power_mode(hba, &final_params);
+-
+-	if (!ret)
+-		ufshcd_vops_pwr_change_notify(hba, POST_CHANGE, NULL,
+-					&final_params);
+-
+-	return ret;
++	return ufshcd_change_power_mode(hba, &final_params);
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_config_pwr_mode);
+ 
+diff --git a/drivers/ufs/host/ufs-amd-versal2.c b/drivers/ufs/host/ufs-amd-versal2.c
+index 6c454ae8a9c8..2154d6286817 100644
+--- a/drivers/ufs/host/ufs-amd-versal2.c
++++ b/drivers/ufs/host/ufs-amd-versal2.c
+@@ -443,7 +443,6 @@ static int ufs_versal2_phy_ratesel(struct ufs_hba *hba, u32 activelanes, u32 rx_
+ }
+ 
+ static int ufs_versal2_pwr_change_notify(struct ufs_hba *hba, enum ufs_notify_change_status status,
+-					 const struct ufs_pa_layer_attr *dev_max_params,
+ 					 struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	struct ufs_versal2_host *host = ufshcd_get_variant(hba);
+@@ -451,8 +450,6 @@ static int ufs_versal2_pwr_change_notify(struct ufs_hba *hba, enum ufs_notify_ch
+ 	int ret = 0;
+ 
+ 	if (status == PRE_CHANGE) {
+-		memcpy(dev_req_params, dev_max_params, sizeof(struct ufs_pa_layer_attr));
+-
+ 		/* If it is not a calibrated part, switch PWRMODE to SLOW_MODE */
+ 		if (!host->attcompval0 && !host->attcompval1 && !host->ctlecompval0 &&
+ 		    !host->ctlecompval1) {
+diff --git a/drivers/ufs/host/ufs-exynos.c b/drivers/ufs/host/ufs-exynos.c
+index 70d195179eba..3230c8ffff0b 100644
+--- a/drivers/ufs/host/ufs-exynos.c
++++ b/drivers/ufs/host/ufs-exynos.c
+@@ -818,12 +818,10 @@ static u32 exynos_ufs_get_hs_gear(struct ufs_hba *hba)
+ }
+ 
+ static int exynos_ufs_pre_pwr_mode(struct ufs_hba *hba,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	struct exynos_ufs *ufs = ufshcd_get_variant(hba);
+ 	struct phy *generic_phy = ufs->phy;
+-	struct ufs_host_params host_params;
+ 	int ret;
+ 
+ 	if (!dev_req_params) {
+@@ -832,18 +830,6 @@ static int exynos_ufs_pre_pwr_mode(struct ufs_hba *hba,
+ 		goto out;
+ 	}
+ 
+-	ufshcd_init_host_params(&host_params);
+-
+-	/* This driver only support symmetric gear setting e.g. hs_tx_gear == hs_rx_gear */
+-	host_params.hs_tx_gear = exynos_ufs_get_hs_gear(hba);
+-	host_params.hs_rx_gear = exynos_ufs_get_hs_gear(hba);
+-
+-	ret = ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
+-	if (ret) {
+-		pr_err("%s: failed to determine capabilities\n", __func__);
+-		goto out;
+-	}
+-
+ 	if (ufs->drv_data->pre_pwr_change)
+ 		ufs->drv_data->pre_pwr_change(ufs, dev_req_params);
+ 
+@@ -1667,17 +1653,30 @@ static int exynos_ufs_link_startup_notify(struct ufs_hba *hba,
+ 	return ret;
+ }
+ 
++static int exynos_ufs_negotiate_pwr_mode(struct ufs_hba *hba,
++					 const struct ufs_pa_layer_attr *dev_max_params,
++					 struct ufs_pa_layer_attr *dev_req_params)
++{
++	struct ufs_host_params host_params;
++
++	ufshcd_init_host_params(&host_params);
++
++	/* This driver only support symmetric gear setting e.g. hs_tx_gear == hs_rx_gear */
++	host_params.hs_tx_gear = exynos_ufs_get_hs_gear(hba);
++	host_params.hs_rx_gear = exynos_ufs_get_hs_gear(hba);
++
++	return ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
++}
++
+ static int exynos_ufs_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	int ret = 0;
+ 
+ 	switch (status) {
+ 	case PRE_CHANGE:
+-		ret = exynos_ufs_pre_pwr_mode(hba, dev_max_params,
+-					      dev_req_params);
++		ret = exynos_ufs_pre_pwr_mode(hba, dev_req_params);
+ 		break;
+ 	case POST_CHANGE:
+ 		ret = exynos_ufs_post_pwr_mode(hba, dev_req_params);
+@@ -2005,6 +2004,7 @@ static const struct ufs_hba_variant_ops ufs_hba_exynos_ops = {
+ 	.exit				= exynos_ufs_exit,
+ 	.hce_enable_notify		= exynos_ufs_hce_enable_notify,
+ 	.link_startup_notify		= exynos_ufs_link_startup_notify,
++	.negotiate_pwr_mode		= exynos_ufs_negotiate_pwr_mode,
+ 	.pwr_change_notify		= exynos_ufs_pwr_change_notify,
+ 	.setup_clocks			= exynos_ufs_setup_clocks,
+ 	.setup_xfer_req			= exynos_ufs_specify_nexus_t_xfer_req,
+diff --git a/drivers/ufs/host/ufs-hisi.c b/drivers/ufs/host/ufs-hisi.c
+index 6f2e6bf31225..993e20ac211d 100644
+--- a/drivers/ufs/host/ufs-hisi.c
++++ b/drivers/ufs/host/ufs-hisi.c
+@@ -298,6 +298,17 @@ static void ufs_hisi_set_dev_cap(struct ufs_host_params *host_params)
+ 	ufshcd_init_host_params(host_params);
+ }
+ 
++static int ufs_hisi_negotiate_pwr_mode(struct ufs_hba *hba,
++				       const struct ufs_pa_layer_attr *dev_max_params,
++				       struct ufs_pa_layer_attr *dev_req_params)
++{
++	struct ufs_host_params host_params;
++
++	ufs_hisi_set_dev_cap(&host_params);
++
++	return ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
++}
++
+ static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
+ {
+ 	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
+@@ -362,10 +373,8 @@ static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
+ 
+ static int ufs_hisi_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+-	struct ufs_host_params host_params;
+ 	int ret = 0;
+ 
+ 	if (!dev_req_params) {
+@@ -377,14 +386,6 @@ static int ufs_hisi_pwr_change_notify(struct ufs_hba *hba,
+ 
+ 	switch (status) {
+ 	case PRE_CHANGE:
+-		ufs_hisi_set_dev_cap(&host_params);
+-		ret = ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
+-		if (ret) {
+-			dev_err(hba->dev,
+-			    "%s: failed to determine capabilities\n", __func__);
+-			goto out;
+-		}
+-
+ 		ufs_hisi_pwr_change_pre_change(hba);
+ 		break;
+ 	case POST_CHANGE:
+@@ -543,6 +544,7 @@ static const struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
+ 	.name = "hi3660",
+ 	.init = ufs_hi3660_init,
+ 	.link_startup_notify = ufs_hisi_link_startup_notify,
++	.negotiate_pwr_mode = ufs_hisi_negotiate_pwr_mode,
+ 	.pwr_change_notify = ufs_hisi_pwr_change_notify,
+ 	.suspend = ufs_hisi_suspend,
+ 	.resume = ufs_hisi_resume,
+@@ -552,6 +554,7 @@ static const struct ufs_hba_variant_ops ufs_hba_hi3670_vops = {
+ 	.name = "hi3670",
+ 	.init = ufs_hi3670_init,
+ 	.link_startup_notify = ufs_hisi_link_startup_notify,
++	.negotiate_pwr_mode = ufs_hisi_negotiate_pwr_mode,
+ 	.pwr_change_notify = ufs_hisi_pwr_change_notify,
+ 	.suspend = ufs_hisi_suspend,
+ 	.resume = ufs_hisi_resume,
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index a0de39274036..49a83e074926 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -1318,6 +1318,23 @@ static int ufs_mtk_init(struct ufs_hba *hba)
+ 	return err;
+ }
+ 
++static int ufs_mtk_negotiate_pwr_mode(struct ufs_hba *hba,
++				      const struct ufs_pa_layer_attr *dev_max_params,
++				      struct ufs_pa_layer_attr *dev_req_params)
++{
++	struct ufs_host_params host_params;
++
++	ufshcd_init_host_params(&host_params);
++	host_params.hs_rx_gear = UFS_HS_G5;
++	host_params.hs_tx_gear = UFS_HS_G5;
++
++	if (dev_max_params->pwr_rx == SLOW_MODE ||
++	    dev_max_params->pwr_tx == SLOW_MODE)
++		host_params.desired_working_mode = UFS_PWM_MODE;
++
++	return ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
++}
++
+ static bool ufs_mtk_pmc_via_fastauto(struct ufs_hba *hba,
+ 				     struct ufs_pa_layer_attr *dev_req_params)
+ {
+@@ -1373,26 +1390,10 @@ static void ufs_mtk_adjust_sync_length(struct ufs_hba *hba)
+ }
+ 
+ static int ufs_mtk_pre_pwr_change(struct ufs_hba *hba,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	struct ufs_mtk_host *host = ufshcd_get_variant(hba);
+-	struct ufs_host_params host_params;
+-	int ret;
+-
+-	ufshcd_init_host_params(&host_params);
+-	host_params.hs_rx_gear = UFS_HS_G5;
+-	host_params.hs_tx_gear = UFS_HS_G5;
+-
+-	if (dev_max_params->pwr_rx == SLOW_MODE ||
+-	    dev_max_params->pwr_tx == SLOW_MODE)
+-		host_params.desired_working_mode = UFS_PWM_MODE;
+-
+-	ret = ufshcd_negotiate_pwr_params(&host_params, dev_max_params, dev_req_params);
+-	if (ret) {
+-		pr_info("%s: failed to determine capabilities\n",
+-			__func__);
+-	}
++	int ret = 0;
+ 
+ 	if (ufs_mtk_pmc_via_fastauto(hba, dev_req_params)) {
+ 		ufs_mtk_adjust_sync_length(hba);
+@@ -1504,7 +1505,6 @@ static int ufs_mtk_auto_hibern8_disable(struct ufs_hba *hba)
+ 
+ static int ufs_mtk_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status stage,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	int ret = 0;
+@@ -1516,8 +1516,7 @@ static int ufs_mtk_pwr_change_notify(struct ufs_hba *hba,
+ 			reg = ufshcd_readl(hba, REG_AUTO_HIBERNATE_IDLE_TIMER);
+ 			ufs_mtk_auto_hibern8_disable(hba);
+ 		}
+-		ret = ufs_mtk_pre_pwr_change(hba, dev_max_params,
+-					     dev_req_params);
++		ret = ufs_mtk_pre_pwr_change(hba, dev_req_params);
+ 		break;
+ 	case POST_CHANGE:
+ 		if (ufshcd_is_auto_hibern8_supported(hba))
+@@ -2321,6 +2320,7 @@ static const struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
+ 	.setup_clocks        = ufs_mtk_setup_clocks,
+ 	.hce_enable_notify   = ufs_mtk_hce_enable_notify,
+ 	.link_startup_notify = ufs_mtk_link_startup_notify,
++	.negotiate_pwr_mode  = ufs_mtk_negotiate_pwr_mode,
+ 	.pwr_change_notify   = ufs_mtk_pwr_change_notify,
+ 	.apply_dev_quirks    = ufs_mtk_apply_dev_quirks,
+ 	.fixup_dev_quirks    = ufs_mtk_fixup_dev_quirks,
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index eba0e6617483..fec0ecad6be1 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -917,13 +917,21 @@ static void ufs_qcom_set_tx_hs_equalizer(struct ufs_hba *hba, u32 gear, u32 tx_l
+ 	}
+ }
+ 
+-static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
+-				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+-				struct ufs_pa_layer_attr *dev_req_params)
++static int ufs_qcom_negotiate_pwr_mode(struct ufs_hba *hba,
++				       const struct ufs_pa_layer_attr *dev_max_params,
++				       struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+ 	struct ufs_host_params *host_params = &host->host_params;
++
++	return ufshcd_negotiate_pwr_params(host_params, dev_max_params, dev_req_params);
++}
++
++static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
++				      enum ufs_notify_change_status status,
++				      struct ufs_pa_layer_attr *dev_req_params)
++{
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+ 	int ret = 0;
+ 
+ 	if (!dev_req_params) {
+@@ -933,13 +941,6 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
+ 
+ 	switch (status) {
+ 	case PRE_CHANGE:
+-		ret = ufshcd_negotiate_pwr_params(host_params, dev_max_params, dev_req_params);
+-		if (ret) {
+-			dev_err(hba->dev, "%s: failed to determine capabilities\n",
+-					__func__);
+-			return ret;
+-		}
+-
+ 		/*
+ 		 * During UFS driver probe, always update the PHY gear to match the negotiated
+ 		 * gear, so that, if quirk UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH is enabled,
+@@ -2218,6 +2219,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+ 	.setup_clocks           = ufs_qcom_setup_clocks,
+ 	.hce_enable_notify      = ufs_qcom_hce_enable_notify,
+ 	.link_startup_notify    = ufs_qcom_link_startup_notify,
++	.negotiate_pwr_mode	= ufs_qcom_negotiate_pwr_mode,
+ 	.pwr_change_notify	= ufs_qcom_pwr_change_notify,
+ 	.apply_dev_quirks	= ufs_qcom_apply_dev_quirks,
+ 	.fixup_dev_quirks       = ufs_qcom_fixup_dev_quirks,
+diff --git a/drivers/ufs/host/ufs-sprd.c b/drivers/ufs/host/ufs-sprd.c
+index 65bd8fb96b99..a5e8c591bead 100644
+--- a/drivers/ufs/host/ufs-sprd.c
++++ b/drivers/ufs/host/ufs-sprd.c
+@@ -161,14 +161,11 @@ static int ufs_sprd_common_init(struct ufs_hba *hba)
+ 
+ static int sprd_ufs_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	struct ufs_sprd_host *host = ufshcd_get_variant(hba);
+ 
+ 	if (status == PRE_CHANGE) {
+-		memcpy(dev_req_params, dev_max_params,
+-			sizeof(struct ufs_pa_layer_attr));
+ 		if (host->unipro_ver >= UFS_UNIPRO_VER_1_8)
+ 			ufshcd_dme_configure_adapt(hba, dev_req_params->gear_tx,
+ 						   PA_INITIAL_ADAPT);
+diff --git a/drivers/ufs/host/ufshcd-pci.c b/drivers/ufs/host/ufshcd-pci.c
+index 5f65dfad1a71..8a4f2381a32e 100644
+--- a/drivers/ufs/host/ufshcd-pci.c
++++ b/drivers/ufs/host/ufshcd-pci.c
+@@ -145,7 +145,7 @@ static int ufs_intel_set_lanes(struct ufs_hba *hba, u32 lanes)
+ 
+ 	pwr_info.lane_rx = lanes;
+ 	pwr_info.lane_tx = lanes;
+-	ret = ufshcd_config_pwr_mode(hba, &pwr_info);
++	ret = ufshcd_change_power_mode(hba, &pwr_info);
+ 	if (ret)
+ 		dev_err(hba->dev, "%s: Setting %u lanes, err = %d\n",
+ 			__func__, lanes, ret);
+@@ -154,17 +154,15 @@ static int ufs_intel_set_lanes(struct ufs_hba *hba, u32 lanes)
+ 
+ static int ufs_intel_lkf_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+-				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+ {
+ 	int err = 0;
+ 
+ 	switch (status) {
+ 	case PRE_CHANGE:
+-		if (ufshcd_is_hs_mode(dev_max_params) &&
++		if (ufshcd_is_hs_mode(dev_req_params) &&
+ 		    (hba->pwr_info.lane_rx != 2 || hba->pwr_info.lane_tx != 2))
+ 			ufs_intel_set_lanes(hba, 2);
+-		memcpy(dev_req_params, dev_max_params, sizeof(*dev_req_params));
+ 		break;
+ 	case POST_CHANGE:
+ 		if (ufshcd_is_hs_mode(dev_req_params)) {
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index 775a66f334a3..eb6e8e9b6433 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -307,11 +307,10 @@ struct ufs_pwr_mode_info {
+  *                     variant specific Uni-Pro initialization.
+  * @link_startup_notify: called before and after Link startup is carried out
+  *                       to allow variant specific Uni-Pro initialization.
++ * @negotiate_pwr_mode: called to negotiate power mode.
+  * @pwr_change_notify: called before and after a power mode change
+  *			is carried out to allow vendor spesific capabilities
+- *			to be set. PRE_CHANGE can modify final_params based
+- *			on desired_pwr_mode, but POST_CHANGE must not alter
+- *			the final_params parameter
++ *			to be set.
+  * @setup_xfer_req: called before any transfer request is issued
+  *                  to set some things
+  * @setup_task_mgmt: called before any task management request is issued
+@@ -352,10 +351,12 @@ struct ufs_hba_variant_ops {
+ 				     enum ufs_notify_change_status);
+ 	int	(*link_startup_notify)(struct ufs_hba *,
+ 				       enum ufs_notify_change_status);
+-	int	(*pwr_change_notify)(struct ufs_hba *,
+-			enum ufs_notify_change_status status,
+-			const struct ufs_pa_layer_attr *desired_pwr_mode,
+-			struct ufs_pa_layer_attr *final_params);
++	int	(*negotiate_pwr_mode)(struct ufs_hba *hba,
++				      const struct ufs_pa_layer_attr *desired_pwr_mode,
++				      struct ufs_pa_layer_attr *final_params);
++	int	(*pwr_change_notify)(struct ufs_hba *hba,
++				     enum ufs_notify_change_status status,
++				     struct ufs_pa_layer_attr *final_params);
+ 	void	(*setup_xfer_req)(struct ufs_hba *hba, int tag,
+ 				  bool is_scsi_cmd);
+ 	void	(*setup_task_mgmt)(struct ufs_hba *, int, u8);
+@@ -1370,6 +1371,8 @@ extern int ufshcd_dme_set_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u8 attr_set, u32 mib_val, u8 peer);
+ extern int ufshcd_dme_get_attr(struct ufs_hba *hba, u32 attr_sel,
+ 			       u32 *mib_val, u8 peer);
++extern int ufshcd_change_power_mode(struct ufs_hba *hba,
++				    struct ufs_pa_layer_attr *pwr_mode);
+ extern int ufshcd_config_pwr_mode(struct ufs_hba *hba,
+ 			struct ufs_pa_layer_attr *desired_pwr_mode);
+ extern int ufshcd_uic_change_pwr_mode(struct ufs_hba *hba, u8 mode);
+-- 
+2.53.0
+

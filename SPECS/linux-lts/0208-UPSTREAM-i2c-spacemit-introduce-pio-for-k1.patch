@@ -1,4 +1,4 @@
-From 4fa4815280ddada7e960eb90a9ccccd015916c00 Mon Sep 17 00:00:00 2001
+From 85a82954acd965a8e7f06acf2b98533ffe944b92 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:22 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: introduce pio for k1

@@ -1,4 +1,4 @@
-From b79c6a8e8737f691e21ed1f9492ed9784de03550 Mon Sep 17 00:00:00 2001
+From 7634a34dc15383e81523eec67c157edc7f6267d5 Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:54 +0000
 Subject: [RUYI PATCH] UPSTREAM: PCI: sg2042: Avoid L0s and L1 on Sophgo 2042

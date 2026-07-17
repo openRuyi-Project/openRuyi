@@ -1,4 +1,4 @@
-From e8797e3dcfc25acbd3f8c8b268ec9d8bd1c28295 Mon Sep 17 00:00:00 2001
+From e7eda2ad9f7e602ec3c79a20c05dbcb621c6ac76 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:56 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: hwmon: moortec,mr75203: adapt

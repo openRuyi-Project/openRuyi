@@ -1,4 +1,4 @@
-From f194dd514161599163226c56b2674969caea19ca Mon Sep 17 00:00:00 2001
+From d63a611184e9b8f84b7f4aefa950b64c8da7edc1 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:15 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: add support for configuring the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 35 insertions(+)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index efe313a59b33..0f7fda75f7fe 100644
+index bd705136ccc0..e86b1378bc8b 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 @@ -3055,6 +3055,36 @@ int stmmac_get_phy_intf_sel(phy_interface_t interface)

@@ -1,0 +1,57 @@
+From 47f12485bbbdd57fa80c7323c7c2e70e379985f1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Fri, 14 Nov 2025 14:43:57 +0100
+Subject: [RUYI PATCH] UPSTREAM: init: deduplicate cc-can-link.sh invocations
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The command to invoke scripts/cc-can-link.sh is very long and new usages
+are about to be added.
+
+Add a helper variable to make the code easier to read and maintain.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://patch.msgid.link/20251114-kbuild-userprogs-bits-v3-2-4dee0d74d439@linutronix.de
+Signed-off-by: Nicolas Schier <nsc@kernel.org>
+(cherry picked from commit 80623f2c83d7de5c289d4240b8f4cef4103c51fc)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ init/Kconfig            | 4 ++--
+ scripts/Kconfig.include | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/init/Kconfig b/init/Kconfig
+index cab3ad28ca49..7b722e714d5c 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -84,8 +84,8 @@ config RUSTC_LLVM_VERSION
+ 
+ config CC_CAN_LINK
+ 	bool
+-	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m64-flag)) if 64BIT
+-	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m32-flag))
++	default $(cc_can_link_user,$(m64-flag)) if 64BIT
++	default $(cc_can_link_user,$(m32-flag))
+ 
+ # Fixed in GCC 14, 13.3, 12.4 and 11.5
+ # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index 33193ca6e803..d42042b6c9e2 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -65,6 +65,9 @@ cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$
+ m32-flag := $(cc-option-bit,-m32)
+ m64-flag := $(cc-option-bit,-m64)
+ 
++# Test whether the compiler can link userspace applications
++cc_can_link_user = $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(1))
++
+ rustc-version := $(shell,$(srctree)/scripts/rustc-version.sh $(RUSTC))
+ rustc-llvm-version := $(shell,$(srctree)/scripts/rustc-llvm-version.sh $(RUSTC))
+ 
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From 71fc35504a003f43684f36757050f5c7e1ca7c23 Mon Sep 17 00:00:00 2001
+From f96f9ecbf2aa737fe00a69a78cc04b4004e5a254 Mon Sep 17 00:00:00 2001
 From: Yao Zi <me@ziyao.cc>
 Date: Sun, 5 Apr 2026 15:41:53 +0000
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Add flags for disabling ASPM

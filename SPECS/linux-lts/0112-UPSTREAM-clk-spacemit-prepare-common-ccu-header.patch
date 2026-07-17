@@ -1,4 +1,4 @@
-From 5fd55e32b05d7b1c89471933925ea500ab96dc8f Mon Sep 17 00:00:00 2001
+From 58da181f8fee4e3f7af2a1cfe8708acb62d1b3f2 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 21:52:08 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: prepare common ccu header

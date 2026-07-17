@@ -1,4 +1,4 @@
-From 8cd168c0e1c6761c9dc36dba489883961c115b69 Mon Sep 17 00:00:00 2001
+From 7bf7522c2f3ea687882aebaef45a23db49a253a6 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:32 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable QSPI and add SPI

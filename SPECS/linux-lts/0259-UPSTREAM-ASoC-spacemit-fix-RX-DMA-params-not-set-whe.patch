@@ -1,4 +1,4 @@
-From a7739f1ea5fb20b796b4b1d3758fd44635a40ea9 Mon Sep 17 00:00:00 2001
+From ceac6c799226bf0a55e750f8dfda4457a57c8b30 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 17:00:50 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: fix RX DMA params not set when

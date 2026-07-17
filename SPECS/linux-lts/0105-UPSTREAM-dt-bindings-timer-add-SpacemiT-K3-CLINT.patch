@@ -1,4 +1,4 @@
-From 9e4be2e7c734325e83668eba93f9e2dbc1220efa Mon Sep 17 00:00:00 2001
+From de3d7ed88147aebae73ec5f42e045e4238eae7a3 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:41 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: timer: add SpacemiT K3 CLINT

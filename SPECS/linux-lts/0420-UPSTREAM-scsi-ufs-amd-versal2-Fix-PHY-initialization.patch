@@ -1,0 +1,42 @@
+From fde75cf0667176b48c80b52592112e61f8335ade Mon Sep 17 00:00:00 2001
+From: Ajay Neeli <ajay.neeli@amd.com>
+Date: Wed, 24 Dec 2025 11:09:50 +0530
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: amd-versal2: Fix PHY initialization
+ in HCE enable notify
+
+Move the PHY initialization from PRE_CHANGE to POST_CHANGE in the
+ufs_versal2_hce_enable_notify() callback. This ensures that the PHY is
+initialized after the host controller enable sequence is complete, rather
+than before it starts.
+
+The PHY initialization requires the UFS host controller to be in a stable
+enabled state to properly configure the MPHY registers. Moving this to
+POST_CHANGE aligns with the expected initialization order and prevents
+potential timing issues during controller startup.
+
+Fixes: 769b8b2ffded ("scsi: ufs: amd-versal2: Add UFS support for AMD Versal Gen 2 SoC")
+Signed-off-by: Ajay Neeli <ajay.neeli@amd.com>
+Link: https://patch.msgid.link/20251224053950.54213-1-ajay.neeli@amd.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 0444568edbf87c1da76b61c798ce0f1c1e478467)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-amd-versal2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ufs/host/ufs-amd-versal2.c b/drivers/ufs/host/ufs-amd-versal2.c
+index 40543db621a1..6c454ae8a9c8 100644
+--- a/drivers/ufs/host/ufs-amd-versal2.c
++++ b/drivers/ufs/host/ufs-amd-versal2.c
+@@ -367,7 +367,7 @@ static int ufs_versal2_hce_enable_notify(struct ufs_hba *hba,
+ {
+ 	int ret = 0;
+ 
+-	if (status == PRE_CHANGE) {
++	if (status == POST_CHANGE) {
+ 		ret = ufs_versal2_phy_init(hba);
+ 		if (ret)
+ 			dev_err(hba->dev, "Phy init failed (%d)\n", ret);
+-- 
+2.53.0
+

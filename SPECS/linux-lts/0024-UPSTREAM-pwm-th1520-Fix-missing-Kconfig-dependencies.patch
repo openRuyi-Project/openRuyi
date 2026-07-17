@@ -1,4 +1,4 @@
-From 04ac502626ab9c23c88cb52a8447f2a6d6871231 Mon Sep 17 00:00:00 2001
+From af00b8640fb223e6e97755df058706ff91f96ad7 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 9 Dec 2025 21:06:03 +0100
 Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: Fix missing Kconfig dependencies

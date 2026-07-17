@@ -1,4 +1,4 @@
-From 57ea95edd2da52d808cbd5a6d874d1cb368dea05 Mon Sep 17 00:00:00 2001
+From 0c563395177127fadd547b5db1ccfd04a9c16977 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:42 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: interrupt-controller: add

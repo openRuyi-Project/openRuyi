@@ -1,4 +1,4 @@
-From 2cbda24297eace09de563cb06455c5936a00088e Mon Sep 17 00:00:00 2001
+From 02ff752ecdd8f77567b57dd2fe015f4b52f0173c Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:08 +0100
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: ma35: Convert to common

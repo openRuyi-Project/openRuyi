@@ -1,4 +1,4 @@
-From a000c3124b2434f1d7da679574181a5b8295c9b8 Mon Sep 17 00:00:00 2001
+From c782e1f412db9ce5888fcbe1308dba4c872f3c6f Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 27 Jan 2026 10:58:49 +0800
 Subject: [RUYI PATCH] UPSTREAM: gpio: spacemit-k1: Use PDR for pin direction,

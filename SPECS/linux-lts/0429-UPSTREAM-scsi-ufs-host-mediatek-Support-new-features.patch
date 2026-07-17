@@ -1,0 +1,61 @@
+From ed665f9af9b48c83b5432971d4b31aa92b19d18d Mon Sep 17 00:00:00 2001
+From: Naomi Chu <naomi.chu@mediatek.com>
+Date: Wed, 24 Sep 2025 17:43:30 +0800
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: host: mediatek: Support new
+ features for MT6991
+
+Add support for the MT6991 platform by enabling MRTT settings and random
+performance improvements. These enhancements aim to optimize performance
+and efficiency on the MT6991 hardware.
+
+Enable multi-Round Trip Time (MRTT) for improved data handling.  Enable
+random performance improvement features to boost overall system
+responsiveness.
+
+Signed-off-by: Naomi Chu <naomi.chu@mediatek.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Acked-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20250924094527.2992256-9-peter.wang@mediatek.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 9ce37e94c30090d26df26b1bbb2fa9c51ede7651)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-mediatek.c | 6 ++++++
+ drivers/ufs/host/ufs-mediatek.h | 3 +++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index 074c988c4e3f..a0de39274036 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -289,6 +289,12 @@ static int ufs_mtk_hce_enable_notify(struct ufs_hba *hba,
+ 				0x453000, REG_UFS_MMIO_OPT_CTRL_0);
+ 		}
+ 
++		if (host->ip_ver >= IP_VER_MT6991_A0) {
++			/* Enable multi-rtt */
++			ufshcd_rmwl(hba, MRTT_EN, MRTT_EN, REG_UFS_MMIO_OPT_CTRL_0);
++			/* Enable random performance improvement */
++			ufshcd_rmwl(hba, RDN_PFM_IMPV_DIS, 0, REG_UFS_MMIO_OPT_CTRL_0);
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/ufs/host/ufs-mediatek.h b/drivers/ufs/host/ufs-mediatek.h
+index f96fd032371d..9747277f11e8 100644
+--- a/drivers/ufs/host/ufs-mediatek.h
++++ b/drivers/ufs/host/ufs-mediatek.h
+@@ -20,6 +20,9 @@
+ #define MCQ_MULTI_INTR_EN       BIT(2)
+ #define MCQ_CMB_INTR_EN         BIT(3)
+ #define MCQ_AH8                 BIT(4)
++#define MON_EN                  BIT(5)
++#define MRTT_EN                 BIT(25)
++#define RDN_PFM_IMPV_DIS        BIT(28)
+ 
+ #define MCQ_INTR_EN_MSK         (MCQ_MULTI_INTR_EN | MCQ_CMB_INTR_EN)
+ 
+-- 
+2.53.0
+

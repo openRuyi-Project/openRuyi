@@ -1,4 +1,4 @@
-From 4cec01963100499caa46c4c97acb3d80549132f6 Mon Sep 17 00:00:00 2001
+From 220eda5b92a6554f6629a577c1a4f8c8c540ea62 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 14 Nov 2025 08:38:03 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: net: sophgo,sg2044-dwmac: add phy

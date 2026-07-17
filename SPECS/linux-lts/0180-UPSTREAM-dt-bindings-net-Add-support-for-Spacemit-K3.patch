@@ -1,4 +1,4 @@
-From c446f352ebab05c2cef0a9835bd9224e19c24ccb Mon Sep 17 00:00:00 2001
+From da2e9a8963b952986b932b293479350fe4dbebc0 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:37 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: net: Add support for Spacemit K3

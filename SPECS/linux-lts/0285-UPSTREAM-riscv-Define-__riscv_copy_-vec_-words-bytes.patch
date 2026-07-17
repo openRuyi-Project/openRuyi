@@ -1,4 +1,4 @@
-From 3df7916fd6c198c8e58d6d4914ab06ebca3918bc Mon Sep 17 00:00:00 2001
+From 827c515038d43e1143d418d94d84f5e524f379aa Mon Sep 17 00:00:00 2001
 From: Nathan Chancellor <nathan@kernel.org>
 Date: Wed, 29 Apr 2026 20:38:17 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: Define

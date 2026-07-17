@@ -1,4 +1,4 @@
-From 3ca9f9c1f974516ed56055f86fe810e70234d2e0 Mon Sep 17 00:00:00 2001
+From ddfa1f0d437d597ddc5ed035dbb6fd04295dd9a1 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:06 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Add PWM controller node

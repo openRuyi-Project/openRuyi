@@ -1,4 +1,4 @@
-From 185f8436e47e0844df0a0d25fbb995a69a565fd1 Mon Sep 17 00:00:00 2001
+From 6a8f49b2e92014e689c4e68927683e244639e7c1 Mon Sep 17 00:00:00 2001
 From: Lucas Zampieri <lzampier@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:40 +0100
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: vendor-prefixes: Add UltraRISC

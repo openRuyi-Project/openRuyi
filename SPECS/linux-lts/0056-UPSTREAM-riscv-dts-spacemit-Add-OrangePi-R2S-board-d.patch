@@ -1,4 +1,4 @@
-From 24c1c297e0c77c81c2e3a9ed9690f3e133986a22 Mon Sep 17 00:00:00 2001
+From a99210e73092a2a51e626e76bb6eb8ae63c8eb26 Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 12 Nov 2025 04:44:42 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S board

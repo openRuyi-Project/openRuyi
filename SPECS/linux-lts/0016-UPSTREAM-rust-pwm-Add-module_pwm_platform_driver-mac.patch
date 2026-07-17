@@ -1,4 +1,4 @@
-From a8369a239ce03856b5d63e39d5c92586c0641c18 Mon Sep 17 00:00:00 2001
+From 8d6832a03f3e1f228dcf5140425930cc757b7bdb Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 28 Oct 2025 13:22:33 +0100
 Subject: [RUYI PATCH] UPSTREAM: rust: pwm: Add module_pwm_platform_driver!

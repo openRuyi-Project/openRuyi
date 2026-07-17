@@ -1,0 +1,33 @@
+From d6a4700e9c8a801dd4c9c247fa9416bf6bdc2ca4 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Fri, 15 May 2026 09:17:57 +0800
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: vendor-prefixes: add Rongda
+
+Add Shenzhen Rongda Computer Co., Ltd. to the vendor prefixes.
+
+Link: http://www.shenrongda.com/
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Link: http://www.shenrongda.com/
+Link: https://lore.kernel.org/r/20260515-ultrarisc-pinctrl-v1-1-bf559589ea8a@ultrarisc.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index d03f700d178e..4ba63daade2d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1355,6 +1355,8 @@ patternProperties:
+     description: Rockchip Electronics Co., Ltd.
+   "^rocktech,.*":
+     description: ROCKTECH DISPLAYS LIMITED
++  "^rongda,.*":
++    description: Shenzhen Rongda Computer Co., Ltd.
+   "^rohm,.*":
+     description: ROHM Semiconductor Co., Ltd
+   "^ronbo,.*":
+-- 
+2.53.0
+

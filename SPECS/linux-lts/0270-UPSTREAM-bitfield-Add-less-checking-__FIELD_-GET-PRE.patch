@@ -1,4 +1,4 @@
-From c59127e75e8cf8ce74f12bd0fe0bb2574674fbe4 Mon Sep 17 00:00:00 2001
+From 7d48e0ac649a9c8f4b760a91b4eb1e76fa1ec967 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:00 +0100
 Subject: [RUYI PATCH] UPSTREAM: bitfield: Add less-checking

@@ -1,4 +1,4 @@
-From 1ff5f22be0212ca408aa7b7fb452742a1c0e44d8 Mon Sep 17 00:00:00 2001
+From ee6d3ec9107c0fd772c16584ca526ebe78cd30b0 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:05 +0200
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM

@@ -1,4 +1,4 @@
-From 4fb7d19f2e7e5112722787c8f89b8ca56f6943be Mon Sep 17 00:00:00 2001
+From 1eb042051f3e2906d1caa4c5ab624056b0991758 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:58 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Move PCIe RP common functions to

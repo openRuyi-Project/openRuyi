@@ -1,4 +1,4 @@
-From a5d94c358a562e2cf863fff92b78f0ee109abf10 Mon Sep 17 00:00:00 2001
+From 7c46eafe84df109f4c91da322c3c0936ca5e6f42 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:04 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: introduce sfa_size devtype data

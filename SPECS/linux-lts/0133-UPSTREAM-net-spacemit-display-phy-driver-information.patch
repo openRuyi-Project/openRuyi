@@ -1,4 +1,4 @@
-From 216580fd5ff0f2f9d1b045a0eebd53199b169c09 Mon Sep 17 00:00:00 2001
+From 8f647c44bb22dd0196ff6853795c4f0184e64b0f Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sun, 1 Feb 2026 18:00:01 +0800
 Subject: [RUYI PATCH] UPSTREAM: net: spacemit: display phy driver information

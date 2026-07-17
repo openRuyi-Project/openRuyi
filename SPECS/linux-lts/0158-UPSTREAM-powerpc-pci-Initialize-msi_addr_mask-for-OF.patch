@@ -1,4 +1,4 @@
-From d219e86b2ba446033884ed9b3f3cb9d0edcd98ef Mon Sep 17 00:00:00 2001
+From eadf535b70265b367eb6619033594dad637807b2 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:27 +0530
 Subject: [RUYI PATCH] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for

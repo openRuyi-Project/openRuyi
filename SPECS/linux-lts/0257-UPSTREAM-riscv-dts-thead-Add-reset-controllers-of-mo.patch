@@ -1,4 +1,4 @@
-From 9edafc5f3980e8fcb1a7a18a54466898f1279c14 Mon Sep 17 00:00:00 2001
+From 990eca59b3d00bfc3fd84a349b32be602ef7eeb9 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:32 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Add reset controllers of

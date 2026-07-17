@@ -1,4 +1,4 @@
-From 409dadffdee997565a81b01180b046890adbdd47 Mon Sep 17 00:00:00 2001
+From 5926baabc063083c74e19f79f6caa78d3830e043 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:33 +0800
 Subject: [RUYI PATCH] UPSTREAM: gpio: spacemit: Add GPIO support for K3 SoC

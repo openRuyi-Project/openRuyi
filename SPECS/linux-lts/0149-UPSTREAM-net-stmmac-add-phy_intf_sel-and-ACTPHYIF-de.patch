@@ -1,4 +1,4 @@
-From 90e4dd06e790973bb6661abbcb3f3e584ec56f1e Mon Sep 17 00:00:00 2001
+From 117b92c58e2f5cd407352654edc8faf142ee0657 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:05 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: add phy_intf_sel and ACTPHYIF

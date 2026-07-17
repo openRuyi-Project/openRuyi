@@ -1,4 +1,4 @@
-From 13956aef479172118fb402bab2ecea2f30a4a744 Mon Sep 17 00:00:00 2001
+From a0a9fabc15452e81c179b036d17a57ed00e1ba9d Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 25 Dec 2025 15:46:32 +0800
 Subject: [RUYI PATCH] UPSTREAM: mfd: Kconfig: Default MFD_SPACEMIT_P1 to 'm'

@@ -1,4 +1,4 @@
-From 7b375e6d39b2d52853eaff4e1f70555adadc5253 Mon Sep 17 00:00:00 2001
+From 44e1df9c4c4219596fdc954025a00aa104ddd99e Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Sat, 6 Dec 2025 14:44:53 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Enable i2c8 adapter for

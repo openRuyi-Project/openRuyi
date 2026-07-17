@@ -1,4 +1,4 @@
-From 2af0a8e17c8cfcbee59a2a2f6315c394a0342dc5 Mon Sep 17 00:00:00 2001
+From 90791ed1e854870177f6c1d1b77e2676feac639f Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:28 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Add missing rogue context

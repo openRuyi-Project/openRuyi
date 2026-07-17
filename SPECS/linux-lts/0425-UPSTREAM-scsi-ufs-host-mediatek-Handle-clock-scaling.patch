@@ -1,0 +1,48 @@
+From e6b93ad394a4fa2295a2087afc9a956837475724 Mon Sep 17 00:00:00 2001
+From: Peter Wang <peter.wang@mediatek.com>
+Date: Wed, 24 Sep 2025 17:43:25 +0800
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: host: mediatek: Handle clock
+ scaling for high gear in PM flow
+
+Add clock scaling down for power management flow in the UFS Mediatek
+driver. If clock scaling is disabled and fixed in high gear, ensure the
+clock scales down during suspend and scales up again after resume to
+support high gear.  This adjustment maintains proper power management.
+
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Acked-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Link: https://patch.msgid.link/20250924094527.2992256-4-peter.wang@mediatek.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 16b42c4281ae536a6ceda97303d9820ac5741293)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-mediatek.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index c25ca23a84cc..b8ef8eefa1cc 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -1778,6 +1778,9 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
+ 	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up)) {
+ 		ufshcd_pm_qos_update(hba, false);
+ 		_ufs_mtk_clk_scale(hba, false);
++	} else if ((!ufshcd_is_clkscaling_supported(hba) &&
++		    hba->pwr_info.gear_rx >= UFS_HS_G5)) {
++		_ufs_mtk_clk_scale(hba, false);
+ 	}
+ 
+ 	return 0;
+@@ -1810,6 +1813,9 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up)) {
+ 		ufshcd_pm_qos_update(hba, true);
+ 		_ufs_mtk_clk_scale(hba, true);
++	} else if ((!ufshcd_is_clkscaling_supported(hba) &&
++		    hba->pwr_info.gear_rx >= UFS_HS_G5)) {
++		_ufs_mtk_clk_scale(hba, true);
+ 	}
+ 
+ 	if (ufshcd_is_link_hibern8(hba)) {
+-- 
+2.53.0
+

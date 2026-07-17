@@ -1,4 +1,4 @@
-From 435c6fcc72eff501ecd29fabd2fedec939c67aa6 Mon Sep 17 00:00:00 2001
+From 01de375c11e96785ae483780df945db623280b95 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:04 +0100
 Subject: [RUYI PATCH] UPSTREAM: EDAC/ie31200: Convert to common field_get()

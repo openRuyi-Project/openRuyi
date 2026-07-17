@@ -1,4 +1,4 @@
-From 8490549e86aef53fa8416d6accaa31283186c10b Mon Sep 17 00:00:00 2001
+From 737621e196c8ba0b53475a9010406b9314bac718 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:52 +0100
 Subject: [RUYI PATCH] UPSTREAM: gpio: aspeed: #undef field_{get,prep}() before

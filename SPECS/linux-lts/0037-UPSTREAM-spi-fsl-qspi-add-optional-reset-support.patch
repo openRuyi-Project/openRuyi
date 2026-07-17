@@ -1,4 +1,4 @@
-From eef2e7554dce124c0d27d06663f545ebf8b06b4f Mon Sep 17 00:00:00 2001
+From ea61a74942a5004fa215d79c58105f1338ec541e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:01 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: add optional reset support

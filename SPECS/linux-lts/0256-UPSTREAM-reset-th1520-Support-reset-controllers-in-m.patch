@@ -1,4 +1,4 @@
-From 34aaa4adc6171c1a972e81edbb9861406d7dfa83 Mon Sep 17 00:00:00 2001
+From faec33d63e5af3e07a519daa81a8d9e953889eaf Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:31 +0000
 Subject: [RUYI PATCH] UPSTREAM: reset: th1520: Support reset controllers in

@@ -1,4 +1,4 @@
-From 336f616b6d4b4f53eb9ffdf8822f067ff0820efa Mon Sep 17 00:00:00 2001
+From 237f1c42bc214c3cb3a624c24de08b613706e2f0 Mon Sep 17 00:00:00 2001
 From: Frank Li <Frank.Li@nxp.com>
 Date: Mon, 29 Sep 2025 10:24:16 -0400
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: dwc3-generic-plat: Add layerscape

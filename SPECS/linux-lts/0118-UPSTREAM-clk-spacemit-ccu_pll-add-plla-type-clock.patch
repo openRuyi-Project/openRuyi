@@ -1,4 +1,4 @@
-From a7ce4c7a2f5e9b248b21befc2f291b0d3ae3b195 Mon Sep 17 00:00:00 2001
+From f7657a9e6b3d91927ebb7a35c3f3092378c5f8aa Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Mon, 27 Oct 2025 21:41:24 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: ccu_pll: add plla type clock

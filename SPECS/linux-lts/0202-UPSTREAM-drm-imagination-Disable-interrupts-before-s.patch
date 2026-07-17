@@ -1,4 +1,4 @@
-From 42218f60a7def59ca6f9513365c5aed9fb77a124 Mon Sep 17 00:00:00 2001
+From 71420ca546d63613ee47267fdcfcb0a761bf330f Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Tue, 10 Mar 2026 11:41:12 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Disable interrupts before

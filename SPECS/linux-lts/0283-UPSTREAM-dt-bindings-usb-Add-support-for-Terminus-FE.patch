@@ -1,4 +1,4 @@
-From 56a298b59d7189961a4e6a04e449718ff2944c21 Mon Sep 17 00:00:00 2001
+From 55eb935ad6a55992f79be588fa21fc97cc4a0368 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:03 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: Add support for Terminus

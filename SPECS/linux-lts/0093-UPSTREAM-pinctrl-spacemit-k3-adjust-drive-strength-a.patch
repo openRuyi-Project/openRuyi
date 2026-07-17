@@ -1,4 +1,4 @@
-From 57250a2d8e90085ff17ab7670d16519f41b64f28 Mon Sep 17 00:00:00 2001
+From dd0d5ad91e6226005daefdfc363c05a7c4089dfd Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:25 +0800
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: spacemit: k3: adjust drive strength

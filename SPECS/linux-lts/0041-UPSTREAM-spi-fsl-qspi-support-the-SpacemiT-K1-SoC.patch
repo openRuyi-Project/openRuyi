@@ -1,4 +1,4 @@
-From 014a6255ae46191c6eae14aa9de40535b4226ff0 Mon Sep 17 00:00:00 2001
+From 53c83a343355c01284a123c0592f92e488eec006 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:05 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: support the SpacemiT K1 SoC

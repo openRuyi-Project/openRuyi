@@ -1,4 +1,4 @@
-From 36c2fd3cabf5ec62efb4f91282e7b4afd1034963 Mon Sep 17 00:00:00 2001
+From b177ff56efc790143fcad8774a0fa6295390e2c9 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:25 +0000
 Subject: [RUYI PATCH] UPSTREAM: rust: clk: implement Send and Sync

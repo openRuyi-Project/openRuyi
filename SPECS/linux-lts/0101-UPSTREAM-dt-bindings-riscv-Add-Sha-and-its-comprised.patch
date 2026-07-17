@@ -1,4 +1,4 @@
-From 1642e810c6656b4e941561a7bb884e733c44a2f6 Mon Sep 17 00:00:00 2001
+From 1d68e1c298a704de7dcb9aa56f680650c887b572 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: Add Sha and its comprised

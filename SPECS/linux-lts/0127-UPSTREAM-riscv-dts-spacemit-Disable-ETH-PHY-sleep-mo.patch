@@ -1,4 +1,4 @@
-From ea85c56c78cbe48a0e645e57bb5d0151fa6f9bfa Mon Sep 17 00:00:00 2001
+From c0f9160d762fe57a9b53602372b37198d2ad5fc2 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Tue, 20 Jan 2026 18:00:01 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Disable ETH PHY sleep

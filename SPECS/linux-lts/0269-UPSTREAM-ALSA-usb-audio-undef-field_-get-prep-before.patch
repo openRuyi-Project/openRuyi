@@ -1,4 +1,4 @@
-From a743678cdf95c66206f1cefd74ad8f2e3157f680 Mon Sep 17 00:00:00 2001
+From dd326795b66465f04d08f11807c402dc08b8e615 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:57 +0100
 Subject: [RUYI PATCH] UPSTREAM: ALSA: usb-audio: #undef field_{get,prep}()

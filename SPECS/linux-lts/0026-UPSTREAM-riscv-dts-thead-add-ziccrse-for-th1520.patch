@@ -1,4 +1,4 @@
-From d86f79c2f13ca9a4c232cce2f5dd5020f18a9656 Mon Sep 17 00:00:00 2001
+From bd68ddac12b197d63d695ebee877c658babc4935 Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add ziccrse for th1520

@@ -1,0 +1,99 @@
+From b7110bcf92d44cdc75ad9e168c735756d83d118d Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:48 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: core: Add helpers to pause and
+ resume command processing
+
+In preparation for supporting TX Equalization refreshing, introduce helper
+functions to safely pause and resume command processing.
+
+ufshcd_pause_command_processing() ensures the host is in a quiescent state
+by stopping the block layer tagset, acquiring the necessary locks
+(scan_mutex and clk_scaling_lock), and waiting for any in-flight commands
+to complete within a specified timeout.
+
+ufshcd_resume_command_processing() restores the host to its previous
+operational state by reversing these steps in the correct order.
+
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-7-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit dc5dcac5327832bffc1971b1445553823bdebc08)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/core/ufshcd-priv.h |  2 ++
+ drivers/ufs/core/ufshcd.c      | 42 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/drivers/ufs/core/ufshcd-priv.h b/drivers/ufs/core/ufshcd-priv.h
+index 671f33d153b0..6ff4badba0f2 100644
+--- a/drivers/ufs/core/ufshcd-priv.h
++++ b/drivers/ufs/core/ufshcd-priv.h
+@@ -79,6 +79,8 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd);
+ int ufshcd_try_to_abort_task(struct ufs_hba *hba, int tag);
+ void ufshcd_release_scsi_cmd(struct ufs_hba *hba,
+ 			     struct ufshcd_lrb *lrbp);
++int ufshcd_pause_command_processing(struct ufs_hba *hba, u64 timeout_us);
++void ufshcd_resume_command_processing(struct ufs_hba *hba);
+ 
+ /**
+  * enum ufs_descr_fmt - UFS string descriptor format
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 51e431a04ee4..5f75f95957a4 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -1361,6 +1361,48 @@ static int ufshcd_wait_for_pending_cmds(struct ufs_hba *hba,
+ 	return ret;
+ }
+ 
++/**
++ * ufshcd_pause_command_processing - Pause command processing
++ * @hba: per-adapter instance
++ * @timeout_us: timeout in microseconds to wait for pending commands to finish
++ *
++ * This function stops new command submissions and waits for existing commands
++ * to complete.
++ *
++ * Return: 0 on success, %-EBUSY if commands did not finish within @timeout_us.
++ * On failure, all acquired locks are released and the tagset is unquiesced.
++ */
++int ufshcd_pause_command_processing(struct ufs_hba *hba, u64 timeout_us)
++{
++	int ret = 0;
++
++	mutex_lock(&hba->host->scan_mutex);
++	blk_mq_quiesce_tagset(&hba->host->tag_set);
++	down_write(&hba->clk_scaling_lock);
++
++	if (ufshcd_wait_for_pending_cmds(hba, timeout_us)) {
++		ret = -EBUSY;
++		up_write(&hba->clk_scaling_lock);
++		blk_mq_unquiesce_tagset(&hba->host->tag_set);
++		mutex_unlock(&hba->host->scan_mutex);
++	}
++
++	return ret;
++}
++
++/**
++ * ufshcd_resume_command_processing - Resume command processing
++ * @hba: per-adapter instance
++ *
++ * This function resumes command submissions.
++ */
++void ufshcd_resume_command_processing(struct ufs_hba *hba)
++{
++	up_write(&hba->clk_scaling_lock);
++	blk_mq_unquiesce_tagset(&hba->host->tag_set);
++	mutex_unlock(&hba->host->scan_mutex);
++}
++
+ /**
+  * ufshcd_scale_gear - scale up/down UFS gear
+  * @hba: per adapter instance
+-- 
+2.53.0
+

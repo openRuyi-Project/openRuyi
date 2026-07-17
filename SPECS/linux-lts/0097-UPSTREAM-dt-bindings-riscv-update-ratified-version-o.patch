@@ -1,4 +1,4 @@
-From 33a192939d2dd110bc17a0f1c65a5c654c617d16 Mon Sep 17 00:00:00 2001
+From 1f57c45be3689590c431a322325a942d2901e7ec Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 25 Dec 2025 14:24:20 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: update ratified version of

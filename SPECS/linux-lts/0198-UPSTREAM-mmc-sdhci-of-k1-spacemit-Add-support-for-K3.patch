@@ -1,4 +1,4 @@
-From aef7fb87d55efc5bff2a628b6196c36b7eaf3e12 Mon Sep 17 00:00:00 2001
+From ab33d441a051812b365999d837b8afaa448e3da7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:31 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-k1: spacemit: Add support for K3

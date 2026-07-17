@@ -1,4 +1,4 @@
-From 404911e71521a30847ea8198f0e48c7d6c92dac5 Mon Sep 17 00:00:00 2001
+From 7e7f51d3fc168ccbde756bef719027fd2756f3b9 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:40 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: pinctrl: update register

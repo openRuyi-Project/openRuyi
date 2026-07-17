@@ -1,4 +1,4 @@
-From eef8f9cc817fec7a4c2229a9b9ee475a0efcf53b Mon Sep 17 00:00:00 2001
+From 6469b6c2dfd9d66deecc8708629891e31602adc2 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:01:59 +0100
 Subject: [RUYI PATCH] UPSTREAM: driver: reset: spacemit-p1: add driver for

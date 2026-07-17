@@ -1,4 +1,4 @@
-From 172fa2e5a76c1351ea1bb6903e1d03944ce8a778 Mon Sep 17 00:00:00 2001
+From 97be83a032e9301602d9de79b068c7f8643c14b5 Mon Sep 17 00:00:00 2001
 From: Chen Wang <unicorn_wang@outlook.com>
 Date: Mon, 20 Oct 2025 11:33:43 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: sophgo: dts: add PCIe controllers for

@@ -1,4 +1,4 @@
-From 43765d604a0ac503f549b2772fc89a67b6df8779 Mon Sep 17 00:00:00 2001
+From 633624709863afc1b51408b875f42181a2e72fb2 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:12 +0000
 Subject: [RUYI PATCH] UPSTREAM: clk: thead: th1520-ap: Add C910 bus clock

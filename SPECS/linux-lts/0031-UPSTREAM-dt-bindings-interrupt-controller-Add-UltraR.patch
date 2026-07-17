@@ -1,4 +1,4 @@
-From 38033dfbe309976053db7684228a93e90a76f54f Mon Sep 17 00:00:00 2001
+From b013929e5a0773eea0cce650019592024dfacecb Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:41 +0100
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: interrupt-controller: Add

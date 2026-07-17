@@ -1,4 +1,4 @@
-From 05c376f7568773671fcd81b7cc92e365126410d0 Mon Sep 17 00:00:00 2001
+From bf4a8b5e720e6d5a59e0bb296f971c97f2e459ff Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 13 Jan 2026 10:38:27 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: fix the node order of

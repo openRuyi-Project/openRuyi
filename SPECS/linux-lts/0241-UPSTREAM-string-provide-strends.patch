@@ -1,4 +1,4 @@
-From 94b2dc80662df98e75c5893573a98c832aa7b104 Mon Sep 17 00:00:00 2001
+From 2192890eb62375ada4534f4dca4d8fc75d8e97d4 Mon Sep 17 00:00:00 2001
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Date: Wed, 12 Nov 2025 14:55:30 +0100
 Subject: [RUYI PATCH] UPSTREAM: string: provide strends()

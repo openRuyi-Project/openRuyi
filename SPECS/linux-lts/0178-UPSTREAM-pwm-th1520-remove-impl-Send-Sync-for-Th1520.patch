@@ -1,4 +1,4 @@
-From b521133241a4f965f50ccf4af99769c36904d779 Mon Sep 17 00:00:00 2001
+From 1c00f5d8f76d51936665551442e935339855075a Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:27 +0000
 Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: remove impl Send/Sync for

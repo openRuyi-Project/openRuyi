@@ -1,4 +1,4 @@
-From 915b04c620188a1aac7cc9e8481bd1dc3069817d Mon Sep 17 00:00:00 2001
+From ea689de88bfd93717b97a988d285c2bcfee10d08 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Tue, 18 Nov 2025 14:08:06 +0800
 Subject: [RUYI PATCH] UPSTREAM: rtc: spacemit: MFD_SPACEMIT_P1 as dependencies

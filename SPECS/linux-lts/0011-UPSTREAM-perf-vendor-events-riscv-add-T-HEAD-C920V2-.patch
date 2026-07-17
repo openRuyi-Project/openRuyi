@@ -1,4 +1,4 @@
-From 97f62d7522d266af5df939fe3f50a0e365d78d37 Mon Sep 17 00:00:00 2001
+From c617ae290d1fc44e19de8a6eabb0f9eb646b2a89 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Tue, 14 Oct 2025 09:48:29 +0800
 Subject: [RUYI PATCH] UPSTREAM: perf vendor events riscv: add T-HEAD C920V2

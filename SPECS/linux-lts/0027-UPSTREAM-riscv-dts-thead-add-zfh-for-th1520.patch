@@ -1,4 +1,4 @@
-From 6c54c277dfd8b9c53a91aac3aa08d80a40eef35d Mon Sep 17 00:00:00 2001
+From c97f4fa9442fe9725a615f5b29d980ecb8e34e1b Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:49 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add zfh for th1520

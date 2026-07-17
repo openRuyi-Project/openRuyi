@@ -1,4 +1,4 @@
-From 039b44e9b855295ac8945486ffea47d65240d000 Mon Sep 17 00:00:00 2001
+From e145877df03e9a22048d70a6df37565741c52bef Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 07:19:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k1: Add "b" ISA

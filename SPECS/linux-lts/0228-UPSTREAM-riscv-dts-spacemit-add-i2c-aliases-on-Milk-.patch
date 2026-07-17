@@ -1,4 +1,4 @@
-From 82fab0710b5af85d582db37f1628e0efe0783003 Mon Sep 17 00:00:00 2001
+From d33a5a7d922d3c7562e7169a9c50caf7b81d39dd Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:31 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add i2c aliases on

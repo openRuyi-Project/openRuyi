@@ -26,12 +26,12 @@
 %global kernel_make_flags LD=ld.bfd KBUILD_BUILD_VERSION=%{release}
 
 Name:           linux-lts
-Version:        6.18.34
+Version:        6.18.38
 Release:        %autorelease
 Summary:        The Linux lts Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:640c4732fb42842166db97e032c1fe7e5ff72c85a8982c75b40f74be3555d760
+#!RemoteAsset:  sha256:ac26e508abd56e9f8b89872b6e10c49fc823bcc70d8068a5d8504c1a7c4ff045
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
 Source1:        config.%{_arch}
 Source2:        series

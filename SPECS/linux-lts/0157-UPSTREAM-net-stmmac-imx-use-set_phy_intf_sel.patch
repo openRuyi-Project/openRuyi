@@ -1,4 +1,4 @@
-From e0a6c2e873b5d2ba2e3a62461407c4523f488812 Mon Sep 17 00:00:00 2001
+From 1eabcd14c3a8ae06847f6a7af868db90fdd417d2 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:46 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: use ->set_phy_intf_sel()

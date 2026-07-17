@@ -1,4 +1,4 @@
-From 195ce637ead66f8aff72ecf491637b937ab32985 Mon Sep 17 00:00:00 2001
+From 37095deb7ea0ea8d388930e4fdf433a994d29c51 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 05:34:39 +0800
 Subject: [RUYI PATCH] UPSTREAM: reset: spacemit: fix auxiliary device id

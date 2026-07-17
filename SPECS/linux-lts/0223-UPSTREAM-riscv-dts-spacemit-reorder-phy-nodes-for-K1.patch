@@ -1,4 +1,4 @@
-From feb6ae05030bda7ec7a43a8384cfdffc80d33e30 Mon Sep 17 00:00:00 2001
+From 8ad8078b131f6aea0fde2e411f43212dbb92b54b Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 18 Mar 2026 18:00:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for K1

@@ -1,0 +1,38 @@
+From 099f5123116f3b3a4f1b8f9cd14915ed44b718db Mon Sep 17 00:00:00 2001
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Date: Sat, 4 Jul 2026 20:25:38 +0800
+Subject: [RUYI PATCH] FROMLIST: PCI: dwc: spacemit: add missing
+ MODULE_DEVICE_TABLE()
+
+The driver has an OF match table wired to .of_match_table, but does
+not export the table with MODULE_DEVICE_TABLE().
+
+Add the missing MODULE_DEVICE_TABLE(of, ...) entry so module alias
+information is generated for OF based module autoloading.
+
+This is a source-level fix.  It does not claim dynamic hardware
+reproduction; the evidence is the driver-owned match table, its use by
+the platform driver, and the missing module alias publication.
+
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260704122538.92830-1-pengpeng@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/controller/dwc/pcie-spacemit-k1.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/controller/dwc/pcie-spacemit-k1.c b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
+index 680acc93f539..7502d66bd0d0 100644
+--- a/drivers/pci/controller/dwc/pcie-spacemit-k1.c
++++ b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
+@@ -547,6 +547,7 @@ static const struct of_device_id k1_pcie_of_match_table[] = {
+ 	{ .compatible = "spacemit,k3-pcie", .data = &k3_pcie_device_data},
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, k1_pcie_of_match_table);
+ 
+ static struct platform_driver k1_pcie_driver = {
+ 	.probe	= k1_pcie_probe,
+-- 
+2.53.0
+

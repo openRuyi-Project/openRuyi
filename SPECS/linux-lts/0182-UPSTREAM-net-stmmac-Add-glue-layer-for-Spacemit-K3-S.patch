@@ -1,4 +1,4 @@
-From 945ce43958e6a4b22a3bf632d66514c6e279d2e9 Mon Sep 17 00:00:00 2001
+From 8877fbd548452797ddc8b8ea1e278fe120e4ed3e Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Mon, 16 Mar 2026 09:00:39 +0800
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: Add glue layer for Spacemit K3

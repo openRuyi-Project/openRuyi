@@ -1,4 +1,4 @@
-From 82e88d4cfa7af6b1ae6ffc952a7d1903d2c8e3ea Mon Sep 17 00:00:00 2001
+From 3a566409d11abdf4ed3f08d0621eb8a348aa265f Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:06 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI/MSI: Convert the boolean no_64bit_msi flag

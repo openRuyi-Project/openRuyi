@@ -1,4 +1,4 @@
-From dd167e5e356efc521fea95cca3dab9214d112f2f Mon Sep 17 00:00:00 2001
+From 1db3accfb97de5435d3b1a655351b544f98c89c2 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 17 Oct 2025 11:16:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: dt-bindings: Add bindings for SpacemiT

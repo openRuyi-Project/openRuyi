@@ -1,4 +1,4 @@
-From 88d1fb14b13933d5016b00a18582e2c2dec28c29 Mon Sep 17 00:00:00 2001
+From 5cfe296d78b80974d17bf71f4b20c59e5c4df2e7 Mon Sep 17 00:00:00 2001
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 Date: Fri, 2 Jan 2026 14:58:39 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id() returns

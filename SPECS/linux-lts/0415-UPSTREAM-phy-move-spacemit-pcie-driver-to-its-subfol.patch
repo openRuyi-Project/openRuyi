@@ -1,0 +1,100 @@
+From 96b3e72a2b88678a06248bfb352a95baaa87b976 Mon Sep 17 00:00:00 2001
+From: Vinod Koul <vkoul@kernel.org>
+Date: Mon, 23 Feb 2026 12:12:39 +0530
+Subject: [RUYI PATCH] UPSTREAM: phy: move spacemit pcie driver to its
+ subfolder
+
+Commit fe4bc1a08638 ("phy: spacemit: support K1 USB2.0 PHY controller")
+created spacemit subfolder with usb driver while commit 57e920b92724
+("phy: spacemit: Introduce PCIe/combo PHY") added pcie driver in phy
+folder. Move latter into spacemit subfolder and rename file to
+phy-k1-pcie.c
+
+Reviewed-by: Alex Elder <elder@riscstar.com>
+Reviewed-by: Yixun Lan <dlan@kernel.org>
+Link: https://patch.msgid.link/20260223064240.386617-1-vkoul@kernel.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+(cherry picked from commit 75fb1a33f9ac4c9730e61bb19aaaab02023a99b2)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/phy/Kconfig                                  | 12 ------------
+ drivers/phy/Makefile                                 |  1 -
+ drivers/phy/spacemit/Kconfig                         | 12 ++++++++++++
+ drivers/phy/spacemit/Makefile                        |  1 +
+ .../phy-k1-pcie.c}                                   |  0
+ 5 files changed, 13 insertions(+), 13 deletions(-)
+ rename drivers/phy/{phy-spacemit-k1-pcie.c => spacemit/phy-k1-pcie.c} (100%)
+
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 88ea9af445b1..c39b40876177 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -101,18 +101,6 @@ config PHY_NXP_PTN3222
+ 	  schemes. It supports all three USB 2.0 data rates: Low Speed, Full
+ 	  Speed and High Speed.
+ 
+-config PHY_SPACEMIT_K1_PCIE
+-	tristate "PCIe and combo PHY driver for the SpacemiT K1 SoC"
+-	depends on ARCH_SPACEMIT || COMPILE_TEST
+-	depends on COMMON_CLK
+-	depends on HAS_IOMEM
+-	depends on OF
+-	select GENERIC_PHY
+-	default ARCH_SPACEMIT
+-	help
+-	  Enable support for the PCIe and USB 3 combo PHY and two
+-	  PCIe-only PHYs used in the SpacemiT K1 SoC.
+-
+ source "drivers/phy/allwinner/Kconfig"
+ source "drivers/phy/amlogic/Kconfig"
+ source "drivers/phy/broadcom/Kconfig"
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 950dd4f14372..e1aea28dbf6b 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -13,7 +13,6 @@ obj-$(CONFIG_PHY_SNPS_EUSB2)		+= phy-snps-eusb2.o
+ obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
+ obj-$(CONFIG_PHY_AIROHA_PCIE)		+= phy-airoha-pcie.o
+ obj-$(CONFIG_PHY_NXP_PTN3222)		+= phy-nxp-ptn3222.o
+-obj-$(CONFIG_PHY_SPACEMIT_K1_PCIE)	+= phy-spacemit-k1-pcie.o
+ obj-y					+= allwinner/	\
+ 					   amlogic/	\
+ 					   broadcom/	\
+diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
+index 0136aee2e8a2..50b0005acf66 100644
+--- a/drivers/phy/spacemit/Kconfig
++++ b/drivers/phy/spacemit/Kconfig
+@@ -2,6 +2,18 @@
+ #
+ # Phy drivers for SpacemiT platforms
+ #
++config PHY_SPACEMIT_K1_PCIE
++	tristate "PCIe and combo PHY driver for the SpacemiT K1 SoC"
++	depends on ARCH_SPACEMIT || COMPILE_TEST
++	depends on COMMON_CLK
++	depends on HAS_IOMEM
++	depends on OF
++	select GENERIC_PHY
++	default ARCH_SPACEMIT
++	help
++	  Enable support for the PCIe and USB 3 combo PHY and two
++	  PCIe-only PHYs used in the SpacemiT K1 SoC.
++
+ config PHY_SPACEMIT_K1_USB2
+ 	tristate "SpacemiT K1 USB 2.0 PHY support"
+ 	depends on (ARCH_SPACEMIT || COMPILE_TEST) && OF
+diff --git a/drivers/phy/spacemit/Makefile b/drivers/phy/spacemit/Makefile
+index fec0b425a948..a821a21d6142 100644
+--- a/drivers/phy/spacemit/Makefile
++++ b/drivers/phy/spacemit/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_PHY_SPACEMIT_K1_PCIE)		+= phy-k1-pcie.o
+ obj-$(CONFIG_PHY_SPACEMIT_K1_USB2)		+= phy-k1-usb2.o
+diff --git a/drivers/phy/phy-spacemit-k1-pcie.c b/drivers/phy/spacemit/phy-k1-pcie.c
+similarity index 100%
+rename from drivers/phy/phy-spacemit-k1-pcie.c
+rename to drivers/phy/spacemit/phy-k1-pcie.c
+-- 
+2.53.0
+

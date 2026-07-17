@@ -1,4 +1,4 @@
-From 2c946683705fc6706119c588fd5499c0c91b2369 Mon Sep 17 00:00:00 2001
+From 6d414cc0992e8a50a71176942000ae8b501050ec Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 26 Dec 2025 16:31:59 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: drop useless spaces

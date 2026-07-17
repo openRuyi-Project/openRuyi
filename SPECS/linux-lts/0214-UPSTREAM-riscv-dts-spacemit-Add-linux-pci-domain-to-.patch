@@ -1,4 +1,4 @@
-From 3c942f15e5112f8554b39f1c889cb52184bd3e90 Mon Sep 17 00:00:00 2001
+From b1b9cbb75e922569afad4faecf4626e8bde3e7d7 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Mon, 9 Mar 2026 11:00:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add 'linux,pci-domain'

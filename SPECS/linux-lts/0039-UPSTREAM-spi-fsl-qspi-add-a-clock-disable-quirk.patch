@@ -1,4 +1,4 @@
-From 513e5c7ca8e7b4847c1a9fa9328ecc1da6e03ca4 Mon Sep 17 00:00:00 2001
+From 981675f3ee85d491d051c4664c508128ac988504 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:03 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: add a clock disable quirk

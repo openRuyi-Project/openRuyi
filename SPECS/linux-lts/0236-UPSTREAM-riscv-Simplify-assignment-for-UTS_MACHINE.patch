@@ -1,4 +1,4 @@
-From 88b461165ff138a8bc16b7a3d1540a19c8a3710e Mon Sep 17 00:00:00 2001
+From 90646c816a8e1bb5cf43743f706066bc525133ee Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 Date: Sat, 4 Apr 2026 18:42:40 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: Simplify assignment for UTS_MACHINE

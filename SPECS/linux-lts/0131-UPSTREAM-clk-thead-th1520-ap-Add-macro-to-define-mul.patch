@@ -1,4 +1,4 @@
-From 17338e1f386a810ea7bbe685d7cf3953dae6a51f Mon Sep 17 00:00:00 2001
+From 52617b1d3610227d206fb38f5fde1cfeeb213fbb Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:14 +0000
 Subject: [RUYI PATCH] UPSTREAM: clk: thead: th1520-ap: Add macro to define

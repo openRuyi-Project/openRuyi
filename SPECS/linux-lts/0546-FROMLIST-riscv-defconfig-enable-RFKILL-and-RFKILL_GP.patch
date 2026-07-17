@@ -1,0 +1,32 @@
+From 4b6155e2dea7292e4daa582ebea5a0a8c24f7e98 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Thu, 16 Jul 2026 23:19:01 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: defconfig: enable RFKILL and
+ RFKILL_GPIO
+
+The SpacemiT K3 Pico-ITX requires RFKILL_GPIO to enable Bluetooth and
+WLAN.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260716213314.3027969-2-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 140c12d4ab15..d68b4ed087f7 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -97,6 +97,8 @@ CONFIG_NET_CLS_CGROUP=m
+ CONFIG_NETLINK_DIAG=y
+ CONFIG_CGROUP_NET_PRIO=y
+ CONFIG_CAN=m
++CONFIG_RFKILL=m
++CONFIG_RFKILL_GPIO=m
+ CONFIG_NET_9P=y
+ CONFIG_NET_9P_VIRTIO=y
+ CONFIG_PCI=y
+-- 
+2.53.0
+

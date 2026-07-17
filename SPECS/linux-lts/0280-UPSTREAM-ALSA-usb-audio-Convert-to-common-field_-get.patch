@@ -1,4 +1,4 @@
-From d565f3b6ace21a51f62812c86add16af8553952d Mon Sep 17 00:00:00 2001
+From 1e575c7526236eca8a9557805ef5a712cc7c3062 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:10 +0100
 Subject: [RUYI PATCH] UPSTREAM: ALSA: usb-audio: Convert to common

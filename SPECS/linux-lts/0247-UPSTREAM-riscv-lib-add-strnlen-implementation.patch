@@ -1,4 +1,4 @@
-From d7fce76a1ce208fab598335c38ae8071bb4d893d Mon Sep 17 00:00:00 2001
+From 1a8b9de36cf32d4946ac90848ae0f16b4436b71d Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: lib: add strnlen() implementation

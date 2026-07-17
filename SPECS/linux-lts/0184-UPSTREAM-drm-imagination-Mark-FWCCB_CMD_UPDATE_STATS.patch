@@ -1,4 +1,4 @@
-From 74c17747b1c536e207645c2cd6bd1399b9d2ec05 Mon Sep 17 00:00:00 2001
+From d3c0e1ed28ef36b7a478ab1e5a1d43b177252681 Mon Sep 17 00:00:00 2001
 From: Matt Coster <matt.coster@imgtec.com>
 Date: Fri, 6 Feb 2026 16:02:13 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Mark FWCCB_CMD_UPDATE_STATS

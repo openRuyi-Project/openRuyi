@@ -1,4 +1,4 @@
-From 6eec5416f899b995199e6a78acdba366552fe74b Mon Sep 17 00:00:00 2001
+From d90ef5c3db441ba7f0277b9d3d8dd93c6be76480 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:01 +0200
 Subject: [RUYI PATCH] UPSTREAM: pwm: Export `pwmchip_release` for external use

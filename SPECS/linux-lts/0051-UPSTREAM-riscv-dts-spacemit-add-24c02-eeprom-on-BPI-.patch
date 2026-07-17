@@ -1,4 +1,4 @@
-From c34d30a8bde9d30953c0d83f0fa993d925f5e038 Mon Sep 17 00:00:00 2001
+From fffc0e28825613d507f1e6731d2f011415adf550 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:38 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on

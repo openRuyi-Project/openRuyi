@@ -1,4 +1,4 @@
-From 30931c3912167e96f982909390b4cb13d61548d5 Mon Sep 17 00:00:00 2001
+From 9a289212a972f7808021f2d5895dbff5dc2a5404 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 5 Nov 2025 11:37:44 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define all missing I2C

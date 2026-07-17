@@ -1,4 +1,4 @@
-From 10c6bee274527e1fa5cf933eade792a8269bfa6e Mon Sep 17 00:00:00 2001
+From 89018ba28165fc32aa888271948560c35503a2be Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:00 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional

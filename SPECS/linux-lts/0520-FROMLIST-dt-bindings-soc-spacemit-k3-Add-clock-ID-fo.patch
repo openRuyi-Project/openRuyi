@@ -1,0 +1,31 @@
+From b4f7041ac6bd1aadb453f13a9b30238794f3dac7 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Tue, 30 Jun 2026 12:52:46 +0000
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: soc: spacemit: k3: Add clock ID
+ for UFS refclk
+
+Add clock ID for the UFS refclk clock in SpacemiT K3 SoC.
+
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/r/20260630-06-clk-ufs-support-v1-2-cf7521d1d0fe@kernel.org
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/dt-bindings/clock/spacemit,k3-clocks.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/dt-bindings/clock/spacemit,k3-clocks.h b/include/dt-bindings/clock/spacemit,k3-clocks.h
+index dfae52547cda..69978ab0b29f 100644
+--- a/include/dt-bindings/clock/spacemit,k3-clocks.h
++++ b/include/dt-bindings/clock/spacemit,k3-clocks.h
+@@ -385,6 +385,7 @@
+ #define CLK_APMU_PCIE_PORTC_DBI  91
+ #define CLK_APMU_PCIE_PORTD_DBI  92
+ #define CLK_APMU_PCIE_PORTE_DBI  93
++#define CLK_APMU_UFS_REFCLK      94
+ 
+ /* DCIU clocks */
+ #define CLK_DCIU_HDMA            0
+-- 
+2.53.0
+
