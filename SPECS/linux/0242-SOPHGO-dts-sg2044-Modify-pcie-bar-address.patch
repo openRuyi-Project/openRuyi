@@ -1,4 +1,4 @@
-From 31f970b4f87d869a8215b44d2a467b7f26764944 Mon Sep 17 00:00:00 2001
+From 5c7f00c25bc95b108907109670a8ae2a354c9614 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Sun, 28 Dec 2025 23:02:15 +0800
 Subject: [RUYI PATCH] SOPHGO: dts: sg2044: Modify pcie bar address

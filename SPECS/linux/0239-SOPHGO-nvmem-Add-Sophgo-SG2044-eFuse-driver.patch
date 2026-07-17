@@ -1,4 +1,4 @@
-From ace95ae04352ca7e4460100232f8235444caddcc Mon Sep 17 00:00:00 2001
+From 53b8180f49035a42cc8db3d3b9861745a1669720 Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Sun, 19 Nov 2023 21:13:32 +0800
 Subject: [RUYI PATCH] SOPHGO: nvmem: Add Sophgo SG2044 eFuse driver

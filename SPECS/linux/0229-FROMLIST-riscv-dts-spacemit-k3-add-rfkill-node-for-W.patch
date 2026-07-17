@@ -1,0 +1,39 @@
+From f2027308ebf09c1313801b03a5fd078697df6593 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Thu, 16 Jul 2026 23:19:04 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: add rfkill node for
+ WLAN on Pico-ITX board
+
+By default the GPIO pin that connects to the RTL8852BE WLAN enable
+signal is driven low, resulting in impossibility to connect to any
+network. Add a DT node to expose it as an RFKILL device, which lets the
+WiFi driver or userspace toggle it as required.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260716213314.3027969-5-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index e60d57b0891b..9dd60d1acb34 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -44,6 +44,13 @@ reg_aux_vcc5v: regulator-aux-vcc5v {
+ 		regulator-always-on;
+ 	};
+ 
++	rfkill-pcie-wlan {
++		compatible = "rfkill-gpio";
++		label = "rfkill-pcie-wlan";
++		radio-type = "wlan";
++		shutdown-gpios = <&gpio 1 3 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	rfkill-usb-bt {
+ 		compatible = "rfkill-gpio";
+ 		label = "rfkill-usb-bt";
+-- 
+2.53.0
+

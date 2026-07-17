@@ -1,0 +1,40 @@
+From e7f3a9d454260acfb0b7c9f92e06658628c5d320 Mon Sep 17 00:00:00 2001
+From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Date: Fri, 17 Jul 2026 00:26:01 -0700
+Subject: [RUYI PATCH] FROMLIST: dt-bindings: soc: spacemit: k3: add
+ i2s_sysclk, i2s_bclk_factor and i2s1_sysclk_src IDs
+
+Add three new clock IDs to expose clocks introduced by the topology fix:
+- CLK_MPMU_I2S_SYSCLK (51): the common i2s sysclk DDN at MPMU_ISCCR1
+- CLK_MPMU_I2S_BCLK_FACTOR (52): the implicit /2 factor feeding i2s_bclk
+- CLK_MPMU_I2S1_SYSCLK_SRC (53): the dedicated i2s1 sysclk source mux
+
+CLK_MPMU_I2S1_SYSCLK keeps its existing ID (47) but will be repointed to
+the real per-instance i2s1 clock in a subsequent patch. No in-tree user
+references this ID so the semantic change is contained.
+
+Fixes: efe897b557e2 ("dt-bindings: soc: spacemit: k3: add clock support")
+Signed-off-by: Troy Mitchell <troy.mitchell@linux.spacemit.com>
+Link: https://lore.kernel.org/r/20260717-k3-clk-fix-i2s-v1-1-e95001a692ee@linux.spacemit.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/dt-bindings/clock/spacemit,k3-clocks.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/dt-bindings/clock/spacemit,k3-clocks.h b/include/dt-bindings/clock/spacemit,k3-clocks.h
+index 69978ab0b29f..4f1099f5da1c 100644
+--- a/include/dt-bindings/clock/spacemit,k3-clocks.h
++++ b/include/dt-bindings/clock/spacemit,k3-clocks.h
+@@ -145,6 +145,9 @@
+ #define CLK_MPMU_I2S3_SYSCLK     48
+ #define CLK_MPMU_I2S4_SYSCLK     49
+ #define CLK_MPMU_I2S5_SYSCLK     50
++#define CLK_MPMU_I2S_SYSCLK      51
++#define CLK_MPMU_I2S_BCLK_FACTOR 52
++#define CLK_MPMU_I2S1_SYSCLK_SRC 53
+ 
+ /* APBC clocks */
+ #define CLK_APBC_UART0           0
+-- 
+2.53.0
+

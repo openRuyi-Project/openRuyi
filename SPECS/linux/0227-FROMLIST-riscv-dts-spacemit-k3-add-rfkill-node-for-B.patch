@@ -1,0 +1,40 @@
+From 69ea6d4a407286fa41b54cc1a541a7a02f4a3f44 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Thu, 16 Jul 2026 23:19:02 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: k3: add rfkill node for
+ Bluetooth on Pico-ITX board
+
+On the K3 PICO-ITX board, by default the GPIO pin that connects to the
+RTL8852BE Bluetooth enable signal is driven low, resulting in
+impossibility to use Bluetooth. Add a DT node to expose it as an RFKILL
+device, which lets the Bluetooth driver or userspace toggle it as
+required.
+
+Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+Link: https://lore.kernel.org/r/20260716213314.3027969-3-aurelien@aurel32.net
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index 7327eb65593c..df6b6201ecc2 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -43,6 +43,13 @@ reg_aux_vcc5v: regulator-aux-vcc5v {
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
++
++	rfkill-usb-bt {
++		compatible = "rfkill-gpio";
++		label = "rfkill-usb-bt";
++		radio-type = "bluetooth";
++		shutdown-gpios = <&gpio 0 30 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &i2c2 {
+-- 
+2.53.0
+

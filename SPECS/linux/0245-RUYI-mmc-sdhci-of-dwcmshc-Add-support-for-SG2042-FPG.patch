@@ -1,4 +1,4 @@
-From 52558a18a8e361f925bdf98c50be907e7192ef3f Mon Sep 17 00:00:00 2001
+From 8cf67e37c7c3e2c09c10613b915b4121a7cbca06 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 28 May 2026 14:18:23 +0800
 Subject: [RUYI PATCH] RUYI: mmc: sdhci-of-dwcmshc: Add support for SG2042 FPGA

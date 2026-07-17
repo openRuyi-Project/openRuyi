@@ -1,0 +1,43 @@
+From 581e5dd0f435f5e66e34b2dcbe513f99b37afe08 Mon Sep 17 00:00:00 2001
+From: Nam Cao <namcao@linutronix.de>
+Date: Thu, 16 Jul 2026 07:33:19 +0200
+Subject: [RUYI PATCH] FROMLIST: riscv: time: Add missing __iomem in
+ get_cycles() and get_cycles_hi()
+
+__iomem is missing while calling readl_relaxed() in get_cycles() and
+get_cycles_hi() and sparse complains.
+
+Add __iomem to silence the sparse warnings.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202607160619.14G8GHp5-lkp@intel.com/
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Link: https://lore.kernel.org/r/20260716053319.2178937-1-namcao@linutronix.de
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/timex.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
+index a06697846e69..d41acfb3959d 100644
+--- a/arch/riscv/include/asm/timex.h
++++ b/arch/riscv/include/asm/timex.h
+@@ -22,13 +22,13 @@ static inline cycles_t get_cycles(void)
+ #else /* !CONFIG_64BIT */
+ static inline u32 get_cycles(void)
+ {
+-	return readl_relaxed(((u32 *)clint_time_val));
++	return readl_relaxed(((u32 __iomem *)clint_time_val));
+ }
+ #define get_cycles get_cycles
+ 
+ static inline u32 get_cycles_hi(void)
+ {
+-	return readl_relaxed(((u32 *)clint_time_val) + 1);
++	return readl_relaxed(((u32 __iomem *)clint_time_val) + 1);
+ }
+ #define get_cycles_hi get_cycles_hi
+ #endif /* CONFIG_64BIT */
+-- 
+2.53.0
+

@@ -1,0 +1,97 @@
+From 615961e762585cfd8044598a7b95ee0fb87cbee9 Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Fri, 17 Jul 2026 20:40:06 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: cmpxchg: Use .option arch for Zacas and
+ Zabha
+
+Instead of adding these to -march globally, use .option arch to use
+instructions from these extensions only in code paths where we know they
+are available, like how it is done for most other extensions.
+TOOLCHAIN_HAS_{ZACAS,ZABHA} already depend on AS_HAS_OPTION_ARCH, so
+this is not a functionality regression even on older assemblers.
+
+Although the compiler is unlikely to generate atomics on its own accord,
+this aligns handling of Zacas and Zabha with most other extensions and
+improves consistency on how assembly code requiring extra extensions is
+written in kernel code.
+
+This is analogous to the use of __LSE_PREAMBLE or .arch_extension lse in
+arm64 code.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260717-riscv-no-zacas-zabha-in-march-v1-1-82b5b0799fb6@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Makefile              |  6 ------
+ arch/riscv/include/asm/cmpxchg.h | 14 +++++++++++++-
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 729a46ac2b0d..3592f9788da3 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -83,12 +83,6 @@ else
+ riscv-march-$(CONFIG_TOOLCHAIN_NEEDS_EXPLICIT_ZICSR_ZIFENCEI) := $(riscv-march-y)_zicsr_zifencei
+ endif
+ 
+-# Check if the toolchain supports Zacas
+-riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZACAS) := $(riscv-march-y)_zacas
+-
+-# Check if the toolchain supports Zabha
+-riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZABHA) := $(riscv-march-y)_zabha
+-
+ KBUILD_BASE_ISA = -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
+ export KBUILD_BASE_ISA
+ 
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index 8712cf9c69dc..662e160b0522 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -23,7 +23,10 @@
+ 	    riscv_has_extension_unlikely(RISCV_ISA_EXT_ZABHA)) {		\
+ 		__asm__ __volatile__ (						\
+ 			prepend							\
++			"	.option push\n"					\
++			"	.option arch, +zabha\n"				\
+ 			"	amoswap" swap_sfx " %0, %z2, %1\n"		\
++			"	.option pop\n"					\
+ 			swap_append						\
+ 			: "=&r" (r), "+A" (*(p))				\
+ 			: "rJ" (n)						\
+@@ -141,7 +144,10 @@
+ 										\
+ 		__asm__ __volatile__ (						\
+ 			cas_prepend							\
++			"	.option push\n"					\
++			"	.option arch, +zacas, +zabha\n"				\
+ 			"	amocas" cas_sfx " %0, %z2, %1\n"		\
++			"	.option pop\n"					\
+ 			cas_append							\
+ 			: "+&r" (r), "+A" (*(p))				\
+ 			: "rJ" (n)						\
+@@ -188,7 +194,10 @@
+ 									\
+ 		__asm__ __volatile__ (					\
+ 			cas_prepend					\
++			"	.option push\n"				\
++			"	.option arch, +zacas\n"			\
+ 			"	amocas" cas_sfx " %0, %z2, %1\n"	\
++			"	.option pop\n"				\
+ 			cas_append					\
+ 			: "+&r" (r), "+A" (*(p))			\
+ 			: "rJ" (n)					\
+@@ -340,7 +349,10 @@ union __u128_halves {
+ 	register unsigned long t4 asm ("t4") = __ho.high;			\
+ 										\
+ 	__asm__ __volatile__ (							\
+-		 "       amocas.q" cas_sfx " %0, %z3, %2"			\
++		 "       .option push\n"					\
++		 "       .option arch, +zacas\n"				\
++		 "       amocas.q" cas_sfx " %0, %z3, %2\n"			\
++		 "       .option pop\n"						\
+ 		 : "+&r" (t3), "+&r" (t4), "+A" (*(p))				\
+ 		 : "rJ" (t1), "rJ" (t2)						\
+ 		 : "memory");							\
+-- 
+2.53.0
+

@@ -1,4 +1,4 @@
-From 9049063e935587f7c78d9501dedf99405384d116 Mon Sep 17 00:00:00 2001
+From 6477daddbe719e7db83611bfbba0c1ca397acce2 Mon Sep 17 00:00:00 2001
 From: Hangfan Li <lihangfan@iscas.ac.cn>
 Date: Fri, 3 Jul 2026 17:29:21 +0800
 Subject: [RUYI PATCH] RUYI: riscv: dts: sophgo: sg2044: srd3: add spifmc node
