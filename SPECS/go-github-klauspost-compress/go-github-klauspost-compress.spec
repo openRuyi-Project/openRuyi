@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jvle <keke.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,18 +9,15 @@
 %define go_import_path  github.com/klauspost/compress
 
 Name:           go-github-klauspost-compress
-Version:        1.18.6
+Version:        1.19.0
 Release:        %autorelease
 Summary:        Optimized Go Compression Packages
 License:        BSD-3-Clause AND Apache-2.0 AND MIT
 URL:            https://github.com/klauspost/compress
-#!RemoteAsset:  sha256:cd94476767c7928b995a77167aa37b0920c7db74d5a4eafd3a1a4a7055e74785
+#!RemoteAsset:  sha256:24a85ea42e61d5bc24313da2d54402792b53895d19e5d2971ea00987d1c540e6
 Source0:        https://github.com/klauspost/compress/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-# Fix Go vet warning with current Go toolchain.
-Patch2000:      2000-fix-buffer-format.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -short -timeout 1h
@@ -56,8 +54,8 @@ This package provides various compression algorithms.
    provides a very fast parallel gzip implementation.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
