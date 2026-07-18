@@ -6,20 +6,20 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquick3d
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 %bcond system_assimp 0
 %bcond system_openxr 0
 
 Name:           qt6-qtquick3d
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Quick3D Libraries and utilities
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquick3d
-#!RemoteAsset:  sha256:17d40272becef0dab71b60333bcf0c23d1d25dcf1df16ee9bf0daa7e4de403e6
+#!RemoteAsset:  sha256:c76b85de3f8aa2a4bee64987acfef560675c1b378b92076c7c6264613e5b456f
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -127,7 +127,9 @@ popd
 %{_bindir}/materialeditor-qt6
 %{_bindir}/shapegen-qt6
 %{_bindir}/lightmapviewer-qt6
+%{_bindir}/particleshadergen
 %{_qt6_bindir}/balsam
+%{_qt6_bindir}/particleshadergen
 %{_qt6_bindir}/meshdebug
 %{_qt6_bindir}/shadergen
 %{_qt6_bindir}/balsamui
