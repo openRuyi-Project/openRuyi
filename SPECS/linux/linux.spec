@@ -41,21 +41,22 @@
 %if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
     %global arch_suffix -rva20
 %else
-    %global arch_suffix %{nil}
+    %global arch_suffix -generic
 %endif
+
+%global patchset_release 1
+%global config_version 0
 
 Name:           linux
 Version:        7.1.4
-Release:        %autorelease
+Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:1c63922a119675d38e3ae0f8f6ee07f15c41a786ab9ed66563749bb8c9a08e2e
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
-Source1:        series
-Source2:        config.x86_64
-Source3:        config.riscv64
-Source4:        config.riscv64-rva20
+#!RemoteAsset:  sha256:e6a4d8c5929fec7194307c8a00e16e1fbf46c7631223afba59f54d2db59275a6
+Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  bison
@@ -124,9 +125,6 @@ Requires(preun): %{name}-dtbs%{?_isa} = %{version}-%{release}
 Requires(post):   kernel-install
 Requires(preun):  kernel-install
 
-%patchlist
-%include %{SOURCE1}
-
 %description
 This is a meta-package that handles standard kernel installation.
 To avoid the execution of kernel service scriptlet, please install
@@ -189,8 +187,18 @@ for booting.
 %endif
 
 %prep
-%autosetup -p1
-cp -v %{_sourcedir}/config.%{_arch}%{arch_suffix} .config
+%autosetup -N
+
+patchset_dir=.openruyi-patchset
+mkdir "${patchset_dir}"
+tar -xf "%{SOURCE1}" -C "${patchset_dir}"
+while IFS= read -r patch_name; do
+    echo "Applying patch: ${patch_name}"
+    patch -p1 < "${patchset_dir}/${patch_name}" || exit 1
+done < "${patchset_dir}/series"
+cp -v "${patchset_dir}/config.%{_arch}%{arch_suffix}" .config
+rm -rf "${patchset_dir}"
+
 echo "-%{kernel_local_version}" > localversion
 
 %conf
