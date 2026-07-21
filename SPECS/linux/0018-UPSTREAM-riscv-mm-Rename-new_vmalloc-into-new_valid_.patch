@@ -1,4 +1,4 @@
-From e1851133afd68fda16025c122b6904564e32389c Mon Sep 17 00:00:00 2001
+From 6eadc6ce951c2f70095681663358f67e8fabf09f Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: mm: Rename new_vmalloc into
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index b1a2ac665792..8c7a0ef2635a 100644
+index b1a2ac6657..8c7a0ef263 100644
 --- a/arch/riscv/include/asm/cacheflush.h
 +++ b/arch/riscv/include/asm/cacheflush.h
 @@ -41,7 +41,7 @@ do {							\
@@ -46,7 +46,7 @@ index b1a2ac665792..8c7a0ef2635a 100644
  #define flush_cache_vmap flush_cache_vmap
  static inline void flush_cache_vmap(unsigned long start, unsigned long end)
 diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 6c14ed7a5613..ebf6918b4e9b 100644
+index e189c477c0..c6988983cd 100644
 --- a/arch/riscv/kernel/entry.S
 +++ b/arch/riscv/kernel/entry.S
 @@ -20,44 +20,44 @@
@@ -121,8 +121,8 @@ index 6c14ed7a5613..ebf6918b4e9b 100644
 +	/* Atomically reset the current cpu bit in new_valid_map_cpus */
  	amoxor.d	a0, a1, (a0)
  
- 	/* Only emit a sfence.vma if the uarch caches invalid entries */
-@@ -84,11 +84,11 @@
+ 	/*
+@@ -87,11 +87,11 @@
  	csrw	CSR_SCRATCH, x0
  	sret
  
@@ -137,7 +137,7 @@ index 6c14ed7a5613..ebf6918b4e9b 100644
  	REG_L	a0, TASK_TI_A0(tp)
  .endm
  
-@@ -146,7 +146,7 @@ SYM_CODE_START(handle_exception)
+@@ -149,7 +149,7 @@ SYM_CODE_START(handle_exception)
  	 *   could "miss" the new mapping and traps: in that case, we only need
  	 *   to retry the access, no sfence.vma is required.
  	 */
@@ -147,7 +147,7 @@ index 6c14ed7a5613..ebf6918b4e9b 100644
  
  	REG_S sp, TASK_TI_KERNEL_SP(tp)
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index fa8d2f6f554b..bede6845f767 100644
+index fa8d2f6f55..bede6845f7 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
 @@ -37,7 +37,7 @@
@@ -160,5 +160,5 @@ index fa8d2f6f554b..bede6845f767 100644
  struct kernel_mapping kernel_map __ro_after_init;
  EXPORT_SYMBOL(kernel_map);
 -- 
-2.53.0
+2.54.0
 

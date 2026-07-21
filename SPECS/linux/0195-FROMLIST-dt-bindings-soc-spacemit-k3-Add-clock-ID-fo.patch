@@ -1,4 +1,4 @@
-From 641e18073789a0e1b29eb885e9468b41ed148832 Mon Sep 17 00:00:00 2001
+From 815d7123b37bd611fabee6a8c7dfa1b56804b54f Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 12:52:46 +0000
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: soc: spacemit: k3: Add clock ID
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/include/dt-bindings/clock/spacemit,k3-clocks.h b/include/dt-bindings/clock/spacemit,k3-clocks.h
-index dfae52547cda..69978ab0b29f 100644
+index dfae52547c..69978ab0b2 100644
 --- a/include/dt-bindings/clock/spacemit,k3-clocks.h
 +++ b/include/dt-bindings/clock/spacemit,k3-clocks.h
 @@ -385,6 +385,7 @@
@@ -27,5 +27,5 @@ index dfae52547cda..69978ab0b29f 100644
  /* DCIU clocks */
  #define CLK_DCIU_HDMA            0
 -- 
-2.53.0
+2.54.0
 

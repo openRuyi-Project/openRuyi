@@ -1,4 +1,4 @@
-From 8fcd2a21be209c955bf953909637e2d0d05f4b4b Mon Sep 17 00:00:00 2001
+From 160b9a19bee6a9e3224425d724ea250ffbbb0d85 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:15 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: thermal: Add SpacemiT K1 thermal
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/thermal/spacemit,k1-tsensor.yaml b/Documentation/devicetree/bindings/thermal/spacemit,k1-tsensor.yaml
 new file mode 100644
-index 000000000000..6dad76a7dd36
+index 0000000000..6dad76a7dd
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/thermal/spacemit,k1-tsensor.yaml
 @@ -0,0 +1,76 @@
@@ -102,5 +102,5 @@ index 000000000000..6dad76a7dd36
 +        #thermal-sensor-cells = <1>;
 +    };
 -- 
-2.53.0
+2.54.0
 

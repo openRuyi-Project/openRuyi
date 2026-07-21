@@ -1,4 +1,4 @@
-From f12f3431a034ff7f0018f566b21366b9c50b73fc Mon Sep 17 00:00:00 2001
+From 0c81354b2fbb63c3c501860a08411a2b69a96a42 Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add thermal sensor for
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 101 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index f8747190d2e1..2ed5cc24e505 100644
+index f8747190d2..2ed5cc24e5 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -339,6 +339,96 @@ osc_32k: clock-32k {
@@ -141,5 +141,5 @@ index f8747190d2e1..2ed5cc24e505 100644
  			compatible = "spacemit,k1-i2c";
  			reg = <0x0 0xd4018800 0x0 0x38>;
 -- 
-2.53.0
+2.54.0
 

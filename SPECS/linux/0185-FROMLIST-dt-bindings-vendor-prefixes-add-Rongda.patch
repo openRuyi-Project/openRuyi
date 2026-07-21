@@ -1,4 +1,4 @@
-From 30adc6ad4f42ce7480a02f3a614e59a29a81a797 Mon Sep 17 00:00:00 2001
+From 77ad83ba87cf488d486b123207926c71d43de915 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:17:57 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: vendor-prefixes: add Rongda
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 28784d66ae7b..04e593c66c7c 100644
+index 28784d66ae..04e593c66c 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
 @@ -1407,6 +1407,8 @@ patternProperties:
@@ -29,5 +29,5 @@ index 28784d66ae7b..04e593c66c7c 100644
      description: ROHM Semiconductor Co., Ltd
    "^ronbo,.*":
 -- 
-2.53.0
+2.54.0
 

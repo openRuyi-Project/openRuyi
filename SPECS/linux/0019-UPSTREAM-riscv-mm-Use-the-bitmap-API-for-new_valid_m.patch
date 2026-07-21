@@ -1,4 +1,4 @@
-From 1b51e79ada107af6f2873b89eb87ea0e53166c49 Mon Sep 17 00:00:00 2001
+From 702cd3c4b268b06c26aa0a163b13cea8222fc622 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 3 Mar 2026 13:29:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: mm: Use the bitmap API for
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index 8c7a0ef2635a..8cfe59483a8f 100644
+index 8c7a0ef263..8cfe59483a 100644
 --- a/arch/riscv/include/asm/cacheflush.h
 +++ b/arch/riscv/include/asm/cacheflush.h
 @@ -41,19 +41,17 @@ do {							\
@@ -46,7 +46,7 @@ index 8c7a0ef2635a..8cfe59483a8f 100644
  #define flush_cache_vmap flush_cache_vmap
  static inline void flush_cache_vmap(unsigned long start, unsigned long end)
 diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index bede6845f767..ea8766c4f3a2 100644
+index bede6845f7..ea8766c4f3 100644
 --- a/arch/riscv/mm/init.c
 +++ b/arch/riscv/mm/init.c
 @@ -37,7 +37,7 @@
@@ -59,5 +59,5 @@ index bede6845f767..ea8766c4f3a2 100644
  struct kernel_mapping kernel_map __ro_after_init;
  EXPORT_SYMBOL(kernel_map);
 -- 
-2.53.0
+2.54.0
 

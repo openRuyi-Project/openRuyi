@@ -1,4 +1,4 @@
-From b5bd7b4a186be6ce3dce4c6d1173cf8c4c41f078 Mon Sep 17 00:00:00 2001
+From 8263d2d31fae22776e58c2fa7116dc72975fe14b Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:40 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Rename fence returned by
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_job.c b/drivers/gpu/drm/imagination/pvr_job.c
-index 0c2f511a6178..dd9f5df01e08 100644
+index 0c2f511a61..dd9f5df01e 100644
 --- a/drivers/gpu/drm/imagination/pvr_job.c
 +++ b/drivers/gpu/drm/imagination/pvr_job.c
 @@ -326,7 +326,7 @@ prepare_job_syncs(struct pvr_file *pvr_file,
@@ -51,7 +51,7 @@ index 0c2f511a6178..dd9f5df01e08 100644
  }
  
 diff --git a/drivers/gpu/drm/imagination/pvr_sync.c b/drivers/gpu/drm/imagination/pvr_sync.c
-index 757a18b1ab8f..936f840a5221 100644
+index 757a18b1ab..936f840a52 100644
 --- a/drivers/gpu/drm/imagination/pvr_sync.c
 +++ b/drivers/gpu/drm/imagination/pvr_sync.c
 @@ -160,7 +160,7 @@ int
@@ -73,7 +73,7 @@ index 757a18b1ab8f..936f840a5221 100644
  
  		if (WARN_ON(!sig_sync->fence))
 diff --git a/drivers/gpu/drm/imagination/pvr_sync.h b/drivers/gpu/drm/imagination/pvr_sync.h
-index db6ccfda104a..48501ad27794 100644
+index db6ccfda10..48501ad277 100644
 --- a/drivers/gpu/drm/imagination/pvr_sync.h
 +++ b/drivers/gpu/drm/imagination/pvr_sync.h
 @@ -70,7 +70,7 @@ int
@@ -86,5 +86,5 @@ index db6ccfda104a..48501ad27794 100644
  void
  pvr_sync_signal_array_push_fences(struct xarray *array);
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From b509f4f503d85095037c29850d13810eb87bfed0 Mon Sep 17 00:00:00 2001
+From a2c71c2c08e31d32b4ed614c4ef842b8b6e1039c Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 5 May 2026 09:53:34 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: spacemit: add u64 cast to NSEC_PER_SEC to
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-spacemit-k1.c b/drivers/spi/spi-spacemit-k1.c
-index 99db429db0b2..215fe66d27b4 100644
+index 99db429db0..215fe66d27 100644
 --- a/drivers/spi/spi-spacemit-k1.c
 +++ b/drivers/spi/spi-spacemit-k1.c
 @@ -390,7 +390,7 @@ static int k1_spi_set_speed(struct k1_spi_driver_data *drv_data,
@@ -39,5 +39,5 @@ index 99db429db0b2..215fe66d27b4 100644
  
  	/*
 -- 
-2.53.0
+2.54.0
 

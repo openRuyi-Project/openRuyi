@@ -1,4 +1,4 @@
-From 1f82f38a875484f6eceaa66b6bcc3dc48e98c5d4 Mon Sep 17 00:00:00 2001
+From 1e2e70ec9055afc250278ca7f42aed0d1997666f Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:36 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Count paired job fence as
@@ -74,7 +74,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 23 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index dd88949f6194..836feaa0b295 100644
+index dd88949f61..836feaa0b2 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -179,7 +179,7 @@ static const struct dma_fence_ops pvr_queue_job_fence_ops = {
@@ -133,5 +133,5 @@ index dd88949f6194..836feaa0b295 100644
  
  		if (dma_fence_is_signaled(&jfence->base))
 -- 
-2.53.0
+2.54.0
 

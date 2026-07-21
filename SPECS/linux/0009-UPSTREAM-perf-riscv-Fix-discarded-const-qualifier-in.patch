@@ -1,4 +1,4 @@
-From 7b8bc618ef98685187d221324362e0c8cb8955db Mon Sep 17 00:00:00 2001
+From c7d4be96bcba154b97c06faa1a103c1fcb884d83 Mon Sep 17 00:00:00 2001
 From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 Date: Thu, 14 May 2026 02:07:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: perf riscv: Fix discarded const qualifier in
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/arch/riscv/util/header.c b/tools/perf/arch/riscv/util/header.c
-index 4b839203d4a5..891984e909bd 100644
+index 4b839203d4..891984e909 100644
 --- a/tools/perf/arch/riscv/util/header.c
 +++ b/tools/perf/arch/riscv/util/header.c
 @@ -19,7 +19,7 @@
@@ -43,5 +43,5 @@ index 4b839203d4a5..891984e909bd 100644
  	line2 = strrchr(line, ' ');
  	if (!line2)
 -- 
-2.53.0
+2.54.0
 

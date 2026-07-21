@@ -1,4 +1,4 @@
-From 1ecf513cff828e2a5409070fc96c697eea9d11f0 Mon Sep 17 00:00:00 2001
+From cb39bb6dbcaaf94f27081f59b31be19c30e9a08e Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:39 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Rename
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index 527eae1309d8..df0a110ed96f 100644
+index 527eae1309..df0a110ed9 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -898,16 +898,16 @@ static const struct drm_sched_backend_ops pvr_queue_sched_ops = {
@@ -50,7 +50,7 @@ index 527eae1309d8..df0a110ed96f 100644
  	struct drm_sched_fence *sched_fence = f ? to_drm_sched_fence(f) : NULL;
  
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.h b/drivers/gpu/drm/imagination/pvr_queue.h
-index fc1986d73fc8..4aa72665ce25 100644
+index fc1986d73f..4aa72665ce 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.h
 +++ b/drivers/gpu/drm/imagination/pvr_queue.h
 @@ -141,7 +141,7 @@ struct pvr_queue {
@@ -63,7 +63,7 @@ index fc1986d73fc8..4aa72665ce25 100644
  int pvr_queue_job_init(struct pvr_job *job, u64 drm_client_id);
  
 diff --git a/drivers/gpu/drm/imagination/pvr_sync.c b/drivers/gpu/drm/imagination/pvr_sync.c
-index 3582616ff722..757a18b1ab8f 100644
+index 3582616ff7..757a18b1ab 100644
 --- a/drivers/gpu/drm/imagination/pvr_sync.c
 +++ b/drivers/gpu/drm/imagination/pvr_sync.c
 @@ -211,7 +211,7 @@ pvr_sync_add_dep_to_job(struct drm_sched_job *job, struct dma_fence *f)
@@ -85,5 +85,5 @@ index 3582616ff722..757a18b1ab8f 100644
  
  			/* If this is a native dependency, we wait for the scheduled fence,
 -- 
-2.53.0
+2.54.0
 

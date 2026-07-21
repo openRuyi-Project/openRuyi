@@ -1,4 +1,4 @@
-From 84f7b15c151c775b2d1a75a1e75a62cce0aebc1c Mon Sep 17 00:00:00 2001
+From f0840c64e141e71384ea386d7892a18293a89a9d Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:51 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: add SpacemiT K1 SPI support
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/spi/spacemit,k1-spi.yaml b/Documentation/devicetree/bindings/spi/spacemit,k1-spi.yaml
 new file mode 100644
-index 000000000000..e82c7f8d0b98
+index 0000000000..e82c7f8d0b
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/spi/spacemit,k1-spi.yaml
 @@ -0,0 +1,84 @@
@@ -110,5 +110,5 @@ index 000000000000..e82c7f8d0b98
 +        dma-names = "rx", "tx";
 +    };
 -- 
-2.53.0
+2.54.0
 

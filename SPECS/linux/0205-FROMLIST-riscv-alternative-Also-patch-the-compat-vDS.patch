@@ -1,4 +1,4 @@
-From e5f6db372a365423745ee4d821279783c7b0df18 Mon Sep 17 00:00:00 2001
+From 1008aebd058f19cada57835ff341a2759a8cd7fb Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Tue, 30 Jun 2026 09:41:42 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: alternative: Also patch the compat vDSO
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+)
 
 diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
-index 6aba169fb213..c0c9306022c5 100644
+index 6aba169fb2..c0c9306022 100644
 --- a/arch/riscv/kernel/alternative.c
 +++ b/arch/riscv/kernel/alternative.c
 @@ -202,6 +202,11 @@ void __init apply_boot_alternatives(void)
@@ -35,5 +35,5 @@ index 6aba169fb213..c0c9306022c5 100644
  
  /*
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 74526b41d6a2fbbf55b7f3dcf93efdee1b2ebac8 Mon Sep 17 00:00:00 2001
+From 64ce21fc1931fb536e3e3a507306ddfa23fd350d Mon Sep 17 00:00:00 2001
 From: Shuwei Wu <shuwei.wu@mailbox.org>
 Date: Mon, 27 Apr 2026 15:15:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: thermal/drivers/spacemit/k1: Add thermal
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/thermal/spacemit/k1_tsensor.c
 
 diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index b10080d61860..1c4a5cd5a23e 100644
+index b10080d618..1c4a5cd5a2 100644
 --- a/drivers/thermal/Kconfig
 +++ b/drivers/thermal/Kconfig
 @@ -472,6 +472,8 @@ endmenu
@@ -46,7 +46,7 @@ index b10080d61860..1c4a5cd5a23e 100644
  
  config GENERIC_ADC_THERMAL
 diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index bb21e7ea7fc6..3b249195c088 100644
+index bb21e7ea7f..3b249195c0 100644
 --- a/drivers/thermal/Makefile
 +++ b/drivers/thermal/Makefile
 @@ -65,6 +65,7 @@ obj-y				+= mediatek/
@@ -59,7 +59,7 @@ index bb21e7ea7fc6..3b249195c088 100644
  obj-$(CONFIG_LOONGSON2_THERMAL)	+= loongson2_thermal.o
 diff --git a/drivers/thermal/spacemit/Kconfig b/drivers/thermal/spacemit/Kconfig
 new file mode 100644
-index 000000000000..de7b5ece5af2
+index 0000000000..de7b5ece5a
 --- /dev/null
 +++ b/drivers/thermal/spacemit/Kconfig
 @@ -0,0 +1,19 @@
@@ -84,7 +84,7 @@ index 000000000000..de7b5ece5af2
 +endmenu
 diff --git a/drivers/thermal/spacemit/Makefile b/drivers/thermal/spacemit/Makefile
 new file mode 100644
-index 000000000000..82b30741e4ec
+index 0000000000..82b30741e4
 --- /dev/null
 +++ b/drivers/thermal/spacemit/Makefile
 @@ -0,0 +1,3 @@
@@ -93,7 +93,7 @@ index 000000000000..82b30741e4ec
 +obj-$(CONFIG_SPACEMIT_K1_TSENSOR)	+= k1_tsensor.o
 diff --git a/drivers/thermal/spacemit/k1_tsensor.c b/drivers/thermal/spacemit/k1_tsensor.c
 new file mode 100644
-index 000000000000..79222d233129
+index 0000000000..79222d2331
 --- /dev/null
 +++ b/drivers/thermal/spacemit/k1_tsensor.c
 @@ -0,0 +1,280 @@
@@ -378,5 +378,5 @@ index 000000000000..79222d233129
 +MODULE_AUTHOR("Shuwei Wu <shuwei.wu@mailbox.org>");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

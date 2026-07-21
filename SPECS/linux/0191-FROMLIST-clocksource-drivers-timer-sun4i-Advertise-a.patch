@@ -1,4 +1,4 @@
-From 9cf9e20d2b4d56b9fa71c7150c37cb171d03df37 Mon Sep 17 00:00:00 2001
+From a58b25a8b04ec00720db1dbb56b1d8b155be1a4d Mon Sep 17 00:00:00 2001
 From: Felix Yan <felixonmars@archlinux.org>
 Date: Thu, 25 Jun 2026 06:04:34 +0800
 Subject: [RUYI PATCH] FROMLIST: clocksource/drivers/timer-sun4i: Advertise a
@@ -35,7 +35,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clocksource/timer-sun4i.c b/drivers/clocksource/timer-sun4i.c
-index 7bdcc60ad43c..c2d04ab7cf2d 100644
+index 7bdcc60ad4..c2d04ab7cf 100644
 --- a/drivers/clocksource/timer-sun4i.c
 +++ b/drivers/clocksource/timer-sun4i.c
 @@ -208,7 +208,7 @@ static int __init sun4i_timer_init(struct device_node *node)
@@ -48,5 +48,5 @@ index 7bdcc60ad43c..c2d04ab7cf2d 100644
  	/* Enable timer0 interrupt */
  	val = readl(timer_of_base(&to) + TIMER_IRQ_EN_REG);
 -- 
-2.53.0
+2.54.0
 

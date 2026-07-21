@@ -1,4 +1,4 @@
-From cd58a27ec226ce4bffdbad1a1d650c2dc5211491 Mon Sep 17 00:00:00 2001
+From 795886c498ea86623f3bf0626a1800ac3e7943da Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:38 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Skip check on paired job
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index f1e54e6d940d..527eae1309d8 100644
+index f1e54e6d94..527eae1309 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -646,10 +646,6 @@ static void pvr_queue_submit_job_to_cccb(struct pvr_job *job)
@@ -53,5 +53,5 @@ index f1e54e6d940d..527eae1309d8 100644
  		if (!WARN_ON(!jfence)) {
  			pvr_fw_object_get_fw_addr(jfence->queue->timeline_ufo.fw_obj,
 -- 
-2.53.0
+2.54.0
 

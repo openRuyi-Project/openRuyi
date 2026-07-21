@@ -1,4 +1,4 @@
-From fdcf97c1c1338689176ffd359d9b642283a43864 Mon Sep 17 00:00:00 2001
+From 26fd033360afd26d0cba6a3add114f1f019e915c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Tue, 30 Jun 2026 09:41:40 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: vdso: Add symbols for the alternative
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 8 insertions(+)
 
 diff --git a/arch/riscv/include/asm/vdso.h b/arch/riscv/include/asm/vdso.h
-index f7998d9ad9b2..0259bbc98e93 100644
+index f7998d9ad9..0259bbc98e 100644
 --- a/arch/riscv/include/asm/vdso.h
 +++ b/arch/riscv/include/asm/vdso.h
 @@ -19,10 +19,14 @@
@@ -54,7 +54,7 @@ index f7998d9ad9b2..0259bbc98e93 100644
  
  extern char vdso_start[], vdso_end[];
 diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.lds.S
-index c29ef12a63bb..5e9424df932b 100644
+index c29ef12a63..5e9424df93 100644
 --- a/arch/riscv/kernel/vdso/vdso.lds.S
 +++ b/arch/riscv/kernel/vdso/vdso.lds.S
 @@ -45,9 +45,11 @@ SECTIONS
@@ -70,5 +70,5 @@ index c29ef12a63bb..5e9424df932b 100644
  
  /*
 -- 
-2.53.0
+2.54.0
 

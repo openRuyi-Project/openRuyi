@@ -1,4 +1,4 @@
-From 37d03dbe9071178cca266a67afd494cf8a2bea68 Mon Sep 17 00:00:00 2001
+From dde0c64eca2a626f5c292f43272216c6539699dc Mon Sep 17 00:00:00 2001
 From: Guodong Xu <docular.xu@gmail.com>
 Date: Sat, 20 Jun 2026 01:07:48 -0400
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: spacemit: Use symbolic PDMA
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pdma.h b/arch/riscv/boot/dts/spacemit/k1-pdma.h
 new file mode 100644
-index 000000000000..7e5ad3d7111d
+index 0000000000..7e5ad3d711
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k1-pdma.h
 @@ -0,0 +1,56 @@
@@ -85,7 +85,7 @@ index 000000000000..7e5ad3d7111d
 +
 +#endif /* _DTS_SPACEMIT_K1_PDMA_H */
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 4a359190f633..3fabfd34114b 100644
+index 4a359190f6..3fabfd3411 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -6,6 +6,8 @@
@@ -107,5 +107,5 @@ index 4a359190f633..3fabfd34114b 100644
  				status = "disabled";
  			};
 -- 
-2.53.0
+2.54.0
 

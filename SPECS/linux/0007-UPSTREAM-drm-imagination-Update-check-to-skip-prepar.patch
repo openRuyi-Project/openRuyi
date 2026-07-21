@@ -1,4 +1,4 @@
-From 5c5a52131299c83f2c92c151fd5d4ed590189a51 Mon Sep 17 00:00:00 2001
+From 2b7fb62b805d2f0b4f867564ad8a386950b06ec0 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:42 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Update check to skip
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index 4a49d954562e..303f4d6cc09e 100644
+index 4a49d95456..303f4d6cc0 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -553,12 +553,13 @@ pvr_queue_prepare_job(struct drm_sched_job *sched_job,
@@ -44,5 +44,5 @@ index 4a49d954562e..303f4d6cc09e 100644
  	}
  
 -- 
-2.53.0
+2.54.0
 

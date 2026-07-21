@@ -1,4 +1,4 @@
-From c419e3678ef87aeb41e57b88deae6c43a78ecfe4 Mon Sep 17 00:00:00 2001
+From 6dd18d07c95463616f21950291ac7aef40efafe2 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 2 Jul 2026 02:31:36 +0000
 Subject: [RUYI PATCH] FROMLIST: scsi: ufs: spacemit: k3: Add UFS Host
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/ufs/host/ufs-spacemit.h
 
 diff --git a/drivers/ufs/host/Kconfig b/drivers/ufs/host/Kconfig
-index 964ae70e7390..9b57772faf5f 100644
+index 964ae70e73..9b57772faf 100644
 --- a/drivers/ufs/host/Kconfig
 +++ b/drivers/ufs/host/Kconfig
 @@ -132,6 +132,18 @@ config SCSI_UFS_VARIABLE_SG_ENTRY_SIZE
@@ -44,7 +44,7 @@ index 964ae70e7390..9b57772faf5f 100644
  	tristate "Unisoc specific hooks to UFS controller platform driver"
  	depends on SCSI_UFSHCD_PLATFORM && (ARCH_SPRD || COMPILE_TEST)
 diff --git a/drivers/ufs/host/Makefile b/drivers/ufs/host/Makefile
-index 65d8bb23ab7b..151bf43dfba7 100644
+index 65d8bb23ab..151bf43dfb 100644
 --- a/drivers/ufs/host/Makefile
 +++ b/drivers/ufs/host/Makefile
 @@ -11,6 +11,7 @@ obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
@@ -57,7 +57,7 @@ index 65d8bb23ab7b..151bf43dfba7 100644
  obj-$(CONFIG_SCSI_UFS_AMD_VERSAL2) += ufs-amd-versal2.o ufshcd-dwc.o
 diff --git a/drivers/ufs/host/ufs-spacemit.c b/drivers/ufs/host/ufs-spacemit.c
 new file mode 100644
-index 000000000000..be475f5566a8
+index 0000000000..be475f5566
 --- /dev/null
 +++ b/drivers/ufs/host/ufs-spacemit.c
 @@ -0,0 +1,931 @@
@@ -994,7 +994,7 @@ index 000000000000..be475f5566a8
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/ufs/host/ufs-spacemit.h b/drivers/ufs/host/ufs-spacemit.h
 new file mode 100644
-index 000000000000..6ae3c263a360
+index 0000000000..6ae3c263a3
 --- /dev/null
 +++ b/drivers/ufs/host/ufs-spacemit.h
 @@ -0,0 +1,90 @@
@@ -1089,5 +1089,5 @@ index 000000000000..6ae3c263a360
 +
 +#endif /* _UFS_SPACEMIT_H_ */
 -- 
-2.53.0
+2.54.0
 

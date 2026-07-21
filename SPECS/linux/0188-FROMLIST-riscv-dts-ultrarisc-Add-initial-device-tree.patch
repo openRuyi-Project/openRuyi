@@ -1,4 +1,4 @@
-From 604598cb0d728499bde490ef728115c26c598edf Mon Sep 17 00:00:00 2001
+From 275bdaeac012a452490e07d04911189a9c1ac45e Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:01 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: Add initial device tree
@@ -27,10 +27,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b0d9abcc4fec..1f6f5c5b8f00 100644
+index aff040a4cf..b10801b35a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -23109,6 +23109,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
+@@ -23108,6 +23108,7 @@ M:	Jia Wang <wangjia@ultrarisc.com>
  L:	linux-riscv@lists.infradead.org
  S:	Maintained
  F:	Documentation/devicetree/bindings/riscv/ultrarisc.yaml
@@ -40,7 +40,7 @@ index b0d9abcc4fec..1f6f5c5b8f00 100644
  M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
 diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
 new file mode 100644
-index 000000000000..1aae53fc1a2b
+index 0000000000..1aae53fc1a
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/dp1000.dtsi
 @@ -0,0 +1,851 @@
@@ -896,5 +896,5 @@ index 000000000000..1aae53fc1a2b
 +	};
 +};
 -- 
-2.53.0
+2.54.0
 

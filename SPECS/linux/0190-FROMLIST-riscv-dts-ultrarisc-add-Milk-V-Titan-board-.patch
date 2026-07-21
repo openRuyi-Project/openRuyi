@@ -1,4 +1,4 @@
-From 66a5e34e5c0f63a85c930f7f8f915a289f910c7e Mon Sep 17 00:00:00 2001
+From 8b8d76b8b131ec315299db55ce4d79bcaadec03f Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:04 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: add Milk-V Titan board
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan.dts
 
 diff --git a/arch/riscv/boot/dts/ultrarisc/Makefile b/arch/riscv/boot/dts/ultrarisc/Makefile
-index d01a770d3cba..9c27256a2f67 100644
+index d01a770d3c..9c27256a2f 100644
 --- a/arch/riscv/boot/dts/ultrarisc/Makefile
 +++ b/arch/riscv/boot/dts/ultrarisc/Makefile
 @@ -1,2 +1,3 @@
@@ -27,7 +27,7 @@ index d01a770d3cba..9c27256a2f67 100644
  dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000-rongda-m0.dtb
 diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan-pinctrl.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan-pinctrl.dtsi
 new file mode 100644
-index 000000000000..053206190ec7
+index 0000000000..053206190e
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan-pinctrl.dtsi
 @@ -0,0 +1,107 @@
@@ -140,7 +140,7 @@ index 000000000000..053206190ec7
 +};
 diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan.dts
 new file mode 100644
-index 000000000000..21d85c03abe1
+index 0000000000..21d85c03ab
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-milkv-titan.dts
 @@ -0,0 +1,182 @@
@@ -327,5 +327,5 @@ index 000000000000..21d85c03abe1
 +	};
 +};
 -- 
-2.53.0
+2.54.0
 

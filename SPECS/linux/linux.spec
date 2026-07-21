@@ -45,12 +45,12 @@
 %endif
 
 Name:           linux
-Version:        7.1.3
+Version:        7.1.4
 Release:        %autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:be41c068e88f5242a19bccdbffbe077b18c47b45f627e2325504b4fab79dd1dc
+#!RemoteAsset:  sha256:1c63922a119675d38e3ae0f8f6ee07f15c41a786ab9ed66563749bb8c9a08e2e
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
 Source1:        series
 Source2:        config.x86_64

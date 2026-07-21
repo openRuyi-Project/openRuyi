@@ -1,4 +1,4 @@
-From 775f535c56bd3577b4aea528cd4cd750cac2a4ff Mon Sep 17 00:00:00 2001
+From 13ce25708d16b1aad0c13ed37b7eb9afc2d6bf6e Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:41 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Move repeated job fence check
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 20 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index df0a110ed96f..4a49d954562e 100644
+index df0a110ed9..4a49d95456 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -177,6 +177,24 @@ static const struct dma_fence_ops pvr_queue_job_fence_ops = {
@@ -67,5 +67,5 @@ index df0a110ed96f..4a49d954562e 100644
  
  /**
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From ff40723c916dabf666d848756758068bb5c49f1f Mon Sep 17 00:00:00 2001
+From 9f4d94d79ac2a407bb0c3c61c38fdd247cb1ba33 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 08:53:19 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: set hdma clock as critical
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/spacemit/ccu-k3.c b/drivers/clk/spacemit/ccu-k3.c
-index 092446590e41..aca61ea76019 100644
+index 092446590e..aca61ea760 100644
 --- a/drivers/clk/spacemit/ccu-k3.c
 +++ b/drivers/clk/spacemit/ccu-k3.c
 @@ -1027,7 +1027,7 @@ CCU_MUX_DIV_GATE_DEFINE(isim_vclk_out3, isim_vclk_parents, APMU_SNR_ISIM_VCLK_CT
@@ -31,5 +31,5 @@ index 092446590e41..aca61ea76019 100644
  CCU_GATE_DEFINE(c2_tcm_pipe_clk, CCU_PARENT_HW(axi_clk), DCIU_C2_TCM_PIPE_CLK, BIT(0), 0);
  CCU_GATE_DEFINE(c3_tcm_pipe_clk, CCU_PARENT_HW(axi_clk), DCIU_C3_TCM_PIPE_CLK, BIT(0), 0);
 -- 
-2.53.0
+2.54.0
 

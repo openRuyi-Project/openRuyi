@@ -1,4 +1,4 @@
-From bc2981227e2ee7a8193cab61992d64d17f301d14 Mon Sep 17 00:00:00 2001
+From e8e7ac22e76bd3ab09057cf21e75a94995c7a42d Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:18:03 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: dts: ultrarisc: add Rongda M0 board
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
 
 diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index 69d8751fb17c..702882974251 100644
+index 69d8751fb1..7028829742 100644
 --- a/arch/riscv/boot/dts/Makefile
 +++ b/arch/riscv/boot/dts/Makefile
 @@ -12,3 +12,4 @@ subdir-y += spacemit
@@ -30,7 +30,7 @@ index 69d8751fb17c..702882974251 100644
 +subdir-y += ultrarisc
 diff --git a/arch/riscv/boot/dts/ultrarisc/Makefile b/arch/riscv/boot/dts/ultrarisc/Makefile
 new file mode 100644
-index 000000000000..d01a770d3cba
+index 0000000000..d01a770d3c
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/Makefile
 @@ -0,0 +1,2 @@
@@ -38,7 +38,7 @@ index 000000000000..d01a770d3cba
 +dtb-$(CONFIG_ARCH_ULTRARISC) += dp1000-rongda-m0.dtb
 diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
 new file mode 100644
-index 000000000000..101b416b1079
+index 0000000000..101b416b10
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0-pinctrl.dtsi
 @@ -0,0 +1,85 @@
@@ -129,7 +129,7 @@ index 000000000000..101b416b1079
 +};
 diff --git a/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
 new file mode 100644
-index 000000000000..6f72d60ad55e
+index 0000000000..6f72d60ad5
 --- /dev/null
 +++ b/arch/riscv/boot/dts/ultrarisc/dp1000-rongda-m0.dts
 @@ -0,0 +1,111 @@
@@ -245,5 +245,5 @@ index 000000000000..6f72d60ad55e
 +	};
 +};
 -- 
-2.53.0
+2.54.0
 

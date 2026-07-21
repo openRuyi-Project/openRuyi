@@ -1,4 +1,4 @@
-From ee34c63b605c9a43979a2c71aebabc2ca8e9c796 Mon Sep 17 00:00:00 2001
+From 9d6a893816245048d7950c75519ae15c87df2823 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Date: Tue, 30 Jun 2026 09:41:41 +0200
 Subject: [RUYI PATCH] FROMLIST: riscv: alternative: Use the statically
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+), 17 deletions(-)
 
 diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
-index 104dc0862c5c..6aba169fb213 100644
+index 104dc0862c..6aba169fb2 100644
 --- a/arch/riscv/kernel/alternative.c
 +++ b/arch/riscv/kernel/alternative.c
 @@ -173,24 +173,14 @@ static void __init_or_module _apply_alternatives(struct alt_entry *begin,
@@ -73,5 +73,5 @@ index 104dc0862c5c..6aba169fb213 100644
  
  /*
 -- 
-2.53.0
+2.54.0
 

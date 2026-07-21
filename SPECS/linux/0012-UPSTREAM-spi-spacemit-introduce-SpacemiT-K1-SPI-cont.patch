@@ -1,4 +1,4 @@
-From dec6ceccdcc3a5d07857835e6c10035349dbdf06 Mon Sep 17 00:00:00 2001
+From 5119cc980928f0e9a9b35596ff5af42fcdc020af Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:52 -0400
 Subject: [RUYI PATCH] UPSTREAM: spi: spacemit: introduce SpacemiT K1 SPI
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/spi/spi-spacemit-k1.c
 
 diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index b563f49e2197..8782514bb89b 100644
+index b563f49e21..8782514bb8 100644
 --- a/drivers/spi/Kconfig
 +++ b/drivers/spi/Kconfig
 @@ -1085,6 +1085,15 @@ config SPI_SG2044_NOR
@@ -43,7 +43,7 @@ index b563f49e2197..8782514bb89b 100644
  	tristate "Spreadtrum SPI controller"
  	depends on ARCH_SPRD || COMPILE_TEST
 diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 9d36190a9884..9fa12498ce8c 100644
+index 9d36190a98..9fa12498ce 100644
 --- a/drivers/spi/Makefile
 +++ b/drivers/spi/Makefile
 @@ -143,6 +143,7 @@ obj-$(CONFIG_SPI_SIFIVE)		+= spi-sifive.o
@@ -56,7 +56,7 @@ index 9d36190a9884..9fa12498ce8c 100644
  obj-$(CONFIG_SPI_STM32) 		+= spi-stm32.o
 diff --git a/drivers/spi/spi-spacemit-k1.c b/drivers/spi/spi-spacemit-k1.c
 new file mode 100644
-index 000000000000..99db429db0b2
+index 0000000000..99db429db0
 --- /dev/null
 +++ b/drivers/spi/spi-spacemit-k1.c
 @@ -0,0 +1,789 @@
@@ -850,5 +850,5 @@ index 000000000000..99db429db0b2
 +MODULE_DESCRIPTION("SpacemiT K1 SPI controller driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

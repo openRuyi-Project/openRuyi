@@ -1,4 +1,4 @@
-From 46109c5a767842625ba66ab507e765ca4bbee028 Mon Sep 17 00:00:00 2001
+From 6ec14048f90f6d9faebd71c606bd82dd41fbfc00 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Tue, 30 Jun 2026 12:52:45 +0000
 Subject: [RUYI PATCH] FROMLIST: clk: spacemit: k3: fix parent clock of UFS
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu-k3.c b/drivers/clk/spacemit/ccu-k3.c
-index 03de04144963..0702b6ecdbd2 100644
+index 03de041449..0702b6ecdb 100644
 --- a/drivers/clk/spacemit/ccu-k3.c
 +++ b/drivers/clk/spacemit/ccu-k3.c
 @@ -926,11 +926,10 @@ CCU_MUX_DIV_GATE_FC_DEFINE(dpu_aclk, dpu_aclk_parents, APMU_LCD_CLK_RES_CTRL5, 1
@@ -40,5 +40,5 @@ index 03de04144963..0702b6ecdbd2 100644
  CCU_MUX_DIV_GATE_FC_DEFINE(ufs_aclk, ufs_aclk_parents, APMU_UFS_CLK_RES_CTRL, 5, 3, BIT(8),
  			   2, 3, BIT(1), 0);
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From aa8f507b8b8a7e294f7845e529c7f2bf45fb6344 Mon Sep 17 00:00:00 2001
+From 770ff4f5e17ae6fb1aefcb5266c80f3964191ee0 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Sat, 2 May 2026 21:30:53 -0400
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define a SPI controller
@@ -32,7 +32,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 42 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 5790d927b93d..9429189354d6 100644
+index 5790d927b9..9429189354 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -14,6 +14,7 @@ aliases {
@@ -57,7 +57,7 @@ index 5790d927b93d..9429189354d6 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index b13dcb10f4d6..34d88334e95e 100644
+index b13dcb10f4..34d88334e9 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -570,4 +570,24 @@ pwm14-1-pins {
@@ -86,7 +86,7 @@ index b13dcb10f4d6..34d88334e95e 100644
 +	};
  };
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index f0bad6855c97..f8747190d2e1 100644
+index f0bad6855c..f8747190d2 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -983,6 +983,21 @@ qspi: spi@d420c000 {
@@ -112,5 +112,5 @@ index f0bad6855c97..f8747190d2e1 100644
  		};
  
 -- 
-2.53.0
+2.54.0
 

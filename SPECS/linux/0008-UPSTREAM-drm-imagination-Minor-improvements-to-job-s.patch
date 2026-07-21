@@ -1,4 +1,4 @@
-From 66e60dabb0df73191dc4c07340f1889d963d8283 Mon Sep 17 00:00:00 2001
+From 5b0711552686258e3ea2330fc4a28b959d9d88cf Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Mon, 30 Mar 2026 08:56:43 +0100
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Minor improvements to job
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 26 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index 303f4d6cc09e..b5bec656d13c 100644
+index 303f4d6cc0..b5bec656d1 100644
 --- a/drivers/gpu/drm/imagination/pvr_queue.c
 +++ b/drivers/gpu/drm/imagination/pvr_queue.c
 @@ -200,6 +200,13 @@ pvr_queue_fence_is_ufo_backed(struct dma_fence *f)
@@ -115,7 +115,7 @@ index 303f4d6cc09e..b5bec656d13c 100644
   *
   * If we have a job waiting for CCCB, and this job now fits in the CCCB, we signal
 diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
-index 869d904e3649..fe54c1cad7a9 100644
+index 869d904e36..fe54c1cad7 100644
 --- a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 +++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 @@ -14,15 +14,7 @@
@@ -136,5 +136,5 @@ index 869d904e3649..fe54c1cad7a9 100644
  
  /*
 -- 
-2.53.0
+2.54.0
 

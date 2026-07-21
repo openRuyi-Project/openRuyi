@@ -1,4 +1,4 @@
-From 0767fe1de0a27a6fa706a0e12ab1773f1a0ae293 Mon Sep 17 00:00:00 2001
+From be05255623cf8a2fcd60552ad2f744e899ac9878 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:02:00 +0100
 Subject: [RUYI PATCH] UPSTREAM: mfd: simple-mfd-i2c: Add a reboot cell for the
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-index 7315fad618e4..52c81b18750e 100644
+index 7315fad618..52c81b1875 100644
 --- a/drivers/mfd/simple-mfd-i2c.c
 +++ b/drivers/mfd/simple-mfd-i2c.c
 @@ -105,6 +105,7 @@ static const struct regmap_config spacemit_p1_regmap_config = {
@@ -30,5 +30,5 @@ index 7315fad618e4..52c81b18750e 100644
  	{ .name = "spacemit-p1-rtc", },
  };
 -- 
-2.53.0
+2.54.0
 

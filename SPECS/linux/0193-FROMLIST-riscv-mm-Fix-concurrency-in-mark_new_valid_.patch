@@ -1,4 +1,4 @@
-From 37938a1d3316ee1494b08c66165b52b8cd50308a Mon Sep 17 00:00:00 2001
+From 481d6abe9a8bb8c5098b4263bfec2eb5c2252e2d Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Mon, 29 Jun 2026 17:25:45 +0800
 Subject: [RUYI PATCH] FROMLIST: riscv: mm: Fix concurrency in
@@ -31,7 +31,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 18 insertions(+), 8 deletions(-)
 
 diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index 8cfe59483a8f..1f191cf801a2 100644
+index c2b0a2928f..c6297a1d26 100644
 --- a/arch/riscv/include/asm/cacheflush.h
 +++ b/arch/riscv/include/asm/cacheflush.h
 @@ -6,7 +6,9 @@
@@ -70,7 +70,7 @@ index 8cfe59483a8f..1f191cf801a2 100644
  #define flush_cache_vmap flush_cache_vmap
  static inline void flush_cache_vmap(unsigned long start, unsigned long end)
 diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index c6988983cdf7..092f408edb7d 100644
+index 3ae498779a..31037385d9 100644
 --- a/arch/riscv/kernel/entry.S
 +++ b/arch/riscv/kernel/entry.S
 @@ -76,6 +76,8 @@
@@ -99,5 +99,5 @@ index c6988983cdf7..092f408edb7d 100644
  	new_valid_map_cpus_check
  #endif
 -- 
-2.53.0
+2.54.0
 

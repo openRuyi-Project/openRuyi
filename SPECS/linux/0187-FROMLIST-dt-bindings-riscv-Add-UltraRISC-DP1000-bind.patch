@@ -1,4 +1,4 @@
-From 517d110e8b6d59fd8f6f47be71b2be4e8e982170 Mon Sep 17 00:00:00 2001
+From b4601cc0a9f0b6a35cd95883ad7d8dab01a5e636 Mon Sep 17 00:00:00 2001
 From: Jia Wang <wangjia@ultrarisc.com>
 Date: Fri, 15 May 2026 09:17:59 +0800
 Subject: [RUYI PATCH] FROMLIST: dt-bindings: riscv: Add UltraRISC DP1000
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/riscv/ultrarisc.yaml b/Documentation/devicetree/bindings/riscv/ultrarisc.yaml
 new file mode 100644
-index 000000000000..d4421c2ef945
+index 0000000000..d4421c2ef9
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/riscv/ultrarisc.yaml
 @@ -0,0 +1,27 @@
@@ -49,10 +49,10 @@ index 000000000000..d4421c2ef945
 +additionalProperties: true
 +...
 diff --git a/MAINTAINERS b/MAINTAINERS
-index dc1fae053502..b0d9abcc4fec 100644
+index 83c8085e03..aff040a4cf 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -23104,6 +23104,12 @@ F:	include/dt-bindings/power/thead,th1520-power.h
+@@ -23103,6 +23103,12 @@ F:	include/dt-bindings/power/thead,th1520-power.h
  F:	include/dt-bindings/reset/thead,th1520-reset.h
  F:	include/linux/firmware/thead/thead,th1520-aon.h
  
@@ -66,5 +66,5 @@ index dc1fae053502..b0d9abcc4fec 100644
  M:	Md. Haris Iqbal <haris.iqbal@ionos.com>
  M:	Jack Wang <jinpu.wang@ionos.com>
 -- 
-2.53.0
+2.54.0
 
