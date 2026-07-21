@@ -28,21 +28,22 @@
 %if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
     %global arch_suffix -rva20
 %else
-    %global arch_suffix %{nil}
+    %global arch_suffix -generic
 %endif
+
+%global patchset_release 1
+%global config_version 0
 
 Name:           linux-lts
 Version:        6.18.39
-Release:        %autorelease
+Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux lts Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:a7a7e3d2ae9d95e74197223a8d4eb5f6be7aac21b6e6de27e9685d001c1f8cb0
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
-Source1:        series
-Source2:        config.x86_64
-Source3:        config.riscv64
-Source4:        config.riscv64-rva20
+#!RemoteAsset:  sha256:a057cd4894f9f6371b9d857f95294e24f7447e2022ff712a75cb38b45be0af6c
+Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  bison
@@ -89,9 +90,6 @@ Requires(post):   kmod
 Requires(post):   kernel-install
 Requires(postun): kernel-install
 
-%patchlist
-%include %{SOURCE1}
-
 %description
 This is a meta-package that installs the core kernel image and modules.
 For a minimal boot environment, install the 'linux-core' package instead.
@@ -132,8 +130,18 @@ for booting.
 %endif
 
 %prep
-%autosetup -p1 -n linux-%{version}
-cp -v %{_sourcedir}/config.%{_arch}%{arch_suffix} .config
+%autosetup -N -n linux-%{version}
+
+patchset_dir=.openruyi-patchset
+mkdir "${patchset_dir}"
+tar -xf "%{SOURCE1}" -C "${patchset_dir}"
+while IFS= read -r patch_name; do
+    echo "Applying patch: ${patch_name}"
+    patch -p1 < "${patchset_dir}/${patch_name}" || exit 1
+done < "${patchset_dir}/series"
+cp -v "${patchset_dir}/config.%{_arch}%{arch_suffix}" .config
+rm -rf "${patchset_dir}"
+
 echo "-%{release}" > localversion
 
 %conf
