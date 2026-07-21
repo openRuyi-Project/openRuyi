@@ -1,0 +1,29 @@
+From e00f6ad4c10f6824638b8949cb6c5ee34121a367 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:28:55 +0800
+Subject: [PATCH] tests: tolerate OAuth2 status text changes
+
+Newer golang.org/x/oauth2 versions include the HTTP reason phrase in token
+endpoint errors. Assert the stable 503 status-code context instead of the
+dependency-specific complete error text.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ ovh/ovh_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ovh/ovh_test.go b/ovh/ovh_test.go
+index fb00204..6a678ea 100644
+--- a/ovh/ovh_test.go
++++ b/ovh/ovh_test.go
+@@ -567,7 +567,7 @@ func TestOAuth2_503(t *testing.T) {
+ 	require.CmpNoError(err)
+ 
+ 	err = client.Get("/v1/auth/time", nil)
+-	assert.String(err, "failed to retrieve OAuth2 Access Token: oauth2: cannot fetch token: 503\nResponse: <html><body><p>test</p></body></html>")
++	assert.Cmp(err.Error(), td.Contains("failed to retrieve OAuth2 Access Token: oauth2: cannot fetch token: 503"))
+ }
+ 
+ func TestOAuth2_BadJSON(t *testing.T) {
+-- 
+2.43.0
