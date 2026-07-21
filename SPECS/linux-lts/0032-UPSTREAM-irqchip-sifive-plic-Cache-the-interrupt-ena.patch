@@ -1,4 +1,4 @@
-From 370b8af4c2f631e8d3a0e7984d878a7c80ed6d18 Mon Sep 17 00:00:00 2001
+From 25d39a6858567da61205d481c48427fd50a22099 Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:42 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Cache the interrupt
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 13 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 0799c15c745d..96e46a3ba4bf 100644
+index 0799c15c74..96e46a3ba4 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -94,15 +94,22 @@ static DEFINE_PER_CPU(struct plic_handler, plic_handlers);
@@ -104,5 +104,5 @@ index 0799c15c745d..96e46a3ba4bf 100644
  }
  
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 9115a394b543402831d6296170c8473755216a9b Mon Sep 17 00:00:00 2001
+From 250decdf2e1dac1e4b7767b10de546c66698495e Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:26 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: use FIELD_PREP()/FIELD_GET()
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 20 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index 4fbee59e7337..f1cfccd4269c 100644
+index 4fbee59e73..f1cfccd426 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -24,24 +24,12 @@
@@ -147,5 +147,5 @@ index 4fbee59e7337..f1cfccd4269c 100644
  	regmap_update_bits(dwmac->intf_regmap, dwmac->intf_reg_off,
  			   MX93_GPR_ENET_QOS_INTF_MODE_MASK, iface);
 -- 
-2.53.0
+2.54.0
 

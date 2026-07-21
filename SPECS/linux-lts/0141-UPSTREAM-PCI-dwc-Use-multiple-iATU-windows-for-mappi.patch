@@ -1,4 +1,4 @@
-From 395317c0c69e903fa5a663ebf87b3f57ee0c3aa7 Mon Sep 17 00:00:00 2001
+From 1d42661d1b2e0b3b77964a3680e32b39527c8979 Mon Sep 17 00:00:00 2001
 From: Samuel Holland <samuel.holland@sifive.com>
 Date: Fri, 9 Jan 2026 19:34:30 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Use multiple iATU windows for
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 57 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 48e4a887bb1b..993858fd0529 100644
+index 48e4a887bb..993858fd05 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
 @@ -887,29 +887,50 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
@@ -141,5 +141,5 @@ index 48e4a887bb1b..993858fd0529 100644
  	}
  
 -- 
-2.53.0
+2.54.0
 

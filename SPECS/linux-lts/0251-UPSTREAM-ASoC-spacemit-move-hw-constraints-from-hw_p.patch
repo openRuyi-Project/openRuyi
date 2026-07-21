@@ -1,4 +1,4 @@
-From 5f7beedf8c1e1cf4cc2d8915cd12d47296a9f445 Mon Sep 17 00:00:00 2001
+From 59c4676538959604a3b3a6a1a7b0a6a563bb4437 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: move hw constraints from
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 32 insertions(+), 13 deletions(-)
 
 diff --git a/sound/soc/spacemit/k1_i2s.c b/sound/soc/spacemit/k1_i2s.c
-index abc439b53e3d..331668b979fd 100644
+index abc439b53e..331668b979 100644
 --- a/sound/soc/spacemit/k1_i2s.c
 +++ b/sound/soc/spacemit/k1_i2s.c
 @@ -106,6 +106,37 @@ static void spacemit_i2s_init(struct spacemit_i2s_dev *i2s)
@@ -96,5 +96,5 @@ index abc439b53e3d..331668b979fd 100644
  	.set_sysclk = spacemit_i2s_set_sysclk,
  	.set_fmt = spacemit_i2s_set_fmt,
 -- 
-2.53.0
+2.54.0
 

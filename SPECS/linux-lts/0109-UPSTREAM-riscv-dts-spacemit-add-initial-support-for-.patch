@@ -1,4 +1,4 @@
-From d8089feae87ad613be7fe448ae79b3f785e8744b Mon Sep 17 00:00:00 2001
+From 5bab4f11e39d68d04b459cf5eca4617c5b785119 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:45 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add initial support for
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
 new file mode 100644
-index 000000000000..b69cf81b5d55
+index 0000000000..b69cf81b5d
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -0,0 +1,578 @@
@@ -604,5 +604,5 @@ index 000000000000..b69cf81b5d55
 +	};
 +};
 -- 
-2.53.0
+2.54.0
 

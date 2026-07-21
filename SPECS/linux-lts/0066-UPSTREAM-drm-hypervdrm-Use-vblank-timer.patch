@@ -1,4 +1,4 @@
-From 8050563879938dc6a528fb8e06da2fa438e114f5 Mon Sep 17 00:00:00 2001
+From c049e3fb0fbecba678521978533919d78270622e Mon Sep 17 00:00:00 2001
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Date: Tue, 16 Sep 2025 10:36:22 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/hypervdrm: Use vblank timer
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 11 insertions(+)
 
 diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index 86696a9a32c5..208fb14e837a 100644
+index 86696a9a32..208fb14e83 100644
 --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
 @@ -19,6 +19,8 @@
@@ -68,5 +68,5 @@ index 86696a9a32c5..208fb14e837a 100644
  
  	return 0;
 -- 
-2.53.0
+2.54.0
 

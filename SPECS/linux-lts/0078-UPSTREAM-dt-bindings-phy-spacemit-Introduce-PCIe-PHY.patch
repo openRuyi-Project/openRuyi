@@ -1,4 +1,4 @@
-From 7301cd7cc4d2125fd7d73e478e7953cb4b1231d4 Mon Sep 17 00:00:00 2001
+From 422f754648dfaadf16f53f38ad46f53451c2fe5d Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:28 -0600
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: phy: spacemit: Introduce PCIe PHY
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml
 new file mode 100644
-index 000000000000..019b28349be7
+index 0000000000..019b28349b
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-pcie-phy.yaml
 @@ -0,0 +1,71 @@
@@ -99,5 +99,5 @@ index 000000000000..019b28349be7
 +        #phy-cells = <0>;
 +    };
 -- 
-2.53.0
+2.54.0
 

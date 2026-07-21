@@ -1,4 +1,4 @@
-From 633624709863afc1b51408b875f42181a2e72fb2 Mon Sep 17 00:00:00 2001
+From d550fcdbc1b303a4cdea20f76aa71bb2706be1e0 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Thu, 20 Nov 2025 13:14:12 +0000
 Subject: [RUYI PATCH] UPSTREAM: clk: thead: th1520-ap: Add C910 bus clock
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
-index d870f0c665f8..b820d47387bb 100644
+index d870f0c665..b820d47387 100644
 --- a/drivers/clk/thead/clk-th1520-ap.c
 +++ b/drivers/clk/thead/clk-th1520-ap.c
 @@ -539,6 +539,20 @@ static struct ccu_mux c910_clk = {
@@ -58,5 +58,5 @@ index d870f0c665f8..b820d47387bb 100644
  	.nr_pll_clks = ARRAY_SIZE(th1520_pll_clks),
  	.nr_div_clks = ARRAY_SIZE(th1520_div_clks),
 -- 
-2.53.0
+2.54.0
 

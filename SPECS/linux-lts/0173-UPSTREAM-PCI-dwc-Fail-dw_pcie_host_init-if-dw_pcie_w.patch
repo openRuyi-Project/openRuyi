@@ -1,4 +1,4 @@
-From ee641316ba28b407fa3c0e2e30ff68676b24911c Mon Sep 17 00:00:00 2001
+From 33456ce39a68b85fa1b69f7fa620f28f89e6a26c Mon Sep 17 00:00:00 2001
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 Date: Tue, 20 Jan 2026 23:17:44 +0530
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Fail dw_pcie_host_init() if
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 993858fd0529..dbd4b66934df 100644
+index 993858fd05..dbd4b66934 100644
 --- a/drivers/pci/controller/dwc/pcie-designware-host.c
 +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
 @@ -664,8 +664,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
@@ -47,5 +47,5 @@ index 993858fd0529..dbd4b66934df 100644
  	ret = pci_host_probe(bridge);
  	if (ret)
 -- 
-2.53.0
+2.54.0
 

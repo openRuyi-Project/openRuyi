@@ -1,4 +1,4 @@
-From 2b433a56c490efe1d3b7f1959b4a3d984435e597 Mon Sep 17 00:00:00 2001
+From fd6a7a77c0f0c14367b1197d95bef595b63138cf Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Sun, 11 Jan 2026 14:41:02 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add USB2 PHY node for K1
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 4c045da95d72..dfabda5ed4fa 100644
+index 4c045da95d..dfabda5ed4 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -429,6 +429,14 @@ i2c5: i2c@d4013800 {
@@ -40,5 +40,5 @@ index 4c045da95d72..dfabda5ed4fa 100644
  			compatible = "spacemit,k1-combo-phy";
  			reg = <0x0 0xc0b10000 0x0 0x1000>;
 -- 
-2.53.0
+2.54.0
 

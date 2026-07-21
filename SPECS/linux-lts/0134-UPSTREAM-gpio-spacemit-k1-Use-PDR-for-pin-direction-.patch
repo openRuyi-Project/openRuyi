@@ -1,4 +1,4 @@
-From c782e1f412db9ce5888fcbe1308dba4c872f3c6f Mon Sep 17 00:00:00 2001
+From 034771b7a03c0bebad86205cc51032ea55824033 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Tue, 27 Jan 2026 10:58:49 +0800
 Subject: [RUYI PATCH] UPSTREAM: gpio: spacemit-k1: Use PDR for pin direction,
@@ -35,7 +35,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index 8f570a1a4894..dbd2e81094b9 100644
+index 8f570a1a48..dbd2e81094 100644
 --- a/drivers/gpio/gpio-spacemit-k1.c
 +++ b/drivers/gpio/gpio-spacemit-k1.c
 @@ -199,7 +199,7 @@ static int spacemit_gpio_add_bank(struct spacemit_gpio *sg,
@@ -69,5 +69,5 @@ index 8f570a1a4894..dbd2e81094b9 100644
  
  	/* This registers 32 GPIO lines per bank */
 -- 
-2.53.0
+2.54.0
 

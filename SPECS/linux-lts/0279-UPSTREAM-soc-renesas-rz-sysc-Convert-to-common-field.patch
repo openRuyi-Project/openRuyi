@@ -1,4 +1,4 @@
-From 9d7b112b2c4bd1ec0fa4fefeb7dd17be7100c322 Mon Sep 17 00:00:00 2001
+From 7f46bb287a5443c41cf89352a971c9992fd22dd7 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:09 +0100
 Subject: [RUYI PATCH] UPSTREAM: soc: renesas: rz-sysc: Convert to common
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
-index a1487195dc87..ae727d9c8cc5 100644
+index a1487195dc..ae727d9c8c 100644
 --- a/drivers/soc/renesas/rz-sysc.c
 +++ b/drivers/soc/renesas/rz-sysc.c
 @@ -5,6 +5,7 @@
@@ -39,5 +39,5 @@ index a1487195dc87..ae727d9c8cc5 100644
   * struct rz_sysc - RZ SYSC private data structure
   * @base: SYSC base address
 -- 
-2.53.0
+2.54.0
 

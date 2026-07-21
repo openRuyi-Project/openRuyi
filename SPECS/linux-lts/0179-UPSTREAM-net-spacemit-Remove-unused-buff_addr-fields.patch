@@ -1,4 +1,4 @@
-From 6b739d775a13c509e838c68cb864879eb5035a21 Mon Sep 17 00:00:00 2001
+From abb2265c1760772621c301d684c08b8bd96164ef Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 5 Mar 2026 15:00:29 +0800
 Subject: [RUYI PATCH] UPSTREAM: net: spacemit: Remove unused buff_addr fields
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
-index 52c0c00a471f..359b409f8203 100644
+index 52c0c00a47..359b409f82 100644
 --- a/drivers/net/ethernet/spacemit/k1_emac.c
 +++ b/drivers/net/ethernet/spacemit/k1_emac.c
 @@ -59,7 +59,6 @@
@@ -45,5 +45,5 @@ index 52c0c00a471f..359b409f8203 100644
  
  	if (tx_buf->skb) {
 -- 
-2.53.0
+2.54.0
 

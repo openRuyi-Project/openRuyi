@@ -1,4 +1,4 @@
-From faddb8617190ce6db91b8957ad5a6e3a98024931 Mon Sep 17 00:00:00 2001
+From 71f619f1e58f8faa56afc20ceeaeb3e804cbe254 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:14 +0100
 Subject: [RUYI PATCH] UPSTREAM: soc: renesas: Use bitfield helpers
@@ -14,7 +14,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
-index 1eb52356b996..ee4f17bb4db4 100644
+index 1eb52356b9..ee4f17bb4d 100644
 --- a/drivers/soc/renesas/renesas-soc.c
 +++ b/drivers/soc/renesas/renesas-soc.c
 @@ -5,6 +5,7 @@
@@ -36,5 +36,5 @@ index 1eb52356b996..ee4f17bb4db4 100644
  			ret = -ENODEV;
  			goto free_soc_dev_attr;
 -- 
-2.53.0
+2.54.0
 

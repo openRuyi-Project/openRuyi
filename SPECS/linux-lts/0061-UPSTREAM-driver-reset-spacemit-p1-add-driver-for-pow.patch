@@ -1,4 +1,4 @@
-From 6469b6c2dfd9d66deecc8708629891e31602adc2 Mon Sep 17 00:00:00 2001
+From bdc539a22b82b7f32f377c8c7fe79bb02b6fa989 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Mon, 3 Nov 2025 00:01:59 +0100
 Subject: [RUYI PATCH] UPSTREAM: driver: reset: spacemit-p1: add driver for
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/power/reset/spacemit-p1-reboot.c
 
 diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 8248895ca903..f6c1bcbb57de 100644
+index 8248895ca9..f6c1bcbb57 100644
 --- a/drivers/power/reset/Kconfig
 +++ b/drivers/power/reset/Kconfig
 @@ -283,6 +283,15 @@ config POWER_RESET_KEYSTONE
@@ -45,7 +45,7 @@ index 8248895ca903..f6c1bcbb57de 100644
  	bool "Generic SYSCON regmap reset driver"
  	depends on OF
 diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 51da87e05ce7..0e4ae6f6b5c5 100644
+index 51da87e05c..0e4ae6f6b5 100644
 --- a/drivers/power/reset/Makefile
 +++ b/drivers/power/reset/Makefile
 @@ -24,6 +24,7 @@ obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
@@ -58,7 +58,7 @@ index 51da87e05ce7..0e4ae6f6b5c5 100644
  obj-$(CONFIG_POWER_RESET_TORADEX_EC) += tdx-ec-poweroff.o
 diff --git a/drivers/power/reset/spacemit-p1-reboot.c b/drivers/power/reset/spacemit-p1-reboot.c
 new file mode 100644
-index 000000000000..9ec3d1fff8f3
+index 0000000000..9ec3d1fff8
 --- /dev/null
 +++ b/drivers/power/reset/spacemit-p1-reboot.c
 @@ -0,0 +1,88 @@
@@ -151,5 +151,5 @@ index 000000000000..9ec3d1fff8f3
 +MODULE_DESCRIPTION("SpacemiT P1 reboot/poweroff driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 8e3494bc849eb33a26b0fc1e3c0662ecc6cbdaba Mon Sep 17 00:00:00 2001
+From 1cde0f51bd9eea5bae7e383ddeb758be5cc7b15e Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:57 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: th1520: add coefficients to
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index aa6c9afa1a20..c65b71d9a1b8 100644
+index aa6c9afa1a..c65b71d9a1 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -782,6 +782,10 @@ pvt: pvt@fffff4e000 {
@@ -35,5 +35,5 @@ index aa6c9afa1a20..c65b71d9a1b8 100644
  
  		gpio@fffff52000 {
 -- 
-2.53.0
+2.54.0
 

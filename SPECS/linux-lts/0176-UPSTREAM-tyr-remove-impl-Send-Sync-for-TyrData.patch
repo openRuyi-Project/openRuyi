@@ -1,4 +1,4 @@
-From 656a7926c150505d9e7116c44047cb98b9b144ac Mon Sep 17 00:00:00 2001
+From 7f29e00c1330bc7eb082bc4245c30c7911af6928 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:26 +0000
 Subject: [RUYI PATCH] UPSTREAM: tyr: remove impl Send/Sync for TyrData
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 deletions(-)
 
 diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
-index 0052ebe95719..0b741450724e 100644
+index 0052ebe957..0b74145072 100644
 --- a/drivers/gpu/drm/tyr/driver.rs
 +++ b/drivers/gpu/drm/tyr/driver.rs
 @@ -53,18 +53,6 @@ pub(crate) struct TyrData {
@@ -47,5 +47,5 @@ index 0052ebe95719..0b741450724e 100644
      regs::GPU_CMD.write(dev, iomem, regs::GPU_CMD_SOFT_RESET)?;
  
 -- 
-2.53.0
+2.54.0
 

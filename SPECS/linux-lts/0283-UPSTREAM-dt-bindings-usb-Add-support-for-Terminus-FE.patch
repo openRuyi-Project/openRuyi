@@ -1,4 +1,4 @@
-From 55eb935ad6a55992f79be588fa21fc97cc4a0368 Mon Sep 17 00:00:00 2001
+From 66c7ef212bf4f1183ec1f4d92a75cf31724791b7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:03 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: Add support for Terminus
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/usb/terminus,fe11.yaml b/Documentation/devicetree/bindings/usb/terminus,fe11.yaml
 new file mode 100644
-index 000000000000..645f97d73807
+index 0000000000..645f97d738
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/usb/terminus,fe11.yaml
 @@ -0,0 +1,62 @@
@@ -92,5 +92,5 @@ index 000000000000..645f97d73807
 +        };
 +    };
 -- 
-2.53.0
+2.54.0
 

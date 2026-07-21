@@ -1,4 +1,4 @@
-From 01de375c11e96785ae483780df945db623280b95 Mon Sep 17 00:00:00 2001
+From 30d3c3636f40046f373627ea1ab123db4a5d62fd Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:04 +0100
 Subject: [RUYI PATCH] UPSTREAM: EDAC/ie31200: Convert to common field_get()
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 72290f430126..dfc9a9cecd74 100644
+index 72290f4301..dfc9a9cecd 100644
 --- a/drivers/edac/ie31200_edac.c
 +++ b/drivers/edac/ie31200_edac.c
 @@ -44,6 +44,7 @@
@@ -40,5 +40,5 @@ index 72290f430126..dfc9a9cecd74 100644
  static struct pci_dev *mci_pdev;
  static int ie31200_registered = 1;
 -- 
-2.53.0
+2.54.0
 

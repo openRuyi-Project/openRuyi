@@ -1,4 +1,4 @@
-From 737621e196c8ba0b53475a9010406b9314bac718 Mon Sep 17 00:00:00 2001
+From 4ecc8a8336460550b0f112dfb6d747e7b0f6f567 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:52 +0100
 Subject: [RUYI PATCH] UPSTREAM: gpio: aspeed: #undef field_{get,prep}() before
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-index 3da37a0fda3f..6255b2080a41 100644
+index 3da37a0fda..6255b2080a 100644
 --- a/drivers/gpio/gpio-aspeed.c
 +++ b/drivers/gpio/gpio-aspeed.c
 @@ -32,7 +32,9 @@
@@ -34,5 +34,5 @@ index 3da37a0fda3f..6255b2080a41 100644
  
  #define GPIO_G7_IRQ_STS_BASE 0x100
 -- 
-2.53.0
+2.54.0
 

@@ -32,12 +32,12 @@
 %endif
 
 Name:           linux-lts
-Version:        6.18.38
+Version:        6.18.39
 Release:        %autorelease
 Summary:        The Linux lts Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:ac26e508abd56e9f8b89872b6e10c49fc823bcc70d8068a5d8504c1a7c4ff045
+#!RemoteAsset:  sha256:a7a7e3d2ae9d95e74197223a8d4eb5f6be7aac21b6e6de27e9685d001c1f8cb0
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
 Source1:        series
 Source2:        config.x86_64

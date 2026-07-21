@@ -1,4 +1,4 @@
-From 6b47c4d6992b0b42614e5c42cd68a690c32a445c Mon Sep 17 00:00:00 2001
+From 7f3077c6c8204d888dae2b83c781ea4697fbe3c6 Mon Sep 17 00:00:00 2001
 From: Feng Jiang <jiangfeng@kylinos.cn>
 Date: Fri, 3 Apr 2026 19:28:47 -0600
 Subject: [RUYI PATCH] UPSTREAM: lib/string_kunit: add correctness test for
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 31 insertions(+)
 
 diff --git a/lib/tests/string_kunit.c b/lib/tests/string_kunit.c
-index 1c2d57e05624..2bed641e1eae 100644
+index 1c2d57e056..2bed641e1e 100644
 --- a/lib/tests/string_kunit.c
 +++ b/lib/tests/string_kunit.c
 @@ -190,6 +190,36 @@ static void string_test_strchr(struct kunit *test)
@@ -70,5 +70,5 @@ index 1c2d57e05624..2bed641e1eae 100644
  	KUNIT_CASE(string_test_strcmp),
  	KUNIT_CASE(string_test_strcmp_long_strings),
 -- 
-2.53.0
+2.54.0
 

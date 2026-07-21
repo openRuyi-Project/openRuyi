@@ -1,4 +1,4 @@
-From 1c00f5d8f76d51936665551442e935339855075a Mon Sep 17 00:00:00 2001
+From 05bbe66aa60576d99e245b151a14fb7b3dbc5237 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:27 +0000
 Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: remove impl Send/Sync for
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 15 deletions(-)
 
 diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index 571db5928356..5559f4273b3d 100644
+index 571db59283..5559f4273b 100644
 --- a/drivers/pwm/pwm_th1520.rs
 +++ b/drivers/pwm/pwm_th1520.rs
 @@ -94,21 +94,6 @@ struct Th1520PwmDriverData {
@@ -51,5 +51,5 @@ index 571db5928356..5559f4273b3d 100644
      type WfHw = Th1520WfHw;
  
 -- 
-2.53.0
+2.54.0
 

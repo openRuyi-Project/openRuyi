@@ -1,4 +1,4 @@
-From d14c1a3674a4d257ec1714aeb83e0c890a87e6fe Mon Sep 17 00:00:00 2001
+From da2b4bcf7aaaaf6ce653ce1a029eed3b74b99bb2 Mon Sep 17 00:00:00 2001
 From: Hendrik Hamerlinck <hendrik.hamerlinck@hammernet.be>
 Date: Wed, 17 Sep 2025 08:59:07 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add UART pinctrl
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 428 insertions(+), 2 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index aff19c86d5ff..ce7b899d4dd9 100644
+index aff19c86d5..ce7b899d4d 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -59,11 +59,437 @@ gmac1-pins {
@@ -466,5 +466,5 @@ index aff19c86d5ff..ce7b899d4dd9 100644
  			drive-strength = <32>;
  		};
 -- 
-2.53.0
+2.54.0
 

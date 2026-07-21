@@ -1,4 +1,4 @@
-From 956564167124dc4f8549d22339a980eaf7730bf0 Mon Sep 17 00:00:00 2001
+From e941648a146cef3280130605524bb0844063068a Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Wed, 14 Jan 2026 20:21:41 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Fix init for AXI clock
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-index dfad61f332c4..2ce2626a7993 100644
+index dfad61f332..2ce2626a79 100644
 --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
 +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
 @@ -1529,6 +1529,7 @@ static int eic7700_init(struct device *dev, struct sdhci_host *host, struct dwcm
@@ -41,5 +41,5 @@ index dfad61f332c4..2ce2626a7993 100644
  	if (ret) {
  		dev_err(dev, "Fail to parse 'eswin,hsp-sp-csr' phandle (%d)\n", ret);
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 5cfe296d78b80974d17bf71f4b20c59e5c4df2e7 Mon Sep 17 00:00:00 2001
+From c178e282f772df13861d321447ce4b3e5c8f8ad1 Mon Sep 17 00:00:00 2001
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 Date: Fri, 2 Jan 2026 14:58:39 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id() returns
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-index 87d655944803..00aff669f5f2 100644
+index 87d6559448..00aff669f5 100644
 --- a/arch/riscv/kernel/cpu_ops_sbi.c
 +++ b/arch/riscv/kernel/cpu_ops_sbi.c
 @@ -85,7 +85,7 @@ static void sbi_cpu_stop(void)
@@ -31,5 +31,5 @@ index 87d655944803..00aff669f5f2 100644
  
  static int sbi_cpu_is_stopped(unsigned int cpuid)
 -- 
-2.53.0
+2.54.0
 

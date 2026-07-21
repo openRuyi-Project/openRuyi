@@ -1,4 +1,4 @@
-From 81676c69d6cf6b645944ad1e96c72e35e483f069 Mon Sep 17 00:00:00 2001
+From c2907d2f858131762dcc7c411923e6b2b840377b Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 10:39:21 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: lichee-pi-4a: enable HDMI
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 25 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
-index c58c2085ca92..7cb7d28683bc 100644
+index c58c2085ca..7cb7d28683 100644
 --- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
 +++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
 @@ -29,6 +29,17 @@ chosen {
@@ -66,5 +66,5 @@ index c58c2085ca92..7cb7d28683bc 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_pins>;
 -- 
-2.53.0
+2.54.0
 

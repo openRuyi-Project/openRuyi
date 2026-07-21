@@ -1,4 +1,4 @@
-From 08f28ce8702a79a701c3eac1b17da588327be574 Mon Sep 17 00:00:00 2001
+From 7ff7f9cf805ce2e03973c8794ef7e4ce06744b81 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 19 Mar 2026 07:51:04 +0000
 Subject: [RUYI PATCH] UPSTREAM: usb: misc: onboard_usb_dev: Add Terminus
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 3 insertions(+)
 
 diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
-index 41360a7591e5..40b2ebf45a9a 100644
+index 41360a7591..40b2ebf45a 100644
 --- a/drivers/usb/misc/onboard_usb_dev.c
 +++ b/drivers/usb/misc/onboard_usb_dev.c
 @@ -570,6 +570,7 @@ static struct platform_driver onboard_dev_driver = {
@@ -41,7 +41,7 @@ index 41360a7591e5..40b2ebf45a9a 100644
  	{ USB_DEVICE(VENDOR_ID_TI, 0x8027) }, /* TI USB8020B 2.0 HUB */
  	{ USB_DEVICE(VENDOR_ID_TI, 0x8140) }, /* TI USB8041 3.0 HUB */
 diff --git a/drivers/usb/misc/onboard_usb_dev.h b/drivers/usb/misc/onboard_usb_dev.h
-index c1462be5526d..be234b5a97bb 100644
+index c1462be552..be234b5a97 100644
 --- a/drivers/usb/misc/onboard_usb_dev.h
 +++ b/drivers/usb/misc/onboard_usb_dev.h
 @@ -146,6 +146,7 @@ static const struct of_device_id onboard_dev_match[] = {
@@ -53,5 +53,5 @@ index c1462be5526d..be234b5a97bb 100644
  	{ .compatible = "usb1da0,55a1", .data = &parade_ps5511_data, },
  	{ .compatible = "usb2109,817", .data = &vialab_vl817_data, },
 -- 
-2.53.0
+2.54.0
 

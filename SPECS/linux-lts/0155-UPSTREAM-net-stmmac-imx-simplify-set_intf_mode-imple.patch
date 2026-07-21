@@ -1,4 +1,4 @@
-From 316608f6a973202aecff9d544c0c8df73b28974f Mon Sep 17 00:00:00 2001
+From 67dde07217243b6429b4ea7f5719b528427ddfe3 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:36 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: simplify set_intf_mode()
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 19 insertions(+), 48 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index dc28486a7af0..d69be9de4468 100644
+index dc28486a7a..d69be9de44 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -67,29 +67,15 @@ static int imx8mp_set_intf_mode(struct plat_stmmacenet_data *plat_dat,
@@ -110,5 +110,5 @@ index dc28486a7af0..d69be9de4468 100644
  
  	val = FIELD_PREP(MX93_GPR_ENET_QOS_INTF_SEL_MASK, phy_intf_sel) |
 -- 
-2.53.0
+2.54.0
 

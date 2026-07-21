@@ -1,4 +1,4 @@
-From 4b5147a1b6e7c57b1d67fd4d34f4d245d368401e Mon Sep 17 00:00:00 2001
+From 082add99905883b667c004c409d367d0e8972bf1 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:07 +0100
 Subject: [RUYI PATCH] UPSTREAM: iio: mlx90614: Convert to common
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/drivers/iio/temperature/mlx90614.c b/drivers/iio/temperature/mlx90614.c
-index de5615fdb396..1ad21b73e1b4 100644
+index de5615fdb3..1ad21b73e1 100644
 --- a/drivers/iio/temperature/mlx90614.c
 +++ b/drivers/iio/temperature/mlx90614.c
 @@ -22,6 +22,7 @@
@@ -43,5 +43,5 @@ index de5615fdb396..1ad21b73e1b4 100644
  	/* EEPROM offsets with 16-bit data, MSB first */
  	/* emissivity correction coefficient */
 -- 
-2.53.0
+2.54.0
 

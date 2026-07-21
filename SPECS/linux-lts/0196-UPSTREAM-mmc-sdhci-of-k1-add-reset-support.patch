@@ -1,4 +1,4 @@
-From dd2cc43099815a13549008e14bc55ac63e84a1c7 Mon Sep 17 00:00:00 2001
+From 8300abc68305a814b7f780f0015b7ccc710c7bfd Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:50 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-k1: add reset support
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 20 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-of-k1.c b/drivers/mmc/host/sdhci-of-k1.c
-index 0cc97e23a2f9..a160e1d5d9bd 100644
+index 0cc97e23a2..a160e1d5d9 100644
 --- a/drivers/mmc/host/sdhci-of-k1.c
 +++ b/drivers/mmc/host/sdhci-of-k1.c
 @@ -15,6 +15,7 @@
@@ -63,5 +63,5 @@ index 0cc97e23a2f9..a160e1d5d9bd 100644
  	if (ret)
  		goto err_pltfm;
 -- 
-2.53.0
+2.54.0
 

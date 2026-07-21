@@ -1,4 +1,4 @@
-From 6e571fa8e67dbd674e29f78d81c3ac573c603e38 Mon Sep 17 00:00:00 2001
+From ef58c6ae28415a1e5d68590bab2594d453a33cd2 Mon Sep 17 00:00:00 2001
 From: Nam Cao <namcao@linutronix.de>
 Date: Tue, 7 Apr 2026 14:06:39 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: Fix fast_unaligned_access_speed_key not
@@ -31,7 +31,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 11 deletions(-)
 
 diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-index 70b5e6927620..5e224cc48c62 100644
+index 70b5e69276..5e224cc48c 100644
 --- a/arch/riscv/kernel/unaligned_access_speed.c
 +++ b/arch/riscv/kernel/unaligned_access_speed.c
 @@ -223,17 +223,6 @@ static void set_unaligned_access_static_branches(void)
@@ -64,5 +64,5 @@ index 70b5e6927620..5e224cc48c62 100644
  }
  
 -- 
-2.53.0
+2.54.0
 

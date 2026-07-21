@@ -1,4 +1,4 @@
-From 89018ba28165fc32aa888271948560c35503a2be Mon Sep 17 00:00:00 2001
+From 174b4ee5275c7194f0813057621f4394215ed89e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:00 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: add optional
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
-index 5e6aff1bc2ed..1d10cfbad86c 100644
+index 5e6aff1bc2..1d10cfbad8 100644
 --- a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 +++ b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 @@ -9,9 +9,6 @@ title: Freescale Quad Serial Peripheral Interface (QuadSPI)
@@ -64,5 +64,5 @@ index 5e6aff1bc2ed..1d10cfbad86c 100644
  
  examples:
 -- 
-2.53.0
+2.54.0
 

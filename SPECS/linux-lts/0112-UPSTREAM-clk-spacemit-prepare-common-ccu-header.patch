@@ -1,4 +1,4 @@
-From 58da181f8fee4e3f7af2a1cfe8708acb62d1b3f2 Mon Sep 17 00:00:00 2001
+From 33af719565bec0e35500a0a7863f55c97f472d6d Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 21:52:08 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: prepare common ccu header
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/include/soc/spacemit/ccu.h b/include/soc/spacemit/ccu.h
 new file mode 100644
-index 000000000000..84dcdecccc05
+index 0000000000..84dcdecccc
 --- /dev/null
 +++ b/include/soc/spacemit/ccu.h
 @@ -0,0 +1,21 @@
@@ -46,7 +46,7 @@ index 000000000000..84dcdecccc05
 +
 +#endif /* __SOC_SPACEMIT_CCU_H__ */
 diff --git a/include/soc/spacemit/k1-syscon.h b/include/soc/spacemit/k1-syscon.h
-index 354751562c55..0be7a2e8d445 100644
+index 354751562c..0be7a2e8d4 100644
 --- a/include/soc/spacemit/k1-syscon.h
 +++ b/include/soc/spacemit/k1-syscon.h
 @@ -5,17 +5,7 @@
@@ -69,5 +69,5 @@ index 354751562c55..0be7a2e8d445 100644
  /* APBS register offset */
  #define APBS_PLL1_SWCR1			0x100
 -- 
-2.53.0
+2.54.0
 

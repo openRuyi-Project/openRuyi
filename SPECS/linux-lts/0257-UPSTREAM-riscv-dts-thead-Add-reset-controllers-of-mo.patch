@@ -1,4 +1,4 @@
-From 990eca59b3d00bfc3fd84a349b32be602ef7eeb9 Mon Sep 17 00:00:00 2001
+From 03d91f31d736bd9e777c4d947a18a4cf54deecee Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:32 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: Add reset controllers of
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 37 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index c65b71d9a1b8..5e91dc1d2b9b 100644
+index c65b71d9a1..5e91dc1d2b 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -289,6 +289,12 @@ clint: timer@ffdc000000 {
@@ -87,5 +87,5 @@ index c65b71d9a1b8..5e91dc1d2b9b 100644
  			compatible = "thead,th1520-pinctrl";
  			reg = <0xff 0xfff4a000 0x0 0x2000>;
 -- 
-2.53.0
+2.54.0
 

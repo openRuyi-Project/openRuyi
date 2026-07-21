@@ -1,4 +1,4 @@
-From 827c515038d43e1143d418d94d84f5e524f379aa Mon Sep 17 00:00:00 2001
+From 1b50fa2fbf390eb01f7d988db2667c67c988505a Mon Sep 17 00:00:00 2001
 From: Nathan Chancellor <nathan@kernel.org>
 Date: Wed, 29 Apr 2026 20:38:17 -0600
 Subject: [RUYI PATCH] UPSTREAM: riscv: Define
@@ -32,7 +32,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/kernel/copy-unaligned.S b/arch/riscv/kernel/copy-unaligned.S
-index 2b3d9398c113..90f3549621f7 100644
+index 2b3d9398c1..90f3549621 100644
 --- a/arch/riscv/kernel/copy-unaligned.S
 +++ b/arch/riscv/kernel/copy-unaligned.S
 @@ -1,6 +1,7 @@
@@ -62,7 +62,7 @@ index 2b3d9398c113..90f3549621f7 100644
  	beqz a4, 2f
  	add  a3, a1, a4
 diff --git a/arch/riscv/kernel/vec-copy-unaligned.S b/arch/riscv/kernel/vec-copy-unaligned.S
-index 7ce4de6f6e69..361039f7b944 100644
+index 7ce4de6f6e..361039f7b9 100644
 --- a/arch/riscv/kernel/vec-copy-unaligned.S
 +++ b/arch/riscv/kernel/vec-copy-unaligned.S
 @@ -2,6 +2,7 @@
@@ -92,5 +92,5 @@ index 7ce4de6f6e69..361039f7b944 100644
  	beqz a4, 2f
  	add  a3, a1, a4
 -- 
-2.53.0
+2.54.0
 

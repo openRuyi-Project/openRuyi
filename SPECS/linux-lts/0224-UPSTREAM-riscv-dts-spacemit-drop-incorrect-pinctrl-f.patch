@@ -1,4 +1,4 @@
-From cc73195bc241ce392226f27e718ad6bb23c7dc33 Mon Sep 17 00:00:00 2001
+From 3b1c582fde837324928bc67280a7e1241391658c Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Sun, 22 Mar 2026 21:25:01 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: drop incorrect pinctrl
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 404b69c47b91..5790d927b93d 100644
+index 404b69c47b..5790d927b9 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -81,8 +81,6 @@ usb3_hub_5v: regulator-usb3-hub-5v {
@@ -38,5 +38,5 @@ index 404b69c47b91..5790d927b93d 100644
  };
  
 -- 
-2.53.0
+2.54.0
 

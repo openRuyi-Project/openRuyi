@@ -1,4 +1,4 @@
-From b96b065a3520d9551fc5a976f91c53ad36374536 Mon Sep 17 00:00:00 2001
+From a98f739cd88fc5f34faa199fa021f318d20dbaa8 Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Wed, 14 Jan 2026 20:22:56 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Fix DMA 128MB boundary
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-index 2ce2626a7993..90aa146a1be3 100644
+index 2ce2626a79..90aa146a1b 100644
 --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
 +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
 @@ -1673,6 +1673,7 @@ static const struct sdhci_ops sdhci_dwcmshc_eic7700_ops = {
@@ -31,5 +31,5 @@ index 2ce2626a7993..90aa146a1be3 100644
  };
  
 -- 
-2.53.0
+2.54.0
 

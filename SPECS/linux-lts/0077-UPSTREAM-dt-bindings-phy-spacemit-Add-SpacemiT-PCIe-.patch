@@ -1,4 +1,4 @@
-From 2b6a2bbdc6760821fd7a9064c53288bc35c8aef3 Mon Sep 17 00:00:00 2001
+From bc521eec77b9d497247696d51691cf3058c4e1f6 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 18 Dec 2025 09:12:27 -0600
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: phy: spacemit: Add SpacemiT
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
 new file mode 100644
-index 000000000000..b59476cd78b5
+index 0000000000..b59476cd78
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,k1-combo-phy.yaml
 @@ -0,0 +1,114 @@
@@ -148,5 +148,5 @@ index 000000000000..b59476cd78b5
 +        #phy-cells = <1>;
 +    };
 -- 
-2.53.0
+2.54.0
 

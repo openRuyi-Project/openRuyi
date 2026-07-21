@@ -1,4 +1,4 @@
-From bd68ddac12b197d63d695ebee877c658babc4935 Mon Sep 17 00:00:00 2001
+From b7f6178e22d3687441d85ed88ab8706b2a4204c2 Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add ziccrse for th1520
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index 0b57699ba398..8e50e24040c2 100644
+index 0b57699ba3..8e50e24040 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -24,8 +24,10 @@ c910_0: cpu@0 {
@@ -74,5 +74,5 @@ index 0b57699ba398..8e50e24040c2 100644
  			reg = <3>;
  			i-cache-block-size = <64>;
 -- 
-2.53.0
+2.54.0
 

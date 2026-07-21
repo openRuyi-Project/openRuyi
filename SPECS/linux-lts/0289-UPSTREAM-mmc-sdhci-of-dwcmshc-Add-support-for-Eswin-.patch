@@ -1,4 +1,4 @@
-From 4ec2ef8d7b9dde2c8f044bead5b65d4e39e3fd8c Mon Sep 17 00:00:00 2001
+From 5a2023636ca9375576c0a435b653547e66d77381 Mon Sep 17 00:00:00 2001
 From: Huan He <hehuan1@eswincomputing.com>
 Date: Sun, 19 Oct 2025 19:53:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: mmc: sdhci-of-dwcmshc: Add support for Eswin
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 491 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-index 5b7ffc359414..dfad61f332c4 100644
+index 5b7ffc3594..dfad61f332 100644
 --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
 +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
 @@ -11,6 +11,7 @@
@@ -610,5 +610,5 @@ index 5b7ffc359414..dfad61f332c4 100644
  {
  	struct sdhci_host *host = dev_get_drvdata(dev);
 -- 
-2.53.0
+2.54.0
 

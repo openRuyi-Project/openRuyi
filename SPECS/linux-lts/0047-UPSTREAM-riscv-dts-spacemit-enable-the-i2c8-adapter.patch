@@ -1,4 +1,4 @@
-From 09fc6e652c8500c58d3fe27c7be9bebf2b59bc5b Mon Sep 17 00:00:00 2001
+From 990fdcacce603391b8ea32bfe1ad89a8d2d597ee Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:54 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable the i2c8 adapter
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 32 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 2aaaff77831e..b33ac47fc6bd 100644
+index 2aaaff7783..b33ac47fc6 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -92,6 +92,18 @@ &pdma {
@@ -41,7 +41,7 @@ index 2aaaff77831e..b33ac47fc6bd 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index ce7b899d4dd9..b71a65ca66fc 100644
+index ce7b899d4d..b71a65ca66 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -59,6 +59,13 @@ gmac1-pins {
@@ -59,7 +59,7 @@ index ce7b899d4dd9..b71a65ca66fc 100644
  	uart0_0_cfg: uart0-0-cfg {
  		uart0-0-pins {
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 6cdcd80a7c83..3de35077731c 100644
+index 6cdcd80a7c..3de3507773 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -459,6 +459,19 @@ pwm7: pwm@d401bc00 {
@@ -83,5 +83,5 @@ index 6cdcd80a7c83..3de35077731c 100644
  			compatible = "spacemit,k1-pinctrl";
  			reg = <0x0 0xd401e000 0x0 0x400>;
 -- 
-2.53.0
+2.54.0
 

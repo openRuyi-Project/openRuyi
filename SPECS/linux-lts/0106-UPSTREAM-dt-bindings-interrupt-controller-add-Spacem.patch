@@ -1,4 +1,4 @@
-From 0c563395177127fadd547b5db1ccfd04a9c16977 Mon Sep 17 00:00:00 2001
+From 0a5dc6d15cebcd3f4a2176a3af1efa2ce89e97d0 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:42 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: interrupt-controller: add
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
-index bef00521d5da..0718071444d2 100644
+index bef00521d5..0718071444 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,aplic.yaml
 @@ -28,6 +28,7 @@ properties:
@@ -29,5 +29,5 @@ index bef00521d5da..0718071444d2 100644
  
    reg:
 -- 
-2.53.0
+2.54.0
 

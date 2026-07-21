@@ -1,4 +1,4 @@
-From b177ff56efc790143fcad8774a0fa6295390e2c9 Mon Sep 17 00:00:00 2001
+From 9f0e7f81697074ef6cd1e33caa3356f5604d73b7 Mon Sep 17 00:00:00 2001
 From: Alice Ryhl <aliceryhl@google.com>
 Date: Mon, 23 Feb 2026 10:08:25 +0000
 Subject: [RUYI PATCH] UPSTREAM: rust: clk: implement Send and Sync
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 1e6c8c42fb3a..0a290202da69 100644
+index 1e6c8c42fb..0a290202da 100644
 --- a/rust/kernel/clk.rs
 +++ b/rust/kernel/clk.rs
 @@ -129,6 +129,13 @@ mod common_clk {
@@ -42,5 +42,5 @@ index 1e6c8c42fb3a..0a290202da69 100644
          /// Gets [`Clk`] corresponding to a [`Device`] and a connection id.
          ///
 -- 
-2.53.0
+2.54.0
 

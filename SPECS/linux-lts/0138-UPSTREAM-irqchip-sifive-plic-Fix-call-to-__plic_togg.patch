@@ -1,4 +1,4 @@
-From f2ab06c62c043be194f5704ea040192c919d5ab1 Mon Sep 17 00:00:00 2001
+From c889d0cd1d07931d56b0fa89a655a555095de6dc Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Mon, 3 Nov 2025 11:18:13 -0500
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Fix call to
@@ -27,7 +27,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index b6ea38e24af3..53e446117599 100644
+index b6ea38e24a..53e4461175 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -684,12 +684,11 @@ static int plic_probe(struct fwnode_handle *fwnode)
@@ -48,5 +48,5 @@ index b6ea38e24af3..53e446117599 100644
  			continue;
  		}
 -- 
-2.53.0
+2.54.0
 

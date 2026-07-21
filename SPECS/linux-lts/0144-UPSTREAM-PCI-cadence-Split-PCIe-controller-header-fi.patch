@@ -1,4 +1,4 @@
-From 0bece09cf85e2707fde8ad276dd6c46b150d6097 Mon Sep 17 00:00:00 2001
+From 96bf1862055001ccada701a5dd7f7a74fc148007 Mon Sep 17 00:00:00 2001
 From: Manikandan K Pillai <mpillai@cadence.com>
 Date: Sat, 8 Nov 2025 22:02:57 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI: cadence: Split PCIe controller header
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/drivers/pci/controller/cadence/pcie-cadence-lga-regs.h b/drivers/pci/controller/cadence/pcie-cadence-lga-regs.h
 new file mode 100644
-index 000000000000..857b2140c5d2
+index 0000000000..857b2140c5
 --- /dev/null
 +++ b/drivers/pci/controller/cadence/pcie-cadence-lga-regs.h
 @@ -0,0 +1,230 @@
@@ -256,7 +256,7 @@ index 000000000000..857b2140c5d2
 +
 +#endif /* _PCIE_CADENCE_LGA_REGS_H */
 diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 23ccad0a31f2..23aa64df1980 100644
+index 23ccad0a31..23aa64df19 100644
 --- a/drivers/pci/controller/cadence/pcie-cadence.h
 +++ b/drivers/pci/controller/cadence/pcie-cadence.h
 @@ -7,211 +7,11 @@
@@ -504,5 +504,5 @@ index 23ccad0a31f2..23aa64df1980 100644
  
  struct cdns_pcie_ops {
 -- 
-2.53.0
+2.54.0
 

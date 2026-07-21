@@ -1,4 +1,4 @@
-From 45a6bb02347afa594bbae7babfc102a290c50a62 Mon Sep 17 00:00:00 2001
+From 71c30e47dcd61d977ba111ac10ecd739dd66f039 Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:52 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: k1: add reset support
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-index 8ef6d5d1927b..d0948a16de3e 100644
+index 8ef6d5d192..d0948a16de 100644
 --- a/drivers/i2c/busses/i2c-k1.c
 +++ b/drivers/i2c/busses/i2c-k1.c
 @@ -10,6 +10,7 @@
@@ -52,5 +52,5 @@ index 8ef6d5d1927b..d0948a16de3e 100644
  
  	i2c_set_adapdata(&i2c->adapt, i2c);
 -- 
-2.53.0
+2.54.0
 

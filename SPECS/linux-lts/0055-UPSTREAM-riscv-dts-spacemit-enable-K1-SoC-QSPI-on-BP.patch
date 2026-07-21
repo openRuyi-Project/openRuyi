@@ -1,4 +1,4 @@
-From 6a39505c993f5f01158a6f6a70f4ad76c6db5234 Mon Sep 17 00:00:00 2001
+From c444504cc96a5cb6180f2fd331b8db785e91447e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:06 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable K1 SoC QSPI on
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 43 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 33ca816bfd4b..02f218a16318 100644
+index 33ca816bfd..02f218a163 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -113,6 +113,12 @@ &pdma {
@@ -36,7 +36,7 @@ index 33ca816bfd4b..02f218a16318 100644
  	pinctrl-0 = <&i2c2_0_cfg>;
  	pinctrl-names = "default";
 diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
-index 4eef81d583f3..e922e05ff856 100644
+index 4eef81d583..e922e05ff8 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
 @@ -73,6 +73,27 @@ i2c8-0-pins {
@@ -68,7 +68,7 @@ index 4eef81d583f3..e922e05ff856 100644
  	uart0_0_cfg: uart0-0-cfg {
  		uart0-0-pins {
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index af35f9cd6435..47f97105bff0 100644
+index af35f9cd64..47f97105bf 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -823,6 +823,22 @@ uart9: serial@d4017800 {
@@ -95,5 +95,5 @@ index af35f9cd6435..47f97105bff0 100644
  		};
  
 -- 
-2.53.0
+2.54.0
 

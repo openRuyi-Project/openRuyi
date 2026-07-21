@@ -1,4 +1,4 @@
-From fffc0e28825613d507f1e6731d2f011415adf550 Mon Sep 17 00:00:00 2001
+From 5cfe84ebbd74dad5cc44f2f0cfa391a764df36fd Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Fri, 26 Sep 2025 19:54:38 +0200
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add 24c02 eeprom on
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 4113e68b8490..487278ea9273 100644
+index 4113e68b84..487278ea92 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -115,6 +115,29 @@ &i2c2 {
@@ -67,5 +67,5 @@ index 4113e68b8490..487278ea9273 100644
  				regulator-max-microvolt = <1800000>;
  				regulator-ramp-delay = <5000>;
 -- 
-2.53.0
+2.54.0
 

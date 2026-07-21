@@ -1,4 +1,4 @@
-From 60519a3245f5c93f0bbe6ec9f8502c9031994419 Mon Sep 17 00:00:00 2001
+From 9a1c9c5e13449363c017846d80f526d107f80a77 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:42 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add clock tree
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 75 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index b69cf81b5d55..e3d7f3102fd5 100644
+index b69cf81b5d..e3d7f3102f 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -4,6 +4,7 @@
@@ -122,5 +122,5 @@ index b69cf81b5d55..e3d7f3102fd5 100644
  			compatible = "spacemit,k3-imsics", "riscv,imsics";
  			reg = <0x0 0xe0400000 0x0 0x200000>;
 -- 
-2.53.0
+2.54.0
 

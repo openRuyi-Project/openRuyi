@@ -1,4 +1,4 @@
-From 4a6215528dd5e1ef5ed45e47dcc2156905f17457 Mon Sep 17 00:00:00 2001
+From 2c4b75783943674ee33e86ba581ec1aee7965ba6 Mon Sep 17 00:00:00 2001
 From: Zixian Zeng <sycamoremoon376@gmail.com>
 Date: Tue, 16 Sep 2025 21:22:53 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: Enable SPI NOR node for
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts b/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
-index 0cd0dc0f537c..b2ceae2d8829 100644
+index 0cd0dc0f53..b2ceae2d88 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
 +++ b/arch/riscv/boot/dts/sophgo/sg2042-evb-v2.dts
 @@ -238,6 +238,18 @@ &sd {
@@ -45,5 +45,5 @@ index 0cd0dc0f537c..b2ceae2d8829 100644
  	pinctrl-0 = <&uart0_cfg>;
  	pinctrl-names = "default";
 -- 
-2.53.0
+2.54.0
 

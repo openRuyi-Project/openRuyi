@@ -1,4 +1,4 @@
-From 6c758ac967a8de6127491a395f361b7031c10667 Mon Sep 17 00:00:00 2001
+From 54a2a012b3017fa318154d13106e3829b5b4382a Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 07:18:59 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: sophgo: sg2044: Add "b" ISA
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 128 insertions(+), 128 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi b/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
-index 523799a1a8b8..3135409c2149 100644
+index 523799a1a8..3135409c21 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
 +++ b/arch/riscv/boot/dts/sophgo/sg2044-cpus.dtsi
 @@ -24,10 +24,10 @@ cpu0: cpu@0 {
@@ -864,5 +864,5 @@ index 523799a1a8b8..3135409c2149 100644
  					       "zawrs", "zba", "zbb", "zbc",
  					       "zbs", "zca", "zcb", "zcd",
 -- 
-2.53.0
+2.54.0
 

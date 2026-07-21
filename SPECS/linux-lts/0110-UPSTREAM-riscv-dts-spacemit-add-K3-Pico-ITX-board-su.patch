@@ -1,4 +1,4 @@
-From 61e63997cecc9eb549744cbe7688cd6f77265382 Mon Sep 17 00:00:00 2001
+From ead5148360b5291e28a584ec382e6311e4fa45a8 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 14:51:46 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add K3 Pico-ITX board
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 
 diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-index 95889e7269d1..7e2b87702571 100644
+index 95889e7269..7e2b877025 100644
 --- a/arch/riscv/boot/dts/spacemit/Makefile
 +++ b/arch/riscv/boot/dts/spacemit/Makefile
 @@ -4,3 +4,4 @@ dtb-$(CONFIG_ARCH_SPACEMIT) += k1-milkv-jupiter.dtb
@@ -32,7 +32,7 @@ index 95889e7269d1..7e2b87702571 100644
 +dtb-$(CONFIG_ARCH_SPACEMIT) += k3-pico-itx.dtb
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 new file mode 100644
-index 000000000000..b691304d4b74
+index 0000000000..b691304d4b
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 @@ -0,0 +1,29 @@
@@ -66,5 +66,5 @@ index 000000000000..b691304d4b74
 +	status = "okay";
 +};
 -- 
-2.53.0
+2.54.0
 

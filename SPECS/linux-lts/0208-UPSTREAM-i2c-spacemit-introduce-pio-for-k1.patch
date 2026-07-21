@@ -1,4 +1,4 @@
-From 85a82954acd965a8e7f06acf2b98533ffe944b92 Mon Sep 17 00:00:00 2001
+From 2a2c9c906495d9945cfb567314ffcaf2c4ed3a88 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Sat, 7 Feb 2026 23:08:22 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: introduce pio for k1
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 228 insertions(+), 72 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-index 6787a51e7391..afc6bdd68bd4 100644
+index 6787a51e73..afc6bdd68b 100644
 --- a/drivers/i2c/busses/i2c-k1.c
 +++ b/drivers/i2c/busses/i2c-k1.c
 @@ -98,6 +98,10 @@
@@ -483,5 +483,5 @@ index 6787a51e7391..afc6bdd68bd4 100644
  };
  
 -- 
-2.53.0
+2.54.0
 

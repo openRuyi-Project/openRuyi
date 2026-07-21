@@ -1,4 +1,4 @@
-From 97ce2bdaf4b2f91ebc9016642d5cc671eabce12f Mon Sep 17 00:00:00 2001
+From 3b9037ea99a1560b3c5c4025d04ce0045a3fe069 Mon Sep 17 00:00:00 2001
 From: Han Gao <gaohan@iscas.ac.cn>
 Date: Fri, 5 Dec 2025 10:42:07 +0800
 Subject: [RUYI PATCH] UPSTREAM: drm/ttm: add pgprot handling for RISC-V
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/ttm/ttm_module.c b/drivers/gpu/drm/ttm/ttm_module.c
-index b3fffe7b5062..aa137ead5cc5 100644
+index b3fffe7b50..aa137ead5c 100644
 --- a/drivers/gpu/drm/ttm/ttm_module.c
 +++ b/drivers/gpu/drm/ttm/ttm_module.c
 @@ -74,7 +74,8 @@ pgprot_t ttm_prot_from_caching(enum ttm_caching caching, pgprot_t tmp)
@@ -40,5 +40,5 @@ index b3fffe7b5062..aa137ead5cc5 100644
  		tmp = pgprot_writecombine(tmp);
  	else
 -- 
-2.53.0
+2.54.0
 

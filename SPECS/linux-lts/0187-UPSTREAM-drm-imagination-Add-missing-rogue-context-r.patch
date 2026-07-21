@@ -1,4 +1,4 @@
-From 90791ed1e854870177f6c1d1b77e2676feac639f Mon Sep 17 00:00:00 2001
+From a78b0aa3dd3fbbac643f1768af681518a94c0622 Mon Sep 17 00:00:00 2001
 From: Alexandru Dadu <alexandru.dadu@imgtec.com>
 Date: Mon, 23 Mar 2026 20:31:28 +0200
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Add missing rogue context
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
-index f95acd5a1f8e..869d904e3649 100644
+index f95acd5a1f..869d904e36 100644
 --- a/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 +++ b/drivers/gpu/drm/imagination/pvr_rogue_fwif_shared.h
 @@ -236,6 +236,18 @@ enum rogue_context_reset_reason {
@@ -49,5 +49,5 @@ index f95acd5a1f8e..869d904e3649 100644
  	ROGUE_CONTEXT_RESET_REASON_FW_WATCHDOG = 12,
  	/* FW page fault (no HWR) */
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 6dc6cd1f8b082a07a30cb10ffb8a1403350e506b Mon Sep 17 00:00:00 2001
+From 64c1b6d070df9452a81aaf0af977f5c7174fffc1 Mon Sep 17 00:00:00 2001
 From: Nick Hu <nick.hu@sifive.com>
 Date: Tue, 2 Dec 2025 14:07:41 +0800
 Subject: [RUYI PATCH] UPSTREAM: irqchip/riscv-aplic: Preserve APLIC states
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 198 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-riscv-aplic-direct.c b/drivers/irqchip/irq-riscv-aplic-direct.c
-index c2a75bf3d20c..5a9650225dd8 100644
+index c2a75bf3d2..5a9650225d 100644
 --- a/drivers/irqchip/irq-riscv-aplic-direct.c
 +++ b/drivers/irqchip/irq-riscv-aplic-direct.c
 @@ -8,6 +8,7 @@
@@ -56,7 +56,7 @@ index c2a75bf3d20c..5a9650225dd8 100644
  {
  	if (aplic_direct_parent_irq)
 diff --git a/drivers/irqchip/irq-riscv-aplic-main.c b/drivers/irqchip/irq-riscv-aplic-main.c
-index 93e7c51f944a..4495ca26abf5 100644
+index 93e7c51f94..4495ca26ab 100644
 --- a/drivers/irqchip/irq-riscv-aplic-main.c
 +++ b/drivers/irqchip/irq-riscv-aplic-main.c
 @@ -12,10 +12,169 @@
@@ -283,7 +283,7 @@ index 93e7c51f944a..4495ca26abf5 100644
  #ifdef CONFIG_ACPI
  	if (!acpi_disabled)
 diff --git a/drivers/irqchip/irq-riscv-aplic-main.h b/drivers/irqchip/irq-riscv-aplic-main.h
-index b0ad8cde69b1..2d8ad7138541 100644
+index b0ad8cde69..2d8ad71385 100644
 --- a/drivers/irqchip/irq-riscv-aplic-main.h
 +++ b/drivers/irqchip/irq-riscv-aplic-main.h
 @@ -23,7 +23,25 @@ struct aplic_msicfg {
@@ -321,5 +321,5 @@ index b0ad8cde69b1..2d8ad7138541 100644
  #ifdef CONFIG_RISCV_APLIC_MSI
  int aplic_msi_setup(struct device *dev, void __iomem *regs);
 -- 
-2.53.0
+2.54.0
 

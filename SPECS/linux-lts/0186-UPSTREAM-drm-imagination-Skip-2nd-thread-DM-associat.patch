@@ -1,4 +1,4 @@
-From 3c81b0118a1dae65d34dd8ccfcc3c139756498ab Mon Sep 17 00:00:00 2001
+From defac66b78bd35d004dcdde8948fc77a8c1daa4f Mon Sep 17 00:00:00 2001
 From: Brajesh Gupta <brajesh.gupta@imgtec.com>
 Date: Fri, 13 Mar 2026 06:38:25 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Skip 2nd thread DM
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_fw_startstop.c b/drivers/gpu/drm/imagination/pvr_fw_startstop.c
-index 6ae0489f7e2e..e24ed6fc4362 100644
+index 6ae0489f7e..e24ed6fc43 100644
 --- a/drivers/gpu/drm/imagination/pvr_fw_startstop.c
 +++ b/drivers/gpu/drm/imagination/pvr_fw_startstop.c
 @@ -243,12 +243,15 @@ pvr_fw_stop(struct pvr_device *pvr_dev)
@@ -43,5 +43,5 @@ index 6ae0489f7e2e..e24ed6fc4362 100644
  	/* Extra Idle checks. */
  	err = pvr_cr_poll_reg32(pvr_dev, ROGUE_CR_BIF_STATUS_MMU, 0,
 -- 
-2.53.0
+2.54.0
 

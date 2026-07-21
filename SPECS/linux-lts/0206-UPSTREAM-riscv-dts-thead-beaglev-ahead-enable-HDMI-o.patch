@@ -1,4 +1,4 @@
-From dceaa01db9088494f93a2bc9dd7fd5887f44e60e Mon Sep 17 00:00:00 2001
+From ce5f7c3ed2ee1993987d7920140ee5be63c9bdfa Mon Sep 17 00:00:00 2001
 From: Robert Mazur <robert.mazur@imgtec.com>
 Date: Wed, 25 Mar 2026 09:18:59 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: beaglev-ahead: enable HDMI
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 25 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-index 21c33f165ba9..91f3f9b987bc 100644
+index 21c33f165b..91f3f9b987 100644
 --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
 +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
 @@ -75,6 +75,17 @@ led-5 {
@@ -63,5 +63,5 @@ index 21c33f165ba9..91f3f9b987bc 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_pins>;
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From eadf535b70265b367eb6619033594dad637807b2 Mon Sep 17 00:00:00 2001
+From eb1a2979dbd78186659856ee7381a5d0193ee2b3 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:27 +0530
 Subject: [RUYI PATCH] UPSTREAM: powerpc/pci: Initialize msi_addr_mask for
@@ -37,7 +37,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/powerpc/kernel/pci_of_scan.c b/arch/powerpc/kernel/pci_of_scan.c
-index 756043dd06e9..fb9fbf0d1796 100644
+index 756043dd06..fb9fbf0d17 100644
 --- a/arch/powerpc/kernel/pci_of_scan.c
 +++ b/arch/powerpc/kernel/pci_of_scan.c
 @@ -212,6 +212,13 @@ struct pci_dev *of_create_pci_dev(struct device_node *node,
@@ -55,5 +55,5 @@ index 756043dd06e9..fb9fbf0d1796 100644
  	pci_fixup_device(pci_fixup_early, dev);
  
 -- 
-2.53.0
+2.54.0
 

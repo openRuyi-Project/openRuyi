@@ -1,4 +1,4 @@
-From 6cbec3202b4d49296d75d3affadb5eefe4743984 Mon Sep 17 00:00:00 2001
+From f4780fa0b2dc2613e7b7d67ff38ddf2b301b7d2a Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Sat, 10 Jan 2026 13:18:19 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: riscv: Add descriptions for
@@ -46,7 +46,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 49 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 36afd1cc42cf..bebbd7797d49 100644
+index 36afd1cc42..bebbd7797d 100644
 --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
 +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
 @@ -234,6 +234,12 @@ properties:
@@ -127,5 +127,5 @@ index 36afd1cc42cf..bebbd7797d49 100644
        - if:
            contains:
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 4ca7dd892e3dbd74973376cc721c85ece7df006b Mon Sep 17 00:00:00 2001
+From 3d92987ac5ea7ec2ecfd77ad5b20a63abb1fb69c Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Thu, 8 Jan 2026 14:42:39 +0800
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: spacemit: support I/O power domain
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 126 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 07267c5f0f44..71390402aaa6 100644
+index 07267c5f0f..71390402aa 100644
 --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
 +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
 @@ -7,8 +7,10 @@
@@ -259,5 +259,5 @@ index 07267c5f0f44..71390402aaa6 100644
  };
  
 -- 
-2.53.0
+2.54.0
 

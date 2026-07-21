@@ -1,4 +1,4 @@
-From 0889d1b742e0a98a0d7f090055580115acf747e6 Mon Sep 17 00:00:00 2001
+From 0b29776e31decad5b46f757c07b6f8c45e3d3914 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:49 +0100
 Subject: [RUYI PATCH] UPSTREAM: clk: at91: pmc: #undef field_{get,prep}()
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 5daa32c4cf25..78a87d31463e 100644
+index 5daa32c4cf..78a87d3146 100644
 --- a/drivers/clk/at91/pmc.h
 +++ b/drivers/clk/at91/pmc.h
 @@ -117,7 +117,9 @@ struct at91_clk_pms {
@@ -36,5 +36,5 @@ index 5daa32c4cf25..78a87d31463e 100644
  
  #define ndck(a, s) (a[s - 1].id + 1)
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From a27cebcdff7f78becf2072cae2b951e1e7f41b1e Mon Sep 17 00:00:00 2001
+From 6c99245a299b5d63677056ae778dd5fa1836f567 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:37 -0600
 Subject: [RUYI PATCH] UPSTREAM: PCI: spacemit: Add SpacemiT PCIe host driver
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/pci/controller/dwc/pcie-spacemit-k1.c
 
 diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 349d4657393c..718bb54e943f 100644
+index 349d465739..718bb54e94 100644
 --- a/drivers/pci/controller/dwc/Kconfig
 +++ b/drivers/pci/controller/dwc/Kconfig
 @@ -416,6 +416,19 @@ config PCIE_SOPHGO_DW
@@ -50,7 +50,7 @@ index 349d4657393c..718bb54e943f 100644
  	bool "STMicroelectronics SPEAr PCIe controller"
  	depends on ARCH_SPEAR13XX || COMPILE_TEST
 diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 7ae28f3b0fb3..662b0a219ddc 100644
+index 7ae28f3b0f..662b0a219d 100644
 --- a/drivers/pci/controller/dwc/Makefile
 +++ b/drivers/pci/controller/dwc/Makefile
 @@ -31,6 +31,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
@@ -63,7 +63,7 @@ index 7ae28f3b0fb3..662b0a219ddc 100644
  
 diff --git a/drivers/pci/controller/dwc/pcie-spacemit-k1.c b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
 new file mode 100644
-index 000000000000..be20a520255b
+index 0000000000..be20a52025
 --- /dev/null
 +++ b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
 @@ -0,0 +1,357 @@
@@ -425,5 +425,5 @@ index 000000000000..be20a520255b
 +MODULE_LICENSE("GPL");
 +MODULE_DESCRIPTION("SpacemiT K1 PCIe host driver");
 -- 
-2.53.0
+2.54.0
 

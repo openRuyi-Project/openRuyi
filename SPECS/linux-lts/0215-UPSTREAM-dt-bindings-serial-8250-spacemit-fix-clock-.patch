@@ -1,4 +1,4 @@
-From 88d533f1c6bfb3181035649386387a8d59f75318 Mon Sep 17 00:00:00 2001
+From 431cc16b1749b632430b0d81161a6b8c22bf2bf1 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:19:39 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: serial: 8250: spacemit: fix clock
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
-index b243afa69a1a..0d4ae9a62f4c 100644
+index b243afa69a..0d4ae9a62f 100644
 --- a/Documentation/devicetree/bindings/serial/8250.yaml
 +++ b/Documentation/devicetree/bindings/serial/8250.yaml
 @@ -63,7 +63,9 @@ allOf:
@@ -42,5 +42,5 @@ index b243afa69a1a..0d4ae9a62f4c 100644
      then:
        required:
 -- 
-2.53.0
+2.54.0
 

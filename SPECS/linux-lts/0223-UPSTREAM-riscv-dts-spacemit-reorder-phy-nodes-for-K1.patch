@@ -1,4 +1,4 @@
-From 8ad8078b131f6aea0fde2e411f43212dbb92b54b Mon Sep 17 00:00:00 2001
+From 26aedb2e5ddea33359db4549a5ead237695af1a3 Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Wed, 18 Mar 2026 18:00:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: reorder phy nodes for K1
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 54 insertions(+), 54 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index d2015201f8e5..f0bad6855c97 100644
+index d2015201f8..f0bad6855c 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -359,6 +359,60 @@ syscon_rcpu2: system-controller@c0888000 {
@@ -144,5 +144,5 @@ index d2015201f8e5..f0bad6855c97 100644
  			compatible = "spacemit,k1-syscon-apbc";
  			reg = <0x0 0xd4015000 0x0 0x1000>;
 -- 
-2.53.0
+2.54.0
 

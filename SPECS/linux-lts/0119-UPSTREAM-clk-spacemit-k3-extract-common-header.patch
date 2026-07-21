@@ -1,4 +1,4 @@
-From c5d576f1d3fffff794dcb2f9bfce1fd8afbbef56 Mon Sep 17 00:00:00 2001
+From 5b96d0284c4c2724f9c9326b8c31f5bd148e07da Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Sat, 20 Dec 2025 21:28:15 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: extract common header
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/include/soc/spacemit/k3-syscon.h b/include/soc/spacemit/k3-syscon.h
 new file mode 100644
-index 000000000000..0299bea065a0
+index 0000000000..0299bea065
 --- /dev/null
 +++ b/include/soc/spacemit/k3-syscon.h
 @@ -0,0 +1,273 @@
@@ -295,5 +295,5 @@ index 000000000000..0299bea065a0
 +
 +#endif /* __SOC_K3_SYSCON_H__ */
 -- 
-2.53.0
+2.54.0
 

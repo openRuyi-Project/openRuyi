@@ -1,4 +1,4 @@
-From d6478eccb6e7703c6cda7c1146e5ed08bd362aaa Mon Sep 17 00:00:00 2001
+From 3355d26332c9b2491d03449f15e16a36965a6e71 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 5 Nov 2025 11:37:43 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: reorder i2c2 node
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 47f97105bff0..e3de4815e811 100644
+index 47f97105bf..e3de4815e8 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -358,6 +358,19 @@ syscon_rcpu2: system-controller@c0888000 {
@@ -63,5 +63,5 @@ index 47f97105bff0..e3de4815e811 100644
  			compatible = "spacemit,k1-i2c";
  			reg = <0x0 0xd401d800 0x0 0x38>;
 -- 
-2.53.0
+2.54.0
 

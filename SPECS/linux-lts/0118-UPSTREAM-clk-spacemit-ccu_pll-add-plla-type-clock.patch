@@ -1,4 +1,4 @@
-From f7657a9e6b3d91927ebb7a35c3f3092378c5f8aa Mon Sep 17 00:00:00 2001
+From ec8c5fdb0420ec39cdd82cf4fa1724eb6dd87c29 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Mon, 27 Oct 2025 21:41:24 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: ccu_pll: add plla type clock
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 166 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu_common.h b/drivers/clk/spacemit/ccu_common.h
-index 7ae244b5eace..8691698e007d 100644
+index 7ae244b5ea..8691698e00 100644
 --- a/drivers/clk/spacemit/ccu_common.h
 +++ b/drivers/clk/spacemit/ccu_common.h
 @@ -26,6 +26,7 @@ struct ccu_common {
@@ -30,7 +30,7 @@ index 7ae244b5eace..8691698e007d 100644
  		};
  	};
 diff --git a/drivers/clk/spacemit/ccu_pll.c b/drivers/clk/spacemit/ccu_pll.c
-index 76d0244873d8..d4066a0ed452 100644
+index 76d0244873..d4066a0ed4 100644
 --- a/drivers/clk/spacemit/ccu_pll.c
 +++ b/drivers/clk/spacemit/ccu_pll.c
 @@ -17,6 +17,9 @@
@@ -170,7 +170,7 @@ index 76d0244873d8..d4066a0ed452 100644
 +};
 +EXPORT_SYMBOL_NS_GPL(spacemit_ccu_plla_ops, "CLK_SPACEMIT");
 diff --git a/drivers/clk/spacemit/ccu_pll.h b/drivers/clk/spacemit/ccu_pll.h
-index 0592f4c3068c..e41db5c97c1a 100644
+index 0592f4c306..e41db5c97c 100644
 --- a/drivers/clk/spacemit/ccu_pll.h
 +++ b/drivers/clk/spacemit/ccu_pll.h
 @@ -16,14 +16,31 @@
@@ -281,5 +281,5 @@ index 0592f4c3068c..e41db5c97c1a 100644
  
  #endif
 -- 
-2.53.0
+2.54.0
 

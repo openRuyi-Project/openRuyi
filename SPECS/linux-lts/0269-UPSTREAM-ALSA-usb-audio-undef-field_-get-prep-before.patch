@@ -1,4 +1,4 @@
-From dd326795b66465f04d08f11807c402dc08b8e615 Mon Sep 17 00:00:00 2001
+From 870cf284b60cb035a59de982060482e5bfa9cfbc Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:57 +0100
 Subject: [RUYI PATCH] UPSTREAM: ALSA: usb-audio: #undef field_{get,prep}()
@@ -20,10 +20,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index 7126a2cf9e79..bf8f97d43299 100644
+index 02d9ede674..c950a7229e 100644
 --- a/sound/usb/mixer_quirks.c
 +++ b/sound/usb/mixer_quirks.c
-@@ -3309,7 +3309,9 @@ static int snd_bbfpro_controls_create(struct usb_mixer_interface *mixer)
+@@ -3326,7 +3326,9 @@ static int snd_bbfpro_controls_create(struct usb_mixer_interface *mixer)
  #define RME_DIGIFACE_INVERT BIT(31)
  
  /* Nonconst helpers */
@@ -34,5 +34,5 @@ index 7126a2cf9e79..bf8f97d43299 100644
  
  static int snd_rme_digiface_write_reg(struct snd_kcontrol *kcontrol, int item, u16 mask, u16 val)
 -- 
-2.53.0
+2.54.0
 

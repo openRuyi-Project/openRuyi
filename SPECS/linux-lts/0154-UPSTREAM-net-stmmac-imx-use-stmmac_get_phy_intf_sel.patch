@@ -1,4 +1,4 @@
-From a3036bb05f0f0ba49141f757e8a9c682124b897f Mon Sep 17 00:00:00 2001
+From f550bade2e73304a4ef620086ae261d0d03c2e72 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:31 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: use
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 25 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index f1cfccd4269c..dc28486a7af0 100644
+index f1cfccd426..dc28486a7a 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -45,7 +45,8 @@ struct imx_dwmac_ops {
@@ -136,5 +136,5 @@ index f1cfccd4269c..dc28486a7af0 100644
  			return ret;
  	}
 -- 
-2.53.0
+2.54.0
 

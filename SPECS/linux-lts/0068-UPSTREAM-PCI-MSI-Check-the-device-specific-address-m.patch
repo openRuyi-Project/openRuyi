@@ -1,4 +1,4 @@
-From 9442e52784b43c32211b4e810635c32d91c7d43c Mon Sep 17 00:00:00 2001
+From 344cb31c82f5e6a7d5dfc9802f626e439dfba9f5 Mon Sep 17 00:00:00 2001
 From: Vivian Wang <wangruikang@iscas.ac.cn>
 Date: Thu, 29 Jan 2026 09:56:07 +0800
 Subject: [RUYI PATCH] UPSTREAM: PCI/MSI: Check the device specific address
@@ -24,7 +24,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index fb9a42bec62e..e2412175d7af 100644
+index fb9a42bec6..e2412175d7 100644
 --- a/drivers/pci/msi/msi.c
 +++ b/drivers/pci/msi/msi.c
 @@ -321,14 +321,16 @@ static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
@@ -48,5 +48,5 @@ index fb9a42bec62e..e2412175d7af 100644
  		}
  	}
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 0bbb0e593c104ca6db38519b0f2e01d0a565288d Mon Sep 17 00:00:00 2001
+From 1ee36c559d21411fdf5ba77512b4c9cfeb21e986 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:21 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: convert to PHY_INTF_SEL_xxx
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index 147fa08d5b6e..4fbee59e7337 100644
+index 147fa08d5b..4fbee59e73 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -23,18 +23,25 @@
@@ -66,5 +66,5 @@ index 147fa08d5b6e..4fbee59e7337 100644
  		return;
  
 -- 
-2.53.0
+2.54.0
 

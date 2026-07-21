@@ -1,4 +1,4 @@
-From d347e2130641f7e7091dd8afbe67c9619baf88f0 Mon Sep 17 00:00:00 2001
+From f74be525d1b29bb1fc1b1a4b506704f891e79a8c Mon Sep 17 00:00:00 2001
 From: Charles Mirabile <cmirabil@redhat.com>
 Date: Fri, 24 Oct 2025 09:36:43 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Add support for UltraRISC
@@ -42,7 +42,7 @@ Signed-off-by: Han Gao <rabenda.cn@gmail.com>
  1 file changed, 103 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 96e46a3ba4bf..b6ea38e24af3 100644
+index 96e46a3ba4..b6ea38e24a 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -49,6 +49,8 @@
@@ -190,5 +190,5 @@ index 96e46a3ba4bf..b6ea38e24af3 100644
  			cpuhp_setup_state(CPUHP_AP_IRQ_SIFIVE_PLIC_STARTING,
  					  "irqchip/sifive/plic:starting",
 -- 
-2.53.0
+2.54.0
 

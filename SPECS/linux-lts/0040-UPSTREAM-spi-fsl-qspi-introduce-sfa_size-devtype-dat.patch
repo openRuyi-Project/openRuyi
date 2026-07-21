@@ -1,4 +1,4 @@
-From 7c46eafe84df109f4c91da322c3c0936ca5e6f42 Mon Sep 17 00:00:00 2001
+From be844ad2dbc40ee61657fbfa2db6aa88c5e7fd62 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:04 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: introduce sfa_size devtype data
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index d72828f7ac44..f30bf46064fc 100644
+index d72828f7ac..f30bf46064 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -207,6 +207,7 @@ struct fsl_qspi_devtype_data {
@@ -73,5 +73,5 @@ index d72828f7ac44..f30bf46064fc 100644
  	q->selected = -1;
  
 -- 
-2.53.0
+2.54.0
 

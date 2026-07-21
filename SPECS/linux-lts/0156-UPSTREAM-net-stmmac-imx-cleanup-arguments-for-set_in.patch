@@ -1,4 +1,4 @@
-From 7c1bcafe332511c19de7c7ac676bb3858d39410c Mon Sep 17 00:00:00 2001
+From ebbc27a89442ed3869bac2f03bddaa2a483b7ad1 Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:41 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: imx: cleanup arguments for
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
-index d69be9de4468..ae1b73e1bcb2 100644
+index d69be9de44..ae1b73e1bc 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
 @@ -39,14 +39,15 @@
@@ -96,5 +96,5 @@ index d69be9de4468..ae1b73e1bcb2 100644
  			return ret;
  	}
 -- 
-2.53.0
+2.54.0
 

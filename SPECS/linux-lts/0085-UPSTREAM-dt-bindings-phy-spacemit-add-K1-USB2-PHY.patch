@@ -1,4 +1,4 @@
-From ad6fa0373403bcbf2e3a081de0862952e93bf85a Mon Sep 17 00:00:00 2001
+From 364a1fdb33b262785efc4dd586430a3000e7cf9c Mon Sep 17 00:00:00 2001
 From: Ze Huang <huang.ze@linux.dev>
 Date: Fri, 17 Oct 2025 22:49:52 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: phy: spacemit: add K1 USB2 PHY
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
 new file mode 100644
-index 000000000000..43eaca90d88c
+index 0000000000..43eaca90d8
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/phy/spacemit,usb2-phy.yaml
 @@ -0,0 +1,40 @@
@@ -65,5 +65,5 @@ index 000000000000..43eaca90d88c
 +        #phy-cells = <0>;
 +    };
 -- 
-2.53.0
+2.54.0
 

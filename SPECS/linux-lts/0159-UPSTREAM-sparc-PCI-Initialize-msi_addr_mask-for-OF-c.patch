@@ -1,4 +1,4 @@
-From 2b9cdafd6924c78f840a81079b9b3460ca015f62 Mon Sep 17 00:00:00 2001
+From 6466684f43e72c6075d6961908c88b9a2e32e2c4 Mon Sep 17 00:00:00 2001
 From: Nilay Shroff <nilay@linux.ibm.com>
 Date: Fri, 20 Feb 2026 12:32:28 +0530
 Subject: [RUYI PATCH] UPSTREAM: sparc/PCI: Initialize msi_addr_mask for
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index b290107170e9..a4815d544781 100644
+index b290107170..a4815d5447 100644
 --- a/arch/sparc/kernel/pci.c
 +++ b/arch/sparc/kernel/pci.c
 @@ -355,6 +355,13 @@ static struct pci_dev *of_create_pci_dev(struct pci_pbm_info *pbm,
@@ -47,5 +47,5 @@ index b290107170e9..a4815d544781 100644
  		/* a PCI-PCI bridge */
  		dev->hdr_type = PCI_HEADER_TYPE_BRIDGE;
 -- 
-2.53.0
+2.54.0
 

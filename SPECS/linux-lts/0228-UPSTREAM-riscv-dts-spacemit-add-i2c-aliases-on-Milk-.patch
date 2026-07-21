@@ -1,4 +1,4 @@
-From d33a5a7d922d3c7562e7169a9c50caf7b81d39dd Mon Sep 17 00:00:00 2001
+From 2bf45e2b31f1ef592c014281be81d557a1da7076 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:31 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: add i2c aliases on
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index bd48208a370c..836311c3f035 100644
+index bd48208a37..836311c3f0 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -15,6 +15,8 @@ aliases {
@@ -33,5 +33,5 @@ index bd48208a370c..836311c3f035 100644
  
  	chosen {
 -- 
-2.53.0
+2.54.0
 

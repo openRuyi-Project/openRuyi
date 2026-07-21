@@ -1,4 +1,4 @@
-From 29093ed6a42705c11d9aad5ea6ad64a74dc62910 Mon Sep 17 00:00:00 2001
+From 15b68e465eb492b5e4ac50f4321f16463f696530 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:01 +0100
 Subject: [RUYI PATCH] UPSTREAM: bitfield: Add non-constant field_{prep,get}()
@@ -43,7 +43,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 59 insertions(+)
 
 diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-index bf8e0ae4b5b4..126dc5b380af 100644
+index bf8e0ae4b5..126dc5b380 100644
 --- a/include/linux/bitfield.h
 +++ b/include/linux/bitfield.h
 @@ -17,6 +17,7 @@
@@ -118,5 +118,5 @@ index bf8e0ae4b5b4..126dc5b380af 100644
 +
  #endif
 -- 
-2.53.0
+2.54.0
 

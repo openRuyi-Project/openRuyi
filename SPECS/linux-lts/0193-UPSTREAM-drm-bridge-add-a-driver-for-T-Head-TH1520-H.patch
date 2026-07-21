@@ -1,4 +1,4 @@
-From b4768d8979f02ad4d17b11a4bd4a0c97b33d5fbc Mon Sep 17 00:00:00 2001
+From 42380834dacfc0395a9d7dea0e4bc070c7e152c0 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:19 +0800
 Subject: [RUYI PATCH] UPSTREAM: drm/bridge: add a driver for T-Head TH1520
@@ -29,10 +29,10 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/gpu/drm/bridge/th1520-dw-hdmi.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b50b6c7a9b52..1509fa6ab229 100644
+index d994edfc2c..456a5225ac 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -22227,6 +22227,7 @@ F:	Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
+@@ -22226,6 +22226,7 @@ F:	Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
  F:	arch/riscv/boot/dts/thead/
  F:	drivers/clk/thead/clk-th1520-ap.c
  F:	drivers/firmware/thead,th1520-aon.c
@@ -41,7 +41,7 @@ index b50b6c7a9b52..1509fa6ab229 100644
  F:	drivers/net/ethernet/stmicro/stmmac/dwmac-thead.c
  F:	drivers/pinctrl/pinctrl-th1520.c
 diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index a250afd8d662..8e19f5fb9ad7 100644
+index a250afd8d6..8e19f5fb9a 100644
 --- a/drivers/gpu/drm/bridge/Kconfig
 +++ b/drivers/gpu/drm/bridge/Kconfig
 @@ -335,6 +335,16 @@ config DRM_THINE_THC63LVD1024
@@ -62,7 +62,7 @@ index a250afd8d662..8e19f5fb9ad7 100644
  	tristate "TC358762 DSI/DPI bridge"
  	depends on OF
 diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index c7dc03182e59..085b5db45d6f 100644
+index c7dc03182e..085b5db45d 100644
 --- a/drivers/gpu/drm/bridge/Makefile
 +++ b/drivers/gpu/drm/bridge/Makefile
 @@ -28,6 +28,7 @@ obj-$(CONFIG_DRM_SII902X) += sii902x.o
@@ -75,7 +75,7 @@ index c7dc03182e59..085b5db45d6f 100644
  obj-$(CONFIG_DRM_TOSHIBA_TC358764) += tc358764.o
 diff --git a/drivers/gpu/drm/bridge/th1520-dw-hdmi.c b/drivers/gpu/drm/bridge/th1520-dw-hdmi.c
 new file mode 100644
-index 000000000000..389eead5f1c4
+index 0000000000..389eead5f1
 --- /dev/null
 +++ b/drivers/gpu/drm/bridge/th1520-dw-hdmi.c
 @@ -0,0 +1,173 @@
@@ -253,5 +253,5 @@ index 000000000000..389eead5f1c4
 +MODULE_DESCRIPTION("T-Head TH1520 HDMI Encoder Driver");
 +MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

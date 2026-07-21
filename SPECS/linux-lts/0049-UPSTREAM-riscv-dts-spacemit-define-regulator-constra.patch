@@ -1,4 +1,4 @@
-From cc04c613686436bcdfd3c38b6ae7ea2d7241c0d7 Mon Sep 17 00:00:00 2001
+From 2bd05de014e204898ffe3883027ca1a427f8cb18 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:56 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define regulator
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 104 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 42762f22ceb1..b3322dcac31a 100644
+index 42762f22ce..b3322dcac3 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -120,6 +120,110 @@ pmic@41 {
@@ -132,5 +132,5 @@ index 42762f22ceb1..b3322dcac31a 100644
  };
  
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From f77dddee6ad705b31db5dd8e1d46b89de99b5994 Mon Sep 17 00:00:00 2001
+From 8b523c4696aceccc663e54e8c8e1a1707779f676 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Thu, 13 Nov 2025 15:45:35 -0600
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pci: spacemit: Introduce PCIe
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 new file mode 100644
-index 000000000000..c4c00b5fcdc0
+index 0000000000..c4c00b5fcd
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/pci/spacemit,k1-pcie-host.yaml
 @@ -0,0 +1,157 @@
@@ -188,5 +188,5 @@ index 000000000000..c4c00b5fcdc0
 +        };
 +    };
 -- 
-2.53.0
+2.54.0
 

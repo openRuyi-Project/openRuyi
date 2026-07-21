@@ -1,4 +1,4 @@
-From 6d414cc0992e8a50a71176942000ae8b501050ec Mon Sep 17 00:00:00 2001
+From 831228269189d4bcc3ddc67828542dcd9ace222b Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 26 Dec 2025 16:31:59 +0800
 Subject: [RUYI PATCH] UPSTREAM: i2c: spacemit: drop useless spaces
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-index afc6bdd68bd4..9152cf436bea 100644
+index afc6bdd68b..9152cf436b 100644
 --- a/drivers/i2c/busses/i2c-k1.c
 +++ b/drivers/i2c/busses/i2c-k1.c
 @@ -4,13 +4,13 @@
@@ -42,5 +42,5 @@ index afc6bdd68bd4..9152cf436bea 100644
  /* spacemit i2c registers */
  #define SPACEMIT_ICR		 0x0		/* Control register */
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 0dee3c150e4f31a42ee5358c2fb16cedbad43f79 Mon Sep 17 00:00:00 2001
+From 5b5b8e6fcfc3f8a7cf3e23745ef22996e9f51e40 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:28 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: reset: thead,th1520-reset: Remove
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 deletions(-)
 
 diff --git a/include/dt-bindings/reset/thead,th1520-reset.h b/include/dt-bindings/reset/thead,th1520-reset.h
-index ee799286c175..e51d6314d131 100644
+index ee799286c1..e51d6314d1 100644
 --- a/include/dt-bindings/reset/thead,th1520-reset.h
 +++ b/include/dt-bindings/reset/thead,th1520-reset.h
 @@ -9,9 +9,6 @@
@@ -39,5 +39,5 @@ index ee799286c175..e51d6314d131 100644
  #define TH1520_RESET_ID_DPU_AXI		6
  #define TH1520_RESET_ID_DPU_CORE	7
 -- 
-2.53.0
+2.54.0
 

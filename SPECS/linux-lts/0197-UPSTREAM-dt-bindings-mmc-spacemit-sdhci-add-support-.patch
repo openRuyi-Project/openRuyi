@@ -1,4 +1,4 @@
-From 34f466edac754bd7fcecd9a421744a5f4ad5280a Mon Sep 17 00:00:00 2001
+From b737d4ffade9a3d1d0c93a8284a8cd1d6f0b2ed3 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 22 Jan 2026 17:37:30 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mmc: spacemit,sdhci: add support
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml b/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
-index 13d9382058fb..383841369fb2 100644
+index 13d9382058..383841369f 100644
 --- a/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
 +++ b/Documentation/devicetree/bindings/mmc/spacemit,sdhci.yaml
 @@ -14,7 +14,9 @@ allOf:
@@ -33,5 +33,5 @@ index 13d9382058fb..383841369fb2 100644
    reg:
      maxItems: 1
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From ee6d3ec9107c0fd772c16584ca526ebe78cd30b0 Mon Sep 17 00:00:00 2001
+From eb25ea5279dc6afde512efecd1c6b9fee7154605 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:05 +0200
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
 new file mode 100644
-index 000000000000..855aec59ac53
+index 0000000000..855aec59ac
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
 @@ -0,0 +1,48 @@
@@ -79,10 +79,10 @@ index 000000000000..855aec59ac53
 +      };
 +    };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 968ec459f065..a615f46a6e8d 100644
+index fb9f84b1a4..2261c9d77b 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -22215,6 +22215,7 @@ F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+@@ -22214,6 +22214,7 @@ F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
  F:	Documentation/devicetree/bindings/mailbox/thead,th1520-mbox.yaml
  F:	Documentation/devicetree/bindings/net/thead,th1520-gmac.yaml
  F:	Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
@@ -91,5 +91,5 @@ index 968ec459f065..a615f46a6e8d 100644
  F:	arch/riscv/boot/dts/thead/
  F:	drivers/clk/thead/clk-th1520-ap.c
 -- 
-2.53.0
+2.54.0
 

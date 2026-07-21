@@ -1,4 +1,4 @@
-From 02ff752ecdd8f77567b57dd2fe015f4b52f0173c Mon Sep 17 00:00:00 2001
+From 6eab6ac7ead28c8497fe21702ea8dc8a7afd13f7 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:08 +0100
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: ma35: Convert to common
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 deletions(-)
 
 diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35.c b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-index 925dd717c9de..8d71dc53cc1d 100644
+index 925dd717c9..8d71dc53cc 100644
 --- a/drivers/pinctrl/nuvoton/pinctrl-ma35.c
 +++ b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
 @@ -81,12 +81,6 @@
@@ -34,5 +34,5 @@ index 925dd717c9de..8d71dc53cc1d 100644
  	"gpioa", "gpiob", "gpioc", "gpiod", "gpioe", "gpiof", "gpiog",
  	"gpioh", "gpioi", "gpioj", "gpiok", "gpiol", "gpiom", "gpion",
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 55c96fbd859895ac18ef19bf2cb66a79be5a441b Mon Sep 17 00:00:00 2001
+From 7f8f345c4fe558bc242a28ef08b750bfc89d81b6 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:51 +0100
 Subject: [RUYI PATCH] UPSTREAM: EDAC/ie31200: #undef field_get() before local
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 5a080ab65476..72290f430126 100644
+index 5a080ab654..72290f4301 100644
 --- a/drivers/edac/ie31200_edac.c
 +++ b/drivers/edac/ie31200_edac.c
 @@ -140,6 +140,7 @@
@@ -32,5 +32,5 @@ index 5a080ab65476..72290f430126 100644
  
  static int nr_channels;
 -- 
-2.53.0
+2.54.0
 

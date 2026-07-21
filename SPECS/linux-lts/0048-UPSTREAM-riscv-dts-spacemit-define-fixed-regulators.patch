@@ -1,4 +1,4 @@
-From 7aec3f89f4115172f971713a137996eabfdc10bb Mon Sep 17 00:00:00 2001
+From 2d35917d61db6b5714ca837ebe550aada5cd71f8 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 25 Aug 2025 12:20:55 -0500
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: define fixed regulators
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 19 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index b33ac47fc6bd..42762f22ceb1 100644
+index b33ac47fc6..42762f22ce 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -30,6 +30,25 @@ led1 {
@@ -46,5 +46,5 @@ index b33ac47fc6bd..42762f22ceb1 100644
  
  &emmc {
 -- 
-2.53.0
+2.54.0
 

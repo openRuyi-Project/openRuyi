@@ -1,4 +1,4 @@
-From 43f0647cb3c08ebc84b841e37b0d55747e913beb Mon Sep 17 00:00:00 2001
+From f1955a09fd110beab9dd51da69c5c2eb4059fa6c Mon Sep 17 00:00:00 2001
 From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Date: Mon, 3 Nov 2025 11:50:00 +0000
 Subject: [RUYI PATCH] UPSTREAM: net: stmmac: s32: move PHY_INTF_SEL_x
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
-index ee095ac13203..2b7ad64bfdf7 100644
+index ee095ac132..2b7ad64bfd 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-s32.c
 @@ -24,10 +24,10 @@
@@ -48,5 +48,5 @@ index ee095ac13203..2b7ad64bfdf7 100644
  	dev_dbg(gmac->dev, "PHY mode set to %s\n", phy_modes(*gmac->intf_mode));
  
 -- 
-2.53.0
+2.54.0
 

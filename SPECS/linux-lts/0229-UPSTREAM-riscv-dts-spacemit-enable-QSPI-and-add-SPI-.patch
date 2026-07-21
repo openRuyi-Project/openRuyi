@@ -1,4 +1,4 @@
-From 7bf7522c2f3ea687882aebaef45a23db49a253a6 Mon Sep 17 00:00:00 2001
+From 38e20bb135dcc04356cd39b8020b1a99e13030f0 Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:32 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable QSPI and add SPI
@@ -30,7 +30,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 836311c3f035..bac6438c6753 100644
+index 836311c3f0..bac6438c67 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -173,7 +173,7 @@ buck3_1v8: buck3 {
@@ -91,5 +91,5 @@ index 836311c3f035..bac6438c6753 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&uart0_2_cfg>;
 -- 
-2.53.0
+2.54.0
 

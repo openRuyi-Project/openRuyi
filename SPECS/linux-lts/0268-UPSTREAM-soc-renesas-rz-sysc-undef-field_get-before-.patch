@@ -1,4 +1,4 @@
-From 3de69d18d8eb1ecf72128605e7f0f320f0504078 Mon Sep 17 00:00:00 2001
+From 7e74f6c7f0c22b465c41a2a28302ebf0819160c3 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:56 +0100
 Subject: [RUYI PATCH] UPSTREAM: soc: renesas: rz-sysc: #undef field_get()
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
-index 19c1e666279b..a1487195dc87 100644
+index 19c1e66627..a1487195dc 100644
 --- a/drivers/soc/renesas/rz-sysc.c
 +++ b/drivers/soc/renesas/rz-sysc.c
 @@ -16,6 +16,7 @@
@@ -32,5 +32,5 @@ index 19c1e666279b..a1487195dc87 100644
  
  /**
 -- 
-2.53.0
+2.54.0
 

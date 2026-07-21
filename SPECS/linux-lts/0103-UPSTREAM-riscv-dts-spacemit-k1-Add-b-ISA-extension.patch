@@ -1,4 +1,4 @@
-From e145877df03e9a22048d70a6df37565741c52bef Mon Sep 17 00:00:00 2001
+From 1d5cbdead98191cdcff7d43e264e56774943f7ed Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Thu, 15 Jan 2026 07:19:00 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k1: Add "b" ISA
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index e22a5f030fa2..0a884947fda4 100644
+index e22a5f030f..0a884947fd 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -54,9 +54,9 @@ cpu_0: cpu@0 {
@@ -126,5 +126,5 @@ index e22a5f030fa2..0a884947fda4 100644
  					       "zifencei", "zihintpause", "zihpm", "zfh", "zba",
  					       "zbb", "zbc", "zbs", "zkt", "zvfh", "zvkt",
 -- 
-2.53.0
+2.54.0
 

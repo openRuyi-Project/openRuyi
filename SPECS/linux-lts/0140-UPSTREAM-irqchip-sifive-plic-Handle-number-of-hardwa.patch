@@ -1,4 +1,4 @@
-From 2aa0cd948f924b6efe91a62370729599c711b60c Mon Sep 17 00:00:00 2001
+From a6ba82cae6555a68eabe5950f42f554511d402ea Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@kernel.org>
 Date: Tue, 3 Feb 2026 20:16:12 +0100
 Subject: [RUYI PATCH] UPSTREAM: irqchip/sifive-plic: Handle number of hardware
@@ -55,7 +55,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 45 insertions(+), 37 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 53e446117599..f255fa044764 100644
+index 53e4461175..f255fa0447 100644
 --- a/drivers/irqchip/irq-sifive-plic.c
 +++ b/drivers/irqchip/irq-sifive-plic.c
 @@ -68,15 +68,17 @@
@@ -225,5 +225,5 @@ index 53e446117599..f255fa044764 100644
  		error = -ENOMEM;
  		goto fail_cleanup_contexts;
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 8f647c44bb22dd0196ff6853795c4f0184e64b0f Mon Sep 17 00:00:00 2001
+From 366993a968fdef5d37a5e1d5668af581ab2ef22e Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Sun, 1 Feb 2026 18:00:01 +0800
 Subject: [RUYI PATCH] UPSTREAM: net: spacemit: display phy driver information
@@ -16,7 +16,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/net/ethernet/spacemit/k1_emac.c b/drivers/net/ethernet/spacemit/k1_emac.c
-index d64ca7bbda9e..52c0c00a471f 100644
+index d64ca7bbda..52c0c00a47 100644
 --- a/drivers/net/ethernet/spacemit/k1_emac.c
 +++ b/drivers/net/ethernet/spacemit/k1_emac.c
 @@ -1757,6 +1757,8 @@ static int emac_phy_connect(struct net_device *ndev)
@@ -29,5 +29,5 @@ index d64ca7bbda9e..52c0c00a471f 100644
  	of_node_put(np);
  	return ret;
 -- 
-2.53.0
+2.54.0
 

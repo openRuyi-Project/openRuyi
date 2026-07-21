@@ -1,4 +1,4 @@
-From 65a1dab86ebddc9772731df5c32673238785b7b2 Mon Sep 17 00:00:00 2001
+From c7070254151b0bef8d722953b2c538dd998bb3ff Mon Sep 17 00:00:00 2001
 From: Miguel Ojeda <ojeda@kernel.org>
 Date: Wed, 29 Oct 2025 19:25:02 +0100
 Subject: [RUYI PATCH] UPSTREAM: pwm: Fix Rust formatting
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 39 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index 0ad38b78be85..ee2a6d573bc2 100644
+index 0ad38b78be..ee2a6d573b 100644
 --- a/drivers/pwm/pwm_th1520.rs
 +++ b/drivers/pwm/pwm_th1520.rs
 @@ -200,7 +200,10 @@ fn round_waveform_fromhw(
@@ -69,7 +69,7 @@ index 0ad38b78be85..ee2a6d573bc2 100644
          // The `TH1520_PWM_START` bit must be written in a separate, final transaction, and
          // only when enabling the channel from a disabled state.
 diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 68c71d888fdb..584aa3282029 100644
+index 68c71d888f..584aa32820 100644
 --- a/rust/kernel/lib.rs
 +++ b/rust/kernel/lib.rs
 @@ -121,6 +121,8 @@
@@ -91,7 +91,7 @@ index 68c71d888fdb..584aa3282029 100644
  pub mod std_vendor;
  pub mod str;
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index e6d1278d8316..cb00f8a8765c 100644
+index e6d1278d83..cb00f8a876 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
 @@ -13,7 +13,7 @@
@@ -215,5 +215,5 @@ index e6d1278d8316..cb00f8a8765c 100644
  }
  
 -- 
-2.53.0
+2.54.0
 

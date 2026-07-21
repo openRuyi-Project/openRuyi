@@ -1,4 +1,4 @@
-From 220eda5b92a6554f6629a577c1a4f8c8c540ea62 Mon Sep 17 00:00:00 2001
+From eb28696a8e61bd2410fcec096002d3a3b3d33bbe Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 14 Nov 2025 08:38:03 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: net: sophgo,sg2044-dwmac: add phy
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 19 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml b/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
-index ce21979a2d9a..e8d3814db0e9 100644
+index ce21979a2d..e8d3814db0 100644
 --- a/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
 +++ b/Documentation/devicetree/bindings/net/sophgo,sg2044-dwmac.yaml
 @@ -70,6 +70,25 @@ required:
@@ -52,5 +52,5 @@ index ce21979a2d9a..e8d3814db0e9 100644
  unevaluatedProperties: false
  
 -- 
-2.53.0
+2.54.0
 

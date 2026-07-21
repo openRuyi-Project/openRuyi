@@ -1,4 +1,4 @@
-From bae97e71f9ca4558461de9dd135102ef2c5a4f0b Mon Sep 17 00:00:00 2001
+From 0d20d0c57502c119d658ca3fe6daacd8171fec02 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:37 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: usb: dwc3: spacemit: add support
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
-index 0f0b5e061ca1..cc27b363ca79 100644
+index 0f0b5e061c..cc27b363ca 100644
 --- a/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
 +++ b/Documentation/devicetree/bindings/usb/spacemit,k1-dwc3.yaml
 @@ -27,7 +27,9 @@ allOf:
@@ -55,5 +55,5 @@ index 0f0b5e061ca1..cc27b363ca79 100644
        - const: usb2-phy
        - const: usb3-phy
 -- 
-2.53.0
+2.54.0
 

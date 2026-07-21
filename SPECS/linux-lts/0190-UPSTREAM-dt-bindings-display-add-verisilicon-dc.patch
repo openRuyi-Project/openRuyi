@@ -1,4 +1,4 @@
-From cc17be16d91b62778ed9f985371b1e03411d8938 Mon Sep 17 00:00:00 2001
+From 43f5a6c7e2bf8bc86baca295d8c674addc7951b4 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:16 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: display: add verisilicon,dc
@@ -26,7 +26,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/display/verisilicon,dc.yaml b/Documentation/devicetree/bindings/display/verisilicon,dc.yaml
 new file mode 100644
-index 000000000000..9dc35ab973f2
+index 0000000000..9dc35ab973
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/display/verisilicon,dc.yaml
 @@ -0,0 +1,122 @@
@@ -153,5 +153,5 @@ index 000000000000..9dc35ab973f2
 +      };
 +    };
 -- 
-2.53.0
+2.54.0
 

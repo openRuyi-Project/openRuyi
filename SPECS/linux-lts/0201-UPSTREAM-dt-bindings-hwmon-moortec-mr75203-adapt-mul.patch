@@ -1,4 +1,4 @@
-From e7eda2ad9f7e602ec3c79a20c05dbcb621c6ac76 Mon Sep 17 00:00:00 2001
+From 3780f5516b3da853af402ea56aca25a596293d50 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Tue, 10 Mar 2026 00:24:56 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: hwmon: moortec,mr75203: adapt
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml b/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
-index 56db2292f062..7d57c2934a8a 100644
+index 56db2292f0..7d57c2934a 100644
 --- a/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
 +++ b/Documentation/devicetree/bindings/hwmon/moortec,mr75203.yaml
 @@ -105,7 +105,7 @@ properties:
@@ -47,5 +47,5 @@ index 56db2292f062..7d57c2934a8a 100644
      $ref: /schemas/types.yaml#/definitions/int32
  
 -- 
-2.53.0
+2.54.0
 

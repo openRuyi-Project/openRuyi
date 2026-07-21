@@ -1,4 +1,4 @@
-From 71420ca546d63613ee47267fdcfcb0a761bf330f Mon Sep 17 00:00:00 2001
+From f1eb714c3f5df7a0f1c98f33f33e3fa6a794d3f9 Mon Sep 17 00:00:00 2001
 From: Alessio Belle <alessio.belle@imgtec.com>
 Date: Tue, 10 Mar 2026 11:41:12 +0000
 Subject: [RUYI PATCH] UPSTREAM: drm/imagination: Disable interrupts before
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 23 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/imagination/pvr_power.c b/drivers/gpu/drm/imagination/pvr_power.c
-index a7994457900d..c03bbf139562 100644
+index a799445790..c03bbf1395 100644
 --- a/drivers/gpu/drm/imagination/pvr_power.c
 +++ b/drivers/gpu/drm/imagination/pvr_power.c
 @@ -91,9 +91,9 @@ pvr_power_request_pwr_off(struct pvr_device *pvr_dev)
@@ -112,5 +112,5 @@ index a7994457900d..c03bbf139562 100644
  
  		if (err && hard_reset)
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 871900020c098bb21b573743517cd57c5ec7f81b Mon Sep 17 00:00:00 2001
+From faa21c0bd0d3460a2169de70fe33a7f63bbbea43 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 Date: Sat, 25 Oct 2025 14:23:56 +0200
 Subject: [RUYI PATCH] UPSTREAM: rust: pwm: Drop wrapping of PWM polarity and
@@ -23,7 +23,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 55 deletions(-)
 
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 6f2f78c687d5..b19661b83b0f 100644
+index 6f2f78c687..b19661b83b 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
 @@ -15,38 +15,7 @@
@@ -104,5 +104,5 @@ index 6f2f78c687d5..b19661b83b0f 100644
      pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
          let c_wf = bindings::pwm_waveform::from(*wf);
 -- 
-2.53.0
+2.54.0
 

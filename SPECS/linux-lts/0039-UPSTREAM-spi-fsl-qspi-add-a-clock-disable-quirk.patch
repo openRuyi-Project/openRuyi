@@ -1,4 +1,4 @@
-From 981675f3ee85d491d051c4664c508128ac988504 Mon Sep 17 00:00:00 2001
+From 9cbe4a3c5b1f2f999445ddb697e578ee096c91f9 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:03 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: add a clock disable quirk
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 17 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 3d731ead8455..d72828f7ac44 100644
+index 3d731ead84..d72828f7ac 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -197,6 +197,11 @@
@@ -69,5 +69,5 @@ index 3d731ead8455..d72828f7ac44 100644
  	q->selected = spi_get_chipselect(spi, 0);
  
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From b2aa1a3066056632c7182ef5ac38340b5b14f5f9 Mon Sep 17 00:00:00 2001
+From acfbd572a133d97b8aaf188bcfc0fd11c85886e7 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Tue, 20 Jan 2026 19:10:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: reset: spacemit: Extract common K1 reset code
@@ -39,7 +39,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 drivers/reset/spacemit/reset-spacemit-common.h
 
 diff --git a/drivers/reset/spacemit/Kconfig b/drivers/reset/spacemit/Kconfig
-index 552884e8b72a..56a4858b30e1 100644
+index 552884e8b7..56a4858b30 100644
 --- a/drivers/reset/spacemit/Kconfig
 +++ b/drivers/reset/spacemit/Kconfig
 @@ -1,10 +1,20 @@
@@ -72,7 +72,7 @@ index 552884e8b72a..56a4858b30e1 100644
  
 +endmenu
 diff --git a/drivers/reset/spacemit/Makefile b/drivers/reset/spacemit/Makefile
-index 34e3350136bb..0b056e8661ec 100644
+index 34e3350136..0b056e8661 100644
 --- a/drivers/reset/spacemit/Makefile
 +++ b/drivers/reset/spacemit/Makefile
 @@ -1,2 +1,4 @@
@@ -82,7 +82,7 @@ index 34e3350136bb..0b056e8661ec 100644
  obj-$(CONFIG_RESET_SPACEMIT_K1)		+= reset-spacemit-k1.o
 diff --git a/drivers/reset/spacemit/reset-spacemit-common.c b/drivers/reset/spacemit/reset-spacemit-common.c
 new file mode 100644
-index 000000000000..0626633a5e7d
+index 0000000000..0626633a5e
 --- /dev/null
 +++ b/drivers/reset/spacemit/reset-spacemit-common.c
 @@ -0,0 +1,77 @@
@@ -165,7 +165,7 @@ index 000000000000..0626633a5e7d
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/reset/spacemit/reset-spacemit-common.h b/drivers/reset/spacemit/reset-spacemit-common.h
 new file mode 100644
-index 000000000000..ffaf2f86eb39
+index 0000000000..ffaf2f86eb
 --- /dev/null
 +++ b/drivers/reset/spacemit/reset-spacemit-common.h
 @@ -0,0 +1,42 @@
@@ -212,7 +212,7 @@ index 000000000000..ffaf2f86eb39
 +
 +#endif /* _RESET_SPACEMIT_COMMON_H_ */
 diff --git a/drivers/reset/spacemit/reset-spacemit-k1.c b/drivers/reset/spacemit/reset-spacemit-k1.c
-index cc7fd1f8750d..8f3b5329ea5f 100644
+index cc7fd1f875..8f3b5329ea 100644
 --- a/drivers/reset/spacemit/reset-spacemit-k1.c
 +++ b/drivers/reset/spacemit/reset-spacemit-k1.c
 @@ -1,41 +1,13 @@
@@ -359,5 +359,5 @@ index cc7fd1f8750d..8f3b5329ea5f 100644
 +MODULE_DESCRIPTION("SpacemiT K1 reset controller driver");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

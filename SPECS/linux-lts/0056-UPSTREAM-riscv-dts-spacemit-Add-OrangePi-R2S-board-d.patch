@@ -1,4 +1,4 @@
-From a99210e73092a2a51e626e76bb6eb8ae63c8eb26 Mon Sep 17 00:00:00 2001
+From 3d5c47a0e2a0166a9d2b6be7ad30341c92b331ef Mon Sep 17 00:00:00 2001
 From: Michael Opdenacker <michael.opdenacker@rootcommit.com>
 Date: Wed, 12 Nov 2025 04:44:42 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: Add OrangePi R2S board
@@ -33,7 +33,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 
 diff --git a/arch/riscv/boot/dts/spacemit/Makefile b/arch/riscv/boot/dts/spacemit/Makefile
-index 942ecb38bea0..95889e7269d1 100644
+index 942ecb38be..95889e7269 100644
 --- a/arch/riscv/boot/dts/spacemit/Makefile
 +++ b/arch/riscv/boot/dts/spacemit/Makefile
 @@ -2,4 +2,5 @@
@@ -44,7 +44,7 @@ index 942ecb38bea0..95889e7269d1 100644
  dtb-$(CONFIG_ARCH_SPACEMIT) += k1-orangepi-rv2.dtb
 diff --git a/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 new file mode 100644
-index 000000000000..58098c4a2aab
+index 0000000000..58098c4a2a
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k1-orangepi-r2s.dts
 @@ -0,0 +1,90 @@
@@ -139,5 +139,5 @@ index 000000000000..58098c4a2aab
 +	status = "okay";
 +};
 -- 
-2.53.0
+2.54.0
 

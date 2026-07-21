@@ -1,4 +1,4 @@
-From 200aa85cc99066caf1bfe42bc48afde3f5f165de Mon Sep 17 00:00:00 2001
+From 4d5b4d2c1df091e5e410f05f6a01680c3c3aa2a1 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:53 +0100
 Subject: [RUYI PATCH] UPSTREAM: iio: dac: ad3530r: #undef field_prep() before
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/iio/dac/ad3530r.c b/drivers/iio/dac/ad3530r.c
-index a0625fc7ad48..84ce89dd76a4 100644
+index a0625fc7ad..84ce89dd76 100644
 --- a/drivers/iio/dac/ad3530r.c
 +++ b/drivers/iio/dac/ad3530r.c
 @@ -54,6 +54,7 @@
@@ -32,5 +32,5 @@ index a0625fc7ad48..84ce89dd76a4 100644
  
  enum ad3530r_mode {
 -- 
-2.53.0
+2.54.0
 

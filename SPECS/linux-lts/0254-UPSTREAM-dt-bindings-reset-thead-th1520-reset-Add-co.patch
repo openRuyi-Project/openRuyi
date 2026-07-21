@@ -1,4 +1,4 @@
-From 0a037ecaecd5d3d6451db6da957486d31735aa89 Mon Sep 17 00:00:00 2001
+From 30b0f46ab1ceb9f2bc8c671e7903153d61ab7d02 Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:29 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: reset: thead,th1520-reset: Add
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 223 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml b/Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
-index f2e91d0add7a..7b5053c177fe 100644
+index f2e91d0add..7b5053c177 100644
 --- a/Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
 +++ b/Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
 @@ -16,7 +16,13 @@ maintainers:
@@ -40,7 +40,7 @@ index f2e91d0add7a..7b5053c177fe 100644
    reg:
      maxItems: 1
 diff --git a/include/dt-bindings/reset/thead,th1520-reset.h b/include/dt-bindings/reset/thead,th1520-reset.h
-index e51d6314d131..ba6805b6b12a 100644
+index e51d6314d1..ba6805b6b1 100644
 --- a/include/dt-bindings/reset/thead,th1520-reset.h
 +++ b/include/dt-bindings/reset/thead,th1520-reset.h
 @@ -7,6 +7,200 @@
@@ -273,5 +273,5 @@ index e51d6314d131..ba6805b6b12a 100644
  
  #endif /* _DT_BINDINGS_TH1520_RESET_H */
 -- 
-2.53.0
+2.54.0
 

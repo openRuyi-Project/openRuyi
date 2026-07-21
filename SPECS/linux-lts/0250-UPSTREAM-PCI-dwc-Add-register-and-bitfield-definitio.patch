@@ -1,4 +1,4 @@
-From 51dd8eef5e0f89c2b72fd1f0b6c6bc8177438545 Mon Sep 17 00:00:00 2001
+From f1e53d8077e31c64f3426c6683d3141d0c0126e2 Mon Sep 17 00:00:00 2001
 From: Vincent Guittot <vincent.guittot@linaro.org>
 Date: Fri, 21 Nov 2025 17:49:18 +0100
 Subject: [RUYI PATCH] UPSTREAM: PCI: dwc: Add register and bitfield
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+)
 
 diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index aa27211b68dd..295e113189b7 100644
+index aa27211b68..295e113189 100644
 --- a/drivers/pci/controller/dwc/pcie-designware.h
 +++ b/drivers/pci/controller/dwc/pcie-designware.h
 @@ -123,6 +123,7 @@
@@ -48,5 +48,5 @@ index aa27211b68dd..295e113189b7 100644
  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
  
 -- 
-2.53.0
+2.54.0
 

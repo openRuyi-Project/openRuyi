@@ -1,4 +1,4 @@
-From 3972df874b39a17accecea4ef294937b0b4db42d Mon Sep 17 00:00:00 2001
+From 869b4c85acfd723d34d1026ae7cb83b2d96e5362 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Thu, 26 Feb 2026 08:17:55 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: pcie: fix missing power
@@ -21,7 +21,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 5971605754b3..51f6c6a774b0 100644
+index 5971605754..51f6c6a774 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
 @@ -305,6 +305,7 @@ &pcie1_phy {
@@ -41,5 +41,5 @@ index 5971605754b3..51f6c6a774b0 100644
  
  &pcie2 {
 -- 
-2.53.0
+2.54.0
 

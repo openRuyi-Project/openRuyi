@@ -1,4 +1,4 @@
-From b7da1d402e48e261c72ea3f0b3cd368e88cd0731 Mon Sep 17 00:00:00 2001
+From ce7ac3f53d64978f9cf5a8bd3e7f988c10a78904 Mon Sep 17 00:00:00 2001
 From: Jiakai Xu <xujiakai2025@iscas.ac.cn>
 Date: Sun, 17 May 2026 12:44:14 +0000
 Subject: [RUYI PATCH] UPSTREAM: RISC-V: KVM: Fix NULL pointer dereference in
@@ -28,7 +28,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/riscv/kvm/vcpu_sbi_v01.c b/arch/riscv/kvm/vcpu_sbi_v01.c
-index 368dfddd23d9..b6aef0e5ea57 100644
+index 368dfddd23..b6aef0e5ea 100644
 --- a/arch/riscv/kvm/vcpu_sbi_v01.c
 +++ b/arch/riscv/kvm/vcpu_sbi_v01.c
 @@ -56,6 +56,8 @@ static int kvm_sbi_ext_v01_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
@@ -41,5 +41,5 @@ index 368dfddd23d9..b6aef0e5ea57 100644
  			if (ret < 0)
  				break;
 -- 
-2.53.0
+2.54.0
 

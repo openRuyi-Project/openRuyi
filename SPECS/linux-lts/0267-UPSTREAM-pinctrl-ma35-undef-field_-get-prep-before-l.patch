@@ -1,4 +1,4 @@
-From 9d7dbecad1fa5819d037808617b077ceccfaf798 Mon Sep 17 00:00:00 2001
+From 50ed66469a7c9ef6082b63c13fcbd7796c1f2399 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:55 +0100
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: ma35: #undef field_{get,prep}()
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/drivers/pinctrl/nuvoton/pinctrl-ma35.c b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
-index cdad01d68a37..925dd717c9de 100644
+index cdad01d68a..925dd717c9 100644
 --- a/drivers/pinctrl/nuvoton/pinctrl-ma35.c
 +++ b/drivers/pinctrl/nuvoton/pinctrl-ma35.c
 @@ -82,7 +82,9 @@
@@ -34,5 +34,5 @@ index cdad01d68a37..925dd717c9de 100644
  
  static const char * const gpio_group_name[] = {
 -- 
-2.53.0
+2.54.0
 

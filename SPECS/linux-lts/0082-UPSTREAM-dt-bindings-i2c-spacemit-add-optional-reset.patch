@@ -1,4 +1,4 @@
-From 2b4b7b00547de7db090321cbe060f0785bbe1c2b Mon Sep 17 00:00:00 2001
+From ccf405549b9a7bcb8660573b987c09f851521c02 Mon Sep 17 00:00:00 2001
 From: Encrow Thorne <jyc0019@gmail.com>
 Date: Tue, 30 Dec 2025 23:06:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: i2c: spacemit: add optional
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
-index b7220fff2235..5896fb120501 100644
+index b7220fff22..5896fb1205 100644
 --- a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 +++ b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 @@ -41,6 +41,9 @@ properties:
@@ -34,5 +34,5 @@ index b7220fff2235..5896fb120501 100644
    - compatible
    - reg
 -- 
-2.53.0
+2.54.0
 

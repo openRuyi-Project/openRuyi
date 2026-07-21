@@ -1,4 +1,4 @@
-From a4fc20e9548ce112196421b63ebe0ae151978397 Mon Sep 17 00:00:00 2001
+From 5940dacfdb2fe1906af7e384600c745e12af4927 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 23 Dec 2025 10:24:51 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: sdhci: add reset support
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 0a884947fda4..529ec68e9c23 100644
+index 0a884947fd..529ec68e9c 100644
 --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
 @@ -1201,6 +1201,9 @@ emmc: mmc@d4281000 {
@@ -29,5 +29,5 @@ index 0a884947fda4..529ec68e9c23 100644
  				status = "disabled";
  			};
 -- 
-2.53.0
+2.54.0
 

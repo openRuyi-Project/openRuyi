@@ -1,4 +1,4 @@
-From faec33d63e5af3e07a519daa81a8d9e953889eaf Mon Sep 17 00:00:00 2001
+From a8491530218194889917cfb64ef0dddb5bc804ca Mon Sep 17 00:00:00 2001
 From: Yao Zi <ziyao@disroot.org>
 Date: Tue, 14 Oct 2025 13:10:31 +0000
 Subject: [RUYI PATCH] UPSTREAM: reset: th1520: Support reset controllers in
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 793 insertions(+)
 
 diff --git a/drivers/reset/reset-th1520.c b/drivers/reset/reset-th1520.c
-index 2b65a95ed021..fd32e991c4cb 100644
+index 2b65a95ed0..fd32e991c4 100644
 --- a/drivers/reset/reset-th1520.c
 +++ b/drivers/reset/reset-th1520.c
 @@ -11,6 +11,85 @@
@@ -852,5 +852,5 @@ index 2b65a95ed021..fd32e991c4cb 100644
  };
  MODULE_DEVICE_TABLE(of, th1520_reset_match);
 -- 
-2.53.0
+2.54.0
 

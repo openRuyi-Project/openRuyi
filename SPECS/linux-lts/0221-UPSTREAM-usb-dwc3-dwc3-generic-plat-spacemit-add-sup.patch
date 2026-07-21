@@ -1,4 +1,4 @@
-From 7d4a17760463805b041533b09751e181e870e5e4 Mon Sep 17 00:00:00 2001
+From ddc63f431bfbf0515def573c776ff5de0eb3d3a7 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Fri, 20 Mar 2026 07:15:38 +0000
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: dwc3-generic-plat: spacemit: add
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
-index e846844e0023..28219968b8b0 100644
+index e846844e00..28219968b8 100644
 --- a/drivers/usb/dwc3/dwc3-generic-plat.c
 +++ b/drivers/usb/dwc3/dwc3-generic-plat.c
 @@ -212,6 +212,7 @@ static const struct dwc3_generic_config eic7700_dwc3 =  {
@@ -29,5 +29,5 @@ index e846844e0023..28219968b8b0 100644
  	{ .compatible = "eswin,eic7700-dwc3", &eic7700_dwc3},
  	{ /* sentinel */ }
 -- 
-2.53.0
+2.54.0
 

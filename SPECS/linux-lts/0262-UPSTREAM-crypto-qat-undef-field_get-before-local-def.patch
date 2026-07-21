@@ -1,4 +1,4 @@
-From b493426d9cce7da21f2865b6e67975ecb05db09f Mon Sep 17 00:00:00 2001
+From 2836c9db4f03f70df6edf871a71a9793fdc73b3a Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:33:50 +0100
 Subject: [RUYI PATCH] UPSTREAM: crypto: qat - #undef field_get() before local
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c b/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
-index 69295a9ddf0a..6186fafb4a7b 100644
+index 69295a9ddf..6186fafb4a 100644
 --- a/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
 +++ b/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
 @@ -11,6 +11,7 @@
@@ -32,5 +32,5 @@ index 69295a9ddf0a..6186fafb4a7b 100644
  
  #define PM_INFO_MAX_KEY_LEN	21
 -- 
-2.53.0
+2.54.0
 

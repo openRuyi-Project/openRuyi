@@ -1,4 +1,4 @@
-From 395f6faa5c6eaee1206ab83d69d671da8d8bf5e3 Mon Sep 17 00:00:00 2001
+From e43392d611ec48a12da6f60dda79f7e42b8813bd Mon Sep 17 00:00:00 2001
 From: Chukun Pan <amadeus@jmu.edu.cn>
 Date: Thu, 26 Mar 2026 18:00:10 +0800
 Subject: [RUYI PATCH] UPSTREAM: usb: dwc3: Add optional VBUS regulator support
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 22 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
-index 28219968b8b0..69b7e6227b3b 100644
+index 28219968b8..69b7e6227b 100644
 --- a/drivers/usb/dwc3/dwc3-generic-plat.c
 +++ b/drivers/usb/dwc3/dwc3-generic-plat.c
 @@ -12,6 +12,8 @@
@@ -80,5 +80,5 @@ index 28219968b8b0..69b7e6227b3b 100644
  	{ .compatible = "fsl,ls1028a-dwc3", &fsl_ls1028_dwc3},
  	{ .compatible = "eswin,eic7700-dwc3", &eic7700_dwc3},
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 7c8f2552576b5ef6a1ae9a1bd2b110a50dcf3633 Mon Sep 17 00:00:00 2001
+From 900956c8ad582be0bcf3f15d6a8c1ff781192233 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 31 Oct 2025 20:40:46 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: ccu_mix: add inverted enable
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu_mix.c b/drivers/clk/spacemit/ccu_mix.c
-index 9a3fc9ea1ce5..a8b407049bf4 100644
+index 9a3fc9ea1c..a8b407049b 100644
 --- a/drivers/clk/spacemit/ccu_mix.c
 +++ b/drivers/clk/spacemit/ccu_mix.c
 @@ -16,17 +16,19 @@
@@ -57,7 +57,7 @@ index 9a3fc9ea1ce5..a8b407049bf4 100644
  
  static unsigned long ccu_factor_recalc_rate(struct clk_hw *hw,
 diff --git a/drivers/clk/spacemit/ccu_mix.h b/drivers/clk/spacemit/ccu_mix.h
-index 54d40cd39b27..8a70cf151461 100644
+index 54d40cd39b..8a70cf1514 100644
 --- a/drivers/clk/spacemit/ccu_mix.h
 +++ b/drivers/clk/spacemit/ccu_mix.h
 @@ -16,9 +16,11 @@
@@ -97,5 +97,5 @@ index 54d40cd39b27..8a70cf151461 100644
  			       _mul, _flags)					\
  static struct ccu_mix _name = {							\
 -- 
-2.53.0
+2.54.0
 

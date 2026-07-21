@@ -1,4 +1,4 @@
-From 01c7afb37293f8274d577acd592a1c6f97b8fbef Mon Sep 17 00:00:00 2001
+From 3b2c084bf75fc4388cb0d83ee19ae52f8ecaec82 Mon Sep 17 00:00:00 2001
 From: Yangyu Chen <cyy@cyyself.name>
 Date: Wed, 4 Feb 2026 01:21:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: interrupt-controller:
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
-index 234cdc2a1a26..8ff5dda648f6 100644
+index 234cdc2a1a..8ff5dda648 100644
 --- a/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
 +++ b/Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.yaml
 @@ -105,7 +105,9 @@ properties:
@@ -37,5 +37,5 @@ index 234cdc2a1a26..8ff5dda648f6 100644
    clocks: true
  
 -- 
-2.53.0
+2.54.0
 

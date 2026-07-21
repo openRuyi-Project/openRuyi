@@ -1,4 +1,4 @@
-From 008e9161472e33b735cabb897a883483eb1d62ce Mon Sep 17 00:00:00 2001
+From c2bbc9ba996d6ab693d5638fe876131877822bdb Mon Sep 17 00:00:00 2001
 From: Aurelien Jarno <aurelien@aurel32.net>
 Date: Thu, 26 Mar 2026 19:35:34 +0100
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable PCIe ports on
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 42 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
-index 8eeaf2631b71..afaad59e6bce 100644
+index 8eeaf2631b..afaad59e6b 100644
 --- a/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 +++ b/arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dts
 @@ -40,6 +40,16 @@ led2 {
@@ -82,5 +82,5 @@ index 8eeaf2631b71..afaad59e6bce 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&qspi_cfg>;
 -- 
-2.53.0
+2.54.0
 

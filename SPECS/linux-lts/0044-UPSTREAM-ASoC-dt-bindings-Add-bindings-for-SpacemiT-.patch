@@ -1,4 +1,4 @@
-From 1db3accfb97de5435d3b1a655351b544f98c89c2 Mon Sep 17 00:00:00 2001
+From 0f87d122a965ef41728bbab050cb7e1b3cdda36e Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 17 Oct 2025 11:16:17 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: dt-bindings: Add bindings for SpacemiT
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
 
 diff --git a/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml b/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml
 new file mode 100644
-index 000000000000..55bd0b307d22
+index 0000000000..55bd0b307d
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/sound/spacemit,k1-i2s.yaml
 @@ -0,0 +1,87 @@
@@ -111,5 +111,5 @@ index 000000000000..55bd0b307d22
 +      #sound-dai-cells = <0>;
 +    };
 -- 
-2.53.0
+2.54.0
 

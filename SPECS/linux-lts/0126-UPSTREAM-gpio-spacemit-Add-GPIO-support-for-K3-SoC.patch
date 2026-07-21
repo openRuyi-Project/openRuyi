@@ -1,4 +1,4 @@
-From 5926baabc063083c74e19f79f6caa78d3830e043 Mon Sep 17 00:00:00 2001
+From d7634c6515a6ed6cb3c0d87296727e2699ccc244 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Tue, 6 Jan 2026 11:09:33 +0800
 Subject: [RUYI PATCH] UPSTREAM: gpio: spacemit: Add GPIO support for K3 SoC
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 117 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
-index eb66a15c002f..8f570a1a4894 100644
+index eb66a15c00..8f570a1a48 100644
 --- a/drivers/gpio/gpio-spacemit-k1.c
 +++ b/drivers/gpio/gpio-spacemit-k1.c
 @@ -15,29 +15,37 @@
@@ -312,5 +312,5 @@ index eb66a15c002f..8f570a1a4894 100644
 +MODULE_DESCRIPTION("GPIO driver for SpacemiT K1/K3 SoC");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

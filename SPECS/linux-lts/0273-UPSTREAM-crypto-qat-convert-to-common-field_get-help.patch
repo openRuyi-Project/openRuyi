@@ -1,4 +1,4 @@
-From 9434386120d19e42a43e97baa0574d3919723bda Mon Sep 17 00:00:00 2001
+From 95fd8bf29b29f2c77cba312c7de863709fac224b Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:03 +0100
 Subject: [RUYI PATCH] UPSTREAM: crypto: qat - convert to common field_get()
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c b/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
-index 6186fafb4a7b..4ccc94ed9493 100644
+index 6186fafb4a..4ccc94ed94 100644
 --- a/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
 +++ b/drivers/crypto/intel/qat/qat_common/adf_pm_dbgfs_utils.c
 @@ -1,19 +1,12 @@
@@ -42,5 +42,5 @@ index 6186fafb4a7b..4ccc94ed9493 100644
  
  static int pm_scnprint_table(char *buff, const struct pm_status_row *table,
 -- 
-2.53.0
+2.54.0
 

@@ -1,4 +1,4 @@
-From 67a9dfd22c5cefa5860160d30c1b5bce5719c5a6 Mon Sep 17 00:00:00 2001
+From 1ece872b9cfc6665c58abde9c2ffef40c48daf5c Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:44 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add GPIO support
@@ -15,7 +15,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 18 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index 6449ab056293..3683a1a65362 100644
+index 6449ab0562..3683a1a653 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -536,6 +536,24 @@ uart9: serial@d4017800 {
@@ -44,5 +44,5 @@ index 6449ab056293..3683a1a65362 100644
  			compatible = "spacemit,k3-pinctrl";
  			reg = <0x0 0xd401e000 0x0 0x1000>;
 -- 
-2.53.0
+2.54.0
 

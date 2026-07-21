@@ -1,4 +1,4 @@
-From 95eff11a4892693dbe633e1582a8e9359fcd79f7 Mon Sep 17 00:00:00 2001
+From ce80fb3bf8825cbb201ada0ee6057ef4f16c979c Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:02 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: mfd: spacemit,p1: Add individual
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 47 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml b/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
-index c6593ac6ef6a..c67b1c6e4e4f 100644
+index c6593ac6ef..c67b1c6e4e 100644
 --- a/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
 +++ b/Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
 @@ -27,8 +27,41 @@ properties:
@@ -99,5 +99,5 @@ index c6593ac6ef6a..c67b1c6e4e4f 100644
                      regulator-name = "aldo1";
                      regulator-min-microvolt = <500000>;
 -- 
-2.53.0
+2.54.0
 

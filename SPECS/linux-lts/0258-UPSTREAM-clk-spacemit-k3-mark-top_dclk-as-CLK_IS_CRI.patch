@@ -1,4 +1,4 @@
-From 9a05689ddb515469b8dd3b3c86c6e461cb930936 Mon Sep 17 00:00:00 2001
+From 1df1eaff3e4554520c3617e866b47a90bbe50339 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Fri, 24 Apr 2026 16:20:32 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: k3: mark top_dclk as
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/spacemit/ccu-k3.c b/drivers/clk/spacemit/ccu-k3.c
-index e98afd59f05c..bb8b75bdbdb3 100644
+index e98afd59f0..bb8b75bdbd 100644
 --- a/drivers/clk/spacemit/ccu-k3.c
 +++ b/drivers/clk/spacemit/ccu-k3.c
 @@ -846,7 +846,7 @@ static const struct clk_parent_data top_parents[] = {
@@ -35,5 +35,5 @@ index e98afd59f05c..bb8b75bdbdb3 100644
  static const struct clk_parent_data ucie_parents[] = {
  	CCU_PARENT_HW(pll1_d8_307p2),
 -- 
-2.53.0
+2.54.0
 

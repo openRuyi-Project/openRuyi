@@ -1,4 +1,4 @@
-From e9bf2921885bbc475e11a6f89d7d1325bf4ea382 Mon Sep 17 00:00:00 2001
+From 2e6a214e6f70fc49a33726b486c19bb76bb38462 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:29:59 -0500
 Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: support SpacemiT
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
-index f2dd20370dbb..5e6aff1bc2ed 100644
+index f2dd20370d..5e6aff1bc2 100644
 --- a/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 +++ b/Documentation/devicetree/bindings/spi/fsl,spi-fsl-qspi.yaml
 @@ -22,6 +22,7 @@ properties:
@@ -32,5 +32,5 @@ index f2dd20370dbb..5e6aff1bc2ed 100644
            - enum:
                - fsl,ls1043a-qspi
 -- 
-2.53.0
+2.54.0
 

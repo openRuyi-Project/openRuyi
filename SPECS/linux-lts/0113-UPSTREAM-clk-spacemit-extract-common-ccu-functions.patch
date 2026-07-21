@@ -1,4 +1,4 @@
-From c52fe85b94bae057810710b424cbb6f7497aa8d7 Mon Sep 17 00:00:00 2001
+From a4053a61bf61b61b33ff29b045ea91ad078abc17 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 19 Dec 2025 08:07:23 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: extract common ccu functions
@@ -29,7 +29,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 186 insertions(+), 174 deletions(-)
 
 diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-index 01d9485b615d..02c792a73759 100644
+index 01d9485b61..02c792a737 100644
 --- a/drivers/clk/spacemit/ccu-k1.c
 +++ b/drivers/clk/spacemit/ccu-k1.c
 @@ -5,15 +5,10 @@
@@ -244,7 +244,7 @@ index 01d9485b615d..02c792a73759 100644
  	.driver = {
  		.name		= "spacemit,k1-ccu",
 diff --git a/drivers/clk/spacemit/ccu_common.c b/drivers/clk/spacemit/ccu_common.c
-index 4412c4104dab..5f05b17f8452 100644
+index 4412c4104d..5f05b17f84 100644
 --- a/drivers/clk/spacemit/ccu_common.c
 +++ b/drivers/clk/spacemit/ccu_common.c
 @@ -1,6 +1,177 @@
@@ -426,7 +426,7 @@ index 4412c4104dab..5f05b17f8452 100644
  MODULE_DESCRIPTION("SpacemiT CCU common clock driver");
  MODULE_LICENSE("GPL");
 diff --git a/drivers/clk/spacemit/ccu_common.h b/drivers/clk/spacemit/ccu_common.h
-index da72f3836e0b..7ae244b5eace 100644
+index da72f3836e..7ae244b5ea 100644
 --- a/drivers/clk/spacemit/ccu_common.h
 +++ b/drivers/clk/spacemit/ccu_common.h
 @@ -7,6 +7,8 @@
@@ -459,5 +459,5 @@ index da72f3836e0b..7ae244b5eace 100644
 +
  #endif /* _CCU_COMMON_H_ */
 -- 
-2.53.0
+2.54.0
 

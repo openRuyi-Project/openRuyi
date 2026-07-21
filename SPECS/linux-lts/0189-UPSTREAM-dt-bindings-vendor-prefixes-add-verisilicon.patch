@@ -1,4 +1,4 @@
-From 17ffbb0f5a1fccd445f675bb3c6c05253578a74a Mon Sep 17 00:00:00 2001
+From 1e732758de5bab3b28349c2190f5e65f24983c67 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <uwu@icenowy.me>
 Date: Thu, 29 Jan 2026 10:39:15 +0800
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: vendor-prefixes: add verisilicon
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 647746e6f75f..d03f700d178e 100644
+index 647746e6f7..d03f700d17 100644
 --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
 +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
 @@ -1723,6 +1723,8 @@ patternProperties:
@@ -33,5 +33,5 @@ index 647746e6f75f..d03f700d178e 100644
      description: Vertexcom Technologies, Inc.
    "^via,.*":
 -- 
-2.53.0
+2.54.0
 

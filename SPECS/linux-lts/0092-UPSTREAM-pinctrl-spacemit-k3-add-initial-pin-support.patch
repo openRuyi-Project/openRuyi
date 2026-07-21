@@ -1,4 +1,4 @@
-From 2ca77029c54bb4a4d9a85faca5542299e38f0282 Mon Sep 17 00:00:00 2001
+From 28772658307f3da4f43795861c85e1ead0eeee22 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@gentoo.org>
 Date: Fri, 2 Jan 2026 15:00:24 +0800
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: spacemit: k3: add initial pin support
@@ -17,7 +17,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 352 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-index d6f6017fd097..c021d51033d1 100644
+index d6f6017fd0..c021d51033 100644
 --- a/drivers/pinctrl/spacemit/Kconfig
 +++ b/drivers/pinctrl/spacemit/Kconfig
 @@ -4,7 +4,7 @@
@@ -39,7 +39,7 @@ index d6f6017fd097..c021d51033d1 100644
  	  each pin. This driver can also be built as a module called
  	  pinctrl-k1.
 diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 33af9b5791c1..441817f539e3 100644
+index 33af9b5791..441817f539 100644
 --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
 +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
 @@ -66,6 +66,7 @@ struct spacemit_pinctrl_data {
@@ -444,5 +444,5 @@ index 33af9b5791c1..441817f539e3 100644
 +MODULE_DESCRIPTION("Pinctrl driver for the SpacemiT K1/K3 SoC");
  MODULE_LICENSE("GPL");
 -- 
-2.53.0
+2.54.0
 

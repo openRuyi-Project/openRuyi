@@ -1,4 +1,4 @@
-From 8096ab2dd7593c509f2914244c681f02c9b33108 Mon Sep 17 00:00:00 2001
+From a6dc99d558e333e3e07ffd9526f0ee483bc9e709 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:02 +0100
 Subject: [RUYI PATCH] UPSTREAM: clk: at91: Convert to common
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  2 files changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
-index e700f40fd87f..e7208c47268b 100644
+index e700f40fd8..e7208c4726 100644
 --- a/drivers/clk/at91/clk-peripheral.c
 +++ b/drivers/clk/at91/clk-peripheral.c
 @@ -3,6 +3,7 @@
@@ -32,7 +32,7 @@ index e700f40fd87f..e7208c47268b 100644
  #include <linux/clk-provider.h>
  #include <linux/clkdev.h>
 diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 78a87d31463e..543d7aee8d24 100644
+index 78a87d3146..543d7aee8d 100644
 --- a/drivers/clk/at91/pmc.h
 +++ b/drivers/clk/at91/pmc.h
 @@ -117,11 +117,6 @@ struct at91_clk_pms {
@@ -48,5 +48,5 @@ index 78a87d31463e..543d7aee8d24 100644
  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
  
 -- 
-2.53.0
+2.54.0
 

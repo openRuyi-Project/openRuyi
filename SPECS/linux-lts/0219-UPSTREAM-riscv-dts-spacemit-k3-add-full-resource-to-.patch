@@ -1,4 +1,4 @@
-From 44eedf0908b4e6c2893a89cb94053d973411abab Mon Sep 17 00:00:00 2001
+From c97be85f516e55abf4e7469c057e0e8dbf6b9a26 Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 4 Mar 2026 07:36:45 +0000
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: k3: add full resource to
@@ -20,7 +20,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
-index b691304d4b74..b098dbd0e7a1 100644
+index b691304d4b..b098dbd0e7 100644
 --- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 +++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
 @@ -5,6 +5,7 @@
@@ -41,7 +41,7 @@ index b691304d4b74..b098dbd0e7a1 100644
  };
 diff --git a/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 new file mode 100644
-index 000000000000..efb0f1572188
+index 0000000000..efb0f15721
 --- /dev/null
 +++ b/arch/riscv/boot/dts/spacemit/k3-pinctrl.dtsi
 @@ -0,0 +1,24 @@
@@ -70,7 +70,7 @@ index 000000000000..efb0f1572188
 +	};
 +};
 diff --git a/arch/riscv/boot/dts/spacemit/k3.dtsi b/arch/riscv/boot/dts/spacemit/k3.dtsi
-index 3683a1a65362..a3a8ceddabec 100644
+index 3683a1a653..a3a8ceddab 100644
 --- a/arch/riscv/boot/dts/spacemit/k3.dtsi
 +++ b/arch/riscv/boot/dts/spacemit/k3.dtsi
 @@ -5,6 +5,7 @@
@@ -202,5 +202,5 @@ index 3683a1a65362..a3a8ceddabec 100644
  			status = "disabled";
  		};
 -- 
-2.53.0
+2.54.0
 

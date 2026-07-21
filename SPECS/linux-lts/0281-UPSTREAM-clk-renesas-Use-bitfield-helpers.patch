@@ -1,4 +1,4 @@
-From fbba92fc24439fb25b3afc63b3bc7576193ba10f Mon Sep 17 00:00:00 2001
+From 5f2bc013498d81b0d045ccbf3e4fe33dfca063b4 Mon Sep 17 00:00:00 2001
 From: Geert Uytterhoeven <geert+renesas@glider.be>
 Date: Thu, 6 Nov 2025 14:34:13 +0100
 Subject: [RUYI PATCH] UPSTREAM: clk: renesas: Use bitfield helpers
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  3 files changed, 11 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/clk/renesas/clk-div6.c b/drivers/clk/renesas/clk-div6.c
-index 3abd6e5400ad..f7b827b5e9b2 100644
+index 3abd6e5400..f7b827b5e9 100644
 --- a/drivers/clk/renesas/clk-div6.c
 +++ b/drivers/clk/renesas/clk-div6.c
 @@ -7,6 +7,7 @@
@@ -50,7 +50,7 @@ index 3abd6e5400ad..f7b827b5e9b2 100644
  	return 0;
  }
 diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
-index 10ae20489df9..b954278ddd9d 100644
+index 10ae20489d..b954278ddd 100644
 --- a/drivers/clk/renesas/rcar-gen3-cpg.c
 +++ b/drivers/clk/renesas/rcar-gen3-cpg.c
 @@ -54,10 +54,8 @@ static unsigned long cpg_pll_clk_recalc_rate(struct clk_hw *hw,
@@ -98,7 +98,7 @@ index 10ae20489df9..b954278ddd9d 100644
  	/*
  	 * Set KICK bit in FRQCRB to update hardware setting and wait for
 diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
-index fb9a876aaba5..db3a0b8ef2b9 100644
+index fb9a876aab..db3a0b8ef2 100644
 --- a/drivers/clk/renesas/rcar-gen4-cpg.c
 +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
 @@ -279,11 +279,7 @@ static unsigned long cpg_z_clk_recalc_rate(struct clk_hw *hw,
@@ -125,5 +125,5 @@ index fb9a876aaba5..db3a0b8ef2b9 100644
  	/*
  	 * Set KICK bit in FRQCRB to update hardware setting and wait for
 -- 
-2.53.0
+2.54.0
 

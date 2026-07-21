@@ -1,4 +1,4 @@
-From 189d71e00b28cf84bdef8a3368c473675599b5a4 Mon Sep 17 00:00:00 2001
+From 9983a076b3e12f1bd920525bb314547ccd7b8f2c Mon Sep 17 00:00:00 2001
 From: Junhui Liu <junhui.liu@pigmoral.tech>
 Date: Thu, 12 Mar 2026 16:42:42 +0800
 Subject: [RUYI PATCH] UPSTREAM: pinctrl: spacemit: return -ENOTSUPP for
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/pinctrl/spacemit/pinctrl-k1.c b/drivers/pinctrl/spacemit/pinctrl-k1.c
-index 71390402aaa6..f3c754f78074 100644
+index 71390402aa..f3c754f780 100644
 --- a/drivers/pinctrl/spacemit/pinctrl-k1.c
 +++ b/drivers/pinctrl/spacemit/pinctrl-k1.c
 @@ -674,7 +674,7 @@ static int spacemit_pinconf_get(struct pinctrl_dev *pctldev,
@@ -82,5 +82,5 @@ index 71390402aaa6..f3c754f78074 100644
  	for (i = 0; i < group->grp.npins; i++)
  		spacemit_pin_set_config(pctrl, group->grp.pins[i], value);
 -- 
-2.53.0
+2.54.0
 

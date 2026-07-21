@@ -1,4 +1,4 @@
-From b190e35d2b5d27e768e7b1ab0e227d0a768a2159 Mon Sep 17 00:00:00 2001
+From adb23510d958c58f811e2aa7f85c96a093640046 Mon Sep 17 00:00:00 2001
 From: Guodong Xu <guodong@riscstar.com>
 Date: Fri, 6 Feb 2026 10:32:03 +0800
 Subject: [RUYI PATCH] UPSTREAM: regulator: spacemit-p1: Update supply names
@@ -25,7 +25,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 14 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/regulator/spacemit-p1.c b/drivers/regulator/spacemit-p1.c
-index 2b585ba01a93..57e6e00a73fa 100644
+index 2b585ba01a..57e6e00a73 100644
 --- a/drivers/regulator/spacemit-p1.c
 +++ b/drivers/regulator/spacemit-p1.c
 @@ -87,13 +87,16 @@ static const struct linear_range p1_ldo_ranges[] = {
@@ -71,5 +71,5 @@ index 2b585ba01a93..57e6e00a73fa 100644
  
  static int p1_regulator_probe(struct platform_device *pdev)
 -- 
-2.53.0
+2.54.0
 

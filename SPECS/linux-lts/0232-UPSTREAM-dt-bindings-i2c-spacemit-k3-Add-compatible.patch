@@ -1,4 +1,4 @@
-From eaf94de0b17a7f2c6c983d703f6f3bd8dbd4db38 Mon Sep 17 00:00:00 2001
+From 08f3ea41ba29332751ad21cfa6e2e126dab354ae Mon Sep 17 00:00:00 2001
 From: Yixun Lan <dlan@kernel.org>
 Date: Wed, 25 Mar 2026 09:49:24 +0000
 Subject: [RUYI PATCH] UPSTREAM: dt-bindings: i2c: spacemit: k3: Add compatible
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
-index 5896fb120501..8c04c675b25e 100644
+index 5896fb1205..8c04c675b2 100644
 --- a/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 +++ b/Documentation/devicetree/bindings/i2c/spacemit,k1-i2c.yaml
 @@ -14,7 +14,11 @@ allOf:
@@ -35,5 +35,5 @@ index 5896fb120501..8c04c675b25e 100644
    reg:
      maxItems: 1
 -- 
-2.53.0
+2.54.0
 

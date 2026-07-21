@@ -1,4 +1,4 @@
-From 1cfd24d0ebea3fd30addd6ab38dfb349a1ec08be Mon Sep 17 00:00:00 2001
+From 7510e559470d855c8cbc98d8c44ddcae7273079f Mon Sep 17 00:00:00 2001
 From: Han Gao <rabenda.cn@gmail.com>
 Date: Fri, 19 Sep 2025 04:44:47 +0800
 Subject: [RUYI PATCH] UPSTREAM: riscv: dts: thead: add xtheadvector to the
@@ -22,7 +22,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index e680d1a7c821..0b57699ba398 100644
+index e680d1a7c8..0b57699ba3 100644
 --- a/arch/riscv/boot/dts/thead/th1520.dtsi
 +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
 @@ -25,7 +25,8 @@ c910_0: cpu@0 {
@@ -66,5 +66,5 @@ index e680d1a7c821..0b57699ba398 100644
  			i-cache-block-size = <64>;
  			i-cache-size = <65536>;
 -- 
-2.53.0
+2.54.0
 

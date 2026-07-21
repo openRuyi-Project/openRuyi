@@ -1,4 +1,4 @@
-From 0b445558d4400c7c06a9225f92fc58434d9c4d63 Mon Sep 17 00:00:00 2001
+From 31b1c3c4218b56769ec30a3a3619d9dafdc72b78 Mon Sep 17 00:00:00 2001
 From: Troy Mitchell <troy.mitchell@linux.spacemit.com>
 Date: Wed, 29 Apr 2026 09:38:48 +0800
 Subject: [RUYI PATCH] UPSTREAM: ASoC: spacemit: adjust FIFO trigger threshold
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/sound/soc/spacemit/k1_i2s.c b/sound/soc/spacemit/k1_i2s.c
-index 331668b979fd..b48c57bede37 100644
+index 331668b979..b48c57bede 100644
 --- a/sound/soc/spacemit/k1_i2s.c
 +++ b/sound/soc/spacemit/k1_i2s.c
 @@ -93,8 +93,8 @@ static void spacemit_i2s_init(struct spacemit_i2s_dev *i2s)
@@ -34,5 +34,5 @@ index 331668b979fd..b48c57bede37 100644
  	ssrwt_val = SSRWT_RWOT;
  	sspsp_val = SSPSP_SFRMP;
 -- 
-2.53.0
+2.54.0
 

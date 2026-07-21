@@ -1,4 +1,4 @@
-From 75570444f9b7f29881d04479bc6f1727d37f53b6 Mon Sep 17 00:00:00 2001
+From 5305168e03fc63d7f830e3f5bdc6ab6cb1946e6b Mon Sep 17 00:00:00 2001
 From: Inochi Amaoto <inochiama@gmail.com>
 Date: Fri, 19 Dec 2025 09:28:18 +0800
 Subject: [RUYI PATCH] UPSTREAM: clk: spacemit: Hide common clock driver from
@@ -19,7 +19,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 6 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/clk/spacemit/Kconfig b/drivers/clk/spacemit/Kconfig
-index 3854f6ae6d0e..3351e8bc801d 100644
+index 3854f6ae6d..3351e8bc80 100644
 --- a/drivers/clk/spacemit/Kconfig
 +++ b/drivers/clk/spacemit/Kconfig
 @@ -1,19 +1,17 @@
@@ -49,5 +49,5 @@ index 3854f6ae6d0e..3351e8bc801d 100644
 -endif
 +endmenu
 -- 
-2.53.0
+2.54.0
 
