@@ -54,6 +54,13 @@ Requires:       pkgconfig(x11)
 %description    devel
 Development files for FLTK.
 
+%package        static
+Summary:        Static libraries for %{name}
+Requires:       %{name}-devel = %{version}-%{release}
+
+%description    static
+Static libraries for FLTK.
+
 %package        fluid
 Summary:        Fast Light User Interface Designer
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -67,7 +74,6 @@ make docs -C %{_vpath_builddir}
 
 %install -a
 mv src/xutf8/COPYING ./COPYING.xutf8
-rm -f %{buildroot}%{_libdir}/*.a
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
@@ -102,6 +108,12 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
 %{_mandir}/man1/fltk-config.1*
 %{_mandir}/man3/fltk.3*
 %{_mandir}/man6/*.6*
+
+%files static
+%{_libdir}/libfltk.a
+%{_libdir}/libfltk_forms.a
+%{_libdir}/libfltk_gl.a
+%{_libdir}/libfltk_images.a
 
 %files fluid
 %{_bindir}/fluid
