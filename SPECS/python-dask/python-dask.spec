@@ -27,16 +27,12 @@ BuildOption(check):  -e 'dask.dataframe.dask_expr.io.tests.test_distributed'
 BuildOption(check):  -e 'dask.dataframe.dask_expr.tests.test_diagnostics'
 # skip tests: No module named 'cupy'
 BuildOption(check):  -e 'dask.array.tests.test_cupy*'
-# skip tests: No module named 'skimage'
+# Skip tests: RuntimeError: Memory error in scipy.linalg.inv
+# https://github.com/openRuyi-Project/openRuyi/issues/992
+BuildOption(check):  -e 'dask.array.image'
 BuildOption(check):  -e 'dask.array.tests.test_image'
-# skip tests: No module named 'sparse'
-BuildOption(check):  -e 'dask.array.tests.test_sparse'
 # skip tests: No module named 'xarray' (circular dependency)
 BuildOption(check):  -e 'dask.array.tests.test_xarray'
-# skip tests: No module named 'ipycytoscape'
-BuildOption(check):  -e 'dask.tests.test_dot'
-# skip tests: No module named 'pyspark'
-BuildOption(check):  -e 'dask.tests.test_spark_compat'
 # skip tests: pyarrow ORC support not available (No module named 'pyarrow._orc')
 BuildOption(check):  -e 'dask.dataframe.io.orc.arrow'
 BuildOption(check):  -e 'dask.dataframe.io.tests.test_orc'
@@ -51,6 +47,8 @@ BuildRequires:  python3dist(cloudpickle)
 BuildRequires:  python3dist(fastavro)
 BuildRequires:  python3dist(flask)
 BuildRequires:  python3dist(fsspec)
+BuildRequires:  python3dist(graphviz)
+BuildRequires:  python3dist(ipycytoscape)
 BuildRequires:  python3dist(jinja2)
 BuildRequires:  python3dist(moto)
 BuildRequires:  python3dist(numpy)
@@ -60,12 +58,14 @@ BuildRequires:  python3dist(partd)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pyarrow)
 BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(pyspark)
 BuildRequires:  python3dist(pyyaml)
 BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(s3fs)
+BuildRequires:  python3dist(scikit-image)
 BuildRequires:  python3dist(scipy)
-BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(sparse)
 BuildRequires:  python3dist(sqlalchemy)
 BuildRequires:  python3dist(toolz)
 
