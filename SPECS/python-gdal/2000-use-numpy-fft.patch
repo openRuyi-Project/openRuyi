@@ -1,0 +1,42 @@
+From 969fe9cea482256a4a538a45e7b9ef6ecb4a6762 Mon Sep 17 00:00:00 2001
+From: zhangjinqiang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Fri, 17 Jul 2026 15:50:00 +0000
+Subject: [PATCH] Use NumPy FFT
+
+---
+ gdal-utils/osgeo_utils/samples/fft.py | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/gdal-utils/osgeo_utils/samples/fft.py b/gdal-utils/osgeo_utils/samples/fft.py
+index bee0c09eec..cdea72edb0 100644
+--- a/gdal-utils/osgeo_utils/samples/fft.py
++++ b/gdal-utils/osgeo_utils/samples/fft.py
+@@ -14,12 +14,7 @@
+ ###############################################################################
+ 
+ import sys
+-
+-try:
+-    import FFT
+-except ModuleNotFoundError:
+-    print("Module FFT not found, cannot continue")
+-    sys.exit(1)
++from numpy import fft
+ from osgeo import gdal
+ 
+ # =============================================================================
+@@ -123,9 +118,9 @@ def main(argv=sys.argv):
+ 
+         data = inband.ReadAsArray(0, 0)
+         if transformation == "forward":
+-            data_tr = FFT.fft2d(data)
++            data_tr = fft.fft2(data)
+         else:
+-            data_tr = FFT.inverse_fft2d(data)
++            data_tr = fft.ifft2(data)
+         outband.WriteArray(data_tr)
+     return 0
+ 
+-- 
+2.54.0
+
