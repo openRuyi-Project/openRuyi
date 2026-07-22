@@ -19,11 +19,9 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
-# skip tests: No module named 'cupy'
+# skip test: No module named 'cupy'
 BuildOption(check):  -e 'xarray.tests.test_cupy'
-# skip tests: No module named 'sparse'
-BuildOption(check):  -e 'xarray.tests.test_sparse'
-# skip tests: circular dependency with python-pint
+# skip test: No module named 'pint' (circular dependency)
 BuildOption(check):  -e 'xarray.tests.test_units'
 
 BuildRequires:  pyproject-rpm-macros
@@ -43,6 +41,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytz)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(sparse)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
