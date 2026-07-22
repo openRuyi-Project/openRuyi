@@ -49,7 +49,7 @@
 %global sub_jerasure                    96c76b89d661c163f65a014b8042c9354ccf7f31
 %global sub_fmt                         123913715afeb8a437e6388b4473fcc4753e1c9a
 %global sub_googletest                  6910c9d9165801d8827d628cb72eb7ea9dd538c5
-%global sub_isa_l                       c196241ae89b1aa4f62efeb849a937c011b3a926
+%global sub_isa_l                       7c3479e0a9dac17f448603ec1ad64c7c625f530c
 %global sub_opentelemetry_cpp           95fe422d56d74ded3640c5cdcaa3011bc9e18f68
 %global sub_libkmip                     c05329f82a1a0e6d9bc4bae6fb25ce3d8e733f6c
 %global sub_rook_client_python          82673cd7c7a3f4919b98706985ff27e57d2c1b94
@@ -83,10 +83,6 @@ VCS:            git:https://github.com/ceph/ceph
 # does not have v21.3.0 yet, so we reassemble from per-submodule archives below.
 #!RemoteAsset:  sha256:89f72245fe99780f450f03f5c475bd0fc4cb02484300546bc1ec713d585c7cca
 Source0:        https://github.com/ceph/ceph/archive/refs/tags/v%{version}.tar.gz#/ceph-%{version}.tar.gz
-# Bundled ceph/isa-l lacks the in-place aliasing fix for the raid xor_gen/pq_gen
-# RVV kernels; apply it on riscv64.
-# https://github.com/intel/isa-l/pull/412
-Source1:        isa-l-riscv64-rvv-raid-aliasing.patch
 %if %{without system_boost}
 #!RemoteAsset:  sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89
 Source3:        https://archives.boost.io/release/%{boost_version}/source/boost_%{boost_underscore}.tar.bz2
@@ -115,7 +111,7 @@ Source18:       https://github.com/ceph/jerasure/archive/%{sub_jerasure}.tar.gz#
 Source19:       https://github.com/ceph/fmt/archive/%{sub_fmt}.tar.gz#/fmt-%{sub_fmt}.tar.gz
 #!RemoteAsset:  sha256:bde221be7f3841fcbc3971665d77d717116394a42155d988ee6407dfc39f1f09
 Source20:       https://github.com/ceph/googletest/archive/%{sub_googletest}.tar.gz#/googletest-%{sub_googletest}.tar.gz
-#!RemoteAsset:  sha256:dbbc990d6a3f0f0c4959da0899c0d588d0cc95e7a0444a4e137bef2de227e576
+#!RemoteAsset:  sha256:591b0d3e6a679286493fd01eaae7d6de922cbdcf6c02d4ebe6f1a8ef53600f6f
 Source21:       https://github.com/ceph/isa-l/archive/%{sub_isa_l}.tar.gz#/isa-l-bundled-%{sub_isa_l}.tar.gz
 #!RemoteAsset:  sha256:4b20033029eb4e732f44428905ed71d024a3062e6936ce8112fc1bac8ef287e6
 Source22:       https://github.com/ceph/opentelemetry-cpp/archive/%{sub_opentelemetry_cpp}.tar.gz#/opentelemetry-cpp-%{sub_opentelemetry_cpp}.tar.gz
@@ -828,12 +824,6 @@ tar -xf %{SOURCE33} -C src/s3select/rapidjson         --strip-components=1
 %if %{without system_boost}
 tar -xf %{SOURCE3} -C src
 mv src/boost_%{boost_underscore} src/boost
-%endif
-
-# Bundled ceph/isa-l lacks the raid xor_gen/pq_gen in-place aliasing fix;
-# apply it on riscv64, after the Source21 (submodule) extraction above.
-%ifarch riscv64
-patch -p1 -i %{SOURCE1}
 %endif
 
 # Apply numbered patches now that all submodule placeholders (src/seastar,
