@@ -7,12 +7,12 @@
 %global srcname protobuf
 
 Name:           python-%{srcname}
-Version:        6.33.2
+Version:        6.33.6
 Release:        %autorelease
 Summary:        Python bindings for Protocol Buffers
 License:        BSD-3-Clause
 URL:            https://developers.google.com/protocol-buffers/
-#!RemoteAsset:  sha256:56dc370c91fbb8ac85bc13582c9e373569668a290aa2e66a590c2a0d35ddb9e4
+#!RemoteAsset:  sha256:a6768d25248312c297558af96a9f9c929e8c4cee0659cb07e780731095f38135
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
