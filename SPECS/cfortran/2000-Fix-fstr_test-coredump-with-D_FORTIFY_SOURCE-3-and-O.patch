@@ -1,0 +1,25 @@
+From 06440e86575c9b15f571ad7bfee42698983b9a04 Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Sat, 18 Jul 2026 23:04:08 +0800
+Subject: [PATCH] Fix fstr_test coredump with -D_FORTIFY_SOURCE=3 and -O2
+
+---
+ eg/fstr/fstr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eg/fstr/fstr.c b/eg/fstr/fstr.c
+index d40d7b4..83b47cd 100644
+--- a/eg/fstr/fstr.c
++++ b/eg/fstr/fstr.c
+@@ -18,7 +18,7 @@ int ls, lsave;
+ if (!s || !save) { save=s; return; }
+ ls    = strlen(s   );
+ lsave = strlen(save);
+-temp = (char *)malloc(ls>lsave?ls:lsave);
++temp = (char *)malloc((ls>lsave?ls:lsave) + 1);
+ /* Switch contents of argument with contents of saved string. */
+ strcpy(temp,save);
+ strcpy(save,s   );
+-- 
+2.54.0
+
