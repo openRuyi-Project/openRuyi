@@ -18,11 +18,6 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
-# skip tests: missing python-matplotlib
-BuildOption(check):  -e 'pint.matplotlib'
-BuildOption(check):  -e 'pint.testsuite.test_matplotlib'
-# skip tests: No module named 'sparse'
-BuildOption(check):  -e 'pint.testsuite.test_compat_downcast'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -32,11 +27,13 @@ BuildRequires:  python3dist(flexcache)
 BuildRequires:  python3dist(flexparser)
 BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(matplotlib)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(platformdirs)
 BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(sparse)
 BuildRequires:  python3dist(typing-extensions)
 BuildRequires:  python3dist(xarray)
 
