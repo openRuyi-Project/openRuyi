@@ -1,0 +1,25 @@
+From 1fa1b0df438326ab3dad12243ddbc781fa2ab654 Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Wed, 12 Aug 2026 18:42:15 +0800
+Subject: [PATCH] use system zfp headers
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 90b3786..4f89ab1 100644
+--- a/setup.py
++++ b/setup.py
+@@ -22,7 +22,7 @@ setup(
+         Extension(
+             "zfpy", 
+             sources=["python/zfpy.pyx"],
+-            include_dirs=["include", str(NumpyImport())],
++            include_dirs=[str(NumpyImport())],
+             libraries=["zfp"], 
+             library_dirs=["build/lib64", "build/lib/Release"],
+             language_level=3,
+-- 
+2.54.0
+
