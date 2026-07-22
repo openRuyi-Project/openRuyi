@@ -1,0 +1,36 @@
+From 0fbde2ffc25eeb0426b9d31ac86c069e4a071bdf Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Wed, 12 Aug 2026 18:23:48 +0800
+Subject: [PATCH] Use the prebuilt Jupyter assets included in the sdist
+
+---
+ pyproject.toml | 2 +-
+ setup.py       | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 554c4dc..d454a5e 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["jupyter_packaging~=0.7.0", "jupyterlab>=3.0.0rc4,==3.*", "setuptools>=40.8.0", "wheel"]
++requires = ["jupyter_packaging", "setuptools>=40.8.0", "wheel"]
+ build-backend = "setuptools.build_meta"
+ 
+ 
+diff --git a/setup.py b/setup.py
+index 67294a1..53fdacd 100644
+--- a/setup.py
++++ b/setup.py
+@@ -33,7 +33,6 @@ lab_path = path.join(HERE, name, "labextension")
+ # Representative files that should exist after a successful build
+ jstargets = [
+     path.join(nb_path, "index.js"),
+-    path.join(HERE, "lib", "plugin.js"),
+ ]
+ 
+ package_data_spec = {name: ["*"]}
+-- 
+2.54.0
+
