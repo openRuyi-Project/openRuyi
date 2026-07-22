@@ -1,0 +1,24 @@
+From b0eca904b3e657c0663f7116dac842ff1ecd0247 Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Wed, 12 Aug 2026 18:26:20 +0800
+Subject: [PATCH] Drop jupyterlab build requirement
+
+Use the prebuilt labextension from the sdist to break the JupyterLab cycle
+---
+ pyproject.toml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index da4494b1..fd6b1ffe 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,6 +1,5 @@
+ [build-system]
+ requires = [
+-  "jupyterlab==4.*",
+   "hatchling>=0.25",
+ ]
+ build-backend = "hatchling.build"
+-- 
+2.54.0
+
