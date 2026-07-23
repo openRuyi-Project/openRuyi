@@ -20,7 +20,6 @@ BuildSystem:    meson
 
 BuildOption(conf):  -Ddebug-gui=false
 BuildOption(conf):  -Ddocumentation=false
-BuildOption(conf):  -Dudev-dir=%{_udevrulesdir}
 %if %{with tests}
 BuildOption(conf):  -Dtests=true
 BuildOption(conf):  -Dinstall-tests=true
@@ -74,11 +73,11 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %files
 %doc COPYING
 %{_libdir}/libinput.so.*
-%{_udevrulesdir}/libinput-device-group
-%{_udevrulesdir}/libinput-fuzz-to-zero
-%{_udevrulesdir}/libinput-fuzz-extract
-%{_udevrulesdir}/rules.d/80-libinput-device-groups.rules
-%{_udevrulesdir}/rules.d/90-libinput-fuzz-override.rules
+%{_prefix}/lib/udev/libinput-device-group
+%{_prefix}/lib/udev/libinput-fuzz-to-zero
+%{_prefix}/lib/udev/libinput-fuzz-extract
+%{_udevrulesdir}/80-libinput-device-groups.rules
+%{_udevrulesdir}/90-libinput-fuzz-override.rules
 %{_bindir}/libinput
 %dir %{_libexecdir}/libinput/
 %{_libexecdir}/libinput/libinput-debug-events
