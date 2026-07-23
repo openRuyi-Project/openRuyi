@@ -8,13 +8,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           xfsprogs
-Version:        6.16.0
+Version:        7.1.1
 Release:        %autorelease
 Summary:        Administration and debugging tools for the XFS file system
 License:        GPL-1.0-or-later AND LGPL-2.1-or-later
 URL:            https://xfs.wiki.kernel.org
 VCS:            git:https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:063edc31ba8e85c95c7faf9be465a04898bba7c6e622fdd9b146eed4ca5415e8
 Source:         http://kernel.org/pub/linux/utils/fs/xfs/xfsprogs/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -56,16 +56,16 @@ that use the XFS filesystem libraries.
 # remove unused files
 find %{buildroot} -type f \( -name "*.a" \) -delete -print
 rm -rf %{buildroot}%{_datadir}/doc/xfsprogs/
-
+%find_lang %{name} --generate-subpackages
 # no check target
 %check
 
-%files
+%files -f %{name}.lang
 %doc doc/CHANGES README
 %{_libdir}/lib*.so.*
 %{_sbindir}/*
+%{_libexecdir}/xfsprogs/xfs_healer
 %{_datadir}/xfsprogs/
-%{_datadir}/locale/*/LC_MESSAGES/xfsprogs.mo
 
 %files devel
 %dir %{_includedir}/xfs
@@ -74,4 +74,4 @@ rm -rf %{buildroot}%{_datadir}/doc/xfsprogs/
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
