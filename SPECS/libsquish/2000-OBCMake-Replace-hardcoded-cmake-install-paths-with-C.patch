@@ -1,0 +1,88 @@
+From f951bc33544b1e9c45dcc4a9878b855c23cdea72 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Thu, 13 Aug 2026 16:32:04 +0800
+Subject: [PATCH] OBCMake: Replace hardcoded cmake install paths with
+ CMAKE_INSTALL_LIBDIR
+
+Replace all hardcoded "cmake" and "cmake/${alias}" install
+destinations with paths using ${CMAKE_INSTALL_LIBDIR}/cmake/libsquish.
+---
+ cmake/module/OB/Executable.cmake | 2 +-
+ cmake/module/OB/Library.cmake    | 2 +-
+ cmake/module/OB/Project.cmake    | 6 +++---
+ cmake/private/common.cmake       | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/cmake/module/OB/Executable.cmake b/cmake/module/OB/Executable.cmake
+index d05a30a..0eb9711 100644
+--- a/cmake/module/OB/Executable.cmake
++++ b/cmake/module/OB/Executable.cmake
+@@ -407,7 +407,7 @@ function(ob_add_standard_executable target)
+             COMPONENT ${_TARGET_NAME}
+             FILE "${_NAMESPACE}${_ALIAS}Targets.cmake"
+             NAMESPACE ${_NAMESPACE}::
+-            DESTINATION "cmake/${_ALIAS}"
++            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish/${_ALIAS}"
+             ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+         )
+ 
+diff --git a/cmake/module/OB/Library.cmake b/cmake/module/OB/Library.cmake
+index ab7e6a9..bfe8aa1 100644
+--- a/cmake/module/OB/Library.cmake
++++ b/cmake/module/OB/Library.cmake
+@@ -526,7 +526,7 @@ function(ob_add_standard_library target)
+             COMPONENT ${_TARGET_NAME}
+             FILE "${_NAMESPACE}${_ALIAS}Targets.cmake"
+             NAMESPACE ${_NAMESPACE}::
+-            DESTINATION "cmake/${_ALIAS}"
++            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish/${_ALIAS}"
+             ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+         )
+ 
+diff --git a/cmake/module/OB/Project.cmake b/cmake/module/OB/Project.cmake
+index 7013afa..487466d 100644
+--- a/cmake/module/OB/Project.cmake
++++ b/cmake/module/OB/Project.cmake
+@@ -316,7 +316,7 @@ function(__ob_process_config_opt_std pkg_name gen_file)
+     configure_package_config_file(
+         "${CFG_TEMPLATE_FILE}"
+         "${gen_file}"
+-        INSTALL_DESTINATION "cmake"
++        INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish"
+         NO_SET_AND_CHECK_MACRO
+     )    
+ endfunction()
+@@ -327,7 +327,7 @@ function(__ob_process_config_opt_custom in_path gen_file)
+         configure_package_config_file(
+             "${in_path}"
+             "${gen_file}"
+-            INSTALL_DESTINATION "cmake"
++            INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish"
+         )
+ endfunction()
+ 
+@@ -488,7 +488,7 @@ function(ob_standard_project_package_config)
+         "${ver_gen_path}"
+         "${cfg_gen_path}"
+         COMPONENT ${PROJECT_NAMESPACE_LC}
+-        DESTINATION "cmake"
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish"
+         ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+     )
+ endfunction()
+diff --git a/cmake/private/common.cmake b/cmake/private/common.cmake
+index d22ddd4..21596b8 100644
+--- a/cmake/private/common.cmake
++++ b/cmake/private/common.cmake
+@@ -195,7 +195,7 @@ function(__ob_parse_std_target_config_option target ns alias)
+     install(FILES
+         "${cfg_gen_path}"
+         COMPONENT ${target}
+-        DESTINATION "cmake/${alias}"
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsquish/${alias}"
+         ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+     )
+ endfunction()
+-- 
+2.34.1
+

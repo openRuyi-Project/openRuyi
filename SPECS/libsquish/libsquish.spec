@@ -18,6 +18,8 @@ Source:         https://github.com/oblivioncth/libsquish/archive/refs/tags/v%{ve
 Source1:        https://github.com/oblivioncth/OBCMake/archive/refs/tags/v%{OBCMake_version}.tar.gz
 BuildSystem:    cmake
 
+Patch2000:      2000-OBCMake-Replace-hardcoded-cmake-install-paths-with-C.patch
+
 BuildRequires:  cmake
 
 BuildOption(conf):  -DNO_VERBOSE_VERSION=ON
@@ -35,16 +37,16 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%prep -a
-%autosetup -p1
+%prep
+%autosetup -N
 tar -xf %{SOURCE1} -C .
+pushd OBCmake-%{OBCMake_version}
+%patch -P 2000 -p1
+popd
 
 %install -a
 rm -f %{buildroot}%{_prefix}/LICENSE
 rm -f %{buildroot}%{_prefix}/README.md
-mkdir -p %{buildroot}%{_libdir}/cmake/libsquish
-mv %{buildroot}%{_prefix}/cmake/* %{buildroot}%{_libdir}/cmake/libsquish/
-rmdir %{buildroot}%{_prefix}/cmake
 
 %files
 %doc README.md
