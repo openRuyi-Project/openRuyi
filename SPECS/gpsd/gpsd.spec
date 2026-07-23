@@ -14,6 +14,8 @@ URL:            https://gitlab.com/gpsd/gpsd
 Source0:        https://download-mirror.savannah.gnu.org/releases/gpsd/gpsd-%{version}.tar.gz
 Source1:        gpsd.sysconfig
 
+Patch2000:      2000-gpsd_hotplug_rules_disable.patch
+
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(libudev)
