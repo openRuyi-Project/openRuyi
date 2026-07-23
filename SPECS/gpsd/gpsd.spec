@@ -38,9 +38,16 @@ Requires:       udev
 %description
 gpsd is a service daemon that mediates access to a GPS sensor.
 
+%package        libs
+Summary:        Library files for the gpsd library
+
+%description    libs
+Library files for gpsd library.
+
 %package        devel
 Summary:        Development files for the gpsd library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description    devel
 Development files for gpsd library.
@@ -155,6 +162,8 @@ install -p -m 0755 gpsinit %{buildroot}%{_sbindir}
 %{_mandir}/man1/gpsmon.1*
 %{_mandir}/man1/gpsctl.1*
 %{_mandir}/man1/ntpshmmon.1*
+
+%files libs
 %{_libdir}/libgps.so.*
 %{_libdir}/libQgpsmm.so.*
 %{_libdir}/libgpsdpacket.so*
