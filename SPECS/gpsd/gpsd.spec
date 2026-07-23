@@ -77,8 +77,8 @@ Various clients using gpsd.
 %package        xclients
 Summary:        Graphical clients for gpsd
 Requires:       python3-%{name} = %{version}-%{release}
-Requires:       python3dist(cairo)
-Requires:       python3dist(PyGObject)
+Requires:       python3dist(pycairo)
+Requires:       python3dist(pygobject)
 Requires:       gtk3
 
 %description    xclients
