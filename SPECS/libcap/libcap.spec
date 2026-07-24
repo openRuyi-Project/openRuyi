@@ -10,18 +10,14 @@
 %global buildvariables RAISE_SETFCAP=no prefix=%{_prefix} lib=%{_lib} SHARED=yes LIBDIR=%{_libdir} SBINDIR=%{_sbindir} PKGCONFIGDIR=%{_libdir}/pkgconfig/ INCDIR=%{_includedir} MANDIR=%{_mandir} SHARED=yes COPTS="%{optflags} %{_lto_cflags} -ffat-lto-objects"
 
 Name:           libcap
-Version:        2.76
+Version:        2.78
 Release:        %autorelease
 Summary:        Library for Capabilities (linux-privs) Support
 License:        BSD-3-Clause OR GPL-2.0-only
 URL:            https://sites.google.com/site/fullycapable/
 VCS:            git:https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:0d621e562fd932ccf67b9660fb018e468a683d7b827541df27813228c996bb11
 Source:         https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.sign
-#!RemoteAsset
-Source2:        https://git.kernel.org/pub/scm/libs/libcap/libcap.git/plain/pgp.keys.asc#/%{name}.keyring
 BuildSystem:    autotools
 
 BuildOption(build):  %{buildvariables}
@@ -95,9 +91,9 @@ rm %{buildroot}%{_libdir}/libcap.a
 %{_libdir}/libpsx.a
 %{_libdir}/pkgconfig/libcap.pc
 %{_libdir}/pkgconfig/libpsx.pc
-%{_mandir}/man3/*.3%{?ext_man}
-%{_mandir}/man5/*.5%{?ext_man}
+%{_mandir}/man3/*.3*
+%{_mandir}/man5/*.5*
 %{_mandir}/man7/*.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog
