@@ -57,6 +57,7 @@ export CFLAGS="%{build_cflags} -std=gnu17"
     --mandir=%{_mandir} \
     --disable-static \
     --enable-colorfgbg \
+    --enable-widec \
     --enable-hard-tabs \
     --enable-overwrite \
     --enable-pc-files \
