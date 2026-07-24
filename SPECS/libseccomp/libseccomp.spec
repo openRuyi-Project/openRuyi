@@ -10,17 +10,16 @@
 %bcond python 1
 
 Name:           libseccomp
-Version:        2.6.0
+Version:        2.6.1
 Release:        %autorelease
 Summary:        Enhanced library for the Linux syscall filtering mechanism
 License:        LGPL-2.1-only
 URL:            https://github.com/seccomp/libseccomp
-#!RemoteAsset:  sha256:83b6085232d1588c379dc9b9cae47bb37407cf262e6e74993c61ba72d2a784dc
+#!RemoteAsset:  sha256:501f66c667225d53791b97e1d7cf85ab764c297d04881f60f38f451c4b0ee1be
 Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-Patch0:         make-python-build.patch
-Patch1:         fix-murmur-hash-strict-aliasing-violation.patch
+Patch2000:      2000-make-python-build.patch
 
 BuildOption(conf):  --disable-static
 %if %{with python}
