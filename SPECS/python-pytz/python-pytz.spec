@@ -7,12 +7,12 @@
 %global srcname pytz
 
 Name:           python-%{srcname}
-Version:        2025.1
+Version:        2026.2
 Release:        %autorelease
 Summary:        Python timezone library
 License:        MIT
 URL:            http://pythonhosted.org/pytz
-#!RemoteAsset:  sha256:c2db42be2a2518b28e65f9207c4d05e6ff547d1efa4086469ef855e4ab70178e
+#!RemoteAsset:  sha256:0e60b47b29f21574376f218fe21abc009894a2321ea16c6754f3cad6eb7cdd6a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
