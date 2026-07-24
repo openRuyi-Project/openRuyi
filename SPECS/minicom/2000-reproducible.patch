@@ -1,0 +1,31 @@
+Description: Drop __DATE__/__TIME__ banners for reproducible builds
+ minicom embeds the build date and time (via __DATE__/__TIME__) into the
+ --version output and into the welcome banner shown at start-up.  Those
+ values vary between builds and make the binary unreproducible.  Remove the
+ two banner fragments; the version number alone remains.
+Origin: vendor
+Forwarded: not-needed
+Last-Update: 2026-06-21
+--- minicom-2.11.1.orig/src/minicom.c
++++ minicom-2.11.1/src/minicom.c
+@@ -1371,9 +1371,6 @@
+       switch(c) {
+         case 'v':
+           printf(_("%s version %s"), PACKAGE, VERSION);
+-#ifdef __DATE__
+-          printf(_(" (compiled %s)"), __DATE__);
+-#endif
+           printf("\n");
+           printf(_("Copyright (C) Miquel van Smoorenburg.\n\n"));
+           printf(_("This program is free software; you can redistribute it and/or\n"
+@@ -1704,9 +1701,6 @@
+ 
+   mc_wprintf(us, "\n%s %s\r\n", _("Welcome to minicom"), VERSION);
+   mc_wprintf(us, "\n%s: %s\r\n", _("OPTIONS"), option_string);
+-#if defined (__DATE__) && defined (__TIME__)
+-  mc_wprintf(us, "%s %s, %s.\r\n",_("Compiled on"), __DATE__,__TIME__);
+-#endif
+   {
+     struct stat st;
+     char port_date[20] = "";
+

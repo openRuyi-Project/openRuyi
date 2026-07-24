@@ -8,13 +8,16 @@
 
 Name:           minicom
 Summary:        A text-based modem control and terminal emulation program
-Version:        2.10
+Version:        2.11.1
 Release:        %autorelease
 URL:            https://salsa.debian.org/minicom-team/minicom
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
-#!RemoteAsset
+#!RemoteAsset:  sha256:b296b0e5795ca143fb1ffa78f46fd294daddfccd720faf9909a842d2f70c564e
 Source0:        https://salsa.debian.org/minicom-team/minicom/-/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+# patch from https://sources.debian.org/src/minicom/2.11.1-2/debian/patches/04reproducible.diff
+Patch2000:      2000-reproducible.patch
 
 BuildRequires:  make
 BuildRequires:  gcc
@@ -48,4 +51,4 @@ rm -f lib/snprintf.c
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
