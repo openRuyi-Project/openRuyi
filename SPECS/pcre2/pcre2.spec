@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           pcre2
-Version:        10.45
+Version:        10.47
 Release:        %autorelease
 Summary:        A library for Perl-compatible regular expressions
 License:        BSD-3-Clause WITH PCRE2-exception
 URL:            https://pcre2project.github.io/pcre2/
 VCS:            git:https://github.com/PCRE2Project/pcre2.git
-#!RemoteAsset:  sha256:21547f3516120c75597e5b30a992e27a592a31950b5140e7b8bfde3f192033c4
-Source0:        https://github.com/PCRE2Project/%{name}/releases/download/%{name}-%{version}/%{name}-%{version}.tar.bz2
+#!RemoteAsset:  sha256:47fe8c99461250d42f89e6e8fdaeba9da057855d06eb7fc08d9ca03fd08d7bc7
+Source0:        https://github.com/PCRE2Project/pcre2/releases/download/pcre2-%{version}/pcre2-%{version}.tar.bz2
 BuildSystem:    autotools
 
 BuildOption(conf):  --enable-jit
