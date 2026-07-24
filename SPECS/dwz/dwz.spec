@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dwz
-Version:        0.16
+Version:        0.17
 Release:        %autorelease
 Summary:        A DWARF optimization and duplicate removal tool
 License:        GPL-2.0-or-later OR GPL-3.0-or-later
 URL:            https://sourceware.org/dwz/
 VCS:            git:https://sourceware.org/git/dwz.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:db10030528f3365c03755969619dd6789147d34fc588db8107364351085aebad
 Source0:        https://sourceware.org/ftp/dwz/releases/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -46,11 +46,6 @@ using DW_TAG_imported_unit to import it into each CU that needs it.
 # no configure scripts.
 %conf
 
-%check -p
-# Avoid failure due to dwz warn: Found compressed .debug_info section
-export CC='cc -gz=none'
-export CXX='g++ -gz=none'
-
 %files
 %defattr(-,root,root,-)
 %license COPYING COPYING3 COPYING.RUNTIME
@@ -58,4 +53,4 @@ export CXX='g++ -gz=none'
 %{_mandir}/man1/dwz*
 
 %changelog
-%{?autochangelog}
+%autochangelog
