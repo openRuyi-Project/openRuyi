@@ -5,14 +5,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global _test_target check
+
 Name:           isl
-Version:        0.27
+Version:        0.28
 Release:        %autorelease
 Summary:        Integer Set Library
 License:        MIT
 URL:            https://libisl.sourceforge.io/
 VCS:            git:https://repo.or.cz/isl.git
-#!RemoteAsset:  sha256:6d8babb59e7b672e8cb7870e874f3f7b813b6e00e6af3f8b04f7579965643d5c
+#!RemoteAsset:  sha256:3dc31b8e1b18329e42d5dfbf84dd55e15c59b61569a2ab246f61497d9592f727
 Source:         https://libisl.sourceforge.io/isl-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -34,9 +36,6 @@ Requires:       pkgconfig(gmp)
 %description    devel
 Development tools and headers for the ISL.
 
-%check
-%make_build check
-
 %install -a
 rm -f  %{buildroot}%{_libdir}/libisl.so.*-gdb.py
 
@@ -47,6 +46,7 @@ rm -f  %{buildroot}%{_libdir}/libisl.so.*-gdb.py
 %{_includedir}/isl
 %{_libdir}/libisl.so
 %{_libdir}/pkgconfig/%{name}.pc
+%{_datadir}/aclocal/isl_detect_clang.m4
 
 %changelog
 %autochangelog
