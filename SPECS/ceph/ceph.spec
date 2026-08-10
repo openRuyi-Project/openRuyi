@@ -37,14 +37,17 @@
 %global _fortify_level 0
 %endif
 
-# Submodule SHAs pinned by ceph.git@v21.3.0 (.gitmodules + tree).
+%global commit      7abb41e487eac2be2a5df223ed89e862f894b7dc
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
+# Submodule SHAs pinned by the ceph.git snapshot above (.gitmodules + tree).
 %global sub_ceph_object_corpus          44b11dd5aa8a2f965ea395f13cf4cbb4a61e9afe
 %global sub_ceph_erasure_code_corpus    2d7d78b9cc52e8a9529d8cc2d2954c7d375d5dd7
 %global sub_blake3                      92e4cd71be48fdf9a79e88ef37b8f415ec5ac210
 %global sub_arrow                       272715f6df2a042d69881ffa03d5078c58e4b345
 %global sub_blkin                       f24ceec055ea236a093988237a9821d145f5f7c8
 %global sub_c_ares                      fd6124c74da0801f23f9d324559d8b66fb83f533
-%global sub_isa_l_crypto                a6dc869666fca3eef9a0305b290e4e0fc8bac645
+%global sub_isa_l_crypto                c353c2d021c03cfc6180ddf9e28a24b3b61e9760
 %global sub_gf_complete                 7e61b44404f0ed410c83cfd3947a52e88ae044e1
 %global sub_jerasure                    96c76b89d661c163f65a014b8042c9354ccf7f31
 %global sub_fmt                         123913715afeb8a437e6388b4473fcc4753e1c9a
@@ -53,7 +56,7 @@
 %global sub_opentelemetry_cpp           95fe422d56d74ded3640c5cdcaa3011bc9e18f68
 %global sub_libkmip                     c05329f82a1a0e6d9bc4bae6fb25ce3d8e733f6c
 %global sub_rook_client_python          82673cd7c7a3f4919b98706985ff27e57d2c1b94
-%global sub_rocksdb                     24ea35870fe9b3ba15285ec8746ba97ed5d67ff3
+%global sub_rocksdb                     c7a7c6340c522d2ecc21625e2b726554cb61eb72
 %global sub_s3select                    0a0f6d439441f5b121ed1052dac54542e4f1d89b
 # Nested submodules under src/s3select (ceph/s3select itself uses recursive
 # submodules). Both are referenced unconditionally by the s3select include
@@ -62,27 +65,27 @@
 #   src/CMakeLists.txt:417-421    -> s3select/rapidjson/include
 %global sub_s3select_csvparser          5a417973b4cea674a5e4a3b88a23098a2ab75479
 %global sub_s3select_rapidjson          fcb23c2dbf561ec0798529be4f66394d3e4996d8
-%global sub_seastar                     15b1ca1bec7e148df262343f57b160d0248c736b
+%global sub_seastar                     cced0236ee7cb4e157b5a37fd9076d62c5be4f58
 %global sub_utf8proc                    d7bf128df773c2a1a7242eb80e51e91a769fc985
-%global sub_xxhash                      bbb27a5efb85b92a0486cf361a8635715a53f6ba
-%global sub_nvmeof_gateway              e27436eddacf8d4b2eace77c5fbd250adf48a155
+%global sub_xxhash                      e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+%global sub_nvmeof_gateway              165faedf2c11ffd966e5746770e11741fa5bbcdf
 # Boost is not a submodule; make-dist downloads 1.87.0 and concatenates the
 # tarball into the official release.
 %global boost_version       1.87.0
 %global boost_underscore    1_87_0
 
 Name:           ceph
-Version:        21.3.0
+Version:        21.3.0+git20260811.%{shortcommit}
 Release:        %autorelease
 Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
 URL:            http://ceph.com/
 VCS:            git:https://github.com/ceph/ceph
 # GitHub archive tarball contains empty submodule placeholder dirs only.
-# download.ceph.com release tarball (which bundles all submodules + boost)
-# does not have v21.3.0 yet, so we reassemble from per-submodule archives below.
-#!RemoteAsset:  sha256:89f72245fe99780f450f03f5c475bd0fc4cb02484300546bc1ec713d585c7cca
-Source0:        https://github.com/ceph/ceph/archive/refs/tags/v%{version}.tar.gz#/ceph-%{version}.tar.gz
+# download.ceph.com only publishes bundled tarballs (submodules + boost) for
+# tagged releases, so we reassemble from per-submodule archives below.
+#!RemoteAsset:  sha256:3e589afd6712505e9f988bea235c5dcb39de65dba1b22280c3c23124d71c3a8c
+Source0:        https://github.com/ceph/ceph/archive/%{commit}/ceph-%{commit}.tar.gz
 %if %{without system_boost}
 #!RemoteAsset:  sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89
 Source3:        https://archives.boost.io/release/%{boost_version}/source/boost_%{boost_underscore}.tar.bz2
@@ -101,7 +104,7 @@ Source13:       https://github.com/apache/arrow/archive/%{sub_arrow}.tar.gz#/arr
 Source14:       https://github.com/ceph/blkin/archive/%{sub_blkin}.tar.gz#/blkin-%{sub_blkin}.tar.gz
 #!RemoteAsset:  sha256:8b76222d7bf9b35a1ed8194c65ac60b55a1b1ef0c2fb2a735e18bf1f387133b7
 Source15:       https://github.com/ceph/c-ares/archive/%{sub_c_ares}.tar.gz#/c-ares-%{sub_c_ares}.tar.gz
-#!RemoteAsset:  sha256:ebe7899b2494eb3f6cd3c7555cd970c2c9611e7ae5471f3fd41afd080bdf78fa
+#!RemoteAsset:  sha256:af19f411f8b4d1ca13618d6b58f091aa1cd25306fe824c3a70663a4cd55211fc
 Source16:       https://github.com/intel/isa-l_crypto/archive/%{sub_isa_l_crypto}.tar.gz#/isa-l_crypto-%{sub_isa_l_crypto}.tar.gz
 #!RemoteAsset:  sha256:8ff04510527262fbc741d9d84b1c9c6066e1dd909b3d5d37dc33dde27b0bc749
 Source17:       https://github.com/ceph/gf-complete/archive/%{sub_gf_complete}.tar.gz#/gf-complete-%{sub_gf_complete}.tar.gz
@@ -119,15 +122,15 @@ Source22:       https://github.com/ceph/opentelemetry-cpp/archive/%{sub_opentele
 Source23:       https://github.com/ceph/libkmip/archive/%{sub_libkmip}.tar.gz#/libkmip-%{sub_libkmip}.tar.gz
 #!RemoteAsset:  sha256:bb6997295a967ac71e2e84a2d629d7828bdb056ffa427a57f925cf027b1a1974
 Source24:       https://github.com/ceph/rook-client-python/archive/%{sub_rook_client_python}.tar.gz#/rook-client-python-%{sub_rook_client_python}.tar.gz
-#!RemoteAsset:  sha256:323c630aaf76a02ff0ed4bcc5b34e100d34d286ce0ac21b90a267c165e1b4667
+#!RemoteAsset:  sha256:61eaacd1e9fee362a16bd0aac15fe25507bf840420914987d45ba55ec9326b5d
 Source25:       https://github.com/ceph/rocksdb/archive/%{sub_rocksdb}.tar.gz#/rocksdb-%{sub_rocksdb}.tar.gz
 #!RemoteAsset:  sha256:799b442ff8f7b03111fdd8bd43b07cb9a497fa384332b1acdd6c9a2bfd21206c
 Source26:       https://github.com/ceph/s3select/archive/%{sub_s3select}.tar.gz#/s3select-%{sub_s3select}.tar.gz
-#!RemoteAsset:  sha256:ab14ab9c9d8d715779b15a8c17a8c88aebd293b6be03ddfef97e4559a67acc53
+#!RemoteAsset:  sha256:b25947b76f5b61a46a5680ff3557106b01b365cb6fad459318cf1a5a9e7df45b
 Source27:       https://github.com/ceph/seastar/archive/%{sub_seastar}.tar.gz#/seastar-%{sub_seastar}.tar.gz
 #!RemoteAsset:  sha256:9131e0a9c6fc25b0fe5d164a4e3eef1218bf22db33bd6b10bc43dc252d769afe
 Source29:       https://github.com/JuliaStrings/utf8proc/archive/%{sub_utf8proc}.tar.gz#/utf8proc-%{sub_utf8proc}.tar.gz
-#!RemoteAsset:  sha256:716fbe4fc85ecd36488afbbc635b59b5ab6aba5ed3b69d4a32a46eae5a453d38
+#!RemoteAsset:  sha256:714198f8441f56eeaec0f287c2a846ee2f07c646e9d8e40cf2bb8b2e759d2830
 Source30:       https://github.com/ceph/xxHash/archive/%{sub_xxhash}.tar.gz#/xxHash-%{sub_xxhash}.tar.gz
 # Nested submodules of ceph/s3select (the s3select tarball itself ships empty
 # submodule placeholders for these two; both are unconditionally pulled in by
@@ -137,10 +140,11 @@ Source32:       https://github.com/ben-strasser/fast-cpp-csv-parser/archive/%{su
 #!RemoteAsset:  sha256:ced53d8e21e06b50a75e88b6bf8e2ef8ac1a21e2f30121a57b406648d247df4c
 Source33:       https://github.com/Tencent/rapidjson/archive/%{sub_s3select_rapidjson}.tar.gz#/rapidjson-%{sub_s3select_rapidjson}.tar.gz
 # Only control/proto/*.proto is consumed, to build ceph-nvmeof-monitor-client.
-#!RemoteAsset:  sha256:83e34889ee4ecb66916ed26eb3cbac0f1d0f174c9dafd4c6081c517abaf838d7
+#!RemoteAsset:  sha256:c9e741c65615a83f5a30c88433a31166365e3be536aaee290a3dd00d7041597f
 Source34:       https://github.com/ceph/ceph-nvmeof/archive/%{sub_nvmeof_gateway}.tar.gz#/ceph-nvmeof-%{sub_nvmeof_gateway}.tar.gz
 # Skipped submodules (not required by the current build options):
 #   src/breakpad        (WITH_BREAKPAD=OFF below)
+#   src/librdkafka      (WITH_SYSTEM_RDKAFKA=ON below)
 #   src/lss             (transitive dep of breakpad)
 #   src/qatlib          (WITH_QATLIB=OFF)
 #   src/qatzip          (WITH_QATZIP=OFF)
@@ -165,6 +169,9 @@ BuildOption(conf):  -DWITH_JAEGER:BOOL=OFF
 %endif
 BuildOption(conf):  -DWITH_RADOSGW_SELECT_PARQUET=OFF
 BuildOption(conf):  -DWITH_RADOSGW_ARROW_FLIGHT=OFF
+# rgw-standalone/rgw-standalone-admin belong to a subpackage that conflicts
+# with ceph-common and radosgw, which is not split out here.
+BuildOption(conf):  -DWITH_RADOSGW_STANDALONE:BOOL=OFF
 %if %{with rdma}
 BuildOption(conf):  -DWITH_RDMA=ON
 %else
@@ -221,6 +228,8 @@ BuildOption(conf):  -DWITH_RADOSGW_AMQP_ENDPOINT:BOOL=OFF
 %endif
 %if %{with kafka_endpoint}
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=ON
+# Upstream defaults to the bundled src/librdkafka submodule.
+BuildOption(conf):  -DWITH_SYSTEM_RDKAFKA:BOOL=ON
 %else
 BuildOption(conf):  -DWITH_RADOSGW_KAFKA_ENDPOINT:BOOL=OFF
 %endif
@@ -431,38 +440,10 @@ Requires:       luarocks
 %endif
 
 %patchlist
-# https://github.com/ceph/ceph/pull/69156
-1004-monitoring-ceph-mixin-jsonnet-bundler-version.patch
-# https://github.com/ceph/ceph/pull/69157
-1005-test-mds-quiesce-agent-evaluate-await-idle.patch
-# https://github.com/ceph/ceph/pull/69161
-1007-librbd-pwl-cancel-timer-before-perf-stop.patch
-# https://github.com/ceph/ceph/pull/69162
-1008-cephadm-tests-mock-find-program-lvcreate.patch
-# https://github.com/scylladb/seastar/commit/59225b1c6d2225b67dd2f2cebd3aa22be84b55d3
-1012-src-seastar-add-initial-riscv-port.patch
-# https://github.com/scylladb/seastar/pull/3435
-1013-seastar-io-uring-retry-socket-send-on-eagain.patch
-# https://github.com/scylladb/seastar/pull/3436
-1016-cmake-don-t-require-i40e-sfc-DPDK-PMDs-on-RISC-V.patch
-# https://github.com/scylladb/seastar/pull/3437
-1017-build-also-detect-GCC-s-Wno-error-cpp-for-warning.patch
-# https://github.com/ceph/ceph/pull/69187
-1018-cmake-rename-Finddpdk-module-to-FindDPDK.patch
-# https://github.com/scylladb/seastar/pull/3441
-1021-cmake-guard-DPDK-dpdk-against-redefinition-in-Finddp.patch
-# https://github.com/ceph/ceph/pull/69449
-1022-cmake-find-Protobuf-via-config-before-module.patch
-# https://github.com/ceph/ceph/pull/69316
-1023-tests-venv-system-site-packages.patch
-# https://github.com/ceph/ceph/pull/69446
-1024-python-common-cryptotools-stop-using-the-removed-X50.patch
-# https://github.com/ceph/ceph/pull/69510
-1025-python-common-cryptotools-reimplement-on-top-of-cryp.patch
-# https://github.com/ceph/ceph/pull/69603
-1026-mgr-tox-run-pytest-in-parallel.patch
-# https://github.com/ceph/ceph/pull/69949
-1027-test-subprocess-add-missing-space-in-SubshellKilled-.patch
+# https://github.com/ceph/ceph/pull/70955
+1019-test-rgw-link-unittest_rgw_posix_driver-against-rgw_.patch
+# https://github.com/ceph/ceph/pull/69898
+1020-fix-AbstractWriteLog.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
@@ -786,13 +767,11 @@ This package provides Grafana dashboards, Prometheus alerts, and
 SNMP MIB for monitoring Ceph clusters.
 
 %prep
-# Fully override the BuildSystem-injected prep stage: numbered patches must be
-# applied AFTER the submodule tarballs are extracted, because
-# 1012-src-seastar-add-initial-riscv-port touches files under src/seastar/ -
-# which is an empty placeholder dir until SOURCE27 is extracted below.
-%autosetup -p1 -N
-# GitHub archive tarball ships empty submodule placeholder dirs.
-# Populate each from its pinned-SHA archive Source.
+# Fully override the BuildSystem-injected prep stage: patches are applied at
+# the end, once the submodule placeholder dirs are populated, so that a patch
+# against a submodule tree can apply.
+%autosetup -p1 -N -n %{name}-%{commit}
+# Populate each submodule placeholder dir from its pinned-SHA archive Source.
 tar -xf %{SOURCE10} -C ceph-object-corpus            --strip-components=1
 tar -xf %{SOURCE11} -C ceph-erasure-code-corpus      --strip-components=1
 tar -xf %{SOURCE12} -C src/BLAKE3                    --strip-components=1
@@ -826,15 +805,13 @@ tar -xf %{SOURCE3} -C src
 mv src/boost_%{boost_underscore} src/boost
 %endif
 
-# Apply numbered patches now that all submodule placeholders (src/seastar,
-# src/isa-l, etc.) are populated; see the autosetup -N call above.
 %autopatch -p1
 
 # src/CMakeLists.txt reads src/.git_version when .git/ is absent (true for
 # GitHub archive tarballs; the file is only generated by upstream make-dist).
 # Provide a placeholder so %conf can proceed; the values only feed the
 # embedded version string.
-printf '%s\n%s\n' 0000000000000000000000000000000000000000 v%{version} > src/.git_version
+printf '%s\n%s\n' %{commit} v%{version} > src/.git_version
 
 # Create two sysusers.d config files
 cat >ceph.sysusers.conf <<EOF
@@ -1001,6 +978,7 @@ fi
 
 %files -n cephadm
 %{_sbindir}/cephadm
+%attr(0700,root,root) %{_libexecdir}/cephadm_invoker.py
 %attr(0700,cephadm,cephadm) %dir %{_sharedstatedir}/cephadm
 %attr(0700,cephadm,cephadm) %dir %{_sharedstatedir}/cephadm/.ssh
 %config(noreplace) %attr(0600,cephadm,cephadm) %{_sharedstatedir}/cephadm/.ssh/authorized_keys
@@ -1186,6 +1164,8 @@ fi
 %{_datadir}/ceph/mgr/mgr_module.*
 %{_datadir}/ceph/mgr/mgr_util.*
 %{_datadir}/ceph/mgr/object_format.*
+%{_datadir}/ceph/mgr/ceph_secrets_client.*
+%{_datadir}/ceph/mgr/ceph_secrets_types.*
 %{_datadir}/ceph/mgr/cherrypy_mgr.py
 %{_unitdir}/ceph-mgr@.service
 %{_unitdir}/ceph-mgr.target
@@ -1333,6 +1313,7 @@ fi
 %{_bindir}/radosgw-es
 %{_bindir}/radosgw-object-expirer
 %{_bindir}/rgw-policy-check
+%{_bindir}/rgw-policy-test
 %dir %{_localstatedir}/lib/ceph/radosgw
 %{_unitdir}/ceph-radosgw@.service
 %{_unitdir}/ceph-radosgw.target
@@ -1346,6 +1327,7 @@ fi
 %{_mandir}/man8/ceph-diff-sorted.8*
 %{_mandir}/man8/radosgw.8*
 %{_mandir}/man8/rgw-policy-check.8*
+%{_mandir}/man8/rgw-policy-test.8*
 %endif
 
 %post radosgw
@@ -1476,6 +1458,7 @@ fi
 %{_includedir}/cephfs/dump.h
 %{_includedir}/cephfs/json.h
 %{_includedir}/cephfs/keys_and_values.h
+%{_includedir}/cephfs/snap_types.h
 %dir %{_includedir}/cephfs/metrics
 %{_includedir}/cephfs/metrics/Types.h
 %{_libdir}/libcephfs.so

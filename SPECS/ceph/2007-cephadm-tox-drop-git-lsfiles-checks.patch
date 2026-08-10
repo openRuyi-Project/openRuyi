@@ -17,13 +17,13 @@ Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
  1 file changed, 4 deletions(-)
 
 diff --git a/src/cephadm/tox.ini b/src/cephadm/tox.ini
-index 13104797d..9d86aecf1 100644
+index 2ca154279..b59c693a6 100644
 --- a/src/cephadm/tox.ini
 +++ b/src/cephadm/tox.ini
 @@ -58,10 +58,6 @@ deps =
      flake8-quotes
  commands =
-     flake8 --config=tox.ini {posargs:cephadm.py cephadmlib}
+     flake8 --config=tox.ini {posargs:cephadm.py cephadm_invoker.py cephadmlib}
 -    bash -c 'test $(git ls-files 'cephadm.py' 'cephadmlib/*.py' | sort -u | xargs grep "docker.io" | wc -l) == 1'
 -    bash -c 'test $(git ls-files 'cephadm.py' 'cephadmlib/*.py' | sort -u | xargs grep "quay.io" | wc -l) == 7'
 -# Downstream distributions may choose to alter this "docker.io" number,

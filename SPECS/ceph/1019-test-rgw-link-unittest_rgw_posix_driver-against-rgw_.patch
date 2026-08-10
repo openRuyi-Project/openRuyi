@@ -1,0 +1,35 @@
+From cd6cf958dd799f94e3559785764bafcb6e3c0459 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 10 Aug 2026 07:30:28 -0700
+Subject: [PATCH] test/rgw: link unittest_rgw_posix_driver against rgw_libs
+
+rgw_a_standalone only exists under WITH_RADOSGW_STANDALONE, but the
+test is built whenever WITH_RADOSGW_POSIX is on. With POSIX=ON and
+STANDALONE=OFF cmake takes the unknown target for a plain library
+name and passes -lrgw_a_standalone, so the test loses rgw's include
+directories and fails to compile:
+
+  rgw_iam_policy.h:28:10: fatal error: rapidjson/error/error.h: No
+  such file or directory
+
+The posix driver sources go into rgw_common either way, and the
+neighbouring unittest_posix_bucket_cache already links rgw_libs.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/test/rgw/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/test/rgw/CMakeLists.txt b/src/test/rgw/CMakeLists.txt
+index b5f7e2ef1738..25854d7776e6 100644
+--- a/src/test/rgw/CMakeLists.txt
++++ b/src/test/rgw/CMakeLists.txt
+@@ -471,7 +471,7 @@ target_include_directories(unittest_rgw_posix_driver
+   SYSTEM PRIVATE "${CMAKE_SOURCE_DIR}/src/rgw/driver/posix")
+ target_link_libraries(unittest_rgw_posix_driver
+   ${UNITTEST_LIBS}
+-  rgw_a_standalone
++  ${rgw_libs}
+   ${LMDB_LIBRARIES})
+ endif(WITH_RADOSGW_POSIX)
+ 
