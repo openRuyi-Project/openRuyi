@@ -9,8 +9,8 @@
 
 %global majorver        26
 %global minorver        0
-%global securityver     1
-%global buildver        8
+%global securityver     2
+%global buildver        10
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -22,8 +22,8 @@ Release:        %autorelease
 Summary:        OpenJDK latest Runtime Environment
 License:        GPL-2.0-only WITH Classpath-exception-2.0
 URL:            https://openjdk.org
-VCS:            git:https://github.com/openjdk/jdk25u
-#!RemoteAsset:  sha256:f5d5496a2f9a81605681209d93fc99726313e5d9a9a2af059f1adaa3914b862d
+VCS:            git:https://github.com/openjdk/jdk26u
+#!RemoteAsset:  sha256:dc7301511e010b22b28f2953c005b1e5bd7845c025440396f940c5c73d4b73d0
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset:  sha256:3fc35759502b620f010a9cd2b3da8454f8a49a156ceaebb00de1fd8335682d40
