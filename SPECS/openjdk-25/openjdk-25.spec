@@ -9,8 +9,8 @@
 
 %global majorver        25
 %global minorver        0
-%global securityver     3
-%global buildver        9
+%global securityver     4
+%global buildver        7
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -23,7 +23,7 @@ Summary:        OpenJDK 25 Runtime Environment
 License:        GPL-2.0-with-classpath-exception
 URL:            https://openjdk.org
 VCS:            git:https://github.com/openjdk/jdk25u
-#!RemoteAsset:  sha256:33991482d2e08eaa865212239db7815ad627f2449a836e4a4362301fc1893e12
+#!RemoteAsset:  sha256:7ac9dc76bc201e1a03e8a7bff750fb226cd7373182293bc1860c33317d47b2df
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset:  sha256:3fc35759502b620f010a9cd2b3da8454f8a49a156ceaebb00de1fd8335682d40
