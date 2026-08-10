@@ -72,11 +72,11 @@
 Name:           gcc%{vermajor}
 URL:            https://gcc.gnu.org/
 # Note: Major version updates requires a new package
-Version:        16.1.0
+Version:        16.2.0
 Release:        %autorelease
 License:        GPL-3.0-or-later
 Summary:        The GNU C Compiler and Support Files
-#!RemoteAsset:  sha256:50efb4d94c3397aff3b0d61a5abd748b4dd31d9d3f2ab7be05b171d36a510f79
+#!RemoteAsset:  sha256:e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
 Source:         https://ftpmirror.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
 
 BuildRequires:  xz
@@ -149,8 +149,6 @@ Requires:       libvtv >= %{version}-%{release}
 %endif
 Suggests:       gcc%{vermajor}-doc
 
-# Fix tree vectorization breaking NaN handling of fmin/fmax
-Patch1000:      1000-UPSTREAM-RISC-V-Change-initial-value-for-fmin-fmax-autovec-re.patch
 Patch2000:      2000-textdomain.patch
 Patch2001:      2001-rename-info-files.patch
 
