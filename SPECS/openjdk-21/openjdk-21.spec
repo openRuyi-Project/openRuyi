@@ -9,8 +9,8 @@
 
 %global majorver        21
 %global minorver        0
-%global securityver     11
-%global buildver        10
+%global securityver     12
+%global buildver        8
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -23,7 +23,7 @@ Summary:        OpenJDK 21 Runtime Environment
 License:        GPL-2.0-with-classpath-exception
 URL:            https://openjdk.org
 VCS:            git:https://github.com/openjdk/jdk21u
-#!RemoteAsset:  sha256:18edf62aa95c99325725475c0ad5621d8de61f4c84fdb8d2b7efd015a6de8e42
+#!RemoteAsset:  sha256:4061da54ee3b69a7b95a5403f3b170e1f6a08b192bde995a5cf607626c839626
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset:  sha256:8171d95189e675e297b5cb96c7ac6247ab4e9f48da82b13f491fc46ef5d97836
