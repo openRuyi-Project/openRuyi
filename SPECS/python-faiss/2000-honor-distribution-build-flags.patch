@@ -1,0 +1,20 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 1111111..2222222 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -67,15 +67,5 @@ BUILD_TESTING = "OFF"
+ BUILD_SHARED_LIBS = "ON"
+ 
+-# Linux: enable LTO and strip dead code and symbols to reduce wheel size.
+-[[tool.scikit-build.overrides]]
+-if.platform-system = "linux"
+-inherit.cmake.define = "append"
+-cmake.define.FAISS_USE_LTO = "ON"
+-cmake.define.CMAKE_C_FLAGS = "-fdata-sections -ffunction-sections"
+-cmake.define.CMAKE_CXX_FLAGS = "-fdata-sections -ffunction-sections"
+-cmake.define.CMAKE_SHARED_LINKER_FLAGS = "-Wl,--gc-sections -Wl,--strip-all"
+-cmake.define.CMAKE_MODULE_LINKER_FLAGS = "-Wl,--gc-sections -Wl,--strip-all"
+-
+ # macOS: enable LTO and strip dead code to reduce wheel size.
+ [[tool.scikit-build.overrides]]
+ if.platform-system = "darwin"
