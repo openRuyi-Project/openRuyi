@@ -9,8 +9,8 @@
 
 %global majorver        17
 %global minorver        0
-%global securityver     19
-%global buildver        10
+%global securityver     20
+%global buildver        8
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -23,7 +23,7 @@ Summary:        OpenJDK 17 Runtime Environment
 License:        GPL-2.0-with-classpath-exception
 URL:            https://openjdk.org
 VCS:            git:https://github.com/openjdk/jdk17u
-#!RemoteAsset:  sha256:87dfd1c72a3c9edec212176fd051dec2249bc42202b539b1cb308f0cc7565b74
+#!RemoteAsset:  sha256:553420058f849043d7bf7715771a5851046043e7d977626d43ee0e3a67b23ddf
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset:  sha256:42cc01235222a27576de8331a532da200ce36c9d155c93e9e0b4d565dcaf684a
