@@ -8,6 +8,7 @@
 %global srcname hatchling
 
 Name:           python-%{srcname}
+# Before upgrading, check whether python-securesystemslib still requires this Hatchling version.
 Version:        1.29.0
 Release:        %autorelease
 Summary:        The build backend used by Hatch
