@@ -12,10 +12,8 @@ Summary:        A library for editing typed command lines
 License:        GPL-3.0-or-later AND GPL-2.0-or-later AND GFDL-1.3-no-invariants-or-later
 URL:            https://tiswww.case.edu/php/chet/readline/rltop.html
 VCS:            git:https://https.git.savannah.gnu.org/git/readline.git
-#!RemoteAsset
-Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz.sig
+#!RemoteAsset:  sha256:fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
+Source0:        https://ftpmirror.gnu.org/gnu/readline/readline-%{version}.tar.gz
 BuildSystem:    autotools
 
 # Official upstream patches
@@ -67,7 +65,7 @@ rm -vf %{buildroot}%{_infodir}/dir*
 %{_includedir}/readline/
 %{_libdir}/libreadline.so
 %{_libdir}/libhistory.so
-%{_libdir}/pkgconfig/%{name}.pc
+%{_libdir}/pkgconfig/readline.pc
 %{_libdir}/pkgconfig/history.pc
 %{_mandir}/man3/readline.3*
 %{_mandir}/man3/history.3*
@@ -76,4 +74,4 @@ rm -vf %{buildroot}%{_infodir}/dir*
 %{_libdir}/libhistory.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
