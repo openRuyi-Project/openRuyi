@@ -19,6 +19,8 @@ BuildSystem:    autotools
 # Official upstream patches
 # Patches are converted to apply with '-p1'
 Patch0:         0001-readline-8.3-patch-1.patch
+Patch1:         0002-readline-8.3-patch-2.patch
+Patch2:         0003-readline-8.3-patch-3.patch
 # Other patches
 # symbol lookup error: /usr/lib64/libreadline.so.8: undefined symbol: UP
 # patch from https://src.fedoraproject.org/rpms/readline/blob/97a022b1e934382ced4391e648f83c056f5ac435/f/readline-8.0-shlib.patch
