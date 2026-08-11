@@ -12,13 +12,13 @@
 %bcond_with openssl
 
 Name:           curl
-Version:        8.20.0
+Version:        8.21.0
 Release:        %autorelease
 Summary:        A Tool for Transferring Data from URLs
 License:        curl
 URL:            https://curl.se
 VCS:            git:https://github.com/curl/curl
-#!RemoteAsset:  sha256:63fe2dc148ba0ceae89922ef838f7e5c946272c2e78b7c59fab4b79d3ce2b896
+#!RemoteAsset:  sha256:aa1b66a70eace83dc624508745646c08ae561de512ab403adffb93ac87fc72e6
 Source0:        https://curl.se/download/curl-%{version}.tar.xz
 BuildSystem:    autotools
 
