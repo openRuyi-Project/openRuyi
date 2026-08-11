@@ -21,7 +21,8 @@ BuildSystem:    autotools
 Patch0:         0001-readline-8.3-patch-1.patch
 # Other patches
 # symbol lookup error: /usr/lib64/libreadline.so.8: undefined symbol: UP
-Patch1:         0010-readline-link-ncurses.patch
+# patch from https://src.fedoraproject.org/rpms/readline/blob/97a022b1e934382ced4391e648f83c056f5ac435/f/readline-8.0-shlib.patch
+Patch2000:      2000-readline-8.0-shlib.patch
 
 BuildOption(conf):  --with-curses
 BuildOption(conf):  --disable-install-examples
