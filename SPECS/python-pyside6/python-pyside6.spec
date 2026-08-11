@@ -40,6 +40,7 @@ BuildRequires:  ninja
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  clang-devel
+BuildRequires:  llvm22-static
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(setuptools)
@@ -185,12 +186,6 @@ mkdir -p %{buildroot}%{python3_sitelib}/%{camel_name}/scripts
 mv %{buildroot}%{_bindir}/{android_deploy.py,deploy_lib,deploy.py,metaobjectdump.py,project_lib,project.py,pyside_tool.py,qml.py,qtpy2cpp_lib,qtpy2cpp.py,requirements-android.txt} %{buildroot}%{python3_sitelib}/%{camel_name}/scripts
 mkdir -p %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
 mv %{buildroot}%{_bindir}/shiboken_tool.py %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
-
-# Fix CMake config files to use correct absolute paths (OpenSUSE solution)
-# The upstream build is designed for wheel installation with relative paths,
-# but for system installation we need absolute paths
-sed -i 's#/typesystems#/share/PySide6/typesystems#g' %{buildroot}%{_libdir}/cmake/PySide6/*.cmake
-sed -i 's#/glue#/share/PySide6/glue#g' %{buildroot}%{_libdir}/cmake/PySide6/*.cmake
 
 # Fix all Python shebangs recursively
 # -p preserves timestamps
