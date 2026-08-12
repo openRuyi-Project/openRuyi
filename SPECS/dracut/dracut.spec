@@ -6,17 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dracut
-Version:        111
+Version:        112
 Release:        %autorelease
 Summary:        Library to create ISO 9660 disk images
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            https://github.com/dracut-ng/dracut-ng
-#!RemoteAsset:  sha256:ca949190692e91611ef16ea3642c0f764f63948860f3f742524310728c991493
+#!RemoteAsset:  sha256:839d21eb4bd27bb0ee40d74c9da46df088c2e1425fcd8c3ea62b7e3a3dd28a91
 Source:         %{url}/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
-
-# https://github.com/dracut-ng/dracut/pull/2482
-Patch2000:      2000-fix-dbus-restrict-After-Requires-removal-patterns.patch
 
 BuildOption(conf):  --systemdsystemunitdir=%{_unitdir}
 BuildOption(conf):  --bashcompletiondir=$(pkg-config --variable=completionsdir bash-completion)
@@ -198,6 +195,8 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/70pcmcia
 %{_prefix}/lib/dracut/modules.d/70qemu
 %{_prefix}/lib/dracut/modules.d/70qemu-net
+%{_prefix}/lib/dracut/modules.d/70qcom-adsp/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/70qcom-adsp/qcom-adsp-pre-udev.sh
 %{_prefix}/lib/dracut/modules.d/70uefi-lib
 %{_prefix}/lib/dracut/modules.d/71overlayfs-crypt
 %{_prefix}/lib/dracut/modules.d/71systemd-cryptsetup
@@ -208,6 +207,12 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/73pkcs11
 %{_prefix}/lib/dracut/modules.d/73tpm2-tss
 %{_prefix}/lib/dracut/modules.d/74debug
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony-ntp-source.sh
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony-wait.service
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony.conf
+%{_prefix}/lib/dracut/modules.d/74chrony/chronyd.service
+%{_prefix}/lib/dracut/modules.d/74chrony/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/74chrony/parse-ntp.sh
 %{_prefix}/lib/dracut/modules.d/74cifs
 %{_prefix}/lib/dracut/modules.d/74fcoe
 %{_prefix}/lib/dracut/modules.d/74fcoe-uefi
