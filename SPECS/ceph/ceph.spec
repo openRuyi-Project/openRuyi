@@ -444,6 +444,8 @@ Requires:       luarocks
 1019-test-rgw-link-unittest_rgw_posix_driver-against-rgw_.patch
 # https://github.com/ceph/ceph/pull/69898
 1020-fix-AbstractWriteLog.patch
+# https://github.com/ceph/ceph/pull/71055
+1021-common-options-use-full-libdir-for-osd_class_dir.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
