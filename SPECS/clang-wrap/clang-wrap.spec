@@ -4,8 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global git_ver git20260720.c9b91a6
-%global git_commit c9b91a6f08ff34ebf3a23631afd94b8c2fafc51b
+%global git_ver git20260813.61647ae
+%global git_commit 61647ae15a409fef8d1663feae720b5467b0055d
 
 Name:           clang-wrap
 Version:        0+%{git_ver}
@@ -13,7 +13,7 @@ Release:        %{autorelease}
 License:        Mulan-2.0
 Summary:        clang-wrap to collect LLVM IR
 URL:            https://github.com/openRuyi-Project/clang-wrap
-#!RemoteAsset:  sha256:0238b50f64af8cfaef0b0c12efd01ef4debfb9813a6e8900d06f1ad4b3451ddb
+#!RemoteAsset:  sha256:41fa9d19b1050db402e358dfb324f7b3abfbb064db15db699375ff06cd1fda29
 Source0:        https://github.com/openRuyi-Project/clang-wrap/archive/%{git_commit}.tar.gz
 Source1:        macros.clang-wrap
 BuildSystem:    rust
@@ -23,6 +23,11 @@ BuildRequires:  rust
 BuildRequires:  rust-rpm-macros
 BuildRequires:  crate(pathdiff-0.2/default)
 BuildRequires:  crate(serde-json-1)
+BuildRequires:  crate(goblin-0.10)
+BuildRequires:  crate(hex-0.4)
+BuildRequires:  crate(sha2-0.10)
+BuildRequires:  crate(log-0.4)
+BuildRequires:  crate(scroll-derive-0.13)
 
 %description
 %{summary}
@@ -36,6 +41,7 @@ These wrappers work on normal object and the IR files at the same time.
 install -p -m0644 -D %{SOURCE1} %{buildroot}%{_rpmmacrodir}/macros.clang-wrap
 cargo install --path=. --root=%{buildroot}/%{_libdir}/clang-wrap
 ln -sf clang %{buildroot}/%{_libdir}/clang-wrap/bin/clang++
+cp -rf cmake/cmake %{buildroot}/%{_libdir}/clang-wrap/
 
 %check
 # there's no check
@@ -45,6 +51,9 @@ mkdir -p %{clang_wrap_varlibdir}
 while read file; do
     name=$(basename "$file")
     case "$name" in
+        llvm-ar-[0-9]* | llvm-ar)
+            ln -sf %{_libdir}/clang-wrap/bin/ar %{clang_wrap_varlibdir}/$name
+            ;;
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
             ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
             ;;
@@ -65,6 +74,9 @@ fi
 while read file; do
     name=$(basename "$file")
     case "$name" in
+        llvm-ar-[0-9]* | llvm-ar)
+            rm -f %{clang_wrap_varlibdir}/$name
+            ;;
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
             rm -f %{clang_wrap_varlibdir}/$name
             ;;
@@ -94,12 +106,15 @@ for file in %{_libdir}/clang-wrap/bin/*; do
             ;;
     esac
 done
-for file in %{_bindir}/clang*; do
+for file in %{_bindir}/clang* %{_bindir}/llvm-ar*; do
     [ -e "$file" ] || continue
     name=$(basename "$file")
     case "$name" in
         clang-[0-9]* | clang++-[0-9]* | clang | clang++)
-            ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
+           ln -sf %{_libdir}/clang-wrap/bin/clang %{clang_wrap_varlibdir}/$name
+           ;;
+        llvm-ar-[0-9]* | llvm-ar)
+           ln -sf %{_libdir}/clang-wrap/bin/ar %{clang_wrap_varlibdir}/$name
            ;;
     esac
 done
