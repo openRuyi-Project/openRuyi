@@ -226,9 +226,6 @@ cd build-%{_target_cpu}
     --disable-build-nscd \
     --disable-nscd \
 %endif
-    libdir=%{_libdir} \
-    slibdir=%{_libdir} \
-    complocaledir=%{_prefix}/lib/locale \
     --disable-crypt || \
   {
     rc=$?;
@@ -238,7 +235,7 @@ cd build-%{_target_cpu}
     exit $rc;
   }
 
-%make_build libdir=%{_libdir} slibdir=%{_libdir} complocaledir=%{_prefix}/lib/locale
+%make_build
 cd ..
 
 %check
@@ -272,16 +269,16 @@ ln -s %{buildroot}%{_sbindir} %{buildroot}/sbin
 ln -s bin %{buildroot}/%{_prefix}/sbin
 %endif
 
+%ifarch riscv64
 mkdir -p %{buildroot}%{_libdir}
-mkdir -p %{buildroot}%{_prefix}/lib
-mkdir -p %{buildroot}%{_prefix}/lib/locale
+ln -s . %{buildroot}%{_libdir}/lp64d
+%endif
 
 # Install base glibc
-%make_install libdir=%{_libdir} slibdir=%{_libdir} install_root=%{buildroot} \
-              complocaledir=%{_prefix}/lib/locale -C build-%{_target_cpu}
-make %{?_smp_mflags} %{?make_output_sync} install_root=%{buildroot} \
-     complocaledir=%{_prefix}/lib/locale \
-     -C build-%{_target_cpu} localedata/install-locale-files
+%make_install install_root=%{buildroot} -C build-%{_target_cpu}
+cd build-%{_target_cpu}
+make %{?_smp_mflags} %{?make_output_sync} install_root=%{buildroot} localedata/install-locale-files
+cd ..
 
 %find_lang libc --generate-subpackages
 
@@ -300,10 +297,9 @@ cat > %{buildroot}/etc/ld.so.conf <<EOF
 %endif
 /usr/local/lib
 include /etc/ld.so.conf.d/*.conf
-%if "%{_lib}" != "lib"
-/usr/%{_lib}
-%endif
-/usr/lib
+# /lib64, /lib, /usr/lib64 and /usr/lib gets added
+# automatically by ldconfig after parsing this file.
+# So, they do not need to be listed.
 EOF
 # Add ldconfig cache directory for directory ownership
 mkdir -p %{buildroot}/var/cache/ldconfig
@@ -410,6 +406,9 @@ rpm.spawn({"%{_sbindir}/ldconfig"})
 %attr(755,root,root) %{rtlddir}/%{rtld_name}
 %if 0%{?rtld_oldname:1}
 %attr(755,root,root) %{rtlddir}/%{rtld_oldname}
+%endif
+%ifarch riscv64
+%{_libdir}/lp64d
 %endif
 %{_libdir}/libBrokenLocale.so.1
 %{_libdir}/libanl.so.1
