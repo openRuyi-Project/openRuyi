@@ -272,7 +272,10 @@ ln -s %{buildroot}%{_sbindir} %{buildroot}/sbin
 ln -s bin %{buildroot}/%{_prefix}/sbin
 %endif
 
+%ifarch riscv64
 mkdir -p %{buildroot}%{_libdir}
+ln -s . %{buildroot}%{_libdir}/lp64d
+%endif
 mkdir -p %{buildroot}%{_prefix}/lib
 mkdir -p %{buildroot}%{_prefix}/lib/locale
 
@@ -410,6 +413,9 @@ rpm.spawn({"%{_sbindir}/ldconfig"})
 %attr(755,root,root) %{rtlddir}/%{rtld_name}
 %if 0%{?rtld_oldname:1}
 %attr(755,root,root) %{rtlddir}/%{rtld_oldname}
+%endif
+%ifarch riscv64
+%{_libdir}/lp64d
 %endif
 %{_libdir}/libBrokenLocale.so.1
 %{_libdir}/libanl.so.1
