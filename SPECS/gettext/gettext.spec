@@ -19,6 +19,10 @@ VCS:            git:https://git.savannah.gnu.org/git/gettext.git
 Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
+# See https://sourceware.org/bugzilla/show_bug.cgi?id=34437
+Patch2000:      2000-gettext-gnulib-posix-addchdr.patch
+
+BuildOption(prep):  -p1
 BuildOption(conf):  --disable-csharp
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --with-xz
