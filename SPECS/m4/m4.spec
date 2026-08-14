@@ -24,6 +24,10 @@ VCS:            git:http://git.savannah.gnu.org/r/m4.git
 Source0:        https://ftpmirror.gnu.org/gnu/m4/m4-%{version}.tar.xz
 BuildSystem:    autotools
 
+# See https://sourceware.org/bugzilla/show_bug.cgi?id=34437
+Patch2000:      2000-m4-1.4.21-gnulib-posix_addchdr.patch
+
+BuildOption(prep):  -p1
 BuildOption(conf):  --without-included-regex
 %if %{with nls}
 BuildOption(conf):  --enable-nls
@@ -59,4 +63,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_infodir}/m4.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
