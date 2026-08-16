@@ -1,0 +1,99 @@
+From: corestudy <2760018909@qq.com>
+Date: Sun, 16 Aug 2026 14:20:00 +0800
+Subject: [PATCH] util: handle short writes and synchronization errors
+
+write() may successfully transfer fewer bytes than requested.  The old
+insert_data() treated that case as an error but returned -errno, which can be
+zero after a successful short write.  It also ignored delayed errors reported
+by fsync() or close().  This can silently leave an incomplete image while the
+generator reports success.
+
+Retry interrupted writes, continue after positive short writes, reject a zero
+length write, and propagate synchronization and close failures.
+
+diff --git a/util.c b/util.c
+--- a/util.c
++++ b/util.c
+@@ -209,14 +209,19 @@ void debug(const char *fmt, ...)
+ static int fsync_close(struct image *image, int fd)
+ {
+-	int a, b;
+-
+-	a = fsync(fd);
+-	if (a)
+-		image_error(image, "fsync() failed: %s\n", strerror(errno));
+-	b = close(fd);
+-	if (b)
+-		image_error(image, "close() failed: %s\n", strerror(errno));
+-	return (a || b) ? -1 : 0;
++	int ret = 0;
++
++	if (fsync(fd) < 0) {
++		ret = -errno;
++		image_error(image, "fsync() failed: %s\n", strerror(-ret));
++	}
++	if (close(fd) < 0) {
++		int close_ret = -errno;
++
++		image_error(image, "close() failed: %s\n", strerror(-close_ret));
++		if (!ret)
++			ret = close_ret;
++	}
++	return ret;
+ }
+ 
+ /*
+@@ -694,32 +699,42 @@ int insert_data(struct image *image, const void *_data, const char *outfile,
+ {
+ 	const char *data = _data;
+ 	int outf = -1;
+-	int now, r;
++	ssize_t written;
+ 	int ret = 0;
+ 
+ 	outf = open_file(image, outfile, 0);
+ 	if (outf < 0)
+ 		return outf;
+ 
+ 	if (lseek(outf, offset, SEEK_SET) < 0) {
+ 		ret = -errno;
+ 		image_error(image, "seek %s: %s\n", outfile, strerror(errno));
+ 		goto err_out;
+ 	}
+ 	while (size) {
+-		now = min(size, 4096);
+-
+-		r = write(outf, data, now);
+-		if (r < now) {
++		size_t now = min(size, (size_t)4096);
++
++		do {
++			written = write(outf, data, now);
++		} while (written < 0 && errno == EINTR);
++
++		if (written < 0) {
+ 			ret = -errno;
+-			image_error(image, "write %s: %s\n", outfile, strerror(errno));
++			image_error(image, "write %s: %s\n", outfile, strerror(-ret));
++			goto err_out;
++		}
++		if (written == 0) {
++			ret = -EIO;
++			image_error(image, "short write to %s\n", outfile);
+ 			goto err_out;
+ 		}
+-		size -= now;
+-		data += now;
++		size -= written;
++		data += written;
+ 	}
+ err_out:
+-	fsync_close(image, outf);
++	written = fsync_close(image, outf);
++	if (!ret && written < 0)
++		ret = written;
+ 
+ 	return ret;
+ }
+-- 
+2.53.0

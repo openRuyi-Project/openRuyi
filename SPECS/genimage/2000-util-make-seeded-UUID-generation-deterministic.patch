@@ -1,0 +1,51 @@
+From: corestudy <2760018909@qq.com>
+Date: Sat, 15 Aug 2026 15:30:00 +0800
+Subject: [PATCH] util: make seeded UUID generation deterministic
+
+C does not define the evaluation order of function arguments.  Calling
+random32() eight times in the xasprintf() argument list therefore produces
+different UUIDs on x86_64 and riscv64 even when randomseed is fixed.
+
+Generate the values in a defined order before formatting the UUID.  Fill the
+array backwards to preserve the output produced by the x86_64 builds used for
+the existing v20 randomseed.expected fixture.
+
+---
+ util.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/util.c b/util.c
+index f6641e2..66cdbdb 100644
+--- a/util.c
++++ b/util.c
+@@ -817,13 +817,22 @@ void uuid_parse(const char *str, unsigned char *uuid)
+ char *uuid_random(void)
+ {
+ 	char *uuid;
++	uint32_t random[8];
++	int i;
++
++	/*
++	 * Function argument evaluation order is unspecified.  Preserve the
++	 * right-to-left order used to generate the existing test fixture, but
++	 * make it explicit so seeded output is identical on every architecture.
++	 */
++	for (i = 8; i > 0; i--)
++		random[i - 1] = random32();
+ 
+ 	xasprintf(&uuid, "%04ux%04ux-%04ux-%04ux-%04ux-%04ux%04ux%04ux",
+-		  random32() & 0xffff, random32() & 0xffff,
+-		  random32() & 0xffff,
+-		  (random32() & 0x0fff) | 0x4000,
+-		  (random32() & 0x3fff) | 0x8000,
+-		  random32() & 0xffff, random32() & 0xffff, random32() & 0xffff);
++		  random[0] & 0xffff, random[1] & 0xffff, random[2] & 0xffff,
++		  (random[3] & 0x0fff) | 0x4000,
++		  (random[4] & 0x3fff) | 0x8000,
++		  random[5] & 0xffff, random[6] & 0xffff, random[7] & 0xffff);
+ 
+ 	return uuid;
+ }
+-- 
+2.53.0
+
