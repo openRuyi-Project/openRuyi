@@ -1,0 +1,284 @@
+From 6bfbe9a6dd032ee2826537864c8239eb8b17a611 Mon Sep 17 00:00:00 2001
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+Date: Mon, 15 Jun 2026 07:40:47 +0200
+Subject: [PATCH] test: erofs: add support for more erofs-utils version
+
+See: https://github.com/pengutronix/genimage/issues/309
+---
+ .github/workflows/tests.yml           |  2 +-
+ Makefile.am                           |  5 +-
+ test/{erofs.dump.old => erofs.dump.0} | 14 ++--
+ test/{erofs.dump.new => erofs.dump.1} |  1 -
+ test/erofs.dump.2                     | 92 +++++++++++++++++++++++++++
+ test/ext.test                         |  5 --
+ test/filesystem.test                  | 29 ++++++---
+ test/test-setup.sh                    |  5 ++
+ 8 files changed, 128 insertions(+), 25 deletions(-)
+ rename test/{erofs.dump.old => erofs.dump.0} (95%)
+ rename test/{erofs.dump.new => erofs.dump.1} (98%)
+ create mode 100644 test/erofs.dump.2
+
+diff --git a/.github/workflows/tests.yml b/.github/workflows/tests.yml
+index 8f42d12..07a241e 100644
+--- a/.github/workflows/tests.yml
++++ b/.github/workflows/tests.yml
+@@ -15,7 +15,7 @@ jobs:
+           fake: sudo rm /usr/include/linux/fiemap.h /usr/include/linux/fs.h
+           env: ac_cv_func_fallocate=no
+         - os: ubuntu-24.04
+-          pkgs: device-tree-compiler rauc android-sdk-libsparse-utils u-boot-tools f2fs-tools arm-trusted-firmware-tools mdadm
++          pkgs: device-tree-compiler rauc android-sdk-libsparse-utils u-boot-tools f2fs-tools arm-trusted-firmware-tools mdadm erofs-utils
+ 
+     steps:
+     - name: Inspect environment
+diff --git a/Makefile.am b/Makefile.am
+index 2d6dbb9..6f737e7 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -63,8 +63,9 @@ EXTRA_DIST += \
+ 	test/custom.config \
+ 	test/erofs.old.config \
+ 	test/erofs.new.config \
+-	test/erofs.dump.old \
+-	test/erofs.dump.new \
++	test/erofs.dump.0 \
++	test/erofs.dump.1 \
++	test/erofs.dump.2 \
+ 	test/exec-check.sh \
+ 	test/exec-fail.config \
+ 	test/exec.config \
+diff --git a/test/erofs.dump.old b/test/erofs.dump.0
+similarity index 95%
+rename from test/erofs.dump.old
+rename to test/erofs.dump.0
+index 88bb2bd..4e31318 100644
+--- a/test/erofs.dump.old
++++ b/test/erofs.dump.0
+@@ -3,9 +3,10 @@ Filesystem blocks:                            2
+ Filesystem inode metadata start block:        0
+ Filesystem shared xattr metadata start block: 0
+ Filesystem root nid:                          36
++Filesystem lz4_max_distance:                  0
++Filesystem sb_extslots:                       0
+ Filesystem inode count:                       41
+ Filesystem created:                           Sat Jan  1 00:00:00 2000
+-Filesystem features:                          sb_csum mtime 
+ Filesystem UUID:                              83d9e40a-fb96-469e-abb9-24fb3c3bd0ff
+ Filesystem total file count:		41
+ Filesystem unknown type count:		0
+@@ -73,12 +74,11 @@ type                   count            ratio |distribution
+ .oat             	0               0.00% |                                                  |
+ .rc              	0               0.00% |                                                  |
+ .otf             	0               0.00% |                                                  |
+-.txt             	0               0.00% |                                                  |
+ others           	24            100.00% |##################################################|
+-File : /
++Path : /
+ Size: 95  On-disk size: 95  directory
+ NID: 36   Links: 6   Layout: 2   Compression ratio: 100.00%
+-Inode size: 64   Extent size: 0   Xattr size: 0
++Inode size: 64   Xattr size: 0
+ Uid: 0   Gid: 0  Access: 0755/rwxr-xr-x
+ Timestamp: 2000-01-01 00:00:00.000000000
+ 
+@@ -86,6 +86,6 @@ Timestamp: 2000-01-01 00:00:00.000000000
+         36    2  .
+         36    2  ..
+         41    2  bar
+-        70    2  baz
+-        99    2  foo
+-       130    2  with spaces
++        46    2  baz
++        51    2  foo
++        56    2  with spaces
+diff --git a/test/erofs.dump.new b/test/erofs.dump.1
+similarity index 98%
+rename from test/erofs.dump.new
+rename to test/erofs.dump.1
+index d85c294..d5947d7 100644
+--- a/test/erofs.dump.new
++++ b/test/erofs.dump.1
+@@ -8,7 +8,6 @@ Filesystem lz4_max_distance:                  0
+ Filesystem sb_size:                           128
+ Filesystem inode count:                       41
+ Filesystem created:                           Sat Jan  1 00:00:00 2000
+-Filesystem features:                          sb_csum mtime 
+ Filesystem UUID:                              83d9e40a-fb96-469e-abb9-24fb3c3bd0ff
+ Filesystem total file count:		41
+ Filesystem unknown type count:		0
+diff --git a/test/erofs.dump.2 b/test/erofs.dump.2
+new file mode 100644
+index 0000000..ab3833e
+--- /dev/null
++++ b/test/erofs.dump.2
+@@ -0,0 +1,92 @@
++Filesystem magic number:                      0xE0F5E1E2
++Filesystem blocksize:                         4096
++Filesystem blocks:                            1
++Filesystem inode metadata start block:        0
++Filesystem shared xattr metadata start block: 0
++Filesystem root nid:                          36
++Filesystem lz4_max_distance:                  0
++Filesystem sb_size:                           128
++Filesystem inode count:                       41
++Filesystem created:                           Sat Jan  1 00:00:00 2000
++Filesystem UUID:                              83d9e40a-fb96-469e-abb9-24fb3c3bd0ff
++Filesystem total file count:		41
++Filesystem unknown type count:		0
++Filesystem regular file count:		24
++Filesystem directory count:		17
++Filesystem char dev count:		0
++Filesystem block dev count:		0
++Filesystem FIFO file count:		0
++Filesystem SOCK file count:		0
++Filesystem symlink file count:		0
++Filesystem compressed files:            0
++Filesystem uncompressed files:          41
++Filesystem total original file size:    0 Bytes
++Filesystem total file size:             0 Bytes
++Filesystem compress rate:               nan%
++
++Original file size distribution:
++>=(KB) .. <(KB)        count            ratio |distribution                                      |
++     0 .. 1     	24            100.00% |##################################################|
++     1 .. 2     	0               0.00% |                                                  |
++     2 .. 4     	0               0.00% |                                                  |
++     4 .. 8     	0               0.00% |                                                  |
++     8 .. 16    	0               0.00% |                                                  |
++    16 .. 32    	0               0.00% |                                                  |
++    32 .. 64    	0               0.00% |                                                  |
++    64 .. 128   	0               0.00% |                                                  |
++   128 .. 256   	0               0.00% |                                                  |
++   256 .. 512   	0               0.00% |                                                  |
++   512 .. 1024  	0               0.00% |                                                  |
++  1024 .. 2048  	0               0.00% |                                                  |
++  2048 .. 4096  	0               0.00% |                                                  |
++  4096 .. 8192  	0               0.00% |                                                  |
++  8192 .. 16384 	0               0.00% |                                                  |
++ 16384 .. 32768 	0               0.00% |                                                  |
++ 32768 ..       	0               0.00% |                                                  |
++
++On-disk file size distribution:
++>=(KB) .. <(KB)        count            ratio |distribution                                      |
++     0 .. 1     	24            100.00% |##################################################|
++     1 .. 2     	0               0.00% |                                                  |
++     2 .. 4     	0               0.00% |                                                  |
++     4 .. 8     	0               0.00% |                                                  |
++     8 .. 16    	0               0.00% |                                                  |
++    16 .. 32    	0               0.00% |                                                  |
++    32 .. 64    	0               0.00% |                                                  |
++    64 .. 128   	0               0.00% |                                                  |
++   128 .. 256   	0               0.00% |                                                  |
++   256 .. 512   	0               0.00% |                                                  |
++   512 .. 1024  	0               0.00% |                                                  |
++  1024 .. 2048  	0               0.00% |                                                  |
++  2048 .. 4096  	0               0.00% |                                                  |
++  4096 .. 8192  	0               0.00% |                                                  |
++  8192 .. 16384 	0               0.00% |                                                  |
++ 16384 .. 32768 	0               0.00% |                                                  |
++ 32768 ..       	0               0.00% |                                                  |
++
++File type distribution:
++type                   count            ratio |distribution                                      |
++.txt             	0               0.00% |                                                  |
++.so              	0               0.00% |                                                  |
++.xml             	0               0.00% |                                                  |
++.apk             	0               0.00% |                                                  |
++.odex            	0               0.00% |                                                  |
++.vdex            	0               0.00% |                                                  |
++.oat             	0               0.00% |                                                  |
++.rc              	0               0.00% |                                                  |
++.otf             	0               0.00% |                                                  |
++others           	24            100.00% |##################################################|
++Path : /
++Size: 95  On-disk size: 95  directory
++NID: 36   Links: 6   Layout: 2   Compression ratio: 100.00%
++Inode size: 32   Xattr size: 0
++Uid: 0   Gid: 0  Access: 0755/rwxr-xr-x
++Timestamp: 2000-01-01 00:00:00.000000000
++
++       NID TYPE  FILENAME
++        36    2  .
++        36    2  ..
++        40    2  bar
++        44    2  baz
++        48    2  foo
++        52    2  with spaces
+diff --git a/test/ext.test b/test/ext.test
+index 1436342..3072bdb 100755
+--- a/test/ext.test
++++ b/test/ext.test
+@@ -23,11 +23,6 @@ compare_label() {
+ 	fi
+ }
+ 
+-version_leq() {
+-	first="$(printf "${1}\n${2}" | sort -V | head -n1)"
+-	test "${first}" == "${1}"
+-}
+-
+ check_ext() {
+ 	[ "$verbose" = "t" ] && set -x
+ 	# UUID is randomly generated
+diff --git a/test/filesystem.test b/test/filesystem.test
+index bc1633b..e1440cf 100755
+--- a/test/filesystem.test
++++ b/test/filesystem.test
+@@ -75,21 +75,32 @@ test_expect_success dd,mkdosfs,mcopy "vfat" "
+ 	check_filelist
+ "
+ 
++prepare_erofs() {
++	erofs_version="$(mkfs.erofs --version | sed -n 's/^mkfs.erofs.* \(.*\)/\1/p')"
++	config=erofs.new.config
++	size=4096
++	if ! mkfs.erofs --help |& grep -q -- --mkfs-time; then
++		dump="${testdir}/erofs.dump.0"
++		config=erofs.old.config
++		size=8192
++	elif version_leq "${erofs_version}" "1.8.9"; then
++		dump="${testdir}/erofs.dump.1"
++		size=8192
++	else
++		dump="${testdir}/erofs.dump.2"
++	fi
++}
++
+ exec_test_set_prereq mkfs.erofs
+ exec_test_set_prereq fsck.erofs
+ test_expect_success mkfs_erofs,fsck_erofs "erofs" "
+-	if mkfs.erofs --help |& grep -q -- --mkfs-time; then
+-		dump=\"${testdir}/erofs.dump.new\"
+-		config=erofs.new.config
+-	else
+-		dump=\"${testdir}/erofs.dump.old\"
+-		config=erofs.old.config
+-	fi
++	prepare_erofs &&
+ 	SOURCE_DATE_EPOCH=946684800 run_genimage_root \"\${config}\" test.erofs &&
+ 	fsck.erofs -p images/test.erofs | tee erofs.log &&
+ 	test_must_fail grep -q 'Filesystem was changed' erofs.log &&
+-	check_size images/test.erofs 8192 &&
+-	dump.erofs -s -S --ls --path=/ images/test.erofs | sed 's/-nan/nan/' > erofs.dump &&
++	check_size images/test.erofs \"\${size}\" &&
++	dump.erofs -s -S --ls --path=/ images/test.erofs | sed 's/-nan/nan/' | \
++		grep -vE '(Filesystem .*features:|Required upstream Linux)' > erofs.dump &&
+ 	test_cmp \"\${dump}\" erofs.dump
+ "
+ 
+diff --git a/test/test-setup.sh b/test/test-setup.sh
+index 8913ebc..0fc71fe 100644
+--- a/test/test-setup.sh
++++ b/test/test-setup.sh
+@@ -113,6 +113,11 @@ exec_test_set_prereq() {
+ 	command -v "${1}" > /dev/null && test_set_prereq "${1/./_}"
+ }
+ 
++version_leq() {
++	first="$(printf "${1}\n${2}" | sort -V | head -n1)"
++	test "${first}" == "${1}"
++}
++
+ set -o pipefail
+ 
+ setup_data
