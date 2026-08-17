@@ -173,6 +173,7 @@ exit 0
 %{_datadir}/authselect/default/*
 %{_bindir}/authselect
 %{_libdir}/libauthselect.so.*
+%{bash_completions_dir}/authselect-completion.sh
 
 %files -n openruyi-authselect-profiles
 %dir %{_datadir}/authselect/vendor/openruyi-local
