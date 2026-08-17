@@ -120,7 +120,7 @@ ls -lR %{buildroot}/%{_libdir}/libelf*
 
 %find_lang %{name} --generate-subpackages
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc AUTHORS ChangeLog NEWS NOTES README THANKS TODO
 %{_bindir}/eu-addr2line
