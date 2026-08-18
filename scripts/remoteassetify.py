@@ -60,7 +60,7 @@ def spec_filter(text: str) -> str:
     GOOD = [
         r'^(Source|Patch)\d*:',
         r'^(Name|Version|Release|Summary|License|URL|VCS|Description):',
-        r'^%(description|package|global|define|if\w*|else|endif)(\s+|$)',
+        r'^%(description|package|global|define|if\w*|else|elif|endif)(\s+|$)',
     ]
 
     BAD = [
@@ -75,8 +75,22 @@ def spec_filter(text: str) -> str:
         if not any(re.search(r, line, re.IGNORECASE) for r in GOOD):
             continue
 
+        # This replaces %if/%elif/%else/%endif sections with something like:
+        #
+        # %if 1
+        # ...
+        # %elif 0
+        # ...
+        # %else
+        # ...
+        # %endif
+        #
+        # This way, only the first branch is used.
+        # Hopefully this generates something that makes sense.
         if line.startswith('%if'):
             line = '%if 1'
+        elif line.startswith('%elif'):
+            line = '%elif 0'
 
         if any(re.search(r, line, re.IGNORECASE) for r in BAD):
             continue
