@@ -7,11 +7,11 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define major_version 3
-%define minor_version 124
+%define minor_version 127
 %define patch_version 0
 
 # Check https://searchfox.org/nss/source/automation/release/nspr-version.txt
-%define nspr_version 4.38.2
+%define nspr_version 4.39
 
 Name:           nss
 Version:        %{major_version}.%{minor_version}.%{patch_version}
@@ -20,7 +20,7 @@ Summary:        Network Security Services
 License:        MPL-2.0
 URL:            https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS
 VCS:            hg:https://hg.mozilla.org/projects/nss
-#!RemoteAsset:  sha256:80da9f1cbcb267293b2248818d288bc02f874d6a34f1989a2828401d74a0bc9b
+#!RemoteAsset:  sha256:5a899cad21ae2c9d3c5132de79726eda8df3b7fdf18eeb239fc544d43b87338b
 Source:         https://ftp.mozilla.org/pub/security/nss/releases/NSS_%{major_version}_%{minor_version}_RTM/src/nss-%{major_version}.%{minor_version}.tar.gz
 BuildSystem:    autotools
 
