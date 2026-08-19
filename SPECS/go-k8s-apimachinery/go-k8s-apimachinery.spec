@@ -7,7 +7,6 @@
 
 %define _name           apimachinery
 %define go_import_path  k8s.io/apimachinery
-%define upstream_version  0.35.3
 # managedfields tests expect api/openapi-spec/swagger.json from the full
 # kubernetes repository, but the standalone apimachinery archive lacks it. - HNO3Miracle
 %define go_test_exclude %{shrink:
@@ -21,8 +20,8 @@ Release:        %autorelease
 Summary:        Shared Kubernetes API machinery for Go
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/apimachinery
-#!RemoteAsset:  sha256:1543950c9875bfa87b12038c484571d573a8870df495e6f19c53abca53e5616e
-Source0:        https://github.com/kubernetes/apimachinery/archive/refs/tags/v%{upstream_version}.tar.gz#/%{_name}-%{upstream_version}.tar.gz
+#!RemoteAsset:  sha256:10fe89c116f303013cc123ff5b4f4a40c55a4d4c89d39e30da0278bb3284b674
+Source0:        https://github.com/kubernetes/apimachinery/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
@@ -60,6 +59,7 @@ BuildRequires:  go(gopkg.in/inf.v0)
 BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go(k8s.io/klog/v2)
 BuildRequires:  go(k8s.io/kube-openapi)
+BuildRequires:  go(k8s.io/streaming)
 BuildRequires:  go(k8s.io/utils)
 BuildRequires:  go(sigs.k8s.io/json)
 BuildRequires:  go(sigs.k8s.io/randfill)
@@ -99,6 +99,7 @@ Requires:       go(gopkg.in/inf.v0)
 Requires:       go(gopkg.in/yaml.v3)
 Requires:       go(k8s.io/klog/v2)
 Requires:       go(k8s.io/kube-openapi)
+Requires:       go(k8s.io/streaming)
 Requires:       go(k8s.io/utils)
 Requires:       go(sigs.k8s.io/json)
 Requires:       go(sigs.k8s.io/randfill)
