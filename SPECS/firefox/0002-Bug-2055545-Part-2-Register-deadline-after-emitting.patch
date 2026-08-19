@@ -1,0 +1,365 @@
+From 6744a0134c42f27e04ab3f4351035c2ca89b70f2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andr=C3=A9=20Bargull?= <andre.bargull@gmail.com>
+Date: Thu, 23 Jul 2026 19:29:06 +0000
+Subject: [PATCH] Bug 2055545 - Part 2: Register deadline after emitting the
+ instruction. r=jandem
+
+If a newly registered deadline is the new earliest deadline, then the veneer
+pool can be considered as full even though we've used `nextInstrOffset`
+directly before registering the deadline.
+
+To avoid this situation, first emit the branch instruction and then register the
+branch deadline.
+
+Also add more assertions to check that the expected branch buffer offset matches
+the actual branch buffer offset.
+
+Differential Revision: https://phabricator.services.mozilla.com/D313236
+---
+ js/src/jit/riscv64/Assembler-riscv64.cpp      | 29 +++---
+ js/src/jit/riscv64/Assembler-riscv64.h        | 12 +--
+ js/src/jit/riscv64/MacroAssembler-riscv64.cpp | 88 ++++++++++++-------
+ js/src/jsapi-tests/testAssemblerBuffer.cpp    | 80 +++++++++++++++++
+ 4 files changed, 155 insertions(+), 54 deletions(-)
+
+diff --git a/js/src/jit/riscv64/Assembler-riscv64.cpp b/js/src/jit/riscv64/Assembler-riscv64.cpp
+index 1b99ce3abdc60..66eda788eba6a 100644
+--- a/js/src/jit/riscv64/Assembler-riscv64.cpp
++++ b/js/src/jit/riscv64/Assembler-riscv64.cpp
+@@ -994,18 +994,6 @@ int32_t Assembler::branchOffset(Label* L, OffsetSize bits,
+     return offset;
+   }
+ 
+-  // Keep track of short-range branches targeting unbound labels. We may need
+-  // to insert veneers in PatchShortRangeBranchToVeneer() below.
+-  if (bits < OffsetSize::kOffset32) {
+-    // This is the last possible branch target.
+-    BufferOffset deadline(next_instr_offset.getOffset() +
+-                          ImmBranchMaxForwardOffset(bits));
+-    DEBUG_PRINTF("\tregisterBranchDeadline %d type %d\n", deadline.getOffset(),
+-                 OffsetSizeToImmBranchRangeType(bits));
+-    m_buffer.registerBranchDeadline(OffsetSizeToImmBranchRangeType(bits),
+-                                    deadline);
+-  }
+-
+   // The label is unbound and previously unused: Store the offset in the label
+   // itself for patching by bind().
+   if (!L->used()) {
+@@ -1064,12 +1052,21 @@ int32_t Assembler::branchOffset(Label* L) {
+   return branchOffset(L, OffsetSize::kOffset32, next_instr_offset);
+ }
+ 
+-int32_t Assembler::branchOffset(Label* L, OffsetSize bits) {
++void Assembler::registerBranchDeadline(Label* L, OffsetSize bits,
++                                       BufferOffset next_instr_offset) {
+   MOZ_ASSERT(bits < OffsetSize::kOffset32);
+ 
+-  // One instruction (jal, branch, etc), possibly one new deadline.
+-  BufferOffset next_instr_offset = nextInstrOffset(1, 1);
+-  return branchOffset(L, bits, next_instr_offset);
++  // Keep track of short-range branches targeting unbound labels. We may need
++  // to insert veneers in PatchShortRangeBranchToVeneer() below.
++  if (!L->bound()) {
++    // This is the last possible branch target.
++    BufferOffset deadline(next_instr_offset.getOffset() +
++                          ImmBranchMaxForwardOffset(bits));
++    DEBUG_PRINTF("\tregisterBranchDeadline %d type %d\n", deadline.getOffset(),
++                 OffsetSizeToImmBranchRangeType(bits));
++    m_buffer.registerBranchDeadline(OffsetSizeToImmBranchRangeType(bits),
++                                    deadline);
++  }
+ }
+ 
+ Assembler::Condition Assembler::InvertCondition(Condition cond) {
+diff --git a/js/src/jit/riscv64/Assembler-riscv64.h b/js/src/jit/riscv64/Assembler-riscv64.h
+index b1e037650fcee..d8200e2de757e 100644
+--- a/js/src/jit/riscv64/Assembler-riscv64.h
++++ b/js/src/jit/riscv64/Assembler-riscv64.h
+@@ -339,21 +339,23 @@ class Assembler : public AssemblerShared,
+   static void disassembleInstr(Instruction* instr) {}
+ #endif
+ 
++ private:
+   BufferOffset jumpChainGetNextLink(BufferOffset pos);
+ 
+   void jumpChainPutTargetAt(BufferOffset pos, BufferOffset target_pos);
+ 
+- private:
++ public:
++  // Branch offset for short or long branches.
+   int32_t branchOffset(Label* L, OffsetSize bits,
+                        BufferOffset next_instr_offset);
+ 
+- public:
+-  // Branch offset for short branches (jal, branch, etc.).
+-  int32_t branchOffset(Label* L, OffsetSize bits);
+-
+   // Branch offset for long branches (auipc + jalr).
+   int32_t branchOffset(Label* L);
+ 
++  // Register branch deadline for forward branches.
++  void registerBranchDeadline(Label* L, OffsetSize bits,
++                              BufferOffset next_instr_offset);
++
+   void nopAlign(int m) { m_buffer.align(m); }
+ 
+   BufferOffset emit(Instr x) override final {
+diff --git a/js/src/jit/riscv64/MacroAssembler-riscv64.cpp b/js/src/jit/riscv64/MacroAssembler-riscv64.cpp
+index 00b6dd0c5af11..7d164c989e162 100644
+--- a/js/src/jit/riscv64/MacroAssembler-riscv64.cpp
++++ b/js/src/jit/riscv64/MacroAssembler-riscv64.cpp
+@@ -5202,7 +5202,10 @@ bool MacroAssemblerRiscv64::UseShortBranch(
+     // Call |nextInstrOffset()| instead of just |nextOffset()| to ensure
+     // branches which are about to go out of range are also taken into account
+     // when computing the next instruction offset.
+-    int32_t offset = nextInstrOffset(1, 1).getOffset();
++    //
++    // Backward branches don't need to register new deadlines, so we can pass
++    // |numNewDeadlines = 0| to |nextInstrOffset()|.
++    int32_t offset = nextInstrOffset(1, 0).getOffset();
+ 
+     // Use a short branch if the label is near enough.
+     if (is_intn(offset - L->offset(), bits)) {
+@@ -5230,13 +5233,19 @@ void MacroAssemblerRiscv64::Branch(Label* L, JumpKind jumpKind) {
+ }
+ 
+ BufferOffset MacroAssemblerRiscv64::BranchShort(Label* L) {
+-  AutoForbidPoolsAndNops afp(this, 1, 1);
++  // One instruction (jal), possibly one new deadline.
++  AutoForbidPoolsAndNops afp(this, 1, !L->bound());
++
++  BufferOffset next_instr_offset = nextInstrOffset(1, !L->bound());
++  int32_t offset = branchOffset(L, OffsetSize::kOffset21, next_instr_offset);
+ 
+   LabelDoc doc = refLabel(L);
+-  int32_t offset = branchOffset(L, OffsetSize::kOffset21);
+-  BufferOffset bo = nextOffset();
+-  Assembler::j(offset, doc);
+-  return bo;
++  BufferOffset actualOffset = Assembler::j(offset, doc);
++  MOZ_ASSERT_IF(actualOffset.assigned(), next_instr_offset == actualOffset);
++
++  registerBranchDeadline(L, OffsetSize::kOffset21, next_instr_offset);
++
++  return actualOffset;
+ }
+ 
+ void MacroAssemblerRiscv64::Branch(Label* L, Condition cond, Register rs,
+@@ -5275,62 +5284,69 @@ void MacroAssemblerRiscv64::BranchShort(Label* L, Condition cond, Register rs,
+   MOZ_ASSERT(cond != Always);
+   MOZ_ASSERT(rs != rt);
+ 
+-  AutoForbidPoolsAndNops afp(this, 1, 1);
++  // One instruction (branch), possibly one new deadline.
++  AutoForbidPoolsAndNops afp(this, 1, !L->bound());
+ 
+-  LabelDoc doc = refLabel(L);
+-  int32_t offset = branchOffset(L, OffsetSize::kOffset13);
++  BufferOffset next_instr_offset = nextInstrOffset(1, !L->bound());
++  int32_t offset = branchOffset(L, OffsetSize::kOffset13, next_instr_offset);
+ 
++  LabelDoc doc = refLabel(L);
++  [[maybe_unused]] BufferOffset actualOffset;
+   switch (cond) {
+     case Equal:
+-      Assembler::beq(rs, rt, offset, doc);
++      actualOffset = Assembler::beq(rs, rt, offset, doc);
+       break;
+     case NotEqual:
+-      Assembler::bne(rs, rt, offset, doc);
++      actualOffset = Assembler::bne(rs, rt, offset, doc);
+       break;
+ 
+     // Signed comparison.
+     case GreaterThan:
+-      Assembler::bgt(rs, rt, offset, doc);
++      actualOffset = Assembler::bgt(rs, rt, offset, doc);
+       break;
+     case GreaterThanOrEqual:
+-      Assembler::bge(rs, rt, offset, doc);
++      actualOffset = Assembler::bge(rs, rt, offset, doc);
+       break;
+     case LessThan:
+-      Assembler::blt(rs, rt, offset, doc);
++      actualOffset = Assembler::blt(rs, rt, offset, doc);
+       break;
+     case LessThanOrEqual:
+-      Assembler::ble(rs, rt, offset, doc);
++      actualOffset = Assembler::ble(rs, rt, offset, doc);
+       break;
+ 
+     // Unsigned comparison.
+     case Above:
+-      Assembler::bgtu(rs, rt, offset, doc);
++      actualOffset = Assembler::bgtu(rs, rt, offset, doc);
+       break;
+     case AboveOrEqual:
+-      Assembler::bgeu(rs, rt, offset, doc);
++      actualOffset = Assembler::bgeu(rs, rt, offset, doc);
+       break;
+     case Below:
+-      Assembler::bltu(rs, rt, offset, doc);
++      actualOffset = Assembler::bltu(rs, rt, offset, doc);
+       break;
+     case BelowOrEqual:
+-      Assembler::bleu(rs, rt, offset, doc);
++      actualOffset = Assembler::bleu(rs, rt, offset, doc);
+       break;
+ 
+     default:
+       MOZ_CRASH("UNREACHABLE");
+   }
++
++  MOZ_ASSERT_IF(actualOffset.assigned(), next_instr_offset == actualOffset);
++
++  registerBranchDeadline(L, OffsetSize::kOffset13, next_instr_offset);
+ }
+ 
+ void MacroAssemblerRiscv64::BranchLong(Label* L) {
+   AutoForbidPoolsAndNops afp(this, 2);
+ 
+   // Generate position independent long branch.
+-  LabelDoc doc = refLabel(L);
+   int32_t imm = branchOffset(L);
+ 
+   UseScratchRegisterScope temps(this);
+   Register scratch = temps.Acquire();
+ 
++  LabelDoc doc = refLabel(L);
+   auto [Hi20, Lo12] = ToHigh20Low12(imm);
+   auipc(scratch, Hi20);    // Read PC + Hi20 into scratch.
+   jr(scratch, Lo12, doc);  // jump PC + Hi20 + Lo12
+@@ -5339,25 +5355,31 @@ void MacroAssemblerRiscv64::BranchLong(Label* L) {
+ CodeOffset MacroAssemblerRiscv64::BranchAndLink(Label* L) {
+   mozilla::Maybe<AutoForbidNops> afn;
+   if (UseShortBranch(L, ShortJump, OffsetSize::kOffset21, afn)) {
+-    AutoForbidPoolsAndNops afp(this, 1, 1);
++    // One instruction (jal), possibly one new deadline.
++    AutoForbidPoolsAndNops afp(this, 1, !L->bound());
++
++    BufferOffset next_instr_offset = nextInstrOffset(1, !L->bound());
++    int32_t offset = branchOffset(L, OffsetSize::kOffset21, next_instr_offset);
+ 
+     LabelDoc doc = refLabel(L);
+-    int32_t offset = branchOffset(L, OffsetSize::kOffset21);
+-    return jal(offset, doc);
+-  }
++    [[maybe_unused]] BufferOffset actualOffset = jal(offset, doc);
++    MOZ_ASSERT_IF(actualOffset.assigned(), next_instr_offset == actualOffset);
+ 
+-  AutoForbidPoolsAndNops afp(this, 2);
++    registerBranchDeadline(L, OffsetSize::kOffset21, next_instr_offset);
++  } else {
++    AutoForbidPoolsAndNops afp(this, 2);
+ 
+-  // Generate position independent long branch and link.
+-  LabelDoc doc = refLabel(L);
+-  int32_t imm = branchOffset(L);
++    // Generate position independent long branch and link.
++    int32_t imm = branchOffset(L);
+ 
+-  UseScratchRegisterScope temps(this);
+-  Register scratch = temps.Acquire();
++    UseScratchRegisterScope temps(this);
++    Register scratch = temps.Acquire();
+ 
+-  auto [Hi20, Lo12] = ToHigh20Low12(imm);
+-  auipc(scratch, Hi20);      // Read PC + Hi20 into scratch.
+-  jalr(scratch, Lo12, doc);  // jump PC + Hi20 + Lo12
++    LabelDoc doc = refLabel(L);
++    auto [Hi20, Lo12] = ToHigh20Low12(imm);
++    auipc(scratch, Hi20);      // Read PC + Hi20 into scratch.
++    jalr(scratch, Lo12, doc);  // jump PC + Hi20 + Lo12
++  }
+ 
+   return CodeOffset(currentOffset());
+ }
+diff --git a/js/src/jsapi-tests/testAssemblerBuffer.cpp b/js/src/jsapi-tests/testAssemblerBuffer.cpp
+index ac47184c9d5d8..e0931691800bd 100644
+--- a/js/src/jsapi-tests/testAssemblerBuffer.cpp
++++ b/js/src/jsapi-tests/testAssemblerBuffer.cpp
+@@ -2227,4 +2227,84 @@ BEGIN_TEST(testAssemblerBuffer_RISCV64_SameDeadlineLong) {
+ }
+ END_TEST(testAssemblerBuffer_RISCV64_SameDeadlineLong)
+ 
++BEGIN_TEST(testAssemblerBuffer_RISCV64_PendingDeadlinesExceedNewBranchRange) {
++  using namespace js::jit;
++  using namespace RV64;
++
++  const auto beq_unbound = RV64::Inst::beq(a0, a1, unbound).InstructionBits();
++
++  constexpr int32_t guardSize = 1;
++
++  // Forward range of beq instructions.
++  int32_t beq_range =
++      ImmBranchMaxForwardOffset(CondBranchRangeType) / kInstrSize;
++
++  // Test
++  for (int32_t i = -10; i <= 10; ++i) {
++    js::LifoAlloc lifo(4096, js::MallocArena);
++    TempAllocator alloc(&lifo);
++    JitContext jc(cx);
++    StackMacroAssembler masm(cx, alloc);
++    AutoCreatedBy acb(masm, __func__);
++
++    // Create enough unconditional jumps so that a following conditional branch
++    // will get out of range.
++    int32_t j_count = beq_range + i;
++    Label j_lbl;
++    for (int32_t i = 0; i < j_count; ++i) {
++      masm.jump(&j_lbl);
++    }
++
++    Label beq_lbl;
++    auto beq_offset = masm.nextOffset();
++    masm.ma_b(a0, a1, &beq_lbl, Assembler::Equal, ShortJump);
++
++    // Still unbound.
++    CHECK_EQUAL(masm.getInstructionAt(beq_offset)->InstructionBits(),
++                beq_unbound);
++
++    BufferOffset guard_offset = masm.nextOffset();
++
++    // Adding a single nop instruction may trigger veneer pool construction.
++    masm.nop();
++
++    auto nop_offset = masm.nextOffset() - kInstrSize;
++
++    // Last instruction is a nop instruction.
++    CHECK_EQUAL(masm.getInstructionAt(nop_offset)->InstructionBits(),
++                RV64::Inst::nop().InstructionBits());
++
++    if (beq_offset + kInstrSize != nop_offset) {
++      // Pool guard is an unconditional jump.
++      CHECK_EQUAL(masm.getInstructionAt(guard_offset)->InstructionBits(),
++                  RV64::Inst::j(nop_offset - guard_offset).InstructionBits());
++
++      // Veneer for "beq" was created.
++      auto veneer_offset = guard_offset + guardSize * kInstrSize;
++      CHECK_EQUAL(masm.getInstructionAt(beq_offset)->InstructionBits(),
++                  RV64::Inst::beq(a0, a1, veneer_offset - beq_offset)
++                      .InstructionBits());
++    }
++
++    // Finally bind all labels.
++    masm.bind(&j_lbl);
++    masm.bind(&beq_lbl);
++
++    if (beq_offset + kInstrSize != nop_offset) {
++      auto veneer_offset = guard_offset + guardSize * kInstrSize;
++      auto veneer_inst =
++          RV64::Inst::veneer(BufferOffset(beq_lbl.offset()) - veneer_offset);
++
++      // Veneer correctly bound to |beq_lbl|.
++      CHECK_EQUAL(masm.getInstructionAt(veneer_offset)->InstructionBits(),
++                  veneer_inst.first.InstructionBits());
++      CHECK_EQUAL(
++          masm.getInstructionAt(veneer_offset + kInstrSize)->InstructionBits(),
++          veneer_inst.second.InstructionBits());
++    }
++  }
++  return true;
++}
++END_TEST(testAssemblerBuffer_RISCV64_PendingDeadlinesExceedNewBranchRange)
++
+ #endif /* JS_CODEGEN_RISCV64 */

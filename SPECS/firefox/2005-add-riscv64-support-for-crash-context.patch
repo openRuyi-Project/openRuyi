@@ -12,31 +12,6 @@ This pull request is based on work by hack3ric:
 From: Eric Long <i@hack3r.moe>
 Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
 ---
- .../rust/crash-context/.cargo-checksum.json   |   2 +-
- third_party/rust/crash-context/src/linux.rs   |  55 ++++++
- .../crash-context/src/linux/getcontext.rs     |   2 +
- .../src/linux/getcontext/riscv64.rs           |  97 +++++++++
- .../rust/minidump-common/.cargo-checksum.json |   2 +-
- .../rust/minidump-common/src/format.rs        |  74 ++++++-
- .../rust/minidump-unwind/.cargo-checksum.json |   2 +-
- third_party/rust/minidump-unwind/src/lib.rs   |   2 +-
- .../rust/minidump-writer/.cargo-checksum.json |   2 +-
- .../src/linux/crash_context/mod.rs            |   2 +
- .../src/linux/crash_context/riscv64.rs        |  61 ++++++
- .../src/linux/dumper_cpu_info/mod.rs          |   7 +
- .../src/linux/dumper_cpu_info/riscv.rs        |  82 ++++++++
- .../src/linux/thread_info/mod.rs              |   3 +
- .../src/linux/thread_info/riscv64.rs          | 132 +++++++++++++
- .../rust/minidump-writer/src/minidump_cpu.rs  |   7 +
- .../rust/minidump/.cargo-checksum.json        |   2 +-
- third_party/rust/minidump/src/context.rs      | 187 ++++++++++++++++++
- third_party/rust/minidump/src/system_info.rs  |   7 +-
- 19 files changed, 719 insertions(+), 9 deletions(-)
- create mode 100644 third_party/rust/crash-context/src/linux/getcontext/riscv64.rs
- create mode 100644 third_party/rust/minidump-writer/src/linux/crash_context/riscv64.rs
- create mode 100644 third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
- create mode 100644 third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
-
 diff --git a/third_party/rust/crash-context/.cargo-checksum.json b/third_party/rust/crash-context/.cargo-checksum.json
 index 167ba40c71..69837e11d4 100644
 --- a/third_party/rust/crash-context/.cargo-checksum.json
@@ -369,13 +344,13 @@ index 77fb45a19f..deb8bac94b 100644
  
                  let cc_summary = match args.calling_convention {
 diff --git a/third_party/rust/minidump-writer/.cargo-checksum.json b/third_party/rust/minidump-writer/.cargo-checksum.json
-index 36e3d9a397..36a7aaefcb 100644
+index 666dc31571..01b834339c 100644
 --- a/third_party/rust/minidump-writer/.cargo-checksum.json
 +++ b/third_party/rust/minidump-writer/.cargo-checksum.json
 @@ -1 +1 @@
--{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".cargo_vcs_info.json":"6e2b2df95fd136326dfa58c130005c13e288b606aa9c1942d080b72458debf94",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"6837a5499b6fcbe0c4b337434ee5fd19b1d491470caf9a8fbab0cfc008016ac4","CHANGELOG.md":"e072ad5fbc55bdd96c218436ddc8c86e66f3ffc3a0e720034995681a3e3fa3e6","Cargo.lock":"d69cb8666f946940bc70029943ef25e46d1d5111622631150b5658855c827113","Cargo.toml":"49e110ab0e4c6fb7736710f49aa6701c287bea6a13056140e5745c96285e25bc","Cargo.toml.orig":"a44f46ad6b6ffc4a1a926e2c33ba6351706c5f2d94f47796331b99132f950fdb","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"71742b170ac34ceecf317d6d69456063bf5d8974453075e9cd2838785717fcdb","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"b2580d3d370d6290301cb825b0d50573b08836b7b36ca8defaa85e0ab1318b56","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"fd62890d54c40fb07380a2d044a92a7cc87406bded1323c249ecb6c99ca67e7e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"c5585d46d0f2b72bda0f90aa748ef5ae522e7f7fea4c6f1b0ac01ffce8630e44","src/linux/android.rs":"f8e165e2a27e4c35faaed9f8d1f1cdbb656f180786d5d582e8fe59e86be0f651","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"dc533013330abd055efc55a2c5a0b142f324de47486db675c5fb96a1031fed67","src/linux/auxv/reader.rs":"19e67193b4960d42706a84bd1578fa57be27ac755ab15b29b0d0cd903f1a6c0d","src/linux/crash_context/aarch64.rs":"005e82997fedfe4a91ff68e35b0ab0eb11166d9dff9a02d7290ae756af163a10","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"0fa80c43990eced7a27cb377fce84afb8b9eddf58863923006d414be6a5a2d9f","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"6b67b846c023e58c1907c45565c610eee348e55091234d6badb825473f6c53f3","src/linux/dso_debug.rs":"be8cb8e4328a14b128f975fe964cc92b7eba5b4e83f1a255896af433f8002d0f","src/linux/dumper_cpu_info/arm.rs":"a126fde5b48428e4a56e46a968a121d207622c535a4ba3478f1fe5b1bd8a99d3","src/linux/dumper_cpu_info/mod.rs":"625dda8597a435092f47a0a90c3f28703ba7fa3a02daa2f9ad60f6d722ed834c","src/linux/dumper_cpu_info/x86_mips.rs":"3779b3be86ce4c2da14d6f88557cec0be6c4dc8439e89663359e6ad34179924b","src/linux/maps_reader.rs":"02f56fa28992c4b1693ee81066d74315ca7702bce8e268d30528e198f5382824","src/linux/mem_reader.rs":"a3e0979d95586ed5534c5817c5ff36107952e5af3789cf2bfb5d12598b75bc53","src/linux/minidump_writer/app_memory.rs":"8de75067c14b29251d75a9277b53889af0cece26028db92614129b7cd0d64f12","src/linux/minidump_writer/errors.rs":"fd2c534604853501866289ed54029ef6af7e15be995ecc0e3a81c99f10542b38","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"a08f3a010cd720a37628cd8b9df7bd413d6a721e96b426ad76088994f1c3018b","src/linux/minidump_writer/mappings.rs":"f50809572509d143e016285a862fa830a577bbc6c980f8a500bea4e58259e20e","src/linux/minidump_writer/memory_info_list_stream.rs":"7fc8a38aeff9ada15aede8b514b9dafab1fe778fe62c596d3efa4b8f2f191660","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"e1a8409573524cfdc83238f7deaf28ac2cfc561e6ed15bfa36383ee46126dc7d","src/linux/minidump_writer/systeminfo_stream.rs":"e793da25ca6c7e241c77763748873d3dc5aefebbf805674dd6d3e6ab353772a4","src/linux/minidump_writer/thread_list_stream.rs":"1a471e14177d551bc6d90b9a253a9c744d500c5a6a41d4c730fc03e14aa56703","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"e316b6a4de8a04070ea4e801cc5eb2bd79fbc48c7f80a3faa28a62d0ac1d37fb","src/linux/module_reader.rs":"79779433fc71f0ed9bd4919a91c01a423bcf6930999bd91ecad0499b0a76f58a","src/linux/serializers.rs":"f3ab10498cdb577ec6c15e39111b4f4faf9e8cecc8895eff9f601bfae3065b99","src/linux/thread_info/aarch64.rs":"a9fc906f0b09c98fceea7b8babf356514e371257744c6918c4c4200f90349a8e","src/linux/thread_info/arm.rs":"b6115b40c46ddf8a39e1d3be09203d72a35a584525ec8e1e4a820164c0e7bfd7","src/linux/thread_info/mips.rs":"08faacfcae95357ae6b6a8e3e7bbe8f94362e2e3e48bf4fddf1d99c289cd044b","src/linux/thread_info/mod.rs":"aad368b3327f0fb0edbd162418b5775a893ab9291efaddfbae1f76293cb6f3b8","src/linux/thread_info/x86.rs":"7a10e23d2b44df9fc206eef39b4954b51a46cc72b47fa9cd921bed67f946f766","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"f5f5b3bde9fd3ea85903b75c80ddb15931a56d5d4425f01fda9643fba8e419d3","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"4671ad90c433db559ec633c880c3fe083f38a2e185ef4fc99577318526076519","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"e01d2d1fa117869f9c8bdb9fe61944991229786c71c4555d748a84b72df9f676","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"959239425c1ea4c9766303fd10a12c82d1fed27b462f836a8a317a470ea0ace7","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"ccb3dc179699159883e539e29285f8f6ba936afb8ce8980dbcb5060a80b6618c","src/minidump_format.rs":"9d5940d71da3a543efa90279e287e0dbbe303de386a4d5aab15e8ccfdd556116","src/serializers.rs":"7a49ed8dcefa7ddf1f796f9ef9360c6539ef57c80712b237af612275ef70ce83","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"24a6f99de9f25ae7bc80f2763d8c5b97e65699682a99ec6265ebc435c3310999","src/windows/minidump_writer.rs":"e10cd290c7563e6203eac6e99b46c82c093d8a82e147a82ceab03bf4795cdd97","src/windows/mod.rs":"caace73419fed05d5d83b2d4b9d21570bec4668ebc6d797aa29c2b76756aa5e1","tests/common/mod.rs":"83cae105781e2ace02dc1f1f43473efcb226ab7a0cc0c88f556d7e1aab83c89d","tests/linux_minidump_writer.rs":"1edd43c3366c6a179200b9cbd9d10234959c9ed8ed7f0b5b1f12721985e6d64c","tests/linux_minidump_writer_soft_error.rs":"f4146c26d726686fa181c77b03027bbd9fcfa2b2035fa5254cd9fe3154b3f088","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"75dc54cc924824d5f9e20d7fac847412aca8320dcf2e5cb141bfaf2bb5a3c5f9","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/windows_minidump_writer.rs":"7a0f42867d6ee56aebea900d7952f686512fc1cbe68a996b52f08377582dc195"},"package":"0e1fc14d6ded915b8e850801465e7096f77ed60bf87e4e85878d463720d9dc4d"}
+-{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"54db6735ed5cc7be01973bd555dbd1484eb535526e02a325e10549988ff936ac","CHANGELOG.md":"202a08b3d7ba93d02e7729bb03b18b8f19d4e019f493eb304254f764601e0f5b","Cargo.lock":"f49c06a0a2c0f3396fc4b5a8d36b4f87f8b68830c7a3f5c088339949e85114b9","Cargo.toml":"65df35d3b0b0fa79f31a12556315243072d500f1c90a1c83c99400aea7f632b6","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"8eb9643e0b9fbc85cd15c64427239f8012b4f734696aa155ba1d9db6eb0736d6","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"03374726bb805f2b0e258348a280c2e36df5edfddb121a3e771aaad504694aec","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"6d566637dcb06290310030a3902572cb8b4aa7c8922ddfe6e0f940e18c72578e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"298379d060cdc74f1b9745bb0cd452b70d24a35fe7e0ea1e22d232f446db5d42","src/linux/android.rs":"8d78677abbd08681068829e6c1262c893997beeb8be8bfefdbf64455d100e347","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"6999b8fcc5d470922c8012c478ad753f8cc6ebd9698b41fd631d01c3dd3d65e9","src/linux/auxv/reader.rs":"dd82dbdebb46737c95af7e97543f8af4bf3a92b184905a81104e796e000fda87","src/linux/crash_context/aarch64.rs":"97f21fef9db0d0719170e51812903b4bcc9b7802de106404f9929a2fe3f2d02a","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"0fa80c43990eced7a27cb377fce84afb8b9eddf58863923006d414be6a5a2d9f","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"81670712b7929e75c38054ada3f016ac3a17e0a152cdd93d58e9c710b11489e1","src/linux/dso_debug.rs":"96b56a3a171a8329abded6d51cad6eccc914c06c525c0dec0e497a4fc5069c18","src/linux/dumper_cpu_info/arm.rs":"a23e00f93d9816c21bd1328b9a08182605f2d783218c4e67604c70ddb70434b1","src/linux/dumper_cpu_info/mod.rs":"f381727faeec2d208f7018dbb22f7d93fa1910f660f329c4ff9f48f2270bb8d7","src/linux/dumper_cpu_info/x86.rs":"571c8eafd3e1835e98102914732f649545fe9684a99cd379f665351d62473403","src/linux/maps_reader.rs":"2ebefd74f67cf212fb1904045a0b330114130ca5f22eeae5cd313ad1d2f16ff5","src/linux/minidump_writer/app_memory.rs":"b3d07c61ede6027794c1ba406d1e3e7b88416141b825ab8d6a8ed375311d30c4","src/linux/minidump_writer/errors.rs":"9a306171fded7aa56fe3e3618b324df9c6dc7ef170abb59ddb1b87b95bb23754","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"72f4dbd4fdb6aebb5fca589e62a13eab7d319c96de665735c71e8162b1630658","src/linux/minidump_writer/mappings.rs":"a941283b59915e5eb8f2e8630782a410ea9e3b98ec5f4c3355d3f0cf9b478ac5","src/linux/minidump_writer/memory_info_list_stream.rs":"3c77d8b6f0856136590f0bbd70755df8241a23ae382e0a121cfd13f4a8d9ffb1","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"65774851784848c621e87a952b7e36d6bd13e44f2d8ef1a033aba9798913e35b","src/linux/minidump_writer/systeminfo_stream.rs":"40995fd9dd2c09db2c1314171b0cbf60923fcf1b497f6e5c4d763329bd33b85b","src/linux/minidump_writer/thread_list_stream.rs":"8c002247e9143f112baaca5cdc19e91d9b7bbf83ed4e8d66b809aa9a2b8aba63","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"a44e1308a8d50415d8cf7afbfdfc06690d59e99ea621e92a81c3356f5b19081c","src/linux/module_reader.rs":"5c0750b338d4e656d3a8b319a9ba91b715c6a7e79e4480585851a090d4431919","src/linux/process_inspection/mod.rs":"1750418f9d8ccf08f655020b9b5c4f07e63552da37282440982c411ec744ff28","src/linux/process_inspection/process_reader.rs":"4d6300b7a38c544c143540634eff8c43966389ea4a837e9bca1e15ec975b82e8","src/linux/serializers.rs":"2ceb04935be0576c282095b3e9e9b656a2adfcf0feef4e046d9c8828b1fe1e38","src/linux/thread_info/aarch64.rs":"1d4841b6a32ffd67cd6a2489feb9a765d2150592371d4d24c7d12d6fdb19feef","src/linux/thread_info/arm.rs":"24d082b85d5706740606eeffbcfb776e42cc70f387e167b3301097d245733fd9","src/linux/thread_info/mod.rs":"d5da77e4f4d0e5613e3302c464529af68f78bffcabef53261cf03881535f0103","src/linux/thread_info/x86.rs":"b3e1b743a0678ce0c873dc208ca62997c8ba40ed6c92830a81af8f26bcea28c7","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"ee6f7d9c8715cd191f894ce73913ce299a9a1faebd87bb9cdfad032b26e032ab","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"304094bad42d894f34cc7b792ed59122d98579ffea0e40c31cbc84363df686e0","src/mac/module_reader.rs":"f75841afb2e2cd53d9380869889905e9aceafce0acbff2acf731797f81fa77d1","src/mac/process_reader.rs":"41bc958342a82711c6975377c6591e7645bab2e974b12d832320effb09a50b44","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"22839b0ec1fc1c151831e186793521f1db4c4f237ad8997d844b66ee4743da56","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"83f91f0cabcc1adc0db8d12249a52c71f799dab4d3453e15353770900865f9b9","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"428bad960ec2319235ca4959d011a1603754ba86c8a565044ac2e77fb157c815","src/minidump_format.rs":"2f96a0efc6b52b1d8af6f0281f6153f4f5f1bcb1816c1c8398cf030613cfcea9","src/module_reader.rs":"29caae7dd615fb542bad368a90fa72cf666da2832eea0980d792b241071c8b07","src/process_reader.rs":"bcd935fada0e449eea2ac6378b985f722f025b497f71df4a19652c72c810e6eb","src/serializers.rs":"aa5713c1739a87eb3cdc21f88d2da5c266ac83e18125f3f4b531badf5d32dec2","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"784eff570da0668d4fe5671022bb03106db1af71a6fe48cbf62a4f80d3d9b76a","src/windows/minidump_writer.rs":"4e3a2b23dc6701dc74490873fb73d542c4c0dcf5f05b40ad82f38e460c019c82","src/windows/mod.rs":"d40550a4cb5a8e99e2bbe281d48e41583be9a8d2398d0f1664bf5a3fcd361ef3","src/windows/module_reader.rs":"929dd6bca70d772294a899f63cf8eb49ae258cb1033e8e292dc1c9768c71acf3","src/windows/process_reader.rs":"162e39188c8f059118a59440e6532369dc2cdeb6d53b6b8582c0b959b5283cf0","tests/common/mod.rs":"429f3ba584e97a858f4390221f120c7724944b91255059b507d9c2d29af8e598","tests/linux_minidump_writer.rs":"764f9802e331fa8a3a7a3a3566af35acf51e6ca02baa2e24bcdb54bd7b01f025","tests/linux_minidump_writer_soft_error.rs":"09991199a685651cfc40a94fe88bf6b84ef72d4f67e520355f7dde28bfbfeafd","tests/linux_module_reader.rs":"03299789005456d8ee5f185f625ba952acedd2a21dacfa3936b8878f9b25f552","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"3cfb7073b1a401a4691c6ec8d9722c815d8431e850a5789304f3502eb8c1a248","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/tiny.elf":"9ccd1d7a8b4d4347f623081ad4a74fade764fa7c8f76495b010bc302fb66e69f","tests/windows_minidump_writer.rs":"f503b424493f4ca73b7c92b6a58f225545169d8909a60a85a9c7cfba6975655a"},"package":null}
 \ No newline at end of file
-+{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".cargo_vcs_info.json":"6e2b2df95fd136326dfa58c130005c13e288b606aa9c1942d080b72458debf94",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"6837a5499b6fcbe0c4b337434ee5fd19b1d491470caf9a8fbab0cfc008016ac4","CHANGELOG.md":"e072ad5fbc55bdd96c218436ddc8c86e66f3ffc3a0e720034995681a3e3fa3e6","Cargo.lock":"d69cb8666f946940bc70029943ef25e46d1d5111622631150b5658855c827113","Cargo.toml":"49e110ab0e4c6fb7736710f49aa6701c287bea6a13056140e5745c96285e25bc","Cargo.toml.orig":"a44f46ad6b6ffc4a1a926e2c33ba6351706c5f2d94f47796331b99132f950fdb","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"71742b170ac34ceecf317d6d69456063bf5d8974453075e9cd2838785717fcdb","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"b2580d3d370d6290301cb825b0d50573b08836b7b36ca8defaa85e0ab1318b56","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"fd62890d54c40fb07380a2d044a92a7cc87406bded1323c249ecb6c99ca67e7e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"c5585d46d0f2b72bda0f90aa748ef5ae522e7f7fea4c6f1b0ac01ffce8630e44","src/linux/android.rs":"f8e165e2a27e4c35faaed9f8d1f1cdbb656f180786d5d582e8fe59e86be0f651","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"dc533013330abd055efc55a2c5a0b142f324de47486db675c5fb96a1031fed67","src/linux/auxv/reader.rs":"19e67193b4960d42706a84bd1578fa57be27ac755ab15b29b0d0cd903f1a6c0d","src/linux/crash_context/aarch64.rs":"005e82997fedfe4a91ff68e35b0ab0eb11166d9dff9a02d7290ae756af163a10","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"31f8fea7230f63c4a698b3033858429d2c61afd27ade74747e5a927ae5f33e4a","src/linux/crash_context/riscv64.rs":"8200526110d1d52a6b0777f3e270e3b4f5cc37d8e8671d268f86c00f75fe3460","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"6b67b846c023e58c1907c45565c610eee348e55091234d6badb825473f6c53f3","src/linux/dso_debug.rs":"be8cb8e4328a14b128f975fe964cc92b7eba5b4e83f1a255896af433f8002d0f","src/linux/dumper_cpu_info/arm.rs":"a126fde5b48428e4a56e46a968a121d207622c535a4ba3478f1fe5b1bd8a99d3","src/linux/dumper_cpu_info/mod.rs":"26578627063bb9c8609f1686684164cdd1c48f92302047b304976fa0b7208887","src/linux/dumper_cpu_info/riscv.rs":"fa45ecdbb989c2dafac23ea48b8ea5cc64658fc0bf28fd2006e4760ce21999f5","src/linux/dumper_cpu_info/x86_mips.rs":"3779b3be86ce4c2da14d6f88557cec0be6c4dc8439e89663359e6ad34179924b","src/linux/maps_reader.rs":"02f56fa28992c4b1693ee81066d74315ca7702bce8e268d30528e198f5382824","src/linux/mem_reader.rs":"a3e0979d95586ed5534c5817c5ff36107952e5af3789cf2bfb5d12598b75bc53","src/linux/minidump_writer/app_memory.rs":"8de75067c14b29251d75a9277b53889af0cece26028db92614129b7cd0d64f12","src/linux/minidump_writer/errors.rs":"fd2c534604853501866289ed54029ef6af7e15be995ecc0e3a81c99f10542b38","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"a08f3a010cd720a37628cd8b9df7bd413d6a721e96b426ad76088994f1c3018b","src/linux/minidump_writer/mappings.rs":"f50809572509d143e016285a862fa830a577bbc6c980f8a500bea4e58259e20e","src/linux/minidump_writer/memory_info_list_stream.rs":"7fc8a38aeff9ada15aede8b514b9dafab1fe778fe62c596d3efa4b8f2f191660","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"e1a8409573524cfdc83238f7deaf28ac2cfc561e6ed15bfa36383ee46126dc7d","src/linux/minidump_writer/systeminfo_stream.rs":"e793da25ca6c7e241c77763748873d3dc5aefebbf805674dd6d3e6ab353772a4","src/linux/minidump_writer/thread_list_stream.rs":"1a471e14177d551bc6d90b9a253a9c744d500c5a6a41d4c730fc03e14aa56703","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"e316b6a4de8a04070ea4e801cc5eb2bd79fbc48c7f80a3faa28a62d0ac1d37fb","src/linux/module_reader.rs":"79779433fc71f0ed9bd4919a91c01a423bcf6930999bd91ecad0499b0a76f58a","src/linux/serializers.rs":"f3ab10498cdb577ec6c15e39111b4f4faf9e8cecc8895eff9f601bfae3065b99","src/linux/thread_info/aarch64.rs":"a9fc906f0b09c98fceea7b8babf356514e371257744c6918c4c4200f90349a8e","src/linux/thread_info/arm.rs":"b6115b40c46ddf8a39e1d3be09203d72a35a584525ec8e1e4a820164c0e7bfd7","src/linux/thread_info/mips.rs":"08faacfcae95357ae6b6a8e3e7bbe8f94362e2e3e48bf4fddf1d99c289cd044b","src/linux/thread_info/mod.rs":"80839691519cf7fe32c9efb01a50124141a285c39387adebc29c0b4a3737e5c6","src/linux/thread_info/riscv64.rs":"7b78602c9543c04bdd16acfc9dabf4ed98bab8a3732cecfdbf061e33a6539e8a","src/linux/thread_info/x86.rs":"7a10e23d2b44df9fc206eef39b4954b51a46cc72b47fa9cd921bed67f946f766","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"f5f5b3bde9fd3ea85903b75c80ddb15931a56d5d4425f01fda9643fba8e419d3","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"4671ad90c433db559ec633c880c3fe083f38a2e185ef4fc99577318526076519","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"e01d2d1fa117869f9c8bdb9fe61944991229786c71c4555d748a84b72df9f676","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"959239425c1ea4c9766303fd10a12c82d1fed27b462f836a8a317a470ea0ace7","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"183b1d9bbe319a5a1503f0a720a072796f9e931cc9370e68265229e610511e73","src/minidump_format.rs":"9d5940d71da3a543efa90279e287e0dbbe303de386a4d5aab15e8ccfdd556116","src/serializers.rs":"7a49ed8dcefa7ddf1f796f9ef9360c6539ef57c80712b237af612275ef70ce83","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"24a6f99de9f25ae7bc80f2763d8c5b97e65699682a99ec6265ebc435c3310999","src/windows/minidump_writer.rs":"e10cd290c7563e6203eac6e99b46c82c093d8a82e147a82ceab03bf4795cdd97","src/windows/mod.rs":"caace73419fed05d5d83b2d4b9d21570bec4668ebc6d797aa29c2b76756aa5e1","tests/common/mod.rs":"83cae105781e2ace02dc1f1f43473efcb226ab7a0cc0c88f556d7e1aab83c89d","tests/linux_minidump_writer.rs":"1edd43c3366c6a179200b9cbd9d10234959c9ed8ed7f0b5b1f12721985e6d64c","tests/linux_minidump_writer_soft_error.rs":"f4146c26d726686fa181c77b03027bbd9fcfa2b2035fa5254cd9fe3154b3f088","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"75dc54cc924824d5f9e20d7fac847412aca8320dcf2e5cb141bfaf2bb5a3c5f9","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/windows_minidump_writer.rs":"7a0f42867d6ee56aebea900d7952f686512fc1cbe68a996b52f08377582dc195"},"package":"0e1fc14d6ded915b8e850801465e7096f77ed60bf87e4e85878d463720d9dc4d"}
++{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"54db6735ed5cc7be01973bd555dbd1484eb535526e02a325e10549988ff936ac","CHANGELOG.md":"202a08b3d7ba93d02e7729bb03b18b8f19d4e019f493eb304254f764601e0f5b","Cargo.lock":"f49c06a0a2c0f3396fc4b5a8d36b4f87f8b68830c7a3f5c088339949e85114b9","Cargo.toml":"65df35d3b0b0fa79f31a12556315243072d500f1c90a1c83c99400aea7f632b6","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"8eb9643e0b9fbc85cd15c64427239f8012b4f734696aa155ba1d9db6eb0736d6","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"03374726bb805f2b0e258348a280c2e36df5edfddb121a3e771aaad504694aec","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"6d566637dcb06290310030a3902572cb8b4aa7c8922ddfe6e0f940e18c72578e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"298379d060cdc74f1b9745bb0cd452b70d24a35fe7e0ea1e22d232f446db5d42","src/linux/android.rs":"8d78677abbd08681068829e6c1262c893997beeb8be8bfefdbf64455d100e347","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"6999b8fcc5d470922c8012c478ad753f8cc6ebd9698b41fd631d01c3dd3d65e9","src/linux/auxv/reader.rs":"dd82dbdebb46737c95af7e97543f8af4bf3a92b184905a81104e796e000fda87","src/linux/crash_context/aarch64.rs":"97f21fef9db0d0719170e51812903b4bcc9b7802de106404f9929a2fe3f2d02a","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"31f8fea7230f63c4a698b3033858429d2c61afd27ade74747e5a927ae5f33e4a","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"81670712b7929e75c38054ada3f016ac3a17e0a152cdd93d58e9c710b11489e1","src/linux/dso_debug.rs":"96b56a3a171a8329abded6d51cad6eccc914c06c525c0dec0e497a4fc5069c18","src/linux/dumper_cpu_info/arm.rs":"a23e00f93d9816c21bd1328b9a08182605f2d783218c4e67604c70ddb70434b1","src/linux/dumper_cpu_info/mod.rs":"5965bfafe47a4f507fb4cd93cbc28c35a2d04ca4b3d3c3772bd89c0be0c5b785","src/linux/dumper_cpu_info/x86.rs":"571c8eafd3e1835e98102914732f649545fe9684a99cd379f665351d62473403","src/linux/maps_reader.rs":"2ebefd74f67cf212fb1904045a0b330114130ca5f22eeae5cd313ad1d2f16ff5","src/linux/minidump_writer/app_memory.rs":"b3d07c61ede6027794c1ba406d1e3e7b88416141b825ab8d6a8ed375311d30c4","src/linux/minidump_writer/errors.rs":"9a306171fded7aa56fe3e3618b324df9c6dc7ef170abb59ddb1b87b95bb23754","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"72f4dbd4fdb6aebb5fca589e62a13eab7d319c96de665735c71e8162b1630658","src/linux/minidump_writer/mappings.rs":"a941283b59915e5eb8f2e8630782a410ea9e3b98ec5f4c3355d3f0cf9b478ac5","src/linux/minidump_writer/memory_info_list_stream.rs":"3c77d8b6f0856136590f0bbd70755df8241a23ae382e0a121cfd13f4a8d9ffb1","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"65774851784848c621e87a952b7e36d6bd13e44f2d8ef1a033aba9798913e35b","src/linux/minidump_writer/systeminfo_stream.rs":"40995fd9dd2c09db2c1314171b0cbf60923fcf1b497f6e5c4d763329bd33b85b","src/linux/minidump_writer/thread_list_stream.rs":"8c002247e9143f112baaca5cdc19e91d9b7bbf83ed4e8d66b809aa9a2b8aba63","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"a44e1308a8d50415d8cf7afbfdfc06690d59e99ea621e92a81c3356f5b19081c","src/linux/module_reader.rs":"5c0750b338d4e656d3a8b319a9ba91b715c6a7e79e4480585851a090d4431919","src/linux/process_inspection/mod.rs":"1750418f9d8ccf08f655020b9b5c4f07e63552da37282440982c411ec744ff28","src/linux/process_inspection/process_reader.rs":"4d6300b7a38c544c143540634eff8c43966389ea4a837e9bca1e15ec975b82e8","src/linux/serializers.rs":"2ceb04935be0576c282095b3e9e9b656a2adfcf0feef4e046d9c8828b1fe1e38","src/linux/thread_info/aarch64.rs":"1d4841b6a32ffd67cd6a2489feb9a765d2150592371d4d24c7d12d6fdb19feef","src/linux/thread_info/arm.rs":"24d082b85d5706740606eeffbcfb776e42cc70f387e167b3301097d245733fd9","src/linux/thread_info/mod.rs":"f4a14683d3f86c775bc3d7f7c78532b56e9515b85fe9cfe025d1cd0d9c7b13e6","src/linux/thread_info/x86.rs":"b3e1b743a0678ce0c873dc208ca62997c8ba40ed6c92830a81af8f26bcea28c7","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"ee6f7d9c8715cd191f894ce73913ce299a9a1faebd87bb9cdfad032b26e032ab","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"304094bad42d894f34cc7b792ed59122d98579ffea0e40c31cbc84363df686e0","src/mac/module_reader.rs":"f75841afb2e2cd53d9380869889905e9aceafce0acbff2acf731797f81fa77d1","src/mac/process_reader.rs":"41bc958342a82711c6975377c6591e7645bab2e974b12d832320effb09a50b44","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"22839b0ec1fc1c151831e186793521f1db4c4f237ad8997d844b66ee4743da56","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"83f91f0cabcc1adc0db8d12249a52c71f799dab4d3453e15353770900865f9b9","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"1da5126fcfab2e3fbd0cdcc5bef8f79e2ede91c963272004de813edee6bb4315","src/minidump_format.rs":"2f96a0efc6b52b1d8af6f0281f6153f4f5f1bcb1816c1c8398cf030613cfcea9","src/module_reader.rs":"29caae7dd615fb542bad368a90fa72cf666da2832eea0980d792b241071c8b07","src/process_reader.rs":"bcd935fada0e449eea2ac6378b985f722f025b497f71df4a19652c72c810e6eb","src/serializers.rs":"aa5713c1739a87eb3cdc21f88d2da5c266ac83e18125f3f4b531badf5d32dec2","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"784eff570da0668d4fe5671022bb03106db1af71a6fe48cbf62a4f80d3d9b76a","src/windows/minidump_writer.rs":"4e3a2b23dc6701dc74490873fb73d542c4c0dcf5f05b40ad82f38e460c019c82","src/windows/mod.rs":"d40550a4cb5a8e99e2bbe281d48e41583be9a8d2398d0f1664bf5a3fcd361ef3","src/windows/module_reader.rs":"929dd6bca70d772294a899f63cf8eb49ae258cb1033e8e292dc1c9768c71acf3","src/windows/process_reader.rs":"162e39188c8f059118a59440e6532369dc2cdeb6d53b6b8582c0b959b5283cf0","tests/common/mod.rs":"429f3ba584e97a858f4390221f120c7724944b91255059b507d9c2d29af8e598","tests/linux_minidump_writer.rs":"764f9802e331fa8a3a7a3a3566af35acf51e6ca02baa2e24bcdb54bd7b01f025","tests/linux_minidump_writer_soft_error.rs":"09991199a685651cfc40a94fe88bf6b84ef72d4f67e520355f7dde28bfbfeafd","tests/linux_module_reader.rs":"03299789005456d8ee5f185f625ba952acedd2a21dacfa3936b8878f9b25f552","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"3cfb7073b1a401a4691c6ec8d9722c815d8431e850a5789304f3502eb8c1a248","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/tiny.elf":"9ccd1d7a8b4d4347f623081ad4a74fade764fa7c8f76495b010bc302fb66e69f","tests/windows_minidump_writer.rs":"f503b424493f4ca73b7c92b6a58f225545169d8909a60a85a9c7cfba6975655a","src/linux/crash_context/riscv64.rs":"8200526110d1d52a6b0777f3e270e3b4f5cc37d8e8671d268f86c00f75fe3460","src/linux/dumper_cpu_info/riscv.rs":"538c27e889369c368956007238a263d440afc416feb295f9f403640c401c06ee","src/linux/thread_info/riscv64.rs":"82a686705f3cb0efca3654f06f43d0d9ebe3f38e499d752936c7596ab82c99e9"},"package":null}
 diff --git a/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs b/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs
 index 185ad76957..14be448419 100644
 --- a/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs
@@ -456,10 +431,10 @@ index 0000000000..4cff851524
 +    }
 +}
 diff --git a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
-index 54a4f3b7a2..21973fc03e 100644
+index f97a9ab6ba..4b6bdec995 100644
 --- a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
 +++ b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
-@@ -20,6 +20,13 @@ cfg_if::cfg_if! {
+@@ -22,6 +22,13 @@ cfg_if::cfg_if! {
      {
          pub mod arm;
          pub use arm as imp;
@@ -475,30 +450,23 @@ index 54a4f3b7a2..21973fc03e 100644
  
 diff --git a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
 new file mode 100644
-index 0000000000..640a652a05
+index 0000000000..36443bf500
 --- /dev/null
 +++ b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,64 @@
 +use {
-+    super::CpuInfoError,
++    super::{CpuInfoError, ProcessInspector},
 +    crate::minidump_format::*,
-+    std::{collections::HashSet, fs::File, io::Read},
++    std::{collections::HashSet, io::Read},
 +};
 +
 +type Result<T> = std::result::Result<T, CpuInfoError>;
 +
-+pub fn parse_cpus_from_sysfile(file: &mut File) -> Result<HashSet<u32>> {
++fn parse_cpus_from_sysfile<R: Read>(mut file: R) -> Result<HashSet<u32>> {
 +    let mut res = HashSet::new();
 +    let mut content = String::new();
-+    file.read_to_string(&mut content)?;
-+    // Expected format: comma-separated list of items, where each
-+    // item can be a decimal integer, or two decimal integers separated
-+    // by a dash.
-+    // E.g.:
-+    //       0
-+    //       0,1,2,3
-+    //       0-3
-+    //       1,10-23
++    file.read_to_string(&mut content)
++        .map_err(CpuInfoError::FileIOError)?;
 +    for items in content.split(',') {
 +        let items = items.trim();
 +        if items.is_empty() {
@@ -516,59 +484,48 @@ index 0000000000..640a652a05
 +                    res.insert(core);
 +                }
 +            }
-+            _ => {
-+                return Err(CpuInfoError::UnparsableCores(format!("{:?}", cores)));
-+            }
++            _ => return Err(CpuInfoError::UnparsableCores(format!("{:?}", cores))),
 +        }
 +    }
 +    Ok(res)
 +}
 +
-+pub fn write_cpu_information(sys_info: &mut MDRawSystemInfo) -> Result<()> {
++pub fn write_cpu_information(
++    process_inspector: &ProcessInspector,
++    sys_info: &mut MDRawSystemInfo,
++) -> Result<()> {
 +    sys_info.processor_architecture = if cfg!(target_arch = "riscv32") {
 +        MDCPUArchitecture::PROCESSOR_ARCHITECTURE_RISCV
 +    } else {
 +        MDCPUArchitecture::PROCESSOR_ARCHITECTURE_RISCV64
 +    } as u16;
 +
-+    // /proc/cpuinfo is not readable under various sandboxed environments
-+    // (e.g. Android services with the android:isolatedProcess attribute)
-+    // prepare for this by setting default values now, which will be
-+    // returned when this happens.
-+    //
-+    // Note: Bogus values are used to distinguish between failures (to
-+    //       read /sys and /proc files) and really badly configured kernels.
 +    sys_info.number_of_processors = 0;
-+    sys_info.processor_level = 1; // There is no ARMv1
++    sys_info.processor_level = 1;
 +    sys_info.processor_revision = 42;
 +
-+    // Counting the number of CPUs involves parsing two sysfs files,
-+    // because the content of /proc/cpuinfo will only mirror the number
-+    // of 'online' cores, and thus will vary with time.
-+    // See http://www.kernel.org/doc/Documentation/cputopology.txt
-+    if let Ok(mut present_file) = File::open("/sys/devices/system/cpu/present") {
-+        // Ignore unparsable content
++    if let Ok(mut present_file) = process_inspector.read_file("/sys/devices/system/cpu/present") {
 +        let cpus_present = parse_cpus_from_sysfile(&mut present_file).unwrap_or_default();
 +
-+        if let Ok(mut possible_file) = File::open("/sys/devices/system/cpu/possible") {
-+            // Ignore unparsable content
++        if let Ok(mut possible_file) =
++            process_inspector.read_file("/sys/devices/system/cpu/possible")
++        {
 +            let cpus_possible = parse_cpus_from_sysfile(&mut possible_file).unwrap_or_default();
 +            let intersection = cpus_present.intersection(&cpus_possible).count();
-+            let cpu_count = std::cmp::min(255, intersection) as u8;
-+            sys_info.number_of_processors = cpu_count;
++            sys_info.number_of_processors = std::cmp::min(255, intersection) as u8;
 +        }
 +    }
 +
 +    Ok(())
 +}
 diff --git a/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs b/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
-index eed2342699..3a0a9981d6 100644
+index 0e5d14b486..57375580b6 100644
 --- a/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
 +++ b/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
 @@ -51,6 +51,9 @@ cfg_if::cfg_if! {
-     } else if #[cfg(target_arch = "mips")] {
-         mod mips;
-         pub type ThreadInfo = mips::ThreadInfoMips;
+     } else if #[cfg(target_arch = "aarch64")] {
+         mod aarch64;
+         pub type ThreadInfo = aarch64::ThreadInfoAarch64;
 +    } else if #[cfg(target_arch = "riscv64")] {
 +        mod riscv64;
 +        pub type ThreadInfo = riscv64::ThreadInfoRiscv64;
@@ -577,81 +534,25 @@ index eed2342699..3a0a9981d6 100644
  
 diff --git a/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs b/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
 new file mode 100644
-index 0000000000..a1f9284f6f
+index 0000000000..8044c30136
 --- /dev/null
 +++ b/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
-@@ -0,0 +1,132 @@
+@@ -0,0 +1,76 @@
 +use {
-+    super::{CommonThreadInfo, NT_Elf, Pid, ThreadInfoError},
-+    crate::minidump_cpu::{RawContextCPU, FP_REG_COUNT},
-+    libc::{c_uint, c_ulonglong, user_regs_struct},
-+    nix::sys::ptrace,
++    super::{Pid, ProcessInspector, ThreadInfoError, regs::*},
++    crate::minidump_cpu::{FP_REG_COUNT, RawContextCPU},
 +};
-+
-+type Result<T> = std::result::Result<T, ThreadInfoError>;
-+
-+#[repr(C)]
-+#[derive(Clone, Copy)]
-+pub union __riscv_mc_fp_state {
-+    pub __f: __riscv_mc_f_ext_state,
-+    pub __d: __riscv_mc_d_ext_state,
-+    pub __q: __riscv_mc_q_ext_state,
-+}
-+
-+#[repr(C)]
-+#[derive(Debug, Clone, Copy, Default)]
-+pub struct __riscv_mc_f_ext_state {
-+    pub __f: [c_uint; 32],
-+    pub __fcsr: c_uint,
-+}
-+
-+#[repr(C)]
-+#[derive(Debug, Clone, Copy, Default)]
-+pub struct __riscv_mc_d_ext_state {
-+    pub __f: [c_ulonglong; 32],
-+    pub __fcsr: c_uint,
-+}
-+
-+#[repr(C)]
-+#[derive(Debug, Clone, Copy)]
-+#[repr(align(16))]
-+pub struct __riscv_mc_q_ext_state {
-+    pub __f: [c_ulonglong; 64],
-+    pub __fcsr: c_uint,
-+    pub __glibc_reserved: [c_uint; 3],
-+}
 +
 +#[derive(Debug)]
 +pub struct ThreadInfoRiscv64 {
 +    pub stack_pointer: usize,
-+    pub tgid: Pid, // thread group id
-+    pub ppid: Pid, // parent process
-+    pub regs: user_regs_struct,
-+    // Breakpad only supports RISCV64 with 64 bit floating point.
-+    pub fpregs: __riscv_mc_d_ext_state,
++    pub tgid: Pid,
++    pub ppid: Pid,
++    pub regs: GenRegs,
++    pub fpregs: FpRegs,
 +}
 +
-+impl CommonThreadInfo for ThreadInfoRiscv64 {}
-+
 +impl ThreadInfoRiscv64 {
-+    // nix currently doesn't support PTRACE_GETFPREGS, so we have to do it ourselves
-+    fn getfpregs(pid: Pid) -> Result<__riscv_mc_d_ext_state> {
-+        Self::ptrace_get_data_via_io(
-+            0x4204 as ptrace::RequestType, // PTRACE_GETREGSET
-+            Some(NT_Elf::NT_PRFPREGSET),
-+            nix::unistd::Pid::from_raw(pid),
-+        )
-+    }
-+
-+    // nix currently doesn't support PTRACE_GETREGS, so we have to do it ourselves
-+    fn getregs(pid: Pid) -> Result<user_regs_struct> {
-+        Self::ptrace_get_data_via_io(
-+            0x4204 as ptrace::RequestType, // PTRACE_GETREGSET
-+            Some(NT_Elf::NT_PRSTATUS),
-+            nix::unistd::Pid::from_raw(pid),
-+        )
-+    }
-+
 +    pub fn get_instruction_pointer(&self) -> usize {
 +        self.regs.pc as usize
 +    }
@@ -693,19 +594,19 @@ index 0000000000..a1f9284f6f
 +        out.t5 = self.regs.t5;
 +        out.t6 = self.regs.t6;
 +
-+        out.float_save.fpcsr = self.fpregs.__fcsr;
-+        out.float_save.fpregs[..FP_REG_COUNT].copy_from_slice(&self.fpregs.__f[..FP_REG_COUNT]);
++        out.float_save.fpcsr = self.fpregs.fcsr;
++        out.float_save.fpregs[..FP_REG_COUNT].copy_from_slice(&self.fpregs.fpregs[..FP_REG_COUNT]);
 +    }
 +
-+    pub fn create_impl(_pid: Pid, tid: Pid) -> Result<Self> {
-+        let (ppid, tgid) = Self::get_ppid_and_tgid(tid)?;
-+        let regs = Self::getregs(tid)?;
-+        let fpregs = Self::getfpregs(tid).unwrap_or(Default::default());
++    pub fn create(process_inspector: &ProcessInspector, tid: Pid) -> Result<Self, ThreadInfoError> {
++        let (ppid, tgid) = super::get_ppid_and_tgid(process_inspector, tid)?;
++        let regs = process_inspector
++            .get_gen_regs(tid)
++            .map_err(ThreadInfoError::PtraceError)?;
++        let fpregs = process_inspector.get_fp_regs(tid).unwrap_or_default();
 +
-+        let stack_pointer = regs.sp as usize;
-+
-+        Ok(ThreadInfoRiscv64 {
-+            stack_pointer,
++        Ok(Self {
++            stack_pointer: regs.sp as usize,
 +            tgid,
 +            ppid,
 +            regs,
@@ -714,23 +615,22 @@ index 0000000000..a1f9284f6f
 +    }
 +}
 diff --git a/third_party/rust/minidump-writer/src/minidump_cpu.rs b/third_party/rust/minidump-writer/src/minidump_cpu.rs
-index 6afc94029e..4f9a7f3822 100644
+index 3dee658111..1d5021be4d 100644
 --- a/third_party/rust/minidump-writer/src/minidump_cpu.rs
 +++ b/third_party/rust/minidump-writer/src/minidump_cpu.rs
-@@ -18,6 +18,13 @@ cfg_if::cfg_if! {
+@@ -18,6 +18,12 @@ cfg_if::cfg_if! {
          pub(crate) const FP_REG_COUNT: usize = 32;
  
          pub type RawContextCPU = minidump_common::format::CONTEXT_ARM64_OLD;
 +    } else if #[cfg(target_arch = "riscv64")] {
-+        /// The number of floating point registers in the floating point save area
 +        #[cfg(any(target_os = "linux", target_os = "android"))]
 +        pub(crate) const FP_REG_COUNT: usize = 32;
 +
 +        pub type RawContextCPU = minidump_common::format::CONTEXT_RISCV64;
 +        pub type FloatStateCPU = minidump_common::format::FLOATING_SAVE_AREA_RISCV64;
-     } else if #[cfg(target_arch = "mips")] {
-         compile_error!("flesh me out");
      } else {
+         compile_error!("unsupported target architecture");
+     }
 diff --git a/third_party/rust/minidump/.cargo-checksum.json b/third_party/rust/minidump/.cargo-checksum.json
 index c776dd3363..6d25a2080c 100644
 --- a/third_party/rust/minidump/.cargo-checksum.json
@@ -1053,6 +953,77 @@ index ac268d7bff..43ceaac2c1 100644
                  Cpu::Unknown(_) => "unknown",
              }
          )
--- 
-2.54.0
-
+diff --git a/third_party/rust/process-backend/.cargo-checksum.json b/third_party/rust/process-backend/.cargo-checksum.json
+index 6787a57e4d..4fcc5b86a5 100644
+--- a/third_party/rust/process-backend/.cargo-checksum.json
++++ b/third_party/rust/process-backend/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{"Cargo.toml":"f9d1e68bc8475f1697b1db4819c5f56fdae0d74d8e3bd69e9d4d0e4f2866f934","src/lib.rs":"68df3ce07860f4906e661839395d14778bf9bcc5db9724ad937929c713a6b041","src/local/error.rs":"7bd22342592178779bc54bbd5d6d64410900eef6a0d52b52ed2164ec6581d7a1","src/local/mod.rs":"c2bfc6f964e2654472ca3e305a9dff8206aa081691c7c4d50e611455b2d4cd85","src/local/module_reader.rs":"ee8d897a600556504f1558eb5bfb5cb2a272ab50865cfc2b1265aa98c84bf7fb","src/local/syscall_invoker.rs":"a3b333c6d9c9f66f2f0b98e91e2677df667ef99f3b3038c3a823c91fcc374167","src/regs.rs":"54cc917765fb3026efcaba8ded8a7e457c4dddca102e8a9a214e86faa1e0ba31"},"package":null}
+\ No newline at end of file
++{"files":{"Cargo.toml":"f9d1e68bc8475f1697b1db4819c5f56fdae0d74d8e3bd69e9d4d0e4f2866f934","src/lib.rs":"68df3ce07860f4906e661839395d14778bf9bcc5db9724ad937929c713a6b041","src/local/error.rs":"7bd22342592178779bc54bbd5d6d64410900eef6a0d52b52ed2164ec6581d7a1","src/local/mod.rs":"6608735f7d0b22a3fde8984958103584ae0e8045c2ad866c443d3113c8ec6d2c","src/local/module_reader.rs":"ee8d897a600556504f1558eb5bfb5cb2a272ab50865cfc2b1265aa98c84bf7fb","src/local/syscall_invoker.rs":"a3b333c6d9c9f66f2f0b98e91e2677df667ef99f3b3038c3a823c91fcc374167","src/regs.rs":"1822cd6119ca044bd8c92b45571e13aad5ee655fdd8bed5780d22f3f82a939a4"},"package":null}
+diff --git a/third_party/rust/process-backend/src/local/mod.rs b/third_party/rust/process-backend/src/local/mod.rs
+index c8c7de065f..68bcf0bb32 100644
+--- a/third_party/rust/process-backend/src/local/mod.rs
++++ b/third_party/rust/process-backend/src/local/mod.rs
+@@ -202,7 +202,12 @@ impl Backend {
+         {
+             Err(Error::NotSupported)
+         }
+-        #[cfg(any(target_arch = "x86", target_arch = "x86_64", target_arch = "aarch64"))]
++        #[cfg(any(
++            target_arch = "x86",
++            target_arch = "x86_64",
++            target_arch = "aarch64",
++            target_arch = "riscv64"
++        ))]
+         {
+             const NT_PRSTATUS: usize = 1;
+             self.ptrace_getregset(NT_PRSTATUS, _pid)
+@@ -220,7 +225,12 @@ impl Backend {
+             const NT_ARM_VFP: usize = 0x400;
+             self.ptrace_getregset(NT_ARM_VFP, pid)
+         }
+-        #[cfg(any(target_arch = "x86", target_arch = "x86_64", target_arch = "aarch64"))]
++        #[cfg(any(
++            target_arch = "x86",
++            target_arch = "x86_64",
++            target_arch = "aarch64",
++            target_arch = "riscv64"
++        ))]
+         {
+             const NT_PRFPREGSET: usize = 2;
+             self.ptrace_getregset(NT_PRFPREGSET, pid)
+@@ -232,6 +242,10 @@ impl Backend {
+         {
+             Err(Error::NotSupported)
+         }
++        #[cfg(target_arch = "riscv64")]
++        {
++            Err(Error::NotSupported)
++        }
+         #[cfg(any(target_arch = "x86", target_arch = "x86_64", target_arch = "aarch64"))]
+         {
+             const PTRACE_GETFPREGS: PtraceRequestType = 14;
+diff --git a/third_party/rust/process-backend/src/regs.rs b/third_party/rust/process-backend/src/regs.rs
+index b98c8f0614..25a465fbe6 100644
+--- a/third_party/rust/process-backend/src/regs.rs
++++ b/third_party/rust/process-backend/src/regs.rs
+@@ -35,6 +35,18 @@ mod imp {
+     }
+ }
+ 
++#[cfg(target_arch = "riscv64")]
++mod imp {
++    pub type GenRegs = libc::user_regs_struct;
++
++    #[repr(C)]
++    #[derive(Debug, Default)]
++    pub struct FpRegs {
++        pub fpregs: [u64; 32],
++        pub fcsr: u32,
++    }
++}
++
+ #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+ mod imp {
+     pub type GenRegs = user_regs_struct;

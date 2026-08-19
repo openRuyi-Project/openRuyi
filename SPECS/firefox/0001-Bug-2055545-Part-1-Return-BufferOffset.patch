@@ -1,0 +1,335 @@
+From b2e35154871f19c17a568e6cfb8f856dad24ee8a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andr=C3=A9=20Bargull?= <andre.bargull@gmail.com>
+Date: Thu, 23 Jul 2026 19:29:05 +0000
+Subject: [PATCH] Bug 2055545 - Part 1: Return BufferOffset from branch method.
+ r=jandem
+
+Return the buffer offset from all branch methods for part 2.
+
+Differential Revision: https://phabricator.services.mozilla.com/D313235
+---
+ .../jit/riscv64/base/base-assembler-riscv.cc  | 36 +++++-----
+ .../jit/riscv64/base/base-assembler-riscv.h   | 19 ++---
+ js/src/jit/riscv64/base/base-riscv-i.cc       | 41 ++++++-----
+ js/src/jit/riscv64/base/base-riscv-i.h        | 70 +++++++++----------
+ 4 files changed, 82 insertions(+), 84 deletions(-)
+
+diff --git a/js/src/jit/riscv64/base/base-assembler-riscv.cc b/js/src/jit/riscv64/base/base-assembler-riscv.cc
+index dfc98c4b9e4c5..abd308ba0b648 100644
+--- a/js/src/jit/riscv64/base/base-assembler-riscv.cc
++++ b/js/src/jit/riscv64/base/base-assembler-riscv.cc
+@@ -189,13 +189,12 @@ void AssemblerRiscvBase::GenInstrRFrm(uint8_t funct7, BaseOpcode opcode,
+   emit(instr);
+ }
+ 
+-BufferOffset AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
+-                                           Register rd, Register rs1,
+-                                           int16_t imm12) {
++void AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
++                                   Register rd, Register rs1, int16_t imm12) {
+   MOZ_ASSERT(is_uint3(funct3) && (is_uint12(imm12) || is_int12(imm12)));
+   Instr instr = opcode | (rd.code() << kRdShift) | (funct3 << kFunct3Shift) |
+                 (rs1.code() << kRs1Shift) | (imm12 << kImm12Shift);
+-  return emit(instr);
++  emit(instr);
+ }
+ 
+ BufferOffset AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
+@@ -207,14 +206,14 @@ BufferOffset AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
+   return emit(instr, doc);
+ }
+ 
+-BufferOffset AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
+-                                           FPURegister rd, Register rs1,
+-                                           int16_t imm12) {
++void AssemblerRiscvBase::GenInstrI(uint8_t funct3, BaseOpcode opcode,
++                                   FPURegister rd, Register rs1,
++                                   int16_t imm12) {
+   MOZ_ASSERT(is_uint3(funct3) && (is_uint12(imm12) || is_int12(imm12)));
+   Instr instr = opcode | (rd.encoding() << kRdShift) |
+                 (funct3 << kFunct3Shift) | (rs1.code() << kRs1Shift) |
+                 (imm12 << kImm12Shift);
+-  return emit(instr);
++  emit(instr);
+ }
+ 
+ void AssemblerRiscvBase::GenInstrIShift(uint8_t funct6, uint8_t funct3,
+@@ -258,9 +257,9 @@ void AssemblerRiscvBase::GenInstrS(uint8_t funct3, BaseOpcode opcode,
+   emit(instr);
+ }
+ 
+-void AssemblerRiscvBase::GenInstrB(uint8_t funct3, BaseOpcode opcode,
+-                                   Register rs1, Register rs2, int16_t imm13,
+-                                   LabelDoc doc) {
++BufferOffset AssemblerRiscvBase::GenInstrB(uint8_t funct3, BaseOpcode opcode,
++                                           Register rs1, Register rs2,
++                                           int16_t imm13, LabelDoc doc) {
+   MOZ_ASSERT(is_uint3(funct3) && is_int13(imm13) && ((imm13 & 1) == 0));
+   Instr instr = opcode | ((imm13 & 0x800) >> 4) |  // bit  11
+                 ((imm13 & 0x1e) << 7) |            // bits 4-1
+@@ -268,7 +267,7 @@ void AssemblerRiscvBase::GenInstrB(uint8_t funct3, BaseOpcode opcode,
+                 (rs2.code() << kRs2Shift) |
+                 ((imm13 & 0x7e0) << 20) |  // bits 10-5
+                 ((imm13 & 0x1000) << 19);  // bit 12
+-  emit(instr, doc);
++  return emit(instr, doc);
+ }
+ 
+ void AssemblerRiscvBase::GenInstrU(BaseOpcode opcode, Register rd,
+@@ -278,15 +277,15 @@ void AssemblerRiscvBase::GenInstrU(BaseOpcode opcode, Register rd,
+   emit(instr);
+ }
+ 
+-void AssemblerRiscvBase::GenInstrJ(BaseOpcode opcode, Register rd,
+-                                   int32_t imm21, LabelDoc doc) {
++BufferOffset AssemblerRiscvBase::GenInstrJ(BaseOpcode opcode, Register rd,
++                                           int32_t imm21, LabelDoc doc) {
+   MOZ_ASSERT(is_int21(imm21) && ((imm21 & 1) == 0));
+   Instr instr = opcode | (rd.code() << kRdShift) |
+                 (imm21 & 0xff000) |          // bits 19-12
+                 ((imm21 & 0x800) << 9) |     // bit  11
+                 ((imm21 & 0x7fe) << 20) |    // bits 10-1
+                 ((imm21 & 0x100000) << 11);  // bit  20
+-  emit(instr, doc);
++  return emit(instr, doc);
+ }
+ 
+ void AssemblerRiscvBase::GenInstrCR(uint8_t funct4, BaseOpcode opcode,
+@@ -426,10 +425,9 @@ void AssemblerRiscvBase::GenInstrCBA(uint8_t funct3, uint8_t funct2,
+ }
+ // ----- Instruction class templates match those in the compiler
+ 
+-void AssemblerRiscvBase::GenInstrBranchCC_rri(uint8_t funct3, Register rs1,
+-                                              Register rs2, int16_t imm13,
+-                                              LabelDoc doc) {
+-  GenInstrB(funct3, BRANCH, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRiscvBase::GenInstrBranchCC_rri(
++    uint8_t funct3, Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
++  return GenInstrB(funct3, BRANCH, rs1, rs2, imm13, doc);
+ }
+ 
+ void AssemblerRiscvBase::GenInstrLoad_ri(uint8_t funct3, Register rd,
+diff --git a/js/src/jit/riscv64/base/base-assembler-riscv.h b/js/src/jit/riscv64/base/base-assembler-riscv.h
+index 580a2ec1723b2..ae437760a2ab6 100644
+--- a/js/src/jit/riscv64/base/base-assembler-riscv.h
++++ b/js/src/jit/riscv64/base/base-assembler-riscv.h
+@@ -119,12 +119,12 @@ class AssemblerRiscvBase {
+                        Register rd, Register rs1, Register rs2);
+   void GenInstrRFrm(uint8_t funct7, BaseOpcode opcode, Register rd,
+                     Register rs1, Register rs2, FPURoundingMode frm);
+-  BufferOffset GenInstrI(uint8_t funct3, BaseOpcode opcode, Register rd,
+-                         Register rs1, int16_t imm12);
++  void GenInstrI(uint8_t funct3, BaseOpcode opcode, Register rd, Register rs1,
++                 int16_t imm12);
+   BufferOffset GenInstrI(uint8_t funct3, BaseOpcode opcode, Register rd,
+                          Register rs1, int16_t imm12, LabelDoc doc);
+-  BufferOffset GenInstrI(uint8_t funct3, BaseOpcode opcode, FPURegister rd,
+-                         Register rs1, int16_t imm12);
++  void GenInstrI(uint8_t funct3, BaseOpcode opcode, FPURegister rd,
++                 Register rs1, int16_t imm12);
+   void GenInstrIShift(uint8_t funct7, uint8_t funct3, BaseOpcode opcode,
+                       Register rd, Register rs1, uint8_t shamt);
+   void GenInstrIShiftW(uint8_t funct7, uint8_t funct3, BaseOpcode opcode,
+@@ -133,10 +133,11 @@ class AssemblerRiscvBase {
+                  int16_t imm12);
+   void GenInstrS(uint8_t funct3, BaseOpcode opcode, Register rs1,
+                  FPURegister rs2, int16_t imm12);
+-  void GenInstrB(uint8_t funct3, BaseOpcode opcode, Register rs1, Register rs2,
+-                 int16_t imm12, LabelDoc doc);
++  BufferOffset GenInstrB(uint8_t funct3, BaseOpcode opcode, Register rs1,
++                         Register rs2, int16_t imm12, LabelDoc doc);
+   void GenInstrU(BaseOpcode opcode, Register rd, int32_t imm20);
+-  void GenInstrJ(BaseOpcode opcode, Register rd, int32_t imm20, LabelDoc doc);
++  BufferOffset GenInstrJ(BaseOpcode opcode, Register rd, int32_t imm20,
++                         LabelDoc doc);
+   void GenInstrCR(uint8_t funct4, BaseOpcode opcode, Register rd, Register rs2);
+   void GenInstrCA(uint8_t funct6, BaseOpcode opcode, Register rd, uint8_t funct,
+                   Register rs2);
+@@ -166,8 +167,8 @@ class AssemblerRiscvBase {
+                    Register rs1, int8_t imm6);
+ 
+   // ----- Instruction class templates match those in LLVM's RISCVInstrInfo.td
+-  void GenInstrBranchCC_rri(uint8_t funct3, Register rs1, Register rs2,
+-                            int16_t imm12, LabelDoc doc);
++  BufferOffset GenInstrBranchCC_rri(uint8_t funct3, Register rs1, Register rs2,
++                                    int16_t imm12, LabelDoc doc);
+   void GenInstrLoad_ri(uint8_t funct3, Register rd, Register rs1,
+                        int16_t imm12);
+   void GenInstrStore_rri(uint8_t funct3, Register rs1, Register rs2,
+diff --git a/js/src/jit/riscv64/base/base-riscv-i.cc b/js/src/jit/riscv64/base/base-riscv-i.cc
+index 08e1ff8adf1b9..225d8b326cf91 100644
+--- a/js/src/jit/riscv64/base/base-riscv-i.cc
++++ b/js/src/jit/riscv64/base/base-riscv-i.cc
+@@ -20,9 +20,8 @@ void AssemblerRISCVI::auipc(Register rd, int32_t imm20) {
+ 
+ // Jumps
+ 
+-CodeOffset AssemblerRISCVI::jal(Register rd, int32_t imm21, LabelDoc doc) {
+-  GenInstrJ(JAL, rd, imm21, doc);
+-  return CodeOffset(currentOffset());
++BufferOffset AssemblerRISCVI::jal(Register rd, int32_t imm21, LabelDoc doc) {
++  return GenInstrJ(JAL, rd, imm21, doc);
+ }
+ 
+ BufferOffset AssemblerRISCVI::jalr(Register rd, Register rs1, int16_t imm12,
+@@ -32,34 +31,34 @@ BufferOffset AssemblerRISCVI::jalr(Register rd, Register rs1, int16_t imm12,
+ 
+ // Branches
+ 
+-void AssemblerRISCVI::beq(Register rs1, Register rs2, int16_t imm13,
+-                          LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b000, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::beq(Register rs1, Register rs2, int16_t imm13,
++                                  LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b000, rs1, rs2, imm13, doc);
+ }
+ 
+-void AssemblerRISCVI::bne(Register rs1, Register rs2, int16_t imm13,
+-                          LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b001, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::bne(Register rs1, Register rs2, int16_t imm13,
++                                  LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b001, rs1, rs2, imm13, doc);
+ }
+ 
+-void AssemblerRISCVI::blt(Register rs1, Register rs2, int16_t imm13,
+-                          LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b100, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::blt(Register rs1, Register rs2, int16_t imm13,
++                                  LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b100, rs1, rs2, imm13, doc);
+ }
+ 
+-void AssemblerRISCVI::bge(Register rs1, Register rs2, int16_t imm13,
+-                          LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b101, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::bge(Register rs1, Register rs2, int16_t imm13,
++                                  LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b101, rs1, rs2, imm13, doc);
+ }
+ 
+-void AssemblerRISCVI::bltu(Register rs1, Register rs2, int16_t imm13,
+-                           LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b110, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::bltu(Register rs1, Register rs2, int16_t imm13,
++                                   LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b110, rs1, rs2, imm13, doc);
+ }
+ 
+-void AssemblerRISCVI::bgeu(Register rs1, Register rs2, int16_t imm13,
+-                           LabelDoc doc) {
+-  GenInstrBranchCC_rri(0b111, rs1, rs2, imm13, doc);
++BufferOffset AssemblerRISCVI::bgeu(Register rs1, Register rs2, int16_t imm13,
++                                   LabelDoc doc) {
++  return GenInstrBranchCC_rri(0b111, rs1, rs2, imm13, doc);
+ }
+ 
+ // Loads
+diff --git a/js/src/jit/riscv64/base/base-riscv-i.h b/js/src/jit/riscv64/base/base-riscv-i.h
+index efd4d03f9ce3e..bc7cc1621d8fd 100644
+--- a/js/src/jit/riscv64/base/base-riscv-i.h
++++ b/js/src/jit/riscv64/base/base-riscv-i.h
+@@ -18,17 +18,17 @@ class AssemblerRISCVI : public AssemblerRiscvBase {
+   void auipc(Register rd, int32_t imm20);
+ 
+   // Jumps
+-  CodeOffset jal(Register rd, int32_t imm20, LabelDoc doc);
++  BufferOffset jal(Register rd, int32_t imm20, LabelDoc doc);
+   BufferOffset jalr(Register rd, Register rs1, int16_t imm12,
+                     LabelDoc doc = {});
+ 
+   // Branches
+-  void beq(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+-  void bne(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+-  void blt(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+-  void bge(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+-  void bltu(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+-  void bgeu(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset beq(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset bne(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset blt(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset bge(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset bltu(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
++  BufferOffset bgeu(Register rs1, Register rs2, int16_t imm12, LabelDoc doc);
+   // Loads
+   void lb(Register rd, Register rs1, int16_t imm12);
+   void lh(Register rd, Register rs1, int16_t imm12);
+@@ -88,50 +88,50 @@ class AssemblerRISCVI : public AssemblerRiscvBase {
+   void unimp();
+ 
+   // Branches
+-  void beqz(Register rs, int16_t imm13, LabelDoc doc) {
+-    beq(rs, zero_reg, imm13, doc);
++  BufferOffset beqz(Register rs, int16_t imm13, LabelDoc doc) {
++    return beq(rs, zero_reg, imm13, doc);
+   }
+-  void bnez(Register rs, int16_t imm13, LabelDoc doc) {
+-    bne(rs, zero_reg, imm13, doc);
++  BufferOffset bnez(Register rs, int16_t imm13, LabelDoc doc) {
++    return bne(rs, zero_reg, imm13, doc);
+   }
+-  void blez(Register rs, int16_t imm13, LabelDoc doc) {
+-    bge(zero_reg, rs, imm13, doc);
++  BufferOffset blez(Register rs, int16_t imm13, LabelDoc doc) {
++    return bge(zero_reg, rs, imm13, doc);
+   }
+-  void bgez(Register rs, int16_t imm13, LabelDoc doc) {
+-    bge(rs, zero_reg, imm13, doc);
++  BufferOffset bgez(Register rs, int16_t imm13, LabelDoc doc) {
++    return bge(rs, zero_reg, imm13, doc);
+   }
+-  void bltz(Register rs, int16_t imm13, LabelDoc doc) {
+-    blt(rs, zero_reg, imm13, doc);
++  BufferOffset bltz(Register rs, int16_t imm13, LabelDoc doc) {
++    return blt(rs, zero_reg, imm13, doc);
+   }
+-  void bgtz(Register rs, int16_t imm13, LabelDoc doc) {
+-    blt(zero_reg, rs, imm13, doc);
++  BufferOffset bgtz(Register rs, int16_t imm13, LabelDoc doc) {
++    return blt(zero_reg, rs, imm13, doc);
+   }
+ 
+-  void bgt(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
+-    blt(rs2, rs1, imm13, doc);
++  BufferOffset bgt(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
++    return blt(rs2, rs1, imm13, doc);
+   }
+-  void ble(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
+-    bge(rs2, rs1, imm13, doc);
++  BufferOffset ble(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
++    return bge(rs2, rs1, imm13, doc);
+   }
+-  void bgtu(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
+-    bltu(rs2, rs1, imm13, doc);
++  BufferOffset bgtu(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
++    return bltu(rs2, rs1, imm13, doc);
+   }
+-  void bleu(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
+-    bgeu(rs2, rs1, imm13, doc);
++  BufferOffset bleu(Register rs1, Register rs2, int16_t imm13, LabelDoc doc) {
++    return bgeu(rs2, rs1, imm13, doc);
+   }
+ 
+-  CodeOffset j(int32_t imm21, LabelDoc doc) {
++  BufferOffset j(int32_t imm21, LabelDoc doc) {
+     return jal(zero_reg, imm21, doc);
+   }
+-  CodeOffset jal(int32_t imm21, LabelDoc doc) { return jal(ra, imm21, doc); }
+-  void jr(Register rs) { jalr(zero_reg, rs, 0); }
+-  void jr(Register rs, int32_t imm12, LabelDoc doc) {
+-    jalr(zero_reg, rs, imm12, doc);
++  BufferOffset jal(int32_t imm21, LabelDoc doc) { return jal(ra, imm21, doc); }
++  BufferOffset jr(Register rs) { return jalr(zero_reg, rs, 0); }
++  BufferOffset jr(Register rs, int32_t imm12, LabelDoc doc) {
++    return jalr(zero_reg, rs, imm12, doc);
+   }
+-  void jalr(Register rs, int32_t imm12, LabelDoc doc) {
+-    jalr(ra, rs, imm12, doc);
++  BufferOffset jalr(Register rs, int32_t imm12, LabelDoc doc) {
++    return jalr(ra, rs, imm12, doc);
+   }
+-  void jalr(Register rs) { jalr(ra, rs, 0); }
++  BufferOffset jalr(Register rs) { return jalr(ra, rs, 0); }
+   void call(int32_t offset) {
+     auto [high20, low12] = ToHigh20Low12(offset);
+     auipc(ra, high20);
