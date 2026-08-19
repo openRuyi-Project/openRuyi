@@ -7,7 +7,6 @@
 
 %define _name           client-go
 %define go_import_path  k8s.io/client-go
-%define upstream_version  0.35.3
 # k8s.io/client-go/testing/internal and k8s.io/client-go/tools/cache use
 # testing/synctest; OBS builds run with asynctimerchan!=0, which makes
 # synctest.Run panic with "synctest.Run not supported with asynctimerchan!=0".
@@ -29,8 +28,8 @@ Release:        %autorelease
 Summary:        Kubernetes client libraries for Go
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/client-go
-#!RemoteAsset:  sha256:9a2a9ca3e1922eb966e93d58fc60cb277ac5bee6884b6b4e1ce32b26e43a0b4f
-Source0:        https://github.com/kubernetes/client-go/archive/refs/tags/v%{upstream_version}.tar.gz#/%{_name}-%{upstream_version}.tar.gz
+#!RemoteAsset:  sha256:916216f9cf446f556bf7b74361c2c7a58c2e7eaeecad0d7862220fca965c7b49
+Source0:        https://github.com/kubernetes/client-go/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
