@@ -1,0 +1,26 @@
+From ff955e7159897ac0ee9c74013ed303ba077efa07 Mon Sep 17 00:00:00 2001
+From: Jvle <keke.oerv@isrc.iscas.ac.cn>
+Date: Thu, 20 Aug 2026 16:50:28 +0800
+Subject: [PATCH] fix: use constant format for logrus error
+
+Signed-off-by: Jvle <keke.oerv@isrc.iscas.ac.cn>
+---
+ cmd/oci-runtime-tool/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/oci-runtime-tool/main.go b/cmd/oci-runtime-tool/main.go
+index 11cdc9f..f1e888f 100644
+--- a/cmd/oci-runtime-tool/main.go
++++ b/cmd/oci-runtime-tool/main.go
+@@ -56,7 +56,7 @@ func before(context *cli.Context) error {
+ 	logLevelString := context.GlobalString("log-level")
+ 	logLevel, err := logrus.ParseLevel(logLevelString)
+ 	if err != nil {
+-		logrus.Fatalf(err.Error())
++		logrus.Fatalf("%s", err)
+ 	}
+ 	logrus.SetLevel(logLevel)
+ 
+-- 
+2.43.0
+
