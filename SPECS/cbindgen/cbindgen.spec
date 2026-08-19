@@ -1,19 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name cbindgen
-%global full_version 0.29.2
+%global full_version 0.29.4
 
 Name:           cbindgen
-Version:        0.29.2
+Version:        0.29.4
 Release:        %autorelease
 Summary:        Rust crate "cbindgen"
 License:        MPL-2.0
 URL:            https://github.com/mozilla/cbindgen
-#!RemoteAsset:  sha256:befbfd072a8e81c02f8c507aefce431fe5e7d051f83d48a23ffc9b9fe5a11799
+#!RemoteAsset:  sha256:2ecb53484c9c167ba674026b656d8a27d7657a58e6066aa902bfb1a4aa00ae20
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildSystem:    rust
 
