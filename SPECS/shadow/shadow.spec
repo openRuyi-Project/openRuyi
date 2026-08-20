@@ -151,8 +151,8 @@ install -Dm644 %{SOURCE4} %{buildroot}%{_unitdir}/shadow.service
 %{_bindir}/sg
 %attr(4755,root,root) %{_bindir}/chage
 %attr(4755,root,root) %{_bindir}/gpasswd
-%attr(0755,root,root) %caps(cap_setgid=ep) %{_bindir}/newgidmap
-%attr(0755,root,root) %caps(cap_setuid=ep) %{_bindir}/newuidmap
+%attr(0755,root,root) %caps(cap_setgid,cap_setpcap=ep) %{_bindir}/newgidmap
+%attr(0755,root,root) %caps(cap_setuid,cap_setpcap=ep) %{_bindir}/newuidmap
 %attr(4755,root,root) %{_bindir}/passwd
 %{_bindir}/chgpasswd
 %{_bindir}/chpasswd
