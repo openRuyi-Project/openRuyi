@@ -32,6 +32,7 @@ Provides:       go(k8s.io/utils) = %{version}
 Provides:       go(k8s.io/utils/trace) = %{version}
 Provides:       go(k8s.io/utils/ptr) = %{version}
 Provides:       go(k8s.io/utils/clock) = %{version}
+Provides:       go(k8s.io/utils/exec) = %{version}
 Provides:       go(k8s.io/utils/net) = %{version}
 
 Requires:       go(github.com/davecgh/go-spew)
