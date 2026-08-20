@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           mold
-Version:        2.41.0
+Version:        2.42.0
 Release:        %autorelease
 Summary:        A Modern Linker
 License:        MIT AND (Apache-2.0 OR MIT)
 URL:            https://github.com/rui314/mold
-#!RemoteAsset:  sha256:0a61abac85d818437b425df856822e9d6e9982baeae5a93bcb02fe6c0060c61a
+#!RemoteAsset:  sha256:6c0f3308c5b3159a369202d970922ad819bab1bfcb5a3b3c06a723d19f65373e
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -34,8 +34,6 @@ Requires(preun): update-alternatives
 %patchlist
 # Allow building against the system-provided `xxhash.h`
 1000-Use-system-compatible-include-path-for-xxhash.h.patch
-# https://github.com/rui314/mold/commit/71cbd79f8c541c091e1fc0a19c5b6ef1f17e8fc0
-1001-Don-t-let-local-hide-a-foo-default-versioned-symbol.patch
 
 %description
 mold is a faster drop-in replacement for existing Unix linkers.
