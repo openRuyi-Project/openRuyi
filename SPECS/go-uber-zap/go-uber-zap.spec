@@ -29,6 +29,9 @@ BuildRequires:  go(go.uber.org/multierr)
 BuildRequires:  go(go.yaml.in/yaml/v3)
 
 Provides:       go(go.uber.org/zap) = %{version}
+Provides:       go(go.uber.org/zap/zapcore) = %{version}
+
+Requires:       go(go.uber.org/multierr)
 
 %description
 Package zap provides fast, structured, leveled logging.

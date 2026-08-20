@@ -1,0 +1,58 @@
+# adjust from meson.
+
+%__muon %{_bindir}/muon
+%__muon_meson %{__muon} meson
+%__muon_wrap_mode nodownload
+%__muon_auto_features enabled
+%__muon_verbose 1
+
+%muon \
+    %set_build_flags \
+    %{shrink:%{__muon_meson} setup \
+        --buildtype=plain \
+        --prefix=%{_prefix} \
+        --libdir=%{_libdir} \
+        --libexecdir=%{_libexecdir} \
+        --bindir=%{_bindir} \
+        --sbindir=%{_sbindir} \
+        --includedir=%{_includedir} \
+        --datadir=%{_datadir} \
+        --mandir=%{_mandir} \
+        --infodir=%{_infodir} \
+        --localedir=%{_datadir}/locale \
+        --sysconfdir=%{_sysconfdir} \
+        --localstatedir=%{_localstatedir} \
+        --sharedstatedir=%{_sharedstatedir} \
+        --wrap-mode=%{__muon_wrap_mode} \
+        --auto-features=%{__muon_auto_features} \
+        %{_vpath_srcdir} %{_vpath_builddir} \
+        %{nil}}
+
+%muon_build \
+    %{shrink:%{__muon_meson} compile \
+        -C %{_vpath_builddir} \
+        --jobs %{_smp_build_ncpus} \
+        %{?__muon_verbose:--verbose} \
+        %{nil}}
+
+%muon_install \
+    %{shrink:DESTDIR=%{buildroot} %{__muon_meson} install \
+        -C %{_vpath_builddir} \
+        --no-rebuild \
+        %{!?__muon_verbose:--quiet} \
+        %{nil}}
+
+%muon_test \
+    %{shrink:%{__muon_meson} test \
+        -C %{_vpath_builddir} \
+        --num-processes %{_smp_build_ncpus} \
+        --print-errorlogs \
+        %{nil}}
+
+# Declarative buildsystem, requires RPM 4.20+ to work
+# https://rpm-software-management.github.io/rpm/manual/buildsystem.html
+%buildsystem_muon_conf() %muon %*
+%buildsystem_muon_generate_buildrequires() %{nil}
+%buildsystem_muon_build() %muon_build %*
+%buildsystem_muon_install() %muon_install %*
+%buildsystem_muon_check() %muon_test %*

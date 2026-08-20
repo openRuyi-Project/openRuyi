@@ -43,6 +43,9 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/otel) = %{version}
+Provides:       go(go.opentelemetry.io/otel/attribute) = %{version}
+Provides:       go(go.opentelemetry.io/otel/propagation) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.17.0) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdoutmetric) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdouttrace) = %{version}
 Provides:       go(go.opentelemetry.io/otel/metric) = %{version}

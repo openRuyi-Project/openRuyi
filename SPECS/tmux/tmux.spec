@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           tmux
-Version:        3.6a
+Version:        3.7c
 Release:        %autorelease
 Summary:        A terminal multiplexer
 License:        ISC AND BSD-2-Clause AND BSD-3-Clause
 URL:            https://tmux.github.io/
 VCS:            git:https://github.com/tmux/tmux
-#!RemoteAsset:  sha256:b6d8d9c76585db8ef5fa00d4931902fa4b8cbe8166f528f44fc403961a3f3759
+#!RemoteAsset:  sha256:7c60cae9a0e25288e2e24750aafc9e8800fc7fd4555e447e1b29ee4201cfb3bf
 Source0:        https://github.com/tmux/tmux/releases/download/%{version}/tmux-%{version}.tar.gz
 BuildSystem:    autotools
 

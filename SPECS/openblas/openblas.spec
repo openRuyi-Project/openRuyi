@@ -28,7 +28,11 @@ BuildOption(build):  NO_STATIC=1
 BuildOption(build):  DYNAMIC_ARCH=1
 BuildOption(build):  NO_TEST=1
 %ifarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+BuildOption(build):  TARGET=RISCV64_ZVL128B
+%else
 BuildOption(build):  TARGET=RISCV64_GENERIC
+%endif
 %endif
 BuildOption(install):  PREFIX=%{_prefix}
 BuildOption(install):  OPENBLAS_LIBRARY_DIR=%{_libdir}
@@ -59,7 +63,11 @@ cp -al . ../ilp64
 %build -a
 %make_build -C ../ilp64 \
 %ifarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+  TARGET=RISCV64_ZVL128B \
+%else
   TARGET=RISCV64_GENERIC \
+%endif
 %endif
   BINARY=64 INTERFACE64=1 LIBNAMESUFFIX=64 \
   USE_THREAD=1 USE_OPENMP=0 NO_STATIC=1 DYNAMIC_ARCH=1 NO_TEST=1
@@ -76,10 +84,12 @@ cp -al . ../ilp64
 %license LICENSE
 %doc Changelog.txt GotoBLAS_01Readme.txt
 %{_libdir}/libopenblas*.so.*
+%{_libdir}/libopenblas*-r%{version}.so
 
 %files devel
 %{_includedir}/*
 %{_libdir}/libopenblas*.so
+%exclude %{_libdir}/libopenblas*-r%{version}.so
 %{_libdir}/pkgconfig/openblas.pc
 %{_libdir}/pkgconfig/openblas64.pc
 %{_libdir}/cmake/openblas/

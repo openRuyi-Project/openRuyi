@@ -12,13 +12,13 @@
 %bcond xorg 0
 
 Name:           openssh
-Version:        10.3p1
+Version:        10.5p1
 Release:        %autorelease
 Summary:        An open source implementation of SSH protocol version 2
 License:        BSD-3-Clause AND BSD-2-Clause AND ISC AND SSH-OpenSSH AND ssh-keyscan AND sprintf AND LicenseRef-openRuyi-Public-Domain AND X11-distribute-modifications-variant
 URL:            http://www.openssh.com/portable.html
 VCS:            git:https://anongit.mindrot.org/openssh.git
-#!RemoteAsset:  sha256:56682a36bb92dcf4b4f016fd8ec8e74059b79a8de25c15d670d731e7d18e45f4
+#!RemoteAsset:  sha256:d44d28a839ea9daf969cc69150fde59910b2b39361dad81a3bd6cbd19218db11
 Source0:        https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
 Source1:        sshd.pam
 Source2:        sshd.service
@@ -255,7 +255,7 @@ popd
 
 %files
 %license LICENCE
-%doc CREDITS ChangeLog OVERVIEW PROTOCOL* README README.platform README.privsep README.tun README.dns TODO
+%doc CREDITS ChangeLog OVERVIEW PROTOCOL* README README.platform README.privsep README.dns TODO
 %attr(0755,root,root) %dir %{_sysconfdir}/ssh
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ssh/moduli
 %attr(0755,root,root) %{_bindir}/ssh-keygen

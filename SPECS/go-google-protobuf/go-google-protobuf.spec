@@ -24,6 +24,9 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
 
 Provides:       go(google.golang.org/protobuf) = %{version}
+Provides:       go(google.golang.org/protobuf/proto) = %{version}
+Provides:       go(google.golang.org/protobuf/reflect) = %{version}
+Provides:       go(google.golang.org/protobuf/runtime) = %{version}
 
 Requires:       pkgconfig(protobuf)
 

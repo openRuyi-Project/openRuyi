@@ -138,6 +138,8 @@ cd %{__cmake_builddir}/python_loader/
 cd %{__cmake_builddir}/python_loader/
 %pyproject_install
 %pyproject_save_files cv2
+# Hacking out import error. https://github.com/openRuyi-Project/openRuyi/issues/998
+sed -i "s#'/home.*'#'%{python3_sitelib}/cv2/python-%{python3_version}'#" %{buildroot}%{python3_sitelib}/cv2/config-*.py
 
 # OpenCV test suite requires test data (opencv_extra repo), network access,
 # and display capabilities unavailable inside the OBS build chroot.
