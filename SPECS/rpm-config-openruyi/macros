@@ -125,7 +125,7 @@
 %_binary_filedigest_algorithm 8
 
 # Use zstd for binary payloads
-%_binary_payload w19T0.zstdio
+%_binary_payload w3T0.zstdio
 
 # Expands to shell code to set the compiler/linker environment
 # variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, LDFLAGS if they have
