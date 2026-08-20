@@ -58,6 +58,8 @@ BuildRequires:  go(google.golang.org/genproto)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc) = %{version}
+Provides:       go(google.golang.org/grpc/codes) = %{version}
+Provides:       go(google.golang.org/grpc/status) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/cncf/xds/go)
