@@ -7,12 +7,12 @@
 %global srcname s3transfer
 
 Name:           python-%{srcname}
-Version:        0.17.0
+Version:        0.19.2
 Release:        %autorelease
 Summary:        Amazon S3 Transfer Manager for Python
 License:        Apache-2.0
 URL:            https://github.com/boto/s3transfer
-#!RemoteAsset:  sha256:9edeb6d1c3c2f89d6050348548834ad8289610d886e5bf7b7207728bd43ce33a
+#!RemoteAsset:  sha256:ba0309fd86be3c27dbf78cdd813c13c5e1df16e5874b99d2535ebbdfb9892993
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
