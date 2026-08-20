@@ -15,7 +15,6 @@ License:        MIT
 URL:            https://github.com/harningt/luajson
 #!RemoteAsset:  sha256:d6f4a354c8325ff965170a7c273bcf3a54736ff09d742008086d19462262368f
 Source:         https://github.com/harningt/luajson/archive/refs/tags/%{version}.tar.gz
-Patch2000:      2000-use-buildroot-test-directory-iterator.patch
 BuildArch:      noarch
 BuildSystem:    autotools
 
@@ -27,6 +26,7 @@ BuildRequires:  findutils
 BuildRequires:  libtool
 BuildRequires:  lua-lpeg
 BuildRequires:  lua-lunitx
+BuildRequires:  lua-filesystem
 BuildRequires:  make
 
 
