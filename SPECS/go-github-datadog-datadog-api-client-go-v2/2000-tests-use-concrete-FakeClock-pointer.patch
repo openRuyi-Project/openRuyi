@@ -1,0 +1,59 @@
+From e93f41390079461d15963e0d945488fc6718362e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 13:44:00 +0800
+Subject: [PATCH] tests: use the concrete FakeClock pointer API
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ tests/test_utils.go | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tests/test_utils.go b/tests/test_utils.go
+index 4d6b0f7..4662744 100644
+--- a/tests/test_utils.go
++++ b/tests/test_utils.go
+@@ -237,7 +237,7 @@ func createWithDir(path string) (*os.File, error) {
+ }
+ 
+ // SetClock stores current time in .freeze file.
+-func SetClock(path string) (clockwork.FakeClock, error) {
++func SetClock(path string) (*clockwork.FakeClock, error) {
+ 	now := clockwork.NewRealClock().Now()
+ 	if GetRecording() == ModeRecording {
+ 		os.MkdirAll("cassettes", 0755)
+@@ -253,7 +253,7 @@ func SetClock(path string) (clockwork.FakeClock, error) {
+ }
+ 
+ // RestoreClock restore current time from .freeze file.
+-func RestoreClock(path string) (clockwork.FakeClock, error) {
++func RestoreClock(path string) (*clockwork.FakeClock, error) {
+ 	freezePath := fmt.Sprintf("cassettes/%s.freeze", path)
+ 	data, err := os.ReadFile(freezePath)
+ 	if err != nil {
+@@ -274,7 +274,7 @@ var (
+ 
+ // WithClock sets clock to context.
+ func WithClock(ctx context.Context, path string) (context.Context, error) {
+-	var fc clockwork.FakeClock
++	var fc *clockwork.FakeClock
+ 	var err error
+ 	if GetRecording() != ModeReplaying {
+ 		fc, err = SetClock(path)
+@@ -319,12 +319,12 @@ func WithUniqueSurrounding(ctx context.Context, name string) string {
+ }
+ 
+ // ClockFromContext returns clock or panics.
+-func ClockFromContext(ctx context.Context) clockwork.FakeClock {
++func ClockFromContext(ctx context.Context) *clockwork.FakeClock {
+ 	if ctx == nil {
+ 		log.Fatal("ctx is required")
+ 	}
+ 	v := ctx.Value(clockKey)
+-	fc, ok := v.(clockwork.FakeClock)
++	fc, ok := v.(*clockwork.FakeClock)
+ 	if !ok {
+ 		log.Fatalf("invalid value %v should be clockwork.FakeClock{}", v)
+ 	}
+-- 
+2.43.0
+
