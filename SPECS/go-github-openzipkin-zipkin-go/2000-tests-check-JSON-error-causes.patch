@@ -1,0 +1,59 @@
+From 20d2ceef8e48d48b1ec658cb539d878eab80f249 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 13:41:38 +0800
+Subject: [PATCH] tests: check JSON error causes rather than wrapper text
+
+Go may describe a Marshaler using its pointer type. Check the sentinel
+error instead of depending on the JSON wrapper error formatting.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ model/span_test.go | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
+
+diff --git a/model/span_test.go b/model/span_test.go
+index 2f3db5a..f3d827f 100644
+--- a/model/span_test.go
++++ b/model/span_test.go
+@@ -17,7 +17,6 @@ package model
+ import (
+ 	"encoding/json"
+ 	"errors"
+-	"fmt"
+ 	"net"
+ 	"reflect"
+ 	"strings"
+@@ -216,13 +215,8 @@ func TestSpanNegativeDuration(t *testing.T) {
+ 		t.Fatalf("Span Marshal Error expected, have nil")
+ 	}
+ 
+-	want := fmt.Sprintf(
+-		"json: error calling MarshalJSON for type model.SpanModel: %s",
+-		ErrValidDurationRequired.Error(),
+-	)
+-
+-	if have := err.Error(); want != have {
+-		t.Errorf("Span Marshal Error want %s, have %s", want, have)
++	if !errors.Is(err, ErrValidDurationRequired) {
++		t.Errorf("Span Marshal Error want %v, have %v", ErrValidDurationRequired, err)
+ 	}
+ }
+ 
+@@ -249,12 +243,8 @@ func TestSpanNegativeTimestamp(t *testing.T) {
+ 		t.Fatalf("Span Marshal Error expected, have nil")
+ 	}
+ 
+-	want := fmt.Sprintf(
+-		"json: error calling MarshalJSON for type model.SpanModel: %s",
+-		ErrValidTimestampRequired.Error(),
+-	)
+-	if have := err.Error(); want != have {
+-		t.Errorf("Span Marshal Error want %s, have %s", want, have)
++	if !errors.Is(err, ErrValidTimestampRequired) {
++		t.Errorf("Span Marshal Error want %v, have %v", ErrValidTimestampRequired, err)
+ 	}
+ 
+ }
+-- 
+2.43.0
+
