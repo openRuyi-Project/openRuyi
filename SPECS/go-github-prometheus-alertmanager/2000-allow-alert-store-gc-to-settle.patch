@@ -1,0 +1,37 @@
+From 4b09d49a0510bd4e245b90390c7642f1b71ed364 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 11 Aug 2026 23:54:44 +0800
+Subject: [PATCH] tests: allow alert store garbage collection to settle
+
+Wait for PostDelete and PostGC callbacks as well as the empty store.
+Garbage collection removes alerts before running these callbacks outside
+of the store lock, so an empty store alone can race with the counter
+assertions.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ provider/mem/mem_test.go | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/provider/mem/mem_test.go b/provider/mem/mem_test.go
+index 9db6ac3..4ea5009 100644
+--- a/provider/mem/mem_test.go
++++ b/provider/mem/mem_test.go
+@@ -517,9 +517,11 @@ func TestAlertsConcurrently(t *testing.T) {
+ 
+ 	time.Sleep(expire)
+ 	require.Eventually(t, func() bool {
+-		// When the alert will eventually expire and is considered resolved - it won't be in the store.
+-		return len(a.alerts.List()) == 0
+-	}, 2*expire, expire)
++		// GC removes alerts before running PostDelete and PostGC outside the lock.
++		// Wait for both the empty store and callback counters to settle.
++		return len(a.alerts.List()) == 0 &&
++			callback.alerts.Load() == 0 && callback.gcCount.Load() == 0
++	}, time.Second, expire)
+ 	require.Equal(t, int32(0), callback.alerts.Load())
+ 	require.Equal(t, int32(0), callback.gcCount.Load())
+ }
+-- 
+2.53.0
+

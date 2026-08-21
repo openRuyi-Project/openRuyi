@@ -1,0 +1,70 @@
+From 3c74deab48776ec3c4e223bc12aa7346e1eaedef Mon Sep 17 00:00:00 2001
+From: Solomon Jacobs <solomonjacobs@protonmail.com>
+Date: Wed, 17 Jun 2026 09:52:31 +0000
+Subject: [PATCH] Bump dependencies (#5308)
+
+* build(deps): bump the go-opentelemetry-io group across 1 directory with 8 updates
+
+Bumps the go-opentelemetry-io group with 4 updates in the / directory: [go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace](https://github.com/open-telemetry/opentelemetry-go-contrib), [go.opentelemetry.io/otel/exporters/otlp/otlptrace](https://github.com/open-telemetry/opentelemetry-go), [go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc](https://github.com/open-telemetry/opentelemetry-go) and [go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp](https://github.com/open-telemetry/opentelemetry-go).
+
+Updates `go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace` from 0.68.0 to 0.69.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go-contrib/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go-contrib/compare/zpages/v0.68.0...zpages/v0.69.0)
+
+Updates `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp` from 0.68.0 to 0.69.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go-contrib/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go-contrib/compare/zpages/v0.68.0...zpages/v0.69.0)
+
+Updates `go.opentelemetry.io/otel` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/sdk` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/trace` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+openRuyi adaptation: use semconv v1.43.0 instead of v1.41.0 to match the resource schema in packaged OpenTelemetry 1.46.0. Preserve the original backport scope and author information.
+---
+ tracing/tracing.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tracing/tracing.go b/tracing/tracing.go
+index 77a8684..4ca3a48 100644
+--- a/tracing/tracing.go
++++ b/tracing/tracing.go
+@@ -31,7 +31,7 @@ import (
+ 	"go.opentelemetry.io/otel/propagation"
+ 	"go.opentelemetry.io/otel/sdk/resource"
+ 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+-	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
++	semconv "go.opentelemetry.io/otel/semconv/v1.43.0"
+ 	"go.opentelemetry.io/otel/trace"
+ 	"go.opentelemetry.io/otel/trace/noop"
+ 	"google.golang.org/grpc/credentials"
+-- 
+2.43.0
+
