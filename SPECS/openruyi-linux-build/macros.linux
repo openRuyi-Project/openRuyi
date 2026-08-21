@@ -58,6 +58,10 @@
 }
 
 %linux_package_dependencies() %{expand:\
+# Provides linux for flavored variant
+%%if "%{name}" != "linux"
+Provides:       linux = %{?epoch:%{epoch}:}%{version}-%{release}
+%%endif
 # Meta-package: default installation
 Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
 Requires:       %%{name}-modules%%{?_isa} = %%{version}-%%{release}
@@ -78,12 +82,18 @@ Requires(preun):  kernel-install
 
 %%package        core
 Summary:        The core Linux kernel image
+%%if "%{name}" != "linux"
+Provides:       linux-core = %{?epoch:%{epoch}:}%{version}-%{release}
+%%endif
 
 %%description    core
 Contains the bootable %%{name} image (vmlinuz) and its Kconfig options.
 
 %%package        modules
 Summary:        Kernel modules for the %%{name} kernel
+%%if "%{name}" != "linux"
+Provides:       linux-modules = %{?epoch:%{epoch}:}%{version}-%{release}
+%%endif
 Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
 
 %%description    modules
@@ -92,6 +102,9 @@ the hardware drivers and kernel features.
 
 %%package        devel
 Summary:        Development files for building external kernel modules
+%%if "%{name}" != "linux"
+Provides:       linux-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+%%endif
 Requires:       %%{name}%%{?_isa} = %%{version}-%%{release}
 Requires:       dwarves
 
@@ -104,6 +117,9 @@ located at %%{_usrsrc}/kernels/%%{_kernel_full_version}, with symlinks provided 
 %%if %%{with dtbs}
 %%package        dtbs
 Summary:        Devicetree blob files from %%{name} sources
+%%if "%{name}" != "linux"
+Provides:       linux-dtbs = %{?epoch:%{epoch}:}%{version}-%{release}
+%%endif
 Requires:       %%{name}-core%%{?_isa} = %%{version}-%%{release}
 
 %%description    dtbs
