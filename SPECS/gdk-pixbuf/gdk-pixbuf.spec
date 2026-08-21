@@ -38,6 +38,11 @@ BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  shared-mime-info
 BuildRequires:  python3dist(docutils)
 
+# Lack of this will result in a report:
+# This may indicate that pixbuf loaders or the mime database could not be found.
+# and then core dumped.
+Requires:       shared-mime-info
+
 %description
 gdk-pixbuf is an image loading library that can be extended by loadable
 modules for new image formats. It is used by toolkits such as GTK+ or
