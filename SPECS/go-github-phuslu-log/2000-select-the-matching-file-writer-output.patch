@@ -1,0 +1,53 @@
+From 15ef92acfec839d3380fb90e96673438e18f5e09 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 21 Aug 2026 22:29:00 +0800
+Subject: [PATCH] tests: select the matching file writer output
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ file_test.go | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/file_test.go b/file_test.go
+index 4b6c760..6371e1c 100644
+--- a/file_test.go
++++ b/file_test.go
+@@ -31,18 +31,24 @@ func TestFileWriter(t *testing.T) {
+ 		t.Fatal("filepath glob return empty")
+ 	}
+ 
+-	data, err := os.ReadFile(matches[0])
+-	if err != nil {
+-		t.Fatalf("read file error: %+v", err)
+-	}
+-
+-	if string(data) != text {
+-		t.Fatalf("read file content mismath: data=[%s], text=[%s]", data, text)
++	found := false
++	for _, match := range matches {
++		data, readErr := os.ReadFile(match)
++		if readErr != nil {
++			t.Fatalf("read file error: %+v", readErr)
++		}
++		if string(data) != text {
++			continue
++		}
++		found = true
++		err = os.Remove(match)
++		if err != nil {
++			t.Fatalf("os remove %s error: %+v", match, err)
++		}
++		break
+ 	}
+-
+-	err = os.Remove(matches[0])
+-	if err != nil {
+-		t.Fatalf("os remove %s error: %+v", matches[0], err)
++	if !found {
++		t.Fatalf("read file content mismatch: no output matched %q", text)
+ 	}
+ 
+ 	os.Remove(filename)
+-- 
+2.43.0
+
