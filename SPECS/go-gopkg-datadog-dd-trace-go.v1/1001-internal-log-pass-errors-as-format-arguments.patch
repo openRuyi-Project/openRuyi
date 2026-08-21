@@ -1,0 +1,41 @@
+From e54487461d659149028b4d7ec9ccdf45199cbdf4 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:59:26 +0800
+Subject: [PATCH 2/2] internal/log: pass aggregated errors as format arguments
+
+Backport the relevant fix from:
+
+https://github.com/DataDog/dd-trace-go/commit/fbda83b5f
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ internal/log/log.go | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/internal/log/log.go b/internal/log/log.go
+index a887721c2..452285191 100644
+--- a/internal/log/log.go
++++ b/internal/log/log.go
+@@ -150,15 +150,15 @@ func Flush() {
+ 
+ func flushLocked() {
+ 	for _, report := range erragg {
+-		msg := fmt.Sprintf("%v", report.err)
++		var extra string
+ 		if report.count > defaultErrorLimit {
+-			msg += fmt.Sprintf(", %d+ additional messages skipped (first occurrence: %s)", defaultErrorLimit, report.first.Format(time.RFC822))
++			extra = fmt.Sprintf(", %d+ additional messages skipped (first occurrence: %s)", defaultErrorLimit, report.first.Format(time.RFC822))
+ 		} else if report.count > 1 {
+-			msg += fmt.Sprintf(", %d additional messages skipped (first occurrence: %s)", report.count-1, report.first.Format(time.RFC822))
++			extra = fmt.Sprintf(", %d additional messages skipped (first occurrence: %s)", report.count-1, report.first.Format(time.RFC822))
+ 		} else {
+-			msg += fmt.Sprintf(" (occurred: %s)", report.first.Format(time.RFC822))
++			extra = fmt.Sprintf(" (occurred: %s)", report.first.Format(time.RFC822))
+ 		}
+-		printMsg("ERROR", msg)
++		printMsg("ERROR", "%v%s", report.err, extra)
+ 	}
+ 	for k := range erragg {
+ 		// compiler-optimized map-clearing post go1.11 (golang/go#20138)
+-- 
+2.43.0
+
