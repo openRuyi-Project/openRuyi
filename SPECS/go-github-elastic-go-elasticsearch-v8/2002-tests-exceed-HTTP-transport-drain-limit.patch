@@ -1,0 +1,43 @@
+From 0c63bd48cfe27b36b85cf7902418e1ba828398fd Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 13:42:12 +0800
+Subject: [PATCH] tests: exceed the HTTP transport automatic drain limit
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ elasticsearch_internal_test.go | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/elasticsearch_internal_test.go b/elasticsearch_internal_test.go
+index 2a52491..6bca871 100644
+--- a/elasticsearch_internal_test.go
++++ b/elasticsearch_internal_test.go
+@@ -33,6 +33,7 @@ import (
+ 	"encoding/base64"
+ 	"encoding/hex"
+ 	"errors"
++	"fmt"
+ 	"io"
+ 	"io/ioutil"
+ 	"math/big"
+@@ -1775,11 +1776,14 @@ func TestAutoDrainBodyEnablesConnectionReuse(t *testing.T) {
+ func TestAutoDrainBodyDisabledConnectionNotReused(t *testing.T) {
+ 	var actualConnections int32
+ 	ts := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
++		// Exceed net/http's 256 KiB automatic drain limit so this tests
++		// the client's AutoDrainBody option, not the transport's fallback.
++		body := []byte(`{"status":"ok","padding":"` + strings.Repeat("x", 512<<10) + `"}`)
+ 		w.Header().Set("X-Elastic-Product", "Elasticsearch")
++		w.Header().Set("Content-Length", fmt.Sprint(len(body)))
+ 		w.WriteHeader(http.StatusOK)
+-		if _, err := w.Write([]byte(`{"status":"ok","padding":"` + strings.Repeat("x", 3000) + `"}`)); err != nil {
+-			t.Errorf("failed to write response: %v", err)
+-		}
++		// Closing an unread body may interrupt the server's write.
++		_, _ = w.Write(body)
+ 	}))
+ 	ts.Config.ConnState = func(_ net.Conn, state http.ConnState) {
+ 		if state == http.StateNew {
+-- 
+2.43.0
+

@@ -1,0 +1,73 @@
+From f66247c4c8583f38699e5c3b071c6e7f45730774 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 04:58:54 +0800
+Subject: [PATCH] internal/build: fix snapshot fallback and timestamp format
+
+Continue to snapshot lookup for prerelease and branch references when the release index is unavailable. Also normalize manifest timestamps to UTC when producing the legacy build representation, as its tests and former time.Time representation require.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ internal/build/sdk/artifacts/manifest_get.go     |  4 ++++
+ .../sdk/artifacts/rest_resources_download.go     | 16 ++++++++--------
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/internal/build/sdk/artifacts/manifest_get.go b/internal/build/sdk/artifacts/manifest_get.go
+index 74a6d7e68..86881722b 100644
+--- a/internal/build/sdk/artifacts/manifest_get.go
++++ b/internal/build/sdk/artifacts/manifest_get.go
+@@ -21,6 +21,7 @@ import (
+ 	"context"
+ 	"fmt"
+ 	"strings"
++	"time"
+ )
+ 
+ // GetManifestRequest represents the request parameters for the GetManifest API.
+@@ -111,6 +112,9 @@ func (m *Manifest) ToBuild() Build {
+ 	var build Build
+ 
+ 	build.StartTime = m.StartTime
++	if startTime, err := time.Parse(time.RFC3339, m.StartTime); err == nil {
++		build.StartTime = startTime.UTC().Format(time.RFC3339)
++	}
+ 	build.Version = m.Version
+ 	build.BuildID = m.BuildID
+ 	build.Projects.Elasticsearch.Branch = m.Projects.Elasticsearch.Branch
+diff --git a/internal/build/sdk/artifacts/rest_resources_download.go b/internal/build/sdk/artifacts/rest_resources_download.go
+index 4872112a2..413f94d43 100644
+--- a/internal/build/sdk/artifacts/rest_resources_download.go
++++ b/internal/build/sdk/artifacts/rest_resources_download.go
+@@ -52,15 +52,13 @@ func (c *Client) DownloadRestResources(ctx context.Context, ref ref.Ref, dest st
+ 		// Try to find in releases using the base version (without prerelease suffix)
+ 		baseVersion := ref.BaseVersion()
+ 		releases, err := c.ListReleases(ctx)
+-		if err != nil {
+-			return fmt.Errorf("cannot list releases: %w", err)
+-		}
+-
+ 		var release *Release
+-		for i := range releases.Releases {
+-			if releases.Releases[i].Version == baseVersion {
+-				release = &releases.Releases[i]
+-				break
++		if err == nil {
++			for i := range releases.Releases {
++				if releases.Releases[i].Version == baseVersion {
++					release = &releases.Releases[i]
++					break
++				}
+ 			}
+ 		}
+ 
+@@ -73,6 +71,8 @@ func (c *Client) DownloadRestResources(ctx context.Context, ref ref.Ref, dest st
+ 				return fmt.Errorf("cannot get latest snapshot: %w", err)
+ 			}
+ 			manifestURL = latestSnapshot.ManifestURL
++		} else if err != nil {
++			return fmt.Errorf("cannot list releases: %w", err)
+ 		} else {
+ 			return fmt.Errorf("release %s not found", ref.String())
+ 		}
+-- 
+2.43.0
+
