@@ -1,0 +1,95 @@
+From 2f6df202f986eb2297cd9e40c110096bd14b100f Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 01:26:46 +0800
+Subject: [PATCH] Raise CMake policy baseline for CMake 4
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cmake/almostcat.cmake   | 2 +-
+ cmake/ec_sort.cmake     | 2 +-
+ cmake/runandsort.cmake  | 2 +-
+ filetree/CMakeLists.txt | 2 +-
+ meta/CMakeLists.txt     | 2 +-
+ meta/sample.cmake       | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/cmake/almostcat.cmake b/cmake/almostcat.cmake
+index 8889e3a..ae9eadb 100755
+--- a/cmake/almostcat.cmake
++++ b/cmake/almostcat.cmake
+@@ -27,7 +27,7 @@
+ # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ if("${WHICH}" STREQUAL "")
+     message(FATAL_ERROR "No WHICH parameter specified")
+diff --git a/cmake/ec_sort.cmake b/cmake/ec_sort.cmake
+index b98478b..a7726df 100755
+--- a/cmake/ec_sort.cmake
++++ b/cmake/ec_sort.cmake
+@@ -32,7 +32,7 @@
+ # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ # See documentation links at https://stackoverflow.com/q/12802377/2877364
+ set(tests_cmake_ec_sort_dir "${CMAKE_CURRENT_LIST_DIR}")
+diff --git a/cmake/runandsort.cmake b/cmake/runandsort.cmake
+index 5746fc8..df1b245 100755
+--- a/cmake/runandsort.cmake
++++ b/cmake/runandsort.cmake
+@@ -27,7 +27,7 @@
+ # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ # Conventions:
+ #   - "P_*" are parameters parsed using cmake_parse_arguments
+diff --git a/filetree/CMakeLists.txt b/filetree/CMakeLists.txt
+index 1d214ed..51704a4 100644
+--- a/filetree/CMakeLists.txt
++++ b/filetree/CMakeLists.txt
+@@ -24,7 +24,7 @@
+ # POSSIBILITY OF SUCH DAMAGE.
+ #
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ # Test for EditorConfig file in parent directory
+ new_ec_test(parent_directory parent_directory.in parent_directory/test.a "^key=value[ \t\n\r]*$")
+diff --git a/meta/CMakeLists.txt b/meta/CMakeLists.txt
+index 4115da1..f821e1a 100755
+--- a/meta/CMakeLists.txt
++++ b/meta/CMakeLists.txt
+@@ -25,7 +25,7 @@
+ # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ # POSSIBILITY OF SUCH DAMAGE.
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ set(tests_meta_cmakelists_dir "${CMAKE_CURRENT_LIST_DIR}")
+ 
+diff --git a/meta/sample.cmake b/meta/sample.cmake
+index a7e9eae..78bd5e5 100644
+--- a/meta/sample.cmake
++++ b/meta/sample.cmake
+@@ -1,6 +1,6 @@
+ # sample.cmake: Tests run_and_sort to make sure it's working.
+ 
+-cmake_minimum_required(VERSION 3.5)
++cmake_minimum_required(VERSION 3.10)
+ 
+ # See documentation links at https://stackoverflow.com/q/12802377/2877364
+ set( tests_meta_sample_dir "${CMAKE_CURRENT_LIST_DIR}" )
+-- 
+2.43.0
+

@@ -1,0 +1,26 @@
+From a98f6760fefc115c2dd96e90e5acd622b7c5a921 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 01:12:31 +0800
+Subject: [PATCH] Declare CMake compatibility for core tests
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9074719..13d4619 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,8 @@
+ # This file is only used as part of 'go test'.
+ 
++cmake_minimum_required(VERSION 3.10)
++project(editorconfig-core-test NONE)
++
+ enable_testing()
+ set(EDITORCONFIG_CMD $ENV{EDITORCONFIG_CMD})
+ add_subdirectory(core-test)
+-- 
+2.43.0
+
