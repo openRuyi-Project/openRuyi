@@ -48,10 +48,15 @@ Provides:       go(go.opentelemetry.io/otel/propagation) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.17.0) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdoutmetric) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdouttrace) = %{version}
+Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdoutlog) = %{version}
+Provides:       go(go.opentelemetry.io/otel/log) = %{version}
+Provides:       go(go.opentelemetry.io/otel/log/logtest) = %{version}
 Provides:       go(go.opentelemetry.io/otel/metric) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/metric) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/metric/metricdata) = %{version}
+Provides:       go(go.opentelemetry.io/otel/sdk/log) = %{version}
+Provides:       go(go.opentelemetry.io/otel/sdk/log/logtest) = %{version}
 Provides:       go(go.opentelemetry.io/otel/trace) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
@@ -85,14 +90,9 @@ This package provides the core OpenTelemetry API module for Go.
 %exclude %{go_sys_gopath}/%{go_import_path}/exporters/otlp/otlptrace/otlptracegrpc
 %exclude %{go_sys_gopath}/%{go_import_path}/exporters/otlp/otlptrace/otlptracehttp
 %exclude %{go_sys_gopath}/%{go_import_path}/exporters/prometheus
-%exclude %{go_sys_gopath}/%{go_import_path}/exporters/stdout/stdoutlog
 %exclude %{go_sys_gopath}/%{go_import_path}/exporters/zipkin
 %exclude %{go_sys_gopath}/%{go_import_path}/internal/tools
-%exclude %{go_sys_gopath}/%{go_import_path}/log
-%exclude %{go_sys_gopath}/%{go_import_path}/log/logtest
 %exclude %{go_sys_gopath}/%{go_import_path}/schema
-%exclude %{go_sys_gopath}/%{go_import_path}/sdk/log
-%exclude %{go_sys_gopath}/%{go_import_path}/sdk/log/logtest
 %exclude %{go_sys_gopath}/%{go_import_path}/trace/internal/telemetry/test
 
 %changelog
