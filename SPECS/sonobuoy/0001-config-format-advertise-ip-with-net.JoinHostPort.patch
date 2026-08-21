@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Masashi Honma <1505016+masap@users.noreply.github.com>
+Date: Tue, 11 Aug 2026 16:00:00 +0800
+Subject: [PATCH] config: format advertise IP with net.JoinHostPort
+
+SONOBUOY_ADVERTISE_IP is populated from the aggregator pod IP.  Formatting
+every value as an IPv6 literal produces invalid IPv4 URLs such as
+https://[10.244.0.1]:8080.  Use net.JoinHostPort so IPv4 addresses remain
+host:port while IPv6 addresses are still bracketed.
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ pkg/config/loader.go | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/pkg/config/loader.go b/pkg/config/loader.go
+index 4e4ff3a..f1b27de 100644
+--- a/pkg/config/loader.go
++++ b/pkg/config/loader.go
+@@ -20,7 +20,9 @@ import (
+ 	"encoding/json"
+ 	"fmt"
+ 	"io"
++	"net"
+ 	"os"
++	"strconv"
+ 	"strings"
+ 
+ 	"github.com/sirupsen/logrus"
+@@ -90,7 +92,7 @@ func (cfg *Config) Resolve() {
+ 	// Figure out what address we will tell pods to dial for aggregation
+ 	if cfg.Aggregation.AdvertiseAddress == "" {
+ 		if ip := os.Getenv("SONOBUOY_ADVERTISE_IP"); ip != "" {
+-			cfg.Aggregation.AdvertiseAddress = fmt.Sprintf("[%v]:%d", ip, cfg.Aggregation.BindPort)
++			cfg.Aggregation.AdvertiseAddress = net.JoinHostPort(ip, strconv.Itoa(cfg.Aggregation.BindPort))
+ 		} else {
+ 			hostname, _ := os.Hostname()
+ 			if hostname != "" {
+-- 
+2.51.0
