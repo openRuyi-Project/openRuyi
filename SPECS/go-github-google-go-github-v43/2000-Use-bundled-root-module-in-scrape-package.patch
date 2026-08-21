@@ -1,0 +1,39 @@
+From c59f2856564ddabedb7caebf93f2a417ddd5443a Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 01:33:04 +0800
+Subject: [PATCH] Use bundled v43 client API in scrape
+
+Keep the scrape module at its own canonical import path.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ scrape/apps.go      | 2 +-
+ scrape/apps_test.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scrape/apps.go b/scrape/apps.go
+index e430763..53259c7 100644
+--- a/scrape/apps.go
++++ b/scrape/apps.go
+@@ -17,7 +17,7 @@ import (
+ 	"strings"
+ 
+ 	"github.com/PuerkitoBio/goquery"
+-	"github.com/google/go-github/v42/github"
++	"github.com/google/go-github/v43/github"
+ )
+ 
+ // AppRestrictionsEnabled returns whether the specified organization has
+diff --git a/scrape/apps_test.go b/scrape/apps_test.go
+index 2d75299..4cdc0fc 100644
+--- a/scrape/apps_test.go
++++ b/scrape/apps_test.go
+@@ -5,7 +5,7 @@ import (
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+-	"github.com/google/go-github/v42/github"
++	"github.com/google/go-github/v43/github"
+ )
+ 
+ func Test_AppRestrictionsEnabled(t *testing.T) {
