@@ -1,0 +1,361 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calico-node
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calico-cni-plugin
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calico-kube-controllers
+  namespace: kube-system
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: calico-config
+  namespace: kube-system
+data:
+  typha_service_name: "none"
+  calico_backend: "vxlan"
+  veth_mtu: "0"
+  cni_network_config: |-
+    {
+      "name": "k8s-pod-network",
+      "cniVersion": "0.3.1",
+      "plugins": [
+        {
+          "type": "calico",
+          "log_level": "info",
+          "log_file_path": "/var/log/calico/cni/cni.log",
+          "datastore_type": "kubernetes",
+          "nodename": "__KUBERNETES_NODE_NAME__",
+          "mtu": __CNI_MTU__,
+          "ipam": {"type": "calico-ipam"},
+          "policy": {"type": "k8s"},
+          "kubernetes": {"kubeconfig": "__KUBECONFIG_FILEPATH__"}
+        },
+        {
+          "type": "portmap",
+          "snat": true,
+          "capabilities": {"portMappings": true}
+        }
+      ]
+    }
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-node
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "nodes/status", "namespaces", "serviceaccounts", "endpoints", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+- apiGroups: [""]
+  resources: ["pods/status"]
+  verbs: ["patch"]
+- apiGroups: ["authentication.k8s.io"]
+  resources: ["tokenreviews"]
+  verbs: ["create"]
+- apiGroups: ["authorization.k8s.io"]
+  resources: ["subjectaccessreviews"]
+  verbs: ["create"]
+- apiGroups: [""]
+  resources: ["serviceaccounts/token"]
+  verbs: ["create"]
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "list", "watch", "create", "update", "patch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["policy.networking.k8s.io"]
+  resources: ["adminnetworkpolicies", "baselineadminnetworkpolicies", "clusternetworkpolicies"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["kubevirt.io"]
+  resources: ["virtualmachineinstances", "virtualmachineinstancemigrations"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["crd.projectcalico.org"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-node
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-node
+subjects:
+- kind: ServiceAccount
+  name: calico-node
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-cni-plugin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-node
+subjects:
+- kind: ServiceAccount
+  name: calico-cni-plugin
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-kube-controllers
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-node
+subjects:
+- kind: ServiceAccount
+  name: calico-kube-controllers
+  namespace: kube-system
+---
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: default-ipv4-ippool
+spec:
+  allowedUses:
+  - Workload
+  - Tunnel
+  assignmentMode: Automatic
+  blockSize: 26
+  cidr: 10.244.0.0/16
+  ipipMode: Never
+  natOutgoing: true
+  nodeSelector: all()
+  vxlanMode: Always
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: calico-node
+  namespace: kube-system
+  labels:
+    k8s-app: calico-node
+spec:
+  selector:
+    matchLabels:
+      k8s-app: calico-node
+  template:
+    metadata:
+      labels:
+        k8s-app: calico-node
+    spec:
+      hostNetwork: true
+      serviceAccountName: calico-node
+      priorityClassName: system-node-critical
+      terminationGracePeriodSeconds: 0
+      tolerations:
+      - operator: Exists
+      initContainers:
+      - name: install-cni
+        image: localhost/kubernetes/calico:v3.32.0-riscv64
+        imagePullPolicy: Never
+        command: ["/opt/cni/bin/install"]
+        env:
+        - name: CNI_CONF_NAME
+          value: "10-calico.conflist"
+        - name: CNI_NETWORK_CONFIG
+          valueFrom:
+            configMapKeyRef:
+              name: calico-config
+              key: cni_network_config
+        - name: KUBERNETES_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CNI_MTU
+          valueFrom:
+            configMapKeyRef:
+              name: calico-config
+              key: veth_mtu
+        - name: SLEEP
+          value: "false"
+        volumeMounts:
+        - mountPath: /host/opt/cni/bin
+          name: cni-bin-dir
+        - mountPath: /host/etc/cni/net.d
+          name: cni-net-dir
+        securityContext:
+          privileged: true
+      containers:
+      - name: calico-node
+        image: localhost/kubernetes/calico:v3.32.0-riscv64
+        imagePullPolicy: Never
+        env:
+        - name: DATASTORE_TYPE
+          value: "kubernetes"
+        - name: WAIT_FOR_DATASTORE
+          value: "true"
+        - name: NODENAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: CALICO_NETWORKING_BACKEND
+          value: "vxlan"
+        - name: CLUSTER_TYPE
+          value: "k8s,openruyi"
+        - name: IP
+          value: "autodetect"
+        - name: IP_AUTODETECTION_METHOD
+          value: "interface=eth1"
+        - name: CALICO_IPV4POOL_CIDR
+          value: "10.244.0.0/16"
+        - name: CALICO_IPV4POOL_IPIP
+          value: "Never"
+        - name: CALICO_IPV4POOL_VXLAN
+          value: "Always"
+        - name: CALICO_IPV4POOL_NAT_OUTGOING
+          value: "true"
+        - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
+          value: "ACCEPT"
+        - name: FELIX_IPV6SUPPORT
+          value: "false"
+        - name: FELIX_HEALTHENABLED
+          value: "true"
+        - name: FELIX_IPTABLESBACKEND
+          value: "NFT"
+        - name: FELIX_BPFENABLED
+          value: "false"
+        - name: FELIX_BPFKUBEPROXYIPTABLESCLEANUPENABLED
+          value: "false"
+        - name: FELIX_XDPENABLED
+          value: "false"
+        - name: FELIX_LOGSEVERITYSYS
+          value: "none"
+        - name: CALICO_DISABLE_FILE_LOGGING
+          value: "true"
+        securityContext:
+          privileged: true
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/calico-node", "-shutdown"]
+        livenessProbe:
+          exec:
+            command: ["/bin/calico-node", "-felix-live"]
+          periodSeconds: 10
+          initialDelaySeconds: 20
+          failureThreshold: 6
+          timeoutSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["/bin/calico-node", "-felix-ready"]
+          periodSeconds: 10
+          timeoutSeconds: 10
+        volumeMounts:
+        - mountPath: /host/etc/cni/net.d
+          name: cni-net-dir
+          readOnly: false
+        - mountPath: /lib/modules
+          name: lib-modules
+          readOnly: true
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
+          readOnly: false
+        - mountPath: /var/run/calico
+          name: var-run-calico
+          readOnly: false
+        - mountPath: /var/lib/calico
+          name: var-lib-calico
+          readOnly: false
+        - mountPath: /var/run/nodeagent
+          name: policysync
+      volumes:
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: var-run-calico
+        hostPath:
+          path: /var/run/calico
+          type: DirectoryOrCreate
+      - name: var-lib-calico
+        hostPath:
+          path: /var/lib/calico
+          type: DirectoryOrCreate
+      - name: xtables-lock
+        hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
+      - name: cni-bin-dir
+        hostPath:
+          path: /opt/cni/bin
+          type: DirectoryOrCreate
+      - name: cni-net-dir
+        hostPath:
+          path: /etc/cni/net.d
+          type: DirectoryOrCreate
+      - name: policysync
+        hostPath:
+          path: /var/run/nodeagent
+          type: DirectoryOrCreate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calico-kube-controllers
+  namespace: kube-system
+  labels:
+    k8s-app: calico-kube-controllers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: calico-kube-controllers
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        k8s-app: calico-kube-controllers
+    spec:
+      serviceAccountName: calico-kube-controllers
+      priorityClassName: system-cluster-critical
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+      - key: CriticalAddonsOnly
+        operator: Exists
+      containers:
+      - name: calico-kube-controllers
+        image: localhost/kubernetes/calico:v3.32.0-riscv64
+        imagePullPolicy: Never
+        command: ["/usr/bin/kube-controllers"]
+        env:
+        - name: ENABLED_CONTROLLERS
+          value: "node,loadbalancer"
+        - name: DATASTORE_TYPE
+          value: "kubernetes"
+        livenessProbe:
+          exec:
+            command: ["/usr/bin/check-status", "-l"]
+          periodSeconds: 10
+          initialDelaySeconds: 10
+          failureThreshold: 6
+          timeoutSeconds: 10
+        readinessProbe:
+          exec:
+            command: ["/usr/bin/check-status", "-r"]
+          periodSeconds: 10
+          timeoutSeconds: 10

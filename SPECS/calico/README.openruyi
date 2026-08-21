@@ -1,0 +1,19 @@
+This package installs Calico v3.32.0 Kubernetes manifests validated on the
+openRuyi RISC-V multi-node Kata Containers and Cloud Hypervisor environment.
+
+The manifests use VXLAN mode and select the node IP from eth1. This matches the
+validated QEMU layout where eth0 is the per-VM user-network interface and eth1
+is the multi-node bridge interface.
+
+Before applying the manifest, import or provide the Calico image as:
+
+  localhost/kubernetes/calico:v3.32.0-riscv64
+
+Apply the manifests in order:
+
+  kubectl apply -f /usr/share/kubernetes/calico/calico-v3.32.0-crds.yaml
+  kubectl apply -f /usr/share/kubernetes/calico/calico-v3.32.0-openruyi-riscv64.yaml
+
+This RPM does not embed the local OCI image tarball. The current validated
+image asset is large and was produced for the RISC-V offline deployment flow;
+it should be provided by an image repository or a separate image-asset package.
