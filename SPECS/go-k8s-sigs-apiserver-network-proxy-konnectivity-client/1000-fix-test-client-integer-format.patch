@@ -1,0 +1,39 @@
+From 99a65280b5ddc82b02a5226f54dcf0f6568f04ef Mon Sep 17 00:00:00 2001
+From: Walter <cheftako@gmail.com>
+Date: Sat, 2 May 2026 18:48:49 -0700
+Subject: [PATCH] Upgrade to go v1.26
+
+Prompt:
+please upgrade the top level go.mod to use go version 1.26.0. Ensure all the tests pass. Do not make changes in
+   konnectivity-client.
+Adding golang changes to support go1.26
+Fixing standard package names.
+Fix go 1.26
+Add go tool chain with covdata support.
+Further define tool chain.
+Set gotoolchain env variable in Makefile
+Added some debugging to Makefile
+Ensure we only run 'go test' if there are tests.
+Switched to golang 1.26.2
+Switched to using //nolint:revive
+Fix lagging util aliases.
+---
+ cmd/test-client/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/test-client/main.go b/cmd/test-client/main.go
+index be67b9e..5f8338c 100644
+--- a/cmd/test-client/main.go
++++ b/cmd/test-client/main.go
+@@ -122,7 +122,7 @@ func (o *GrpcProxyClientOptions) Print() {
+ 	klog.V(1).Infof("ProxyHost set to %q.\n", o.proxyHost)
+ 	klog.V(1).Infof("ProxyPort set to %d.\n", o.proxyPort)
+ 	klog.V(1).Infof("ProxyUdsName set to %q.\n", o.proxyUdsName)
+-	klog.V(1).Infof("TestRequests set to %q.\n", o.testRequests)
++	klog.V(1).Infof("TestRequests set to %d.\n", o.testRequests)
+ 	klog.V(1).Infof("TestDelaySec set to %d.\n", o.testDelaySec)
+ 	klog.V(1).Infof("AfterDelaySec set to %d.\n", o.afterDelaySec)
+ 	klog.V(1).Infof("CloseIdleConn set to %t.\n", o.closeIdleConn)
+-- 
+2.43.0
+
