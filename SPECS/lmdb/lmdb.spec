@@ -2,19 +2,20 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global _test_target test
 
 Name:           lmdb
-Version:        0.9.33
+Version:        0.9.36
 Release:        %autorelease
 Summary:        Memory-mapped key-value database
 License:        OLDAP-2.8
 URL:            https://www.symas.com/lmdb
 VCS:            git:https://git.openldap.org/openldap/openldap
-#!RemoteAsset:  sha256:476801f5239c88c7de61c3390502a5d13965ecedef80105b5fb0fcb8373d1e53
+#!RemoteAsset:  sha256:90a595ea500074af61b213464452d8d212405261094667a686357467ae7b57b9
 Source0:        https://git.openldap.org/openldap/openldap/-/archive/LMDB_%{version}/openldap-LMDB_%{version}.tar.gz
 Source1:        lmdb.pc.in
 BuildSystem:    autotools
@@ -26,7 +27,7 @@ BuildOption(build):  -C libraries/liblmdb SOVERSION=%{version} CFLAGS="%{optflag
 BuildOption(install):  -C libraries/liblmdb
 BuildOption(install):  SOVERSION=%{version} bindir=%{_bindir} libdir=%{_libdir}
 BuildOption(install):  mandir=%{_mandir} includedir=%{_includedir} datarootdir=%{_datadir}
-BuildOption(check):  -C libraries/liblmdb
+BuildOption(check):  -C libraries/liblmdb SOVERSION=%{version} LD_LIBRARY_PATH=.
 
 BuildRequires:  make
 
@@ -67,10 +68,6 @@ sed -e 's:@PREFIX@:%{_prefix}:g' \
     -e 's:@PACKAGE_VERSION@:%{version}:g' \
     %{SOURCE1} >lmdb.pc
 install -Dpm 0644 -t %{buildroot}%{_libdir}/pkgconfig lmdb.pc
-
-# TODO: Fix tests
-%check
-:
 
 %files
 %doc libraries/liblmdb/COPYRIGHT
