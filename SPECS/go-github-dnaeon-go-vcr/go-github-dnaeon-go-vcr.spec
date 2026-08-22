@@ -27,6 +27,7 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(gopkg.in/yaml.v2)
 
+Provides:       go(github.com/dnaeon/go-vcr) = %{version}
 Provides:       go(github.com/dnaeon/go-vcr/cassette) = %{version}
 Provides:       go(github.com/dnaeon/go-vcr/recorder) = %{version}
 
