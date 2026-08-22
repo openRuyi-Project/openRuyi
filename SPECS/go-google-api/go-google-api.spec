@@ -88,6 +88,7 @@ BuildRequires:  go(gopkg.in/warnings.v0)
 
 Provides:       go(google.golang.org/api) = %{version}
 Provides:       go(google.golang.org/api/option) = %{version}
+Provides:       go(google.golang.org/api/transport) = %{version}
 
 Requires:       go(cloud.google.com/go/auth)
 Requires:       go(cloud.google.com/go/auth/oauth2adapt)
