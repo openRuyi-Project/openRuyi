@@ -70,6 +70,7 @@ BuildRequires:  go(golang.org/x/crypto)
 BuildRequires:  go(golang.org/x/net)
 BuildRequires:  go(golang.org/x/text)
 
+Provides:       go(github.com/Azure/azure-sdk-for-go) = %{version}
 # azcore v%{ver_azcore}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/azcore) = %{ver_azcore}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/azcore/arm) = %{ver_azcore}
