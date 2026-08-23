@@ -98,7 +98,6 @@ Requires:       python3dist(pyelftools)
 %{_libdir}/pkgconfig/libdpdk-libs.pc
 
 %files tools
-%exclude %{_bindir}/dpdk-*.py
 %{_bindir}/dpdk-dumpcap
 %{_bindir}/dpdk-pdump
 %{_bindir}/dpdk-graph
