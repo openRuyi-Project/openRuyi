@@ -1,10 +1,11 @@
-From: Sakura286 <sakura286@outlook.com>
+From 1659b9382d6c37978c41234443f3e4cde17516ed Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
 Date: Tue, 22 Jul 2025 15:24:10 +0800
-Subject: add lp64d target to llvm-mc
+Subject: [PATCH 2/2] add lp64d target to llvm-mc
 
 ---
- clr/hipamd/src/hip_embed_pch.sh      | 8 ++++----
- clr/hipamd/src/hiprtc/CMakeLists.txt | 2 +-
+ hipamd/src/hip_embed_pch.sh      | 8 ++++----
+ hipamd/src/hiprtc/CMakeLists.txt | 2 +-
  2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/hipamd/src/hip_embed_pch.sh b/hipamd/src/hip_embed_pch.sh
@@ -52,3 +53,6 @@ index 675d587..89554a2 100644
    DEPENDS ${llvm-mc} ${HIPRTC_GEN_PREPROCESSED} ${HIPRTC_GEN_MCIN})
  
  # Create hiprtc-builtins library.
+-- 
+2.53.0
+

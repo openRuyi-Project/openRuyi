@@ -1,0 +1,15 @@
+From d0f5d5ec270e80bad36071deaddb5107e455acb6 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Wed, 19 Aug 2026 15:36:34 +0800
+Subject: [PATCH] rocclr: avoid noinline macro pollution
+
+The ordinary C++ fallback defines __noinline__ as an empty macro. This pollutes standard-library attributes such as [[__gnu__::__noinline__]] after HIP headers are included.
+
+Issue: https://github.com/ROCm/rocm-systems/issues/9897
+
+diff --git a/hipamd/include/hip/amd_detail/host_defines.h b/hipamd/include/hip/amd_detail/host_defines.h
+index 8081966..280d371 100644
+--- a/hipamd/include/hip/amd_detail/host_defines.h
++++ b/hipamd/include/hip/amd_detail/host_defines.h
+@@ -253 +252,0 @@ typedef __hip_internal::int64_t __hip_int64_t;
+-#define __noinline__

@@ -1,14 +1,22 @@
-From: Sakura286 <sakura286@outlook.com>
+From adf15901e8bab6ee33f68cf217b00c5dac135cdb Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
 Date: Mon, 29 Jun 2026 19:00:00 +0800
-Subject: Fix riscv64 ABI and replace fence instructions
+Subject: [PATCH 1/2] Fix riscv64 ABI and replace fence instructions
 
 Read the stack pointer through an ATI_ARCH_RISCV inline-asm branch, and
 replace _mm_sfence/_mm_mfence with RISC-V fence equivalents in
 rocvirtual.cpp and hip_graph_internal.cpp.
+---
+ hipamd/src/hip_graph_internal.cpp |  8 ++++++++
+ rocclr/device/rocm/rocvirtual.cpp | 12 ++++++++++++
+ rocclr/os/os_posix.cpp            |  1 +
+ 3 files changed, 21 insertions(+)
 
+diff --git a/hipamd/src/hip_graph_internal.cpp b/hipamd/src/hip_graph_internal.cpp
+index e567be4..dd0e596 100644
 --- a/hipamd/src/hip_graph_internal.cpp
 +++ b/hipamd/src/hip_graph_internal.cpp
-@@ -2077,9 +2077,17 @@
+@@ -2077,9 +2077,17 @@ void GraphKernelArgManager::ReadBackOrFlush() {
  
        // Read-modify-write sequence with memory barriers
        volatile unsigned char kSentinel = *sentinel_ptr;
@@ -26,22 +34,23 @@ rocvirtual.cpp and hip_graph_internal.cpp.
        kSentinel = *sentinel_ptr;
        (void)kSentinel; // Suppress unused variable warning
      }
+diff --git a/rocclr/device/rocm/rocvirtual.cpp b/rocclr/device/rocm/rocvirtual.cpp
+index 6a7d64a..58c8d79 100644
 --- a/rocclr/device/rocm/rocvirtual.cpp
 +++ b/rocclr/device/rocm/rocvirtual.cpp
-@@ -3582,8 +3582,12 @@
+@@ -3582,7 +3582,11 @@ __attribute__((optimize("unroll-all-loops"), always_inline)) static inline void
    std::memcpy(dst, src, size);
  
    // Add memory fence
 +#if !defined(__riscv)
    _mm_sfence();
- #else
++#else
 +  asm volatile("fence w,w" ::: "memory");
 +#endif
-+#else
+ #else
    std::memcpy(dst, src, size);
  #endif
- }
-@@ -3840,9 +3844,17 @@
+@@ -3840,9 +3844,17 @@ bool VirtualGPU::submitKernelInternal(const amd::NDRangeContainer& sizes, const
          *dev().info().hdpMemFlushCntl = 1u;
          auto kSentinel = *reinterpret_cast<volatile int*>(dev().info().hdpMemFlushCntl);
        } else if (kernArgImpl == KernelArgImpl::DeviceKernelArgsReadback && argSize != 0) {
@@ -59,9 +68,11 @@ rocvirtual.cpp and hip_graph_internal.cpp.
          auto kSentinel = *reinterpret_cast<volatile unsigned char*>(argBuffer + argSize - 1);
        }
      }
+diff --git a/rocclr/os/os_posix.cpp b/rocclr/os/os_posix.cpp
+index ddc060b..5a0f7ab 100644
 --- a/rocclr/os/os_posix.cpp
 +++ b/rocclr/os/os_posix.cpp
-@@ -677,6 +677,7 @@
+@@ -677,6 +677,7 @@ address Os::currentStackPtr() {
        LP64_SWITCH("movl %%esp", "movq %%rsp") ",%0"
        : "=r"(value)
  #elif defined(ATI_ARCH_ARM)
@@ -69,3 +80,6 @@ rocvirtual.cpp and hip_graph_internal.cpp.
        "mov %0,sp"
        : "=r"(value)
  #else
+-- 
+2.53.0
+

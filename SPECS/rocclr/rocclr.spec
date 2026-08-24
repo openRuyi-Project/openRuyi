@@ -55,8 +55,8 @@ BuildRequires:  clang(major) = %{llvm_maj_ver}
 BuildRequires:  cmake
 BuildRequires:  cmake(amd_comgr)
 BuildRequires:  cmake(hsa-runtime64)
-BuildRequires:  llvm22-devel
-BuildRequires:  llvm22-static
+BuildRequires:  llvm-devel(major) = %{llvm_maj_ver}
+BuildRequires:  llvm-static(major) = %{llvm_maj_ver}
 BuildRequires:  cmake(rocprofiler-register)
 BuildRequires:  hipcc
 BuildRequires:  lld(major) = %{llvm_maj_ver}
@@ -73,6 +73,7 @@ BuildRequires:  rocm-llvm-macros
 # Add riscv64 support
 2001-fix-riscv64-abi.patch
 2002-add-lp64d-target-to-llvm-mc.patch
+2003-avoid-noinline-macro-pollution.patch
 
 %description
 ROCm Compute Language Runtime
