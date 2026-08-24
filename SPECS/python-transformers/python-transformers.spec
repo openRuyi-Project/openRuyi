@@ -7,13 +7,13 @@
 %global srcname transformers
 
 Name:           python-transformers
-Version:        5.2.0
+Version:        5.12.1
 Release:        %autorelease
 Summary:        Model-definition framework for state-of-the-art machine learning
 License:        Apache-2.0
 URL:            https://pypi.org/project/transformers/
 VCS:            git:https://github.com/huggingface/transformers
-#!RemoteAsset:  sha256:0088b8b46ccc9eff1a1dca72b5d618a5ee3b1befc3e418c9512b35dea9f9a650
+#!RemoteAsset:  sha256:679ee731c8225347889ad4fb3b2c926a62e9da3b7d284e9d12c791da7272466b
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
