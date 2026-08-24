@@ -1,0 +1,25 @@
+From ff439381f2be955730fa80a70625a9d7f510805c Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 12:34:33 +0800
+Subject: [PATCH] ROCm hipSPARSELt ordering
+
+Find hipSPARSELt before Torch so the roc::hipsparselt target exists when Torch's exported CMake targets reference it.
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 54374c2..9354d5f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,6 +109,7 @@ endif()
+ # so there is no need to do this explicitly with check_language/enable_language,
+ # etc.
+ #
++find_package(hipsparselt CONFIG REQUIRED)
+ find_package(Torch REQUIRED)
+ 
+ # Supported NVIDIA architectures.
+-- 
+2.53.0
+

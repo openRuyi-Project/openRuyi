@@ -1,0 +1,1343 @@
+From ad8494d639a3846793bb10ae6e47809d0b12b14b Mon Sep 17 00:00:00 2001
+From: FeiYehua <31472675+feiyehua@users.noreply.github.com>
+Date: Wed, 17 Jun 2026 11:23:08 +0800
+Subject: [PATCH 1/3] [Kernel][ROCm] Qwen3.5: add split kv attention kernel for
+ gfx12xx to speedup decode
+
+Signed-off-by: FeiYehua <31472675+feiyehua@users.noreply.github.com>
+---
+ .../attention/test_splitkv_paged_decode.py    | 274 ++++++++
+ .../ops/chunked_prefill_paged_decode.py       | 633 +++++++++++++++++-
+ 2 files changed, 885 insertions(+), 22 deletions(-)
+ create mode 100644 tests/kernels/attention/test_splitkv_paged_decode.py
+
+diff --git a/tests/kernels/attention/test_splitkv_paged_decode.py b/tests/kernels/attention/test_splitkv_paged_decode.py
+new file mode 100644
+index 000000000000..8fd16abda6c5
+--- /dev/null
++++ b/tests/kernels/attention/test_splitkv_paged_decode.py
+@@ -0,0 +1,274 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++import pytest
++import torch
++
++from tests.kernels.allclose_default import get_default_atol, get_default_rtol
++from vllm.platforms import current_platform
++from vllm.platforms.rocm import on_gfx12x
++from vllm.triton_utils import triton
++from vllm.utils.torch_utils import set_random_seed
++from vllm.v1.attention.ops.chunked_prefill_paged_decode import (
++    kernel_paged_attention_2d,
++    paged_attention_2d_splitkv_decode,
++)
++
++DEVICE_TYPE = current_platform.device_type
++
++
++def _to_vllm_kv_cache(
++    key_cache: torch.Tensor,
++    value_cache: torch.Tensor,
++) -> tuple[torch.Tensor, torch.Tensor]:
++    num_blocks, block_size, num_kv_heads, head_size = key_cache.shape
++    x = 8
++    key_cache = (
++        key_cache.view(num_blocks, block_size, num_kv_heads, head_size // x, x)
++        .permute(0, 2, 3, 1, 4)
++        .contiguous()
++    )
++    value_cache = value_cache.permute(0, 2, 3, 1).contiguous()
++    return key_cache, value_cache
++
++
++# Use the non-split triton kernel as the reference
++# implementation since we are replacing this kernel
++def _ref_paged_decode(
++    query: torch.Tensor,
++    key_cache: torch.Tensor,
++    value_cache: torch.Tensor,
++    block_tables: torch.Tensor,
++    seq_lens: torch.Tensor,
++    scale: float,
++    query_start_loc: torch.Tensor | None = None,
++    filter_by_query_len: bool = False,
++) -> torch.Tensor:
++    """Reference decode using the non-split kernel_paged_attention_2d."""
++    output = torch.empty_like(query)
++    num_query_heads = query.shape[1]
++    num_kv_heads = key_cache.shape[1]
++    num_queries_per_kv = num_query_heads // num_kv_heads
++    head_size = query.shape[2]
++    physical_block_size = key_cache.shape[3]
++    num_seqs = seq_lens.shape[0]
++
++    is_pow2 = physical_block_size > 0 and (
++        physical_block_size & (physical_block_size - 1) == 0
++    )
++    triton_block_size = min(physical_block_size, 128) if is_pow2 else 32
++
++    kernel_paged_attention_2d[(num_seqs, num_kv_heads)](
++        output_ptr=output,
++        query_ptr=query,
++        key_cache_ptr=key_cache,
++        value_cache_ptr=value_cache,
++        sink_ptr=None,
++        block_tables_ptr=block_tables,
++        seq_lens_ptr=seq_lens,
++        alibi_slopes_ptr=None,
++        scale=scale,
++        k_scale=1.0,
++        v_scale=1.0,
++        out_scale_inv=1.0,
++        num_query_heads=num_query_heads,
++        num_queries_per_kv=num_queries_per_kv,
++        num_queries_per_kv_padded=max(triton.next_power_of_2(num_queries_per_kv), 16),
++        block_table_stride=block_tables.stride(0),
++        query_stride_0=query.stride(0),
++        query_stride_1=query.stride(1),
++        output_stride_0=output.stride(0),
++        output_stride_1=output.stride(1),
++        BLOCK_SIZE=triton_block_size,
++        PHYSICAL_BLOCK_SIZE=physical_block_size,
++        HEAD_SIZE=head_size,
++        HEAD_SIZE_PADDED=triton.next_power_of_2(head_size),
++        USE_ALIBI_SLOPES=False,
++        SLIDING_WINDOW=0,
++        x=key_cache.shape[4],
++        stride_k_cache_0=key_cache.stride(0),
++        stride_k_cache_1=key_cache.stride(1),
++        stride_k_cache_2=key_cache.stride(2),
++        stride_k_cache_3=key_cache.stride(3),
++        stride_k_cache_4=key_cache.stride(4),
++        stride_v_cache_0=value_cache.stride(0),
++        stride_v_cache_1=value_cache.stride(1),
++        stride_v_cache_2=value_cache.stride(2),
++        stride_v_cache_3=value_cache.stride(3),
++        filter_by_query_len=filter_by_query_len,
++        query_start_len_ptr=query_start_loc,
++        USE_SINKS=False,
++        USE_FP8=False,
++    )
++    return output
++
++
++@pytest.mark.skipif(
++    not on_gfx12x(), reason="split-KV decode kernel is only activated on gfx12x"
++)
++@pytest.mark.skipif(
++    not torch.accelerator.is_available(), reason="split-KV decode test requires a GPU"
++)
++@pytest.mark.parametrize("num_query_heads,num_kv_heads", [(4, 4), (16, 4)])
++@pytest.mark.parametrize("block_size", [16, 32, 528])
++@pytest.mark.parametrize("batch_size", [1, 3, 5])
++@pytest.mark.parametrize(
++    "seq_lens",
++    [
++        [257, 513, 1025, 2048, 4096],
++        [2049, 4097, 8193, 8192, 16384],
++        [8193, 12289, 16385, 16384, 16384],
++    ],
++)
++@torch.inference_mode()
++def test_paged_attention_2d_splitkv_decode(
++    num_query_heads: int,
++    num_kv_heads: int,
++    block_size: int,
++    batch_size: int,
++    seq_lens: list[int],
++) -> None:
++    set_random_seed(0)
++    torch.set_default_device(DEVICE_TYPE)
++
++    head_size = 256
++    dtype = torch.bfloat16
++    seq_lens_tensor = torch.tensor(seq_lens[:batch_size], dtype=torch.int32)
++    max_seq_len = int(seq_lens_tensor.max().item())
++    num_blocks_per_seq = (max_seq_len + block_size - 1) // block_size
++    num_blocks = batch_size * num_blocks_per_seq
++    scale = head_size**-0.5
++
++    query = torch.randn(batch_size, num_query_heads, head_size, dtype=dtype)
++    dense_key_cache = torch.randn(
++        num_blocks, block_size, num_kv_heads, head_size, dtype=dtype
++    )
++    dense_value_cache = torch.randn_like(dense_key_cache)
++    block_tables = torch.arange(num_blocks, dtype=torch.int32).view(
++        batch_size, num_blocks_per_seq
++    )
++    key_cache, value_cache = _to_vllm_kv_cache(dense_key_cache, dense_value_cache)
++
++    output = paged_attention_2d_splitkv_decode(
++        query=query,
++        key_cache=key_cache,
++        value_cache=value_cache,
++        block_tables=block_tables,
++        seq_lens=seq_lens_tensor,
++        scale=scale,
++        actual_max_splits=4,
++        max_seq_len=max_seq_len,
++    )
++    ref_output = _ref_paged_decode(
++        query=query,
++        key_cache=key_cache,
++        value_cache=value_cache,
++        block_tables=block_tables,
++        seq_lens=seq_lens_tensor,
++        scale=scale,
++    )
++
++    # NOTE: Due to the kernel-level split-KV reduction and bfloat16 precision,
++    # there is a small numerical difference. Use dtype-aware default tolerances.
++    atol = get_default_atol(output)
++    rtol = get_default_rtol(output)
++    torch.testing.assert_close(output, ref_output, atol=atol, rtol=rtol)
++
++
++@pytest.mark.skipif(
++    not on_gfx12x(), reason="split-KV decode kernel is only activated on gfx12x"
++)
++@pytest.mark.skipif(
++    not torch.accelerator.is_available(), reason="split-KV decode test requires a GPU"
++)
++@pytest.mark.parametrize("block_size", [16, 32, 528])
++@pytest.mark.parametrize(
++    "query_lens,seq_lens",
++    [
++        ([1, 3, 1], [257, 513, 1025]),
++        ([1, 1, 1], [2049, 4097, 8193]),
++        ([1, 3, 1], [8193, 12289, 16385]),
++        ([1], [4097]),
++        ([1, 1], [8193, 16385]),
++    ],
++)
++@torch.inference_mode()
++def test_paged_attention_2d_splitkv_decode_filters_prefill_queries(
++    block_size: int,
++    query_lens: list[int],
++    seq_lens: list[int],
++) -> None:
++    set_random_seed(0)
++    torch.set_default_device(DEVICE_TYPE)
++
++    query_start_loc = torch.tensor(
++        [0] + [sum(query_lens[: i + 1]) for i in range(len(query_lens))],
++        dtype=torch.int32,
++    )
++    seq_lens_tensor = torch.tensor(seq_lens, dtype=torch.int32)
++    batch_size = len(query_lens)
++    num_query_heads = 4
++    num_kv_heads = 4
++    head_size = 256
++    dtype = torch.bfloat16
++    max_seq_len = int(seq_lens_tensor.max().item())
++    num_blocks_per_seq = (max_seq_len + block_size - 1) // block_size
++    num_blocks = batch_size * num_blocks_per_seq
++    scale = head_size**-0.5
++
++    query = torch.randn(sum(query_lens), num_query_heads, head_size, dtype=dtype)
++    dense_key_cache = torch.randn(
++        num_blocks, block_size, num_kv_heads, head_size, dtype=dtype
++    )
++    dense_value_cache = torch.randn_like(dense_key_cache)
++    block_tables = torch.arange(num_blocks, dtype=torch.int32).view(
++        batch_size, num_blocks_per_seq
++    )
++    key_cache, value_cache = _to_vllm_kv_cache(dense_key_cache, dense_value_cache)
++    output = torch.full_like(query, 7.0)
++
++    paged_attention_2d_splitkv_decode(
++        query=query,
++        key_cache=key_cache,
++        value_cache=value_cache,
++        block_tables=block_tables,
++        seq_lens=seq_lens_tensor,
++        scale=scale,
++        output=output,
++        actual_max_splits=4,
++        max_seq_len=max_seq_len,
++        query_start_loc=query_start_loc,
++        filter_by_query_len=True,
++    )
++    ref_output = _ref_paged_decode(
++        query=query,
++        key_cache=key_cache,
++        value_cache=value_cache,
++        block_tables=block_tables,
++        seq_lens=seq_lens_tensor,
++        scale=scale,
++        query_start_loc=query_start_loc,
++        filter_by_query_len=True,
++    )
++
++    # NOTE: Due to the kernel-level split-KV reduction and bfloat16 precision,
++    # there is a small numerical difference. Use dtype-aware default tolerances.
++    atol = get_default_atol(output)
++    rtol = get_default_rtol(output)
++    # Decode queries (query_len==1) should match the reference.
++    # Prefill queries (query_len>1) should be untouched (still 7.0).
++    prefill_start = 0
++    for i, ql in enumerate(query_lens):
++        if ql > 1:
++            torch.testing.assert_close(
++                output[prefill_start : prefill_start + ql],
++                torch.full_like(output[prefill_start : prefill_start + ql], 7.0),
++            )
++        else:
++            torch.testing.assert_close(
++                output[prefill_start],
++                ref_output[prefill_start],
++                atol=atol,
++                rtol=rtol,
++            )
++        prefill_start += ql
+diff --git a/vllm/v1/attention/ops/chunked_prefill_paged_decode.py b/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
+index 77eb3ac60b1f..e7bcb3d86f40 100644
+--- a/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
++++ b/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
+@@ -6,6 +6,7 @@
+ #  - Jan van Lunteren <jvl@zurich.ibm.com>
+ #  - Chih-Chieh Yang <chih.chieh.yang@ibm.com>
+ #  - Thomas Parnell <tpa@zurich.ibm.com>
++import math
+ 
+ import torch
+ 
+@@ -20,6 +21,19 @@
+ 
+ float8_info = torch.finfo(current_platform.fp8_dtype())
+ 
++_MAX_SPLITS = 16
++_DEFAULT_COMPUTE_BLOCK_SIZE = 32
++
++
++# The split-kv kernel has the best performance when the
++# compute block size is 32.
++def _choose_compute_block_size(physical_block_size: int) -> int:
++    """Choose the logical attention tile size inside a physical KV block."""
++    for block_size in (32, 16, 8, 4, 2):
++        if physical_block_size % block_size == 0:
++            return min(block_size, _DEFAULT_COMPUTE_BLOCK_SIZE)
++    return 1
++
+ 
+ def has_native_kv_cache_layout(
+     key_cache: torch.Tensor,
+@@ -37,6 +51,10 @@ def has_native_kv_cache_layout(
+     )
+ 
+ 
++def _cdiv(x: int, y: int) -> int:
++    return (x + y - 1) // y
++
++
+ @triton.jit
+ def cdiv_fn(x, y):
+     return (x + y - 1) // y
+@@ -439,39 +457,527 @@ def chunked_prefill_paged_decode(
+         else:
+             processed_block_table = block_table.to(torch.int32)
+ 
+-        kernel_paged_attention_2d[
+-            (
+-                num_seqs,
+-                num_kv_heads,
++        from vllm.platforms.rocm import on_gfx12x
++
++        # Split kv is currently only tuned for gfx12x with head dim 256.
++        use_splitkv_decode = (
++            on_gfx12x()
++            and query.dtype in (torch.float16, torch.bfloat16)
++            and head_size == 256
++            and not use_alibi_slopes
++            and sliding_window == 0
++            and sinks is None
++            and output_scale is None
++            and "fp8" not in kv_cache_dtype
++        )
++        if use_splitkv_decode:
++            paged_attention_2d_splitkv_decode(
++                query=query,
++                key_cache=key_cache,
++                value_cache=value_cache,
++                block_tables=processed_block_table,
++                seq_lens=seq_lens,
++                scale=sm_scale,
++                output=output,
++                max_seq_len=max_seq_len,
++                max_num_splits=_MAX_SPLITS,
++                query_start_loc=query_start_loc,
++                filter_by_query_len=True,
++            )
++        else:
++            kernel_paged_attention_2d[
++                (
++                    num_seqs,
++                    num_kv_heads,
++                )
++            ](
++                output_ptr=output,
++                query_ptr=query,
++                key_cache_ptr=key_cache,
++                value_cache_ptr=value_cache,
++                sink_ptr=sinks,
++                block_tables_ptr=processed_block_table,
++                seq_lens_ptr=seq_lens,
++                alibi_slopes_ptr=alibi_slopes,
++                scale=sm_scale,
++                k_scale=k_scale,
++                v_scale=v_scale,
++                out_scale_inv=1.0 / output_scale if output_scale is not None else 1.0,
++                num_query_heads=num_query_heads,
++                num_queries_per_kv=num_queries_per_kv,
++                num_queries_per_kv_padded=num_queries_per_kv_padded,
++                block_table_stride=processed_block_table.stride(0),
++                query_stride_0=query.stride(0),
++                query_stride_1=query.stride(1),
++                output_stride_0=output.stride(0),
++                output_stride_1=output.stride(1),
++                BLOCK_SIZE=TRITON_BLOCK_SIZE,
++                PHYSICAL_BLOCK_SIZE=real_block_size,
++                HEAD_SIZE=head_size,
++                HEAD_SIZE_PADDED=triton.next_power_of_2(head_size),
++                USE_ALIBI_SLOPES=use_alibi_slopes,
++                SLIDING_WINDOW=sliding_window,
++                x=key_cache.shape[4],
++                stride_k_cache_0=key_cache.stride(0),
++                stride_k_cache_1=key_cache.stride(1),
++                stride_k_cache_2=key_cache.stride(2),
++                stride_k_cache_3=key_cache.stride(3),
++                stride_k_cache_4=key_cache.stride(4),
++                stride_v_cache_0=value_cache.stride(0),
++                stride_v_cache_1=value_cache.stride(1),
++                stride_v_cache_2=value_cache.stride(2),
++                stride_v_cache_3=value_cache.stride(3),
++                filter_by_query_len=True,
++                query_start_len_ptr=query_start_loc,
++                USE_SINKS=sinks is not None,
++                USE_FP8=output_scale is not None,
++            )
++
++
++@triton.jit
++def kernel_paged_attention_2d_splitkv(
++    mid_out_ptr,  # [num_seqs, num_query_heads, max_num_splits, head_size]
++    mid_lse_ptr,  # [num_seqs, num_query_heads, max_num_splits]
++    query_ptr,  # [num_tokens, num_query_heads, head_size]
++    key_cache_ptr,  # [num_blks, num_kv_heads, head_size // x, blk_size, x]
++    value_cache_ptr,  # [num_blks, num_kv_heads, head_size, blk_size]
++    block_tables_ptr,  # [num_seqs, max_num_blocks_per_seq]
++    seq_lens_ptr,  # [num_seqs]
++    scale,
++    num_query_heads: tl.constexpr,
++    num_queries_per_kv: tl.constexpr,
++    num_queries_per_kv_padded: tl.constexpr,
++    block_table_stride: tl.int64,
++    query_stride_0: tl.int64,
++    query_stride_1: tl.int64,
++    mid_out_stride_0: tl.int64,
++    mid_out_stride_1: tl.int64,
++    mid_out_stride_2: tl.int64,
++    mid_lse_stride_0: tl.int64,
++    mid_lse_stride_1: tl.int64,
++    mid_lse_stride_2: tl.int64,
++    BLOCK_SIZE: tl.constexpr,
++    PHYSICAL_BLOCK_SIZE: tl.constexpr,
++    HEAD_SIZE: tl.constexpr,
++    HEAD_SIZE_PADDED: tl.constexpr,
++    x: tl.constexpr,
++    stride_k_cache_0: tl.int64,
++    stride_k_cache_1: tl.int64,
++    stride_k_cache_2: tl.int64,
++    stride_k_cache_3: tl.int64,
++    stride_k_cache_4: tl.int64,
++    stride_v_cache_0: tl.int64,
++    stride_v_cache_1: tl.int64,
++    stride_v_cache_2: tl.int64,
++    stride_v_cache_3: tl.int64,
++    filter_by_query_len: tl.constexpr,
++    query_start_len_ptr,  # [num_seqs+1]
++):
++    seq_idx = tl.program_id(0)
++    kv_head_idx = tl.program_id(1)
++    split_idx = tl.program_id(2)
++
++    if filter_by_query_len:
++        cur_batch_in_all_start_index = tl.load(query_start_len_ptr + seq_idx)
++        cur_batch_in_all_stop_index = tl.load(query_start_len_ptr + seq_idx + 1)
++        cur_batch_query_len = cur_batch_in_all_stop_index - cur_batch_in_all_start_index
++        if cur_batch_query_len > 1:
++            return
++    else:
++        cur_batch_in_all_start_index = seq_idx
++
++    seq_len = tl.load(seq_lens_ptr + seq_idx)
++    num_splits = tl.num_programs(2)
++
++    split_len = cdiv_fn(cdiv_fn(seq_len, num_splits), BLOCK_SIZE) * BLOCK_SIZE
++    split_start = split_idx * split_len
++    split_end = tl.minimum(split_start + split_len, seq_len)
++
++    query_head_idx = kv_head_idx * num_queries_per_kv + tl.arange(
++        0, num_queries_per_kv_padded
++    )
++    head_mask = query_head_idx < (kv_head_idx + 1) * num_queries_per_kv
++    head_mask = head_mask & (query_head_idx < num_query_heads)
++
++    offs_d = tl.arange(0, HEAD_SIZE_PADDED)
++    dim_mask = offs_d < HEAD_SIZE
++
++    query_offset = (
++        cur_batch_in_all_start_index * query_stride_0
++        + query_head_idx[:, None] * query_stride_1
++    )
++    Q = tl.load(
++        query_ptr + query_offset + offs_d[None, :],
++        mask=head_mask[:, None] & dim_mask[None, :],
++        other=0.0,
++    )
++
++    M = tl.full([num_queries_per_kv_padded], float("-inf"), dtype=tl.float32)
++    L = tl.zeros([num_queries_per_kv_padded], dtype=tl.float32)
++    acc = tl.zeros([num_queries_per_kv_padded, HEAD_SIZE_PADDED], dtype=tl.float32)
++
++    block_table_offset = seq_idx * block_table_stride
++    offs_n = tl.arange(0, BLOCK_SIZE)
++
++    for start_n in tl.range(split_start, split_end, BLOCK_SIZE):
++        abs_token_idx = start_n + offs_n
++        l_block_idx = abs_token_idx // PHYSICAL_BLOCK_SIZE
++        p_block_idx = tl.load(block_tables_ptr + block_table_offset + l_block_idx)
++        internal_offsets = abs_token_idx % PHYSICAL_BLOCK_SIZE
++        token_mask = abs_token_idx < split_end
++
++        # Should use stride_k_cache_4 = 1 and stride_k_cache_3 = x here
++        # to make triton compiler happy.
++        # However benchmark show the compiler correctly generates
++        # 128bit memory access instruction,
++        # but there is no obvious performance difference.
++        # So we keep the original stride for better readability.
++        k_offset = (
++            p_block_idx[None, :] * stride_k_cache_0
++            + kv_head_idx * stride_k_cache_1
++            + (offs_d[:, None] // x) * stride_k_cache_2
++            + internal_offsets[None, :] * stride_k_cache_3
++            + (offs_d[:, None] % x) * stride_k_cache_4
++        )
++        K = tl.load(
++            key_cache_ptr + k_offset,
++            mask=dim_mask[:, None] & token_mask[None, :],
++            other=0.0,
++            eviction_policy="evict_last",
++        )
++
++        v_offset = (
++            p_block_idx[:, None] * stride_v_cache_0
++            + kv_head_idx * stride_v_cache_1
++            + offs_d[None, :] * stride_v_cache_2
++            + internal_offsets[:, None] * stride_v_cache_3
++        )
++        V = tl.load(
++            value_cache_ptr + v_offset,
++            mask=token_mask[:, None] & dim_mask[None, :],
++            other=0.0,
++            eviction_policy="evict_last",
++        )
++
++        S = scale * tl.dot(Q, K)
++        S = tl.where(head_mask[:, None] & token_mask[None, :], S, float("-inf"))
++
++        m_j = tl.maximum(M, tl.max(S, axis=1))
++        p = tl.exp(S - m_j[:, None])
++        p = tl.where(m_j[:, None] == float("-inf"), 0.0, p)
++        l_j = tl.sum(p, axis=1)
++
++        # Previous partial sums are expressed in exp(x - M); rescale them when
++        # the running maximum increases before adding this block.
++        alpha = tl.exp(M - m_j)
++        alpha = tl.where(float("-inf") == M, 0.0, alpha)
++        acc = acc * alpha[:, None]
++        L = L * alpha + l_j
++        M = m_j
++        acc += tl.dot(p.to(V.dtype), V)
++
++    mid_out_offset = (
++        seq_idx * mid_out_stride_0
++        + query_head_idx[:, None] * mid_out_stride_1
++        + split_idx * mid_out_stride_2
++        + offs_d[None, :]
++    )
++    mid_lse_offset = (
++        seq_idx * mid_lse_stride_0
++        + query_head_idx * mid_lse_stride_1
++        + split_idx * mid_lse_stride_2
++    )
++
++    has_tokens = split_end > split_start
++    out = acc / (L[:, None] + 1e-10)
++    lse = M + tl.log(L)
++
++    tl.store(
++        mid_out_ptr + mid_out_offset,
++        out,
++        mask=has_tokens & head_mask[:, None] & dim_mask[None, :],
++    )
++    tl.store(
++        mid_lse_ptr + mid_lse_offset,
++        lse,
++        mask=has_tokens & head_mask,
++    )
++
++
++@triton.jit
++def kernel_paged_attention_2d_splitkv_reduce(
++    output_ptr,  # [num_tokens, num_query_heads, head_size]
++    mid_out_ptr,  # [num_seqs, num_query_heads, max_num_splits, head_size]
++    mid_lse_ptr,  # [num_seqs, num_query_heads, max_num_splits]
++    seq_lens_ptr,  # [num_seqs]
++    output_stride_0: tl.int64,
++    output_stride_1: tl.int64,
++    mid_out_stride_0: tl.int64,
++    mid_out_stride_1: tl.int64,
++    mid_out_stride_2: tl.int64,
++    mid_lse_stride_0: tl.int64,
++    mid_lse_stride_1: tl.int64,
++    mid_lse_stride_2: tl.int64,
++    BLOCK_SIZE: tl.constexpr,
++    HEAD_SIZE: tl.constexpr,
++    HEAD_SIZE_PADDED: tl.constexpr,
++    MAX_NUM_SPLITS: tl.constexpr,
++    filter_by_query_len: tl.constexpr,
++    query_start_len_ptr,  # [num_seqs+1]
++):
++    seq_idx = tl.program_id(0)
++    query_head_idx = tl.program_id(1)
++
++    if filter_by_query_len:
++        cur_batch_in_all_start_index = tl.load(query_start_len_ptr + seq_idx)
++        cur_batch_in_all_stop_index = tl.load(query_start_len_ptr + seq_idx + 1)
++        cur_batch_query_len = cur_batch_in_all_stop_index - cur_batch_in_all_start_index
++        if cur_batch_query_len > 1:
++            return
++    else:
++        cur_batch_in_all_start_index = seq_idx
++
++    seq_len = tl.load(seq_lens_ptr + seq_idx)
++    split_len = cdiv_fn(cdiv_fn(seq_len, MAX_NUM_SPLITS), BLOCK_SIZE) * BLOCK_SIZE
++
++    offs_d = tl.arange(0, HEAD_SIZE_PADDED)
++    dim_mask = offs_d < HEAD_SIZE
++
++    M = -float("inf")
++    L = 0.0
++    acc = tl.zeros([HEAD_SIZE_PADDED], dtype=tl.float32)
++
++    for split_idx in tl.range(0, MAX_NUM_SPLITS, num_stages=2):
++        split_start = split_idx * split_len
++        split_end = tl.minimum(split_start + split_len, seq_len)
++
++        if split_end > split_start:
++            lse = tl.load(
++                mid_lse_ptr
++                + seq_idx * mid_lse_stride_0
++                + query_head_idx * mid_lse_stride_1
++                + split_idx * mid_lse_stride_2
++            )
++            partial = tl.load(
++                mid_out_ptr
++                + seq_idx * mid_out_stride_0
++                + query_head_idx * mid_out_stride_1
++                + split_idx * mid_out_stride_2
++                + offs_d,
++                mask=dim_mask,
++                other=0.0,
+             )
+-        ](
++
++            m_j = tl.maximum(M, lse)
++            alpha = tl.exp(M - m_j)
++            beta = tl.exp(lse - m_j)
++            acc = acc * alpha + partial * beta
++            L = L * alpha + beta
++            M = m_j
++
++    out = acc / (L + 1e-10)
++    tl.store(
++        output_ptr
++        + cur_batch_in_all_start_index * output_stride_0
++        + query_head_idx * output_stride_1
++        + offs_d,
++        out,
++        mask=dim_mask,
++    )
++
++
++def _num_splits_heuristic(
++    batch_nheads_mblocks: int,
++    num_sms: int,
++    num_n_blocks: int,
++    max_splits: int,
++) -> int:
++    """Choose split count for small-batch decode occupancy.
++
++    Use FlashAttention's wave-efficiency heuristic: pick the smallest eligible
++    split whose wave efficiency (n_waves / ceil(n_waves)) is within 85% of the
++    maximum achievable.  On gfx12 torch reports WGPs while rocprof reports CUs,
++    so target two workgroups per reported processor.
++    """
++    target_workgroups = 2 * num_sms
++    if batch_nheads_mblocks >= 0.8 * target_workgroups:
++        return 1
++
++    max_splits = min(max_splits, num_sms, num_n_blocks)
++    if max_splits <= 1:
++        return 1
++
++    def is_split_eligible(num_splits: int) -> bool:
++        return num_splits == 1 or _cdiv(num_n_blocks, num_splits) != _cdiv(
++            num_n_blocks, num_splits - 1
++        )
++
++    max_efficiency = 0.0
++    efficiency = []
++    for num_splits in range(1, max_splits + 1):
++        if not is_split_eligible(num_splits):
++            efficiency.append(0.0)
++            continue
++
++        n_waves = batch_nheads_mblocks * num_splits / target_workgroups
++        eff = n_waves / math.ceil(n_waves)
++        max_efficiency = max(max_efficiency, eff)
++        efficiency.append(eff)
++
++    for num_splits, eff in enumerate(efficiency, start=1):
++        if is_split_eligible(num_splits) and eff >= 0.85 * max_efficiency:
++            return num_splits
++
++    return 1
++
++
++def _choose_decode_num_splits(
++    batch_size: int,
++    num_kv_heads: int,
++    max_seq_len: int,
++    block_size: int,
++    max_num_splits: int,
++    num_sms: int,
++) -> int:
++    if max_seq_len <= block_size:
++        return 1
++
++    batch_nheads = batch_size * num_kv_heads
++    num_n_blocks = _cdiv(max_seq_len, block_size)
++
++    # Not enough KV blocks to keep each split busy on the GPU.
++    if num_n_blocks < 2 * num_sms:
++        return 1
++
++    max_splits = min(max_num_splits, num_sms, num_n_blocks)
++    return _num_splits_heuristic(batch_nheads, num_sms, num_n_blocks, max_splits)
++
++
++def _get_num_splits(
++    batch_size: int,
++    num_kv_heads: int,
++    head_size: int,
++    block_size: int,
++    max_seq_len: int,
++    max_num_splits: int = _MAX_SPLITS,
++    num_sms: int | None = None,
++) -> int:
++    """Heuristic for decode split-KV.
++
++    Decode means one query token per sequence. max_seq_len is the static
++    KV/context length bound used to choose one split count for the whole launch.
++    """
++    if num_sms is None:
++        num_sms = torch.cuda.get_device_properties(
++            torch.accelerator.current_device_index()
++        ).multi_processor_count
++
++    compute_block_size = _choose_compute_block_size(block_size)
++
++    if head_size <= 64 and max_seq_len < 4096:
++        return 1
++
++    # Match FlashAttention's 128-thread split-KV occupancy model. The model is
++    # based on compute tiles, not physical cache pages; a 528-token page should
++    # behave like 33 smaller 16-token tiles for split-KV scheduling.
++    return _choose_decode_num_splits(
++        batch_size,
++        num_kv_heads,
++        max_seq_len,
++        compute_block_size,
++        max_num_splits,
++        num_sms,
++    )
++
++
++def paged_attention_2d_splitkv_decode(
++    query: torch.Tensor,
++    key_cache: torch.Tensor,
++    value_cache: torch.Tensor,
++    block_tables: torch.Tensor,
++    seq_lens: torch.Tensor,
++    scale: float,
++    output: torch.Tensor | None = None,
++    actual_max_splits: int | None = None,
++    max_seq_len: int | None = None,
++    mid_out: torch.Tensor | None = None,
++    mid_lse: torch.Tensor | None = None,
++    max_num_splits: int = _MAX_SPLITS,
++    query_start_loc: torch.Tensor | None = None,
++    filter_by_query_len: bool = False,
++) -> torch.Tensor:
++    """Decode-only paged attention launcher with split-KV.
++
++    query is one token per sequence: [batch, num_query_heads, head_size].
++    seq_lens is the current KV/context length per sequence, not query length.
++    """
++    if output is None:
++        output = torch.empty_like(query)
++
++    batch_size = seq_lens.shape[0] if filter_by_query_len else query.shape[0]
++    num_query_heads = query.shape[1]
++    head_size = query.shape[2]
++    num_kv_heads = key_cache.shape[1]
++    physical_block_size = key_cache.shape[3]
++    block_size = _choose_compute_block_size(physical_block_size)
++    if block_size != 32:
++        logger.warning_once(
++            f"Chosen block size {block_size} may lead to suboptimal performance. "
++            f"Consider using block size = 32 if possible."
++        )
++    x = key_cache.shape[4]
++    num_queries_per_kv = num_query_heads // num_kv_heads
++    num_queries_per_kv_padded = max(triton.next_power_of_2(num_queries_per_kv), 16)
++    head_size_padded = triton.next_power_of_2(head_size)
++
++    if max_seq_len is None:
++        max_seq_len = block_tables.shape[1] * physical_block_size
++
++    if actual_max_splits is None:
++        actual_max_splits = _get_num_splits(
++            batch_size,
++            num_kv_heads,
++            head_size,
++            block_size,
++            max_seq_len,
++            max_num_splits,
++        )
++
++    if actual_max_splits > max_num_splits:
++        raise ValueError(
++            f"actual_max_splits ({actual_max_splits}) must be <= "
++            f"max_num_splits ({max_num_splits})."
++        )
++
++    if actual_max_splits == 1:
++        kernel_paged_attention_2d[(batch_size, num_kv_heads)](
+             output_ptr=output,
+             query_ptr=query,
+             key_cache_ptr=key_cache,
+             value_cache_ptr=value_cache,
+-            sink_ptr=sinks,
+-            block_tables_ptr=processed_block_table,
++            sink_ptr=None,
++            block_tables_ptr=block_tables,
+             seq_lens_ptr=seq_lens,
+-            alibi_slopes_ptr=alibi_slopes,
+-            scale=sm_scale,
+-            k_scale=k_scale,
+-            v_scale=v_scale,
+-            out_scale_inv=1.0 / output_scale if output_scale is not None else 1.0,
++            alibi_slopes_ptr=None,
++            scale=scale,
++            k_scale=1.0,
++            v_scale=1.0,
++            out_scale_inv=1.0,
+             num_query_heads=num_query_heads,
+             num_queries_per_kv=num_queries_per_kv,
+             num_queries_per_kv_padded=num_queries_per_kv_padded,
+-            block_table_stride=processed_block_table.stride(0),
++            block_table_stride=block_tables.stride(0),
+             query_stride_0=query.stride(0),
+             query_stride_1=query.stride(1),
+             output_stride_0=output.stride(0),
+             output_stride_1=output.stride(1),
+-            BLOCK_SIZE=TRITON_BLOCK_SIZE,
+-            PHYSICAL_BLOCK_SIZE=real_block_size,
++            BLOCK_SIZE=block_size,
++            PHYSICAL_BLOCK_SIZE=physical_block_size,
+             HEAD_SIZE=head_size,
+-            HEAD_SIZE_PADDED=triton.next_power_of_2(head_size),
+-            USE_ALIBI_SLOPES=use_alibi_slopes,
+-            SLIDING_WINDOW=sliding_window,
+-            x=key_cache.shape[4],
++            HEAD_SIZE_PADDED=head_size_padded,
++            USE_ALIBI_SLOPES=False,
++            SLIDING_WINDOW=0,
++            x=x,
+             stride_k_cache_0=key_cache.stride(0),
+             stride_k_cache_1=key_cache.stride(1),
+             stride_k_cache_2=key_cache.stride(2),
+@@ -481,8 +987,91 @@ def chunked_prefill_paged_decode(
+             stride_v_cache_1=value_cache.stride(1),
+             stride_v_cache_2=value_cache.stride(2),
+             stride_v_cache_3=value_cache.stride(3),
+-            filter_by_query_len=True,
++            filter_by_query_len=filter_by_query_len,
+             query_start_len_ptr=query_start_loc,
+-            USE_SINKS=sinks is not None,
+-            USE_FP8=output_scale is not None,
++            USE_SINKS=False,
++            USE_FP8=False,
++        )
++        return output
++
++    # In practice the intermediate buffers should be pre-allocated,
++    # however the calls to this function is deeply coupled with CUDA FlashAttention,
++    # so we allocate them here for simplicity.
++    if mid_out is None:
++        mid_out = torch.empty(
++            (batch_size, num_query_heads, actual_max_splits, head_size),
++            device=query.device,
++            dtype=torch.float32,
++        )
++    if mid_lse is None:
++        mid_lse = torch.empty(
++            (batch_size, num_query_heads, actual_max_splits),
++            device=query.device,
++            dtype=torch.float32,
+         )
++
++    kernel_paged_attention_2d_splitkv[(batch_size, num_kv_heads, actual_max_splits)](
++        mid_out,
++        mid_lse,
++        query,
++        key_cache,
++        value_cache,
++        block_tables,
++        seq_lens,
++        scale,
++        num_query_heads=num_query_heads,
++        num_queries_per_kv=num_queries_per_kv,
++        num_queries_per_kv_padded=num_queries_per_kv_padded,
++        block_table_stride=block_tables.stride(0),
++        query_stride_0=query.stride(0),
++        query_stride_1=query.stride(1),
++        mid_out_stride_0=mid_out.stride(0),
++        mid_out_stride_1=mid_out.stride(1),
++        mid_out_stride_2=mid_out.stride(2),
++        mid_lse_stride_0=mid_lse.stride(0),
++        mid_lse_stride_1=mid_lse.stride(1),
++        mid_lse_stride_2=mid_lse.stride(2),
++        BLOCK_SIZE=block_size,
++        PHYSICAL_BLOCK_SIZE=physical_block_size,
++        HEAD_SIZE=head_size,
++        HEAD_SIZE_PADDED=head_size_padded,
++        x=x,
++        stride_k_cache_0=key_cache.stride(0),
++        stride_k_cache_1=key_cache.stride(1),
++        stride_k_cache_2=key_cache.stride(2),
++        stride_k_cache_3=key_cache.stride(3),
++        stride_k_cache_4=key_cache.stride(4),
++        stride_v_cache_0=value_cache.stride(0),
++        stride_v_cache_1=value_cache.stride(1),
++        stride_v_cache_2=value_cache.stride(2),
++        stride_v_cache_3=value_cache.stride(3),
++        filter_by_query_len=filter_by_query_len,
++        query_start_len_ptr=query_start_loc,
++        num_warps=4,
++        num_stages=1,
++        waves_per_eu=1,
++    )
++    kernel_paged_attention_2d_splitkv_reduce[(batch_size, num_query_heads)](
++        output,
++        mid_out,
++        mid_lse,
++        seq_lens,
++        output.stride(0),
++        output.stride(1),
++        mid_out.stride(0),
++        mid_out.stride(1),
++        mid_out.stride(2),
++        mid_lse.stride(0),
++        mid_lse.stride(1),
++        mid_lse.stride(2),
++        BLOCK_SIZE=block_size,
++        HEAD_SIZE=head_size,
++        HEAD_SIZE_PADDED=head_size_padded,
++        MAX_NUM_SPLITS=actual_max_splits,
++        filter_by_query_len=filter_by_query_len,
++        query_start_len_ptr=query_start_loc,
++        num_warps=4,
++        num_stages=1,
++        waves_per_eu=1,
++    )
++    return output
+
+From 77d0815d79074fb23758665f205a248ce3043a1a Mon Sep 17 00:00:00 2001
+From: Jason Yao <wsyjh8@gmail.com>
+Date: Thu, 30 Jul 2026 08:21:59 -0400
+Subject: [PATCH 2/3] [Kernel][ROCm] Widen split-KV decode gate from gfx12x to
+ gfx1x
+
+The split-KV decode path was gated on on_gfx12x(). The same kernel is
+correct and faster on RDNA3: validated on gfx1151 and gfx1100 in addition
+to gfx1201. Switch the dispatch and the test skipif to on_gfx1x(), which
+covers gfx11xx/gfx12xx and excludes gfx10xx.
+
+Also generalize the occupancy note: torch reports WGPs while rocprof
+reports CUs on RDNA3 exactly as on RDNA4 (gfx1201: 32 vs 64 CUs;
+gfx1100: 42 vs 84 CUs), so 2 * num_sms lands on the true CU count on
+both. The kernel itself is unchanged.
+
+Signed-off-by: Jason Yao <wsyjh8@gmail.com>
+---
+ tests/kernels/attention/test_splitkv_paged_decode.py  |  6 +++---
+ vllm/v1/attention/ops/chunked_prefill_paged_decode.py | 11 ++++++-----
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/tests/kernels/attention/test_splitkv_paged_decode.py b/tests/kernels/attention/test_splitkv_paged_decode.py
+index 8fd16abda6c5..a42f46a80ced 100644
+--- a/tests/kernels/attention/test_splitkv_paged_decode.py
++++ b/tests/kernels/attention/test_splitkv_paged_decode.py
+@@ -6,7 +6,7 @@
+ 
+ from tests.kernels.allclose_default import get_default_atol, get_default_rtol
+ from vllm.platforms import current_platform
+-from vllm.platforms.rocm import on_gfx12x
++from vllm.platforms.rocm import on_gfx1x
+ from vllm.triton_utils import triton
+ from vllm.utils.torch_utils import set_random_seed
+ from vllm.v1.attention.ops.chunked_prefill_paged_decode import (
+@@ -104,7 +104,7 @@ def _ref_paged_decode(
+ 
+ 
+ @pytest.mark.skipif(
+-    not on_gfx12x(), reason="split-KV decode kernel is only activated on gfx12x"
++    not on_gfx1x(), reason="split-KV decode kernel is only activated on gfx1x"
+ )
+ @pytest.mark.skipif(
+     not torch.accelerator.is_available(), reason="split-KV decode test requires a GPU"
+@@ -176,7 +176,7 @@ def test_paged_attention_2d_splitkv_decode(
+ 
+ 
+ @pytest.mark.skipif(
+-    not on_gfx12x(), reason="split-KV decode kernel is only activated on gfx12x"
++    not on_gfx1x(), reason="split-KV decode kernel is only activated on gfx1x"
+ )
+ @pytest.mark.skipif(
+     not torch.accelerator.is_available(), reason="split-KV decode test requires a GPU"
+diff --git a/vllm/v1/attention/ops/chunked_prefill_paged_decode.py b/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
+index e7bcb3d86f40..261bc7d016f2 100644
+--- a/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
++++ b/vllm/v1/attention/ops/chunked_prefill_paged_decode.py
+@@ -457,11 +457,11 @@ def chunked_prefill_paged_decode(
+         else:
+             processed_block_table = block_table.to(torch.int32)
+ 
+-        from vllm.platforms.rocm import on_gfx12x
++        from vllm.platforms.rocm import on_gfx1x
+ 
+-        # Split kv is currently only tuned for gfx12x with head dim 256.
++        # Split kv is currently only tuned for gfx1x with head dim 256.
+         use_splitkv_decode = (
+-            on_gfx12x()
++            on_gfx1x()
+             and query.dtype in (torch.float16, torch.bfloat16)
+             and head_size == 256
+             and not use_alibi_slopes
+@@ -796,8 +796,9 @@ def _num_splits_heuristic(
+ 
+     Use FlashAttention's wave-efficiency heuristic: pick the smallest eligible
+     split whose wave efficiency (n_waves / ceil(n_waves)) is within 85% of the
+-    maximum achievable.  On gfx12 torch reports WGPs while rocprof reports CUs,
+-    so target two workgroups per reported processor.
++    maximum achievable.  On gfx1x torch reports WGPs while rocprof reports CUs
++    (gfx1201: 32 vs 64 CUs; gfx1100: 42 vs 84 CUs), so target two workgroups
++    per reported processor.
+     """
+     target_workgroups = 2 * num_sms
+     if batch_nheads_mblocks >= 0.8 * target_workgroups:
+
+From 686ae8913e5fedf6446d0aab284a04d86a29b40d Mon Sep 17 00:00:00 2001
+From: Jason Yao <wsyjh8@gmail.com>
+Date: Thu, 30 Jul 2026 08:22:08 -0400
+Subject: [PATCH 3/3] [Test][ROCm] Add CPU tests for the split-KV decode
+ split-count heuristic
+
+The existing split-KV decode tests pass actual_max_splits=4 explicitly,
+so _get_num_splits - the heuristic real serving actually uses - had no
+coverage. It takes num_sms as an argument, so it can be pinned on CPU
+without a GPU or ROCm.
+
+Golden values are measured on gfx1201 (32 WGPs) and gfx1100 (42 WGPs)
+at head_size=256. Also covers the two boundaries: the low-context early
+return at 2 * num_sms compute blocks, and the batch guard at
+0.8 * (2 * num_sms), asserted as a relationship so it holds across
+part sizes rather than encoding one card's numbers.
+
+New file rather than an addition to test_splitkv_paged_decode.py: that
+module imports vllm.platforms.rocm, which resolves the GCN arch at
+import and needs an AMD device.
+
+Signed-off-by: Jason Yao <wsyjh8@gmail.com>
+---
+ .../attention/test_splitkv_num_splits.py      | 246 ++++++++++++++++++
+ 1 file changed, 246 insertions(+)
+ create mode 100644 tests/kernels/attention/test_splitkv_num_splits.py
+
+diff --git a/tests/kernels/attention/test_splitkv_num_splits.py b/tests/kernels/attention/test_splitkv_num_splits.py
+new file mode 100644
+index 000000000000..d1a61b02f926
+--- /dev/null
++++ b/tests/kernels/attention/test_splitkv_num_splits.py
+@@ -0,0 +1,246 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++"""Tests for the decode split-KV split-count heuristic.
++
++`_get_num_splits` takes `num_sms` as an argument, so these run on CPU without
++a GPU or ROCm. This file deliberately avoids importing `vllm.platforms.rocm`,
++which resolves the GCN arch at module load and needs an AMD device.
++
++Expected values below are measured on gfx1201 and gfx1100.
++"""
++
++import pytest
++import torch
++
++from vllm.v1.attention.ops.chunked_prefill_paged_decode import (
++    _MAX_SPLITS,
++    _choose_compute_block_size,
++    _get_num_splits,
++    paged_attention_2d_splitkv_decode,
++)
++
++HEAD_SIZE = 256
++NUM_KV_HEADS = 4
++
++# torch reports WGPs rather than CUs: gfx1201 reports 32 against 64 CUs and
++# gfx1100 reports 42 against 84 CUs.
++GFX1201_SMS = 32
++GFX1100_SMS = 42
++
++
++def _splits(
++    max_seq_len: int,
++    num_sms: int,
++    physical_block_size: int,
++    batch_size: int = 1,
++    max_num_splits: int = _MAX_SPLITS,
++) -> int:
++    return _get_num_splits(
++        batch_size=batch_size,
++        num_kv_heads=NUM_KV_HEADS,
++        head_size=HEAD_SIZE,
++        block_size=physical_block_size,
++        max_seq_len=max_seq_len,
++        max_num_splits=max_num_splits,
++        num_sms=num_sms,
++    )
++
++
++@pytest.mark.parametrize(
++    "physical_block_size,expected",
++    [(1056, 32), (528, 16), (784, 16), (32, 32), (16, 16)],
++)
++def test_choose_compute_block_size(physical_block_size: int, expected: int):
++    """The split tables below depend on this physical -> compute mapping."""
++    assert _choose_compute_block_size(physical_block_size) == expected
++
++
++# (num_sms, physical_block_size, max_seq_len, expected_splits)
++MEASURED_SPLITS = [
++    # gfx1201, physical block 1056 -> compute block 32
++    (GFX1201_SMS, 1056, 512, 1),
++    (GFX1201_SMS, 1056, 1024, 1),
++    (GFX1201_SMS, 1056, 2048, 16),
++    (GFX1201_SMS, 1056, 4096, 15),
++    (GFX1201_SMS, 1056, 8192, 14),
++    (GFX1201_SMS, 1056, 16384, 14),
++    (GFX1201_SMS, 1056, 32768, 14),
++    # gfx1201, physical block 528 -> compute block 16
++    (GFX1201_SMS, 528, 512, 1),
++    (GFX1201_SMS, 528, 1024, 16),
++    (GFX1201_SMS, 528, 2048, 15),
++    (GFX1201_SMS, 528, 4096, 14),
++    (GFX1201_SMS, 528, 8192, 14),
++    (GFX1201_SMS, 528, 16384, 14),
++    (GFX1201_SMS, 528, 32768, 14),
++    # gfx1100, physical block 784 -> compute block 16
++    (GFX1100_SMS, 784, 512, 1),
++    (GFX1100_SMS, 784, 1024, 1),
++    (GFX1100_SMS, 784, 2048, 15),
++    (GFX1100_SMS, 784, 4096, 14),
++    (GFX1100_SMS, 784, 8192, 14),
++    (GFX1100_SMS, 784, 16384, 14),
++    (GFX1100_SMS, 784, 32768, 14),
++]
++
++
++@pytest.mark.parametrize(
++    "num_sms,physical_block_size,max_seq_len,expected", MEASURED_SPLITS
++)
++def test_num_splits_matches_measured(
++    num_sms: int, physical_block_size: int, max_seq_len: int, expected: int
++):
++    assert _splits(max_seq_len, num_sms, physical_block_size) == expected
++
++
++BATCH_COLLAPSE_SEQ_LEN = 30000
++
++# (num_sms, physical_block_size, batch_size, expected_splits)
++MEASURED_BATCH_SPLITS = [
++    (GFX1201_SMS, 1056, 1, 14),
++    (GFX1201_SMS, 1056, 2, 7),
++    (GFX1201_SMS, 1056, 4, 4),
++    (GFX1201_SMS, 1056, 8, 2),
++    (GFX1201_SMS, 1056, 16, 1),
++    (GFX1100_SMS, 784, 1, 14),
++    (GFX1100_SMS, 784, 2, 9),
++    (GFX1100_SMS, 784, 4, 5),
++    (GFX1100_SMS, 784, 8, 5),
++    (GFX1100_SMS, 784, 16, 5),
++]
++
++
++@pytest.mark.parametrize(
++    "num_sms,physical_block_size,batch_size,expected", MEASURED_BATCH_SPLITS
++)
++def test_num_splits_collapses_with_batch(
++    num_sms: int, physical_block_size: int, batch_size: int, expected: int
++):
++    """Splitting tapers as the batch fills the machine on its own."""
++    splits = _splits(
++        BATCH_COLLAPSE_SEQ_LEN,
++        num_sms,
++        physical_block_size,
++        batch_size=batch_size,
++    )
++    assert splits == expected
++
++
++@pytest.mark.parametrize("num_sms", [16, GFX1201_SMS, GFX1100_SMS, 64])
++def test_low_context_early_return_boundary(num_sms: int):
++    """No splitting below 2 * num_sms compute blocks of context."""
++    physical_block_size = 784
++    compute_block_size = _choose_compute_block_size(physical_block_size)
++    boundary = 2 * num_sms * compute_block_size
++
++    below = _splits(boundary - compute_block_size, num_sms, physical_block_size)
++    at_boundary = _splits(boundary, num_sms, physical_block_size)
++
++    assert below == 1
++    assert at_boundary > 1
++
++
++@pytest.mark.parametrize(
++    "num_sms,physical_block_size",
++    [(GFX1201_SMS, 1056), (GFX1100_SMS, 784)],
++)
++def test_batch_guard_threshold_scales_with_num_sms(
++    num_sms: int, physical_block_size: int
++):
++    """Splitting is off once batch_nheads reaches 0.8 * (2 * num_sms).
++
++    The threshold is 51.2 on a 32-WGP part and 67.2 on a 42-WGP one, so a
++    batch of 16 (64 KV-head groups) collapses on the former but not the
++    latter. Assert the relationship rather than one card's numbers.
++    """
++    threshold = 0.8 * 2 * num_sms
++
++    for batch_size in (1, 2, 4, 8, 16, 32):
++        splits = _splits(
++            BATCH_COLLAPSE_SEQ_LEN,
++            num_sms,
++            physical_block_size,
++            batch_size=batch_size,
++        )
++        if batch_size * NUM_KV_HEADS >= threshold:
++            assert splits == 1, f"expected collapse at batch {batch_size}"
++        else:
++            assert splits > 1, f"expected splitting at batch {batch_size}"
++
++
++@pytest.mark.parametrize("num_sms", [1, 2, 8, 16, 32, 42, 64, 128, 304])
++@pytest.mark.parametrize("max_num_splits", [1, 8, _MAX_SPLITS])
++def test_num_splits_invariants(num_sms: int, max_num_splits: int):
++    """Never 0, never above the requested bound.
++
++    The launcher rejects a count above max_num_splits, so staying inside the
++    bound is what keeps that guard from firing.
++    """
++    for physical_block_size in (16, 32, 528, 784, 1056):
++        for batch_size in (1, 4, 16):
++            for max_seq_len in (1, 512, 4096, 32768, 131072):
++                splits = _splits(
++                    max_seq_len,
++                    num_sms,
++                    physical_block_size,
++                    batch_size=batch_size,
++                    max_num_splits=max_num_splits,
++                )
++                assert 1 <= splits <= max_num_splits, (
++                    f"{num_sms=} {physical_block_size=} "
++                    f"{batch_size=} {max_seq_len=} -> {splits}"
++                )
++
++
++def test_small_head_size_short_context_never_splits():
++    """head_size <= 64 with short context never splits."""
++    assert (
++        _get_num_splits(
++            batch_size=1,
++            num_kv_heads=NUM_KV_HEADS,
++            head_size=64,
++            block_size=32,
++            max_seq_len=2048,
++            max_num_splits=_MAX_SPLITS,
++            num_sms=GFX1201_SMS,
++        )
++        == 1
++    )
++
++
++def test_launcher_rejects_splits_above_max(monkeypatch):
++    """The launcher raises before launching any kernel.
++
++    The stub triton used when no GPU driver is active has no next_power_of_2,
++    so supply it; the guard under test runs before any kernel launch.
++    """
++    from vllm.v1.attention.ops import chunked_prefill_paged_decode as ops
++
++    if not hasattr(ops.triton, "next_power_of_2"):
++        monkeypatch.setattr(
++            ops.triton,
++            "next_power_of_2",
++            lambda n: 1 << (n - 1).bit_length(),
++            raising=False,
++        )
++
++    block_size, x = 32, 8
++    query = torch.zeros(1, NUM_KV_HEADS, HEAD_SIZE)
++    key_cache = torch.zeros(1, NUM_KV_HEADS, HEAD_SIZE // x, block_size, x)
++    value_cache = torch.zeros(1, NUM_KV_HEADS, HEAD_SIZE, block_size)
++    block_tables = torch.zeros(1, 1, dtype=torch.int32)
++    seq_lens = torch.ones(1, dtype=torch.int32)
++
++    with pytest.raises(ValueError, match="must be <="):
++        paged_attention_2d_splitkv_decode(
++            query=query,
++            key_cache=key_cache,
++            value_cache=value_cache,
++            block_tables=block_tables,
++            seq_lens=seq_lens,
++            scale=1.0,
++            actual_max_splits=_MAX_SPLITS + 1,
++            max_num_splits=_MAX_SPLITS,
++            max_seq_len=1024,
++        )

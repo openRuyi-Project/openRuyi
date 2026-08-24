@@ -1,0 +1,25 @@
+From d325e34a7be37c670baf2f03a49d583242883557 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 12:34:33 +0800
+Subject: [PATCH] Define USE_ROCM for cumem_allocator
+
+cumem_allocator is a CXX target but falls into the CUDA path by default.
+---
+ CMakeLists.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9354d5f..ab64323 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1509,3 +1509,7 @@ if (VLLM_GPU_LANG STREQUAL "CUDA")
+     # vllm-flash-attn should be last as it overwrites some CMake functions
+     include(cmake/external_projects/vllm_flash_attn.cmake)
+ endif ()
++
++if(VLLM_GPU_LANG STREQUAL "HIP" AND TARGET cumem_allocator)
++  target_compile_definitions(cumem_allocator PRIVATE USE_ROCM)
++endif()
+-- 
+2.53.0
+
