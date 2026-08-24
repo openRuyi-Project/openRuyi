@@ -151,6 +151,7 @@ Suggests:       gcc%{vermajor}-doc
 
 Patch2000:      2000-textdomain.patch
 Patch2001:      2001-rename-info-files.patch
+Patch2002:      2002-riscv-fix-bclr-sign-extension.patch
 
 %description
 Core package for the GNU Compiler Collection, including the C language

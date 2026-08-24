@@ -1,0 +1,143 @@
+From 21200172bc9ed0b6028a1cd80b58e7c869d3b6af Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 01:03:33 -0700
+Subject: [PATCH] [RISC-V] Fix sign extension when bclr replaces a 32 bit x &
+ (x - 1)
+
+addi+and keeps a 32 bit object sign extended on rv64, bclr does not:
+clearing bit 31 leaves 0xffffffff00000000, so for (m = x; m; m &= m - 1)
+never terminates.
+
+Wrong code since r16-3984-g4f01f39d021; it hangs rte_softrss() in DPDK
+built with -march=rva23u64.
+
+gcc/
+	* config/riscv/riscv-bclr-lowest-set-bit.cc
+	(pass_bclr_lowest_set_bit::execute): Sign extend the bclr result
+	for a sub-word operand.
+
+gcc/testsuite/
+	* gcc.target/riscv/bclr-lowest-set-bit-2.c: New test.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ gcc/config/riscv/riscv-bclr-lowest-set-bit.cc | 39 +++++++++++++++++--
+ .../gcc.target/riscv/bclr-lowest-set-bit-2.c  | 33 ++++++++++++++++
+ 2 files changed, 68 insertions(+), 4 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+
+diff --git a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+index ecfa511a882..1e1b58354f8 100644
+--- a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
++++ b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+@@ -193,10 +193,14 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 	  rtx dec_src = SET_SRC (dec_set);
+ 	  rtx dec_dest = SET_DEST (dec_set);
+ 
+-	  /* For a 32 bit object on rv64, the decrement will
+-	     be wrapped by a SIGN_EXTEND.  Strip it.  */
++	  /* For a 32 bit object on rv64 the decrement is wrapped by a
++	     SIGN_EXTEND.  Strip it, remembering the mode to extend from.  */
++	  machine_mode subword_mode = VOIDmode;
+ 	  if (GET_CODE (dec_src) == SIGN_EXTEND)
+-	    dec_src = XEXP (dec_src, 0);
++	    {
++	      subword_mode = GET_MODE (XEXP (dec_src, 0));
++	      dec_src = XEXP (dec_src, 0);
++	    }
+ 
+ 	  /* Verify it's res = x - 1, if not proceed to the next insn.  */
+ 	  if (!dec_set
+@@ -229,6 +233,10 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 	      || GET_CODE (and_src) != AND)
+ 	    continue;
+ 
++	  /* The extension lands in AND_DEST, and bclr is word_mode only.  */
++	  if (subword_mode != VOIDmode && GET_MODE (and_dest) != word_mode)
++	    continue;
++
+ 	  rtx and_op0 = XEXP (and_src, 0);
+ 	  rtx and_op1 = XEXP (and_src, 1);
+ 
+@@ -251,6 +259,17 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 					gen_lowpart (QImode, prior_ctz_output));
+ 	      pat = gen_rtx_AND (GET_MODE (dec_dest), pat, dec_src);
+ 
++	      /* bclr does not keep a sub-word result sign extended:
++		 clearing bit 31 leaves the upper half set.  Redo it.  */
++	      if (subword_mode != VOIDmode)
++		{
++		  rtx tmp = gen_reg_rtx (word_mode);
++		  df_insn_rescan (emit_insn_before (gen_rtx_SET (tmp, pat),
++						    next));
++		  pat = gen_rtx_SIGN_EXTEND (word_mode,
++					     gen_lowpart (subword_mode, tmp));
++		}
++
+ 	      /* Slam that pattern in as the SET_SRC of the original AND.  */
+ 	      SET_SRC (and_set) = pat;
+ 	      INSN_CODE (next) = -1;
+@@ -288,8 +307,20 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 				        GEN_INT (-2),
+ 					gen_lowpart (QImode, later_ctz_output));
+ 	      pat = gen_rtx_AND (GET_MODE (dec_dest), pat, dec_src);
++
++	      /* Sign extend as above.  */
++	      rtx_insn *after = NEXT_INSN (next);
++	      if (subword_mode != VOIDmode)
++		{
++		  rtx tmp = gen_reg_rtx (word_mode);
++		  after = emit_insn_after (gen_rtx_SET (tmp, pat), after);
++		  df_insn_rescan (after);
++		  pat = gen_rtx_SIGN_EXTEND (word_mode,
++					     gen_lowpart (subword_mode, tmp));
++		}
++
+ 	      pat = gen_rtx_SET (and_dest, pat);
+-	      df_insn_rescan (emit_insn_after (pat, NEXT_INSN (next)));
++	      df_insn_rescan (emit_insn_after (pat, after));
+ 	    }
+ 	}
+     }
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+new file mode 100644
+index 00000000000..de772ab67ff
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+@@ -0,0 +1,33 @@
++/* { dg-do run { target { rv64 && riscv_b_ok } } } */
++/* { dg-options "-march=rv64gc_zbb_zbs -mabi=lp64d -O2 -save-temps" } */
++
++/* If bclr drops the sign extension, this loop never terminates.  */
++
++extern void abort (void);
++
++__attribute__((noipa)) unsigned
++bit_walk (unsigned x)
++{
++  unsigned r = 0;
++  unsigned guard = 0;
++
++  for (unsigned m = x; m; m &= m - 1)
++    {
++      if (++guard > 32)
++	abort ();
++      r += (unsigned) __builtin_ctz (m);
++    }
++  return r;
++}
++
++int
++main (void)
++{
++  if (bit_walk (0x80000001u) != 31)
++    abort ();
++  return 0;
++}
++
++/* And that bclr is still used.  */
++/* { dg-final { scan-assembler "\\sbclr\\s" } } */
++/* { dg-final { scan-assembler "\\ssext\\.w\\s" } } */
+-- 
+2.55.0
+
