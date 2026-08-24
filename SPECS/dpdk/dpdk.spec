@@ -27,8 +27,15 @@ VCS:            git:https://github.com/DPDK/dpdk
 Source:         https://fast.dpdk.org/rel/dpdk-%{version}.tar.xz
 BuildSystem:    meson
 
+%global dpdk_isa generic
+%ifarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+%global dpdk_isa rva23u64
+%endif
+%endif
+
 BuildOption(prep):  -p1 -n dpdk%{version_suffix}-%{version}
-BuildOption(conf):  -Dmachine=generic
+BuildOption(conf):  -Dcpu_instruction_set=%{dpdk_isa}
 
 BuildRequires:  meson
 BuildRequires:  python3dist(pyelftools)
@@ -74,6 +81,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       kmod
 Requires:       pciutils
 Requires:       iproute2
+Requires:       which
 Requires:       python3dist(pyelftools)
 
 %description    tools
