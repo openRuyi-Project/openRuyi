@@ -1,0 +1,23 @@
+From c7328b915aa507aff91c41e8694f04d4109d4334 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Thu, 20 Aug 2026 18:44:36 +0800
+Subject: [PATCH] Use flavor-specific torch build dependency
+
+---
+ pyproject.toml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 61e4a95..9845efb 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -15,4 +15,5 @@ excludes = [
+ 
+ [build-system]
+ 
+-requires = ["setuptools", "torch", "wheel"]
++# torch is supplied explicitly by the RPM flavor (CPU or ROCm).
++requires = ["setuptools", "wheel"]
+-- 
+2.53.0
+
