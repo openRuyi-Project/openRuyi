@@ -9,13 +9,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           grpc
-Version:        1.80.0
+Version:        1.82.1
 Release:        %autorelease
 Summary:        An HTTP/2-based Remote Procedure Call framework
 License:        Apache-2.0
 URL:            https://grpc.io/
 VCS:            git:https://github.com/grpc/grpc
-#!RemoteAsset:  sha256:38f58596277fa632064cc0719b9ece4381c8c77461cb51e9b66ca149574b7865
+#!RemoteAsset:  sha256:d74186d8fa221cc7f07ec2db970098302559f73612f6cf340cfe754848c4fc29
 Source:         https://github.com/grpc/grpc/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
