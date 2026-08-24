@@ -21,7 +21,7 @@
 %endif
 
 %global dotnet_major 10.0
-%global dotnet_minor 103
+%global dotnet_minor 110
 %global dotnet_is_latest 1
 
 # Note: upstream can produce releases with a different tag than the SDK version
@@ -33,16 +33,16 @@
 # So we don't set 'officialBuildId', as it breaks produced builds re-bootstrapping on RISC-V.
 # Triage this if you need 'officialBuildId' in the future.
 %global dotnet_sourceRepository https://github.com/dotnet/dotnet.git
-%global dotnet_sourceVersion c2435c3e0f46de784341ac3ed62863ce77e117b4
-# %global dotnet_officialBuildId 20260125.3
+%global dotnet_sourceVersion f7d90799ce4ef09a0bb257852a57248d2a8fb8dd
+# %global dotnet_officialBuildId 20260626.16
 
 %{!?runtime_id:%global runtime_id linux-%{runtime_arch}}
 %global dotnet_version %{dotnet_major}.%{dotnet_minor}
-%global hostfxr_version 10.0.3
-%global runtime_version 10.0.3
-%global aspnetcore_runtime_version 10.0.3
+%global hostfxr_version 10.0.10
+%global runtime_version 10.0.10
+%global aspnetcore_runtime_version 10.0.10
 %global templates_version %{aspnetcore_runtime_version}
-%global sdk_version 10.0.103
+%global sdk_version 10.0.110
 %global sdk_feature_band_version %(echo %{sdk_version} | cut -d '-' -f 1 | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 
 %global use_bundled_brotli 0
@@ -82,9 +82,9 @@ Summary:        .NET %{dotnet_major} Runtime and SDK
 License:        0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND APSL-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND BSL-1.0 AND bzip2-1.0.6 AND CC0-1.0 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-PDDC AND CNRI-Python AND EPL-1.0 AND GPL-2.0-only AND (GPL-2.0-only WITH GCC-exception-2.0) AND GPL-2.0-or-later AND GPL-3.0-only AND ICU AND ISC AND LGPL-2.1-only AND LGPL-2.1-or-later AND LicenseRef-openRuyi-Public-Domain AND LicenseRef-ISO-8879 AND MIT AND MIT-Wu AND MS-PL AND MS-RL AND NCSA AND OFL-1.1 AND OpenSSL AND Unicode-DFS-2015 AND Unicode-DFS-2016 AND W3C-19980720 AND X11 AND Zlib
 URL:            https://dotnet.microsoft.com
 VCS:            git:https://github.com/dotnet/dotnet.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:9265f5899f5aeb0f787a4f438a0fc54a314a9449e40379c419f17e9a74c791d2
 Source0:        https://github.com/dotnet/dotnet/archive/refs/tags/%{upstream_tag}.tar.gz#/dotnet-%{sdk_version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:f80edbe9e0e7f5b0b963b737c0142debdec8e473f519b6ad823ecc9afef5bf32
 Source1:        https://github.com/dotnet/dotnet/releases/download/%{upstream_tag}/release.json
 
 # Fix an error caused by fortify CFLAGS with how .NET builds some assembly files
@@ -92,20 +92,20 @@ Patch0:         runtime-disable-fortify-on-ilasm-parser.patch
 
 ExclusiveArch:  riscv64 x86_64
 
-BuildRequires:  aspnetcore-runtime-%{dotnet_major}
-BuildRequires:  aspnetcore-targeting-pack-%{dotnet_major}
+BuildRequires:  aspnetcore-runtime-%{dotnet_major}-bin
+BuildRequires:  aspnetcore-targeting-pack-%{dotnet_major}-bin
 BuildRequires:  bash-completion
 BuildRequires:  clang
 BuildRequires:  cmake
 BuildRequires:  coreutils
-BuildRequires:  dotnet-apphost-pack-%{dotnet_major}
-BuildRequires:  dotnet-host
-BuildRequires:  dotnet-hostfxr-%{dotnet_major}
-BuildRequires:  dotnet-runtime-%{dotnet_major}
-BuildRequires:  dotnet-sdk-%{dotnet_major}
-BuildRequires:  dotnet-sdk-%{dotnet_major}-source-built-artifacts
-BuildRequires:  dotnet-targeting-pack-%{dotnet_major}
-BuildRequires:  dotnet-templates-%{dotnet_major}
+BuildRequires:  dotnet-apphost-pack-%{dotnet_major}-bin
+BuildRequires:  dotnet-host-bin
+BuildRequires:  dotnet-hostfxr-%{dotnet_major}-bin
+BuildRequires:  dotnet-runtime-%{dotnet_major}-bin
+BuildRequires:  dotnet-sdk-%{dotnet_major}-bin
+BuildRequires:  dotnet-sdk-%{dotnet_major}-source-built-artifacts-bin
+BuildRequires:  dotnet-targeting-pack-%{dotnet_major}-bin
+BuildRequires:  dotnet-templates-%{dotnet_major}-bin
 BuildRequires:  findutils
 BuildRequires:  git
 BuildRequires:  gnupg
@@ -188,7 +188,7 @@ applications and micro-services.
 
 %package     -n dotnet-runtime-%{dotnet_major}
 Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} runtime
+Summary:        .NET %{dotnet_major} runtime
 Requires:       dotnet-hostfxr-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
 # libicu is dlopen()ed
 Requires:       icu
@@ -216,7 +216,7 @@ managed parts of the .NET runtime itself.
 
 %package     -n aspnetcore-runtime-%{dotnet_major}
 Version:        %{runtime_version}
-Summary:        ASP.NET Core %{runtime_version} runtime
+Summary:        ASP.NET Core %{dotnet_major} runtime
 Requires:       dotnet-runtime-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
 Conflicts:      aspnetcore-runtime-%{dotnet_major}-bin
 
@@ -242,7 +242,7 @@ managed parts of the ASP.NET Core runtime itself.
 
 %package     -n dotnet-templates-%{dotnet_major}
 Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} templates
+Summary:        .NET %{dotnet_major} templates
 # Theoretically any version of the host should work. But lets aim for the one
 # provided by this package, or from a newer version of .NET
 Requires:       dotnet-host%{?_isa} >= %{runtime_version}-%{release}
@@ -258,8 +258,8 @@ It particularly focuses on creating console applications, web
 applications and micro-services.
 
 %package     -n dotnet-sdk-%{dotnet_major}
-Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} SDK
+Version:        %{sdk_version}
+Summary:        .NET %{dotnet_major} SDK
 Requires:       dotnet-runtime-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
 Requires:       aspnetcore-runtime-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
 Requires:       dotnet-apphost-pack-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
@@ -290,7 +290,7 @@ Software Development Kit (SDK) itself.
 %package     -n dotnet-sdk-aot-%{dotnet_major}
 Version:        %{sdk_version}
 Summary:        .NET %{dotnet_major} SDK - Native AoT Support
-Requires:       dotnet-sdk-%{dotnet_major}%{?_isa} >= %{runtime_version}-%{release}
+Requires:       dotnet-sdk-%{dotnet_major}%{?_isa} >= %{sdk_version}-%{release}
 Conflicts:      dotnet-sdk-aot-%{dotnet_major}-bin
 # When installing AOT support, also install all dependencies needed to build
 # NativeAOT applications. AOT invokes `clang ... -lssl -lcrypto -lbrotlienc
@@ -674,4 +674,4 @@ rm %{buildroot}%{_libdir}/dotnet/dotnet
 %{_libdir}/dotnet/source-built-artifacts
 
 %changelog
-%{?autochangelog}
+%autochangelog
