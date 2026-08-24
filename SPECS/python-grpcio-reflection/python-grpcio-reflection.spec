@@ -8,13 +8,13 @@
 %global pypi_name grpcio_reflection
 
 Name:           python-%{srcname}
-Version:        1.80.0
+Version:        1.82.1
 Release:        %autorelease
 Summary:        Standard Protobuf Reflection Service for gRPC
 License:        Apache-2.0
 URL:            https://grpc.io/
 VCS:            git:https://github.com/grpc/grpc
-#!RemoteAsset:  sha256:e9c76aabc4324279945b70bc76a3d41bc4f9396bffcf1cfc1011a571c2c56221
+#!RemoteAsset:  sha256:2ec943ead3e17b43f8e0747a5cb417b3a64357fe3d9b4a7bdc39a4c33ea9800d
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
