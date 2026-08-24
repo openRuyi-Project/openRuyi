@@ -14,14 +14,6 @@
 
 %global miniz_version 3.0.2
 
-# Do not expose private LibTorch and the installed native-test helpers as system-wide capabilities
-%global torch_privlibs libaoti_custom_ops|libbackend_with_compiler|libc10|libc10_hip
-%global torch_privlibs %{torch_privlibs}|libcaffe2_nvrtc|libjitbackend_test|libshm
-%global torch_privlibs %{torch_privlibs}|libtorch|libtorch_cpu|libtorch_global_deps
-%global torch_privlibs %{torch_privlibs}|libtorch_hip|libtorch_python|libtorchbind_test
-%global __provides_exclude_from ^%{python3_sitearch}/torch/lib/.*\\.so$
-%global __requires_exclude ^(%{torch_privlibs})\\.so
-
 %bcond test 1
 
 # The default flavor builds a CPU-only torch
