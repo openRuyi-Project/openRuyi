@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Utility for IPMI control
 License:        BSD-3-Clause
 URL:            https://github.com/ipmitool/ipmitool
-#!RemoteAsset
+#!RemoteAsset:  sha256:48b010e7bcdf93e4e4b6e43c53c7f60aa6873d574cbd45a8d86fa7aaeebaff9c
 Source0:        https://github.com/ipmitool/ipmitool/archive/refs/tags/IPMITOOL_%{gitversion}.tar.gz
 Source1:        ipmievd.sysconf
 Source2:        ipmievd.service
@@ -66,6 +66,7 @@ install -Dpm 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/ipmievd
 
 install -D -m 0644 contrib/exchange-bmc-os-info.service.redhat %{buildroot}%{_unitdir}/exchange-bmc-os-info.service
 install -D -m 0644 contrib/exchange-bmc-os-info.sysconf %{buildroot}/%{_sysconfdir}/sysconfig/exchange-bmc-os-info
+install -Dm 755 contrib/exchange-bmc-os-info.init.redhat %{buildroot}%{_libexecdir}/exchange-bmc-os-info
 
 install -Dm 644 contrib/bmc-snmp-proxy.sysconf %{buildroot}%{_sysconfdir}/sysconfig/bmc-snmp-proxy
 install -Dm 644 contrib/bmc-snmp-proxy.service %{buildroot}%{_unitdir}/bmc-snmp-proxy.service
@@ -95,6 +96,7 @@ rm -f %{buildroot}%{_datadir}/misc/enterprise-numbers
 %{_mandir}/man8/ipmievd.8*
 %config(noreplace) %{_sysconfdir}/sysconfig/exchange-bmc-os-info
 %{_unitdir}/exchange-bmc-os-info.service
+%{_libexecdir}/exchange-bmc-os-info
 
 %files -n bmc-snmp-proxy
 %config(noreplace) %{_sysconfdir}/sysconfig/bmc-snmp-proxy
@@ -102,4 +104,4 @@ rm -f %{buildroot}%{_datadir}/misc/enterprise-numbers
 %{_libexecdir}/bmc-snmp-proxy
 
 %changelog
-%{?autochangelog}
+%autochangelog
