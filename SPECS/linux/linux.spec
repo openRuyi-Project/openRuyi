@@ -46,17 +46,19 @@
 
 %global patchset_release 3
 %global config_version 0
+# Initial mainline tarballs omit the .0 that the kernel Makefile reports.
+%global upstream_version 7.2
 
 Name:           linux
-Version:        7.2
+Version:        7.2.0
 Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:f9fef3d14c0df53819026f4be74459835c2a0b0dcbf5b5bbd9ea19f0829402b3
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{upstream_version}.tar.xz
 #!RemoteAsset:  sha256:2a94363b824f8218bfe52cfe88cb5f403bdeb2168af2b05536af352e470ef5d4
-Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
+Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/%{name}-v%{upstream_version}-%{patchset_release}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  bison
@@ -187,7 +189,7 @@ for booting.
 %endif
 
 %prep
-%autosetup -N
+%autosetup -n %{name}-%{upstream_version} -N
 
 patchset_dir=.openruyi-patchset
 mkdir "${patchset_dir}"
