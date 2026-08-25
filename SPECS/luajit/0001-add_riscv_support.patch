@@ -1,14 +1,14 @@
-From cab5d57d8249daa01bb4f98928dbdfb270153c66 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 01/23] riscv(support): add RISC-V 64 arch base definition
+From a3cb7804d3a83ce2617954403b0f11924a221abb Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 01/21] riscv(support): add RISC-V 64 arch base definition
 
 ---
  src/lj_arch.h | 22 ++++++++++++++++++++++
  1 file changed, 22 insertions(+)
 
 diff --git a/src/lj_arch.h b/src/lj_arch.h
-index add90dd18..19f9fe71e 100644
+index 5587fa25e..399034827 100644
 --- a/src/lj_arch.h
 +++ b/src/lj_arch.h
 @@ -33,6 +33,8 @@
@@ -29,7 +29,7 @@ index add90dd18..19f9fe71e 100644
  #else
  #error "Architecture not supported (in this version), see: https://luajit.org/status.html#architectures"
  #endif
-@@ -506,6 +510,20 @@
+@@ -508,6 +512,20 @@
  #define LJ_ARCH_NUMMODE		LJ_NUMMODE_DUAL
  #define LJ_TARGET_GC64		1
  #define LJ_ARCH_NOJIT		1	/* NYI */
@@ -50,7 +50,7 @@ index add90dd18..19f9fe71e 100644
  
  #else
  #error "No target architecture defined"
-@@ -590,6 +608,10 @@
+@@ -592,6 +610,10 @@
  #error "Only n64 ABI supported for MIPS64"
  #undef LJ_TARGET_MIPS
  #endif
@@ -62,10 +62,10 @@ index add90dd18..19f9fe71e 100644
  #endif
  
 
-From 2ac65409e06f6744bb7b1a9e353b7ef036a9ea54 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 02/23] riscv(dynasm): add RISC-V support
+From 5bcb7467faabacfd1c6d82aff8f067ba05547457 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 02/21] riscv(dynasm): add RISC-V support
 
 ---
  dynasm/dasm_riscv.h     | 433 ++++++++++++++++++
@@ -1539,10 +1539,10 @@ index 000000000..49f6b2250
 +riscv64 = true -- Using a global is an ugly, but effective solution.
 +return require("dasm_riscv")
 
-From 105f50a33bc6ec308bc16b3291992446b00a0934 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 03/23] riscv(interp): add register definition
+From 10f525bbbbe522340ee95bca13d7470a5a2a89e0 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 03/21] riscv(interp): add register definition
 
 ---
  src/vm_riscv64.dasc | 81 +++++++++++++++++++++++++++++++++++++++++++++
@@ -1637,10 +1637,10 @@ index 000000000..946fc414c
 +|.define FTMP3,		f3
 +|.define FTMP4,		f4
 
-From c780af78a703c922a9066f0f518c96d2042e2f45 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 04/23] riscv(interp): add frame definition
+From 6c166bc474b065e53b42b8d58436aa7b2ad6b4fc Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 04/21] riscv(interp): add frame definition
 
 ---
  src/lj_frame.h      |  9 +++++
@@ -1759,10 +1759,10 @@ index 946fc414c..124040794 100644
 +|  ret
 +|.endmacro
 
-From 504766b9e3f6f454e0a532c684b8fed6472063e9 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 05/23] riscv(interp): add helper macros and typedefs
+From 25d871f7a3baa36eaa3f3fc0cbd8fb75eff15296 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 05/21] riscv(interp): add helper macros and typedefs
 
 ---
  src/vm_riscv64.dasc | 353 ++++++++++++++++++++++++++++++++++++++++++++
@@ -2130,16 +2130,16 @@ index 124040794..60e835a8d 100644
 +|
 +|//-----------------------------------------------------------------------
 
-From f36b3564223bc95f5f369422df865ca3d45b67ec Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 06/23] riscv(interp): add base assembly interpreter VM
+From 8275effbd9ce4a3c2d72a51a3b72ac17d8fb3ea0 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:40 +0800
+Subject: [PATCH 06/21] riscv(interp): add base assembly interpreter VM
 
 ---
  src/lj_vm.h         |    3 +
  src/lj_vmmath.c     |    3 +-
- src/vm_riscv64.dasc | 3629 ++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 3631 insertions(+), 4 deletions(-)
+ src/vm_riscv64.dasc | 3703 ++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 3705 insertions(+), 4 deletions(-)
 
 diff --git a/src/lj_vm.h b/src/lj_vm.h
 index b8ac3db6f..b176d8700 100644
@@ -2156,10 +2156,10 @@ index b8ac3db6f..b176d8700 100644
  #if LJ_HASJIT
  LJ_ASMF LJ_CONSTF double lj_vm_foldfpm(double x, int op);
 diff --git a/src/lj_vmmath.c b/src/lj_vmmath.c
-index 5aca72071..62f1cb81f 100644
+index 603b913e6..44a88370a 100644
 --- a/src/lj_vmmath.c
 +++ b/src/lj_vmmath.c
-@@ -69,7 +69,8 @@ double lj_vm_foldarith(double x, double y, int op)
+@@ -74,7 +74,8 @@ double lj_vm_foldarith(double x, double y, int op)
  
  /* -- Helper functions for generated machine code ------------------------- */
  
@@ -2170,7 +2170,7 @@ index 5aca72071..62f1cb81f 100644
  {
    uint32_t y, ua, ub;
 diff --git a/src/vm_riscv64.dasc b/src/vm_riscv64.dasc
-index 60e835a8d..5eb1d82e7 100644
+index 60e835a8d..4cf4d8e07 100644
 --- a/src/vm_riscv64.dasc
 +++ b/src/vm_riscv64.dasc
 @@ -437,9 +437,11 @@
@@ -2188,7 +2188,7 @@ index 60e835a8d..5eb1d82e7 100644
  |.endmacro
  |
  |// Set current VM state. Uses TMP0.
-@@ -515,3 +517,3624 @@
+@@ -515,3 +517,3698 @@
  |.endmacro
  |
  |//-----------------------------------------------------------------------
@@ -2209,7 +2209,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |
 +  |  // Return from pcall or xpcall fast func.
 +  |  mov_true TMP1
-+  |  bxeqz TMP0, ->cont_dispatch
++  |  beqz TMP0, ->cont_dispatch
 +  |  ld PC, FRAME_PC(TMP2)		// Fetch PC of previous frame.
 +  |  mv BASE, TMP2			// Restore caller base.
 +  |  // Prepending may overwrite the pcall frame, so do it at the end.
@@ -2220,9 +2220,9 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  addiw RD, RD, 8			// RD = (nresults+1)*8.
 +  |  andi TMP0, PC, FRAME_TYPE
 +  |  li CRET1, LUA_YIELD
-+  |  bxeqz RD, ->vm_unwind_c_eh
++  |  beqz RD, ->vm_unwind_c_eh
 +  |  mv MULTRES, RD
-+  |  bxeqz TMP0, ->BC_RET_Z		// Handle regular return to Lua.
++  |  beqz TMP0, ->BC_RET_Z		// Handle regular return to Lua.
 +  |
 +  |->vm_return:
 +  |  // BASE = base, RA = resultptr, RD/MULTRES = (nresults+1)*8, PC = return
@@ -2230,7 +2230,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  andi TMP2, PC, ~FRAME_TYPEP
 +  |  xori TMP0, TMP0, FRAME_C
 +  |  sub TMP2, BASE, TMP2		// TMP2 = previous base.
-+  |  bxnez TMP0, ->vm_returnp
++  |  bnez TMP0, ->vm_returnp
 +  |
 +  |  addiw TMP1, RD, -8
 +  |  sd TMP2, L->base
@@ -2399,7 +2399,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  andi TMP0, PC, FRAME_TYPE
 +  |   li TISNIL, LJ_TNIL
 +  |   li TISNUM, LJ_TISNUM
-+  |  bxeqz TMP0, ->BC_RET_Z
++  |  beqz TMP0, ->BC_RET_Z
 +  |  j ->vm_return
 +  |
 +  |->vm_pcall:				// Setup protected C frame and enter VM.
@@ -2644,7 +2644,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  // Returns 0/1 or TValue * (metamethod).
 +  |3:
 +  |  sltiu TMP1, CRET1, 2
-+  |  bxeqz TMP1, ->vmeta_binop
++  |  beqz TMP1, ->vmeta_binop
 +  |   negw TMP2, CRET1
 +  |4:
 +  |  lhu RD, OFS_RD(PC)
@@ -2720,7 +2720,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  // (lua_State *L, TValue *ra,*rb,*rc, BCReg op)
 +  |  call_intern vmeta_arith, lj_meta_arith
 +  |  // Returns NULL (finished) or TValue * (metamethod).
-+  |  bxeqz CRET1, ->cont_nop
++  |  beqz CRET1, ->cont_nop
 +  |
 +  |  // Call metamethod for binary op.
 +  |->vmeta_binop:
@@ -2733,6 +2733,26 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  li NARGS8:RC, 16                  // 2 args for func(o1, o2).
 +  |  j ->vm_call_dispatch
 +  |
++  |//-- Bit operator metamethods -------------------------------------------
++  |
++  |->vmeta_bnot:
++  |  mv CARG3, RB			// rb = &src
++  |  mv CARG4, CARG3			// rc = &src
++  |  j >1
++  |
++  |->vmeta_bitop:
++  |  mv CARG3, RB			// rb = &src1
++  |   mv CARG4, RC			// rc = &src2
++  |1:
++  |  mv CARG1, L
++  |   sd BASE, L->base
++  |  mv CARG2, RA			// ra = &dst
++  |   sd PC, SAVE_PC(sp)
++  |  decode_OP1 CARG5, INS
++  |  // (lua_State *L, TValue *ra,*rb,*rc, BCReg op)
++  |  call_intern vmeta_bitop, lj_meta_bitop
++  |  j ->cont_nop
++  |
 +  |->vmeta_len:
 +  |  // CARG2 already set by BC_LEN.
 +#if LJ_52
@@ -2744,7 +2764,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  call_intern vmeta_len, lj_meta_len	// (lua_State *L, TValue *o)
 +  |  // Returns NULL (retry) or TValue * (metamethod base).
 +#if LJ_52
-+  |  bxnez CRET1, ->vmeta_binop		// Binop call for compatibility.
++  |  bnez CRET1, ->vmeta_binop		// Binop call for compatibility.
 +  |  mv CARG1, MULTRES
 +  |  j ->BC_LEN_Z
 +#else
@@ -2823,7 +2843,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |->ff_ .. name:
 +  |  ld CARG1, 0(BASE)
 +  |  fld FARG1, 0(BASE)
-+  |  bxeqz NARGS8:RC, ->fff_fallback
++  |  beqz NARGS8:RC, ->fff_fallback
 +  |  checknum CARG1, ->fff_fallback
 +  |.endmacro
 +  |
@@ -2832,7 +2852,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  ld CARG1, 0(BASE)
 +  |    sltiu TMP0, NARGS8:RC, 16
 +  |   ld CARG2, 8(BASE)
-+  |  bxnez TMP0, ->fff_fallback
++  |  bnez TMP0, ->fff_fallback
 +  |  gettp TMP1, CARG1
 +  |   gettp TMP2, CARG2
 +  |  sltiu TMP1, TMP1, LJ_TISNUM
@@ -2840,7 +2860,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  fld FARG1, 0(BASE)
 +  |  and TMP1, TMP1, TMP2
 +  |   fld FARG2, 8(BASE)
-+  |  bxeqz TMP1, ->fff_fallback
++  |  beqz TMP1, ->fff_fallback
 +  |.endmacro
 +  |
 +  |// Inlined GC threshold check.
@@ -2900,7 +2920,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |2:
 +  |   ld STR:RC, GL->gcroot[GCROOT_MMNAME+MM_metatable]
 +  |  li CARG1, LJ_TNIL
-+  |  bxeqz TAB:RB, ->fff_restv
++  |  beqz TAB:RB, ->fff_restv
 +  |  lw TMP0, TAB:RB->hmask
 +  |   lw TMP1, STR:RC->sid
 +  |    ld NODE:TMP2, TAB:RB->node
@@ -2922,7 +2942,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  settp CARG1, RB, TMP3
 +  |  j ->fff_restv			// Not found, keep default result.
 +  |5:
-+  |  bxne CARG1, TISNIL, ->fff_restv
++  |  bne CARG1, TISNIL, ->fff_restv
 +  |  j <4				// Ditto for nil value.
 +  |
 +  |6:
@@ -2948,7 +2968,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  bxnez TMP3, ->fff_fallback
 +  |  andi TMP3, TMP2, LJ_GC_BLACK		// isblack(table)
 +  |  sd TAB:CARG2, TAB:TMP1->metatable
-+  |  bxeqz TMP3, ->fff_restv
++  |  beqz TMP3, ->fff_restv
 +  |  barrierback TAB:TMP1, TMP2, TMP0, ->fff_restv
 +  |
 +  |.ffunc rawget
@@ -2983,7 +3003,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  gettp TMP0, CARG1
 +  |  addi TMP1, TMP0, -LJ_TSTR
 +  |  // A __tostring method in the string base metatable is ignored.
-+  |  bxeqz TMP1, ->fff_restv	// String key?
++  |  beqz TMP1, ->fff_restv	// String key?
 +  |  // Handle numbers inline, unless a number base metatable is present.
 +  |   ld TMP1, GL->gcroot[GCROOT_BASEMT_NUM]
 +  |  sltu TMP0, TISNUM, TMP0
@@ -3013,10 +3033,10 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  call_intern ff_next, lj_tab_next	// (GCtab *t, cTValue *key, TValue *o)
 +  |  // Returns 1=found, 0=end, -1=error.
 +  |  li RD, (2+1)*8
-+  |  bxgtz CRET1, ->fff_res		// Found key/value.
++  |  bgtz CRET1, ->fff_res		// Found key/value.
 +  |  mv TMP1, CRET1
 +  |  mv CARG1, TISNIL
-+  |  bxeqz TMP1, ->fff_restv		// End of traversal: return nil.
++  |  beqz TMP1, ->fff_restv		// End of traversal: return nil.
 +  |   ld CFUNC:RB, FRAME_FUNC(BASE)
 +  |  li RC, 2*8
 +  |   cleartp CFUNC:RB
@@ -3056,19 +3076,19 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  ld TMP1, 0(TMP3)
 +  |1:
 +  |  li RD, (0+1)*8
-+  |  bxeq TMP1, TISNIL, ->fff_res	// End of iteration, return 0 results.
++  |  beq TMP1, TISNIL, ->fff_res	// End of iteration, return 0 results.
 +  |  sd TMP1, -8(BASE)
 +  |  li RD, (2+1)*8
 +  |  j ->fff_res
 +  |2:  // Check for empty hash part first. Otherwise call C function.
 +  |  lw TMP0, TAB:CARG1->hmask
 +  |  li RD, (0+1)*8
-+  |  bxeqz TMP0, ->fff_res
++  |  beqz TMP0, ->fff_res
 +  |  mv CARG2, TMP2
 +  |  call_intern ff_ipairs_aux, lj_tab_getinth	// (GCtab *t, int32_t key)
 +  |  // Returns cTValue * or NULL.
 +  |  li RD, (0+1)*8
-+  |  bxeqz CRET1, ->fff_res
++  |  beqz CRET1, ->fff_res
 +  |  ld TMP1, 0(CRET1)
 +  |  j <1
 +  |
@@ -3105,7 +3125,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  srliw TMP3, TMP3, HOOK_ACTIVE_SHIFT
 +  |  andi TMP3, TMP3, 1
 +  |  addi PC, TMP3, 16+FRAME_PCALL
-+  |  bxeqz NARGS8:RC, ->vm_call_dispatch
++  |  beqz NARGS8:RC, ->vm_call_dispatch
 +  |1:
 +  |   add TMP0, BASE, NARGS8:RC
 +  |2:
@@ -3162,17 +3182,17 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  xor CARG2, CARG2, TMP3		// CARG2 = TMP4 ? CARG2 : TMP3
 +  |  and CARG2, CARG2, TMP4
 +  |  xor CARG2, TMP3, CARG2
-+  |  bxgtz CARG4, ->fff_fallback		// st > LUA_YIELD?
++  |  bgtz CARG4, ->fff_fallback		// st > LUA_YIELD?
 +  |   xor TMP2, TMP2, CARG3
 +  |   or CARG4, TMP2, TMP0
-+  |  bxnez TMP1, ->fff_fallback		// cframe != 0?
++  |  bnez TMP1, ->fff_fallback		// cframe != 0?
 +  |  ld TMP0, L:CARG1->maxstack
 +  |   ld PC, FRAME_PC(BASE)
-+  |  bxeqz CARG4, ->fff_fallback		// base == top && st == 0?
++  |  beqz CARG4, ->fff_fallback		// base == top && st == 0?
 +  |  add TMP2, CARG2, NARGS8:RC
 +  |  sd BASE, L->base
 +  |  sd PC, SAVE_PC(sp)
-+  |  bxltu TMP0, TMP2, ->fff_fallback		// Stack overflow?
++  |  bltu TMP0, TMP2, ->fff_fallback		// Stack overflow?
 +  |1:
 +  |.if resume
 +  |  addi BASE, BASE, 8		// Keep resumed thread in stack for GC.
@@ -3277,7 +3297,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |   sd BASE, L->base
 +  |  andi TMP0, TMP0, CFRAME_RESUME
 +  |   sd TMP1, L->top
-+  |  bxeqz TMP0, ->fff_fallback
++  |  beqz TMP0, ->fff_fallback
 +  |  sd x0, L->cframe
 +  |    sb CRET1, L->status
 +  |  j ->vm_leave_unw
@@ -3288,14 +3308,14 @@ index 60e835a8d..5eb1d82e7 100644
 +  |->ff_math_ .. func:
 +  |  ld CARG1, 0(BASE)
 +  |   gettp TMP0, CARG1
-+  |  bxeqz NARGS8:RC, ->fff_fallback
++  |  beqz NARGS8:RC, ->fff_fallback
 +  |   fmv.d.x FARG1, CARG1
-+  |    bxeq TMP0, TISNUM, ->fff_restv
++  |    beq TMP0, TISNUM, ->fff_restv
 +  |   srli TMP1, CARG1, 52		// Extract exponent (and sign).
-+  |    bxgeu TMP0, TISNUM, ->fff_fallback
++  |    bgeu TMP0, TISNUM, ->fff_fallback
 +  |  andi TMP1, TMP1, 0x7ff		// Extract exponent.
 +  |  slti TMP2, TMP1, 1023 + 52 + 1	// 1023: Bias, 52: Max fraction
-+  |  bxeqz TMP2, ->fff_resn		// Less than 2^52 / Not NaN?
++  |  beqz TMP2, ->fff_resn		// Less than 2^52 / Not NaN?
 +  |  fcvt.l.d TMP3, FARG1, rm
 +  |  fcvt.d.l FTMP1, TMP3
 +  |  fsgnj.d FRET1, FTMP1, FARG1
@@ -3315,7 +3335,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  sub CARG1, TMP1, TMP0
 +  |  slli TMP3, CARG1, 32
 +  |   settp CARG1, TISNUM
-+  |  bxgez TMP3, ->fff_restv
++  |  bgez TMP3, ->fff_restv
 +  |  lui CARG1, 0x41e00		// 2^31 as a double.
 +  |  slli CARG1, CARG1, 32
 +  |  j ->fff_restv
@@ -3323,7 +3343,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  sltiu TMP2, CARG2, LJ_TISNUM
 +  |  slli CARG1, CARG1, 1
 +  |  srli CARG1, CARG1, 1
-+  |  bxeqz TMP2, ->fff_fallback		// int
++  |  beqz TMP2, ->fff_fallback		// int
 +  |// fallthrough
 +  |
 +  |->fff_restv:
@@ -3379,7 +3399,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  li TMP1, 8
 +  |   ld CARG1, 0(BASE)
 +  |   fld FARG1, 0(BASE)
-+  |  bxne NARGS8:RC, TMP1, ->fff_fallback		// Need exactly 1 argument.
++  |  bne NARGS8:RC, TMP1, ->fff_fallback		// Need exactly 1 argument.
 +  |  checknum CARG1, ->fff_fallback
 +  |  call_extern ff_math_log, log
 +  |  j ->fff_resn
@@ -3433,7 +3453,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  checkint CARG1, >4
 +  |1:  // Handle integers.
 +  |   ld CARG2, 0(RA)
-+  |  bxeq RA, RB, ->fff_restv
++  |  beq RA, RB, ->fff_restv
 +  |   sext.w CARG1, CARG1
 +  |  checkint CARG2, >3
 +  |   sext.w CARG2, CARG2
@@ -3462,7 +3482,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |5:  // Handle numbers.
 +  |  ld CARG2, 0(RA)
 +  |  fld FARG2, 0(RA)
-+  |   bxgeu RA, RB, ->fff_resn
++  |   bgeu RA, RB, ->fff_resn
 +  |  checknum CARG2, >7
 +  |6:
 +  |.if ismax
@@ -3493,7 +3513,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  addi TMP0, TMP0, -LJ_TSTR
 +  |  or TMP1, TMP1, TMP0
 +  |   cleartp STR:CARG1
-+  |  bxnez TMP1, ->fff_fallback		// Need exactly 1 string argument.
++  |  bnez TMP1, ->fff_fallback		// Need exactly 1 string argument.
 +  |  lw TMP0, STR:CARG1->len
 +  |    ld PC, FRAME_PC(BASE)
 +  |  snez RD, TMP0
@@ -3516,7 +3536,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |   sltu TMP2, TMP2, CARG1		// !(255 < n).
 +  |   or TMP1, TMP1, TMP2
 +  |   li CARG3, 1
-+  |  bxnez TMP1, ->fff_fallback
++  |  bnez TMP1, ->fff_fallback
 +  |  addi CARG2, sp, TMPD_OFS
 +  |  sb CARG1, TMPD(sp)
 +  |->fff_newstr:
@@ -3539,7 +3559,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  ld CARG3, 16(BASE)
 +  |  addi TMP0, NARGS8:RC, -16
 +  |   gettp TMP1, CARG1
-+  |  bxltz TMP0, ->fff_fallback
++  |  bltz TMP0, ->fff_fallback
 +  |  cleartp STR:CARG1, CARG1
 +  |   li CARG4, -1
 +  |  beqz TMP0, >1
@@ -3549,7 +3569,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  checkint CARG2, ->fff_fallback
 +  |  addi TMP0, TMP1, -LJ_TSTR
 +  |   sext.w CARG3, CARG2
-+  |  bxnez TMP0, ->fff_fallback
++  |  bnez TMP0, ->fff_fallback
 +  |  lw CARG2, STR:CARG1->len
 +  |  // STR:CARG1 = str, CARG2 = str->len, CARG3 = start, CARG4 = end
 +  |  addiw TMP0, CARG2, 1
@@ -3572,7 +3592,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  sub CARG3, CARG4, CARG3		// len = end - start
 +  |   addi CARG2, CARG2, sizeof(GCstr)-1
 +  |   addiw CARG3, CARG3, 1             // len += 1
-+  |  bxgez CARG3, ->fff_newstr
++  |  bgez CARG3, ->fff_newstr
 +  |->fff_emptystr:  // Return empty string.
 +  |  li TMP1, LJ_TSTR
 +  |  addi STR:CARG1, GL, offsetof(global_State, strempty)
@@ -3583,7 +3603,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  .ffunc string_ .. name
 +  |  ffgccheck
 +  |   ld CARG2, 0(BASE)
-+  |  bxeqz NARGS8:RC, ->fff_fallback
++  |  beqz NARGS8:RC, ->fff_fallback
 +  |  checkstr STR:CARG2, ->fff_fallback
 +  |  addi SBUF:CARG1, GL, offsetof(global_State, tmpbuf)
 +  |  ld TMP0, SBUF:CARG1->b
@@ -3605,7 +3625,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |
 +  |->vm_tobit_fb:
 +  |  fld FARG1, 0(BASE)
-+  |  bxeqz TMP1, ->fff_fallback
++  |  beqz TMP1, ->fff_fallback
 +  |   fadd.d FARG1, FARG1, TOBIT
 +  |  fmv.x.w CRET1, FARG1
 +  |  zext.w CRET1, CRET1
@@ -3627,7 +3647,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  add TMP3, BASE, NARGS8:RC
 +  |1:
 +  |   ld TMP1, 0(TMP2)
-+  |  bxeq TMP2, TMP3, ->fff_resi
++  |  beq TMP2, TMP3, ->fff_resi
 +  |  gettp TMP0, TMP1
 +  |   addi TMP2, TMP2, 8
 +  |  bne TMP0, TISNUM, >2
@@ -3638,7 +3658,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |   fld FARG1, -8(TMP2)
 +  |  sltiu TMP0, TMP0, LJ_TISNUM
 +  |   fadd.d FARG1, FARG1, TOBIT
-+  |  bxeqz TMP0, ->fff_fallback
++  |  beqz TMP0, ->fff_fallback
 +  |  fmv.x.w TMP1, FARG1
 +  |  zext.w TMP1, TMP1
 +  |   bins CRET1, CRET1, TMP1
@@ -3686,7 +3706,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |1:
 +  |  gettp TMP0, CARG2
 +  |   zext.w CARG2, CARG2
-+  |  bxne TMP0, TISNUM, ->fff_fallback
++  |  bne TMP0, TISNUM, ->fff_fallback
 +  |  sext.w CARG1, CARG1
 +  |  shins CRET1, CARG1, CARG2
 +  |   zext.w CRET1, CRET1
@@ -3707,7 +3727,7 @@ index 60e835a8d..5eb1d82e7 100644
 +  |1:
 +  |  gettp TMP0, CARG2
 +  |   zext.w CARG2, CARG2
-+  |  bxne TMP0, TISNUM, ->fff_fallback
++  |  bne TMP0, TISNUM, ->fff_fallback
 +  |  sext.w CARG1, CARG1
 +  |  neg TMP2, CARG2
 +  |  rotinsa TMP1, CARG1, CARG2
@@ -3738,13 +3758,13 @@ index 60e835a8d..5eb1d82e7 100644
 +  |  // Either throws an error, or recovers and returns -1, 0 or nresults+1.
 +  |  ld BASE, L->base
 +  |   slliw RD, CRET1, 3
-+  |  bxgtz CRET1, ->fff_res		// Returned nresults+1?
++  |  bgtz CRET1, ->fff_res		// Returned nresults+1?
 +  |1:  // Returned 0 or -1: retry fast path.
 +  |   ld LFUNC:RB, FRAME_FUNC(BASE)
 +  |  ld TMP0, L->top
 +  |   sub NARGS8:RC, TMP0, BASE
 +  |   cleartp LFUNC:RB
-+  |  bxnez CRET1, ->vm_call_tail		// Returned -1?
++  |  bnez CRET1, ->vm_call_tail		// Returned -1?
 +  |  ins_callt				// Returned 0: retry fast path.
 +  |
 +  |// Reconstruct previous base for vmeta_call during tailcall.
@@ -4528,6 +4548,60 @@ index 60e835a8d..5eb1d82e7 100644
 +    |   add RA, BASE, RA
 +    |  sd TMP0, 0(RA)
 +    |  ins_next
++    break;
++
++  /* -- Bit ops ----------------------------------------------------------- */
++
++  case BC_BNOT:
++    |  // RA = dst*8, RD = src*8
++    |  add RB, BASE, RD
++    |   add RA, BASE, RA
++    |  ld CARG1, 0(RB)
++    |  checkint CARG1, ->vmeta_bnot
++    |  not CARG1, CARG1
++    |  zext.w CARG1, CARG1
++    |  ins_next1
++    |  settp_b CARG1, TISNUM
++    |  sd CARG1, 0(RA)
++    |  ins_next2
++    break;
++
++    |.macro ins_bitop, ins
++    |  // RA = dst*8, RB = src1*8, RC = src2*8
++    |  decode_RB8 RB, INS
++    |   decode_RDtoRC8 RC, RD
++    |  add RB, BASE, RB
++    |   add RC, BASE, RC
++    |  add RA, BASE, RA
++    |  ld CARG1, 0(RB)
++    |   ld CARG2, 0(RC)
++    |  checkint CARG1, ->vmeta_bitop
++    |   checkint CARG2, ->vmeta_bitop
++    |  ins CRET1, CARG1, CARG2
++    |  zext.w CRET1, CRET1
++    |  ins_next1
++    |  settp_b CRET1, TISNUM
++    |  sd CRET1, 0(RA)
++    |  ins_next2
++    |.endmacro
++
++  case BC_BAND:
++    |  ins_bitop and
++    break;
++  case BC_BOR:
++    |  ins_bitop or
++    break;
++  case BC_BXOR:
++    |  ins_bitop xor
++    break;
++  case BC_BSHL:
++    |  ins_bitop sllw
++    break;
++  case BC_BSHR:
++    |  ins_bitop srlw
++    break;
++  case BC_BSAR:
++    |  ins_bitop sraw
 +    break;
 +
 +  /* -- Constant ops ------------------------------------------------------ */
@@ -5455,7 +5529,7 @@ index 60e835a8d..5eb1d82e7 100644
 +    |
 +    |->BC_RETV_Z:  // Non-standard return case.
 +    |  andi TMP2, TMP1, FRAME_TYPEP
-+    |  bxnez TMP2, ->vm_return
++    |  bnez TMP2, ->vm_return
 +    |  // Return from vararg function: relocate BASE down.
 +    |  sub BASE, BASE, TMP1
 +    |   ld PC, FRAME_PC(BASE)
@@ -5681,7 +5755,7 @@ index 60e835a8d..5eb1d82e7 100644
 +    |  ld TMP2, L->maxstack
 +    |   lbu TMP1, -4+PC2PROTO(numparams)(PC)
 +    |    ld KBASE, -4+PC2PROTO(k)(PC)
-+    |  bxltu TMP2, RA, ->vm_growstack_l
++    |  bltu TMP2, RA, ->vm_growstack_l
 +    |   slliw TMP1, TMP1, 3			// numparams*8
 +    |2:
 +    |  bltu NARGS8:RC, TMP1, >3		// Check for missing parameters.
@@ -5718,7 +5792,7 @@ index 60e835a8d..5eb1d82e7 100644
 +    |   addi TMP3, RC, 16+FRAME_VARG
 +    |    ld KBASE, -4+PC2PROTO(k)(PC)
 +    |   sd TMP3, 8(TMP1)                // Store delta + FRAME_VARG.
-+    |  bxgeu TMP0, TMP2, ->vm_growstack_l
++    |  bgeu TMP0, TMP2, ->vm_growstack_l
 +    |  lbu TMP2, -4+PC2PROTO(numparams)(PC)
 +    |   mv RA, BASE
 +    |   mv RC, TMP1
@@ -5764,7 +5838,7 @@ index 60e835a8d..5eb1d82e7 100644
 +    |   add RC, BASE, NARGS8:RC
 +    |  sd BASE, L->base		// base of currently excuting function
 +    |   sd RC, L->top
-+    |  bxgtu TMP1, TMP2, ->vm_growstack_c	// Need to grow stack.
++    |  bgtu TMP1, TMP2, ->vm_growstack_c	// Need to grow stack.
 +    |    li_vmstate C			// li TMP0, ~LJ_VMST_C
 +    if (op == BC_FUNCCW) {
 +      |  ld CARG2, CFUNC:RB->f
@@ -5814,10 +5888,10 @@ index 60e835a8d..5eb1d82e7 100644
 +
 +}
 
-From eb03f5f9ddb074d596ad74e009336b8f517c1023 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 07/23] riscv(support): add target definition
+From 5a15eea4d3792a0dbc036632f3f158b2f0a4597e Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 07/21] riscv(support): add target definition
 
 ---
  src/lj_target.h       |   4 +-
@@ -6396,67 +6470,62 @@ index 000000000..668511b55
 +
 +#endif
 
-From 5e929308209ef3907bec1d6b065834b72e60d797 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 08/23] riscv(ffi): add call convention and support framework
+From 3dd4490bbfa67f979c15030715ec36ca6b19eaf4 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 08/21] riscv(ffi): add call convention and support framework
 
 ---
- src/lj_ccall.c      | 418 +++++++++++++++++++++++++++++++++++++++++++-
+ src/lj_ccall.c      | 401 +++++++++++++++++++++++++++++++++++++++++++-
  src/lj_ccall.h      |  17 ++
  src/lj_ccallback.c  |  64 ++++++-
- src/vm_riscv64.dasc | 199 ++++++++++++++++++++-
- 4 files changed, 695 insertions(+), 3 deletions(-)
+ src/vm_riscv64.dasc | 201 +++++++++++++++++++++-
+ 4 files changed, 680 insertions(+), 3 deletions(-)
 
 diff --git a/src/lj_ccall.c b/src/lj_ccall.c
-index efaff5b04..4b39a4f28 100644
+index a0993fce7..6a8f99415 100644
 --- a/src/lj_ccall.c
 +++ b/src/lj_ccall.c
-@@ -687,6 +687,146 @@
+@@ -689,6 +689,197 @@
      if (ngpr < maxgpr) { dp = &cc->gpr[ngpr++]; goto done; } \
    }
  
 +#elif LJ_TARGET_RISCV64
 +/* -- RISC-V lp64d calling conventions ------------------------------------ */
 +
++/* Forward declarations for functions used by macros below. */
++#define CCALL_MIX_MAXFIELDS  2   /* MIX state machine has exactly 2 slots. */
++typedef struct {
++  CTSize offset;
++  uint8_t esz;
++  uint8_t isfp;
++} CCallMixField;
++
++typedef struct {
++  uint8_t nfields;
++  CCallMixField fields[CCALL_MIX_MAXFIELDS];
++} CCallMixFieldList;
++
++static CTSize ccall_place_mix_fields(CCallState *cc, CCallMixFieldList *list,
++				     CTSize sz, uint8_t *src,
++				     MSize *pnfpr, MSize *pngpr, int isva);
++static void ccall_unplace_mix_fields(CCallState *cc, CCallMixFieldList *list,
++				     uint8_t *dp);
++
 +#define CCALL_HANDLE_STRUCTRET \
-+  /* Return structs of size > 16 by reference. */ \
-+  cc->retref = !(sz <= 16); \
++  /* Return by reference only if >16 bytes and not classifiable as MIX. */ \
++  cc->retref = !ccall_classify_struct(cts, ctr, NULL, 0).ispod && sz > 16; \
 +  if (cc->retref) cc->gpr[ngpr++] = (GPRArg)dp;
 +
 +#define CCALL_HANDLE_STRUCTRET2 \
-+  CCallStructClass cl = ccall_classify_struct(cts, ctr); \
++{ \
++  CCallMixFieldList mixlist = {0}; \
++  CCallStructClass cl = ccall_classify_struct(cts, ctr, &mixlist, 0); \
 +  CCallStructMix mix = cl.mix; \
 +  switch (mix.val) { \
-+    case MIX_IX: { \
-+      ((intptr_t *)dp)[0] = cc->gpr[0]; \
-+      break; \
-+    } \
-+    case MIX_FX: case MIX_DX: \
-+    case MIX_FF: case MIX_FD: \
-+    case MIX_DF: case MIX_DD: { \
-+      eCCallStructMixElem es[2] = { mix.e1, mix.e2 }; \
-+      for (int ti = 0; ti < 2; ti++) { \
-+        if (es[ti] == MIX_ELEM_FLOAT) { \
-+          ((float *)dp)[ti] = cc->fpr[ti].f; \
-+        } else /*if (es[ti] == MIX_ELEM_DOUBLE)*/ { \
-+          ((double *)dp)[ti] = cc->fpr[ti].d; \
-+        } \
-+      } \
-+      break; \
-+    } \
-+    case MIX_FI: case MIX_DI: \
-+    case MIX_IF: case MIX_ID: { \
-+      eCCallStructMixElem es[2] = { mix.e1, mix.e2 }; \
-+      for (int ti = 0; ti < 2; ti++) { \
-+        if (es[ti] == MIX_ELEM_FLOAT) { \
-+          ((float *)dp)[ti] = cc->fpr[0].f; \
-+        } else if (es[ti] == MIX_ELEM_DOUBLE) { \
-+          ((double *)dp)[ti] = cc->fpr[0].d; \
-+        } else /*if (es[ti] == MIX_ELEM_INT)*/ { \
-+          ((intptr_t *)dp)[ti] = cc->gpr[0]; \
-+        } \
-+      } \
++    case MIX_IX: case MIX_FX: \
++    case MIX_FF: case MIX_IF: case MIX_FI: { \
++      ccall_unplace_mix_fields(cc, &mixlist, (uint8_t *)dp); \
 +      break; \
 +    } \
 +    case MIX_UNINIT: \
@@ -6465,7 +6534,8 @@ index efaff5b04..4b39a4f28 100644
 +      break; \
 +    } \
 +    default: lj_assertL(0, "Invalid ret mix %d", mix.val); \
-+  }
++  } \
++}
 +
 +#define CCALL_HANDLE_COMPLEXRET \
 +  /* Complex values are returned in 1 or 2 FPRs. */ \
@@ -6491,7 +6561,7 @@ index efaff5b04..4b39a4f28 100644
 +    mix = (CCallStructMix){ .val = MIX_FF }; \
 +    sz = CTSIZE_PTR; \
 +  } else /*if (sz == 2*sizeof(double))*/ { \
-+    mix = (CCallStructMix){ .val = MIX_DD }; \
++    mix = (CCallStructMix){ .val = MIX_FF }; \
 +    sz = 2*CTSIZE_PTR; \
 +  }
 +
@@ -6500,66 +6570,121 @@ index efaff5b04..4b39a4f28 100644
 +    sp = (uint8_t *)&cc->fpr[0].f;
 +
 +#define CCALL_HANDLE_STRUCTARG \
-+  /* Pass structs of size >16 by reference. */ \
-+  CCallStructClass cl = ccall_classify_struct(cts, d); \
++  /* Pass structs of size >16 by reference if not classifiable as MIX. */ \
++  CCallMixFieldList mixlist = {0}; \
++  CCallStructClass cl = ccall_classify_struct(cts, d, &mixlist, 0); \
 +  uint8_t ispod = cl.ispod; \
 +  mix = cl.mix; \
++  /* Check if MIX registers available; fall back to integer conv if not */ \
++  if (ispod && mix.val != MIX_FAILED && mix.val != MIX_UNINIT) { \
++    int need_fpr = 0, need_gpr = 0; \
++    switch (mix.val) { \
++    case MIX_FX: need_fpr = 1; break; \
++    case MIX_FF: need_fpr = 2; break; \
++    case MIX_FI: case MIX_IF: need_fpr = 1; need_gpr = 1; break; \
++    default: lj_assertCTS(0, "Invalid MIX %d", mix.val); \
++    } \
++    if ((need_fpr && nfpr + need_fpr > CCALL_NARG_FPR) || \
++	      (need_gpr && ngpr + need_gpr > CCALL_NARG_GPR)) \
++      mix.val = MIX_FAILED;  /* Fall back to integer convention */ \
++  } \
++  /* Integer convention >2xXLEN: pass by reference */ \
++  if (ispod && (mix.val == MIX_FAILED || mix.val == MIX_UNINIT) && sz > 16) \
++    ispod = 0;  /* Route to by-reference path below. */ \
 +  if (!ispod && sz > 16) { \
 +    rp = cdataptr(lj_cdata_new(cts, did, sz)); \
 +    sz = CTSIZE_PTR; \
-+  }
-+
-+
-+#define CCALL_HANDLE_REGARG \
-+  if (!isva) { /* Try determine MIX registers. */ \
-+    int n2 = 0; \
-+    switch (mix.val) { \
-+      case MIX_UNINIT: \
-+        if (isfp) { \
-+          n2 = 1; \
-+          break; \
-+        } \
-+      /* fallthrough */ \
-+      case MIX_FAILED: \
-+      /* MIX_[IFD]X are just like a standalone element */ \
-+      case MIX_IX: goto reghandle_gpr; \
-+      case MIX_FX: case MIX_DX: \
-+        n2 = 1; \
-+        break; \
-+      /* MIX_[FD][FD] are just like two standalone elements */ \
-+      /* fix float later */ \
-+      case MIX_FF: case MIX_DD: \
-+      case MIX_FD: case MIX_DF: \
-+        n2 = 2; \
-+        break; \
-+      /* Setup MIX_I[FD] or MIX[FD]I on stack first, fix later */ \
-+      default: goto reghandle_exit; \
-+    } \
-+    if (nfpr + n2 <= CCALL_NARG_FPR) { \
-+      dp = &cc->fpr[nfpr]; \
-+      nfpr += n2; \
-+      goto done; \
++  } else if (ispod) { \
++    /* POD struct: convert to stack, then place fields in registers. */ \
++    MSize al = (1u << ctype_align(ccall_struct_align(cts, d))) - 1; \
++    MSize ns = (nsp + al) & ~al; \
++    if (ns + sz > CCALL_SIZE_STACK) goto err_nyi; \
++    uint8_t *src = (uint8_t *)cc->stack + ns; \
++    lj_cconv_ct_tv(cts, d, src, o, CCF_ARG(narg)); \
++    if (mix.val == MIX_FAILED || mix.val == MIX_UNINIT) { \
++      /* Integer convention: place 8-byte chunks in GPRs, rest on stack. */ \
++      int nchunks = (sz + 7) >> 3; \
++      int chunks_avail = CCALL_NARG_GPR - (int)ngpr; \
++      int i; \
++      for (i = 0; i < chunks_avail && i < nchunks; i++) \
++	cc->gpr[ngpr++] = ((GPRArg *)src)[i]; \
++      if (i < nchunks) { \
++	memmove(src, src + i * 8, sz - i * 8); \
++	nsp = ns + (nchunks - i) * 8; \
++      } \
 +    } else { \
-+      if (ngpr + n2 <= maxgpr) { \
-+       dp = &cc->gpr[ngpr]; \
-+       ngpr += n2; \
-+       goto done; \
++      /* MIX convention: place fields from flat descriptor list. */ \
++      CTSize tail = ccall_place_mix_fields(cc, &mixlist, sz, \
++				   src, &nfpr, &ngpr, isva); \
++      if (tail < sz) { \
++	memmove(src, src + tail, sz - tail); \
++	nsp = ns + (sz - tail); \
 +      } \
 +    } \
-+  } else {  /* Try to pass argument in GPRs. */ \
-+  reghandle_gpr: \
-+      if (ngpr + n <= maxgpr) { \
-+        dp = &cc->gpr[ngpr]; \
-+        ngpr += n; \
-+        goto done; \
-+    } \
-+  reghandle_exit: \
++    continue; \
 +  }
++
++#define CCALL_HANDLE_REGARG \
++  if (!isva) { \
++    if (isfp && nfpr + 1 <= CCALL_NARG_FPR) { \
++      dp = &cc->fpr[nfpr]; \
++      nfpr += 1; \
++      goto done; \
++    } \
++  } \
++  if (ngpr + n <= maxgpr) { \
++    dp = &cc->gpr[ngpr]; \
++    ngpr += n; \
++    goto done; \
++  }
++
++/* Place MIX struct fields from a flat descriptor list into registers.
++** Returns byte offset of first unplaced field (sz if all placed). */
++static CTSize ccall_place_mix_fields(CCallState *cc, CCallMixFieldList *list,
++				     CTSize sz, uint8_t *src,
++				     MSize *pnfpr, MSize *pngpr,
++				     int isva)
++{
++  for (int i = 0; i < list->nfields; i++) {
++    CCallMixField *f = &list->fields[i];
++    uint64_t val;
++    if (f->isfp) {
++      val = (f->esz == 4) ? (*(uint32_t *)(src + f->offset) | U64x(ffffffff,00000000))
++	                        :  *(uint64_t *)(src + f->offset);
++      if (!isva && *pnfpr < CCALL_NARG_FPR) cc->fpr[(*pnfpr)++].u = val;
++      else if (*pngpr < CCALL_NARG_GPR) cc->gpr[(*pngpr)++] = val;
++      else return f->offset;
++    } else {
++      val = (f->esz < 8) ? (uint64_t)(int64_t)*(int32_t *)(src + f->offset)
++	                       : *(uint64_t *)(src + f->offset);
++      if (*pngpr < CCALL_NARG_GPR) cc->gpr[(*pngpr)++] = val;
++      else return f->offset;
++    }
++  }
++  return sz;  /* all placed */
++}
++
++/* Reconstruct MIX struct fields from registers using flat descriptor list. */
++static void ccall_unplace_mix_fields(CCallState *cc, CCallMixFieldList *list,
++				     uint8_t *dp)
++{
++  int gpi = 0, fpi = 0;
++  for (int i = 0; i < list->nfields; i++) {
++    CCallMixField *f = &list->fields[i];
++    if (f->isfp) {
++      if (f->esz == 4) *(float *)(dp + f->offset)  = cc->fpr[fpi++].f;
++      else            *(double *)(dp + f->offset)  = cc->fpr[fpi++].d;
++    } else {
++      if (f->esz < 8) *(int32_t *)(dp + f->offset) = (int32_t)cc->gpr[gpi++];
++      else            *(int64_t *)(dp + f->offset) = cc->gpr[gpi++];
++    }
++  }
++}
 +
  #else
  #error "Missing calling convention definitions for this architecture"
  #endif
-@@ -1055,6 +1195,164 @@ static void ccall_copy_struct(CCallState *cc, CType *ctr, void *dp, void *sp,
+@@ -1085,6 +1276,206 @@ static void ccall_copy_struct(CCallState *cc, CType *ctr, void *dp, void *sp,
  
  #endif
  
@@ -6570,29 +6695,35 @@ index efaff5b04..4b39a4f28 100644
 +/* RISC-V 64 LP64D fp reg struct classification. */
 +/* X: unknown/uninit, F: float, D: double, I: integer */
 +
++/* Flat descriptor for a single field element produced by classification.
++** Place/unplace iterate this list instead of re-walking the ctype tree. */
++#define CCALL_MIX_MAXFIELDS  2   /* MIX state machine has exactly 2 slots. */
++
++/* Add a field descriptor to the flat list (if space remains). */
++static LJ_AINLINE void ccall_add_mix_field(CCallMixFieldList *list,
++    CTSize offset, CTSize esz, int isfp)
++{
++  if (list && list->nfields < CCALL_MIX_MAXFIELDS) {
++    CCallMixField *f = &list->fields[list->nfields++];
++    f->offset = offset;
++    f->esz = (uint8_t)esz;
++    f->isfp = (uint8_t)isfp;
++  }
++}
++
 +typedef enum eCCallStructMixElem {
 +  MIX_ELEM_UNINIT = 0,
 +  MIX_ELEM_FLOAT = 1,
-+  MIX_ELEM_DOUBLE = 2,
-+  MIX_ELEM_INT = 3,
++  MIX_ELEM_INT = 2,
 +} eCCallStructMixElem;
 +typedef enum eCCallStructMix {
-+  MIX_UNINIT = 0, // i.e. MIX_XX
-+  MIX_FX = 1,
-+  MIX_DX = 2,
-+  MIX_IX = 3,
-+  MIX_XF = 4,
-+  MIX_FF = 5,
-+  MIX_DF = 6,
-+  MIX_IF = 7,
-+  MIX_XD = 8,
-+  MIX_FD = 9,
-+  MIX_DD = 10,
-+  MIX_ID = 11,
-+  MIX_XI = 12,
-+  MIX_FI = 13,
-+  MIX_DI = 14,
-+  MIX_FAILED = 15, // MIX_II but that's not mixed
++  MIX_UNINIT = 0, /* XX */
++  MIX_FX = 1,     /* F X  — single float/double */
++  MIX_IX = 2,     /* I X  — single int */
++  MIX_FF = 5,     /* F F  — two floats/doubles */
++  MIX_IF = 6,     /* I F  — int then float/double */
++  MIX_FI = 9,     /* F I  — float/double then int */
++  MIX_FAILED = 10 /* anything else */
 +} eCCallStructMix;
 +
 +typedef union CCallStructMix {
@@ -6611,7 +6742,8 @@ index efaff5b04..4b39a4f28 100644
 +  };
 +} CCallStructClass;
 +
-+static CCallStructClass ccall_classify_struct(CTState *cts, CType *ct)
++static CCallStructClass ccall_classify_struct(CTState *cts, CType *ct,
++					       CCallMixFieldList *list, CTSize base_ofs)
 +{
 +  CTSize sz = ct->size;
 +  CCallStructMix mix = { .val = MIX_UNINIT };
@@ -6620,111 +6752,146 @@ index efaff5b04..4b39a4f28 100644
 +    unsigned int m = 1;
 +    CType *sct;
 +    ct = ctype_get(cts, ct->sib);
-+    if (ctype_isfield(ct->info)) {
-+      sct = ctype_rawchild(cts, ct);
-+      if (ctype_isarray(sct->info)) {
-+	CType *cct = ctype_rawchild(cts, sct);
-+	if (!cct->size) continue;
-+	m = sct->size / cct->size;
-+	sct = cct;
++    {
++      CTSize fofs = ct->size;  /* Field offset within this struct. */
++      if (ctype_isfield(ct->info)) {
++	sct = ctype_rawchild(cts, ct);
++	if (ctype_isarray(sct->info) && !sct->size) continue;
++	while (ctype_isarray(sct->info)) {
++	  CType *cct = ctype_rawchild(cts, sct);
++	  m *= sct->size / cct->size;
++	  sct = cct;
++	}
++	{
++	  CTSize esz = sct->size;
++	  if (ctype_isfp(sct->info)) {
++	    unsigned int mi;
++	    for (mi = 0; mi < m; mi++) {
++	      /* Mix state trans: fp (float or double)
++	       * mix XX  -> mix = FX
++	       * mix X[IF] -> mix = FAILED
++	       * mix [IF]X -> mix = [IF]F
++	       * mix [IF][IF] -> mix = FAILED
++	       */
++	      eCCallStructMixElem ne = MIX_ELEM_FLOAT;
++	      if (mix.val == MIX_UNINIT) {
++		mix = (CCallStructMix){ .e1 = ne, .e2 = MIX_ELEM_UNINIT };
++	      } else {
++		eCCallStructMixElem o1 = mix.e1, o2 = mix.e2, n2 = ne;
++		mix = (o2 != MIX_ELEM_UNINIT ? (CCallStructMix){ .val = MIX_FAILED }
++					     : (CCallStructMix){ .e1 = o1, .e2 = n2 });
++	      }
++	      ccall_add_mix_field(list, base_ofs + fofs + mi*esz, esz, 1);
++	    }
++	  } else if (ctype_iscomplex(sct->info)) {
++	    unsigned int mi;
++	    CType *esct = ctype_rawchild(cts, sct);
++	    CTSize cesz = esct->size;
++	    for (mi = 0; mi < m; mi++) {
++	      /* Mix state trans: complex
++	       * mix XX    -> mix = FF
++	       * mix other -> mix = FAILED
++	       */
++	      eCCallStructMixElem ne = MIX_ELEM_FLOAT;
++	      mix = (mix.val == MIX_UNINIT) ? (CCallStructMix){ .e1 = ne, .e2 = ne }
++					    : (CCallStructMix){ .val = MIX_FAILED };
++	      ccall_add_mix_field(list, base_ofs + fofs + mi*cesz*2, cesz, 1);
++	      ccall_add_mix_field(list, base_ofs + fofs + mi*cesz*2 + cesz, cesz, 1);
++	    }
++	  } else if (ctype_isinteger_or_bool(sct->info) || ctype_isenum(sct->info)) {
++	    unsigned int mi;
++	    for (mi = 0; mi < m; mi++) {
++	      /* Mix state trans: int
++	       * mix XX  -> mix = IX
++	       * mix X[IF] -> mix = FAILED
++	       * mix [IF]X -> mix = [IF]I; this auto fails II
++	       * mix [IF][IF] -> mix = FAILED
++	       */
++	      if (mix.val == MIX_UNINIT) {
++		mix = (CCallStructMix){ .e1 = MIX_ELEM_INT, .e2 = MIX_ELEM_UNINIT };
++	      } else {
++		eCCallStructMixElem o1 = mix.e1, o2 = mix.e2, n2 = MIX_ELEM_INT;
++		mix = (o2 != MIX_ELEM_UNINIT ? (CCallStructMix){ .val = MIX_FAILED }
++					     : (CCallStructMix){ .e1 = o1, .e2 = n2 });
++	      }
++	      ccall_add_mix_field(list, base_ofs + fofs + mi*esz, esz, 0);
++	    }
++	  } else if (ctype_isstruct(sct->info)) {
++	    goto substruct;
++	  } else {
++	    goto not_ag;
++	  }
++	}
++      } else if (ctype_isbitfield(ct->info) && ctype_bitbsz(ct->info)) {
++	/* Non-zero bitfield: treat as integer element for MIX classification. */
++	CTSize fofs = ct->size;
++	sct = ctype_rawchild(cts, ct);
++	{
++	  /* Mix state trans: bitfield
++	   * mix XX      -> mix = IX
++	   * mix X[IF]   -> mix = FAILED
++	   * mix [IF]X   -> mix = [IF]I
++	   * mix [IF][IF] -> mix = FAILED
++	   */
++	  if (mix.val == MIX_UNINIT) {
++	    mix = (CCallStructMix){ .e1 = MIX_ELEM_INT, .e2 = MIX_ELEM_UNINIT };
++	  } else {
++	    eCCallStructMixElem o1 = mix.e1, o2 = mix.e2, n2 = MIX_ELEM_INT;
++	    mix = (o2 != MIX_ELEM_UNINIT ? (CCallStructMix){ .val = MIX_FAILED }
++					                         : (CCallStructMix){ .e1 = o1, .e2 = n2 });
++	  }
++	  ccall_add_mix_field(list, base_ofs + fofs, sct->size, 0);
++	}
++      } else if (ctype_isxattrib(ct->info, CTA_SUBTYPE)) {
++	sct = ctype_rawchild(cts, ct);
++      substruct:
++	if (sct->size > 0) {
++	  CCallStructClass s = ccall_classify_struct(cts, sct, list,
++						     base_ofs + fofs);
++	  CCallStructMix smix = s.mix;
++	  uint8_t spod = s.ispod;
++	  if (smix.val == MIX_FAILED) mix.val = MIX_FAILED;
++	  if (!spod) goto not_ag;
++	  while (m--) {
++	    /* Mix state transfer: substruct
++	     * mix XX, smix any  -> mix = smix
++	     * mix X[IF], smix any -> mix = FAILED
++	     * mix [IF]X, smix [XIF]X -> mix = [IF][XIF]
++	     *            smix other -> mix = FAILED
++	     * mix [IF][IF], smix XX -> mix = mix
++	     *               smix other -> mix = FAILED; this keeps II fail
++	     */
++	    if (mix.val == MIX_UNINIT) {
++	      mix = smix;
++	    } else {
++	      eCCallStructMixElem o1 = mix.e1, o2 = mix.e2;
++	      eCCallStructMixElem n1 = smix.e1, n2 = smix.e2;
++	      if (o2 != MIX_ELEM_UNINIT) {
++		mix = (smix.val != MIX_UNINIT) ? (CCallStructMix){ .val = MIX_FAILED }
++		                               : mix;
++	      } else {
++		mix = (n2 != MIX_ELEM_UNINIT) ? (CCallStructMix){ .val = MIX_FAILED }
++		                              : (CCallStructMix){ .e1 = o1, .e2 = n1 };
++	      }
++	    }
++	  }
++	}
 +      }
-+      if (ctype_isfp(sct->info)) {
-+	while (m--) {
-+    /* Mix state trans: fp
-+     * mix XX -> mix = [FD]X
-+     * mix X[IFD] -> mix = FAILED
-+     * mix [IFD]X -> mix = [IFD][FD]
-+     * mix [IFD][IFD] -> mix = FAILED
-+     */
-+    eCCallStructMixElem ne = (sct->size == 4) ? MIX_ELEM_FLOAT : MIX_ELEM_DOUBLE;
-+    if (mix.val == MIX_UNINIT) {
-+      mix = (CCallStructMix){ .e1 = ne, .e2 = MIX_ELEM_UNINIT };
-+    } else {
-+      eCCallStructMixElem o1 = mix.e1, o2 = mix.e2, n2 = ne;
-+      mix = (o2 != MIX_ELEM_UNINIT ? (CCallStructMix){ .val = MIX_FAILED }
-+                                   : (CCallStructMix){ .e1 = o1, .e2 = n2 });
 +    }
 +  }
-+      } else if (ctype_iscomplex(sct->info)) {
-+	while (m--) {
-+    /* Mix state trans: complex
-+     * mix XX -> mix = [FD][FD]
-+     * mix other -> mix = FAILED
-+     */
-+    eCCallStructMixElem ne = (sct->size == 8) ? MIX_ELEM_FLOAT : MIX_ELEM_DOUBLE;
-+    mix = (mix.val == MIX_UNINIT) ? (CCallStructMix){ .e1 = ne, .e2 = ne }
-+                                  : (CCallStructMix){ .val = MIX_FAILED };
-+  }
-+      } else if (ctype_isinteger_or_bool(sct->info) || ctype_isenum(sct->info)) {
-+  while (m--) {
-+    /* Mix state trans: int
-+     * mix XX -> mix = IX
-+     * mix X[IFD] -> mix = FAILED
-+     * mix [IFD]X -> mix = [FD]I; this auto fails II
-+     * mix [IFD][IFD] -> mix = FAILED
-+     */
-+    if (mix.val == MIX_UNINIT) {
-+      mix = (CCallStructMix){ .e1 = MIX_ELEM_INT, .e2 = MIX_ELEM_UNINIT };
-+    } else {
-+      eCCallStructMixElem o1 = mix.e1, o2 = mix.e2, n2 = MIX_ELEM_INT;
-+      mix = (o2 != MIX_ELEM_UNINIT ? (CCallStructMix){ .val = MIX_FAILED }
-+                                   : (CCallStructMix){ .e1 = o1, .e2 = n2 });
-+    }
-+  }
-+      } else if (ctype_isstruct(sct->info)) {
-+	goto substruct;
-+      } else {
-+	goto not_ag;
-+      }
-+    } else if (ctype_isbitfield(ct->info)) {
-+      goto not_ag;
-+    } else if (ctype_isxattrib(ct->info, CTA_SUBTYPE)) {
-+      sct = ctype_rawchild(cts, ct);
-+    substruct:
-+      if (sct->size > 0) {
-+	CCallStructClass s = ccall_classify_struct(cts, sct);
-+  CCallStructMix smix = s.mix;
-+  uint8_t spod = s.ispod;
-+  if (smix.val == MIX_FAILED) mix.val = MIX_FAILED;
-+	if (!spod) goto not_ag;
-+  while (m--) {
-+    /* Mix state transfer: substruct
-+     * mix XX, smix any -> mix = smix
-+     * mix X[IFD], smix any -> mix = FAILED
-+     * mix [IFD]X, smix [XIFD]X -> mix = [IFD][XIFD]
-+     *             smix other -> mix = FAILED
-+     * mix [IFD][IFD], smix XX -> mix = mix
-+     *                 smix other -> mix = FAILED; this keep II fail
-+     */
-+    if (mix.val == MIX_UNINIT) {
-+      mix = smix;
-+    } else {
-+      eCCallStructMixElem o1 = mix.e1, o2 = mix.e2;
-+      eCCallStructMixElem n1 = smix.e1, n2 = smix.e2;
-+      if (o2 != MIX_ELEM_UNINIT) {
-+        mix = (smix.val != MIX_UNINIT) ? mix
-+                                       : (CCallStructMix){ .val = MIX_FAILED };
-+      } else {
-+        mix = (n2 != MIX_ELEM_UNINIT) ? (CCallStructMix){ .val = MIX_FAILED }
-+                                      : (CCallStructMix){ .e1 = o1, .e2 = n1 };
-+      }
-+    }
-+  }
-+      }
-+    }
-+  }
-+  if (MIX_UNINIT < mix.val && mix.val < MIX_FAILED)  /* Mixed passing */
++  if (MIX_UNINIT < mix.val && mix.val < MIX_FAILED && mix.e1 != MIX_ELEM_UNINIT)  /* Mixed passing */
 +    return (CCallStructClass){ .ispod = 1, .mix = mix };
 +not_ag:  /* Not a float/double aggregate or int/fp mix pair aggregate */
-+  return (CCallStructClass){ .ispod = (sz <= 16), .mix = mix };  /* Return structs of size <= 16 in GPRs. */
++  if (list) list->nfields = 0;  /* Invalidate flat list on classification failure. */
++  return (CCallStructClass){ .ispod = (sz <= 16), .mix = mix };
 +}
 +
 +#endif
 +
- /* -- Common C call handling ---------------------------------------------- */
- 
- /* Infer the destination CTypeID for a vararg argument.
-@@ -1106,6 +1404,7 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
+ #ifndef ccall_struct_align
+ /* Alignment of pass-by-value structs. */
+ #define ccall_struct_align(cts, ct)	((ct)->info & CTF_ALIGN)
+@@ -1141,6 +1532,7 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
  #endif
  #endif
  
@@ -6732,40 +6899,17 @@ index efaff5b04..4b39a4f28 100644
    /* Clear unused regs to get some determinism in case of misdeclaration. */
    memset(cc->gpr, 0, sizeof(cc->gpr));
  #if CCALL_NUM_FPR
-@@ -1168,6 +1467,11 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
+@@ -1203,6 +1595,9 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
      CType *d;
      CTSize sz;
      MSize n, isfp = 0, isva = 0;
 +#if LJ_TARGET_RISCV64
-+    MSize onsp, mnsp;
 +    CCallStructMix mix = { .val = MIX_UNINIT };
-+    int isstack = 0;
 +#endif
      void *dp, *rp = NULL;
  #if LJ_TARGET_PPC && LJ_ARCH_BITS == 64
      int isf32 = 0;
-@@ -1215,6 +1519,10 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
-     /* Otherwise pass argument on stack. */
- #if LJ_TARGET_S390X
-     onstack = 1;
-+#endif
-+#if LJ_TARGET_RISCV64
-+    isstack = 1;
-+    onsp = nsp;
- #endif
-     if (CCALL_ALIGN_STACKARG) {  /* Align argument on stack. */
-       MSize align = (1u << ctype_align(d->info)) - 1;
-@@ -1227,6 +1535,9 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
-     dp = ((uint8_t *)cc->stack) + (int32_t)nsp;
- #else
-     dp = ((uint8_t *)cc->stack) + nsp;
-+#endif
-+#if LJ_TARGET_RISCV64
-+    mnsp = nsp + n * CTSIZE_PTR / 2;
- #endif
-     nsp += CCALL_PACK_STACKARG ? sz : n * CTSIZE_PTR;
-     if ((int32_t)nsp > CCALL_SIZE_STACK) {  /* Too many arguments. */
-@@ -1295,7 +1606,11 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
+@@ -1333,7 +1728,11 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
          *(int64_t *)dp = (int64_t)*(int32_t *)dp;
      }
  #endif
@@ -6778,114 +6922,6 @@ index efaff5b04..4b39a4f28 100644
      if ((ctype_isinteger_or_bool(d->info) || ctype_isenum(d->info)
  #if LJ_TARGET_MIPS64
  	 || (isfp && nsp == 0)
-@@ -1335,6 +1650,107 @@ static int ccall_set_args(lua_State *L, CTState *cts, CType *ct,
-       CTSize i = (sz >> 2) - 1;
-       do { ((uint64_t *)dp)[i] = ((uint32_t *)dp)[i]; } while (i--);
-     }
-+#elif LJ_TARGET_RISCV64
-+    switch (mix.val) {
-+      case MIX_UNINIT:
-+  break;
-+      /* Fix MIX values */
-+      case MIX_DF: {
-+  ((uint32_t *)dp)[3] = 0xffffffffu;
-+  break;
-+      }
-+      case MIX_FF:
-+  if (isstack) break;
-+  ((uint64_t *)dp)[1] = 0xffffffff00000000ul | ((uint32_t *)dp)[1];
-+      case MIX_FX:
-+      case MIX_FD: {
-+  ((uint64_t *)dp)[0] = 0xffffffff00000000ul | ((uint32_t *)dp)[0];
-+  break;
-+      }
-+      case MIX_FI: {
-+  lj_assertL(sz == 8 || sz == 16, "invalid MIX_FI size %d", (int)sz);
-+  if (ngpr >= CCALL_NARG_GPR) break;
-+  if (sz == 8) {
-+    FPRArg farg = { .hi = 0xffffffffu, .lo = ((uint32_t *)dp)[0] };
-+    if (!isva && nfpr + 1 <= CCALL_NARG_FPR) {
-+      cc->fpr[nfpr++] = farg;
-+      goto fi_next;
-+    } else if (ngpr + 1 <= CCALL_NARG_GPR) {
-+      cc->gpr[ngpr++] = farg.u;
-+fi_next:
-+      ((uint32_t *)dp)[0] = ((uint32_t *)dp)[1];
-+      ((uint32_t *)dp)[1] = 0;
-+      if (ngpr + 1 <= CCALL_NARG_GPR) {
-+        cc->gpr[ngpr++] = ((uint32_t *)dp)[0];
-+        ((uint32_t *)dp)[0] = 0, nsp = onsp;
-+      }
-+    }
-+    break;
-+  } else /*if (sz == 16)*/ {
-+    ((uint64_t *)dp)[0] |= 0xffffffff00000000ul;
-+    /* fallthrough */
-+  }
-+      }
-+      case MIX_DI: {
-+  lj_assertL(sz == 16, "invalid MIX_DI size %d", (int)sz);
-+  if (ngpr >= CCALL_NARG_GPR) break;
-+  if (!isva && nfpr + 1 <= CCALL_NARG_FPR) {
-+    cc->fpr[nfpr++] = (FPRArg){ .u = ((uint64_t *)dp)[0] };
-+    goto di_next;
-+  } else if (ngpr + 1 <= CCALL_NARG_GPR) {
-+    cc->gpr[ngpr++] = ((uint64_t *)dp)[0];
-+di_next:
-+    ((uint64_t *)dp)[0] = ((uint64_t *)dp)[1];
-+    ((uint64_t *)dp)[1] = 0, nsp = mnsp;
-+    if (ngpr + 1 <= CCALL_NARG_GPR) {
-+      cc->gpr[ngpr++] = ((uint64_t *)dp)[0];
-+      ((uint64_t *)dp)[0] = 0, nsp = onsp;
-+    }
-+  }
-+  break;
-+      }
-+      case MIX_IF: {
-+  lj_assertL(sz == 8 || sz == 16, "invalid MIX_IF size %d", (int)sz);
-+  if (sz == 8) {
-+    FPRArg farg = { .hi = 0xffffffffu, .lo = ((uint32_t *)dp)[1] };
-+    if (ngpr + 1 <= CCALL_NARG_GPR) {
-+      cc->gpr[ngpr++] = ((uint32_t *)dp)[0];
-+      ((uint32_t *)dp)[0] = ((uint32_t *)dp)[1];
-+      ((uint32_t *)dp)[1] = 0;
-+      if (!isva && nfpr + 1 <= CCALL_NARG_FPR) {
-+        cc->fpr[nfpr++] = farg;
-+        goto if_next;
-+      } else if (ngpr + 1 <= CCALL_NARG_GPR) {
-+        cc->gpr[ngpr++] = farg.u;
-+if_next:
-+        ((uint32_t *)dp)[0] = 0, nsp = onsp;
-+      }
-+    }
-+    break;
-+  } else /*if (sz == 16)*/ {
-+    ((uint64_t *)dp)[1] |= 0xffffffff00000000ul;
-+    /* fallthrough */
-+  }
-+      }
-+      case MIX_ID: {
-+  lj_assertL(sz == 16, "invalid MIX_ID size %d", (int)sz);
-+  if (ngpr + 1 <= CCALL_NARG_GPR) {
-+    cc->gpr[ngpr++] = ((uint64_t *)dp)[0];
-+    ((uint64_t *)dp)[0] = ((uint64_t *)dp)[1];
-+    ((uint64_t *)dp)[1] = 0, nsp = mnsp;
-+    if (!isva && nfpr + 1 <= CCALL_NARG_FPR) {
-+      cc->fpr[nfpr++] = (FPRArg){ .u = ((uint64_t *)dp)[0] };
-+      goto id_next;
-+    } else if (ngpr + 1 <= CCALL_NARG_GPR) {
-+      cc->gpr[ngpr++] = ((uint64_t *)dp)[0];
-+id_next:
-+      ((uint64_t *)dp)[0] = 0, nsp = onsp;
-+    }
-+  }
-+  break;
-+      }
-+      default: break;
-+    }
- #else
-     UNUSED(isfp);
- #endif
 diff --git a/src/lj_ccall.h b/src/lj_ccall.h
 index e1f6c230b..804073776 100644
 --- a/src/lj_ccall.h
@@ -6915,7 +6951,7 @@ index e1f6c230b..804073776 100644
  #error "Missing calling convention definitions for this architecture"
  #endif
 diff --git a/src/lj_ccallback.c b/src/lj_ccallback.c
-index dc01ef47f..7a49b3fff 100644
+index 6348264bf..12537efaf 100644
 --- a/src/lj_ccallback.c
 +++ b/src/lj_ccallback.c
 @@ -102,6 +102,10 @@ static MSize CALLBACK_OFS2SLOT(MSize ofs)
@@ -7011,7 +7047,7 @@ index dc01ef47f..7a49b3fff 100644
      if (ctr->size <= 4 &&
  	(LJ_ABI_SOFTFP || ctype_isinteger_or_bool(ctr->info)))
 diff --git a/src/vm_riscv64.dasc b/src/vm_riscv64.dasc
-index 5eb1d82e7..8ba93d019 100644
+index 4cf4d8e07..1ea86742a 100644
 --- a/src/vm_riscv64.dasc
 +++ b/src/vm_riscv64.dasc
 @@ -811,14 +811,29 @@ static void build_subroutines(BuildCtx *ctx)
@@ -7063,7 +7099,7 @@ index 5eb1d82e7..8ba93d019 100644
    |->vmeta_istype:
    |  addi PC, PC, -4
    |   sd BASE, L->base
-@@ -2161,7 +2188,6 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2181,7 +2208,6 @@ static void build_subroutines(BuildCtx *ctx)
    |
    |
    |->vm_callhook:			// Dispatch target for call hooks.
@@ -7071,7 +7107,7 @@ index 5eb1d82e7..8ba93d019 100644
    |
    |->cont_stitch:			// Trace stitching.
    |
-@@ -2258,6 +2284,130 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2278,6 +2304,130 @@ static void build_subroutines(BuildCtx *ctx)
    |.endif
    |
    |//-----------------------------------------------------------------------
@@ -7202,7 +7238,7 @@ index 5eb1d82e7..8ba93d019 100644
  }
  
  /* Generate the code for a single instruction. */
-@@ -2382,6 +2532,13 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2402,6 +2552,15 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
        |  beqz TMP0, ->BC_ISNEN_Z
      }
      |// Either or both types are not numbers.
@@ -7210,13 +7246,15 @@ index 5eb1d82e7..8ba93d019 100644
 +    |  // Check if RA or RD is a cdata.
 +    |  xori TMP0, CARG3, LJ_TCDATA
 +    |  xori TMP1, CARG4, LJ_TCDATA
-+    |  and TMP0, TMP0, TMP1
-+    |  bxeqz TMP0, ->vmeta_equal_cd
++    |  seqz TMP0, TMP0
++    |  seqz TMP1, TMP1
++    |  or TMP0, TMP0, TMP1
++    |  bxnez TMP0, ->vmeta_equal_cd
 +    |.endif
      |  lui TMP3, (-(BCBIAS_J*4 >> 12)) & 0xfffff		// -BCBIAS_J*4
      |  decode_BC4b TMP2
      |  addw TMP2, TMP2, TMP3		// (jump-0x8000)<<2
-@@ -2434,10 +2591,17 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2454,10 +2613,17 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |   sub RD, KBASE, RD
      |    lhu TMP2, -4+OFS_RD(PC)
      |   ld CARG2, -8(RD)		// KBASE-8-str_const*8
@@ -7234,7 +7272,7 @@ index 5eb1d82e7..8ba93d019 100644
      |  xor TMP0, CARG1, CARG2		// TMP2=0: A==D; TMP2!=0: A!=D
      |   addw TMP2, TMP2, TMP3
      if (vk) {
-@@ -2492,7 +2656,11 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2512,7 +2678,11 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |
      |4:  // RA is not an integer.
      |    addw TMP2, TMP2, TMP3
@@ -7246,7 +7284,7 @@ index 5eb1d82e7..8ba93d019 100644
      |  fmv.d.x FTMP0, CARG1
      |   fmv.d.x FTMP2, CARG2
      |  bne CARG4, TISNUM, >5
-@@ -2505,11 +2673,26 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2525,11 +2695,26 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |  j <1
      |
      |6: // RA is an integer, RD is a number.
@@ -7273,7 +7311,7 @@ index 5eb1d82e7..8ba93d019 100644
      break;
  
    case BC_ISEQP: case BC_ISNEP:
-@@ -2523,6 +2706,10 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2543,6 +2728,10 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |  gettp TMP1, TMP1
      |    addi PC, PC, 4
      |   xor TMP0, TMP1, TMP0		// TMP0=0 A=D; TMP0!=0 A!=D
@@ -7284,7 +7322,7 @@ index 5eb1d82e7..8ba93d019 100644
      |  decode_BC4b TMP2
      |  lui TMP3, (-(BCBIAS_J*4 >> 12)) & 0xfffff		// -BCBIAS_J*4
      |  addw TMP2, TMP2, TMP3		// TMP2=(jump-0x8000)<<2
-@@ -2868,6 +3055,16 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -2942,6 +3131,16 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |  ins_next
      break;
    case BC_KCDATA:
@@ -7302,42 +7340,45 @@ index 5eb1d82e7..8ba93d019 100644
    case BC_KSHORT:
      |  // RA = dst*8, RD = int16_literal*8
 
-From 0de514bfd0a57ea499a9637eda2b2c8d71eed4b3 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 09/23] riscv(support): add extension detection
+From b332a923658bb409719a81f3f76859d080f91a7a Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 09/21] riscv(support): add extension detection
 
 ---
- src/lib_jit.c | 124 ++++++++++++++++++++++++++++++++++++++++++++++++++
- src/lj_jit.h  |  11 +++++
- 2 files changed, 135 insertions(+)
+ src/lib_jit.c | 121 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/lj_jit.h  |  40 +++++++++++++++++
+ 2 files changed, 161 insertions(+)
 
 diff --git a/src/lib_jit.c b/src/lib_jit.c
-index 1e14514c3..ec2250f2f 100644
+index 565804f8d..ff62c02ff 100644
 --- a/src/lib_jit.c
 +++ b/src/lib_jit.c
-@@ -706,6 +706,111 @@ JIT_PARAMDEF(JIT_PARAMINIT)
+@@ -713,6 +713,104 @@ JIT_PARAMDEF(JIT_PARAMINIT)
  #include <sys/utsname.h>
  #endif
  
 +#if LJ_TARGET_RISCV64 && LJ_TARGET_POSIX
-+#include <setjmp.h>
-+#include <signal.h>
-+static sigjmp_buf sigbuf = {0};
-+static void detect_sigill(int sig)
-+{
-+  siglongjmp(sigbuf, 1);
-+}
++
++#if LJ_TARGET_LINUX
++#include <unistd.h>
++
++struct riscv_hwprobe hwprobe_requests[] = {
++	{RISCV_HWPROBE_KEY_IMA_EXT_0}
++};
++
++const uint64_t *hwprobe_ext = &hwprobe_requests[0].value;
++
++int hwprobe_ret = 0;
++#endif
 +
 +static int riscv_compressed()
 +{
 +#if defined(__riscv_c) || defined(__riscv_compressed)
 +  /* Don't bother checking for RVC -- would crash before getting here. */
 +  return 1;
-+#elif defined(__GNUC__)
-+  /* c.nop; c.nop; */
-+  __asm__(".4byte 0x00010001");
-+  return 1;
++#elif LJ_TARGET_LINUX
++  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_IMA_C)) ? 1 : 0;
 +#else
 +  return 0;
 +#endif
@@ -7348,11 +7389,8 @@ index 1e14514c3..ec2250f2f 100644
 +#if defined(__riscv_b) || defined(__riscv_zba)
 +  /* Don't bother checking for Zba -- would crash before getting here. */
 +  return 1;
-+#elif defined(__GNUC__)
-+  /* Don't bother verifying the result, just check if the instruction exists. */
-+  /* add.uw zero, zero, zero */
-+  __asm__(".4byte 0x0800003b");
-+  return 1;
++#elif LJ_TARGET_LINUX
++  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZBA)) ? 1 : 0;
 +#else
 +  return 0;
 +#endif
@@ -7363,11 +7401,8 @@ index 1e14514c3..ec2250f2f 100644
 +#if defined(__riscv_b) || defined(__riscv_zbb)
 +  /* Don't bother checking for Zbb -- would crash before getting here. */
 +  return 1;
-+#elif defined(__GNUC__)
-+  register int t asm ("a0");
-+  /* addi a0, zero, 255; sext.b a0, a0; */
-+  __asm__("addi a0, zero, 255\n\t.4byte 0x60451513");
-+  return t < 0;
++#elif LJ_TARGET_LINUX
++  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZBB)) ? 1 : 0;
 +#else
 +  return 0;
 +#endif
@@ -7378,10 +7413,8 @@ index 1e14514c3..ec2250f2f 100644
 +#if defined(__riscv_zicond)
 +  /* Don't bother checking for Zicond -- would crash before getting here. */
 +  return 1;
-+#elif defined(__GNUC__)
-+  /* czero.eqz zero, zero, zero; */
-+  __asm__(".4byte 0x0e005033");
-+  return 1;
++#elif LJ_TARGET_LINUX
++  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZICOND)) ? 1 : 0;
 +#else
 +  return 0;
 +#endif
@@ -7392,6 +7425,8 @@ index 1e14514c3..ec2250f2f 100644
 +#if defined(__riscv_zfa)
 +  /* Don't bother checking for Zfa -- would crash before getting here. */
 +  return 1;
++#elif LJ_TARGET_LINUX
++  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZFA)) ? 1 : 0;
 +#else
 +  return 0;
 +#endif
@@ -7405,47 +7440,47 @@ index 1e14514c3..ec2250f2f 100644
 +  && defined(__riscv_xtheadmac))
 +  /* Don't bother checking for XThead -- would crash before getting here. */
 +  return 1;
-+#elif defined(__GNUC__)
-+    register int t asm ("a0");
-+    /* C906 & C910 & C908 all have "xtheadc", XTheadBb subset "xtheadc". */
-+    /* Therefore assume XThead* are present if XTheadBb is present. */
-+    /* addi a0, zero, 255; th.ext a0, a0, 7, 0; */
-+    __asm__("addi a0, zero, 255\n\t.4byte 0x1c05250b");
-+    return t == -1;		/* In case of collision with other vendor extensions. */
 +#else
-+    return 0;
++/*
++** Hardcoded as there's no easy way of detection:
++** - SIGILL have some trouble with libluajit as we speak
++** - Checking mvendorid looks good, but might not be reliable.
++*/
++  return 0;
 +#endif
 +}
 +
 +static uint32_t riscv_probe(int (*func)(void), uint32_t flag)
 +{
-+    if (sigsetjmp(sigbuf, 1) == 0) {
-+        return func() ? flag : 0;
-+    } else return 0;
++    return func() ? flag : 0;
 +}
 +#endif
 +
  /* Arch-dependent CPU feature detection. */
  static uint32_t jit_cpudetect(void)
  {
-@@ -778,6 +883,25 @@ static uint32_t jit_cpudetect(void)
+@@ -791,6 +889,29 @@ static uint32_t jit_cpudetect(void)
  #endif
  #elif LJ_TARGET_S390X
    /* No optional CPU features to detect (for now). */
 +
 +#elif LJ_TARGET_RISCV64
 +#if LJ_HASJIT
-+  /* SIGILL-based detection of RVC, Zba, Zbb and XThead. Welcome to the future. */
-+  struct sigaction old = {0}, act = {0};
-+  act.sa_handler = detect_sigill;
-+  sigaction(SIGILL, &act, &old);
++
++#if LJ_TARGET_LINUX
++  /* HWPROBE-based detection of RVC, Zba, Zbb and Zicond. */
++  hwprobe_ret = syscall(__NR_riscv_hwprobe, &hwprobe_requests,
++                sizeof(hwprobe_requests) / sizeof(struct riscv_hwprobe), 0,
++			          NULL, 0);
++
 +  flags |= riscv_probe(riscv_compressed, JIT_F_RVC);
 +  flags |= riscv_probe(riscv_zba, JIT_F_RVZba);
 +  flags |= riscv_probe(riscv_zbb, JIT_F_RVZbb);
 +  flags |= riscv_probe(riscv_zicond, JIT_F_RVZicond);
 +  flags |= riscv_probe(riscv_zfa, JIT_F_RVZfa);
 +  flags |= riscv_probe(riscv_xthead, JIT_F_RVXThead);
-+  sigaction(SIGILL, &old, NULL);
++
++#endif
 +
 +  /* Detect V/P? */
 +  /* V have no hardware available, P not ratified yet. */
@@ -7455,10 +7490,10 @@ index 1e14514c3..ec2250f2f 100644
  #error "Missing CPU detection for this architecture"
  #endif
 diff --git a/src/lj_jit.h b/src/lj_jit.h
-index 74a88ad86..985c311fb 100644
+index 74a88ad86..c528cc607 100644
 --- a/src/lj_jit.h
 +++ b/src/lj_jit.h
-@@ -68,6 +68,17 @@
+@@ -68,6 +68,46 @@
  #endif
  #endif
  
@@ -7473,14 +7508,43 @@ index 74a88ad86..985c311fb 100644
 +
 +#define JIT_F_CPUSTRING		"\003RVC\003Zba\003Zbb\006Zicond\003Zfa\006XThead"
 +
++#if LJ_TARGET_LINUX
++#include <sys/syscall.h>
++
++#ifndef __NR_riscv_hwprobe
++#ifndef __NR_arch_specific_syscall
++#define __NR_arch_specific_syscall 244
++#endif
++#define __NR_riscv_hwprobe (__NR_arch_specific_syscall + 14)
++#endif
++
++struct riscv_hwprobe {
++    int64_t key;
++    uint64_t value;
++};
++
++#define RISCV_HWPROBE_KEY_MVENDORID     0
++#define RISCV_HWPROBE_KEY_MARCHID       1
++#define RISCV_HWPROBE_KEY_MIMPID        2
++#define RISCV_HWPROBE_KEY_BASE_BEHAVIOR 3
++#define RISCV_HWPROBE_KEY_IMA_EXT_0     4
++
++#define RISCV_HWPROBE_IMA_C      (1 << 1)
++#define RISCV_HWPROBE_EXT_ZBA    (1 << 3)
++#define RISCV_HWPROBE_EXT_ZBB    (1 << 4)
++#define RISCV_HWPROBE_EXT_ZFA    (1ULL << 32)
++#define RISCV_HWPROBE_EXT_ZICOND (1ULL << 35)
++
++#endif
++
  #else
  
  #define JIT_F_CPUSTRING		""
 
-From 3669029b57f62846bb522b3024dd338c029fea02 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Wed, 26 Nov 2025 16:25:31 +0800
-Subject: [PATCH 10/23] riscv(jit): add mandatory constants
+From d00702887cb79ca8cc541721355256a48c5811c7 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 10/21] riscv(jit): add mandatory constants
 
 ---
  src/lj_jit.h   | 4 ++--
@@ -7488,10 +7552,10 @@ Subject: [PATCH 10/23] riscv(jit): add mandatory constants
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/lj_jit.h b/src/lj_jit.h
-index 985c311fb..f299c5381 100644
+index c528cc607..137f03739 100644
 --- a/src/lj_jit.h
 +++ b/src/lj_jit.h
-@@ -375,13 +375,13 @@ enum {
+@@ -404,13 +404,13 @@ enum {
  #if LJ_TARGET_MIPS
    LJ_K64_2P31,		/* 2^31 */
  #endif
@@ -7508,7 +7572,7 @@ index 985c311fb..f299c5381 100644
  enum {
  #if LJ_TARGET_X86ORX64 || LJ_TARGET_MIPS64
 diff --git a/src/lj_trace.c b/src/lj_trace.c
-index 4b3c50662..ef96606d1 100644
+index edf12cba0..afda5eb87 100644
 --- a/src/lj_trace.c
 +++ b/src/lj_trace.c
 @@ -351,7 +351,7 @@ void lj_trace_initstate(global_State *g)
@@ -7521,10 +7585,10 @@ index 4b3c50662..ef96606d1 100644
    J->k64[LJ_K64_VM_EXIT_INTERP].u64 = (uintptr_t)lj_ptr_sign((void *)lj_vm_exit_interp, 0);
  #endif
 
-From 484e820087ecebfceba4f4fbefdc5006c3e7d2cb Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 11/23] riscv(jit): add insn emitter
+From a0a8f051f56c409863bb1e5a8a31b771241ad99f Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 11/21] riscv(jit): add insn emitter
 
 ---
  src/lj_emit_riscv.h | 576 ++++++++++++++++++++++++++++++++++++++++++++
@@ -8114,15 +8178,15 @@ index 000000000..1907d8f76
 +
 +#define emit_spsub(as, ofs)	emit_addptr(as, RID_SP, -(ofs))
 
-From 32e5f11ccbc802865465775e238266653412f3f5 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 12/23] riscv(jit): add IR assembler
+From 0de72311650bde3746aae5030d6ab7f313c2db05 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 12/21] riscv(jit): add IR assembler
 
 ---
  src/lj_asm.c         |    4 +
- src/lj_asm_riscv64.h | 2048 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 2052 insertions(+)
+ src/lj_asm_riscv64.h | 2049 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 2053 insertions(+)
  create mode 100644 src/lj_asm_riscv64.h
 
 diff --git a/src/lj_asm.c b/src/lj_asm.c
@@ -8149,10 +8213,10 @@ index fd4e71162..f7b986cc4 100644
  #endif
 diff --git a/src/lj_asm_riscv64.h b/src/lj_asm_riscv64.h
 new file mode 100644
-index 000000000..5961c888d
+index 000000000..b3c1450fd
 --- /dev/null
 +++ b/src/lj_asm_riscv64.h
-@@ -0,0 +1,2048 @@
+@@ -0,0 +1,2049 @@
 +/*
 +** RISC-V IR assembler (SSA IR -> machine code).
 +** Copyright (C) 2022-2026 ISRC, ISCAS. See Copyright Notice in luajit.h
@@ -9681,7 +9745,8 @@ index 000000000..5961c888d
 +  Reg left = ra_alloc1(as, ir->op1, RSET_GPR);
 +  uint32_t shmsk = irt_is64(ir->t) ? 63 : 31;
 +  if (irref_isk(ir->op2)) {  /* Constant shifts. */
-+    uint32_t shift = (uint32_t)(IR(ir->op2)->i & shmsk);
++    IRIns *irr = IR(ir->op2);
++    uint32_t shift = (uint32_t) irr->o == IR_KINT ? (uint32_t)irr->i : (uint32_t)ir_kint64(irr)->u64;
 +    switch (riscvik) {
 +      case RISCVI_SRAI: case RISCVI_SRLI: case RISCVI_SLLI:
 +      case RISCVI_SRAIW: case RISCVI_SLLIW: case RISCVI_SRLIW:
@@ -10202,10 +10267,10 @@ index 000000000..5961c888d
 +  lj_mcode_patch(J, mcarea, 1);
 +}
 
-From df4581bb8224193366d16b66c61c537fd965eca5 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 13/23] riscv(interp): add VM builder support
+From 77fdcbc5ed21f2b511efa1deeae23d05f398c4bb Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 13/21] riscv(interp): add VM builder support
 
 Co-authored-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
 ---
@@ -10276,20 +10341,20 @@ index b2aa948ee..bdde6b3bc 100644
    emit_asm_align(ctx, 4);
  
 
-From 95b93755918287d29b664e56c372b4d26d752d49 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 14/23] riscv(misc): add bytecode listing support
+From 674543bd92b7a59915def08288a86c0dccfe602b Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 14/21] riscv(misc): add bytecode listing support
 
 ---
  src/jit/bcsave.lua | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/src/jit/bcsave.lua b/src/jit/bcsave.lua
-index 149f46d18..99952a7c7 100644
+index 409403ac8..4d35e59ad 100644
 --- a/src/jit/bcsave.lua
 +++ b/src/jit/bcsave.lua
-@@ -103,6 +103,7 @@ local map_arch = {
+@@ -106,6 +106,7 @@ local map_arch = {
    mips64r6 =	{ e = "be", b = 64, m = 8, f = 0xa0000407, },
    mips64r6el =	{ e = "le", b = 64, m = 8, f = 0xa0000407, },
    s390x =	{ e = "be", b = 64, m = 22, },
@@ -10298,17 +10363,17 @@ index 149f46d18..99952a7c7 100644
  
  local map_os = {
 
-From 8bb00b4211dfc8cbe2410e74fbb27bfd1c0203b0 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 15/23] riscv(jit): add hooks in interpreter
+From 48390f3573ed4521bc5550c12ff9e2620118c308 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 15/21] riscv(jit): add hooks in interpreter
 
 ---
  src/vm_riscv64.dasc | 388 ++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 388 insertions(+)
 
 diff --git a/src/vm_riscv64.dasc b/src/vm_riscv64.dasc
-index 8ba93d019..38eb5f049 100644
+index 1ea86742a..99b8e9eaa 100644
 --- a/src/vm_riscv64.dasc
 +++ b/src/vm_riscv64.dasc
 @@ -448,6 +448,24 @@
@@ -10336,7 +10401,7 @@ index 8ba93d019..38eb5f049 100644
  |// Move table write barrier back. Overwrites mark and tmp.
  |.macro barrierback, tab, mark, tmp, target
  |  ld tmp, GL->gc.grayagain
-@@ -1145,8 +1163,15 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -1165,8 +1183,15 @@ static void build_subroutines(BuildCtx *ctx)
    |   sd PC, SAVE_PC(sp)
    |  mv MULTRES, INS
    |  call_intern vmeta_for, lj_meta_for	// (lua_State *L, TValue *base)
@@ -10352,7 +10417,7 @@ index 8ba93d019..38eb5f049 100644
    |  j =>BC_FORI
    |
    |//-----------------------------------------------------------------------
-@@ -2141,6 +2166,20 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2161,6 +2186,20 @@ static void build_subroutines(BuildCtx *ctx)
    |//-----------------------------------------------------------------------
    |
    |->vm_record:				// Dispatch target for recording phase.
@@ -10373,7 +10438,7 @@ index 8ba93d019..38eb5f049 100644
    |
    |->vm_rethook:			// Dispatch target for return hooks.
    |   lbu TMP3, GL->hookmask
-@@ -2186,10 +2225,103 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2206,10 +2245,103 @@ static void build_subroutines(BuildCtx *ctx)
    |   lw MULTRES, -24(RB)		// Restore MULTRES for *M ins.
    |  j <4
    |
@@ -10477,7 +10542,7 @@ index 8ba93d019..38eb5f049 100644
    |
    |->vm_profhook:			// Dispatch target for profiler hook.
  #if LJ_HASPROFILE
-@@ -2204,6 +2336,149 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2224,6 +2356,149 @@ static void build_subroutines(BuildCtx *ctx)
    |   ld BASE, L->base
    |  j ->cont_nop
  #endif
@@ -10627,7 +10692,7 @@ index 8ba93d019..38eb5f049 100644
    |
    |//-----------------------------------------------------------------------
    |//-- Math helper functions ----------------------------------------------
-@@ -2230,6 +2505,10 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2250,6 +2525,10 @@ static void build_subroutines(BuildCtx *ctx)
    |  vm_round rdn
    |->vm_ceil:
    |  vm_round rup
@@ -10638,7 +10703,7 @@ index 8ba93d019..38eb5f049 100644
    |
    |
    |//-----------------------------------------------------------------------
-@@ -2283,6 +2562,67 @@ static void build_subroutines(BuildCtx *ctx)
+@@ -2303,6 +2582,67 @@ static void build_subroutines(BuildCtx *ctx)
    |  ret
    |.endif
    |
@@ -10706,7 +10771,7 @@ index 8ba93d019..38eb5f049 100644
    |//-----------------------------------------------------------------------
    |//-- FFI helper functions -----------------------------------------------
    |//-----------------------------------------------------------------------
-@@ -3775,6 +4115,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -3851,6 +4191,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
  
    case BC_ITERN:
      |  // RA = base*8, (RB = (nresults+1)*8, RC = (nargs+1)*8 (2+1)*8)
@@ -10716,7 +10781,7 @@ index 8ba93d019..38eb5f049 100644
      |->vm_IITERN:
      |  add RA, BASE, RA
      |  ld TAB:RB, -16(RA)
-@@ -3859,8 +4202,26 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -3935,8 +4278,26 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      |   li TMP1, BC_ITERC
      |  sb TMP3, -4+OFS_OP(PC)
      |   add PC, TMP0, TMP2
@@ -10743,7 +10808,7 @@ index 8ba93d019..38eb5f049 100644
      break;
  
    case BC_VARG:
-@@ -4026,6 +4387,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -4102,6 +4463,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
    /* -- Loops and branches ------------------------------------------------ */
  
    case BC_FORL:
@@ -10753,7 +10818,7 @@ index 8ba93d019..38eb5f049 100644
      |  // Fall through. Assumes BC_IFORL follows.
      break;
  
-@@ -4146,6 +4510,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -4222,6 +4586,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      break;
  
    case BC_ITERL:
@@ -10763,7 +10828,7 @@ index 8ba93d019..38eb5f049 100644
      |  // Fall through. Assumes BC_IITERL follows.
      break;
  
-@@ -4170,6 +4537,12 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -4246,6 +4613,12 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      break;
  
    case BC_LOOP:
@@ -10776,7 +10841,7 @@ index 8ba93d019..38eb5f049 100644
      |  // Fall through. Assumes BC_ILOOP follows.
      break;
  
-@@ -4179,6 +4552,18 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -4255,6 +4628,18 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
      break;
  
    case BC_JLOOP:
@@ -10795,7 +10860,7 @@ index 8ba93d019..38eb5f049 100644
      break;
  
    case BC_JMP:
-@@ -4190,6 +4575,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
+@@ -4266,6 +4651,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
    /* -- Function headers -------------------------------------------------- */
  
    case BC_FUNCF:
@@ -10806,20 +10871,20 @@ index 8ba93d019..38eb5f049 100644
      |  // Fall through. Assumes BC_IFUNCF/BC_IFUNCV follow.
      break;
 
-From 0451d7bda8b689a180ee8b6c926df97749a234cc Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 16/23] riscv(interp): add DWARF info
+From 2b0fd0a9c76789b690b83969c660975f0a54ac72 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 16/21] riscv(interp): add DWARF info
 
 ---
  src/vm_riscv64.dasc | 132 +++++++++++++++++++++++++++++++++++++++++++-
  1 file changed, 131 insertions(+), 1 deletion(-)
 
 diff --git a/src/vm_riscv64.dasc b/src/vm_riscv64.dasc
-index 38eb5f049..117d89b74 100644
+index 99b8e9eaa..d0b1ab1e9 100644
 --- a/src/vm_riscv64.dasc
 +++ b/src/vm_riscv64.dasc
-@@ -4721,5 +4721,135 @@ static int build_backend(BuildCtx *ctx)
+@@ -4797,5 +4797,135 @@ static int build_backend(BuildCtx *ctx)
  /* Emit pseudo frame-info for all assembler functions. */
  static void emit_asm_debug(BuildCtx *ctx)
  {
@@ -10957,10 +11022,10 @@ index 38eb5f049..117d89b74 100644
 +  }
  }
 
-From 9de7a973099cf41bffdbe6dfe5aec562d1fc6337 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 17/23] riscv(jit): add GDBJIT support
+From a3a824099fd7b611afb8dd8303e4fcfc7160bbdc Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 17/21] riscv(jit): add GDBJIT support
 
 ---
  src/lj_gdbjit.c | 15 +++++++++++++++
@@ -11007,10 +11072,10 @@ index 4cea4fabd..acb3b6449 100644
  #error "Unsupported target architecture"
  #endif
 
-From de878da0d9946c074e5742ba006ae24b238889ec Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 18/23] riscv(support,linux): add Linux specfic icache sync
+From 64367653a2179460213daf02da43c7b0d2504e8d Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 18/21] riscv(support,linux): add Linux specfic icache sync
  codepath
 
 ---
@@ -11053,10 +11118,10 @@ index edcc4bd9d..25b11ccfc 100644
    __clear_cache(start, end);
  #else
 
-From 6c7308cd310af6763e29a65be078b3ed4e190cd8 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 19/23] riscv(support,linux): make mremap() non-moving due to
+From c59fec0958683e53357a12a943e3ce2f33952925 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 19/21] riscv(support,linux): make mremap() non-moving due to
  VA space woes
 
 ---
@@ -11064,7 +11129,7 @@ Subject: [PATCH 19/23] riscv(support,linux): make mremap() non-moving due to
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/lj_alloc.c b/src/lj_alloc.c
-index cb704f7b3..9039d8053 100644
+index f4d3a7da6..078331020 100644
 --- a/src/lj_alloc.c
 +++ b/src/lj_alloc.c
 @@ -365,7 +365,7 @@ static void *CALL_MREMAP_(void *ptr, size_t osz, size_t nsz, int flags)
@@ -11077,10 +11142,10 @@ index cb704f7b3..9039d8053 100644
  #else
  #define CALL_MREMAP_MV		CALL_MREMAP_MAYMOVE
 
-From e24681cacec9a3f420a8634ad5d00617e21c0934 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 20/23] riscv(misc): add disassmbler support
+From d3840989eb0169d78b204e9c9220223f1b1ffe87 Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 20/21] riscv(misc): add disassmbler support
 
 ---
  src/jit/dis_riscv.lua   | 979 ++++++++++++++++++++++++++++++++++++++++
@@ -12097,10 +12162,10 @@ index 000000000..cc867342c
 +  regname = dis_riscv.regname
 +}
 
-From b3fdfdf983598d97315e4da91b7fc2cf453621d1 Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 21/23] riscv(misc): add support in Makefile
+From ce14aff834d8d62220fc730a16042c52451f41cc Mon Sep 17 00:00:00 2001
+From: gns <root@infi.wang>
+Date: Tue, 25 Aug 2026 20:02:41 +0800
+Subject: [PATCH 21/21] riscv(misc): add support in Makefile
 
 ---
  Makefile     | 1 +
@@ -12120,7 +12185,7 @@ index 2e97ed6aa..e0ce98857 100644
  
  ifeq (,$(findstring Windows,$(OS)))
 diff --git a/src/Makefile b/src/Makefile
-index 7cde88f9a..6770dcade 100644
+index 25acee602..def3c8be8 100644
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -52,6 +52,7 @@ CCOPT_arm=
@@ -12159,641 +12224,3 @@ index 7cde88f9a..6770dcade 100644
  endif
  endif
  
-
-From c7f27837e66dc0352910db23177ac524cdc0be8b Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 22/23] riscv(support,linux): use HWPROBE for ISE detection
-
-Current SIGILL handler appears to have weird issues with libluajit on
-some platform. Considering 6.6 kernel is becoming more common, switch
-to HWPROBE for better compatibility.
----
- src/lib_jit.c | 79 +++++++++++++++++++++++++--------------------------
- src/lj_jit.h  | 29 +++++++++++++++++++
- 2 files changed, 67 insertions(+), 41 deletions(-)
-
-diff --git a/src/lib_jit.c b/src/lib_jit.c
-index ec2250f2f..4e1267b43 100644
---- a/src/lib_jit.c
-+++ b/src/lib_jit.c
-@@ -707,23 +707,26 @@ JIT_PARAMDEF(JIT_PARAMINIT)
- #endif
- 
- #if LJ_TARGET_RISCV64 && LJ_TARGET_POSIX
--#include <setjmp.h>
--#include <signal.h>
--static sigjmp_buf sigbuf = {0};
--static void detect_sigill(int sig)
--{
--  siglongjmp(sigbuf, 1);
--}
-+
-+#if LJ_TARGET_LINUX
-+#include <unistd.h>
-+
-+struct riscv_hwprobe hwprobe_requests[] = {
-+	{RISCV_HWPROBE_KEY_IMA_EXT_0}
-+};
-+
-+const uint64_t *hwprobe_ext = &hwprobe_requests[0].value;
-+
-+int hwprobe_ret = 0;
-+#endif
- 
- static int riscv_compressed()
- {
- #if defined(__riscv_c) || defined(__riscv_compressed)
-   /* Don't bother checking for RVC -- would crash before getting here. */
-   return 1;
--#elif defined(__GNUC__)
--  /* c.nop; c.nop; */
--  __asm__(".4byte 0x00010001");
--  return 1;
-+#elif LJ_TARGET_LINUX
-+  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_IMA_C)) ? 1 : 0;
- #else
-   return 0;
- #endif
-@@ -734,11 +737,8 @@ static int riscv_zba()
- #if defined(__riscv_b) || defined(__riscv_zba)
-   /* Don't bother checking for Zba -- would crash before getting here. */
-   return 1;
--#elif defined(__GNUC__)
--  /* Don't bother verifying the result, just check if the instruction exists. */
--  /* add.uw zero, zero, zero */
--  __asm__(".4byte 0x0800003b");
--  return 1;
-+#elif LJ_TARGET_LINUX
-+  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZBA)) ? 1 : 0;
- #else
-   return 0;
- #endif
-@@ -749,11 +749,8 @@ static int riscv_zbb()
- #if defined(__riscv_b) || defined(__riscv_zbb)
-   /* Don't bother checking for Zbb -- would crash before getting here. */
-   return 1;
--#elif defined(__GNUC__)
--  register int t asm ("a0");
--  /* addi a0, zero, 255; sext.b a0, a0; */
--  __asm__("addi a0, zero, 255\n\t.4byte 0x60451513");
--  return t < 0;
-+#elif LJ_TARGET_LINUX
-+  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZBB)) ? 1 : 0;
- #else
-   return 0;
- #endif
-@@ -764,10 +761,8 @@ static int riscv_zicond()
- #if defined(__riscv_zicond)
-   /* Don't bother checking for Zicond -- would crash before getting here. */
-   return 1;
--#elif defined(__GNUC__)
--  /* czero.eqz zero, zero, zero; */
--  __asm__(".4byte 0x0e005033");
--  return 1;
-+#elif LJ_TARGET_LINUX
-+  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZICOND)) ? 1 : 0;
- #else
-   return 0;
- #endif
-@@ -778,6 +773,8 @@ static int riscv_zfa()
- #if defined(__riscv_zfa)
-   /* Don't bother checking for Zfa -- would crash before getting here. */
-   return 1;
-+#elif LJ_TARGET_LINUX
-+  return (hwprobe_ret == 0 && ((*hwprobe_ext) & RISCV_HWPROBE_EXT_ZFA)) ? 1 : 0;
- #else
-   return 0;
- #endif
-@@ -791,23 +788,19 @@ static int riscv_xthead()
-   && defined(__riscv_xtheadmac))
-   /* Don't bother checking for XThead -- would crash before getting here. */
-   return 1;
--#elif defined(__GNUC__)
--    register int t asm ("a0");
--    /* C906 & C910 & C908 all have "xtheadc", XTheadBb subset "xtheadc". */
--    /* Therefore assume XThead* are present if XTheadBb is present. */
--    /* addi a0, zero, 255; th.ext a0, a0, 7, 0; */
--    __asm__("addi a0, zero, 255\n\t.4byte 0x1c05250b");
--    return t == -1;		/* In case of collision with other vendor extensions. */
- #else
--    return 0;
-+/*
-+** Hardcoded as there's no easy way of detection:
-+** - SIGILL have some trouble with libluajit as we speak
-+** - Checking mvendorid looks good, but might not be reliable.
-+*/
-+  return 0;
- #endif
- }
- 
- static uint32_t riscv_probe(int (*func)(void), uint32_t flag)
- {
--    if (sigsetjmp(sigbuf, 1) == 0) {
--        return func() ? flag : 0;
--    } else return 0;
-+    return func() ? flag : 0;
- }
- #endif
- 
-@@ -886,17 +879,21 @@ static uint32_t jit_cpudetect(void)
- 
- #elif LJ_TARGET_RISCV64
- #if LJ_HASJIT
--  /* SIGILL-based detection of RVC, Zba, Zbb and XThead. Welcome to the future. */
--  struct sigaction old = {0}, act = {0};
--  act.sa_handler = detect_sigill;
--  sigaction(SIGILL, &act, &old);
-+
-+#if LJ_TARGET_LINUX
-+  /* HWPROBE-based detection of RVC, Zba, Zbb and Zicond. */
-+  hwprobe_ret = syscall(__NR_riscv_hwprobe, &hwprobe_requests,
-+                sizeof(hwprobe_requests) / sizeof(struct riscv_hwprobe), 0,
-+			          NULL, 0);
-+
-   flags |= riscv_probe(riscv_compressed, JIT_F_RVC);
-   flags |= riscv_probe(riscv_zba, JIT_F_RVZba);
-   flags |= riscv_probe(riscv_zbb, JIT_F_RVZbb);
-   flags |= riscv_probe(riscv_zicond, JIT_F_RVZicond);
-   flags |= riscv_probe(riscv_zfa, JIT_F_RVZfa);
-   flags |= riscv_probe(riscv_xthead, JIT_F_RVXThead);
--  sigaction(SIGILL, &old, NULL);
-+
-+#endif
- 
-   /* Detect V/P? */
-   /* V have no hardware available, P not ratified yet. */
-diff --git a/src/lj_jit.h b/src/lj_jit.h
-index f299c5381..137f03739 100644
---- a/src/lj_jit.h
-+++ b/src/lj_jit.h
-@@ -79,6 +79,35 @@
- 
- #define JIT_F_CPUSTRING		"\003RVC\003Zba\003Zbb\006Zicond\003Zfa\006XThead"
- 
-+#if LJ_TARGET_LINUX
-+#include <sys/syscall.h>
-+
-+#ifndef __NR_riscv_hwprobe
-+#ifndef __NR_arch_specific_syscall
-+#define __NR_arch_specific_syscall 244
-+#endif
-+#define __NR_riscv_hwprobe (__NR_arch_specific_syscall + 14)
-+#endif
-+
-+struct riscv_hwprobe {
-+    int64_t key;
-+    uint64_t value;
-+};
-+
-+#define RISCV_HWPROBE_KEY_MVENDORID     0
-+#define RISCV_HWPROBE_KEY_MARCHID       1
-+#define RISCV_HWPROBE_KEY_MIMPID        2
-+#define RISCV_HWPROBE_KEY_BASE_BEHAVIOR 3
-+#define RISCV_HWPROBE_KEY_IMA_EXT_0     4
-+
-+#define RISCV_HWPROBE_IMA_C      (1 << 1)
-+#define RISCV_HWPROBE_EXT_ZBA    (1 << 3)
-+#define RISCV_HWPROBE_EXT_ZBB    (1 << 4)
-+#define RISCV_HWPROBE_EXT_ZFA    (1ULL << 32)
-+#define RISCV_HWPROBE_EXT_ZICOND (1ULL << 35)
-+
-+#endif
-+
- #else
- 
- #define JIT_F_CPUSTRING		""
-
-From 4d8cf882a3a4ed3259407ad78614a60b02dd553f Mon Sep 17 00:00:00 2001
-From: gns <wangbingzhen.riscv@isrc.iscas.ac.cn>
-Date: Thu, 27 Nov 2025 20:48:19 +0800
-Subject: [PATCH 23/23] riscv(interp): strip excessive extended branch (^B+J)
-
----
- src/vm_riscv64.dasc | 104 ++++++++++++++++++++++----------------------
- 1 file changed, 52 insertions(+), 52 deletions(-)
-
-diff --git a/src/vm_riscv64.dasc b/src/vm_riscv64.dasc
-index 117d89b74..8ba54b500 100644
---- a/src/vm_riscv64.dasc
-+++ b/src/vm_riscv64.dasc
-@@ -552,7 +552,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |
-   |  // Return from pcall or xpcall fast func.
-   |  mov_true TMP1
--  |  bxeqz TMP0, ->cont_dispatch
-+  |  beqz TMP0, ->cont_dispatch
-   |  ld PC, FRAME_PC(TMP2)		// Fetch PC of previous frame.
-   |  mv BASE, TMP2			// Restore caller base.
-   |  // Prepending may overwrite the pcall frame, so do it at the end.
-@@ -563,9 +563,9 @@ static void build_subroutines(BuildCtx *ctx)
-   |  addiw RD, RD, 8			// RD = (nresults+1)*8.
-   |  andi TMP0, PC, FRAME_TYPE
-   |  li CRET1, LUA_YIELD
--  |  bxeqz RD, ->vm_unwind_c_eh
-+  |  beqz RD, ->vm_unwind_c_eh
-   |  mv MULTRES, RD
--  |  bxeqz TMP0, ->BC_RET_Z		// Handle regular return to Lua.
-+  |  beqz TMP0, ->BC_RET_Z		// Handle regular return to Lua.
-   |
-   |->vm_return:
-   |  // BASE = base, RA = resultptr, RD/MULTRES = (nresults+1)*8, PC = return
-@@ -573,7 +573,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  andi TMP2, PC, ~FRAME_TYPEP
-   |  xori TMP0, TMP0, FRAME_C
-   |  sub TMP2, BASE, TMP2		// TMP2 = previous base.
--  |  bxnez TMP0, ->vm_returnp
-+  |  bnez TMP0, ->vm_returnp
-   |
-   |  addiw TMP1, RD, -8
-   |  sd TMP2, L->base
-@@ -742,7 +742,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  andi TMP0, PC, FRAME_TYPE
-   |   li TISNIL, LJ_TNIL
-   |   li TISNUM, LJ_TISNUM
--  |  bxeqz TMP0, ->BC_RET_Z
-+  |  beqz TMP0, ->BC_RET_Z
-   |  j ->vm_return
-   |
-   |->vm_pcall:				// Setup protected C frame and enter VM.
-@@ -1002,7 +1002,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  // Returns 0/1 or TValue * (metamethod).
-   |3:
-   |  sltiu TMP1, CRET1, 2
--  |  bxeqz TMP1, ->vmeta_binop
-+  |  beqz TMP1, ->vmeta_binop
-   |   negw TMP2, CRET1
-   |4:
-   |  lhu RD, OFS_RD(PC)
-@@ -1090,7 +1090,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  // (lua_State *L, TValue *ra,*rb,*rc, BCReg op)
-   |  call_intern vmeta_arith, lj_meta_arith
-   |  // Returns NULL (finished) or TValue * (metamethod).
--  |  bxeqz CRET1, ->cont_nop
-+  |  beqz CRET1, ->cont_nop
-   |
-   |  // Call metamethod for binary op.
-   |->vmeta_binop:
-@@ -1114,7 +1114,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  call_intern vmeta_len, lj_meta_len	// (lua_State *L, TValue *o)
-   |  // Returns NULL (retry) or TValue * (metamethod base).
- #if LJ_52
--  |  bxnez CRET1, ->vmeta_binop		// Binop call for compatibility.
-+  |  bnez CRET1, ->vmeta_binop		// Binop call for compatibility.
-   |  mv CARG1, MULTRES
-   |  j ->BC_LEN_Z
- #else
-@@ -1200,7 +1200,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |->ff_ .. name:
-   |  ld CARG1, 0(BASE)
-   |  fld FARG1, 0(BASE)
--  |  bxeqz NARGS8:RC, ->fff_fallback
-+  |  beqz NARGS8:RC, ->fff_fallback
-   |  checknum CARG1, ->fff_fallback
-   |.endmacro
-   |
-@@ -1209,7 +1209,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  ld CARG1, 0(BASE)
-   |    sltiu TMP0, NARGS8:RC, 16
-   |   ld CARG2, 8(BASE)
--  |  bxnez TMP0, ->fff_fallback
-+  |  bnez TMP0, ->fff_fallback
-   |  gettp TMP1, CARG1
-   |   gettp TMP2, CARG2
-   |  sltiu TMP1, TMP1, LJ_TISNUM
-@@ -1217,7 +1217,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  fld FARG1, 0(BASE)
-   |  and TMP1, TMP1, TMP2
-   |   fld FARG2, 8(BASE)
--  |  bxeqz TMP1, ->fff_fallback
-+  |  beqz TMP1, ->fff_fallback
-   |.endmacro
-   |
-   |// Inlined GC threshold check.
-@@ -1277,7 +1277,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |2:
-   |   ld STR:RC, GL->gcroot[GCROOT_MMNAME+MM_metatable]
-   |  li CARG1, LJ_TNIL
--  |  bxeqz TAB:RB, ->fff_restv
-+  |  beqz TAB:RB, ->fff_restv
-   |  lw TMP0, TAB:RB->hmask
-   |   lw TMP1, STR:RC->sid
-   |    ld NODE:TMP2, TAB:RB->node
-@@ -1299,7 +1299,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  settp CARG1, RB, TMP3
-   |  j ->fff_restv			// Not found, keep default result.
-   |5:
--  |  bxne CARG1, TISNIL, ->fff_restv
-+  |  bne CARG1, TISNIL, ->fff_restv
-   |  j <4				// Ditto for nil value.
-   |
-   |6:
-@@ -1325,7 +1325,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  bxnez TMP3, ->fff_fallback
-   |  andi TMP3, TMP2, LJ_GC_BLACK		// isblack(table)
-   |  sd TAB:CARG2, TAB:TMP1->metatable
--  |  bxeqz TMP3, ->fff_restv
-+  |  beqz TMP3, ->fff_restv
-   |  barrierback TAB:TMP1, TMP2, TMP0, ->fff_restv
-   |
-   |.ffunc rawget
-@@ -1360,7 +1360,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  gettp TMP0, CARG1
-   |  addi TMP1, TMP0, -LJ_TSTR
-   |  // A __tostring method in the string base metatable is ignored.
--  |  bxeqz TMP1, ->fff_restv	// String key?
-+  |  beqz TMP1, ->fff_restv	// String key?
-   |  // Handle numbers inline, unless a number base metatable is present.
-   |   ld TMP1, GL->gcroot[GCROOT_BASEMT_NUM]
-   |  sltu TMP0, TISNUM, TMP0
-@@ -1390,10 +1390,10 @@ static void build_subroutines(BuildCtx *ctx)
-   |  call_intern ff_next, lj_tab_next	// (GCtab *t, cTValue *key, TValue *o)
-   |  // Returns 1=found, 0=end, -1=error.
-   |  li RD, (2+1)*8
--  |  bxgtz CRET1, ->fff_res		// Found key/value.
-+  |  bgtz CRET1, ->fff_res		// Found key/value.
-   |  mv TMP1, CRET1
-   |  mv CARG1, TISNIL
--  |  bxeqz TMP1, ->fff_restv		// End of traversal: return nil.
-+  |  beqz TMP1, ->fff_restv		// End of traversal: return nil.
-   |   ld CFUNC:RB, FRAME_FUNC(BASE)
-   |  li RC, 2*8
-   |   cleartp CFUNC:RB
-@@ -1433,19 +1433,19 @@ static void build_subroutines(BuildCtx *ctx)
-   |  ld TMP1, 0(TMP3)
-   |1:
-   |  li RD, (0+1)*8
--  |  bxeq TMP1, TISNIL, ->fff_res	// End of iteration, return 0 results.
-+  |  beq TMP1, TISNIL, ->fff_res	// End of iteration, return 0 results.
-   |  sd TMP1, -8(BASE)
-   |  li RD, (2+1)*8
-   |  j ->fff_res
-   |2:  // Check for empty hash part first. Otherwise call C function.
-   |  lw TMP0, TAB:CARG1->hmask
-   |  li RD, (0+1)*8
--  |  bxeqz TMP0, ->fff_res
-+  |  beqz TMP0, ->fff_res
-   |  mv CARG2, TMP2
-   |  call_intern ff_ipairs_aux, lj_tab_getinth	// (GCtab *t, int32_t key)
-   |  // Returns cTValue * or NULL.
-   |  li RD, (0+1)*8
--  |  bxeqz CRET1, ->fff_res
-+  |  beqz CRET1, ->fff_res
-   |  ld TMP1, 0(CRET1)
-   |  j <1
-   |
-@@ -1482,7 +1482,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  srliw TMP3, TMP3, HOOK_ACTIVE_SHIFT
-   |  andi TMP3, TMP3, 1
-   |  addi PC, TMP3, 16+FRAME_PCALL
--  |  bxeqz NARGS8:RC, ->vm_call_dispatch
-+  |  beqz NARGS8:RC, ->vm_call_dispatch
-   |1:
-   |   add TMP0, BASE, NARGS8:RC
-   |2:
-@@ -1539,17 +1539,17 @@ static void build_subroutines(BuildCtx *ctx)
-   |  xor CARG2, CARG2, TMP3		// CARG2 = TMP4 ? CARG2 : TMP3
-   |  and CARG2, CARG2, TMP4
-   |  xor CARG2, TMP3, CARG2
--  |  bxgtz CARG4, ->fff_fallback		// st > LUA_YIELD?
-+  |  bgtz CARG4, ->fff_fallback		// st > LUA_YIELD?
-   |   xor TMP2, TMP2, CARG3
-   |   or CARG4, TMP2, TMP0
--  |  bxnez TMP1, ->fff_fallback		// cframe != 0?
-+  |  bnez TMP1, ->fff_fallback		// cframe != 0?
-   |  ld TMP0, L:CARG1->maxstack
-   |   ld PC, FRAME_PC(BASE)
--  |  bxeqz CARG4, ->fff_fallback		// base == top && st == 0?
-+  |  beqz CARG4, ->fff_fallback		// base == top && st == 0?
-   |  add TMP2, CARG2, NARGS8:RC
-   |  sd BASE, L->base
-   |  sd PC, SAVE_PC(sp)
--  |  bxltu TMP0, TMP2, ->fff_fallback		// Stack overflow?
-+  |  bltu TMP0, TMP2, ->fff_fallback		// Stack overflow?
-   |1:
-   |.if resume
-   |  addi BASE, BASE, 8		// Keep resumed thread in stack for GC.
-@@ -1654,7 +1654,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |   sd BASE, L->base
-   |  andi TMP0, TMP0, CFRAME_RESUME
-   |   sd TMP1, L->top
--  |  bxeqz TMP0, ->fff_fallback
-+  |  beqz TMP0, ->fff_fallback
-   |  sd x0, L->cframe
-   |    sb CRET1, L->status
-   |  j ->vm_leave_unw
-@@ -1665,14 +1665,14 @@ static void build_subroutines(BuildCtx *ctx)
-   |->ff_math_ .. func:
-   |  ld CARG1, 0(BASE)
-   |   gettp TMP0, CARG1
--  |  bxeqz NARGS8:RC, ->fff_fallback
-+  |  beqz NARGS8:RC, ->fff_fallback
-   |   fmv.d.x FARG1, CARG1
--  |    bxeq TMP0, TISNUM, ->fff_restv
-+  |    beq TMP0, TISNUM, ->fff_restv
-   |   srli TMP1, CARG1, 52		// Extract exponent (and sign).
--  |    bxgeu TMP0, TISNUM, ->fff_fallback
-+  |    bgeu TMP0, TISNUM, ->fff_fallback
-   |  andi TMP1, TMP1, 0x7ff		// Extract exponent.
-   |  slti TMP2, TMP1, 1023 + 52 + 1	// 1023: Bias, 52: Max fraction
--  |  bxeqz TMP2, ->fff_resn		// Less than 2^52 / Not NaN?
-+  |  beqz TMP2, ->fff_resn		// Less than 2^52 / Not NaN?
-   |  fcvt.l.d TMP3, FARG1, rm
-   |  fcvt.d.l FTMP1, TMP3
-   |  fsgnj.d FRET1, FTMP1, FARG1
-@@ -1692,7 +1692,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  sub CARG1, TMP1, TMP0
-   |  slli TMP3, CARG1, 32
-   |   settp CARG1, TISNUM
--  |  bxgez TMP3, ->fff_restv
-+  |  bgez TMP3, ->fff_restv
-   |  lui CARG1, 0x41e00		// 2^31 as a double.
-   |  slli CARG1, CARG1, 32
-   |  j ->fff_restv
-@@ -1700,7 +1700,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  sltiu TMP2, CARG2, LJ_TISNUM
-   |  slli CARG1, CARG1, 1
-   |  srli CARG1, CARG1, 1
--  |  bxeqz TMP2, ->fff_fallback		// int
-+  |  beqz TMP2, ->fff_fallback		// int
-   |// fallthrough
-   |
-   |->fff_restv:
-@@ -1756,7 +1756,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  li TMP1, 8
-   |   ld CARG1, 0(BASE)
-   |   fld FARG1, 0(BASE)
--  |  bxne NARGS8:RC, TMP1, ->fff_fallback		// Need exactly 1 argument.
-+  |  bne NARGS8:RC, TMP1, ->fff_fallback		// Need exactly 1 argument.
-   |  checknum CARG1, ->fff_fallback
-   |  call_extern ff_math_log, log
-   |  j ->fff_resn
-@@ -1810,7 +1810,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  checkint CARG1, >4
-   |1:  // Handle integers.
-   |   ld CARG2, 0(RA)
--  |  bxeq RA, RB, ->fff_restv
-+  |  beq RA, RB, ->fff_restv
-   |   sext.w CARG1, CARG1
-   |  checkint CARG2, >3
-   |   sext.w CARG2, CARG2
-@@ -1839,7 +1839,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |5:  // Handle numbers.
-   |  ld CARG2, 0(RA)
-   |  fld FARG2, 0(RA)
--  |   bxgeu RA, RB, ->fff_resn
-+  |   bgeu RA, RB, ->fff_resn
-   |  checknum CARG2, >7
-   |6:
-   |.if ismax
-@@ -1870,7 +1870,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  addi TMP0, TMP0, -LJ_TSTR
-   |  or TMP1, TMP1, TMP0
-   |   cleartp STR:CARG1
--  |  bxnez TMP1, ->fff_fallback		// Need exactly 1 string argument.
-+  |  bnez TMP1, ->fff_fallback		// Need exactly 1 string argument.
-   |  lw TMP0, STR:CARG1->len
-   |    ld PC, FRAME_PC(BASE)
-   |  snez RD, TMP0
-@@ -1893,7 +1893,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |   sltu TMP2, TMP2, CARG1		// !(255 < n).
-   |   or TMP1, TMP1, TMP2
-   |   li CARG3, 1
--  |  bxnez TMP1, ->fff_fallback
-+  |  bnez TMP1, ->fff_fallback
-   |  addi CARG2, sp, TMPD_OFS
-   |  sb CARG1, TMPD(sp)
-   |->fff_newstr:
-@@ -1916,7 +1916,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  ld CARG3, 16(BASE)
-   |  addi TMP0, NARGS8:RC, -16
-   |   gettp TMP1, CARG1
--  |  bxltz TMP0, ->fff_fallback
-+  |  bltz TMP0, ->fff_fallback
-   |  cleartp STR:CARG1, CARG1
-   |   li CARG4, -1
-   |  beqz TMP0, >1
-@@ -1926,7 +1926,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  checkint CARG2, ->fff_fallback
-   |  addi TMP0, TMP1, -LJ_TSTR
-   |   sext.w CARG3, CARG2
--  |  bxnez TMP0, ->fff_fallback
-+  |  bnez TMP0, ->fff_fallback
-   |  lw CARG2, STR:CARG1->len
-   |  // STR:CARG1 = str, CARG2 = str->len, CARG3 = start, CARG4 = end
-   |  addiw TMP0, CARG2, 1
-@@ -1949,7 +1949,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  sub CARG3, CARG4, CARG3		// len = end - start
-   |   addi CARG2, CARG2, sizeof(GCstr)-1
-   |   addiw CARG3, CARG3, 1             // len += 1
--  |  bxgez CARG3, ->fff_newstr
-+  |  bgez CARG3, ->fff_newstr
-   |->fff_emptystr:  // Return empty string.
-   |  li TMP1, LJ_TSTR
-   |  addi STR:CARG1, GL, offsetof(global_State, strempty)
-@@ -1960,7 +1960,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  .ffunc string_ .. name
-   |  ffgccheck
-   |   ld CARG2, 0(BASE)
--  |  bxeqz NARGS8:RC, ->fff_fallback
-+  |  beqz NARGS8:RC, ->fff_fallback
-   |  checkstr STR:CARG2, ->fff_fallback
-   |  addi SBUF:CARG1, GL, offsetof(global_State, tmpbuf)
-   |  ld TMP0, SBUF:CARG1->b
-@@ -1982,7 +1982,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |
-   |->vm_tobit_fb:
-   |  fld FARG1, 0(BASE)
--  |  bxeqz TMP1, ->fff_fallback
-+  |  beqz TMP1, ->fff_fallback
-   |   fadd.d FARG1, FARG1, TOBIT
-   |  fmv.x.w CRET1, FARG1
-   |  zext.w CRET1, CRET1
-@@ -2004,7 +2004,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |  add TMP3, BASE, NARGS8:RC
-   |1:
-   |   ld TMP1, 0(TMP2)
--  |  bxeq TMP2, TMP3, ->fff_resi
-+  |  beq TMP2, TMP3, ->fff_resi
-   |  gettp TMP0, TMP1
-   |   addi TMP2, TMP2, 8
-   |  bne TMP0, TISNUM, >2
-@@ -2015,7 +2015,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |   fld FARG1, -8(TMP2)
-   |  sltiu TMP0, TMP0, LJ_TISNUM
-   |   fadd.d FARG1, FARG1, TOBIT
--  |  bxeqz TMP0, ->fff_fallback
-+  |  beqz TMP0, ->fff_fallback
-   |  fmv.x.w TMP1, FARG1
-   |  zext.w TMP1, TMP1
-   |   bins CRET1, CRET1, TMP1
-@@ -2063,7 +2063,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |1:
-   |  gettp TMP0, CARG2
-   |   zext.w CARG2, CARG2
--  |  bxne TMP0, TISNUM, ->fff_fallback
-+  |  bne TMP0, TISNUM, ->fff_fallback
-   |  sext.w CARG1, CARG1
-   |  shins CRET1, CARG1, CARG2
-   |   zext.w CRET1, CRET1
-@@ -2084,7 +2084,7 @@ static void build_subroutines(BuildCtx *ctx)
-   |1:
-   |  gettp TMP0, CARG2
-   |   zext.w CARG2, CARG2
--  |  bxne TMP0, TISNUM, ->fff_fallback
-+  |  bne TMP0, TISNUM, ->fff_fallback
-   |  sext.w CARG1, CARG1
-   |  neg TMP2, CARG2
-   |  rotinsa TMP1, CARG1, CARG2
-@@ -2115,13 +2115,13 @@ static void build_subroutines(BuildCtx *ctx)
-   |  // Either throws an error, or recovers and returns -1, 0 or nresults+1.
-   |  ld BASE, L->base
-   |   slliw RD, CRET1, 3
--  |  bxgtz CRET1, ->fff_res		// Returned nresults+1?
-+  |  bgtz CRET1, ->fff_res		// Returned nresults+1?
-   |1:  // Returned 0 or -1: retry fast path.
-   |   ld LFUNC:RB, FRAME_FUNC(BASE)
-   |  ld TMP0, L->top
-   |   sub NARGS8:RC, TMP0, BASE
-   |   cleartp LFUNC:RB
--  |  bxnez CRET1, ->vm_call_tail		// Returned -1?
-+  |  bnez CRET1, ->vm_call_tail		// Returned -1?
-   |  ins_callt				// Returned 0: retry fast path.
-   |
-   |// Reconstruct previous base for vmeta_call during tailcall.
-@@ -4338,7 +4338,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
-     |
-     |->BC_RETV_Z:  // Non-standard return case.
-     |  andi TMP2, TMP1, FRAME_TYPEP
--    |  bxnez TMP2, ->vm_return
-+    |  bnez TMP2, ->vm_return
-     |  // Return from vararg function: relocate BASE down.
-     |  sub BASE, BASE, TMP1
-     |   ld PC, FRAME_PC(BASE)
-@@ -4591,7 +4591,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
-     |  ld TMP2, L->maxstack
-     |   lbu TMP1, -4+PC2PROTO(numparams)(PC)
-     |    ld KBASE, -4+PC2PROTO(k)(PC)
--    |  bxltu TMP2, RA, ->vm_growstack_l
-+    |  bltu TMP2, RA, ->vm_growstack_l
-     |   slliw TMP1, TMP1, 3			// numparams*8
-     |2:
-     |  bltu NARGS8:RC, TMP1, >3		// Check for missing parameters.
-@@ -4628,7 +4628,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
-     |   addi TMP3, RC, 16+FRAME_VARG
-     |    ld KBASE, -4+PC2PROTO(k)(PC)
-     |   sd TMP3, 8(TMP1)                // Store delta + FRAME_VARG.
--    |  bxgeu TMP0, TMP2, ->vm_growstack_l
-+    |  bgeu TMP0, TMP2, ->vm_growstack_l
-     |  lbu TMP2, -4+PC2PROTO(numparams)(PC)
-     |   mv RA, BASE
-     |   mv RC, TMP1
-@@ -4674,7 +4674,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
-     |   add RC, BASE, NARGS8:RC
-     |  sd BASE, L->base		// base of currently excuting function
-     |   sd RC, L->top
--    |  bxgtu TMP1, TMP2, ->vm_growstack_c	// Need to grow stack.
-+    |  bgtu TMP1, TMP2, ->vm_growstack_c	// Need to grow stack.
-     |    li_vmstate C			// li TMP0, ~LJ_VMST_C
-     if (op == BC_FUNCCW) {
-       |  ld CARG2, CFUNC:RB->f

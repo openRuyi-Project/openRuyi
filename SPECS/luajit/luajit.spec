@@ -12,7 +12,7 @@
 # This also avoids having to package both vanilla LuaJIT and OR LuaJIT.
 %global major 2.1
 # The commit that could be patched
-%global minor 20260114
+%global minor 20260824
 
 Name:           luajit
 Version:        %{major}+openresty%{minor}
@@ -21,13 +21,13 @@ Summary:        Just-In-Time Compiler for Lua
 License:        MIT
 URL:            http://luajit.org
 VCS:            git:https://github.com/openresty/luajit2
-#!RemoteAsset
+#!RemoteAsset:  sha256:d73577495b63373079fe65e89613aee383db4369c22cf5b88a20a57be3d9f33a
 Source0:        https://github.com/openresty/luajit2/archive/refs/tags/v%{major}-%{minor}.tar.gz#/luajit-openresty-v%{major}-%{minor}.tar.gz
 # not autotools, use this for ease
 BuildSystem:    autotools
 
 # RISC-V 64 support, from https://github.com/openresty/luajit2/pull/236
-# Should remove once PR is mereged.
+# Should remove if PR is ever mereged.
 Patch0:         0001-add_riscv_support.patch
 # Preserve timestamps during installation
 Patch1:         0002-preserve-timestamps.patch
@@ -87,4 +87,4 @@ This package contains static files for %{name}.
 %{_libdir}/libluajit-*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog
