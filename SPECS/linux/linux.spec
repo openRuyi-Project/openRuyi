@@ -44,18 +44,18 @@
     %global arch_suffix -generic
 %endif
 
-%global patchset_release 1
+%global patchset_release 3
 %global config_version 0
 
 Name:           linux
-Version:        7.1.4
+Version:        7.2
 Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:1c63922a119675d38e3ae0f8f6ee07f15c41a786ab9ed66563749bb8c9a08e2e
+#!RemoteAsset:  sha256:f9fef3d14c0df53819026f4be74459835c2a0b0dcbf5b5bbd9ea19f0829402b3
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
-#!RemoteAsset:  sha256:e6a4d8c5929fec7194307c8a00e16e1fbf46c7631223afba59f54d2db59275a6
+#!RemoteAsset:  sha256:2a94363b824f8218bfe52cfe88cb5f403bdeb2168af2b05536af352e470ef5d4
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
 
 BuildRequires:  gcc
