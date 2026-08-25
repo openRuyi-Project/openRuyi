@@ -5,6 +5,30 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%bcond llvmir 1
+
+%if %{with llvmir}
+  %define __install /var/lib/clang-wrap/install
+
+  %ifarch x86_64
+     %global emit_llvmir_flags -march=x86-64-v4
+  %elifarch riscv64
+     %global emit_llvmir_flags -march=rva23u64
+  %else
+     %global emit_llvmir_flags 1
+  %endif
+
+%global ___build_pre \
+        set -x \
+        export EMIT_LLVMIR=%{emit_llvmir_flags} \
+        export PATH=%{clang_wrap_varlibdir}:$PATH \
+        set +x \
+        %{?___build_pre}
+%global toolchain clang
+%endif
+
+
+
 %global _test_target test
 
 # These are for SQLite sources
@@ -25,6 +49,7 @@ Source0:        http://www.sqlite.org/%{year}/sqlite-src-%{download_version}.zip
 #!RemoteAsset:  sha256:30c5488926e72a0b958d64377c91c975a35a8f16d285cbb83cfad31f4af71c6d
 Source1:        http://www.sqlite.org/%{year}/sqlite-doc-%{doc_version}.zip
 BuildSystem:    autotools
+Conflicts:      sqlite-devel < 3.53.2-10
 
 # Support system-wide template (located at /usr/share/lemon/lempar.c) in lemon.
 Patch2000:      2000-sqlite-lemon-system-template.patch
@@ -39,6 +64,13 @@ BuildRequires:  glibc-devel
 BuildRequires:  tcl-devel
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  unzip
+
+
+%if %{with llvmir}
+BuildRequires:  clang
+BuildRequires:  llvm
+BuildRequires:  clang-wrap >= 0+git20260825.83227ac
+%endif
 
 Provides:       %{name}3 = %{version}-%{release}
 
@@ -134,6 +166,10 @@ rm -f %{name}-doc-%{docver}/sqlite.css~ || :
 # These are needed otherwise configure will fail
 export CC=gcc
 export CC_FOR_BUILD=gcc
+%if %{with llvmir}
+export CC=clang
+export CC_FOR_BUILD=clang
+%endif
 export TCLLIBDIR=%{tcl_archdir}/sqlite%{version}
 export CFLAGS="$RPM_OPT_FLAGS $RPM_LD_FLAGS \
  -DSQLITE_ENABLE_COLUMN_METADATA=1 \
@@ -165,6 +201,7 @@ export CFLAGS="$RPM_OPT_FLAGS $RPM_LD_FLAGS \
 # We also need to build tcl & sqldiff
 %make_build sqlite3_analyzer
 %make_build sqldiff
+%make_build speedtest1
 
 %install -a
 # Install lemon
@@ -179,18 +216,29 @@ chmod 0755 $RPM_BUILD_ROOT/%{tcl_archdir}/sqlite%{version}/*.so
 install -D -m0755 sqlite3_analyzer $RPM_BUILD_ROOT/%{_bindir}/sqlite3_analyzer
 # Install sqldiff
 install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
+# Install speedtest1
+install -D -m0755 speedtest1 $RPM_BUILD_ROOT/%{_bindir}/sqlite3_speedtest1
 
 %files
 %{_bindir}/sqlite3
 %{_bindir}/sqldiff
+%{_bindir}/sqlite3_speedtest1
+%if %{with llvmir}
+%{clang_wrap_llvmir_bin_dir}/sqlite3{,_cmd}
+%{clang_wrap_llvmir_bin_dir}/sqldiff{,_cmd}
+%{clang_wrap_llvmir_bin_dir}/sqlite3_speedtest1{,_cmd}
+%endif
 %{_mandir}/man?/*
 %{_libdir}/*.so.%{version}
+%{_libdir}/*.so.0
+%if %{with llvmir}
+%{clang_wrap_llvmir_dir}/libsqlite3.so.0{,_cmd}
+%endif
 
 %files devel
 %doc README.md
 %{_includedir}/*.h
 %{_libdir}/*.so
-%{_libdir}/*.so.0
 %{_libdir}/pkgconfig/sqlite3.pc
 
 %files doc
@@ -199,12 +247,18 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %files -n lemon
 %{_bindir}/lemon
 %{_datadir}/lemon
+%if %{with llvmir}
+%{clang_wrap_llvmir_bin_dir}/lemon{,_cmd}
+%endif
 
 %files tcl
 %{tcl_archdir}/*
 
 %files analyzer
 %{_bindir}/sqlite3_analyzer
+%if %{with llvmir}
+%{clang_wrap_llvmir_bin_dir}/sqlite3_analyzer{,_cmd}
+%endif
 
 %changelog
 %autochangelog
