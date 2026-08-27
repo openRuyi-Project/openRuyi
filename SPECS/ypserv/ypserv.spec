@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -11,12 +12,14 @@ Summary:        The NIS (Network Information Service) server
 License:        GPL-2.0-only
 URL:            https://www.thkukuk.de/nis/nis/ypserv/
 VCS:            git:https://github.com/thkukuk/ypserv
-#!RemoteAsset
+#!RemoteAsset:  sha256:8c9d72ddd6d38aa48545c4b486932e3f7008354131ae1be27db863dfd7b11aaf
 Source0:        https://github.com/thkukuk/ypserv/archive/refs/tags/v%{version}.tar.gz
 Source1:        ypserv.service
 Source2:        yppasswdd.service
 Source3:        ypxfrd.service
 Source4:        yppasswdd
+Source5:        rpc.yppasswdd.env
+Source6:        yppasswdd-pre-setdomain
 BuildSystem:    autotools
 
 # disable gen docs.
@@ -70,6 +73,9 @@ install -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/ypxfrd.service
 
 install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/
 
+install -m 755 %{SOURCE5} %{buildroot}%{_libexecdir}/rpc.yppasswdd.env
+install -m 755 %{SOURCE6} %{buildroot}%{_libexecdir}/yppasswdd-pre-setdomain
+
 %post
 %systemd_post ypserv.service ypxfrd.service yppasswdd.service
 
@@ -89,7 +95,8 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/
 %{_unitdir}/*
 %{_libdir}/yp/*
 %{_sbindir}/*
+%{_libexecdir}/*
 %{_includedir}/rpcsvc
 
 %changelog
-%{?autochangelog}
+%autochangelog
