@@ -14,12 +14,12 @@
 }
 
 Name:           go-github-oapi-codegen-runtime
-Version:        1.0.0
+Version:        1.3.1
 Release:        %autorelease
 Summary:        Runtime helpers for oapi-codegen generated Go code
 License:        Apache-2.0
 URL:            https://github.com/oapi-codegen/runtime
-#!RemoteAsset:  sha256:927082334aa76c0adc3799f2954fb4698407c94b73cba06a8a4539dff9f50e2c
+#!RemoteAsset:  sha256:a6792fb0b8b85fa469ea99f35445844b68ddb19b449dd1aae1e55abe680b1315
 Source0:        https://github.com/oapi-codegen/runtime/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -1,0 +1,46 @@
+From a47d606bc9542d124bc20db0aac6743fe4b2fda9 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:28:55 +0800
+Subject: [PATCH] tests: use a local UDP listener for syslog
+
+The syslog writer test should not send packets to a fixed external address.
+Bind a loopback UDP listener and direct the writer to it so the test remains
+self-contained in restricted build environments.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ syslog_test.go | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/syslog_test.go b/syslog_test.go
+index 02ef8fa..81e6b6e 100644
+--- a/syslog_test.go
++++ b/syslog_test.go
+@@ -10,9 +10,15 @@ import (
+ )
+ 
+ func TestSyslogWriterTCP(t *testing.T) {
++	conn, err := net.ListenPacket("udp", "127.0.0.1:0")
++	if err != nil {
++		t.Fatalf("listen UDP: %v", err)
++	}
++	defer conn.Close()
++
+ 	w := &SyslogWriter{
+ 		Network: "udp",
+-		Address: "10.0.0.2:543",
++		Address: conn.LocalAddr().String(),
+ 		Tag:     "",
+ 		Dial:    net.Dial,
+ 	}
+@@ -23,7 +29,7 @@ func TestSyslogWriterTCP(t *testing.T) {
+ 		_, _ = wlprintf(w, ParseLevel(level), `{"ts":1234567890,"level":"%s","caller":"test.go:42","error":"i am test error","foo":"bar","n":42,"message":"hello journal writer"}`+"\n", level)
+ 	}
+ 
+-	_, err := wlprintf(w, InfoLevel, `{"time":"2019-07-10T05:35:54.277Z","level":"error","msg":"a test message\n"}`+"\n")
++	_, err = wlprintf(w, InfoLevel, `{"time":"2019-07-10T05:35:54.277Z","level":"error","msg":"a test message\n"}`+"\n")
+ 	if err != nil {
+ 		t.Errorf("write syslog writer error: %+v", err)
+ 	}
+-- 
+2.43.0
