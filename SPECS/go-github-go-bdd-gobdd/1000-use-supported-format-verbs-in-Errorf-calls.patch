@@ -1,0 +1,47 @@
+From 92db1e938ffe32ccaafc19d948a223b3a0608e0a Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 09:43:44 +0800
+Subject: [PATCH] gobdd: use supported format verbs in Errorf calls
+
+Backport the relevant fix from:
+
+https://github.com/go-bdd/gobdd/commit/de7b6339a33ed28fa8733acfcff1aab60409d574
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ gobdd.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gobdd.go b/gobdd.go
+index be553ef..95c4cad 100644
+--- a/gobdd.go
++++ b/gobdd.go
+@@ -197,7 +197,7 @@ func (s *Suite) AddParameterTypes(from string, to []string) {
+ func (s *Suite) AddStep(expr string, step interface{}) {
+ 	err := validateStepFunc(step)
+ 	if err != nil {
+-		s.t.Errorf("the step function for step `%s` is incorrect: %w", expr, err)
++		s.t.Errorf("the step function for step `%s` is incorrect: %s", expr, err.Error())
+ 		s.hasStepErrors = true
+ 
+ 		return
+@@ -208,7 +208,7 @@ func (s *Suite) AddStep(expr string, step interface{}) {
+ 	for _, expr := range exprs {
+ 		compiled, err := regexp.Compile(expr)
+ 		if err != nil {
+-			s.t.Errorf("the step function is incorrect: %w", err)
++			s.t.Errorf("the step function is incorrect: %s", err.Error())
+ 			s.hasStepErrors = true
+ 
+ 			return
+@@ -248,7 +248,7 @@ func (s *Suite) applyParameterTypes(expr string) []string {
+ func (s *Suite) AddRegexStep(expr *regexp.Regexp, step interface{}) {
+ 	err := validateStepFunc(step)
+ 	if err != nil {
+-		s.t.Errorf("the step function is incorrect: %w", err)
++		s.t.Errorf("the step function is incorrect: %s", err.Error())
+ 		s.hasStepErrors = true
+ 
+ 		return
+-- 
+2.43.0
+
