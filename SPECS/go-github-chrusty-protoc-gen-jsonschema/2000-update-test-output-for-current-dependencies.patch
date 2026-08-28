@@ -1,0 +1,68 @@
+From 5218546af8a753a4473f59621f9e9be817b602b0 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 07:28:25 +0800
+Subject: [PATCH] test: update output for current dependencies
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ internal/converter/testdata/google_int64_value_allow_null.go    | 2 +-
+ .../testdata/google_int64_value_disallow_string_allow_null.go   | 2 +-
+ internal/converter/testdata/json_fields.go                      | 2 +-
+ internal/converter/testdata/wellknown.go                        | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/internal/converter/testdata/google_int64_value_allow_null.go b/internal/converter/testdata/google_int64_value_allow_null.go
+index f14ad63..abadb6c 100644
+--- a/internal/converter/testdata/google_int64_value_allow_null.go
++++ b/internal/converter/testdata/google_int64_value_allow_null.go
+@@ -16,7 +16,7 @@ const GoogleInt64ValueAllowNull = `{
+                         }
+                     ],
+                     "title": "Int 64 Value",
+-                    "description": "Wrapper message for ` + "`int64`" + `. The JSON representation for ` + "`Int64Value`" + ` is JSON string."
++                    "description": "Wrapper message for ` + "`int64`" + `. The JSON representation for ` + "`Int64Value`" + ` is JSON string. Not recommended for use in new APIs, but still useful for legacy APIs and has no plan to be removed."
+                 }
+             },
+             "additionalProperties": true,
+diff --git a/internal/converter/testdata/google_int64_value_disallow_string_allow_null.go b/internal/converter/testdata/google_int64_value_disallow_string_allow_null.go
+index e73ee97..7f6e3e9 100644
+--- a/internal/converter/testdata/google_int64_value_disallow_string_allow_null.go
++++ b/internal/converter/testdata/google_int64_value_disallow_string_allow_null.go
+@@ -16,7 +16,7 @@ const GoogleInt64ValueDisallowStringAllowNull = `{
+                         }
+                     ],
+                     "title": "Int 64 Value",
+-                    "description": "Wrapper message for ` + "`int64`" + `. The JSON representation for ` + "`Int64Value`" + ` is JSON string."
++                    "description": "Wrapper message for ` + "`int64`" + `. The JSON representation for ` + "`Int64Value`" + ` is JSON string. Not recommended for use in new APIs, but still useful for legacy APIs and has no plan to be removed."
+                 }
+             },
+             "additionalProperties": true,
+diff --git a/internal/converter/testdata/json_fields.go b/internal/converter/testdata/json_fields.go
+index 31ad675..4f24c16 100644
+--- a/internal/converter/testdata/json_fields.go
++++ b/internal/converter/testdata/json_fields.go
+@@ -33,7 +33,7 @@ const JSONFields = `{
+             },
+             "additionalProperties": true,
+             "type": "object",
+-            "title": "JSON Fields"
++            "title": "Jsonfields"
+         }
+     }
+ }`
+diff --git a/internal/converter/testdata/wellknown.go b/internal/converter/testdata/wellknown.go
+index 0e24404..e11b2a4 100644
+--- a/internal/converter/testdata/wellknown.go
++++ b/internal/converter/testdata/wellknown.go
+@@ -27,7 +27,7 @@ const WellKnown = `{
+                     "items": {
+                         "type": "integer",
+                         "title": "Int 32 Value",
+-                        "description": "Wrapper message for ` + "`int32`" + `. The JSON representation for ` + "`Int32Value`" + ` is JSON number."
++                        "description": "Wrapper message for ` + "`int32`" + `. The JSON representation for ` + "`Int32Value`" + ` is JSON number. Not recommended for use in new APIs, but still useful for legacy APIs and has no plan to be removed."
+                     },
+                     "type": "array"
+                 },
+-- 
+2.43.0
+

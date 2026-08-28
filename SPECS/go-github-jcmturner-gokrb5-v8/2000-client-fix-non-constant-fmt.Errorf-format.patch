@@ -1,0 +1,25 @@
+From 3fdd316ae82ce44471f42371d8aa7db2980306c3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 15:31:35 +0800
+Subject: [PATCH] client: fix non-constant fmt.Errorf format
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ v8/client/client.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/v8/client/client.go b/v8/client/client.go
+index 074e3f1..0701c36 100644
+--- a/v8/client/client.go
++++ b/v8/client/client.go
+@@ -303,7 +303,7 @@ func (cl *Client) Diagnostics(w io.Writer) error {
+ 	if errs == nil || len(errs) < 1 {
+ 		return nil
+ 	}
+-	err = fmt.Errorf(strings.Join(errs, "\n"))
++	err = fmt.Errorf("%s", strings.Join(errs, "\n"))
+ 	return err
+ }
+ 
+-- 
+2.43.0
