@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: tangyihong <yihong.or@isrc.iscas.ac.cn>
+Date: Fri, 17 Jul 2026 12:00:00 +0800
+Subject: [PATCH] Adapt root module to runtime-spec 1.3 Pids limit
+
+runtime-spec 1.3 changed LinuxPids.Limit from int64 to *int64. Check for
+nil and dereference the value when converting OCI resources.
+
+The equivalent upstream adjustment is present in:
+https://github.com/containerd/cgroups/commit/34ef430d727e569c31b4f2bbc7d83bffeb1c0165
+
+---
+ pids.go     | 4 ++--
+ v2/utils.go | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/pids.go b/pids.go
+--- a/pids.go
++++ b/pids.go
+@@ -48,10 +48,10 @@ func (p *pidsController) Create(path string, resources *specs.LinuxResources) e
+ 	if err := os.MkdirAll(p.Path(path), defaultDirPerm); err != nil {
+ 		return err
+ 	}
+-	if resources.Pids != nil && resources.Pids.Limit > 0 {
++	if resources.Pids != nil && resources.Pids.Limit != nil && *resources.Pids.Limit > 0 {
+ 		return retryingWriteFile(
+ 			filepath.Join(p.Path(path), "pids.max"),
+-			[]byte(strconv.FormatInt(resources.Pids.Limit, 10)),
++			[]byte(strconv.FormatInt(*resources.Pids.Limit, 10)),
+ 			defaultFilePerm,
+ 		)
+ 	}
+diff --git a/v2/utils.go b/v2/utils.go
+--- a/v2/utils.go
++++ b/v2/utils.go
+@@ -198,9 +198,9 @@ func resourcesFromSpec(spec *specs.LinuxResources) *Resources {
+ 		}
+ 		resources.HugeTlb = &hugeTlbUsage
+ 	}
+-	if pids := spec.Pids; pids != nil {
++	if pids := spec.Pids; pids != nil && pids.Limit != nil {
+ 		resources.Pids = &Pids{
+-			Max: pids.Limit,
++			Max: *pids.Limit,
+ 		}
+ 	}
+ 	if i := spec.BlockIO; i != nil {
+--
+2.43.0

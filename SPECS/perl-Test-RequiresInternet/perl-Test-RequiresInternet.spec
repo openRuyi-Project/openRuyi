@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Test::RequiresInternet Perl module
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-RequiresInternet
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MA/MALLEN/Test-RequiresInternet-%{version}.tar.gz
+#!RemoteAsset:  sha256:bba7b32a1cc0d58ce2ec20b200a7347c69631641e8cae8ff4567ad24ef1e833e
+Source0:        https://www.cpan.org/authors/id/M/MA/MALLEN/Test-RequiresInternet-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Socket)
@@ -28,20 +32,8 @@ BuildRequires:  perl(warnings)
 SYNOPSIS      use Test::More;      use Test::RequiresInternet
 ('www.example.com' => 80, 'foobar.io' => 25);
 
-%prep
-%setup -q -n Test-RequiresInternet-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,34 @@
+From 0f4c4944a7eeab64cd8fc17d62d908e8238b63fd Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:30:00 +0800
+Subject: [PATCH] version the shared libraries
+
+magma installs libmagma and libmagma_sparse unversioned. Give them a
+SONAME/version (driven by the -DMAGMA_SO_VERSION cache variable) so the
+unversioned .so symlink can live in the -devel sub-package while the
+versioned library stays in the main runtime package.
+
+Upstream request: https://bitbucket.org/icl/magma/issues/77/versioning-so
+---
+ CMakeLists.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 405b272..7cd30e0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -612,6 +612,11 @@ foreach( TEST ${sparse_testing_all} )
+ endforeach()
+ add_custom_target( sparse-testing DEPENDS ${sparse-testing} )
+ 
++# openRuyi: give the shared libraries a SONAME/version so the runtime
++# and devel sub-packages can be split (upstream ships them unversioned).
++set_target_properties( magma PROPERTIES VERSION ${MAGMA_SO_VERSION} SOVERSION ${MAGMA_SO_VERSION} )
++set_target_properties( magma_sparse PROPERTIES VERSION ${MAGMA_SO_VERSION} SOVERSION ${MAGMA_SO_VERSION} )
++
+ 
+ # ----------------------------------------
+ # what to install
+-- 
+2.53.0
+

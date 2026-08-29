@@ -5,13 +5,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+# Parallel build might fail on our platform.
+%global _smp_ncpus_max 1
+
 Name:           libvorbis
 Version:        1.3.7
 Release:        %autorelease
 Summary:        The Vorbis General Audio Compression Codec
 License:        BSD-3-Clause
 URL:            https://github.com/xiph/vorbis
-#!RemoteAsset
+#!RemoteAsset:  sha256:270c76933d0934e42c5ee0a54a36280e2d87af1de3cc3e584806357e237afd13
 Source:         https://github.com/xiph/vorbis/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -56,8 +59,10 @@ rm -f %{buildroot}%{_docdir}/%{name}-%{version}/doxygen-build.stamp
 %{_libdir}/libvorbis.so
 %{_libdir}/libvorbisfile.so
 %{_libdir}/libvorbisenc.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/vorbis.pc
+%{_libdir}/pkgconfig/vorbisenc.pc
+%{_libdir}/pkgconfig/vorbisfile.pc
 %{_datadir}/aclocal/vorbis.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

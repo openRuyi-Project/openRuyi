@@ -9,14 +9,19 @@ Name:           perl-Encode-JIS2K
 Version:        0.05
 Release:        %autorelease
 Summary:        JIS X 0212 (aka JIS 2000) Encodings
-License:        Artistic-1.0
+License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Encode-JIS2K
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DANKOGAI/Encode-JIS2K-%{version}.tar.gz
+#!RemoteAsset:  sha256:022f1f3d6869742b3718c27bfcca6f7c96aceffac0a2267d140bbf653d7c0ac2
+Source0:        https://www.cpan.org/authors/id/D/DA/DANKOGAI/Encode-JIS2K-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
+BuildRequires:  perl-devel
 BuildRequires:  perl(Encode) >= 1.41
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -25,21 +30,8 @@ Requires:       perl(Encode) >= 1.41
 %description
 To find out how to use this module in detail, see Encode.
 
-%prep
-%setup -q -n Encode-JIS2K-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

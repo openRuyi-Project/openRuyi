@@ -7,12 +7,12 @@
 %global srcname wcwidth
 
 Name:           python-%{srcname}
-Version:        0.2.13
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Measures number of Terminal column cells of wide-character codes
 License:        MIT
 URL:            https://github.com/jquast/wcwidth
-#!RemoteAsset
+#!RemoteAsset:  sha256:90e3a7ea092341c44b99562e75d09e4d5160fe7a3974c6fb842a101a95e7eed0
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +37,4 @@ printable width of a string on a Terminal.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

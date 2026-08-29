@@ -1,0 +1,16 @@
+[Unit]
+Description=Clam AntiVirus userspace daemon
+Documentation=man:clamd(8) man:clamd.conf(5) https://docs.clamav.net/
+After=network.target
+ConditionPathExistsGlob=/var/lib/clamav/main.{c[vl]d,inc}
+ConditionPathExistsGlob=/var/lib/clamav/daily.{c[vl]d,inc}
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/clamd -c /etc/clamav/clamd.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+Restart=on-failure
+TimeoutStartSec=5min
+
+[Install]
+WantedBy=multi-user.target

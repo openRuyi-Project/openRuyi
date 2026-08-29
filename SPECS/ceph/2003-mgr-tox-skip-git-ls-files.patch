@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 10 May 2026 16:06:17 +0800
+Subject: [PATCH] mgr/tox: drop `git ls-files cephadm` assertions from flake8
+ env
+
+Same root cause as 2017-cephadm-tox-drop-git-lsfiles-checks.patch: the
+flake8 env asserts the exact count of `docker.io` / `quay.io`
+references in cephadm/*.py via `git ls-files`, which fails on the
+release tarball (no .git, zero matches, assertion trips).  The
+flake8 lint itself passes.
+
+These checks are only meaningful in a dev git checkout; on a frozen
+tarball both counts are fixed.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/pybind/mgr/tox.ini | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/pybind/mgr/tox.ini b/src/pybind/mgr/tox.ini
+index c2deb6272..7cff726ff 100644
+--- a/src/pybind/mgr/tox.ini
++++ b/src/pybind/mgr/tox.ini
+@@ -161,8 +161,6 @@ modules =
+ commands =
+     flake8 --config=tox.ini {posargs} \
+       {posargs:{[testenv:flake8]modules}}
+-    bash -c 'test $(git ls-files cephadm | grep ".py$" | grep -v tests | xargs grep "docker.io" | wc -l) == 3'
+-    bash -c 'test $(git ls-files cephadm | grep ".py$" | grep -v tests | xargs grep "quay.io" | wc -l) == 8'
+
+ [testenv:jinjalint]
+ deps =

@@ -7,20 +7,24 @@
 %global srcname platformdirs
 
 Name:           python-%{srcname}
-Version:        4.4.0
+Version:        4.9.6
 Release:        %autorelease
+Summary:        Determine the appropriate platform-specific directories
 License:        MIT
 URL:            https://github.com/platformdirs/platformdirs
-Summary:        Determine the appropriate platform-specific directories
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
-#!RemoteAsset
+#!RemoteAsset:  sha256:3bfa75b0ad0db84096ae777218481852c0ebc6c727b3168c1b9e0118e458cf0a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
 BuildSystem:    pyproject
-BuildOption(install): -l %{srcname} +auto
+
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 When writing applications, finding the right location to
 store user data and configuration varies per platform.  Even for
@@ -35,4 +39,4 @@ platform-specific directories, e.g. the ``user data dir''.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

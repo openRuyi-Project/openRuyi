@@ -10,11 +10,15 @@ Release:        %autorelease
 Summary:        High resolution alarm, sleep, gettimeofday, interval timers
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Time-HiRes
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/A/AT/ATOOMIC/Time-HiRes-%{version}.tar.gz
+#!RemoteAsset:  sha256:9841be5587bfb7cd1f2fe267b5e5ac04ce25e79d5cc77e5ef9a9c5abd101d7b1
+Source0:        https://www.cpan.org/authors/id/A/AT/ATOOMIC/Time-HiRes-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -25,6 +29,7 @@ BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(XSLoader)
+BuildRequires:  perl-devel
 
 %description
 The Time::HiRes module implements a Perl interface to the usleep,
@@ -34,21 +39,8 @@ below and the test scripts for usage; see your system documentation for the
 description of the underlying nanosleep or usleep, ualarm, gettimeofday,
 and setitimer/getitimer calls.
 
-%prep
-%setup -q -n Time-HiRes-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog

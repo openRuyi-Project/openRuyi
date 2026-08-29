@@ -7,12 +7,12 @@
 %global srcname anyio
 
 Name:           python-%{srcname}
-Version:        4.11.0
+Version:        4.13.0
 Release:        %autorelease
 Summary:        Compatibility layer for multiple asynchronous event loop implementations
 License:        MIT
 URL:            https://github.com/agronholm/anyio
-#!RemoteAsset
+#!RemoteAsset:  sha256:334b70e641fd2221c1505b3890c69882fe4a2df910cba14d97019b90b24439dc
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -20,10 +20,10 @@ BuildSystem:    pyproject
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,4 +36,4 @@ of either asyncio or trio.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,17 +13,18 @@ Release:        %autorelease
 Summary:        Create bespoke OS images
 License:        LGPL-2.1-or-later
 URL:            https://github.com/systemd/mkosi
-#!RemoteAsset
+#!RemoteAsset:  sha256:5a1fb73305fe6c531e72b72deee906b1870bd3d197a5f7f1569a8bba4949b878
 Source:         https://github.com/systemd/mkosi/archive/%{commit}/mkosi-%{commit}.tar.gz
 
-BuildRequires:  python3-devel python3-pip
+BuildRequires:  python3-devel
+BuildRequires:  python3dist(pip)
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildSystem:    pyproject
 Patch0:         0001-Add-openruyi-support.patch
 
-BuildOption(prep): -n %{name}-%{commit}
-BuildOption(install): %{name} +auto
+BuildOption(prep):  -n %{name}-%{commit}
+BuildOption(install):  %{name} +auto
 
 Requires:       python3
 Requires:       coreutils
@@ -99,4 +100,4 @@ install -m 0644 -D mkosi.zsh %{buildroot}%{_datadir}/zsh/site-functions/_mkosi
 %ghost %dir %{_sysconfdir}/mkosi-addon
 
 %changelog
-%{?autochangelog}
+%autochangelog

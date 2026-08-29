@@ -11,8 +11,8 @@ Release:        %autorelease
 Summary:        An encoder/decoder for the Free Lossless Audio Codec
 License:        BSD-3-Clause AND GPL-2.0-or-later AND GFDL-1.3-or-later
 URL:            https://github.com/xiph/flac
-#!RemoteAsset
-Source:         https://downloads.xiph.org/releases/flac/flac-%{version}.tar.xz
+#!RemoteAsset:  sha256:f2c1c76592a82ffff8413ba3c4a1299b6c7ab06c734dee03fd88630485c2b920
+Source0:        https://downloads.xiph.org/releases/flac/flac-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildRequires:  cmake
@@ -37,6 +37,7 @@ This package contains the shared libraries for the Free Lossless Audio Codec.
 %package        devel
 Summary:        Development files for the FLAC libraries
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, libraries, and documentation
@@ -73,8 +74,9 @@ install src/libFLAC++/libFLAC++.m4 %{buildroot}%{_datadir}/aclocal/
 %{_libdir}/cmake/FLAC/
 %{_libdir}/libFLAC.so
 %{_libdir}/libFLAC++.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/flac++.pc
+%{_libdir}/pkgconfig/flac.pc
 %{_datadir}/aclocal/*.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

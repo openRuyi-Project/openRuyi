@@ -50,7 +50,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/X11/extensions/*.h
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xrender.pc
 %{_docdir}/libXrender/*
 
 %changelog

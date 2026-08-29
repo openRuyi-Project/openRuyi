@@ -1,2 +1,0 @@
-%__kernel_provides	%{_rpmconfigdir}/find-provides.ksyms
-%__kernel_path		^((/usr)?/lib/modules/[^/]*/kernel/(.*\.ko(\.gz|\.xz|\.zst)?|vmlinu[xz])|/boot/vmlinu[xz].*)$

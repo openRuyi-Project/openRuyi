@@ -1,45 +1,38 @@
---- arrow-apache-arrow-23.0.1/cpp/cmake_modules/ThirdpartyToolchain.cmake.orig
-+++ arrow-apache-arrow-23.0.1/cpp/cmake_modules/ThirdpartyToolchain.cmake
-@@ -2321,72 +2321,21 @@
- if(ARROW_MIMALLOC)
-   if(NOT ARROW_ENABLE_THREADING)
+From abba42a759b9b80146f327155d605618f33d96ec Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 26 Jun 2026 17:22:58 +0800
+Subject: [PATCH] Using system mimalloc shared library
+
+---
+ cpp/cmake_modules/ThirdpartyToolchain.cmake | 68 ++++-----------------
+ 1 file changed, 12 insertions(+), 56 deletions(-)
+
+diff --git a/cpp/cmake_modules/ThirdpartyToolchain.cmake b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+index 665d1b5..04bc728 100644
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -2349,62 +2349,18 @@ if(ARROW_MIMALLOC)
      message(FATAL_ERROR "Can't use mimalloc with ARROW_ENABLE_THREADING=OFF")
--  endif()
--
+   endif()
+ 
 -  message(STATUS "Building (vendored) mimalloc from source")
 -  # We only use a vendored mimalloc as we want to control its build options.
 -
 -  set(MIMALLOC_LIB_BASE_NAME "mimalloc")
 -  if(${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
 -    set(MIMALLOC_LIB_BASE_NAME "${MIMALLOC_LIB_BASE_NAME}-${LOWERCASE_BUILD_TYPE}")
-   endif()
- 
+-  endif()
+-
 -  set(MIMALLOC_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/mimalloc_ep/src/mimalloc_ep")
 -  set(MIMALLOC_INCLUDE_DIR "${MIMALLOC_PREFIX}/include")
 -  set(MIMALLOC_STATIC_LIB
 -      "${MIMALLOC_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}${MIMALLOC_LIB_BASE_NAME}${CMAKE_STATIC_LIBRARY_SUFFIX}"
 -  )
-+  message(STATUS "Using system mimalloc shared library")
-+  find_package(mimalloc REQUIRED)
- 
+-
 -  set(MIMALLOC_C_FLAGS ${EP_C_FLAGS})
 -  if(MINGW)
 -    # Workaround https://github.com/microsoft/mimalloc/issues/910 on RTools40
 -    set(MIMALLOC_C_FLAGS "${MIMALLOC_C_FLAGS} -DERROR_COMMITMENT_MINIMUM=635")
-+  if(NOT TARGET mimalloc::mimalloc)
-+    add_library(mimalloc::mimalloc SHARED IMPORTED)
-+    find_library(MIMALLOC_LIB mimalloc)
-+    find_path(MIMALLOC_INCLUDE_DIR mimalloc.h)
-+    set_target_properties(mimalloc::mimalloc PROPERTIES
-+      IMPORTED_LOCATION "${MIMALLOC_LIB}")
-+    target_include_directories(mimalloc::mimalloc INTERFACE "${MIMALLOC_INCLUDE_DIR}")
-   endif()
- 
--  set(MIMALLOC_PATCH_COMMAND "")
--  if(${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
--    find_program(PATCH patch REQUIRED)
--    set(MIMALLOC_PATCH_COMMAND ${PATCH} -p1 -i
--                               ${CMAKE_CURRENT_LIST_DIR}/mimalloc-1138.patch)
 -  endif()
 -
 -  set(MIMALLOC_CMAKE_ARGS
@@ -59,7 +52,6 @@
 -                      ${EP_COMMON_OPTIONS}
 -                      URL ${MIMALLOC_SOURCE_URL}
 -                      URL_HASH "SHA256=${ARROW_MIMALLOC_BUILD_SHA256_CHECKSUM}"
--                      PATCH_COMMAND ${MIMALLOC_PATCH_COMMAND}
 -                      CMAKE_ARGS ${MIMALLOC_CMAKE_ARGS}
 -                      BUILD_BYPRODUCTS "${MIMALLOC_STATIC_LIB}")
 -
@@ -79,7 +71,21 @@
 -  list(APPEND ARROW_BUNDLED_STATIC_LIBS mimalloc::mimalloc)
 -
 -  set(mimalloc_VENDORED TRUE)
++  message(STATUS "Using system mimalloc shared library")
++  find_package(mimalloc REQUIRED)
++
++  if(NOT TARGET mimalloc::mimalloc)
++    add_library(mimalloc::mimalloc SHARED IMPORTED)
++    find_library(MIMALLOC_LIB mimalloc)
++    find_path(MIMALLOC_INCLUDE_DIR mimalloc.h)
++    set_target_properties(mimalloc::mimalloc PROPERTIES
++      IMPORTED_LOCATION "${MIMALLOC_LIB}")
++    target_include_directories(mimalloc::mimalloc INTERFACE "${MIMALLOC_INCLUDE_DIR}")
++  endif()
 +  set(mimalloc_VENDORED FALSE)
  endif()
  
  # ----------------------------------------------------------------------
+-- 
+2.54.0
+

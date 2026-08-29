@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname click
 
 Name:           python-%{srcname}
-Version:        8.1.7
+Version:        8.3.3
 Release:        %autorelease
 Summary:        Simple wrapper around optparse for powerful command line utilities
 License:        BSD-3-Clause
 URL:            https://github.com/pallets/click
-#!RemoteAsset
+#!RemoteAsset:  sha256:398329ad4837b2ff7cbe1dd166a4c0f8900c3ca3a218de04466f38f6497f18a2
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +23,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -35,8 +36,8 @@ comes with good defaults out of the box.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.rst
-%doc README.rst CHANGES.rst
+%doc README.md CHANGES.rst
+%license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

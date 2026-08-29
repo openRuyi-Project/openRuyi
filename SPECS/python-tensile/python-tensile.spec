@@ -7,7 +7,7 @@
 
 %global srcname tensile
 %global upstreamname Tensile
-%global rocm_version 7.1.1
+%global rocm_version 7.2.4
 
 Name:           python-%{srcname}
 Version:        %{rocm_version}
@@ -15,12 +15,14 @@ Release:        %autorelease
 Summary:        Tool for creating benchmark-driven backend libraries for GEMMs
 License:        MIT
 URL:            https://github.com/ROCm/Tensile
-#!RemoteAsset
-Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+#!RemoteAsset:  sha256:a514e11ea6a53ab41d68e335c1dd730d1a480c74d49084450fbeef09f2df2b39
+Source0:        %{url}/archive/rocm-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{upstreamname}
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
 Requires:       cmake-filesystem
@@ -29,7 +31,7 @@ Requires:       rocminfo
 Requires:       python3dist(msgpack)
 Requires:       python3dist(pyyaml)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %patchlist
@@ -88,4 +90,4 @@ mv %{buildroot}%{_datadir}/cmake/Tensile/*.cmake %{buildroot}%{python3_sitelib}/
 %{_bindir}/TensileRetuneLibrary
 
 %changelog
-%{?autochangelog}
+%autochangelog

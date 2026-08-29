@@ -3,19 +3,20 @@
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global cups_serverbin %{_exec_prefix}/lib/cups
 
 Name:           cups
-Version:        2.4.14
+Version:        2.4.19
 Release:        %autorelease
 Summary:        Standards-based, open source printing system for Linux
 License:        Apache-2.0
 URL:            https://openprinting.github.io/cups/
 VCS:            git:https://github.com/OpenPrinting/cups
-#!RemoteAsset
+#!RemoteAsset:  sha256:820984b12a67f98705785aae2dd1347fe0ac097828001d4583ff64574aed6389
 Source0:        https://github.com/OpenPrinting/cups/releases/download/v%{version}/cups-%{version}-source.tar.gz
 Source1:        macros.cups
 BuildSystem:    autotools
@@ -59,17 +60,16 @@ Requires(post): grep
 Requires(post): sed
 
 %patchlist
-cups-system-auth.patch
-cups-multilib.patch
-cups-banners.patch
-cups-direct-usb.patch
-cups-driverd-timeout.patch
-cups-usb-paperout.patch
-cups-uri-compat.patch
-cups-freebind.patch
-cups-ipp-multifile.patch
-cups-web-devices-timeout.patch
-fix-httpAddrGetList-test-case-fail.patch
+0001-cups-system-auth.patch
+0002-cups-multilib.patch
+0003-cups-banners.patch
+0004-cups-direct-usb.patch
+0005-cups-driverd-timeout.patch
+0006-cups-usb-paperout.patch
+0007-cups-uri-compat.patch
+0008-cups-freebind.patch
+0009-cups-ipp-multifile.patch
+0010-cups-web-devices-timeout.patch
 
 %description
 CUPS is the standards-based, open source printing system developed by
@@ -118,7 +118,7 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d
 install -d %{buildroot}%{_tmpfilesdir}
 cat > %{buildroot}%{_tmpfilesdir}/cups.conf <<EOF
 d /run/cups 0755 root lp -
-d /run/cups/certs 0511 lp sys -
+d /run/cups/certs 0511 nobody sys -
 d /var/spool/cups/tmp - - - 30d
 EOF
 
@@ -147,9 +147,6 @@ rm -rf %{buildroot}%{_unitdir}/cups-lpd@.service
 # there are pdf-banners shipped with cups-filters (#919489)
 rm -rf %{buildroot}%{_datadir}/cups/banners
 rm -f %{buildroot}%{_datadir}/cups/data/testprint
-
-# TODO: Fix tests.
-%check
 
 %files -f %{name}.lang
 %license LICENSE NOTICE
@@ -190,4 +187,4 @@ rm -f %{buildroot}%{_datadir}/cups/data/testprint
 %{_rpmconfigdir}/macros.d/macros.cups
 
 %changelog
-%{?autochangelog}
+%autochangelog

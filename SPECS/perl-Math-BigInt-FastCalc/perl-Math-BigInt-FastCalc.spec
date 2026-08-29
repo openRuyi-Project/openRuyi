@@ -10,11 +10,15 @@ Release:        %autorelease
 Summary:        Math::BigInt::Calc with some XS for more speed
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Math-BigInt-FastCalc
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PJ/PJACKLAM/Math-BigInt-FastCalc-%{version}.tar.gz
+#!RemoteAsset:  sha256:6dfd72e784e612aab46136532a609c0b77a5b0b7854ab837682d64fb1af2a74e
+Source0:        https://www.cpan.org/authors/id/P/PJ/PJACKLAM/Math-BigInt-FastCalc-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.1
 BuildRequires:  perl(Carp) >= 1.22
@@ -29,21 +33,8 @@ Requires:       perl(Math::BigInt) >= 2.005001
 %description
 Math::BigInt::FastCalc inherits from Math::BigInt::Calc.
 
-%prep
-%setup -q -n Math-BigInt-FastCalc-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc CHANGES CREDITS README README.md TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog

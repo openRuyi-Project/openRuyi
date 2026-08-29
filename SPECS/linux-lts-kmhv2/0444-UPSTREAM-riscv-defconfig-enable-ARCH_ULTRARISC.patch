@@ -1,0 +1,31 @@
+From e28418b1445fd81ea0360d13cd0c8a2a794cd7f6 Mon Sep 17 00:00:00 2001
+From: Jia Wang <wangjia@ultrarisc.com>
+Date: Fri, 15 May 2026 09:18:05 +0800
+Subject: [RUYI PATCH] UPSTREAM: riscv: defconfig: enable ARCH_ULTRARISC
+
+Enable `ARCH_ULTRARISC` in the default RISC-V defconfig.
+
+Signed-off-by: Jia Wang <wangjia@ultrarisc.com>
+Link: https://patch.msgid.link/20260515-ultrarisc-pinctrl-v1-9-bf559589ea8a@ultrarisc.com
+Signed-off-by: Paul Walmsley <pjw@kernel.org>
+(cherry picked from commit 3fb29495b486b1ec61708248cb388745fc607278)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index fc2725cbca18..140c12d4ab15 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -30,6 +30,7 @@ CONFIG_ARCH_SPACEMIT=y
+ CONFIG_SOC_STARFIVE=y
+ CONFIG_ARCH_SUNXI=y
+ CONFIG_ARCH_THEAD=y
++CONFIG_ARCH_ULTRARISC=y
+ CONFIG_ARCH_VIRT=y
+ CONFIG_ARCH_CANAAN=y
+ CONFIG_SMP=y
+-- 
+2.53.0
+

@@ -8,15 +8,19 @@
 Name:           perl-IPC-Run3
 Version:        0.049
 Release:        %autorelease
-Summary:        Run a subprocess in batch mode
-License:        GPL-1.0-or-later OR Artistic-1.0-Perl OR BSD-2-Clause
+Summary:        Run a subprocess with input/output redirection
+License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/IPC-Run3
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/IPC-Run3-%{version}.tar.gz
+#!RemoteAsset:  sha256:9d048ae7b9ae63871bae976ba01e081d887392d904e5d48b04e22d35ed22011a
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/IPC-Run3-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More) >= 0.31
@@ -30,20 +34,8 @@ and/or stderr to files and perl data structures. It aims to satisfy 99%
 of the need for using system, qx, and open3 with a simple, extremely
 Perlish API.
 
-%prep
-%setup -q -n IPC-Run3-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

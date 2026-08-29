@@ -13,7 +13,7 @@ Summary:        XCB utility modules
 License:        MIT
 URL:            https://xcb.freedesktop.org/
 VCS:	        git:https://gitlab.freedesktop.org/xorg/lib/libxcb-util.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:5abe3bbbd8e54f0fa3ec945291b7e8fa8cfd3cccc43718f8758430f94126e512
 Source:         https://xcb.freedesktop.org/dist/xcb-util-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -62,7 +62,10 @@ in %{name}.
 %doc README.md
 %{_includedir}/xcb
 %{_libdir}/libxcb-util.so
-%{_libdir}/pkgconfig/xcb-*.pc
+%{_libdir}/pkgconfig/xcb-atom.pc
+%{_libdir}/pkgconfig/xcb-aux.pc
+%{_libdir}/pkgconfig/xcb-event.pc
+%{_libdir}/pkgconfig/xcb-util.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

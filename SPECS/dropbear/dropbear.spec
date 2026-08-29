@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dropbear
-Version:        2025.89
+Version:        2026.91
 Release:        %autorelease
 Summary:        A lightweight SSH server and client
 License:        MIT
 URL:            https://matt.ucc.asn.au/dropbear/dropbear.html
 VCS:            git:https://github.com/mkj/dropbear
-#!RemoteAsset
+#!RemoteAsset:  sha256:defa924475abf6bc1e74abc00173e46bfdc804bd47caafa14f5a4ef0cc76da34
 Source0:        https://matt.ucc.asn.au/dropbear/releases/dropbear-%{version}.tar.bz2
 Source1:        dropbear.service
 Source2:        dropbear-keygen.service
@@ -75,4 +75,4 @@ install -pm644 %{SOURCE2} %{buildroot}%{_unitdir}/dropbear-keygen.service
 %{_mandir}/man8/*.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

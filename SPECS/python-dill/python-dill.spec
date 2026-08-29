@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/uqfoundation/dill
 #!RemoteAsset:  sha256:423092df4182177d4d8ba8290c8a5b640c66ab35ec7da59ccfa00f6fa3eea5fa
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # Skip import tests
@@ -28,7 +29,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ and the inverse of which is converting a byte stream back to a Python object hie
 %{_bindir}/undill
 
 %changelog
-%{?autochangelog}
+%autochangelog

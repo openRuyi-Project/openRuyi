@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Safely and cleanly create closures via string eval
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Eval-Closure
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DO/DOY/Eval-Closure-%{version}.tar.gz
+#!RemoteAsset:  sha256:ea0944f2f5ec98d895bef6d503e6e4a376fea6383a6bc64c7670d46ff2218cad
+Source0:        https://www.cpan.org/authors/id/D/DO/DOY/Eval-Closure-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(B)
 BuildRequires:  perl(blib) >= 1.01
@@ -48,20 +52,8 @@ the scope it's used in (which determines which variables are in scope
 inside the eval), and it's easy to miss compilation errors, since eval
 catches them and sticks them in $@ instead.
 
-%prep
-%setup -q -n Eval-Closure-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

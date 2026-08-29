@@ -15,9 +15,11 @@ Summary:        All Google Noto Fonts except CJK and Emoji
 License:        OFL-1.1
 URL:            https://notofonts.github.io/
 VCS:            git:https://github.com/notofonts/notofonts.github.io
-#!RemoteAsset
+#!RemoteAsset:  sha256:f1bec0dd722fcfcb0aa75c803530e3a8ae4e0dd59e5b93a52dd8f57d5494ef44
 Source0:        https://github.com/notofonts/notofonts.github.io/archive/refs/tags/noto-monthly-release-%{hyear}.%{hmonth}.%{hday}.tar.gz
 BuildArch:      noarch
+
+BuildRequires:  fonts-rpm-macros
 
 # By default, we only install the variable fonts
 Requires:       %{name}-vf = %{version}-%{release}
@@ -53,35 +55,23 @@ cp notofonts.github.io-noto-monthly-release-%{hyear}.%{hmonth}.%{hday}/fonts/LIC
 # No build required
 
 %install
-mkdir -p %{buildroot}%{_datadir}/fonts/truetype
+# Install vf fonts (variable) into the noto-vf subdirectory
+%install_fonts */fonts/*/unhinted/slim-variable-ttf/Noto*.ttf noto-vf
 
-: > vf.file
-: > static.file
-
-# Install vf fonts
-for f in */fonts/*/unhinted/slim-variable-ttf/Noto*.ttf; do
-    [ -f "$f" ] || continue
-    install -m 0644 -p "$f" %{buildroot}%{_datadir}/fonts/truetype/
-    echo "%{_datadir}/fonts/truetype/$(basename "$f")" >> vf.file
-done
-
-# Install static fonts
-for f in */fonts/*/unhinted/ttf/Noto*.ttf */fonts/*/hinted/ttf/Noto*.ttf; do
-    [ -f "$f" ] || continue
-    install -m 0644 -p "$f" %{buildroot}%{_datadir}/fonts/truetype/
-    echo "%{_datadir}/fonts/truetype/$(basename "$f")" >> static.file
-done
-
-sort -u vf.file -o vf.file
-sort -u static.file -o static.file
+# Install static fonts into the noto-static subdirectory
+%install_fonts */fonts/*/unhinted/ttf/Noto*.ttf noto-static
+%install_fonts */fonts/*/hinted/ttf/Noto*.ttf noto-static
 
 %files
-
-%files vf -f vf.file
 %license LICENSE
 
-%files static -f static.file
+%files vf
 %license LICENSE
+%font_files noto-vf ttf
+
+%files static
+%license LICENSE
+%font_files noto-static ttf
 
 %changelog
-%{?autochangelog}
+%autochangelog

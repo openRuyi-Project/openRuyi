@@ -7,13 +7,14 @@
 %global srcname IPython
 
 Name:           python-ipython
-Version:        9.10.0
+Version:        9.13.0
 Release:        %autorelease
 Summary:        An enhanced interactive Python shell
 License:        BSD-3-Clause
 URL:            https://ipython.org
-#!RemoteAsset:  sha256:cd9e656be97618a0676d058134cd44e6dc7012c0e5cb36a9ce96a8c904adaf77
+#!RemoteAsset:  sha256:7e834b6afc99f020e3f05966ced34792f40267d64cb1ea9043886dab0dde5967
 Source0:        https://files.pythonhosted.org/packages/source/i/ipython/ipython-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # Skip import tests and some other modules that are not needed for the package
@@ -30,7 +31,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +48,4 @@ IPython provides a rich toolkit to help you make the most out of using Python in
 %{_mandir}/man1/ipython.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

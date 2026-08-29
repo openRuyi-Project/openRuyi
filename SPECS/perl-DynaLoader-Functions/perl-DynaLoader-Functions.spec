@@ -11,10 +11,15 @@ Release:        %autorelease
 Summary:        Deconstructed dynamic C library loading
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/DynaLoader-Functions
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DynaLoader-Functions-%{version}.tar.gz
+#!RemoteAsset:  sha256:5e8e424671a0b2f1d9dff30e5f99087e7555880eb5d79a328b31f4cd4992983d
+Source0:        https://www.cpan.org/authors/id/Z/ZE/ZEFRAM/DynaLoader-Functions-%{version}.tar.gz
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor optimize="%{optflags}"
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -33,21 +38,8 @@ by Perl. Some details of dynamic loading are very platform-dependent, so
 correct use of these functions requires the programmer to be mindful of the
 space of platform variations.
 
-%prep
-%setup -q -n DynaLoader-Functions-%{version}
-
-%build
-perl Build.PL --installdirs=vendor optimize="%{optflags}"
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

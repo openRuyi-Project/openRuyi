@@ -1,0 +1,78 @@
+From 6f2e2c71136d34fb67b78456859b39bc3ee29ade Mon Sep 17 00:00:00 2001
+From: Kai Zhang <zhangkai@iscas.ac.cn>
+Date: Fri, 24 Apr 2026 21:02:14 +0800
+Subject: [PATCH] find-lang.sh: Put a lang variants altogether when
+ generate-subpackages
+
+Locale name is typically of the form:
+  language[_territory][.codeset][@modifier]
+
+All three variants are optional. `find-lang.sh --generate-subpackages`
+only dealed with _territory variant but not others. When the name had
+language@modifier format, find-lang.sh would error out due to
+"Illegal char '@'" in the package name.
+
+Now, put all variants of one language in the same lang package and
+extend the tests accordingly.
+
+Fixes: #4180
+
+Signed-off-by: Kai Zhang <zhangkai@iscas.ac.cn>
+---
+ scripts/find-lang.sh                 | 2 +-
+ tests/data/SPECS/find-lang-test.spec | 2 +-
+ tests/rpmbuild.at                    | 5 +++++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/find-lang.sh b/scripts/find-lang.sh
+index eb9991bb552c..4a96f47ccffd 100755
+--- a/scripts/find-lang.sh
++++ b/scripts/find-lang.sh
+@@ -301,7 +301,7 @@ echo "" > $MO_NAME
+ while IFS= read -r line
+ do
+     LOCALE=`echo $line|sed 's/%lang(//'|sed 's/).*//'`
+-    LANG=`echo $LOCALE|sed 's/_.*//'`
++    LANG=`echo $LOCALE|sed 's/[_.@].*//'`
+     LANGNAME=$LANG
+     #LANGNAME=`locale -av | grep -m 1 -A 12 "locale: $LOCALE" | grep " language |" | cut "-d|" -f2`
+     if [ -z "$LANGNAME" ]; then
+diff --git a/tests/data/SPECS/find-lang-test.spec b/tests/data/SPECS/find-lang-test.spec
+index 04a92d7b14eb..81138cd7d497 100644
+--- a/tests/data/SPECS/find-lang-test.spec
++++ b/tests/data/SPECS/find-lang-test.spec
+@@ -16,7 +16,7 @@ BuildArch:	noarch
+ %setup -c -T
+ 
+ %install
+-for f in fi de_DE pl ""; do
++for f in fi de_DE pl be be@latin ""; do
+     mkdir -p $RPM_BUILD_ROOT/%{_datadir}/man/$f/man1
+     echo "This is $f language" | gzip > $RPM_BUILD_ROOT/%{_datadir}/man/$f/man1/%{name}.1.gz
+ done
+diff --git a/tests/rpmbuild.at b/tests/rpmbuild.at
+index fb22f3582f9c..989248498465 100644
+--- a/tests/rpmbuild.at
++++ b/tests/rpmbuild.at
+@@ -748,6 +748,8 @@ runroot rpm -qp --qf '[%{FILELANGS} %{FILENAMES}\n]' /build/RPMS/noarch/find-lan
+ ]],
+ [0],
+ [ /usr/share/find-lang-test/empty.txt
++be /usr/share/man/be/man1/find-lang-test.1.gz
++be@latin /usr/share/man/be@latin/man1/find-lang-test.1.gz
+ de /usr/share/man/de_DE/man1/find-lang-test.1.gz
+ fi /usr/share/man/fi/man1/find-lang-test.1.gz
+  /usr/share/man/man1/find-lang-test.1.gz
+@@ -773,6 +775,9 @@ runroot rpm -qp --qf '%{NVRA}\n[%{FILELANGS} %{FILENAMES}\n]' /build/RPMS/noarch
+ [find-lang-test-1.0-1.noarch
+  /usr/share/find-lang-test/empty.txt
+  /usr/share/man/man1/find-lang-test.1.gz
++find-lang-test-langpack-be-1.0-1.noarch
++be /usr/share/man/be/man1/find-lang-test.1.gz
++be@latin /usr/share/man/be@latin/man1/find-lang-test.1.gz
+ find-lang-test-langpack-de-1.0-1.noarch
+ de /usr/share/man/de_DE/man1/find-lang-test.1.gz
+ find-lang-test-langpack-fi-1.0-1.noarch
+-- 
+2.43.0
+

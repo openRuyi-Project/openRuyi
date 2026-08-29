@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fastfetch
-Version:        2.61.0
+Version:        2.63.1
 Release:        %autorelease
 Summary:        Display system information in a stylized manner
 License:        MIT
 URL:            https://github.com/fastfetch-cli/fastfetch
-#!RemoteAsset:  sha256:b05b95bcc0915431cf732382813261497fa4412c3967904c1a9f207d5c946c65
+#!RemoteAsset:  sha256:6e124699ea20fb02c5bc402c0012543303ee75ca55ad664f96bc6cd414d7e6b3
 Source:         https://github.com/fastfetch-cli/fastfetch/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
-
-Patch0:         0001-Logo-Builtin-Add-openruyi.patch
 
 # TODO: Add package yyjson.
 # BuildOption(conf): -DENABLE_SYSTEM_YYJSON=ON
@@ -43,4 +41,4 @@ system distribution, akin to many similar tools.
 %{_mandir}/man1/fastfetch.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

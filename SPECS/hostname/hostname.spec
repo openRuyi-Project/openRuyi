@@ -13,8 +13,8 @@ Summary:        Utility to Set/Show the Host Name or Domain Name
 License:        GPL-2.0-or-later
 URL:            https://tracker.debian.org/pkg/hostname
 VCS:            git:https://salsa.debian.org/meskes/hostname.git
-#!RemoteAsset
-Source0:        http://http.debian.net/debian/pool/main/h/hostname/hostname_%{version}.tar.xz#/hostname-%{version}.tar.xz
+#!RemoteAsset:  sha256:5bb5d1be011158090157c9e7587ae5606c262a5020ecdc5caac6686b9910592e
+Source0:        https://deb.debian.org/debian/pool/main/h/hostname/hostname_%{version}.tar.xz#/hostname-%{version}.tar.xz
 Source1:        nis-domainname
 Source2:        nis-domainname.service.in
 BuildSystem:    autotools
@@ -68,4 +68,4 @@ install -p -m 0644 nis-domainname.service %{buildroot}%{_unitdir}
 %{_libexecdir}/hostname/
 
 %changelog
-%{?autochangelog}
+%autochangelog

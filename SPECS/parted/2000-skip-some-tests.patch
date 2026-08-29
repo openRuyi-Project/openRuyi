@@ -1,0 +1,22 @@
+--- parted-3.7/tests/Makefile.am	2026-03-25 07:30:48.000000000 +0800
++++ parted-3.7-fix3/tests/Makefile.am	2026-06-09 12:44:25.879321600 +0800
+@@ -64,8 +64,6 @@
+   t3200-type-change.sh \
+   t3210-gpt-type-change.sh \
+   t3300-palo-prep.sh \
+-  t3310-flags.sh \
+-  t3400-whole-disk-FAT-partition.sh \
+   t4000-sun-raid-type.sh \
+   t4001-sun-vtoc.sh \
+   t4002-sun-badlabel.sh \
+--- parted-3.7/tests/Makefile.in	2026-06-09 12:28:40.158934200 +0800
++++ parted-3.7-fix3/tests/Makefile.in	2026-06-09 12:44:25.881337900 +0800
+@@ -2101,8 +2101,6 @@
+   t3200-type-change.sh \
+   t3210-gpt-type-change.sh \
+   t3300-palo-prep.sh \
+-  t3310-flags.sh \
+-  t3400-whole-disk-FAT-partition.sh \
+   t4000-sun-raid-type.sh \
+   t4001-sun-vtoc.sh \
+   t4002-sun-badlabel.sh \

@@ -1,0 +1,58 @@
+From 46395da906919f1ddb1907ad69caad724dbdb9d0 Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Fri, 10 Apr 2026 17:48:58 +0800
+Subject: [PATCH] isaspec: decode: manually print the sign when printing NaN
+ float values
+
+The IEEE754-2019 standard declaring the preceding sign "optional" when
+converting NaN values to strings because the standard tries to not
+regulate how sign bits in NaNs are interpreted.
+
+In the real world, when using printf-series function to print a number
+with type `float` on RISC-V, the sign of NaNs is wiped during the
+conversion from `float` to `double` (defined as part of the default
+argument promotions rule for variable arguments in the C spec).
+
+Change the code to stop relying on isa_print() to print the negative
+sign, instead parse it from the highest bit of value and manually print
+it before "nan" string.
+
+This fixes the `etnaviv_isa_disasm` unit test on RISC-V.
+
+Suggested-by: Christian Gmeiner <cgmeiner@igalia.com>
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Reviewed-by: Christian Gmeiner <cgmeiner@igalia.com>
+Reviewed-by: Rob Clark <rob.clark@oss.qualcomm.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/40887>
+---
+ src/compiler/isaspec/isaspec_decode_impl.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/src/compiler/isaspec/isaspec_decode_impl.c b/src/compiler/isaspec/isaspec_decode_impl.c
+index 452a25ab54c..77baf0258bd 100644
+--- a/src/compiler/isaspec/isaspec_decode_impl.c
++++ b/src/compiler/isaspec/isaspec_decode_impl.c
+@@ -649,10 +649,18 @@ display_field(struct decode_scope *scope, const char *field_name)
+ 			f = uif(val);
+ 			fmt = "%.9g";
+ 		}
+-		if (f == truncf(f) && isfinite(f))
++		if (isnan(f)) {
++			/* IEEE 754 declares the sign optional when converting
++			 * NaN to strings, so manually extract it from the raw
++			 * value and print it instead of relying on printf().
++			 */
++			bool negative = (width == 16) ? (val >> 15) & 1 : (val >> 31) & 1;
++			isa_print(print, "%snan", negative ? "-" : "");
++		} else if (f == truncf(f) && isfinite(f)) {
+ 			isa_print(print, "%.1f", f);
+-		else
++		} else {
+ 			isa_print(print, fmt, f);
++		}
+ 		break;
+ 	}
+ 	case TYPE_BOOL:
+-- 
+2.52.0
+

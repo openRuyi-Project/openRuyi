@@ -12,7 +12,7 @@ Summary:        A library for managing OS information for virtualization
 License:        LGPL-2.1-or-later
 URL:            https://libosinfo.org/
 VCS:            git:https://gitlab.com/libosinfo/libosinfo
-#!RemoteAsset
+#!RemoteAsset:  sha256:ad8557ece26793da43d26de565e3d68ce2ee6bfb8d0113b7cc7dfe07f6bfc6b6
 Source:         https://releases.pagure.org/libosinfo/libosinfo-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -55,9 +55,6 @@ This package contains the libraries, header files, and documentation needed to
 develop applications that use the libosinfo library.
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -87,4 +84,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_datadir}/vala/vapi/libosinfo-1.0.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog

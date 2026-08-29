@@ -1,0 +1,25 @@
+From fcbdc4c01c734e77c32d7e1bcd8b16fb4d2604db Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 20:51:38 +0800
+Subject: [PATCH] Fix Decode test Errorf argument order
+
+---
+ decode_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/decode_test.go b/decode_test.go
+index 53753c2..a9d9e0c 100644
+--- a/decode_test.go
++++ b/decode_test.go
+@@ -5079,7 +5079,7 @@ func TestUnmarshalArrayToStructNoToArrayOptionError(t *testing.T) {
+ 	} else if _, ok := err.(*UnmarshalTypeError); !ok {
+ 		t.Errorf("Decode(%+v) returned wrong error type %T, want (*UnmarshalTypeError)", v1, err)
+ 	} else if !strings.Contains(err.Error(), "cannot unmarshal") {
+-		t.Errorf("Decode(%+v) returned error %q, want error containing %q", err.Error(), v1, "cannot unmarshal")
++		t.Errorf("Decode(%+v) returned error %q, want error containing %q", v1, err.Error(), "cannot unmarshal")
+ 	}
+ 	if !reflect.DeepEqual(v1, wantT) {
+ 		t.Errorf("Decode() = %+v (%T), want %+v (%T)", v1, v1, wantT, wantT)
+-- 
+2.43.0
+

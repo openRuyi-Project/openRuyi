@@ -1,0 +1,31 @@
+From f23ecc7352d27dc5c3a4cb19e9113556b1be9d49 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 8 Jun 2026 09:00:08 +0800
+Subject: [PATCH] hipblaslt tensilelite use system nanobind
+
+---
+ tensilelite/rocisa/CMakeLists.txt | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/tensilelite/rocisa/CMakeLists.txt b/tensilelite/rocisa/CMakeLists.txt
+index 3918f18..9c6fcd3 100644
+--- a/tensilelite/rocisa/CMakeLists.txt
++++ b/tensilelite/rocisa/CMakeLists.txt
+@@ -17,13 +17,7 @@ target_include_directories(rocisa-cpp
+ )
+ 
+ if(HIPBLASLT_BUNDLE_PYTHON_DEPS)
+-    include(FetchContent)
+-    FetchContent_Declare(
+-      nanobind
+-      GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+-      GIT_TAG        9b3afa9dbdc23641daf26fadef7743e7127ff92f # v2.6.1
+-    )
+-    FetchContent_MakeAvailable(nanobind)
++    find_package(nanobind CONFIG REQUIRED)
+ 
+     set(ROCISAINST_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/rocisa/src/instruction/instruction.cpp"
+                           "${CMAKE_CURRENT_SOURCE_DIR}/rocisa/src/instruction/common.cpp"
+-- 
+2.53.0
+

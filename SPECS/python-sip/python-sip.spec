@@ -13,7 +13,7 @@ Summary:        A Python bindings generator for C/C++ libraries
 License:        BSD-2-Clause
 URL:            https://www.riverbankcomputing.com/software/sip/
 VCS:            git:https://github.com/Python-SIP/sip
-#!RemoteAsset
+#!RemoteAsset:  sha256:dc2e58c1798a74e1b31c28e837339822fe8fa55288ae30e8986eb28100ebca5a
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -30,7 +30,8 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(ply)
 BuildRequires:  python3dist(setuptools-scm) >= 8
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -55,4 +56,4 @@ tools, and a runtime module.
 %{_bindir}/sip-wheel
 
 %changelog
-%{?autochangelog}
+%autochangelog

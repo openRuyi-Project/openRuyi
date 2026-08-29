@@ -1,0 +1,24 @@
+# Patch purpose:
+# - Match Paddle's log_patch.h with the LogMessageVoidify namespace used by
+#   system glog 0.7.x.
+# Why this patch exists:
+# - Paddle 3.3.1 still references google::LogMessageVoidify in its custom
+#   LOG_IF/VLOG macro patch. openRuyi's system glog 0.7.1 exposes this helper
+#   as google::logging::internal::LogMessageVoidify, so the old namespace fails
+#   during template parsing.
+
+diff -uprN a/paddle/fluid/framework/fleet/heter_ps/log_patch.h b/paddle/fluid/framework/fleet/heter_ps/log_patch.h
+--- a/paddle/fluid/framework/fleet/heter_ps/log_patch.h	2026-03-19 14:53:19.000000000 +0800
++++ b/paddle/fluid/framework/fleet/heter_ps/log_patch.h	2026-06-20 04:25:25.249080959 +0800
+@@ -27,8 +27,10 @@ limitations under the License. */
+ 
+ #undef LOG_IF
+ #define LOG_IF(severity, condition) \
+   static_cast<void>(0),             \
+-      !(condition) ? (void)0 : google::LogMessageVoidify() & LOG(severity)
++      !(condition)                  \
++          ? (void)0                 \
++          : google::logging::internal::LogMessageVoidify() & LOG(severity)
+ 
+ #undef VLOG
+ #define VLOG(verboselevel) LOG_IF(INFO, VLOG_IS_ON(verboselevel))

@@ -57,8 +57,6 @@ Requires:       pkgconfig(Qt6Core) >= 6.2.4
 %{summary}.
 
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -84,4 +82,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libAppStreamQt.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

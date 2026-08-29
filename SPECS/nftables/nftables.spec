@@ -13,7 +13,7 @@ Summary:        Netfilter Tables userspace utilities
 License:        GPL-2.0-only
 URL:            https://netfilter.org/projects/nftables/
 VCS:            git:https://git.netfilter.org/nftables
-#!RemoteAsset
+#!RemoteAsset:  sha256:1daf10f322e14fd90a017538aaf2c034d7cc1eb1cc418ded47445d714ea168d4
 Source0:        https://netfilter.org/projects/nftables/files/nftables-%{version}.tar.xz
 Source1:        nftables.service
 Source2:        nftables.conf
@@ -33,10 +33,10 @@ BuildRequires:  pkgconfig(jansson)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(libedit)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  make
 BuildRequires:  gcc
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(pip)
 BuildRequires:  pkgconfig(libmnl) >= 1.0.4
 BuildRequires:  pkgconfig(libnftnl) >= 1.3.0
 BuildRequires:  pkgconfig(xtables) >= 1.6.1
@@ -127,4 +127,4 @@ cd py
 %{_unitdir}/nftables.service
 
 %changelog
-%{?autochangelog}
+%autochangelog

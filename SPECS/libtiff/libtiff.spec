@@ -72,7 +72,7 @@ CFLAGS="%{optflags} -fPIC"
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libtiff-4.pc
 %{_libdir}/cmake/tiff/
 
 %files docs

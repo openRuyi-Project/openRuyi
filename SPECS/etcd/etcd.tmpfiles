@@ -1,0 +1,1 @@
+d /var/lib/etcd 0750 etcd etcd -

@@ -25,7 +25,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(wcwidth)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +40,4 @@ ftfy fixes mojibake and other glitches in Unicode text, after the fact.
 %{_bindir}/ftfy
 
 %changelog
-%{?autochangelog}
+%autochangelog

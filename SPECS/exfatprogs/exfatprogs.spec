@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           exfatprogs
-Version:        1.2.9
+Version:        1.3.2
 Release:        %autorelease
 Summary:        Userspace utilities for exFAT filesystems
 License:        GPL-2.0-only
 URL:            https://github.com/exfatprogs/exfatprogs
-#!RemoteAsset
+#!RemoteAsset:  sha256:4b3e198a2b879da52254f9d4a68accff8001b7b4e5c1860d47ad232e03a2a2d0
 Source:         https://github.com/exfatprogs/exfatprogs/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -21,7 +21,6 @@ BuildOption(conf):  --enable-static=no
 
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  gcc
 BuildRequires:  libtool
 BuildRequires:  make
 
@@ -49,4 +48,4 @@ autoreconf -vif
 %{_mandir}/man8/tune.exfat.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           iperf
-Version:        3.20
+Version:        3.21
 Release:        %autorelease
 Summary:        A TCP, UDP, and SCTP network bandwidth measurement tool
 License:        BSD-3-Clause
 URL:            https://software.es.net/iperf/
 VCS:            git:https://github.com/esnet/iperf
-#!RemoteAsset
+#!RemoteAsset:  sha256:dd289b6700d3bc33eda7fa3ce6db217d6ca42239edbcb2e7f152bf7bf5c8a5aa
 Source0:        https://github.com/esnet/iperf/archive/%{version}/iperf-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -63,4 +63,4 @@ rm -f %{buildroot}%{_libdir}/libiperf.la
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -15,6 +15,7 @@ License:        MIT
 URL:            https://github.com/mgxd/ci-info
 #!RemoteAsset:  sha256:34d5a18726b3780abdf985234b871ac33124d64dd8e294870b8cc5b410c18418
 Source:         https://files.pythonhosted.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
@@ -27,7 +28,7 @@ BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ current Continuous Integration environment.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

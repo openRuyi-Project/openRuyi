@@ -1,0 +1,194 @@
+diff --git a/clamdscan/client.c b/clamdscan/client.c
+index 51f9744..7f7e3af 100644
+--- a/clamdscan/client.c
++++ b/clamdscan/client.c
+@@ -25,6 +25,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <inttypes.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+@@ -240,14 +241,14 @@ int16_t ping_clamd(const struct optstruct *opts)
+         if (i + 1 < attempts) {
+             if (optget(opts, "wait")->enabled) {
+                 if (interval == 1)
+-                    logg(LOGG_DEBUG, "Could not connect, will try again in %lu second\n", interval);
++                    logg(LOGG_DEBUG, "Could not connect, will try again in %" PRIu64 " second\n", interval);
+                 else
+-                    logg(LOGG_DEBUG, "Could not connect, will try again in %lu seconds\n", interval);
++                    logg(LOGG_DEBUG, "Could not connect, will try again in %" PRIu64 " seconds\n", interval);
+             } else {
+                 if (interval == 1)
+-                    logg(LOGG_INFO, "Could not connect, will PING again in %lu second\n", interval);
++                    logg(LOGG_INFO, "Could not connect, will PING again in %" PRIu64 " second\n", interval);
+                 else
+-                    logg(LOGG_INFO, "Could not connect, will PING again in %lu seconds\n", interval);
++                    logg(LOGG_INFO, "Could not connect, will PING again in %" PRIu64 " seconds\n", interval);
+             }
+             sleep(interval);
+         }
+diff --git a/clamonacc/client/client.c b/clamonacc/client/client.c
+index 316a2ac..7f86db2 100644
+--- a/clamonacc/client/client.c
++++ b/clamonacc/client/client.c
+@@ -25,6 +25,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <inttypes.h>
+ #include <curl/curl.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+@@ -254,14 +255,14 @@ int16_t onas_ping_clamd(struct onas_context **ctx)
+         if (i + 1 < attempts) {
+             if (optget((*ctx)->opts, "wait")->enabled) {
+                 if (interval == 1)
+-                    logg(LOGG_DEBUG, "Will try again in %lu second\n", interval);
++                    logg(LOGG_DEBUG, "Will try again in %" PRIu64 " second\n", interval);
+                 else
+-                    logg(LOGG_DEBUG, "Will try again in %lu seconds\n", interval);
++                    logg(LOGG_DEBUG, "Will try again in %" PRIu64 " seconds\n", interval);
+             } else {
+                 if (interval == 1)
+-                    logg(LOGG_INFO, "PINGing again in %lu second\n", interval);
++                    logg(LOGG_INFO, "PINGing again in %" PRIu64 " second\n", interval);
+                 else
+-                    logg(LOGG_INFO, "PINGing again in %lu seconds\n", interval);
++                    logg(LOGG_INFO, "PINGing again in %" PRIu64 " seconds\n", interval);
+             }
+             sleep(interval);
+         }
+diff --git a/clamonacc/fanotif/fanotif.c b/clamonacc/fanotif/fanotif.c
+index cb57a4e..dc8c397 100644
+--- a/clamonacc/fanotif/fanotif.c
++++ b/clamonacc/fanotif/fanotif.c
+@@ -25,6 +25,7 @@
+ #if defined(HAVE_SYS_FANOTIFY_H)
+ 
+ #include <stdio.h>
++#include <inttypes.h>
+ #include <unistd.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -141,7 +142,7 @@ cl_error_t onas_setup_fanotif(struct onas_context **ctx)
+     /* Load other options. */
+     (*ctx)->sizelimit = optget((*ctx)->clamdopts, "OnAccessMaxFileSize")->numarg;
+     if ((*ctx)->sizelimit) {
+-        logg(LOGG_DEBUG, "ClamFanotif: max file size limited to %lu bytes\n", (*ctx)->sizelimit);
++        logg(LOGG_DEBUG, "ClamFanotif: max file size limited to %" PRIu64 " bytes\n", (*ctx)->sizelimit);
+     } else {
+         logg(LOGG_DEBUG, "ClamFanotif: file size limit disabled\n");
+     }
+diff --git a/libclamav/mew.c b/libclamav/mew.c
+index 19269d9..264a944 100644
+--- a/libclamav/mew.c
++++ b/libclamav/mew.c
+@@ -787,7 +787,7 @@ int unmew11(char *src, uint32_t off, uint32_t ssize, uint32_t dsize, uint32_t ba
+     }
+     if (((size_t)(src + off) < (size_t)(src)) ||
+         ((size_t)(src + off) < (size_t)(off))) {
+-        cli_dbgmsg("MEW: Buffer pointer (%08zx) + offset (%08zx) exceeds max size of pointer (%08lx)\n",
++        cli_dbgmsg("MEW: Buffer pointer (%08zx) + offset (%08zx) exceeds max size of pointer (%08zx)\n",
+                    (size_t)src, (size_t)off, SIZE_MAX);
+         return -1;
+     }
+diff --git a/libclamav/pe.c b/libclamav/pe.c
+index e08e2d9..1951c66 100644
+--- a/libclamav/pe.c
++++ b/libclamav/pe.c
+@@ -5076,12 +5076,12 @@ cl_error_t cli_peheader(cli_ctx *ctx, struct cli_exe_info *peinfo, uint32_t opts
+ 
+                 /* If a section is truncated, adjust its size value */
+                 if (!CLI_ISCONTAINED_0_TO(fsize, section->raw, section->rsz)) {
+-                    cli_dbgmsg("cli_peheader: PE Section %zu raw+rsz extends past the end of the file by %lu bytes\n", section_pe_idx, (section->raw + section->rsz) - fsize);
++                    cli_dbgmsg("cli_peheader: PE Section %zu raw+rsz extends past the end of the file by %zu bytes\n", section_pe_idx, (section->raw + section->rsz) - fsize);
+                     section->rsz = fsize - section->raw;
+                 }
+ 
+                 if (!CLI_ISCONTAINED_0_TO(fsize, section->uraw, section->ursz)) {
+-                    cli_dbgmsg("cli_peheader: PE Section %zu uraw+ursz extends past the end of the file by %lu bytes\n", section_pe_idx, (section->uraw + section->ursz) - fsize);
++                    cli_dbgmsg("cli_peheader: PE Section %zu uraw+ursz extends past the end of the file by %zu bytes\n", section_pe_idx, (section->uraw + section->ursz) - fsize);
+                     section->ursz = fsize - section->uraw;
+                 }
+             }
+diff --git a/libfreshclam/libfreshclam_internal.c b/libfreshclam/libfreshclam_internal.c
+index f29b7d5..0556db6 100644
+--- a/libfreshclam/libfreshclam_internal.c
++++ b/libfreshclam/libfreshclam_internal.c
+@@ -232,7 +232,7 @@ fc_error_t load_freshclam_dat(void)
+             if (-1 == lseek(handle, strlen(MIRRORS_DAT_MAGIC), SEEK_SET)) {
+                 char error_message[260];
+                 cli_strerror(errno, error_message, 260);
+-                logg(LOGG_ERROR, "Can't seek to %lu, error: %s\n", strlen(MIRRORS_DAT_MAGIC), error_message);
++                logg(LOGG_ERROR, "Can't seek to %zu, error: %s\n", strlen(MIRRORS_DAT_MAGIC), error_message);
+                 goto done;
+             }
+ 
+diff --git a/unit_tests/check_clamav.c b/unit_tests/check_clamav.c
+index d21f511..4197093 100644
+--- a/unit_tests/check_clamav.c
++++ b/unit_tests/check_clamav.c
+@@ -1919,7 +1919,7 @@ void diff_file_mem(int fd, const char *ref, size_t len)
+ 
+     ck_assert_msg(!!buf, "unable to malloc buffer: %zu", len);
+     p = read(fd, buf, len);
+-    ck_assert_msg(p == len, "file is smaller: %lu, expected: %lu", p, len);
++    ck_assert_msg(p == len, "file is smaller: %zu, expected: %zu", p, len);
+     p = 0;
+     while (len > 0) {
+         c1 = ref[p];
+@@ -1930,10 +1930,10 @@ void diff_file_mem(int fd, const char *ref, size_t len)
+         len--;
+     }
+     if (len > 0)
+-        ck_assert_msg(c1 == c2, "file contents mismatch at byte: %lu, was: %c, expected: %c", p, c2, c1);
++        ck_assert_msg(c1 == c2, "file contents mismatch at byte: %zu, was: %c, expected: %c", p, c2, c1);
+     free(buf);
+     p = lseek(fd, 0, SEEK_END);
+-    ck_assert_msg(p == reflen, "trailing garbage, file size: %ld, expected: %ld", p, reflen);
++    ck_assert_msg(p == reflen, "trailing garbage, file size: %zd, expected: %zd", p, reflen);
+     close(fd);
+ }
+ 
+@@ -1949,7 +1949,7 @@ void diff_files(int fd, int ref_fd)
+ 
+     ck_assert_msg(lseek(ref_fd, 0, SEEK_SET) == 0, "lseek failed");
+     nread = read(ref_fd, ref, siz);
+-    ck_assert_msg(nread == siz, "short read, expected: %ld, was: %ld", siz, nread);
++    ck_assert_msg(nread == siz, "short read, expected: %ld, was: %zd", siz, nread);
+     close(ref_fd);
+     diff_file_mem(fd, ref, siz);
+     free(ref);
+diff --git a/unit_tests/check_clamd.c b/unit_tests/check_clamd.c
+index 204ee27..5dba068 100644
+--- a/unit_tests/check_clamd.c
++++ b/unit_tests/check_clamd.c
+@@ -363,7 +363,7 @@ START_TEST(test_stats)
+ 
+     recvdata = (char *)recvfull(sockd, &len);
+ 
+-    ck_assert_msg(len > strlen(STATS_REPLY), "Reply has wrong size: %lu, minimum %lu, reply: %s\n",
++    ck_assert_msg(len > strlen(STATS_REPLY), "Reply has wrong size: %zu, minimum %zu, reply: %s\n",
+                   len, strlen(STATS_REPLY), recvdata);
+ 
+     if (len > strlen(STATS_REPLY))
+@@ -416,7 +416,7 @@ START_TEST(test_instream)
+     recvdata = (char *)recvfull(sockd, &len);
+ 
+     expect_len = strlen(EXPECT_INSTREAM);
+-    ck_assert_msg(len == expect_len, "Reply has wrong size: %lu, expected %lu, reply: %s\n",
++    ck_assert_msg(len == expect_len, "Reply has wrong size: %zu, expected %zu, reply: %s\n",
+                   len, expect_len, recvdata);
+ 
+     rc = memcmp(recvdata, EXPECT_INSTREAM, expect_len);
+@@ -494,7 +494,7 @@ static void tst_fildes(const char *cmd, size_t len, int fd,
+     ck_assert_msg(sscanf(recvdata, "fd[%u]", &rc) == 1, "Reply doesn't contain fd: %s\n", recvdata);
+ 
+     len -= p - recvdata;
+-    ck_assert_msg(len == expect_len, "Reply has wrong size: %lu, expected %lu, reply: %s, expected: %s\n",
++    ck_assert_msg(len == expect_len, "Reply has wrong size: %zu, expected %zu, reply: %s, expected: %s\n",
+                   len, expect_len, p, expect);
+ 
+     rc = memcmp(p, expect, expect_len);

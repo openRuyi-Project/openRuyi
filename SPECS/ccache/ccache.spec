@@ -3,19 +3,20 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond test 0
 
 Name:           ccache
-Version:        4.13.1
+Version:        4.13.6
 Release:        %autorelease
 Summary:        A Fast C/C++ Compiler Cache
 License:        GPL-3.0-or-later
 URL:            https://ccache.dev/
 VCS:            git:https://github.com/ccache/ccache
-#!RemoteAsset:  sha256:5923c712764b80dd45ed261da4bd8d3908a553615fb5d7ec2512c0c46ed1e9c3
+#!RemoteAsset:  sha256:b0688da07593d481ed1901ec39739a770469090c8feff32522256d48077aaf9b
 Source:         https://github.com/ccache/ccache/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -28,7 +29,6 @@ BuildOption(conf):  -DENABLE_DOCUMENTATION:BOOL=OFF
 
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(fmt)
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  pkgconfig
@@ -45,19 +45,33 @@ result of previous compilations and detecting when the same compilation is
 being done again.
 
 %install -a
-# create the compat symlinks into /usr/libdir/ccache
+# create the ccache directory only
 mkdir -p %{buildroot}/%{_libdir}/ccache
-cd %{buildroot}/%{_libdir}/ccache
-ln -sf ../../bin/ccache gcc
-ln -sf ../../bin/ccache g++
-# do the same for clang
-ln -sf ../../bin/ccache clang
-ln -sf ../../bin/ccache clang++
-# and regular cc
-ln -sf ../../bin/ccache cc
-ln -sf ../../bin/ccache c++
-# and for nvidia cuda
-ln -sf ../../bin/ccache nvcc
+
+# filetrigger to create symlinks when compilers are installed
+%filetriggerin -p /bin/sh -- %{_bindir}
+# create symlinks for newly installed compilers
+mkdir -p %{_libdir}/ccache
+while read file; do
+    name=$(basename $file)
+    # check if it matches compiler patterns we care about
+    for base in gcc g++ clang clang++ cc c++ nvcc; do
+        # match: base, base-N, target-base, target-base-N
+        case $name in
+            $base|$base-[0-9]*|*-$base|*-$base-[0-9]*)
+                ln -sf ../../bin/ccache %{_libdir}/ccache/$name
+                ;;
+        esac
+    done
+done
+
+# filetrigger to remove symlinks when compilers are removed
+%filetriggerun -p /bin/sh -- %{_bindir}
+# remove symlinks for removed compilers
+while read file; do
+    name=$(basename $file)
+    rm -f %{_libdir}/ccache/$name
+done
 
 %files
 %license LICENSE.* GPL-3.0.txt
@@ -66,4 +80,4 @@ ln -sf ../../bin/ccache nvcc
 %{_libdir}/ccache
 
 %changelog
-%{?autochangelog}
+%autochangelog

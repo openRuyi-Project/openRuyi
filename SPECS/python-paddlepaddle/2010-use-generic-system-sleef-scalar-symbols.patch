@@ -1,0 +1,280 @@
+# Patch purpose:
+# - Use architecture-neutral scalar SLEEF entry points with the system SLEEF
+#   headers shipped by openRuyi.
+# Why this patch exists:
+# - Paddle 3.3.1 calls scalar functions with one-lane suffixes such as
+#   Sleef_sinf1_u35 and Sleef_sind1_u10. openRuyi's SLEEF 3.9.0 riscv64
+#   headers expose the generic scalar APIs instead, for example
+#   Sleef_sinf_u35 and Sleef_sin_u10. The generic names are also available on
+#   x86_64, so using them keeps the source portable across both OBS targets.
+
+diff -uprN a/paddle/phi/kernels/funcs/activation_functor.h b/paddle/phi/kernels/funcs/activation_functor.h
+--- a/paddle/phi/kernels/funcs/activation_functor.h	2026-06-20 02:52:17.442037934 +0800
++++ b/paddle/phi/kernels/funcs/activation_functor.h	2026-06-20 02:52:17.890047336 +0800
+@@ -72,7 +72,7 @@ struct Sine<float> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return sin(val);
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return Sleef_sinf1_u35(val);
++    return Sleef_sinf_u35(val);
+ #else
+     return sin(val);
+ #endif
+@@ -86,7 +86,7 @@ struct Sine<double> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return sin(val);
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return Sleef_sind1_u10(val);
++    return Sleef_sin_u10(val);
+ #else
+     return sin(val);
+ #endif
+@@ -99,7 +99,7 @@ struct Sine<dtype::float16> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return dtype::float16(sin(static_cast<float>(val)));
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return dtype::float16(Sleef_sinf1_u35(static_cast<float>(val)));
++    return dtype::float16(Sleef_sinf_u35(static_cast<float>(val)));
+ #else
+     return dtype::float16(sin(static_cast<float>(val)));
+ #endif
+@@ -112,7 +112,7 @@ struct Sine<dtype::bfloat16> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return dtype::bfloat16(sin(static_cast<float>(val)));
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return dtype::bfloat16(Sleef_sinf1_u35(static_cast<float>(val)));
++    return dtype::bfloat16(Sleef_sinf_u35(static_cast<float>(val)));
+ #else
+     return dtype::bfloat16(sin(static_cast<float>(val)));
+ #endif
+@@ -131,7 +131,7 @@ struct Cosine<float> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return cos(val);
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return Sleef_cosf1_u35(val);
++    return Sleef_cosf_u35(val);
+ #else
+     return cos(val);
+ #endif
+@@ -145,7 +145,7 @@ struct Cosine<double> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return cos(val);
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return Sleef_cosd1_u10(val);
++    return Sleef_cos_u10(val);
+ #else
+     return cos(val);
+ #endif
+@@ -158,7 +158,7 @@ struct Cosine<dtype::float16> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return dtype::float16(cos(static_cast<float>(val)));
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return dtype::float16(Sleef_cosf1_u35(static_cast<float>(val)));
++    return dtype::float16(Sleef_cosf_u35(static_cast<float>(val)));
+ #else
+     return dtype::float16(cos(static_cast<float>(val)));
+ #endif
+@@ -171,7 +171,7 @@ struct Cosine<dtype::bfloat16> {
+ #if defined(__CUDA_ARCH__) || defined(__HIP_DEVICE_COMPILE__)
+     return dtype::bfloat16(cos(static_cast<float>(val)));
+ #elif defined(PADDLE_WITH_SLEEF)
+-    return dtype::bfloat16(Sleef_cosf1_u35(static_cast<float>(val)));
++    return dtype::bfloat16(Sleef_cosf_u35(static_cast<float>(val)));
+ #else
+     return dtype::bfloat16(cos(static_cast<float>(val)));
+ #endif
+diff -uprN a/paddle/phi/kernels/funcs/elementwise_functor.h b/paddle/phi/kernels/funcs/elementwise_functor.h
+--- a/paddle/phi/kernels/funcs/elementwise_functor.h	2026-03-19 14:53:19.000000000 +0800
++++ b/paddle/phi/kernels/funcs/elementwise_functor.h	2026-06-20 02:52:17.890047336 +0800
+@@ -1427,14 +1427,14 @@ template <typename T>
+ inline HOSTDEVICE
+     typename std::enable_if<std::is_same<T, float>::value, T>::type
+     compute_pow_sleef(const T a, const T b) {
+-  return Sleef_powf1_u10(a, b);
++  return Sleef_powf_u10(a, b);
+ }
+ 
+ template <typename T>
+ inline HOSTDEVICE
+     typename std::enable_if<std::is_same<T, double>::value, T>::type
+     compute_pow_sleef(const T a, const T b) {
+-  return Sleef_powd1_u10(a, b);
++  return Sleef_pow_u10(a, b);
+ }
+ 
+ #if defined(__AVX512F__)
+diff -uprN a/paddle/phi/kernels/funcs/sleef_vectorized_math.h b/paddle/phi/kernels/funcs/sleef_vectorized_math.h
+--- a/paddle/phi/kernels/funcs/sleef_vectorized_math.h	2026-03-19 14:53:19.000000000 +0800
++++ b/paddle/phi/kernels/funcs/sleef_vectorized_math.h	2026-06-20 02:52:17.890047336 +0800
+@@ -48,13 +48,13 @@ namespace sleef_vec {
+ template <typename T>
+ inline typename std::enable_if<std::is_same<T, float>::value, T>::type
+ pow_sleef_scalar(const T a, const T b) {
+-  return Sleef_powf1_u10(a, b);
++  return Sleef_powf_u10(a, b);
+ }
+ 
+ template <typename T>
+ inline typename std::enable_if<std::is_same<T, double>::value, T>::type
+ pow_sleef_scalar(const T a, const T b) {
+-  return Sleef_powd1_u10(a, b);
++  return Sleef_pow_u10(a, b);
+ }
+ 
+ #endif  // PADDLE_WITH_SLEEF
+@@ -84,7 +84,7 @@ inline void vsin_avx2_f32(float* out, co
+ 
+   // Handle remaining elements with scalar version
+   for (; i < n; ++i) {
+-    out[i] = Sleef_sinf1_u35(in[i]);
++    out[i] = Sleef_sinf_u35(in[i]);
+   }
+ }
+ 
+@@ -100,7 +100,7 @@ inline void vcos_avx2_f32(float* out, co
+   }
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_cosf1_u35(in[i]);
++    out[i] = Sleef_cosf_u35(in[i]);
+   }
+ }
+ 
+@@ -116,7 +116,7 @@ inline void vsin_avx2_f64(double* out, c
+   }
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_sind1_u10(in[i]);
++    out[i] = Sleef_sin_u10(in[i]);
+   }
+ }
+ 
+@@ -132,7 +132,7 @@ inline void vcos_avx2_f64(double* out, c
+   }
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_cosd1_u10(in[i]);
++    out[i] = Sleef_cos_u10(in[i]);
+   }
+ }
+ 
+@@ -142,7 +142,7 @@ inline void vpow_avx2_f32(float* out,
+                           const float* y,
+                           int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_powf1_u10(x[i], y[i]);
++    out[i] = Sleef_powf_u10(x[i], y[i]);
+   }
+ }
+ 
+@@ -152,7 +152,7 @@ inline void vpow_avx2_f64(double* out,
+                           const double* y,
+                           int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_powd1_u10(x[i], y[i]);
++    out[i] = Sleef_pow_u10(x[i], y[i]);
+   }
+ }
+ 
+@@ -183,7 +183,7 @@ inline void vsin_avx512_f32(float* out,
+ #endif
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_sinf1_u35(in[i]);
++    out[i] = Sleef_sinf_u35(in[i]);
+   }
+ }
+ 
+@@ -206,7 +206,7 @@ inline void vcos_avx512_f32(float* out,
+ #endif
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_cosf1_u35(in[i]);
++    out[i] = Sleef_cosf_u35(in[i]);
+   }
+ }
+ 
+@@ -229,7 +229,7 @@ inline void vsin_avx512_f64(double* out,
+ #endif
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_sind1_u10(in[i]);
++    out[i] = Sleef_sin_u10(in[i]);
+   }
+ }
+ 
+@@ -252,7 +252,7 @@ inline void vcos_avx512_f64(double* out,
+ #endif
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_cosd1_u10(in[i]);
++    out[i] = Sleef_cos_u10(in[i]);
+   }
+ }
+ 
+@@ -272,7 +272,7 @@ inline void vpow_avx512_f32(float* out,
+   }
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_powf1_u10(x[i], y[i]);
++    out[i] = Sleef_powf_u10(x[i], y[i]);
+   }
+ }
+ 
+@@ -292,7 +292,7 @@ inline void vpow_avx512_f64(double* out,
+   }
+ 
+   for (; i < n; ++i) {
+-    out[i] = Sleef_powd1_u10(x[i], y[i]);
++    out[i] = Sleef_pow_u10(x[i], y[i]);
+   }
+ }
+ 
+@@ -303,25 +303,25 @@ inline void vpow_avx512_f64(double* out,
+ // -----------------------------------------------------------------------------
+ inline void vsin_scalar_f32(float* out, const float* in, int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_sinf1_u35(in[i]);
++    out[i] = Sleef_sinf_u35(in[i]);
+   }
+ }
+ 
+ inline void vcos_scalar_f32(float* out, const float* in, int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_cosf1_u35(in[i]);
++    out[i] = Sleef_cosf_u35(in[i]);
+   }
+ }
+ 
+ inline void vsin_scalar_f64(double* out, const double* in, int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_sind1_u10(in[i]);
++    out[i] = Sleef_sin_u10(in[i]);
+   }
+ }
+ 
+ inline void vcos_scalar_f64(double* out, const double* in, int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_cosd1_u10(in[i]);
++    out[i] = Sleef_cos_u10(in[i]);
+   }
+ }
+ 
+@@ -331,7 +331,7 @@ inline void vpow_scalar_f32(float* out,
+                             const float* y,
+                             int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_powf1_u10(x[i], y[i]);
++    out[i] = Sleef_powf_u10(x[i], y[i]);
+   }
+ }
+ 
+@@ -340,7 +340,7 @@ inline void vpow_scalar_f64(double* out,
+                             const double* y,
+                             int64_t n) {
+   for (int64_t i = 0; i < n; ++i) {
+-    out[i] = Sleef_powd1_u10(x[i], y[i]);
++    out[i] = Sleef_pow_u10(x[i], y[i]);
+   }
+ }
+ 

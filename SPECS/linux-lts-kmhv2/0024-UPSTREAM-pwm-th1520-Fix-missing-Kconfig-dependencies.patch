@@ -1,8 +1,7 @@
-From 1c97c6b1ae6a867755a26ea34c88b8ee35a189bf Mon Sep 17 00:00:00 2001
+From af00b8640fb223e6e97755df058706ff91f96ad7 Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 9 Dec 2025 21:06:03 +0100
-Subject: [PATCH 024/292] UPSTREAM: pwm: th1520: Fix missing Kconfig
- dependencies
+Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: Fix missing Kconfig dependencies
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

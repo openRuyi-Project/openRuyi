@@ -1,0 +1,32 @@
+From c4afcbc4ad1d2a925b98c9c303ec2377fd75c7e7 Mon Sep 17 00:00:00 2001
+From: Felix Yan <felixonmars@archlinux.org>
+Date: Thu, 5 Mar 2026 10:58:04 +0200
+Subject: [PATCH] Use memmove for update_contact demunging to fix RISC-V test
+ failure
+
+g_strlcpy() with overlapping buffers is undefined behavior and causes the as-self-test to fail on RISC-V, where the optimized memcpy does not handle the overlap:
+
+  "richard_at_hughsie_dot_co_dot_uk" -> "richard@hugh_ie.cot_ut_uk"
+
+Use memmove() instead which handles overlapping regions correctly.
+---
+ libappstream-glib/as-app.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libappstream-glib/as-app.c b/libappstream-glib/as-app.c
+index baa2260e..2a9f07c1 100644
+--- a/libappstream-glib/as-app.c
++++ b/libappstream-glib/as-app.c
+@@ -2663,9 +2663,9 @@ as_app_set_update_contact (AsApp *app, const gchar *update_contact)
+ 					    replacements[i].search);
+ 			if (tmp != NULL) {
+ 				*tmp = replacements[i].replace;
+-				(void)g_strlcpy (tmp + 1,
+-					   tmp + strlen (replacements[i].search),
+-					   len);
++				memmove (tmp + 1,
++					 tmp + strlen (replacements[i].search),
++					 strlen (tmp + strlen (replacements[i].search)) + 1);
+ 				done_replacement = TRUE;
+ 			}
+ 		}

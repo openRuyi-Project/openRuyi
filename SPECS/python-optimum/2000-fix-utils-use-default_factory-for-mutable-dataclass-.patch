@@ -1,0 +1,35 @@
+From e9b897588ed7915f868cd476dff3146018e05ea9 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Tue, 26 May 2026 02:52:34 +0800
+Subject: [PATCH] fix(utils): use default_factory for mutable dataclass fields
+
+In modern Python versions, using a mutable object (like a class instance)
+as a default value in a dataclass without `default_factory` raises a
+ValueError. This strict check prevents unintended shared state across
+instances (ghost bugs).
+
+This commit updates `_RunDefaults.time_benchmark_args` in
+`optimum.utils.runs` to use `default_factory=BenchmarkTimeArgs`
+instead of `default=BenchmarkTimeArgs()`. This perfectly resolves
+the ValueError during module initialization and testing.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ optimum/utils/runs.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/optimum/utils/runs.py b/optimum/utils/runs.py
+index 0087ac0..2ada606 100644
+--- a/optimum/utils/runs.py
++++ b/optimum/utils/runs.py
+@@ -227,7 +227,7 @@ class _RunDefaults:
+         metadata={"description": "Maximum number of samples to use from the evaluation dataset for evaluation."},
+     )
+     time_benchmark_args: Optional[BenchmarkTimeArgs] = field(
+-        default=BenchmarkTimeArgs(), metadata={"description": "Parameters related to time benchmark."}
++        default_factory=BenchmarkTimeArgs, metadata={"description": "Parameters related to time benchmark."}
+     )
+ 
+ 
+-- 
+2.54.0

@@ -8,27 +8,26 @@
 %global _test_target test
 
 # These are for SQLite sources
-%define year 2025
-%define download_version 3500400
+%define year 2026
+%define download_version 3530200
 # Doc version might be different
-%define doc_version 3500400
+%define doc_version 3530200
 
 Name:           sqlite
-Version:        3.50.4
+Version:        3.53.2
 Release:        %autorelease
 Summary:        Library that implements an embeddable SQL database engine
 License:        GPL-3.0-or-later
 URL:            https://www.sqlite.org/
 VCS:            git:https://github.com/sqlite/sqlite.git
-#!RemoteAsset
-Source0:        http://www.sqlite.org/%{year}/%{name}-src-%{download_version}.zip
-#!RemoteAsset
-Source1:        http://www.sqlite.org/%{year}/%{name}-doc-%{doc_version}.zip
+#!RemoteAsset:  sha256:cafff764c03f6d720968f746e2f47a986bbf12bf4c18904f1eb131c0b0b592d3
+Source0:        http://www.sqlite.org/%{year}/sqlite-src-%{download_version}.zip
+#!RemoteAsset:  sha256:30c5488926e72a0b958d64377c91c975a35a8f16d285cbb83cfad31f4af71c6d
+Source1:        http://www.sqlite.org/%{year}/sqlite-doc-%{doc_version}.zip
 BuildSystem:    autotools
 
 # Support system-wide template (located at /usr/share/lemon/lempar.c) in lemon.
-Patch0:         0001-sqlite-lemon-system-template.patch
-Patch1:         0002-add-missing-quote.patch
+Patch2000:      2000-sqlite-lemon-system-template.patch
 
 BuildOption(prep):  -a 1
 
@@ -100,7 +99,7 @@ www.sqlite.org website, including all of the SQL Syntax and the
 C/C++ interface specs and other miscellaneous documentation.
 
 %package     -n lemon
-Summary: A parser generator
+Summary:        A parser generator
 
 %description -n lemon
 Lemon is an LALR(1) parser generator for C or C++. It does the same
@@ -192,10 +191,10 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/*.so.0
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/sqlite3.pc
 
 %files doc
-%doc %{name}-doc-%{doc_version}/*
+%doc sqlite-doc-%{doc_version}/*
 
 %files -n lemon
 %{_bindir}/lemon
@@ -208,4 +207,4 @@ install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 %{_bindir}/sqlite3_analyzer
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Recursively copy Perl datatypes
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Clone-PP
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/N/NE/NEILB/Clone-PP-%{version}.tar.gz
+#!RemoteAsset:  sha256:57203094a5d8574b6a00951e8f2399b666f4e74f9511d9c9fb5b453d5d11f578
+Source0:        https://www.cpan.org/authors/id/N/NE/NEILB/Clone-PP-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Benchmark)
@@ -33,20 +37,8 @@ This module provides a general-purpose clone function to make deep copies
 of Perl data structures. It calls itself recursively to copy nested hash,
 array, scalar and reference types, including tied variables and objects.
 
-%prep
-%setup -q -n Clone-PP-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

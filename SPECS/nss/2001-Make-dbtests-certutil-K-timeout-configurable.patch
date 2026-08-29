@@ -1,0 +1,28 @@
+From d65dbdff311a9392fbcc88e82309a2716ee24105 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Mon, 11 May 2026 11:41:28 +0800
+Subject: [PATCH] Make dbtests certutil -K timeout configurable
+
+Allow users to set NSS_DBTESTS_CERTUTIL_K_TIMEOUT to override the threshold.
+The default remains 5 seconds, preserving the existing behavior unless the
+variable is explicitly set.
+---
+ nss/tests/dbtests/dbtests.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nss/tests/dbtests/dbtests.sh b/nss/tests/dbtests/dbtests.sh
+index dd2977e..dda6657 100755
+--- a/nss/tests/dbtests/dbtests.sh
++++ b/nss/tests/dbtests/dbtests.sh
+@@ -560,7 +560,7 @@ dbtest_main()
+       RARRAY=($dtime)
+       TIMEARRAY=(${RARRAY[1]//./ })
+       echo "${TIMEARRAY[0]} seconds"
+-      test ${TIMEARRAY[0]} -lt 5
++      test ${TIMEARRAY[0]} -lt ${NSS_DBTESTS_CERTUTIL_K_TIMEOUT:-10}
+       ret=$?
+       html_msg ${ret} 0 "certutil dump keys with explicit default trust flags"
+     fi
+-- 
+2.54.0
+

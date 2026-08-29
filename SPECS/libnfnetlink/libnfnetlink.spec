@@ -13,7 +13,7 @@ Summary:        Netlink library for netfilter
 License:        GPL-2.0-or-later
 URL:            http://netfilter.org
 VCS:            git:https://git.netfilter.org/libnfnetlink
-#!RemoteAsset
+#!RemoteAsset:  sha256:b064c7c3d426efb4786e60a8e6859b82ee2f2c5e49ffeea640cfe4fe33cbc376
 Source0:        http://netfilter.org/projects/libnfnetlink/files/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -43,10 +43,10 @@ that use the libnfnetlink library.
 %doc README
 %{_libdir}/*.so.*
 
-%files          devel
+%files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
-%{_includedir}/%{name}/*.h
+%{_libdir}/pkgconfig/libnfnetlink.pc
+%{_includedir}/libnfnetlink/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

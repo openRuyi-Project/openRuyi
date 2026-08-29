@@ -8,25 +8,26 @@
 %global srcname pyparsing
 
 Name:           python-%{srcname}
-Version:        3.2.1
+Version:        3.3.2
 Release:        %autorelease
+Summary:        Python parsing class library
 License:        MIT
 URL:            https://github.com/pyparsing/pyparsing
-Summary:        Python parsing class library
-#!RemoteAsset
+#!RemoteAsset:  sha256:c777f4d763f140633dcb6d8a3eda953bf7a214dc4eff598413c070bcdc117cbc
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
-BuildSystem:    pyproject
 BuildArch:      noarch
+BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} +auto
 # skip the part of the tests,as we have no railroad yet.
 BuildOption(check):  -e pyparsing.diagram
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-flit-core
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ that client code uses to construct the grammar directly in Python code.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

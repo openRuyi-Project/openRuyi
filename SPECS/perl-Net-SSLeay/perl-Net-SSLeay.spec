@@ -6,18 +6,22 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Net-SSLeay
-Version:        1.94
+Version:        1.96
 Release:        %autorelease
 Summary:        Perl bindings for OpenSSL and LibreSSL
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Net-SSLeay
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CH/CHRISN/Net-SSLeay-%{version}.tar.gz
+#!RemoteAsset:  sha256:ab213691685fb2a576c669cbc8d9266f8165a31563ad15b7c4030b94adfc0753
+Source0:        https://www.cpan.org/authors/id/C/CH/CHRISN/Net-SSLeay-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl >= 5.8.1
+BuildRequires:  perl-devel
 BuildRequires:  perl(base)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config)
@@ -33,29 +37,14 @@ BuildRequires:  perl(Socket)
 BuildRequires:  perl(Storable)
 BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::More) >= 0.60_01
-# Manual
 BuildRequires:  pkgconfig(openssl)
-BuildRequires:  pkgconfig(zlib)
 
 %description
 This module provides Perl bindings for libssl (an SSL/TLS API) and
 libcrypto (a cryptography API).
 
-%prep
-%setup -q -n Net-SSLeay-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.md Credits QuickRef README README.OSX README.VMS README.Win32
 
 %changelog
-%{?autochangelog}
+%autochangelog

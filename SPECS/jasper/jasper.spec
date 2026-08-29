@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           jasper
-Version:        4.2.8
+Version:        4.2.9
 Release:        %autorelease
 Summary:        Implementation of the JPEG-2000 standard, Part 1
 License:        JasPer-2.0
 URL:            http://www.ece.uvic.ca/~frodo/jasper/
 VCS:            git:https://github.com/jasper-software/jasper
-#!RemoteAsset
+#!RemoteAsset:  sha256:b0e5af6b54c274b9670c7e32ddbf6c802d88c896062d760267695dd0aa7014ff
 Source0:        https://github.com/jasper-software/jasper/archive/refs/tags/version-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -65,4 +65,4 @@ rm -rf %{buildroot}%{_docdir}/JasPer
 %{_libdir}/pkgconfig/jasper.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

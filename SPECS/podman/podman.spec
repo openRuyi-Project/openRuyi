@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           podman
-Version:        5.8.1
+Version:        5.8.2
 Release:        %autorelease
 Summary:        Manage containers, images, pods, and their volumes
 License:        Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT AND MPL-2.0
 URL:            https://podman.io/
 VCS:            git:https://github.com/containers/podman
-#!RemoteAsset:  sha256:b9540ecb19cfcbcfc40e1b81d39930f688c537d8fd6f11ae56be41f2bf9e97a4
+#!RemoteAsset:  sha256:b20ea65afc5a58ea1cea019bd51a5d84eb9042d25d3eb82c55010c8815732d84
 Source0:        https://github.com/containers/podman/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -63,8 +63,8 @@ containers.
 %check
 
 %files
-%license LICENSE vendor/modules.txt
 %doc README.md CONTRIBUTING.md install.md transfer.md
+%license LICENSE vendor/modules.txt
 %{_bindir}/podman
 %{_bindir}/podman-remote
 %{_bindir}/podmansh

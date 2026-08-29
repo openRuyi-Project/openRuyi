@@ -15,7 +15,7 @@ Summary:        SELinux policy management library and utilities
 License:        LGPL-2.1-or-later
 URL:            https://github.com/SELinuxProject/selinux/wiki/Releases
 VCS:            git:https://github.com/SELinuxProject/selinux
-#!RemoteAsset
+#!RemoteAsset:  sha256:1978894c414769ad77438d26886eaae3fb7bb74578ef2a5ad3130c89cb5cb1fe
 Source0:        https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz
 Source1:        semanage.conf
 BuildSystem:    autotools
@@ -43,7 +43,7 @@ BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  python3
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  swig
 BuildRequires:  pkgconfig(cunit)
 
@@ -107,4 +107,4 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/selinux
 %{_libexecdir}/selinux/semanage_migrate_store
 
 %changelog
-%{?autochangelog}
+%autochangelog

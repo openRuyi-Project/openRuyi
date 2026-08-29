@@ -6,26 +6,29 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquick3dphysics
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtquick3dphysics
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Quick3D Physics Libraries and utilities
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquick3dphysics
-#!RemoteAsset
+#!RemoteAsset:  sha256:d1086d6f014e7b698945cf0ee1dc3e43545ed7dcf0b5e501c0d6836a96ac79af
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
+
+# enable riscv64 by disable simd.
+# It's from https://github.com/felixonmars/archriscv-packages/blob/master/qt6-quick3dphysics/physx-rv64.patch.
+Patch0:         0001-enable-build-for-riscv64.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
-BuildRequires:  ninja
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
@@ -82,10 +85,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DPhysics.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DPhysicsHelpers.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

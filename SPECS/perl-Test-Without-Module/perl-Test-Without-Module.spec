@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Test fallback behaviour in absence of modules
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Test-Without-Module
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CO/CORION/Test-Without-Module-%{version}.tar.gz
+#!RemoteAsset:  sha256:8289e1cd7f57017a816ab4127e29ecd7a754ae7cd5c037c41b3b3bf849c21d21
+Source0:        https://www.cpan.org/authors/id/C/CO/CORION/Test-Without-Module-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -30,20 +34,8 @@ This module allows you to deliberately hide modules from a program even
 though they are installed. This is mostly useful for testing modules that
 have a fallback when a certain dependency module is not installed.
 
-%prep
-%setup -q -n Test-Without-Module-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README README.mkdn testrules.yml
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,8 +1,8 @@
-From 3067c7bfaffd9433a9b26baa26ed3f8dab61622f Mon Sep 17 00:00:00 2001
+From e9bf2921885bbc475e11a6f89d7d1325bf4ea382 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:29:59 -0500
-Subject: [PATCH 035/292] UPSTREAM: spi: dt-bindings: fsl-qspi: support
- SpacemiT K1
+Subject: [RUYI PATCH] UPSTREAM: spi: dt-bindings: fsl-qspi: support SpacemiT
+ K1
 
 Add the SpacemiT K1 SoC QSPI IP to the list of supported hardware.  This
 is the first non-Freescale device represented here.  It has a nearly

@@ -14,6 +14,7 @@ License:        PSF-2.0
 URL:            https://github.com/aio-libs/aiohappyeyeballs
 #!RemoteAsset:  sha256:c3f9d0113123803ccadfdf3f0faa505bc78e6a72d1cc4806cbd719826e943558
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} -L
@@ -24,7 +25,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(poetry-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ names via another method such as zeroconf.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

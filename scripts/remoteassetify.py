@@ -23,7 +23,7 @@ arg_parser = argparse.ArgumentParser(
     epilog = f'''{sys.argv[0]} does not edit spec files directly.
 Pipe the output into 'git apply' to apply the patch:
 
-$ {sys.argv[0]} SPECS/<package>/<package>.py | git apply
+$ {sys.argv[0]} SPECS/<package>/<package>.spec | git apply
 ''',
 )
 
@@ -33,7 +33,10 @@ arg_parser.add_argument('--verbose', action='store_true', help='Generate more de
 arg_parser.add_argument('--unsafe-optional-enosys', action='store_true', help='UNSAFE: Allow running rpmspec without enosys')
 arg_parser.add_argument('--workflow', action='store_true', help='Generate some messages as workflow commands')
 
-CURL_DOWNLOAD = shlex.split("""curl --fail --location --user-agent 'scripts/remoteassetify.py https://github.com/openRuyi-Project/openruyi' -o""")
+# Initialized in main()
+args: argparse.Namespace
+
+CURL_DOWNLOAD = shlex.split("""curl --fail --location --proto '=http,https' --user-agent 'scripts/remoteassetify.py openruyi.cn' -o""")
 
 CHECKSUM_TYPES = { 'sha256' }
 
@@ -41,7 +44,7 @@ def message(prefix: str, text: str, line_num: Optional[int] = None, line_text: O
     PREFIX_MAP = { 'WARN': 'warning', 'INFO': 'notice' }
 
     if line_num is not None:
-        append_msg = f' in line {line_num + 1}:\n    > {line_text if line_text else '(empty)'}'
+        append_msg = f" in line {line_num + 1}:\n    > {line_text if line_text else '(empty)'}"
         additional_tags = f',line={line_num + 1}'
     else:
         append_msg = ''
@@ -55,10 +58,9 @@ def message(prefix: str, text: str, line_num: Optional[int] = None, line_text: O
 
 def spec_filter(text: str) -> str:
     GOOD = [
-        r'^Source\d*:',
+        r'^(Source|Patch)\d*:',
         r'^(Name|Version|Release|Summary|License|URL|VCS|Description):',
-        r'^%(description|package)(\s+|$)',
-        r'^%(global|define)\s+',
+        r'^%(description|package|global|define|if\w*|else|elif|endif)(\s+|$)',
     ]
 
     BAD = [
@@ -72,6 +74,23 @@ def spec_filter(text: str) -> str:
     for line in text.splitlines():
         if not any(re.search(r, line, re.IGNORECASE) for r in GOOD):
             continue
+
+        # This replaces %if/%elif/%else/%endif sections with something like:
+        #
+        # %if 1
+        # ...
+        # %elif 0
+        # ...
+        # %else
+        # ...
+        # %endif
+        #
+        # This way, only the first branch is used.
+        # Hopefully this generates something that makes sense.
+        if line.startswith('%if'):
+            line = '%if 1'
+        elif line.startswith('%elif'):
+            line = '%elif 0'
 
         if any(re.search(r, line, re.IGNORECASE) for r in BAD):
             continue
@@ -121,7 +140,12 @@ def get_name(text: str) -> str:
 
     raise ValueError('No Name found in spec')
 
-def get_sources(text: str) -> str:
+class RemoteAssetData(NamedTuple):
+    lineno: int
+    checksum_type: str | None
+    checksum: str | None
+
+def get_sources(text: str) -> dict[str, str]:
     result = {}
 
     for line in text.splitlines():
@@ -129,22 +153,15 @@ def get_sources(text: str) -> str:
             continue
 
         key, value = line.split(':', 1)
-        m = re.match(r'^Source\d*$', key, re.IGNORECASE)
+        m = re.match(r'^(Source|Patch)\d*$', key, re.IGNORECASE)
         if not m:
             continue
-
-        if ':' not in value:
-            # Probably not URL
-            continue
-
-        if re.search(r'%[a-z_{]', value, re.IGNORECASE):
-            message('WARN', f'Possible unexpanded RPM macro in:\n    > {line}')
 
         result[key] = value.strip()
 
     return result
 
-def get_remoteasset_lines(text: str) -> str:
+def get_remoteasset_lines(text: str) -> dict[str, RemoteAssetData]:
     lines = text.splitlines()
 
     result = {}
@@ -165,7 +182,7 @@ def get_remoteasset_lines(text: str) -> str:
                 checksum_type = parts[1].split(':', 1)[0]
                 checksum = parts[1].split(':', 1)[1]
             else:
-                message('INFO', f'Unhandled #!RemoteAsset format ignored', i, line)
+                message('INFO', 'Unhandled #!RemoteAsset format ignored', i, line)
                 continue
 
         else:
@@ -181,31 +198,31 @@ def get_remoteasset_lines(text: str) -> str:
             continue
 
         key, value = next_line.split(':', 1)
-        m = re.match(r'^Source\d*$', key, re.IGNORECASE)
+        m = re.match(r'^(Source|Patch)\d*$', key, re.IGNORECASE)
 
         if not m:
             message('WARN', f'Unhandled remote asset with key {key}', i + 1, next_line)
             continue
 
-        result[key] = {
-            'lineno': i,
-            'checksum_type': checksum_type,
-            'checksum': checksum
-        }
+        result[key] = RemoteAssetData(
+            lineno=i,
+            checksum_type=checksum_type,
+            checksum=checksum
+        )
 
     return result
 
-def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path:
+def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path | None:
     outdir.mkdir(parents=True, exist_ok=True)
     orig_base = url.rsplit('/', 1)[-1]
     base = re.sub(r'[^\w.-]', '_', orig_base)
     if base != orig_base:
-        print(f'WARN: Sanitized file name to {base}')
+        message('WARN', f'Sanitized file name to {base}')
 
     out_path = outdir / base
 
     # I know urllib exists, but having a copiable curl command is nicer
-    command = [*CURL_DOWNLOAD, str(out_path), url]
+    command = [*CURL_DOWNLOAD, str(out_path), '--', url]
 
     print(f'$ {shlex.join(command)}', file=sys.stderr)
     proc = subprocess.run(command)
@@ -225,7 +242,7 @@ def main():
 
         if sys.stdin.isatty():
             print('WARN: Reading spec file from stdin...', file=sys.stderr)
-        spec = sys.stdin.read().strip()
+        spec = sys.stdin.read()
     else:
         if args.filename[0] == '/':
             print('WARN: Absolute path specified, patch will probably not work', file=sys.stderr)
@@ -249,18 +266,25 @@ def main():
         print('INFO: No supported #!RemoteAsset found', file=sys.stderr)
         return
 
-    for key in assets:
+    for key, data in assets.items():
         if key not in sources:
             raise ValueError(f'{key} key not found in parsed spec, that is odd')
 
+        url = sources[key]
+
+        if ':' not in url:
+            message('WARN', f'Unrecognized URL: {url}', data.lineno + 1, spec_lines[data.lineno + 1])
+        elif re.search(r'%[a-z_{]', url, re.IGNORECASE):
+            message('WARN', f'Possible unexpanded RPM macro in URL: {url}', data.lineno + 1, spec_lines[data.lineno + 1])
+
     if args.dry_run:
         if sys.stdout.isatty():
-            print(f'INFO: Found remote assets:', file=sys.stderr)
+            print('INFO: Found remote assets:', file=sys.stderr)
             print(file=sys.stderr)
 
         for key, data in assets.items():
-            if data['checksum_type']:
-                checksum_type, checksum = data['checksum_type'], data['checksum']
+            if data.checksum_type:
+                checksum_type, checksum = data.checksum_type, data.checksum
                 print(f'{key}: {sources[key]} {checksum_type}:{checksum}')
             else:
                 print(f'{key}: {sources[key]}')
@@ -270,10 +294,10 @@ def main():
         print('INFO: Found remote assets:', file=sys.stderr)
 
         for key, data in assets.items():
-            lineno = data['lineno']
+            lineno = data.lineno
 
-            if data['checksum_type']:
-                checksum_type, checksum = data['checksum_type'], data['checksum']
+            if data.checksum_type:
+                checksum_type, checksum = data.checksum_type, data.checksum
                 print(f'{lineno + 1:4}: {key}: {sources[key]} {checksum_type}:{checksum}', file=sys.stderr)
             else:
                 print(f'{lineno + 1:4}: {key}: {sources[key]} (Unknown checksum)', file=sys.stderr)
@@ -286,19 +310,19 @@ def main():
     patch_lines = []
 
     for key, data in assets.items():
-        if data['checksum_type'] not in CHECKSUM_TYPES:
+        if data.checksum_type not in CHECKSUM_TYPES:
             checksum_type = 'sha256'
-            if data['checksum_type'] is not None:
-                print(f"WARN: Unknown checksum type {data['checksum_type']}, using {checksum_type}", file=sys.stderr)
+            if data.checksum_type is not None:
+                print(f"WARN: Unknown checksum type {data.checksum_type}, using {checksum_type}", file=sys.stderr)
         else:
-            checksum_type = data['checksum_type']
-            old_checksum = data['checksum']
+            checksum_type = data.checksum_type
+            old_checksum = data.checksum
 
         print(f'INFO: Downloading {key}', file=sys.stderr)
         out_path = download_asset(outdir, sources[key])
 
         if out_path is None:
-            message('WARN', f'Failed to download {key} from {sources[key]}', data['lineno'] + 1, spec_lines[data['lineno'] + 1])
+            message('WARN', f'Failed to download {key} from {sources[key]}', data.lineno + 1, spec_lines[data.lineno + 1])
             failed.append(key)
             continue
 
@@ -307,10 +331,10 @@ def main():
             print(f'$ cksum --untagged -a {shlex.join([checksum_type, str(out_path)])}', file=sys.stderr)
             print(f'{new_checksum}  {out_path}', file=sys.stderr)
 
-        if checksum_type != data['checksum_type'] or new_checksum != old_checksum:
+        if checksum_type != data.checksum_type or new_checksum != old_checksum:
             any_changed = True
 
-            if checksum_type == data['checksum_type']:
+            if checksum_type == data.checksum_type:
                 differ.append(key)
                 print(f'WARN: Checksum changed for {key}, was {checksum_type}:{old_checksum}, now {checksum_type}:{new_checksum}', file=sys.stderr)
 
@@ -320,16 +344,15 @@ def main():
             print(f'    > {new_remoteasset_line}', file=sys.stderr)
 
             if args.workflow:
-                print(f"::warning file={args.filename},line={data['lineno'] + 1}::{new_remoteasset_line}", file=sys.stderr)
+                print(f"::warning file={args.filename},line={data.lineno + 1}::{new_remoteasset_line}", file=sys.stderr)
 
-            patch_lines.append(f'diff --git a/{args.filename} b/{args.filename}')
             patch_lines.append(f'--- a/{args.filename}')
             patch_lines.append(f'+++ b/{args.filename}')
-            patch_lines.append(f"@@ -{data['lineno'] + 1},2 +{data['lineno'] + 1},2 @@")
-            patch_lines.append(f"-{spec_lines[data['lineno']]}")
+            patch_lines.append(f"@@ -{data.lineno + 1},2 +{data.lineno + 1},2 @@")
+            patch_lines.append(f"-{spec_lines[data.lineno]}")
             patch_lines.append(f'+{new_remoteasset_line}')
-            patch_lines.append(f" {spec_lines[data['lineno'] + 1]}")
-            if data['lineno'] == len(spec_lines) - 2 and spec_noeol:
+            patch_lines.append(f" {spec_lines[data.lineno + 1]}")
+            if data.lineno == len(spec_lines) - 2 and spec_noeol:
                 patch_lines.append('\\ No newline at end of file')
             patch_lines.append('')
 
@@ -351,7 +374,7 @@ def main():
         print(f'INFO: #!RemoteAsset lines for {args.filename} are up to date', file=sys.stderr)
 
     if failed:
-        print(f'WARN: Downloads have failed for: {', '.join(failed)}', file=sys.stderr)
+        print(f"WARN: Downloads have failed for: {', '.join(failed)}", file=sys.stderr)
         exit_code = 1
 
     if exit_code != 0:

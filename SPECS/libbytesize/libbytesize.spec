@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A library for working with sizes in bytes
 License:        LGPL-2.1-or-later
 URL:            https://github.com/storaged-project/libbytesize
-#!RemoteAsset
+#!RemoteAsset:  sha256:e8b39afc6580f5777c9b1c8488e21fcbb60a3effdac7399eef0236185639bc41
 Source0:        https://github.com/storaged-project/libbytesize/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -68,9 +68,6 @@ This package contains Python 3 bindings for libbytesize.
 make check TESTS=libbytesize_unittest.sh
 
 %install -a
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -94,4 +91,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{python3_sitearch}/bytesize/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -14,7 +14,7 @@ Summary:        A full-featured TLS VPN solution
 License:        GPL-2.0-only
 URL:            https://community.openvpn.net/
 VCS:            git:https://github.com/OpenVPN/openvpn
-#!RemoteAsset
+#!RemoteAsset:  sha256:80256bf2f9f4c912dbc72e8b00180f6c30fb40a1bb2122fb5e686e71af6a06e7
 Source0:        https://github.com/OpenVPN/openvpn/archive/refs/tags/v%{version}.tar.gz
 Source1:        roadwarrior-server.conf
 Source2:        roadwarrior-client.conf
@@ -52,7 +52,7 @@ BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(cmocka)
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  pkgconfig(python3)
 %if %{with dco}
 BuildRequires:  pkgconfig(libnl-3.0)
@@ -154,4 +154,4 @@ rm -rf %{buildroot}%{_pkgdocdir}/contrib/cmake*
 %{_includedir}/openvpn-msg.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,13 +13,15 @@ Release:        %autorelease
 Summary:        Now is a time toolkit for golang
 License:        MIT
 URL:            https://github.com/jinzhu/now
-#!RemoteAsset
+#!RemoteAsset:  sha256:6660b00538ebb0e0ade120371f2a891c692650e9126bd45a805b8f4d65293127
 Source0:        https://github.com/jinzhu/now/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+# For tests.
+BuildRequires:  tzdata
 
 Provides:       go(github.com/jinzhu/now) = %{version}
 
@@ -32,4 +34,4 @@ Now is a time toolkit for golang
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

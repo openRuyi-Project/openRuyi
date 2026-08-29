@@ -1,0 +1,35 @@
+From 69f42eaa542ca3e123f2c9b467c0e89a0954323e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 2 Jun 2026 01:15:56 +0800
+Subject: [PATCH] Accept quoted semver constraint errors
+
+The packaged semver parser quotes invalid constraints in error messages. Adjust tests to match that behavior.
+---
+ internal/node_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/internal/node_test.go b/internal/node_test.go
+index 063c894..d76dacf 100644
+--- a/internal/node_test.go
++++ b/internal/node_test.go
+@@ -513,7 +513,7 @@ var _ = Describe("Constructing nodes", func() {
+ 		It("validates SemVerConstraints", func() {
+ 			node, errors := internal.NewNode(dt, ntIt, "", body, cl, SemVerConstraint("&| 1.0.0", ""))
+ 			Ω(node).Should(BeZero())
+-			Ω(errors).Should(ConsistOf(types.GinkgoErrors.InvalidSemVerConstraint("&| 1.0.0", "improper constraint: &| 1.0.0", cl), types.GinkgoErrors.InvalidEmptySemVerConstraint(cl)))
++			Ω(errors).Should(ConsistOf(types.GinkgoErrors.InvalidSemVerConstraint("&| 1.0.0", "improper constraint: \"&| 1.0.0\"", cl), types.GinkgoErrors.InvalidEmptySemVerConstraint(cl)))
+ 			Ω(dt.DidTrackDeprecations()).Should(BeFalse())
+ 		})
+ 	})
+@@ -574,7 +574,7 @@ var _ = Describe("Constructing nodes", func() {
+ 			Ω(node).Should(BeZero())
+ 			Ω(errors).Should(ConsistOf(
+ 				types.GinkgoErrors.InvalidEmptyComponentForSemVerConstraint(cl),
+-				types.GinkgoErrors.InvalidSemVerConstraint("&| 1.0.0", "improper constraint: &| 1.0.0", cl),
++				types.GinkgoErrors.InvalidSemVerConstraint("&| 1.0.0", "improper constraint: \"&| 1.0.0\"", cl),
+ 				types.GinkgoErrors.InvalidEmptySemVerConstraint(cl),
+ 			))
+ 			Ω(dt.DidTrackDeprecations()).Should(BeFalse())
+-- 
+2.43.0
+

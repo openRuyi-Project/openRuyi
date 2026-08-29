@@ -6,16 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Module-Build-Tiny
-Version:        0.052
+Version:        0.053
 Release:        %autorelease
 Summary:        Tiny replacement for Module::Build
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Build-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/Module-Build-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:3726d622da6f655e88fdf89e4fd597709c44970b47de65082003e8d86b5e193a
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/Module-Build-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(blib)
@@ -64,20 +69,8 @@ to drive distribution configuration, build, test and installation.
 Traditionally, Build.PL uses Module::Build as the underlying build system.
 This module provides a simple, lightweight, drop-in replacement.
 
-%prep
-%setup -q -n Module-Build-Tiny-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install --destdir=%{buildroot} --create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README Todo
 
 %changelog
-%{?autochangelog}
+%autochangelog

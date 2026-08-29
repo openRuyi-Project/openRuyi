@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,18 +10,16 @@
 %define go_import_path  golang.org/x/sync
 
 Name:           go-golang-x-sync
-Version:        0.19.0
+Version:        0.21.0
 Release:        %autorelease
-Summary:        concurrency primitives supplemental to the Go standard library
+Summary:        Concurrency primitives supplemental to the Go standard library
 License:        BSD-3-Clause
 URL:            https://golang.org/x/sync
 VCS:            git:https://github.com/golang/sync
-#!RemoteAsset
+#!RemoteAsset:  sha256:375daf62cdc3612f7155587763b2b15562ac5aff1e38000c5853a5c1644f7dc7
 Source0:        https://github.com/golang/sync/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -33,9 +33,9 @@ primitives in addition to the ones provided by the language ro the "sync"
 and "sync/atomic" packages.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

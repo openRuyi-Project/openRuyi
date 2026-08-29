@@ -7,36 +7,54 @@
 %global srcname hypothesis
 
 Name:           python-%{srcname}
-Version:        6.148.6
+Version:        6.152.4
 Release:        %autorelease
 Summary:        Library for property based testing
 License:        MPL-2.0
 URL:            https://github.com/HypothesisWorks/hypothesis
-#!RemoteAsset
+#!RemoteAsset:  sha256:31c8f9ce619716f543e2710b489b1633c833586641d9e6c94cee03f109a5afc4
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname} '_%{srcname}_*'
+BuildOption(install):  -l %{srcname} '_%{srcname}_*'
+# We don't have python-libcst
+BuildOption(check):  -e hypothesis.extra.codemods
+# We don't have python-dpcontracts
+BuildOption(check):  -e hypothesis.extra.dpcontracts
+# We don't have python-black
+BuildOption(check):  -e hypothesis.extra.ghostwriter
+# We don't have python-lark
+BuildOption(check):  -e hypothesis.extra.lark
+# Test won't run even with django installed, so skip it
+BuildOption(check):  -e hypothesis.extra.django
+BuildOption(check):  -e hypothesis.extra.pandas
+BuildOption(check):  -e 'hypothesis.extra.pandas.*'
+# Don't include numpy, avoid circular dependency.
+BuildOption(check):  -e hypothesis.extra.numpy
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
+# For tests
+BuildRequires:  python3dist(python-dateutil)
+# BuildRequires:  python3dist(numpy)
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(pytz)
+BuildRequires:  python3dist(redis)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
-
-%{pyproject_extras_subpkg -n python%{python3_pkgversion}-hypothesis pytz,dateutil,lark,numpy,pandas,pytest,redis,zoneinfo,cli,ghostwriter,django,codemods}
 
 %description
 Flask-RESTful provides the building blocks for creating a REST API.
 
+%pyproject_extras_subpkg -n python-hypothesis pytz,dateutil,lark,numpy,pandas,pytest,redis,zoneinfo,cli,ghostwriter,django,codemods
+
 %generate_buildrequires
 %pyproject_buildrequires
-
-%check
 
 %files -f %{pyproject_files}
 %{_bindir}/hypothesis
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -8,21 +8,24 @@
 
 %define rname kguiaddons
 
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 # %%{!?_kf6_version: %%global _kf6_version %%{version}}
-%global _kf6_version 6.22.0
+%global _kf6_version 6.28.0
 
 Name:           kf6-kguiaddons
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Utilities for graphical user interfaces
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kguiaddons
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:f46aeca80707e774fcffe8aa82e464a81056ce84f613347a5c9cc24c1c9a8432
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_PYTHON_BINDINGS=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  pkgconfig
 BuildRequires:  qt6-qtbase-private-devel >= %{qt6_version}
@@ -40,9 +43,9 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
@@ -50,19 +53,12 @@ BuildRequires:  cmake(PySide6)
 # https://community.kde.org/Plasma/Plasma_6#Coinstallability
 Provides:       kguiaddons = %{version}-%{release}
 Obsoletes:      kguiaddons < %{version}-%{release}
+Provides:       kf6-kguiaddons-imports = %{version}-%{release}
+Obsoletes:      kf6-kguiaddons-imports < %{version}-%{release}
 
 %description
 The KDE GUI addons provide utilities for graphical user interfaces in the areas
 of colors, fonts, text, images, keyboard input.
-
-%package        imports
-Summary:        QtQuick bindings for utilities for graphical user interfaces
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    imports
-The KDE GUI addons provide utilities for graphical user interfaces in the areas
-of colors, fonts, text, images, keyboard input. This package provides QtQuick
-bindings to use these GUI addons with QML and QtQuick applications.
 
 %package        devel
 Summary:        Utilities for graphical user interfaces: Build Environment
@@ -72,31 +68,16 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The KDE GUI addons provide utilities for graphical user interfaces in the areas
 of colors, fonts, text, images, keyboard input. Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6 \
-  -DBUILD_PYTHON_BINDINGS=OFF
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %files
-%license LICENSES/*
 %doc README.md
+%license LICENSES/*
 %{_kf6_applicationsdir}/google-maps-geo-handler.desktop
 %{_kf6_applicationsdir}/openstreetmap-geo-handler.desktop
 %{_kf6_applicationsdir}/wheelmap-geo-handler.desktop
 %{_kf6_bindir}/kde-geo-uri-handler
 %{_kf6_debugdir}/kguiaddons.categories
 %{_kf6_libdir}/libKF6GuiAddons.so.*
-
-%files imports
+%{_kf6_libdir}/qt6/metatypes/qt6kf6guiaddons_metatypes.json
 %{_kf6_qmldir}/org/kde/guiaddons/
 
 %files devel
@@ -106,4 +87,4 @@ of colors, fonts, text, images, keyboard input. Development files.
 %{_kf6_pkgconfigdir}/KF6GuiAddons.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

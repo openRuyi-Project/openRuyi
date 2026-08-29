@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Simple construction, analysis and modification of binary data
 License:        MIT
 URL:            https://github.com/mborgerson/pyxbe
-#!RemoteAsset
+#!RemoteAsset:  sha256:ef38c9b07bffd9daecdd32640a3e6c99f62a621a8b8a4d54a0c2ccf9fb1b7cdb
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l xbe
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +37,4 @@ for the original Xbox game console.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

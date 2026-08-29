@@ -12,17 +12,17 @@ Release:        %autorelease
 Summary:        A Python SOCKS client module
 License:        BSD-3-Clause
 URL:            https://github.com/Anorov/PySocks
-#!RemoteAsset
+#!RemoteAsset:  sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l socks sockshandler
+BuildOption(install):  -l socks sockshandler
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-pysocks
+Provides:       python3-pysocks = %{version}-%{release}
 %python_provide python3-pysocks
 
 %description
@@ -37,4 +37,4 @@ drop-in replacement to the socket module.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

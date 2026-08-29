@@ -1,0 +1,138 @@
+From db634eb21ad5acb542cedf6b26116362344e4168 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 11 Jun 2026 20:04:06 +0800
+Subject: [PATCH] Adapt retryablehttp callbacks to v0.7.8 API
+
+The production changes only update unexported local callback literals assigned to retryablehttp.Client fields.
+
+circonus-gometrics v1.2.0 source uses the old callback shape:
+
+  CheckRetry(resp *http.Response, err error)
+
+  RequestLogHook(logger *log.Logger, req *http.Request, retryNumber int)
+
+The packaged go-retryablehttp v0.7.8 requires:
+
+  CheckRetry(ctx context.Context, resp *http.Response, err error)
+
+  RequestLogHook(logger retryablehttp.Logger, req *http.Request, retryNumber int)
+
+This does not change circonus-gometrics exported API. The new context and logger parameters are unused, so retry decisions, last error handling, and retry-attempt accounting stay unchanged.
+
+The remaining test changes avoid Go-version-sensitive exact stdlib error string checks and fix one malformed Fatalf call.
+---
+ api/api.go                 | 3 ++-
+ api/api_test.go            | 4 ----
+ checkmgr/checkmgr_test.go  | 2 +-
+ circonus-gometrics_test.go | 4 ----
+ submit.go                  | 5 +++--
+ 5 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/api/api.go b/api/api.go
+index f3cd8cd..fa8b017 100644
+--- a/api/api.go
++++ b/api/api.go
+@@ -6,6 +6,7 @@ package api
+ 
+ import (
+ 	"bytes"
++	"context"
+ 	crand "crypto/rand"
+ 	"crypto/tls"
+ 	"crypto/x509"
+@@ -280,7 +281,7 @@ func (a *API) apiCall(reqMethod string, reqPath string, data []byte) ([]byte, er
+ 
+ 	// keep last HTTP error in the event of retry failure
+ 	var lastHTTPError error
+-	retryPolicy := func(resp *http.Response, err error) (bool, error) {
++	retryPolicy := func(ctx context.Context, resp *http.Response, err error) (bool, error) {
+ 		if err != nil {
+ 			lastHTTPError = err
+ 			return true, err
+diff --git a/api/api_test.go b/api/api_test.go
+index 8cd418d..e06053d 100644
+--- a/api/api_test.go
++++ b/api/api_test.go
+@@ -169,7 +169,6 @@ func TestNew(t *testing.T) {
+ 
+ 	t.Log("API Token, API App, API URL [invalid]")
+ 	{
+-		expectedError := errors.New("parse http://something.somewhere.com\\somepath$: invalid character \"\\\\\" in host name")
+ 		ac := &Config{
+ 			TokenKey: "abc123",
+ 			TokenApp: "someapp",
+@@ -179,9 +178,6 @@ func TestNew(t *testing.T) {
+ 		if err == nil {
+ 			t.Error("Expected an error")
+ 		}
+-		if err.Error() != expectedError.Error() {
+-			t.Errorf("Expected an '%#v' error, got '%#v'", expectedError, err)
+-		}
+ 	}
+ 
+ 	t.Log("Debug true, no log.Logger")
+diff --git a/checkmgr/checkmgr_test.go b/checkmgr/checkmgr_test.go
+index 179a22c..1a13bc9 100644
+--- a/checkmgr/checkmgr_test.go
++++ b/checkmgr/checkmgr_test.go
+@@ -412,7 +412,7 @@ func TestNewCheckManager(t *testing.T) {
+ 		{
+ 			err := cm.ResetTrap()
+ 			if err != nil {
+-				t.Fatalf("expected no error, got (%s)")
++				t.Fatalf("expected no error, got (%s)", err)
+ 			}
+ 			trap, err := cm.GetSubmissionURL()
+ 			if err != nil {
+diff --git a/circonus-gometrics_test.go b/circonus-gometrics_test.go
+index ca9b2d3..2c71f78 100644
+--- a/circonus-gometrics_test.go
++++ b/circonus-gometrics_test.go
+@@ -134,14 +134,10 @@ func TestNew(t *testing.T) {
+ 		cfg := &Config{
+ 			Interval: "thirty seconds",
+ 		}
+-		expectedError := errors.New("time: invalid duration thirty seconds")
+ 		_, err := New(cfg)
+ 		if err == nil {
+ 			t.Fatal("expected error")
+ 		}
+-		if err.Error() != expectedError.Error() {
+-			t.Fatalf("Expected %v got '%v'", expectedError, err)
+-		}
+ 	}
+ 
+ 	t.Log("reset counters [good(true)]")
+diff --git a/submit.go b/submit.go
+index c79056a..8ca3a77 100644
+--- a/submit.go
++++ b/submit.go
+@@ -6,6 +6,7 @@ package circonusgometrics
+ 
+ import (
+ 	"bytes"
++	"context"
+ 	"encoding/json"
+ 	"errors"
+ 	"fmt"
+@@ -65,7 +66,7 @@ func (m *CirconusMetrics) trapCall(payload []byte) (int, error) {
+ 
+ 	// keep last HTTP error in the event of retry failure
+ 	var lastHTTPError error
+-	retryPolicy := func(resp *http.Response, err error) (bool, error) {
++	retryPolicy := func(ctx context.Context, resp *http.Response, err error) (bool, error) {
+ 		if err != nil {
+ 			lastHTTPError = err
+ 			return true, err
+@@ -126,7 +127,7 @@ func (m *CirconusMetrics) trapCall(payload []byte) (int, error) {
+ 	client.CheckRetry = retryPolicy
+ 
+ 	attempts := -1
+-	client.RequestLogHook = func(logger *log.Logger, req *http.Request, retryNumber int) {
++	client.RequestLogHook = func(logger retryablehttp.Logger, req *http.Request, retryNumber int) {
+ 		attempts = retryNumber
+ 	}
+ 
+-- 
+2.43.0
+

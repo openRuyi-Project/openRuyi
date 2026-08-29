@@ -1,0 +1,38 @@
+[workspace]
+members = [
+    "python_ext",
+    "parser",
+    "toktrie",
+    "toktrie_hf_tokenizers",
+    "toktrie_tiktoken",
+]
+default-members = [
+    "python_ext",
+]
+resolver = "2"
+
+[workspace.package]
+rust-version="1.87"
+
+[profile.release]
+debug = 1
+strip = "debuginfo"
+# lto = "thin"
+# codegen-units = 1
+
+[profile.perf]
+inherits = "release"
+debug = 1
+opt-level = 3
+
+# [patch.crates-io]
+# derivre = { path = "../derivre" }
+
+[workspace.dependencies]
+toktrie = { path = "toktrie" }
+llguidance = { path = "parser" }
+llg_test_utils = { path = "llg_test_utils" }
+toktrie_hf_tokenizers = { path = "toktrie_hf_tokenizers" }
+toktrie_hf_downloader = { path = "toktrie_hf_downloader" }
+toktrie_tiktoken = { path = "toktrie_tiktoken" }
+rand = "0.9"

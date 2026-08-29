@@ -1,0 +1,69 @@
+From 3e8fe90bd2e95b57436d468492e262a669247a01 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Wed, 13 May 2026 03:15:55 +0000
+Subject: [PATCH 2/6] agent: resolve RISC-V platform PCI root bus path
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ src/agent/src/linux_abi.rs | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
+
+diff --git a/src/agent/src/linux_abi.rs b/src/agent/src/linux_abi.rs
+index cb5c6bc3f..4991259ed 100644
+--- a/src/agent/src/linux_abi.rs
++++ b/src/agent/src/linux_abi.rs
+@@ -9,13 +9,12 @@ use cfg_if::cfg_if;
+ use std::str::FromStr;
+ // Linux ABI related constants.
+ 
+-#[cfg(target_arch = "aarch64")]
++#[cfg(any(target_arch = "aarch64", target_arch = "riscv64"))]
+ use std::fs;
+ 
+ pub const SYSFS_DIR: &str = "/sys";
+ #[cfg(any(
+     all(target_arch = "powerpc64", target_endian = "little"),
+-    target_arch = "riscv64",
+     target_arch = "s390x",
+     target_arch = "x86_64",
+     target_arch = "x86"
+@@ -26,6 +25,36 @@ pub fn create_pci_root_bus_path(root_complex: &str) -> String {
+     format!("/devices/pci0000:{root_complex}")
+ }
+ 
++#[cfg(target_arch = "riscv64")]
++pub fn create_pci_root_bus_path(root_complex: &str) -> String {
++    let acpi_root_bus_path = format!("/devices/pci0000:{root_complex}");
++    let acpi_sysfs_dir = format!("{SYSFS_DIR}{acpi_root_bus_path}");
++    if fs::metadata(acpi_sysfs_dir).is_ok() {
++        return acpi_root_bus_path;
++    }
++
++    let fallback = format!("/devices/platform/30000000.pci/pci0000:{root_complex}");
++    let platform_sysfs_dir = format!("{SYSFS_DIR}/devices/platform");
++    let entries = match fs::read_dir(platform_sysfs_dir) {
++        Ok(entries) => entries,
++        Err(_) => return fallback,
++    };
++
++    for entry in entries.flatten() {
++        let dir_name = entry.file_name();
++        let root_bus_path = format!(
++            "/devices/platform/{}/pci0000:{root_complex}",
++            dir_name.to_string_lossy()
++        );
++        let sysfs_dir = format!("{SYSFS_DIR}{root_bus_path}");
++        if fs::metadata(sysfs_dir).is_ok() {
++            return root_bus_path;
++        }
++    }
++
++    fallback
++}
++
+ // This is used in several modules, let's create a helper function to parse the
+ // qom path and switch easily once the shim sends us the full NUMA path
+ pub fn pcipath_from_dev_tree_path(dev_tree_path: &str) -> Result<(&str, pci::Path)> {
+-- 
+2.50.1 (Apple Git-155)
+

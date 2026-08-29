@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Louvain algorithm for community detection
 License:        BSD-3-Clause
 URL:            https://github.com/taynaud/python-louvain
-#!RemoteAsset
+#!RemoteAsset:  sha256:b7ba2df5002fd28d3ee789a49532baad11fe648e4f2117cf0798e7520a1da56b
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  community
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ the Louvain method for identifying communities in large networks.
 %{_bindir}/community
 
 %changelog
-%{?autochangelog}
+%autochangelog

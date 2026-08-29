@@ -65,7 +65,8 @@ install -Dm 755 test/probe.t %{buildroot}%{_bindir}/io_uring_probe
 %{_includedir}/liburing.h
 %{_libdir}/liburing.so
 %{_libdir}/liburing-ffi.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/liburing-ffi.pc
+%{_libdir}/pkgconfig/liburing.pc
 %{_mandir}/man*/*
 
 %changelog

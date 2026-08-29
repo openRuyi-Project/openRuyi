@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,18 +11,16 @@
 %define go_test_exclude_glob golang.org/x/oauth2/google*
 
 Name:           go-golang-x-oauth2
-Version:        0.34.0
+Version:        0.36.0
 Release:        %autorelease
 Summary:        Go supplementary network libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/oauth2
 VCS:            git:https://github.com/golang/oauth2
-#!RemoteAsset
+#!RemoteAsset:  sha256:77008e6b04072af4be6dd94027ab5667ebfd56e8798a20bc36f0b1bcf37a31ab
 Source0:        https://github.com/golang/oauth2/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -38,10 +37,11 @@ This repository holds supplementary Go networking packages.
 # In order to avoid circular dependency
 %package        google
 Summary:        Google specific OAuth2 support
-# Use the specific golang import path for google subpackage
-#Requires:       go(google.golang.org/cloud/compute/metadata)
 
 Provides:       go(golang.org/x/oauth2/google) = %{version}
+
+# Use the specific golang import path for google subpackage
+Requires:       go(cloud.google.com/go/compute/metadata)
 
 %description    google
 This package provides support for making OAuth2 authorized and
@@ -49,15 +49,15 @@ authenticated HTTP requests against Google APIs. It can additionally grant
 authorization with Bearer JWT.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 %exclude %{go_sys_gopath}/%{go_import_path}/google
 
 %files google
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}/google
 
 %changelog
-%{?autochangelog}
+%autochangelog

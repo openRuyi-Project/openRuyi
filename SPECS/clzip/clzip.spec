@@ -2,19 +2,20 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           clzip
-Version:        1.15
+Version:        1.16
 Release:        %autorelease
 Summary:        Small, stand-alone lzip compressor and decompressor
 License:        GPL-2.0-or-later AND BSD-2-Clause
 URL:            https://www.nongnu.org/lzip/clzip.html
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:f339a3a5dfc2220532dc36f937a7a58e3a3278b174f2815cc5615107e55966e4
 Source0:        https://download.savannah.nongnu.org/releases/lzip/clzip/clzip-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:f43cad169cc4fc5c6370c10fda4f0453e832bde41f479ee0a3e5710a9bc01303
 Source1:        https://download.savannah.nongnu.org/releases/lzip/clzip/clzip-%{version}.tar.gz.sig
 BuildSystem:    autotools
 
@@ -39,4 +40,4 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_infodir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

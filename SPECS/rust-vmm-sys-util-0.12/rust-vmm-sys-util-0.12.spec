@@ -1,0 +1,63 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+%global crate_name vmm-sys-util
+%global full_version 0.12.1
+%global pkgname vmm-sys-util-0.12
+
+Name:           rust-vmm-sys-util-0.12
+Version:        0.12.1
+Release:        %autorelease
+Summary:        Rust crate "vmm-sys-util"
+License:        BSD-3-Clause
+URL:            https://github.com/rust-vmm/vmm-sys-util
+#!RemoteAsset:  sha256:1d1435039746e20da4f8d507a72ee1b916f7b4b05af7a91c093d2c6561934ede
+Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
+BuildArch:      noarch
+BuildSystem:    rustcrates
+
+BuildRequires:  rust-rpm-macros
+
+Requires:       crate(bitflags-1/default) >= 1.0.0
+Requires:       crate(libc-0.2/default) >= 0.2.39
+Provides:       crate(%{pkgname}) = %{version}
+Provides:       crate(%{pkgname}/default) = %{version}
+
+%description
+Source code for takopackized Rust crate "vmm-sys-util"
+
+%package     -n %{name}+serde
+Summary:        System utility set - feature "serde"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(serde-1/default) >= 1.0.27
+Provides:       crate(%{pkgname}/serde) = %{version}
+
+%description -n %{name}+serde
+This metapackage enables feature "serde" for the Rust vmm-sys-util crate, by pulling in any additional dependencies needed by that feature.
+
+%package     -n %{name}+serde-derive
+Summary:        System utility set - feature "serde_derive"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(serde-derive-1/default) >= 1.0.27
+Provides:       crate(%{pkgname}/serde-derive) = %{version}
+
+%description -n %{name}+serde-derive
+This metapackage enables feature "serde_derive" for the Rust vmm-sys-util crate, by pulling in any additional dependencies needed by that feature.
+
+%package     -n %{name}+with-serde
+Summary:        System utility set - feature "with-serde"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(%{pkgname}/serde) = %{version}
+Requires:       crate(%{pkgname}/serde-derive) = %{version}
+Provides:       crate(%{pkgname}/with-serde) = %{version}
+
+%description -n %{name}+with-serde
+This metapackage enables feature "with-serde" for the Rust vmm-sys-util crate, by pulling in any additional dependencies needed by that feature.
+
+%files
+%{_datadir}/cargo/registry/%{crate_name}-%{version}/
+
+%changelog
+%autochangelog

@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Module-CoreList
-Version:        5.20251120
+Version:        5.20260601
 Release:        %autorelease
 Summary:        What modules shipped with versions of perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-CoreList
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Module-CoreList-%{version}.tar.gz
+#!RemoteAsset:  sha256:b3c70d3e868c3cd230f558c4d2774bfd56777c9d4c1414867ef8bd28b9be7496
+Source0:        https://www.cpan.org/authors/id/B/BI/BINGOS/Module-CoreList-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(List::Util)
@@ -28,20 +32,8 @@ Requires:       perl(version) >= 0.88
 Module::CoreList provides information on which core and dual-life modules
 shipped with each version of perl.
 
-%prep
-%setup -q -n Module-CoreList-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes corelist identify-dependencies README
 
 %changelog
-%{?autochangelog}
+%autochangelog

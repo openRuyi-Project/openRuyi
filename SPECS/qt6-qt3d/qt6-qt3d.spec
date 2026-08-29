@@ -6,19 +6,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qt3d
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 %bcond system_assimp 0
 
 Name:           qt6-qt3d
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Qt3D QML bindings and C++ APIs
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qt3d.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:a66d8c8e049d1ee7a7687b34940f3555d0d7084858b6dc78d1e1cb7df40a0107
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -55,7 +55,6 @@ support for 2D and 3D rendering in both Qt C++ and Qt Quick applications.
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       pkgconfig(Qt6Quick3D)
 
 %description    devel
 Development files for %{name}.
@@ -101,10 +100,23 @@ popd
 %{_qt6_libdir}/libQt63D*.so
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt63DAnimation.pc
+%{_qt6_libdir}/pkgconfig/Qt63DCore.pc
+%{_qt6_libdir}/pkgconfig/Qt63DExtras.pc
+%{_qt6_libdir}/pkgconfig/Qt63DInput.pc
+%{_qt6_libdir}/pkgconfig/Qt63DLogic.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickAnimation.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickExtras.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickInput.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickLogic.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickRender.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickScene2D.pc
+%{_qt6_libdir}/pkgconfig/Qt63DQuickScene3D.pc
+%{_qt6_libdir}/pkgconfig/Qt63DRender.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

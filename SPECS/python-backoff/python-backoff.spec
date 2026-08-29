@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python library providing function decorators for configurable backoff and retry
 License:        MIT
 URL:            https://github.com/litl/backoff
-#!RemoteAsset
+#!RemoteAsset:  sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -20,10 +20,10 @@ BuildSystem:    pyproject
 BuildOption(install):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ polling resources for externally generated content.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

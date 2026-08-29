@@ -1,0 +1,3 @@
+%clang_wrap_llvmir_bin_dir %{_prefix}/lib/llvmir-bin
+%clang_wrap_llvmir_dir %{_libdir}/llvmir
+%clang_wrap_varlibdir %{_var}/lib/clang-wrap

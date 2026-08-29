@@ -11,15 +11,15 @@
 %global _lto_cflags %{_lto_cflags} -ffat-lto-objects
 
 Name:           openldap
-Version:        2.6.12
+Version:        2.6.13
 Release:        %autorelease
 Summary:        An implementation of the Lightweight Directory Access Protocol
 License:        OLDAP-2.8
 URL:            https://www.openldap.org
 VCS:            git:https://git.openldap.org/openldap/openldap.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d693b49517a42efb85a1a364a310aed16a53d428d1b46c0d31ef3fba78fcb656
 Source0:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz
-#!RemoteAsset
+#!RemoteAsset:  sha256:9e9317a322ba4b01a125fe4e292b6862d753696f1487839066eb0ccbaa599c5c
 Source1:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz.asc
 Source2:        slapd.conf
 Source3:        sasl-slapd.conf
@@ -75,6 +75,7 @@ BuildRequires:  pkgconfig(libargon2)
 BuildRequires:  cyrus-sasl-devel
 BuildRequires:  db-devel
 BuildRequires:  mandoc
+BuildRequires:  perl-devel
 BuildRequires:  libtool
 BuildRequires:  unixODBC-devel
 BuildRequires:  pkgconfig(krb5)
@@ -92,6 +93,7 @@ The server provides several database backends and overlays.
 %package        back-perl
 Summary:        OpenLDAP Perl backend
 Requires:       %{name} = %{version}-%{release}
+BuildRequires:  perl-devel
 Requires:       perl
 
 %description    back-perl
@@ -405,11 +407,12 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %{_includedir}/*.h
 %{_libdir}/liblber.so
 %{_libdir}/libldap*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/lber.pc
+%{_libdir}/pkgconfig/ldap.pc
 
 %files static
 %_libdir/liblber.a
 %_libdir/libldap*.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

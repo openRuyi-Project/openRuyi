@@ -82,7 +82,7 @@ rm -f %{buildroot}%{_libdir}/*.a
 
 %files devel
 %{_includedir}/cdda/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/cdparanoia-3.pc
 %{_libdir}/*.so
 
 %changelog

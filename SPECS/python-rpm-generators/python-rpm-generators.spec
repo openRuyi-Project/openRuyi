@@ -25,7 +25,7 @@ BuildArch:      noarch
 
 %package     -n python3-rpm-generators
 Summary:        %{summary}
-Requires:       python3-packaging
+Requires:       python3dist(packaging)
 Requires:       rpm
 Requires:       python-srpm-macros
 
@@ -49,4 +49,4 @@ install -Dpm0755 -t %{buildroot}%{_rpmconfigdir} *.py
 %{_rpmconfigdir}/pythonbundles.py
 
 %changelog
-%{?autochangelog}
+%autochangelog

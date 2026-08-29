@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Generated code for OpenTelemetry protobuf data model
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-proto-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:87b9d9dab8f5f4ceae467fe7c277cac4804621d052e39b82c06ff96b54c9961e
 Source0:        https://github.com/open-telemetry/opentelemetry-proto-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -36,4 +36,4 @@ Generated Go code for the OpenTelemetry protobuf data model.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

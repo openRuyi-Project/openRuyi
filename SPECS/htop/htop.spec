@@ -7,21 +7,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           htop
-Version:        3.4.1
+Version:        3.5.1
 Release:        %autorelease
 Summary:        An interactive process viewer
 License:        GPL-2.0-or-later
 URL:            https://htop.dev
 VCS:            git:https://github.com/htop-dev/htop
-#!RemoteAsset
+#!RemoteAsset:  sha256:dfc4a09845e9bc86f466a722e62b8f87d59028ff39689077ff2257a6a605061d
 Source0:        https://github.com/htop-dev/htop/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  autoconf
 BuildRequires:  automake
-BuildRequires:  gcc
-
 %description
 htop is a cross-platform interactive process viewer. It allows scrolling the
 list of processes, and provides an overview of system resource consumption.
@@ -40,4 +38,4 @@ entering their PIDs.
 %{_mandir}/man1/htop.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

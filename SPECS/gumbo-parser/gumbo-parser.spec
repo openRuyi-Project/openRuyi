@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,6 +18,7 @@ BuildSystem:    autotools
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-silent-rules
 BuildOption(conf):  --docdir=%{_pkgdocdir}
+BuildOption(check):  CXXFLAGS="%{build_cxxflags} -std=gnu++17"
 
 BuildRequires:  make
 BuildRequires:  gcc-c++
@@ -89,4 +91,4 @@ install -m 644 doc/*.md %{buildroot}%{_pkgdocdir}
 %{python3_sitelib}/gumbo-*.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog

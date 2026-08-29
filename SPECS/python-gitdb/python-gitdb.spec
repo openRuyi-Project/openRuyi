@@ -7,13 +7,14 @@
 %global srcname gitdb
 
 Name:           python-%{srcname}
-Version:        4.0.11
+Version:        4.0.12
 Release:        %autorelease
 Summary:        Git Object Database
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/gitdb
-#!RemoteAsset
+#!RemoteAsset:  sha256:5ef71f855d191a3326fcfbc0d5da835f26b13fbcba60c32c21091c349ffdb571
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(smmap)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ allowing to handle large objects with a small memory footprint.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

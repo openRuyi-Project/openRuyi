@@ -1,0 +1,32 @@
+From: LiYong Tai <liyongtai@iscas.ac.cn>
+Date: Fri, 14 Aug 2026 22:21:05 +0800
+Subject: llvm22: fix VPlan phi recipe ordering
+
+Insert recipes generated while scalarizing pointer inductions after all
+phi-like recipes in the vector loop header. This preserves VPlan recipe
+ordering and fixes a LoopVectorize crash on RISC-V vector targets.
+
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+diff --git a/llvm/lib/Transforms/Vectorize/VPlanTransforms.cpp b/llvm/lib/Transforms/Vectorize/VPlanTransforms.cpp
+index b41e04cff6d8..011d5894a267 100644
+--- a/llvm/lib/Transforms/Vectorize/VPlanTransforms.cpp
++++ b/llvm/lib/Transforms/Vectorize/VPlanTransforms.cpp
+@@ -3829,7 +3829,13 @@ void VPlanTransforms::convertToConcreteRecipes(VPlan &Plan) {
+         // If the recipe only generates scalars, scalarize it instead of
+         // expanding it.
+         if (WidenIVR->onlyScalarsGenerated(Plan.hasScalableVF())) {
+-          VPBuilder Builder(WidenIVR);
++          // Insert the scalarizing recipes after all phi-like recipes in the
++          // header, not before WidenIVR: WidenIVR may be followed by further
++          // phi-like recipes, and inserting non-phi recipes before it would
++          // leave phi-like recipes after non-phi ones.
++          VPBasicBlock *HeaderVPBB =
++              Plan.getVectorLoopRegion()->getEntryBasicBlock();
++          VPBuilder Builder(HeaderVPBB, HeaderVPBB->getFirstNonPhi());
+           VPValue *PtrAdd =
+               scalarizeVPWidenPointerInduction(WidenIVR, Plan, Builder);
+           WidenIVR->replaceAllUsesWith(PtrAdd);
+-- 
+2.55.0
+

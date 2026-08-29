@@ -21,7 +21,7 @@ Summary:        Userland logical volume management tools
 License:        LicenseRef-DMIT
 URL:            https://sourceware.org/lvm2
 VCS:            git:https://gitlab.com/lvmteam/lvm2.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:ebf28b3427535e2b5abd9991cd839b61622a0dbfb8c86df0f7af1f69dcaa8371
 Source0:        https://sourceware.org/pub/lvm2/releases/LVM2.%{version}.tgz
 BuildSystem:    autotools
 
@@ -69,7 +69,7 @@ BuildRequires:  systemd-units
 BuildRequires:  pkgconfig(readline)
 %if %{with lvmdbusd}
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3-dbus
 BuildRequires:  python3-pyudev
 %endif
@@ -491,4 +491,4 @@ fi
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Parse directory listing
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-Listing
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/File-Listing-%{version}.tar.gz
+#!RemoteAsset:  sha256:189b3a13fc0a1ba412b9d9ec5901e9e5e444cc746b9f0156d4399370d33655c6
+Source0:        https://www.cpan.org/authors/id/P/PL/PLICEASE/File-Listing-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Exporter) >= 5.57
@@ -30,20 +34,8 @@ Requires:       perl(Exporter) >= 5.57
 This module exports a single function called parse_dir, which can be used
 to parse directory listings.
 
-%prep
-%setup -q -n File-Listing-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc author.yml Changes Changes.original perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog

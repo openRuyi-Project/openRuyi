@@ -50,7 +50,11 @@ developing applications that use %{name}.
 %files devel
 %{_includedir}/va/
 %{_libdir}/libva*.so
-%{_libdir}/pkgconfig/libva*.pc
+%{_libdir}/pkgconfig/libva-drm.pc
+%{_libdir}/pkgconfig/libva-glx.pc
+%{_libdir}/pkgconfig/libva-wayland.pc
+%{_libdir}/pkgconfig/libva-x11.pc
+%{_libdir}/pkgconfig/libva.pc
 
 %changelog
 %{?autochangelog}

@@ -1,0 +1,35 @@
+From 67a015b24f35e400d8236f9c97905bd521fd0399 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 19:32:00 +0800
+Subject: [PATCH] Drop CMAKE_INSTALL_RPATH_USE_LINK_PATH
+
+openRuyi packaging does not need an RPATH baked in from the build
+tree's link path; the installed library resolves its dependencies via
+the normal system linker search path.
+---
+ CMakeLists.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c93f5ff..f5dd343 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,7 +52,6 @@ option(BUILD_TEST "Build tests (requires googletest)" OFF)
+ option(DEPENDENCIES_FORCE_DOWNLOAD "Do not use system installed dependencies, always download and build them" OFF)
+ option(DISABLE_WERROR "Disable building with Werror" ON)
+ option(DOWNLOAD_ROCRAND "Download rocRAND if it is not found in the default install directory or the manually-specified directory" OFF)
+-option(CMAKE_INSTALL_RPATH_USE_LINK_PATH ON)
+ option(BUILD_SHARED_LIBS "Build shared" ON)
+ 
+ set(BUILD_WITH_LIB "ROCM" CACHE STRING "Select backend library to build with (ROCM or CUDA)")
+@@ -75,7 +74,6 @@ else()
+   set(GTEST_ROOT "" CACHE INTERNAL "")
+ endif()
+ 
+-mark_as_advanced(CMAKE_INSTALL_RPATH_USE_LINK_PATH)
+ mark_as_advanced(HIPRAND_CONFIG_DIR)
+ 
+ # CMake modules
+-- 
+2.53.0
+

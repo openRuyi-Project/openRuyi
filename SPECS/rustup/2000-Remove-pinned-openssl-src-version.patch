@@ -1,0 +1,25 @@
+From aeee5f49c2fdd8219dee59f6595180dd28600f05 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Tue, 21 Jul 2026 17:19:37 +0800
+Subject: [PATCH] Remove pinned openssl-src version
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 6994070..52d2f3d 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -68,7 +68,7 @@ opener = "0.8.0"
+ openssl = { version = "0.10", optional = true }
+ # HACK: Temporarily pinned due to ppc64 ELFv1/v2 ABI issue in 300.5.5, to be
+ # removed when <https://github.com/openssl/openssl/issues/29815> lands.
+-openssl-src = { version = "=300.5.4", optional = true }
++openssl-src = { version = "300.5.4", optional = true }
+ opentelemetry = { version = "0.31", optional = true }
+ opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic"], optional = true }
+ opentelemetry_sdk = { version = "0.31", features = ["rt-tokio"], optional = true }
+-- 
+2.55.0
+

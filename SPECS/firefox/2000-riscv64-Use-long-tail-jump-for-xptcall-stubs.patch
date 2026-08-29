@@ -1,0 +1,40 @@
+From 1444cc51c0249652a4998b8ee4ea084983b4bfb6 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Sun, 17 May 2026 11:32:17 +0800
+Subject: [PATCH] riscv64: Use long tail jump for xptcall stubs
+
+The riscv64 xptcall stubs currently jump to SharedStub with a plain
+`j SharedStub`. This emits an R_RISCV_JAL relocation, whose range is
+limited to +/- 1 MiB.
+
+When linking large optimized libxul builds, especially with LTO enabled,
+the generated StubN functions may be placed too far away from SharedStub.
+This causes lld to fail with relocation errors such as:
+
+  relocation R_RISCV_JAL out of range: ... references SharedStub
+
+Use `tail SharedStub` instead. This preserves the tail-call semantics of
+the original jump while allowing the assembler/linker to generate a
+relaxable long branch sequence when needed.
+
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ xpcom/reflect/xptcall/md/unix/xptcstubs_riscv64.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xpcom/reflect/xptcall/md/unix/xptcstubs_riscv64.cpp b/xpcom/reflect/xptcall/md/unix/xptcstubs_riscv64.cpp
+index 17c0789eff..3330b34e8d 100644
+--- a/xpcom/reflect/xptcall/md/unix/xptcstubs_riscv64.cpp
++++ b/xpcom/reflect/xptcall/md/unix/xptcstubs_riscv64.cpp
+@@ -139,7 +139,7 @@ extern "C" nsresult ATTRIBUTE_USED PrepareAndDispatch(nsXPTCStubBase* self,
+       ".err   \"stub number "#n" >= 1000 not yet supported\"\n"                     \
+       ".endif \n\t"                                                                 \
+       "li      t0, "#n" \n\t"                                                       \
+-      "j       SharedStub \n"                                                       \
++      "tail    SharedStub \n"                                                       \
+       ".if "#n" < 10\n\t"                                                           \
+       ".size   _ZN14nsXPTCStubBase5Stub"#n"Ev,.-_ZN14nsXPTCStubBase5Stub"#n"Ev\n\t" \
+       ".elseif "#n" < 100\n\t"                                                      \
+-- 
+2.54.0
+

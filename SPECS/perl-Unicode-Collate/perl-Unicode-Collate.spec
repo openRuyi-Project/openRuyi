@@ -10,11 +10,15 @@ Release:        %autorelease
 Summary:        Unicode Collation Algorithm
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Unicode-Collate
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SA/SADAHIRO/Unicode-Collate-%{version}.tar.gz
+#!RemoteAsset:  sha256:b75dd07bbc252937b1b87064bf79ccd0a1b7ee993b8cf0e80f47406c3205639f
+Source0:        https://www.cpan.org/authors/id/S/SA/SADAHIRO/Unicode-Collate-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
@@ -28,21 +32,8 @@ BuildRequires:  perl(XSLoader)
 This module is an implementation of Unicode Technical Standard #10 (a.k.a.
 UTS #10) - Unicode Collation Algorithm (a.k.a. UCA).
 
-%prep
-%setup -q -n Unicode-Collate-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes Collate.pmN disableXS enableXS MANIFEST.N mkheader mklocale README
 
 %changelog
-%{?autochangelog}
+%autochangelog

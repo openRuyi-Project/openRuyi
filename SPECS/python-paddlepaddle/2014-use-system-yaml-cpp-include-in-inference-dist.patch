@@ -1,0 +1,28 @@
+# Patch purpose:
+# - Use the detected system yaml-cpp include directory when assembling Paddle's
+#   inference distribution.
+# Why this patch exists:
+# - With WITH_SYSTEM_THIRD_PARTY=ON, yaml-cpp is found from the system and
+#   YAML_INSTALL_DIR is not a vendored install prefix. inference_lib.cmake must
+#   copy YAML_INCLUDE_DIR instead of expanding ${YAML_INSTALL_DIR}/include to
+#   /include.
+
+diff -uprN a/cmake/inference_lib.cmake b/cmake/inference_lib.cmake
+--- a/cmake/inference_lib.cmake	2026-06-20 16:11:49.878685897 +0800
++++ b/cmake/inference_lib.cmake	2026-06-20 16:11:50.318694619 +0800
+@@ -212,9 +212,14 @@ function(copy_part_of_third_party TARGET
+     DSTS ${dst_dir} ${dst_dir}/lib)
+ 
+   set(dst_dir "${DST}/third_party/install/yaml-cpp")
++  if(WITH_SYSTEM_THIRD_PARTY)
++    set(YAML_DIST_INCLUDE_DIR ${YAML_INCLUDE_DIR})
++  else()
++    set(YAML_DIST_INCLUDE_DIR ${YAML_INSTALL_DIR}/include)
++  endif()
+   copy(
+     ${TARGET}
+-    SRCS ${YAML_INSTALL_DIR}/include ${YAML_LIBRARIES}
++    SRCS ${YAML_DIST_INCLUDE_DIR} ${YAML_LIBRARIES}
+     DSTS ${dst_dir} ${dst_dir}/lib)
+ 
+   if(WITH_CRYPTO)

@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           xapian
-Version:        1.4.29
+Version:        1.4.31
 Release:        %autorelease
 Summary:        An Open Source Probabilistic Information Retrieval Library
 License:        GPL-2.0-or-later
 URL:            https://www.xapian.org/
 VCS:            git:https://git.xapian.org/xapian
-#!RemoteAsset
+#!RemoteAsset:  sha256:fecf609ea2efdc8a64be369715aac733336a11f7480a6545244964ae6bc80811
 Source0:        https://oligarchy.co.uk/xapian/%{version}/xapian-core-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -62,4 +62,4 @@ rm -rf %{buildroot}%{_datadir}/doc/%{name}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

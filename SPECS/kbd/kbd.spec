@@ -8,13 +8,13 @@
 %bcond nls 0
 
 Name:           kbd
-Version:        2.8.0
+Version:        2.9.0
 Release:        %autorelease
 Summary:        Tools for configuring the console (keyboard, virtual terminals, etc.)
 License:        GPL-2.0-or-late
 URL:            https://kbd-project.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/legion/kbd.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:fb3197f17a99eb44d22a3a1a71f755f9622dd963e66acfdea1a45120951b02ed
 Source0:        https://www.kernel.org/pub/linux/utils/%{name}/%{name}-%{version}.tar.xz
 Source1:        vlock.pamd
 BuildSystem:    autotools
@@ -68,4 +68,4 @@ install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/pam.d/vlock
 %{_datadir}/keymaps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        SQL parsing and processing engine
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/SQL-Statement
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RE/REHSACK/SQL-Statement-%{version}.tar.gz
+#!RemoteAsset:  sha256:dde8bdcfa6a136eedda06519ba0f3efaec085c39db0df9c472dc0ec6cd781a49
+Source0:        https://www.cpan.org/authors/id/R/RE/REHSACK/SQL-Statement-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -46,20 +50,8 @@ many features including column and table aliases, built-in and user-defined
 functions, implicit and explicit joins, complex nested search conditions,
 and other features.
 
-%prep
-%setup -q -n SQL-Statement-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ARTISTIC-1.0 Changes GPL-1 GPL-2.0 README README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

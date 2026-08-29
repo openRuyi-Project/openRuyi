@@ -6,21 +6,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           createrepo_c
-Version:        1.2.1
+Version:        1.2.4
 Release:        %autorelease
 Summary:        Creates a common metadata repository
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/createrepo_c
-#!RemoteAsset
+#!RemoteAsset:  sha256:4c980c2b5938694d36ab3117eb286b9ffa7187c768ac66e7805662a3dd22edf1
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
-# Part of https://github.com/rpm-software-management/createrepo_c/pull/438
-Patch0:         0001-fix-build-with-cmake-4.patch
-
 BuildOption(conf):  -DWITH_ZCHUNK=ON
 BuildOption(conf):  -DWITH_LIBMODULEMD=ON
-BuildOption(conf):  -DWITH_DRPM=ON
+BuildOption(conf):  -DENABLE_DRPM=ON
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
@@ -68,7 +65,7 @@ These development files are for easy manipulation with a repodata.
 Summary:        Python bindings for the createrepo_c library
 %{?python_provide:%python_provide python3-%{name}}
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 Requires:       %{name}-libs = %{version}-%{release}
 
 %description -n python-%{name}
@@ -110,7 +107,7 @@ ln -sr %{buildroot}%{_bindir}/modifyrepo_c %{buildroot}%{_bindir}/modifyrepo
 %files -n python-%{name}
 %doc examples/python/*
 %{python3_sitearch}/createrepo_c/
-%{python3_sitearch}/createrepo_c-*-py%{python3_version}.egg-info
+%{python3_sitearch}/createrepo_c-*.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,9 +12,9 @@ Summary:        Script for generating man pages from --help output
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/help2man/
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:4d7e4fdef2eca6afe07a2682151cea78781e0a4e8f9622142d9f70c083a2fd4f
 Source0:        https://ftpmirror.gnu.org/gnu/help2man/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:d0ba9b2c9ccd73e476f7d949bd1e60e74e7a9e3fc8bece95b40b499f5e38b2b5
 Source1:        https://ftpmirror.gnu.org/gnu/help2man/%{name}-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
@@ -47,10 +47,9 @@ still providing some useful information.
 %{_libdir}/help2man/
 %{_infodir}/help2man.info%{?ext_info}
 %{_mandir}/man1/help2man.1%{?ext_man}
-%license COPYING
 %{_infodir}/help2man-*.info%{?ext_info}
 %dir %{_mandir}/??
 %dir %{_mandir}/??/man1
 
 %changelog
-%{?autochangelog}
+%autochangelog

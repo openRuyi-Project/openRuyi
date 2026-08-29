@@ -1,0 +1,33 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index fa7164e..55581d0 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -4,6 +4,9 @@ members = [
+     "niri-ipc",
+     "niri-visual-tests",
+ ]
++exclude = [
++    "smithay-ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef",
++]
+ 
+ [workspace.package]
+ version = "26.4.0"
+@@ -26,16 +29,11 @@ tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+ tracy-client = { version = "0.18.4", default-features = false }
+ 
+ [workspace.dependencies.smithay]
+-# version = "0.4.1"
+-git = "https://github.com/Smithay/smithay.git"
+-rev = "ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef"
++path = "smithay-ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef"
+ default-features = false
+ 
+ [workspace.dependencies.smithay-drm-extras]
+-# version = "0.1.0"
+-git = "https://github.com/Smithay/smithay.git"
+-rev = "ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef"
+-# path = "../smithay/smithay-drm-extras"
++path = "smithay-ff5fa7df392cecfba049ffed55cdaa4e98a8e7ef/smithay-drm-extras"
+ 
+ [package]
+ name = "niri"

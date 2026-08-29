@@ -1,0 +1,26 @@
+From 615faf9407beb2df61dca4b0346ea047ceffa579 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 30 Jun 2026 19:48:21 +0800
+Subject: [PATCH] Fix vet warning for stack slice formatting
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ internal/stackdump/stackdump_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/stackdump/stackdump_test.go b/internal/stackdump/stackdump_test.go
+index 7f782ca..195476d 100644
+--- a/internal/stackdump/stackdump_test.go
++++ b/internal/stackdump/stackdump_test.go
+@@ -116,7 +116,7 @@ func TestCallerPC(t *testing.T) {
+ 		stack := pcAt(calls, tc.depth)
+ 		if tc.wantEndOfStack {
+ 			if len(stack) != 0 {
+-				t.Errorf("for %v calls, stackdump.CallerPC(%v) =\n%q\nwant []", calls, tc.depth, stack)
++				t.Errorf("for %v calls, stackdump.CallerPC(%v) =\n%v\nwant []", calls, tc.depth, stack)
+ 			}
+ 			continue
+ 		}
+-- 
+2.43.0
+

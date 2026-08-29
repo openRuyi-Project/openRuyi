@@ -8,12 +8,12 @@
 %define go_import_path  github.com/hashicorp/go-bexpr
 
 Name:           go-github-hashicorp-go-bexpr
-Version:        0.1.15
+Version:        0.1.16
 Release:        %autorelease
 Summary:        Generic boolean expression evaluation in Go
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-bexpr
-#!RemoteAsset
+#!RemoteAsset:  sha256:84c7277da41f7ed3bba3d46bac0a30b3ac95284e1ad5abd4b231500f70634d55
 Source0:        https://github.com/hashicorp/go-bexpr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -46,4 +46,4 @@ values in expressions.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

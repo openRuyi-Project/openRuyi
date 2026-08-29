@@ -1,0 +1,70 @@
+# Rebuild active TeX Live configuration from installed split-package fragments.
+#
+# Upstream TeX Live ships full fmtutil/updmap/language configuration files that
+# assume all TeX Live packages are installed.
+# openRuyi splits TeX Live into collection RPMs, so the active files in /etc/texmf
+# must be regenerated from the fragments owned by the packages currently installed
+# in the target root.
+
+set -euo pipefail
+shopt -s nullglob
+
+root=${1:-}
+texmf_dist="$root/usr/share/texmf-dist"
+fragment_dir="${TEXLIVE_FRAGMENT_DIR:-$root/var/lib/texmf/arch/installedpkgs}"
+web2c_dir="$root/etc/texmf/web2c"
+language_dir="$root/etc/texmf/tex/generic/config"
+
+install -d "$web2c_dir" "$language_dir"
+
+# fmtutil.cnf controls which TeX formats fmtutil-sys builds.
+# Start with the upstream header, then append only installed collection fragments.
+{
+    cat "$texmf_dist/web2c/fmtutil-hdr.cnf"
+    for file in "$fragment_dir"/*.fmts; do
+        echo
+        cat "$file"
+    done
+} > "$web2c_dir/fmtutil.cnf"
+
+# updmap.cfg controls which font maps updmap-sys enables.
+# Keep it derived from installed collection fragments for split-package safety.
+{
+    cat "$texmf_dist/web2c/updmap-hdr.cfg"
+    for file in "$fragment_dir"/*.maps; do
+        echo
+        cat "$file"
+    done
+} > "$web2c_dir/updmap.cfg"
+
+# language.dat is intentionally not the upstream full file.  A minimal US base
+# plus installed AddHyphen fragments avoids references to missing language files.
+{
+    cat "$texmf_dist/tex/generic/config/language.us"
+    for file in "$fragment_dir"/*.dat; do
+        echo
+        cat "$file"
+    done
+} > "$language_dir/language.dat"
+
+# language.dat.lua has a table body in language.us.lua; close it after appending
+# installed collection fragments.
+{
+    cat "$texmf_dist/tex/generic/config/language.us.lua"
+    for file in "$fragment_dir"/*.dat.lua; do
+        echo
+        cat "$file"
+    done
+    echo "}"
+} > "$language_dir/language.dat.lua"
+
+# language.def keeps USenglish as the final fallback language, matching TeX Live
+# split-package hook behavior.
+{
+    cat "$texmf_dist/tex/generic/config/language.us.def"
+    for file in "$fragment_dir"/*.def; do
+        echo
+        cat "$file"
+    done
+    echo "\\uselanguage {USenglish}"
+} > "$language_dir/language.def"

@@ -13,19 +13,19 @@ Summary:        Python implementation of the CaRT library for (un)inerting files
 License:        MIT
 URL:            https://github.com/CybercentreCanada/cart
 # no source distribution files available for this release, so we have to use the GitHub archive instead.
-#!RemoteAsset
+#!RemoteAsset:  sha256:4b2921931b95c4a5ba81d690f8dc3107a0a1fab04470c146251faf6d6ed1a151
 Source0:        https://github.com/CybercentreCanada/cart/archive/v%{version}/cart-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-Patch0:         python-cart-1.2.2-cryptodomex.patch
+Patch0:         0001-python-cart-1.2.2-cryptodomex.patch
 
 BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +50,4 @@ sed -i '/#!\/usr\/bin\/env python/d' cart/cart.py
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

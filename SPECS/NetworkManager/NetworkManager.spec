@@ -81,6 +81,9 @@ BuildRequires:  python3dist(dbus-python)
 BuildRequires:  python3dist(pygobject)
 BuildRequires:  vala
 
+Recommends:     %{name}-tui%{?_isa} = %{version}-%{release}
+Recommends:     %{name}-plugins%{?_isa} = %{version}-%{release}
+
 %description
 NetworkManager is a system service that manages network interfaces and
 connections using either user-defined settings or automatic configuration.
@@ -148,8 +151,6 @@ applications using NetworkManager functionality from applications.
 %install -a
 install -m 0644 %{SOURCE1} %{buildroot}%{_prefix}/lib/NetworkManager/
 install -m 0644 %{SOURCE2} %{buildroot}%{_prefix}/lib/NetworkManager/conf.d
-# TODO: Avoid illegal locale package name
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 # TODO: We purposely disable tests for now

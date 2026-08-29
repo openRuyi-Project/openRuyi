@@ -12,7 +12,7 @@ Summary:        Thai language support routines
 License:        LGPL-2.1-or-later
 URL:            https://linux.thai.net/plone/TLWG/libthai/
 VCS:            git:https://github.com/tlwg/libthai
-#!RemoteAsset
+#!RemoteAsset:  sha256:fc80cc7dcb50e11302b417cebd24f2d30a8b987292e77e003267b9100d0f4bcd
 Source0:        http://linux.thai.net/pub/thailinux/software/libthai/libthai-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -47,7 +47,7 @@ libthai.
 %files devel
 %{_includedir}/thai
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/libthai.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Summary:        Tools for managing the osinfo database
 License:        LGPL-2.1-or-later AND GPL-2.0-or-later
 Url:            https://releases.pagure.org/libosinfo/
 VCS:            git:https://gitlab.com/libosinfo/osinfo-db-tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:f3315f675d18770f25dea8ed04b20b8fc80efb00f60c37ee5e815f9c3776e7f3
 Source:         https://releases.pagure.org/libosinfo/osinfo-db-tools-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -20,12 +20,12 @@ BuildRequires:  meson
 BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(json-glib-1.0)
-BuildRequires:  libarchive-devel
-BuildRequires:  libxml2-devel >= 2.6.0
+BuildRequires:  pkgconfig(libarchive)
+BuildRequires:  pkgconfig(libxml-2.0) >= 2.6.0
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(libsoup-3.0)
 # fo tests
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(requests)
 
 %description
@@ -33,14 +33,11 @@ This package provides tools for managing the osinfo database of
 information about operating systems for use with virtualization.
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang %{name} --generate-subpackages
 
 %files
-%license COPYING
 %doc NEWS README
+%license COPYING
 %{_bindir}/osinfo-db-export
 %{_bindir}/osinfo-db-import
 %{_bindir}/osinfo-db-path
@@ -51,4 +48,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_mandir}/man1/osinfo-db-validate.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

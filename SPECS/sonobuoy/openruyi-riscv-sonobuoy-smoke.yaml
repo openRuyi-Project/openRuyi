@@ -1,0 +1,31 @@
+sonobuoy-config:
+  driver: Job
+  plugin-name: openruyi-riscv-smoke
+  result-format: raw
+spec:
+  command:
+  - /bin/sh
+  - -c
+  - |
+    set -eu
+    results_dir="${RESULTS_DIR:-/tmp/sonobuoy/results}"
+    mkdir -p "${results_dir}"
+    {
+     echo "openRuyi RISC-V Sonobuoy smoke"
+     printf "node=%s\n" "${NODE_NAME:-unknown}"
+     uname -m
+     if [ -r /etc/os-release ]; then
+       sed -n '1,3p' /etc/os-release
+     else
+       echo "image=busybox"
+     fi
+     nslookup kubernetes.default.svc.cluster.local || true
+    } > "${results_dir}/smoke.txt"
+    printf "%s" "${results_dir}" > "${results_dir}/done"
+  image: docker.io/library/busybox:1.36.1
+  imagePullPolicy: IfNotPresent
+  name: plugin
+  resources: {}
+  volumeMounts:
+  - mountPath: /tmp/results
+    name: results

@@ -12,17 +12,21 @@ Release:        %autorelease
 Summary:        Foreign function interface for Python
 License:        MIT
 URL:            https://cffi.readthedocs.io/
-#!RemoteAsset
+#!RemoteAsset:  sha256:44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
-
-BuildRequires:  python3-devel
-BuildRequires:  libffi-devel
-BuildRequires:  pkg-config
-BuildRequires:  gcc
 BuildSystem:    pyproject
-BuildOption(install):   _cffi_backend cffi
-Provides:       python3-%{srcname}
+
+BuildOption(install):  _cffi_backend cffi
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  pkgconfig(libffi)
+BuildRequires:  pkg-config
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
+
 %description
 Foreign Function Interface for Python calling C code.
 
@@ -34,4 +38,4 @@ Foreign Function Interface for Python calling C code.
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

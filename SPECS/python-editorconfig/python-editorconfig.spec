@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ styles between different editors and IDEs.
 %{_bindir}/editorconfig
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,1058 @@
+From c7c5b1a5c23753f5a54847e05c4e05121868deb4 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 12 Jun 2026 15:01:27 +0800
+Subject: [PATCH] Add riscv64 support for crash-context
+
+This pull request is based on work by hack3ric:
+ - https://github.com/EmbarkStudios/crash-handling/pull/102
+ - https://github.com/EmbarkStudios/crash-handling/pull/104
+ - https://github.com/rust-minidump/rust-minidump/pull/1124
+ - https://github.com/hack3ric/minidump-writer/commit/da548e48906a4fd497d7d08a30757a37221004cb
+
+From: Eric Long <i@hack3r.moe>
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ .../rust/crash-context/.cargo-checksum.json   |   2 +-
+ third_party/rust/crash-context/src/linux.rs   |  55 ++++++
+ .../crash-context/src/linux/getcontext.rs     |   2 +
+ .../src/linux/getcontext/riscv64.rs           |  97 +++++++++
+ .../rust/minidump-common/.cargo-checksum.json |   2 +-
+ .../rust/minidump-common/src/format.rs        |  74 ++++++-
+ .../rust/minidump-unwind/.cargo-checksum.json |   2 +-
+ third_party/rust/minidump-unwind/src/lib.rs   |   2 +-
+ .../rust/minidump-writer/.cargo-checksum.json |   2 +-
+ .../src/linux/crash_context/mod.rs            |   2 +
+ .../src/linux/crash_context/riscv64.rs        |  61 ++++++
+ .../src/linux/dumper_cpu_info/mod.rs          |   7 +
+ .../src/linux/dumper_cpu_info/riscv.rs        |  82 ++++++++
+ .../src/linux/thread_info/mod.rs              |   3 +
+ .../src/linux/thread_info/riscv64.rs          | 132 +++++++++++++
+ .../rust/minidump-writer/src/minidump_cpu.rs  |   7 +
+ .../rust/minidump/.cargo-checksum.json        |   2 +-
+ third_party/rust/minidump/src/context.rs      | 187 ++++++++++++++++++
+ third_party/rust/minidump/src/system_info.rs  |   7 +-
+ 19 files changed, 719 insertions(+), 9 deletions(-)
+ create mode 100644 third_party/rust/crash-context/src/linux/getcontext/riscv64.rs
+ create mode 100644 third_party/rust/minidump-writer/src/linux/crash_context/riscv64.rs
+ create mode 100644 third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
+ create mode 100644 third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
+
+diff --git a/third_party/rust/crash-context/.cargo-checksum.json b/third_party/rust/crash-context/.cargo-checksum.json
+index 167ba40c71..69837e11d4 100644
+--- a/third_party/rust/crash-context/.cargo-checksum.json
++++ b/third_party/rust/crash-context/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo_vcs_info.json":"6ed7b69d2ca6fd1aaf962ffee20012e30364afee54eb73015bae5053181dc62b","CHANGELOG.md":"843168dabb93f6bc42076d4924040cd8c8a268f03cb02856b55691b5e9a873e1","Cargo.toml":"94c36b790e888c511e093c2b20ade75157daa86fad994d508d071bd4c049223a","Cargo.toml.orig":"27429894b157ef179ff40f155a12c7e81ceec7eaf03c883e86a8d03d592ff7e9","LICENSE-APACHE":"8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90","LICENSE-MIT":"090a294a492ab2f41388252312a65cf2f0e423330b721a68c6665ac64766753b","README.md":"f91ee04dfaa356214af7ac68e4cfa1d6c8674f7fea08d65275f3fafde28301df","release.toml":"287ba3b6c89e3b289eae59827d36d6eb6e27b88cc2ada2c0d9a663c8b487117e","src/lib.rs":"26957a6a2555ab82aa9b6d3d1f24efaf20753d6c5eb1510395789283890ac1d1","src/linux.rs":"cf05c1217709a60adeea08e8623438f68a18dea66758b194de0e07ff398b090d","src/linux/getcontext.rs":"4164236732556d71cbb9e04bf4f2b41fd6f51f9bb94dfb974158cc5f49c3c789","src/linux/getcontext/aarch64.rs":"1193e68f06f7f2f4d3e64d80a196804e6cdfd03643ac50332c7af10928a5eccb","src/linux/getcontext/arm.rs":"682f163f4a96c21930e37427a6d687efc68199cbd8a9125b34d99a81280dd31b","src/linux/getcontext/x86.rs":"7c585ec44835910f99801cbb3ac34153e8d687b5dcbc682f9b7768873655c4a0","src/linux/getcontext/x86_64.rs":"db63a1c05e2c7c5b998f3c57b399972fc4e756eb36bcd119a99419c94470444a","src/mac.rs":"13d25443466d387eabf28adae361708f4b6297949c7eeb5bf1b38cb0ca13a418","src/mac/guard.rs":"115d1e8d5ac7bd9ecc666b11a0c584ed1e997160aacb0a1cc0f215ff5a1e9803","src/mac/ipc.rs":"2fc139ee5b70964bd726a30853d7fe9f74f7a6e0f8cf3d150e72a2ac802c1fba","src/mac/resource.rs":"8289db9294a45d6148329d537530512913c456a182783059a832767e39c67295","src/windows.rs":"c6c043cf56cf0840cc1373edc4bd39cf829566d181e50589174745629ab2ad37","tests/capture_context.rs":"899e94c522cd015fd1f45230aff5c8970346ba20623da46cd34da892bbd07f7e"},"package":"b85cef661eeca0c6675116310936972c520ebb0a33ddef16fd7efc957f4c1288"}
+\ No newline at end of file
++{"files":{".cargo_vcs_info.json":"6ed7b69d2ca6fd1aaf962ffee20012e30364afee54eb73015bae5053181dc62b","CHANGELOG.md":"843168dabb93f6bc42076d4924040cd8c8a268f03cb02856b55691b5e9a873e1","Cargo.toml":"94c36b790e888c511e093c2b20ade75157daa86fad994d508d071bd4c049223a","Cargo.toml.orig":"27429894b157ef179ff40f155a12c7e81ceec7eaf03c883e86a8d03d592ff7e9","LICENSE-APACHE":"8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90","LICENSE-MIT":"090a294a492ab2f41388252312a65cf2f0e423330b721a68c6665ac64766753b","README.md":"f91ee04dfaa356214af7ac68e4cfa1d6c8674f7fea08d65275f3fafde28301df","release.toml":"287ba3b6c89e3b289eae59827d36d6eb6e27b88cc2ada2c0d9a663c8b487117e","src/lib.rs":"26957a6a2555ab82aa9b6d3d1f24efaf20753d6c5eb1510395789283890ac1d1","src/linux.rs":"793b93e91a506e9ab37f1f621948533bbb09f172022393de8d6435f6cbef9095","src/linux/getcontext.rs":"e30b9edbc561645be1c52a0a5d0193f147d1d1a140eb24e3c33d66a8668d8f8f","src/linux/getcontext/aarch64.rs":"1193e68f06f7f2f4d3e64d80a196804e6cdfd03643ac50332c7af10928a5eccb","src/linux/getcontext/arm.rs":"682f163f4a96c21930e37427a6d687efc68199cbd8a9125b34d99a81280dd31b","src/linux/getcontext/riscv64.rs":"ef675a729951f2b636a6b33a26d1cfac30b4ab7ada6df435e3f0d762bc71ae23","src/linux/getcontext/x86.rs":"7c585ec44835910f99801cbb3ac34153e8d687b5dcbc682f9b7768873655c4a0","src/linux/getcontext/x86_64.rs":"db63a1c05e2c7c5b998f3c57b399972fc4e756eb36bcd119a99419c94470444a","src/mac.rs":"13d25443466d387eabf28adae361708f4b6297949c7eeb5bf1b38cb0ca13a418","src/mac/guard.rs":"115d1e8d5ac7bd9ecc666b11a0c584ed1e997160aacb0a1cc0f215ff5a1e9803","src/mac/ipc.rs":"2fc139ee5b70964bd726a30853d7fe9f74f7a6e0f8cf3d150e72a2ac802c1fba","src/mac/resource.rs":"8289db9294a45d6148329d537530512913c456a182783059a832767e39c67295","src/windows.rs":"c6c043cf56cf0840cc1373edc4bd39cf829566d181e50589174745629ab2ad37","tests/capture_context.rs":"899e94c522cd015fd1f45230aff5c8970346ba20623da46cd34da892bbd07f7e"},"package":"b85cef661eeca0c6675116310936972c520ebb0a33ddef16fd7efc957f4c1288"}
+diff --git a/third_party/rust/crash-context/src/linux.rs b/third_party/rust/crash-context/src/linux.rs
+index f9952c12d9..8705e90b94 100644
+--- a/third_party/rust/crash-context/src/linux.rs
++++ b/third_party/rust/crash-context/src/linux.rs
+@@ -256,6 +256,61 @@ cfg_if::cfg_if! {
+             pub arm_cpsr: u32,
+             pub fault_address: u32,
+         }
++    } else if #[cfg(target_arch = "riscv64")] {
++        #[repr(C)]
++        #[derive(Clone)]
++        #[doc(hidden)]
++        pub struct ucontext_t {
++            pub __uc_flags: u64,
++            pub uc_link: *mut ucontext_t,
++            pub uc_stack: stack_t,
++            pub uc_sigmask: sigset_t,
++            pub uc_mcontext: mcontext_t,
++        }
++
++        #[repr(C, align(16))]
++        #[derive(Clone)]
++        #[doc(hidden)]
++        pub struct mcontext_t {
++            pub __gregs: [u64; 32],
++            pub __fpregs: __riscv_mc_fp_state,
++        }
++
++        #[repr(C)]
++        #[derive(Clone, Copy)]
++        #[doc(hidden)]
++        pub union __riscv_mc_fp_state {
++            pub __f: __riscv_mc_f_ext_state,
++            pub __d: __riscv_mc_d_ext_state,
++            pub __q: __riscv_mc_q_ext_state,
++        }
++
++        #[repr(C)]
++        #[derive(Clone, Copy)]
++        #[doc(hidden)]
++        pub struct __riscv_mc_f_ext_state {
++            pub __f: [u32; 32],
++            pub __fcsr: u32,
++        }
++
++        #[repr(C)]
++        #[derive(Clone, Copy)]
++        #[doc(hidden)]
++        pub struct __riscv_mc_d_ext_state {
++            pub __f: [u64; 32],
++            pub __fcsr: u32,
++        }
++
++        #[repr(C, align(16))]
++        #[derive(Clone, Copy)]
++        #[doc(hidden)]
++        pub struct __riscv_mc_q_ext_state {
++            pub __f: [u64; 64],
++            pub __fcsr: u32,
++            pub __reserved: [u32; 3],
++        }
++
++        pub type fpregset_t = __riscv_mc_fp_state;
+     }
+ }
+ 
+diff --git a/third_party/rust/crash-context/src/linux/getcontext.rs b/third_party/rust/crash-context/src/linux/getcontext.rs
+index 93bb5fdaff..d41bc4ee80 100644
+--- a/third_party/rust/crash-context/src/linux/getcontext.rs
++++ b/third_party/rust/crash-context/src/linux/getcontext.rs
+@@ -20,5 +20,7 @@ cfg_if::cfg_if! {
+         mod aarch64;
+     } else if #[cfg(target_arch = "arm")] {
+         mod arm;
++    } else if #[cfg(target_arch = "riscv64")] {
++        mod riscv64;
+     }
+ }
+diff --git a/third_party/rust/crash-context/src/linux/getcontext/riscv64.rs b/third_party/rust/crash-context/src/linux/getcontext/riscv64.rs
+new file mode 100644
+index 0000000000..e84ac6a05c
+--- /dev/null
++++ b/third_party/rust/crash-context/src/linux/getcontext/riscv64.rs
+@@ -0,0 +1,97 @@
++// UCONTEXT_SIGMASK_OFFSET = 40
++// MCONTEXT_GREGS_OFFSET = 168
++// MCONTEXT_GREGS_SIZE = 8
++
++std::arch::global_asm! {
++    ".text",
++    ".attribute arch, \"rv64gc\"",
++    ".globl crash_context_getcontext",
++    ".hidden crash_context_getcontext",
++    ".type crash_context_getcontext, @function",
++    ".align 0",
++    ".cfi_startproc",
++"crash_context_getcontext:",
++
++    // Save general registers
++    "sd ra,  0xa8(a0)",
++    "sd ra,  0xb0(a0)",
++    "sd sp,  0xb8(a0)",
++    "sd gp,  0xc0(a0)",
++    "sd tp,  0xc8(a0)",
++    "sd t0,  0xd0(a0)",
++    "sd t1,  0xd8(a0)",
++    "sd t2,  0xe0(a0)",
++    "sd s0,  0xe8(a0)",
++    "sd s1,  0xf0(a0)",
++    "sd a0,  0xf8(a0)",
++    "sd a1,  0x100(a0)",
++    "sd a2,  0x108(a0)",
++    "sd a3,  0x110(a0)",
++    "sd a4,  0x118(a0)",
++    "sd a5,  0x120(a0)",
++    "sd a6,  0x128(a0)",
++    "sd a7,  0x130(a0)",
++    "sd s2,  0x138(a0)",
++    "sd s3,  0x140(a0)",
++    "sd s4,  0x148(a0)",
++    "sd s5,  0x150(a0)",
++    "sd s6,  0x158(a0)",
++    "sd s7,  0x160(a0)",
++    "sd s8,  0x168(a0)",
++    "sd s9,  0x170(a0)",
++    "sd s10, 0x178(a0)",
++    "sd s11, 0x180(a0)",
++    "sd t3,  0x188(a0)",
++    "sd t4,  0x190(a0)",
++    "sd t5,  0x198(a0)",
++    "sd t6 , 0x1a0(a0)",
++
++    // Save floating point registers
++    "frsr a1",  // Save CSR
++    "fsd ft0,  0x1a8(a0)",
++    "fsd ft1,  0x1b0(a0)",
++    "fsd ft2,  0x1b8(a0)",
++    "fsd ft3,  0x1c0(a0)",
++    "fsd ft4,  0x1c8(a0)",
++    "fsd ft5,  0x1d0(a0)",
++    "fsd ft6,  0x1d8(a0)",
++    "fsd ft7,  0x1e0(a0)",
++    "fsd fs0,  0x1e8(a0)",
++    "fsd fs1,  0x1f0(a0)",
++    "fsd fa0,  0x1f8(a0)",
++    "fsd fa1,  0x200(a0)",
++    "fsd fa2,  0x208(a0)",
++    "fsd fa3,  0x210(a0)",
++    "fsd fa4,  0x218(a0)",
++    "fsd fa5,  0x220(a0)",
++    "fsd fa6,  0x228(a0)",
++    "fsd fa7,  0x230(a0)",
++    "fsd fs2,  0x238(a0)",
++    "fsd fs3,  0x240(a0)",
++    "fsd fs4,  0x248(a0)",
++    "fsd fs5,  0x250(a0)",
++    "fsd fs6,  0x258(a0)",
++    "fsd fs7,  0x260(a0)",
++    "fsd fs8,  0x268(a0)",
++    "fsd fs9,  0x270(a0)",
++    "fsd fs10, 0x278(a0)",
++    "fsd fs11, 0x280(a0)",
++    "fsd ft8,  0x288(a0)",
++    "fsd ft9,  0x290(a0)",
++    "fsd ft10, 0x298(a0)",
++    "fsd ft11, 0x2a0(a0)",
++    "sw a1, 0x2a8(a0)",
++
++    "mv a1, zero",
++    "add a2, a0, 40",  // UCONTEXT_SIGMASK_OFFSET
++    "li a3, 8",        // _NSIG8
++    "mv a0, zero",
++    "li a7, 135",      // __NR_rt_sigprocmask
++    "ecall",
++
++    "mv a0, zero",
++    "ret",
++
++    ".cfi_endproc",
++    ".size crash_context_getcontext, . - crash_context_getcontext",
++}
+diff --git a/third_party/rust/minidump-common/.cargo-checksum.json b/third_party/rust/minidump-common/.cargo-checksum.json
+index 6dc078eaa0..fa8c3c5ed1 100644
+--- a/third_party/rust/minidump-common/.cargo-checksum.json
++++ b/third_party/rust/minidump-common/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo_vcs_info.json":"7b3077a78aab7a0109a421f3d730660cbfc0d4a558e41b028cbdb5e9492cd637","Cargo.lock":"5220cd63c715bab0c0494af3d4a7b89d714de55cf8d9f4bc92c811882cffba1b","Cargo.toml":"1a8499dc80a590958564a106d7edb835d912cd3fbc34a807d3b1b428a6854952","Cargo.toml.orig":"b2001596dc42f075b6384ca6a8827f3b19af497f4c1b5eb6ed67386e41566a8f","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"4c2a1448aab9177fd5f033faaf704af7bb222bf0804079fd3cff90fa1df4b812","src/errors/linux.rs":"df743ac9478e39f8a577f4f10f2d1317babad7b7c0d26cdbba2ea6b5426f4126","src/errors/macos.rs":"4516aaeb7abf6209f5cd94e86a1e55a9675ef77262f52e3b2d5596fd4b858458","src/errors/mod.rs":"f224af66124fd31a040c8da11bbab7b7795b48e4edea76e01c1f4dee537ea38a","src/errors/windows.rs":"5f5bfee7e2012b379c80c78be36d2ada02f4788c530b46aac5cd6fa71a45e343","src/format.rs":"e791826e63a5de5307c299dce6f31a45a56c99bff955106a9c7deb0c9583aada","src/lib.rs":"0900c00594b3c386b86127055889006f0d7d0004b08455fadb0e60d55a469cab","src/traits.rs":"4fb7f5c4ec890680dc0232d8deba0edcacb3915e11c56e1c9c291d8d36c92579","src/utils.rs":"6ab64a2fc39187903de0813d27db370cbeb57ba4984c6a993034829176bed4d7"},"package":"2e16d10087ae9e375bad7a40e8ef5504bc08e808ccc6019067ff9de42a84570f"}
+\ No newline at end of file
++{"files":{".cargo_vcs_info.json":"7b3077a78aab7a0109a421f3d730660cbfc0d4a558e41b028cbdb5e9492cd637","Cargo.lock":"5220cd63c715bab0c0494af3d4a7b89d714de55cf8d9f4bc92c811882cffba1b","Cargo.toml":"1a8499dc80a590958564a106d7edb835d912cd3fbc34a807d3b1b428a6854952","Cargo.toml.orig":"b2001596dc42f075b6384ca6a8827f3b19af497f4c1b5eb6ed67386e41566a8f","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"4c2a1448aab9177fd5f033faaf704af7bb222bf0804079fd3cff90fa1df4b812","src/errors/linux.rs":"df743ac9478e39f8a577f4f10f2d1317babad7b7c0d26cdbba2ea6b5426f4126","src/errors/macos.rs":"4516aaeb7abf6209f5cd94e86a1e55a9675ef77262f52e3b2d5596fd4b858458","src/errors/mod.rs":"f224af66124fd31a040c8da11bbab7b7795b48e4edea76e01c1f4dee537ea38a","src/errors/windows.rs":"5f5bfee7e2012b379c80c78be36d2ada02f4788c530b46aac5cd6fa71a45e343","src/format.rs":"110f1d5160d180f02b8bf1403804560c8761e59e8cbcf6c08c7c2adfdffeb4ad","src/lib.rs":"0900c00594b3c386b86127055889006f0d7d0004b08455fadb0e60d55a469cab","src/traits.rs":"4fb7f5c4ec890680dc0232d8deba0edcacb3915e11c56e1c9c291d8d36c92579","src/utils.rs":"6ab64a2fc39187903de0813d27db370cbeb57ba4984c6a993034829176bed4d7"},"package":"2e16d10087ae9e375bad7a40e8ef5504bc08e808ccc6019067ff9de42a84570f"}
+diff --git a/third_party/rust/minidump-common/src/format.rs b/third_party/rust/minidump-common/src/format.rs
+index dc43f22705..8757299258 100644
+--- a/third_party/rust/minidump-common/src/format.rs
++++ b/third_party/rust/minidump-common/src/format.rs
+@@ -786,8 +786,8 @@ bitflags! {
+     /// CPU type values in the `context_flags` member of `CONTEXT_` structs
+     ///
+     /// This applies to the [`CONTEXT_ARM`], [`CONTEXT_PPC`], [`CONTEXT_MIPS`],
+-    /// [`CONTEXT_AMD64`], [`CONTEXT_ARM64`], [`CONTEXT_PPC64`], [`CONTEXT_SPARC`] and
+-    /// [`CONTEXT_ARM64_OLD`] structs.
++    /// [`CONTEXT_AMD64`], [`CONTEXT_ARM64`], [`CONTEXT_PPC64`], [`CONTEXT_SPARC`],
++    /// [`CONTEXT_RISCV64`] and [`CONTEXT_ARM64_OLD`] structs.
+     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+     pub struct ContextFlagsCpu: u32 {
+         const CONTEXT_IA64 = 0x80000;
+@@ -810,6 +810,7 @@ bitflags! {
+         const CONTEXT_PPC64 = 0x1000000;
+         const CONTEXT_SPARC = 0x10000000;
+         const CONTEXT_X86 = 0x10000;
++        const CONTEXT_RISCV64 = 0x08000000;
+     }
+ }
+ 
+@@ -916,6 +917,18 @@ bitflags! {
+     }
+ }
+ 
++bitflags! {
++    /// Flags available for use in [`CONTEXT_RISCV.context_flags`]
++    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
++    pub struct ContextFlagsRiscv64: u32 {
++        // Yes, breakpad never defined CONTROL for this context
++
++        const CONTEXT_RISCV64_INTEGER = 0x00000001 | ContextFlagsCpu::CONTEXT_RISCV64.bits();
++        const CONTEXT_RISCV64_FLOATING_POINT = 0x00000002 | ContextFlagsCpu::CONTEXT_RISCV64.bits();
++        const CONTEXT_RISCV64_FULL = Self::CONTEXT_RISCV64_INTEGER.bits() | Self::CONTEXT_RISCV64_FLOATING_POINT.bits();
++    }
++}
++
+ /// Possible contents of [`CONTEXT_AMD64::float_save`].
+ ///
+ /// This struct matches the definition of the struct with the same name from WinNT.h.
+@@ -1410,6 +1423,59 @@ pub struct CONTEXT_X86 {
+     pub extended_registers: [u8; 512], // MAXIMUM_SUPPORTED_EXTENSION
+ }
+ 
++/// RISC-V64 floating point state
++#[derive(Debug, Default, Clone, Pread, Pwrite, SizeWith)]
++#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
++pub struct FLOATING_SAVE_AREA_RISCV64 {
++    pub fpregs: [u64; 32],
++    pub fpcsr: u32,
++}
++
++/// A RISC-V64 CPU context
++///
++/// This is a Breakpad extension, as there is no definition of `CONTEXT` for RISC-V in WinNT.h.
++#[derive(Debug, Default, Clone, Pread, Pwrite, SizeWith)]
++#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
++pub struct CONTEXT_RISCV64 {
++    pub context_flags: u32,
++    pub version: u32,
++
++    pub pc: u64,
++    pub ra: u64,
++    pub sp: u64,
++    pub gp: u64,
++    pub tp: u64,
++    pub t0: u64,
++    pub t1: u64,
++    pub t2: u64,
++    pub s0: u64,
++    pub s1: u64,
++    pub a0: u64,
++    pub a1: u64,
++    pub a2: u64,
++    pub a3: u64,
++    pub a4: u64,
++    pub a5: u64,
++    pub a6: u64,
++    pub a7: u64,
++    pub s2: u64,
++    pub s3: u64,
++    pub s4: u64,
++    pub s5: u64,
++    pub s6: u64,
++    pub s7: u64,
++    pub s8: u64,
++    pub s9: u64,
++    pub s10: u64,
++    pub s11: u64,
++    pub t3: u64,
++    pub t4: u64,
++    pub t5: u64,
++    pub t6: u64,
++
++    pub float_save: FLOATING_SAVE_AREA_RISCV64,
++}
++
+ /// CPU information contained within the [`MINIDUMP_SYSTEM_INFO`] struct
+ ///
+ /// This struct matches the definition of the `CPU_INFORMATION` union from minidumpapiset.h.
+@@ -1514,6 +1580,10 @@ pub enum ProcessorArchitecture {
+     PROCESSOR_ARCHITECTURE_ARM64_OLD = 0x8003,
+     /// Breakpad-defined value for MIPS64
+     PROCESSOR_ARCHITECTURE_MIPS64 = 0x8004,
++    /// Breakpad-defined value for RISC-V
++    PROCESSOR_ARCHITECTURE_RISCV = 0x8005,
++    /// Breakpad-defined value for RISC-V64
++    PROCESSOR_ARCHITECTURE_RISCV64 = 0x8006,
+     PROCESSOR_ARCHITECTURE_UNKNOWN = 0xffff,
+ }
+ 
+diff --git a/third_party/rust/minidump-unwind/.cargo-checksum.json b/third_party/rust/minidump-unwind/.cargo-checksum.json
+index 8727cd45f7..83f87b6cfc 100644
+--- a/third_party/rust/minidump-unwind/.cargo-checksum.json
++++ b/third_party/rust/minidump-unwind/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo_vcs_info.json":"95188809eab5cf2dd2be05d90cd844558a04f3a2ba120a314397ab8788953563","Cargo.lock":"d6360352fc4dc68337dc1ccb09ccc7f30415018f586c1c76c2426be82fe9c1d1","Cargo.toml":"3c72eb86059300c6f404af4c66166763984571222efa10865ec4e8582bbf46f8","Cargo.toml.orig":"52dd6918259f9318c83f76f5a9c7e8b8bf3cc833a35e5df19949d707191f2b57","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"0202d4bced7cbc5fb801a916d11c752019111a0043fb6476ef945414d322588e","src/amd64.rs":"7eb838702b005475ec322e6bf05bf9d193be24471ff152c9b78713d000ad6414","src/amd64_unittest.rs":"a48626cd00a77a545afb565d8bc5684fc81e8ba93515373d04d82345a72459a6","src/arm.rs":"a61b28eabf8c72ea7d16911426c6bbab4e08766ca43e75099d0cd7817e02a977","src/arm64.rs":"c8233f255b64d116ea804a0fe15a4ee0211124f9434d0125a957d267ab6ea3c2","src/arm64_old.rs":"78843e9a46e3ce5f461a19d63445fd1b2aac7f4e6d91aac0f3b9e352b958606c","src/arm64_unittest.rs":"d48d7577422aa53bb041bc243e866d369bdc57fd1219ebe7f7032b9bfedfc1dc","src/arm_unittest.rs":"b2e64e57ed638c228d41ecf35ea57f0a6f9ca007a5288bc63a779fa759548c50","src/lib.rs":"77e4267e6c91195e848f0cddca1ad1b3e564c950d21781a835de3540a6bee7f5","src/mips.rs":"897aa10ade29adc4253bb2049b19a7e1690bf548ce015ba63eba1f8bcc04361c","src/symbols/debuginfo.rs":"2a90acdaff64da78d77e7bbef9452301a38c8965270bba08b09867b124b161ab","src/symbols/mod.rs":"a598e48bf2ef657e7c833f7f2d3950a10c68483e71b98f136c7975baba9ad238","src/system_info.rs":"228ac55b18a647e5302b5cb7c10e65c9d046decb5d9207e4ded098405bf1739c","src/x86.rs":"fab7ccec6285a9970da7f13709b8e7e53b1198ca275235e4bd415a620d87197e","src/x86_unittest.rs":"73212f5b1c2ce4605e540230c5574de817e42e0447ffe304b8822b69066aa7c8"},"package":"4aa8b7212f59c525f93c62457c54f9f9ac550316ee0e41f129b4b19165d5acd1"}
+\ No newline at end of file
++{"files":{".cargo_vcs_info.json":"95188809eab5cf2dd2be05d90cd844558a04f3a2ba120a314397ab8788953563","Cargo.lock":"d6360352fc4dc68337dc1ccb09ccc7f30415018f586c1c76c2426be82fe9c1d1","Cargo.toml":"3c72eb86059300c6f404af4c66166763984571222efa10865ec4e8582bbf46f8","Cargo.toml.orig":"52dd6918259f9318c83f76f5a9c7e8b8bf3cc833a35e5df19949d707191f2b57","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"0202d4bced7cbc5fb801a916d11c752019111a0043fb6476ef945414d322588e","src/amd64.rs":"7eb838702b005475ec322e6bf05bf9d193be24471ff152c9b78713d000ad6414","src/amd64_unittest.rs":"a48626cd00a77a545afb565d8bc5684fc81e8ba93515373d04d82345a72459a6","src/arm.rs":"a61b28eabf8c72ea7d16911426c6bbab4e08766ca43e75099d0cd7817e02a977","src/arm64.rs":"c8233f255b64d116ea804a0fe15a4ee0211124f9434d0125a957d267ab6ea3c2","src/arm64_old.rs":"78843e9a46e3ce5f461a19d63445fd1b2aac7f4e6d91aac0f3b9e352b958606c","src/arm64_unittest.rs":"d48d7577422aa53bb041bc243e866d369bdc57fd1219ebe7f7032b9bfedfc1dc","src/arm_unittest.rs":"b2e64e57ed638c228d41ecf35ea57f0a6f9ca007a5288bc63a779fa759548c50","src/lib.rs":"bc97cee061862034be26b1e450f72490c44bc6618d52df8a51da6290c65d8383","src/mips.rs":"897aa10ade29adc4253bb2049b19a7e1690bf548ce015ba63eba1f8bcc04361c","src/symbols/debuginfo.rs":"2a90acdaff64da78d77e7bbef9452301a38c8965270bba08b09867b124b161ab","src/symbols/mod.rs":"a598e48bf2ef657e7c833f7f2d3950a10c68483e71b98f136c7975baba9ad238","src/system_info.rs":"228ac55b18a647e5302b5cb7c10e65c9d046decb5d9207e4ded098405bf1739c","src/x86.rs":"fab7ccec6285a9970da7f13709b8e7e53b1198ca275235e4bd415a620d87197e","src/x86_unittest.rs":"73212f5b1c2ce4605e540230c5574de817e42e0447ffe304b8822b69066aa7c8"},"package":"4aa8b7212f59c525f93c62457c54f9f9ac550316ee0e41f129b4b19165d5acd1"}
+diff --git a/third_party/rust/minidump-unwind/src/lib.rs b/third_party/rust/minidump-unwind/src/lib.rs
+index 77fb45a19f..deb8bac94b 100644
+--- a/third_party/rust/minidump-unwind/src/lib.rs
++++ b/third_party/rust/minidump-unwind/src/lib.rs
+@@ -518,7 +518,7 @@ impl CallStack {
+                 use MinidumpRawContext::*;
+                 let pointer_width = match &frame.context.raw {
+                     X86(_) | Ppc(_) | Sparc(_) | Arm(_) | Mips(_) => 4,
+-                    Ppc64(_) | Amd64(_) | Arm64(_) | OldArm64(_) => 8,
++                    Ppc64(_) | Amd64(_) | Arm64(_) | OldArm64(_) | Riscv64(_) => 8,
+                 };
+ 
+                 let cc_summary = match args.calling_convention {
+diff --git a/third_party/rust/minidump-writer/.cargo-checksum.json b/third_party/rust/minidump-writer/.cargo-checksum.json
+index 36e3d9a397..36a7aaefcb 100644
+--- a/third_party/rust/minidump-writer/.cargo-checksum.json
++++ b/third_party/rust/minidump-writer/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".cargo_vcs_info.json":"6e2b2df95fd136326dfa58c130005c13e288b606aa9c1942d080b72458debf94",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"6837a5499b6fcbe0c4b337434ee5fd19b1d491470caf9a8fbab0cfc008016ac4","CHANGELOG.md":"e072ad5fbc55bdd96c218436ddc8c86e66f3ffc3a0e720034995681a3e3fa3e6","Cargo.lock":"d69cb8666f946940bc70029943ef25e46d1d5111622631150b5658855c827113","Cargo.toml":"49e110ab0e4c6fb7736710f49aa6701c287bea6a13056140e5745c96285e25bc","Cargo.toml.orig":"a44f46ad6b6ffc4a1a926e2c33ba6351706c5f2d94f47796331b99132f950fdb","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"71742b170ac34ceecf317d6d69456063bf5d8974453075e9cd2838785717fcdb","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"b2580d3d370d6290301cb825b0d50573b08836b7b36ca8defaa85e0ab1318b56","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"fd62890d54c40fb07380a2d044a92a7cc87406bded1323c249ecb6c99ca67e7e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"c5585d46d0f2b72bda0f90aa748ef5ae522e7f7fea4c6f1b0ac01ffce8630e44","src/linux/android.rs":"f8e165e2a27e4c35faaed9f8d1f1cdbb656f180786d5d582e8fe59e86be0f651","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"dc533013330abd055efc55a2c5a0b142f324de47486db675c5fb96a1031fed67","src/linux/auxv/reader.rs":"19e67193b4960d42706a84bd1578fa57be27ac755ab15b29b0d0cd903f1a6c0d","src/linux/crash_context/aarch64.rs":"005e82997fedfe4a91ff68e35b0ab0eb11166d9dff9a02d7290ae756af163a10","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"0fa80c43990eced7a27cb377fce84afb8b9eddf58863923006d414be6a5a2d9f","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"6b67b846c023e58c1907c45565c610eee348e55091234d6badb825473f6c53f3","src/linux/dso_debug.rs":"be8cb8e4328a14b128f975fe964cc92b7eba5b4e83f1a255896af433f8002d0f","src/linux/dumper_cpu_info/arm.rs":"a126fde5b48428e4a56e46a968a121d207622c535a4ba3478f1fe5b1bd8a99d3","src/linux/dumper_cpu_info/mod.rs":"625dda8597a435092f47a0a90c3f28703ba7fa3a02daa2f9ad60f6d722ed834c","src/linux/dumper_cpu_info/x86_mips.rs":"3779b3be86ce4c2da14d6f88557cec0be6c4dc8439e89663359e6ad34179924b","src/linux/maps_reader.rs":"02f56fa28992c4b1693ee81066d74315ca7702bce8e268d30528e198f5382824","src/linux/mem_reader.rs":"a3e0979d95586ed5534c5817c5ff36107952e5af3789cf2bfb5d12598b75bc53","src/linux/minidump_writer/app_memory.rs":"8de75067c14b29251d75a9277b53889af0cece26028db92614129b7cd0d64f12","src/linux/minidump_writer/errors.rs":"fd2c534604853501866289ed54029ef6af7e15be995ecc0e3a81c99f10542b38","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"a08f3a010cd720a37628cd8b9df7bd413d6a721e96b426ad76088994f1c3018b","src/linux/minidump_writer/mappings.rs":"f50809572509d143e016285a862fa830a577bbc6c980f8a500bea4e58259e20e","src/linux/minidump_writer/memory_info_list_stream.rs":"7fc8a38aeff9ada15aede8b514b9dafab1fe778fe62c596d3efa4b8f2f191660","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"e1a8409573524cfdc83238f7deaf28ac2cfc561e6ed15bfa36383ee46126dc7d","src/linux/minidump_writer/systeminfo_stream.rs":"e793da25ca6c7e241c77763748873d3dc5aefebbf805674dd6d3e6ab353772a4","src/linux/minidump_writer/thread_list_stream.rs":"1a471e14177d551bc6d90b9a253a9c744d500c5a6a41d4c730fc03e14aa56703","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"e316b6a4de8a04070ea4e801cc5eb2bd79fbc48c7f80a3faa28a62d0ac1d37fb","src/linux/module_reader.rs":"79779433fc71f0ed9bd4919a91c01a423bcf6930999bd91ecad0499b0a76f58a","src/linux/serializers.rs":"f3ab10498cdb577ec6c15e39111b4f4faf9e8cecc8895eff9f601bfae3065b99","src/linux/thread_info/aarch64.rs":"a9fc906f0b09c98fceea7b8babf356514e371257744c6918c4c4200f90349a8e","src/linux/thread_info/arm.rs":"b6115b40c46ddf8a39e1d3be09203d72a35a584525ec8e1e4a820164c0e7bfd7","src/linux/thread_info/mips.rs":"08faacfcae95357ae6b6a8e3e7bbe8f94362e2e3e48bf4fddf1d99c289cd044b","src/linux/thread_info/mod.rs":"aad368b3327f0fb0edbd162418b5775a893ab9291efaddfbae1f76293cb6f3b8","src/linux/thread_info/x86.rs":"7a10e23d2b44df9fc206eef39b4954b51a46cc72b47fa9cd921bed67f946f766","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"f5f5b3bde9fd3ea85903b75c80ddb15931a56d5d4425f01fda9643fba8e419d3","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"4671ad90c433db559ec633c880c3fe083f38a2e185ef4fc99577318526076519","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"e01d2d1fa117869f9c8bdb9fe61944991229786c71c4555d748a84b72df9f676","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"959239425c1ea4c9766303fd10a12c82d1fed27b462f836a8a317a470ea0ace7","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"ccb3dc179699159883e539e29285f8f6ba936afb8ce8980dbcb5060a80b6618c","src/minidump_format.rs":"9d5940d71da3a543efa90279e287e0dbbe303de386a4d5aab15e8ccfdd556116","src/serializers.rs":"7a49ed8dcefa7ddf1f796f9ef9360c6539ef57c80712b237af612275ef70ce83","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"24a6f99de9f25ae7bc80f2763d8c5b97e65699682a99ec6265ebc435c3310999","src/windows/minidump_writer.rs":"e10cd290c7563e6203eac6e99b46c82c093d8a82e147a82ceab03bf4795cdd97","src/windows/mod.rs":"caace73419fed05d5d83b2d4b9d21570bec4668ebc6d797aa29c2b76756aa5e1","tests/common/mod.rs":"83cae105781e2ace02dc1f1f43473efcb226ab7a0cc0c88f556d7e1aab83c89d","tests/linux_minidump_writer.rs":"1edd43c3366c6a179200b9cbd9d10234959c9ed8ed7f0b5b1f12721985e6d64c","tests/linux_minidump_writer_soft_error.rs":"f4146c26d726686fa181c77b03027bbd9fcfa2b2035fa5254cd9fe3154b3f088","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"75dc54cc924824d5f9e20d7fac847412aca8320dcf2e5cb141bfaf2bb5a3c5f9","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/windows_minidump_writer.rs":"7a0f42867d6ee56aebea900d7952f686512fc1cbe68a996b52f08377582dc195"},"package":"0e1fc14d6ded915b8e850801465e7096f77ed60bf87e4e85878d463720d9dc4d"}
+\ No newline at end of file
++{"files":{".cargo/android-runner.sh":"ab3bbf893efd6ec7ad262ffbd0b0172036dacc51f7b6ba634688454dbc5a3127",".cargo/config.toml":"a38182719a06427f6a84318a67418bf73e58053d47c6cda8983e4682f4696313",".cargo_vcs_info.json":"6e2b2df95fd136326dfa58c130005c13e288b606aa9c1942d080b72458debf94",".github/CODEOWNERS":"ea38cb1cb80482d2f0d0327c8d84d94e55b2171d5a6ed9b9656c6e8ce2938d50",".github/workflows/audit.yml":"19ad888251cbf88d2484d5eecc6e9e47470de20e53cf53e9e6ef5783e6f43483",".github/workflows/ci.yml":"6837a5499b6fcbe0c4b337434ee5fd19b1d491470caf9a8fbab0cfc008016ac4","CHANGELOG.md":"e072ad5fbc55bdd96c218436ddc8c86e66f3ffc3a0e720034995681a3e3fa3e6","Cargo.lock":"d69cb8666f946940bc70029943ef25e46d1d5111622631150b5658855c827113","Cargo.toml":"49e110ab0e4c6fb7736710f49aa6701c287bea6a13056140e5745c96285e25bc","Cargo.toml.orig":"a44f46ad6b6ffc4a1a926e2c33ba6351706c5f2d94f47796331b99132f950fdb","LICENSE":"1ecdd8e8977af83c07c5f97bec87b47d27059b7ea323ca3160fbfa2314f5d99c","README.md":"71742b170ac34ceecf317d6d69456063bf5d8974453075e9cd2838785717fcdb","build.rs":"689cd32a441f5011f694a9f86bc03bc27c2a09bcb4130f47e04fe00bb069b1b5","deny.toml":"764229c5a5619e336675a4c512b0a2830e2173681c7026d376980ebd75569d04","examples/synthetic.rs":"b2580d3d370d6290301cb825b0d50573b08836b7b36ca8defaa85e0ab1318b56","release.toml":"f554067378aec602383b96e5fa63427136533a7dd00137fd0664b279fb8fcc56","src/bin/test.rs":"fd62890d54c40fb07380a2d044a92a7cc87406bded1323c249ecb6c99ca67e7e","src/dir_section.rs":"5386b73683fda9a3bf19fc656071d3ec7b4248284dc26ca3b8cbfdfc61d3726a","src/lib.rs":"c5585d46d0f2b72bda0f90aa748ef5ae522e7f7fea4c6f1b0ac01ffce8630e44","src/linux/android.rs":"f8e165e2a27e4c35faaed9f8d1f1cdbb656f180786d5d582e8fe59e86be0f651","src/linux/app_memory.rs":"5f093e4ed0aecc6086366a9c09658761fdd3b0e6e9ff2111690719e56612df64","src/linux/auxv/mod.rs":"dc533013330abd055efc55a2c5a0b142f324de47486db675c5fb96a1031fed67","src/linux/auxv/reader.rs":"19e67193b4960d42706a84bd1578fa57be27ac755ab15b29b0d0cd903f1a6c0d","src/linux/crash_context/aarch64.rs":"005e82997fedfe4a91ff68e35b0ab0eb11166d9dff9a02d7290ae756af163a10","src/linux/crash_context/arm.rs":"2274b5af43346491018c21bf01af984719623cc5a365d39424f94dd63aa1ce39","src/linux/crash_context/mod.rs":"31f8fea7230f63c4a698b3033858429d2c61afd27ade74747e5a927ae5f33e4a","src/linux/crash_context/riscv64.rs":"8200526110d1d52a6b0777f3e270e3b4f5cc37d8e8671d268f86c00f75fe3460","src/linux/crash_context/x86.rs":"389be4a28fce3b1f9c5b8b0a1145a0df9de52b9d26b039d022f69c6e7e697710","src/linux/crash_context/x86_64.rs":"6b67b846c023e58c1907c45565c610eee348e55091234d6badb825473f6c53f3","src/linux/dso_debug.rs":"be8cb8e4328a14b128f975fe964cc92b7eba5b4e83f1a255896af433f8002d0f","src/linux/dumper_cpu_info/arm.rs":"a126fde5b48428e4a56e46a968a121d207622c535a4ba3478f1fe5b1bd8a99d3","src/linux/dumper_cpu_info/mod.rs":"26578627063bb9c8609f1686684164cdd1c48f92302047b304976fa0b7208887","src/linux/dumper_cpu_info/riscv.rs":"fa45ecdbb989c2dafac23ea48b8ea5cc64658fc0bf28fd2006e4760ce21999f5","src/linux/dumper_cpu_info/x86_mips.rs":"3779b3be86ce4c2da14d6f88557cec0be6c4dc8439e89663359e6ad34179924b","src/linux/maps_reader.rs":"02f56fa28992c4b1693ee81066d74315ca7702bce8e268d30528e198f5382824","src/linux/mem_reader.rs":"a3e0979d95586ed5534c5817c5ff36107952e5af3789cf2bfb5d12598b75bc53","src/linux/minidump_writer/app_memory.rs":"8de75067c14b29251d75a9277b53889af0cece26028db92614129b7cd0d64f12","src/linux/minidump_writer/errors.rs":"fd2c534604853501866289ed54029ef6af7e15be995ecc0e3a81c99f10542b38","src/linux/minidump_writer/exception_stream.rs":"1e714647a5b62917cb8595219d924928a319aa79e726f68c815d1f64fb54858c","src/linux/minidump_writer/handle_data_stream.rs":"a08f3a010cd720a37628cd8b9df7bd413d6a721e96b426ad76088994f1c3018b","src/linux/minidump_writer/mappings.rs":"f50809572509d143e016285a862fa830a577bbc6c980f8a500bea4e58259e20e","src/linux/minidump_writer/memory_info_list_stream.rs":"7fc8a38aeff9ada15aede8b514b9dafab1fe778fe62c596d3efa4b8f2f191660","src/linux/minidump_writer/memory_list_stream.rs":"6ec99cee760afa323502fde6a07f0314d994c4fcae7170a6ea18dfe4be7ab628","src/linux/minidump_writer/mod.rs":"e1a8409573524cfdc83238f7deaf28ac2cfc561e6ed15bfa36383ee46126dc7d","src/linux/minidump_writer/systeminfo_stream.rs":"e793da25ca6c7e241c77763748873d3dc5aefebbf805674dd6d3e6ab353772a4","src/linux/minidump_writer/thread_list_stream.rs":"1a471e14177d551bc6d90b9a253a9c744d500c5a6a41d4c730fc03e14aa56703","src/linux/minidump_writer/thread_names_stream.rs":"d5cc4e6e009628805ad32b6762acf94657c9873e9579ecb01fb0f5b2319e5508","src/linux/mod.rs":"e316b6a4de8a04070ea4e801cc5eb2bd79fbc48c7f80a3faa28a62d0ac1d37fb","src/linux/module_reader.rs":"79779433fc71f0ed9bd4919a91c01a423bcf6930999bd91ecad0499b0a76f58a","src/linux/serializers.rs":"f3ab10498cdb577ec6c15e39111b4f4faf9e8cecc8895eff9f601bfae3065b99","src/linux/thread_info/aarch64.rs":"a9fc906f0b09c98fceea7b8babf356514e371257744c6918c4c4200f90349a8e","src/linux/thread_info/arm.rs":"b6115b40c46ddf8a39e1d3be09203d72a35a584525ec8e1e4a820164c0e7bfd7","src/linux/thread_info/mips.rs":"08faacfcae95357ae6b6a8e3e7bbe8f94362e2e3e48bf4fddf1d99c289cd044b","src/linux/thread_info/mod.rs":"80839691519cf7fe32c9efb01a50124141a285c39387adebc29c0b4a3737e5c6","src/linux/thread_info/riscv64.rs":"7b78602c9543c04bdd16acfc9dabf4ed98bab8a3732cecfdbf061e33a6539e8a","src/linux/thread_info/x86.rs":"7a10e23d2b44df9fc206eef39b4954b51a46cc72b47fa9cd921bed67f946f766","src/mac/errors.rs":"6ad50e4da9e5df8b0e9b471086c40c8e5f22ca1d1269a12b5d9cdacd35a07066","src/mac/mach.rs":"f5f5b3bde9fd3ea85903b75c80ddb15931a56d5d4425f01fda9643fba8e419d3","src/mac/minidump_writer.rs":"5cc9e83042df41488792c86eaecd311d1bd1ea2990bee990028837f512874166","src/mac/mod.rs":"4671ad90c433db559ec633c880c3fe083f38a2e185ef4fc99577318526076519","src/mac/streams/breakpad_info.rs":"3971ef91bd0d20fbe34ef3d0138d30dc1e34605c953fb2fd8bf623b7deb9586d","src/mac/streams/exception.rs":"ed8ff9b24279e7597b1e0e5ff150e19d455bf071aec3f45a208833fce8cfca7a","src/mac/streams/memory_list.rs":"e507a1ada858ef535e3e211d91195901e9976ba0ff6cf601919d7cacb48c5e9f","src/mac/streams/misc_info.rs":"e01d2d1fa117869f9c8bdb9fe61944991229786c71c4555d748a84b72df9f676","src/mac/streams/mod.rs":"6f650ce6e8141061fbae6446d67951e3acc19f7fb401cb9fddba8296ac85e657","src/mac/streams/module_list.rs":"959239425c1ea4c9766303fd10a12c82d1fed27b462f836a8a317a470ea0ace7","src/mac/streams/system_info.rs":"8032a05568b5bc0a40d61a3353d4fb7b4e567253977e805622d8454cf41e246e","src/mac/streams/thread_list.rs":"0931c4640b657dbfa537f21823300d98a12b5b61553ed19d26331104a6cb9bb7","src/mac/streams/thread_names.rs":"881574c8deda6cbeac039efbbbb9682cd7fa98ff8710aba3ee0c6a218f372c48","src/mac/task_dumper.rs":"69b24681cf9ba2ffeb91ba82a6fbad329510d6814711785beff9b799381ef346","src/mem_writer.rs":"49995b0fca6cc48a8bf47dc8d738d5ee5afbcedea926b0dcba331e6a2b976eb9","src/minidump_cpu.rs":"183b1d9bbe319a5a1503f0a720a072796f9e931cc9370e68265229e610511e73","src/minidump_format.rs":"9d5940d71da3a543efa90279e287e0dbbe303de386a4d5aab15e8ccfdd556116","src/serializers.rs":"7a49ed8dcefa7ddf1f796f9ef9360c6539ef57c80712b237af612275ef70ce83","src/windows/errors.rs":"9b8752122784417ed48b9c3fccc9bdabc6c4e6285cdb77c79723cba56cb0de82","src/windows/ffi.rs":"24a6f99de9f25ae7bc80f2763d8c5b97e65699682a99ec6265ebc435c3310999","src/windows/minidump_writer.rs":"e10cd290c7563e6203eac6e99b46c82c093d8a82e147a82ceab03bf4795cdd97","src/windows/mod.rs":"caace73419fed05d5d83b2d4b9d21570bec4668ebc6d797aa29c2b76756aa5e1","tests/common/mod.rs":"83cae105781e2ace02dc1f1f43473efcb226ab7a0cc0c88f556d7e1aab83c89d","tests/linux_minidump_writer.rs":"1edd43c3366c6a179200b9cbd9d10234959c9ed8ed7f0b5b1f12721985e6d64c","tests/linux_minidump_writer_soft_error.rs":"f4146c26d726686fa181c77b03027bbd9fcfa2b2035fa5254cd9fe3154b3f088","tests/mac_minidump_writer.rs":"2c3f8ee0d546eb696a5c8ab6630061238399758457ecf316136c92a4925c5ddf","tests/ptrace_dumper.rs":"75dc54cc924824d5f9e20d7fac847412aca8320dcf2e5cb141bfaf2bb5a3c5f9","tests/task_dumper.rs":"16af34e70259c00a22f3001e5b2e13c9e990cc07db2722c98ba80e16de686c1d","tests/windows_minidump_writer.rs":"7a0f42867d6ee56aebea900d7952f686512fc1cbe68a996b52f08377582dc195"},"package":"0e1fc14d6ded915b8e850801465e7096f77ed60bf87e4e85878d463720d9dc4d"}
+diff --git a/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs b/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs
+index 185ad76957..14be448419 100644
+--- a/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs
++++ b/third_party/rust/minidump-writer/src/linux/crash_context/mod.rs
+@@ -25,5 +25,7 @@ cfg_if::cfg_if! {
+         mod aarch64;
+     } else if #[cfg(target_arch = "arm")] {
+         mod arm;
++    } else if #[cfg(target_arch = "riscv64")] {
++        mod riscv64;
+     }
+ }
+diff --git a/third_party/rust/minidump-writer/src/linux/crash_context/riscv64.rs b/third_party/rust/minidump-writer/src/linux/crash_context/riscv64.rs
+new file mode 100644
+index 0000000000..4cff851524
+--- /dev/null
++++ b/third_party/rust/minidump-writer/src/linux/crash_context/riscv64.rs
+@@ -0,0 +1,61 @@
++use {
++    super::CrashContext,
++    crate::{minidump_cpu::{RawContextCPU, FP_REG_COUNT}, minidump_format::format},
++};
++
++impl CrashContext {
++    pub fn get_instruction_pointer(&self) -> usize {
++        self.inner.context.uc_mcontext.__gregs[0] as usize
++    }
++
++    pub fn get_stack_pointer(&self) -> usize {
++        self.inner.context.uc_mcontext.__gregs[2] as usize
++    }
++
++    pub fn fill_cpu_context(&self, out: &mut RawContextCPU) {
++        out.context_flags = format::ContextFlagsRiscv64::CONTEXT_RISCV64_FULL.bits() as u32;
++
++        {
++            let gregs = &self.inner.context.uc_mcontext.__gregs;
++            out.pc = gregs[0];
++            out.ra = gregs[1];
++            out.sp = gregs[2];
++            out.gp = gregs[3];
++            out.tp = gregs[4];
++            out.t0 = gregs[5];
++            out.t1 = gregs[6];
++            out.t2 = gregs[7];
++            out.s0 = gregs[8];
++            out.s1 = gregs[9];
++            out.a0 = gregs[10];
++            out.a1 = gregs[11];
++            out.a2 = gregs[12];
++            out.a3 = gregs[13];
++            out.a4 = gregs[14];
++            out.a5 = gregs[15];
++            out.a6 = gregs[16];
++            out.a7 = gregs[17];
++            out.s2 = gregs[18];
++            out.s3 = gregs[19];
++            out.s4 = gregs[20];
++            out.s5 = gregs[21];
++            out.s6 = gregs[22];
++            out.s7 = gregs[23];
++            out.s8 = gregs[24];
++            out.s9 = gregs[25];
++            out.s10 = gregs[26];
++            out.s11 = gregs[27];
++            out.t3 = gregs[28];
++            out.t4 = gregs[29];
++            out.t5 = gregs[30];
++            out.t6 = gregs[31];
++        }
++
++        // Breakpad only supports RISCV64 with 64 bit floating point.
++        {
++            let fs = unsafe { &self.inner.float_state.__d };
++            out.float_save.fpcsr = fs.__fcsr;
++            out.float_save.fpregs[..FP_REG_COUNT].copy_from_slice(&fs.__f[..FP_REG_COUNT]);
++        }
++    }
++}
+diff --git a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
+index 54a4f3b7a2..21973fc03e 100644
+--- a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
++++ b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/mod.rs
+@@ -20,6 +20,13 @@ cfg_if::cfg_if! {
+     {
+         pub mod arm;
+         pub use arm as imp;
++    } else if #[cfg(any(
++        target_arch = "riscv32",
++        target_arch = "riscv64",
++    ))]
++    {
++        pub mod riscv;
++        pub use riscv as imp;
+     }
+ }
+ 
+diff --git a/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
+new file mode 100644
+index 0000000000..640a652a05
+--- /dev/null
++++ b/third_party/rust/minidump-writer/src/linux/dumper_cpu_info/riscv.rs
+@@ -0,0 +1,82 @@
++use {
++    super::CpuInfoError,
++    crate::minidump_format::*,
++    std::{collections::HashSet, fs::File, io::Read},
++};
++
++type Result<T> = std::result::Result<T, CpuInfoError>;
++
++pub fn parse_cpus_from_sysfile(file: &mut File) -> Result<HashSet<u32>> {
++    let mut res = HashSet::new();
++    let mut content = String::new();
++    file.read_to_string(&mut content)?;
++    // Expected format: comma-separated list of items, where each
++    // item can be a decimal integer, or two decimal integers separated
++    // by a dash.
++    // E.g.:
++    //       0
++    //       0,1,2,3
++    //       0-3
++    //       1,10-23
++    for items in content.split(',') {
++        let items = items.trim();
++        if items.is_empty() {
++            continue;
++        }
++        let cores: std::result::Result<Vec<_>, _> =
++            items.split('-').map(|x| x.parse::<u32>()).collect();
++        let cores = cores?;
++        match cores.as_slice() {
++            [x] => {
++                res.insert(*x);
++            }
++            [x, y] => {
++                for core in *x..=*y {
++                    res.insert(core);
++                }
++            }
++            _ => {
++                return Err(CpuInfoError::UnparsableCores(format!("{:?}", cores)));
++            }
++        }
++    }
++    Ok(res)
++}
++
++pub fn write_cpu_information(sys_info: &mut MDRawSystemInfo) -> Result<()> {
++    sys_info.processor_architecture = if cfg!(target_arch = "riscv32") {
++        MDCPUArchitecture::PROCESSOR_ARCHITECTURE_RISCV
++    } else {
++        MDCPUArchitecture::PROCESSOR_ARCHITECTURE_RISCV64
++    } as u16;
++
++    // /proc/cpuinfo is not readable under various sandboxed environments
++    // (e.g. Android services with the android:isolatedProcess attribute)
++    // prepare for this by setting default values now, which will be
++    // returned when this happens.
++    //
++    // Note: Bogus values are used to distinguish between failures (to
++    //       read /sys and /proc files) and really badly configured kernels.
++    sys_info.number_of_processors = 0;
++    sys_info.processor_level = 1; // There is no ARMv1
++    sys_info.processor_revision = 42;
++
++    // Counting the number of CPUs involves parsing two sysfs files,
++    // because the content of /proc/cpuinfo will only mirror the number
++    // of 'online' cores, and thus will vary with time.
++    // See http://www.kernel.org/doc/Documentation/cputopology.txt
++    if let Ok(mut present_file) = File::open("/sys/devices/system/cpu/present") {
++        // Ignore unparsable content
++        let cpus_present = parse_cpus_from_sysfile(&mut present_file).unwrap_or_default();
++
++        if let Ok(mut possible_file) = File::open("/sys/devices/system/cpu/possible") {
++            // Ignore unparsable content
++            let cpus_possible = parse_cpus_from_sysfile(&mut possible_file).unwrap_or_default();
++            let intersection = cpus_present.intersection(&cpus_possible).count();
++            let cpu_count = std::cmp::min(255, intersection) as u8;
++            sys_info.number_of_processors = cpu_count;
++        }
++    }
++
++    Ok(())
++}
+diff --git a/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs b/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
+index eed2342699..3a0a9981d6 100644
+--- a/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
++++ b/third_party/rust/minidump-writer/src/linux/thread_info/mod.rs
+@@ -51,6 +51,9 @@ cfg_if::cfg_if! {
+     } else if #[cfg(target_arch = "mips")] {
+         mod mips;
+         pub type ThreadInfo = mips::ThreadInfoMips;
++    } else if #[cfg(target_arch = "riscv64")] {
++        mod riscv64;
++        pub type ThreadInfo = riscv64::ThreadInfoRiscv64;
+     }
+ }
+ 
+diff --git a/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs b/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
+new file mode 100644
+index 0000000000..a1f9284f6f
+--- /dev/null
++++ b/third_party/rust/minidump-writer/src/linux/thread_info/riscv64.rs
+@@ -0,0 +1,132 @@
++use {
++    super::{CommonThreadInfo, NT_Elf, Pid, ThreadInfoError},
++    crate::minidump_cpu::{RawContextCPU, FP_REG_COUNT},
++    libc::{c_uint, c_ulonglong, user_regs_struct},
++    nix::sys::ptrace,
++};
++
++type Result<T> = std::result::Result<T, ThreadInfoError>;
++
++#[repr(C)]
++#[derive(Clone, Copy)]
++pub union __riscv_mc_fp_state {
++    pub __f: __riscv_mc_f_ext_state,
++    pub __d: __riscv_mc_d_ext_state,
++    pub __q: __riscv_mc_q_ext_state,
++}
++
++#[repr(C)]
++#[derive(Debug, Clone, Copy, Default)]
++pub struct __riscv_mc_f_ext_state {
++    pub __f: [c_uint; 32],
++    pub __fcsr: c_uint,
++}
++
++#[repr(C)]
++#[derive(Debug, Clone, Copy, Default)]
++pub struct __riscv_mc_d_ext_state {
++    pub __f: [c_ulonglong; 32],
++    pub __fcsr: c_uint,
++}
++
++#[repr(C)]
++#[derive(Debug, Clone, Copy)]
++#[repr(align(16))]
++pub struct __riscv_mc_q_ext_state {
++    pub __f: [c_ulonglong; 64],
++    pub __fcsr: c_uint,
++    pub __glibc_reserved: [c_uint; 3],
++}
++
++#[derive(Debug)]
++pub struct ThreadInfoRiscv64 {
++    pub stack_pointer: usize,
++    pub tgid: Pid, // thread group id
++    pub ppid: Pid, // parent process
++    pub regs: user_regs_struct,
++    // Breakpad only supports RISCV64 with 64 bit floating point.
++    pub fpregs: __riscv_mc_d_ext_state,
++}
++
++impl CommonThreadInfo for ThreadInfoRiscv64 {}
++
++impl ThreadInfoRiscv64 {
++    // nix currently doesn't support PTRACE_GETFPREGS, so we have to do it ourselves
++    fn getfpregs(pid: Pid) -> Result<__riscv_mc_d_ext_state> {
++        Self::ptrace_get_data_via_io(
++            0x4204 as ptrace::RequestType, // PTRACE_GETREGSET
++            Some(NT_Elf::NT_PRFPREGSET),
++            nix::unistd::Pid::from_raw(pid),
++        )
++    }
++
++    // nix currently doesn't support PTRACE_GETREGS, so we have to do it ourselves
++    fn getregs(pid: Pid) -> Result<user_regs_struct> {
++        Self::ptrace_get_data_via_io(
++            0x4204 as ptrace::RequestType, // PTRACE_GETREGSET
++            Some(NT_Elf::NT_PRSTATUS),
++            nix::unistd::Pid::from_raw(pid),
++        )
++    }
++
++    pub fn get_instruction_pointer(&self) -> usize {
++        self.regs.pc as usize
++    }
++
++    pub fn fill_cpu_context(&self, out: &mut RawContextCPU) {
++        out.context_flags =
++            crate::minidump_format::format::ContextFlagsRiscv64::CONTEXT_RISCV64_FULL.bits();
++
++        out.pc = self.regs.pc;
++        out.ra = self.regs.ra;
++        out.sp = self.regs.sp;
++        out.gp = self.regs.gp;
++        out.tp = self.regs.tp;
++        out.t0 = self.regs.t0;
++        out.t1 = self.regs.t1;
++        out.t2 = self.regs.t2;
++        out.s0 = self.regs.s0;
++        out.s1 = self.regs.s1;
++        out.a0 = self.regs.a0;
++        out.a1 = self.regs.a1;
++        out.a2 = self.regs.a2;
++        out.a3 = self.regs.a3;
++        out.a4 = self.regs.a4;
++        out.a5 = self.regs.a5;
++        out.a6 = self.regs.a6;
++        out.a7 = self.regs.a7;
++        out.s2 = self.regs.s2;
++        out.s3 = self.regs.s3;
++        out.s4 = self.regs.s4;
++        out.s5 = self.regs.s5;
++        out.s6 = self.regs.s6;
++        out.s7 = self.regs.s7;
++        out.s8 = self.regs.s8;
++        out.s9 = self.regs.s9;
++        out.s10 = self.regs.s10;
++        out.s11 = self.regs.s11;
++        out.t3 = self.regs.t3;
++        out.t4 = self.regs.t4;
++        out.t5 = self.regs.t5;
++        out.t6 = self.regs.t6;
++
++        out.float_save.fpcsr = self.fpregs.__fcsr;
++        out.float_save.fpregs[..FP_REG_COUNT].copy_from_slice(&self.fpregs.__f[..FP_REG_COUNT]);
++    }
++
++    pub fn create_impl(_pid: Pid, tid: Pid) -> Result<Self> {
++        let (ppid, tgid) = Self::get_ppid_and_tgid(tid)?;
++        let regs = Self::getregs(tid)?;
++        let fpregs = Self::getfpregs(tid).unwrap_or(Default::default());
++
++        let stack_pointer = regs.sp as usize;
++
++        Ok(ThreadInfoRiscv64 {
++            stack_pointer,
++            tgid,
++            ppid,
++            regs,
++            fpregs,
++        })
++    }
++}
+diff --git a/third_party/rust/minidump-writer/src/minidump_cpu.rs b/third_party/rust/minidump-writer/src/minidump_cpu.rs
+index 6afc94029e..4f9a7f3822 100644
+--- a/third_party/rust/minidump-writer/src/minidump_cpu.rs
++++ b/third_party/rust/minidump-writer/src/minidump_cpu.rs
+@@ -18,6 +18,13 @@ cfg_if::cfg_if! {
+         pub(crate) const FP_REG_COUNT: usize = 32;
+ 
+         pub type RawContextCPU = minidump_common::format::CONTEXT_ARM64_OLD;
++    } else if #[cfg(target_arch = "riscv64")] {
++        /// The number of floating point registers in the floating point save area
++        #[cfg(any(target_os = "linux", target_os = "android"))]
++        pub(crate) const FP_REG_COUNT: usize = 32;
++
++        pub type RawContextCPU = minidump_common::format::CONTEXT_RISCV64;
++        pub type FloatStateCPU = minidump_common::format::FLOATING_SAVE_AREA_RISCV64;
+     } else if #[cfg(target_arch = "mips")] {
+         compile_error!("flesh me out");
+     } else {
+diff --git a/third_party/rust/minidump/.cargo-checksum.json b/third_party/rust/minidump/.cargo-checksum.json
+index c776dd3363..6d25a2080c 100644
+--- a/third_party/rust/minidump/.cargo-checksum.json
++++ b/third_party/rust/minidump/.cargo-checksum.json
+@@ -1 +1 @@
+-{"files":{".cargo_vcs_info.json":"24f6f593a3b9bad3be4b7b1baf606e8f15970f0e5d117875d39c347b96a6ffc0","Cargo.lock":"5eca0ed5ef700841e06e8752bcdcb263fff0beb8a3e8bd10a352a45fa86c9f65","Cargo.toml":"32c7c6bcc262d3c69fe93dd568a16eab74e50f6a9a1e3c929e95e77798859d57","Cargo.toml.orig":"476443345be280ac4138dbe80dfd2a9694d49bd1cc4dfdc1a03bcb138ee17c57","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"f0fe4547fd7044ef4d06d902491be33a0fc13ba003c4e5af1965d6126907ced8","src/context.rs":"2d999a7fd135738ca85236ecdc90a124272c85afdb0b8747e5da0454da137072","src/iostuff.rs":"eedeb0a9cf9f7d2af1558c916c73ec7287de5f4e45b4ff6b9a8013645f09b9e1","src/lib.rs":"3e9a488c4714dd652e27a476ccb28e71081784c8cf23d9ce04312ff13d550bcb","src/minidump.rs":"64cb5935908775c1906d1e81a761f839e6a7ec87949ccbc7151ef8d579ceaeef","src/stability_report.rs":"b022ba26ad42d78efd4f21673af207a0783c554d77459e849018805cc41b0343","src/strings.rs":"5ed5db26ab0ad28dfd30c9379a5d2e62d0c26e8c6f77a939596dd95d006d0ff4","src/system_info.rs":"96cbbd3239c388474e60690ef9250040c91331811f8ff06a10ed82b9f55e7455","tests/test_minidump.rs":"d9fb6b8ec7749d3bc6bf6de6b8a9a73d5934c81881a9d98087fcc490e8bb447d"},"package":"a902ca21d9772a66d3d1b050b3436dcadb192694be01409e0219902dcf4bc1e8"}
+\ No newline at end of file
++{"files":{".cargo_vcs_info.json":"24f6f593a3b9bad3be4b7b1baf606e8f15970f0e5d117875d39c347b96a6ffc0","Cargo.lock":"5eca0ed5ef700841e06e8752bcdcb263fff0beb8a3e8bd10a352a45fa86c9f65","Cargo.toml":"32c7c6bcc262d3c69fe93dd568a16eab74e50f6a9a1e3c929e95e77798859d57","Cargo.toml.orig":"476443345be280ac4138dbe80dfd2a9694d49bd1cc4dfdc1a03bcb138ee17c57","LICENSE":"06de63df29199a394442b57a28e886059ddc940973e10646877a0793fd53e2c9","README.md":"f0fe4547fd7044ef4d06d902491be33a0fc13ba003c4e5af1965d6126907ced8","src/context.rs":"6a25c7d3f756a647653331e329e8b3eedb48016d560fe4a0077d67d7ab66190c","src/iostuff.rs":"eedeb0a9cf9f7d2af1558c916c73ec7287de5f4e45b4ff6b9a8013645f09b9e1","src/lib.rs":"3e9a488c4714dd652e27a476ccb28e71081784c8cf23d9ce04312ff13d550bcb","src/minidump.rs":"64cb5935908775c1906d1e81a761f839e6a7ec87949ccbc7151ef8d579ceaeef","src/stability_report.rs":"b022ba26ad42d78efd4f21673af207a0783c554d77459e849018805cc41b0343","src/strings.rs":"5ed5db26ab0ad28dfd30c9379a5d2e62d0c26e8c6f77a939596dd95d006d0ff4","src/system_info.rs":"c6cdeb246dde64930811e186fd0d8f5a9522ad7c6e56c5d59314cd6c38b76883","tests/test_minidump.rs":"d9fb6b8ec7749d3bc6bf6de6b8a9a73d5934c81881a9d98087fcc490e8bb447d"},"package":"a902ca21d9772a66d3d1b050b3436dcadb192694be01409e0219902dcf4bc1e8"}
+diff --git a/third_party/rust/minidump/src/context.rs b/third_party/rust/minidump/src/context.rs
+index e803a11627..c956b146ef 100644
+--- a/third_party/rust/minidump/src/context.rs
++++ b/third_party/rust/minidump/src/context.rs
+@@ -30,6 +30,7 @@ pub enum MinidumpRawContext {
+     Arm64(md::CONTEXT_ARM64),
+     OldArm64(md::CONTEXT_ARM64_OLD),
+     Mips(md::CONTEXT_MIPS),
++    Riscv64(md::CONTEXT_RISCV64),
+ }
+ 
+ /// Generic over the specifics of a CPU context.
+@@ -988,6 +989,101 @@ impl CpuContext for md::CONTEXT_SPARC {
+     }
+ }
+ 
++impl CpuContext for md::CONTEXT_RISCV64 {
++    type Register = u64;
++
++    const REGISTERS: &'static [&'static str] = &[
++        "pc", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4",
++        "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4",
++        "t5", "t6",
++    ];
++
++    fn get_register_always(&self, reg: &str) -> Self::Register {
++        match reg {
++            "pc" => self.pc,
++            "ra" => self.ra,
++            "sp" => self.sp,
++            "gp" => self.gp,
++            "tp" => self.tp,
++            "t0" => self.t0,
++            "t1" => self.t1,
++            "t2" => self.t2,
++            "s0" => self.s0,
++            "s1" => self.s1,
++            "a0" => self.a0,
++            "a1" => self.a1,
++            "a2" => self.a2,
++            "a3" => self.a3,
++            "a4" => self.a4,
++            "a5" => self.a5,
++            "a6" => self.a6,
++            "a7" => self.a7,
++            "s2" => self.s2,
++            "s3" => self.s3,
++            "s4" => self.s4,
++            "s5" => self.s5,
++            "s6" => self.s6,
++            "s7" => self.s7,
++            "s8" => self.s8,
++            "s9" => self.s9,
++            "s10" => self.s10,
++            "s11" => self.s11,
++            "t3" => self.t3,
++            "t4" => self.t4,
++            "t5" => self.t5,
++            "t6" => self.t6,
++            _ => unreachable!("Invalid risc-v register! {}", reg),
++        }
++    }
++
++    fn set_register(&mut self, reg: &str, val: Self::Register) -> Option<()> {
++        match reg {
++            "pc" => self.pc = val,
++            "ra" => self.ra = val,
++            "sp" => self.sp = val,
++            "gp" => self.gp = val,
++            "tp" => self.tp = val,
++            "t0" => self.t0 = val,
++            "t1" => self.t1 = val,
++            "t2" => self.t2 = val,
++            "s0" => self.s0 = val,
++            "s1" => self.s1 = val,
++            "a0" => self.a0 = val,
++            "a1" => self.a1 = val,
++            "a2" => self.a2 = val,
++            "a3" => self.a3 = val,
++            "a4" => self.a4 = val,
++            "a5" => self.a5 = val,
++            "a6" => self.a6 = val,
++            "a7" => self.a7 = val,
++            "s2" => self.s2 = val,
++            "s3" => self.s3 = val,
++            "s4" => self.s4 = val,
++            "s5" => self.s5 = val,
++            "s6" => self.s6 = val,
++            "s7" => self.s7 = val,
++            "s8" => self.s8 = val,
++            "s9" => self.s9 = val,
++            "s10" => self.s10 = val,
++            "s11" => self.s11 = val,
++            "t3" => self.t3 = val,
++            "t4" => self.t4 = val,
++            "t5" => self.t5 = val,
++            "t6" => self.t6 = val,
++            _ => return None,
++        }
++        Some(())
++    }
++
++    fn stack_pointer_register_name(&self) -> &'static str {
++        "sp"
++    }
++
++    fn instruction_pointer_register_name(&self) -> &'static str {
++        "pc"
++    }
++}
++
+ /// Information about which registers are valid in a `MinidumpContext`.
+ #[derive(Clone, Debug, PartialEq, Eq)]
+ pub enum MinidumpContextValidity {
+@@ -1173,6 +1269,18 @@ impl MinidumpContext {
+                     Err(ContextError::ReadFailure)
+                 }
+             }
++            Some(PROCESSOR_ARCHITECTURE_RISCV64) => {
++                let ctx: md::CONTEXT_RISCV64 = bytes
++                    .gread_with(&mut offset, endian)
++                    .or(Err(ContextError::ReadFailure))?;
++
++                let flags = ContextFlagsCpu::from_flags(ctx.context_flags);
++                if flags == ContextFlagsCpu::CONTEXT_RISCV64 {
++                    Ok(MinidumpContext::from_raw(MinidumpRawContext::Riscv64(ctx)))
++                } else {
++                    Err(ContextError::ReadFailure)
++                }
++            }
+             _ => Err(ContextError::UnknownCpuContext),
+         }
+     }
+@@ -1190,6 +1298,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Sparc(ref ctx) => ctx.pc,
+             MinidumpRawContext::X86(ref ctx) => ctx.eip as u64,
+             MinidumpRawContext::Mips(ref ctx) => ctx.epc,
++            MinidumpRawContext::Riscv64(ref ctx) => ctx.pc,
+         }
+     }
+ 
+@@ -1214,6 +1323,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Mips(ref ctx) => {
+                 ctx.iregs[md::MipsRegisterNumbers::StackPointer as usize]
+             }
++            MinidumpRawContext::Riscv64(ref ctx) => ctx.sp,
+         }
+     }
+ 
+@@ -1228,6 +1338,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Sparc(ref ctx) => ctx.get_register_always(reg),
+             MinidumpRawContext::X86(ref ctx) => ctx.get_register_always(reg).into(),
+             MinidumpRawContext::Mips(ref ctx) => ctx.get_register_always(reg),
++            MinidumpRawContext::Riscv64(ref ctx) => ctx.get_register_always(reg),
+         }
+     }
+ 
+@@ -1242,6 +1353,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Arm64(ctx) => ctx.register_is_valid(reg, &self.valid),
+             MinidumpRawContext::OldArm64(ctx) => ctx.register_is_valid(reg, &self.valid),
+             MinidumpRawContext::Mips(ctx) => ctx.register_is_valid(reg, &self.valid),
++            MinidumpRawContext::Riscv64(ctx) => ctx.register_is_valid(reg, &self.valid),
+         };
+ 
+         if valid {
+@@ -1262,6 +1374,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Sparc(ref ctx) => ctx.format_register(reg),
+             MinidumpRawContext::X86(ref ctx) => ctx.format_register(reg),
+             MinidumpRawContext::Mips(ref ctx) => ctx.format_register(reg),
++            MinidumpRawContext::Riscv64(ref ctx) => ctx.format_register(reg),
+         }
+     }
+ 
+@@ -1276,6 +1389,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Sparc(_) => md::CONTEXT_SPARC::REGISTERS,
+             MinidumpRawContext::X86(_) => md::CONTEXT_X86::REGISTERS,
+             MinidumpRawContext::Mips(_) => md::CONTEXT_MIPS::REGISTERS,
++            MinidumpRawContext::Riscv64(_) => md::CONTEXT_RISCV64::REGISTERS,
+         }
+     }
+ 
+@@ -1299,6 +1413,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Arm64(ctx) => ctx.register_is_valid(reg, &self.valid),
+             MinidumpRawContext::OldArm64(ctx) => ctx.register_is_valid(reg, &self.valid),
+             MinidumpRawContext::Mips(ctx) => ctx.register_is_valid(reg, &self.valid),
++            MinidumpRawContext::Riscv64(ctx) => ctx.register_is_valid(reg, &self.valid),
+         })
+     }
+ 
+@@ -1318,6 +1433,7 @@ impl MinidumpContext {
+             MinidumpRawContext::Arm64(ctx) => get(ctx),
+             MinidumpRawContext::OldArm64(ctx) => get(ctx),
+             MinidumpRawContext::Mips(ctx) => get(ctx),
++            MinidumpRawContext::Riscv64(ctx) => get(ctx),
+         }
+     }
+ 
+@@ -1612,6 +1728,77 @@ impl MinidumpContext {
+                     )?;
+                 }
+             }
++            MinidumpRawContext::Riscv64(ref raw) => {
++                write!(
++                    f,
++                    r#"CONTEXT_RISCV64
++  context_flags = {:#x}
++  ra            = {:#x}
++  sp            = {:#x}
++  gp            = {:#x}
++  tp            = {:#x}
++  t0            = {:#x}
++  t1            = {:#x}
++  t2            = {:#x}
++  s0            = {:#x}
++  s1            = {:#x}
++  a0            = {:#x}
++  a1            = {:#x}
++  a2            = {:#x}
++  a3            = {:#x}
++  a4            = {:#x}
++  a5            = {:#x}
++  a6            = {:#x}
++  a7            = {:#x}
++  s2            = {:#x}
++  s3            = {:#x}
++  s4            = {:#x}
++  s5            = {:#x}
++  s6            = {:#x}
++  s7            = {:#x}
++  s8            = {:#x}
++  s9            = {:#x}
++  s10           = {:#x}
++  s11           = {:#x}
++  t3            = {:#x}
++  t4            = {:#x}
++  t5            = {:#x}
++  t6            = {:#x}
++"#,
++                    raw.context_flags,
++                    raw.ra,
++                    raw.sp,
++                    raw.gp,
++                    raw.tp,
++                    raw.t0,
++                    raw.t1,
++                    raw.t2,
++                    raw.s0,
++                    raw.s1,
++                    raw.a0,
++                    raw.a1,
++                    raw.a2,
++                    raw.a3,
++                    raw.a4,
++                    raw.a5,
++                    raw.a6,
++                    raw.a7,
++                    raw.s2,
++                    raw.s3,
++                    raw.s4,
++                    raw.s5,
++                    raw.s6,
++                    raw.s7,
++                    raw.s8,
++                    raw.s9,
++                    raw.s10,
++                    raw.s11,
++                    raw.t3,
++                    raw.t4,
++                    raw.t5,
++                    raw.t6,
++                )?;
++            }
+         }
+         Ok(())
+     }
+diff --git a/third_party/rust/minidump/src/system_info.rs b/third_party/rust/minidump/src/system_info.rs
+index ac268d7bff..43ceaac2c1 100644
+--- a/third_party/rust/minidump/src/system_info.rs
++++ b/third_party/rust/minidump/src/system_info.rs
+@@ -96,6 +96,7 @@ pub enum Cpu {
+     Arm64,
+     Mips,
+     Mips64,
++    Riscv64,
+     Unknown(u16),
+ }
+ 
+@@ -124,6 +125,7 @@ impl Cpu {
+             }
+             Some(PROCESSOR_ARCHITECTURE_MIPS) => Cpu::Mips,
+             Some(PROCESSOR_ARCHITECTURE_MIPS64) => Cpu::Mips64,
++            Some(PROCESSOR_ARCHITECTURE_RISCV64) => Cpu::Riscv64,
+             _ => Cpu::Unknown(arch),
+         }
+     }
+@@ -132,7 +134,9 @@ impl Cpu {
+     pub fn pointer_width(&self) -> PointerWidth {
+         match self {
+             Cpu::X86 | Cpu::Ppc | Cpu::Sparc | Cpu::Arm | Cpu::Mips => PointerWidth::Bits32,
+-            Cpu::X86_64 | Cpu::Ppc64 | Cpu::Arm64 | Cpu::Mips64 => PointerWidth::Bits64,
++            Cpu::X86_64 | Cpu::Ppc64 | Cpu::Arm64 | Cpu::Mips64 | Cpu::Riscv64 => {
++                PointerWidth::Bits64
++            }
+             Cpu::Unknown(_) => PointerWidth::Unknown,
+         }
+     }
+@@ -153,6 +157,7 @@ impl fmt::Display for Cpu {
+                 Cpu::Arm64 => "arm64",
+                 Cpu::Mips => "mips",
+                 Cpu::Mips64 => "mips64",
++                Cpu::Riscv64 => "riscv64",
+                 Cpu::Unknown(_) => "unknown",
+             }
+         )
+-- 
+2.54.0
+

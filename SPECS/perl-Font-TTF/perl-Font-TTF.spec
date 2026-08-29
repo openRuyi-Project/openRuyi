@@ -11,33 +11,26 @@ Release:        %autorelease
 Summary:        Perl module for TrueType Font hacking
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Font-TTF
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BH/BHALLISSY/Font-TTF-%{version}.tar.gz
+#!RemoteAsset:  sha256:4b697d444259759ea02d2c442c9bffe5ffe14c9214084a01f743693a944cc293
+Source0:        https://www.cpan.org/authors/id/B/BH/BHALLISSY/Font-TTF-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(IO::String)
 
 %description
 This module allows you to do almost anything to a TrueType/OpenType Font
 including modify and inspect nearly all tables.
 
-%prep
-%setup -q -n Font-TTF-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTORS README.TXT TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog

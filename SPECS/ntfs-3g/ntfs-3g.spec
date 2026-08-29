@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        NTFS userspace driver for Linux
 License:        GPL-2.0-or-later
 URL:            https://github.com/tuxera/ntfs-3g
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bd7749ea9d8534c9f0664d48b576e90b96d45ec8803c9427f6ffaa2f0dde299
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz#%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -24,14 +24,13 @@ BuildOption(conf):  --enable-extras
 BuildOption(conf):  --enable-crypto
 BuildOption(conf):  --enable-quarantined
 BuildOption(conf):  --exec-prefix=/
-BuildOption(conf):  --with-fuse=external
+BuildOption(conf):  --with-fuse=internal
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  pkgconfig
-BuildRequires:  pkgconfig(fuse)
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(hwinfo)
 BuildRequires:  pkgconfig(libgcrypt)
@@ -46,7 +45,7 @@ Windows 10, and Windows 11.
 
 %package        devel
 Summary:        Development files and libraries for ntfs-3g
-Requires:       %{name}{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Headers and libraries for developing applications that use ntfs-3g
@@ -56,7 +55,10 @@ functionality.
 autoreconf -fiv
 
 %install -a
-ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
+ln -sfn --relative "%{buildroot}%{_bindir}/ntfs-3g" "%{buildroot}%{_sbindir}/mount.ntfs-3g"
+ln -sfn --relative "%{buildroot}%{_bindir}/lowntfs-3g" "%{buildroot}%{_sbindir}/mount.lowntfs-3g"
+ln -sfn --relative "%{buildroot}%{_sbindir}/mkntfs" "%{buildroot}%{_sbindir}/mkfs.ntfs"
+ln -sfn mount.ntfs-3g "%{buildroot}%{_sbindir}/mount.ntfs"
 
 %files
 %doc AUTHORS ChangeLog CREDITS NEWS README
@@ -99,7 +101,7 @@ ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
 %{_mandir}/man8/ntfs-3g*
 %{_mandir}/man8/mkntfs.8*
 %{_mandir}/man8/mkfs.ntfs.8*
-%{_mandir}/man8/ntfs[^m][^o]*.8*
+%{_mandir}/man8/ntfs[^-m][^o]*.8*
 
 %files devel
 %{_includedir}/ntfs-3g/
@@ -107,4 +109,4 @@ ln -s -f %{_sbindir}/mount.ntfs-3g %{buildroot}%{_sbindir}/mount.ntfs
 %{_libdir}/pkgconfig/libntfs-3g.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

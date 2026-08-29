@@ -20,6 +20,8 @@ BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
+# We don't have python-pygraphviz, python3dist(pytest_mpl), python-matplotlib, etc...
+BuildOption(check):  -e 'networkx.drawing.tests.*'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -28,8 +30,12 @@ BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(scipy)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
+# For tests
+BuildRequires:  python3dist(pandas)
+BuildRequires:  python3dist(sympy)
+BuildRequires:  python3dist(pydot)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,10 +44,7 @@ NetworkX is a Python package for the creation, manipulation, and study of the st
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as some deps we don't have yet.
-
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

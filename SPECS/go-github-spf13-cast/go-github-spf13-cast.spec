@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        safe and easy casting from one type to another in Go
 License:        MIT
 URL:            https://github.com/spf13/cast
-#!RemoteAsset
+#!RemoteAsset:  sha256:d62a9b81da805574153b14c9defb1d817f71fb9ebb5b6d20e8859b3029170a38
 Source0:        https://github.com/spf13/cast/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -27,6 +27,8 @@ BuildOption(prep):  -n %{_name}-%{version}
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/frankban/quicktest)
+# For tests.
+BuildRequires:  tzdata
 
 Provides:       go(github.com/spf13/cast) = %{version}
 
@@ -50,4 +52,4 @@ TOML or JSON for meta data.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

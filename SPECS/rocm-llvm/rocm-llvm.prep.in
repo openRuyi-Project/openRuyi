@@ -27,7 +27,7 @@ sed -i -e 's@sys::path::append(HIPPath, "hip");@//sys::path::append(HIPPath, "hi
 # Default rocm path is _prefix
 sed -i -e 's@/opt/rocm@%{_prefix}@' amd/hipcc/src/hipBin_base.h
 
-LLVM_BINDIR=`llvm-config --bindir`
+LLVM_BINDIR=`%{bundle_prefix}/bin/llvm-config --bindir`
 if [ ! -x ${LLVM_BINDIR}/clang++ ]; then
     echo "Something wrong with llvm-config"
     false
@@ -43,13 +43,12 @@ sed -i '/" -isystem " + hsaPath + "\/include"/d' amd/hipcc/src/hipBin_amd.h
 
 sed -i 's/find_package(Clang REQUIRED CONFIG)/find_package(Clang REQUIRED)/' amd/comgr/CMakeLists.txt
 sed -i 's/find_package(LLD REQUIRED CONFIG)/find_package(LLD REQUIRED)/' amd/comgr/CMakeLists.txt
-sed -i 's@${CLANG_CMAKE_DIR}/../../../@/usr/lib/clang/%{llvm_maj_ver}/@' amd/comgr/cmake/opencl_pch.cmake
 
 # CMP0053 OLD is only needed on Windows. But on new version of cmake it is deprecated.
 sed -i 's/cmake_policy(SET CMP0053 OLD)/cmake_policy(SET CMP0053 NEW)/' amd/device-libs/cmake/OCL.cmake
 
 # Fix up the path to the device libs hipcc uses
-sed -i -e 's@amdgcnBitcode = roccmPath@amdgcnBitcode = "%{_prefix}/%{amd_device_libs_prefix}/"@' amd/hipcc/src/hipBin_amd.h
+sed -i -e 's@amdgcnBitcode = roccmPath@amdgcnBitcode = "%{amd_device_libs_prefix}/"@' amd/hipcc/src/hipBin_amd.h
 
 # Fix up the location AMD_DEVICE_LIBS_PREFIX
-sed -i 's|@AMD_DEVICE_LIBS_PREFIX_CODE@|set(AMD_DEVICE_LIBS_PREFIX "%{_prefix}/%{amd_device_libs_prefix}")|' amd/device-libs/AMDDeviceLibsConfig.cmake.in
+sed -i 's|@AMD_DEVICE_LIBS_PREFIX_CODE@|set(AMD_DEVICE_LIBS_PREFIX "%{amd_device_libs_prefix}")|' amd/device-libs/AMDDeviceLibsConfig.cmake.in

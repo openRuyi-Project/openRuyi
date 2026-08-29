@@ -1,0 +1,9 @@
+%clang_version   %(clang -dumpversion)
+%clang_major_version %(echo %{clang_version} | awk -F. '{print $1}')
+%clang_minor_version %(echo %{clang_version} | awk -F. '{print $2}')
+%clang_patch_version %(echo %{clang_version} | awk -F. '{print $3}')
+# This is the path to the clang resource directory that has clang's internal
+# headers and libraries.  This path should be used by packages that need to
+# install files into this directory.  This macro's value changes every time
+# clang's version changes.
+%clang_resource_dir %{_libdir}/llvm%{clang_major_version}/lib/clang/%{clang_major_version}

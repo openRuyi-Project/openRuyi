@@ -5,17 +5,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Module-Metadata
-Version:        1.000038
+Version:        1.000039
 Release:        %autorelease
 Summary:        Gather package and POD information from perl module files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Metadata
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Module-Metadata-%{version}.tar.gz
+#!RemoteAsset:  sha256:4c2bf998053d232df9e6262ea0ccad62abe87e448e62fdfe719949ea1a856c28
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Module-Metadata-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -43,20 +47,8 @@ through (mostly) static analysis and (some) code execution. When
 determining the version of a module, the $VERSION assignment is evaled, as
 is traditional in the CPAN toolchain.
 
-%prep
-%setup -q -n Module-Metadata-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

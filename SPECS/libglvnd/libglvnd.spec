@@ -108,7 +108,10 @@ mkdir -p %{buildroot}%{_datadir}/egl/egl_external_platform.d/
 %{_includedir}/GLES3/*.h
 %{_includedir}/KHR/*.h
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/gl*.pc
+%{_libdir}/pkgconfig/gl.pc
+%{_libdir}/pkgconfig/glesv1_cm.pc
+%{_libdir}/pkgconfig/glesv2.pc
+%{_libdir}/pkgconfig/glx.pc
 %{_libdir}/pkgconfig/egl.pc
 %{_libdir}/pkgconfig/opengl.pc
 

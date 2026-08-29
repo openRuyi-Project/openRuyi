@@ -2,11 +2,12 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define package_version 9.2
-%define patchlevel 0272
+%define patchlevel 0593
 
 %define vimdir vim92
 
@@ -17,7 +18,7 @@ Summary:        A popular VI editor derivative with enhanced functionality
 License:        Vim AND LGPL-2.1-or-later AND MIT AND GPL-1.0-only AND (GPL-2.0-only OR Vim) AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND GPL-3.0-or-later AND OPUBL-1.0 AND Apache-2.0
 URL:            https://www.vim.org/
 VCS:            git:https://github.com/vim/vim
-#!RemoteAsset:  sha256:020efae1f8187a65a457f4b73cdbd0be3ccbae230e63293af51fdfcf3c831cb5
+#!RemoteAsset:  sha256:43835eae8d0d202cc3b1ce9364183b4be7b48095a6895cf988b96dc385504a85
 Source0:        https://github.com/vim/vim/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -54,16 +55,18 @@ rm -rf %{buildroot}%{_mandir}/da.ISO8859-1/
 rm -rf %{buildroot}%{_mandir}/de.ISO8859-1/
 rm -rf %{buildroot}%{_mandir}/tr.ISO8859-9/
 rm -rf %{buildroot}%{_mandir}/tr.UTF-8/
+ln -s vim %{buildroot}%{_bindir}/vi
 
 %find_lang %{name} --all-name --with-man --generate-subpackages
 
-# Nothing to check.
+# Disable tests.
 %check
 
 %files
 %license %{_datadir}/%{name}/%{vimdir}/LICENSE
 %doc %{_datadir}/%{name}/%{vimdir}/README.txt
 %{_bindir}/vim
+%{_bindir}/vi
 %{_bindir}/rvim
 %{_bindir}/vimdiff
 %{_bindir}/vimtutor
@@ -155,4 +158,4 @@ rm -rf %{buildroot}%{_mandir}/tr.UTF-8/
 %{_mandir}/man1/xxd.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

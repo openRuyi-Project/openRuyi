@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/pydantic/pydantic
 #!RemoteAsset:  sha256:4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -34,7 +35,7 @@ BuildRequires:  python3dist(typing-extensions)
 BuildRequires:  python3dist(typing-inspection)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 # use the pydantic-core provided by the system
@@ -54,4 +55,4 @@ Define how data should be in pure, canonical Python 3.9+; validate it with Pydan
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

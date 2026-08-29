@@ -1,0 +1,11 @@
+--- a/pyproject.toml	2020-02-02 08:00:00
++++ b/pyproject.toml	2026-04-23 22:57:37
+@@ -12,7 +12,7 @@
+     "python-dateutil >=2.8.2",
+     "typing-inspection >=0.4.0",
+     "opentelemetry-api (>=1.33.1,<2.0.0)",
+-    "opentelemetry-semantic-conventions (>=0.60b1,<0.61)",
++    "opentelemetry-semantic-conventions (>=0.60b1,<1.0)",
+     "jsonpath-python >=1.0.6", # required for speakeasy generated path with pagination
+ ]
+ 

@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/naiquevin/pipdeptree
 #!RemoteAsset:  sha256:0f78fe4bcf36a72d0d006aee0f4e315146cb278e4c4d51621f370a3d6b8861c1
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # remove graphviz test
@@ -30,7 +31,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pytest-mock)
 BuildRequires:  python3dist(virtualenv)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,7 +42,7 @@ globally on a machine as well as in a virtualenv.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest -vvv -k "not test_console and not test_custom_interpreter"
 
 %files -f %{pyproject_files}
@@ -50,4 +51,4 @@ globally on a machine as well as in a virtualenv.
 %{_bindir}/pipdeptree
 
 %changelog
-%{?autochangelog}
+%autochangelog

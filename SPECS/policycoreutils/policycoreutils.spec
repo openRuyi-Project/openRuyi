@@ -14,25 +14,25 @@ Release:        %autorelease
 Summary:        SELinux policy core utilities
 License:        GPL-2.0-or-later
 URL:            https://github.com/SELinuxProject/selinux
-#!RemoteAsset
+#!RemoteAsset:  sha256:8dbd50d868acbfae9d1a972f6bbb2587f06c9ec73308d11af6acb3a401de9832
 Source0:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:a3e175f2cc0019d1904b2cefb864d94cc2718421f1e850e733183ed4fb6e81a1
 Source1:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
-#!RemoteAsset
+#!RemoteAsset:  sha256:5fb88e50eaf2b25f74c2022352aefe54fc24b416eef672a5ce55fae26bc79501
 Source2:        %{url}/releases/download/%{version}/selinux-dbus-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:3b29100bbb5018cd8b6a570e4d08c250f7859b3a921a3bd93d587e6e58bd8ab8
 Source3:        %{url}/releases/download/%{version}/selinux-dbus-%{version}.tar.gz.asc
-#!RemoteAsset
+#!RemoteAsset:  sha256:9d0a5b69f2fbcce8e5ccd8e0f17d56f71e6005a756386f8fb36c31f9424191a2
 Source4:        %{url}/releases/download/%{version}/selinux-python-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:d711c7ccae7b757e929bed02c681028f2cd1d11ffe842a01e4427960779769ab
 Source5:        %{url}/releases/download/%{version}/selinux-python-%{version}.tar.gz.asc
-#!RemoteAsset
+#!RemoteAsset:  sha256:4e98cf387f2e30d8f29fa58f4ff2889d07f294fade3da1216a0fceae831d8e8a
 Source6:        %{url}/releases/download/%{version}/selinux-gui-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:5cd8f2a318fe36e94993bdae834a8182ca16c910cb6b6891c75c5f6bed69f376
 Source7:        %{url}/releases/download/%{version}/selinux-gui-%{version}.tar.gz.asc
-#!RemoteAsset
+#!RemoteAsset:  sha256:1c2f14cc098cbb4d75912d131c5f747e70246e1042e72f2ab40e28f53cf45c10
 Source8:        %{url}/releases/download/%{version}/semodule-utils-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:a99dcefc28c97ed677250602bc2e40d4dbe52cc1bbeeb5f566a35b3b37085d93
 Source9:        %{url}/releases/download/%{version}/semodule-utils-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
@@ -57,9 +57,9 @@ BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  python-rpm-macros
 
 Requires:       util-linux
@@ -316,4 +316,4 @@ rm -f %{buildroot}/etc/pam.d/run_init*
 %config(noreplace) %{_sysconfdir}/pam.d/newrole
 
 %changelog
-%{?autochangelog}
+%autochangelog

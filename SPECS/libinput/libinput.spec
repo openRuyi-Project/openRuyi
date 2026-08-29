@@ -8,19 +8,18 @@
 %bcond tests 0
 
 Name:           libinput
-Version:        1.30.0
+Version:        1.31.3
 Release:        %autorelease
 Summary:        Input device library
 License:        MIT
 URL:            http://www.freedesktop.org/wiki/Software/libinput/
 VCS:            git:https://gitlab.freedesktop.org/libinput/libinput.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:01414457befc3d1c68a328ebe01eacec8e7077a4ff08e181f5659daf9f50930e
 Source:         https://gitlab.freedesktop.org/libinput/libinput/-/archive/%{version}/libinput-%{version}.tar.bz2
 BuildSystem:    meson
 
 BuildOption(conf):  -Ddebug-gui=false
 BuildOption(conf):  -Ddocumentation=false
-BuildOption(conf):  -Dudev-dir=%{_udevrulesdir}
 %if %{with tests}
 BuildOption(conf):  -Dtests=true
 BuildOption(conf):  -Dinstall-tests=true
@@ -56,8 +55,8 @@ developing applications that use %{name}.
 %package        utils
 Summary:        Utilities and tools for debugging %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       python3-pyudev
-Requires:       python3-libevdev
+Requires:       python3dist(pyudev)
+Requires:       python3dist(libevdev)
 
 %description    utils
 The %{name}-utils package contains tools to debug hardware and analyze
@@ -74,11 +73,11 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %files
 %doc COPYING
 %{_libdir}/libinput.so.*
-%{_udevrulesdir}/libinput-device-group
-%{_udevrulesdir}/libinput-fuzz-to-zero
-%{_udevrulesdir}/libinput-fuzz-extract
-%{_udevrulesdir}/rules.d/80-libinput-device-groups.rules
-%{_udevrulesdir}/rules.d/90-libinput-fuzz-override.rules
+%{_prefix}/lib/udev/libinput-device-group
+%{_prefix}/lib/udev/libinput-fuzz-to-zero
+%{_prefix}/lib/udev/libinput-fuzz-extract
+%{_udevrulesdir}/80-libinput-device-groups.rules
+%{_udevrulesdir}/90-libinput-fuzz-override.rules
 %{_bindir}/libinput
 %dir %{_libexecdir}/libinput/
 %{_libexecdir}/libinput/libinput-debug-events
@@ -116,4 +115,4 @@ The %{name}-utils package contains tools to debug hardware and analyze
 %{_mandir}/man1/libinput-replay.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

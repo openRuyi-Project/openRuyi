@@ -1,0 +1,107 @@
+From 8c19d164c63d7f360e8a42dd83d5c33b8637c892 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 14 Aug 2026 15:51:05 +0800
+Subject: [PATCH] Fix RVA23 host triple detection in rustup test
+
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ src/cli/self_update.rs | 12 +++++------
+ src/test.rs            | 48 +-----------------------------------------
+ 2 files changed, 7 insertions(+), 53 deletions(-)
+
+diff --git a/src/cli/self_update.rs b/src/cli/self_update.rs
+index e37dc25..f4a06cc 100644
+--- a/src/cli/self_update.rs
++++ b/src/cli/self_update.rs
+@@ -1453,23 +1453,23 @@ mod tests {
+                 no_update_toolchain: false,
+             };
+ 
++            let default_host_triple = cfg.get_default_host_triple().unwrap();
+             assert_eq!(
+                 "stable"
+                     .parse::<PartialToolchainDesc>()
+                     .unwrap()
+-                    .resolve(&cfg.get_default_host_triple().unwrap())
++                    .resolve(&default_host_triple)
+                     .unwrap(),
+                 opts.install(&mut cfg)
+                     .unwrap() // result
+                     .unwrap() // option
+             );
+             assert_eq!(
+-                for_host!(
+-                    r"info: profile set to default
+-info: default host triple is {0}
+-"
++                format!(
++                    "info: profile set to default\n\
++                    info: default host triple is {default_host_triple}\n"
+                 ),
+-                &String::from_utf8(tp.stderr()).unwrap()
++                String::from_utf8(tp.stderr()).unwrap()
+             );
+             Ok(())
+         })
+diff --git a/src/test.rs b/src/test.rs
+index 99e57e2..e5167ba 100644
+--- a/src/test.rs
++++ b/src/test.rs
+@@ -144,53 +144,7 @@ pub fn this_host_triple() -> String {
+         let tp = TestProcess::default();
+         return TargetTriple::from_host(&tp.process).unwrap().to_string();
+     }
+-    let arch = if cfg!(target_arch = "x86") {
+-        "i686"
+-    } else if cfg!(target_arch = "x86_64") {
+-        "x86_64"
+-    } else if cfg!(target_arch = "riscv64") {
+-        "riscv64gc"
+-    } else if cfg!(target_arch = "aarch64") {
+-        "aarch64"
+-    } else if cfg!(target_arch = "loongarch64") {
+-        "loongarch64"
+-    } else if cfg!(target_arch = "powerpc64") && cfg!(target_endian = "little") {
+-        "powerpc64le"
+-    } else if cfg!(target_arch = "s390x") {
+-        "s390x"
+-    } else if cfg!(target_arch = "sparc64") {
+-        "sparcv9"
+-    } else {
+-        unimplemented!()
+-    };
+-    let os = if cfg!(target_os = "linux") {
+-        "unknown-linux"
+-    } else if cfg!(target_os = "macos") {
+-        "apple-darwin"
+-    } else if cfg!(target_os = "illumos") {
+-        "unknown-illumos"
+-    } else if cfg!(target_os = "freebsd") {
+-        "unknown-freebsd"
+-    } else if cfg!(target_os = "solaris") {
+-        if cfg!(target_arch = "sparc64") {
+-            "sun-solaris"
+-        } else {
+-            "pc-solaris"
+-        }
+-    } else {
+-        unimplemented!()
+-    };
+-    let env = if cfg!(target_env = "gnu") {
+-        Some("gnu")
+-    } else {
+-        None
+-    };
+-
+-    if let Some(env) = env {
+-        format!("{arch}-{os}-{env}")
+-    } else {
+-        format!("{arch}-{os}")
+-    }
++    env!("TARGET").to_owned()
+ }
+ 
+ // Format a string with this host triple.
+-- 
+2.55.0
+

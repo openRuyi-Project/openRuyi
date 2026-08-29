@@ -26,7 +26,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,8 +36,8 @@ A lightweight console printing and formatting toolkit.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.md
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

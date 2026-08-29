@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Finding and running system commands made easy
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/IPC-Cmd
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/IPC-Cmd-%{version}.tar.gz
+#!RemoteAsset:  sha256:d110a0f60e35c65721454200f0d2f0f8965529a2add9649d1fa6f4f9eccb6430
+Source0:        https://www.cpan.org/authors/id/B/BI/BINGOS/IPC-Cmd-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
@@ -32,20 +36,8 @@ Requires:       perl(Params::Check) >= 0.20
 IPC::Cmd allows you to run commands platform independently, interactively
 if desired, but have them still work.
 
-%prep
-%setup -q -n IPC-Cmd-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc CHANGES README
 
 %changelog
-%{?autochangelog}
+%autochangelog

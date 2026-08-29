@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond tests 0
 
 Name:           bolt
-Version:        0.9.10
+Version:        0.9.11
 Release:        %autorelease
 Summary:        Thunderbolt device manager
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.freedesktop.org/bolt/bolt
-#!RemoteAsset
+#!RemoteAsset:  sha256:cde4fc6d4a188e37d088cf59a5b2d174ac4b03d57bf9d084d711ba92105c33c0
 Source0:        https://gitlab.freedesktop.org/bolt/bolt/-/archive/%{version}/bolt-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -75,4 +76,4 @@ bolt is a system daemon to manage Thunderbolt devices via a D-BUS API.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

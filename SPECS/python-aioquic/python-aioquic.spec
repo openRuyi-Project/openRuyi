@@ -12,17 +12,18 @@ Release:        %autorelease
 Summary:        DNS toolkit for Python
 License:        BSD-3-Clause
 URL:            https://github.com/aiortc/aioquic
-#!RemoteAsset
+#!RemoteAsset:  sha256:28d070b2183e3e79afa9d4e7bd558960d0d53aeb98bc0cf0a358b279ba797c92
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): %{srcname} -l
+BuildOption(install):  %{srcname} -l
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(openssl)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +38,4 @@ A library for the QUIC network protocol in Python. It features a minimal TLS
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

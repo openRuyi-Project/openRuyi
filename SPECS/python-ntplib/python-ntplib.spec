@@ -12,17 +12,17 @@ Release:        %autorelease
 Summary:        Python module that offers a simple interface to query NTP servers
 License:        MIT
 URL:            https://github.com/cf-natali/ntplib
-#!RemoteAsset
+#!RemoteAsset:  sha256:899d8fb5f8c2555213aea95efca02934c7343df6ace9d7628a5176b176906267
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): %{srcname}
+BuildOption(install):  %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ modules, it should work on any platform with a Python implementation.
 %doc CHANGELOG
 
 %changelog
-%{?autochangelog}
+%autochangelog

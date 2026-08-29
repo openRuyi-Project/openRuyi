@@ -9,13 +9,13 @@
 %global srcname capstone
 
 Name:           %{srcname}
-Version:        5.0.3
+Version:        5.0.6
 Release:        %autorelease
 Summary:        A multi-platform, multi-architecture disassembly framework
 License:        BSD-3-Clause
 URL:            https://www.capstone-engine.org
 VCS:            git:https://github.com/capstone-engine/capstone
-#!RemoteAsset
+#!RemoteAsset:  sha256:240ebc834c51aae41ca9215d3190cc372fd132b9c5c8aa2d5f19ca0c325e28f9
 Source0:        https://github.com/capstone-engine/%{srcname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -38,6 +38,7 @@ disasm engine for binary analysis and reversing in the security community.
 
 %package        devel
 Summary:        Development files to build upon libcapstone
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Development files to build upon libcapstone, C language only.
@@ -80,6 +81,9 @@ popd
 sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
     -i %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 
+# Delete static libraries we don't want to ship
+rm -f %{buildroot}%{_libdir}/lib%{name}*.a
+
 %fdupes %{buildroot}
 
 %files
@@ -90,7 +94,7 @@ sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/capstone.pc
 %{_libdir}/cmake/%{srcname}/
 
 %files -n python-%{srcname}
@@ -103,4 +107,4 @@ sed -e '/^archive/d' -e 's|^libdir=.*|libdir=%{_libdir}|' \
 %{_docdir}/%{srcname}-doc/docs/
 
 %changelog
-%{?autochangelog}
+%autochangelog

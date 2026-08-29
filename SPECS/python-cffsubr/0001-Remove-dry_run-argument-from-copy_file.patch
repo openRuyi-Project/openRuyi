@@ -1,0 +1,26 @@
+From 472aef1e8c6a8a3c45efac810d02a6b325bc5226 Mon Sep 17 00:00:00 2001
+From: Khaled Hosny <khaled@aliftype.com>
+Date: Thu, 26 Mar 2026 00:12:30 +0200
+Subject: [PATCH 2/2] Remove dry_run argument from copy_file
+
+It does not seem to be supported anymore. Fixes:
+
+  File "<string>", line 70, in build_extension
+TypeError: copy_file() got an unexpected keyword argument 'dry_run'
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 6d9851a..020ffe5 100755
+--- a/setup.py
++++ b/setup.py
+@@ -67,7 +67,7 @@ def build_extension(self, ext):
+         dest_path = self.get_ext_fullpath(ext.name)
+         mkpath(os.path.dirname(dest_path), verbose=self.verbose, dry_run=self.dry_run)
+ 
+-        copy_file(exe_fullpath, dest_path, verbose=self.verbose, dry_run=self.dry_run)
++        copy_file(exe_fullpath, dest_path, verbose=self.verbose)
+ 
+ 
+ cmdclass["build_ext"] = ExecutableBuildExt

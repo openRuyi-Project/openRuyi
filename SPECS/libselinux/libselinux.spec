@@ -12,9 +12,9 @@ Release:        %autorelease
 Summary:        SELinux runtime library and utilities
 License:        LicenseRef-openRuyi-Public-Domain
 URL:            https://github.com/SELinuxProject/selinux/wiki/Releases
-#!RemoteAsset
+#!RemoteAsset:  sha256:1ef216c5b56fb7e0a51cd2909787a175a17ee391e0467894807873539ebe766b
 Source0:        https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:39dac0fe73847c0329f59ffe138d7baba193f1edf9fd6d5d226335ef4543c17d
 Source1:        https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
 Source2:        libselinux.keyring
 Source3:        selinux-ready
@@ -32,8 +32,8 @@ BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  python3
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
 BuildRequires:  swig
 
 BuildOption(build):  LIBDIR="%{_libdir}" CC="%__cc"
@@ -170,4 +170,4 @@ install -m 0755 %{SOURCE3} %{buildroot}%{_sbindir}/selinux-ready
 %{python3_sitearch}/_selinux*
 
 %changelog
-%{?autochangelog}
+%autochangelog

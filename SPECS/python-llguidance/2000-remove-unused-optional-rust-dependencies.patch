@@ -1,0 +1,83 @@
+diff -urN a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml	2006-07-24 09:21:28.000000000 +0800
++++ b/Cargo.toml	2026-06-14 21:12:41.114841796 +0800
+@@ -2,25 +2,12 @@
+ members = [
+     "python_ext",
+     "parser",
+-    "sample_parser",
+-    "json_stats",
+-    "json_schema_test_suite",
+-    "llg_test_utils",
+     "toktrie",
+     "toktrie_hf_tokenizers",
+-    "toktrie_hf_downloader",
+     "toktrie_tiktoken",
+ ]
+-# just exclude python_ext since it doesn't build without maturin
+ default-members = [
+-    "parser",
+-    "sample_parser",
+-    "json_stats",
+-    "json_schema_test_suite",
+-    "toktrie",
+-    "toktrie_hf_tokenizers",
+-    "toktrie_hf_downloader",
+-    "toktrie_tiktoken",
++    "python_ext",
+ ]
+ resolver = "2"
+ 
+diff -urN a/parser/Cargo.toml b/parser/Cargo.toml
+--- a/parser/Cargo.toml	2006-07-24 09:21:28.000000000 +0800
++++ b/parser/Cargo.toml	2026-06-14 21:12:41.114841796 +0800
+@@ -23,13 +23,10 @@
+ jsonschema = { version = "0.29.0", default-features = false, optional = true }
+ lazy_static = { version = "1.5.0", optional = true }
+ 
+-instant = { version = "0.1.13", optional = true }
+ 
+ [lib]
+ crate-type = ["staticlib", "rlib", "cdylib"]
+ 
+-[build-dependencies]
+-cbindgen = { version = "0.29", optional = true }
+ 
+ [features]
+ default = ["lark", "rayon", "referencing", "ahash"]
+@@ -37,23 +34,8 @@
+ lark = []                                                     # ~115k (binary)
+ jsonschema_validation = ["dep:jsonschema", "dep:lazy_static"] # ~2.5M (binary)
+ rayon = ["dep:rayon"]
+-wasm = ["dep:instant"]
++wasm = []
+ referencing = ["dep:referencing"]
+ ahash = ["derivre/ahash"]
+ # Regenerate parser/llguidance.h: cargo check -p llguidance --features generate-header
+-generate-header = ["dep:cbindgen"]
+-
+-[dev-dependencies]
+-criterion = "0.8.1"
+-regex = "1.11.1"
+-toktrie_hf_downloader = { workspace = true }
+-llg_test_utils = { workspace = true }
+-rstest = "0.25.0"
+-serde-json-fmt = "0.1.0"
+-lazy_static = "1.5.0"
+-serde_json = { version = "1.0.138", features = ["preserve_order"] }
+-rand = { workspace = true }
+-
+-[[bench]]
+-name = "compute_mask"
+-harness = false
++generate-header = []
+diff -urN a/toktrie_hf_tokenizers/Cargo.toml b/toktrie_hf_tokenizers/Cargo.toml
+--- a/toktrie_hf_tokenizers/Cargo.toml	2006-07-24 09:21:28.000000000 +0800
++++ b/toktrie_hf_tokenizers/Cargo.toml	2026-06-14 21:12:41.114841796 +0800
+@@ -17,6 +17,3 @@
+     "fancy-regex",
+ ] }
+ log = "0.4.25"
+-
+-[dev-dependencies]
+-rstest = "0.25.0"

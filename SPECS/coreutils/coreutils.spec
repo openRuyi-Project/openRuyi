@@ -7,12 +7,12 @@
 
 Summary:        GNU Core Utilities
 Name:           coreutils
-Version:        9.10
+Version:        9.11
 Release:        %autorelease
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/coreutils/
 VCS:            git:https://github.com/coreutils/coreutils.git
-#!RemoteAsset:  sha256:16535a9adf0b10037364e2d612aad3d9f4eca3a344949ced74d12faf4bd51d25
+#!RemoteAsset:  sha256:394024eda0a5955217ceda9cd1201e65dc8fa3aa29c2951135a49521d57c3cc3
 Source0:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -44,8 +44,6 @@ the GNU fileutils, sh-utils, and textutils packages.
   uptime users vdir wc who whoami yes
 
 %install -a
-# TODO: Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -56,4 +54,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_infodir}/coreutils.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog

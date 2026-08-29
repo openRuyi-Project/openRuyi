@@ -12,13 +12,13 @@
 %global upstream_main_version 2.8
 
 Name:           cryptsetup
-Version:        %{upstream_main_version}.2
+Version:        %{upstream_main_version}.6
 Release:        %autorelease
 Summary:        Utility for setting up encrypted disks
 License:        GPL-2.0-or-later WITH cryptsetup-OpenSSL-exception AND LGPL-2.1-or-later WITH cryptsetup-OpenSSL-exception
 URL:            https://gitlab.com/cryptsetup/cryptsetup
-#!RemoteAsset:  sha256:dd9ede9875976cb25f3d29bfabf343b1c60f6186646b67ef5e40e60ab4935ec1
-Source0:        https://www.kernel.org/pub/linux/utils/cryptsetup/v%{upstream_main_version}/cryptsetup-%{version}.tar.xz
+#!RemoteAsset:  sha256:8004265fd993885d08f7b633dbe056851de1a210307613a4ebddc743fccefe5a
+Source0:        https://cdn.kernel.org/pub/linux/utils/cryptsetup/v%{upstream_main_version}/cryptsetup-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildOption(conf):  --enable-fips
@@ -59,7 +59,6 @@ disk encryption using dm-crypt kernel module.
 %package        devel
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       pkgconfig(libudev)
-Requires:       pkgconfig
 Summary:        Headers and libraries for using encrypted file systems
 
 %description    devel
@@ -101,7 +100,7 @@ disk integrity protection using dm-integrity kernel module.
 %install -a
 %find_lang %{name} --generate-subpackages
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc AUTHORS FAQ.md docs/*ReleaseNotes
 %{_mandir}/man8/cryptsetup.8.gz
@@ -127,15 +126,15 @@ disk integrity protection using dm-integrity kernel module.
 %files libs
 %license COPYING docs/licenses/COPYING.LGPL-2.1-or-later-WITH-cryptsetup-OpenSSL-exception
 %{_libdir}/libcryptsetup.so.*
-%dir %{_libdir}/%{name}/
+%dir %{_libdir}/cryptsetup/
 %{_tmpfilesdir}/cryptsetup.conf
 %ghost %attr(700, -, -) %dir /run/cryptsetup
 
 %files ssh
 %license COPYING docs/licenses/COPYING.LGPL-2.1-or-later-WITH-cryptsetup-OpenSSL-exception
-%{_libdir}/%{name}/libcryptsetup-token-ssh.so
+%{_libdir}/cryptsetup/libcryptsetup-token-ssh.so
 %{_mandir}/man8/cryptsetup-ssh.8.gz
 %{_sbindir}/cryptsetup-ssh
 
 %changelog
-%{?autochangelog}
+%autochangelog

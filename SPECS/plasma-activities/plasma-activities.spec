@@ -9,17 +9,20 @@
 %define sover 7
 
 Name:           plasma-activities
-Version:        6.5.5
+Version:        6.7.4
 Release:        %autorelease
 Summary:        Plasma Activities support
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-activities
-#!RemoteAsset
-Source:         https://download.kde.org/stable/plasma/%{version}/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:aec18ca3387bc7abc1df177e7a048dd6a07e814bb7199e62683d5f37227966ca
+Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+BuildSystem:    cmake
+
+BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_QCH:BOOL=ON
 
 BuildRequires:  doxygen
-BuildRequires:  fdupes
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
 BuildRequires:  cmake(KF6Config) >= %{kf6_version}
 BuildRequires:  cmake(KF6CoreAddons) >= %{kf6_version}
@@ -48,19 +51,6 @@ Requires:       cmake(Qt6Core) >= %{qt6_version}
 Kactivities provides an API for using and interacting with the Plasma Activities Manager.
 Development files.
 
-%prep
-%autosetup -p1 -n %{name}-%{version}
-
-%build
-%cmake -DBUILD_QCH:BOOL=ON
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %files
 %license LICENSES/*
 %{_kf6_debugdir}/plasma-activities.categories
@@ -70,11 +60,10 @@ Development files.
 %{_kf6_qmldir}/org/kde/activities/
 
 %files devel
-%doc %{_kf6_qchdir}/PlasmaActivities.*
 %{_kf6_cmakedir}/PlasmaActivities/
 %{_includedir}/PlasmaActivities/
 %{_kf6_libdir}/libPlasmaActivities.so
 %{_kf6_pkgconfigdir}/PlasmaActivities.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

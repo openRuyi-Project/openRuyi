@@ -7,8 +7,8 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global upstreamname rocminfo
-%global rocm_release 7.1
-%global rocm_patch 1
+%global rocm_release 7.2
+%global rocm_patch 4
 %global rocm_version %{rocm_release}.%{rocm_patch}
 
 %global pkg_desc ROCm system info utility
@@ -19,7 +19,7 @@ Release:        %autorelease
 Summary:        %{pkg_desc}
 License:        NCSA
 URL:            https://github.com/ROCm/rocminfo
-#!RemoteAsset
+#!RemoteAsset:  sha256:4e7a456d23c44f7d0136715635190134ba3c572bdc595515d28182c674a62e33
 Source0:        %{url}/archive/refs/tags/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -32,9 +32,6 @@ BuildRequires:  clang
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  cmake(hsa-runtime64) >= 1.0
-
-# rocminfo calls lsmod to check the kernel mode driver status
-Requires:       kmod
 
 %description
 %{pkg_desc}
@@ -54,4 +51,4 @@ chmod 755 %{buildroot}%{_bindir}/*
 %exclude %{_docdir}/*/License.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

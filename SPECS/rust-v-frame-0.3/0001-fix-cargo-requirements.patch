@@ -1,0 +1,13 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index 034504f81..9c4ad3ba2 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -48,7 +48,7 @@ path = "benches/bench.rs"
+ harness = false
+ 
+ [dependencies.aligned-vec]
+-version = ">=0.5.0, <0.7"
++version = "0.6.0"
+ 
+ [dependencies.num-traits]
+ version = "0.2"

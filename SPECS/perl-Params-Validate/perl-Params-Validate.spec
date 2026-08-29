@@ -11,10 +11,15 @@ Release:        %autorelease
 Summary:        Validate method/function parameters
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Params-Validate
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Params-Validate-%{version}.tar.gz
+#!RemoteAsset:  sha256:1bf2518ef2c4869f91590e219f545c8ef12ed53cf313e0eb5704adf7f1b2961e
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Params-Validate-%{version}.tar.gz
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor optimize="%{optflags}"
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(base)
@@ -47,21 +52,8 @@ That module, despite being pure Perl, is significantly faster than this
 one, at the cost of having to adopt a type system such as Specio,
 Type::Tiny, or the one shipped with Moose.
 
-%prep
-%setup -q -n Params-Validate-%{version}
-
-%build
-perl Build.PL --installdirs=vendor optimize="%{optflags}"
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc README.md tidyall.ini TODO weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

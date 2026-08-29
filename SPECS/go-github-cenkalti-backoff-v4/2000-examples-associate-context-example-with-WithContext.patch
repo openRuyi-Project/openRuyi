@@ -1,0 +1,28 @@
+From 35a8168a8e885168e7f7bfd81c2d152bc9d92374 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 12:04:55 +0800
+Subject: [PATCH] examples: associate context example with WithContext
+
+RetryContext is not an exported identifier, so go vet rejects the example name. The example demonstrates WithContext; associate it with that function instead of suppressing an external linter.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ example_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/example_test.go b/example_test.go
+index 19d0451..a457c30 100644
+--- a/example_test.go
++++ b/example_test.go
+@@ -20,7 +20,7 @@ func ExampleRetry() {
+ 	// Operation is successful.
+ }
+ 
+-func ExampleRetryContext() { // nolint: govet
++func ExampleWithContext() {
+ 	// A context
+ 	ctx := context.Background()
+ 
+-- 
+2.43.0
+

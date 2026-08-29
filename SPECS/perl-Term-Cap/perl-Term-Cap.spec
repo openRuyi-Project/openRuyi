@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Perl termcap interface
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Term-Cap
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/J/JS/JSTOWE/Term-Cap-%{version}.tar.gz
+#!RemoteAsset:  sha256:7d5b155824223b4c5cc2587b9dea15f7a5c8f7fd9eaf704a9a6828557a527d0a
+Source0:        https://www.cpan.org/authors/id/J/JS/JSTOWE/Term-Cap-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More) >= 0.33
@@ -26,20 +30,8 @@ Requires:       perl(Test::More) >= 0.33
 These are low-level functions to extract and use capabilities from a
 terminal capability (termcap) database.
 
-%prep
-%setup -q -n Term-Cap-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

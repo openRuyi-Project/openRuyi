@@ -8,14 +8,14 @@
 %global srcname pathspec
 
 Name:           python-%{srcname}
-Version:        0.12.1
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Utility library for gitignore style pattern matching of file paths
 License:        MIT
 URL:            https://github.com/cpburnz/python-path-specification
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,12 +24,11 @@ BuildOption(install):  pathspec
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-packaging
+BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-core)
-BuildRequires:  expat
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +44,4 @@ is derived from Rsync's wildmatch. Git uses wildmatch for its gitignore files.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

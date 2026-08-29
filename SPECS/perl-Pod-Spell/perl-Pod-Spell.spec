@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Formatter for spellchecking Pod
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Pod-Spell
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/H/HA/HAARG/Pod-Spell-%{version}.tar.gz
+#!RemoteAsset:  sha256:7ef56c9229f3efbc71a0462ce44490c0dd49fbf3b21fe85bb08b1eeac6f7b063
+Source0:        https://www.cpan.org/authors/id/H/HA/HAARG/Pod-Spell-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -34,10 +38,9 @@ BuildRequires:  perl(parent)
 BuildRequires:  perl(Pod::Escapes)
 BuildRequires:  perl(Pod::Simple) >= 3.27
 BuildRequires:  perl(POSIX)
+BuildRequires:  perl(File::ShareDir::Install)
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(Text::Wrap)
-# Manual
-BuildRequires:  perl(File::ShareDir::Install)
 
 Requires:       perl(Pod::Simple) >= 3.27
 
@@ -48,20 +51,8 @@ into actual formatting, and it suppresses things that look like Perl
 symbols or Perl jargon (so that your spellchecking program won't complain
 about mystery words like "$thing" or "Foo::Bar" or "hashref").
 
-%prep
-%setup -q -n Pod-Spell-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING prereqs.yml README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

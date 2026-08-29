@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtvirtualkeyboard
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtvirtualkeyboard
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - VirtualKeyboard component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtvirtualkeyboard
-#!RemoteAsset
+#!RemoteAsset:  sha256:a1c6967b326243b2ca8d50bc7b7f7852c3975d9aa6ce4b186ebdf35bb1007e1c
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 
 BuildSystem:    cmake
@@ -102,4 +102,4 @@ Programming examples for %{name}.
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

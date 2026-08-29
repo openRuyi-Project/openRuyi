@@ -1,7 +1,7 @@
-From 3c0447a987ca54c3170ca5dad59eb6696845a539 Mon Sep 17 00:00:00 2001
+From 6a39505c993f5f01158a6f6a70f4ad76c6db5234 Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:06 -0500
-Subject: [PATCH 055/292] UPSTREAM: riscv: dts: spacemit: enable K1 SoC QSPI on
+Subject: [RUYI PATCH] UPSTREAM: riscv: dts: spacemit: enable K1 SoC QSPI on
  BPI-F3
 
 Define DTS nodes to enable support for QSPI on the K1 SoC, including the

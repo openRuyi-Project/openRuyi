@@ -1,0 +1,58 @@
+From 6ca7cba3ec416ceb9f7806f956999136d4908b68 Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Fri, 17 Jul 2026 07:55:28 +0800
+Subject: [PATCH 1/2] add testcase test_shellcmd_module_import
+
+---
+ ipyparallel/tests/test_shellcmd.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/ipyparallel/tests/test_shellcmd.py b/ipyparallel/tests/test_shellcmd.py
+index 748dd83c..6fce5d51 100644
+--- a/ipyparallel/tests/test_shellcmd.py
++++ b/ipyparallel/tests/test_shellcmd.py
+@@ -128,6 +128,12 @@ sender_ids = [
+ ]
+ 
+ 
++def test_shellcmd_module_import():
++    import ipyparallel.shellcmd
++
++    assert callable(ipyparallel.shellcmd.main)
++
++
+ @pytest.fixture
+ def shellcmd_test_cmd():
+     """returns a command that runs for 5 seconds"""
+-- 
+2.54.0
+
+
+From e4500428737df9364117f5f45a68083ff95b5f3f Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Fri, 17 Jul 2026 07:57:59 +0800
+Subject: [PATCH 2/2] fix ShellCommandReceive ImportError
+
+File "/.../ipyparallel/shellcmd.py", line 19, in <module>
+    from .cluster.shellcmd import ShellCommandReceive
+ImportError: cannot import name 'ShellCommandReceive' from 'ipyparallel.cluster.shellcmd'
+---
+ ipyparallel/shellcmd.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ipyparallel/shellcmd.py b/ipyparallel/shellcmd.py
+index 3f76c725..5755b2a4 100644
+--- a/ipyparallel/shellcmd.py
++++ b/ipyparallel/shellcmd.py
+@@ -16,7 +16,7 @@ import os
+ import sys
+ from argparse import ArgumentParser
+ 
+-from .cluster.shellcmd import ShellCommandReceive
++from .cluster.shellcmd_receive import ShellCommandReceive
+ 
+ 
+ def main():
+-- 
+2.54.0
+

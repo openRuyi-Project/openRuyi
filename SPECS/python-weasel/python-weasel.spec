@@ -7,12 +7,12 @@
 %global srcname weasel
 
 Name:           python-%{srcname}
-Version:        0.4.3
+Version:        1.0.0
 Release:        %autorelease
 Summary:        A small and easy workflow system
 License:        MIT
 URL:            https://github.com/explosion/weasel
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b129b44c90cc543b760532974ca1e4eb30dad2aa2026f57bdce66354ae610fc
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -33,7 +33,7 @@ BuildRequires:  python3dist(srsly)
 BuildRequires:  python3dist(typer-slim)
 BuildRequires:  python3dist(wasabi)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -50,4 +50,4 @@ custom pipelines.
 %{_bindir}/weasel
 
 %changelog
-%{?autochangelog}
+%autochangelog

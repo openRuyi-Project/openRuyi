@@ -14,6 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/aio-libs/aiosignal
 #!RemoteAsset:  sha256:f47eecd9468083c2029cc99945502cb7708b082c232f9aca65da147157b251c7
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -24,12 +25,13 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(frozenlist)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-FrozenList is a list-like structure which implements
-collections.abc.MutableSequence, and which can be made immutable.
+aiosignal is a library that provides a Signal class for registering
+and dispatching asynchronous callbacks. It is used by aiohttp and
+other asyncio-based projects to manage lists of callable handlers.
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -38,4 +40,4 @@ collections.abc.MutableSequence, and which can be made immutable.
 %doc CHANGES.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

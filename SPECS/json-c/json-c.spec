@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        JSON implementation in C
 License:        MIT
 URL:            https://github.com/json-c/json-c
-#!RemoteAsset
+#!RemoteAsset:  sha256:3112c1f25d39eca661fe3fc663431e130cc6e2f900c081738317fba49d29e298
 Source0:        https://github.com/json-c/json-c/archive/json-c-%{version}-%{version_date}.tar.gz
 BuildSystem:    cmake
 
@@ -58,13 +58,14 @@ cp -R doc/html "%{buildroot}%{_docdir}/%{name}/"
 %files
 %license COPYING
 %doc AUTHORS ChangeLog README.md
-%{_docdir}/%{name}/
+%{_docdir}/json-c/
 %{_libdir}/libjson-c.so.*
 
-%files  devel
+%files devel
 %{_libdir}/libjson-c.so
 %{_includedir}/json-c
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/json-c.pc
+%{_libdir}/pkgconfig/json.pc
 %dir %{_libdir}/cmake/json-c
 %{_libdir}/cmake/json-c/json-c-config.cmake
 %{_libdir}/cmake/json-c/json-c-targets-*.cmake
@@ -72,4 +73,4 @@ cp -R doc/html "%{buildroot}%{_docdir}/%{name}/"
 %{_libdir}/libjson-c.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

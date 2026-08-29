@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,21 +15,16 @@
 # TODO: This package is NOT USABLE?
 
 Name:           shim
-Version:        16.1
+Version:        16.1+git20260715.0a88e2a
 Release:        %autorelease
 Summary:        First-stage UEFI bootloader
 License:        BSD-3-Clause
 URL:            https://github.com/rhboot/shim
-#!RemoteAsset:  git+https://github.com/rhboot/shim.git#16.1
-#!CreateArchive
-Source0:        shim.tar.gz
-#!RemoteAsset:  git+https://github.com/ncroxon/gnu-efi.git#ee80edbb57331968c541903762cb65280fe23a6f
-#!CreateArchive
-Source1:        gnu-efi.tar.gz
+#!RemoteAsset:  sha256:b22f03a0eab91329fd77c14c8d9d927241336dd963b400f8df8376bb45d41b94
+Source0:        https://github.com/rhboot/shim/archive/0a88e2ac01eab51a90ea61f40e0c77d619f3feab.tar.gz
+#!RemoteAsset:  sha256:40b61e842a4efcbf80f3e53b2f220c044e8cfe46eb4dd6396c83b751240b1c0d
+Source1:        https://github.com/ncroxon/gnu-efi/archive/refs/tags/4.0.4.tar.gz
 BuildSystem:    autotools
-
-# https://github.com/rhboot/shim/pull/778
-Patch0:         0001-add-riscv64-support.patch
 
 BuildOption(build):  EFIDIR=%{_vendor} LD=ld.bfd
 BuildOption(install):  DATATARGETDIR="%{_datadir}/shim" EFIDIR=%{_vendor} install-as-data
@@ -56,21 +53,28 @@ Summary:        UEFI shim loader - debug source
 %description    debugsource
 The source code of UEFI shim loader
 
-%prep
-%setup -q -n %{name}
-
+%prep -a
 # We use our own gnu-efi
-rm -rf gnu-efi
-tar xf %{SOURCE1}
-# Hey, we can't patch a submodule folder, so this... - 251
-%{__patch} -p1 -F3 -l --no-backup-if-mismatch < %{PATCH0} || true
+tar --strip-components=1 -xvf %{SOURCE1} -C gnu-efi
 
-sed -e 's/-Werror\b//g' -i Makefile Make.defaults
+# Force RV64GC since Zifencei is not part of RVA23U64, but RVA23S64;
+# And Zifencei is part of RV64G (RV64IMAFD_Zicsr_Zifencei)
+# FIXME: Forcing RV64GC is only a temporary solution.
+# According to UEFI spec, we should only use `-march=rv64imac_zicsr_zifencei`, but right now this is causing FTBFS.
+# See https://github.com/openRuyi-Project/openRuyi/issues/762 for more info.
+
+%ifarch riscv64
+  echo 'override CC := $(CC) -march=rv64gc' >> Make.defaults
+%endif
 
 %conf
 # No Configure
 
 %install -a
+mv %{buildroot}/%{_prefix}/src/debug/%{name}* %{buildroot}/%{_prefix}/src/debug/%{name}-%{version}
+
+%check
+# No tests
 
 %files
 %defattr(-,root,root,-)
@@ -80,9 +84,6 @@ sed -e 's/-Werror\b//g' -i Makefile Make.defaults
 # Not sure these will be provided by this - 251
 /boot/efi/EFI/BOOT/*
 /boot/efi/EFI/%{_vendor}/*
-
-# No tests
-%check
 
 %files debuginfo
 %defattr(-,root,root,-)
@@ -106,4 +107,4 @@ sed -e 's/-Werror\b//g' -i Makefile Make.defaults
 %{_prefix}/src/debug/%{name}-%{version}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

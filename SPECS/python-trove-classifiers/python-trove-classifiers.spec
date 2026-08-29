@@ -33,8 +33,8 @@ BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-trove-classifiers = %{version}-%{release}
+%python_provide python3-trove-classifiers
 
 %description
 Canonical source for classifiers on PyPI.

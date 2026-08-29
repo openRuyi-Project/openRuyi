@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gnutls
-Version:        3.8.10
+Version:        3.8.13
 Release:        %autorelease
 Summary:        A TLS protocol implementation
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnutls.org/
 VCS:            git:https://gitlab.com/gnutls/gnutls
-#!RemoteAsset
+#!RemoteAsset:  sha256:ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e
 Source0:        https://www.gnupg.org/ftp/gcrypt/%{name}/v3.8/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -43,14 +43,24 @@ BuildRequires:  texinfo
 # Tests
 BuildRequires:  ca-certificates-mozilla
 
+Recommends:     %{name}-dane
+
 %description
 GnuTLS is a secure communications library implementing the SSL, TLS and DTLS
 protocols. This package contains the essential shared libraries needed by
 applications, as well as the command-line tools for administration.
 
+%package        libs
+Summary:        Libraries used by the gnutls
+
+%description    libs
+Contains libraries used by the gnutls.
+
 %package        devel
 Summary:        Development files for GnuTLS
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}-dane%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(libtasn1)
 Requires:       pkgconfig(nettle)
 Requires:       pkgconfig(p11-kit-1)
@@ -58,6 +68,18 @@ Requires:       pkgconfig(p11-kit-1)
 %description    devel
 This package contains the header files, programming documentation, and
 development libraries for GnuTLS.
+
+# We have separated this package in order to avoid introducing unbound and all
+# related dependencies when using it in the basic way.
+%package        dane
+Summary:        The tools and libraries necessary to implement DANE.
+
+%description    dane
+GnuTLS DANE provides the tools and libraries necessary to implement DNS-based
+Authentication of Named Entities (DANE). DANE allows applications to verify TLS
+certificates securely via DNSSEC (DNS Security Extensions), reducing or
+completely bypassing reliance on traditional, third-party Certificate
+Authorities (CAs)
 
 %install -a
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
@@ -74,14 +96,13 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_bindir}/ocsptool
 %{_bindir}/psktool
 %{_bindir}/p11tool
-%{_bindir}/danetool
+%{_mandir}/man1/*
+
+%files libs
 %{_libdir}/libgnutls.so.30
 %{_libdir}/libgnutls.so.30.*
 %{_libdir}/libgnutlsxx.so.30
 %{_libdir}/libgnutlsxx.so.30.*
-%{_libdir}/libgnutls-dane.so.0
-%{_libdir}/libgnutls-dane.so.0.*
-%{_mandir}/man1/*
 
 %files devel
 %{_includedir}/gnutls/
@@ -93,5 +114,10 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_mandir}/man3/*
 %{_infodir}/*
 
+%files dane
+%{_bindir}/danetool
+%{_libdir}/libgnutls-dane.so.0
+%{_libdir}/libgnutls-dane.so.0.*
+
 %changelog
-%{?autochangelog}
+%autochangelog

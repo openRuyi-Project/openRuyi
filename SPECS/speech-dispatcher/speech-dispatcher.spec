@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        To provide a high-level device independent layer for speech synthesis
 License:        GPL-2.0-or-later AND LGPL-2.1-only
 URL:            https://github.com/brailcom/speechd
-#!RemoteAsset
+#!RemoteAsset:  sha256:b14a5238d287d2dcce4dd42bbd66ca65fa228e7e683708267f7b34036f7ba4b4
 Source0:        https://github.com/brailcom/speechd/releases/download/%{version}/speech-dispatcher-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -44,7 +44,7 @@ BuildRequires:  pkgconfig(sndfile)
 BuildRequires:  pulseaudio-devel
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  desktop-file-utils
@@ -80,9 +80,6 @@ Python 3 module for speech-dispatcher.
 %install -a
 # install -p -m 0644 sound-icons-0.1/* %{buildroot}%{_datadir}/sounds/%{name}/
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 #Remove %{_infodir}/dir file
@@ -147,10 +144,10 @@ desktop-file-validate %{buildroot}%{_datadir}/speech-dispatcher/conf/desktop/spe
 %files devel
 %{_includedir}/*
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/speech-dispatcher.pc
 
 %files -n python-speechd
 %{python3_sitearch}/speechd*
 
 %changelog
-%{?autochangelog}
+%autochangelog

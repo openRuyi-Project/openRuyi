@@ -59,9 +59,6 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang gcr-4 --generate-subpackages
 
 %post
@@ -104,4 +101,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/doc/gcr-4/
 
 %changelog
-%{?autochangelog}
+%autochangelog

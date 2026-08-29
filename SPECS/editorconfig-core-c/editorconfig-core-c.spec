@@ -37,8 +37,12 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 This package contains the files needed for development.
 
-%install -a
-rm -f %{buildroot}/%{_libdir}/libeditorconfig_static.a
+%package        static
+Summary:        Static files for EditorConfig files
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
+
+%description    static
+Static libraries for developing applications that use %{name}.
 
 %files
 %doc README.md
@@ -56,5 +60,8 @@ rm -f %{buildroot}/%{_libdir}/libeditorconfig_static.a
 %{_libdir}/cmake/EditorConfig/
 %{_libdir}/pkgconfig/editorconfig.pc
 
+%files static
+%{_libdir}/libeditorconfig_static.a
+
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,51 @@
+From 36246e7cbaca481c4c172427c4e9ab9f202f74c4 Mon Sep 17 00:00:00 2001
+From: Anmeng Zhang <zhang.anmeng@zte.com.cn>
+Date: Wed, 8 Jul 2026 09:50:46 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: stacktrace: Fix NULL task pointer in
+ ftrace_graph_ret_addr()
+
+When dump_backtrace() is called with a NULL task argument, and the
+call stack contains functions that are being traced,
+walk_stackframe() eventually calls ftrace_graph_ret_addr() with the
+NULL task pointer, which results in a NULL pointer dereference when
+accessing task->curr_ret_stack.
+
+Fix this by assigning the task pointer to the current task in
+walk_stackframe() when it is NULL, keeping the behavior consistent
+with other architectures.
+
+Fixes: ecbf894165a2 ("riscv: Fix ftrace_graph_ret_addr() to use the correct task pointer")
+Reviewed-by: Shengming Hu <hu.shengming@zte.com.cn>
+Reviewed-by: Rui Gao <gao.rui@zte.com.cn>
+Reviewed-by: Luo Haiyang <luo.haiyang@zte.com.cn>
+Reviewed-by: Run Zhang <zhang.run@zte.com.cn>
+Signed-off-by: Anmeng Zhang <zhang.anmeng@zte.com.cn>
+Link: https://lore.kernel.org/r/20260708095046716mVQlEvhyoXko9eueCxict@zte.com.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/stacktrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+index b41b6255751c..694c9c7fde4a 100644
+--- a/arch/riscv/kernel/stacktrace.c
++++ b/arch/riscv/kernel/stacktrace.c
+@@ -52,11 +52,14 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
+ 	int graph_idx = 0;
+ 	int level = 0;
+ 
++	if (task == NULL)
++		task = current;
++
+ 	if (regs) {
+ 		fp = frame_pointer(regs);
+ 		sp = user_stack_pointer(regs);
+ 		pc = instruction_pointer(regs);
+-	} else if (task == NULL || task == current) {
++	} else if (task == current) {
+ 		fp = (unsigned long)__builtin_frame_address(0);
+ 		sp = current_stack_pointer;
+ 		pc = (unsigned long)walk_stackframe;
+-- 
+2.53.0
+

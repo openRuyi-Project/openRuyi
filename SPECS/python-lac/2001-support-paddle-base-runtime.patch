@@ -1,0 +1,90 @@
+diff --git a/LAC/lac.py b/LAC/lac.py
+index 9f084b7..9927db3 100644
+--- a/LAC/lac.py
++++ b/LAC/lac.py
+@@ -25,10 +25,18 @@ import shutil
+ import logging
+ 
+ import numpy as np
+-import paddle.fluid as fluid
+-from paddle.fluid.core import PaddleTensor
+-from paddle.fluid.core import AnalysisConfig
+-from paddle.fluid.core import create_paddle_predictor
++try:
++    import paddle.fluid as fluid
++    from paddle.fluid.core import PaddleTensor
++    from paddle.fluid.core import AnalysisConfig
++    from paddle.fluid.core import create_paddle_predictor
++except ModuleNotFoundError as exc:
++    if exc.name != "paddle.fluid":
++        raise
++    import paddle.base as fluid
++    from paddle.base.core import PaddleTensor
++    from paddle.base.core import AnalysisConfig
++    from paddle.base.core import create_paddle_predictor
+ 
+ from . import nets
+ from . import utils
+diff --git a/LAC/models.py b/LAC/models.py
+index e0a104d..d4b439b 100644
+--- a/LAC/models.py
++++ b/LAC/models.py
+@@ -23,10 +23,18 @@ import shutil
+ import logging
+ 
+ import numpy as np
+-import paddle.fluid as fluid
+-from paddle.fluid.core import PaddleTensor
+-from paddle.fluid.core import AnalysisConfig
+-from paddle.fluid.core import create_paddle_predictor
++try:
++    import paddle.fluid as fluid
++    from paddle.fluid.core import PaddleTensor
++    from paddle.fluid.core import AnalysisConfig
++    from paddle.fluid.core import create_paddle_predictor
++except ModuleNotFoundError as exc:
++    if exc.name != "paddle.fluid":
++        raise
++    import paddle.base as fluid
++    from paddle.base.core import PaddleTensor
++    from paddle.base.core import AnalysisConfig
++    from paddle.base.core import create_paddle_predictor
+ 
+ from . import nets
+ from . import utils
+diff --git a/LAC/nets.py b/LAC/nets.py
+index ae6d4c9..a9e287f 100644
+--- a/LAC/nets.py
++++ b/LAC/nets.py
+@@ -25,7 +25,12 @@ import math
+ 
+ import paddle
+ import multiprocessing
+-import paddle.fluid as fluid
++try:
++    import paddle.fluid as fluid
++except ModuleNotFoundError as exc:
++    if exc.name != "paddle.fluid":
++        raise
++    import paddle.base as fluid
+ 
+ from . import utils
+ from .reader import Dataset
+diff --git a/LAC/utils.py b/LAC/utils.py
+index b05dcf8..c2c2e54 100644
+--- a/LAC/utils.py
++++ b/LAC/utils.py
+@@ -24,7 +24,12 @@ from __future__ import print_function
+ import os
+ import sys
+ import numpy as np
+-import paddle.fluid as fluid
++try:
++    import paddle.fluid as fluid
++except ModuleNotFoundError as exc:
++    if exc.name != "paddle.fluid":
++        raise
++    import paddle.base as fluid
+ 
+ try:
+     import configparser

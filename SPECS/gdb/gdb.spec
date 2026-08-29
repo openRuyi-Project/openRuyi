@@ -10,13 +10,13 @@
 %define _lto_cflags %{nil}
 
 Name:           gdb
-Version:        17.1
+Version:        17.2
 Release:        %autorelease
 Summary:        A GNU source-level debugger for C, C++, Fortran, Go and other languages
 License:        GPL-3.0-only WITH GCC-exception-3.1 AND GPL-3.0-or-later AND LGPL-2.1-or-later AND LGPL-3.0-or-later AND MIT
 URL:            https://www.gnu.org/software/gdb/
 VCS:            git:https://sourceware.org/git/binutils-gdb.git
-#!RemoteAsset:  sha256:2b93c4c9726a4b8cfe771036e155377405dfa41c483d90945481319c5663c120
+#!RemoteAsset:  sha256:cb891b9a9f554cac972eea5368176b240640ae90b681aae84bf873a9501f0063
 Source0:        https://ftpmirror.gnu.org/gnu/gdb/gdb-%{version}.tar.gz
 Source2:        gdbinit
 BuildSystem:    autotools
@@ -27,6 +27,7 @@ BuildOption(conf):  --with-system-readline
 BuildOption(conf):  --with-python=%{__python3}
 BuildOption(conf):  --with-gdb-datadir=%{_datadir}/gdb
 BuildOption(conf):  --with-system-gdbinit=%{_sysconfdir}/gdbinit
+BuildOption(conf):  --with-separate-debug-dir=/usr/lib/debug
 BuildOption(conf):  --enable-source-highlight
 BuildOption(conf):  --enable-tui
 BuildOption(conf):  --enable-languages=all
@@ -70,8 +71,8 @@ machine than the one which is running the program being debugged.
 Summary:        Documentation for GDB (the GNU source-level debugger)
 License:        GFDL
 BuildArch:      noarch
-Requires(post): /usr/sbin/install-info
-Requires(preun): /usr/sbin/install-info
+Requires(post): texinfo
+Requires(preun): texinfo
 
 %description    doc
 GDB, the GNU debugger, allows you to debug programs written in C, C++,
@@ -179,8 +180,8 @@ done
 # For --excludedocs:
 if [ -e %{_infodir}/gdb.info.gz ]
 then
-  /usr/sbin/install-info --info-dir=%{_infodir} %{_infodir}/annotate.info.gz || :
-  /usr/sbin/install-info --info-dir=%{_infodir} %{_infodir}/gdb.info.gz || :
+  install-info --info-dir=%{_infodir} %{_infodir}/annotate.info.gz || :
+  install-info --info-dir=%{_infodir} %{_infodir}/gdb.info.gz || :
 fi
 
 %preun doc
@@ -189,8 +190,8 @@ then
   # For --excludedocs:
   if [ -e %{_infodir}/gdb.info.gz ]
   then
-    /usr/sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/annotate.info.gz || :
-    /usr/sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/gdb.info.gz || :
+    install-info --delete --info-dir=%{_infodir} %{_infodir}/annotate.info.gz || :
+    install-info --delete --info-dir=%{_infodir} %{_infodir}/gdb.info.gz || :
   fi
 fi
 
@@ -230,4 +231,4 @@ fi
 %{_infodir}/gdb.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog

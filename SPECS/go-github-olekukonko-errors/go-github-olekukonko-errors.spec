@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/olekukonko/errors
 
 Name:           go-github-olekukonko-errors
-Version:        1.1.0
+Version:        1.3.0
 Release:        %autorelease
 Summary:        A production-grade error handling library for Go
 License:        MIT
 URL:            https://github.com/olekukonko/errors
-#!RemoteAsset
+#!RemoteAsset:  sha256:afe9c8d882210a0dd6124dbbd6b6aea915ab326a5812b982016a3c10dee48af3
 Source0:        https://github.com/olekukonko/errors/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +38,4 @@ monitoring through two complementary packages: errors (core) and errmgr
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

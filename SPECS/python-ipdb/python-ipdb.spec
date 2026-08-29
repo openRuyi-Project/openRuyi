@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/gotcha/ipdb
 #!RemoteAsset:  sha256:e3ac6018ef05126d442af680aad863006ec19d02290561ac88b8b1c0b0cfc726
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -27,7 +28,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(ipython)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +45,4 @@ better introspection with the same interface as the pdb module.
 %{_bindir}/ipdb3
 
 %changelog
-%{?autochangelog}
+%autochangelog

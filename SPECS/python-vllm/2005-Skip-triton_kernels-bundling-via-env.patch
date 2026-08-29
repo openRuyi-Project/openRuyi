@@ -1,0 +1,63 @@
+From 48e113a6f6aa9683e909d0ef1e6506c8b3b8c366 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 12:34:33 +0800
+Subject: [PATCH] Skip triton_kernels bundling via environment
+
+Skip triton_kernels build and avoid git clone it
+---
+ CMakeLists.txt |  6 +++++-
+ setup.py       | 20 ++++++++++++--------
+ 2 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ab64323..a22a701 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1494,7 +1494,11 @@ endif()
+ 
+ # For CUDA and HIP builds also build the triton_kernels external package.
+ if(VLLM_GPU_LANG STREQUAL "CUDA" OR VLLM_GPU_LANG STREQUAL "HIP")
+-    include(cmake/external_projects/triton_kernels.cmake)
++    if(NOT DEFINED ENV{VLLM_SKIP_TRITON_KERNELS})
++        include(cmake/external_projects/triton_kernels.cmake)
++    else()
++        add_custom_target(triton_kernels)
++    endif()
+ endif()
+ 
+ # For CUDA we also build and ship some external projects.
+diff --git a/setup.py b/setup.py
+index a8817a9..14c0ff6 100644
+--- a/setup.py
++++ b/setup.py
+@@ -408,15 +408,19 @@ class cmake_build_ext(build_ext):
+             # copy vllm/third_party/triton_kernels/**/*.py from self.build_lib
+             # to current directory so that they can be included in the editable
+             # build
+-            print(
+-                f"Copying {self.build_lib}/vllm/third_party/triton_kernels "
+-                "to vllm/third_party/triton_kernels"
+-            )
+-            shutil.copytree(
+-                f"{self.build_lib}/vllm/third_party/triton_kernels",
+-                "vllm/third_party/triton_kernels",
+-                dirs_exist_ok=True,
++            triton_kernels_build = (
++                f"{self.build_lib}/vllm/third_party/triton_kernels"
+             )
++            if os.path.isdir(triton_kernels_build):
++                print(
++                    f"Copying {triton_kernels_build} "
++                    "to vllm/third_party/triton_kernels"
++                )
++                shutil.copytree(
++                    triton_kernels_build,
++                    "vllm/third_party/triton_kernels",
++                    dirs_exist_ok=True,
++                )
+ 
+         if _is_cuda():
+             # copy vendored deep_gemm package from build_lib to source tree
+-- 
+2.53.0
+

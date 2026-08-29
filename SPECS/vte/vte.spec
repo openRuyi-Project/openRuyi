@@ -18,7 +18,7 @@ Summary:        Terminal Emulator Library
 License:        CC-BY-4.0 AND LGPL-3.0-or-later AND GPL-3.0-or-later AND MIT
 URL:            https://wiki.gnome.org/Apps/Terminal/VTE
 VCS:            git:https://gitlab.gnome.org/GNOME/vte.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6dc6278f6fee30d07d1a03e2ba3335b1ea4e8d2956ceb59d861943115d930a85
 Source:         https://download.gnome.org/sources/vte/0.82/vte-0.82.3.tar.xz
 BuildSystem:    meson
 
@@ -153,9 +153,6 @@ widgets in Glade.
 %endif
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang vte-%{_apiver} --generate-subpackages
 
 %files -f vte-%{_apiver}.lang
@@ -212,4 +209,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

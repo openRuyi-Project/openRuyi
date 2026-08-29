@@ -1,0 +1,11 @@
+--- a/module/checker.go	2025-11-18 20:57:03.000000000 +0000
++++ b/module/checker.go	2026-06-25 05:08:53.172352744 +0000
+@@ -267,7 +267,7 @@
+ 
+ 		for _, in := range r.In {
+ 			if _, ok = vals[in]; !ok {
+-				m.Failf("undefined `in` value (%d) conflicts with `defined_only` rule")
++				m.Failf("undefined `in` value (%d) conflicts with `defined_only` rule", in)
+ 			}
+ 		}
+ 	}

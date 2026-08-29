@@ -28,7 +28,8 @@ BuildRequires:  python3dist(cymem)
 BuildRequires:  python3dist(murmurhash)
 BuildRequires:  python3dist(cython)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +44,4 @@ pre-randomized keys to void* values. Inspired by Jeff Preshing.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

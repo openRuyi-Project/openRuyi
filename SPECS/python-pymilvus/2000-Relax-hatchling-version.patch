@@ -1,0 +1,24 @@
+From 3c0903bb5498bbda4f78c95087dc412a94717d88 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 26 Jun 2026 16:43:33 +0800
+Subject: [PATCH] Relax hatchling version
+
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index ac8288c0..b819bda5 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,6 +1,6 @@
+ [build-system]
+ requires = [
+-  "hatchling>=1.27,<1.28",
++  "hatchling>=1.27",
+   "setuptools_scm[toml]>=8",
+ ]
+ build-backend = "hatchling.build"
+-- 
+2.54.0
+

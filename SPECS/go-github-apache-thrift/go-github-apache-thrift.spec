@@ -13,15 +13,18 @@
 }
 
 Name:           go-github-apache-thrift
-Version:        0.22.0
+Version:        0.23.0
 Release:        %autorelease
 Summary:        Apache Thrift
 License:        Apache-2.0
 URL:            https://github.com/apache/thrift
-#!RemoteAsset
+#!RemoteAsset:  sha256:087ba9517063c8252e9e7fb4e3891a9fd85e20af80e0309e2276eff16791d75c
 Source0:        https://github.com/apache/thrift/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# From Debian.
+Patch1000:      1000-fix_go_print_format.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -skip TestSocketIsntListeningAfterInterrupt
@@ -52,4 +55,4 @@ rm -rf lib/go/test
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

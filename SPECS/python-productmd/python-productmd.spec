@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Product, compose and installation media metadata library
 License:        LGPL-2.1-only
 URL:            https://github.com/release-engineering/productmd
-#!RemoteAsset
+#!RemoteAsset:  sha256:a27df6835de352b6ad06e0781c83105037069b99350c0ed294e8a5c7fd379aba
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,7 +23,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ and installation media.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

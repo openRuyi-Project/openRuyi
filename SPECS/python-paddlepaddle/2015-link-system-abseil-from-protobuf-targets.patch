@@ -1,0 +1,53 @@
+# Patch purpose:
+# - Preserve system protobuf's required Abseil link dependency when Paddle
+#   reconstructs its own protobuf imported targets.
+# Why this patch exists:
+# - openRuyi protobuf is linked against Abseil. Paddle creates protobuf,
+#   protobuf_lite, and libprotoc imported targets from raw library paths, which
+#   drops the interface dependency normally carried by system CMake targets.
+# - On riscv64 this made eager_generator fail to link with a missing
+#   absl_raw_hash_set DSO.
+
+diff --git a/cmake/external/protobuf.cmake b/cmake/external/protobuf.cmake
+index 61ebedd..b3c87c3 100755
+--- a/cmake/external/protobuf.cmake
++++ b/cmake/external/protobuf.cmake
+@@ -99,6 +99,11 @@ macro(PROMPT_PROTOBUF_LIB)
+   message(STATUS "Protobuf version: ${PROTOBUF_VERSION}")
+   include_directories(${PROTOBUF_INCLUDE_DIR})
+ 
++  if(WITH_SYSTEM_THIRD_PARTY)
++    find_package(absl CONFIG REQUIRED)
++    set(PROTOBUF_SYSTEM_ABSL_DEPS absl::raw_hash_set)
++  endif()
++
+   # Assuming that all the protobuf libraries are of the same type.
+   if(${PROTOBUF_LIBRARY} MATCHES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+     set(protobuf_LIBTYPE STATIC)
+@@ -110,14 +115,26 @@ macro(PROMPT_PROTOBUF_LIB)
+ 
+   add_library(protobuf ${protobuf_LIBTYPE} IMPORTED GLOBAL)
+   set_property(TARGET protobuf PROPERTY IMPORTED_LOCATION ${PROTOBUF_LIBRARY})
++  if(PROTOBUF_SYSTEM_ABSL_DEPS)
++    set_property(TARGET protobuf PROPERTY INTERFACE_LINK_LIBRARIES
++                                           ${PROTOBUF_SYSTEM_ABSL_DEPS})
++  endif()
+ 
+   add_library(protobuf_lite ${protobuf_LIBTYPE} IMPORTED GLOBAL)
+   set_property(TARGET protobuf_lite PROPERTY IMPORTED_LOCATION
+                                              ${PROTOBUF_LITE_LIBRARY})
++  if(PROTOBUF_SYSTEM_ABSL_DEPS)
++    set_property(TARGET protobuf_lite PROPERTY INTERFACE_LINK_LIBRARIES
++                                                ${PROTOBUF_SYSTEM_ABSL_DEPS})
++  endif()
+ 
+   add_library(libprotoc ${protobuf_LIBTYPE} IMPORTED GLOBAL)
+   set_property(TARGET libprotoc PROPERTY IMPORTED_LOCATION
+                                              ${PROTOBUF_PROTOC_LIBRARY})
++  if(PROTOBUF_SYSTEM_ABSL_DEPS)
++    set_property(TARGET libprotoc PROPERTY INTERFACE_LINK_LIBRARIES
++                                             ${PROTOBUF_SYSTEM_ABSL_DEPS})
++  endif()
+ 
+   add_executable(protoc IMPORTED GLOBAL)
+   set_property(TARGET protoc PROPERTY IMPORTED_LOCATION

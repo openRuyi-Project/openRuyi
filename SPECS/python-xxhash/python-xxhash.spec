@@ -13,7 +13,7 @@ Summary:        Python binding for xxHash
 License:        BSD-3-Clause
 URL:            https://github.com/ifduyue/python-xxhash
 VCS:            git:https://github.com/ifduyue/python-xxhash
-#!RemoteAsset
+#!RemoteAsset:  sha256:f0162a78b13a0d7617b2845b90c763339d1f1d82bb04a4b07f4ab535cc5e05d6
 Source0:        https://files.pythonhosted.org/packages/source/x/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -25,7 +25,8 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libxxhash)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,12 +39,9 @@ non-cryptographic hash algorithms.
 %build -p
 export XXHASH_LINK_SO=1
 
-%check
-# tests are skipped for now because pytest test dependencies are not fully available.
-
 %files -f %{pyproject_files}
 %doc README.rst CHANGELOG.rst
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

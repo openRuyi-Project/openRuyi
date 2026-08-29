@@ -1,0 +1,161 @@
+--- a/libs.json
++++ b/libs.json
+@@ -52,40 +52,44 @@
+         "machine": "x86_64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnu",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "x86_64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "x86_64",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "x86_64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "musl",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "x86_64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "x86_64",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "i686",
+         "pointer_size": 32,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnu",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "i386"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "i386",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "aarch64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnu",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "aarch64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "aarch64",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Android",
+@@ -102,49 +106,54 @@
+         "machine": "riscv64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnu",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "riscv64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "riscv64",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "aarch64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "musl",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "aarch64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "aarch64",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "armv6l",
+         "pointer_size": 32,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnueabihf",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "arm"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "arm",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "armv7l",
+         "pointer_size": 32,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnueabihf",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "arm"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "arm",
++        "libdir": "/usr/lib64"
+     },
+     {
+         "system": "Linux",
+         "machine": "loongarch64",
+         "pointer_size": 64,
+         "sysname": "linux",
+-        "link_type": "static",
++        "link_type": "dynamic",
+         "libc": "gnu",
+-        "obj_name": "libcurl-impersonate.a",
+-        "arch": "loongarch64"
++        "obj_name": "libcurl-impersonate-chrome.so",
++        "arch": "loongarch64",
++        "libdir": "/usr/lib64"
+     }
+ ]
+--- a/scripts/build.py
++++ b/scripts/build.py
+@@ -48,7 +48,8 @@
+             and ("libc" not in arch or arch.get("libc") == libc)
+         ):
+             if arch.get("libdir"):
+-                arch["libdir"] = os.path.expanduser(arch["libdir"])
++                if not arch["libdir"].startswith("/"):
++                    arch["libdir"] = os.path.expanduser(arch["libdir"])
+             else:
+                 if "CI" in os.environ:
+                     tmpdir = "./tmplibdir"
+@@ -74,6 +75,10 @@
+ 
+ 
+ def download_libcurl():
++    if is_dynamic and str(libdir).startswith("/usr"):
++        print(f"Using system library from {libdir}")
++        return
++
+     expected = libdir / arch["obj_name"]
+     if expected.exists():
+         print(f"libcurl-impersonate: {expected} already downloaded.")
+@@ -138,7 +143,7 @@
+             "iphlpapi",
+         ]
+     elif is_dynamic:
+-        return ["curl-impersonate"]
++        return ["curl-impersonate-chrome"]
+     else:
+         return []
+ 

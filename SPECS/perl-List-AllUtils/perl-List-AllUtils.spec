@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Combines List::Util, List::SomeUtils and List::UtilsBy in one bite-sized package
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/List-AllUtils
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/List-AllUtils-%{version}.tar.gz
+#!RemoteAsset:  sha256:30a8146ab21a7787b8c56d5829cf9a7f2b15276d3b3fca07336ac38d3002ffbc
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/List-AllUtils-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(base)
 BuildRequires:  perl(Exporter)
@@ -26,6 +30,7 @@ BuildRequires:  perl(List::SomeUtils) >= 0.58
 BuildRequires:  perl(List::Util) >= 1.56
 BuildRequires:  perl(List::UtilsBy) >= 0.11
 BuildRequires:  perl(strict)
+BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(Sub::Util)
 BuildRequires:  perl(Test::More) >= 0.96
 BuildRequires:  perl(warnings)
@@ -40,20 +45,8 @@ in List::Util, List::SomeUtils or List::UtilsBy? I sure am. Now you don't
 have to remember. This module will export all of the functions that either
 of those three modules defines.
 
-%prep
-%setup -q -n List-AllUtils-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

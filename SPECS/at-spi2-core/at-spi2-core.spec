@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Protocol definitions and daemon for D-Bus at-spi
 License:        LGPL-2.1-or-later
 URL:            https://gitlab.gnome.org/GNOME/at-spi2-core
-#!RemoteAsset
+#!RemoteAsset:  sha256:a2823b962ed16cdd5cb1fc5365029fd218394d852acd4098b321854bd6692f6e
 Source0:        https://download.gnome.org/sources/at-spi2-core/2.58/at-spi2-core-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -57,9 +57,6 @@ The at-spi2-core-devel package includes the header files and
 API documentation for libatspi.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %check
@@ -109,4 +106,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/pkgconfig/atk-bridge-2.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

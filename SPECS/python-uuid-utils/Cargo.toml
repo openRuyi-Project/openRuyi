@@ -1,0 +1,30 @@
+[package]
+name = "uuid-utils"
+version = "0.16.0"
+edition = "2024"
+readme = "README.md"
+
+[lib]
+name = "uuid_utils"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.28.3", features = [
+    "extension-module",
+    "generate-import-lib",
+]}
+rand = "0.10.1"
+uuid = { version  = "1.23.1", features = [
+    "v1",
+    "v3",
+    "v4",
+    "v5",
+    "v6",
+    "v7",
+    "v8",
+    "fast-rng",
+]}
+ahash = "0.8.12"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+mac_address = "1.1.8"

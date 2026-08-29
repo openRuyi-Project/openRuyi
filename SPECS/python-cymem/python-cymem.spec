@@ -27,7 +27,7 @@ BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  gcc-c++
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ when the object is garbage collected.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

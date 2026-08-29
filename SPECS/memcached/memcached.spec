@@ -18,7 +18,7 @@ Summary:        In-memory caching service
 License:        BSD-3-Clause
 URL:            https://memcached.org/
 VCS:            git:https://github.com/memcached/memcached.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:b1d02d7e9887d80f4885a024931c8bbe9c16d333200d2dcadde8597892c54855
 Source:         https://memcached.org/files/memcached-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -32,7 +32,7 @@ BuildOption(conf):  --enable-seccomp
 BuildOption(conf):  --enable-sasl
 %endif
 %if %{with sasl_pwdb}
-BuildOption(conf):  --enable-pwdb
+BuildOption(conf):  --enable-sasl-pwdb
 %endif
 %if %{with dtrace}
 BuildOption(conf):  --enable-dtrace
@@ -43,8 +43,11 @@ BuildRequires:  pkgconfig(libevent)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  autoconf
 BuildRequires:  automake
-%if %{with sasl}
-BuildRequires:  cyrus-sasl-devel
+%if %{with seccomp}
+BuildRequires:  pkgconfig(libseccomp)
+%endif
+%if %{with sasl} || %{with sasl_pwdb}
+BuildRequires:  pkgconfig(libsasl2)
 %endif
 
 %description
@@ -68,4 +71,4 @@ mkdir -p %{buildroot}/%{_localstatedir}/run/%{name}
 %dir %attr(750,nobody,nobody) %{_localstatedir}/run/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog

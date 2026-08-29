@@ -13,12 +13,12 @@
 }
 
 Name:           go-github-go-ldap-ldap
-Version:        3.4.12
+Version:        3.4.13
 Release:        %autorelease
 Summary:        Basic LDAP v3 functionality for the GO programming language.
 License:        MIT
 URL:            https://github.com/go-ldap/ldap
-#!RemoteAsset
+#!RemoteAsset:  sha256:554427b39afe6ddd4f90af137a46fc7b1cd8d16b70b38c3a214237af298faa71
 Source0:        https://github.com/go-ldap/ldap/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -52,4 +52,4 @@ The library implements the following specifications:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

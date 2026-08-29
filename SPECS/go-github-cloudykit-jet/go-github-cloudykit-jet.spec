@@ -8,12 +8,12 @@
 %define go_import_path  github.com/CloudyKit/jet
 
 Name:           go-github-cloudykit-jet
-Version:        6.3.1
+Version:        6.3.2
 Release:        %autorelease
 Summary:        Jet Template Engine for Go
 License:        Apache-2.0
 URL:            https://github.com/cloudykit/jet
-#!RemoteAsset
+#!RemoteAsset:  sha256:ed64097f8155da8fd66ed0846a31a88cd344a06d8c49de30adf43e426361cd27
 Source0:        https://github.com/cloudykit/jet/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -44,4 +44,4 @@ yet secure and very fast.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

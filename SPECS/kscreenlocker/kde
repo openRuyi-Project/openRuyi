@@ -1,0 +1,7 @@
+#%PAM-1.0
+# This service is only used by kcheckpass for unlocking,
+# so only auth is really relevant here.
+auth     include        system-auth
+account  include        system-auth
+password include        system-auth
+session  include        system-auth

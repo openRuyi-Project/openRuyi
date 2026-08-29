@@ -4,23 +4,23 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global parquet_test_commit a3d96a65e11e2bbca7d22a894e8313ede90a33a3
-%global arrow_test_commit df428ddaa22d94dfb525af4c0951f3dafb463795
+%global parquet_test_commit e74785d85a4ecee829e1e405444d6a1b24b8bc9c
+%global arrow_test_commit 249079a810caedda6898464003c7ef8a47efeeae
 
 Name:           arrow
-Version:        23.0.1
+Version:        24.0.0
 Release:        %autorelease
 Summary:        Apache Arrow is a universal columnar format and multi-language toolbox
 License:        Apache-2.0
 URL:            https://arrow.apache.org
 VCS:            git:https://github.com/apache/arrow
-#!RemoteAsset
+#!RemoteAsset:  sha256:94e18d188f26324c4da6bb3a723fec1536ae88b8308bada28d53c0b8d5206b28
 Source0:        https://github.com/apache/arrow/archive/apache-arrow-%{version}/%{name}-%{version}.tar.gz
 # parquet-testing data submodule, pinned to the commit used by arrow %%{version}
-#!RemoteAsset
+#!RemoteAsset:  sha256:6b3d9c1d9b9f059cf3b84b10af2b8a861db167f7809ecef555e610d26fd16433
 Source1:        https://github.com/apache/parquet-testing/archive/%{parquet_test_commit}/parquet-testing.tar.gz
 # arrow-testing data submodule, pinned to the commit used by arrow %%{version}
-#!RemoteAsset
+#!RemoteAsset:  sha256:0ad28c64bcea7a0d201043b7782b4545af822f976946bc7fc233b583cebca92e
 Source2:        https://github.com/apache/arrow-testing/archive/%{arrow_test_commit}/arrow-testing.tar.gz
 BuildSystem:    cmake
 
@@ -109,9 +109,9 @@ export PARQUET_TEST_DATA=%{_builddir}/parquet-testing/data
 export ARROW_TEST_DATA=%{_builddir}/arrow-testing/data
 
 %files
-%license %{_datadir}/doc/arrow/LICENSE.txt
 %doc %{_datadir}/doc/arrow/NOTICE.txt
 %doc %{_datadir}/doc/arrow/README.md
+%license %{_datadir}/doc/arrow/LICENSE.txt
 %{_libdir}/libarrow.so.*
 %{_libdir}/libarrow_acero.so.*
 %{_libdir}/libarrow_compute.so.*
@@ -143,4 +143,4 @@ export ARROW_TEST_DATA=%{_builddir}/arrow-testing/data
 %{_libdir}/pkgconfig/parquet.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

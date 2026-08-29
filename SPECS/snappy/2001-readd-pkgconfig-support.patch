@@ -1,0 +1,55 @@
+From f7f916d3abb6147b0fa62145b5d4e4e34684dceb Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Thu, 2 Jul 2026 20:12:08 -0700
+Subject: [PATCH] re-add pkg-config support
+
+Generate and install snappy.pc from a template under
+${CMAKE_INSTALL_LIBDIR}/pkgconfig with an absolute libdir.
+
+Based on Debian's patch:
+https://sources.debian.org/src/snappy/1.2.2-2/debian/patches/readd_pkgconfig_support.patch
+---
+ CMakeLists.txt     |  9 +++++++++
+ cmake/snappy.pc.in | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 cmake/snappy.pc.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cd71a47..d90a1ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -418,6 +418,15 @@ if(SNAPPY_INSTALL)
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+   )
+ 
++  configure_file(
++    "${PROJECT_SOURCE_DIR}/cmake/snappy.pc.in"
++    "${PROJECT_BINARY_DIR}/snappy.pc"
++    @ONLY
++  )
++  install(
++    FILES "${PROJECT_BINARY_DIR}/snappy.pc"
++    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
++  )
+   include(CMakePackageConfigHelpers)
+   configure_package_config_file(
+     "cmake/${PROJECT_NAME}Config.cmake.in"
+diff --git a/cmake/snappy.pc.in b/cmake/snappy.pc.in
+new file mode 100644
+index 0000000..3a03106
+--- /dev/null
++++ b/cmake/snappy.pc.in
+@@ -0,0 +1,10 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=${prefix}
++libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
++
++Name: @PROJECT_NAME@
++Description: A fast compressor/decompressor library
++Version: @PROJECT_VERSION@
++Libs: -L${libdir} -lsnappy
++Cflags: -I${includedir}
+-- 
+2.55.0
+

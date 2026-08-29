@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Sophisticated exporter for custom-built routines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Sub-Exporter
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Sub-Exporter-%{version}.tar.gz
+#!RemoteAsset:  sha256:2a95695d35c5d0d5373a7e145c96b9b016113b74e94116835ac05450cae4d445
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Sub-Exporter-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.12.0
 BuildRequires:  perl(base)
@@ -37,24 +41,13 @@ Requires:       perl(Data::OptList) >= 0.100
 Requires:       perl(Params::Util) >= 0.14
 Requires:       perl(Sub::Install) >= 0.92
 
+# don't use cpan2spec's description.
 %description
 Sub::Exporter provides a sophisticated alternative to Exporter.pm. It allows
 for renaming, currying/sub-generation, and other cool stuff.
-
-%prep
-%setup -q -n Sub-Exporter-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

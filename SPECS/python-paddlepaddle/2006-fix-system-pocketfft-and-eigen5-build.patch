@@ -1,0 +1,54 @@
+# Patch purpose:
+# - Use the distribution pocketfft header path when WITH_SYSTEM_THIRD_PARTY is
+#   enabled.
+# - Include the standard header that defines PRId64 in eigvals_kernel.cc.
+# - Avoid Eigen Tensor pow() for squaring so float16 and Paddle complex types
+#   build with Eigen 5.
+# Why this patch exists:
+# - The system pocketfft package installs pocketfft_hdronly.h directly in its
+#   include directory, not under Paddle's vendored extern_pocketfft/ prefix.
+# - GCC 16 diagnoses the missing <cinttypes> include for PRId64.
+# - Eigen 5 pow() overload selection rejects phi::dtype::float16 as an exponent
+#   and also does not resolve Paddle's custom complex type with an int exponent.
+
+diff --git a/paddle/phi/kernels/funcs/activation_functor.h b/paddle/phi/kernels/funcs/activation_functor.h
+index 83f18f0..e322e0a 100644
+--- a/paddle/phi/kernels/funcs/activation_functor.h
++++ b/paddle/phi/kernels/funcs/activation_functor.h
+@@ -1055,8 +1055,8 @@ struct SoftplusDoubleGradFunctor {
+           (x_beta > static_cast<T>(threshold))
+               .select(x.constant(static_cast<T>(0)),
+                       ddx * dout * static_cast<T>(beta) * x_beta.exp() /
+-                          (x_beta.exp() + static_cast<T>(1))
+-                              .pow(static_cast<T>(2)));
++                          ((x_beta.exp() + static_cast<T>(1)) *
++                           (x_beta.exp() + static_cast<T>(1))));
+     }
+ 
+     if (ddOut) {
+diff --git a/paddle/phi/kernels/cpu/eigvals_kernel.cc b/paddle/phi/kernels/cpu/eigvals_kernel.cc
+index b7a036a..b76bddd 100644
+--- a/paddle/phi/kernels/cpu/eigvals_kernel.cc
++++ b/paddle/phi/kernels/cpu/eigvals_kernel.cc
+@@ -12,6 +12,8 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#include <cinttypes>
++
+ #include "paddle/phi/kernels/eigvals_kernel.h"
+ 
+ #include "glog/logging.h"
+diff --git a/paddle/phi/kernels/funcs/fft.cc b/paddle/phi/kernels/funcs/fft.cc
+index 06d71c6..67f6a4e 100644
+--- a/paddle/phi/kernels/funcs/fft.cc
++++ b/paddle/phi/kernels/funcs/fft.cc
+@@ -22,7 +22,7 @@
+ #include "paddle/phi/kernels/funcs/mkl_fft_utils.h"
+ #elif defined(PADDLE_WITH_POCKETFFT)
+ #define POCKETFFT_CACHE_SIZE 16
+-#include "extern_pocketfft/pocketfft_hdronly.h"
++#include "pocketfft_hdronly.h"
+ #endif
+ 
+ namespace phi::funcs {

@@ -1,0 +1,77 @@
+From 3e87e3b6763d294f5596421762cbdfdad481a6ea Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 6 Jun 2026 21:55:37 +0800
+Subject: [PATCH 2/2] Tolerate missing CPU/E-SMI symbols
+
+With ENABLE_ESMI_LIB=OFF, libamd_smi.so omits the CPU API,
+but the ctypesgen wrapper binds every symbol at import time, so the
+missing CPU symbols make `import amdsmi` fail with AttributeError.
+
+Wrap the loaded CDLL in a proxy so missing symbols resolve to a lazy
+stub that only raises when actually called. `import amdsmi` then works
+and GPU consumers (e.g. PyTorch with ROCM EP, which never calls the CPU
+API) are unaffected. The library object is wrapped instead of ctypes.CDLL
+itself so callers hooking ctypes.CDLL keep working.
+---
+ py-interface/amdsmi_wrapper.py | 38 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
+
+diff --git a/py-interface/amdsmi_wrapper.py b/py-interface/amdsmi_wrapper.py
+index 6f152486..8b892f8d 100644
+--- a/py-interface/amdsmi_wrapper.py
++++ b/py-interface/amdsmi_wrapper.py
+@@ -180,6 +180,42 @@ from pathlib import Path
+ # 3. Relative to amdsmi_wrapper.py
+ #    - parent directory
+ #    - current directory
++class _AmdsmiMissingSymbol:
++    # Placeholder for a symbol absent from libamd_smi.so (e.g. the CPU/E-SMI
++    # API when the library is built with ENABLE_ESMI_LIB=OFF on non-x86_64).
++    # It accepts the restype/argtypes the wrapper assigns at import time and
++    # only raises if the symbol is ever actually called.
++    def __init__(self, name):
++        object.__setattr__(self, "_amdsmi_name", name)
++
++    def __setattr__(self, key, value):
++        object.__setattr__(self, key, value)
++
++    def __call__(self, *args, **kwargs):
++        name = object.__getattribute__(self, "_amdsmi_name")
++        raise NotImplementedError(
++            "amdsmi symbol " + repr(name) + " is unavailable: it is not "
++            "exported by this build of libamd_smi.so")
++
++
++class _AmdsmiTolerantLib:
++    # Proxy around the loaded CDLL so that binding a symbol the library does
++    # not export resolves to a stub instead of raising AttributeError at
++    # import time. We wrap the already-constructed library object rather than
++    # the ctypes.CDLL() call so that callers hooking ctypes.CDLL (e.g.
++    # PyTorch's libamd_smi.so loader) keep working.
++    def __init__(self, lib):
++        object.__setattr__(self, "_amdsmi_lib", lib)
++
++    def __getattr__(self, name):
++        try:
++            return getattr(object.__getattribute__(self, "_amdsmi_lib"), name)
++        except AttributeError:
++            if name.startswith("__"):
++                raise
++            return _AmdsmiMissingSymbol(name)
++
++
+ def find_smi_library():
+     err = OSError("Could not load libamd_smi.so")
+     possible_locations = []
+@@ -201,7 +237,7 @@ def find_smi_library():
+     for location in possible_locations:
+         try:
+             lib = ctypes.CDLL(location)
+-            return lib, location
++            return _AmdsmiTolerantLib(lib), location
+         except OSError as e:
+             err = e
+             continue
+-- 
+2.53.0
+

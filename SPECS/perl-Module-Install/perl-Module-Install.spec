@@ -11,11 +11,15 @@ Release:        %autorelease
 Summary:        Standalone, extensible Perl module installer
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Install
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Module-Install-%{version}.tar.gz
+#!RemoteAsset:  sha256:fbf91007f30565f3920e106055fd0d4287981d5e7dad8b35323ce4b733f15a7b
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Module-Install-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Archive::Zip) >= 1.37
@@ -64,21 +68,8 @@ distributions that are clean, simple, minimalist, act in a strictly correct
 manner with ExtUtils::MakeMaker, and will run on any Perl installation
 version 5.005 or newer.
 
-%prep
-%setup -q -n Module-Install-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog

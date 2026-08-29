@@ -10,11 +10,15 @@ Release:        %autorelease
 Summary:        Binary Search a sorted array with XS routines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/List-BinarySearch-XS
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAVIDO/List-BinarySearch-XS-%{version}.tar.gz
+#!RemoteAsset:  sha256:9ceb9fc3c1fc3418eb8d372be03d566a35dde6df06d55a6096a305891581f4c2
+Source0:        https://www.cpan.org/authors/id/D/DA/DAVIDO/List-BinarySearch-XS-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -25,21 +29,8 @@ A binary search searches sorted lists using a divide and conquer technique.
 On each iteration the search domain is cut in half, until the result is
 found. The computational complexity of a binary search is O(log n).
 
-%prep
-%setup -q -n List-BinarySearch-XS-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

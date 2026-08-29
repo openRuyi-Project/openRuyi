@@ -7,20 +7,23 @@
 %define qt6_version 6.8.0
 
 %define rname ksvg
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-ksvg
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Components for handling SVGs
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/ksvg
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:d580e6038ab3fb8a8755c953abd27a55894c2ae05e72cdef9bca1cf4e265a325
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
 Patch0:         0001-Revert-Support-for-fractional-scaling.patch
+
+BuildOption(conf):  -DBUILD_TESTING=OFF
 
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  cmake(KF6Archive) >= %{_kf6_version}
@@ -51,17 +54,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 Development Files for the ksvg framework.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
 %files
 %license LICENSES/*
 %doc README.md
@@ -75,4 +67,4 @@ Development Files for the ksvg framework.
 %{_kf6_libdir}/libKF6Svg.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

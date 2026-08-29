@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/cloudpipe/cloudpickle
 #!RemoteAsset:  sha256:7fda9eb655c9c230dab534f1983763de5835249750e85fbcef43aaa30a9a2414
 Source:         https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -23,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(flit-core)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description

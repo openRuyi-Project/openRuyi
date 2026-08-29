@@ -1,0 +1,28 @@
+From 4404821e65502caaea481271320d29edec346daa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Nikola=20Forr=C3=B3?= <nforro@redhat.com>
+Date: Fri, 6 Mar 2020 10:40:09 +0100
+Subject: [PATCH] do not overwrite docdir
+
+---
+ Makefile.in | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index f15a302..c3035c4 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -4668,9 +4668,8 @@ datarootdir = @datarootdir@
+ 
+ # 'infodir' says where to install info files.
+ 
+-# 'docdir' says where to install documentation files.  The default
+-# location is ${datarootdir}/doc/${PACKAGE}, but we add the version
+-docdir = $(datarootdir)/doc/${PACKAGE}-$(SHORT_VERSION)
++# 'docdir' says where to install documentation files.
++docdir = @docdir@
+ dvidir = @dvidir@
+ exec_prefix = @exec_prefix@
+ g = @g@
+-- 
+2.50.0
+

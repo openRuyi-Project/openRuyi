@@ -6,23 +6,30 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-JSON
-Version:        4.10
+Version:        4.11
 Release:        %autorelease
 Summary:        JSON (JavaScript Object Notation) encoder/decoder
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/JSON
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/I/IS/ISHIGAKI/JSON-%{version}.tar.gz
+#!RemoteAsset:  sha256:713bdbe724dbb915ed50265ffe47e079a511980cb2427aa19076788bb64c3182
+Source0:        https://www.cpan.org/authors/id/I/IS/ISHIGAKI/JSON-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(JSON::XS) >= 2.34
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Scalar::Util) >= 1.08
+BuildRequires:  perl(Test::More) >= 0.88
 
 Requires:       perl(JSON::XS) >= 2.34
+Requires:       perl(Scalar::Util) >= 1.08
+Requires:       perl(Test::More) >= 0.88
 
 %description
 This module is a thin wrapper for JSON::XS-compatible modules with a few
@@ -35,20 +42,8 @@ different .pm file) bundled in the same distribution as this module. You
 can also explicitly specify to use Cpanel::JSON::XS, a fork of JSON::XS by
 Reini Urban.
 
-%prep
-%setup -q -n JSON-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

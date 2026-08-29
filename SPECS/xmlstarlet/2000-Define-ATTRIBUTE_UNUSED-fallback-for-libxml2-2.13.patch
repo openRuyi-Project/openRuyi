@@ -1,0 +1,36 @@
+From 822f300e480c0bf47a6faf7a22059290f6ac7c7c Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Thu, 11 Jun 2026 02:51:12 +0800
+Subject: [PATCH] Define ATTRIBUTE_UNUSED fallback for libxml2 2.13+
+
+libxml2 2.13 removed the ATTRIBUTE_UNUSED macro from its public headers,
+so provide a local fallback definition.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/xml_pyx.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/xml_pyx.c b/src/xml_pyx.c
+index ab295f1..b4aa5f6 100644
+--- a/src/xml_pyx.c
++++ b/src/xml_pyx.c
+@@ -21,6 +21,15 @@
+ 
+ #include "xmlstar.h"
+ 
++/* libxml2 2.13 removed ATTRIBUTE_UNUSED from its public headers */
++#ifndef ATTRIBUTE_UNUSED
++# ifdef __GNUC__
++#  define ATTRIBUTE_UNUSED __attribute__((unused))
++# else
++#  define ATTRIBUTE_UNUSED
++# endif
++#endif
++
+ /**
+  *  Output newline and tab characters as escapes
+  *  Required both for attribute values and character data (#PCDATA)
+-- 
+2.54.0
+

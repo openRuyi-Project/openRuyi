@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           strace
-Version:        6.18
+Version:        6.19
 Release:        %autorelease
 Summary:        Tracks and displays system calls associated with a running process
 License:        LGPL-2.1-or-later
 URL:            http://strace.io/
 VCS:            git:https://github.com/strace/strace.git
-#!RemoteAsset:  sha256:0ad5dcba973a69e779650ef1cb335b12ee60716fc7326609895bd33e6d2a7325
+#!RemoteAsset:  sha256:e076c851eec0972486ec842164fdc54547f9d17abd3d1449de8b120f5d299143
 Source0:        https://strace.io/files/%{version}/strace-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -45,4 +45,4 @@ received by a process.
 %{_mandir}/man1/strace-log-merge.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

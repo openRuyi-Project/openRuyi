@@ -41,8 +41,8 @@ developing applications that use %{name}.
 %files devel
 %{_includedir}/pangomm-*/
 %{_libdir}/libpangomm-*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/pangomm-1.4.pc
 %{_libdir}/pangomm-*/
 
 %changelog
-%{?autochangelog}
+%autochangelog

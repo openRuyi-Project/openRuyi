@@ -11,12 +11,17 @@ Release:        %autorelease
 Summary:        Custom op checking attached to subroutines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Devel-CallChecker
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Devel-CallChecker-%{version}.tar.gz
+#!RemoteAsset:  sha256:7a46caef9c48908f00fe8985dcecc4ec55f42e6c4efaafce9dbdaf9d45a37bc4
+Source0:        https://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Devel-CallChecker-%{version}.tar.gz
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor optimize="%{optflags}"
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl >= 5.6.0
+BuildRequires:  perl-devel
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(DynaLoader::Functions) >= 0.001
 BuildRequires:  perl(Exporter)
@@ -43,21 +48,8 @@ available. (It is possible to achieve the effect of cv_set_call_checker
 from XS code on much earlier Perl versions, but it is painful to achieve
 without the centralised facility.)
 
-%prep
-%setup -q -n Devel-CallChecker-%{version}
-
-%build
-perl Build.PL --installdirs=vendor optimize="%{optflags}"
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Pretty printing of data structures
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Data-Dump
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/G/GA/GARU/Data-Dump-%{version}.tar.gz
+#!RemoteAsset:  sha256:a4aa6e0ddbf39d5ad49bddfe0f89d9da864e3bc00f627125d1bc580472f53fbd
+Source0:        https://www.cpan.org/authors/id/G/GA/GARU/Data-Dump-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -28,20 +32,8 @@ This module provides a few functions that traverse their argument list and
 return a string containing Perl code that, when evaled, produces a deep
 copy of the original arguments.
 
-%prep
-%setup -q -n Data-Dump-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

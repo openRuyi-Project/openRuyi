@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Module for reading .ini-style configuration files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Config-IniFiles
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SH/SHLOMIF/Config-IniFiles-%{version}.tar.gz
+#!RemoteAsset:  sha256:3c457b65d98e5ff40bdb9cf814b0d5983eb0c53fb8696bda3ba035ad2acd6802
+Source0:        https://www.cpan.org/authors/id/S/SH/SHLOMIF/Config-IniFiles-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(base)
@@ -49,20 +54,8 @@ outside your Perl script. Configurations can be imported (inherited,
 stacked,...), sections can be grouped, and settings can be accessed from a
 tied hash.
 
-%prep
-%setup -q -n Config-IniFiles-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install --destdir=%{buildroot} --create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes OLD-Changes.txt README scripts weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

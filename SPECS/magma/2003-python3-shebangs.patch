@@ -1,0 +1,45 @@
+From 29242e16b49ff0ec4d60dbaa07d3a35a7fd3bd27 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:33:00 +0800
+Subject: [PATCH] python to python3, need env to find local bits like
+ magmasubs.py
+
+---
+ tools/check-style.py         | 2 +-
+ tools/checklist_run_tests.py | 2 +-
+ tools/parse-magma.py         | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/check-style.py b/tools/check-style.py
+index 9bd4d67..82811cf 100755
+--- a/tools/check-style.py
++++ b/tools/check-style.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Rejects commits that don't follow certain stylistic rules.
+ # see https://bitbucket.org/icl/style/wiki/ICL_C_CPP_Coding_Style_Guide
+diff --git a/tools/checklist_run_tests.py b/tools/checklist_run_tests.py
+index 328fd8e..4d2b0cf 100755
+--- a/tools/checklist_run_tests.py
++++ b/tools/checklist_run_tests.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Compares testing/Makefile.src and testing/run_tests.py
+ # to ensure that all routines are being tested.
+diff --git a/tools/parse-magma.py b/tools/parse-magma.py
+index f74d8de..30e06c1 100755
+--- a/tools/parse-magma.py
++++ b/tools/parse-magma.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ #
+ # Parses output from testers into Python numpy arrays or Matlab arrays.
+ # Replaces words and "---" with NAN.
+-- 
+2.53.0
+

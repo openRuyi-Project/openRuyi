@@ -1,0 +1,46 @@
+From bd7cbe6605ff3de4f6a4c5c97f73c88e9b721c47 Mon Sep 17 00:00:00 2001
+From: Fabian Vogt <fabian@ritter-vogt.de>
+Date: Tue, 11 Jan 2022 09:12:32 +0100
+Subject: [PATCH] Apply branding to default favorites
+
+5.23.5 broke reading kickoffrc, which is the only way to specify default
+favorites outside of patching Plasma itself. See
+git:https://invent.kde.org/plasma/plasma-desktop/-/merge_requests/793 for details.
+As a workaround, copy favorites from plasma-openSUSE into the config, and:
+- Update desktop filenames (fix Amarok, LO for both Leap/TW)
+- Remove Amarok
+- Add Kate
+
+Use both org.kde.khelpcenter.desktop as well as the previous org.kde.Help name
+from khelpcenter <= v21.12.
+---
+ applets/kicker/main.xml  | 2 +-
+ applets/kickoff/main.xml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+Index: plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2/applets/kicker/main.xml
+===================================================================
+--- plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2.orig/applets/kicker/main.xml
++++ plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2/applets/kicker/main.xml
+@@ -38,7 +38,7 @@
+     </entry>
+     <entry name="favoriteApps" type="StringList">
+       <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
+-      <default>preferred://browser,org.kde.kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,org.kde.discover</default>
++      <default>preferred://browser,org.kde.kontact.desktop,writer.desktop,libreoffice-writer.desktop,org.kde.digikam.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,systemsettings.desktop,org.kde.Help.desktop,org.kde.khelpcenter.desktop,org.kde.konsole.desktop</default>
+     </entry>
+     <entry name="favoriteSystemActions" type="StringList">
+       <label>List of system action favorites.</label>
+Index: plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2/applets/kickoff/main.xml
+===================================================================
+--- plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2.orig/applets/kickoff/main.xml
++++ plasma-desktop-6.1.80git.20250709T014535~1b43b04ee2/applets/kickoff/main.xml
+@@ -19,7 +19,7 @@
+         </entry>
+         <entry name="favorites" type="StringList">
+             <label>List of general favorites. Supported values are menu id's (usually .desktop file names), special URLs that expand into default applications (e.g. preferred://browser), document URLs and KPeople contact URIs.</label>
+-            <default>preferred://browser,org.kde.kontact.desktop,systemsettings.desktop,org.kde.dolphin.desktop,org.kde.discover.desktop</default>
++            <default>preferred://browser,org.kde.kontact.desktop,writer.desktop,libreoffice-writer.desktop,org.kde.digikam.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop,systemsettings.desktop,org.kde.Help.desktop,org.kde.khelpcenter.desktop,org.kde.konsole.desktop</default>
+         </entry>
+         <entry name="systemFavorites" type="StringList">
+             <label>List of system action favorites.</label>

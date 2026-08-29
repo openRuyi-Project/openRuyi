@@ -25,6 +25,11 @@
 %endif
 %ifarch riscv64
 %global gohostarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+%global goriscv64 rva23u64
+%else
+%global goriscv64 rva20u64
+%endif
 %endif
 
 # we are shipping the full contents of src in the data subpackage, which
@@ -45,31 +50,33 @@
   /usr/lib/rpm/brp-compress
 
 Name:           go
-Version:        1.25.8
+Version:        1.26.5
 Release:        %autorelease
 Summary:        The Go Programming Language toolchain
 License:        BSD-3-Clause
 URL:            https://go.dev/
 VCS:            git:https://github.com/golang/go
-#!RemoteAsset
+#!RemoteAsset:  sha256:495be4bc87176ac567392e5b4116abd98466d33d7b49d41e764ccc6976b2dc42
 Source0:        https://go.dev/dl/%{name}%{version}.src.tar.gz
-%if %{with bootstrap}
-#!RemoteAsset
-Source1:        https://go.dev/dl/%{name}%{version}.linux-%{gohostarch}.tar.gz
-%endif
-
-# https://go-review.googlesource.com/c/go/+/732560
-Patch1:	0001-crypto-sha1-provide-optimised-assembly-for-riscv64.patch
+#!RemoteAsset:  sha256:5c2c3b16caefa1d968a94c1daca04a7ca301a496d9b086e17ad77bb81393f053
+Source1:        https://go.dev/dl/%{name}%{version}.linux-amd64.tar.gz
+#!RemoteAsset:  sha256:d4a24dd4484d3f86b99c2d300af0dea5d184557e6d61eb7aba19ff61662750e3
+Source2:        https://go.dev/dl/%{name}%{version}.linux-riscv64.tar.gz
 
 # Bootstrap from a pre-existing Go compiler.
 %if %{without bootstrap}
 BuildRequires:  go
 %endif
-BuildRequires:  gcc, make
+BuildRequires:  gcc
+BuildRequires:  make
 
 Provides:       golang = %{version}-%{release}
 Recommends:     %{name}-cshared = %{version}-%{release}
 Requires:       glibc
+
+%patchlist
+# https://go-review.googlesource.com/c/go/+/732560
+0001-crypto-sha1-provide-optimised-assembly-for-riscv64.patch
 
 %description
 The Go Programming Language. This package contains the compiler, tools,
@@ -112,13 +119,21 @@ Contains the Go standard library pre-compiled with race detector support.
 
 %if %{with bootstrap}
 mkdir -p %{_builddir}/%{name}-bootstrap
+%ifarch x86_64
 tar -xf %{SOURCE1} -C %{_builddir}/%{name}-bootstrap --strip-components=1
+%endif
+%ifarch riscv64
+tar -xf %{SOURCE2} -C %{_builddir}/%{name}-bootstrap --strip-components=1
+%endif
 %endif
 
 %build
 export GOROOT_FINAL=%{_libdir}/%{name}
 export GOHOSTOS=linux
 export GOHOSTARCH=%{gohostarch}
+%ifarch riscv64
+export GORISCV64=%{goriscv64}
+%endif
 %if %{with bootstrap}
 export GOROOT_BOOTSTRAP=%{_builddir}/%{name}-bootstrap
 %else
@@ -166,6 +181,9 @@ export GOROOT_FINAL=%{_libdir}/%{name}/
 export PATH="%{buildroot}%{_libdir}/%{name}/bin:$PATH"
 export GOTOOLDIR="%{buildroot}%{_libdir}/%{name}/pkg/tool/linux_%{gohostarch}"
 export GO_TEST_TIMEOUT_SCALE=20
+%ifarch riscv64
+export GORISCV64=%{goriscv64}
+%endif
 pushd src
 ./run.bash --no-rebuild -v -v -v -k -run "!(cmd/cgo/internal/testsanitizers|syscall)"
 popd
@@ -212,4 +230,4 @@ popd
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

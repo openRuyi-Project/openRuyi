@@ -53,7 +53,9 @@ make -j1 V=1 test
 %{_mandir}/man3/*
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/efiboot.pc
+%{_libdir}/pkgconfig/efisec.pc
+%{_libdir}/pkgconfig/efivar.pc
 
 %changelog
 %{?autochangelog}

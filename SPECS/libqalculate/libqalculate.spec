@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,6 +16,7 @@ Source0:        https://github.com/Qalculate/libqalculate/archive/refs/tags/v%{v
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
+BuildOption(build):  CXXFLAGS="%{optflags} -std=gnu++17"
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -62,4 +64,4 @@ autoreconf -fiv
 %{_includedir}/libqalculate/
 
 %changelog
-%{?autochangelog}
+%autochangelog

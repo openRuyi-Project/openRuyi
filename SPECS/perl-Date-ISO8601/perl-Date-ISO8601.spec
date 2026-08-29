@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Three ISO 8601 numerical calendars
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Date-ISO8601
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Date-ISO8601-%{version}.tar.gz
+#!RemoteAsset:  sha256:84bef53cc808bd11830fbb434c9836c3dc4b24a58db878f5073db198fb9a586c
+Source0:        https://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Date-ISO8601-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -41,20 +46,8 @@ functions to represent dates textually in the ISO 8601 formats. ISO 8601
 also covers time of day and time periods, but this module does nothing
 relating to those parts of the standard; this is only about labelling days.
 
-%prep
-%setup -q -n Date-ISO8601-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

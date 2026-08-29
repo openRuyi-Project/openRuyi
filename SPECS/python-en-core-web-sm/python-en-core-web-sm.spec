@@ -27,6 +27,9 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(spacy) >= 3.8.0
 
+Provides:       python3-en-core-web-sm = %{version}-%{release}
+%python_provide python3-en-core-web-sm
+
 Requires:       python3dist(spacy) >= 3.8.0
 
 %description
@@ -43,4 +46,4 @@ This is a spaCy language model for English, trained on OntoNotes 5 corpus.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

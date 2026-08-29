@@ -4,19 +4,19 @@ fdk-aac-free-devel is GPL compatible
 
 See https://bugzilla.redhat.com/show_bug.cgi?id=1501522#c112
 
-Index: ffmpeg-7.0/configure
+Index: ffmpeg-8.1.1/configure
 ===================================================================
---- ffmpeg-7.0.orig/configure	2022-02-09 20:07:49.490888877 +0100
-+++ ffmpeg-7.0/configure	2022-02-09 20:08:30.102854308 +0100
-@@ -1872,7 +1872,6 @@ EXTERNAL_LIBRARY_GPL_LIST="
+--- ffmpeg-8.1.1.orig/configure	2025-04-30 16:24:25.000000000 +0000
++++ ffmpeg-8.1.1/configure	2025-04-30 16:24:25.000000000 +0000
+@@ -2003,7 +2003,6 @@
 
  EXTERNAL_LIBRARY_NONFREE_LIST="
      decklink
 -    libfdk_aac
-     libtls
+     libmpeghdec
  "
 
-@@ -1912,6 +1911,7 @@ EXTERNAL_LIBRARY_LIST="
+@@ -2044,6 +2043,7 @@
      libcodec2
      libdav1d
      libdc1394
@@ -24,4 +24,3 @@ Index: ffmpeg-7.0/configure
      libflite
      libfontconfig
      libfreetype
-

@@ -62,9 +62,14 @@ Wayland-based applications, including the wayland-scanner tool.
 %{_bindir}/wayland-scanner
 %{_includedir}/wayland-*.h
 %{_libdir}/libwayland-*.so
-%{_libdir}/pkgconfig/wayland-*.pc
+%{_libdir}/pkgconfig/wayland-client.pc
+%{_libdir}/pkgconfig/wayland-cursor.pc
+%{_libdir}/pkgconfig/wayland-egl-backend.pc
+%{_libdir}/pkgconfig/wayland-egl.pc
+%{_libdir}/pkgconfig/wayland-scanner.pc
+%{_libdir}/pkgconfig/wayland-server.pc
 %{_datadir}/aclocal/
 %{_datadir}/wayland/
 
 %changelog
-%{?autochangelog}
+%autochangelog

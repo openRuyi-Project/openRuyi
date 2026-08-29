@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        For resolving Pod E<...> sequences
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Pod-Escapes
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/N/NE/NEILB/Pod-Escapes-%{version}.tar.gz
+#!RemoteAsset:  sha256:dbf7c827984951fb248907f940fd8f19f2696bc5545c0a15287e0fbe56a52308
+Source0:        https://www.cpan.org/authors/id/N/NE/NEILB/Pod-Escapes-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Exporter)
@@ -29,20 +33,8 @@ This module provides things that are useful in decoding Pod E<...>
 sequences. Presumably, it should be used only by Pod parsers and/or
 formatters.
 
-%prep
-%setup -q -n Pod-Escapes-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

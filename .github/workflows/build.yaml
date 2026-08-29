@@ -12,8 +12,7 @@ permissions:
 
 on:
   pull_request:
-    branches: [main, ci-test]
-    types: [opened, synchronize]
+    branches: [main, ci-test, fix-pbuild]
     paths:
      - 'SPECS/**'
 
@@ -52,7 +51,7 @@ jobs:
         sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
     - name: apply pbuild patch
       run: |
-        sudo patch --directory=/usr/lib/build --strip=1 -i $(pwd)/.github/build/pbuild.patch
+        sudo patch --directory=/ --strip=1 -i $(pwd)/.github/build/pbuild.patch
     - name: Limit the number of compilations
       if: steps.changed-files.outputs.specs_any_changed == 'true'
       run: |
@@ -84,3 +83,22 @@ jobs:
        name: PR${{ github.event.pull_request.number }}-build-packages-results
        path: ${{ steps.result.outputs.paths }}
        if-no-files-found: error
+  install:
+    needs: build
+    runs-on: [ubuntu-latest]
+    container:
+      image: git.openruyi.cn/openruyi/creek-x86-64:latest
+    steps:
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v8
+      with:
+       name: PR${{ github.event.pull_request.number }}-build-packages-results
+    - name: dnf update
+      run: |
+        dnf update --assumeyes
+    - name: Install all
+      run: |
+        rpms=$(find . -name '*.rpm' ! -name '*.src.rpm')
+        [ -n "$rpms" ]
+        ls -lah $rpms
+        dnf install --assumeyes $rpms

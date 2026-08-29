@@ -67,9 +67,6 @@ touch %{buildroot}%{_localstatedir}/run/udev-configure-printer/usb-uris
 
 %py_byte_compile %{__python3} %{buildroot}%{_datadir}/%{name}
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang

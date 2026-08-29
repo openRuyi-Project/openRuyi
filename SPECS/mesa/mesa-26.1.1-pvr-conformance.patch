@@ -1,0 +1,572 @@
+From c9b0e45674b80c7184246a32b1ea48407799389f Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Mon, 20 Apr 2026 19:30:21 +0800
+Subject: [PATCH 1/8] pvr: ignore DS attachment's D or S when it's unused in
+ dynamic rendering
+
+Dynamic rendering codepath allows binding an attachment with a
+depth+stencil format, but only depth or stencil active. The
+corresponding test should be disable in such case.
+
+Ignore the attachment's depth or stencil according to the rendering
+attachment info's is_depth and is_stencil variables.
+
+Fixes the following CTS testcases:
+dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.static_enable.d24_unorm_s8_uint
+dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.static_enable.d32_sfloat_s8_uint
+dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.dynamic_enable.d24_unorm_s8_uint
+dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.dynamic_enable.d32_sfloat_s8_uint
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Reviewed-by: Luigi Santivetti <luigi.santivetti@imgtec.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/41054>
+---
+ src/imagination/ci/bxs-4-64-fails.txt        |  4 ----
+ src/imagination/vulkan/pvr_arch_cmd_buffer.c | 10 +++++++++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/src/imagination/ci/bxs-4-64-fails.txt b/src/imagination/ci/bxs-4-64-fails.txt
+index c52d17f0dbd..482b7ace7c5 100644
+--- a/src/imagination/ci/bxs-4-64-fails.txt
++++ b/src/imagination/ci/bxs-4-64-fails.txt
+@@ -12,7 +12,3 @@ dEQP-VK.binding_model.unused_invalid_descriptor.write.unused.storage_buffer,Cras
+ dEQP-VK.binding_model.unused_invalid_descriptor.write.unused.storage_image,Crash
+ dEQP-VK.binding_model.unused_invalid_descriptor.write.unused.uniform_buffer,Crash
+ dEQP-VK.memory.concurrent_access.shader_and_host,Crash
+-dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.dynamic_enable.d24_unorm_s8_uint,Fail
+-dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.dynamic_enable.d32_sfloat_s8_uint,Fail
+-dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.static_enable.d24_unorm_s8_uint,Fail
+-dEQP-VK.pipeline.monolithic.stencil.no_stencil_att.dynamic_rendering.static_enable.d32_sfloat_s8_uint,Fail
+diff --git a/src/imagination/vulkan/pvr_arch_cmd_buffer.c b/src/imagination/vulkan/pvr_arch_cmd_buffer.c
+index c1c7c63672c..1e21cc8c354 100644
+--- a/src/imagination/vulkan/pvr_arch_cmd_buffer.c
++++ b/src/imagination/vulkan/pvr_arch_cmd_buffer.c
+@@ -6612,12 +6612,20 @@ pvr_setup_isp_faces_and_control(struct pvr_cmd_buffer *const cmd_buffer,
+    const enum ROGUE_TA_OBJTYPE obj_type =
+       pvr_ta_objtype(dynamic_state->ia.primitive_topology);
+ 
+-   const VkImageAspectFlags ds_aspects =
++   VkImageAspectFlags ds_aspects =
+       (!rasterizer_discard && attachment)
+          ? vk_format_aspects(attachment->vk_format) &
+               (VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT)
+          : VK_IMAGE_ASPECT_NONE;
+ 
++   /* Dynamic rendering attachments could be bound with a D+S format but only
++    * D or S active.
++    */
++   if (!pass_info->pass && attachment && !attachment->is_depth)
++      ds_aspects &= ~VK_IMAGE_ASPECT_DEPTH_BIT;
++   if (!pass_info->pass && attachment && !attachment->is_stencil)
++      ds_aspects &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
++
+    /* This is deliberately a full copy rather than a pointer because
+     * vk_optimize_depth_stencil_state() can only be run once against any given
+     * instance of vk_depth_stencil_state.
+-- 
+2.52.0
+
+From 7376d4bc8a82d1a26b3daf6c6fa43cce8cc19312 Mon Sep 17 00:00:00 2001
+From: hmtheboy154 <buingoc67@gmail.com>
+Date: Tue, 27 Jan 2026 01:12:28 +0700
+Subject: [PATCH 2/8] pvr: add support for driconf for the Vulkan driver
+
+Bringing force_vk_vendor as the first option, force_vk_devicename
+will be added later
+
+Signed-off-by: hmtheboy154 <buingoc67@gmail.com>
+Reviewed-by: Simon Perretta <simon.perretta@imgtec.com>
+[Icenowy: rebased on top of main]
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_instance.c        | 33 ++++++++++++++++++++
+ src/imagination/vulkan/pvr_instance.h        |  5 +++
+ src/imagination/vulkan/pvr_physical_device.c |  3 +-
+ src/imagination/vulkan/pvr_wsi.c             |  2 +-
+ 4 files changed, 41 insertions(+), 2 deletions(-)
+
+diff --git a/src/imagination/vulkan/pvr_instance.c b/src/imagination/vulkan/pvr_instance.c
+index 9ff8648f208..3e10ea3d591 100644
+--- a/src/imagination/vulkan/pvr_instance.c
++++ b/src/imagination/vulkan/pvr_instance.c
+@@ -22,6 +22,7 @@
+ #include "wsi_common.h"
+ 
+ #include "util/build_id.h"
++#include "util/driconf.h"
+ 
+ #include "pvr_debug.h"
+ #include "pvr_device.h"
+@@ -320,6 +321,32 @@ pvr_get_driver_build_sha(struct pvr_instance *instance)
+    return true;
+ }
+ 
++static const driOptionDescription pvr_dri_options[] = {
++   DRI_CONF_SECTION_DEBUG
++      DRI_CONF_FORCE_VK_VENDOR()
++   DRI_CONF_SECTION_END
++};
++
++static void pvr_init_dri_options(struct pvr_instance *instance)
++{
++   driParseOptionInfo(&instance->available_dri_options,
++                      pvr_dri_options,
++                      ARRAY_SIZE(pvr_dri_options));
++   driParseConfigFiles(&instance->dri_options,
++                       &instance->available_dri_options,
++                       0,
++                       "pvr",
++                       NULL,
++                       NULL,
++                       instance->vk.app_info.app_name,
++                       instance->vk.app_info.app_version,
++                       instance->vk.app_info.engine_name,
++                       instance->vk.app_info.engine_version);
++
++   instance->force_vk_vendor =
++      driQueryOptioni(&instance->dri_options, "force_vk_vendor");
++}
++
+ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
+                             const VkAllocationCallbacks *pAllocator,
+                             VkInstance *pInstance)
+@@ -357,6 +384,7 @@ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
+       goto err_free_instance;
+ 
+    pvr_process_debug_variable();
++   pvr_init_dri_options(instance);
+ 
+    instance->active_device_count = 0;
+ 
+@@ -377,6 +405,8 @@ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
+    return VK_SUCCESS;
+ 
+ err_free_instance:
++   driDestroyOptionCache(&instance->dri_options);
++   driDestroyOptionInfo(&instance->available_dri_options);
+    vk_free(pAllocator, instance);
+    return result;
+ }
+@@ -391,6 +421,9 @@ void pvr_DestroyInstance(VkInstance _instance,
+ 
+    VG(VALGRIND_DESTROY_MEMPOOL(instance));
+ 
++   driDestroyOptionCache(&instance->dri_options);
++   driDestroyOptionInfo(&instance->available_dri_options);
++
+    vk_instance_finish(&instance->vk);
+    vk_free(&instance->vk.alloc, instance);
+ }
+diff --git a/src/imagination/vulkan/pvr_instance.h b/src/imagination/vulkan/pvr_instance.h
+index 4148ef5f4d9..497831b2f6d 100644
+--- a/src/imagination/vulkan/pvr_instance.h
++++ b/src/imagination/vulkan/pvr_instance.h
+@@ -15,6 +15,7 @@
+ #define PVR_INSTANCE_H
+ 
+ #include "vk_instance.h"
++#include "util/xmlconfig.h"
+ 
+ #include <stdint.h>
+ 
+@@ -25,7 +26,11 @@ struct pvr_instance {
+ 
+    uint32_t active_device_count;
+ 
++   struct driOptionCache dri_options;
++   struct driOptionCache available_dri_options;
++
+    uint8_t driver_build_sha[BLAKE3_KEY_LEN];
++   uint32_t force_vk_vendor;
+ };
+ 
+ VK_DEFINE_HANDLE_CASTS(pvr_instance,
+diff --git a/src/imagination/vulkan/pvr_physical_device.c b/src/imagination/vulkan/pvr_physical_device.c
+index f0192175cfc..416e0f72d06 100644
+--- a/src/imagination/vulkan/pvr_physical_device.c
++++ b/src/imagination/vulkan/pvr_physical_device.c
+@@ -559,7 +559,8 @@ static bool pvr_physical_device_get_properties(
+       /* Vulkan 1.0 */
+       .apiVersion = get_api_version(),
+       .driverVersion = vk_get_driver_version(),
+-      .vendorID = VK_VENDOR_ID_IMAGINATION,
++      .vendorID = pdevice->instance->force_vk_vendor ?
++                  pdevice->instance->force_vk_vendor : VK_VENDOR_ID_IMAGINATION,
+       .deviceID = dev_info->ident.device_id,
+       .deviceType = VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU,
+       /* deviceName and pipelineCacheUUID are filled below .*/
+diff --git a/src/imagination/vulkan/pvr_wsi.c b/src/imagination/vulkan/pvr_wsi.c
+index 3f8b6e2e95b..ee1204054ef 100644
+--- a/src/imagination/vulkan/pvr_wsi.c
++++ b/src/imagination/vulkan/pvr_wsi.c
+@@ -74,7 +74,7 @@ VkResult pvr_wsi_init(struct pvr_physical_device *pdevice)
+                             pvr_wsi_proc_addr,
+                             &pdevice->vk.instance->alloc,
+                             pdevice->ws->display_fd,
+-                            NULL,
++                            &pdevice->instance->dri_options,
+                             &(struct wsi_device_options){ .sw_device = false });
+    if (result != VK_SUCCESS)
+       return result;
+-- 
+2.52.0
+
+From fe25f08b47c8b7a846c9546bf01beeca3521f1ff Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Mon, 27 Apr 2026 18:26:27 +0800
+Subject: [PATCH 3/8] pvr: prohibit clang-format from touching the dri options
+ list
+
+The DRI options list is formatted specically and clang-format cannot
+handle it properly.
+
+Disable clang-format for this snippet.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_instance.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/imagination/vulkan/pvr_instance.c b/src/imagination/vulkan/pvr_instance.c
+index 3e10ea3d591..8773e406b26 100644
+--- a/src/imagination/vulkan/pvr_instance.c
++++ b/src/imagination/vulkan/pvr_instance.c
+@@ -321,11 +321,13 @@ pvr_get_driver_build_sha(struct pvr_instance *instance)
+    return true;
+ }
+ 
++/* clang-format off */
+ static const driOptionDescription pvr_dri_options[] = {
+    DRI_CONF_SECTION_DEBUG
+       DRI_CONF_FORCE_VK_VENDOR()
+    DRI_CONF_SECTION_END
+ };
++/* clang-format on */
+ 
+ static void pvr_init_dri_options(struct pvr_instance *instance)
+ {
+-- 
+2.52.0
+
+From de56756722d9a3b965eb962677fb613bc3979eff Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Mon, 27 Apr 2026 18:28:08 +0800
+Subject: [PATCH 4/8] pvr: add dri options used by common WSI code
+
+The common Mesa Vulkan WSI code checks some DRI options.
+
+Add them to the option list of the PVR driver.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_instance.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/imagination/vulkan/pvr_instance.c b/src/imagination/vulkan/pvr_instance.c
+index 8773e406b26..52da6d884f5 100644
+--- a/src/imagination/vulkan/pvr_instance.c
++++ b/src/imagination/vulkan/pvr_instance.c
+@@ -323,8 +323,20 @@ pvr_get_driver_build_sha(struct pvr_instance *instance)
+ 
+ /* clang-format off */
+ static const driOptionDescription pvr_dri_options[] = {
++   DRI_CONF_SECTION_PERFORMANCE
++      DRI_CONF_ADAPTIVE_SYNC(true)
++      DRI_CONF_VK_X11_OVERRIDE_MIN_IMAGE_COUNT(0)
++      DRI_CONF_VK_X11_STRICT_IMAGE_COUNT(false)
++      DRI_CONF_VK_X11_ENSURE_MIN_IMAGE_COUNT(false)
++      DRI_CONF_VK_XWAYLAND_WAIT_READY(false)
++   DRI_CONF_SECTION_END
++
+    DRI_CONF_SECTION_DEBUG
+       DRI_CONF_FORCE_VK_VENDOR()
++      DRI_CONF_VK_WSI_DISABLE_UNORDERED_SUBMITS(false)
++      DRI_CONF_VK_WSI_FORCE_BGRA8_UNORM_FIRST(false)
++      DRI_CONF_VK_WSI_FORCE_SWAPCHAIN_TO_CURRENT_EXTENT(false)
++      DRI_CONF_VK_X11_IGNORE_SUBOPTIMAL(false)
+    DRI_CONF_SECTION_END
+ };
+ /* clang-format on */
+-- 
+2.52.0
+
+From da58cd888405ef19aa7802b2178dd452a4e377bf Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Mon, 27 Apr 2026 22:25:22 +0800
+Subject: [PATCH 5/8] pvr: add a driconf option to advertise FILTER_LINEAR for
+ LINEAR images
+
+Wayland compositors want to sample from 2D linear images (contents of
+the Wayland surfaces) with linear filtering.
+
+However, this feature isn't thoroughly tested, and is known to cause
+CTS failures about blitting from 3D linear images.
+
+Add a driconf option to selectively advertise this feature for Wayland
+compositors. Weston and wlroots are added to the allowlist, and their
+sources are confirmed to have no reference to 3D linear images.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_formats.c  | 17 ++++++++++++-----
+ src/imagination/vulkan/pvr_instance.c |  7 +++++++
+ src/imagination/vulkan/pvr_instance.h |  1 +
+ src/util/00-mesa-defaults.conf        | 15 +++++++++++++++
+ src/util/driconf.h                    |  8 ++++++++
+ 5 files changed, 43 insertions(+), 5 deletions(-)
+
+diff --git a/src/imagination/vulkan/pvr_formats.c b/src/imagination/vulkan/pvr_formats.c
+index b46a8454b79..1f40370daf7 100644
+--- a/src/imagination/vulkan/pvr_formats.c
++++ b/src/imagination/vulkan/pvr_formats.c
+@@ -34,6 +34,7 @@
+ #include "pvr_csb.h"
+ #include "pvr_device.h"
+ #include "pvr_entrypoints.h"
++#include "pvr_instance.h"
+ #include "pvr_limits.h"
+ #include "pvr_formats.h"
+ #include "pvr_macros.h"
+@@ -262,12 +263,11 @@ pvr_get_image_format_features2(struct pvr_physical_device *pdevice,
+       vk_format_get_ycbcr_info(vk_format);
+ 
+    if (pvr_format->bind & PVR_BIND_SAMPLER_VIEW) {
++      const uint32_t first_component_size =
++         vk_format_get_component_bits(vk_format,
++                                      UTIL_FORMAT_COLORSPACE_RGB,
++                                      0);
+       if (vk_tiling == VK_IMAGE_TILING_OPTIMAL) {
+-         const uint32_t first_component_size =
+-            vk_format_get_component_bits(vk_format,
+-                                         UTIL_FORMAT_COLORSPACE_RGB,
+-                                         0);
+-
+          flags |= VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT |
+                   VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT |
+                   VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT;
+@@ -289,6 +289,13 @@ pvr_get_image_format_features2(struct pvr_physical_device *pdevice,
+                   VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT |
+                   VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT;
+ 
++         if (pdevice->instance->enable_linear_image_linear_filter &&
++             !vk_format_is_int(vk_format) &&
++             !vk_format_is_depth_or_stencil(vk_format) &&
++             first_component_size < 32) {
++            flags |= VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
++	 }
++
+          if (ycbcr_info) {
+             flags |= VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT;
+          } else {
+diff --git a/src/imagination/vulkan/pvr_instance.c b/src/imagination/vulkan/pvr_instance.c
+index 52da6d884f5..6da953972c4 100644
+--- a/src/imagination/vulkan/pvr_instance.c
++++ b/src/imagination/vulkan/pvr_instance.c
+@@ -338,6 +338,10 @@ static const driOptionDescription pvr_dri_options[] = {
+       DRI_CONF_VK_WSI_FORCE_SWAPCHAIN_TO_CURRENT_EXTENT(false)
+       DRI_CONF_VK_X11_IGNORE_SUBOPTIMAL(false)
+    DRI_CONF_SECTION_END
++
++   DRI_CONF_SECTION_MISCELLANEOUS
++      DRI_CONF_PVR_ENABLE_LINEAR_IMAGE_LINEAR_FILTER(false)
++   DRI_CONF_SECTION_END
+ };
+ /* clang-format on */
+ 
+@@ -359,6 +363,9 @@ static void pvr_init_dri_options(struct pvr_instance *instance)
+ 
+    instance->force_vk_vendor =
+       driQueryOptioni(&instance->dri_options, "force_vk_vendor");
++   instance->enable_linear_image_linear_filter =
++      driQueryOptionb(&instance->dri_options,
++                      "pvr_enable_linear_image_linear_filter");
+ }
+ 
+ VkResult pvr_CreateInstance(const VkInstanceCreateInfo *pCreateInfo,
+diff --git a/src/imagination/vulkan/pvr_instance.h b/src/imagination/vulkan/pvr_instance.h
+index 497831b2f6d..135a0e406a2 100644
+--- a/src/imagination/vulkan/pvr_instance.h
++++ b/src/imagination/vulkan/pvr_instance.h
+@@ -31,6 +31,7 @@ struct pvr_instance {
+ 
+    uint8_t driver_build_sha[BLAKE3_KEY_LEN];
+    uint32_t force_vk_vendor;
++   bool enable_linear_image_linear_filter;
+ };
+ 
+ VK_DEFINE_HANDLE_CASTS(pvr_instance,
+diff --git a/src/util/00-mesa-defaults.conf b/src/util/00-mesa-defaults.conf
+index 6e130c80b94..00eff12f43c 100644
+--- a/src/util/00-mesa-defaults.conf
++++ b/src/util/00-mesa-defaults.conf
+@@ -1544,4 +1544,19 @@ TODO: document the other workarounds.
+             <option name="allow_rgb16_configs" value="false"/>
+         </application>
+     </device>
++    <device driver="pvr">
++        <!--
++           The PowerVR hardware can do linear filtering on linear 2D images,
++           but not 3D ones. Wayland compositors will want this, and they
++           are known not to perform linear filtering on linear 3D images.
++        -->
++        <application name="weston" application_name_match="weston">
++            <!-- Weston does not use 3D images -->
++            <option name="pvr_enable_linear_image_linear_filter" value="true"/>
++        </application>
++        <engine engine_name_match="wlroots">
++            <!-- Wlroots only creates OPTIMAL tiled 3D images -->
++            <option name="pvr_enable_linear_image_linear_filter" value="true"/>
++        </engine>
++    </device>
+ </driconf>
+diff --git a/src/util/driconf.h b/src/util/driconf.h
+index 5a73c15ac2f..a96b5c3849a 100644
+--- a/src/util/driconf.h
++++ b/src/util/driconf.h
+@@ -660,6 +660,14 @@
+    DRI_CONF_OPT_B(pan_force_enable_shader_atomics, def, \
+                   "Enable fragmentStoresAndAtomics and vertexPipelineStoresAndAtomics on any architecture. (This may not work reliably and is for debug purposes only!)")
+ 
++/**
++ * \brief powervr specific configuration options
++ */
++
++#define DRI_CONF_PVR_ENABLE_LINEAR_IMAGE_LINEAR_FILTER(def) \
++   DRI_CONF_OPT_B(pvr_enable_linear_image_linear_filter, def, \
++                  "Enable advertisement of linear filtering on linear images (which works for 2D images but not 3D ones)")
++
+ /**
+  * \brief Turnip specific configuration options
+  */
+-- 
+2.52.0
+
+From 3768dffac902464772d632db98d890e7b7ccfd41 Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Tue, 5 May 2026 17:29:31 +0800
+Subject: [PATCH 6/8] pvr: allow STORAGE usage for WSI images
+
+WSI images are expected to accept the same usage with OPTIMAL tiling
+images, and this is checked in the CTS dEQP-VK.wsi.*.headless.swapchain.
+create.image_usage test.
+
+As storage to 2D linear images seems to be okay, check whether the image
+is a WSI one by Mesa-private pNext, and allow STORAGE usage for those
+that are created by Mesa WSI.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_formats.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/imagination/vulkan/pvr_formats.c b/src/imagination/vulkan/pvr_formats.c
+index 1f40370daf7..db09c01d4f1 100644
+--- a/src/imagination/vulkan/pvr_formats.c
++++ b/src/imagination/vulkan/pvr_formats.c
+@@ -636,6 +636,16 @@ pvr_get_image_format_properties(struct pvr_physical_device *pdevice,
+       goto err_unsupported_format;
+    }
+ 
++   /* Allow STORAGE usage for WSI linear images, which is expected by the
++    * Vulkan specification (because WSI images should be as capable as optimal
++    * images). WSI images are expected to be all 2D.
++    */
++   if (vk_find_struct_const(info->pNext, WSI_IMAGE_CREATE_INFO_MESA) &&
++       tiling == VK_IMAGE_TILING_LINEAR &&
++       (pvr_format->bind & PVR_BIND_STORAGE_IMAGE)) {
++      tiling_features2 |= VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT;
++   }
++
+    /* If VK_IMAGE_CREATE_EXTENDED_USAGE_BIT is set, the driver can't decide if a
+     * specific format isn't supported based on the usage.
+     */
+@@ -816,7 +826,8 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
+ 
+    /* Extract input structs */
+    vk_foreach_struct_const (ext, pImageFormatInfo->pNext) {
+-      switch (ext->sType) {
++      /* Casting to accept Mesa-private types w/o compiler warning */
++      switch ((unsigned)ext->sType) {
+       case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO:
+          external_info = (const void *)ext;
+          break;
+@@ -824,6 +835,7 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
+          break;
+       case VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO:
+       case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT:
++      case VK_STRUCTURE_TYPE_WSI_IMAGE_CREATE_INFO_MESA:
+          /* Nothing to do here, it's handled in
+           * pvr_get_image_format_properties)
+           */
+-- 
+2.52.0
+
+From f51bcb1e1a12fa7fbf3bdb07d9cd2555c95a413a Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Mon, 27 Apr 2026 14:27:48 +0800
+Subject: [PATCH 7/8] pvr: bump conformance version to 1.4.3.3
+
+With a few fixes applied, present_id2/wait2 extensions disabled (these
+two are not recognized by Vulkan CTS 1.4.3.x) and a fix backported to
+the Vulkan CTS, the driver can now pass Vulkan CTS 1.4.3.3.
+
+Bump the conformance version to that value.
+
+Link: https://www.khronos.org/conformance/adopters/conformant-products/vulkan#submission_981
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_physical_device.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/imagination/vulkan/pvr_physical_device.c b/src/imagination/vulkan/pvr_physical_device.c
+index 416e0f72d06..451aa1c74ab 100644
+--- a/src/imagination/vulkan/pvr_physical_device.c
++++ b/src/imagination/vulkan/pvr_physical_device.c
+@@ -768,9 +768,9 @@ static bool pvr_physical_device_get_properties(
+       .driverInfo = "Mesa " PACKAGE_VERSION MESA_GIT_SHA1,
+       .conformanceVersion = {
+          .major = 1,
+-         .minor = 3,
+-         .subminor = 8,
+-         .patch = 4,
++         .minor = 4,
++         .subminor = 3,
++         .patch = 3,
+       },
+ 
+       /* VK_EXT_extended_dynamic_state3 */
+-- 
+2.52.0
+
+From 171b33e910a98c68f62bd02aa80e7483e7268af2 Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Wed, 27 May 2026 20:50:44 +0800
+Subject: [PATCH 8/8] pvr: advertise BXM-4-64 as conformant
+
+CTS tests have passed on BXM-4-64 (both 36.52.104.182 and 36.56.104.183)
+with the open source driver.
+
+Advertise them as conformant.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ src/imagination/vulkan/pvr_physical_device.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/imagination/vulkan/pvr_physical_device.c b/src/imagination/vulkan/pvr_physical_device.c
+index 451aa1c74ab..c9d22ec0d6f 100644
+--- a/src/imagination/vulkan/pvr_physical_device.c
++++ b/src/imagination/vulkan/pvr_physical_device.c
+@@ -977,7 +977,9 @@ static bool pvr_device_is_conformant(const struct pvr_device_info *info)
+ {
+    const uint64_t bvnc = pvr_get_packed_bvnc(info);
+    switch (bvnc) {
++   case PVR_BVNC_PACK(36, 52, 104, 182):
+    case PVR_BVNC_PACK(36, 53, 104, 796):
++   case PVR_BVNC_PACK(36, 56, 104, 183):
+       return true;
+ 
+    default:
+-- 
+2.52.0
+

@@ -17,22 +17,18 @@
 %global _test_target test
 
 Name:           openssl
-Version:        3.5.2
+Version:        3.6.3
 Release:        %autorelease
 Summary:        Cryptography and SSL/TLS Toolkit
 License:        Apache-2.0
 URL:            https://www.openssl.org/
 VCS:            git:https://github.com/openssl/openssl.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:243a86649cf6f23eeb6a2ff2456e09e5d77dd9018a54d3d96b0c6bdd6ba6c7f1
 Source:         https://www.openssl.org/source/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-# Use the shared jitterentropy library instead of static
-Patch0:         openssl-shared-jitterentropy.patch
-
 BuildOption(check):  LD_LIBRARY_PATH="$PWD"
 
-BuildRequires:  gcc
 BuildRequires:  jitterentropy-devel
 BuildRequires:  make
 BuildRequires:  perl
@@ -48,6 +44,29 @@ OpenSSL contains an implementation of the SSL and TLS protocols.
 %package        devel
 Summary:        Development files for building with OpenSSL
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%patchlist
+# Use the shared jitterentropy library instead of static
+0001-openssl-shared-jitterentropy.patch
+# https://github.com/openssl/openssl/pull/30787
+0004-RISC-V-Port-dot-asm-ChaCha20-assembly-implementation.patch
+# https://github.com/openssl/openssl/pull/31178
+0005-RISC-V-GHASH-multi-block-aggregation.patch
+0006-RISC-V-GHASH-Zvbc-multi-block-aggregation.patch
+0007-RISC-V-GHASH-Zvkg-multi-block-aggregation.patch
+# https://github.com/openssl/openssl/pull/28673
+0008-Backport-Instruction-rearrangement-optimization-for-SHA256-on-RISCV.patch
+# https://github.com/openssl/openssl/pull/30194
+0009-Backport-riscv-AES-XTS-Code-Comment-Correction.patch
+# https://github.com/openssl/openssl/pull/29134
+# https://github.com/openssl/openssl/pull/29137
+# https://github.com/openssl/openssl/pull/29451
+# https://github.com/openssl/openssl/pull/29544
+0010-Backport-riscv-Performance-Optimization-of-SM4-CBC-on-RISC-V-Architecture.patch
+# https://github.com/openssl/openssl/pull/31116
+0011-Backport-riscv-Further-improve-the-decryption-performance-of-AES-128-CBC-on-RISC-V.patch
+# https://github.com/openssl/openssl/pull/25918
+0012-Add-SM2-implementation-in-generic-riscv64-asm.patch
 
 %description    devel
 This package contains the header files, pkgconfig/cmake files, development
@@ -164,4 +183,4 @@ find demos -type f -perm /111 -exec chmod 644 {} +
 %{_datadir}/doc/openssl/html/
 
 %changelog
-%{?autochangelog}
+%autochangelog

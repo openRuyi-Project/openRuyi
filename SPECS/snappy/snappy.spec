@@ -12,9 +12,14 @@ Release:        %autorelease
 Summary:        A fast compressor/decompressor
 License:        BSD-3-Clause
 URL:            https://github.com/google/snappy
-#!RemoteAsset
+#!RemoteAsset:  sha256:90f74bc1fbf78a6c56b3c4a082a05103b3a56bb17bca1a27e052ea11723292dc
 Source0:        https://github.com/google/snappy/archive/%{version}/snappy-%{version}.tar.gz
 BuildSystem:    cmake
+
+# https://sources.debian.org/patches/snappy/1.2.2-1/add_option_to_enable_rtti.patch/
+Patch2000:      2000-honor-SNAPPY_ENABLE_RTTI.patch
+# Re-add pkg-config support
+Patch2001:      2001-readd-pkgconfig-support.patch
 
 BuildOption(conf):  -DBUILD_SHARED_LIBS:BOOL=ON
 BuildOption(conf):  -DSNAPPY_ENABLE_RTTI:BOOL=ON
@@ -52,6 +57,7 @@ developing applications that use the Snappy library.
 %dir %{_libdir}/cmake
 %dir %{_libdir}/cmake/Snappy
 %{_libdir}/cmake/Snappy/*
+%{_libdir}/pkgconfig/snappy.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

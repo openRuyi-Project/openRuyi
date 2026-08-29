@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Validate your CPAN META.yml files
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Test-CPAN-Meta
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BA/BARBIE/Test-CPAN-Meta-%{version}.tar.gz
+#!RemoteAsset:  sha256:f55b4f9cf6bc396d0fe8027267685cb2ac4affce897d0967a317fac6db5a8db5
+Source0:        https://www.cpan.org/authors/id/B/BA/BARBIE/Test-CPAN-Meta-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -39,20 +43,8 @@ slowly being introduced to module uploads, via the use of package makers
 and installers such as ExtUtils::MakeMaker, Module::Build and
 Module::Install.
 
-%prep
-%setup -q -n Test-CPAN-Meta-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

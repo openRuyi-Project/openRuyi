@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python data structures for data analysis, time series, and statistics
 License:        BSD-3-Clause
 URL:            https://pandas.pydata.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:4186a699674af418f655dbd420ed87f50d56b4cd6603784279d9eef6627823c8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -31,7 +31,8 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(hypothesis)
 BuildRequires:  python3dist(jinja2)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ block for doing data analysis in Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

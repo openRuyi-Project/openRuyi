@@ -10,16 +10,21 @@ Release:        %autorelease
 Summary:        Perl interface to the MD5 Algorithm
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Digest-MD5
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/Digest-MD5-%{version}.tar.gz
+#!RemoteAsset:  sha256:b5ecba079bd5907d52663a659cd977b6247526abe6aed9b818d083dd99af77d2
+Source0:        https://www.cpan.org/authors/id/T/TO/TODDR/Digest-MD5-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Digest::base) >= 1.00
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(XSLoader)
+BuildRequires:  perl-devel
 
 Requires:       perl(Digest::base) >= 1.00
 
@@ -29,21 +34,8 @@ Message Digest algorithm from within Perl programs. The algorithm takes as
 input a message of arbitrary length and produces as output a 128-bit
 "fingerprint" or "message digest" of the input.
 
-%prep
-%setup -q -n Digest-MD5-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README rfc1321.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

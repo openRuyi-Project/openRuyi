@@ -26,14 +26,14 @@ Summary:        A persistent key-value database
 License:        BSD-3-Clause AND BSD-2-Clause AND MIT AND BSL-1.0
 URL:            https://valkey.io
 VCS:            git:https://github.com/valkey-io/valkey
-#!RemoteAsset
+#!RemoteAsset:  sha256:32350b017fee5e1a85f7e2d8580d581a0825ceae5cb3395075012c0970694dee
 Source0:        https://github.com/valkey-io/valkey/archive/%{version}/valkey-%{version}.tar.gz
 Source1:        valkey.logrotate
 Source2:        valkey-sentinel.service
 Source3:        valkey.service
 Source4:        valkey.sysusers
 Source5:        valkey.tmpfiles
-#!RemoteAsset
+#!RemoteAsset:  sha256:aa7976a217d399d8079e1c3c9ba3b816ec285e1a197e8a5c378b0d94bd106c7d
 Source50:       https://github.com/valkey-io/valkey-doc/archive/%{doc_version}/valkey-doc-%{doc_version}.tar.gz
 BuildSystem:    autotools
 
@@ -59,7 +59,7 @@ BuildRequires:  pkgconfig(openssl)
 # for docs/man pages
 BuildRequires:  pandoc
 BuildRequires:  python3
-BuildRequires:  python3-pyyaml
+BuildRequires:  python3dist(pyyaml)
 %endif
 
 Provides:       valkey(modules_abi)%{?_isa} = %{valkey_modules_abi}
@@ -334,4 +334,4 @@ taskset -c 1 ./runtest --clients 50 --skiptest "Active defrag - AOF loading"
 %{_includedir}/redismodule.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

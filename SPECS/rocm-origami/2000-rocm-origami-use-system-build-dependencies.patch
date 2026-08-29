@@ -1,0 +1,28 @@
+From a51fcb409d6cd44a4b884bdb0fe46bb44fab4563 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 12:00:00 +0800
+Subject: [PATCH] Do not require git at cmake configure time
+
+We build from a release tarball, not a git checkout, so git is not
+guaranteed to be present and is not actually needed to configure the
+build. Skip the find_package(Git REQUIRED) check.
+---
+ cmake/dependencies.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index 82f912d..31b1a47 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -4,7 +4,7 @@
+ # Dependencies
+ 
+ # Git
+-find_package(Git REQUIRED)
++#find_package(Git REQUIRED)
+ 
+ # Workaround until hcc & hip cmake modules fixes symlink logic in their config files.
+ # (Thanks to rocBLAS devs for finding workaround for this problem!)
+-- 
+2.53.0
+

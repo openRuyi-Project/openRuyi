@@ -1,0 +1,3 @@
+# Distribution-guard flag for spec `%if 0%{?openruyi}`. A presence flag (1)
+# rather than a version number, since VERSION_ID is a codename ("Creek").
+%openruyi 1

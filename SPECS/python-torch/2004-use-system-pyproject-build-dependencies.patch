@@ -1,0 +1,24 @@
+Use the distro's CMake and Ninja executables and omit backend-only network
+dependencies. Relax only setuptools' upper bound so the current distro build
+backend can validate PyTorch's PEP 639 metadata.
+
+diff --git a/pyproject.toml b/pyproject.toml
+index e527c56..c143eac 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -2,14 +2,10 @@
+
+ [build-system]
+ requires = [
+-    "setuptools>=77.0.0,<82",  # 77.0 is the first release with PEP 639 license-files support
+-    "cmake>=3.27",
+-    "ninja",
++    "setuptools>=77.0.0",  # 77.0 is the first release with PEP 639 license-files support
+     "numpy",
+     "packaging>=24.2",  # required by setuptools>=77 to validate PEP 639 license expressions
+     "pyyaml",
+-    "requests",
+-    "six",  # dependency chain: NNPACK -> PeachPy -> six
+     "typing-extensions>=4.10.0",
+ ]
+ build-backend = "setuptools.build_meta"

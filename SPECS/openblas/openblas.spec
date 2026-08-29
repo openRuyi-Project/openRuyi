@@ -21,12 +21,19 @@ Source0:        https://github.com/OpenMathLib/OpenBLAS/releases/download/v%{ver
 BuildSystem:    autotools
 
 BuildOption(build):  BINARY=64
-BuildOption(build):  INTERFACE64=1
+BuildOption(build):  INTERFACE64=0
 BuildOption(build):  USE_THREAD=1
 BuildOption(build):  USE_OPENMP=0
 BuildOption(build):  NO_STATIC=1
 BuildOption(build):  DYNAMIC_ARCH=1
 BuildOption(build):  NO_TEST=1
+%ifarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+BuildOption(build):  TARGET=RISCV64_ZVL128B
+%else
+BuildOption(build):  TARGET=RISCV64_GENERIC
+%endif
+%endif
 BuildOption(install):  PREFIX=%{_prefix}
 BuildOption(install):  OPENBLAS_LIBRARY_DIR=%{_libdir}
 BuildOption(install):  NO_STATIC=1
@@ -34,10 +41,6 @@ BuildOption(install):  NO_STATIC=1
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  perl-devel
-
-%ifarch riscv64
-BuildOption(build): TARGET=RISCV64_GENERIC
-%endif
 
 %description
 OpenBLAS is an optimized BLAS library based on GotoBLAS2, providing a high-performance
@@ -53,16 +56,44 @@ This package contains the development headers and libraries for OpenBLAS.
 # No configure
 %conf
 
+# Parallel ILP64 build for consumers that BR pkgconfig(openblas64).
+%prep -a
+cp -al . ../ilp64
+
+%build -a
+%make_build -C ../ilp64 \
+%ifarch riscv64
+%if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+  TARGET=RISCV64_ZVL128B \
+%else
+  TARGET=RISCV64_GENERIC \
+%endif
+%endif
+  BINARY=64 INTERFACE64=1 LIBNAMESUFFIX=64 \
+  USE_THREAD=1 USE_OPENMP=0 NO_STATIC=1 DYNAMIC_ARCH=1 NO_TEST=1
+
+%install -a
+%make_install -C ../ilp64 \
+  PREFIX=%{_prefix} \
+  OPENBLAS_LIBRARY_DIR=%{_libdir} \
+  OPENBLAS_INCLUDE_DIR=%{_includedir}/openblas64 \
+  OPENBLAS_CMAKE_DIR=%{_libdir}/cmake/openblas64 \
+  INTERFACE64=1 LIBNAMESUFFIX=64 NO_STATIC=1
+
 %files
 %license LICENSE
 %doc Changelog.txt GotoBLAS_01Readme.txt
 %{_libdir}/libopenblas*.so.*
+%{_libdir}/libopenblas*-r%{version}.so
 
 %files devel
 %{_includedir}/*
 %{_libdir}/libopenblas*.so
-%{_libdir}/pkgconfig/*.pc
+%exclude %{_libdir}/libopenblas*-r%{version}.so
+%{_libdir}/pkgconfig/openblas.pc
+%{_libdir}/pkgconfig/openblas64.pc
 %{_libdir}/cmake/openblas/
+%{_libdir}/cmake/openblas64/
 
 %changelog
-%{?autochangelog}
+%autochangelog

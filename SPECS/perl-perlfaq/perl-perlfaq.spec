@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Frequently asked questions about Perl
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/perlfaq
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/perlfaq-%{version}.tar.gz
+#!RemoteAsset:  sha256:eed03a887f21e2bede71c07645357a26cabde487365ac17fa3366baaeb0ea8d6
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/perlfaq-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -29,20 +33,8 @@ The perlfaq comprises several documents that answer the most commonly asked
 questions about Perl and Perl programming. It's divided by topic into nine
 major sections outlined in this document.
 
-%prep
-%setup -q -n perlfaq-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

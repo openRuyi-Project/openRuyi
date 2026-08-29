@@ -68,7 +68,7 @@ sed -i \
 %files devel
 %{_includedir}/*.h
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libtomcrypt.pc
 
 %changelog
 %{?autochangelog}

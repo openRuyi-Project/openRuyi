@@ -1,0 +1,122 @@
+# === Font directory macros ===
+# Use these in %%files sections and %%install scripts.
+
+%_fontdir               %{_datadir}/fonts
+%_font_truetypedir      %{_fontdir}/truetype
+%_font_opentypedir      %{_fontdir}/opentype
+%_font_fontconfigdir    %{_datadir}/fontconfig/conf.avail
+
+# === %install_font ===
+# Install a single font file to the correct directory based on extension.
+# Usage: %install_font <src> [subdir]
+#
+#   .ttf / .ttc  -> %%{_font_truetypedir}/<subdir>/
+#   .otf         -> %%{_font_opentypedir}/<subdir>/
+#
+# If subdir is omitted, files go directly into the type directory.
+# The destination directory is created automatically.
+#
+# This is pure shell — safe to call inside for loops.
+#
+# Examples:
+#   %install_font Foo-Regular.ttf mypkg
+#   %install_font Bar-Bold.otf   mypkg
+#   %install_font Foo.ttc
+
+%install_font() \
+  _font_src="%{1}" \
+  case "${_font_src##*.}" in \
+    ttf|ttc) _font_dest="%{_font_truetypedir}" ;; \
+    otf)     _font_dest="%{_font_opentypedir}" ;; \
+    *)       echo "%%install_font: unknown font extension: $_font_src" >&2; exit 1 ;; \
+  esac \
+  [ -n "%{2}" ] && _font_dest="$_font_dest/%{2}" \
+  install -m 0755 -d "%{buildroot}$_font_dest" \
+  install -m 0644 -p "$_font_src" "%{buildroot}$_font_dest/" \
+  :
+
+# === %install_fonts ===
+# Install font files matching a glob to the correct directory.
+# Usage: %install_fonts <glob> [subdir]
+#
+# Each file matched by <glob> is installed via %%install_font.
+# Files that don't exist (glob with no matches) are silently skipped.
+#
+# Examples:
+#   %install_fonts *.ttf        mypkg
+#   %install_fonts *.otf
+#   %install_fonts Sarasa-*.ttc
+
+%install_fonts() \
+  for _f in %{1}; do \
+    [ -f "$_f" ] || continue \
+    %install_font "$_f" "%{2}" \
+  done \
+  :
+
+# === %install_fonts_auto ===
+# Auto-detect and install all font files in the current directory.
+# Usage: %install_fonts_auto [subdir]
+#
+# Scans for *.ttf, *.otf, *.ttc and installs each to the correct
+# destination based on extension.  Use when a source archive mixes
+# ttf and otf and you just want them sorted correctly.
+#
+# Example:
+#   %install_fonts_auto mypkg
+
+%install_fonts_auto() \
+  for _ext in ttf otf ttc; do \
+    for _f in *."$_ext"; do \
+      [ -f "$_f" ] || continue \
+      %install_font "$_f" "%{1}" \
+    done \
+  done \
+  :
+
+# === %font_files ===
+# Generate %%files entries for fonts installed under a subdirectory.
+# Usage: %font_files <subdir> [ext...]
+#
+# If no extensions are given, generates entries for ttf, otf, and ttc.
+# Each extension gets a %%dir line and a glob line for the matching
+# type directory.
+#
+# Entries are joined with string.char(10) (a literal newline) because
+# rpm's lua print() emits no trailing newline — joining with "\n" is
+# ambiguous under rpm's backslash handling, and bare print()s collapse
+# onto a single %%files line.
+#
+# Examples:
+#   %font_files mypkg             -> dir + globs for ttf, otf, ttc
+#   %font_files mypkg ttf         -> dir + glob for ttf only
+#   %font_files mypkg ttf otf     -> dir + globs for ttf and otf
+
+%font_files() \
+  %{lua: \
+    local subdir = rpm.expand("%{1}") \
+    local exts = {} \
+    if rpm.expand("%{2}") == "" then \
+      exts = {"ttf", "otf", "ttc"} \
+    else \
+      for i = 2, 99 do \
+        local e = rpm.expand("%{" .. i .. "}") \
+        if e == "" then break end \
+        exts[#exts+1] = e \
+      end \
+    end \
+    local lines = {} \
+    for _, ext in ipairs(exts) do \
+      local typedir \
+      if ext == "ttf" or ext == "ttc" then \
+        typedir = rpm.expand("%{_font_truetypedir}") \
+      elseif ext == "otf" then \
+        typedir = rpm.expand("%{_font_opentypedir}") \
+      end \
+      if typedir then \
+        lines[#lines+1] = "%dir " .. typedir .. "/" .. subdir .. "/" \
+        lines[#lines+1] = typedir .. "/" .. subdir .. "/*." .. ext \
+      end \
+    end \
+    print(table.concat(lines, string.char(10))) \
+  }

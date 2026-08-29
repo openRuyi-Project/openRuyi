@@ -11,16 +11,18 @@
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kio
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Network transparent access to files and data
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kio
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:158f47746806c3dd87a09091eaa46ffee286cd658f9e26b4422656b66176627a
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  attr-devel
 BuildRequires:  pkgconfig
@@ -106,25 +108,11 @@ will ever need. In fact, the KDE file manager (Dolphin) and the KDE
 file dialog also uses this to provide its network-enabled file management.
 Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
+%install -a
 # Use langpacks macro to auto-split translations
-%find_lang %{name}6 --with-qt --all-name --generate-subpackages
+%find_lang %{name} --with-qt --all-name --generate-subpackages
 
-%files -f %{name}6.lang
+%files -f %{name}.lang
 %license LICENSES/*
 %doc README.md
 %{_kf6_applicationsdir}/ktelnetservice6.desktop
@@ -180,4 +168,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_sharedir}/kdevappwizard/templates/kioworker6.tar.bz2
 
 %changelog
-%{?autochangelog}
+%autochangelog

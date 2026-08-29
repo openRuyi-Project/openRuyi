@@ -1,0 +1,825 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c1ee2c6..b51fa08 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -293,6 +293,7 @@ option(WITH_TESTING "Compile PaddlePaddle with unit testing" OFF)
+ option(WITH_MULTINODE_TESTING "Test multinode apis and ops" OFF)
+ option(WITH_MKL "Compile PaddlePaddle with MKL support." ${AVX_FOUND})
+ option(WITH_SYSTEM_BLAS "Use system blas library" OFF)
++option(WITH_SYSTEM_THIRD_PARTY "Use system third-party dependencies" OFF)
+ option(WITH_DISTRIBUTE "Compile with distributed support" OFF)
+ option(WITH_BRPC_RDMA "Use brpc rdma as the rpc protocol" OFF)
+ option(ON_INFER "Turn on inference optimization and inference-lib generation"
+diff --git a/cmake/cblas.cmake b/cmake/cblas.cmake
+index 9f1058b..ec80719 100644
+--- a/cmake/cblas.cmake
++++ b/cmake/cblas.cmake
+@@ -178,6 +178,10 @@ if(NOT DEFINED CBLAS_PROVIDER AND WITH_SYSTEM_BLAS)
+ endif()
+ 
+ ## Then build openblas by external_project
++if(NOT DEFINED CBLAS_PROVIDER AND WITH_SYSTEM_THIRD_PARTY)
++  message(FATAL_ERROR "System BLAS requested but no usable CBLAS provider was found")
++endif()
++
+ if(NOT DEFINED CBLAS_PROVIDER)
+   include(external/openblas) # download, build, install openblas
+   set(CBLAS_PROVIDER EXTERN_OPENBLAS)
+diff --git a/cmake/external/dlpack.cmake b/cmake/external/dlpack.cmake
+index 87b3bce..058c814 100644
+--- a/cmake/external/dlpack.cmake
++++ b/cmake/external/dlpack.cmake
+@@ -14,6 +14,17 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(DLPACK_INCLUDE_DIR NAMES dlpack/dlpack.h)
++  if(NOT DLPACK_INCLUDE_DIR)
++    message(FATAL_ERROR "System dlpack requested but not found")
++  endif()
++  include_directories(${DLPACK_INCLUDE_DIR})
++  add_library(dlpack INTERFACE)
++  target_include_directories(dlpack INTERFACE ${DLPACK_INCLUDE_DIR})
++  return()
++endif()
++
+ set(DLPACK_PREFIX_DIR ${THIRD_PARTY_PATH}/dlpack)
+ set(DLPACK_INCLUDE_DIR ${THIRD_PARTY_PATH}/dlpack/src/extern_dlpack/include)
+ set(SOURCE_DIR ${PADDLE_SOURCE_DIR}/third_party/dlpack)
+diff --git a/cmake/external/eigen.cmake b/cmake/external/eigen.cmake
+index 744e9c1..fcd5d14 100644
+--- a/cmake/external/eigen.cmake
++++ b/cmake/external/eigen.cmake
+@@ -14,6 +14,20 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(EIGEN_INCLUDE_DIR NAMES Eigen/Core PATH_SUFFIXES eigen3)
++  if(NOT EIGEN_INCLUDE_DIR)
++    message(FATAL_ERROR "System eigen3 requested but not found")
++  endif()
++  include_directories(${EIGEN_INCLUDE_DIR})
++  add_library(eigen3 INTERFACE)
++  target_include_directories(eigen3 INTERFACE ${EIGEN_INCLUDE_DIR})
++  if(WITH_SW)
++    add_definitions(-DEIGEN_AVOID_THREAD_LOCAL)
++  endif()
++  return()
++endif()
++
+ # update eigen to the commit id f612df27 on 03/16/2021
+ set(EIGEN_PREFIX_DIR ${THIRD_PARTY_PATH}/eigen3)
+ set(EIGEN_SOURCE_DIR ${THIRD_PARTY_PATH}/eigen3/src/extern_eigen3)
+diff --git a/cmake/external/gflags.cmake b/cmake/external/gflags.cmake
+index c8152cd..0e0a493 100755
+--- a/cmake/external/gflags.cmake
++++ b/cmake/external/gflags.cmake
+@@ -14,6 +14,29 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(GFLAGS_INCLUDE_DIR NAMES gflags/gflags.h)
++  find_library(GFLAGS_LIBRARIES NAMES gflags)
++  if(NOT GFLAGS_INCLUDE_DIR OR NOT GFLAGS_LIBRARIES)
++    message(FATAL_ERROR "System gflags requested but not found")
++  endif()
++  include_directories(${GFLAGS_INCLUDE_DIR})
++  if(NOT TARGET gflags)
++    add_library(gflags UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET gflags PROPERTY IMPORTED_LOCATION ${GFLAGS_LIBRARIES})
++    set_property(TARGET gflags PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                       ${GFLAGS_INCLUDE_DIR})
++  endif()
++  set(flags_dep)
++  if(WITH_GFLAGS)
++    list(APPEND flags_dep gflags)
++    add_definitions(-DPADDLE_WITH_GFLAGS)
++  else()
++    list(APPEND flags_dep paddle_flags)
++  endif()
++  return()
++endif()
++
+ set(GFLAGS_INSTALL_DIR ${THIRD_PARTY_PATH}/install/gflags)
+ set(GFLAGS_PREFIX_DIR ${THIRD_PARTY_PATH}/gflags)
+ set(GFLAGS_INCLUDE_DIR
+diff --git a/cmake/external/glog.cmake b/cmake/external/glog.cmake
+index bd1ab7f..12c7c89 100755
+--- a/cmake/external/glog.cmake
++++ b/cmake/external/glog.cmake
+@@ -16,6 +16,23 @@ include(ExternalProject)
+ 
+ add_definitions(-DGLOG_NO_ABBREVIATED_SEVERITIES)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(GLOG_INCLUDE_DIR NAMES glog/logging.h)
++  find_library(GLOG_LIBRARIES NAMES glog)
++  if(NOT GLOG_INCLUDE_DIR OR NOT GLOG_LIBRARIES)
++    message(FATAL_ERROR "System glog requested but not found")
++  endif()
++  include_directories(${GLOG_INCLUDE_DIR})
++  if(NOT TARGET glog)
++    add_library(glog UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET glog PROPERTY IMPORTED_LOCATION ${GLOG_LIBRARIES})
++    set_property(TARGET glog PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                      ${GLOG_INCLUDE_DIR})
++  endif()
++  link_libraries(glog)
++  return()
++endif()
++
+ set(GLOG_PREFIX_DIR ${THIRD_PARTY_PATH}/glog)
+ set(GLOG_INSTALL_DIR ${THIRD_PARTY_PATH}/install/glog)
+ set(GLOG_INCLUDE_DIR
+diff --git a/cmake/external/json.cmake b/cmake/external/json.cmake
+index 60ab91f..9754def 100644
+--- a/cmake/external/json.cmake
++++ b/cmake/external/json.cmake
+@@ -14,6 +14,17 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(JSON_INCLUDE_DIR NAMES nlohmann/json.hpp)
++  if(NOT JSON_INCLUDE_DIR)
++    message(FATAL_ERROR "System nlohmann_json requested but not found")
++  endif()
++  include_directories(${JSON_INCLUDE_DIR})
++  add_library(json INTERFACE)
++  target_include_directories(json INTERFACE ${JSON_INCLUDE_DIR})
++  return()
++endif()
++
+ set(JSON_PREFIX_DIR ${THIRD_PARTY_PATH}/nlohmann_json)
+ set(JSON_INCLUDE_DIR ${JSON_PREFIX_DIR}/include)
+ 
+diff --git a/cmake/external/libuv.cmake b/cmake/external/libuv.cmake
+index 5896f83..27cb7fc 100644
+--- a/cmake/external/libuv.cmake
++++ b/cmake/external/libuv.cmake
+@@ -14,6 +14,22 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(LIBUV_INCLUDE_DIR NAMES uv.h)
++  find_library(LIBUV_LIBRARIES NAMES uv)
++  if(NOT LIBUV_INCLUDE_DIR OR NOT LIBUV_LIBRARIES)
++    message(FATAL_ERROR "System libuv requested but not found")
++  endif()
++  include_directories(${LIBUV_INCLUDE_DIR})
++  if(NOT TARGET libuv)
++    add_library(libuv UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET libuv PROPERTY IMPORTED_LOCATION ${LIBUV_LIBRARIES})
++    set_property(TARGET libuv PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                     ${LIBUV_INCLUDE_DIR})
++  endif()
++  return()
++endif()
++
+ set(LIBUV_SOURCE_DIR ${PADDLE_SOURCE_DIR}/third_party/libuv)
+ set(LIBUV_INSTALL_DIR ${THIRD_PARTY_PATH}/install/libuv)
+ set(LIBUV_PREFIX_DIR ${THIRD_PARTY_PATH}/libuv)
+diff --git a/cmake/external/pocketfft.cmake b/cmake/external/pocketfft.cmake
+index 1382ca7..e8d7114 100644
+--- a/cmake/external/pocketfft.cmake
++++ b/cmake/external/pocketfft.cmake
+@@ -14,6 +14,17 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(POCKETFFT_INCLUDE_DIR NAMES pocketfft_hdronly.h)
++  if(NOT POCKETFFT_INCLUDE_DIR)
++    message(FATAL_ERROR "System pocketfft requested but not found")
++  endif()
++  include_directories(${POCKETFFT_INCLUDE_DIR})
++  add_library(pocketfft INTERFACE)
++  target_include_directories(pocketfft INTERFACE ${POCKETFFT_INCLUDE_DIR})
++  return()
++endif()
++
+ set(POCKETFFT_PATH
+     "${THIRD_PARTY_PATH}/pocketfft"
+     CACHE STRING "A path setting for external_pocketfft path.")
+diff --git a/cmake/external/pybind11.cmake b/cmake/external/pybind11.cmake
+index 185f4ea..1505b52 100644
+--- a/cmake/external/pybind11.cmake
++++ b/cmake/external/pybind11.cmake
+@@ -14,6 +14,17 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(PYBIND_INCLUDE_DIR NAMES pybind11/pybind11.h)
++  if(NOT PYBIND_INCLUDE_DIR)
++    message(FATAL_ERROR "System pybind11 requested but not found")
++  endif()
++  include_directories(${PYBIND_INCLUDE_DIR})
++  add_library(pybind INTERFACE)
++  target_include_directories(pybind INTERFACE ${PYBIND_INCLUDE_DIR})
++  return()
++endif()
++
+ set(PYBIND_PREFIX_DIR ${THIRD_PARTY_PATH}/pybind)
+ set(PYBIND_SOURCE_DIR ${PYBIND_PREFIX_DIR}/src/extern_pybind)
+ set(PYBIND_INCLUDE_DIR ${PYBIND_SOURCE_DIR}/include)
+diff --git a/cmake/external/threadpool.cmake b/cmake/external/threadpool.cmake
+index 3d2af4d..137aa69 100644
+--- a/cmake/external/threadpool.cmake
++++ b/cmake/external/threadpool.cmake
+@@ -14,6 +14,18 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(THREADPOOL_INCLUDE_DIR NAMES ThreadPool.h)
++  if(NOT THREADPOOL_INCLUDE_DIR)
++    message(FATAL_ERROR "System ThreadPool requested but not found")
++  endif()
++  include_directories(${THREADPOOL_INCLUDE_DIR})
++  add_library(simple_threadpool INTERFACE)
++  target_include_directories(simple_threadpool
++                             INTERFACE ${THREADPOOL_INCLUDE_DIR})
++  return()
++endif()
++
+ set(THREADPOOL_PREFIX_DIR ${THIRD_PARTY_PATH}/threadpool)
+ set(THREADPOOL_TAG 9a42ec1329f259a5f4881a291db1dcb8f2ad9040)
+ set(SOURCE_DIR ${PADDLE_SOURCE_DIR}/third_party/threadpool)
+diff --git a/cmake/external/utf8proc.cmake b/cmake/external/utf8proc.cmake
+index 231dd9b..fe114d5 100644
+--- a/cmake/external/utf8proc.cmake
++++ b/cmake/external/utf8proc.cmake
+@@ -14,6 +14,23 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(UTF8PROC_INCLUDE_DIR NAMES utf8proc.h)
++  find_library(UTF8PROC_LIBRARIES NAMES utf8proc)
++  if(NOT UTF8PROC_INCLUDE_DIR OR NOT UTF8PROC_LIBRARIES)
++    message(FATAL_ERROR "System utf8proc requested but not found")
++  endif()
++  include_directories(${UTF8PROC_INCLUDE_DIR})
++  if(NOT TARGET utf8proc)
++    add_library(utf8proc UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET utf8proc PROPERTY IMPORTED_LOCATION
++                                      ${UTF8PROC_LIBRARIES})
++    set_property(TARGET utf8proc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                        ${UTF8PROC_INCLUDE_DIR})
++  endif()
++  return()
++endif()
++
+ set(UTF8PROC_PREFIX_DIR ${THIRD_PARTY_PATH}/utf8proc)
+ set(UTF8PROC_INSTALL_DIR ${THIRD_PARTY_PATH}/install/utf8proc)
+ # As we add extra features for utf8proc, we use the non-official repo
+diff --git a/cmake/external/warpctc.cmake b/cmake/external/warpctc.cmake
+index 9ae0486..8037e5e 100644
+--- a/cmake/external/warpctc.cmake
++++ b/cmake/external/warpctc.cmake
+@@ -18,6 +18,19 @@ if(WITH_ROCM)
+   add_definitions(-DWARPCTC_WITH_HIP)
+ endif()
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(WARPCTC_INCLUDE_DIR NAMES warpctc/include/ctc.h ctc.h)
++  find_library(WARPCTC_LIBRARIES NAMES warpctc)
++  if(NOT WARPCTC_INCLUDE_DIR OR NOT WARPCTC_LIBRARIES)
++    message(FATAL_ERROR "System warp-ctc requested but not found")
++  endif()
++  get_filename_component(WARPCTC_LIBRARY_PATH ${WARPCTC_LIBRARIES} DIRECTORY)
++  include_directories(${WARPCTC_INCLUDE_DIR})
++  add_library(warpctc INTERFACE)
++  target_include_directories(warpctc INTERFACE ${WARPCTC_INCLUDE_DIR})
++  return()
++endif()
++
+ set(WARPCTC_PREFIX_DIR ${THIRD_PARTY_PATH}/warpctc)
+ set(WARPCTC_INSTALL_DIR ${THIRD_PARTY_PATH}/install/warpctc)
+ # in case of low internet speed
+diff --git a/cmake/external/warprnnt.cmake b/cmake/external/warprnnt.cmake
+index 8a975d6..ca40d42 100644
+--- a/cmake/external/warprnnt.cmake
++++ b/cmake/external/warprnnt.cmake
+@@ -18,6 +18,19 @@ if(WITH_ROCM)
+   add_definitions(-DWARPRNNT_WITH_HIP)
+ endif()
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(WARPRNNT_INCLUDE_DIR NAMES warprnnt/include/rnnt.h rnnt.h)
++  find_library(WARPRNNT_LIBRARIES NAMES warprnnt)
++  if(NOT WARPRNNT_INCLUDE_DIR OR NOT WARPRNNT_LIBRARIES)
++    message(FATAL_ERROR "System warp-transducer requested but not found")
++  endif()
++  get_filename_component(WARPRNNT_LIBRARY_PATH ${WARPRNNT_LIBRARIES} DIRECTORY)
++  include_directories(${WARPRNNT_INCLUDE_DIR})
++  add_library(warprnnt INTERFACE)
++  target_include_directories(warprnnt INTERFACE ${WARPRNNT_INCLUDE_DIR})
++  return()
++endif()
++
+ set(WARPRNNT_PREFIX_DIR ${THIRD_PARTY_PATH}/warprnnt)
+ set(WARPRNNT_INSTALL_DIR ${THIRD_PARTY_PATH}/install/warprnnt)
+ set(WARPRNNT_TAG 7ea6bfe748779c245a0fcaa5dd9383826273eff2)
+diff --git a/cmake/external/xxhash.cmake b/cmake/external/xxhash.cmake
+index 5314fe4..948db54 100644
+--- a/cmake/external/xxhash.cmake
++++ b/cmake/external/xxhash.cmake
+@@ -14,6 +14,22 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(XXHASH_INCLUDE_DIR NAMES xxhash.h)
++  find_library(XXHASH_LIBRARIES NAMES xxhash)
++  if(NOT XXHASH_INCLUDE_DIR OR NOT XXHASH_LIBRARIES)
++    message(FATAL_ERROR "System xxhash requested but not found")
++  endif()
++  include_directories(${XXHASH_INCLUDE_DIR})
++  if(NOT TARGET xxhash)
++    add_library(xxhash UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET xxhash PROPERTY IMPORTED_LOCATION ${XXHASH_LIBRARIES})
++    set_property(TARGET xxhash PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                       ${XXHASH_INCLUDE_DIR})
++  endif()
++  return()
++endif()
++
+ set(XXHASH_PREFIX_DIR ${THIRD_PARTY_PATH}/xxhash)
+ set(XXHASH_SOURCE_DIR ${THIRD_PARTY_PATH}/xxhash/src/extern_xxhash)
+ set(XXHASH_INSTALL_DIR ${THIRD_PARTY_PATH}/install/xxhash)
+diff --git a/cmake/external/yaml.cmake b/cmake/external/yaml.cmake
+index 9c094ea..58ad177 100644
+--- a/cmake/external/yaml.cmake
++++ b/cmake/external/yaml.cmake
+@@ -14,6 +14,23 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_path(YAML_INCLUDE_DIR NAMES yaml-cpp/yaml.h)
++  find_library(YAML_LIBRARIES NAMES yaml-cpp)
++  if(NOT YAML_INCLUDE_DIR OR NOT YAML_LIBRARIES)
++    message(FATAL_ERROR "System yaml-cpp requested but not found")
++  endif()
++  include_directories(${YAML_INCLUDE_DIR})
++  if(NOT TARGET yaml)
++    add_library(yaml UNKNOWN IMPORTED GLOBAL)
++    set_property(TARGET yaml PROPERTY IMPORTED_LOCATION ${YAML_LIBRARIES})
++    set_property(TARGET yaml PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                    ${YAML_INCLUDE_DIR})
++  endif()
++  link_libraries(yaml)
++  return()
++endif()
++
+ set(YAML_PREFIX_DIR ${THIRD_PARTY_PATH}/yaml-cpp)
+ set(YAML_INSTALL_DIR ${THIRD_PARTY_PATH}/install/yaml-cpp)
+ set(YAML_INCLUDE_DIR ${YAML_INSTALL_DIR}/include)
+diff --git a/cmake/external/zlib.cmake b/cmake/external/zlib.cmake
+index 0f51b3d..4afa333 100644
+--- a/cmake/external/zlib.cmake
++++ b/cmake/external/zlib.cmake
+@@ -14,6 +14,24 @@
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_THIRD_PARTY)
++  find_package(ZLIB REQUIRED)
++  set(ZLIB_INCLUDE_DIR
++      ${ZLIB_INCLUDE_DIRS}
++      CACHE PATH "zlib include directory." FORCE)
++  set(ZLIB_LIBRARIES
++      ${ZLIB_LIBRARIES}
++      CACHE FILEPATH "zlib library." FORCE)
++  include_directories(${ZLIB_INCLUDE_DIR})
++  if(NOT TARGET zlib)
++    add_library(zlib INTERFACE IMPORTED GLOBAL)
++    set_property(TARGET zlib PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
++    set_property(TARGET zlib PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                     ${ZLIB_INCLUDE_DIR})
++  endif()
++  return()
++endif()
++
+ set(ZLIB_PREFIX_DIR ${THIRD_PARTY_PATH}/zlib)
+ set(ZLIB_INSTALL_DIR ${THIRD_PARTY_PATH}/install/zlib)
+ set(ZLIB_ROOT
+diff --git a/cmake/generic.cmake b/cmake/generic.cmake
+index e95ffa8..8aca81d 100644
+--- a/cmake/generic.cmake
++++ b/cmake/generic.cmake
+@@ -1157,7 +1157,9 @@ function(proto_library TARGET_NAME)
+     ${TARGET_NAME}
+     SRCS ${proto_srcs}
+     DEPS ${proto_library_DEPS} protobuf)
+-  add_dependencies(extern_xxhash ${TARGET_NAME})
++  if(TARGET extern_xxhash)
++    add_dependencies(extern_xxhash ${TARGET_NAME})
++  endif()
+ endfunction()
+ 
+ function(py_proto_compile TARGET_NAME)
+@@ -1324,7 +1326,9 @@ function(copy_if_different src_file dst_file)
+     COMMENT "copy_if_different ${dst_file}"
+     VERBATIM)
+ 
+-  add_dependencies(extern_glog copy_${FILE_NAME}_command)
++  if(TARGET extern_glog)
++    add_dependencies(extern_glog copy_${FILE_NAME}_command)
++  endif()
+ endfunction()
+ 
+ # create a dummy source file, then create a static library.
+diff --git a/cmake/third_party.cmake b/cmake/third_party.cmake
+index a9d918a..613be9e 100755
+--- a/cmake/third_party.cmake
++++ b/cmake/third_party.cmake
+@@ -32,6 +32,17 @@ set(THIRD_PARTY_CACHE_PATH
+ set(THIRD_PARTY_BUILD_TYPE Release)
+ set(third_party_deps)
+ 
++function(append_third_party_deps)
++  foreach(dep IN LISTS ARGN)
++    if(TARGET ${dep})
++      list(APPEND third_party_deps ${dep})
++    endif()
++  endforeach()
++  set(third_party_deps
++      "${third_party_deps}"
++      PARENT_SCOPE)
++endfunction()
++
+ include(ProcessorCount)
+ ProcessorCount(NPROC)
+ if(NOT WITH_SETUP_INSTALL)
+@@ -387,34 +398,20 @@ include(external/warpctc) # download, build, install warpctc
+ include(external/warprnnt) # download, build, install warprnnt
+ include(external/utf8proc) # download, build, install utf8proc
+ 
+-list(APPEND third_party_deps extern_eigen3 extern_gflags extern_glog
+-     extern_xxhash)
+-list(
+-  APPEND
+-  third_party_deps
+-  extern_zlib
+-  extern_dlpack
+-  extern_warpctc
+-  extern_warprnnt
+-  extern_threadpool
+-  extern_utf8proc)
+-include(external/lapack) # download, build, install lapack
++append_third_party_deps(extern_eigen3 extern_gflags extern_glog extern_xxhash)
++append_third_party_deps(extern_zlib extern_dlpack extern_warpctc
++                        extern_warprnnt extern_threadpool extern_utf8proc)
++if(NOT WITH_SYSTEM_THIRD_PARTY)
++  include(external/lapack) # download, build, install lapack
++endif()
+ 
+ if(WITH_MAGMA)
+   include(external/magma) # download, build, install magma
+ endif()
+ 
+-list(APPEND third_party_deps extern_eigen3 extern_gflags extern_glog
+-     extern_xxhash)
+-list(
+-  APPEND
+-  third_party_deps
+-  extern_zlib
+-  extern_dlpack
+-  extern_warpctc
+-  extern_warprnnt
+-  extern_threadpool
+-  extern_lapack)
++append_third_party_deps(extern_eigen3 extern_gflags extern_glog extern_xxhash)
++append_third_party_deps(extern_zlib extern_dlpack extern_warpctc
++                        extern_warprnnt extern_threadpool extern_lapack)
+ 
+ if(WITH_MAGMA)
+   list(APPEND third_party_deps extern_magma)
+@@ -454,7 +451,9 @@ endif()
+ if(NOT ((NOT WITH_PYTHON) AND ON_INFER))
+   include(external/python) # find python and python_module
+   include(external/pybind11) # prepare submodule pybind11
+-  list(APPEND third_party_deps extern_pybind)
++  if(TARGET extern_pybind)
++    list(APPEND third_party_deps extern_pybind)
++  endif()
+ endif()
+ 
+ if(WITH_TESTING OR WITH_DISTRIBUTE)
+@@ -526,9 +525,9 @@ if(WITH_FLAGCX)
+   endif()
+ endif()
+ 
+-if(NOT WIN32 AND NOT APPLE)
++if(WITH_GLOO AND NOT WIN32 AND NOT APPLE)
+   include(external/gloo)
+-  list(APPEND third_party_deps extern_gloo)
++  append_third_party_deps(extern_gloo)
+ endif()
+ 
+ if(WITH_BOX_PS)
+@@ -561,7 +560,7 @@ endif()
+ 
+ if(WITH_POCKETFFT)
+   include(external/pocketfft)
+-  list(APPEND third_party_deps extern_pocketfft)
++  append_third_party_deps(extern_pocketfft)
+   add_definitions(-DPADDLE_WITH_POCKETFFT)
+ endif()
+ 
+diff --git a/paddle/fluid/eager/api/utils/global_utils.h b/paddle/fluid/eager/api/utils/global_utils.h
+index bed88bb..545c879 100644
+--- a/paddle/fluid/eager/api/utils/global_utils.h
++++ b/paddle/fluid/eager/api/utils/global_utils.h
+@@ -276,7 +276,7 @@ class LogIndent {
+    * Call this method when entering a nested scope to increase
+    * log indentation for better visual hierarchy.
+    */
+-  void IncreaseIndentLevel() { FLAGS_indentlevel = FLAGS_indentlevel + 1; }
++  void IncreaseIndentLevel() { indentlevel_ = indentlevel_ + 1; }
+   /**
+    * @brief Decrease the current indentation level by 1
+    *
+@@ -284,8 +284,8 @@ class LogIndent {
+    * Call this when leaving a nested scope.
+    */
+   void DecreaseIndentLevel() {
+-    if (FLAGS_indentlevel > 0) {
+-      FLAGS_indentlevel = FLAGS_indentlevel - 1;
++    if (indentlevel_ > 0) {
++      indentlevel_ = indentlevel_ - 1;
+     }
+   }
+   LogIndent(const LogIndent&) = delete;
+@@ -294,6 +294,7 @@ class LogIndent {
+  private:
+   LogIndent() = default;
+   ~LogIndent() = default;
++  int indentlevel_ = 0;
+ };
+ 
+ }  // namespace egr
+diff --git a/paddle/phi/CMakeLists.txt b/paddle/phi/CMakeLists.txt
+index b4330c2..eeafd7f 100644
+--- a/paddle/phi/CMakeLists.txt
++++ b/paddle/phi/CMakeLists.txt
+@@ -342,7 +342,9 @@ if(MKL_FOUND AND WITH_ONEMKL)
+   endif()
+ endif()
+ 
+-add_dependencies(phi extern_lapack)
++if(TARGET extern_lapack)
++  add_dependencies(phi extern_lapack)
++endif()
+ if(WITH_MAGMA)
+   add_dependencies(phi extern_magma)
+ endif()
+diff --git a/python/env_dict.py.in b/python/env_dict.py.in
+index 4855e88..06abedc 100644
+--- a/python/env_dict.py.in
++++ b/python/env_dict.py.in
+@@ -22,6 +22,7 @@ env_dict={
+     'IR_LIB':'@IR_LIB@',
+     'IR_NAME':'@IR_NAME@',
+     'WITH_SHARED_IR':'@WITH_SHARED_IR@',
++    'WITH_SYSTEM_THIRD_PARTY':'@WITH_SYSTEM_THIRD_PARTY@',
+     'COMMON_LIB':'@COMMON_LIB@',
+     'COMMON_LINK':'@COMMON_LINK@',
+     'COMMON_NAME':'@COMMON_NAME@',
+diff --git a/python/setup.py.in b/python/setup.py.in
+index f352d3c..5d15750 100644
+--- a/python/setup.py.in
++++ b/python/setup.py.in
+@@ -1182,10 +1182,6 @@ if('${WITH_SHARED_IR}' == 'ON'):
+     package_data['paddle.libs'] += [('libpir' if os.name != 'nt' else 'pir') + ext_name]
+     shutil.copy('${IR_LIB}', libs_path)
+ 
+-package_data['paddle.libs']+=[
+-    ('libwarpctc' if os.name != 'nt' else 'warpctc') + ext_name,
+-    ('libwarprnnt' if os.name != 'nt' else 'warprnnt') + ext_name,
+-]
+ package_data['paddle.libs']+=[
+     ('libcommon' if os.name != 'nt' else 'common') + ext_name,
+ ]
+@@ -1193,26 +1189,31 @@ if os.name == 'nt':
+     package_data['paddle.libs'] += ['common.lib']
+     shutil.copy('${COMMON_LINK}', libs_path)
+ shutil.copy('${COMMON_LIB}', libs_path)
+-shutil.copy('${WARPCTC_LIBRARIES}', libs_path)
+-shutil.copy('${WARPRNNT_LIBRARIES}', libs_path)
+-
+-package_data['paddle.libs']+=[
+-    os.path.basename('${LAPACK_LIB}'),
+-    os.path.basename('${BLAS_LIB}'),
+-    os.path.basename('${GFORTRAN_LIB}'),
+-    os.path.basename('${GNU_RT_LIB_1}')]
+-shutil.copy('${BLAS_LIB}', libs_path)
+-shutil.copy('${LAPACK_LIB}', libs_path)
+-shutil.copy('${GFORTRAN_LIB}', libs_path)
+-shutil.copy('${GNU_RT_LIB_1}', libs_path)
+-if('${WITH_MAGMA}' == 'ON'):
++if '${WITH_SYSTEM_THIRD_PARTY}' != 'ON':
+     package_data['paddle.libs']+=[
+-        os.path.basename('${MAGMA_LIB}')]
+-    shutil.copy('${MAGMA_LIB}', libs_path)
++        ('libwarpctc' if os.name != 'nt' else 'warpctc') + ext_name,
++        ('libwarprnnt' if os.name != 'nt' else 'warprnnt') + ext_name,
++    ]
++    shutil.copy('${WARPCTC_LIBRARIES}', libs_path)
++    shutil.copy('${WARPRNNT_LIBRARIES}', libs_path)
+ 
+-if not sys.platform.startswith("linux"):
+-    package_data['paddle.libs']+=[os.path.basename('${GNU_RT_LIB_2}')]
+-    shutil.copy('${GNU_RT_LIB_2}', libs_path)
++    package_data['paddle.libs']+=[
++        os.path.basename('${LAPACK_LIB}'),
++        os.path.basename('${BLAS_LIB}'),
++        os.path.basename('${GFORTRAN_LIB}'),
++        os.path.basename('${GNU_RT_LIB_1}')]
++    shutil.copy('${BLAS_LIB}', libs_path)
++    shutil.copy('${LAPACK_LIB}', libs_path)
++    shutil.copy('${GFORTRAN_LIB}', libs_path)
++    shutil.copy('${GNU_RT_LIB_1}', libs_path)
++    if('${WITH_MAGMA}' == 'ON'):
++        package_data['paddle.libs']+=[
++            os.path.basename('${MAGMA_LIB}')]
++        shutil.copy('${MAGMA_LIB}', libs_path)
++
++    if not sys.platform.startswith("linux"):
++        package_data['paddle.libs']+=[os.path.basename('${GNU_RT_LIB_2}')]
++        shutil.copy('${GNU_RT_LIB_2}', libs_path)
+ 
+ if '${WITH_GPU}' == 'ON' or '${WITH_ROCM}' == 'ON':
+     if len('${FLASHATTN_LIBRARIES}') > 1:
+@@ -1239,24 +1240,25 @@ if '${WITH_DISTRIBUTE}' == 'ON' and '${WITH_NVSHMEM}' == 'ON':
+     shutil.copy('${NVSHMEM_TRANSPORT_IBRC_LIB}', libs_path)
+     shutil.copy('${NVSHMEM_TRANSPORT_IBGDA_LIB}', libs_path)
+ 
+-if '${WITH_MKL}' == 'ON':
+-    shutil.copy('${MKLML_SHARED_LIB}', libs_path)
+-    shutil.copy('${MKLML_SHARED_IOMP_LIB}', libs_path)
+-    package_data['paddle.libs']+=[('libmklml_intel' if os.name != 'nt' else 'mklml') + ext_name, ('libiomp5' if os.name != 'nt' else 'libiomp5md') + ext_name]
+-elif '${WITH_HML}' == 'ON':
+-    shutil.copy('${HML_LIB}', libs_path)
+-    package_data['paddle.libs']+=['libhml_rt' + ext_name]
+-else:
+-    if os.name == 'nt':
+-        # copy the openblas.dll
+-        shutil.copy('${OPENBLAS_SHARED_LIB}', libs_path)
+-        package_data['paddle.libs'] += ['openblas' + ext_name]
+-    elif os.name == 'posix' and platform.machine() == 'aarch64' and '${OPENBLAS_LIB}'.endswith('so'):
+-        # copy the libopenblas.so on linux+aarch64
+-        # special: libpaddle.so without avx depends on 'libopenblas.so.0', not 'libopenblas.so'
+-        if os.path.exists('${OPENBLAS_LIB}' + '.0'):
+-            shutil.copy('${OPENBLAS_LIB}' + '.0', libs_path)
+-            package_data['paddle.libs'] += ['libopenblas.so.0']
++if '${WITH_SYSTEM_THIRD_PARTY}' != 'ON':
++    if '${WITH_MKL}' == 'ON':
++        shutil.copy('${MKLML_SHARED_LIB}', libs_path)
++        shutil.copy('${MKLML_SHARED_IOMP_LIB}', libs_path)
++        package_data['paddle.libs']+=[('libmklml_intel' if os.name != 'nt' else 'mklml') + ext_name, ('libiomp5' if os.name != 'nt' else 'libiomp5md') + ext_name]
++    elif '${WITH_HML}' == 'ON':
++        shutil.copy('${HML_LIB}', libs_path)
++        package_data['paddle.libs']+=['libhml_rt' + ext_name]
++    else:
++        if os.name == 'nt':
++            # copy the openblas.dll
++            shutil.copy('${OPENBLAS_SHARED_LIB}', libs_path)
++            package_data['paddle.libs'] += ['openblas' + ext_name]
++        elif os.name == 'posix' and platform.machine() == 'aarch64' and '${OPENBLAS_LIB}'.endswith('so'):
++            # copy the libopenblas.so on linux+aarch64
++            # special: libpaddle.so without avx depends on 'libopenblas.so.0', not 'libopenblas.so'
++            if os.path.exists('${OPENBLAS_LIB}' + '.0'):
++                shutil.copy('${OPENBLAS_LIB}' + '.0', libs_path)
++                package_data['paddle.libs'] += ['libopenblas.so.0']
+ 
+ if '${WITH_CINN}' == 'ON':
+     shutil.copy('${CINN_LIB_LOCATION}/${CINN_LIB_NAME}', libs_path)
+diff --git a/setup.py b/setup.py
+index d58d9a6..b51f3df 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1547,10 +1547,6 @@ def get_package_data_and_package_dir():
+         ]
+         shutil.copy(env_dict.get("IR_LIB"), libs_path)
+ 
+-    package_data['paddle.libs'] += [
+-        ('libwarpctc' if os.name != 'nt' else 'warpctc') + ext_suffix,
+-        ('libwarprnnt' if os.name != 'nt' else 'warprnnt') + ext_suffix,
+-    ]
+     package_data['paddle.libs'] += [
+         ('libcommon' if os.name != 'nt' else 'common') + ext_suffix,
+     ]
+@@ -1558,54 +1554,61 @@ def get_package_data_and_package_dir():
+         package_data['paddle.libs'] += ['common.lib']
+         shutil.copy(env_dict.get("COMMON_LINK"), libs_path)
+     shutil.copy(env_dict.get("COMMON_LIB"), libs_path)
+-    shutil.copy(env_dict.get("WARPCTC_LIBRARIES"), libs_path)
+-    shutil.copy(env_dict.get("WARPRNNT_LIBRARIES"), libs_path)
+-    package_data['paddle.libs'] += [
+-        os.path.basename(env_dict.get("LAPACK_LIB")),
+-        os.path.basename(env_dict.get("BLAS_LIB")),
+-        os.path.basename(env_dict.get("GFORTRAN_LIB")),
+-        os.path.basename(env_dict.get("GNU_RT_LIB_1")),
+-    ]
+-    shutil.copy(env_dict.get("BLAS_LIB"), libs_path)
+-    shutil.copy(env_dict.get("LAPACK_LIB"), libs_path)
+-    shutil.copy(env_dict.get("GFORTRAN_LIB"), libs_path)
+-    shutil.copy(env_dict.get("GNU_RT_LIB_1"), libs_path)
+-    if env_dict.get("WITH_MAGMA") == 'ON':
+-        package_data['paddle.libs'] += [
+-            os.path.basename('MAGMA_LIB'),
+-        ]
+-        shutil.copy(env_dict.get("MAGMA_LIB"), libs_path)
+-
+-    if not sys.platform.startswith("linux"):
++    if env_dict.get("WITH_SYSTEM_THIRD_PARTY") != 'ON':
+         package_data['paddle.libs'] += [
+-            os.path.basename(env_dict.get("GNU_RT_LIB_2"))
++            ('libwarpctc' if os.name != 'nt' else 'warpctc') + ext_suffix,
++            ('libwarprnnt' if os.name != 'nt' else 'warprnnt') + ext_suffix,
+         ]
+-        shutil.copy(env_dict.get("GNU_RT_LIB_2"), libs_path)
+-    if env_dict.get("WITH_MKL") == 'ON':
+-        shutil.copy(env_dict.get("MKLML_SHARED_LIB"), libs_path)
+-        shutil.copy(env_dict.get("MKLML_SHARED_IOMP_LIB"), libs_path)
++        shutil.copy(env_dict.get("WARPCTC_LIBRARIES"), libs_path)
++        shutil.copy(env_dict.get("WARPRNNT_LIBRARIES"), libs_path)
+         package_data['paddle.libs'] += [
+-            ('libmklml_intel' if os.name != 'nt' else 'mklml') + ext_suffix,
+-            ('libiomp5' if os.name != 'nt' else 'libiomp5md') + ext_suffix,
++            os.path.basename(env_dict.get("LAPACK_LIB")),
++            os.path.basename(env_dict.get("BLAS_LIB")),
++            os.path.basename(env_dict.get("GFORTRAN_LIB")),
++            os.path.basename(env_dict.get("GNU_RT_LIB_1")),
+         ]
+-    elif env_dict.get("WITH_HML") == 'ON':
+-        shutil.copy(env_dict.get("HML_LIB"), libs_path)
+-        package_data['paddle.libs'] += ['libhml_rt' + ext_suffix]
+-    else:
+-        if os.name == 'nt':
+-            # copy the openblas.dll
+-            shutil.copy(env_dict.get("OPENBLAS_SHARED_LIB"), libs_path)
+-            package_data['paddle.libs'] += ['openblas' + ext_suffix]
+-        elif (
+-            os.name == 'posix'
+-            and platform.machine() == 'aarch64'
+-            and env_dict.get("OPENBLAS_LIB").endswith('so')
+-        ):
+-            # copy the libopenblas.so on linux+aarch64
+-            # special: libpaddle.so without avx depends on 'libopenblas.so.0', not 'libopenblas.so'
+-            if os.path.exists(env_dict.get("OPENBLAS_LIB") + '.0'):
+-                shutil.copy(env_dict.get("OPENBLAS_LIB") + '.0', libs_path)
+-                package_data['paddle.libs'] += ['libopenblas.so.0']
++        shutil.copy(env_dict.get("BLAS_LIB"), libs_path)
++        shutil.copy(env_dict.get("LAPACK_LIB"), libs_path)
++        shutil.copy(env_dict.get("GFORTRAN_LIB"), libs_path)
++        shutil.copy(env_dict.get("GNU_RT_LIB_1"), libs_path)
++        if env_dict.get("WITH_MAGMA") == 'ON':
++            package_data['paddle.libs'] += [
++                os.path.basename('MAGMA_LIB'),
++            ]
++            shutil.copy(env_dict.get("MAGMA_LIB"), libs_path)
++
++        if not sys.platform.startswith("linux"):
++            package_data['paddle.libs'] += [
++                os.path.basename(env_dict.get("GNU_RT_LIB_2"))
++            ]
++            shutil.copy(env_dict.get("GNU_RT_LIB_2"), libs_path)
++        if env_dict.get("WITH_MKL") == 'ON':
++            shutil.copy(env_dict.get("MKLML_SHARED_LIB"), libs_path)
++            shutil.copy(env_dict.get("MKLML_SHARED_IOMP_LIB"), libs_path)
++            package_data['paddle.libs'] += [
++                ('libmklml_intel' if os.name != 'nt' else 'mklml')
++                + ext_suffix,
++                ('libiomp5' if os.name != 'nt' else 'libiomp5md')
++                + ext_suffix,
++            ]
++        elif env_dict.get("WITH_HML") == 'ON':
++            shutil.copy(env_dict.get("HML_LIB"), libs_path)
++            package_data['paddle.libs'] += ['libhml_rt' + ext_suffix]
++        else:
++            if os.name == 'nt':
++                # copy the openblas.dll
++                shutil.copy(env_dict.get("OPENBLAS_SHARED_LIB"), libs_path)
++                package_data['paddle.libs'] += ['openblas' + ext_suffix]
++            elif (
++                os.name == 'posix'
++                and platform.machine() == 'aarch64'
++                and env_dict.get("OPENBLAS_LIB").endswith('so')
++            ):
++                # copy the libopenblas.so on linux+aarch64
++                # special: libpaddle.so without avx depends on 'libopenblas.so.0', not 'libopenblas.so'
++                if os.path.exists(env_dict.get("OPENBLAS_LIB") + '.0'):
++                    shutil.copy(env_dict.get("OPENBLAS_LIB") + '.0', libs_path)
++                    package_data['paddle.libs'] += ['libopenblas.so.0']
+ 
+     if env_dict.get("WITH_GPU") == 'ON' or env_dict.get("WITH_ROCM") == 'ON':
+         if len(env_dict.get("FLASHATTN_LIBRARIES", "")) > 1:

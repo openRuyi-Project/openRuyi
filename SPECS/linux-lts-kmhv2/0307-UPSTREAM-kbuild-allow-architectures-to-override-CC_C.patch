@@ -1,0 +1,76 @@
+From 5145724870f7f6189dd6daa9500771e4c3184a29 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Fri, 14 Nov 2025 14:43:58 +0100
+Subject: [RUYI PATCH] UPSTREAM: kbuild: allow architectures to override
+ CC_CAN_LINK
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The generic test for CC_CAN_LINK assumes that all architectures use -m32
+and -m64 to switch between 32-bit and 64-bit compilation. This is overly
+simplistic. Architectures may use other flags (-mabi, -m31, etc.) or may
+also require byte order handling (-mlittle-endian, -EL). Expressing all
+of the different possibilities will be very complicated and brittle.
+Instead allow architectures to supply their own logic which will be
+easy to understand and evolve.
+
+Both the boolean ARCH_HAS_CC_CAN_LINK and the string ARCH_USERFLAGS need
+to be implemented as kconfig does not allow the reuse of string options.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Nicolas Schier <nsc@kernel.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://patch.msgid.link/20251114-kbuild-userprogs-bits-v3-3-4dee0d74d439@linutronix.de
+Signed-off-by: Nicolas Schier <nsc@kernel.org>
+(cherry picked from commit deab487e0f9b39ae4603e22d7d00908ebfc9753c)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ Makefile     | 13 +++++++++++--
+ init/Kconfig |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7ee3beedceca..8ae52cf42da5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1156,8 +1156,17 @@ ifneq ($(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS),)
+ LDFLAGS_vmlinux	+= --emit-relocs --discard-none
+ endif
+ 
+-# Align the bit size of userspace programs with the kernel
+-USERFLAGS_FROM_KERNEL := -m32 -m64 --target=%
++# Align the architecture of userspace programs with the kernel
++USERFLAGS_FROM_KERNEL := --target=%
++
++ifdef CONFIG_ARCH_USERFLAGS
++KBUILD_USERCFLAGS += $(CONFIG_ARCH_USERFLAGS)
++KBUILD_USERLDFLAGS += $(CONFIG_ARCH_USERFLAGS)
++else
++# If not overridden also inherit the bit size
++USERFLAGS_FROM_KERNEL += -m32 -m64
++endif
++
+ KBUILD_USERCFLAGS  += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+ KBUILD_USERLDFLAGS += $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index 7b722e714d5c..4a2ae3cfbf26 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -82,8 +82,12 @@ config RUSTC_LLVM_VERSION
+ 	int
+ 	default $(rustc-llvm-version)
+ 
++config ARCH_HAS_CC_CAN_LINK
++	bool
++
+ config CC_CAN_LINK
+ 	bool
++	default ARCH_CC_CAN_LINK if ARCH_HAS_CC_CAN_LINK
+ 	default $(cc_can_link_user,$(m64-flag)) if 64BIT
+ 	default $(cc_can_link_user,$(m32-flag))
+ 
+-- 
+2.53.0
+

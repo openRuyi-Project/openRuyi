@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Base class for HTML formatters
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTML-Formatter
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/N/NI/NIGELM/HTML-Formatter-%{version}.tar.gz
+#!RemoteAsset:  sha256:cb0a0dd8aa5e8ba9ca214ce451bf4df33aa09c13e907e8d3082ddafeb30151cc
+Source0:        https://www.cpan.org/authors/id/N/NI/NIGELM/HTML-Formatter-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(base)
@@ -63,20 +67,8 @@ some output format. When you take an object of such a base class and call
 $formatter-format( $tree )> with an HTML::TreeBuilder (or HTML::Element)
 object, they return the appropriately formatted string for the input HTML.
 
-%prep
-%setup -q -n HTML-Formatter-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

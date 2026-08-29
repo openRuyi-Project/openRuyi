@@ -1,0 +1,28 @@
+Work around an llvm 22.x AMDGPU SelectionDAG bug: compiling
+aten/src/ATen/native/hip/Loss.hip for gfx1100/1101/1102 aborts with
+
+  fatal error: error in backend: Unsupported instruction : <MCInst 4399 ...>
+
+Build just this file at -O0 so -O0 wins for this file only
+
+Issue: https://github.com/llvm/llvm-project/issues/208912
+LLVM Fix: https://github.com/llvm/llvm-project/commit/9429a1e8
+
+Drop this patch once the system llvm22 toolchain carries the fix.
+
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -934,6 +934,13 @@
+   set(__caffe2_hip_srcs_hip ${Caffe2_HIP_SRCS})
+   list(FILTER __caffe2_hip_srcs_hip INCLUDE REGEX "\\.(cu|hip)$")
+   set_source_files_properties(${__caffe2_hip_srcs_hip} PROPERTIES LANGUAGE HIP)
++
++  set(__caffe2_loss_hip_workaround ${__caffe2_hip_srcs_hip})
++  list(FILTER __caffe2_loss_hip_workaround INCLUDE REGEX "native/hip/Loss\\.hip$")
++  if(__caffe2_loss_hip_workaround)
++    set_source_files_properties(${__caffe2_loss_hip_workaround}
++        PROPERTIES COMPILE_OPTIONS "-O0")
++  endif()
+ endif()
+ 
+ # Compile exposed libraries.

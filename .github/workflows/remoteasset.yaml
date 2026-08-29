@@ -13,16 +13,15 @@ permissions:
 on:
   pull_request:
     branches: [main, ci-test]
-    types: [opened, synchronize]
     paths:
-     - 'SPECS/**'
+     - 'SPECS/**.spec'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}-remoteasset
   cancel-in-progress: true
 
 jobs:
-  check:
+  check_remoteasset:
     runs-on: ubuntu-latest
     steps:
     - name: Install dependencies
@@ -36,7 +35,7 @@ jobs:
     - name: Find changed remote assets
       id: find-changed
       run: |
-        git diff --name-only HEAD^1...HEAD SPECS/ | grep '.spec$' > changed-files
+        git diff --name-only HEAD^1...HEAD 'SPECS/**/*.spec' > changed-files
 
         touch changed-remoteassets
 
@@ -58,12 +57,16 @@ jobs:
           echo "::endgroup::" >&2
         done < changed-files
 
-        echo "# Spec files with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
+        num_changed="$(wc -l < changed-remoteassets)"
+        echo "num=$num_changed" > "$GITHUB_OUTPUT"
+
+        echo "# Specs with changed remote assets" >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
         sed -e 's/^/    /' changed-remoteassets >> "$GITHUB_STEP_SUMMARY"
+        if [ "$num_changed" -eq 0 ]; then
+          echo "*(None)*" >> "$GITHUB_STEP_SUMMARY"
+        fi
         echo "" >> "$GITHUB_STEP_SUMMARY"
-
-        echo "num=$(wc -l < changed-remoteassets)" > "$GITHUB_OUTPUT"
 
     - name: Check remote assets
       id: check-changed
@@ -77,12 +80,16 @@ jobs:
           echo "::endgroup::" >&2
         done < changed-remoteassets
 
+        num_needs_update="$(wc -l < needs-update)"
+        echo "num=$num_needs_update" > "$GITHUB_OUTPUT"
+
         echo "# Specs requiring update" >> "$GITHUB_STEP_SUMMARY"
         echo "" >> "$GITHUB_STEP_SUMMARY"
         sed -e 's/^/    /' needs-update >> "$GITHUB_STEP_SUMMARY"
+        if [ "$num_needs_update" -eq 0 ]; then
+          echo "*(None)*" >> "$GITHUB_STEP_SUMMARY"
+        fi
         echo "" >> "$GITHUB_STEP_SUMMARY"
-
-        echo "num=$(wc -l < needs-update)" > "$GITHUB_OUTPUT"
 
         mv changes.diff "pr-${{ github.event.pull_request.number }}-remoteassets.diff"
 
@@ -105,5 +112,6 @@ jobs:
     - name: Fail if update required
       if: steps.check-changed.outputs.num != '0'
       run: |
-        echo "::error::Updates required for some #!RemoteAsset lines"
+        url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        echo "::error::Updates required for some #!RemoteAsset lines. Please see $url"
         exit 1

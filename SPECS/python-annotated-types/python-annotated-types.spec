@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Reusable constraint types to use with typing
 License:        MIT
 URL:            https://github.com/annotated-types/annotated-types
-#!RemoteAsset
+#!RemoteAsset:  sha256:aff07c09a53a08bc8cfccb9c85b05f1aa9a2a6f23728d790723543408344ce89
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ This package provides metadata objects which can be used to represent common con
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

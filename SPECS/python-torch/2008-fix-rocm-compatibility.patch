@@ -1,0 +1,51 @@
+Adapt the shared CUDA/HIP declarations to the ROCm 7.2 clang ABI and prevent
+an unset HIP version from selecting the obsolete occupancy API. No matching
+upstream fix was found; the related upstream report does not contain this fix.
+
+diff --git a/aten/src/ATen/cuda/CUDABlas.h b/aten/src/ATen/cuda/CUDABlas.h
+index 0295948..2d8398d 100644
+--- a/aten/src/ATen/cuda/CUDABlas.h
++++ b/aten/src/ATen/cuda/CUDABlas.h
+@@ -52,12 +52,12 @@ private:
+ #define CUDABLAS_GEMM_DTYPE_IS_FLOAT_TYPE_AND_C_DTYPE_IS_FLOAT \
+     ((std::is_same<Dtype, at::Half>::value || std::is_same<Dtype, at::BFloat16>::value) && std::is_same<C_Dtype, float>::value)
+
+-template <typename Dtype, typename C_Dtype = Dtype, typename std::enable_if<!CUDABLAS_GEMM_DTYPE_IS_FLOAT_TYPE_AND_C_DTYPE_IS_FLOAT, Dtype>::type* = nullptr>
++template <typename Dtype, typename C_Dtype = Dtype>
+ inline void gemm(CUDABLAS_GEMM_ARGTYPES_AND_C_DTYPE(Dtype, C_Dtype)) {
+   static_assert(false&&sizeof(Dtype),"at::cuda::blas::gemm: not implemented");
+ }
+
+-template <typename Dtype, typename C_Dtype, typename std::enable_if<CUDABLAS_GEMM_DTYPE_IS_FLOAT_TYPE_AND_C_DTYPE_IS_FLOAT, Dtype>::type* = nullptr>
++template <typename Dtype, typename C_Dtype>
+ void gemm(CUDABLAS_GEMM_ARGTYPES_AND_C_DTYPE(Dtype, C_Dtype));
+
+ template <>
+@@ -175,12 +175,12 @@ void scaled_gemm(
+ #define CUDABLAS_BGEMM_ARGS(Dtype) \
+   transa, transb, m, n, k, alpha, a, lda, stridea, b, ldb, strideb, beta, c, ldc, stridec, num_batches
+
+-template <typename Dtype, typename C_Dtype = Dtype, typename std::enable_if<!CUDABLAS_GEMM_DTYPE_IS_FLOAT_TYPE_AND_C_DTYPE_IS_FLOAT, Dtype>::type* = nullptr>
++template <typename Dtype, typename C_Dtype = Dtype>
+ inline void bgemm(CUDABLAS_BGEMM_ARGTYPES_AND_C_DTYPE(Dtype, C_Dtype)) {
+   static_assert(false&&sizeof(Dtype),"at::cuda::blas::bgemm: not implemented");
+ }
+
+-template <typename Dtype, typename C_Dtype, typename std::enable_if<CUDABLAS_GEMM_DTYPE_IS_FLOAT_TYPE_AND_C_DTYPE_IS_FLOAT, Dtype>::type* = nullptr>
++template <typename Dtype, typename C_Dtype>
+ void bgemm(CUDABLAS_BGEMM_ARGTYPES_AND_C_DTYPE(Dtype, C_Dtype));
+
+ template <>
+diff --git a/aten/src/ATen/cuda/nvrtc_stub/ATenNVRTC.h b/aten/src/ATen/cuda/nvrtc_stub/ATenNVRTC.h
+index 0f5772e..c38ef5c 100644
+--- a/aten/src/ATen/cuda/nvrtc_stub/ATenNVRTC.h
++++ b/aten/src/ATen/cuda/nvrtc_stub/ATenNVRTC.h
+@@ -103,7 +103,7 @@ namespace at::cuda {
+ //
+ // HIP from ROCm 3.5 on renamed hipOccupancyMaxActiveBlocksPerMultiprocessor
+ // to hipModuleOccupancyMaxActiveBlocksPerMultiprocessor.
+-#if TORCH_HIP_VERSION < 305
++#if TORCH_HIP_VERSION < 305 && TORCH_HIP_VERSION > 0
+ #define HIPOCCUPANCYMAXACTIVEBLOCKSPERMULTIPROCESSOR hipOccupancyMaxActiveBlocksPerMultiprocessor
+ #else
+ #define HIPOCCUPANCYMAXACTIVEBLOCKSPERMULTIPROCESSOR cuOccupancyMaxActiveBlocksPerMultiprocessor

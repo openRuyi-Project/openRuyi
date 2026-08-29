@@ -7,19 +7,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           parted
-Version:        3.6
+Version:        3.7
 Release:        %autorelease
 Summary:        The GNU disk partition manipulation program
 License:        GPLv3+
 URL:            https://www.gnu.org/software/parted/
 VCS:            git:https://https.git.savannah.gnu.org/git/parted.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:008de57561a4f3c25a0648e66ed11e7b30be493889b64334a6d70f2c1951ef7b
 Source0:        https://ftpmirror.gnu.org/gnu/parted/parted-%{version}.tar.xz
 BuildSystem:    autotools
 
-Patch0:         0001-fix-do_version-parameters.patch
 # skip some tests need superuser.
-Patch1:         0002-skip-some-tests.patch
+Patch2000:      2000-skip-some-tests.patch
 
 BuildOption(conf):  --enable-shared
 BuildOption(conf):  --disable-device-mapper
@@ -33,6 +32,8 @@ BuildRequires:  libtool
 BuildRequires:  texinfo
 BuildRequires:  gcc
 BuildRequires:  make
+# t4002-sun-badlabel test helper is a Python script
+BuildRequires:  python3
 BuildRequires:  util-linux-devel
 
 %description
@@ -51,16 +52,13 @@ manipulation. If you want to develop programs that manipulate disk
 partitions and filesystems using the routines provided by the GNU
 Parted library, you need to install this package.
 
-%conf -p
-autoreconf -fiv
-
 %install -a
 %{__rm} -rf %{buildroot}%{_infodir}/dir
 %find_lang %{name} --generate-subpackages
 
 %files
 %license COPYING
-%doc README doc/API doc/FAT
+%doc README doc/FAT
 %{_sbindir}/parted
 %{_sbindir}/partprobe
 %{_libdir}/libparted*.so.*
@@ -71,7 +69,8 @@ autoreconf -fiv
 %files devel
 %{_includedir}/parted
 %{_libdir}/libparted*.so
-%{_libdir}/pkgconfig/libparted*.pc
+%{_libdir}/pkgconfig/libparted-fs-resize.pc
+%{_libdir}/pkgconfig/libparted.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

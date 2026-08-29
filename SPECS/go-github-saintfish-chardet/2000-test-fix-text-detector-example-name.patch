@@ -1,0 +1,17 @@
+From b07f4d335d44b576669010e48975933f599b0652 Mon Sep 17 00:00:00 2001
+From: Keke Ming <ming.jvle@gmail.com>
+Date: Sun, 19 Jul 2026 17:55:07 +0800
+Subject: [PATCH] test: fix text detector example name
+
+Signed-off-by: Keke Ming <ming.jvle@gmail.com>
+---
+ example_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/example_test.go b/example_test.go
+index 02389cf..01522a7 100644
+--- a/example_test.go
++++ b/example_test.go
+@@ -16 +16 @@ var (
+-func ExampleTextDetector() {
++func ExampleNewTextDetector() {

@@ -6,18 +6,22 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-XML-LibXML
-Version:        2.0210
+Version:        2.0213
 Release:        %autorelease
 Summary:        Perl Binding for libxml2
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-LibXML
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SH/SHLOMIF/XML-LibXML-%{version}.tar.gz
+#!RemoteAsset:  sha256:2af21c5d61ac34ea26a5fabf15ba5a5841e648f7189db3e33b6f28b5489802ab
+Source0:        https://www.cpan.org/authors/id/T/TO/TODDR/XML-LibXML-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl >= 5.8.1
+BuildRequires:  perl-devel
 BuildRequires:  perl(base)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config)
@@ -38,16 +42,14 @@ BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Tie::Hash)
 BuildRequires:  perl(utf8)
-BuildRequires:  perl(vars)
 BuildRequires:  perl(warnings)
+BuildRequires:  perl(Alien::Base::Wrapper)
+BuildRequires:  perl(Alien::Libxml2)
 BuildRequires:  perl(XML::NamespaceSupport) >= 1.07
 BuildRequires:  perl(XML::SAX) >= 0.11
 BuildRequires:  perl(XML::SAX::Base)
 BuildRequires:  perl(XML::SAX::DocumentLocator)
 BuildRequires:  perl(XML::SAX::Exception)
-# Manual
-BuildRequires:  perl(Alien::Base::Wrapper)
-BuildRequires:  perl(Alien::Libxml2)
 BuildRequires:  pkgconfig(libxml-2.0)
 
 Requires:       perl(Exporter) >= 5.57
@@ -61,21 +63,8 @@ and a XML::XPath-like interface to XPath API of libxml2. The module is
 split into several packages which are not described in this section; unless
 stated otherwise, you only need to use XML::LibXML; in your programs.
 
-%prep
-%setup -q -n XML-LibXML-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes HACKING.txt README TODO
+%doc AI_POLICY.md Changes HACKING.txt README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

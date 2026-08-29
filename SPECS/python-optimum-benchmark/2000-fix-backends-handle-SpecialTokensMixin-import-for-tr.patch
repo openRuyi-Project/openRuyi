@@ -1,0 +1,45 @@
+From cb3df6cba1f923011bd317042aa7f104d7d03158 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Tue, 26 May 2026 01:48:48 +0800
+Subject: [PATCH] fix(backends): handle SpecialTokensMixin import for
+ transformers v5
+
+Use nested try-except blocks to import SpecialTokensMixin, falling back
+to tokenization_utils_base for >=4.45.0, and aliasing it to
+PreTrainedTokenizerBase for v5.0.0+ compatibility.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ optimum_benchmark/backends/transformers_utils.py | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/optimum_benchmark/backends/transformers_utils.py b/optimum_benchmark/backends/transformers_utils.py
+index 37851c9..5e9cddf 100644
+--- a/optimum_benchmark/backends/transformers_utils.py
++++ b/optimum_benchmark/backends/transformers_utils.py
+@@ -16,9 +16,22 @@ from transformers import (
+     ImageProcessingMixin,
+     PretrainedConfig,
+     ProcessorMixin,
+-    SpecialTokensMixin,
+ )
+ 
++# Handle transformers API changes across versions
++try:
++    # For transformers < 4.45.0
++    from transformers import SpecialTokensMixin
++except ImportError:
++    try:
++        # For 4.45.0 <= transformers < 5.0.0
++        from transformers.tokenization_utils_base import SpecialTokensMixin
++    except ImportError:
++        # For transformers >= 5.0.0 (Tokenization Overhaul)
++        # SpecialTokensMixin was removed and merged into PreTrainedTokenizerBase
++        from transformers import PreTrainedTokenizerBase
++        SpecialTokensMixin = PreTrainedTokenizerBase
++
+ from ..task_utils import TASKS_TO_AUTO_MODEL_CLASS_NAMES, map_from_synonym_task
+ 
+ 
+-- 
+2.54.0

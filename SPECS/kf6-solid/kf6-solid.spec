@@ -9,17 +9,19 @@
 %define rname solid
 
 Name:           kf6-solid
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        KDE Desktop hardware abstraction
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/solid
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:47fa84db565372584c6ecb03f71a6085f706a1c031ea4f2ffc35808f09a19b3d
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
+
+BuildOption(conf):  -DBUILD_TESTING=OFF
 
 BuildRequires:  bison
-BuildRequires:  fdupes
 BuildRequires:  flex
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  pkgconfig
@@ -51,26 +53,11 @@ Solid is a device integration framework. It provides a way of querying and
 interacting with hardware independently of the underlying operating system.
 Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
+%install -a
 # Use langpacks macro to auto-split translations
-%find_lang %{name}6 --with-qt --all-name --generate-subpackages
+%find_lang %{name} --with-qt --all-name --generate-subpackages
 
-%files -f %{name}6.lang
+%files -f %{name}.lang
 %license LICENSES/*
 %doc README.md
 %{_kf6_debugdir}/solid.categories
@@ -84,4 +71,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_libdir}/libKF6Solid.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

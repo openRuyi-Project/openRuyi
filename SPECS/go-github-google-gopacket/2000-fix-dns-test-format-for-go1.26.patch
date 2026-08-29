@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 14 Jul 2026 00:00:00 +0000
+Subject: [PATCH] Fix DNS URI test format verbs
+
+Go 1.26 vet rejects %q for the uint16 priority and weight fields. Use the
+numeric %d verb so the existing tests remain enabled.
+---
+ layers/dns_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/layers/dns_test.go b/layers/dns_test.go
+--- a/layers/dns_test.go
++++ b/layers/dns_test.go
+@@ -192 +192 @@
+-		t.Errorf("Incorrect URI priority value, expected %q, got %q", testParseDNSTypeURIPriority, priority)
++		t.Errorf("Incorrect URI priority value, expected %d, got %d", testParseDNSTypeURIPriority, priority)
+@@ -196 +196 @@
+-		t.Errorf("Incorrect URI weight value, expected %q, got %q", testParseDNSTypeURIWeight, weight)
++		t.Errorf("Incorrect URI weight value, expected %d, got %d", testParseDNSTypeURIWeight, weight)

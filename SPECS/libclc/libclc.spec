@@ -11,7 +11,7 @@ Summary:        An open source implementation of the OpenCL 1.1 library requirem
 License:        Apache-2.0 WITH LLVM-exception OR NCSA OR MIT
 URL:            https://libclc.llvm.org
 VCS:            git:https://github.com/llvm/llvm-project
-#!RemoteAsset
+#!RemoteAsset:  sha256:de1c8dbffdce898a4c5e70fb7f5aa6dea1e429f63471773da8cb3cdf9e945403
 Source0:        https://github.com/llvm/llvm-project/releases/download/llvmorg-%{version}/libclc-%{version}.src.tar.xz
 BuildArch:      noarch
 BuildSystem:    cmake
@@ -24,6 +24,7 @@ BuildRequires:  python3
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  clang-devel >= %{version}
 BuildRequires:  llvm-devel >= %{version}
+BuildRequires:  llvm-static >= %{version}
 BuildRequires:  pkgconfig(libedit)
 BuildRequires:  spirv-llvm-translator
 
@@ -51,4 +52,4 @@ which are the subset required for upstream Mesa OpenCL support with RustiCL.
 %{_datadir}/clc/*.bc
 
 %changelog
-%{?autochangelog}
+%autochangelog

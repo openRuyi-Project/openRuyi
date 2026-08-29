@@ -4,30 +4,29 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname types_psutil
-%global pypi_name types-psutil
-%global install_name psutil-stubs
+%global srcname types-psutil
+%global pypi_name types_psutil
 
-Name:           python-%{pypi_name}
+Name:           python-types-psutil
 Version:        7.2.2.20260130
 Release:        %autorelease
 Summary:        Typing stubs for psutil
 License:        Apache-2.0
 URL:            https://github.com/python/typeshed
-#!RemoteAsset
-Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:15b0ab69c52841cf9ce3c383e8480c620a4d13d6a8e22b16978ebddac5590950
+Source0:        https://files.pythonhosted.org/packages/source/t/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  %{install_name}
+BuildOption(install):  psutil-stubs
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-types-psutil = %{version}-%{release}
+%python_provide python3-types-psutil
 
 %description
 Typeshed contains external type annotations for the Python standard library and Python builtins, as well as third-party packages that are contributed by people external to those projects.
@@ -43,4 +42,4 @@ Typeshed contains external type annotations for the Python standard library and 
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,7 +5,9 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global rocm_version 7.1.1
+%global rocm_version 7.2.4
+
+%global llvm_maj_ver 22
 
 Name:           rocprim
 Version:        %{rocm_version}
@@ -13,8 +15,8 @@ Release:        %autorelease
 Summary:        ROCm parallel primatives
 License:        MIT AND BSD-3-Clause
 URL:            https://github.com/ROCm/rocPRIM
-#!RemoteAsset
-Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+#!RemoteAsset:  sha256:6531360bf8d03a0e6c1e8748db7a12e7ab87a9e631eda5463e54f418f639c44b
+Source0:        %{url}/archive/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF
@@ -28,15 +30,15 @@ BuildOption(conf):  -DCMAKE_RANLIB=%{rocmllvm_bindir}/llvm-ranlib
 BuildOption(conf):  -DGPU_TARGETS=%{rocm_gpu_list_default}
 BuildOption(conf):  -DROCM_SYMLINK_LIBS=OFF
 
-BuildRequires:  clang-tools-extra-devel
+BuildRequires:  clang%{llvm_maj_ver}-tools-extra-devel
+BuildRequires:  clang-devel(major) = %{llvm_maj_ver}
 BuildRequires:  cmake
 BuildRequires:  cmake(amd_comgr)
-BuildRequires:  cmake(Clang)
 BuildRequires:  cmake(hip)
 BuildRequires:  cmake(hsa-runtime64)
-BuildRequires:  cmake(LLD)
-BuildRequires:  cmake(LLVM)
 BuildRequires:  gcc-c++
+BuildRequires:  lld-devel(major) = %{llvm_maj_ver}
+BuildRequires:  llvm-devel(major) = %{llvm_maj_ver}
 BuildRequires:  python3
 BuildRequires:  rocm-cmake
 BuildRequires:  rocm-device-libs
@@ -66,4 +68,4 @@ rm -f %{buildroot}%{_prefix}/share/doc/rocprim/LICENSE.md
 %{_libdir}/cmake/rocprim
 
 %changelog
-%{?autochangelog}
+%autochangelog

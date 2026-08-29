@@ -7,16 +7,16 @@
 
 %global pypi_name pyside6
 %global camel_name PySide6
-%global qt6ver 6.10.1
+%global qt6ver 6.11.1
 
 Name:           python-%{pypi_name}
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Python bindings for the Qt 6 cross-platform application and UI framework
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://wiki.qt.io/Qt_for_Python
 VCS:            git:https://github.com/qtproject/pyside-pyside-setup
-#!RemoteAsset:  sha256:fd54f40853d61dfd845dbb40d4f89fbd63df5ed341b3d9a2c77bb5c947a0a838
+#!RemoteAsset:  sha256:6ffd9835bb0dd2c56f061d62f1616bb1707cfc0202b80e3165d6be087f3965e2
 Source0:        https://download.qt.io/official_releases/QtForPython/%{pypi_name}/%{camel_name}-%{qt6ver}-src/pyside-setup-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -28,7 +28,7 @@ Patch1:         0002-Always-link-to-python-libraries.patch
 Patch2:         0003-Fix-installation.patch
 
 BuildOption(conf):  -DCMAKE_BUILD_TYPE=Release
-BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_TESTS=OFF
 BuildOption(conf):  -DBUILD_DOCS=OFF
 BuildOption(conf):  -DNO_QT_TOOLS=yes
 BuildOption(conf):  -DCMAKE_SKIP_INSTALL_RPATH=ON
@@ -40,6 +40,7 @@ BuildRequires:  ninja
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  clang-devel
+BuildRequires:  llvm22-static
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(setuptools)
@@ -101,9 +102,11 @@ BuildRequires:  cmake(Qt63DAnimation)
 BuildRequires:  cmake(Qt63DExtras)
 BuildRequires:  cmake(Qt6RemoteObjects)
 BuildRequires:  cmake(Qt6UiPlugin)
+BuildRequires:  clang-static
 BuildRequires:  qt6-designer
 
-Provides:       python3-%{pypi_name}
+Provides:       python3-%{pypi_name} = %{version}-%{release}
+Provides:       python3-%{pypi_name}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{pypi_name}
 
 %description
@@ -114,7 +117,8 @@ provides access to the complete Qt 6+ framework.
 Summary:        Development files related to %{name}
 Requires:       pyside6-tools
 Requires:       shiboken6
-Provides:       python3-%{pypi_name}-devel
+Provides:       python3-%{pypi_name}-devel = %{version}-%{release}
+Provides:       python3-%{pypi_name}-devel%{?_isa} = %{version}-%{release}
 
 %description -n python-%{pypi_name}-devel
 Development files for PySide6.
@@ -134,7 +138,8 @@ Shiboken binding generator.
 
 %package     -n python-shiboken6
 Summary:        Python / C++ bindings libraries for %camel_name
-Provides:       python3-shiboken6
+Provides:       python3-shiboken6 = %{version}-%{release}
+Provides:       python3-shiboken6%{?_isa} = %{version}-%{release}
 %python_provide python3-shiboken6
 
 %description -n python-shiboken6
@@ -144,7 +149,8 @@ Shiboken Python libraries.
 Summary:        Python / C++ bindings helper module for %camel_name
 Requires:       shiboken6
 Requires:       python-shiboken6
-Provides:       python3-shiboken6-devel
+Provides:       python3-shiboken6-devel = %{version}-%{release}
+Provides:       python3-shiboken6-devel%{?_isa} = %{version}-%{release}
 
 %description -n python-shiboken6-devel
 Shiboken development files.
@@ -153,11 +159,6 @@ Shiboken development files.
 sed -i 's#${base}/../shiboken6/##' sources/pyside6/CMakeLists.txt
 
 %build -p
-# fix can't find stddef.h
-CLANG_INC=$(ls -d /usr/lib/clang/*/include | head -n 1)
-echo "Injecting CPATH=$CLANG_INC into shiboken_wrapper.sh"
-find . -name "shiboken_wrapper.sh" -exec sed -i "2i export CPATH=\"$CLANG_INC:\$CPATH\"" {} +
-
 export PYTHONPATH="$PWD/%{_vpath_builddir}/sources:$PYTHONPATH"
 
 %install -a
@@ -185,12 +186,6 @@ mkdir -p %{buildroot}%{python3_sitelib}/%{camel_name}/scripts
 mv %{buildroot}%{_bindir}/{android_deploy.py,deploy_lib,deploy.py,metaobjectdump.py,project_lib,project.py,pyside_tool.py,qml.py,qtpy2cpp_lib,qtpy2cpp.py,requirements-android.txt} %{buildroot}%{python3_sitelib}/%{camel_name}/scripts
 mkdir -p %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
 mv %{buildroot}%{_bindir}/shiboken_tool.py %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
-
-# Fix CMake config files to use correct absolute paths (OpenSUSE solution)
-# The upstream build is designed for wheel installation with relative paths,
-# but for system installation we need absolute paths
-sed -i 's#/typesystems#/share/PySide6/typesystems#g' %{buildroot}%{_libdir}/cmake/PySide6/*.cmake
-sed -i 's#/glue#/share/PySide6/glue#g' %{buildroot}%{_libdir}/cmake/PySide6/*.cmake
 
 # Fix all Python shebangs recursively
 # -p preserves timestamps
@@ -241,4 +236,4 @@ export LD_LIBRARY_PATH="%{buildroot}%{_libdir}"
 %{python3_sitearch}/shiboken6_generator-%{version}-py%{python3_version}.egg-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog

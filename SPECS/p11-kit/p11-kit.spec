@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           p11-kit
-Version:        0.25.5
+Version:        0.26.5
 Release:        %autorelease
 Summary:        Library and tools for working with PKCS#11 modules
 License:        BSD-3-Clause
 URL:            https://p11-glue.freedesktop.org/p11-kit.html
 VCS:            git:https://github.com/p11-glue/p11-kit
-#!RemoteAsset
-Source:         https://github.com/p11-glue/%{name}/releases/download/%{version}/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:f2cc09111e44bf3fea58f023180b33acea90aa82d042d6fbb623fbc5ba033bb7
+Source:         https://github.com/p11-glue/p11-kit/releases/download/%{version}/p11-kit-%{version}.tar.xz
 BuildSystem:    meson
 
 BuildOption(conf):  -Dtrust_paths=%{_sysconfdir}/pki/trust:%{_datadir}/pki/trust
@@ -24,7 +24,6 @@ BuildOption(conf):  -Dman=false
 
 BuildRequires:  meson
 BuildRequires:  python3
-BuildRequires:  cmake
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(libffi) >= 3.0.0
 BuildRequires:  pkgconfig(libsystemd)
@@ -55,19 +54,21 @@ rm -f %{buildroot}%{_sysconfdir}/pkcs11/pkcs11.conf.example
 %dir %{_sysconfdir}/pkcs11
 %dir %{_sysconfdir}/pkcs11/modules
 %dir %{_libdir}/pkcs11
-%dir %{_datadir}/%{name}
-%dir %{_datadir}/%{name}/modules
-%{_datadir}/%{name}/modules/p11-kit-trust.module
-%{_libdir}/pkcs11/p11-kit-trust.so
-%dir %{_libexecdir}/%{name}
-%{_libexecdir}/%{name}/*
-%{_libdir}/libp11-kit.so.*
-%{_libdir}/p11-kit-proxy.so
+%dir %{_datadir}/p11-kit
+%dir %{_datadir}/p11-kit/modules
 %{_bindir}/p11-kit
 %{_bindir}/trust
+%{_datadir}/p11-kit/modules/p11-kit-trust.module
+%{_libdir}/libp11-kit.so.*
+%{_libdir}/p11-kit-proxy.so
 %{_libdir}/pkcs11/p11-kit-client.so
+%{_libdir}/pkcs11/p11-kit-trust.so
+%dir %{_libexecdir}/p11-kit
+%{_libexecdir}/p11-kit/*
 %{_userunitdir}/p11-kit-server.service
 %{_userunitdir}/p11-kit-server.socket
+%{zsh_completions_dir}/_p11-kit
+%{zsh_completions_dir}/_trust
 
 %files devel
 %{_includedir}/p11-kit-1/
@@ -75,4 +76,4 @@ rm -f %{buildroot}%{_sysconfdir}/pkcs11/pkcs11.conf.example
 %{_libdir}/pkgconfig/p11-kit-1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

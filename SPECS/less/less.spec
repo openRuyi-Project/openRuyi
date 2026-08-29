@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           less
-Version:        679
+Version:        702
 Release:        %autorelease
 Summary:        Text File Browser and Pager Similar to more
 License:        BSD-2-Clause OR GPL-3.0-or-later
 URL:            https://www.greenwoodsoftware.com/less/
 VCS:            git:https://github.com/gwsw/less
-#!RemoteAsset
+#!RemoteAsset:  sha256:242a64c00f02d96f8ee208cf638ae1728b727c7f5fdf82a7d4f4cae32fb084e2
 Source0:        https://ftpmirror.gnu.org/gnu/less/less-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -34,8 +34,9 @@ start an editor at any time from within less.
 %doc NEWS
 %{_mandir}/*/*
 %{_bindir}/less
-%{_bindir}/lessecho
 %{_bindir}/lesskey
+%{_libexecdir}/lessecho
+%{_libexecdir}/less-osc8-open
 
 %changelog
-%{?autochangelog}
+%autochangelog

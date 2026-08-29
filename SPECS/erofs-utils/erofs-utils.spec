@@ -6,12 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           erofs-utils
-Version:        1.8.10
+Version:        1.9.1
 Release:        %autorelease
 Summary:        Utilities for the Extendable Read-Only Filesystem (EROFS)
 License:        GPL-2.0-or-later
 URL:            https://github.com/erofs/erofs-utils
-#!RemoteAsset
+VCS:            git:https://github.com/erofs/erofs-utils.git
+#!RemoteAsset:  sha256:a9ef5ab67c4b8d2d3e9ed71f39cd008bda653142a720d8a395a36f1110d0c432
 Source:         https://github.com/erofs/erofs-utils/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -41,6 +42,7 @@ autoreconf -fiv
 %license COPYING
 %{_bindir}/*erofs
 %{_mandir}/man1/*erofs*
+%{_mandir}/man8/*erofs*
 
 %changelog
-%{?autochangelog}
+%autochangelog

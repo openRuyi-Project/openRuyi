@@ -13,9 +13,11 @@ Summary:       A tool for listing open files
 License:       Sendmail and LGPL-2.1-or-later and Zlib
 URL:           https://lsof.readthedocs.io/en/latest/
 VCS:           git:https://github.com/lsof-org/lsof
-#!RemoteAsset
+#!RemoteAsset:  sha256:6081dedf841cd61f8a022ff7cbe04ed78918a47dea3c39528c8571474167aa0f
 Source0:       https://github.com/lsof-org/lsof/releases/download/%{version}/lsof-%{version}.tar.gz
 BuildSystem:   autotools
+
+Patch2000:     2000-skip-LTlock-test-in-package-builds.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --enable-security
@@ -40,10 +42,10 @@ install -m 0644 lsof.1 -D %{buildroot}%{_mandir}/man1/lsof.1
 rm -rf %{buildroot}%{_mandir}/man8/lsof.8*
 
 %files
-%license COPYING
 %doc 00CREDITS 00README 00FAQ 00LSOF-L 00QUICKSTART
+%license COPYING
 %{_bindir}/lsof
 %{_mandir}/man1/lsof.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

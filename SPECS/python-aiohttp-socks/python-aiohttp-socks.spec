@@ -15,6 +15,7 @@ License:        Apache-2.0
 URL:            https://pypi.org/project/aiohttp-socks/
 #!RemoteAsset:  sha256:0afe51638527c79077e4bd6e57052c87c4824233d6e20bb061c53766421b10f0
 Source0:        https://files.pythonhosted.org/packages/source/a/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
@@ -27,6 +28,9 @@ BuildRequires:  python3dist(python-socks[asyncio])
 BuildRequires:  python3dist(aiohttp)
 BuildRequires:  python3dist(python-socks)
 
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 SOCKS proxy connector for aiohttp. SOCKS4(a) and SOCKS5 are supported.
 
@@ -37,4 +41,4 @@ SOCKS proxy connector for aiohttp. SOCKS4(a) and SOCKS5 are supported.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,16 +5,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname language_data
-%global pypi_name language_data
 
-Name:           python-%{srcname}
+Name:           python-language-data
 Version:        1.4.0
 Release:        %autorelease
 Summary:        Library for language data
 License:        MIT
 URL:            https://github.com/rspeer/language_data
 #!RemoteAsset:  sha256:800e6457e7beda781c156e02d7707e38db2ded026472e07e2c055dc8446ee574
-Source0:        https://files.pythonhosted.org/packages/source/l/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
@@ -28,8 +27,8 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(marisa-trie)
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
+Provides:       python3-language-data = %{version}-%{release}
+%python_provide python3-language-data
 
 %description
 This package provides language data and functions for working with it.
@@ -43,4 +42,4 @@ It is a dependency for other libraries like langcodes.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

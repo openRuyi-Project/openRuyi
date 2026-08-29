@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/sethmlarson/socksio
 #!RemoteAsset:  sha256:f88beb3da5b5c38b9890469de67d0cb0f9d494b78b106ca1845f96c10b91c4ac
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 # change the dep version of python-flit-core.
@@ -29,7 +30,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(flit-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +45,4 @@ SOCKS5. socksio is a sans-I/O library similar to h11 or h2.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

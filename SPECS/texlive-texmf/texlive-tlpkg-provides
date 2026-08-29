@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+evr=$1
+
+while IFS= read -r file; do
+    awk -v evr="$evr" '
+        NF && $1 !~ /^#/ {
+            print "texlive-" $1 " = " evr
+        }
+    ' "$file"
+done

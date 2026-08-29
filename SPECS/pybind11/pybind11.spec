@@ -37,6 +37,7 @@ C++ code.
 
 %package        devel
 Summary:        Development headers for pybind11
+Requires:       pkgconfig(python3)
 
 %description    devel
 This package contains the development headers for pybind11.
@@ -78,4 +79,4 @@ This package contains the Python 3 files for pybind11.
 %files -n python-%{srcname} -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

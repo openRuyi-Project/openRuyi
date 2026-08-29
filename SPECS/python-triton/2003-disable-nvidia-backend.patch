@@ -1,0 +1,254 @@
+diff -ruN a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2026-06-18 11:45:56
++++ b/CMakeLists.txt	2026-06-18 11:45:56
+@@ -20,11 +20,19 @@
+ option(TRITON_BUILD_PROTON "Build the Triton Proton profiler" ON)
+ option(TRITON_BUILD_UT "Build C++ Triton Unit Tests" ON)
+ option(TRITON_BUILD_WITH_CCACHE "Build with ccache (if available)" ON)
++option(TRITON_BUILD_EXAMPLES "Build Triton examples and sample plugins" ON)
++option(TRITON_BUILD_TOOLS "Build Triton command-line tools and tests" ON)
+ option(TRITON_OFFLINE_BUILD "Build without downloading dependencies" OFF)
+ option(TRITON_EXT_ENABLED "Build with default visibility for Triton+LLVM symbol exposure to plugin extensions" OFF)
+ set(TRITON_CODEGEN_BACKENDS "" CACHE STRING "Enable different codegen backends")
+ set(TRITON_VERSION "" CACHE STRING "Triton version string (passed from setup.py)")
+ 
++list(FIND TRITON_CODEGEN_BACKENDS "nvidia" TRITON_NVIDIA_BACKEND_INDEX)
++set(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN OFF)
++if(NOT TRITON_NVIDIA_BACKEND_INDEX EQUAL -1)
++  set(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN ON)
++endif()
++
+ if(TRITON_BUILD_WITH_CCACHE)
+   find_program(CCACHE_PROGRAM ccache)
+   if(CCACHE_PROGRAM)
+@@ -201,6 +209,10 @@
+     add_subdirectory(third_party/${CODEGEN_BACKEND})
+   endforeach()
+ 
++  if(NOT TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++    add_subdirectory(third_party/nvidia)
++  endif()
++
+   if (TRITON_BUILD_PROTON)
+     add_subdirectory(third_party/proton)
+   endif()
+@@ -204,8 +216,8 @@
+   if (TRITON_BUILD_PROTON)
+     add_subdirectory(third_party/proton)
++    list(APPEND TRITON_PLUGIN_NAMES "proton")
+   endif()
+   # We always build proton dialect
+-  list(APPEND TRITON_PLUGIN_NAMES "proton")
+   add_subdirectory(third_party/proton/Dialect)
+ 
+   if (DEFINED TRITON_PLUGIN_DIRS)
+@@ -314,7 +326,9 @@
+     COPYONLY)
+ 
+   # Build plugins when building libtriton since they depend on libtriton.
+-  add_subdirectory(examples/plugins)
++  if(TRITON_BUILD_EXAMPLES)
++    add_subdirectory(examples/plugins)
++  endif()
+ endif()
+ 
+ if (UNIX AND NOT APPLE AND NOT TRITON_EXT_ENABLED)
+@@ -341,16 +355,18 @@
+ 
+ find_package(Threads REQUIRED)
+ 
+-add_subdirectory(third_party/f2reduce)
+-add_subdirectory(bin)
+-add_subdirectory(test)
+-
+-if(TRITON_BUILD_UT)
+-  add_subdirectory(unittest)
+-  # This target runs all the unit tests.
+-  add_custom_target(check-triton-unit-tests
+-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+-    DEPENDS TritonUnitTests
+-    USES_TERMINAL
+-  )
++add_subdirectory(third_party/f2reduce)
++if(TRITON_BUILD_TOOLS)
++  add_subdirectory(bin)
++  add_subdirectory(test)
++
++  if(TRITON_BUILD_UT)
++    add_subdirectory(unittest)
++    # This target runs all the unit tests.
++    add_custom_target(check-triton-unit-tests
++      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
++      DEPENDS TritonUnitTests
++      USES_TERMINAL
++    )
++  endif()
+ endif()
+diff -ruN a/lib/Conversion/CMakeLists.txt b/lib/Conversion/CMakeLists.txt
+--- a/lib/Conversion/CMakeLists.txt	2026-06-18 11:21:24
++++ b/lib/Conversion/CMakeLists.txt	2026-06-18 11:45:56
+@@ -1,3 +1,5 @@
+ add_subdirectory(TritonToTritonGPU)
+ add_subdirectory(TritonGPUToLLVM)
+-add_subdirectory(TritonInstrumentToLLVM)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(TritonInstrumentToLLVM)
++endif()
+diff -ruN a/MANIFEST.in b/MANIFEST.in
+--- a/MANIFEST.in	2026-06-18 11:21:24
++++ b/MANIFEST.in	2026-06-18 12:45:00
+@@ -6,6 +6,9 @@
+ graft python/src
+ graft python/test
+ graft python/triton
++prune python/triton/experimental/gluon/nvidia
++prune python/triton/experimental/gluon/language/nvidia
++prune python/triton/tools/triton_to_gluon_translater
+ graft test
+ graft third_party
+ graft unittest
+diff -ruN a/python/triton/experimental/gluon/__init__.py b/python/triton/experimental/gluon/__init__.py
+--- a/python/triton/experimental/gluon/__init__.py	2026-06-18 11:21:24
++++ b/python/triton/experimental/gluon/__init__.py	2026-06-18 13:20:00
+@@ -1,6 +1,5 @@
+ from ._runtime import constexpr_function, jit
+ from triton.language.core import must_use_result
+-from . import nvidia
+ from . import amd
+ 
+-__all__ = ["constexpr_function", "jit", "must_use_result", "nvidia", "amd"]
++__all__ = ["constexpr_function", "jit", "must_use_result", "amd"]
+diff -ruN a/python/triton/experimental/gluon/language/__init__.py b/python/triton/experimental/gluon/language/__init__.py
+--- a/python/triton/experimental/gluon/language/__init__.py	2026-06-18 11:21:24
++++ b/python/triton/experimental/gluon/language/__init__.py	2026-06-18 13:20:00
+@@ -132,6 +132,5 @@
+     zeros_like,
+ )
+ 
+-from . import nvidia
+ from . import amd
+ from . import extra
+diff -ruN a/setup.py b/setup.py
+--- a/setup.py	2026-06-18 11:45:56
++++ b/setup.py	2026-06-18 11:45:56
+@@ -405,7 +405,8 @@
+         build_ext.finalize_options(self)
+ 
+     def run(self):
+-        download_and_copy_dependencies()
++        if any(backend.name == "nvidia" for backend in backends):
++            download_and_copy_dependencies()
+ 
+         try:
+             out = subprocess.check_output(["cmake", "--version"])
+@@ -629,7 +630,12 @@
+     )
+ 
+ 
+-backends = [*BackendInstaller.copy(["nvidia", "amd"]), *BackendInstaller.copy_externals()]
++def get_enabled_in_tree_backends():
++    backends = os.getenv("TRITON_CODEGEN_BACKENDS")
++    return ["nvidia", "amd"] if backends is None else [backend for backend in backends.split(";") if backend]
++
++
++backends = [*BackendInstaller.copy(get_enabled_in_tree_backends()), *BackendInstaller.copy_externals()]
+ 
+ 
+ def get_package_dirs():
+@@ -662,7 +668,17 @@
+ 
+ 
+ def get_packages():
+-    yield from find_packages(where="python")
++    excludes = []
++    if not any(backend.name == "nvidia" for backend in backends):
++        excludes.extend([
++            "triton.experimental.gluon.nvidia",
++            "triton.experimental.gluon.nvidia.*",
++            "triton.experimental.gluon.language.nvidia",
++            "triton.experimental.gluon.language.nvidia.*",
++            "triton.tools.triton_to_gluon_translater",
++            "triton.tools.triton_to_gluon_translater.*",
++        ])
++    yield from find_packages(where="python", exclude=excludes)
+ 
+     for backend in backends:
+         yield f"triton.backends.{backend.name}"
+diff -ruN a/third_party/nvidia/CMakeLists.txt b/third_party/nvidia/CMakeLists.txt
+--- a/third_party/nvidia/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/nvidia/CMakeLists.txt	2026-06-18 11:45:56
+@@ -2,11 +2,11 @@
+ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+ add_subdirectory(include)
+ add_subdirectory(lib)
+-if(TRITON_BUILD_PYTHON_MODULE)
++if(TRITON_BUILD_PYTHON_MODULE AND TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
+   add_triton_plugin(TritonNVIDIA ${CMAKE_CURRENT_SOURCE_DIR}/triton_nvidia.cc LINK_LIBS TritonNVIDIAGPUToLLVM NVGPUToLLVM)
+   target_link_libraries(TritonNVIDIA PRIVATE Python3::Module pybind11::headers)
+ endif()
+-if(TRITON_BUILD_UT)
++if(TRITON_BUILD_UT AND TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
+   add_subdirectory(unittest)
+ endif()
+ add_subdirectory(hopper)
+diff -ruN a/third_party/nvidia/hopper/CMakeLists.txt b/third_party/nvidia/hopper/CMakeLists.txt
+--- a/third_party/nvidia/hopper/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/nvidia/hopper/CMakeLists.txt	2026-06-18 11:45:56
+@@ -1,2 +1,4 @@
+ add_subdirectory(include)
+-add_subdirectory(lib)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(lib)
++endif()
+diff -ruN a/third_party/nvidia/include/CMakeLists.txt b/third_party/nvidia/include/CMakeLists.txt
+--- a/third_party/nvidia/include/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/nvidia/include/CMakeLists.txt	2026-06-18 11:45:56
+@@ -1,3 +1,5 @@
+ add_subdirectory(Dialect)
+-add_subdirectory(TritonNVIDIAGPUToLLVM)
+-add_subdirectory(NVGPUToLLVM)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(TritonNVIDIAGPUToLLVM)
++  add_subdirectory(NVGPUToLLVM)
++endif()
+diff -ruN a/third_party/nvidia/lib/CMakeLists.txt b/third_party/nvidia/lib/CMakeLists.txt
+--- a/third_party/nvidia/lib/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/nvidia/lib/CMakeLists.txt	2026-06-18 11:45:56
+@@ -1,3 +1,5 @@
+ add_subdirectory(Dialect)
+-add_subdirectory(TritonNVIDIAGPUToLLVM)
+-add_subdirectory(NVGPUToLLVM)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(TritonNVIDIAGPUToLLVM)
++  add_subdirectory(NVGPUToLLVM)
++endif()
+diff -ruN a/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt b/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt
+--- a/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt	2026-06-18 11:50:00
+@@ -2,5 +2,7 @@
+ mlir_tablegen(Passes.h.inc -gen-pass-decls --name ProtonGPUToLLVM)
+ add_public_tablegen_target(ProtonGPUConversionPassIncGen)
+ 
+-add_subdirectory(ProtonNvidiaGPUToLLVM)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(ProtonNvidiaGPUToLLVM)
++endif()
+ add_subdirectory(ProtonAMDGPUToLLVM)
+diff -ruN a/third_party/proton/Dialect/CMakeLists.txt b/third_party/proton/Dialect/CMakeLists.txt
+--- a/third_party/proton/Dialect/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/proton/Dialect/CMakeLists.txt	2026-06-18 11:55:00
+@@ -5,1 +5,1 @@
+-if(TRITON_BUILD_PYTHON_MODULE)
++if(TRITON_BUILD_PYTHON_MODULE AND TRITON_BUILD_PROTON)
+diff -ruN a/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt b/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt
+--- a/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt	2026-06-18 11:21:24
++++ b/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt	2026-06-18 11:50:00
+@@ -13,5 +13,7 @@
+     ProtonAnalysis
+ )
+ 
+-add_subdirectory(ProtonNvidiaGPUToLLVM)
++if(TRITON_BUILD_NVIDIA_BACKEND_PLUGIN)
++  add_subdirectory(ProtonNvidiaGPUToLLVM)
++endif()
+ add_subdirectory(ProtonAMDGPUToLLVM)

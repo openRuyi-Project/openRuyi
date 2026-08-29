@@ -1,0 +1,72 @@
+From e308a4d17d13dd8bd7022a103861970e8276e363 Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Fri, 24 Apr 2026 11:03:26 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Do not probe satp mode limit if
+ known in FDT
+
+Some systems may only have memory at such a high address that an
+identity mapping cannot be made in Sv48, or even Sv57. To avoid crashing
+while probing satp mode support, trust the mmu-type property from FDT
+and avoid probing if it is set.
+
+For example, if a CPU supports (up to) Sv57 but the SoC it is on only
+has memory starting at 128 TiB, an identity mapping cannot be made in
+Sv48. If the user specifies "no5lvl" on the command line,
+set_satp_mode() will attempt to test Sv48 support and crash, since the
+virtual address is too high. Instead, given the correct FDT CPU node
+property mmu-type = "riscv,sv57", set_satp_mode() can pick the maximum
+allowed mode from command line and FDT, namely Sv48, without probing.
+
+Handling of mmu-type "riscv,sv57" in set_satp_mode_from_fdt() is added
+since it is now needed.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260424-riscv-mm-trust-fdt-mmu-type-v1-1-57f3313275d2@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/kernel/pi/fdt_early.c | 2 ++
+ arch/riscv/mm/init.c             | 7 ++++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/pi/fdt_early.c b/arch/riscv/kernel/pi/fdt_early.c
+index a12ff8090f19..702253287560 100644
+--- a/arch/riscv/kernel/pi/fdt_early.c
++++ b/arch/riscv/kernel/pi/fdt_early.c
+@@ -218,6 +218,8 @@ u64 set_satp_mode_from_fdt(uintptr_t dtb_pa)
+ 			return SATP_MODE_39;
+ 		else if (!strcmp(mmu_type, "riscv,sv48"))
+ 			return SATP_MODE_48;
++		else if (!strcmp(mmu_type, "riscv,sv57"))
++			return SATP_MODE_57;
+ 		break;
+ 	}
+ 
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index ac5bece70736..f10c37999f23 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -892,8 +892,9 @@ static __init void set_satp_mode(uintptr_t dtb_pa)
+ {
+ 	u64 identity_satp, hw_satp;
+ 	uintptr_t set_satp_mode_pmd = ((unsigned long)set_satp_mode) & PMD_MASK;
++	u64 satp_mode_limit_fdt = __pi_set_satp_mode_from_fdt(dtb_pa);
+ 	u64 satp_mode_limit = min_not_zero(__pi_set_satp_mode_from_cmdline(dtb_pa),
+-					   __pi_set_satp_mode_from_fdt(dtb_pa));
++					   satp_mode_limit_fdt);
+ 
+ 	kernel_map.page_offset = PAGE_OFFSET_L5;
+ 
+@@ -905,6 +906,10 @@ static __init void set_satp_mode(uintptr_t dtb_pa)
+ 		return;
+ 	}
+ 
++	/* Skip probing if max SATP mode known from FDT */
++	if (satp_mode_limit_fdt)
++		return;
++
+ 	create_p4d_mapping(early_p4d,
+ 			set_satp_mode_pmd, (uintptr_t)early_pud,
+ 			P4D_SIZE, PAGE_TABLE);
+-- 
+2.53.0
+

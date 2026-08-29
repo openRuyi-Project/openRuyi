@@ -9,18 +9,25 @@
 %bcond nuspell 0
 
 Name:           enchant
-Version:        2.8.12
+Version:        2.8.16
 Release:        %autorelease
 Summary:        Generic Spell Checking Library
 License:        LGPL-2.1-or-later
 URL:            https://rrthomas.github.io/enchant/
 VCS:            git:https://github.com/rrthomas/enchant
-#!RemoteAsset
+#!RemoteAsset:  sha256:d73162b5eff401a6397e1215e2b103bcef83f921c396c7f6b1394d2450d124e2
 Source0:        https://github.com/rrthomas/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 %if %{with aspell}
 BuildOption(conf):  --with-aspell
+%else
+BuildOption(conf):  --without-aspell
+%endif
+%if %{with nuspell}
+BuildOption(conf):  --with-nuspell
+%else
+BuildOption(conf):  --without-nuspell
 %endif
 BuildOption(conf):  --disable-static
 
@@ -90,7 +97,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/enchant-2
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/enchant-2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

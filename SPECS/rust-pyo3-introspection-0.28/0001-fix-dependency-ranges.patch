@@ -1,0 +1,11 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -38,7 +38,7 @@
+ version = "1"
+ 
+ [dependencies.goblin]
+-version = ">=0.9, <0.11"
++version = "0.10.7"
+ 
+ [dependencies.serde]
+ version = "1"

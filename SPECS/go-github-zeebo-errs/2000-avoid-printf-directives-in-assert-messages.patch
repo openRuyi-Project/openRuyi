@@ -1,0 +1,30 @@
+From 361474bb911d70222ea6e91f67440f1769ef8a21 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 21:10:17 +0800
+Subject: [PATCH] Avoid printf directives in assert messages
+
+---
+ errs_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/errs_test.go b/errs_test.go
+index ce41964..ae24199 100644
+--- a/errs_test.go
++++ b/errs_test.go
+@@ -109,11 +109,11 @@ func TestErrs(t *testing.T) {
+ 
+ 			assert(t,
+ 				!strings.Contains(fmt.Sprintf("%v", err), "\n"),
+-				"%v format contains newline",
++				"plain format contains newline",
+ 			)
+ 			assert(t,
+ 				strings.Contains(fmt.Sprintf("%+v", err), "\n"),
+-				"%+v format does not contain newline",
++				"detailed format does not contain newline",
+ 			)
+ 		})
+ 
+-- 
+2.43.0
+

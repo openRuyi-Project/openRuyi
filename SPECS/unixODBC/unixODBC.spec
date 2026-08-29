@@ -8,17 +8,17 @@
 
 %bcond   gui_related_parts 1
 
-Name:            unixODBC
-Version:         2.3.14
-Release:         %autorelease
-Summary:         A complete ODBC driver manager for Linux
-License:         GPL-2.0-or-later AND LGPL-2.1-or-later
-URL:             http://www.unixODBC.org/
-VCS:             git:https://github.com/lurcher/unixODBC.git
-#!RemoteAsset
-Source0:         http://www.unixODBC.org/unixODBC-%{version}.tar.gz
-Source1:         odbcinst.ini
-BuildSystem:     autotools
+Name:           unixODBC
+Version:        2.3.14
+Release:        %autorelease
+Summary:        A complete ODBC driver manager for Linux
+License:        GPL-2.0-or-later AND LGPL-2.1-or-later
+URL:            https://www.unixODBC.org/
+VCS:            git:https://github.com/lurcher/unixODBC.git
+#!RemoteAsset:  sha256:4e2814de3e01fc30b0b9f75e83bb5aba91ab0384ee951286504bb70205524771
+Source0:        https://www.unixODBC.org/unixODBC-%{version}.tar.gz
+Source1:        odbcinst.ini
+BuildSystem:    autotools
 
 BuildOption(conf):  --with-gnu-ld=yes
 BuildOption(conf):  --enable-threads=yes
@@ -78,8 +78,10 @@ rm -rf %{buildroot}%{_datadir}/libtool
 
 %files devel
 %{_includedir}/*
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/odbc.pc
+%{_libdir}/pkgconfig/odbccr.pc
+%{_libdir}/pkgconfig/odbcinst.pc
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

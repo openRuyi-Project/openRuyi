@@ -13,7 +13,8 @@
 %global pkgdir %{_prefix}/lib/systemd
 %global system_unit_dir %{pkgdir}/system
 %global user_unit_dir %{pkgdir}/user
-
+%global sysusers_dir %{_prefix}/lib/sysusers.d
+%global tmpfiles_dir %{_prefix}/lib/tmpfiles.d
 # If we want to enable bootstrap, change this to 1
 # When bootstrap, libcryptsetup is disabled
 # but auto-features causes many options to be turned on
@@ -44,7 +45,7 @@
 # We don't want eBPF support yet
 %bcond bpf 0
 
-%global base_version 259
+%global base_version 261.1
 
 Name:           systemd
 Version:        %{base_version}
@@ -53,7 +54,7 @@ Summary:        System and service manager
 License:        LGPL-2.1-or-later AND MIT AND GPL-2.0-or-later
 URL:            https://systemd.io
 VCS:            git:https://github.com/systemd/systemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:f9b9da1103d1714703503d1746971ccbeeae945663ef3ede3b7348169b5df064
 Source0:        https://github.com/systemd/systemd/archive/v%{version}/%{name}-%{version}.tar.gz
 # These are essential files
 Source1:        systemd-user.pam
@@ -61,7 +62,6 @@ BuildSystem:    meson
 
 BuildOption(conf):  -Dmode=release
 BuildOption(conf):  -Dsbat-distro-url='%{_vendor_url}'
-BuildOption(conf):  -Drc-local=/etc/rc.d/rc.local
 BuildOption(conf):  -Ddns-servers=''
 BuildOption(conf):  -Dkmod=enabled
 BuildOption(conf):  -Dxkbcommon=%{?with_x:enabled}%{!?with_x:disabled}
@@ -93,7 +93,6 @@ BuildOption(conf):  -Dgnutls=enabled
 BuildOption(conf):  -Dmicrohttpd=%{?with_journal_remote:enabled}%{!?with_journal_remote:disabled}
 BuildOption(conf):  -Dvmspawn=%{?with_bootstrap:disabled}%{!?with_bootstrap:enabled}
 BuildOption(conf):  -Dlibidn2=enabled
-BuildOption(conf):  -Dlibiptc=%{?with_network:enabled}%{!?with_network:disabled}
 BuildOption(conf):  -Dnetworkd=%{?with_network:true}%{!?with_network:false}
 BuildOption(conf):  -Dresolve=%{?with_network:true}%{!?with_network:false}
 BuildOption(conf):  -Dnss-resolve=%{?with_network:enabled}%{!?with_network:disabled}
@@ -300,6 +299,8 @@ Requires:       systemd = %{version}-%{release}
 Requires(post): grep
 Provides:       udev = %{version}
 Requires:       kbd
+Recommends:     kmod-libs
+Recommends:     libseccomp
 %{?systemd_requires}
 
 %description    udev
@@ -433,6 +434,7 @@ This package provide mount.ddi and systemd-dissect.
 
 %package     -n kernel-install
 Summary:        This package provides kernel-install tool
+Requires:       kmod
 
 %description -n kernel-install
 This package provides kernel-install tool
@@ -572,7 +574,7 @@ if [ $1 -ge 2 ]; then
   systemd-tmpfiles --create &>/dev/null || :
 fi
 
-%systemd_posttrans_with_restart systemd-timedated.service systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
+%systemd_posttrans_with_restart systemd-hostnamed.service systemd-journald.service systemd-localed.service systemd-userdbd.service
 
 # FIXME: systemd-logind.service is excluded (https://github.com/systemd/systemd/pull/17558)
 
@@ -662,7 +664,6 @@ fi
                         systemd-suspend-then-hibernate.service
                         systemd-suspend.service
                         systemd-sysctl.service
-                        systemd-timesyncd.service
                         systemd-tmpfiles-setup-dev-early.service
                         systemd-tmpfiles-setup-dev.service
                         systemd-udev-load-credentials.service
@@ -690,12 +691,20 @@ systemd-hwdb update &>/dev/null
 %posttrans udev
 # Restart some services.
 # Others are either oneshot services, or sockets, and restarting them causes issues (#1378974)
-%systemd_posttrans_with_restart systemd-udevd.service systemd-timesyncd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
+%systemd_posttrans_with_restart systemd-udevd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
 
+%global timesyncd_units %{shrink:
+                          systemd-time-wait-sync.service
+                          systemd-timedated.service
+                          systemd-timesyncd.service
+                         }
+
+%post timesyncd
+%systemd_post %timesyncd_units
 %preun timesyncd
-%systemd_preun systemd-timesyncd.service
+%systemd_preun %timesyncd_units
 %posttrans timesyncd
-%systemd_posttrans_with_restart systemd-timesyncd.service
+%systemd_posttrans_with_restart systemd-timedated.service systemd-timesyncd.service
 
 %if %{with journal_remote}
 %global journal_remote_units_restart systemd-journal-gatewayd.service systemd-journal-remote.service systemd-journal-upload.service
@@ -716,7 +725,6 @@ systemd-hwdb update &>/dev/null
                             systemd-networkd.socket
                             systemd-networkd-wait-online.service
                             systemd-network-generator.service
-                            systemd-networkd-persistent-storage.service
                            }
 
 %post networkd
@@ -788,7 +796,7 @@ fi
 %exclude %{_docdir}/systemd/LICENSE*
 %doc %{_prefix}/lib/modprobe.d/README
 %doc %{_prefix}/lib/sysctl.d/README
-%doc %{_prefix}/lib/tmpfiles.d/README
+%doc %{tmpfiles_dir}/README
 %doc %{_docdir}/systemd/ENVIRONMENT.md
 %doc %{_docdir}/systemd/NEWS
 %doc %{_docdir}/systemd/README
@@ -805,22 +813,23 @@ fi
 %{_sysconfdir}/systemd/system.conf
 %{_sysconfdir}/systemd/user.conf
 %{_prefix}/lib/sysctl.d/50-*
-%{_prefix}/lib/tmpfiles.d/20-*
-%{_prefix}/lib/tmpfiles.d/credstore.conf
-%{_prefix}/lib/tmpfiles.d/etc.conf
-%{_prefix}/lib/tmpfiles.d/home.conf
-%{_prefix}/lib/tmpfiles.d/journal-nocow.conf
-%{_prefix}/lib/tmpfiles.d/legacy.conf
-%{_prefix}/lib/tmpfiles.d/portables.conf
-%{_prefix}/lib/tmpfiles.d/provision.conf
-%{_prefix}/lib/tmpfiles.d/static-nodes-permissions.conf
-%{_prefix}/lib/tmpfiles.d/systemd-nologin.conf
-%{_prefix}/lib/tmpfiles.d/systemd-pstore.conf
-%{_prefix}/lib/tmpfiles.d/systemd-tmp.conf
-%{_prefix}/lib/tmpfiles.d/systemd.conf
-%{_prefix}/lib/tmpfiles.d/tmp.conf
-%{_prefix}/lib/tmpfiles.d/var.conf
-%{_prefix}/lib/tmpfiles.d/x11.conf
+%{tmpfiles_dir}/20-*
+%{tmpfiles_dir}/credstore.conf
+%{tmpfiles_dir}/etc.conf
+%{tmpfiles_dir}/home.conf
+%{tmpfiles_dir}/journal-nocow.conf
+%{tmpfiles_dir}/legacy.conf
+%{tmpfiles_dir}/portables.conf
+%{tmpfiles_dir}/provision.conf
+%{tmpfiles_dir}/root.conf
+%{tmpfiles_dir}/static-nodes-permissions.conf
+%{tmpfiles_dir}/systemd-nologin.conf
+%{tmpfiles_dir}/systemd-pstore.conf
+%{tmpfiles_dir}/systemd-tmp.conf
+%{tmpfiles_dir}/systemd.conf
+%{tmpfiles_dir}/tmp.conf
+%{tmpfiles_dir}/var.conf
+%{tmpfiles_dir}/x11.conf
 %{bash_completions_dir}/busctl
 %{bash_completions_dir}/coredumpctl
 %{bash_completions_dir}/hostnamectl
@@ -830,6 +839,7 @@ fi
 %{bash_completions_dir}/oomctl
 %{bash_completions_dir}/portablectl
 %{bash_completions_dir}/run0
+%{bash_completions_dir}/storagectl
 %{bash_completions_dir}/systemctl
 %{bash_completions_dir}/systemd-analyze
 %{bash_completions_dir}/systemd-cat
@@ -843,9 +853,10 @@ fi
 %{bash_completions_dir}/systemd-path
 %{bash_completions_dir}/systemd-run
 %{bash_completions_dir}/systemd-sysext
+%{bash_completions_dir}/systemd-sysinstall
+%{bash_completions_dir}/systemd-vpick
 %{bash_completions_dir}/userdbctl
 %{bash_completions_dir}/varlinkctl
-%{bash_completions_dir}/systemd-vpick
 %if %{with bpf}
 %{bash_completions_dir}/systemd-bpf
 %endif
@@ -856,12 +867,19 @@ fi
 %{_datadir}/mime/packages/io.systemd.xml
 %{_bindir}/busctl
 %{_bindir}/coredumpctl
+%{_bindir}/halt
 %{_bindir}/hostnamectl
+%{_bindir}/init
 %{_bindir}/journalctl
 %{_bindir}/localectl
 %{_bindir}/loginctl
+%{_bindir}/mount.storage
 %{_bindir}/oomctl
+%{_bindir}/poweroff
+%{_bindir}/reboot
 %{_bindir}/run0
+%{_bindir}/shutdown
+%{_bindir}/storagectl
 %{_bindir}/systemctl
 %{_bindir}/systemd-ac-power
 %{_bindir}/systemd-analyze
@@ -887,6 +905,8 @@ fi
 %{_bindir}/systemd-socket-activate
 %{_bindir}/systemd-stdio-bridge
 %{_bindir}/systemd-sysext
+%{_bindir}/systemd-sysinstall
+%{_bindir}/systemd-sysupdate
 %{_bindir}/systemd-tmpfiles
 %{_bindir}/systemd-tty-ask-password-agent
 %{_bindir}/systemd-umount
@@ -894,11 +914,6 @@ fi
 %{_bindir}/timedatectl
 %{_bindir}/userdbctl
 %{_bindir}/varlinkctl
-%{_bindir}/halt
-%{_bindir}/init
-%{_bindir}/poweroff
-%{_bindir}/reboot
-%{_bindir}/shutdown
 %if %{with bpf}
 %{_bindir}/systemd-bpf
 %endif
@@ -907,25 +922,28 @@ fi
 %{_datadir}/dbus-1/system-services/org.freedesktop.hostname1.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.locale1.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
+%{_datadir}/dbus-1/system-services/org.freedesktop.oom1.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.systemd1.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
-%{_datadir}/dbus-1/system-services/org.freedesktop.oom1.service
 %dir %{_datadir}/dbus-1/system.d
 %{_datadir}/dbus-1/system.d/org.freedesktop.hostname1.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.locale1.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.login1.conf
-%{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.oom1.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.systemd1.conf
+%{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
 %dir %{_datadir}/polkit-1/actions
+%{_datadir}/polkit-1/actions/io.systemd.ask-password.policy
+%{_datadir}/polkit-1/actions/io.systemd.credentials.policy
+%{_datadir}/polkit-1/actions/io.systemd.imds.policy
+%{_datadir}/polkit-1/actions/io.systemd.mount-file-system.policy
+%{_datadir}/polkit-1/actions/io.systemd.namespace-resource.policy
+%{_datadir}/polkit-1/actions/io.systemd.storage.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.hostname1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.locale1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.systemd1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
-%{_datadir}/polkit-1/actions/io.systemd.credentials.policy
-%{_datadir}/polkit-1/actions/io.systemd.mount-file-system.policy
-%{_datadir}/polkit-1/actions/io.systemd.namespace-resource.policy
 %if %{without bootstrap}
 %{_datadir}/polkit-1/rules.d/10-systemd-logind-root-ignore-inhibitors.rules.example
 %{_datadir}/polkit-1/rules.d/empower.rules
@@ -935,32 +953,37 @@ fi
 %dir %{_datadir}/systemd
 %{_datadir}/systemd/kbd-model-map
 %{_datadir}/systemd/language-fallback-map
-%dir %{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/_busctl
-%{_datadir}/zsh/site-functions/_coredumpctl
-%{_datadir}/zsh/site-functions/_hostnamectl
-%{_datadir}/zsh/site-functions/_journalctl
-%{_datadir}/zsh/site-functions/_localectl
-%{_datadir}/zsh/site-functions/_loginctl
-%{_datadir}/zsh/site-functions/_run0
-%{_datadir}/zsh/site-functions/_sd_hosts_or_user_at_host
-%{_datadir}/zsh/site-functions/_sd_outputmodes
-%{_datadir}/zsh/site-functions/_sd_unit_files
-%{_datadir}/zsh/site-functions/_systemctl
-%{_datadir}/zsh/site-functions/_systemd
-%{_datadir}/zsh/site-functions/_systemd-analyze
-%{_datadir}/zsh/site-functions/_systemd-delta
-%{_datadir}/zsh/site-functions/_systemd-inhibit
-%{_datadir}/zsh/site-functions/_systemd-path
-%{_datadir}/zsh/site-functions/_systemd-run
-%{_datadir}/zsh/site-functions/_systemd-tmpfiles
-%{_datadir}/zsh/site-functions/_timedatectl
-%{_datadir}/zsh/site-functions/_oomctl
-%{_datadir}/zsh/site-functions/_sd_bus_address
-%{_datadir}/zsh/site-functions/_sd_machines
-%{_datadir}/zsh/site-functions/_varlinkctl
+%dir %{zsh_completions_dir}
+%{zsh_completions_dir}/_busctl
+%{zsh_completions_dir}/_coredumpctl
+%{zsh_completions_dir}/_hostnamectl
+%{zsh_completions_dir}/_journalctl
+%{zsh_completions_dir}/_localectl
+%{zsh_completions_dir}/_loginctl
+%{zsh_completions_dir}/_oomctl
+%{zsh_completions_dir}/_run0
+%{zsh_completions_dir}/_sd_bus_address
+%{zsh_completions_dir}/_sd_hosts_or_user_at_host
+%{zsh_completions_dir}/_sd_machines
+%{zsh_completions_dir}/_sd_outputmodes
+%{zsh_completions_dir}/_sd_unit_files
+%{zsh_completions_dir}/_storagectl
+%{zsh_completions_dir}/_systemctl
+%{zsh_completions_dir}/_systemd
+%{zsh_completions_dir}/_systemd-analyze
+%{zsh_completions_dir}/_systemd-delta
+%{zsh_completions_dir}/_systemd-id128
+%{zsh_completions_dir}/_systemd-inhibit
+%{zsh_completions_dir}/_systemd-path
+%{zsh_completions_dir}/_systemd-run
+%{zsh_completions_dir}/_systemd-sysinstall
+%{zsh_completions_dir}/_systemd-tmpfiles
+%{zsh_completions_dir}/_timedatectl
+%{zsh_completions_dir}/_userdbctl
+%{zsh_completions_dir}/_varlinkctl
+%{_datadir}/user-tmpfiles.d/20-systemd-varlink.conf
 %if %{with bpf}
-%{_datadir}/zsh/site-functions/_systemd-bpf
+%{zsh_completions_dir}/_systemd-bpf
 %endif
 %{system_unit_dir}/
 %dir %{pkgdir}
@@ -992,13 +1015,12 @@ fi
 %{pkgdir}/system-generators/systemd-getty-generator
 %{pkgdir}/system-generators/systemd-gpt-auto-generator
 %{pkgdir}/system-generators/systemd-hibernate-resume-generator
+%{pkgdir}/system-generators/systemd-imds-generator
 %{pkgdir}/system-generators/systemd-import-generator
 %{pkgdir}/system-generators/systemd-integritysetup-generator
-%{pkgdir}/system-generators/systemd-rc-local-generator
 %{pkgdir}/system-generators/systemd-run-generator
 %{pkgdir}/system-generators/systemd-ssh-generator
 %{pkgdir}/system-generators/systemd-system-update-generator
-%{pkgdir}/system-generators/systemd-sysv-generator
 %{pkgdir}/system-generators/systemd-veritysetup-generator
 %{pkgdir}/system-preset/90-systemd.preset
 %{pkgdir}/system-preset/99-default.preset
@@ -1022,6 +1044,8 @@ fi
 %{pkgdir}/systemd-homed
 %{pkgdir}/systemd-homework
 %{pkgdir}/systemd-hostnamed
+%{pkgdir}/systemd-imds
+%{pkgdir}/systemd-imdsd
 %{pkgdir}/systemd-import
 %{pkgdir}/systemd-import-fs
 %{pkgdir}/systemd-importd
@@ -1048,6 +1072,9 @@ fi
 %{pkgdir}/systemd-random-seed
 %{pkgdir}/systemd-remount-fs
 %{pkgdir}/systemd-reply-password
+%{pkgdir}/systemd-report
+%{pkgdir}/systemd-report-basic
+%{pkgdir}/systemd-report-cgroup
 %{pkgdir}/systemd-resolved
 %{pkgdir}/systemd-rfkill
 %{pkgdir}/systemd-sbsign
@@ -1056,6 +1083,8 @@ fi
 %{pkgdir}/systemd-socket-proxyd
 %{pkgdir}/systemd-ssh-issue
 %{pkgdir}/systemd-ssh-proxy
+%{pkgdir}/systemd-storage-block
+%{pkgdir}/systemd-storage-fs
 %{pkgdir}/systemd-storagetm
 %{pkgdir}/systemd-sulogin-shell
 %{pkgdir}/systemd-sysctl
@@ -1095,11 +1124,17 @@ fi
 %{user_unit_dir}/session.slice
 %{user_unit_dir}/shutdown.target
 %{user_unit_dir}/smartcard.target
+%{user_unit_dir}/systemd-storage-fs@.service
+%{user_unit_dir}/systemd-storage-fs.socket
 %{user_unit_dir}/sockets.target
 %{user_unit_dir}/sockets.target.wants/systemd-ask-password.socket
 %{user_unit_dir}/sockets.target.wants/systemd-importd.socket
 %{user_unit_dir}/sockets.target.wants/systemd-machined.socket
+%{user_unit_dir}/sockets.target.wants/systemd-storage-fs.socket
 %{user_unit_dir}/sound.target
+%{user_unit_dir}/systemd-journalctl@.service
+%{user_unit_dir}/systemd-journalctl.socket
+%{user_unit_dir}/sockets.target.wants/systemd-journalctl.socket
 %{user_unit_dir}/systemd-ask-password.socket
 %{user_unit_dir}/systemd-ask-password@.service
 %{user_unit_dir}/systemd-exit.service
@@ -1146,8 +1181,28 @@ fi
 %exclude %{_sysconfdir}/systemd/journal-upload.conf
 %exclude %{_localstatedir}/lib/systemd/journal-upload
 %endif
+%if %{with journal_remote}
+%exclude %{system_unit_dir}/systemd-journal-gatewayd.service
+%exclude %{system_unit_dir}/systemd-journal-gatewayd.socket
+%exclude %{system_unit_dir}/systemd-journal-remote.service
+%exclude %{system_unit_dir}/systemd-journal-remote.socket
+%exclude %{system_unit_dir}/systemd-journal-upload.service
+%endif
+%exclude %{system_unit_dir}/systemd-boot-update.service
+%exclude %{system_unit_dir}/systemd-bootctl.socket
+%exclude %{system_unit_dir}/systemd-bootctl@.service
+%exclude %{system_unit_dir}/sockets.target.wants/systemd-bootctl.socket
+%exclude %{system_unit_dir}/systemd-sysusers.service
+%exclude %{system_unit_dir}/sysinit.target.wants/systemd-sysusers.service
+%exclude %{system_unit_dir}/dbus-org.freedesktop.timedate1.service
+%exclude %{system_unit_dir}/systemd-time-wait-sync.service
+%exclude %{system_unit_dir}/systemd-timedated.service
+%exclude %{system_unit_dir}/systemd-timesyncd.service
+%exclude %{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
+%exclude %{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%exclude %{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %exclude %{bash_completions_dir}/bootctl
-%exclude %{_datadir}/zsh/site-functions/_bootctl
+%exclude %{zsh_completions_dir}/_bootctl
 
 %files -n kernel-install
 %{_bindir}/kernel-install
@@ -1155,13 +1210,15 @@ fi
 %{_prefix}/lib/kernel/install.d/50-depmod.install
 %{_prefix}/lib/kernel/install.d/90-loaderentry.install
 %{_prefix}/lib/kernel/install.d/90-uki-copy.install
-%{_datadir}/zsh/site-functions/_kernel-install
+%{zsh_completions_dir}/_kernel-install
 %{bash_completions_dir}/kernel-install
 
 %files libs
 %license LICENSE.LGPL2.1
-%{_libdir}/lib*.so.*
-%exclude %{_libdir}/libudev.so*
+%{_libdir}/libnss_myhostname.so.2*
+%{_libdir}/libnss_mymachines.so.2*
+%{_libdir}/libnss_systemd.so.2*
+%{_libdir}/libsystemd.so.0*
 
 %files shared
 %license LICENSE.LGPL2.1
@@ -1188,25 +1245,31 @@ fi
 %{pkgdir}/repart/definitions/sysext.repart.d/10-root.conf
 %{pkgdir}/repart/definitions/sysext.repart.d/20-root-verity.conf
 %{pkgdir}/repart/definitions/sysext.repart.d/30-root-verity-sig.conf
+%dir %{_datadir}/polkit-1/actions
+%{_datadir}/polkit-1/actions/io.systemd.sysext.policy
 
 %files dissect
 %{_bindir}/mount.ddi
+%{_bindir}/mount.mstack
 %{_bindir}/systemd-dissect
+%{_bindir}/systemd-mstack
 %{bash_completions_dir}/systemd-dissect
 
 %files sysusers
 %{_bindir}/systemd-sysusers
-%doc %{_prefix}/lib/sysusers.d/README
-%{_prefix}/lib/sysusers.d/basic.conf
-%{_prefix}/lib/sysusers.d/systemd-coredump.conf
-%{_prefix}/lib/sysusers.d/systemd-journal.conf
-%{_prefix}/lib/sysusers.d/systemd-oom.conf
+%doc %{sysusers_dir}/README
+%{sysusers_dir}/basic.conf
+%{sysusers_dir}/systemd-coredump.conf
+%{sysusers_dir}/systemd-imds.conf
+%{sysusers_dir}/systemd-journal.conf
+%{sysusers_dir}/systemd-oom.conf
 %if %{with docs}
 %{_mandir}/man1/systemd-sysusers.1.gz
 %{_mandir}/man5/sysusers.d.5.gz
 %{_mandir}/man8/systemd-sysusers.service.8.gz
 %endif
-%{pkgdir}/system/systemd-sysusers.service
+%{system_unit_dir}/systemd-sysusers.service
+%{system_unit_dir}/sysinit.target.wants/systemd-sysusers.service
 
 %if %{with network}
 %files resolved
@@ -1214,8 +1277,8 @@ fi
 %{_bindir}/resolvectl
 %{_bindir}/resolvconf
 %{_sysconfdir}/systemd/resolved.conf
-%{_prefix}/lib/tmpfiles.d/systemd-resolve.conf
-%{_prefix}/lib/sysusers.d/systemd-resolve.conf
+%{tmpfiles_dir}/systemd-resolve.conf
+%{sysusers_dir}/systemd-resolve.conf
 %{bash_completions_dir}/systemd-resolve
 %if %{with docs}
 %{_mandir}/man1/resolvectl.1.gz
@@ -1236,12 +1299,12 @@ fi
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.resolve1.policy
 %{bash_completions_dir}/resolvectl
-%dir %{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/_resolvectl
+%dir %{zsh_completions_dir}
+%{zsh_completions_dir}/_resolvectl
 %{_libdir}/libnss_resolve.so.2
 %dir %{pkgdir}
 %dir %{pkgdir}/system
-%{pkgdir}/system/systemd-resolved.service
+%{system_unit_dir}/systemd-resolved.service
 %ghost /etc/resolv.conf
 %endif
 
@@ -1296,23 +1359,32 @@ fi
 %{_prefix}/lib/udev/rules.d/*
 %{bash_completions_dir}/udevadm
 %{bash_completions_dir}/timedatectl
+%{bash_completions_dir}/systemd-hwdb
+%{zsh_completions_dir}/_systemd-hwdb
 %{_prefix}/lib/modprobe.d/systemd.conf
-%{_datadir}/zsh/site-functions/_udevadm
+%{zsh_completions_dir}/_udevadm
 
 %{_datadir}/factory/etc/vconsole.conf
 
 %files timesyncd
 %dir %{pkgdir}
+%{system_unit_dir}/dbus-org.freedesktop.timedate1.service
 %{pkgdir}/systemd-time-wait-sync
 %{pkgdir}/systemd-timedated
 %{pkgdir}/systemd-timesyncd
+%{system_unit_dir}/systemd-time-wait-sync.service
+%{system_unit_dir}/systemd-timedated.service
+%{system_unit_dir}/systemd-timesyncd.service
 %{pkgdir}/ntp-units.d/80-systemd-timesync.list
 %{pkgdir}/timesyncd.conf
-%{_prefix}/lib/sysusers.d/systemd-timesync.conf
+%{sysusers_dir}/systemd-timesync.conf
 %{_sysconfdir}/systemd/timesyncd.conf
 %{_localstatedir}/lib/systemd/timesync/clock
 %{_datadir}/dbus-1/system-services/org.freedesktop.timesync1.service
+%{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.timesync1.conf
+%{_datadir}/dbus-1/system.d/org.freedesktop.timedate1.conf
+%{_datadir}/polkit-1/actions/org.freedesktop.timedate1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.timesync1.policy
 
 %if %{with ukify}
@@ -1331,6 +1403,8 @@ fi
 %{pkgdir}/boot/efi/systemd-boot*.efi
 # %%{pkgdir}/boot/efi/systemd-stub*.efi
 %{pkgdir}/boot/efi/*.efi.stub
+%dir %{pkgdir}/boot/hwids
+%{pkgdir}/boot/hwids/*
 %if %{with docs}
 %{_mandir}/man8/bootctl.8.gz
 %{_mandir}/man7/systemd-boot.7.gz
@@ -1338,19 +1412,32 @@ fi
 %endif
 %{_bindir}/bootctl
 %{bash_completions_dir}/bootctl
-%{_datadir}/zsh/site-functions/_bootctl
-%{pkgdir}/system/systemd-boot-update.service
+%{zsh_completions_dir}/_bootctl
+%{system_unit_dir}/systemd-bootctl.socket
+%{system_unit_dir}/systemd-bootctl@.service
+%{system_unit_dir}/systemd-boot-update.service
+%{system_unit_dir}/sockets.target.wants/systemd-bootctl.socket
 
 %files container
 %ghost %dir %attr(0700,-,-) /var/lib/machines
 %{_bindir}/machinectl
 %{_bindir}/portablectl
 %{_bindir}/systemd-nspawn
-%{_prefix}/lib/tmpfiles.d/systemd-nspawn.conf
+%{tmpfiles_dir}/systemd-nspawn.conf
 %{pkgdir}/portable/profile/default/service.conf
 %{pkgdir}/portable/profile/nonetwork/service.conf
 %{pkgdir}/portable/profile/strict/service.conf
 %{pkgdir}/portable/profile/trusted/service.conf
+%dir %{pkgdir}/oci-registry
+%{pkgdir}/oci-registry/default.oci-registry
+%{pkgdir}/oci-registry/image.alpine.oci-registry
+%{pkgdir}/oci-registry/image.archlinux.oci-registry
+%{pkgdir}/oci-registry/image.debian.oci-registry
+%{pkgdir}/oci-registry/image.fedora-minimal.oci-registry
+%{pkgdir}/oci-registry/image.fedora.oci-registry
+%{pkgdir}/oci-registry/image.ubuntu.oci-registry
+%{pkgdir}/oci-registry/registry.docker.io.oci-registry
+%{pkgdir}/oci-registry/registry.fedora.oci-registry
 
 %{bash_completions_dir}/systemd-nspawn
 %if %{without bootstrap}
@@ -1383,17 +1470,24 @@ fi
 %dir %{_datadir}/dbus-1/system.d
 %{_datadir}/dbus-1/system.d/org.freedesktop.machine1.conf
 %{_datadir}/dbus-1/system.d/org.freedesktop.portable1.conf
+%{_datadir}/dbus-1/services/org.freedesktop.portable1.service
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.machine1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.portable1.policy
 %{bash_completions_dir}/machinectl
-%dir %{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/_machinectl
-%{_datadir}/zsh/site-functions/_systemd-nspawn
-%{pkgdir}/system/machines.target
-%{pkgdir}/system/systemd-machined.service
-%{pkgdir}/system/systemd-portabled.service
-%{pkgdir}/system/systemd-nspawn@.service
+%dir %{zsh_completions_dir}
+%{zsh_completions_dir}/_machinectl
+%{zsh_completions_dir}/_systemd-nspawn
+%{system_unit_dir}/machines.target
+%{system_unit_dir}/systemd-machined.service
+%{system_unit_dir}/systemd-portabled.service
+%{system_unit_dir}/systemd-nspawn@.service
+%{user_unit_dir}/dbus-org.freedesktop.portable1.service
+%{user_unit_dir}/portable/profile/default/service.conf
+%{user_unit_dir}/portable/profile/nonetwork/service.conf
+%{user_unit_dir}/portable/profile/strict/service.conf
+%{user_unit_dir}/portable/profile/trusted/service.conf
+%{user_unit_dir}/systemd-portabled.service
 
 %if %{with journal_remote}
 %files journal-remote
@@ -1401,10 +1495,15 @@ fi
 %{pkgdir}/systemd-journal-gatewayd
 %{pkgdir}/systemd-journal-remote
 %{pkgdir}/systemd-journal-upload
+%{system_unit_dir}/systemd-journal-gatewayd.service
+%{system_unit_dir}/systemd-journal-gatewayd.socket
+%{system_unit_dir}/systemd-journal-remote.service
+%{system_unit_dir}/systemd-journal-remote.socket
+%{system_unit_dir}/systemd-journal-upload.service
 %{pkgdir}/journal-remote.conf
 %{_sysconfdir}/systemd/journal-remote.conf
 %{_sysconfdir}/systemd/journal-upload.conf
-%{_prefix}/lib/sysusers.d/systemd-remote.conf
+%{sysusers_dir}/systemd-remote.conf
 %if %{with docs}
 %{_mandir}/man8/systemd-journal-gatewayd.8.gz
 %{_mandir}/man8/systemd-journal-gatewayd.service.8.gz
@@ -1429,8 +1528,8 @@ fi
 %files networkd
 %{_bindir}/networkctl
 %{_sysconfdir}/systemd/networkd.conf
-%{_prefix}/lib/tmpfiles.d/systemd-network.conf
-%{_prefix}/lib/sysusers.d/systemd-network.conf
+%{tmpfiles_dir}/systemd-network.conf
+%{sysusers_dir}/systemd-network.conf
 %{pkgdir}/network/80-6rd-tunnel.link
 %{pkgdir}/network/80-6rd-tunnel.network
 %{pkgdir}/network/80-auto-link-local.network.example
@@ -1478,11 +1577,13 @@ fi
 %{_datadir}/polkit-1/rules.d/systemd-networkd.rules
 %endif
 %{bash_completions_dir}/networkctl
-%dir %{_datadir}/zsh/site-functions
-%{_datadir}/zsh/site-functions/_networkctl
-%{pkgdir}/system/systemd-networkd.service
-%{pkgdir}/system/systemd-networkd.socket
-%{pkgdir}/system/systemd-networkd-wait-online.service
+%dir %{zsh_completions_dir}
+%{zsh_completions_dir}/_networkctl
+%{system_unit_dir}/systemd-networkd.service
+%{system_unit_dir}/systemd-networkd.socket
+%{system_unit_dir}/systemd-network-generator.service
+%{system_unit_dir}/systemd-networkd-resolve-hook.socket
+%{system_unit_dir}/systemd-networkd-wait-online.service
 
 %files networkd-defaults
 %{pkgdir}/network/99-default.link
@@ -1514,4 +1615,4 @@ fi
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwayland
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtwayland
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Wayland platform support and QtCompositor module
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwayland
-#!RemoteAsset
+#!RemoteAsset:  sha256:95788aa502f75441d4edf65932b235f76523084e13dbbb7b9ee2d207b32bd9b3
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -142,18 +142,20 @@ popd
 %{_qt6_libdir}/cmake/Qt6/*.cmake
 %{_qt6_libdir}/cmake/Qt6BuildInternals/StandaloneTests/QtWaylandTestsConfig.cmake
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/*.cmake
-%{_qt6_libdir}/cmake/Qt6WaylandClient/*.cmake
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
-%exclude %{_qt6_libdir}/cmake/Qt6WaylandClient/Qt6QWaylandAdwaitaDecoration*.cmake
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositor.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorIviapplication.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorPresentationTime.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorWLShell.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandCompositorXdgShell.pc
 
 %files adwaita-decoration
 %{_qt6_pluginsdir}/wayland-decoration-client/libadwaita.so
-%{_qt6_libdir}/cmake/Qt6WaylandClient/Qt6QWaylandAdwaitaDecoration*.cmake
+%{_qt6_libdir}/cmake/Qt6Gui/Qt6QWayland*.cmake
 
 %files examples
 %{_qt6_examplesdir}/wayland/
 
 %changelog
-%{?autochangelog}
+%autochangelog

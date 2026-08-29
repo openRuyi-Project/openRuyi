@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/trungdong/prov
 #!RemoteAsset:  sha256:7d012b164f5bbb42e118ed9d25788ab012d09082b722bc9dd4e811a309ea57f5
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -29,7 +30,7 @@ BuildRequires:  python3dist(python-dateutil)
 BuildRequires:  python3dist(lxml)
 BuildRequires:  python3dist(rdflib)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,10 +41,10 @@ import/export.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc AUTHORS.rst HISTORY.rst README.rst
+%license LICENSE
 %{_bindir}/prov-compare
 %{_bindir}/prov-convert
 
 %changelog
-%{?autochangelog}
+%autochangelog

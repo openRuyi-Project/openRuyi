@@ -11,37 +11,32 @@ Release:        %autorelease
 Summary:        HTTP::Response::Encoding Perl module
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Response-Encoding
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DANKOGAI/HTTP-Response-Encoding-%{version}.tar.gz
+#!RemoteAsset:  sha256:10167b8e238a682004ab0d7accbe9d76eae2db57af07c5ae2dfa808074a4a8aa
+Source0:        https://www.cpan.org/authors/id/D/DA/DANKOGAI/HTTP-Response-Encoding-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Encode) >= 2
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(HTTP::Response)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(LWP::UserAgent)
+BuildRequires:  perl(Try::Tiny)
+BuildRequires:  perl(IO::HTML)
 
 Requires:       perl(Encode) >= 2
 
 %description
 SYNOPSIS      use LWP::UserAgent;      use HTTP::Response::Encoding;
 
-%prep
-%setup -q -n HTTP-Response-Encoding-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

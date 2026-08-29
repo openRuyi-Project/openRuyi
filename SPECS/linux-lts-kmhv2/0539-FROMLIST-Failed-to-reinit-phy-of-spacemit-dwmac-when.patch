@@ -1,0 +1,74 @@
+From d038896e5e76e45986dcd757f2aa2eb062d59aba Mon Sep 17 00:00:00 2001
+From: Inochi Amaoto <inochiama@gmail.com>
+Date: Sun, 12 Jul 2026 12:52:33 +0800
+Subject: [RUYI PATCH] FROMLIST: Failed to reinit phy of spacemit-dwmac when
+ reset-gpio is present
+
+TL;DR:
+
+The DWMAC on Spacemit K3 is failled to register phy after the reload
+the driver module (rmmod then insmod). Because the reset-gpio is
+asserted while unloading the driver and is not desserted before reading
+the c22 id, which leads to a fault.
+
+Description
+
+In a few days ago, E Shattow reports he has sufferred the a weird issue,
+when unloading the spacemit-dwmac driver and then reloading it, he got
+the following error:
+
+[   60.713071] mdio_bus stmmac-0: MDIO device at address 1 is missing.
+
+This only occurs when reloading the driver but the first initialization
+successed. After some function tracking, I found it is failed at reading
+c22 id. The call graph is as the follows:
+
+stmmac_mdio_register
+	mdiobus_alloc
+	of_mdiobus_register
+		__of_mdiobus_register
+		__mdiobus_register
+		__of_mdiobus_parse_phys
+			of_mdiobus_child_is_phy
+			of_mdiobus_register_phy
+				fwnode_mdiobus_register_phy
+					get_phy_device
+						get_phy_c22_id
+
+By checking the difference between the initialization process and the
+reloading process, I found the reset gpio is asserted in the function
+mdiobus_unregister(). And there is no any function desserted this reset
+gpio in the loading stage. And in the initialization process, the reset
+goio is deasserted.
+
+This bug report is sent as I found it is hard to solve this problem
+and ask for help to fix this issue as it is related to the framework
+instead of a specific driver.
+
+The possible workaround I found is as the following, just use the phy
+id in the compatible string (Confirmed by dlan):
+
+Tested-by: E Shattow <e@freeshell.de>
+Link: https://lore.kernel.org/r/20260712045233.800748-1-inochiama@gmail.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/boot/dts/spacemit/k3-pico-itx.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+index c412f7002011..7327eb65593c 100644
+--- a/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
++++ b/arch/riscv/boot/dts/spacemit/k3-pico-itx.dts
+@@ -234,7 +234,8 @@ &eth0 {
+ 
+ 	mdio {
+ 		phy0: phy@1 {
+-			compatible = "ethernet-phy-ieee802.3-c22";
++			compatible = "ethernet-phy-id001c.c916",
++				     "ethernet-phy-ieee802.3-c22";
+ 			reg = <1>;
+ 			reset-gpios = <&gpio 0 15 GPIO_ACTIVE_LOW>;
+ 			reset-assert-us = <10000>;
+-- 
+2.53.0
+

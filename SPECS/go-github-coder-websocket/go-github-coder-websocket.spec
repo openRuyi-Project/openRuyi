@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-coder-websocket
-Version:        1.8.14
+Version:        1.8.15
 Release:        %autorelease
 Summary:        Minimal and idiomatic WebSocket library for Go
 License:        ISC
 URL:            https://github.com/coder/websocket
-#!RemoteAsset
+#!RemoteAsset:  sha256:12db8c89d5bc608afe18cb53ecaac222fa1148f1ea1422a8eaba207e5bc8fc30
 Source0:        https://github.com/coder/websocket/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,4 +41,4 @@ websocket is a minimal and idiomatic WebSocket library for Go.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

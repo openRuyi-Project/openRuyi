@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname pyproject-metadata
+%global pypi_name pyproject_metadata
 
 Name:           python-%{srcname}
 Version:        0.9.1
@@ -12,17 +13,17 @@ Release:        %autorelease
 Summary:        PEP 621 metadata parsing
 License:        MIT
 URL:            https://github.com/FFY00/python-pyproject-metadata
-#!RemoteAsset
-Source0:         https://github.com/FFY00/python-pyproject-metadata/archive/refs/tags/%{version}.tar.gz#/pyproject-metadata-%{version}.tar.gz
-
+#!RemoteAsset:  sha256:b8b2253dd1b7062b78cf949a115f02ba7fa4114aabe63fa10528e9e1a954a816
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
+
 BuildOption(install):  -l pyproject_metadata  +auto
 
-Provides:       python3-%{srcname}
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,8 +40,8 @@ file (e.g. `PKG-INFO`).
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README*
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

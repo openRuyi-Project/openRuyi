@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           wireguard-tools
-Version:        1.0.20250521
+Version:        1.0.20260223
 Release:        %autorelease
 Summary:        Fast, modern, secure VPN tunnel
 License:        GPL-2.0-only
 URL:            https://www.wireguard.com/
 VCS:            git:https://git.zx2c4.com/wireguard-tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:af459827b80bfd31b83b08077f4b5843acb7d18ad9a33a2ef532d3090f291fbf
 Source0:        https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-%{version}.tar.asc
 BuildSystem:    autotools
 
 BuildOption(build):  RUNSTATEDIR=%{_rundir}
@@ -83,4 +81,4 @@ popd
 %{_mandir}/man8/wg-quick.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

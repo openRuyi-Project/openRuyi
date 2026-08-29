@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           openexr
-Version:        3.4.6
+Version:        3.4.10
 Release:        %autorelease
 Summary:        Provides the specification and reference implementation of the EXR file format
 License:        BSD-3-Clause
 URL:            https://www.openexr.com/
 VCS:            git:https://github.com/AcademySoftwareFoundation/openexr
-#!RemoteAsset:  sha256:f8cfe743a81c8cc1dd3cbaafa7fa76f75ad31456b0fc45a42b086d12530a4e35
+#!RemoteAsset:  sha256:b61ae2d0fa4872c5f5fc45618f107945df37c0eba4853263091b949c513d3319
 Source0:        https://github.com/AcademySoftwareFoundation/openexr/archive/v%{version}/openexr-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -60,4 +61,4 @@ Development files for OpenEXR.
 %{_libdir}/pkgconfig/OpenEXR.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

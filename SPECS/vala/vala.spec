@@ -19,8 +19,8 @@ Summary:        A modern programming language for GNOME
 License:        LGPL-2.1-or-later AND BSD-2-Clause
 URL:            https://wiki.gnome.org/Projects/Vala
 VCS:            git:https://gitlab.gnome.org/GNOME/vala.git
-#!RemoteAsset
-Source:         https://download.gnome.org/sources/%{name}/%{release_version}/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:f2affe7d40ab63db8e7b9ecc3f6bdc9c2fc7e3134c84ff2d795f482fe926a382
+Source:         https://download.gnome.org/sources/vala/%{release_version}/vala-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -121,7 +121,8 @@ autoreconf -fiv
 %{_bindir}/vala-gen-introspect-%{release_version}*
 %{_bindir}/vapigen
 %{_bindir}/vapigen-%{release_version}
-%{_libdir}/pkgconfig/vapigen*.pc
+%{_libdir}/pkgconfig/vapigen-0.56.pc
+%{_libdir}/pkgconfig/vapigen.pc
 %{_libdir}/vala-%{release_version}/
 %{_datadir}/aclocal/vala.m4
 %{_datadir}/aclocal/vapigen.m4
@@ -161,4 +162,4 @@ autoreconf -fiv
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

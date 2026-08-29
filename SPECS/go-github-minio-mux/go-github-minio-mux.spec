@@ -8,12 +8,12 @@
 %define go_import_path  github.com/minio/mux
 
 Name:           go-github-minio-mux
-Version:        1.9.2
+Version:        1.10.0
 Release:        %autorelease
 Summary:        A powerful HTTP router and URL matcher for building Go web servers with 🦍
 License:        BSD-3-Clause
 URL:            https://github.com/minio/mux
-#!RemoteAsset
+#!RemoteAsset:  sha256:8dc284d6d8c9a8a007a3e72fa919939e28feb792c34add7bde1179ace008a42c
 Source0:        https://github.com/minio/mux/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -54,4 +54,4 @@ or other conditions. The main features are:
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

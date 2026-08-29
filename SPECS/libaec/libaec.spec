@@ -5,19 +5,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libaec
-Version:        1.1.4
+Version:        1.1.6
 Release:        %autorelease
 Summary:        Adaptive Entropy Coding library
 License:        BSD-2-Clause
 URL:            https://gitlab.dkrz.de/k202009/libaec
-#!RemoteAsset
+#!RemoteAsset:  sha256:e50f323418eb451587891102b6014730e1aa936e763c47f2ae166a4745d1bed2
 Source0:        https://gitlab.dkrz.de/k202009/libaec/-/archive/v%{version}/libaec-v%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=ON
 BuildOption(conf):  -DBUILD_STATIC_LIBS=ON
 
-BuildRequires:  gcc
 BuildRequires:  cmake
 BuildRequires:  make
 
@@ -34,8 +33,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Development files for libaec.
 
 %files
-%doc README.md README.SZIP CHANGELOG.md
-%license LICENSE.txt doc/patent.txt
+%doc README.md doc/README.SZIP CHANGELOG.md
+%license LICENSE.txt
 %{_libdir}/libaec.so.0*
 %{_libdir}/libsz.so.2*
 
@@ -49,4 +48,4 @@ Development files for libaec.
 %{_libdir}/cmake/libaec/
 
 %changelog
-%{?autochangelog}
+%autochangelog

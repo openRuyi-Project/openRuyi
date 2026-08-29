@@ -21,7 +21,7 @@ BuildOption(install):  -l procfs
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-linux-procfs
+Provides:       python3-linux-procfs = %{version}-%{release}
 %python_provide python3-linux-procfs
 
 Requires:       python3dist(six)

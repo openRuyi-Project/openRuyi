@@ -14,6 +14,7 @@ License:        PSF-2.0
 URL:            https://github.com/effigies/looseversion
 #!RemoteAsset:  sha256:ebde65f3f6bb9531a81016c6fef3eb95a61181adc47b7f949e9c0ea47911669e
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(flit-core)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +45,4 @@ LooseVersion.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

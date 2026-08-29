@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Perl extension for generating and using LALR parsers
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Parse-Yapp
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/W/WB/WBRASWELL/Parse-Yapp-%{version}.tar.gz
+#!RemoteAsset:  sha256:3810e998308fba2e0f4f26043035032b027ce51ce5c8a52a8b8e340ca65f13e5
+Source0:        https://www.cpan.org/authors/id/W/WB/WBRASWELL/Parse-Yapp-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -24,20 +28,8 @@ Parse::Yapp (Yet Another Perl Parser compiler) is a collection of modules
 that let you generate and use yacc like thread safe (reentrant) parsers
 with perl object oriented interface.
 
-%prep
-%setup -q -n Parse-Yapp-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Calc.yp Changes README README.md yapp YappParse.yp
 
 %changelog
-%{?autochangelog}
+%autochangelog

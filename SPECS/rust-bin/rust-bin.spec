@@ -3,10 +3,12 @@
 # SPDX-FileContributor: Ruoqing He <heruoqing@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define __os_install_post %{nil}
+%define __spec_install_post %{nil}
+%global debug_package %{nil}
 
 %ifarch riscv64
 %global rust_arch riscv64gc
@@ -15,14 +17,14 @@
 %endif
 
 Name:           rust-bin
-Version:        1.91.1
+Version:        1.97.1
 Release:        %autorelease
 Summary:        A systems programming language
 License:        Apache-2.0 OR MIT
 URL:            https://forge.rust-lang.org/infra/other-installation-methods.html#standalone
-#!RemoteAsset
+#!RemoteAsset:  sha256:59bec35d8febb2ab918fa41cffbaa5b07146a63bdc33f029ff756d70a3151ece
 Source0:        https://static.rust-lang.org/dist/rust-%{version}-riscv64gc-unknown-linux-gnu.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:b4cdbc7cc6b0ee0a2666b1872769fdb2ad8393b28b63952f6493b4b400e4832b
 Source1:        https://static.rust-lang.org/dist/rust-%{version}-x86_64-unknown-linux-gnu.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
@@ -71,5 +73,6 @@ rm %{buildroot}%{_prefix}/lib/rustlib/manifest-*
 %{_prefix}/lib/libLLVM.so.*-rust-%{version}-stable
 %endif
 %exclude %{_sysconfdir}/target-spec-json-schema.json
+
 %changelog
-%{?autochangelog}
+%autochangelog

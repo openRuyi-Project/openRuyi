@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           ddcutil
-Version:        2.2.6
+Version:        2.2.7
 Release:        %autorelease
 Summary:        Query and update monitor settings
 License:        GPL-2.0-or-later
 URL:            https://github.com/rockowitz/ddcutil
-#!RemoteAsset:  sha256:f61b87074eb839d70e947338d33cc4388e286437131e6c32564fbbb56f2046da
+#!RemoteAsset:  sha256:7b5cb9824c23974241146f4a696abc65f8e9d1e950198c8dc00e4a5c6a2f41ee
 Source0:        https://github.com/rockowitz/ddcutil/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -19,7 +19,6 @@ BuildOption(conf):  --enable-lib=yes
 BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:  libtool
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(libusb-1.0)
@@ -29,6 +28,8 @@ BuildRequires:  pkgconfig(xrandr)
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(libkmod)
 BuildRequires:  pkgconfig(jansson)
+BuildRequires:  pkgconfig(libacl)
+BuildRequires:  pkgconfig(dbus-1)
 
 Requires:       hwdata
 Requires:       i2c-tools
@@ -65,4 +66,4 @@ NOCONFIGURE=1 ./autogen.sh
 %{_libdir}/pkgconfig/ddcutil.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

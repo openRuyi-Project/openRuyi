@@ -1,0 +1,86 @@
+From 9356e0b1aca8638cba51554e98db1a0c96a13396 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Mon, 18 May 2026 17:41:57 +0800
+Subject: [PATCH 5/6] kata-sys-util: fix warnings with newer Rust
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ src/libs/kata-sys-util/src/mount.rs      | 13 +++++++------
+ src/libs/kata-sys-util/src/protection.rs |  4 ++--
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/src/libs/kata-sys-util/src/mount.rs b/src/libs/kata-sys-util/src/mount.rs
+index 892e95639..0533e51a2 100644
+--- a/src/libs/kata-sys-util/src/mount.rs
++++ b/src/libs/kata-sys-util/src/mount.rs
+@@ -225,7 +225,7 @@ pub fn create_mount_destination<S: AsRef<Path>, D: AsRef<Path>, R: AsRef<Path>>(
+ /// Caller needs to ensure safety of the `dst` to avoid possible file path based attacks.
+ pub fn bind_remount<P: AsRef<Path>>(dst: P, readonly: bool) -> Result<()> {
+     let dst = dst.as_ref();
+-    if dst.is_empty() {
++    if NixPath::is_empty(dst) {
+         return Err(Error::NullMountPointPath);
+     }
+     let dst = dst
+@@ -262,10 +262,10 @@ pub fn bind_mount_unchecked<S: AsRef<Path>, D: AsRef<Path>>(
+ 
+     let src = src.as_ref();
+     let dst = dst.as_ref();
+-    if src.is_empty() {
++    if NixPath::is_empty(src) {
+         return Err(Error::NullMountPointPath);
+     }
+-    if dst.is_empty() {
++    if NixPath::is_empty(dst) {
+         return Err(Error::NullMountPointPath);
+     }
+     let abs_src = src
+@@ -760,19 +760,20 @@ pub fn umount_timeout<P: AsRef<Path>>(path: P, timeout: u64) -> Result<()> {
+ /// # Safety
+ /// Caller needs to ensure safety of the `path` to avoid possible file path based attacks.
+ pub fn umount_all<P: AsRef<Path>>(mountpoint: P, lazy_umount: bool) -> Result<()> {
+-    if mountpoint.as_ref().is_empty() || !mountpoint.as_ref().exists() {
++    let mountpoint = mountpoint.as_ref();
++    if NixPath::is_empty(mountpoint) || !mountpoint.exists() {
+         return Ok(());
+     }
+ 
+     loop {
+-        if let Err(e) = umount2(mountpoint.as_ref(), lazy_umount) {
++        if let Err(e) = umount2(mountpoint, lazy_umount) {
+             // EINVAL is returned if the target is not a mount point, indicating that we are
+             // done. It can also indicate a few other things (such as invalid flags) which we
+             // unfortunately end up squelching here too.
+             if e.kind() == io::ErrorKind::InvalidInput {
+                 break;
+             } else {
+-                return Err(Error::Umount(mountpoint.as_ref().to_path_buf(), e));
++                return Err(Error::Umount(mountpoint.to_path_buf(), e));
+             }
+         }
+     }
+diff --git a/src/libs/kata-sys-util/src/protection.rs b/src/libs/kata-sys-util/src/protection.rs
+index 77d2698d0..38a38009a 100644
+--- a/src/libs/kata-sys-util/src/protection.rs
++++ b/src/libs/kata-sys-util/src/protection.rs
+@@ -126,7 +126,7 @@ pub fn arch_guest_protection(
+         // shouldn't hurt to double-check and have better logging if anything
+         // goes wrong.
+ 
+-        let fn0 = unsafe { x86_64::__cpuid(0) };
++        let fn0 = x86_64::__cpuid(0);
+         // The values in [ ebx, edx, ecx ] spell out "AuthenticAMD" when
+         // interpreted byte-wise as ASCII.  No need to bother here with an
+         // actual conversion to string though.
+@@ -139,7 +139,7 @@ pub fn arch_guest_protection(
+         }
+ 
+         // AMD64 Architecture Prgrammer's Manual Fn8000_001f docs on pg. 640
+-        let fn8000_001f = unsafe { x86_64::__cpuid(0x8000_001f) };
++        let fn8000_001f = x86_64::__cpuid(0x8000_001f);
+         if fn8000_001f.eax & 0x10 == 0 {
+             return Err(ProtectionError::CheckFailed("SEV not supported".to_owned()));
+         }
+-- 
+2.50.1 (Apple Git-155)
+

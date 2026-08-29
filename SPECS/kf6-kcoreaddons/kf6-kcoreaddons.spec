@@ -12,16 +12,22 @@
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kcoreaddons
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Utilities for core application functionality and accessing the OS
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            https://invent.kde.org/frameworks/kcoreaddons
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:a713febee2f43bc31986d6c27d846ccab556fc7bc7c1919c3a662495720b431a
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DENABLE_PCH:BOOL=FALSE
+BuildOption(conf):  -DBUILD_PYTHON_BINDINGS:BOOL=OFF
+BuildOption(conf):  -DBUILD_QCH:BOOL=OFF
+BuildOption(conf):  -DKCOREADDONS_BUILD_PYTHON_DOCS:BOOL=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  shared-mime-info
 BuildRequires:  cmake(Qt6Core) >= %{qt6_version}
@@ -31,13 +37,15 @@ BuildRequires:  cmake(Qt6LinguistTools) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Qml) >= %{qt6_version}
 BuildRequires:  cmake(Qt6QuickTest) >= %{qt6_version}
 BuildRequires:  cmake(Qt6ToolsTools) >= %{qt6_version}
+BuildRequires:  pkgconfig(mount)
+BuildRequires:  pkgconfig(libudev)
 BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
@@ -49,13 +57,6 @@ KCoreAddons provides classes built on top of QtCore to perform various tasks
 such as manipulating mime types, autosaving files, creating backup files,
 generating random sequences, performing text manipulations such as macro
 replacement, accessing user information and many more.
-
-%package        imports
-Summary:        QML imports for kcoreaddons
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    imports
-QML imports for kcoreaddons.
 
 %package        devel
 Summary:        Utilities for core application functionality and accessing the OS
@@ -76,24 +77,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description -n python-%{name}
 The package contains the PySide6 bindings library for %{name}.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-# ENABLE_PCH breaks the build locally with 'error: is pie differs in PCH file vs. current file'
-%cmake_kf6 \
-  -DENABLE_PCH:BOOL=FALSE \
-  -DBUILD_PYTHON_BINDINGS:BOOL=OFF \
-  -DBUILD_QCH:BOOL=OFF \
-  -DKCOREADDONS_BUILD_PYTHON_DOCS:BOOL=OFF
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %files
 %license LICENSES/*
 %doc README.md
@@ -101,9 +84,8 @@ The package contains the PySide6 bindings library for %{name}.
 %{_kf6_debugdir}/kcoreaddons.categories
 %{_kf6_debugdir}/kcoreaddons.renamecategories
 %{_kf6_libdir}/libKF6CoreAddons.so.*
+%{_kf6_libdir}/qt6/metatypes/qt6kf6coreaddons_metatypes.json
 %{_datadir}/locale/*/LC_MESSAGES/kcoreaddons6_qt.qm
-
-%files imports
 %{_kf6_qmldir}/org/kde/coreaddons/
 
 %files devel
@@ -118,4 +100,4 @@ The package contains the PySide6 bindings library for %{name}.
 # Python bindings disabled; package intentionally empty
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,56 @@
+From f1d17b7a4f696ff2e0d459ce22f402103a434cde Mon Sep 17 00:00:00 2001
+From: Peter Wang <peter.wang@mediatek.com>
+Date: Wed, 24 Sep 2025 17:43:24 +0800
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: host: mediatek: Adjust clock
+ scaling for PM flow
+
+Adjust clock scaling during suspend and resume in the UFS Mediatek
+driver. Ensure that the clock scales down during suspend if it was
+scaled up, and scales up again after resume.  This adjustment maintains
+proper power management.
+
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Acked-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Link: https://patch.msgid.link/20250924094527.2992256-3-peter.wang@mediatek.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 55ce691dc75a356e4b7c552505ce0a427c72f3af)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-mediatek.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index 27418ea618ed..c25ca23a84cc 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -1774,9 +1774,11 @@ static int ufs_mtk_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
+ 
+ 	ufs_mtk_sram_pwr_ctrl(false, res);
+ 
+-	/* Release pm_qos if in scale-up mode during suspend */
+-	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up))
++	/* Release pm_qos/clk if in scale-up mode during suspend */
++	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up)) {
+ 		ufshcd_pm_qos_update(hba, false);
++		_ufs_mtk_clk_scale(hba, false);
++	}
+ 
+ 	return 0;
+ fail:
+@@ -1804,9 +1806,11 @@ static int ufs_mtk_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	if (err)
+ 		goto fail;
+ 
+-	/* Request pm_qos if in scale-up mode after resume */
+-	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up))
++	/* Request pm_qos/clk if in scale-up mode after resume */
++	if (ufshcd_is_clkscaling_supported(hba) && (host->clk_scale_up)) {
+ 		ufshcd_pm_qos_update(hba, true);
++		_ufs_mtk_clk_scale(hba, true);
++	}
+ 
+ 	if (ufshcd_is_link_hibern8(hba)) {
+ 		err = ufs_mtk_link_set_hpm(hba);
+-- 
+2.53.0
+

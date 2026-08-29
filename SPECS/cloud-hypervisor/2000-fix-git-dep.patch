@@ -1,0 +1,13 @@
+diff --git a/vmm/Cargo.toml b/vmm/Cargo.toml
+index fe5901b..1d5555d 100644
+--- a/vmm/Cargo.toml
++++ b/vmm/Cargo.toml
+@@ -67,7 +67,7 @@ landlock = "0.4.5"
+ libc = { workspace = true }
+ linux-loader = { workspace = true, features = ["bzimage", "elf", "pe"] }
+ log = { workspace = true }
+-micro_http = { git = "https://github.com/firecracker-microvm/micro-http", branch = "main" }
++micro_http = { path = "../deps/micro-http"}
+ mshv-bindings = { workspace = true, features = [
+   "fam-wrappers",
+   "with-serde",

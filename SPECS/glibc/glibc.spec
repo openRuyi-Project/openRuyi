@@ -24,10 +24,10 @@
 Name:           glibc
 Summary:        Standard Shared Libraries (from the GNU C Library)
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND GPL-3.0-or-later
-Version:        2.43
+Version:        2.44
 Release:        %autorelease
 URL:            https://www.gnu.org/software/libc/libc.html
-#!RemoteAsset:  sha256:d9c86c6b5dbddb43a3e08270c5844fc5177d19442cf5b8df4be7c07cd5fa3831
+#!RemoteAsset:  sha256:37f600f2bef3c5e8300147059568b2a2e40a7ad6ccc65ce942556d49429cc667
 Source0:        https://ftpmirror.gnu.org/gnu/glibc/glibc-%{version}.tar.xz
 %if %{with nscd}
 Source2:        nscd.tmpfiles
@@ -226,6 +226,9 @@ cd build-%{_target_cpu}
     --disable-build-nscd \
     --disable-nscd \
 %endif
+    libdir=%{_libdir} \
+    slibdir=%{_libdir} \
+    complocaledir=%{_prefix}/lib/locale \
     --disable-crypt || \
   {
     rc=$?;
@@ -235,7 +238,7 @@ cd build-%{_target_cpu}
     exit $rc;
   }
 
-%make_build
+%make_build libdir=%{_libdir} slibdir=%{_libdir} complocaledir=%{_prefix}/lib/locale
 cd ..
 
 %check
@@ -273,12 +276,15 @@ ln -s bin %{buildroot}/%{_prefix}/sbin
 mkdir -p %{buildroot}%{_libdir}
 ln -s . %{buildroot}%{_libdir}/lp64d
 %endif
+mkdir -p %{buildroot}%{_prefix}/lib
+mkdir -p %{buildroot}%{_prefix}/lib/locale
 
 # Install base glibc
-%make_install install_root=%{buildroot} -C build-%{_target_cpu}
-cd build-%{_target_cpu}
-make %{?_smp_mflags} %{?make_output_sync} install_root=%{buildroot} localedata/install-locale-files
-cd ..
+%make_install libdir=%{_libdir} slibdir=%{_libdir} install_root=%{buildroot} \
+              complocaledir=%{_prefix}/lib/locale -C build-%{_target_cpu}
+make %{?_smp_mflags} %{?make_output_sync} install_root=%{buildroot} \
+     complocaledir=%{_prefix}/lib/locale \
+     -C build-%{_target_cpu} localedata/install-locale-files
 
 %find_lang libc --generate-subpackages
 
@@ -297,9 +303,10 @@ cat > %{buildroot}/etc/ld.so.conf <<EOF
 %endif
 /usr/local/lib
 include /etc/ld.so.conf.d/*.conf
-# /lib64, /lib, /usr/lib64 and /usr/lib gets added
-# automatically by ldconfig after parsing this file.
-# So, they do not need to be listed.
+%if "%{_lib}" != "lib"
+/usr/%{_lib}
+%endif
+/usr/lib
 EOF
 # Add ldconfig cache directory for directory ownership
 mkdir -p %{buildroot}/var/cache/ldconfig
@@ -575,4 +582,4 @@ rpm.spawn({"%{_sbindir}/ldconfig"})
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

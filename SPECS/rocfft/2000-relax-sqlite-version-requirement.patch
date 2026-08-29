@@ -1,0 +1,28 @@
+From 4283fc811f4ae5090b293780420e467638956110 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 19:34:00 +0800
+Subject: [PATCH] Relax the SQLite3 find_package version requirement
+
+Do not care so much about the sqlite version; use whatever system
+SQLite3 openRuyi provides instead of requiring upstream's pinned
+minimum.
+---
+ cmake/sqlite.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/sqlite.cmake b/cmake/sqlite.cmake
+index 2dc2a28..a44e4ef 100644
+--- a/cmake/sqlite.cmake
++++ b/cmake/sqlite.cmake
+@@ -26,7 +26,7 @@ option( SQLITE_USE_SYSTEM_PACKAGE "Use SQLite3 from find_package" OFF )
+ 
+ if( SQLITE_USE_SYSTEM_PACKAGE )
+   # Require a safe baseline (fixes truncation/memory-corruption issues).
+-  find_package(SQLite3 3.50.2 REQUIRED)
++  find_package(SQLite3 REQUIRED)
+   list(APPEND static_depends PACKAGE SQLite3)
+   set(ROCFFT_SQLITE_LIB SQLite::SQLite3)
+ else()
+-- 
+2.53.0
+

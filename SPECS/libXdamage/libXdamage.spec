@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libXdamage
-Version:        1.1.6
+Version:        1.1.7
 Release:        %autorelease
 Summary:        X Damage extension library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/xorg/lib/libXdamage
-#!RemoteAsset
+#!RemoteAsset:  sha256:127067f521d3ee467b97bcb145aeba1078e2454d448e8748eb984d5b397bde24
 Source0:        https://www.x.org/pub/individual/lib/libXdamage-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -49,4 +49,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/xdamage.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,357 @@
+From d18807bda3490e87b186368a0d446f419beb89f1 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 14:52:19 +0800
+Subject: [PATCH 1/2] tests: require opt-in for remote fixtures
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ bundler/bundler_test.go                  |  2 ++
+ bundler/network_test.go                  | 16 ++++++++++++++++
+ datamodel/high/v3/document_test.go       |  6 ++++++
+ datamodel/high/v3/network_test.go        | 16 ++++++++++++++++
+ datamodel/low/v2/network_test.go         | 16 ++++++++++++++++
+ datamodel/low/v2/swagger_test.go         |  2 ++
+ datamodel/low/v3/create_document_test.go |  2 ++
+ datamodel/low/v3/network_test.go         | 16 ++++++++++++++++
+ document_examples_test.go                |  1 -
+ document_test.go                         |  4 ++++
+ index/find_component_test.go             |  2 ++
+ index/network_test.go                    | 16 ++++++++++++++++
+ index/resolver_test.go                   |  4 ++++
+ index/rolodex_test.go                    |  2 ++
+ index/spec_index_test.go                 |  8 ++++++++
+ network_test.go                          | 16 ++++++++++++++++
+ 16 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 bundler/network_test.go
+ create mode 100644 datamodel/high/v3/network_test.go
+ create mode 100644 datamodel/low/v2/network_test.go
+ create mode 100644 datamodel/low/v3/network_test.go
+ create mode 100644 index/network_test.go
+ create mode 100644 network_test.go
+
+diff --git a/bundler/bundler_test.go b/bundler/bundler_test.go
+index 8b15df2..3349534 100644
+--- a/bundler/bundler_test.go
++++ b/bundler/bundler_test.go
+@@ -37,6 +37,8 @@ const digitalOceanCommitID = "ed0958267922794ec8cf540e19131a2d9664bfc7"
+ 
+ func checkoutDigitalOceanRepo(t *testing.T) string {
+ 	t.Helper()
++	requireNetworkTests(t)
++
+ 	tmp := t.TempDir()
+ 	cmd := exec.Command("git", "clone", "https://github.com/digitalocean/openapi.git", tmp)
+ 	if err := cmd.Run(); err != nil {
+diff --git a/bundler/network_test.go b/bundler/network_test.go
+new file mode 100644
+index 0000000..d655b14
+--- /dev/null
++++ b/bundler/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package bundler
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+diff --git a/datamodel/high/v3/document_test.go b/datamodel/high/v3/document_test.go
+index c24715f..f27325d 100644
+--- a/datamodel/high/v3/document_test.go
++++ b/datamodel/high/v3/document_test.go
+@@ -493,6 +493,8 @@ func TestAsanaAsDoc(t *testing.T) {
+ }
+ 
+ func TestDigitalOceanAsDocViaCheckout(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	// this is a full checkout of the digitalocean API repo.
+ 	tmp := t.TempDir()
+ 	cmd := exec.Command("git", "clone", "https://github.com/digitalocean/openapi", tmp)
+@@ -539,6 +541,8 @@ func TestDigitalOceanAsDocViaCheckout(t *testing.T) {
+ }
+ 
+ func TestDigitalOceanAsDocFromSHA(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	data, _ := os.ReadFile("../../../test_specs/digitalocean.yaml")
+ 	info, _ := datamodel.ExtractSpecInfo(data)
+ 	var err error
+@@ -569,6 +573,8 @@ func TestDigitalOceanAsDocFromSHA(t *testing.T) {
+ }
+ 
+ func TestDigitalOceanAsDocFromMain(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	data, _ := os.ReadFile("../../../test_specs/digitalocean.yaml")
+ 	info, _ := datamodel.ExtractSpecInfo(data)
+ 	var err error
+diff --git a/datamodel/high/v3/network_test.go b/datamodel/high/v3/network_test.go
+new file mode 100644
+index 0000000..8b3cfa0
+--- /dev/null
++++ b/datamodel/high/v3/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package v3
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+diff --git a/datamodel/low/v2/network_test.go b/datamodel/low/v2/network_test.go
+new file mode 100644
+index 0000000..882de5d
+--- /dev/null
++++ b/datamodel/low/v2/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package v2
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+diff --git a/datamodel/low/v2/swagger_test.go b/datamodel/low/v2/swagger_test.go
+index f3a161b..f66475f 100644
+--- a/datamodel/low/v2/swagger_test.go
++++ b/datamodel/low/v2/swagger_test.go
+@@ -378,6 +378,8 @@ func TestRolodexLocalFileSystem_BadPath(t *testing.T) {
+ }
+ 
+ func TestRolodexRemoteFileSystem(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	data, _ := os.ReadFile("../../../test_specs/first.yaml")
+ 	info, _ := datamodel.ExtractSpecInfo(data)
+ 
+diff --git a/datamodel/low/v3/create_document_test.go b/datamodel/low/v3/create_document_test.go
+index 0f7080b..03f8301 100644
+--- a/datamodel/low/v3/create_document_test.go
++++ b/datamodel/low/v3/create_document_test.go
+@@ -225,6 +225,8 @@ func TestRolodexLocalFileSystem_BadPath(t *testing.T) {
+ }
+ 
+ func TestRolodexRemoteFileSystem(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	data, _ := os.ReadFile("../../../test_specs/first.yaml")
+ 	info, _ := datamodel.ExtractSpecInfo(data)
+ 
+diff --git a/datamodel/low/v3/network_test.go b/datamodel/low/v3/network_test.go
+new file mode 100644
+index 0000000..8b3cfa0
+--- /dev/null
++++ b/datamodel/low/v3/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package v3
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+diff --git a/document_examples_test.go b/document_examples_test.go
+index 7f3b8cb..5ddf6cd 100644
+--- a/document_examples_test.go
++++ b/document_examples_test.go
+@@ -141,7 +141,6 @@ func ExampleNewDocument_fromWithDocumentConfigurationSuccess() {
+ 	// running this through a change detection, will render out the entire model and
+ 	// any stage two rendering for the model will be caught.
+ 	what_changed.CompareOpenAPIDocuments(m.Model.GoLow(), m.Model.GoLow())
+-	// Output: Digital Ocean spec built successfully
+ }
+ 
+ func ExampleNewDocument_fromSwaggerDocument() {
+diff --git a/document_test.go b/document_test.go
+index cf2b13e..6f1cf59 100644
+--- a/document_test.go
++++ b/document_test.go
+@@ -1624,6 +1624,8 @@ func TestDocument_TestNestedFiles(t *testing.T) {
+ }
+ 
+ func TestDocument_MinimalRemoteRefs(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	newRemoteHandlerFunc := func() utils.RemoteURLHandler {
+ 		c := &http.Client{
+ 			Timeout: time.Second * 120,
+@@ -1673,6 +1675,8 @@ func TestDocument_Issue264(t *testing.T) {
+ }
+ 
+ func TestDocument_Issue269(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	spec := `openapi: "3.0.0"
+ info:
+   title: test
+diff --git a/index/find_component_test.go b/index/find_component_test.go
+index a9439a5..01971ca 100644
+--- a/index/find_component_test.go
++++ b/index/find_component_test.go
+@@ -210,6 +210,8 @@ func TestSpecIndex_FailFindComponentInRoot(t *testing.T) {
+ }
+ 
+ func TestSpecIndex_LocateRemoteDocsWithRemoteURLHandler(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	// This test will push the index to do try and locate remote references that use relative references
+ 	spec := `openapi: 3.0.2
+ info:
+diff --git a/index/network_test.go b/index/network_test.go
+new file mode 100644
+index 0000000..d4c01ad
+--- /dev/null
++++ b/index/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package index
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+diff --git a/index/resolver_test.go b/index/resolver_test.go
+index 5bb43d3..0b7da09 100644
+--- a/index/resolver_test.go
++++ b/index/resolver_test.go
+@@ -916,6 +916,8 @@ func TestResolver_ExtractRelatives_HttpFullDefinition(t *testing.T) {
+ }
+ 
+ func TestResolver_ResolveComponents_MixedRef(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	mixedref, _ := os.ReadFile("../test_specs/mixedref-burgershop.openapi.yaml")
+ 	var rootNode yaml.Node
+ 	_ = yaml.Unmarshal(mixedref, &rootNode)
+@@ -1532,6 +1534,8 @@ func TestLocateRefEnd_WithResolve(t *testing.T) {
+ }
+ 
+ func TestResolveDoc_Issue195(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	spec := `openapi: 3.0.1
+ info:
+   title: Some Example!
+diff --git a/index/rolodex_test.go b/index/rolodex_test.go
+index bc7272a..5d10805 100644
+--- a/index/rolodex_test.go
++++ b/index/rolodex_test.go
+@@ -1387,6 +1387,8 @@ components:
+ }
+ 
+ func TestRolodex_IndexCircularLookup_LookupHttpNoBaseURL(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	first := `openapi: 3.1.0
+ components:
+   schemas:
+diff --git a/index/spec_index_test.go b/index/spec_index_test.go
+index e94f1c9..f35c512 100644
+--- a/index/spec_index_test.go
++++ b/index/spec_index_test.go
+@@ -157,6 +157,8 @@ func TestSpecIndex_Asana(t *testing.T) {
+ }
+ 
+ func TestSpecIndex_DigitalOcean(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	do, _ := os.ReadFile("../test_specs/digitalocean.yaml")
+ 	var rootNode yaml.Node
+ 	_ = yaml.Unmarshal(do, &rootNode)
+@@ -241,6 +243,8 @@ func hasRateLimitedRemoteErrors(errs []error) bool {
+ }
+ 
+ func TestSpecIndex_Redocly(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	do, _ := os.ReadFile("../test_specs/redocly-starter.yaml")
+ 	var rootNode yaml.Node
+ 	_ = yaml.Unmarshal(do, &rootNode)
+@@ -303,6 +307,8 @@ func TestSpecIndex_Redocly(t *testing.T) {
+ }
+ 
+ func TestSpecIndex_DigitalOcean_FullCheckoutLocalResolve(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	// this is a full checkout of the digitalocean API repo.
+ 	tmp := t.TempDir()
+ 	cmd := exec.Command("git", "clone", "https://github.com/digitalocean/openapi", tmp)
+@@ -385,6 +391,8 @@ func TestSpecIndex_DigitalOcean_FullCheckoutLocalResolve(t *testing.T) {
+ }
+ 
+ func TestSpecIndex_DigitalOcean_FullCheckoutLocalResolve_RecursiveLookup(t *testing.T) {
++	requireNetworkTests(t)
++
+ 	// this is a full checkout of the digitalocean API repo.
+ 	tmp := t.TempDir()
+ 	cmd := exec.Command("git", "clone", "https://github.com/digitalocean/openapi", tmp)
+diff --git a/network_test.go b/network_test.go
+new file mode 100644
+index 0000000..9fae769
+--- /dev/null
++++ b/network_test.go
+@@ -0,0 +1,16 @@
++// SPDX-FileCopyrightText: Copyright 2026 HNO3Miracle
++// SPDX-License-Identifier: MIT
++
++package libopenapi
++
++import (
++	"os"
++	"testing"
++)
++
++func requireNetworkTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("LIBOPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set LIBOPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++}
+-- 
+2.43.0

@@ -1,19 +1,21 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname jsonschema
 
 Name:           python-%{srcname}
-Version:        4.17.3
+Version:        4.26.0
 Release:        %autorelease
 Summary:        Implementation of JSON Schema validation for Python
 License:        MIT
 URL:            https://github.com/Julian/jsonschema
-#!RemoteAsset
+#!RemoteAsset:  sha256:0c26707e2efad8aa1bfc5b7ce170f3fccc2e4918ff85989ba9ffa9facb2be326
 Source:         https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -22,17 +24,22 @@ BuildOption(check):  -e 'jsonschema.benchmarks*' -e 'jsonschema.tests.test_jsons
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-hatch-vcs
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python-hatch_fancy_pypi_readme
+BuildRequires:  python3dist(attrs)
+BuildRequires:  python3dist(hatch-fancy-pypi-readme)
+BuildRequires:  python3dist(hatch-vcs)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(jsonschema-specifications)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(referencing)
+BuildRequires:  python3dist(rpds-py)
+BuildRequires:  python3dist(setuptools)
 # for tests
-BuildRequires:  python3-pytest
-BuildRequires:  python3-attrs
-BuildRequires:  python3-pyrsistent
+BuildRequires:  python3dist(hypothesis)
+BuildRequires:  python3dist(jsonpath-ng)
+BuildRequires:  python3dist(pyrsistent)
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,16 +51,18 @@ jsonschema is an implementation of JSON Schema for Python (supporting
  - Small and extensible
  - Programmatic querying of which properties or items failed validation.
 
+%pyproject_extras_subpkg -n python-jsonschema format format-nongpl
+
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
-%license COPYING json/LICENSE
 %doc README.rst
+%license COPYING json/LICENSE
 %{_bindir}/jsonschema
 
 %changelog
-%{?autochangelog}
+%autochangelog

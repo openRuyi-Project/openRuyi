@@ -1,0 +1,16 @@
+--- ./tensilelite/Tensile/Toolchain/Validators.py	2025-11-14 05:43:51
++++ ./tensilelite/Tensile/Toolchain/Validators.py.mod	2026-03-04 16:10:09
+@@ -114,11 +114,11 @@
+
+
+ class ToolchainDefaults(NamedTuple):
+-    CXX_COMPILER = osSelect(linux="amdclang++", windows="clang++.exe")
+-    C_COMPILER = osSelect(linux="amdclang", windows="clang.exe")
++    CXX_COMPILER = osSelect(linux="clang++", windows="clang++.exe")
++    C_COMPILER = osSelect(linux="clang", windows="clang.exe")
+     OFFLOAD_BUNDLER = osSelect(linux="clang-offload-bundler", windows="clang-offload-bundler.exe")
+     DEVICE_ENUMERATOR = osSelect(linux="rocm_agent_enumerator" if isRhel8() else "amdgpu-arch", windows="hipinfo")
+-    ASSEMBLER = osSelect(linux="amdclang++", windows="clang++.exe")
++    ASSEMBLER = osSelect(linux="clang++", windows="clang++.exe")
+     HIP_CONFIG = osSelect(linux="hipconfig", windows="hipconfig.exe")
+

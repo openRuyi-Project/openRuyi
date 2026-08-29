@@ -71,13 +71,11 @@ This is a setup utility for IBus.
 make -C ui/gtk3 maintainer-clean-generic
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
 %find_lang %{name}10 --generate-subpackages
 
 %files devel
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/ibus-1.0.pc
 %{_includedir}/ibus-1.0/*
 %dir %{_libdir}/girepository-1.0
 %{_libdir}/girepository-1.0/IBus*-1.0.typelib
@@ -127,4 +125,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

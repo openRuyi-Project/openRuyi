@@ -14,6 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/nipreps/acres
 #!RemoteAsset:  sha256:128b6447bf5df3b6210264feccbfa018b4ac5bd337358319aec6563f99db8f3a
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname} -L
@@ -24,7 +25,7 @@ BuildRequires:  python3dist(pdm-backend)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +43,4 @@ export PDM_BUILD_SCM_VERSION='%{version}'
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

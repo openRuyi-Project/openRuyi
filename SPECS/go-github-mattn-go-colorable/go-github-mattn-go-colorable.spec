@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/mattn/go-colorable
 
 Name:           go-github-mattn-go-colorable
-Version:        0.1.14
+Version:        0.1.15
 Release:        %autorelease
 Summary:        Colorable writer for windows
 License:        MIT
 URL:            https://github.com/mattn/go-colorable
-#!RemoteAsset
+#!RemoteAsset:  sha256:a25a2f60984f0a47b120cb8f9bcba8c19d86c5be4d5d53b1e00bcfdba9e5fd25
 Source0:        https://github.com/mattn/go-colorable/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,4 +42,4 @@ possible to handle escape sequence for ansi color on windows.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

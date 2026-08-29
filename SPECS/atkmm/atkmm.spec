@@ -40,7 +40,7 @@ developing applications that use %{name}.
 %files devel
 %{_includedir}/atkmm-*/
 %{_libdir}/libatkmm-*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/atkmm-1.6.pc
 %{_libdir}/atkmm-*/
 
 %changelog

@@ -14,7 +14,7 @@ Summary:        D-Bus interfaces for querying and manipulating user account info
 License:        GPL-3.0-or-later
 URL:            https://www.freedesktop.org/wiki/Software/AccountsService/
 VCS:            git:https://gitlab.freedesktop.org/accountsservice/accountsservice.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:15354c7f0457afdc0b9f7cc86bb2b8b90b7f6cfc09a80402bd685b56a4012c54
 Source0:        https://gitlab.freedesktop.org/accountsservice/accountsservice/-/archive/%{version}/accountsservice-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -68,8 +68,6 @@ files needed to build applications that use accountsservice-libs.
 %install -a
 mkdir -p %{buildroot}%{_datadir}/accountsservice/interfaces/
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang accounts-service --generate-subpackages
 
 %post
@@ -111,4 +109,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

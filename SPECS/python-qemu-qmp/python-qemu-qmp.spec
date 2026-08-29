@@ -7,36 +7,38 @@
 %bcond doc 0
 %bcond tests 0
 
-Name:           python-qemu-qmp
-Version:        0.0.5
+%global srcname qemu-qmp
+%global pypi_name qemu.qmp
+
+Name:           python-%{srcname}
+Version:        0.0.6
 Release:        %autorelease
 Summary:        QEMU Monitor Protocol library
 License:        GPL-2.0-only AND LGPL-2.0-or-later
 URL:            https://pypi.org/project/qemu.qmp
-#!RemoteAsset
-Source:         https://files.pythonhosted.org/packages/82/53/a7668df6a6051ecf714b3831526a8a754a3dae9a5ddea3e4f99a09547234/qemu_qmp-%{version}.tar.gz
+#!RemoteAsset:  sha256:a3c25d871fab549122b2340810de1f99481002c942a2132476b062aacdbf6e92
+Source:         https://files.pythonhosted.org/packages/source/q/%{pypi_name}/qemu_qmp-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install): -l qemu
+BuildOption(install):  -l qemu
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-setuptools_scm
-BuildRequires:  python3-wheel
-
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(wheel)
 %if %{with tests}
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(pytest)
 %endif
-
 %if %{with doc}
-BuildRequires:  python3-sphinx
-BuildRequires:  python3-sphinx-rtd-theme
+BuildRequires:  python3dist(sphinx)
+BuildRequires:  python3dist(sphinx-rtd-theme)
 %endif
 
-Provides:       python3-qemu-qmp = %{version}-%{release}
-%python_provide python3-qemu-qmp
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 qemu.qmp is a QEMU Monitor Protocol ("QMP") library written in Python,
@@ -51,7 +53,6 @@ This package provides offline HTML documentation for python3-qemu-qmp.
 
 %generate_buildrequires
 %pyproject_buildrequires
-
 
 %install -a
 rm -f %{buildroot}%{_bindir}/qmp-tui
@@ -70,8 +71,8 @@ install -Dpm 0644 man/*.1 -t %{buildroot}%{_mandir}/man1/
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE LICENSE_GPL2
 %doc README.rst
+%license LICENSE LICENSE_GPL2
 %{_bindir}/qmp-shell
 %{_bindir}/qmp-shell-wrap
 %if %{with doc}
@@ -81,9 +82,9 @@ install -Dpm 0644 man/*.1 -t %{buildroot}%{_mandir}/man1/
 
 %if %{with doc}
 %files doc
-%license LICENSE LICENSE_GPL2
 %doc html
+%license LICENSE LICENSE_GPL2
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

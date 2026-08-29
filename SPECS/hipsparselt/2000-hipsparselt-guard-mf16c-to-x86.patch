@@ -1,0 +1,30 @@
+From b98fc335d48e86a0f1b69e543fc1eb27473bf8ce Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Wed, 1 Jul 2026 18:02:13 +0800
+Subject: [PATCH] hipsparselt: guard x86-only -mf16c behind
+ CMAKE_SYSTEM_PROCESSOR
+
+-mf16c enables x86 F16C intrinsics and is rejected by clang on non-x86 targets
+(riscv64: "unsupported option '-mf16c'"). Gate it on x86 so the library builds
+on RISC-V hosts. Same x86-only guard as ollama PR #8129.
+
+https://github.com/ollama/ollama/pull/8129
+---
+ library/CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
+index 7513bb6..fc93859 100644
+--- a/library/CMakeLists.txt
++++ b/library/CMakeLists.txt
+@@ -28,8 +28,8 @@ if(HIPSPARSELT_ENABLE_HIP)
+     )
+ endif()
+ 
+-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+-    # Enable F16C intrinsics
++if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
++    # Enable F16C intrinsics (x86-only; -mf16c is unsupported on other targets)
+     target_compile_options(hipsparselt PRIVATE -mf16c)
+ endif()
+ 

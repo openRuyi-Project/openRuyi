@@ -1,0 +1,68 @@
+From 346dbf0541b3086cf6e288aa170f5d4cae692dff Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Mon, 13 Jul 2026 14:15:20 +0800
+Subject: [RUYI PATCH] FROMLIST: riscv: mm: Make mark_new_valid_map() stuff
+ depend on 64BIT && MMU
+
+None of the code relating to mark_new_valid_map() does anything useful
+without CONFIG_64BIT=y && CONFIG_MMU=y, because the
+new_valid_map_cpus_check code is only used if CONFIG_64BIT, and the
+exception codes checked there can only happen with CONFIG_MMU=y.
+
+Therefore, make these conditional on CONFIG_64BIT=y && CONFIG_MMU=y to
+simplify programming, since we do not have to handle CONFIG_MMU=n when
+changing this code in the future. This also removes some unused code on
+the entry path for CONFIG_MMU=n.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260713-mark-after-vmemmap-populate-v6-1-b945ceba29d4@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/include/asm/cacheflush.h | 2 +-
+ arch/riscv/kernel/entry.S           | 2 +-
+ arch/riscv/mm/init.c                | 2 ++
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
+index 1f191cf801a2..939ac3b61ff2 100644
+--- a/arch/riscv/include/asm/cacheflush.h
++++ b/arch/riscv/include/asm/cacheflush.h
+@@ -42,7 +42,7 @@ do {							\
+ 		flush_icache_mm(vma->vm_mm, 0);		\
+ } while (0)
+ 
+-#ifdef CONFIG_64BIT
++#if defined(CONFIG_64BIT) && defined(CONFIG_MMU)
+ /* This is accessed in assembly code. cpumask_var_t would be too complex. */
+ extern DECLARE_BITMAP(new_valid_map_cpus, NR_CPUS);
+ extern char _end[];
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index 5a97f002bf1f..df3f720ad61f 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -112,7 +112,7 @@ SYM_CODE_START(handle_exception)
+ .Lrestore_kernel_tpsp:
+ 	csrr tp, CSR_SCRATCH
+ 
+-#ifdef CONFIG_64BIT
++#if defined(CONFIG_64BIT) && defined(CONFIG_MMU)
+ 	/*
+ 	 * The RISC-V kernel does not flush TLBs on all CPUS after each new
+ 	 * vmalloc mapping or kfence_unprotect(), which may result in
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index f10c37999f23..715575f68c69 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -37,7 +37,9 @@
+ 
+ #include "../kernel/head.h"
+ 
++#if defined(CONFIG_64BIT) && defined(CONFIG_MMU)
+ DECLARE_BITMAP(new_valid_map_cpus, NR_CPUS);
++#endif
+ 
+ struct kernel_mapping kernel_map __ro_after_init;
+ EXPORT_SYMBOL(kernel_map);
+-- 
+2.53.0
+

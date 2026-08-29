@@ -11,7 +11,7 @@ Version:        2022.3.0
 Release:        %autorelease
 License:        Apache-2.0 AND BSD-3-Clause
 URL:            https://github.com/uxlfoundation/oneTBB
-#!RemoteAsset
+#!RemoteAsset:  sha256:01598a46c1162c27253a0de0236f520fd8ee8166e9ebb84a4243574f88e6e50a
 Source0:        https://github.com/uxlfoundation/oneTBB/archive/refs/tags/v%{version}.tar.gz
 Source1:        tbbmalloc.pc
 Source2:        tbbmalloc_proxy.pc
@@ -67,7 +67,9 @@ rm -fr %{buildroot}%{_datadir}/doc
 %{_includedir}/tbb/
 %{_libdir}/*.so
 %{_libdir}/cmake/TBB/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/tbb.pc
+%{_libdir}/pkgconfig/tbbmalloc.pc
+%{_libdir}/pkgconfig/tbbmalloc_proxy.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -8,12 +8,12 @@
 %define go_import_path  github.com/aymanbagabas/go-udiff
 
 Name:           go-github-aymanbagabas-go-udiff
-Version:        0.3.1
+Version:        0.4.1
 Release:        %autorelease
 Summary:        µDiff - a micro Go diffing library
 License:        BSD-3-Clause
 URL:            https://github.com/aymanbagabas/go-udiff
-#!RemoteAsset
+#!RemoteAsset:  sha256:ece2365439eaa35b37430030e03bf91cacc5be9379283d7a45c13c6d6715996a
 Source0:        https://github.com/aymanbagabas/go-udiff/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -43,4 +43,4 @@ authors (https://go.dev/AUTHORS).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

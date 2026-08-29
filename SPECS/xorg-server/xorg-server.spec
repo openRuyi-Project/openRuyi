@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        The X.org X server
 License:        Adobe-Display-PostScript AND BSD-3-Clause AND DEC-3-Clause AND HPND AND HPND-sell-MIT-disclaimer-xserver AND HPND-sell-variant AND ICU AND ISC AND MIT AND MIT-open-group AND NTP AND SGI-B-2.0 AND SMLNJ AND X11 AND X11-distribute-modifications-variant
 URL:            https://gitlab.freedesktop.org/xorg/xserver
-#!RemoteAsset
+#!RemoteAsset:  sha256:c0cbe5545b3f645bae6024b830d1d1154a956350683a4e52b2fff5b0fa1ab519
 Source:         https://www.x.org/releases/individual/xserver/xorg-server-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -71,7 +71,6 @@ BuildRequires:  pkgconfig(xshmfence)
 BuildRequires:  pkgconfig(xtrans)
 BuildRequires:  pkgconfig(xext)
 BuildRequires:  pkgconfig(x11-xcb)
-BuildRequires:  pkgconfig(xcb)
 BuildRequires:  pkgconfig(xcb-xv)
 BuildRequires:  pkgconfig(xcb-shape)
 BuildRequires:  pkgconfig(xcb-render)
@@ -138,4 +137,4 @@ system memory, which is useful for headless automation processes.
 %{_mandir}/man1/Xvfb.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

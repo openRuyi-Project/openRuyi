@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/agronholm/apscheduler
 #!RemoteAsset:  sha256:2a9966b052ec805f020c8c4c3ae6e6a06e24b1bf19f2e11d91d8cca0473eef41
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(setuptools-scm)
 BuildRequires:  python3dist(tzlocal)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -59,4 +60,4 @@ APscheduler provides multiple job stores.
 %doc README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

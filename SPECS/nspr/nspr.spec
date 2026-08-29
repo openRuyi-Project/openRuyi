@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           nspr
-Version:        4.37.0
+Version:        4.39.0
 Release:        %autorelease
 Summary:        Netscape Portable Runtime libraries
 License:        MPL-2.0
 URL:            https://firefox-source-docs.mozilla.org/nspr/index.html
 VCS:            hg:https://hg.mozilla.org/projects/nspr
-#!RemoteAsset
-Source0:        https://ftp.mozilla.org/pub/nspr/releases/v4.37/src/%{name}-4.37.tar.gz#/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:bbd02ee87a55676063a63e5bc819e0227de2666b47307b2a0134414cdf42368e
+Source0:        https://ftp.mozilla.org/pub/nspr/releases/v4.39/src/%{name}-4.39.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 # Use GCC atomic built-ins for x86/x86_64
@@ -66,4 +66,4 @@ cd .. && make runtests
 %{_libdir}/pkgconfig/nspr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

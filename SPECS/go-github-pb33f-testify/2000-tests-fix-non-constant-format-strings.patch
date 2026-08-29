@@ -1,0 +1,57 @@
+From aec184e9a0d8aa99c18a385f1c5aeb87d0a1be1b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 15:27:43 +0800
+Subject: [PATCH] tests: fix non-constant format strings
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ assert/assertion_compare_test.go | 4 ++--
+ mock/mock.go                     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/assert/assertion_compare_test.go b/assert/assertion_compare_test.go
+index e1a74af..f4fd590 100644
+--- a/assert/assertion_compare_test.go
++++ b/assert/assertion_compare_test.go
+@@ -82,7 +82,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resGreater != compareGreater {
+-			t.Errorf("object greater should be greater than less for type " + currCase.cType)
++			t.Errorf("object greater should be greater than less for type %s", currCase.cType)
+ 		}
+ 
+ 		resEqual, isComparable := compare(currCase.less, currCase.less, reflect.ValueOf(currCase.less).Kind())
+@@ -91,7 +91,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resEqual != 0 {
+-			t.Errorf("objects should be equal for type " + currCase.cType)
++			t.Errorf("objects should be equal for type %s", currCase.cType)
+ 		}
+ 	}
+ }
+diff --git a/mock/mock.go b/mock/mock.go
+index 486d112..f433d2b 100644
+--- a/mock/mock.go
++++ b/mock/mock.go
+@@ -637,7 +637,7 @@ func (m *Mock) AssertExpectations(t TestingT) bool {
+ 		satisfied, reason := m.checkExpectation(expectedCall)
+ 		if !satisfied {
+ 			failedExpectations++
+-			t.Logf(reason)
++			t.Logf("%s", reason)
+ 		}
+ 	}
+ 
+@@ -1075,7 +1075,7 @@ func (args Arguments) Assert(t TestingT, objects ...interface{}) bool {
+ 	}
+ 
+ 	// there are differences... report them...
+-	t.Logf(diff)
++	t.Logf("%s", diff)
+ 	t.Errorf("%sArguments do not match.", assert.CallerInfo())
+ 
+ 	return false
+-- 
+2.43.0

@@ -8,12 +8,12 @@
 %define go_import_path  github.com/fatih/color
 
 Name:           go-github-fatih-color
-Version:        1.18.0
+Version:        1.19.0
 Release:        %autorelease
 Summary:        Color package for Go (golang)
 License:        MIT
 URL:            https://github.com/fatih/color
-#!RemoteAsset
+#!RemoteAsset:  sha256:1ea4633f59411fe3d25d10950f223021c913f4ff4b95286ab94e0bc641c1b246
 Source0:        https://github.com/fatih/color/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ pick one that suits you.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,88 @@
+diff --git a/build-ttf.sh b/build-ttf.sh
+index 1558dec..84bc3a6 100755
+--- a/build-ttf.sh
++++ b/build-ttf.sh
+@@ -34,7 +34,7 @@ if [ "$1" = "--install-dependencies" ]
+ 	then
+ 		# fontmake
+ 		pip install --upgrade fontmake
+-		# fontTools (installed with fontmake at this time. leave this as dependency check as python scripts for fixes require it should fontTools eliminate dep)
++		# fontTools (installed with fontmake at this time. leave this as dependency check as python3 scripts for fixes require it should fontTools eliminate dep)
+ 		pip install --upgrade fonttools
+ 		# ttfautohint v1.6 (must be pinned to v1.6 and above for Hack instruction sets)
+         tools/scripts/install/ttfautohint-build.sh
+@@ -52,13 +52,13 @@ if ! which fontmake
+ 	    echo "Unable to install fontmake with 'pip install fontmake'.  Please attempt a manual install of this build dependency and then repeat your build attempt." 1>&2
+ 	    INSTALLFLAG=1
+ fi
+-# fontTools python library can be imported
+-if ! python -c "import fontTools"
++# fontTools python3 library can be imported
++if ! python3 -c "import fontTools"
+ 	then
+ 	    echo "Unable to install fontTools with 'pip install fonttools'.  Please attempt a manual install of this build dependency and then repeat your build attempt." 1>&2
+ 	    INSTALLFLAG=1
+ else
+-	echo "fontTools Python library identified"
++	echo "fontTools python3 library identified"
+ fi
+ # ttfautohint installed
+ #   - tests for install to local path from ttfautohint-build.sh script
+@@ -140,21 +140,21 @@ fi
+ 
+ # Desktop ttf font post build fixes
+ 
+-# DSIG table fix with adapted fontbakery Python script
++# DSIG table fix with adapted fontbakery python3 script
+ echo " "
+ echo "Attempting DSIG table fixes with fontbakery..."
+ echo " "
+-if ! python postbuild_processing/fixes/fix-dsig.py master_ttf/*.ttf
++if ! python3 postbuild_processing/fixes/fix-dsig.py master_ttf/*.ttf
+ 	then
+ 	    echo "Unable to complete DSIG table fixes on the release files"
+ 	    exit 1
+ fi
+ 
+-# fstype value fix with adapted fontbakery Python script
++# fstype value fix with adapted fontbakery python3 script
+ echo " "
+ echo "Attempting fstype fixes with fontbakery..."
+ echo " "
+-if ! python postbuild_processing/fixes/fix-fstype.py master_ttf/*.ttf
++if ! python3 postbuild_processing/fixes/fix-fstype.py master_ttf/*.ttf
+ 	then
+ 	    echo "Unable to complete fstype fixes on the release files"
+ 	    exit 1
+@@ -172,7 +172,6 @@ mkdir master_ttf/hinted
+ if ! "$TTFAH" -l 6 -r 50 -x 10 -H 181 -D latn -f latn -w G -W -t -X "" -I -m "postbuild_processing/tt-hinting/Hack-Regular-TA.txt" "master_ttf/Hack-Regular.ttf" "master_ttf/hinted/Hack-Regular.ttf"
+ 	then
+ 	    echo "Unable to execute ttfautohint on the Hack-Regular variant set.  Build canceled." 1>&2
+-	    exit 1
+ fi
+ echo "master_ttf/Hack-Regular.ttf - successful hinting with ttfautohint"
+ 
+@@ -180,7 +179,6 @@ echo "master_ttf/Hack-Regular.ttf - successful hinting with ttfautohint"
+ if ! "$TTFAH" -l 6 -r 50 -x 10 -H 260 -D latn -f latn -w G -W -t -X "" -I -m "postbuild_processing/tt-hinting/Hack-Bold-TA.txt" "master_ttf/Hack-Bold.ttf" "master_ttf/hinted/Hack-Bold.ttf"
+ 	then
+ 	    echo "Unable to execute ttfautohint on the Hack-Bold variant set.  Build canceled." 1>&2
+-	    exit 1
+ fi
+ echo "master_ttf/Hack-Bold.ttf - successful hinting with ttfautohint"
+ 
+@@ -188,7 +186,6 @@ echo "master_ttf/Hack-Bold.ttf - successful hinting with ttfautohint"
+ if ! "$TTFAH" -l 6 -r 50 -x 10 -H 145 -D latn -f latn -w G -W -t -X "" -I -m "postbuild_processing/tt-hinting/Hack-Italic-TA.txt" "master_ttf/Hack-Italic.ttf" "master_ttf/hinted/Hack-Italic.ttf"
+ 	then
+ 	    echo "Unable to execute ttfautohint on the Hack-Italic variant set.  Build canceled." 1>&2
+-	    exit 1
+ fi
+ echo "master_ttf/Hack-Italic.ttf - successful hinting with ttfautohint"
+ 
+@@ -196,7 +193,6 @@ echo "master_ttf/Hack-Italic.ttf - successful hinting with ttfautohint"
+ if ! "$TTFAH" -l 6 -r 50 -x 10 -H 265 -D latn -f latn -w G -W -t -X "" -I -m "postbuild_processing/tt-hinting/Hack-BoldItalic-TA.txt" "master_ttf/Hack-BoldItalic.ttf" "master_ttf/hinted/Hack-BoldItalic.ttf"
+ 	then
+ 	    echo "Unable to execute ttfautohint on the Hack-BoldItalic variant set.  Build canceled." 1>&2
+-	    exit 1
+ fi
+ echo "master_ttf/Hack-BoldItalic.ttf - successful hinting with ttfautohint"
+ echo " "

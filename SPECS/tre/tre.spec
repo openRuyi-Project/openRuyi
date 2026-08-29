@@ -13,7 +13,7 @@ Summary:        POSIX-compatible regexp library with approximate matching
 License:        BSD-3-Clause
 URL:            https://laurikari.net/tre/
 VCS:            git:https://github.com/laurikari/tre
-#!RemoteAsset
+#!RemoteAsset:  sha256:f57f5698cafdfe516d11fb0b71705916fe1162f14b08cf69d7cf86923b5a2477
 Source:         https://github.com/laurikari/tre/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -50,7 +50,7 @@ needed to develop applications that use the TRE library.
 %doc doc/default.css doc/tre-api.html doc/tre-syntax.html
 %{_includedir}/*
 %{_libdir}/libtre.so
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/tre.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,45 @@
+# Patch purpose:
+# - Guard x86 intrinsic includes/code paths in search_compute for riscv64 builds.
+# Why this patch exists:
+# - Upstream unconditionally enters x86 SIMD sections on riscv64 in this header.
+# - That triggers missing <immintrin.h> and incompatible intrinsic compile failures.
+
+diff --git a/paddle/phi/kernels/funcs/search_compute.h b/paddle/phi/kernels/funcs/search_compute.h
+--- a/paddle/phi/kernels/funcs/search_compute.h	2026-03-07 12:54:07.372860611 +0800
++++ b/paddle/phi/kernels/funcs/search_compute.h	2026-03-07 12:54:07.376860597 +0800
+@@ -15,7 +15,8 @@
+ #pragma once
+ 
+ #if !defined(PADDLE_WITH_ARM) && !defined(PADDLE_WITH_SW) && \
+-    !defined(PADDLE_WITH_MIPS) && !defined(PADDLE_WITH_LOONGARCH)
++    !defined(PADDLE_WITH_MIPS) && !defined(PADDLE_WITH_LOONGARCH) && \
++    !defined(__riscv)
+ #include <immintrin.h>
+ #endif
+ #include <cfloat>
+@@ -101,7 +102,8 @@
+ }
+ 
+ #if !defined(PADDLE_WITH_ARM) && !defined(PADDLE_WITH_SW) && \
+-    !defined(PADDLE_WITH_MIPS) && !defined(PADDLE_WITH_LOONGARCH)
++    !defined(PADDLE_WITH_MIPS) && !defined(PADDLE_WITH_LOONGARCH) && \
++    !defined(__riscv)
+ 
+ #define __m256x __m256
+ 
+@@ -142,6 +144,7 @@
+                       _mm256_mul_px(mm_alpha, _mm256_load_px(x + jjj))));
+   }
+ #elif defined(PADDLE_WITH_ARM) || defined(PADDLE_WITH_SW) || \
++    defined(__riscv) || \
+     defined(PADDLE_WITH_MIPS) || defined(PADDLE_WITH_LOONGARCH)
+   PADDLE_THROW(common::errors::Unimplemented("axpy is not supported"));
+ #else
+@@ -172,6 +175,7 @@
+     _mm256_store_px(y + jjj, _mm256_mul_px(mm_alpha, _mm256_load_px(x + jjj)));
+   }
+ #elif defined(PADDLE_WITH_ARM) || defined(PADDLE_WITH_SW) || \
++    defined(__riscv) || \
+     defined(PADDLE_WITH_MIPS) || defined(PADDLE_WITH_LOONGARCH)
+   PADDLE_THROW(common::errors::Unimplemented("axpy_noadd is not supported"));
+ #else

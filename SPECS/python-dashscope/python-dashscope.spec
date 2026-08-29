@@ -14,7 +14,7 @@ License:        Apache-2.0
 URL:            https://dashscope.aliyun.com/
 VCS:            git:https://github.com/dashscope/dashscope-sdk-python
 # PyPI source not available for this version, using GitHub release
-#!RemoteAsset
+#!RemoteAsset:  sha256:1279d8d09552184c9ccdd85bf89d08058e66c4697b9441c862fbdbf671d34d5f
 Source0:        https://github.com/dashscope/dashscope-sdk-python/archive/refs/tags/v%{version}.tar.gz#/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -31,7 +31,7 @@ BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3dist(requests)
 BuildRequires:  python3dist(websocket-client)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -52,4 +52,4 @@ sed -i 's/version=get_version(),/version="%{version}",/' setup.py
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

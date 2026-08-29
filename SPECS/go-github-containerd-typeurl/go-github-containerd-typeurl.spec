@@ -8,12 +8,12 @@
 %define go_import_path  github.com/containerd/typeurl
 
 Name:           go-github-containerd-typeurl
-Version:        2.2.2
+Version:        2.2.3
 Release:        %autorelease
 Summary:        Go package for managing marshaled types to protobuf.Any
 License:        Apache-2.0
 URL:            https://github.com/containerd/typeurl
-#!RemoteAsset
+#!RemoteAsset:  sha256:c47bcfa292363b3d84de7816f045edd6b7077da9fee864c1368bf8ea25bc67e3
 Source0:        https://github.com/containerd/typeurl/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +37,4 @@ of encoded types.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

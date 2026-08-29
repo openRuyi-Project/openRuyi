@@ -1,0 +1,38 @@
+From eac138f2a6c9680578c56cb5b83093f05dab3ce3 Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+Date: Wed, 13 May 2026 23:55:05 +0800
+Subject: [PATCH] render/egl: try GBM platform if device platform fails to
+ initialize
+
+Mesa could generate EGL devices that cannot be used for eglInitialize(),
+e.g. in the case of a vmwgfx device w/o 3D acceleration enabled.
+
+Continue to try GBM platform instead of bailing out when device platform
+fails to initialize.
+
+This fixes launch of wlroots-based compositors on VirtualBox VMs w/o 3D
+acceleration enabled.
+
+Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
+---
+ render/egl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/render/egl.c b/render/egl.c
+index 6f3e9c8c..86805578 100644
+--- a/render/egl.c
++++ b/render/egl.c
+@@ -575,9 +575,8 @@ struct wlr_egl *wlr_egl_create_with_drm_fd(int drm_fd) {
+ 				wlr_log(WLR_DEBUG, "Using EGL_PLATFORM_DEVICE_EXT");
+ 				return egl;
+ 			}
+-			goto error;
+ 		}
+-		/* Falls back on GBM in case the device was not found */
++		/* Falls back on GBM in case the device was not found or do not work */
+ 	} else {
+ 		wlr_log(WLR_DEBUG, "EXT_platform_device not supported");
+ 	}
+-- 
+2.52.0
+

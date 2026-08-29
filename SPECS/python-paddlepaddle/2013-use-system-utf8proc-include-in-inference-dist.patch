@@ -1,0 +1,28 @@
+# Patch purpose:
+# - Use the detected system utf8proc include directory when assembling Paddle's
+#   inference distribution.
+# Why this patch exists:
+# - With WITH_SYSTEM_THIRD_PARTY=ON, utf8proc.cmake returns after finding the
+#   system header and library, so UTF8PROC_INSTALL_DIR is not a valid vendored
+#   install prefix. inference_lib.cmake must copy UTF8PROC_INCLUDE_DIR instead
+#   of expanding ${UTF8PROC_INSTALL_DIR}/include to /include.
+
+diff -uprN a/cmake/inference_lib.cmake b/cmake/inference_lib.cmake
+--- a/cmake/inference_lib.cmake	2026-03-19 14:53:19.000000000 +0800
++++ b/cmake/inference_lib.cmake	2026-06-20 12:06:24.655157437 +0800
+@@ -201,9 +201,14 @@ function(copy_part_of_third_party TARGET
+     DSTS ${dst_dir} ${dst_dir}/lib)
+ 
+   set(dst_dir "${DST}/third_party/install/utf8proc")
++  if(WITH_SYSTEM_THIRD_PARTY)
++    set(UTF8PROC_DIST_INCLUDE_DIR ${UTF8PROC_INCLUDE_DIR})
++  else()
++    set(UTF8PROC_DIST_INCLUDE_DIR ${UTF8PROC_INSTALL_DIR}/include)
++  endif()
+   copy(
+     ${TARGET}
+-    SRCS ${UTF8PROC_INSTALL_DIR}/include ${UTF8PROC_LIBRARIES}
++    SRCS ${UTF8PROC_DIST_INCLUDE_DIR} ${UTF8PROC_LIBRARIES}
+     DSTS ${dst_dir} ${dst_dir}/lib)
+ 
+   set(dst_dir "${DST}/third_party/install/yaml-cpp")

@@ -1,0 +1,54 @@
+From d0479433cd3a208bbb43314e767aeca86aef439d Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:15:00 +0800
+Subject: [PATCH] Disable clang-tidy
+
+clang-tidy is brittle and not needed when rebuilding from a tarball;
+point CLANG_TIDY_EXE at /usr/bin/true so find_program resolves it to a
+no-op.
+---
+ cmake/ClangTidy.cmake | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/cmake/ClangTidy.cmake b/cmake/ClangTidy.cmake
+index ca9b205..dbb14dc 100644
+--- a/cmake/ClangTidy.cmake
++++ b/cmake/ClangTidy.cmake
+@@ -30,14 +30,14 @@ get_filename_component(CLANG_TIDY_EXE_HINT "${CMAKE_CXX_COMPILER}" PATH)
+ 
+ find_program(CLANG_TIDY_EXE
+     NAMES
+-        clang-tidy
+-        clang-tidy-5.0
+-        clang-tidy-4.0
+-        clang-tidy-3.9
+-        clang-tidy-3.8
+-        clang-tidy-3.7
+-        clang-tidy-3.6
+-        clang-tidy-3.5
++        true
++        true-5.0
++        true-4.0
++        true-3.9
++        true-3.8
++        true-3.7
++        true-3.6
++        true-3.5
+     HINTS
+         ${CLANG_TIDY_EXE_HINT}
+     PATH_SUFFIXES
+@@ -158,9 +158,9 @@ function(clang_tidy_check TARGET)
+             set(tidy_target tidy-target-${TARGET}-${tidy_file})
+             add_custom_target(${tidy_target}
+                 DEPENDS ${SOURCE}
+-                COMMAND ${CLANG_TIDY_COMMAND} "-config-file=${PROJECT_SOURCE_DIR}/.clang-tidy" ${SOURCE} "-export-fixes=${CLANG_TIDY_FIXIT_DIR}/${TARGET}-${tidy_file}.yaml"
++                COMMAND ${CLANG_TIDY_COMMAND} "-config-file=${PROJECT_SOURCE_DIR}/.true" ${SOURCE} "-export-fixes=${CLANG_TIDY_FIXIT_DIR}/${TARGET}-${tidy_file}.yaml"
+                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-                COMMENT "clang-tidy: Running clang-tidy on target ${SOURCE}..."
++                COMMENT "true: Running clang-tidy on target ${SOURCE}..."
+             )
+             add_dependencies(${tidy_target} ${TARGET})
+             add_dependencies(${tidy_target} tidy-base)
+-- 
+2.53.0
+

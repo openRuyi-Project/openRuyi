@@ -7,13 +7,14 @@
 %global srcname fsspec
 
 Name:           python-%{srcname}
-Version:        2026.2.0
+# NOTE: Please check compatibility of python-datasets when updating.
+Version:        2026.4.0
 Release:        %autorelease
 Summary:        File-system specification for Python
 License:        BSD-3-Clause
 URL:            https://pypi.org/project/fsspec/
 VCS:            git:https://github.com/fsspec/filesystem_spec
-#!RemoteAsset
+#!RemoteAsset:  sha256:301d8ac70ae90ef3ad05dcf94d6c3754a097f9b5fe4667d2787aa359ec7df7e4
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,13 +26,42 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(hatch-vcs)
+BuildRequires:  python3dist(hatchling) >= 1.27
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
 Fsspec provides a unified Python interface for local, remote, and embedded
 filesystems.
+
+%pyproject_extras_subpkg -n python-%{srcname} abfs
+%pyproject_extras_subpkg -n python-%{srcname} adl
+%pyproject_extras_subpkg -n python-%{srcname} arrow
+%pyproject_extras_subpkg -n python-%{srcname} dask
+%pyproject_extras_subpkg -n python-%{srcname} dev
+%pyproject_extras_subpkg -n python-%{srcname} doc
+%pyproject_extras_subpkg -n python-%{srcname} dropbox
+%pyproject_extras_subpkg -n python-%{srcname} full
+%pyproject_extras_subpkg -n python-%{srcname} fuse
+%pyproject_extras_subpkg -n python-%{srcname} gcs
+%pyproject_extras_subpkg -n python-%{srcname} git
+%pyproject_extras_subpkg -n python-%{srcname} github
+%pyproject_extras_subpkg -n python-%{srcname} gs
+%pyproject_extras_subpkg -n python-%{srcname} gui
+%pyproject_extras_subpkg -n python-%{srcname} hdfs
+%pyproject_extras_subpkg -n python-%{srcname} http
+%pyproject_extras_subpkg -n python-%{srcname} libarchive
+%pyproject_extras_subpkg -n python-%{srcname} oci
+%pyproject_extras_subpkg -n python-%{srcname} s3
+%pyproject_extras_subpkg -n python-%{srcname} sftp
+%pyproject_extras_subpkg -n python-%{srcname} smb
+%pyproject_extras_subpkg -n python-%{srcname} ssh
+%pyproject_extras_subpkg -n python-%{srcname} test
+%pyproject_extras_subpkg -n python-%{srcname} test-downstream
+%pyproject_extras_subpkg -n python-%{srcname} test-full
+%pyproject_extras_subpkg -n python-%{srcname} tqdm
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -41,4 +71,4 @@ filesystems.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

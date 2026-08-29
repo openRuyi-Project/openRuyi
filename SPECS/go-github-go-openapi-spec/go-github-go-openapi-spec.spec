@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-openapi/spec
 
 Name:           go-github-go-openapi-spec
-Version:        0.22.3
+Version:        0.22.6
 Release:        %autorelease
 Summary:        openapi specification object model
 License:        Apache-2.0
 URL:            https://github.com/go-openapi/spec
-#!RemoteAsset
+#!RemoteAsset:  sha256:0be2776f9fea20cf173b46de6dfc38f4a0201431b02d5a998fc3bb2054d92075
 Source0:        https://github.com/go-openapi/spec/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -43,4 +43,4 @@ The object model for OpenAPI v2 specification documents.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

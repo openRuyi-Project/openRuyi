@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qt5compat
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qt5compat
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Qt 5 Compatibility Libraries
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qt5compat
-#!RemoteAsset
+#!RemoteAsset:  sha256:cfcb9fdaa051aad54b0e61b24ac5693b4887a86e07609f665fea67328a6f161b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -33,7 +33,6 @@ BuildRequires:  pkgconfig(Qt6ShaderTools)
 BuildRequires:  pkgconfig(Qt6Xml)
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
-BuildRequires:  pkgconfig(Qt6ShaderTools)
 BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(icu-i18n)
 
@@ -85,10 +84,10 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_datadir}/modules/*.json
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Core5Compat.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

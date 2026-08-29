@@ -11,15 +11,20 @@ Release:        %autorelease
 Summary:        Traces memory leaks
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-LeakTrace
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEEJO/Test-LeakTrace-%{version}.tar.gz
+#!RemoteAsset:  sha256:777d64d2938f5ea586300eef97ef03eacb43d4c1853c9c3b1091eb3311467970
+Source0:        https://www.cpan.org/authors/id/L/LE/LEEJO/Test-LeakTrace-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Exporter) >= 5.57
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More) >= 0.62
+BuildRequires:  perl-devel
 
 Requires:       perl(Exporter) >= 5.57
 
@@ -28,21 +33,8 @@ Test::LeakTrace provides several functions that trace memory leaks. This
 module scans arenas, the memory allocation system, so it can detect any
 leaked SVs in given blocks.
 
-%prep
-%setup -q -n Test-LeakTrace-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

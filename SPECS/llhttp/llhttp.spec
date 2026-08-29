@@ -7,17 +7,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           llhttp
-Version:        9.3.0
+Version:        9.4.1
 Release:        %autorelease
 Summary:        Port of http_parser to llparse
 License:        MIT
 URL:            https://github.com/nodejs/llhttp
-#!RemoteAsset
+#!RemoteAsset:  sha256:86a8c16759fdcc7aa2c9841fbe8ba2e77ea98be7d5d45615f2604776d0ff78c7
 Source:         https://github.com/nodejs/llhttp/archive/refs/tags/release/v%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 
 %description
@@ -44,4 +43,4 @@ developing applications that use llhttp.
 %{_libdir}/cmake/llhttp/
 
 %changelog
-%{?autochangelog}
+%autochangelog

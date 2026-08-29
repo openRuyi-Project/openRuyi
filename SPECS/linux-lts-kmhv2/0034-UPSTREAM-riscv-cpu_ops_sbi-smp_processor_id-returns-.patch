@@ -1,8 +1,8 @@
-From 8d37df9c47751a4eebf24d84e00ac37fcacf9f1c Mon Sep 17 00:00:00 2001
+From 5cfe296d78b80974d17bf71f4b20c59e5c4df2e7 Mon Sep 17 00:00:00 2001
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 Date: Fri, 2 Jan 2026 14:58:39 +0000
-Subject: [PATCH 034/292] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id()
- returns int, not unsigned int
+Subject: [RUYI PATCH] UPSTREAM: riscv: cpu_ops_sbi: smp_processor_id() returns
+ int, not unsigned int
 
 The print in sbi_cpu_stop() assumes smp_processor_id() returns an
 unsigned int, when it is actually an int. Fix the format string to

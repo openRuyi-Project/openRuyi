@@ -1,0 +1,25 @@
+From 335f56bf88524ba0613e5870a6dc839ea8f39862 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:35:00 +0800
+Subject: [PATCH] Remove a test that fails to link (undefined
+ magma_generate_matrix)
+
+---
+ testing/Makefile.src | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/testing/Makefile.src b/testing/Makefile.src
+index 3cf9816..c2b863d 100644
+--- a/testing/Makefile.src
++++ b/testing/Makefile.src
+@@ -61,7 +61,6 @@ testing_src += \
+ 	$(cdir)/testing_constants.cpp	\
+ 	$(cdir)/testing_operators.cpp	\
+ 	$(cdir)/testing_parse_opts.cpp	\
+-	$(cdir)/testing_zgenerate.cpp	\
+ 
+ # ----------
+ # Cholesky, GPU interface
+-- 
+2.53.0
+

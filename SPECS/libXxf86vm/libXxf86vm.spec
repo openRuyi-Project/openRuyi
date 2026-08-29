@@ -42,7 +42,7 @@ Requires:       pkgconfig
 
 %files devel
 %{_includedir}/X11/extensions/xf86vmode.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/xxf86vm.pc
 %{_libdir}/libXxf86vm.so
 %{_mandir}/man3/*
 

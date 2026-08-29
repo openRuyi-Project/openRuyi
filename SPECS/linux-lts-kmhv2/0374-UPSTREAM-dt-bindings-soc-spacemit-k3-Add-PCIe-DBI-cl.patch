@@ -1,0 +1,36 @@
+From 8f46d831880adb7e2d1fd0f12e3decdfb1481f54 Mon Sep 17 00:00:00 2001
+From: Yixun Lan <dlan@kernel.org>
+Date: Mon, 11 May 2026 02:59:11 +0000
+Subject: [RUYI PATCH] UPSTREAM: dt-bindings: soc: spacemit: k3: Add PCIe DBI
+ clock IDs
+
+Add clock IDs of PCIe DBI (Data Bus Interface) clock.
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://patch.msgid.link/20260511-06-pci-clk-fix-v2-3-c9a5e563bab3@kernel.org
+Signed-off-by: Yixun Lan <dlan@kernel.org>
+(cherry picked from commit 7a2db70a3196717bfb01415b6dde1f90d4291ab1)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ include/dt-bindings/clock/spacemit,k3-clocks.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/dt-bindings/clock/spacemit,k3-clocks.h b/include/dt-bindings/clock/spacemit,k3-clocks.h
+index b22336f3ae40..dfae52547cda 100644
+--- a/include/dt-bindings/clock/spacemit,k3-clocks.h
++++ b/include/dt-bindings/clock/spacemit,k3-clocks.h
+@@ -380,6 +380,11 @@
+ #define CLK_APMU_ISIM_VCLK1      86
+ #define CLK_APMU_ISIM_VCLK2      87
+ #define CLK_APMU_ISIM_VCLK3      88
++#define CLK_APMU_PCIE_PORTA_DBI  89
++#define CLK_APMU_PCIE_PORTB_DBI  90
++#define CLK_APMU_PCIE_PORTC_DBI  91
++#define CLK_APMU_PCIE_PORTD_DBI  92
++#define CLK_APMU_PCIE_PORTE_DBI  93
+ 
+ /* DCIU clocks */
+ #define CLK_DCIU_HDMA            0
+-- 
+2.53.0
+

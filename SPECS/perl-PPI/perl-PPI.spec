@@ -6,17 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-PPI
-Version:        1.283
+Version:        1.291
 Release:        %autorelease
 Summary:        Parse, Analyze and Manipulate Perl (without perl)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/PPI
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MI/MITHALDU/PPI-%{version}.tar.gz
+#!RemoteAsset:  sha256:74ac10bf66443ea813fb37d2ff5219c4d8e685379272d6699c812a39d91f3c1d
+Source0:        https://www.cpan.org/authors/id/M/MI/MITHALDU/PPI-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(B)
@@ -63,20 +67,8 @@ Requires:       perl(version) >= 0.77
 %description
 About this Document
 
-%prep
-%setup -q -n PPI-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes dev_notes.txt README
+%doc Changes dev_notes.txt README xt
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,16 +12,19 @@
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-knotifications
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        KDE Desktop notifications
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/knotifications
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:e5d3b284ccc907f190d3ab10995a0ae7fa0f505088acc69edc7adfcc6a8140d6
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_PYTHON_BINDINGS=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  pkgconfig
 BuildRequires:  cmake(KF6Config) >= %{_kf6_version}
@@ -36,26 +39,19 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-build
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(build)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
 BuildRequires:  clang-devel
 BuildRequires:  cmake(Shiboken6)
 BuildRequires:  cmake(PySide6)
 
+Provides:       kf6-knotifications-imports = %{version}-%{release}
+Obsoletes:      kf6-knotifications-imports < %{version}-%{release}
+
 %description
 KNotification is used to notify the user of an event. It covers feedback and
 persistent events.
-
-%package        imports
-Summary:        KDE Desktop notifications - QML files
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    imports
-KNotification is used to notify the user of an event. It covers feedback and
-persistent events.
-This package contains files that allow using knotification in QtQuick based
-applications.
 
 %package        devel
 Summary:        KDE Desktop notifications: Build Environment
@@ -77,20 +73,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description -n python-%{name}
 The package contains the PySide6 bindings library for %{name}.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6 \
-  -DBUILD_PYTHON_BINDINGS=OFF
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %files
 %license LICENSES/*
 %doc README.md
@@ -98,8 +80,6 @@ The package contains the PySide6 bindings library for %{name}.
 %{_kf6_debugdir}/knotifications.renamecategories
 %{_kf6_libdir}/libKF6Notifications.so.*
 %{_datadir}/locale/*/LC_MESSAGES/knotifications6_qt.qm
-
-%files imports
 %{_kf6_qmldir}/org/kde/notification/
 
 %files devel
@@ -111,4 +91,4 @@ The package contains the PySide6 bindings library for %{name}.
 # Python bindings disabled; package intentionally empty
 
 %changelog
-%{?autochangelog}
+%autochangelog

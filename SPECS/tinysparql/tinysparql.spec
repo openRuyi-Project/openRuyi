@@ -7,6 +7,7 @@
 
 %bcond doc 0
 %bcond tests 0
+%bcond libstemmer 0
 
 Name:           tinysparql
 Version:        3.10.1
@@ -14,7 +15,7 @@ Release:        %autorelease
 Summary:        Desktop-neutral metadata database and search tool
 License:        GPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/tinysparql
-#!RemoteAsset
+#!RemoteAsset:  sha256:5a7f3e789db6671a550ed6280ed4f60a60bea77368da92be68dc7d8d7e230265
 Source0:        https://download.gnome.org/sources/tinysparql/3.10/tinysparql-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -42,6 +43,7 @@ BuildRequires:  gcc
 BuildRequires:  gettext
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  vala
+BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(icu-i18n)
@@ -82,9 +84,6 @@ This package contains the documentation for %{name}.
 %endif
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang tinysparql3 --generate-subpackages
 
 %check
@@ -138,4 +137,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

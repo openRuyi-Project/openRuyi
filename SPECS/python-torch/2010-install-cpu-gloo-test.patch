@@ -1,0 +1,17 @@
+Install the CPU ProcessGroupGlooTest when the native test payload is enabled.
+Upstream builds this target but hardcodes installation off; no matching
+upstream issue or pull request was found.
+
+diff --git a/test/cpp/c10d/CMakeLists.txt b/test/cpp/c10d/CMakeLists.txt
+index aa98db5..ffb7b8c 100644
+--- a/test/cpp/c10d/CMakeLists.txt
++++ b/test/cpp/c10d/CMakeLists.txt
+@@ -121,7 +121,7 @@ elseif(USE_ROCM)
+   endif()
+ else()
+   if(USE_GLOO AND USE_C10D_GLOO)
+-    c10d_add_test(ProcessGroupGlooTest.cpp LINK_LIBRARIES torch_cpu gtest_main INSTALL_TEST OFF)
++    c10d_add_test(ProcessGroupGlooTest.cpp LINK_LIBRARIES torch_cpu gtest_main INSTALL_TEST ${INSTALL_TEST})
+   endif()
+ endif()
+

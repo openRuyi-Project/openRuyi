@@ -10,9 +10,12 @@ Release:        %autorelease
 Summary:        GLib wrapper around libusb1
 License:        LGPL-2.1-or-later
 URL:            https://github.com/hughsie/libgusb
-#!RemoteAsset
+#!RemoteAsset:  sha256:9df5ef301d6a4b361002aa52cce1165a87a89744055879bdbab31e7e86f1e846
 Source0:        https://github.com/hughsie/libgusb/releases/download/%{version}/libgusb-%{version}.tar.xz
 BuildSystem:    meson
+
+# https://github.com/hughsie/libgusb/pull/120
+Patch0:         0001-Convert-version-parsing-from-pkg_resources-to-packaging.patch
 
 BuildOption(conf):  -Ddocs=false
 BuildOption(conf):  -Dtests=false
@@ -25,6 +28,7 @@ BuildRequires:  pkgconfig(json-glib-1.0)
 BuildRequires:  pkgconfig(libusb-1.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  vala
+BuildRequires:  python3dist(packaging)
 
 %description
 GUsb is a GObject wrapper for libusb1 that makes it easy to do
@@ -53,4 +57,4 @@ Development files for %{name}.
 %{_datadir}/vala/vapi/gusb.deps
 
 %changelog
-%{?autochangelog}
+%autochangelog

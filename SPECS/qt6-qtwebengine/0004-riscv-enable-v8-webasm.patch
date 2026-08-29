@@ -1,0 +1,12 @@
+diff --git a/src/pdf/CMakeLists.txt b/src/pdf/CMakeLists.txt
+--- a/src/pdf/CMakeLists.txt
++++ b/src/pdf/CMakeLists.txt
+@@ -139,7 +139,7 @@ foreach(arch ${archs})
+           enable_web_speech=false
+           chrome_pgo_phase=0
+           strip_absolute_paths_from_debug_symbols=false
+-          v8_enable_webassembly=false
++          v8_enable_webassembly=true
+           use_v8_context_snapshot=false
+           v8_use_external_startup_data=false
+           build_with_tflite_lib=false

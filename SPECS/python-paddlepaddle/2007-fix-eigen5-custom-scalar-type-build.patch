@@ -1,0 +1,77 @@
+# Patch purpose:
+# - Avoid Eigen sign() on bfloat16 in the CPU rprop kernel.
+# - Allow Paddle complex scalars to compare with their real scalar type.
+# Why this patch exists:
+# - Eigen 5 resolves bfloat16 isnan() through several viable overloads when
+#   evaluating sign(), which makes rprop fail to compile.
+# - Eigen 5's is_exactly_zero() compares custom complex values with a real zero
+#   literal during min/max reductions; Paddle only provided complex-to-complex
+#   comparison operators.
+
+diff --git a/paddle/phi/common/complex.h b/paddle/phi/common/complex.h
+index d948f77..9050ec4 100644
+--- a/paddle/phi/common/complex.h
++++ b/paddle/phi/common/complex.h
+@@ -421,11 +421,31 @@ HOSTDEVICE inline bool operator==(const complex<T>& a, const complex<T>& b) {
+   return a.real == b.real && a.imag == b.imag;
+ }
+ 
++template <typename T>
++HOSTDEVICE inline bool operator==(const complex<T>& a, const T& b) {
++  return a.real == b && a.imag == static_cast<T>(0);
++}
++
++template <typename T>
++HOSTDEVICE inline bool operator==(const T& a, const complex<T>& b) {
++  return b == a;
++}
++
+ template <typename T>
+ HOSTDEVICE inline bool operator!=(const complex<T>& a, const complex<T>& b) {
+   return a.real != b.real || a.imag != b.imag;
+ }
+ 
++template <typename T>
++HOSTDEVICE inline bool operator!=(const complex<T>& a, const T& b) {
++  return !(a == b);
++}
++
++template <typename T>
++HOSTDEVICE inline bool operator!=(const T& a, const complex<T>& b) {
++  return !(a == b);
++}
++
+ template <typename T>
+ HOSTDEVICE inline bool operator<(const complex<T>& a, const complex<T>& b) {
+   return a.real < b.real;
+diff --git a/paddle/phi/kernels/cpu/rprop_kernel.cc b/paddle/phi/kernels/cpu/rprop_kernel.cc
+index 2d41fb1..0a2e201 100644
+--- a/paddle/phi/kernels/cpu/rprop_kernel.cc
++++ b/paddle/phi/kernels/cpu/rprop_kernel.cc
+@@ -28,6 +28,5 @@ void RpropKernelCPUImpl(const Context& dev_ctx,
+   auto param_eigen = EigenVector<T>::Flatten(param);
+   auto prev_eigen = EigenVector<T>::Flatten(prev);
+-  auto param_out_eigen = EigenVector<T>::Flatten(*param_out);
+   auto prev_out_eigen = EigenVector<T>::Flatten(*prev_out);
+   auto learning_rate_out_eigen = EigenVector<T>::Flatten(*learning_rate_out);
+   auto learning_rate_min = learning_rate_range.data<T>()[0];
+@@ -92,7 +91,18 @@ void RpropKernelCPUImpl(const Context& dev_ctx,
+     }
+   }
+ 
+-  param_out_eigen = param_eigen - grad_eigen.sign() * learning_rate_eigen;
++  const T* param_data = param.data<T>();
++  T* param_out_data = param_out->data<T>();
++  for (int64_t i = 0, n = param.numel(); i < n; i++) {
++    if (grad_data[i] > zero) {
++      param_out_data[i] = param_data[i] - learning_rate_data[i];
++    } else if (grad_data[i] < zero) {
++      param_out_data[i] = param_data[i] + learning_rate_data[i];
++    } else {
++      param_out_data[i] = param_data[i];
++    }
++  }
++
+   prev_out_eigen = grad_eigen;
+   learning_rate_out_eigen = learning_rate_eigen;
+   phi::Copy<Context>(dev_ctx, grad_tensor, dev_ctx.GetPlace(), true, prev_out);

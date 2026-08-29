@@ -8,16 +8,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qttools
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qttools
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - QtTool components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
-#!RemoteAsset
+#!RemoteAsset:  sha256:8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        assistant.desktop
 Source2:        designer.desktop
@@ -27,6 +27,9 @@ BuildSystem:    cmake
 
 # some install dir is error.
 Patch0:         0001-fix-install-dir.patch
+
+# https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-tools/-/blob/19e83dd083700044acfec5aa06d19c726ef0ab8d/llvm22.patch
+Patch2000:      2000-adapt-to-llvm22.patch
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
@@ -41,7 +44,9 @@ BuildRequires:  qt6-qtbase-static >= %{version}
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  qt6-qtdeclarative-static >= %{version}
 BuildRequires:  clang-devel
+BuildRequires:  clang-static
 BuildRequires:  llvm-devel
+BuildRequires:  llvm-static
 BuildRequires:  libzstd-devel
 
 %description
@@ -136,6 +141,9 @@ for prl_file in libQt6*.prl ; do
 done
 popd
 
+# Drop CMake object files accidentally installed under objects-$CONFIG/
+find %{buildroot}%{_qt6_libdir} -type f -name "*.o" -delete -print
+
 %files
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 %{_bindir}/qdbus-qt6
@@ -183,9 +191,10 @@ popd
 %{_qt6_bindir}/lconvert*
 %{_qt6_bindir}/lrelease*
 %{_qt6_bindir}/lupdate*
-%{_qt6_libexecdir}/lprodump*
-%{_qt6_libexecdir}/lrelease*
-%{_qt6_libexecdir}/lupdate*
+%{_bindir}/lcheck*
+%{_bindir}/ltext2id*
+%{_qt6_bindir}/lcheck*
+%{_qt6_bindir}/ltext2id*
 
 %files -n qt6-qdbusviewer
 %{_bindir}/qdbusviewer*
@@ -214,10 +223,14 @@ popd
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Designer.pc
+%{_qt6_libdir}/pkgconfig/Qt6Help.pc
+%{_qt6_libdir}/pkgconfig/Qt6Linguist.pc
+%{_qt6_libdir}/pkgconfig/Qt6UiPlugin.pc
+%{_qt6_libdir}/pkgconfig/Qt6UiTools.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

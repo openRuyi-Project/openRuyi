@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
@@ -7,14 +8,17 @@
 %bcond xwayland 0
 
 Name:           wlroots
-Version:        0.19.2
+Version:        0.20.1
 Release:        %autorelease
 Summary:        A modular Wayland compositor library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wlroots/wlroots
-#!RemoteAsset
+#!RemoteAsset:  sha256:e9e699a06492121153ce3a3448b0aa610f3285130754b85fbb58736c931fffec
 Source0:        https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/%{version}/wlroots-%{version}.tar.gz
 BuildSystem:    meson
+
+# Fixes labwc launching issue on vmwgfx
+Patch0:         0001-render-egl-try-GBM-platform-if-device-platform-fails.patch
 
 BuildOption(conf):  -Dexamples=false
 BuildOption(conf):  -Dxwayland=disabled
@@ -58,7 +62,6 @@ BuildRequires:  pkgconfig(xcb-ewmh)
 BuildRequires:  pkgconfig(xcb-icccm)
 BuildRequires:  pkgconfig(xcb-renderutil)
 %endif
-Provides:       wlroots-0.19
 
 %description
 wlroots is a modular Wayland compositor library. It implements a huge number of
@@ -67,7 +70,9 @@ Wayland protocols and features.
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Recommends:     pkgconfig(xcb-icccm)
+# wlr/xwayland/xwayland.h is installed even with xwayland disabled
+Requires:       pkgconfig(xcb-ewmh)
+Requires:       pkgconfig(xcb-icccm)
 
 %description    devel
 Development files for %{name}.
@@ -79,7 +84,7 @@ Development files for %{name}.
 
 %files devel
 %{_includedir}/wlroots-*/
-%{_libdir}/pkgconfig/wlroots-*.pc
+%{_libdir}/pkgconfig/wlroots-0.20.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

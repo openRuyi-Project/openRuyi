@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,18 +14,19 @@ Release:        %autorelease
 Summary:        Go support for Google's protocol buffers
 License:        BSD-3-Clause
 URL:            https://github.com/protocolbuffers/protobuf-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:517b935001f3d43640489cd1aab531a3ed5927fb34379fa6cb1c1a514e9cb8e8
 Source0:        https://github.com/protocolbuffers/protobuf-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-BuildOption(prep):  -n %{_name}-%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
 
 Provides:       go(google.golang.org/protobuf) = %{version}
+Provides:       go(google.golang.org/protobuf/proto) = %{version}
+Provides:       go(google.golang.org/protobuf/reflect) = %{version}
+Provides:       go(google.golang.org/protobuf/runtime) = %{version}
 
 Requires:       pkgconfig(protobuf)
 
@@ -41,9 +43,9 @@ messages in Go. See the protocol buffer developer guide
 buffers themselves.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

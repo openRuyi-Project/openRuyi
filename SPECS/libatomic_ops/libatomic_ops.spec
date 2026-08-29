@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libatomic_ops
-Version:        7.8.2
+Version:        7.10.0
 Release:        %autorelease
 Summary:        A portable library for atomic memory operations
 License:        GPL-2.0-or-later AND MIT
 URL:            https://github.com/ivmai/libatomic_ops
-#!RemoteAsset
+#!RemoteAsset:  sha256:0db3ebff755db170f65e74a64ec4511812e9ee3185c232eeffeacd274190dfb0
 Source:         https://github.com/ivmai/libatomic_ops/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -40,9 +40,6 @@ portable code. Unlike earlier similar packages, this one explicitly
 considers memory barrier semantics, and allows the construction of code
 that involves minimum overhead across a variety of architectures.
 
-%build -p
-%global _lto_cflags %{_lto_cflags} -ffat-lto-objects
-
 %files devel
 %license LICENSE COPYING
 %doc ChangeLog README.md
@@ -53,4 +50,4 @@ that involves minimum overhead across a variety of architectures.
 %{_docdir}/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

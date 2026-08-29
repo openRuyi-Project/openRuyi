@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Han Gao <gaohan@iscas.ac.cn>
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
@@ -10,14 +10,14 @@
 %global _firmwarepath /usr/lib/firmware
 
 Name:           linux-firmware
-Version:        20260110
+Version:        20260519
 Release:        %autorelease
 Summary:        Firmware files used by the Linux kernel
 License:        GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-#!RemoteAsset:  sha256:48e05166db539f4ee8d29ac9d236a94442c5b1b1a160a966f6fe6b42bd714331
-Source0:        https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:b14e7197a290a7e5569f5ef790cde289bddc47e32126f2eb262a8e677fc39727
+Source0:        https://cdn.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
 
 BuildRequires:  make
 BuildRequires:  git
@@ -599,6 +599,7 @@ end
 %files -n mediatek-firmware
 %license LICENCE.mediatek
 %dir %{_firmwarepath}/mediatek
+%{_firmwarepath}/mediatek/mt7927/
 %{_firmwarepath}/mediatek/mt798?*
 %{_firmwarepath}/mediatek/mt8173/
 %{_firmwarepath}/mediatek/mt8183/
@@ -619,6 +620,7 @@ end
 %{_firmwarepath}/qcom/*.bin*
 %{_firmwarepath}/qcom/*.m*
 %{_firmwarepath}/qcom/apq*/
+%{_firmwarepath}/qcom/glymur/
 %{_firmwarepath}/qcom/kaanapali/
 %{_firmwarepath}/qcom/qcm*/
 %{_firmwarepath}/qcom/qcs*/
@@ -626,6 +628,7 @@ end
 %{_firmwarepath}/qcom/sa*/
 %{_firmwarepath}/qcom/sc*/
 %{_firmwarepath}/qcom/sdm*/
+%{_firmwarepath}/qcom/shikra/
 %{_firmwarepath}/qcom/sm*/
 %{_firmwarepath}/qcom/venus-*/
 %{_firmwarepath}/qcom/vpu*/
@@ -673,4 +676,4 @@ end
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
-%{?autochangelog}
+%autochangelog

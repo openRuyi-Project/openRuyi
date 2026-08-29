@@ -11,20 +11,23 @@ Release:        %autorelease
 Summary:        Interface to the GNOME libxslt library
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-LibXSLT
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SH/SHLOMIF/XML-LibXSLT-%{version}.tar.gz
+#!RemoteAsset:  sha256:7caa5aee72f53be59d8b84eecb6864a07c612a12ea6b27d5c706960edcd54587
+Source0:        https://www.cpan.org/authors/id/S/SH/SHLOMIF/XML-LibXSLT-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
-BuildRequires:  perl >= 5.14.0
+BuildRequires:  perl-devel
 BuildRequires:  perl(Encode)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Path) >= 2.06
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 BuildRequires:  perl(XML::LibXML) >= 1.70
-# Manual
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(libxml-2.0)
 
@@ -36,21 +39,8 @@ This module is an interface to the GNOME project's libxslt. This is an
 extremely good XSLT engine, highly compliant and also very fast. I have
 tests showing this to be more than twice as fast as Sablotron.
 
-%prep
-%setup -q -n XML-LibXSLT-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

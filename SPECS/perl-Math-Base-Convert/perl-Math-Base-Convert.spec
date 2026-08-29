@@ -9,14 +9,18 @@ Name:           perl-Math-Base-Convert
 Version:        0.13
 Release:        %autorelease
 Summary:        Very fast base to base conversion
-License:        CHECK(GPL-1.0-or-later OR Artistic-1.0-Perl)
+License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Math-Base-Convert
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/M/MI/MIKER/Math-Base-Convert-%{version}.tar.gz
+#!RemoteAsset:  sha256:289c0c33bc9886db3dc2cf949d8e0ab24e36c67b9e833355941d70aaf3519ed2
+Source0:        https://www.cpan.org/authors/id/M/MI/MIKER/Math-Base-Convert-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -24,20 +28,8 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 This module provides fast functions and methods to convert between
 arbitrary number bases from 2 (binary) thru 65535.
 
-%prep
-%setup -q -n Math-Base-Convert-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc bitmaps Changes README recurse2txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

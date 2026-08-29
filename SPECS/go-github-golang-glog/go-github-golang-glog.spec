@@ -13,10 +13,13 @@ Release:        %autorelease
 Summary:        Leveled execution logs for Go
 License:        Apache-2.0
 URL:            https://github.com/golang/glog
-#!RemoteAsset
+#!RemoteAsset:  sha256:5f1479dfe446a12e4019014e52c3b8a045f00395113812aeaab6a0a754729bb5
 Source0:        https://github.com/golang/glog/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# Fix Go vet warning with current Go toolchain.
+Patch2000:      2000-fix-stack-slice-format.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
@@ -45,4 +48,4 @@ over logging at the file level.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,83 @@
+# Patch purpose:
+# - Use the distribution ONNX package instead of bundled third_party/onnx.
+# - Build versioned shared libraries for packaging.
+# - Preserve the ONNX dependency in the exported CMake package config.
+# Why this patch exists:
+# - openRuyi already packages ONNX, so onnx-optimizer must not build or ship a
+#   private ONNX copy.
+# - Consumers such as Paddle2ONNX should be able to find ONNXOptimizer via CMake
+#   and link it against the system ONNX target.
+# - ONNXConfig already loads protobuf; loading Protobuf first can make protobuf
+#   CMake targets partially defined and break the later ONNXConfig load.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,6 +18,7 @@
+ if (NOT DEFINED ONNX_TARGET_NAME)
+   set(ONNX_TARGET_NAME onnx)
+ endif()
++option(ONNX_OPT_USE_SYSTEM_ONNX "Use system ONNX instead of bundled third_party/onnx" OFF)
+ 
+ if(DEFINED BUILD_ONNX_PYTHON AND NOT DEFINED ONNX_BUILD_PYTHON)
+   set(ONNX_BUILD_PYTHON ${BUILD_ONNX_PYTHON})
+@@ -31,8 +32,13 @@
+ endif()
+ 
+ 
+-set(ONNX_ROOT ${PROJECT_SOURCE_DIR}/third_party/onnx)
+-add_subdirectory_if_no_target(${ONNX_ROOT} ${ONNX_TARGET_NAME})
++if(ONNX_OPT_USE_SYSTEM_ONNX)
++  find_package(ONNX REQUIRED)
++  set(ONNX_TARGET_NAME ONNX::onnx)
++else()
++  set(ONNX_ROOT ${PROJECT_SOURCE_DIR}/third_party/onnx)
++  add_subdirectory_if_no_target(${ONNX_ROOT} ${ONNX_TARGET_NAME})
++endif()
+ 
+ file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" ONNX_OPTIMIZER_VERSION)
+ string(STRIP "${ONNX_OPTIMIZER_VERSION}" ONNX_OPTIMIZER_VERSION)
+@@ -45,6 +51,9 @@
+ list(REMOVE_ITEM onnx_opt_srcs "${PROJECT_SOURCE_DIR}/onnxoptimizer/cpp2py_export.cc")
+ 
+ onnxopt_add_library(onnx_optimizer ${onnx_opt_srcs})
++set_target_properties(onnx_optimizer PROPERTIES
++  VERSION ${ONNX_OPTIMIZER_VERSION}
++  SOVERSION ${ONNX_OPTIMIZER_VERSION})
+ target_link_libraries(onnx_optimizer PUBLIC ${ONNX_TARGET_NAME})
+ target_include_directories(onnx_optimizer PUBLIC
+     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+@@ -60,6 +69,9 @@
+     )
+ 
+ onnxopt_add_library(onnx_optimizer_c_api ${onnx_opt_c_api_srcs})
++set_target_properties(onnx_optimizer_c_api PROPERTIES
++  VERSION ${ONNX_OPTIMIZER_VERSION}
++  SOVERSION ${ONNX_OPTIMIZER_VERSION})
+ target_link_libraries(onnx_optimizer_c_api PRIVATE onnx_optimizer)
+ target_include_directories(onnx_optimizer_c_api PUBLIC
+     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+--- a/cmake/ONNXOptimizerConfig.cmake.in
++++ b/cmake/ONNXOptimizerConfig.cmake.in
+@@ -6,6 +6,9 @@
+ # library version information
+ set(ONNX_OPTIMIZER_VERSION "@ONNX_OPTIMIZER_VERSION@")
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(ONNX)
++
+ # import targets
+ include ("${CMAKE_CURRENT_LIST_DIR}/ONNXOptimizerTargets.cmake")
+ 
+--- a/cmake/utils.cmake
++++ b/cmake/utils.cmake
+@@ -2,7 +2,9 @@
+ #
+ # SPDX-License-Identifier: Apache-2.0
+ 
+-include(${PROJECT_SOURCE_DIR}/third_party/onnx/cmake/Utils.cmake)
++if(EXISTS "${PROJECT_SOURCE_DIR}/third_party/onnx/cmake/Utils.cmake")
++  include(${PROJECT_SOURCE_DIR}/third_party/onnx/cmake/Utils.cmake)
++endif()
+ 
+ # Poor man's FetchContent
+ function(add_subdirectory_if_no_target dir target)

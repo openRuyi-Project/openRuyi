@@ -1,0 +1,24 @@
+From 8ecc1e8d61734a708a1878624c339b7157055b47 Mon Sep 17 00:00:00 2001
+From: laokz <26503046+laokz@users.noreply.github.com>
+Date: Sat, 22 Aug 2026 21:03:58 +0800
+Subject: [PATCH] tests/GHSA-x692-q9x7-8c3f.phpt:  Add extensions required
+
+bccomp() is in bcmath extension. Add the requires to avoid test failure if bcmath extension not configured.
+
+Signed-off-by: Kai Zhang <zhangkai@iscas.ac.cn>
+---
+ ext/bcmath/tests/GHSA-x692-q9x7-8c3f.phpt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ext/bcmath/tests/GHSA-x692-q9x7-8c3f.phpt b/ext/bcmath/tests/GHSA-x692-q9x7-8c3f.phpt
+index b735958bd07a..d544ad949bbe 100644
+--- a/ext/bcmath/tests/GHSA-x692-q9x7-8c3f.phpt
++++ b/ext/bcmath/tests/GHSA-x692-q9x7-8c3f.phpt
+@@ -1,5 +1,7 @@
+ --TEST--
+ GHSA-x692-q9x7-8c3f: bccomp() out-of-bounds write
++--EXTENSIONS--
++bcmath
+ --CREDITS--
+ Recep Asan (recepasan)
+ --FILE--

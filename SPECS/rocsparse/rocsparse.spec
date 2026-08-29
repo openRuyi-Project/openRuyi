@@ -7,22 +7,24 @@
 
 %bcond test 0
 
-%global rocm_version 7.1.1
+%global rocm_version 7.2.4
+
+%global llvm_maj_ver 22
 
 Name:           rocsparse
 Version:        %{rocm_version}
 Release:        %autorelease
 Summary:        SPARSE implementation for ROCm
 License:        MIT
-Url:            https://github.com/ROCm/rocSPARSE
-#!RemoteAsset
-Source0:        %{url}/archive/rocm-%{rocm_version}.tar.gz
+URL:            https://github.com/ROCm/rocSPARSE
+#!RemoteAsset:  sha256:0f1a6d1340909a0aa91c70410f62e227d0fc22b30eb2fb19584eeccabd984450
+Source0:        %{url}/archive/rocm-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_FILE_REORG_BACKWARD_COMPATIBILITY=OFF
 BuildOption(conf):  -DBUILD_WITH_OFFLOAD_COMPRESS=ON
 BuildOption(conf):  -DCMAKE_CXX_COMPILER=hipcc
-BuildOption(conf):  -DCMAKE_C_COMPILER=clang
+BuildOption(conf):  -DCMAKE_C_COMPILER=%{rocmllvm_bindir}/clang
 BuildOption(conf):  -DCMAKE_LINKER=%{rocmllvm_bindir}/ld.lld
 BuildOption(conf):  -DCMAKE_AR=%{rocmllvm_bindir}/llvm-ar
 BuildOption(conf):  -DCMAKE_RANLIB=%{rocmllvm_bindir}/llvm-ranlib
@@ -39,17 +41,17 @@ BuildOption(conf):  -G Ninja
 BuildOption(conf):  -DCMAKE_MATRICES_DIR=%{_builddir}/rocsparse-test-matrices/
 %endif
 
-BuildRequires:  clang
-BuildRequires:  clang-tools-extra
-BuildRequires:  compiler-rt
+BuildRequires:  clang(major) = %{llvm_maj_ver}
+BuildRequires:  clang%{llvm_maj_ver}-tools-extra
+BuildRequires:  compiler-rt22
 BuildRequires:  cmake
 BuildRequires:  cmake(amd_comgr)
 BuildRequires:  cmake(hip)
 BuildRequires:  cmake(hsa-runtime64)
 BuildRequires:  cmake(rocprim)
 BuildRequires:  hipcc
-BuildRequires:  lld
-BuildRequires:  llvm
+BuildRequires:  lld(major) = %{llvm_maj_ver}
+BuildRequires:  llvm(major) = %{llvm_maj_ver}
 BuildRequires:  gcc-c++
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(libzstd)
@@ -57,15 +59,13 @@ BuildRequires:  python3
 BuildRequires:  rocm-cmake
 BuildRequires:  rocm-llvm-macros
 BuildRequires:  rocminfo
+BuildRequires:  cmake(rocblas)
 %if %{with test}
 BuildRequires:  cmake(GTest)
-BuildRequires:  cmake(rocblas)
 BuildRequires:  cmake(openmp)
-BuildRequires:  gcc-gfortran
+BuildRequires:  gcc-fortran
 BuildRequires:  python3dist(pyyaml)
 %endif
-
-Provides:       %{name} = %{version}-%{release}
 
 %description
 rocSPARSE exposes a common interface that provides Basic
@@ -131,4 +131,4 @@ export LD_LIBRARY_PATH=%{_vpath_builddir}/library:$LD_LIBRARY_PATH
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

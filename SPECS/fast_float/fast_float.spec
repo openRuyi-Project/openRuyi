@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fast_float
-Version:        8.1.0
+Version:        8.2.5
 Release:        %autorelease
 Summary:        Re-implementation of std::from_chars for parsing strings into numbers
 License:        Apache-2.0 OR BSL-1.0 OR MIT
 URL:            https://github.com/fastfloat/fast_float
-#!RemoteAsset
+#!RemoteAsset:  sha256:17c7fb14499fcf42c3f5d143df0fbe22172e92749ec5f75ef13224005421a654
 Source:         %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -34,4 +34,4 @@ from_chars functions for float and double types as well as integer types.
 %{_datadir}/cmake/
 
 %changelog
-%{?autochangelog}
+%autochangelog

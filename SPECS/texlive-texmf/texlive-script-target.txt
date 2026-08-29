@@ -1,0 +1,44 @@
+# TeX Live linked-script targets.
+#
+# Format follows upstream texk/texlive/linked_scripts/scripts-targets.lst:
+#   texmf-dist/scripts/path/to/script command
+#   primary-command alias-command
+#
+# Keep this file declarative.  Do not write reversed aliases such as
+# "fmtutil-sys fmtutil"; fmtutil-sys and updmap-sys have their own wrapper
+# scripts and must point to those scripts directly.
+
+texmf-dist/scripts/texlive/fmtutil-sys.sh fmtutil-sys
+texmf-dist/scripts/texlive/fmtutil-user.sh fmtutil-user
+texmf-dist/scripts/texlive/fmtutil.pl fmtutil
+fmtutil mktexfmt
+
+texmf-dist/scripts/texlive/mktexlsr mktexlsr
+mktexlsr texhash
+texmf-dist/scripts/texlive/mktexmf mktexmf
+texmf-dist/scripts/texlive/mktexpk mktexpk
+texmf-dist/scripts/texlive/mktextfm mktextfm
+
+texmf-dist/scripts/texlive/updmap-sys.sh updmap-sys
+texmf-dist/scripts/texlive/updmap-user.sh updmap-user
+texmf-dist/scripts/texlive/updmap.pl updmap
+
+texmf-dist/scripts/ptex-fontmaps/kanji-config-updmap.pl kanji-config-updmap
+kanji-config-updmap kanji-config-updmap-sys
+kanji-config-updmap kanji-config-updmap-user
+
+texmf-dist/scripts/texlive-extra/allcm.sh allcm
+allcm allec
+texmf-dist/scripts/texlive-extra/kpsetool.sh kpsetool
+kpsetool kpsepath
+kpsetool kpsexpand
+kpsetool kpsewhere
+texmf-dist/scripts/pdfcrop/pdfcrop.pl pdfcrop
+pdfcrop rpdfcrop
+texmf-dist/scripts/epstopdf/epstopdf.pl epstopdf
+epstopdf repstopdf
+texmf-dist/scripts/texdef/texdef.pl texdef
+texdef latexdef
+texmf-dist/scripts/cluttex/cluttex.lua cluttex
+cluttex cllualatex
+cluttex clxelatex

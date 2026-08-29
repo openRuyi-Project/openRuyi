@@ -1,0 +1,33 @@
+From ecc87e849e81a2541048869d3c89f519e46ebe40 Mon Sep 17 00:00:00 2001
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Date: Tue, 16 Jun 2026 21:51:31 +0800
+Subject: [RUYI PATCH] FROMLIST: ACPI: tables: Add missing #include
+ <asm/fixmap.h>
+
+drivers/acpi/tables.c uses NR_FIX_BTMAPS without including
+<asm/fixmap.h>. This isn't a problem for existing archs, but would be
+when ARCH_HAS_ACPI_TABLE_UPGRADE is enabled for RISC-V. Add the missing
+include.
+
+Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20260616-riscv-acpi-table-upgrade-v1-1-45902d2dedf9@iscas.ac.cn
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/acpi/tables.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index 57fc8bc56166..c127da7fa32a 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -22,6 +22,7 @@
+ #include <linux/initrd.h>
+ #include <linux/security.h>
+ #include <linux/kmemleak.h>
++#include <asm/fixmap.h>
+ #include "internal.h"
+ 
+ #ifdef CONFIG_ACPI_CUSTOM_DSDT
+-- 
+2.53.0
+

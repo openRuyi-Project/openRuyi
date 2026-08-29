@@ -1,0 +1,141 @@
+From f244dcceaac5fe85f3baf08a3d53d34b9045be00 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:34:00 +0800
+Subject: [PATCH] ICS, Copy of strlcpy - just use strlcpy
+
+---
+ control/Makefile.src      |  1 -
+ control/strlcpy.cpp       | 69 ---------------------------------------
+ control/trace.cpp         |  8 ++---
+ include/magma_auxiliary.h |  1 -
+ 4 files changed, 4 insertions(+), 75 deletions(-)
+ delete mode 100644 control/strlcpy.cpp
+
+diff --git a/control/Makefile.src b/control/Makefile.src
+index 81fb05d..65e1db7 100644
+--- a/control/Makefile.src
++++ b/control/Makefile.src
+@@ -43,7 +43,6 @@ libmagma_src += \
+ 	$(cdir)/magma_znan_inf.cpp	\
+ 	$(cdir)/pthread_barrier.cpp	\
+ 	$(cdir)/sqrt.cpp		\
+-	$(cdir)/strlcpy.cpp		\
+ 	$(cdir)/thread_queue.cpp	\
+ 	$(cdir)/trace.cpp		\
+ 	$(cdir)/xerbla.cpp		\
+diff --git a/control/strlcpy.cpp b/control/strlcpy.cpp
+deleted file mode 100644
+index 350a64f..0000000
+--- a/control/strlcpy.cpp
++++ /dev/null
+@@ -1,69 +0,0 @@
+-/*
+-    -- MAGMA (version 2.0) --
+-       Univ. of Tennessee, Knoxville
+-       Univ. of California, Berkeley
+-       Univ. of Colorado, Denver
+-       @date
+-*/
+-#include "magma_internal.h"
+-
+-/*  $OpenBSD: strlcpy.c,v 1.11 2006/05/05 15:27:38 millert Exp $  */
+-
+-/*
+- * Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>
+- *
+- * Permission to use, copy, modify, and distribute this software for any
+- * purpose with or without fee is hereby granted, provided that the above
+- * copyright notice and this permission notice appear in all copies.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+- */
+-
+-#include <sys/types.h>
+-#include <string.h>
+-
+-/***************************************************************************//**
+-    Copy src to string dst of size siz.  At most siz-1 characters
+-    will be copied.  Always NUL terminates (unless siz == 0).
+-    Returns strlen(src); if retval >= siz, truncation occurred.
+-    
+-    Use strlcat to copy strings. It is available on BSD, but not Linux or
+-    Windows, so we provide our own copy of the BSD implementation. Note that:
+-    strcat   is insecure (buffer overflow),
+-    strncat  is insecure (doesn't always null terminate) and inefficient (zero pads),
+-    snprintf is renamed and insecure on Windows (_sprintf doesn't always null terminate).
+-    
+-    @magma_util
+-*******************************************************************************/
+-extern "C"
+-size_t
+-magma_strlcpy(char *dst, const char *src, size_t siz)
+-{
+-    char *d = dst;
+-    const char *s = src;
+-    size_t n = siz;
+-    
+-    /* Copy as many bytes as will fit */
+-    if (n != 0) {
+-        while (--n != 0) {
+-            if ((*d++ = *s++) == '\0')
+-                break;
+-        }
+-    }
+-    
+-    /* Not enough room in dst, add NUL and traverse rest of src */
+-    if (n == 0) {
+-        if (siz != 0)
+-            *d = '\0';     /* NUL-terminate dst */
+-        while (*s++)
+-            ;
+-    }
+-    
+-    return (s - src - 1);   /* count does not include NUL */
+-}
+diff --git a/control/trace.cpp b/control/trace.cpp
+index cf7245e..05d77f2 100644
+--- a/control/trace.cpp
++++ b/control/trace.cpp
+@@ -106,8 +106,8 @@ void trace_cpu_start( int core, const char* tag, const char* lbl )
+ {
+     int id = glog.cpu_id[core];
+     glog.cpu_start[core][id] = magma_wtime();
+-    magma_strlcpy( glog.cpu_tag  [core][id], tag, MAX_LABEL_LEN );
+-    magma_strlcpy( glog.cpu_label[core][id], lbl, MAX_LABEL_LEN );
++    strlcpy( glog.cpu_tag  [core][id], tag, MAX_LABEL_LEN );
++    strlcpy( glog.cpu_label[core][id], lbl, MAX_LABEL_LEN );
+ }
+ 
+ 
+@@ -136,8 +136,8 @@ void trace_gpu_start( int dev, int s, const char* tag, const char* lbl )
+     magma_event_create( &glog.gpu_start[t][id] );
+     magma_event_record(  glog.gpu_start[t][id], glog.queues[t] );
+ #endif
+-    magma_strlcpy( glog.gpu_tag  [t][id], tag, MAX_LABEL_LEN );
+-    magma_strlcpy( glog.gpu_label[t][id], lbl, MAX_LABEL_LEN );
++    strlcpy( glog.gpu_tag  [t][id], tag, MAX_LABEL_LEN );
++    strlcpy( glog.gpu_label[t][id], lbl, MAX_LABEL_LEN );
+ }
+ 
+ 
+diff --git a/include/magma_auxiliary.h b/include/magma_auxiliary.h
+index c4f06d5..0ea8b36 100644
+--- a/include/magma_auxiliary.h
++++ b/include/magma_auxiliary.h
+@@ -362,7 +362,6 @@ const char* magma_strerror( magma_int_t error );
+ // =============================================================================
+ // string functions
+ 
+-size_t magma_strlcpy( char *dst, const char *src, size_t size );
+ 
+ 
+ // =============================================================================
+-- 
+2.53.0
+

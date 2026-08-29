@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        GTK+ graphical user interface library
 License:        LGPL-2.0-or-later
 URL:            https://gitlab.gnome.org/GNOME/gtk
-#!RemoteAsset
+#!RemoteAsset:  sha256:0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f
 Source0:        https://download.gnome.org/sources/gtk/3.24/gtk-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -104,9 +104,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/gtk-3.0
 mkdir -p %{buildroot}%{_libdir}/gtk-3.0/modules
 mkdir -p %{buildroot}%{_libdir}/gtk-3.0/immodules
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang gtk30 --all-name --generate-subpackages
 
 %check
@@ -156,7 +153,14 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_includedir}/gail-3.0/
 %{_includedir}/gtk-3.0/
 %{_datadir}/aclocal/gtk-3.0.m4
-%{_libdir}/pkgconfig/g*-3.0.pc
+%{_libdir}/pkgconfig/gail-3.0.pc
+%{_libdir}/pkgconfig/gdk-3.0.pc
+%{_libdir}/pkgconfig/gdk-wayland-3.0.pc
+%{_libdir}/pkgconfig/gdk-x11-3.0.pc
+%{_libdir}/pkgconfig/gtk+-3.0.pc
+%{_libdir}/pkgconfig/gtk+-unix-print-3.0.pc
+%{_libdir}/pkgconfig/gtk+-wayland-3.0.pc
+%{_libdir}/pkgconfig/gtk+-x11-3.0.pc
 %{_bindir}/gtk3-*
 %{_bindir}/gtk-builder-tool
 %{_bindir}/gtk-encode-symbolic-svg
@@ -167,7 +171,6 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %{_datadir}/gir-1.0
 %{_datadir}/gtk-3.0/gtkbuilder.rng
 %{_datadir}/gtk-3.0/valgrind/
-%{_libdir}/gtk-3.0/%{bin_version}/immodules/im-xim.so
 
 %if %{with tests}
 %files tests
@@ -176,4 +179,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

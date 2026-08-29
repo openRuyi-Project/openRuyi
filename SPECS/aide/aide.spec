@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           aide
-Version:        0.19.2
+Version:        0.19.3
 Release:        %autorelease
 Summary:        Intrusion detection environment
 License:        GPL-2.0-or-later
 URL:            https://github.com/aide/aide
-#!RemoteAsset
+#!RemoteAsset:  sha256:6513170bb5b8c22802dd1b72f02d8aa9f432aef2b4470522db03e755212a3f47
 Source0:        https://github.com/aide/aide/releases/download/v%{version}/%{name}-%{version}.tar.gz
 Source1:        aide.conf
 Source2:        README.quickstart
@@ -29,9 +29,8 @@ BuildOption(conf):  --with-selinux
 BuildOption(conf):  --with-xattr
 BuildOption(conf):  --with-e2fsattrs
 BuildOption(conf):  --with-audit
-BuildOption(install): bindir=%{_sbindir}
+BuildOption(install):  bindir=%{_sbindir}
 
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  bison
 BuildRequires:  flex
@@ -79,4 +78,4 @@ mkdir -p -m0700 %{buildroot}%{_localstatedir}/lib/aide
 %dir %attr(0700,root,root) %{_localstatedir}/log/aide
 
 %changelog
-%{?autochangelog}
+%autochangelog

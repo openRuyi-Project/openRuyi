@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        A general purpose library and file format for storing scientific data
 License:        BSD-3-Clause
 URL:            https://github.com/HDFGroup/hdf5/
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e6ae0430995c8ae724688c866f4dbb6feba9c6220583d72049fbb9b006c1cd5
 Source0:        https://github.com/HDFGroup/hdf5/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -20,10 +20,10 @@ BuildOption(conf):  -DHDF5_BUILD_HL_LIB=ON
 BuildOption(conf):  -DHDF5_BUILD_FORTRAN=OFF
 BuildOption(conf):  -DHDF5_BUILD_CPP_LIB=ON
 BuildOption(conf):  -DHDF5_INSTALL_BIN_DIR=%{_bindir}
-BuildOption(conf):  -DHDF5_INSTALL_LIB_DIR=%{_libdir}
+BuildOption(conf):  -DHDF5_INSTALL_LIB_DIR=%{_lib}
 BuildOption(conf):  -DHDF5_INSTALL_INCLUDE_DIR=%{_includedir}
 BuildOption(conf):  -DHDF5_INSTALL_DATA_DIR=%{_datadir}
-BuildOption(conf):  -DHDF5_INSTALL_CMAKE_DIR=%{_libdir}/cmake/hdf5
+BuildOption(conf):  -DHDF5_INSTALL_CMAKE_DIR=%{_lib}/cmake/hdf5
 BuildOption(conf):  -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
 BuildOption(conf):  -DHDF5_BUILD_EXAMPLES=OFF
 BuildOption(conf):  -DBUILD_TESTING=OFF
@@ -87,4 +87,4 @@ HDF5 development headers and libraries.
 %{_libdir}/pkgconfig/hdf5_hl_cpp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

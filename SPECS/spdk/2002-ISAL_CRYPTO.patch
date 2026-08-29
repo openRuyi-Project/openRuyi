@@ -1,0 +1,26 @@
+From 62b4b86f4b01c1dee1ea38a45c689bf9eabcb046 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Tue, 3 Feb 2026 19:23:30 +0800
+Subject: [PATCH] ISAL_CRYPTO
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index 04fa11887..c2dc5230f 100755
+--- a/configure
++++ b/configure
+@@ -1229,7 +1229,7 @@ fi
+ if [[ "${CONFIG[ISAL_PKG_CONFIG]}" = "y" ]]; then
+ 	echo "Using system ISA-L"
+ 	CONFIG[ISAL]=y
+-	if [[ $arch == x86_64* ]] || [[ $arch == aarch64* ]]; then
++	if [[ $arch == x86_64* ]] || [[ $arch == aarch64* ]] || [[ $arch == riscv64* ]]; then
+ 		CONFIG[ISAL_CRYPTO]=y
+ 	else
+ 		# missing isal_aes_xts_*
+-- 
+2.52.0
+

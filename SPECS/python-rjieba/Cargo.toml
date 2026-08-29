@@ -1,0 +1,19 @@
+[package]
+name = "rjieba"
+version = "0.2.1"
+authors = ["messense <messense@icloud.com>"]
+edition = "2024"
+description = "jieba-rs Python binding"
+license = "MIT"
+repository = "https://github.com/messense/rjieba-py"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "rjieba"
+crate-type = ["cdylib"]
+
+[dependencies]
+jieba-rs = "0.9.0"
+pyo3 = { version = "0.28.3", features = ["abi3-py38", "generate-import-lib"] }

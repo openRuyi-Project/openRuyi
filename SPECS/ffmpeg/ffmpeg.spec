@@ -15,25 +15,25 @@
 %bcond lv2 0
 
 %if %{with all_codecs}
-%bcond rtmp 1
+%bcond librtmp 1
 %bcond vvc 1
 %bcond x264 1
 %bcond x265 1
 %else
-%bcond rtmp 0
+%bcond librtmp 0
 %bcond vvc 0
 %bcond x264 0
 %bcond x265 0
 %endif
 
 Name:           ffmpeg
-Version:        8.0.1
+Version:        8.1.2
 Release:        %autorelease
 Summary:        A complete solution to record, convert and stream audio and video
 License:        GPL-3.0-or-later
 URL:            https://ffmpeg.org/
 VCS:            git:https://git.ffmpeg.org/ffmpeg.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:464beb5e7bf0c311e68b45ae2f04e9cc2af88851abb4082231742a74d97b524c
 Source0:        https://ffmpeg.org/releases/ffmpeg-%{version}.tar.xz
 Source1:        enable_decoders
 Source2:        enable_encoders
@@ -44,8 +44,6 @@ Patch1:         0001-ffmpeg-codec-choice.patch
 # Allow to build with fdk-aac-free
 # See https://bugzilla.redhat.com/show_bug.cgi?id=1501522#c112
 Patch2:         0002-ffmpeg-allow-fdk-aac-free.patch
-# Support building with EVC base profile libraries
-Patch3:         0003-ffmpeg-support-evc-base-libraries.patch
 # Add first_dts getter to libavformat for Chromium
 # See: https://bugzilla.redhat.com/show_bug.cgi?id=2240127
 # Reference: https://crbug.com/1306560
@@ -111,8 +109,8 @@ BuildRequires:  pkgconfig(zlib)
 # BuildRequires:  pkgconfig(openh264)
 BuildRequires:  pkgconfig(libopenjp2)
 BuildRequires:  texinfo
-%if %{with rtmp}
-BuildRequires:  librtmp-devel
+%if %{with librtmp}
+BuildRequires:  pkgconfig(librtmp)
 %endif
 BuildRequires:  pkgconfig(xevdb)
 BuildRequires:  pkgconfig(xeveb)
@@ -395,4 +393,4 @@ make alltools
 %{_mandir}/man3/libswscale.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

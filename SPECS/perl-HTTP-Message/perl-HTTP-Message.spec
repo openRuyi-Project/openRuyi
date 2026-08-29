@@ -6,17 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-HTTP-Message
-Version:        7.00
+Version:        7.02
 Release:        %autorelease
 Summary:        HTTP style message (base class)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTTP-Message
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Message-%{version}.tar.gz
+#!RemoteAsset:  sha256:78abef1d833146b48d17db219b1b03d53cbbe37a28ccdad0efdcc5833ca5c60c
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/HTTP-Message-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -71,20 +75,8 @@ Requires:       perl(URI) >= 1.10
 An HTTP::Message object contains some headers and a content body. The
 following methods are available:
 
-%prep
-%setup -q -n HTTP-Message-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.md CONTRIBUTORS perlcriticrc perltidyrc README.md tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

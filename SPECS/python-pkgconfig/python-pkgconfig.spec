@@ -7,12 +7,12 @@
 %global srcname pkgconfig
 
 Name:           python-%{srcname}
-Version:        1.5.5
+Version:        1.6.0
 Release:        %autorelease
 Summary:        Python interface to the pkg-config command line tool
 License:        MIT
 URL:            https://github.com/matze/pkgconfig
-#!RemoteAsset:  sha256:deb4163ef11f75b520d822d9505c1f462761b4309b1bb713d08689759ea8b899
+#!RemoteAsset:  sha256:4a5a6631ce937fafac457104a40d558785a658bbdca5c49b6295bc3fd651907f
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(poetry-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +47,4 @@ If pkg-config is not on the path, raises EnvironmentError.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

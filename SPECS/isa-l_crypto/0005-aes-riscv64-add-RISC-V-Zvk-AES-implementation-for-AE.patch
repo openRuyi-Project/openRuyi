@@ -1,0 +1,2748 @@
+From 3137db5f7d99bdbfa8ee03c05d75fe60540ea9f8 Mon Sep 17 00:00:00 2001
+From: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+Date: Sun, 14 Jun 2026 14:27:24 +0000
+Subject: [PATCH 2/2] aes/riscv64: add RISC-V Zvk* AES implementation for AES
+ CBC/GCM/XTS
+
+Add RISC-V Zvk-accelerated providers for AES-CBC, AES-GCM, and AES-XTS, dispatched at runtime via riscv_hwprobe(). Fall back to C implementation when Zvk* extensions unavailable.
+
+Also update README.md for Zvk support requirement.
+
+Signed-off-by: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+---
+ README.md                                |   3 +
+ aes/Makefile.am                          |  23 +-
+ aes/riscv64/aes_block_zvkned.S           | 271 ++++++++++++++++++
+ aes/riscv64/aes_zvk_internal.h           |  99 +++++++
+ aes/riscv64/aes_zvk_macros.S             | 181 ++++++++++++
+ aes/riscv64/cbc_multibinary_riscv64.S    |  38 +++
+ aes/riscv64/cbc_riscv64_dispatcher.c     |  84 ++++++
+ aes/riscv64/cbc_zvkned.S                 | 130 +++++++++
+ aes/riscv64/cbc_zvkned_wrap.c            |  87 ++++++
+ aes/riscv64/gcm_ctr32_zvkned_zvkb.S      | 137 +++++++++
+ aes/riscv64/gcm_multibinary_riscv64.S    |  57 ++++
+ aes/riscv64/gcm_riscv64_dispatcher.c     | 208 ++++++++++++++
+ aes/riscv64/gcm_zvk.c                    | 304 ++++++++++++++++++++
+ aes/riscv64/ghash_zvkg.S                 | 167 +++++++++++
+ aes/riscv64/keyexp_multibinary_riscv64.S |  35 +++
+ aes/riscv64/keyexp_riscv64_dispatcher.c  |  38 +++
+ aes/riscv64/xts_multibinary_riscv64.S    |  39 +++
+ aes/riscv64/xts_riscv64_dispatcher.c     | 102 +++++++
+ aes/riscv64/xts_zvkned.c                 | 346 +++++++++++++++++++++++
+ configure.ac                             |  27 ++
+ include/internal/riscv64_multibinary.h   | 125 +++++++-
+ 21 files changed, 2492 insertions(+), 9 deletions(-)
+ create mode 100644 aes/riscv64/aes_block_zvkned.S
+ create mode 100644 aes/riscv64/aes_zvk_internal.h
+ create mode 100644 aes/riscv64/aes_zvk_macros.S
+ create mode 100644 aes/riscv64/cbc_multibinary_riscv64.S
+ create mode 100644 aes/riscv64/cbc_riscv64_dispatcher.c
+ create mode 100644 aes/riscv64/cbc_zvkned.S
+ create mode 100644 aes/riscv64/cbc_zvkned_wrap.c
+ create mode 100644 aes/riscv64/gcm_ctr32_zvkned_zvkb.S
+ create mode 100644 aes/riscv64/gcm_multibinary_riscv64.S
+ create mode 100644 aes/riscv64/gcm_riscv64_dispatcher.c
+ create mode 100644 aes/riscv64/gcm_zvk.c
+ create mode 100644 aes/riscv64/ghash_zvkg.S
+ create mode 100644 aes/riscv64/keyexp_multibinary_riscv64.S
+ create mode 100644 aes/riscv64/keyexp_riscv64_dispatcher.c
+ create mode 100644 aes/riscv64/xts_multibinary_riscv64.S
+ create mode 100644 aes/riscv64/xts_riscv64_dispatcher.c
+ create mode 100644 aes/riscv64/xts_zvkned.c
+
+diff --git a/README.md b/README.md
+index c3f3279..e969060 100644
+--- a/README.md
++++ b/README.md
+@@ -55,6 +55,9 @@ RISC-V 64:
+ * For RISC-V Vector (RVV) support:
+ 	* Assembler: gas v2.39 or later.
+ 	* Compiler: gcc v12.1 or later.
++* For RISC-V Vector Crypto (Zvk*) support (Zvkned, Zvkg, Zvkb):
++	* Assembler: gas v2.42 or later.
++	* Compiler: gcc v14.1 or later.
+ 
+ other:
+ * Compiler: Portable base functions are available that build with most C compilers.
+diff --git a/aes/Makefile.am b/aes/Makefile.am
+index 778d9be..9854c7b 100644
+--- a/aes/Makefile.am
++++ b/aes/Makefile.am
+@@ -117,11 +117,22 @@ lsrc_aes       = aes/aes_base.c         \
+                  aes/aes_gcm_base.c    \
+                  aes/aes_xts_base.c
+ 
+-lsrc_riscv64 += ${lsrc_aes}                   \
+-                 aes/aes_keyexp_base_aliases.c \
+-                 aes/aes_cbc_base_aliases.c    \
+-                 aes/aes_gcm_base_aliases.c    \
+-                 aes/aes_xts_base_aliases.c
++lsrc_riscv64 += ${lsrc_aes}                                 \
++                aes/riscv64/keyexp_multibinary_riscv64.S    \
++                aes/riscv64/keyexp_riscv64_dispatcher.c     \
++                aes/riscv64/cbc_multibinary_riscv64.S       \
++                aes/riscv64/cbc_riscv64_dispatcher.c        \
++                aes/riscv64/cbc_zvkned_wrap.c           \
++                aes/riscv64/cbc_zvkned.S                \
++                aes/riscv64/gcm_multibinary_riscv64.S       \
++                aes/riscv64/gcm_riscv64_dispatcher.c        \
++                aes/riscv64/gcm_ctr32_zvkned_zvkb.S         \
++                aes/riscv64/ghash_zvkg.S                    \
++                aes/riscv64/gcm_zvk.c                   \
++                aes/riscv64/xts_multibinary_riscv64.S       \
++                aes/riscv64/xts_riscv64_dispatcher.c        \
++                aes/riscv64/aes_block_zvkned.S                \
++                aes/riscv64/xts_zvkned.c
+ 
+ lsrc_base_aliases += ${lsrc_aes}               \
+                  aes/aes_keyexp_base_aliases.c \
+@@ -144,6 +155,8 @@ other_src   += aes/gcm_avx_gen2.asm
+ other_src   += aes/gcm_avx_gen4.asm
+ other_src   += aes/gcm_keys_vaes_avx512.asm
+ other_src   += aes/gcm_vaes_avx512.asm
++other_src   += aes/riscv64/aes_zvk_internal.h
++other_src   += aes/riscv64/aes_zvk_macros.S
+ 
+ check_tests += aes/cbc_std_vectors_test
+ check_tests += aes/gcm_std_vectors_test
+diff --git a/aes/riscv64/aes_block_zvkned.S b/aes/riscv64/aes_block_zvkned.S
+new file mode 100644
+index 0000000..034ef28
+--- /dev/null
++++ b/aes/riscv64/aes_block_zvkned.S
+@@ -0,0 +1,271 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++/*
++ * Internal RISC-V ZVKNED AES block helpers for isa-l_crypto wrappers.
++ */
++
++#if HAVE_RISCV_ZVK
++
++.text
++	.option arch, +v, +zvkned, +zvkb
++
++#include "aes_zvk_macros.S"
++
++#define INP	a0
++#define OUTP	a1
++#define KEYP	a2
++#define BLOCKS	a2
++#define TWEAKP	a3
++#define XTS_KEYP	a4
++
++.macro FUNC_START name
++	.global \name
++	.type   \name, %function
++\name:
++.endm
++
++.macro FUNC_END name
++	.size \name, .-\name
++.endm
++
++.macro aes_block_encrypt keylen
++	aes_load_keys	KEYP, \keylen
++	vle32.v		v16, (INP)
++	aes_encrypt	v16, \keylen
++	vse32.v		v16, (OUTP)
++	ret
++.endm
++
++.macro aes_block_decrypt keylen
++	aes_load_keys	KEYP, \keylen
++	vle32.v		v16, (INP)
++	aes_decrypt_enc_keys	v16, \keylen
++	vse32.v		v16, (OUTP)
++	ret
++.endm
++
++.macro aes_block_decrypt_dec_keys keylen
++	aes_load_dec_keys_as_enc	KEYP, \keylen
++	vle32.v		v16, (INP)
++	aes_decrypt_enc_keys	v16, \keylen
++	vse32.v		v16, (OUTP)
++	ret
++.endm
++
++.macro xts_mul_alpha tweak
++	vsetivli	zero, 16, e8, m1, ta, ma
++	vsrl.vi		v18, \tweak, 7
++	vsll.vi		\tweak, \tweak, 1
++	vmv.v.i		v19, 0
++	vslideup.vi	v19, v18, 1
++	vor.vv		\tweak, \tweak, v19
++	vslidedown.vi	v20, v18, 15
++	vmv.x.s		t0, v20
++	andi		t0, t0, 1
++	beqz		t0, .Lxts_mul_done\@
++	li		t0, 0x87
++	vmv.v.i		v19, 0
++	vsetivli	zero, 1, e8, m1, tu, ma
++	vmv.s.x		v19, t0
++	vsetivli	zero, 16, e8, m1, ta, ma
++	vxor.vv		\tweak, \tweak, v19
++.Lxts_mul_done\@:
++	vsetivli	zero, 4, e32, m1, ta, ma
++.endm
++
++.macro aes_xts_encrypt_blocks_128
++	beqz		BLOCKS, 2f
++	aes_load_keys	XTS_KEYP, 128
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_encrypt	v16, 128
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++.macro aes_xts_decrypt_blocks_128
++	beqz		BLOCKS, 2f
++	aes_load_keys	XTS_KEYP, 128
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_decrypt_enc_keys	v16, 128
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++.macro aes_xts_decrypt_blocks_128_dec_keys
++	beqz		BLOCKS, 2f
++	aes_load_dec_keys_as_enc	XTS_KEYP, 128
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_decrypt_enc_keys	v16, 128
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++.macro aes_xts_encrypt_blocks_256
++	beqz		BLOCKS, 2f
++	aes_load_keys	XTS_KEYP, 256
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_encrypt	v16, 256
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++.macro aes_xts_decrypt_blocks_256
++	beqz		BLOCKS, 2f
++	aes_load_keys	XTS_KEYP, 256
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_decrypt_enc_keys	v16, 256
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++.macro aes_xts_decrypt_blocks_256_dec_keys
++	beqz		BLOCKS, 2f
++	aes_load_dec_keys_as_enc	XTS_KEYP, 256
++	vle32.v		v17, (TWEAKP)
++1:
++	vle32.v		v16, (INP)
++	vxor.vv		v16, v16, v17
++	aes_decrypt_enc_keys	v16, 256
++	vxor.vv		v16, v16, v17
++	vse32.v		v16, (OUTP)
++	xts_mul_alpha	v17
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		BLOCKS, BLOCKS, -1
++	bnez		BLOCKS, 1b
++	vse32.v		v17, (TWEAKP)
++2:
++	ret
++.endm
++
++FUNC_START aes_encrypt_block_128_zvkned
++	aes_block_encrypt 128
++FUNC_END aes_encrypt_block_128_zvkned
++
++FUNC_START aes_encrypt_block_256_zvkned
++	aes_block_encrypt 256
++FUNC_END aes_encrypt_block_256_zvkned
++
++FUNC_START aes_decrypt_block_128_zvkned
++	aes_block_decrypt 128
++FUNC_END aes_decrypt_block_128_zvkned
++
++FUNC_START aes_decrypt_block_256_zvkned
++	aes_block_decrypt 256
++FUNC_END aes_decrypt_block_256_zvkned
++
++FUNC_START aes_decrypt_block_128_dec_keys_zvkned
++	aes_block_decrypt_dec_keys 128
++FUNC_END aes_decrypt_block_128_dec_keys_zvkned
++
++FUNC_START aes_decrypt_block_256_dec_keys_zvkned
++	aes_block_decrypt_dec_keys 256
++FUNC_END aes_decrypt_block_256_dec_keys_zvkned
++
++FUNC_START aes_xts_enc_blocks_128_zvkned
++	aes_xts_encrypt_blocks_128
++FUNC_END aes_xts_enc_blocks_128_zvkned
++
++FUNC_START aes_xts_dec_blocks_128_zvkned
++	aes_xts_decrypt_blocks_128
++FUNC_END aes_xts_dec_blocks_128_zvkned
++
++FUNC_START aes_xts_dec_blocks_128_dec_keys_zvkned
++	aes_xts_decrypt_blocks_128_dec_keys
++FUNC_END aes_xts_dec_blocks_128_dec_keys_zvkned
++
++FUNC_START aes_xts_enc_blocks_256_zvkned
++	aes_xts_encrypt_blocks_256
++FUNC_END aes_xts_enc_blocks_256_zvkned
++
++FUNC_START aes_xts_dec_blocks_256_zvkned
++	aes_xts_decrypt_blocks_256
++FUNC_END aes_xts_dec_blocks_256_zvkned
++
++FUNC_START aes_xts_dec_blocks_256_dec_keys_zvkned
++	aes_xts_decrypt_blocks_256_dec_keys
++FUNC_END aes_xts_dec_blocks_256_dec_keys_zvkned
++
++#endif
+diff --git a/aes/riscv64/aes_zvk_internal.h b/aes/riscv64/aes_zvk_internal.h
+new file mode 100644
+index 0000000..a8e4e81
+--- /dev/null
++++ b/aes/riscv64/aes_zvk_internal.h
+@@ -0,0 +1,99 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#ifndef _AES_ZVK_INTERNAL_H_
++#define _AES_ZVK_INTERNAL_H_
++
++#include <stdint.h>
++
++void
++aes_keyexp_128_enc_base(const uint8_t *key, uint8_t *exp_key_enc);
++void
++aes_keyexp_256_enc_base(const uint8_t *key, uint8_t *exp_key_enc);
++
++void
++aes_encrypt_block_128_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *enc_keys);
++void
++aes_encrypt_block_256_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *enc_keys);
++void
++aes_decrypt_block_128_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *enc_keys);
++void
++aes_decrypt_block_256_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *enc_keys);
++void
++aes_decrypt_block_128_dec_keys_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *dec_keys);
++void
++aes_decrypt_block_256_dec_keys_zvkned(const uint8_t *in, uint8_t *out, const uint8_t *dec_keys);
++void
++aes_xts_enc_blocks_128_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks, uint8_t *tweak,
++                              const uint8_t *enc_keys);
++void
++aes_xts_dec_blocks_128_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks, uint8_t *tweak,
++                              const uint8_t *enc_keys);
++void
++aes_xts_dec_blocks_128_dec_keys_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks,
++                                       uint8_t *tweak, const uint8_t *dec_keys);
++void
++aes_xts_enc_blocks_256_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks, uint8_t *tweak,
++                              const uint8_t *enc_keys);
++void
++aes_xts_dec_blocks_256_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks, uint8_t *tweak,
++                              const uint8_t *enc_keys);
++void
++aes_xts_dec_blocks_256_dec_keys_zvkned(const uint8_t *in, uint8_t *out, uint64_t nblocks,
++                                       uint8_t *tweak, const uint8_t *dec_keys);
++
++void
++aes_cbc_enc_128_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++void
++aes_cbc_enc_192_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++void
++aes_cbc_enc_256_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++void
++aes_cbc_dec_128_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++void
++aes_cbc_dec_192_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++void
++aes_cbc_dec_256_zvkned_impl(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes);
++
++void
++aes_gcm_ctr32_crypt_128_zvkned_zvkb(const uint8_t *in, uint8_t *out, uint64_t len, uint8_t *iv,
++                                    const uint8_t *keys);
++void
++aes_gcm_ctr32_crypt_256_zvkned_zvkb(const uint8_t *in, uint8_t *out, uint64_t len, uint8_t *iv,
++                                    const uint8_t *keys);
++
++/*
++ * ghash_zvkg: ZVKG-accelerated GHASH.
++ * htable points to four contiguous 16-byte GF(2^128) elements:
++ * H, H^2, H^3 and H^4 as computed by the base GCM precomp.
++ */
++void
++ghash_zvkg(uint8_t *accumulator, const uint8_t *htable, const uint8_t *data, uint64_t nblocks);
++
++#endif /* _AES_ZVK_INTERNAL_H_ */
+diff --git a/aes/riscv64/aes_zvk_macros.S b/aes/riscv64/aes_zvk_macros.S
+new file mode 100644
+index 0000000..47bad0c
+--- /dev/null
++++ b/aes/riscv64/aes_zvk_macros.S
+@@ -0,0 +1,181 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++/*
++ * Shared AES macros for RISC-V Zvk providers.
++ */
++
++/*
++ * Loads AES round keys from \keyp into vector registers.
++ *
++ * The expanded key layout in isa-l_crypto is a flat array of 16-byte round
++ * keys. The key length and whether the loaded keys are encryption or
++ * decryption schedules are known from the selected provider symbol.
++ */
++.macro	aes_load_keys keyp, keylen
++	vsetivli	zero, 4, e32, m1, ta, ma
++	vle32.v		v1, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v2, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v3, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v4, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v5, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v6, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v7, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v8, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v9, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v10, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v11, (\keyp)
++.if \keylen >= 192
++	addi		\keyp, \keyp, 16
++	vle32.v		v12, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v13, (\keyp)
++.endif
++.if \keylen == 256
++	addi		\keyp, \keyp, 16
++	vle32.v		v14, (\keyp)
++	addi		\keyp, \keyp, 16
++	vle32.v		v15, (\keyp)
++.endif
++.endm
++
++.macro	aes_mix_columns_key key
++	vror.vi		v28, \key, 8
++	vror.vi		v29, \key, 16
++	vror.vi		v30, \key, 24
++
++	vxor.vv		v31, \key, v28
++	li		t2, 0x80808080
++	vand.vx		v27, v31, t2
++	vsrl.vi		v27, v27, 7
++	li		t2, 0x1b
++	vmul.vx		v27, v27, t2
++	li		t2, 0x7f7f7f7f
++	vand.vx		v31, v31, t2
++	vsll.vi		v31, v31, 1
++	vxor.vv		v31, v31, v27
++
++	vxor.vv		\key, v28, v29
++	vxor.vv		\key, \key, v30
++	vxor.vv		\key, \key, v31
++.endm
++
++.macro	aes_load_dec_middle_key keyp, reg
++	addi		\keyp, \keyp, -16
++	vle32.v		\reg, (\keyp)
++	aes_mix_columns_key	\reg
++.endm
++
++.macro	aes_load_dec_keys_as_enc keyp, keylen
++	vsetivli	zero, 4, e32, m1, ta, ma
++.if \keylen == 128
++	vle32.v		v11, (\keyp)
++	addi		\keyp, \keyp, 160
++	vle32.v		v1, (\keyp)
++	.irp reg, v2, v3, v4, v5, v6, v7, v8, v9, v10
++	aes_load_dec_middle_key	\keyp, \reg
++	.endr
++.elseif \keylen == 192
++	vle32.v		v13, (\keyp)
++	addi		\keyp, \keyp, 192
++	vle32.v		v1, (\keyp)
++	.irp reg, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12
++	aes_load_dec_middle_key	\keyp, \reg
++	.endr
++.else
++	vle32.v		v15, (\keyp)
++	addi		\keyp, \keyp, 224
++	vle32.v		v1, (\keyp)
++	.irp reg, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14
++	aes_load_dec_middle_key	\keyp, \reg
++	.endr
++.endif
++.endm
++
++.macro	aes_encrypt data, keylen
++	vaesz.vs	\data, v1
++	vaesem.vs	\data, v2
++	vaesem.vs	\data, v3
++	vaesem.vs	\data, v4
++	vaesem.vs	\data, v5
++	vaesem.vs	\data, v6
++	vaesem.vs	\data, v7
++	vaesem.vs	\data, v8
++	vaesem.vs	\data, v9
++	vaesem.vs	\data, v10
++.if \keylen == 128
++	vaesef.vs	\data, v11
++.elseif \keylen == 192
++	vaesem.vs	\data, v11
++	vaesem.vs	\data, v12
++	vaesef.vs	\data, v13
++.else
++	vaesem.vs	\data, v11
++	vaesem.vs	\data, v12
++	vaesem.vs	\data, v13
++	vaesem.vs	\data, v14
++	vaesef.vs	\data, v15
++.endif
++.endm
++
++.macro	aes_decrypt_enc_keys data, keylen
++.if \keylen == 128
++	vaesz.vs	\data, v11
++.elseif \keylen == 192
++	vaesz.vs	\data, v13
++	vaesdm.vs	\data, v12
++	vaesdm.vs	\data, v11
++.else
++	vaesz.vs	\data, v15
++	vaesdm.vs	\data, v14
++	vaesdm.vs	\data, v13
++	vaesdm.vs	\data, v12
++	vaesdm.vs	\data, v11
++.endif
++	vaesdm.vs	\data, v10
++	vaesdm.vs	\data, v9
++	vaesdm.vs	\data, v8
++	vaesdm.vs	\data, v7
++	vaesdm.vs	\data, v6
++	vaesdm.vs	\data, v5
++	vaesdm.vs	\data, v4
++	vaesdm.vs	\data, v3
++	vaesdm.vs	\data, v2
++	vaesdf.vs	\data, v1
++.endm
+diff --git a/aes/riscv64/cbc_multibinary_riscv64.S b/aes/riscv64/cbc_multibinary_riscv64.S
+new file mode 100644
+index 0000000..9ab69b0
+--- /dev/null
++++ b/aes/riscv64/cbc_multibinary_riscv64.S
+@@ -0,0 +1,38 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include "riscv64_multibinary.h"
++
++mbin_interface     _aes_cbc_dec_128
++mbin_interface     _aes_cbc_dec_192
++mbin_interface     _aes_cbc_dec_256
++
++mbin_interface     _aes_cbc_enc_128
++mbin_interface     _aes_cbc_enc_192
++mbin_interface     _aes_cbc_enc_256
+diff --git a/aes/riscv64/cbc_riscv64_dispatcher.c b/aes/riscv64/cbc_riscv64_dispatcher.c
+new file mode 100644
+index 0000000..3f7a668
+--- /dev/null
++++ b/aes/riscv64/cbc_riscv64_dispatcher.c
+@@ -0,0 +1,84 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <riscv64_multibinary.h>
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_enc_128)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_enc_128_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_enc_128_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_enc_192)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_enc_192_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_enc_192_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_enc_256)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_enc_256_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_enc_256_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_dec_128)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_dec_128_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_dec_128_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_dec_192)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_dec_192_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_dec_192_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_cbc_dec_256)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_cbc_dec_256_zvkned);
++#endif
++        return PROVIDER_INFO(aes_cbc_dec_256_base);
++}
+diff --git a/aes/riscv64/cbc_zvkned.S b/aes/riscv64/cbc_zvkned.S
+new file mode 100644
+index 0000000..ec03ae5
+--- /dev/null
++++ b/aes/riscv64/cbc_zvkned.S
+@@ -0,0 +1,130 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++/*
++ * RISC-V ZVKNED AES-CBC providers for isa-l_crypto.
++ */
++
++#if HAVE_RISCV_ZVK
++
++.text
++	.option arch, +v, +zvkned, +zvkb
++
++#include "aes_zvk_macros.S"
++
++#define INP	a0
++#define IVP	a1
++#define KEYP	a2
++#define OUTP	a3
++#define LEN		a4
++
++.macro FUNC_START name
++	.global \name
++	.type   \name, %function
++\name:
++.endm
++
++.macro FUNC_END name
++	.size \name, .-\name
++.endm
++
++.macro	aes_cbc_encrypt keylen
++	vle32.v		v16, (IVP)
++1:
++	vle32.v		v17, (INP)
++	vxor.vv		v16, v16, v17
++	aes_encrypt	v16, \keylen
++	vse32.v		v16, (OUTP)
++	addi		INP, INP, 16
++	addi		OUTP, OUTP, 16
++	addi		LEN, LEN, -16
++	bnez		LEN, 1b
++
++	ret
++.endm
++
++.macro	aes_cbc_decrypt keylen
++	srli		LEN, LEN, 2
++	vle32.v		v16, (IVP)
++1:
++	/* Keep each vector operation on a complete 16-byte AES block boundary. */
++	vsetvli		t0, LEN, e32, m4, ta, ma
++	andi		t0, t0, -4
++	bnez		t0, 2f
++	li		t0, 4
++2:
++	vsetvli		zero, t0, e32, m4, ta, ma
++	vle32.v		v20, (INP)
++	vslideup.vi	v16, v20, 4
++	addi		t1, t0, -4
++	vslidedown.vx	v24, v20, t1
++	aes_decrypt_enc_keys	v20, \keylen
++	vxor.vv		v20, v20, v16
++	vse32.v		v20, (OUTP)
++	vmv.v.v		v16, v24
++	slli		t1, t0, 2
++	add		INP, INP, t1
++	add		OUTP, OUTP, t1
++	sub		LEN, LEN, t0
++	bnez		LEN, 1b
++
++	ret
++.endm
++
++FUNC_START aes_cbc_enc_128_zvkned_impl
++	aes_load_keys	KEYP, 128
++	aes_cbc_encrypt	128
++FUNC_END aes_cbc_enc_128_zvkned_impl
++
++FUNC_START aes_cbc_enc_192_zvkned_impl
++	aes_load_keys	KEYP, 192
++	aes_cbc_encrypt	192
++FUNC_END aes_cbc_enc_192_zvkned_impl
++
++FUNC_START aes_cbc_enc_256_zvkned_impl
++	aes_load_keys	KEYP, 256
++	aes_cbc_encrypt	256
++FUNC_END aes_cbc_enc_256_zvkned_impl
++
++FUNC_START aes_cbc_dec_128_zvkned_impl
++	aes_load_dec_keys_as_enc	KEYP, 128
++	aes_cbc_decrypt	128
++FUNC_END aes_cbc_dec_128_zvkned_impl
++
++FUNC_START aes_cbc_dec_192_zvkned_impl
++	aes_load_dec_keys_as_enc	KEYP, 192
++	aes_cbc_decrypt	192
++FUNC_END aes_cbc_dec_192_zvkned_impl
++
++FUNC_START aes_cbc_dec_256_zvkned_impl
++	aes_load_dec_keys_as_enc	KEYP, 256
++	aes_cbc_decrypt	256
++FUNC_END aes_cbc_dec_256_zvkned_impl
++
++#endif
+diff --git a/aes/riscv64/cbc_zvkned_wrap.c b/aes/riscv64/cbc_zvkned_wrap.c
+new file mode 100644
+index 0000000..29b18b3
+--- /dev/null
++++ b/aes/riscv64/cbc_zvkned_wrap.c
+@@ -0,0 +1,87 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <stdint.h>
++
++#include "aes_zvk_internal.h"
++
++#if HAVE_RISCV_ZVK
++
++int
++aes_cbc_enc_128_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return 0;
++        aes_cbc_enc_128_zvkned_impl(in, IV, keys, out, len_bytes);
++        return 0;
++}
++
++int
++aes_cbc_enc_192_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return 0;
++        aes_cbc_enc_192_zvkned_impl(in, IV, keys, out, len_bytes);
++        return 0;
++}
++
++int
++aes_cbc_enc_256_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return 0;
++        aes_cbc_enc_256_zvkned_impl(in, IV, keys, out, len_bytes);
++        return 0;
++}
++
++void
++aes_cbc_dec_128_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return;
++        aes_cbc_dec_128_zvkned_impl(in, IV, keys, out, len_bytes);
++}
++
++void
++aes_cbc_dec_192_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return;
++        aes_cbc_dec_192_zvkned_impl(in, IV, keys, out, len_bytes);
++}
++
++void
++aes_cbc_dec_256_zvkned(void *in, uint8_t *IV, uint8_t *keys, void *out, uint64_t len_bytes)
++{
++        if (len_bytes == 0)
++                return;
++        aes_cbc_dec_256_zvkned_impl(in, IV, keys, out, len_bytes);
++}
++
++#endif
+diff --git a/aes/riscv64/gcm_ctr32_zvkned_zvkb.S b/aes/riscv64/gcm_ctr32_zvkned_zvkb.S
+new file mode 100644
+index 0000000..2456668
+--- /dev/null
++++ b/aes/riscv64/gcm_ctr32_zvkned_zvkb.S
+@@ -0,0 +1,137 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++/*
++ * Internal RISC-V ZVKNED+ZVKB CTR32 helper for isa-l_crypto GCM wrappers.
++ */
++
++#if HAVE_RISCV_ZVK
++
++.text
++	.option arch, +v, +zvkned, +zvkb
++
++#include "aes_zvk_macros.S"
++
++#define INP	a0
++#define OUTP	a1
++#define LEN	a2
++#define IVP	a3
++#define KEYP	a4
++
++#define LEN32	a5
++#define VL_E32	a6
++#define VL_BLOCKS	a7
++
++.macro FUNC_START name
++	.global \name
++	.type   \name, %function
++\name:
++.endm
++
++.macro FUNC_END name
++	.size \name, .-\name
++.endm
++
++.macro	gcm_ctr32_crypt keylen
++	addi		t0, LEN, 15
++	srli		t0, t0, 4
++	slli		LEN32, t0, 2
++
++	li		t0, 0x88
++	vsetvli		t1, zero, e8, m1, ta, ma
++	vmv.v.x		v0, t0
++
++	vsetivli	zero, 4, e32, m1, ta, mu
++	vle32.v		v31, (IVP)
++
++	vrev8.v		v31, v31, v0.t
++
++	aes_load_keys	KEYP, \keylen
++
++	/* AES operates on groups of four e32 lanes, one full 16-byte block. */
++	vsetvli		VL_E32, LEN32, e32, m4, ta, mu
++	andi		VL_E32, VL_E32, -4
++	bnez		VL_E32, 3f
++	li		VL_E32, 4
++3:
++	vsetvli		zero, VL_E32, e32, m4, ta, mu
++	vmv.v.i		v16, 0
++	vaesz.vs	v16, v31
++
++	viota.m		v20, v0, v0.t
++	vadd.vv		v16, v16, v20, v0.t
++
++	j 2f
++1:
++	vsetvli		VL_E32, LEN32, e32, m4, ta, mu
++	andi		VL_E32, VL_E32, -4
++	bnez		VL_E32, 3f
++	li		VL_E32, 4
++3:
++	vsetvli		zero, VL_E32, e32, m4, ta, mu
++	vadd.vx		v16, v16, VL_BLOCKS, v0.t
++2:
++	vmv.v.v		v24, v16
++	vrev8.v		v24, v24, v0.t
++
++	aes_encrypt	v24, \keylen
++
++	slli		t0, VL_E32, 2
++	bleu		t0, LEN, 3f
++	mv		t0, LEN
++3:
++	vsetvli		t0, t0, e8, m4, ta, ma
++	vle8.v		v20, (INP)
++	vxor.vv		v20, v20, v24
++	vse8.v		v20, (OUTP)
++
++	add		INP, INP, t0
++	add		OUTP, OUTP, t0
++	sub		LEN, LEN, t0
++	sub		LEN32, LEN32, VL_E32
++	srli		VL_BLOCKS, VL_E32, 2
++	bnez		LEN, 1b
++
++	vsetivli	zero, 4, e32, m1, ta, mu
++	vadd.vx		v16, v16, VL_BLOCKS, v0.t
++	vrev8.v		v16, v16, v0.t
++	vse32.v		v16, (IVP)
++
++	ret
++.endm
++
++FUNC_START aes_gcm_ctr32_crypt_128_zvkned_zvkb
++	gcm_ctr32_crypt 128
++FUNC_END aes_gcm_ctr32_crypt_128_zvkned_zvkb
++
++FUNC_START aes_gcm_ctr32_crypt_256_zvkned_zvkb
++	gcm_ctr32_crypt 256
++FUNC_END aes_gcm_ctr32_crypt_256_zvkned_zvkb
++
++#endif
+diff --git a/aes/riscv64/gcm_multibinary_riscv64.S b/aes/riscv64/gcm_multibinary_riscv64.S
+new file mode 100644
+index 0000000..e96d8bf
+--- /dev/null
++++ b/aes/riscv64/gcm_multibinary_riscv64.S
+@@ -0,0 +1,57 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include "riscv64_multibinary.h"
++
++mbin_interface     _aes_gcm_enc_128
++mbin_interface     _aes_gcm_dec_128
++mbin_interface     _aes_gcm_precomp_128
++mbin_interface     _aes_gcm_enc_256
++mbin_interface     _aes_gcm_dec_256
++mbin_interface     _aes_gcm_precomp_256
++
++mbin_interface     _aes_gcm_enc_128_update
++mbin_interface     _aes_gcm_enc_128_finalize
++mbin_interface     _aes_gcm_dec_128_update
++mbin_interface     _aes_gcm_dec_128_finalize
++mbin_interface     _aes_gcm_enc_256_update
++mbin_interface     _aes_gcm_enc_256_finalize
++mbin_interface     _aes_gcm_dec_256_update
++mbin_interface     _aes_gcm_dec_256_finalize
++
++mbin_interface     _aes_gcm_init_256
++mbin_interface     _aes_gcm_init_128
++mbin_interface     _aes_gcm_enc_128_nt
++mbin_interface     _aes_gcm_enc_128_update_nt
++mbin_interface     _aes_gcm_dec_128_nt
++mbin_interface     _aes_gcm_dec_128_update_nt
++mbin_interface     _aes_gcm_enc_256_nt
++mbin_interface     _aes_gcm_enc_256_update_nt
++mbin_interface     _aes_gcm_dec_256_nt
++mbin_interface     _aes_gcm_dec_256_update_nt
+diff --git a/aes/riscv64/gcm_riscv64_dispatcher.c b/aes/riscv64/gcm_riscv64_dispatcher.c
+new file mode 100644
+index 0000000..d9b05d5
+--- /dev/null
++++ b/aes/riscv64/gcm_riscv64_dispatcher.c
+@@ -0,0 +1,208 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <riscv64_multibinary.h>
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_128)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_128_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_128_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_128)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_128_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_128_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_precomp_128)
++{
++        return PROVIDER_INFO(aes_gcm_precomp_128_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_256)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_256_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_256_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_256)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_256_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_256_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_precomp_256)
++{
++        return PROVIDER_INFO(aes_gcm_precomp_256_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_128_update)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_128_update_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_128_update_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_128_finalize)
++{
++        return PROVIDER_INFO(aes_gcm_enc_128_finalize_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_128_update)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_128_update_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_128_update_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_128_finalize)
++{
++        return PROVIDER_INFO(aes_gcm_dec_128_finalize_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_256_update)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_256_update_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_256_update_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_256_finalize)
++{
++        return PROVIDER_INFO(aes_gcm_enc_256_finalize_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_256_update)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_256_update_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_256_update_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_256_finalize)
++{
++        return PROVIDER_INFO(aes_gcm_dec_256_finalize_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_init_256) { return PROVIDER_INFO(aes_gcm_init_256_base); }
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_init_128) { return PROVIDER_INFO(aes_gcm_init_128_base); }
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_128_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_128_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_128_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_128_update_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_128_update_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_128_update_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_128_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_128_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_128_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_128_update_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_128_update_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_128_update_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_256_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_256_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_256_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_enc_256_update_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_enc_256_update_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_enc_256_update_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_256_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_256_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_256_nt_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_aes_gcm_dec_256_update_nt)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(aes_gcm_dec_256_update_nt_zvk);
++#endif
++        return PROVIDER_INFO(aes_gcm_dec_256_update_nt_base);
++}
+diff --git a/aes/riscv64/gcm_zvk.c b/aes/riscv64/gcm_zvk.c
+new file mode 100644
+index 0000000..870c58c
+--- /dev/null
++++ b/aes/riscv64/gcm_zvk.c
+@@ -0,0 +1,304 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <stdint.h>
++
++#include "aes_gcm.h"
++#include "aes_zvk_internal.h"
++
++#if HAVE_RISCV_ZVK
++
++void
++aes_gcm_init_128_base(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                      uint8_t *iv, uint8_t const *aad, uint64_t aad_len);
++void
++aes_gcm_init_256_base(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                      uint8_t *iv, uint8_t const *aad, uint64_t aad_len);
++void
++aes_gcm_enc_128_update_base(const struct isal_gcm_key_data *key_data,
++                            struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                            uint64_t len);
++void
++aes_gcm_enc_256_update_base(const struct isal_gcm_key_data *key_data,
++                            struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                            uint64_t len);
++void
++aes_gcm_dec_128_update_base(const struct isal_gcm_key_data *key_data,
++                            struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                            uint64_t len);
++void
++aes_gcm_dec_256_update_base(const struct isal_gcm_key_data *key_data,
++                            struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                            uint64_t len);
++void
++aes_gcm_enc_128_finalize_base(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *auth_tag,
++                              uint64_t auth_tag_len);
++void
++aes_gcm_enc_256_finalize_base(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *auth_tag,
++                              uint64_t auth_tag_len);
++void
++aes_gcm_dec_128_finalize_base(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *auth_tag,
++                              uint64_t auth_tag_len);
++void
++aes_gcm_dec_256_finalize_base(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *auth_tag,
++                              uint64_t auth_tag_len);
++
++typedef void (*gcm_ctr_fn)(const uint8_t *in, uint8_t *out, uint64_t len, uint8_t *iv,
++                           const uint8_t *keys);
++typedef void (*gcm_update_base_fn)(const struct isal_gcm_key_data *key_data,
++                                   struct isal_gcm_context_data *ctx, uint8_t *out,
++                                   const uint8_t *in, uint64_t len);
++
++static void
++gcm_update_enc_zvk_common(const struct isal_gcm_key_data *key_data,
++                          struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                          uint64_t len, gcm_ctr_fn ctr_fn, gcm_update_base_fn base_fn)
++{
++        uint64_t full_len;
++        uint64_t rem_len;
++
++        if (ctx->partial_block_length != 0) {
++                uint64_t drain = 16 - ctx->partial_block_length;
++                if (len <= drain) {
++                        base_fn(key_data, ctx, out, in, len);
++                        return;
++                }
++                base_fn(key_data, ctx, out, in, drain);
++                out += drain;
++                in += drain;
++                len -= drain;
++        }
++
++        if (len < 16) {
++                base_fn(key_data, ctx, out, in, len);
++                return;
++        }
++
++        full_len = len & ~UINT64_C(15);
++        rem_len = len - full_len;
++
++        if (full_len != 0) {
++                ctr_fn(in, out, full_len, ctx->current_counter, key_data->expanded_keys);
++                ghash_zvkg(ctx->aad_hash, key_data->shifted_hkey_1, out, full_len / 16);
++                ctx->in_length += full_len;
++        }
++
++        if (rem_len != 0) {
++                base_fn(key_data, ctx, out + full_len, in + full_len, rem_len);
++        }
++}
++
++static void
++gcm_update_dec_zvk_common(const struct isal_gcm_key_data *key_data,
++                          struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                          uint64_t len, gcm_ctr_fn ctr_fn, gcm_update_base_fn base_fn)
++{
++        uint64_t full_len;
++        uint64_t rem_len;
++
++        if (ctx->partial_block_length != 0) {
++                uint64_t drain = 16 - ctx->partial_block_length;
++                if (len <= drain) {
++                        base_fn(key_data, ctx, out, in, len);
++                        return;
++                }
++                base_fn(key_data, ctx, out, in, drain);
++                out += drain;
++                in += drain;
++                len -= drain;
++        }
++
++        if (len < 16) {
++                base_fn(key_data, ctx, out, in, len);
++                return;
++        }
++
++        full_len = len & ~UINT64_C(15);
++        rem_len = len - full_len;
++
++        if (full_len != 0) {
++                ghash_zvkg(ctx->aad_hash, key_data->shifted_hkey_1, in, full_len / 16);
++                ctr_fn(in, out, full_len, ctx->current_counter, key_data->expanded_keys);
++                ctx->in_length += full_len;
++        }
++
++        if (rem_len != 0) {
++                base_fn(key_data, ctx, out + full_len, in + full_len, rem_len);
++        }
++}
++
++void
++aes_gcm_enc_128_update_zvk(const struct isal_gcm_key_data *key_data,
++                           struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                           uint64_t len)
++{
++        gcm_update_enc_zvk_common(key_data, ctx, out, in, len, aes_gcm_ctr32_crypt_128_zvkned_zvkb,
++                                  aes_gcm_enc_128_update_base);
++}
++
++void
++aes_gcm_enc_256_update_zvk(const struct isal_gcm_key_data *key_data,
++                           struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                           uint64_t len)
++{
++        gcm_update_enc_zvk_common(key_data, ctx, out, in, len, aes_gcm_ctr32_crypt_256_zvkned_zvkb,
++                                  aes_gcm_enc_256_update_base);
++}
++
++void
++aes_gcm_dec_128_update_zvk(const struct isal_gcm_key_data *key_data,
++                           struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                           uint64_t len)
++{
++        gcm_update_dec_zvk_common(key_data, ctx, out, in, len, aes_gcm_ctr32_crypt_128_zvkned_zvkb,
++                                  aes_gcm_dec_128_update_base);
++}
++
++void
++aes_gcm_dec_256_update_zvk(const struct isal_gcm_key_data *key_data,
++                           struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                           uint64_t len)
++{
++        gcm_update_dec_zvk_common(key_data, ctx, out, in, len, aes_gcm_ctr32_crypt_256_zvkned_zvkb,
++                                  aes_gcm_dec_256_update_base);
++}
++
++void
++aes_gcm_enc_128_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                    uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv, uint8_t const *aad,
++                    uint64_t aad_len, uint8_t *auth_tag, uint64_t auth_tag_len)
++{
++        aes_gcm_init_128_base(key_data, ctx, iv, aad, aad_len);
++        aes_gcm_enc_128_update_zvk(key_data, ctx, out, in, len);
++        aes_gcm_enc_128_finalize_base(key_data, ctx, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_enc_256_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                    uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv, uint8_t const *aad,
++                    uint64_t aad_len, uint8_t *auth_tag, uint64_t auth_tag_len)
++{
++        aes_gcm_init_256_base(key_data, ctx, iv, aad, aad_len);
++        aes_gcm_enc_256_update_zvk(key_data, ctx, out, in, len);
++        aes_gcm_enc_256_finalize_base(key_data, ctx, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_dec_128_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                    uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv, uint8_t const *aad,
++                    uint64_t aad_len, uint8_t *auth_tag, uint64_t auth_tag_len)
++{
++        aes_gcm_init_128_base(key_data, ctx, iv, aad, aad_len);
++        aes_gcm_dec_128_update_zvk(key_data, ctx, out, in, len);
++        aes_gcm_dec_128_finalize_base(key_data, ctx, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_dec_256_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                    uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv, uint8_t const *aad,
++                    uint64_t aad_len, uint8_t *auth_tag, uint64_t auth_tag_len)
++{
++        aes_gcm_init_256_base(key_data, ctx, iv, aad, aad_len);
++        aes_gcm_dec_256_update_zvk(key_data, ctx, out, in, len);
++        aes_gcm_dec_256_finalize_base(key_data, ctx, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_enc_128_nt_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                       uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv,
++                       uint8_t const *aad, uint64_t aad_len, uint8_t *auth_tag,
++                       uint64_t auth_tag_len)
++{
++        aes_gcm_enc_128_zvk(key_data, ctx, out, in, len, iv, aad, aad_len, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_enc_256_nt_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                       uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv,
++                       uint8_t const *aad, uint64_t aad_len, uint8_t *auth_tag,
++                       uint64_t auth_tag_len)
++{
++        aes_gcm_enc_256_zvk(key_data, ctx, out, in, len, iv, aad, aad_len, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_dec_128_nt_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                       uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv,
++                       uint8_t const *aad, uint64_t aad_len, uint8_t *auth_tag,
++                       uint64_t auth_tag_len)
++{
++        aes_gcm_dec_128_zvk(key_data, ctx, out, in, len, iv, aad, aad_len, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_dec_256_nt_zvk(const struct isal_gcm_key_data *key_data, struct isal_gcm_context_data *ctx,
++                       uint8_t *out, uint8_t const *in, uint64_t len, uint8_t *iv,
++                       uint8_t const *aad, uint64_t aad_len, uint8_t *auth_tag,
++                       uint64_t auth_tag_len)
++{
++        aes_gcm_dec_256_zvk(key_data, ctx, out, in, len, iv, aad, aad_len, auth_tag, auth_tag_len);
++}
++
++void
++aes_gcm_enc_128_update_nt_zvk(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                              uint64_t len)
++{
++        aes_gcm_enc_128_update_zvk(key_data, ctx, out, in, len);
++}
++
++void
++aes_gcm_enc_256_update_nt_zvk(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                              uint64_t len)
++{
++        aes_gcm_enc_256_update_zvk(key_data, ctx, out, in, len);
++}
++
++void
++aes_gcm_dec_128_update_nt_zvk(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                              uint64_t len)
++{
++        aes_gcm_dec_128_update_zvk(key_data, ctx, out, in, len);
++}
++
++void
++aes_gcm_dec_256_update_nt_zvk(const struct isal_gcm_key_data *key_data,
++                              struct isal_gcm_context_data *ctx, uint8_t *out, const uint8_t *in,
++                              uint64_t len)
++{
++        aes_gcm_dec_256_update_zvk(key_data, ctx, out, in, len);
++}
++
++#endif
+diff --git a/aes/riscv64/ghash_zvkg.S b/aes/riscv64/ghash_zvkg.S
+new file mode 100644
+index 0000000..1872767
+--- /dev/null
++++ b/aes/riscv64/ghash_zvkg.S
+@@ -0,0 +1,167 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++/*
++ * Internal RISC-V ZVKG GHASH helper for isa-l_crypto GCM wrappers.
++ *
++ * Uses 4-block parallel aggregation for throughput: four independent
++ * accumulators each multiplied by H^4 per step, with the final 4-block
++ * group using descending powers [H^4, H^3, H^2, H] for correctness.
++ * This is VLEN-independent (always uses m1 with vl=4, one block = 4×e32).
++ *
++ * The KEY parameter points to a contiguous table of four 16-byte GF(2^128)
++ * elements: H at offset 0, H^2 at +16, H^3 at +32, H^4 at +48.
++ * This matches the layout of isal_gcm_key_data.shifted_hkey_1..4 as
++ * computed by the base GCM precomp using standard GF(2^128) multiplication.
++ *
++ * void ghash_zvkg(uint8_t *Xi, const uint8_t *H, const uint8_t *data,
++ *                 uint64_t nblocks);
++ */
++
++#if HAVE_RISCV_ZVK
++
++.text
++	.option arch, +v, +zvkg
++
++#define Xi	a0
++#define Htable	a1
++#define DATA	a2
++#define NBLOCKS	a3
++
++.macro FUNC_START name
++	.global \name
++	.type   \name, %function
++\name:
++.endm
++
++.macro FUNC_END name
++	.size \name, .-\name
++.endm
++
++/*
++ * Register usage:
++ *   v1        – running Xi accumulator (also final result)
++ *   v2        – H  (Htable[0])
++ *   v5        – H^4 (Htable[48])
++ *   v6        – H^3 (Htable[32])
++ *   v7        – H^2 (Htable[16])
++ *   v8-v11    – four input blocks (scratch)
++ *   v20-v23   – four independent accumulators for the parallel path
++ */
++FUNC_START ghash_zvkg
++	beqz		NBLOCKS, .Lret		/* nothing to do */
++
++	vsetivli	zero, 4, e32, m1, ta, ma
++	vle32.v		v1, (Xi)		/* v1 = Xi */
++	vle32.v		v2, (Htable)		/* v2 = H */
++
++	li		t0, 4
++	bltu		NBLOCKS, t0, .Lstep	/* nblocks < 4: single-block path */
++
++	/* --- 4-block aggregation path --- */
++	addi		t0, Htable, 48
++	vle32.v		v5, (t0)		/* v5 = H^4 */
++	addi		t0, Htable, 32
++	vle32.v		v6, (t0)		/* v6 = H^3 */
++	addi		t0, Htable, 16
++	vle32.v		v7, (t0)		/* v7 = H^2 */
++
++	vmv.v.v		v20, v1			/* lane 0 = Xi */
++	vmv.v.i		v21, 0			/* lane 1 = 0 */
++	vmv.v.i		v22, 0			/* lane 2 = 0 */
++	vmv.v.i		v23, 0			/* lane 3 = 0 */
++
++	li		t0, 8
++	bltu		NBLOCKS, t0, .Llast_4x	/* nblocks < 8: skip main loop */
++
++	/*
++	 * Main loop: process groups of 4 blocks with all lanes using H^4.
++	 * Each lane independently accumulates every 4th block.
++	 * Runs while nblocks >= 8 so the last 4 blocks are processed
++	 * by .Llast_4x with the correct descending-power multipliers.
++	 */
++.Lghash_4x:
++	vle32.v		v8,  (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v9,  (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v10, (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v11, (DATA)
++	addi		DATA, DATA, 16
++	addi		NBLOCKS, NBLOCKS, -4
++	vghsh.vv	v20, v5, v8		/* lane 0: (v20 ^ v8) * H^4 */
++	vghsh.vv	v21, v5, v9		/* lane 1: (v21 ^ v9) * H^4 */
++	vghsh.vv	v22, v5, v10		/* lane 2: (v22 ^ v10) * H^4 */
++	vghsh.vv	v23, v5, v11		/* lane 3: (v23 ^ v11) * H^4 */
++	li		t0, 8
++	bgeu		NBLOCKS, t0, .Lghash_4x
++
++	/*
++	 * Last 4-block group: multiply with [H^4, H^3, H^2, H] so the
++	 * combined result equals the correct GHASH polynomial evaluation.
++	 */
++.Llast_4x:
++	vle32.v		v8,  (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v9,  (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v10, (DATA)
++	addi		DATA, DATA, 16
++	vle32.v		v11, (DATA)
++	addi		DATA, DATA, 16
++	addi		NBLOCKS, NBLOCKS, -4
++	vghsh.vv	v20, v5, v8		/* lane 0: * H^4 */
++	vghsh.vv	v21, v6, v9		/* lane 1: * H^3 */
++	vghsh.vv	v22, v7, v10		/* lane 2: * H^2 */
++	vghsh.vv	v23, v2, v11		/* lane 3: * H   */
++
++	/* Reduce four lanes: v1 = v20 ^ v21 ^ v22 ^ v23 */
++	vxor.vv		v20, v20, v21
++	vxor.vv		v20, v20, v22
++	vxor.vv		v20, v20, v23
++	vmv.v.v		v1, v20
++
++	beqz		NBLOCKS, .Ldone		/* no tail blocks */
++
++	/* Single-block tail for remaining 1-3 blocks */
++.Lstep:
++	vle32.v		v3, (DATA)
++	addi		DATA, DATA, 16
++	addi		NBLOCKS, NBLOCKS, -1
++	vghsh.vv	v1, v2, v3
++	bnez		NBLOCKS, .Lstep
++
++.Ldone:
++	vse32.v		v1, (Xi)
++.Lret:
++	ret
++FUNC_END ghash_zvkg
++
++#endif
+diff --git a/aes/riscv64/keyexp_multibinary_riscv64.S b/aes/riscv64/keyexp_multibinary_riscv64.S
+new file mode 100644
+index 0000000..b2cad3b
+--- /dev/null
++++ b/aes/riscv64/keyexp_multibinary_riscv64.S
+@@ -0,0 +1,35 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include "riscv64_multibinary.h"
++
++mbin_interface     _aes_keyexp_128
++mbin_interface     aes_keyexp_128_enc
++mbin_interface     _aes_keyexp_192
++mbin_interface     _aes_keyexp_256
+diff --git a/aes/riscv64/keyexp_riscv64_dispatcher.c b/aes/riscv64/keyexp_riscv64_dispatcher.c
+new file mode 100644
+index 0000000..b469e7d
+--- /dev/null
++++ b/aes/riscv64/keyexp_riscv64_dispatcher.c
+@@ -0,0 +1,38 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <riscv64_multibinary.h>
++
++DEFINE_INTERFACE_DISPATCHER(_aes_keyexp_128) { return PROVIDER_INFO(aes_keyexp_128_base); }
++
++DEFINE_INTERFACE_DISPATCHER(aes_keyexp_128_enc) { return PROVIDER_INFO(aes_keyexp_128_enc_base); }
++
++DEFINE_INTERFACE_DISPATCHER(_aes_keyexp_192) { return PROVIDER_INFO(aes_keyexp_192_base); }
++
++DEFINE_INTERFACE_DISPATCHER(_aes_keyexp_256) { return PROVIDER_INFO(aes_keyexp_256_base); }
+diff --git a/aes/riscv64/xts_multibinary_riscv64.S b/aes/riscv64/xts_multibinary_riscv64.S
+new file mode 100644
+index 0000000..1577ec1
+--- /dev/null
++++ b/aes/riscv64/xts_multibinary_riscv64.S
+@@ -0,0 +1,39 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include "riscv64_multibinary.h"
++
++mbin_interface     _XTS_AES_128_enc
++mbin_interface     _XTS_AES_128_dec
++mbin_interface     _XTS_AES_128_enc_expanded_key
++mbin_interface     _XTS_AES_128_dec_expanded_key
++mbin_interface     _XTS_AES_256_enc
++mbin_interface     _XTS_AES_256_dec
++mbin_interface     _XTS_AES_256_enc_expanded_key
++mbin_interface     _XTS_AES_256_dec_expanded_key
+diff --git a/aes/riscv64/xts_riscv64_dispatcher.c b/aes/riscv64/xts_riscv64_dispatcher.c
+new file mode 100644
+index 0000000..ef69716
+--- /dev/null
++++ b/aes/riscv64/xts_riscv64_dispatcher.c
+@@ -0,0 +1,102 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <riscv64_multibinary.h>
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_128_enc)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_128_enc_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_128_enc_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_128_dec)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_128_dec_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_128_dec_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_128_enc_expanded_key)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_128_enc_expanded_key_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_128_enc_expanded_key_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_128_dec_expanded_key)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_128_dec_expanded_key_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_128_dec_expanded_key_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_256_enc)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_256_enc_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_256_enc_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_256_dec)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_256_dec_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_256_dec_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_256_enc_expanded_key)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_256_enc_expanded_key_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_256_enc_expanded_key_base);
++}
++
++DEFINE_INTERFACE_DISPATCHER(_XTS_AES_256_dec_expanded_key)
++{
++#if HAVE_RISCV_ZVK
++        if (is_zvk_aes_available())
++                return PROVIDER_INFO(XTS_AES_256_dec_expanded_key_zvkned);
++#endif
++        return PROVIDER_INFO(XTS_AES_256_dec_expanded_key_base);
++}
+diff --git a/aes/riscv64/xts_zvkned.c b/aes/riscv64/xts_zvkned.c
+new file mode 100644
+index 0000000..94b679e
+--- /dev/null
++++ b/aes/riscv64/xts_zvkned.c
+@@ -0,0 +1,346 @@
++/**********************************************************************
++  Copyright (c) 2026 Institute of Software Chinese Academy of Sciences (ISCAS).
++
++  Redistribution and use in source and binary forms, with or without
++  modification, are permitted provided that the following conditions
++  are met:
++    * Redistributions of source code must retain the above copyright
++      notice, this list of conditions and the following disclaimer.
++    * Redistributions in binary form must reproduce the above copyright
++      notice, this list of conditions and the following disclaimer in
++      the documentation and/or other materials provided with the
++      distribution.
++    * Neither the name of ISCAS nor the names of its
++      contributors may be used to endorse or promote products derived
++      from this software without specific prior written permission.
++
++  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++**********************************************************************/
++
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include "aes_base.h"
++#include "aes_zvk_internal.h"
++
++#if HAVE_RISCV_ZVK
++
++void
++XTS_AES_128_enc_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *pt,
++                     uint8_t *ct);
++void
++XTS_AES_128_dec_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *ct,
++                     uint8_t *pt);
++void
++XTS_AES_128_enc_expanded_key_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                  const uint8_t *pt, uint8_t *ct);
++void
++XTS_AES_128_dec_expanded_key_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                  const uint8_t *ct, uint8_t *pt);
++void
++XTS_AES_256_enc_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *pt,
++                     uint8_t *ct);
++void
++XTS_AES_256_dec_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *ct,
++                     uint8_t *pt);
++void
++XTS_AES_256_enc_expanded_key_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                  const uint8_t *pt, uint8_t *ct);
++void
++XTS_AES_256_dec_expanded_key_base(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                  const uint8_t *ct, uint8_t *pt);
++
++typedef void (*aes_block_fn)(const uint8_t *in, uint8_t *out, const uint8_t *keys);
++typedef void (*xts_blocks_fn)(const uint8_t *in, uint8_t *out, uint64_t nblocks, uint8_t *tweak,
++                              const uint8_t *keys);
++
++static int
++buffers_partially_overlap(const uint8_t *a, const uint8_t *b, uint64_t len)
++{
++        uintptr_t au, bu;
++
++        if (a == b || len == 0)
++                return 0;
++
++        au = (uintptr_t) a;
++        bu = (uintptr_t) b;
++
++        return (au < bu) ? (uint64_t) (bu - au) < len : (uint64_t) (au - bu) < len;
++}
++
++static void
++xts_enc_expanded_key_zvkned(uint8_t *k2_exp, uint8_t *k1_exp, uint8_t *TW_initial, uint64_t N,
++                            const uint8_t *pt, uint8_t *ct, aes_block_fn enc_block,
++                            xts_blocks_fn enc_blocks)
++{
++        uint8_t tweak[16];
++        uint8_t block[16];
++        uint8_t stolen[16];
++        uint8_t last_ct[16];
++        uint8_t *tmp;
++        uint64_t full_blocks, remainder, main_blocks, i;
++        int j;
++
++        /*
++         * The isa-l XTS API has no error channel. Invalid short inputs and
++         * allocation failures below leave the output untouched.
++         */
++        if (N < 16) {
++                return;
++        }
++
++        if (buffers_partially_overlap(pt, ct, N)) {
++                if (N > SIZE_MAX)
++                        return;
++                tmp = malloc((size_t) N);
++                if (tmp == NULL)
++                        return;
++                memcpy(tmp, pt, (size_t) N);
++                xts_enc_expanded_key_zvkned(k2_exp, k1_exp, TW_initial, N, tmp, ct, enc_block,
++                                            enc_blocks);
++                aes_base_secure_zero(tmp, (size_t) N);
++                free(tmp);
++                return;
++        }
++
++        enc_block(TW_initial, tweak, k2_exp);
++
++        full_blocks = N / 16;
++        remainder = N % 16;
++        main_blocks = (remainder > 0) ? full_blocks - 1 : full_blocks;
++
++        if (enc_blocks != NULL && main_blocks > 0) {
++                enc_blocks(pt, ct, main_blocks, tweak, k1_exp);
++        } else {
++                for (i = 0; i < main_blocks; i++) {
++                        for (j = 0; j < 16; j++)
++                                block[j] = pt[i * 16 + j] ^ tweak[j];
++                        enc_block(block, block, k1_exp);
++                        for (j = 0; j < 16; j++)
++                                ct[i * 16 + j] = block[j] ^ tweak[j];
++                        aes_base_xts_mul_alpha(tweak);
++                }
++        }
++
++        if (remainder > 0) {
++                for (j = 0; j < 16; j++)
++                        block[j] = pt[main_blocks * 16 + j] ^ tweak[j];
++                enc_block(block, last_ct, k1_exp);
++                for (j = 0; j < 16; j++)
++                        last_ct[j] ^= tweak[j];
++
++                for (j = 0; j < (int) remainder; j++)
++                        stolen[j] = pt[(main_blocks + 1) * 16 + j];
++                for (j = (int) remainder; j < 16; j++)
++                        stolen[j] = last_ct[j];
++
++                memcpy(ct + (main_blocks + 1) * 16, last_ct, remainder);
++
++                aes_base_xts_mul_alpha(tweak);
++                for (j = 0; j < 16; j++)
++                        block[j] = stolen[j] ^ tweak[j];
++                enc_block(block, block, k1_exp);
++                for (j = 0; j < 16; j++)
++                        ct[main_blocks * 16 + j] = block[j] ^ tweak[j];
++        }
++
++        aes_base_secure_zero(tweak, sizeof(tweak));
++        aes_base_secure_zero(block, sizeof(block));
++        aes_base_secure_zero(stolen, sizeof(stolen));
++        aes_base_secure_zero(last_ct, sizeof(last_ct));
++}
++
++static void
++xts_dec_expanded_key_zvkned(uint8_t *k2_exp, uint8_t *k1_exp, uint8_t *TW_initial, uint64_t N,
++                            const uint8_t *ct, uint8_t *pt, aes_block_fn enc_block,
++                            aes_block_fn dec_block, xts_blocks_fn dec_blocks)
++{
++        uint8_t tweak[16];
++        uint8_t tweak_next[16];
++        uint8_t block[16];
++        uint8_t stolen[16];
++        uint8_t last_pt[16];
++        uint8_t *tmp;
++        uint64_t full_blocks, remainder, main_blocks, i;
++        int j;
++
++        /*
++         * The isa-l XTS API has no error channel. Invalid short inputs and
++         * allocation failures below leave the output untouched.
++         */
++        if (N < 16) {
++                return;
++        }
++
++        if (buffers_partially_overlap(ct, pt, N)) {
++                if (N > SIZE_MAX)
++                        return;
++                tmp = malloc((size_t) N);
++                if (tmp == NULL)
++                        return;
++                memcpy(tmp, ct, (size_t) N);
++                xts_dec_expanded_key_zvkned(k2_exp, k1_exp, TW_initial, N, tmp, pt, enc_block,
++                                            dec_block, dec_blocks);
++                aes_base_secure_zero(tmp, (size_t) N);
++                free(tmp);
++                return;
++        }
++
++        enc_block(TW_initial, tweak, k2_exp);
++
++        full_blocks = N / 16;
++        remainder = N % 16;
++        main_blocks = (remainder > 0) ? full_blocks - 1 : full_blocks;
++
++        if (dec_blocks != NULL && main_blocks > 0) {
++                dec_blocks(ct, pt, main_blocks, tweak, k1_exp);
++        } else {
++                for (i = 0; i < main_blocks; i++) {
++                        for (j = 0; j < 16; j++)
++                                block[j] = ct[i * 16 + j] ^ tweak[j];
++                        dec_block(block, block, k1_exp);
++                        for (j = 0; j < 16; j++)
++                                pt[i * 16 + j] = block[j] ^ tweak[j];
++                        aes_base_xts_mul_alpha(tweak);
++                }
++        }
++
++        if (remainder > 0) {
++                memcpy(tweak_next, tweak, 16);
++                aes_base_xts_mul_alpha(tweak_next);
++
++                for (j = 0; j < 16; j++)
++                        block[j] = ct[main_blocks * 16 + j] ^ tweak_next[j];
++                dec_block(block, last_pt, k1_exp);
++                for (j = 0; j < 16; j++)
++                        last_pt[j] ^= tweak_next[j];
++
++                for (j = 0; j < (int) remainder; j++)
++                        stolen[j] = ct[(main_blocks + 1) * 16 + j];
++                for (j = (int) remainder; j < 16; j++)
++                        stolen[j] = last_pt[j];
++
++                memcpy(pt + (main_blocks + 1) * 16, last_pt, remainder);
++
++                for (j = 0; j < 16; j++)
++                        block[j] = stolen[j] ^ tweak[j];
++                dec_block(block, block, k1_exp);
++                for (j = 0; j < 16; j++)
++                        pt[main_blocks * 16 + j] = block[j] ^ tweak[j];
++        }
++
++        aes_base_secure_zero(tweak, sizeof(tweak));
++        aes_base_secure_zero(tweak_next, sizeof(tweak_next));
++        aes_base_secure_zero(block, sizeof(block));
++        aes_base_secure_zero(stolen, sizeof(stolen));
++        aes_base_secure_zero(last_pt, sizeof(last_pt));
++}
++
++void
++XTS_AES_128_enc_expanded_key_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                    const uint8_t *pt, uint8_t *ct)
++{
++        xts_enc_expanded_key_zvkned(k2, k1, TW_initial, N, pt, ct, aes_encrypt_block_128_zvkned,
++                                    aes_xts_enc_blocks_128_zvkned);
++}
++
++void
++XTS_AES_128_dec_expanded_key_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                    const uint8_t *ct, uint8_t *pt)
++{
++        xts_dec_expanded_key_zvkned(k2, k1, TW_initial, N, ct, pt, aes_encrypt_block_128_zvkned,
++                                    aes_decrypt_block_128_dec_keys_zvkned,
++                                    aes_xts_dec_blocks_128_dec_keys_zvkned);
++}
++
++void
++XTS_AES_256_enc_expanded_key_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                    const uint8_t *pt, uint8_t *ct)
++{
++        xts_enc_expanded_key_zvkned(k2, k1, TW_initial, N, pt, ct, aes_encrypt_block_256_zvkned,
++                                    aes_xts_enc_blocks_256_zvkned);
++}
++
++void
++XTS_AES_256_dec_expanded_key_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N,
++                                    const uint8_t *ct, uint8_t *pt)
++{
++        xts_dec_expanded_key_zvkned(k2, k1, TW_initial, N, ct, pt, aes_encrypt_block_256_zvkned,
++                                    aes_decrypt_block_256_dec_keys_zvkned,
++                                    aes_xts_dec_blocks_256_dec_keys_zvkned);
++}
++
++void
++XTS_AES_128_enc_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *pt,
++                       uint8_t *ct)
++{
++        uint8_t k1_enc[16 * 11];
++        uint8_t k2_enc[16 * 11];
++
++        aes_keyexp_128_enc_base(k1, k1_enc);
++        aes_keyexp_128_enc_base(k2, k2_enc);
++        xts_enc_expanded_key_zvkned(k2_enc, k1_enc, TW_initial, N, pt, ct,
++                                    aes_encrypt_block_128_zvkned, aes_xts_enc_blocks_128_zvkned);
++        aes_base_secure_zero(k1_enc, sizeof(k1_enc));
++        aes_base_secure_zero(k2_enc, sizeof(k2_enc));
++}
++
++void
++XTS_AES_128_dec_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *ct,
++                       uint8_t *pt)
++{
++        uint8_t k1_enc[16 * 11];
++        uint8_t k2_enc[16 * 11];
++
++        aes_keyexp_128_enc_base(k1, k1_enc);
++        aes_keyexp_128_enc_base(k2, k2_enc);
++        xts_dec_expanded_key_zvkned(k2_enc, k1_enc, TW_initial, N, ct, pt,
++                                    aes_encrypt_block_128_zvkned, aes_decrypt_block_128_zvkned,
++                                    aes_xts_dec_blocks_128_zvkned);
++        aes_base_secure_zero(k1_enc, sizeof(k1_enc));
++        aes_base_secure_zero(k2_enc, sizeof(k2_enc));
++}
++
++void
++XTS_AES_256_enc_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *pt,
++                       uint8_t *ct)
++{
++        uint8_t k1_enc[16 * 15];
++        uint8_t k2_enc[16 * 15];
++
++        aes_keyexp_256_enc_base(k1, k1_enc);
++        aes_keyexp_256_enc_base(k2, k2_enc);
++        xts_enc_expanded_key_zvkned(k2_enc, k1_enc, TW_initial, N, pt, ct,
++                                    aes_encrypt_block_256_zvkned, aes_xts_enc_blocks_256_zvkned);
++        aes_base_secure_zero(k1_enc, sizeof(k1_enc));
++        aes_base_secure_zero(k2_enc, sizeof(k2_enc));
++}
++
++void
++XTS_AES_256_dec_zvkned(uint8_t *k2, uint8_t *k1, uint8_t *TW_initial, uint64_t N, const uint8_t *ct,
++                       uint8_t *pt)
++{
++        uint8_t k1_enc[16 * 15];
++        uint8_t k2_enc[16 * 15];
++
++        aes_keyexp_256_enc_base(k1, k1_enc);
++        aes_keyexp_256_enc_base(k2, k2_enc);
++        xts_dec_expanded_key_zvkned(k2_enc, k1_enc, TW_initial, N, ct, pt,
++                                    aes_encrypt_block_256_zvkned, aes_decrypt_block_256_zvkned,
++                                    aes_xts_dec_blocks_256_zvkned);
++        aes_base_secure_zero(k1_enc, sizeof(k1_enc));
++        aes_base_secure_zero(k2_enc, sizeof(k2_enc));
++}
++
++#endif
+diff --git a/configure.ac b/configure.ac
+index d7cdb4d..c9bd824 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -34,6 +34,7 @@ AM_CONDITIONAL([CPU_X86_64], [test "$CPU" = "x86_64"])
+ AM_CONDITIONAL([CPU_AARCH64], [test "$CPU" = "aarch64"])
+ AM_CONDITIONAL([CPU_RISCV64], [test "$CPU" = "riscv64"])
+ AM_CONDITIONAL([HAVE_RVV], [false])
++AM_CONDITIONAL([HAVE_RISCV_ZVK], [false])
+ AM_CONDITIONAL([CPU_UNDEFINED], [test "x$CPU" = "x"])
+ AM_CONDITIONAL([SAFE_PARAM], [test x"$SAFE_PARAM" = x"yes"])
+ 
+@@ -69,6 +70,32 @@ case "${CPU}" in
+ 			AM_CONDITIONAL([HAVE_RVV], [false]) rvv=no]
+ 		)
+ 		AC_MSG_RESULT([$rvv])
++		if test x"$rvv" = x"yes"; then
++			AC_MSG_CHECKING([whether compiler and linker support RISC-V ZVk instructions])
++			AC_LINK_IFELSE(
++				[AC_LANG_PROGRAM([], [
++					__asm__ volatile(
++						".option arch, +v\n"
++						".option arch, +zvbb\n"
++						".option arch, +zvkb\n"
++						".option arch, +zvkned\n"
++						".option arch, +zvkg\n"
++						"vsetivli zero, 4, e32, m1, ta, ma\n"
++						"vbrev8.v v0, v1\n"
++						"vrev8.v v0, v1\n"
++						"vaesz.vs v0, v1\n"
++						"vghsh.vv v0, v1, v2\n"
++					);
++				])],
++				[AC_DEFINE([HAVE_RISCV_ZVK], [1], [Enable RISC-V ZVk instructions])
++				AM_CONDITIONAL([HAVE_RISCV_ZVK], [true]) riscv_zvk=yes],
++				[AC_DEFINE([HAVE_RISCV_ZVK], [0], [Disable RISC-V ZVk instructions])
++				AM_CONDITIONAL([HAVE_RISCV_ZVK], [false]) riscv_zvk=no]
++			)
++			AC_MSG_RESULT([$riscv_zvk])
++		else
++			AC_DEFINE([HAVE_RISCV_ZVK], [0], [Disable RISC-V ZVk instructions])
++		fi
+ 		is_x86=no
+ 		;;
+ 
+diff --git a/include/internal/riscv64_multibinary.h b/include/internal/riscv64_multibinary.h
+index 5dc3a3a..a21ce9a 100644
+--- a/include/internal/riscv64_multibinary.h
++++ b/include/internal/riscv64_multibinary.h
+@@ -45,6 +45,7 @@
+  * 	2. name must be \name\()_dispatcher
+  * 	3. Prototype should be *"void * \name\()_dispatcher"*
+  * 	4. The dispatcher should return the right function pointer, revision and a string
++ * 	5. The stack pointer sp must be 16-byte aligned under the standard RISC-V psABI. So we set aside 80 as multiple of 16-byte for stack alignment even we don't use all of them.
+  * information .
+  **/
+ .macro mbin_interface name:req
+@@ -57,26 +58,30 @@
+ 	.section .text
+ 	.global \name\()_mbinit
+ \name\()_mbinit:
+-	addi        sp, sp, -56
+-	sd          ra, 48(sp)
++	addi        sp, sp, -80
++	sd          ra, 64(sp)
+ 	sd          a0, 0(sp)
+ 	sd          a1, 8(sp)
+ 	sd          a2, 16(sp)
+ 	sd          a3, 24(sp)
+ 	sd          a4, 32(sp)
+ 	sd          a5, 40(sp)
++	sd          a6, 48(sp)
++	sd          a7, 56(sp)
+ 	call        \name\()_dispatcher
+ 	mv          t2, a0
+ 	la          t0, \name\()_dispatcher_info
+ 	sd          a0, 0(t0)
+-	ld          ra, 48(sp)
++	ld          ra, 64(sp)
+ 	ld          a0, 0(sp)
+ 	ld          a1, 8(sp)
+ 	ld          a2, 16(sp)
+ 	ld          a3, 24(sp)
+ 	ld          a4, 32(sp)
+ 	ld          a5, 40(sp)
+-	addi        sp, sp, 56
++	ld          a6, 48(sp)
++	ld          a7, 56(sp)
++	addi        sp, sp, 80
+ 	jr          t2
+ .global \name\()
+ .type \name,%function
+@@ -112,8 +117,120 @@
+ 
+ #include <sys/auxv.h>
+ 
++#if defined(__has_include)
++# if __has_include(<sys/hwprobe.h>)
++#  include <sys/hwprobe.h>
++#  define HAVE_RISCV_HWPROBE_HEADER 1
++# endif
++#endif
++
++#ifndef HAVE_RISCV_HWPROBE_HEADER
++#include <unistd.h>
++#include <sys/syscall.h>
++#endif
++
++#ifndef HAVE_RVV
++#define HAVE_RVV 0
++#endif
++
++#ifndef HAVE_RISCV_ZVK
++#define HAVE_RISCV_ZVK 0
++#endif
++
+ #define HWCAP_RV(letter) (1ul << ((letter) - 'A'))
+ 
++/*
++ * RISC-V multi-letter extension runtime detection via riscv_hwprobe.
++ * AT_HWCAP only exposes coarse single-letter ISA bits such as V, so
++ * fine-grained vector crypto dispatch has to query hwprobe.
++ *
++ * Usage:  riscv_hwprobe_ext(RISCV_HWPROBE_KEY_IMA_EXT_0,
++ *                           RISCV_HWPROBE_EXT_ZVBB)
++ */
++#ifndef HAVE_RISCV_HWPROBE_HEADER
++#ifndef __NR_riscv_hwprobe
++#define __NR_riscv_hwprobe 258
++#endif
++struct riscv_hwprobe_pair {
++        long long key;
++        unsigned long long value;
++};
++#endif
++
++#ifndef RISCV_HWPROBE_KEY_IMA_EXT_0
++#define RISCV_HWPROBE_KEY_IMA_EXT_0 4
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZBA
++#define RISCV_HWPROBE_EXT_ZBA   (1ULL << 3)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZBB
++#define RISCV_HWPROBE_EXT_ZBB   (1ULL << 4)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVBB
++#define RISCV_HWPROBE_EXT_ZVBB  (1ULL << 17)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVBC
++#define RISCV_HWPROBE_EXT_ZVBC  (1ULL << 18)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKB
++#define RISCV_HWPROBE_EXT_ZVKB  (1ULL << 19)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKG
++#define RISCV_HWPROBE_EXT_ZVKG  (1ULL << 20)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKNED
++#define RISCV_HWPROBE_EXT_ZVKNED (1ULL << 21)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKNHA
++#define RISCV_HWPROBE_EXT_ZVKNHA (1ULL << 22)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKNHB
++#define RISCV_HWPROBE_EXT_ZVKNHB (1ULL << 23)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKSED
++#define RISCV_HWPROBE_EXT_ZVKSED (1ULL << 24)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKSH
++#define RISCV_HWPROBE_EXT_ZVKSH (1ULL << 25)
++#endif
++#ifndef RISCV_HWPROBE_EXT_ZVKT
++#define RISCV_HWPROBE_EXT_ZVKT  (1ULL << 26)
++#endif
++
++static inline int riscv_hwprobe_ext(long long key, unsigned long long mask)
++{
++#ifdef HAVE_RISCV_HWPROBE_HEADER
++        unsigned long long value = 0;
++
++        if (__riscv_hwprobe_one(__riscv_hwprobe, key, &value) != 0)
++                return 0;
++        return (value & mask) == mask;
++#else
++        struct riscv_hwprobe_pair pairs[] = { { .key = key } };
++
++        if (syscall(__NR_riscv_hwprobe, pairs, 1, 0, (void *)0, 0) == 0)
++                return (pairs[0].value & mask) == mask;
++        return 0;
++#endif
++}
++
++static inline int riscv_has_rvv(void)
++{
++        return (getauxval(AT_HWCAP) & HWCAP_RV('V')) != 0;
++}
++
++static inline int is_zvk_aes_available(void)
++{
++#if HAVE_RISCV_ZVK
++        return riscv_has_rvv() &&
++               riscv_hwprobe_ext(RISCV_HWPROBE_KEY_IMA_EXT_0,
++                                 RISCV_HWPROBE_EXT_ZVKB | RISCV_HWPROBE_EXT_ZVKNED |
++                                         RISCV_HWPROBE_EXT_ZVKG);
++#else
++        return 0;
++#endif
++}
++
+ #define DEFINE_INTERFACE_DISPATCHER(name) void *name##_dispatcher(void)
+ 
+ #define PROVIDER_BASIC(name) PROVIDER_INFO(name##_base)
+-- 
+2.54.0
+

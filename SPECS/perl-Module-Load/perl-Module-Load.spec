@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Runtime require of both modules and files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Load
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BINGOS/Module-Load-%{version}.tar.gz
+#!RemoteAsset:  sha256:d825020ac00b220e89f9524e24d838f9438b072fcae8c91938e4026677bef6e0
+Source0:        https://www.cpan.org/authors/id/B/BI/BINGOS/Module-Load-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More) >= 0.94
@@ -24,20 +28,8 @@ BuildRequires:  perl(Test::More) >= 0.94
 Module::Load eliminates the need to know whether you are trying to require
 either a file or a module.
 
-%prep
-%setup -q -n Module-Load-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc CHANGES README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Minimal try/catch with proper preservation of $@
 License:        MIT
 URL:            https://metacpan.org/dist/Try-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/Try-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:ef2d6cab0bad18e3ab1c4e6125cc5f695c7e459899f512451c8fa3ef83fa7fc0
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/Try-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -35,20 +39,8 @@ Requires:       perl(Exporter) >= 5.57
 This module provides bare bones try/catch/finally statements that are
 designed to minimize common mistakes with eval blocks, and NOTHING else.
 
-%prep
-%setup -q -n Try-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING maint README
 
 %changelog
-%{?autochangelog}
+%autochangelog

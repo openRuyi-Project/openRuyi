@@ -30,8 +30,8 @@ BuildOption(conf):  -DCMAKE_INSTALL_LIBDIR=%{_lib}
 BuildOption(conf):  -DCMAKE_INSTALL_INCLUDEDIR=include
 BuildOption(conf):  -Donnxruntime_ENABLE_CPUINFO=ON
 BuildOption(conf):  -Donnxruntime_INSTALL_UNIT_TESTS=OFF
-# disable Werror uninitialized to avoid build failures
-BuildOption(conf):  -DCMAKE_CXX_FLAGS="-Wno-error=uninitialized"
+# FIXME: Avoid build failures with gcc >= 15.
+BuildOption(conf):  -DCMAKE_CXX_FLAGS="-Wno-error=uninitialized -Wno-error=sfinae-incomplete -Wno-error=maybe-uninitialized"
 BuildOption(conf):  -DCMAKE_C_FLAGS="-Wno-error=uninitialized"
 
 BuildRequires:  cmake
@@ -163,4 +163,4 @@ ln -s "../../../../libonnxruntime_providers_shared.so.%{version}" "%{buildroot}/
 %{python3_sitearch}/onnxruntime/capi/libonnxruntime_providers_shared.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

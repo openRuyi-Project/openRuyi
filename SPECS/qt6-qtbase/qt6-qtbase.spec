@@ -7,8 +7,8 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtbase
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 %bcond xcb 1
 %bcond mysql 0
@@ -16,13 +16,13 @@
 %bcond tests 0
 
 Name:           qt6-qtbase
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt 6 core components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtbase.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        macros.qt6-qtbase
 BuildSystem:    cmake
@@ -146,7 +146,6 @@ BuildRequires:  pkgconfig(xcb-image)
 BuildRequires:  pkgconfig(xcb-keysyms)
 BuildRequires:  pkgconfig(xcb-renderutil)
 BuildRequires:  pkgconfig(xcb-util)
-BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(xkbcommon-x11)
 BuildRequires:  pkgconfig(xrender)
 BuildRequires:  pkgconfig(sm)
@@ -274,6 +273,12 @@ sed -i \
   -e "s|@@EVR@@|%{?epoch:%{epoch:}}%{version}-%{release}|g" \
   %{buildroot}%{_rpmmacrodir}/macros.qt6-qtbase
 
+# - nothing provides /bin/env needed by qt6-qtbase-examples
+grep -RIl '^#!/bin/env' %{buildroot} |
+while read -r file; do
+    sed -i '1s|^#!/bin/env|#!/usr/bin/env|' "$file"
+done
+
 %files
 %license LICENSES/GPL* LICENSES/LGPL*
 %{_qt6_libdir}/libQt6Core.so.6*
@@ -294,6 +299,7 @@ sed -i \
 %{_qt6_pluginsdir}/tls/libqcertonlybackend.so
 %{_qt6_pluginsdir}/tls/libqopensslbackend.so
 %{_qt6_pluginsdir}/sqldrivers/libqsqlodbc.so
+%{_qt6_pluginsdir}/networkinformation/libqconnman.so
 %{_bindir}/qtpaths*
 %{_qt6_bindir}/qtpaths*
 %if %{with postgresql}
@@ -316,6 +322,7 @@ sed -i \
 %{_bindir}/qdbusxml2cpp*
 %{_bindir}/androiddeployqt*
 %{_bindir}/androidtestrunner
+%{_bindir}/wasmdeployqt
 %{_qt6_bindir}/*
 %{_qt6_libexecdir}/*
 %{_qt6_includedir}/QtConcurrent/
@@ -366,11 +373,24 @@ sed -i \
 %{_qt6_libdir}/cmake/Qt6Xml/*.cmake
 %{_qt6_descriptionsdir}/*.json
 %{_qt6_metatypesdir}/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Concurrent.pc
+%{_qt6_libdir}/pkgconfig/Qt6Core.pc
+%{_qt6_libdir}/pkgconfig/Qt6DBus.pc
+%{_qt6_libdir}/pkgconfig/Qt6Gui.pc
+%{_qt6_libdir}/pkgconfig/Qt6Network.pc
+%{_qt6_libdir}/pkgconfig/Qt6OpenGL.pc
+%{_qt6_libdir}/pkgconfig/Qt6OpenGLWidgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6Platform.pc
+%{_qt6_libdir}/pkgconfig/Qt6PrintSupport.pc
+%{_qt6_libdir}/pkgconfig/Qt6Sql.pc
+%{_qt6_libdir}/pkgconfig/Qt6Test.pc
+%{_qt6_libdir}/pkgconfig/Qt6WaylandClient.pc
+%{_qt6_libdir}/pkgconfig/Qt6Widgets.pc
+%{_qt6_libdir}/pkgconfig/Qt6Xml.pc
+%{_qt6_datadir}/json_schema/modules.json
 %{_qt6_mkspecsdir}/*
 %{_qt6_includedir}/QtInputSupport
 %{_qt6_includedir}/QtFbSupport
-%{_qt6_includedir}/QtExampleIcons
 %{_qt6_includedir}/QtDeviceDiscoverySupport
 
 %files private-devel
@@ -394,7 +414,6 @@ sed -i \
 %{_qt6_libdir}/cmake/Qt6EglFSDeviceIntegrationPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6XcbQpaPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6DeviceDiscoverySupportPrivate/*.cmake
-%{_qt6_libdir}/cmake/Qt6ExampleIconsPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6FbSupportPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6InputSupportPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6WaylandClientPrivate/*.cmake
@@ -432,4 +451,4 @@ sed -i \
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

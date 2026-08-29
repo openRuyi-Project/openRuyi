@@ -14,7 +14,7 @@ Summary:        A utility for creating TTY dialog boxes
 License:        LGPL-2.1-only
 URL:            https://invisible-island.net/dialog/dialog.html
 VCS:            git:https://github.com/ThomasDickey/dialog-snapshots
-#!RemoteAsset
+#!RemoteAsset:  sha256:bee47347a983312facc4dbcccd7fcc86608d684e1f119d9049c4692213db96c3
 Source:         https://invisible-mirror.net/archives/dialog/dialog-%{version}-%{dialogsubversion}.tgz
 BuildSystem:    autotools
 
@@ -67,8 +67,6 @@ chmod 755 %{buildroot}%{_libdir}/libdialog.so.*.*.*
 
 find %{buildroot} -type f -name "*.a" -delete
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -86,4 +84,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/dialog.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

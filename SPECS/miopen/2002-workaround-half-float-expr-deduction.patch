@@ -1,0 +1,26 @@
+From 2b0174162974142495ab2edf1f2d8748be1e0271 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:15:00 +0800
+Subject: [PATCH] Work around half_float::detail::expr not present in all half
+ versions
+
+---
+ test/verify.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/verify.hpp b/test/verify.hpp
+index f541ca9..39baa45 100644
+--- a/test/verify.hpp
++++ b/test/verify.hpp
+@@ -195,7 +195,7 @@ auto max_diff_v2(R1&& r1, R2&& r2)
+     using T            = decltype(r1[0] - r2[0]);
+     auto abs_diff_func = [](auto x, auto y) { return x > y ? x - y : y - x; };
+     // BUG: deduced wrong datatype, half_float bug
+-    if constexpr(std::is_same_v<T, half_float::detail::expr>)
++    if constexpr(0)
+         return range_product(r1, r2, half_float::half(), max, abs_diff_func);
+     else
+         return range_product(r1, r2, T(), max, abs_diff_func);
+-- 
+2.53.0
+

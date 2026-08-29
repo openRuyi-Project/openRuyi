@@ -7,12 +7,12 @@
 %global srcname beniget
 
 Name:           python-%{srcname}
-Version:        0.4.2.post1
+Version:        0.5.0
 Release:        %autorelease
 Summary:        Scientific Tools for Python
 License:        BSD-3-Clause
 URL:            https://github.com/serge-sans-paille/beniget/
-#!RemoteAsset
+#!RemoteAsset:  sha256:e7af11fa8ec7de3d3eb3d98b1e722d15d44017d8b35d8aa11d54f6719b312f22
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,7 +25,7 @@ BuildRequires:  python3dist(gast)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +39,4 @@ Beniget provides a static over-approximation of the global and local definitions
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

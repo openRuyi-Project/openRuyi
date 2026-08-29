@@ -10,12 +10,12 @@
 %bcond system_yajl 0
 
 Name:           crun
-Version:        1.26
+Version:        1.27.1
 Release:        %autorelease
 Summary:        OCI runtime written in C
 License:        GPL-2.0-only
 URL:            https://github.com/containers/crun
-#!RemoteAsset:  sha256:32211d0160ac092a71d1b0623232342d627dd601913a1fbb552d7d7d5b99bcc1
+#!RemoteAsset:  sha256:be7a71c455c918bbab0c03de64cf5ce4693c7164821ab3dce0bb0f579216e8f0
 Source0:        https://github.com/containers/crun/releases/download/%{version}/crun-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -26,6 +26,11 @@ BuildOption(conf):  --with-libkrun
 %if %{with wasm}
 BuildOption(conf):  --with-wasmedge
 %endif
+%if %{with criu}
+BuildOption(conf):  --enable-criu
+%else
+BuildOption(conf):  --disable-criu
+%endif
 %if %{without system_yajl}
 BuildOption(conf):  --enable-embedded-yajl
 %endif
@@ -33,7 +38,6 @@ BuildOption(conf):  --enable-embedded-yajl
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
-BuildRequires:  gcc
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(libsystemd)
@@ -81,4 +85,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

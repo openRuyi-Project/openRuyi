@@ -27,31 +27,27 @@ Release:        %autorelease
 Summary:        Core utilities for Python packages
 License:        BSD-2-Clause OR Apache-2.0
 URL:            https://github.com/pypa/packaging
-#!RemoteAsset
+#!RemoteAsset:  sha256:15b6ba95eb12d8f99dcf215ea37cbea16812ef28358e8ef3d9344acb827acac1
 Source:         %{url}/archive/%{version}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  unzip
+%if %{with bootstrap}
+BuildRequires:  python3dist(flit-core)
+%endif
 
 %if %{with bootstrap}
-BuildRequires:  python3-flit-core
+Provides:       python3dist(packaging) = %{version}-%{release}
+
+Requires:       python(abi) = %{python3_version}
+%else
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
 %endif
 
 %description
-python-packaging provides core utilities for Python packages like utilities for
-dealing with versions, specifiers, markers etc.
-
-%package     -n python3-%{srcname}
-Summary:        %{summary}
-%if %{with bootstrap}
-Provides:       python3dist(packaging) = %{version}
-Provides:       python%{python3_version}dist(packaging) = %{version}
-Requires:       python(abi) = %{python3_version}
-%endif
-
-%description -n python3-%{srcname}
 python-packaging provides core utilities for Python packages like utilities for
 dealing with versions, specifiers, markers etc.
 
@@ -80,9 +76,9 @@ echo '%{python3_sitelib}/packaging*' > %{pyproject_files}
 %pyproject_save_files %{srcname}
 %endif
 
-%files -n python3-%{srcname} -f %{pyproject_files}
-%license LICENSE LICENSE.APACHE LICENSE.BSD
+%files -f %{pyproject_files}
 %doc README.rst CHANGELOG.rst CONTRIBUTING.rst
+%license LICENSE LICENSE.APACHE LICENSE.BSD
 
 %changelog
-%{?autochangelog}
+%autochangelog

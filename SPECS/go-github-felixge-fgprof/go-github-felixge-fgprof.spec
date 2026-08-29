@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Jvle <keke.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,10 +14,13 @@ Release:        %autorelease
 Summary:        🚀 fgprof is a sampling Go profiler that allows you to analyze On-CPU as well as Off-CPU (e.g. I/O) time together.
 License:        MIT
 URL:            https://github.com/felixge/fgprof
-#!RemoteAsset
+#!RemoteAsset:  sha256:2b83e48501162ae64df6ba55e8ce39cab1294ed413dcf4b36dfe00bcd8c65881
 Source0:        https://github.com/felixge/fgprof/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# https://github.com/felixge/fgprof/pull/39 - Jvle
+Patch2000:      2000-fix-handle-zero-sample-rate-in-pprof-export.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -35,9 +39,9 @@ Go's builtin sampling CPU profiler can only show On-CPU time, but it's better th
 fgprof is designed for analyzing applications with mixed I/O and CPU workloads. This kind of profiling is also known as wall-clock profiling.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

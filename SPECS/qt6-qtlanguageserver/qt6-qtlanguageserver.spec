@@ -5,17 +5,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtlanguageserver
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtlanguageserver
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - LanguageServer component
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlanguageserver
-#!RemoteAsset
+#!RemoteAsset:  sha256:50008537f2ca54abb3b8dc3f26759864e9cad2b2ad39e92e42fa718de2dd8aef
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -32,6 +32,7 @@ Server protocol.
 
 %package        devel
 Summary:        Development files for %{name}
+Requires:       pkgconfig(Qt6Core)
 
 %description    devel
 Development files for %{name}.
@@ -55,4 +56,4 @@ Development files for %{name}.
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 
 %changelog
-%{?autochangelog}
+%autochangelog

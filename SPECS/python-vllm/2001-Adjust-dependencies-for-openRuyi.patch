@@ -1,0 +1,165 @@
+From 89eebe932c2656f1da218f9023216d35fd96d195 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 12:34:33 +0800
+Subject: [PATCH] Adjust dependencies for openRuyi
+
+---
+ pyproject.toml          |  5 +----
+ requirements/common.txt | 25 +++++++++++--------------
+ requirements/cpu.txt    | 17 +++--------------
+ requirements/rocm.txt   | 20 ++++----------------
+ 4 files changed, 19 insertions(+), 48 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 0766645..954df4c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,13 +1,10 @@
+ [build-system]
+ # Should be mirrored in requirements/build/cuda.txt
+ requires = [
+-    "cmake>=3.26.1",
+-    "ninja",
+     "packaging>=24.2",
+-    "setuptools>=77.0.3,<81.0.0",
++    "setuptools",
+     "setuptools-scm>=8.0",
+     "setuptools-rust>=1.9.0",
+-    "torch == 2.13.0",
+     "wheel",
+     "jinja2",
+ ]
+diff --git a/requirements/common.txt b/requirements/common.txt
+index 748ffe8..37177b6 100644
+--- a/requirements/common.txt
++++ b/requirements/common.txt
+@@ -10,39 +10,37 @@ py-cpuinfo
+ transformers >= 5.5.3
+ tokenizers >= 0.21.1  # Required for fast incremental detokenization.
+ safetensors >= 0.6.2  # MXFP4/MXFP6 dtype support (F8_E8M0, F4) added in 0.6.0: https://github.com/huggingface/safetensors/pull/611
+-protobuf >= 5.29.6, !=6.30.*, !=6.31.*, !=6.32.*, !=6.33.0.*, !=6.33.1.*, !=6.33.2.*, !=6.33.3.*, !=6.33.4.* # Required by LlamaTokenizer, gRPC. CVE-2026-0994
+-fastapi[standard] >= 0.133.0, < 0.137.0 # First version supporting Starlette 1.0; < 0.137.0 avoids route-tree change that breaks model-hosting-container-standards handler overrides.
+-starlette >= 1.0.1 # CVE-2026-48710: Host header injection in < 1.0.1
++protobuf >= 5.29.6, !=6.30.*, !=6.31.*, !=6.32.*, !=6.33.0.*, !=6.33.1.*, !=6.33.3.*, !=6.33.4.* # Required by LlamaTokenizer, gRPC. CVE-2026-0994
++fastapi >= 0.133.0, < 0.137.0 # First version supporting Starlette 1.0; < 0.137.0 avoids route-tree change that breaks model-hosting-container-standards handler overrides.
++starlette >= 1.0.0 # CVE-2026-48710: Host header injection in < 1.0.1
+ aiohttp >= 3.13.3
+ openai >= 2.0.0  # For Responses API with reasoning content
+ pydantic >= 2.12.0
+ prometheus_client >= 0.18.0
+ pillow  # Required for image processing
+-prometheus-fastapi-instrumentator >= 8.0.0 # v8 unblocks starlette >= 1.0
++prometheus-fastapi-instrumentator >= 7.1.0 # v8 unblocks starlette >= 1.0
+ tiktoken >= 0.6.0  # Required for DBRX tokenizer
+ lm-format-enforcer == 0.11.3
+-llguidance >= 1.7.0, < 1.8.0; platform_machine == "x86_64" or platform_machine == "arm64" or platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "s390x"
+-outlines_core == 0.2.14
+-lark == 1.2.2
+-xgrammar >= 0.2.1, < 1.0.0; platform_machine == "x86_64" or platform_machine == "aarch64" or platform_machine == "arm64" or platform_machine == "s390x" or platform_machine == "ppc64le"
++llguidance >= 1.7.0, < 1.8.0; platform_machine == "x86_64" or platform_machine == "arm64" or platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "s390x" or platform_machine == "riscv64"
++lark
++xgrammar >= 0.2.1, < 1.0.0; platform_machine == "x86_64" or platform_machine == "aarch64" or platform_machine == "arm64" or platform_machine == "s390x" or platform_machine == "ppc64le" or platform_machine == "riscv64"
+ typing_extensions >= 4.10
+ filelock >= 3.16.1 # need to contain https://github.com/tox-dev/filelock/pull/317
+ partial-json-parser # used for parsing partial JSON outputs
+ jsonschema >= 4.23.0 # required for MiniMax M3 tool schema validation
+ pyzmq >= 25.0.0
+ msgspec
+-mistral_common[image] >= 1.11.6
+-opencv-python-headless >= 4.13.0    # required for video IO
++mistral_common >= 1.11.2
++opencv >= 4.13.0    # required for video IO
+ pyyaml
+ six>=1.16.0; python_version > '3.11' # transitive dependency of pandas that needs to be the latest version for python 3.12
+-setuptools>=77.0.3,<81.0.0; python_version > '3.11' # Setuptools is used by triton, we need to ensure a modern version is installed for 3.12+ so that it does not try to import distutils, which was removed in 3.12
++setuptools>=77.0.3; python_version > '3.11' # Setuptools is used by triton, we need to ensure a modern version is installed for 3.12+ so that it does not try to import distutils, which was removed in 3.12
+ einops # Required for Qwen2-VL.
+-compressed-tensors == 0.17.0 # required for compressed-tensors
++compressed-tensors >= 0.15.0.1 # required for compressed-tensors
+ depyf==0.20.0 # required for profiling and debugging with compilation config
+ cloudpickle # allows pickling lambda functions in model_executor/models/registry.py
+ watchfiles # required for http server to monitor the updates of TLS files
+ python-json-logger # Used by logging as per examples/features/logging_configuration.md
+-ninja # Required for xgrammar, rocm, tpu, xpu
+ pybase64 # fast base64 implementation
+ cbor2 # Required for cross-language serialization of hashable objects
+ ijson # Required for mistral streaming tool parser
+@@ -53,5 +51,4 @@ model-hosting-container-standards >= 0.1.14, < 1.0.0
+ mcp
+ opentelemetry-sdk >= 1.27.0
+ opentelemetry-api >= 1.27.0
+-opentelemetry-exporter-otlp >= 1.27.0
+ opentelemetry-semantic-conventions-ai >= 0.4.1
+diff --git a/requirements/cpu.txt b/requirements/cpu.txt
+index 30e47a8..c74af4c 100644
+--- a/requirements/cpu.txt
++++ b/requirements/cpu.txt
+@@ -1,25 +1,14 @@
+ # Common dependencies
+ -r common.txt
+ 
+-setuptools==77.0.3 # this version can reuse CMake build dir
+-
+-numba == 0.65.0; platform_machine != "s390x" # Required for N-gram speculative decoding
++setuptools # this version can reuse CMake build dir
+ 
+ # Dependencies for CPUs
+-torch==2.13.0+cpu; platform_machine == "x86_64" or platform_machine == "s390x" or platform_machine == "aarch64"
+-torch==2.13.0; platform_system == "Darwin" or platform_machine == "ppc64le" or platform_machine == "riscv64"
+-
+-# required for the image processor of minicpm-o-2_6, this must be updated alongside torch
+-torchaudio; platform_machine != "s390x" and platform_machine != "riscv64"
++torch; platform_machine == "x86_64" or platform_machine == "s390x" or platform_machine == "aarch64"
++torch; platform_system == "Darwin" or platform_machine == "ppc64le" or platform_machine == "riscv64"
+ 
+ # required for the image processor of phi3v, this must be updated alongside torch
+ torchvision; platform_machine != "s390x"  and platform_machine != "riscv64"
+ 
+-# required for the torchcodec video decoding backend
+-torchcodec >= 0.14; platform_machine != "s390x" and platform_machine != "riscv64" and platform_machine != "ppc64le"
+-
+-# Intel Extension for PyTorch, only for x86_64 CPUs
+-intel-openmp==2024.2.1; platform_machine == "x86_64"
+-
+ # Use this to gather CPU info and optimize based on ARM Neoverse cores
+ py-cpuinfo; platform_machine == "aarch64"
+diff --git a/requirements/rocm.txt b/requirements/rocm.txt
+index b5bcdf4..a11dcdc 100644
+--- a/requirements/rocm.txt
++++ b/requirements/rocm.txt
+@@ -2,28 +2,16 @@
+ -r common.txt
+ 
+ # The version of gRPC libraries should be consistent with each other
+-grpcio==1.78.0
+-grpcio-reflection==1.78.0
+-
+-numba == 0.65.0 # Required for N-gram speculative decoding
++grpcio
++grpcio-reflection
+ 
+ # Dependencies for AMD GPUs
+ datasets
+ peft
+ pytest-asyncio
+-tensorizer==2.10.1
++tensorizer
+ packaging>=24.2
+-setuptools>=77.0.3,<80.0.0
++setuptools>=77.0.3
+ setuptools-scm>=8
+ setuptools-rust>=1.9.0
+-runai-model-streamer[s3,gcs,azure]==0.15.7
+-conch-triton-kernels==1.2.1
+ timm>=1.0.17
+-# amd-quark: required for Quark quantization on ROCm
+-# To be consistent with test_quark.py
+-amd-quark==0.12.post1
+-tilelang==0.1.10
+-# Required apache-tvm-ffi matching tilelang version
+-apache-tvm-ffi==0.1.10 
+-# Required for faster safetensors model loading
+-fastsafetensors >= 0.3.2
+-- 
+2.53.0
+

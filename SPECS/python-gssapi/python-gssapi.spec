@@ -16,8 +16,8 @@ URL:            https://github.com/pythongssapi/python-gssapi
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): %{srcname}
-BuildOption(check): -e "gssapi.tests.*"
+BuildOption(install):  %{srcname}
+BuildOption(check):  -e "gssapi.tests.*"
 
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(python3)
@@ -27,11 +27,13 @@ BuildRequires:  python3dist(decorator)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-Python-GSSAPI provides both low-level and high level wrappers around the GSSAPI C libraries. While it focuses on the Kerberos mechanism, it should also be useable with other GSSAPI mechanisms.
+Python-GSSAPI provides both low-level and high level wrappers around the GSSAPI C libraries.
+While it focuses on the Kerberos mechanism, it should also be useable with other GSSAPI mechanisms.
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -44,4 +46,4 @@ cd %{_builddir}/%{name}-%{version}
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

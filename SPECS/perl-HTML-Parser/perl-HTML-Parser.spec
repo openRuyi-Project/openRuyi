@@ -6,16 +6,20 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-HTML-Parser
-Version:        3.83
+Version:        3.85
 Release:        %autorelease
 Summary:        HTML parser class
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/HTML-Parser
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/HTML-Parser-%{version}.tar.gz
+#!RemoteAsset:  sha256:fd42ba6abe07241cf0ad57be246c3980065f683e4465e59b46af9efebc8e0c71
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/HTML-Parser-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -32,6 +36,7 @@ BuildRequires:  perl(Test::More)
 BuildRequires:  perl(URI)
 BuildRequires:  perl(URI::URL)
 BuildRequires:  perl(XSLoader)
+BuildRequires:  perl-devel
 
 %description
 Objects of the HTML::Parser class will recognize markup and separate it
@@ -39,21 +44,8 @@ from plain text (alias data content) in HTML documents. As different
 kinds of markup and text are recognized, the corresponding event handlers
 are invoked.
 
-%prep
-%setup -q -n HTML-Parser-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes entities.html mkhctype mkpfunc README TODO
+%doc Changes eg entities.html hints mkhctype mkpfunc README TODO
 
 %changelog
-%{?autochangelog}
+%autochangelog

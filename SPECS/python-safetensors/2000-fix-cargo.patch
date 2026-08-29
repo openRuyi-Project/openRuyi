@@ -1,0 +1,27 @@
+diff --git a/safetensors/Cargo.toml b/safetensors/Cargo.toml
+index 5fb5e0a..3f88f3d 100644
+--- a/safetensors/Cargo.toml
++++ b/safetensors/Cargo.toml
+@@ -35,11 +35,6 @@ tempfile = { version = "3", optional = true }
+ [target.'cfg(target_os = "macos")'.dependencies]
+ libc = "0.2"
+ 
+-[dev-dependencies]
+-criterion = "0.6"
+-memmap2 = "0.9"
+-proptest = "1.7"
+-
+ [features]
+ default = ["std"]
+ std = ["serde/default", "serde_json/default", "dep:tempfile"]
+diff --git a/bindings/python/Cargo.toml b/bindings/python/Cargo.toml
+index 351f0fd..1d7e9ab 100644
+--- a/bindings/python/Cargo.toml
++++ b/bindings/python/Cargo.toml
+@@ -28,6 +28,0 @@
+-objc2 = "0.6"
+-objc2-metal = { version = "0.3", features = [
+-  "MTLDevice",
+-  "MTLBuffer",
+-  "MTLResource",
+-] }

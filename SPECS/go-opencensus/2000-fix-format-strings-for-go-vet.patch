@@ -1,0 +1,65 @@
+From 3869d85831b144356b7f29373c58db19838fea3b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 22:02:46 +0800
+Subject: [PATCH] Fix format strings for Go vet
+
+---
+ tag/map.go                          | 2 +-
+ trace/trace_test.go                 | 8 ++++----
+ trace/tracestate/tracestate_test.go | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tag/map.go b/tag/map.go
+index 0272ef8..1d5db94 100644
+--- a/tag/map.go
++++ b/tag/map.go
+@@ -193,7 +193,7 @@ func New(ctx context.Context, mutator ...Mutator) (context.Context, error) {
+ 				return ctx, fmt.Errorf("key:%q: %v", k, errInvalidKeyName)
+ 			}
+ 			if !checkValue(v.value) {
+-				return ctx, fmt.Errorf("key:%q value:%q: %v", k.Name(), v, errInvalidValue)
++				return ctx, fmt.Errorf("key:%q value:%q: %v", k.Name(), v.value, errInvalidValue)
+ 			}
+ 			m.insert(k, v.value, v.m)
+ 		}
+diff --git a/trace/trace_test.go b/trace/trace_test.go
+index 6363c26..c4f7e0e 100644
+--- a/trace/trace_test.go
++++ b/trace/trace_test.go
+@@ -848,16 +848,16 @@ func TestChildSpanCount(t *testing.T) {
+ 		t.Fatalf("len(%#v) = %d; want %d", spans, got, want)
+ 	}
+ 	if got, want := spans["span-3"].ChildSpanCount, 0; got != want {
+-		t.Errorf("span-3.ChildSpanCount=%q; want %q", got, want)
++		t.Errorf("span-3.ChildSpanCount=%d; want %d", got, want)
+ 	}
+ 	if got, want := spans["span-2"].ChildSpanCount, 0; got != want {
+-		t.Errorf("span-2.ChildSpanCount=%q; want %q", got, want)
++		t.Errorf("span-2.ChildSpanCount=%d; want %d", got, want)
+ 	}
+ 	if got, want := spans["span-1"].ChildSpanCount, 1; got != want {
+-		t.Errorf("span-1.ChildSpanCount=%q; want %q", got, want)
++		t.Errorf("span-1.ChildSpanCount=%d; want %d", got, want)
+ 	}
+ 	if got, want := spans["parent"].ChildSpanCount, 2; got != want {
+-		t.Errorf("parent.ChildSpanCount=%q; want %q", got, want)
++		t.Errorf("parent.ChildSpanCount=%d; want %d", got, want)
+ 	}
+ }
+ 
+diff --git a/trace/tracestate/tracestate_test.go b/trace/tracestate/tracestate_test.go
+index 379ff4f..e7eccf0 100644
+--- a/trace/tracestate/tracestate_test.go
++++ b/trace/tracestate/tracestate_test.go
+@@ -35,7 +35,7 @@ func checkBack(t *testing.T, tracestate *Tracestate, wantKey, testname string) {
+ 
+ func checkSize(t *testing.T, tracestate *Tracestate, wantSize int, testname string) {
+ 	if gotSize := len(tracestate.entries); gotSize != wantSize {
+-		t.Errorf("test:%s: size of the list: got %q want %q", testname, gotSize, wantSize)
++		t.Errorf("test:%s: size of the list: got %d want %d", testname, gotSize, wantSize)
+ 	}
+ }
+ 
+-- 
+2.43.0
+

@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           qtkeychain
-Version:        0.15.0
+Version:        0.16.0
 Release:        %autorelease
 Summary:        A password store library for Qt6
 License:        BSD-3-Clause
 URL:            https://github.com/frankosterfeld/qtkeychain
-#!RemoteAsset:  sha256:f4254dc8f0933b06d90672d683eab08ef770acd8336e44dfa030ce041dc2ca22
+#!RemoteAsset:  sha256:3be26ec4ae30eecf0c2ff7572ba83799791b157c76e15a05ef35f23dc25e4054
 Source0:        https://github.com/frankosterfeld/qtkeychain/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -25,7 +25,6 @@ BuildRequires:  qt6-macros
 BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6DBus)
 BuildRequires:  qt6-linguist
-BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6LinguistTools)
 
 %description
@@ -45,9 +44,6 @@ Requires:       cmake(Qt6DBus)
 This package contains development files for qt6keychain.
 
 %install -a
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages --with-qt
 
 %check

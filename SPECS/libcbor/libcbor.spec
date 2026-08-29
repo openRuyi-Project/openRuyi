@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libcbor
-Version:        0.11.0
+Version:        0.14.0
 Release:        %autorelease
 Summary:        Library for parsing Concise Binary Object Representation (CBOR)
 License:        MIT
 URL:            https://github.com/PJK/libcbor
-#!RemoteAsset
+#!RemoteAsset:  sha256:a8c1516e741562cf95aa4479c64916c3d4d2623e24fdc35e414e2320e7300aae
 Source0:        https://github.com/PJK/libcbor/archive/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -52,4 +52,4 @@ The libcbor-devel contains libraries and header files for libcbor.
 %{_libdir}/cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

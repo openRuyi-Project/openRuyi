@@ -1,0 +1,113 @@
+From 358f3d2b3923ff3a88686fa234746e2d4d5dc0ed Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 14:51:51 +0800
+Subject: [PATCH] tests: use mock servers for schema loading
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ .../openapi_schemas/load_schema.go              | 16 +++++++++++-----
+ .../openapi_schemas/load_schema_test.go         | 17 ++++++++++++-----
+ 2 files changed, 23 insertions(+), 10 deletions(-)
+
+diff --git a/schema_validation/openapi_schemas/load_schema.go b/schema_validation/openapi_schemas/load_schema.go
+index d36b8ea..5afe4d6 100644
+--- a/schema_validation/openapi_schemas/load_schema.go
++++ b/schema_validation/openapi_schemas/load_schema.go
+@@ -16,7 +16,15 @@ import (
+ 	_ "embed"
+ )
+ 
+-var schema30, schema31 string
++const (
++	defaultSchema30URL = "https://raw.githubusercontent.com/pb33f/openapi-specification/main/schemas/v3.0/schema.json"
++	defaultSchema31URL = "https://raw.githubusercontent.com/pb33f/openapi-specification/main/schemas/v3.1/schema.json"
++)
++
++var (
++	schema30, schema31       string
++	schema30URL, schema31URL = defaultSchema30URL, defaultSchema31URL
++)
+ 
+ // LoadSchema3_0 loads the latest OpenAPI 3.0 specification. The latest version is fetched from the OpenAPI repo.
+ // and if there is no change in the schema, the local version is returned, otherwise the remote version is returned.
+@@ -24,8 +32,7 @@ func LoadSchema3_0(schema string) string {
+ 	if schema30 != "" {
+ 		return schema30
+ 	}
+-	remoteSpec := "https://raw.githubusercontent.com/pb33f/openapi-specification/main/schemas/v3.0/schema.json"
+-	schema30 = extractSchema(remoteSpec, schema)
++	schema30 = extractSchema(schema30URL, schema)
+ 	return schema30
+ }
+ 
+@@ -35,8 +42,7 @@ func LoadSchema3_1(schema string) string {
+ 	if schema31 != "" {
+ 		return schema31
+ 	}
+-	remoteSpec := "https://raw.githubusercontent.com/pb33f/openapi-specification/main/schemas/v3.1/schema.json"
+-	schema31 = extractSchema(remoteSpec, schema)
++	schema31 = extractSchema(schema31URL, schema)
+ 	return schema31
+ }
+ 
+diff --git a/schema_validation/openapi_schemas/load_schema_test.go b/schema_validation/openapi_schemas/load_schema_test.go
+index d5e8220..adde41d 100644
+--- a/schema_validation/openapi_schemas/load_schema_test.go
++++ b/schema_validation/openapi_schemas/load_schema_test.go
+@@ -47,10 +47,11 @@ func TestLoadSchema3_0_RemoteDifferent(t *testing.T) {
+ 	remoteSchema := `{"title": "OpenAPI 3.0"}`
+ 	server := mockServer(remoteSchema, http.StatusOK)
+ 	defer server.Close()
++	schema30URL = server.URL
++	t.Cleanup(func() { schema30URL = defaultSchema30URL })
+ 
+-	// Override the remote spec URL in extractSchema function
+ 	result := LoadSchema3_0(`{"title": "Local Schema 3.0"}`)
+-	require.NotEqual(t, remoteSchema, result)
++	require.Equal(t, remoteSchema, result)
+ }
+ 
+ // Test LoadSchema3_0 when the remote schema is the same as the local schema
+@@ -64,9 +65,11 @@ func TestLoadSchema3_0_RemoteSame(t *testing.T) {
+ 
+ 	server := mockServer(remoteSchema, http.StatusOK)
+ 	defer server.Close()
++	schema30URL = server.URL
++	t.Cleanup(func() { schema30URL = defaultSchema30URL })
+ 
+ 	result := LoadSchema3_0(localSchema)
+-	require.NotEqual(t, localSchema, result)
++	require.Equal(t, localSchema, result)
+ }
+ 
+ // Test LoadSchema3_1 when the remote schema is different from the local schema
+@@ -78,10 +81,12 @@ func TestLoadSchema3_1_RemoteDifferent(t *testing.T) {
+ 	remoteSchema := `{"title": "OpenAPI 3.1"}`
+ 	server := mockServer(remoteSchema, http.StatusOK)
+ 	defer server.Close()
++	schema31URL = server.URL
++	t.Cleanup(func() { schema31URL = defaultSchema31URL })
+ 
+ 	// The result should be the remote schema because it differs from the local schema
+ 	result := LoadSchema3_1(`{"title": "Local Schema 3.1"}`)
+-	require.NotEqual(t, remoteSchema, result)
++	require.Equal(t, remoteSchema, result)
+ }
+ 
+ // Test LoadSchema3_1 when the remote schema is the same as the local schema
+@@ -95,10 +100,12 @@ func TestLoadSchema3_1_RemoteSame(t *testing.T) {
+ 
+ 	server := mockServer(remoteSchema, http.StatusOK)
+ 	defer server.Close()
++	schema31URL = server.URL
++	t.Cleanup(func() { schema31URL = defaultSchema31URL })
+ 
+ 	// The result should be the local schema since the MD5 hashes are the same
+ 	result := LoadSchema3_1(localSchema)
+-	require.NotEqual(t, localSchema, result)
++	require.Equal(t, localSchema, result)
+ }
+ 
+ // Test extractSchema when the remote schema differs from the local schema
+-- 
+2.43.0

@@ -36,7 +36,6 @@ BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(OpenEXR)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libavif)
-BuildRequires:  pkgconfig(libbrotlicommon)
 BuildRequires:  pkgconfig(libbrotlidec)
 BuildRequires:  pkgconfig(libwebp)
 
@@ -91,4 +90,4 @@ lossless compression.
 %{_libdir}/pkgconfig/libjxl_cms.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

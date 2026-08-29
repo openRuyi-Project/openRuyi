@@ -1,0 +1,9 @@
+[Unit]
+Description=ClamAV virus database updater
+Documentation=man:freshclam(1) man:freshclam.conf(5) https://docs.clamav.net/
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/freshclam --config-file=/etc/clamav/freshclam.conf

@@ -1,0 +1,77 @@
+From: Colin Watson <cjwatson@debian.org>
+Date: Sun, 4 Jan 2026 18:01:44 +0000
+Subject: Stop using pkg_resources
+
+The upstream project has been archived, so there's nowhere to forward
+this to.
+
+Bug-Debian: https://bugs.debian.org/1083591
+Last-Update: 2026-01-04
+---
+ ptr/__init__.py | 31 ++++++++++++++-----------------
+ 1 file changed, 14 insertions(+), 17 deletions(-)
+
+diff --git a/ptr/__init__.py b/ptr/__init__.py
+index 41192fa..cb099f4 100644
+--- a/ptr/__init__.py
++++ b/ptr/__init__.py
+@@ -8,9 +8,8 @@ import contextlib as _contextlib
+ import sys as _sys
+ import operator as _operator
+ import itertools as _itertools
+-import warnings as _warnings
+ 
+-import pkg_resources
++from packaging.markers import InvalidMarker, Marker
+ import setuptools.command.test as orig
+ from setuptools import Distribution
+ 
+@@ -121,7 +120,10 @@ class PyTest(orig.test):
+         instead of declaring the dependency in the package
+         metadata, assert the requirement at run time.
+         """
+-        pkg_resources.require('setuptools>=27.3')
++        # For Debian, do nothing.  pkg_resources is deprecated with no
++        # natural replacement for pkg_resources.require (see e.g.
++        # https://github.com/pypa/packaging-problems/issues/664), and the
++        # last several stable Debian releases have shipped setuptools>=27.3.
+ 
+     def finalize_options(self):
+         if self.addopts:
+@@ -133,11 +135,12 @@ class PyTest(orig.test):
+         Given an environment marker, return True if the marker is valid
+         and matches this environment.
+         """
+-        return (
+-            not marker
+-            or not pkg_resources.invalid_marker(marker)
+-            and pkg_resources.evaluate_marker(marker)
+-        )
++        if not marker:
++            return True
++        try:
++            return Marker(marker).evaluate()
++        except InvalidMarker:
++            return False
+ 
+     def install_dists(self, dist):
+         """
+@@ -170,15 +173,9 @@ class PyTest(orig.test):
+ 
+     @staticmethod
+     def _warn_old_setuptools():
+-        msg = (
+-            "pytest-runner will stop working on this version of setuptools; "
+-            "please upgrade to setuptools 30.4 or later or pin to "
+-            "pytest-runner < 5."
+-        )
+-        ver_str = pkg_resources.get_distribution('setuptools').version
+-        ver = pkg_resources.parse_version(ver_str)
+-        if ver < pkg_resources.parse_version('30.4'):
+-            _warnings.warn(msg)
++        # For Debian, do nothing.  The last several stable Debian releases
++        # have shipped setuptools>=30.4.
++        return
+ 
+     def run(self):
+         """

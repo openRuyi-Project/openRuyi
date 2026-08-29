@@ -11,11 +11,15 @@ Release:        %autorelease
 Summary:        EucJP-ascii - An eucJP-open mapping
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Encode-EUCJPASCII
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/N/NE/NEZUMI/Encode-EUCJPASCII-%{version}.tar.gz
+#!RemoteAsset:  sha256:f998d34d55fd9c82cf910786a0448d1edfa60bf68e2c2306724ca67c629de861
+Source0:        https://www.cpan.org/authors/id/N/NE/NEZUMI/Encode-EUCJPASCII-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Encode) >= 1.41
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -27,21 +31,8 @@ Requires:       perl(Encode) >= 1.41
 This module provides eucJP-ascii, one of eucJP-open mappings, and its
 derivative. Following encodings are supported.
 
-%prep
-%setup -q -n Encode-EUCJPASCII-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

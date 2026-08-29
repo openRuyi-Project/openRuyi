@@ -1,0 +1,38 @@
+From 3ebf8d8911a3ac7292101f649aee0d67c8862d76 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:40:28 +0800
+Subject: [PATCH] client: pass authentication commands as data
+
+Client.cmd treats its command argument as a format string. Pass dynamically
+constructed authentication commands through a constant %s format so percent
+signs in challenge responses remain data and current Go vet accepts the calls.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ client.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/client.go b/client.go
+index 21d265c..2551696 100644
+--- a/client.go
++++ b/client.go
+@@ -380,7 +380,7 @@ func (c *Client) Auth(a sasl.Client) error {
+ 	} else if resp != nil {
+ 		resp64 = []byte{'='}
+ 	}
+-	code, msg64, err := c.cmd(0, strings.TrimSpace(fmt.Sprintf("AUTH %s %s", mech, resp64)))
++	code, msg64, err := c.cmd(0, "%s", strings.TrimSpace(fmt.Sprintf("AUTH %s %s", mech, resp64)))
+ 	for err == nil {
+ 		var msg []byte
+ 		switch code {
+@@ -409,7 +409,7 @@ func (c *Client) Auth(a sasl.Client) error {
+ 		}
+ 		resp64 = make([]byte, encoding.EncodedLen(len(resp)))
+ 		encoding.Encode(resp64, resp)
+-		code, msg64, err = c.cmd(0, string(resp64))
++		code, msg64, err = c.cmd(0, "%s", string(resp64))
+ 	}
+ 	return err
+ }
+-- 
+2.43.0

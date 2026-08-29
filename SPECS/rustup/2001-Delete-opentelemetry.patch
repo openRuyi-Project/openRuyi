@@ -1,0 +1,49 @@
+From 27e44a815d4081a61a72dcbdd30ecb9d36b43ec6 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Tue, 21 Jul 2026 17:28:04 +0800
+Subject: [PATCH] Delete opentelemetry
+
+---
+ Cargo.toml | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 52d2f3d..6b3e55b 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -28,14 +28,6 @@ reqwest-rustls-tls = [
+ # Include in the default set to disable self-update and uninstall.
+ no-self-update = []
+ 
+-# Include an Opentelemetry sink for tracing events
+-otel = [
+-  "dep:opentelemetry-otlp",
+-  "dep:tracing-opentelemetry",
+-  "dep:opentelemetry",
+-  "dep:opentelemetry_sdk",
+-]
+-
+ # Exports code dependent on private interfaces for the integration test suite
+ test = ["dep:snapbox", "dep:walkdir", "clap-cargo/testing_colors"]
+ 
+@@ -69,9 +61,6 @@ openssl = { version = "0.10", optional = true }
+ # HACK: Temporarily pinned due to ppc64 ELFv1/v2 ABI issue in 300.5.5, to be
+ # removed when <https://github.com/openssl/openssl/issues/29815> lands.
+ openssl-src = { version = "300.5.4", optional = true }
+-opentelemetry = { version = "0.31", optional = true }
+-opentelemetry-otlp = { version = "0.31", features = ["grpc-tonic"], optional = true }
+-opentelemetry_sdk = { version = "0.31", features = ["rt-tokio"], optional = true }
+ platforms = "3.4"
+ pulldown-cmark = { version = "0.13", default-features = false }
+ rand = "0.10"
+@@ -99,7 +88,6 @@ tokio-stream = "0.1.14"
+ toml = "1.0"
+ tracing = "0.1"
+ tracing-log = "0.2"
+-tracing-opentelemetry = { version = "0.32", optional = true }
+ # Newer versions render ANSI escape codes, causing CLI errors to be ugly
+ # See also https://github.com/tokio-rs/tracing/issues/3369
+ tracing-subscriber = { version = "=0.3.19", features = ["env-filter"] }
+-- 
+2.55.0
+

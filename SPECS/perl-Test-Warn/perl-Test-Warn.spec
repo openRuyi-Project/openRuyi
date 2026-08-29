@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Perl extension to test methods for warnings
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Test-Warn
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BI/BIGJ/Test-Warn-%{version}.tar.gz
+#!RemoteAsset:  sha256:98ca32e7f2f5ea89b8bfb9a0609977f3d153e242e2e51705126cb954f1a06b57
+Source0:        https://www.cpan.org/authors/id/B/BI/BIGJ/Test-Warn-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp) >= 1.22
@@ -36,20 +40,8 @@ Requires:       perl(Test::Builder::Tester) >= 1.02
 A good style of Perl programming calls for a lot of diverse
 regression tests.
 
-%prep
-%setup -q -n Test-Warn-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

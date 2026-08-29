@@ -1,0 +1,162 @@
+# Patch purpose:
+# - Remove git-dependent patch flows in third_party external CMake modules.
+# Why this patch exists:
+# - Packaging uses pre-unpacked source archives for third_party code.
+# - Those trees have no .git metadata, so upstream "git checkout/apply" commands fail.
+
+diff --git a/cmake/external/eigen.cmake b/cmake/external/eigen.cmake
+index cfada54..744e9c1 100644
+--- a/cmake/external/eigen.cmake
++++ b/cmake/external/eigen.cmake
+@@ -41,13 +41,13 @@ endif()
+ 
+ file(TO_NATIVE_PATH "${PADDLE_SOURCE_DIR}/patches/eigen/TensorRandom.h.patch"
+      tensor_random_header)
+-# See: [Why calling some `git` commands before `patch`?]
+-set(EIGEN_PATCH_COMMAND git checkout -- . && git checkout ${EIGEN_TAG} && git
+-                        apply ${tensor_random_header})
++# Sources are unpacked from archives in packaging; avoid relying on git metadata.
++set(EIGEN_PATCH_COMMAND patch -p1 -d ${SOURCE_DIR} < ${tensor_random_header})
+ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+   file(TO_NATIVE_PATH ${PADDLE_SOURCE_DIR}/patches/eigen/Complex.h.patch
+        complex_header)
+-  set(EIGEN_PATCH_COMMAND ${EIGEN_PATCH_COMMAND} && git apply ${complex_header})
++  set(EIGEN_PATCH_COMMAND ${EIGEN_PATCH_COMMAND} && patch -p1 -d ${SOURCE_DIR} <
++                          ${complex_header})
+ endif()
+ 
+ set(EIGEN_INCLUDE_DIR ${SOURCE_DIR})
+diff --git a/cmake/external/glog.cmake b/cmake/external/glog.cmake
+index 6a394ef..bd1ab7f 100755
+--- a/cmake/external/glog.cmake
++++ b/cmake/external/glog.cmake
+@@ -49,8 +49,7 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0")
+ endif()
+ # patch
+ file(TO_NATIVE_PATH ${PADDLE_SOURCE_DIR}/patches/glog/indent.patch log_indent)
+-set(GLOG_PATCH_COMMAND git checkout -- . && git apply --check ${log_indent} &&
+-                       git apply ${log_indent})
++set(GLOG_PATCH_COMMAND patch -p1 -N < ${log_indent})
+ ExternalProject_Add(
+   extern_glog
+   ${EXTERNAL_PROJECT_LOG_ARGS} ${SHALLOW_CLONE}
+diff --git a/cmake/external/gloo.cmake b/cmake/external/gloo.cmake
+index 734e69c..b171e73 100755
+--- a/cmake/external/gloo.cmake
++++ b/cmake/external/gloo.cmake
+@@ -31,8 +31,8 @@ set(GLOO_LIBRARIES
+     ${GLOO_INSTALL_DIR}/lib/libgloo.a
+     CACHE FILEPATH "gloo library." FORCE)
+ 
+-# Setup gloo patch command
+-set(GLOO_PATCH_COMMAND git checkout -- . && git checkout ${GLOO_TAG})
++# Setup gloo patch command without requiring git metadata
++set(GLOO_PATCH_COMMAND ${CMAKE_COMMAND} -E true)
+ 
+ file(TO_NATIVE_PATH ${PADDLE_SOURCE_DIR}/patches/gloo/device.cc.patch
+      native_dst)
+diff --git a/cmake/external/gtest.cmake b/cmake/external/gtest.cmake
+index 1832e7d..699fd1f 100644
+--- a/cmake/external/gtest.cmake
++++ b/cmake/external/gtest.cmake
+@@ -78,8 +78,7 @@ if(NOT WIN32 AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 12.0)
+        ${PADDLE_SOURCE_DIR}/patches/gtest/gtest-death-test.cc.patch native_src)
+   # See: [Why calling some `git` commands before `patch`?]
+   set(GTEST_PATCH_COMMAND
+-      git checkout -- . && git checkout ${GTEST_TAG} && patch -Nd
+-      ${SOURCE_DIR}/googletest/src < ${native_src})
++      patch -Nd ${SOURCE_DIR}/googletest/src < ${native_src})
+ endif()
+ if(NOT WIN32
+    AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+diff --git a/cmake/external/pocketfft.cmake b/cmake/external/pocketfft.cmake
+index 102d288..1382ca7 100644
+--- a/cmake/external/pocketfft.cmake
++++ b/cmake/external/pocketfft.cmake
+@@ -32,8 +32,7 @@ if(APPLE)
+        ${PADDLE_SOURCE_DIR}/patches/pocketfft/pocketfft_hdronly.h.patch
+        native_dst)
+   set(POCKETFFT_PATCH_COMMAND
+-      git checkout -- . && git checkout ${POCKETFFT_TAG} && patch -Nd
+-      ${SOURCE_DIR} < ${native_dst})
++      patch -Nd ${SOURCE_DIR} < ${native_dst})
+ endif()
+ 
+ ExternalProject_Add(
+diff --git a/cmake/external/protobuf.cmake b/cmake/external/protobuf.cmake
+index e59dabb..e9c1240 100755
+--- a/cmake/external/protobuf.cmake
++++ b/cmake/external/protobuf.cmake
+@@ -254,8 +254,7 @@ function(build_protobuf TARGET_NAME)
+     PREFIX ${PROTOBUF_PREFIX_DIR}
+     SOURCE_DIR ${SOURCE_DIR}
+     UPDATE_COMMAND ""
+-    PATCH_COMMAND
+-    COMMAND cd ${SOURCE_DIR} && git checkout ${PROTOBUF_TAG}
++    PATCH_COMMAND ""
+     DEPENDS zlib
+     CONFIGURE_COMMAND
+       ${CMAKE_COMMAND} ${SOURCE_DIR}/cmake ${OPTIONAL_ARGS} -G${CMAKE_GENERATOR}
+diff --git a/cmake/external/pybind11.cmake b/cmake/external/pybind11.cmake
+index 457be2f..185f4ea 100644
+--- a/cmake/external/pybind11.cmake
++++ b/cmake/external/pybind11.cmake
+@@ -35,8 +35,7 @@ if(LINUX
+   # 1. Patch to the wrong version: the tag version of CI's cache falls behind PYBIND_TAG, use `git checkout ${PYBIND_TAG}` to solve this.
+   # 2. Patch twice: the tag version of cache == PYBIND_TAG, but patch has already applied to cache.
+   set(PYBIND_PATCH_COMMAND
+-      git checkout -- . && git checkout ${PYBIND_TAG} && patch -Nd
+-      ${SOURCE_INCLUDE_DIR}/pybind11/detail < ${native_dst})
++      patch -Nd ${SOURCE_INCLUDE_DIR}/pybind11/detail < ${native_dst})
+ endif()
+ 
+ ExternalProject_Add(
+diff --git a/cmake/external/warpctc.cmake b/cmake/external/warpctc.cmake
+index 17ef70b..9ae0486 100644
+--- a/cmake/external/warpctc.cmake
++++ b/cmake/external/warpctc.cmake
+@@ -32,8 +32,7 @@ if(WIN32)
+       ${PADDLE_SOURCE_DIR}/patches/warpctc/CMakeLists.txt.cuda.patch)
+ else()
+   set(WARPCTC_PATCH_CUDA_COMMAND
+-      git checkout -- . && git checkout ${WARPCTC_TAG} && patch -Nd
+-      ${SOURCE_DIR} <
++      patch -Nd ${SOURCE_DIR} <
+       ${PADDLE_SOURCE_DIR}/patches/warpctc/CMakeLists.txt.cuda.patch)
+ endif()
+ 
+@@ -42,8 +41,7 @@ if(NOT WIN32 AND WITH_GPU)
+                                                   VERSION_GREATER 12.0)
+     file(TO_NATIVE_PATH
+          ${PADDLE_SOURCE_DIR}/patches/warpctc/CMakeLists.txt.patch native_src)
+-    set(WARPCTC_PATCH_COMMAND git checkout -- . && git checkout ${WARPCTC_TAG}
+-                              && patch -Nd ${SOURCE_DIR} < ${native_src} &&)
++    set(WARPCTC_PATCH_COMMAND patch -Nd ${SOURCE_DIR} < ${native_src})
+     set(WARPCTC_CCBIN_OPTION -DCCBIN_COMPILER=${CCBIN_COMPILER})
+   endif()
+ endif()
+diff --git a/cmake/external/warprnnt.cmake b/cmake/external/warprnnt.cmake
+index ce4b433..8a975d6 100644
+--- a/cmake/external/warprnnt.cmake
++++ b/cmake/external/warprnnt.cmake
+@@ -37,8 +37,7 @@ if(WIN32)
+   endif()
+ else()
+   set(WARPCTC_PATCH_CUDA_COMMAND
+-      git checkout -- . && git checkout ${WARPRNNT_TAG} && patch -Nd
+-      ${SOURCE_DIR} <
++      patch -Nd ${SOURCE_DIR} <
+       ${PADDLE_SOURCE_DIR}/patches/warprnnt/CMakeLists.txt.cuda.patch)
+ endif()
+ if(WITH_ROCM)
+@@ -51,9 +50,7 @@ if(NOT WIN32 AND WITH_GPU)
+                                                   VERSION_GREATER 12.0)
+     file(TO_NATIVE_PATH
+          ${PADDLE_SOURCE_DIR}/patches/warprnnt/CMakeLists.txt.patch native_src)
+-    set(WARPRNNT_PATCH_COMMAND
+-        git checkout -- . && git checkout ${WARPRNNT_TAG} && patch -Nd
+-        ${SOURCE_DIR} < ${native_src})
++    set(WARPRNNT_PATCH_COMMAND patch -Nd ${SOURCE_DIR} < ${native_src})
+     set(WARPRNNT_CCBIN_OPTION -DCCBIN_COMPILER=${CCBIN_COMPILER})
+   endif()
+ endif()

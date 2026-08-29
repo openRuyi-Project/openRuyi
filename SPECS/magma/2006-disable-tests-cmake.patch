@@ -1,0 +1,66 @@
+From 49bca38635d20323d517533bf115ab19b4758f2f Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 21:02:30 +0800
+Subject: [PATCH] Disable building the test/sparse-test targets
+
+Testers require a GPU to run; when tests are disabled, skip building
+them entirely instead of only skipping %check, so a plain build does
+not need the testing sources to link. Rebased on top of the
+version-shared-libraries patch, which inserts lines right after the
+sparse-testing custom target this patch also touches.
+---
+ CMakeLists.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9570ef2..90b7fb8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -539,7 +539,7 @@ else()
+     include_directories( sparse_hip/include )
+     include_directories( sparse_hip/control )
+ endif()
+-include_directories( testing )
++#include_directories( testing )
+ 
+ if (MAGMA_ENABLE_CUDA)
+     add_library( magma_sparse ${libsparse_all} )
+@@ -575,7 +575,7 @@ set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY testing_lib )
+ set( CMAKE_LIBRARY_OUTPUT_DIRECTORY testing_lib )
+ 
+ # skip Fortran testers, which require an extra file from CUDA
+-foreach( filename ${testing_all} )
++foreach( filename ${no_testing_all} )
+     if (filename MATCHES "\\.(c|cu|cpp)$")
+         list( APPEND testing_all_cpp ${filename} )
+     endif()
+@@ -588,7 +588,7 @@ foreach( TEST ${testing_all_cpp} )
+     target_link_libraries( ${EXE} tester lapacktest magma )
+     list( APPEND testing ${EXE} )
+ endforeach()
+-add_custom_target( testing DEPENDS ${testing} )
++#add_custom_target( testing DEPENDS ${testing} )
+ 
+ 
+ # ----------------------------------------
+@@ -602,7 +602,7 @@ endif()
+ 
+ 
+ set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${SPARSE_TEST_DIR}" )
+-foreach( TEST ${sparse_testing_all} )
++foreach( TEST ${no_sparse_testing_all} )
+     string( REGEX REPLACE "\\.(cpp|f90|F90)"     "" EXE ${TEST} )
+     string( REGEX REPLACE "${SPARSE_TEST_DIR}/" "" EXE ${EXE} )
+     #message( "${TEST} --> ${EXE}" )
+@@ -610,7 +610,7 @@ foreach( TEST ${sparse_testing_all} )
+     target_link_libraries( ${EXE} magma_sparse magma )
+     list( APPEND sparse-testing ${EXE} )
+ endforeach()
+-add_custom_target( sparse-testing DEPENDS ${sparse-testing} )
++#add_custom_target( sparse-testing DEPENDS ${sparse-testing} )
+ 
+ # openRuyi: give the shared libraries a SONAME/version so the runtime
+ # and devel sub-packages can be split (upstream ships them unversioned).
+-- 
+2.53.0
+

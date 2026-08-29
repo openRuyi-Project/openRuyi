@@ -13,12 +13,14 @@ Release:        %autorelease
 Summary:        Selected Go-internal packages factored out from the standard library
 License:        BSD-3-Clause
 URL:            https://github.com/rogpeppe/go-internal
-#!RemoteAsset
+#!RemoteAsset:  sha256:7e54f6d0f002a4904f150e29417515b286ff3b0bbde8e1a01082cbb5178132cb
 Source0:        https://github.com/rogpeppe/go-internal/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 # https://salsa.debian.org/go-team/packages/golang-github-rogpeppe-go-internal/-/blob/0f60076977a5f66c5f557820c009eb0b3d647b01/debian/0001-Allow-TestSimple-cover-to-PASS.patch
 Source1:        2000-Allow-TestSimple-cover-to-PASS.patch
 # Otherwise the TestScripts/env_var_with_go test will fail - 251
 Source2:        2001-Allow-empty-default-GOPROXY.patch
+# https://salsa.debian.org/go-team/packages/golang-github-rogpeppe-go-internal/-/blob/6a1ec9e79d68423095f64c13a428bac63148483c/debian/patches/0001-Fix-FTBFS-with-golang-1.26.patch
+Source3:        2002-Fix-FTBFS-with-golang-1.26.patch
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
@@ -52,14 +54,15 @@ pushd %{_builddir}/go/src/%{go_import_path}
 # Apply patch here
 %__patch -N -p6 -i %{SOURCE1}
 %__patch -N -p1 -i %{SOURCE2}
+%__patch -N -p1 -i %{SOURCE3}
 # Then test
 go test -vet=off -v ./...
 popd
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

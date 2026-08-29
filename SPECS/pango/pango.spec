@@ -69,7 +69,12 @@ The pango-devel package includes the header files for the pango package.
 %files devel
 %{_libdir}/libpango*.so
 %{_includedir}/*
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/pango.pc
+%{_libdir}/pkgconfig/pangocairo.pc
+%{_libdir}/pkgconfig/pangofc.pc
+%{_libdir}/pkgconfig/pangoft2.pc
+%{_libdir}/pkgconfig/pangoot.pc
+%{_libdir}/pkgconfig/pangoxft.pc
 %{_datadir}/gir-1.0/Pango-1.0.gir
 %{_datadir}/gir-1.0/PangoCairo-1.0.gir
 %{_datadir}/gir-1.0/PangoFc-1.0.gir
@@ -78,4 +83,4 @@ The pango-devel package includes the header files for the pango package.
 %{_datadir}/gir-1.0/PangoXft-1.0.gir
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,6 +12,7 @@ on:
      - 'SPECS/**'
 concurrency:
   group: update_package
+  queue: max
   cancel-in-progress: false
 
 jobs:

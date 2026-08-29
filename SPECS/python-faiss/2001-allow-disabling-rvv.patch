@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1111111..2222222 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -86,6 +86,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+ 
+ # Valid values are "generic", "avx2", "avx512", "avx512_spr", "sve".
+ option(FAISS_OPT_LEVEL "" "generic")
++option(FAISS_ENABLE_RVV "Enable RISC-V Vector Extension kernels." ON)
+ option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
+ option(FAISS_GPU_STATIC "Link GPU libraries statically." OFF)
+ option(FAISS_ENABLE_CUVS "Enable cuVS for GPU indexes." OFF)
+diff --git a/faiss/CMakeLists.txt b/faiss/CMakeLists.txt
+index 3333333..4444444 100644
+--- a/faiss/CMakeLists.txt
++++ b/faiss/CMakeLists.txt
+@@ -82,7 +82,7 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64|amd64|AMD64)")
+     ${FAISS_SIMD_AVX512_SPR_SRC} ${FAISS_SIMD_AVX512_SPR_SRC})
+ elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(aarch64|arm64|ARM64)")
+   set(FAISS_SIMD_SRC ${FAISS_SIMD_NEON_SRC} ${FAISS_SIMD_SVE_SRC})
+-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)")
++elseif(FAISS_ENABLE_RVV AND CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)")
+   set(FAISS_SIMD_SRC ${FAISS_SIMD_RVV_SRC})
+ else()
+   set(FAISS_SIMD_SRC "")
+@@ -590,7 +590,7 @@ if(FAISS_OPT_LEVEL STREQUAL "dd")
+       TARGET_DIRECTORY faiss
+       PROPERTIES COMPILE_OPTIONS "-march=armv8.2-a+sve"
+     )
+-  elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)")
++  elseif(FAISS_ENABLE_RVV AND CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)")
+     target_compile_definitions(faiss PRIVATE COMPILE_SIMD_RISCV_RVV)
+     if(FAISS_SIMD_RVV_SRC)
+       set_source_files_properties(${FAISS_SIMD_RVV_SRC}
+@@ -618,6 +618,6 @@ endif()
+ # FAISS_SIMD_RVV_SRC and is added via target_sources above, so we must not
+ # add it a second time or we get duplicate symbol errors at link time.
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)" AND NOT FAISS_OPT_LEVEL STREQUAL "dd")
++if(FAISS_ENABLE_RVV AND CMAKE_SYSTEM_PROCESSOR MATCHES "(riscv64|riscv)" AND NOT FAISS_OPT_LEVEL STREQUAL "dd")
+   target_compile_definitions(faiss PRIVATE COMPILE_SIMD_RISCV_RVV)
+   target_sources(faiss PRIVATE ${FAISS_SIMD_RVV_SRC})
+   if(NOT WIN32 AND FAISS_SIMD_RVV_SRC)

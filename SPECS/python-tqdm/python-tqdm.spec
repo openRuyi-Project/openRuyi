@@ -7,13 +7,14 @@
 %global srcname tqdm
 
 Name:           python-%{srcname}
-Version:        4.67.1
+Version:        4.67.3
 Release:        %autorelease
 Summary:        Fast, Extensible Progress Meter
 License:        MPL-2.0 AND MIT
 URL:            https://github.com/tqdm/tqdm
-#!RemoteAsset:  sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2
+#!RemoteAsset:  sha256:7d825f03f89244ef73f1d4ce193cb1774a8179fd96f31d7e1dcde62092b960bb
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -28,7 +29,7 @@ BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(colorama)
 BuildRequires:  python3dist(rich)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,9 +43,9 @@ tqdm(iterable), and you’re done!
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%{_bindir}/tqdm
 %doc README.rst
 %license LICENCE
+%{_bindir}/tqdm
 
 %changelog
-%{?autochangelog}
+%autochangelog

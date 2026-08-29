@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           iwd
-Version:        3.10
+Version:        3.12
 Release:        %autorelease
 Summary:        Wireless daemon for Linux
 License:        LGPL-2.1-or-later
 URL:            https://archive.kernel.org/oldwiki/iwd.wiki.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/network/wireless/iwd.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d89a5e45c7180170e19be828f9e944a768c593758094fc57a358d0e7c4cb1a49
 Source:         https://www.kernel.org/pub/linux/network/wireless/iwd-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -27,7 +27,6 @@ BuildOption(conf):  --with-systemd-networkdir=%{_systemd_util_dir}/network
 BuildOption(conf):  --with-systemd-modloaddir=%{_modulesloaddir}
 BuildOption(conf):  --disable-manual
 
-BuildRequires:  gcc
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  pkgconfig(dbus-1)
@@ -68,4 +67,4 @@ rm -f %{buildroot}%{_systemd_util_dir}/network/80-iwd.link
 %dir %{_sharedstatedir}/ead
 
 %changelog
-%{?autochangelog}
+%autochangelog

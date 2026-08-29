@@ -7,23 +7,24 @@
 %global srcname distlib
 
 Name:           python-%{srcname}
-Version:        0.3.7
+Version:        0.4.0
 Release:        %autorelease
-# TODO: Is this the correct license? Or should it be Python-2.0?
-License:        PSF-2.0
-URL:            https://github.com/pypa/distlib
 Summary:        Distribution utilities
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
-#!RemoteAsset
+License:        Python-2.0
+URL:            https://github.com/pypa/distlib
+#!RemoteAsset:  sha256:feec40075be03a04501a973d81f633735b4b69f98b05450592310c0f401a4e0d
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-
-BuildRequires:  python3-devel
-BuildRequires:  pyproject-rpm-macros
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname} +auto
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 %description
 Distlib is a library which implements low-level functions that
 relate to packaging and distribution of Python software.  It is intended to be
@@ -39,4 +40,4 @@ rm distlib/*.exe
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,7 +24,6 @@
     golang.org/x/exp/sumdb*
 }
 
-
 Name:           go-golang-x-exp
 Version:        0+git20260107.944ab1f
 Release:        %autorelease
@@ -31,12 +31,11 @@ Summary:        Experimental and deprecated packages
 License:        BSD-3-Clause
 URL:            https://golang.org/x/exp
 VCS:            git:https://github.com/golang/exp
-#!RemoteAsset
+#!RemoteAsset:  sha256:83d8e932d1daf52bda5042d856e30e54b2b9a556b5010e55a3954c544b3ea5fe
 Source0:        https://github.com/golang/exp/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-BuildOption(prep):  -n %{_name}-%{commit_id}
 BuildOption(check):  -vet=off -short
 
 BuildRequires:  go
@@ -55,9 +54,9 @@ Requires:       go(golang.org/x/tools)
 This package holds experimental and deprecated (in the old directory) packages.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

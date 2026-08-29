@@ -1,0 +1,44 @@
+From 96785f26ed86055e0521e8ebdb9342051b1c295c Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 13 Jun 2026 21:57:04 +0800
+Subject: [PATCH] Fix test format strings for Go vet
+
+---
+ decode_test.go | 2 +-
+ encode_test.go | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/decode_test.go b/decode_test.go
+index 8f32ced..b3c60f5 100644
+--- a/decode_test.go
++++ b/decode_test.go
+@@ -2407,7 +2407,7 @@ func TestUnmarshalUnexported(t *testing.T) {
+ 		t.Errorf("got error %v, expected nil", err)
+ 	}
+ 	if !reflect.DeepEqual(out, want) {
+-		t.Errorf("got %q, want %q", out, want)
++		t.Errorf("got %#v, want %#v", out, want)
+ 	}
+ }
+ 
+diff --git a/encode_test.go b/encode_test.go
+index e71a999..dc93dcd 100644
+--- a/encode_test.go
++++ b/encode_test.go
+@@ -991,11 +991,11 @@ func TestMarshalerError(t *testing.T) {
+ 		want string
+ 	}{
+ 		{
+-			json.NewMarshalerError(st, fmt.Errorf(errText), ""),
++			json.NewMarshalerError(st, fmt.Errorf("%s", errText), ""),
+ 			"json: error calling MarshalJSON for type " + st.String() + ": " + errText,
+ 		},
+ 		{
+-			json.NewMarshalerError(st, fmt.Errorf(errText), "TestMarshalerError"),
++			json.NewMarshalerError(st, fmt.Errorf("%s", errText), "TestMarshalerError"),
+ 			"json: error calling TestMarshalerError for type " + st.String() + ": " + errText,
+ 		},
+ 	}
+-- 
+2.43.0
+

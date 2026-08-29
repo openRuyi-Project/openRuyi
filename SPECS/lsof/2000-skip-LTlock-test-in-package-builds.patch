@@ -1,0 +1,27 @@
+From bf44b761e316f3c0cb5d4afb18823c4961693a7e Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Tue, 26 May 2026 00:43:37 +0800
+Subject: [PATCH] skip LTlock test in package builds
+
+See: https://github.com/lsof-org/lsof/issues/152
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ tests/LTlock.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/LTlock.c b/tests/LTlock.c
+index 60aa0f3..f6e152c 100644
+--- a/tests/LTlock.c
++++ b/tests/LTlock.c
+@@ -382,6 +382,8 @@ int main(int argc,     /* argument count */
+             "since OpenBSD kernel forbids kvm_read, thus skipping the test",
+             Pn);
+         xv = 77;
++# elif defined(LT_DIAL_linux)
++        xv = 77;
+ #    else
+         xv = 1;
+ #    endif
+-- 
+2.54.0
+

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Check for the presence of a compiler
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/ExtUtils-HasCompiler
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-HasCompiler-%{version}.tar.gz
+#!RemoteAsset:  sha256:02e1e7275df00682d3ca8ea1c27a30591d6dd08b3e3865c0958afae911635a66
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-HasCompiler-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -41,20 +45,8 @@ BuildRequires:  perl(warnings)
 This module tries to check if the current system is capable of compiling,
 linking and loading an XS module.
 
-%prep
-%setup -q -n ExtUtils-HasCompiler-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

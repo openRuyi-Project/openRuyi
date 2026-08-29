@@ -1,0 +1,32 @@
+---
+ setup.py |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/setup.py
++++ b/setup.py
+@@ -25,7 +25,8 @@ from distutils.command.sdist import sdis
+ from distutils import log
+ from subprocess import Popen, PIPE
+ sys.path.append("lib")
+-from contrib.debian.installer import DebianInstaller
++# this is opensuse not debian
++#from contrib.debian.installer import DebianInstaller
+ 
+ #
+ # Build the command line script
+@@ -373,10 +374,11 @@ class Install(install):
+             raise OSError("not found: %s" % ", ".join(mis_stys))
+ 
+     def run(self):
+-        if self.install_layout == "deb":
+-            db = DebianInstaller(self)
+-        else:
+-            db = None
++# this is opensuse not debian so disable this
++#        if self.install_layout == "deb":
++#            db = DebianInstaller(self)
++#        else:
++        db = None
+ 
+         if not(db) and not(self.nodeps):
+             try:

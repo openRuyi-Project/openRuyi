@@ -1,0 +1,41 @@
+From 40772e30fdb13c97a515b189f12f89abd74a91ef Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 15 May 2026 13:38:07 +0800
+Subject: [PATCH] Relax fsspec version requirements
+
+https://github.com/huggingface/datasets/issues/7326
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ PKG-INFO | 2 +-
+ setup.py | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/PKG-INFO b/PKG-INFO
+index 0ef17d7..b3221e4 100644
+--- a/PKG-INFO
++++ b/PKG-INFO
+@@ -35,7 +35,7 @@ Requires-Dist: httpx<1.0.0
+ Requires-Dist: tqdm>=4.66.3
+ Requires-Dist: xxhash
+ Requires-Dist: multiprocess<0.70.20
+-Requires-Dist: fsspec[http]<=2026.2.0,>=2023.1.0
++Requires-Dist: fsspec[http]<=2026.4.0,>=2023.1.0
+ Requires-Dist: huggingface-hub<2.0,>=0.25.0
+ Requires-Dist: packaging
+ Requires-Dist: pyyaml>=5.1
+diff --git a/setup.py b/setup.py
+index 4baf45b..4064eb9 100644
+--- a/setup.py
++++ b/setup.py
+@@ -127,7 +127,7 @@ REQUIRED_PKGS = [
+     "multiprocess<0.70.20",  # to align with dill<0.3.9 (see above)
+     # to save datasets locally or on any filesystem
+     # minimum 2023.1.0 to support protocol=kwargs in fsspec's `open`, `get_fs_token_paths`, etc.: see https://github.com/fsspec/filesystem_spec/pull/1143
+-    "fsspec[http]>=2023.1.0,<=2026.2.0",
++    "fsspec[http]>=2023.1.0,<=2026.4.0",
+     # To get datasets from the Datasets Hub on huggingface.co
+     "huggingface-hub>=0.25.0,<2.0",
+     # Utilities from PyPA to e.g., compare versions
+-- 
+2.54.0
+

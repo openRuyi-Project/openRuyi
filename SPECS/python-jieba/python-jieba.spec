@@ -12,12 +12,12 @@ Release:        %autorelease
 Summary:        Chinese text segmentation
 License:        MIT
 URL:            https://github.com/fxsjy/jieba
-#!RemoteAsset
+#!RemoteAsset:  sha256:055ca12f62674fafed09427f176506079bc135638a14e23e25be909131928db2
 Source0:        https://files.pythonhosted.org/packages/source/j/%{srcname}/%{srcname}-%{version}.tar.gz
 # The tarball from PyPI does not have README.md and LICENSE. So we fetch files from GitHub additionally.
-#!RemoteAsset
+#!RemoteAsset:  sha256:f7e986b6d4d067cd057b0e98a678fed7b4a76f9866571d7d65cfdada8afe4c0c
 Source1:        https://raw.githubusercontent.com/fxsjy/jieba/refs/tags/v%{version}/README.md
-#!RemoteAsset
+#!RemoteAsset:  sha256:18ba0984839f85853b29fadaf992f7dba8fd0ca0fbeae34de2b8735222dc7a37
 Source2:        https://raw.githubusercontent.com/fxsjy/jieba/refs/tags/v%{version}/LICENSE
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -31,11 +31,12 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(whoosh)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-"Jieba" (Chinese for "to stutter") Chinese text segmentation: built to be the best Python Chinese word segmentation module.
+"Jieba" (Chinese for "to stutter") Chinese text segmentation:
+built to be the best Python Chinese word segmentation module.
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -49,4 +50,4 @@ cp %{SOURCE2} LICENSE
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

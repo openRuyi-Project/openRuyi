@@ -6,16 +6,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-Name:          pcre2
-Version:       10.45
-Release:       %autorelease
-Summary:       A library for Perl-compatible regular expressions
-License:       BSD-3-Clause WITH PCRE2-exception
-URL:           https://pcre2project.github.io/pcre2/
-VCS:           git:https://github.com/PCRE2Project/pcre2.git
-#!RemoteAsset
-Source0:       https://github.com/PCRE2Project/%{name}/releases/download/%{name}-%{version}/%{name}-%{version}.tar.bz2
-BuildSystem:   autotools
+Name:           pcre2
+Version:        10.47
+Release:        %autorelease
+Summary:        A library for Perl-compatible regular expressions
+License:        BSD-3-Clause WITH PCRE2-exception
+URL:            https://pcre2project.github.io/pcre2/
+VCS:            git:https://github.com/PCRE2Project/pcre2.git
+#!RemoteAsset:  sha256:47fe8c99461250d42f89e6e8fdaeba9da057855d06eb7fc08d9ca03fd08d7bc7
+Source0:        https://github.com/PCRE2Project/pcre2/releases/download/pcre2-%{version}/pcre2-%{version}.tar.bz2
+BuildSystem:    autotools
 
 BuildOption(conf):  --enable-jit
 BuildOption(conf):  --enable-pcre2-16
@@ -66,10 +66,13 @@ autoreconf -fiv
 %{_includedir}/*.h
 %{_libdir}/*.so
 %{_libdir}/*.a
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libpcre2-16.pc
+%{_libdir}/pkgconfig/libpcre2-32.pc
+%{_libdir}/pkgconfig/libpcre2-8.pc
+%{_libdir}/pkgconfig/libpcre2-posix.pc
 %{_mandir}/man1/pcre2-config.1.gz
 %{_mandir}/man3/*
 %{_bindir}/pcre2-config
 
 %changelog
-%{?autochangelog}
+%autochangelog

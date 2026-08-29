@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Utility functions for checking references
 License:        MIT
 URL:            https://metacpan.org/dist/Ref-Util
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/A/AR/ARC/Ref-Util-%{version}.tar.gz
+#!RemoteAsset:  sha256:415fa73dbacf44f3d5d79c14888cc994562720ab468e6f71f91cd1f769f105e1
+Source0:        https://www.cpan.org/authors/id/A/AR/ARC/Ref-Util-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Exporter) >= 5.57
@@ -30,20 +34,8 @@ Requires:       perl(Exporter) >= 5.57
 Ref::Util introduces several functions to help identify references in a
 smarter (and usually faster) way. In short:
 
-%prep
-%setup -q -n Ref-Util-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

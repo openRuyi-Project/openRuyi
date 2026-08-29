@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Simple construction, analysis and modification of binary data
 License:        MIT
 URL:            https://github.com/scott-griffiths/bitstring
-#!RemoteAsset
+#!RemoteAsset:  sha256:a08bc09d3857216d4c0f412a1611056f1cc2b64fd254fb1e8a0afba7cfa1a95a
 Source0:        https://files.pythonhosted.org/packages/source/b/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip) >= 19
 BuildRequires:  python3dist(setuptools) >= 61
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ to a file or stream.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

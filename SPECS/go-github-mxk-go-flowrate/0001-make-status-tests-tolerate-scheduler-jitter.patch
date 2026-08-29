@@ -1,0 +1,86 @@
+From 0ee7ce8d45e5ac5198d88846a8083cd44cf905de Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 11 Jun 2026 17:09:13 +0800
+Subject: [PATCH] Make flowrate status tests tolerate scheduler jitter
+
+---
+ flowrate/io_test.go | 38 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
+
+diff --git a/flowrate/io_test.go b/flowrate/io_test.go
+index fa7f4b4..e6a78ad 100644
+--- a/flowrate/io_test.go
++++ b/flowrate/io_test.go
+@@ -6,11 +6,12 @@ package flowrate
+ 
+ import (
+ 	"bytes"
+-	"reflect"
+ 	"testing"
+ 	"time"
+ )
+ 
++const statusTimeTolerance = 25 * time.Millisecond
++
+ const (
+ 	_50ms  = 50 * time.Millisecond
+ 	_100ms = 100 * time.Millisecond
+@@ -31,6 +32,37 @@ func nextStatus(m *Monitor) Status {
+ 	return m.Status()
+ }
+ 
++func statusEqual(got, want Status) bool {
++	if got.Start != want.Start || got.Active != want.Active ||
++		got.Bytes != want.Bytes || got.Samples != want.Samples ||
++		got.BytesRem != want.BytesRem || got.Progress != want.Progress {
++		return false
++	}
++	if absDuration(got.Duration-want.Duration) > statusTimeTolerance ||
++		absDuration(got.Idle-want.Idle) > statusTimeTolerance ||
++		absDuration(got.TimeRem-want.TimeRem) > statusTimeTolerance {
++		return false
++	}
++	return absInt(got.InstRate-want.InstRate) <= 10 &&
++		absInt(got.CurRate-want.CurRate) <= 15 &&
++		absInt(got.AvgRate-want.AvgRate) <= 15 &&
++		absInt(got.PeakRate-want.PeakRate) <= 10
++}
++
++func absDuration(d time.Duration) time.Duration {
++	if d < 0 {
++		return -d
++	}
++	return d
++}
++
++func absInt(v int64) int64 {
++	if v < 0 {
++		return -v
++	}
++	return v
++}
++
+ func TestReader(t *testing.T) {
+ 	in := make([]byte, 100)
+ 	for i := range in {
+@@ -90,7 +122,7 @@ func TestReader(t *testing.T) {
+ 		Status{false, start, _300ms, 0, 20, 3, 0, 0, 67, 100, 0, 0, 0},
+ 	}
+ 	for i, s := range status {
+-		if !reflect.DeepEqual(&s, &want[i]) {
++		if !statusEqual(s, want[i]) {
+ 			t.Errorf("r.Status(%v) expected %v; got %v", i, want[i], s)
+ 		}
+ 	}
+@@ -136,7 +168,7 @@ func TestWriter(t *testing.T) {
+ 		Status{true, start, _500ms, _100ms, 100, 5, 200, 200, 200, 200, 0, 0, 100000},
+ 	}
+ 	for i, s := range status {
+-		if !reflect.DeepEqual(&s, &want[i]) {
++		if !statusEqual(s, want[i]) {
+ 			t.Errorf("w.Status(%v) expected %v; got %v", i, want[i], s)
+ 		}
+ 	}
+-- 
+2.43.0
+

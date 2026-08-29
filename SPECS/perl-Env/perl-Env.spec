@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Perl module that imports environment variables as scalars or arrays
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Env
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Env-%{version}.tar.gz
+#!RemoteAsset:  sha256:d94a3d412df246afdc31a2199cbd8ae915167a3f4684f7b7014ce1200251ebb0
+Source0:        https://www.cpan.org/authors/id/F/FL/FLORA/Env-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Tie::Array)
@@ -25,20 +29,8 @@ Perl maintains environment variables in a special hash named %ENV. For when
 this access method is inconvenient, the Perl module Env allows environment
 variables to be treated as scalar or array variables.
 
-%prep
-%setup -q -n Env-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

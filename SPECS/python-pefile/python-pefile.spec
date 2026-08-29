@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python module to read and work with PE (Portable Executable) files
 License:        MIT
 URL:            https://github.com/erocarrera/pefile
-#!RemoteAsset
+#!RemoteAsset:  sha256:3ff6c5d8b43e8c37bb6e6dd5085658d658a7a0bdcd20b6a07b1fcfc1c4e9d632
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -20,10 +20,10 @@ BuildSystem:    pyproject
 BuildOption(install):  %{srcname} ordlookup peutils +auto
 
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  pytest
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +47,4 @@ file format.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

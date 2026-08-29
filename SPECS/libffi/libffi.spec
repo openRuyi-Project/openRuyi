@@ -62,7 +62,7 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_libdir}/*.so.*
 
 %files devel
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libffi.pc
 %{_includedir}/ffi*.h
 %{_libdir}/*.so
 %{_mandir}/man3/*

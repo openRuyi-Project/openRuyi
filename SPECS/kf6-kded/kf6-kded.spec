@@ -7,20 +7,22 @@
 %define qt6_version 6.8.0
 
 %define rname kded
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kded
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Central daemon of KDE workspaces
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kded
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:31ba5c920b199dd13fff634001d22c993df3d639a8df989e0a55ec1d13a8279f
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  cmake(KF6Config) >= %{_kf6_version}
@@ -51,19 +53,6 @@ KDED runs in the background and performs a number of small tasks.
 Some of these tasks are built in, others are started on demand.
 Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %preun
 %systemd_user_preun plasma-kded6.service
 
@@ -91,4 +80,4 @@ Development files.
 %{_kf6_dbusinterfacesdir}/org.kde.kded6.xml
 
 %changelog
-%{?autochangelog}
+%autochangelog

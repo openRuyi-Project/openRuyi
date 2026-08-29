@@ -87,7 +87,7 @@ fi
 %files devel
 %{_includedir}/libisoburn
 %{_libdir}/libisoburn.so
-%{_libdir}/pkgconfig/libisoburn*.pc
+%{_libdir}/pkgconfig/libisoburn-1.pc
 
 %files -n xorriso
 %ghost %{_bindir}/cdrecord

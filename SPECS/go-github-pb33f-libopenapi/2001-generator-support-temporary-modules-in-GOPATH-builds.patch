@@ -1,0 +1,91 @@
+From 7e26edcc8a51574d9a4af8dae9379d9c70d6361d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 14:52:19 +0800
+Subject: [PATCH 2/2] generator: support temporary modules in GOPATH builds
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ generator/golang/fullcircle_test.go           | 22 ++++++++++++++-----
+ generator/golang/roundtrip_components_test.go |  6 ++---
+ 2 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/generator/golang/fullcircle_test.go b/generator/golang/fullcircle_test.go
+index 92c72ce..a90bc4d 100644
+--- a/generator/golang/fullcircle_test.go
++++ b/generator/golang/fullcircle_test.go
+@@ -14,8 +14,7 @@ func TestTrainTravelFullCircleCanonicalRoundTrip(t *testing.T) {
+ 	file := renderTrainTravel(t, trainTravelFullCircleOptions()...)
+ 
+ 	repoRoot := repoRootDir(t)
+-	dir := t.TempDir()
+-	writeTempModule(t, dir, repoRoot)
++	dir, moduleEnv := writeTempModule(t, repoRoot)
+ 	writeTempFile(t, filepath.Join(dir, "internal", "trainmodels", "models_gen.go"), file.Source)
+ 	if file.SchemaMetadata == nil {
+ 		t.Fatal("expected schema metadata sidecar")
+@@ -25,9 +24,8 @@ func TestTrainTravelFullCircleCanonicalRoundTrip(t *testing.T) {
+ 
+ 	cmd := exec.Command("go", "run", "./cmd/roundtrip")
+ 	cmd.Dir = dir
+-	cmd.Env = append(os.Environ(),
+-		"GOWORK=off",
+-		"GOFLAGS=-mod=mod",
++	cmd.Env = append(os.Environ(), moduleEnv...)
++	cmd.Env = append(cmd.Env,
+ 		"TRAIN_TRAVEL_SPEC="+filepath.Join(repoRoot, "generator", "golang", "testdata", "train-travel.yaml"),
+ 		"GENERATED_MODELS="+filepath.Join(dir, "internal", "trainmodels", "models_gen.go"),
+ 		"GENERATED_METADATA="+filepath.Join(dir, "internal", "trainmodels", file.SchemaMetadata.Name),
+@@ -64,14 +62,26 @@ func repoRootDir(t *testing.T) string {
+ 	return root
+ }
+ 
+-func writeTempModule(t *testing.T, dir, repoRoot string) {
++func writeTempModule(t *testing.T, repoRoot string) (string, []string) {
+ 	t.Helper()
++	workspace := t.TempDir()
++	dir := workspace
++	moduleEnv := []string{"GO111MODULE=on", "GOWORK=off", "GOFLAGS=-mod=mod"}
++	if os.Getenv("GO111MODULE") == "off" {
++		dir = filepath.Join(workspace, "src", "trainfullcircle")
++		moduleEnv = []string{
++			"GO111MODULE=off",
++			"GOWORK=off",
++			"GOPATH=" + workspace + string(os.PathListSeparator) + os.Getenv("GOPATH"),
++		}
++	}
+ 	writeTempFile(t, filepath.Join(dir, "go.mod"), []byte("module trainfullcircle\n\ngo 1.25.0\n\nrequire github.com/pb33f/libopenapi v0.0.0\n\nreplace github.com/pb33f/libopenapi => "+repoRoot+"\n"))
+ 	sum, err := os.ReadFile(filepath.Join(repoRoot, "go.sum"))
+ 	if err != nil {
+ 		t.Fatal(err)
+ 	}
+ 	writeTempFile(t, filepath.Join(dir, "go.sum"), sum)
++	return dir, moduleEnv
+ }
+ 
+ func writeTempFile(t *testing.T, path string, data []byte) {
+diff --git a/generator/golang/roundtrip_components_test.go b/generator/golang/roundtrip_components_test.go
+index 95a5228..2be7f25 100644
+--- a/generator/golang/roundtrip_components_test.go
++++ b/generator/golang/roundtrip_components_test.go
+@@ -96,8 +96,7 @@ func TestTrainTravelComponentsRoundTrip(t *testing.T) {
+ func reflectComponentsRoundTrip(t *testing.T, file *GeneratedFile) []byte {
+ 	t.Helper()
+ 	repoRoot := repoRootDir(t)
+-	dir := t.TempDir()
+-	writeTempModule(t, dir, repoRoot)
++	dir, moduleEnv := writeTempModule(t, repoRoot)
+ 	writeTempFile(t, filepath.Join(dir, "internal", "trainmodels", "models_gen.go"), file.Source)
+ 	writeTempFile(t, filepath.Join(dir, "internal", "trainmodels", file.SchemaMetadata.Name), file.SchemaMetadata.Source)
+ 	program := strings.Replace(roundTripDriverProgram, "__TYPES__", reflectTypeList(file), 1)
+@@ -106,7 +105,8 @@ func reflectComponentsRoundTrip(t *testing.T, file *GeneratedFile) []byte {
+ 	out := filepath.Join(dir, "reconstructed.yaml")
+ 	cmd := exec.Command("go", "run", "./cmd/roundtrip")
+ 	cmd.Dir = dir
+-	cmd.Env = append(os.Environ(), "GOWORK=off", "GOFLAGS=-mod=mod", "ROUNDTRIP_OUT="+out)
++	cmd.Env = append(os.Environ(), moduleEnv...)
++	cmd.Env = append(cmd.Env, "ROUNDTRIP_OUT="+out)
+ 	if combined, err := cmd.CombinedOutput(); err != nil {
+ 		t.Fatalf("reflect round-trip command failed: %v\n%s", err, combined)
+ 	}
+-- 
+2.43.0

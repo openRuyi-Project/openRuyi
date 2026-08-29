@@ -1,0 +1,22 @@
+---
+ t/syslog.t | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/t/syslog.t b/t/syslog.t
+index 0c61b4d..8af7570 100644
+--- a/t/syslog.t
++++ b/t/syslog.t
+@@ -8,6 +8,10 @@ use Log::Any::Adapter;
+ use Log::Any::Adapter::Syslog;
+ 
+ # Mock the Sys::Syslog classes to behave as we desire.
++# Log::Any::Adapter::Syslog uses these variables to choose its default
++# log_level, so keep this test independent of the build environment.
++local @ENV{qw(LOG_LEVEL TRACE DEBUG VERBOSE QUIET)};
++
+ my @logs;
+ my @openlogs;
+ no warnings qw( redefine once );
+-- 
+2.50.1
+

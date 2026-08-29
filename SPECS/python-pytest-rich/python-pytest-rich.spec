@@ -26,7 +26,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools) >= 42
 BuildRequires:  python3dist(setuptools-scm)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,8 +37,8 @@ output.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst CHANGELOG.md
+%license LICENSE
 
 %changelog
 %autochangelog

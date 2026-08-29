@@ -1,0 +1,208 @@
+From aae20f999dae84b5991892e4c47fd761bbc37cb4 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 10 Jul 2026 17:48:38 +0800
+Subject: [PATCH] fix(procfs): report raw values in parse errors
+
+Use the original string fields when reporting mountinfo and network socket parsing failures. The parsed integer destinations are zero-valued on errors and hide the malformed input.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ mountinfo.go          |  4 ++--
+ mountinfo_test.go     | 32 ++++++++++++++++++++++++++++++++
+ net_ip_socket.go      | 18 +++++++++---------
+ net_ip_socket_test.go | 37 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 80 insertions(+), 11 deletions(-)
+
+diff --git a/mountinfo.go b/mountinfo.go
+index 8594ae7..c019656 100644
+--- a/mountinfo.go
++++ b/mountinfo.go
+@@ -98,11 +98,11 @@ func parseMountInfoString(mountString string) (*MountInfo, error) {
+ 
+ 	mount.MountID, err = strconv.Atoi(mountInfo[0])
+ 	if err != nil {
+-		return nil, fmt.Errorf("%w: mount ID: %q", ErrFileParse, mount.MountID)
++		return nil, fmt.Errorf("%w: mount ID: %q", ErrFileParse, mountInfo[0])
+ 	}
+ 	mount.ParentID, err = strconv.Atoi(mountInfo[1])
+ 	if err != nil {
+-		return nil, fmt.Errorf("%w: parent ID: %q", ErrFileParse, mount.ParentID)
++		return nil, fmt.Errorf("%w: parent ID: %q", ErrFileParse, mountInfo[1])
+ 	}
+ 	// Has optional fields, which is a space separated list of values.
+ 	// Example: shared:2 master:7
+diff --git a/mountinfo_test.go b/mountinfo_test.go
+index e40987b..832edac 100644
+--- a/mountinfo_test.go
++++ b/mountinfo_test.go
+@@ -13,11 +13,43 @@
+ package procfs
+ 
+ import (
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+ )
+ 
++func TestParseMountInfoStringParseErrorsIncludeRawValue(t *testing.T) {
++	tests := []struct {
++		name  string
++		line  string
++		value string
++	}{
++		{
++			name:  "mount ID",
++			line:  "invalid-mount-id 21 0:16 / /sys rw shared:7 - sysfs sysfs rw",
++			value: "invalid-mount-id",
++		},
++		{
++			name:  "parent ID",
++			line:  "16 invalid-parent-id 0:16 / /sys rw shared:7 - sysfs sysfs rw",
++			value: "invalid-parent-id",
++		},
++	}
++
++	for _, test := range tests {
++		t.Run(test.name, func(t *testing.T) {
++			_, err := parseMountInfoString(test.line)
++			if err == nil {
++				t.Fatal("expected an error, but none occurred")
++			}
++			if !strings.Contains(err.Error(), test.value) {
++				t.Fatalf("error %q does not contain raw value %q", err, test.value)
++			}
++		})
++	}
++}
++
+ func TestMountInfo(t *testing.T) {
+ 	tests := []struct {
+ 		name    string
+diff --git a/net_ip_socket.go b/net_ip_socket.go
+index 9291f8c..b3b6ec3 100644
+--- a/net_ip_socket.go
++++ b/net_ip_socket.go
+@@ -178,7 +178,7 @@ func parseNetIPSocketLine(fields []string, isUDP bool) (*netIPSocketLine, error)
+ 	}
+ 
+ 	if line.Sl, err = strconv.ParseUint(s[0], 0, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Unable to parse sl field in %q: %w", ErrFileParse, line.Sl, err)
++		return nil, fmt.Errorf("%w: Unable to parse sl field in %q: %w", ErrFileParse, s[0], err)
+ 	}
+ 	// local_address
+ 	l := strings.Split(fields[1], ":")
+@@ -189,7 +189,7 @@ func parseNetIPSocketLine(fields []string, isUDP bool) (*netIPSocketLine, error)
+ 		return nil, err
+ 	}
+ 	if line.LocalPort, err = strconv.ParseUint(l[1], 16, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Unable to parse local_address port value line %q: %w", ErrFileParse, line.LocalPort, err)
++		return nil, fmt.Errorf("%w: Unable to parse local_address port value line %q: %w", ErrFileParse, l[1], err)
+ 	}
+ 
+ 	// remote_address
+@@ -201,12 +201,12 @@ func parseNetIPSocketLine(fields []string, isUDP bool) (*netIPSocketLine, error)
+ 		return nil, err
+ 	}
+ 	if line.RemPort, err = strconv.ParseUint(r[1], 16, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse rem_address port value in %q: %w", ErrFileParse, line.RemPort, err)
++		return nil, fmt.Errorf("%w: Cannot parse rem_address port value in %q: %w", ErrFileParse, r[1], err)
+ 	}
+ 
+ 	// st
+ 	if line.St, err = strconv.ParseUint(fields[3], 16, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse st value in %q: %w", ErrFileParse, line.St, err)
++		return nil, fmt.Errorf("%w: Cannot parse st value in %q: %w", ErrFileParse, fields[3], err)
+ 	}
+ 
+ 	// tx_queue and rx_queue
+@@ -219,27 +219,27 @@ func parseNetIPSocketLine(fields []string, isUDP bool) (*netIPSocketLine, error)
+ 		)
+ 	}
+ 	if line.TxQueue, err = strconv.ParseUint(q[0], 16, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse tx_queue value in %q: %w", ErrFileParse, line.TxQueue, err)
++		return nil, fmt.Errorf("%w: Cannot parse tx_queue value in %q: %w", ErrFileParse, q[0], err)
+ 	}
+ 	if line.RxQueue, err = strconv.ParseUint(q[1], 16, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse trx_queue value in %q: %w", ErrFileParse, line.RxQueue, err)
++		return nil, fmt.Errorf("%w: Cannot parse trx_queue value in %q: %w", ErrFileParse, q[1], err)
+ 	}
+ 
+ 	// uid
+ 	if line.UID, err = strconv.ParseUint(fields[7], 0, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse UID value in %q: %w", ErrFileParse, line.UID, err)
++		return nil, fmt.Errorf("%w: Cannot parse UID value in %q: %w", ErrFileParse, fields[7], err)
+ 	}
+ 
+ 	// inode
+ 	if line.Inode, err = strconv.ParseUint(fields[9], 0, 64); err != nil {
+-		return nil, fmt.Errorf("%w: Cannot parse inode value in %q: %w", ErrFileParse, line.Inode, err)
++		return nil, fmt.Errorf("%w: Cannot parse inode value in %q: %w", ErrFileParse, fields[9], err)
+ 	}
+ 
+ 	// drops
+ 	if isUDP {
+ 		drops, err := strconv.ParseUint(fields[12], 0, 64)
+ 		if err != nil {
+-			return nil, fmt.Errorf("%w: Cannot parse drops value in %q: %w", ErrFileParse, drops, err)
++			return nil, fmt.Errorf("%w: Cannot parse drops value in %q: %w", ErrFileParse, fields[12], err)
+ 		}
+ 		line.Drops = &drops
+ 	}
+diff --git a/net_ip_socket_test.go b/net_ip_socket_test.go
+index 4847d43..6e1c018 100644
+--- a/net_ip_socket_test.go
++++ b/net_ip_socket_test.go
+@@ -15,11 +15,48 @@ package procfs
+ 
+ import (
+ 	"net"
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+ )
+ 
++func TestParseNetIPSocketLineParseErrorsIncludeRawValue(t *testing.T) {
++	baseFields := []string{"1:", "00000000:0000", "00000000:0000", "07", "00000000:00000001", "0:0", "0", "10", "0", "39309", "2", "000000009bd60d72", "5"}
++	tests := []struct {
++		name  string
++		value string
++		want  string
++		field int
++		isUDP bool
++	}{
++		{name: "sl", field: 0, value: "invalid-sl:", want: "invalid-sl"},
++		{name: "local port", field: 1, value: "00000000:invalid-local-port", want: "invalid-local-port"},
++		{name: "remote port", field: 2, value: "00000000:invalid-remote-port", want: "invalid-remote-port"},
++		{name: "state", field: 3, value: "invalid-state", want: "invalid-state"},
++		{name: "transmit queue", field: 4, value: "invalid-tx-queue:00000001", want: "invalid-tx-queue"},
++		{name: "receive queue", field: 4, value: "00000000:invalid-rx-queue", want: "invalid-rx-queue"},
++		{name: "UID", field: 7, value: "invalid-uid", want: "invalid-uid"},
++		{name: "inode", field: 9, value: "invalid-inode", want: "invalid-inode"},
++		{name: "drops", field: 12, value: "invalid-drops", want: "invalid-drops", isUDP: true},
++	}
++
++	for _, test := range tests {
++		t.Run(test.name, func(t *testing.T) {
++			fields := append([]string(nil), baseFields...)
++			fields[test.field] = test.value
++
++			_, err := parseNetIPSocketLine(fields, test.isUDP)
++			if err == nil {
++				t.Fatal("expected an error, but none occurred")
++			}
++			if !strings.Contains(err.Error(), test.want) {
++				t.Fatalf("error %q does not contain raw value %q", err, test.want)
++			}
++		})
++	}
++}
++
+ func Test_parseNetIPSocketLine(t *testing.T) {
+ 	tests := []struct {
+ 		fields  []string
+-- 
+2.43.0
+
+

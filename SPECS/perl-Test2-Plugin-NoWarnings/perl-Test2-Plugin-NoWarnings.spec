@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Fail if tests warn
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Test2-Plugin-NoWarnings
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Test2-Plugin-NoWarnings-%{version}.tar.gz
+#!RemoteAsset:  sha256:c97cb1122cc6e3e4a079059da71e12f65760bfb0671d19d25a7ec7c5f1f240fb
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Test2-Plugin-NoWarnings-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -25,13 +29,13 @@ BuildRequires:  perl(IPC::Run3)
 BuildRequires:  perl(Module::Pluggable)
 BuildRequires:  perl(parent)
 BuildRequires:  perl(strict)
-BuildRequires:  perl(Test::More) >= 1.302015
 BuildRequires:  perl(Test2) >= 1.302167
 BuildRequires:  perl(Test2::API)
 BuildRequires:  perl(Test2::Event)
 BuildRequires:  perl(Test2::Require::Module)
 BuildRequires:  perl(Test2::Util::HashBase)
 BuildRequires:  perl(Test2::V0)
+BuildRequires:  perl(Test::More) >= 1.302015
 BuildRequires:  perl(warnings)
 
 Requires:       perl(Test2) >= 1.302167
@@ -41,20 +45,8 @@ Loading this plugin causes your tests to fail if there any warnings while
 they run. Each warning generates a new failing test and the warning content
 is outputted via diag.
 
-%prep
-%setup -q -n Test2-Plugin-NoWarnings-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

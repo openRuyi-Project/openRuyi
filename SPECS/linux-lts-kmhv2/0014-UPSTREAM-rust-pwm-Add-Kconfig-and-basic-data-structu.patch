@@ -1,7 +1,7 @@
-From 39b686ede0ad0976a184f7f68abbac380f5a59d6 Mon Sep 17 00:00:00 2001
+From d22b703423b02fef77f92c7c296b729cb930987e Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Thu, 16 Oct 2025 15:38:02 +0200
-Subject: [PATCH 014/292] UPSTREAM: rust: pwm: Add Kconfig and basic data
+Subject: [RUYI PATCH] UPSTREAM: rust: pwm: Add Kconfig and basic data
  structures
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,7 +44,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  create mode 100644 rust/kernel/pwm.rs
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index e8f06145fb54..990436459862 100644
+index 554e881b05be..fce5418579bd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -20798,6 +20798,14 @@ F:	include/linux/pwm.h

@@ -5,14 +5,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           rust-rpm-macros
-Version:        0.2
+Version:        0.5
 Release:        %autorelease
 Summary:        Rust macros for openRuyi packaging
 License:        MIT
-# TODO: Update the URL when there is a proper project page
-URL:            https://git.openruyi.cn/openRuyi/rust-rpm-macros
-#!RemoteAsset:  sha256:5659e8ee57a1669b23a64bf9ae580908f04257d069d1b5c924279682a4feae17
-Source0:        https://git.openruyi.cn/openRuyi/rust-rpm-macros/archive/%{version}.tar.gz
+URL:            https://github.com/openRuyi-Project/rust-rpm-macros
+#!RemoteAsset:  sha256:ef72765b89211254f2ef54c0a49fcfb9e7f3bd27cef84a3890420347087cbc21
+Source0:        https://github.com/openRuyi-Project/rust-rpm-macros/archive/refs/tags/v%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    autotools
 
@@ -31,8 +30,9 @@ This package provides RPM macros for packaging Rust software in openRuyi.
 %files
 %license LICENSE
 %{_rpmmacrodir}/macros.buildsystem.rustcrates
+%{_rpmmacrodir}/macros.buildsystem.rust
 %{_rpmmacrodir}/macros.rust
 %{_rpmconfigdir}/rust-rpm-macros/rustcrates-gen-feature-specparts.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog

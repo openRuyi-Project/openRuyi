@@ -1,0 +1,22 @@
+From ba05fe8cd6f7f7c8512a58f07c9a2318e4662a6b Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Thu, 14 May 2026 19:37:00 +0800
+Subject: [PATCH 4/6] runtime: enable Cloud Hypervisor config on RISC-V
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ src/runtime/arch/riscv64-options.mk | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/runtime/arch/riscv64-options.mk b/src/runtime/arch/riscv64-options.mk
+index 55ba9da80..347642f3c 100644
+--- a/src/runtime/arch/riscv64-options.mk
++++ b/src/runtime/arch/riscv64-options.mk
+@@ -11,3 +11,4 @@ MACHINEACCELERATORS :=
+ CPUFEATURES :=
+ 
+ QEMUCMD := qemu-system-riscv64
++CLHCMD := cloud-hypervisor
+-- 
+2.50.1 (Apple Git-155)
+

@@ -9,17 +9,16 @@ Version:        0.1
 Release:        %autorelease
 Summary:        Go macros for openRuyi packaging
 License:        MIT
-# TODO: Update the URL when there is a proper project page
-URL:            https://git.openruyi.cn/misaka00251/go-rpm-macros
-#!RemoteAsset
-Source0:        https://git.openruyi.cn/misaka00251/go-rpm-macros/archive/v%{version}.tar.gz
+URL:            https://github.com/openRuyi-Project/go-rpm-macros
+#!RemoteAsset:  sha256:a7e328684503191c82d2c7a4c56030783e51f9f9f8b1f6f7800714230692f960
+Source0:        https://github.com/openRuyi-Project/go-rpm-macros/archive/refs/tags/v%{version}.tar.gz
 BuildArch:      noarch
 
 %description
 This package provides RPM macros for packaging Go software in openRuyi.
 
 %prep
-%autosetup -n %{name}
+%autosetup -n %{name}-%{version}
 
 # No build needed
 %build
@@ -39,4 +38,4 @@ install -D -m644 macros.buildsystem.golangmodules %{buildroot}%{_rpmmacrodir}/ma
 %{_rpmmacrodir}/macros.buildsystem.golangmodules
 
 %changelog
-%{?autochangelog}
+%autochangelog

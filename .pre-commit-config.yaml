@@ -20,6 +20,12 @@ repos:
        entry: '^Release:.*(%autorelease|%{autorelease}).*$'
        args: ["--negate"]
        files: \.spec$
+    -  id: check-files-pkgconfig-file
+       name: "check %files pkgconfig files is not *"
+       language: pygrep
+       entry: '^%{(_datadir|_libdir)}/pkgconfig/\*.*'
+       args: []
+       files: \.spec$
     -  id: autochangelog
        name: "check autochangelog macro"
        language: pygrep
@@ -32,11 +38,41 @@ repos:
        entry: '^(((BuildOption\(.*\)|BuildRequires):(?! {2}))|(%files {2,}(?=\S)))'
        args: []
        files: \.spec$
+    -  id: python-name
+       name: "python spec name should follow PEP 503"
+       language: fail
+       entry: |
+         only valid characters in a name are the ASCII alphabet, ASCII numbers, ., -,
+         and _. The name should be lowercased with all runs of the characters ., -,
+         or _ replaced with a single - character.
+
+         see https://peps.python.org/pep-0503/#normalized-names
+         see https://openruyi.cn/docs/guide/packaging-guidelines/languages/Python
+       files: python-(?!([a-z0-9]|[a-z0-9][a-z0-9._-]*[a-z0-9])).*\.spec$
+    -  id: no-entries-directly-under-SPECS
+       name: "SPECS may only containreal subdirectorys"
+       language: fail
+       entry: |
+         There should only be subdirectories under SPECS
+       files: '^SPECS/[^/]+$'
+    -  id: dont-add-constraints-to-repo
+       name: "Don't add _constraints to spec directory"
+       language: fail
+       entry: |
+         _constraints should not be placed in the git repository
+         It should be configured in the obs repository.
+       files: ^SPECS/.*/_constraints$
     -  id: sourcewithRemoteAsset
        name: "check Source with #!RemoteAsset"
        language: python
        entry: scripts/pre-commit-hooks/check_source_with_remoteasset.py
        files: \.spec$
+       pass_filenames: true
+    -  id: check-rust-cargo-toml
+       name: "Check Cargo.toml for crate related specs"
+       language: python
+       entry: scripts/pre-commit-hooks/check_rust_cargo_toml.py
+       files: ^SPECS/[^/]+/(Cargo\.toml|[^/]+\.spec)$
        pass_filenames: true
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0

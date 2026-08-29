@@ -90,24 +90,26 @@ rm -f %{buildroot}%{_libdir}/icu/%{version}/{Makefile.inc,pkgdata.inc}
 %files
 %license license.html
 %doc readme.html
-%_bindir/*
-%_sbindir/*
-%_mandir/man*/*
-%dir %_datadir/icu
-%dir %_datadir/icu/%{version}
-%_datadir/icu/%{version}/*
-%_libdir/libicu*.so.*
+%{_bindir}/*
+%{_sbindir}/*
+%{_mandir}/man*/*
+%dir %{_datadir}/icu
+%dir %{_datadir}/icu/%{version}
+%{_datadir}/icu/%{version}/*
+%{_libdir}/libicu*.so.*
 
 %files devel
-%_libdir/libicu*.so
-%_includedir/unicode/
-%dir %_libdir/icu/
-%dir %_libdir/icu/%{version}/
-%_libdir/pkgconfig/icu-*.pc
+%{_libdir}/libicu*.so
+%{_includedir}/unicode/
+%dir %{_libdir}/icu/
+%dir %{_libdir}/icu/%{version}/
+%{_libdir}/pkgconfig/icu-i18n.pc
+%{_libdir}/pkgconfig/icu-io.pc
+%{_libdir}/pkgconfig/icu-uc.pc
 %_bindir/icu-config
-%dir %_datadir/icu/
-%dir %_datadir/icu/%{version}/
-%_datadir/icu/%{version}/config/
+%dir %{_datadir}/icu/
+%dir %{_datadir}/icu/%{version}/
+%{_datadir}/icu/%{version}/config/
 %doc %{_docdir}/icu4c/
 %{_libdir}/icu/Makefile.inc
 %{_libdir}/icu/pkgdata.inc

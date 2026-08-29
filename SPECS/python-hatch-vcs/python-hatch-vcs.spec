@@ -30,16 +30,15 @@ BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(pluggy)
 BuildRequires:  python3dist(setuptools-scm)
 
+Provides:       python3-hatch-vcs = %{version}-%{release}
+%python_provide python3-hatch-vcs
+
 %description
 This provides a plugin for Hatch that uses your preferred version control
 system (like Git) to determine project versions.
 
-Provides:       python3-hatch-vcs
-%python_provide python3-hatch-vcs
-
 %files -f %{pyproject_files}
-%doc README.md
-%doc HISTORY.md
+%doc README.md HISTORY.md
 
 %changelog
 %autochangelog

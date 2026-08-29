@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-mailru-easyjson
-Version:        0.9.1
+Version:        0.9.2
 Release:        %autorelease
 Summary:        Fast JSON serializer for golang.
 License:        MIT
 URL:            https://github.com/mailru/easyjson
-#!RemoteAsset
+#!RemoteAsset:  sha256:0a6b7a5175aeb38c52ae794d49373f2a9baa5a5e47b7cf430db2cbb668297689
 Source0:        https://github.com/mailru/easyjson/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -44,4 +44,4 @@ available with the standard encoding/json package, such as generating
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

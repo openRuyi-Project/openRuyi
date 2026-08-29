@@ -7,12 +7,12 @@
 %global srcname archinfo
 
 Name:           python-%{srcname}
-Version:        9.2.193
+Version:        9.2.214
 Release:        %autorelease
 Summary:        Collection of classes that contain architecture-specific information
 License:        BSD
 URL:            https://github.com/angr/archinfo
-#!RemoteAsset
+#!RemoteAsset:  sha256:423c7a87dffbf039596b8c80d3828ee83a2465fb2056f790eb1e169605d2dab7
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,7 +24,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip) >= 19
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ information. It is useful for cross-architecture tools.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

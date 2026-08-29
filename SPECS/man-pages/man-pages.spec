@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           man-pages
-Version:        6.15
+Version:        6.18
 Release:        %autorelease
 Summary:        Linux kernel and user-space C library interfaces documentation
 License:        GPL-1.0-or-later AND GPL-2.0-only AND GPL-2.0-or-later AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause-UC AND LGPL-3.0-or-later AND LGPL-3.0-only AND LGPL-3.0-linking-exception AND MIT AND Spencer-94
 URL:            https://www.kernel.org/doc/man-pages/
 VCS:            git:https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:c934fadc8b59748c68227a34f6581d2ddf8282b73cdcd52546c8cd88b74b24d1
 Source0:        https://www.kernel.org/pub/linux/docs/man-pages/%{name}-%{version}.tar.xz
 BuildArch:      noarch
 
@@ -46,7 +46,11 @@ touch %{buildroot}%{_mandir}/man7/man.7
 %files
 %doc README Changes
 %{_bindir}/diffman-git
+%{_bindir}/grepc
+%{_bindir}/grepc_c
+%{_bindir}/grepc_mk
 %{_bindir}/mansect
+%{_bindir}/mansectf
 %{_bindir}/pdfman
 %{_bindir}/sortman
 %ghost %{_mandir}/man7/man.7*
@@ -74,4 +78,4 @@ if [ $1 -ge 1 ]; then
 fi
 
 %changelog
-%{?autochangelog}
+%autochangelog

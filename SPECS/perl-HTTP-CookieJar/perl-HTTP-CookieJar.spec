@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Minimalist HTTP user agent cookie jar
 License:        Apache-2.0
 URL:            https://metacpan.org/dist/HTTP-CookieJar
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/HTTP-CookieJar-%{version}.tar.gz
+#!RemoteAsset:  sha256:7094ea5c91f536d263b85e83ab4e9a963e11c4408ce08ecae553fa9c0cc47e73
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/HTTP-CookieJar-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -40,20 +44,8 @@ Requires:       perl(Time::Local)
 This module implements a minimalist HTTP user agent cookie jar in
 conformance with RFC 6265.
 
-%prep
-%setup -q -n HTTP-CookieJar-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           bcc
-Version:        0.36.1
+Version:        0.37.0
 Release:        %autorelease
 Summary:        BPF Compiler Collection (BCC)
 License:        Apache-2.0
 URL:            https://github.com/iovisor/bcc
-#!RemoteAsset
+#!RemoteAsset:  sha256:c89f63bafc688abb4749e901006321e329ab90941433d85f442f9c03bb3c7824
 Source0:        https://github.com/iovisor/bcc/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -27,7 +27,7 @@ BuildRequires:  cmake >= 2.8.7
 BuildRequires:  flex
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libelf)
 BuildRequires:  pkgconfig(libdebuginfod)
 BuildRequires:  llvm-devel
@@ -92,15 +92,13 @@ Standalone tool to run BCC tracers written in Lua
 Summary:        Command line tools for BPF Compiler Collection (BCC)
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       python3-%{name} = %{version}-%{release}
-Requires:       python3-netaddr
+Requires:       python3dist(netaddr)
 
 %description    tools
 Command line tools for BPF Compiler Collection (BCC)
 
 %package     -n libbpf-tools
 Summary:        Command line libbpf tools for BPF Compiler Collection (BCC)
-BuildRequires:  libbpf-devel
-BuildRequires:  libbpf-static
 BuildRequires:  bpftool
 
 %description -n libbpf-tools
@@ -188,4 +186,4 @@ rm -rf %{buildroot}%{_datadir}/%{name}/tools/old/
 %{_sbindir}/bpf-*
 
 %changelog
-%{?autochangelog}
+%autochangelog

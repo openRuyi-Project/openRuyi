@@ -22,15 +22,13 @@ BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  openssh-clients
 
-Requires:       openssh
+Requires:       openssh-clients
 
 %description
 Autossh is a program to start a copy of ssh and monitor it, restarting
 it as necessary should it die or stop passing traffic.
 
 %prep -a
-tar xzf %{SOURCE0} --strip-components=1
-
 # Create a sysusers.d config file
 cat >autossh.sysusers.conf <<EOF
 u autossh - 'autossh service account' %{_sysconfdir}/autossh -
@@ -74,4 +72,4 @@ fi
 %{_sysusersdir}/autossh.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,15 @@
+Preselect std::regex because the build environment cannot run benchmark's
+try_run probe, and compile its static library as PIC for PIE test executables.
+
+--- a/third_party/benchmark/CMakeLists.txt
++++ b/third_party/benchmark/CMakeLists.txt
+@@ -1,6 +1,9 @@
+ # Require CMake 3.10. If available, use the policies up to CMake 3.22.
+ cmake_minimum_required (VERSION 3.13...3.22)
+ 
++set(HAVE_STD_REGEX 1)
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++
+ project (benchmark VERSION 1.9.3 LANGUAGES CXX)
+ 
+ option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." ON)

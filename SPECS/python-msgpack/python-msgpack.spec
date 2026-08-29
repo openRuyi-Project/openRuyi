@@ -1,30 +1,33 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Yifan Xu <xuyifan@iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname msgpack
-%global python3_pkgversion 3
 
 Name:           python-%{srcname}
-Version:        1.1.2
+Version:        1.2.1
 Release:        %autorelease
 Summary:        Python MessagePack (de)serializer
 License:        Apache-2.0
 URL:            https://msgpack.org/
-#!RemoteAsset
-Source0:        https://github.com/msgpack/msgpack-python/archive/v%{version}/%{srcname}-%{version}.tar.gz
+#!RemoteAsset:  sha256:04c721c2c7448767e9e3f2520a475663d8ee0f09c31890f6d2bd70fd636a9647
+Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install): -l %{srcname}
+BuildOption(install):  -l %{srcname}
 
 BuildRequires:  gcc-c++
 BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3dist(cython)
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
+%python_provide python3-%{srcname}
 
 %description
 MessagePack is a binary-based efficient data interchange format that is
@@ -38,12 +41,9 @@ rm -rf test/test_timestamp.py
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build -p
-make cython
-
 %files -f %{pyproject_files}
 %doc README.md
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

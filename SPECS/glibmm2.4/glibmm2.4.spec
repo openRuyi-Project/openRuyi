@@ -59,7 +59,8 @@ chmod +x %{buildroot}%{_libdir}/glibmm-*/proc/gmmproc
 %{_libdir}/*.so
 %{_libdir}/glibmm-*/
 %{_libdir}/giomm-*/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/giomm-2.4.pc
+%{_libdir}/pkgconfig/glibmm-2.4.pc
 
 %changelog
 %{?autochangelog}

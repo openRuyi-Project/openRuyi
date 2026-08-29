@@ -19,7 +19,7 @@ Summary:        Introspection system for GObject-based libraries
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            https://gi.readthedocs.io/
 VCS:            git:https://gitlab.gnome.org/GNOME/gobject-introspection.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:920d1a3fcedeadc32acff95c2e203b319039dd4b4a08dd1a2dfd283d19c0b9ae
 Source0:        https://download.gnome.org/sources/%{name}/%{major_version}/%{name}-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -33,15 +33,15 @@ BuildRequires:  gcc
 BuildRequires:  meson
 BuildRequires:  libffi-devel
 BuildRequires:  python3-devel
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(glib-2.0)
 %if %{with tests}
 BuildRequires:  pkgconfig(cairo-gobject)
 %endif
 %if %{with doc}
 BuildRequires:  gtk-doc
-BuildRequires:  python3-mako
-BuildRequires:  python3-markdown
+BuildRequires:  python3dist(mako)
+BuildRequires:  python3dist(markdown)
 %endif
 
 %description
@@ -56,7 +56,7 @@ Requires:       python(abi) = %{python3_version}
 Requires:       pkgconfig(glib-2.0) >= 2.80.0
 # The package uses distutils which is no longer part of Python 3.12+ standard library
 # https://bugzilla.redhat.com/show_bug.cgi?id=2135406
-Requires:       python3-setuptools
+Requires:       python3dist(setuptools)
 
 %description    devel
 This is the primary package for developers. It contains the essential
@@ -93,4 +93,4 @@ needed to generate introspection data for other GObject-based libraries.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

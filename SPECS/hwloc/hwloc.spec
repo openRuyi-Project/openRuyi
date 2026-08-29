@@ -17,7 +17,7 @@ Release:        %autorelease
 License:        BSD-2-Clause
 URL:            http://www.open-mpi.org/projects/hwloc/
 VCS:            git:https://github.com/open-mpi/ompi
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff7d309fdff7ceddfe15c1e79eaff25f3126a134f29f44d4e85571f187a6bab8
 Source0:        https://download.open-mpi.org/release/hwloc/v%{major_version}.%{minor_version}/hwloc-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -95,7 +95,7 @@ sed -i 's/^{$/{return 77;/' tests/hwloc/glibc-sched.c
 %{_libdir}/libhwloc*so.15*
 
 %files devel
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/hwloc.pc
 %{_mandir}/man3/*
 %dir %{_includedir}/hwloc
 %{_includedir}/hwloc/*
@@ -103,4 +103,4 @@ sed -i 's/^{$/{return 77;/' tests/hwloc/glibc-sched.c
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,232 @@
+# Patch purpose:
+# - Use system protobuf, ONNX Runtime, and Paddle2ONNX when requested.
+# Why this patch exists:
+# - Upstream Paddle downloads or builds pinned bundled dependencies by default.
+# - openRuyi packages must use the distribution-wide protobuf and avoid bundled x86_64 ONNX Runtime/Paddle2ONNX binaries.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6ea73365e8..9f80fd3303 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,6 +63,8 @@ option(WITH_WIN_DUMP_DBG "Compile with windows core dump debug mode" OFF)
+ option(WITH_ROCM "Compile PaddlePaddle with ROCM platform" OFF)
+ option(WITH_IPU "Compile PaddlePaddle with Graphcore IPU" OFF)
+ option(WITH_ONNXRUNTIME "Compile PaddlePaddle with ONNXRUNTIME" OFF)
++option(WITH_SYSTEM_ONNXRUNTIME "Use system ONNX Runtime instead of bundled binary" OFF)
++option(WITH_SYSTEM_PADDLE2ONNX "Use system Paddle2ONNX instead of bundled binary" OFF)
+ option(WITH_CUSPARSELT "Compile PaddlePaddle with CUSPARSELT" OFF)
+ option(WITH_SETUP_INSTALL "Compile PaddlePaddle with setup.py" OFF)
+ option(WITH_SHARED_PHI "Compile PaddlePaddle with SHARED LIB of PHI" ON)
+diff --git a/cmake/external/onnxruntime.cmake b/cmake/external/onnxruntime.cmake
+index 76d534e0c0..6e62bd8be7 100644
+--- a/cmake/external/onnxruntime.cmake
++++ b/cmake/external/onnxruntime.cmake
+@@ -25,6 +25,40 @@ include(ExternalProject)
+ 
+ add_definitions(-DPADDLE_WITH_ONNXRUNTIME)
+ 
++if(WITH_SYSTEM_ONNXRUNTIME)
++  find_path(
++    ONNXRUNTIME_INC_DIR
++    NAMES onnxruntime_c_api.h
++    PATH_SUFFIXES include include/onnxruntime include/onnxruntime/core/session)
++  find_library(ONNXRUNTIME_SHARED_LIB NAMES onnxruntime)
++  if(NOT ONNXRUNTIME_INC_DIR OR NOT ONNXRUNTIME_SHARED_LIB)
++    message(FATAL_ERROR "System ONNX Runtime requested but not found")
++  endif()
++
++  get_filename_component(ONNXRUNTIME_LIB_DIR ${ONNXRUNTIME_SHARED_LIB}
++                         DIRECTORY)
++  get_filename_component(ONNXRUNTIME_LIB_NAME ${ONNXRUNTIME_SHARED_LIB} NAME)
++  set(ONNXRUNTIME_LIB
++      ${ONNXRUNTIME_SHARED_LIB}
++      CACHE FILEPATH "ONNXRUNTIME library." FORCE)
++  set(ONNXRUNTIME_SHARED_LIB
++      ${ONNXRUNTIME_SHARED_LIB}
++      CACHE FILEPATH "ONNXRUNTIME shared library." FORCE)
++  set(ONNXRUNTIME_LIB_DIR
++      ${ONNXRUNTIME_LIB_DIR}
++      CACHE PATH "ONNXRUNTIME library directory." FORCE)
++  set(ONNXRUNTIME_LIB_NAME
++      ${ONNXRUNTIME_LIB_NAME}
++      CACHE STRING "ONNXRUNTIME library name." FORCE)
++  include_directories(${ONNXRUNTIME_INC_DIR})
++  add_library(onnxruntime SHARED IMPORTED GLOBAL)
++  set_property(TARGET onnxruntime PROPERTY IMPORTED_LOCATION
++                                           ${ONNXRUNTIME_LIB})
++  set_property(TARGET onnxruntime PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                           ${ONNXRUNTIME_INC_DIR})
++  return()
++endif()
++
+ set(ONNXRUNTIME_PROJECT "extern_onnxruntime")
+ set(ONNXRUNTIME_VERSION "1.11.1")
+ set(ONNXRUNTIME_PREFIX_DIR ${THIRD_PARTY_PATH}/onnxruntime)
+diff --git a/cmake/external/paddle2onnx.cmake b/cmake/external/paddle2onnx.cmake
+index decb6c9168..43103f658d 100644
+--- a/cmake/external/paddle2onnx.cmake
++++ b/cmake/external/paddle2onnx.cmake
+@@ -23,6 +23,39 @@ endif()
+ 
+ include(ExternalProject)
+ 
++if(WITH_SYSTEM_PADDLE2ONNX)
++  find_path(
++    PADDLE2ONNX_INC_DIR
++    NAMES paddle2onnx/converter.h
++    PATH_SUFFIXES include)
++  find_library(PADDLE2ONNX_LIB NAMES paddle2onnx)
++  if(NOT PADDLE2ONNX_INC_DIR OR NOT PADDLE2ONNX_LIB)
++    message(FATAL_ERROR "System Paddle2ONNX requested but not found")
++  endif()
++
++  get_filename_component(PADDLE2ONNX_LIB_DIR ${PADDLE2ONNX_LIB} DIRECTORY)
++  get_filename_component(PADDLE2ONNX_LIB_NAME ${PADDLE2ONNX_LIB} NAME)
++  set(PADDLE2ONNX_LIB
++      ${PADDLE2ONNX_LIB}
++      CACHE FILEPATH "PADDLE2ONNX library." FORCE)
++  set(PADDLE2ONNX_COMPILE_LIB
++      ${PADDLE2ONNX_LIB}
++      CACHE FILEPATH "PADDLE2ONNX compile library." FORCE)
++  set(PADDLE2ONNX_LIB_DIR
++      ${PADDLE2ONNX_LIB_DIR}
++      CACHE PATH "PADDLE2ONNX library directory." FORCE)
++  set(PADDLE2ONNX_LIB_NAME
++      ${PADDLE2ONNX_LIB_NAME}
++      CACHE STRING "PADDLE2ONNX library name." FORCE)
++  include_directories(${PADDLE2ONNX_INC_DIR})
++  add_library(paddle2onnx SHARED IMPORTED GLOBAL)
++  set_property(TARGET paddle2onnx PROPERTY IMPORTED_LOCATION
++                                           ${PADDLE2ONNX_COMPILE_LIB})
++  set_property(TARGET paddle2onnx PROPERTY INTERFACE_INCLUDE_DIRECTORIES
++                                           ${PADDLE2ONNX_INC_DIR})
++  return()
++endif()
++
+ set(PADDLE2ONNX_PROJECT "extern_paddle2onnx")
+ set(PADDLE2ONNX_VERSION "1.0.0rc2")
+ set(PADDLE2ONNX_PREFIX_DIR ${THIRD_PARTY_PATH}/paddle2onnx)
+diff --git a/cmake/external/protobuf.cmake b/cmake/external/protobuf.cmake
+index e59dabb2bb..fc3725c846 100755
+--- a/cmake/external/protobuf.cmake
++++ b/cmake/external/protobuf.cmake
+@@ -116,7 +116,8 @@ macro(PROMPT_PROTOBUF_LIB)
+                                              ${PROTOBUF_LITE_LIBRARY})
+ 
+   add_library(libprotoc ${protobuf_LIBTYPE} IMPORTED GLOBAL)
+-  set_property(TARGET libprotoc PROPERTY IMPORTED_LOCATION ${PROTOC_LIBRARY})
++  set_property(TARGET libprotoc PROPERTY IMPORTED_LOCATION
++                                             ${PROTOBUF_PROTOC_LIBRARY})
+ 
+   add_executable(protoc IMPORTED GLOBAL)
+   set_property(TARGET protoc PROPERTY IMPORTED_LOCATION
+@@ -156,15 +157,15 @@ if(NOT "${PROTOBUF_ROOT}" STREQUAL "")
+     NO_DEFAULT_PATH)
+   find_library(
+     PROTOBUF_LIBRARY protobuf libprotobuf.lib
+-    PATHS ${PROTOBUF_ROOT}/lib
++    PATHS ${PROTOBUF_ROOT}/lib ${PROTOBUF_ROOT}/lib64
+     NO_DEFAULT_PATH)
+   find_library(
+     PROTOBUF_LITE_LIBRARY protobuf-lite libprotobuf-lite.lib
+-    PATHS ${PROTOBUF_ROOT}/lib
++    PATHS ${PROTOBUF_ROOT}/lib ${PROTOBUF_ROOT}/lib64
+     NO_DEFAULT_PATH)
+   find_library(
+     PROTOBUF_PROTOC_LIBRARY protoc libprotoc.lib
+-    PATHS ${PROTOBUF_ROOT}/lib
++    PATHS ${PROTOBUF_ROOT}/lib ${PROTOBUF_ROOT}/lib64
+     NO_DEFAULT_PATH)
+   find_program(
+     PROTOBUF_PROTOC_EXECUTABLE protoc
+diff --git a/cmake/third_party.cmake b/cmake/third_party.cmake
+index af676127bf..4188884963 100755
+--- a/cmake/third_party.cmake
++++ b/cmake/third_party.cmake
+@@ -471,7 +471,12 @@ if(WITH_ONNXRUNTIME)
+   include(external/onnxruntime
+   )# download, build, install onnxruntime、paddle2onnx
+   include(external/paddle2onnx)
+-  list(APPEND third_party_deps extern_onnxruntime extern_paddle2onnx)
++  if(TARGET extern_onnxruntime)
++    list(APPEND third_party_deps extern_onnxruntime)
++  endif()
++  if(TARGET extern_paddle2onnx)
++    list(APPEND third_party_deps extern_paddle2onnx)
++  endif()
+ endif()
+ 
+ if(WITH_GPU)
+diff --git a/python/env_dict.py.in b/python/env_dict.py.in
+index a571a4ce7f..47505bd021 100644
+--- a/python/env_dict.py.in
++++ b/python/env_dict.py.in
+@@ -63,6 +63,8 @@ env_dict={
+     'OPENVINO_PADDLE_LIB':'@OPENVINO_PADDLE_LIB@',
+     'OPENVINO_CPU_PLUGIN_LIB':'@OPENVINO_CPU_PLUGIN_LIB@',
+     'WITH_ONNXRUNTIME':'@WITH_ONNXRUNTIME@',
++    'WITH_SYSTEM_ONNXRUNTIME':'@WITH_SYSTEM_ONNXRUNTIME@',
++    'WITH_SYSTEM_PADDLE2ONNX':'@WITH_SYSTEM_PADDLE2ONNX@',
+     'ONNXRUNTIME_SHARED_LIB':'@ONNXRUNTIME_SHARED_LIB@',
+     'PADDLE2ONNX_LIB':'@PADDLE2ONNX_LIB@',
+     'PADDLE2ONNX_LIB_NAME':'@PADDLE2ONNX_LIB_NAME@',
+diff --git a/python/setup.py.in b/python/setup.py.in
+index c1d11c5f36..1295b6be52 100644
+--- a/python/setup.py.in
++++ b/python/setup.py.in
+@@ -1313,12 +1313,17 @@ if '${WITH_ONEDNN}' == 'ON':
+         package_data['paddle.libs']+=['mkldnn.dll']
+ 
+ if '${WITH_ONNXRUNTIME}' == 'ON':
+-    shutil.copy('${ONNXRUNTIME_SHARED_LIB}', libs_path)
+-    shutil.copy('${PADDLE2ONNX_LIB}', libs_path)
+     if os.name == 'nt':
++        shutil.copy('${ONNXRUNTIME_SHARED_LIB}', libs_path)
++        shutil.copy('${PADDLE2ONNX_LIB}', libs_path)
+         package_data['paddle.libs']+=['paddle2onnx.dll', 'onnxruntime.dll']
+     else:
+-        package_data['paddle.libs']+=['${PADDLE2ONNX_LIB_NAME}', '${ONNXRUNTIME_LIB_NAME}']
++        if '${WITH_SYSTEM_PADDLE2ONNX}' != 'ON':
++            shutil.copy('${PADDLE2ONNX_LIB}', libs_path)
++            package_data['paddle.libs']+=['${PADDLE2ONNX_LIB_NAME}']
++        if '${WITH_SYSTEM_ONNXRUNTIME}' != 'ON':
++            shutil.copy('${ONNXRUNTIME_SHARED_LIB}', libs_path)
++            package_data['paddle.libs']+=['${ONNXRUNTIME_LIB_NAME}']
+ 
+ if '${WITH_OPENVINO}' == 'ON':
+     shutil.copy('${OPENVINO_LIB}', libs_path)
+diff --git a/setup.py b/setup.py
+index 18abcba811..156f6b5082 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1743,18 +1743,24 @@ def get_package_data_and_package_dir():
+             package_data['paddle.libs'] += ['mkldnn.dll']
+ 
+     if env_dict.get("WITH_ONNXRUNTIME") == 'ON':
+-        shutil.copy(env_dict.get("ONNXRUNTIME_SHARED_LIB"), libs_path)
+-        shutil.copy(env_dict.get("PADDLE2ONNX_LIB"), libs_path)
+         if os.name == 'nt':
++            shutil.copy(env_dict.get("ONNXRUNTIME_SHARED_LIB"), libs_path)
++            shutil.copy(env_dict.get("PADDLE2ONNX_LIB"), libs_path)
+             package_data['paddle.libs'] += [
+                 'paddle2onnx.dll',
+                 'onnxruntime.dll',
+             ]
+         else:
+-            package_data['paddle.libs'] += [
+-                env_dict.get("PADDLE2ONNX_LIB_NAME"),
+-                env_dict.get("ONNXRUNTIME_LIB_NAME"),
+-            ]
++            if env_dict.get("WITH_SYSTEM_PADDLE2ONNX") != 'ON':
++                shutil.copy(env_dict.get("PADDLE2ONNX_LIB"), libs_path)
++                package_data['paddle.libs'] += [
++                    env_dict.get("PADDLE2ONNX_LIB_NAME")
++                ]
++            if env_dict.get("WITH_SYSTEM_ONNXRUNTIME") != 'ON':
++                shutil.copy(env_dict.get("ONNXRUNTIME_SHARED_LIB"), libs_path)
++                package_data['paddle.libs'] += [
++                    env_dict.get("ONNXRUNTIME_LIB_NAME")
++                ]
+ 
+     if env_dict.get("WITH_OPENVINO") == 'ON':
+         shutil.copy(env_dict.get("OPENVINO_LIB"), libs_path)

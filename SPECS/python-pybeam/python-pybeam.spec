@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Python module to parse Erlang BEAM files
 License:        MIT
 URL:            https://github.com/matwey/pybeam
-#!RemoteAsset
+#!RemoteAsset:  sha256:44a059cac90ba7f490c2442d561f1df6a3134fc5a0d1c2c38a3860fbcd28b0b1
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,4 +37,4 @@ chunks in pretty python format.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

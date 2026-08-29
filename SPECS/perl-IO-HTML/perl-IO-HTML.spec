@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Open an HTML file with automatic charset detection
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/IO-HTML
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CJ/CJM/IO-HTML-%{version}.tar.gz
+#!RemoteAsset:  sha256:c87b2df59463bbf2c39596773dfb5c03bde0f7e1051af339f963f58c1cbd8bf5
+Source0:        https://www.cpan.org/authors/id/C/CJ/CJM/IO-HTML-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -35,20 +39,8 @@ IO::HTML provides an easy way to open a file containing HTML while
 automatically determining its encoding. It uses the HTML5 encoding sniffing
 algorithm specified in section 8.2.2.2 of the draft standard.
 
-%prep
-%setup -q -n IO-HTML-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -7,12 +7,12 @@
 %global srcname threadpoolctl
 
 Name:           python-%{srcname}
-Version:        3.5.0
+Version:        3.6.0
 Release:        %autorelease
 Summary:        Thread-pool Controls
 License:        BSD-3-Clause
 URL:            https://github.com/joblib/threadpoolctl
-#!RemoteAsset
+#!RemoteAsset:  sha256:8ab8b4aa3491d812b623328249fab5302a68d2d71745c8a4c719a2fcaba9f44e
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  %{srcname}
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,7 +37,7 @@ oversubscription issues.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.md multiple_openmp.md
+%doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

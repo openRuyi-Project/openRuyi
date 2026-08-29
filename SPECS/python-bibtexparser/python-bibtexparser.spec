@@ -26,7 +26,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pyparsing)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ on pyparsing and is tested with unit tests.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

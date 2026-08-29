@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        Zlib replacement with optimizations
 License:        Zlib
 URL:            https://github.com/zlib-ng/zlib-ng
-#!RemoteAsset
+#!RemoteAsset:  sha256:f9c65aa9c852eb8255b636fd9f07ce1c406f061ec19a2e7d508b318ca0c907d1
 Source:         https://github.com/zlib-ng/zlib-ng/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -55,17 +55,12 @@ Summary:        Development files for zlib-ng-compat
 Requires:       %{name}-compat%{?_isa} = %{version}-%{release}
 Provides:       zlib-devel = %{version}-%{release}
 Provides:       zlib-devel%{?_isa} = %{version}-%{release}
+Provides:       %{name}-compat-static = %{version}-%{release}
+Provides:       %{name}-compat-static%{?_isa} = %{version}-%{release}
 
 %description    compat-devel
 The zlib-ng-compat-devel package contains header files and development libraries for zlib-ng-compat.
 This package provides a drop-in zlib-compatible header files and development libraries.
-
-%package        compat-static
-Summary:        Static library for zlib-ng-compat
-Requires:       %{name}-compat-devel%{?_isa} = %{version}-%{release}
-
-%description    compat-static
-The %{name}-static package contains static libraries for zlib-ng-compat.
 
 %files compat
 %license LICENSE.md
@@ -79,9 +74,7 @@ The %{name}-static package contains static libraries for zlib-ng-compat.
 %{_libdir}/libz.so
 %{_libdir}/pkgconfig/zlib.pc
 %{_libdir}/cmake/ZLIB/
-
-%files compat-static
 %{_libdir}/libz.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,9 +13,9 @@ Summary:        Device Tree Compiler
 License:        GPL-2.0-or-later
 URL:            https://devicetree.org/
 VCS:            git:https://github.com/dgibson/dtc
-#!RemoteAsset
+#!RemoteAsset:  sha256:92d8ca769805ae1f176204230438fe52808f4e1c7944053c9eec0e649b237539
 Source0:        https://www.kernel.org/pub/software/utils/%{name}/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:76929711ac4c53bd283619037c3d853d4e97bdbfd5a793a09e11698824b7032e
 Source1:        https://www.kernel.org/pub/software/utils/%{name}/%{name}-%{version}.tar.sign
 BuildSystem:    autotools
 
@@ -35,10 +35,10 @@ BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  swig
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-setuptools_scm
-BuildRequires:  python3-wheel
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools-scm)
+BuildRequires:  python3dist(wheel)
 Provides:       libfdt%{?_isa} = %{version}-%{release}
 Obsoletes:      libfdt < %{version}-%{release}
 
@@ -97,4 +97,4 @@ export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %{python3_sitearch}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

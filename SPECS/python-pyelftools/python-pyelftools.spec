@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Analyze binary and library file information
 License:        LicenseRef-openRuyi-Public-Domain
 URL:            https://github.com/eliben/pyelftools
-#!RemoteAsset
+#!RemoteAsset:  sha256:6de90ee7b8263e740c8715a925382d4099b354f29ac48ea40d840cf7aa14ace5
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,7 +22,7 @@ BuildOption(install):  -l elftools +auto
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -38,4 +38,4 @@ Format (DWARF).
 %doc README*
 
 %changelog
-%{?autochangelog}
+%autochangelog

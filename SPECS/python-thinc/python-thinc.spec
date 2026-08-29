@@ -7,12 +7,12 @@
 %global srcname thinc
 
 Name:           python-%{srcname}
-Version:        8.3.10
+Version:        8.3.13
 Release:        %autorelease
 Summary:        A refreshing functional take on deep learning, compatible with your favorite libraries
 License:        MIT
 URL:            https://github.com/explosion/thinc
-#!RemoteAsset:  sha256:5a75109f4ee1c968fc055ce651a17cb44b23b000d9e95f04a4d047ab3cb3e34e
+#!RemoteAsset:  sha256:68e658549fc1eb3ff92aed5147fcbb9c15d6e9cc0e623b4d0998d16522ffb4f9
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -40,7 +40,8 @@ BuildRequires:  python3dist(pydantic)
 BuildRequires:  python3dist(srsly)
 BuildRequires:  python3dist(wasabi)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -62,4 +63,4 @@ models built with their favorite framework.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

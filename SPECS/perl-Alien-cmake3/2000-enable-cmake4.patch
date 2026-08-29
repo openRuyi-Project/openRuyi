@@ -1,0 +1,39 @@
+diff --git a/alienfile b/alienfile
+index 2563670..a75cdd0 100644
+--- a/alienfile
++++ b/alienfile
+@@ -33,16 +33,12 @@ probe sub {
+     if($old_cmake_version)
+     {
+       my($major) = $old_cmake_version =~ /^([0-9])\./;
+-      if($major == 3)
++      if($major >= 3)
+       {
+         $build->install_prop->{my_old_cmake_use} = 1;
+         $build->log("GOOD found cmake version $old_cmake_version");
+         return 'system' unless $ENV{ALIEN_CMAKE_FROM_SOURCE};
+       }
+-      elsif ($major > 3)
+-      {
+-        $build->log("TOO NEW found cmake version $old_cmake_version");
+-      }
+       else
+       {
+         $build->log("TOO OLD found cmake version $old_cmake_version");
+diff --git a/t/alien_cmake3.t b/t/alien_cmake3.t
+index 61bb207..061f0fd 100644
+--- a/t/alien_cmake3.t
++++ b/t/alien_cmake3.t
+@@ -6,9 +6,9 @@ alien_ok 'Alien::cmake3';
+ 
+ run_ok(['cmake', '--version'])
+   ->exit_is(0)
+-  ->out_like(qr/cmake version 3\.([0-9\.])+/)
++  ->out_like(qr/cmake version (?:3|4)\.([0-9.])+/)
+   ->note;
+ 
+ helper_ok 'cmake3';
+ 
+-done_testing
++done_testing;
+\ No newline at end of file

@@ -7,12 +7,12 @@
 %global srcname w3lib
 
 Name:           python-%{srcname}
-Version:        2.3.1
+Version:        2.4.1
 Release:        %autorelease
 Summary:        Library of web-related functions
 License:        BSD-3-Clause
 URL:            https://github.com/scrapy/w3lib
-#!RemoteAsset:  sha256:5c8ac02a3027576174c2b61eb9a2170ba1b197cae767080771b6f1febda249a4
+#!RemoteAsset:  sha256:8dd69ee39ff6398d708c793abc779c334a69bac7cee1cdf71736c669ed6be864
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +41,4 @@ extracting base url, translating entities, encoding multipart/form-data, etc.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

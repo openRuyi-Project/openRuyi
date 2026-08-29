@@ -1,0 +1,56 @@
+# Patch purpose:
+# - Pass PROTOBUF_ROOT from the packaging environment to Paddle's CMake
+#   configure step.
+# - Propagate the export macro required by system glog 0.7.x headers.
+# - Restore __SSE2__ as a valued macro after Paddle temporarily undefines it.
+# Why this patch exists:
+# - setup.py only forwards selected environment variables to CMake, so
+#   exporting PROTOBUF_ROOT alone still lets Paddle build bundled protobuf.
+# - glog 0.7.x headers reject direct use unless the consumer defines the
+#   expected export macro, normally provided by the CMake target.
+# - An empty __SSE2__ definition breaks GCC 16 libstdc++ preprocessor checks.
+
+diff --git a/cmake/external/glog.cmake b/cmake/external/glog.cmake
+index 12c7c89..805b492 100755
+--- a/cmake/external/glog.cmake
++++ b/cmake/external/glog.cmake
+@@ -23,11 +23,14 @@ if(WITH_SYSTEM_THIRD_PARTY)
+     message(FATAL_ERROR "System glog requested but not found")
+   endif()
+   include_directories(${GLOG_INCLUDE_DIR})
++  add_definitions(-DGLOG_USE_GLOG_EXPORT)
+   if(NOT TARGET glog)
+     add_library(glog UNKNOWN IMPORTED GLOBAL)
+     set_property(TARGET glog PROPERTY IMPORTED_LOCATION ${GLOG_LIBRARIES})
+     set_property(TARGET glog PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+                                       ${GLOG_INCLUDE_DIR})
++    set_property(TARGET glog PROPERTY INTERFACE_COMPILE_DEFINITIONS
++                                      GLOG_USE_GLOG_EXPORT)
+   endif()
+   link_libraries(glog)
+   return()
+diff --git a/paddle/phi/common/float16.h b/paddle/phi/common/float16.h
+index d970878..e9c8599 100644
+--- a/paddle/phi/common/float16.h
++++ b/paddle/phi/common/float16.h
+@@ -21,7 +21,7 @@
+ #ifdef __SSE2__
+ #undef __SSE2__
+ #include <immintrin.h>
+-#define __SSE2__
++#define __SSE2__ 1
+ #else
+ #include <immintrin.h>
+ #endif
+diff --git a/setup.py b/setup.py
+index b51f3df..7fb534a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -961,6 +961,7 @@ def cmake_run(build_path):
+                 "CUB_PATH",
+                 "NEW_RELEASE_PYPI",
+                 "CUDNN_ROOT",
++                "PROTOBUF_ROOT",
+                 "THIRD_PARTY_PATH",
+                 "NOAVX_CORE_FILE",
+                 "LITE_GIT_TAG",

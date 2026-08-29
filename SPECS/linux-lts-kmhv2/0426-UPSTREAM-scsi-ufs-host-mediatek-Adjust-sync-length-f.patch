@@ -1,0 +1,100 @@
+From a52aba3f7189c05d469edd5ef59d86ede64eacdb Mon Sep 17 00:00:00 2001
+From: Peter Wang <peter.wang@mediatek.com>
+Date: Wed, 24 Sep 2025 17:43:26 +0800
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: host: mediatek: Adjust sync length
+ for FASTAUTO mode
+
+Set the sync length for FASTAUTO G1 mode in the UFS Mediatek
+driver. This ensures the sync length meets minimum values for high-speed
+gears, improving stability during power mode changes.
+
+Signed-off-by: Peter Wang <peter.wang@mediatek.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Link: https://patch.msgid.link/20250924094527.2992256-5-peter.wang@mediatek.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 1fd05367d5b1a5edd3d14c966a5f510e5b8a0c5e)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-mediatek.c | 32 ++++++++++++++++++++++++++++++++
+ include/ufs/unipro.h            |  7 ++++++-
+ 2 files changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/ufs/host/ufs-mediatek.c b/drivers/ufs/host/ufs-mediatek.c
+index b8ef8eefa1cc..0f261c3afc34 100644
+--- a/drivers/ufs/host/ufs-mediatek.c
++++ b/drivers/ufs/host/ufs-mediatek.c
+@@ -1332,6 +1332,36 @@ static bool ufs_mtk_pmc_via_fastauto(struct ufs_hba *hba,
+ 	return true;
+ }
+ 
++static void ufs_mtk_adjust_sync_length(struct ufs_hba *hba)
++{
++	int i;
++	u32 value;
++	u32 cnt, att, min;
++	struct attr_min {
++		u32 attr;
++		u32 min_value;
++	} pa_min_sync_length[] = {
++		{PA_TXHSG1SYNCLENGTH, 0x48},
++		{PA_TXHSG2SYNCLENGTH, 0x48},
++		{PA_TXHSG3SYNCLENGTH, 0x48},
++		{PA_TXHSG4SYNCLENGTH, 0x48},
++		{PA_TXHSG5SYNCLENGTH, 0x48}
++	};
++
++	cnt = sizeof(pa_min_sync_length) / sizeof(struct attr_min);
++	for (i = 0; i < cnt; i++) {
++		att = pa_min_sync_length[i].attr;
++		min = pa_min_sync_length[i].min_value;
++		ufshcd_dme_get(hba, UIC_ARG_MIB(att), &value);
++		if (value < min)
++			ufshcd_dme_set(hba, UIC_ARG_MIB(att), min);
++
++		ufshcd_dme_peer_get(hba, UIC_ARG_MIB(att), &value);
++		if (value < min)
++			ufshcd_dme_peer_set(hba, UIC_ARG_MIB(att), min);
++	}
++}
++
+ static int ufs_mtk_pre_pwr_change(struct ufs_hba *hba,
+ 				const struct ufs_pa_layer_attr *dev_max_params,
+ 				struct ufs_pa_layer_attr *dev_req_params)
+@@ -1355,6 +1385,8 @@ static int ufs_mtk_pre_pwr_change(struct ufs_hba *hba,
+ 	}
+ 
+ 	if (ufs_mtk_pmc_via_fastauto(hba, dev_req_params)) {
++		ufs_mtk_adjust_sync_length(hba);
++
+ 		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXTERMINATION), true);
+ 		ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXGEAR), UFS_HS_G1);
+ 
+diff --git a/include/ufs/unipro.h b/include/ufs/unipro.h
+index faf1c471ad30..59de737490ca 100644
+--- a/include/ufs/unipro.h
++++ b/include/ufs/unipro.h
+@@ -111,6 +111,9 @@
+ #define PA_TXLINKSTARTUPHS	0x1544
+ #define PA_AVAILRXDATALANES	0x1540
+ #define PA_MINRXTRAILINGCLOCKS	0x1543
++#define PA_TXHSG1SYNCLENGTH	0x1552
++#define PA_TXHSG2SYNCLENGTH	0x1554
++#define PA_TXHSG3SYNCLENGTH	0x1556
+ #define PA_LOCAL_TX_LCC_ENABLE	0x155E
+ #define PA_ACTIVETXDATALANES	0x1560
+ #define PA_CONNECTEDTXDATALANES	0x1561
+@@ -160,7 +163,9 @@
+ #define PA_PACPFRAMECOUNT	0x15C0
+ #define PA_PACPERRORCOUNT	0x15C1
+ #define PA_PHYTESTCONTROL	0x15C2
+-#define PA_TXHSADAPTTYPE       0x15D4
++#define PA_TXHSG4SYNCLENGTH	0x15D0
++#define PA_TXHSADAPTTYPE	0x15D4
++#define PA_TXHSG5SYNCLENGTH	0x15D6
+ 
+ /* Adpat type for PA_TXHSADAPTTYPE attribute */
+ #define PA_REFRESH_ADAPT       0x00
+-- 
+2.53.0
+

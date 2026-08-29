@@ -5,16 +5,20 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Compress-Raw-Zlib
-Version:        2.214
+Version:        2.222
 Release:        %autorelease
 Summary:        Low-Level Interface to zlib or zlib-ng compression library
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Compress-Raw-Zlib
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PM/PMQS/Compress-Raw-Zlib-%{version}.tar.gz
+#!RemoteAsset:  sha256:1dfd7d511a655627c81815d30d3babc28fa5b88455ff03f8b04099dcb51286b8
+Source0:        https://www.cpan.org/authors/id/P/PM/PMQS/Compress-Raw-Zlib-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 
@@ -23,21 +27,8 @@ The Compress::Raw::Zlib module provides a Perl interface to the zlib or zlib-
 ng compression libraries (see "SEE ALSO" for details about where to get
 zlib or zlib-ng).
 
-%prep
-%setup -q -n Compress-Raw-Zlib-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes README
+%doc Changes README SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

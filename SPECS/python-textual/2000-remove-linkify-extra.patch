@@ -1,0 +1,11 @@
+--- textual-8.2.6.orig/pyproject.toml	2026-05-28 06:45:38.905136938 +0000
++++ textual-8.2.6/pyproject.toml	2026-05-28 06:45:46.179951584 +0000
+@@ -46,7 +46,7 @@
+ 
+ [tool.poetry.dependencies]
+ python = "^3.9"
+-markdown-it-py = { extras = ["linkify"], version = ">=2.1.0" }
++markdown-it-py = ">=2.1.0"
+ mdit-py-plugins = "*"
+ rich = ">=14.2.0"
+ #rich = {path="../rich", develop=true}

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Keep imports out of your namespace
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/namespace-autoclean
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/E/ET/ETHER/namespace-autoclean-%{version}.tar.gz
+#!RemoteAsset:  sha256:d3b32c82e1d2caa9d58b8c8075965240e6cab66ab9350bd6f6bea4ca07e938d6
+Source0:        https://www.cpan.org/authors/id/E/ET/ETHER/namespace-autoclean-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(B)
@@ -34,6 +38,7 @@ BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(Test::Needs)
+BuildRequires:  perl(Try::Tiny)
 BuildRequires:  perl(warnings)
 
 Requires:       perl(B::Hooks::EndOfScope) >= 0.12
@@ -43,20 +48,8 @@ Requires:       perl(namespace::clean) >= 0.20
 When you import a function into a Perl package, it will naturally also be
 available as a method.
 
-%prep
-%setup -q -n namespace-autoclean-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libXinerama
-Version:        1.1.5
+Version:        1.1.6
 Release:        %autorelease
 Summary:        X.Org X11 libXinerama runtime library
 License:        MIT AND MIT-open-group AND X11
 URL:            https://gitlab.freedesktop.org/xorg/lib/libxinerama
-#!RemoteAsset
+#!RemoteAsset:  sha256:d00fc1599c303dc5cbc122b8068bdc7405d6fcb19060f4597fc51bd3a8be51d7
 Source0:        http://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_includedir}/X11/extensions/panoramiXext.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

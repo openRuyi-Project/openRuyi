@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,21 +16,21 @@
 }
 
 Name:           go-golang-x-text
-Version:        0.32.0
+Version:        0.38.0
 Release:        %autorelease
 Summary:        Go text processing support
 License:        BSD-3-Clause
 URL:            https://golang.org/x/text
 VCS:            git:https://github.com/golang/text
-#!RemoteAsset
+#!RemoteAsset:  sha256:a2506f66cd14b919b0314d396530bfc325d14b2242b5547f827506bee65995b8
 Source0:        https://github.com/golang/text/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # https://sources.debian.org/src/golang-golang-x-text/0.31.0-1/debian/patches/0001-Disable-failed-test-TestCountMallocs.patch
-Patch0:         2000-Disable-failed-test-TestCountMallocs.patch
+Patch2000:      2000-Disable-failed-test-TestCountMallocs.patch
 # https://sources.debian.org/src/golang-golang-x-text/0.31.0-1/debian/patches/0002-Skip-TestLinking-in-language-display.patch
-Patch1:         2001-Skip-TestLinking-in-language-display.patch
+Patch2001:      2001-Skip-TestLinking-in-language-display.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
@@ -42,9 +44,9 @@ This repository provides text-related packages, such as character
 encodings, text transformations, and locale-specific text handling.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

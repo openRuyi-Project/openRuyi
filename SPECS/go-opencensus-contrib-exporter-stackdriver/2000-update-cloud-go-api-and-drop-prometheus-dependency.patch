@@ -1,0 +1,498 @@
+From 22ad8a126693a23cead17628c646ddfd73dad415 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 24 May 2026 15:38:06 +0800
+Subject: [PATCH] Update cloud-go APIs and fix Go test format strings
+
+Newer cloud-go exposes the Monitoring v3 protos through
+cloud.google.com/go/monitoring/apiv3/v2/monitoringpb instead of
+google.golang.org/genproto/googleapis/monitoring/v3, so update the imports to
+match the packaged cloud-go stack.
+
+The previous code only used github.com/prometheus/prometheus/model/value for
+the stale NaN constants and helper. Copy the equivalent constants locally to
+avoid pulling the full Prometheus source dependency into this leaf exporter;
+the stale NaN detection behavior is unchanged.
+
+Current Go vet also rejects non-constant format strings passed to t.Fatalf, so
+convert those call sites to regular format arguments.
+
+---
+ equivalence_test.go       |  2 +-
+ metrics.go                |  7 ++++++-
+ metrics_batcher.go        |  5 +++--
+ metrics_batcher_test.go   |  2 +-
+ metrics_proto.go          | 38 ++++++++++++++++++++++++++------------
+ metrics_proto_api_test.go | 22 +++++++++++-----------
+ metrics_proto_test.go     |  2 +-
+ metrics_test.go           |  2 +-
+ metrics_utils_test.go     |  2 +-
+ stats.go                  | 15 +++++++--------
+ stats_test.go             |  2 +-
+ trace.go                  |  4 +---
+ trace_proto.go            |  5 +++--
+ trace_proto_test.go       |  2 +-
+ trace_test.go             |  2 +-
+ 15 files changed, 65 insertions(+), 47 deletions(-)
+
+diff --git a/equivalence_test.go b/equivalence_test.go
+index 2058c6e..41cd138 100644
+--- a/equivalence_test.go
++++ b/equivalence_test.go
+@@ -34,7 +34,7 @@ import (
+ 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ )
+ 
+ func TestStatsAndMetricsEquivalence(t *testing.T) {
+diff --git a/metrics.go b/metrics.go
+index a88432b..1516c35 100644
+--- a/metrics.go
++++ b/metrics.go
+@@ -29,11 +29,11 @@ import (
+ 	"go.opencensus.io/trace"
+ 	"google.golang.org/protobuf/proto"
+ 
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	distributionpb "google.golang.org/genproto/googleapis/api/distribution"
+ 	labelpb "google.golang.org/genproto/googleapis/api/label"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
+ 
+ 	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
+ 	"go.opencensus.io/metric/metricdata"
+@@ -261,6 +261,11 @@ func (se *statsExporter) createMetricDescriptorFromMetric(ctx context.Context, m
+ 		return err
+ 	}
+ 
++	// ignore
++	if inMD.MetricKind == googlemetricpb.MetricDescriptor_METRIC_KIND_UNSPECIFIED {
++		return nil
++	}
++
+ 	if err = se.createMetricDescriptor(ctx, inMD); err != nil {
+ 		return err
+ 	}
+diff --git a/metrics_batcher.go b/metrics_batcher.go
+index 2b5f9fb..54fecd1 100644
+--- a/metrics_batcher.go
++++ b/metrics_batcher.go
+@@ -24,7 +24,7 @@ import (
+ 	"time"
+ 
+ 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ )
+ 
+ const (
+@@ -209,7 +209,8 @@ func newWorker(
+ 	reqsChan chan *monitoringpb.CreateTimeSeriesRequest,
+ 	respsChan chan *response,
+ 	wg *sync.WaitGroup,
+-	timeout time.Duration) *worker {
++	timeout time.Duration,
++) *worker {
+ 	return &worker{
+ 		ctx:       ctx,
+ 		mc:        mc,
+diff --git a/metrics_batcher_test.go b/metrics_batcher_test.go
+index 60b0a24..7c28aff 100644
+--- a/metrics_batcher_test.go
++++ b/metrics_batcher_test.go
+@@ -23,7 +23,7 @@ import (
+ 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
+ 	"google.golang.org/api/option"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"google.golang.org/grpc"
+ 	"google.golang.org/grpc/credentials/insecure"
+ )
+diff --git a/metrics_proto.go b/metrics_proto.go
+index fd5d67f..b8f0036 100644
+--- a/metrics_proto.go
++++ b/metrics_proto.go
+@@ -29,25 +29,39 @@ import (
+ 
+ 	"go.opencensus.io/resource"
+ 
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	commonpb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/common/v1"
+ 	metricspb "github.com/census-instrumentation/opencensus-proto/gen-go/metrics/v1"
+ 	resourcepb "github.com/census-instrumentation/opencensus-proto/gen-go/resource/v1"
+ 	timestamppb "github.com/golang/protobuf/ptypes/timestamp"
+-	promvalue "github.com/prometheus/prometheus/model/value"
+ 	distributionpb "google.golang.org/genproto/googleapis/api/distribution"
+ 	labelpb "google.golang.org/genproto/googleapis/api/label"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
+ )
+ 
+-var errNilMetricOrMetricDescriptor = errors.New("non-nil metric or metric descriptor")
+-var percentileLabelKey = &metricspb.LabelKey{
+-	Key:         "percentile",
+-	Description: "the value at a given percentile of a distribution",
++var (
++	errNilMetricOrMetricDescriptor = errors.New("non-nil metric or metric descriptor")
++	percentileLabelKey             = &metricspb.LabelKey{
++		Key:         "percentile",
++		Description: "the value at a given percentile of a distribution",
++	}
++)
++
++var (
++	globalResource = &resource.Resource{Type: "global"}
++	domains        = []string{"googleapis.com", "kubernetes.io", "istio.io", "knative.dev"}
++)
++
++// this code copied from prometheus project to avoid direct dependency
++// read more at https://pkg.go.dev/github.com/prometheus/prometheus@v0.42.0/model/value#pkg-constants
++const promValueStaleNaN uint64 = 0x7ff0000000000002
++
++// this code copied from prometheus project to avoid direct dependency
++// read more at https://pkg.go.dev/github.com/prometheus/prometheus@v0.42.0/model/value#IsStaleNaN
++func isStaleNaN(v float64) bool {
++	return math.Float64bits(v) == promValueStaleNaN
+ }
+-var globalResource = &resource.Resource{Type: "global"}
+-var domains = []string{"googleapis.com", "kubernetes.io", "istio.io", "knative.dev"}
+ 
+ // PushMetricsProto exports OpenCensus Metrics Proto to Stackdriver Monitoring synchronously,
+ // without de-duping or adding proto metrics to the bundler.
+@@ -204,7 +218,7 @@ func (se *statsExporter) convertSummaryMetrics(summary *metricspb.Metric) []*met
+ }
+ 
+ func (se *statsExporter) getResource(rsc *resourcepb.Resource, metric *metricspb.Metric, seenRscs map[*resourcepb.Resource]*monitoredrespb.MonitoredResource) *monitoredrespb.MonitoredResource {
+-	var resource = rsc
++	resource := rsc
+ 	if metric.Resource != nil {
+ 		resource = metric.Resource
+ 	}
+@@ -494,7 +508,7 @@ func protoToMetricPoint(value interface{}) (*monitoringpb.TypedValue, error) {
+ 		}, nil
+ 
+ 	case *metricspb.Point_DoubleValue:
+-		if promvalue.IsStaleNaN(v.DoubleValue) {
++		if isStaleNaN(v.DoubleValue) {
+ 			return nil, nil
+ 		}
+ 		return &monitoringpb.TypedValue{
+@@ -507,7 +521,7 @@ func protoToMetricPoint(value interface{}) (*monitoringpb.TypedValue, error) {
+ 		dv := v.DistributionValue
+ 		var mv *monitoringpb.TypedValue_DistributionValue
+ 		if dv != nil {
+-			if isStaleInt64(dv.Count) || promvalue.IsStaleNaN(dv.Sum) {
++			if isStaleInt64(dv.Count) || isStaleNaN(dv.Sum) {
+ 				return nil, nil
+ 			}
+ 			var mean float64
+@@ -547,7 +561,7 @@ func protoToMetricPoint(value interface{}) (*monitoringpb.TypedValue, error) {
+ }
+ 
+ func isStaleInt64(v int64) bool {
+-	return v == int64(math.Float64frombits(promvalue.StaleNaN))
++	return v == int64(math.Float64frombits(promValueStaleNaN))
+ }
+ 
+ func bucketCounts(buckets []*metricspb.DistributionValue_Bucket) []int64 {
+diff --git a/metrics_proto_api_test.go b/metrics_proto_api_test.go
+index 295b43e..ce2791e 100644
+--- a/metrics_proto_api_test.go
++++ b/metrics_proto_api_test.go
+@@ -33,7 +33,7 @@ import (
+ 
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"google.golang.org/grpc"
+ 
+ 	sd "contrib.go.opencensus.io/exporter/stackdriver"
+@@ -427,7 +427,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 	// Read input Metrics proto.
+ 	f, err := readFile("testdata/" + filename + "/inMetrics.txt")
+ 	if err != nil {
+-		t.Fatalf("error opening in file " + filename)
++		t.Fatalf("error opening in file %s", filename)
+ 	}
+ 
+ 	strMetrics := strings.Split(string(f), "---")
+@@ -435,7 +435,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 		in := metricspb.Metric{}
+ 		err = prototext.Unmarshal([]byte(strMetric), &in)
+ 		if err != nil {
+-			t.Fatalf("error unmarshalling Metric protos from file " + filename)
++			t.Fatalf("error unmarshalling Metric protos from file %s", filename)
+ 		}
+ 		tc.inMetric = append(tc.inMetric, &in)
+ 	}
+@@ -443,7 +443,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 	// Read expected output CreateMetricDescriptorRequest proto.
+ 	f, err = readFile("testdata/" + filename + "/outMDR.txt")
+ 	if err != nil {
+-		t.Fatalf("error opening in file " + filename)
++		t.Fatalf("error opening in file %s", filename)
+ 	}
+ 
+ 	strOutMDRs := strings.Split(string(f), "---")
+@@ -451,7 +451,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 		outMDR := monitoringpb.CreateMetricDescriptorRequest{}
+ 		err = prototext.Unmarshal([]byte(strOutMDR), &outMDR)
+ 		if err != nil {
+-			t.Fatalf("error unmarshalling CreateMetricDescriptorRequest protos from file " + filename)
++			t.Fatalf("error unmarshalling CreateMetricDescriptorRequest protos from file %s", filename)
+ 		}
+ 		if outMDR.Name != "" {
+ 			tc.outMDR = append(tc.outMDR, &outMDR)
+@@ -461,7 +461,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 	// Read expected output CreateTimeSeriesRequest proto.
+ 	f, err = readFile("testdata/" + filename + "/outTSR.txt")
+ 	if err != nil {
+-		t.Fatalf("error opening in file " + filename)
++		t.Fatalf("error opening in file %s", filename)
+ 	}
+ 
+ 	strOutTSRs := strings.Split(string(f), "---")
+@@ -469,7 +469,7 @@ func readTestCaseFromFiles(t *testing.T, filename string) *testCases {
+ 		outTSR := monitoringpb.CreateTimeSeriesRequest{}
+ 		err = prototext.Unmarshal([]byte(strOutTSR), &outTSR)
+ 		if err != nil {
+-			t.Fatalf("error unmarshalling CreateTimeSeriesRequest protos from file " + filename)
++			t.Fatalf("error unmarshalling CreateTimeSeriesRequest protos from file %s", filename)
+ 		}
+ 		tc.outTSR = append(tc.outTSR, &outTSR)
+ 	}
+@@ -480,7 +480,7 @@ func readTestResourcesFiles(t *testing.T, filename string) ([]*resourcepb.Resour
+ 	// Read input Resource proto.
+ 	f, err := readFile("testdata/" + filename + "/in.txt")
+ 	if err != nil {
+-		t.Fatalf("error opening in file " + filename)
++		t.Fatalf("error opening in file %s", filename)
+ 	}
+ 
+ 	inResources := []*resourcepb.Resource{}
+@@ -489,7 +489,7 @@ func readTestResourcesFiles(t *testing.T, filename string) ([]*resourcepb.Resour
+ 		inRes := resourcepb.Resource{}
+ 		err = prototext.Unmarshal([]byte(strRes), &inRes)
+ 		if err != nil {
+-			t.Fatalf("error unmarshalling input Resource protos from file " + filename)
++			t.Fatalf("error unmarshalling input Resource protos from file %s", filename)
+ 		}
+ 		inResources = append(inResources, &inRes)
+ 	}
+@@ -497,7 +497,7 @@ func readTestResourcesFiles(t *testing.T, filename string) ([]*resourcepb.Resour
+ 	// Read output Resource proto.
+ 	f, err = readFile("testdata/" + filename + "/out.txt")
+ 	if err != nil {
+-		t.Fatalf("error opening out file " + filename)
++		t.Fatalf("error opening out file %s", filename)
+ 	}
+ 
+ 	outResources := []*monitoredrespb.MonitoredResource{}
+@@ -506,7 +506,7 @@ func readTestResourcesFiles(t *testing.T, filename string) ([]*resourcepb.Resour
+ 		outRes := monitoredrespb.MonitoredResource{}
+ 		err = prototext.Unmarshal([]byte(strRes), &outRes)
+ 		if err != nil {
+-			t.Fatalf("error unmarshalling output Resource protos from file " + filename)
++			t.Fatalf("error unmarshalling output Resource protos from file %s", filename)
+ 		}
+ 		outResources = append(outResources, &outRes)
+ 	}
+diff --git a/metrics_proto_test.go b/metrics_proto_test.go
+index d5a437e..c84432b 100644
+--- a/metrics_proto_test.go
++++ b/metrics_proto_test.go
+@@ -27,7 +27,7 @@ import (
+ 	labelpb "google.golang.org/genproto/googleapis/api/label"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"google.golang.org/grpc"
+ 	"google.golang.org/grpc/credentials/insecure"
+ 	"google.golang.org/protobuf/testing/protocmp"
+diff --git a/metrics_test.go b/metrics_test.go
+index 593beff..0993834 100644
+--- a/metrics_test.go
++++ b/metrics_test.go
+@@ -28,7 +28,7 @@ import (
+ 	labelpb "google.golang.org/genproto/googleapis/api/label"
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 
+ 	"contrib.go.opencensus.io/exporter/stackdriver/monitoredresource"
+ 	"go.opencensus.io/metric/metricdata"
+diff --git a/metrics_utils_test.go b/metrics_utils_test.go
+index 4cc3710..81a285a 100644
+--- a/metrics_utils_test.go
++++ b/metrics_utils_test.go
+@@ -28,7 +28,7 @@ import (
+ 
+ 	googlemetricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"google.golang.org/protobuf/testing/protocmp"
+ )
+ 
+diff --git a/stats.go b/stats.go
+index 68e0c6a..d4e5582 100644
+--- a/stats.go
++++ b/stats.go
+@@ -32,6 +32,7 @@ import (
+ 	"go.opencensus.io/trace"
+ 
+ 	monitoring "cloud.google.com/go/monitoring/apiv3/v2"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"github.com/golang/protobuf/ptypes/timestamp"
+ 	"go.opencensus.io/metric/metricdata"
+ 	"go.opencensus.io/metric/metricexport"
+@@ -41,7 +42,6 @@ import (
+ 	labelpb "google.golang.org/genproto/googleapis/api/label"
+ 	metricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
+ 	"google.golang.org/protobuf/proto"
+ )
+ 
+@@ -73,9 +73,7 @@ type statsExporter struct {
+ 	initReaderOnce sync.Once
+ }
+ 
+-var (
+-	errBlankProjectID = errors.New("expecting a non-blank ProjectID")
+-)
++var errBlankProjectID = errors.New("expecting a non-blank ProjectID")
+ 
+ // newStatsExporter returns an exporter that uploads stats data to Stackdriver Monitoring.
+ // Only one Stackdriver exporter should be created per ProjectID per process, any subsequent
+@@ -631,8 +629,9 @@ var createServiceTimeSeries = func(ctx context.Context, c *monitoring.MetricClie
+ }
+ 
+ // splitCreateTimeSeriesRequest splits a *monitoringpb.CreateTimeSeriesRequest object into two new objects:
+-//   * The first object only contains service time series.
+-//   * The second object only contains non-service time series.
++//   - The first object only contains service time series.
++//   - The second object only contains non-service time series.
++//
+ // A returned object may be nil if no time series is found in the original request that satisfies the rules
+ // above.
+ // All other properties of the original CreateTimeSeriesRequest object are kept in the returned objects.
+@@ -653,8 +652,8 @@ func splitCreateTimeSeriesRequest(req *monitoringpb.CreateTimeSeriesRequest) (*m
+ }
+ 
+ // splitTimeSeries splits a []*monitoringpb.TimeSeries slice into two:
+-//   * The first slice only contains service time series
+-//   * The second slice only contains non-service time series
++//   - The first slice only contains service time series
++//   - The second slice only contains non-service time series
+ func splitTimeSeries(timeSeries []*monitoringpb.TimeSeries) ([]*monitoringpb.TimeSeries, []*monitoringpb.TimeSeries) {
+ 	var serviceTs, nonServiceTs []*monitoringpb.TimeSeries
+ 	for _, ts := range timeSeries {
+diff --git a/stats_test.go b/stats_test.go
+index 6b9d929..ad8905e 100644
+--- a/stats_test.go
++++ b/stats_test.go
+@@ -32,7 +32,7 @@ import (
+ 	"google.golang.org/genproto/googleapis/api/distribution"
+ 	metricpb "google.golang.org/genproto/googleapis/api/metric"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	monitoringpb "google.golang.org/genproto/googleapis/monitoring/v3"
++	"cloud.google.com/go/monitoring/apiv3/v2/monitoringpb"
+ 	"google.golang.org/grpc"
+ 	"google.golang.org/protobuf/testing/protocmp"
+ )
+diff --git a/trace.go b/trace.go
+index 1bbaa95..30cdbde 100644
+--- a/trace.go
++++ b/trace.go
+@@ -22,9 +22,9 @@ import (
+ 	"time"
+ 
+ 	tracingclient "cloud.google.com/go/trace/apiv2"
++	"cloud.google.com/go/trace/apiv2/tracepb"
+ 	"go.opencensus.io/trace"
+ 	"google.golang.org/api/support/bundler"
+-	tracepb "google.golang.org/genproto/googleapis/devtools/cloudtrace/v2"
+ 	"google.golang.org/protobuf/proto"
+ 
+ 	commonpb "github.com/census-instrumentation/opencensus-proto/gen-go/agent/common/v1"
+@@ -33,7 +33,6 @@ import (
+ 
+ // traceExporter is an implementation of trace.Exporter that uploads spans to
+ // Stackdriver.
+-//
+ type traceExporter struct {
+ 	o         Options
+ 	projectID string
+@@ -153,7 +152,6 @@ func (e *traceExporter) pushTraceSpans(ctx context.Context, node *commonpb.Node,
+ 	defer cancel()
+ 
+ 	err := e.client.BatchWriteSpans(ctx, &req)
+-
+ 	if err != nil {
+ 		return len(spans), err
+ 	}
+diff --git a/trace_proto.go b/trace_proto.go
+index b44957f..0b961e4 100644
+--- a/trace_proto.go
++++ b/trace_proto.go
+@@ -21,12 +21,12 @@ import (
+ 	"time"
+ 	"unicode/utf8"
+ 
++	"cloud.google.com/go/trace/apiv2/tracepb"
+ 	timestamppb "github.com/golang/protobuf/ptypes/timestamp"
+ 	wrapperspb "github.com/golang/protobuf/ptypes/wrappers"
+ 	"go.opencensus.io/plugin/ochttp"
+ 	"go.opencensus.io/trace"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	tracepb "google.golang.org/genproto/googleapis/devtools/cloudtrace/v2"
+ 	statuspb "google.golang.org/genproto/googleapis/rpc/status"
+ )
+ 
+@@ -250,7 +250,8 @@ func attributeValue(v interface{}) *tracepb.AttributeValue {
+ 		return &tracepb.AttributeValue{
+ 			Value: &tracepb.AttributeValue_StringValue{
+ 				StringValue: trunc(strconv.FormatFloat(value, 'f', -1, 64),
+-					maxAttributeStringValue)},
++					maxAttributeStringValue),
++			},
+ 		}
+ 	case string:
+ 		return &tracepb.AttributeValue{
+diff --git a/trace_proto_test.go b/trace_proto_test.go
+index c759a54..1723d04 100644
+--- a/trace_proto_test.go
++++ b/trace_proto_test.go
+@@ -28,7 +28,7 @@ import (
+ 	wrapperspb "github.com/golang/protobuf/ptypes/wrappers"
+ 	"go.opencensus.io/trace"
+ 	monitoredrespb "google.golang.org/genproto/googleapis/api/monitoredres"
+-	tracepb "google.golang.org/genproto/googleapis/devtools/cloudtrace/v2"
++	"cloud.google.com/go/trace/apiv2/tracepb"
+ 	codepb "google.golang.org/genproto/googleapis/rpc/code"
+ 	statuspb "google.golang.org/genproto/googleapis/rpc/status"
+ 	"google.golang.org/protobuf/encoding/prototext"
+diff --git a/trace_test.go b/trace_test.go
+index 494c9e4..200f63a 100644
+--- a/trace_test.go
++++ b/trace_test.go
+@@ -22,7 +22,7 @@ import (
+ 	"time"
+ 
+ 	"go.opencensus.io/trace"
+-	tracepb "google.golang.org/genproto/googleapis/devtools/cloudtrace/v2"
++	"cloud.google.com/go/trace/apiv2/tracepb"
+ )
+ 
+ func TestBundling(t *testing.T) {
+-- 
+2.43.0

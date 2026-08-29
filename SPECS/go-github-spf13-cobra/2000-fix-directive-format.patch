@@ -1,0 +1,26 @@
+From 143acc85628652a059243e50964a83c35aa93e97 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 30 Jun 2026 19:51:02 +0800
+Subject: [PATCH] Fix vet warning for directive formatting
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ completions_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/completions_test.go b/completions_test.go
+index ec7b907..07060ce 100644
+--- a/completions_test.go
++++ b/completions_test.go
+@@ -3727,7 +3727,7 @@ func TestGetFlagCompletion(t *testing.T) {
+ 					t.Errorf("Unexpected completions %q", comps)
+ 				}
+ 				if tc.directive != directive {
+-					t.Errorf("Unexpected directive %q", directive)
++					t.Errorf("Unexpected directive %v", directive)
+ 				}
+ 			}
+ 		})
+-- 
+2.43.0
+

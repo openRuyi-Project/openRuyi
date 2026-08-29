@@ -1,0 +1,47 @@
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 20 Jul 2026 09:20:00 +0800
+Subject: [PATCH] default to hipBLASLt as the BLAS backend on gfx110x/gfx1151
+
+Backport of upstream pytorch/pytorch commit 10a5f2ff7c90d8c84938b0e789ab2f4145f90b5d
+("[ROCm] Add gfx110X and gfx1151 to preferred hipBLASLt architectures
+list (#185375)"), with the ROCm version gate for the added archs lowered
+from 71300 to 70200: upstream flips the default only for ROCm >= 7.13,
+but openRuyi ships ROCm 7.2.4, where the original bug still reproduces.
+
+On gfx1100 (Radeon RX 7900 XTX) torch defaults to rocBLAS for GEMM, and
+the rocBLAS shipped in openRuyi has no fp16 GEMM Tensile solution for
+some problem shapes (e.g. an N=10 addmm from a small nn.Linear under
+AMP), failing with:
+
+  RuntimeError: CUDA error: HIPBLAS_STATUS_INTERNAL_ERROR when calling
+  rocblas_gemm_ex(..., rocblas_datatype_f16_r, ...)
+
+fp32/bf16 GEMM and fp16 square matmul are fine; only fp16 GEMM at those
+shapes breaks.  hipBLASLt handles every shape, and forcing it
+(TORCH_BLAS_PREFER_HIPBLASLT=1) makes the failure disappear.
+
+gfx1100/gfx1101/gfx1151 are all already in getHipblasltSupportedArchs()
+(gated at ROCm 6.3 / 7.0 respectively), so the supported-arch check
+still passes and the backend is not overridden back to rocBLAS.
+
+Only the CUDAHooks.cpp half of the upstream commit is backported; the
+test/test_cuda.py half is left out (distro builds do not run it).
+---
+ aten/src/ATen/cuda/detail/CUDAHooks.cpp | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff -Naur a/aten/src/ATen/cuda/detail/CUDAHooks.cpp b/aten/src/ATen/cuda/detail/CUDAHooks.cpp
+--- a/aten/src/ATen/cuda/detail/CUDAHooks.cpp	2026-07-20 09:19:46.612879802 +0800
++++ b/aten/src/ATen/cuda/detail/CUDAHooks.cpp	2026-07-20 09:19:54.144838461 +0800
+@@ -554,7 +554,10 @@
+     "gfx1200", "gfx1201",
+ #endif
+ #if ROCM_VERSION >= 70000
+-    "gfx950"
++    "gfx950",
++#endif
++#if ROCM_VERSION >= 70200
++    "gfx1100", "gfx1101", "gfx1151"
+ #endif
+   };
+   return archs;

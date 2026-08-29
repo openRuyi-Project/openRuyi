@@ -7,14 +7,25 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global flavor @BUILD_FLAVOR@%{nil}
+%if "%{flavor}" == "bootstrap"
+%bcond bootstrap 1
+%else
+%bcond bootstrap 0
+%endif
+
+%if %{with bootstrap}
+Name:           cmake-bootstrap
+%else
 Name:           cmake
-Version:        4.3.1
+%endif
+Version:        4.3.2
 Release:        %autorelease
 Summary:        Cross-platform make system
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
 VCS:            git:https://gitlab.kitware.com/cmake/cmake
-#!RemoteAsset:  sha256:0798f4be7a1a406a419ac32db90c2956936fecbf50db3057d7af47d69a2d7edb
+#!RemoteAsset:  sha256:b0231eb39b3c3cabdc568c619df78208a7bd95ea10c9b2236d61218bac1b367d
 Source0:        https://www.cmake.org/files/v4.3/cmake-%{version}.tar.gz
 Source1:        macros.cmake
 Source2:        macros.buildsystem.cmake
@@ -27,12 +38,20 @@ BuildOption(conf):  --no-system-libs
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  gcc-c++
+
+%if %{with bootstrap}
+Provides:       cmake
+%else
+BuildRequires:  openssl-devel
+Obsoletes:      cmake-bootstrap <= %{version}
+%endif
+
 # For tests
 BuildRequires:  git
 
-Requires:       cmake-data = %{version}-%{release}
-Requires:       cmake-rpm-macros = %{version}-%{release}
-Requires:       cmake-filesystem = %{version}-%{release}
+Requires:       %{name}-data = %{version}-%{release}
+Requires:       %{name}-rpm-macros = %{version}-%{release}
+Requires:       %{name}-filesystem = %{version}-%{release}
 
 %description
 CMake is used to control the software compilation process using simple
@@ -44,8 +63,11 @@ generation, code generation, and template instantiation.
 
 %package        data
 Summary:        Common data-files for cmake
-Requires:       cmake = %{version}-%{release}
-Requires:       cmake-rpm-macros = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}-rpm-macros = %{version}-%{release}
+%if %{without bootstrap}
+Obsoletes:      cmake-bootstrap-data <= %{version}
+%endif
 BuildArch:      noarch
 
 %description    data
@@ -53,6 +75,9 @@ This package contains common data-files for cmake.
 
 %package        filesystem
 Summary:        Directories used by CMake modules
+%if %{without bootstrap}
+Obsoletes:      cmake-bootstrap-filesystem <= %{version}
+%endif
 
 %description    filesystem
 This package owns all directories used by CMake modules.
@@ -60,16 +85,21 @@ This package owns all directories used by CMake modules.
 %package        rpm-macros
 Summary:        Common RPM macros for cmake
 Requires:       rpm
-Conflicts:      cmake-data < 3.10.1-2
+%if %{without bootstrap}
+Obsoletes:      cmake-bootstrap-rmp-macros <= %{version}
+%endif
 BuildArch:      noarch
 
 %description    rpm-macros
 This package contains common RPM macros for cmake.
 
 %conf
+%if %{with bootstrap}
 # cmake also need openssl to make FetchContent() usable, but in rpm building
 # process we should download all sources in advance
 echo "set(CMAKE_USE_OPENSSL OFF)" | cat - CMakeLists.txt > tmpfile && mv tmpfile CMakeLists.txt
+%endif
+
 ./bootstrap --prefix=%{_prefix} --datadir=/share/cmake \
              --docdir=/share/doc/cmake --mandir=/share/man \
              --no-system-libs \
@@ -145,8 +175,8 @@ bin/ctest %{?_smp_mflags} -V -E "$NO_TEST" --output-on-failure
 %{_datadir}/cmake
 %{_datadir}/aclocal/cmake.m4
 %{_datadir}/bash-completion
-%{_datadir}/vim/vimfiles/indent/%{name}.vim
-%{_datadir}/vim/vimfiles/syntax/%{name}.vim
+%{_datadir}/vim/vimfiles/indent/cmake.vim
+%{_datadir}/vim/vimfiles/syntax/cmake.vim
 %exclude %{_datadir}/cmake/Templates/Windows/Windows_TemporaryKey.pfx
 
 %files rpm-macros
@@ -155,4 +185,4 @@ bin/ctest %{?_smp_mflags} -V -E "$NO_TEST" --output-on-failure
 %{_rpmmacrodir}/macros.buildsystem.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,225 @@
+From 84a63c91f60633a8bea67f024d5cf7fe363b5346 Mon Sep 17 00:00:00 2001
+From: Ajay Neeli <ajay.neeli@amd.com>
+Date: Tue, 21 Oct 2025 17:00:02 +0530
+Subject: [RUYI PATCH] UPSTREAM: scsi: firmware: xilinx: Add APIs for UFS PHY
+ initialization
+
+ - Add APIs for UFS PHY initialization.
+
+ - Verify M-PHY TX-RX configuration readiness.
+
+ - Confirm SRAM initialization and Set SRAM bypass.
+
+ - Retrieve UFS calibration values.
+
+Signed-off-by: Ajay Neeli <ajay.neeli@amd.com>
+Acked-by: Senthil Nathan Thangaraj <senthilnathan.thangaraj@amd.com>
+Acked-by: Michal Simek <michal.simek@amd.com>
+Acked-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://patch.msgid.link/20251021113003.13650-4-ajay.neeli@amd.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 0e4d26f79a74bc633846a27a9a20d52217c108dc)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/firmware/xilinx/Makefile         |   2 +-
+ drivers/firmware/xilinx/zynqmp-ufs.c     | 118 +++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp-ufs.h |  38 ++++++++
+ include/linux/firmware/xlnx-zynqmp.h     |   1 +
+ 4 files changed, 158 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/xilinx/zynqmp-ufs.c
+ create mode 100644 include/linux/firmware/xlnx-zynqmp-ufs.h
+
+diff --git a/drivers/firmware/xilinx/Makefile b/drivers/firmware/xilinx/Makefile
+index 875a53703c82..70f8f02f14a3 100644
+--- a/drivers/firmware/xilinx/Makefile
++++ b/drivers/firmware/xilinx/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for Xilinx firmwares
+ 
+-obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o
++obj-$(CONFIG_ZYNQMP_FIRMWARE) += zynqmp.o zynqmp-ufs.o
+ obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) += zynqmp-debug.o
+diff --git a/drivers/firmware/xilinx/zynqmp-ufs.c b/drivers/firmware/xilinx/zynqmp-ufs.c
+new file mode 100644
+index 000000000000..85da8a822f3a
+--- /dev/null
++++ b/drivers/firmware/xilinx/zynqmp-ufs.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Firmware Layer for UFS APIs
++ *
++ * Copyright (C) 2025 Advanced Micro Devices, Inc.
++ */
++
++#include <linux/firmware/xlnx-zynqmp.h>
++#include <linux/module.h>
++
++/* Register Node IDs */
++#define PM_REGNODE_PMC_IOU_SLCR		0x30000002 /* PMC IOU SLCR */
++#define PM_REGNODE_EFUSE_CACHE		0x30000003 /* EFUSE Cache */
++
++/* Register Offsets for PMC IOU SLCR */
++#define SRAM_CSR_OFFSET			0x104C /* SRAM Control and Status */
++#define TXRX_CFGRDY_OFFSET		0x1054 /* M-PHY TX-RX Config ready */
++
++/* Masks for SRAM Control and Status Register */
++#define SRAM_CSR_INIT_DONE_MASK		BIT(0) /* SRAM initialization done */
++#define SRAM_CSR_EXT_LD_DONE_MASK	BIT(1) /* SRAM External load done */
++#define SRAM_CSR_BYPASS_MASK		BIT(2) /* Bypass SRAM interface */
++
++/* Mask to check M-PHY TX-RX configuration readiness */
++#define TX_RX_CFG_RDY_MASK		GENMASK(3, 0)
++
++/* Register Offsets for EFUSE Cache */
++#define UFS_CAL_1_OFFSET		0xBE8 /* UFS Calibration Value */
++
++/**
++ * zynqmp_pm_is_mphy_tx_rx_config_ready - check M-PHY TX-RX config readiness
++ * @is_ready:	Store output status (true/false)
++ *
++ * Return:	Returns 0 on success or error value on failure.
++ */
++int zynqmp_pm_is_mphy_tx_rx_config_ready(bool *is_ready)
++{
++	u32 regval;
++	int ret;
++
++	if (!is_ready)
++		return -EINVAL;
++
++	ret = zynqmp_pm_sec_read_reg(PM_REGNODE_PMC_IOU_SLCR, TXRX_CFGRDY_OFFSET, &regval);
++	if (ret)
++		return ret;
++
++	regval &= TX_RX_CFG_RDY_MASK;
++	if (regval)
++		*is_ready = true;
++	else
++		*is_ready = false;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_is_mphy_tx_rx_config_ready);
++
++/**
++ * zynqmp_pm_is_sram_init_done - check SRAM initialization
++ * @is_done:	Store output status (true/false)
++ *
++ * Return:	Returns 0 on success or error value on failure.
++ */
++int zynqmp_pm_is_sram_init_done(bool *is_done)
++{
++	u32 regval;
++	int ret;
++
++	if (!is_done)
++		return -EINVAL;
++
++	ret = zynqmp_pm_sec_read_reg(PM_REGNODE_PMC_IOU_SLCR, SRAM_CSR_OFFSET, &regval);
++	if (ret)
++		return ret;
++
++	regval &= SRAM_CSR_INIT_DONE_MASK;
++	if (regval)
++		*is_done = true;
++	else
++		*is_done = false;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_is_sram_init_done);
++
++/**
++ * zynqmp_pm_set_sram_bypass - Set SRAM bypass Control
++ *
++ * Return:	Returns 0 on success or error value on failure.
++ */
++int zynqmp_pm_set_sram_bypass(void)
++{
++	u32 sram_csr;
++	int ret;
++
++	ret = zynqmp_pm_sec_read_reg(PM_REGNODE_PMC_IOU_SLCR, SRAM_CSR_OFFSET, &sram_csr);
++	if (ret)
++		return ret;
++
++	sram_csr &= ~SRAM_CSR_EXT_LD_DONE_MASK;
++	sram_csr |= SRAM_CSR_BYPASS_MASK;
++
++	return zynqmp_pm_sec_mask_write_reg(PM_REGNODE_PMC_IOU_SLCR, SRAM_CSR_OFFSET,
++					    GENMASK(2, 1), sram_csr);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_set_sram_bypass);
++
++/**
++ * zynqmp_pm_get_ufs_calibration_values - Read UFS calibration values
++ * @val:	Store the calibration value
++ *
++ * Return:	Returns 0 on success or error value on failure.
++ */
++int zynqmp_pm_get_ufs_calibration_values(u32 *val)
++{
++	return zynqmp_pm_sec_read_reg(PM_REGNODE_EFUSE_CACHE, UFS_CAL_1_OFFSET, val);
++}
++EXPORT_SYMBOL_GPL(zynqmp_pm_get_ufs_calibration_values);
+diff --git a/include/linux/firmware/xlnx-zynqmp-ufs.h b/include/linux/firmware/xlnx-zynqmp-ufs.h
+new file mode 100644
+index 000000000000..d3538dd5822a
+--- /dev/null
++++ b/include/linux/firmware/xlnx-zynqmp-ufs.h
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Firmware layer for UFS APIs.
++ *
++ * Copyright (c) 2025 Advanced Micro Devices, Inc.
++ */
++
++#ifndef __FIRMWARE_XLNX_ZYNQMP_UFS_H__
++#define __FIRMWARE_XLNX_ZYNQMP_UFS_H__
++
++#if IS_REACHABLE(CONFIG_ZYNQMP_FIRMWARE)
++int zynqmp_pm_is_mphy_tx_rx_config_ready(bool *is_ready);
++int zynqmp_pm_is_sram_init_done(bool *is_done);
++int zynqmp_pm_set_sram_bypass(void);
++int zynqmp_pm_get_ufs_calibration_values(u32 *val);
++#else
++static inline int zynqmp_pm_is_mphy_tx_rx_config_ready(bool *is_ready)
++{
++	return -ENODEV;
++}
++
++static inline int zynqmp_pm_is_sram_init_done(bool *is_done)
++{
++	return -ENODEV;
++}
++
++static inline int zynqmp_pm_set_sram_bypass(void)
++{
++	return -ENODEV;
++}
++
++static inline int zynqmp_pm_get_ufs_calibration_values(u32 *val)
++{
++	return -ENODEV;
++}
++#endif
++
++#endif /* __FIRMWARE_XLNX_ZYNQMP_UFS_H__ */
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index b161f37de5cc..784d5920b4cd 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -16,6 +16,7 @@
+ #include <linux/types.h>
+ 
+ #include <linux/err.h>
++#include <linux/firmware/xlnx-zynqmp-ufs.h>
+ 
+ #define ZYNQMP_PM_VERSION_MAJOR	1
+ #define ZYNQMP_PM_VERSION_MINOR	0
+-- 
+2.53.0
+

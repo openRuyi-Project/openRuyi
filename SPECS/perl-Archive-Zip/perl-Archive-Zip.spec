@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Provide an interface to ZIP archive files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Archive-Zip
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PH/PHRED/Archive-Zip-%{version}.tar.gz
+#!RemoteAsset:  sha256:984e185d785baf6129c6e75f8eb44411745ac00bf6122fb1c8e822a3861ec650
+Source0:        https://www.cpan.org/authors/id/P/PH/PHRED/Archive-Zip-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Compress::Raw::Zlib) >= 2.017
@@ -41,20 +45,8 @@ Requires:       perl(File::Spec) >= 0.80
 The Archive::Zip module allows a Perl program to create, manipulate, read,
 and write Zip archive files.
 
-%prep
-%setup -q -n Archive-Zip-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

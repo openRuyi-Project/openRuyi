@@ -1,4 +1,4 @@
-From 247950ec070cef60c45a877d24a4770991d1eefc Mon Sep 17 00:00:00 2001
+From f193064b7086fb91b90e9a8d597e04f317932558 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Ond=C5=99ej=20Poho=C5=99elsk=C3=BD?= <opohorel@redhat.com>
 Date: Wed, 20 Aug 2025 09:35:47 +0200
 Subject: [PATCH] sideband: mask control characters
@@ -78,10 +78,10 @@ Signed-off-by: Ondřej Pohořelský <opohorel@redhat.com>
  create mode 100644 Documentation/config/sideband.adoc
 
 diff --git a/Documentation/config.adoc b/Documentation/config.adoc
-index cc769251be..a8b04c4e51 100644
+index 62eebe7c5..dcea3c0c1 100644
 --- a/Documentation/config.adoc
 +++ b/Documentation/config.adoc
-@@ -522,6 +522,8 @@ include::config/sequencer.adoc[]
+@@ -523,6 +523,8 @@ include::config/sequencer.adoc[]
  
  include::config/showbranch.adoc[]
  
@@ -92,7 +92,7 @@ index cc769251be..a8b04c4e51 100644
  include::config/splitindex.adoc[]
 diff --git a/Documentation/config/sideband.adoc b/Documentation/config/sideband.adoc
 new file mode 100644
-index 0000000000..a809e2de89
+index 000000000..a809e2de8
 --- /dev/null
 +++ b/Documentation/config/sideband.adoc
 @@ -0,0 +1,16 @@
@@ -113,7 +113,7 @@ index 0000000000..a809e2de89
 +		This is the default.
 +--
 diff --git a/sideband.c b/sideband.c
-index 8f15b98a65..461eea0a51 100644
+index ea7c25211..88d1b44a7 100644
 --- a/sideband.c
 +++ b/sideband.c
 @@ -26,6 +26,12 @@ static struct keyword_entry keywords[] = {
@@ -127,10 +127,10 @@ index 8f15b98a65..461eea0a51 100644
 +} allow_control_characters = ALLOW_ALL_CONTROL_CHARACTERS;
 +
  /* Returns a color setting (GIT_COLOR_NEVER, etc). */
- static int use_sideband_colors(void)
+ static enum git_colorbool use_sideband_colors(void)
  {
-@@ -39,6 +45,25 @@ static int use_sideband_colors(void)
- 	if (use_sideband_colors_cached >= 0)
+@@ -39,6 +45,25 @@ static enum git_colorbool use_sideband_colors(void)
+ 	if (use_sideband_colors_cached != GIT_COLOR_UNKNOWN)
  		return use_sideband_colors_cached;
  
 +	switch (repo_config_get_maybe_bool(the_repository, "sideband.allowcontrolcharacters", &i)) {
@@ -230,7 +230,7 @@ index 8f15b98a65..461eea0a51 100644
  
  
 diff --git a/t/t5409-colorize-remote-messages.sh b/t/t5409-colorize-remote-messages.sh
-index fa5de4500a..2d40d8c640 100755
+index fa5de4500..2d40d8c64 100755
 --- a/t/t5409-colorize-remote-messages.sh
 +++ b/t/t5409-colorize-remote-messages.sh
 @@ -98,4 +98,35 @@ test_expect_success 'fallback to color.ui' '
@@ -270,4 +270,5 @@ index fa5de4500a..2d40d8c640 100755
 +
  test_done
 -- 
-2.50.1
+2.54.0
+

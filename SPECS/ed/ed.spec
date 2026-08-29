@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           ed
-Version:        1.21.1
+Version:        1.22.5
 Release:        %autorelease
 Summary:        A line-oriented text editor
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnu.org/software/ed/
 # VCS: TODO: How to write https://savannah.gnu.org/cvs/?group=ed
-#!RemoteAsset
+#!RemoteAsset:  sha256:56e107ddc2f29dad6690376c15bf9751509e1ee3b8241710e44edbe5c3a158cc
 Source:         https://ftpmirror.gnu.org/ed/ed-%{version}.tar.lz
 Buildsystem:    autotools
 
@@ -37,4 +37,4 @@ superseded by full-screen editors such as GNU Emacs or GNU Moe.
 %{_mandir}/man1/r%{name}.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog

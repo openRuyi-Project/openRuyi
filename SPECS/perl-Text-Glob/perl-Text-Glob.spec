@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Match globbing patterns against text
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Text-Glob
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RC/RCLAMP/Text-Glob-%{version}.tar.gz
+#!RemoteAsset:  sha256:069ccd49d3f0a2dedb115f4bdc9fbac07a83592840953d1fcdfc39eb9d305287
+Source0:        https://www.cpan.org/authors/id/R/RC/RCLAMP/Text-Glob-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.5.0
 BuildRequires:  perl(constant)
@@ -29,20 +33,8 @@ Text::Glob implements glob(3) style matching that can be used to match
 against text, rather than fetching names from a filesystem. If you want to
 do full file globbing use the File::Glob module instead.
 
-%prep
-%setup -q -n Text-Glob-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes
 
 %changelog
-%{?autochangelog}
+%autochangelog

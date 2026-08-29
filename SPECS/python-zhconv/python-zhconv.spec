@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/gumblex/zhconv
 #!RemoteAsset:  sha256:ad42d9057ca0605f8e41d62b67ca797f879f58193ee6840562c51459b2698c45
 Source:         https://files.pythonhosted.org/packages/source/z/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -23,7 +24,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -40,4 +41,4 @@ and zh-hant. It also fully supports MediaWiki's manual conversion syntax.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

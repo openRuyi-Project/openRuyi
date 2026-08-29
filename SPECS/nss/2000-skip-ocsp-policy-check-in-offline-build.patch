@@ -1,0 +1,33 @@
+From 6dbd80413ab86e0df5f05ab0e02676bf1fbb9bc9 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Sat, 9 May 2026 23:43:07 +0800
+Subject: [PATCH] Skip OCSP policy check in offline build
+
+---
+ nss/tests/ssl/ssl.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/nss/tests/ssl/ssl.sh b/nss/tests/ssl/ssl.sh
+index 8018302..a04889b 100755
+--- a/nss/tests/ssl/ssl.sh
++++ b/nss/tests/ssl/ssl.sh
+@@ -990,6 +990,16 @@ ssl_policy_pkix_ocsp()
+   echo "Saving pkcs11.txt"
+   cp ${P_R_SERVERDIR}/pkcs11.txt ${P_R_SERVERDIR}/pkcs11.txt.sav
+ 
++  if [ "${NSS_SKIP_BADSSL_OCSP}" = "1" ]; then
++      echo "$SCRIPTNAME: skipping badssl.com OCSP policy check in offline build"
++      if [ "${PKIX_SAVE}" != "unset" ]; then
++          export NSS_DISABLE_LIBPKIX_VERIFY=${PKIX_SAVE}
++      fi
++      cp ${P_R_SERVERDIR}/pkcs11.txt.sav ${P_R_SERVERDIR}/pkcs11.txt
++      html "</TABLE><BR>"
++      return 0
++  fi
++
+   # Disallow sha1 explicitly. This will test if we are trying to verify the sha1 signature
+   # on the GlobalSign root during OCSP processing
+   setup_policy "disallow=sha1" ${P_R_SERVERDIR}
+-- 
+2.54.0
+

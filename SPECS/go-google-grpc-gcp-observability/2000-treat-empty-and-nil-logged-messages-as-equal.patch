@@ -1,0 +1,29 @@
+From 20e82618393761665761221d82a99d080489f4cd Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 14:55:59 +0800
+Subject: [PATCH] Treat empty and nil logged messages as equal in tests
+
+OBS exposes a comparison mismatch where protobuf byte slices can be nil on one
+side and empty on the other side. They represent the same logged payload for
+this test, so compare byte slices by their string content while leaving the
+runtime logging code untouched.
+---
+ gcp/observability/logging_test.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/gcp/observability/logging_test.go b/gcp/observability/logging_test.go
+index 5e2bab44..cb54e6ca 100644
+--- a/gcp/observability/logging_test.go
++++ b/gcp/observability/logging_test.go
+@@ -57,6 +57,9 @@ func cmpLoggingEntryList(got []*grpcLogEntry, want []*grpcLogEntry) error {
+ 			}
+ 			return true
+ 		}),
++		cmp.Comparer(func(a []byte, b []byte) bool {
++			return string(a) == string(b)
++		}),
+ 		cmpopts.IgnoreFields(grpcLogEntry{}, "CallID", "Peer"),
+ 		cmpopts.IgnoreFields(address{}, "IPPort", "Type"),
+ 		cmpopts.IgnoreFields(payload{}, "Timeout")); diff != "" {
+-- 
+2.43.0

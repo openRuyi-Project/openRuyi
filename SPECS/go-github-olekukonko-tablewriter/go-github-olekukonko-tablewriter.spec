@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/olekukonko/tablewriter
 
 Name:           go-github-olekukonko-tablewriter
-Version:        1.1.2
+Version:        1.1.4
 Release:        %autorelease
 Summary:        ASCII table in golang
 License:        MIT
 URL:            https://github.com/olekukonko/tablewriter
-#!RemoteAsset
+#!RemoteAsset:  sha256:cf9434e290e9afe287d18298f515b59dab647cb00070a87b47710334d24f278f
 Source0:        https://github.com/olekukonko/tablewriter/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -64,4 +65,4 @@ Key Features
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

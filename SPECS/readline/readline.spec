@@ -12,18 +12,19 @@ Summary:        A library for editing typed command lines
 License:        GPL-3.0-or-later AND GPL-2.0-or-later AND GFDL-1.3-no-invariants-or-later
 URL:            https://tiswww.case.edu/php/chet/readline/rltop.html
 VCS:            git:https://https.git.savannah.gnu.org/git/readline.git
-#!RemoteAsset
-Source0:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/%{name}/%{name}-%{version}.tar.gz.sig
+#!RemoteAsset:  sha256:fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc
+Source0:        https://ftpmirror.gnu.org/gnu/readline/readline-%{version}.tar.gz
 BuildSystem:    autotools
 
 # Official upstream patches
 # Patches are converted to apply with '-p1'
 Patch0:         0001-readline-8.3-patch-1.patch
+Patch1:         0002-readline-8.3-patch-2.patch
+Patch2:         0003-readline-8.3-patch-3.patch
 # Other patches
 # symbol lookup error: /usr/lib64/libreadline.so.8: undefined symbol: UP
-Patch1:         0010-readline-link-ncurses.patch
+# patch from https://src.fedoraproject.org/rpms/readline/blob/97a022b1e934382ced4391e648f83c056f5ac435/f/readline-8.0-shlib.patch
+Patch2000:      2000-readline-8.0-shlib.patch
 
 BuildOption(conf):  --with-curses
 BuildOption(conf):  --disable-install-examples
@@ -67,7 +68,7 @@ rm -vf %{buildroot}%{_infodir}/dir*
 %{_includedir}/readline/
 %{_libdir}/libreadline.so
 %{_libdir}/libhistory.so
-%{_libdir}/pkgconfig/%{name}.pc
+%{_libdir}/pkgconfig/readline.pc
 %{_libdir}/pkgconfig/history.pc
 %{_mandir}/man3/readline.3*
 %{_mandir}/man3/history.3*
@@ -76,4 +77,4 @@ rm -vf %{buildroot}%{_infodir}/dir*
 %{_libdir}/libhistory.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

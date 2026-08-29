@@ -29,7 +29,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pycryptodomex)
 BuildRequires:  python3dist(urllib3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ Cloud Storage paths, and Azure Blob Storage paths.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

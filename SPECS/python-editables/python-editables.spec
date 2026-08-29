@@ -7,20 +7,24 @@
 %global srcname editables
 
 Name:           python-%{srcname}
-Version:        0.5
+Version:        0.6
 Release:        %autorelease
+Summary:        Editable installations
 License:        MIT
 URL:            https://github.com/pfmoore/editables
-Summary:        Editable installations
-#!RemoteAsset
+#!RemoteAsset:  sha256:1163834902381c4613787951c5914800fdf155ae08848a373b8ea5006780977c
 Source0:        https://files.pythonhosted.org/packages/source/e/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
-Provides:       python3-%{srcname}
+BuildSystem:    pyproject
+
+BuildOption(install):  -l %{srcname}
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
-BuildRequires:  python3-devel
-BuildSystem:    pyproject
-BuildOption(install): -l %{srcname}
 %description
 A Python library for creating “editable wheels”
 
@@ -36,4 +40,4 @@ Python, without needing a reinstall.
 %doc README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

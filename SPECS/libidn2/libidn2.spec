@@ -13,12 +13,8 @@ Summary:        Support for Internationalized Domain Names (IDN) based on IDNA20
 License:        (GPL-2.0-or-later OR LGPL-3.0-or-later) AND GPL-3.0-or-later
 URL:            https://www.gnu.org/software/libidn/#libidn2
 VCS:            git:https://gitlab.com/libidn/libidn2
-#!RemoteAsset
+#!RemoteAsset:  sha256:f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a
 Source0:        https://ftpmirror.gnu.org/gnu/libidn/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/libidn/%{name}-%{version}.tar.gz.sig
-#!RemoteAsset
-Source2:        https://josefsson.org/key-20190320.txt#/%{name}.keyring
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -40,8 +36,6 @@ An implementation of the IDNA2008 specifications (RFCs 5890, 5891, 5892, 5893)
 %install -a
 rm -rf %{buildroot}/%{_datadir}/gtk-doc/
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files
@@ -60,4 +54,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -8,12 +8,12 @@
 %define go_import_path  github.com/zeebo/xxh3
 
 Name:           go-github-zeebo-xxh3
-Version:        1.0.2
+Version:        1.1.0
 Release:        %autorelease
 Summary:        XXH3 algorithm in Go
 License:        BSD-2-Clause
 URL:            https://github.com/zeebo/xxh3
-#!RemoteAsset
+#!RemoteAsset:  sha256:0465b8344ab7275dccb919c80e95a3b31d206190e95a36f9566090feb7b9dd67
 Source0:        https://github.com/zeebo/xxh3/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -47,4 +47,4 @@ that.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

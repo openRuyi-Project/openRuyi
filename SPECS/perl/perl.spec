@@ -12,7 +12,7 @@ Summary:        Practical Extraction and Report Language
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://www.perl.org/
 VCS:            git:https://github.com/Perl/perl5.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:73cf6cc1ea2b2b1c110a18c14bbbc73a362073003893ffcedc26d22ebdbdd0c3
 Source0:        https://www.cpan.org/src/5.0/%{name}-%{version}.tar.xz
 # Use config.over to make build of perl reproducible
 Source1:        config.over
@@ -71,7 +71,7 @@ details on the Perl decomposition into packages.
 Summary:        Header files for use in perl development
 License:        (GPL-1.0-or-later OR Artistic-1.0-Perl) AND Unicode-3.0
 Requires:       perl(ExtUtils::ParseXS)
-Requires:       perl
+Requires:       perl%{?_isa} = %{version}-%{release}
 Requires:       perl(Devel::PPPort)
 Requires:       pkgconfig(libxcrypt)
 
@@ -211,6 +211,9 @@ rm -f %{buildroot}%{archlib}/CORE/libperl.a
 %{_mandir}/man1/*.gz
 %{_mandir}/man3/*
 %exclude %{archlib}/.packlist
+%exclude %{archlib}/CORE/*.h
+%exclude %{_mandir}/man1/h2xs*
+%exclude %{_mandir}/man1/perlivp*
 
 %files devel
 %{_bindir}/h2xs
@@ -225,4 +228,4 @@ rm -f %{buildroot}%{archlib}/CORE/libperl.a
 %{_rpmmacrodir}/macros.perl
 
 %changelog
-%{?autochangelog}
+%autochangelog

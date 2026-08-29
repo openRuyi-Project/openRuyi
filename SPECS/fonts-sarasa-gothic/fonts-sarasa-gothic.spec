@@ -16,6 +16,7 @@ Source0:        https://github.com/be5invis/Sarasa-Gothic/releases/download/v%{v
 Source1:        LICENSE
 BuildArch:      noarch
 
+BuildRequires:  fonts-rpm-macros
 BuildRequires:  unzip
 
 %description
@@ -31,12 +32,11 @@ cp %{SOURCE1} LICENSE
 # No build required
 
 %install
-mkdir -p %{buildroot}%{_datadir}/fonts/truetype
-install -m 0644 -p Sarasa-*.ttc %{buildroot}%{_datadir}/fonts/truetype/
+%install_fonts Sarasa-*.ttc sarasa-gothic
 
 %files
 %license LICENSE
-%{_datadir}/fonts/truetype/Sarasa-*.ttc
+%font_files sarasa-gothic ttc
 
 %changelog
 %autochangelog

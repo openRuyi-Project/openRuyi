@@ -56,9 +56,6 @@ rm -f %{buildroot}%{_infodir}/dir \
       %{buildroot}%{_bindir}/texinfo2man \
       %{buildroot}%{_datadir}/doc/indent/indent.html
 
-# TODO: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
@@ -69,4 +66,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_infodir}/indent.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog

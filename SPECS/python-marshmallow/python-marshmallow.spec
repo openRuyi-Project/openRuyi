@@ -7,14 +7,15 @@
 %global srcname marshmallow
 
 Name:           python-%{srcname}
-Version:        4.2.1
+Version:        4.3.0
 Release:        %autorelease
 Summary:        A lightweight library for converting complex objects to and from simple Python datatypes
 License:        MIT
 URL:            https://marshmallow.readthedocs.io/
 VCS:            git:https://github.com/marshmallow-code/marshmallow/
-#!RemoteAsset:  sha256:4d1d66189c8d279ca73a6b0599d74117e5f8a3830b5cd766b75c2bb08e3464e7
+#!RemoteAsset:  sha256:fb43c53b3fe240b8f6af37223d6ef1636f927ad9bea8ab323afad95dff090880
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -27,7 +28,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(ordered-set)
 BuildRequires:  python3dist(simplejson)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +48,4 @@ Marshmallow schemas can be used to:
 %doc CHANGELOG.rst README.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

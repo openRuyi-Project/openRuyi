@@ -1,0 +1,609 @@
+From a0441a5a33c6875090a185336834600e6c50f23a Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:02:46 +0100
+Subject: [PATCH 01/18] remove PyObject_AsCharBuffer for python 3.12
+
+---
+ src/python3/connection.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index 7e5f0c7..e0decf5 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -524,17 +524,36 @@ _pysqlite_set_result(sqlite3_context* context, PyObject* py_val)
+     } else if (PyObject_CheckBuffer(py_val)) {
+         const char* buffer;
+         Py_ssize_t buflen;
++        #if PY_VERSION_HEX < 0x030C0000
++        // Python <3.12
+         if (PyObject_AsCharBuffer(py_val, &buffer, &buflen) != 0) {
+             PyErr_SetString(PyExc_ValueError,
+                             "could not convert BLOB to buffer");
+             return -1;
+         }
++        #else
++        // Python >=3.12
++        Py_buffer view;
++        if (PyObject_GetBuffer(py_val, &view, PyBUF_SIMPLE) != 0) {
++            PyErr_SetString(PyExc_ValueError,
++                            "could not convert BLOB to buffer");
++            return -1;
++        }
++        buffer = view.buf;
++        buflen = view.len;
++        #endif
++
+         if (buflen > INT_MAX) {
+             PyErr_SetString(PyExc_OverflowError,
+                             "BLOB longer than INT_MAX bytes");
+             return -1;
+         }
+         sqlite3_result_blob(context, buffer, (int)buflen, SQLITE_TRANSIENT);
++
++        #if PY_VERSION_HEX >= 0x030C0000
++        // Python >=3.12
++        PyBuffer_Release(&view);
++        #endif
+     } else {
+         return -1;
+     }
+
+From eb166c61e0ea723b615c4ca8afdedea5fc41ccab Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:08:52 +0100
+Subject: [PATCH 02/18] remove _PyLong_AsInt for python 3.12
+
+---
+ src/python3/connection.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index e0decf5..ae4118a 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -937,7 +937,7 @@ static int _authorizer_callback(void* user_arg, int action, const char* arg1, co
+     }
+     else {
+         if (PyLong_Check(ret)) {
+-            rc = _PyLong_AsInt(ret);
++            rc = PyLong_AsLong(ret);
+             if (rc == -1 && PyErr_Occurred()) {
+                 if (_enable_callback_tracebacks)
+                     PyErr_Print();
+
+From 23e3757d6dd12c24d7bb47c6b7bbcc4d2d7bd420 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:36:36 +0100
+Subject: [PATCH 03/18] remove _PyArg_NoKeywords for python 3.12
+
+---
+ src/python3/row.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/python3/row.c b/src/python3/row.c
+index ee9a908..951d033 100644
+--- a/src/python3/row.c
++++ b/src/python3/row.c
+@@ -41,8 +41,11 @@ pysqlite_row_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
+ 
+     assert(type != NULL && type->tp_alloc != NULL);
+ 
+-    if (!_PyArg_NoKeywords("Row()", kwargs))
++    if (kwargs != NULL && PyDict_Check(kwargs) && PyDict_Size(kwargs) != 0) {
++        PyErr_SetString(PyExc_TypeError, "Row() takes no keyword arguments");
+         return NULL;
++    }
++
+     if (!PyArg_ParseTuple(args, "OO", &cursor, &data))
+         return NULL;
+ 
+
+From 1a60fc5c0fa8a7915e4e952725e3259afdd4ac58 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:40:29 +0100
+Subject: [PATCH 04/18] remove PyObject_AsCharBuffer for python 3.12
+
+---
+ src/python3/statement.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/src/python3/statement.c b/src/python3/statement.c
+index c007ffe..c325fbb 100644
+--- a/src/python3/statement.c
++++ b/src/python3/statement.c
+@@ -146,6 +146,8 @@ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObjec
+             rc = sqlite3_bind_text(self->st, pos, string, (int)buflen, SQLITE_TRANSIENT);
+             break;
+         case TYPE_BUFFER:
++            #if PY_VERSION_HEX < 0x030C0000
++            // Python <3.12
+             if (PyObject_AsCharBuffer(parameter, &buffer, &buflen) != 0) {
+                 PyErr_SetString(PyExc_ValueError, "could not convert BLOB to buffer");
+                 return -1;
+@@ -156,6 +158,22 @@ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObjec
+                 return -1;
+             }
+             rc = sqlite3_bind_blob(self->st, pos, buffer, buflen, SQLITE_TRANSIENT);
++            #else
++            // Python >=3.12
++            Py_buffer view;
++            if (PyObject_GetBuffer(parameter, &view, PyBUF_SIMPLE) != 0) {
++                PyErr_SetString(PyExc_ValueError, "could not convert BLOB to buffer");
++                return -1;
++            }
++            if (view.len > INT_MAX) {
++                PyBuffer_Release(&view);
++                PyErr_SetString(PyExc_OverflowError,
++                                "BLOB longer than INT_MAX bytes");
++                return -1;
++            }
++            rc = sqlite3_bind_blob(self->st, pos, view.buf, (int)view.len, SQLITE_TRANSIENT);
++            PyBuffer_Release(&view);
++            #endif
+             break;
+         case TYPE_UNKNOWN:
+             rc = -1;
+
+From a6998534d7cec132b0420c91af2d5662c58e799f Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:46:42 +0100
+Subject: [PATCH 05/18] remove _PyLong_AsByteArray for python 3.12
+
+---
+ src/python3/util.c | 38 +++++++++++---------------------------
+ 1 file changed, 11 insertions(+), 27 deletions(-)
+
+diff --git a/src/python3/util.c b/src/python3/util.c
+index 312fe3b..6891d72 100644
+--- a/src/python3/util.c
++++ b/src/python3/util.c
+@@ -139,34 +139,18 @@ sqlite_int64
+ _pysqlite_long_as_int64(PyObject * py_val)
+ {
+     int overflow;
+-#ifdef HAVE_LONG_LONG
+-    PY_LONG_LONG value = PyLong_AsLongLongAndOverflow(py_val, &overflow);
+-#else
+-    long value = PyLong_AsLongAndOverflow(py_val, &overflow);
+-#endif
++    sqlite_int64 value;
++    #if SIZEOF_LONG_LONG >= 8
++    value = PyLong_AsLongLongAndOverflow(py_val, &overflow);
++    #else
++    value = PyLong_AsLongAndOverflow(py_val, &overflow);
++    #endif
+     if (value == -1 && PyErr_Occurred())
+         return -1;
+-    if (!overflow) {
+-#ifdef HAVE_LONG_LONG
+-# if SIZEOF_LONG_LONG > 8
+-        if (-0x8000000000000000LL <= value && value <= 0x7FFFFFFFFFFFFFFFLL)
+-# endif
+-#else
+-# if SIZEOF_LONG > 8
+-        if (-0x8000000000000000L <= value && value <= 0x7FFFFFFFFFFFFFFFL)
+-# endif
+-#endif
+-            return value;
+-    }
+-    else if (sizeof(value) < sizeof(sqlite_int64)) {
+-        sqlite_int64 int64val;
+-        if (_PyLong_AsByteArray((PyLongObject *)py_val,
+-                                (unsigned char *)&int64val, sizeof(int64val),
+-                                IS_LITTLE_ENDIAN, 1 /* signed */) >= 0) {
+-            return int64val;
+-        }
++    if (overflow != 0) {
++        PyErr_SetString(PyExc_OverflowError,
++                        "Python int too large to convert to SQLite INTEGER");
++        return -1;
+     }
+-    PyErr_SetString(PyExc_OverflowError,
+-                    "Python int too large to convert to SQLite INTEGER");
+-    return -1;
++    return value;
+ }
+
+From 5d6a5408ef62d09257ee9277d680e076ed606c97 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:57:08 +0100
+Subject: [PATCH 06/18] remove PyWeakref_GetObject for python 3.12
+
+---
+ src/python3/connection.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index ae4118a..d219e32 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -220,15 +220,16 @@ void pysqlite_do_all_statements(pysqlite_Connection* self, int action, int reset
+ 
+     for (i = 0; i < PyList_Size(self->statements); i++) {
+         weakref = PyList_GetItem(self->statements, i);
+-        statement = PyWeakref_GetObject(weakref);
+-        if (statement != Py_None) {
+-            Py_INCREF(statement);
+-            if (action == ACTION_RESET) {
+-                (void)pysqlite_statement_reset((pysqlite_Statement*)statement);
+-            } else {
+-                (void)pysqlite_statement_finalize((pysqlite_Statement*)statement);
++        if (PyWeakref_GetRef(weakref, &statement) > 0) {
++            if (statement != Py_None) {
++                Py_INCREF(statement);
++                if (action == ACTION_RESET) {
++                    (void)pysqlite_statement_reset((pysqlite_Statement*)statement);
++                } else {
++                    (void)pysqlite_statement_finalize((pysqlite_Statement*)statement);
++                }
++                Py_DECREF(statement);
+             }
+-            Py_DECREF(statement);
+         }
+     }
+ 
+
+From 5675c6cc4835d53e5ffaeaee1cfc30964a7d1461 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 14:59:17 +0100
+Subject: [PATCH 07/18] remove PyWeakref_GetObject for python 3.12
+
+---
+ src/python3/connection.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index d219e32..4b6dcbc 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -236,10 +236,16 @@ void pysqlite_do_all_statements(pysqlite_Connection* self, int action, int reset
+     if (reset_cursors) {
+         for (i = 0; i < PyList_Size(self->cursors); i++) {
+             weakref = PyList_GetItem(self->cursors, i);
+-            cursor = (pysqlite_Cursor*)PyWeakref_GetObject(weakref);
+-            if ((PyObject*)cursor != Py_None) {
++            PyObject *obj;
++            int ok = PyWeakref_GetRef(weakref, &obj);
++            if (ok > 0 && obj != Py_None) {
++                cursor = (pysqlite_Cursor*)obj;
+                 cursor->reset = 1;
++                // release the strong reference
++                Py_DECREF(obj);
+             }
++            // if ok == 0, reference is dead
++            // if ok < 0, error occurred
+         }
+     }
+ }
+
+From 036f5e081748f0b16450f4a2483ba5bde8e1e254 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:03:46 +0100
+Subject: [PATCH 08/18] remove PyWeakref_GetObject for python 3.12
+
+---
+ src/python3/connection.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index 4b6dcbc..5fde4d9 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -812,12 +812,22 @@ static void _pysqlite_drop_unused_statement_references(pysqlite_Connection* self
+ 
+     for (i = 0; i < PyList_Size(self->statements); i++) {
+         weakref = PyList_GetItem(self->statements, i);
+-        if (PyWeakref_GetObject(weakref) != Py_None) {
+-            if (PyList_Append(new_list, weakref) != 0) {
+-                Py_DECREF(new_list);
+-                return;
++        PyObject *obj;
++        int ok = PyWeakref_GetRef(weakref, &obj);
++        if (ok > 0) {
++            // weakref is alive
++            if (obj != Py_None) {
++                if (PyList_Append(new_list, weakref) != 0) {
++                    Py_DECREF(obj);
++                    Py_DECREF(new_list);
++                    return;
++                }
+             }
++            // release strong reference
++            Py_DECREF(obj);
+         }
++        // ok == 0 => weakref is dead, skip
++        // ok < 0 => error occurred, could log if desired
+     }
+ 
+     Py_DECREF(self->statements);
+
+From 41059b078ed018fbbf9686d05aa8562403f25bcb Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:05:54 +0100
+Subject: [PATCH 09/18] remove PyWeakref_GetObject for python 3.12
+
+---
+ src/python3/connection.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index 5fde4d9..63536fc 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -854,12 +854,22 @@ static void _pysqlite_drop_unused_cursor_references(pysqlite_Connection* self)
+ 
+     for (i = 0; i < PyList_Size(self->cursors); i++) {
+         weakref = PyList_GetItem(self->cursors, i);
+-        if (PyWeakref_GetObject(weakref) != Py_None) {
+-            if (PyList_Append(new_list, weakref) != 0) {
+-                Py_DECREF(new_list);
+-                return;
++        PyObject *obj;
++        int ok = PyWeakref_GetRef(weakref, &obj);
++        if (ok > 0) {
++            // weakref is alive
++            if (obj != Py_None) {
++                if (PyList_Append(new_list, weakref) != 0) {
++                    Py_DECREF(obj);
++                    Py_DECREF(new_list);
++                    return;
++                }
+             }
++            // release strong reference
++            Py_DECREF(obj);
+         }
++        // ok == 0 => weakref is dead, skip
++        // ok < 0 => error occurred, could log if desired
+     }
+ 
+     Py_DECREF(self->cursors);
+
+From 7fe1c6879f738cd1cfd6438c0e7096bd2d97a51d Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:09:36 +0100
+Subject: [PATCH 10/18] fix: warning: comparison of integer expressions of
+ different signedness
+
+---
+ src/python3/connection.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/python3/connection.h b/src/python3/connection.h
+index 9db8901..56cfce5 100644
+--- a/src/python3/connection.h
++++ b/src/python3/connection.h
+@@ -66,7 +66,7 @@ typedef struct
+     int initialized;
+ 
+     /* thread identification of the thread the connection was created in */
+-    long thread_ident;
++    unsigned long thread_ident;
+ 
+     pysqlite_Cache* statement_cache;
+ 
+
+From 92496e87e30717c6aed6a66f65448b92da6bb1c0 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:13:25 +0100
+Subject: [PATCH 11/18] remove _PyUnicode_AsString for python 3.12
+
+---
+ src/python3/connection.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/python3/connection.c b/src/python3/connection.c
+index 63536fc..3d782bc 100644
+--- a/src/python3/connection.c
++++ b/src/python3/connection.c
+@@ -1553,7 +1553,7 @@ pysqlite_connection_create_collation(pysqlite_Connection* self, PyObject* args)
+     PyObject* retval;
+     Py_ssize_t i, len;
+     _Py_IDENTIFIER(upper);
+-    char *uppercase_name_str;
++    const char *uppercase_name_str;
+     int rc;
+     unsigned int kind;
+     void *data;
+@@ -1589,7 +1589,7 @@ pysqlite_connection_create_collation(pysqlite_Connection* self, PyObject* args)
+         }
+     }
+ 
+-    uppercase_name_str = _PyUnicode_AsString(uppercase_name);
++    uppercase_name_str = PyUnicode_AsUTF8AndSize(uppercase_name, &len);
+     if (!uppercase_name_str)
+         goto finally;
+ 
+
+From 20407c04dfd4caf2ef112261280a919ca52f5647 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:14:50 +0100
+Subject: [PATCH 12/18] fix: warning: comparison of integer expressions of
+ different signedness
+
+---
+ src/python3/cursor.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/python3/cursor.c b/src/python3/cursor.c
+index 3a560ad..c507b17 100644
+--- a/src/python3/cursor.c
++++ b/src/python3/cursor.c
+@@ -46,7 +46,7 @@ static pysqlite_StatementKind detect_statement_type(const char* statement)
+ 
+     dst = buf;
+     *dst = 0;
+-    while (Py_ISALPHA(*src) && dst - buf < sizeof(buf) - 2) {
++    while (Py_ISALPHA(*src) && dst - buf < (ptrdiff_t)(sizeof(buf) - 2)) {
+         *dst++ = Py_TOLOWER(*src++);
+     }
+ 
+
+From 671d335beec5dd4462b42177d9f494f94da6202a Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:17:28 +0100
+Subject: [PATCH 13/18] remove PyEval_InitThreads for python 3.7
+
+---
+ src/python3/module.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/python3/module.c b/src/python3/module.c
+index 7a7e860..7a39941 100644
+--- a/src/python3/module.c
++++ b/src/python3/module.c
+@@ -469,7 +469,10 @@ PyMODINIT_FUNC PyInit__sqlite3(void)
+      *  (see pybsddb-users mailing list post on 2002-08-07)
+      */
+ #ifdef WITH_THREAD
++    #if PY_VERSION_HEX < 0x03070000
++    // Python <3.7
+     PyEval_InitThreads();
++    #endif
+ #endif
+ 
+ error:
+
+From 2914dbb99cb20b09994cef8463e4cb6cef263a96 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:20:31 +0100
+Subject: [PATCH 14/18] remove _PyUnicode_AsString
+
+---
+ src/python3/row.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/python3/row.c b/src/python3/row.c
+index 951d033..1a58acb 100644
+--- a/src/python3/row.c
++++ b/src/python3/row.c
+@@ -82,7 +82,7 @@ PyObject* pysqlite_row_item(pysqlite_Row* self, Py_ssize_t idx)
+ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+ {
+     Py_ssize_t _idx;
+-    char* key;
++    const char* key;
+     Py_ssize_t nitems, i;
+     char* compare_key;
+ 
+@@ -101,7 +101,7 @@ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+         Py_XINCREF(item);
+         return item;
+     } else if (PyUnicode_Check(idx)) {
+-        key = _PyUnicode_AsString(idx);
++        key = PyUnicode_AsUTF8AndSize(idx, &i);
+         if (key == NULL)
+             return NULL;
+ 
+
+From 606cbd68163e6f540671565f0bac5f3dd2f758e0 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:22:19 +0100
+Subject: [PATCH 15/18] remove _PyUnicode_AsString
+
+---
+ src/python3/row.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/python3/row.c b/src/python3/row.c
+index 1a58acb..e697b62 100644
+--- a/src/python3/row.c
++++ b/src/python3/row.c
+@@ -84,7 +84,7 @@ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+     Py_ssize_t _idx;
+     const char* key;
+     Py_ssize_t nitems, i;
+-    char* compare_key;
++    const char* compare_key;
+ 
+     char* p1;
+     char* p2;
+@@ -111,7 +111,7 @@ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+             PyObject *obj;
+             obj = PyTuple_GET_ITEM(self->description, i);
+             obj = PyTuple_GET_ITEM(obj, 0);
+-            compare_key = _PyUnicode_AsString(obj);
++            compare_key = PyUnicode_AsUTF8AndSize(obj, &i);
+             if (!compare_key) {
+                 return NULL;
+             }
+
+From d387c9c2353771372b01308c6a0ba9c9be68196f Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:23:43 +0100
+Subject: [PATCH 16/18] fix: warning: assignment discards const qualifier from
+ pointer target type
+
+---
+ src/python3/row.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/src/python3/row.c b/src/python3/row.c
+index e697b62..baff099 100644
+--- a/src/python3/row.c
++++ b/src/python3/row.c
+@@ -86,8 +86,8 @@ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+     Py_ssize_t nitems, i;
+     const char* compare_key;
+ 
+-    char* p1;
+-    char* p2;
++    const char* p1;
++    const char* p2;
+ 
+     PyObject* item;
+ 
+@@ -115,7 +115,6 @@ PyObject* pysqlite_row_subscript(pysqlite_Row* self, PyObject* idx)
+             if (!compare_key) {
+                 return NULL;
+             }
+-
+             p1 = key;
+             p2 = compare_key;
+ 
+
+From 2987839fe0f19541d4b6c6a474101e8564990894 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:25:34 +0100
+Subject: [PATCH 17/18] fix: warning: assignment discards const qualifier from
+ pointer target type
+
+---
+ src/python3/statement.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/python3/statement.c b/src/python3/statement.c
+index c325fbb..7bd8c31 100644
+--- a/src/python3/statement.c
++++ b/src/python3/statement.c
+@@ -95,7 +95,7 @@ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObjec
+ {
+     int rc = SQLITE_OK;
+     const char* buffer;
+-    char* string;
++    const char* string;
+     Py_ssize_t buflen;
+     parameter_type paramtype;
+ 
+
+From ef340612bc49751adc14ec27b3a2950dad2ebaf3 Mon Sep 17 00:00:00 2001
+From: Milan Hauth <milahu@gmail.com>
+Date: Mon, 27 Oct 2025 15:26:16 +0100
+Subject: [PATCH 18/18] fix: warning: unused variable buffer
+
+---
+ src/python3/statement.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/python3/statement.c b/src/python3/statement.c
+index 7bd8c31..be9c059 100644
+--- a/src/python3/statement.c
++++ b/src/python3/statement.c
+@@ -94,7 +94,6 @@ int pysqlite_statement_create(pysqlite_Statement* self, pysqlite_Connection* con
+ int pysqlite_statement_bind_parameter(pysqlite_Statement* self, int pos, PyObject* parameter)
+ {
+     int rc = SQLITE_OK;
+-    const char* buffer;
+     const char* string;
+     Py_ssize_t buflen;
+     parameter_type paramtype;

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -29,12 +30,12 @@
 }
 
 Name:           go-google-grpc
-Version:        1.78.0
+Version:        1.81.1
 Release:        %autorelease
 Summary:        The Go language implementation of gRPC. HTTP/2 based RPC
 License:        Apache-2.0
 URL:            https://github.com/grpc/grpc-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:cf93868b1243053559399325cdcd369948c4cefaefae35ac66b9630070c7a0a6
 Source0:        https://github.com/grpc/grpc-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -57,6 +58,8 @@ BuildRequires:  go(google.golang.org/genproto)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc) = %{version}
+Provides:       go(google.golang.org/grpc/codes) = %{version}
+Provides:       go(google.golang.org/grpc/status) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/cncf/xds/go)
@@ -79,9 +82,14 @@ and HTTP/2 first. For more information see the Go gRPC docs
 start (https://grpc.io/docs/languages/go/quickstart).
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
+# These directories are standalone Go modules packaged separately; keep the
+# root grpc package from owning the same files. - HNO3Miracle
+%exclude %{go_sys_gopath}/%{go_import_path}/examples
+%exclude %{go_sys_gopath}/%{go_import_path}/gcp/observability
+%exclude %{go_sys_gopath}/%{go_import_path}/security/advancedtls
 
 %changelog
-%{?autochangelog}
+%autochangelog

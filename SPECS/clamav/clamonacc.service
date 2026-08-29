@@ -1,0 +1,14 @@
+[Unit]
+Description=ClamAV On-Access Scanner
+Documentation=man:clamonacc(8) man:clamd.conf(5) https://docs.clamav.net/
+Requires=clamd.service
+After=clamd.service syslog.target network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/sbin/clamonacc -F --config-file=/etc/clamav/clamd.conf --ping 30:10 --wait --fdpass
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

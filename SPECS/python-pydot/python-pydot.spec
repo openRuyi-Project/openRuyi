@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/pydot/pydot
 #!RemoteAsset:  sha256:c2148f681c4a33e08bf0e26a9e5f8e4099a82e0e2a068098f32ce86577364ad5
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -26,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pyparsing)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +45,4 @@ tools dot, neato, twopi.
 %doc ChangeLog README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

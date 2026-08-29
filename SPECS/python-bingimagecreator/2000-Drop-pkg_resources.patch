@@ -1,0 +1,39 @@
+From 6ac8de4f37c7d982be778a10cb5b58532ab69533 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 26 Jun 2026 15:17:36 +0800
+Subject: [PATCH] Drop pkg_resources
+
+---
+ src/BingImageCreator.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/BingImageCreator.py b/src/BingImageCreator.py
+index c7a0645..3f622e2 100644
+--- a/src/BingImageCreator.py
++++ b/src/BingImageCreator.py
+@@ -7,12 +7,12 @@ import random
+ import sys
+ import time
+ from functools import partial
++from importlib.metadata import version
+ from typing import Dict
+ from typing import List
+ from typing import Union
+ 
+ import httpx
+-import pkg_resources
+ import regex
+ import requests
+ 
+@@ -464,7 +464,7 @@ def main():
+     args = parser.parse_args()
+ 
+     if args.version:
+-        print(pkg_resources.get_distribution("BingImageCreator").version)
++        print(version("BingImageCreator"))
+         sys.exit()
+ 
+     # Load auth cookie
+-- 
+2.54.0
+

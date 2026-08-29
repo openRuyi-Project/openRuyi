@@ -1,0 +1,26 @@
+From 02e5cdf68a73e808a1c671a44f34548ec9d9f123 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 16:46:10 +0800
+Subject: [PATCH] Fix non-constant Fprintf format string
+
+The message is already formatted by concatenation, so use fmt.Fprint for current Go vet.
+---
+ v2/var.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/v2/var.go b/v2/var.go
+index c60a9d2..2f42740 100644
+--- a/v2/var.go
++++ b/v2/var.go
+@@ -92,7 +92,7 @@ func (s *Set) addFlag(p Value, name string, short rune, helpvalue ...string) Opt
+ 		opt.where = where
+ 	}
+ 	if opt.short == 0 && opt.long == "" {
+-		fmt.Fprintf(stderr, opt.where+": no short or long option given")
++		fmt.Fprint(stderr, opt.where+": no short or long option given")
+ 		exit(1)
+ 	}
+ 	s.AddOption(opt)
+-- 
+2.43.0
+

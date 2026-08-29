@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Locate per-dist and per-module shared files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-ShareDir
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RE/REHSACK/File-ShareDir-%{version}.tar.gz
+#!RemoteAsset:  sha256:3bb2a20ba35df958dc0a4f2306fc05d903d8b8c4de3c8beefce17739d281c958
+Source0:        https://www.cpan.org/authors/id/R/RE/REHSACK/File-ShareDir-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Class::Inspector) >= 1.12
@@ -40,20 +44,8 @@ and File::HomeDir, modules that take a process that is well-known by
 advanced Perl developers but gets a little tricky, and make it more
 available to the larger Perl community.
 
-%prep
-%setup -q -n File-ShareDir-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README.md testrules.yml
 
 %changelog
-%{?autochangelog}
+%autochangelog

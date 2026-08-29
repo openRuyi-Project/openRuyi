@@ -12,21 +12,25 @@ Release:        %autorelease
 Summary:        Comprehensive password hashing framework supporting over 20 schemes
 License:        BSD-3-Clause AND Beerware AND UnixCrypt AND ISC
 URL:            https://foss.heptapod.net/python-libs/passlib
-#!RemoteAsset
+#!RemoteAsset:  sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
+
+# patch from https://src.fedoraproject.org/rpms/python-passlib/blob/cf445e70c3412153212988d45bcf8a3ebf3b208d/f/passlib-pkg_resources.patch
+Patch0:         0001-passlib-pkg_resources.patch
 
 BuildOption(install):  -l %{srcname} -L
 BuildOption(check):  -e passlib.ext.django.models
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -41,4 +45,4 @@ cross-platform implementations of over 20 password hashing algorithms.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

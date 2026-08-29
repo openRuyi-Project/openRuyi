@@ -1,0 +1,32 @@
+From 88926a2ae2aa80bb9a3abd166c036925bdcd3605 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 7 Jun 2026 20:21:06 +0800
+Subject: [PATCH] Fix non-constant fmt.Printf calls in example
+
+---
+ examples/03-consumeJSON/main.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/examples/03-consumeJSON/main.go b/examples/03-consumeJSON/main.go
+index b1ba9c7..171c98b 100644
+--- a/examples/03-consumeJSON/main.go
++++ b/examples/03-consumeJSON/main.go
+@@ -36,13 +36,13 @@ func main() {
+ 	go createJSON(file)
+ 	var js jsonStruct
+ 	for line := range t.Lines {
+-		fmt.Printf("JSON: " + line.Text + "\n")
++		fmt.Print("JSON: " + line.Text + "\n")
+ 
+ 		err := json.Unmarshal([]byte(line.Text), &js)
+ 		if err != nil {
+ 			panic(err)
+ 		}
+-		fmt.Printf("JSON counter field: " + js.Counter + "\n")
++		fmt.Print("JSON counter field: " + js.Counter + "\n")
+ 	}
+ }
+ 
+-- 
+2.43.0
+

@@ -15,15 +15,13 @@
 %global _syslibdir /lib
 
 Name:           musl
-Version:        1.2.5
+Version:        1.2.6
 Release:        %autorelease
 Summary:        Fully featured lightweight standard C library for Linux
 License:        MIT
 URL:            https://musl.libc.org
-#!RemoteAsset
+#!RemoteAsset:  sha256:d585fd3b613c66151fc3249e8ed44f77020cb5e6c1e635a616d3f9f82460512a
 Source0:        %{url}/releases/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/%{name}-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 # Support PIE with static linking
@@ -159,4 +157,4 @@ EOF
 %{_bindir}/ld.musl-clang
 
 %changelog
-%{?autochangelog}
+%autochangelog

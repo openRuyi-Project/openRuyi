@@ -15,7 +15,11 @@ License:        BSD-3-Clause
 URL:            https://github.com/serge-sans-paille/pythran
 #!RemoteAsset:  sha256:8803ed948bf841a11bbbb10472a8ff6ea24ebd70e67c3f77b77be3db900eccfe
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
+
+# Relax generated dependencies for repository-provided gast 0.7 and beniget 0.5.
+Patch2000:         2000-relax-gast-beniget-upper-bounds.patch
 
 BuildOption(install):  -l %{srcname} omp
 
@@ -27,8 +31,10 @@ BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(ply)
 BuildRequires:  python3dist(gast)
 BuildRequires:  python3dist(beniget)
+# For tests
+BuildRequires:  python3dist(ipython)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -37,13 +43,10 @@ Data validation using Python type hints.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
-# skip tests as some deps we don't have yet.
-
 %files -f %{pyproject_files}
 %license LICENSE
 %{_bindir}/pythran
 %{_bindir}/pythran-config
 
 %changelog
-%{?autochangelog}
+%autochangelog

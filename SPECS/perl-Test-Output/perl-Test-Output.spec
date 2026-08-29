@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Utilities to test STDOUT and STDERR messages
 License:        Artistic-2.0
 URL:            https://metacpan.org/dist/Test-Output
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/B/BR/BRIANDFOY/Test-Output-%{version}.tar.gz
+#!RemoteAsset:  sha256:a3a95cb8c4d387fe079add4490757e69927ef0488bbb18b4d55e7fc6d25f1a63
+Source0:        https://www.cpan.org/authors/id/B/BR/BRIANDFOY/Test-Output-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Capture::Tiny) >= 0.17
@@ -34,20 +38,8 @@ Test::Output provides a simple interface for testing output sent to STDOUT
 or STDERR. A number of different utilities are included to try and be as
 flexible as possible to the tester.
 
-%prep
-%setup -q -n Test-Output-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes INSTALL.SKIP SECURITY.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

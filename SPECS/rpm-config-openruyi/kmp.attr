@@ -1,4 +1,0 @@
-%__kmp_provides		%{_rpmconfigdir}/find-provides.ksyms
-%__kmp_requires		%{_rpmconfigdir}/find-requires.ksyms
-%__kmp_supplements	%{_rpmconfigdir}/find-supplements.ksyms
-%__kmp_path		^(/usr)?/lib/modules/[^/]*/(updates|extra)/.*\.ko(\.gz|\.xz|\.zst)?

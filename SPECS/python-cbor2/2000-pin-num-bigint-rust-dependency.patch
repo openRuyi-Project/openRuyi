@@ -1,0 +1,12 @@
+diff -urN a/rust/Cargo.toml b/rust/Cargo.toml
+--- a/rust/Cargo.toml	2006-07-24 09:21:28.000000000 +0800
++++ b/rust/Cargo.toml	2026-06-26 00:00:00.000000000 +0800
+@@ -12,7 +12,7 @@
+ [dependencies]
+ bigdecimal = "0.4.10"
+ half = "2.7.1"
+-num-bigint = "*"
++num-bigint = "0.4.6"
+ pyo3 = { version = "0.28.0", features = ["extension-module", "num-bigint", "bigdecimal"] }
+ 
+ [build-dependencies]

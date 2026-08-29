@@ -15,10 +15,12 @@ Release:        %autorelease
 Summary:        Protocol Buffer Validation
 License:        Apache-2.0
 URL:            https://github.com/envoyproxy/protoc-gen-validate
-#!RemoteAsset
+#!RemoteAsset:  sha256:26dc6db523ee943af51fdfc292658a2dbe7046735654f1dc839745988f0fe26b
 Source0:        https://github.com/envoyproxy/protoc-gen-validate/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+Patch2000:      2000-fix-checker.go-error.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
@@ -48,4 +50,4 @@ to protoc-generated code to validate such constraints.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

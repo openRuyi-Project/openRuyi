@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Cron expression parser in Go language (golang)
 License:        Apache-2.0
 URL:            https://github.com/hashicorp/cronexpr
-#!RemoteAsset
+#!RemoteAsset:  sha256:1d546a0497dd21a16f75745bd5645af96d63f506249f4582855f2a9fdc07f29a
 Source0:        https://github.com/hashicorp/cronexpr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -21,6 +21,8 @@ BuildSystem:    golangmodules
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/stretchr/testify)
+# For tests
+BuildRequires:  tzdata
 
 Provides:       go(github.com/hashicorp/cronexpr) = %{version}
 
@@ -36,4 +38,4 @@ stamp which satisfies the cron expression.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

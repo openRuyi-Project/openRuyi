@@ -103,7 +103,6 @@ BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(egl)
 BuildRequires:  pkgconfig(gbm)
 BuildRequires:  pkgconfig(libdrm)
-BuildRequires:  pkgconfig(sdl2)
 BuildRequires:  pkgconfig(libva)
 BuildRequires:  pkgconfig(vdpau)
 BuildRequires:  bash-completion

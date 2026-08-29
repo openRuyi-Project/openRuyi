@@ -1,0 +1,46 @@
+From 13bb39b2cd13170c7a9c58072e4a4b35c3bb9e0d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:24:06 +0800
+Subject: [PATCH] tests: use the bundled Petstore example fixture
+
+The documentation examples should not depend on petstore.swagger.io. Load the
+repository fixture instead so the examples remain deterministic and work in
+offline build environments.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ doc_test.go | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/doc_test.go b/doc_test.go
+index b0ce7c9..c867e96 100644
+--- a/doc_test.go
++++ b/doc_test.go
+@@ -41,9 +41,9 @@ func ExampleSpec() {
+ func ExampleSpec_second() {
+ 	// Example with high level spec validation call, without showing warnings
+ 
+-	// Example with online spec URL:
+-	url := "http://petstore.swagger.io/v2/swagger.json"
+-	doc, err := loads.JSONSpec(url)
++	// Example with the bundled Petstore spec:
++	path := "fixtures/go-swagger/canary/petstore/swagger.json"
++	doc, err := loads.JSONSpec(path)
+ 	if err == nil {
+ 		validate.SetContinueOnErrors(true)         // Set global options
+ 		errs := validate.Spec(doc, strfmt.Default) // Validates spec with default Swagger 2.0 format definitions
+@@ -92,9 +92,9 @@ func ExampleSpecValidator_Validate() {
+ func ExampleSpecValidator_Validate_url() {
+ 	// Example of spec validation call with full result
+ 
+-	// Example with online spec URL:
+-	url := "http://petstore.swagger.io/v2/swagger.json"
+-	doc, err := loads.JSONSpec(url)
++	// Example with the bundled Petstore spec:
++	path := "fixtures/go-swagger/canary/petstore/swagger.json"
++	doc, err := loads.JSONSpec(path)
+ 	if err == nil {
+ 		validator := validate.NewSpecValidator(doc.Schema(), strfmt.Default)
+ 		validator.SetContinueOnErrors(true)  // Set option for this validator
+-- 
+2.43.0

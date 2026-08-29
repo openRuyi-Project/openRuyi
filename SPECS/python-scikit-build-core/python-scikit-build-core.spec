@@ -10,36 +10,33 @@
 %bcond test 0
 
 Name:           python-%{srcname}
-Version:        0.11.6
+Version:        0.12.2
 Release:        %autorelease
 Summary:        Build backend for CMake based projects
 License:        Apache-2.0 AND MIT
 URL:            https://github.com/scikit-build/scikit-build-core
-#!RemoteAsset
+#!RemoteAsset:  sha256:562e0bbc9de1a354c87825ccf732080268d6582a0200f648e8c4a2dcb1e3736d
 Source:         https://files.pythonhosted.org/packages/source/s/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-hatchling
-BuildRequires:  python3-hatch-vcs
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(hatchling)
+BuildRequires:  python3dist(hatch-vcs)
 BuildRequires:  cmake
 BuildRequires:  ninja
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
-%if %{with test}
-# for tests.
-BuildRequires:  python3-pytest
-BuildRequires:  python3-virtualenv
-BuildRequires:  python3-numpy
-BuildRequires:  python3-pybind11
-%endif
+# For tests
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(virtualenv)
+BuildRequires:  python3dist(numpy)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -51,15 +48,14 @@ cp -p src/scikit_build_core/_vendor/pyproject_metadata/LICENSE LICENSE-pyproject
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
 %if %{with test}
-%pyproject_check_import
+%check -a
 %pytest -m "not network"
 %endif
 
 %files -f %{pyproject_files}
-%license LICENSE LICENSE-pyproject-metadata
 %doc README.md
+%license LICENSE LICENSE-pyproject-metadata
 
 %changelog
-%{?autochangelog}
+%autochangelog

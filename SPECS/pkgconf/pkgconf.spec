@@ -21,18 +21,18 @@
 # Search path for pc files for pkgconf
 %global pkgconf_libdirs %{_libdir}/pkgconfig:%{_datadir}/pkgconfig
 
-%global somajor 5
+%global somajor 7
 %global libname lib%{name}%{somajor}
 %global devname lib%{name}-devel
 
 Name:           pkgconf
-Version:        2.2.0
+Version:        2.5.1
 Release:        %autorelease
 Summary:        Package compiler and linker metadata toolkit
 License:        ISC
 URL:            https://pkgconf.org/
 VCS:            git:https://github.com/pkgconf/pkgconf.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:cd05c9589b9f86ecf044c10a2269822bc9eb001eced2582cfffd658b0a50c243
 Source0:        https://distfiles.dereferenced.org/%{name}/%{name}-%{version}.tar.xz
 # Simple wrapper script to offer platform versions of pkgconfig from Fedora
 Source1:        platform-pkg-config.in
@@ -162,9 +162,12 @@ rm -rf %{buildroot}%{_mandir}/man7
 %{_bindir}/pkgconf
 %{_bindir}/bomtool
 %{_mandir}/man1/pkgconf.1*
+%{_mandir}/man1/bomtool.1*
 %{_mandir}/man5/pc.5*
 %{_mandir}/man5/pkgconf-personality.5*
 %{_rpmmacrodir}/macros.pkgconf
+%dir %{_libdir}/pkgconfig
+%dir %{_datadir}/pkgconfig
 %dir %{_sysconfdir}/pkgconfig
 %dir %{_sysconfdir}/pkgconfig/personality.d
 %dir %{_datadir}/pkgconfig/personality.d
@@ -195,4 +198,4 @@ rm -rf %{buildroot}%{_mandir}/man7
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

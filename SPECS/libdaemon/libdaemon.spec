@@ -46,7 +46,7 @@ autoreconf -fiv
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libdaemon.pc
 %doc doc/README.html doc/style.css
 %{_datadir}/doc/%{name}/*
 

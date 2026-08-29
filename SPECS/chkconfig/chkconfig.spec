@@ -6,33 +6,28 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global merged_sbin %["%{_sbindir}" == "%{_bindir}"]
-
 Name:           chkconfig
 Summary:        A system tool for maintaining the /etc/rc*.d hierarchy
 Version:        1.33
 Release:        %autorelease
 License:        GPL-2.0-only
 URL:            https://github.com/fedora-sysv/chkconfig
-#!RemoteAsset
+#!RemoteAsset:  sha256:c973a38d46d75ab2b411ab141e4c320a66dc4cc98832c3f2f6c5999531057861
 Source:         https://github.com/fedora-sysv/chkconfig/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(build):  RPM_OPT_FLAGS="%{build_cflags}"
 BuildOption(build):  LDFLAGS="%{build_ldflags}"
-BuildOption(build):  MERGED_SBIN=%{merged_sbin}
 BuildOption(install):  MANDIR=%{_mandir}
 BuildOption(install):  SBINDIR=%{_sbindir}
 
 BuildRequires:  pkgconfig(libnewt)
 BuildRequires:  pkgconfig(popt)
 BuildRequires:  pkgconfig(libselinux)
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  pkgconfig(systemd)
-
-Provides:       update-alternatives
-Provides:       alternatives
+BuildRequires:  beakerlib
+Recommends:     update-alternatives
 
 %description
 Chkconfig is a basic system utility.  It updates and queries runlevel
@@ -40,28 +35,38 @@ information for system services.  Chkconfig manipulates the numerous
 symbolic links in /etc/rc.d, to relieve system administrators of some
 of the drudgery of manually editing the symbolic links.
 
+%package     -n update-alternatives
+Summary:        Multi-version software coexistence management tool
+Provides:       alternatives
+
+%description -n update-alternatives
+update-alternatives allows multiple versions of software to coexist and defines
+the default command path.
+
 # No configure
 %conf
 
-# TODO: enable test when we have beakerlib
-%check
-
 %install -a
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
 %license COPYING
-%dir %{_sysconfdir}/alternatives
-%ghost %dir %attr(755, root, root) /etc/alternatives.admindir
-%ghost %dir %attr(755, root, root) /var/lib/alternatives
 %{_sbindir}/ntsysv
-%{_sbindir}/update-alternatives
-%{_sbindir}/alternatives
 %{_sbindir}/chkconfig
 %{_prefix}/lib/systemd/systemd-sysv-install
 %{_mandir}/man8/*
+%exclude %{_mandir}/man8/update-alternatives*
+%exclude %{_mandir}/man8/alternatives*
+
+%files -n update-alternatives
+%license COPYING
+%dir %{_sysconfdir}/alternatives
+%ghost %dir %attr(755, root, root) /etc/alternatives.admindir
+%ghost %dir %attr(755, root, root) /var/lib/alternatives
+%{_sbindir}/update-alternatives
+%{_sbindir}/alternatives
+%{_mandir}/man8/update-alternatives*
+%{_mandir}/man8/alternatives*
 
 %changelog
-%{?autochangelog}
+%autochangelog

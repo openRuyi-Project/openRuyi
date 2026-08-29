@@ -94,8 +94,6 @@ applications that use the calamares installer framework.
 %cmake_install
 
 # Should we split the python bindings into a separate package? - 251
-# TODO: Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang calamares-python --generate-subpackages
 
 %files -f calamares-python.lang
@@ -129,4 +127,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/cmake/Calamares/
 
 %changelog
-%{?autochangelog}
+%autochangelog

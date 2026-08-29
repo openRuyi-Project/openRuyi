@@ -1,0 +1,31 @@
+From c7ef26d602dff0c8db5cf130a306c99b75a3d54d Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Wed, 8 Jul 2026 16:00:00 +0800
+Subject: [PATCH] Cargo: use openRuyi packaged compatible crate versions
+
+openRuyi already packages newer compatible env_logger and syslog crate
+families. Relax virtiofsd's dependency requirements so the package can build
+against the distro Rust crate registry without introducing older compatibility
+crate packages.
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ Cargo.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index a18b457..0b6ab7e 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -26,7 +26,7 @@
+ bitflags = "1.2"
+ btree-range-map = "0.7"
+ capng = "0.2.2"
+-env_logger = "0.8.4"
++env_logger = "0.11"
+ futures = { version = "0.3", features = ["thread-pool"] }
+ libc = "0.2.177"
+ log = "0.4"
+@@ -43 +43 @@
+-syslog = "6.1"
++syslog = "7"

@@ -67,7 +67,8 @@ is highly discouraged.
 %doc TODO
 %{_libdir}/*.so
 %{_includedir}/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libcrypt.pc
+%{_libdir}/pkgconfig/libxcrypt.pc
 %{_mandir}/man?/*
 
 %files static

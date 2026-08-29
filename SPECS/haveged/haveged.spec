@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           haveged
-Version:        1.9.19
+Version:        1.9.20
 Release:        %autorelease
 Summary:        A Linux entropy source using the HAVEGE algorithm
 License:        GPL-3.0-or-later
 URL:            https://github.com/jirka-h/haveged
-#!RemoteAsset
+#!RemoteAsset:  sha256:215d64f98e84ad30795dcf3b58a10c8a821589f8967057c570da0b5e83de2c52
 Source0:        https://github.com/jirka-h/haveged/archive/refs/tags/v%{version}.tar.gz
 Source1:        haveged.service
 Source2:        90-haveged.rules
@@ -22,7 +22,6 @@ BuildOption(conf):  --disable-enttest
 BuildOption(conf):  --enable-nistest
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  automake
 BuildRequires:  systemd-rpm-macros
@@ -80,4 +79,4 @@ install -Dpm 0755 %{SOURCE3} %{buildroot}%{_prefix}/lib/dracut/modules.d/98%{nam
 %{_libdir}/*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,39 @@
+From 9a08bb255736c69063dd9d1c757647db281e26ea Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Mon, 24 Aug 2026 12:34:33 +0800
+Subject: [PATCH] Use the openRuyi CPU backend OpenMP path
+
+---
+ cmake/cpu_extension.cmake | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/cmake/cpu_extension.cmake b/cmake/cpu_extension.cmake
+index cdfc6cb..3ca8b6a 100644
+--- a/cmake/cpu_extension.cmake
++++ b/cmake/cpu_extension.cmake
+@@ -53,7 +53,8 @@ else()
+         set(ENV{LD_LIBRARY_PATH} "${VLLM_TORCH_GOMP_SHIM_DIR}:$ENV{LD_LIBRARY_PATH}")
+     else()
+         # Fall back to system / toolchain libgomp
+-        find_library(OPEN_MP NAMES gomp REQUIRED)
++        find_package(OpenMP REQUIRED)
++        set(OPEN_MP OpenMP::OpenMP_CXX)
+     endif()
+ endif()
+ 
+@@ -552,9 +553,9 @@ if (ENABLE_X86_ISA)
+     message(STATUS "CPU extension (AVX512F) source files: ${VLLM_EXT_SRC_AVX512}")
+     message(STATUS "CPU extension (AVX2) source files: ${VLLM_EXT_SRC_AVX2}")
+ 
+-    set(_C_LIBS numa dnnl_ext)
+-    set(_C_AVX512_LIBS numa dnnl_ext)
+-    set(_C_AVX2_LIBS numa dnnl_ext)
++    set(_C_LIBS numa dnnl_ext ${OPEN_MP})
++    set(_C_AVX512_LIBS numa dnnl_ext ${OPEN_MP})
++    set(_C_AVX2_LIBS numa dnnl_ext ${OPEN_MP})
+ 
+     # AMX + AVX512F + AVX512BF16 + AVX512VNNI
+     define_extension_target(
+-- 
+2.53.0
+

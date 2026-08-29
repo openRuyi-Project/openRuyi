@@ -1,0 +1,43 @@
+diff -ruN a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2026-05-08 00:50:13
++++ b/CMakeLists.txt	2026-06-17 17:19:09
+@@ -159,7 +159,7 @@
+     # crash a Triton not compiled with visibility due to missing symbols.
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTRITON_EXT_ENABLED=1")
+   endif()
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-covered-switch-default ")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wno-covered-switch-default ")
+ 
+ else()
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4624 /wd4715 /wd4530")
+diff -ruN a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml	2026-05-08 00:50:13
++++ b/pyproject.toml	2026-06-17 17:19:09
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["setuptools>=40.8.0", "cmake>=3.20,<4.0", "ninja>=1.11.1", "pybind11>=2.13.1"]
++requires = ["setuptools"]
+ build-backend = "setuptools.build_meta"
+ 
+ [tool.mypy]
+diff -ruN a/setup.py b/setup.py
+--- a/setup.py	2026-05-08 00:50:13
++++ b/setup.py	2026-06-17 17:19:09
+@@ -427,7 +427,7 @@
+             pybind11_include_dir = os.path.join(pybind11_sys_path, "include")
+         else:
+             pybind11_include_dir = pybind11.get_include()
+-        return [f"-Dpybind11_INCLUDE_DIR='{pybind11_include_dir}'", f"-Dpybind11_DIR='{pybind11.get_cmake_dir()}'"]
++        return [f"-Dpybind11_INCLUDE_DIR='{pybind11_include_dir}'", f"-Dpybind11_DIR='{(os.environ.get('PYBIND11_CMAKE_DIR') or pybind11.get_cmake_dir())}'"]
+ 
+     def get_proton_cmake_args(self):
+         cmake_args = get_thirdparty_packages([get_json_package_info()])
+@@ -462,7 +462,7 @@
+             "-DCMAKE_MAKE_PROGRAM=" +
+             ninja_dir,  # Pass explicit path to ninja otherwise cmake may cache a temporary path
+             "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+-            "-DLLVM_ENABLE_WERROR=ON",
++            "-DLLVM_ENABLE_WERROR=OFF",
+             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + extdir,
+             "-DTRITON_BUILD_PYTHON_MODULE=ON",
+             "-DPython3_EXECUTABLE:FILEPATH=" + sys.executable,

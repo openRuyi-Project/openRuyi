@@ -14,7 +14,7 @@ Summary:        Memory-mapped key-value database
 License:        OLDAP-2.8
 URL:            https://www.symas.com/lmdb
 VCS:            git:https://git.openldap.org/openldap/openldap
-#!RemoteAsset
+#!RemoteAsset:  sha256:476801f5239c88c7de61c3390502a5d13965ecedef80105b5fb0fcb8373d1e53
 Source0:        https://git.openldap.org/openldap/openldap/-/archive/LMDB_%{version}/openldap-LMDB_%{version}.tar.gz
 Source1:        lmdb.pc.in
 BuildSystem:    autotools
@@ -85,7 +85,7 @@ install -Dpm 0644 -t %{buildroot}%{_libdir}/pkgconfig lmdb.pc
 %files devel
 %{_includedir}/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/lmdb.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,23 @@
+From: "Dr. Tobias Quathamer" <toddy@debian.org>
+Date: Fri, 27 Feb 2026 21:23:54 +0100
+Subject: Fix FTBFS with golang 1.26
+
+The error is in cmd.go, line 546
+TestScript.Fatalf format %q has arg bgName of wrong type int
+---
+ testscript/cmd.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testscript/cmd.go b/testscript/cmd.go
+index 55abd31..c2e04db 100644
+--- a/testscript/cmd.go
++++ b/testscript/cmd.go
+@@ -543,7 +543,7 @@ func (ts *TestScript) killBackground(signal os.Signal) {
+ 	for bgName, bg := range ts.background {
+ 		err := bg.cmd.Process.Signal(signal)
+ 		if err != nil {
+-			ts.Fatalf("unexpected error terminating background command %q: %v", bgName, err)
++			ts.Fatalf("unexpected error terminating background command %v: %v", bgName, err)
+ 		}
+ 	}
+ }

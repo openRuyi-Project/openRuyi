@@ -1,0 +1,189 @@
+From e4d988bc89772647e7df1e24272f0d214db6d4b7 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:21:55 +0800
+Subject: [PATCH] tests: require opt-in for live API tests
+
+Mark examples that access the OUTSCALE API as integration tests. Also skip
+credential-dependent configuration tests unless OSC_RUN_LIVE_TESTS is
+explicitly enabled, while retaining all offline unit tests.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ examples/configuration_file_test.go | 2 ++
+ examples/debug_test.go              | 2 ++
+ examples/error_test.go              | 2 ++
+ examples/keypair_test.go            | 2 ++
+ examples/load_balancer_test.go      | 2 ++
+ examples/region_test.go             | 2 ++
+ examples/security_group_test.go     | 2 ++
+ examples/tag_test.go                | 2 ++
+ examples/teardown_test.go           | 2 ++
+ examples/virtual_machine_test.go    | 2 ++
+ v2/config_env_test.go               | 9 +++++++++
+ v2/config_file_test.go              | 3 +++
+ 12 files changed, 32 insertions(+)
+
+diff --git a/examples/configuration_file_test.go b/examples/configuration_file_test.go
+index a941fc4..cb25118 100644
+--- a/examples/configuration_file_test.go
++++ b/examples/configuration_file_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/debug_test.go b/examples/debug_test.go
+index 0b23b5f..d13e1fc 100644
+--- a/examples/debug_test.go
++++ b/examples/debug_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/error_test.go b/examples/error_test.go
+index d645c69..748457d 100644
+--- a/examples/error_test.go
++++ b/examples/error_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/keypair_test.go b/examples/keypair_test.go
+index 132773d..2da7de7 100644
+--- a/examples/keypair_test.go
++++ b/examples/keypair_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/load_balancer_test.go b/examples/load_balancer_test.go
+index a958391..9cdf972 100644
+--- a/examples/load_balancer_test.go
++++ b/examples/load_balancer_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/region_test.go b/examples/region_test.go
+index d0f6cec..464e169 100644
+--- a/examples/region_test.go
++++ b/examples/region_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/security_group_test.go b/examples/security_group_test.go
+index 6d1bf1b..2611373 100644
+--- a/examples/security_group_test.go
++++ b/examples/security_group_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/tag_test.go b/examples/tag_test.go
+index eac217f..84c0d7d 100644
+--- a/examples/tag_test.go
++++ b/examples/tag_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/teardown_test.go b/examples/teardown_test.go
+index 0a4a634..7894282 100644
+--- a/examples/teardown_test.go
++++ b/examples/teardown_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/examples/virtual_machine_test.go b/examples/virtual_machine_test.go
+index a5a1e6d..ecdd86e 100644
+--- a/examples/virtual_machine_test.go
++++ b/examples/virtual_machine_test.go
+@@ -1,3 +1,5 @@
++//go:build integration
++
+ /*
+ BSD 3-Clause License
+ 
+diff --git a/v2/config_env_test.go b/v2/config_env_test.go
+index 03d86b2..a909f61 100644
+--- a/v2/config_env_test.go
++++ b/v2/config_env_test.go
+@@ -9,6 +9,7 @@ import (
+ )
+ 
+ func TestEnvVariablesAkSk(t *testing.T) {
++	requireIntegrationTests(t)
+ 	configEnv := NewConfigEnv()
+ 	config, err := configEnv.Configuration()
+ 	if err != nil {
+@@ -22,6 +23,7 @@ func TestEnvVariablesAkSk(t *testing.T) {
+ }
+ 
+ func TestEnvVariablesWithProfile(t *testing.T) {
++	requireIntegrationTests(t)
+ 	if err := os.Setenv("OSC_PROFILE", "SomeProfile"); err != nil {
+ 		t.Fatalf("Cannot set OSC_PROFILE: %s", err.Error())
+ 	}
+@@ -76,6 +78,13 @@ func TestEnvVariablesWithProfile(t *testing.T) {
+ 	testConfAndContextOk(t, config, &ctx)
+ }
+ 
++func requireIntegrationTests(t *testing.T) {
++	t.Helper()
++	if os.Getenv("OSC_RUN_INTEGRATION_TESTS") == "" {
++		t.Skip("set OSC_RUN_INTEGRATION_TESTS to run live API tests")
++	}
++}
++
+ func testConfAndContextOk(t *testing.T, config *Configuration, ctx *context.Context) {
+ 	client := NewAPIClient(config)
+ 	_, _, err := client.SubregionApi.ReadSubregions(*ctx).ReadSubregionsRequest(ReadSubregionsRequest{}).Execute()
+diff --git a/v2/config_file_test.go b/v2/config_file_test.go
+index 2086936..5feb57f 100644
+--- a/v2/config_file_test.go
++++ b/v2/config_file_test.go
+@@ -8,6 +8,7 @@ import (
+ )
+ 
+ func TestBasicConfigFileWithValidEndpoint1(t *testing.T) {
++	requireIntegrationTests(t)
+ 	ak := os.Getenv("OSC_ACCESS_KEY")
+ 	sk := os.Getenv("OSC_SECRET_KEY")
+ 	region := os.Getenv("OSC_REGION")
+@@ -40,6 +41,7 @@ func TestBasicConfigFileWithValidEndpoint1(t *testing.T) {
+ }
+ 
+ func TestBasicConfigFileWithValidEndpoint2(t *testing.T) {
++	requireIntegrationTests(t)
+ 	ak := os.Getenv("OSC_ACCESS_KEY")
+ 	sk := os.Getenv("OSC_SECRET_KEY")
+ 	region := os.Getenv("OSC_REGION")
+@@ -64,6 +66,7 @@ func TestBasicConfigFileWithValidEndpoint2(t *testing.T) {
+ }
+ 
+ func TestBasicConfigFileWithValidRegion2(t *testing.T) {
++	requireIntegrationTests(t)
+ 	ak := os.Getenv("OSC_ACCESS_KEY")
+ 	sk := os.Getenv("OSC_SECRET_KEY")
+ 	region := os.Getenv("OSC_REGION")
+-- 
+2.43.0

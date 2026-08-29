@@ -1,0 +1,59 @@
+From d9b63ea98db063936af099bb8380bd4660824407 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 15 Apr 2026 16:57:10 +0800
+Subject: [PATCH] put bash completions in 
+ /usr/share/bash-completion/completions/
+
+ Backport from https://github.com/linux-audit/audit-userspace/commit/13e79b7d2c4aa833129487c4cb5837df08e94e77
+---
+ init.d/Makefile.am           | 7 ++++---
+ init.d/audit.bash_completion | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/init.d/Makefile.am b/init.d/Makefile.am
+index 53c6e13..e8668c1 100644
+--- a/init.d/Makefile.am
++++ b/init.d/Makefile.am
+@@ -32,6 +32,7 @@ EXTRA_DIST = auditd.service.in audit-rules.service.in augenrules.in \
+ libconfig = libaudit.conf
+ initdir = $(prefix)/lib/systemd/system
+ legacydir = $(libexecdir)/initscripts/legacy-actions/auditd
++bashcompdir = $(datadir)/bash-completion/completions
+ 
+ auditdir = $(sysconfdir)/audit
+ auditrdir = $(auditdir)/rules.d
+@@ -53,12 +54,12 @@ install-data-hook:
+ 
+ install-exec-hook:
+ 	mkdir -p ${DESTDIR}${initdir}
+-	mkdir -p ${DESTDIR}${sysconfdir}/bash_completion.d
++	mkdir -p ${DESTDIR}${bashcompdir}
+ 	$(INSTALL_SCRIPT) -D -m 644 ${builddir}/auditd.service ${DESTDIR}${initdir}
+ 	$(INSTALL_SCRIPT) -D -m 644 ${builddir}/audit-rules.service ${DESTDIR}${initdir}
+ 	chmod 0755 $(DESTDIR)$(sbindir)/augenrules
+ 	$(INSTALL_SCRIPT) -D -m 644 ${srcdir}/audit.bash_completion \
+-		${DESTDIR}${sysconfdir}/bash_completion.d/
++		${DESTDIR}${bashcompdir}
+ if INSTALL_LEGACY_ACTIONS
+ 	mkdir -p ${DESTDIR}${legacydir}
+ 	$(INSTALL_SCRIPT) -D -m 750 ${srcdir}/auditd.rotate ${DESTDIR}${legacydir}/rotate
+@@ -84,4 +85,4 @@ if INSTALL_LEGACY_ACTIONS
+ 	rm ${DESTDIR}${legacydir}/condrestart
+ endif
+ 	rm ${DESTDIR}$(prefix)/lib/tmpfiles.d/audit.conf
+-	rm ${DESTDIR}${sysconfdir}/bash_completion.d/audit.bash_completion
++	rm ${DESTDIR}${bashcompdir}/audit.bash_completion
+diff --git a/init.d/audit.bash_completion b/init.d/audit.bash_completion
+index 9f395c2..9e4be3f 100644
+--- a/init.d/audit.bash_completion
++++ b/init.d/audit.bash_completion
+@@ -1,5 +1,5 @@
+ # Bash completion for audit utilities
+-# Installed to /etc/bash_completion.d/audit
++# Installed to /usr/share/bash-completion/completions/
+ 
+ _ausearch_opts="--event --arch --comm --debug --checkpoint --eoe-timeout \
+ --exit --escape --extra-keys --extra-labels --extra-obj2 --extra-time \
+-- 
+2.53.0
+

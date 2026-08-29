@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        package tensor provides efficient and generic n-dimensional arrays in Go that are useful for machine learning and deep learning purposes
 License:        Apache-2.0
 URL:            https://github.com/pdevine/tensor
-#!RemoteAsset
+#!RemoteAsset:  sha256:284d2f3cfb403bac5218d0142f39de8f92d5af6a820a41622d59a18190d8fd5f
 Source0:        https://github.com/pdevine/tensor/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,7 +41,7 @@ BuildRequires:  go(go4.org/unsafe/assume-no-moving-gc)
 BuildRequires:  go(gonum.org/v1/gonum)
 BuildRequires:  go(gorgonia.org/vecf32)
 BuildRequires:  go(gorgonia.org/vecf64)
-BuildRequires:  python3-numpy
+BuildRequires:  python3dist(numpy)
 BuildRequires:  python3
 
 Provides:       go(github.com/pdevine/tensor) = %{version}
@@ -76,4 +76,4 @@ export PYTHON_COMMAND=python3
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

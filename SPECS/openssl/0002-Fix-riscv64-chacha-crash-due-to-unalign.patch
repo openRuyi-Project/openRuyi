@@ -1,0 +1,34 @@
+From 22417bc14d6bde173425ba4f87c68be0cf394fa4 Mon Sep 17 00:00:00 2001
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Date: Sat, 27 Sep 2025 22:14:04 +0200
+Subject: [PATCH] Fix riscv64 chacha crash due to unaligned data
+
+The linux-riscv64 test machine crashes due to unaligned data,
+when the V extension is enabled, while QEMU seems to have no
+problems with unaligned data.
+
+So check for aligned data and fall back to C code in case the
+input or output values are unaligned.
+
+Reviewed-by: Paul Dale <ppzgs1@gmail.com>
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/28684)
+---
+ crypto/chacha/chacha_riscv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/crypto/chacha/chacha_riscv.c b/crypto/chacha/chacha_riscv.c
+index 734444bfa88b7..6721eaa112a9d 100644
+--- a/crypto/chacha/chacha_riscv.c
++++ b/crypto/chacha/chacha_riscv.c
+@@ -51,7 +51,9 @@ void ChaCha20_ctr32_v_zbb(unsigned char *out, const unsigned char *inp,
+ void ChaCha20_ctr32(unsigned char *out, const unsigned char *inp, size_t len,
+                     const unsigned int key[8], const unsigned int counter[4])
+ {
+-    if (len > CHACHA_BLK_SIZE && RISCV_HAS_ZBB() && riscv_vlen() >= 128) {
++    if (len > CHACHA_BLK_SIZE && RISCV_HAS_ZBB() && riscv_vlen() >= 128
++            && (size_t)out % sizeof(size_t) == 0
++            && (size_t)inp % sizeof(size_t) == 0) {
+         if (RISCV_HAS_ZVKB()) {
+             ChaCha20_ctr32_v_zbb_zvkb(out, inp, len, key, counter);
+         } else {

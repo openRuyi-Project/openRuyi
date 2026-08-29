@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %define go_import_path  github.com/pelletier/go-toml/v2
 
 Name:           go-github-pelletier-go-toml-v2
-Version:        2.2.4
+Version:        2.4.0
 Release:        %autorelease
 Summary:        Go library for the TOML file format
 License:        MIT
 URL:            https://github.com/pelletier/go-toml
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e08afb954c489e09dc94e403ab727d7f5348e1369a764237ac4158ac4e5ac4f
 Source0:        https://github.com/pelletier/go-toml/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +38,4 @@ This library supports TOML v1.0.0 (https://toml.io/en/v1.0.0).
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

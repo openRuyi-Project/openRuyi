@@ -19,7 +19,7 @@ Summary:        D-Bus Message Bus System
 License:        AFL-2.1 OR GPL-2.0-or-later
 URL:            https://dbus.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/dbus/dbus.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:0ba2a1a4b16afe7bceb2c07e9ce99a8c2c3508e5dec290dbb643384bd6beb7e2
 Source0:        https://dbus.freedesktop.org/releases/dbus/dbus-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -53,7 +53,6 @@ BuildRequires:  pkgconfig(audit)
 BuildRequires:  pkgconfig(libcap-ng)
 BuildRequires:  pkgconfig(expat)
 BuildRequires:  pkgconfig
-BuildRequires:  xmlto
 %if %{with systemd}
 BuildRequires:  pkgconfig(libsystemd) >= 209
 %endif
@@ -186,4 +185,4 @@ fi
 %{_libdir}/cmake/DBus1
 
 %changelog
-%{?autochangelog}
+%autochangelog

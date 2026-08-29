@@ -10,37 +10,26 @@ Release:        %autorelease
 Summary:        Distribution of general-utility subroutines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Scalar-List-Utils
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PE/PEVANS/Scalar-List-Utils-%{version}.tar.gz
+#!RemoteAsset:  sha256:e0cc03f9fe3565cdf4d6102654f87bba3bca2d8ff989da38307e857d0ae3c886
+Source0:        https://www.cpan.org/authors/id/P/PE/PEVANS/Scalar-List-Utils-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 
 %description
-This package contains a selection of subroutines that people have expressed
-would be nice to have in the perl core, but the usage would not really be
-high enough to warrant the use of a keyword, and the size so small such
-that being individual extensions would be wasteful.
-
-%prep
-%setup -q -n Scalar-List-Utils-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
+Scalar::List::Utils does nothing on its own. It is packaged with several
+useful modules.
 
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

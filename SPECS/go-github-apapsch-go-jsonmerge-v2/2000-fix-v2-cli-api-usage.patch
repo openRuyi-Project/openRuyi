@@ -1,0 +1,104 @@
+From 354f6c32a2d9b0bfee8a6a3e6e5548f83331b844 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 16:45:26 +0800
+Subject: [PATCH] Fix v2 CLI import paths
+
+Use the module v2 import path for the bundled jsonmerge command packages.
+---
+ cmd/jsonmerge/main.go  |  2 +-
+ cmd/jsonmerge/patch.go | 15 ++++++++-------
+ cmd/jsonmerge/print.go |  8 ++++----
+ 3 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/cmd/jsonmerge/main.go b/cmd/jsonmerge/main.go
+index 09682ce..b3a05fd 100644
+--- a/cmd/jsonmerge/main.go
++++ b/cmd/jsonmerge/main.go
+@@ -5,7 +5,7 @@ import (
+ 	"os"
+ 	"path/filepath"
+ 
+-	"github.com/RaveNoX/go-jsonmerge/cmd/jsonmerge/options"
++	"github.com/apapsch/go-jsonmerge/v2/cmd/jsonmerge/options"
+ )
+ 
+ var opts *options.Options
+diff --git a/cmd/jsonmerge/patch.go b/cmd/jsonmerge/patch.go
+index 211da19..d9356c9 100644
+--- a/cmd/jsonmerge/patch.go
++++ b/cmd/jsonmerge/patch.go
+@@ -4,7 +4,7 @@ import (
+ 	"fmt"
+ 	"os"
+ 
+-	"github.com/RaveNoX/go-jsonmerge"
++	"github.com/apapsch/go-jsonmerge/v2"
+ )
+ 
+ func patchFile(patchBuff interface{}, file string) error {
+@@ -14,11 +14,12 @@ func patchFile(patchBuff interface{}, file string) error {
+ 		return fmt.Errorf("%v: load error: %v", file, err)
+ 	}
+ 
+-	result, info := jsonmerge.Merge(data, patchBuff)
++	merger := &jsonmerge.Merger{}
++	result := merger.Merge(data, patchBuff)
+ 
+-	if len(info.Errors) > 0 {
+-		printMergeErrors(file, info)
+-		return fmt.Errorf("%v: got %v merge errors", file, len(info.Errors))
++	if len(merger.Errors) > 0 {
++		printMergeErrors(file, merger)
++		return fmt.Errorf("%v: got %v merge errors", file, len(merger.Errors))
+ 	}
+ 
+ 	if !opts.DryRun {
+@@ -31,9 +32,9 @@ func patchFile(patchBuff interface{}, file string) error {
+ 
+ 	if !opts.Quiet {
+ 		if opts.Verbose {
+-			printReplaces(file, info)
++			printReplaces(file, merger)
+ 		} else if opts.Patch {
+-			printPatch(file, info)
++			printPatch(file, merger)
+ 		} else {
+ 			fmt.Printf("%v\n", file)
+ 		}
+diff --git a/cmd/jsonmerge/print.go b/cmd/jsonmerge/print.go
+index ae38d19..024cd27 100644
+--- a/cmd/jsonmerge/print.go
++++ b/cmd/jsonmerge/print.go
+@@ -7,17 +7,17 @@ import (
+ 	"sort"
+ 	"strings"
+ 
+-	"github.com/RaveNoX/go-jsonmerge"
++	"github.com/apapsch/go-jsonmerge/v2"
+ )
+ 
+-func printMergeErrors(file string, info *jsonmerge.Info) {
++func printMergeErrors(file string, info *jsonmerge.Merger) {
+ 	for _, err := range info.Errors {
+ 		fmt.Fprintf(os.Stderr, "%v: replace warning: %v\n", file, err)
+ 	}
+ 	fmt.Fprintln(os.Stderr)
+ }
+ 
+-func printReplaces(file string, info *jsonmerge.Info) {
++func printReplaces(file string, info *jsonmerge.Merger) {
+ 	var keys []string
+ 
+ 	for k := range info.Replaced {
+@@ -39,7 +39,7 @@ func printReplaces(file string, info *jsonmerge.Info) {
+ 	fmt.Println()
+ }
+ 
+-func printPatch(file string, info *jsonmerge.Info) {
++func printPatch(file string, info *jsonmerge.Merger) {
+ 	m := make(map[string]interface{})
+ 
+ 	for k, v := range info.Replaced {
+-- 
+2.43.0
+

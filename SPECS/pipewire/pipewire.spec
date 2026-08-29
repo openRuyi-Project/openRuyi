@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Media Sharing Server
 License:        MIT
 URL:            https://gitlab.freedesktop.org/pipewire/pipewire
-#!RemoteAsset
+#!RemoteAsset:  sha256:b9d137dcf18ff228d67312f9a205e3ea8766a13d9a841a029832568ea8928efe
 Source0:        https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/%{version}/pipewire-%{version}.tar.gz
 Source1:        pipewire.sysusers
 BuildSystem:    meson
@@ -81,7 +81,7 @@ BuildRequires:  pkgconfig(sndfile)
 BuildRequires:  pkgconfig(speexdsp)
 BuildRequires:  pkgconfig(fftw3)
 BuildRequires:  doxygen
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  graphviz
 BuildRequires:  pkgconfig(libdrm)
 BuildRequires:  pkgconfig(vulkan)
@@ -93,8 +93,22 @@ BuildRequires:  pkgconfig(libcanberra)
 Requires:       systemd
 Requires:       rtkit
 
+Recommends:     %{name}-jack%{?_isa} = %{version}-%{release}
+
 %description
 PipeWire is a multimedia server for Linux.
+
+%package        jack
+Summary:        PipeWire JACK implementation
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Provides:       jack-audio-connection-kit
+
+%description    jack
+This package contains a JACK implementation based on PipeWire. It ships
+drop-in replacement libraries (libjack.so.0 and friends) and registers
+them with the dynamic linker so that JACK applications run on top of
+PipeWire without a separate JACK daemon. To use the real jack2 instead,
+remove this package (the main pipewire package only Recommends it).
 
 %package        devel
 Summary:        Headers and libraries for PipeWire client development
@@ -115,6 +129,10 @@ cp %{buildroot}%{_datadir}/alsa/alsa.conf.d/50-pipewire.conf \
 cp %{buildroot}%{_datadir}/alsa/alsa.conf.d/99-pipewire-default.conf \
         %{buildroot}%{_sysconfdir}/alsa/conf.d/99-pipewire-default.conf
 
+install -d -m 0755 %{buildroot}%{_sysconfdir}/ld.so.conf.d/
+echo "%{_libdir}/pipewire-%{apiversion}/jack" \
+        > %{buildroot}%{_sysconfdir}/ld.so.conf.d/pipewire-jack.conf
+
 install -d -m 0755 %{buildroot}%{_datadir}/pipewire/pipewire-pulse.conf.d/
 ln -s ../pipewire-pulse.conf.avail/20-upmix.conf \
         %{buildroot}%{_datadir}/pipewire/pipewire-pulse.conf.d/20-upmix.conf
@@ -129,9 +147,6 @@ ln -s ../client.conf.avail/20-upmix.conf \
 # raop config
 ln -s ../pipewire.conf.avail/50-raop.conf \
         %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/50-raop.conf
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
 
@@ -165,7 +180,6 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_sysusersdir}/pipewire.conf
 # libs
 %{_libdir}/libpipewire-%{apiversion}.so.*
-%{_libdir}/pipewire-%{apiversion}/jack/libjack*.so.*
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-access.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-adapter.so
 %{_libdir}/pipewire-%{apiversion}/libpipewire-module-avb.so
@@ -239,7 +253,6 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/doc/pipewire/html
 # utils
 %{_bindir}/pw-cat
-%{_bindir}/pw-jack
 %{_bindir}/pw-cli
 %{_bindir}/pw-config
 %{_bindir}/pw-container
@@ -291,17 +304,22 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_datadir}/pipewire/pipewire.conf.d/20-upmix.conf
 %{_datadir}/pipewire/client.conf.d/20-upmix.conf
 %{_datadir}/pipewire/pipewire-pulse.conf.d/20-upmix.conf
+
+%files jack
+%{_bindir}/pw-jack
+%{_libdir}/pipewire-%{apiversion}/jack/libjack*.so.*
 %{_datadir}/pipewire/jack.conf
+%{_sysconfdir}/ld.so.conf.d/pipewire-jack.conf
+%{_libdir}/pipewire-%{apiversion}/jack/libjack.so
+%{_libdir}/pipewire-%{apiversion}/jack/libjacknet.so
+%{_libdir}/pipewire-%{apiversion}/jack/libjackserver.so
 
 %files devel
 %{_libdir}/libpipewire-%{apiversion}.so
 %{_includedir}/pipewire-%{apiversion}/
 %{_includedir}/spa-%{spaversion}/
-%{_libdir}/pipewire-%{apiversion}/jack/libjack.so
-%{_libdir}/pipewire-%{apiversion}/jack/libjacknet.so
-%{_libdir}/pipewire-%{apiversion}/jack/libjackserver.so
 %{_libdir}/pkgconfig/libpipewire-%{apiversion}.pc
 %{_libdir}/pkgconfig/libspa-%{spaversion}.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

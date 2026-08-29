@@ -1,0 +1,2 @@
+g vscan - -
+u vscan - "ClamAV scanner user" /var/lib/clamav -

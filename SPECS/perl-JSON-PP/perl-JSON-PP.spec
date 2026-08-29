@@ -5,43 +5,36 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-JSON-PP
-Version:        4.16
+Version:        4.18
 Release:        %autorelease
 Summary:        JSON::XS compatible pure-Perl module
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/JSON-PP
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/I/IS/ISHIGAKI/JSON-PP-%{version}.tar.gz
+#!RemoteAsset:  sha256:9c7bcb238183c4240db5548b1910ce8428e0464d05e413df5893998e67bf602c
+Source0:        https://www.cpan.org/authors/id/I/IS/ISHIGAKI/JSON-PP-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Scalar::Util) >= 1.08
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::More) >= 0.88
 
 Requires:       perl(Scalar::Util) >= 1.08
+Requires:       perl(Test::More) >= 0.88
 
 %description
 JSON::PP is a pure perl JSON decoder/encoder, and (almost) compatible to
 much faster JSON::XS written by Marc Lehmann in C. JSON::PP works as a
 fallback module when you use JSON module without having installed JSON::XS.
 
-%prep
-%setup -q -n JSON-PP-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

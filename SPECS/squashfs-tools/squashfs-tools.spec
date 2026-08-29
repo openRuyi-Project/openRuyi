@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           squashfs-tools
-Version:        4.7.2
+Version:        4.7.5
 Release:        %autorelease
 Summary:        Utilities for the SquashFS read-only filesystem
 License:        GPL-2.0-or-later
 URL:            https://github.com/plougher/squashfs-tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:547b7b7f4d2e44bf91b6fc554664850c69563701deab9fd9cd7e21f694c88ea6
 Source0:        https://github.com/plougher/squashfs-tools/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -59,4 +59,4 @@ sed -i -e "s|-O2|%{optflags}|" squashfs-tools/Makefile
 %{_mandir}/*.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

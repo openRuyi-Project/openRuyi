@@ -10,11 +10,15 @@ Release:        %autorelease
 Summary:        Unicode Normalization Forms
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Unicode-Normalize
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/K/KH/KHW/Unicode-Normalize-%{version}.tar.gz
+#!RemoteAsset:  sha256:bade6f74e89b95a4b2226a0965ac1218e0e4eeaa0edb4b30ee7aac9d5dae773f
+Source0:        https://www.cpan.org/authors/id/K/KH/KHW/Unicode-Normalize-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -27,25 +31,13 @@ BuildRequires:  perl(SelectSaver)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 
+# don't use cpan2spec's description.
 %description
 This package provides Perl functions that can convert strings into various
 Unicode normalization forms as defined in Unicode Standard Annex #15.
-
-%prep
-%setup -q -n Unicode-Normalize-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
 
 %files -f %{name}.files
 %doc Changes mkheader README
 
 %changelog
-%{?autochangelog}
+%autochangelog

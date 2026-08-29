@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Simple, sane and efficient module to slurp a file
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-Slurper
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/File-Slurper-%{version}.tar.gz
+#!RemoteAsset:  sha256:d5a36487339888c3cd758e648160ee1d70eb4153cacbaff57846dbcefb344b0c
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/File-Slurper-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -42,20 +46,8 @@ This module provides functions for fast and correct slurping and spewing.
 All functions are optionally exported. All functions throw exceptions on
 errors, write functions don't return any meaningful value.
 
-%prep
-%setup -q -n File-Slurper-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc bench Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

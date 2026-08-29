@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquickeffectmaker
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtquickeffectmaker
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Tool for creating shader effects for Qt Quick
 License:        GPL-3.0-only
 URL:            https://doc.qt.io/qt-6/qtquickeffectmaker-index.html
 VCS:            git:https://github.com/qt/qtquickeffectmaker
-#!RemoteAsset
+#!RemoteAsset:  sha256:cfe63e70e88bdd126a175762d3eeb38eb336e45beceedcbd027bc5362744136b
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 Source1:        quickeffectmaker.desktop
 BuildSystem:    cmake
@@ -30,7 +30,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  qt6-qtbase-private-devel
-BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
 BuildRequires:  pkgconfig(Qt6Quick)
 BuildRequires:  pkgconfig(Qt6ShaderTools)
@@ -64,4 +63,4 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications --vendor="qt6" %
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -7,20 +7,22 @@
 %define qt6_version 6.8.0
 
 %define rname   kauth
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kauth
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Framework which lets applications perform actions as a privileged user
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kauth
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:fb4d90ee46a2f6202e53cdd5af8f77069c380955e3f340881f2f36ec8312079b
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  kf6-kcoreaddons-devel >= %{_kf6_version}
 BuildRequires:  qt6-qttools
@@ -47,26 +49,11 @@ Requires:       cmake(KF6CoreAddons) >= %{_kf6_version}
 KAuth is a framework to let applications perform actions as a privileged user.
 Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
+%install -a
 # Use langpacks macro to auto-split translations
-%find_lang %{name}6 --with-qt --all-name --generate-subpackages
+%find_lang %{name} --with-qt --all-name --generate-subpackages
 
-%files -f %{name}6.lang
+%files -f %{name}.lang
 %license LICENSES/*
 %doc README.md
 %dir %{_kf6_plugindir}/kf6/kauth
@@ -88,4 +75,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_libdir}/libKF6AuthCore.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

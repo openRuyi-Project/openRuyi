@@ -8,22 +8,23 @@
 %global srcname markdown
 
 Name:           python-%{srcname}
-Version:        3.8.2
+Version:        3.10.2
 Release:        %autorelease
 Summary:        Markdown implementation in Python
 License:        BSD-3-Clause
 URL:            https://python-markdown.github.io/
-#!RemoteAsset
+#!RemoteAsset:  sha256:994d51325d25ad8aa7ce4ebaec003febcce822c3f8c911e3b17c52f7f589f950
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  %{srcname}
 
+BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pyyaml)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -48,4 +49,4 @@ PYTHONPATH=%{buildroot}%{python3_sitelib} \
 %{_bindir}/markdown_py
 
 %changelog
-%{?autochangelog}
+%autochangelog

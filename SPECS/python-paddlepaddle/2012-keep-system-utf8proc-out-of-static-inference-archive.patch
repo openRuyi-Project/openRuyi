@@ -1,0 +1,41 @@
+# Patch purpose:
+# - Keep system utf8proc out of Paddle's static inference archive merge while
+#   retaining it as a link dependency.
+# Why this patch exists:
+# - With WITH_SYSTEM_THIRD_PARTY=ON, utf8proc is an imported system shared
+#   library target. Paddle's create_static_lib() feeds every input target to
+#   ar via an MRI script, and ar cannot add /usr/lib64/libutf8proc.so to a
+#   static archive. Static archives should contain object/static archive inputs;
+#   shared system libraries belong in the target link interface instead.
+
+diff -uprN a/paddle/fluid/inference/CMakeLists.txt b/paddle/fluid/inference/CMakeLists.txt
+--- a/paddle/fluid/inference/CMakeLists.txt	2026-03-19 14:53:19.000000000 +0800
++++ b/paddle/fluid/inference/CMakeLists.txt	2026-06-20 07:59:59.380556693 +0800
+@@ -36,6 +36,10 @@ get_property(phi_modules GLOBAL PROPERTY
+ get_property(ir_targets GLOBAL PROPERTY IR_TARGETS)
+ get_property(not_infer_modules GLOBAL PROPERTY NOT_INFER_MODULES)
+ set(utils_modules pretty_log string_helper utf8proc)
++set(static_utils_modules ${utils_modules})
++if(WITH_SYSTEM_THIRD_PARTY)
++  list(REMOVE_ITEM static_utils_modules utf8proc)
++endif()
+ 
+ add_subdirectory(api)
+ 
+@@ -59,10 +63,14 @@ list(REMOVE_DUPLICATES fluid_modules)
+ # and cc_library is dummy
+ if(WIN32)
+   cc_library(paddle_inference DEPS ${fluid_modules} ${STATIC_INFERENCE_API}
+-                                   ${utils_modules})
++                                   ${static_utils_modules})
+ else()
+   create_static_lib(paddle_inference ${phi_modules} ${fluid_modules}
+-                    ${ir_targets} ${STATIC_INFERENCE_API} ${utils_modules})
++                    ${ir_targets} ${STATIC_INFERENCE_API}
++                    ${static_utils_modules})
++endif()
++if(WITH_SYSTEM_THIRD_PARTY AND TARGET utf8proc)
++  target_link_libraries(paddle_inference utf8proc)
+ endif()
+ 
+ if(NOT APPLE)

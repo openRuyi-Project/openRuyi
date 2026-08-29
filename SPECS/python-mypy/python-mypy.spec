@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Optional static typing for Python
 License:        MIT
 URL:            https://www.mypy-lang.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:19d88bb05303fe63f71dd2c6270daca27cb9401c4ca8255fe50d1d920e0eb9ba
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -32,11 +32,15 @@ BuildRequires:  python3dist(types-psutil)
 BuildRequires:  python3dist(types-setuptools)
 BuildRequires:  python3dist(typing-extensions)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-Add type annotations to your Python programs, and use mypy to type check them. Mypy is essentially a Python linter on steroids, and it can catch many programming errors by analyzing your program, without actually having to run it. Mypy has a powerful type system with features such as type inference, gradual typing, generics and union types.
+Add type annotations to your Python programs, and use mypy to type check them.
+Mypy is essentially a Python linter on steroids, and it can catch many programming
+errors by analyzing your program, without actually having to run it. Mypy has a
+powerful type system with features such as type inference, gradual typing, generics
+and union types.
 
 %prep -a
 # The test suites have bugs that halt the checking process.
@@ -56,4 +60,4 @@ rm -rf %{_builddir}/python-%{srcname}-%{version}/mypyc/test
 %{_bindir}/stubtest
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,44 @@
+From 6ee487a33dd2564845a9ca60f0affc2fb673873e Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Tue, 9 Jun 2026 14:48:54 +0800
+Subject: [PATCH] install libraries and CMake files to GNUInstallDirs
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ angelscript/projects/cmake/CMakeLists.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/angelscript/projects/cmake/CMakeLists.txt b/angelscript/projects/cmake/CMakeLists.txt
+index 658c9cd..725f981 100644
+--- a/angelscript/projects/cmake/CMakeLists.txt
++++ b/angelscript/projects/cmake/CMakeLists.txt
+@@ -1,6 +1,7 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+ project(angelscript)
++include(GNUInstallDirs)
+ 
+ option(BUILD_SHARED_LIBS "Build shared library" OFF)
+ option(AS_NO_EXCEPTIONS "Disable exception handling in script context" OFF)
+@@ -215,8 +216,8 @@ if(NOT AS_DISABLE_INSTALL)
+ 	#See https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#creating-packages for a detailed explanation about this part
+ 	install(TARGETS ${ANGELSCRIPT_LIBRARY_NAME} EXPORT AngelscriptTargets
+ 		RUNTIME DESTINATION bin
+-		LIBRARY DESTINATION lib
+-		ARCHIVE DESTINATION lib
++		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 		INCLUDES DESTINATION include
+ 	)
+ 
+@@ -242,7 +243,7 @@ if(NOT AS_DISABLE_INSTALL)
+ 		COPYONLY
+ 	)
+ 
+-	set(ConfigPackageLocation lib/cmake/Angelscript)
++	set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/Angelscript)
+ 	install(EXPORT AngelscriptTargets
+ 		FILE AngelscriptTargets.cmake
+ 		NAMESPACE Angelscript::
+-- 
+2.54.0

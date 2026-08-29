@@ -1,0 +1,59 @@
+From dfbb380d228f636c386ad2abfcaaf019b71655e2 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 2 Jun 2026 14:50:34 +0800
+Subject: [PATCH] Detect generic release asset content types
+
+GitHub release uploads fail for files whose extension maps to the generic
+application/octet-stream media type. Detect the content from the file bytes in
+that case, but keep an explicitly configured media type authoritative. The
+change is limited to release asset uploads and restores the file offset after
+sniffing so callers can still upload the whole file.
+---
+ github/repos_releases.go | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/github/repos_releases.go b/github/repos_releases.go
+index 7231db6..a9f7430 100644
+--- a/github/repos_releases.go
++++ b/github/repos_releases.go
+@@ -456,7 +456,13 @@ func (s *RepositoriesService) UploadReleaseAsset(ctx context.Context, owner, rep
+ 		return nil, nil, errors.New("the asset to upload can't be a directory")
+ 	}
+ 
+-	mediaType := mime.TypeByExtension(filepath.Ext(file.Name()))
++	ext := filepath.Ext(file.Name())
++	mediaType := mime.TypeByExtension(ext)
++	if ext != "" && (mediaType == "" || mediaType == defaultMediaType) {
++		if sniffed, err := sniffFileContentType(file); err == nil && sniffed != "" {
++			mediaType = sniffed
++		}
++	}
+ 	if opts.MediaType != "" {
+ 		mediaType = opts.MediaType
+ 	}
+@@ -473,3 +479,23 @@ func (s *RepositoriesService) UploadReleaseAsset(ctx context.Context, owner, rep
+ 	}
+ 	return asset, resp, nil
+ }
++
++func sniffFileContentType(file *os.File) (string, error) {
++	offset, err := file.Seek(0, io.SeekCurrent)
++	if err != nil {
++		return "", err
++	}
++	_, err = file.Seek(0, io.SeekStart)
++	if err != nil {
++		return "", err
++	}
++	var buf [512]byte
++	n, readErr := file.Read(buf[:])
++	if _, seekErr := file.Seek(offset, io.SeekStart); seekErr != nil {
++		return "", seekErr
++	}
++	if readErr != nil && readErr != io.EOF {
++		return "", readErr
++	}
++	return http.DetectContentType(buf[:n]), nil
++}
+-- 
+2.43.0

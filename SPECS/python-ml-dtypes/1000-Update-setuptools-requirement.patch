@@ -1,0 +1,35 @@
+From f1f6f7796ee58c44bf7ac669608525e80c9517a4 Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Tue, 10 Feb 2026 00:07:31 +0000
+Subject: [PATCH] Update setuptools requirement from ~=80.9.0 to >=80.9,<82.1
+
+Updates the requirements on [setuptools](https://github.com/pypa/setuptools) to permit the latest version.
+- [Release notes](https://github.com/pypa/setuptools/releases)
+- [Changelog](https://github.com/pypa/setuptools/blob/main/NEWS.rst)
+- [Commits](https://github.com/pypa/setuptools/compare/v80.9.0...v82.0.0)
+
+---
+updated-dependencies:
+- dependency-name: setuptools
+  dependency-version: 82.0.0
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 0de10bb1..b4453ca5 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -52,7 +52,7 @@ requires = [
+     # We build against the most recent supported NumPy 2.0 release;
+     # see https://github.com/numpy/numpy/issues/27265
+     "numpy~=2.0",
+-    "setuptools~=80.9.0",
++    "setuptools>=80.9,<82.1",
+ ]
+ build-backend = "setuptools.build_meta"
+ 

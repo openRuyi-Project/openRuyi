@@ -13,10 +13,13 @@ Release:        %autorelease
 Summary:        A Commander for modern Go CLI interactions
 License:        Apache-2.0
 URL:            https://github.com/spf13/cobra
-#!RemoteAsset
+#!RemoteAsset:  sha256:8ee67b82ddb730f6ed639724d19ddd874be36b65da45529ad5cacce53c310704
 Source0:        https://github.com/spf13/cobra/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# Fix Go vet warning with current Go toolchain.
+Patch2000:      2000-fix-directive-format.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
@@ -51,4 +54,4 @@ of projects using Cobra.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

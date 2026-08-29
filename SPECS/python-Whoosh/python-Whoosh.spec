@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Pure-Python full text indexing, search, and spell checking library
 License:        BSD-2-Clause
 URL:            http://bitbucket.org/mchaput/whoosh
-#!RemoteAsset
+#!RemoteAsset:  sha256:7ca5633dbfa9e0e0fa400d3151a8a0c4bec53bd2ecedc0a67705b17565c31a83
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,7 +25,7 @@ BuildOption(check):  -e whoosh.automata.nfa
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -42,4 +42,4 @@ needs.
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

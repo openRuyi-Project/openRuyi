@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Simple generic namespace processor
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/XML-NamespaceSupport
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-%{version}.tar.gz
+#!RemoteAsset:  sha256:47e995859f8dd0413aa3f22d350c4a62da652e854267aa0586ae544ae2bae5ef
+Source0:        https://www.cpan.org/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(constant)
@@ -31,20 +35,8 @@ This module offers a simple to process namespaced XML names (unames) from
 within any application that may need them. It also helps maintain a prefix
 to namespace URI map, and provides a number of basic checks.
 
-%prep
-%setup -q -n XML-NamespaceSupport-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

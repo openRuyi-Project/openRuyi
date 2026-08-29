@@ -5,17 +5,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           md4c
-Version:        0.5.2
+Version:        0.5.3
 Release:        %autorelease
 Summary:        Markdown for C
 License:        MIT
 URL:            https://github.com/mity/md4c
-#!RemoteAsset
+#!RemoteAsset:  sha256:353c346f376b87c954a13f3415ede2d51264cc61dc5abcd38ff1d2aa0d059b9e
 Source0:        https://github.com/mity/md4c/archive/refs/tags/release-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  python3
 
 %description
@@ -32,7 +31,7 @@ developing applications that use md4c.
 
 %check
 cd %{__cmake_builddir}
-../scripts/run-tests.sh
+python3 ../scripts/run-tests.py
 
 %files
 %doc README.md CHANGELOG.md
@@ -52,4 +51,4 @@ cd %{__cmake_builddir}
 %{_libdir}/pkgconfig/md4c-html.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

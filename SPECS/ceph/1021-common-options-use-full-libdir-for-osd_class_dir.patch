@@ -1,0 +1,34 @@
+From 0bc90371aaad9d9243c0e1409df90f79b0dfb3b6 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Thu, 13 Aug 2026 22:04:12 -0700
+Subject: [PATCH] common/options: use an absolute libdir for osd_class_dir
+
+osd_class_dir defaults to @CMAKE_INSTALL_LIBDIR@, which GNUInstallDirs
+leaves relative ("lib64").  The OSD then looks for rados classes below
+its own cwd, loads none, and every class-backed operation fails:
+
+  _load_class could not stat class lib64/rados-classes/libcls_lock.so:
+      (2) No such file or directory
+
+ceph.spec.in hides this by passing an absolute -DCMAKE_INSTALL_LIBDIR.
+Use @CMAKE_INSTALL_FULL_LIBDIR@ instead, as the tree already does for
+other paths baked into the binaries.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/common/options/osd.yaml.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/common/options/osd.yaml.in b/src/common/options/osd.yaml.in
+index 34dc096477e0..d7d07a564026 100644
+--- a/src/common/options/osd.yaml.in
++++ b/src/common/options/osd.yaml.in
+@@ -666,7 +666,7 @@ options:
+ - name: osd_class_dir
+   type: str
+   level: advanced
+-  default: @CMAKE_INSTALL_LIBDIR@/rados-classes
++  default: @CMAKE_INSTALL_FULL_LIBDIR@/rados-classes
+   fmt_desc: The class path for RADOS class plug-ins.
+   with_legacy: true
+ - name: osd_open_classes_on_start

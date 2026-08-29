@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           debugedit
-Version:        5.2
+Version:        5.3
 Release:        %autorelease
 Summary:        Debuginfo extraction
 License:        GPL-3.0-or-later
 URL:            https://www.sourceware.org/debugedit
 VCS:            git:https://sourceware.org/git/debugedit.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:3b8c6396fe235e0270c9b9c0d244cfd0e86c284fc27e820acc58360e7cfa08c2
 Source0:        https://sourceware.org/ftp/%{name}/%{version}/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://sourceware.org/ftp/%{name}/%{version}/%{name}-%{version}.tar.xz.sig
 Source2:        %{name}.keyring
 BuildSystem:    autotools
 
@@ -58,12 +56,14 @@ ln -s ../../bin/debugedit %{buildroot}/usr/lib/rpm
 %license COPYING3
 %doc README
 %{_bindir}/debugedit
+%{_bindir}/debugedit-classify-ar
 /usr/lib/rpm/debugedit
 /usr/lib/rpm/find-debuginfo
 /usr/lib/rpm/sepdebugcrcfix
 %{_mandir}/man1/debugedit.1%{?ext_man}
+%{_mandir}/man1/debugedit-classify-ar.1%{?ext_man}
 %{_mandir}/man1/find-debuginfo.1%{?ext_man}
 %{_mandir}/man1/sepdebugcrcfix.1%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog

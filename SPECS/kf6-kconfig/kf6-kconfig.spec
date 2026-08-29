@@ -7,20 +7,22 @@
 %define qt6_version 6.8.0
 
 %define rname kconfig
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kconfig
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Advanced configuration system
 License:        LGPL-2.1-or-later AND GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            https://invent.kde.org/frameworks/kconfig
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:24e26e516b7904a26661eab7d2064bee1ac57165571e85b4da6020fd36f14322
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
 BuildRequires:  cmake(Qt6Core) >= %{qt6_version}
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
@@ -33,6 +35,9 @@ BuildRequires:  qt6-qttools
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-linguist
 BuildRequires:  cmake(Qt6Xml) >= %{qt6_version}
+
+Provides:       kf6-kconfig-imports = %{version}-%{release}
+Obsoletes:      kf6-kconfig-imports < %{version}-%{release}
 
 %description
 KConfig provides an advanced configuration system. It is made of three parts:
@@ -50,13 +55,6 @@ automatically initialized from the configuration and automatically propagate
 their changes to their respective configuration files.
 
 KConfigQml provides QtQuick bindings to KConfig, allowing it to be used with QML.
-
-%package        imports
-Summary:        QML imports for kconfig
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    imports
-QML imports for kconfig.
 
 %package        devel
 Summary:        KConfig Development files
@@ -80,19 +78,6 @@ KConfigGui provides a way to hook widgets to the configuration so that they are
 automatically initialized from the configuration and automatically propagate
 their changes to their respective configuration files. Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
 %files
 %license LICENSES/*
 %doc README.md
@@ -103,10 +88,10 @@ their changes to their respective configuration files. Development files.
 %{_kf6_libdir}/libKF6ConfigCore.so.*
 %{_kf6_libdir}/libKF6ConfigGui.so.*
 %{_kf6_libdir}/libKF6ConfigQml.so.*
+%{_kf6_libdir}/qt6/metatypes/qt6kf6configcore_metatypes.json
+%{_kf6_libdir}/qt6/metatypes/qt6kf6configgui_metatypes.json
 %{_datadir}/locale/*/LC_MESSAGES/kconfig6_qt.qm
 %{_kf6_libexecdir}/kconf_update
-
-%files imports
 %{_kf6_qmldir}/org/kde/config/
 
 %files devel
@@ -121,4 +106,4 @@ their changes to their respective configuration files. Development files.
 %{_kf6_libexecdir}/kconfig_compiler_kf6
 
 %changelog
-%{?autochangelog}
+%autochangelog

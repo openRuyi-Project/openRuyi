@@ -13,7 +13,7 @@
 %bcond bootstrap 0
 %endif
 
-%bcond  static        0
+%bcond  static        1
 # For -tests subpackage.
 %bcond  tests         0
 %bcond  doc           0
@@ -30,7 +30,7 @@ Summary:        A core application building block and utility library
 License:        LGPL-2.1-or-later
 URL:            https://docs.gtk.org/glib/
 VCS:            git:https://gitlab.gnome.org/GNOME/glib.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:fc2ce0f948ee163f8adc5bdde2f38612b8a3f270022aa1b0d087cb9f1f0ac5c2
 Source0:        https://download.gnome.org/sources/glib/2.87/glib-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -80,7 +80,7 @@ BuildRequires:  dbus-daemon
 BuildRequires:  shared-mime-info
 %endif
 %if %{with man}
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 %endif
 # For %check
 BuildRequires:  systemd
@@ -94,6 +94,10 @@ This package contains the essential runtime libraries and tools.
 %package        devel
 Summary:        Development files for the GLib library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+%if %{with static}
+Provides:       %{name}-static = %{version}-%{release}
+Provides:       %{name}-static%{?_isa} = %{version}-%{release}
+%endif
 
 %description    devel
 This package contains the header files, libraries, and developer tools
@@ -125,8 +129,6 @@ rm -f %{buildroot}%{_bindir}/glib-compile-schemas
 ln -sf ../%{_lib}/glib-2.0/gio-querymodules %{buildroot}%{_bindir}/gio-querymodules
 ln -sf ../%{_lib}/glib-2.0/glib-compile-schemas %{buildroot}%{_bindir}/glib-compile-schemas
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang glib20 --generate-subpackages --all-name
 
 # handle GIO/GSettings cache updates.
@@ -180,13 +182,24 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/bash-completion/completions/gsettings
 
 %files devel
+%if %{with static}
+%{_libdir}/lib*.a
+%endif
 %{_libdir}/lib*.so
 %dir %{_libdir}/glib-2.0
 %dir %{_libdir}/glib-2.0/include
 %{_libdir}/glib-2.0/include/glibconfig.h
 %{_includedir}/glib-2.0/
 %{_includedir}/gio-unix-2.0/
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gio-2.0.pc
+%{_libdir}/pkgconfig/gio-unix-2.0.pc
+%{_libdir}/pkgconfig/girepository-2.0.pc
+%{_libdir}/pkgconfig/glib-2.0.pc
+%{_libdir}/pkgconfig/gmodule-2.0.pc
+%{_libdir}/pkgconfig/gmodule-export-2.0.pc
+%{_libdir}/pkgconfig/gmodule-no-export-2.0.pc
+%{_libdir}/pkgconfig/gobject-2.0.pc
+%{_libdir}/pkgconfig/gthread-2.0.pc
 %{_datadir}/aclocal/*.m4
 # Added: GDB helper scripts for better debugging experience
 %dir %{_datadir}/gdb
@@ -241,4 +254,4 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

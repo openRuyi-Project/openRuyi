@@ -7,13 +7,14 @@
 %global srcname mitogen
 
 Name:           python-%{srcname}
-Version:        0.3.37
+Version:        0.3.47
 Release:        %autorelease
 Summary:        Distributed self-replicating programs in Python
 License:        BSD-3-Clause
 URL:            https://github.com/mitogen-hq/mitogen
-#!RemoteAsset:  sha256:6ac841a1b520c3136062ec930b95f6f4718ed8c3136ef3d7caf1a1d8e92d4823
+#!RemoteAsset:  sha256:fcd678d5098ddbefc948a70cf72dc781f450702d78ce9beec83588a2cfa853cb
 Source:         https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -24,7 +25,7 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -47,4 +48,4 @@ remote machine aside from an SSH connection.
 %{python3_sitelib}/ansible_%{srcname}
 
 %changelog
-%{?autochangelog}
+%autochangelog

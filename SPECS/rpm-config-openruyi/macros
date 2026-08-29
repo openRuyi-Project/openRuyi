@@ -1,6 +1,13 @@
+
+# XXX: Under rpm6, signatures are required by default. In the future,
+# we should add signatures.
+%_pkgverify_level digest
+
 # directories
 %_infodir               %{_prefix}/share/info
 %_mandir                %{_prefix}/share/man
+# By default, we merge sbin and bin.
+%_sbindir               %{_bindir}
 %_sysconfdir            /etc
 %_localstatedir         /var
 %_defaultdocdir         %{_datadir}/doc
@@ -61,6 +68,10 @@
 %openruyi_security_ldflags  -Wl,-z,relro,-z,now,-z,noexecstack
 %openruyi_security_cxxflags -D_GLIBCXX_ASSERTIONS
 
+# use "%undefine _ld_as_needed" to disable.
+%_ld_as_needed		1
+%_ld_as_needed_flags	%{?_ld_as_needed:-Wl,--as-needed}
+
 # General Compiler Flags
 %openruyi_general_flags     -O2 -g -fno-omit-frame-pointer -pipe %{_lto_cflags} -funwind-tables -fasynchronous-unwind-tables
 
@@ -74,7 +85,7 @@
 
 %__global_cflags()   %{expand:%{?_target_cpu:%%{openruyi_optflags_%{_target_cpu}}}}
 %__global_cxxflags() %{__global_cflags} %{openruyi_security_cxxflags}
-%__global_ldflags()  %{openruyi_security_ldflags}
+%__global_ldflags()  %{openruyi_security_ldflags} %{_ld_as_needed_flags}
 
 %build_cflags      %{__global_cflags}
 %build_cxxflags    %{__global_cxxflags}

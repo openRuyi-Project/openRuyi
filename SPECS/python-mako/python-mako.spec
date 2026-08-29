@@ -8,12 +8,12 @@
 %global srcname mako
 
 Name:           python-%{srcname}
-Version:        1.3.10
+Version:        1.3.12
 Release:        %autorelease
 Summary:        Mako template library for Python
 License:        MIT AND Python-2.0.1 AND BSD-3-Clause
 URL:            https://www.makotemplates.org/
-#!RemoteAsset:  sha256:99579a6f39583fa7e5630a28c3c1f440e4e97a414b80372649c0ce338da2ea28
+#!RemoteAsset:  sha256:9f778e93289bd410bb35daadeb4fc66d95a746f0b75777b942088b7fd7af550a
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -24,11 +24,17 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(markupsafe)
+BuildRequires:  python3dist(lingua)
+# For tests
+BuildRequires:  python3dist(babel)
+BuildRequires:  python3dist(pygments)
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 Requires:       python3dist(six)
+Requires:       python3dist(lingua)
 
 %description
 Mako is a template library written in Python. It provides a familiar, non-XML
@@ -52,12 +58,9 @@ mv %{buildroot}/%{_bindir}/mako-render %{buildroot}/%{_bindir}/mako-render-%{pyt
 ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render-3
 ln -s ./mako-render-%{python3_version} %{buildroot}/%{_bindir}/mako-render
 
-# Skip the import test suite, which requires lingua or something
-%check
-
 %files -f %{pyproject_files}
-%license LICENSE
 %doc CHANGES README.rst examples
+%license LICENSE
 %{_bindir}/mako-render
 %{_bindir}/mako-render-3
 %{_bindir}/mako-render-%{python3_version}

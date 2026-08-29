@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           publicsuffix-list
-Version:        20251008
+Version:        20260701
 Release:        %autorelease
 Summary:        Cross-vendor public domain suffix database
 License:        MPL-2.0
@@ -46,4 +46,4 @@ ln -s public_suffix_list.dat %{buildroot}%{_datadir}/publicsuffix/effective_tld_
 %{_datadir}/publicsuffix/index.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

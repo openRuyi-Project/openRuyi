@@ -1,0 +1,34 @@
+From eb8269a4baa7f9947c051ea14c9ca7855bfbbaa1 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Fri, 26 Jun 2026 15:03:54 +0800
+Subject: [PATCH] Drop pkg_resources
+
+---
+ setup.py | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 8cd1a6c..a4e30a9 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,4 +1,3 @@
+-from pkg_resources import DistributionNotFound, load_entry_point, working_set
+ import setuptools
+ from shutil import rmtree
+ 
+@@ -46,12 +45,5 @@ setup_params = dict(
+ # Clean up first, old eggs seem to confuse setuptools_scm
+ rmtree(setup_params["name"] + ".egg-info", ignore_errors=True)
+ 
+-# Bootstrap
+-try:
+-    load_entry_point(setup_params["name"], ENTRY_GROUP, ENTRY_NAME)
+-except (DistributionNotFound, ImportError):
+-    working_set.add_entry(".")
+-
+-
+ if __name__ == "__main__":
+     setuptools.setup(**setup_params)
+-- 
+2.54.0
+

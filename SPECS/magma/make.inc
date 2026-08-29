@@ -1,0 +1,3 @@
+BACKEND = hip
+FORT = false
+GPU_TARGET = @GPU_TARGET@

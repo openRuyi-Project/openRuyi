@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        More sensible way to change directories
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-chdir
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/File-chdir-%{version}.tar.gz
+#!RemoteAsset:  sha256:31ebf912df48d5d681def74b9880d78b1f3aca4351a0ed1fe3570b8e03af6c79
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/File-chdir-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -39,20 +43,8 @@ global. If any part of your program calls chdir() or if any library you
 use calls chdir(), it changes the current working directory for the
 *whole* program.
 
-%prep
-%setup -q -n File-chdir-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README
 
 %changelog
-%{?autochangelog}
+%autochangelog

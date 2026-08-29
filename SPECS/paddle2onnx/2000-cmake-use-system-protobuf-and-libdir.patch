@@ -1,0 +1,138 @@
+# Patch purpose:
+# - Use system ONNX, ONNX Optimizer, and protobuf instead of bundled sources.
+# - Build top-level Paddle2ONNX sources with a C++ standard compatible with the
+#   distribution protobuf/abseil headers.
+# - Install Paddle2ONNX into the distribution libdir.
+# Why this patch exists:
+# - openRuyi already packages ONNX and ONNX Optimizer, so Paddle2ONNX must not
+#   build or ship private copies from third/.
+# - The bundled Paddle2ONNX CMake file forces C++11, but current system
+#   protobuf/abseil headers require newer C++ language support.
+# - ONNXConfig already loads protobuf; loading Protobuf first can make protobuf
+#   CMake targets partially defined and break the later ONNXConfig load.
+# - Using system ONNX Optimizer exposes Paddle2ONNX's logger namespace mismatch
+#   in optimizer code; explicitly import the logger into that namespace.
+# - openRuyi uses lib64 on 64-bit architectures.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,9 @@
+ PROJECT(paddle2onnx C CXX)
+ CMAKE_MINIMUM_REQUIRED (VERSION 3.16)
++include(GNUInstallDirs)
++find_package(ONNX REQUIRED)
++find_package(ONNXOptimizer REQUIRED)
++set(ONNX_NAMESPACE "onnx")
+ 
+ ADD_SUBDIRECTORY(paddle2onnx)
+ 
+@@ -11,9 +15,9 @@
+ if(PADDLE2ONNX_DEBUG)
+   add_definitions(-DPADDLE2ONNX_DEBUG)
+ endif()
+-# Set C++11 as standard for the whole project
++# Set C++17 as standard for the whole project
+ if(NOT MSVC)
+-  set(CMAKE_CXX_STANDARD 11)
++  set(CMAKE_CXX_STANDARD 17)
+ endif(NOT MSVC)
+ 
+ # setting max opset version for onnx
+@@ -22,42 +26,14 @@
+ # refer to https://github.com/onnx/onnx/blob/main/docs/Versioning.md#released-versions
+ add_definitions(-DMAX_ONNX_OPSET_VERSION=16)
+ add_definitions(-DPADDLE2ONNX_LIB)
+-
+-# Third dependency: onnx
+-if(NOT TARGET onnx_proto)
+-  if(NOT ONNX_NAMESPACE)
+-    set(ONNX_NAMESPACE "paddle2onnx")
+-  endif()
+-  add_definitions("-DONNX_NAMESPACE=${ONNX_NAMESPACE}")
+-
+-  if(ONNX_CUSTOM_PROTOC_PATH)
+-    if(WIN32)
+-      if(MSVC_STATIC_CRT)
+-        # MT
+-        set(ONNX_USE_MSVC_STATIC_RUNTIME ON)
+-      else()
+-        # MD
+-        set(ONNX_USE_MSVC_STATIC_RUNTIME OFF)
+-      endif()
+-      set(ONNX_CUSTOM_PROTOC_PATH "${ONNX_CUSTOM_PROTOC_PATH};$ENV{PATH}")
+-    else()
+-      set(ONNX_CUSTOM_PROTOC_PATH "${ONNX_CUSTOM_PROTOC_PATH}:$ENV{PATH}")
+-    endif()
+-    set(ENV{PATH} ${ONNX_CUSTOM_PROTOC_PATH})
+-  endif()
+-
+-  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-  add_subdirectory(${PROJECT_SOURCE_DIR}/third/onnx)
+-endif()
++add_definitions("-DONNX_NAMESPACE=${ONNX_NAMESPACE}")
+ 
+ include_directories(${PROJECT_SOURCE_DIR})
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+-include_directories(${PROJECT_SOURCE_DIR}/third/optimizer)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/paddle2onnx/proto)
+ 
+-file(GLOB_RECURSE ALL_SRCS ${PROJECT_SOURCE_DIR}/paddle2onnx/*.cc ${PROJECT_SOURCE_DIR}/third/optimizer/onnxoptimizer/*.cc)
++file(GLOB_RECURSE ALL_SRCS ${PROJECT_SOURCE_DIR}/paddle2onnx/*.cc)
+ list(REMOVE_ITEM ALL_SRCS ${PROJECT_SOURCE_DIR}/paddle2onnx/cpp2py_export.cc)
+-list(REMOVE_ITEM ALL_SRCS ${PROJECT_SOURCE_DIR}/third/optimizer/onnxoptimizer/cpp2py_export.cc)
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" PADDLE2ONNX_VERSION)
+@@ -79,7 +55,7 @@
+         set_target_properties(paddle2onnx PROPERTIES LINK_FLAGS_RELEASE -s)
+     endif()
+     set_target_properties(paddle2onnx PROPERTIES VERSION ${PADDLE2ONNX_VERSION})
+-    TARGET_LINK_LIBRARIES(paddle2onnx  p2o_paddle_proto onnx)
++    TARGET_LINK_LIBRARIES(paddle2onnx p2o_paddle_proto ONNX::onnx onnx_optimizer)
+ else ()
+     ADD_LIBRARY(paddle2onnx SHARED ${ALL_SRCS})
+     if(APPLE)
+@@ -95,7 +71,7 @@
+         set_target_properties(paddle2onnx PROPERTIES LINK_FLAGS_RELEASE -s)
+     endif()
+     set_target_properties(paddle2onnx PROPERTIES VERSION ${PADDLE2ONNX_VERSION})
+-    TARGET_LINK_LIBRARIES(paddle2onnx p2o_paddle_proto onnx)
++    TARGET_LINK_LIBRARIES(paddle2onnx p2o_paddle_proto ONNX::onnx onnx_optimizer)
+ endif()
+ 
+ #install(
+@@ -107,20 +83,20 @@
+ if(WIN32)
+   install(
+     TARGETS paddle2onnx
+-    LIBRARY DESTINATION lib
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION lib
+-    RUNTIME DESTINATION lib
++    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   )
+ else()
+   install(
+     TARGETS paddle2onnx
+-    LIBRARY DESTINATION lib
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   )
+ endif()
+ install(
+     FILES paddle2onnx/converter.h
+     ${PROJECT_SOURCE_DIR}/paddle2onnx/converter.h
+-    DESTINATION include/paddle2onnx
++    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/paddle2onnx
+ )
+ 
+ 
+--- a/paddle2onnx/optimizer/paddle2onnx_optimizer.cc
++++ b/paddle2onnx/optimizer/paddle2onnx_optimizer.cc
+@@ -28,6 +28,7 @@
+ 
+ namespace ONNX_NAMESPACE {
+ namespace optimization {
++using paddle2onnx::P2OLogger;
+ 
+ ONNX_NAMESPACE::ModelProto OptimizeOnnxModel(
+     const ONNX_NAMESPACE::ModelProto& model_proto) {

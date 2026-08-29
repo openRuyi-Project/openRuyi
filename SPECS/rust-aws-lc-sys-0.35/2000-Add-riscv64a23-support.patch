@@ -1,0 +1,28 @@
+From 604f6d8b2956d30262a40e1afbe295d47577ca3b Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 15 Jul 2026 12:04:26 +0800
+Subject: [PATCH] Add riscv64a23 support
+
+---
+ builder/cc_builder.rs | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/builder/cc_builder.rs b/builder/cc_builder.rs
+index 6d9ae26..340566c 100644
+--- a/builder/cc_builder.rs
++++ b/builder/cc_builder.rs
+@@ -82,7 +82,10 @@ impl PlatformConfig {
+             "aarch64-apple-darwin" => Some(PlatformConfig::aarch64_apple_darwin),
+             "aarch64-unknown-linux-gnu" => Some(PlatformConfig::aarch64_unknown_linux_gnu),
+             "aarch64-unknown-linux-musl" => Some(PlatformConfig::aarch64_unknown_linux_musl),
+-            "riscv64gc-unknown-linux-gnu" => Some(PlatformConfig::riscv64gc_unknown_linux_gnu),
++            "riscv64gc-unknown-linux-gnu"
++            | "riscv64a23-unknown-linux-gnu" => {
++                Some(PlatformConfig::riscv64gc_unknown_linux_gnu)
++            }
+             "x86_64-apple-darwin" => Some(PlatformConfig::x86_64_apple_darwin),
+             "x86_64-unknown-linux-gnu" => Some(PlatformConfig::x86_64_unknown_linux_gnu),
+             "x86_64-unknown-linux-musl" => Some(PlatformConfig::x86_64_unknown_linux_musl),
+-- 
+2.55.0
+

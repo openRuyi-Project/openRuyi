@@ -23,12 +23,14 @@ Release:        %autorelease
 Summary:        A repository for plotting and visualizing data
 License:        BSD-3-Clause
 URL:            https://github.com/gonum/plot
-#!RemoteAsset
+#!RemoteAsset:  sha256:2aff394ccbdfac20c38c916ef741905b4a7269338bd85126f5834bd6f0c12fd1
 Source0:        https://github.com/gonum/plot/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-BuildOption(prep):  -n %{_name}-%{version}
+# https://github.com/gonum/plot/commit/d56745857d70e2e68bbcb858ff76fa6000cd8442
+Patch0:         0001-use-cmpimg_equalapprox-for-jpg.patch
+
 BuildOption(check):  -short -skip TestDrawGlyphBoxes
 
 BuildRequires:  go
@@ -63,9 +65,9 @@ For additional Plotters, see the Community Plotters
 (https://github.com/gonum/plot/wiki/Community-Plotters) Wiki page.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

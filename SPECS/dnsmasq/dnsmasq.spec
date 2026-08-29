@@ -9,13 +9,13 @@
 %global _copts -DHAVE_DBUS -DHAVE_LIBIDN2 -DHAVE_DNSSEC -DHAVE_CONNTRACK -DHAVE_NFTSET
 
 Name:           dnsmasq
-Version:        2.91
+Version:        2.92
 Release:        %autorelease
 Summary:        A lightweight DHCP/caching DNS server
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            https://thekelleys.org.uk/dnsmasq/
 VCS:            git:http://thekelleys.org.uk/git/dnsmasq.git
-#!RemoteAsset:  sha256:f622682848b33677adb2b6ad08264618a2ae0a01da486a93fd8cd91186b3d153
+#!RemoteAsset:  sha256:4bf50c2c1018f9fbc26037df51b90ecea0cb73d46162846763b92df0d6c3a458
 Source0:        https://thekelleys.org.uk/dnsmasq/dnsmasq-%{version}.tar.xz
 Source2:        dnsmasq.service
 Source3:        dnsmasq.sysusers
@@ -31,7 +31,6 @@ BuildOption(install):  LDFLAGS="%{?build_ldflags}"
 BuildOption(install):  COPTS="%{_copts}"
 BuildOption(install):  BINDIR="%{_bindir}"
 
-BuildRequires:  gcc
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(libidn2)
 BuildRequires:  pkgconfig(libnetfilter_conntrack)
@@ -125,4 +124,4 @@ install -p -Dpm 644 %{SOURCE3} %{buildroot}%{_sysusersdir}/%{name}.conf
 %{_mandir}/man8/dnsmasq*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -7,12 +7,12 @@
 %global srcname genshi
 
 Name:           python-%{srcname}
-Version:        0.7.10
+Version:        0.7.11
 Release:        %autorelease
 Summary:        Toolkit for stream-based generation of output for the web
 License:        BSD-3-Clause
 URL:            https://genshi.edgewall.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:82c4f9bbf4b03be5162a24d6d8e4fdbfe3ed2602d3ebcbf505a33350a379dcb7
 Source:         https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -20,12 +20,13 @@ BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-pip
-BuildRequires:  python3-wheel
-BuildRequires:  python3-pytest
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(wheel)
+BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,7 +37,7 @@ textual content for output generation on the web.
 %generate_buildrequires
 %pyproject_buildrequires
 
-%check
+%check -a
 %pytest
 
 %files -f %{pyproject_files}
@@ -44,4 +45,4 @@ textual content for output generation on the web.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

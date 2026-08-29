@@ -14,8 +14,10 @@ Version:        0+git20260126.94417b9
 Release:        %autorelease
 License:        BSD-3-Clause
 URL:            https://chromium.googlesource.com/libyuv/libyuv
-#!RemoteAsset
-Source:         https://chromium.googlesource.com/libyuv/libyuv/+archive/%{git_commit}.tar.gz
+VCS:            git:https://chromium.googlesource.com/libyuv/libyuv
+#!RemoteAsset:  git+https://chromium.googlesource.com/libyuv/libyuv#%{git_commit}
+#!CreateArchive
+Source:         %{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
 Patch:          0001-fix-install-dir.patch
@@ -69,4 +71,4 @@ install -p -D -m 0644 %{name}.pc %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 %{_libdir}/pkgconfig/libyuv.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

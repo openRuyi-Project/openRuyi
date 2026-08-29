@@ -1,0 +1,13 @@
+#%PAM-1.0
+auth       required                    pam_shells.so
+auth       requisite                   pam_nologin.so
+auth       requisite                   pam_faillock.so      preauth
+-auth      required                    pam_pkcs11.so        wait_for_card card_only
+
+account    substack                    common-account
+account    include                     postlogin-account
+
+password   required                    pam_deny.so
+
+session    substack                    common-session
+session    include                     postlogin-session

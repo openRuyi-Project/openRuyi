@@ -3,10 +3,11 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define byaccdate 20241231
+%define byaccdate 20260126
 
 Name:           byacc
 Version:        2.0.%{byaccdate}
@@ -15,7 +16,7 @@ Summary:        A parser generator
 License:        LicenseRef-openRuyi-Public-Domain
 URL:            https://invisible-island.net/byacc/byacc.html
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:b618c5fb44c2f5f048843db90f7d1b24f78f47b07913c8c7ba8c942d3eb24b00
 Source:         https://invisible-mirror.net/archives/byacc/byacc-%{byaccdate}.tgz
 BuildSystem:    autotools
 
@@ -45,4 +46,4 @@ find . -type f -name \*.c -print0 | xargs -0 sed -i 's/YYSTACKSIZE 500/YYSTACKSI
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

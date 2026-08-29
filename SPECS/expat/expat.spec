@@ -5,23 +5,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global unversion 2_7_1
+%global unversion 2_8_1
 
 Name:           expat
-Version:        2.7.1
+Version:        2.8.1
 Release:        %autorelease
 Summary:        XML Parser Toolkit
 License:        MIT
 URL:            https://libexpat.github.io
 VCS:            git:https://github.com/libexpat/libexpat
-#!RemoteAsset
+#!RemoteAsset:  sha256:10b195ee78160a908388180a8fe3603d4e9a12f4755fbf5f3816b23a9d750da0
 Source0:        https://github.com/libexpat/libexpat/releases/download/R_%{unversion}/expat-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://github.com/libexpat/libexpat/releases/download/R_%{unversion}/expat-%{version}.tar.xz.asc
-# https://www.gentoo.org/inside-gentoo/developers/index.html#sping
-# https://github.com/libexpat/libexpat/issues/537#issuecomment-1003796884
-#!RemoteAsset
-Source4:        https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3176ef7db2367f1fca4f306b1f9b0e909af37285#/expat.keyring
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-silent-rules
@@ -62,10 +56,10 @@ in libexpat.
 %files devel
 %doc doc/reference.html doc/*.css examples/*.c
 %{_libdir}/libexpat.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/expat.pc
 %{_includedir}/*.h
 %{_libdir}/cmake/expat-%{version}
 %exclude %{_libdir}/libexpat.la
 
 %changelog
-%{?autochangelog}
+%autochangelog

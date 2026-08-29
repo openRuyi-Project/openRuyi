@@ -11,25 +11,27 @@
 
 Name:           mesa
 Summary:        The Mesa 3D graphics library
-Version:        26.0.1
+Version:        26.1.1
 Release:        %autorelease
 License:        MIT
 URL:            https://mesa3d.org/
 VCS:            git:https://gitlab.freedesktop.org/mesa/mesa
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bd36c031cc6d0edfec04617527609454ee3a09ad53bdf983b45fc2c1e129b2e
 Source:         https://archive.mesa3d.org/mesa-%{version}.tar.xz
 BuildSystem:    meson
 
 # Fixes etnaviv disasm unit test failure of excepting "-nan"
-Patch1:         0001-isaspec-deocde-try-to-preserve-NaN-sign-when-printin.patch
+Patch1:         0001-isaspec-decode-manually-print-the-sign-when-printing.patch
 # Patches to allow Zink running on libVK_IMG w/o IMG GLES driver
-# See FD.o gitlab mesa/mesa MRs: !37115 !38810
+# See FD.o gitlab mesa/mesa MRs: !37115
 # The IMG blob related part isn't submitted yet
-Patch2:         mesa-26.0.1-zink-kmsro-for-img-blob.patch
+Patch2:         mesa-26.1.1-zink-kmsro-for-img-blob.patch
+# Patches to fix CTS failures and advertise BXM-4-64 as conformant
+Patch3:         mesa-26.1.1-pvr-conformance.patch
 
 # nvk is blocked by Rust packaging
-BuildOption(conf):  -Dgallium-drivers=llvmpipe,softpipe,r300,r600,radeonsi,nouveau,virgl,iris,etnaviv,zink
-BuildOption(conf):  -Dvulkan-drivers=amd,intel,swrast,imagination,virtio,gfxstream
+BuildOption(conf):  -Dgallium-drivers=llvmpipe,softpipe,r300,r600,radeonsi,nouveau,virgl,iris,etnaviv,zink,crocus
+BuildOption(conf):  -Dvulkan-drivers=amd,intel,swrast,imagination,virtio,gfxstream,intel_hasvk
 BuildOption(conf):  -Dplatforms=x11,wayland
 
 BuildOption(conf):  -Degl=enabled
@@ -251,4 +253,4 @@ non-Mesa drivers.
 %{_bindir}/mesa-*-control.py
 
 %changelog
-%{?autochangelog}
+%autochangelog

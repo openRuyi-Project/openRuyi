@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           tzdata
-Version:        2026a
+Version:        2026c
 Release:        %autorelease
 Summary:        Timezone data
 # I'm not sure about this... but I checked from below - 251
@@ -16,14 +16,10 @@ Summary:        Timezone data
 License:        CC0-1.0 AND BSD-3-Clause
 URL:            https://www.iana.org/time-zones
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:e4a178a4477f3d0ea77cc31828ff72aa38feff8d61aa13e7e99e142e9d902be4
 Source0:        https://www.iana.org/time-zones/repository/releases/tzdata%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://www.iana.org/time-zones/repository/releases/tzdata%{version}.tar.gz.asc
-#!RemoteAsset
+#!RemoteAsset:  sha256:b1cffc3ace4c4c7cd0efba2f7add86ec3d0b79da48bcf03582671fd3c8feace8
 Source2:        https://www.iana.org/time-zones/repository/releases/tzcode%{version}.tar.gz
-#!RemoteAsset
-Source3:        https://www.iana.org/time-zones/repository/releases/tzcode%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 # Also extract %%{SOURCE2}
@@ -79,4 +75,4 @@ install -D -m 755 zic      %{buildroot}%{_bindir}/zic
 %{_bindir}/tzselect
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,822 @@
+From 73e4c98602bd05977dd2418d2b8a12d00be17c33 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Wed, 25 Feb 2026 11:32:17 +0800
+Subject: [PATCH] fix for openRuyi
+
+---
+ bin/install-depends                           | 24 +++++++++++++++++-
+ bin/list-cpu-siblings.pl                      | 12 ++++-----
+ bin/unbuffer                                  | 11 ++++++++
+ ...config-network-netperf-stream-ipv4-unbound |  4 +--
+ ...config-network-netperf-stream-ipv6-unbound |  4 +--
+ run-mmtests.sh                                |  8 +++---
+ shellpack_src/src/blasbuild/blasbuild-bench   |  2 +-
+ shellpack_src/src/blasbuild/blasbuild-install |  2 ++
+ shellpack_src/src/blogbench/blogbench-bench   |  2 +-
+ shellpack_src/src/blogbench/blogbench-install |  2 +-
+ shellpack_src/src/cmakebuild/cmakebuild-bench |  4 +--
+ .../src/cmakebuild/cmakebuild-install         |  4 ++-
+ shellpack_src/src/coremark/coremark-bench     |  2 +-
+ shellpack_src/src/coremark/coremark-install   |  2 +-
+ shellpack_src/src/dbench/dbench-install       |  2 +-
+ shellpack_src/src/fio/fio-bench               |  2 +-
+ shellpack_src/src/fio/fio-install             |  2 +-
+ shellpack_src/src/gmpbuild/gmpbuild-bench     |  4 +--
+ shellpack_src/src/gmpbuild/gmpbuild-install   |  2 +-
+ .../src/metisbuild/metisbuild-install         |  4 ++-
+ shellpack_src/src/monitor/monitor-bench       |  4 +--
+ shellpack_src/src/mpfrbuild/mpfrbuild-bench   |  6 ++---
+ shellpack_src/src/mpfrbuild/mpfrbuild-install |  2 +-
+ .../0001-netlib-Drop-wrong-inlines.patch      | 25 -------------------
+ shellpack_src/src/netperf/netperf-bench       |  2 +-
+ shellpack_src/src/netperf/netperf-install     | 10 +++++---
+ shellpack_src/src/perfbuild/perfbuild-install | 10 ++++++--
+ .../src/redis-memtier/redis-memtier-bench     |  2 +-
+ shellpack_src/src/redis/redis-bench           |  2 +-
+ .../src/redisbuild/redisbuild-install         |  2 +-
+ shellpack_src/src/sqlite/sqlite-bench         |  2 +-
+ shellpack_src/src/sqlite/sqlite-install       |  4 +--
+ shellpack_src/src/stockfish/stockfish-bench   |  2 +-
+ shellpack_src/src/stockfish/stockfish-install |  8 +++---
+ shellpack_src/src/stressng/stressng-bench     |  2 +-
+ shellpack_src/src/stressng/stressng-install   |  2 +-
+ .../src/sysbenchbuild/sysbenchbuild-install   |  4 +--
+ .../src/sysbenchcpu/sysbenchcpu-bench         |  4 +--
+ .../src/sysbenchmutex/sysbenchmutex-bench     |  2 +-
+ shellpack_src/src/wis/wis-bench               |  3 ++-
+ shellpack_src/src/wis/wis-install             |  2 +-
+ 41 files changed, 112 insertions(+), 87 deletions(-)
+ delete mode 100644 shellpack_src/src/netperf/0001-netlib-Drop-wrong-inlines.patch
+
+diff --git a/bin/install-depends b/bin/install-depends
+index e122770f..51648179 100755
+--- a/bin/install-depends
++++ b/bin/install-depends
+@@ -128,42 +128,63 @@ my %package_map = (
+ 	"redhat::netcat-openbsd"		=> "netcat",
+ 	"redhat::iproute2"			=> "iproute",
+ 	"redhat::procps"			=> "procps-ng",
++
++	"openruyi::netcat-openbsd"		=> "nmap",
++	"openruyi::btrfsprogs"		=> "btrfs-progs",
++	"openruyi::cpupower"		=> "linux-tools",
++	"openruyi::openmpi-libs"		=> "openmpi-devel",
++	"openruyi::libpsm_infinipath1"		=> "infinipath-psm",
++	"openruyi::glibc-devel-static"		=> "glibc-devel",
++	"openruyi::mkisofs"			=> "xorriso",
++	"openruyi::libdw-devel"		=> "elfutils-devel",
++	"openruyi::libnuma-devel"		=> "numactl-devel",
++	"openruyi::python-devel"		=> "python3-devel",
++	"openruyi::zlib-devel-static"		=> "zlib-devel",
++	"openruyi::libpfm4-dev"		=> "libpfm-devel",
++	"openruyi::libz1"			=> "zlib",
++	"openruyi::libtraceevent1"		=> "libtraceevent",
++	"openruyi::libopenssl-devel"		=> "openssl-devel",
+ );
+ 
+ my %package_bin = (
+ 	"suse"		=> "zypper install",
+ 	"debian"	=> "apt-get install",
+ 	"redhat"	=> "yum install",
++	"openruyi"	=> "dnf install",
+ );
+ 
+ my %force_install = (
+ 	"suse" => "",
+ 	"debian" => "",
+ 	"redhat" => "",
++	"openruyi" => "",
+ );
+ 
+ my %noninteractive_install = (
+ 	"suse" => "",
+ 	"debian" => "",
+ 	"redhat" => "",
++	"openruyi" => "",
+ );
+ 
+ my %allow_downgrade = (
+ 	"suse" => "",
+ 	"debian" => "",
+ 	"redhat" => "",
++	"openruyi" => "",
+ );
+ 
+ my %check_package = (
+ 	"suse" => "rpm -q",
+ 	"debian" => "dpkg-query -s",
+ 	"redhat" => "rpm -q",
++	"openruyi" => "rpm -q",
+ );
+ 
+ my $distro;
+ foreach my $release_file ("debian_version", "debian_release",
+ 			  "redhat-release", "redhat_version",
+-			  "SuSE-release") {
++			  "SuSE-release", "openRuyi-release") {
+ 	if (-r "/etc/$release_file" ) {
+ 		$distro = $release_file;
+ 		$distro =~ tr/[A-Z]/[a-z]/;
+@@ -276,6 +297,7 @@ foreach my $package (@ARGV) {
+ 		$force_install{"suse"} = "-y";
+ 		$force_install{"debian"} = "-y";
+ 		$force_install{"redhat"} = "-y";
++		$force_install{"openruyi"} = "-y";
+ 		$noninteractive_install{"debian"} = "DEBIAN_FRONTEND=noninteractive";
+ 	}
+ 
+diff --git a/bin/list-cpu-siblings.pl b/bin/list-cpu-siblings.pl
+index 7b765112..ca62a78a 100755
+--- a/bin/list-cpu-siblings.pl
++++ b/bin/list-cpu-siblings.pl
+@@ -11,20 +11,20 @@ my @llc_core_list;
+ # Sanity check target CPU argument
+ my $target_cpu = $ARGV[0];
+ my $target_topology = $ARGV[1];
+-die "CPU $target_cpu does not exist or cannot be examined" if ! -e "/sys/bus/cpu/drivers/processor/cpu$target_cpu";
++die "CPU $target_cpu does not exist or cannot be examined" if ! -e "/sys/devices/system/cpu/cpu$target_cpu";
+ 
+ # Auto-detect NUMA node if not specified.
+ my $target_node = $ARGV[2];
+ if (!defined $target_node) {
+-	my @node_dirs = </sys/bus/cpu/drivers/processor/cpu$target_cpu/node*>;
++	my @node_dirs = </sys/devices/system/cpu/cpu$target_cpu/node*>;
+ 	die "Core belongs to multiple nodes?!? Must specify correct node as third argument" if $#node_dirs > 0;
+ 	$target_node = $node_dirs[0];
+ 	$target_node =~ s/.*([0-9]+)$/\1/;
+-	die "Unable to discover node information" if ! -e "/sys/bus/cpu/drivers/processor/cpu$target_cpu/node$target_node";
++	die "Unable to discover node information" if ! -e "/sys/devices/system/cpu/cpu$target_cpu/node$target_node";
+ }
+ 
+ # Identify SMT siblings of target_cpu
+-open(INPUT, "/sys/bus/cpu/drivers/processor/cpu$target_cpu/topology/thread_siblings_list") ||
++open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/topology/thread_siblings_list") ||
+ 	open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/topology/thread_siblings_list") ||
+ 	die("Failed to open core topology file for CPU $target_cpu");
+ while (!eof(INPUT)) {
+@@ -51,7 +51,7 @@ while (!eof(INPUT)) {
+ close INPUT;
+ 
+ # Identify CPUs on the same node as target_cpu that are not SMT siblings
+-open(INPUT, "/sys/bus/cpu/drivers/processor/cpu$target_cpu/node$target_node/cpulist") ||
++open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/node$target_node/cpulist") ||
+ 	open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/node$target_node/cpulist") ||
+ 	die("Failed to open node cpulist file for CPU $target_cpu");
+ while (!eof(INPUT)) {
+@@ -77,7 +77,7 @@ while (!eof(INPUT)) {
+ close INPUT;
+ 
+ # Identify CPUs sharing a Last Level Cache (LLC) that are not SMT siblings
+-if (open(INPUT, "/sys/bus/cpu/drivers/processor/cpu$target_cpu/cache/index3/shared_cpu_list") ||
++if (open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/cache/index3/shared_cpu_list") ||
+     open(INPUT, "/sys/devices/system/cpu/cpu$target_cpu/cache/index3/shared_cpu_list")) {
+ 	while (!eof(INPUT)) {
+ 		my $line = <INPUT>;
+diff --git a/bin/unbuffer b/bin/unbuffer
+index 5da818c2..423c633f 100755
+--- a/bin/unbuffer
++++ b/bin/unbuffer
+@@ -7,6 +7,17 @@
+ # The next line is executed by /bin/sh, but not tcl \
+ exec tclsh "$0" ${1+"$@"}
+ 
++set expect_dirs [glob -nocomplain /usr/lib*/tcl*/expect*]
++# 遍历每个目录
++foreach expect_dir $expect_dirs {
++    # 检查目录中是否存在 pkgIndex.tcl 文件
++    set pkg_index_file "$expect_dir/pkgIndex.tcl"
++    if {[file exists $pkg_index_file]} {
++        # 将该目录添加到 auto_path
++        lappend auto_path $expect_dir
++    }
++}
++
+ package require Expect
+ 
+ set child 0
+diff --git a/configs/config-network-netperf-stream-ipv4-unbound b/configs/config-network-netperf-stream-ipv4-unbound
+index cd26b68a..282a63c9 100644
+--- a/configs/config-network-netperf-stream-ipv4-unbound
++++ b/configs/config-network-netperf-stream-ipv4-unbound
+@@ -12,10 +12,10 @@ export MONITORS_WITH_LATENCY="vmstat"
+ export MONITOR_UPDATE_FREQUENCY=10
+ 
+ # NetPerf
+-# By default, you'll get Netperf 2.6.0. Use the NETPERF_VERSION
++# By default, you'll get Netperf with master. Use the NETPERF_VERSION
+ # variable to run the benchmark with a different one (e.g., 2.7.0,
+ # see: https://github.com/HewlettPackard/netperf)
+-#export NETPERF_VERSION=2.7.0
++#export NETPERF_VERSION=master
+ export NETPERF_BUFFER_SIZES=64,128,256,1024,2048,3312,4096,8192,16384
+ export NETPERF_ITERATIONS=5
+ export NETPERF_CONFIDENCE_MIN=3
+diff --git a/configs/config-network-netperf-stream-ipv6-unbound b/configs/config-network-netperf-stream-ipv6-unbound
+index 78aeb2f4..d46d6e5a 100644
+--- a/configs/config-network-netperf-stream-ipv6-unbound
++++ b/configs/config-network-netperf-stream-ipv6-unbound
+@@ -12,10 +12,10 @@ export MONITORS_WITH_LATENCY="vmstat"
+ export MONITOR_UPDATE_FREQUENCY=10
+ 
+ # NetPerf
+-# By default, you'll get Netperf 2.6.0. Use the NETPERF_VERSION
++# By default, you'll get Netperf master. Use the NETPERF_VERSION
+ # variable to run the benchmark with a different one (e.g., 2.7.0,
+ # see: https://github.com/HewlettPackard/netperf)
+-#export NETPERF_VERSION=2.7.0
++#export NETPERF_VERSION=master
+ export NETPERF_BUFFER_SIZES=64,128,256,1024,2048,3312,4096,8192,16384
+ export NETPERF_ITERATIONS=5
+ export NETPERF_CONFIDENCE_MIN=3
+diff --git a/run-mmtests.sh b/run-mmtests.sh
+index 72bd06c0..693eef61 100755
+--- a/run-mmtests.sh
++++ b/run-mmtests.sh
+@@ -168,7 +168,7 @@ if [ -d $SCRIPTDIR/work/sources/ ]; then
+ fi
+ 
+ # required in common.sh
+-install-depends gawk
++install-depends gawk procps wget
+ 
+ . $SCRIPTDIR/shellpacks/common.sh
+ . $SCRIPTDIR/shellpacks/common-config.sh
+@@ -229,10 +229,10 @@ if [ $? -ne 0 ]; then
+ 	install-depends perl-Time-HiRes
+ fi
+ install-depends autoconf automake bc binutils-devel btrfsprogs bzip2	\
+-	coreutils cpupower e2fsprogs expect expect-devel gcc hdparm	\
++	coreutils cpupower e2fsprogs expect expect-devel gcc gcc-c++ hdparm	\
+ 	hwloc libtool make patch psmisc tcl	\
+-	time wget xfsprogs xfsprogs-devel xz which perl-File-Slurp netcat-openbsd \
+-	gzip hostname iproute2
++	time xfsprogs xfsprogs-devel xz which perl-File-Slurp netcat-openbsd \
++	gzip hostname iproute2 kmod
+ 
+ # if we're running in a vm, and the firewall seems on, let's (try to) whitelist
+ # the host, so we can communicate with it. this should work fine if we're using
+diff --git a/shellpack_src/src/blasbuild/blasbuild-bench b/shellpack_src/src/blasbuild/blasbuild-bench
+index 7be44f22..05e87b7a 100644
+--- a/shellpack_src/src/blasbuild/blasbuild-bench
++++ b/shellpack_src/src/blasbuild/blasbuild-bench
+@@ -7,6 +7,6 @@
+ ###SHELLPACK parseargEnd
+ ###SHELLPACK monitor_hooks
+ 
+-export BLAS_VERSION="v0.3.10"
++export BLAS_VERSION="v0.3.30"
+ # dependencies
+ ###SHELLPACK check_external_install_required blasbuild     blasbuild-${BLAS_VERSION}         ${BLAS_VERSION}
+diff --git a/shellpack_src/src/blasbuild/blasbuild-install b/shellpack_src/src/blasbuild/blasbuild-install
+index cfa16379..c0165b2f 100755
+--- a/shellpack_src/src/blasbuild/blasbuild-install
++++ b/shellpack_src/src/blasbuild/blasbuild-install
+@@ -3,6 +3,8 @@
+ GIT_LOCATION=https://github.com/xianyi/OpenBLAS
+ MIRROR_LOCATION="$WEBROOT/blasbuild/"
+ 
++install-depends gcc-fortran
++
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargEnd
+ 
+diff --git a/shellpack_src/src/blogbench/blogbench-bench b/shellpack_src/src/blogbench/blogbench-bench
+index d25ab11e..e57c645a 100755
+--- a/shellpack_src/src/blogbench/blogbench-bench
++++ b/shellpack_src/src/blogbench/blogbench-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble blogbench-bench 1.1
++###SHELLPACK preamble blogbench-bench 1.2
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+diff --git a/shellpack_src/src/blogbench/blogbench-install b/shellpack_src/src/blogbench/blogbench-install
+index df272a90..348d8741 100755
+--- a/shellpack_src/src/blogbench/blogbench-install
++++ b/shellpack_src/src/blogbench/blogbench-install
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ # blogbench installer
+-###SHELLPACK preamble blogbench-install 1.1
++###SHELLPACK preamble blogbench-install 1.2
+ 
+ WEB_LOCATION=https://download.pureftpd.org/pub/blogbench
+ MIRROR_LOCATION="$WEBROOT/blogbench/"
+diff --git a/shellpack_src/src/cmakebuild/cmakebuild-bench b/shellpack_src/src/cmakebuild/cmakebuild-bench
+index 183ad8eb..e47514e6 100644
+--- a/shellpack_src/src/cmakebuild/cmakebuild-bench
++++ b/shellpack_src/src/cmakebuild/cmakebuild-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble cmakebuild cmake-v3.8.2
++###SHELLPACK preamble cmakebuild cmake-v4.1.1
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+@@ -7,6 +7,6 @@
+ ###SHELLPACK parseargEnd
+ ###SHELLPACK monitor_hooks
+ 
+-export CMAKE_VERSION="v3.8.2"
++export CMAKE_VERSION="v4.1.1"
+ # dependencies
+ ###SHELLPACK check_external_install_required cmakebuild     cmakebuild-${CMAKE_VERSION}         ${CMAKE_VERSION}
+diff --git a/shellpack_src/src/cmakebuild/cmakebuild-install b/shellpack_src/src/cmakebuild/cmakebuild-install
+index 23ee827c..7176ffa6 100755
+--- a/shellpack_src/src/cmakebuild/cmakebuild-install
++++ b/shellpack_src/src/cmakebuild/cmakebuild-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble cmakebuild v3.8.2
++###SHELLPACK preamble cmakebuild v4.1.1
+ GIT_LOCATION="https://gitlab.kitware.com/cmake/cmake"
+ MIRROR_LOCATION="$WEBROOT/cmake/"
+ 
+@@ -8,6 +8,8 @@ MIRROR_LOCATION="$WEBROOT/cmake/"
+ 
+ ###SHELLPACK git_fetch cmakebuild-${VERSION}.tar.gz cmakebuild-${VERSION}
+ 
++install-depends libopenssl-devel
++
+ ###SHELLPACK build_start cmakebuild-${VERSION}
+ ###SHELLPACK build_configure cmakebuild-${VERSION}
+ ###SHELLPACK make_make_install
+diff --git a/shellpack_src/src/coremark/coremark-bench b/shellpack_src/src/coremark/coremark-bench
+index 7fd78d09..674a9bb6 100755
+--- a/shellpack_src/src/coremark/coremark-bench
++++ b/shellpack_src/src/coremark/coremark-bench
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # This script runs the coremark benchmark
+ 
+-###SHELLPACK preamble coremark-bench v1.01
++###SHELLPACK preamble coremark-bench 1f483d5b
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+diff --git a/shellpack_src/src/coremark/coremark-install b/shellpack_src/src/coremark/coremark-install
+index d91bbe2d..6f1f5ddd 100755
+--- a/shellpack_src/src/coremark/coremark-install
++++ b/shellpack_src/src/coremark/coremark-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble coremark-install v1.01
++###SHELLPACK preamble coremark-install 1f483d5b
+ GIT_LOCATION=https://github.com/eembc/coremark
+ MIRROR_LOCATION="$WEBROOT/coremark/"
+ 
+diff --git a/shellpack_src/src/dbench/dbench-install b/shellpack_src/src/dbench/dbench-install
+index 38e6fe2e..ee4cbe20 100755
+--- a/shellpack_src/src/dbench/dbench-install
++++ b/shellpack_src/src/dbench/dbench-install
+@@ -6,7 +6,7 @@ MIRROR_LOCATION="$WEBROOT/dbench/"
+ 
+ install-depends popt-devel libz1 zlib-devel
+ install-depends rpcgen
+-install-depends libtirpc-devel
++install-depends libtirpc-devel libsmbclient-devel libiscsi libiscsi-devel
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargEnd
+diff --git a/shellpack_src/src/fio/fio-bench b/shellpack_src/src/fio/fio-bench
+index 8c683a1e..92d01d4a 100644
+--- a/shellpack_src/src/fio/fio-bench
++++ b/shellpack_src/src/fio/fio-bench
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # This script installs fio and runs a fio job
+ 
+-###SHELLPACK preamble fio-bench 3.33
++###SHELLPACK preamble fio-bench 3.40
+ FIO_CMD_OPTIONS=
+ 
+ ###SHELLPACK parseargBegin
+diff --git a/shellpack_src/src/fio/fio-install b/shellpack_src/src/fio/fio-install
+index 38c16d24..8609f332 100755
+--- a/shellpack_src/src/fio/fio-install
++++ b/shellpack_src/src/fio/fio-install
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ # fio installer
+-###SHELLPACK preamble fio-install 3.33
++###SHELLPACK preamble fio-install 3.40
+ WEB_LOCATION=http://brick.kernel.dk/snaps
+ MIRROR_LOCATION="$WEBROOT/fio"
+ 
+diff --git a/shellpack_src/src/gmpbuild/gmpbuild-bench b/shellpack_src/src/gmpbuild/gmpbuild-bench
+index de128b22..b1010faa 100644
+--- a/shellpack_src/src/gmpbuild/gmpbuild-bench
++++ b/shellpack_src/src/gmpbuild/gmpbuild-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble gmpbuild gmp-6.1.2
++###SHELLPACK preamble gmpbuild gmp-6.3.0
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+@@ -7,6 +7,6 @@
+ ###SHELLPACK parseargEnd
+ ###SHELLPACK monitor_hooks
+ 
+-export GMP_VERSION="6.1.2"
++export GMP_VERSION="6.3.0"
+ # dependencies
+ ###SHELLPACK check_external_install_required gmpbuild       gmpbuild-${GMP_VERSION}             ${GMP_VERSION}
+diff --git a/shellpack_src/src/gmpbuild/gmpbuild-install b/shellpack_src/src/gmpbuild/gmpbuild-install
+index 1dbdbdf6..e9184a60 100755
+--- a/shellpack_src/src/gmpbuild/gmpbuild-install
++++ b/shellpack_src/src/gmpbuild/gmpbuild-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble gmpbuild-install 6.1.2
++###SHELLPACK preamble gmpbuild-install 6.3.0
+ WEB_LOCATION="https://gmplib.org/download/gmp"
+ MIRROR_LOCATION="$WEBROOT/boost/"
+ 
+diff --git a/shellpack_src/src/metisbuild/metisbuild-install b/shellpack_src/src/metisbuild/metisbuild-install
+index 12c48775..3f3eba6b 100755
+--- a/shellpack_src/src/metisbuild/metisbuild-install
++++ b/shellpack_src/src/metisbuild/metisbuild-install
+@@ -1,11 +1,13 @@
+ #!/bin/bash
+ ###SHELLPACK preamble metisbuild 5.1.0
+-WEB_LOCATION="http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis"
++WEB_LOCATION="https://downloads.sourceforge.net/project/myosin"
+ MIRROR_LOCATION="$WEBROOT/metisbuild/"
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargEnd
+ 
++install-depends cmake
++
+ ###SHELLPACK sources_fetch metis-${VERSION}.tar.gz metisbuild-${VERSION}
+ ###SHELLPACK build_start metisbuild-${VERSION}
+ sed -i -e "s/LIBRARY DESTINATION lib/LIBRARY DESTINATION $MMTESTS_LIBDIR/" libmetis/CMakeLists.txt
+diff --git a/shellpack_src/src/monitor/monitor-bench b/shellpack_src/src/monitor/monitor-bench
+index 973c0ce0..cd71c781 100644
+--- a/shellpack_src/src/monitor/monitor-bench
++++ b/shellpack_src/src/monitor/monitor-bench
+@@ -29,8 +29,8 @@ elif [ "$MONITOR_FOREVER" = "yes" ]; then
+ 		sleep 60
+ 	done
+ else
+-	echo Hit enter, run kill $$ or kill \`cat /tmp/mmtests-monitor.pid\` to finish monitoring.
+-	read INPUT
++	echo sleep 60s, run kill $$ or kill \`cat /tmp/mmtests-monitor.pid\` to finish monitoring.
++	sleep 60
+ fi
+ echo Exiting, may take time to compress logs
+ monitor_post_hook $LOGDIR_RESULTS monitor
+diff --git a/shellpack_src/src/mpfrbuild/mpfrbuild-bench b/shellpack_src/src/mpfrbuild/mpfrbuild-bench
+index d8840976..3e8933f9 100644
+--- a/shellpack_src/src/mpfrbuild/mpfrbuild-bench
++++ b/shellpack_src/src/mpfrbuild/mpfrbuild-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble mpfrbuild mpfr-4.0.1
++###SHELLPACK preamble mpfrbuild mpfr-4.2.1
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+@@ -7,8 +7,8 @@
+ ###SHELLPACK parseargEnd
+ ###SHELLPACK monitor_hooks
+ 
+-export GMP_VERSION="6.1.2"
+-export MPFR_VERSION="4.0.1"
++export GMP_VERSION="6.3.0"
++export MPFR_VERSION="4.2.1"
+ # dependencies
+ ###SHELLPACK check_external_install_required gmpbuild       gmpbuild-${GMP_VERSION}             ${GMP_VERSION}
+ ###SHELLPACK check_external_install_required mpfrbuild      mpfrbuild-${MPFR_VERSION}           ${MPFR_VERSION}
+diff --git a/shellpack_src/src/mpfrbuild/mpfrbuild-install b/shellpack_src/src/mpfrbuild/mpfrbuild-install
+index 286e615f..a3bf2e8f 100755
+--- a/shellpack_src/src/mpfrbuild/mpfrbuild-install
++++ b/shellpack_src/src/mpfrbuild/mpfrbuild-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble mpfrbuild-install 4.0.1
++###SHELLPACK preamble mpfrbuild-install 4.2.1
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargEnd
+diff --git a/shellpack_src/src/netperf/0001-netlib-Drop-wrong-inlines.patch b/shellpack_src/src/netperf/0001-netlib-Drop-wrong-inlines.patch
+deleted file mode 100644
+index 675968f6..00000000
+--- a/shellpack_src/src/netperf/0001-netlib-Drop-wrong-inlines.patch
++++ /dev/null
+@@ -1,25 +0,0 @@
+-diff --git a/src/netlib.c b/src/netlib.c
+-index 206e002..988fbc9 100644
+---- a/src/netlib.c
+-+++ b/src/netlib.c
+-@@ -3959,7 +3959,7 @@ void demo_stream_setup(uint32_t a, uint32_t b) {
+- #ifdef WIN32
+- __forceinline void demo_interval_display(double actual_interval)
+- #else
+--  inline void demo_interval_display(double actual_interval)
+-+  void demo_interval_display(double actual_interval)
+- #endif
+- {
+-   static int count = 0;
+-@@ -4026,7 +4026,7 @@ __forceinline void demo_interval_display(double actual_interval)
+-    inline directive has to appear in netlib.h... */
+- void demo_interval_tick(uint32_t units)
+- #else
+--  inline void demo_interval_tick(uint32_t units)
+-+  void demo_interval_tick(uint32_t units)
+- #endif
+- {
+-   double actual_interval = 0.0;
+--- 
+-2.51.0
+-
+diff --git a/shellpack_src/src/netperf/netperf-bench b/shellpack_src/src/netperf/netperf-bench
+index 12175819..cc45eee5 100755
+--- a/shellpack_src/src/netperf/netperf-bench
++++ b/shellpack_src/src/netperf/netperf-bench
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ # This script installs netperf and runs the regression tests
+-###SHELLPACK preamble netperf-bench 2.6.0
++###SHELLPACK preamble netperf-bench master
+ 
+ TASKSET_SERVER=
+ TASKSET_CLIENT=
+diff --git a/shellpack_src/src/netperf/netperf-install b/shellpack_src/src/netperf/netperf-install
+index 3c8740b7..f2c58ca8 100755
+--- a/shellpack_src/src/netperf/netperf-install
++++ b/shellpack_src/src/netperf/netperf-install
+@@ -1,11 +1,12 @@
+ #!/bin/bash
+ # Netperf installer
+-###SHELLPACK preamble netperf-install 2.6.0
++###SHELLPACK preamble netperf-install master
+ GIT_LOCATION=https://github.com/HewlettPackard/netperf
+ MIRROR_LOCATION="$WEBROOT/netperf/"
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargEnd
++install-depends expect automake
+ 
+ GIT_FETCH_BRANCH="netperf-${VERSION}"
+ ###SHELLPACK git_fetch ${VERSION}.tar.gz netperf-${VERSION}
+@@ -14,10 +15,11 @@ GIT_FETCH_BRANCH="netperf-${VERSION}"
+ ###SHELLPACK self_extract 0001-netlib-Drop-wrong-inlines.patch
+ cat $SHELLPACK_TEMP/0001-netlib-Drop-wrong-inlines.patch | patch -p1
+ 
++cp /usr/share/automake*/config.sub ./
++cp /usr/share/automake*/config.guess ./
++
+ sed  -i '1i #define _GNU_SOURCE' src/netlib.c
+-if [ "$VERSION" = "2.6.0" ]; then
+-	export CFLAGS+=" -fno-strict-aliasing -fcommon"
+-fi
++export CFLAGS+=" -fno-strict-aliasing -fcommon"
+ 
+ if [ ! -e ./configure ]; then
+ 	./autogen.sh || die "Failed to run autogen"
+diff --git a/shellpack_src/src/perfbuild/perfbuild-install b/shellpack_src/src/perfbuild/perfbuild-install
+index a5463d5e..f169b163 100644
+--- a/shellpack_src/src/perfbuild/perfbuild-install
++++ b/shellpack_src/src/perfbuild/perfbuild-install
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ 
+-###SHELLPACK preamble perfbuild-install 6.15
++###SHELLPACK preamble perfbuild-install 6.18
+ WEB_LOCATION="https://www.kernel.org/pub/linux/kernel/vX.X"
+ MIRROR_LOCATION="$WEBROOT/linux/"
+ 
+@@ -16,6 +16,12 @@ install-depends libtraceevent-devel
+ install-depends libunwind-devel
+ install-depends libzstd-devel
+ install-depends zlib-devel-static
++install-depends elfutils-libelf-devel
++install-depends slang-devel
++install-depends libbabeltrace-devel
++install-depends libpfm-devel
++install-depends asciidoc
++install-depends xmlto
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+@@ -24,7 +30,7 @@ install-depends zlib-devel-static
+ MAJOR=`echo $VERSION | awk -F . '{print $1}'`
+ WEB_LOCATION=`echo $WEB_LOCATION | sed -e "s/vX.X/v$MAJOR.x/"`
+ 
+-###SHELLPACK sources_fetch linux-${VERSION}.tar.xz perfbuild-${VERSION}
++###SHELLPACK sources_fetch OLK-${VERSION}.tar.gz perfbuild-${VERSION}
+ ###SHELLPACK build_start perfbuild-${VERSION}
+ 
+ ###SHELLPACK build_start perfbuild-${VERSION}/tools/perf
+diff --git a/shellpack_src/src/redis-memtier/redis-memtier-bench b/shellpack_src/src/redis-memtier/redis-memtier-bench
+index ddab2a33..334e0d90 100755
+--- a/shellpack_src/src/redis-memtier/redis-memtier-bench
++++ b/shellpack_src/src/redis-memtier/redis-memtier-bench
+@@ -9,7 +9,7 @@ if [ "$REMOTE_SERVER_HOST" != "" ]; then
+ 	SERVER_HOST=$REMOTE_SERVER_HOST
+ fi
+ 
+-REDIS_VERSION=6.2.6
++REDIS_VERSION=8.0.1
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+diff --git a/shellpack_src/src/redis/redis-bench b/shellpack_src/src/redis/redis-bench
+index 06c3342d..4df20060 100755
+--- a/shellpack_src/src/redis/redis-bench
++++ b/shellpack_src/src/redis/redis-bench
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ # This script installs redis and runs the benchmark suite tests
+-###SHELLPACK preamble redis-bench 6.2.6
++###SHELLPACK preamble redis-bench 8.0.1
+ 
+ TASKSET_SERVER=
+ TASKSET_CLIENT=
+diff --git a/shellpack_src/src/redisbuild/redisbuild-install b/shellpack_src/src/redisbuild/redisbuild-install
+index 1296779d..7bc2f9d5 100755
+--- a/shellpack_src/src/redisbuild/redisbuild-install
++++ b/shellpack_src/src/redisbuild/redisbuild-install
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ # Redis installer
+-###SHELLPACK preamble redisbuild-install 6.2.6
++###SHELLPACK preamble redisbuild-install 8.0.1
+ WEB_LOCATION=http://download.redis.io/releases
+ MIRROR_LOCATION="$WEBROOT/redis/"
+ 
+diff --git a/shellpack_src/src/sqlite/sqlite-bench b/shellpack_src/src/sqlite/sqlite-bench
+index 4c5941b7..9943c80c 100755
+--- a/shellpack_src/src/sqlite/sqlite-bench
++++ b/shellpack_src/src/sqlite/sqlite-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble sqlite-bench 3340000
++###SHELLPACK preamble sqlite-bench 3490100
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+diff --git a/shellpack_src/src/sqlite/sqlite-install b/shellpack_src/src/sqlite/sqlite-install
+index e1ceafe8..f45028ef 100755
+--- a/shellpack_src/src/sqlite/sqlite-install
++++ b/shellpack_src/src/sqlite/sqlite-install
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # sqlite installer
+-###SHELLPACK preamble sqlite-install 3340000
+-WEB_LOCATION=https://www.sqlite.org/2020
++###SHELLPACK preamble sqlite-install 3490100
++WEB_LOCATION=https://www.sqlite.org/2025
+ MIRROR_LOCATION="$WEBROOT/sqlite/"
+ 
+ ###SHELLPACK parseargBegin
+diff --git a/shellpack_src/src/stockfish/stockfish-bench b/shellpack_src/src/stockfish/stockfish-bench
+index 1869bd93..c8e2d74a 100755
+--- a/shellpack_src/src/stockfish/stockfish-bench
++++ b/shellpack_src/src/stockfish/stockfish-bench
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # Run stockfish benchmark
+ 
+-###SHELLPACK preamble stockfish-bench 0
++###SHELLPACK preamble stockfish-bench sf_17.1
+ 
+ ITERATIONS=12
+ TESTLIST=
+diff --git a/shellpack_src/src/stockfish/stockfish-install b/shellpack_src/src/stockfish/stockfish-install
+index 445234a9..85ef1d9b 100755
+--- a/shellpack_src/src/stockfish/stockfish-install
++++ b/shellpack_src/src/stockfish/stockfish-install
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+-###SHELLPACK preamble stockfish-install 0
+-GIT_LOCATION=https://github.com/mcostalba/Stockfish.git
++###SHELLPACK preamble stockfish-install sf_17.1
++GIT_LOCATION=https://github.com/official-stockfish/Stockfish
+ MIRROR_LOCATION="$WEBROOT/stockfish/"
+ 
+ ###SHELLPACK parseargBegin
+@@ -11,7 +11,6 @@ install-depends gcc-c++
+ ###SHELLPACK git_fetch stockfish-${VERSION}.tar.gz stockfish-${VERSION}
+ 
+ ###SHELLPACK build_start stockfish-${VERSION}/src
+-git checkout 54f8a9cb138a1bc0b0054b98f911fafd8d1b03ad
+ case `uname -m` in
+ aarch64)
+ 	ARCH=general-64
+@@ -19,6 +18,9 @@ aarch64)
+ x86_64)
+ 	ARCH=x86-64
+ 	;;
++riscv64)
++	ARCH=riscv64
++	;;
+ esac
+ 
+ make build ARCH=$ARCH PREFIX=$SHELLPACK_SOURCES/stockfish-${VERSION}-installed || die Failed to run make build
+diff --git a/shellpack_src/src/stressng/stressng-bench b/shellpack_src/src/stressng/stressng-bench
+index 6068a049..a641c7e9 100755
+--- a/shellpack_src/src/stressng/stressng-bench
++++ b/shellpack_src/src/stressng/stressng-bench
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ 
+-###SHELLPACK preamble stressng-bench V0.13.03
++###SHELLPACK preamble stressng-bench V0.19.00
+ 
+ STRESSNG_MIN_THREADS=1
+ STRESSNG_MAX_THREADS=1
+diff --git a/shellpack_src/src/stressng/stressng-install b/shellpack_src/src/stressng/stressng-install
+index c6e37fa8..302a7174 100644
+--- a/shellpack_src/src/stressng/stressng-install
++++ b/shellpack_src/src/stressng/stressng-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble stressng-install V0.13.03
++###SHELLPACK preamble stressng-install V0.19.00
+ GIT_LOCATION=https://github.com/ColinIanKing/stress-ng
+ MIRROR_LOCATION="$WEBROOT/stressng/"
+ 
+diff --git a/shellpack_src/src/sysbenchbuild/sysbenchbuild-install b/shellpack_src/src/sysbenchbuild/sysbenchbuild-install
+index 4813ce56..54a5cddc 100755
+--- a/shellpack_src/src/sysbenchbuild/sysbenchbuild-install
++++ b/shellpack_src/src/sysbenchbuild/sysbenchbuild-install
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+-###SHELLPACK preamble sysbenchbuild-install 1.0.20
++###SHELLPACK preamble sysbenchbuild-install 43cd2d3
+ 
+-GIT_LOCATION="https://github.com/akopytov/sysbench"
++GIT_LOCATION="https://github.com/woqidaideshi/sysbench"
+ MIRROR_LOCATION="$WEBROOT/sysbench"
+ 
+ install-depends pkg-config
+diff --git a/shellpack_src/src/sysbenchcpu/sysbenchcpu-bench b/shellpack_src/src/sysbenchcpu/sysbenchcpu-bench
+index dc3800f8..8f0799f7 100755
+--- a/shellpack_src/src/sysbenchcpu/sysbenchcpu-bench
++++ b/shellpack_src/src/sysbenchcpu/sysbenchcpu-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble sysbenchcpu-bench 1.0.20
++###SHELLPACK preamble sysbenchcpu-bench 43cd2d3
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+@@ -17,7 +17,7 @@
+ export PATH=$SHELLPACK_SOURCES/sysbenchbuild-${VERSION}-installed/bin:$PATH
+ 
+ ###SHELLPACK threads_large_stride_begin $MIN_THREADS $MAX_THREADS
+-	BENCH_CMD="sysbench cpu --num-threads=$NR_THREADS --cpu-max-prime=$MAX_PRIME run"
++	BENCH_CMD="sysbench cpu --threads=$NR_THREADS --cpu-max-prime=$MAX_PRIME run"
+ 	log_cmd $BENCH_CMD
+ 
+ 	monitor_pre_hook $LOGDIR_RESULTS $NR_THREADS
+diff --git a/shellpack_src/src/sysbenchmutex/sysbenchmutex-bench b/shellpack_src/src/sysbenchmutex/sysbenchmutex-bench
+index 49465cb5..378190be 100755
+--- a/shellpack_src/src/sysbenchmutex/sysbenchmutex-bench
++++ b/shellpack_src/src/sysbenchmutex/sysbenchmutex-bench
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble sysbenchmutex-bench 1.0.20
++###SHELLPACK preamble sysbenchmutex-bench 43cd2d3
+ 
+ ###SHELLPACK parseargBegin
+ ###SHELLPACK parseargInstall
+diff --git a/shellpack_src/src/wis/wis-bench b/shellpack_src/src/wis/wis-bench
+index bbd3dff7..069330d0 100755
+--- a/shellpack_src/src/wis/wis-bench
++++ b/shellpack_src/src/wis/wis-bench
+@@ -1,7 +1,7 @@
+ #!/bin/bash
+ # Run wis benchmark
+ 
+-###SHELLPACK preamble wis-bench a34a85cc1e9b
++###SHELLPACK preamble wis-bench 75f66e4569
+ TESTTIME=15
+ ITERATIONS=12
+ 
+@@ -24,6 +24,7 @@ echo $WIS_MODELS > $LOGDIR_RESULTS/models
+ IFS=',' read -a ALL_MODELS <<< "$WIS_MODELS"
+ IFS=',' read -a ALL_WORKLOADS <<< "$WIS_WORKLOADS"
+ 
++cd $SHELLPACK_SOURCES/wis-${VERSION}-installed || die "Failed to cd to wis install directory"
+ for WORKLOAD in ${ALL_WORKLOADS[@]}
+ do
+ 	###SHELLPACK threads_large_stride_begin $WIS_MIN_THREADS $WIS_MAX_THREADS
+diff --git a/shellpack_src/src/wis/wis-install b/shellpack_src/src/wis/wis-install
+index fd2aaa35..4a84ebd0 100644
+--- a/shellpack_src/src/wis/wis-install
++++ b/shellpack_src/src/wis/wis-install
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-###SHELLPACK preamble wis-install a34a85cc1e9b
++###SHELLPACK preamble wis-install 75f66e4569
+ GIT_LOCATION=https://github.com/antonblanchard/will-it-scale.git
+ MIRROR_LOCATION="$WEBROOT/wis/"
+ 
+-- 
+2.34.1
+

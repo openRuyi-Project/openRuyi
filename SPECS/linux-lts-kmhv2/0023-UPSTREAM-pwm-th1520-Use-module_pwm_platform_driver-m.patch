@@ -1,8 +1,8 @@
-From 3d181703f6aa86c4515a75c9aa75d72140c132c2 Mon Sep 17 00:00:00 2001
+From 8a1293a6044b839a46bfd2af6ce741fffaec1cdd Mon Sep 17 00:00:00 2001
 From: Michal Wilczynski <m.wilczynski@samsung.com>
 Date: Tue, 28 Oct 2025 13:22:34 +0100
-Subject: [PATCH 023/292] UPSTREAM: pwm: th1520: Use
- module_pwm_platform_driver! macro
+Subject: [RUYI PATCH] UPSTREAM: pwm: th1520: Use module_pwm_platform_driver!
+ macro
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit

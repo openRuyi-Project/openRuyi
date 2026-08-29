@@ -1,0 +1,31 @@
+--- a/build/parseSimpleScript.cc
++++ b/build/parseSimpleScript.cc
+@@ -59,6 +59,28 @@ int parseSimpleScript(rpmSpec spec, const char * name,
+ 	target = &buf;
+     }
+ 
++    if (!mode && !*target && !strcmp(name, "conf")) {
++        *target = newStringBuf();
++        appendLineStringBuf(*target,
++            "ref=/usr/lib/rpm\n"
++            "mints=0\n"
++            "case $(uname -m) in\n"
++            "    aarch64) mints=20120610;;\n"
++            "    ppc64le) mints=20130610;;\n"
++            "    riscv64) mints=20160911;;\n"
++            "    loongarch64) mints=20201222;;\n"
++            "esac\n"
++            "for s in guess sub; do\n"
++            "    for c in $(find -maxdepth 8 -name \"config.$s\"); do\n"
++            "         grep -q config-patches@ $c || continue\n"
++            "         timestamp=$(sed -n \"/^timestamp=/{s///;s/[-'\\\"]//g;p;q;}\" $c)\n"
++            "         test -n \"$timestamp\" || timestamp=0\n"
++            "         test $timestamp -ge $mints || install -m 755 $ref/config.$s $c\n"
++            "     done\n"
++            "done\n"
++        );
++    }
++
+     res = parseLines(spec, STRIP_NOTHING, NULL, target);
+ 
+     if (buf) {

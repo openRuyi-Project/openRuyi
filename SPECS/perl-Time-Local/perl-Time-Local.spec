@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Efficiently compute time from local and GMT time
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Time-Local
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Time-Local-%{version}.tar.gz
+#!RemoteAsset:  sha256:1d136b71bd041cbe6f66c43180ee79e675b72ad5a3596abd6a44d211072ada29
+Source0:        https://www.cpan.org/authors/id/D/DR/DROLSKY/Time-Local-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(constant)
@@ -37,20 +41,8 @@ value can be positive or negative, though POSIX only requires support for
 positive values, so dates before the system's epoch may not work on all
 operating systems.
 
-%prep
-%setup -q -n Time-Local-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc azure-pipelines.yml Changes CODE_OF_CONDUCT.md CONTRIBUTING.md perlcriticrc perltidyrc precious.toml README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

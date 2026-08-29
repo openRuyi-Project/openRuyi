@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Yafen Fang <yafen@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,6 +17,8 @@ VCS:            git:https://github.com/pauldreik/rdfind
 #!RemoteAsset:  sha256:bd17dbd9c6c9fc0c0b016b3e77ecf5cd718eee428172c767f429ba30405816d8
 Source0:        https://github.com/pauldreik/rdfind/archive/refs/tags/releases/%{version}.tar.gz
 BuildSystem:    autotools
+
+BuildOption(conf):  CXXFLAGS="%{optflags} -std=gnu++17"
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -40,4 +43,4 @@ autoreconf -vif
 %{_mandir}/man1/rdfind.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

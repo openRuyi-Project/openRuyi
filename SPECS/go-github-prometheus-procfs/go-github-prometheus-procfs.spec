@@ -6,22 +6,25 @@
 
 %define _name           procfs
 %define go_import_path  github.com/prometheus/procfs
+%define commit_id       3c943fdba94a978d990553698da4add62bb11a30
 
 Name:           go-github-prometheus-procfs
-Version:        0.19.2
+Version:        0.19.2+git20260702.3c943fd
 Release:        %autorelease
 Summary:        procfs provides functions to retrieve system, kernel and process metrics from the pseudo-filesystem proc.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/procfs
-#!RemoteAsset
-Source0:        https://github.com/prometheus/procfs/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:e2046309491a50f1cf1757f4a37d21eea14eb3097e13eed2593efec464340b44
+Source0:        https://github.com/prometheus/procfs/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # https://sources.debian.org/src/golang-github-prometheus-procfs/0.19.2-1/debian/patches/0001-Fix-testdata-paths.patch
-Patch0:         2000-Fix-testdata-paths.patch
+Patch2000:      2000-Fix-testdata-paths.patch
+# https://github.com/prometheus/procfs/pull/841
+Patch2001:      2001-report-raw-values-in-parse-errors.patch
 
-BuildOption(prep):  -n %{_name}-%{version}
+BuildOption(prep):  -n %{_name}-%{commit_id}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -56,4 +59,4 @@ cd %{_builddir}/go/src/%{go_import_path}
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

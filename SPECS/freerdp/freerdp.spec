@@ -9,13 +9,13 @@
 %bcond webview 0
 
 Name:           freerdp
-Version:        3.22.0
+Version:        3.26.0
 Release:        %autorelease
 Summary:        Free implementation of the Remote Desktop Protocol (RDP)
 License:        Apache-2.0
 URL:            http://www.freerdp.com/
 VCS:            git:https://github.com/FreeRDP/FreeRDP
-#!RemoteAsset:  sha256:f4af346eb12b5558f7a93e585e55f523a5cbbb53e6e3a0bf3ffed8f293e2a5b8
+#!RemoteAsset:  sha256:ae3b1c0b8e334ecbc2c784bce266249309fad32a0ef41947ce5c059eb18e2059
 Source0:        https://github.com/FreeRDP/FreeRDP/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -31,6 +31,7 @@ BuildOption(conf):  -DWITH_JPEG=ON
 BuildOption(conf):  -DWITH_JSONC_REQUIRED=ON
 BuildOption(conf):  -DWITH_ZLIB=ON
 BuildOption(conf):  -DWITH_SERVER=ON
+BuildOption(conf):  -DWITH_RDTK=ON
 BuildOption(conf):  -DWITH_SHADOW_X11=ON
 %if %{with ffmpeg}
 BuildOption(conf):  -DWITH_FFMPEG=ON
@@ -177,7 +178,8 @@ find %{buildroot} -name "*.a" -delete
 %{_libdir}/cmake/FreeRDP-Proxy3/
 %{_libdir}/cmake/FreeRDP-Server3/
 %{_libdir}/cmake/FreeRDP-Shadow3/
-%{_libdir}/pkgconfig/freerdp-server*.pc
+%{_libdir}/pkgconfig/freerdp-server-proxy3.pc
+%{_libdir}/pkgconfig/freerdp-server3.pc
 %{_libdir}/pkgconfig/freerdp-shadow3.pc
 %{_libdir}/libfreerdp-server*.so
 %{_libdir}/libfreerdp-shadow*.so
@@ -196,4 +198,4 @@ find %{buildroot} -name "*.a" -delete
 %{_mandir}/man1/freerdp-shadow-cli.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

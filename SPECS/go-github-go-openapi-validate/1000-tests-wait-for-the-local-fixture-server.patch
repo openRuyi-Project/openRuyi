@@ -1,0 +1,54 @@
+From 53fe559bae574c1ca847b4f4f436f4b6a1618499 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 11:37:28 +0800
+Subject: [PATCH] tests: wait for the local fixture server
+
+TestJSONSchemaSuite started the HTTP fixture server in a goroutine and immediately ran parallel tests, allowing clients to connect before the listener was ready. Create the listener synchronously and close the server during cleanup to remove the race.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ jsonschema_test.go | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/jsonschema_test.go b/jsonschema_test.go
+index faf547a..ca2a847 100644
+--- a/jsonschema_test.go
++++ b/jsonschema_test.go
+@@ -5,6 +5,8 @@ package validate
+ 
+ import (
+ 	"encoding/json"
++	"errors"
++	"net"
+ 	"net/http"
+ 	"os"
+ 	"path/filepath"
+@@ -97,15 +99,18 @@ func isExtendedEnabled(nm string) bool {
+ 
+ func TestJSONSchemaSuite(t *testing.T) {
+ 	// Internal local server to serve remote $ref
++	svr := &http.Server{
++		ReadTimeout:  5 * time.Second,
++		WriteTimeout: 10 * time.Second,
++		Handler:      http.FileServer(http.Dir(jsonSchemaFixturesPath + "/remotes")),
++	}
++	listener, err := net.Listen("tcp", "localhost:1234")
++	require.NoError(t, err)
++	t.Cleanup(func() {
++		require.NoError(t, svr.Close())
++	})
+ 	go func() {
+-		svr := &http.Server{
+-			ReadTimeout:  5 * time.Second,
+-			WriteTimeout: 10 * time.Second,
+-			Addr:         "localhost:1234",
+-			Handler:      http.FileServer(http.Dir(jsonSchemaFixturesPath + "/remotes")),
+-		}
+-		err := svr.ListenAndServe()
+-		if err != nil {
++		if err := svr.Serve(listener); err != nil && !errors.Is(err, http.ErrServerClosed) {
+ 			panic(err.Error())
+ 		}
+ 	}()
+-- 
+2.43.0

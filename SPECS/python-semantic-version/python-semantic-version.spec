@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Library implementing the 'SemVer' scheme
 License:        BSD-2-Clause
 URL:            https://github.com/rbarrois/python-semanticversion
-#!RemoteAsset
+#!RemoteAsset:  sha256:bdabb6d336998cbb378d4b9db3a4b56a1e3235701dc05ea2690d9a997ed5041c
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,16 +21,14 @@ BuildSystem:    pyproject
 BuildOption(install):  -l %{srcname}
 # skip the tests as we have no django yet.
 BuildOption(check):  -e semantic_version.django_fields
-BuildRequires:  pyproject-rpm-macros
-BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-wheel
 
-# We provide these for compatibility
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
-Provides:       python3-semantic-version
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(wheel)
+
+Provides:       python3-semantic-version = %{version}-%{release}
 %python_provide python3-semantic-version
 
 %description
@@ -41,4 +39,4 @@ Python.
 %doc README.rst ChangeLog CREDITS
 
 %changelog
-%{?autochangelog}
+%autochangelog

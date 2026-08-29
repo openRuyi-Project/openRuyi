@@ -12,9 +12,9 @@ Summary:        A tool to test PAM applications and PAM modules
 License:        GPL-3.0-or-later
 URL:            http://cwrap.org/
 VCS:            git:https://git.samba.org/pam_wrapper.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6549c0b3e41d1ebe0c94a1be63c25eec918191462b602ab6f47d4a5fa709c3e4
 Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:6093195d65f7e3566f38e3d9f9e0b6c3615e92774de904028937b18d941f699b
 Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
 BuildSystem:    cmake
 
@@ -25,7 +25,7 @@ BuildOption(conf):  -DPYTHON_INSTALL_SITEARCH=%{python3_sitearch}
 BuildRequires:  cmake
 BuildRequires:  cmocka-cmake
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(pam)
 
 Recommends:     cmake
@@ -114,4 +114,4 @@ sed -i -e 's/assertRaisesRegexp/assertRaisesRegex/' tests/pypamtest_test.py
 %{python3_sitearch}/pypamtest.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

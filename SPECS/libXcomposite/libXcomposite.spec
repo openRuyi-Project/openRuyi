@@ -5,13 +5,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libXcomposite
-Version:        0.4.6
+Version:        0.4.7
 Release:        %autorelease
 Summary:        X Composite Extension library
 License:        MIT AND HPND-sell-variant
 URL:            http://www.x.org
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libXcomposite
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bdf310967f484503fa51714cf97bff0723d9b673e0eecbf92b3f97c060c8ccb
 Source0:        https://www.x.org/archive/individual/lib/libXcomposite-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_mandir}/man3/X?omposite*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

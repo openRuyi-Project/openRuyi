@@ -10,21 +10,24 @@
 # Internal QML import
 %global __requires_exclude qt6qmlimport\\(org\\.kde\\.kcmutils\\.private.*\\)
 
-# Full KF6 version (e.g. 6.22.0)
+# Full KF6 version (e.g. 6.28.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kcmutils
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        Classes to work with KCModules
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kcmutils
-#!RemoteAsset
-Source:         https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:9afe5ca9d1c4bd06479b2619326ec6f1e3c3998859dceaae3da9a4b7318d5a21
+Source:         https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildOption(conf):  -DBUILD_TESTING=OFF
+
 BuildRequires:  kf6-extra-cmake-modules >= %{_kf6_version}
+BuildRequires:  kf6-kirigami >= %{_kf6_version}
 BuildRequires:  cmake(KF6ConfigWidgets) >= %{_kf6_version}
 BuildRequires:  cmake(KF6CoreAddons) >= %{_kf6_version}
 BuildRequires:  cmake(KF6GuiAddons) >= %{_kf6_version}
@@ -49,15 +52,6 @@ BuildRequires:  qt6-linguist
 KCMUtils provides various classes to work with KCModules. KCModules can be
 created with the KConfigWidgets framework.
 
-%package        imports
-Summary:        QtQuick bindings for classes to work with KCModules
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    imports
-KCMUtils provides various classes to work with KCModules. KCModules can be
-created with the KConfigWidgets framework. This package provides QtQuick bindings
-for the KCMUtils libraries.
-
 %package        devel
 Summary:        Build environment for kcmutils, a set of classes to work with KCModules
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -69,36 +63,19 @@ Requires:       cmake(Qt6Qml) >= %{qt6_version}
 KCMUtils provides various classes to work with KCModules. KCModules can be
 created with the KConfigWidgets framework. Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
-# todo: fix the name error.
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
+%install -a
 # Use langpacks macro to auto-split translations
-%find_lang %{name}6 --with-qt --all-name --generate-subpackages
+%find_lang %{name} --with-qt --all-name --generate-subpackages
 
-%files -f %{name}6.lang
-%license LICENSES/*
+%files -f %{name}.lang
 %doc README.md
+%license LICENSES/*
 %{_kf6_bindir}/kcmshell6
 %{_kf6_debugdir}/kcmutils.categories
 %{_kf6_libexecdir}/kcmdesktopfilegenerator
 %{_kf6_libdir}/libKF6KCMUtils.so.*
 %{_kf6_libdir}/libKF6KCMUtilsCore.so.*
 %{_kf6_libdir}/libKF6KCMUtilsQuick.so.*
-
-%files imports
 %{_kf6_qmldir}/org/kde/kcmutils/
 
 %files devel
@@ -111,4 +88,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_kf6_libdir}/libKF6KCMUtilsQuick.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

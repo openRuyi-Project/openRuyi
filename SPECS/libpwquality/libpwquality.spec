@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A library for password generation and password quality checking
 License:        BSD-3-Clause OR GPL-2.0-or-later
 URL:            https://github.com/libpwquality/libpwquality
-#!RemoteAsset
+#!RemoteAsset:  sha256:6fcf18b75d305d99d04d2e42982ed5b787a081af2842220ed63287a2d6a10988
 Source0:        https://github.com/libpwquality/libpwquality/releases/download/libpwquality-%{version}/libpwquality-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -28,8 +28,8 @@ BuildRequires:  cracklib-devel
 BuildRequires:  gettext
 BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-packaging
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(packaging)
 
 %description
 This is a library for password quality checks and generation
@@ -61,8 +61,6 @@ pronounceable passwords from Python applications.
 
 %install -a
 mkdir %{buildroot}%{_pam_secconfdir}/pwquality.conf.d
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
 
@@ -84,7 +82,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %files devel
 %{_includedir}/pwquality.h
 %{_libdir}/libpwquality.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/pwquality.pc
 %{_mandir}/man3/*
 
 %files -n python-pwquality
@@ -92,4 +90,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{python3_sitearch}/*.egg-info
 
 %changelog
-%{?autochangelog}
+%autochangelog

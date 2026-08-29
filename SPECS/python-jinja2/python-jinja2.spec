@@ -26,7 +26,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,8 +44,7 @@ environments.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.md
-%doc docs/examples
+%doc README.md docs/examples
 %license LICENSE.txt
 
 %changelog

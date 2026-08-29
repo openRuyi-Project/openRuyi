@@ -54,7 +54,8 @@ libnetfilter_log.
 %{_libdir}/*.so
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_log.pc
+%{_libdir}/pkgconfig/libnetfilter_log_libipulog.pc
 
 %changelog
 %{?autochangelog}

@@ -14,6 +14,7 @@ License:        MIT
 URL:            https://github.com/explosion/spacy-loggers
 #!RemoteAsset:  sha256:d60b0bdbf915a60e516cc2e653baeff946f0cfc461b452d11a4d5458c6fe5f24
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/spacy-loggers-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -44,4 +45,4 @@ independently from the core spaCy library.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

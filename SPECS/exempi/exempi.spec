@@ -56,7 +56,7 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %files devel
 %{_includedir}/exempi-2.0/
 %{_libdir}/libexempi.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/exempi-2.0.pc
 
 %changelog
 %{?autochangelog}

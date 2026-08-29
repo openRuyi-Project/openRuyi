@@ -15,7 +15,7 @@ Summary:        A lightweight and flexible command-line JSON processor
 License:        MIT AND ICU AND CC-BY-3.0
 URL:            https://jqlang.org/
 VCS:            git:https://github.com/jqlang/jq
-#!RemoteAsset
+#!RemoteAsset:  sha256:2be64e7129cecb11d5906290eba10af694fb9e3e7f9fc208a311dc33ca837eb0
 Source0:        https://github.com/jqlang/jq/releases/download/jq-%{version}/jq-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -29,6 +29,7 @@ BuildRequires:  pkgconfig(oniguruma)
 %if %{with valgrind}
 BuildRequires:  valgrind
 %endif
+BuildRequires:  tzdata
 
 %description
 jq is a lightweight and flexible command-line JSON processor.
@@ -70,4 +71,4 @@ chrpath -d %{buildroot}%{_bindir}/%{name}
 %{_mandir}/man1/jq.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

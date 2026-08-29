@@ -7,10 +7,10 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global majorver        25
+%global majorver        26
 %global minorver        0
-%global securityver     0
-%global buildver        36
+%global securityver     2
+%global buildver        10
 %global newjavaver      %{majorver}.%{minorver}.%{securityver}
 %global _jvmdir         %_libdir/jvm
 
@@ -22,13 +22,13 @@ Release:        %autorelease
 Summary:        OpenJDK latest Runtime Environment
 License:        GPL-2.0-only WITH Classpath-exception-2.0
 URL:            https://openjdk.org
-VCS:            git:https://github.com/openjdk/jdk25u
-#!RemoteAsset
-Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{majorver}+%{buildver}.tar.gz
+VCS:            git:https://github.com/openjdk/jdk26u
+#!RemoteAsset:  sha256:dc7301511e010b22b28f2953c005b1e5bd7845c025440396f940c5c73d4b73d0
+Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
-#!RemoteAsset
+#!RemoteAsset:  sha256:3fc35759502b620f010a9cd2b3da8454f8a49a156ceaebb00de1fd8335682d40
 Source1:        https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25%2B36/OpenJDK25U-jdk_riscv64_linux_hotspot_25_36.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:ee04de95ab9da7287d40bd2173076ecc2a6dd662f007bedfc6eb0380c0ef90e8
 Source2:        https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25%2B36/OpenJDK25U-jdk_x64_linux_hotspot_25_36.tar.gz
 %endif
 
@@ -64,7 +64,7 @@ Provides:       java-latest-openjdk-headless = %{version}-%{release}
 The OpenJDK latest runtime environment.
 
 %prep
-%autosetup -p1 -n jdk%{majorver}u-jdk-%{majorver}-%{buildver}
+%autosetup -p1 -n jdk%{majorver}u-jdk-%{newjavaver}-%{buildver}
 
 %build
 %if %{with bootstrap}
@@ -97,6 +97,11 @@ bash ../configure \
     --with-vendor-url="%{_vendor_url}" \
     --with-vendor-bug-url="%{_vendor_bug_url}" \
     --enable-unlimited-crypto \
+%ifarch riscv64
+  %if "%{openruyi_riscv_arch}" == "-march=rva23u64"
+    --with-extra-cxxflags="-march=rva23u64_zifencei" \
+  %endif
+%endif
     --disable-warnings-as-errors
 make images
 popd
@@ -143,4 +148,4 @@ alternatives --remove java %{_jvmdir}/java-latest-openjdk/bin/java
 %{_jvmdir}/java-latest-openjdk
 
 %changelog
-%{?autochangelog}
+%autochangelog

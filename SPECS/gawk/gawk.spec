@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gawk
-Version:        5.3.2
+Version:        5.4.0
 Release:        %autorelease
 Summary:        Domain-specific language for text processing
 License:        GPL-3.0-or-later
 URL:            https://www.gnu.org/software/gawk/
 VCS:            git:https://https.git.savannah.gnu.org/git/gawk.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:3dd430f0cd3b4428c6c3f6afc021b9cd3c1f8c93f7a688dc268ca428a90b4ac1
 Source:         http://ftpmirror.gnu.org/gnu/gawk/gawk-%{version}.tar.xz
-#!RemoteAsset
-Source2:        http://ftpmirror.gnu.org/gnu/gawk/gawk-%{version}.tar.xz.sig
 BuildSystem:    autotools
 
 BuildRequires:  pkgconfig(mpfr)
@@ -39,9 +37,7 @@ almost completely POSIX 1003.2 compliant.
 %{_bindir}/awk
 %license COPYING*
 %doc AUTHORS NEWS POSIX.STD README ChangeLog*
-%{_bindir}/gawk
 %{_bindir}/gawk*
-%{_bindir}/gawkbug
 %{_libexecdir}/awk
 %{_libdir}/gawk
 %{_datadir}/awk
@@ -54,4 +50,4 @@ almost completely POSIX 1003.2 compliant.
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

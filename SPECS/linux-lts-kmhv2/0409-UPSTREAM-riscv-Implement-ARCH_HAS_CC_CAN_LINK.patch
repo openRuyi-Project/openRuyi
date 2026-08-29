@@ -1,0 +1,61 @@
+From eb84757dd5d3bdd86b9d2416592634a065006323 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Date: Sat, 6 Jun 2026 20:17:52 -0600
+Subject: [RUYI PATCH] UPSTREAM: riscv: Implement ARCH_HAS_CC_CAN_LINK
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The generic CC_CAN_LINK detection relies on -m32/-m64 compiler flags.
+These are not supported by riscv compilers.
+
+Use architecture-specific logic using -mabi instead.
+
+Prefer the 'd' ABI variant when possible as todays toolchains are most
+likely to provide a libc for that one.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Link: https://patch.msgid.link/20260316-cc-can-link-riscv-v4-1-64c072b456dd@linutronix.de
+Signed-off-by: Paul Walmsley <pjw@kernel.org>
+(cherry picked from commit 84894ceb3c2ef5c5404359efd4edc6c438aa6d0c)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ arch/riscv/Kconfig | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 5a3e88128ee0..12bebdbaaf9f 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -25,6 +25,7 @@ config RISCV
+ 	select ARCH_ENABLE_SPLIT_PMD_PTLOCK if PGTABLE_LEVELS > 2
+ 	select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
+ 	select ARCH_HAS_BINFMT_FLAT
++	select ARCH_HAS_CC_CAN_LINK
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+@@ -1337,6 +1338,20 @@ config PORTABLE
+ config ARCH_PROC_KCORE_TEXT
+ 	def_bool y
+ 
++config ARCH_CC_CAN_LINK
++	bool
++	default $(cc_can_link_user,-march=rv64g -mabi=lp64d) if 64BIT && FPU
++	default $(cc_can_link_user,-march=rv64g -mabi=lp64) if 64BIT
++	default $(cc_can_link_user,-march=rv32g -mabi=ilp32d) if FPU
++	default $(cc_can_link_user,-march=rv32g -mabi=ilp32)
++
++config ARCH_USERFLAGS
++	string
++	default "-march=rv64g -mabi=lp64d" if 64BIT && FPU
++	default "-march=rv64g -mabi=lp64" if 64BIT
++	default "-march=rv32g -mabi=ilp32d" if FPU
++	default "-march=rv32g -mabi=ilp32"
++
+ menu "Power management options"
+ 
+ source "kernel/power/Kconfig"
+-- 
+2.53.0
+

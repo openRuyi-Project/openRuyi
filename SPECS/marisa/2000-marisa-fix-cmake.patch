@@ -1,0 +1,36 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,6 +13,14 @@
+ option(ENABLE_COVERAGE "Enable code coverage instrumentation (only enabled with BUILD_TESTING)" OFF)
+ option(ENABLE_STATIC_STDLIB "Link C++ stdlib statically" OFF)
+
++include(GNUInstallDirs)
++set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}" CACHE PATH "")
++set(BIN_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}" CACHE PATH "")
++
++if(CMAKE_INSTALL_LIBDIR MATCHES "lib64$")
++  set(LIB_SUFFIX 64)
++endif()
++
+ function(check_macro_defined MACRO OUTPUT_VAR)
+   set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+   try_compile(result
+@@ -311,3 +319,18 @@
+
+ configure_file(marisa.pc.in ${CMAKE_CURRENT_BINARY_DIR}/marisa.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/marisa.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
++
++install(
++  FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/libmarisa.so"
++    "${CMAKE_CURRENT_BINARY_DIR}/libmarisa.so.0"
++    "${CMAKE_CURRENT_BINARY_DIR}/libmarisa.so.0.3.0"
++    DESTINATION
++      ${LIB_INSTALL_DIR}
++)
++
++if(ENABLE_TOOLS)
++  foreach(_tool ${MARISA_TOOLS})
++    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${_tool} DESTINATION ${BIN_INSTALL_DIR})
++  endforeach()
++endif()

@@ -8,19 +8,18 @@
 %define unixbench_prefix /opt/unixbench
 
 Name:           unixbench
-Version:        6.0.0
+Version:        6.0.1
 Release:        %autorelease
 Summary:        The BYTE UNIX Benchmark
 License:        GPL-2.0-only
 URL:            https://code.google.com/archive/p/byte-unixbench/
 VCS:            git:https://github.com/kdlucas/byte-unixbench
-#!RemoteAsset
+#!RemoteAsset:  sha256:e52257ae9ba6294a0c5804d802745294cf536e8c8d9383aabff7a8b039e31faa
 Source0:        https://github.com/kdlucas/byte-unixbench/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(prep):   -n %{_name}-%{version} -p1
+BuildOption(prep):  -n %{_name}-%{version} -p1
 BuildOption(build):  all
-BuildOption(build):  CC='gcc -std=gnu99'
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -43,6 +42,7 @@ combined to make an overall index for the system.
 cd UnixBench
 # Switch to RVA23 profile
 sed -i 's/rv64g/rva23u64/g' Makefile
+sed -i 's/-std=gnu89/-std=gnu99/' Makefile
 
 # Skip automatic compilation check to use pre-built binaries
 sed -i 's/^\([[:space:]]*\)preChecks();/\1# preChecks();/' Run
@@ -69,4 +69,4 @@ cp -rp pgms/* %{buildroot}%{unixbench_prefix}/pgms/
 %{unixbench_prefix}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,34 +5,31 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwebengine
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtwebengine
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - QtWebEngine components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwebengine
-#!RemoteAsset
+#!RemoteAsset:  sha256:679c66ccc6c158fc215e9c58ef160331ecd29974232e345c05161889f8667083
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
-# workaround FTBFS against kernel-headers-5.2.0+
-Patch0:         0001-qtwebengine-SIOCGSTAMP.patch
 # enable to link pipewire
-Patch1:         0002-qtwebengine-link-pipewire.patch
-## Upstreamable patches:
-Patch2:         0003-qtwebengine-add-missing-pipewire-headers.patch
+Patch0:         0001-qtwebengine-link-pipewire.patch
 %ifarch riscv64
 # Patches from https://build.opensuse.org/package/show/openSUSE:Factory:RISCV/qt6-webengine
-# At revision dd1924eb288d26a395e5cd4841bd51d6.
-# Nov 09, 2025
-Patch3:         0004-riscv-sandbox.patch
-Patch4:         0005-riscv-v8.patch
-Patch5:         0006-riscv-enable-v8-webasm.patch
+# Updated for Qt 6.11.1 (openSUSE Factory RISCV)
+Patch1:         0002-riscv-sandbox.patch
+Patch2:         0003-riscv-misc.patch
+Patch3:         0004-riscv-enable-v8-webasm.patch
 %endif
+# Based on various upstream commits.
+Patch4:         0005-adapt-chromium-to-gcc16-glibc2.43-and-rvv.patch
 
 BuildOption(conf):  -DCMAKE_TOOLCHAIN_FILE="%{_libdir}/cmake/Qt6/qt.toolchain.cmake"
 BuildOption(conf):  -DFEATURE_webengine_build_gn=ON
@@ -91,13 +88,13 @@ BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  python3
-BuildRequires:  python3-html5lib
+BuildRequires:  python3dist(html5lib)
 BuildRequires:  gperf
 BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  perl
 BuildRequires:  nodejs
-BuildRequires:  python3-six
+BuildRequires:  python3dist(six)
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  qt6-macros
 BuildRequires:  qt6-qtbase-private-devel
@@ -236,7 +233,6 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_translationsdir}/qtwebengine_locales/
 %{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
 %{_qt6_archdatadir}/sbom/qtpdf-%{real_version}.spdx
-%{_qt6_datadir}/resources/qtwebengine_devtools_resources.pak
 %{_qt6_libdir}/libQt6Pdf.so.*
 %{_qt6_libdir}/libQt6PdfQuick.so.*
 %{_qt6_libdir}/libQt6PdfWidgets.so.*
@@ -256,7 +252,10 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/cmake/Qt6WebEngine*/
 %{_qt6_libdir}/cmake/Qt6/*.cmake
 %{_qt6_libdir}/cmake/Qt6BuildInternals/StandaloneTests/QtWebEngine*
-%{_qt6_libdir}/pkgconfig/Qt6WebEngine*.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineCore.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineQuickDelegatesQml.pc
+%{_qt6_libdir}/pkgconfig/Qt6WebEngineWidgets.pc
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_webengine*.pri
 %{_qt6_pluginsdir}/designer/libqwebengineview.so
 %{_qt6_includedir}/QtPdf*/
@@ -267,7 +266,9 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/cmake/Qt6Gui/Qt6QPdf*.cmake
 %{_qt6_libdir}/cmake/Qt6Pdf*/
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6Pdf*.cmake
-%{_qt6_libdir}/pkgconfig/Qt6Pdf*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Pdf.pc
+%{_qt6_libdir}/pkgconfig/Qt6PdfQuick.pc
+%{_qt6_libdir}/pkgconfig/Qt6PdfWidgets.pc
 %{_qt6_archdatadir}/mkspecs/modules/qt_lib_pdf*.pri
 
 %files examples
@@ -275,4 +276,4 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_examplesdir}/pdf*
 
 %changelog
-%{?autochangelog}
+%autochangelog

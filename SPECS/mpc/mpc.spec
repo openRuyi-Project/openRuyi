@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           mpc
-Version:        1.3.1
+Version:        1.4.1
 Release:        %autorelease
 Summary:        multiple-precision complex shared library
 License:        LGPL-3.0-or-later
 URL:            http://www.multiprecision.org/mpc/
 VCS:            git:https://gitlab.inria.fr/mpc/mpc
-#!RemoteAsset
-Source0:        https://ftpmirror.gnu.org/gnu/mpc/mpc-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftpmirror.gnu.org/gnu/mpc/mpc-%{version}.tar.gz.sig
+#!RemoteAsset:  sha256:91204cd32f164bd3b7c992d4a6a8ce6519511aadab30f78b6982d0bf8d73e931
+Source0:        https://ftpmirror.gnu.org/gnu/mpc/mpc-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildRequires:  pkgconfig
@@ -51,7 +49,8 @@ MPC multiple-precision complex library development files.
 %{_infodir}/mpc.info*
 %{_libdir}/libmpc.a
 %{_libdir}/libmpc.so
+%{_libdir}/pkgconfig/mpc.pc
 %{_includedir}/mpc.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Simple and Efficient Reading/Writing/Modifying of Complete Files
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/File-Slurp
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CA/CAPOEIRAB/File-Slurp-%{version}.tar.gz
+#!RemoteAsset:  sha256:4c3c21992a9d42be3a79dd74a3c83d27d38057269d65509a2f555ea0fb2bc5b0
+Source0:        https://www.cpan.org/authors/id/C/CA/CAPOEIRAB/File-Slurp-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(B)
 BuildRequires:  perl(Carp)
@@ -45,20 +49,8 @@ one simple call. They are designed to be simple to use, have flexible ways
 to pass in or get the file contents and to be very efficient. There is also
 a sub to read in all the files in a directory.
 
-%prep
-%setup -q -n File-Slurp-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README.md
 
 %changelog
-%{?autochangelog}
+%autochangelog

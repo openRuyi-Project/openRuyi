@@ -20,7 +20,7 @@ BuildOption(conf):  -Dmpd=disabled
 
 BuildRequires:  meson
 BuildRequires:  gcc
-BuildRequires:  python3-docutils
+BuildRequires:  python3dist(docutils)
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
@@ -51,4 +51,4 @@ compositors.
 %{_mandir}/man1/*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -21,7 +21,7 @@ Summary:        High Availability monitor for LVS and VRRP
 License:        GPL-2.0-or-later
 URL:            http://www.keepalived.org/
 VCS:            git:https://github.com/acassen/keepalived
-#!RemoteAsset
+#!RemoteAsset:  sha256:85882eb62974f395d4c631be990a41a839594a7e62fbfebcb5649a937a7a1bb6
 Source0:        http://www.keepalived.org/software/keepalived-%{version}.tar.gz
 Source1:        keepalived.service
 BuildSystem:    autotools
@@ -53,11 +53,10 @@ BuildOption(build):  STRIP=/bin/true
 %if %{with snmp}
 BuildRequires:  pkgconfig(netsnmp)
 %endif
-%if %{with nftables}
 BuildRequires:  pkgconfig(libmnl)
+%if %{with nftables}
 BuildRequires:  pkgconfig(libnftnl)
 %else
-BuildRequires:  pkgconfig(libmnl)
 BuildRequires:  pkgconfig(xtables)
 %endif
 BuildRequires:  gcc
@@ -117,4 +116,4 @@ mkdir -p %{buildroot}%{_libexecdir}/keepalived
 %{_mandir}/man8/keepalived.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

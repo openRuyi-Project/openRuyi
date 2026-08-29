@@ -17,7 +17,7 @@ Release:        %autorelease
 Summary:        Official Go implementation of Apache Arrow
 License:        Apache-2.0
 URL:            https://github.com/apache/arrow
-#!RemoteAsset
+#!RemoteAsset:  sha256:5d8c62c87aadeb033ed89b4ea1df70d0a3c37443baa8f0ffc240e3276ff8e518
 Source0:        https://github.com/apache/arrow/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -43,7 +43,6 @@ BuildRequires:  go(github.com/andybalholm/brotli)
 BuildRequires:  go(github.com/apache/thrift)
 BuildRequires:  go(github.com/golang/snappy)
 BuildRequires:  go(github.com/klauspost/asmfmt)
-BuildRequires:  go(github.com/klauspost/compress)
 BuildRequires:  go(github.com/minio/asm2plan9s)
 BuildRequires:  go(github.com/minio/c2goasm)
 BuildRequires:  go(github.com/zeebo/xxh3)
@@ -70,7 +69,6 @@ Requires:       go(github.com/andybalholm/brotli)
 Requires:       go(github.com/apache/thrift)
 Requires:       go(github.com/golang/snappy)
 Requires:       go(github.com/klauspost/asmfmt)
-Requires:       go(github.com/klauspost/compress)
 Requires:       go(github.com/minio/asm2plan9s)
 Requires:       go(github.com/minio/c2goasm)
 Requires:       go(github.com/zeebo/xxh3)
@@ -97,4 +95,4 @@ and move data fast.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        a set of locales generated from the CLDR Project which can be used independently or within an i18n package
 License:        MIT
 URL:            https://github.com/go-playground/locales
-#!RemoteAsset
+#!RemoteAsset:  sha256:29b29f1ff125e04a4d81a1f584d929ac8444663255cfdfa076a78339e23b4624
 Source0:        https://github.com/go-playground/locales/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -23,6 +23,8 @@ BuildOption(prep):  -n %{_name}-%{version}
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(golang.org/x/text)
+# For tests.
+BuildRequires:  tzdata
 
 Provides:       go(github.com/go-playground/locales) = %{version}
 
@@ -53,4 +55,4 @@ Features
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

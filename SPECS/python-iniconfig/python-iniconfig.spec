@@ -8,12 +8,12 @@
 %global srcname iniconfig
 
 Name:           python-%{srcname}
-Version:        2.1.0
+Version:        2.3.0
 Release:        %autorelease
 Summary:        Brain-dead simple parsing of ini files
 License:        MIT
 URL:            http://github.com/RonnyPfannschmidt/iniconfig
-#!RemoteAsset:  sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7
+#!RemoteAsset:  sha256:c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d8c4730
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -30,7 +30,7 @@ BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description

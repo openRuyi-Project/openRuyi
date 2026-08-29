@@ -1,0 +1,26 @@
+From 60c10b032fd38da4254b2dcd785dbcf4c2dcafcb Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Sat, 16 May 2026 16:54:14 +0800
+Subject: [PATCH] fops-zip: Fix 'ramount' may be used uninitialized
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+---
+ lib/roles/http/server/fops-zip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/roles/http/server/fops-zip.c b/lib/roles/http/server/fops-zip.c
+index 43ed0c04e..7420b84a3 100644
+--- a/lib/roles/http/server/fops-zip.c
++++ b/lib/roles/http/server/fops-zip.c
+@@ -499,7 +499,7 @@ lws_fops_zip_read(lws_fop_fd_t fd, lws_filepos_t *amount, uint8_t *buf,
+ 		  lws_filepos_t len)
+ {
+ 	lws_fops_zip_t priv = fop_fd_to_priv(fd);
+-	lws_filepos_t ramount, rlen, cur = lws_vfs_tell(fd);
++	lws_filepos_t ramount = 0, rlen, cur = lws_vfs_tell(fd);
+ 	int ret;
+ 
+ 	if (priv->decompress) {
+-- 
+2.53.0
+

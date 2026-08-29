@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Binary Search within a sorted array
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/List-BinarySearch
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAVIDO/List-BinarySearch-%{version}.tar.gz
+#!RemoteAsset:  sha256:c8113071bd6040035ee8ab01cf1b72a910574192f1d179102ae775a973f2e82a
+Source0:        https://www.cpan.org/authors/id/D/DA/DAVIDO/List-BinarySearch-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(English)
@@ -31,20 +35,8 @@ A binary search searches sorted lists using a divide and conquer technique.
 On each iteration the search domain is cut in half, until the result is
 found. The computational complexity of a binary search is O(log n).
 
-%prep
-%setup -q -n List-BinarySearch-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
-%doc Changes examples README
+%doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Library to provide visual progress to long running operations
 License:        BSD-3-Clause
 URL:            https://github.com/WoLpH/python-progressbar
-#!RemoteAsset
+#!RemoteAsset:  sha256:6662cb624886ed31eb94daf61e27583b5144ebc7383a17bae076f8f4f59088fb
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,7 +25,7 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(freezegun)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +45,4 @@ automatically enable features like auto-resizing when the system supports it.
 %{_bindir}/progressbar
 
 %changelog
-%{?autochangelog}
+%autochangelog

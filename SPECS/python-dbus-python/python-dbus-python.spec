@@ -38,7 +38,8 @@ BuildRequires:  python3dist(wheel)
 # For compatibility
 Provides:       dbus-python
 # Pypi name is dbus-python
-Provides:       python3-dbus-python
+Provides:       python3-dbus-python = %{version}-%{release}
+Provides:       python3-dbus-python%{?_isa} = %{version}-%{release}
 %python_provide python3-dbus-python
 
 %description
@@ -47,6 +48,7 @@ This is a metapackage that requires the main Python 3 package.
 
 %package        devel
 Summary:        Libraries and headers for dbus-python
+Requires:       pkgconfig(python3)
 
 %description    devel
 This package contains the header files and static libraries needed for

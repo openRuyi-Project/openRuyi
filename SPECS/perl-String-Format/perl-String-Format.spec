@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Sprintf-like string formatting capabilities with arbitrary format definitions
 License:        GPL-2.0-only
 URL:            https://metacpan.org/dist/String-Format
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SR/SREZIC/String-Format-%{version}.tar.gz
+#!RemoteAsset:  sha256:9e417a8f8d9ea623beea2d13a47c0d5a696fc8602c0509b826cd45f97b76e778
+Source0:        https://www.cpan.org/authors/id/S/SR/SREZIC/String-Format-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
@@ -29,20 +33,8 @@ particular way. It was inspired by mutt's index_format and related
 directives (see <URL:http://www.mutt.org/doc/manual/manual-
 6.html#index_format>).
 
-%prep
-%setup -q -n String-Format-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-uber-zap
-Version:        1.27.1
+Version:        1.28.0
 Release:        %autorelease
 Summary:        Blazing fast, structured, leveled logging in Go.
 License:        MIT
 URL:            https://github.com/uber-go/zap
-#!RemoteAsset
+#!RemoteAsset:  sha256:b6718c9fdc426a938578355ab194719dd8a75a985451bb4cddc25246143aef19
 Source0:        https://github.com/uber-go/zap/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -29,6 +29,9 @@ BuildRequires:  go(go.uber.org/multierr)
 BuildRequires:  go(go.yaml.in/yaml/v3)
 
 Provides:       go(go.uber.org/zap) = %{version}
+Provides:       go(go.uber.org/zap/zapcore) = %{version}
+
+Requires:       go(go.uber.org/multierr)
 
 %description
 Package zap provides fast, structured, leveled logging.
@@ -39,4 +42,4 @@ Package zap provides fast, structured, leveled logging.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

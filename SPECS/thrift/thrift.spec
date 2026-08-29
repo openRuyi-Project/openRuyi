@@ -11,7 +11,7 @@ Summary:        Software framework for scalable cross-language services developm
 License:        Apache-2.0
 URL:            https://thrift.apache.org
 VCS:            git:https://github.com/apache/thrift
-#!RemoteAsset
+#!RemoteAsset:  sha256:c4649c5879dd56c88f1e7a1c03e0fbfcc3b2a2872fb81616bffba5aa8a225a37
 Source0:        https://github.com/apache/thrift/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -47,6 +47,10 @@ OCaml and Delphi and other languages.
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       boost-devel
+Requires:       pkgconfig(libevent)
+Requires:       pkgconfig(openssl)
+Requires:       pkgconfig(zlib)
 
 %description    devel
 Development headers and pkg-config files for Apache Thrift.
@@ -66,4 +70,4 @@ Development headers and pkg-config files for Apache Thrift.
 %{_libdir}/pkgconfig/thrift-z.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

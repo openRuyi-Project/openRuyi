@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Establish an ISA relationship with base classes at compile time
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/parent
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/C/CO/CORION/parent-%{version}.tar.gz
+#!RemoteAsset:  sha256:149a65f019909c289714b57fb5c7cadba593e7b86ccf25cb49f7e54a2a1af1ce
+Source0:        https://www.cpan.org/authors/id/C/CO/CORION/parent-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -25,20 +29,8 @@ BuildRequires:  perl(Test::More) >= 0.40
 Allows you to both load one or more modules, while setting up inheritance
 from those modules at the same time. Mostly similar in effect to
 
-%prep
-%setup -q -n parent-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes
 
 %changelog
-%{?autochangelog}
+%autochangelog

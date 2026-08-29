@@ -13,19 +13,14 @@
 %define _lto_cflags %{nil}
 
 Name:           isa-l_crypto
-Version:        2.26
+Version:        2.26.1
 Release:        %autorelease
 Summary:        Intelligent Storage Acceleration Library with crypto
 License:        BSD-3-Clause
 URL:            https://github.com/intel/isa-l_crypto
-#!RemoteAsset
+#!RemoteAsset:  sha256:dd83e3da8e589d15ff475ac727b38c8cba48d2e82465fa58de2b5d9fefcd682b
 Source0:        https://github.com/intel/isa-l_crypto/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
-
-# https://github.com/intel/isa-l_crypto/pull/168
-Patch1:         0001-mh_sha1-add-an-mh_sha1-assembly-implementation-with-.patch
-# https://github.com/intel/isa-l_crypto/pull/172
-Patch2:         0001-mh_sha1_murmur3_x64_128-add-an-mh_sha1_murmur3_x64_1.patch
 
 BuildOption(conf):  --disable-static
 
@@ -38,6 +33,17 @@ BuildRequires:  pkgconfig(openssl)
 %ifarch x86_64
 BuildRequires:  nasm
 %endif
+
+%patchlist
+# https://github.com/intel/isa-l_crypto/pull/168
+0001-mh_sha1-add-an-mh_sha1-assembly-implementation-with-.patch
+# https://github.com/intel/isa-l_crypto/pull/172
+0002-mh_sha1_murmur3_x64_128-add-an-mh_sha1_murmur3_x64_1.patch
+# https://github.com/intel/isa-l_crypto/pull/177
+0003-sha1_mb-add-an-sha1_mb-assembly-implementation-with-.patch
+# Unsubmit PR
+0004-aes-Add-C-AES-software-implementations-for-RISC-V.patch
+0005-aes-riscv64-add-RISC-V-Zvk-AES-implementation-for-AE.patch
 
 %description
 ISA-L_crypto is a collection of optimized low-level functions
@@ -72,4 +78,4 @@ This package contains the development files needed to build against the shared l
 %{_libdir}/pkgconfig/libisal_crypto.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

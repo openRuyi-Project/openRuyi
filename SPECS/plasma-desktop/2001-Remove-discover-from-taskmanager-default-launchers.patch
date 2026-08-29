@@ -1,0 +1,25 @@
+From 0d5a45bd0563f59d5de5db967809f2cc66ca0f6a Mon Sep 17 00:00:00 2001
+From: jingyupu <pujingyu@iscas.ac.cn>
+Date: Thu, 28 May 2026 13:20:00 +0800
+Subject: [PATCH] Remove Discover from taskmanager default launchers
+
+Avoid pinning Discover by default in taskmanager launcher list.
+---
+ applets/taskmanager/main.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/applets/taskmanager/main.xml b/applets/taskmanager/main.xml
+index 022f6d6..88caa7e 100644
+--- a/applets/taskmanager/main.xml
++++ b/applets/taskmanager/main.xml
+@@ -103,7 +103,7 @@
+     </entry>
+     <entry name="launchers" type="StringList">
+       <label>The list of launcher tasks on the widget. Usually .desktop file or executable URLs. Special URLs such as preferred://browser that expand to default applications are supported.</label>
+-      <default>applications:systemsettings.desktop,applications:org.kde.discover.desktop,preferred://filemanager,preferred://browser</default>
++      <default>applications:systemsettings.desktop,preferred://filemanager,preferred://browser</default>
+     </entry>
+     <entry name="middleClickAction" type="Enum">
+       <label>What to do on middle-mouse click on a task button.</label>
+-- 
+2.49.0

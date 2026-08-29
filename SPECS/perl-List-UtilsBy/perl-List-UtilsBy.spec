@@ -11,11 +11,16 @@ Release:        %autorelease
 Summary:        Higher-order list utility functions
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/List-UtilsBy
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PE/PEVANS/List-UtilsBy-%{version}.tar.gz
+#!RemoteAsset:  sha256:fff1281fd469fe982b1a58044becfd970f313bff3a26e1c7b2b3f4c0a5ed71e0
+Source0:        https://www.cpan.org/authors/id/P/PE/PEVANS/List-UtilsBy-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
 
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(Exporter) >= 5.57
 BuildRequires:  perl(Module::Build)
@@ -32,20 +37,8 @@ sort takes a list of values and returns them, sorted into order by their
 string value. The "sort_by" function sorts them according to the string
 value returned by the extra function, when given each value.
 
-%prep
-%setup -q -n List-UtilsBy-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

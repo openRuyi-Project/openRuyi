@@ -13,8 +13,10 @@ Release:        %autorelease
 Summary:        VP8/VP9 codec library
 License:        BSD-3-Clause AND GPL-2.0-or-later
 URL:            https://chromium.googlesource.com/webm/libvpx
-#!RemoteAsset
-Source:         https://chromium.googlesource.com/webm/libvpx/+archive/v%{version}.tar.gz
+VCS:            git:https://chromium.googlesource.com/webm/libvpx
+#!RemoteAsset:  git+https://chromium.googlesource.com/webm/libvpx#v%{version}
+#!CreateArchive
+Source:         %{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 # Add arch support for riscv64.
@@ -72,4 +74,4 @@ Development headers and library for libvpx.
 %{_libdir}/libvpx.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

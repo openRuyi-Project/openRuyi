@@ -1,0 +1,59 @@
+From 8e96237ef3d552c0a0aaa1d6528fa3f2cbcacce6 Mon Sep 17 00:00:00 2001
+From: Kai Zhang <zhangkai@iscas.ac.cn>
+Date: Thu, 4 Jun 2026 17:15:11 +0800
+Subject: [PATCH] riscv64: Blindly set rust rva23 target when needed
+
+Firefox doesn't support rust riscv64a23-unknown-linux-gnu now.
+When using rva23 rust to build, the failure may like:
+
+  0:37.22 checking for rust host triplet...
+  0:37.22 E ERROR: The rust compiler host (riscv64a23-unknown-linux-gnu) is not suitable for the configure host (riscv64-unknown-linux-gnu/riscv64gc-unknown-linux-gnu).
+  0:37.22 To resolve this, install and select a Rust toolchain for riscv64gc-unknown-linux-gnu:
+  0:37.22   rustup default stable-riscv64gc-unknown-linux-gnu
+  0:37.22 Then rerun configure.
+
+Workaround the problem if we really have a rva23 rustc.
+
+Signed-off-by: Kai Zhang <zhangkai@iscas.ac.cn>
+---
+ build/moz.configure/rust.configure | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/build/moz.configure/rust.configure b/build/moz.configure/rust.configure
+index a89585f6f81d..82c5a97b7cae 100644
+--- a/build/moz.configure/rust.configure
++++ b/build/moz.configure/rust.configure
+@@ -488,6 +488,12 @@ def assert_rust_compile(host_or_target, rustc_target, rustc):
+ def rust_host_triple(
+     rustc, host, compiler_info, rustc_host, rust_supported_targets, arm_target
+ ):
++    # There's no easy way to match RUST riscv64a23-unknown-linux-gnu against AUTOCONF
++    # riscv64-unknown-linux-gnu target, because riscv64gc-unknown-linux-gnu always
++    # wins. So just return it.
++    if rustc_host == "riscv64a23-unknown-linux-gnu":
++        return rustc_host
++
+     rustc_target = detect_rustc_target(
+         host, compiler_info, arm_target, rust_supported_targets
+     )
+@@ -517,12 +523,15 @@ def rust_host_triple(
+ 
+ 
+ @depends(
+-    rustc, target, c_compiler, rust_supported_targets, arm_target, when=rust_compiler
++    rustc, target, c_compiler, rust_supported_targets, arm_target, rustc_info.host, when=rust_compiler
+ )
+ @checking("for rust target triplet")
+ def rust_target_triple(
+-    rustc, target, compiler_info, rust_supported_targets, arm_target
++    rustc, target, compiler_info, rust_supported_targets, arm_target, rustc_host
+ ):
++    if rustc_host == "riscv64a23-unknown-linux-gnu":
++        return rustc_host
++
+     rustc_target = detect_rustc_target(
+         target, compiler_info, arm_target, rust_supported_targets
+     )
+-- 
+2.43.0
+

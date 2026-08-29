@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           dracut
-Version:        108
+Version:        112
 Release:        %autorelease
 Summary:        Library to create ISO 9660 disk images
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            https://github.com/dracut-ng/dracut-ng
-#!RemoteAsset
+#!RemoteAsset:  sha256:839d21eb4bd27bb0ee40d74c9da46df088c2e1425fcd8c3ea62b7e3a3dd28a91
 Source:         %{url}/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -20,10 +20,11 @@ BuildOption(conf):  --bashcompletiondir=$(pkg-config --variable=completionsdir b
 BuildOption(conf):  --libdir=%{_prefix}/lib
 BuildOption(conf):  --disable-dracut-cpio
 BuildOption(conf):  --disable-documentation
+# We can't run the whole test suite in the build environment
+BuildOption(check):  TESTS="80 81"
 
 BuildRequires:  bash
 BuildRequires:  git-core
-
 BuildRequires:  pkgconfig
 BuildRequires:  systemd
 BuildRequires:  bash-completion
@@ -92,10 +93,6 @@ mkdir -p %{buildroot}%{_prefix}/lib/dracutdracut.conf.d
 
 rm -f %{buildroot}%{_mandir}/man?/*suse*
 
-# TODO: make tests pass.
-%check
-
-
 %files
 %{_bindir}/dracut
 %{_datadir}/bash-completion/completions/dracut
@@ -104,7 +101,6 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %dir %{_prefix}/lib/dracut
 %dir %{_prefix}/lib/dracut/modules.d
 %{_prefix}/lib/dracut/dracut-functions.sh
-%{_prefix}/lib/dracut/dracut-init.sh
 %{_prefix}/lib/dracut/dracut-functions
 %{_prefix}/lib/dracut/dracut-version.sh
 %{_prefix}/lib/dracut/dracut-logger.sh
@@ -129,7 +125,6 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/11systemd-battery-check
 %{_prefix}/lib/dracut/modules.d/11systemd-coredump
 %{_prefix}/lib/dracut/modules.d/11systemd-creds
-%{_prefix}/lib/dracut/modules.d/11systemd-cryptsetup
 %{_prefix}/lib/dracut/modules.d/11systemd-hostnamed
 %{_prefix}/lib/dracut/modules.d/11systemd-initrd
 %{_prefix}/lib/dracut/modules.d/11systemd-integritysetup
@@ -137,14 +132,14 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/11systemd-ldconfig
 %{_prefix}/lib/dracut/modules.d/11systemd-modules-load
 %{_prefix}/lib/dracut/modules.d/11systemd-networkd
-%{_prefix}/lib/dracut/modules.d/11systemd-pcrphase
+%{_prefix}/lib/dracut/modules.d/11systemd-pcrextend
 %{_prefix}/lib/dracut/modules.d/11systemd-portabled
 %{_prefix}/lib/dracut/modules.d/11systemd-pstore
 %{_prefix}/lib/dracut/modules.d/11systemd-repart
 %{_prefix}/lib/dracut/modules.d/11systemd-resolved
 %{_prefix}/lib/dracut/modules.d/11systemd-sysext
 %{_prefix}/lib/dracut/modules.d/11systemd-sysctl
-%{_prefix}/lib/dracut/modules.d/68systemd-sysusers
+%{_prefix}/lib/dracut/modules.d/11systemd-sysusers-service
 %{_prefix}/lib/dracut/modules.d/11systemd-timedated
 %{_prefix}/lib/dracut/modules.d/11systemd-timesyncd
 %{_prefix}/lib/dracut/modules.d/11systemd-tmpfiles
@@ -162,20 +157,21 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/20i18n
 %{_prefix}/lib/dracut/modules.d/30convertfs
 %{_prefix}/lib/dracut/modules.d/35connman
-# TODO: Is this obsolete?
-%{_prefix}/lib/dracut/modules.d/35network-legacy
 %{_prefix}/lib/dracut/modules.d/35network-manager
 %{_prefix}/lib/dracut/modules.d/40network
 %{_prefix}/lib/dracut/modules.d/45drm
 %{_prefix}/lib/dracut/modules.d/45simpledrm
 %{_prefix}/lib/dracut/modules.d/45net-lib
 %{_prefix}/lib/dracut/modules.d/45plymouth
+%{_prefix}/lib/dracut/modules.d/45systemd-import
 %{_prefix}/lib/dracut/modules.d/45url-lib
 %{_prefix}/lib/dracut/modules.d/68lvmmerge
 %{_prefix}/lib/dracut/modules.d/68lvmthinpool-monitor
 %{_prefix}/lib/dracut/modules.d/70bluetooth
 %{_prefix}/lib/dracut/modules.d/70btrfs
 %{_prefix}/lib/dracut/modules.d/70crypt
+%{_prefix}/lib/dracut/modules.d/70crypt-lib
+%{_prefix}/lib/dracut/modules.d/70devicetree-firmware
 %{_prefix}/lib/dracut/modules.d/70dm
 %{_prefix}/lib/dracut/modules.d/70dmraid
 %{_prefix}/lib/dracut/modules.d/70dmsquash-live
@@ -184,11 +180,13 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/70fs-lib
 %{_prefix}/lib/dracut/modules.d/70img-lib
 %{_prefix}/lib/dracut/modules.d/70kernel-modules
+%{_prefix}/lib/dracut/modules.d/70kernel-modules-export
 %{_prefix}/lib/dracut/modules.d/70kernel-modules-extra
 %{_prefix}/lib/dracut/modules.d/70kernel-network-modules
 %{_prefix}/lib/dracut/modules.d/70livenet
 %{_prefix}/lib/dracut/modules.d/70lvm
 %{_prefix}/lib/dracut/modules.d/70mdraid
+%{_prefix}/lib/dracut/modules.d/70memdisk
 %{_prefix}/lib/dracut/modules.d/70multipath
 %{_prefix}/lib/dracut/modules.d/70nvdimm
 %{_prefix}/lib/dracut/modules.d/70numlock
@@ -197,7 +195,11 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/70pcmcia
 %{_prefix}/lib/dracut/modules.d/70qemu
 %{_prefix}/lib/dracut/modules.d/70qemu-net
+%{_prefix}/lib/dracut/modules.d/70qcom-adsp/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/70qcom-adsp/qcom-adsp-pre-udev.sh
 %{_prefix}/lib/dracut/modules.d/70uefi-lib
+%{_prefix}/lib/dracut/modules.d/71overlayfs-crypt
+%{_prefix}/lib/dracut/modules.d/71systemd-cryptsetup
 %{_prefix}/lib/dracut/modules.d/73crypt-gpg
 %{_prefix}/lib/dracut/modules.d/73crypt-loop
 %{_prefix}/lib/dracut/modules.d/73fido2
@@ -205,6 +207,12 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/73pkcs11
 %{_prefix}/lib/dracut/modules.d/73tpm2-tss
 %{_prefix}/lib/dracut/modules.d/74debug
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony-ntp-source.sh
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony-wait.service
+%{_prefix}/lib/dracut/modules.d/74chrony/chrony.conf
+%{_prefix}/lib/dracut/modules.d/74chrony/chronyd.service
+%{_prefix}/lib/dracut/modules.d/74chrony/module-setup.sh
+%{_prefix}/lib/dracut/modules.d/74chrony/parse-ntp.sh
 %{_prefix}/lib/dracut/modules.d/74cifs
 %{_prefix}/lib/dracut/modules.d/74fcoe
 %{_prefix}/lib/dracut/modules.d/74fcoe-uefi
@@ -237,6 +245,7 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %{_prefix}/lib/dracut/modules.d/77syslog
 %{_prefix}/lib/dracut/modules.d/77usrmount
 %{_prefix}/lib/dracut/modules.d/77initqueue
+%{_prefix}/lib/dracut/modules.d/78systemd-sysusers
 %{_prefix}/lib/dracut/modules.d/80base
 %{_prefix}/lib/dracut/modules.d/81busybox
 %{_prefix}/lib/dracut/modules.d/84memstrack
@@ -274,4 +283,4 @@ rm -f %{buildroot}%{_mandir}/man?/*suse*
 %dir %{_localstatedir}/lib/dracut/overlay
 
 %changelog
-%{?autochangelog}
+%autochangelog

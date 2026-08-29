@@ -11,7 +11,7 @@ Version:        2020.1
 Release:        %autorelease
 Summary:        Better dates and times for Python
 License:        Apache-2.0
-URL:            https://github.com/arrow-py/arrow
+URL:            https://github.com/sdispater/pytzdata
 #!RemoteAsset:  sha256:3efa13b335a00a8de1d345ae41ec78dd11c9f8807f522d39850f2dd828681540
 Source:         https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
@@ -35,7 +35,7 @@ BuildRequires:  tzdata
 
 Requires:       tzdata
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,8 +46,8 @@ bindings to the database provided by the system tzdata package.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc README.rst
+%license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

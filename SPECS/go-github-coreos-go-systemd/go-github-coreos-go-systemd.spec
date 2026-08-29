@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           go-systemd
-%define go_import_path  github.com/coreos/go-systemd
+%define go_import_path  github.com/coreos/go-systemd/v22
 # systemd tests cannot done in a container environment - Julian
 %define go_test_ignore_failure 1
 
@@ -15,20 +15,24 @@ Release:        %autorelease
 Summary:        Go bindings to systemd socket activation, journal, D-Bus, and unit files
 License:        Apache-2.0
 URL:            https://github.com/coreos/go-systemd
-#!RemoteAsset
+#!RemoteAsset:  sha256:ff64fccd64a70123d513f979ea7a97f42300d7af33303890c1ab491f57a311ea
 Source0:        https://github.com/coreos/go-systemd/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+BuildOption(check):  -vet=off
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
-BuildRequires:  go(github.com/godbus/dbus)
+BuildRequires:  go(github.com/godbus/dbus/v5)
 BuildRequires:  go(golang.org/x/sys)
+BuildRequires:  pkgconfig(libsystemd)
 
-Provides:       go(github.com/coreos/go-systemd) = %{version}
+Provides:       go(%{go_import_path}) = %{version}
 
-Requires:       go(github.com/godbus/dbus)
+Requires:       go(github.com/godbus/dbus/v5)
 Requires:       go(golang.org/x/sys)
+Requires:       pkgconfig(libsystemd)
 
 %description
 Go bindings to systemd. The project has several packages:
@@ -43,9 +47,9 @@ Go bindings to systemd. The project has several packages:
  * unit - for (de)serialization and comparison of unit files
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

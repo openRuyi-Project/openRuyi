@@ -18,6 +18,12 @@ Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{sr
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# Maybe upstream should update these tests
+BuildOption(check):  -e traits.stubs_tests.examples
+BuildOption(check):  -e 'traits.stubs_tests.examples.*'
+BuildOption(check):  -e traits.stubs_tests.numpy_examples.Array
+# No module named 'sphinx'
+BuildOption(check):  -e traits.util.trait_documenter
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -26,7 +32,8 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(numpy)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -35,16 +42,12 @@ definition called a trait. Although they can be used as normal Python object
 attributes, traits also have several additional characteristics: initialization,
 validation, delegation, notification, and visualization.
 
-%check
-# skip tests as some deps we don't have yet.
-
 %generate_buildrequires
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc CHANGES.rst README.rst
-%doc examples/tutorials/
+%doc CHANGES.rst README.rst examples/tutorials/
 %license LICENSE.txt
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Summary:        Userspace Tracing (profiling) library
 License:        LGPL-2.1-only AND MIT AND GPL-2.0-only AND BSD-3-Clause AND BSD-2-Clause
 URL:            https://lttng.org/
 VCS:            git:https://github.com/lttng/lttng-ust.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:82cdfd304bbb2b2b7d17cc951a6756b37a9f73868ec0ba7db448a0d5ca51b763
 Source:         https://lttng.org/files/lttng-ust/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -41,6 +41,9 @@ needed to develop applications that use the lttng-ust library.
 %conf -p
 autoreconf -vif
 
+%install -a
+sed -i 's|^#!/usr/bin/env python$|#!/usr/bin/env python3|' %{buildroot}%{_bindir}/lttng-gen-tp
+
 %files
 %{_libdir}/lib*.so.*
 %{_mandir}/man3/*
@@ -59,10 +62,11 @@ autoreconf -vif
 %dir %{_includedir}/lttng
 %{_includedir}/lttng/*
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/lttng-ust*.pc
+%{_libdir}/pkgconfig/lttng-ust-ctl.pc
+%{_libdir}/pkgconfig/lttng-ust.pc
 
 %dir %{_docdir}/lttng-ust/examples
 %{_docdir}/lttng-ust/examples/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,11 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 4f480a7..e4492ad 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["scikit-build-core >= 0.11.4, < 0.12.0", "cffi >= 1.0.3;implementation_name == 'cpython'"]
++requires = ["scikit-build-core >= 0.11.4, < 0.13.0", "cffi >= 1.0.3;implementation_name == 'cpython'"]
+ build-backend = "scikit_build_core.build"
+ 
+ [project]

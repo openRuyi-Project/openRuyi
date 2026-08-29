@@ -8,17 +8,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           mimalloc
-Version:        3.1.5
+Version:        3.3.2
 Release:        %autorelease
 Summary:        A general purpose allocator with excellent performance
 License:        MIT
 URL:            https://github.com/microsoft/mimalloc
-#!RemoteAsset
+#!RemoteAsset:  sha256:ca02384e007f46950598500dfaebde5ff9948c1d231f5a81b058799afa64bbbb
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
-# unmerged patch enabling native RISC-V pause support
-Patch0:         riscv-atomic-yield-fastpath.patch
+# https://github.com/microsoft/mimalloc/pull/1299
+Patch0:         0001-RISC-V-detect-virtual-address-space-at-runtime-using-hwprobe.patch
 
 BuildOption(conf):  -DMI_INSTALL_TOPLEVEL=ON
 # if you want to override malloc/free globally, set this to ON
@@ -64,4 +64,4 @@ rm -rf bin
 %{_libdir}/cmake/%{name}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

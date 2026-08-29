@@ -10,15 +10,15 @@ Release:        %autorelease
 Summary:        A dynamic adaptive system tuning daemon
 License:        GPL-2.0-or-later
 URL:            https://github.com/redhat-performance/tuned
-#!RemoteAsset
+#!RemoteAsset:  sha256:20b6af0752bce2dbcf5406c95077b349dca95d8e5449c8e6a4c05ceddd95ac02
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  make
 BuildRequires:  desktop-file-utils
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-pyudev
-BuildRequires:  python3-dbus
+BuildRequires:  python3dist(pyudev)
+BuildRequires:  pkgconfig(dbus-python)
 BuildRequires:  pkgconfig(systemd)
 
 Requires:       ethtool
@@ -27,10 +27,10 @@ Requires:       hdparm
 Requires:       polkit
 Requires:       util-linux
 Requires:       virt-what
-Requires:       python3-dbus
-Requires:       python3-linux-procfs
-Requires:       python3-pyudev
-Requires:       python3-pyinotify
+Requires:       pkgconfig(dbus-python)
+Requires:       python3dist(python-linux-procfs)
+Requires:       python3dist(pyudev)
+Requires:       python3dist(pyinotify)
 
 %description
 The tuned package contains a daemon that tunes system settings dynamically.
@@ -44,7 +44,7 @@ Summary:        GTK+ GUI for tuned
 Requires:       %{name} = %{version}-%{release}
 Requires:       powertop
 Requires:       polkit
-Requires:       python3-pygobject
+Requires:       python3dist(pygobject)
 
 %description    gtk
 GTK+ GUI that can control tuned and provides simple profile editor.
@@ -246,4 +246,4 @@ done
 %{_mandir}/man8/scomes.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

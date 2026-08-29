@@ -43,6 +43,18 @@ Requires:       nano
 %description
 This meta package provides the minimal environment for openRuyi.
 
+%package        systemd
+Summary:        Meta package for minimal openRuyi environment, with systemd
+Requires:       systemd
+Requires:       systemd-udev
+# for udevd System call
+Requires:       libseccomp
+# for udevd auto modprobe
+Requires:       kmod-libs
+
+%description    systemd
+This meta package provides the minimal environment with systemd for openRuyi.
+
 %prep
 
 %build
@@ -51,5 +63,7 @@ This meta package provides the minimal environment for openRuyi.
 
 %files
 
+%files systemd
+
 %changelog
-%{?autochangelog}
+%autochangelog

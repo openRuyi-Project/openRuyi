@@ -7,22 +7,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fmt
-Version:        12.0.0
+Version:        12.1.0
 Release:        %autorelease
 Summary:        Small, safe and fast formatting library for C++
 License:        MIT
 URL:            https://github.com/fmtlib/fmt
-#!RemoteAsset
+#!RemoteAsset:  sha256:ea7de4299689e12b6dddd392f9896f08fb0777ac7168897a244a6d6085043fea
 Source0:        https://github.com/fmtlib/fmt/archive/%{version}/fmt-%{version}.tar.gz
 BuildSystem:    cmake
 
-BuildOption(conf): -DCMAKE_BUILD_TYPE=RelWithDebInfo
-BuildOption(conf): -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
-BuildOption(conf): -DFMT_CMAKE_DIR:STRING=%{_libdir}/cmake/%{name}
-BuildOption(conf): -DFMT_LIB_DIR:STRING=%{_libdir}
+BuildOption(conf):  -DCMAKE_BUILD_TYPE=RelWithDebInfo
+BuildOption(conf):  -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+BuildOption(conf):  -DFMT_CMAKE_DIR:STRING=%{_libdir}/cmake/%{name}
+BuildOption(conf):  -DFMT_LIB_DIR:STRING=%{_libdir}
 
 BuildRequires:  cmake
-BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  ninja
 
@@ -48,4 +47,4 @@ for developing applications that use the fmt library.
 %{_libdir}/pkgconfig/fmt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

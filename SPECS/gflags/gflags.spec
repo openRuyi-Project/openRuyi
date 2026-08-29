@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gflags
-Version:        2.2.2
+Version:        2.3.0
 Release:        %autorelease
 Summary:        Library for commandline flag processing
 License:        BSD-3-Clause
 URL:            https://gflags.github.io/gflags/
 VCS:            git:https://github.com/gflags/gflags
-#!RemoteAsset
+#!RemoteAsset:  sha256:f619a51371f41c0ad6837b2a98af9d4643b3371015d873887f7e8d3237320b2f
 Source0:        https://github.com/gflags/gflags/archive/v%{version}/gflags-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -58,4 +58,4 @@ This package contains development files for %{name}.
 %{_libdir}/cmake/gflags
 
 %changelog
-%{?autochangelog}
+%autochangelog

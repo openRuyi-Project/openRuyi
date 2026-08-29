@@ -6,17 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-URI
-Version:        5.32
+Version:        5.34
 Release:        %autorelease
 Summary:        Uniform Resource Identifiers (absolute and relative)
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/URI
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/URI-%{version}.tar.gz
+#!RemoteAsset:  sha256:de64c779a212ff1821896c5ca2bb69e74767d2674cee411e777deea7a22604a8
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/URI-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -52,20 +56,8 @@ This module implements the URI class. Objects of this class represent
 "Uniform Resource Identifier references" as specified in RFC 2396 (and
 updated by RFC 2732).
 
-%prep
-%setup -q -n URI-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.md perlimports.toml README uri-test
 
 %changelog
-%{?autochangelog}
+%autochangelog

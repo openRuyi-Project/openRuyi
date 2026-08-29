@@ -76,7 +76,8 @@ about a point.
 %{_libdir}/cmake/Qhull/QhullTargets*.cmake
 %{_libdir}/pkgconfig/qhull_r.pc
 %{_libdir}/pkgconfig/qhullcpp.pc
-%{_libdir}/pkgconfig/qhullstatic*.pc
+%{_libdir}/pkgconfig/qhullstatic.pc
+%{_libdir}/pkgconfig/qhullstatic_r.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

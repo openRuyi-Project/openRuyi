@@ -63,7 +63,7 @@ find %{buildroot} -name '*.a' -delete
 %files devel
 %{_includedir}/*.h
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libtommath.pc
 
 %changelog
 %{?autochangelog}

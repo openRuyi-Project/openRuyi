@@ -24,7 +24,8 @@ BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -36,4 +37,4 @@ text-unidecode is the most basic port of the Text::Unidecode Perl library.
 %files -f %{pyproject_files}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Automatically give your module the ability to have plugins
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Module-Pluggable
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SI/SIMONW/Module-Pluggable-%{version}.tar.gz
+#!RemoteAsset:  sha256:58512bb9c654746d0937770b98b559b30872d85ac24073485e5830890dd1b2a0
+Source0:        https://www.cpan.org/authors/id/S/SI/SIMONW/Module-Pluggable-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -48,20 +52,8 @@ Provides a simple but, hopefully, extensible way of having 'plugins' for
 your module. Obviously this isn't going to be the be all and end all of
 solutions but it works for me.
 
-%prep
-%setup -q -n Module-Pluggable-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

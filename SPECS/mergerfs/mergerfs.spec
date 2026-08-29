@@ -11,7 +11,7 @@ Release:        %{autorelease}
 Summary:        A FUSE union filesystem
 License:        MIT
 URL:            https://github.com/trapexit/mergerfs
-#!RemoteAsset
+#!RemoteAsset:  sha256:d3ac8c07af0d0667f825bc50796896696d92734dafea962884eecd983f255dca
 Source0:        https://github.com/trapexit/mergerfs/releases/download/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -24,7 +24,6 @@ BuildOption(install):  LIBDIR=%{_libdir}
 
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(libattr)
-BuildRequires:  pkgconfig(fuse)
 BuildRequires:  libtool
 
 %description
@@ -41,9 +40,11 @@ behavior.
 %files
 %doc README.md
 %{_bindir}/*
+%if "%{_sbindir}" != "%{_bindir}"
 %{_sbindir}/*
+%endif
 %{_mandir}/man1/*.1*
 %{_libdir}/mergerfs
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -5,18 +5,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           pv
-Version:        1.10.3
+Version:        1.10.5
 Release:        %autorelease
 Summary:        Flexible operating system image builder
 License:        GPL-3.0-or-later
 URL:            https://www.ivarch.com/programs/pv.shtml
 VCS:            git:https://codeberg.org/ivarch/pv.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:ab21b4f8662280646b6a02e1b9f096790918f89c952bbe0d06fef75d3b52fb15
 Source0:        https://www.ivarch.com/programs/sources/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildRequires:  make
-BuildRequires:  gcc
 BuildRequires:  gettext
 
 %description
@@ -39,4 +38,4 @@ rm %{buildroot}/%{_docdir}/%{name}/INSTALL
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,21 @@
+[workspace]
+resolver = "2"
+exclude = ["cryptography-47.0.0"]
+
+members = [
+    "rust/",
+    "rust/tsp-asn1",
+]
+
+[workspace.dependencies]
+asn1 = "0.24.1"
+cryptography-x509 = { path = "cryptography-47.0.0/src/rust/cryptography-x509" }
+hex = "0.4"
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+authors = [
+    "Trail of Bits <opensource@trailofbits.com>"
+]
+publish = false

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Check that a library is available for FFI
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/FFI-CheckLib
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/FFI-CheckLib-%{version}.tar.gz
+#!RemoteAsset:  sha256:04d885fc377d44896e5ea1c4ec310f979bb04f2f18658a7e7a4d509f7e80bb80
+Source0:        https://www.cpan.org/authors/id/P/PL/PLICEASE/FFI-CheckLib-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -37,20 +41,8 @@ provides a find_lib function that will return the full path to the found
 dynamic library, which can be feed directly into FFI::Platypus or another
 FFI system.
 
-%prep
-%setup -q -n FFI-CheckLib-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc author.yml Changes perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog

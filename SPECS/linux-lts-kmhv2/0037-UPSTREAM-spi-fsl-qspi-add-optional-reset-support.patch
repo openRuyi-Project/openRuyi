@@ -1,7 +1,7 @@
-From 3a4ce77b198741c2a076154aaeedad34ff5f9521 Mon Sep 17 00:00:00 2001
+From ea61a74942a5004fa215d79c58105f1338ec541e Mon Sep 17 00:00:00 2001
 From: Alex Elder <elder@riscstar.com>
 Date: Mon, 27 Oct 2025 08:30:01 -0500
-Subject: [PATCH 037/292] UPSTREAM: spi: fsl-qspi: add optional reset support
+Subject: [RUYI PATCH] UPSTREAM: spi: fsl-qspi: add optional reset support
 
 Add support for one or more optional exclusive resets.  These simply need
 to be deasserted at probe time, and can remain that way for the life of the
@@ -18,7 +18,7 @@ Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
  1 file changed, 12 insertions(+)
 
 diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index c887abb028d7..1e27647dd2a0 100644
+index 3904d64ed433..df411b3fb2bd 100644
 --- a/drivers/spi/spi-fsl-qspi.c
 +++ b/drivers/spi/spi-fsl-qspi.c
 @@ -36,6 +36,7 @@

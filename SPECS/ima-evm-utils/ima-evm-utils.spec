@@ -12,7 +12,7 @@ Summary:        IMA/EVM support utilities
 License:        GPL-2.0-or-later
 URL:            https://github.com/linux-integrity/ima-evm-utils
 VCS:            git:https://github.com/linux-integrity/ima-evm-utils
-#!RemoteAsset
+#!RemoteAsset:  sha256:9346a5ccd5ca77caf6a9d2ac0d83873c04d0372414a632126df4e7a88bedff4a
 Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -41,6 +41,7 @@ ima-evm-utils is used to prepare the file system for these extended attributes.
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig(openssl)
 
 %description    devel
 This package provides the header files for %{name}
@@ -62,4 +63,4 @@ rm -rf %{buildroot}%{_datadir}/doc
 %{_libdir}/libimaevm.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

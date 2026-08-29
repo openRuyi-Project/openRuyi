@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Protocol Buffers - Google's data interchange format
 License:        BSD-3-Clause
 URL:            https://github.com/protocolbuffers/protobuf
-#!RemoteAsset
+#!RemoteAsset:  sha256:6b6599b54c88d75904b7471f5ca34a725fa0af92e134dd1a32d5b395aa4b4ca8
 Source0:        https://github.com/protocolbuffers/protobuf/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -71,7 +71,9 @@ RPC protocols and file formats.
 %package        devel
 Summary:        Header files, libraries and development documentation for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Provides:       libprotobuf-devel
+Requires:       pkgconfig(zlib)
+Provides:       libprotobuf-devel = %{version}-%{release}
+Provides:       protobuf-compiler = %{version}-%{release}
 
 %description    devel
 Protocol Buffers are a way of encoding structured data in an efficient yet
@@ -91,9 +93,12 @@ RPC protocols and file formats.
 %{_includedir}/*.h
 %{_libdir}/cmake/protobuf
 %{_libdir}/cmake/utf8_range
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/protobuf-lite.pc
+%{_libdir}/pkgconfig/protobuf.pc
+%{_libdir}/pkgconfig/upb.pc
+%{_libdir}/pkgconfig/utf8_range.pc
 # the UPB static lib is included, used for development
 %{_libdir}/libupb.a
 
 %changelog
-%{?autochangelog}
+%autochangelog

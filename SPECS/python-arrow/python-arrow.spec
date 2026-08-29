@@ -26,7 +26,7 @@ BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(python-dateutil)
 BuildRequires:  python3dist(pytzdata)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -46,4 +46,4 @@ sed -i 's/tzdata;python_version/pytzdata;python_version/' pyproject.toml
 %doc README.rst CHANGELOG.rst
 
 %changelog
-%{?autochangelog}
+%autochangelog

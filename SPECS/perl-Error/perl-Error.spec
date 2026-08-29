@@ -11,10 +11,16 @@ Release:        %autorelease
 Summary:        Error/exception handling in an OO-ish way
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Error
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SH/SHLOMIF/Error-%{version}.tar.gz
+#!RemoteAsset:  sha256:34d382276c0fb0d6b38355b94c96a30b12d834d5662eb53f088ee25e3e712924
+Source0:        https://www.cpan.org/authors/id/S/SH/SHLOMIF/Error-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlbuild
+
+BuildOption(build):  --installdirs=vendor
+BuildOption(install):  --destdir=%{buildroot} --create_packlist=0
+
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(base)
@@ -38,19 +44,8 @@ procedural interface to exception handling. Secondly Error is a base class
 for errors/exceptions that can either be thrown, for subsequent catch, or
 can simply be recorded.
 
-%prep
-%setup -q -n Error-%{version}
-
-%build
-perl Build.PL --installdirs=vendor
-./Build
-
-%install
-./Build install destdir=%{buildroot} create_packlist=0
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ChangeLog Changes examples README scripts weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

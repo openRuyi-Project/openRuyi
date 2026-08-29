@@ -11,14 +11,19 @@ Release:        %autorelease
 Summary:        Implementation of the soundex algorithm
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Text-Soundex
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Text-Soundex-%{version}.tar.gz
+#!RemoteAsset:  sha256:f6dd55b4280b25dea978221839864382560074e1d6933395faee2510c2db60ed
+Source0:        https://www.cpan.org/authors/id/R/RJ/RJBS/Text-Soundex-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(if)
+BuildRequires:  perl-devel
 
 %description
 Soundex is a phonetic algorithm for indexing names by sound, as pronounced
@@ -29,21 +34,8 @@ algorithms and is often used (incorrectly) as a synonym for "phonetic
 algorithm". Improvements to Soundex are the basis for many modern phonetic
 algorithms. (Wikipedia, 2007)
 
-%prep
-%setup -q -n Text-Soundex-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

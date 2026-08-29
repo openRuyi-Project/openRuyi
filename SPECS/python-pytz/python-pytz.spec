@@ -7,25 +7,28 @@
 %global srcname pytz
 
 Name:           python-%{srcname}
-Version:        2025.1
+Version:        2026.2
 Release:        %autorelease
 Summary:        Python timezone library
 License:        MIT
 URL:            http://pythonhosted.org/pytz
-#!RemoteAsset
+#!RemoteAsset:  sha256:0e60b47b29f21574376f218fe21abc009894a2321ea16c6754f3cad6eb7cdd6a
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    pyproject
 
-Provides:       python3-%{srcname}
-%python_provide python3-%{srcname}
-BuildRequires:  python3-devel
-BuildRequires:  python3-pip
-BuildRequires:  python3-setuptools
+BuildOption(install):  -l %{srcname} +auto
+
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(setuptools)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  tzdata
+
+Provides:       python3-%{srcname} = %{version}-%{release}
+%python_provide python3-%{srcname}
+
 Requires:       tzdata
-BuildSystem:    pyproject
-BuildOption(install):  -l %{srcname} +auto
 
 %description
 This library brings the Olson tz database into Python.  It
@@ -37,7 +40,8 @@ saving time.  Almost all of the Olson timezones are supported.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE.txt
 %doc README*
+%license LICENSE.txt
+
 %changelog
-%{?autochangelog}
+%autochangelog

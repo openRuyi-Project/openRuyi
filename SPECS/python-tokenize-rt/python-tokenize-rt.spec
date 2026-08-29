@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Wrapper for Python's stdlib `tokenize` supporting roundtrips
 License:        MIT
 URL:            https://github.com/asottile/tokenize-rt/
-#!RemoteAsset
+#!RemoteAsset:  sha256:8439c042b330c553fdbe1758e4a05c0ed460dbbbb24a606f11f0dee75da4cad6
 Source0:        https://files.pythonhosted.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -25,7 +25,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(pytest)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +43,4 @@ a refactoring tool based on the python tokenization.
 %{_bindir}/tokenize-rt
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -6,16 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libnetfilter_conntrack
-Version:        1.0.9
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Netfilter conntrack userspace library
 License:        GPL-2.0-or-later
 URL:            https://netfilter.org/projects/libnetfilter_conntrack
 VCS:            git:https://git.netfilter.org/libnetfilter_conntrack
-#!RemoteAsset
-Source0:        %{url}/files/%name-%version.tar.bz2
-#!RemoteAsset
-Source1:        %{url}/files/%name-%version.tar.bz2.sig
+#!RemoteAsset:  sha256:769d3eaf57fa4fbdb05dd12873b6cb9a5be7844d8937e222b647381d44284820
+Source0:        %{url}/files/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -50,9 +48,9 @@ autoreconf -fiv
 
 %files devel
 %{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libnetfilter_conntrack.pc
 %dir %{_includedir}/libnetfilter_conntrack
 %{_includedir}/libnetfilter_conntrack/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

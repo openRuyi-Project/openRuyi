@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Only use Sub::Exporter if you need it
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Sub-Exporter-Progressive
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/F/FR/FREW/Sub-Exporter-Progressive-%{version}.tar.gz
+#!RemoteAsset:  sha256:d535b7954d64da1ac1305b1fadf98202769e3599376854b2ced90c382beac056
+Source0:        https://www.cpan.org/authors/id/F/FR/FREW/Sub-Exporter-Progressive-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More) >= 0.88
@@ -29,20 +33,8 @@ they are doing is picking exports, but use Sub::Exporter if your users try
 to use Sub::Exporter's more advanced features, like renaming exports, if
 they try to use them.
 
-%prep
-%setup -q -n Sub-Exporter-Progressive-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

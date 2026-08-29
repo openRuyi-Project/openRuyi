@@ -9,13 +9,13 @@
 %global _test_target test
 
 Name:           fio
-Version:        3.41
+Version:        3.42
 Release:        %autorelease
 Summary:        Multithreaded IO generation tool
 License:        GPL-2.0-only
 URL:            https://fio.readthedocs.io/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/axboe/fio.git
-#!RemoteAsset:  sha256:ba95867d541a680b0e743b1ecb385e0874a88e422566a1a27eb15f1edf703a30
+#!RemoteAsset:  sha256:ac126c69fde515a3da3f71817562715df9001e79f2008ed98a17eac340cd3f66
 Source0:        http://brick.kernel.dk/snaps/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -25,7 +25,6 @@ BuildOption(install):  mandir=%{_mandir}
 BuildOption(install):  libdir=%{_libdir}/fio
 BuildOption(install):  INSTALL="install -p"
 
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  libaio
 BuildRequires:  pkgconfig(libaio)

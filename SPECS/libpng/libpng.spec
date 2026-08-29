@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libpng
-Version:        1.6.55
+Version:        1.6.58
 Release:        %autorelease
 Summary:        A library of functions for manipulating PNG image format files
 License:        zlib
 URL:            http://www.libpng.org/pub/png/
 VCS:            git:https://github.com/glennrp/libpng
-#!RemoteAsset
+#!RemoteAsset:  sha256:a9d4df463d36a6e5f9c29bd6f4967312d17e996c1854f3511f833924eb1993cf
 Source0:        https://github.com/glennrp/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -46,7 +46,6 @@ the libpng package.
 
 %files
 %license LICENSE
-%{_bindir}/pngfix
 %{_libdir}/libpng*.so.*
 %{_mandir}/man5/*
 
@@ -55,10 +54,11 @@ the libpng package.
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/libpng*.so
-%{_libdir}/pkgconfig/libpng*.pc
+%{_libdir}/pkgconfig/libpng.pc
+%{_libdir}/pkgconfig/libpng16.pc
 %{_libdir}/cmake/PNG/
 %{_libdir}/libpng
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

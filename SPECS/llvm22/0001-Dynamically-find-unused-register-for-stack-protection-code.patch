@@ -1,0 +1,228 @@
+From f24e882549d8b9341f52a1d9d7f10ac167809146 Mon Sep 17 00:00:00 2001
+From: Jan Rehders <jrehders@baylibre.com>
+Date: Wed, 15 Jul 2026 16:10:44 +0200
+Subject: [PATCH] [RISCV] Dynamically find unused register for stack protection
+ code
+
+Previously stack protection used hardcoded registers which could conflict with
+registers being used by user code. This fixes a bug where clang
+-fstack-clash-protection would cause local variables to be trashed by the stack
+probing loop.
+
+The implementation is following the pattern of the AArch64 and X86
+backends. Utility function getLiveRegsForEntryMBB has been copied from
+AArch64FrameLowering.cpp and findScratchNonCalleeSaveRegister is loosely based
+on the AArch64 version.
+
+This fixes Github issue #198699
+---
+ llvm/lib/Target/RISCV/RISCVFrameLowering.cpp  | 64 +++++++++++++++--
+ llvm/lib/Target/RISCV/RISCVFrameLowering.h    |  5 ++
+ .../RISCV/stack-protector-vector-clobber.ll   | 70 +++++++++++++++++++
+ 3 files changed, 134 insertions(+), 5 deletions(-)
+ create mode 100644 llvm/test/CodeGen/RISCV/stack-protector-vector-clobber.ll
+
+diff --git a/llvm/lib/Target/RISCV/RISCVFrameLowering.cpp b/llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+index bbd1738cd5117..7de62329e9704 100644
+--- a/llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
++++ b/llvm/lib/Target/RISCV/RISCVFrameLowering.cpp
+@@ -647,6 +647,47 @@ getQCISavedInfo(const MachineFunction &MF,
+   return QCIInterruptCSI;
+ }
+ 
++static void getLiveRegsForEntryMBB(LivePhysRegs &LiveRegs,
++                                   const MachineBasicBlock &MBB) {
++  const MachineFunction *MF = MBB.getParent();
++  LiveRegs.addLiveIns(MBB);
++  const MCPhysReg *CSRegs = MF->getRegInfo().getCalleeSavedRegs();
++  for (unsigned i = 0; CSRegs[i]; ++i)
++    LiveRegs.addReg(CSRegs[i]);
++}
++
++Register RISCVFrameLowering::findScratchNonCalleeSaveRegister(
++    MachineBasicBlock *MBB, Register PreferredReg, Register DontUseReg) const {
++  MachineFunction *MF = MBB->getParent();
++
++  // Stack protection code is being inserted at beginning of function, use
++  // register which has been historically used
++  if (&MF->front() == MBB)
++    return PreferredReg;
++
++  const RISCVSubtarget &Subtarget = MF->getSubtarget<RISCVSubtarget>();
++  const TargetRegisterInfo &TRI = *Subtarget.getRegisterInfo();
++  LivePhysRegs LiveRegs(TRI);
++  getLiveRegsForEntryMBB(LiveRegs, *MBB);
++
++  const MachineRegisterInfo &MRI = MF->getRegInfo();
++  // Prefer the register which has been historically used for stack protector
++  if (LiveRegs.available(MRI, PreferredReg))
++    return PreferredReg;
++
++  static const MCPhysReg CandidateRegs[] = {
++      RISCV::X5,  RISCV::X6,  RISCV::X7,  RISCV::X28,
++      RISCV::X29, RISCV::X30, RISCV::X31,
++  };
++
++  for (unsigned Reg : CandidateRegs) {
++    if (Reg != DontUseReg && LiveRegs.available(MRI, Reg))
++      return Reg;
++  }
++
++  return Register();
++}
++
+ void RISCVFrameLowering::allocateAndProbeStackForRVV(
+     MachineFunction &MF, MachineBasicBlock &MBB,
+     MachineBasicBlock::iterator MBBI, const DebugLoc &DL, int64_t Amount,
+@@ -656,8 +697,10 @@ void RISCVFrameLowering::allocateAndProbeStackForRVV(
+   // Emit a variable-length allocation probing loop.
+ 
+   // Get VLEN in TargetReg
++  Register TargetReg = findScratchNonCalleeSaveRegister(&MBB, RISCV::X6);
++  assert(TargetReg.isValid() &&
++         "No available scratch register for stack probing");
+   const RISCVInstrInfo *TII = STI.getInstrInfo();
+-  Register TargetReg = RISCV::X6;
+   uint32_t NumOfVReg = Amount / RISCV::RVVBytesPerBlock;
+   BuildMI(MBB, MBBI, DL, TII->get(RISCV::PseudoReadVLENB), TargetReg)
+       .setMIFlag(Flag);
+@@ -849,7 +892,9 @@ void RISCVFrameLowering::allocateStack(MachineBasicBlock &MBB,
+   uint64_t RoundedSize = alignDown(Offset, ProbeSize);
+   uint64_t Residual = Offset - RoundedSize;
+ 
+-  Register TargetReg = RISCV::X6;
++  Register TargetReg = findScratchNonCalleeSaveRegister(&MBB, RISCV::X6);
++  assert(TargetReg.isValid() &&
++         "No available scratch register for stack probing");
+   // SUB TargetReg, SP, RoundedSize
+   RI->adjustReg(MBB, MBBI, DL, TargetReg, SPReg,
+                 StackOffset::getFixed(-RoundedSize), Flag, getStackAlign());
+@@ -2640,8 +2685,11 @@ TargetStackID::Value RISCVFrameLowering::getStackIDForScalableVectors() const {
+ 
+ // Synthesize the probe loop.
+ static void emitStackProbeInline(MachineBasicBlock::iterator MBBI, DebugLoc DL,
+-                                 Register TargetReg, bool IsRVV) {
++                                 Register TargetReg, Register ScratchReg,
++                                 bool IsRVV) {
+   assert(TargetReg != RISCV::X2 && "New top of stack cannot already be in SP");
++  assert(ScratchReg != RISCV::X2 && "Scratch register cannot be SP");
++  assert(TargetReg != ScratchReg && "Target and scratch must be different");
+ 
+   MachineBasicBlock &MBB = *MBBI->getParent();
+   MachineFunction &MF = *MBB.getParent();
+@@ -2660,7 +2708,6 @@ static void emitStackProbeInline(MachineBasicBlock::iterator MBBI, DebugLoc DL,
+   MachineBasicBlock *ExitMBB = MF.CreateMachineBasicBlock(MBB.getBasicBlock());
+   MF.insert(MBBInsertPoint, ExitMBB);
+   MachineInstr::MIFlag Flags = MachineInstr::FrameSetup;
+-  Register ScratchReg = RISCV::X7;
+ 
+   // ScratchReg = ProbeSize
+   TII->movImm(MBB, MBBI, DL, ScratchReg, ProbeSize, Flags);
+@@ -2734,7 +2781,14 @@ void RISCVFrameLowering::inlineStackProbe(MachineFunction &MF,
+       MachineBasicBlock::iterator MBBI = MI->getIterator();
+       DebugLoc DL = MBB.findDebugLoc(MBBI);
+       Register TargetReg = MI->getOperand(0).getReg();
+-      emitStackProbeInline(MBBI, DL, TargetReg,
++
++      Register ScratchReg =
++          findScratchNonCalleeSaveRegister(&MBB, RISCV::X7, TargetReg);
++
++      assert(ScratchReg.isValid() &&
++             "No available scratch register for stack probe loop");
++
++      emitStackProbeInline(MBBI, DL, TargetReg, ScratchReg,
+                            (MI->getOpcode() == RISCV::PROBED_STACKALLOC_RVV));
+       MBBI->eraseFromParent();
+     }
+diff --git a/llvm/lib/Target/RISCV/RISCVFrameLowering.h b/llvm/lib/Target/RISCV/RISCVFrameLowering.h
+index d79e402e13fbc..70191cb48662c 100644
+--- a/llvm/lib/Target/RISCV/RISCVFrameLowering.h
++++ b/llvm/lib/Target/RISCV/RISCVFrameLowering.h
+@@ -71,6 +71,11 @@ class RISCVFrameLowering : public TargetFrameLowering {
+ 
+   bool enableShrinkWrapping(const MachineFunction &MF) const override;
+ 
++  Register
++  findScratchNonCalleeSaveRegister(MachineBasicBlock *MBB,
++                                   Register PreferredReg,
++                                   Register DontUseReg = Register()) const;
++
+   bool isSupportedStackID(TargetStackID::Value ID) const override;
+   TargetStackID::Value getStackIDForScalableVectors() const override;
+ 
+diff --git a/llvm/test/CodeGen/RISCV/stack-protector-vector-clobber.ll b/llvm/test/CodeGen/RISCV/stack-protector-vector-clobber.ll
+new file mode 100644
+index 0000000000000..9944110ae10d8
+--- /dev/null
++++ b/llvm/test/CodeGen/RISCV/stack-protector-vector-clobber.ll
+@@ -0,0 +1,70 @@
++; NOTE: Assertions have been autogenerated by utils/update_llc_test_checks.py UTC_ARGS: --version 5
++;; Test that stack protection with vector clobbers and inline asm register
++;; constraints works correctly. This is a regression test for issue #198699. It
++;; has been produced from the repro case at
++;; https://github.com/llvm/llvm-project/issues/198699
++;
++; RUN: llc -mtriple=riscv64 -mattr=+v < %s | FileCheck %s --check-prefix=RV64V
++
++define range(i64 0, -9223372036854775808) i64 @test_stack_protector_with_vector_clobber(ptr nofree noundef %0) #0 {
++; RV64V-LABEL: test_stack_protector_with_vector_clobber:
++; RV64V:       # %bb.0:
++; RV64V-NEXT:    li a1, 2
++; RV64V-NEXT:    ld t2, 0(a0)
++; RV64V-NEXT:    #APP
++; RV64V-NEXT:    #NO_APP
++; RV64V-NEXT:    bge t2, a1, .LBB0_2
++; RV64V-NEXT:  # %bb.1:
++; RV64V-NEXT:    li a0, 0
++; RV64V-NEXT:    ret
++; RV64V-NEXT:  .LBB0_2:
++; RV64V-NEXT:    addi sp, sp, -16
++; RV64V-NEXT:    csrr t1, vlenb
++; RV64V-NEXT:    slli t1, t1, 3
++; RV64V-NEXT:    lui t0, 1
++; RV64V-NEXT:  .LBB0_3: # =>This Inner Loop Header: Depth=1
++; RV64V-NEXT:    sub sp, sp, t0
++; RV64V-NEXT:    sd zero, 0(sp)
++; RV64V-NEXT:    sub t1, t1, t0
++; RV64V-NEXT:    bge t1, t0, .LBB0_3
++; RV64V-NEXT:  # %bb.4:
++; RV64V-NEXT:    sub sp, sp, t1
++; RV64V-NEXT:    vsetivli zero, 8, e64, m8, ta, ma
++; RV64V-NEXT:    vle64.v v8, (a0)
++; RV64V-NEXT:    addi a1, sp, 16
++; RV64V-NEXT:    vs8r.v v8, (a1) # vscale x 64-byte Folded Spill
++; RV64V-NEXT:    #APP
++; RV64V-NEXT:    #NO_APP
++; RV64V-NEXT:    vl8r.v v8, (a1) # vscale x 64-byte Folded Reload
++; RV64V-NEXT:    vsetivli zero, 8, e64, m8, ta, ma
++; RV64V-NEXT:    vse64.v v8, (a0)
++; RV64V-NEXT:    csrr a0, vlenb
++; RV64V-NEXT:    slli a0, a0, 3
++; RV64V-NEXT:    add sp, sp, a0
++; RV64V-NEXT:    addi sp, sp, 16
++; RV64V-NEXT:    mv a0, t2
++; RV64V-NEXT:    ret
++  %2 = load i64, ptr %0, align 8
++  ; Inline asm using register x7 (t2)
++  %3 = tail call i64 asm sideeffect "", "={x7},{x7}"(i64 %2)
++  %4 = icmp slt i64 %3, 2
++  br i1 %4, label %7, label %5
++
++5:
++  ; Load vector
++  %6 = tail call <vscale x 8 x i64> @llvm.riscv.vle.nxv8i64.p0.i64(<vscale x 8 x i64> poison, ptr nonnull %0, i64 8)
++  ; Inline asm that clobbers all vector registers
++  tail call void asm sideeffect "", "~{v0},~{v1},~{v2},~{v3},~{v4},~{v5},~{v6},~{v7},~{v8},~{v9},~{v10},~{v11},~{v12},~{v13},~{v14},~{v15},~{v16},~{v17},~{v18},~{v19},~{v20},~{v21},~{v22},~{v23},~{v24},~{v25},~{v26},~{v27},~{v28},~{v29},~{v30},~{v31},~{memory}"()
++  ; Store vector
++  tail call void @llvm.riscv.vse.nxv8i64.p0.i64(<vscale x 8 x i64> %6, ptr nonnull %0, i64 8)
++  br label %7
++
++7:
++  %8 = phi i64 [ %3, %5 ], [ 0, %1 ]
++  ret i64 %8
++}
++
++declare <vscale x 8 x i64> @llvm.riscv.vle.nxv8i64.p0.i64(<vscale x 8 x i64>, ptr, i64)
++declare void @llvm.riscv.vse.nxv8i64.p0.i64(<vscale x 8 x i64>, ptr, i64)
++
++attributes #0 = { noinline nounwind "probe-stack"="inline-asm" "stack-protector-buffer-size"="8" "target-cpu"="generic-rv64" "target-features"="+v" }

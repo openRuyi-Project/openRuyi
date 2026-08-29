@@ -8,23 +8,23 @@
 
 %global includesubiddir %{_includedir}/shadow
 
-Name:          shadow
-Version:       4.18.0
-Release:       %autorelease
-Summary:       User and group account management utilities
-License:       BSD-3-Clause AND GPL-2.0-or-later
-URL:           https://github.com/shadow-maint/shadow
-#!RemoteAsset
-Source0:       https://github.com/shadow-maint/shadow/releases/download/%{version}/%{name}-%{version}.tar.xz
-Source1:       useradd.defaults
-Source2:       login.defs
-Source3:       shadow.timer
-Source4:       shadow.service
-Source5:       passwd.service
-BuildSystem:   autotools
+Name:           shadow
+Version:        4.19.4
+Release:        %autorelease
+Summary:        User and group account management utilities
+License:        BSD-3-Clause AND GPL-2.0-or-later
+URL:            https://github.com/shadow-maint/shadow
+#!RemoteAsset:  sha256:ce57a313e315a0a7cb04a8f50cc20753e994e487bbe9b78a2a824ca75cb486c0
+Source0:        https://github.com/shadow-maint/shadow/releases/download/%{version}/%{name}-%{version}.tar.xz
+Source1:        useradd.defaults
+Source2:        login.defs
+Source3:        shadow.timer
+Source4:        shadow.service
+Source5:        passwd.service
+BuildSystem:    autotools
 
-Patch0:        0001-openruyi-disable-conflicting-tools.patch
-Patch1:        0002-openruyi-adapt-configs.patch
+Patch2000:      2000-openruyi-disable-conflicting-tools.patch
+Patch2001:      2001-openruyi-adapt-configs.patch
 
 # Configure options for a modern, systemd-centric distro.
 BuildOption(conf):  --enable-shadowgrp
@@ -60,6 +60,7 @@ BuildRequires:  pkgconfig(pam_misc)
 BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  pkgconfig(libsemanage)
 BuildRequires:  pkgconfig(libxcrypt)
+BuildRequires:  pkgconfig(libsystemd)
 
 Provides:       shadow = %{version}-%{release}
 Provides:       passwd
@@ -199,4 +200,4 @@ install -Dm644 %{SOURCE4} %{buildroot}%{_unitdir}/shadow.service
 %{_libdir}/libsubid.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,303 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index ce3ec7f..fb2c9c8 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -42,88 +42,9 @@
+ pkg-fmt = "zip"
+ 
+ [features]
+-all = [
+-    "dist-client",
+-    "redis",
+-    "s3",
+-    "memcached",
+-    "gcs",
+-    "azure",
+-    "gha",
+-    "webdav",
+-    "oss",
+-    "cos",
+-]
+-azure = [
+-    "opendal/services-azblob",
+-    "reqsign",
+-    "reqwest",
+-]
+-cos = [
+-    "opendal/services-cos",
+-    "reqsign",
+-    "reqwest",
+-]
+-default = ["all"]
+-dist-client = [
+-    "flate2",
+-    "hyper",
+-    "http-body-util",
+-    "hyper-util",
+-    "reqwest",
+-    "url",
+-    "sha2",
+-]
+-dist-server = [
+-    "jwt",
+-    "flate2",
+-    "libmount",
+-    "nix",
+-    "openssl",
+-    "reqwest",
+-    "rouille",
+-    "syslog",
+-    "version-compare",
+-]
+-dist-tests = [
+-    "dist-client",
+-    "dist-server",
+-]
+-gcs = [
+-    "opendal/services-gcs",
+-    "reqsign",
+-    "url",
+-    "reqwest",
+-]
+-gha = [
+-    "opendal/services-ghac",
+-    "reqwest",
+-]
+-memcached = ["opendal/services-memcached"]
++default = []
+ native-zlib = []
+-oss = [
+-    "opendal/services-oss",
+-    "reqsign",
+-    "reqwest",
+-]
+-redis = [
+-    "url",
+-    "opendal/services-redis",
+-]
+-s3 = [
+-    "opendal/services-s3",
+-    "reqsign",
+-    "reqwest",
+-]
+ unstable = []
+-vendored-openssl = [
+-    "openssl?/vendored",
+-    "reqwest?/native-tls-vendored",
+-]
+-webdav = [
+-    "opendal/services-webdav",
+-    "reqwest",
+-]
+ 
+ [lib]
+ name = "sccache"
+@@ -133,11 +54,6 @@
+ name = "sccache"
+ path = "src/main.rs"
+ 
+-[[bin]]
+-name = "sccache-dist"
+-path = "src/bin/sccache-dist/main.rs"
+-required-features = ["dist-server"]
+-
+ [[test]]
+ name = "cache_hit_rate"
+ path = "tests/cache_hit_rate.rs"
+@@ -229,12 +145,6 @@
+ [dependencies.filetime]
+ version = "0.2"
+ 
+-[dependencies.flate2]
+-version = "1.0"
+-features = ["rust_backend"]
+-optional = true
+-default-features = false
+-
+ [dependencies.fs-err]
+ version = "3"
+ 
+@@ -249,37 +159,12 @@
+ [dependencies.http]
+ version = "1.0"
+ 
+-[dependencies.http-body-util]
+-version = "0.1"
+-optional = true
+-
+-[dependencies.hyper]
+-version = "1.1"
+-features = [
+-    "server",
+-    "http1",
+-]
+-optional = true
+-
+-[dependencies.hyper-util]
+-version = "0.1.3"
+-features = [
+-    "tokio",
+-    "server",
+-]
+-optional = true
+-
+ [dependencies.itertools]
+ version = "0.14"
+ 
+ [dependencies.jobserver]
+ version = "0.1"
+ 
+-[dependencies.jwt]
+-version = "9"
+-optional = true
+-package = "jsonwebtoken"
+-
+ [dependencies.libc]
+ version = "0.2.153"
+ 
+@@ -298,60 +183,18 @@
+ [dependencies.mime]
+ version = "0.3"
+ 
+-[dependencies.nix]
+-version = "0.30.0"
+-features = [
+-    "mount",
+-    "user",
+-    "sched",
+-    "signal",
+-    "process",
+-]
+-optional = true
+-
+ [dependencies.number_prefix]
+ version = "0.4"
+ 
+ [dependencies.object]
+ version = "0.37"
+ 
+-[dependencies.opendal]
+-version = "0.55.0"
+-optional = true
+-default-features = false
+-
+-[dependencies.openssl]
+-version = "0.10.75"
+-optional = true
+-
+ [dependencies.rand]
+ version = "0.8.4"
+ 
+ [dependencies.regex]
+ version = "1.10.3"
+ 
+-[dependencies.reqsign]
+-version = "0.18.0"
+-optional = true
+-
+-[dependencies.reqwest]
+-version = "0.12"
+-features = [
+-    "json",
+-    "blocking",
+-    "stream",
+-    "rustls-tls",
+-    "rustls-tls-native-roots",
+-    "trust-dns",
+-]
+-optional = true
+-
+-[dependencies.rouille]
+-version = "3.6"
+-features = ["ssl"]
+-optional = true
+-default-features = false
+-
+ [dependencies.semver]
+ version = "1.0"
+ 
+@@ -360,11 +203,7 @@
+ features = ["derive"]
+ 
+ [dependencies.serde_json]
+-version = ">=1.0, <1.0.147"
+-
+-[dependencies.sha2]
+-version = "0.10.8"
+-optional = true
++version = "1.0"
+ 
+ [dependencies.shlex]
+ version = "1.3.0"
+@@ -372,10 +211,6 @@
+ [dependencies.strip-ansi-escapes]
+ version = "0.2"
+ 
+-[dependencies.syslog]
+-version = "7"
+-optional = true
+-
+ [dependencies.tar]
+ version = "0.4.40"
+ 
+@@ -412,18 +247,10 @@
+ [dependencies.typed-path]
+ version = "0.12.0"
+ 
+-[dependencies.url]
+-version = "2"
+-optional = true
+-
+ [dependencies.uuid]
+ version = "1.9"
+ features = ["v4"]
+ 
+-[dependencies.version-compare]
+-version = "0.1.1"
+-optional = true
+-
+ [dependencies.walkdir]
+ version = "2"
+ 
+@@ -438,41 +265,6 @@
+ [dependencies.zstd]
+ version = "0.13"
+ 
+-[dev-dependencies.assert_cmd]
+-version = "2.0.13"
+-
+-[dev-dependencies.cc]
+-version = "1.0"
+-
+-[dev-dependencies.chrono]
+-version = "0.4.42"
+-
+-[dev-dependencies.divan]
+-version = "4"
+-package = "codspeed-divan-compat"
+-
+-[dev-dependencies.filetime]
+-version = "0.2"
+-
+-[dev-dependencies.predicates]
+-version = "=3.1.0"
+-
+-[dev-dependencies.serial_test]
+-version = "3.1"
+-
+-[dev-dependencies.temp-env]
+-version = "0.3.6"
+-
+-[dev-dependencies.test-case]
+-version = "3.3.1"
+-
+-[dev-dependencies.thirtyfour]
+-version = "0.36"
+-
+-[target.'cfg(not(target_os = "freebsd"))'.dependencies.libmount]
+-version = "0.1.15"
+-optional = true
+-
+ [target."cfg(unix)".dependencies.daemonix]
+ version = "0.1"
+ 

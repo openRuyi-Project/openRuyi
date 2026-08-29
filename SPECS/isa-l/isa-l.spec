@@ -8,20 +8,22 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           isa-l
-Version:        2.32.0
+Version:        2.32.1
 Release:        %autorelease
 Summary:        Intelligent Storage Acceleration Library
 License:        BSD-3-Clause
 URL:            https://github.com/intel/isa-l
-#!RemoteAsset
+#!RemoteAsset:  sha256:d9f7179ab0e14a3db9b610fac22793854a1435e8423ec9ce07f4cbedc5f92f5e
 Source0:        https://github.com/intel/isa-l/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
+BuildOption(conf):  --enable-programs
 
 BuildRequires:  make
 BuildRequires:  autoconf
 BuildRequires:  automake
+BuildRequires:  help2man
 BuildRequires:  libtool
 %ifarch x86_64
 BuildRequires:  nasm
@@ -86,4 +88,4 @@ This package contains CLI tools.
 %{_mandir}/man1/igzip.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

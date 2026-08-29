@@ -5,8 +5,8 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           dbus
-%define go_import_path  github.com/godbus/dbus
-# test code need v4 but mainline code version is v5, tests are incompatible with v5, - Julian
+%define go_import_path  github.com/godbus/dbus/v5
+# Integration tests require a running D-Bus daemon.
 %define go_test_ignore_failure 1
 
 Name:           go-github-godbus-dbus
@@ -15,15 +15,17 @@ Release:        %autorelease
 Summary:        Native Go bindings for D-Bus
 License:        BSD-2-Clause
 URL:            https://github.com/godbus/dbus
-#!RemoteAsset
+#!RemoteAsset:  sha256:f8d9e0df1350a834c169dc53ff75e5f630d0563802be51fbb60de283e2ea499c
 Source0:        https://github.com/godbus/dbus/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+BuildOption(check):  -vet=off
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
-Provides:       go(github.com/godbus/dbus) = %{version}
+Provides:       go(%{go_import_path}) = %{version}
 
 %description
 dbus is a simple library that implements native Go client bindings for
@@ -42,4 +44,4 @@ Features
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -3,16 +3,17 @@
 # SPDX-FileContributor: Dingli Zhang <dingli@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           alsa-lib
-Version:        1.2.15
+Version:        1.2.15.3
 Release:        %autorelease
 Summary:        The Advanced Linux Sound Architecture (ALSA) library
 License:        LGPL-2.1-or-later
 URL:            http://www.alsa-project.org/
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b079d614d582cade7ab8db2364e65271d0877a37df8757ac4ac0c8970be861e
 Source0:        https://www.alsa-project.org/files/pub/lib/%{name}-%{version}.tar.bz2
 Source1:        asound.conf
 Source2:        modprobe-dist-alsa.conf
@@ -109,4 +110,4 @@ rm -f %{buildroot}%{_includedir}/asoundlib.h
 %{_datadir}/aclocal/alsa.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

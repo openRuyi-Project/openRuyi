@@ -6,16 +6,20 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-Date-Manip
-Version:        6.98
+Version:        6.99
 Release:        %autorelease
 Summary:        Date manipulation routines
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Date-Manip
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SB/SBECK/Date-Manip-%{version}.tar.gz
+#!RemoteAsset:  sha256:3239e5f671e1af74d4a91b8278f3ae64f214184f7fc27ed4f80409ec2e6c4f54
+Source0:        https://www.cpan.org/authors/id/S/SB/SBECK/Date-Manip-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -39,21 +43,8 @@ are all easily done. It deals with time as it is used in the Gregorian
 calendar (the one currently in use) with full support for time changes due
 to daylight saving time.
 
-%prep
-%setup -q -n Date-Manip-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README README.first
 
 %changelog
-%{?autochangelog}
+%autochangelog

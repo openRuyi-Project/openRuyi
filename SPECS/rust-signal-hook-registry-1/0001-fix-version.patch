@@ -1,0 +1,13 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index a2f56a54e..fc776b7ee 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -49,7 +49,7 @@ name = "unregister_signal"
+ path = "tests/unregister_signal.rs"
+ 
+ [dependencies.errno]
+-version = ">=0.2, <0.4"
++version = "0.3"
+ 
+ [dependencies.libc]
+ version = "^0.2"

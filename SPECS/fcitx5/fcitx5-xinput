@@ -1,0 +1,20 @@
+IMSETTINGS_IGNORE_SESSION=*-wayland
+XIM=fcitx5
+XIM_PROGRAM=/usr/bin/fcitx5
+ICON="fcitx5"
+XIM_ARGS="-D"
+PREFERENCE_PROGRAM=/usr/bin/fcitx5-configtool
+SHORT_DESC="fcitx5"
+GTK_IM_MODULE=fcitx
+if test -f /usr/lib/qt4/plugins/inputmethods/qtim-fcitx5.so || \
+   test -f /usr/lib64/qt4/plugins/inputmethods/qtim-fcitx5.so || \
+   test -f /usr/lib/qt5/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so || \
+   test -f /usr/lib64/qt5/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so || \
+   test -f /usr/lib/qt6/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so || \
+   test -f /usr/lib64/qt6/plugins/platforminputcontexts/libfcitx5platforminputcontextplugin.so ;
+then
+    QT_IM_MODULE=fcitx
+else
+    QT_IM_MODULE=xim
+fi
+

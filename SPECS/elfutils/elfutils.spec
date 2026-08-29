@@ -7,18 +7,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           elfutils
-Version:        0.194
+Version:        0.196
 Release:        %autorelease
 Summary:        Higher-level library to access ELF files
 License:        GPL-3.0-or-later
 URL:            https://sourceware.org/elfutils/
 VCS:            git:https://sourceware.org/git/elfutils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:fd5cc6b77ad6773cac93cb3f415f9318ac3b3455eecf801f6b4a742c4f6c7209
 Source0:        https://sourceware.org/elfutils/ftp/%{version}/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
-
-# from https://sourceware.org/git/?p=elfutils.git;a=commit;h=4a5cf8be906d5991e7527e69e3f2ceaa74811301
-Patch0:         elfutils-0.194-fix-const.patch
 
 BuildOption(conf):  --program-prefix=eu-
 BuildOption(conf):  --disable-debuginfod
@@ -104,6 +101,11 @@ The package is dummy.
 %conf -p
 autoreconf -fiv
 chmod a+x tests/run*.sh
+# This test may fail or be skipped when run in a chroot environment
+# due to differences in the host environment. Since this test is not
+# suitable for testing in a sandbox, it will be unconditionally
+# skipped directly.
+echo -e "#! /usr/bin/env bash\nexit 77;\n" > tests/run-backtrace-native-core.sh
 
 %install -a
 # remove unneeded files
@@ -113,11 +115,9 @@ rm -f %{buildroot}%{_mandir}/man8/debuginfod*.8*
 rm -rf %{buildroot}/%{_datadir}/fish
 ls -lR %{buildroot}/%{_libdir}/libelf*
 
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %find_lang %{name} --generate-subpackages
 
-%files
+%files -f %{name}.lang
 %license COPYING
 %doc AUTHORS ChangeLog NEWS NOTES README THANKS TODO
 %{_bindir}/eu-addr2line
@@ -138,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_bindir}/eu-strip
 %{_bindir}/eu-unstrip
 %{_bindir}/eu-srcfiles
+%ifarch x86_64
+%{_bindir}/eu-stackprof
+%endif
 # libasm
 %{_libdir}/libasm.so.*
 %{_libdir}/libasm-%{version}.so
@@ -157,7 +160,6 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_libdir}/libdw.a
 %{_libdir}/libdw.so
 %{_includedir}/dwarf.h
-%dir %{_includedir}/elfutils
 %{_includedir}/elfutils/libdw.h
 %{_includedir}/elfutils/libdwelf.h
 %{_includedir}/elfutils/libdwfl.h
@@ -182,7 +184,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man3/elf_*.3*
 %{_mandir}/man3/elf32_*.3*
 %{_mandir}/man3/elf64_*.3*
-%{_mandir}/man3/gelf_*.3*
+%{_mandir}/man3/gelf*.3*
 %{_mandir}/man3/libelf.3.gz
 
 %files -n libdebuginfod-dummy
@@ -202,4 +204,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_mandir}/man7/debuginfod-client-config.7*
 
 %changelog
-%{?autochangelog}
+%autochangelog

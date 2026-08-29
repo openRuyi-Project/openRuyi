@@ -90,7 +90,7 @@ mv %{buildroot}%{_libexecdir}/upower %{buildroot}%{_libexecdir}/installed-tests/
 %{_includedir}/libupower-glib/up-*.h
 %{_includedir}/libupower-glib/upower.h
 %{_libdir}/libupower-glib.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/upower-glib.pc
 %{_datadir}/dbus-1/interfaces/*.xml
 %{_datadir}/gir-1.0/*.gir
 %dir %{_datadir}/gtk-doc
@@ -98,4 +98,4 @@ mv %{buildroot}%{_libexecdir}/upower %{buildroot}%{_libexecdir}/installed-tests/
 %{_datadir}/gtk-doc/html/UPower/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jvle <keke.oerv@isrc.iscas.ac.cn>
+Date: Sat, 18 Jul 2026 14:45:00 +0800
+Subject: [PATCH] Reject comma time fractions
+
+RFC3339 section 5.6 only allows "." as the time-secfrac separator.
+Newer Go accepts "," in time.Parse layouts, which makes the JSON Schema
+draft7 optional time format test accept an invalid value.
+---
+ format_checkers.go | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+--- a/format_checkers.go	2019-10-15 22:03:57.000000000 +0800
++++ b/format_checkers.go	2026-07-18 14:40:12.300968263 +0800
+@@ -229,6 +229,10 @@ func (f DateTimeFormatChecker) IsFormat(
+ 		return false
+ 	}
+ 
++	if strings.Contains(asString, ",") {
++		return false
++	}
++
+ 	formats := []string{
+ 		"15:04:05",
+ 		"15:04:05Z07:00",
+@@ -263,6 +267,10 @@ func (f TimeFormatChecker) IsFormat(inpu
+ 		return false
+ 	}
+ 
++	if strings.Contains(asString, ",") {
++		return false
++	}
++
+ 	if _, err := time.Parse("15:04:05Z07:00", asString); err == nil {
+ 		return true
+ 	}
+-- 
+2.50.1

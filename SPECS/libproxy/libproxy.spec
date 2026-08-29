@@ -6,15 +6,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libproxy
-Version:        0.5.11
+Version:        0.5.12
 Release:        %autorelease
 Summary:        A library for proxy configuration management
 License:        LGPL-2.1-or-later
 URL:            https://libproxy.github.io/libproxy/
 VCS:            git:https://github.com/libproxy/libproxy
-#!RemoteAsset
+#!RemoteAsset:  sha256:a1fa55991998b80a567450a9e84382421a7176a84446c95caaa8b72cf09fa86f
 Source:         https://github.com/libproxy/libproxy/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
+
+# https://github.com/libproxy/libproxy/pull/344
+Patch0:         0001-make-use-of-meson-library.patch
 
 BuildOption(conf):  -Dconfig-gnome=false
 BuildOption(conf):  -Dconfig-kde=false
@@ -69,4 +72,4 @@ developing applications that use libproxy.
 %{_datadir}/vala/vapi/libproxy-1.0.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog

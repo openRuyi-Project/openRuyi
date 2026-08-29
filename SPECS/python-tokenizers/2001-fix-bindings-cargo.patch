@@ -1,0 +1,14 @@
+diff --git a/bindings/python/Cargo.toml b/bindings/python/Cargo.toml
+index 52e6602..250d048 100644
+--- a/bindings/python/Cargo.toml
++++ b/bindings/python/Cargo.toml
+@@ -27,9 +27,5 @@ ahash = { version = "0.8.11", features = ["serde"] }
+ [dependencies.tokenizers]
+ path = "../../tokenizers"
+ 
+-[dev-dependencies]
+-tempfile = "3.10"
+-pyo3 = { version = "0.26", features = ["auto-initialize"] }
+-
+ [features]
+ default = ["pyo3/extension-module"]

@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        File path utility
 License:        Apache-2.0
 URL:            https://metacpan.org/dist/Path-Tiny
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Path-Tiny-%{version}.tar.gz
+#!RemoteAsset:  sha256:ff20713d1a14d257af9c78209001f40dc177e4b9d1496115cbd8726d577946c7
+Source0:        https://www.cpan.org/authors/id/D/DA/DAGOLDEN/Path-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.1
 BuildRequires:  perl(Carp)
@@ -63,20 +67,8 @@ from several other core file handling modules. It aims to be smaller and
 faster than many alternatives on CPAN, while helping people do many common
 things in consistent and less error-prone ways.
 
-%prep
-%setup -q -n Path-Tiny-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes CONTRIBUTING.mkdn perlcritic.rc README tidyall.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

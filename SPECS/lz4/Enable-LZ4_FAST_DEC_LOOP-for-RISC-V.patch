@@ -1,0 +1,21 @@
+From dfb1cb6147eb8e1fe2c6ea49054ec30f1e2dc0d4 Mon Sep 17 00:00:00 2001
+From: Huang Shangcheng <huang.shangcheng@zte.com.cn>
+Date: Thu, 30 Apr 2026 15:51:03 +0800
+Subject: [PATCH] Enable LZ4_FAST_DEC_LOOP for RISC-V
+
+---
+ lib/lz4.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/lz4.c b/lib/lz4.c
+--- a/lib/lz4.c
++++ b/lib/lz4.c
+@@ -477,6 +477,8 @@
+       * on certain mobile chipsets, performance is reduced with clang. For
+       * more information refer to https://github.com/lz4/lz4/pull/707 */
+ #    define LZ4_FAST_DEC_LOOP 1
++#  elif defined(__riscv) && (__riscv_xlen == 64)
++#    define LZ4_FAST_DEC_LOOP 1
+ #  else
+ #    define LZ4_FAST_DEC_LOOP 0
+ #  endif

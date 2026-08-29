@@ -10,15 +10,13 @@
 %bcond systemd 0
 
 Name:           e2fsprogs
-Version:        1.47.3
+Version:        1.47.4
 Release:        %autorelease
 Summary:        Utilities for the Second Extended File System
 License:        GPL-2.0-only
 URL:            http://e2fsprogs.sourceforge.net
-#!RemoteAsset
+#!RemoteAsset:  sha256:fd5bf388cbdbe006a3d3b318d983b2948382440acc85a87f1e7d108653e8db0b
 Source0:        http://www.kernel.org/pub/linux/kernel/people/tytso/e2fsprogs/v%{version}/e2fsprogs-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://thunk.org/tytso/tytso-key.asc#/%{name}.keyring
 BuildSystem:    autotools
 
 BuildOption(conf):  --with-root-prefix=''
@@ -102,7 +100,6 @@ Requires:       libcom_err%{?_isa} = %{version}-%{release}
 Development files for the com_err error message display library.
 
 %build -a
-
 # Guarantee that tranlations match the source messages
 make -C po update-po
 
@@ -182,4 +179,4 @@ rm -f %{buildroot}%{_libdir}/e2initrd_helper
 %{_mandir}/man3/com_err.3.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

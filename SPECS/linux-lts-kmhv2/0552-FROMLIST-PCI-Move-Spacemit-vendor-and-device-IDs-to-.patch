@@ -1,0 +1,54 @@
+From 64b66eb1e39719aab650752801d8e9f97f010c9a Mon Sep 17 00:00:00 2001
+From: Anirudh Srinivasan <asrinivasan@oss.tenstorrent.com>
+Date: Thu, 16 Jul 2026 18:05:10 -0500
+Subject: [RUYI PATCH] FROMLIST: PCI: Move Spacemit vendor and device IDs to
+ linux/pci_ids.h
+
+Move the vendor and device ID for the existing Spacemit K1 PCIe Root
+Complex to include/linux/pci_ids.h. Also add K3's Root Complex device ID
+to this header. This is done so that these values can be referenced in
+the rtw89 driver to enable 36-bit DMA ability in it for WiFi to function
+on the K3 Pico ITX board.
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Anirudh Srinivasan <asrinivasan@oss.tenstorrent.com>
+Link: https://lore.kernel.org/r/20260716-rtw89-spacemit-k3-v2-1-392b577ebf75@oss.tenstorrent.com
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/pci/controller/dwc/pcie-spacemit-k1.c | 4 ----
+ include/linux/pci_ids.h                       | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-spacemit-k1.c b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
+index 7502d66bd0d0..bf2ab5cb59ce 100644
+--- a/drivers/pci/controller/dwc/pcie-spacemit-k1.c
++++ b/drivers/pci/controller/dwc/pcie-spacemit-k1.c
+@@ -21,10 +21,6 @@
+ 
+ #include "pcie-designware.h"
+ 
+-#define PCI_VENDOR_ID_SPACEMIT		0x201f
+-#define PCI_DEVICE_ID_SPACEMIT_K1	0x0001
+-#define PCI_DEVICE_ID_SPACEMIT_K3	0x0002
+-
+ /* Offsets and field definitions for link management registers */
+ #define K1_PHY_AHB_IRQ_EN			0x0000
+ #define PCIE_INTERRUPT_EN		BIT(0)
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 7c01548a6ddb..26ac13010cb5 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2643,6 +2643,10 @@
+ #define PCI_VENDOR_ID_SUNIX		0x1fd4
+ #define PCI_DEVICE_ID_SUNIX_1999	0x1999
+ 
++#define PCI_VENDOR_ID_SPACEMIT		0x201f
++#define PCI_DEVICE_ID_SPACEMIT_K1	0x0001
++#define PCI_DEVICE_ID_SPACEMIT_K3	0x0002
++
+ #define PCI_VENDOR_ID_HINT             0x3388
+ #define PCI_DEVICE_ID_HINT_VXPROII_IDE 0x8013
+ 
+-- 
+2.53.0
+

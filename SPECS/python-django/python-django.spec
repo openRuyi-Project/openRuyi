@@ -1,30 +1,39 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname django
 
 Name:           python-%{srcname}
-Version:        5.2.4
+Version:        5.2.14
 Release:        %autorelease
 Summary:        A high-level Python Web framework
 License:        BSD-3-Clause AND PSF-2.0 AND MIT AND OFL-1.1
 URL:            https://www.djangoproject.com/
-#!RemoteAsset
+#!RemoteAsset:  sha256:58a63ba841662e5c686b57ba1fec52ddd68c0b93bd96ac3029d55728f00bf8a2
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
+# many contrib modules assume a configured app, "Requested setting INSTALLED_APPS..."
+# the rest needs optional dependencies
+BuildOption(check):  -e 'django.contrib.*'
+BuildOption(check):  -e 'django.core.serializers.pyyaml'
+BuildOption(check):  -e 'django.db.backends.mysql*'
+BuildOption(check):  -e 'django.db.backends.oracle*'
+BuildOption(check):  -e 'django.db.backends.postgresql*'
 
-BuildRequires:  python3-devel
-BuildRequires:  python3-asgiref
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(asgiref)
 # Tests?
-BuildRequires:  python3-jinja2
+BuildRequires:  python3dist(jinja2)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -33,12 +42,12 @@ development and a clean, pragmatic design. It focuses on automating as
 much as possible and adhering to the DRY (Don't Repeat Yourself)
 principle.
 
-%package -n %{srcname}-bash-completion
+%package        bash-completion
 Summary:        Bash completion files for Django
 BuildRequires:  bash-completion
 Requires:       bash-completion
 
-%description -n %{srcname}-bash-completion
+%description    bash-completion
 This package contains the Bash completion files form Django high-level
 Python Web framework.
 
@@ -63,23 +72,13 @@ done
 find %{buildroot} -name "*.po" | xargs rm -f
 sed -i '/.po$/d' %{pyproject_files}
 
-%check
-# many contrib modules assume a configured app, "Requested setting INSTALLED_APPS..."
-# the rest needs optional dependencies
-%{pyproject_check_import \
-   -e 'django.contrib.*' \
-   -e 'django.core.serializers.pyyaml' \
-   -e 'django.db.backends.mysql*' \
-   -e 'django.db.backends.oracle*' \
-   -e 'django.db.backends.postgresql*'}
-
 %files -f %{pyproject_files}
 %doc AUTHORS README.rst
 %{_bindir}/django-admin
 %{_mandir}/man1/django-admin.1*
 
-%files -n %{srcname}-bash-completion
+%files bash-completion
 %{bash_completions_dir}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -23,7 +23,6 @@ BuildOption(conf):  -Dfft=fftw
 BuildOption(conf):  -Dresampler=libsamplerate
 
 BuildRequires:  meson
-BuildRequires:  cmake
 BuildRequires:  pkgconfig(fftw3)
 BuildRequires:  pkgconfig(sndfile)
 BuildRequires:  pkgconfig(samplerate)

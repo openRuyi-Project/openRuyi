@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Create and manipulate PAR distributions
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/PAR-Dist
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/R/RS/RSCHUPP/PAR-Dist-%{version}.tar.gz
+#!RemoteAsset:  sha256:04cbc81e786968f9a4109ad6c2f9b81e879ac0c6b6080a9d217443b61dfd2498
+Source0:        https://www.cpan.org/authors/id/R/RS/RSCHUPP/PAR-Dist-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Find)
@@ -32,20 +36,8 @@ after their make or Build stage, a META.yml describing metadata of the
 original CPAN distribution, and a MANIFEST detailing all files within it.
 Digitally signed PAR distributions will also contain a SIGNATURE file.
 
-%prep
-%setup -q -n PAR-Dist-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

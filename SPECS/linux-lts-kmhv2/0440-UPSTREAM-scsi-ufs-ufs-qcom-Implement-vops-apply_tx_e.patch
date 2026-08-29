@@ -1,0 +1,104 @@
+From 0623b509b86e77bdd30f561590bf76fcd9a798e2 Mon Sep 17 00:00:00 2001
+From: Can Guo <can.guo@oss.qualcomm.com>
+Date: Wed, 25 Mar 2026 08:21:53 -0700
+Subject: [RUYI PATCH] UPSTREAM: scsi: ufs: ufs-qcom: Implement vops
+ apply_tx_eqtr_settings()
+
+On some platforms, when Host Software triggers TX Equalization Training, HW
+does not take TX EQTR settings programmed in PA_TxEQTRSetting, instead HW
+takes TX EQTR settings from PA_TxEQG1Setting. Implement vops
+apply_tx_eqtr_setting() to work around it by programming TX EQTR settings
+to PA_TxEQG1Setting during TX EQTR procedure.
+
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Can Guo <can.guo@oss.qualcomm.com>
+Reviewed-by: Peter Wang <peter.wang@mediatek.com>
+Link: https://patch.msgid.link/20260325152154.1604082-12-can.guo@oss.qualcomm.com
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+(cherry picked from commit 16cbdc8308776270d76340cd52ac63ac4fbf9968)
+Signed-off-by: Han Gao <gaohan@iscas.ac.cn>
+---
+ drivers/ufs/host/ufs-qcom.c | 31 +++++++++++++++++++++++++++++++
+ drivers/ufs/host/ufs-qcom.h |  2 ++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index b5e95c7385d1..c0112ad1db53 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -2693,6 +2693,26 @@ static int ufs_qcom_get_rx_fom(struct ufs_hba *hba,
+ 	return 0;
+ }
+ 
++static int ufs_qcom_apply_tx_eqtr_settings(struct ufs_hba *hba,
++					   struct ufs_pa_layer_attr *pwr_mode,
++					   struct tx_eqtr_iter *h_iter,
++					   struct tx_eqtr_iter *d_iter)
++{
++	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
++	u32 setting = 0;
++	int lane;
++
++	if (host->hw_ver.major != 0x7 || host->hw_ver.minor > 0x1)
++		return 0;
++
++	for (lane = 0; lane < pwr_mode->lane_tx; lane++) {
++		setting |= TX_HS_PRESHOOT_BITS(lane, h_iter->preshoot);
++		setting |= TX_HS_DEEMPHASIS_BITS(lane, h_iter->deemphasis);
++	}
++
++	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXEQG1SETTING), setting);
++}
++
+ static int ufs_qcom_tx_eqtr_notify(struct ufs_hba *hba,
+ 				   enum ufs_notify_change_status status,
+ 				   struct ufs_pa_layer_attr *pwr_mode)
+@@ -2715,6 +2735,11 @@ static int ufs_qcom_tx_eqtr_notify(struct ufs_hba *hba,
+ 		return 0;
+ 
+ 	if (status == PRE_CHANGE) {
++		ret = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_TXEQG1SETTING),
++				     &host->saved_tx_eq_g1_setting);
++		if (ret)
++			return ret;
++
+ 		/* PMC to target HS Gear. */
+ 		ret = ufshcd_change_power_mode(hba, pwr_mode,
+ 					       UFSHCD_PMC_POLICY_DONT_FORCE);
+@@ -2722,6 +2747,11 @@ static int ufs_qcom_tx_eqtr_notify(struct ufs_hba *hba,
+ 			dev_err(hba->dev, "%s: Failed to PMC to target HS-G%u, Rate-%s: %d\n",
+ 				__func__, gear, ufs_hs_rate_to_str(rate), ret);
+ 	} else {
++		ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TXEQG1SETTING),
++				     host->saved_tx_eq_g1_setting);
++		if (ret)
++			return ret;
++
+ 		/* PMC back to HS-G1. */
+ 		ret = ufshcd_change_power_mode(hba, &pwr_mode_hs_g1,
+ 					       UFSHCD_PMC_POLICY_DONT_FORCE);
+@@ -2764,6 +2794,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+ 	.config_esi		= ufs_qcom_config_esi,
+ 	.freq_to_gear_speed	= ufs_qcom_freq_to_gear_speed,
+ 	.get_rx_fom		= ufs_qcom_get_rx_fom,
++	.apply_tx_eqtr_settings	= ufs_qcom_apply_tx_eqtr_settings,
+ 	.tx_eqtr_notify		= ufs_qcom_tx_eqtr_notify,
+ };
+ 
+diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
+index d38bc0c4fc58..5f979daabd53 100644
+--- a/drivers/ufs/host/ufs-qcom.h
++++ b/drivers/ufs/host/ufs-qcom.h
+@@ -348,6 +348,8 @@ struct ufs_qcom_host {
+ 	u32 phy_gear;
+ 
+ 	bool esi_enabled;
++
++	u32 saved_tx_eq_g1_setting;
+ };
+ 
+ struct ufs_qcom_drvdata {
+-- 
+2.53.0
+

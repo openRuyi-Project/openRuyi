@@ -8,12 +8,12 @@
 %define go_import_path  github.com/rabbitmq/amqp091-go
 
 Name:           go-github-rabbitmq-amqp091-go
-Version:        1.10.0
+Version:        1.12.0
 Release:        %autorelease
 Summary:        An AMQP 0-9-1 Go client maintained by the RabbitMQ team.
 License:        BSD-2-Clause
 URL:            https://github.com/rabbitmq/amqp091-go
-#!RemoteAsset
+#!RemoteAsset:  sha256:4aeaafa6422f3aa7c0a97efa40700db0e1a6a9f808fd69b9bc6c5132e7b17189
 Source0:        https://github.com/rabbitmq/amqp091-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -34,4 +34,4 @@ It was originally developed by Sean Treadway.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

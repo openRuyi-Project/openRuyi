@@ -1,0 +1,29 @@
+From 99ca6988d35ac95e653caa5b76dcddf1859aa255 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 11:20:14 +0800
+Subject: [PATCH] tests: require opt-in for remote fixture
+
+TestFlatten_RemoteAbsolute fetches a CloudEvents fixture from raw.githubusercontent.com. Skip it by default so the unit test suite works in offline build environments, while retaining an explicit opt-in for integration testing.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ flatten_test.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/flatten_test.go b/flatten_test.go
+index 96f5fb7..0f79f08 100644
+--- a/flatten_test.go
++++ b/flatten_test.go
+@@ -1202,6 +1202,10 @@ func TestFlatten_1851(t *testing.T) {
+ }
+ 
+ func TestFlatten_RemoteAbsolute(t *testing.T) {
++	if os.Getenv("GO_OPENAPI_RUN_NETWORK_TESTS") == "" {
++		t.Skip("set GO_OPENAPI_RUN_NETWORK_TESTS to run tests requiring remote fixtures")
++	}
++
+ 	for _, toPin := range []string{
+ 		// this one has simple remote ref pattern
+ 		filepath.Join("fixtures", "bugs", "remote-absolute", "swagger-mini.json"),
+-- 
+2.43.0

@@ -1,0 +1,18 @@
+Description: allow-riscv64-usegles
+Author: Han Gao <rabenda.cn@gmail.com>
+
+Last-Update: 2024-06-20
+
+Index: firefox-140.0.4/toolkit/xre/glxtest/glxtest.cpp
+===================================================================
+--- firefox-140.0.4.orig/toolkit/xre/glxtest/glxtest.cpp
++++ firefox-140.0.4/toolkit/xre/glxtest/glxtest.cpp
+@@ -438,7 +438,7 @@ static bool get_egl_gl_status(EGLDisplay
+   PFNGLGETSTRING glGetString =
+       cast<PFNGLGETSTRING>(eglGetProcAddress("glGetString"));
+
+-#if defined(__arm__) || defined(__aarch64__)
++#if defined(__arm__) || defined(__aarch64__) || (defined(__riscv) && __riscv_xlen == 64)
+   bool useGles = true;
+ #else
+   bool useGles = false;

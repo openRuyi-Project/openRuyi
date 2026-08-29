@@ -1,0 +1,9 @@
+diff --color -aNru sbsigntools-0.9.5-1/src/Makefile.am sbsigntools-0.9.5/src/Makefile.am
+--- a/src/Makefile.am	2026-04-16 17:53:39.508652235 +0800
++++ b/src/Makefile.am	2026-04-16 17:54:16.900652445 +0800
+@@ -38,4 +38,4 @@
+ sbkeysync_SOURCES = sbkeysync.c $(common_SOURCES)
+ sbkeysync_LDADD = $(common_LDADD) $(uuid_LIBS)
+ sbkeysync_CPPFLAGS = $(EFI_CPPFLAGS)
+-sbkeysync_CFLAGS = $(AM_CFLAGS) $(common_CFLAGS)
++sbkeysync_CFLAGS = $(AM_CFLAGS) $(common_CFLAGS) -Wno-error=maybe-uninitialized

@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Suyun <ziyu.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,6 +19,8 @@ URL:            https://web.mit.edu/kerberos/
 VCS:            git:https://github.com/krb5/krb5
 #!RemoteAsset:  sha256:3243ffbc8ea4d4ac22ddc7dd2a1dc54c57874c40648b60ff97009763554eaf13
 Source:         https://kerberos.org/dist/krb5/1.22/%{name}-%{version}.tar.gz
+Source1:        kadmind.service
+Source2:        kpropd.service
 BuildSystem:    autotools
 
 # From https://github.com/krb5/krb5/pull/1471
@@ -89,6 +92,12 @@ install -d -m 755 %{buildroot}%{_sysconfdir}/krb5.conf.d
 
 install -d -m 700 %{buildroot}%{_localstatedir}/kerberos/krb5kdc
 
+%if %{with systemd}
+install -d -m 755 %{buildroot}%{_unitdir}
+install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/kadmind.service
+install -m 644 %{SOURCE2} %{buildroot}%{_unitdir}/kpropd.service
+%endif
+
 install -m 644 src/config-files/krb5.conf %{buildroot}%{_sysconfdir}/krb5.conf
 install -m 644 src/config-files/kdc.conf %{buildroot}%{_sysconfdir}/kdc.conf
 
@@ -118,6 +127,10 @@ rm -rf %{buildroot}%{_datadir}/et/
 %dir %{_sysconfdir}/krb5.conf.d
 %dir %attr(0700,root,root) %{_localstatedir}/kerberos
 %dir %attr(0700,root,root) %{_localstatedir}/kerberos/krb5kdc
+%if %{with systemd}
+%{_unitdir}/kadmind.service
+%{_unitdir}/kpropd.service
+%endif
 %{_libdir}/lib*.so.*
 %dir %{_libdir}/krb5
 %dir %{_libdir}/krb5/plugins
@@ -148,7 +161,14 @@ rm -rf %{buildroot}%{_datadir}/et/
 %{_includedir}/gssapi.h
 %{_includedir}/profile.h
 %{_libdir}/lib*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/gssrpc.pc
+%{_libdir}/pkgconfig/kadm-client.pc
+%{_libdir}/pkgconfig/kadm-server.pc
+%{_libdir}/pkgconfig/kdb.pc
+%{_libdir}/pkgconfig/krb5-gssapi.pc
+%{_libdir}/pkgconfig/krb5.pc
+%{_libdir}/pkgconfig/mit-krb5-gssapi.pc
+%{_libdir}/pkgconfig/mit-krb5.pc
 %{_bindir}/krb5-config
 %{_datadir}/aclocal/ac_check_krb5.m4
 %{_mandir}/man1/krb5-config.1*
@@ -156,4 +176,4 @@ rm -rf %{buildroot}%{_datadir}/et/
 %{_mandir}/man5/.k5login.5.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

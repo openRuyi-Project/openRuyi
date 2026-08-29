@@ -11,18 +11,15 @@
 %global comgr_full_api_ver %{comgr_maj_api_ver}.0
 
 # What LLVM is upstream using (use LLVM_VERSION_MAJOR from cmake/Modules/LLVMVersion.cmake):
-%global llvm_maj_ver 21
-# Sakura286: ROCm 7.1.1 uses LLVM 20, but only LLVM 21 is on openRuyi.
-#            Backport is needed.
-%global rocm_llvm_maj_ver 20
+%global llvm_maj_ver 22
 
-%global rocm_release 7.1
-%global rocm_patch 1
+%global rocm_release 7.2
+%global rocm_patch 4
 %global rocm_version %{rocm_release}.%{rocm_patch}
 
 %global bundle_prefix %{_libdir}/llvm%{llvm_maj_ver}
 %global llvm_triple %{_target_platform}
-%global amd_device_libs_prefix lib/clang/%{llvm_maj_ver}
+%global amd_device_libs_prefix %{bundle_prefix}/lib/clang/%{llvm_maj_ver}
 
 %global toolchain clang
 
@@ -48,25 +45,19 @@ Summary:        Various AMD ROCm LLVM related services
 # hipcc is MIT, comgr and device-libs are NCSA:
 License:        (Apache-2.0 WITH LLVM-exception OR NCSA) AND NCSA AND MIT
 URL:            https://github.com/ROCm/llvm-project
-#!RemoteAsset
-Source0:        %{url}/archive/refs/tags/rocm-%{rocm_version}.tar.gz
+#!RemoteAsset:  sha256:526b5fe23417c41acbeb2273e470887b4593f48a297a8d9c1a1aa730d556f9fb
+Source0:        %{url}/archive/refs/tags/rocm-%{version}.tar.gz
 Source1:        rocm-llvm.prep.in
 
-# RISC-V support patches
-# https://salsa.debian.org/rocm-team/rocm-llvm/-/merge_requests/2
-Patch0:         0002-Use-signed-char-in-comgr-building.patch
-# Backport mainline comgr patches since 7.1.1 is build on llvm-20
-Patch1:         0003-adapt-comgr-api-to-llvm-21.patch
-
-BuildRequires:  clang >= %{llvm_maj_ver}
-BuildRequires:  clang-devel >= %{llvm_maj_ver}
-BuildRequires:  clang-tools-extra
+BuildRequires:  clang(major) = %{llvm_maj_ver}
+BuildRequires:  clang-devel(major) = %{llvm_maj_ver}
+BuildRequires:  clang-static(major) = %{llvm_maj_ver}
 BuildRequires:  cmake
 BuildRequires:  fdupes
-BuildRequires:  lld >= %{llvm_maj_ver}
-BuildRequires:  lld-devel >= %{llvm_maj_ver}
-BuildRequires:  llvm-devel >= %{llvm_maj_ver}
-BuildRequires:  llvm-test >= %{llvm_maj_ver}
+BuildRequires:  lld(major) = %{llvm_maj_ver}
+BuildRequires:  lld-devel(major) = %{llvm_maj_ver}
+BuildRequires:  llvm(major) = %{llvm_maj_ver}
+BuildRequires:  llvm-static(major) = %{llvm_maj_ver}
 BuildRequires:  pkgconfig(libffi)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(libzstd)
@@ -74,6 +65,17 @@ BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  rocm-cmake >= %{rocm_release}
+
+%patchlist
+# https://salsa.debian.org/rocm-team/rocm-llvm/-/merge_requests/2
+0001-Use-signed-char-in-comgr-building.patch
+# Clang version of rocm-llvm is bebind llvm22 on openRuyi
+# https://github.com/ROCm/llvm-project/commit/ebcaa3d9
+1000-comgr-Options-changes-for-comgr.patch
+# https://github.com/ROCm/llvm-project/commit/ccb14ba83
+1001-comgr-remove-Driver-from-GetResourcesPath.patch
+# https://github.com/ROCm/llvm-project/commit/bc157825
+1002-device-libs-add-cube-lerp-qsad-sad-target-features.patch
 
 %description
 %{summary}
@@ -117,6 +119,11 @@ The AMD Code Object Manager (Comgr) development package.
 
 %package     -n hipcc
 Summary:        HIP compiler driver
+Requires:       clang%{llvm_maj_ver}
+Requires:       clang%{llvm_maj_ver}-tools-extra
+Requires:       compiler-rt%{llvm_maj_ver}
+Requires:       lld%{llvm_maj_ver}
+Requires:       llvm%{llvm_maj_ver}
 Requires:       rocm-device-libs = %{version}-%{release}
 Suggests:       rocminfo
 
@@ -129,14 +136,12 @@ hipcc will pass-through options to the target compiler. The tools calling hipcc
 must ensure the compiler options are appropriate for the target compiler.
 
 %prep
-%autosetup -p1 -n llvm-project-rocm-%{rocm_version}
+%autosetup -p1 -n llvm-project-rocm-%{version}
 
 # llvm_maj_ver sanity check (we should be matching the bundled llvm major ver):
 if ! grep -q "set(LLVM_VERSION_MAJOR %{llvm_maj_ver})" cmake/Modules/LLVMVersion.cmake; then
     echo "ERROR llvm_maj_ver macro is not correctly set"
-    # Sakura286: ROCm 7.1.1 uses LLVM 20, but only 21 is on openRuyi. Sad.
-    # TODO: Need to re-enable this 'if' when rocm upstream bump to llvm-21
-    # exit 1
+    exit 1
 fi
 
 # Make sure we only build the AMD bits by discarding the bundled llvm code:
@@ -158,7 +163,7 @@ CLANG_VERSION=%llvm_maj_ver
 # Maybe use llvm-config-%{llvm_maj_ver} in the future
 LLVM_BINDIR=`%{_libdir}/llvm%{llvm_maj_ver}/bin/llvm-config --bindir`
 LLVM_CMAKEDIR=`%{_libdir}/llvm%{llvm_maj_ver}/bin/llvm-config --cmakedir`
-# Only enable one target to accelerate build
+# Only enable limited targets to accelerate build
 GPU_TARGET="gfx1100;gfx1101;gfx1200;gfx1201"
 
 echo "%%rocmllvm_version $CLANG_VERSION"        >  macros.rocmcompiler
@@ -176,9 +181,7 @@ export INCLUDE_PATH=%{_libdir}/llvm%{llvm_maj_ver}/include
 ln -s %{amd_device_libs_prefix}/amdgcn amdgcn
 #TODO ROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_* should be removed in ROCm 7.0:
 %cmake -DROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_NEW="%{amd_device_libs_prefix}/amdgcn" \
-    -DROCM_DEVICE_LIBS_BITCODE_INSTALL_LOC_OLD="" \
-    -DCMAKE_EXE_LINKER_FLAGS:STRING="-fuse-ld=lld" \
-    %{?__cmake_build_type:-DCMAKE_BUILD_TYPE="%{__cmake_build_type}"}
+    -DCMAKE_EXE_LINKER_FLAGS:STRING="-fuse-ld=lld"
 %cmake_build -- %{?_smp_mflags}
 # Used by comgr to find device libs when building:
 export ROCM_PATH=$(realpath %__cmake_builddir)
@@ -187,8 +190,6 @@ export ROCM_PATH=$(realpath %__cmake_builddir)
 %define _vpath_srcdir amd/comgr
 %define _vpath_builddir build-comgr
 %cmake -DCMAKE_PREFIX_PATH=$ROCM_PATH \
-    -DCMAKE_MODULE_PATH=%{_libdir}/llvm%{llvm_maj_ver}/lib \
-    -DCMAKE_BUILD_TYPE="RELEASE" \
     -DCMAKE_EXE_LINKER_FLAGS:STRING="-fuse-ld=lld" \
     -DBUILD_TESTING=%{?with_comgr_test:ON}%{!?with_comgr_test:OFF}
 %cmake_build -- %{?_smp_mflags}
@@ -258,7 +259,7 @@ install -Dpm 644 macros.rocmcompiler \
 %define _vpath_builddir build-hipcc
 %cmake_install
 
-rm -f %{buildroot}%{_datadir}/doc/ROCm-Device-Libs/LICENSE.TXT
+rm -f %{buildroot}%{_datadir}/doc/rocm-device-libs/LICENSE.TXT
 rm -rf %{buildroot}%{_datadir}/doc/amd_comgr
 rm -f %{buildroot}%{_datadir}/doc/hipcc/LICENSE.txt
 rm -f %{buildroot}%{_datadir}/doc/hipcc/README.md
@@ -271,12 +272,11 @@ rm -f %{buildroot}%{_datadir}/doc/hipcc/README.md
 %license    amd/device-libs/LICENSE.TXT
 %dir        %{_libdir}/cmake/AMDDeviceLibs
 %{_libdir}/cmake/AMDDeviceLibs/*.cmake
-%{_prefix}/%{amd_device_libs_prefix}/amdgcn
+%{amd_device_libs_prefix}/amdgcn
 
 %files -n rocm-comgr
 %doc        amd/comgr/README.md
 %license    amd/comgr/LICENSE.txt
-%license    amd/comgr/NOTICES.txt
 %{_libdir}/libamd_comgr.so.*
 
 %files -n rocm-comgr-devel
@@ -295,4 +295,4 @@ rm -f %{buildroot}%{_datadir}/doc/hipcc/README.md
 %{_bindir}/hipvars.pm
 
 %changelog
-%{?autochangelog}
+%autochangelog

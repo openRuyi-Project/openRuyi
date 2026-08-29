@@ -13,7 +13,7 @@ Summary:        Python bindings for libgit2
 License:        GPL-2.0-only WITH GCC-exception-2.0
 URL:            https://www.pygit2.org/
 VCS:            git:https://github.com/libgit2/pygit2
-#!RemoteAsset
+#!RemoteAsset:  sha256:eca87e0662c965715b7f13491d5e858df2c0908341dee9bde2bc03268e460f55
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -24,7 +24,8 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(libgit2)
 BuildRequires:  make
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -39,4 +40,4 @@ the core of Git.
 %license COPYING
 
 %changelog
-%{?autochangelog}
+%autochangelog

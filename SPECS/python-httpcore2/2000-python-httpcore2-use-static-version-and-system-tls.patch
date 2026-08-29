@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+Date: Tue, 25 Aug 2026 00:00:00 +1000
+Subject: [PATCH] python-httpcore2: use static version and system TLS
+
+---
+ httpcore2/_ssl.py |  4 +---
+ pyproject.toml    |  5 ++---
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+--- a/httpcore2/_ssl.py
++++ b/httpcore2/_ssl.py
+@@ -1,12 +1,10 @@
+ import os
+ import ssl
+ 
+-import truststore
+ 
+-
+ def default_ssl_context() -> ssl.SSLContext:
+     if cafile := os.environ.get("SSL_CERT_FILE"):  # pragma: no cover
+         return ssl.create_default_context(cafile=cafile)
+     if capath := os.environ.get("SSL_CERT_DIR"):  # pragma: no cover
+         return ssl.create_default_context(capath=capath)
+-    return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
++    return ssl.create_default_context()
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -2,7 +2,6 @@
+ requires = [
+     "hatchling",
+     "hatch-fancy-pypi-readme",
+-    "uv-dynamic-versioning>=0.14.0",
+ ]
+ build-backend = "hatchling.build"
+ 
+@@ -17,7 +16,7 @@
+ 
+ [project]
+ name = "httpcore2"
+-dynamic = ["readme", "version"]
++version = "2.12.0"
+ description = "A minimal low-level HTTP client."
+ license = "BSD-3-Clause"
+ requires-python = ">=3.10"
+@@ -44,7 +43,7 @@
+     "Programming Language :: Python :: 3.15",
+     "Topic :: Internet :: WWW/HTTP",
+ ]
+-dependencies = ["truststore>=0.10", "h11>=0.16"]
++dependencies = ["h11>=0.16"]
+ 
+ [project.optional-dependencies]
+ http2 = ["h2>=3,<5"]
+-- 
+2.51.0

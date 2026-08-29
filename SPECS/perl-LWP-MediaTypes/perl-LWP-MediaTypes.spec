@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Guess media type for a file or a URL
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/LWP-MediaTypes
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/O/OA/OALDERS/LWP-MediaTypes-%{version}.tar.gz
+#!RemoteAsset:  sha256:8f1bca12dab16a1c2a7c03a49c5e58cce41a6fec9519f0aadfba8dad997919d9
+Source0:        https://www.cpan.org/authors/id/O/OA/OALDERS/LWP-MediaTypes-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.2
 BuildRequires:  perl(Carp)
@@ -38,20 +42,8 @@ defined by the media.types file. If the ~/.media.types file exists it is
 used instead. For backwards compatibility we will also look for
 ~/.mime.types.
 
-%prep
-%setup -q -n LWP-MediaTypes-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

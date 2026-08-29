@@ -10,27 +10,27 @@ Release:        %autorelease
 Summary:        The Command Line Interface to work with an Open Build Service
 License:        GPL-2.0-or-later
 URL:            https://github.com/openSUSE/osc
-#!RemoteAsset
+#!RemoteAsset:  sha256:6579381095a8a6675a6ffca4c894a2e5706fe19c45f2e9a18631d75e00bed051
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  python3-argparse-manpage
-BuildRequires:  python3-cryptography
+BuildRequires:  python3dist(argparse-manpage)
+BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3-devel
-BuildRequires:  python3-distro
-BuildRequires:  python3-pip
-BuildRequires:  python3-progressbar2
+BuildRequires:  python3dist(distro)
+BuildRequires:  python3dist(pip)
+BuildRequires:  python3dist(progressbar2)
 BuildRequires:  python3-rpm
-BuildRequires:  python3-ruamel-yaml
-BuildRequires:  python3-setuptools
-BuildRequires:  python3-urllib3
+BuildRequires:  python3dist(ruamel-yaml)
+BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(urllib3)
 BuildRequires:  git-core
 BuildRequires:  bash-completion
 
-Requires:       python3-cryptography
+Requires:       python3dist(cryptography)
 Requires:       python3-rpm
-Requires:       python3-urllib3
-Requires:       python3-lxml
+Requires:       python3dist(urllib3)
+Requires:       python3dist(lxml)
 
 %description
 Commandline client for the Open Build Service.
@@ -122,4 +122,4 @@ sed -i '3i # PYTHON_ARGCOMPLETE_OK'  %{buildroot}%{_bindir}/git-obs
 %{_rpmconfigdir}/macros.d/macros.osc
 
 %changelog
-%{?autochangelog}
+%autochangelog

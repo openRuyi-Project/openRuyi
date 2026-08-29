@@ -1,0 +1,47 @@
+From 15b20feb4a1bc64ed72023b39f784225f763df50 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 25 May 2026 16:46:12 +0800
+Subject: [PATCH] Drop x/tools test fixtures
+
+Replace x/tools godoc VFS fixtures with standard-library test files to avoid pulling obsolete x/tools packages into tests.
+---
+ fs_test.go | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/fs_test.go b/fs_test.go
+index d54d31f..6606067 100644
+--- a/fs_test.go
++++ b/fs_test.go
+@@ -4,12 +4,12 @@ import (
+ 	"io"
+ 	"net/http"
+ 	"net/http/httptest"
++	"os"
++	"path/filepath"
+ 	"strings"
+ 	"testing"
+ 
+ 	"github.com/shurcooL/httpgzip"
+-	"golang.org/x/tools/godoc/vfs/httpfs"
+-	"golang.org/x/tools/godoc/vfs/mapfs"
+ )
+ 
+ func ExampleFileServer() {
+@@ -26,9 +26,11 @@ func ExampleFileServer() {
+ // See https://github.com/shurcooL/httpgzip/pull/3
+ // and https://github.com/golang/go/commit/3745716bc3940f471137bf06fbe8c042257a43d3.
+ func TestFileServerImplicitLeadingSlash(t *testing.T) {
+-	fs := httpfs.New(mapfs.New(map[string]string{
+-		"foo.txt": "Hello world",
+-	}))
++	dir := t.TempDir()
++	if err := os.WriteFile(filepath.Join(dir, "foo.txt"), []byte("Hello world"), 0o644); err != nil {
++		t.Fatal(err)
++	}
++	fs := http.FS(os.DirFS(dir))
+ 	ts := httptest.NewServer(http.StripPrefix("/bar/", httpgzip.FileServer(fs, httpgzip.FileServerOptions{})))
+ 	defer ts.Close()
+ 	get := func(suffix string) string {
+-- 
+2.43.0
+

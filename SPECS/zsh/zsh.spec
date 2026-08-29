@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           zsh
-Version:        5.9
+Version:        5.9.1
 Release:        %autorelease
 Summary:        Powerful interactive shell
 License:        MIT-Modern-Variant AND ISC AND GPL-2.0-only
 URL:            https://zsh.sourceforge.net/
 VCS:            git:git://git.code.sf.net/p/zsh/code
-#!RemoteAsset
+#!RemoteAsset:  sha256:5d20bec03f981dc4e9a09ec245e7415388ff641f79c5c5c416b5042e58d8280d
 Source0:        https://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.xz
 Source1:        zlogin.rhs
 Source2:        zlogout.rhs
@@ -53,26 +53,9 @@ BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  pkgconfig(libpcre2-posix)
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  texinfo
+BuildRequires:  groff
 
 Provides:       /bin/zsh
-
-%patchlist
-# Upstream commit ab4d62eb975a4c4c51dd35822665050e2ddc6918
-0001-zsh-Use-int-main-in-test-c-codes.patch
-# upstream commit a84fdd7c8f77935ecce99ff2b0bdba738821ed79
-0002-zsh-fix-module-loading-problem-with-full-RELRO.patch
-# upstream commit 1b421e4978440234fb73117c8505dad1ccc68d46
-0003-zsh-enable-PCRE-locale-switching.patch
-# upstream commit b62e911341c8ec7446378b477c47da4256053dc0 and 10bdbd8b5b0b43445aff23dcd412f25cf6aa328a
-0004-zsh-port-to-pcre2.patch
-# upstream commit ecd3f9c9506c7720dc6c0833dc5d5eb00e4459c4
-0005-zsh-support-texinfo-7.0.patch
-# upstream commit 4c89849c98172c951a9def3690e8647dae76308f
-0006-zsh-configure-c99.patch
-# upstream commit d3edf318306e37d2d96c4e4ea442d10207722e94
-0007-zsh-deletefilelist-segfault.patch
-# avoid egrep warning break the tests
-0008-zsh-5.9-do-not-use-egrep-in-tests.patch
 
 %description
 The zsh shell is a command interpreter usable as an interactive login
@@ -152,4 +135,4 @@ fi
 %doc Doc/*.html
 
 %changelog
-%{?autochangelog}
+%autochangelog

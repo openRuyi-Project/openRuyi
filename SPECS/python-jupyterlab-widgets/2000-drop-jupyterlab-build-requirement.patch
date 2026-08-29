@@ -1,0 +1,26 @@
+From ae85ad9aabfc9d7b09471ac2b16c74388a69c30d Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Wed, 12 Aug 2026 18:34:37 +0800
+Subject: [PATCH] Drop jupyterlab build requirement
+
+Use the prebuilt JupyterLab extension included in the sdist
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index f7aae5e9..e95936b6 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -38,7 +38,7 @@ dynamic = ["version"]
+ path = "jupyterlab_widgets/_version.py"
+ 
+ [build-system]
+-requires = ["hatchling>=1.5.0", "jupyterlab~=4.0"]
++requires = ["hatchling>=1.5.0"]
+ build-backend = "hatchling.build"
+ 
+ [tool.check-manifest]
+-- 
+2.54.0
+

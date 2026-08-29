@@ -10,12 +10,16 @@ Release:        %autorelease
 Summary:        Framework for localization
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Locale-Maketext
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/Locale-Maketext-%{version}.tar.gz
+#!RemoteAsset:  sha256:6cefc5d38907cddfe50a4939176fd36567596cde0aa4d499b97a8b57fcd93995
+Source0:        https://www.cpan.org/authors/id/T/TO/TODDR/Locale-Maketext-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(I18N::LangTags) >= 0.31
@@ -34,20 +38,8 @@ framework for software localization; it provides you with the tools for
 organizing and accessing the bits of text and text-processing code that you
 need for producing localized applications.
 
-%prep
-%setup -q -n Locale-Maketext-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc ChangeLog perlcriticrc README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -6,17 +6,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtlottie
-%define real_version 6.10.1
-%define short_version 6.10
+%define real_version 6.11.1
+%define short_version 6.11
 
 Name:           qt6-qtlottie
-Version:        6.10.1
+Version:        6.11.1
 Release:        %autorelease
 Summary:        Qt6 - Lottie Animation
 License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlottie
-#!RemoteAsset
+#!RemoteAsset:  sha256:e0d0fadbdc33e97c8241c56273b54b6a7b1139e076fdd21281bc4662ee4b2679
 Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
 BuildSystem:    cmake
 
@@ -29,7 +29,9 @@ BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(Qt6Gui)
 BuildRequires:  qt6-qtbase-private-devel
+BuildRequires:  qt6-qtbase-static
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
+BuildRequires:  qt6-qtdeclarative-static >= %{version}
 BuildRequires:  pkgconfig(Qt6Svg) >= %{version}
 BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(openssl)
@@ -85,10 +87,11 @@ Programming examples for %{name}.
 %{_qt6_archdatadir}/mkspecs/modules/*.pri
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
-%{_qt6_libdir}/pkgconfig/*.pc
+%{_qt6_libdir}/pkgconfig/Qt6Lottie.pc
+%{_qt6_libdir}/pkgconfig/Qt6LottieVectorImageHelpers.pc
 
 %files examples
 %{_qt6_examplesdir}/
 
 %changelog
-%{?autochangelog}
+%autochangelog

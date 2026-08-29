@@ -1,0 +1,4 @@
+# Do not use %%bash_completion_dir, use %%bash_completions_dir instead!!!
+%bash_completions_dir %{_datadir}/bash-completion/completions
+%fish_completions_dir %{_datadir}/fish/vendor_completions.d
+%zsh_completions_dir %{_datadir}/zsh/site-functions

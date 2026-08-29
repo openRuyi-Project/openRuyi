@@ -6,17 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           perl-ExtUtils-InstallPaths
-Version:        0.014
+Version:        0.015
 Release:        %autorelease
 Summary:        Build.PL install path logic made easy
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/ExtUtils-InstallPaths
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-InstallPaths-%{version}.tar.gz
+#!RemoteAsset:  sha256:7d64eb2dfa87ead010cdf55c8a1bdfde50b7b5852d7cb8cf2304f55bea2eb007
+Source0:        https://www.cpan.org/authors/id/L/LE/LEONT/ExtUtils-InstallPaths-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(Carp)
@@ -34,20 +38,8 @@ Requires:       perl(ExtUtils::Config) >= 0.009
 %description
 This module tries to make install path resolution as easy as possible.
 
-%prep
-%setup -q -n ExtUtils-InstallPaths-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

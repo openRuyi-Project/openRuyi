@@ -8,12 +8,12 @@
 %define go_import_path  github.com/phpdave11/gofpdi
 
 Name:           go-github-phpdave11-gofpdi
-Version:        1.0.15
+Version:        1.0.16
 Release:        %autorelease
 Summary:        Go Free PDF Document Importer
 License:        MIT
 URL:            https://github.com/phpdave11/gofpdi
-#!RemoteAsset
+#!RemoteAsset:  sha256:2ce333b99f3573339c813af0b7263571b2fb4ed622090f1372e6c6c8d82331c7
 Source0:        https://github.com/phpdave11/gofpdi/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -37,4 +37,4 @@ gofpdi allows you to import an existing PDF into a new PDF.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

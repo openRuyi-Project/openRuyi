@@ -14,7 +14,7 @@ Summary:        Travel through time in your Python tests
 License:        MIT
 URL:            https://time-machine.readthedocs.io/en/latest/
 VCS:            git:https://github.com/adamchainz/time-machine
-#!RemoteAsset
+#!RemoteAsset:  sha256:a4ddd1cea17b8950e462d1805a42b20c81eb9aafc8f66b392dd5ce997e037d79
 Source0:        https://files.pythonhosted.org/packages/source/t/%{modname}/%{modname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -25,7 +25,8 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(tokenize-rt)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +44,4 @@ Includes a test-function decorator that sets time to an arbitrary value.
 %{python3_sitearch}/time_machine-%{version}.dist-info/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -14,6 +14,7 @@ License:        MIT AND Apache-2.0
 URL:            https://github.com/Dav1dde/glad
 #!RemoteAsset:  sha256:b84079b9fa404f37171b961bdd1d8da21370e6c818defb8481c5b3fe3d6436da
 Source:         https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l glad
@@ -25,7 +26,7 @@ BuildRequires:  python3dist(jinja2)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(setuptools)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description

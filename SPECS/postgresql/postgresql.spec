@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,7 +13,7 @@
 %global service_name postgresql.service
 
 Name:           postgresql
-Version:        18.1
+Version:        18.4
 Release:        %autorelease
 Summary:        PostgreSQL client programs
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
@@ -20,7 +21,7 @@ Summary:        PostgreSQL client programs
 License:        PostgreSQL
 Url:            http://www.postgresql.org/
 VCS:            git:https://git.postgresql.org/git/postgresql.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:81a81ec695fb0c7901407defaa1d2f7973617154cf27ba74e3a7ab8e64436094
 Source0:        https://ftp.postgresql.org/pub/source/v%{version}/postgresql-%{version}.tar.bz2
 Source1:        Makefile.regress
 Source2:        postgresql.pam
@@ -480,7 +481,7 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %{_includedir}/pgsql/internal/libpq/protocol.h
 
 %{_includedir}/libpq/*.h
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libpq.pc
 %{_libdir}/libpq.so
 %{_includedir}/pg_config*.h
 
@@ -494,4 +495,4 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

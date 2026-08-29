@@ -1,0 +1,31 @@
+From f38e9e0a9872d899773d6e486cac296c3b75f5f6 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:15:00 +0800
+Subject: [PATCH] Fix the path used to locate the ROCm clang binary at build
+ time
+
+---
+ src/hip/hip_build_utils.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/hip/hip_build_utils.cpp b/src/hip/hip_build_utils.cpp
+index 4744ec0..02fd3de 100644
+--- a/src/hip/hip_build_utils.cpp
++++ b/src/hip/hip_build_utils.cpp
+@@ -47,10 +47,10 @@ MIOPEN_DECLARE_ENV_VAR_BOOL(MIOPEN_DEBUG_HIP_DUMP)
+ // for each Compiler Flags from ROCM Install Path
+ // This flag Paths are expected to be deprecated/modified
+ // in upcoming MAJOR Releases.
+-#define MIOPEN_CLANG_REL_PATH "llvm/bin/clang"
++#define MIOPEN_CLANG_REL_PATH "bin/clang"
+ #define MIOPEN_OCL_REL_PATH "bin/clang"
+-#define MIOPEN_CPPCLANG_REL_PATH "llvm/bin/clang++"
+-#define MIOPEN_OFFLOADBUNDLER_REL_PATH "llvm/bin/clang-offload-bundler"
++#define MIOPEN_CPPCLANG_REL_PATH "bin/clang++"
++#define MIOPEN_OFFLOADBUNDLER_REL_PATH "bin/clang-offload-bundler"
+ 
+ // Function to generate the MIOPEN Compiler Path Value using
+ // ROCm Base Install Path fetched using getROCmInstallPath()
+-- 
+2.53.0
+

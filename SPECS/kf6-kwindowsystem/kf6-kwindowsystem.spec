@@ -8,27 +8,27 @@
 %define qt6_version 6.8.0
 
 Name:           kf6-kwindowsystem
-Version:        6.22.0
+Version:        6.28.0
 Release:        %autorelease
 Summary:        KDE Access to window manager
 License:        LGPL-2.1-or-later
 URL:            https://kde.org
 VCS:            git:https://invent.kde.org/frameworks/kwindowsystem
-#!RemoteAsset
-Source0:        https://download.kde.org/stable/frameworks/6.22/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:5adbdf9c82b1ecbb92bda6498ea1b8f88c08f9ec57dbff70d582e2453bf16b12
+Source0:        https://download.kde.org/stable/frameworks/6.28/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
+
+BuildOption(conf):  -DBUILD_TESTING=OFF
 
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  cmake
-BuildRequires:  meson
-BuildRequires:  fdupes
 BuildRequires:  xz
 BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  xmlto
 BuildRequires:  pkgconfig
-BuildRequires:  kf6-extra-cmake-modules >= 6.22.0
+BuildRequires:  kf6-extra-cmake-modules >= 6.28.0
 BuildRequires:  qt6-qtbase-private-devel >= 6.8.0
 BuildRequires:  cmake(Qt6GuiPrivate)
 BuildRequires:  cmake(Qt6LinguistTools)
@@ -59,12 +59,6 @@ KWindowSystem provides information about the state of the window manager and
 allows asking the window manager to change the using a more high-level
 interface than the NETWinInfo/NETRootInfo low-level classes.
 
-%package        imports
-Summary:        QML Bindings for KWindowSystem
-
-%description    imports
-QML Bindings for KWindowSystem.
-
 %package        devel
 Summary:        KDE Access to window manager: Build Environment
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -81,22 +75,6 @@ allows asking the window manager to change the using a more high-level
 interface than the NETWinInfo/NETRootInfo low-level classes.
 Development files.
 
-%prep
-%autosetup -p1 -n %{rname}-%{version}
-
-%build
-%cmake_kf6 -DBUILD_TESTING=OFF
-
-%kf6_build
-
-%install
-%kf6_install
-
-%fdupes %{buildroot}
-
-%check
-# Upstream autotests require a running X server; skip in buildroot
-
 %files
 %license LICENSES/*
 %doc README.md
@@ -107,8 +85,6 @@ Development files.
 %{_kf6_plugindir}/kf6/kwindowsystem/KF6WindowSystemX11Plugin.so
 %{_kf6_libdir}/libKF6WindowSystem.so.*
 %{_datadir}/locale/*/LC_MESSAGES/kwindowsystem6_qt.qm
-
-%files imports
 %{_kf6_qmldir}/org/kde/kwindowsystem/
 
 %files devel
@@ -118,4 +94,4 @@ Development files.
 %{_kf6_pkgconfigdir}/KF6WindowSystem.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

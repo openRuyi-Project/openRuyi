@@ -1,0 +1,38 @@
+From 470a48568f6793d5e2e60262eb9d518bba8effe6 Mon Sep 17 00:00:00 2001
+From: Jvle <keke.oerv@isrc.iscas.ac.cn>
+Date: Thu, 20 Aug 2026 16:38:57 +0800
+Subject: [PATCH] tests: skip netns creation without privileges
+
+Signed-off-by: Jvle <keke.oerv@isrc.iscas.ac.cn>
+---
+ netns_linux_test.go | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/netns_linux_test.go b/netns_linux_test.go
+index b8d9bd9..a34365a 100644
+--- a/netns_linux_test.go
++++ b/netns_linux_test.go
+@@ -1,7 +1,10 @@
+ package netns
+ 
+ import (
++	"errors"
+ 	"runtime"
++
++	"golang.org/x/sys/unix"
+ 	"sync"
+ 	"testing"
+ )
+@@ -16,6 +19,9 @@ func TestGetNewSetDelete(t *testing.T) {
+ 	}
+ 	newns, err := New()
+ 	if err != nil {
++		if errors.Is(err, unix.EPERM) {
++			t.Skip("network namespace creation requires privileges unavailable in OBS")
++		}
+ 		t.Fatal(err)
+ 	}
+ 	if origns.Equal(newns) {
+-- 
+2.43.0
+

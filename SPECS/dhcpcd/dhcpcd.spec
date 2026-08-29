@@ -9,13 +9,13 @@
 %global _test_target test
 
 Name:           dhcpcd
-Version:        10.2.4
+Version:        10.3.2
 Release:        %autorelease
 Summary:        A minimalistic network configuration daemon
 License:        BSD-2-Clause AND ISC AND MIT
 URL:            http://roy.marples.name/projects/dhcpcd/
 VCS:            git:https://github.com/NetworkConfiguration/dhcpcd
-#!RemoteAsset
+#!RemoteAsset:  sha256:b6aa46932074906a9badef1bfe142b8aff9d041c2689e1ef8b74c12e9fd942bd
 Source0:        https://github.com/NetworkConfiguration/dhcpcd/releases/download/v%{version}/dhcpcd-%{version}.tar.xz
 Source1:        dhcpcd.service
 Source2:        dhcpcd@.service
@@ -26,7 +26,6 @@ BuildSystem:    autotools
 BuildOption(conf):  --dbdir=%{_localstatedir}/lib/%{name}
 BuildOption(conf):  --runstatedir=%{_rundir}
 
-BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  systemd-rpm-macros
@@ -73,4 +72,4 @@ install -d %{buildroot}%{_localstatedir}/lib/%{name}
 %attr(0644,root,dhcpcd) %dir %{_localstatedir}/lib/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog

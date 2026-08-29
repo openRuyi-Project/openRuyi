@@ -1,0 +1,26 @@
+From 32aa7e283b6d744a2e2beb4f5c5ed3c9c3ace756 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Sat, 18 Jul 2026 20:31:00 +0800
+Subject: [PATCH] Add newer gfx targets to Makefile's valid arch whitelist
+
+https://bitbucket.org/icl/magma/issues/76/a-few-new-rocm-gpus
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index f0ddf0b..747ff55 100644
+--- a/Makefile
++++ b/Makefile
+@@ -245,7 +245,7 @@ else ifeq ($(BACKEND),hip)
+     ## Suggestion by Mark (from SLATE)
+     # Valid architecture numbers
+     # TODO: remove very old ones?
+-    VALID_GFXS = 600 601 602 700 701 702 703 704 705 801 802 803 805 810 900 902 904 906 908 909 90a 940 941 942 90c 1010 1011 1012 1030 1031 1032 1033
++    VALID_GFXS = 600 601 602 700 701 702 703 704 705 801 802 803 805 810 900 902 904 906 908 909 90a 940 941 942 90c 1010 1011 1012 1030 1031 1032 1033 1100 1101 1102 1103 1150 1151 1152 1153 1200 1201
+ 
+     # Generated GFX option
+     TARGET_GFX      = --offload-arch=gfx$(gfx)
+-- 
+2.53.0
+

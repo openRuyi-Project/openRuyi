@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Conversion between character sets and surfaces
 License:        GPL-3.0-or-later AND LGPL-3.0-or-later AND BSD-2-Clause
 URL:            https://github.com/rrthomas/recode
-#!RemoteAsset
+#!RemoteAsset:  sha256:f590407fc51badb351973fc1333ee33111f05ec83a8f954fd8cf0c5e30439806
 Source0:        https://github.com/rrthomas/recode/releases/download/v%{version}/recode-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -31,9 +31,9 @@ BuildRequires:  gettext-devel
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  texinfo
-BuildRequires:  python3-Cython
+BuildRequires:  python3dist(cython)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3-setuptools
+BuildRequires:  python3dist(setuptools)
 
 %description
 The recode tool and library convert files between character sets and surfaces.
@@ -48,8 +48,6 @@ This package provides the header files for a recode library.
 
 %install -a
 rm -f %{buildroot}%{_infodir}/dir
-# Avoid illegal package names
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 
 %find_lang %{name} --generate-subpackages
 
@@ -67,4 +65,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/*@*
 %{_includedir}/recodext.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

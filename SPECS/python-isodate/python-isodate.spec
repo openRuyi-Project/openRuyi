@@ -14,6 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/gweis/isodate
 #!RemoteAsset:  sha256:4cd1aa0f43ca76f4a6c6c0292a85f40b35ec2e43e315b59f06e6d32171a953e6
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -27,7 +28,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools-scm)
 BuildRequires:  python3dist(setuptools-scm[toml])
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -43,4 +44,4 @@ representations mentioned in the standard.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

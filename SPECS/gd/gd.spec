@@ -16,13 +16,12 @@ Summary:        A Drawing Library for Programs That Use PNG and JPEG Output
 License:        MIT
 URL:            http://libgd.github.io/
 VCS:            git:https://github.com/libgd/libgd
-#!RemoteAsset
+#!RemoteAsset:  sha256:3fe822ece20796060af63b7c60acb151e5844204d289da0ce08f8fdf131e5a61
 Source0:        https://github.com/libgd/libgd/releases/download/%{name}-%{version}/libgd-%{version}.tar.xz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-werror
-BuildOption(conf):  --disable-slient-rules
 BuildOption(conf):  --without-liq
 BuildOption(conf):  --without-x
 BuildOption(conf):  --with-fontconfig
@@ -31,12 +30,18 @@ BuildOption(conf):  --with-jpeg
 BuildOption(conf):  --with-png
 %if %{with avif}
 BuildOption(conf):  --with-avif
+%else
+BuildOption(conf):  --without-avif
 %endif
 %if %{with webp}
 BuildOption(conf):  --with-webp
+%else
+BuildOption(conf):  --without-webp
 %endif
 %if %{with xpm}
 BuildOption(conf):  --with-xpm
+%else
+BuildOption(conf):  --without-xpm
 %endif
 
 BuildRequires:  automake
@@ -111,4 +116,4 @@ export TMPDIR=/tmp
 %{_libdir}/pkgconfig/gdlib.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

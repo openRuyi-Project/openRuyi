@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           openresolv
-Version:        3.17.0
+Version:        3.17.4
 Release:        %autorelease
 Summary:        A framework for managing DNS resolution
 License:        BSD-2-Clause
 URL:            https://roy.marples.name/projects/openresolv
 VCS:            git:https://github.com/NetworkConfiguration/openresolv
-#!RemoteAsset
+#!RemoteAsset:  sha256:506937359aff4f5bb40f8646945aaf5647537f4040ec4988e334e03c3c126f6e
 Source:         https://github.com/NetworkConfiguration/openresolv/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -20,7 +20,6 @@ BuildOption(conf):  --sbindir=%{_sbindir}
 BuildOption(conf):  --libexecdir=%{_prefix}/lib/resolvconf
 
 BuildRequires:  make
-BuildRequires:  gcc
 
 Provides:       resolvconf = %{version}-%{release}
 
@@ -52,6 +51,7 @@ touch %{buildroot}%{_mandir}/man8/resolvconf.8
 if [ $1 -eq 0 ] ; then
   %{_sbindir}/update-alternatives --remove resolvconf %{_sbindir}/resolvconf.%{name}
 fi
+
 # no tests
 %check
 
@@ -68,4 +68,4 @@ fi
 %ghost %{_mandir}/man8/resolvconf.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

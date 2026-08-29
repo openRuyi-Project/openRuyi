@@ -1,0 +1,22 @@
+From 4c617fb8c9b681a584ee52970aa40865d25b21ab Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Wed, 12 Aug 2026 18:39:33 +0800
+Subject: [PATCH] use python3 for cythoner
+
+---
+ src/skimage/_build_utils/cythoner.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/skimage/_build_utils/cythoner.py b/src/skimage/_build_utils/cythoner.py
+index 83bc34a48..117c55ee9 100755
+--- a/src/skimage/_build_utils/cythoner.py
++++ b/src/skimage/_build_utils/cythoner.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/env python3
+ """Scipy variant of Cython command
+ 
+ Cython, as applied to single pyx file.
+-- 
+2.54.0
+

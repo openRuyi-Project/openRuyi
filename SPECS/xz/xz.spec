@@ -8,20 +8,16 @@
 %bcond static 0
 
 Name:           xz
-Version:        5.8.1
+Version:        5.8.3
 Release:        %autorelease
 Summary:        A Program for Compressing Files with the Lempel–Ziv–Markov algorithm
 License:        0BSD AND GPL-2.0-or-later AND GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://tukaani.org/xz/
 VCS:            git:https://github.com/tukaani-project/xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:fff1ffcf2b0da84d308a14de513a1aa23d4e9aa3464d17e64b9714bfdd0bbfb6
 Source0:        https://github.com/tukaani-project/xz/releases/download/v%{version}/xz-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://github.com/tukaani-project/xz/releases/download/v%{version}/xz-%{version}.tar.xz.sig
-#!RemoteAsset
-Source3:        https://tukaani.org/misc/lasse_collin_pubkey.txt#/xz.keyring
-Source4:        xznew
-Source5:        xznew.1
+Source1:        xznew
+Source2:        xznew.1
 BuildSystem:    autotools
 
 BuildOption(conf):  --with-pic
@@ -83,8 +79,8 @@ cp ./src/liblzma/.libs/liblzma.a liblzma.a
 %endif
 
 %install -a
-install -Dpm 0755 %{SOURCE4} %{buildroot}%{_bindir}/xznew
-install -Dpm 0644 %{SOURCE5} %{buildroot}%{_mandir}/man1/xznew.1
+install -Dpm 0755 %{SOURCE1} %{buildroot}%{_bindir}/xznew
+install -Dpm 0644 %{SOURCE2} %{buildroot}%{_mandir}/man1/xznew.1
 %if %{with static}
 install -Dpm 0644 liblzma.a %{buildroot}%{_libdir}/
 %endif
@@ -159,4 +155,4 @@ rm -vf %{buildroot}%{_docdir}/%{name}/{COPYING,COPYING.GPLv2}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

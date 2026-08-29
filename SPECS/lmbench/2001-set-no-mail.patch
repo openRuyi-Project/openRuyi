@@ -1,0 +1,34 @@
+From 16b57822e0fe0e2a08266dadc924d1bd8d71eb05 Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Tue, 19 May 2026 12:49:26 +0000
+Subject: [PATCH 2/3] set no mail
+
+---
+ scripts/config-run | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/config-run b/scripts/config-run
+index f620c15..1ed0714 100755
+--- a/scripts/config-run
++++ b/scripts/config-run
+@@ -677,13 +677,13 @@ fast box, they may be made available on the lmbench web page, which is
+ 
+ EOF
+ 
+-echo $ECHON "Mail results [default yes]: $ECHOC"
++echo $ECHON "Mail results [default no]: $ECHOC"
+ read MAIL
+ case $MAIL in 
+-    [Nn]*)	MAIL=no
+-		echo OK, no results mailed.
++    [Yy]*)	MAIL=yes
++		echo OK, results mailed.
+ 		;;
+-    *)		MAIL=yes
++    *)		MAIL=no
+ 		;;
+ esac
+ 
+-- 
+2.34.1
+

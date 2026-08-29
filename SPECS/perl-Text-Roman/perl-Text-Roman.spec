@@ -11,12 +11,16 @@ Release:        %autorelease
 Summary:        Allows conversion between Roman and Arabic algarisms
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Text-Roman
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SY/SYP/Text-Roman-%{version}.tar.gz
+#!RemoteAsset:  sha256:cb4a08a3b151802ffb2fce3258a416542ab81db0f739ee474a9583ffb73e046a
+Source0:        https://www.cpan.org/authors/id/S/SY/SYP/Text-Roman-%{version}.tar.gz
 BuildArch:      noarch
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.6.0
 BuildRequires:  perl(Carp)
@@ -38,20 +42,8 @@ algarism e.g. IV_V = 4_005. The term Milhar apparently derives from the
 Portuguese word for "thousands" and the range of this notation extends the
 range of Roman numbers to 3999 * 1000 + 3999 = 4_002_999.
 
-%prep
-%setup -q -n Text-Roman-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor
-%{make_build}
-
-%install
-%perl_make_install
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes perlcritic.rc README weaver.ini
 
 %changelog
-%{?autochangelog}
+%autochangelog

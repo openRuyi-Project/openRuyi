@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Tool and library for SPIR-V reflection and disassembly
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/KhronosGroup/SPIRV-Cross
-#!RemoteAsset
+#!RemoteAsset:  sha256:c3e935cb19e2dda8e2e03fcfcbe451131595fec2cfbc73ab79a6f4c4cd43eb16
 Source0:        https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/vulkan-sdk-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -34,9 +34,14 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 This package contains the development headers and libraries for SPIRV-Cross.
 
-%install -a
-rm -fv %{buildroot}/%{_libdir}/*.a
+%package        static
+Summary:        Static files for the SPIRV-Cross library
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
 
+%description    static
+This package contains the static libraries for developing applications that use SPIRV-Cross.
+
+%install -a
 for i in c core cpp glsl hlsl msl reflect util; do
 	ln -s "libspirv-cross-c-shared.so" "%{buildroot}/%{_libdir}/libspirv-cross-$i.so"
 done
@@ -49,10 +54,14 @@ done
 
 %files devel
 %{_libdir}/libspirv-cross-*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/spirv-cross-c-shared.pc
+%{_libdir}/pkgconfig/spirv-cross-c.pc
 %{_includedir}/spirv_cross/
 %dir %_datadir/spirv*
 %_datadir/spirv*/cmake/
 
+%files static
+%_libdir/*.a
+
 %changelog
-%{?autochangelog}
+%autochangelog

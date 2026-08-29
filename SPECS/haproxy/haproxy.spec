@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define minor dev8
+%define minor dev9
 
 Name:           haproxy
 Version:        3.3
@@ -13,7 +13,7 @@ Summary:        The Reliable, High Performance TCP/HTTP Load Balancer
 License:        GPL-2.0-or-later
 URL:            https://www.haproxy.org/
 VCS:            git:https://github.com/haproxy/haproxy
-#!RemoteAsset
+#!RemoteAsset:  sha256:8e83364938b26602102f746127a2fe8f92929d8bb5f671f7780caa23cf9686f3
 Source0:        https://www.haproxy.org/download/3.3/src/devel/%{name}-%{version}-%{minor}.tar.gz
 Source1:        %{name}.cfg
 Source2:        %{name}.logrotate
@@ -41,7 +41,6 @@ BuildOption(install):  SBINDIR=%{_sbindir}
 BuildOption(install):  MANDIR=%{_mandir}
 BuildOption(install):  DOCDIR=%{_docdir}/%{name}
 
-BuildRequires:  gcc
 BuildRequires:  lua-devel
 BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  pkgconfig(openssl)
@@ -126,4 +125,4 @@ exit 0
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

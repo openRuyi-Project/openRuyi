@@ -1,0 +1,26 @@
+From 7823606289e25473b605b4e2e7603477118b54f1 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Mon, 18 May 2026 17:45:44 +0800
+Subject: [PATCH 6/6] agent: generate version file for optimized builds
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ src/agent/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/agent/Makefile b/src/agent/Makefile
+index 4305c41d4..5ce024c2d 100644
+--- a/src/agent/Makefile
++++ b/src/agent/Makefile
+@@ -134,7 +134,7 @@ $(GENERATED_FILES): %: %.in $(VERSION_FILE)
+ 	@sed $(foreach r,$(GENERATED_REPLACEMENTS),-e 's|@$r@|$($r)|g') "$<" > "$@"
+ 
+ ##TARGET optimize: optimized  build
+-optimize: show-summary show-header
++optimize: $(GENERATED_CODE) show-summary show-header
+ 	@RUSTFLAGS="-C link-arg=-s $(EXTRA_RUSTFLAGS) --deny warnings" cargo build --target $(TRIPLE) $(if $(findstring release,$(BUILD_TYPE)),--release) $(EXTRA_RUSTFEATURES)
+ 
+ ##TARGET install: install agent
+-- 
+2.50.1 (Apple Git-155)
+

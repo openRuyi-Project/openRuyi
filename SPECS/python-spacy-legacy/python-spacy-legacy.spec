@@ -11,9 +11,10 @@ Version:        3.0.12
 Release:        %autorelease
 Summary:        Legacy registered functions for spaCy backwards compatibility
 License:        MIT
-URL:            https://github.com/explosion/spacy-loggers
+URL:            https://github.com/explosion/spacy-legacy
 #!RemoteAsset:  sha256:b37d6e0c9b6e1d7ca1cf5bc7152ab64a4c4671f59c85adaf7a3fcb870357a774
 Source0:        https://files.pythonhosted.org/packages/source/s/spacy_legacy/spacy-legacy-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{srcname}
@@ -26,7 +27,7 @@ BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -34,15 +35,15 @@ This package includes outdated registered functions
 for spaCy v3.x, for example model architectures, pipeline
 components and utilities.
 
-%check
-# Skip the check; it depends on the spacy
-
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check
+# Skip the check; it depends on the spacy
 
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

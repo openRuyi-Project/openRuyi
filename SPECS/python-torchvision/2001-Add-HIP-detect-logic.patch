@@ -1,19 +1,27 @@
-From cda17c080e1ebbea9bc7797ab9eb685590cc976e Mon Sep 17 00:00:00 2001
-From: Sakura286 <sakura286@outlook.com>
-Date: Thu, 12 Mar 2026 16:28:58 +0800
-Subject: [PATCH] Add HIP detect logic
+From c380725c6bf685a66155cb351b26c8e543a65ad9 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Thu, 20 Aug 2026 18:49:42 +0800
+Subject: [PATCH] Add HIP version detection
 
 ---
- torchvision/csrc/vision.cpp | 2 ++
- 1 file changed, 2 insertions(+)
+ torchvision/csrc/vision.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/torchvision/csrc/vision.cpp b/torchvision/csrc/vision.cpp
-index 806e870..7a62927 100644
+index 6cd289d..f834126 100644
 --- a/torchvision/csrc/vision.cpp
 +++ b/torchvision/csrc/vision.cpp
-@@ -21,6 +21,8 @@ namespace vision {
- int64_t cuda_version() {
+@@ -7,6 +7,7 @@
+ #endif
+ #ifdef WITH_HIP
+ #include <hip/hip_runtime.h>
++#include <rocm-core/rocm_version.h>
+ #endif
+ 
+ // If we are in a Windows environment, we need to define
+@@ -22,6 +23,8 @@ int64_t cuda_version() {
  #ifdef WITH_CUDA
+   // looks like 12060, 12080, etc.
    return CUDA_VERSION;
 +#elif defined(WITH_HIP)
 +  return (ROCM_VERSION_MAJOR * 100) + ROCM_VERSION_MINOR;
@@ -21,5 +29,5 @@ index 806e870..7a62927 100644
    return -1;
  #endif
 -- 
-2.51.0
+2.53.0
 

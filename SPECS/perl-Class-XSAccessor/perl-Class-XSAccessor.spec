@@ -11,11 +11,15 @@ Release:        %autorelease
 Summary:        Generate fast XS accessors without runtime compilation
 License:        GPL-1.0-or-later OR Artistic-1.0-Perl
 URL:            https://metacpan.org/dist/Class-XSAccessor
-#!RemoteAsset
-Source0:        http://www.cpan.org/authors/id/S/SM/SMUELLER/Class-XSAccessor-%{version}.tar.gz
+#!RemoteAsset:  sha256:99c56b395f1239af19901f2feeb125d9ecb4e351a0d80daa9529211a4700a6f2
+Source0:        https://www.cpan.org/authors/id/S/SM/SMUELLER/Class-XSAccessor-%{version}.tar.gz
+BuildSystem:    perlmaker
+
+BuildOption(build):  INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 
 BuildRequires:  make
 BuildRequires:  perl-rpm-packaging
+BuildRequires:  perl-rpm-macros
 BuildRequires:  perl-macros
 BuildRequires:  perl >= 5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -32,21 +36,8 @@ implemented as ordinary hashes. Class::XSAccessor::Array implements the
 same interface for objects that use arrays for their internal
 representation.
 
-%prep
-%setup -q -n Class-XSAccessor-%{version}
-
-%build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
-%{make_build}
-
-%install
-%perl_make_install
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-%perl_process_packlist
-%perl_gen_filelist
-
 %files -f %{name}.files
 %doc Changes README
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,40 @@
+From 6762dbf0fc6e9a8de0940253cbdf6ac0d6111f32 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 24 Jun 2026 12:13:18 +0800
+Subject: [PATCH] fix riscv64 native JIT build with simulator headers
+
+Firefox 152 still has a riscv64 JIT source file that unconditionally
+includes jit/riscv64/Simulator-riscv64.h.
+
+After Mozilla Bug 2038968 part 4, simulator headers intentionally fail
+to compile when the corresponding JS_SIMULATOR_* option is disabled.
+Our riscv64 build uses the native JIT backend, JS_CODEGEN_RISCV64, not
+the riscv64 simulator, so this trips the "simulator disabled" error
+while building js/src/jit.
+
+Guard the simulator-specific include with JS_SIMULATOR_RISCV64. This
+keeps the native riscv64 JIT path enabled and does not change LTO
+settings.
+
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ js/src/jit/riscv64/constant/Base-constant-riscv.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/js/src/jit/riscv64/constant/Base-constant-riscv.cpp b/js/src/jit/riscv64/constant/Base-constant-riscv.cpp
+index b25ce174bc..f4a1afecb5 100644
+--- a/js/src/jit/riscv64/constant/Base-constant-riscv.cpp
++++ b/js/src/jit/riscv64/constant/Base-constant-riscv.cpp
+@@ -13,7 +13,9 @@
+ #include "jit/riscv64/constant/Constant-riscv-v.h"
+ #include "jit/riscv64/constant/Constant-riscv-zicsr.h"
+ #include "jit/riscv64/constant/Constant-riscv-zifencei.h"
++#ifdef JS_SIMULATOR_RISCV64
+ #include "jit/riscv64/Simulator-riscv64.h"
++#endif
+ namespace js {
+ namespace jit {
+ 
+-- 
+2.54.0
+

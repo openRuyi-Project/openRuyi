@@ -1,0 +1,21 @@
+From 72521fcca77c010b9c8b9ce91cde925164502d6f Mon Sep 17 00:00:00 2001
+From: Tom Rix <Tom.Rix@amd.com>
+Date: Thu, 25 Sep 2025 13:02:55 -0700
+Subject: [PATCH] hipblaslt tensilelite remove yappi dependency
+
+Signed-off-by: Tom Rix <Tom.Rix@amd.com>
+---
+ tensilelite/Tensile/TensileCreateLibrary/Run.py | 15 ---------------
+ tensilelite/requirements.txt                    |  2 +-
+ 2 files changed, 1 insertion(+), 16 deletions(-)
+
+diff --git a/tensilelite/Tensile/TensileCreateLibrary/Run.py b/tensilelite/Tensile/TensileCreateLibrary/Run.py
+index 835ed9c01916..a02705f6554a 100644
+--- a/tensilelite/Tensile/TensileCreateLibrary/Run.py
++++ b/tensilelite/Tensile/TensileCreateLibrary/Run.py
+diff --git a/tensilelite/requirements.txt b/tensilelite/requirements.txt
+index 60c4c1144537..e87db8445411 100644
+--- a/tensilelite/requirements.txt
++++ b/tensilelite/requirements.txt
+-- 
+2.52.0

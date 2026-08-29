@@ -6,12 +6,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fltk
-Version:        1.4.4
+Version:        1.4.5
 Release:        %autorelease
 Summary:        C++ user interface toolkit
 License:        LGPL-2.0-or-later WITH FLTK-exception
 URL:            https://github.com/fltk/fltk
-#!RemoteAsset
+#!RemoteAsset:  sha256:7715e69ce081fa9ce6da48bb0dd3b07a4cf2cf937813814c04272f36fff593ea
 Source0:        https://github.com/fltk/fltk/archive/refs/tags/release-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -54,6 +54,13 @@ Requires:       pkgconfig(x11)
 %description    devel
 Development files for FLTK.
 
+%package        static
+Summary:        Static libraries for %{name}
+Requires:       %{name}-devel = %{version}-%{release}
+
+%description    static
+Static libraries for FLTK.
+
 %package        fluid
 Summary:        Fast Light User Interface Designer
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -67,7 +74,6 @@ make docs -C %{_vpath_builddir}
 
 %install -a
 mv src/xutf8/COPYING ./COPYING.xutf8
-rm -f %{buildroot}%{_libdir}/*.a
 
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
@@ -103,6 +109,12 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
 %{_mandir}/man3/fltk.3*
 %{_mandir}/man6/*.6*
 
+%files static
+%{_libdir}/libfltk.a
+%{_libdir}/libfltk_forms.a
+%{_libdir}/libfltk_gl.a
+%{_libdir}/libfltk_images.a
+
 %files fluid
 %{_bindir}/fluid
 %{_mandir}/man1/fluid.1*
@@ -111,4 +123,4 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/fluid.desktop
 %{_datadir}/icons/hicolor/*/*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

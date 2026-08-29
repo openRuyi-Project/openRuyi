@@ -9,15 +9,15 @@
 %bcond bootstrap 1
 
 Name:           freetype
-Version:        2.13.3
+Version:        2.14.3
 Release:        %autorelease
 Summary:        A free and portable font rendering engine
 License:        (FTL OR GPL-2.0-or-later) AND BSD-3-Clause AND MIT AND MIT-Modern-Variant AND LicenseRef-openRuyi-Public-Domain AND Zlib
 URL:            https://www.freetype.org
 VCS:            git:https://gitlab.freedesktop.org/freetype/freetype.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:36bc4f1cc413335368ee656c42afca65c5a3987e8768cc28cf11ba775e785a5f
 Source0:        http://download.savannah.gnu.org/releases/freetype/freetype-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:66a988d8bbb58f83efafe555678ac172f70f0b060cf61424fe5460157470fd21
 Source1:        http://download.savannah.gnu.org/releases/freetype/freetype-doc-%{version}.tar.xz
 Source2:        ftconfig.h
 BuildSystem:    autotools
@@ -116,4 +116,4 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.{a,la}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

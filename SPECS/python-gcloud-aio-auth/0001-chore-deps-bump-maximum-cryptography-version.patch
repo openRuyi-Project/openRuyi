@@ -1,0 +1,20 @@
+From ce54a347504108023e55e9f34c721c19565b5944 Mon Sep 17 00:00:00 2001
+From: Kevin James <kevin@talkiq.com>
+Date: Wed, 3 Jun 2026 14:23:47 +0100
+Subject: [PATCH] chore(deps): bump maximum cryptography version
+
+---
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 95c1f8eb6..7a9aef23c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -25,7 +25,7 @@
+ backoff = ">= 1.0.0, < 3.0.0"
+ chardet = ">= 2.0, < 7.0"
+ # See https://cryptography.io/en/latest/api-stability/#deprecation
+-cryptography = ">= 2.0.0, < 49.0.0"  # pin max to < (major + 3)
++cryptography = ">= 2.0.0, < 51.0.0"  # pin max to < (major + 3)
+ pyjwt = ">= 1.5.3, < 3.0.0"
+ # requests = ">= 2.2.1, < 3.0.0"
+ 

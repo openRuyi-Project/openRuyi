@@ -1,0 +1,125 @@
+From 7abd6bfcf2c56a9729dc2204aba8e3e0369a5910 Mon Sep 17 00:00:00 2001
+From: Aurelien Jarno <aurelien@aurel32.net>
+Date: Mon, 25 May 2026 11:41:28 +0200
+Subject: [PATCH] RISC-V: detect virtual address space at runtime using hwprobe
+
+The virtual address space on RISC-V is currently detected at build time
+by parsing /proc/cpuinfo. This works when the binary runs on the same
+hardware it was built, however running such a binary on a system with a
+larger address space just causes a segmentation fault.
+
+Replace the build time check with a runtime detection using the hwprobe
+interface (available since Linux 6.11, commit c9b8cd139c1d "riscv:
+hwprobe export highest virtual userspace address"), with a fallback to
+parsing /proc/cpuinfo on older kernels.
+---
+ CMakeLists.txt       | 23 +++++++------------
+ src/prim/unix/prim.c | 54 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 15 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c33c30461..a23169a52 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -439,14 +439,15 @@ else()
+   # list(APPEND mi_defines MI_WIN_INIT_USE_CRT_TLS=1)
+ endif()
+
+-# Check /proc/cpuinfo for an SV39 MMU and limit the virtual address bits.
+-# (this will skip the aligned hinting in that case. Issue #939, #949)
+-if (EXISTS /proc/cpuinfo)
+-  file(STRINGS /proc/cpuinfo mi_sv39_mmu REGEX "^mmu[ \t]+:[ \t]+sv39$")
+-  if (mi_sv39_mmu)
+-    MESSAGE( STATUS "Set virtual address bits to 39 (SV39 MMU detected)" )
+-    list(APPEND mi_defines MI_DEFAULT_VIRTUAL_ADDRESS_BITS=39)
++if(MI_ARCH MATCHES "riscv")
++  CHECK_INCLUDE_FILES("asm/hwprobe.h;" MI_HAS_ASM_HWPROBEH)
++  if (MI_HAS_ASM_HWPROBEH)
++    list(APPEND mi_defines MI_HAS_ASM_HWPROBEH=1)
+   endif()
++  CHECK_INCLUDE_FILES("sys/hwprobe.h;" MI_HAS_SYS_HWPROBEH)
++  if (MI_HAS_SYS_HWPROBEH)
++    list(APPEND mi_defines MI_HAS_SYS_HWPROBEH=1)
++   endif()
+ endif()
+
+ # On Haiku use `-DCMAKE_INSTALL_PREFIX` instead, issue #788
+diff --git a/src/prim/unix/prim.c b/src/prim/unix/prim.c
+index 7781a37a5..fc08712d3 100644
+--- a/src/prim/unix/prim.c
++++ b/src/prim/unix/prim.c
+@@ -41,6 +41,13 @@ terms of the MIT license. A copy of the license can be found in the file
+   #else
+   #include <sys/mman.h>
+   #endif
++  #if defined(__riscv) || defined(_M_RISCV)
++    #if defined(MI_HAS_SYS_HWPROBEH)
++      #include <sys/hwprobe.h>
++    #elif defined(MI_HAS_ASM_HWPROBEH)
++      #include <asm/hwprobe.h>
++    #endif
++  #endif
+ #elif defined(__APPLE__)
+   #include <AvailabilityMacros.h>
+   #include <TargetConditionals.h>
+@@ -206,6 +213,52 @@ static void unix_detect_physical_memory( size_t page_size, size_t* physical_memo
+   #endif
+ }
+ 
++// Detect the virtual address bits (currently Linux/RISC-V only)
++static size_t unix_detect_virtual_address_bits(void)
++{
++  #if defined(__riscv) || defined(_M_RISCV)
++    #if defined(RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS)
++      struct riscv_hwprobe probe = {
++        .key = RISCV_HWPROBE_KEY_HIGHEST_VIRT_ADDRESS,
++      };
++
++      // Prefer the GNU libc interface if available, as it can also use the VDSO
++      #if defined(MI_HAS_SYS_HWPROBEH)
++      if (__riscv_hwprobe(&probe, 1, 0, NULL, 0) == 0) {
++      #else
++      if (syscall(__NR_riscv_hwprobe, &probe, 1, 0, NULL, 0) == 0) {
++      #endif
++        // If a key is unknown to the kernel, its key field will be cleared to -1.
++        if (probe.key != -1) {
++          return MI_SIZE_BITS - mi_clz((uintptr_t)probe.value);
++        }
++      }
++    #endif
++
++    // Fallback to checking /proc/cpuinfo for older kernels
++    const int fd = mi_prim_open("/proc/cpuinfo", O_RDONLY);
++    if (fd >= 0) {
++      char buf[2048];
++      ssize_t nread = mi_prim_read(fd, &buf, sizeof(buf));
++      mi_prim_close(fd);
++      if ((nread >= 1) && (nread <= (ssize_t)sizeof(buf))) {
++        if (_mi_strnstr(buf, nread, "sv39")) {
++          return 39;
++        }
++        if (_mi_strnstr(buf, nread, "sv48")) {
++          return 48;
++        }
++        if (_mi_strnstr(buf, nread, "sv57")) {
++          return 57;
++        }
++      }
++    }
++  #endif
++
++  // default: MI_MAX_VABITS
++  return MI_MAX_VABITS;
++}
++
+ void _mi_prim_mem_init( mi_os_mem_config_t* config )
+ {
+   long psize = sysconf(_SC_PAGESIZE);
+@@ -219,6 +272,7 @@ void _mi_prim_mem_init( mi_os_mem_config_t* config )
+   config->has_partial_free = true;    // mmap can free in parts
+   config->has_virtual_reserve = true; // todo: check if this true for NetBSD?  (for anonymous mmap with PROT_NONE)
+   config->has_transparent_huge_pages = unix_detect_thp();
++  config->virtual_address_bits = unix_detect_virtual_address_bits();
+ 
+   // disable transparent huge pages for this process?
+   #if (defined(__linux__) || defined(__ANDROID__)) && defined(PR_GET_THP_DISABLE)

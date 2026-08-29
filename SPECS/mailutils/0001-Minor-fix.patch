@@ -1,0 +1,25 @@
+From a7da7302f84638568639b41abe71b0ad1ce90fd0 Mon Sep 17 00:00:00 2001
+From: Sergey Poznyakoff <gray@gnu.org>
+Date: Fri, 8 May 2026 11:52:18 +0300
+Subject: [PATCH] Minor fix
+
+---
+ libmailutils/mailer/progmailer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libmailutils/mailer/progmailer.c b/libmailutils/mailer/progmailer.c
+index c61c917e3..7afe3b662 100644
+--- a/libmailutils/mailer/progmailer.c
++++ b/libmailutils/mailer/progmailer.c
+@@ -45,7 +45,7 @@ struct _mu_progmailer
+ {
+   int fd;
+   pid_t pid;
+-  void (*sighandler)();
++  void (*sighandler)(int);
+   char *command;
+ };
+ 
+-- 
+2.54.0.windows.1
+

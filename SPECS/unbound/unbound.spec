@@ -14,16 +14,14 @@
 %bcond dracut 0
 
 Name:           unbound
-Version:        1.24.2
+Version:        1.25.1
 Release:        %autorelease
 Summary:        Validating, recursive, and caching DNS(SEC) resolver
 License:        BSD-3-Clause
 URL:            https://nlnetlabs.nl/projects/unbound
 VCS:            git:https://github.com/NLnetLabs/unbound
-#!RemoteAsset
-Source0:        https://nlnetlabs.nl/downloads/%{name}/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://nlnetlabs.nl/downloads/%{name}/%{name}-%{version}.tar.gz.asc
+#!RemoteAsset:  sha256:0fe8b6277b0959cfd17562debac0aa5f71e0b02dc4ffa9c60271c583edab586f
+Source0:        https://nlnetlabs.nl/downloads/unbound/unbound-%{version}.tar.gz
 Source2:        unbound.service
 Source3:        unbound.munin
 Source4:        unbound_munin_
@@ -33,7 +31,7 @@ Source7:        tmpfiles-unbound.conf
 Source8:        example.com.key
 Source9:        example.com.conf
 Source10:       block-example.com.conf
-#!RemoteAsset
+#!RemoteAsset:  sha256:d4c77eafb8a3bc1d68fb7c171afbd0d2a76870dae81ad18d0c584fa46ecd1eb1
 Source11:       https://data.iana.org/root-anchors/icannbundle.pem
 Source12:       root.anchor
 Source13:       unbound.sysconfig
@@ -42,9 +40,6 @@ Source15:       unbound-munin.README
 Source16:       unbound-anchor.service
 Source17:       unbound.sysusers
 BuildSystem:    autotools
-
-# high version swig change the way to gen code.
-Patch0:         0001-adjust-to-high-swig.patch
 
 BuildOption(conf):  --disable-rpath
 BuildOption(conf):  --disable-static
@@ -282,7 +277,7 @@ echo ".so man8/unbound-control.8" > %{buildroot}/%{_mandir}/man8/unbound-control
 %{_libdir}/libunbound.so
 %{_includedir}/unbound.h
 %{_mandir}/man3/*
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/pkgconfig/libunbound.pc
 
 %files libs
 %doc doc/README
@@ -311,4 +306,4 @@ echo ".so man8/unbound-control.8" > %{buildroot}/%{_mandir}/man8/unbound-control
 %{_mandir}/man1/unbound-*
 
 %changelog
-%{?autochangelog}
+%autochangelog

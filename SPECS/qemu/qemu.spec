@@ -43,8 +43,8 @@
 # By default build dynamic user-mode emulation
 %bcond user_dynamic 1
 
-# By default do not build static user-mode emulation
-%bcond user_static 0
+# By default build static user-mode emulation
+%bcond user_static 1
 
 # Disable compiler Werror by default
 %bcond enable_werror 0
@@ -128,7 +128,7 @@
 %bcond have_dtrace 0
 
 # openRuyi: SLIRP networking backend not supported yet
-%bcond have_slirp 0
+%bcond have_slirp 1
 
 # openRuyi: QEMU Audio support not ready yet
 %bcond have_audio 0
@@ -140,7 +140,7 @@
 %bcond have_usb 0
 
 # All modules should be listed here.
-%bcond have_block_rbd 0
+%bcond have_block_rbd 1
 
 # Not supported on x86_64 and riscv64
 %bcond have_block_iscsi 0
@@ -177,13 +177,13 @@
 %global qemudocdir %{_docdir}/%{name}
 
 Name:           qemu
-Version:        10.2.0
+Version:        11.0.1
 Release:        %autorelease
 Summary:        Machine emulator and virtualizer
 License:        BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
 URL:            http://www.qemu.org/
 VCS:            git:https://gitlab.com/qemu-project/qemu
-#!RemoteAsset:  sha256:9e30ad1b8b9f7b4463001582d1ab297f39cfccea5d08540c0ca6d6672785883a
+#!RemoteAsset:  sha256:0d235f5820278d914a3155ec27af8e4258d697ea892895570807d69c0cb8cd64
 Source0:        https://download.qemu.org/%{name}-%{version}.tar.xz
 Source1:        qemu-guest-agent.service
 Source2:        qemu-ga.sysconfig
@@ -193,13 +193,8 @@ Source5:        kvm-x86.conf
 Source6:        kvm-riscv.conf
 BuildSystem:    autotools
 
-# QEMU RISC-V rvsp-ref upstream patch
-Patch1:         0001-target-riscv-cpu.c-remove-bare-condition-for-.profil.patch
-Patch2:         0002-target-riscv-Add-server-platform-reference-cpu.patch
-Patch3:         0003-hw-riscv-experimental-server-platform-reference-mach.patch
-Patch4:         0004-hw-riscv-server_platform_ref.c-add-riscv-iommu-sys.patch
-Patch5:         0005-docs-add-rvsp-ref.rst.patch
-Patch6:         0006-target-riscv-update-satp_mode-to-SV48-for-rvsp-ref.patch
+# Patch fixing ACPI table generation for KVM with PLIC emu
+Patch1:         0001-FROMLIST-hw-riscv-virt-acpi-build-Fix-RINTC-PLIC-con.patch
 
 BuildRequires:  hostname
 BuildRequires:  meson
@@ -233,7 +228,7 @@ BuildRequires:  pkgconfig(libseccomp)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(libssh)
 %if %{with have_block_rbd}
-BuildRequires:  librbd-devel
+BuildRequires:  ceph-devel
 %endif
 
 %if %{with have_systemtap}
@@ -359,8 +354,6 @@ BuildRequires:  pkgconfig(liburing)
 %endif
 # zstd compression support
 BuildRequires:  pkgconfig(libzstd)
-# `hostname` used by test suite
-BuildRequires:  hostname
 %if %{with have_daxctl}
 # nvdimm dax
 BuildRequires:  pkgconfig(libdaxctl)
@@ -407,7 +400,7 @@ BuildRequires:  igvm-devel
 %if %{with user_static}
 BuildRequires:  glib-static
 BuildRequires:  glibc-static
-BuildRequires:  zlib-devel-static
+BuildRequires:  zlib-ng-compat-static
 #BuildRequires:  libatomic-static
 %endif
 # Requires for the openRuyi 'qemu' metapackage
@@ -484,6 +477,7 @@ This package provides the QEMU system emulator for multi-arch systems.
 
 %prep
 %setup -q -n qemu-%{version}
+%autopatch -p1 -q
 
 %global qemu_kvm_build qemu_kvm_build
 %global static_builddir static_builddir
@@ -1386,7 +1380,7 @@ popd
 
 %files tests
 %{testsdir}
-%{_libdir}/%{name}/accel-qtest-*.so
+%{_libdir}/%{name}/accel-qtest.so
 
 %if %{with user_dynamic}
 %files user
@@ -1544,6 +1538,7 @@ popd
 %{_bindir}/qemu-sparc32plus-static
 %{_bindir}/qemu-sparc64-static
 %{_bindir}/qemu-x86_64-static
+%{_bindir}/qemu-i386-static
 %if %{with have_systemtap}
 %{_datadir}/systemtap/tapset/qemu-aarch64-log-static.stp
 %{_datadir}/systemtap/tapset/qemu-aarch64-simpletrace-static.stp
@@ -1610,6 +1605,7 @@ popd
 %endif
 %ifnarch x86_64
 %{_exec_prefix}/lib/binfmt.d/qemu-x86_64-static.conf
+%{_exec_prefix}/lib/binfmt.d/qemu-i386-static.conf
 %{_exec_prefix}/lib/binfmt.d/qemu-i486-static.conf
 %endif
 %{_exec_prefix}/lib/binfmt.d/qemu-s390x-static.conf
@@ -1755,25 +1751,39 @@ popd
 %if %{with have_man}
 %{_mandir}/man1/qemu-system-aarch64.1*
 %{_mandir}/man1/qemu-system-alpha.1*
+%{_mandir}/man1/qemu-system-arm.1*
+%{_mandir}/man1/qemu-system-avr.1*
 %{_mandir}/man1/qemu-system-hppa.1*
+%{_mandir}/man1/qemu-system-i386.1*
 %{_mandir}/man1/qemu-system-loongarch64.1*
 %{_mandir}/man1/qemu-system-m68k.1*
-%{_mandir}/man1/qemu-system-mips64el.1*
+%{_mandir}/man1/qemu-system-microblaze.1*
+%{_mandir}/man1/qemu-system-mips.1*
 %{_mandir}/man1/qemu-system-mips64.1*
+%{_mandir}/man1/qemu-system-mips64el.1*
+%{_mandir}/man1/qemu-system-mipsel.1*
 %{_mandir}/man1/qemu-system-or1k.1*
 %{_mandir}/man1/qemu-system-ppc.1*
 %{_mandir}/man1/qemu-system-ppc64.1*
 %{_mandir}/man1/qemu-system-riscv*.1*
 %{_mandir}/man1/qemu-system-rx.1*
 %{_mandir}/man1/qemu-system-s390x.1*
+%{_mandir}/man1/qemu-system-sh4.1*
+%{_mandir}/man1/qemu-system-sh4eb.1*
+%{_mandir}/man1/qemu-system-sparc.1*
 %{_mandir}/man1/qemu-system-sparc64.1*
+%{_mandir}/man1/qemu-system-tricore.1*
 %{_mandir}/man1/qemu-system-x86_64.1*
+%{_mandir}/man1/qemu-system-xtensa.1*
+%{_mandir}/man1/qemu-system-xtensaeb.1*
+%if %{with need_qemu_kvm}
+%{_mandir}/man1/qemu-kvm.1*
+%endif
 %endif
 %{_bindir}/qemu-system-arm
 %{_bindir}/qemu-system-avr
 %{_bindir}/qemu-system-m68k
 %{_bindir}/qemu-system-microblaze
-%{_bindir}/qemu-system-microblazeel
 %{_bindir}/qemu-system-mips
 %{_bindir}/qemu-system-mipsel
 %{_bindir}/qemu-system-or1k
@@ -1805,8 +1815,6 @@ popd
 %{_datadir}/%{name}/QEMU,tcx.bin
 %{_datadir}/%{name}/QEMU,cgthree.bin
 %{_datadir}/%{name}/kvmvapic.bin
-%{_datadir}/%{name}/linuxboot.bin
-%{_datadir}/%{name}/multiboot.bin
 %{_datadir}/%{name}/multiboot_dma.bin
 %{_datadir}/%{name}/pvh.bin
 %{_datadir}/%{name}/qboot.rom
@@ -1831,9 +1839,6 @@ popd
 %{_datadir}/systemtap/tapset/qemu-system-microblaze.stp
 %{_datadir}/systemtap/tapset/qemu-system-microblaze-log.stp
 %{_datadir}/systemtap/tapset/qemu-system-microblaze-simpletrace.stp
-%{_datadir}/systemtap/tapset/qemu-system-microblazeel.stp
-%{_datadir}/systemtap/tapset/qemu-system-microblazeel-log.stp
-%{_datadir}/systemtap/tapset/qemu-system-microblazeel-simpletrace.stp
 %{_datadir}/systemtap/tapset/qemu-system-mips.stp
 %{_datadir}/systemtap/tapset/qemu-system-mips-log.stp
 %{_datadir}/systemtap/tapset/qemu-system-mips-simpletrace.stp
@@ -1874,36 +1879,9 @@ popd
 %{_datadir}/systemtap/tapset/qemu-system-xtensaeb-log.stp
 %{_datadir}/systemtap/tapset/qemu-system-xtensaeb-simpletrace.stp
 %endif
-%if %{with have_man}
-%{_mandir}/man1/qemu-system-alpha.1*
-%{_mandir}/man1/qemu-system-arm.1*
-%{_mandir}/man1/qemu-system-avr.1*
-%{_mandir}/man1/qemu-system-hppa.1*
-%{_mandir}/man1/qemu-system-m68k.1*
-%{_mandir}/man1/qemu-system-microblaze.1*
-%{_mandir}/man1/qemu-system-microblazeel.1*
-%{_mandir}/man1/qemu-system-mips.1*
-%{_mandir}/man1/qemu-system-mipsel.1*
-%{_mandir}/man1/qemu-system-mips64el.1*
-%{_mandir}/man1/qemu-system-mips64.1*
-%{_mandir}/man1/qemu-system-or1k.1*
-%{_mandir}/man1/qemu-system-ppc.1*
-%{_mandir}/man1/qemu-system-riscv*.1*
-%{_mandir}/man1/qemu-system-rx.1*
-%{_mandir}/man1/qemu-system-sh4.1*
-%{_mandir}/man1/qemu-system-sh4eb.1*
-%{_mandir}/man1/qemu-system-sparc.1*
-%{_mandir}/man1/qemu-system-tricore.1*
-%{_mandir}/man1/qemu-system-i386.1*
-%{_mandir}/man1/qemu-system-xtensa.1*
-%{_mandir}/man1/qemu-system-xtensaeb.1*
-%if %{with need_qemu_kvm}
-%{_mandir}/man1/qemu-kvm.1*
-%endif
-%endif
 
 # endif !tools_only
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

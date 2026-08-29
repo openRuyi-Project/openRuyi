@@ -16,6 +16,7 @@ License:        MIT
 URL:            https://pypi.org/project/%{srcname}/
 #!RemoteAsset:  sha256:e7d98ea108258d29aa0efbfd591b2e2075fa1722a2fae8699f0b3c9de11eff41
 Source0:        https://files.pythonhosted.org/packages/source/a/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
+BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{modname}
@@ -31,7 +32,7 @@ BuildRequires:  python3dist(isodate)
 BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3dist(azure-core)
 
-Provides:       python3-%{srcname}
+Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -45,4 +46,4 @@ Azure Storage Blobs client library for Python.
 %license LICENSE
 
 %changelog
-%{?autochangelog}
+%autochangelog

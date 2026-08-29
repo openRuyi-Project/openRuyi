@@ -10,16 +10,14 @@
 %bcond gssapi 0
 
 Name:           libssh
-Version:        0.11.3
+Version:        0.11.5
 Release:        %autorelease
 Summary:        A library implementing the SSH protocol
 License:        LGPL-2.1-or-later
 URL:            http://www.libssh.org
 VCS:            git:git://git.libssh.org/projects/libssh.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:6898ba9dd836d618b71dc7a4bb786a502c173cef5cafbf20fe5e0567ba4ea30c
 Source0:        https://www.libssh.org/files/0.11/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://www.libssh.org/files/0.11/%{name}-%{version}.tar.xz.asc
 Source2:        libssh_client.config
 Source3:        libssh_server.config
 BuildSystem:    cmake
@@ -111,4 +109,4 @@ install -m644 %{SOURCE3} %{buildroot}%{_sysconfdir}/libssh/libssh_server.config
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/libssh/libssh_server.config
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -1,0 +1,12 @@
+diff --git a/src/3rdparty/chromium/third_party/webrtc/webrtc.gni b/src/3rdparty/chromium/third_party/webrtc/webrtc.gni
+--- a/src/3rdparty/chromium/third_party/webrtc/webrtc.gni
++++ b/src/3rdparty/chromium/third_party/webrtc/webrtc.gni
+@@ -144,7 +144,7 @@
+   rtc_use_pipewire = is_linux && use_sysroot
+ 
+   # Set this to link PipeWire and required libraries directly instead of using the dlopen.
+-  rtc_link_pipewire = false
++  rtc_link_pipewire = true
+ 
+   # Enable to use the Mozilla internal settings.
+   build_with_mozilla = false

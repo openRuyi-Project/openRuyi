@@ -1,0 +1,26 @@
+From 3e61cef8b2c9a7096f7ac3e41b084322c02af9cc Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 22 May 2026 22:52:00 +0800
+Subject: [PATCH] Fix Killf test format string
+
+The test message contains a literal %s in the sample call. Escape it so
+Go vet does not treat it as an extra formatting directive.
+---
+ tomb_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tomb_test.go b/tomb_test.go
+index 5fd0a62..040d225 100644
+--- a/tomb_test.go
++++ b/tomb_test.go
+@@ -39,7 +39,7 @@ func TestKillf(t *testing.T) {
+ 
+ 	err := tb.Killf("BO%s", "OM")
+ 	if s := err.Error(); s != "BOOM" {
+-		t.Fatalf(`Killf("BO%s", "OM"): want "BOOM", got %q`, s)
++		t.Fatalf(`Killf("BO%%s", "OM"): want "BOOM", got %q`, s)
+ 	}
+ 	testState(t, tb, true, false, err)
+ 
+-- 
+2.51.0

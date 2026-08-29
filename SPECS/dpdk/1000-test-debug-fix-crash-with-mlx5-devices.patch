@@ -1,0 +1,224 @@
+From 2b403dd8fb37d0ba13723e44ffc7ee2c2795f838 Mon Sep 17 00:00:00 2001
+From: David Marchand <david.marchand@redhat.com>
+Date: Thu, 2 Oct 2025 17:36:50 +0200
+Subject: [PATCH] test/debug: fix crash with mlx5 devices
+
+Running rte_exit() in a forked process means that shared memory will be
+released by the child process before the parent process does the same.
+This issue has been seen recently when some GHA virtual machine (with
+some mlx5 devices) runs the debug_autotest unit test.
+
+Instead, run rte_panic() and rte_exit() from a new DPDK process spawned
+like for other recursive unit tests.
+
+Bugzilla ID: 1796
+Fixes: af75078fece3 ("first public release")
+Cc: stable@dpdk.org
+
+Signed-off-by: David Marchand <david.marchand@redhat.com>
+Acked-by: Bruce Richardson <bruce.richardson@intel.com>
+Acked-by: Dariusz Sosnowski <dsosnowski@nvidia.com>
+---
+ app/test/process.h    |  2 +-
+ app/test/test.c       |  2 +
+ app/test/test.h       |  2 +
+ app/test/test_debug.c | 92 ++++++++++++++++++++++++++++++-------------
+ 4 files changed, 69 insertions(+), 29 deletions(-)
+
+diff --git a/app/test/process.h b/app/test/process.h
+index 9fb2bf481c8..8e11d0b0599 100644
+--- a/app/test/process.h
++++ b/app/test/process.h
+@@ -203,7 +203,7 @@ process_dup(const char *const argv[], int numargs, const char *env_value)
+  * tests attempting to use this function on FreeBSD.
+  */
+ #ifdef RTE_EXEC_ENV_LINUX
+-static char *
++static inline char *
+ get_current_prefix(char *prefix, int size)
+ {
+ 	char path[PATH_MAX] = {0};
+diff --git a/app/test/test.c b/app/test/test.c
+index fd653cbbfdb..8a4598baeeb 100644
+--- a/app/test/test.c
++++ b/app/test/test.c
+@@ -80,6 +80,8 @@ do_recursive_call(void)
+ 			{ "test_memory_flags", no_action },
+ 			{ "test_file_prefix", no_action },
+ 			{ "test_no_huge_flag", no_action },
++			{ "test_panic", test_panic },
++			{ "test_exit", test_exit },
+ #ifdef RTE_LIB_TIMER
+ #ifndef RTE_EXEC_ENV_WINDOWS
+ 			{ "timer_secondary_spawn_wait", test_timer_secondary },
+diff --git a/app/test/test.h b/app/test/test.h
+index ebc4864bf8f..c6d7d233136 100644
+--- a/app/test/test.h
++++ b/app/test/test.h
+@@ -174,7 +174,9 @@ extern const char *prgname;
+ int commands_init(void);
+ int command_valid(const char *cmd);
+ 
++int test_exit(void);
+ int test_mp_secondary(void);
++int test_panic(void);
+ int test_timer_secondary(void);
+ 
+ int test_set_rxtx_conf(cmdline_fixed_string_t mode);
+diff --git a/app/test/test_debug.c b/app/test/test_debug.c
+index 8ad6d40fcb0..fe5dd5b02d2 100644
+--- a/app/test/test_debug.c
++++ b/app/test/test_debug.c
+@@ -8,6 +8,18 @@
+ #include <stdint.h>
+ 
+ #ifdef RTE_EXEC_ENV_WINDOWS
++int
++test_panic(void)
++{
++	printf("debug not supported on Windows, skipping test\n");
++	return TEST_SKIPPED;
++}
++int
++test_exit(void)
++{
++	printf("debug not supported on Windows, skipping test\n");
++	return TEST_SKIPPED;
++}
+ static int
+ test_debug(void)
+ {
+@@ -25,34 +37,31 @@ test_debug(void)
+ #include <rte_debug.h>
+ #include <rte_common.h>
+ #include <rte_eal.h>
+-#include <rte_service_component.h>
++#include <rte_lcore.h>
++
++#include "process.h"
+ 
+ /*
+  * Debug test
+  * ==========
+  */
+ 
+-/* use fork() to test rte_panic() */
+-static int
++static const char *test_args[7];
++
++int
+ test_panic(void)
+ {
+-	int pid;
+ 	int status;
+ 
+-	pid = fork();
+-
+-	if (pid == 0) {
++	if (getenv(RECURSIVE_ENV_VAR) != NULL) {
+ 		struct rlimit rl;
+ 
+ 		/* No need to generate a coredump when panicking. */
+ 		rl.rlim_cur = rl.rlim_max = 0;
+ 		setrlimit(RLIMIT_CORE, &rl);
+ 		rte_panic("Test Debug\n");
+-	} else if (pid < 0) {
+-		printf("Fork Failed\n");
+-		return -1;
+ 	}
+-	wait(&status);
++	status = process_dup(test_args, RTE_DIM(test_args), "test_panic");
+ 	if(status == 0){
+ 		printf("Child process terminated normally!\n");
+ 		return -1;
+@@ -62,27 +71,16 @@ test_panic(void)
+ 	return 0;
+ }
+ 
+-/* use fork() to test rte_exit() */
+ static int
+ test_exit_val(int exit_val)
+ {
+-	int pid;
++	char buf[5];
+ 	int status;
+ 
+-	/* manually cleanup EAL memory, as the fork() below would otherwise
+-	 * cause the same hugepages to be free()-ed multiple times.
+-	 */
+-	rte_service_finalize();
+-
+-	pid = fork();
+-
+-	if (pid == 0)
+-		rte_exit(exit_val, __func__);
+-	else if (pid < 0){
+-		printf("Fork Failed\n");
+-		return -1;
+-	}
+-	wait(&status);
++	sprintf(buf, "%d", exit_val);
++	if (setenv("TEST_DEBUG_EXIT_VAL", buf, 1) == -1)
++		rte_panic("Failed to set exit value in env\n");
++	status = process_dup(test_args, RTE_DIM(test_args), "test_exit");
+ 	printf("Child process status: %d\n", status);
+ 	if(!WIFEXITED(status) || WEXITSTATUS(status) != (uint8_t)exit_val){
+ 		printf("Child process terminated with incorrect status (expected = %d)!\n",
+@@ -92,11 +90,22 @@ test_exit_val(int exit_val)
+ 	return 0;
+ }
+ 
+-static int
++int
+ test_exit(void)
+ {
+ 	int test_vals[] = { 0, 1, 2, 255, -1 };
+ 	unsigned i;
++
++	if (getenv(RECURSIVE_ENV_VAR) != NULL) {
++		int exit_val;
++
++		if (!getenv("TEST_DEBUG_EXIT_VAL"))
++			rte_panic("No exit value set in env\n");
++
++		exit_val = strtol(getenv("TEST_DEBUG_EXIT_VAL"), NULL, 0);
++		rte_exit(exit_val, __func__);
++	}
++
+ 	for (i = 0; i < RTE_DIM(test_vals); i++) {
+ 		if (test_exit_val(test_vals[i]) < 0)
+ 			return -1;
+@@ -128,6 +137,33 @@ test_usage(void)
+ static int
+ test_debug(void)
+ {
++#ifdef RTE_EXEC_ENV_FREEBSD
++	/* BSD target doesn't support prefixes at this point, and we also need to
++	 * run another primary process here.
++	 */
++	const char * prefix = "--no-shconf";
++#else
++	const char * prefix = "--file-prefix=debug";
++#endif
++	char core[10];
++
++	sprintf(core, "%d", rte_get_main_lcore());
++
++	test_args[0] = prgname;
++	test_args[1] = prefix;
++	test_args[2] = "-l";
++	test_args[3] = core;
++
++	if (rte_eal_has_hugepages()) {
++		test_args[4] = "";
++		test_args[5] = "";
++		test_args[6] = "";
++	} else {
++		test_args[4] = "--no-huge";
++		test_args[5] = "-m";
++		test_args[6] = "2048";
++	}
++
+ 	rte_dump_stack();
+ 	if (test_panic() < 0)
+ 		return -1;

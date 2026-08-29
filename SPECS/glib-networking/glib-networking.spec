@@ -12,7 +12,7 @@ Summary:        Network-related GIO modules for GLib
 License:        LGPL-2.1-or-later
 URL:            https://www.gnome.org
 VCS:            git:https://gitlab.gnome.org/GNOME/glib-networking.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:b80e2874157cd55071f1b6710fa0b911d5ac5de106a9ee2a4c9c7bee61782f8e
 Source:         https://download.gnome.org/sources/glib-networking/2.80/glib-networking-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -37,9 +37,6 @@ This package contains network-related GIO modules for GLib, providing
 TLS (via GnuTLS) and proxy support (via libproxy).
 
 %install -a
-# Avoid illegal package names
-rm -rf %{buildroot}%{_datadir}/locale/*@*
-
 %find_lang %{name} --generate-subpackages
 
 %post
@@ -59,4 +56,4 @@ rm -rf %{buildroot}%{_datadir}/locale/*@*
 %{_userunitdir}/glib-pacrunner.service
 
 %changelog
-%{?autochangelog}
+%autochangelog
