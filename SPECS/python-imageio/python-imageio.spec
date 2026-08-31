@@ -22,9 +22,6 @@ BuildSystem:    pyproject
 Patch1000:      1000-support-tifffile-axes-codes.patch
 
 BuildOption(install):  -l imageio
-# skip tests: recursion is detected during loading of "cv2" binary extensions
-# https://github.com/openRuyi-Project/openRuyi/issues/998
-BuildOption(check):  -e 'imageio.plugins.opencv'
 # Skip tests: No module named 'SimpleITK'
 # Wait for SimpleITK 3.0 release, it will switch from setuptools.build_meta to scikit-build-core.
 BuildOption(check):  -e 'imageio.plugins.simpleitk'
