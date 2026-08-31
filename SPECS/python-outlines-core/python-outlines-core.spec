@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: zhangjinqiang <jinqiang.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,8 +24,6 @@ BuildOption(install):  -l %{pypi_name}
 BuildOption(check):  -e outlines_core.kernels.mlx
 # No module named 'numba'
 BuildOption(check):  -e outlines_core.kernels.numpy
-# ImportError: libomp.so: cannot open shared object file: No such file or directory
-BuildOption(check):  -e outlines_core.kernels.torch
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
