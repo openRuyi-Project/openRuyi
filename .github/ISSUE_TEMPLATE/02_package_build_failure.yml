@@ -19,7 +19,7 @@ body:
   - type: "input"
     id: "openruyi-version"
     attributes:
-      label: "openRuyi version"
+      label: "openRuyi package version"
       description: |
         Please indicate the version number of this package on which you encountered this build failure.
     validations:

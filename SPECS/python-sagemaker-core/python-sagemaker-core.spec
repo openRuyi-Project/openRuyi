@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name sagemaker_core
 
 Name:           python-%{srcname}
-Version:        2.12.0
+Version:        2.20.0
 Release:        %autorelease
 Summary:        A library for training and deploying machine learning models on Amazon SageMaker
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:9338b356edb7f5faef168f3284b40c1367013ad74e231a9e60326fcfd436fe55
+#!RemoteAsset:  sha256:1b8eaf0b6550c682471989e3a0927948deae0d3c903fc9891c5faa5c1c388ad3
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -39,6 +40,7 @@ type hints to enhance the developer experience as well as productivity.
 %prep -a
 sed -i 's/importlib-metadata<7.0,>=1.4.0/importlib-metadata>=1.4.0/g' pyproject.toml
 sed -i 's/"rich>=13.0.0, <15.0.0"/"rich>=13.0.0"/g' pyproject.toml
+sed -i 's/"protobuf>=3.12,<7.0.0"/"protobuf>=3.12"/g' pyproject.toml
 
 %generate_buildrequires
 %pyproject_buildrequires

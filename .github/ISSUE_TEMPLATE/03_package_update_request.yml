@@ -26,7 +26,7 @@ body:
   - type: "input"
     id: "openruyi-version"
     attributes:
-      label: "openRuyi version"
+      label: "openRuyi package version"
       description: |
         Please indicate the current version number in openRuyi's repository.
     validations:
