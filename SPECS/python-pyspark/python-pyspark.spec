@@ -22,11 +22,6 @@ BuildOption(install):  -l pyspark
 BuildOption(check):  -e 'pyspark.python.pyspark.shell'
 BuildOption(check):  -e 'pyspark.shell'
 
-# TODO: remove libomp after PR merged
-# https://github.com/openRuyi-Project/openRuyi/pull/970/
-# Importing pyspark.ml.torch.data fails with:
-# ImportError: libomp.so: cannot open shared object file: No such file or directory
-BuildRequires:  libomp
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(grpcio)
