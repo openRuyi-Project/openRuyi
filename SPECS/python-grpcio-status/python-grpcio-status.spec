@@ -8,13 +8,13 @@
 %global pypi_name grpcio_status
 
 Name:           python-%{srcname}
-Version:        1.80.0
+Version:        1.82.1
 Release:        %autorelease
 Summary:        Status proto mapping for gRPC
 License:        Apache-2.0
 URL:            https://grpc.io/
 VCS:            git:https://github.com/grpc/grpc.git
-#!RemoteAsset:  sha256:df73802a4c89a3ea88aa2aff971e886fccce162bc2e6511408b3d67a144381cd
+#!RemoteAsset:  sha256:d9de8ac34763cd468130fdd2923294af7c3d28d09426f6c45221d27c25931130
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
