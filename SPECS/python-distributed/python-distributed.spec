@@ -63,11 +63,6 @@ BuildRequires:  python3dist(torch)
 BuildRequires:  python3dist(tornado)
 BuildRequires:  python3dist(urllib3)
 BuildRequires:  python3dist(zict)
-# TODO: remove libomp after PR merged
-# https://github.com/openRuyi-Project/openRuyi/pull/970/
-# Importing distributed.protocol.torch fails with:
-# ImportError: libomp.so: cannot open shared object file: No such file or directory
-BuildRequires:  libomp
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
