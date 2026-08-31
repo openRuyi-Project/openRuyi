@@ -22,20 +22,6 @@ BuildSystem:    pyproject
 Patch2000:         2000-use-python3-for-cythoner.patch
 
 BuildOption(install):  skimage skimage2
-# Skip tests: RuntimeError: Memory error in scipy.linalg.inv
-# https://github.com/openRuyi-Project/openRuyi/issues/992
-BuildOption(check):  -e 'skimage.color.colorconv'
-BuildOption(check):  -e 'skimage.color.colorlabel'
-BuildOption(check):  -e 'skimage.color.delta_e'
-BuildOption(check):  -e 'skimage.feature.haar'
-BuildOption(check):  -e 'skimage.feature.texture'
-BuildOption(check):  -e 'skimage.io'
-BuildOption(check):  -e 'skimage.io.collection'
-BuildOption(check):  -e 'skimage.io.manage_plugins'
-BuildOption(check):  -e 'skimage.io.sift'
-BuildOption(check):  -e 'skimage.io.util'
-BuildOption(check):  -e 'skimage.segmentation.boundaries'
-BuildOption(check):  -e 'skimage.segmentation.slic_superpixels'
 
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
