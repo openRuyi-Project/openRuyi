@@ -240,6 +240,8 @@ validation of %{name}. This is not the complete upstream Python test suite.
 2009-skip-benchmark-try-run.patch
 # Install the GLOO test
 2010-install-cpu-gloo-test.patch
+# Avoid compiling and dispatching RVV code for the rva20 baseline.
+2011-gate-rvv-kernel-on-vector-target.patch
 
 %description
 PyTorch is a Python package that provides two high-level features:
