@@ -27,10 +27,6 @@ BuildOption(check):  -e 'dask.dataframe.dask_expr.io.tests.test_distributed'
 BuildOption(check):  -e 'dask.dataframe.dask_expr.tests.test_diagnostics'
 # skip tests: No module named 'cupy'
 BuildOption(check):  -e 'dask.array.tests.test_cupy*'
-# Skip tests: RuntimeError: Memory error in scipy.linalg.inv
-# https://github.com/openRuyi-Project/openRuyi/issues/992
-BuildOption(check):  -e 'dask.array.image'
-BuildOption(check):  -e 'dask.array.tests.test_image'
 # skip tests: No module named 'xarray' (circular dependency)
 BuildOption(check):  -e 'dask.array.tests.test_xarray'
 # skip tests: pyarrow ORC support not available (No module named 'pyarrow._orc')
