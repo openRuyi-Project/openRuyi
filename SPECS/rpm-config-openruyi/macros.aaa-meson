@@ -1,0 +1,15 @@
+# This file is called macros.aaa-meson
+# to sort alphabetically before macros.meson.
+# When this file is installed but macros.meson is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.meson is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+%meson_buildrequires(-) echo 'meson' && exit 0
+
+# Declarative buildsystem, requires RPM 4.20+ to work
+# https://rpm-software-management.github.io/rpm/manual/buildsystem.html
+%buildsystem_meson_conf() %nil
+%buildsystem_meson_generate_buildrequires() %meson_buildrequires %*
+%buildsystem_meson_build() %nil
+%buildsystem_meson_install() %nil
+%buildsystem_meson_check() %nil

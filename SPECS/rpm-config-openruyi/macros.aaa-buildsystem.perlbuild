@@ -1,0 +1,12 @@
+# This file is called macros.aaa-buildsystem.perlbuild
+# to sort alphabetically before macros.buildsystem.perlbuild.
+# When this file is installed but macros.buildsystem.perlbuild is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.buildsystem.perlbuild is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+
+%buildsystem_perlbuild_conf() %nil
+%buildsystem_perlbuild_generate_buildrequires() echo 'perl-rpm-macros' && exit 0
+%buildsystem_perlbuild_build() %nil
+%buildsystem_perlbuild_install() %nil
+%buildsystem_perlbuild_check() %nil

@@ -29,6 +29,14 @@ brp-openruyi
 firmware.attr
 firmware.prov
 macros
+macros.aaa-buildsystem.cmake
+macros.aaa-buildsystem.golang
+macros.aaa-buildsystem.golangmodules
+macros.aaa-buildsystem.perlbuild
+macros.aaa-buildsystem.perlmaker
+macros.aaa-buildsystem.rust
+macros.aaa-buildsystem.rustcrates
+macros.aaa-meson
 macros.buildsystem
 macros.completions
 macros.ldconfig

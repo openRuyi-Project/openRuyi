@@ -1,0 +1,12 @@
+# This file is called macros.aaa-buildsystem.rustcrates
+# to sort alphabetically before macros.buildsystem.rustcrates.
+# When this file is installed but macros.buildsystem.rustcrates is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.buildsystem.rustcrates is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+
+%buildsystem_rustcrates_conf() %nil
+%buildsystem_rustcrates_generate_buildrequires() echo 'rust-rpm-macros' && exit 0
+%buildsystem_rustcrates_build() %nil
+%buildsystem_rustcrates_install() %nil
+%buildsystem_rustcrates_check() %nil

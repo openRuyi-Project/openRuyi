@@ -1,0 +1,12 @@
+# This file is called macros.aaa-buildsystem.rust
+# to sort alphabetically before macros.buildsystem.rust.
+# When this file is installed but macros.buildsystem.rust is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.buildsystem.rust is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+
+%buildsystem_rust_conf() %nil
+%buildsystem_rust_generate_buildrequires() echo 'rust-rpm-macros' && exit 0
+%buildsystem_rust_build() %nil
+%buildsystem_rust_install() %nil
+%buildsystem_rust_check() %nil

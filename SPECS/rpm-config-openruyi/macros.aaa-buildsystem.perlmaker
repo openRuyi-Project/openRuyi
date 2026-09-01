@@ -1,0 +1,12 @@
+# This file is called macros.aaa-buildsystem.perlmaker
+# to sort alphabetically before macros.buildsystem.perlmaker.
+# When this file is installed but macros.buildsystem.perlmaker is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.buildsystem.perlmaker is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+
+%buildsystem_perlmaker_conf() %nil
+%buildsystem_perlmaker_generate_buildrequires() echo 'perl-rpm-macros' && exit 0
+%buildsystem_perlmaker_build() %nil
+%buildsystem_perlmaker_install() %nil
+%buildsystem_perlmaker_check() %nil

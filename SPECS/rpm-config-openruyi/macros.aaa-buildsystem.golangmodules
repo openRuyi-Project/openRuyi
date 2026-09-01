@@ -1,0 +1,12 @@
+# This file is called macros.aaa-buildsystem.golangmodules
+# to sort alphabetically before macros.buildsystem.golangmodules.
+# When this file is installed but macros.buildsystem.golangmodules is not
+# this macro will cause the package with the real macro to be installed.
+# When macros.buildsystem.golangmodules is installed, it overrides this macro.
+# Note: This takes arbitrary options, to ease addition of new options to the real macro.
+
+%buildsystem_golangmodules_conf() %nil
+%buildsystem_golangmodules_generate_buildrequires() echo 'go-rpm-macros' && exit 0
+%buildsystem_golangmodules_build() %nil
+%buildsystem_golangmodules_install() %nil
+%buildsystem_golangmodules_check() %nil
