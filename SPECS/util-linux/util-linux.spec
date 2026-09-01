@@ -14,7 +14,7 @@ License:        GPL-2.0-or-later and others
 URL:            https://www.kernel.org/pub/linux/utils/util-linux/
 VCS:            git:https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
 #!RemoteAsset:  sha256:3330d873f0fceb5560b89a7dc14e4f3288bbd880e96903ed9b50ec2b5799e58b
-Source0:        https://www.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-%{version}.tar.xz
+Source0:        https://cdn.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-%{version}.tar.xz
 # These files define the default behavior for openRuyi.
 Source10:       login.pam
 Source11:       su-l.pam
