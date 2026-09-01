@@ -6,14 +6,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libffi
-Version:        3.5.2
+Version:        3.8.0
 Release:        %autorelease
 Summary:        A Portable Foreign Function Interface Library
 License:        MIT
 URL:            https://sourceware.org/libffi
 VCS:            git:https://github.com/libffi/libffi
-#!RemoteAsset
-Source0:        https://github.com/libffi/libffi/releases/download/v%{version}/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:7da3e2d9a171eb0a038f592ecad3ff2bb2550f3496d87b3b29ad0cf4430c0db4
+Source0:        https://github.com/libffi/libffi/releases/download/v%{version}/libffi-%{version}.tar.gz
 Buildsystem:    autotools
 
 BuildOption(conf):  --disable-multi-os-directory
@@ -69,4 +69,4 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %{_infodir}/libffi.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
