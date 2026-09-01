@@ -86,6 +86,7 @@ Requires:       ncurses
 Requires:       pam
 Requires:       readline
 Requires:       zlib
+Suggests:       systemd-udev
 
 %description
 The util-linux package contains a large variety of low-level system
