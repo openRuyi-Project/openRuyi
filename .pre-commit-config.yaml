@@ -86,6 +86,11 @@ repos:
     -   id: check-case-conflict
     -   id: check-toml
     -   id: check-yaml
+-   repo: https://github.com/redrose2100/openruyi-precommit-hooks
+    rev: v0.2.0
+    hooks:
+    -   id: check-spdx-header
+        files: \.spec$
 -   repo: local
     hooks:
     -   id: reuse-add-annotate
