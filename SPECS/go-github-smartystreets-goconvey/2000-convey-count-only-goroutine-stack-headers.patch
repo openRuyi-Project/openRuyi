@@ -1,0 +1,60 @@
+From 74ee4934398038b3bf34dcd4c7d1ac79dee655f1 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 05:28:50 +0800
+Subject: [PATCH] convey: count only goroutine stack headers
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ convey/stack_trace_test.go | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/convey/stack_trace_test.go b/convey/stack_trace_test.go
+index 71e1f53..e1844d2 100644
+--- a/convey/stack_trace_test.go
++++ b/convey/stack_trace_test.go
+@@ -2,12 +2,15 @@ package convey
+ 
+ import (
+ 	"fmt"
++	"regexp"
+ 	"strings"
+ 	"testing"
+ 
+ 	"github.com/smartystreets/goconvey/convey/reporting"
+ )
+ 
++var goroutineHeader = regexp.MustCompile(`(?m)^[ \t]*goroutine [0-9]+ `)
++
+ func TestStackTrace(t *testing.T) {
+ 	file, test := setupFileReporter()
+ 
+@@ -58,7 +61,7 @@ func TestStackModeMultipleInvocationInheritance(t *testing.T) {
+ 		})
+ 	})
+ 
+-	stackCount := strings.Count(file.String(), "goroutine ")
++	stackCount := len(goroutineHeader.FindAllStringIndex(file.String(), -1))
+ 	if stackCount != 1 {
+ 		t.Errorf("Expected 1 stack trace, found %d.", stackCount)
+ 		fmt.Printf("RESULT: %s \n", file.String())
+@@ -78,7 +81,7 @@ func TestStackModeMultipleInvocationInheritance2(t *testing.T) {
+ 		})
+ 	})
+ 
+-	stackCount := strings.Count(file.String(), "goroutine ")
++	stackCount := len(goroutineHeader.FindAllStringIndex(file.String(), -1))
+ 	if stackCount != 2 {
+ 		t.Errorf("Expected 2 stack traces, found %d.", stackCount)
+ 	}
+@@ -97,7 +100,7 @@ func TestStackModeMultipleInvocationInheritance3(t *testing.T) {
+ 		})
+ 	})
+ 
+-	stackCount := strings.Count(file.String(), "goroutine ")
++	stackCount := len(goroutineHeader.FindAllStringIndex(file.String(), -1))
+ 	if stackCount != 1 {
+ 		t.Errorf("Expected 1 stack trace1, found %d.", stackCount)
+ 	}
+-- 
+2.43.0
+

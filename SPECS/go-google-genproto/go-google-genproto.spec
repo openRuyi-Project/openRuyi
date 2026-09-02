@@ -13,6 +13,7 @@
 %define go_import_path  google.golang.org/genproto
 # Upstream does not provide git tags, use commit ID instead - 251
 %define commit_id e7812ac95cc0c7174fe2fc2914ed037d4bd20613
+%define api_commit f6391c0de4c7faa7ff952a3e47cf1dd2cdb18aaf
 # Circular dependency with google.golang.org/grpc - 251
 %define go_test_exclude_glob %{shrink:
     google.golang.org/genproto/googleapis*
@@ -27,16 +28,28 @@ License:        Apache-2.0
 URL:            https://github.com/googleapis/go-genproto
 #!RemoteAsset:  sha256:ee9bdfda880edd9348440dd2ec43a1cf9cf4e0b70b06f0cdd1ec7aa8515f1358
 Source0:        https://github.com/googleapis/go-genproto/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:5d7f61221fea378b9699169d4a4fe43b55358071bdedc7b297c713697b85ee59
+Source1:        https://github.com/googleapis/go-genproto/archive/%{api_commit}.tar.gz#/%{_name}-googleapis-api-%{api_commit}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/golang/protobuf)
+BuildRequires:  go(golang.org/x/net)
+BuildRequires:  go(golang.org/x/sys)
+BuildRequires:  go(golang.org/x/text)
+BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/genproto) = %{version}
+Provides:       go(google.golang.org/genproto/googleapis/api) = %{version}
 
+Requires:       %{name}-googleapis-rpc = %{version}-%{release}
 Requires:       go(github.com/golang/protobuf)
+Requires:       go(golang.org/x/net)
+Requires:       go(golang.org/x/sys)
+Requires:       go(golang.org/x/text)
+Requires:       go(google.golang.org/grpc)
 Requires:       go(google.golang.org/protobuf)
 
 %description
@@ -53,6 +66,12 @@ Provides:       go(google.golang.org/genproto/googleapis/rpc) = %{version}
 %description    googleapis-rpc
 This subpackage contains the generated code for common Google APIs RPC
 protos.
+
+%prep -a
+tar -xzf %{SOURCE1}
+rm -rf googleapis/api
+cp -a "go-%{_name}-%{api_commit}/googleapis/api" googleapis/
+rm -rf "go-%{_name}-%{api_commit}"
 
 %files
 %doc README*

@@ -52,6 +52,7 @@ BuildRequires:  go(github.com/google/go-cmp)
 BuildRequires:  go(github.com/google/uuid)
 BuildRequires:  go(golang.org/x/net)
 BuildRequires:  go(golang.org/x/oauth2)
+BuildRequires:  go(golang.org/x/oauth2/google)
 BuildRequires:  go(golang.org/x/sync)
 BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(google.golang.org/genproto)
@@ -59,6 +60,10 @@ BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc) = %{version}
 Provides:       go(google.golang.org/grpc/codes) = %{version}
+Provides:       go(google.golang.org/grpc/credentials) = %{version}
+Provides:       go(google.golang.org/grpc/metadata) = %{version}
+Provides:       go(google.golang.org/grpc/peer) = %{version}
+Provides:       go(google.golang.org/grpc/stats) = %{version}
 Provides:       go(google.golang.org/grpc/status) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
@@ -69,6 +74,7 @@ Requires:       go(github.com/google/go-cmp)
 Requires:       go(github.com/google/uuid)
 Requires:       go(golang.org/x/net)
 Requires:       go(golang.org/x/oauth2)
+Requires:       go(golang.org/x/oauth2/google)
 Requires:       go(golang.org/x/sync)
 Requires:       go(golang.org/x/sys)
 Requires:       go(google.golang.org/genproto)
