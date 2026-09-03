@@ -87,7 +87,7 @@ repos:
     -   id: check-toml
     -   id: check-yaml
 -   repo: https://github.com/redrose2100/openruyi-precommit-hooks
-    rev: v0.2.0
+    rev: fbbd4435ce90ce2c6f2263062b8c36ea35be9506
     hooks:
     -   id: check-spdx-header
         files: \.spec$
