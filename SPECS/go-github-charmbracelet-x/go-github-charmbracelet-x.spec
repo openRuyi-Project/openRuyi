@@ -6,7 +6,7 @@
 
 %define _name           x
 %define go_import_path  github.com/charmbracelet/x
-%define commit_id d6a276319c45fce7a423ea796c0fd3e48ec828f8
+%define commit_id       d6a276319c45fce7a423ea796c0fd3e48ec828f8
 # TODO: test has circular dependency, add it later - Julian
 %define go_test_ignore_failure 1
 
@@ -16,7 +16,7 @@ Release:        %autorelease
 Summary:        Charm experimental packages
 License:        MIT
 URL:            https://github.com/charmbracelet/x
-#!RemoteAsset
+#!RemoteAsset:  sha256:f791fd740305561ca8798817e0f190c8bc10916d6e09779b97b11b1125264b62
 Source0:        https://github.com/charmbracelet/x/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -25,6 +25,20 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(github.com/charmbracelet/x) = %{version}
+# Dedicated submodule packages were removed as duplicates of this monorepo
+# package. Export providers for the source versions included at this commit.
+Provides:       go(github.com/charmbracelet/x/ansi) = 0.11.6
+Provides:       go(github.com/charmbracelet/x/cellbuf) = 0.0.15
+Provides:       go(github.com/charmbracelet/x/term) = 0.2.2
+
+Requires:       go(github.com/bits-and-blooms/bitset)
+Requires:       go(github.com/clipperhouse/displaywidth)
+Requires:       go(github.com/clipperhouse/uax29/v2)
+Requires:       go(github.com/charmbracelet/colorprofile)
+Requires:       go(github.com/lucasb-eyer/go-colorful)
+Requires:       go(github.com/mattn/go-runewidth)
+Requires:       go(github.com/rivo/uniseg)
+Requires:       go(golang.org/x/sys)
 
 %description
 This repository contains experimental packages with no promises of
@@ -99,9 +113,9 @@ Currently the following packages are available:
    dev/github.com/charmbracelet/x/xpty)
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
