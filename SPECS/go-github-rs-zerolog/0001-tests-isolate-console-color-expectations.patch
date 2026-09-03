@@ -1,0 +1,29 @@
+From e2efad4bb129699e615a507e067a76c94711cc0d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 12:22:47 +0800
+Subject: [PATCH] tests: isolate console color expectations
+
+TestConsoleWriter verifies both colored output and the NO_COLOR behavior, but inherited NO_COLOR from the build environment. Start the test with a known empty value so its color assertions are deterministic.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ console_test.go | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/console_test.go b/console_test.go
+index 6b97f6c..e992a97 100644
+--- a/console_test.go
++++ b/console_test.go
+@@ -102,6 +102,8 @@ func TestConsoleLogger(t *testing.T) {
+ }
+ 
+ func TestConsoleWriter(t *testing.T) {
++	t.Setenv("NO_COLOR", "")
++
+ 	t.Run("Default field formatter", func(t *testing.T) {
+ 		buf := &bytes.Buffer{}
+ 		w := zerolog.ConsoleWriter{Out: buf, NoColor: true, PartsOrder: []string{"foo"}}
+-- 
+2.43.0
+
+

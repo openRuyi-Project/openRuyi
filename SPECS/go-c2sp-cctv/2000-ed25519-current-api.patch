@@ -1,0 +1,81 @@
+From fd710038f574b067ecc0aae5e1c158e355b1ac97 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 3 Sep 2026 15:31:28 +0800
+Subject: [PATCH] ed25519: support current edwards25519 API
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+
+diff --git a/ed25519/ed25519vectors.go b/ed25519/ed25519vectors.go
+index 50d6afb..b085326 100644
+--- a/ed25519/ed25519vectors.go
++++ b/ed25519/ed25519vectors.go
+@@ -150,13 +150,19 @@ const jumbo = false
+ func GenerateVectors() []Vector {
+ 	// Pick an arbitrary private scalar and compute the public key.
+ 	sBytes := bytes.Repeat([]byte{0x42}, 32)
+-	s := edwards25519.NewScalar().SetBytesWithClamping(sBytes)
++	s, err := edwards25519.NewScalar().SetBytesWithClamping(sBytes)
++	if err != nil {
++		panic(err)
++	}
+ 	A := edwards25519.NewIdentityPoint().ScalarBaseMult(s)
+ 
+ 	// Pick an arbitrary r (normally derived from message and private key, but
+ 	// that's just a way to make it deterministic and unpredictable).
+ 	rBytes := bytes.Repeat([]byte{0x13, 0x37}, 32)
+-	r := edwards25519.NewScalar().SetUniformBytes(rBytes)
++	r, err := edwards25519.NewScalar().SetUniformBytes(rBytes)
++	if err != nil {
++		panic(err)
++	}
+ 	R := edwards25519.NewIdentityPoint().ScalarBaseMult(r)
+ 
+ 	var vectors []Vector
+@@ -268,7 +274,11 @@ func computeK(A, R []byte, message string, reEncodeK bool) *edwards25519.Scalar
+ 	io.WriteString(kh, message)
+ 	hramDigest := make([]byte, 0, sha512.Size)
+ 	hramDigest = kh.Sum(hramDigest)
+-	return edwards25519.NewScalar().SetUniformBytes(hramDigest)
++	k, err := edwards25519.NewScalar().SetUniformBytes(hramDigest)
++	if err != nil {
++		panic(err)
++	}
++	return k
+ }
+ 
+ func lowOrderComponentsAddUpToZero(A, R *edwards25519.Point, k *edwards25519.Scalar) bool {
+diff --git a/ed25519/ed25519vectors_test.go b/ed25519/ed25519vectors_test.go
+index 5152239..2fe2ba3 100644
+--- a/ed25519/ed25519vectors_test.go
++++ b/ed25519/ed25519vectors_test.go
+@@ -173,7 +173,10 @@ func TestVectors(t *testing.T) {
+ func TestMultByPrimeOrder(t *testing.T) {
+ 	b := make([]byte, 64)
+ 	rand.Read(b)
+-	s := (&edwards25519.Scalar{}).SetUniformBytes(b)
++	s, err := (&edwards25519.Scalar{}).SetUniformBytes(b)
++	if err != nil {
++		t.Fatal(err)
++	}
+ 	p := (&edwards25519.Point{}).ScalarBaseMult(s)
+ 	if multByPrimeOrder(p).Equal(I) != 1 {
+ 		t.Fail()
+diff --git a/ed25519/reencoded25519.go b/ed25519/reencoded25519.go
+index d3f7e3b..4b58755 100644
+--- a/ed25519/reencoded25519.go
++++ b/ed25519/reencoded25519.go
+@@ -37,7 +37,10 @@ func ReencodedVerify(publicKey, message, sig []byte) bool {
+ 	kh.Write(message)
+ 	hramDigest := make([]byte, 0, sha512.Size)
+ 	hramDigest = kh.Sum(hramDigest)
+-	k := new(edwards25519.Scalar).SetUniformBytes(hramDigest)
++	k, err := new(edwards25519.Scalar).SetUniformBytes(hramDigest)
++	if err != nil {
++		return false
++	}
+ 
+ 	// [8][S]B = [8]R + [8][k]A --> [8]([k](-A) + [S]B) = [8]R
+ 	minusA := new(edwards25519.Point).Negate(A)
+-- 
+2.43.0
+

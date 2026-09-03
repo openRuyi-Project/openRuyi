@@ -1,0 +1,29 @@
+From 0021beeaeb1e9349c80a23a182ffd3b37c4d2c95 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:50:56 +0800
+Subject: [PATCH] journald: mock SendFunc in byte count test
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ journald/journald_test.go | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/journald/journald_test.go b/journald/journald_test.go
+index 11b5c32..78ce0c0 100644
+--- a/journald/journald_test.go
++++ b/journald/journald_test.go
+@@ -81,6 +81,11 @@ func TestSanitizeKey(t *testing.T) {
+ }
+ 
+ func TestWriteReturnsNoOfWrittenBytes(t *testing.T) {
++	mock := &mockSend{}
++	oldSend := SendFunc
++	SendFunc = mock.send
++	defer func() { SendFunc = oldSend }()
++
+ 	input := []byte(`{"level":"info","time":1570912626,"message":"Starting..."}`)
+ 	wr := NewJournalDWriter()
+ 	want := len(input)
+-- 
+2.43.0
+
