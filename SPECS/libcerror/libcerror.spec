@@ -6,18 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libcerror
-Version:        20240413
+Version:        20260703
 Release:        %autorelease
 Summary:        Library for cross-platform C error functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libcerror
-#!RemoteAsset:  sha256:e42461065f4ba06f8f3116849471795d24b927c72e00cce0b5b7b8ddfe9b2806
+#!RemoteAsset:  sha256:a3659a1aeb9bc82428a95e9b54283659314e522e47e1afe8a3d3c66bca391bfd
 Source0:        %{url}/releases/download/%{version}/%{name}-beta-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 
 %description
 libcerror is a library for cross-platform C error functions.
