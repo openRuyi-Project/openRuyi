@@ -6,20 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libcthreads
-Version:        20240413
+Version:        20260703
 Release:        %autorelease
 Summary:        Library for cross-platform C threads functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libcthreads
-#!RemoteAsset
+#!RemoteAsset:  sha256:d88bdbcf1a628f8eed16e74a396188fe7af86e664972a0b30a8e8a1299b2b199
 Source0:        %{url}/releases/download/%{version}/libcthreads-alpha-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/libcthreads-alpha-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  pkg-config
 BuildRequires:  pkgconfig(libcerror) >= 20240413
 
@@ -49,4 +50,4 @@ applications that want to make use of libcthreads.
 %{_mandir}/man3/libcthreads.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
