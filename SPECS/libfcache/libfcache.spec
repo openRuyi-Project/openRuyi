@@ -6,20 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libfcache
-Version:        20240414
+Version:        20260520
 Release:        %autorelease
 Summary:        Library to provide generic file data cache functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libfcache
-#!RemoteAsset
+#!RemoteAsset:  sha256:290056f6bea437c7b9718845a5f9b6cd7c24a5710bd9e7d23809aebb4845e76d
 Source0:        %{url}/releases/download/%{version}/libfcache-alpha-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/libfcache-alpha-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  pkg-config
 BuildRequires:  pkgconfig(libcdata) >= 20240414
 BuildRequires:  pkgconfig(libcerror) >= 20240413
@@ -54,4 +55,4 @@ applications that want to make use of libfcache.
 %{_mandir}/man3/libfcache.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
