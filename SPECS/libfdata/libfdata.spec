@@ -6,20 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libfdata
-Version:        20240415
+Version:        20260521
 Release:        %autorelease
 Summary:        Library to provide generic file data functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libfdata
-#!RemoteAsset
+#!RemoteAsset:  sha256:42a8a8f50b3c52cea4bcf79f9a47aa152fbef509f7c910edb2ed1890c2adee2d
 Source0:        %{url}/releases/download/%{version}/libfdata-alpha-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/libfdata-alpha-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  pkg-config
 BuildRequires:  pkgconfig(libcdata) >= 20240414
 BuildRequires:  pkgconfig(libcerror) >= 20240413
@@ -52,4 +53,4 @@ applications that want to make use of libfdata.
 %{_mandir}/man3/libfdata.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
