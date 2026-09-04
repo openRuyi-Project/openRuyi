@@ -6,20 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libcdata
-Version:        20240414
+Version:        20260703
 Release:        %autorelease
 Summary:        Library for cross-platform C generic data functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libcdata
-#!RemoteAsset
+#!RemoteAsset:  sha256:f25dc0e362e0193e41a66793ca0784d0d345afc515a2991a6336f71821a42938
 Source0:        %{url}/releases/download/%{version}/%{name}-alpha-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/%{name}-alpha-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  pkg-config
 BuildRequires:  pkgconfig(libcerror) >= 20240413
 BuildRequires:  pkgconfig(libcthreads) >= 20240413
@@ -50,4 +51,4 @@ applications that want to make use of libcdata.
 %{_mandir}/man3/libcdata.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
