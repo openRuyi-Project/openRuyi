@@ -46,6 +46,7 @@ BuildRequires:  zlib-devel
 BuildRequires:  numactl-devel
 BuildRequires:  openssl-devel
 BuildRequires:  rdma-core-devel
+BuildRequires:  pkgconfig(libarchive)
 
 %patchlist
 # 25.11
