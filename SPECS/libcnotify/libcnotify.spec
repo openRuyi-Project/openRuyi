@@ -6,20 +6,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libcnotify
-Version:        20240414
+Version:        20260703
 Release:        %autorelease
 Summary:        Library for cross-platform C notification functions
 License:        LGPL-3.0-or-later
 URL:            https://github.com/libyal/libcnotify
-#!RemoteAsset
+#!RemoteAsset:  sha256:9cbc0301ab2c7ea393b40f6a793339d08b18907acda247dded4146f10b5b1077
 Source0:        %{url}/releases/download/%{version}/libcnotify-beta-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/libcnotify-beta-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 
-BuildRequires:  gcc
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  pkg-config
 BuildRequires:  pkgconfig(libcerror) >= 20240413
 
@@ -49,4 +50,4 @@ applications that want to make use of libcnotify.
 %{_mandir}/man3/libcnotify.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
