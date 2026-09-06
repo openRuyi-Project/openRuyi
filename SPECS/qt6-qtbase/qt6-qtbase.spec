@@ -68,6 +68,7 @@ BuildOption(conf):  -DFEATURE_relocatable=OFF
 BuildOption(conf):  -DFEATURE_journald=ON
 BuildOption(conf):  -DFEATURE_libproxy=ON
 BuildOption(conf):  -DFEATURE_accessibility=ON
+BuildOption(conf):  -DFEATURE_accessibility_atspi_bridge=ON
 BuildOption(conf):  -DFEATURE_fontconfig=ON
 BuildOption(conf):  -DFEATURE_glib=ON
 BuildOption(conf):  -DFEATURE_sctp=ON
@@ -116,6 +117,7 @@ BuildRequires:  pkgconfig(harfbuzz)
 BuildRequires:  pkgconfig(icu-i18n)
 BuildRequires:  pkgconfig(libpcre2-16)
 BuildRequires:  pkgconfig(dbus-1)
+BuildRequires:  pkgconfig(atspi-2)
 BuildRequires:  pkgconfig(libinput)
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(mtdev)
