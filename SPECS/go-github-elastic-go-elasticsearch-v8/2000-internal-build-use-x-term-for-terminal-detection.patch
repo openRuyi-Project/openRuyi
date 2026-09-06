@@ -1,0 +1,28 @@
+From 3b9e7a02f31b306fe5a96614ee23ccf050f1ae24 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 04:50:03 +0800
+Subject: [PATCH] internal/build: use x/term for terminal detection
+
+The deprecated golang.org/x/crypto/ssh/terminal package is no longer shipped by current x/crypto releases. Use its maintained replacement without changing behavior.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ internal/build/utils/terminal.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/build/utils/terminal.go b/internal/build/utils/terminal.go
+index f7add47..8a90a17 100644
+--- a/internal/build/utils/terminal.go
++++ b/internal/build/utils/terminal.go
+@@ -21,7 +21,7 @@ import (
+ 	"fmt"
+ 	"os"
+ 
+-	"golang.org/x/crypto/ssh/terminal"
++	terminal "golang.org/x/term"
+ )
+ 
+ var (
+-- 
+2.43.0
+

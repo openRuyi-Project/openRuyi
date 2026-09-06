@@ -1,0 +1,25 @@
+From 0897a195ee354ac8b5a3f8ecc787f61ab3e306a4 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 16:54:45 +0800
+Subject: [PATCH] tracing: align semantic conventions with OpenTelemetry 1.44
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ tracing/tracing.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tracing/tracing.go b/tracing/tracing.go
+index 77a8684..5ec7a2a 100644
+--- a/tracing/tracing.go
++++ b/tracing/tracing.go
+@@ -31,7 +31,7 @@ import (
+ 	"go.opentelemetry.io/otel/propagation"
+ 	"go.opentelemetry.io/otel/sdk/resource"
+ 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+-	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
++	semconv "go.opentelemetry.io/otel/semconv/v1.41.0"
+ 	"go.opentelemetry.io/otel/trace"
+ 	"go.opentelemetry.io/otel/trace/noop"
+ 	"google.golang.org/grpc/credentials"
+-- 
+2.43.0
