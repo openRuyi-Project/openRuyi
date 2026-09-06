@@ -24,6 +24,7 @@ VCS:            git:https://https.git.savannah.gnu.org/git/grub.git
 #!RemoteAsset:  sha256:bc8d3c73535b8838d8c8e2654d73edc4e6ae8c8acdb45d5df5dc9a1547446d43
 Source0:        https://ftpmirror.gnu.org/gnu/grub/grub-%{version}.tar.xz
 Source1:        grub.default
+Source2:        28_blsuki
 
 # https://gitlab.freedesktop.org/gnu-grub/grub/-/merge_requests/10
 Patch0:         skip-efi_uga.patch
@@ -183,6 +184,7 @@ for plat in %{grub_platforms}; do
 done
 
 install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
+install -D -m 0555 %{SOURCE2} %{buildroot}%{_sysconfdir}/grub.d/28_blsuki
 
 %find_lang %{name} --generate-subpackages
 
@@ -196,7 +198,8 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %config(noreplace) %{_sysconfdir}/grub.d/00_header
 %config(noreplace) %{_sysconfdir}/grub.d/10_linux
 %config(noreplace) %{_sysconfdir}/grub.d/20_linux_xen
-%attr(0644, root, root) %config(noreplace) %{_sysconfdir}/grub.d/25_bli
+%config(noreplace) %{_sysconfdir}/grub.d/28_blsuki
+%attr(0555, root, root) %config(noreplace) %{_sysconfdir}/grub.d/25_bli
 %config(noreplace) %{_sysconfdir}/grub.d/30_os-prober
 %config(noreplace) %{_sysconfdir}/grub.d/30_uefi-firmware
 %config(noreplace) %{_sysconfdir}/grub.d/40_custom
