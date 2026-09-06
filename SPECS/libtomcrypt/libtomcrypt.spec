@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: corestudy <2760018909@qq.com>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +16,7 @@ Summary:        A comprehensive, portable cryptographic toolkit
 License:        Unlicense OR WTFPL
 URL:            http://www.libtom.net/
 VCS:            git:https://github.com/libtom/libtomcrypt
-#!RemoteAsset
+#!RemoteAsset:  sha256:d870fad1e31cb787c85161a8894abb9d7283c2a654a9d3d4c6d45a1eba59952c
 Source:         https://github.com/libtom/libtomcrypt/archive/v%{version}/libtomcrypt-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -29,6 +30,9 @@ BuildOption(install):  INSTALL_OPTS="-m 755"
 BuildOption(install):  INCPATH="%{_includedir}"
 BuildOption(install):  LIBPATH="%{_libdir}"
 BuildOption(install):  -f makefile.shared
+BuildOption(check):  EXTRALIBS="-ltommath"
+BuildOption(check):  CFLAGS="%{optflags} -DLTM_DESC -DUSE_LTM"
+BuildOption(check):  -f makefile.shared && ./test
 
 BuildRequires:  pkgconfig(libtommath)
 BuildRequires:  libtool
@@ -58,9 +62,6 @@ sed -i \
     -e 's|^libdir=.*|libdir=${prefix}/%{_lib}|g' \
     %{buildroot}%{_libdir}/pkgconfig/%{name}.pc
 
-# TODO: Fix test build.
-%check
-
 %files
 %license LICENSE
 %{_libdir}/*.so.*
@@ -71,4 +72,4 @@ sed -i \
 %{_libdir}/pkgconfig/libtomcrypt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
