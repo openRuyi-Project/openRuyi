@@ -48,6 +48,9 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opencensus.io) = %{version}
+Provides:       go(go.opencensus.io/plugin/ochttp) = %{version}
+Provides:       go(go.opencensus.io/trace) = %{version}
+Provides:       go(go.opencensus.io/trace/propagation) = %{version}
 
 Requires:       go(github.com/golang/groupcache)
 Requires:       go(github.com/golang/protobuf)
