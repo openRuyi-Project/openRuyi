@@ -1,0 +1,22 @@
+From 2d6dad5ff3780a3f2c814d7314918d23a68445c3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 3 Sep 2026 15:21:26 +0800
+Subject: [PATCH] server: serialize stats index test
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+
+diff --git a/server/server_test.go b/server/server_test.go
+index 266afef..471d9d5 100644
+--- a/server/server_test.go
++++ b/server/server_test.go
+@@ -209,7 +209,6 @@ func TestGetStats(t *testing.T) {
+ }
+ 
+ func TestGetStatsIndex(t *testing.T) {
+-	t.Parallel()
+ 	var testStats bigcache.Stats
+ 
+ 	getreq := httptest.NewRequest("GET", testBaseString+"/api/v1/stats", nil)
+-- 
+2.43.0
+

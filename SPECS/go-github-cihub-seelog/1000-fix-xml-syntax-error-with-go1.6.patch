@@ -1,0 +1,25 @@
+From abfc09715edde0722e239c1c1744c31618d4da5d Mon Sep 17 00:00:00 2001
+From: Yohan Legat <yohan.legat@zenika.com>
+Date: Tue, 5 Apr 2016 16:28:44 +0200
+Subject: [PATCH] Fix XML syntax error with go1.6
+
+---
+ internals_xmlnode_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internals_xmlnode_test.go b/internals_xmlnode_test.go
+index 3a4487c..2655002 100644
+--- a/internals_xmlnode_test.go
++++ b/internals_xmlnode_test.go
+@@ -110,7 +110,7 @@ func getXMLTests() []xmlNodeTest {
+ 		testName = "Comments"
+ 		testXML =
+ 			`<!-- <abcdef/> -->
+-<a> <!-- <!--12345-->
++<a> <!-- 12345-->
+ </a>
+ `
+ 		testExpected = newNode()
+-- 
+2.43.0
+

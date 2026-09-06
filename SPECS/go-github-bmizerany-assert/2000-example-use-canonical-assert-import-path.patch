@@ -1,0 +1,27 @@
+From a6a9237450deb34c77ed519a3410dda493d26de9 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 23:37:44 +0800
+Subject: [PATCH] example: use canonical assert import path
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ example/point_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/example/point_test.go b/example/point_test.go
+index 34e791a..0ff7332 100644
+--- a/example/point_test.go
++++ b/example/point_test.go
+@@ -1,8 +1,8 @@
+ package point
+ 
+ import (
++	"github.com/bmizerany/assert"
+ 	"testing"
+-	"assert"
+ )
+ 
+ func TestAsserts(t *testing.T) {
+-- 
+2.43.0
+

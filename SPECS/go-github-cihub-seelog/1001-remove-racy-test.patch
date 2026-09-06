@@ -1,0 +1,39 @@
+From 79cbb3d1b030f15bedefb1470e80b3ba80c93d21 Mon Sep 17 00:00:00 2001
+From: Pavel Korotkov <pkorotkov@gmail.com>
+Date: Mon, 30 Jan 2017 16:45:32 +0300
+Subject: [PATCH] Remove racy test
+
+---
+ writers_bufferedwriter_test.go | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+diff --git a/writers_bufferedwriter_test.go b/writers_bufferedwriter_test.go
+index 03f74f7..9f8f509 100644
+--- a/writers_bufferedwriter_test.go
++++ b/writers_bufferedwriter_test.go
+@@ -43,22 +43,6 @@ func TestChunkWriteOnFilling(t *testing.T) {
+ 	bufferedWriter.Write(bytes)
+ }
+ 
+-func TestFlushByTimePeriod(t *testing.T) {
+-	writer, _ := newBytesVerifier(t)
+-	bufferedWriter, err := NewBufferedWriter(writer, 1024, 10)
+-
+-	if err != nil {
+-		t.Fatalf("Unexpected buffered writer creation error: %s", err.Error())
+-	}
+-
+-	bytes := []byte("Hello")
+-
+-	for i := 0; i < 2; i++ {
+-		writer.ExpectBytes(bytes)
+-		bufferedWriter.Write(bytes)
+-	}
+-}
+-
+ func TestBigMessageMustPassMemoryBuffer(t *testing.T) {
+ 	writer, _ := newBytesVerifier(t)
+ 	bufferedWriter, err := NewBufferedWriter(writer, 1024, 0)
+-- 
+2.43.0
+

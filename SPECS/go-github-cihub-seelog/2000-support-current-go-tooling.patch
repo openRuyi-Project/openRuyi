@@ -1,0 +1,126 @@
+From 4cd06cd1bde0fbd00bc426b08c3eae7796a8c709 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 13:31:02 +0800
+Subject: [PATCH] tests: support current Go tooling
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cfg_logconfig_test.go             | 6 +++---
+ common_constraints_test.go        | 4 ++--
+ dispatch_filterdispatcher_test.go | 4 ++--
+ dispatch_splitdispatcher_test.go  | 2 +-
+ internals_byteverifiers_test.go   | 2 +-
+ writers_formattedwriter_test.go   | 2 +-
+ 6 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/cfg_logconfig_test.go b/cfg_logconfig_test.go
+index af64a6c..f09477a 100644
+--- a/cfg_logconfig_test.go
++++ b/cfg_logconfig_test.go
+@@ -48,17 +48,17 @@ func TestConfig(t *testing.T) {
+ 
+ 	context, err := currentContext(nil)
+ 	if err != nil {
+-		t.Errorf("cannot get current context:" + err.Error())
++		t.Errorf("cannot get current context: %s", err)
+ 		return
+ 	}
+ 	firstContext, err := getFirstContext()
+ 	if err != nil {
+-		t.Errorf("cannot get current context:" + err.Error())
++		t.Errorf("cannot get current context: %s", err)
+ 		return
+ 	}
+ 	secondContext, err := getSecondContext()
+ 	if err != nil {
+-		t.Errorf("cannot get current context:" + err.Error())
++		t.Errorf("cannot get current context: %s", err)
+ 		return
+ 	}
+ 
+diff --git a/common_constraints_test.go b/common_constraints_test.go
+index bb9918e..0fb60ee 100644
+--- a/common_constraints_test.go
++++ b/common_constraints_test.go
+@@ -60,7 +60,7 @@ func TestInvalidLogLevels(t *testing.T) {
+ 	}
+ }
+ 
+-func TestlistConstraintsWithDuplicates(t *testing.T) {
++func TestListConstraintsWithDuplicates(t *testing.T) {
+ 	duplicateList := []LogLevel{TraceLvl, DebugLvl, InfoLvl,
+ 		WarnLvl, ErrorLvl, CriticalLvl, CriticalLvl, CriticalLvl}
+ 
+@@ -85,7 +85,7 @@ func TestlistConstraintsWithDuplicates(t *testing.T) {
+ 	}
+ }
+ 
+-func TestlistConstraintsWithOffInList(t *testing.T) {
++func TestListConstraintsWithOffInList(t *testing.T) {
+ 	offList := []LogLevel{TraceLvl, DebugLvl, Off}
+ 
+ 	listConstr, errList := NewListConstraints(offList)
+diff --git a/dispatch_filterdispatcher_test.go b/dispatch_filterdispatcher_test.go
+index c1894a7..0d5f0db 100644
+--- a/dispatch_filterdispatcher_test.go
++++ b/dispatch_filterdispatcher_test.go
+@@ -28,7 +28,7 @@ import (
+ 	"testing"
+ )
+ 
+-func TestfilterDispatcher_Pass(t *testing.T) {
++func TestFilterDispatcher_Pass(t *testing.T) {
+ 	writer, _ := newBytesVerifier(t)
+ 	filter, err := NewFilterDispatcher(onlyMessageFormatForTest, []interface{}{writer}, TraceLvl)
+ 	if err != nil {
+@@ -48,7 +48,7 @@ func TestfilterDispatcher_Pass(t *testing.T) {
+ 	writer.MustNotExpect()
+ }
+ 
+-func TestfilterDispatcher_Deny(t *testing.T) {
++func TestFilterDispatcher_Deny(t *testing.T) {
+ 	writer, _ := newBytesVerifier(t)
+ 	filter, err := NewFilterDispatcher(DefaultFormatter, []interface{}{writer})
+ 	if err != nil {
+diff --git a/dispatch_splitdispatcher_test.go b/dispatch_splitdispatcher_test.go
+index fc4651c..781c9d9 100644
+--- a/dispatch_splitdispatcher_test.go
++++ b/dispatch_splitdispatcher_test.go
+@@ -39,7 +39,7 @@ func init() {
+ 	}
+ }
+ 
+-func TestsplitDispatcher(t *testing.T) {
++func TestSplitDispatcher(t *testing.T) {
+ 	writer1, _ := newBytesVerifier(t)
+ 	writer2, _ := newBytesVerifier(t)
+ 	spliter, err := NewSplitDispatcher(onlyMessageFormatForTest, []interface{}{writer1, writer2})
+diff --git a/internals_byteverifiers_test.go b/internals_byteverifiers_test.go
+index 0ab6ebc..26a1024 100644
+--- a/internals_byteverifiers_test.go
++++ b/internals_byteverifiers_test.go
+@@ -97,7 +97,7 @@ func (verifier *bytesVerifier) MustNotExpect() {
+ 			errorText += ". text = " + string(verifier.expectedBytes)
+ 		}
+ 
+-		verifier.testEnv.Errorf(errorText)
++		verifier.testEnv.Error(errorText)
+ 	}
+ }
+ 
+diff --git a/writers_formattedwriter_test.go b/writers_formattedwriter_test.go
+index 351ac4e..c2c5740 100644
+--- a/writers_formattedwriter_test.go
++++ b/writers_formattedwriter_test.go
+@@ -28,7 +28,7 @@ import (
+ 	"testing"
+ )
+ 
+-func TestformattedWriter(t *testing.T) {
++func TestFormattedWriter(t *testing.T) {
+ 	formatStr := "%Level %LEVEL %Msg"
+ 	message := "message"
+ 	var logLevel = LogLevel(TraceLvl)
+-- 
+2.43.0
+
