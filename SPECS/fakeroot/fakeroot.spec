@@ -6,27 +6,29 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           fakeroot
-Version:        1.37.2
+Version:        2.1.4
 Release:        %autorelease
 Summary:        Gives a fake root environment
 License:        GPL-3.0-or-later
 URL:            https://tracker.debian.org/pkg/fakeroot
 VCS:            git:https://salsa.debian.org/clint/fakeroot
-#!RemoteAsset
-Source:         https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_%{version}.orig.tar.gz
+#!RemoteAsset:  sha256:0822bd5a9f0cf19d2ba0546b88b0432d4d3d9917db62c57b74044ccadba06e49
+Source:         https://deb.debian.org/debian/pool/main/f/fakeroot/fakeroot_%{version}.orig.tar.xz
 BuildSystem:    autotools
 
-Patch0:         debian_fix-shell-in-fakeroot.patch
+# https://salsa.debian.org/clint/fakeroot/-/merge_requests/39
+Patch2000:      2000-t.xattr2-Only-test-user-namespace.patch
 
 BuildRequires:  make
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  util-linux
-BuildRequires:  gcc
 BuildRequires:  acl-devel
 BuildRequires:  libcap-devel
 BuildRequires:  sharutils
+BuildRequires:  po4a
+
 Requires(post): alternatives
 Requires(post): coreutils
 Requires(preun): alternatives
@@ -125,4 +127,4 @@ fi
 %ghost %{_libdir}/libfakeroot/libfakeroot-0.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
