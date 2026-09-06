@@ -1,0 +1,43 @@
+From 776bb5e57838b74dc49abfde9825aba5256efe6e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 2 Sep 2026 22:46:30 +0800
+Subject: [PATCH] test: tolerate Go 1.27 JSON error type formatting
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ marshaler_test.go | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/marshaler_test.go b/marshaler_test.go
+index b52d832..071f467 100644
+--- a/marshaler_test.go
++++ b/marshaler_test.go
+@@ -5,6 +5,7 @@ import (
+ 	"errors"
+ 	"math"
+ 	"reflect"
++	"strings"
+ 	"testing"
+ )
+ 
+@@ -122,11 +123,14 @@ func TestMarshalStdlibMarshalerError(t *testing.T) {
+ 	err := Marshal(&w, stdlibMarshalerFunc(func() ([]byte, error) {
+ 		return nil, errors.New("boom")
+ 	}))
+-	assertEncoded(t, &w, `{"__ERROR__":"json: error calling MarshalJSON for type fastjson.stdlibMarshalerFunc: boom"}`)
+-	expectedErr := `json: error calling MarshalJSON for type fastjson.stdlibMarshalerFunc: boom`
+-	if err == nil || err.Error() != expectedErr {
+-		t.Fatalf("expected %q, got %q", expectedErr, err)
++	if err == nil || !strings.HasPrefix(err.Error(), "json: error calling MarshalJSON for type ") || !strings.HasSuffix(err.Error(), ": boom") {
++		t.Fatalf("unexpected error: %v", err)
++	}
++	expected, marshalErr := json.Marshal(map[string]string{"__ERROR__": err.Error()})
++	if marshalErr != nil {
++		t.Fatal(marshalErr)
+ 	}
++	assertEncoded(t, &w, string(expected))
+ }
+ 
+ func TestMarshalMapValueError(t *testing.T) {
+-- 
+2.43.0

@@ -33,6 +33,9 @@ BuildRequires:  go(golang.org/x/tools)
 
 Provides:       go(github.com/tinylib/msgp) = %{version}
 
+Requires:       go(github.com/philhofer/fwd)
+Requires:       go(golang.org/x/tools)
+
 %description
 This is a code generation tool and serialization library for MessagePack. You can read more about MessagePack in the wiki, or at msgpack.org.
 

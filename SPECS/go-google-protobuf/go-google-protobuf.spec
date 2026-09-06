@@ -27,6 +27,7 @@ Provides:       go(google.golang.org/protobuf) = %{version}
 Provides:       go(google.golang.org/protobuf/proto) = %{version}
 Provides:       go(google.golang.org/protobuf/reflect) = %{version}
 Provides:       go(google.golang.org/protobuf/runtime) = %{version}
+Provides:       go(google.golang.org/protobuf/types) = %{version}
 
 Requires:       pkgconfig(protobuf)
 

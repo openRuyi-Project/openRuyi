@@ -1,0 +1,215 @@
+From 3c890cce93a5b4f4c34b0ee350f205b7a72d5291 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:39:02 +0800
+Subject: [PATCH] tests: support current Go and dependencies
+
+Backport the upstream Cleanup rename, make go-cmp assertions resilient to current diagnostics and traversal ordering, and fix a non-constant format string rejected by current Go vet.
+
+Based on upstream commits:
+
+https://github.com/gotestyourself/gotest.tools/commit/6bc35c2
+
+https://github.com/gotestyourself/gotest.tools/commit/85ad333
+
+https://github.com/gotestyourself/gotest.tools/commit/e7180e8
+
+https://github.com/gotestyourself/gotest.tools/commit/77bb3d3
+
+https://github.com/gotestyourself/gotest.tools/commit/89b3401
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ assert/assert_test.go      | 10 +++-------
+ assert/cmp/compare_test.go | 37 +++++++++++++++++++------------------
+ assert/opt/opt_test.go     | 26 ++++++++++++++++++++++----
+ fs/report.go               |  4 ++--
+ x/subtest/context.go       |  6 +++---
+ 5 files changed, 49 insertions(+), 34 deletions(-)
+
+diff --git a/assert/assert_test.go b/assert/assert_test.go
+index 61d2853..4d117ea 100644
+--- a/assert/assert_test.go
++++ b/assert/assert_test.go
+@@ -302,13 +302,9 @@ func TestDeepEqualFailure(t *testing.T) {
+ 
+ 	fakeT := &fakeTestingT{}
+ 	DeepEqual(fakeT, actual, expected, gocmp.AllowUnexported(stub{}))
+-	expectFailNowed(t, fakeT, "assertion failed: "+`
+---- actual
+-+++ expected
+-{assert.stub}.b:
+-	-: 1
+-	+: 2
+-`)
++	if !fakeT.failNowed {
++		t.Fatal("should have failNowed")
++	}
+ }
+ 
+ func TestErrorFailure(t *testing.T) {
+diff --git a/assert/cmp/compare_test.go b/assert/cmp/compare_test.go
+index f99ce88..0bbcdce 100644
+--- a/assert/cmp/compare_test.go
++++ b/assert/cmp/compare_test.go
+@@ -14,32 +14,33 @@ import (
+ )
+ 
+ func TestDeepEqual(t *testing.T) {
+-	actual := DeepEqual([]string{"a", "b"}, []string{"b", "a"})()
+-	expected := `
+---- result
+-+++ exp
+-{[]string}[0]:
+-	-: "a"
+-	+: "b"
+-{[]string}[1]:
+-	-: "b"
+-	+: "a"
+-`
+-	args := []ast.Expr{&ast.Ident{Name: "result"}, &ast.Ident{Name: "exp"}}
+-	assertFailureTemplate(t, actual, args, expected)
++	t.Run("failure", func(t *testing.T) {
++		result := DeepEqual([]string{"a", "b"}, []string{"b", "a"})()
++		if result.Success() {
++			t.Errorf("expected failure")
++		}
++
++		args := []ast.Expr{&ast.Ident{Name: "result"}, &ast.Ident{Name: "exp"}}
++		message := result.(templatedResult).FailureMessage(args)
++		expected := "\n--- result\n+++ exp\n"
++		if !strings.HasPrefix(message, expected) {
++			t.Errorf("expected prefix \n%q\ngot\n%q\n", expected, message)
++		}
++	})
+ 
+-	actual = DeepEqual([]string{"a"}, []string{"a"})()
+-	assertSuccess(t, actual)
++	t.Run("success", func(t *testing.T) {
++		actual := DeepEqual([]string{"a"}, []string{"a"})()
++		assertSuccess(t, actual)
++	})
+ }
+ 
+ type Stub struct {
+ 	unx int
+ }
+ 
+-func TestDeepEqualeWithUnexported(t *testing.T) {
++func TestDeepEqualWithUnexported(t *testing.T) {
+ 	result := DeepEqual(Stub{}, Stub{unx: 1})()
+-	assertFailure(t, result, `cannot handle unexported field: {cmp.Stub}.unx
+-consider using AllowUnexported or cmpopts.IgnoreUnexported`)
++	assertFailureHasPrefix(t, result, `cannot handle unexported field at {cmp.Stub}.unx:`)
+ }
+ 
+ func TestRegexp(t *testing.T) {
+diff --git a/assert/opt/opt_test.go b/assert/opt/opt_test.go
+index 734ab71..6760e99 100644
+--- a/assert/opt/opt_test.go
++++ b/assert/opt/opt_test.go
+@@ -1,6 +1,7 @@
+ package opt
+ 
+ import (
++	"sort"
+ 	"testing"
+ 	"time"
+ 
+@@ -167,6 +168,7 @@ func (p *pathRecorder) record(path gocmp.Path) bool {
+ func matchPaths(fixture interface{}, filter func(gocmp.Path) bool) []string {
+ 	rec := &pathRecorder{filter: filter}
+ 	gocmp.Equal(fixture, fixture, gocmp.FilterPath(rec.record, gocmp.Ignore()))
++	sort.Strings(rec.matches)
+ 	return rec.matches
+ }
+ 
+@@ -186,7 +188,12 @@ func TestPathStringFromStruct(t *testing.T) {
+ 
+ 	spec := "Ref.Children.Labels.Value"
+ 	matches := matchPaths(fixture, PathString(spec))
+-	expected := []string{`{opt.node}.Ref.Children[1].Labels["first"].Value`}
++	expected := []string{
++		`{opt.node}.Ref.Children[1].Labels["first"].Value`,
++		// as of google/go-cmp 0.3.0 PathFilter seems to traverse some parts
++		// of the tree more than once.
++		`{opt.node}.Ref.Children[1].Labels["first"].Value`,
++	}
+ 	assert.DeepEqual(t, matches, expected)
+ }
+ 
+@@ -211,7 +218,14 @@ func TestPathStringFromSlice(t *testing.T) {
+ 
+ 	spec := "Ref.Children.Labels.Ref.Value"
+ 	matches := matchPaths(fixture, PathString(spec))
+-	expected := []string{`{[]opt.node}[0].Ref.Children[1].Labels["second"].Ref.Value`}
++	expected := []string{
++		`{[]opt.node}[0].Ref.Children[1].Labels["second"].Ref.Value`,
++		// as of google/go-cmp 0.3.0 PathFilter seems to traverse some parts
++		// of the tree more than once.
++		`{[]opt.node}[0].Ref.Children[1].Labels["second"].Ref.Value`,
++		`{[]opt.node}[0].Ref.Children[1].Labels["second"].Ref.Value`,
++		`{[]opt.node}[0].Ref.Children[1].Labels["second"].Ref.Value`,
++	}
+ 	assert.DeepEqual(t, matches, expected)
+ }
+ 
+@@ -228,11 +242,15 @@ func TestPathField(t *testing.T) {
+ 	filter := PathField(nodeValue{}, "Value")
+ 	matches := matchPaths(fixture, filter)
+ 	expected := []string{
+-		"{opt.node}.Value.Value",
++		"{opt.node}.Children[0].Value.Value",
+ 		"{opt.node}.Children[0].Value.Value",
+ 		"{opt.node}.Children[1].Value.Value",
+-		"{opt.node}.Children[2].Value.Value",
++		"{opt.node}.Children[1].Value.Value",
++		"{opt.node}.Children[2].Ref.Value.Value",
+ 		"{opt.node}.Children[2].Ref.Value.Value",
++		"{opt.node}.Children[2].Value.Value",
++		"{opt.node}.Children[2].Value.Value",
++		"{opt.node}.Value.Value",
+ 	}
+ 	assert.DeepEqual(t, matches, expected)
+ }
+diff --git a/fs/report.go b/fs/report.go
+index adc5a5f..1822b3b 100644
+--- a/fs/report.go
++++ b/fs/report.go
+@@ -50,8 +50,8 @@ func errProblem(reason string, err error) problem {
+ 	return problem(fmt.Sprintf("%s: %s", reason, err))
+ }
+ 
+-func existenceProblem(filename, reason string, args ...interface{}) problem {
+-	return problem(filename + ": " + fmt.Sprintf(reason, args...))
++func existenceProblem(filename string, msgAndArgs ...interface{}) problem {
++	return problem(filename + ": " + format.Message(msgAndArgs...))
+ }
+ 
+ func eqResource(x, y resource) []problem {
+diff --git a/x/subtest/context.go b/x/subtest/context.go
+index 878bdeb..bcf13ee 100644
+--- a/x/subtest/context.go
++++ b/x/subtest/context.go
+@@ -27,9 +27,9 @@ func (tc *testcase) Ctx() context.Context {
+ 	return tc.ctx
+ }
+ 
+-// Cleanup runs all cleanup functions. Functions are run in the opposite order
++// cleanup runs all cleanup functions. Functions are run in the opposite order
+ // in which they were added. Cleanup is called automatically before Run exits.
+-func (tc *testcase) Cleanup() {
++func (tc *testcase) cleanup() {
+ 	for _, f := range tc.cleanupFuncs {
+ 		// Defer all cleanup functions so they all run even if one calls
+ 		// t.FailNow() or panics. Deferring them also runs them in reverse order.
+@@ -59,7 +59,7 @@ type parallel interface {
+ func Run(t *testing.T, name string, subtest func(t TestContext)) bool {
+ 	return t.Run(name, func(t *testing.T) {
+ 		tc := &testcase{TB: t}
+-		defer tc.Cleanup()
++		defer tc.cleanup()
+ 		subtest(tc)
+ 	})
+ }
+-- 
+2.43.0
+

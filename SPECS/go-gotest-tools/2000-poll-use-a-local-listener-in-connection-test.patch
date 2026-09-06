@@ -1,0 +1,42 @@
+From 9ce2bb9e7a5b48402aee7a5e78ec8a118558a235 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:48:11 +0800
+Subject: [PATCH] poll: use a local listener in connection test
+
+OBS builds do not have external network access, so checking google.com makes the test environment-dependent. A local TCP listener exercises the same successful connection path deterministically.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ poll/check_test.go | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/poll/check_test.go b/poll/check_test.go
+index a9277d4..2d2f31e 100644
+--- a/poll/check_test.go
++++ b/poll/check_test.go
+@@ -2,6 +2,7 @@ package poll
+ 
+ import (
+ 	"fmt"
++	"net"
+ 	"os"
+ 	"testing"
+ 
+@@ -35,8 +36,12 @@ func TestWaitOnSocketWithTimeout(t *testing.T) {
+ 		assert.Equal(t, r.Message(), "socket tcp://foo.bar:55555 not available")
+ 	})
+ 
+-	t.Run("connection to ", func(t *testing.T) {
+-		check := Connection("tcp", "google.com:80")
++	t.Run("connection to available address", func(t *testing.T) {
++		listener, err := net.Listen("tcp", "127.0.0.1:0")
++		assert.NilError(t, err)
++		defer listener.Close()
++
++		check := Connection("tcp", listener.Addr().String())
+ 		assert.Assert(t, check(t).Done())
+ 	})
+ }
+-- 
+2.43.0
+

@@ -1,0 +1,35 @@
+From d45d0e418c568b6ad42dafbf18c4a1ff47e9f4a1 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:28:16 +0800
+Subject: [PATCH] test: use integer verbs for HTTP status codes
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ recorder/recorder_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/recorder/recorder_test.go b/recorder/recorder_test.go
+index 0340c91..7d848d6 100644
+--- a/recorder/recorder_test.go
++++ b/recorder/recorder_test.go
+@@ -75,7 +75,7 @@ func (tc testCase) run(client *http.Client, ctx context.Context, serverUrl strin
+ 	}
+ 
+ 	if resp.StatusCode != tc.wantStatus {
+-		return fmt.Errorf("want status: %q, got status: %q", resp.StatusCode, tc.wantStatus)
++		return fmt.Errorf("want status: %d, got status: %d", resp.StatusCode, tc.wantStatus)
+ 	}
+ 
+ 	if resp.ContentLength != int64(tc.wantContentLength) {
+@@ -209,7 +209,7 @@ func TestRecordOnceMode(t *testing.T) {
+ 
+ 		recordedStatus := c.Interactions[i].Response.Code
+ 		if test.wantStatus != recordedStatus {
+-			t.Fatalf("got recorded status: %q, want recorded status: %q", test.wantStatus, recordedStatus)
++			t.Fatalf("got recorded status: %d, want recorded status: %d", test.wantStatus, recordedStatus)
+ 
+ 		}
+ 	}
+-- 
+2.43.0
+

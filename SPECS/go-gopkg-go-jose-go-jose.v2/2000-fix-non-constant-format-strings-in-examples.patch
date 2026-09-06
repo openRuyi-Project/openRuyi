@@ -1,0 +1,35 @@
+From 34d75794685fdebdf956a6f761ac1d3f0a0c46d3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 21 Aug 2026 19:32:33 +0800
+Subject: [PATCH] Fix non-constant format strings in examples
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ doc_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/doc_test.go b/doc_test.go
+index 8a7b605..c796aa9 100644
+--- a/doc_test.go
++++ b/doc_test.go
+@@ -70,7 +70,7 @@ func Example_jWE() {
+ 		panic(err)
+ 	}
+ 
+-	fmt.Printf(string(decrypted))
++	fmt.Printf("%s", decrypted)
+ 	// output: Lorem ipsum dolor sit amet
+ }
+ 
+@@ -116,7 +116,7 @@ func Example_jWS() {
+ 		panic(err)
+ 	}
+ 
+-	fmt.Printf(string(output))
++	fmt.Printf("%s", output)
+ 	// output: Lorem ipsum dolor sit amet
+ }
+ 
+-- 
+2.43.0
+
