@@ -1,0 +1,26 @@
+From 226a51c0d4b417f52bfcb4e54ac23fe6ea0eb1ab Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:50:38 +0800
+Subject: [PATCH] go: avoid a dynamic format string in pickle example
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ go/pickles_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/go/pickles_test.go b/go/pickles_test.go
+index 5ecf67f3..c9b728ee 100644
+--- a/go/pickles_test.go
++++ b/go/pickles_test.go
+@@ -30,7 +30,7 @@ func ExamplePickles() {
+ 	pickles := Pickles(*gherkinDocument, "test.feature", (&messages.Incrementing{}).NewId)
+ 
+ 	marshal, err := json.Marshal(pickles)
+-	fmt.Fprintf(os.Stdout, string(marshal))
++	fmt.Fprint(os.Stdout, string(marshal))
+ 
+ 	// Output:
+ 	//
+-- 
+2.43.0
+

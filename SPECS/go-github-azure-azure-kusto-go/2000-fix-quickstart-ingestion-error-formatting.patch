@@ -1,0 +1,26 @@
+From 36a08c1a49c2cfa05072d9d943147b985bdb8174 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 23:15:49 +0800
+Subject: [PATCH] fix quickstart ingestion error formatting
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ quickstart/utils/ingestion/ingestion.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/quickstart/utils/ingestion/ingestion.go b/quickstart/utils/ingestion/ingestion.go
+index 48bed69..7463469 100644
+--- a/quickstart/utils/ingestion/ingestion.go
++++ b/quickstart/utils/ingestion/ingestion.go
+@@ -31,7 +31,7 @@ func IngestSource(ingestClient *azkustoingest.Ingestion, DataSourceUri string, c
+ 	_, err := ingestClient.FromFile(ctx, DataSourceUri, options...)
+ 
+ 	if err != nil {
+-		err := errors.ES(errors.OpFileIngest, errors.KOther, fmt.Sprintf("%s ingestion error", source))
++		err := errors.ES(errors.OpFileIngest, errors.KOther, "%s ingestion error", source)
+ 		utils.ErrorHandler(fmt.Sprintf("Ingestion exception while trying to ingest '%s' into '%s.%s'", DataSourceUri, databaseName, tableName), err)
+ 	}
+ }
+-- 
+2.43.0
+

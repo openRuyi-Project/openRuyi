@@ -1,0 +1,27 @@
+From 618ced518077f3e84e894b396358a59fb06a55dd Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 23:44:31 +0800
+Subject: [PATCH] example: make request error placeholder compile
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ example_test.go | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/example_test.go b/example_test.go
+index 88d0e55..735e88a 100644
+--- a/example_test.go
++++ b/example_test.go
+@@ -8,6 +8,8 @@ func ExampleNewEpsilonGreedy() {
+ 	hp := hostpool.NewEpsilonGreedy([]string{"a", "b"}, 0, &hostpool.LinearEpsilonValueCalculator{})
+ 	hostResponse := hp.Get()
+ 	hostname := hostResponse.Host()
+-	err := nil // (make a request with hostname)
++	// Make a request with hostname and assign its error to err.
++	_ = hostname
++	var err error
+ 	hostResponse.Mark(err)
+ }
+-- 
+2.43.0
+

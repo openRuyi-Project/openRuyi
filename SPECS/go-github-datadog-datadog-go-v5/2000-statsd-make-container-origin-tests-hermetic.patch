@@ -1,0 +1,71 @@
+From d2c186fb06940538f792ec1636e5dcc27dc8be50 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 05:04:12 +0800
+Subject: [PATCH] statsd: make container-origin tests hermetic
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ statsd/event_test.go        | 5 +++++
+ statsd/test_helpers_test.go | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/statsd/event_test.go b/statsd/event_test.go
+index 94bb9f4..f7722ec 100644
+--- a/statsd/event_test.go
++++ b/statsd/event_test.go
+@@ -18,6 +18,7 @@ func encodeEvent(e *Event) (string, error) {
+ }
+ 
+ func TestEventEncode(t *testing.T) {
++	withoutOriginGlobals(t)
+ 	matrix := []struct {
+ 		event   *Event
+ 		encoded string
+@@ -51,6 +52,7 @@ func TestEventEncode(t *testing.T) {
+ }
+ 
+ func TestNewEventTitleMissing(t *testing.T) {
++	withoutOriginGlobals(t)
+ 	e := NewEvent("", "hi")
+ 	_, err := encodeEvent(e)
+ 	require.Error(t, err)
+@@ -58,6 +60,7 @@ func TestNewEventTitleMissing(t *testing.T) {
+ }
+ 
+ func TestNewEvent(t *testing.T) {
++	withoutOriginGlobals(t)
+ 	e := NewEvent("hello", "world")
+ 	e.Tags = []string{"tag1", "tag2"}
+ 	eventEncoded, err := encodeEvent(e)
+@@ -67,6 +70,7 @@ func TestNewEvent(t *testing.T) {
+ }
+ 
+ func TestNewEventTagsAppend(t *testing.T) {
++	withoutOriginGlobals(t)
+ 	e := NewEvent("hello", "world")
+ 	e.Tags = append(e.Tags, "tag1", "tag2")
+ 	eventEncoded, err := encodeEvent(e)
+@@ -76,6 +80,7 @@ func TestNewEventTagsAppend(t *testing.T) {
+ }
+ 
+ func TestNewEventEmptyText(t *testing.T) {
++	withoutOriginGlobals(t)
+ 	e := NewEvent("hello", "")
+ 	e.Tags = append(e.Tags, "tag1", "tag2")
+ 	eventEncoded, err := encodeEvent(e)
+diff --git a/statsd/test_helpers_test.go b/statsd/test_helpers_test.go
+index 4708847..9253987 100644
+--- a/statsd/test_helpers_test.go
++++ b/statsd/test_helpers_test.go
+@@ -641,7 +641,7 @@ func (ts *testServer) sendExtendedBasicAggregationMetricsWithPreAggregatedSample
+ 	client.DistributionSamples("distro2", []float64{5, 6}, tags, 0.5)
+ 
+ 	finalTags := ts.getFinalTags(tags...)
+-	return append(expectedMetrics, ts.namespace+"distro2:5:6|d|@0.5"+finalTags)
++	return append(expectedMetrics, ts.namespace+"distro2:5:6|d|@0.5"+finalTags+ts.getContainerID())
+ }
+ 
+ func patchContainerID(id string) {
+-- 
+2.43.0
+
