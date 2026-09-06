@@ -8,42 +8,22 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%ifarch riscv64
+%bcond dtbs  1
+%else
+%bcond dtbs  0
+%endif
 %bcond tools 1
 %bcond rust  1
 
-# Whether dtbs needed for arch
-%ifarch riscv64
-%global need_dtbs 1
-%else
-%global need_dtbs 0
-%endif
-
+# Overrides /usr/lib/rpm/openruyi/macros
 %global _lto_cflags %{nil}
-
-#### About Versioning
-#
-# CONFIG_LOCALVERSION_AUTO must not be set.
-# This ensures kernel build system never injects hash value generated from commit id.
-# This also bypass the KBUILD_BUILD_VERSION logic.
-#
 
 # Making flavored kernels by setting this one.
 # This will be included into `uname -r` so that multiple kernels will co-exist
-# %%global variant_name
+%global variant_name %nil
 
-# SHOULD NOT TOUCH
-%global kernel_local_version    %{?variant_name:%{variant_name}-}%{release}
-%global kernel_full_version     %{version}-%{kernel_local_version}
-
-%global kernel_make_flags LD=ld.bfd
-%global modpath /lib/modules/%{kernel_full_version}
-
-%if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
-    %global arch_suffix -rva20
-%else
-    %global arch_suffix -generic
-%endif
-
+# Managed under kernel-team-tools
 %global patchset_release 3
 %global config_version 1
 # Initial mainline tarballs omit the .0 that the kernel Makefile reports.
@@ -60,35 +40,13 @@ Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{upstream_ve
 #!RemoteAsset:  sha256:fde1cb23bfaa54c5aa50811eb7462119f1403834a343d8a10e62fac32db54e60
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/%{name}-v%{upstream_version}-%{patchset_release}.tar.gz
 
-BuildRequires:  gcc
-BuildRequires:  bison
-BuildRequires:  binutils
-BuildRequires:  glibc-devel
-BuildRequires:  make
-BuildRequires:  perl
-BuildRequires:  flex
-BuildRequires:  bc
-BuildRequires:  cpio
-BuildRequires:  dwarves
-BuildRequires:  gettext
-BuildRequires:  python3
-BuildRequires:  rsync
-BuildRequires:  tar
-BuildRequires:  xz
-BuildRequires:  zstd
-BuildRequires:  libdebuginfod-dummy-devel
-BuildRequires:  pkgconfig(ncurses)
-BuildRequires:  pkgconfig(libcap)
-BuildRequires:  pkgconfig(libssh)
-BuildRequires:  pkgconfig(libdw)
-BuildRequires:  pkgconfig(libelf)
-BuildRequires:  pkgconfig(libzstd)
-BuildRequires:  pkgconfig(python3)
-BuildRequires:  pkgconfig(slang)
-BuildRequires:  pkgconfig(zlib)
-BuildRequires:  pkgconfig(openssl)
-BuildRequires:  kmod
-BuildRequires:  rpm-config-openruyi
+BuildSystem:    linux
+# Extracted within %%prep
+BuildOption(conf):  %{_sourcedir}/defconfig
+
+BuildRequires:  openruyi-linux-build
+%linux_package_dependencies
+
 %if %{with tools}
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -104,62 +62,19 @@ BuildRequires:  pkgconfig(numa)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  systemtap-sdt-devel
 %endif
+
 %if %{with rust}
 BuildRequires:  bindgen
 BuildRequires:  cargo
 BuildRequires:  rust
 %endif
 
-# Meta-package: default installation
-Requires:       %{name}-core%{?_isa} = %{version}-%{release}
-Requires:       %{name}-modules%{?_isa} = %{version}-%{release}
-%if %{need_dtbs}
-Requires:       %{name}-dtbs%{?_isa} = %{version}-%{release}
-%endif
-
-# Meta-package: order of removal
-Requires(preun): %{name}-core%{?_isa} = %{version}-%{release}
-Requires(preun): %{name}-modules%{?_isa} = %{version}-%{release}
-%if %{need_dtbs}
-Requires(preun): %{name}-dtbs%{?_isa} = %{version}-%{release}
-%endif
-
-Requires(post):   kernel-install
-Requires(preun):  kernel-install
-
 %description
-This is a meta-package that handles standard kernel installation.
-To avoid the execution of kernel service scriptlet, please install
-%{name}-core%{?_isa}, %{name}-modules%{?_isa} instead.
-
-%package        core
-Summary:        The core Linux kernel image
-
-%description    core
-Contains the bootable kernel image (vmlinuz) and its Kconfig options.
-
-%package        modules
-Summary:        Kernel modules for the Linux kernel
-Requires:       %{name}-core%{?_isa} = %{version}-%{release}
-
-%description    modules
-Contains all the kernel modules (.ko files) and associated metadata for
-the hardware drivers and kernel features.
-
-%package        devel
-Summary:        Development files for building external kernel modules
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       dwarves
-
-%description    devel
-This package provides the kernel headers and Makefiles necessary to build
-external kernel modules against the installed kernel. The development files are
-located at %{_usrsrc}/kernels/%{kernel_full_version}, with symlinks provided under
-/lib/modules/%{kernel_full_version}/ for compatibility.
+This is the meta package that handles standard %{name} kernel installation.
 
 %if %{with tools}
 %package        tools
-Summary:        Set of tools for the Linux kernel
+Summary:        Set of tools for the %{name} kernel
 License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-only
 Provides:       perf = %{version}-%{release}
 Obsoletes:      perf < %{version}-%{release}
@@ -178,19 +93,8 @@ This package contains the libraries and header files for the
 tools/ directory from the kernel source.
 %endif
 
-%if %{need_dtbs}
-%package        dtbs
-Summary:        Devicetree blob files from Linux sources
-Requires:       %{name}-core%{?_isa} = %{version}-%{release}
-
-%description    dtbs
-This package provides the DTB files built from Linux sources that may be used
-for booting.
-%endif
-
 %prep
-%autosetup -n %{name}-%{upstream_version} -N
-
+%setup -n %{name}-%{upstream_version}
 patchset_dir=.openruyi-patchset
 mkdir "${patchset_dir}"
 tar -xf "%{SOURCE1}" -C "${patchset_dir}"
@@ -198,20 +102,18 @@ while IFS= read -r patch_name; do
     echo "Applying patch: ${patch_name}"
     patch -p1 < "${patchset_dir}/${patch_name}" || exit 1
 done < "${patchset_dir}/series"
-cp -v "${patchset_dir}/config.%{_arch}%{arch_suffix}" .config
-rm -rf "${patchset_dir}"
 
-echo "-%{kernel_local_version}" > localversion
+%if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
+    %define arch_suffix -rva20
+%else
+    %define arch_suffix -generic
+%endif
+cp -v "${patchset_dir}/config.%{_arch}%{arch_suffix}" %{_sourcedir}/defconfig
 
-%conf
-%make_build %{kernel_make_flags} olddefconfig
-
-%build
+%build -a
 %if %{with tools}
-# build tools
-%make_build -C tools EXTRA_CFLAGS="%{optflags}" bootconfig gpio iio spi tmon
-%make_build -C tools LD=ld.bfd EXTRA_CFLAGS="%{optflags} -Wno-array-bounds -Wno-maybe-uninitialized" perf
-%make_build -C tools/power/cpupower EXTRA_CFLAGS="%{optflags}" CPUFRQ_BENCH=false VERSION=%{version}
+%make_build -C tools bootconfig gpio iio spi tmon perf
+%make_build -C tools/power/cpupower CPUFRQ_BENCH=false VERSION=%{version}
 
 pushd tools/usb/usbip
 ./autogen.sh
@@ -220,96 +122,19 @@ pushd tools/usb/usbip
 popd
 %endif
 
-# build kernel
-
-%make_build %{kernel_make_flags}
-
-%if %{need_dtbs}
-%make_build %{kernel_make_flags} dtbs
-%endif
-
-%install
+%install -a
 %if %{with tools}
 # install tools
-make -C tools/power/cpupower DESTDIR=%{buildroot} libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false VERSION=%{version} install
-make -C tools DESTDIR=%{buildroot} bootconfig_install gpio_install iio_install spi_install
-make -C tools INSTALL_ROOT=%{buildroot} tmon_install
-make -C tools/perf LD=ld.bfd EXTRA_CFLAGS="%{optflags} -Wno-array-bounds -Wno-maybe-uninitialized" DESTDIR=%{buildroot} prefix=%{_prefix} install-bin
-make -C tools/usb/usbip DESTDIR=%{buildroot} install
+%make_build -C tools/power/cpupower DESTDIR=%{buildroot} libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false VERSION=%{version} install
+%make_build -C tools DESTDIR=%{buildroot} bootconfig_install gpio_install iio_install spi_install
+%make_build -C tools INSTALL_ROOT=%{buildroot} tmon_install
+%make_build -C tools/perf DESTDIR=%{buildroot} prefix=%{_prefix} install-bin
+%make_build -C tools/usb/usbip DESTDIR=%{buildroot} install
 find %{buildroot}%{_libdir} -type f -name "*.a" -delete -print
 %find_lang cpupower --generate-subpackages
 %endif
 
-# install kernel
-
-%define ksrcpath %{buildroot}%{_usrsrc}/kernels/%{kernel_full_version}
-install -d %{buildroot}%{modpath} %{ksrcpath}
-
-%make_build %{kernel_make_flags} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
-
-%if %{need_dtbs}
-%make_build %{kernel_make_flags} INSTALL_DTBS_PATH=%{buildroot}%{modpath}/dtb dtbs_install
-%endif
-
-%make_build run-command %{kernel_make_flags} KBUILD_RUN_COMMAND="$(pwd)/scripts/package/install-extmod-build %{ksrcpath}"
-
-pushd %{buildroot}%{modpath}
-rm -f build source
-ln -sf %{_usrsrc}/kernels/%{kernel_full_version} build
-ln -sf %{_usrsrc}/kernels/%{kernel_full_version} source
-popd
-
-install -Dm644 $(make %{kernel_make_flags} -s image_name) %{buildroot}%{modpath}/vmlinuz
-zstd -f .config -o %{buildroot}%{modpath}/config.zst
-
-echo "Module signing would happen here for version %{kernel_full_version}."
-
-%pretrans
-# Cleanup state file ahead to avoid leftovers from previous failure.
-rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
-
-%post
-# Workaround reinstalling: let %%preun know that the same package is installed just before.
-touch "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
-
-%{_bindir}/kernel-install add %{kernel_full_version} %{modpath}/vmlinuz
-
-%preun
-# Why not "if [ $1 -eq 0 ]"? It breaks kernel removal when multi versions were installed.
-if [ ! -e "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed" ]; then
-    %{_bindir}/kernel-install remove %{kernel_full_version}
-fi
-
-%posttrans
-rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_installed"
-
-%files
-%license COPYING
-%doc README
-
-%files core
-%dir %{modpath}
-%{modpath}/vmlinuz
-%{modpath}/config.zst
-
-%files modules
-%{modpath}/kernel
-%{modpath}/modules.builtin
-%{modpath}/modules.builtin.modinfo
-%{modpath}/modules.order
-
-%files devel
-%{_usrsrc}/kernels/%{kernel_full_version}/
-%{modpath}/build
-%{modpath}/source
-
-%if %{need_dtbs}
-%files dtbs
-%{modpath}/dtb
-%endif
-
 %if %{with tools}
-# linux tools
 %files tools -f cpupower.lang
 %license COPYING
 %config %{_sysconfdir}/cpupower-service.conf
@@ -349,6 +174,8 @@ rm -f "%{_localstatedir}/lib/rpm-state/%{name}-%{kernel_full_version}.just_insta
 %{_libdir}/libcpupower.so
 %{_libdir}/libusbip.so
 %endif
+
+%linux_package_implementation
 
 %changelog
 %autochangelog
