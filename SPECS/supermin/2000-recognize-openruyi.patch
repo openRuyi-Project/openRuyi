@@ -1,0 +1,36 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] rpm: recognize openRuyi and exercise its package handler
+
+openRuyi uses RPM and DNF5. Reuse the Fedora RPM handler and run
+the existing RPM appliance tests on openRuyi as well.
+
+This patch was authored downstream for openRuyi and has not been submitted
+upstream.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+
+diff --git a/src/ph_rpm.ml b/src/ph_rpm.ml
+--- a/src/ph_rpm.ml
++++ b/src/ph_rpm.ml
+@@ -32,7 +32,7 @@
+ let fedora_detect () =
+   Config.rpm <> "no" && Config.rpm2cpio <> "no" && rpm_is_available () &&
+     (Config.yumdownloader <> "no" || Config.dnf <> "no") &&
+-    (List.mem (Os_release.get_id ()) [ "fedora"; "rhel"; "centos"; "openEuler"; "anolis"; "KylinSecOS" ] ||
++    (List.mem (Os_release.get_id ()) [ "fedora"; "rhel"; "centos"; "openruyi"; "openEuler"; "anolis"; "KylinSecOS" ] ||
+      try
+        (stat "/etc/redhat-release").st_kind = S_REG ||
+        (stat "/etc/fedora-release").st_kind = S_REG ||
+diff --git a/tests/test-harder.sh b/tests/test-harder.sh
+--- a/tests/test-harder.sh
++++ b/tests/test-harder.sh
+@@ -28,7 +28,7 @@
+ if [ -f /etc/os-release ]; then
+     distro=$(. /etc/os-release && echo $ID)
+     case "$distro" in
+-        fedora|rhel|centos) distro=redhat ;;
++        fedora|rhel|centos|openruyi) distro=redhat ;;
+         opensuse*|sled|sles) distro=suse ;;
+         ubuntu) distro=debian ;;
+         openmandriva) distro=openmandriva ;;
