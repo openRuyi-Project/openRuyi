@@ -1,0 +1,43 @@
+From 35f9797ba86b7016cc4df23f997defd15ee42ebe Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 03:17:54 +0800
+Subject: [PATCH] cmd/telemetrygen: fix canonical import comments
+
+Go module mode ignores canonical import comments, but GOPATH mode validates
+them. Update two stale comments so telemetrygen can also be built in the
+offline GOPATH layout used by openRuyi.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cmd/telemetrygen/config.go            | 2 +-
+ cmd/telemetrygen/pkg/traces/worker.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmd/telemetrygen/config.go b/cmd/telemetrygen/config.go
+index 20df54dabf..0412b842fa 100644
+--- a/cmd/telemetrygen/config.go
++++ b/cmd/telemetrygen/config.go
+@@ -4,7 +4,7 @@
+ 
+ //go:generate make mdatagen
+ 
+-package main // import "github.com/open-telemetry/opentelemetry-collector-contrib/telemetrygen/internal/telemetrygen"
++package main // import "github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen"
+ 
+ import (
+ 	"os"
+diff --git a/cmd/telemetrygen/pkg/traces/worker.go b/cmd/telemetrygen/pkg/traces/worker.go
+index a5aee180ca..cdd068ce8a 100644
+--- a/cmd/telemetrygen/pkg/traces/worker.go
++++ b/cmd/telemetrygen/pkg/traces/worker.go
+@@ -1,7 +1,7 @@
+ // Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package traces // import "github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen/internal/traces"
++package traces // import "github.com/open-telemetry/opentelemetry-collector-contrib/cmd/telemetrygen/pkg/traces"
+ 
+ import (
+ 	"context"
+-- 
+2.43.0
