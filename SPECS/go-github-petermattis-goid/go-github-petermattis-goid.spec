@@ -13,6 +13,7 @@ Release:        %autorelease
 Summary:        Retrieve the current goroutine ID
 License:        Apache-2.0
 URL:            https://github.com/petermattis/goid
+VCS:            git:https://github.com/petermattis/goid.git
 #!RemoteAsset:  sha256:5870318c822a581c4dddd26d1add02423a2a82de79e9916670a35b613fb12736
 Source0:        https://github.com/petermattis/goid/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
