@@ -12,7 +12,7 @@ Summary:        Support Utilities for Kernel nfsd
 License:        GPL-2.0-or-later
 URL:            https://kernel.org/pub/linux/utils/nfs-utils/
 VCS:            git:git://git.linux-nfs.org/projects/steved/nfs-utils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:11c4cc598a434d7d340bad3e072a373ba1dcc2c49f855d44b202222b78ecdbf5
 Source0:        https://kernel.org/pub/linux/utils/nfs-utils/%{version}/nfs-utils-%{version}.tar.xz
 Source1:        sysconfig.nfs
 Source2:        idmapd.conf
@@ -65,6 +65,8 @@ the NFS kernel server utilities.
 Summary:        Support Utilities for NFS Client
 Requires:       keyutils
 Requires:       rpcbind
+# for 60-nfs.rules
+Requires:       /usr/bin/sysctl
 Requires(pre):  systemd-sysusers
 
 %description -n nfs-client
@@ -288,4 +290,4 @@ fi
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
