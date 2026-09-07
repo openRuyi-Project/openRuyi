@@ -12,7 +12,7 @@ Summary:        Utilities for devices that use SCSI command sets
 License:        GPL-2.0-or-later AND BSD-2-Clause
 URL:            https://sg.danny.cz/sg/sg3_utils.html
 VCS:            git:https://github.com/doug-gilbert/sg3_utils
-#!RemoteAsset
+#!RemoteAsset:  sha256:d6b9a41690d540e58d1e99c26ac8db37336c849ef6a03f96ea48ca2fe334dbfa
 Source0:        https://sg.danny.cz/sg/p/sg3_utils-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -23,6 +23,8 @@ BuildRequires:  systemd
 
 # For compatibility
 Provides:       %{name}-libs = %{version}-%{release}
+# for 55-scsi-sg3_id.rules
+Requires:       /usr/bin/logger
 
 %description
 Collection of Linux utilities for devices that use the SCSI command set.
@@ -88,4 +90,4 @@ install -p -m 755 scripts/fc_wwpn_id %{buildroot}%{_udevrulesdir}/..
 %{_libdir}/libsgutils2.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
