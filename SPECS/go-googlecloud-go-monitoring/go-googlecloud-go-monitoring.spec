@@ -9,12 +9,12 @@
 %define go_source_subdir monitoring
 
 Name:           go-googlecloud-go-monitoring
-Version:        1.29.0
+Version:        1.30.0
 Release:        %autorelease
 Summary:        Monitoring client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:8d559272531eb275071c834efdcf938937035491a482a9cc4dd497d4eec6a6b2
+#!RemoteAsset:  sha256:3a448e4a388e73a07b9f46cf3b96dbe6380d7c831b426dccdebf9b1fb6d967a9
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/monitoring/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
