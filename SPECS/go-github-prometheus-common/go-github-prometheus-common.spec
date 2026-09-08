@@ -11,12 +11,12 @@
 %define go_test_exclude_glob github.com/prometheus/common/config*
 
 Name:           go-github-prometheus-common
-Version:        0.69.0
+Version:        0.71.0
 Release:        %autorelease
 Summary:        Go libraries shared across Prometheus components and libraries.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/common
-#!RemoteAsset:  sha256:327ca7a5df6d625e920e3f138d56e2b4e81e74be7b9b8f02a94f07ad025b0791
+#!RemoteAsset:  sha256:72f597ad183c0c348d7e94a18a79ed7d47c78f7cb5b7f7f229808a92ab6e6389
 Source0:        https://github.com/prometheus/common/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
