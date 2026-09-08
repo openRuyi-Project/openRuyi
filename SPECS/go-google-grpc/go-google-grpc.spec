@@ -30,12 +30,12 @@
 }
 
 Name:           go-google-grpc
-Version:        1.81.1
+Version:        1.83.2
 Release:        %autorelease
 Summary:        The Go language implementation of gRPC. HTTP/2 based RPC
 License:        Apache-2.0
 URL:            https://github.com/grpc/grpc-go
-#!RemoteAsset:  sha256:cf93868b1243053559399325cdcd369948c4cefaefae35ac66b9630070c7a0a6
+#!RemoteAsset:  sha256:e37f94d2b50e040523caebc9ab703d931f6d3bf037eae156274240066ffd6e89
 Source0:        https://github.com/grpc/grpc-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
