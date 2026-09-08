@@ -1,0 +1,54 @@
+From 31ce1a167f7265be5ea9672cb88e1dae7b4fe25c Mon Sep 17 00:00:00 2001
+From: Nick Ripley <nick.ripley@datadoghq.com>
+Date: Thu, 18 Jan 2024 07:32:28 -0500
+Subject: [PATCH 1/2] profiler/internal/pprofutils: work around breaking pprof
+ change (#2515)
+
+The Google pprof library introduced a breaking change, adding an extra
+argument to a function we use. We currently have "smoke tests" which
+assert that we can unconditionally upgrade every dependency to the
+latest version and still compile.
+
+This commit is meant to satisify that test. We don't actually *need* a
+newer version of the pprof library. But there is a possibility (however
+unlikely) that a user wants to handle pprofs separately of our library
+using that library. Either we upgrade our dependency, breaking them, or
+they upgrade their dependency, breaking us. To avoid either issue, use
+an interface assertion to support either version of the API.
+
+(cherry picked from commit a83fc8bb30c3337fcd624e24f546913ca0bfb538)
+---
+ profiler/internal/pprofutils/protobuf.go | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/profiler/internal/pprofutils/protobuf.go b/profiler/internal/pprofutils/protobuf.go
+index 9aed70915..e49760dda 100644
+--- a/profiler/internal/pprofutils/protobuf.go
++++ b/profiler/internal/pprofutils/protobuf.go
+@@ -33,8 +33,21 @@ func (p Protobuf) Convert(protobuf *profile.Profile, text io.Writer) error {
+ 		}
+ 		w.WriteString(strings.Join(sampleTypes, " ") + "\n")
+ 	}
+-	if err := protobuf.Aggregate(true, true, false, false, false); err != nil {
+-		return err
++	// This is a workaround for a breaking change in the pprof library
++	// when it added columns as an additional attribute for aggregation.
++	if pb, ok := any(protobuf).(interface {
++		Aggregate(bool, bool, bool, bool, bool) error
++	}); ok {
++		if err := pb.Aggregate(true, true, false, false, false); err != nil {
++			return err
++		}
++	}
++	if pb, ok := any(protobuf).(interface {
++		Aggregate(bool, bool, bool, bool, bool, bool) error
++	}); ok {
++		if err := pb.Aggregate(true, true, false, false, false, false); err != nil {
++			return err
++		}
+ 	}
+ 	protobuf = protobuf.Compact()
+ 	sort.Slice(protobuf.Sample, func(i, j int) bool {
+-- 
+2.43.0
+
