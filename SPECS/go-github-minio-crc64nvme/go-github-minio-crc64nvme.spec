@@ -7,12 +7,12 @@
 %define go_import_path  github.com/minio/crc64nvme
 
 Name:           go-github-minio-crc64nvme
-Version:        1.0.1
+Version:        1.1.1
 Release:        %autorelease
 Summary:        CRC64 checksums using the NVMe polynomial
 License:        Apache-2.0
 URL:            https://github.com/minio/crc64nvme
-#!RemoteAsset:  sha256:41e2093b4ea48b0315e97df7568b70c7547e33b92aca1d5bd93a2f2de70c5d43
+#!RemoteAsset:  sha256:3f9bdaafd423fb8aa2c1440da2a3dadad81bde0a46d5fa6396f026c1a612f8d2
 Source0:        https://github.com/minio/crc64nvme/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
