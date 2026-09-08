@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Quick helpers for testing Go applications
 License:        MIT
 URL:            https://github.com/frankban/quicktest
-#!RemoteAsset
+#!RemoteAsset:  sha256:c77b45b267ac5f5e03d00ab1b3f944d68c74e91601a1c8121e49040ff89d8b0a
 Source0:        https://github.com/frankban/quicktest/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -34,10 +34,14 @@ Requires:       go(github.com/kr/pretty)
 This package quicktest provides a collection of Go helpers for writing
 tests.
 
+%check -p
+# Keep encoding/json v1 semantics for tests incompatible with Go 1.27 jsonv2.
+export GOEXPERIMENT=nojsonv2
+
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
