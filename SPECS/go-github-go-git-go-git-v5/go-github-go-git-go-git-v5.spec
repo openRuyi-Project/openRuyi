@@ -37,6 +37,8 @@ Source0:        https://github.com/go-git/go-git/archive/refs/tags/v%{version}.t
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# https://github.com/go-git/go-git/commit/4ae786a01dfb96289854ddc6460981531a6fe53c
+Patch0:         0001-Compute-zlib-output-in-tests-instead-of-hardcoding-it.patch
 # The packaged go-git/gcfg is newer than upstream's pinned pseudo-version and
 # accepts empty subsection names; adjust that single compatibility assertion.
 # - HNO3Miracle
