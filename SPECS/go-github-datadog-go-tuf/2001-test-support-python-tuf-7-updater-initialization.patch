@@ -1,0 +1,42 @@
+From d832239bbd828fa6d877d5e4b8be1ff636d333be Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 05:41:55 +0800
+Subject: [PATCH] test: support Python TUF 7 updater initialization
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ client/python_interop/testdata/python-tuf-v2.0.0/client.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/client/python_interop/testdata/python-tuf-v2.0.0/client.py b/client/python_interop/testdata/python-tuf-v2.0.0/client.py
+index 93e23a0..6870a6f 100644
+--- a/client/python_interop/testdata/python-tuf-v2.0.0/client.py
++++ b/client/python_interop/testdata/python-tuf-v2.0.0/client.py
+@@ -7,6 +7,7 @@
+ # https://github.com/theupdateframework/python-tuf/blob/v1.0.0/examples/client_example/client_example.py
+ 
+ import argparse
++import inspect
+ 
+ from typing import List
+ from pathlib import Path
+@@ -20,12 +21,15 @@ def update_client(repo: str, targets: List[str]):
+     metadata_dir = Path("tufrepo/metadata/current")
+     targets_dir = Path("tuftargets")
+     targets_dir.mkdir()
+-    updater = Updater(
++    updater_args = dict(
+         metadata_dir=str(metadata_dir),
+         metadata_base_url=f"{repo}/repository/",
+         target_base_url=f"{repo}/repository/targets/",
+         target_dir=str(targets_dir),
+     )
++    if "bootstrap" in inspect.signature(Updater).parameters:
++        updater_args["bootstrap"] = None
++    updater = Updater(**updater_args)
+ 
+     updater.refresh()
+     for target in targets:
+-- 
+2.43.0
+

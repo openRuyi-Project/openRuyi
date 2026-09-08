@@ -1,0 +1,26 @@
+From a4a2e11559b6aa1b1af4fda921eb653aa09277d2 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 15:43:33 +0800
+Subject: [PATCH] config: use compatible critical logger call
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ config.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.go b/config.go
+index 5adc30e..e5ab9f1 100644
+--- a/config.go
++++ b/config.go
+@@ -47,7 +47,7 @@ type eureka struct {
+ func ReadConfig(loc string) (conf Config, err error) {
+ 	err = gcfg.ReadFileInto(&conf, loc)
+ 	if err != nil {
+-		log.Criticalf("Unable to read config file Error: %s", err.Error())
++		log.Critical("Unable to read config file Error: %s", err.Error())
+ 		return conf, err
+ 	}
+ 	conf.fillDefaults()
+-- 
+2.43.0
+

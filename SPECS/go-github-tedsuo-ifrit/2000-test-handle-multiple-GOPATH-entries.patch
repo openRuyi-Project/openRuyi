@@ -1,0 +1,65 @@
+From 4d395aeb580c4f73029c50f3922ec26aa936db3d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 22:32:25 +0800
+Subject: [PATCH] test: handle multiple GOPATH entries
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ grpc_server/server_test.go      | 3 ++-
+ http_server/http_server_test.go | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/grpc_server/server_test.go b/grpc_server/server_test.go
+index efc739f..c8c1aa5 100644
+--- a/grpc_server/server_test.go
++++ b/grpc_server/server_test.go
+@@ -11,6 +11,7 @@ import (
+ 
+ 	"os"
+ 	"path"
++	"path/filepath"
+ 
+ 	. "github.com/onsi/ginkgo/v2"
+ 	. "github.com/onsi/gomega"
+@@ -31,7 +32,7 @@ var _ = Describe("GRPCServer", func() {
+ 	BeforeEach(func() {
+ 		var err error
+ 
+-		basePath := path.Join(os.Getenv("GOPATH"), "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
++		basePath := path.Join(filepath.SplitList(os.Getenv("GOPATH"))[0], "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
+ 		certFile := path.Join(basePath, "server.crt")
+ 		keyFile := path.Join(basePath, "server.key")
+ 
+diff --git a/http_server/http_server_test.go b/http_server/http_server_test.go
+index 920d035..3877f63 100644
+--- a/http_server/http_server_test.go
++++ b/http_server/http_server_test.go
+@@ -7,6 +7,7 @@ import (
+ 	"net/http"
+ 	"os"
+ 	"path"
++	"path/filepath"
+ 	"syscall"
+ 
+ 	. "github.com/onsi/ginkgo/v2"
+@@ -165,7 +166,7 @@ var _ = Describe("HttpServer", func() {
+ 			var socketPath string
+ 
+ 			BeforeEach(func() {
+-				basePath := path.Join(os.Getenv("GOPATH"), "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
++				basePath := path.Join(filepath.SplitList(os.Getenv("GOPATH"))[0], "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
+ 				certFile := path.Join(basePath, "server.crt")
+ 				keyFile := path.Join(basePath, "server.key")
+ 
+@@ -215,7 +216,7 @@ var _ = Describe("HttpServer", func() {
+ 			var responses chan httpResponse
+ 
+ 			BeforeEach(func() {
+-				basePath := path.Join(os.Getenv("GOPATH"), "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
++				basePath := path.Join(filepath.SplitList(os.Getenv("GOPATH"))[0], "src", "github.com", "tedsuo", "ifrit", "http_server", "test_certs")
+ 				certFile := path.Join(basePath, "server.crt")
+ 				keyFile := path.Join(basePath, "server.key")
+ 
+-- 
+2.43.0
+

@@ -1,0 +1,26 @@
+From f93fe121c73c4e683eee052c9e64ac3de0ae7263 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 08:49:51 +0800
+Subject: [PATCH 2/2] tests: associate pickle example with exported function
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ pickles_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pickles_test.go b/pickles_test.go
+index add78b9..8f7d8a0 100644
+--- a/pickles_test.go
++++ b/pickles_test.go
+@@ -7,7 +7,7 @@ import (
+ 	"strings"
+ )
+ 
+-func ExampleCompilePickles() {
++func ExamplePickles() {
+ 
+ 	input := `Feature: test
+ 
+-- 
+2.43.0
+
