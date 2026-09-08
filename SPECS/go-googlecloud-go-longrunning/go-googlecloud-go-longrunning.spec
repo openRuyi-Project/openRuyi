@@ -9,12 +9,12 @@
 %define go_source_subdir longrunning
 
 Name:           go-googlecloud-go-longrunning
-Version:        1.0.0
+Version:        1.2.0
 Release:        %autorelease
 Summary:        Long-running operation clients for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:97922f03412c49b0f13f83b8f6866f4ce7663663024bf57819add8f8ecc22f53
+#!RemoteAsset:  sha256:0ecce286f361b0bcd089572f3decb1e05948dda0e6ad35ddcd6e3d019d56bc16
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/longrunning/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
