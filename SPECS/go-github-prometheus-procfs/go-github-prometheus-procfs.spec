@@ -9,7 +9,7 @@
 %define commit_id       3c943fdba94a978d990553698da4add62bb11a30
 
 Name:           go-github-prometheus-procfs
-Version:        0.19.2+git20260702.3c943fd
+Version:        0.22.0
 Release:        %autorelease
 Summary:        procfs provides functions to retrieve system, kernel and process metrics from the pseudo-filesystem proc.
 License:        Apache-2.0
