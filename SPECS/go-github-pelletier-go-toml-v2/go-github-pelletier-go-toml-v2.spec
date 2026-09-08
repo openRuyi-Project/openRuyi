@@ -9,12 +9,12 @@
 %define go_import_path  github.com/pelletier/go-toml/v2
 
 Name:           go-github-pelletier-go-toml-v2
-Version:        2.4.0
+Version:        2.4.3
 Release:        %autorelease
 Summary:        Go library for the TOML file format
 License:        MIT
 URL:            https://github.com/pelletier/go-toml
-#!RemoteAsset:  sha256:3e08afb954c489e09dc94e403ab727d7f5348e1369a764237ac4158ac4e5ac4f
+#!RemoteAsset:  sha256:0778701c7c7d3261510da7f622c20bfc17c204c80134c1e032aacc99e14c8b35
 Source0:        https://github.com/pelletier/go-toml/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
