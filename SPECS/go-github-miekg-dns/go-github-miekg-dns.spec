@@ -8,12 +8,12 @@
 %define go_import_path  github.com/miekg/dns
 
 Name:           go-github-miekg-dns
-Version:        1.1.72
+Version:        1.1.73
 Release:        %autorelease
 Summary:        DNS library in Go
 License:        BSD-3-Clause
 URL:            https://github.com/miekg/dns
-#!RemoteAsset
+#!RemoteAsset:  sha256:7aa6cfd69a1235ab2b3f9fc2015a2d8d92068d4a241283cb7ac5d6d22c9b84a5
 Source0:        https://github.com/miekg/dns/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -41,4 +41,4 @@ We try to keep the "master" branch as sane as possible and at the bleeding edge 
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
