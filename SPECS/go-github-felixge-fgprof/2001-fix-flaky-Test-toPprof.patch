@@ -1,0 +1,24 @@
+From 80d4e400ebde5afbbf9cab42f91fc889d91e325d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Felix=20Geisend=C3=B6rfer?= <felix@felixge.de>
+Date: Fri, 2 May 2025 14:44:55 +0300
+Subject: [PATCH] fix: flaky Test_toPprof (#36)
+
+---
+ fgprof.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fgprof.go b/fgprof.go
+index 459787b..728f508 100644
+--- a/fgprof.go
++++ b/fgprof.go
+@@ -205,6 +205,10 @@ nextStack:
+ 		}
+ 		stacks = append(stacks, ws)
+ 	}
++	// sort stacks by count to create stable output for testing purposes.
++	sort.Slice(stacks, func(i, j int) bool {
++		return stacks[i].count < stacks[j].count
++	})
+ 	return stacks
+ }
+ 

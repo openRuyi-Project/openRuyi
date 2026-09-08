@@ -21,6 +21,8 @@ BuildSystem:    golangmodules
 
 # https://github.com/felixge/fgprof/pull/39 - Jvle
 Patch2000:      2000-fix-handle-zero-sample-rate-in-pprof-export.patch
+# https://github.com/felixge/fgprof/commit/80d4e400ebde5afbbf9cab42f91fc889d91e325d
+Patch2001:      2001-fix-flaky-Test-toPprof.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
