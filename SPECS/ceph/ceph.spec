@@ -86,6 +86,8 @@ VCS:            git:https://github.com/ceph/ceph
 # tagged releases, so we reassemble from per-submodule archives below.
 #!RemoteAsset:  sha256:3e589afd6712505e9f988bea235c5dcb39de65dba1b22280c3c23124d71c3a8c
 Source0:        https://github.com/ceph/ceph/archive/%{commit}/ceph-%{commit}.tar.gz
+Source1:        ceph.sysusers
+Source2:        cephadm.sysusers
 %if %{without system_boost}
 #!RemoteAsset:  sha256:af57be25cb4c4f4b413ed692fe378affb4352ea50fbe294a11ef548f4d527d89
 Source3:        https://archives.boost.io/release/%{boost_version}/source/boost_%{boost_underscore}.tar.bz2
@@ -478,6 +480,7 @@ Base is the package that includes all the files shared amongst ceph servers
 
 %package     -n cephadm
 Summary:        Utility to bootstrap Ceph clusters
+Requires(pre):  systemd-sysusers
 Requires:       lvm2
 Requires:       python3
 Requires:       openssh-server
@@ -510,6 +513,7 @@ Requires:       python-cephfs%{?_isa} = %{version}-%{release}
 Requires:       python-rgw%{?_isa} = %{version}-%{release}
 Requires:       python-ceph-common = %{version}-%{release}
 Requires:       python3dist(prettytable)
+Requires(pre):  systemd-sysusers
 %{?systemd_requires}
 Provides:       group(ceph)
 Provides:       user(ceph)
@@ -815,15 +819,6 @@ mv src/boost_%{boost_underscore} src/boost
 # embedded version string.
 printf '%s\n%s\n' %{commit} v%{version} > src/.git_version
 
-# Create two sysusers.d config files
-cat >ceph.sysusers.conf <<EOF
-g ceph 167
-u ceph 167 'Ceph storage service' %{_localstatedir}/lib/ceph -
-EOF
-cat >cephadm.sysusers.conf <<EOF
-u cephadm - 'cephadm user for mgr/cephadm' %{_sharedstatedir}/cephadm /bin/bash
-EOF
-
 %check
 %if %{with make_check}
 export CEPH_PYTHON_SYSTEM_SITE=true
@@ -847,8 +842,8 @@ install -m 0644 -D COPYING %{buildroot}%{_docdir}/ceph/COPYING
 install -m 0644 -D etc/sysctl/90-ceph-osd.conf %{buildroot}%{_sysctldir}/90-ceph-osd.conf
 install -m 0755 -D src/tools/rbd_nbd/rbd-nbd_quiesce %{buildroot}%{_libexecdir}/rbd-nbd/rbd-nbd_quiesce
 
-install -m 0644 -D ceph.sysusers.conf %{buildroot}%{_sysusersdir}/ceph.conf
-install -m 0644 -D cephadm.sysusers.conf %{buildroot}%{_sysusersdir}/cephadm.conf
+install -m 0644 -D %{SOURCE1} %{buildroot}%{_sysusersdir}/ceph.conf
+install -m 0644 -D %{SOURCE2} %{buildroot}%{_sysusersdir}/cephadm.conf
 
 mkdir -p %{buildroot}%{_sharedstatedir}/cephadm
 chmod 0700 %{buildroot}%{_sharedstatedir}/cephadm
@@ -977,6 +972,9 @@ if [ $1 -ge 1 ] ; then
     /usr/bin/systemctl try-restart ceph-immutable-object-cache@.service > /dev/null 2>&1 || :
   fi
 fi
+
+%pre -n cephadm
+%sysusers_create_package cephadm %{SOURCE2}
 
 %files -n cephadm
 %{_sbindir}/cephadm
@@ -1110,11 +1108,7 @@ fi
 %endif
 
 %pre common
-CEPH_GROUP_ID=167
-CEPH_USER_ID=167
-/usr/sbin/groupadd ceph -g $CEPH_GROUP_ID -o -r 2>/dev/null || :
-/usr/sbin/useradd ceph -u $CEPH_USER_ID -o -r -g ceph -s /sbin/nologin -c "Ceph daemons" -d %{_localstatedir}/lib/ceph 2>/dev/null || :
-exit 0
+%sysusers_create_package ceph %{SOURCE1}
 
 %post common
 %tmpfiles_create %{_tmpfilesdir}/ceph-common.conf
