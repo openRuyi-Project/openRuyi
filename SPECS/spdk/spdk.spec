@@ -40,6 +40,8 @@ BuildRequires:  pkgconfig(libisal_crypto)
 BuildRequires:  pkgconfig(libibverbs)
 BuildRequires:  pkgconfig(librdmacm)
 BuildRequires:  pkgconfig(libiscsi)
+BuildRequires:  pkgconfig(liburing)
+BuildRequires:  ceph-devel
 
 Requires:       dpdk
 Requires:       numactl
@@ -99,6 +101,8 @@ export CXX="g++ -fuse-ld=bfd"
     --with-dpdk \
     --with-rdma \
     --with-iscsi-initiator \
+    --with-uring \
+    --with-rbd \
     --disable-examples \
     --disable-tests \
     --disable-unit-tests \
@@ -160,7 +164,9 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_bdev_nvme.pc
 %{_libdir}/pkgconfig/spdk_bdev_passthru.pc
 %{_libdir}/pkgconfig/spdk_bdev_raid.pc
+%{_libdir}/pkgconfig/spdk_bdev_rbd.pc
 %{_libdir}/pkgconfig/spdk_bdev_split.pc
+%{_libdir}/pkgconfig/spdk_bdev_uring.pc
 %{_libdir}/pkgconfig/spdk_bdev_virtio.pc
 %{_libdir}/pkgconfig/spdk_bdev_zone_block.pc
 %{_libdir}/pkgconfig/spdk_blob.pc
@@ -214,6 +220,7 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_sock.pc
 %{_libdir}/pkgconfig/spdk_sock_modules.pc
 %{_libdir}/pkgconfig/spdk_sock_posix.pc
+%{_libdir}/pkgconfig/spdk_sock_uring.pc
 %{_libdir}/pkgconfig/spdk_syslibs.pc
 %{_libdir}/pkgconfig/spdk_thread.pc
 %{_libdir}/pkgconfig/spdk_trace.pc
