@@ -9,12 +9,12 @@
 %define go_test_exclude github.com/smallstep/pkcs7
 
 Name:           go-github-smallstep-pkcs7
-Version:        0.2.1
+Version:        0.2.3
 Release:        %autorelease
 Summary:        PKCS#7 implementation in Go
 License:        MIT
 URL:            https://github.com/smallstep/pkcs7
-#!RemoteAsset:  sha256:3c774ced859b47a40690e09345a311e3913b45ba69e6fe976a4d26a669ff3d3a
+#!RemoteAsset:  sha256:fea1852e1ce516ad5574cfca9a66b0d67b43fef343397bfda616ad593e74e752
 Source0:        https://github.com/smallstep/pkcs7/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
