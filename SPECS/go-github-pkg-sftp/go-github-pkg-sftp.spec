@@ -8,12 +8,12 @@
 %define go_import_path  github.com/pkg/sftp
 
 Name:           go-github-pkg-sftp
-Version:        1.13.10
+Version:        1.13.11
 Release:        %autorelease
 Summary:        SFTP support for the go.crypto/ssh package
 License:        BSD-2-Clause
 URL:            https://github.com/pkg/sftp
-#!RemoteAsset
+#!RemoteAsset:  sha256:9d433b45c4bf4401354f2a8194d2d48565f6b84f5c0ea30f493855946aacee7f
 Source0:        https://github.com/pkg/sftp/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -44,4 +44,4 @@ for serving files from the filesystem.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
