@@ -9,12 +9,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-urfave-cli
-Version:        1.22.12
+Version:        1.22.17
 Release:        %autorelease
 Summary:        Declarative command line library for Go
 License:        MIT
 URL:            https://github.com/urfave/cli
-#!RemoteAsset:  sha256:8c6fccbffd8830987eed79da995b5626a9ee09cb6af95055a7658068c53c1dca
+#!RemoteAsset:  sha256:44e20f78e0d399014591e1d0bd3c520dfff65a27ec2ad1310649eca5e56521e4
 Source0:        https://github.com/urfave/cli/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
