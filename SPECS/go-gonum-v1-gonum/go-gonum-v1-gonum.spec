@@ -13,12 +13,12 @@
 }
 
 Name:           go-gonum-v1-gonum
-Version:        0.16.0
+Version:        0.17.0
 Release:        %autorelease
 Summary:        Gonum is a set of numeric libraries for the Go programming language.
 License:        BSD-3-Clause
 URL:            https://github.com/gonum/gonum
-#!RemoteAsset
+#!RemoteAsset:  sha256:951637b967e5ad2399d213532541a6738dfa850c2282a6db5a1db9767942129c
 Source0:        https://github.com/gonum/gonum/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -53,4 +53,4 @@ analysis; and more.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
