@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-confmap-xconfmap
-Version:        0.154.0
+Version:        0.160.0
 Release:        %autorelease
 Summary:        Experimental configuration map helpers for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:435042617d9ffae6e7a634524dd82d6dc080d4d50cedc87fb3e3af5b475e2f92
+#!RemoteAsset:  sha256:47853d41123730a6700497e144d21567e0203e5f0a0e65c7352f11dfea84fd25
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/confmap/xconfmap/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
