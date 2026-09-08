@@ -18,6 +18,9 @@ Source0:        https://github.com/gin-gonic/gin/archive/v%{version}.tar.gz#/%{_
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# https://github.com/gin-gonic/gin/commit/b38c59de7fef67400a1c98efeae700a689c45783
+Patch0:         0001-change-Unwrap-method-receiver-to-value-type.patch
+
 BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -skip TestContextFormFileFailed17
 

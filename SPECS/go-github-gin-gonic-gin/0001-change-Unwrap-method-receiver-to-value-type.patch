@@ -1,0 +1,34 @@
+From b38c59de7fef67400a1c98efeae700a689c45783 Mon Sep 17 00:00:00 2001
+From: Orkhan Alikhanov <Orkhan.Alikhanov@gmail.com>
+Date: Sun, 11 May 2025 18:38:33 +0400
+Subject: [PATCH] fix(errors): change Unwrap method receiver to value type
+ (#4232)
+
+Signed-Off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+diff --git a/errors.go b/errors.go
+index 06b53c28b3..b0d70a948b 100644
+--- a/errors.go
++++ b/errors.go
+@@ -91,7 +91,7 @@ func (msg *Error) IsType(flags ErrorType) bool {
+ }
+ 
+ // Unwrap returns the wrapped error, to allow interoperability with errors.Is(), errors.As() and errors.Unwrap()
+-func (msg *Error) Unwrap() error {
++func (msg Error) Unwrap() error {
+ 	return msg.Err
+ }
+ 
+diff --git a/errors_test.go b/errors_test.go
+index 78d561c..53a217c 100644
+--- a/errors_test.go
++++ b/errors_test.go
+@@ -116,7 +116,7 @@ func TestErrorUnwrap(t *testing.T) {
+ 	innerErr := TestErr("some error")
+ 
+ 	// 2 layers of wrapping : use 'fmt.Errorf("%w")' to wrap a gin.Error{}, which itself wraps innerErr
+-	err := fmt.Errorf("wrapped: %w", &Error{
++	err := fmt.Errorf("wrapped: %w", Error{
+ 		Err:  innerErr,
+ 		Type: ErrorTypeAny,
+ 	})
