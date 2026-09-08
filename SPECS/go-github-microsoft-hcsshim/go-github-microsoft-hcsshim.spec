@@ -7,12 +7,12 @@
 %define go_import_path  github.com/Microsoft/hcsshim
 
 Name:           go-github-microsoft-hcsshim
-Version:        0.11.7
+Version:        0.14.1
 Release:        %autorelease
 Summary:        Containerd runhcs statistics types for Go
 License:        MIT
 URL:            https://github.com/Microsoft/hcsshim
-#!RemoteAsset:  sha256:fb550edc6526403e5b897db2df9e38c216d90eb9d9768917e7d44d5479c76107
+#!RemoteAsset:  sha256:bffcd8ac5a59cc11da3cae2515ac4044eb74f6453827052f075460c00b90b339
 Source0:        https://github.com/Microsoft/hcsshim/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
