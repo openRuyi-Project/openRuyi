@@ -11,12 +11,12 @@
 %define go_test_exclude_glob github.com/pierrec/lz4/v4/cmd*
 
 Name:           go-github-pierrec-lz4-v4
-Version:        4.1.27
+Version:        4.1.29
 Release:        %autorelease
 Summary:        LZ4 compression and decompression in pure Go
 License:        BSD-3-Clause
 URL:            https://github.com/pierrec/lz4
-#!RemoteAsset:  sha256:b158379fcf0abd1fbd262d142bb1e7cc06fafeb6c2c55c778b7df986d5fe252e
+#!RemoteAsset:  sha256:28d00b2e137070efa9e922e5588c3d81f158639b0a64a00df986ebcc54735136
 Source0:        https://github.com/pierrec/lz4/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
