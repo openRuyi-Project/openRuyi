@@ -7,12 +7,12 @@
 %define go_import_path  github.com/secure-systems-lab/go-securesystemslib
 
 Name:           go-github-secure-systems-lab-go-securesystemslib
-Version:        0.11.0
+Version:        0.11.1
 Release:        %autorelease
 Summary:        A library that provides cryptographic and general-purpose functions for Go
 License:        MIT
 URL:            https://github.com/secure-systems-lab/go-securesystemslib
-#!RemoteAsset:  sha256:2bf9c97afec8e45f5f4b68121ac747e14e76c887024000a4a8bebf463fe2d50e
+#!RemoteAsset:  sha256:197a8a633aa49a912ca6caa459210b853d322568d8568f405c5ca74c8a6ee9e9
 Source0:        https://github.com/secure-systems-lab/go-securesystemslib/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
