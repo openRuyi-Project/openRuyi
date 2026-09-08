@@ -7,12 +7,12 @@
 %define go_import_path  github.com/nwaples/rardecode/v2
 
 Name:           go-github-nwaples-rardecode-v2
-Version:        2.2.5
+Version:        2.4.1
 Release:        %autorelease
 Summary:        A go package for reading RAR archives
 License:        BSD-2-Clause
 URL:            https://github.com/nwaples/rardecode
-#!RemoteAsset:  sha256:8c9cc16f5e0aa08896cf4197b3437d422d857d4e53ade5498866fbf186802c2d
+#!RemoteAsset:  sha256:0955f47559c2b5a657536dda8cecfcef2c1775b38b06477da41e8b7352b4cb5a
 Source0:        https://github.com/nwaples/rardecode/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
