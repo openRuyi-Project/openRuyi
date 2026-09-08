@@ -8,12 +8,12 @@
 %define go_import_path  github.com/woodsbury/decimal128
 
 Name:           go-github-woodsbury-decimal128
-Version:        1.4.0
+Version:        1.5.0
 Release:        %autorelease
 Summary:        Go module implementing support for decimal128 values
 License:        BSD-0-Clause
 URL:            https://github.com/woodsbury/decimal128
-#!RemoteAsset:  sha256:f2b39f7e8b7a1907c13edfa9d2700295b6fd74e54214edd94c4d14f909719adc
+#!RemoteAsset:  sha256:d393be0a8ee4139403dfcbbd28e76e8c4cd542a9172d3e5c629002cf6776814b
 Source0:        https://github.com/woodsbury/decimal128/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
