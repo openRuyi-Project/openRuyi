@@ -19,6 +19,9 @@ Source0:        https://github.com/go-logr/logr/archive/v%{version}.tar.gz#/%{_n
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Preserve json.RawMessage rendering with Go 1.27 jsonv2
+Patch2000:      2000-Preserve-json.RawMessage-rendering-with-Go-1.27.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 

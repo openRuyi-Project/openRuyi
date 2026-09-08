@@ -1,0 +1,27 @@
+From 0e74b2060c2c4ea7a206cf7e39210a9bbfdafd94 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Tue, 8 Sep 2026 21:02:14 +0800
+Subject: [PATCH] Preserve json.RawMessage rendering with Go 1.27
+
+---
+ funcr/funcr.go | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/funcr/funcr.go b/funcr/funcr.go
+index b22c57d..f40c16c 100644
+--- a/funcr/funcr.go
++++ b/funcr/funcr.go
+@@ -449,7 +449,9 @@ func (f Formatter) prettyWithFlags(value any, flags uint32, depth int) string {
+ 	// Handle types that want to format themselves.
+ 	switch v := value.(type) {
+ 	case fmt.Stringer:
+-		value = invokeStringer(v)
++		if _, ok := value.(json.RawMessage); !ok {
++			value = invokeStringer(v)
++		}
+ 	case error:
+ 		value = invokeError(v)
+ 	}
+-- 
+2.55.0
+
