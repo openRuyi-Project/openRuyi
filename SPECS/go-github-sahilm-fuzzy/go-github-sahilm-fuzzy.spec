@@ -7,12 +7,12 @@
 %define go_import_path  github.com/sahilm/fuzzy
 
 Name:           go-github-sahilm-fuzzy
-Version:        0.1.2
+Version:        0.1.3
 Release:        %autorelease
 Summary:        Go library that provides fuzzy string matching optimized for filenames and code symbols in the style of Sublime Text, VSCode, IntelliJ IDEA et al.
 License:        MIT
 URL:            https://github.com/sahilm/fuzzy
-#!RemoteAsset:  sha256:28f93f07f4f85ee29375623be4d148da2f5a64523b8fb1c01a93943162925e7f
+#!RemoteAsset:  sha256:ee951dc268aea78126b04bbb6f283147c191883dc515a65e285d2841b74014ce
 Source0:        https://github.com/sahilm/fuzzy/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
