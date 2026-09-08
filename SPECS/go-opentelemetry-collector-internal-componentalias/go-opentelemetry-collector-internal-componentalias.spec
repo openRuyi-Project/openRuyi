@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-internal-componentalias
-Version:        0.154.0
+Version:        0.160.0
 Release:        %autorelease
 Summary:        Component alias helpers for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:ed01ccd79a597159a69255932770642e7abc7b2752afc6be213301e7adaea4a4
+#!RemoteAsset:  sha256:f05e336d61244b461d36b690bfb83fae272df6433f66961ad34416982adf27a4
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/internal/componentalias/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
