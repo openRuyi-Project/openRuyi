@@ -8,13 +8,13 @@
 %global pypi_name grpcio_tools
 
 Name:           python-%{srcname}
-Version:        1.80.0
+Version:        1.82.1
 Release:        %autorelease
 Summary:        Protobuf code generator for gRPC
 License:        Apache-2.0
 URL:            https://grpc.io/
 VCS:            git:https://github.com/grpc/grpc.git
-#!RemoteAsset:  sha256:26052b19c6ce0dcf52d1024496aea3e2bdfa864159f06dc7b97b22d041a94b26
+#!RemoteAsset:  sha256:2bd3176ccdbf7cd1f463eb75b7b83544c7d6429f5ca8a0f7f784b76097dac891
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
