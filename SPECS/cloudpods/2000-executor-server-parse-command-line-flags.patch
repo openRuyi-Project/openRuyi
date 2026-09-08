@@ -1,0 +1,29 @@
+From 9cf2025bb9f59cd57797d7076b8f635a9ad75fbf Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Tue, 8 Sep 2026 16:35:00 +0800
+Subject: [PATCH] executor-server: parse command-line flags
+
+The socket-path flag is registered but never parsed, so the value supplied by
+the systemd service is ignored. Parse flags before checking privileges and
+starting the executor.
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ cmd/executor-server/main.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cmd/executor-server/main.go b/cmd/executor-server/main.go
+index 794479251a..6551276ed4 100644
+--- a/cmd/executor-server/main.go
++++ b/cmd/executor-server/main.go
+@@ -36,6 +36,7 @@ func init() {
+ }
+ 
+ func main() {
++	flag.Parse()
+ 	if !sysutils.IsRootPermission() {
+ 		log.Fatalln("executor must run on root permission")
+ 	}
+-- 
+2.50.1
+
