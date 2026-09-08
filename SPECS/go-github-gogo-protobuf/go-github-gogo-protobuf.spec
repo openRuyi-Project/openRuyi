@@ -20,12 +20,14 @@ Release:        %autorelease
 Summary:        Protocol Buffers for Go with Gadgets
 License:        BSD-3-Clause
 URL:            https://github.com/gogo/protobuf
-#!RemoteAsset
+#!RemoteAsset:  sha256:2bb4b13d6e56b3911f09b8e9ddd15708477fbff8823c057cc79dd99c9a452b34
 Source0:        https://github.com/gogo/protobuf/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 BuildOption(prep):  -n %{_name}-%{version}
+# TestStdTypesGoString is flaky due to invalid GoString output for nil *time.Time.
+BuildOption(check):  -skip '^TestStdTypesGoString$'
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -46,9 +48,9 @@ This code generation is used to achieve:
  * other serialization formats
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
