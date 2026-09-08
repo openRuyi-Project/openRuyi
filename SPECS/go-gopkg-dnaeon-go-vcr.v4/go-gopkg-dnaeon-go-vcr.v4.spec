@@ -8,12 +8,12 @@
 %define go_import_path  gopkg.in/dnaeon/go-vcr.v4
 
 Name:           go-gopkg-dnaeon-go-vcr.v4
-Version:        4.0.6
+Version:        4.0.7
 Release:        %autorelease
 Summary:        HTTP interaction recorder and replayer for Go tests
 License:        BSD-2-Clause
 URL:            https://github.com/dnaeon/go-vcr
-#!RemoteAsset:  sha256:0381d0dd319d3405e7b9ca2de6900b21cfda300f98067f0c18b956ca2e33ddb5
+#!RemoteAsset:  sha256:0f9d5a1c4901375aa827b2ddc252ed9aa465a4d7e94725b1946964ec9804061f
 Source0:        https://github.com/dnaeon/go-vcr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
