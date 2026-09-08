@@ -10,14 +10,15 @@ Release:        %autorelease
 Summary:        A OpenGL (ES) 2.0 benchmark
 License:        MIT AND BSD-3-Clause AND GPL-3.0-or-later
 URL:            https://github.com/glmark2/glmark2
-#!RemoteAsset
-Source:         https://github.com/glmark2/glmark2/archive/refs/tags/%{version}.tar.gz
+#!RemoteAsset:  git+https://github.com/glmark2/glmark2.git#%{version}
+#!CreateArchive
+Source:         glmark2-%{version}.tar.gz
 BuildSystem:    meson
 
 # Fixes visual config match for drivers bind depth with stencil (e.g. IMG proprietary GLES)
 Patch1:         glmark2-2023.01-backport-visual-config-match.patch
 
-BuildOption(conf):  -Dflavors=drm-gl,drm-glesv2,wayland-gl,wayland-glesv2,x11-gl,x11-glesv2,x11-gl-egl
+BuildOption(conf):  -Dflavors=drm-gl,drm-glesv2,wayland-gl,wayland-glesv2,x11-gl,x11-glesv2,x11-gl-egl,gbm-gl,gbm-glesv2
 
 BuildRequires:  meson
 BuildRequires:  pkgconfig(libjpeg)
@@ -50,4 +51,4 @@ properly weighted.
 %{_mandir}/man1/glmark*.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog
