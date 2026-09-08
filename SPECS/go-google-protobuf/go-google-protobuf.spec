@@ -9,12 +9,12 @@
 %define go_import_path  google.golang.org/protobuf
 
 Name:           go-google-protobuf
-Version:        1.36.11
+Version:        1.36.12
 Release:        %autorelease
 Summary:        Go support for Google's protocol buffers
 License:        BSD-3-Clause
 URL:            https://github.com/protocolbuffers/protobuf-go
-#!RemoteAsset:  sha256:517b935001f3d43640489cd1aab531a3ed5927fb34379fa6cb1c1a514e9cb8e8
+#!RemoteAsset:  sha256:23a247d69c52872ecbfd6bcbee3216793b2672fa5a7b99497777bf9c3563756f
 Source0:        https://github.com/protocolbuffers/protobuf-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
