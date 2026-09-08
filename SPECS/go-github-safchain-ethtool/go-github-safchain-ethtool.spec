@@ -9,12 +9,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-safchain-ethtool
-Version:        0.5.10
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Go bindings for Linux SIOCETHTOOL ioctl operations
 License:        Apache-2.0
 URL:            https://github.com/safchain/ethtool
-#!RemoteAsset:  sha256:0a6a0c58bd9924eda29d8120ceaace297259e2dee44abd1e2e83812700a4beb6
+#!RemoteAsset:  sha256:4c991abe432201d52057c5faae3282d56c2793243897683f286c96e5e2b2b18f
 Source0:        https://github.com/safchain/ethtool/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
