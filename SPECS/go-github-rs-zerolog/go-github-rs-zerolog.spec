@@ -9,12 +9,12 @@
 %define go_test_exclude github.com/rs/zerolog/journald
 
 Name:           go-github-rs-zerolog
-Version:        1.34.0
+Version:        1.35.1
 Release:        %autorelease
 Summary:        Zero-allocation JSON logging library for Go
 License:        MIT
 URL:            https://github.com/rs/zerolog
-#!RemoteAsset:  sha256:7a658d16b365f28fc6b75ae4ea2948cbe39e8fdaaadd0b5e92a6d911703ba430
+#!RemoteAsset:  sha256:10f3751ea3b5fde2cdf217e0789711bb078bb4caf3909ac1307ff6c35292f8c7
 Source0:        https://github.com/rs/zerolog/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
