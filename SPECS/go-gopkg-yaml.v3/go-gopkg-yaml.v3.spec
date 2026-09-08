@@ -8,12 +8,12 @@
 %define go_import_path  go.yaml.in/yaml/v3
 
 Name:           go-gopkg-yaml.v3
-Version:        3.0.4
+Version:        3.0.5
 Release:        %autorelease
 Summary:        YAML support for the Go language.
 License:        MIT
 URL:            https://github.com/yaml/go-yaml
-#!RemoteAsset
+#!RemoteAsset:  sha256:ee53cdc11215b3c9c5edf265dfb1d61c6f763c58e2525ef37284c895cc0a8447
 Source0:        https://github.com/yaml/go-yaml/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -48,4 +48,4 @@ ln -s ../%{go_import_path} %{buildroot}%{go_sys_gopath}/gopkg.in/yaml.v3
 %{go_sys_gopath}/gopkg.in/yaml.v3
 
 %changelog
-%{?autochangelog}
+%autochangelog
