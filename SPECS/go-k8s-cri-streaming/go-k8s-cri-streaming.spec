@@ -7,12 +7,12 @@
 %define go_import_path  k8s.io/cri-streaming
 
 Name:           go-k8s-cri-streaming
-Version:        0.36.3
+Version:        0.37.0
 Release:        %autorelease
 Summary:        Kubernetes CRI streaming server implementation
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/cri-streaming
-#!RemoteAsset:  sha256:3b516875a5e9b7020ea969a7b6f06abae889e1a0d92036283ff76158ea34d10d
+#!RemoteAsset:  sha256:ea4321c8d88979ae0de4d4b91d124e127423415483b9c55c0cb268fcb195ae29
 Source0:        https://github.com/kubernetes/cri-streaming/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
