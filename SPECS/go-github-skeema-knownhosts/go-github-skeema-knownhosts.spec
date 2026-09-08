@@ -8,12 +8,12 @@
 %define go_import_path  github.com/skeema/knownhosts
 
 Name:           go-github-skeema-knownhosts
-Version:        1.3.2
+Version:        1.3.3
 Release:        %autorelease
 Summary:        Enhanced known_hosts management for Go SSH
 License:        Apache-2.0
 URL:            https://github.com/skeema/knownhosts
-#!RemoteAsset:  sha256:80e0892ca8108e20b6de6f6f531f526b9953c704127c4330cbb886762af3d681
+#!RemoteAsset:  sha256:275919987b4fc2d8735f2e706db0b393580dd79aed9a3e1913ffb64e82c0ae19
 Source0:        https://github.com/skeema/knownhosts/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
