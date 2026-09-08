@@ -13,13 +13,13 @@
 %define go_test_ignore_failure 1
 
 Name:           go-golang-x-arch
-Version:        0.28.0
+Version:        0.30.0
 Release:        %autorelease
 Summary:        Go supplementary cryptography libraries
 License:        BSD-3-Clause
 URL:            https://golang.org/x/arch
 VCS:            git:https://github.com/golang/arch
-#!RemoteAsset:  sha256:c001a910ade256b7ec41a89790a984431cfdf10460a5945f1ca9128a390c3e27
+#!RemoteAsset:  sha256:ee4cb5e8b2a1c259d473f3782c7ba24e8ded7d14a943531dacd09d94323ed23a
 Source0:        https://github.com/golang/arch/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
