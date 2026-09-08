@@ -7,7 +7,7 @@
 %define _name           gofakeit
 %define go_import_path  github.com/brianvoe/gofakeit/v7
 
-Name:           go-github-brianvoe-gofakeit
+Name:           go-github-brianvoe-gofakeit-v7
 Version:        7.15.0
 Release:        %autorelease
 Summary:        Random fake data generator written in go
@@ -18,6 +18,9 @@ Source0:        https://github.com/brianvoe/gofakeit/archive/v%{version}.tar.gz#
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Golang 1.27 changes, we wait for upstream to fix the issue
+BuildOption(check):  -skip '^(TestJSONRawMessage|TestJSONRawMessageWithTag|TestJSONRawMessageWithInvalidCustomFuncTag|ExampleImagePng|ExampleFaker_ImagePng)$'
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
@@ -27,8 +30,8 @@ Provides:       go(github.com/brianvoe/gofakeit/v7) = %{version}
 Random data generator written in go
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
