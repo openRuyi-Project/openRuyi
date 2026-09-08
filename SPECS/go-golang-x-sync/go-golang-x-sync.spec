@@ -10,13 +10,13 @@
 %define go_import_path  golang.org/x/sync
 
 Name:           go-golang-x-sync
-Version:        0.21.0
+Version:        0.22.0
 Release:        %autorelease
 Summary:        Concurrency primitives supplemental to the Go standard library
 License:        BSD-3-Clause
 URL:            https://golang.org/x/sync
 VCS:            git:https://github.com/golang/sync
-#!RemoteAsset:  sha256:375daf62cdc3612f7155587763b2b15562ac5aff1e38000c5853a5c1644f7dc7
+#!RemoteAsset:  sha256:de9a6936f62055bdae1dd1e79fe92d057ce5a5f59b84c2019b0a0545055c5dca
 Source0:        https://github.com/golang/sync/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
