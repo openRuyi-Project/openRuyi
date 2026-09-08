@@ -11,12 +11,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-pb33f-jsonpath
-Version:        0.8.2
+Version:        0.8.3
 Release:        %autorelease
 Summary:        JSONPath implementation for Go
 License:        Apache-2.0
 URL:            https://github.com/pb33f/jsonpath
-#!RemoteAsset:  sha256:0fbf47e08ada6ce5e9b1b155a85fcae429c64b8dbeb6326fe915793a50813b5b
+#!RemoteAsset:  sha256:35c85e3d717ec2f605af619458cdff37db659709e49a7f5096cb7a78cb3126b9
 Source0:        https://github.com/pb33f/jsonpath/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
