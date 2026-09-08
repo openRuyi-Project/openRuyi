@@ -22,7 +22,8 @@ BuildArch:      noarch
 BuildSystem:    golangmodules
 
 BuildOption(prep):  -n %{_name}-%{version}
-BuildOption(check):  -skip ExampleFpdf_RegisterImageReader
+# Golang 1.27 changed the encoded output from Writer
+BuildOption(check):  -skip 'ExampleFpdf_(RegisterImageReader|AddUTF8Font|SetAttachments|AddOutputIntent)'
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
