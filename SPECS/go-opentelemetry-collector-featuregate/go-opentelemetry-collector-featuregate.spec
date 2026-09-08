@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-featuregate
-Version:        1.60.0
+Version:        1.66.0
 Release:        %autorelease
 Summary:        Feature gate module for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:ecdd56f1c46976a0621f7bf558d7dd3d8b7ba0ef85d95ad03b2d93bf4ef8a3b9
+#!RemoteAsset:  sha256:c93134ff0eb7be6da1decd52ca94bce74e3c5cb9a85b949e57ee1d342a3e3a5f
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/featuregate/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
