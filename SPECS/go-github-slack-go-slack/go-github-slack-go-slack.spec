@@ -9,12 +9,12 @@
 %define go_test_exclude %{go_import_path}
 
 Name:           go-github-slack-go-slack
-Version:        0.17.3
+Version:        0.29.0
 Release:        %autorelease
 Summary:        Go client library for the Slack API
 License:        BSD-2-Clause
 URL:            https://github.com/slack-go/slack
-#!RemoteAsset:  sha256:c10ec15bbf68356ceac20d1761e03211a26aae7fd536f2a3573618c94bee9c93
+#!RemoteAsset:  sha256:696fed6a80750da33a040aa7ae3eb73f39b42bdf85dabb90094c7c8e463a1286
 Source0:        https://github.com/slack-go/slack/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
