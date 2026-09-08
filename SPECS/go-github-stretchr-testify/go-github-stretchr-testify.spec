@@ -8,12 +8,12 @@
 %define go_import_path  github.com/stretchr/testify
 
 Name:           go-github-stretchr-testify
-Version:        1.11.1
+Version:        1.12.1
 Release:        %autorelease
 Summary:        A toolkit with common assertions and mocks that plays nicely with the standard library
 License:        MIT
 URL:            https://github.com/stretchr/testify
-#!RemoteAsset:  sha256:4b51fbc0f19e42841013748e6d527314e1d0e7255122766b5fca1d35b4630c69
+#!RemoteAsset:  sha256:99c6cb283579951078acc7fb0bf274df478034374b5767de5dcdb09f1bdd72d2
 Source0:        https://github.com/stretchr/testify/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
