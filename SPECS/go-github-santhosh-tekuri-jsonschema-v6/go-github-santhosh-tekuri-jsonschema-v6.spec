@@ -11,12 +11,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-santhosh-tekuri-jsonschema-v6
-Version:        6.0.2
+Version:        6.0.3
 Release:        %autorelease
 Summary:        JSON Schema validation library for Go
 License:        Apache-2.0
 URL:            https://github.com/santhosh-tekuri/jsonschema
-#!RemoteAsset:  sha256:06465cc1c647b086f9b8d590c9de1608e5b335b58598d0eb84b9ee63a747e1d7
+#!RemoteAsset:  sha256:f94a43d08c6b8f1f80069f44e996090ce89e2abb3b6dd997e8f1e61ac6d9fb9f
 Source0:        https://github.com/santhosh-tekuri/jsonschema/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
