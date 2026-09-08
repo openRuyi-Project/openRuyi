@@ -1,0 +1,82 @@
+From 20c16f85d00a013f662efa80baf9a845aa2d5f3c Mon Sep 17 00:00:00 2001
+From: Nurzhan Muratkhan <nurzhanmuratkhan@gmail.com>
+Date: Tue, 8 Sep 2026 22:05:12 +0800
+Subject: [PATCH] Ensure compatibility with encoding/json/v2 experiment
+
+Backport commit: https://github.com/google/go-github/commit/92a3830f9be93a0a314c4d6c2726ee820cc79c2e?utm_source=chatgpt.com
+
+Signed-off-by: misaka00251 <liuxin@iscas.ac.cn>
+---
+ github/github_test.go                 | 5 +----
+ github/repos_hooks_deliveries_test.go | 3 ++-
+ github/security_advisories_test.go    | 4 ++--
+ 3 files changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/github/github_test.go b/github/github_test.go
+index 9a369a2..61b33fc 100644
+--- a/github/github_test.go
++++ b/github/github_test.go
+@@ -539,16 +539,13 @@ func TestNewRequest_invalidJSON(t *testing.T) {
+ 	c := NewClient(nil)
+ 
+ 	type T struct {
+-		A map[interface{}]interface{}
++		F func()
+ 	}
+ 	_, err := c.NewRequest("GET", ".", &T{})
+ 
+ 	if err == nil {
+ 		t.Error("Expected error to be returned.")
+ 	}
+-	if err, ok := err.(*json.UnsupportedTypeError); !ok {
+-		t.Errorf("Expected a JSON error; got %#v.", err)
+-	}
+ }
+ 
+ func TestNewRequest_badURL(t *testing.T) {
+diff --git a/github/repos_hooks_deliveries_test.go b/github/repos_hooks_deliveries_test.go
+index 057d712..ba5a3f0 100644
+--- a/github/repos_hooks_deliveries_test.go
++++ b/github/repos_hooks_deliveries_test.go
+@@ -11,6 +11,7 @@ import (
+ 	"fmt"
+ 	"net/http"
+ 	"reflect"
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+@@ -261,7 +262,7 @@ func TestHookDelivery_ParsePayload_invalidPayload(t *testing.T) {
+ 	}
+ 
+ 	_, err := d.ParseRequestPayload()
+-	if err == nil || err.Error() != "json: cannot unmarshal string into Go struct field CheckRun.check_run.id of type int64" {
++	if err == nil || !strings.Contains(err.Error(), "json: cannot unmarshal") || !strings.Contains(err.Error(), "check_run.id") {
+ 		t.Errorf("unexpected error: %v", err)
+ 	}
+ }
+diff --git a/github/security_advisories_test.go b/github/security_advisories_test.go
+index eb8e7d3..e44959f 100644
+--- a/github/security_advisories_test.go
++++ b/github/security_advisories_test.go
+@@ -590,7 +590,7 @@ func TestSecurityAdvisoriesService_ListRepositorySecurityAdvisoriesForOrg_Unmars
+ 	advisories, resp, err := client.SecurityAdvisories.ListRepositorySecurityAdvisoriesForOrg(ctx, "o", nil)
+ 	if err == nil {
+ 		t.Errorf("Expected unmarshal error")
+-	} else if !strings.Contains(err.Error(), "json: cannot unmarshal number into Go struct field SecurityAdvisory.ghsa_id of type string") {
++	} else if !strings.Contains(err.Error(), "json: cannot unmarshal") || !strings.Contains(err.Error(), "ghsa_id") {
+ 		t.Errorf("ListRepositorySecurityAdvisoriesForOrg returned unexpected error: %v", err)
+ 	}
+ 	if got, want := resp.Response.StatusCode, http.StatusOK; got != want {
+@@ -721,7 +721,7 @@ func TestSecurityAdvisoriesService_ListRepositorySecurityAdvisories_UnmarshalErr
+ 	advisories, resp, err := client.SecurityAdvisories.ListRepositorySecurityAdvisories(ctx, "o", "r", nil)
+ 	if err == nil {
+ 		t.Errorf("Expected unmarshal error")
+-	} else if !strings.Contains(err.Error(), "json: cannot unmarshal number into Go struct field SecurityAdvisory.ghsa_id of type string") {
++	} else if !strings.Contains(err.Error(), "json: cannot unmarshal") || !strings.Contains(err.Error(), "ghsa_id") {
+ 		t.Errorf("ListRepositorySecurityAdvisories returned unexpected error: %v", err)
+ 	}
+ 	if got, want := resp.Response.StatusCode, http.StatusOK; got != want {
+-- 
+2.55.0
+

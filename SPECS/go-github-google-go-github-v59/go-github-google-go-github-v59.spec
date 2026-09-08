@@ -30,6 +30,8 @@ BuildSystem:    golangmodules
 # type; sniff named assets before falling back to the default upload type.
 # - HNO3Miracle
 Patch2000:      2000-detect-generic-release-asset-content-types.patch
+# https://github.com/google/go-github/pull/4029 backport
+Patch2001:      2001-Ensure-compatibility-with-encoding-json-v2-experimen.patch
 
 # Go 1.26 vet reports Errorf %q with a *strings.Reader argument in upstream
 # github tests; keep tests enabled but disable vet. - HNO3Miracle
