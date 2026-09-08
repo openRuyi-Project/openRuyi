@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-component
-Version:        1.60.0
+Version:        1.66.0
 Release:        %autorelease
 Summary:        Component model for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:239f93431877edef67401a37d825ac8bc2e79695ef757b947ebf93addb4b3f32
+#!RemoteAsset:  sha256:9b5179584a4faf1729084e7883761dd871242a07618f19ceb6f6e4e4547dfbf6
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/component/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
