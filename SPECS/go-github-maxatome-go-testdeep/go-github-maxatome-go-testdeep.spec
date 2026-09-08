@@ -8,12 +8,12 @@
 %define go_import_path  github.com/maxatome/go-testdeep
 
 Name:           go-github-maxatome-go-testdeep
-Version:        1.15.0
+Version:        1.16.0
 Release:        %autorelease
 Summary:        Flexible deep comparison helpers for Go tests
 License:        BSD-2-Clause
 URL:            https://github.com/maxatome/go-testdeep
-#!RemoteAsset:  sha256:ddc106b33e174f01e6536ea2a3c949547b95c28837749b5e62b53f7e01026269
+#!RemoteAsset:  sha256:072566ea5f4a34d1e9490a99fb430cb17a26061763b7247d1b43d8aafa995960
 Source0:        https://github.com/maxatome/go-testdeep/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
