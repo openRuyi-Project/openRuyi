@@ -18,12 +18,12 @@
 %define go_test_exclude_glob %{go_import_path}/internal/benchmarks
 
 Name:           go-googlecloud-go-storage
-Version:        1.62.3
+Version:        1.67.1
 Release:        %autorelease
 Summary:        Storage client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:92812ab80e4f7886eb85670c7f9ab4d1985ed79e98df4affc4ed24acd8454304
+#!RemoteAsset:  sha256:207a9ac2caa77b5d78866da4053182ab4cbdda3f89c5197b552ca65015537ae4
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/storage/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
