@@ -1,0 +1,43 @@
+From 5be4c11f482e88cb763391ab0eecc5cd5e33075d Mon Sep 17 00:00:00 2001
+From: Boris Glimcher <Boris.Glimcher@emc.com>
+Date: Thu, 16 Oct 2025 13:44:13 -0400
+Subject: [PATCH] python/rpc: use functools.wraps to fix deprecation decorator
+
+Fixes #3752
+
+Signed-off-by: Boris Glimcher <Boris.Glimcher@emc.com>
+Reviewed-on: https://review.spdk.io/c/spdk/spdk/+/26927
+Reviewed-by: Karol Latecki <karol.latecki@nutanix.com>
+Tested-by: SPDK Automated Test System <spdkbot@gmail.com>
+Reviewed-by: Tomasz Zawadzki <tomasz@tzawadzki.com>
+Reviewed-by: Amit Engel <amit.engel@dell.com>
+Reviewed-by: Michal Berger <michal.berger@nutanix.com>
+Reviewed-by: Konrad Sztyber <ksztyber@nvidia.com>
+(cherry picked from commit 117acba97e503632e278ead1889cb8f91e481ad9)
+---
+ python/spdk/rpc/helpers.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/python/spdk/rpc/helpers.py b/python/spdk/rpc/helpers.py
+index 9eed61e71..2c0906120 100644
+--- a/python/spdk/rpc/helpers.py
++++ b/python/spdk/rpc/helpers.py
+@@ -3,6 +3,7 @@
+ #  All rights reserved.
+ 
+ import sys
++import functools
+ 
+ deprecated_aliases = {}
+ 
+@@ -23,6 +24,7 @@ def deprecated_alias(old_name):
+ def deprecated_method(method):
+     method.deprecated_warning = False
+ 
++    @functools.wraps(method)
+     def wrap(*args, **kwargs):
+         if not method.deprecated_warning:
+             print(f'{method.__name__} is deprecated, use JSONRPCClient directly', file=sys.stderr)
+-- 
+2.55.0
+

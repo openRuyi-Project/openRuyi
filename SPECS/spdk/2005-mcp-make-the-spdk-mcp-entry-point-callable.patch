@@ -1,0 +1,47 @@
+From 07981e276bbbaf83a210f788d87912f47d53cd20 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 7 Sep 2026 22:21:41 -0700
+Subject: [PATCH] mcp: make the spdk-mcp entry point callable
+
+spdk.mcp:server resolves to the server module, not a function, so the
+console script fails with "'module' object is not callable". Point it at
+a main() that runs the server.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ python/pyproject.toml     | 2 +-
+ python/spdk/mcp/server.py | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/python/pyproject.toml b/python/pyproject.toml
+index a02d8cde0..e61613450 100644
+--- a/python/pyproject.toml
++++ b/python/pyproject.toml
+@@ -44,7 +44,7 @@ dependencies = []
+ spdk-rpc = "spdk.spdk_rpc:main"
+ spdk-sma = "spdk.spdk_sma:main"
+ spdk-cli = "spdk.spdk_cli:main"
+-spdk-mcp = "spdk.mcp:server"
++spdk-mcp = "spdk.mcp.server:main"
+ 
+ [project.optional-dependencies]
+ sma = [
+diff --git a/python/spdk/mcp/server.py b/python/spdk/mcp/server.py
+index 01bd4566a..57622b6e1 100644
+--- a/python/spdk/mcp/server.py
++++ b/python/spdk/mcp/server.py
+@@ -34,5 +34,10 @@ for func in bdev_functions:
+     newfunc.__doc__ = func.__doc__
+     mcp.add_tool(newfunc)
+ 
+-if __name__ == "__main__":
++
++def main():
+     mcp.run()
++
++
++if __name__ == "__main__":
++    main()
+-- 
+2.55.0
+

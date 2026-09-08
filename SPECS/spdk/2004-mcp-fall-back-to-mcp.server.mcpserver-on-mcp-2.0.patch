@@ -1,0 +1,33 @@
+From 8df4cbe3d70ccf36acaf56b326814f0953ecbfe2 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 7 Sep 2026 06:12:50 -0700
+Subject: [PATCH 2004/2004] mcp: fall back to mcp.server.mcpserver on the mcp
+ 2.0 SDK
+
+mcp 2.0 renamed mcp.server.fastmcp.FastMCP to mcp.server.mcpserver.MCPServer.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ python/spdk/mcp/server.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/python/spdk/mcp/server.py b/python/spdk/mcp/server.py
+index f9459c5..01bd456 100644
+--- a/python/spdk/mcp/server.py
++++ b/python/spdk/mcp/server.py
+@@ -5,7 +5,11 @@ import os
+ from spdk.rpc import bdev
+ from functools import partial
+ from spdk.rpc.client import JSONRPCClient
+-from mcp.server.fastmcp import FastMCP
++try:
++    from mcp.server.fastmcp import FastMCP
++except ImportError:
++    # mcp 2.0 renamed FastMCP to mcp.server.mcpserver.MCPServer
++    from mcp.server.mcpserver import MCPServer as FastMCP
+ 
+ # Create an MCP server
+ mcp = FastMCP("SPDK")
+-- 
+2.55.0
+

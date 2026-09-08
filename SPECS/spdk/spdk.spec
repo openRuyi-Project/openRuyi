@@ -42,6 +42,9 @@ BuildRequires:  pkgconfig(librdmacm)
 BuildRequires:  pkgconfig(libiscsi)
 BuildRequires:  pkgconfig(liburing)
 BuildRequires:  ceph-devel
+# for --with-sma
+BuildRequires:  python3dist(grpcio)
+BuildRequires:  python3dist(grpcio-tools)
 
 Requires:       dpdk
 Requires:       numactl
@@ -64,6 +67,12 @@ applications.
 2001-with-system-isal.patch
 # Add support for ISA-L_crypto library on RISC-V 64
 2002-ISAL_CRYPTO.patch
+# mcp 2.0 renamed FastMCP to MCPServer
+2004-mcp-fall-back-to-mcp.server.mcpserver-on-mcp-2.0.patch
+# spdk.mcp:server is a module, not a function
+2005-mcp-make-the-spdk-mcp-entry-point-callable.patch
+# upstream 117acba97: every rpc function was named "wrap", so spdk-mcp registered one tool
+2006-python-rpc-use-functools.wraps-to-fix-deprecation-decorator.patch
 
 %package        devel
 Summary:        Storage Performance Development Kit development files
@@ -85,6 +94,13 @@ Development Kit.
 %package        tools
 Summary:        Storage Performance Development Kit tools files
 Requires:       %{name} = %{version}-%{release}
+# imported by spdk-cli, spdk-sma and spdk-mcp
+Requires:       python3dist(configshell-fb)
+Requires:       python3dist(grpcio)
+Requires:       python3dist(mcp)
+Requires:       python3dist(protobuf)
+Requires:       python3dist(pyparsing)
+Requires:       python3dist(pyyaml)
 BuildArch:      noarch
 
 %description    tools
@@ -103,6 +119,7 @@ export CXX="g++ -fuse-ld=bfd"
     --with-iscsi-initiator \
     --with-uring \
     --with-rbd \
+    --with-sma \
     --disable-examples \
     --disable-tests \
     --disable-unit-tests \
