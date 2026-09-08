@@ -7,12 +7,12 @@
 %define go_import_path  k8s.io/streaming
 
 Name:           go-k8s-streaming
-Version:        0.36.3
+Version:        0.37.0
 Release:        %autorelease
 Summary:        Contains the staged module root for Kubernetes transport streaming primitives
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/streaming
-#!RemoteAsset:  sha256:6a6869bba30980648555f776a7efebeed76c75bd8353be058a2595b4177e1211
+#!RemoteAsset:  sha256:548b7ad1d254fbf0cf1a10bd0a077e0d5314189f59117f76bba60f3d9674b408
 Source0:        https://github.com/kubernetes/streaming/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
