@@ -60,6 +60,9 @@ Source0:        https://github.com/aws/aws-sdk-go-v2/archive/release-%{upstream_
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Otherwise we need to -vet=off
+Patch2000:      2000-Wrap-status-code-error-value-for-Go-1.27.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/aws/smithy-go)

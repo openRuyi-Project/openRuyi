@@ -1,0 +1,25 @@
+From 31e618ed823439ba2e00af9872e2d72612fdc6ac Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Tue, 8 Sep 2026 15:36:29 +0800
+Subject: [PATCH] Wrap status code error value for Go 1.27
+
+---
+ aws/retry/retryable_error_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/aws/retry/retryable_error_test.go b/aws/retry/retryable_error_test.go
+index aa0317b3..0bb21e90 100644
+--- a/aws/retry/retryable_error_test.go
++++ b/aws/retry/retryable_error_test.go
+@@ -164,7 +164,7 @@ func TestRetryHTTPStatusCodes(t *testing.T) {
+ 			Expect: aws.TrueTernary,
+ 		},
+ 		"nested": {
+-			Err:    fmt.Errorf("some error, %w", &mockStatusCodeError{code: 500}),
++			Err:    fmt.Errorf("some error, %w", mockStatusCodeError{code: 500}),
+ 			Expect: aws.TrueTernary,
+ 		},
+ 		"response error": {
+-- 
+2.55.0
+
