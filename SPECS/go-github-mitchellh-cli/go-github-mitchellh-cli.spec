@@ -12,12 +12,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-mitchellh-cli
-Version:        1.1.0
+Version:        1.1.5
 Release:        %autorelease
 Summary:        A Go library for implementing command-line interfaces
 License:        MPL-2.0
 URL:            https://github.com/mitchellh/cli
-#!RemoteAsset:  sha256:f6350f72a358d6d829684e95e2a1e3ea7b7793959c676b53f5ef19e5e7b90abf
+#!RemoteAsset:  sha256:06cd78eac74a0961e51a6ecd4c7fb0ee26ea0adf61852efb61e5d1fcc166a652
 Source0:        https://github.com/mitchellh/cli/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
