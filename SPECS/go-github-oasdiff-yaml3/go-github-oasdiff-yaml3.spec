@@ -8,12 +8,12 @@
 %define go_import_path  github.com/oasdiff/yaml3
 
 Name:           go-github-oasdiff-yaml3
-Version:        0.0.13
+Version:        0.0.14
 Release:        %autorelease
 Summary:        YAML support for the Go language
 License:        MIT AND Apache-2.0
 URL:            https://github.com/oasdiff/yaml3
-#!RemoteAsset:  sha256:98cd6c83501c01789580bedf4213437babdefc7135179237dd8332bff52cc0f9
+#!RemoteAsset:  sha256:d6f544ecdc37ac2752c419be744ee6a115d3ccf92dfe908278a7880a11f210dc
 Source0:        https://github.com/oasdiff/yaml3/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
