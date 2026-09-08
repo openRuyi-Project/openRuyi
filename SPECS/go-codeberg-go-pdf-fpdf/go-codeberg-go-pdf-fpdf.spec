@@ -16,7 +16,7 @@ Release:        %autorelease
 Summary:        A PDF document generator with high level support for text, drawing and images
 License:        MIT
 URL:            https://codeberg.org/go-pdf/fpdf
-#!RemoteAsset:  sha256:b994c605389bfc31ef2bb9a41ec460caf64b341a8b4c20dbdbf2dbb5484f7fa1
+#!RemoteAsset:  sha256:7dea41095abffdaa990f5eb7c14206b1d772ebc0e73315b4e9393f13afa59a2f
 Source0:        https://codeberg.org/go-pdf/fpdf/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -44,8 +44,8 @@ This package implements a PDF document generator with high level
 support for text, drawing and images.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
