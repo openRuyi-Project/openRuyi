@@ -9,12 +9,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-shoenig-go-m1cpu
-Version:        0.1.6
+Version:        0.2.2
 Release:        %autorelease
 Summary:        Inspect Apple Silicon CPU frequency from Go
 License:        MPL-2.0
 URL:            https://github.com/shoenig/go-m1cpu
-#!RemoteAsset:  sha256:80a4292edf006308f82222b842195c785fbdc7fddaee09698b403c13612590ed
+#!RemoteAsset:  sha256:db639d03716d09cb6fe3eccc273e901627348140c85619132ad0cbef68356501
 Source0:        https://github.com/shoenig/go-m1cpu/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
