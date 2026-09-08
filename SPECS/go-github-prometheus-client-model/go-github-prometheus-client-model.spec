@@ -8,12 +8,12 @@
 %define go_import_path  github.com/prometheus/client_model
 
 Name:           go-github-prometheus-client-model
-Version:        0.6.2
+Version:        0.6.3
 Release:        %autorelease
 Summary:        Data model artifacts for Prometheus.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/client_model
-#!RemoteAsset:  sha256:47c5ea7949f68e7f7b344350c59b6bd31eeb921f0eec6c3a566e27cf1951470c
+#!RemoteAsset:  sha256:77b46a8f9924c42095422fe7d51ac2df3a2cae6d354e14ce1b70a16b52ae3983
 Source0:        https://github.com/prometheus/client_model/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
