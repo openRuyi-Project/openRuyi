@@ -7,12 +7,12 @@
 %define go_import_path  github.com/yuin/goldmark-emoji
 
 Name:           go-github-yuin-goldmark-emoji
-Version:        1.0.5
+Version:        1.0.6
 Release:        %autorelease
 Summary:        Emoji extension for the Goldmark Markdown parser
 License:        MIT
 URL:            https://github.com/yuin/goldmark-emoji
-#!RemoteAsset:  sha256:5b9b47ab7436f79a25bf8a747fe612c9aaa7b1563945783ebab660f30580558e
+#!RemoteAsset:  sha256:18d7b88aa782ae3d0e8f885c86d33097245254e9c4c60921aae5735a3df3ec3d
 Source0:        https://github.com/yuin/goldmark-emoji/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
