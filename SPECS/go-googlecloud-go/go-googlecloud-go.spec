@@ -67,6 +67,7 @@ BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(cloud.google.com/go) = %{version}
+Provides:       go(cloud.google.com/go/secretmanager) = %{version}
 
 %description
 This package provides the root cloud.google.com/go import path and common

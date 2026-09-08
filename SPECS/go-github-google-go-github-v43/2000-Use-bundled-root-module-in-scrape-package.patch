@@ -1,0 +1,54 @@
+From 7db0c1fe833de255394aec267f74e4afc9fd96b3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 01:33:04 +0800
+Subject: [PATCH] Use bundled root module in scrape package
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ scrape/apps.go                | 2 +-
+ scrape/apps_test.go           | 2 +-
+ scrape/example/scrape/main.go | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/scrape/apps.go b/scrape/apps.go
+index e430763..53259c7 100644
+--- a/scrape/apps.go
++++ b/scrape/apps.go
+@@ -17,7 +17,7 @@ import (
+ 	"strings"
+ 
+ 	"github.com/PuerkitoBio/goquery"
+-	"github.com/google/go-github/v42/github"
++	"github.com/google/go-github/v43/github"
+ )
+ 
+ // AppRestrictionsEnabled returns whether the specified organization has
+diff --git a/scrape/apps_test.go b/scrape/apps_test.go
+index 2d75299..4cdc0fc 100644
+--- a/scrape/apps_test.go
++++ b/scrape/apps_test.go
+@@ -5,7 +5,7 @@ import (
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+-	"github.com/google/go-github/v42/github"
++	"github.com/google/go-github/v43/github"
+ )
+ 
+ func Test_AppRestrictionsEnabled(t *testing.T) {
+diff --git a/scrape/example/scrape/main.go b/scrape/example/scrape/main.go
+index a55b88e..7ef6dd2 100644
+--- a/scrape/example/scrape/main.go
++++ b/scrape/example/scrape/main.go
+@@ -12,7 +12,7 @@ import (
+ 	"os"
+ 	"strings"
+ 
+-	"github.com/google/go-github/scrape"
++	"github.com/google/go-github/v43/scrape"
+ )
+ 
+ var (
+-- 
+2.43.0
+

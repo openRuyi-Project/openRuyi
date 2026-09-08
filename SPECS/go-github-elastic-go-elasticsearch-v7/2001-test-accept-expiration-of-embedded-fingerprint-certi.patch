@@ -1,0 +1,33 @@
+From 36afdde2db8ba5a5e7a9f6aca8df2ebfe1b9f14d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 04:58:54 +0800
+Subject: [PATCH] test: accept expiration of embedded fingerprint certificate
+
+The static TLS certificate used by TestFingerprint expired in March 2026. Treat that explicit certificate validation failure as equivalent to the unknown-authority failure that the no-fingerprint case expects, while continuing to reject unrelated errors.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ elasticsearch_internal_test.go | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/elasticsearch_internal_test.go b/elasticsearch_internal_test.go
+index ffe5a1305..ddf3a8a54 100644
+--- a/elasticsearch_internal_test.go
++++ b/elasticsearch_internal_test.go
+@@ -852,8 +852,11 @@ oftUHvkHS0Vv/LicMEOufFGslb4T9aPJ7oyhoSlz9CfAutDWk/q/
+ 	_, err = client.Info()
+ 
+ 	if err.Error() != `x509: “instance” certificate is not standards compliant` {
+-		if ok := errors.As(err, &x509.UnknownAuthorityError{}); !ok {
+-			t.Fatalf("Uknown error, expected UnknownAuthorityError, got: %s", err)
++		var invalidErr x509.CertificateInvalidError
++		unknownAuthority := errors.As(err, &x509.UnknownAuthorityError{})
++		expired := errors.As(err, &invalidErr) && invalidErr.Reason == x509.Expired
++		if !unknownAuthority && !expired {
++			t.Fatalf("Unknown certificate error, got: %s", err)
+ 		}
+ 	}
+ 
+-- 
+2.43.0
+
