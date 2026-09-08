@@ -9,12 +9,12 @@
 %define go_import_path  github.com/mdlayher/socket
 
 Name:           go-github-mdlayher-socket
-Version:        0.6.1
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Low-level network connection helpers for Go
 License:        MIT
 URL:            https://github.com/mdlayher/socket
-#!RemoteAsset:  sha256:a638875c80b00c1327586e58132f535c79383870b10636e1e95ad3421bb3c599
+#!RemoteAsset:  sha256:0a538bfe476d7264fd36105b7967261288a98c6f14f6390925bb44250eefea1c
 Source0:        https://github.com/mdlayher/socket/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
