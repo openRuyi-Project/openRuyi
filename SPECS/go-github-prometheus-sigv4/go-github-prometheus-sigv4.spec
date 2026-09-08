@@ -8,12 +8,12 @@
 %define go_import_path  github.com/prometheus/sigv4
 
 Name:           go-github-prometheus-sigv4
-Version:        0.4.1
+Version:        0.5.0
 Release:        %autorelease
 Summary:        AWS Signature Version 4 support for Prometheus
 License:        Apache-2.0
 URL:            https://github.com/prometheus/sigv4
-#!RemoteAsset:  sha256:d2da42104b380d5a95711787b719e28081fc9244c91f83e78d0da4ab47292fda
+#!RemoteAsset:  sha256:c5cc222b4a58af6b80162738151ed3c7639264f5365029e45dcd3af8aeee24b7
 Source0:        https://github.com/prometheus/sigv4/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
