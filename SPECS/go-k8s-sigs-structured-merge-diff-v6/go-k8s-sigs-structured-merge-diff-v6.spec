@@ -9,12 +9,12 @@
 %define go_import_path  sigs.k8s.io/structured-merge-diff/v6
 
 Name:           go-k8s-sigs-structured-merge-diff-v6
-Version:        6.4.0
+Version:        6.4.2
 Release:        %autorelease
 Summary:        Kubernetes structured merge diff library for Go
 License:        Apache-2.0
 URL:            https://github.com/kubernetes-sigs/structured-merge-diff
-#!RemoteAsset:  sha256:7916149033337caf65fd540884a9cf8ef312aa20880f8e036b0d537678a27124
+#!RemoteAsset:  sha256:f3f9e7b1666db3a1370bfb6e82c7394e988baae564ed6dadd77a5f4761c36a2e
 Source0:        https://github.com/kubernetes-sigs/structured-merge-diff/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
