@@ -32,22 +32,23 @@
 }
 
 Name:           go-golang-x-tools
-Version:        0.40.0
+Version:        0.49.0
 Release:        %autorelease
 Summary:        Various packages and tools that support the Go programming language
 License:        BSD-3-Clause
 URL:            https://golang.org/x/tools
 VCS:            git:https://github.com/golang/tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:df7f087706730d85ced76f5f2e3d1a51703de3beb305acc72d1170d405f5a21e
 Source0:        https://github.com/golang/tools/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://github.com/golang/telemetry/archive/config/v0.80.0.tar.gz#/telemetry-config-v0.80.0.tar.gz
+#!RemoteAsset:  sha256:7c7d1718dd80c6fed01597c3a4789ce373386c865531b62da656e2eff2f9ab29
+Source1:        https://github.com/golang/telemetry/archive/config/v0.119.0.tar.gz#/telemetry-config-v0.119.0.tar.gz
+BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # Skip flaky test - 251
-Patch0:         2000-skip-test.patch
+Patch2000:      2000-skip-test.patch
 # Patches from debian, thanks!
-Patch1:         2001-Set-GO111MODULE-on.patch
+Patch2001:      2001-Set-GO111MODULE-on.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 BuildOption(check):  -short -timeout=30m
@@ -71,13 +72,6 @@ Requires:       go(golang.org/x/sync)
 This package provides the golang.org/x/tools module, comprising
 various tools and packages mostly for static analysis of Go programs.
 
-%package     -n go-tools
-Summary:        Executable of tools
-
-%description -n go-tools
-This package contains the golang.org/x/tools module executables, comprising
-various tools and packages mostly for static analysis of Go programs.
-
 %prep -a
 %go_prep
 # Provide only the x/telemetry subtree
@@ -87,33 +81,18 @@ mkdir -p vendor/golang.org/x/telemetry
 tar -xf %{SOURCE1} \
     --strip-components=1 \
     -C vendor/golang.org/x/telemetry \
-    telemetry-config-v0.80.0
+    telemetry-config-v0.119.0
 cat > vendor/modules.txt <<'EOF'
-# golang.org/x/telemetry v0.80.0
+# golang.org/x/telemetry v0.119.0
 ## explicit
 golang.org/x/telemetry
 EOF
 popd
-
-# Build binaries for tools
-%build
-%go_common
-cd %{_builddir}/go/src/%{go_import_path}
-go install -trimpath -v -p %{?_smp_build_ncpus} ./cmd/...
-
-# Install binaries for tools
-%install -a
-install -d %{buildroot}%{_bindir}
-install -m 0755 %{_builddir}/go/bin/* %{buildroot}%{_bindir}/
 
 %files
 %license LICENSE*
 %doc README*
 %{go_sys_gopath}/%{go_import_path}
 
-%files -n go-tools
-%license LICENSE*
-%{_bindir}/*
-
 %changelog
-%{?autochangelog}
+%autochangelog
