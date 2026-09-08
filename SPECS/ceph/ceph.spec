@@ -559,6 +559,9 @@ Requires:       python3dist(pyopenssl)
 Requires:       python3dist(requests)
 Requires:       python3dist(python-dateutil)
 Requires:       python3dist(setuptools)
+# for the prometheus module
+Requires:       python3dist(cherrypy)
+Requires:       python3dist(pyyaml)
 Provides:       ceph-mgr-modules-core = %{version}-%{release}
 Obsoletes:      ceph-mgr-modules-core < %{version}-%{release}
 
