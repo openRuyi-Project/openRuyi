@@ -7,12 +7,12 @@
 %define go_import_path  github.com/matryer/is
 
 Name:           go-github-matryer-is
-Version:        1.4.0
+Version:        1.4.1
 Release:        %autorelease
 Summary:        Lightweight testing assertions for Go
 License:        MIT
 URL:            https://github.com/matryer/is
-#!RemoteAsset:  sha256:9fdffa00496e767c2585c2fd7dbb018bee65b6f65f95aaeb96966719fbdd3ddc
+#!RemoteAsset:  sha256:853cd8171db93e3e36417f5266d6d72ed3ada4f7d5e56837b19656c87adc31eb
 Source0:        https://github.com/matryer/is/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
