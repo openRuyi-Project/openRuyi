@@ -8,12 +8,12 @@
 %define go_import_path  github.com/vultr/govultr/v3
 
 Name:           go-github-vultr-govultr-v3
-Version:        3.32.0
+Version:        3.33.0
 Release:        %autorelease
 Summary:        Vultr API client for Go
 License:        MIT
 URL:            https://github.com/vultr/govultr
-#!RemoteAsset:  sha256:30725b6bb3b971a6e96d16971825e2b71c653b4034e21ad589e8ae4288d8e7c0
+#!RemoteAsset:  sha256:be485cbe2c57a3b6f382e7f8fbf470a632eaf5d43b5c2da678c4954fdb1fbc37
 Source0:        https://github.com/vultr/govultr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
