@@ -32,6 +32,9 @@ Source0:        https://github.com/kubernetes/kube-openapi/archive/%{commit_id}.
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# https://github.com/kubernetes/kube-openapi/pull/616
+Patch0:         0001-Insulate-go-json-experiment-from-stdlib.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/davecgh/go-spew)
