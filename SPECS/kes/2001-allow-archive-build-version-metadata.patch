@@ -1,0 +1,45 @@
+From 528a93b403e8fb7df6644b27e016bb85259cf810 Mon Sep 17 00:00:00 2001
+From: cl2t <91820982+cl2t@users.noreply.github.com>
+Date: Wed, 9 Sep 2026 13:01:58 +0800
+Subject: [PATCH] Allow archive builds to supply version metadata
+
+Official source archives do not contain .git metadata. Accept linker-provided version and commit fallbacks while preserving debug build settings when available.
+
+Signed-off-by: cl2t <91820982+cl2t@users.noreply.github.com>
+---
+ internal/sys/build.go | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/internal/sys/build.go b/internal/sys/build.go
+index a9e6a50..a0bc28c 100644
+--- a/internal/sys/build.go
++++ b/internal/sys/build.go
+@@ -20,18 +20,21 @@ type BinaryInfo struct {
+ 	Compiler string // The Go compiler used to build this binary
+ }
+ 
++// Version and CommitID can be supplied by the linker for source-archive builds.
++// VCS metadata, when present, continues to take precedence.
++var Version = "<unknown>"
++var CommitID = "<unknown>"
++
+ // ReadBinaryInfo returns the ReadBinaryInfo about this program.
+ func ReadBinaryInfo() (BinaryInfo, error) { return readBinaryInfo() }
+ 
+ var readBinaryInfo = sync.OnceValues[BinaryInfo, error](func() (BinaryInfo, error) {
+ 	const (
+-		DefaultVersion  = "<unknown>"
+-		DefaultCommitID = "<unknown>"
+ 		DefaultCompiler = "<unknown>"
+ 	)
+ 	binaryInfo := BinaryInfo{
+-		Version:  DefaultVersion,
+-		CommitID: DefaultCommitID,
++		Version:  Version,
++		CommitID: CommitID,
+ 		Runtime:  runtime.Version(),
+ 		Compiler: DefaultCompiler,
+ 	}
+-- 
+2.52.0
+

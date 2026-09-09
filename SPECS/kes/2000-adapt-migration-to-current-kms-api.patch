@@ -1,0 +1,72 @@
+From 67feb7a51ee7e71d782e7da2e6778c97d7ab6f29 Mon Sep 17 00:00:00 2001
+From: cl2t <91820982+cl2t@users.noreply.github.com>
+Date: Wed, 9 Sep 2026 13:01:58 +0800
+Subject: [PATCH] Adapt migration to the current KMS client API
+
+Use mtls.ParsePrivateKey, which retains the k1 API-key format, and pass the selected enclave explicitly to both import attempts and forced deletion. Preserve merge and overwrite behavior.
+
+The MinIO-pinned kms-go/kms 4e64ce8 client moved the enclave out of the request messages.
+
+Signed-off-by: cl2t <91820982+cl2t@users.noreply.github.com>
+---
+ cmd/kes/migrate.go | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
+
+diff --git a/cmd/kes/migrate.go b/cmd/kes/migrate.go
+index 646e5f2..fcd1de7 100644
+--- a/cmd/kes/migrate.go
++++ b/cmd/kes/migrate.go
+@@ -16,6 +16,7 @@ import (
+ 	"sync/atomic"
+ 	"time"
+ 
++	"aead.dev/mtls"
+ 	"github.com/minio/kes/internal/cli"
+ 	"github.com/minio/kes/internal/crypto"
+ 	"github.com/minio/kes/kesconf"
+@@ -183,7 +184,7 @@ func migrate(args []string) {
+ 	}
+ 
+ 	// Migrate from a KES backend (--from) to a KMS server (-s / --server).
+-	apiKey, err := kms.ParseAPIKey(kmsAPIKey)
++	apiKey, err := mtls.ParsePrivateKey(kmsAPIKey)
+ 	cli.Assert(err == nil, err)
+ 
+ 	client, err := kms.NewClient(&kms.Config{
+@@ -233,24 +234,22 @@ func migrate(args []string) {
+ 		key, err := crypto.ParseKeyVersion(b)
+ 		cli.Assert(err == nil, err)
+ 
+-		err = client.ImportKey(ctx, &kms.ImportKeyRequest{
+-			Enclave: kmsEnclave,
+-			Name:    name,
+-			Type:    kms.SecretKeyType(key.Key.Type()),
+-			Key:     key.Key.Bytes(),
++		err = client.ImportKey(ctx, kmsEnclave, &kms.ImportKeyRequest{
++			Name: name,
++			Type: kms.SecretKeyType(key.Key.Type()),
++			Key:  key.Key.Bytes(),
+ 		})
+ 		if merge && errors.Is(err, kms.ErrKeyExists) {
+ 			continue // Do not increment the counter since we skip this key
+ 		}
+ 		if force && errors.Is(err, kms.ErrKeyExists) { // Try to overwrite the key
+-			if err = client.DeleteKey(ctx, &kms.DeleteKeyRequest{Enclave: kmsEnclave, Name: name, AllVersions: true}); err != nil {
++			if err = client.DeleteKey(ctx, kmsEnclave, &kms.DeleteKeyRequest{Name: name, AllVersions: true}); err != nil {
+ 				cli.Assert(err == nil, err)
+ 			}
+-			err = client.ImportKey(ctx, &kms.ImportKeyRequest{
+-				Enclave: kmsEnclave,
+-				Name:    name,
+-				Type:    kms.SecretKeyType(key.Key.Type()),
+-				Key:     key.Key.Bytes(),
++			err = client.ImportKey(ctx, kmsEnclave, &kms.ImportKeyRequest{
++				Name: name,
++				Type: kms.SecretKeyType(key.Key.Type()),
++				Key:  key.Key.Bytes(),
+ 				// TODO(aead): migrate HMAC key as well
+ 			})
+ 		}
+-- 
+2.52.0
+

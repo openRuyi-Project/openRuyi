@@ -1,0 +1,28 @@
+From 020981b83326e9f310983ec00bde79342cbb1f7a Mon Sep 17 00:00:00 2001
+From: cl2t <91820982+cl2t@users.noreply.github.com>
+Date: Wed, 9 Sep 2026 13:04:24 +0800
+Subject: [PATCH] Format Fortanix HTTP status as a decimal number
+
+An HTTP status is an integer, not a quoted character. This also keeps the package compatible with the current Go printf analyzer without disabling vet.
+
+Signed-off-by: cl2t <91820982+cl2t@users.noreply.github.com>
+---
+ internal/keystore/fortanix/keystore.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/keystore/fortanix/keystore.go b/internal/keystore/fortanix/keystore.go
+index 358f403..43478ef 100644
+--- a/internal/keystore/fortanix/keystore.go
++++ b/internal/keystore/fortanix/keystore.go
+@@ -249,7 +249,7 @@ func (s *Store) Create(ctx context.Context, name string, value []byte) error {
+ 	if resp.StatusCode != http.StatusCreated {
+ 		switch err := parseErrorResponse(resp); {
+ 		case err == nil:
+-			return fmt.Errorf("fortanix: failed to create key '%s': %s (%q)", name, resp.Status, resp.StatusCode)
++			return fmt.Errorf("fortanix: failed to create key '%s': %s (%d)", name, resp.Status, resp.StatusCode)
+ 		case resp.StatusCode == http.StatusConflict && err.Error() == "sobject already exists":
+ 			return kesdk.ErrKeyExists
+ 		default:
+-- 
+2.52.0
+
