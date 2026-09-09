@@ -15,19 +15,20 @@ Example: Resolves #123
 
 - Resolves #
 
-## Checklist
 
+## Code of Conduct Declaration
 - [ ] I have read the [openRuyi Code of Conduct] and agree to abide by it.
 
+## AI-Generated Content Declaration *(check exactly one)*
 <!--
-If this PR includes non-trivial AI-assisted content, check the box below and add attribution
-using the `AGENT_NAME:MODEL_VERSION` format.
+If this PR includes non-trivial AI-assisted content, add attribution using the `AGENT_NAME:MODEL_VERSION` format
 Example: Assisted-by: ChatGPT:GPT-5.5 Thinking
 -->
 
-- [ ] I have read the [AI-Assisted Contribution Policy], and this Pull Request includes non-trivial AI-assisted content.
-
-Assisted-by:
+> Definition: *Trivial AI assistance* = code formatting, spell-checking, boilerplate comments, etc
+- [ ] This PR is **fully human-authored**, or contains only **trivial AI assistance**.
+- [ ] This PR contains **non-trivial AI-assisted content**. I agree to abide by the [AI-Assisted Contribution Policy] and take full responsibility for the AI-generated content.
+    - Assisted-by:
 
 [openRuyi Code of Conduct]: https://openruyi.cn/governance/legal/code-of-conduct
 [AI-Assisted Contribution Policy]:https://openruyi.cn/governance/policy/ai-contribution-policy
