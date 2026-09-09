@@ -25,6 +25,9 @@ Source0:        https://github.com/kubernetes/apimachinery/archive/refs/tags/v%{
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Tolerate Go 1.27 json/v2 UTF-8 encoding in serializer tests.
+Patch0:         0001-Tolerate-json-v2-invalid-UTF-8-munging-in-unstructured-serialization-tests.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/armon/go-socks5)
