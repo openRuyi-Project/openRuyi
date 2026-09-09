@@ -1,0 +1,36 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] tests: expect JSON after nats-server removed JSONP
+
+In nats-server 2.15.1, server.ResponseHandler ignores JSONP callback
+query parameters and always sets Content-Type to application/json.
+Update the monitoring callback test expectation to match; production
+code is unchanged.
+
+Upstream-Status: Inappropriate [upstream repository archived]
+Reference: https://github.com/nats-io/nats-server/blob/v2.15.1/server/monitor.go
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+diff --git a/server/monitor_test.go b/server/monitor_test.go
+index be9fda5..55cb88a 100644
+--- a/server/monitor_test.go
++++ b/server/monitor_test.go
+@@ -43,7 +43,6 @@ const (
+ 	monitorPort  = 8222
+ 	expectedJSON = "application/json"
+ 	expectedText = "text/html; charset=utf-8"
+-	expectedCb   = "application/javascript"
+ )
+ 
+ var defaultMonitorOptions = natsd.Options{
+@@ -315,8 +314,8 @@ func TestMonitorServerz(t *testing.T) {
+ 	}
+ 	resp.Body.Close()
+ 
+-	// Test JSONP
+-	resp, _ = getBody(t, ServerPath+"?callback=callback", expectedCb)
++	// Current nats-server ResponseHandler ignores JSONP callbacks and returns JSON.
++	resp, _ = getBody(t, ServerPath+"?callback=callback", expectedJSON)
+ 	resp.Body.Close()
+ 
+ 	// Restart server, for memory based server, things should have been reset
