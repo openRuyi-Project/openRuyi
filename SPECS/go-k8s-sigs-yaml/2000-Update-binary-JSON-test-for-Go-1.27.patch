@@ -1,0 +1,25 @@
+From 72965f6285f9590f3cb729fabfc762735a8a3e7d Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 9 Sep 2026 23:02:08 +0800
+Subject: [PATCH] Update binary JSON test for Go 1.27
+
+---
+ yaml_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/yaml_test.go b/yaml_test.go
+index 4ab50f0..4d1608f 100644
+--- a/yaml_test.go
++++ b/yaml_test.go
+@@ -723,7 +723,7 @@ func TestYAMLToJSON(t *testing.T) {
+ 		},
+ 		"binary data": {
+ 			yaml:                 "a: !!binary gIGC",
+-			json:                 `{"a":"\ufffd\ufffd\ufffd"}`,
++			json:                 `{"a":"���"}`,
+ 			yamlReverseOverwrite: strPtr("a: \ufffd\ufffd\ufffd\n"),
+ 		},
+ 
+-- 
+2.55.0
+

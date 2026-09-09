@@ -18,6 +18,10 @@ Source0:        https://github.com/kubernetes-sigs/yaml/archive/v%{version}.tar.
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Update binary JSON test output for Go 1.27 encoding/json.
+# Remove this once upstream resolves the issue.
+Patch2000:      2000-Update-binary-JSON-test-for-Go-1.27.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
