@@ -18,6 +18,10 @@ Source0:        https://github.com/flyingmutant/rapid/archive/v%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Update string examples for Go 1.27 Unicode 17 tables.
+# Remove this once upstream resolves the issue.
+Patch2000:      2000-Update-string-examples-for-Go-1.27-Unicode-tables.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 

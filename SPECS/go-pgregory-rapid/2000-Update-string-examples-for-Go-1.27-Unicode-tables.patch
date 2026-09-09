@@ -1,0 +1,49 @@
+From 5c68c3ade50777588439b3263754ec8292d7eb86 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 9 Sep 2026 22:37:58 +0800
+Subject: [PATCH] Update string examples for Go 1.27 Unicode tables
+
+---
+ strings_example_test.go | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/strings_example_test.go b/strings_example_test.go
+index bb5e048..e8818ab 100644
+--- a/strings_example_test.go
++++ b/strings_example_test.go
+@@ -28,8 +28,8 @@ func ExampleRune() {
+ 	// '\n' '\x1b' 'A' 'a' '*'
+ 	// '0' '@' '?' '\'' '\ue05d'
+ 	// '<' '%' '!' '\u0604' 'A'
+-	// '%' '╷' '~' '!' '/'
+-	// '\u00ad' '𝅾' '@' '҈' ' '
++	// '%' '╴' '~' '!' '/'
++	// '\u00ad' 'ૼ' '@' '҈' ' '
+ }
+ 
+ func ExampleRuneFrom() {
+@@ -64,8 +64,8 @@ func ExampleString() {
+ 	}
+ 	// Output:
+ 	// "\n߾⃝?\rA�֍"
+-	// "\u2006𑨳"
+-	// "A＄\u0603ᾢ"
++	// "\u2006𝨠#`\x1b�\u00a0?˄~ס"
++	// "A﹩\u0603ᾢ"
+ 	// "+^#.[#৲"
+ 	// ""
+ }
+@@ -92,8 +92,8 @@ func ExampleStringN() {
+ 	}
+ 	// Output:
+ 	// "\n߾⃝?\r"
+-	// "\u2006𑨳#`\x1b"
+-	// "A＄\u0603ᾢÉ"
++	// "\u2006𝨠#`\x1b"
++	// "A﹩\u0603ᾢÉ"
+ 	// "+^#.["
+ 	// ".A<a¤"
+ }
+-- 
+2.55.0
+
