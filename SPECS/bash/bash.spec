@@ -93,8 +93,6 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 %dir %{_datadir}/doc/*
 %{_datadir}/doc/*
 %{_datadir}/info/*
-%doc RBASH README
-%doc doc/{FAQ,INTRO,README,bash{,ref}.html}
 %{_libdir}/bash/*
 
 %files devel
