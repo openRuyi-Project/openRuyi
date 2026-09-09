@@ -1,0 +1,26 @@
+From b12aa9011e4393c37fdf55d1240d84d527c9ac29 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 10:24:20 +0800
+Subject: [PATCH] Fix non-constant format strings for current Go
+
+Use constant formatting or a non-formatting test method. Keep upstream
+tests enabled with the distro Go toolchain.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ regression_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/regression_test.go b/regression_test.go
+index 534c10e..7ff533f 100644
+--- a/regression_test.go
++++ b/regression_test.go
+@@ -97,7 +97,7 @@ func TestExponentialRegressionYCoordErr(t *testing.T) {
+ 	c := []stats.Coordinate{{1, -5}, {4, 25}, {6, 5}}
+ 	_, err := stats.ExponentialRegression(c)
+ 	if err != stats.YCoordErr {
+-		t.Errorf(err.Error())
++		t.Error(err)
+ 	}
+ }
+ 

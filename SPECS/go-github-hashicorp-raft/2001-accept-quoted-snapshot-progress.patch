@@ -1,0 +1,28 @@
+From 2821e374d945c46c651c78f5445c3f4d2ee74709 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 10:29:53 +0800
+Subject: [PATCH] tests: accept quoted snapshot progress from go-hclog
+
+With go-hclog 1.6.3 the same completed snapshot progress is printed as
+percent-complete="100.00%". Accept both text representations while still
+requiring the restore message and the exact completion percentage.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ raft_test.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/raft_test.go b/raft_test.go
+index 84234e7..730ccd1 100644
+--- a/raft_test.go
++++ b/raft_test.go
+@@ -1088,7 +1088,8 @@ func TestRaft_SnapshotRestore_Progress(t *testing.T) {
+ 		found := false
+ 		for scan.Scan() {
+ 			line := scan.Text()
+-			if strings.Contains(line, "snapshot restore progress") && strings.Contains(line, "percent-complete=100.00%") {
++			if strings.Contains(line, "snapshot restore progress") &&
++				(strings.Contains(line, "percent-complete=100.00%") || strings.Contains(line, `percent-complete="100.00%"`)) {
+ 				found = true
+ 				break
+ 			}

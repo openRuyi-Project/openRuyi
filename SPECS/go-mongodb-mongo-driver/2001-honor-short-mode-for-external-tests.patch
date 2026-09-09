@@ -1,0 +1,136 @@
+From dc9c13a7446403738dedcbdc3d49df0d07f59eeb Mon Sep 17 00:00:00 2001
+From: cl2t <91820982+cl2t@users.noreply.github.com>
+Date: Wed, 9 Sep 2026 19:56:06 +0800
+Subject: [PATCH] Honor short mode in tests requiring DNS or a MongoDB server
+
+SRV fixtures resolve test.build.10gen.cc using external DNS. The heartbeat timeout test connects to localhost:27017. Skip those cases in the upstream short test mode while retaining the remaining URI, topology and authentication tests. Full-mode test bodies and production behavior are unchanged.
+
+Signed-off-by: cl2t <91820982+cl2t@users.noreply.github.com>
+---
+ mongo/options/clientoptions_test.go           |  3 +++
+ .../driver/connstring/connstring_spec_test.go |  4 ++++
+ .../topology/polling_srv_records_test.go      | 20 +++++++++++++++++++
+ x/mongo/driver/topology/server_test.go        |  4 ++++
+ x/mongo/driver/topology/topology_test.go      |  3 +++
+ 5 files changed, 34 insertions(+)
+
+diff --git a/mongo/options/clientoptions_test.go b/mongo/options/clientoptions_test.go
+index f85a112..f97a905 100644
+--- a/mongo/options/clientoptions_test.go
++++ b/mongo/options/clientoptions_test.go
+@@ -626,6 +626,9 @@ func TestClientOptions(t *testing.T) {
+ 
+ 		for _, tc := range testCases {
+ 			t.Run(tc.name, func(t *testing.T) {
++				if testing.Short() && (tc.name == "srvServiceName" || tc.name == "srvMaxHosts") {
++					t.Skip("requires external MongoDB SRV DNS records")
++				}
+ 				result := Client().ApplyURI(tc.uri)
+ 
+ 				// Manually add the URI and ConnString to the test expectations to avoid adding them in each test
+diff --git a/x/mongo/driver/connstring/connstring_spec_test.go b/x/mongo/driver/connstring/connstring_spec_test.go
+index aea68eb..0cec05e 100644
+--- a/x/mongo/driver/connstring/connstring_spec_test.go
++++ b/x/mongo/driver/connstring/connstring_spec_test.go
+@@ -119,6 +119,10 @@ func runTest(t *testing.T, filename string, test testCase, warningsError bool) {
+ 			}
+ 		}
+ 
++		if testing.Short() && strings.Contains(test.URI, "test.build.10gen.cc") {
++			t.Skip("requires external MongoDB SRV DNS records")
++		}
++
+ 		cs, err := connstring.ParseAndValidate(test.URI)
+ 		// Since we don't have warnings in Go, we return warnings as errors.
+ 		//
+diff --git a/x/mongo/driver/topology/polling_srv_records_test.go b/x/mongo/driver/topology/polling_srv_records_test.go
+index 04f5e8c..1e8a96e 100644
+--- a/x/mongo/driver/topology/polling_srv_records_test.go
++++ b/x/mongo/driver/topology/polling_srv_records_test.go
+@@ -126,6 +126,10 @@ func compareHosts(t *testing.T, received []description.Server, expected []string
+ }
+ 
+ func TestPollingSRVRecordsSpec(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires external MongoDB SRV DNS records")
++	}
++
+ 	for _, uri := range []string{
+ 		"mongodb+srv://test1.test.build.10gen.cc/?heartbeatFrequencyMS=100",
+ 		// Test with user:pass as a regression test for GODRIVER-2620
+@@ -168,6 +172,10 @@ func testPollingSRVRecordsSpec(t *testing.T, uri string) {
+ }
+ 
+ func TestPollSRVRecords(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires external MongoDB SRV DNS records")
++	}
++
+ 	t.Run("Not unknown or sharded topology", func(t *testing.T) {
+ 		uri := "mongodb+srv://test1.test.build.10gen.cc/?heartbeatFrequencyMS=100"
+ 		cfg, err := NewConfig(options.Client().ApplyURI(uri), nil)
+@@ -267,6 +275,10 @@ func TestPollSRVRecords(t *testing.T) {
+ }
+ 
+ func TestPollingSRVRecordsLoadBalanced(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires external MongoDB SRV DNS records")
++	}
++
+ 	createLBTopology := func(t *testing.T, uri string) *Topology {
+ 		t.Helper()
+ 
+@@ -312,6 +324,10 @@ func TestPollingSRVRecordsLoadBalanced(t *testing.T) {
+ }
+ 
+ func TestPollSRVRecordsMaxHosts(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires external MongoDB SRV DNS records")
++	}
++
+ 	// simulateSRVPoll creates a topology with srvMaxHosts, mocks the DNS changes described by
+ 	// recordsToAdd and recordsToRemove, and returns the topology.
+ 	simulateSRVPoll := func(srvMaxHosts int, recordsToAdd []*net.SRV, recordsToRemove []*net.SRV) (*Topology, func(ctx context.Context) error) {
+@@ -384,6 +400,10 @@ func TestPollSRVRecordsMaxHosts(t *testing.T) {
+ }
+ 
+ func TestPollSRVRecordsServiceName(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires external MongoDB SRV DNS records")
++	}
++
+ 	// simulateSRVPoll creates a topology with srvServiceName, mocks the DNS changes described by
+ 	// recordsToAdd and recordsToRemove, and returns the topology.
+ 	simulateSRVPoll := func(srvServiceName string, recordsToAdd []*net.SRV, recordsToRemove []*net.SRV) (*Topology, func(ctx context.Context) error) {
+diff --git a/x/mongo/driver/topology/server_test.go b/x/mongo/driver/topology/server_test.go
+index 1c10d61..1e8470f 100644
+--- a/x/mongo/driver/topology/server_test.go
++++ b/x/mongo/driver/topology/server_test.go
+@@ -128,6 +128,10 @@ func (d *timeoutDialer) DialContext(ctx context.Context, network, address string
+ 
+ // TestServerHeartbeatTimeout tests timeout retry and preemptive canceling.
+ func TestServerHeartbeatTimeout(t *testing.T) {
++	if testing.Short() {
++		t.Skip("requires MongoDB on localhost:27017")
++	}
++
+ 	if os.Getenv("DOCKER_RUNNING") != "" {
+ 		t.Skip("Skipping this test in docker.")
+ 	}
+diff --git a/x/mongo/driver/topology/topology_test.go b/x/mongo/driver/topology/topology_test.go
+index ad91d95..9a915a8 100644
+--- a/x/mongo/driver/topology/topology_test.go
++++ b/x/mongo/driver/topology/topology_test.go
+@@ -913,6 +913,9 @@ func TestTopologyConstructionLogging(t *testing.T) {
+ 			tc := tc
+ 
+ 			t.Run(tc.name, func(t *testing.T) {
++				if testing.Short() && tc.name == "srv" {
++					t.Skip("requires external MongoDB SRV DNS records")
++				}
+ 				t.Parallel()
+ 
+ 				sink := &mockLogSink{}
+-- 
+2.52.0
+

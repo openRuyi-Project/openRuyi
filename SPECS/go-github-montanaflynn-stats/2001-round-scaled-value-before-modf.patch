@@ -1,0 +1,31 @@
+From b53ac325585c527df82fea471f05435ff4eda77e Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 10:28:05 +0800
+Subject: [PATCH] Round the scaled value before extracting its fractional part
+
+An explicit float64 conversion prevents fusion from retaining extra
+precision across the multiplication and Modf. The existing Round(5.55, 1)
+regression test returned 5.5 on riscv64 instead of 5.6.
+
+See https://go.dev/ref/spec#Floating_point_operators.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ round.go | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/round.go b/round.go
+index b66779c..b74f4ca 100644
+--- a/round.go
++++ b/round.go
+@@ -21,7 +21,9 @@ func Round(input float64, places int) (rounded float64, err error) {
+ 	precision := math.Pow(10, float64(places))
+ 
+ 	// Find the decimal place we are looking to round
+-	digit := input * precision
++	// Round the product before Modf; fused multiply-subtract can otherwise
++	// move a half-way value below 0.5 on architectures such as RISC-V.
++	digit := float64(input * precision)
+ 
+ 	// Get the actual decimal number as a fraction to be compared
+ 	_, decimal := math.Modf(digit)

@@ -1,0 +1,52 @@
+From be0d21ead51b6f179aef223b47d294ca064e7211 Mon Sep 17 00:00:00 2001
+From: cl2t <91820982+cl2t@users.noreply.github.com>
+Date: Wed, 9 Sep 2026 19:56:06 +0800
+Subject: [PATCH] Keep test diagnostics compatible with the current printf
+ checker
+
+Use Error for an existing error value and constant format strings for type names. Keep test conditions and expected results unchanged; do not disable vet.
+
+Signed-off-by: cl2t <91820982+cl2t@users.noreply.github.com>
+---
+ internal/assert/assertion_compare_test.go | 4 ++--
+ internal/rand/rand_test.go                | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/internal/assert/assertion_compare_test.go b/internal/assert/assertion_compare_test.go
+index ef8862e..5ffcafe 100644
+--- a/internal/assert/assertion_compare_test.go
++++ b/internal/assert/assertion_compare_test.go
+@@ -75,7 +75,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resGreater != compareGreater {
+-			t.Errorf("object greater should be greater than less for type " + currCase.cType)
++			t.Errorf("object greater should be greater than less for type %s", currCase.cType)
+ 		}
+ 
+ 		resEqual, isComparable := compare(currCase.less, currCase.less, reflect.ValueOf(currCase.less).Kind())
+@@ -84,7 +84,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resEqual != 0 {
+-			t.Errorf("objects should be equal for type " + currCase.cType)
++			t.Errorf("objects should be equal for type %s", currCase.cType)
+ 		}
+ 	}
+ }
+diff --git a/internal/rand/rand_test.go b/internal/rand/rand_test.go
+index 952ce2e..6dee991 100644
+--- a/internal/rand/rand_test.go
++++ b/internal/rand/rand_test.go
+@@ -80,7 +80,7 @@ func checkSampleDistribution(t *testing.T, samples []float64, expected *statsRes
+ 	actual := getStatsResults(samples)
+ 	err := actual.checkSimilarDistribution(expected)
+ 	if err != nil {
+-		t.Errorf(err.Error())
++		t.Error(err)
+ 	}
+ }
+ 
+-- 
+2.52.0
+

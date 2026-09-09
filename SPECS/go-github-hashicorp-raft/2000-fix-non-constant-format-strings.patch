@@ -1,0 +1,40 @@
+From 68babec7e0a9351972ecfdb93ba4be200a7f33c0 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 10:24:20 +0800
+Subject: [PATCH] Fix non-constant format strings for current Go
+
+Use constant formatting or a non-formatting test method. Keep upstream
+tests enabled with the distro Go toolchain.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ net_transport.go | 2 +-
+ raft_test.go     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net_transport.go b/net_transport.go
+index 2e98bd3..4761ca2 100644
+--- a/net_transport.go
++++ b/net_transport.go
+@@ -694,7 +694,7 @@ func decodeResponse(conn *netConn, resp interface{}) (bool, error) {
+ 
+ 	// Format an error if any
+ 	if rpcError != "" {
+-		return true, fmt.Errorf(rpcError)
++		return true, fmt.Errorf("%s", rpcError)
+ 	}
+ 	return true, nil
+ }
+diff --git a/raft_test.go b/raft_test.go
+index 8a11ced..6a9b537 100644
+--- a/raft_test.go
++++ b/raft_test.go
+@@ -1714,7 +1714,7 @@ func TestRaft_Barrier(t *testing.T) {
+ 	// Ensure all the logs are the same
+ 	c.EnsureSame(t)
+ 	if len(getMockFSM(c.fsms[0]).logs) != 100 {
+-		t.Fatalf(fmt.Sprintf("Bad log length: %d", len(getMockFSM(c.fsms[0]).logs)))
++		t.Fatalf("Bad log length: %d", len(getMockFSM(c.fsms[0]).logs))
+ 	}
+ }
+ 
