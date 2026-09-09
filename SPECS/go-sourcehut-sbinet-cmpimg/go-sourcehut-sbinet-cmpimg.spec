@@ -13,10 +13,13 @@ Release:        %autorelease
 Summary:        simple package to compare images
 License:        BSD-3-Clause
 URL:            https://git.sr.ht/~sbinet/cmpimg
-#!RemoteAsset
+#!RemoteAsset:  sha256:fb13ae7a19cde0a2f4a85e1691db457cbb1d568915ed93e2349d5dd2efad834c
 Source0:        https://git.sr.ht/~sbinet/cmpimg/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# Avoid relying on exact PNG encoding output changed by Go 1.27.
+Patch2000:      2000-Fix-TestDiff-for-Go-1.27-PNG-encoding-changes.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
@@ -35,9 +38,9 @@ cmpimg is a simple package (extracted from Gonum/plot) to
 compare images (PNG, JPEG, PDF, ...)
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

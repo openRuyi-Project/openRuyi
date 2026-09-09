@@ -1,0 +1,36 @@
+From 510b447f4f2217d97e07ccb4394c79f49b14da09 Mon Sep 17 00:00:00 2001
+From: misaka00251 <liuxin@iscas.ac.cn>
+Date: Wed, 9 Sep 2026 22:00:44 +0800
+Subject: [PATCH] Fix TestDiff for Go 1.27 PNG encoding changes
+
+---
+ cmpimg_test.go | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/cmpimg_test.go b/cmpimg_test.go
+index 3a1798c..b4aa666 100644
+--- a/cmpimg_test.go
++++ b/cmpimg_test.go
+@@ -49,9 +49,16 @@ func TestDiff(t *testing.T) {
+ 	if err != nil {
+ 		t.Fatalf("failed to encode difference png: %v", err)
+ 	}
+-	gotDiff := base64.StdEncoding.EncodeToString(buf.Bytes())
+-	if gotDiff != wantDiffEncoded {
+-		t.Errorf("unexpected encoded diff value:\ngot:%s\nwant:%s", gotDiff, wantDiffEncoded)
++	wantDiff, err := base64.StdEncoding.DecodeString(wantDiffEncoded)
++	if err != nil {
++		t.Fatalf("failed to decode expected difference png: %v", err)
++	}
++	equal, err := Equal("png", buf.Bytes(), wantDiff)
++	if err != nil {
++		t.Fatalf("failed to compare difference png: %v", err)
++	}
++	if !equal {
++		t.Error("unexpected diff image")
+ 	}
+ }
+ 
+-- 
+2.55.0
+
