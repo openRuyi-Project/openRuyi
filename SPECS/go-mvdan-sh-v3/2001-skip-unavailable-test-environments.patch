@@ -1,0 +1,52 @@
+From 6a383c86723d8638f4e2891cf6ab1f898b59295a Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 18:40:24 +0800
+Subject: [PATCH] tests: skip unavailable pseudo-terminals and process
+ substitution
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+
+diff --git a/interp/interp_test.go b/interp/interp_test.go
+index 8b40623..3f30a0e 100644
+--- a/interp/interp_test.go
++++ b/interp/interp_test.go
+@@ -4419,6 +4419,12 @@ func TestRunnerRunConfirm(t *testing.T) {
+ 	}
+ 	for _, c := range runTests {
+ 		t.Run("", func(t *testing.T) {
++			if strings.Contains(c.in, "<(") || strings.Contains(c.in, ">(") {
++				if _, err := os.Stat("/dev/fd"); err != nil {
++					// Process substitution cannot run without the fd filesystem.
++					t.Skipf("process substitution requires /dev/fd: %v", err)
++				}
++			}
+ 			if strings.Contains(c.want, " #IGNORE") {
+ 				return
+ 			}
+diff --git a/interp/unix_test.go b/interp/unix_test.go
+index 61489f0..8ad7525 100644
+--- a/interp/unix_test.go
++++ b/interp/unix_test.go
+@@ -36,7 +36,8 @@ func TestRunnerTerminalStdIO(t *testing.T) {
+ 		{"Pseudo", func(t *testing.T) (io.Writer, io.Reader) {
+ 			primary, secondary, err := pty.Open()
+ 			if err != nil {
+-				t.Fatal(err)
++				// Some build workers do not expose a pseudo-terminal device.
++				t.Skipf("pseudo-terminal is unavailable: %v", err)
+ 			}
+ 			return secondary, primary
+ 		}, "012end\r\n"},
+@@ -112,7 +113,8 @@ func TestRunnerTerminalExec(t *testing.T) {
+ 			// That can lead to "signal: hangup" flakes.
+ 			primary, secondary, err := pty.Open()
+ 			if err != nil {
+-				t.Fatal(err)
++				// Some build workers do not expose a pseudo-terminal device.
++				t.Skipf("pseudo-terminal is unavailable: %v", err)
+ 			}
+ 			cmd.Stdin = secondary
+ 			cmd.Stdout = secondary
+-- 
+2.43.0
+

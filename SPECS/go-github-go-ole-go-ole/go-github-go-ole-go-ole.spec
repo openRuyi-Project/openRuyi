@@ -5,6 +5,8 @@
 
 %define _name           go-ole
 %define go_import_path  github.com/go-ole/go-ole
+# The Windows-only bindings cannot be tested on Linux workers.
+%define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-go-ole-go-ole
 Version:        1.3.0
@@ -19,8 +21,8 @@ BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
-BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(github.com/stretchr/testify)
+BuildRequires:  go(golang.org/x/sys)
 
 Provides:       go(github.com/go-ole/go-ole) = %{version}
 

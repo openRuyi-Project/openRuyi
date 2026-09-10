@@ -82,6 +82,8 @@ BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc/examples) = %{version}
+# cmux imports this installed package from the examples module.
+Provides:       go(google.golang.org/grpc/examples/helloworld/helloworld) = %{version}
 
 Requires:       go(cel.dev/expr)
 Requires:       go(github.com/aws/aws-sdk-go-v2)

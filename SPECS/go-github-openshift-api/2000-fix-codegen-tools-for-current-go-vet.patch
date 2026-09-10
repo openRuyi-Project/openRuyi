@@ -1,0 +1,54 @@
+From bc51cd204d5926c809fd0bac78b0c8181fda5e56 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 19:04:21 +0800
+Subject: [PATCH] fix: make codegen tools compatible with current Go vet
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ tools/codegen/pkg/compatibility/compatibility.go | 2 +-
+ tools/codegen/pkg/openapi/generator.go           | 2 +-
+ tools/codegen/pkg/utils/markdown.go              | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/codegen/pkg/compatibility/compatibility.go b/tools/codegen/pkg/compatibility/compatibility.go
+index 29ce244c8..dcf947699 100644
+--- a/tools/codegen/pkg/compatibility/compatibility.go
++++ b/tools/codegen/pkg/compatibility/compatibility.go
+@@ -280,7 +280,7 @@ func extractIsInternal(spec *dst.GenDecl) bool {
+ 	}
+ 	internal, err := strconv.ParseBool(value[0])
+ 	if err != nil {
+-		klog.Fatalf("%s: error parsing %s tag: %v", typeName(spec), err)
++		klog.Fatalf("%s: error parsing %s tag: %v", typeName(spec), internalTagName, err)
+ 	}
+ 	return internal
+ }
+
+diff --git a/tools/codegen/pkg/openapi/generator.go b/tools/codegen/pkg/openapi/generator.go
+index 9fdcf9a23..230b8fbb9 100644
+--- a/tools/codegen/pkg/openapi/generator.go
++++ b/tools/codegen/pkg/openapi/generator.go
+@@ -124,7 +124,7 @@ func getInputPaths(groupCtxs []generation.APIGroupContext) []string {
+ 
+ 	for _, groupCtx := range groupCtxs {
+ 		if groupCtx.Config != nil && groupCtx.Config.OpenAPI != nil && groupCtx.Config.OpenAPI.Disabled {
+-			klog.V(2).Info("Excluding API group %q from openapi generation", groupCtx.Name)
++			klog.V(2).Infof("Excluding API group %q from openapi generation", groupCtx.Name)
+ 			continue
+ 		}
+
+diff --git a/tools/codegen/pkg/utils/markdown.go b/tools/codegen/pkg/utils/markdown.go
+index aacb1200b..cbaa91c60 100644
+--- a/tools/codegen/pkg/utils/markdown.go
++++ b/tools/codegen/pkg/utils/markdown.go
+@@ -29,7 +29,7 @@ func (m *Markdown) Bytes() []byte {
+ 	ret := &bytes.Buffer{}
+ 	fmt.Fprintf(ret, "# %s\n\n", m.title)
+ 	fmt.Fprintf(ret, "## Table of Contents\n")
+-	fmt.Fprintf(ret, m.tableOfContents.String())
++	fmt.Fprint(ret, m.tableOfContents.String())
+ 	fmt.Fprintln(ret, "")
+ 	fmt.Fprintln(ret, "")
+ 	ret.WriteString(m.body.String())
+-- 
+2.43.0

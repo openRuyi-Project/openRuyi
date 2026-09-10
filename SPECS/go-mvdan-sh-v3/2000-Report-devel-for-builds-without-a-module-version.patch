@@ -1,0 +1,35 @@
+From c4b3ad583ac024aac381d9a8fd6f6ba0f8e09e55 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 02:09:06 +0800
+Subject: [PATCH] Report devel for builds without a module version
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cmd/shfmt/main.go | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/cmd/shfmt/main.go b/cmd/shfmt/main.go
+index ebe86ce..61b4af8 100644
+--- a/cmd/shfmt/main.go
++++ b/cmd/shfmt/main.go
+@@ -153,13 +153,15 @@ For more information and to report bugs, see https://github.com/mvdan/sh.
+ 	flag.Parse()
+ 
+ 	if versionFlag.val {
+-		version := "(unknown)"
++		version := "devel"
+ 		if info, ok := debug.ReadBuildInfo(); ok {
+ 			mod := &info.Main
+ 			if mod.Replace != nil {
+ 				mod = mod.Replace
+ 			}
+-			version = mod.Version
++			if mod.Version != "" {
++				version = mod.Version
++			}
+ 		}
+ 		fmt.Println(version)
+ 		return
+-- 
+2.43.0
+

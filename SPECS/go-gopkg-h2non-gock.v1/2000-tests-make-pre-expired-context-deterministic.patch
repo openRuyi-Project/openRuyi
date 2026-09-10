@@ -1,0 +1,30 @@
+From 7008160828d0210e1c675d69564603d0bd69c31a Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 09:12:17 +0800
+Subject: [PATCH] tests: make pre-expired context deterministic
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ responder_test.go | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/responder_test.go b/responder_test.go
+index d5739d3..f02368e 100644
+--- a/responder_test.go
++++ b/responder_test.go
+@@ -106,10 +106,9 @@ func TestResponderPreExpiredContext(t *testing.T) {
+ 	defer after()
+ 	mres := New("http://foo.com").Get("").Reply(200).BodyString("foo")
+ 
+-	// create a context and wait to ensure it is expired
+-	ctx, cancel := context.WithTimeout(context.Background(), 500*time.Microsecond)
++	// create a context whose deadline has already expired
++	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(-time.Second))
+ 	defer cancel()
+-	time.Sleep(1 * time.Millisecond)
+ 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "http://foo.com", nil)
+ 
+ 	res, err := Responder(req, mres, nil)
+-- 
+2.43.0
+
