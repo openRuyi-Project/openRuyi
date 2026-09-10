@@ -1,0 +1,26 @@
+From 3db72355ce5d12d0cae3d2a327452a43d56b7237 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 00:54:07 +0800
+Subject: [PATCH] Fix logging of transition target state
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ parser.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/parser.go b/parser.go
+index 03cec7a..4013a88 100644
+--- a/parser.go
++++ b/parser.go
+@@ -136,7 +136,7 @@ func (ap *AnsiParser) changeState(newState state) error {
+ 
+ 	// Perform transition action
+ 	if err := ap.currState.Transition(newState); err != nil {
+-		ap.logf("Transition from '%s' to '%s' failed with: '%v'", ap.currState.Name(), newState.Name, err)
++		ap.logf("Transition from '%s' to '%s' failed with: '%v'", ap.currState.Name(), newState.Name(), err)
+ 		return err
+ 	}
+ 
+-- 
+2.43.0
+

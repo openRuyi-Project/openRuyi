@@ -20,14 +20,16 @@ BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+BuildRequires:  go(github.com/Microsoft/go-winio)
 BuildRequires:  go(github.com/stretchr/testify)
 
 Provides:       go(github.com/DataDog/datadog-go) = %{version}
 
+Requires:       go(github.com/Microsoft/go-winio)
+
 %description
 This package provides the legacy, pre-v5 github.com/DataDog/datadog-go
-import path required by packages that depend on
-github.com/DataDog/datadog-go v3.x+incompatible.
+import path required by packages that depend on v3 or v4 releases.
 
 %files
 %doc CHANGELOG.md

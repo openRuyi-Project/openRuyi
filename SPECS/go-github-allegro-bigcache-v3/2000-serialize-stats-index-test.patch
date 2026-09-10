@@ -1,0 +1,27 @@
+From b908b157b86aad156ededb374b8ea4eb5e8667de Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 8 Sep 2026 01:28:46 +0800
+Subject: [PATCH] server: serialize stats index test
+
+TestGetStatsIndex shares the package-level cache used by other server tests. Do not run it in parallel, so its entry count and collisions remain deterministic.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ server/server_test.go | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/server/server_test.go b/server/server_test.go
+index 266afef..471d9d5 100644
+--- a/server/server_test.go
++++ b/server/server_test.go
+@@ -209,7 +209,6 @@ func TestGetStats(t *testing.T) {
+ }
+ 
+ func TestGetStatsIndex(t *testing.T) {
+-	t.Parallel()
+ 	var testStats bigcache.Stats
+ 
+ 	getreq := httptest.NewRequest("GET", testBaseString+"/api/v1/stats", nil)
+-- 
+2.43.0
+
