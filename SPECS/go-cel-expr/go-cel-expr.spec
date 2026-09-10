@@ -25,11 +25,11 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(cel.dev/expr) = %{version}
+Provides:       go(cel.dev/expr/conformance) = %{version}
 
 Requires:       go(google.golang.org/protobuf)
 
 %description
-
 The Common Expression Language (CEL) implements common semantics for
 expression evaluation, enabling different applications to more easily
 interoperate.

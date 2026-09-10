@@ -1,0 +1,28 @@
+From 1688c41c442192b7677a713ff08cf5914026276b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:28:55 +0800
+Subject: [PATCH] tests: use integer formats for cookie MaxAge
+
+Cookie MaxAge values are integers. Use %d in the failure message so the test
+passes Go vet and reports the values with the correct type.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cookie_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cookie_test.go b/cookie_test.go
+index de530ca..91453a9 100644
+--- a/cookie_test.go
++++ b/cookie_test.go
+@@ -52,7 +52,7 @@ func TestNewCookieFromOptions(t *testing.T) {
+ 			t.Fatalf("%v: bad cookie domain: got %q, want %q", i+1, cookie.Domain, v.domain)
+ 		}
+ 		if cookie.MaxAge != v.maxAge {
+-			t.Fatalf("%v: bad cookie maxAge: got %q, want %q", i+1, cookie.MaxAge, v.maxAge)
++			t.Fatalf("%v: bad cookie maxAge: got %d, want %d", i+1, cookie.MaxAge, v.maxAge)
+ 		}
+ 		if cookie.Secure != v.secure {
+ 			t.Fatalf("%v: bad cookie secure: got %v, want %v", i+1, cookie.Secure, v.secure)
+-- 
+2.43.0

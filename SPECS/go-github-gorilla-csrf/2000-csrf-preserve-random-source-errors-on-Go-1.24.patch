@@ -1,0 +1,36 @@
+From 4bae9c0ba03108b05844cd657c6f220d67065d84 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 04:31:26 +0800
+Subject: [PATCH] csrf: preserve random source errors on Go 1.24
+
+Go 1.24 changed crypto/rand.Read to terminate the process when its Reader fails. Read through io.ReadFull instead so generateRandomBytes continues to honor its error-returning contract and its short-reader test remains valid.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ helpers.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/helpers.go b/helpers.go
+index 99005ee..ff1b002 100644
+--- a/helpers.go
++++ b/helpers.go
+@@ -6,6 +6,7 @@ import (
+ 	"encoding/base64"
+ 	"fmt"
+ 	"html/template"
++	"io"
+ 	"net/http"
+ 	"net/url"
+ )
+@@ -142,7 +143,7 @@ func (cs *csrf) requestToken(r *http.Request) ([]byte, error) {
+ // fails to function correctly.
+ func generateRandomBytes(n int) ([]byte, error) {
+ 	b := make([]byte, n)
+-	_, err := rand.Read(b)
++	_, err := io.ReadFull(rand.Reader, b)
+ 	// err == nil only if len(b) == n
+ 	if err != nil {
+ 		return nil, err
+-- 
+2.43.0
+

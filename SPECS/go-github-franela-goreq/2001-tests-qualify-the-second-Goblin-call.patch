@@ -1,0 +1,26 @@
+From 6f5b473bf2105cca247faa0b3d4782372be392d0 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 05:16:33 +0800
+Subject: [PATCH] tests: qualify the second Goblin call
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ goreq_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/goreq_test.go b/goreq_test.go
+index 460db84..c9ca47b 100644
+--- a/goreq_test.go
++++ b/goreq_test.go
+@@ -1147,7 +1147,7 @@ func Test_paramParse(t *testing.T) {
+ 		Corge       string `url:"corge"`
+ 	}
+ 
+-	g := Goblin(t)
++	g := goblin.Goblin(t)
+ 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
+ 	var form = Form{}
+ 	var aform = AnnotedForm{}
+-- 
+2.43.0
+

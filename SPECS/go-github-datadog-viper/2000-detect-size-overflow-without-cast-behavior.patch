@@ -1,0 +1,38 @@
+From 289e41ef0ba797375d3f9e09a1fdefde05b3786c Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 13:01:08 +0800
+Subject: [PATCH] fix: detect size overflow without cast behavior
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ util.go | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/util.go b/util.go
+index 34ae083..c796a6c 100644
+--- a/util.go
++++ b/util.go
+@@ -15,6 +15,7 @@ import (
+ 	"os"
+ 	"path/filepath"
+ 	"runtime"
++	"strconv"
+ 	"strings"
+ 	"unicode"
+ 
+@@ -181,10 +182,11 @@ func parseSizeInBytes(sizeStr string) (uint, error) {
+ 		}
+ 	}
+ 
+-	num, err := cast.ToUintE(sizeStr)
++	num64, err := strconv.ParseUint(sizeStr, 10, strconv.IntSize)
+ 	if err != nil {
+ 		return 0, err
+ 	}
++	num := uint(num64)
+ 
+ 	size, err := safeMul(num, multiplier)
+ 	if err != nil {
+-- 
+2.43.0
+
