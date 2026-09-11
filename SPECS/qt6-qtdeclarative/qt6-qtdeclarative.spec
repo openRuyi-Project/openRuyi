@@ -66,7 +66,6 @@ Provides:       qt6-quickcontrols2-examples = %{version}-%{release}
 Programming examples for %{name}.
 
 %install -a
-find %{buildroot}%{_qt6_libdir} -type f -name "*.o" -delete -print
 mkdir -p %{buildroot}%{_bindir}
 pushd %{buildroot}%{_qt6_bindir}
 for i in * ; do
@@ -137,6 +136,7 @@ popd
 %{_qt6_libdir}/libQt6Quick*.prl
 %{_qt6_libdir}/libQt6Quick*.so
 %{_qt6_libdir}/cmake/Qt6*/
+%{_qt6_libdir}/objects-*/
 %{_qt6_mkspecsdir}/features/*.prf
 %{_qt6_descriptionsdir}/*.json
 %{_qt6_metatypesdir}/*.json
