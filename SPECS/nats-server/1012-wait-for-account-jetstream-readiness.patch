@@ -1,0 +1,30 @@
+From eeae282ccb537066af83b6738d544bbd7c35f6ec Mon Sep 17 00:00:00 2001
+From: Neil Twigg <neil@nats.io>
+Date: Fri, 21 Mar 2025 16:54:18 +0000
+Subject: [PATCH] Update `waitOnAccount` to check JetStream readiness
+
+Signed-off-by: Neil Twigg <neil@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/jetstream_helpers_test.go | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/server/jetstream_helpers_test.go b/server/jetstream_helpers_test.go
+index 3cfbb0a8b76..157e3c4f0c2 100644
+--- a/server/jetstream_helpers_test.go
++++ b/server/jetstream_helpers_test.go
+@@ -1599,8 +1599,13 @@ func (c *cluster) waitOnAccount(account string) {
+ 	for time.Now().Before(expires) {
+ 		found := true
+ 		for _, s := range c.servers {
++			s.optsMu.RLock()
++			wantJS := s.opts.JetStream
++			s.optsMu.RUnlock()
+ 			acc, err := s.fetchAccount(account)
+-			found = found && err == nil && acc != nil
++			if found = found && err == nil && acc != nil; wantJS {
++				found = found && acc.JetStreamEnabled()
++			}
+ 		}
+ 		if found {
+ 			return

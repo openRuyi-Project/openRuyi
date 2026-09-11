@@ -1,0 +1,29 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Thu, 10 Sep 2026 17:17:52 +0800
+Subject: [PATCH] tests: retain KV revisions until the stream source copies them
+
+The KV source test writes three revisions and expects all three to reach
+an asynchronous source stream, but the default KV history retains only
+the latest revision. A fast second update can evict value2 before the
+source copies it. Retain all three revisions while preserving the original
+update ordering and all fetched-message content assertions.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/jetstream_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/server/jetstream_test.go b/server/jetstream_test.go
+--- a/server/jetstream_test.go
++++ b/server/jetstream_test.go
+@@ -12243,8 +12243,8 @@
+ 	nc, js := jsClientConnect(t, s)
+ 	defer nc.Close()
+ 
+-	// Create a kv store
+-	kv, err := js.CreateKeyValue(&nats.KeyValueConfig{Bucket: "test"})
++	// Retain all revisions until the asynchronous source can copy them.
++	kv, err := js.CreateKeyValue(&nats.KeyValueConfig{Bucket: "test", History: 3})
+ 	require_NoError(t, err)
+ 
+ 	// Create a stream with a source from the kv store

@@ -1,0 +1,140 @@
+From eb59889c7931e59231f2f93a19e8e82074bd8ffd Mon Sep 17 00:00:00 2001
+From: Maurice van Veen <github@mauricevanveen.com>
+Date: Wed, 26 Aug 2026 18:46:04 +0000
+Subject: [PATCH] [FIXED] Route missing after reconnect when duplicate
+ resolution kept gossip URL
+
+Signed-off-by: Maurice van Veen <github@mauricevanveen.com>
+
+(cherry picked from commit e67032a444c6b8a2e68e66ad8b16423e3f161cf5)
+[cl2t: Append the regression test to the 2.11.1 suite.]
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/route.go       |  9 ++++-
+ server/routes_test.go | 85 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 91 insertions(+), 3 deletions(-)
+
+diff --git a/server/route.go b/server/route.go
+index 9a10c98..584d00e 100644
+--- a/server/route.go
++++ b/server/route.go
+@@ -2414,9 +2414,14 @@ func handleDuplicateRoute(remote, c *client, setNoReconnect bool) {
+ 	}
+ 
+ 	remote.mu.Lock()
+-	if didSolicit && !remote.route.didSolicit {
++	if didSolicit {
++		// On disconnect, an explicit route only reconnects if the connection's
++		// URL matches a configured route. So adopt the given URL rather than
++		// keeping a gossiped one, which may not match any configured route.
++		if !remote.route.didSolicit || (rtype == Explicit && remote.route.routeType != Explicit) {
++			remote.route.url = url
++		}
+ 		remote.route.didSolicit = true
+-		remote.route.url = url
+ 	}
+ 	// The extra route might be an configured explicit route
+ 	// so keep the state that the remote was configured.
+diff --git a/server/routes_test.go b/server/routes_test.go
+index 858b5c1..e868d5a 100644
+--- a/server/routes_test.go
++++ b/server/routes_test.go
+@@ -4654,7 +4654,7 @@ func TestRouteImplicitJoinsSeparateGroups(t *testing.T) {
+ 	}
+ }
+ 
+-func TestRouteReconnectAfterDuplicateRouteUpgrade(t *testing.T) {
++func TestRouteReconnectAfterSolicitedUpgradeAdoptsConfiguredURL(t *testing.T) {
+ 	// Default pool size + pinned $SYS route, like a production setup, with a
+ 	// hostname-based route URL like production configs use.
+ 	ob := DefaultOptions()
+@@ -4719,3 +4719,86 @@ func TestRouteReconnectAfterDuplicateRouteUpgrade(t *testing.T) {
+ 	_, err = nca.Request("reconnect.echo", []byte("ping"), time.Second)
+ 	require_NoError(t, err)
+ }
++
++func TestRouteReconnectAfterDuplicateRouteAdoptsConfiguredURL(t *testing.T) {
++	// handleDuplicateRoute is the other path that promotes a route to Explicit,
++	// used for duplicate per-account (pinned) routes and for any duplicate
++	// route in non-pool mode. It must adopt the configured URL too, otherwise
++	// routeStillValid rejects the gossiped one and the reconnect is abandoned.
++	// The global account is pinned here so interest can use ordinary pub/sub.
++	ob := DefaultOptions()
++	ob.Cluster.PinnedAccounts = []string{globalAccountName}
++	sb := RunServer(ob)
++	defer sb.Shutdown()
++
++	oa := DefaultOptions()
++	oa.Cluster.PinnedAccounts = []string{globalAccountName}
++	oa.Routes = RoutesFromStr(fmt.Sprintf("nats://localhost:%d", sb.ClusterAddr().Port))
++	sa := RunServer(oa)
++	defer sa.Shutdown()
++	checkClusterFormed(t, sa, sb)
++
++	// Grab A's pinned route for the global account.
++	var pinned *client
++	sa.mu.RLock()
++	for _, r := range sa.accRoutes[globalAccountName] {
++		pinned = r
++	}
++	sa.mu.RUnlock()
++	require_NotNil(t, pinned)
++
++	// Put the connection in the pre-upgrade gossip-dial state, then resolve it
++	// as a duplicate against the configured explicit route, as addRoute does
++	// for a pinned account. The upgrade must adopt the configured URL so the
++	// later reconnect passes routeStillValid.
++	gossipURL, err := url.Parse(fmt.Sprintf("nats-route://127.0.0.1:%d/", sb.ClusterAddr().Port))
++	require_NoError(t, err)
++	pinned.mu.Lock()
++	pinned.route.didSolicit = true
++	pinned.route.routeType = Implicit
++	pinned.route.url = gossipURL
++	pinned.mu.Unlock()
++
++	configured := oa.Routes[0]
++	dup := &client{}
++	dup.route = &route{
++		url:        configured,
++		didSolicit: true,
++		routeType:  Explicit,
++		accName:    []byte(globalAccountName),
++	}
++	handleDuplicateRoute(pinned, dup, true)
++
++	pinned.mu.Lock()
++	upURL := pinned.route.url
++	pinned.mu.Unlock()
++	require_Equal(t, upURL, configured)
++
++	// Drop the connection the way a fault would (slow consumer). The pinned
++	// route must come back, otherwise this account's mesh stays severed while
++	// every pooled route looks healthy.
++	pinned.closeConnection(SlowConsumerWriteDeadline)
++	checkClusterFormed(t, sa, sb)
++
++	checkFor(t, 5*time.Second, 50*time.Millisecond, func() error {
++		sa.mu.RLock()
++		defer sa.mu.RUnlock()
++		for _, r := range sa.accRoutes[globalAccountName] {
++			if r != nil && r != pinned {
++				return nil
++			}
++		}
++		return fmt.Errorf("pinned route for %q did not reconnect", globalAccountName)
++	})
++
++	// Interest must flow across the re-established pinned route again.
++	nca := natsConnect(t, sa.ClientURL())
++	defer nca.Close()
++	ncb := natsConnect(t, sb.ClientURL())
++	defer ncb.Close()
++	natsSub(t, ncb, "pinned.echo", func(m *nats.Msg) { m.Respond(m.Data) })
++	natsFlush(t, ncb)
++	checkSubInterest(t, sa, globalAccountName, "pinned.echo", 2*time.Second)
++	_, err = nca.Request("pinned.echo", []byte("ping"), time.Second)
++	require_NoError(t, err)
++}
+-- 
+2.52.0
+

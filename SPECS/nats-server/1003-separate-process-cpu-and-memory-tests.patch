@@ -1,0 +1,92 @@
+From 0b09ebf551213347f9ce5bfbc58c59f838b7c291 Mon Sep 17 00:00:00 2001
+From: Daniele Sciascia <daniele@nats.io>
+Date: Thu, 4 Sep 2025 13:24:51 +0200
+Subject: [PATCH] Split TestPSEmulation into memory and CPU tests
+
+The original TestPSEmulation checked both memory and CPU usage in a
+single run, causing instability in CPU measurements.
+Splitting the test, avoids any processing in between the CPU
+measurements from `ps` and `ProcUsage()`, such as the invoking the
+garbage collector through `debug.FreeOSMemory()`.
+
+Signed-off-by: Daniele Sciascia <daniele@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/pse/pse_test.go | 41 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 9 deletions(-)
+
+diff --git a/server/pse/pse_test.go b/server/pse/pse_test.go
+index 27cf37c860d..5924a2be121 100644
+--- a/server/pse/pse_test.go
++++ b/server/pse/pse_test.go
+@@ -22,31 +22,27 @@ import (
+ 	"testing"
+ )
+ 
+-func TestPSEmulation(t *testing.T) {
++func TestPSEmulationCPU(t *testing.T) {
+ 	if runtime.GOOS == "windows" {
+ 		t.Skipf("Skipping this test on Windows")
+ 	}
+-	var rss, vss, psRss, psVss int64
++	var rss, vss int64
+ 	var pcpu, psPcpu float64
+ 
+ 	debug.FreeOSMemory()
+ 
+ 	// PS version first
+ 	pidStr := fmt.Sprintf("%d", os.Getpid())
+-	out, err := exec.Command("ps", "o", "pcpu=,rss=,vsz=", "-p", pidStr).Output()
++	out, err := exec.Command("ps", "o", "pcpu=", "-p", pidStr).Output()
+ 	if err != nil {
+ 		t.Fatalf("Failed to execute ps command: %v\n", err)
+ 	}
+ 
+-	fmt.Sscanf(string(out), "%f %d %d", &psPcpu, &psRss, &psVss)
+-	psRss *= 1024 // 1k blocks, want bytes.
+-	psVss *= 1024 // 1k blocks, want bytes.
+-
+-	debug.FreeOSMemory()
+-
+ 	// Our internal version
+ 	ProcUsage(&pcpu, &rss, &vss)
+ 
++	fmt.Sscanf(string(out), "%f", &psPcpu)
++
+ 	if pcpu != psPcpu {
+ 		delta := int64(pcpu - psPcpu)
+ 		if delta < 0 {
+@@ -56,6 +52,33 @@ func TestPSEmulation(t *testing.T) {
+ 			t.Fatalf("CPUs did not match close enough: %f vs %f", pcpu, psPcpu)
+ 		}
+ 	}
++}
++
++func TestPSEmulationMem(t *testing.T) {
++	if runtime.GOOS == "windows" {
++		t.Skipf("Skipping this test on Windows")
++	}
++	var rss, vss, psRss, psVss int64
++	var pcpu float64
++
++	debug.FreeOSMemory()
++
++	// PS version first
++	pidStr := fmt.Sprintf("%d", os.Getpid())
++	out, err := exec.Command("ps", "o", "rss=,vsz=", "-p", pidStr).Output()
++	if err != nil {
++		t.Fatalf("Failed to execute ps command: %v\n", err)
++	}
++
++	fmt.Sscanf(string(out), "%d %d", &psRss, &psVss)
++	psRss *= 1024 // 1k blocks, want bytes.
++	psVss *= 1024 // 1k blocks, want bytes.
++
++	debug.FreeOSMemory()
++
++	// Our internal version
++	ProcUsage(&pcpu, &rss, &vss)
++
+ 	if rss != psRss {
+ 		delta := rss - psRss
+ 		if delta < 0 {

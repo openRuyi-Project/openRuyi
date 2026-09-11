@@ -1,0 +1,24 @@
+From c6ce4b16cc0b90b6cdecf5ac50c13ca79e042b98 Mon Sep 17 00:00:00 2001
+From: Neil Twigg <neil@nats.io>
+Date: Wed, 25 Jun 2025 14:17:24 +0100
+Subject: [PATCH] Modify `TestPSEmulation` to use `FreeOSMemory` both times
+
+Signed-off-by: Neil Twigg <neil@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/pse/pse_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/server/pse/pse_test.go b/server/pse/pse_test.go
+index 35bec2d2568..27cf37c860d 100644
+--- a/server/pse/pse_test.go
++++ b/server/pse/pse_test.go
+@@ -29,7 +29,7 @@ func TestPSEmulation(t *testing.T) {
+ 	var rss, vss, psRss, psVss int64
+ 	var pcpu, psPcpu float64
+ 
+-	runtime.GC()
++	debug.FreeOSMemory()
+ 
+ 	// PS version first
+ 	pidStr := fmt.Sprintf("%d", os.Getpid())
