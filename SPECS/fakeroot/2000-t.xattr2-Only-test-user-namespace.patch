@@ -1,0 +1,47 @@
+From cd56034b17a8d413553553e93f0b0ccfaffd3fbf Mon Sep 17 00:00:00 2001
+From: Kai Zhang <zhangkai@iscas.ac.cn>
+Date: Fri, 4 Sep 2026 03:16:09 +0000
+Subject: [PATCH] t.xattr2: Only test "user" namespace
+
+It seems the "gnu" namespace only work on specific filesystem:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=88ee9d571b6d8ed345f877e05f685814412e359b
+
+At least on xfs, "setfattr --name=gnu.abc" would error out with:
+
+  setfattr: foo: Operation not supported
+
+Test most common "user" namespace xattr might be enough.
+
+Signed-off-by: Kai Zhang <zhangkai@iscas.ac.cn>
+---
+ test/t.xattr2 | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/test/t.xattr2 b/test/t.xattr2
+index 5d6ad8ae9506..1d9c9aef55a7 100755
+--- a/test/t.xattr2
++++ b/test/t.xattr2
+@@ -24,7 +24,6 @@ setfattr --name=user.test --value=test $tmp/realtest || exit 77
+ touch $tmp/foo
+ cat > $tmp/sh <<EOF
+ setfattr --name=user.test --value=test $tmp/foo
+-setfattr --name=gnu.translator --value=/hurd/pflocal $tmp/foo
+ EOF
+ run_fakeroot -- \
+   ${posixshell} $tmp/sh >$tmp/set.out
+@@ -32,11 +31,9 @@ run_fakeroot -- \
+ # Did fakeroot setfattr actually make it onto the file-system?
+ cat > $tmp/sh <<EOF
+ getfattr --name=user.test $tmp/foo
+-getfattr --name=gnu.translator $tmp/foo
+ EOF
+ run_fakeroot -- \
+   ${posixshell} $tmp/sh >$tmp/get.out
+ 
+ cat $tmp/get.out
+ grep '^user\.test="test"' $tmp/get.out
+-grep '^gnu\.translator="/hurd/pflocal"' $tmp/get.out
+-- 
+2.43.0
+
