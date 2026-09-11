@@ -1,0 +1,25 @@
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Subject: [PATCH] tests: make integer-to-rune conversions explicit
+
+Preserve character generation while satisfying modern go vet stringintconv.
+
+--- a/qrcode_decode_test.go
++++ b/qrcode_decode_test.go
+@@ -122,7 +122,7 @@
+ 
+ 	// zbarimg has trouble with null bytes, hence start from ASCII 1.
+ 	for i := 1; i < 256; i++ {
+-		content += string(i)
++		content += string(rune(i))
+ 	}
+ 
+ 	q, err := New(content, Low)
+@@ -154,7 +154,7 @@
+ 		for j := 0; j < len; j++ {
+ 			// zbarimg seems to have trouble with special characters, test printable
+ 			// characters only for now.
+-			content += string(32 + r.Intn(94))
++			content += string(rune(32 + r.Intn(94)))
+ 		}
+ 
+ 		for _, level := range []RecoveryLevel{Low, Medium, High, Highest} {
