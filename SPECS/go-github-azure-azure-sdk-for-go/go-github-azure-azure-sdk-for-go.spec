@@ -20,7 +20,8 @@
 #
 # Sub-module versions: Source0..4 are the Prometheus v3.13.1 pins; Source5..6
 # are MinIO RELEASE.2025-10-15T17-29-55Z pins (azblob and its go.mod
-# armstorage require). Each maps to an upstream git tag "sdk/<module>/v<ver>"
+# armstorage require); Source7..8 are KES 0.24.0 Key Vault dependencies.
+# Each maps to an upstream git tag "sdk/<module>/v<ver>"
 # in github.com/Azure/azure-sdk-for-go. Maintained by hand; go2spec cannot
 # emit a monorepo multi-module spec.
 %define ver_azcore      1.22.0
@@ -30,6 +31,8 @@
 %define ver_armnetwork  4.3.0
 %define ver_azblob      1.6.1
 %define ver_armstorage  1.8.0
+%define ver_azsecrets    1.1.0
+%define ver_kv_internal  1.0.1
 
 # Source archive top-level directory names (github archive layout).
 %define dir_azcore      azure-sdk-for-go-sdk-azcore-v%{ver_azcore}
@@ -39,15 +42,22 @@
 %define dir_armnetwork  azure-sdk-for-go-sdk-resourcemanager-network-armnetwork-v%{ver_armnetwork}
 %define dir_azblob      azure-sdk-for-go-sdk-storage-azblob-v%{ver_azblob}
 %define dir_armstorage  azure-sdk-for-go-sdk-resourcemanager-storage-armstorage-v%{ver_armstorage}
+%define dir_azsecrets    azure-sdk-for-go-sdk-security-keyvault-azsecrets-v%{ver_azsecrets}
+%define dir_kv_internal  azure-sdk-for-go-sdk-security-keyvault-internal-v%{ver_kv_internal}
 
 Name:           go-github-azure-azure-sdk-for-go
 Version:        20260615
 Release:        %autorelease
-Summary:        Azure SDK for Go (azcore, azidentity, internal, ARM, azblob)
+Summary:        Azure SDK for Go (core, identity, ARM, storage, Key Vault)
 License:        MIT
 URL:            https://github.com/Azure/azure-sdk-for-go
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# Keep the existing azidentity test-proxy adaptation.
+Patch2000:      2000-disable-azidentity-test-proxy.patch
+# Run azsecrets offline tests without starting Azure's recording proxy.
+Patch2001:      2001-separate-azsecrets-offline-tests.patch
 
 #!RemoteAsset:  sha256:51b956194c3ef970ac2b2e16c05ee8c44f8cff6ba41428528322d8802630b903
 Source0:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/azcore/v%{ver_azcore}.tar.gz#/%{_name}-azcore-%{ver_azcore}.tar.gz
@@ -64,7 +74,10 @@ Source5:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/
 #!RemoteAsset:  sha256:ee25b4e734c183d41be74f19150c9c0c92f9d42ddd2c9a276bafae5c2f43b154
 Source6:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/resourcemanager/storage/armstorage/v%{ver_armstorage}.tar.gz#/%{_name}-armstorage-%{ver_armstorage}.tar.gz
 
-Patch2000:      2000-disable-azidentity-test-proxy.patch
+#!RemoteAsset:  sha256:ffa8c82f223362b4e0ff1d293eae65cfa612535bffdda8d9994c5617e7909bfd
+Source7:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/security/keyvault/azsecrets/v%{ver_azsecrets}.tar.gz#/%{_name}-azsecrets-%{ver_azsecrets}.tar.gz
+#!RemoteAsset:  sha256:e1138e95e79cdb7680df58360d91c0de5ca16342b95da572501ed3bec1f6c7d6
+Source8:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/security/keyvault/internal/v%{ver_kv_internal}.tar.gz#/%{_name}-kv-internal-%{ver_kv_internal}.tar.gz
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -128,6 +141,9 @@ Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service)
 # armstorage v%{ver_armstorage}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage) = %{ver_armstorage}
 
+Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets) = %{ver_azsecrets}
+Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal) = %{ver_kv_internal}
+
 Requires:       go(github.com/AzureAD/microsoft-authentication-library-for-go)
 Requires:       go(github.com/golang-jwt/jwt/v5)
 Requires:       go(github.com/google/uuid)
@@ -139,11 +155,11 @@ Requires:       go(golang.org/x/text)
 The Azure SDK for Go provides typed clients for Azure services. This
 package bundles the sub-modules required by Prometheus' Azure service
 discovery (azcore, azidentity, internal, armcompute/v5, armnetwork/v4)
-and by MinIO (azblob, armstorage). Each sub-module is installed under
-its GOPATH import path.
+and by MinIO and KES (azblob, armstorage, azsecrets, Key Vault internal).
+Each sub-module is installed under its GOPATH import path.
 
 %prep
-# Unpack all seven source archives side by side (no merging of trees).
+# Unpack all nine source archives side by side (no merging of trees).
 %setup -q -c -T -a 0
 %setup -q -D -T -a 1
 %setup -q -D -T -a 2
@@ -151,7 +167,10 @@ its GOPATH import path.
 %setup -q -D -T -a 4
 %setup -q -D -T -a 5
 %setup -q -D -T -a 6
+%setup -q -D -T -a 7
+%setup -q -D -T -a 8
 %patch -P 2000 -p1 -d %{dir_azidentity}
+%patch -P 2001 -p1 -d %{dir_azsecrets}
 # azidentity/cache is an independently versioned optional module. Prometheus
 # does not import it, so do not ship the arbitrary cache snapshot contained in
 # the azidentity tag archive or compile examples that require that module.
@@ -193,6 +212,10 @@ install -d %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/resourcemanager/st
 cp -a %{dir_armstorage}/sdk/resourcemanager/storage/armstorage \
       %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/resourcemanager/storage/armstorage
 
+install -d %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/security/keyvault
+cp -a %{dir_azsecrets}/sdk/security/keyvault/azsecrets %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/security/keyvault/azsecrets
+cp -a %{dir_kv_internal}/sdk/security/keyvault/internal %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/security/keyvault/internal
+
 %check
 %{go_common}
 # Copy every selected module into one GOPATH tree before compiling; azcore and
@@ -204,7 +227,9 @@ for mod in \
     sdk/resourcemanager/compute/armcompute/v5 \
     sdk/resourcemanager/network/armnetwork/v4 \
     sdk/resourcemanager/storage/armstorage \
-    sdk/storage/azblob ; do
+    sdk/storage/azblob \
+    sdk/security/keyvault/azsecrets \
+    sdk/security/keyvault/internal ; do
   src="%{buildroot}%{go_sys_gopath}/%{go_import_path}/$mod"
   dst="%{_builddir}/go/src/%{go_import_path}/$mod"
   mkdir -p "$dst"
@@ -224,6 +249,11 @@ for mod in \
   # Some Azure integration tests require credentials, network access or local
   # services unavailable in the isolated build worker.
   ( cd "$dst" && %__go test -vet=off %{go_test_flags_default} ./... ) || :
+done
+
+# New Key Vault modules retain vet and fail on any compile or test error.
+for mod in sdk/security/keyvault/azsecrets sdk/security/keyvault/internal ; do
+  ( cd "%{_builddir}/go/src/%{go_import_path}/$mod" && %__go test %{go_test_flags_default} ./... )
 done
 
 %files

@@ -1,0 +1,30 @@
+From f4d81fa806c540050b40897694af7e5abf72387e Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 12:38:24 +0800
+Subject: [PATCH] tests: associate the context example with Retry
+
+RetryContext is not an exported function in the v3 API. Name this
+example as a context variant of Retry so current Go vet accepts it.
+The example body and cancellation behavior are unchanged.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ example_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/example_test.go b/example_test.go
+index 19d0451..404bc0c 100644
+--- a/example_test.go
++++ b/example_test.go
+@@ -20,7 +20,7 @@ func ExampleRetry() {
+ 	// Operation is successful.
+ }
+ 
+-func ExampleRetryContext() { // nolint: govet
++func ExampleRetry_context() { // nolint: govet
+ 	// A context
+ 	ctx := context.Background()
+ 
+-- 
+2.52.0
+

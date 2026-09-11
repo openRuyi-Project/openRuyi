@@ -6,6 +6,8 @@
 
 %define _name           go
 %define go_import_path  cloud.google.com/go
+# Version declared by secretmanager/internal/version.go in release-14617.
+%define ver_secretmanager 1.20.0
 
 Name:           go-googlecloud-go
 Version:        14617
@@ -62,15 +64,26 @@ BuildRequires:  go(golang.org/x/text)
 BuildRequires:  go(golang.org/x/time)
 BuildRequires:  go(google.golang.org/api)
 BuildRequires:  go(google.golang.org/genproto)
+BuildRequires:  go(google.golang.org/genproto/googleapis/api)
 BuildRequires:  go(google.golang.org/genproto/googleapis/rpc)
 BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(cloud.google.com/go) = %{version}
+Provides:       go(cloud.google.com/go/secretmanager) = %{ver_secretmanager}
+
+Requires:       go(cloud.google.com/go/iam)
+Requires:       go(github.com/googleapis/gax-go/v2)
+Requires:       go(google.golang.org/api)
+Requires:       go(google.golang.org/genproto)
+Requires:       go(google.golang.org/genproto/googleapis/api)
+Requires:       go(google.golang.org/grpc)
+Requires:       go(google.golang.org/protobuf)
 
 %description
 This package provides the root cloud.google.com/go import path and common
-metadata for Google Cloud Go client modules.
+metadata for Google Cloud Go client modules, including the Secret Manager
+client already present in this archive.
 
 %check
 export GO111MODULE=off
@@ -84,6 +97,9 @@ cd "%{_builddir}/go/src/%{go_import_path}"
 # big". This aggregate package is only needed for the root import path, while
 # selected submodules are packaged and tested separately. - HNO3Miracle
 go test -v %{go_import_path}
+# Verify the complete Secret Manager module before exporting its provider.
+cd secretmanager
+go test -v ./...
 
 %files
 %doc CONTRIBUTING.md
