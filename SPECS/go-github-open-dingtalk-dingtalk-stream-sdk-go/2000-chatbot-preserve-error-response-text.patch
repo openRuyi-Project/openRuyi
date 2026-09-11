@@ -1,0 +1,17 @@
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Subject: [PATCH] chatbot: treat error response bodies as plain text
+
+Avoid interpreting server response bodies as format strings and satisfy
+modern go vet checks for non-constant fmt.Errorf formats.
+
+--- a/chatbot/chatbot_replier.go
++++ b/chatbot/chatbot_replier.go
+@@ -66,7 +66,7 @@
+ 			return err
+ 		}
+ 
+-		return fmt.Errorf(string(responseJsonBody))
++		return fmt.Errorf("%s", responseJsonBody)
+ 	}
+ 
+ 	return nil
