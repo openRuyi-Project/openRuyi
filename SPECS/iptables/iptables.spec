@@ -5,20 +5,19 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global script_path %{_libexecdir}/iptables
 Name:           iptables
-Version:        1.8.11
+Version:        1.8.13
 Release:        %autorelease
 Summary:        Tools for managing Linux kernel packet filtering capabilities
 License:        GPL-2.0-only AND Artistic-2.0 AND ISC
 URL:            https://www.netfilter.org/projects/iptables
 VCS:            git:https://git.netfilter.org/iptables
-#!RemoteAsset
+#!RemoteAsset:  sha256:1afcd33da9e8f913ace6a2126788162e207e26f5d5e29c6573c0e581ffc58b99
 Source0:        %{url}/files/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        %{url}/files/%{name}-%{version}.tar.xz.sig
+Source1:        iptables.init
 Source2:        iptables.service
-Source3:        arptables.service
-Source4:        ebtables.service
+Source3:        iptables-config
 Source5:        empty.rules
 BuildSystem:    autotools
 
@@ -67,7 +66,7 @@ libxtables development headers and pkgconfig files
 
 %package        utils
 Summary:        iptables and ip6tables misc utilities
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 
 %description    utils
 Utils for iptables
@@ -82,21 +81,16 @@ Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires(post): update-alternatives
 Requires(post): /usr/bin/readlink
 Requires(postun): update-alternatives
-Provides:       arptables-helper
 Provides:       iptables
-Provides:       arptables
-Provides:       ebtables
 
 %description    nft
 nftables compatibility for iptables, arptables and ebtables.
 
 %package        services
 Summary:        iptables and ip6tables services for iptables
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 Requires:       %{name}-utils%{?_isa} = %{version}-%{release}
 %{?systemd_ordering}
-Provides:       arptables-services = %{version}-%{release}
-Provides:       ebtables-services = %{version}-%{release}
 BuildArch:      noarch
 
 %description    services
@@ -153,16 +147,22 @@ rm -f include/linux/types.h
 %install -a
 # install systemd service files
 install -d -m 755 %{buildroot}/%{_unitdir}
-install -c -m 644 %{SOURCE2} %{SOURCE3} %{SOURCE4} %{buildroot}/%{_unitdir}
-sed -e 's;iptables;ip6tables;g' -e 's;IPv4;IPv6;g' -e 's;/usr/libexec/ip6tables;/usr/libexec/iptables;g' < %{SOURCE5} > ip6tables.service
+install -c -m 644 %{SOURCE2} %{buildroot}/%{_unitdir}
+sed -e 's;iptables;ip6tables;g' -e 's;IPv4;IPv6;g' -e 's;/usr/libexec/ip6tables;/usr/libexec/iptables;g' < %{SOURCE2} > ip6tables.service
 install -c -m 644 ip6tables.service %{buildroot}/%{_unitdir}
+
+install -m 0755 -d %{buildroot}/%{script_path}
+install -m 0755 -c %{SOURCE1} %{buildroot}/%{script_path}/iptables.init
+sed -e 's;iptables;ip6tables;g' -e 's;IPTABLES;IP6TABLES;g' < %{SOURCE1} > ip6tables.init
+install -m 0755 ip6tables.init %{buildroot}/%{script_path}/ip6tables.init
 
 # install configuration files
 install -d -m 755 %{buildroot}%{_sysconfdir}/sysconfig
+install -c -m 0600 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/iptables-config
+sed -e 's;iptables;ip6tables;g' -e 's;IPTABLES;IP6TABLES;g' < %{SOURCE3} > ip6tables-config
+install -c -m 0600 ip6tables-config %{buildroot}%{_sysconfdir}/sysconfig/ip6tables-config
 install -c -m 600 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/iptables
 install -c -m 600 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/ip6tables
-echo '# Configure prior to use' > %{buildroot}%{_sysconfdir}/sysconfig/arptables
-touch %{buildroot}%{_sysconfdir}/sysconfig/ebtables
 
 # Remove /etc/ethertypes (part of setup)
 rm -f %{buildroot}%{_sysconfdir}/ethertypes
@@ -186,15 +186,12 @@ install -d %{buildroot}/%{legacy_actions}/ip6tables
 %check
 
 %post services
-%systemd_post arptables.service ebtables.service
 %systemd_post iptables.service ip6tables.service
 
 %preun services
-%systemd_preun arptables.service ebtables.service
 %systemd_preun iptables.service ip6tables.service
 
 %postun services
-%systemd_postun arptables.service ebtables.service
 %systemd_postun iptables.service ip6tables.service
 
 %post -e nft
@@ -244,11 +241,6 @@ update-alternatives --install \
     ${do_man:+--follower $manpfx.8.gz arptables-man $manpfx-nft.8.gz} \
     ${do_man:+--follower $manpfx-save.8.gz arptables-save-man $manpfx-nft-save.8.gz} \
     ${do_man:+--follower $manpfx-restore.8.gz arptables-restore-man $manpfx-nft-restore.8.gz}
-
-# TODO: In the future we might merge %%%{_sbindir} and %%{_bindir}? - 251
-for name in ip{,6}tables{,-save,-restore} ebtables{,-save,-restore} arptables{,-save,-restore}; do
-    test -h /usr/sbin || ln -s ../bin/$name /usr/sbin/$name 2>/dev/null || :
-done
 
 %postun nft
 if [ $1 -eq 0 ]; then
@@ -323,10 +315,10 @@ fi
 %ghost %{_mandir}/man8/ebtables.8.gz
 
 %files services
-%config(noreplace) %{_sysconfdir}/sysconfig/ip{,6}tables
-%config(noreplace) %{_sysconfdir}/sysconfig/arptables
-%ghost %{_sysconfdir}/sysconfig/ebtables
-%{_unitdir}/{arp,eb,ip,ip6}tables.service
+%dir %{script_path}
+%{script_path}/ip{,6}tables.init
+%config(noreplace) %{_sysconfdir}/sysconfig/ip{,6}tables{,-config}
+%{_unitdir}/{ip,ip6}tables.service
 
 %files legacy
 %{_sbindir}/ip{,6}tables-legacy*
@@ -349,4 +341,4 @@ fi
 %{_libdir}/pkgconfig/libip{,4,6}tc.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
