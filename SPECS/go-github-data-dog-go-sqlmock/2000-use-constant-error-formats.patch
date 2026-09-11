@@ -1,0 +1,54 @@
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Subject: [PATCH] use constant formats for plain error messages
+
+Preserve error text and pass modern go vet checks.
+
+--- a/sqlmock.go
++++ b/sqlmock.go
+@@ -176,7 +176,7 @@
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return fmt.Errorf("%s", msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -250,7 +250,7 @@
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return nil, fmt.Errorf(msg)
++		return nil, fmt.Errorf("%s", msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -386,7 +386,7 @@
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return fmt.Errorf("%s", msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -421,7 +421,7 @@
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return fmt.Errorf("%s", msg)
+ 	}
+ 
+ 	expected.triggered = true
+--- a/sqlmock_go18.go
++++ b/sqlmock_go18.go
+@@ -145,7 +145,7 @@
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return nil, fmt.Errorf(msg)
++		return nil, fmt.Errorf("%s", msg)
+ 	}
+ 
+ 	expected.triggered = true
