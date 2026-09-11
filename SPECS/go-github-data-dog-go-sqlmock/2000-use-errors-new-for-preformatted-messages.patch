@@ -1,0 +1,78 @@
+From 7921d9d274ef78dae94d5263bd35f81867ef0b48 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Mon, 7 Sep 2026 00:04:12 +0800
+Subject: [PATCH] Use errors.New for preformatted messages
+
+These error messages are already formatted strings, not format strings.
+Use errors.New to preserve their contents and pass the printf analyzer
+in recent Go releases without disabling vet.
+
+This is an openRuyi downstream patch; not submitted upstream.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ sqlmock.go      | 9 +++++----
+ sqlmock_go18.go | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/sqlmock.go b/sqlmock.go
+index d074266..b70a351 100644
+--- a/sqlmock.go
++++ b/sqlmock.go
+@@ -13,6 +13,7 @@ package sqlmock
+ import (
+ 	"database/sql"
+ 	"database/sql/driver"
++	"errors"
+ 	"fmt"
+ 	"time"
+ )
+@@ -176,7 +177,7 @@ func (c *sqlmock) Close() error {
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return errors.New(msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -250,7 +251,7 @@ func (c *sqlmock) begin() (*ExpectedBegin, error) {
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return nil, fmt.Errorf(msg)
++		return nil, errors.New(msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -386,7 +387,7 @@ func (c *sqlmock) Commit() error {
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return errors.New(msg)
+ 	}
+ 
+ 	expected.triggered = true
+@@ -421,7 +422,7 @@ func (c *sqlmock) Rollback() error {
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return fmt.Errorf(msg)
++		return errors.New(msg)
+ 	}
+ 
+ 	expected.triggered = true
+diff --git a/sqlmock_go18.go b/sqlmock_go18.go
+index f268900..fc6d5c4 100644
+--- a/sqlmock_go18.go
++++ b/sqlmock_go18.go
+@@ -145,7 +145,7 @@ func (c *sqlmock) ping() (*ExpectedPing, error) {
+ 		if fulfilled == len(c.expected) {
+ 			msg = "all expectations were already fulfilled, " + msg
+ 		}
+-		return nil, fmt.Errorf(msg)
++		return nil, errors.New(msg)
+ 	}
+ 
+ 	expected.triggered = true

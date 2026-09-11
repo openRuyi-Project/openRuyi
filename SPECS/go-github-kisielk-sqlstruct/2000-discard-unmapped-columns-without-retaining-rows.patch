@@ -1,0 +1,139 @@
+From 76f99b58fc03c6f9db5cf436f890c267ab2f78e5 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Mon, 7 Sep 2026 00:04:12 +0800
+Subject: [PATCH] Discard unmapped columns without retaining SQL row data
+
+Using sql.RawBytes for ignored columns retains a database/sql row lock.
+A second ScanAliased on the same row fails with current Go releases,
+which also causes the go-sqlmock orders example to hang during rollback.
+
+Use a no-op sql.Scanner for ignored columns. Add a regression test with
+a standard-library driver, avoiding a dependency cycle on go-sqlmock.
+
+This is an openRuyi downstream patch; not submitted upstream.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ scan_sql_test.go | 77 ++++++++++++++++++++++++++++++++++++++++++++++++
+ sqlstruct.go     | 10 +++++--
+ 2 files changed, 85 insertions(+), 2 deletions(-)
+ create mode 100644 scan_sql_test.go
+
+diff --git a/scan_sql_test.go b/scan_sql_test.go
+new file mode 100644
+index 0000000..d55011d
+--- /dev/null
++++ b/scan_sql_test.go
+@@ -0,0 +1,77 @@
++// Copyright 2026 openRuyi Project Contributors.
++// SPDX-License-Identifier: MIT
++
++package sqlstruct
++
++import (
++	"context"
++	"database/sql"
++	"database/sql/driver"
++	"errors"
++	"io"
++	"testing"
++)
++
++// Use database/sql itself so its RawBytes lifetime rules are exercised.
++// An in-package driver keeps this test independent of external mock libraries.
++func TestScanAliasedSameSQLRow(t *testing.T) {
++	db := sql.OpenDB(scanTestConnector{})
++	defer db.Close()
++	rows, err := db.Query("SELECT a_name, b_name")
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer rows.Close()
++	if !rows.Next() {
++		t.Fatalf("expected one row, error: %v", rows.Err())
++	}
++	var first, second struct {
++		Name string `sql:"name"`
++	}
++	if err := ScanAliased(&first, rows, "a"); err != nil {
++		t.Fatal(err)
++	}
++	if err := ScanAliased(&second, rows, "b"); err != nil {
++		t.Fatalf("scanning another alias from the same row: %v", err)
++	}
++	if first.Name != "Alice" || second.Name != "Paris" {
++		t.Fatalf("unexpected values: %q, %q", first.Name, second.Name)
++	}
++}
++
++type scanTestConnector struct{}
++
++func (scanTestConnector) Connect(context.Context) (driver.Conn, error) {
++	return scanTestConn{}, nil
++}
++func (scanTestConnector) Driver() driver.Driver { return scanTestDriver{} }
++
++type scanTestDriver struct{}
++
++func (scanTestDriver) Open(string) (driver.Conn, error) { return scanTestConn{}, nil }
++
++type scanTestConn struct{}
++
++func (scanTestConn) Prepare(string) (driver.Stmt, error) {
++	return nil, errors.New("prepare is not used in this test")
++}
++func (scanTestConn) Close() error { return nil }
++func (scanTestConn) Begin() (driver.Tx, error) {
++	return nil, errors.New("transactions are not used in this test")
++}
++func (scanTestConn) Query(string, []driver.Value) (driver.Rows, error) {
++	return &scanTestRows{}, nil
++}
++
++type scanTestRows struct{ done bool }
++
++func (*scanTestRows) Columns() []string { return []string{"a_name", "b_name"} }
++func (*scanTestRows) Close() error      { return nil }
++func (r *scanTestRows) Next(values []driver.Value) error {
++	if r.done {
++		return io.EOF
++	}
++	values[0], values[1] = []byte("Alice"), []byte("Paris")
++	r.done = true
++	return nil
++}
+diff --git a/sqlstruct.go b/sqlstruct.go
+index bd9756b..a36d397 100644
+--- a/sqlstruct.go
++++ b/sqlstruct.go
+@@ -83,7 +83,6 @@ package sqlstruct
+ 
+ import (
+ 	"bytes"
+-	"database/sql"
+ 	"fmt"
+ 	"reflect"
+ 	"sort"
+@@ -123,6 +122,13 @@ type Rows interface {
+ 	Columns() ([]string, error)
+ }
+ 
++// discardColumn consumes an unmapped column without retaining row data.
++// RawBytes would hold a database/sql row lock until Next or Close, preventing
++// another ScanAliased call on the same row.
++type discardColumn struct{}
++
++func (*discardColumn) Scan(interface{}) error { return nil }
++
+ // getFieldInfo creates a fieldInfo for the provided type. Fields that are not tagged
+ // with the "sql" tag and unexported fields are not included.
+ func getFieldInfo(typ reflect.Type) fieldInfo {
+@@ -248,7 +254,7 @@ func doScan(dest interface{}, rows Rows, alias string) error {
+ 		var v interface{}
+ 		if !ok {
+ 			// There is no field mapped to this column so we discard it
+-			v = &sql.RawBytes{}
++			v = &discardColumn{}
+ 		} else {
+ 			v = elem.FieldByIndex(idx).Addr().Interface()
+ 		}
