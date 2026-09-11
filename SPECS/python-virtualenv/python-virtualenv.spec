@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname virtualenv
 
 Name:           python-%{srcname}
-Version:        20.35.4
+Version:        21.7.4
 Release:        %autorelease
 Summary:        Tool to create isolated Python environments
 License:        MIT
 URL:            https://github.com/pypa/virtualenv
-#!RemoteAsset:  sha256:643d3914d73d3eeb0c552cbb12d7e82adf0e504dbf86a3182f8771a153a1971c
+#!RemoteAsset:  sha256:c9d960c95fa458171e58222a5ccab7465298e4b6559977865e627c4719f1e825
 Source0:        https://files.pythonhosted.org/packages/source/v/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -56,9 +57,9 @@ to name just a few more prominent:
 
 %prep -a
 # Remove the wheels provided by RPM packages
-rm src/virtualenv/seed/wheels/embed/pip-*
-rm src/virtualenv/seed/wheels/embed/setuptools-*
-rm src/virtualenv/seed/wheels/embed/wheel-*
+rm -f src/virtualenv/seed/wheels/embed/pip-*
+rm -f src/virtualenv/seed/wheels/embed/setuptools-*
+rm -f src/virtualenv/seed/wheels/embed/wheel-*
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -71,6 +72,8 @@ rm src/virtualenv/seed/wheels/embed/wheel-*
             not test_create_distutils_cfg and \
             not test_seed_link_via_app_data and \
             not test_embed_wheel_versions and \
+            not test_embed_wheel_oldest_supported_is_present and \
+            not test_embed_wheel_future_version_reuses_newest and \
             not test_wheel_ and \
             not test_base_bootstrap_via_pip_invoke and \
             not test_acquire and \
