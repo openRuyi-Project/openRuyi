@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           dolphin-plugins
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        Version control plugins for Dolphin
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/system/dolphin-plugins.git
-#!RemoteAsset:  sha256:8c53ce19b2b910f087de42180c034dd9c087598d3b145815a3eba713006e22e7
+#!RemoteAsset:  sha256:f9edc41bb0fc75dba1ac32a8c15ef33fb8152740f10b90265dbc6f1724eb929b
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -64,6 +64,8 @@ Dolphin file manager specific version control plugins that:
 %dir %{_kf6_plugindir}/kf6/kfileitemaction
 %{_kf6_plugindir}/kf6/kfileitemaction/makefileactions.so
 %{_kf6_plugindir}/kf6/kfileitemaction/mountisoaction.so
+%dir %{_kf6_plugindir}/kf6/overlayicon
+%{_kf6_plugindir}/kf6/overlayicon/mountedisooverlay.so
 
 %changelog
 %autochangelog

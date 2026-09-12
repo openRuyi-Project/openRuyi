@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           konsole
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KDE Terminal
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/utilities/konsole.git
-#!RemoteAsset:  sha256:d81a696d6a316d0c8fabe3cecd83783f656ee97c70ced89513b3fd16e9d216ac
+#!RemoteAsset:  sha256:64d8aaba741f4412ede26ffbbbe3824523e941b725d3046ec27f510fd42d82e6
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -44,6 +44,7 @@ BuildRequires:  cmake(KF6TextWidgets) >= %{kf6_version}
 BuildRequires:  cmake(KF6WidgetsAddons) >= %{kf6_version}
 BuildRequires:  cmake(KF6WindowSystem) >= %{kf6_version}
 BuildRequires:  cmake(KF6XmlGui) >= %{kf6_version}
+BuildRequires:  cmake(libssh) >= 0.9.8
 BuildRequires:  cmake(Qt6Core) >= %{qt6_version}
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Multimedia) >= %{qt6_version}

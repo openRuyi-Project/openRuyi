@@ -10,13 +10,13 @@
 
 
 Name:           kate
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        Advanced Text Editor
 License:        GPL-3.0-or-later
 URL:            https://kate-editor.org
 VCS:            git:https://invent.kde.org/utilities/kate.git
-#!RemoteAsset:  sha256:f138a5b022b6ca0562b903bea7b2a794bb6bb18b88a9277ffcaf418b9b49018d
+#!RemoteAsset:  sha256:b7d690761e37c29b425375ee42b959b59a9de693789de86e0fb826bace5b3d7f
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 

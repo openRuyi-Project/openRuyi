@@ -10,12 +10,12 @@
 %define qt6_version 6.9.0
 
 Name:           kaccounts-providers
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KDE Accounts Providers
 License:        GPL-2.0-or-later
 VCS:            git:https://invent.kde.org/network/kaccounts-providers.git
-#!RemoteAsset:  sha256:0d3f278ffac88af2db4c7ba7d9cab4622a2e19dbb39fbd144f1daa1075caf8a0
+#!RemoteAsset:  sha256:59d70593a7b8917500fa65ee8ec6c876d30ea2213d1a7a454aaff7d1da1fccb1
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 

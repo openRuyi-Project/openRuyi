@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           kdialog
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KDE version of xdialog
 License:        GPL-2.0-or-later
 URL:            https://apps.kde.org/kdialog
 VCS:            git:https://invent.kde.org/utilities/kdialog
-#!RemoteAsset:  sha256:527ecfd4a9af19078f55f5758977821dbcef47a1b496b1a1b680d681228ade6d
+#!RemoteAsset:  sha256:e7142c812d2b4b202abd12bea054f8368fdba9bb0552a9f46d3a7d7283339c72
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 

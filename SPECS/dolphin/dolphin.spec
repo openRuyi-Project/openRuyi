@@ -9,13 +9,13 @@
 %define qt6_version 6.9.0
 
 Name:           dolphin
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KDE File Manager
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/system/dolphin.git
-#!RemoteAsset:  sha256:c7e90beb8ce13aea091494ae7ddfabde999b1297986a596403828010bec59346
+#!RemoteAsset:  sha256:f5635feff84e7070d35342d6defb46e9b42ff1c44e3896635f4bd9f43da947c1
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -112,6 +112,8 @@ ln -sf ../applications/org.kde.dolphin.desktop %{buildroot}%{_kf6_sharedir}/kglo
 %{_kf6_sharedir}/kconf_update/dolphin_replace_view_mode_with_view_settings_in_toolbar.py
 %{_kf6_sharedir}/kconf_update/dolphin_replace_view_mode_with_view_settings_in_toolbar.upd
 %{_kf6_sharedir}/kconf_update/dolphin_statusandlocationbarssettings.upd
+%{_kf6_sharedir}/kconf_update/dolphin_tab_key_shortcut_for_focus_other_view.py
+%{_kf6_sharedir}/kconf_update/dolphin_tab_key_shortcut_for_focus_other_view.upd
 %dir %{_kf6_sharedir}/kglobalaccel
 %{_kf6_sharedir}/kglobalaccel/org.kde.dolphin.desktop
 %{_userunitdir}/plasma-dolphin.service

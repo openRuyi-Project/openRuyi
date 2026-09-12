@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           signon-kwallet-extension
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KWallet integration for signon framework
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/network/signon-kwallet-extension.git
-#!RemoteAsset:  sha256:a8795fa827a6996b91c100d10e8a0c302ae7f8c731c5cc540d50f5a723a2891f
+#!RemoteAsset:  sha256:d50f42b725e5d1bcb7c9e3caff77c2b9c835715567427e544c3824e484776ced
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 

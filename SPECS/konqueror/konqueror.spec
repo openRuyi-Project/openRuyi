@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           konqueror
-Version:        26.04.2
+Version:        26.08.1
 Release:        %autorelease
 Summary:        KDE File Manager and Browser
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/network/konqueror.git
-#!RemoteAsset:  sha256:aa9a35f81fa1f30aac1d77b9008d074fb041b2a7c12319d1f8c9b194137e57de
+#!RemoteAsset:  sha256:d974853fc14a356e76ac7901c7270323bf93a38e5ae4470b0a32e4b749854ccd
 Source0:        https://download.kde.org/stable/release-service/%{version}/src/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
 
