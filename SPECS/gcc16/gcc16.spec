@@ -77,7 +77,7 @@ Release:        %autorelease
 License:        GPL-3.0-or-later
 Summary:        The GNU C Compiler and Support Files
 #!RemoteAsset:  sha256:e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e
-Source:         https://ftpmirror.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
+Source:         https://ftp.gnu.org/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.xz
 
 BuildRequires:  xz
 BuildRequires:  pkgconfig(libzstd)
@@ -151,7 +151,7 @@ Suggests:       gcc%{vermajor}-doc
 
 Patch2000:      2000-textdomain.patch
 Patch2001:      2001-rename-info-files.patch
-Patch2002:      2002-riscv-fix-bclr-sign-extension.patch
+Patch2002:      2002-riscv-fix-bclr-ctz-reuse-and-widths.patch
 
 %description
 Core package for the GNU Compiler Collection, including the C language

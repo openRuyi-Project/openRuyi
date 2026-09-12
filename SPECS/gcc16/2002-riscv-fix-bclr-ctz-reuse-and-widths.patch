@@ -1,0 +1,503 @@
+From: kiritakekumi <pujingyu@iscas.ac.cn>
+Date: Tue, 9 Sep 2026 20:22:00 +0800
+Subject: [PATCH] RISC-V: fix CTZ reuse in bclr_lowest_set_bit
+
+A rotated set-bit iteration loop can put a CTZ immediately after an
+in-place x &= x - 1.  Reusing that CTZ clears another bit because it
+observes the updated input.  Check the search boundary instructions as
+well as the intervening instructions, and reject CTZ output overlaps
+that make the later-CTZ transformation unsafe.
+
+Also preserve operation widths when matching the idiom.  A sign-extended
+32-bit decrement is not generally a 64-bit decrement, and a CTZ of the
+low 32 bits cannot locate a set bit in the upper half of a 64-bit value.
+Require both operations to cover all observable result bits.  Preserve
+valid RV64 word optimizations when dataflow proves that only the low
+32 bits are used, and remove stale equality notes after replacement.
+
+Add regression tests for loop iteration, both width mismatches, and
+width boundaries in the existing positive optimization cases.
+
+Validated with a rebuilt GCC 17 cc1: 40 runtime configurations,
+1,052,160 differential comparisons, 15 assembly configurations and
+7 -fcompare-debug checks.  Full bootstrap/DejaGNU testing was not run.
+
+This is a standalone combined patch; it supersedes and replaces
+2002-riscv-fix-bclr-sign-extension.patch, whose sign extension case is
+handled here by refusing the transformation instead.
+Base-commit: fe89c51bc6b94fd6aa95f5ffbabc6a0f40274798
+
+Co-authored-by: Jiawei Chen <jiawei@iscas.ac.cn>
+Co-authored-by: Jingyu Pu <pujingyu@iscas.ac.cn>
+Signed-off-by: Jingyu Pu <pujingyu@iscas.ac.cn>
+---
+ gcc/config/riscv/riscv-bclr-lowest-set-bit.cc      |  147 ++++++++++++++++----
+ .../gcc.target/riscv/bclr-lowest-set-bit-2.c       |   29 ++++
+ .../gcc.target/riscv/bclr-lowest-set-bit-3.c       |   20 +++
+ .../gcc.target/riscv/bclr-lowest-set-bit-4.c       |   20 +++
+ .../gcc.target/riscv/bclr-lowest-set-bit-5.c       |   81 +++++++++++
+ .../gcc.target/riscv/bclr-lowest-set-bit-6.c       |   43 ++++++
+ 6 files changed, 314 insertions(+), 26 deletions(-)
+
+diff --git a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+--- a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
++++ b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+@@ -68,12 +68,61 @@
+ private:
+ }; // class pass_bclr_lowest_set_bit
+ 
++/* Return true if every use of REG, including uses in equivalence notes,
++   observes only its low MODE bits.  Do not accept promoted subregs: their
++   promotion promises constrain the upper bits too.  Checking all uses,
++   rather than only uses of this definition, is deliberately conservative.  */
++
++static bool
++only_lowpart_uses_p (rtx reg, machine_mode mode)
++{
++  if (HARD_REGISTER_P (reg))
++    return false;
++
++  df_ref chains[] = { DF_REG_USE_CHAIN (REGNO (reg)),
++		      DF_REG_EQ_USE_CHAIN (REGNO (reg)) };
++  for (df_ref chain : chains)
++    for (df_ref use = chain; use; use = DF_REF_NEXT_REG (use))
++      {
++	rtx ref = DF_REF_REG (use);
++	if (!SUBREG_P (ref)
++	    || !subreg_lowpart_p (ref)
++	    || SUBREG_PROMOTED_VAR_P (ref)
++	    || !known_le (GET_MODE_BITSIZE (GET_MODE (ref)),
++			  GET_MODE_BITSIZE (mode)))
++	  return false;
++      }
++  return true;
++}
++
++/* Return true if SET computes a CTZ of SRC that can be used to clear
++   the lowest set bit in the low MODE bits of SRC.  In particular, a CTZ
++   of a subreg must start at bit zero and cover all observable bits.  */
++
++static bool
++matching_ctz_p (rtx set, rtx src, machine_mode mode)
++{
++  if (!REG_P (SET_DEST (set)) || GET_CODE (SET_SRC (set)) != CTZ)
++    return false;
++
++  rtx input = XEXP (SET_SRC (set), 0);
++  if (!known_ge (GET_MODE_BITSIZE (GET_MODE (input)),
++		 GET_MODE_BITSIZE (mode)))
++    return false;
++
++  return input == src
++	 || (SUBREG_P (input)
++	     && subreg_lowpart_p (input)
++	     && SUBREG_REG (input) == src);
++}
++
+ /* Look at real insns before START to see if any of them compute ctz (src).
+    If so, return the insn that is a ctz, otherwise return NULL.  Look no
+-   further than LIMIT real statements and do not leave this basic block.  */
++   further than LIMIT real statements and do not leave this basic block.
++   MODE is the width of the observable result.  */
+ 
+ rtx_insn *
+-find_prior_ctz (rtx_insn *start, rtx src, int limit)
++find_prior_ctz (rtx_insn *start, rtx src, machine_mode mode, int limit)
+ {
+   rtx_insn *prev = start;
+   while (prev && limit > 0)
+@@ -87,16 +136,15 @@
+ 	  if (!set)
+ 	    continue;
+ 
+-	  /* A ctz of a SI object on rv64 will have an
+-	     SUBREG argument.  */
+-	  if (GET_CODE (SET_SRC (set)) == CTZ
+-	      && (XEXP (SET_SRC (set), 0) == src
+-		  || (SUBREG_P (XEXP (SET_SRC (set), 0))
+-		      && SUBREG_REG (XEXP (SET_SRC (set), 0)) == src)))
++	  if (matching_ctz_p (set, src, mode))
+ 	    {
+ 	      /* We've found a CTZ, make sure neither the input nor
+-		 the output change between the CTZ and START.  */
+-	      if (reg_set_between_p (src, prev, start)
++		 the output change between the CTZ and START.  Note
++		 reg_set_between_p is exclusive at both ends, so START
++		 itself has to be checked separately.  */
++	      if (reg_set_p (src, start)
++		  || reg_set_p (SET_DEST (set), start)
++		  || reg_set_between_p (src, prev, start)
+ 		  || reg_set_between_p (SET_DEST (set), prev, start))
+ 		return NULL;
+ 
+@@ -110,10 +158,11 @@
+ 
+ /* Look at real insns after START to see if any of them compute ctz (src).
+    If so, return the insn that is a ctz, otherwise return NULL.  Look no
+-   further than LIMIT real statements and do not leave this basic block.  */
++   further than LIMIT real statements and do not leave this basic block.
++   MODE is the width of the observable result.  */
+ 
+ rtx_insn *
+-find_later_ctz (rtx_insn *start, rtx src, int limit)
++find_later_ctz (rtx_insn *start, rtx src, machine_mode mode, int limit)
+ {
+   rtx_insn *next = start;
+   while (next && limit > 0)
+@@ -127,19 +176,28 @@
+ 	  if (!set)
+ 	    continue;
+ 
+-	  /* A ctz of a SI object on rv64 will have an
+-	     SUBREG argument.  */
+-	  if (GET_CODE (SET_SRC (set)) == CTZ
+-	      && (XEXP (SET_SRC (set), 0) == src
+-		  || (SUBREG_P (XEXP (SET_SRC (set), 0))
+-		      && SUBREG_REG (XEXP (SET_SRC (set), 0)) == src)))
++	  if (matching_ctz_p (set, src, mode))
+ 	    {
+ 	      /* We've found a CTZ.  The CTZ is going to be moved, so
+ 		 we need to verify its input doesn't change between
+ 		 START and NEXT.  We also have to verify that its
+-		 destination is unused between those points.  */
+-	      if (reg_set_between_p (XEXP (SET_SRC (set), 0), start, next)
+-		  || reg_used_between_p (SET_DEST (set), start, next))
++		 destination is neither used nor set between those
++		 points; a set that originally preceded the CTZ would
++		 clobber its result after the move.
++
++		 reg_set_between_p and reg_used_between_p are exclusive at
++		 both ends, so START itself has to be checked separately.
++		 That is essential rather than merely conservative: START
++		 is the AND of the x & (x - 1) idiom, and when the idiom
++		 updates its input in place, as it does in the usual
++		 'iterate over the set bits' loop, this CTZ consumes the
++		 value *after* the lowest set bit has been cleared.  The
++		 two are then not interchangeable at all and folding them
++		 together clears two bits per iteration.  */
++	      if (reg_set_p (src, start)
++		  || reg_set_between_p (XEXP (SET_SRC (set), 0), start, next)
++		  || reg_used_between_p (SET_DEST (set), start, next)
++		  || reg_set_between_p (SET_DEST (set), start, next))
+ 		return NULL;
+ 
+ 	      return next;
+@@ -172,6 +230,8 @@
+ pass_bclr_lowest_set_bit::execute (function *fn)
+ {
+   basic_block bb;
++
++  df_process_deferred_rescans ();
+ 
+   /* Scan all the blocks, once.  */
+   FOR_ALL_BB_FN (bb, fn)
+@@ -205,11 +265,19 @@
+ 	      || (XEXP (dec_src, 1) != CONSTM1_RTX (GET_MODE (dec_src))))
+ 	    continue;
+ 
++	  machine_mode dec_mode = GET_MODE (dec_src);
++
+ 	  /* Get the value being decremented.  Note it might be
+ 	     wrapped by a SUBREG which we strip.  */
+ 	  dec_src = XEXP (dec_src, 0);
+ 	  if (SUBREG_P (dec_src))
+-	    dec_src = SUBREG_REG (dec_src);
++	    {
++	      if (!subreg_lowpart_p (dec_src))
++		continue;
++	      dec_src = SUBREG_REG (dec_src);
++	    }
++	  if (!REG_P (dec_src))
++	    continue;
+ 
+ 	  /* So we've found dest = src - 1;  Now look at the next
+ 	     real insn and see if it's dest2 = (dest & src).  */
+@@ -238,9 +306,23 @@
+ 	  if (dec_src != and_op0 && dec_src != and_op1)
+ 	    continue;
+ 
++	  /* BCLR operates on a full word.  A subword decrement or CTZ is
++	     sufficient only when the AND's upper bits are unobservable.
++	     For example, x & sext ((int) x - 1) is not generally x & (x - 1),
++	     and ctz ((int) x) cannot locate a bit in the high word of x.  */
++	  machine_mode mode = GET_MODE (and_dest);
++	  if (mode != word_mode
++	      || GET_MODE (dec_src) != mode
++	      || GET_MODE (dec_dest) != mode)
++	    continue;
++	  if (TARGET_64BIT && only_lowpart_uses_p (and_dest, SImode))
++	    mode = SImode;
++	  if (!known_ge (GET_MODE_BITSIZE (dec_mode), GET_MODE_BITSIZE (mode)))
++	    continue;
++
+ 	  /* We've found x & (x - 1).  Now look for a suitable ctz nearby.  */
+ 
+-	  rtx_insn *prior_ctz = find_prior_ctz (insn, dec_src, 10);
++	  rtx_insn *prior_ctz = find_prior_ctz (insn, dec_src, mode, 10);
+ 	  if (prior_ctz)
+ 	    {
+ 	      rtx prior_ctz_output = SET_DEST (single_set (prior_ctz));
+@@ -253,6 +335,8 @@
+ 
+ 	      /* Slam that pattern in as the SET_SRC of the original AND.  */
+ 	      SET_SRC (and_set) = pat;
++	      /* A subword transformation need not preserve the upper bits.  */
++	      remove_reg_equal_equiv_notes (next, true);
+ 	      INSN_CODE (next) = -1;
+ 	      df_insn_rescan (next);
+ 
+@@ -271,11 +355,23 @@
+ 
+ 	  /* We didn't find a CTZ before INSN.  So look after NEXT.
+ 	     This case is more complex as we have to move insns around.  */
+-	  rtx_insn *later_ctz = find_later_ctz (next, dec_src, 10);
++	  rtx_insn *later_ctz = find_later_ctz (next, dec_src, mode, 10);
+ 	  if (later_ctz)
+ 	    {
++	      /* The bclr we are about to emit reads DEC_SRC as well as the
++		 CTZ's output and writes AND_DEST, and it has to be placed
++		 after the CTZ.  So the CTZ's output must overlap neither:
++		 if it overlapped DEC_SRC, the CTZ would clobber the bclr's
++		 input; if it overlapped AND_DEST, the bclr would clobber
++		 the CTZ's result for any later use.  */
++	      rtx later_ctz_output = SET_DEST (single_set (later_ctz));
++	      if (reg_overlap_mentioned_p (later_ctz_output, dec_src)
++		  || reg_overlap_mentioned_p (later_ctz_output, and_dest))
++		continue;
++
+ 	      /* Remove the CTZ from the stream and reemit it immediately
+-		 after NEXT.  XXX FIXME.  Need to prove this is safe.  */
++		 after NEXT.  find_later_ctz has verified that this motion
++		 is safe.  */
+ 	      df_insn_delete (later_ctz);
+ 	      remove_insn (later_ctz);
+ 	      SET_PREV_INSN (later_ctz) = NULL;
+@@ -283,7 +379,6 @@
+ 	      df_insn_rescan (emit_insn_after (PATTERN (later_ctz), next));
+ 
+ 	      /* Now construct the bclr insn and add it to the stream.  */
+-	      rtx later_ctz_output = SET_DEST (single_set (later_ctz));
+ 	      rtx pat = gen_rtx_ROTATE (GET_MODE (dec_dest),
+ 				        GEN_INT (-2),
+ 					gen_lowpart (QImode, later_ctz_output));
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+new file mode 100644
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+@@ -0,0 +1,29 @@
++/* { dg-do compile } */
++/* { dg-options "-march=rv64gcb -mabi=lp64d" { target { rv64 } } } */
++/* { dg-options "-march=rv32gcb -mabi=ilp32" { target { rv32 } } } */
++/* { dg-skip-if "" { *-*-* } { "-O0" "-Og" } } */
++/* { dg-skip-if "unrotated loop permits bclr" { rv32 } { "-Os" "-Oz" } } */
++
++/* The canonical "iterate over the set bits" loop.  Once the loop has been
++   rotated, the ctz that produces the bit index for the *next* iteration
++   sits immediately after the in-place x &= x - 1, in the same block.
++
++   That ctz reads x *after* the lowest set bit has been cleared, so the
++   two are not interchangeable and this must not be folded into a
++   ctz+bclr sequence: the original AND stays live, the bclr is emitted on
++   top of it and a second bit is cleared every iteration.  scan (0xffff)
++   then returns 0x2aab instead of 0xffff.  */
++
++unsigned
++scan (unsigned x)
++{
++  unsigned result = 0;
++
++  for (unsigned bit; ((bit = __builtin_ffs (x) - 1), x); x &= x - 1)
++    result |= 1u << bit;
++
++  return result;
++}
++
++/* { dg-final { scan-assembler "\\sand\\s" } } */
++/* { dg-final { scan-assembler-not "\\sbclr\\s" } } */
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-3.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-3.c
+new file mode 100644
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-3.c
+@@ -0,0 +1,20 @@
++/* { dg-do run { target { rv64 && riscv_b_ok } } } */
++/* { dg-options "-O2 -march=rv64gcb -mabi=lp64d" } */
++
++/* The decrement is only 32 bits wide.  Its sign extension is part of
++   the expression and must not be discarded when matching x & (x - 1). */
++__attribute__((noipa))
++unsigned long
++foo (unsigned long x, unsigned *bit)
++{
++  *bit = __builtin_ctzl (x);
++  return x & (unsigned long) (int) ((unsigned) x - 1u);
++}
++
++int
++main (void)
++{
++  unsigned bit;
++  unsigned long result = foo (0x100000001UL, &bit);
++  return result != 0 || bit != 0;
++}
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-4.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-4.c
+new file mode 100644
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-4.c
+@@ -0,0 +1,20 @@
++/* { dg-do run { target { rv64 && riscv_b_ok } } } */
++/* { dg-options "-O2 -march=rv64gcb -mabi=lp64d" } */
++
++/* A CTZ of the low 32 bits is not interchangeable with a CTZ of all
++   64 bits.  ffs(0) is defined, so the low-word-zero case is intentional. */
++__attribute__((noipa))
++unsigned long
++foo (unsigned long x, unsigned *bit)
++{
++  *bit = __builtin_ffs ((unsigned) x);
++  return x & (x - 1);
++}
++
++int
++main (void)
++{
++  unsigned bit;
++  unsigned long result = foo (1UL << 40, &bit);
++  return result != 0 || bit != 0;
++}
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-5.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-5.c
+new file mode 100644
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-5.c
+@@ -0,0 +1,81 @@
++/* { dg-do run { target riscv_b_ok } } */
++/* { dg-options "-O2 -march=rv64gcb -mabi=lp64d" { target rv64 } } */
++/* { dg-options "-O2 -march=rv32gcb -mabi=ilp32" { target rv32 } } */
++
++/* Exercise the existing positive cases at bit-width boundaries.  Keep
++   their calls out of line so that we test the transformed functions.  */
++#define DECLARE(N, T) void foo##N (T) __attribute__((noipa));
++DECLARE (1, unsigned int)
++DECLARE (2, unsigned int)
++DECLARE (3, unsigned int)
++DECLARE (4, unsigned int)
++DECLARE (5, unsigned int)
++DECLARE (6, unsigned int)
++DECLARE (7, unsigned long)
++DECLARE (8, unsigned long)
++DECLARE (9, unsigned long)
++DECLARE (10, unsigned long)
++DECLARE (11, unsigned long)
++DECLARE (12, unsigned long)
++
++#include "bclr-lowest-set-bit-1.c"
++
++static unsigned __attribute__((noipa, optimize ("O0")))
++reference_ctz (unsigned long x)
++{
++  unsigned n = 0;
++  while ((x & 1) == 0)
++    {
++      x >>= 1;
++      ++n;
++    }
++  return n;
++}
++
++#define CHECK(N, T, X, CLEAR, CTZ) \
++  do \
++    { \
++      foo##N (X); \
++      if ((T) foo##N##_res1 != (CLEAR) \
++	  || (T) foo##N##_res2 != (CTZ)) \
++	__builtin_abort (); \
++    } \
++  while (0)
++
++int
++main (void)
++{
++  static const unsigned long inputs[] = {
++    1, 2, 3, 0x7fffffffUL, 0x80000000UL, 0x80000001UL, 0xffffffffUL,
++#if __SIZEOF_LONG__ == 8
++    0x100000000UL, 0x100000001UL, 1UL << 40, 1UL << 63,
++    (1UL << 63) | 1, ~0UL,
++#endif
++  };
++
++  for (unsigned i = 0; i < sizeof (inputs) / sizeof (inputs[0]); ++i)
++    {
++      unsigned long x = inputs[i];
++      unsigned bit = reference_ctz (x);
++      unsigned long cleared = x ^ (1UL << bit);
++      CHECK (7, unsigned long, x, cleared, bit);
++      CHECK (8, unsigned long, x, cleared, bit);
++      CHECK (9, unsigned long, x, cleared, bit);
++      CHECK (10, unsigned long, x, cleared, bit);
++      CHECK (11, unsigned long, x, cleared, bit);
++      CHECK (12, unsigned long, x, cleared, bit);
++
++      unsigned int word = x;
++      if (word == 0)
++	continue;
++      bit = reference_ctz (word);
++      unsigned int cleared_word = word ^ (1U << bit);
++      CHECK (1, unsigned int, word, cleared_word, bit);
++      CHECK (2, unsigned int, word, cleared_word, bit);
++      CHECK (3, unsigned int, word, cleared_word, bit);
++      CHECK (4, unsigned int, word, cleared_word, bit);
++      CHECK (5, unsigned int, word, cleared_word, bit);
++      CHECK (6, unsigned int, word, cleared_word, bit);
++    }
++  return 0;
++}
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-6.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-6.c
+new file mode 100644
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-6.c
+@@ -0,0 +1,43 @@
++/* { dg-do run { target riscv_b_ok } } */
++/* { dg-options "-O2 -march=rv64gcb -mabi=lp64d" { target rv64 } } */
++/* { dg-options "-O2 -march=rv32gcb -mabi=ilp32" { target rv32 } } */
++
++/* A rotated loop can put the next iteration's CTZ immediately after
++   the in-place AND.  Check all 16-bit masks, including zero.  */
++unsigned __attribute__((noipa))
++scan (unsigned short mask)
++{
++  unsigned result = 0;
++  for (unsigned x = mask, bit;
++       ((bit = __builtin_ffs (x) - 1), x);
++       x &= x - 1)
++    result |= 1U << bit;
++  return result;
++}
++
++/* Also exercise the unsigned-input variant used by the assembly test.
++   In an unrotated loop, reusing a prior CTZ is a valid optimization.  */
++unsigned __attribute__((noipa))
++scan_word (unsigned x)
++{
++  unsigned result = 0;
++  for (unsigned bit; ((bit = __builtin_ffs (x) - 1), x); x &= x - 1)
++    result |= 1U << bit;
++  return result;
++}
++
++int
++main (void)
++{
++  for (unsigned x = 0; x <= 0xffff; ++x)
++    if (scan (x) != x || scan_word (x) != x)
++      __builtin_abort ();
++
++  static const unsigned inputs[] = {
++    0x80000000U, 0x80000001U, 0xffff0000U, 0x80010001U, 0xffffffffU
++  };
++  for (unsigned i = 0; i < sizeof (inputs) / sizeof (inputs[0]); ++i)
++    if (scan_word (inputs[i]) != inputs[i])
++      __builtin_abort ();
++  return 0;
++}
+-- 
+2.55.0
+
