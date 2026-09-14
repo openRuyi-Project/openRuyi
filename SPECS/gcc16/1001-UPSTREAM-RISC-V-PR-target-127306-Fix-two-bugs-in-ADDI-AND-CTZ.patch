@@ -1,0 +1,117 @@
+From 011b6fff1465676f9d2fcb3df615d508ab49b8e0 Mon Sep 17 00:00:00 2001
+From: Jeff Law <jeffrey.law@oss.qualcomm.com>
+Date: Fri, 11 Sep 2026 16:25:27 -0600
+Subject: [PATCH 1/2] [RISC-V][PR target/127306] Fix two bugs in ADDI+AND+CTZ
+ -> CTZ+BCLR optimization for RISC-V
+
+So this BZ exposed two problems.
+
+First in the case where we find the CTZ after the AND which clears the lowest
+set bit, we have to make sure to remove the original AND, otherwise we end up
+clearing two bits at a time, not good.
+
+Second, when determining if moving the CTZ is safe, we had an off-by-one error.
+So we could incorrectly transform a sequence when the AND was setting a value
+used by the CTZ.  Had this been fixed first, it likely would have masked the
+first problem.
+
+I'd left a FIXME comment in the code.  I was pretty sure I'd addressed the
+issue in the FIXME, which thankfully I had (modulo the off-by-one bug mentioned
+above).  So the bogus comment is removed.
+
+Tested on riscv32-elf and riscv64-elf.  It'll test on the K3 overnight and the
+K1 over the weekend (assuming the ULEB128 issues don't pop again).  Pushing to
+the trunk.  I'll let it simmer for a few days and likely backport to gcc-16
+next week.
+
+	PR target/127306
+gcc/
+	* config/riscv/riscv-bclr-lowest-set-bit.cc (find_later_ctz): Fix
+	off-by-one error for scan to verify ctz input isn't modified.
+	(pass_bclr_lowest_bit_set::execute): Remove original AND in case
+	where the CTZ is found after the AND.
+
+gcc/testsuite/
+	* gcc.target/riscv/pr127306.c: New test.
+---
+ gcc/config/riscv/riscv-bclr-lowest-set-bit.cc | 12 ++++++--
+ gcc/testsuite/gcc.target/riscv/pr127306.c     | 30 +++++++++++++++++++
+ 2 files changed, 39 insertions(+), 3 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/riscv/pr127306.c
+
+diff --git a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+index 99f15418cf7f..403250757419 100644
+--- a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
++++ b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+@@ -138,8 +138,8 @@ find_later_ctz (rtx_insn *start, rtx src, int limit)
+ 		 we need to verify its input doesn't change between
+ 		 START and NEXT.  We also have to verify that its
+ 		 destination is unused between those points.  */
+-	      if (reg_set_between_p (XEXP (SET_SRC (set), 0), start, next)
+-		  || reg_used_between_p (SET_DEST (set), start, next))
++	      if (reg_set_between_p (XEXP (SET_SRC (set), 0), PREV_INSN (start), next)
++		  || reg_used_between_p (SET_DEST (set), PREV_INSN (start), next))
+ 		return NULL;
+ 
+ 	      return next;
+@@ -275,7 +275,7 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 	  if (later_ctz)
+ 	    {
+ 	      /* Remove the CTZ from the stream and reemit it immediately
+-		 after NEXT.  XXX FIXME.  Need to prove this is safe.  */
++		 after NEXT.  */
+ 	      df_insn_delete (later_ctz);
+ 	      remove_insn (later_ctz);
+ 	      SET_PREV_INSN (later_ctz) = NULL;
+@@ -290,6 +290,12 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 	      pat = gen_rtx_AND (GET_MODE (dec_dest), pat, dec_src);
+ 	      pat = gen_rtx_SET (and_dest, pat);
+ 	      df_insn_rescan (emit_insn_after (pat, NEXT_INSN (next)));
++
++	      /* And remove the original AND.  */
++	      df_insn_delete (next);
++	      remove_insn (next);
++	      SET_PREV_INSN (next) = NULL;
++	      SET_NEXT_INSN (next) = NULL;
+ 	    }
+ 	}
+     }
+diff --git a/gcc/testsuite/gcc.target/riscv/pr127306.c b/gcc/testsuite/gcc.target/riscv/pr127306.c
+new file mode 100644
+index 000000000000..1c8e5e57ee38
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/pr127306.c
+@@ -0,0 +1,30 @@
++/* { dg-do run } */
++/* { dg-additional-options "-march=rv64gc_zbb_zbs -mabi=lp64d" { target rv64 } } */ 
++/* { dg-additional-options "-march=rv32gc_zbb_zbs -mabi=ilp32" { target rv32 } } */ 
++
++typedef unsigned short uint16_t;
++
++__attribute__((noinline)) unsigned
++scan(uint16_t mask)
++{
++    unsigned result = 0, dword = mask, bit = 0;
++
++    while (dword) {
++        result |= 1u << bit;
++	dword &= dword - 1;
++	bit = __builtin_ffs(dword) - 1;
++    }
++
++    return result;
++}
++
++int
++main(void)
++{
++    const unsigned expected = 0xffff;
++    const unsigned actual = scan(expected);
++
++    if (actual != expected)
++      __builtin_abort ();
++    __builtin_exit (0);
++}
+-- 
+2.52.0
+
