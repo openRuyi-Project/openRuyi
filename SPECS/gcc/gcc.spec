@@ -42,6 +42,15 @@ Requires:       gcc%{gcc_version}
 %description
 The system GNU C Compiler.
 
+%package     -n gcc-devel
+Summary:        GCC plugins development environment
+License:        GPL-3.0-or-later
+Requires:       gcc%{gcc_version}-devel
+Requires:       gcc = %{version}
+
+%description -n gcc-devel
+Files required for developing and compiling GCC plugins.
+
 %package     -n cpp
 Summary:        The system GNU Preprocessor
 License:        GPL-3.0-or-later
@@ -236,6 +245,9 @@ fi
 %doc %{_mandir}/man1/gcov-dump.1.gz
 %doc %{_mandir}/man1/gcov-tool.1.gz
 %doc %{_mandir}/man1/lto-dump.1.gz
+
+%files -n gcc-devel
+%defattr(-,root,root)
 
 %files -n cpp
 %defattr(-,root,root)
