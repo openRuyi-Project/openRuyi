@@ -5,8 +5,8 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global llvm_config /usr/bin/llvm-config
-%global gcc /usr/bin/gcc-%{gcc_version}
-%global gxx /usr/bin/g++-%{gcc_version}
+%global gcc /usr/bin/gcc
+%global gxx /usr/bin/g++
 %global clang /usr/bin/clang
 %global lld /usr/bin/ld.lld
 %global afl_helper_path %{_libdir}/af
@@ -52,8 +52,8 @@ BuildOption(install):  MAN_PATH="%{_mandir}/man8"
 BuildOption(install):  MISC_PATH="%{_pkgdocdir}"
 
 BuildRequires:  clang
-BuildRequires:  gcc%{gcc_version}-c++
-BuildRequires:  gcc%{gcc_version}-devel
+BuildRequires:  gcc-c++
+BuildRequires:  gcc-devel
 BuildRequires:  llvm-devel
 %ifarch x86_64
 BuildRequires:  lld
