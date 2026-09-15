@@ -1,0 +1,39 @@
+From 499ca774c8cf6a90eb4199784341dcd4f4b64bb3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 21 Jul 2026 13:50:56 +0800
+Subject: [PATCH] tests: fix histogram label formatting
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ histogram_example_test.go            | 2 +-
+ prometheus_histogram_example_test.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/histogram_example_test.go b/histogram_example_test.go
+index b168e2c..f9a503b 100644
+--- a/histogram_example_test.go
++++ b/histogram_example_test.go
+@@ -20,7 +20,7 @@ func ExampleHistogram() {
+ func ExampleHistogram_vec() {
+ 	for i := range 3 {
+ 		// Dynamically construct metric name and pass it to GetOrCreateHistogram.
+-		name := fmt.Sprintf(`response_size_bytes{path=%q, code=%q}`, "/foo/bar", 200+i)
++		name := fmt.Sprintf(`response_size_bytes{path=%q, code="%d"}`, "/foo/bar", 200+i)
+ 		response := processRequest()
+ 		metrics.GetOrCreateHistogram(name).Update(float64(len(response)))
+ 	}
+diff --git a/prometheus_histogram_example_test.go b/prometheus_histogram_example_test.go
+index 3aeaca2..8371ff4 100644
+--- a/prometheus_histogram_example_test.go
++++ b/prometheus_histogram_example_test.go
+@@ -20,7 +20,7 @@ func ExamplePrometheusHistogram() {
+ func ExamplePrometheusHistogram_vec() {
+ 	for i := range 3 {
+ 		// Dynamically construct metric name and pass it to GetOrCreatePrometheusHistogram.
+-		name := fmt.Sprintf(`response_size_bytes{path=%q, code=%q}`, "/foo/bar", 200+i)
++		name := fmt.Sprintf(`response_size_bytes{path=%q, code="%d"}`, "/foo/bar", 200+i)
+ 		response := processRequest()
+ 		metrics.GetOrCreatePrometheusHistogram(name).Update(float64(len(response)))
+ 	}
+-- 
+2.43.0

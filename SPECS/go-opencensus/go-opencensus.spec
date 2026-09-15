@@ -8,7 +8,7 @@
 %define go_import_path  go.opencensus.io
 # plugin/ochttp hits https://example.com during TestAgainstSpecs, which fails
 # in the OBS network sandbox. plugin/ocgrpc has a timing-sensitive
-# TestServerSpanDuration failure on riscv64 with "no more spans". - HNO3Miracle
+# TestServerSpanDuration failure on riscv64 with "no more spans".
 %define go_test_exclude %{shrink:
     go.opencensus.io/plugin/ochttp
     go.opencensus.io/plugin/ocgrpc
@@ -26,10 +26,11 @@ BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # Current Go vet rejects mismatched fmt format strings in opencensus tests and
-# one error path. Keep the tests enabled and fix the formats. - HNO3Miracle
+# one error path. Keep the tests enabled and fix the formats.
 Patch2000:      2000-fix-format-strings-for-go-vet.patch
 
 BuildRequires:  go
+BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/davecgh/go-spew)
 BuildRequires:  go(github.com/golang/groupcache)
 BuildRequires:  go(github.com/golang/protobuf)
@@ -45,9 +46,11 @@ BuildRequires:  go(google.golang.org/genproto/googleapis/rpc)
 BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 BuildRequires:  go(gopkg.in/yaml.v3)
-BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opencensus.io) = %{version}
+Provides:       go(go.opencensus.io/plugin/ochttp) = %{version}
+Provides:       go(go.opencensus.io/trace) = %{version}
+Provides:       go(go.opencensus.io/trace/propagation) = %{version}
 
 Requires:       go(github.com/golang/groupcache)
 Requires:       go(github.com/golang/protobuf)
