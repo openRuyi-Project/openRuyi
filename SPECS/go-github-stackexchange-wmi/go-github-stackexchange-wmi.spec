@@ -5,18 +5,17 @@
 
 %define _name           wmi
 %define go_import_path  github.com/StackExchange/wmi
-# This is a package for windows
-# However, it's depended by certtostore
-%define go_test_ignore_failure 1
+# WMI requires Windows; tolerate failures from the default checks on Linux.
+%define go_test_ignore_failure  1
 
 Name:           go-github-stackexchange-wmi
-Version:        1.1.0
+Version:        1.2.1
 Release:        %autorelease
-Summary:        WMI client library for Go
+Summary:        WMI query library for Go
 License:        MIT
 URL:            https://github.com/StackExchange/wmi
-#!RemoteAsset:  sha256:e5e7537a37b205eedc30b0bd21991dbe7146b9a7ae902fd20080e0d33006a2f8
-Source0:        https://github.com/StackExchange/wmi/archive/refs/tags/%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:a90126aa4c4defa7455be9610e84b0606972eccfa4111c2ec97179691d240b5a
+Source0:        https://github.com/StackExchange/wmi/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
@@ -24,12 +23,13 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/go-ole/go-ole)
 
-Provides:       go(github.com/StackExchange/wmi) = %{version}
+Provides:       go(%{go_import_path}) = %{version}
 
 Requires:       go(github.com/go-ole/go-ole)
 
 %description
-Package wmi provides a Windows Management Instrumentation client for Go.
+This package provides a WQL interface for querying Windows Management
+Instrumentation from Go.
 
 %files
 %doc README.md

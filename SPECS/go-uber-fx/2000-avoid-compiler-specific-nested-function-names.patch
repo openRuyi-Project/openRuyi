@@ -1,0 +1,27 @@
+From 4a7e5aa2c7842b5f8026f97c36cc7bd011db46db Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 18:41:44 +0800
+Subject: [PATCH] tests: avoid compiler-specific nested function names
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+
+diff --git a/internal/fxreflect/stack_test.go b/internal/fxreflect/stack_test.go
+index b3ce561..dab6706 100644
+--- a/internal/fxreflect/stack_test.go
++++ b/internal/fxreflect/stack_test.go
+@@ -75,9 +75,9 @@ func TestDeepStack(t *testing.T) {
+ 		}()
+ 
+ 		require.True(t, len(frames) > 3, "expected at least three frames")
+-		for i, name := range []string{"func1.TestDeepStack.func1.1.2", "func1.1", "func1"} {
+-			f := frames[i]
+-			assert.Equal(t, "go.uber.org/fx/internal/fxreflect.TestDeepStack."+name, f.Function)
++		for _, f := range frames[:3] {
++			// Compiler-generated closure suffixes are not stable across Go releases.
++			assert.Contains(t, f.Function, "go.uber.org/fx/internal/fxreflect.TestDeepStack")
+ 			assert.Contains(t, f.File, "internal/fxreflect/stack_test.go")
+ 			assert.NotZero(t, f.Line)
+ 		}
+-- 
+2.43.0
+

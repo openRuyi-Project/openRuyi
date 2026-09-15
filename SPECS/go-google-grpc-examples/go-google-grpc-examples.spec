@@ -6,12 +6,11 @@
 
 %define _name           examples
 %define go_import_path  google.golang.org/grpc/examples
-%define go_source_subdir examples
-%define commit_id 609310837bbc7fab1553fa53f2d1312bd7d85275
+%define commit_id       609310837bbc7fab1553fa53f2d1312bd7d85275
 # The CSM observability and OpenTelemetry examples require
 # go.opentelemetry.io/otel/exporters/prometheus, which is only used by sample
 # programs and is not packaged in this branch. - HNO3Miracle
-%define go_test_exclude_glob %{shrink:
+%define go_test_exclude_glob  %{shrink:
     %{go_import_path}/features/advancedtls*
     %{go_import_path}/features/csm_observability*
     %{go_import_path}/features/observability*
@@ -28,11 +27,6 @@ URL:            https://github.com/grpc/grpc-go
 Source0:        https://github.com/grpc/grpc-go/archive/%{commit_id}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-# This package owns a Go module below the repository root; the explicit
-# %%install/%%check sections below copy only %%{go_source_subdir}, because
-# the default golangmodules phases would copy the full archive under
-# %%{go_import_path} and create invalid import paths. - HNO3Miracle
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -82,6 +76,8 @@ BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(google.golang.org/grpc/examples) = %{version}
+# cmux imports this installed package from the examples module.
+Provides:       go(google.golang.org/grpc/examples/helloworld/helloworld) = %{version}
 
 Requires:       go(cel.dev/expr)
 Requires:       go(github.com/aws/aws-sdk-go-v2)
@@ -131,13 +127,15 @@ Requires:       go(google.golang.org/protobuf)
 %description
 This package contains the standalone gRPC examples Go module.
 
+# Install the examples module from its subdirectory, avoiding an extra
+# examples component in the installed import paths.
 %install
-pushd %{go_source_subdir}
+pushd examples
 %buildsystem_golangmodules_install
 popd
 
 %check
-pushd %{go_source_subdir}
+pushd examples
 export GO111MODULE=off
 # Submodule tests import packages, including internal packages, from the parent
 # grpc module. Copy the installed parent tree into the temporary GOPATH first so

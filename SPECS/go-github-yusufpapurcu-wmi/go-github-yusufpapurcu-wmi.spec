@@ -7,7 +7,7 @@
 %define go_import_path  github.com/yusufpapurcu/wmi
 # Linux/riscv compile no Windows-tagged packages, so go test ./...
 # reports "no packages to test" and exits non-zero.
-%define go_test_ignore_failure 1
+%define go_test_ignore_failure  1
 
 Name:           go-github-yusufpapurcu-wmi
 Version:        1.2.4
@@ -22,15 +22,17 @@ BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+BuildRequires:  go(github.com/go-ole/go-ole)
 
 Provides:       go(github.com/yusufpapurcu/wmi) = %{version}
+
+Requires:       go(github.com/go-ole/go-ole)
 
 %description
 Package wmi provides a WQL interface to Windows WMI. The implementation
 is Windows-only; other GOOS values compile to empty source via build
-tags. go-ole is not a BuildRequires because openruyi's go-ole package
-is currently failed on riscv64, and Linux/riscv builds do not compile
-the Windows sources.
+tags. The go-ole dependency is retained for Windows consumers even though
+the Linux build has no runnable WMI implementation.
 
 %files
 %doc README.md
