@@ -1,0 +1,38 @@
+From b346047f0896a9a5b8194de21b0aeaa34b3e40f9 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 23:01:03 +0800
+Subject: [PATCH] z: use mremap fallback on riscv64
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ z/mremap_nosize.go | 4 ++--
+ z/mremap_size.go   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/z/mremap_nosize.go b/z/mremap_nosize.go
+index 3ff0796..bc266d8 100644
+--- a/z/mremap_nosize.go
++++ b/z/mremap_nosize.go
+@@ -1,5 +1,5 @@
+-//go:build (arm64 || arm || s390x) && linux && !js
+-// +build arm64 arm s390x
++//go:build (arm64 || arm || s390x || riscv64) && linux && !js
++// +build arm64 arm s390x riscv64
+ // +build linux
+ // +build !js
+ 
+diff --git a/z/mremap_size.go b/z/mremap_size.go
+index a70a06c..507825b 100644
+--- a/z/mremap_size.go
++++ b/z/mremap_size.go
+@@ -1,5 +1,5 @@
+-//go:build linux && !arm64 && !arm && !s390x && !js
+-// +build linux,!arm64,!arm,!s390x,!js
++//go:build linux && !arm64 && !arm && !s390x && !riscv64 && !js
++// +build linux,!arm64,!arm,!s390x,!riscv64,!js
+ 
+ /*
+  * SPDX-FileCopyrightText: © 2017-2025 Istari Digital, Inc.
+-- 
+2.43.0
+

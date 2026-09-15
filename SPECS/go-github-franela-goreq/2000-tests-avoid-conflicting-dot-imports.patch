@@ -1,0 +1,35 @@
+From 658ce0f599ca44df0fcb21b745b9b650e75a0d15 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 04:57:16 +0800
+Subject: [PATCH] tests: avoid conflicting dot imports
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ goreq_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/goreq_test.go b/goreq_test.go
+index 3b15657..460db84 100644
+--- a/goreq_test.go
++++ b/goreq_test.go
+@@ -16,7 +16,7 @@ import (
+ 	"testing"
+ 	"time"
+ 
+-	. "github.com/franela/goblin"
++	"github.com/franela/goblin"
+ 	. "github.com/onsi/gomega"
+ )
+ 
+@@ -37,7 +37,7 @@ func TestRequest(t *testing.T) {
+ 	valuesQuery.Add("friend", "jonas")
+ 	valuesQuery.Add("friend", "peter")
+ 
+-	g := Goblin(t)
++	g := goblin.Goblin(t)
+ 
+ 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
+ 
+-- 
+2.43.0
+

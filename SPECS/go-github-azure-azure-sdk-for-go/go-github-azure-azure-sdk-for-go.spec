@@ -21,6 +21,7 @@
 # Sub-module versions: Source0..4 are the Prometheus v3.13.1 pins; Source5..6
 # are MinIO RELEASE.2025-10-15T17-29-55Z pins (azblob and its go.mod
 # armstorage require); Source7..8 are KES 0.24.0 Key Vault dependencies.
+# Source9..10 supply the table and queue clients required by Azure Kusto.
 # Each maps to an upstream git tag "sdk/<module>/v<ver>"
 # in github.com/Azure/azure-sdk-for-go. Maintained by hand; go2spec cannot
 # emit a monorepo multi-module spec.
@@ -33,6 +34,8 @@
 %define ver_armstorage  1.8.0
 %define ver_azsecrets   1.1.0
 %define ver_kv_internal 1.0.1
+%define ver_aztables    1.4.1
+%define ver_azqueue     1.0.1
 
 # Source archive top-level directory names (github archive layout).
 %define dir_azcore      azure-sdk-for-go-sdk-azcore-v%{ver_azcore}
@@ -44,6 +47,8 @@
 %define dir_armstorage  azure-sdk-for-go-sdk-resourcemanager-storage-armstorage-v%{ver_armstorage}
 %define dir_azsecrets   azure-sdk-for-go-sdk-security-keyvault-azsecrets-v%{ver_azsecrets}
 %define dir_kv_internal azure-sdk-for-go-sdk-security-keyvault-internal-v%{ver_kv_internal}
+%define dir_aztables    azure-sdk-for-go-sdk-data-aztables-v%{ver_aztables}
+%define dir_azqueue     azure-sdk-for-go-sdk-storage-azqueue-v%{ver_azqueue}
 
 Name:           go-github-azure-azure-sdk-for-go
 Version:        20260615
@@ -69,6 +74,10 @@ Source6:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/
 Source7:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/security/keyvault/azsecrets/v%{ver_azsecrets}.tar.gz#/%{_name}-azsecrets-%{ver_azsecrets}.tar.gz
 #!RemoteAsset:  sha256:e1138e95e79cdb7680df58360d91c0de5ca16342b95da572501ed3bec1f6c7d6
 Source8:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/security/keyvault/internal/v%{ver_kv_internal}.tar.gz#/%{_name}-kv-internal-%{ver_kv_internal}.tar.gz
+#!RemoteAsset:  sha256:1fd405224bbe50748cf84ef068bc1414fb3f42e73a077a88883b87192a09e715
+Source9:        https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/data/aztables/v%{ver_aztables}.tar.gz#/%{_name}-aztables-%{ver_aztables}.tar.gz
+#!RemoteAsset:  sha256:5400e1ee01ad0fa76dac0bdc5ef33298024e092cdeab15aad8a691526dbf1884
+Source10:       https://github.com/Azure/azure-sdk-for-go/archive/refs/tags/sdk/storage/azqueue/v%{ver_azqueue}.tar.gz#/%{_name}-azqueue-%{ver_azqueue}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
@@ -138,7 +147,9 @@ Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas) = %
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/service) = %{ver_azblob}
 # armstorage v%{ver_armstorage}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/storage/armstorage) = %{ver_armstorage}
-
+# aztables v%{ver_aztables}; azqueue v%{ver_azqueue}
+Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/data/aztables) = %{ver_aztables}
+Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/storage/azqueue) = %{ver_azqueue}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/azsecrets) = %{ver_azsecrets}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/security/keyvault/internal) = %{ver_kv_internal}
 
@@ -157,7 +168,7 @@ and by MinIO and KES (azblob, armstorage, azsecrets, Key Vault internal).
 Each sub-module is installed under its GOPATH import path.
 
 %prep
-# Unpack all nine source archives side by side (no merging of trees).
+# Unpack all eleven source archives side by side (no merging of trees).
 %setup -q -c -T -a 0
 %setup -q -D -T -a 1
 %setup -q -D -T -a 2
@@ -167,6 +178,8 @@ Each sub-module is installed under its GOPATH import path.
 %setup -q -D -T -a 6
 %setup -q -D -T -a 7
 %setup -q -D -T -a 8
+%setup -q -D -T -a 9
+%setup -q -D -T -a 10
 %patch -P 2000 -p1 -d %{dir_azidentity}
 %patch -P 2001 -p1 -d %{dir_azsecrets}
 # azidentity/cache is an independently versioned optional module. Prometheus
@@ -209,6 +222,12 @@ cp -a %{dir_azblob}/sdk/storage/azblob \
 install -d %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/resourcemanager/storage
 cp -a %{dir_armstorage}/sdk/resourcemanager/storage/armstorage \
       %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/resourcemanager/storage/armstorage
+install -d %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/data
+cp -a %{dir_aztables}/sdk/data/aztables \
+      %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/data/aztables
+# Install the stable v1 queue module at its canonical import path.
+cp -a %{dir_azqueue}/sdk/storage/azqueue \
+      %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/storage/azqueue
 
 install -d %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/security/keyvault
 cp -a %{dir_azsecrets}/sdk/security/keyvault/azsecrets %{buildroot}%{go_sys_gopath}/%{go_import_path}/sdk/security/keyvault/azsecrets
@@ -227,7 +246,9 @@ for mod in \
     sdk/resourcemanager/storage/armstorage \
     sdk/storage/azblob \
     sdk/security/keyvault/azsecrets \
-    sdk/security/keyvault/internal ; do
+    sdk/security/keyvault/internal \
+    sdk/data/aztables \
+    sdk/storage/azqueue ; do
   src="%{buildroot}%{go_sys_gopath}/%{go_import_path}/$mod"
   dst="%{_builddir}/go/src/%{go_import_path}/$mod"
   mkdir -p "$dst"
@@ -240,7 +261,9 @@ for mod in \
     sdk/resourcemanager/compute/armcompute/v5 \
     sdk/resourcemanager/network/armnetwork/v4 \
     sdk/resourcemanager/storage/armstorage \
-    sdk/storage/azblob ; do
+    sdk/storage/azblob \
+    sdk/data/aztables \
+    sdk/storage/azqueue ; do
   dst="%{_builddir}/go/src/%{go_import_path}/$mod"
   # Compilation must succeed before environment-sensitive tests are tolerated.
   ( cd "$dst" && %__go test -vet=off -run '^$' %{go_test_flags_default} ./... )
