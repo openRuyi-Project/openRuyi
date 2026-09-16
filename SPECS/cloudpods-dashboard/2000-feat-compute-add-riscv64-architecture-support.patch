@@ -1,0 +1,1085 @@
+From 12b39d851d1a7839b30c7c2ba004a58e020e4952 Mon Sep 17 00:00:00 2001
+From: Jiayi Yin <jiayi@iscas.ac.cn>
+Date: Sun, 16 Aug 2026 10:09:07 +0800
+Subject: [PATCH] feat(compute): add riscv64 architecture support
+
+Centralize CPU architecture normalization.
+
+Expose RISC-V in image, host, VM creation, lifecycle, and usage views.
+
+Add localized labels and unit coverage.
+
+Signed-off-by: Jiayi Yin <jiayi@iscas.ac.cn>
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ .../create/form/IDC.vue                       | 24 +++++-----
+ containers/Compute/locales/en.json            |  1 +
+ containers/Compute/locales/ja-JP.json         |  1 +
+ containers/Compute/locales/zh-CN.json         |  1 +
+ .../sections/OsSelect/ImageSelectTemplate.vue |  6 ++-
+ containers/Compute/utils/createServer.js      |  3 +-
+ .../views/host/mixins/singleActions.js        |  2 +-
+ .../views/image/dialogs/EditAttributes.vue    | 17 ++++---
+ .../views/image/image-import-ce/index.vue     | 11 +++--
+ .../components/AdjustConfigForm.vue           |  4 +-
+ .../vminstance-container/create/form/IDC.vue  | 35 ++++++--------
+ .../components/AdjustConfigForm.vue           | 12 ++---
+ .../views/vminstance/constants/actions.js     |  2 +-
+ .../views/vminstance/create/form/IDC.vue      | 48 ++++++++-----------
+ .../views/vminstance/create/form/Private.vue  | 13 ++---
+ .../views/vminstance/create/form/Public.vue   | 13 ++---
+ .../views/vminstance/dialogs/RebuildRoot.vue  | 13 ++---
+ .../views/vminstance/dialogs/Update.vue       | 14 +++---
+ containers/Dashboard/constants/index.js       |  9 ++++
+ .../JComponents/JImageList/JImageList.vue     | 22 ++++-----
+ src/constants/compute.js                      | 23 +--------
+ src/constants/computeArch.js                  | 44 +++++++++++++++++
+ src/locales/index.js                          | 15 ++++++
+ src/sections/OsArch/index.vue                 |  7 ++-
+ src/utils/common/tableColumn.js               |  7 ++-
+ tests/unit/compute-arch.spec.js               | 22 +++++++++
+ 26 files changed, 209 insertions(+), 160 deletions(-)
+ create mode 100644 src/constants/computeArch.js
+ create mode 100644 tests/unit/compute-arch.spec.js
+
+diff --git a/containers/Cloudenv/views/server-price-comparator/create/form/IDC.vue b/containers/Cloudenv/views/server-price-comparator/create/form/IDC.vue
+index dddffe9a2..3533e872c 100644
+--- a/containers/Cloudenv/views/server-price-comparator/create/form/IDC.vue
++++ b/containers/Cloudenv/views/server-price-comparator/create/form/IDC.vue
+@@ -113,7 +113,7 @@ import _ from 'lodash'
+ import * as R from 'ramda'
+ import { HYPERVISORS_MAP } from '@/constants'
+ import { resolveValueChangeField } from '@/utils/common/ant'
+-import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import OsArch from '@/sections/OsArch'
+ import { diskSupportTypeMedium, getOriginDiskKey } from '@/utils/common/hypervisor'
+ import mixin from './mixin'
+@@ -141,6 +141,12 @@ export default {
+     isArm () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.arm.key
+     },
++    isRiscv64 () {
++      return this.form.fd.os_arch === HOST_CPU_ARCHS.riscv64.key
++    },
++    isArmOrRiscv () {
++      return this.isArm || this.isRiscv64
++    },
+     isLoongarch64 () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.loongarch64.key
+     },
+@@ -174,12 +180,10 @@ export default {
+     cacheImageParams () {
+       const params = {
+         cloudregion_id: _.get(this.form.fd, 'cloudregion.key'),
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+       if (!params.cloudregion_id) return {}
+       if (this.form.fd.imageType === 'vmware') params.image_type = 'system'
+-      if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-      if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+       return params
+     },
+     showSku () {
+@@ -384,20 +388,16 @@ export default {
+     imageParams () {
+       const params = {
+         ...this.scopeParams,
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+-      if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-      if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+       return params
+     },
+     archOptions () {
+       let opts = []
+       if (this.form.fi.capability.host_cpu_archs && this.form.fi.capability.host_cpu_archs.length) {
+         opts = this.form.fi.capability.host_cpu_archs.map(item => {
+-          if (item === HOST_CPU_ARCHS.arm.capabilityKey) return HOST_CPU_ARCHS.arm.key
+-          if (item === HOST_CPU_ARCHS.x86.capabilityKey) return HOST_CPU_ARCHS.x86.key
+-          if (item === HOST_CPU_ARCHS.loongarch64.capabilityKey) return HOST_CPU_ARCHS.loongarch64.key
+-          return item
++          const archConfig = resolveHostCpuArch(item)
++          return archConfig ? archConfig.key : item
+         })
+       }
+       return opts
+@@ -484,7 +484,7 @@ export default {
+     uefi (val) {
+       this.setBios(val)
+     },
+-    isArm (val, oldV) {
++    isArmOrRiscv (val, oldV) {
+       this.setBios(val)
+     },
+   },
+diff --git a/containers/Compute/locales/en.json b/containers/Compute/locales/en.json
+index 7725221f6..38ff4c858 100644
+--- a/containers/Compute/locales/en.json
++++ b/containers/Compute/locales/en.json
+@@ -182,6 +182,7 @@
+   "compute.text_179": "CPU",
+   "compute.cpu_arch": "CPU Arch",
+   "compute.cpu_arch.aarch64": "ARM",
++  "compute.cpu_arch.riscv64": "RISC-V 64-bit",
+   "compute.cpu_arch.x86": "x86",
+   "compute.text_180": "Memory (GB)",
+   "compute.text_181": "Price",
+diff --git a/containers/Compute/locales/ja-JP.json b/containers/Compute/locales/ja-JP.json
+index 19cc583b1..8ab38c949 100644
+--- a/containers/Compute/locales/ja-JP.json
++++ b/containers/Compute/locales/ja-JP.json
+@@ -182,6 +182,7 @@
+   "compute.text_179": "CPU (コア)",
+   "compute.cpu_arch": "CPU (アーキテクチャ)",
+   "compute.cpu_arch.aarch64": "腕",
++  "compute.cpu_arch.riscv64": "RISC-V 64ビット",
+   "compute.cpu_arch.x86": "x86",
+   "compute.text_180": "メモリ (GB)",
+   "compute.text_181": "価格",
+diff --git a/containers/Compute/locales/zh-CN.json b/containers/Compute/locales/zh-CN.json
+index 1c59192a9..d924fd698 100644
+--- a/containers/Compute/locales/zh-CN.json
++++ b/containers/Compute/locales/zh-CN.json
+@@ -182,6 +182,7 @@
+   "compute.text_179": "CPU(核)",
+   "compute.cpu_arch": "CPU(架构)",
+   "compute.cpu_arch.aarch64": "ARM",
++  "compute.cpu_arch.riscv64": "RISC-V 64位",
+   "compute.cpu_arch.x86": "x86",
+   "compute.text_180": "内存(GB)",
+   "compute.text_181": "价格",
+diff --git a/containers/Compute/sections/OsSelect/ImageSelectTemplate.vue b/containers/Compute/sections/OsSelect/ImageSelectTemplate.vue
+index d01723820..5d87a8738 100644
+--- a/containers/Compute/sections/OsSelect/ImageSelectTemplate.vue
++++ b/containers/Compute/sections/OsSelect/ImageSelectTemplate.vue
+@@ -29,7 +29,7 @@
+ <script>
+ import * as R from 'ramda'
+ import _ from 'lodash'
+-import { IMAGES_TYPE_MAP } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { sizestr } from '@/utils/utils'
+ 
+ export default {
+@@ -99,7 +99,9 @@ export default {
+       }
+       const sizeStr = sizestr(size, 'B', 1024)
+       const props = img.properties || (img.info ? img.info.properties : undefined)
+-      const arch = img.os_arch || (props && props.os_arch && props.os_arch === 'aarch64' ? this.$t('compute.cpu_arch.aarch64') : props?.os_arch) || 'x86_64'
++      const rawArch = img.os_arch || props?.os_arch || HOST_CPU_ARCHS.x86.capabilityKey
++      const archConfig = resolveHostCpuArch(rawArch)
++      const arch = archConfig ? archConfig.label : rawArch
+       let bios = 'BIOS'
+       if (props) {
+         const { uefi_support, bios_support } = props
+diff --git a/containers/Compute/utils/createServer.js b/containers/Compute/utils/createServer.js
+index acecf67d4..ed28c22c3 100644
+--- a/containers/Compute/utils/createServer.js
++++ b/containers/Compute/utils/createServer.js
+@@ -1819,7 +1819,8 @@ export class GenCreateData {
+     }
+     // 安装监控 agent
+     if (this.isIDC) {
+-      if ((this.isWindows() && this.fd.os_arch !== HOST_CPU_ARCHS.arm.key) || !this.isWindows()) {
++      const windowsAgentUnsupportedArchs = [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key]
++      if ((this.isWindows() && !windowsAgentUnsupportedArchs.includes(this.fd.os_arch)) || !this.isWindows()) {
+         if (this.fd.deploy_telegraf) {
+           data.deploy_telegraf = this.fd.deploy_telegraf
+         }
+diff --git a/containers/Compute/views/host/mixins/singleActions.js b/containers/Compute/views/host/mixins/singleActions.js
+index b02fb5264..4b347baa0 100644
+--- a/containers/Compute/views/host/mixins/singleActions.js
++++ b/containers/Compute/views/host/mixins/singleActions.js
+@@ -350,7 +350,7 @@ export default {
+                       validate: false,
+                       tooltip: '',
+                     }
+-                  } else if (obj.cpu_architecture === HOST_CPU_ARCHS.arm.capabilityKey) {
++                  } else if ([HOST_CPU_ARCHS.arm.capabilityKey, HOST_CPU_ARCHS.riscv64.capabilityKey].includes(obj.cpu_architecture)) {
+                     return {
+                       validate: false,
+                       tooltip: i18n.t('compute.text_1364'),
+diff --git a/containers/Compute/views/image/dialogs/EditAttributes.vue b/containers/Compute/views/image/dialogs/EditAttributes.vue
+index d1d49e3bf..bb4a61ef8 100644
+--- a/containers/Compute/views/image/dialogs/EditAttributes.vue
++++ b/containers/Compute/views/image/dialogs/EditAttributes.vue
+@@ -71,7 +71,7 @@
+               v-for="(item, index) in biosOptions"
+               :value="item.value"
+               :key="index"
+-              :disabled="isArm && item.value==='BIOS'">{{item.text}}</a-radio-button>
++              :disabled="requiresUefi && item.value==='BIOS'">{{item.text}}</a-radio-button>
+           </a-radio-group>
+         </a-form-item>
+         <a-form-item :label="$t('compute.vdi_protocol')">
+@@ -96,7 +96,7 @@ import * as R from 'ramda'
+ import DialogMixin from '@/mixins/dialog'
+ import WindowsMixin from '@/mixins/windows'
+ import OsArch from '@/sections/OsArch'
+-import { HOST_CPU_ARCHS } from '@/constants/compute'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ 
+ export default {
+   name: 'ImageEditAttributesDialog',
+@@ -106,10 +106,9 @@ export default {
+   mixins: [DialogMixin, WindowsMixin],
+   data () {
+     const data = this.params.data[0]
+-    let os_arch = data.os_arch || HOST_CPU_ARCHS.x86.key
+-    if (data.properties && data.properties.os_arch) {
+-      os_arch = data.properties.os_arch.includes('x86') ? HOST_CPU_ARCHS.x86.key : HOST_CPU_ARCHS.arm.key
+-    }
++    const rawOsArch = (data.properties && data.properties.os_arch) || data.os_arch
++    const osArchConfig = resolveHostCpuArch(rawOsArch)
++    const os_arch = osArchConfig ? osArchConfig.key : (rawOsArch || HOST_CPU_ARCHS.x86.key)
+     let bios = 'BIOS'
+     const { properties = {} } = data
+     const { uefi_support, bios_support } = properties
+@@ -120,9 +119,9 @@ export default {
+     } else if (uefi_support !== 'true') {
+       bios = 'BIOS'
+     }
+-    const isArm = (os_arch === HOST_CPU_ARCHS.arm.key)
++    const requiresUefi = [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(os_arch)
+     return {
+-      isArm: isArm,
++      requiresUefi,
+       loading: false,
+       form: {
+         fc: this.$form.createForm(this),
+@@ -344,7 +343,7 @@ export default {
+       })
+     },
+     osArchChangeHandle (e) {
+-      this.isArm = (e === HOST_CPU_ARCHS.arm.key)
++      this.requiresUefi = [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(e)
+       this.$nextTick(() => {
+         this.form.fc.setFieldsValue({ bios: 'UEFI' })
+       })
+diff --git a/containers/Compute/views/image/image-import-ce/index.vue b/containers/Compute/views/image/image-import-ce/index.vue
+index cf40cd00b..18426c4ac 100644
+--- a/containers/Compute/views/image/image-import-ce/index.vue
++++ b/containers/Compute/views/image/image-import-ce/index.vue
+@@ -37,6 +37,7 @@
+ import { mapGetters } from 'vuex'
+ import axios from 'axios'
+ import WindowsMixin from '@/mixins/windows'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { isCE } from '@/utils/utils'
+ const path = require('path')
+ const imagesLogoFiles = require.context('@/assets/images/os-images', false, /.svg$/)
+@@ -108,7 +109,7 @@ export default {
+       ],
+       imagesLogos,
+       form: {
+-        os_arch: 'x86_64',
++        os_arch: HOST_CPU_ARCHS.x86.capabilityKey,
+         source: 'all',
+         distribution: 'Debian',
+       },
+@@ -117,10 +118,14 @@ export default {
+   computed: {
+     ...mapGetters(['userInfo']),
+     archList () {
+-      const ret = []
++      const ret = Object.values(HOST_CPU_ARCHS).map(item => ({
++        value: item.capabilityKey,
++        label: item.label,
++      }))
+       this.imageList.map(item => {
+         if (item.data.os_arch && !ret.some(l => l.value === item.data.os_arch)) {
+-          ret.push({ value: item.data.os_arch, label: item.data.os_arch })
++          const archConfig = resolveHostCpuArch(item.data.os_arch)
++          ret.push({ value: item.data.os_arch, label: archConfig ? archConfig.label : item.data.os_arch })
+         }
+       })
+       return ret
+diff --git a/containers/Compute/views/vminstance-container/components/AdjustConfigForm.vue b/containers/Compute/views/vminstance-container/components/AdjustConfigForm.vue
+index 76470dfed..1b61892d8 100644
+--- a/containers/Compute/views/vminstance-container/components/AdjustConfigForm.vue
++++ b/containers/Compute/views/vminstance-container/components/AdjustConfigForm.vue
+@@ -85,6 +85,7 @@ import {
+ import { findPlatform } from '@/utils/common/hypervisor'
+ import { sizestr } from '@/utils/utils'
+ import DiscountPrice from '@/sections/DiscountPrice'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ 
+ export default {
+   name: 'AdjustConfig',
+@@ -198,7 +199,8 @@ export default {
+       return this.params.data.some(val => val.status === 'running')
+     },
+     isSomeArm () {
+-      return this.selectedItem.os_arch === 'arm'
++      const archConfig = resolveHostCpuArch(this.selectedItem.os_arch)
++      return archConfig && [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(archConfig.key)
+     },
+     runningArm () {
+       return this.isSomeArm && this.isSomeRunning
+diff --git a/containers/Compute/views/vminstance-container/create/form/IDC.vue b/containers/Compute/views/vminstance-container/create/form/IDC.vue
+index 14e6a1d8c..f3df38190 100644
+--- a/containers/Compute/views/vminstance-container/create/form/IDC.vue
++++ b/containers/Compute/views/vminstance-container/create/form/IDC.vue
+@@ -194,7 +194,7 @@ import Labels from '@Compute/sections/Labels'
+ import SpecContainer from '@Compute/sections/SpecContainer'
+ import { NETWORK_OPTIONS_MAP } from '@Compute/constants'
+ import OsArch from '@/sections/OsArch'
+-import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { resolveValueChangeField } from '@/utils/common/ant'
+ import { HYPERVISORS_MAP } from '@/constants'
+ import { diskSupportTypeMedium, getOriginDiskKey } from '@/utils/common/hypervisor'
+@@ -231,6 +231,12 @@ export default {
+     isArm () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.arm.key
+     },
++    isRiscv64 () {
++      return this.form.fd.os_arch === HOST_CPU_ARCHS.riscv64.key
++    },
++    isArmOrRiscv () {
++      return this.isArm || this.isRiscv64
++    },
+     isLoongarch64 () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.loongarch64.key
+     },
+@@ -267,7 +273,7 @@ export default {
+     cacheImageParams () {
+       const params = {
+         cloudregion_id: _.get(this.form.fd, 'cloudregion.key'),
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+       if (!params.cloudregion_id) return {}
+       if (this.form.fd.imageType === 'vmware') {
+@@ -301,7 +307,7 @@ export default {
+           usable: true,
+           zone,
+           host_type: 'container',
+-          os_arch: HOST_CPU_ARCHS.x86.key,
++          os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+           ...this.scopeParams,
+         }
+         if ([HYPERVISORS_MAP.esxi.key, HYPERVISORS_MAP.kvm.key].includes(params.hypervisor)) {
+@@ -319,8 +325,6 @@ export default {
+           }
+           params.cloudprovider = this.form.fd.prefer_manager
+         }
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+         return params
+       }
+       return {}
+@@ -470,20 +474,15 @@ export default {
+     imageParams () {
+       const params = {
+         ...this.scopeParams,
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+-      if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-      if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+       return params
+     },
+     archOptions () {
+       let opts = []
+       if (this.form.fi.capability.host_cpu_archs && this.form.fi.capability.host_cpu_archs.length) {
+-        opts = this.form.fi.capability.host_cpu_archs.map(item => {
+-          if (item === HOST_CPU_ARCHS.arm.capabilityKey) return HOST_CPU_ARCHS.arm
+-          if (item === HOST_CPU_ARCHS.x86.capabilityKey) return HOST_CPU_ARCHS.x86
+-          if (item === HOST_CPU_ARCHS.loongarch64.capabilityKey) return HOST_CPU_ARCHS.loongarch64
+-          return item
++        opts = this.form.fi.capability.host_cpu_archs.map((item, index) => {
++          return resolveHostCpuArch(item) || { key: item, label: item, capabilityKey: item, order: 100 + index }
+         })
+       }
+       return opts.sort((a, b) => a.order - b.order)
+@@ -709,12 +708,8 @@ export default {
+         const { os_arch } = this.$route.query
+         // 数据延迟回填
+         if (os_arch) {
+-          let canUseOsArch = ''
+-          if (os_arch.indexOf('x86') !== -1) {
+-            canUseOsArch = HOST_CPU_ARCHS.x86.key
+-          } else if (os_arch.indexOf('aarch') !== -1) {
+-            canUseOsArch = HOST_CPU_ARCHS.arm.key
+-          }
++          const archConfig = resolveHostCpuArch(os_arch)
++          const canUseOsArch = archConfig ? archConfig.key : ''
+           if (!canUseOsArch) return
+           this.form.fc.setFieldsValue({ os_arch: canUseOsArch })
+         }
+@@ -722,7 +717,7 @@ export default {
+     },
+     getMachineDecorator () {
+       let initValue = 'pc'
+-      if (this.isArm) {
++      if (this.isArmOrRiscv) {
+         initValue = 'virt'
+       }
+       return [
+diff --git a/containers/Compute/views/vminstance/components/AdjustConfigForm.vue b/containers/Compute/views/vminstance/components/AdjustConfigForm.vue
+index b14f2bece..47e68abc3 100644
+--- a/containers/Compute/views/vminstance/components/AdjustConfigForm.vue
++++ b/containers/Compute/views/vminstance/components/AdjustConfigForm.vue
+@@ -176,7 +176,7 @@ import {
+ import { findPlatform, diskSupportTypeMedium, getOriginDiskKey } from '@/utils/common/hypervisor'
+ import { isRequired } from '@/utils/validate'
+ import { sizestr } from '@/utils/utils'
+-import { STORAGE_TYPES, HOST_CPU_ARCHS } from '@/constants/compute'
++import { STORAGE_TYPES, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import DiscountPrice from '@/sections/DiscountPrice'
+ 
+ export default {
+@@ -494,7 +494,8 @@ export default {
+       return this.dataList.some(val => val.status === 'running')
+     },
+     isSomeArm () {
+-      return this.selectedItem.os_arch === 'arm' && [HYPERVISORS_MAP.kvm.hypervisor].includes(this.hypervisor)
++      const archConfig = resolveHostCpuArch(this.selectedItem.os_arch)
++      return archConfig && [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(archConfig.key) && [HYPERVISORS_MAP.kvm.hypervisor].includes(this.hypervisor)
+     },
+     runningArm () {
+       return this.isSomeArm && this.isSomeRunning
+@@ -592,11 +593,8 @@ export default {
+         }
+       }
+       if (this.selectedItem.os_arch) {
+-        if (this.selectedItem.os_arch.includes('x86')) {
+-          params.cpu_arch = HOST_CPU_ARCHS.x86.key
+-        } else if (this.selectedItem.os_arch.includes('arm') || this.selectedItem.os_arch.includes('aarch64')) {
+-          params.cpu_arch = HOST_CPU_ARCHS.arm.key
+-        }
++        const archConfig = resolveHostCpuArch(this.selectedItem.os_arch)
++        if (archConfig) params.cpu_arch = archConfig.key
+       }
+       return params
+     },
+diff --git a/containers/Compute/views/vminstance/constants/actions.js b/containers/Compute/views/vminstance/constants/actions.js
+index 6e7dee17d..5af7ab7b2 100644
+--- a/containers/Compute/views/vminstance/constants/actions.js
++++ b/containers/Compute/views/vminstance/constants/actions.js
+@@ -1029,7 +1029,7 @@ const getSingleActions = function (ctx) {
+                     ret.tooltip = i18n.t('compute.text_1111')
+                     return ret
+                   }
+-                  if (obj.os_arch === HOST_CPU_ARCHS.arm.key && obj.status === 'running') {
++                  if ([HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(obj.os_arch) && obj.status === 'running') {
+                     ret.tooltip = i18n.t('compute.text_1371')
+                     return ret
+                   }
+diff --git a/containers/Compute/views/vminstance/create/form/IDC.vue b/containers/Compute/views/vminstance/create/form/IDC.vue
+index cf0331653..36631f70a 100644
+--- a/containers/Compute/views/vminstance/create/form/IDC.vue
++++ b/containers/Compute/views/vminstance/create/form/IDC.vue
+@@ -227,7 +227,7 @@
+               :cloudproviderParamsExtra="cloudproviderParamsExtra" />
+           </a-form-item>
+           <a-form-item :label="$t('compute.text_1155')" class="mb-0" v-if="isKvm">
+-            <bios :decorator="decorators.bios" :uefi="uefi" :isArm="isArm" :showDefault="true" />
++            <bios :decorator="decorators.bios" :uefi="uefi" :isArm="isArmOrRiscv" :showDefault="true" />
+           </a-form-item>
+           <a-form-item :label="$t('compute.vdi_protocol')" class="mb-0" v-if="isKvm">
+             <vdi :decorator="decorators.vdi" :showDefault="true" />
+@@ -236,7 +236,7 @@
+             <vga :decorator="decorators.vga" :vdi="vdi" :form="form" :showDefault="true" />
+           </a-form-item>
+           <a-form-item :label="$t('compute.machine')" class="mb-0" v-if="isKvm">
+-            <machine :decorator="getMachineDecorator()" :isArm="isArm" :showDefault="true" />
++            <machine :decorator="getMachineDecorator()" :isArm="isArmOrRiscv" :showDefault="true" />
+           </a-form-item>
+           <a-form-item v-show="!isServertemplate" v-if="isKvm && isLocalDisk" :label="$t('compute.text_1156')" :extra="$t('compute.text_1157')">
+             <backup
+@@ -284,7 +284,7 @@
+ import _ from 'lodash'
+ import * as R from 'ramda'
+ import OsArch from '@/sections/OsArch'
+-import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, STORAGE_TYPES, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { resolveValueChangeField } from '@/utils/common/ant'
+ import { HYPERVISORS_MAP } from '@/constants'
+ import { diskSupportTypeMedium, getOriginDiskKey } from '@/utils/common/hypervisor'
+@@ -330,6 +330,12 @@ export default {
+     isArm () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.arm.key
+     },
++    isRiscv64 () {
++      return this.form.fd.os_arch === HOST_CPU_ARCHS.riscv64.key
++    },
++    isArmOrRiscv () {
++      return this.isArm || this.isRiscv64
++    },
+     isLoongarch64 () {
+       return this.form.fd.os_arch === HOST_CPU_ARCHS.loongarch64.key
+     },
+@@ -376,13 +382,12 @@ export default {
+     cacheImageParams () {
+       const params = {
+         cloudregion_id: _.get(this.form.fd, 'cloudregion.key'),
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+       if (!params.cloudregion_id) return {}
+       if (this.form.fd.imageType === 'vmware') {
+         params.image_type = 'system'
+       }
+-      if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+       return params
+     },
+     showSku () {
+@@ -411,7 +416,7 @@ export default {
+           usable: true,
+           zone,
+           hypervisor: this.form.fd.hypervisor,
+-          os_arch: HOST_CPU_ARCHS.x86.key,
++          os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+           ...this.scopeParams,
+         }
+         if ([HYPERVISORS_MAP.esxi.key, HYPERVISORS_MAP.kvm.key].includes(params.hypervisor)) {
+@@ -429,8 +434,6 @@ export default {
+           }
+           params.cloudprovider = this.form.fd.prefer_manager
+         }
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+         return params
+       }
+       return {}
+@@ -443,11 +446,9 @@ export default {
+           usable: true,
+           zone,
+           hypervisor: this.form.fd.hypervisor,
+-          os_arch: HOST_CPU_ARCHS.x86.key,
++          os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+           ...this.scopeParams,
+         }
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+         return params
+       }
+       return {}
+@@ -683,20 +684,15 @@ export default {
+     imageParams () {
+       const params = {
+         ...this.scopeParams,
+-        os_arch: HOST_CPU_ARCHS.x86.key,
++        os_arch: this.form.fd.os_arch || HOST_CPU_ARCHS.x86.key,
+       }
+-      if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-      if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
+       return params
+     },
+     archOptions () {
+       let opts = []
+       if (this.form.fi.capability.host_cpu_archs && this.form.fi.capability.host_cpu_archs.length) {
+-        opts = this.form.fi.capability.host_cpu_archs.map(item => {
+-          if (item === HOST_CPU_ARCHS.arm.capabilityKey) return HOST_CPU_ARCHS.arm
+-          if (item === HOST_CPU_ARCHS.x86.capabilityKey) return HOST_CPU_ARCHS.x86
+-          if (item === HOST_CPU_ARCHS.loongarch64.capabilityKey) return HOST_CPU_ARCHS.loongarch64
+-          return item
++        opts = this.form.fi.capability.host_cpu_archs.map((item, index) => {
++          return resolveHostCpuArch(item) || { key: item, label: item, capabilityKey: item, order: 100 + index }
+         })
+       }
+       return opts.sort((a, b) => a.order - b.order)
+@@ -713,7 +709,7 @@ export default {
+     isShowAgent () {
+       if (this.isIso || !this.osType) return false
+       if (this.isWindows) {
+-        return !this.isArm
++        return !this.isArmOrRiscv
+       }
+       return true
+     },
+@@ -800,7 +796,7 @@ export default {
+     uefi (val) {
+       this.setBios(val)
+     },
+-    isArm (val, oldV) {
++    isArmOrRiscv (val, oldV) {
+       this.setBios(val)
+     },
+     isShowAgent (val) {
+@@ -981,12 +977,8 @@ export default {
+         const { os_arch } = this.$route.query
+         // 数据延迟回填
+         if (os_arch) {
+-          let canUseOsArch = ''
+-          if (os_arch.indexOf('x86') !== -1) {
+-            canUseOsArch = HOST_CPU_ARCHS.x86.key
+-          } else if (os_arch.indexOf('aarch') !== -1) {
+-            canUseOsArch = HOST_CPU_ARCHS.arm.key
+-          }
++          const archConfig = resolveHostCpuArch(os_arch)
++          const canUseOsArch = archConfig ? archConfig.key : ''
+           if (!canUseOsArch) return
+           this.form.fc.setFieldsValue({ os_arch: canUseOsArch })
+         }
+@@ -994,7 +986,7 @@ export default {
+     },
+     getMachineDecorator () {
+       let initValue = 'pc'
+-      if (this.isArm) {
++      if (this.isArmOrRiscv) {
+         initValue = 'virt'
+       }
+       return [
+diff --git a/containers/Compute/views/vminstance/create/form/Private.vue b/containers/Compute/views/vminstance/create/form/Private.vue
+index 5142752d2..f3a66ebd1 100644
+--- a/containers/Compute/views/vminstance/create/form/Private.vue
++++ b/containers/Compute/views/vminstance/create/form/Private.vue
+@@ -195,7 +195,7 @@ import * as R from 'ramda'
+ import SecgroupConfig from '@Compute/sections/SecgroupConfig'
+ import { resolveValueChangeField } from '@/utils/common/ant'
+ import { HYPERVISORS_MAP } from '@/constants'
+-import { HOST_CPU_ARCHS } from '@/constants/compute'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { uuid } from '@/utils/utils'
+ import mixin from './mixin'
+ 
+@@ -206,12 +206,6 @@ export default {
+   },
+   mixins: [mixin],
+   computed: {
+-    isArm () {
+-      return this.form.fd.sku && this.form.fd.sku.cpu_arch === HOST_CPU_ARCHS.arm.capabilityKey
+-    },
+-    isLoongarch64 () {
+-      return this.form.fd.sku && this.form.fd.sku.cpu_arch === HOST_CPU_ARCHS.loongarch64.capabilityKey
+-    },
+     osArch () {
+       if (this.form.fd.sku && this.form.fd.sku.cpu_arch) {
+         return this.form.fd.sku.cpu_arch
+@@ -244,9 +238,8 @@ export default {
+         if (this.cloudregionZoneParams.cloudregion) {
+           params.cloudregion_id = this.cloudregionZoneParams.cloudregion
+         }
+-        params.os_arch = HOST_CPU_ARCHS.x86.key
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
++        const archConfig = resolveHostCpuArch(this.form.fd.sku.cpu_arch)
++        params.os_arch = archConfig ? archConfig.key : HOST_CPU_ARCHS.x86.key
+       }
+       return params
+     },
+diff --git a/containers/Compute/views/vminstance/create/form/Public.vue b/containers/Compute/views/vminstance/create/form/Public.vue
+index 2d665a8a5..81afa6997 100644
+--- a/containers/Compute/views/vminstance/create/form/Public.vue
++++ b/containers/Compute/views/vminstance/create/form/Public.vue
+@@ -228,7 +228,7 @@ import EipConfig from '@Compute/sections/EipConfig'
+ import SecgroupConfig from '@Compute/sections/SecgroupConfig'
+ import { resolveValueChangeField } from '@/utils/common/ant'
+ import { PROVIDER_MAP, HYPERVISORS_MAP } from '@/constants'
+-import { HOST_CPU_ARCHS } from '@/constants/compute'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import AreaSelects from '@/sections/AreaSelects'
+ import { IMAGES_TYPE_MAP } from '@/constants/compute'
+ 
+@@ -251,12 +251,6 @@ export default {
+     isPackage () {
+       return this.form.fd.billType === BILL_TYPES_MAP.package.key
+     },
+-    isArm () {
+-      return this.form.fd.sku && this.form.fd.sku.cpu_arch === HOST_CPU_ARCHS.arm.capabilityKey
+-    },
+-    isLoongarch64 () {
+-      return this.form.fd.sku && this.form.fd.sku.cpu_arch === HOST_CPU_ARCHS.loongarch64.capabilityKey
+-    },
+     osArch () {
+       if (this.form.fd.sku && this.form.fd.sku.cpu_arch) {
+         return this.form.fd.sku.cpu_arch
+@@ -315,9 +309,8 @@ export default {
+     imageParams () {
+       const params = {}
+       if (R.is(Object, this.form.fd.sku)) {
+-        params.os_arch = HOST_CPU_ARCHS.x86.key
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
++        const archConfig = resolveHostCpuArch(this.form.fd.sku.cpu_arch)
++        params.os_arch = archConfig ? archConfig.key : HOST_CPU_ARCHS.x86.key
+       }
+       return params
+     },
+diff --git a/containers/Compute/views/vminstance/dialogs/RebuildRoot.vue b/containers/Compute/views/vminstance/dialogs/RebuildRoot.vue
+index 0aeaed2bc..43c1b6c39 100644
+--- a/containers/Compute/views/vminstance/dialogs/RebuildRoot.vue
++++ b/containers/Compute/views/vminstance/dialogs/RebuildRoot.vue
+@@ -69,7 +69,7 @@ import DialogMixin from '@/mixins/dialog'
+ import WindowsMixin from '@/mixins/windows'
+ import { HYPERVISORS_MAP } from '@/constants'
+ import { Manager } from '@/utils/manager'
+-import { IMAGES_TYPE_MAP, HOST_CPU_ARCHS } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { isRequired, passwordValidator } from '@/utils/validate'
+ import { findPlatform } from '@/utils/common/hypervisor'
+ 
+@@ -152,7 +152,9 @@ export default {
+     },
+     osArch () {
+       const { instance_type = '', os_arch } = this.params.data[0]
+-      if (instance_type.startsWith('k') || os_arch === HOST_CPU_ARCHS.arm.capabilityKey) {
++      const archConfig = resolveHostCpuArch(os_arch)
++      if (archConfig) return archConfig.capabilityKey
++      if (instance_type.startsWith('k')) {
+         return HOST_CPU_ARCHS.arm.capabilityKey
+       }
+       return ''
+@@ -164,9 +166,8 @@ export default {
+         status: 'active',
+         os_arch: HOST_CPU_ARCHS.x86.key,
+       }
+-      if (this.osArch === HOST_CPU_ARCHS.arm.capabilityKey) {
+-        params.os_arch = HOST_CPU_ARCHS.arm.key
+-      }
++      const archConfig = resolveHostCpuArch(this.osArch)
++      if (archConfig) params.os_arch = archConfig.key
+       return params
+     },
+     isZStack () {
+@@ -373,7 +374,7 @@ export default {
+       const { os } = this.form.fd
+       if (![HYPERVISORS_MAP.kvm.key, HYPERVISORS_MAP.esxi.key].includes(this.hypervisor)) return false
+       if (os === 'Windows') {
+-        return this.osArch !== HOST_CPU_ARCHS.arm.capabilityKey
++        return ![HOST_CPU_ARCHS.arm.capabilityKey, HOST_CPU_ARCHS.riscv64.capabilityKey].includes(this.osArch)
+       }
+       return true
+     },
+diff --git a/containers/Compute/views/vminstance/dialogs/Update.vue b/containers/Compute/views/vminstance/dialogs/Update.vue
+index e9e232f23..b5e45a3a6 100644
+--- a/containers/Compute/views/vminstance/dialogs/Update.vue
++++ b/containers/Compute/views/vminstance/dialogs/Update.vue
+@@ -26,7 +26,7 @@
+             </a-radio-group>
+           </a-form-item> -->
+           <a-form-item :label="$t('compute.text_1155')">
+-            <bios :decorator="decorators.bios" :isArm="isArm" />
++            <bios :decorator="decorators.bios" :isArm="requiresVirtMachine" />
+           </a-form-item>
+           <a-form-item :label="$t('compute.vdi_protocol')">
+             <vdi :decorator="decorators.vdi" @change="handleVdiChange" />
+@@ -35,7 +35,7 @@
+             <vga :decorator="decorators.vga" :vdi="vdi" :form="form" />
+           </a-form-item>
+           <a-form-item :label="$t('compute.machine')">
+-            <machine :decorator="decorators.machine" :isArm="isArm" />
++            <machine :decorator="decorators.machine" :isArm="requiresVirtMachine" />
+           </a-form-item>
+           <a-form-item v-if="isKvm" :label="$t('compute.usb_kbd')">
+             <a-switch v-decorator="decorators.disable_usb_kbd" />
+@@ -61,6 +61,7 @@ import Bios from '@Compute/sections/BIOS'
+ import Vdi from '@Compute/sections/VDI'
+ import Vga from '@Compute/sections/VGA'
+ import Machine from '@Compute/sections/Machine'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ 
+ export default {
+   name: 'VmUpdateDialog',
+@@ -174,8 +175,9 @@ export default {
+     isKvm () {
+       return this.params.data.length >= 1 && this.params.data[0].hypervisor === 'kvm'
+     },
+-    isArm () {
+-      return this.params.data.length >= 1 && (this.params.data[0].os_arch === 'arm' || this.params.data[0].os_arch === 'aarch64')
++    requiresVirtMachine () {
++      const archConfig = this.params.data.length >= 1 && resolveHostCpuArch(this.params.data[0].os_arch)
++      return archConfig && [HOST_CPU_ARCHS.arm.key, HOST_CPU_ARCHS.riscv64.key].includes(archConfig.key)
+     },
+     canAdminUpdate () {
+       return hasPermission({ key: 'server_update', resourceData: this.params.data[0] }) && this.$store.getters.isAdminMode
+@@ -230,11 +232,11 @@ export default {
+         }
+         if (this.isKvm) {
+           // updateObj.boot_order = data.boot_order
+-          updateObj.bios = data.bios || (this.isArm ? 'UEFI' : 'BIOS')
++          updateObj.bios = data.bios || (this.requiresVirtMachine ? 'UEFI' : 'BIOS')
+           updateObj.vdi = data.vdi ? data.vdi : 'vnc'
+           updateObj.vga = data.vga ? data.vga : 'std'
+           this.vdi = updateObj.vdi
+-          updateObj.machine = data.machine ? data.machine : (this.isArm ? 'virt' : 'pc')
++          updateObj.machine = data.machine ? data.machine : (this.requiresVirtMachine ? 'virt' : 'pc')
+           // updateObj.is_daemon = data.is_daemon
+           this.is_daemon = data.is_daemon
+         }
+diff --git a/containers/Dashboard/constants/index.js b/containers/Dashboard/constants/index.js
+index 2896677d4..2db9dcecc 100644
+--- a/containers/Dashboard/constants/index.js
++++ b/containers/Dashboard/constants/index.js
+@@ -2525,6 +2525,15 @@ export const USAGE_CONFIG = {
+   },
+ }
+ 
++// Architecture-specific server metrics share the same units and scope rules.
++// Keep RISC-V in sync with the existing x86_64 metric set without duplicating
++// dozens of otherwise identical entries.
++Object.keys(USAGE_CONFIG).forEach(key => {
++  if (key.includes('.x86_64')) {
++    USAGE_CONFIG[key.replace('.x86_64', '.riscv64')] = { ...USAGE_CONFIG[key] }
++  }
++})
++
+ export const K8S_USAGE_CONFIG = {
+   'all.cluster.count': {
+     unit: i18n.t('dashboard.text_1'),
+diff --git a/src/components/JsonSchemaForm/JComponents/JImageList/JImageList.vue b/src/components/JsonSchemaForm/JComponents/JImageList/JImageList.vue
+index 311c2113c..c2fc84d3e 100644
+--- a/src/components/JsonSchemaForm/JComponents/JImageList/JImageList.vue
++++ b/src/components/JsonSchemaForm/JComponents/JImageList/JImageList.vue
+@@ -50,7 +50,7 @@
+ import _ from 'lodash'
+ import * as R from 'ramda'
+ import { HYPERVISORS_MAP } from '@/constants'
+-import { IMAGES_TYPE_MAP, OS_TYPE_OPTION_MAP, HOST_CPU_ARCHS } from '@/constants/compute'
++import { IMAGES_TYPE_MAP, OS_TYPE_OPTION_MAP, HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import { sizestr, uuid } from '@/utils/utils'
+ import mixin from '../mixin'
+ 
+@@ -87,12 +87,6 @@ export default {
+     hypervisor () {
+       return this.formFd.fd.hypervisor
+     },
+-    isArm () {
+-      return this.fe.sku && this.fe.sku.cpu_arch === HOST_CPU_ARCHS.arm.capabilityKey
+-    },
+-    isLoongarch64 () {
+-      return this.fe.sku && this.fe.sku.cpu_arch === HOST_CPU_ARCHS.loongarch64.capabilityKey
+-    },
+     isIDC () {
+       return HYPERVISORS_MAP[this.hypervisor]?.env === 'idc'
+     },
+@@ -129,9 +123,8 @@ export default {
+         }
+       }
+       if (R.is(Object, this.formFd.fe.sku)) {
+-        params.os_arch = HOST_CPU_ARCHS.x86.key
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
++        const archConfig = resolveHostCpuArch(this.formFd.fe.sku.cpu_arch)
++        params.os_arch = archConfig ? archConfig.key : HOST_CPU_ARCHS.x86.key
+       }
+       return params
+     },
+@@ -149,9 +142,8 @@ export default {
+         }
+       }
+       if (R.is(Object, this.formFd.fe.sku)) {
+-        params.os_arch = HOST_CPU_ARCHS.x86.key
+-        if (this.isArm) params.os_arch = HOST_CPU_ARCHS.arm.key
+-        if (this.isLoongarch64) params.os_arch = HOST_CPU_ARCHS.loongarch64.key
++        const archConfig = resolveHostCpuArch(this.formFd.fe.sku.cpu_arch)
++        params.os_arch = archConfig ? archConfig.key : HOST_CPU_ARCHS.x86.key
+       }
+       return params
+     },
+@@ -455,7 +447,9 @@ export default {
+       const min_disk = sizestr(img.min_disk, 'M', 1024)
+       const size = sizestr(img.size, 'B', 1024)
+       const props = img.properties || (img.info ? img.info.properties : undefined)
+-      const arch = props && props.os_arch && props.os_arch === 'aarch64' ? this.$t('compute.cpu_arch.aarch64') : props?.os_arch || 'x86_64'
++      const rawArch = props?.os_arch || HOST_CPU_ARCHS.x86.capabilityKey
++      const archConfig = resolveHostCpuArch(rawArch)
++      const arch = archConfig ? archConfig.label : rawArch
+       let bios = 'BIOS'
+       if (props) {
+         const { uefi_support, bios_support } = props
+diff --git a/src/constants/compute.js b/src/constants/compute.js
+index efb40c665..b97f3e5d8 100644
+--- a/src/constants/compute.js
++++ b/src/constants/compute.js
+@@ -2,6 +2,8 @@ import i18n from '@/locales'
+ import { HYPERVISORS_MAP } from '@/constants'
+ import { arrayToObj } from '@/utils/utils'
+ 
++export { HOST_CPU_ARCHS, resolveHostCpuArch } from './computeArch'
++
+ // 镜像类型
+ export const IMAGES_TYPE_MAP = {
+   standard: { key: 'standard', label: i18n.t('label.standardImage'), tooltip: i18n.t('common.text00016') },
+@@ -857,27 +859,6 @@ export const DISK_MOUNT_POINT_OPTIONS = [
+   // { key: 'swap', label: 'swap' },
+ ]
+ 
+-export const HOST_CPU_ARCHS = {
+-  x86: {
+-    key: 'x86',
+-    label: 'x86_64',
+-    capabilityKey: 'x86_64',
+-    order: 1,
+-  },
+-  arm: {
+-    key: 'arm',
+-    label: 'aarch64',
+-    capabilityKey: 'aarch64',
+-    order: 2,
+-  },
+-  loongarch64: {
+-    key: 'loongarch64',
+-    label: 'loongarch64',
+-    capabilityKey: 'loongarch64',
+-    order: 3,
+-  },
+-}
+-
+ export const DISK_LABEL_MAP = {
+   GPSSD: i18n.t('compute.disk.rotate_gpssd'),
+   GPSSD2: i18n.t('compute.huawei.ssd_genric_v2'),
+diff --git a/src/constants/computeArch.js b/src/constants/computeArch.js
+new file mode 100644
+index 000000000..a738780bb
+--- /dev/null
++++ b/src/constants/computeArch.js
+@@ -0,0 +1,44 @@
++export const HOST_CPU_ARCHS = {
++  x86: {
++    key: 'x86',
++    label: 'x86_64',
++    capabilityKey: 'x86_64',
++    order: 1,
++  },
++  arm: {
++    key: 'arm',
++    label: 'aarch64',
++    capabilityKey: 'aarch64',
++    order: 2,
++  },
++  riscv64: {
++    key: 'riscv64',
++    label: 'riscv64',
++    capabilityKey: 'riscv64',
++    order: 3,
++  },
++  loongarch64: {
++    key: 'loongarch64',
++    label: 'loongarch64',
++    capabilityKey: 'loongarch64',
++    order: 4,
++  },
++}
++
++export const resolveHostCpuArch = (arch) => {
++  const value = String(arch || '').toLowerCase()
++  if (!value) return undefined
++  if (value.startsWith('x86') || value === 'i386') {
++    return HOST_CPU_ARCHS.x86
++  }
++  if (value.startsWith('arm') || value.startsWith('aarch')) {
++    return HOST_CPU_ARCHS.arm
++  }
++  if (value.startsWith('riscv')) {
++    return HOST_CPU_ARCHS.riscv64
++  }
++  if (value === 'loong64' || value === HOST_CPU_ARCHS.loongarch64.key) {
++    return HOST_CPU_ARCHS.loongarch64
++  }
++  return undefined
++}
+diff --git a/src/locales/index.js b/src/locales/index.js
+index e7c5ecba8..cb2b5ed3a 100644
+--- a/src/locales/index.js
++++ b/src/locales/index.js
+@@ -36,6 +36,21 @@ const register = (ctx) => {
+ register(moduleCtx)
+ register(scopeCtx)
+ 
++const riscvUsageLabels = {
++  en: 'RISC-V 64-bit',
++  'zh-CN': 'RISC-V 64位',
++  'ja-JP': 'RISC-V 64ビット',
++}
++
++Object.keys(riscvUsageLabels).forEach(lang => {
++  const usageMessages = messages[lang].usage || {}
++  Object.keys(usageMessages).forEach(key => {
++    if (key.includes('.x86_64')) {
++      usageMessages[key.replace('.x86_64', '.riscv64')] = usageMessages[key].replace(/x86/g, riscvUsageLabels[lang])
++    }
++  })
++})
++
+ const i18n = new VueI18n({
+   locale: getLanguage(),
+   messages,
+diff --git a/src/sections/OsArch/index.vue b/src/sections/OsArch/index.vue
+index 461ebd1ad..e4178d810 100644
+--- a/src/sections/OsArch/index.vue
++++ b/src/sections/OsArch/index.vue
+@@ -12,7 +12,7 @@
+ <script>
+ import * as R from 'ramda'
+ import _ from 'lodash'
+-import { HOST_CPU_ARCHS } from '@/constants/compute'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ 
+ export default {
+   name: 'OsArch',
+@@ -37,10 +37,9 @@ export default {
+       if (this.options.length) {
+         if (R.is(String, this.options[0])) {
+           return this.options.map(str => {
+-            const label = _.get(HOST_CPU_ARCHS, `[${str}].label`) || str
+-            return {
++            return resolveHostCpuArch(str) || {
+               key: str,
+-              label,
++              label: str,
+             }
+           })
+         }
+diff --git a/src/utils/common/tableColumn.js b/src/utils/common/tableColumn.js
+index abd946b5e..c94c707c7 100644
+--- a/src/utils/common/tableColumn.js
++++ b/src/utils/common/tableColumn.js
+@@ -8,7 +8,7 @@ import store from '@/store'
+ import i18n from '@/locales'
+ import { hasPermission } from '@/utils/auth'
+ import { typeClouds } from '@/utils/common/hypervisor'
+-import { HOST_CPU_ARCHS } from '@/constants/compute'
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/compute'
+ import expectStatus from '@/constants/expectStatus'
+ import { status as statusMap } from '@/locales/zh-CN'
+ import setting from '@/config/setting'
+@@ -1339,10 +1339,9 @@ export const getOsArch = ({
+       if (!arch && field !== 'os_arch') {
+         arch = _.get(row, 'os_arch')
+       }
+-      if (arch === HOST_CPU_ARCHS.arm.capabilityKey) arch = HOST_CPU_ARCHS.arm.key
+-      if (arch === HOST_CPU_ARCHS.x86.capabilityKey) arch = HOST_CPU_ARCHS.x86.key
+       if (arch) {
+-        return _.get(HOST_CPU_ARCHS, `${arch}.label`) || arch
++        const archConfig = resolveHostCpuArch(arch)
++        return archConfig ? archConfig.label : arch
+       }
+       return HOST_CPU_ARCHS.x86.label
+     },
+diff --git a/tests/unit/compute-arch.spec.js b/tests/unit/compute-arch.spec.js
+new file mode 100644
+index 000000000..cb6eee338
+--- /dev/null
++++ b/tests/unit/compute-arch.spec.js
+@@ -0,0 +1,22 @@
++import { HOST_CPU_ARCHS, resolveHostCpuArch } from '@/constants/computeArch'
++
++describe('RISC-V architecture support', () => {
++  it('exposes riscv64 in shared architecture options', () => {
++    expect(HOST_CPU_ARCHS.riscv64).toEqual({
++      key: 'riscv64',
++      label: 'riscv64',
++      capabilityKey: 'riscv64',
++      order: 3,
++    })
++  })
++
++  it.each([
++    ['riscv', HOST_CPU_ARCHS.riscv64],
++    ['riscv64', HOST_CPU_ARCHS.riscv64],
++    ['x86_64', HOST_CPU_ARCHS.x86],
++    ['aarch64', HOST_CPU_ARCHS.arm],
++    ['loongarch64', HOST_CPU_ARCHS.loongarch64],
++  ])('normalizes %s to its UI architecture option', (value, expected) => {
++    expect(resolveHostCpuArch(value)).toBe(expected)
++  })
++})
+-- 
+2.54.0 (Apple Git-157)
