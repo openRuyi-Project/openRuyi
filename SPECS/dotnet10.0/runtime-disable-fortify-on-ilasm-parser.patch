@@ -6,7 +6,7 @@ index cca2c6da185..d31e6cb2070 100644
    add_compile_options(-Wno-array-bounds)
    add_compile_options(-Wno-unused-label)
    set_source_files_properties( prebuilt/asmparse.cpp PROPERTIES COMPILE_FLAGS "-O0" )
-+  set_source_files_properties( prebuilt/asmparse.cpp PROPERTIES COMPILE_FLAGS "-Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=0" )
++  set_source_files_properties( prebuilt/asmparse.cpp PROPERTIES COMPILE_FLAGS "-O0 -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=0" )
  endif(CLR_CMAKE_HOST_UNIX)
  
  if(CLR_CMAKE_HOST_LINUX OR CLR_CMAKE_HOST_FREEBSD OR CLR_CMAKE_HOST_NETBSD OR CLR_CMAKE_HOST_SUNOS OR CLR_CMAKE_HOST_HAIKU)

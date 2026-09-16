@@ -6,6 +6,11 @@
 # Originally extracted from Fedora Project
 # Authors: The Fedora Project Contributors
 
+# LTO is not supported by .NET's native/AOT build: it makes the compiler/tool
+# binaries misbehave (the source-built `ilc` segfaults on riscv64).
+# amd64 is not affected for some reason, needs further triage.
+%global _lto_cflags %{nil}
+
 %global toolchain clang
 
 %define __os_install_post %{nil}
@@ -21,7 +26,7 @@
 %endif
 
 %global dotnet_major 10.0
-%global dotnet_minor 110
+%global dotnet_minor 112
 %global dotnet_is_latest 1
 
 # Note: upstream can produce releases with a different tag than the SDK version
@@ -33,16 +38,16 @@
 # So we don't set 'officialBuildId', as it breaks produced builds re-bootstrapping on RISC-V.
 # Triage this if you need 'officialBuildId' in the future.
 %global dotnet_sourceRepository https://github.com/dotnet/dotnet.git
-%global dotnet_sourceVersion f7d90799ce4ef09a0bb257852a57248d2a8fb8dd
-# %global dotnet_officialBuildId 20260626.16
+%global dotnet_sourceVersion 95017c711e6afc1085133d440e42b4bd78155701
+# %global dotnet_officialBuildId 20260822.8
 
 %{!?runtime_id:%global runtime_id linux-%{runtime_arch}}
 %global dotnet_version %{dotnet_major}.%{dotnet_minor}
-%global hostfxr_version 10.0.10
-%global runtime_version 10.0.10
-%global aspnetcore_runtime_version 10.0.10
+%global hostfxr_version 10.0.12
+%global runtime_version 10.0.12
+%global aspnetcore_runtime_version 10.0.12
 %global templates_version %{aspnetcore_runtime_version}
-%global sdk_version 10.0.110
+%global sdk_version 10.0.112
 %global sdk_feature_band_version %(echo %{sdk_version} | cut -d '-' -f 1 | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 
 %global use_bundled_brotli 0
@@ -82,9 +87,9 @@ Summary:        .NET %{dotnet_major} Runtime and SDK
 License:        0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND APSL-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND BSL-1.0 AND bzip2-1.0.6 AND CC0-1.0 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-PDDC AND CNRI-Python AND EPL-1.0 AND GPL-2.0-only AND (GPL-2.0-only WITH GCC-exception-2.0) AND GPL-2.0-or-later AND GPL-3.0-only AND ICU AND ISC AND LGPL-2.1-only AND LGPL-2.1-or-later AND LicenseRef-openRuyi-Public-Domain AND LicenseRef-ISO-8879 AND MIT AND MIT-Wu AND MS-PL AND MS-RL AND NCSA AND OFL-1.1 AND OpenSSL AND Unicode-DFS-2015 AND Unicode-DFS-2016 AND W3C-19980720 AND X11 AND Zlib
 URL:            https://dotnet.microsoft.com
 VCS:            git:https://github.com/dotnet/dotnet.git
-#!RemoteAsset:  sha256:9265f5899f5aeb0f787a4f438a0fc54a314a9449e40379c419f17e9a74c791d2
+#!RemoteAsset:  sha256:0107a6a9aca7635fcb66a90dd22269e42640797ce2ba0731c8669ba59f4e310d
 Source0:        https://github.com/dotnet/dotnet/archive/refs/tags/%{upstream_tag}.tar.gz#/dotnet-%{sdk_version}.tar.gz
-#!RemoteAsset:  sha256:f80edbe9e0e7f5b0b963b737c0142debdec8e473f519b6ad823ecc9afef5bf32
+#!RemoteAsset:  sha256:df14b07ce83d8b4d59c9dbb34f83ca6d8e1f99f41aa02133cba87f546a620db0
 Source1:        https://github.com/dotnet/dotnet/releases/download/%{upstream_tag}/release.json
 
 # Fix an error caused by fortify CFLAGS with how .NET builds some assembly files
