@@ -1,0 +1,24 @@
+From 68aedccda9af179eb891e0c745bc44052663f2f3 Mon Sep 17 00:00:00 2001
+From: Neil Twigg <neil@nats.io>
+Date: Thu, 20 Mar 2025 16:13:35 +0000
+Subject: [PATCH] De-flake `TestNoRaceWSNoCorruptionWithFrameSizeLimit`
+
+Signed-off-by: Neil Twigg <neil@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/websocket_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/server/websocket_test.go b/server/websocket_test.go
+index b1f0ac03744..c6921001bda 100644
+--- a/server/websocket_test.go
++++ b/server/websocket_test.go
+@@ -4390,7 +4390,7 @@ func testWSNoCorruptionWithFrameSizeLimit(t *testing.T, total int) {
+ 	nc2 := natsConnect(t, fmt.Sprintf("ws://127.0.0.1:%d", o2.Websocket.Port))
+ 	defer nc2.Close()
+ 
+-	payload := make([]byte, 100000)
++	payload := make([]byte, 2*wsFrameSizeForBrowsers+123)
+ 	for i := 0; i < len(payload); i++ {
+ 		payload[i] = 'A' + byte(i%26)
+ 	}

@@ -1,0 +1,52 @@
+From d6a8e026bc35df9943cc2d30767cd76bc8e4b4c4 Mon Sep 17 00:00:00 2001
+From: Waldemar Quevedo <wally@nats.io>
+Date: Mon, 16 Mar 2026 16:30:31 +0000
+Subject: [PATCH] Fix goroutine panic in
+ TestJetStreamClusterInterestPolicyEphemeral
+
+Signed-off-by: Waldemar Quevedo <wally@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/jetstream_cluster_3_test.go | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/server/jetstream_cluster_3_test.go b/server/jetstream_cluster_3_test.go
+index 765bf3c251d..0715a0038fa 100644
+--- a/server/jetstream_cluster_3_test.go
++++ b/server/jetstream_cluster_3_test.go
+@@ -2895,13 +2895,20 @@ func TestJetStreamClusterInterestPolicyEphemeral(t *testing.T) {
+ 			require_NoError(t, err)
+ 
+ 			// This happens only if we start publishing messages after consumer was created.
++			pubErr := make(chan error, 1)
+ 			pubDone := make(chan struct{})
+ 			go func(subject string) {
++				defer close(pubDone)
+ 				for i := 0; i < msgs; i++ {
+ 					_, err := js.Publish(subject, []byte("DATA"))
+-					require_NoError(t, err)
++					if err != nil {
++						select {
++						case pubErr <- err:
++						default:
++						}
++						return
++					}
+ 				}
+-				close(pubDone)
+ 			}(test.subject)
+ 
+ 			// Wait for inactive threshold to expire and all messages to be published and received
+@@ -2914,6 +2921,12 @@ func TestJetStreamClusterInterestPolicyEphemeral(t *testing.T) {
+ 				t.Fatalf("Did not receive completion signal")
+ 			}
+ 
++			select {
++			case err := <-pubErr:
++				t.Fatalf("Publish error: %v", err)
++			default:
++			}
++
+ 			checkFor(t, time.Second, 100*time.Millisecond, func() error {
+ 				info, err := js.ConsumerInfo(test.stream, name)
+ 				if err != nil {

@@ -1,0 +1,38 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Run periodic interest cleanup within the test window
+
+Only consumer leaders propose replicated stream message deletions. When
+leaders process their local consumer acks before the other consumers'
+replicated acks, removal waits for the periodic interest sweep. Its default
+two-minute interval exceeds this test's 30-second assertion window.
+
+Use the same four-second test interval and one-second jitter as upstream
+TestJetStreamClusterInterestStreamConsumer, restoring the defaults after
+cluster shutdown. Keep all ten consumers, 10,000 messages, ack floors and
+empty-stream assertions.
+
+Based on the fixture adjustment and ordering explanation in:
+https://github.com/nats-io/nats-server/commit/44cc2ac1f19d765ad7884ad59aa923d9918e10c0
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/norace_test.go
++++ b/server/norace_test.go
+@@ -7294,6 +7294,17 @@
+ }
+ 
+ func TestNoRaceJetStreamInterestStreamCheckInterestRaceBug(t *testing.T) {
++	// Leaders may process their own consumer's ack before the other consumers'
++	// replicated acks arrive. The periodic interest sweep then proposes deletion.
++	// Exercise that sweep within the 30-second assertion window, as in
++	// TestJetStreamClusterInterestStreamConsumer.
++	checkInterestStateT = 4 * time.Second
++	checkInterestStateJ = 1
++	defer func() {
++		checkInterestStateT = defaultCheckInterestStateT
++		checkInterestStateJ = defaultCheckInterestStateJ
++	}()
++
+ 	c := createJetStreamClusterExplicit(t, "R3S", 3)
+ 	defer c.shutdown()
+ 

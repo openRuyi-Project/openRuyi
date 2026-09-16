@@ -1,0 +1,112 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] test: inject leafnode write timeout after CONNECT
+
+A nanosecond deadline does not reliably fail a write on every worker.
+Wait for the accepted leaf connection, then inject a deadline error into
+its socket write path. Keep the exact slow-consumer count assertion and
+require the timed-out leaf to disconnect. All waits remain bounded.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/leafnode_test.go
++++ b/server/leafnode_test.go
+@@ -9100,58 +9100,59 @@
+ 	checkNoMsg(subc)
+ }
+ 
++type leafSlowConsumerTimeoutConn struct {
++	net.Conn
++}
++
++func (c *leafSlowConsumerTimeoutConn) Write([]byte) (int, error) {
++	return 0, os.ErrDeadlineExceeded
++}
++
+ func TestLeafNodeSlowConsumer(t *testing.T) {
+ 	ao := DefaultOptions()
+ 	ao.LeafNode.Host = "127.0.0.1"
+ 	ao.LeafNode.Port = -1
+-	ao.WriteDeadline = 1 * time.Millisecond
+ 	a := RunServer(ao)
+ 	defer a.Shutdown()
+ 
+ 	c, err := net.Dial("tcp", fmt.Sprintf("127.0.0.1:%d", ao.LeafNode.Port))
+-	if err != nil {
+-		t.Fatalf("Error connecting: %v", err)
+-	}
+-	time.Sleep(5 * time.Millisecond)
+-	a.mu.Lock()
+-	checkFor(t, 2*time.Second, 15*time.Millisecond, func() error {
+-		a.grMu.Lock()
+-		defer a.grMu.Unlock()
+-		for _, cli := range a.grTmpClients {
+-			cli.out.wdl = time.Nanosecond
++	require_NoError(t, err)
++	defer c.Close()
++	require_NoError(t, c.SetReadDeadline(time.Now().Add(5*time.Second)))
++	br := bufio.NewReader(c)
++	_, err = br.ReadString('\n')
++	require_NoError(t, err)
++
++	// Only leafnodes that have completed CONNECT contribute to the counter.
++	_, err = c.Write([]byte("CONNECT {}\r\n"))
++	require_NoError(t, err)
++	var leaf *client
++	checkFor(t, 5*time.Second, 10*time.Millisecond, func() error {
++		a.mu.Lock()
++		defer a.mu.Unlock()
++		for _, cli := range a.leafs {
++			leaf = cli
+ 			return nil
++		}
++		return fmt.Errorf("leafnode has not completed CONNECT")
++	})
++
++	// Trigger the real write-timeout path without relying on timer resolution.
++	leaf.mu.Lock()
++	leaf.nc = &leafSlowConsumerTimeoutConn{Conn: leaf.nc}
++	leaf.mu.Unlock()
++	_, err = c.Write([]byte("PING\r\n"))
++	require_NoError(t, err)
++
++	checkFor(t, 5*time.Second, 10*time.Millisecond, func() error {
++		if got := a.NumSlowConsumersLeafs(); got != 1 {
++			return fmt.Errorf("slow consumer leafnodes: got %d, expected 1", got)
++		}
++		if got := a.NumLeafNodes(); got != 0 {
++			return fmt.Errorf("slow leafnode is still connected: %d", got)
+ 		}
+ 		return nil
+ 	})
+-	a.mu.Unlock()
+-
+-	// Only leafnode slow consumers that made it past connect are tracked
+-	// in the slow consumers counter.
+-	if _, err := c.Write([]byte("CONNECT {}\r\n")); err != nil {
+-		t.Fatalf("Error writing connect: %v", err)
+-	}
+-	// Read info
+-	br := bufio.NewReader(c)
+-	br.ReadLine()
+-	for i := 0; i < 10; i++ {
+-		if _, err := c.Write([]byte("PING\r\n")); err != nil {
+-			t.Fatalf("Unexpected error writing PING: %v", err)
+-		}
+-	}
+-	defer c.Close()
+-	timeout := time.Now().Add(time.Second)
+-	var (
+-		got      uint64
+-		expected uint64 = 1
+-	)
+-	for time.Now().Before(timeout) {
+-		got = a.NumSlowConsumersLeafs()
+-		if got == expected {
+-			return
+-		}
+-		time.Sleep(1 * time.Millisecond)
+-	}
+-	t.Fatalf("Timed out waiting for slow consumer leafnodes, got: %v, expected: %v", got, expected)
+ }
+ 
+ // https://github.com/nats-io/nats-server/issues/4367

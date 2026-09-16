@@ -1,0 +1,71 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 15 Sep 2026 16:30:00 +0800
+Subject: [PATCH] test: stop mock consumers before returning
+
+Wait for consumer handlers and reconnect loops to stop before their test
+logger becomes invalid. Keep the command and backoff assertions unchanged.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/mock_test.go
++++ b/mock_test.go
+@@ -246,6 +246,14 @@
+ 	q, _ := NewConsumer(topicName, "ch", config)
+ 	q.SetLogger(newTestLogger(t), LogLevelDebug)
+ 	q.AddHandler(&testHandler{})
++	defer func() {
++		q.Stop()
++		select {
++		case <-q.StopChan:
++		case <-time.After(5 * time.Second):
++			t.Error("consumer did not stop")
++		}
++	}()
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+ 		t.Fatal(err.Error())
+@@ -317,6 +325,14 @@
+ 	q, _ := NewConsumer(topicName, "ch", config)
+ 	q.SetLogger(newTestLogger(t), LogLevelDebug)
+ 	q.AddHandler(&testHandler{})
++	defer func() {
++		q.Stop()
++		select {
++		case <-q.StopChan:
++		case <-time.After(5 * time.Second):
++			t.Error("consumer did not stop")
++		}
++	}()
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+ 		t.Fatal(err.Error())
+@@ -387,6 +403,14 @@
+ 	q, _ := NewConsumer(topicName, "ch", config)
+ 	q.SetLogger(newTestLogger(t), LogLevelDebug)
+ 	q.AddHandler(&testHandler{})
++	defer func() {
++		q.Stop()
++		select {
++		case <-q.StopChan:
++		case <-time.After(5 * time.Second):
++			t.Error("consumer did not stop")
++		}
++	}()
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+ 		t.Fatal(err.Error())
+@@ -493,6 +517,14 @@
+ 	q, _ := NewConsumer(topicName, "ch", config)
+ 	q.SetLogger(newTestLogger(t), LogLevelDebug)
+ 	q.AddHandler(&testHandler{})
++	defer func() {
++		q.Stop()
++		select {
++		case <-q.StopChan:
++		case <-time.After(5 * time.Second):
++			t.Error("consumer did not stop")
++		}
++	}()
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+ 		t.Fatal(err.Error())

@@ -1,0 +1,64 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Wait for Will handling before checking retained permissions
+
+A disconnected client is removed before mqttHandleClosedClient finishes
+clean-session cleanup and Will delivery. Checking only the client count
+can subscribe too early and receive the live Will, including before
+SUBACK, instead of the retained message this fixture needs to inspect.
+
+Wait for both the clean-session entry and its cleanup lock to disappear.
+The cleanup lock is released only after mqttHandleWill returns. Retain the
+allowed and forbidden publication checks, QoS/retain assertions, and the
+permission-reload check.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/mqtt_test.go
++++ b/server/mqtt_test.go
+@@ -4183,6 +4183,28 @@
+ 	s, o := RunServerWithConfig(conf)
+ 	defer testMQTTShutdownServer(s)
+ 
++	waitForWill := func() {
++		t.Helper()
++		checkClientsCount(t, s, 0)
++		// Client removal precedes clean-session cleanup and Will delivery.
++		// Wait until the session is removed and its cleanup lock is released
++		// before subscribing, so we receive a retained message, not a live Will.
++		checkFor(t, 5*time.Second, 10*time.Millisecond, func() error {
++			s.mqtt.sessmgr.mu.RLock()
++			asm := s.mqtt.sessmgr.sessions[globalAccountName]
++			s.mqtt.sessmgr.mu.RUnlock()
++			if asm == nil {
++				return errors.New("MQTT account session manager not available")
++			}
++			asm.mu.RLock()
++			defer asm.mu.RUnlock()
++			if len(asm.sessions) != 0 || len(asm.sessLocked) != 0 {
++				return errors.New("MQTT clean-session Will handling not finished")
++			}
++			return nil
++		})
++	}
++
+ 	ci := &mqttConnInfo{
+ 		cleanSess: true,
+ 		user:      "mqtt",
+@@ -4206,7 +4228,7 @@
+ 
+ 	// Wait for the server to process the connection close, which will
+ 	// cause the "will" message to be published (and retained).
+-	checkClientsCount(t, s, 0)
++	waitForWill()
+ 
+ 	// Create a subscription on the Will subject and we should receive it.
+ 	ci.will = nil
+@@ -4241,7 +4263,7 @@
+ 
+ 	// Wait for the server to process the connection close, which will
+ 	// cause the "will" message to be published (and retained).
+-	checkClientsCount(t, s, 0)
++	waitForWill()
+ 
+ 	// Create sub on "bar" which user is allowed to subscribe to.
+ 	ci.will = nil

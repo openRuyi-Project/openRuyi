@@ -1,0 +1,110 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 15 Sep 2026 15:47:56 +0800
+Subject: [PATCH] test: report preformatted errors directly
+
+Keep error messages unchanged and avoid non-constant format diagnostics
+from recent Go vet releases.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/consumer_test.go
++++ b/consumer_test.go
+@@ -61,7 +61,7 @@
+ 	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(body))
+ 	resp, err := httpclient.Do(req)
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 		return
+ 	}
+ 	if resp.StatusCode != 200 {
+--- a/mock_test.go
++++ b/mock_test.go
+@@ -248,7 +248,7 @@
+ 	q.AddHandler(&testHandler{})
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	<-n.exitChan
+@@ -319,7 +319,7 @@
+ 	q.AddHandler(&testHandler{})
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	select {
+@@ -389,7 +389,7 @@
+ 	q.AddHandler(&testHandler{})
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	select {
+@@ -495,7 +495,7 @@
+ 	q.AddHandler(&testHandler{})
+ 	err := q.ConnectToNSQD(n.tcpAddr.String())
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	timeoutCh := time.After(500 * time.Millisecond)
+--- a/producer_test.go
++++ b/producer_test.go
+@@ -147,14 +147,14 @@
+ 	for i := 0; i < msgCount; i++ {
+ 		err := w.PublishAsync(topicName, []byte("publish_test_case"), responseChan, "test")
+ 		if err != nil {
+-			t.Fatalf(err.Error())
++			t.Fatal(err.Error())
+ 		}
+ 	}
+ 
+ 	for i := 0; i < msgCount; i++ {
+ 		trans := <-responseChan
+ 		if trans.Error != nil {
+-			t.Fatalf(trans.Error.Error())
++			t.Fatal(trans.Error.Error())
+ 		}
+ 		if trans.Args[0].(string) != "test" {
+ 			t.Fatalf(`proxied arg "%s" != "test"`, trans.Args[0].(string))
+@@ -186,12 +186,12 @@
+ 	responseChan := make(chan *ProducerTransaction)
+ 	err := w.MultiPublishAsync(topicName, testData, responseChan, "test0", 1)
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	trans := <-responseChan
+ 	if trans.Error != nil {
+-		t.Fatalf(trans.Error.Error())
++		t.Fatal(trans.Error.Error())
+ 	}
+ 	if trans.Args[0].(string) != "test0" {
+ 		t.Fatalf(`proxied arg "%s" != "test0"`, trans.Args[0].(string))
+@@ -234,7 +234,7 @@
+ 
+ 	err = w.Publish(topicName, []byte("publish_test_case"))
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	time.Sleep(1100 * time.Millisecond)
+@@ -270,7 +270,7 @@
+ 
+ 	err := q.ConnectToNSQD("127.0.0.1:4150")
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 	<-q.StopChan
+ 

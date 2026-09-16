@@ -1,0 +1,20 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 15 Sep 2026 15:47:56 +0800
+Subject: [PATCH] test: report callback errors without treating them as formats
+
+The callback error is already formatted. Pass it to Fatal so current
+Go vet can compile the tests, including the external-broker suite.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/fvt_client_test.go
++++ b/fvt_client_test.go
+@@ -984,7 +984,7 @@
+ 
+ 	err := <-handlerError
+ 	if err != nil {
+-		t.Fatalf(err.Error())
++		t.Fatal(err.Error())
+ 	}
+ 
+ 	time.Sleep(time.Microsecond) // Allow a little time in case the handler returning after connection dropped causes an issue (panic)

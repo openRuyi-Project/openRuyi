@@ -1,0 +1,59 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Handle heartbeats while installing route test subscriptions
+
+The raw test connection assumes its next read after 100,000 SUB commands
+starts with PONG. On slower workers the server sends its initial PING
+first. Use the NATS client to answer heartbeats and flush the same 100,000
+subscriptions. Keep exact remote subscription counts and slow-consumer
+assertions.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/test/fanout_test.go
++++ b/test/fanout_test.go
+@@ -20,6 +20,7 @@
+ 	"strconv"
+ 	"sync"
+ 	"testing"
++	"time"
+ 
+ 	"github.com/nats-io/nats-server/v2/server"
+ 	"github.com/nats-io/nats.go"
+@@ -89,23 +90,30 @@
+ }
+ 
+ func TestNoRaceRouteFormTimeWithHighSubscriptions(t *testing.T) {
+-	srvA, optsA := RunServerWithConfig("./configs/srv_a.conf")
++	srvA, _ := RunServerWithConfig("./configs/srv_a.conf")
+ 	defer srvA.Shutdown()
+ 
+-	clientA := createClientConn(t, optsA.Host, optsA.Port)
++	// The client must process server PINGs while installing subscriptions.
++	// A raw connection can receive a heartbeat before the flush PONG.
++	// This fixture never publishes messages, so avoid large per-subscription queues.
++	clientA, err := nats.Connect(srvA.ClientURL(), nats.SyncQueueLen(1))
++	if err != nil {
++		t.Fatalf("Error connecting: %v", err)
++	}
+ 	defer clientA.Close()
+-
+-	sendA, expectA := setupConn(t, clientA)
+ 
+ 	// Now add lots of subscriptions. These will need to be forwarded
+ 	// to new routes when they are added.
+ 	subsTotal := 100000
+ 	for i := 0; i < subsTotal; i++ {
+ 		subject := fmt.Sprintf("FOO.BAR.BAZ.%d", i)
+-		sendA(fmt.Sprintf("SUB %s %d\r\n", subject, i))
++		if _, err := clientA.SubscribeSync(subject); err != nil {
++			t.Fatalf("Error subscribing to %q: %v", subject, err)
++		}
+ 	}
+-	sendA("PING\r\n")
+-	expectA(pongRe)
++	if err := clientA.FlushTimeout(10 * time.Second); err != nil {
++		t.Fatalf("Error flushing subscriptions: %v", err)
++	}
+ 
+ 	srvB, _ := RunServerWithConfig("./configs/srv_b.conf")
+ 	defer srvB.Shutdown()

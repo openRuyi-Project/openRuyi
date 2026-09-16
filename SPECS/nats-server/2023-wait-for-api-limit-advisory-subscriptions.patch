@@ -1,0 +1,27 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Wait for API limit advisory subscriptions before requests
+
+The finite burst of API requests uses a different connection from the
+system-account advisory subscription. Without flushing that subscription
+and waiting for route propagation, every advisory can be sent before its
+subscriber exists. Flush it and wait for interest on each cluster member
+before generating the original 100 requests. Keep the queue limit, domain
+and dropped-request assertions unchanged.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/jetstream_cluster_4_test.go
++++ b/server/jetstream_cluster_4_test.go
+@@ -2986,6 +2986,12 @@
+ 
+ 	sub, err := snc.SubscribeSync(JSAdvisoryAPILimitReached)
+ 	require_NoError(t, err)
++	natsFlush(t, snc)
++	// Requests and advisories use different connections. Wait for interest
++	// on every server before the finite request burst can publish advisories.
++	for _, srv := range c.servers {
++		checkSubInterest(t, srv, srv.SystemAccount().GetName(), JSAdvisoryAPILimitReached, 5*time.Second)
++	}
+ 
+ 	// There's a very slim chance that a worker could pick up a request between
+ 	// pushing to and draining the queue, so make sure we've sent enough of them

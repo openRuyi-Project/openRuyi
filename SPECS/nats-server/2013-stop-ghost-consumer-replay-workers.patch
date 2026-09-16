@@ -1,0 +1,97 @@
+From 6e5aa7110eafdccf635ad7d8990be156a93b86d1 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Fri, 11 Sep 2026 10:43:00 +0800
+Subject: [PATCH] tests: stop ghost-consumer replay loops on every exit
+
+The one-second meta-recovery check can fail before cancel is called,
+leaving the replay goroutines spinning against a closed connection for
+the rest of the server test suite. Cancel, close and join these workers
+on every exit, and join the normal stop before checking consumer state.
+
+Use the existing health-check helper's 30-second recovery budget for the
+metadata-only check. Keep all restart cycles, replay workers and consumer
+consistency assertions.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/norace_test.go | 46 ++++++++++++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+
+diff --git a/server/norace_test.go b/server/norace_test.go
+index 2150d2a..f612e7d 100644
+--- a/server/norace_test.go
++++ b/server/norace_test.go
+@@ -6721,24 +6721,37 @@ func TestNoRaceJetStreamClusterGhostConsumers(t *testing.T) {
+ 	}
+ 
+ 	ctx, cancel := context.WithCancel(context.Background())
++	var replays sync.WaitGroup
++	defer func() {
++		cancel()
++		nc.Close()
++		replays.Wait()
++	}()
++	startReplay := func(id int) {
++		replays.Add(1)
++		go func() {
++			defer replays.Done()
++			replay(ctx, id)
++		}()
++	}
+ 
+-	go replay(ctx, 0)
+-	go replay(ctx, 1)
+-	go replay(ctx, 2)
+-	go replay(ctx, 3)
+-	go replay(ctx, 4)
+-	go replay(ctx, 5)
+-	go replay(ctx, 6)
+-	go replay(ctx, 7)
+-	go replay(ctx, 8)
+-	go replay(ctx, 9)
++	startReplay(0)
++	startReplay(1)
++	startReplay(2)
++	startReplay(3)
++	startReplay(4)
++	startReplay(5)
++	startReplay(6)
++	startReplay(7)
++	startReplay(8)
++	startReplay(9)
+ 
+ 	time.Sleep(5 * time.Second)
+ 
+ 	for _, server := range c.servers {
+ 		server.Shutdown()
+ 		restarted := c.restartServer(server)
+-		checkFor(t, time.Second, 200*time.Millisecond, func() error {
++		checkFor(t, 30*time.Second, 200*time.Millisecond, func() error {
+ 			hs := restarted.healthz(&HealthzOptions{
+ 				JSMetaOnly: true,
+ 			})
+@@ -6749,15 +6762,16 @@ func TestNoRaceJetStreamClusterGhostConsumers(t *testing.T) {
+ 		})
+ 		c.waitOnStreamLeader(globalAccountName, "TEST")
+ 		time.Sleep(time.Second * 2)
+-		go replay(ctx, 5)
+-		go replay(ctx, 6)
+-		go replay(ctx, 7)
+-		go replay(ctx, 8)
+-		go replay(ctx, 9)
++		startReplay(5)
++		startReplay(6)
++		startReplay(7)
++		startReplay(8)
++		startReplay(9)
+ 	}
+ 
+ 	time.Sleep(5 * time.Second)
+ 	cancel()
++	replays.Wait()
+ 
+ 	// Check we don't report missing consumers.
+ 	subj := fmt.Sprintf(JSApiConsumerListT, "TEST")
+-- 
+2.52.0
+

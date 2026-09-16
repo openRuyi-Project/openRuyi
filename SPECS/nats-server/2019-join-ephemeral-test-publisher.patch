@@ -1,0 +1,97 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Bound and join the ephemeral consumer test publisher
+
+On riscv64, 5,000 synchronous three-replica publishes exceed the original
+10-second aggregate wait. Keep the workload and one-second inactivity
+threshold, but give publishing a cancellable two-minute total deadline.
+Always cancel and join the publisher before tearing down its connection.
+Report acknowledgement errors through a channel instead of calling Fatal
+from the NATS callback. Wait for all acknowledgement callbacks before
+checking their errors.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/jetstream_cluster_3_test.go
++++ b/server/jetstream_cluster_3_test.go
+@@ -2882,18 +2882,30 @@
+ 			}
+ 
+ 			const msgs = 5_000
++			var acknowledged atomic.Int32
++			ackErr := make(chan error, 1)
+ 			sub, err := js.Subscribe(_EMPTY_, func(msg *nats.Msg) {
+-				require_NoError(t, msg.Ack())
++				defer acknowledged.Add(1)
++				if err := msg.Ack(); err != nil {
++					select {
++					case ackErr <- err:
++					default:
++					}
++				}
+ 			}, nats.Bind(test.stream, name), nats.ManualAck())
+ 			require_NoError(t, err)
+ 
+ 			// This happens only if we start publishing messages after consumer was created.
++			// Keep all 5,000 synchronous replicated publishes. Their aggregate
++			// duration is not bounded by the consumer's inactivity threshold.
++			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
++			defer cancel()
+ 			pubErr := make(chan error, 1)
+ 			pubDone := make(chan struct{})
+ 			go func(subject string) {
+ 				defer close(pubDone)
+ 				for i := 0; i < msgs; i++ {
+-					_, err := js.Publish(subject, []byte("DATA"))
++					_, err := js.Publish(subject, []byte("DATA"), nats.Context(ctx))
+ 					if err != nil {
+ 						select {
+ 						case pubErr <- err:
+@@ -2903,6 +2915,10 @@
+ 					}
+ 				}
+ 			}(test.subject)
++			defer func() {
++				cancel()
++				<-pubDone
++			}()
+ 
+ 			// Wait for inactive threshold to expire and all messages to be published and received
+ 			// Bug is we clean up active consumers when we should not.
+@@ -2910,8 +2926,8 @@
+ 
+ 			select {
+ 			case <-pubDone:
+-			case <-time.After(10 * time.Second):
+-				t.Fatalf("Did not receive completion signal")
++			case <-ctx.Done():
++				t.Fatalf("Publishing did not complete: %v", ctx.Err())
+ 			}
+ 
+ 			select {
+@@ -2920,7 +2936,7 @@
+ 			default:
+ 			}
+ 
+-			checkFor(t, time.Second, 100*time.Millisecond, func() error {
++			checkFor(t, 5*time.Second, 100*time.Millisecond, func() error {
+ 				info, err := js.ConsumerInfo(test.stream, name)
+ 				if err != nil {
+ 					return fmt.Errorf("Expected to be able to retrieve consumer: %v", err)
+@@ -2928,8 +2944,17 @@
+ 				if info.Delivered.Stream != msgs {
+ 					return fmt.Errorf("require uint64 equal, but got: %d != %d", info.Delivered.Stream, msgs)
+ 				}
++				if got := acknowledged.Load(); got != msgs {
++					return fmt.Errorf("Expected %d acknowledgement callbacks, got %d", msgs, got)
++				}
+ 				return nil
+ 			})
++
++			select {
++			case err := <-ackErr:
++				t.Fatalf("Acknowledgement error: %v", err)
++			default:
++			}
+ 
+ 			// Stop the subscription and remove the interest.
+ 			err = sub.Unsubscribe()

@@ -1,0 +1,50 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Run peer expiry within the leaf-spoke test window
+
+The cluster peer-count assertion waits 30 seconds, but a lost shutdown
+notification falls back to the system-account orphan sweep: by default,
+servers expire after 150 seconds and the sweep runs every 90 seconds.
+
+Configure only this fixture's servers to report stats every second and
+expire silent peers after ten seconds, checking every second. Live peers
+continue reporting well inside the expiry window. Retain the complete
+12-to-9-to-12 membership assertions, including the restarted spoke.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/jetstream_cluster_2_test.go
++++ b/server/jetstream_cluster_2_test.go
+@@ -490,6 +490,25 @@
+ 	lnc3 := c.createLeafNodesWithStartPortAndDomain("R3", 3, 22130, _EMPTY_)
+ 	defer lnc3.shutdown()
+ 
++	// Closing a spoke can lose shutdown notifications as its leaf routes close.
++	// Exercise the normal orphan sweep within waitOnPeerCount's 30-second
++	// deadline. Keep live peers reporting well inside the expiry interval.
++	setPeerTimings := func(clusters ...*cluster) {
++		for _, cl := range clusters {
++			for _, srv := range cl.servers {
++				srv.mu.Lock()
++				srv.sys.statsz = time.Second
++				srv.sys.cstatsz = srv.sys.statsz
++				srv.sys.stmr.Reset(srv.sys.statsz)
++				srv.sys.orphMax = 10 * time.Second
++				srv.sys.chkOrph = time.Second
++				srv.sys.sweeper.Reset(srv.sys.chkOrph)
++				srv.mu.Unlock()
++			}
++		}
++	}
++	setPeerTimings(c, lnc1, lnc2, lnc3)
++
+ 	// Wait on all peers.
+ 	c.waitOnPeerCount(12)
+ 
+@@ -499,6 +518,7 @@
+ 
+ 	lnc3 = c.createLeafNodesWithStartPortAndDomain("LNC3", 3, 22130, _EMPTY_)
+ 	defer lnc3.shutdown()
++	setPeerTimings(lnc3)
+ 
+ 	c.waitOnPeerCount(12)
+ }

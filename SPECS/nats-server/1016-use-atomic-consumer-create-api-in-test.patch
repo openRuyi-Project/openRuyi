@@ -1,0 +1,101 @@
+From c801700ac87c9ff84dae97b691bbe6c81d097d9c Mon Sep 17 00:00:00 2001
+From: Neil Twigg <neil@nats.io>
+Date: Tue, 8 Apr 2025 10:32:27 +0100
+Subject: [PATCH] De-flake `TestJetStreamClusterParallelConsumerCreation`
+
+Using the new JetStream API from the client increases the reliability
+of this test as it removes the race conditions in the client between
+the consumer info and the consumer create calls (now fixed by the presence
+of the consumer actions).
+
+Backport only the server test changes; the RPM dependency provides nats.go
+1.41.2, which already includes consumer actions and WithDefaultTimeout.
+
+Signed-off-by: Neil Twigg <neil@nats.io>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+diff --git a/server/jetstream_cluster_3_test.go b/server/jetstream_cluster_3_test.go
+index 6f67e7c4e27..60b1250bb3f 100644
+--- a/server/jetstream_cluster_3_test.go
++++ b/server/jetstream_cluster_3_test.go
+@@ -34,6 +34,7 @@ import (
+ 
+ 	"github.com/nats-io/jwt/v2"
+ 	"github.com/nats-io/nats.go"
++	"github.com/nats-io/nats.go/jetstream"
+ )
+ 
+ func TestJetStreamClusterRemovePeerByID(t *testing.T) {
+@@ -1613,10 +1614,12 @@ func TestJetStreamClusterParallelConsumerCreation(t *testing.T) {
+ 	c := createJetStreamClusterExplicit(t, "R3S", 3)
+ 	defer c.shutdown()
+ 
+-	nc, js := jsClientConnect(t, c.randomServer())
++	nc, js := jsClientConnectNewAPI(t, c.randomServer())
+ 	defer nc.Close()
+ 
+-	_, err := js.AddStream(&nats.StreamConfig{
++	ctx := context.Background()
++
++	_, err := js.CreateStream(ctx, jetstream.StreamConfig{
+ 		Name:     "TEST",
+ 		Subjects: []string{"common.*.*"},
+ 		Replicas: 3,
+@@ -1629,7 +1632,7 @@ func TestJetStreamClusterParallelConsumerCreation(t *testing.T) {
+ 	startCh := make(chan bool)
+ 	errCh := make(chan error, np)
+ 
+-	cfg := &nats.ConsumerConfig{
++	cfg := jetstream.ConsumerConfig{
+ 		Durable:  "dlc",
+ 		Replicas: 3,
+ 	}
+@@ -1644,7 +1647,7 @@ func TestJetStreamClusterParallelConsumerCreation(t *testing.T) {
+ 			defer wg.Done()
+ 
+ 			// Individual connection
+-			nc, js := jsClientConnect(t, c.randomServer())
++			nc, js := jsClientConnectNewAPI(t, c.randomServer())
+ 			defer nc.Close()
+ 
+ 			swg.Done()
+@@ -1652,7 +1655,7 @@ func TestJetStreamClusterParallelConsumerCreation(t *testing.T) {
+ 			// Make them all fire at once.
+ 			<-startCh
+ 
+-			if _, err := js.AddConsumer("TEST", cfg); err != nil {
++			if _, err := js.CreateConsumer(ctx, "TEST", cfg); err != nil {
+ 				errCh <- err
+ 			}
+ 		}()
+diff --git a/server/jetstream_helpers_test.go b/server/jetstream_helpers_test.go
+index 157e3c4f0c2..5ebd7a1deb1 100644
+--- a/server/jetstream_helpers_test.go
++++ b/server/jetstream_helpers_test.go
+@@ -36,6 +36,7 @@ import (
+ 	"time"
+ 
+ 	"github.com/nats-io/nats.go"
++	"github.com/nats-io/nats.go/jetstream"
+ 	"golang.org/x/time/rate"
+ 
+ 	"github.com/nats-io/nats-server/v2/internal/antithesis"
+@@ -1258,6 +1259,19 @@ func jsClientConnectEx(t testing.TB, s *Server, jsOpts []nats.JSOpt, opts ...nat
+ 	return nc, js
+ }
+ 
++func jsClientConnectNewAPI(t testing.TB, s *Server, opts ...nats.Option) (*nats.Conn, jetstream.JetStream) {
++	t.Helper()
++	nc, err := nats.Connect(s.ClientURL(), opts...)
++	if err != nil {
++		t.Fatalf("Failed to create client: %v", err)
++	}
++	js, err := jetstream.New(nc, jetstream.WithDefaultTimeout(10*time.Second))
++	if err != nil {
++		t.Fatalf("Unexpected error getting JetStream context: %v", err)
++	}
++	return nc, js
++}
++
+ func jsClientConnectURL(t testing.TB, url string, opts ...nats.Option) (*nats.Conn, nats.JetStreamContext) {
+ 	t.Helper()

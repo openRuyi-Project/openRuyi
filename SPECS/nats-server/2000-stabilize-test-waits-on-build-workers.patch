@@ -1,0 +1,68 @@
+From b2ddc61df72612a528c7a4f5a9fcc4af735f51c5 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Thu, 10 Sep 2026 14:15:43 +0800
+Subject: [PATCH] tests: correct wait units and allow worker scheduling delays
+
+Use a real ten-second cluster convergence deadline instead of ten nanoseconds. Allow five seconds for KV updates, retaining the assertion that all updates arrive.
+
+After the upstream process-sampling test split, let Linux CPU sampling leave the startup GC window before comparing it with ps.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/jetstream_super_cluster_test.go | 2 +-
+ server/jetstream_test.go               | 4 ++--
+ server/pse/pse_test.go                 | 6 ++++++
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/server/jetstream_super_cluster_test.go b/server/jetstream_super_cluster_test.go
+index 763bfd4..f32eed6 100644
+--- a/server/jetstream_super_cluster_test.go
++++ b/server/jetstream_super_cluster_test.go
+@@ -826,7 +826,7 @@ func TestJetStreamSuperClusterUniquePlacementTag(t *testing.T) {
+ 			si, err = js.UpdateStream(cfg)
+ 			require_NoError(t, err)
+ 			require_Equal(t, si.Cluster.Name, "C2")
+-			checkFor(t, 10, 250*time.Millisecond, func() error {
++			checkFor(t, 10*time.Second, 250*time.Millisecond, func() error {
+ 				if si, err := js.StreamInfo(cfg.Name); err != nil {
+ 					return err
+ 				} else if diff, err := inDifferentAz(si.Cluster); err != nil {
+diff --git a/server/jetstream_test.go b/server/jetstream_test.go
+index f17306e..9b910ca 100644
+--- a/server/jetstream_test.go
++++ b/server/jetstream_test.go
+@@ -14123,8 +14123,8 @@ func TestJetStreamMemoryCorruption(t *testing.T) {
+ 				if count == 13 {
+ 					return
+ 				}
+-			case <-time.After(time.Second):
+-				t.Fatal("Did not receive all updates")
++			case <-time.After(5 * time.Second):
++				t.Fatalf("Received %d of 13 updates", count)
+ 			}
+ 		}
+ 	}
+diff --git a/server/pse/pse_test.go b/server/pse/pse_test.go
+index 5d90ae6..fefa7f8 100644
+--- a/server/pse/pse_test.go
++++ b/server/pse/pse_test.go
+@@ -20,6 +20,7 @@ import (
+ 	"runtime"
+ 	"runtime/debug"
+ 	"testing"
++	"time"
+ )
+ 
+ func TestPSEmulationCPU(t *testing.T) {
+@@ -31,6 +32,11 @@ func TestPSEmulationCPU(t *testing.T) {
+ 
+ 	debug.FreeOSMemory()
+ 
++	// Linux samples CPU usage once per second; let startup GC leave that window.
++	if runtime.GOOS == "linux" {
++		time.Sleep(2 * time.Second)
++	}
++
+ 	// PS version first
+ 	pidStr := fmt.Sprintf("%d", os.Getpid())
+ 	out, err := exec.Command("ps", "o", "pcpu=", "-p", pidStr).Output()

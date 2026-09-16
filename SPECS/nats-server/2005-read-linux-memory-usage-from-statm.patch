@@ -1,0 +1,84 @@
+From 2df41d02ef86e863344e677dcd37dffb10ce416f Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Thu, 10 Sep 2026 19:24:13 +0800
+Subject: [PATCH] Read Linux memory usage from statm
+
+Linux commit 82241a83cd15 (mm: fix the inaccurate memory statistics
+issue for users) includes the per-CPU RSS counters in status and statm,
+while stat may still report an approximate value. procps-ng 4.0.5 reads
+VmRSS from status, so the memory test compares different accounting
+methods on kernels carrying that fix. On the riscv64 build worker,
+41 of 50 samples exceeded the existing 1 MiB limit even before the
+second FreeOSMemory call.
+
+Read RSS and virtual size from statm, converting both page counts with
+os.Getpagesize. Leave CPU sampling on stat. Preserve the original ps
+comparison, collection sequence and 1 MiB test tolerance.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/pse/pse_linux.go | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/server/pse/pse_linux.go b/server/pse/pse_linux.go
+index 5414b32..711df4d 100644
+--- a/server/pse/pse_linux.go
++++ b/server/pse/pse_linux.go
+@@ -23,25 +23,25 @@ import (
+ )
+ 
+ var (
+-	procStatFile string
+-	ticks        int64
+-	lastTotal    int64
+-	lastSeconds  int64
+-	ipcpu        int64
++	procStatFile  string
++	procStatmFile string
++	ticks         int64
++	lastTotal     int64
++	lastSeconds   int64
++	ipcpu         int64
+ )
+ 
+ const (
+ 	utimePos = 13
+ 	stimePos = 14
+ 	startPos = 21
+-	vssPos   = 22
+-	rssPos   = 23
+ )
+ 
+ func init() {
+ 	// Avoiding to generate docker image without CGO
+ 	ticks = 100 // int64(C.sysconf(C._SC_CLK_TCK))
+ 	procStatFile = fmt.Sprintf("/proc/%d/stat", os.Getpid())
++	procStatmFile = procStatFile + "m"
+ 	periodic()
+ }
+ 
+@@ -87,15 +87,17 @@ func periodic() {
+ 
+ // ProcUsage returns CPU usage
+ func ProcUsage(pcpu *float64, rss, vss *int64) error {
+-	contents, err := os.ReadFile(procStatFile)
++	contents, err := os.ReadFile(procStatmFile)
+ 	if err != nil {
+ 		return err
+ 	}
+ 	fields := bytes.Fields(contents)
+ 
+-	// Memory
+-	*rss = (parseInt64(fields[rssPos])) << 12
+-	*vss = parseInt64(fields[vssPos])
++	// statm includes per-CPU RSS counters that stat may leave unreported.
++	// Both memory fields are expressed in pages.
++	pageSize := int64(os.Getpagesize())
++	*rss = parseInt64(fields[1]) * pageSize
++	*vss = parseInt64(fields[0]) * pageSize
+ 
+ 	// PCPU
+ 	// We track this with periodic sampling, so just load and go.
+-- 
+2.39.5 (Apple Git-154)
+

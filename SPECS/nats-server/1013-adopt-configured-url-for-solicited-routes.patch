@@ -1,0 +1,130 @@
+From fe0f9baf66f150d7dca966038e9fcadf29071067 Mon Sep 17 00:00:00 2001
+From: Maurice van Veen <github@mauricevanveen.com>
+Date: Tue, 11 Aug 2026 17:14:37 +0000
+Subject: [PATCH] [FIXED] Route missing after reconnect due to gossip URL
+ mismatch
+
+Signed-off-by: Maurice van Veen <github@mauricevanveen.com>
+
+(cherry picked from commit df1b12b7c6f3e461df926b649981ef0d3dd87891)
+[cl2t: Append the regression test to the 2.11.1 suite and read its existing
+account route-pool index under the server lock instead of the newer helper.]
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/route.go       |  9 ++++--
+ server/routes_test.go | 66 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+), 2 deletions(-)
+
+diff --git a/server/route.go b/server/route.go
+index d56cdf9..9a10c98 100644
+--- a/server/route.go
++++ b/server/route.go
+@@ -2381,10 +2381,13 @@ func upgradeRouteToSolicited(r *client, url *url.URL, rtype RouteType) {
+ 		return
+ 	}
+ 	r.mu.Lock()
+-	if !r.route.didSolicit {
+-		r.route.didSolicit = true
++	// On disconnect, an explicit route only reconnects if the connection's
++	// URL matches a configured route. So adopt the given URL rather than
++	// keeping a gossiped one, which may not match any configured route.
++	if !r.route.didSolicit || (rtype == Explicit && r.route.routeType != Explicit) {
+ 		r.route.url = url
+ 	}
++	r.route.didSolicit = true
+ 	if rtype == Explicit {
+ 		r.route.routeType = Explicit
+ 	}
+@@ -2830,6 +2833,7 @@ func (s *Server) connectToRoute(rURL *url.URL, rtype RouteType, firstConnect boo
+ 	for attempts := 0; s.isRunning(); {
+ 		if tryForEver {
+ 			if !s.routeStillValid(rURL) {
++				s.Debugf("Not attempting to connect to explicit route %q, no longer part of configured routes", rURL.Redacted())
+ 				return
+ 			}
+ 			if accName != _EMPTY_ {
+@@ -2837,6 +2841,7 @@ func (s *Server) connectToRoute(rURL *url.URL, rtype RouteType, firstConnect boo
+ 				_, valid := s.accRoutes[accName]
+ 				s.mu.RUnlock()
+ 				if !valid {
++					s.Debugf("Not attempting to connect to route %q for account %q, no longer a per-account route", rURL.Redacted(), accName)
+ 					return
+ 				}
+ 			}
+diff --git a/server/routes_test.go b/server/routes_test.go
+index e83004a..858b5c1 100644
+--- a/server/routes_test.go
++++ b/server/routes_test.go
+@@ -4653,3 +4653,69 @@ func TestRouteImplicitJoinsSeparateGroups(t *testing.T) {
+ 		})
+ 	}
+ }
++
++func TestRouteReconnectAfterDuplicateRouteUpgrade(t *testing.T) {
++	// Default pool size + pinned $SYS route, like a production setup, with a
++	// hostname-based route URL like production configs use.
++	ob := DefaultOptions()
++	sb := RunServer(ob)
++	defer sb.Shutdown()
++
++	oa := DefaultOptions()
++	oa.Routes = RoutesFromStr(fmt.Sprintf("nats://localhost:%d", sb.ClusterAddr().Port))
++	sa := RunServer(oa)
++	defer sa.Shutdown()
++	checkClusterFormed(t, sa, sb)
++
++	// Find A's pooled route connection for the slot that carries the global
++	// account's interest.
++	gacc := sa.globalAccount()
++	sa.mu.RLock()
++	gSlot := gacc.routePoolIdx
++	sa.mu.RUnlock()
++	var route *client
++	sa.mu.RLock()
++	sa.forEachRouteIdx(gSlot, func(r *client) bool {
++		route = r
++		return false
++	})
++	sa.mu.RUnlock()
++	require_NotNil(t, route)
++
++	// Put the connection in the pre-upgrade gossip-dial state, then run the
++	// actual upgrade with the configured URL, as duplicate-route resolution
++	// does. The upgrade must adopt the configured URL so the later reconnect
++	// passes routeStillValid.
++	gossipURL, err := url.Parse(fmt.Sprintf("nats-route://127.0.0.1:%d/", sb.ClusterAddr().Port))
++	require_NoError(t, err)
++	route.mu.Lock()
++	route.route.didSolicit = true
++	route.route.routeType = Implicit
++	route.route.url = gossipURL
++	route.mu.Unlock()
++
++	configured := oa.Routes[0]
++	upgradeRouteToSolicited(route, configured, Explicit)
++
++	route.mu.Lock()
++	upURL := route.route.url
++	route.mu.Unlock()
++	require_Equal(t, upURL, configured)
++
++	// Drop the connection the way a fault would (slow consumer). The sibling
++	// pool slots and the pinned $SYS route stay up, so the remote is never
++	// treated as new and only this reconnect can re-establish the slot.
++	route.closeConnection(SlowConsumerWriteDeadline)
++	checkClusterFormed(t, sa, sb)
++
++	// Interest must flow across the re-established slot again.
++	nca := natsConnect(t, sa.ClientURL())
++	defer nca.Close()
++	ncb := natsConnect(t, sb.ClientURL())
++	defer ncb.Close()
++	natsSub(t, ncb, "reconnect.echo", func(m *nats.Msg) { m.Respond(m.Data) })
++	natsFlush(t, ncb)
++	checkSubInterest(t, sa, globalAccountName, "reconnect.echo", 2*time.Second)
++	_, err = nca.Request("reconnect.echo", []byte("ping"), time.Second)
++	require_NoError(t, err)
++}
+-- 
+2.52.0
+

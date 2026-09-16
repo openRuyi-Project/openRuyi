@@ -1,0 +1,42 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Wait for remote leaf subscriptions in permissions test
+
+The server already has a local wildcard subscription. The account-wide
+SubscriptionInterest("bar") check therefore succeeds even before the leaf
+has sent its subscriptions, and the first publish can be lost. Wait for
+bar and baz interest on the actual leaf connection before publishing.
+Retain both delivery checks and the forbidden-publish assertion.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/test/leafnode_test.go
++++ b/test/leafnode_test.go
+@@ -1669,8 +1669,26 @@
+ 	}
+ 	leafnc.Flush()
+ 
+-	// Make sure the interest on "bar" from "sl" server makes it to the "s" server.
+-	checkSubInterest(t, s, acc.GetName(), "bar", time.Second)
++	// The local "*" subscription already matches "bar" and "baz", so
++	// account-wide interest does not prove that leaf subscriptions arrived.
++	checkFor(t, 5*time.Second, 15*time.Millisecond, func() error {
++		leafz, err := s.Leafz(&server.LeafzOptions{Account: acc.GetName(), Subscriptions: true})
++		if err != nil {
++			return err
++		}
++		if len(leafz.Leafs) != 1 {
++			return fmt.Errorf("Expected one leaf, got %d", len(leafz.Leafs))
++		}
++		var bar, baz bool
++		for _, subject := range leafz.Leafs[0].Subs {
++			bar = bar || subject == "bar" || subject == "*"
++			baz = baz || subject == "baz" || subject == "*"
++		}
++		if !bar || !baz {
++			return fmt.Errorf("Leaf interest has not arrived: %v", leafz.Leafs[0].Subs)
++		}
++		return nil
++	})
+ 	// Check for local interest too.
+ 	checkSubInterest(t, sl, "$G", "bar", time.Second)
+ 

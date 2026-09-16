@@ -1,0 +1,45 @@
+From 0ee8cf7209e36de63fc30a3152c76b77a8e29c63 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Thu, 10 Sep 2026 23:26:06 +0800
+Subject: [PATCH] tests: wait for both WebSocket subscribers before publishing
+
+The frame-size test expects every message at two subscribers on separate
+cluster nodes. Its previous interest check returned as soon as either
+subscription reached the publishing node, allowing early messages to miss
+the other subscriber and making the completion wait time out.
+
+Wait for both matching subscriptions using the existing one-second bound.
+Keep the upstream frame-crossing payload, both message workloads, payload
+comparisons and ten-second completion deadline unchanged.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/websocket_test.go | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/server/websocket_test.go b/server/websocket_test.go
+index c692100..36edf31 100644
+--- a/server/websocket_test.go
++++ b/server/websocket_test.go
+@@ -4430,7 +4430,17 @@ func testWSNoCorruptionWithFrameSizeLimit(t *testing.T, total int) {
+ 	createSub(nc2)
+ 	createSub(nc3)
+ 
+-	checkSubInterest(t, s1, globalAccountName, "foo", time.Second)
++	// Both subscribers must be routed here before publishing the first message.
++	checkFor(t, time.Second, 15*time.Millisecond, func() error {
++		acc := s1.globalAccount()
++		acc.mu.RLock()
++		n := len(acc.sl.Match("foo").psubs)
++		acc.mu.RUnlock()
++		if n != 2 {
++			return fmt.Errorf("Expected two subscriptions on foo, got %d", n)
++		}
++		return nil
++	})
+ 
+ 	nc1 := natsConnect(t, fmt.Sprintf("ws://127.0.0.1:%d", o1.Websocket.Port))
+ 	defer nc1.Close()
+-- 
+2.52.0
+

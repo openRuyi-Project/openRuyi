@@ -1,0 +1,32 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] test: wait for restarted stream replicas before comparing state
+
+After a cluster restart, the follower that was stopped before the snapshot
+must catch up before its message count and sequence numbers can match the
+leader. The existing two-second state check can expire while this recovery
+is still in progress on build workers.
+
+Move the existing bounded waitOnStreamCurrent calls before checkState.
+Keep every state comparison and the failure when a replica never catches up.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+--- a/server/norace_test.go
++++ b/server/norace_test.go
+@@ -5051,12 +5051,13 @@
+ 	c.waitOnLeader()
+ 	c.waitOnStreamLeader("$JS", "TEST")
+ 
++	// Snapshot catch-up must finish before comparing replica state.
++	for _, cs := range c.servers {
++		c.waitOnStreamCurrent(cs, "$JS", "TEST")
++	}
+ 	checkFor(t, 2*time.Second, 500*time.Millisecond, func() error {
+ 		return checkState(t, c, "$JS", "TEST")
+ 	})
+-	for _, cs := range c.servers {
+-		c.waitOnStreamCurrent(cs, "$JS", "TEST")
+-	}
+ }
+ 
+ func TestNoRaceJetStreamPullConsumersAndInteriorDeletes(t *testing.T) {
