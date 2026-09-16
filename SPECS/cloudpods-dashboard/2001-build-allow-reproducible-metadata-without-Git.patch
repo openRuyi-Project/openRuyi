@@ -1,0 +1,49 @@
+From a6384e6af4dff64d139e3437d407f2aa4f099c09 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Mon, 14 Sep 2026 11:11:41 +0800
+Subject: [PATCH] build: allow reproducible metadata without Git
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ vue.config.js | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/vue.config.js b/vue.config.js
+index 2e5d353..020a720 100644
+--- a/vue.config.js
++++ b/vue.config.js
+@@ -31,7 +31,19 @@ function getModuleList () {
+ 
+ const getBuildInfo = () => {
+   const getDate = D => `${D.getFullYear() + '-' + (D.getMonth() + 1) + '-' + D.getDate() + ' ' + D.getHours() + ':' + D.getMinutes()}`
++  const getUTCDate = D => D.toISOString().replace('T', ' ').slice(0, 16)
++  const sourceDate = process.env.SOURCE_DATE_EPOCH
++    ? new Date(Number(process.env.SOURCE_DATE_EPOCH) * 1000)
++    : new Date()
+   const getCommitMSg = dirPath => {
++    if (process.env.DASHBOARD_SOURCE_COMMIT) {
++      return {
++        commit: process.env.DASHBOARD_SOURCE_COMMIT,
++        commitUserName: process.env.DASHBOARD_SOURCE_COMMITTER || 'unknown',
++        commitDate: getUTCDate(sourceDate),
++        head: process.env.DASHBOARD_SOURCE_REF || '-',
++      }
++    }
+     const commitDateObj = new Date(child_process.execSync(`cd ${dirPath} && git show -s --format=%cd`).toString())
+     const commit = child_process.execSync(`cd ${dirPath} && git show -s --format=%H`).toString().trim()
+     const commitUserName = child_process.execSync(`cd ${dirPath} && git show -s --format=%cn`).toString().trim()
+@@ -48,10 +60,9 @@ const getBuildInfo = () => {
+       head,
+     }
+   }
+-  const nowDate = new Date()
+-  const buildDate = `${nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate() + ' ' + nowDate.getHours() + ':' + nowDate.getMinutes()}`
++  const buildDate = process.env.SOURCE_DATE_EPOCH ? getUTCDate(sourceDate) : getDate(sourceDate)
+   const containers = fs.readdirSync('./containers').filter(item => !/^\..*/.test(item)) // 忽略隐藏文件
+-  const gitBranch = child_process.execSync('git branch --show-current').toString()
++  const gitBranch = process.env.DASHBOARD_SOURCE_REF || child_process.execSync('git branch --show-current').toString()
+   const info = {
+     scope: getCommitMSg('./'),
+     src: getCommitMSg('./src'),
+-- 
+2.54.0 (Apple Git-157)
