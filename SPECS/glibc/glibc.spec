@@ -37,6 +37,7 @@ Source4:        nscd.sysusers
 
 # For obvious reasons.
 Patch2000:      glibc-2.4-china.diff
+Patch2001:      add-rvv-optimized-mem-function.patch
 
 BuildRequires:  pkgconfig(audit)
 BuildRequires:  bison
