@@ -1,0 +1,18 @@
+[Unit]
+Description=Cloudpods privileged command executor
+Documentation=https://www.cloudpods.org/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+RuntimeDirectory=onecloud
+RuntimeDirectoryMode=0755
+# Other Cloudpods host services share this directory and own sockets in it.
+RuntimeDirectoryPreserve=yes
+ExecStart=/usr/libexec/cloudpods/executor-server --socket-path /run/onecloud/exec.sock
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target
