@@ -24,6 +24,9 @@
 %bcond ocf 1
 %bcond spdk 0
 %bcond crimson 0
+# The frontend is not built and the git snapshot has no prebuilt dist/;
+# the module refuses to run without it.
+%bcond mgr_dashboard 0
 %bcond seastar_dpdk 0
 
 %define _lto_cflags %{nil}
@@ -579,6 +582,7 @@ module derived from Calamari) and expose CLI hooks.  ceph-mgr gathers
 the cluster maps, the daemon metadata, and performance counters, and
 exposes all these to the python modules.
 
+%if %{with mgr_dashboard}
 %package        mgr-dashboard
 Summary:        Ceph Dashboard
 Requires:       ceph-mgr%{?_isa} = %{version}-%{release}
@@ -594,6 +598,17 @@ to monitor and manage many aspects of a Ceph cluster and related components.
 See the Dashboard documentation at http://docs.ceph.com/ for details and a
 detailed feature overview. This package also includes disk failure prediction
 module using local algorithms and machine-learning databases.
+%else
+%package        mgr-diskprediction-local
+Summary:        Ceph Manager module for predicting disk failures
+Requires:       ceph-mgr%{?_isa} = %{version}-%{release}
+Requires:       python3dist(numpy)
+Requires:       python3dist(scipy)
+
+%description    mgr-diskprediction-local
+ceph-mgr-diskprediction-local is a ceph-mgr module that tries to predict
+disk failures using local algorithms and machine-learning databases.
+%endif
 
 %package        mgr-orchestration
 Summary:        Ceph Manager orchestration modules
@@ -898,6 +913,11 @@ install -m 644 -D monitoring/ceph-mixin/dashboards_out/* %{buildroot}/etc/grafan
 
 # SNMP MIB
 install -m 644 -D -t %{buildroot}%{_datadir}/snmp/mibs monitoring/snmp/CEPH-MIB.txt
+
+%if %{without mgr_dashboard}
+# cmake installs the module even without the frontend
+rm -rf %{buildroot}%{_datadir}/ceph/mgr/dashboard
+%endif
 
 mv %{buildroot}%{_exec_prefix}/sbin/ceph-create-keys %{buildroot}%{_bindir}/
 
@@ -1229,10 +1249,15 @@ if [ $1 -ge 1 ] ; then
   fi
 fi
 
+%if %{with mgr_dashboard}
 %files mgr-dashboard
 %{_datadir}/ceph/mgr/dashboard
 # diskprediction_local (merged from ceph-mgr-diskprediction-local)
 %{_datadir}/ceph/mgr/diskprediction_local
+%else
+%files mgr-diskprediction-local
+%{_datadir}/ceph/mgr/diskprediction_local
+%endif
 
 %files mgr-orchestration
 # cephadm module (merged from ceph-mgr-cephadm)
