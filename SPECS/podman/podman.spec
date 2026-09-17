@@ -50,6 +50,7 @@ Requires:       conmon
 Requires:       crun
 Requires:       passt
 Requires:       netavark
+Requires:       tini
 
 %description
 Podman (the POD MANager) is a tool for managing containers and images,
@@ -58,6 +59,9 @@ containers.
 
 # no configure scripts
 %conf
+
+%install -a
+ln -s %{_bindir}/tini %{buildroot}%{_libexecdir}/podman/catatonit
 
 # TODO: enable tests when we have bats
 %check
@@ -72,6 +76,7 @@ containers.
 %{_datadir}/fish/vendor_completions.d/podman*.fish
 %{_datadir}/zsh/site-functions/_podman*
 %dir %{_libexecdir}/podman
+%{_libexecdir}/podman/catatonit
 %{_libexecdir}/podman/quadlet
 %{_libexecdir}/podman/rootlessport
 %{_mandir}/man*/podman*
