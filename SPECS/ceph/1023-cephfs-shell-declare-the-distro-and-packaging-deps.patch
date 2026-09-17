@@ -1,0 +1,39 @@
+From e3441ca9efe97aefba4668d4d5f3f74bcb76a82b Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Wed, 16 Sep 2026 19:07:20 -0700
+Subject: [PATCH] cephfs-shell: declare the distro and packaging deps
+
+The shell imports both at startup.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ ceph.spec.in                    | 2 ++
+ src/tools/cephfs/shell/setup.py | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/ceph.spec.in b/ceph.spec.in
+index 4dc67f78cc30..c70d5dc0f0f3 100644
+--- a/ceph.spec.in
++++ b/ceph.spec.in
+@@ -1574,6 +1574,8 @@ It also contains utilities used for the cephadm orchestrator.
+ Summary:    Interactive shell for Ceph file system
+ Requires:   python3dist(cmd2)
+ Requires:   python3dist(colorama)
++Requires:   python3dist(distro)
++Requires:   python3dist(packaging)
+ Requires:   python3-cephfs
+ %description -n cephfs-shell
+ This package contains an interactive tool that allows accessing a Ceph
+diff --git a/src/tools/cephfs/shell/setup.py b/src/tools/cephfs/shell/setup.py
+index 8cf7f28f7d54..b2f1ae9f4bd3 100644
+--- a/src/tools/cephfs/shell/setup.py
++++ b/src/tools/cephfs/shell/setup.py
+@@ -14,6 +14,8 @@
+         'cephfs',
+         'cmd2',
+         'colorama',
++        'distro',
++        'packaging',
+     ],
+     classifiers=[
+         'Development Status :: 3 - Alpha',

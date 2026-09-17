@@ -1,0 +1,48 @@
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Subject: [PATCH] ceph-crash: fall back on a missing keyring too
+
+https://github.com/ceph/ceph/pull/71853, two commits:
+
+ceph: exit with ENOENT when connecting fails with it
+
+  Like EACCES, so callers can tell a missing keyring from other failures.
+
+ceph-crash: fall back on a missing keyring too
+
+  Since 3a0f9ee5099 post_crash() only tries the next auth name on EACCES,
+  but a name without a keyring fails with ENOENT. A host without a
+  client.crash.<hostname> key stopped there and posted nothing.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+  src/ceph-crash.in | 2 +-
+  src/ceph.in       | 3 +++
+  2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/ceph-crash.in b/src/ceph-crash.in
+index 25d7ca4..22c2d17 100644
+--- a/src/ceph-crash.in
++++ b/src/ceph-crash.in
+@@ -59,7 +59,7 @@ def post_crash(path):
+         f.close()
+         if rc == 0 and stderr == "":
+             break
+-        if rc == errno.EACCES:
++        if rc in (errno.EACCES, errno.ENOENT):
+             log.debug('post %s as %s failed: %s' % (path, n, stderr))
+         else:
+             log.warning('post %s as %s failed: %s' % (path, n, stderr))
+diff --git a/src/ceph.in b/src/ceph.in
+index 8872556..d8f4fc0 100644
+--- a/src/ceph.in
++++ b/src/ceph.in
+@@ -1096,6 +1096,9 @@ def main():
+     except rados.PermissionDeniedError as e:
+         print(str(e), file=sys.stderr)
+         return errno.EACCES
++    except rados.ObjectNotFound as e:
++        print(str(e), file=sys.stderr)
++        return errno.ENOENT
+     except Exception as e:
+         print(str(e), file=sys.stderr)
+         return 1

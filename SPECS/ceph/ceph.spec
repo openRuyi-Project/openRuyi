@@ -448,6 +448,12 @@ Requires:       luarocks
 1020-fix-AbstractWriteLog.patch
 # https://github.com/ceph/ceph/pull/71055
 1021-common-options-use-full-libdir-for-osd_class_dir.patch
+# https://github.com/ceph/ceph/pull/71851
+1022-systemd-keep-the-FUSE-mount-of-ceph-fuse-service-visible.patch
+# https://github.com/ceph/ceph/pull/71852
+1023-cephfs-shell-declare-the-distro-and-packaging-deps.patch
+# https://github.com/ceph/ceph/pull/71853
+1024-ceph-crash-fall-back-on-a-missing-keyring-too.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
@@ -497,6 +503,8 @@ with systemd and podman.
 Summary:        Interactive shell for Ceph file system
 Requires:       python3dist(cmd2)
 Requires:       python3dist(colorama)
+Requires:       python3dist(distro)
+Requires:       python3dist(packaging)
 Requires:       python-cephfs%{?_isa} = %{version}-%{release}
 
 %description -n cephfs-shell
