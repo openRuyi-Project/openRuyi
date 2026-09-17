@@ -40,7 +40,7 @@
 %global _fortify_level 0
 %endif
 
-%global commit      7abb41e487eac2be2a5df223ed89e862f894b7dc
+%global commit      35ae58662739d4fa9ffd16be32814ec8997b3a71
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 # Submodule SHAs pinned by the ceph.git snapshot above (.gitmodules + tree).
@@ -71,14 +71,14 @@
 %global sub_seastar                     cced0236ee7cb4e157b5a37fd9076d62c5be4f58
 %global sub_utf8proc                    d7bf128df773c2a1a7242eb80e51e91a769fc985
 %global sub_xxhash                      e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
-%global sub_nvmeof_gateway              165faedf2c11ffd966e5746770e11741fa5bbcdf
+%global sub_nvmeof_gateway              5e04ca9a89c5333004d2c3ff8114d91f0d0deac4
 # Boost is not a submodule; make-dist downloads 1.87.0 and concatenates the
 # tarball into the official release.
 %global boost_version       1.87.0
 %global boost_underscore    1_87_0
 
 Name:           ceph
-Version:        21.3.0+git20260811.%{shortcommit}
+Version:        21.3.0+git20260917.%{shortcommit}
 Release:        %autorelease
 Summary:        User space components of the Ceph file system
 License:        LGPL-2.1-or-later AND LGPL-3.0-only AND CC-BY-SA-3.0 AND GPL-2.0-only AND BSL-1.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT
@@ -87,7 +87,7 @@ VCS:            git:https://github.com/ceph/ceph
 # GitHub archive tarball contains empty submodule placeholder dirs only.
 # download.ceph.com only publishes bundled tarballs (submodules + boost) for
 # tagged releases, so we reassemble from per-submodule archives below.
-#!RemoteAsset:  sha256:3e589afd6712505e9f988bea235c5dcb39de65dba1b22280c3c23124d71c3a8c
+#!RemoteAsset:  sha256:f5fbc10907217724a206fa694617036874d797c5663260ce558893dc02fb799e
 Source0:        https://github.com/ceph/ceph/archive/%{commit}/ceph-%{commit}.tar.gz
 Source1:        ceph.sysusers
 Source2:        cephadm.sysusers
@@ -145,7 +145,7 @@ Source32:       https://github.com/ben-strasser/fast-cpp-csv-parser/archive/%{su
 #!RemoteAsset:  sha256:ced53d8e21e06b50a75e88b6bf8e2ef8ac1a21e2f30121a57b406648d247df4c
 Source33:       https://github.com/Tencent/rapidjson/archive/%{sub_s3select_rapidjson}.tar.gz#/rapidjson-%{sub_s3select_rapidjson}.tar.gz
 # Only control/proto/*.proto is consumed, to build ceph-nvmeof-monitor-client.
-#!RemoteAsset:  sha256:c9e741c65615a83f5a30c88433a31166365e3be536aaee290a3dd00d7041597f
+#!RemoteAsset:  sha256:657fb86a2646a4445b79ab9d74cb15a74fe82cbb4f3b1dd57c98fb0e41ffd9d6
 Source34:       https://github.com/ceph/ceph-nvmeof/archive/%{sub_nvmeof_gateway}.tar.gz#/ceph-nvmeof-%{sub_nvmeof_gateway}.tar.gz
 # Skipped submodules (not required by the current build options):
 #   src/breakpad        (WITH_BREAKPAD=OFF below)
@@ -447,10 +447,6 @@ Requires:       luarocks
 %patchlist
 # https://github.com/ceph/ceph/pull/70955
 1019-test-rgw-link-unittest_rgw_posix_driver-against-rgw_.patch
-# https://github.com/ceph/ceph/pull/69898
-1020-fix-AbstractWriteLog.patch
-# https://github.com/ceph/ceph/pull/71055
-1021-common-options-use-full-libdir-for-osd_class_dir.patch
 # https://github.com/ceph/ceph/pull/71851
 1022-systemd-keep-the-FUSE-mount-of-ceph-fuse-service-visible.patch
 # https://github.com/ceph/ceph/pull/71852
@@ -934,6 +930,7 @@ mv %{buildroot}%{_exec_prefix}/sbin/ceph-create-keys %{buildroot}%{_bindir}/
 %{_bindir}/ceph-create-keys
 %dir %{_libexecdir}/ceph
 %{_libexecdir}/ceph/ceph_common.sh
+%{_libexecdir}/ceph/block-device-health
 %dir %{_libdir}/rados-classes
 %{_libdir}/rados-classes/*
 %dir %{_libdir}/ceph
