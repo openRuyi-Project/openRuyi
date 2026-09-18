@@ -1,0 +1,58 @@
+From a929298403411f28280ad7b262bdba8c387e1ecc Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Fri, 18 Sep 2026 17:23:48 +0800
+Subject: [PATCH] scripts/getsummary: fix size pattern matching to avoid
+ confusion with mount info
+
+In `scripts/getsummary`, the patterns `/size=0/`, `/size=16/`, and `/size=64/`
+could falsely match mount table entries in the result output, for example:
+
+  [mount: tmpfs on /run/user/0 type tmpfs (...,size=1633652k,...)]
+  [mount: tmpfs on /run/user/1000 type tmpfs (...,size=1633652k,...)]
+
+On K3 Pico-ITX (8 cores, 16G RAM), these mount lines contain "size=16..."
+which confused the parser, causing it to stop prematurely before reaching the
+actual benchmark data like `"size=16k ovr=2.58` — resulting in data extraction
+failures during `make see`.
+
+Fix: anchor the regexes with a leading double-quote (`"size=0`, `"size=16`,
+`"size=64`) so they only match the actual benchmark result lines and not
+mount table entries.
+---
+ scripts/getsummary | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/getsummary b/scripts/getsummary
+index 4d54fea..476631f 100755
+--- a/scripts/getsummary
++++ b/scripts/getsummary
+@@ -315,7 +315,7 @@ foreach $file (@ARGV) {
+ 				}
+ 			}
+ 		}
+-		if (/size=0/) {
++		if (/"size=0/) {
+ 			while (<FD>) {
+ 				if (/^2 /) {
+ 					@_ = split; push(@lat_ctx0_2, $_[1]);
+@@ -327,7 +327,7 @@ foreach $file (@ARGV) {
+ 			    	last if /^\s*$/ || /^Memory/;
+ 			}
+ 		}
+-		if (/size=16/) {
++		if (/"size=16/) {
+ 			while (<FD>) {
+ 				if (/^2 /) {
+ 					@_ = split; push(@lat_ctx16_2, $_[1]);
+@@ -339,7 +339,7 @@ foreach $file (@ARGV) {
+ 			    	last if /^\s*$/;
+ 			}
+ 		}
+-		if (/size=64/) {
++		if (/"size=64/) {
+ 			while (<FD>) {
+ 				if (/^2 /) {
+ 					@_ = split; push(@lat_ctx64_2, $_[1]);
+-- 
+2.34.1
+
