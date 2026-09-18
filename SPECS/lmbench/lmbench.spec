@@ -22,6 +22,7 @@ BuildSystem:    autotools
 Patch2000:      2000-Fix-build-errors.patch
 # Change default mail setting from "yes" to "no"
 Patch2001:      2001-set-no-mail.patch
+Patch2002:      2002-scripts-getsummary-fix-size-pattern-matching-to-avoi.patch
 
 BuildRequires:  libtirpc-devel
 
