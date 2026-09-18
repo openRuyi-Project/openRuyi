@@ -10,21 +10,17 @@
 %global _lto_cflags %{nil}
 
 Name:           flashrom
-Version:        1.7.0
+Version:        1.8.0
 Release:        %autorelease
 Summary:        Utility for identifying, reading, writing, verifying and erasing flash chips
 License:        GPL-2.0-only
 URL:            https://www.flashrom.org/
 VCS:            git:https://review.coreboot.org/flashrom
-#!RemoteAsset:  sha256:4328ace9833f7efe7c334bdd73482cde8286819826cc00149e83fba96bf3ab4f
+#!RemoteAsset:  sha256:654c9c61745c250cd3b5ccd0e56fc43ee76980f92a5e078420420639d66975a2
 Source:         https://download.flashrom.org/releases/flashrom-v%{version}.tar.xz
 BuildSystem:    meson
 
 BuildOption(conf):  --auto-features=auto
-
-# This patch is included in flashrom's main branch
-# Drop it if a new release comes out
-Patch0:         0001-avoid_POSIX_C_SOURCE_redefinition.patch
 
 BuildRequires:  meson
 BuildRequires:  ninja
