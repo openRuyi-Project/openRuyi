@@ -5,14 +5,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libjaylink
-Version:        0.4.0
+Version:        0.5.0
 Release:        %autorelease
 Summary:        A library to access SEGGER J-Link and compatible devices
 # Note: future versions of libjaylink changed to LGPL-2.1-or-later
 License:        GPL-2.0-or-later
 URL:            https://gitlab.zapb.de/libjaylink/libjaylink
 VCS:            git:https://gitlab.zapb.de/libjaylink/libjaylink
-#!RemoteAsset:  sha256:5557d623934a4bbc053c11f9a181375d7abeb76af910696d9e3d9b1de3bf6987
+#!RemoteAsset:  sha256:235b12d161b29d813026704f335536a6a916646ea2058302e4ca45ca2cd81325
 Source:         https://gitlab.zapb.de/%{name}/%{name}/-/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -35,7 +35,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %{summary}.
 
 %files
-%{_libdir}/libjaylink.so.0.2.1
+%{_libdir}/libjaylink.so.0.2.2
 %{_libdir}/libjaylink.so.0
 
 %files devel
