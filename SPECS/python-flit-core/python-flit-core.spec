@@ -33,8 +33,10 @@ URL:            https://flit.pypa.io/
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
+%if %{with bootstrap}
+BuildRequires:  python3-bootstrap-devel
+%else
 BuildRequires:  pkgconfig(python3)
-%if %{without bootstrap}
 BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 %endif
@@ -42,7 +44,7 @@ BuildRequires:  python3dist(pip)
 # RPM generators are not yet available when we bootstrap
 %if %{with bootstrap}
 Provides:       python3dist(flit-core) = %{version}-%{release}
-
+Provides:       python%{python3_version}dist(flit-core) = %{version}-%{release}
 Requires:       python(abi) = %{python3_version}
 %else
 Provides:       python3-%{srcname} = %{version}-%{release}
