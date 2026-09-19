@@ -1,0 +1,79 @@
+From 2868f0319dc95bac7b7add482a57e285d616ef89 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 11:08:19 +0800
+Subject: [PATCH] tests: wait for Raft connection cleanup after route recovery
+
+The leak test sleeps for one second after resuming a route and then
+checks connection counts once. A riscv64 build observed ten connections
+at that point. Use the existing bounded wait helper to allow asynchronous
+cleanup to settle, retaining the same num < 10 requirement and failing
+if it does not hold within ten seconds.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/clustering_test.go | 45 ++++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
+
+diff --git a/server/clustering_test.go b/server/clustering_test.go
+index 86da36a..863ba0e 100644
+--- a/server/clustering_test.go
++++ b/server/clustering_test.go
+@@ -9026,30 +9026,35 @@ func TestClusteringRaftSubsAndConnsLeak(t *testing.T) {
+ 
+ 			time.Sleep(time.Second)
+ 
+-			conns, err := ns1.Connz(&natsd.ConnzOptions{Subscriptions: true})
+-			if err != nil {
+-				t.Fatalf("Error getting connz: %v", err)
+-			}
+-			num := uint32(0)
+-			for _, conn := range conns.Conns {
+-				if test.nodesConnections {
+-					if strings.Contains(conn.Name, "-a-to-") {
+-						num++
+-					}
+-				} else if strings.HasSuffix(conn.Name, "-raft") {
+-					for _, sub := range conn.Subs {
+-						if strings.Contains(sub, ".request.") {
++			// Connection cleanup is asynchronous after the route recovers.
++			// Preserve the leak threshold, but wait for cleanup to settle.
++			waitFor(t, 10*time.Second, 50*time.Millisecond, func() error {
++				conns, err := ns1.Connz(&natsd.ConnzOptions{Subscriptions: true})
++				if err != nil {
++					return fmt.Errorf("error getting connz: %v", err)
++				}
++				num := uint32(0)
++				for _, conn := range conns.Conns {
++					if test.nodesConnections {
++						if strings.Contains(conn.Name, "-a-to-") {
+ 							num++
+ 						}
++					} else if strings.HasSuffix(conn.Name, "-raft") {
++						for _, sub := range conn.Subs {
++							if strings.Contains(sub, ".request.") {
++								num++
++							}
++						}
++						break
+ 					}
+-					break
+ 				}
+-			}
+-			// If "num" is greater than, say, 10 (for any mode), then it is indicative
+-			// of the issue.
+-			if num >= 10 {
+-				t.Fatalf("Unexpected number of subs/conns: %v", num)
+-			}
++				// If "num" is greater than, say, 10 (for any mode), then it is indicative
++				// of the issue.
++				if num >= 10 {
++					return fmt.Errorf("unexpected number of subs/conns: %v", num)
++				}
++				return nil
++			})
+ 		})
+ 	}
+ }
+-- 
+2.52.0
+
