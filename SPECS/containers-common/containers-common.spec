@@ -14,6 +14,9 @@ URL:            https://github.com/containers/container-libs
 Source:         https://github.com/containers/container-libs/archive/refs/tags/common/v%{version}.tar.gz
 BuildArch:      noarch
 
+# https://github.com/podman-container-tools/container-libs/pull/1203
+Patch2000:      2000-seccomp-allow-riscv_hwprobe.patch
+
 BuildRequires:  go
 BuildRequires:  go-md2man
 
@@ -21,7 +24,7 @@ BuildRequires:  go-md2man
 Monorepository with libraries used by the containers projects.
 
 %prep
-%autosetup -n container-libs-common-v%{version}
+%autosetup -p1 -n container-libs-common-v%{version}
 
 %build
 mkdir -p man5

@@ -1,0 +1,41 @@
+From 45bfa0b68bf93bd6eba219cac2bcecd88353196f Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 19 Sep 2026 11:45:50 -0700
+Subject: [PATCH] seccomp: riscv: allow riscv_hwprobe
+
+riscv_hwprobe only reads CPU feature information. OpenSSL and zlib-ng
+use it to detect ISA extensions; when it fails with ENOSYS they
+silently fall back to scalar code.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ common/pkg/seccomp/default_linux.go | 1 +
+ common/pkg/seccomp/seccomp.json     | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/common/pkg/seccomp/default_linux.go b/common/pkg/seccomp/default_linux.go
+index b74a113bda..6d892a9e16 100644
+--- a/common/pkg/seccomp/default_linux.go
++++ b/common/pkg/seccomp/default_linux.go
+@@ -583,6 +583,7 @@ func DefaultProfile() *Seccomp {
+ 		{
+ 			Names: []string{
+ 				"riscv_flush_icache",
++				"riscv_hwprobe",
+ 			},
+ 			Action: ActAllow,
+ 			Args:   []*Arg{},
+diff --git a/common/pkg/seccomp/seccomp.json b/common/pkg/seccomp/seccomp.json
+index 6ccf86dcdb..e5e30783aa 100644
+--- a/common/pkg/seccomp/seccomp.json
++++ b/common/pkg/seccomp/seccomp.json
+@@ -647,7 +647,8 @@
+ 		},
+ 		{
+ 			"names": [
+-				"riscv_flush_icache"
++				"riscv_flush_icache",
++				"riscv_hwprobe"
+ 			],
+ 			"action": "SCMP_ACT_ALLOW",
+ 			"args": [],
