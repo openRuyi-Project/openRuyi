@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name normpath
-%global full_version 1.5.0
+%global full_version 1.5.1
 %global pkgname normpath-1
 
 Name:           rust-normpath-1
-Version:        1.5.0
+Version:        1.5.1
 Release:        %autorelease
 Summary:        Rust crate "normpath"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/dylni/normpath
-#!RemoteAsset:  sha256:bf23ab2b905654b4cb177e30b629937b3868311d4e1cba859f899c041046e69b
+#!RemoteAsset:  sha256:b9985ef7269fa99f3b12437bb698381da2428743ab90f20393f399fa14cab21a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,6 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(windows-sys-0.61/default) >= 0.61.0
 Requires:       crate(windows-sys-0.61/win32-storage-filesystem) >= 0.61.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 
@@ -61,13 +62,17 @@ This metapackage enables feature "serde" for the Rust normpath crate, by pulling
 %package     -n %{name}+uniquote
 Summary:        More reliable path manipulation - feature "uniquote"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(uniquote-4/default) >= 4.0.0
+Requires:       crate(uniquote-5/default) >= 5.0.0
+Requires:       crate(uniquote-5/os-str-bytes) >= 5.0.0
 Provides:       crate(%{pkgname}/uniquote) = %{version}
 
 %description -n %{name}+uniquote
 This metapackage enables feature "uniquote" for the Rust normpath crate, by pulling in any additional dependencies needed by that feature.
 
 %files
+%license LICENSE-APACHE
+%license LICENSE-MIT
+%license LICENSE-THIRD-PARTY
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog

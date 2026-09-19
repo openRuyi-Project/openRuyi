@@ -1,0 +1,105 @@
+[package]
+authors = ["David Peter <mail@david-peter.de>"]
+categories = ["command-line-utilities"]
+description = "fd is a simple, fast and user-friendly alternative to find."
+exclude = ["/benchmarks/*"]
+homepage = "https://github.com/sharkdp/fd"
+documentation = "https://docs.rs/fd-find"
+keywords = [
+    "search",
+    "find",
+    "file",
+    "filesystem",
+    "tool",
+]
+license = "MIT OR Apache-2.0"
+name = "fd-find"
+readme = "README.md"
+repository = "https://github.com/sharkdp/fd"
+version = "10.5.0"
+edition= "2024"
+rust-version = "1.90.0"
+
+[badges.appveyor]
+repository = "sharkdp/fd"
+
+[badges.travis-ci]
+repository = "sharkdp/fd"
+
+[[bin]]
+name = "fd"
+path = "src/main.rs"
+
+[dependencies]
+aho-corasick = "1.1"
+nu-ansi-term = "0.50"
+argmax = "0.4.0"
+ignore = "0.4.25"
+regex = "1.12.2"
+regex-syntax = "0.8"
+ctrlc = "3.5"
+globset = "0.4"
+anyhow = "1.0"
+etcetera = "0.11"
+normpath = "1.5.1"
+crossbeam-channel = "0.5.15"
+clap_complete = {version = "4.6.5", optional = true}
+faccess = "0.2.4"
+jiff = "0.2.27"
+
+[dependencies.clap]
+version = "4.6.1"
+features = ["suggestions", "color", "wrap_help", "cargo", "derive"]
+
+[dependencies.lscolors]
+version = "0.21"
+default-features = false
+features = ["nu-ansi-term"]
+
+[target.'cfg(unix)'.dependencies]
+nix = { version = "0.31.1", default-features = false, features = ["signal", "user", "hostname"] }
+
+[target.'cfg(all(unix, not(target_os = "redox")))'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+diff = "0.1"
+tempfile = "3.27"
+filetime = "0.2"
+test-case = "3.3"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+
+[profile.debugging]
+inherits = "dev"
+debug = true
+
+[profile.release]
+lto = true
+strip = false
+codegen-units = 1
+
+[features]
+completions = ["clap_complete"]
+default = ["completions"]
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/{ name }-v{ version }-{ target }.{ archive-format }"
+bin-dir = "{ bin }-v{ version }-{ target }/{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-gnu]
+pkg-fmt = "zip"
+
+[package.metadata.binstall.overrides.i686-pc-windows-msvc]
+pkg-fmt = "zip"
+
+[package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
+pkg-fmt = "zip"

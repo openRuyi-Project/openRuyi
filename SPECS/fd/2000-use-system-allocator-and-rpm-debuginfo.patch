@@ -1,0 +1,68 @@
+From: LI GUAN <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] Use the system allocator and preserve RPM debug information
+
+The optional jemalloc allocator is disabled in upstream default builds.
+Remove the unused dependency for offline system-registry resolution and
+let RPM handle stripping.
+
+Signed-off-by: LI GUAN <guanli.oerv@isrc.iscas.ac.cn>
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -62,14 +62,6 @@
+ [target.'cfg(all(unix, not(target_os = "redox")))'.dependencies]
+ libc = "0.2"
+ 
+-# FIXME: Re-enable jemalloc on macOS
+-# jemalloc is currently disabled on macOS due to a bug in jemalloc in combination with macOS
+-# Catalina. See https://github.com/sharkdp/fd/issues/498 for details.
+-# This has to be kept in sync with src/main.rs where the allocator for
+-# the program is set.
+-[target.'cfg(all(not(windows), not(target_os = "android"), not(target_os = "macos"), not(target_os = "freebsd"), not(target_os = "openbsd"), not(target_os = "illumos"), not(all(target_env = "musl", target_pointer_width = "32")), not(target_arch = "riscv64")))'.dependencies]
+-tikv-jemallocator = {version = "0.7.0", optional = true}
+-
+ [dev-dependencies]
+ diff = "0.1"
+ tempfile = "3.27"
+@@ -88,13 +80,11 @@
+ 
+ [profile.release]
+ lto = true
+-strip = true
++strip = false
+ codegen-units = 1
+ 
+ [features]
+-use-jemalloc = ["tikv-jemallocator"]
+ completions = ["clap_complete"]
+-base = ["use-jemalloc"]
+ default = ["completions"]
+ 
+ [package.metadata.binstall]
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -34,24 +34,6 @@
+ use crate::filter::OwnerFilter;
+ use crate::filter::TimeFilter;
+ use crate::regex_helper::{pattern_has_uppercase_char, pattern_matches_strings_with_leading_dot};
+-
+-// We use jemalloc for performance reasons, see https://github.com/sharkdp/fd/pull/481
+-// FIXME: re-enable jemalloc on macOS, see comment in Cargo.toml file for more infos
+-// This has to be kept in sync with the Cargo.toml file section that declares a
+-// dependency on tikv-jemallocator.
+-#[cfg(all(
+-    not(windows),
+-    not(target_os = "android"),
+-    not(target_os = "macos"),
+-    not(target_os = "freebsd"),
+-    not(target_os = "openbsd"),
+-    not(target_os = "illumos"),
+-    not(all(target_env = "musl", target_pointer_width = "32")),
+-    not(target_arch = "riscv64"),
+-    feature = "use-jemalloc"
+-))]
+-#[global_allocator]
+-static ALLOC: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
+ 
+ // vivid --color-mode 8-bit generate molokai
+ const DEFAULT_LS_COLORS: &str = "

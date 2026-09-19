@@ -4,25 +4,26 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name jiff
-%global full_version 0.2.24
+%global full_version 0.2.27
 %global pkgname jiff-0.2
 
 Name:           rust-jiff-0.2
-Version:        0.2.24
+Version:        0.2.27
 Release:        %autorelease
 Summary:        Rust crate "jiff"
 License:        Unlicense OR MIT
 URL:            https://github.com/BurntSushi/jiff
-#!RemoteAsset:  sha256:f00b5dbd620d61dfdcb6007c9c1f6054ebd75319f163d886a9055cec1155073d
+#!RemoteAsset:  sha256:392c70591e8749fe235ddaf513e6f58b26bce3dcc16524cecc8936f75afa161e
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(jiff-static-0.2/default) >= 0.2.24
+Requires:       crate(jiff-static-0.2/default) >= 0.2.27
 Requires:       crate(portable-atomic-1) >= 1.10.0
 Requires:       crate(portable-atomic-util-0.2) >= 0.2.4
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/perf-inline) = %{version}
 
@@ -92,7 +93,7 @@ This metapackage enables feature "serde" for the Rust jiff crate, by pulling in 
 Summary:        Date-time library that encourages you to jump into the pit of success - feature "static"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/static-tz) = %{version}
-Requires:       crate(jiff-static-0.2/tzdb) >= 0.2.24
+Requires:       crate(jiff-static-0.2/tzdb) >= 0.2.27
 Provides:       crate(%{pkgname}/static) = %{version}
 
 %description -n %{name}+static
@@ -102,7 +103,7 @@ This metapackage enables feature "static" for the Rust jiff crate, by pulling in
 %package     -n %{name}+static-tz
 Summary:        Date-time library that encourages you to jump into the pit of success - feature "static-tz"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(jiff-static-0.2/default) >= 0.2.24
+Requires:       crate(jiff-static-0.2/default) >= 0.2.27
 Provides:       crate(%{pkgname}/static-tz) = %{version}
 
 %description -n %{name}+static-tz
@@ -128,7 +129,7 @@ Additionally, this package also provides the "tzdb-concatenated", and "tzdb-zone
 %package     -n %{name}+tz-fat
 Summary:        Date-time library that encourages you to jump into the pit of success - feature "tz-fat"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(jiff-static-0.2/tz-fat) >= 0.2.24
+Requires:       crate(jiff-static-0.2/tz-fat) >= 0.2.27
 Provides:       crate(%{pkgname}/tz-fat) = %{version}
 
 %description -n %{name}+tz-fat
@@ -139,8 +140,7 @@ This metapackage enables feature "tz-fat" for the Rust jiff crate, by pulling in
 Summary:        Date-time library that encourages you to jump into the pit of success - feature "tz-system"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/std) = %{version}
-Requires:       crate(windows-sys-0.52/win32-foundation) >= 0.52.0
-Requires:       crate(windows-sys-0.52/win32-system-time) >= 0.52.0
+Requires:       crate(windows-link-0.2/default) >= 0.2.1
 Provides:       crate(%{pkgname}/tz-system) = %{version}
 
 %description -n %{name}+tz-system
@@ -170,6 +170,9 @@ This library is heavily inspired by the Temporal project.
 This metapackage enables feature "tzdb-bundle-platform" for the Rust jiff crate, by pulling in any additional dependencies needed by that feature.
 
 %files
+%license COPYING
+%license LICENSE-MIT
+%license UNLICENSE
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
