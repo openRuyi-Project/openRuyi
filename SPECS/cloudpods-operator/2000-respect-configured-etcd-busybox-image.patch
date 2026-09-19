@@ -1,0 +1,29 @@
+From 844387f47a91bc477b427449f98501b6b54eabc7 Mon Sep 17 00:00:00 2001
+From: Jiayi Yin <jiayi@iscas.ac.cn>
+Date: Tue, 18 Aug 2026 09:15:15 +0800
+Subject: [PATCH] fix: respect configured etcd busybox image
+
+Signed-off-by: Jiayi Yin <jiayi@iscas.ac.cn>
+---
+ pkg/manager/component/etcd.go | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/pkg/manager/component/etcd.go b/pkg/manager/component/etcd.go
+index 81d4a1e47..b2b7d464a 100644
+--- a/pkg/manager/component/etcd.go
++++ b/pkg/manager/component/etcd.go
+@@ -395,8 +395,10 @@ func (m *etcdManager) customPodSpec(pod *corev1.Pod, mb *etcdutil.Member, state,
+ 	shareProcessNamespace := true
+ 	pod.Spec.ShareProcessNamespace = &shareProcessNamespace
+ 
+-	pod.Spec.InitContainers[0].Image = fmt.Sprintf("%s:%s",
+-		path.Join(imageRepository, constants.BusyboxImageName), constants.BusyboxImageVersion)
++	if m.oc.Spec.Etcd.Pod == nil || len(m.oc.Spec.Etcd.Pod.BusyboxImage) == 0 {
++		pod.Spec.InitContainers[0].Image = fmt.Sprintf("%s:%s",
++			path.Join(imageRepository, constants.BusyboxImageName), constants.BusyboxImageVersion)
++	}
+ 
+ 	pod.Spec.DNSPolicy = corev1.DNSClusterFirst
+ 	if pod.Spec.Tolerations == nil {
+-- 
+2.54.0
