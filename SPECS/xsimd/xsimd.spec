@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           xsimd
-Version:        14.0.0
+Version:        14.2.0
 Release:        %autorelease
 Summary:        C++ wrappers for SIMD intrinsics and parallelized, optimized math implementations
 License:        BSD-3-Clause
 URL:            https://github.com/xtensor-stack/xsimd
-#!RemoteAsset
+#!RemoteAsset:  sha256:21e841ab684b05331e81e7f782431753a029ef7b7d9d6d3ddab837e7782a40ee
 Source0:        https://github.com/xtensor-stack/xsimd/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -36,4 +37,4 @@ parallelized, optimized mathematical functions.
 %{_libdir}/pkgconfig/xsimd.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

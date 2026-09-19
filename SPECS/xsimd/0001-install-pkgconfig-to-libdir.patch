@@ -1,6 +1,6 @@
---- xsimd-14.0.0/CMakeLists.txt.orig
-+++ xsimd-14.0.0/CMakeLists.txt
-@@ -166,4 +166,4 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,4 +109,4 @@
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
                  @ONLY)
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"

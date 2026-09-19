@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -35,6 +36,8 @@ Source3:        nscd.service
 Source4:        nscd.sysusers
 %endif
 
+# https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=7cba77790f3279bec3ac20e9c7632b021cd53f95
+Patch0001:      0001-fix-sinh-worst-case-results.patch
 # For obvious reasons.
 Patch2000:      glibc-2.4-china.diff
 
