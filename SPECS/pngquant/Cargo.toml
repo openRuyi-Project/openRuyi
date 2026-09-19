@@ -1,0 +1,56 @@
+[package]
+name = "pngquant"
+version = "3.0.3"
+authors = ["Kornel Lesiński <kornel@pngquant.org>"]
+description = "Convert 24/32-bit PNG images to efficient 8-bit format with alpha channel"
+build = "rust/build.rs"
+categories = ["multimedia::images"]
+homepage = "https://pngquant.org"
+documentation = "https://github.com/kornelski/pngquant#readme"
+include = ["/rwpng*.[ch]", "/pngquant.c","/pngquant_opts.[ch]", "/rust/*.rs", "/COPYRIGHT", "/Cargo.toml", "/README.md"]
+keywords = ["quantization", "palette", "image", "pngquant", "compression"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/kornelski/pngquant.git"
+edition = "2021"
+rust-version = "1.63"
+
+[[bin]]
+name = "pngquant"
+path = "rust/bin.rs"
+
+[build-dependencies]
+cc = "1.0.72"
+dunce = "1.0.4"
+
+[dependencies]
+getopts = "0.2.21"
+libc = "0.2.112"
+libpng-sys = { version = "1.1.9", default-features = false }
+wild = "2.2.0"
+imagequant-sys = { version = "4.0.3" }
+
+[dependencies.lcms2-sys]
+optional = true
+version = "4.0.3"
+default-features = false
+features = ["dynamic"]
+
+[features]
+cocoa = []
+default = ["lcms2"]
+lcms2 = ["dep:lcms2-sys"]
+lcms2-static = ["lcms2", "lcms2-sys?/static"]
+png-static = ["libpng-sys/static"]
+z-static = ["libpng-sys/static-libz"]
+static = ["lcms2-static", "png-static"]
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+lto = true
+panic = "abort"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+rustdoc-args = ["--generate-link-to-definition"]

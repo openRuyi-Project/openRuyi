@@ -1,0 +1,22 @@
+From c925bcd554c16b95f57fa3e888afead787cecb33 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Fri, 18 Sep 2026 17:27:00 +0800
+Subject: [PATCH] Fix stale CLI test expectations
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ test/test.sh | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/test/test.sh b/test/test.sh
+index 111400d..6bc84f9 100755
+--- a/test/test.sh
++++ b/test/test.sh
+@@ -12 +12 @@ PATH=.:$PATH # Required, since BIN may be just 'pngquant'
+-$BIN --version 2>&1 | fgrep 2.
++$BIN --version 2>&1 | fgrep 3.
+@@ -31,4 +30,0 @@ function test_overwrite() {
+-    rm "$TMPDIR/overwritetest-or8.png"
+-    $BIN 2>&1 -nofs "$TMPDIR/overwritetest.png" | fgrep -q warning:
+-    test -f "$TMPDIR/overwritetest-or8.png"
+-

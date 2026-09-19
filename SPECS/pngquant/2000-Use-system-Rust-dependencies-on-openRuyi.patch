@@ -1,0 +1,30 @@
+From f411b9ea0e301f98824fd0c63025b411aa8cb3ae Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Fri, 18 Sep 2026 16:22:25 +0800
+Subject: [PATCH] Use system Rust dependencies on openRuyi
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ Cargo.toml | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f5619d9..dbd3284 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -29 +29 @@ libc = "0.2.112"
+-libpng-sys = "1.1.9"
++libpng-sys = { version = "1.1.9", default-features = false }
+@@ -31,5 +31 @@ wild = "2.2.0"
+-imagequant-sys = { version = "4.0.3", path = "lib/imagequant-sys" }
+-
+-[dependencies.cocoa_image]
+-optional = true
+-version = "1.0.6"
++imagequant-sys = { version = "4.0.3" }
+@@ -39,0 +36,2 @@ version = "4.0.3"
++default-features = false
++features = ["dynamic"]
+@@ -42 +40 @@ version = "4.0.3"
+-cocoa = ["dep:cocoa_image"]
++cocoa = []
