@@ -1,0 +1,34 @@
+From 4b213deb5d17710014b48f49f3c15c396429f453 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 13:01:58 +0800
+Subject: [PATCH] Use the current KMS private-key parser
+
+The distribution KMS client uses aead.dev/mtls for API private keys.
+The enclave argument changes are already included in the source snapshot.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ cmd/kes/migrate.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/cmd/kes/migrate.go b/cmd/kes/migrate.go
+index e52f95b..cfabe81 100644
+--- a/cmd/kes/migrate.go
++++ b/cmd/kes/migrate.go
+@@ -16,6 +16,7 @@ import (
+ 	"sync/atomic"
+ 	"time"
+ 
++	"aead.dev/mtls"
+ 	"github.com/minio/kes/internal/cli"
+ 	"github.com/minio/kes/internal/crypto"
+ 	"github.com/minio/kes/kesconf"
+@@ -183,7 +184,7 @@ func migrate(args []string) {
+ 	}
+ 
+ 	// Migrate from a KES backend (--from) to a KMS server (-s / --server).
+-	apiKey, err := kms.ParseAPIKey(kmsAPIKey)
++	apiKey, err := mtls.ParsePrivateKey(kmsAPIKey)
+ 	cli.Assert(err == nil, err)
+ 
+ 	client, err := kms.NewClient(&kms.Config{
