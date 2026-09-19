@@ -1,0 +1,24 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] tests: Use grep -F instead of obsolete fgrep
+
+Recent grep prints a deprecation warning for fgrep.  The directory
+comparison test expects no output, so use the equivalent grep -F form
+without changing the paths being compared.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/src/sanity.sh b/src/sanity.sh
+--- a/src/sanity.sh
++++ b/src/sanity.sh
+@@ -1723,9 +1723,9 @@
+ 	cd $DIR_1
+-	find . -print | fgrep -v /CVS | sort > $TESTDIR/dc$$d1
++	find . -print | grep -F -v /CVS | sort > $TESTDIR/dc$$d1
+ 
+ 	# go back where we were to avoid symlink hell...
+ 	cd $OLDPWD
+ 	cd $DIR_2
+-	find . -print | fgrep -v /CVS | sort > $TESTDIR/dc$$d2
++	find . -print | grep -F -v /CVS | sort > $TESTDIR/dc$$d2
+ 
+ 	if diff $TESTDIR/dc$$d1 $TESTDIR/dc$$d2 >/dev/null 2>&1

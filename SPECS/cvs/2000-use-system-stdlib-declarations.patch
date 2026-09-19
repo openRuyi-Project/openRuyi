@@ -1,0 +1,24 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] build: Use the system allocation declarations
+
+The fallback hand-written malloc and calloc prototypes conflict with
+current C library declarations.  Include stdlib.h unconditionally.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/lib/sighandle.c b/lib/sighandle.c
+--- a/lib/sighandle.c
++++ b/lib/sighandle.c
+@@ -40,11 +40 @@
+-#ifdef STDC_HEADERS
+-#include <stdlib.h>
+-#else
+-#if __STDC__
+-char *calloc(unsigned nelem, unsigned size);
+-char *malloc(unsigned size);
+-#else
+-char *calloc();
+-char *malloc();
+-#endif /* __STDC__ */
+-#endif /* STDC_HEADERS */
++#include <stdlib.h>

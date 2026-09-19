@@ -1,0 +1,24 @@
+Subject: [PATCH] Reject a leading dash in an implicit CVS root
+Origin: https://src.opensuse.org/pool/cvs/src/branch/factory/cvs-Bug-1053364-disallow-dash.patch
+CVE: CVE-2017-12836
+
+Prevent a CVS root beginning with a dash from being interpreted as an
+option by a program invoked by CVS.
+---
+diff --git a/src/root.c b/src/root.c
+--- a/src/root.c
++++ b/src/root.c
+@@ -619,0 +620,13 @@ parse_cvsroot (const char *root_in)
++    else if (*cvsroot_copy == '-')
++    {
++        /* Without an explicit method, the root may begin with a user name,
++           host name, or path.  None needs a leading dash: relative paths can
++           use "./".  Reject it so that a crafted root cannot become an
++           option to a program invoked by CVS.  */
++        error (
++            0,
++            0,
++            "CVSROOT (`%s') must not start with a dash.",
++            cvsroot_copy);
++        goto error_exit;
++    }
