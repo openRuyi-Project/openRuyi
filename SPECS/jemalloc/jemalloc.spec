@@ -5,20 +5,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           jemalloc
-Version:        5.3.1
+Version:        5.4.0
 Release:        %autorelease
 Summary:        general purpose malloc(3) implementation
 License:        BSD-2-Clause
 URL:            https://jemalloc.net/
 VCS:            git:https://github.com/jemalloc/jemalloc
-#!RemoteAsset:  sha256:3826bc80232f22ed5c4662f3034f799ca316e819103bdc7bb99018a421706f92
-Source0:        https://github.com/jemalloc/jemalloc/releases/download/5.3.1/jemalloc-5.3.1.tar.bz2
+#!RemoteAsset:  sha256:200776fac271093e7c2f21edd6d62657ecd2be578d9328633f2a86bfa6ef4f1d
+Source0:        https://github.com/jemalloc/jemalloc/releases/download/5.4.0/jemalloc-5.4.0.tar.bz2
 BuildSystem:    autotools
 
-# Patch0001 is partially picked from https://github.com/jemalloc/jemalloc/pull/2900
-# Note: this patch is already included in jemalloc's dev branch
-# Should be dropped in further releases of jemalloc
-Patch0:         0001-fix-builds-with-gcc-16.patch
 # Use Zihintpause for CPU_SPINWAIT
 Patch2000:      2000-fix-riscv-build-without-zihintpause.patch
 
