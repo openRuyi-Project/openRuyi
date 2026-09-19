@@ -9,9 +9,9 @@ Version:        1.43.1
 Release:        %autorelease
 Summary:        A tool that facilitates building OCI images
 License:        Apache-2.0
-URL:            https://github.com/containers/buildah
+URL:            https://github.com/podman-container-tools/buildah
 #!RemoteAsset:  sha256:7980a8b4fb719a104d592b06de149cc18766de02f8c3dd94e727f8702a62f9cd
-Source:         https://github.com/containers/buildah/archive/v%{version}.tar.gz
+Source:         https://github.com/podman-container-tools/buildah/archive/v%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(install):  DESTDIR=%{buildroot}
