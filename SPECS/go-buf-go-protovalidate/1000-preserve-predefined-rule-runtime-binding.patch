@@ -1,0 +1,41 @@
+From b78a225709097da1191731d59077b87ce940ef67 Mon Sep 17 00:00:00 2001
+From: Sri Krishna <93153132+srikrsna-buf@users.noreply.github.com>
+Date: Wed, 24 Dec 2025 06:15:04 +0000
+Subject: [PATCH] Always provide all available variables (#297)
+
+Closes #296
+
+Because of the partial evaluation step, `rules` and `rule` were
+optimized away for standard rules so far. For some reason, cel-go is
+unable to do the same for field masks. Since this is not clearly
+defined, we should always provide them.
+
+Signed-off-by: Sri Krishna <skrishna@buf.build>
+
+Backport of b90590ade1f6eafc98b9d99075451121a884f7a5:
+Apply the runtime rule binding to the v0.12.0 activation chain. Retain
+its existing rules globals and variable pool; omit the newer bindings
+refactor and field-mask fixtures, which require newer protobuf schemas.
+This also preserves repeated predefined rules with cel-go v0.30.0.
+---
+ program.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/program.go b/program.go
+index a974876..a115dba 100644
+--- a/program.go
++++ b/program.go
+@@ -111,6 +111,10 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
+ 	now := globalNowPool.Get(cfg.nowFn)
+ 	defer globalNowPool.Put(now)
+ 	bindings.Next = now
++	// Partial evaluation may leave references to the predefined rule value.
++	if expr.Value.IsValid() {
++		bindings.Next = &variable{Name: "rule", Val: expr.Value.Interface(), Next: now}
++	}
+ 
+ 	value, _, err := expr.Program.Eval(bindings)
+ 	if err != nil {
+-- 
+2.43.0
+
