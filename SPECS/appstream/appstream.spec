@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           appstream
-Version:        1.1.2
+Version:        1.2.0
 Release:        %autorelease
 Summary:        Utilities to generate, maintain and access the AppStream database
 License:        LGPL-2.1-or-later
 URL:            https://github.com/ximion/appstream
-#!RemoteAsset:  sha256:564ec87b16e9e4ee81fb021e612250fd27f3a3ecd31c209a5dd1ff59def3022d
+#!RemoteAsset:  sha256:02f723cb1afa372d434896e138503163a44ad49e4a813d0d30713fc38ccb8d0c
 Source:         https://github.com/ximion/appstream/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -27,11 +28,12 @@ BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(libcurl)
-BuildRequires:  pkgconfig(libfyaml)
+BuildRequires:  pkgconfig(libfyaml) >= 0.9.5
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(xmlb)
 BuildRequires:  pkgconfig(yaml-0.1)
+BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(Qt6Core)
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  itstool

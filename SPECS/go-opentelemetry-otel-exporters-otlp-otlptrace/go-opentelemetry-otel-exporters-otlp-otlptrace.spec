@@ -7,12 +7,12 @@
 %define go_import_path  go.opentelemetry.io/otel/exporters/otlp/otlptrace
 
 Name:           go-opentelemetry-otel-exporters-otlp-otlptrace
-Version:        1.46.0
+Version:        1.44.0
 Release:        %autorelease
 Summary:        OTLP trace exporter abstractions for OpenTelemetry Go
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-go
-#!RemoteAsset:  sha256:5da7830e37741e46606c10b65f15f16481c2c7f83ee31bb8e833d76376f6331b
+#!RemoteAsset:  sha256:783be7d19f41e47867c1e4d0aeee20a45ebf4b3b90df13b39a8393890a1528b0
 Source0:        https://github.com/open-telemetry/opentelemetry-go/archive/refs/tags/exporters/otlp/otlptrace/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -7,25 +7,21 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           PackageKit
-Version:        1.3.5
+Version:        1.4.0
 Release:        %autorelease
 Summary:        Package management service
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND FSFAP
 URL:            http://www.freedesktop.org/software/PackageKit/
 VCS:            git:https://github.com/PackageKit/PackageKit
-#!RemoteAsset:  sha256:6020dbed2ffb4304a91bb2e8ab27c8c26a24b1a3bea2d1a7b2d7610ef316ef1e
+#!RemoteAsset:  sha256:8a1acd00caae752d5f3165ed821f3f683d80ed2190d62dc11d1196b9b8070f5f
 Source:         https://github.com/PackageKit/PackageKit/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    meson
-
-# remove libdnf package.
-Patch:          0001-remove-libdnf.patch
 
 BuildOption(conf):  -Dgtk_doc=false
 BuildOption(conf):  -Dman_pages=false
 BuildOption(conf):  -Dgtk_module=false
 BuildOption(conf):  -Dpython_backend=false
 BuildOption(conf):  -Dpackaging_backend=dnf5
-BuildOption(conf):  -Dlocal_checkout=true
 BuildOption(conf):  -Dgstreamer_plugin=false
 
 BuildRequires:  meson
@@ -96,8 +92,8 @@ ln -s pkgcli %{buildroot}%{_bindir}/pkmon
 %systemd_post packagekit-offline-update.service packagekit.service
 
 %files -f %{name}.lang
-%license COPYING
 %doc README.md AUTHORS NEWS
+%license COPYING
 %dir %{_datadir}/PackageKit
 %dir %{_sysconfdir}/PackageKit
 %dir %{_localstatedir}/lib/PackageKit
@@ -146,9 +142,9 @@ ln -s pkgcli %{buildroot}%{_bindir}/pkmon
 %files devel
 %{_libdir}/libpackagekit-glib2.so
 %{_libdir}/pkgconfig/packagekit-glib2.pc
-%dir %{_includedir}/PackageKit
-%dir %{_includedir}/PackageKit/packagekit-glib2
-%{_includedir}/PackageKit/packagekit-glib*/*.h
+%dir %{_includedir}/packagekit
+%dir %{_includedir}/packagekit/packagekit-glib2
+%{_includedir}/packagekit/packagekit-glib*/*.h
 %{_datadir}/gir-1.0/PackageKitGlib-1.0.gir
 %{_datadir}/vala/vapi/packagekit-glib2.vapi
 %{_datadir}/vala/vapi/packagekit-glib2.deps

@@ -1,0 +1,25 @@
+diff --git a/onnxruntime/test/providers/cpu/text/string_normalizer_test.cc b/onnxruntime/test/providers/cpu/text/string_normalizer_test.cc
+index 229d239..7170170 100644
+--- a/onnxruntime/test/providers/cpu/text/string_normalizer_test.cc
++++ b/onnxruntime/test/providers/cpu/text/string_normalizer_test.cc
+@@ -61 +61 @@ TEST(ContribOpTest, StringNormalizerSensitiveNoCase) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutNoCase) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutNoCase) {
+@@ -80 +80 @@ TEST(ContribOpTest, StringNormalizerSensitiveFilterOutNoCase) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutLower) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutLower) {
+@@ -97 +97 @@ TEST(ContribOpTest, StringNormalizerSensitiveFilterOutLower) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpper) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutUpper) {
+@@ -115 +115 @@ TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpper) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpperWithLocale) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutUpperWithLocale) {
+@@ -156 +156 @@ TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpperWithLocale) {
+-TEST(ContribOpTest, StringNormalizerInsensitiveFilterOutUpperWithLocale) {
++TEST(ContribOpTest, DISABLED_StringNormalizerInsensitiveFilterOutUpperWithLocale) {
+@@ -198 +198 @@ TEST(ContribOpTest, StringNormalizerInsensitiveFilterOutUpperWithLocale) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpperEmptyCase) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutUpperEmptyCase) {
+@@ -215 +215 @@ TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpperEmptyCase) {
+-TEST(ContribOpTest, StringNormalizerSensitiveFilterOutUpperSameOutput) {
++TEST(ContribOpTest, DISABLED_StringNormalizerSensitiveFilterOutUpperSameOutput) {

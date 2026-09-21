@@ -8,12 +8,12 @@
 %global pypi_name graphql_core
 
 Name:           python-%{srcname}
-Version:        3.2.8
+Version:        3.2.12
 Release:        %autorelease
 Summary:        A Python 3 port of the GraphQL.js reference implementation of GraphQL
 License:        MIT
 URL:            https://github.com/graphql-python/graphql-core
-#!RemoteAsset:  sha256:015457da5d996c924ddf57a43f4e959b0b94fb695b85ed4c29446e508ed65cf3
+#!RemoteAsset:  sha256:4579094d5fc8a1a59555a9b18e51b320779d9bbc63e2302c519af0c4919d9543
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname pyopenssl
 
 Name:           python-%{srcname}
-Version:        26.3.0
+Version:        26.4.0
 Release:        %autorelease
 Summary:        pyopenssl is a wrapper around the OpenSSL library
 License:        Apache-2.0
 URL:            https://github.com/pyca/pyopenssl
-#!RemoteAsset:  sha256:589de7fae1c9ea670d18422ed00fc04da787bbde8e1454aea872aa57b49ad341
+#!RemoteAsset:  sha256:28dfcce0162b9211413e26dfbfdf1d24317fbeba18fc93c12400a1856b2a0bc7
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

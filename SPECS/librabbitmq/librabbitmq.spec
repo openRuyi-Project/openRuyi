@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           librabbitmq
-Version:        0.15.0
+Version:        0.18.0
 Release:        %autorelease
 Summary:        Client library for AMQP 0-9-1 written in C
 License:        MIT
 URL:            https://github.com/alanxz/rabbitmq-c
-#!RemoteAsset:  sha256:7b652df52c0de4d19ca36c798ed81378cba7a03a0f0c5d498881ae2d79b241c2
+#!RemoteAsset:  sha256:d57782c950ec04c7da3692cad6f02059dad6df90e588e2f6a1def632fa59f7d7
 Source:         %{url}/archive/refs/tags/v%{version}.tar.gz#/rabbitmq-c-%{version}.tar.gz
 BuildSystem:    cmake
 

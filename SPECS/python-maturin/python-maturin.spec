@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname maturin
 
 Name:           python-%{srcname}
-Version:        1.14.0
+Version:        1.14.1
 Release:        %autorelease
 Summary:        Build and publish Rust crates as Python packages
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/PyO3/maturin
-#!RemoteAsset:  sha256:f7f82a6aca4a6c402bf00b99200be199d4874d04b9b9e74e825726a3478bba7f
+#!RemoteAsset:  sha256:9d6577a62cd08e0ceba7a0db06fb098e0c9b1b3429bad747a4f3a18215a1b3df
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -62,11 +63,11 @@ BuildRequires:  crate(cargo-cyclonedx-0.5) >= 0.5.9
 BuildRequires:  crate(cargo-lock-10) >= 10.1.0
 BuildRequires:  crate(cargo-metadata-0.18) >= 0.18.1
 BuildRequires:  crate(cargo-metadata-0.23) >= 0.23.1
-BuildRequires:  crate(cargo-options-0.7) >= 0.7.6
+BuildRequires:  crate(cargo-options-0.8) >= 0.8.1
 BuildRequires:  crate(cargo-platform-0.1) >= 0.1.9
 BuildRequires:  crate(cargo-platform-0.3) >= 0.3.1
-BuildRequires:  crate(cargo-xwin-0.22) >= 0.22.0
-BuildRequires:  crate(cargo-zigbuild-0.22) >= 0.22.3
+BuildRequires:  crate(cargo-xwin-0.23) >= 0.23.0
+BuildRequires:  crate(cargo-zigbuild-0.23) >= 0.23.0
 BuildRequires:  crate(cbindgen-0.29) >= 0.29.2
 BuildRequires:  crate(cc-1) >= 1.2.63
 BuildRequires:  crate(cesu8-1) >= 1.1.0
@@ -251,7 +252,7 @@ BuildRequires:  crate(prettyplease-0.2) >= 0.2.37
 BuildRequires:  crate(proc-macro2-1) >= 1.0.106
 BuildRequires:  crate(psm-0.1) >= 0.1.31
 BuildRequires:  crate(purl-0.1) >= 0.1.6
-BuildRequires:  crate(pyo3-introspection-0.28) >= 0.28.3
+BuildRequires:  crate(pyo3-introspection-0.29) >= 0.29.0
 BuildRequires:  crate(pyproject-toml-0.13) >= 0.13.7
 BuildRequires:  crate(python-pkginfo-0.6) >= 0.6.8
 BuildRequires:  crate(quote-1) >= 1.0.45
@@ -510,8 +511,8 @@ export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=256
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license license-apache license-mit
 %doc README.md Changelog.md
+%license license-apache license-mit
 %{_bindir}/maturin
 
 %changelog

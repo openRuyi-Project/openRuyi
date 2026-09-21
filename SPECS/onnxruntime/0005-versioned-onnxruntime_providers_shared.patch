@@ -1,0 +1,24 @@
+diff --git a/cmake/onnxruntime_providers_cpu.cmake b/cmake/onnxruntime_providers_cpu.cmake
+index b7d2bbf..4414d25 100644
+--- a/cmake/onnxruntime_providers_cpu.cmake
++++ b/cmake/onnxruntime_providers_cpu.cmake
+@@ -233,6 +233,7 @@ if (NOT onnxruntime_MINIMAL_BUILD AND NOT onnxruntime_EXTENDED_MINIMAL_BUILD
+   if (CMAKE_SYSTEM_NAME MATCHES "AIX")
+     set_target_properties(onnxruntime_providers_shared PROPERTIES AIX_SHARED_LIBRARY_ARCHIVE OFF)
+   endif()
++  set_target_properties(onnxruntime_providers_shared PROPERTIES VERSION ${ORT_VERSION})
+ 
+   target_compile_definitions(onnxruntime_providers_shared PRIVATE FILE_NAME=\"onnxruntime_providers_shared.dll\")
+ 
+diff --git a/cmake/onnxruntime_providers_cuda.cmake b/cmake/onnxruntime_providers_cuda.cmake
+index 52eb245..47439d9 100644
+--- a/cmake/onnxruntime_providers_cuda.cmake
++++ b/cmake/onnxruntime_providers_cuda.cmake
+@@ -406,6 +406,7 @@
+     # ${CMAKE_CURRENT_BINARY_DIR} is so that #include "onnxruntime_config.h" inside tensor_shape.h is found
+     set_target_properties(${target} PROPERTIES LINKER_LANGUAGE CUDA)
+     set_target_properties(${target} PROPERTIES FOLDER "ONNXRuntime")
++    set_target_properties(${target} PROPERTIES VERSION ${ORT_VERSION})
+ 
+     if(ORT_HAS_SM90_OR_LATER)
+       target_compile_options(${target} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xptxas=-w>)

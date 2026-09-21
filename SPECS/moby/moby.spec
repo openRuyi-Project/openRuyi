@@ -1,12 +1,13 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           moby
-%define docker_version  28.5.2
-%define docker_commit   89c5e8fd66634b6128fc4c0e6f1236e2540e46e0
-# The daemon source uses the v28.5.2 tag. Prometheus v3.12.0/go.mod requires
+%define docker_version  29.8.1
+%define docker_commit   464cd50c3d9e92877d56940ea160de6fca7bea23
+# The daemon source uses the docker-v29.8.1 tag. Prometheus v3.12.0/go.mod requires
 # github.com/moby/moby/api v1.54.2 and github.com/moby/moby/client v0.4.1;
 # their sources use the matching api/v1.54.2 and client/v0.4.1 tags.
 %define api_import_path github.com/moby/moby/api
@@ -25,8 +26,8 @@ Release:        %autorelease
 Summary:        Moby container engine
 License:        Apache-2.0
 URL:            https://github.com/moby/moby
-#!RemoteAsset:  sha256:0e450c03c536a1304ba8fd26ca4c4ff96fac62182fd042fec90ffdf4a0969d40
-Source0:        https://github.com/moby/moby/archive/refs/tags/v%{docker_version}.tar.gz#/%{_name}-%{docker_version}.tar.gz
+#!RemoteAsset:  sha256:94be9d6940b613676335fc494e617b4acf98676435b3744f32649ed72114bd58
+Source0:        https://github.com/moby/moby/archive/refs/tags/docker-v%{docker_version}.tar.gz#/%{_name}-%{docker_version}.tar.gz
 #!RemoteAsset:  sha256:f40a40f5b64ef6c7b7734ec08840fef438c1bf96ac29673881a38fb9178f216c
 Source1:        https://github.com/moby/moby/archive/refs/tags/api/v%{api_version}.tar.gz#/%{_name}-api-%{api_version}.tar.gz
 #!RemoteAsset:  sha256:d10aad65356cd49d0b8c462863253effcc19e18bf7041a9bdb6c1c94097d1280
@@ -34,10 +35,10 @@ Source2:        https://github.com/moby/moby/archive/refs/tags/client/v%{client_
 Source3:        moby.sysusers
 BuildSystem:    golang
 
-# The release tarball extracts to moby-%{docker_version}.
-BuildOption(prep):  -n moby-%{docker_version}
+# The release tarball extracts to moby-docker-v%{docker_version}.
+BuildOption(prep):  -n moby-docker-v%{docker_version}
 
-BuildRequires:  go
+BuildRequires:  go >= 1.26.3
 BuildRequires:  go-rpm-macros
 BuildRequires:  go-md2man
 BuildRequires:  git
@@ -128,7 +129,7 @@ tar -xzf %{SOURCE2}
 export CGO_ENABLED=1
 export GOTOOLCHAIN=local
 export VERSION=%{docker_version}
-# Use the commit shown for refs/tags/vX.Y.Z^{} by git ls-remote.
+# Use the commit shown for refs/tags/docker-vX.Y.Z^{} by git ls-remote.
 export DOCKER_GITCOMMIT=%{docker_commit}
 export DOCKER_BUILDTAGS="%{docker_buildtags}"
 KEEPDEST=1 KEEPBUNDLE=1 hack/make.sh dynbinary-daemon dynbinary-proxy
@@ -158,11 +159,9 @@ rm -f %{buildroot}%{go_sys_gopath}/%{client_import_path}/{README.md,LICENSE}
 %{buildroot}%{_bindir}/docker-proxy --version
 %{_bindir}/tini-static --version
 test "$(readlink %{buildroot}%{_libexecdir}/docker/docker-init)" = ../../bin/tini-static
-export GOFLAGS="-mod=vendor -modfile=vendor.mod"
+export GOFLAGS="-mod=vendor"
 export PATH="%{buildroot}%{_bindir}:$PATH"
-# Moby uses vendor.mod instead of a root go.mod. Its helper creates a temporary
-# go.mod while running the command-package tests, then removes it.
-hack/with-go-mod.sh go test -vet=off -p=1 \
+go test -vet=off -p=1 \
     -skip "^(TestIfaceAddrs|TestSCTP[46]ProxyNoListener)$" \
     -tags "%{docker_buildtags}" -test.timeout=5m \
     ./cmd/dockerd ./cmd/docker-proxy

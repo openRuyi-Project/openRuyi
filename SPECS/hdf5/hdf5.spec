@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           hdf5
-Version:        2.0.0
+Version:        2.2.0
 Release:        %autorelease
 Summary:        A general purpose library and file format for storing scientific data
 License:        BSD-3-Clause
 URL:            https://github.com/HDFGroup/hdf5/
-#!RemoteAsset:  sha256:3e6ae0430995c8ae724688c866f4dbb6feba9c6220583d72049fbb9b006c1cd5
-Source0:        https://github.com/HDFGroup/hdf5/archive/refs/tags/%{version}.tar.gz
+#!RemoteAsset:  sha256:1a1ab8209b35586fbc1aa279ba76d102130b95badcb20ca329587219112d8c16
+Source0:        https://github.com/HDFGroup/hdf5/releases/download/%{version}/hdf5-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
@@ -24,7 +25,7 @@ BuildOption(conf):  -DHDF5_INSTALL_LIB_DIR=%{_lib}
 BuildOption(conf):  -DHDF5_INSTALL_INCLUDE_DIR=%{_includedir}
 BuildOption(conf):  -DHDF5_INSTALL_DATA_DIR=%{_datadir}
 BuildOption(conf):  -DHDF5_INSTALL_CMAKE_DIR=%{_lib}/cmake/hdf5
-BuildOption(conf):  -DHDF5_ENABLE_Z_LIB_SUPPORT=ON
+BuildOption(conf):  -DHDF5_ENABLE_ZLIB_SUPPORT=ON
 BuildOption(conf):  -DHDF5_BUILD_EXAMPLES=OFF
 BuildOption(conf):  -DBUILD_TESTING=OFF
 BuildOption(conf):  -DCMAKE_SKIP_RPATH=ON
@@ -37,6 +38,13 @@ BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  libaec-devel
+
+%prep -a
+# The official release asset wraps the source in an additional
+# hdf5-%{version} directory.  Promote that directory into the declarative
+# build root so the later CMake phases see CMakeLists.txt.
+cp -a hdf5-%{version}/. .
+rm -rf hdf5-%{version}
 
 %description
 HDF5 is a general purpose library and file format for storing scientific data.
@@ -52,8 +60,8 @@ HDF5 development headers and libraries.
 
 %files
 %doc ACKNOWLEDGMENTS README.md
-%{_datadir}/CHANGELOG.md
-%{_datadir}/LICENSE
+%license %{_datadir}/LICENSE
+%{_docdir}/HDF5/CHANGELOG.md
 %{_bindir}/h5clear
 %{_bindir}/h5copy
 %{_bindir}/h5debug
@@ -74,7 +82,7 @@ HDF5 development headers and libraries.
 %{_libdir}/*.so.*
 
 %files devel
-%{_datadir}/USING_HDF5_CMake.txt
+%{_docdir}/HDF5/USING_HDF5_CMake.md
 %{_bindir}/h5c++*
 %{_bindir}/h5cc*
 %{_includedir}/*.h

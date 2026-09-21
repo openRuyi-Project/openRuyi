@@ -6,7 +6,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Co-Authored-By: Miro HronÄ¨ok <miro@hroncok.cz>
+Co-Authored-By: Miro Hrončok <miro@hroncok.cz>
 ---
  src/virtualenv/run/__init__.py                |  5 +++--
  src/virtualenv/seed/embed/base_embed.py       | 16 +++++++++++++-
@@ -23,7 +23,7 @@ index 9788ebd..d6bd305 100644
 --- a/src/virtualenv/run/__init__.py
 +++ b/src/virtualenv/run/__init__.py
 @@ -125,8 +125,12 @@ def build_parser_only(args: list[str] | None = None) -> VirtualEnvConfigParser:
-
+ 
  def handle_extra_commands(options: VirtualEnvOptions) -> None:
      if options.upgrade_embed_wheels:
 -        result = manual_upgrade(options.app_data, options.env)
@@ -34,8 +34,8 @@ index 9788ebd..d6bd305 100644
 +            "together with other RPM packages of the system.",
 +        )
 +        raise SystemExit(1)
-
-
+ 
+ 
  def load_app_data(
 diff --git a/src/virtualenv/seed/embed/base_embed.py b/src/virtualenv/seed/embed/base_embed.py
 index 65c2f4e..b65589d 100644
@@ -46,22 +46,22 @@ index 65c2f4e..b65589d 100644
  from virtualenv.seed.wheels import Version
  from virtualenv.seed.wheels.embed import MIN, OLDEST_SUPPORTED
 +from virtualenv.util.path._system_wheels import get_system_wheels_paths
-
+ 
  if TYPE_CHECKING:
      from argparse import ArgumentParser
 @@ -19,7 +20,7 @@ if TYPE_CHECKING:
      from virtualenv.config.cli.parser import VirtualEnvOptions
-
+ 
  LOGGER = logging.getLogger(__name__)
 -PERIODIC_UPDATE_ON_BY_DEFAULT = True
 +PERIODIC_UPDATE_ON_BY_DEFAULT = False
-
-
+ 
+ 
  class BaseEmbed(Seeder, ABC):
 @@ -51,6 +52,15 @@ class BaseEmbed(Seeder, ABC):
          if not self.distribution_to_versions():
              self.enabled = False
-
+ 
 +        if "embed" in (self.pip_version, self.setuptools_version, getattr(self, "wheel_version", None)):
 +            raise RuntimeError(
 +                "Embedded wheels are not available if virtualenv "
@@ -77,12 +77,12 @@ index 65c2f4e..b65589d 100644
 @@ -163,6 +173,10 @@ class BaseEmbed(Seeder, ABC):
              result += f" {distribution}{ver},"
          return result[:-1] + ")"
-
+ 
 +    def insert_system_wheels_paths(self, creator):
 +        system_wheels_paths = get_system_wheels_paths(creator.interpreter)
 +        self.extra_search_dir = list(system_wheels_paths) + self.extra_search_dir
 +
-
+ 
  __all__ = [
      "BaseEmbed",
 diff --git a/src/virtualenv/seed/embed/pip_invoke.py b/src/virtualenv/seed/embed/pip_invoke.py
@@ -114,7 +114,7 @@ index 9659b57..13ea09a 100644
 --- a/src/virtualenv/seed/wheels/acquire.py
 +++ b/src/virtualenv/seed/wheels/acquire.py
 @@ -68,11 +68,13 @@ def get_wheel(  # ruff:ignore[too-many-arguments]
-
+ 
      if download and wheel is None and version != Version.embed:
          # 2. download from the internet
 +        from virtualenv.util.path._system_wheels import get_system_wheels_paths
@@ -134,7 +134,7 @@ index 1d8be73..34e12cb 100644
 +++ b/src/virtualenv/seed/wheels/embed/__init__.py
 @@ -78,6 +78,7 @@ def get_embed_wheel(distribution: str, for_py_version: str | None) -> Wheel | No
      :raises RuntimeError: if the bundled wheel on disk fails SHA-256 verification.
-
+ 
      """
 +    return None
      if for_py_version is None or _release_tuple(for_py_version) > _release_tuple(MAX):

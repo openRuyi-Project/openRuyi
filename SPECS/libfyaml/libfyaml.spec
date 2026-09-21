@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <ialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libfyaml
-Version:        0.9.3
+Version:        0.9.5
 Release:        %autorelease
 Summary:        Complete YAML parser and emitter
 License:        MIT AND GPL-2.0-only AND BSD-2-Clause
 URL:            https://github.com/pantoniou/libfyaml
-#!RemoteAsset:  sha256:99ec52a528c629de11da7ead35ffa3c0e8cb548e4acafbd292db47535720f04c
+#!RemoteAsset:  sha256:bbb0ce413003e665b8bce1c167640f069ad10491a0c05937b41aa7a2c3f1d139
 Source0:        https://github.com/pantoniou/libfyaml/archive/refs/tags/v%{version}.tar.gz
 Source1:        LICENSE-GPL-2.0
 Source2:        LICENSE-BSD-2-Clause
@@ -44,8 +45,8 @@ cp %{SOURCE2} .
 autoreconf -fiv
 
 %files
-%license LICENSE LICENSE-GPL-2.0 LICENSE-BSD-2-Clause
 %doc README.md AUTHORS
+%license LICENSE LICENSE-GPL-2.0 LICENSE-BSD-2-Clause
 %{_bindir}/fy-*
 %{_libdir}/libfyaml.so.0*
 %{_mandir}/man1/fy-*.1*
@@ -56,4 +57,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libfyaml.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

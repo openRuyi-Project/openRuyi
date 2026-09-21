@@ -8,13 +8,13 @@
 %global pypi_name sagemaker_train
 
 Name:           python-%{srcname}
-Version:        1.8.0
+Version:        1.11.0
 Release:        %autorelease
 Summary:        Amazon SageMaker Python SDK for SageMaker Training
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:e241e99c6c3dec0d0464f33e6da87bc45db97867b7ed1f02ff2e264553fac54b
+#!RemoteAsset:  sha256:9c64531f8656eccd84ed5adc6c3f0f788f393ff46a63d1479b22ad15694ef2c5
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

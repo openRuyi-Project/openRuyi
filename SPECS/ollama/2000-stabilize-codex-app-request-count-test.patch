@@ -1,0 +1,51 @@
+From 6ebb90cd7258c419ab4ac5d0e9285c262a504292 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 10:48:25 +0800
+Subject: [PATCH] tests: stabilize Codex app request count fixture timestamps
+
+Set the test fixture mtime to its corresponding event time after each write.
+This avoids coarse buildroot timestamp resolution causing the production
+start-time filter to skip the fixture.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ cmd/launch/codex_app_test.go | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/cmd/launch/codex_app_test.go b/cmd/launch/codex_app_test.go
+index 70636b98..57f660e0 100644
+--- a/cmd/launch/codex_app_test.go
++++ b/cmd/launch/codex_app_test.go
+@@ -924,6 +924,9 @@ func TestCodexAppCountsOnlyOllamaRequestsInRegularProfile(t *testing.T) {
+ 	if err := os.WriteFile(regularSessionPath, regularLines, 0o600); err != nil {
+ 		t.Fatal(err)
+ 	}
++	if err := os.Chtimes(regularSessionPath, start.Add(6*time.Second), start.Add(6*time.Second)); err != nil {
++		t.Fatal(err)
++	}
+ 	if got := codexAppRegularProfileRequestCount(); got != 2 {
+ 		t.Fatalf("regular profile Ollama request count = %d, want 2", got)
+ 	}
+@@ -940,6 +943,9 @@ func TestCodexAppCountsOnlyOllamaRequestsInRegularProfile(t *testing.T) {
+ 	if err := file.Close(); err != nil {
+ 		t.Fatal(err)
+ 	}
++	if err := os.Chtimes(regularSessionPath, start.Add(8*time.Second), start.Add(8*time.Second)); err != nil {
++		t.Fatal(err)
++	}
+ 	if got := codexAppRegularProfileRequestCount(); got != 2 {
+ 		t.Fatalf("regular profile count after native request = %d, want 2", got)
+ 	}
+@@ -956,6 +962,9 @@ func TestCodexAppCountsOnlyOllamaRequestsInRegularProfile(t *testing.T) {
+ 	if err := file.Close(); err != nil {
+ 		t.Fatal(err)
+ 	}
++	if err := os.Chtimes(regularSessionPath, start.Add(10*time.Second), start.Add(10*time.Second)); err != nil {
++		t.Fatal(err)
++	}
+ 	if got := codexAppRegularProfileRequestCount(); got != 3 {
+ 		t.Fatalf("incremental regular profile Ollama request count = %d, want 3", got)
+ 	}
+-- 
+2.46.0.windows.1
+

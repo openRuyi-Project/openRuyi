@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname gitpython
 
 Name:           python-%{srcname}
-Version:        3.1.50
+Version:        3.1.60
 Release:        %autorelease
 Summary:        Python Git Library
 License:        BSD-3-Clause
 URL:            https://github.com/gitpython-developers/GitPython
-#!RemoteAsset:  sha256:80da2d12504d52e1f998772dc5baf6e553f8d2fcfe1fcc226c9d9a2ee3372dcc
+#!RemoteAsset:  sha256:e936431879fa85581b4311fa63492ea52251909e2d655b6529c704c904ddcc24
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

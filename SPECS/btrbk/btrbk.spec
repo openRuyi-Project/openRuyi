@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           btrbk
-Version:        0.32.6
+Version:        0.32.7
 Release:        %autorelease
 Summary:        Tool for creating snapshots and remote backups of btrfs sub-volumes
 License:        GPL-3.0-or-later
 URL:            https://digint.ch/btrbk/
 VCS:            https://github.com/digint/btrbk.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:7f53cf55a007570c9de5a1c4f946ca7372fad5e057c8b1c9d7afc2176cc32cd3
 Source0:        https://digint.ch/download/btrbk/releases/btrbk-%{version}.tar.xz
 Source1:        btrbk.logrotate
 
@@ -20,8 +21,9 @@ BuildRequires:  systemd-rpm-macros
 BuildRequires:  make
 BuildRequires:  pkgconfig(bash-completion)
 
-Requires:       btrfs-progs
 Recommends:     openssh-clients
+
+Requires:       btrfs-progs
 
 %description
 Backup tool for btrfs sub-volumes, using a configuration file, allows
@@ -65,4 +67,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
 %{bash_completions_dir}/lsbtr
 
 %changelog
-%{?autochangelog}
+%autochangelog

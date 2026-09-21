@@ -8,13 +8,13 @@
 %global pypi_name sagemaker_mlops
 
 Name:           python-%{srcname}
-Version:        1.8.0
+Version:        1.11.0
 Release:        %autorelease
 Summary:        A library for MLOps on Amazon SageMaker
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:b4738d72b3c2e11a54ef9a751db6b5e33fa863556732cb3b8161698d4b4af2f1
+#!RemoteAsset:  sha256:8ee022c2881c3f1db688f7d502a7918bf7e28807e02b28106e6f5a592e38178f
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

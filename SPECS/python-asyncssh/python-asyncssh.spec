@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun <ziyu.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname asyncssh
 
 Name:           python-%{srcname}
-Version:        2.23.0
+Version:        2.24.0
 Release:        %autorelease
 Summary:        Asynchronous SSHv2 client and server library
 License:        EPL-2.0 OR GPL-2.0-or-later
 URL:            https://asyncssh.timeheart.net/
-#!RemoteAsset:  sha256:8c54760953c1f2cf282591bcba5c8c70efc48d645bbf26bd2307a9c66a0ed1a7
+#!RemoteAsset:  sha256:4064c590e59ce2e8d82a2f66d35f3120d765828b4df5e3dbfb07b4a8c24686c9
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

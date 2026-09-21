@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname httplib2
 
 Name:           python-%{srcname}
-Version:        0.31.2
+Version:        0.32.0
 Release:        %autorelease
 Summary:        Comprehensive HTTP client library
 License:        MIT
 URL:            https://github.com/httplib2/httplib2
-#!RemoteAsset:  sha256:385e0869d7397484f4eab426197a4c020b606edd43372492337c0b4010ae5d24
+#!RemoteAsset:  sha256:48a0ef30a42db65d8f3399045e1d09ab0ba66e3b9efc360d07f80ea55d286025
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

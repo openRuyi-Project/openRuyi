@@ -1,0 +1,32 @@
+From 2d2b79cf0e36d24b9f4c0959f7404ce6a6fca09c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 08:45:00 +0800
+Subject: [PATCH] Call the renamed Subtract method in tests
+
+Upstream-Commit: 27b20373df0c6b79a80b745ea10c38601f57f5dd
+
+Upstream commit 27b20373df0c6b79a80b745ea10c38601f57f5dd renamed the
+test fixture's Substract method to Subtract but missed the reflective call in
+TestCallMethod.  Match that call to the already-renamed fixture method.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ reflector/reflector_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/reflector/reflector_test.go b/reflector/reflector_test.go
+index 68b247f..b62c5c7 100644
+--- a/reflector/reflector_test.go
++++ b/reflector/reflector_test.go
+@@ -328,7 +328,7 @@ func TestCallMethod(t *testing.T) {
+ 	assert.Equal(t, len(method.InTypes()), 3)
+ 	assert.Equal(t, len(method.OutTypes()), 1)
+ 
+-	sub, err := obj.Method("Substract").Call(5, 6)
++	sub, err := obj.Method("Subtract").Call(5, 6)
+ 	assert.Nil(t, err)
+ 	assert.Equal(t, sub.Result, []interface{}{-1})
+ }
+-- 
+2.50.1
+

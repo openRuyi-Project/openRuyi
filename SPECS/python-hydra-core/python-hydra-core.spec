@@ -8,12 +8,12 @@
 %global pypi_name hydra_core
 
 Name:           python-%{srcname}
-Version:        1.3.3
+Version:        1.3.6
 Release:        %autorelease
 Summary:        A framework for elegantly configuring complex applications
 License:        MIT
 URL:            https://github.com/facebookresearch/hydra
-#!RemoteAsset:  sha256:b7477ee21f08b62f71bf0126d44695c048dc7e9c0cc79e2d593b707cb1e44048
+#!RemoteAsset:  sha256:8c4c215b6cfba68e9a4e76f565bd7399fc2a86b93cfe8cb7328b046834dfbee5
 Source0:        https://files.pythonhosted.org/packages/source/h/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

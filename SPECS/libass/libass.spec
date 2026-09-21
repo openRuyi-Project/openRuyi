@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libass
-Version:        0.17.4
+Version:        0.17.5
 Release:        %autorelease
 Summary:        Library for SSA/ASS-formatted subtitle rendering
 License:        ISC
 URL:            https://github.com/libass/libass
-#!RemoteAsset
+#!RemoteAsset:  sha256:fa286fc9ee1ba3b932703a3df7b8474d01dc8abe29ec69b6fa68781dc4bf7acc
 Source:         https://github.com/libass/libass/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -60,4 +61,4 @@ applications that use the libass library.
 %{_libdir}/pkgconfig/libass.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

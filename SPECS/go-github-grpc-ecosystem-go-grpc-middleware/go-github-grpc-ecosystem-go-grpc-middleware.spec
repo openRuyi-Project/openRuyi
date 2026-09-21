@@ -19,12 +19,32 @@ BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+BuildRequires:  go(github.com/go-kit/log)
+BuildRequires:  go(github.com/gogo/protobuf)
+BuildRequires:  go(github.com/golang/protobuf)
+BuildRequires:  go(github.com/opentracing/opentracing-go)
+BuildRequires:  go(github.com/sirupsen/logrus)
 BuildRequires:  go(github.com/stretchr/testify)
+BuildRequires:  go(go.uber.org/zap)
+BuildRequires:  go(golang.org/x/net)
+BuildRequires:  go(golang.org/x/oauth2)
+BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(google.golang.org/genproto/googleapis/rpc)
 BuildRequires:  go(google.golang.org/grpc)
 
 Provides:       go(github.com/grpc-ecosystem/go-grpc-middleware) = %{version}
+Provides:       go(github.com/grpc-ecosystem/go-grpc-middleware/logging/zap) = %{version}
+Provides:       go(github.com/grpc-ecosystem/go-grpc-middleware/tags) = %{version}
 
+Requires:       go(github.com/go-kit/log)
+Requires:       go(github.com/gogo/protobuf)
+Requires:       go(github.com/golang/protobuf)
+Requires:       go(github.com/opentracing/opentracing-go)
+Requires:       go(github.com/sirupsen/logrus)
+Requires:       go(go.uber.org/zap)
+Requires:       go(golang.org/x/net)
+Requires:       go(golang.org/x/oauth2)
+Requires:       go(golang.org/x/sys)
 Requires:       go(google.golang.org/genproto/googleapis/rpc)
 Requires:       go(google.golang.org/grpc)
 
@@ -32,10 +52,17 @@ Requires:       go(google.golang.org/grpc)
 go-grpc-middleware provides reusable server and client middleware for gRPC
 applications.
 
-%prep -a
-# containerd uses only the root interceptor-chain API. Remove optional
-# middleware implementations and their unrelated dependency closure.
-find . -maxdepth 1 -mindepth 1 -type d -exec rm -rf {} +
+%check
+export GO111MODULE=off
+export GOPATH=%{_builddir}/go:%{_datadir}/gocode
+mkdir -p %{_builddir}/go/src/%{go_import_path}
+cp -a . %{_builddir}/go/src/%{go_import_path}
+cd %{_builddir}/go/src/%{go_import_path}
+# The two upstream testproto generators share the historical protobuf name.
+# Keep the complete test suite and use protobuf's documented compatibility mode.
+export GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
+# Go 1.26 vet rejects upstream's historical non-constant logging formats.
+go test -v -vet=off ./...
 
 %files
 %doc README.md

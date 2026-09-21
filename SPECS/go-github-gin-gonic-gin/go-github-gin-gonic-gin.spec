@@ -8,21 +8,22 @@
 %define go_import_path  github.com/gin-gonic/gin
 
 Name:           go-github-gin-gonic-gin
-Version:        1.8.1
+Version:        1.10.0
 Release:        %autorelease
 Summary:        Gin is a high-performance HTTP web framework written in Go. It provides a Martini-like API but with significantly better performance—up to 40 times faster—thanks to httprouter. Gin is designed for building REST APIs, web applications, and microservices.
 License:        MIT
 URL:            https://github.com/gin-gonic/gin
-#!RemoteAsset:  sha256:9f6a9a6c2b96c323902d8ee1728152bafdf1894130554a93af5d3f1807c0403b
+#!RemoteAsset:  sha256:28c0b8cc8bcccf4bceb1a77c3d0993a271dab7848f070b67beb7681f9c558479
 Source0:        https://github.com/gin-gonic/gin/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # https://github.com/gin-gonic/gin/commit/b38c59de7fef67400a1c98efeae700a689c45783
 Patch0:         0001-change-Unwrap-method-receiver-to-value-type.patch
+# https://github.com/gin-gonic/gin/commit/cf4775283ec30cda685355b5016c5abd2a56884e
+Patch1:         0002-test-yaml-rendering-semantically.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
-BuildOption(check):  -skip TestContextFormFileFailed17
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -33,8 +34,8 @@ BuildRequires:  go(github.com/pelletier/go-toml/v2)
 BuildRequires:  go(github.com/stretchr/testify)
 BuildRequires:  go(github.com/ugorji/go/codec)
 BuildRequires:  go(golang.org/x/net)
-BuildRequires:  go(gopkg.in/yaml.v2)
-BuildRequires:  go(google.golang.org/protobuf)
+BuildRequires:  go(google.golang.org/protobuf/proto)
+BuildRequires:  go(gopkg.in/yaml.v3)
 # For tests.
 BuildRequires:  tzdata
 
@@ -46,8 +47,8 @@ Requires:       go(github.com/mattn/go-isatty)
 Requires:       go(github.com/pelletier/go-toml/v2)
 Requires:       go(github.com/ugorji/go/codec)
 Requires:       go(golang.org/x/net)
-Requires:       go(gopkg.in/yaml.v2)
-Requires:       go(google.golang.org/protobuf)
+Requires:       go(google.golang.org/protobuf/proto)
+Requires:       go(gopkg.in/yaml.v3)
 
 %description
 Gin is a high-performance HTTP web framework written in Go
@@ -58,8 +59,8 @@ building REST APIs, web applications, and microservices where speed and
 developer productivity are essential.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog

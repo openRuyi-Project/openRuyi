@@ -1,0 +1,37 @@
+From cf4775283ec30cda685355b5016c5abd2a56884e Mon Sep 17 00:00:00 2001
+From: M. Ilham Surya Pratama <ilhamsurya26@gmail.com>
+Date: Sat, 21 Jun 2025 11:38:28 +0700
+Subject: [PATCH] Test YAML rendering semantically
+
+Upstream-Commit: cf4775283ec30cda685355b5016c5abd2a56884e
+
+Backport the upstream TestRenderYAML hunk so the test verifies the rendered
+data instead of depending on exact whitespace from a particular YAML library
+version.  The hunk context retains v1.10.0's assert.NoError call in place of
+the later require.NoError call; the added assertions are unchanged.
+---
+ render/render_test.go | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/render/render_test.go b/render/render_test.go
+index 0b98e63..d9ae206 100644
+--- a/render/render_test.go
++++ b/render/render_test.go
+@@ -285,7 +285,14 @@ b:
+ 
+ 	err := (YAML{data}).Render(w)
+ 	assert.NoError(t, err)
+-	assert.Equal(t, "|4-\n    a : Easy!\n    b:\n    \tc: 2\n    \td: [3, 4]\n    \t\n", w.Body.String())
++
++	// With github.com/goccy/go-yaml, the output format is different from gopkg.in/yaml.v3
++	// We're checking that the output contains the expected data, not the exact formatting
++	output := w.Body.String()
++	assert.Contains(t, output, "a : Easy!")
++	assert.Contains(t, output, "b:")
++	assert.Contains(t, output, "c: 2")
++	assert.Contains(t, output, "d: [3, 4]")
+ 	assert.Equal(t, "application/yaml; charset=utf-8", w.Header().Get("Content-Type"))
+ }
+ 
+-- 
+2.52.0

@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname tornado
 
 Name:           python-%{srcname}
-Version:        6.5.8
+Version:        6.5.9
 Release:        %autorelease
 Summary:        Scalable, non-blocking web server and tools
 License:        Apache-2.0
 URL:            https://github.com/tornadoweb/tornado
-#!RemoteAsset:  sha256:9452e1b208a8bd771e2cb1f2ff564985b9b214bdebbe622793e1799e0a6bd23f
+#!RemoteAsset:  sha256:4d868544ebdf2fc155239a74397f65ebfea9b4d3635296c96b5dfb0701c354f5
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 

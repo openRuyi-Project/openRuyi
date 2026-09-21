@@ -12,7 +12,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.49.0"
+version = "0.50.0"
 authors = ["The cryptography developers <cryptography-dev@python.org>"]
 edition = "2021"
 publish = false
@@ -21,14 +21,16 @@ rust-version = "1.83.0"
 license = "Apache-2.0 OR BSD-3-Clause"
 
 [workspace.dependencies]
-base64 = "0.22"
+asn1 = { version = "0.24.1", default-features = false }
+base64 = "0.23"
 cc = "1.2.63"
 cfg-if = "1"
 foreign-types = "0.3"
 foreign-types-shared = "0.1"
 openssl = "0.10.80"
 openssl-sys = "0.9.116"
-pyo3 = { version = "0.29", features = ["abi3"] }
+pem = { version = "4", default-features = false }
+pyo3 = { version = "0.29", features = ["abi3", "abi3t"] }
 pyo3-build-config = { version = "0.29" }
 self_cell = "1"
 

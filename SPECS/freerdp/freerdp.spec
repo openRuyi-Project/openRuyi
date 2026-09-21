@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,13 +10,13 @@
 %bcond webview 0
 
 Name:           freerdp
-Version:        3.26.0
+Version:        3.31.0
 Release:        %autorelease
 Summary:        Free implementation of the Remote Desktop Protocol (RDP)
 License:        Apache-2.0
 URL:            http://www.freerdp.com/
 VCS:            git:https://github.com/FreeRDP/FreeRDP
-#!RemoteAsset:  sha256:ae3b1c0b8e334ecbc2c784bce266249309fad32a0ef41947ce5c059eb18e2059
+#!RemoteAsset:  sha256:3c66cdd4506b86c451dd0817cb60aa8434c32f56ac1f92aa543f332b376113af
 Source0:        https://github.com/FreeRDP/FreeRDP/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -133,8 +134,8 @@ Server support for FreeRDP.
 find %{buildroot} -name "*.a" -delete
 
 %files
-%license LICENSE
 %doc README.md ChangeLog
+%license LICENSE
 %{_bindir}/winpr-hash
 %{_bindir}/winpr-makecert
 %{_bindir}/xfreerdp

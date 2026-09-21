@@ -1,7 +1,7 @@
 [package]
 authors = ["konstin <konstin@mailbox.org>", "messense <messense@icloud.com>"]
 name = "maturin"
-version = "1.14.0"
+version = "1.14.1"
 description = "Build and publish crates with pyo3, cffi and uniffi bindings as well as rust binaries as python packages"
 exclude = [
     "test-crates/**/*",
@@ -44,7 +44,7 @@ base64 = "0.22.0"
 glob = "0.3.0"
 cargo-config2 = "0.1.24"
 cargo_metadata = "0.23.1"
-cargo-options = "0.7.2"
+cargo-options = "0.8.1"
 cbindgen = { version = "0.29.0", default-features = false }
 flate2 = "1.0.18"
 goblin = "0.10.0"
@@ -74,7 +74,7 @@ semver = "1.0.22"
 target-lexicon = "0.13.3"
 indexmap = "2.2.3"
 pyproject-toml = { version = "0.13.5", features = ["pep639-glob"] }
-pyo3-introspection = "0.28"
+pyo3-introspection = "0.29"
 python-pkginfo = "0.6.8"
 textwrap = "0.16.1"
 ignore = "0.4.20"
@@ -101,8 +101,8 @@ clap = { version = "4.0.0", features = [
 clap_complete_command = { version = "0.6.1", optional = true }
 
 # cross compile
-cargo-zigbuild = { version = "0.22.2", default-features = false, optional = true }
-cargo-xwin = { version = "0.22.0", default-features = false, optional = true }
+cargo-zigbuild = { version = "0.23.0", default-features = false, optional = true }
+cargo-xwin = { version = "0.23.0", default-features = false, optional = true }
 xz2 = { version = "0.1", optional = true }
 
 # log

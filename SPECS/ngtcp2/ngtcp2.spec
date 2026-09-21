@@ -3,18 +3,19 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond doc 0
 
 Name:           ngtcp2
-Version:        1.16.0
+Version:        1.22.1
 Release:        %autorelease
 Summary:        Implementation of RFC 9000 QUIC protocol
 License:        MIT
 URL:            https://github.com/ngtcp2/ngtcp2
-#!RemoteAsset:  sha256:367cbcecaca539f76453c49454d8e7b38ecb162acf89cd571535ac4acf82a2b4
+#!RemoteAsset:  sha256:dfd2c68bd64b89847c611425b9487105c46e8447b5c21e6aeb00642c8fbe2ca8
 Source:         https://github.com/ngtcp2/ngtcp2/releases/download/v%{version}/ngtcp2-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -88,9 +89,9 @@ Development files for the OpenSSL crypto backend for ngtcp2.
 autoreconf -fsi
 
 %files
-%license COPYING
 %doc AUTHORS
 %doc %{_docdir}/ngtcp2
+%license COPYING
 %{_libdir}/libngtcp2.so.16*
 
 %files crypto-gnutls

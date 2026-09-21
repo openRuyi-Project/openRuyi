@@ -8,13 +8,13 @@
 %global pypi_name sagemaker_serve
 
 Name:           python-%{srcname}
-Version:        1.8.0
+Version:        1.11.0
 Release:        %autorelease
 Summary:        Amazon SageMaker Python SDK for SageMaker Server
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:8b2349c27e351c61271b03efafd88bd80f695a725446f4771195a6dc244ae899
+#!RemoteAsset:  sha256:ab836daaaa85d77b723cf138cea6f00aaa7ade5e6b1c29f9f5e3e738d50483a5
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

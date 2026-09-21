@@ -7,12 +7,12 @@
 %global srcname gradio
 
 Name:           python-%{srcname}
-Version:        6.14.0
+Version:        6.16.0
 Release:        %autorelease
 Summary:        Python library for easily interacting with trained machine learning models
 License:        Apache-2.0
 URL:            https://github.com/gradio-app/gradio
-#!RemoteAsset:  sha256:4972ef7d01ac57472772624eb4e095767b6c8f3cd4846b7fea648e8034cda9f8
+#!RemoteAsset:  sha256:a48d03ffb436644265e4386388ad8a50ec183c8e1fdd3bae0548f7f229c474da
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -35,6 +35,10 @@ Build and share delightful machine learning apps, all in Python.
 %prep -a
 sed -i 's/tomlkit>=0.12.0,<0.15.0/tomlkit>=0.12.0/g' requirements.txt
 sed -i 's/Requires-Dist: tomlkit<0.15.0,>=0.12.0/Requires-Dist: tomlkit>=0.12.0/g' PKG-INFO
+# Gradio and gradio-client are released together; accept the newer compatible
+# client already carried by openRuyi instead of requiring the exact PyPI lock.
+sed -i 's/gradio_client==2.5.0/gradio_client>=2.5.0/' requirements.txt
+sed -i 's/Requires-Dist: gradio-client==2.5.0/Requires-Dist: gradio-client>=2.5.0/' PKG-INFO
 
 %generate_buildrequires
 %pyproject_buildrequires

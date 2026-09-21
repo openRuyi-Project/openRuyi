@@ -1,0 +1,36 @@
+From 40af647d66993e64440589c779ac3934d5264e8f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 09:05:00 +0800
+Subject: [PATCH] Test generated classes with modern TypeScript
+
+TypeScript 2.7 made strictPropertyInitialization part of --strict.  Several
+tests deliberately request generated classes without constructors, so that
+newer compilers reject their fields before the existing Node runtime checks
+can run.  Disable only that newer strict sub-check while retaining every other
+--strict check and all Node execution tests.
+
+Reference: https://www.typescriptlang.org/tsconfig/strictPropertyInitialization.html
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ typescriptify/typescriptify_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/typescriptify/typescriptify_test.go b/typescriptify/typescriptify_test.go
+index bde6225..7f16fea 100644
+--- a/typescriptify/typescriptify_test.go
++++ b/typescriptify/typescriptify_test.go
+@@ -363,9 +363,9 @@ func testTypescriptExpression(t *testing.T, strictMode bool, baseScript string,
+ 	fmt.Println("tmp ts: ", f.Name())
+ 	var byts []byte
+ 	if strictMode {
+-		byts, err = exec.Command("tsc", "--strict", f.Name()).CombinedOutput()
++		byts, err = exec.Command("tsc", "--strict", "--strictPropertyInitialization", "false", f.Name()).CombinedOutput()
+ 	} else {
+-		byts, err = exec.Command("tsc", f.Name()).CombinedOutput()
++		byts, err = exec.Command("tsc", "--strictPropertyInitialization", "false", f.Name()).CombinedOutput()
+ 	}
+ 	assert.Nil(t, err, string(byts))
+ 
+-- 
+2.50.1
