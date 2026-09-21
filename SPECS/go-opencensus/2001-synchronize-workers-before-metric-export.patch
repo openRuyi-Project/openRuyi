@@ -1,0 +1,32 @@
+From a8ac949e32f20d1670ed21b1d32b32c701c4f085 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 21 Sep 2026 17:59:50 +0800
+Subject: [PATCH] test: synchronize workers before metric export
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ stats/view/worker_test.go | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/stats/view/worker_test.go b/stats/view/worker_test.go
+index af81fbb..1f8dd88 100644
+--- a/stats/view/worker_test.go
++++ b/stats/view/worker_test.go
+@@ -171,6 +171,14 @@ func Test_Worker_MultiExport(t *testing.T) {
+ 		}
+ 	}
+ 
++	// Drain both workers' command queues before reading their metrics.
++	if _, err := RetrieveData(count.Name); err != nil {
++		t.Fatalf("failed to flush the default worker: %v", err)
++	}
++	if _, err := worker2.RetrieveData(count.Name); err != nil {
++		t.Fatalf("failed to flush the secondary worker: %v", err)
++	}
++
+ 	makeKey := func(r *resource.Resource, view string) string {
+ 		if r == nil {
+ 			r = &resource.Resource{}
+-- 
+2.43.0
+
