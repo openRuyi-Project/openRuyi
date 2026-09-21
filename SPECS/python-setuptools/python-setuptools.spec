@@ -51,10 +51,14 @@ URL:            https://pypi.python.org/pypi/setuptools
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  pkgconfig(python3)
-
 %if %{with bootstrap}
 BuildRequires:  unzip
+# Bootstrap from the source tree without an installed setuptools.
+BuildRequires:  python3-bootstrap-devel
+%else
+BuildRequires:  pkgconfig(python3)
+# Use an existing setuptools installation to regenerate metadata.
+BuildRequires:  python3dist(setuptools)
 %endif
 
 # python3 bootstrap: this is built before the final build of python3, which
@@ -62,11 +66,6 @@ BuildRequires:  unzip
 BuildRequires:  python3-rpm-generators
 # we also use %%{_pyproject_wheeldir}, so an explicit requirement on the pyproject-macros is needed
 BuildRequires:  pyproject-rpm-macros
-
-%if %{without bootstrap}
-# Not to use the pre-generated egg-info, we use setuptools from previous build to generate it
-BuildRequires:  python-setuptools
-%endif
 
 %{bundled}
 

@@ -17,9 +17,9 @@
 %endif
 
 %global _test_target test
-%global pybasever 3.13
+%global pybasever 3.14
 # pybasever without the dot
-%global pyshortver 313
+%global pyshortver 314
 
 %if %{with bootstrap}
 %global pkgname python3-bootstrap
@@ -37,31 +37,30 @@
 # This needs to be manually updated when we update Python.
 # Explore the sources tarball (you need the version before %%prep is executed):
 #  $ tar -tf Python-%%{upstream_version}.tar.xz | grep whl
-%global pip_version 25.2
+%global pip_version 26.2.1
 %global setuptools_version 79.0.1
 # All of those also include a list of indirect bundled libs:
 # pip
 #  $ %%{_rpmconfigdir}/pythonbundles.py <(unzip -p Lib/ensurepip/_bundled/pip-*.whl pip/_vendor/vendor.txt)
 %global pip_bundled_provides %{expand:
-Provides: bundled(python3dist(cachecontrol)) = 0.14.3
-Provides: bundled(python3dist(certifi)) = 2025.7.14
-Provides: bundled(python3dist(dependency-groups)) = 1.3.1
-Provides: bundled(python3dist(distlib)) = 0.4
+Provides: bundled(python3dist(cachecontrol)) = 0.14.4
+Provides: bundled(python3dist(certifi)) = 2026.6.17
+Provides: bundled(python3dist(distlib)) = 0.4.2
 Provides: bundled(python3dist(distro)) = 1.9
-Provides: bundled(python3dist(idna)) = 3.10
-Provides: bundled(python3dist(msgpack)) = 1.1.1
-Provides: bundled(python3dist(packaging)) = 25
-Provides: bundled(python3dist(platformdirs)) = 4.3.8
-Provides: bundled(python3dist(pygments)) = 2.19.2
+Provides: bundled(python3dist(idna)) = 3.18
+Provides: bundled(python3dist(msgpack)) = 1.1.2
+Provides: bundled(python3dist(packaging)) = 26.2
+Provides: bundled(python3dist(platformdirs)) = 4.10
+Provides: bundled(python3dist(pygments)) = 2.20
 Provides: bundled(python3dist(pyproject-hooks)) = 1.2
-Provides: bundled(python3dist(requests)) = 2.32.4
-Provides: bundled(python3dist(resolvelib)) = 1.2
-Provides: bundled(python3dist(rich)) = 14.1
+Provides: bundled(python3dist(requests)) = 2.34.2
+Provides: bundled(python3dist(resolvelib)) = 1.2.1
+Provides: bundled(python3dist(rich)) = 14.2
 Provides: bundled(python3dist(setuptools)) = 70.3
-Provides: bundled(python3dist(tomli)) = 2.2.1
+Provides: bundled(python3dist(tomli)) = 2.4.1
 Provides: bundled(python3dist(tomli-w)) = 1.2
-Provides: bundled(python3dist(truststore)) = 0.10.1
-Provides: bundled(python3dist(urllib3)) = 1.26.20
+Provides: bundled(python3dist(truststore)) = 0.10.4
+Provides: bundled(python3dist(urllib3)) = 2.7
 }
 # setuptools
 # vendor.txt not in .whl
@@ -108,15 +107,13 @@ Name:           python-bootstrap
 Name:           python
 %endif
 
-Version:        3.13.8
+Version:        3.14.7
 Release:        %autorelease
 Summary:        Python 3 Interpreter
 License:        Python-2.0.1
 URL:            https://www.python.org
-#!RemoteAsset:  sha256:b9910730526b298299b46b35595ced9055722df60c06ad6301f6a4e2c728a252
+#!RemoteAsset:  sha256:3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81
 Source0:        %{url}/ftp/python/%{version}/Python-%{version}.tar.xz
-#!RemoteAsset:  sha256:741978566e632b39ba64d522f5e2356e0fca96b0517186a7db64658f38634f8e
-Source1:        %{url}/ftp/python/%{version}/Python-%{version}.tar.xz.asc
 BuildSystem:    autotools
 
 # Set values of base and platbase in sysconfig from /usr to /usr/local
@@ -153,6 +150,7 @@ BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(liblzma)
 BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(uuid)
+BuildRequires:  pkgconfig(libzstd)
 
 %if %{with rpmwheels}
 # Python 3.12 removed the deprecated imp module,
@@ -184,6 +182,8 @@ Recommends:     %{_bindir}/python
 # depend on python(abi). Provide that here.
 Provides:       python(abi) = %{pybasever}
 Provides:       /bin/python3
+Provides:       %{_bindir}/python3
+Provides:       %{_bindir}/python%{pybasever}
 Requires:       %{pkgname}-libs%{?_isa} = %{version}-%{release}
 
 # This prevents ALL subpackages built from this spec to require
@@ -234,9 +234,6 @@ Provides:       bundled(python3dist(pip)) = %{pip_version}
 %pip_bundled_provides
 License:        Python-2.0.1 AND CC0-1.0 AND MIT AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND LGPL-2.1-only AND MPL-2.0 AND (Apache-2.0 OR BSD-2-Clause)
 %endif
-# Bundled internal headers are used even when building with system libb2
-# last updated by https://github.com/python/cpython/pull/6286
-Provides:       bundled(libb2) = 0.98.1
 # Bundled mimalloc version in Include/internal/mimalloc/mimalloc.h
 # Python's version is modified, differences are listed in:
 # https://github.com/python/cpython/issues/113141
@@ -493,7 +490,8 @@ done
 %if "%{flavor}" == "bootstrap"
 %else
 EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
-%make_build test TESTOPTS="$EXCLUDES"
+# Do not use external network resources in the build environment.
+%make_build test TESTOPTS="-u-network,-urlfetch $EXCLUDES"
 %endif
 
 %files -n %{pkgname}
@@ -524,6 +522,7 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{pylibdir}/_pyrepl/
 %{pylibdir}/asyncio/
 %{pylibdir}/collections/
+%{pylibdir}/compression/
 %{pylibdir}/concurrent/
 %{pylibdir}/ctypes/
 %{pylibdir}/curses/
@@ -539,6 +538,7 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{pylibdir}/pydoc_data/
 %{pylibdir}/re/
 %{pylibdir}/sqlite3/
+%{pylibdir}/string/
 %{pylibdir}/sysconfig/
 %{pylibdir}/tomllib/
 %{pylibdir}/unittest/
@@ -581,18 +581,17 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{dynload_dir}/_codecs_jp.*.so
 %{dynload_dir}/_codecs_kr.*.so
 %{dynload_dir}/_codecs_tw.*.so
-%{dynload_dir}/_contextvars.*.so
 %{dynload_dir}/_csv.*.so
 %{dynload_dir}/_ctypes.*.so
 %{dynload_dir}/_curses.*.so
 %{dynload_dir}/_curses_panel.*.so
-%{dynload_dir}/_datetime.*.so
 %{dynload_dir}/_dbm.*.so
 %{dynload_dir}/_gdbm.*.so
 %{dynload_dir}/_decimal.*.so
 %{dynload_dir}/_elementtree.*.so
 %{dynload_dir}/_hashlib.*.so
 %{dynload_dir}/_heapq.*.so
+%{dynload_dir}/_hmac.*.so
 %{dynload_dir}/_interpchannels.*.so
 %{dynload_dir}/_interpqueues.*.so
 %{dynload_dir}/_interpreters.*.so
@@ -602,12 +601,12 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{dynload_dir}/_md5.*.so
 %{dynload_dir}/_multibytecodec.*.so
 %{dynload_dir}/_multiprocessing.*.so
-%{dynload_dir}/_opcode.*.so
 %{dynload_dir}/_pickle.*.so
 %{dynload_dir}/_posixshmem.*.so
 %{dynload_dir}/_posixsubprocess.*.so
 %{dynload_dir}/_queue.*.so
 %{dynload_dir}/_random.*.so
+%{dynload_dir}/_remote_debugging.*.so
 %{dynload_dir}/_sha1.*.so
 %{dynload_dir}/_sha2.*.so
 %{dynload_dir}/_sha3.*.so
@@ -618,6 +617,7 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{dynload_dir}/_struct.*.so
 %{dynload_dir}/_uuid.*.so
 %{dynload_dir}/_zoneinfo.*.so
+%{dynload_dir}/_zstd.*.so
 %{dynload_dir}/array.*.so
 %{dynload_dir}/binascii.*.so
 %{dynload_dir}/cmath.*.so
@@ -654,6 +654,8 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 
 %{_libdir}/*.so
 %{_libdir}/*.so.*
+%{pylibdir}/_sysconfig_vars__linux_%{platform_triplet}.json
+%{pylibdir}/build-details.json
 
 %files -n %{pkgname}-devel
 %{pylibdir}/config-%{pybasever}-%{platform_triplet}/*
@@ -672,8 +674,8 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{_bindir}/msgfmt%{pybasever}.py
 
 %{_bindir}/python*-config
-%{_libdir}/pkgconfig/python-3.13-embed.pc
-%{_libdir}/pkgconfig/python-3.13.pc
+%{_libdir}/pkgconfig/python-%{pybasever}-embed.pc
+%{_libdir}/pkgconfig/python-%{pybasever}.pc
 %{_libdir}/pkgconfig/python.pc
 %{_libdir}/pkgconfig/python3-embed.pc
 %{_libdir}/pkgconfig/python3.pc
@@ -702,7 +704,6 @@ EXCLUDES="-x test_ensurepip -x test_ctypes -x test_tools"
 %{dynload_dir}/_testcapi.*.so
 %{dynload_dir}/_testclinic.*.so
 %{dynload_dir}/_testclinic_limited.*.so
-%{dynload_dir}/_testexternalinspection.*.so
 %{dynload_dir}/_testimportmultiple.*.so
 %{dynload_dir}/_testinternalcapi.*.so
 %{dynload_dir}/_testlimitedcapi.*.so
