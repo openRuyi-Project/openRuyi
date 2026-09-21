@@ -1,0 +1,15 @@
+--- a/tilelang/tladapter/toolchain.py
++++ b/tilelang/tladapter/toolchain.py
+@@ -23,6 +23,12 @@
+         if env_value:
+             roots.append(Path(env_value).expanduser())
+ 
++    # Distro layout: openRuyi installs the buddy-mlir toolchain under
++    # /usr/lib64/buddy-mlir/llvm, which is not on PATH.
++    system_buddy = Path("/usr/lib64/buddy-mlir/llvm")
++    if system_buddy.is_dir():
++        roots.append(system_buddy)
++
+     roots.extend(
+         [
+             _BUDDY_MLIR_ROOT / "llvm" / "install",

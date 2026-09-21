@@ -1,0 +1,13 @@
+--- a/3rdparty/tvm/cmake/config.cmake
++++ b/3rdparty/tvm/cmake/config.cmake
+@@ -345,7 +345,9 @@
+ # - ON: Build from ffi/3rdparty/libbacktrace.
+ # - OFF: Don't use libbacktrace.
+ # - /path/to/libbacktrace: Looking for the libbacktrace header and static lib from a user-provided path. Report error if not found.
+-set(TVM_FFI_USE_LIBBACKTRACE ON)
++if(NOT DEFINED TVM_FFI_USE_LIBBACKTRACE)
++  set(TVM_FFI_USE_LIBBACKTRACE ON)
++endif()
+ 
+ # Whether to install a signal handler to print a backtrace on segfault.
+ # Need to have TVM_FFI_USE_LIBBACKTRACE enabled.
