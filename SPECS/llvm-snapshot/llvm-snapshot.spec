@@ -9,11 +9,11 @@
 
 %define _unpackaged_files_terminate_build 0
 
-%global maj_ver 23
+%global maj_ver 24
 %global min_ver 0
 %global patch_ver 0
-%global git_ver git20260701.c7e2809
-%global git_commit c7e2809a631a2fbe73a13e5f2d2e48bc3f3dcf18
+%global git_ver git20260920.e31da6a
+%global git_commit e31da6ab711d043a785b340d6d9add76debd237d
 
 %bcond check 0
 
@@ -79,7 +79,7 @@ Summary:        The Low Level Virtual Machine (%{maj_ver})
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
-#!RemoteAsset:  sha256:978c698af342692419133eea3b23bc6137e6f341101abf41d8164ca148258bb2
+#!RemoteAsset:  sha256:9f2cc6cfdbfa0d1d46de28ee45679b6ce3f848ddffe314c900fde8423e9a05d1
 Source0:        https://github.com/llvm/llvm-project/archive/%{git_commit}.tar.gz
 
 # please keep the patches in different groups for easier maintenance
@@ -543,11 +543,6 @@ OLD_CWD="$PWD"
 %global cmake_common_args %{cmake_common_args} \\\
     -DLLVM_ENABLE_EH=OFF
 
-%ifarch riscv64
-%global cmake_common_args %{cmake_common_args} \\\
-    -DLLVM_PARALLEL_LINK_JOBS=2
-%endif
-
 %global cmake_config_args %{cmake_common_args}
 # clang options
 %global cmake_config_args %{cmake_config_args} \\\
@@ -650,7 +645,9 @@ OLD_CWD="$PWD"
 # installation using the CMAKE_SKIP_INSTALL_RPATH option.
 %global cmake_config_args %{cmake_config_args} -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
 %global cmake_config_args %{cmake_config_args} -DLLVM_VERSION_SUFFIX=''
-%global cmake_config_args %{cmake_config_args} -DLLVM_RAM_PER_COMPILE_JOB=2048
+%global cmake_config_args %{cmake_config_args} \\\
+    -DLLVM_RAM_PER_LINK_JOB=10000 \\\
+    -DLLVM_RAM_PER_COMPILE_JOB=8000
 
 extra_cmake_args=''
 # https://github.com/llvm/llvm-project/issues/111492
@@ -809,7 +806,6 @@ rm -rf %{buildroot}/%{install_prefix}/src
     llvm-reduce
     llvm-remarkutil
     llvm-rtdyld
-    llvm-sim
     llvm-size
     llvm-split
     llvm-stress
@@ -840,6 +836,7 @@ rm -rf %{buildroot}/%{install_prefix}/src
     not
     yaml-bench
     llvm-gpu-loader
+    llvm-calc-occupancy
 }}
 %{install_datadir}/opt-viewer
 
@@ -942,8 +939,10 @@ rm -rf %{buildroot}/%{install_prefix}/src
     clang-change-namespace
     clang-check
     clang-doc
+    clang-dxc
     clang-extdef-mapping
     clang-format
+    clang-format-diff
     clang-include-cleaner
     clang-include-fixer
     clang-installapi
@@ -956,6 +955,10 @@ rm -rf %{buildroot}/%{install_prefix}/src
     clang-refactor
     clang-reorder-fields
     clang-repl
+    clang-ssaf-analyzer
+    clang-ssaf-format
+    clang-ssaf-linker
+    clang-ssaf-src-edit-merge
     clang-sycl-linker
     clang-tidy
     clangd
@@ -967,12 +970,8 @@ rm -rf %{buildroot}/%{install_prefix}/src
     c-index-test
     find-all-symbols
     modularize
-    clang-format-diff
     run-clang-tidy
     offload-arch
-    clang-ssaf-format
-    clang-ssaf-linker
-    clang-ssaf-analyzer
     llvm-extract-bundle-entry
 }}
 %{install_datadir}/clang/clang-format.py*
@@ -1136,6 +1135,8 @@ rm -rf %{buildroot}/%{install_prefix}/src
     mlir-translate
     tblgen-lsp-server
     tblgen-to-irdl
+    mlir-irdl-to-cpp
+    mlir-src-sharder
 }}
 %{install_includedir}/mlir
 %{install_includedir}/mlir-c
