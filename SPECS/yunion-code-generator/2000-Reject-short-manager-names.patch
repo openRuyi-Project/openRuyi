@@ -1,0 +1,81 @@
+From 84bd9e98cd45cd26209ec8969576551b6db0e7da Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 22 Sep 2026 15:15:08 +0800
+Subject: [PATCH] fix: reject short manager names before deriving keywords
+
+The length guard used &&, so it could never reject an invalid manager
+name. Use the intended minimum length before accessing name[1]. This
+prevents S and SManager from panicking and rejects empty keywords.
+
+Cover normal manager names and invalid short names with regression tests.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/swagger-gen/generators/gen.go             |  2 +-
+ .../generators/manager_keyword_test.go        | 44 +++++++++++++++++++
+ 2 files changed, 45 insertions(+), 1 deletion(-)
+ create mode 100644 pkg/swagger-gen/generators/manager_keyword_test.go
+
+diff --git a/pkg/swagger-gen/generators/gen.go b/pkg/swagger-gen/generators/gen.go
+index e04e36e..e12ac55 100755
+--- a/pkg/swagger-gen/generators/gen.go
++++ b/pkg/swagger-gen/generators/gen.go
+@@ -522,7 +522,7 @@ func newTypeParser(man *types.Type, model *types.Type) *typeParser {
+ 
+ func getManagerKeyword(manName string) string {
+ 	name := strings.TrimSuffix(manName, "Manager")
+-	if len(name) == 0 && len(name) == 1 {
++	if len(name) < 2 {
+ 		log.Fatalf("Invalid manager struct name: %s", manName)
+ 	}
+ 	isUpper := func(x byte) bool {
+diff --git a/pkg/swagger-gen/generators/manager_keyword_test.go b/pkg/swagger-gen/generators/manager_keyword_test.go
+new file mode 100644
+index 0000000..38ae2a3
+--- /dev/null
++++ b/pkg/swagger-gen/generators/manager_keyword_test.go
+@@ -0,0 +1,44 @@
++package generators
++
++import (
++	"bytes"
++	"os"
++	"os/exec"
++	"testing"
++)
++
++func TestGetManagerKeyword(t *testing.T) {
++	for name, want := range map[string]string{
++		"HostManager":         "host",
++		"SHostManager":        "host",
++		"SHostNetworkManager": "host_network",
++		"NetworkManager":      "network",
++	} {
++		t.Run(name, func(t *testing.T) {
++			if got := getManagerKeyword(name); got != want {
++				t.Fatalf("getManagerKeyword(%q) = %q, want %q", name, got, want)
++			}
++		})
++	}
++}
++
++func TestGetManagerKeywordRejectsShortNames(t *testing.T) {
++	const helperEnv = "CODEGEN_TEST_MANAGER_NAME"
++	if name, helper := os.LookupEnv(helperEnv); helper {
++		getManagerKeyword(name)
++		return
++	}
++	for _, name := range []string{"", "Manager", "S", "SManager", "A", "AManager"} {
++		t.Run(name, func(t *testing.T) {
++			cmd := exec.Command(os.Args[0], "-test.run=^TestGetManagerKeywordRejectsShortNames$")
++			cmd.Env = append(os.Environ(), helperEnv+"="+name)
++			output, err := cmd.CombinedOutput()
++			if _, ok := err.(*exec.ExitError); !ok {
++				t.Fatalf("expected rejection for %q, got %v: %s", name, err, output)
++			}
++			if !bytes.Contains(output, []byte("Invalid manager struct name:")) {
++				t.Fatalf("expected validation error for %q, got: %s", name, output)
++			}
++		})
++	}
++}
