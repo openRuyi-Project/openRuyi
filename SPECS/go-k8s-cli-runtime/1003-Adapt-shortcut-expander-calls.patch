@@ -1,0 +1,100 @@
+From a85a12631147b308b068763589a2719a45d76e24 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Arda=20G=C3=BC=C3=A7l=C3=BC?= <aguclu@redhat.com>
+Date: Wed, 11 Oct 2023 18:04:11 +0300
+Subject: [PATCH] Add shortname ambiguity warning in shortcut expander
+ (#117668)
+
+* Add warning handler callback function in shortcut expander
+
+Currently, errors in client-go are propagated back to the callers via
+function returns. However, there is no elegant way for just warning users.
+For example, when user wants to get a resource with it's short name format
+and if there are multiple resources belonging to this short name, we need to
+warn user about this ambugity which one is picked and which ones are discarded.
+
+Not only to overcome this particular case mentioned above, but also propose a
+way for the possible warnings in the future, this commit adds a warningHandler
+callback function in shortcutExpander.
+
+* Add warningPrinter functionality in ConfigFlags
+
+ConfigFlags has neither warning user in a standardized
+format functionality nor passing warning callback functions to other upper level
+libraries such as client-go.
+
+This commit adds an ability that user can set warningPrinters
+according to their IOStreams and this warningPrinters will be used
+to raise possible warnings happening not only in cli-runtime but
+also in client-go.
+
+* Pass warning callback function in ConfigFlags to shortcutExpander
+
+This commit passes warning callback function to print possible
+warnings happened in shortcut expander to warn user in a
+standardized format.
+
+* Add integration test for CRDs having ambiguous short names
+
+This commit adds integration test to assure that warning message
+related to this ambiguity is printed when resources are being retrieved via their short name
+representations in cases where multiple resources have same
+short names.
+
+This integration test also ensures that the logic behind which resource
+will be selected hasn't been changed which may cause disperancies in
+clusters.
+
+* Remove defaultConfigFlag global variable
+
+* Move default config flags initialization into function
+
+* Skip warning for versions of same group/resource
+
+* Run update-vendor
+
+* Warn only once when there are multiple versions registered for ambiguous resource
+
+* Apply gocritic review
+
+* Add multi-resource multi-version ambiguity unit test
+
+Kubernetes-commit: a504aed54d028dbc8ea2508142c94d309f5f1ec6
+
+(cherry picked from commit a96869e0c2be74cb5d6099987c741079484bc348)
+Partial backport: adapt the two shortcut-expander calls. Pass nil to retain
+the old behavior without the new warning-printer feature.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/genericclioptions/config_flags.go      | 2 +-
+ pkg/genericclioptions/config_flags_fake.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pkg/genericclioptions/config_flags.go b/pkg/genericclioptions/config_flags.go
+index 2bf672a..ca89318 100644
+--- a/pkg/genericclioptions/config_flags.go
++++ b/pkg/genericclioptions/config_flags.go
+@@ -248,7 +248,7 @@ func (f *ConfigFlags) ToRESTMapper() (meta.RESTMapper, error) {
+ 	}
+ 
+ 	mapper := restmapper.NewDeferredDiscoveryRESTMapper(discoveryClient)
+-	expander := restmapper.NewShortcutExpander(mapper, discoveryClient)
++	expander := restmapper.NewShortcutExpander(mapper, discoveryClient, nil)
+ 	return expander, nil
+ }
+ 
+diff --git a/pkg/genericclioptions/config_flags_fake.go b/pkg/genericclioptions/config_flags_fake.go
+index ff986b0..dc17cc5 100644
+--- a/pkg/genericclioptions/config_flags_fake.go
++++ b/pkg/genericclioptions/config_flags_fake.go
+@@ -54,7 +54,7 @@ func (f *TestConfigFlags) ToRESTMapper() (meta.RESTMapper, error) {
+ 	}
+ 	if f.discoveryClient != nil {
+ 		mapper := restmapper.NewDeferredDiscoveryRESTMapper(f.discoveryClient)
+-		expander := restmapper.NewShortcutExpander(mapper, f.discoveryClient)
++		expander := restmapper.NewShortcutExpander(mapper, f.discoveryClient, nil)
+ 		return expander, nil
+ 	}
+ 	return nil, fmt.Errorf("no restmapper")
+-- 
+2.39.5 (Apple Git-154)
+
