@@ -15,6 +15,9 @@ URL:            https://github.com/vkmark/vkmark
 Source0:        %{name}-%{version}.tar.gz
 BuildSystem:    meson
 
+# Backport a upstream fix for display winsys crash on lavapipe
+Patch0001:      0001-UPSTREAM-display-Properly-handle-Vulkan-errors-during-probing.patch
+
 BuildOption(conf):  -Dxcb=true
 BuildOption(conf):  -Dwayland=true
 BuildOption(conf):  -Dkms=true
