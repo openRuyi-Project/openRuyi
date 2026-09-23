@@ -1,0 +1,38 @@
+From 336fbeaed1fa0b6945b75a99daa63bebeeff04ba Mon Sep 17 00:00:00 2001
+From: jojoliang <agin719@126.com>
+Date: Fri, 3 Mar 2023 13:34:01 +0800
+Subject: [PATCH] update unit test
+
+Backport to v0.7.24, adjusting the import context.
+
+Upstream-Status: Backport [https://github.com/tencentyun/cos-go-sdk-v5/commit/336fbeaed1fa0b6945b75a99daa63bebeeff04ba]
+---
+ object_test.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/object_test.go b/object_test.go
+--- a/object_test.go
++++ b/object_test.go
+@@ -14,6 +14,7 @@
+ 	"os"
+ 	"reflect"
+ 	"strconv"
++	"sync"
+ 	"testing"
+ 	"time"
+ )
+@@ -380,11 +381,14 @@
+ 	newfile.Write(b)
+ 	newfile.Close()
+ 
++	var mu sync.Mutex
+ 	// 已上传内容, 10个分块
+ 	rb := make([][]byte, 33)
+ 	uploadid := "test-cos-multiupload-uploadid"
+ 	partmap := make(map[int64]int)
+ 	mux.HandleFunc("/test.go.upload", func(w http.ResponseWriter, r *http.Request) {
++		mu.Lock()
++		defer mu.Unlock()
+ 		if r.Method == http.MethodPut { // 分块上传
+ 			r.ParseForm()
+ 			part, _ := strconv.ParseInt(r.Form.Get("partNumber"), 10, 64)
