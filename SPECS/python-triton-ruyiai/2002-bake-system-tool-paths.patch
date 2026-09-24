@@ -1,0 +1,57 @@
+diff --git a/backend/compiler.py b/backend/compiler.py
+index 2e37aba..47c6025 100644
+--- a/backend/compiler.py
++++ b/backend/compiler.py
+@@ -21,17 +21,29 @@ from .riscv import DEFAULT_LLC_FEATURES, RiscvToolchain
+ def _get_buddy_translate_path() -> str:
+     """Path to buddy-translate (from buddy-mlir build)."""
+     path = os.getenv("BUDDY_MLIR_BINARY_DIR", "")
+-    if path == "":
+-        raise Exception("BUDDY_MLIR_BINARY_DIR is not set.")
+-    return os.path.join(path, "buddy-translate")
++    if path:
++        return os.path.join(path, "buddy-translate")
++    # openRuyi: buddy-mlir RPM installs buddy-translate to /usr/bin.
++    found = shutil.which("buddy-translate")
++    if found:
++        return found
++    raise Exception(
++        "Unable to locate 'buddy-translate' via BUDDY_MLIR_BINARY_DIR or PATH."
++    )
+ 
+ 
+ def _get_buddy_llc_path() -> str:
+     """Path to buddy-llc (from buddy-mlir build)."""
+     path = os.getenv("BUDDY_MLIR_BINARY_DIR", "")
+-    if path == "":
+-        raise Exception("BUDDY_MLIR_BINARY_DIR is not set.")
+-    return os.path.join(path, "buddy-llc")
++    if path:
++        return os.path.join(path, "buddy-llc")
++    # openRuyi: buddy-mlir RPM installs buddy-llc to /usr/bin.
++    found = shutil.which("buddy-llc")
++    if found:
++        return found
++    raise Exception(
++        "Unable to locate 'buddy-llc' via BUDDY_MLIR_BINARY_DIR or PATH."
++    )
+ 
+ 
+ def _use_ime_pipeline() -> bool:
+diff --git a/backend/paths.py b/backend/paths.py
+index 406a410..49dca36 100644
+--- a/backend/paths.py
++++ b/backend/paths.py
+@@ -34,6 +34,12 @@ def _get_llvm_bin_path(bin_name: str) -> str:
+     if path_entry:
+         return path_entry
+ 
++    # openRuyi: buddy-mlir-llvm RPM installs llc / mlir-translate to
++    # /usr/lib64/buddy-mlir/llvm/bin (not on PATH).
++    rpm_path = os.path.join("/usr/lib64/buddy-mlir/llvm/bin", bin_name)
++    if os.path.isfile(rpm_path) and os.access(rpm_path, os.X_OK):
++        return rpm_path
++
+     raise Exception(f"Unable to locate '{bin_name}' via LLVM_BINARY_DIR or PATH.")
+ 
+ 

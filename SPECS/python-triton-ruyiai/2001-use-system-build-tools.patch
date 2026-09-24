@@ -1,0 +1,18 @@
+diff -ruN a/pyproject.toml b/pyproject.toml
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["setuptools>=40.8.0", "cmake>=3.20,<4.0", "ninja>=1.11.1", "nanobind==2.10.2"]
++requires = ["setuptools>=40.8.0", "nanobind"]
+ build-backend = "setuptools.build_meta"
+ 
+ [tool.mypy]
+diff -ruN a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -243,3 +243,3 @@
+     def get_nanobind_cmake_args(self):
+-        return [f"-Dnanobind_ROOT='{nanobind.cmake_dir()}'"]
++        return [f"-Dnanobind_ROOT='{os.environ.get('NANOBIND_CMAKE_DIR') or nanobind.cmake_dir()}'"]
+ 
