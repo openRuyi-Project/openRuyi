@@ -5,15 +5,15 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global upstream_version 0.9-rc4
+%global upstream_version 0.9-rc5
 
 Name:           avahi
-Version:        0.9~rc4
+Version:        0.9~rc5
 Release:        %autorelease
 Summary:        Local network service discovery
 License:        LGPL-2.1-or-later AND LGPL-2.0-or-later
 URL:            https://github.com/avahi/avahi
-#!RemoteAsset:  sha256:08fcc57377ed05416ec4b3d8a179da716a7a9376821551a5ae16f8276a1ef0b5
+#!RemoteAsset:  sha256:5b0a9d88110b0fc8aaafc5cc0a26e83e7d2a4aca3a36bc27c9b626db7ead27b0
 Source0:        https://github.com/avahi/avahi/archive/refs/tags/v%{upstream_version}.tar.gz
 Source1:        avahi.sysusers
 Source2:        avahi-autoipd.sysusers

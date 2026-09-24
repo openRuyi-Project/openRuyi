@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname webob
 
 Name:           python-%{srcname}
-Version:        1.8.10
+Version:        1.8.11
 Release:        %autorelease
 Summary:        WSGI request and response objects
 License:        MIT
 URL:            https://webob.org/
 VCS:            git:https://github.com/Pylons/webob.git
-#!RemoteAsset:  sha256:1c963a11f307bc3f624fbab9dde737701eae255f32981b7a5486a88db1767c2b
+#!RemoteAsset:  sha256:aa8c27231070b135c025e567a9cd7eda03f4df71352ffaac740cb6a75f0f81a5
 Source0:        https://files.pythonhosted.org/packages/source/w/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

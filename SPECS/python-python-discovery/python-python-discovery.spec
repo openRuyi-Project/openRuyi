@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %global pypi_name python-discovery
 
 Name:           python-python-discovery
-Version:        1.5.2
+Version:        1.6.1
 Release:        %autorelease
 Summary:        Python interpreter discovery
 License:        MIT
 URL:            https://github.com/tox-dev/python-discovery
-#!RemoteAsset:  sha256:45fd4f20a4e3f9b7bf2e0817870bc8e3b320a19658da177af800768c82dbf354
+#!RemoteAsset:  sha256:cf87d3627dfb4412437fdd5b13eae402607722998d21567993aedbc59b23c15e
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

@@ -3,6 +3,7 @@
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -37,12 +38,12 @@ Provides:       bundled(python%{1}dist(urllib3)) = 2.6.3
 }
 
 Name:           python-%{srcname}
-Version:        26.1.2
+Version:        26.2
 Release:        %autorelease
 Summary:        A tool for installing and managing Python packages
 License:        MIT AND Python-2.0.1 AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND ISC AND MPL-2.0 AND (Apache-2.0 OR BSD-2-Clause)
 URL:            https://pip.pypa.io/
-#!RemoteAsset:  sha256:193a7030ac78282beba6a95a3512241a71c2025fe5a05308d0e827a679f99847
+#!RemoteAsset:  sha256:991c94e174822f025b167e55ffd3dc113c46fa1bb8c260d09e25aad8f1916aa0
 Source0:        https://github.com/pypa/%{srcname}/archive/%{version}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 

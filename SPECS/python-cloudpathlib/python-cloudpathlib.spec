@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun <ziyu.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname cloudpathlib
 
 Name:           python-%{srcname}
-Version:        0.24.0
+Version:        0.25.0
 Release:        %autorelease
 Summary:        Python pathlib-style classes for cloud storage services such as Amazon S3, Azure Blob Storage, and Google Cloud Storage
 License:        MIT
 URL:            https://github.com/drivendataorg/cloudpathlib
-#!RemoteAsset:  sha256:c521a984e77b47e656fe78e20a7e3e260e0ab45fc69e33ac01094227c979e34a
+#!RemoteAsset:  sha256:63612e17778c5e3a51b472def8d785d0aaaf347486d6b6786dc7be627556d4c6
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

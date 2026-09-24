@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name langchain_core
 
 Name:           python-%{srcname}
-Version:        1.4.0
+Version:        1.4.6
 Release:        %autorelease
 Summary:        Core abstractions for building LangChain applications
 License:        MIT
 URL:            https://github.com/langchain-ai/langchain
 VCS:            git:https://github.com/langchain-ai/langchain.git
-#!RemoteAsset:  sha256:1dc341eed802ed9c117c0df3923c991e5e9e226571e5725c194eeb5bd93d1a7f
+#!RemoteAsset:  sha256:fb8547f83587c8f646f2136b106b732a974ffbff5537799125d16ed4c326eb63
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

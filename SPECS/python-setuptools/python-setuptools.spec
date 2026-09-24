@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -40,14 +41,14 @@ Name:           python-%{srcname}-bootstrap
 %else
 Name:           python-%{srcname}
 %endif
-Version:        82.0.1
+Version:        83.0.0
 Release:        %autorelease
 Summary:        Easily build and distribute Python packages
 License:        MIT AND Apache-2.0 AND (BSD-2-Clause OR Apache-2.0) AND Python-2.0.1 AND LGPL-3.0-only
 URL:            https://pypi.python.org/pypi/setuptools
 # TODO: Use %%{pypi_source %%{srcname} %%{version}} in the future - 251
 #       Otherwise https://files.pythonhosted.org/packages/source/a/abc/%%{srcname}-%%{version}.tar.gz
-#!RemoteAsset:  sha256:7d872682c5d01cfde07da7bccc7b65469d3dca203318515ada1de5eda35efbf9
+#!RemoteAsset:  sha256:025bccbbf0fa05b6192bc64ae1e7b16e001fd6d6d4d5de03c97b1c1ade523bef
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
