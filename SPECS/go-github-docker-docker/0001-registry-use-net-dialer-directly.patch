@@ -1,0 +1,37 @@
+From 8b7395856f0289a18bfa2b48845637a624f754da Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Tue, 22 Sep 2026 17:30:00 +0800
+Subject: [PATCH] registry: use net dialer directly
+
+docker/go-connections 0.8 removed DialerFromEnvironment. The HTTP
+transport already uses http.ProxyFromEnvironment, so retain the direct
+net.Dialer instead of calling the removed compatibility helper.
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ registry/registry.go | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/registry/registry.go b/registry/registry.go
+index a33090ca1..cd6918fe7 100644
+--- a/registry/registry.go
++++ b/registry/registry.go
+@@ -13,6 +13,5 @@ import (
+ 
+ 	"github.com/docker/distribution/registry/client/transport"
+-	"github.com/docker/go-connections/sockets"
+ 	"github.com/docker/go-connections/tlsconfig"
+ 	"github.com/sirupsen/logrus"
+ 
+@@ -198,9 +197,5 @@ func NewTransport(tlsConfig *tls.Config) *http.Transport {
+ 		DisableKeepAlives: true,
+ 	}
+ 
+-	proxyDialer, err := sockets.DialerFromEnvironment(direct)
+-	if err == nil {
+-		base.Dial = proxyDialer.Dial
+-	}
+ 	return base
+ }
+-- 
+2.51.0
