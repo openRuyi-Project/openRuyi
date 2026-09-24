@@ -10,26 +10,39 @@
 # See Cargo.toml.orig for the original contents.
 
 [package]
-edition = "2021"
-name = "acpi_tables"
-version = "0.2.1"
-authors = ["The Cloud Hypervisor Authors"]
-build = false
+edition = "2024"
+rust-version = "1.85"
+name = "kvm-ioctls"
+version = "0.25.0"
+authors = ["Amazon Firecracker Team <firecracker-maintainers@amazon.com>"]
+build = "build.rs"
 autolib = false
 autobins = false
 autoexamples = false
 autotests = false
 autobenches = false
-description = "Infrastructure for creating dynamic (via AML) and static ACPI tables"
+description = "Safe wrappers over KVM ioctls"
 readme = "README.md"
-keywords = ["virt"]
-license = "Apache-2.0"
-repository = "https://github.com/rust-vmm/acpi_tables"
+keywords = ["kvm"]
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/rust-vmm/kvm"
 
 [lib]
-name = "acpi_tables"
+name = "kvm_ioctls"
 path = "src/lib.rs"
 
-[dependencies.zerocopy]
-version = "0.8.23"
-features = ["derive"]
+[dependencies.bitflags]
+version = "2.4.1"
+
+[dependencies.kvm-bindings]
+version = "0.14.1"
+features = ["fam-wrappers"]
+
+[dependencies.libc]
+version = "0.2.39"
+
+[dependencies.vmm-sys-util]
+version = "0.15"
+
+[dev-dependencies.byteorder]
+version = "1.2.1"
