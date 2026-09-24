@@ -1,0 +1,77 @@
+From 4c0dd708f93bd1204be559bb5869aade2825be3c Mon Sep 17 00:00:00 2001
+From: Dan Winship <danwinship@redhat.com>
+Date: Sat, 20 Jan 2024 11:44:16 -0500
+Subject: [PATCH] Fix unit tests that expected the old FakeClient semantics
+
+Kubernetes-commit: cd980ee07649f7d042569048896a8829c12a8569
+
+(cherry picked from commit f993acddbd816ff241d1e3af1a5e9f06e75b7955)
+Backport the seven cases present in v0.19.3.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ .../nodelifecycle/node_lifecycle_controller_test.go        | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/controllers/nodelifecycle/node_lifecycle_controller_test.go b/controllers/nodelifecycle/node_lifecycle_controller_test.go
+index 8059fa0..7604dbc 100644
+--- a/controllers/nodelifecycle/node_lifecycle_controller_test.go
++++ b/controllers/nodelifecycle/node_lifecycle_controller_test.go
+@@ -62,6 +62,7 @@ func Test_NodesDeleted(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				ExistsByProviderID: false,
+@@ -176,6 +177,7 @@ func Test_NodesDeleted(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				ExistsByProviderID: false,
+@@ -287,6 +289,7 @@ func Test_NodesDeleted(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				EnableInstancesV2:  true,
+@@ -404,6 +407,7 @@ func Test_NodesDeleted(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				EnableInstancesV2:  true,
+@@ -614,6 +618,7 @@ func Test_NodesShutdown(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				NodeShutdown:            false,
+@@ -638,6 +643,7 @@ func Test_NodesShutdown(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				NodeShutdown:            false,
+@@ -702,6 +708,7 @@ func Test_NodesShutdown(t *testing.T) {
+ 					},
+ 				},
+ 			},
++			expectedNode:    &v1.Node{},
+ 			expectedDeleted: true,
+ 			fakeCloud: &fakecloud.Cloud{
+ 				NodeShutdown:            true,
+-- 
+2.39.5 (Apple Git-154)
+
