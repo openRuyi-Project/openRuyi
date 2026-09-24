@@ -1,0 +1,28 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] build: Avoid the dynamic percent-n probe on glibc
+
+The legacy snprintf length probe uses a writable format containing %n,
+which hardened glibc rejects at runtime.  Use the fallback formatter on
+glibc while retaining the existing path elsewhere.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/lib/vasnprintf.c b/lib/vasnprintf.c
+--- a/lib/vasnprintf.c
++++ b/lib/vasnprintf.c
+@@ -88 +88,6 @@
+-# define USE_SNPRINTF 1
++# if defined __GLIBC__
++/* glibc rejects the writable format used for the %n length probe. */
++#  define USE_SNPRINTF 0
++# else
++#  define USE_SNPRINTF 1
++# endif
+@@ -103 +108,6 @@
+-# define USE_SNPRINTF (HAVE_DECL__SNPRINTF || HAVE_SNPRINTF)
++# if defined __GLIBC__
++/* glibc rejects the writable format used for the %n length probe. */
++#  define USE_SNPRINTF 0
++# else
++#  define USE_SNPRINTF (HAVE_DECL__SNPRINTF || HAVE_SNPRINTF)
++# endif

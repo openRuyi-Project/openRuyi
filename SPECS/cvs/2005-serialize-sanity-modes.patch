@@ -1,0 +1,27 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] tests: Serialize the full sanity modes
+
+The local, remote, and proxy sanity modes share check.log and
+/tmp/cvs-sanity.  Run their complete suites in order so parallel make
+does not start multiple modes in the same test directory.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -130 +130,4 @@
+-check-local: localcheck remotecheck proxycheck
++check-local:
++	$(MAKE) $(AM_MAKEFLAGS) localcheck
++	$(MAKE) $(AM_MAKEFLAGS) remotecheck
++	$(MAKE) $(AM_MAKEFLAGS) proxycheck
+diff --git a/src/Makefile.in b/src/Makefile.in
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -753 +753,4 @@
+-check-local: localcheck remotecheck proxycheck
++check-local:
++	$(MAKE) $(AM_MAKEFLAGS) localcheck
++	$(MAKE) $(AM_MAKEFLAGS) remotecheck
++	$(MAKE) $(AM_MAKEFLAGS) proxycheck

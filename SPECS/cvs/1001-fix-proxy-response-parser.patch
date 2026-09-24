@@ -1,0 +1,16 @@
+Subject: [PATCH] Reject malformed HTTP proxy status responses
+Origin: https://src.opensuse.org/pool/cvs/src/branch/factory/cvs-CVE-2012-0804.patch
+CVE: CVE-2012-0804
+
+Parse only the status code and require exactly one conversion.  The old
+unbounded %s conversion could overflow the response buffer.
+---
+diff --git a/src/client.c b/src/client.c
+--- a/src/client.c
++++ b/src/client.c
+@@ -3561 +3561 @@ connect_to_pserver (cvsroot_t *root, struct buffer **to_server_p,
+-	sscanf (read_buf, "%s %d", write_buf, &codenum);
++	count = sscanf (read_buf, "%*s %d", &codenum);
+@@ -3563 +3563 @@ connect_to_pserver (cvsroot_t *root, struct buffer **to_server_p,
+-	if ((codenum / 100) != 2)
++	if (count != 1 || (codenum / 100) != 2)

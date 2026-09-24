@@ -1,0 +1,22 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] tests: Accept quoted invalid option diagnostics
+
+Current glibc getopt diagnostics quote the rejected option as 'H'.  The
+older unquoted form is still valid, so accept both without weakening the
+test that cvs admin -H rejects the option and aborts.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/src/sanity.sh b/src/sanity.sh
+--- a/src/sanity.sh
++++ b/src/sanity.sh
+@@ -3329,7 +3329,7 @@
+ 	  # otherwise the other, so accept both of them. -- mdb
+ 	  dotest_fail basicb-21 "${testcvs} -q admin -H" \
+-"admin: invalid option -- H
++"admin: invalid option -- '\{0,1\}H'\{0,1\}
+ ${CPROG} \[admin aborted\]: specify ${CPROG} -H admin for usage information" \
+-"admin: illegal option -- H
++"admin: illegal option -- '\{0,1\}H'\{0,1\}
+ ${CPROG} \[admin aborted\]: specify ${CPROG} -H admin for usage information"
+ 	  cd ..

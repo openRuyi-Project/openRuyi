@@ -1,0 +1,21 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] build: Recognize the openRuyi riscv64 triplet
+
+The bundled config.sub predates riscv64-openruyi-linux; normalize that
+triplet to the GNU ABI form expected by this configure script.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub
++++ b/build-aux/config.sub
+@@ -116,0 +117,9 @@
++case $1 in
++ riscv64-openruyi-linux)
++   echo "$1-gnu"
++   exit 0;;
++ riscv64-openruyi-linux-gnu)
++   echo "$1"
++   exit 0;;
++esac
++

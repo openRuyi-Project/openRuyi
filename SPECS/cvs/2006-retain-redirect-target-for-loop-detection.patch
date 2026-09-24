@@ -1,0 +1,16 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] client: Retain redirect targets for loop detection
+
+The response line passed to handle_redirect is freed by
+get_server_responses after the handler returns.  The redirect list
+must own a copy of the root; otherwise its hash entry points to freed
+memory and repeated redirects can loop forever.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/src/client.c b/src/client.c
+--- a/src/client.c
++++ b/src/client.c
+@@ -615 +615 @@ handle_redirect (char *args, size_t len)
+-	push_string (redirects, args);
++	push_string (redirects, xstrdup (args));
