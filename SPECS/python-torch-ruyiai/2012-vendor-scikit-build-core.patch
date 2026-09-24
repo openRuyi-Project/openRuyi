@@ -1,0 +1,55 @@
+Take scikit-build-core out of build-system.requires, pin the schema floor
+directly, and drop the license-files pattern that the pruned third_party tree
+cannot satisfy.
+
+The RuyiAI snapshot needs scikit-build-core 1.0 or newer, while openRuyi still
+ships 0.12.x and python-pyvex pins an upper bound against it, so the backend
+comes in as an extra source instead of a repository-wide upgrade.  PyTorch's
+license-files list globs the vendored components; this build keeps only the
+components it compiles, so the .rst pattern matches nothing and PEP 639
+rejects the metadata.
+
+diff --git a/pyproject.toml b/pyproject.toml
+index e0baa0e..68237cd 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -5,10 +5,9 @@ requires = [
+     "numpy",
+     "packaging>=24.2",  # required by setuptools>=77 to validate PEP 639 license expressions
+     "pyyaml",
+-    # 1.0 is required for [[tool.dynamic-metadata]], the [tool.scikit-build.env]
+-    # table, and native CMAKE_BUILD_TYPE env handling used below. CI pins the
+-    # exact patch we test against in .ci/docker/requirements-ci.txt.
+-    "scikit-build-core>=1.0",
++    # openRuyi: scikit-build-core 1.0 or newer is supplied by the build from
++    # its own source archive instead of from this list, so that building the
++    # package does not require a repository-wide backend upgrade.
+     # Imported by torchgen at build time (cmake/Codegen.cmake runs
+     # `python -m torchgen.gen`, and torchgen/utils.py uses `Self` /
+     # `assert_never`). Currently also pulled in transitively through
+@@ -24,9 +23,11 @@ requires = [
+ build-backend = "scikit_build_core.build"
+ 
+ [tool.scikit-build]
+-# Track the build-system.requires floor (scikit-build-core>=1.0) so the schema
+-# and defaults are pinned to the version we build against.
+-minimum-version = "build-system.requires"
++# openRuyi: the floor is pinned directly because build-system.requires no
++# longer names the backend.  1.0 is required for [[tool.dynamic-metadata]], the
++# [tool.scikit-build.env] table, and native CMAKE_BUILD_TYPE env handling used
++# below.
++minimum-version = "1.0"
+ build-dir = "build"
+ 
+ [tool.scikit-build.env]
+@@ -354,7 +355,9 @@ license-files = [
+     "LICENSE",
+     "third_party/**/LICENSE",
+     "third_party/**/LICENSE.txt",
+-    "third_party/**/LICENSE.rst",
++    # openRuyi: the only components that ship a .rst license are ones this
++    # build prunes from third_party, and PEP 639 rejects a pattern that
++    # matches nothing.
+ ]
+ authors = [{ name = "PyTorch Team", email = "packages@pytorch.org" }]
+ keywords = ["pytorch", "machine learning"]

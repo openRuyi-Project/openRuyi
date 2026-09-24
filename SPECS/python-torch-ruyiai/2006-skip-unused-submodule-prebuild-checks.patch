@@ -1,0 +1,53 @@
+PyTorch 2.13 runs cmake/PreBuildSteps.cmake before later CMake option handling.
+When building from the release asset without .gitmodules, its fallback
+submodule sanity list still checks cpuinfo, onnx, fbgemm, and cutlass even when
+the distro build uses system cpuinfo/onnx, disables fbgemm, and has CUDA off.
+
+Build the fallback list from the forwarded USE_* / USE_SYSTEM_* variables so
+the source tree may prune unused vendored directories while keeping the default
+upstream behavior when those variables are not set.
+
+diff --git a/cmake/PreBuildSteps.cmake b/cmake/PreBuildSteps.cmake
+index 5c5f3246b..11f080339 100644
+--- a/cmake/PreBuildSteps.cmake
++++ b/cmake/PreBuildSteps.cmake
+@@ -21,13 +21,22 @@ if(NOT DEFINED USE_SYSTEM_LIBS OR NOT USE_SYSTEM_LIBS)
+       list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/${_path}")
+     endforeach()
+   else()
+-    set(_submodule_folders
+-      "${PROJECT_SOURCE_DIR}/third_party/gloo"
+-      "${PROJECT_SOURCE_DIR}/third_party/cpuinfo"
+-      "${PROJECT_SOURCE_DIR}/third_party/onnx"
+-      "${PROJECT_SOURCE_DIR}/third_party/fbgemm"
+-      "${PROJECT_SOURCE_DIR}/third_party/cutlass"
+-    )
++    set(_submodule_folders)
++    if((NOT DEFINED USE_GLOO OR USE_GLOO) AND (NOT DEFINED USE_SYSTEM_GLOO OR NOT USE_SYSTEM_GLOO))
++      list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/gloo")
++    endif()
++    if(NOT DEFINED USE_SYSTEM_CPUINFO OR NOT USE_SYSTEM_CPUINFO)
++      list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/cpuinfo")
++    endif()
++    if(NOT DEFINED USE_SYSTEM_ONNX OR NOT USE_SYSTEM_ONNX)
++      list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/onnx")
++    endif()
++    if(NOT DEFINED USE_FBGEMM OR USE_FBGEMM)
++      list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/fbgemm")
++    endif()
++    if(NOT DEFINED USE_CUDA OR USE_CUDA)
++      list(APPEND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/cutlass")
++    endif()
+   endif()
+
+   set(_all_missing TRUE)
+@@ -79,7 +88,8 @@ if(NOT DEFINED USE_SYSTEM_LIBS OR NOT USE_SYSTEM_LIBS)
+     endif()
+   endforeach()
+   # Extra check for fbgemm's nested dependency
+-  if(NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/fbgemm/external/asmjit/CMakeLists.txt")
++  list(FIND _submodule_folders "${PROJECT_SOURCE_DIR}/third_party/fbgemm" _fbgemm_submodule_index)
++  if(NOT _fbgemm_submodule_index EQUAL -1 AND NOT EXISTS "${PROJECT_SOURCE_DIR}/third_party/fbgemm/external/asmjit/CMakeLists.txt")
+     message(FATAL_ERROR
+       "third_party/fbgemm/external/asmjit appears incomplete.\n"
+       "Please run: git submodule update --init --recursive"
