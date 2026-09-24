@@ -4,36 +4,40 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global srcname s3fs
+%global srcname proto-plus
+%global pypi_name proto_plus
 
 Name:           python-%{srcname}
-Version:        2026.6.0
+Version:        1.28.4
 Release:        %autorelease
-Summary:        S3 Filesystem
-License:        BSD-3-Clause
-URL:            https://github.com/fsspec/s3fs/
-#!RemoteAsset:  sha256:b28de7082d0a4f72392884bdc497e34a4a1582f675d214c7da0acf6e950a0083
-Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
+Summary:        Pythonic wrapper for protocol buffers
+License:        Apache-2.0
+URL:            https://github.com/googleapis/proto-plus-python
+#!RemoteAsset:  sha256:5ff7ecad828e032a491fcb86947801768e32237f99dd049b649965b892ae9a63
+Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l proto +auto
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(protobuf) >= 6.33.5
+BuildRequires:  python3dist(setuptools)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
-S3FS builds on aiobotocore to provide a convenient Python filesystem interface for S3.
+Proto Plus provides idiomatic Python wrappers around protocol buffer message
+classes.
 
 %generate_buildrequires
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.md
-%license LICENSE.txt
+%doc README.rst
+%license LICENSE
 
 %changelog
 %autochangelog

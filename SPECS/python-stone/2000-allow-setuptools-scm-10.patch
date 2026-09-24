@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 12:00:00 +0800
+Subject: [PATCH] build: allow setuptools-scm 10
+
+openRuyi provides setuptools-scm 10.0.5.  Stone's generated version file and
+setuptools-scm configuration work with that release, so retain the minimum
+version while removing the obsolete build-only upper bound.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index aff7608..85b7399 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -5,3 +5,3 @@
+ # and writes it to stone/_version.py for runtime access.
+-requires = ["setuptools>=77", "setuptools-scm>=8,<9"]
++requires = ["setuptools>=77", "setuptools-scm>=8"]
+ build-backend = "setuptools.build_meta"
