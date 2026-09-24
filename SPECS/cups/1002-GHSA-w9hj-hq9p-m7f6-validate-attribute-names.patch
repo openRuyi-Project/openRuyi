@@ -1,0 +1,148 @@
+From 05fe6b0e848e51243e9d62e2c5adb6c3023f247e Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 16 Sep 2026 11:16:26 -0400
+Subject: [PATCH] Validate IPP attribute names unconditionally
+
+Upstream-Commit: 05fe6b0e848e51243e9d62e2c5adb6c3023f247e
+Backport-Notes: The CHANGES.md hunk is omitted. CUPS 2.4.19 keeps its fixed
+IPP_BUF_SIZE bounds, while the official shared keyword validator and all four
+validation call sites are backported. The incompatible upstream removals of
+later IPP_MAX_KEYWORD-only guards are therefore inapplicable on this base.
+---
+--- a/cups/ipp.c
++++ b/cups/ipp.c
+@@ -31,6 +31,7 @@
+ static void		ipp_free_values(ipp_attribute_t *attr, int element,
+ 			                int count);
+ static char		*ipp_get_code(const char *locale, char *buffer, size_t bufsize) _CUPS_NONNULL(1,2);
++static int		ipp_is_valid_keyword(const char *name, const char *keyword);
+ static char		*ipp_lang_code(const char *locale, char *buffer, size_t bufsize) _CUPS_NONNULL(1,2);
+ static size_t		ipp_length(ipp_t *ipp, int collection);
+ static ssize_t		ipp_read_file(int *fd, ipp_uchar_t *buffer, size_t length);
+@@ -4008,21 +4009,8 @@
+   * Validate the attribute name.
+   */
+ 
+-  for (ptr = attr->name; *ptr; ptr ++)
+-    if (!isalnum(*ptr & 255) && *ptr != '-' && *ptr != '.' && *ptr != '_')
+-      break;
+-
+-  if (*ptr || ptr == attr->name)
+-  {
+-    ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad attribute name - invalid character (RFC 8011 section 5.1.4)."), attr->name);
+-    return (0);
+-  }
+-
+-  if ((ptr - attr->name) > 255)
+-  {
+-    ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad attribute name - bad length %d (RFC 8011 section 5.1.4)."), attr->name, (int)(ptr - attr->name));
++  if (!ipp_is_valid_keyword(/*name*/NULL, attr->name))
+     return (0);
+-  }
+ 
+   switch (attr->value_tag)
+   {
+@@ -4285,24 +4273,8 @@
+     case IPP_TAG_KEYWORD :
+         for (i = 0; i < attr->num_values; i ++)
+ 	{
+-	  for (ptr = attr->values[i].string.text; *ptr; ptr ++)
+-	  {
+-	    if (!isalnum(*ptr & 255) && *ptr != '-' && *ptr != '.' &&
+-	        *ptr != '_')
+-	      break;
+-	  }
+-
+-	  if (*ptr || ptr == attr->values[i].string.text)
+-	  {
+-	    ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad keyword value \"%s\" - invalid character (RFC 8011 section 5.1.4)."), attr->name, attr->values[i].string.text);
++	  if (!ipp_is_valid_keyword(attr->name, attr->values[i].string.text))
+ 	    return (0);
+-	  }
+-
+-	  if ((ptr - attr->values[i].string.text) > (IPP_MAX_KEYWORD - 1))
+-	  {
+-	    ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad keyword value \"%s\" - bad length %d (RFC 8011 section 5.1.4)."), attr->name, attr->values[i].string.text, (int)(ptr - attr->values[i].string.text));
+-	    return (0);
+-	  }
+ 	}
+         break;
+ 
+@@ -5459,7 +5431,7 @@
+   * Range check input...
+   */
+ 
+-  if (!ipp || num_values < 0)
++  if (!ipp || num_values < 0 || (name && !ipp_is_valid_keyword(/*name*/NULL, name)))
+     return (NULL);
+ 
+  /*
+@@ -5651,6 +5623,47 @@
+ 
+ 
+ /*
++ * 'ipp_is_valid_keyword()' - Determine whether a keyword string is valid.
++ */
++
++static int				/* O - 1 if valid, 0 if bad */
++ipp_is_valid_keyword(
++    const char *name,			/* I - Attribute name */
++    const char *keyword)		/* I - Keyword string */
++{
++  const char	*ptr;			/* Pointer into keyword */
++
++
++  for (ptr = keyword; *ptr; ptr ++)
++  {
++    if (!isalnum(*ptr & 255) && *ptr != '-' && *ptr != '.' && *ptr != '_')
++      break;
++  }
++
++  if (*ptr || ptr == keyword)
++  {
++    if (name)
++      ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad keyword value \"%s\" - invalid character (RFC 8011 section 5.1.4)."), name, keyword);
++    else
++      ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad attribute name - invalid character (RFC 8011 section 5.1.4)."), keyword);
++
++    return (0);
++  }
++  else if ((ptr - keyword) > 255)
++  {
++    if (name)
++      ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad keyword value \"%s\" - bad length %d (RFC 8011 section 5.1.4)."), name, keyword, (int)(ptr - keyword));
++    else
++      ipp_set_error(IPP_STATUS_ERROR_BAD_REQUEST, _("\"%s\": Bad attribute name - bad length %d (RFC 8011 section 5.1.4)."), keyword, (int)(ptr - keyword));
++
++    return (0);
++  }
++
++  return (1);
++}
++
++
++/*
+  * 'ipp_lang_code()' - Convert a C locale name into an IPP language code.
+  *
+  * This typically converts strings of the form "ll_CC" and "ll-REGION" to "ll-cc" and
+@@ -6274,6 +6287,9 @@
+ 
+ 	    buffer[n] = '\0';
+ 
++	    if (!ipp_is_valid_keyword(/*name*/NULL, (char *)buffer))
++	      goto rollback;
++
+             if (ipp->current)
+ 	      ipp->prev = ipp->current;
+ 
+@@ -6600,6 +6616,10 @@
+ 		}
+ 
+ 		buffer[n] = '\0';
++
++		if (!ipp_is_valid_keyword(/*name*/NULL, (char *)buffer))
++		  goto rollback;
++
+ 		attr->name = _cupsStrAlloc((char *)buffer);
+ 
+                /*

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Jvle <keke.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,15 +10,20 @@
 %global srcname capstone
 
 Name:           %{srcname}
-Version:        5.0.6
+Version:        5.0.9
 Release:        %autorelease
 Summary:        A multi-platform, multi-architecture disassembly framework
 License:        BSD-3-Clause
 URL:            https://www.capstone-engine.org
 VCS:            git:https://github.com/capstone-engine/capstone
-#!RemoteAsset:  sha256:240ebc834c51aae41ca9215d3190cc372fd132b9c5c8aa2d5f19ca0c325e28f9
+#!RemoteAsset:  sha256:0619da31af08152600af95c481527ef6d756c0a8404fca7544a4fdf6dfc2c0f9
 Source0:        https://github.com/capstone-engine/%{srcname}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
+
+# From https://github.com/capstone-engine/capstone/commit/e17ee44a8307ea33375b4727ac4f987650bf7bed
+Patch1000:      1000-V5-Fix-OOB-reads-writes-CVE-2026-55893-CVE-2026-5589.patch
+# From https://github.com/capstone-engine/capstone/commit/de4b58b2e74b92296a1e181f4121c42bd65eb286
+Patch1001:      1001-GHSA-5q63-4654-94v6-fail-invalid-long-instruction.patch
 
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
 BuildOption(conf):  -DCAPSTONE_BUILD_CSTOOL=ON

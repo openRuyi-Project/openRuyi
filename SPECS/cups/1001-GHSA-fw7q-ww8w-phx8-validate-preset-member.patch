@@ -1,0 +1,21 @@
+From 28834c719ae76e97b75f8190ee5e941daedb3da8 Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 16 Sep 2026 10:41:41 -0400
+Subject: [PATCH] Validate preset member attributes
+
+Upstream-Commit: 28834c719ae76e97b75f8190ee5e941daedb3da8
+Backport-Notes: CUPS 2.4.19 predates the upstream attr-based validation at this
+site. The official member validation and value-tag checks are added to the
+corresponding fallback branch.
+---
+--- a/cups/ppd-cache.c
++++ b/cups/ppd-cache.c
+@@ -5155,7 +5155,7 @@
+ 	  else if (keyword && !strcmp(keyword, "two-sided-short-edge"))
+ 	    cupsFilePuts(fp, "*Duplex DuplexTumble\n");
+         }
+-        else
++        else if (ippValidateAttribute(member) && (ippGetValueTag(member) == IPP_TAG_BOOLEAN || ippGetValueTag(member) == IPP_TAG_INTEGER || ippGetValueTag(member) == IPP_TAG_KEYWORD))
+         {
+          /*
+           * Add attribute name and value as-is...
