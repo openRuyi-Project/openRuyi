@@ -30,6 +30,7 @@ Requires:       kf6-kcoreaddons
 Requires:       kf6-kcmutils
 Requires:       kf6-kconfig
 Requires:       kf6-qqc2-desktop-style
+Requires:       openruyi-logo
 
 Recommends:     discover
 Recommends:     mpv
