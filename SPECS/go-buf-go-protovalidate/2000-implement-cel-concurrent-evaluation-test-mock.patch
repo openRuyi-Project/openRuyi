@@ -1,0 +1,28 @@
+From b686a0433afb44a61e3d5fdd8e282d4c272056a3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 12:00:00 +0800
+Subject: [PATCH] tests: implement CEL concurrent evaluation mock
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ program_test.go | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/program_test.go b/program_test.go
+index 57b7ce0..e871666 100644
+--- a/program_test.go
++++ b/program_test.go
+@@ -285,3 +285,10 @@ func (m mockProgram) Eval(_ any) (ref.Val, *cel.EvalDetails, error) {
+ func (m mockProgram) ContextEval(_ context.Context, _ any) (ref.Val, *cel.EvalDetails, error) {
+ 	return m.Val, nil, m.Err
+ }
++
++func (m mockProgram) ConcurrentEval(_ context.Context, _ any) <-chan cel.EvalResult {
++	result := make(chan cel.EvalResult, 1)
++	result <- cel.EvalResult{Val: m.Val, Err: m.Err}
++	close(result)
++	return result
++}
+-- 
+2.43.0
+
