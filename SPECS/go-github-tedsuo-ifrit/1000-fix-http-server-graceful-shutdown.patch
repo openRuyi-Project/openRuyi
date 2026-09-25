@@ -1,0 +1,90 @@
+From 56b97e100a6fa0b68848d57387719e705bb1a369 Mon Sep 17 00:00:00 2001
+From: Geoff Franks <geoff.franks@gmail.com>
+Date: Thu, 20 Aug 2026 15:09:54 -0400
+Subject: [PATCH] fix: correct http_server graceful shutdown to not call
+ log.Fatalf
+
+Three bugs introduced in PR #46 ("Modernizing ifrit", commit 94822c9)
+caused CI to hang and never exit:
+
+1. log.Fatalf used the outer `err` variable (from serverErrChan) instead
+   of `shutdownErr`, calling os.Exit(1) from library code and killing
+   the test binary mid-run.
+2. errors.Is check for http.ErrServerClosed on server.Shutdown's return
+   value was wrong -- Shutdown never returns that sentinel (only Serve
+   does), so any real shutdown error fell through to the Fatalf path.
+3. listener.Close() before server.Shutdown() was redundant; Shutdown
+   already closes the listener and can race on the handle.
+
+Replace the broken block with `return server.Shutdown(ctx)`, which
+propagates real errors to the caller without calling os.Exit. Drop the
+now-unused `errors` and `log` imports.
+
+Add a regression test: "exits cleanly without error after graceful
+shutdown" exercises the signal path with an in-flight request and
+asserts the process exits with nil.
+
+ai-assisted=yes
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+---
+ http_server/http_server.go      | 16 +---------------
+ http_server/http_server_test.go |  7 +++++++
+ 2 files changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/http_server/http_server.go b/http_server/http_server.go
+index 23a1dbb..73a6474 100644
+--- a/http_server/http_server.go
++++ b/http_server/http_server.go
+@@ -3,8 +3,6 @@ package http_server
+ import (
+ 	"context"
+ 	"crypto/tls"
+-	"errors"
+-	"log"
+ 	"net"
+ 	"net/http"
+ 	"os"
+@@ -76,21 +74,9 @@ func (s *httpServer) Run(signals <-chan os.Signal, ready chan<- struct{}) error
+ 			return err
+ 
+ 		case <-signals:
+-			listener.Close()
+-
+ 			ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+ 			defer cancel()
+-			if shutdownErr := server.Shutdown(ctx); shutdownErr != nil {
+-				// 2. Filter out http.ErrServerClosed (this is a normal, successful shutdown)
+-				if errors.Is(shutdownErr, http.ErrServerClosed) {
+-					log.Println("HTTP server closed gracefully.")
+-				} else {
+-					// 3. Handle actual errors (e.g., context deadline timeout)
+-					log.Fatalf("HTTP server shutdown failed: %v", err)
+-				}
+-			}
+-
+-			return nil
++			return server.Shutdown(ctx)
+ 		}
+ 	}
+ }
+diff --git a/http_server/http_server_test.go b/http_server/http_server_test.go
+index 920d035..88a0134 100644
+--- a/http_server/http_server_test.go
++++ b/http_server/http_server_test.go
+@@ -142,6 +142,13 @@ var _ = Describe("HttpServer", func() {
+ 						finishRequestChan <- struct{}{}
+ 						Eventually(process.Wait()).Should(Receive())
+ 					})
++
++					It("exits cleanly without error after graceful shutdown", func() {
++						finishRequestChan <- struct{}{}
++						var exitErr error
++						Eventually(process.Wait()).Should(Receive(&exitErr))
++						Ω(exitErr).ShouldNot(HaveOccurred())
++					})
+ 				})
+ 			})
+ 		})
+-- 
+2.43.0
+

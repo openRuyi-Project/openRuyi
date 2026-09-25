@@ -1,0 +1,47 @@
+From 951072abe87b43058e81497a98842031e46486e8 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 17 Aug 2026 05:37:53 +0800
+Subject: [PATCH] test: ignore expiration for rollback recovery fixture
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ client/client_test.go | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/client/client_test.go b/client/client_test.go
+index c76c5b2..970bc81 100644
+--- a/client/client_test.go
++++ b/client/client_test.go
+@@ -559,6 +559,14 @@ func initRootTest(c *C, baseDir string) (*Client, func() error) {
+ 	return tufClient, l.Close
+ }
+ 
++func updateIgnoringExpired(c *Client) error {
++	isExpired := verify.IsExpired
++	defer func() { verify.IsExpired = isExpired }()
++	verify.IsExpired = func(time.Time) bool { return false }
++	_, err := c.Update()
++	return err
++}
++
+ func (s *ClientSuite) TestUpdateRoots(c *C) {
+ 	var tests = []struct {
+ 		fixturePath      string
+@@ -608,7 +616,13 @@ func (s *ClientSuite) TestUpdateRoots(c *C) {
+ 		tufClient, closer := initRootTest(c, test.fixturePath)
+ 		// after initialization of the client, ensure the local store is up-to-date as well.
+ 		tufClient.getLocalMeta()
+-		_, err := tufClient.Update()
++		var err error
++		if test.fixturePath == "testdata/Published1Time_rollbackAttackRecovery" {
++			// This fixture verifies rollback recovery, not metadata expiration.
++			err = updateIgnoringExpired(tufClient)
++		} else {
++			_, err = tufClient.Update()
++		}
+ 		if test.expectedError == nil {
+ 			c.Assert(err, IsNil)
+ 			// Check if the root.json is being saved in non-volatile storage.
+-- 
+2.43.0
+
