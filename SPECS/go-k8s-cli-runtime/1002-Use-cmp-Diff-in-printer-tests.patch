@@ -1,0 +1,54 @@
+From d37c623b3bee6c4ac81e66567bd76e2f8d37e6c1 Mon Sep 17 00:00:00 2001
+From: Tim Hockin <thockin@google.com>
+Date: Thu, 23 Mar 2023 11:29:01 -0700
+Subject: [PATCH] Replace uses of diff.ObjectDiff with cmp.Diff
+
+ObjectDiff is already a shim over cmp.Diff, so no actual output or
+behavior changes
+
+Kubernetes-commit: 29c0b73d640b6e50c4f2dfeee7b07ca66a530dbd
+
+(cherry picked from commit 7130611e271da415b1751fd83db423701fa7c725)
+Backport the source changes to the pinned OpenShift fork; retain its module metadata.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/printers/json_test.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/pkg/printers/json_test.go b/pkg/printers/json_test.go
+index f8f1277..279af79 100644
+--- a/pkg/printers/json_test.go
++++ b/pkg/printers/json_test.go
+@@ -21,10 +21,10 @@ import (
+ 	"reflect"
+ 	"testing"
+ 
++	"github.com/google/go-cmp/cmp"
+ 	"k8s.io/api/core/v1"
+ 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+ 	"k8s.io/apimachinery/pkg/runtime"
+-	"k8s.io/apimachinery/pkg/util/diff"
+ 	"k8s.io/apimachinery/pkg/util/json"
+ 	"k8s.io/client-go/kubernetes/scheme"
+ 	"sigs.k8s.io/yaml"
+@@ -79,7 +79,7 @@ func testPrinter(t *testing.T, printer ResourcePrinter, unmarshalFunc func(data
+ 		t.Fatal(err)
+ 	}
+ 	if !reflect.DeepEqual(testData, poutput) {
+-		t.Errorf("Test data and unmarshaled data are not equal: %v", diff.ObjectDiff(poutput, testData))
++		t.Errorf("Test data and unmarshaled data are not equal: %v", cmp.Diff(poutput, testData))
+ 	}
+ 
+ 	obj := &v1.Pod{
+@@ -102,7 +102,7 @@ func testPrinter(t *testing.T, printer ResourcePrinter, unmarshalFunc func(data
+ 		t.Fatal(err)
+ 	}
+ 	if !reflect.DeepEqual(obj, &objOut) {
+-		t.Errorf("Unexpected inequality:\n%v", diff.ObjectDiff(obj, &objOut))
++		t.Errorf("Unexpected inequality:\n%v", cmp.Diff(obj, &objOut))
+ 	}
+ }
+ 
+-- 
+2.39.5 (Apple Git-154)
+
