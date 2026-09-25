@@ -1,0 +1,121 @@
+From c17fa3e82bbe07ee961f4e7fb69a3a985d0809c8 Mon Sep 17 00:00:00 2001
+From: chai2010 <chaishushan@gmail.com>
+Date: Wed, 25 Dec 2019 16:53:08 +0800
+Subject: [PATCH] add go.mod and fix test
+
+(cherry picked from commit 6b9f4b1008e1c41455d40558ca5dade14f360ab8)
+Backport caller-name normalization and its tests; retain the pinned module layout.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ gettext/caller.go      | 28 ++++++++++++++++++++++------
+ gettext/caller_test.go | 34 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 54 insertions(+), 8 deletions(-)
+
+diff --git a/gettext/caller.go b/gettext/caller.go
+index e24aab3..fa80ae1 100644
+--- a/gettext/caller.go
++++ b/gettext/caller.go
+@@ -10,8 +10,12 @@ import (
+ )
+ 
+ var (
+-	reInit    = regexp.MustCompile(`init·\d+$`) // main.init·1
+-	reClosure = regexp.MustCompile(`func·\d+$`) // main.func·001
++	reInit1 = regexp.MustCompile(`init·\d+$`)  // main.init·1
++	reInit2 = regexp.MustCompile(`init\.\d+$`) // main.init.1
++
++	reClosure1 = regexp.MustCompile(`func·\d+$`)                // main.func·001
++	reClosure2 = regexp.MustCompile(`glob\.\.func\d+(\.\d+)*$`) // main.glob..func1
++	reClosure3 = regexp.MustCompile(`\w+\.func\d+(\.\d+)*$`)    // main.FuncName.func1
+ )
+ 
+ // caller types:
+@@ -29,11 +33,23 @@ func callerName(skip int) string {
+ 		return ""
+ 	}
+ 	name := runtime.FuncForPC(pc).Name()
+-	if reInit.MatchString(name) {
+-		return reInit.ReplaceAllString(name, "init")
++
++	if reInit1.MatchString(name) {
++		return reInit1.ReplaceAllString(name, "init")
+ 	}
+-	if reClosure.MatchString(name) {
+-		return reClosure.ReplaceAllString(name, "func")
++	if reInit2.MatchString(name) {
++		return reInit2.ReplaceAllString(name, "init")
++	}
++
++	if reClosure1.MatchString(name) {
++		return reClosure1.ReplaceAllString(name, "func")
+ 	}
++	if reClosure2.MatchString(name) {
++		return reClosure2.ReplaceAllString(name, "func")
++	}
++	if reClosure3.MatchString(name) {
++		return regexp.MustCompile(`func\d+(\.\d+)?$`).ReplaceAllString(name, "func") //+ "##"
++	}
++
+ 	return name
+ }
+diff --git a/gettext/caller_test.go b/gettext/caller_test.go
+index 9ee0bb9..c43cebf 100644
+--- a/gettext/caller_test.go
++++ b/gettext/caller_test.go
+@@ -5,6 +5,8 @@
+ package gettext
+ 
+ import (
++	"runtime"
++	"strings"
+ 	"testing"
+ )
+ 
+@@ -73,14 +75,42 @@ func TestCallerName(t *testing.T) {
+ 
+ 	// closure
+ 	func() {
+-		name = `github.com/chai2010/gettext-go/gettext.func`
++		switch s := runtime.Version(); true {
++		case s == "go1.3" || strings.HasPrefix(s, "go1.3."),
++			s == "go1.4" || strings.HasPrefix(s, "go1.4."),
++			s == "go1.5" || strings.HasPrefix(s, "go1.5."):
++			name = `github.com/chai2010/gettext-go/gettext.func`
++
++		case s == "go1.10" || strings.HasPrefix(s, "go1.10."),
++			s == "go1.11" || strings.HasPrefix(s, "go1.11."),
++			s == "go1.12" || strings.HasPrefix(s, "go1.12."),
++			s == "go1.13" || strings.HasPrefix(s, "go1.13."):
++			name = `github.com/chai2010/gettext-go/gettext.TestCallerName.func`
++
++		default: // tip
++			name = `github.com/chai2010/gettext-go/gettext.TestCallerName.func`
++		}
+ 		if s := callerName(1); s != name {
+ 			t.Fatalf("expect = %s, got = %s", name, s)
+ 		}
+ 	}()
+ 	func() {
+ 		func() {
+-			name = `github.com/chai2010/gettext-go/gettext.func`
++			switch s := runtime.Version(); true {
++			case s == "go1.3" || strings.HasPrefix(s, "go1.3."),
++				s == "go1.4" || strings.HasPrefix(s, "go1.4."),
++				s == "go1.5" || strings.HasPrefix(s, "go1.5."):
++				name = `github.com/chai2010/gettext-go/gettext.func`
++
++			case s == "go1.10" || strings.HasPrefix(s, "go1.10."),
++				s == "go1.11" || strings.HasPrefix(s, "go1.11."),
++				s == "go1.12" || strings.HasPrefix(s, "go1.12."),
++				s == "go1.13" || strings.HasPrefix(s, "go1.13."):
++				name = `github.com/chai2010/gettext-go/gettext.TestCallerName.func`
++
++			default: // tip
++				name = `github.com/chai2010/gettext-go/gettext.TestCallerName.func`
++			}
+ 			if s := callerName(1); s != name {
+ 				t.Fatalf("expect = %s, got = %s", name, s)
+ 			}
+-- 
+2.39.5 (Apple Git-154)
+
