@@ -18,7 +18,11 @@ Source0:        %{url}/files/%{name}-%{version}.tar.xz
 Source1:        iptables.init
 Source2:        iptables.service
 Source3:        iptables-config
-Source5:        empty.rules
+Source4:        arptables.service
+Source5:        arptables-helper
+Source6:        ebtables.service
+Source7:        ebtables-helper
+Source8:        empty.rules
 BuildSystem:    autotools
 
 BuildOption(conf):  --enable-devel
@@ -81,7 +85,10 @@ Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires(post): update-alternatives
 Requires(post): /usr/bin/readlink
 Requires(postun): update-alternatives
+Provides:       arptables-helper
 Provides:       iptables
+Provides:       arptables
+Provides:       ebtables
 
 %description    nft
 nftables compatibility for iptables, arptables and ebtables.
@@ -91,6 +98,8 @@ Summary:        iptables and ip6tables services for iptables
 Requires:       %{name} = %{version}-%{release}
 Requires:       %{name}-utils%{?_isa} = %{version}-%{release}
 %{?systemd_ordering}
+Provides:       arptables-services = %{version}-%{release}
+Provides:       ebtables-services = %{version}-%{release}
 BuildArch:      noarch
 
 %description    services
@@ -147,7 +156,7 @@ rm -f include/linux/types.h
 %install -a
 # install systemd service files
 install -d -m 755 %{buildroot}/%{_unitdir}
-install -c -m 644 %{SOURCE2} %{buildroot}/%{_unitdir}
+install -c -m 644 %{SOURCE2} %{SOURCE4} %{SOURCE6} %{buildroot}/%{_unitdir}
 sed -e 's;iptables;ip6tables;g' -e 's;IPv4;IPv6;g' -e 's;/usr/libexec/ip6tables;/usr/libexec/iptables;g' < %{SOURCE2} > ip6tables.service
 install -c -m 644 ip6tables.service %{buildroot}/%{_unitdir}
 
@@ -155,14 +164,17 @@ install -m 0755 -d %{buildroot}/%{script_path}
 install -m 0755 -c %{SOURCE1} %{buildroot}/%{script_path}/iptables.init
 sed -e 's;iptables;ip6tables;g' -e 's;IPTABLES;IP6TABLES;g' < %{SOURCE1} > ip6tables.init
 install -m 0755 ip6tables.init %{buildroot}/%{script_path}/ip6tables.init
+install -p -m 755 %{SOURCE5} %{SOURCE7} %{buildroot}%{_libexecdir}/
 
 # install configuration files
 install -d -m 755 %{buildroot}%{_sysconfdir}/sysconfig
 install -c -m 0600 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/iptables-config
 sed -e 's;iptables;ip6tables;g' -e 's;IPTABLES;IP6TABLES;g' < %{SOURCE3} > ip6tables-config
 install -c -m 0600 ip6tables-config %{buildroot}%{_sysconfdir}/sysconfig/ip6tables-config
-install -c -m 600 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/iptables
-install -c -m 600 %{SOURCE5} %{buildroot}%{_sysconfdir}/sysconfig/ip6tables
+install -c -m 600 %{SOURCE8} %{buildroot}%{_sysconfdir}/sysconfig/iptables
+install -c -m 600 %{SOURCE8} %{buildroot}%{_sysconfdir}/sysconfig/ip6tables
+echo '# Configure prior to use' > %{buildroot}%{_sysconfdir}/sysconfig/arptables
+touch %{buildroot}%{_sysconfdir}/sysconfig/ebtables
 
 # Remove /etc/ethertypes (part of setup)
 rm -f %{buildroot}%{_sysconfdir}/ethertypes
@@ -186,12 +198,15 @@ install -d %{buildroot}/%{legacy_actions}/ip6tables
 %check
 
 %post services
+%systemd_post arptables.service ebtables.service
 %systemd_post iptables.service ip6tables.service
 
 %preun services
+%systemd_preun arptables.service ebtables.service
 %systemd_preun iptables.service ip6tables.service
 
 %postun services
+%systemd_preun arptables.service ebtables.service
 %systemd_postun iptables.service ip6tables.service
 
 %post -e nft
@@ -318,7 +333,10 @@ fi
 %dir %{script_path}
 %{script_path}/ip{,6}tables.init
 %config(noreplace) %{_sysconfdir}/sysconfig/ip{,6}tables{,-config}
-%{_unitdir}/{ip,ip6}tables.service
+%config(noreplace) %{_sysconfdir}/sysconfig/arptables
+%ghost %{_sysconfdir}/sysconfig/ebtables
+%{_unitdir}/{arp,eb,ip,ip6}tables.service
+%{_libexecdir}/{arp,eb}tables-helper
 
 %files legacy
 %{_sbindir}/ip{,6}tables-legacy*

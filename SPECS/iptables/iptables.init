@@ -19,6 +19,7 @@
 ### END INIT INFO
 
 # compat for removed initscripts dependency
+
 success() {
 	echo -n "[  OK  ]"
 	return 0
@@ -41,7 +42,7 @@ IPTABLES_CONFIG=/etc/sysconfig/${IPTABLES}-config
 IPV=${IPTABLES%tables} # ip for ipv4 | ip6 for ipv6
 [ "$IPV" = "ip" ] && _IPV="ipv4" || _IPV="ipv6"
 PROC_IPTABLES_NAMES=/proc/net/${IPV}_tables_names
-VAR_SUBSYS_IPTABLES=/var/lock/subsys/$IPTABLES
+VAR_LOCK_IPTABLES=/var/lock/$IPTABLES
 
 # only usable for root
 if [ $EUID != 0 ]; then
@@ -53,11 +54,6 @@ if [ ! -x /sbin/$IPTABLES ]; then
     echo -n $"${IPTABLES}: /sbin/$IPTABLES does not exist."; warning; echo
     exit 5
 fi
-
-# Old or new modutils
-/sbin/modprobe --version 2>&1 | grep -q 'kmod version' \
-    && NEW_MODUTILS=1 \
-    || NEW_MODUTILS=0
 
 # Default firewall configuration:
 IPTABLES_MODULES=""
@@ -74,13 +70,33 @@ IPTABLES_RESTORE_WAIT_INTERVAL=1000000
 # Load firewall configuration.
 [ -f "$IPTABLES_CONFIG" ] && . "$IPTABLES_CONFIG"
 
+is_iptables_nft() {
+	iptables --version | grep -q '(nf_tables)'
+}
+
+netfilter_active() {
+	is_iptables_nft && return 0
+	[ -e "$PROC_IPTABLES_NAMES" ]
+}
+
+netfilter_tables() {
+	netfilter_active || return 1
+	is_iptables_nft && {
+		# explicitly omit security table from this list as
+		# it should be reserved for SELinux use
+		echo "raw mangle filter nat"
+		return 0
+	}
+	cat "$PROC_IPTABLES_NAMES" 2>/dev/null
+}
+
 # Get active tables
-NF_TABLES=$(cat "$PROC_IPTABLES_NAMES" 2>/dev/null)
+NF_TABLES=$(netfilter_tables)
 
 
 flush_n_delete() {
     # Flush firewall rules and delete chains.
-    [ ! -e "$PROC_IPTABLES_NAMES" ] && return 0
+    netfilter_active || return 0
 
     # Check if firewall is configured (has tables)
     [ -z "$NF_TABLES" ] && return 1
@@ -112,10 +128,10 @@ set_policy() {
     policy=$1
 
     # Check if iptable module is loaded
-    [ ! -e "$PROC_IPTABLES_NAMES" ] && return 0
+    netfilter_active || return 0
 
     # Check if firewall is configured (has tables)
-    tables=$(cat "$PROC_IPTABLES_NAMES" 2>/dev/null)
+    tables=$(netfilter_tables)
     [ -z "$tables" ] && return 1
 
     echo -n $"${IPTABLES}: Setting chains to policy $policy: "
@@ -123,12 +139,6 @@ set_policy() {
     for i in $tables; do
 	echo -n "$i "
 	case "$i" in
-            security)
-		$IPTABLES -t filter -P INPUT $policy \
-		    && $IPTABLES -t filter -P OUTPUT $policy \
-		    && $IPTABLES -t filter -P FORWARD $policy \
-		    || let ret+=1
-		;;
 	    raw)
 		$IPTABLES -t raw -P PREROUTING $policy \
 		    && $IPTABLES -t raw -P OUTPUT $policy \
@@ -171,7 +181,7 @@ load_sysctl() {
         echo -n $"Loading sysctl settings: "
         ret=0
         for item in $IPTABLES_SYSCTL_LOAD_LIST; do
-            fgrep -hs $item /etc/sysctl.d/* | sysctl -p - >/dev/null
+            fgrep -hs $item /etc/sysctl.d/*.conf | sysctl -p - >/dev/null
             let ret+=$?;
         done
         [ $ret -eq 0 ] && success || failure
@@ -222,7 +232,7 @@ start() {
 	    return 1
 	fi
     fi
-    
+ 
     # Load additional modules (helpers)
     if [ -n "$IPTABLES_MODULES" ]; then
 	echo -n $"${IPTABLES}: Loading additional modules: "
@@ -235,17 +245,17 @@ start() {
 	[ $ret -eq 0 ] && success || failure
 	echo
     fi
-    
+ 
     # Load sysctl settings
     load_sysctl
 
-    touch $VAR_SUBSYS_IPTABLES
+    touch $VAR_LOCK_IPTABLES
     return $ret
 }
 
 stop() {
     # Do not stop if iptables module is not loaded.
-    [ ! -e "$PROC_IPTABLES_NAMES" ] && return 0
+    netfilter_active || return 0
 
     # Set default chain policy to ACCEPT, in order to not break shutdown
     # on systems where the default policy is DROP and root device is
@@ -253,14 +263,14 @@ stop() {
     set_policy ACCEPT
     # And then, flush the rules and delete chains
     flush_n_delete
-    
-    rm -f $VAR_SUBSYS_IPTABLES
+
+    rm -f $VAR_LOCK_IPTABLES
     return $ret
 }
 
 save() {
     # Check if iptable module is loaded
-    if [ ! -e "$PROC_IPTABLES_NAMES" ]; then
+    if ! netfilter_active; then
 	echo -n $"${IPTABLES}: Nothing to save."; warning; echo
 	return 0
     fi
@@ -303,7 +313,7 @@ save() {
 }
 
 status() {
-    if [ ! -f "$VAR_SUBSYS_IPTABLES" -a -z "$NF_TABLES" ]; then
+    if [ ! -f "$VAR_LOCK_IPTABLES" ]; then
 	echo $"${IPTABLES}: Firewall is not running."
 	return 3
     fi
@@ -311,7 +321,7 @@ status() {
     # Do not print status if lockfile is missing and iptables modules are not 
     # loaded.
     # Check if iptable modules are loaded
-    if [ ! -e "$PROC_IPTABLES_NAMES" ]; then
+    if ! netfilter_active; then
 	echo $"${IPTABLES}: Firewall modules are not loaded."
 	return 3
     fi
@@ -324,7 +334,7 @@ status() {
 
     NUM=
     [ "x$IPTABLES_STATUS_NUMERIC" = "xyes" ] && NUM="-n"
-    VERBOSE= 
+    VERBOSE=
     [ "x$IPTABLES_STATUS_VERBOSE" = "xyes" ] && VERBOSE="--verbose"
     COUNT=
     [ "x$IPTABLES_STATUS_LINENUMBERS" = "xyes" ] && COUNT="--line-numbers"
@@ -397,7 +407,7 @@ restart() {
 
 case "$1" in
     start)
-	[ -f "$VAR_SUBSYS_IPTABLES" ] && exit 0
+	[ -f "$VAR_LOCK_IPTABLES" ] && exit 0
 	start
 	RETVAL=$?
 	;;
@@ -411,11 +421,11 @@ case "$1" in
 	RETVAL=$?
 	;;
     reload)
-	[ -e "$VAR_SUBSYS_IPTABLES" ] && reload
+	[ -e "$VAR_LOCK_IPTABLES" ] && reload
 	RETVAL=$?
 	;;      
     condrestart|try-restart)
-	[ ! -e "$VAR_SUBSYS_IPTABLES" ] && exit 0
+	[ ! -e "$VAR_LOCK_IPTABLES" ] && exit 0
 	restart
 	RETVAL=$?
 	;;
