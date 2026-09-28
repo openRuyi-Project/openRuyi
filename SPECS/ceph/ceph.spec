@@ -716,7 +716,7 @@ RBD block device, RGW gateway, and CephFS distributed file system.
 
 %package     -n python-rgw
 Summary:        Python libraries for the RADOS gateway
-Requires:       ceph-radosgw%{?_isa} = %{version}-%{release}
+Requires:       ceph-common%{?_isa} = %{version}-%{release}
 Requires:       python-rados%{?_isa} = %{version}-%{release}
 Provides:       python3-rgw = %{version}-%{release}
 %python_provide python3-rgw
@@ -1092,6 +1092,12 @@ fi
 %if %{with libradosstriper}
 %{_libdir}/libradosstriper.so.*
 %endif
+# librgw runtime libs (merged from librgw2)
+%{_libdir}/librgw.so.*
+%if %{with lttng}
+%{_libdir}/librgw_op_tp.so.*
+%{_libdir}/librgw_rados_tp.so.*
+%endif
 # rbd-fuse (merged)
 %{_bindir}/rbd-fuse
 # rbd-nbd (merged)
@@ -1346,12 +1352,6 @@ fi
 %dir %{_localstatedir}/lib/ceph/radosgw
 %{_unitdir}/ceph-radosgw@.service
 %{_unitdir}/ceph-radosgw.target
-# librgw runtime libs (merged from librgw2)
-%{_libdir}/librgw.so.*
-%if %{with lttng}
-%{_libdir}/librgw_op_tp.so.*
-%{_libdir}/librgw_rados_tp.so.*
-%endif
 %if %{with manpages}
 %{_mandir}/man8/ceph-diff-sorted.8*
 %{_mandir}/man8/radosgw.8*
