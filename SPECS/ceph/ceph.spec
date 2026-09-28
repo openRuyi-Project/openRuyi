@@ -600,6 +600,7 @@ Summary:        Ceph Manager module for predicting disk failures
 Requires:       ceph-mgr%{?_isa} = %{version}-%{release}
 Requires:       python3dist(numpy)
 Requires:       python3dist(scipy)
+Obsoletes:      ceph-mgr-dashboard < %{version}-%{release}
 
 %description    mgr-diskprediction-local
 ceph-mgr-diskprediction-local is a ceph-mgr module that tries to predict
