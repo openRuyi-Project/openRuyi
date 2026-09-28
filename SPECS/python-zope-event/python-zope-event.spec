@@ -33,6 +33,10 @@ publishing API, a very simple event-dispatching system on which more
 sophisticated event dispatching systems can be built, and a way to
 subscribe to events.
 
+%prep -a
+# we don't have specific versions of setuptools available
+sed -i -r 's/("| )setuptools == /\1setuptools >= /' pyproject.toml tox.ini
+
 %generate_buildrequires
 %pyproject_buildrequires
 
