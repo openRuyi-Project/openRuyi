@@ -1,0 +1,12 @@
+diff --color -urN a/efi/meson.build b/efi/meson.build
+--- a/efi/meson.build	2026-10-15 11:05:20.585125416 +0800
++++ b/efi/meson.build	2026-10-15 11:48:16.234036451 +0800
+@@ -92,7 +92,7 @@
+ # older objcopy for Aarch64, ARM32 and RISC-V are not EFI capable.
+ # Use 'binary' instead, and add required symbols manually.
+ if ( host_cpu == 'arm'
+-  or (host_cpu == 'riscv64'     and (objcopy_version.version_compare ('< 2.42') or coff_header_in_crt0))
++  or (host_cpu == 'riscv64')
+   or (host_cpu == 'aarch64'     and (objcopy_version.version_compare ('< 2.38') or coff_header_in_crt0 or uswid.found()))
+   or (host_cpu == 'loongarch64' and (objcopy_version.version_compare ('< 2.41') or coff_header_in_crt0)) )
+   objcopy_manualsymbols = true
