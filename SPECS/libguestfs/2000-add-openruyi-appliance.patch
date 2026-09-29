@@ -1,0 +1,58 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] appliance: add openRuyi RPM package names
+
+Use openRuyi package names and the RPM dependency query when preparing
+the appliance. The distro ID is already read from os-release.
+
+This patch was authored downstream for openRuyi and has not been submitted
+upstream.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+
+diff --git a/appliance/packagelist.in b/appliance/packagelist.in
+--- a/appliance/packagelist.in
++++ b/appliance/packagelist.in
+@@ -4,6 +4,7 @@
+ dnl This file is processed by m4 with one of the
+ dnl following symbols defined (depending on the distro):
+ dnl
++dnl   OPENRUYI=1    For openRuyi.
+ dnl   REDHAT=1      For Fedora, RHEL, EPEL and workalikes.
+ dnl   DEBIAN=1      For Debian.
+ dnl   UBUNTU=1      For Ubuntu.
+@@ -23,6 +24,22 @@
+ 
+ dnl Basically the same with a few minor tweaks.
+ ifelse(UBUNTU,1,`define(`DEBIAN',1)')
++
++ifelse(OPENRUYI,1,
++  cryptsetup
++  dhcpcd
++  gptfdisk
++  iproute2
++  iputils
++  linux
++  ntfs-3g
++  openssh-clients
++  rpm
++  systemd
++  systemd-udev
++  xz
++  zstd
++)
+ 
+ ifelse(REDHAT,1,
+   apfs-fuse
+diff --git a/m4/guestfs-appliance.m4 b/m4/guestfs-appliance.m4
+--- a/m4/guestfs-appliance.m4
++++ b/m4/guestfs-appliance.m4
+@@ -132,7 +132,7 @@
+     AC_SUBST([DISTRO])
+ fi
+ AM_CONDITIONAL([HAVE_RPM],
+-    [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | TENCENTOS | OPENEULER ], [true],
++    [AS_CASE([$DISTRO], [REDHAT | SUSE | OPENMANDRIVA | MAGEIA | OPENCLOUDOS | TENCENTOS | OPENEULER | OPENRUYI ], [true],
+                         [*], [false])])
+ AM_CONDITIONAL([HAVE_DPKG],
+     [AS_CASE([$DISTRO], [DEBIAN | UBUNTU ], [true],
