@@ -3,23 +3,21 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global _test_target test
 
 Name:           multipath-tools
-Version:        0.11.1
+Version:        0.15.1
 Release:        %autorelease
 Summary:        Tools to manage multipath devices using device-mapper
 License:        GPL-2.0-only AND GPL-3.0-or-later
 URL:            https://github.com/opensvc/multipath-tools
-#!RemoteAsset:  sha256:6cc57e33894ea2cd4c3bf1cbb9e4e8e7250d0699163b2907fcab1cd2e0123d85
+#!RemoteAsset:  sha256:99e4a4b8c245479dd5c5d473a031acb67d752b94dcd76be172279cd445845421
 Source0:        %{url}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
-
-# From https://github.com/opensvc/multipath-tools/commit/9f611e2f10a4456477b6447641eea041ecee1019
-Patch0:         multipath-tools-fix-c23-errors-with-strchr.patch
 
 BuildOption(conf):  LIB=%{_lib}
 BuildOption(install):  bindir=%{_sbindir}
@@ -134,6 +132,7 @@ fi
 %{_sbindir}/mpathpersist
 %{_unitdir}/multipathd.service
 %{_unitdir}/multipathd.socket
+%{_unitdir}/multipathd-queueing.service
 %{_mandir}/man5/multipath.conf.5*
 %{_mandir}/man8/multipath.8*
 %{_mandir}/man8/multipathd.8*

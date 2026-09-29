@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: CHEN Xuan <chenxuan@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,14 +18,15 @@
 %bcond vulkan 0
 %endif
 
-%global build_number 10448
+%global build_number 10964
 # Private libraries should not expose public ABI
 # The libllama* is CLI tools
 # The libggml-* entries are dlopen()ed backend plugins under %%{_libdir}/ggml
 %global __provides_exclude ^(libllama-.*-impl|libggml-cpu.*|libggml-hip|libggml-vulkan)\\.so
 %global __requires_exclude ^libllama-.*-impl\\.so
 # Exclude network/model-related, maintainer-only, and GGML_BACKEND_DL-incompatible tests
-%global ctest_exclude_common (test-tokenizers-ggml-vocabs|test-download-model|test-thread-safety|test-state-restore-fragmented|test-recurrent-state-rollback|test-save-load-state|test-quant-type-selection|test-gguf-model-data|test-arg-parser|test-jinja-py|test-backend-ops|test-llama-archs|test-generate-models|test-recurrent-state-rollback-nemotron-h)
+# The dsv4 and kimi-k3 rollback tests require model files omitted from the release tarball and OBS offline builds
+%global ctest_exclude_common (test-tokenizers-ggml-vocabs|test-download-model|test-thread-safety|test-state-restore-fragmented|test-recurrent-state-rollback|test-save-load-state|test-quant-type-selection|test-gguf-model-data|test-arg-parser|test-jinja-py|test-backend-ops|test-llama-archs|test-generate-models|test-recurrent-state-rollback-nemotron-h|test-recurrent-state-rollback-dsv4|test-recurrent-state-rollback-kimi-k3)
 %if %{with rocm} || %{with vulkan}
 # GPU flavors exclude test-opt because package is built with no GPU device
 %global ctest_exclude ^(%{ctest_exclude_common}|test-opt)$
@@ -41,14 +43,14 @@ Name:           llama-cpp-vulkan
 %else
 Name:           llama-cpp
 %endif
-Version:        b%{build_number}
+Version:        0.4.1
 Release:        %autorelease
 Summary:        LLM inference in C/C++
 License:        MIT AND Apache-2.0 AND Unlicense
 URL:            https://github.com/ggml-org/llama.cpp
 VCS:            git:https://github.com/ggml-org/llama.cpp.git
-#!RemoteAsset:  sha256:85791799efe44625718640e3dcedb6112a132018e38e61e43190b1ff37ade355
-Source0:        %{url}/archive/refs/tags/%{version}.tar.gz
+#!RemoteAsset:  sha256:ef3d5b1907a391500ae11b5e61a8e2022e0deaac9790899cad9c4e02f03bfb9a
+Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
 %if %{with rocm}
@@ -60,7 +62,7 @@ BuildOption(prep):  -n llama.cpp-%{version}
 BuildOption(conf):  -G Ninja
 BuildOption(conf):  -DLLAMA_BUILD_NUMBER=%{build_number}
 # Source0 is an archive without .git; preserve the verified release tag commit
-BuildOption(conf):  -DLLAMA_BUILD_COMMIT=ad1de39e0708e3ced9c71bb3c82d93a2c046a73f
+BuildOption(conf):  -DLLAMA_BUILD_COMMIT=b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
 BuildOption(conf):  -DLLAMA_BUILD_EXAMPLES=OFF
 BuildOption(conf):  -DLLAMA_TESTS_INSTALL=OFF
 # Building the Web UI downloads frontend assets
