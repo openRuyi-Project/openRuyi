@@ -126,6 +126,11 @@ export CXX="g++ -fuse-ld=bfd"
     --with-shared \
     --with-system-isal
 
+# bdevperf is an example upstream: --disable-examples skips it and make install
+# never installs it, so build just this one and install it by hand
+%build -a
+%make_build -C examples/bdev/bdevperf
+
 %install -p
 find . -name "*.mk" -o -name "Makefile" | xargs sed -i 's/pip install/pip install --no-build-isolation/g'
 
@@ -136,6 +141,9 @@ echo '#!/usr/bin/env bash' > %{buildroot}%{_bindir}/spdk-setup
 cat scripts/common.sh scripts/setup.sh >> %{buildroot}%{_bindir}/spdk-setup
 sed -ri '/^rootdir/d;/^source/d;s,\$rootdir,%{_usr},' %{buildroot}%{_bindir}/spdk-setup
 chmod +x %{buildroot}%{_bindir}/spdk-setup
+
+install -Dm755 build/examples/bdevperf %{buildroot}%{_bindir}/spdk_bdevperf
+patchelf --remove-rpath %{buildroot}%{_bindir}/spdk_bdevperf
 
 # Install bash completion
 install -Dm644 scripts/bash-completion/spdk %{buildroot}%{_datadir}/bash-completion/completions/spdk
