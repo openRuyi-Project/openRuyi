@@ -17,7 +17,7 @@
 # There are two macros:
 #
 # This always contains the major.minor version (with dots), default for %%python3_version.
-%__default_python3_version 3.13
+%__default_python3_version 3.14
 #
 # The pkgname version that determines the alternative provide name (e.g. python3.9-foo),
 # set to the same as above, but historically hasn't included the dot.

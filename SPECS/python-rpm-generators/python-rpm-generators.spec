@@ -20,12 +20,16 @@ Source4:        pythondistdeps.py
 Source5:        pythonbundles.py
 BuildArch:      noarch
 
+BuildRequires:  python-srpm-macros
+
 %description
 %{summary}.
 
 %package     -n python3-rpm-generators
 Summary:        %{summary}
-Requires:       python3dist(packaging)
+# Keep the generator runtime and its module dependency on the target Python.
+Requires:       python(abi) = %{__default_python3_version}
+Requires:       python%{__default_python3_version}dist(packaging)
 Requires:       rpm
 Requires:       python-srpm-macros
 
@@ -37,6 +41,7 @@ Requires:       python-srpm-macros
 cp -a %{sources} .
 
 %install
+sed -i -e 's|#!/usr/bin/python3|#!%{__python3}|g' *.py
 install -Dpm0644 -t %{buildroot}%{_fileattrsdir} *.attr
 install -Dpm0755 -t %{buildroot}%{_rpmconfigdir} *.py
 

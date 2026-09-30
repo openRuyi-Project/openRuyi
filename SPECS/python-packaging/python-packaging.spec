@@ -31,16 +31,19 @@ URL:            https://github.com/pypa/packaging
 Source:         %{url}/archive/%{version}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  unzip
 %if %{with bootstrap}
+BuildRequires:  python3-bootstrap-devel
+BuildRequires:  python-flit-core-bootstrap
+%else
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(flit-core)
 %endif
 
 %if %{with bootstrap}
 Provides:       python3dist(packaging) = %{version}-%{release}
-
+Provides:       python%{python3_version}dist(packaging) = %{version}-%{release}
 Requires:       python(abi) = %{python3_version}
 %else
 Provides:       python3-%{srcname} = %{version}-%{release}
