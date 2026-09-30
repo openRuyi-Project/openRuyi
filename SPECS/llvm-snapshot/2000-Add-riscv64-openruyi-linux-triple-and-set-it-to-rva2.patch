@@ -1,4 +1,4 @@
-From 38a21a2b1da4549ce19b20bebceaefad52f9efe6 Mon Sep 17 00:00:00 2001
+From d60302e6764129b2037136ae746c36f6ac80c38f Mon Sep 17 00:00:00 2001
 From: YunQiang Su <yunqiang@isrc.iscas.ac.cn>
 Date: Wed, 15 Apr 2026 15:48:55 +0800
 Subject: [PATCH 1/2] Support Vendor openruyi
@@ -10,17 +10,17 @@ The default ISA level is set to RVA23U64.
 
 See: https://openruyi.cn/
 ---
- clang/lib/Driver/ToolChains/Arch/RISCV.cpp | 4 ++++
- llvm/include/llvm/TargetParser/Triple.h    | 3 ++-
- llvm/lib/TargetParser/Triple.cpp           | 3 +++
- llvm/unittests/TargetParser/TripleTest.cpp | 6 ++++++
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ clang/lib/Driver/ToolChains/Arch/RISCV.cpp    | 4 ++++
+ llvm/include/llvm/TargetParser/Triple.h       | 3 ++-
+ llvm/include/llvm/TargetParser/TripleName.def | 1 +
+ llvm/unittests/TargetParser/TripleTest.cpp    | 6 ++++++
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/clang/lib/Driver/ToolChains/Arch/RISCV.cpp b/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
-index 7fda8ea50223..63ceaefb1187 100644
+index 8e650ddf92df..df1695d67d85 100644
 --- a/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
 +++ b/clang/lib/Driver/ToolChains/Arch/RISCV.cpp
-@@ -320,6 +320,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
+@@ -382,6 +382,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
          return "rv64imafdcv_zba_zbb_zbs";
        if (Triple.isOSFuchsia())
          return "rva22u64_v";
@@ -29,7 +29,7 @@ index 7fda8ea50223..63ceaefb1187 100644
        return "rv64imafdc";
      }
    }
-@@ -341,6 +343,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
+@@ -403,6 +405,8 @@ std::string riscv::getRISCVArch(const llvm::opt::ArgList &Args,
      return "rv64imafdcv_zba_zbb_zbs";
    if (Triple.isOSFuchsia())
      return "rva22u64_v";
@@ -39,10 +39,10 @@ index 7fda8ea50223..63ceaefb1187 100644
  }
  
 diff --git a/llvm/include/llvm/TargetParser/Triple.h b/llvm/include/llvm/TargetParser/Triple.h
-index 7b24db121818..def8139afe3a 100644
+index b369b66960b1..6b5b66d0648e 100644
 --- a/llvm/include/llvm/TargetParser/Triple.h
 +++ b/llvm/include/llvm/TargetParser/Triple.h
-@@ -207,7 +207,8 @@ public:
+@@ -296,7 +296,8 @@ public:
      OpenEmbedded,
      Intel,
      Meta,
@@ -52,32 +52,23 @@ index 7b24db121818..def8139afe3a 100644
    };
    enum OSType {
      UnknownOS,
-diff --git a/llvm/lib/TargetParser/Triple.cpp b/llvm/lib/TargetParser/Triple.cpp
-index c6515425b7eb..ad8f2f3d1ae3 100644
---- a/llvm/lib/TargetParser/Triple.cpp
-+++ b/llvm/lib/TargetParser/Triple.cpp
-@@ -389,6 +389,8 @@ StringRef Triple::getVendorTypeName(VendorType Kind) {
-     return "suse";
-   case Meta:
-     return "meta";
-+  case openRuyi:
-+    return "openruyi";
-   }
+diff --git a/llvm/include/llvm/TargetParser/TripleName.def b/llvm/include/llvm/TargetParser/TripleName.def
+index 95026bd39db7..ed42efdb9980 100644
+--- a/llvm/include/llvm/TargetParser/TripleName.def
++++ b/llvm/include/llvm/TargetParser/TripleName.def
+@@ -201,6 +201,7 @@ TRIPLE_VENDOR(SCEI, "scei")
+ TRIPLE_VENDOR_ALIAS(SCEI, "sie")
+ TRIPLE_VENDOR(SUSE, "suse")
+ TRIPLE_VENDOR(Meta, "meta")
++TRIPLE_VENDOR(openRuyi, "openruyi")
  
-   llvm_unreachable("Invalid VendorType!");
-@@ -912,6 +914,7 @@ static Triple::VendorType parseVendor(StringRef VendorName) {
-       .Case("oe", Triple::OpenEmbedded)
-       .Case("intel", Triple::Intel)
-       .Case("meta", Triple::Meta)
-+      .Case("openruyi", Triple::openRuyi)
-       .Default(Triple::UnknownVendor);
- }
- 
+ #undef TRIPLE_VENDOR
+ #undef TRIPLE_VENDOR_ALIAS
 diff --git a/llvm/unittests/TargetParser/TripleTest.cpp b/llvm/unittests/TargetParser/TripleTest.cpp
-index 9ce222b6c9c3..7f59a36003d4 100644
+index a81801dc97a7..27ce6385de10 100644
 --- a/llvm/unittests/TargetParser/TripleTest.cpp
 +++ b/llvm/unittests/TargetParser/TripleTest.cpp
-@@ -854,6 +854,12 @@ TEST(TripleTest, ParsedIDs) {
+@@ -862,6 +862,12 @@ TEST(TripleTest, ParsedIDs) {
    EXPECT_EQ(Triple::Hurd, T.getOS());
    EXPECT_EQ(Triple::GNU, T.getEnvironment());
  
@@ -91,5 +82,5 @@ index 9ce222b6c9c3..7f59a36003d4 100644
    EXPECT_EQ(Triple::arm, T.getArch());
    EXPECT_EQ(Triple::SUSE, T.getVendor());
 -- 
-2.47.3
+2.54.0
 
