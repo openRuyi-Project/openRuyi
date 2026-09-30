@@ -26,11 +26,16 @@ Source0:        https://github.com/containerd/cgroups/archive/refs/tags/v%{root_
 Source1:        https://github.com/containerd/cgroups/archive/refs/tags/v%{v3_version}.tar.gz#/%{_name}-%{v3_version}.tar.gz
 BuildSystem:    golangmodules
 
+# https://github.com/containerd/cgroups/commit/71108180403484cb7c651b5431d18115c43416ba
+# Backport the compatibility fix for cilium-ebpf 0.21, which removed Instruction.Sym.
+Patch1000:      1000-cgroups-use-withsymbol.patch
+# https://github.com/containerd/cgroups/commit/34ef430d727e569c31b4f2bbc7d83bffeb1c0165
+Patch1001:      1001-cgroups-root-adapt-to-runtime-spec-1.3.patch
+# https://github.com/containerd/cgroups/commit/34ef430d727e569c31b4f2bbc7d83bffeb1c0165
+Patch1002:      1002-cgroups-v3-adapt-to-runtime-spec-1.3.patch
+
 BuildOption(prep):  -n %{root_dir} -N
 BuildOption(check):  -vet=off -run '^$'
-
-Patch2000:      2000-cgroups-root-adapt-to-runtime-spec-1.3.patch
-Patch2001:      2001-cgroups-v3-adapt-to-runtime-spec-1.3.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -73,15 +78,16 @@ This package contains the root v1 and v3 Go modules from
 github.com/containerd/cgroups.
 
 %prep -a
-# The two patches apply to different module tags, so the automatic patch pass is
+# The patches apply to different module tags, so the automatic patch pass is
 # disabled above and each patch is applied to its own source tree.
-%patch -P 2000 -p1
+%patch -P 1000 -p1
 # This test assigns an int64 to runtime-spec 1.3's pointer-valued Pids limit.
+%patch -P 1001 -p1
 rm -f pids_test.go
 
 tar -xzf %{SOURCE1} -C %{_builddir}
 pushd %{_builddir}/%{v3_dir}
-%patch -P 2001 -p1
+%patch -P 1002 -p1
 rm -f cgroup1/pids_test.go
 popd
 

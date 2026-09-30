@@ -5,7 +5,7 @@
 
 %define _name           ebpf
 %define go_import_path  github.com/cilium/ebpf
-# eBPF program-loading tests require capabilities not available in OBS.
+# eBPF program-loading tests require capabilities unavailable in OBS.
 %define go_test_ignore_failure 1
 
 Name:           go-github-cilium-ebpf
@@ -21,8 +21,10 @@ BuildSystem:    golangmodules
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
-BuildRequires:  go(github.com/frankban/quicktest)
+BuildRequires:  go(github.com/go-quicktest/qt)
 BuildRequires:  go(github.com/google/go-cmp)
+BuildRequires:  go(github.com/jsimonetti/rtnetlink/v2)
+BuildRequires:  go(golang.org/x/sync)
 BuildRequires:  go(golang.org/x/sys)
 
 Provides:       go(github.com/cilium/ebpf) = %{version}

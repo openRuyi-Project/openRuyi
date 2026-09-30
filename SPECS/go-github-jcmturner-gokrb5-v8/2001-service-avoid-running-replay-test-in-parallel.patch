@@ -1,0 +1,27 @@
+From b38465bb7cd0d738bec1e36f98b04b5b6f1cfe3a Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 11 Aug 2026 22:31:39 +0800
+Subject: [PATCH] service: avoid running replay test in parallel
+
+The replay cache is shared by AP-REQ verification tests. Running TestVerifyAPREQ_Replay in parallel can make its first verification observe a request inserted by another test and fail with KRB_AP_ERR_REPEAT. Keep this stateful test serialized with the other service tests.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ v8/service/APExchange_test.go | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/v8/service/APExchange_test.go b/v8/service/APExchange_test.go
+index 7b83f79..5d8b880 100644
+--- a/v8/service/APExchange_test.go
++++ b/v8/service/APExchange_test.go
+@@ -207,7 +207,6 @@ func TestVerifyAPREQ_LargeClockSkew(t *testing.T) {
+ }
+ 
+ func TestVerifyAPREQ_Replay(t *testing.T) {
+-	t.Parallel()
+ 	cl := getClient()
+ 	sname := types.PrincipalName{
+ 		NameType:   nametype.KRB_NT_PRINCIPAL,
+-- 
+2.43.0
+

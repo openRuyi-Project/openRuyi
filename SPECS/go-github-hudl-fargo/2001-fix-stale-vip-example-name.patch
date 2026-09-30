@@ -1,0 +1,26 @@
+From 86c9a1fa11f8c6f589550da2f5001b940d633cbe Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 15:55:09 +0800
+Subject: [PATCH] tests: fix stale VIP example name
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ example_vipupdate_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/example_vipupdate_test.go b/example_vipupdate_test.go
+index f9f1372..dedf389 100644
+--- a/example_vipupdate_test.go
++++ b/example_vipupdate_test.go
+@@ -56,7 +56,7 @@ func ExampleEurekaConnection_ScheduleVIPAddressUpdates_context() {
+ 	fmt.Printf("Done monitoring VIP address %q.\n", vipAddress)
+ }
+ 
+-func ExampleEurekaConnection_ScheduleSecureVIPAddressUpdates_context() {
++func ExampleEurekaConnection_ScheduleVIPAddressUpdates_secure() {
+ 	e := makeConnection()
+ 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+ 	defer cancel()
+-- 
+2.43.0
+

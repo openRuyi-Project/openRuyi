@@ -1,0 +1,60 @@
+From f1479676e4ead7e36ad93a52bfff20aaa0b9f11c Mon Sep 17 00:00:00 2001
+From: Nurzhan Muratkhan <nurzhanmuratkhan@gmail.com>
+Date: Mon, 23 Feb 2026 19:54:55 +0500
+Subject: [PATCH] feat: Ensure compatibility with encoding/json/v2 experiment
+ (#4029)
+
+[openRuyi backport: Omit security_advisories_test.go, which does not exist in v41.]
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ github/github_test.go                 | 5 +----
+ github/repos_hooks_deliveries_test.go | 3 ++-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/github/github_test.go b/github/github_test.go
+index 3a0c293..cf326e8 100644
+--- a/github/github_test.go
++++ b/github/github_test.go
+@@ -511,16 +511,13 @@ func TestNewRequest_invalidJSON(t *testing.T) {
+ 	c := NewClient(nil)
+ 
+ 	type T struct {
+-		A map[interface{}]interface{}
++		F func()
+ 	}
+ 	_, err := c.NewRequest("GET", ".", &T{})
+ 
+ 	if err == nil {
+ 		t.Error("Expected error to be returned.")
+ 	}
+-	if err, ok := err.(*json.UnsupportedTypeError); !ok {
+-		t.Errorf("Expected a JSON error; got %#v.", err)
+-	}
+ }
+ 
+ func TestNewRequest_badURL(t *testing.T) {
+diff --git a/github/repos_hooks_deliveries_test.go b/github/repos_hooks_deliveries_test.go
+index 8724e86..0445be4 100644
+--- a/github/repos_hooks_deliveries_test.go
++++ b/github/repos_hooks_deliveries_test.go
+@@ -11,6 +11,7 @@ import (
+ 	"fmt"
+ 	"net/http"
+ 	"reflect"
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/google/go-cmp/cmp"
+@@ -215,7 +216,7 @@ func TestHookDelivery_ParsePayload_invalidPayload(t *testing.T) {
+ 	}
+ 
+ 	_, err := d.ParseRequestPayload()
+-	if err == nil || err.Error() != "json: cannot unmarshal string into Go struct field CheckRun.check_run.id of type int64" {
++	if err == nil || !strings.Contains(err.Error(), "json: cannot unmarshal") || !strings.Contains(err.Error(), "check_run.id") {
+ 		t.Errorf("unexpected error: %v", err)
+ 	}
+ }
+-- 
+2.43.0
+

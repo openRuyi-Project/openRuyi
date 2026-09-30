@@ -1,0 +1,39 @@
+From 071a9dde418ade03d77cbf0f49676d89072088a7 Mon Sep 17 00:00:00 2001
+From: Austin Vazquez <macedonv@amazon.com>
+Date: Thu, 9 Feb 2023 21:12:06 +0000
+Subject: [PATCH] cgroups: use WithSymbol for newer ebpf
+
+Backport the upstream compatibility change from containerd/cgroups commit 71108180403484cb7c651b5431d18115c43416ba.
+
+Signed-off-by: Austin Vazquez <macedonv@amazon.com>
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ v2/devicefilter.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/v2/devicefilter.go b/v2/devicefilter.go
+index 0882036..98a15ba 100644
+--- a/v2/devicefilter.go
++++ b/v2/devicefilter.go
+@@ -167,7 +167,7 @@ func (p *program) appendDevice(dev specs.LinuxDeviceCgroup) error {
+ 	}
+ 	p.insts = append(p.insts, acceptBlock(dev.Allow)...)
+ 	// set blockSym to the first instruction we added in this iteration
+-	p.insts[prevBlockLastIdx+1] = p.insts[prevBlockLastIdx+1].Sym(blockSym)
++	p.insts[prevBlockLastIdx+1] = p.insts[prevBlockLastIdx+1].WithSymbol(blockSym)
+ 	p.blockID++
+ 	return nil
+ }
+@@ -180,7 +180,7 @@ func (p *program) finalize() (asm.Instructions, error) {
+ 	blockSym := fmt.Sprintf("block-%d", p.blockID)
+ 	p.insts = append(p.insts,
+ 		// R0 <- 0
+-		asm.Mov.Imm32(asm.R0, 0).Sym(blockSym),
++		asm.Mov.Imm32(asm.R0, 0).WithSymbol(blockSym),
+ 		asm.Return(),
+ 	)
+ 	p.blockID = -1
+-- 
+2.43.0
+

@@ -5,42 +5,43 @@
 
 %define _name           nats.go
 %define go_import_path  github.com/nats-io/nats.go
+# The test subpackages use the external NATS Testing Framework service via
+# orbit.go/ntf-client. That client depends on nats.go itself, so the service
+# tests would create a build cycle and are not runnable in OBS.
+%define go_test_exclude_glob %{shrink:
+    %{go_import_path}/test*
+    %{go_import_path}/jetstream/test*
+    %{go_import_path}/micro/test*
+}
 
 Name:           go-github-nats-io-nats.go
-Version:        1.41.2
+Version:        1.53.1
 Release:        %autorelease
 Summary:        Go client for the NATS messaging system
 License:        Apache-2.0
 URL:            https://github.com/nats-io/nats.go
-#!RemoteAsset:  sha256:72a933638244f93cc78294e469d46c15078c07e0c37f0c455afce1fd20791cb2
+#!RemoteAsset:  sha256:633e9fd0791b6e9732b9754b83542fbdc5059da6588b1145d1a2c69904b8e188
 Source0:        https://github.com/nats-io/nats.go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-# Use valid IPv6 fixtures while retaining all URL assertions.
-Patch2000:      2000-use-valid-ipv6-addresses-in-url-tests.patch
-
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/klauspost/compress)
+BuildRequires:  go(github.com/nats-io/jwt/v2)
 BuildRequires:  go(github.com/nats-io/nkeys)
 BuildRequires:  go(github.com/nats-io/nuid)
-BuildRequires:  go(google.golang.org/protobuf)
+BuildRequires:  go(google.golang.org/protobuf/proto)
 
-Provides:       go(github.com/nats-io/nats.go) = %{version}
+Provides:       go(%{go_import_path}) = %{version}
 
 Requires:       go(github.com/klauspost/compress)
 Requires:       go(github.com/nats-io/nkeys)
 Requires:       go(github.com/nats-io/nuid)
+Requires:       go(google.golang.org/protobuf/proto)
 
 %description
-nats.go is the official Go client for NATS. Tests that need a live
-nats-server are dropped; they live in a separate go_test.mod.
-
-%prep -a
-# examples and bench are samples. test/, micro/test, and jetstream/test
-# import unpackaged nats-server/v2, jwt, and goleak from go_test.mod.
-rm -rf examples bench test micro/test jetstream/test
+NATS.go is the official Go client for the NATS messaging system.
 
 %files
 %doc README.md

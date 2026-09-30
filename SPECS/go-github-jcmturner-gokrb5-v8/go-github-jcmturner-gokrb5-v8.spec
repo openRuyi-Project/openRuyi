@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,7 +10,7 @@
 Name:           go-github-jcmturner-gokrb5-v8
 Version:        8.4.4
 Release:        %autorelease
-Summary:        Pure Go Kerberos v5 library
+Summary:        Pure Go implementation of Kerberos
 License:        Apache-2.0
 URL:            https://github.com/jcmturner/gokrb5
 #!RemoteAsset:  sha256:ddd7b1200d33a01cf9f129a4cfd122deb205cf9c10901a0c794dde1b56126a89
@@ -17,8 +18,12 @@ Source0:        https://github.com/jcmturner/gokrb5/archive/v%{version}.tar.gz#/
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-# Preserve diagnostic text and satisfy current Go vet.
-Patch2000:      2000-use-literal-diagnostic-error.patch
+# Backport the upstream fix for a Go 1.26 vet error caused by a dynamic
+# fmt.Errorf format.
+# https://github.com/jcmturner/gokrb5/pull/579
+Patch1000:      1000-client-fix-non-constant-fmt.Errorf-format.patch
+# Keep the replay-cache test serialized to avoid parallel test interference.
+Patch2001:      2001-service-avoid-running-replay-test-in-parallel.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -31,6 +36,7 @@ BuildRequires:  go(github.com/jcmturner/goidentity/v6)
 BuildRequires:  go(github.com/jcmturner/rpc/v2)
 BuildRequires:  go(github.com/stretchr/testify)
 BuildRequires:  go(golang.org/x/crypto)
+BuildRequires:  go(golang.org/x/net)
 
 Provides:       go(github.com/jcmturner/gokrb5/v8) = %{version}
 
@@ -42,22 +48,25 @@ Requires:       go(github.com/jcmturner/gofork)
 Requires:       go(github.com/jcmturner/goidentity/v6)
 Requires:       go(github.com/jcmturner/rpc/v2)
 Requires:       go(golang.org/x/crypto)
+Requires:       go(golang.org/x/net)
 
 %description
-gokrb5/v8 is a pure-Go Kerberos v5 implementation. IBM Sarama uses it
-for optional Kafka GSSAPI authentication.
+Gokrb5 provides a pure Go implementation of the Kerberos authentication
+protocol for client, server, and custom integration use cases.
 
-%prep -a
-# Nested module github.com/jcmturner/gokrb5/v8; go.mod lives under v8/.
-find . -maxdepth 1 -mindepth 1 -not -name v8 -not -name LICENSE -not -name NOTICE -not -name README.md -exec rm -rf {} +
-cp -a v8/. .
-rm -rf v8
-# examples are sample programs, not the library.
-rm -rf examples
+%install
+pushd v8
+%buildsystem_golangmodules_install
+popd
+
+%check
+pushd v8
+%buildsystem_golangmodules_check
+popd
 
 %files
-%doc README.md USAGE.md
-%license LICENSE NOTICE
+%doc NOTICE README.md USAGE.md
+%license LICENSE
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
