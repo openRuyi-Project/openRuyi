@@ -1,0 +1,30 @@
+From c6ca09a541c1946adb3d5bd5e6fa1af53e5b69bc Mon Sep 17 00:00:00 2001
+From: Gautier Delorme <gautier.delorme@gmail.com>
+Date: Thu, 22 Apr 2021 14:06:13 +0000
+Subject: [PATCH] remove go-openapi/spec,validate,strfmt from api/
+
+Signed-off-by: Gautier Delorme <gautier.delorme@gmail.com>
+
+(cherry picked from commit 86c3863bc94ba681d13b047b171a217308f7c1b3)
+[cl2t: Backport the import change to the v2 source path. Omit module
+metadata changes because this package builds against distribution libraries.]
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/transformers/config/factorycrd.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pkg/transformers/config/factorycrd.go b/pkg/transformers/config/factorycrd.go
+index 66a24dc..28fe9a2 100644
+--- a/pkg/transformers/config/factorycrd.go
++++ b/pkg/transformers/config/factorycrd.go
+@@ -21,9 +21,9 @@ import (
+ 	"strings"
+ 
+ 	"github.com/ghodss/yaml"
+-	"github.com/go-openapi/spec"
+ 	"github.com/pkg/errors"
+ 	"k8s.io/kube-openapi/pkg/common"
++	"k8s.io/kube-openapi/pkg/validation/spec"
+ 	"sigs.k8s.io/kustomize/pkg/gvk"
+ 	"sigs.k8s.io/kustomize/pkg/ifc"
+ )
