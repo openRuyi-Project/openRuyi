@@ -13,16 +13,16 @@
 %endif
 
 %global dotnet_major 10.0
-%global dotnet_minor 100
+%global dotnet_minor 110
 %global dotnet_is_latest 1
 
 %{!?runtime_id:%global runtime_id linux-%{runtime_arch}}
 %global dotnet_version %{dotnet_major}.%{dotnet_minor}
-%global hostfxr_version 10.0.0
-%global runtime_version 10.0.0
-%global aspnetcore_runtime_version 10.0.0
+%global hostfxr_version 10.0.10
+%global runtime_version 10.0.10
+%global aspnetcore_runtime_version 10.0.10
 %global templates_version %{aspnetcore_runtime_version}
-%global sdk_version 10.0.100
+%global sdk_version 10.0.110
 %global sdk_feature_band_version %(echo %{sdk_version} | cut -d '-' -f 1 | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 
 # The tracing support in CoreCLR is optional. It has a run-time
@@ -54,14 +54,14 @@ Release:        %autorelease
 Summary:        .NET %{dotnet_major} Runtime and SDK - Binary
 License:        0BSD AND Apache-2.0 AND (Apache-2.0 WITH LLVM-exception) AND APSL-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND BSL-1.0 AND bzip2-1.0.6 AND CC0-1.0 AND CC-BY-3.0 AND CC-BY-4.0 AND CC-PDDC AND CNRI-Python AND EPL-1.0 AND GPL-2.0-only AND (GPL-2.0-only WITH GCC-exception-2.0) AND GPL-2.0-or-later AND GPL-3.0-only AND ICU AND ISC AND LGPL-2.1-only AND LGPL-2.1-or-later AND LicenseRef-Fedora-Public-Domain AND LicenseRef-ISO-8879 AND MIT AND MIT-Wu AND MS-PL AND MS-RL AND NCSA AND OFL-1.1 AND OpenSSL AND Unicode-DFS-2015 AND Unicode-DFS-2016 AND W3C-19980720 AND X11 AND Zlib
 URL:            https://dotnet.microsoft.com
-#!RemoteAsset:  sha256:08cc3c72f9c7b45a291af109b8a65abbd9b1b3a7aa70c458424042a8ad571e87
-Source0:        https://oerv.ac.cn/repo_dropout/dotnet-bin/dotnet-sdk-%{version}-linux-riscv64.tar.gz
-#!RemoteAsset:  sha256:32d9a9a4f08089a7a2528ff738e19e908ab913ba5fcb9eecfb97b8290584a061
-Source1:        https://oerv.ac.cn/repo_dropout/dotnet-bin/Private.SourceBuilt.Artifacts.%{version}-rtm.linux-riscv64.tar.gz
-#!RemoteAsset:  sha256:ec8db63b4c9a8040826a312f80b06752a2ed8f3fe852654d27a9ce46a8976ee7
-Source2:        https://oerv.ac.cn/repo_dropout/dotnet-bin/dotnet-sdk-%{version}-linux-x64.tar.gz
-#!RemoteAsset:  sha256:e10d096c2d825e2de68d448a902d3b06a1a72d143bdfaeda35adb2744ede7ec8
-Source3:        https://oerv.ac.cn/repo_dropout/dotnet-bin/Private.SourceBuilt.Artifacts.%{version}-rtm.linux-x64.tar.gz
+#!RemoteAsset:  sha256:b24dbc3934aeba259497b33ab98a00543dd8d8af896571983e58ee64b6fdd11b
+Source0:        https://github.com/software-vendor/dotnet-vendor/releases/download/%{dotnet_version}/dotnet-sdk-%{version}-linux-riscv64.tar.gz
+#!RemoteAsset:  sha256:6f4b1284640b9c86dcc54bed871b7e89f3fb7b56a6c2b79a1e35b9324daadc33
+Source1:        https://github.com/software-vendor/dotnet-vendor/releases/download/%{dotnet_version}/Private.SourceBuilt.Artifacts.%{version}-servicing.linux-riscv64.tar.gz
+#!RemoteAsset:  sha256:d9f03499a760c474470a0dca132273db4580ccf0f0538996195fc1480437a621
+Source2:        https://github.com/software-vendor/dotnet-vendor/releases/download/%{dotnet_version}/dotnet-sdk-%{version}-linux-x64.tar.gz
+#!RemoteAsset:  sha256:6a4da88898a9369a082c843185226fb13e59a3df6cb537211965e61ef3e30d5f
+Source3:        https://github.com/software-vendor/dotnet-vendor/releases/download/%{dotnet_version}/Private.SourceBuilt.Artifacts.%{version}-servicing.linux-x64.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
 BuildRequires:  bash
@@ -99,7 +99,7 @@ to install Dotnet for a development environment, you should install
 
 %package     -n dotnet-runtime-%{dotnet_major}-bin
 Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} runtime
+Summary:        .NET %{dotnet_major} runtime
 Requires:       dotnet-hostfxr-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
 # libicu is dlopen()ed
 Requires:       icu
@@ -112,7 +112,7 @@ to install Dotnet for a development environment, you should install
 
 %package     -n aspnetcore-runtime-%{dotnet_major}-bin
 Version:        %{runtime_version}
-Summary:        ASP.NET Core %{runtime_version} runtime
+Summary:        ASP.NET Core %{dotnet_major} runtime
 Requires:       dotnet-runtime-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
 Provides:       aspnetcore-runtime-%{dotnet_major} = %{version}
 
@@ -123,7 +123,7 @@ to install Dotnet for a development environment, you should install
 
 %package     -n dotnet-templates-%{dotnet_major}-bin
 Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} templates
+Summary:        .NET %{dotnet_major} templates
 # Theoretically any version of the host should work. But lets aim for the one
 # provided by this package, or from a newer version of .NET
 Requires:       dotnet-host-bin%{?_isa} >= %{runtime_version}-%{release}
@@ -135,8 +135,8 @@ to install Dotnet for a development environment, you should install
 'dotnet-templates-%{dotnet_major}' instead.
 
 %package     -n dotnet-sdk-%{dotnet_major}-bin
-Version:        %{runtime_version}
-Summary:        .NET %{runtime_version} SDK
+Version:        %{sdk_version}
+Summary:        .NET %{dotnet_major} SDK
 Requires:       dotnet-runtime-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
 Requires:       aspnetcore-runtime-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
 Requires:       dotnet-apphost-pack-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
@@ -153,7 +153,7 @@ to install Dotnet for a development environment, you should install
 %package     -n dotnet-sdk-aot-%{dotnet_major}-bin
 Version:        %{sdk_version}
 Summary:        .NET %{dotnet_major} SDK - Native AoT Support
-Requires:       dotnet-sdk-%{dotnet_major}-bin%{?_isa} >= %{runtime_version}-%{release}
+Requires:       dotnet-sdk-%{dotnet_major}-bin%{?_isa} >= %{sdk_version}-%{release}
 # When installing AOT support, also install all dependencies needed to build
 # NativeAOT applications. AOT invokes `clang ... -lssl -lcrypto -lbrotlienc
 # -lbrotlidec -lz ...`.
