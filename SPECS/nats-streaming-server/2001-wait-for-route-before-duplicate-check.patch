@@ -1,0 +1,49 @@
+From a1a891ad382237f43e1f7599685a029a13397e2c Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 10:44:11 +0800
+Subject: [PATCH] tests: wait for route readiness before duplicate server
+ detection
+
+Start the second NATS node and prove that discovery reaches the existing
+streaming server before starting a duplicate instance. This preserves the
+duplicate-ID assertion without assuming that NATS route establishment
+and interest propagation complete synchronously during server startup.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/server_run_test.go | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
+
+diff --git a/server/server_run_test.go b/server/server_run_test.go
+index 4c94207..4d6012d 100644
+--- a/server/server_run_test.go
++++ b/server/server_run_test.go
+@@ -157,9 +157,25 @@ func TestEnsureStandAlone(t *testing.T) {
+ 	nOpts2 := DefaultNatsServerOptions
+ 	nOpts2.Port = 4333
+ 	nOpts2.Cluster.Name = "abc"
+-	nOpts2.Cluster.ListenStr = "nats://127.0.0.1:5551"
+-	nOpts2.RoutesStr = "nats://127.0.0.1:5550"
+-	s2, err := RunServerWithOpts(sOpts, &nOpts2)
++	nOpts2.Cluster.Host = "127.0.0.1"
++	nOpts2.Cluster.Port = 5551
++	nOpts2.Routes = natsd.RoutesFromStr("nats://127.0.0.1:5550")
++	ns := natsdTest.RunServer(&nOpts2)
++	defer ns.Shutdown()
++
++	// Establish the route and discovery subscription before checking for a
++	// duplicate. Newer NATS servers can return NoResponders while their
++	// route pool is still starting, before the first server is reachable.
++	sOpts.NATSServerURL = "nats://127.0.0.1:4333"
++	waitFor(t, 2*time.Second, 15*time.Millisecond, func() error {
++		sc, err := stan.Connect(clusterName, "route-ready",
++			stan.NatsURL(sOpts.NATSServerURL), stan.ConnectWait(100*time.Millisecond))
++		if err != nil {
++			return err
++		}
++		return sc.Close()
++	})
++	s2, err := RunServerWithOpts(sOpts, nil)
+ 	if s2 != nil || err == nil {
+ 		s2.Shutdown()
+ 		t.Fatal("Expected server to fail to start, it did not")
