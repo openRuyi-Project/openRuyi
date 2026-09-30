@@ -102,3 +102,26 @@ jobs:
         [ -n "$rpms" ]
         ls -lah $rpms
         dnf install --assumeyes $rpms
+  abi-check:
+    needs: build
+    runs-on: [ubuntu-latest]
+    container:
+      image: ghcr.io/openruyi-project/creek-x86_64:latest
+    steps:
+    - name: Install pkg
+      run: dnf5 install --assumeyes libabigail tar gzip cpio rpm
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Download All Build Artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: PR${{ github.event.pull_request.number }}-build-packages-results
+        path: rpms
+    - name: Flatten RPMs to top level
+      run: |
+        find rpms -name '*.rpm' -exec mv {} . \;
+        rmdir rpms 2>/dev/null || true
+        ls -la *.rpm 2>/dev/null || echo "(no rpms)"
+    - name: Run ABI check
+      run: bash .github/build/abi-check.sh
