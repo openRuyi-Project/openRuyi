@@ -1,0 +1,34 @@
+From ad8f971f38834317cd4dbf42e65b98d39b3710af Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 22 Sep 2026 17:44:41 +0800
+Subject: [PATCH] gettext: normalize package-level closures named by modern Go
+
+Modern Go names package-level function literals init.funcN rather than glob..funcN. Keep their automatic translation context consistent with the legacy package.func form. The existing TestCallerName global-closure assertion covers this case.
+
+This applies to the legacy automatic-context API, removed upstream by 069e9f757190c26950ce39a499573f0d81e0b743.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ gettext/caller.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gettext/caller.go b/gettext/caller.go
+index fa80ae1..28e9ee5 100644
+--- a/gettext/caller.go
++++ b/gettext/caller.go
+@@ -13,9 +13,9 @@ var (
+ 	reInit1 = regexp.MustCompile(`init·\d+$`)  // main.init·1
+ 	reInit2 = regexp.MustCompile(`init\.\d+$`) // main.init.1
+ 
+-	reClosure1 = regexp.MustCompile(`func·\d+$`)                // main.func·001
+-	reClosure2 = regexp.MustCompile(`glob\.\.func\d+(\.\d+)*$`) // main.glob..func1
+-	reClosure3 = regexp.MustCompile(`\w+\.func\d+(\.\d+)*$`)    // main.FuncName.func1
++	reClosure1 = regexp.MustCompile(`func·\d+$`)                         // main.func·001
++	reClosure2 = regexp.MustCompile(`(glob\.\.|init\.)func\d+(\.\d+)*$`) // main.glob..func1, main.init.func1
++	reClosure3 = regexp.MustCompile(`\w+\.func\d+(\.\d+)*$`)             // main.FuncName.func1
+ )
+ 
+ // caller types:
+-- 
+2.52.0
+
