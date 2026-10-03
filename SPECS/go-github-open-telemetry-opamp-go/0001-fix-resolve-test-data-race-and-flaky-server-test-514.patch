@@ -1,0 +1,87 @@
+From 7b3e7ed6de23cf9d8bc3b89f0469a98c9ee1049d Mon Sep 17 00:00:00 2001
+From: Arpit Srivastava <arpitsrivastava529@gmail.com>
+Date: Thu, 19 Feb 2026 03:56:32 +0530
+Subject: [PATCH] fix: resolve test data race and flaky server test (#514)
+
+this pr fixes two test failures reported in issue #442 by addressing concurrency and stale state issues in the test suite.
+
+this change wraps `newInstanceUid` in `atomic.Value` in `TestAgentIdentification` to safely synchronize access between the server handler and polling goroutines, resolving the data race reported by the go race detector. it also resets the `rcvMsg` and `srvConn` atomics in `TestServerNotResponse` between the http and websocket phases, ensuring the websocket phase does not pass prematurely using stale state from the earlier http phase.
+
+fixes #442
+---
+ client/clientimpl_test.go | 12 +++++++-----
+ server/serverimpl_test.go | 14 +++++++++++---
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/client/clientimpl_test.go b/client/clientimpl_test.go
+index 1b4b64e..2bc0eca 100644
+--- a/client/clientimpl_test.go
++++ b/client/clientimpl_test.go
+@@ -788,17 +788,19 @@ func TestAgentIdentification(t *testing.T) {
+ 	testClients(t, func(t *testing.T, client OpAMPClient) {
+ 		// Start a server.
+ 		srv := internal.StartMockServer(t)
+-		newInstanceUid := genNewInstanceUid(t)
++		var newInstanceUid atomic.Value
++		newInstanceUid.Store(genNewInstanceUid(t))
+ 		var rcvAgentInstanceUid atomic.Value
+ 		srv.OnMessage = func(msg *protobufs.AgentToServer) *protobufs.ServerToAgent {
+ 			if msg.Flags&uint64(protobufs.AgentToServerFlags_AgentToServerFlags_RequestInstanceUid) == 1 {
+-				newInstanceUid = genNewInstanceUid(t)
+-				rcvAgentInstanceUid.Store(newInstanceUid[:])
++				uid := genNewInstanceUid(t)
++				newInstanceUid.Store(uid)
++				rcvAgentInstanceUid.Store(uid[:])
+ 				return &protobufs.ServerToAgent{
+ 					InstanceUid: msg.InstanceUid,
+ 					AgentIdentification: &protobufs.AgentIdentification{
+ 						// If the RequestInstanceUid flag was set, populate this field.
+-						NewInstanceUid: newInstanceUid[:],
++						NewInstanceUid: uid[:],
+ 					},
+ 				}
+ 			}
+@@ -856,7 +858,7 @@ func TestAgentIdentification(t *testing.T) {
+ 				if !ok {
+ 					return false
+ 				}
+-				return types.InstanceUid(instanceUid) == newInstanceUid
++				return types.InstanceUid(instanceUid) == newInstanceUid.Load().(types.InstanceUid)
+ 			},
+ 		)
+ 
+diff --git a/server/serverimpl_test.go b/server/serverimpl_test.go
+index 036814b..e1728ed 100644
+--- a/server/serverimpl_test.go
++++ b/server/serverimpl_test.go
+@@ -1293,6 +1293,10 @@ func TestServerNotResponse(t *testing.T) {
+ 	assert.EqualValues(t, sendMsg.InstanceUid, response.InstanceUid)
+ 
+ 	// Test WebSocket
++	// Reset state from the HTTP phase so the checks below
++	// actually wait for the WebSocket message to arrive.
++	rcvMsg.Store((*protobufs.AgentToServer)(nil))
++
+ 	// Connect using a WebSocket client.
+ 	conn, _, _ := dialClient(settings)
+ 	require.NotNil(t, conn)
+@@ -1308,9 +1312,13 @@ func TestServerNotResponse(t *testing.T) {
+ 	err = conn.WriteMessage(websocket.BinaryMessage, bytes)
+ 	require.NoError(t, err)
+ 
+-	// Wait until Server receives the message.
+-	eventually(t, func() bool { return rcvMsg.Load() != nil })
+-	assert.True(t, proto.Equal(rcvMsg.Load().(proto.Message), &sendMsg))
++	// Wait until Server receives the WebSocket message.
++	assert.EventuallyWithT(t, func(c *assert.CollectT) {
++		msg, ok := rcvMsg.Load().(*protobufs.AgentToServer)
++		assert.True(c, ok, "rcvMsg is not type *protobufs.AgentToServer")
++		assert.NotNil(c, msg)
++		assert.True(c, proto.Equal(msg, &sendMsg), "message contents mismatch")
++	}, 5*time.Second, 10*time.Millisecond, "server did not receive message")
+ 	require.NoError(t, srvConn.Load().(net.Conn).Close())
+ 
+ 	// Read Server's response.
+-- 
+2.43.0
+
