@@ -20,12 +20,12 @@
 %define go_test_exclude_glob %{go_import_path}/metadata*
 
 Name:           go-googlecloud-go-compute
-Version:        1.68.0
+Version:        1.70.0
 Release:        %autorelease
 Summary:        Compute client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:e714fac8b68d71052ba2b34c763a6bfb463fff12918e42cd36161f4ea15f687a
+#!RemoteAsset:  sha256:c819fd094b0145709a142c1ca24cb1a859ecd0b004ca0141c707ac58c1cbcbf2
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/compute/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

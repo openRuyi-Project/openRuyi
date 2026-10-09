@@ -7,12 +7,12 @@
 %define go_import_path  github.com/bombsimon/logrusr/v4
 
 Name:           go-github-bombsimon-logrusr-v4
-Version:        4.1.0
+Version:        4.2.0
 Release:        %autorelease
 Summary:        Logrus backend for the logr interface
 License:        MIT
 URL:            https://github.com/bombsimon/logrusr
-#!RemoteAsset:  sha256:f65a0182512284e7887efc1ace8a126eabf038abbf40ab8fcdf7cc99d1b0f81a
+#!RemoteAsset:  sha256:0d28b1773f9ab3f721afca91199efa5f83fe3e4c9f8208fbc10b61af26ec7591
 Source0:        https://github.com/bombsimon/logrusr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

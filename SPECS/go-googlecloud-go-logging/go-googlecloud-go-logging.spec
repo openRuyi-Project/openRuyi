@@ -17,12 +17,12 @@
 %define go_test_exclude_glob %{go_import_path}/logadmin
 
 Name:           go-googlecloud-go-logging
-Version:        1.19.1
+Version:        1.20.0
 Release:        %autorelease
 Summary:        Logging client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:c5b51c1822bca3f1d7d0d218d73691c8e5707e1a475020aa0f8593aa4bd7d61d
+#!RemoteAsset:  sha256:2dd536f836f1cfe401c72eb140da80bf01b561a25f27779b99569244394122ff
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/logging/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

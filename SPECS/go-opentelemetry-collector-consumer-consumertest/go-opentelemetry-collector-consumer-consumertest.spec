@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-consumer-consumertest
-Version:        0.160.0
+Version:        0.161.0
 Release:        %autorelease
 Summary:        Test helpers for OpenTelemetry Collector consumers
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:9a8cf060dcd1069293b89af8944aba72e82573949af6dda3c80b2e96dddc5639
+#!RemoteAsset:  sha256:dbc73d9505a9767add2175eed18ef25c7befcda754de315106c1a0bb111a0570
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/consumer/consumertest/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

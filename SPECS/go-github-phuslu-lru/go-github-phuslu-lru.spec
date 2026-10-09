@@ -7,12 +7,12 @@
 %define go_import_path  github.com/phuslu/lru
 
 Name:           go-github-phuslu-lru
-Version:        1.0.23
+Version:        1.0.24
 Release:        %autorelease
 Summary:        High-performance generic LRU cache for Go
 License:        MIT
 URL:            https://github.com/phuslu/lru
-#!RemoteAsset:  sha256:ff6efe8ff19251fe4b48ce4a063a0e94fc2b1c359f5d94145a5fd5709bae2501
+#!RemoteAsset:  sha256:698ce233335fa595806a546b3da295c4c41083c774ee86ea6efd7e61c0eb3968
 Source0:        https://github.com/phuslu/lru/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

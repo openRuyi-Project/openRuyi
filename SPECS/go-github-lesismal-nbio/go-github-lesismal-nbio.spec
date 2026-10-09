@@ -8,12 +8,12 @@
 %define go_import_path  github.com/lesismal/nbio
 
 Name:           go-github-lesismal-nbio
-Version:        1.6.12
+Version:        1.7.0
 Release:        %autorelease
 Summary:        Pure Go 1000k+ connections solution, support tls/http1.x/websocket and basically compatible with net/http.
 License:        MIT
 URL:            https://github.com/lesismal/nbio
-#!RemoteAsset:  sha256:2202a8f87e201c3135a6165cb04d39704ab36163c264100c8bad12ec00937cea
+#!RemoteAsset:  sha256:40c2eecffe9e673d5d8a5196bdb3067db9a3bbba456ed88cfe3957acf1e9bffe
 Source0:        https://github.com/lesismal/nbio/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

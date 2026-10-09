@@ -7,12 +7,12 @@
 %define go_import_path  github.com/PuerkitoBio/goquery
 
 Name:           go-github-puerkitobio-goquery
-Version:        1.12.0
+Version:        1.13.0
 Release:        %autorelease
 Summary:        HTML document query and manipulation library for Go
 License:        BSD-3-Clause
 URL:            https://github.com/PuerkitoBio/goquery
-#!RemoteAsset:  sha256:f93137d692e8fae34739b16eba5978ac3d28b2693bdffe21d3f536cc2a9e5665
+#!RemoteAsset:  sha256:e298b82fb4e086c3aa0f8b629c3bbbf72513bddc4cd392280e5fbeb25998acbe
 Source0:        https://github.com/PuerkitoBio/goquery/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

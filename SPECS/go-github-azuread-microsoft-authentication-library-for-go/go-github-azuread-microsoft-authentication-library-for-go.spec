@@ -13,12 +13,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-azuread-microsoft-authentication-library-for-go
-Version:        1.9.0
+Version:        1.10.0
 Release:        %autorelease
 Summary:        Microsoft Authentication Library (MSAL) for Go
 License:        MIT
 URL:            https://github.com/AzureAD/microsoft-authentication-library-for-go
-#!RemoteAsset:  sha256:635765445bb131286cab1a21458969331e789f1051ce68fe736b5df81da9656c
+#!RemoteAsset:  sha256:d016d9fa246f847f006e4d7c6f2d34ac1c4183eb4a21647cb8c59aa2477ec438
 Source0:        https://github.com/AzureAD/microsoft-authentication-library-for-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

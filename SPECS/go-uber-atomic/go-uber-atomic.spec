@@ -8,12 +8,12 @@
 %define go_import_path  go.uber.org/atomic
 
 Name:           go-uber-atomic
-Version:        1.11.0
+Version:        1.12.0
 Release:        %autorelease
 Summary:        Wrapper types for sync/atomic which enforce atomic access
 License:        MIT
 URL:            https://github.com/uber-go/atomic
-#!RemoteAsset:  sha256:cfe258c20d71ac4dbf0f716a23ed00c332b7f281180651e2a67ad40a8b0772cc
+#!RemoteAsset:  sha256:a90f965f58ed3e095a19fea1e62aadf4f163b69efd5086c4789b3e1e6ccd56af
 Source0:        https://github.com/uber-go/atomic/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

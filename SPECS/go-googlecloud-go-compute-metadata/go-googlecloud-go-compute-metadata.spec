@@ -9,12 +9,12 @@
 %define go_source_subdir compute/metadata
 
 Name:           go-googlecloud-go-compute-metadata
-Version:        0.9.0
+Version:        0.10.0
 Release:        %autorelease
 Summary:        Google Compute metadata client for Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:6c91b83e40f93b7a9e07d41bf06fe615a9a4498f6aaa6e8e32328231b9c260b3
+#!RemoteAsset:  sha256:29e717c78d46ec472e86bc70aa088997c9203b83dc80484c324f7933873e2664
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/compute/metadata/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

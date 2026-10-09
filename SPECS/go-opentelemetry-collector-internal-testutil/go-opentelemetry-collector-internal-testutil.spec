@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-internal-testutil
-Version:        0.160.0
+Version:        0.161.0
 Release:        %autorelease
 Summary:        Test utilities for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:1cc650bfcf867021a8711206ca8b071eca770c3de91d926b1cb1adaadac9ae05
+#!RemoteAsset:  sha256:b8b4f3a9969d092f0b4aa6a4f4f265d0b6c4bfb3db6bbf7493ff42cda23f83ce
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/internal/testutil/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

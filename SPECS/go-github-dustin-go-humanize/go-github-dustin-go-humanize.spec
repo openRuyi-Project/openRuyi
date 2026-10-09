@@ -8,12 +8,12 @@
 %define go_import_path  github.com/dustin/go-humanize
 
 Name:           go-github-dustin-go-humanize
-Version:        1.0.1
+Version:        1.1.0
 Release:        %autorelease
 Summary:        Go Humans! (formatters for units to human friendly sizes)
 License:        MIT
 URL:            https://github.com/dustin/go-humanize
-#!RemoteAsset
+#!RemoteAsset:  sha256:103ef7f1ce7f8fbf72c054aad46b6848026f7eb2634913cb4dc1b386dd05a298
 Source0:        https://github.com/dustin/go-humanize/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -32,4 +32,4 @@ Just a few functions for helping humanize times and sizes.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

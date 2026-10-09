@@ -7,12 +7,12 @@
 %define go_import_path  k8s.io/cri-api
 
 Name:           go-k8s-cri-api
-Version:        0.37.0
+Version:        0.37.1
 Release:        %autorelease
 Summary:        Kubernetes Container Runtime Interface API definitions
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/cri-api
-#!RemoteAsset:  sha256:f574da0f6b366d1c81b0ee8bf1069559c775efdd0ae8a461863c800e40f8e938
+#!RemoteAsset:  sha256:96c6ac2620dd941676930077f0920cda8f009fec0e21ea630502e7a902a06e3f
 Source0:        https://github.com/kubernetes/cri-api/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

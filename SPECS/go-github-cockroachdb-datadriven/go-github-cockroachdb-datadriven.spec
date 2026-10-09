@@ -8,12 +8,12 @@
 %define go_import_path  github.com/cockroachdb/datadriven
 
 Name:           go-github-cockroachdb-datadriven
-Version:        1.0.2
+Version:        1.0.3
 Release:        %autorelease
 Summary:        Data-Driven Testing for Go
 License:        Apache-2.0
 URL:            https://github.com/cockroachdb/datadriven
-#!RemoteAsset
+#!RemoteAsset:  sha256:970cdcc569719d53d18f3de7a74200392fe4032613d79656aced8b7b3dc1928f
 Source0:        https://github.com/cockroachdb/datadriven/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,4 +40,4 @@ and reading these tests.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-pdata
-Version:        1.66.0
+Version:        1.67.0
 Release:        %autorelease
 Summary:        Telemetry data model for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:cbbf1ec917f8245ccb7c048833418b538423bd4ff88533cc9c9b00bfd83a75a8
+#!RemoteAsset:  sha256:7cc6bdcd44675a88f1a6a136d504efb858e684c2f71d4f36a9d7d0e52350608d
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/pdata/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

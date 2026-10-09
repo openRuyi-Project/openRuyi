@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-beevik-ntp
-Version:        1.5.0
+Version:        1.6.0
 Release:        %autorelease
 Summary:        a simple ntp client package for go
 License:        BSD-2-Clause
 URL:            https://github.com/beevik/ntp
-#!RemoteAsset
+#!RemoteAsset:  sha256:11a5ac8d0366b90c69eb96ce4c7a07ec47a591c5b0283947d356ea0c29771665
 Source0:        https://github.com/beevik/ntp/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -42,4 +42,4 @@ time.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

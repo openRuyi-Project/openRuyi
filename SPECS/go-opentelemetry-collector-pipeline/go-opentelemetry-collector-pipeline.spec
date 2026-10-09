@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-pipeline
-Version:        1.66.0
+Version:        1.67.0
 Release:        %autorelease
 Summary:        Pipeline identifiers for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:daa2fb8916eab9f3f0110dada3131422b8fd46b7e43020a5a38de6375b8b9d6b
+#!RemoteAsset:  sha256:cb617f5f4b1c6bbfe36923ab4e3e891d4dbef2cabeee430b3f6d2d19170896d0
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/pipeline/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

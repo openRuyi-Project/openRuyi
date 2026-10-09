@@ -7,12 +7,12 @@
 %define go_import_path  github.com/DeRuina/timberjack
 
 Name:           go-github-deruina-timberjack
-Version:        1.4.6
+Version:        1.4.8
 Release:        %autorelease
 Summary:        Size- and time-based rolling logger for Go
 License:        MIT
 URL:            https://github.com/DeRuina/timberjack
-#!RemoteAsset:  sha256:390a6801573946fb63d30a02092f98b5b465b00bef327e466e05df61820d7661
+#!RemoteAsset:  sha256:8764647fdf9309d7f2b6c42b694a5bba96f272205f14f9ca840f50b77a57289b
 Source0:        https://github.com/DeRuina/timberjack/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

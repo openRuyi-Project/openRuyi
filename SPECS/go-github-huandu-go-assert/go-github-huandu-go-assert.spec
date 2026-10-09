@@ -7,13 +7,13 @@
 %define go_import_path  github.com/huandu/go-assert
 
 Name:           go-github-huandu-go-assert
-Version:        1.1.5
+Version:        1.1.6
 Release:        %autorelease
 Summary:        Assertions with source context for Go tests
 License:        MIT
 URL:            https://github.com/huandu/go-assert
 VCS:            git:https://github.com/huandu/go-assert.git
-#!RemoteAsset:  sha256:2094ba6f89f2943917a1e753e22748f77be5cef11d0290cb2d288b66964b01b8
+#!RemoteAsset:  sha256:32677b94294e794cf9ef63e247a96602cbdbc8a443f7591179df88216c28ef03
 Source0:        https://github.com/huandu/go-assert/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

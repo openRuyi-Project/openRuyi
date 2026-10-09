@@ -14,12 +14,12 @@
 %define go_test_exclude_glob %{go_import_path}*
 
 Name:           go-github-onsi-gomega
-Version:        1.43.0
+Version:        1.44.0
 Release:        %autorelease
 Summary:        Matcher and assertion helpers for Go tests
 License:        MIT
 URL:            https://github.com/onsi/gomega
-#!RemoteAsset:  sha256:7cf4044c9aef9efee93177bcd5bc509f5d01d89549f0131336fffcca4d43c648
+#!RemoteAsset:  sha256:e46be4011571df2615dfc618007eebde5f4f9c9a14b817285de1ed795292cea2
 Source0:        https://github.com/onsi/gomega/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

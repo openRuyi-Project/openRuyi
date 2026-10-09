@@ -7,12 +7,12 @@
 %define go_import_path  github.com/huandu/xstrings
 
 Name:           go-github-huandu-xstrings
-Version:        1.5.0
+Version:        1.6.1
 Release:        %autorelease
 Summary:        Is to provide string algorithms which are useful but not included in strings package
 License:        MIT
 URL:            https://github.com/huandu/xstrings
-#!RemoteAsset:  sha256:2b242f966abe8aa75dbd6cf2c6625692feea117bc937b9f3fe76b99cdaf7365a
+#!RemoteAsset:  sha256:a6d1c71957ac19a3213e94a29506dd16ecd19190e50754fc80f620e1cd141338
 Source0:        https://github.com/huandu/xstrings/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

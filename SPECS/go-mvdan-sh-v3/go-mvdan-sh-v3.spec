@@ -9,12 +9,12 @@
 %define go_test_exclude_glob  %{go_import_path}/moreinterp*
 
 Name:           go-mvdan-sh-v3
-Version:        3.13.1
+Version:        3.14.1
 Release:        %autorelease
 Summary:        Shell parser, formatter, and interpreter for Go
 License:        BSD-3-Clause
 URL:            https://github.com/mvdan/sh
-#!RemoteAsset:  sha256:b31aad2d4c26b0c6e8ebe894d59022520bbebce33e082d7d29e4325eee35d308
+#!RemoteAsset:  sha256:ec4bdb88ab6c95686be3a4eeb4ad77d2b49d33d2ed7b0a65035cd52d2d87c443
 Source0:        https://github.com/mvdan/sh/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -7,12 +7,12 @@
 %define go_import_path  github.com/hashicorp/hcl/v2
 
 Name:           go-github-hashicorp-hcl-v2
-Version:        2.24.0
+Version:        2.25.0
 Release:        %autorelease
 Summary:        HashiCorp Configuration Language version 2 for Go
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/hcl
-#!RemoteAsset:  sha256:0eef23c176aeb7d6f2e7a93aa7bb66405ff38bb407bac0a1ecbab89b09c7c6cf
+#!RemoteAsset:  sha256:a2cc385ada570cea4e623c4e7eae862e1a920482e91fb08d24590fc1c546e8d1
 Source0:        https://github.com/hashicorp/hcl/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-playground/universal-translator
 
 Name:           go-github-go-playground-universal-translator
-Version:        0.18.1
+Version:        0.18.2
 Release:        %autorelease
 Summary:        i18n Translator for Go/Golang using CLDR data + pluralization rules
 License:        MIT
 URL:            https://github.com/go-playground/universal-translator
-#!RemoteAsset
+#!RemoteAsset:  sha256:227dd35a0011a1adfa69eae49b157436c5a4753e16bc670bd1f5a4a4b5b0aef6
 Source0:        https://github.com/go-playground/universal-translator/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -42,5 +42,4 @@ translate text for use in your applications.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
-
+%autochangelog

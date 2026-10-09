@@ -11,12 +11,12 @@
 %define go_test_exclude  github.com/aperturerobotics/protobuf-go-lite/cmd/protoc-gen-go-lite
 
 Name:           go-github-aperturerobotics-protobuf-go-lite
-Version:        0.18.0
+Version:        0.19.0
 Release:        %autorelease
 Summary:        Reflection-free Protobuf for Go.
 License:        BSD-3-Clause
 URL:            https://github.com/aperturerobotics/protobuf-go-lite
-#!RemoteAsset:  sha256:f4baf8ecbfe5531aeff211f2561c1c6dd7dbd2f5f35e491bf96b45a9f798d839
+#!RemoteAsset:  sha256:3d533c7433e5a64095e1c9d9d0f6e7147c4aa0074f05605d76b8f49df91d28ff
 Source0:        https://github.com/aperturerobotics/protobuf-go-lite/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

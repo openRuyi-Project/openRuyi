@@ -9,12 +9,12 @@
 %define go_test_exclude  %{go_import_path}
 
 Name:           go-github-jsimonetti-rtnetlink-v2
-Version:        2.0.1
+Version:        2.2.0
 Release:        %autorelease
 Summary:        Low-level Linux rtnetlink library for Go
 License:        MIT
 URL:            https://github.com/jsimonetti/rtnetlink
-#!RemoteAsset:  sha256:5f8140f47f55f4b90ef7b52543ca019022f0e5975c378666d52dd151c155b820
+#!RemoteAsset:  sha256:fab1f59db068c705f1dc8dbb9120180dd7710a1c950c23ff0cf6ee6052d2c582
 Source0:        https://github.com/jsimonetti/rtnetlink/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

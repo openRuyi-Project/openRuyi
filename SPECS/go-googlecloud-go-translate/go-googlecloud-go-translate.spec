@@ -9,12 +9,12 @@
 %define go_source_subdir translate
 
 Name:           go-googlecloud-go-translate
-Version:        1.18.0
+Version:        1.19.0
 Release:        %autorelease
 Summary:        Translate client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:729b09ad95982bea8f525b2ad31aca35d9d849b4ecd081d7608a7d1e0ca9619d
+#!RemoteAsset:  sha256:404214b63ccfe17e055622eb801e36c8bb0c8e8e0909651816f1f15018bca515
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/translate/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

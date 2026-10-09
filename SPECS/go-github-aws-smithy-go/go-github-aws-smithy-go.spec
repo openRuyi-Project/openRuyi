@@ -10,12 +10,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-aws-smithy-go
-Version:        1.28.1
+Version:        1.28.2
 Release:        %autorelease
 Summary:        Smithy code generators for Go (in development)
 License:        Apache-2.0
 URL:            https://github.com/aws/smithy-go
-#!RemoteAsset:  sha256:6b9157800cb2bfa166d1b470492b7c4319fc3a7f9380b49286a97357b1f695c9
+#!RemoteAsset:  sha256:29e64874aaa4058e749ebbbcca712f2ac552ce35b9c78c575a070a7527ff0de6
 Source0:        https://github.com/aws/smithy-go/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

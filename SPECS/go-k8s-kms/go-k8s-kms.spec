@@ -7,12 +7,12 @@
 %define go_import_path  k8s.io/kms
 
 Name:           go-k8s-kms
-Version:        0.36.2
+Version:        0.37.1
 Release:        %autorelease
 Summary:        Kubernetes Key Management Service API
 License:        Apache-2.0
 URL:            https://github.com/kubernetes/kms
-#!RemoteAsset:  sha256:d5b2d8c42b3993fbb713248e176aab0b703f09d638d358a26163f901b41e90b2
+#!RemoteAsset:  sha256:c353e5fd72374a4664716f736ac6ad70c902992fa1a6f662443543edde1d3e05
 Source0:        https://github.com/kubernetes/kms/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

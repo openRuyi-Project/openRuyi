@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-confmap
-Version:        1.66.0
+Version:        1.67.0
 Release:        %autorelease
 Summary:        Configuration map module for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:de210a719802c4c65e15a724e1e47b9f382bcf9c9e412669bee84918510c1593
+#!RemoteAsset:  sha256:28ed66bb4933f935d5c0e98cfa803fe970137e46a405a1060566ca963806452a
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/confmap/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

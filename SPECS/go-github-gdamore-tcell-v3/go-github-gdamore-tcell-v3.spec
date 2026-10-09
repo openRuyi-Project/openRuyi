@@ -7,12 +7,12 @@
 %define go_import_path  github.com/gdamore/tcell/v3
 
 Name:           go-github-gdamore-tcell-v3
-Version:        3.4.2
+Version:        3.5.0
 Release:        %autorelease
 Summary:        Cell-based terminal package for Go
 License:        Apache-2.0
 URL:            https://github.com/gdamore/tcell
-#!RemoteAsset:  sha256:25c2327d78e767166296d951bf0ba7e38f7d3a3f40f981f5f4225d4f1f79334e
+#!RemoteAsset:  sha256:e0b68fb55a41ad28e970ce4c2997f0742af59aa4517ccae371493a78b57fe23d
 Source0:        https://github.com/gdamore/tcell/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

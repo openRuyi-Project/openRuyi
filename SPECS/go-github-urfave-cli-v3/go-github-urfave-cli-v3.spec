@@ -9,12 +9,12 @@
 %define go_test_exclude  %{go_import_path}/docs
 
 Name:           go-github-urfave-cli-v3
-Version:        3.11.0
+Version:        3.13.0
 Release:        %autorelease
 Summary:        Command-line application framework for Go
 License:        MIT
 URL:            https://github.com/urfave/cli
-#!RemoteAsset:  sha256:95351a5fdf8da5ed550521712134abc64dccce81d4f9249eb4ac509504c1ce1a
+#!RemoteAsset:  sha256:6359e879782eb330304e5cdc65550802839a9adc4499cedb37c4254c8d0cc5b7
 Source0:        https://github.com/urfave/cli/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

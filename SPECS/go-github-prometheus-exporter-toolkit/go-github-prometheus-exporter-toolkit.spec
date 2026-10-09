@@ -8,12 +8,12 @@
 %define go_import_path  github.com/prometheus/exporter-toolkit
 
 Name:           go-github-prometheus-exporter-toolkit
-Version:        0.19.0
+Version:        0.20.0
 Release:        %autorelease
 Summary:        Utilities for Prometheus exporters
 License:        Apache-2.0
 URL:            https://github.com/prometheus/exporter-toolkit
-#!RemoteAsset:  sha256:b312bb6bb8fcb89830868462f72c4d990205f8d9522d66da874189f2513cd9de
+#!RemoteAsset:  sha256:12df30b0c69403100ca17677ff31691e11faccc794086acaac20894c45618018
 Source0:        https://github.com/prometheus/exporter-toolkit/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

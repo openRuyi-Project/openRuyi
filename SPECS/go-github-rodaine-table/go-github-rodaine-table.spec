@@ -8,13 +8,13 @@
 %define go_import_path  github.com/rodaine/table
 
 Name:           go-github-rodaine-table
-Version:        1.3.1
+Version:        1.4.0
 Release:        %autorelease
 Summary:        Go library for simple terminal tables
 License:        MIT
 URL:            https://github.com/rodaine/table
 VCS:            git:https://github.com/rodaine/table
-#!RemoteAsset:  sha256:06c9dd4211e76ffca2df995497354272532230b17c0989ebc5a19b6f5ec8fc63
+#!RemoteAsset:  sha256:83c5ff178b1bcb6b40dc8800b0702801938d9ce79188b5a24e3a608b639b4f7a
 Source0:        https://github.com/rodaine/table/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

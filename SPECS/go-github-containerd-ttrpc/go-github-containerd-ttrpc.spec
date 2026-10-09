@@ -7,12 +7,12 @@
 %define go_import_path  github.com/containerd/ttrpc
 
 Name:           go-github-containerd-ttrpc
-Version:        1.2.9
+Version:        1.2.10
 Release:        %autorelease
 Summary:        Low-memory gRPC implementation
 License:        Apache-2.0
 URL:            https://github.com/containerd/ttrpc
-#!RemoteAsset:  sha256:16dba7a04c7eb11bc0f725d5ffaa8863d60113b711a1caacf7c99a543ac3960f
+#!RemoteAsset:  sha256:797a5d3ba83ec8c3c0ef4ca4185eb2965fdef97f1870dbe1ecad454cdfd7729c
 Source0:        https://github.com/containerd/ttrpc/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -18,12 +18,12 @@
 }
 
 Name:           go-gonum-v1-plot
-Version:        0.16.0
+Version:        0.17.0
 Release:        %autorelease
 Summary:        A repository for plotting and visualizing data
 License:        BSD-3-Clause
 URL:            https://github.com/gonum/plot
-#!RemoteAsset:  sha256:2aff394ccbdfac20c38c916ef741905b4a7269338bd85126f5834bd6f0c12fd1
+#!RemoteAsset:  sha256:bbf9e0d0431a01a68a180fcc2ccc1f825cedb3328ee17e35560bed3086a61b49
 Source0:        https://github.com/gonum/plot/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

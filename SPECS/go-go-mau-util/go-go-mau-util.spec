@@ -11,12 +11,12 @@
 %global go_test_flags_default -v -skip '^(TestAdd_Full|TestFullyQualify_Full)$'
 
 Name:           go-go-mau-util
-Version:        0.9.6
+Version:        0.10.1
 Release:        %autorelease
 Summary:        Go utilities for mautrix and related projects
 License:        MPL-2.0
 URL:            https://github.com/mautrix/go-util
-#!RemoteAsset:  sha256:2830aae953fea2cfb27a2dfa24896c45637908dbb8702e0818dd13ea01cb30b5
+#!RemoteAsset:  sha256:e48b97b8ba7a9069c9f3c80bf9d56ed2272e273b3a3f75d1552602016101ba26
 Source0:        https://github.com/mautrix/go-util/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

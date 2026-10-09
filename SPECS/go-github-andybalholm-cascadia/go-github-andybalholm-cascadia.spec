@@ -7,12 +7,12 @@
 %define go_import_path  github.com/andybalholm/cascadia
 
 Name:           go-github-andybalholm-cascadia
-Version:        1.3.4
+Version:        1.3.5
 Release:        %autorelease
 Summary:        CSS selector implementation for Go
 License:        BSD-3-Clause
 URL:            https://github.com/andybalholm/cascadia
-#!RemoteAsset:  sha256:6d646174d19d2400b610d627ff43d4a53a4de91bfc02fad7a70aae73c36930e0
+#!RemoteAsset:  sha256:dc70adcf38b85fba3233ce1ffa025274c57c23f8f470693fbf7fe2ed164781f4
 Source0:        https://codeload.github.com/andybalholm/cascadia/tar.gz/refs/tags/v%{version}#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

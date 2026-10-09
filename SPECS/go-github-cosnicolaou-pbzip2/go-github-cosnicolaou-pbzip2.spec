@@ -7,12 +7,12 @@
 %define go_import_path  github.com/cosnicolaou/pbzip2
 
 Name:           go-github-cosnicolaou-pbzip2
-Version:        1.0.5
+Version:        1.0.6
 Release:        %autorelease
 Summary:        Parallel bzip2 decompression for Go
 License:        Apache-2.0
 URL:            https://github.com/cosnicolaou/pbzip2
-#!RemoteAsset:  sha256:df45ca125533ec6aa16d6fb9a24f68d52b0b2db9a2282325e6fef66deeb2dbc2
+#!RemoteAsset:  sha256:1a4eaccaf2661cff459b821d823129b670ac1138fd33bd7fc1f31b49f3a6a0a7
 Source0:        https://github.com/cosnicolaou/pbzip2/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

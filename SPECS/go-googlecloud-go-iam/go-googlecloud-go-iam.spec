@@ -9,12 +9,12 @@
 %define go_source_subdir iam
 
 Name:           go-googlecloud-go-iam
-Version:        1.13.0
+Version:        1.14.0
 Release:        %autorelease
 Summary:        IAM client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:aa3bdbe4d9271deaf0da94d1c23df93c7f3488e2eb1360c6f46f9ef782609f62
+#!RemoteAsset:  sha256:d636428416b1f3c1e421779d15bad2f789d026b079e7161c9854d92c70cc77f6
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/iam/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

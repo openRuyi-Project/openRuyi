@@ -13,12 +13,12 @@
 %define go_test_exclude_glob %{go_import_path}/tools*
 
 Name:           go-github-google-s2a-go
-Version:        0.1.9
+Version:        0.1.10
 Release:        %autorelease
 Summary:        Google S2A authentication library for Go
 License:        Apache-2.0
 URL:            https://github.com/google/s2a-go
-#!RemoteAsset:  sha256:c996a4f8f50ca2229787fcb8066d963a4e17908a6552b3d2c138e1f9ee522d4d
+#!RemoteAsset:  sha256:8c195f91b441ec36863609678f3b69d31f9287f4b9527156c94bae649dc0fd8c
 Source0:        https://github.com/google/s2a-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -7,12 +7,12 @@
 %define go_import_path  github.com/mattn/go-shellwords
 
 Name:           go-github-mattn-go-shellwords
-Version:        1.0.14
+Version:        1.0.15
 Release:        %autorelease
 Summary:        Parse line as shell words
 License:        MIT
 URL:            https://github.com/mattn/go-shellwords
-#!RemoteAsset:  sha256:8321ef5121866ce370f5d6af7bc4182754a3758125f266febe00b1c88022d3c4
+#!RemoteAsset:  sha256:eb89245b4dd6561e42ea14de96558bfba0bb05c1e8a3b3a81700a55ac91405bc
 Source0:        https://github.com/mattn/go-shellwords/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -12,12 +12,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-opentelemetry-collector-processor
-Version:        1.66.0
+Version:        1.67.0
 Release:        %autorelease
 Summary:        Processor APIs for OpenTelemetry Collector
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-collector
-#!RemoteAsset:  sha256:2108a26f612b38caf739f7921391d3b5e6854d0fb98eca6520eae0543de22bce
+#!RemoteAsset:  sha256:b0ea73509b3c2c6125b91106d40f2ea606daffec94a1d1ec21b809fa5d9a5745
 Source0:        https://github.com/open-telemetry/opentelemetry-collector/archive/refs/tags/processor/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

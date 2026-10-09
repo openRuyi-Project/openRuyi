@@ -24,12 +24,12 @@
 }
 
 Name:           go-github-bazelbuild-rules-go
-Version:        0.62.0
+Version:        0.63.0
 Release:        %autorelease
 Summary:        Bazel rules for building Go code
 License:        Apache-2.0
 URL:            https://github.com/bazelbuild/rules_go
-#!RemoteAsset:  sha256:988a8856e5cf6ce5bcb1e30919fe87e444af0fe09ae26ae125035c9522bda147
+#!RemoteAsset:  sha256:f34d10e44e06fe7cca7709dbcf4a0a1f1f2f99ae666a4e88442d6e3e533b9c5a
 Source0:        https://github.com/bazelbuild/rules_go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

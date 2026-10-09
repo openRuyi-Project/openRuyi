@@ -8,12 +8,12 @@
 %define go_import_path  github.com/xhit/go-str2duration/v2
 
 Name:           go-github-xhit-go-str2duration-v2
-Version:        2.1.0
+Version:        2.2.0
 Release:        %autorelease
 Summary:        Convert string to duration in golang
 License:        BSD-3-Clause
 URL:            https://github.com/xhit/go-str2duration
-#!RemoteAsset
+#!RemoteAsset:  sha256:79dbc26fb0be8e4dd737eb0aa3d6a3074b0f7ec8282bd6dc555598f9b2c88dad
 Source0:        https://github.com/xhit/go-str2duration/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -38,4 +38,4 @@ days too!.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

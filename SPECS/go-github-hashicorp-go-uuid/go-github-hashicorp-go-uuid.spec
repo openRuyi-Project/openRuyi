@@ -8,12 +8,12 @@
 %define go_import_path  github.com/hashicorp/go-uuid
 
 Name:           go-github-hashicorp-go-uuid
-Version:        1.0.3
+Version:        1.0.4
 Release:        %autorelease
 Summary:        Generates UUID-format strings using purely high quality random bytes
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-uuid
-#!RemoteAsset
+#!RemoteAsset:  sha256:13868e1f82015c5e2edd4fa34ea61990a60b4898bdd67a96cccfb0b799884ee1
 Source0:        https://github.com/hashicorp/go-uuid/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -35,4 +35,4 @@ UUID-format strings into their component bytes.
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog

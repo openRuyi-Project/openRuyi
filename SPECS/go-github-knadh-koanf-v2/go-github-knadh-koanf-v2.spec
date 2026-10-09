@@ -13,12 +13,12 @@
 %define go_test_include %{go_import_path}
 
 Name:           go-github-knadh-koanf-v2
-Version:        2.3.6
+Version:        2.3.7
 Release:        %autorelease
 Summary:        Lightweight extensible configuration management library for Go
 License:        MIT
 URL:            https://github.com/knadh/koanf
-#!RemoteAsset:  sha256:c78d8736d3e27ab78956426a381c2767acf2fa522abe8e709bf87996008e76ab
+#!RemoteAsset:  sha256:73292055744e5a52d7c15be11d30b32b7a5e32b25580dd6a592e0b63ca5c3a60
 Source0:        https://github.com/knadh/koanf/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

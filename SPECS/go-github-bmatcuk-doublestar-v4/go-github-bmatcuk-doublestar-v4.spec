@@ -11,12 +11,12 @@
 %define go_test_exclude_glob  %{go_import_path}/examples*
 
 Name:           go-github-bmatcuk-doublestar-v4
-Version:        4.10.0
+Version:        4.10.2
 Release:        %autorelease
 Summary:        Path pattern matching and globbing supporting doublestar patterns
 License:        MIT
 URL:            https://github.com/bmatcuk/doublestar
-#!RemoteAsset:  sha256:5d178e61fe67b3ae3ea46f023b2fbfaf0400e6ee74fe5cef1074690305a3f4f6
+#!RemoteAsset:  sha256:bb1082ee3e27a0a25f8cab17d604e5c646cca232f16bb09587639d0b4fde8e33
 Source0:        https://github.com/bmatcuk/doublestar/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

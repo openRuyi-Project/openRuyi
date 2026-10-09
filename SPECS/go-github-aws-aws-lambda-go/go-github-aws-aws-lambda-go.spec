@@ -7,12 +7,12 @@
 %define go_import_path  github.com/aws/aws-lambda-go
 
 Name:           go-github-aws-aws-lambda-go
-Version:        1.55.0
+Version:        1.55.1
 Release:        %autorelease
 Summary:        Libraries for building AWS Lambda functions in Go
 License:        Apache-2.0
 URL:            https://github.com/aws/aws-lambda-go
-#!RemoteAsset:  sha256:06c080cf35eb27ba2645bf9ac02c2f2cdb69b065b5b4d161218e1c28d7e746df
+#!RemoteAsset:  sha256:5e575db971788e50bae18a57d754eb414ed2c56cd881374d22811e747745d573
 Source0:        https://github.com/aws/aws-lambda-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

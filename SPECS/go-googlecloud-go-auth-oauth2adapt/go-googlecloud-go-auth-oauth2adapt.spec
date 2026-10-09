@@ -9,12 +9,12 @@
 %define go_source_subdir auth/oauth2adapt
 
 Name:           go-googlecloud-go-auth-oauth2adapt
-Version:        0.2.8
+Version:        0.3.0
 Release:        %autorelease
 Summary:        OAuth2 adapter for Google Cloud Go auth
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:55481ab06b21172f13e4c6862927873a90ca8eddf1faf936d481cc8b6ee70744
+#!RemoteAsset:  sha256:45853ea37ad717002b143a6222add515a9c513ad3f6877e83a940256a2e98d4e
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/auth/oauth2adapt/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

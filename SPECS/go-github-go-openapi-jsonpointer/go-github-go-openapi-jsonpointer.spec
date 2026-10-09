@@ -8,12 +8,12 @@
 %define go_import_path  github.com/go-openapi/jsonpointer
 
 Name:           go-github-go-openapi-jsonpointer
-Version:        1.0.1
+Version:        1.0.2
 Release:        %autorelease
 Summary:        jsonpointer for golang with support for structs
 License:        Apache-2.0
 URL:            https://github.com/go-openapi/jsonpointer
-#!RemoteAsset:  sha256:9345caece26aa63650fb93bdc365e867a367c8694e2cf1bf83ca5dc7d620b2e4
+#!RemoteAsset:  sha256:8d270abb12a9a7f84a775894a5d56ac24f9c2aaeb0dea91ef4ee5edb7519d7c8
 Source0:        https://github.com/go-openapi/jsonpointer/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -13,12 +13,12 @@
 %define skip_srv_logging ^TestTopologyConstructionLogging$/^genuine_URIs$/^srv$
 
 Name:           go-mongodb-mongo-driver
-Version:        1.17.3
+Version:        1.17.10
 Release:        %autorelease
 Summary:        MongoDB Go driver v1
 License:        Apache-2.0
 URL:            https://github.com/mongodb/mongo-go-driver
-#!RemoteAsset:  sha256:afc937f54185a2dd7bf5e9db7928dfc716310279726bea3a69dfcbc341ecdc35
+#!RemoteAsset:  sha256:e205a5d490b900ccdbdef228ee41bc478dfd88b34365ee5dde568e4f40249719
 Source0:        https://github.com/mongodb/mongo-go-driver/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

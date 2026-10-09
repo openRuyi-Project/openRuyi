@@ -7,12 +7,12 @@
 %define go_import_path  github.com/cheggaaa/pb/v3
 
 Name:           go-github-cheggaaa-pb-v3
-Version:        3.1.7
+Version:        3.2.1
 Release:        %autorelease
 Summary:        Terminal progress bars for Go v3
 License:        BSD-3-Clause
 URL:            https://github.com/cheggaaa/pb
-#!RemoteAsset:  sha256:2545c01a291a1d8cafa44b0e5865498c71a5bed18f291d46bdf0851a52018141
+#!RemoteAsset:  sha256:2634ff0e1588412e2ead59c055c46e06343181bed92ed2e79dd9a458ec3f0152
 Source0:        https://github.com/cheggaaa/pb/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

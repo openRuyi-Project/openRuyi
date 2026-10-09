@@ -9,12 +9,12 @@
 %define go_test_ignore_failure 1
 
 Name:           go-github-coreos-go-oidc-v3
-Version:        3.14.1
+Version:        3.21.0
 Release:        %autorelease
 Summary:        OpenID Connect client for Go
 License:        Apache-2.0
 URL:            https://github.com/coreos/go-oidc
-#!RemoteAsset:  sha256:9d48558e18521a819bedf60dde068f8be4dedc5a3bca3bb85ad20318d1577307
+#!RemoteAsset:  sha256:6763e7b537a6bf21921180b3e829f4092036fac366bda5074a6636949bed79dc
 Source0:        https://github.com/coreos/go-oidc/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

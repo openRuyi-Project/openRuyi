@@ -7,12 +7,12 @@
 %define go_import_path  github.com/cucumber/messages-go/v12
 
 Name:           go-github-cucumber-messages-go-v12
-Version:        12.0.0
+Version:        12.4.0
 Release:        %autorelease
 Summary:        Cucumber message protocol types for Go
 License:        MIT
 URL:            https://github.com/cucumber/messages-go
-#!RemoteAsset:  sha256:5b302721ce965f5df13d3ce5820ce88e7bee452300af273c12c80aaae02e342a
+#!RemoteAsset:  sha256:4c6fa0feef328d3f80cf1ddae3bb936cf927a53df020a0f5411b9beaa27af0ec
 Source0:        https://github.com/cucumber/messages-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

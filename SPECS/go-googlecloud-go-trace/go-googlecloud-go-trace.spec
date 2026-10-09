@@ -9,12 +9,12 @@
 %define go_source_subdir trace
 
 Name:           go-googlecloud-go-trace
-Version:        1.16.0
+Version:        1.17.0
 Release:        %autorelease
 Summary:        Trace client libraries for Google Cloud Go
 License:        Apache-2.0
 URL:            https://github.com/googleapis/google-cloud-go
-#!RemoteAsset:  sha256:5d4a7415acf000a8250321ddc93f709a155c2cc477134b0e183c94b9a00642cb
+#!RemoteAsset:  sha256:0dcdff124a70dc4b3bbec736b00a6922b35abeb8b5e2f433ee557953a5352475
 Source0:        https://github.com/googleapis/google-cloud-go/archive/refs/tags/trace/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

@@ -12,12 +12,12 @@
 %global go_test_ignore_failure 1
 
 Name:           go-github-hashicorp-memberlist
-Version:        0.6.0
+Version:        0.7.0
 Release:        %autorelease
 Summary:        Go library for gossip based membership and failure detection
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/memberlist
-#!RemoteAsset:  sha256:3eb013905776f0a5e54d94153b69a23540e2ab60fbe3ebc4f7133e494e7d2f27
+#!RemoteAsset:  sha256:029eea1d086269dfd7cb7dd3a53ddfb1a5172f7b31fc601d8e17a904bf1bfca9
 Source0:        https://github.com/hashicorp/memberlist/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules

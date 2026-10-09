@@ -9,12 +9,12 @@
 %define go_import_path  github.com/go-playground/validator/v10
 
 Name:           go-github-go-playground-validator-v10
-Version:        10.30.4
+Version:        10.30.5
 Release:        %autorelease
 Summary:        Go Struct and Field validation, including Cross Field, Cross Struct, Map, Slice and Array diving
 License:        MIT
 URL:            https://github.com/go-playground/validator
-#!RemoteAsset:  sha256:d4908a9d294130503a3736e2a2e9b5f8f33fc35baa14c54ca193dcfa589d8865
+#!RemoteAsset:  sha256:91ef7d50e3cf2da25c1ce502621d2a8476a0df0eacd5478d486529f71e6a8d01
 Source0:        https://github.com/go-playground/validator/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
