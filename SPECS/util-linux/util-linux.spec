@@ -7,14 +7,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           util-linux
-Version:        2.41.3
+Version:        2.42.4
 Release:        %autorelease
 Summary:        A collection of basic system utilities
 License:        GPL-2.0-or-later and others
 URL:            https://www.kernel.org/pub/linux/utils/util-linux/
 VCS:            git:https://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
-#!RemoteAsset:  sha256:3330d873f0fceb5560b89a7dc14e4f3288bbd880e96903ed9b50ec2b5799e58b
-Source0:        https://cdn.kernel.org/pub/linux/utils/util-linux/v2.41/util-linux-%{version}.tar.xz
+#!RemoteAsset:  sha256:fbd62a100ab7bb8746ba0661255c3c48185b1e9021507c624da01fbc696330ec
+Source0:        https://cdn.kernel.org/pub/linux/utils/util-linux/v2.42/util-linux-%{version}.tar.xz
 # These files define the default behavior for openRuyi.
 Source10:       login.pam
 Source11:       su-l.pam
@@ -29,9 +29,6 @@ BuildSystem:    autotools
 Patch0:         login-lastlog-create.patch
 # Integrates with systemd's motd.d directory.
 Patch1:         login-default-motd-file.patch
-# Fixes an issue with the EROFS filesystem.
-Patch2:         0001-libmount-disable-EROFS-backing-file-support.patch
-
 # Configure options for a modern, feature-rich build.
 BuildOption(conf):  --with-systemdsystemunitdir=%{_unitdir}
 BuildOption(conf):  --disable-silent-rules
