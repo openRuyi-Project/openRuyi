@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-integration
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Plugins responsible for better integration of Qt applications in KDE Workspace
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-integration.git
-#!RemoteAsset:  sha256:2d243883a803a8c79d96bda0bdd854d39207d4c31b0f019ed3a1995d1ec5ae07
+#!RemoteAsset:  sha256:1e323d55105f55d99bfa2626387e8e6682a698cc4eb3fb9c22cfd0f6c4e0321a
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

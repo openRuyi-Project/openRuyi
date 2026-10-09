@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kscreen
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Screen management software by KDE
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kscreen.git
-#!RemoteAsset:  sha256:a8ecc001a18388eebf8397c119bfeb04f5c3c6f3ddc19337d1f99145b0688d19
+#!RemoteAsset:  sha256:9a4bf3aa089b57db7727948a86a22678605f7e1c90e3774478b7bb2753a2ee7b
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

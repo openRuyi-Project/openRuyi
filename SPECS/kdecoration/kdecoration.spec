@@ -11,13 +11,13 @@
 %global private_sover 2
 
 Name:           kdecoration
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        KDE's window decorations library
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kdecoration.git
-#!RemoteAsset:  sha256:c61aa76e73814321d26b626f736e686b9d022fe5ef6e4d76eb372a84987fdb08
+#!RemoteAsset:  sha256:2f4f459d74608dd20804a54b89755c8a7b8b3614da1bb0cfe1e2826c8249fb8a
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           qqc2-breeze-style
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Breeze Style for Qt Quick
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/qqc2-breeze-style.git
-#!RemoteAsset:  sha256:23d31e8c5aa1ec49a405149500be7e1966de2e5ca73f4a9771517186afbeb433
+#!RemoteAsset:  sha256:d4c3aca73f56238f110cec4f67e70bcc22be18fb964a5f19084db0780f778e82
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

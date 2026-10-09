@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-login-manager
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        QML based login manager from KDE
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND BSD-3-Clause AND CC0-1.0 AND (GPL-2.0-only OR GPL-3.0-only)
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-login-manager.git
-#!RemoteAsset:  sha256:c4ce3a18989d169da050812c9664537147a35278d1a7bbe129def1166246f7ba
+#!RemoteAsset:  sha256:8f90804eab0952792d7eb1e6f8cf75205084835b9db8ff485acecf68d8aad6a3
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

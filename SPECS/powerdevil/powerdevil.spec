@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           powerdevil
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        KDE Power Management module
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/powerdevil.git
-#!RemoteAsset:  sha256:48ab2cb3510f4dd239711c38d935c80600258f1b7b591edd18ba9121f1749f72
+#!RemoteAsset:  sha256:d18808b344af12baae5f20f373ecf129e5caaf3fe757f6829899d2cce899831b
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

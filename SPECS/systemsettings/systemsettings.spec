@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           systemsettings
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        KDE's control center
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/systemsettings.git
-#!RemoteAsset:  sha256:b86364b4745b17161787e94e20a1b344e0033a96d9f467cea35e84e7b597e39a
+#!RemoteAsset:  sha256:e01d55f0d8111138fca480b9839ba5440abdf3ca3c42e5f671a4133d80f3bda1
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

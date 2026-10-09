@@ -9,13 +9,13 @@
 %define sover 7
 
 Name:           plasma-activities
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Plasma Activities support
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-activities
-#!RemoteAsset:  sha256:aec18ca3387bc7abc1df177e7a048dd6a07e814bb7199e62683d5f37227966ca
+#!RemoteAsset:  sha256:f0c7c83424637f097c42dbbba58f7513edd96501259855fe0869ee070848298c
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

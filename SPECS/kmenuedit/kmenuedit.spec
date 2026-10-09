@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kmenuedit
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Provides the interface and basic tools for the KDE workspace
 License:        GPL-2.0-only
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kmenuedit.git
-#!RemoteAsset:  sha256:14c4b7d93d31105c69ceaf3634e620fcde56a6c3e693d6992b203e0206a7b62f
+#!RemoteAsset:  sha256:425c9ed2efd380007b4a9b1bacc566dd91d91266a7e6d6f4e646ee5d811f3956
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

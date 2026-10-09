@@ -20,13 +20,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-workspace
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        The KDE Plasma Workspace Components
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-workspace.git
-#!RemoteAsset:  sha256:a6904e3f5a51f63e449caf8c303a910bf4bfaa6523c9394e41b8a67648090841
+#!RemoteAsset:  sha256:c4475f4a532b9ebcc755e79f5f2693dee72d29c3d39bb265ce453a8631af63d7
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 Source1:        sddm.conf
 Source2:        waitforkded.conf

@@ -16,13 +16,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           xdg-desktop-portal-kde
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        QT/KF6 backend for xdg-desktop-portal
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/xdg-desktop-portal-kde.git
-#!RemoteAsset:  sha256:4181aad1d0c1c8c75a4a581178751df48acb080ee79337bee81ad196e873c9f6
+#!RemoteAsset:  sha256:027790dfdbbd8fa643fd48287cc169bce247e9cacf39e509f9403150c69c2d77
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

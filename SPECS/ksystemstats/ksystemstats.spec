@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           ksystemstats
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Plugin based system monitoring daemon
 License:        BSD-2-Clause AND BSD-3-Clause AND CC0-1.0 AND GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/ksystemstats.git
-#!RemoteAsset:  sha256:b46e29035a2e7635af34589efa33b77cb316c364f4e161374a4048ebf9206c41
+#!RemoteAsset:  sha256:72195c08a722e307dd60f5d8e7cd620574341e29d604ad4cf7dbd64c0aeecbcf
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

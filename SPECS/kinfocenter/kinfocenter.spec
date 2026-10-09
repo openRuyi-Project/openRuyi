@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kinfocenter
-Version:        6.7.4
+Version:        6.7.5
 Release:        %autorelease
 Summary:        Utility that provides information about a computer system
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kinfocenter.git
-#!RemoteAsset:  sha256:8e2c157e0fb18d041f907ac655c75f7a6d843a7b69f2657bd419d4f80e191808
+#!RemoteAsset:  sha256:9dd94df94a67124b5c259edf728954bc9b41ca1fbe39ac41e8cbbbc24ce3d9f7
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
