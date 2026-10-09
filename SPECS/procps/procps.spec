@@ -9,7 +9,7 @@
 
 %define libname libproc2
 
-Name:           procps-ng
+Name:           procps
 Version:        4.0.5
 Release:        %autorelease
 Summary:        System and process monitoring utilities
@@ -34,7 +34,7 @@ BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(libsystemd)
 
-Provides:       procps
+Provides:       procps-ng = %{version}-%{release}
 
 %description
 The procps-ng package contains a set of system utilities that provide
@@ -43,6 +43,7 @@ system information, such as ps, top, free, vmstat, and watch.
 %package        devel
 Summary:        Development files for procps-ng
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Provides:       procps-ng-devel = %{version}-%{release}
 
 %description    devel
 This package contains the header files and development libraries for procps-ng.
@@ -60,7 +61,7 @@ rm -rf %{buildroot}%{_mandir}/pl/man5
 rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 
 # Package localization files using the find_lang macro for the -lang subpackage.
-%find_lang %{name}  --all-name --with-man --generate-subpackages
+%find_lang procps-ng  --all-name --with-man --generate-subpackages
 
 %files
 %license COPYING COPYING.LIB
