@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname h2
 
 Name:           python-%{srcname}
-Version:        4.3.0
+Version:        4.4.1
 Release:        %autorelease
 Summary:        HTTP/2 State-Machine based protocol implementation
 License:        MIT
 URL:            https://github.com/python-hyper/hyper-h2
-#!RemoteAsset:  sha256:6c59efe4323fa18b47a632221a1888bd7fde6249819beda254aeca909f221bf1
+#!RemoteAsset:  sha256:4e866ffb1a869ae14dd9b5e6beb5c24a13da0495ad72b65925ded182521c1516
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

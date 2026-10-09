@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname gi_docgen
 
 Name:           gi-docgen
-Version:        2025.4
+Version:        2025.5
 Release:        %autorelease
 Summary:        Documentation tool for GObject-based libraries
 License:        (Apache-2.0 OR GPL-3.0-or-later) AND CC0-1.0 AND MIT AND OFL-1.1
 URL:            https://gitlab.gnome.org/GNOME/gi-docgen
-#!RemoteAsset
+#!RemoteAsset:  sha256:7fb2b5370d99849e52e74e9e584b7eeb5b5a3a95493d6752c88c0d251777f4bf
 Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -63,11 +64,11 @@ stable.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSES/ .reuse/dep5
+%license LICENSES/
 %{_bindir}/gi-docgen
 %{_mandir}/man1/gi-docgen.1*
 # Should we split this into a -devel package in the future? - 251
 %{_datadir}/pkgconfig/gi-docgen.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

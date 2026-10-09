@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname pymongo
 
 Name:           python-%{srcname}
-Version:        4.16.0
+Version:        4.18.1
 Release:        %autorelease
 Summary:        Python driver for MongoDB
 License:        Apache-2.0
 URL:            https://pymongo.readthedocs.io/en/stable/
 VCS:            git:https://github.com/mongodb/mongo-python-driver
-#!RemoteAsset:  sha256:8ba8405065f6e258a6f872fe62d797a28f383a12178c7153c01ed04e845c600c
+#!RemoteAsset:  sha256:d04134ff4ea0e7d14b6e2ef23dbfe06112a99318c9578b213d2dee9060b23dce
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
