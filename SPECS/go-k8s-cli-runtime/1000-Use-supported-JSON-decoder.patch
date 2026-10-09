@@ -1,0 +1,58 @@
+From e3fde95a84a7fcf91fa505cfc8af04747e9095b3 Mon Sep 17 00:00:00 2001
+From: Jordan Liggitt <liggitt@google.com>
+Date: Tue, 14 Sep 2021 17:54:37 -0400
+Subject: [PATCH] Switch from json-iterator to utiljson
+
+Kubernetes-commit: bba877d3a6d0e6498d5e43a54939d5e4e8baee1a
+
+(cherry picked from commit efe64d475096dfb118e45157a7e1a732c2ea3429)
+Backport the source changes to the pinned OpenShift fork; retain its module metadata.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/resource/builder_test.go     | 2 +-
+ pkg/resource/metadata_decoder.go | 7 ++-----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/pkg/resource/builder_test.go b/pkg/resource/builder_test.go
+index 5f5fe43..ef16f2d 100644
+--- a/pkg/resource/builder_test.go
++++ b/pkg/resource/builder_test.go
+@@ -1761,7 +1761,7 @@ func TestUnstructured(t *testing.T) {
+ 		{
+ 			name:          "badpod",
+ 			file:          "badpod.json",
+-			expectedError: "v1.ObjectMeta.Annotations",
++			expectedError: "ObjectMeta.",
+ 		},
+ 	}
+ 
+diff --git a/pkg/resource/metadata_decoder.go b/pkg/resource/metadata_decoder.go
+index c79c6b5..d688c3a 100644
+--- a/pkg/resource/metadata_decoder.go
++++ b/pkg/resource/metadata_decoder.go
+@@ -20,12 +20,9 @@ import (
+ 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+ 	"k8s.io/apimachinery/pkg/runtime"
+ 	"k8s.io/apimachinery/pkg/runtime/schema"
+-	"k8s.io/apimachinery/pkg/runtime/serializer/json"
++	utiljson "k8s.io/apimachinery/pkg/util/json"
+ )
+ 
+-// hold a single instance of the case-sensitive decoder
+-var caseSensitiveJsonIterator = json.CaseSensitiveJsonIterator()
+-
+ // metadataValidatingDecoder wraps a decoder and additionally ensures metadata schema fields decode before returning an unstructured object
+ type metadataValidatingDecoder struct {
+ 	decoder runtime.Decoder
+@@ -47,7 +44,7 @@ func (m *metadataValidatingDecoder) Decode(data []byte, defaults *schema.GroupVe
+ 	// make sure the data can decode into ObjectMeta before we return,
+ 	// so we don't silently truncate schema errors in metadata later with accesser get/set calls
+ 	v := &metadataOnlyObject{}
+-	if typedErr := caseSensitiveJsonIterator.Unmarshal(data, v); typedErr != nil {
++	if typedErr := utiljson.Unmarshal(data, v); typedErr != nil {
+ 		return obj, gvk, typedErr
+ 	}
+ 	return obj, gvk, err
+-- 
+2.39.5 (Apple Git-154)
+
