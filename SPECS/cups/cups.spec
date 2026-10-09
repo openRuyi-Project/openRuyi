@@ -70,6 +70,12 @@ Requires(post): sed
 0008-cups-freebind.patch
 0009-cups-ipp-multifile.patch
 0010-cups-web-devices-timeout.patch
+# From https://github.com/OpenPrinting/cups/commit/88e67c00c130a45f3a1edf36686f7a0b2982fef8
+1000-CVE-2026-87876-compare-usernames-consistently.patch
+# From https://github.com/OpenPrinting/cups/commit/28834c719ae76e97b75f8190ee5e941daedb3da8
+1001-GHSA-fw7q-ww8w-phx8-validate-preset-member.patch
+# From https://github.com/OpenPrinting/cups/commit/05fe6b0e848e51243e9d62e2c5adb6c3023f247e
+1002-GHSA-w9hj-hq9p-m7f6-validate-attribute-names.patch
 
 %description
 CUPS is the standards-based, open source printing system developed by

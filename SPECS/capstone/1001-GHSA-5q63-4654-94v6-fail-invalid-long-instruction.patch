@@ -1,0 +1,23 @@
+From de4b58b2e74b92296a1e181f4121c42bd65eb286 Mon Sep 17 00:00:00 2001
+From: Rot127 <45763064+Rot127@users.noreply.github.com>
+Date: Thu, 6 Aug 2026 11:52:22 +0000
+Subject: [PATCH] Fix OOB read in SH module
+
+Upstream-Commit: de4b58b2e74b92296a1e181f4121c42bd65eb286
+Backport-Notes: Retain the upstream early failure after decode_long rejects a
+32-bit SH2A instruction. The operand bounds assertions from the same commit
+are already enforced by Patch1000's checked set_reg_n/set_mem_n helpers and
+decoder-table bound check. Macro-only formatting is omitted, and the upstream
+integration test file does not exist in the 5.0.9 release tree.
+---
+--- a/arch/SH/SHDisassembler.c
++++ b/arch/SH/SHDisassembler.c
+@@ -2180,6 +2180,8 @@ static bool sh_disassemble(const uint8_t *code, MCInst *MI, uint64_t address,
+ 			insn |= code[2] << 8 | code[3];
+ 			if (decode_long(insn, address,	MI, info, detail))
+ 				return MCDisassembler_Success;
++			else
++				return MCDisassembler_Fail;
+ 		}
+ 	}
+ 	/* Co-processor instructions */
