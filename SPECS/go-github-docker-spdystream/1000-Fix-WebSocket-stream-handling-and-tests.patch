@@ -1,0 +1,252 @@
+From aef7e4d3b91cd2ae97dde4e2260c828465a9573b Mon Sep 17 00:00:00 2001
+From: Wei Fu <fuweid89@gmail.com>
+Date: Mon, 22 Oct 2018 20:23:00 +0800
+Subject: [PATCH] bugfix: make test case right
+
+1. fix format issue for go1.10
+2. update the github.com/docker/spdystream/... package test case
+
+Signed-off-by: Wei Fu <fuweid89@gmail.com>
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ handlers.go        |  4 +---
+ spdy_bench_test.go |  4 ++--
+ spdy_test.go       |  1 +
+ ws/connection.go   | 52 ++++++++++++++++++++++++++++++----------------
+ ws/ws_test.go      | 34 ++++++++++++++++++------------
+ 5 files changed, 59 insertions(+), 36 deletions(-)
+
+diff --git a/handlers.go b/handlers.go
+index b59fa5f..d4ee7be 100644
+--- a/handlers.go
++++ b/handlers.go
+@@ -30,9 +30,7 @@ func MirrorStreamHandler(stream *Stream) {
+ 	}()
+ }
+ 
+-// NoopStreamHandler does nothing when stream connects, most
+-// likely used with RejectAuthHandler which will not allow any
+-// streams to make it to the stream handler.
++// NoopStreamHandler does nothing when stream connects.
+ func NoOpStreamHandler(stream *Stream) {
+ 	stream.SendReply(http.Header{}, false)
+ }
+diff --git a/spdy_bench_test.go b/spdy_bench_test.go
+index 6f9e491..041a377 100644
+--- a/spdy_bench_test.go
++++ b/spdy_bench_test.go
+@@ -60,7 +60,7 @@ func BenchmarkDialWithSPDYStream10000(b *testing.B) {
+ 
+ 		closeErr := spdyConn.Close()
+ 		if closeErr != nil {
+-			b.Fatalf("Error closing connection: %s, closeErr")
++			b.Fatalf("Error closing connection: %s", closeErr)
+ 		}
+ 	}
+ }
+@@ -103,7 +103,7 @@ func benchmarkStreamWithDataAndSize(size uint64, b *testing.B) {
+ 
+ 		closeErr := spdyConn.Close()
+ 		if closeErr != nil {
+-			b.Fatalf("Error closing connection: %s, closeErr")
++			b.Fatalf("Error closing connection: %s", closeErr)
+ 		}
+ 	}
+ }
+diff --git a/spdy_test.go b/spdy_test.go
+index 7f0e3a4..e85b465 100644
+--- a/spdy_test.go
++++ b/spdy_test.go
+@@ -1144,6 +1144,7 @@ var authenticated bool
+ func authStreamHandler(stream *Stream) {
+ 	if !authenticated {
+ 		stream.Refuse()
++		return
+ 	}
+ 	MirrorStreamHandler(stream)
+ }
+diff --git a/ws/connection.go b/ws/connection.go
+index d0ea001..06dc59a 100644
+--- a/ws/connection.go
++++ b/ws/connection.go
+@@ -1,10 +1,11 @@
+ package ws
+ 
+ import (
+-	"github.com/gorilla/websocket"
++	"fmt"
+ 	"io"
+-	"log"
+ 	"time"
++
++	"github.com/gorilla/websocket"
+ )
+ 
+ // Wrap an HTTP2 connection over WebSockets and
+@@ -19,7 +20,7 @@ func NewConnection(w *websocket.Conn) *Conn {
+ 	return &Conn{Conn: w}
+ }
+ 
+-func (c Conn) Write(b []byte) (int, error) {
++func (c *Conn) Write(b []byte) (int, error) {
+ 	err := c.WriteMessage(websocket.BinaryMessage, b)
+ 	if err != nil {
+ 		return 0, err
+@@ -27,29 +28,44 @@ func (c Conn) Write(b []byte) (int, error) {
+ 	return len(b), nil
+ }
+ 
+-func (c Conn) Read(b []byte) (int, error) {
++func (c *Conn) Read(b []byte) (int, error) {
+ 	if c.reader == nil {
+-		t, r, err := c.NextReader()
+-		if err != nil {
++		if err := c.nextReader(); err != nil {
+ 			return 0, err
+ 		}
+-		if t != websocket.BinaryMessage {
+-			log.Printf("ws: ignored non-binary message in stream")
+-			return 0, nil
++	}
++
++	for {
++		n, err := c.reader.Read(b)
++		if err != nil {
++			if err != io.EOF {
++				return n, err
++			}
++
++			// get next reader if there is no data in the current one
++			if err := c.nextReader(); err != nil {
++				return 0, err
++			}
++			continue
+ 		}
+-		c.reader = r
++		return n, nil
+ 	}
+-	n, err := c.reader.Read(b)
++}
++
++func (c *Conn) nextReader() error {
++	t, r, err := c.NextReader()
+ 	if err != nil {
+-		if err == io.EOF {
+-			c.reader = nil
+-		}
+-		return n, err
++		return err
+ 	}
+-	return n, nil
++
++	if t != websocket.BinaryMessage {
++		return fmt.Errorf("ws: non-binary message in stream")
++	}
++	c.reader = r
++	return nil
+ }
+ 
+-func (c Conn) SetDeadline(t time.Time) error {
++func (c *Conn) SetDeadline(t time.Time) error {
+ 	if err := c.Conn.SetReadDeadline(t); err != nil {
+ 		return err
+ 	}
+@@ -59,7 +75,7 @@ func (c Conn) SetDeadline(t time.Time) error {
+ 	return nil
+ }
+ 
+-func (c Conn) Close() error {
++func (c *Conn) Close() error {
+ 	err := c.Conn.Close()
+ 	return err
+ }
+diff --git a/ws/ws_test.go b/ws/ws_test.go
+index 36c4a46..1abd03b 100644
+--- a/ws/ws_test.go
++++ b/ws/ws_test.go
+@@ -2,14 +2,15 @@ package ws
+ 
+ import (
+ 	"bytes"
+-	"github.com/docker/spdystream"
+-	"github.com/gorilla/websocket"
+ 	"io"
+ 	"log"
+ 	"net/http"
+ 	"net/http/httptest"
+ 	"strings"
+ 	"testing"
++
++	"github.com/docker/spdystream"
++	"github.com/gorilla/websocket"
+ )
+ 
+ var upgrader = websocket.Upgrader{
+@@ -24,7 +25,7 @@ var serverSpdyConn *spdystream.Connection
+ func ExampleConn() {
+ 	wsconn, _, _ := websocket.DefaultDialer.Dial("ws://localhost/", http.Header{"Origin": {"http://localhost/"}})
+ 	conn, _ := spdystream.NewConnection(NewConnection(wsconn), false)
+-	go conn.Serve(spdystream.NoOpStreamHandler, spdystream.NoAuthHandler)
++	go conn.Serve(spdystream.NoOpStreamHandler)
+ 	stream, _ := conn.CreateStream(http.Header{}, nil, false)
+ 	stream.Wait()
+ }
+@@ -50,7 +51,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
+ 		return
+ 	}
+ 	serverSpdyConn = spdyConn
+-	go spdyConn.Serve(spdystream.MirrorStreamHandler, authStreamHandler)
++	spdyConn.Serve(authStreamHandler)
+ }
+ 
+ func TestSpdyStreamOverWs(t *testing.T) {
+@@ -75,7 +76,7 @@ func TestSpdyStreamOverWs(t *testing.T) {
+ 	}
+ 	defer spdyConn.Close()
+ 	authenticated = true
+-	go spdyConn.Serve(spdystream.NoOpStreamHandler, spdystream.RejectAuthHandler)
++	go spdyConn.Serve(spdystream.NoOpStreamHandler)
+ 
+ 	stream, streamErr := spdyConn.CreateStream(http.Header{}, nil, false)
+ 	if streamErr != nil {
+@@ -137,15 +138,18 @@ func TestSpdyStreamOverWs(t *testing.T) {
+ 		t.Fatalf("Expected EOF reading from finished stream, read %d bytes", n)
+ 	}
+ 
++	// Closing again should return error since the stream is already closed
+ 	streamCloseErr := stream.Close()
+-	if streamCloseErr != nil {
+-		t.Fatalf("Error closing stream: %s", streamCloseErr)
++	if streamCloseErr == nil {
++		t.Fatalf("No error closing finished stream")
++	}
++	if streamCloseErr != spdystream.ErrWriteClosedStream {
++		t.Fatalf("Unexpected error closing stream: %s", streamCloseErr)
+ 	}
+ 
+-	// Closing again should return nil
+-	streamCloseErr = stream.Close()
+-	if streamCloseErr != nil {
+-		t.Fatalf("Error closing stream: %s", streamCloseErr)
++	streamResetErr := stream.Reset()
++	if streamResetErr != nil {
++		t.Fatalf("Error reseting stream: %s", streamResetErr)
+ 	}
+ 
+ 	authenticated = false
+@@ -170,6 +174,10 @@ func TestSpdyStreamOverWs(t *testing.T) {
+ 
+ var authenticated bool
+ 
+-func authStreamHandler(header http.Header, slot uint8, parent uint32) bool {
+-	return authenticated
++func authStreamHandler(stream *spdystream.Stream) {
++	if !authenticated {
++		stream.Refuse()
++		return
++	}
++	spdystream.MirrorStreamHandler(stream)
+ }
+-- 
+2.39.5 (Apple Git-154)
+
