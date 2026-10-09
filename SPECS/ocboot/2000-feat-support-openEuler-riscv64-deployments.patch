@@ -1,0 +1,1789 @@
+From e8ec17f3f044a11f281aa08cf28578436d528820 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Wed, 16 Sep 2026 09:27:22 +0800
+Subject: [PATCH] feat: support openEuler riscv64 deployments
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ README.md                                     |   3 +
+ airgap_assets/k3s-install.sh                  |   5 +-
+ config-example-openeuler-riscv64.yml          |  63 +++++
+ docs/riscv64.md                               |  56 ++++
+ lib/add_node.py                               |   1 +
+ lib/cluster.py                                |   7 +-
+ lib/install.py                                |  13 +-
+ lib/k3s.py                                    | 180 ++++++++++++-
+ lib/ocboot.py                                 | 131 ++++++++-
+ lib/parser.py                                 |   6 +
+ lib/service.py                                |  76 +++++-
+ ocboot.sh                                     |  51 +++-
+ .../common/tasks/os/openeuler_24_riscv64.yml  | 146 +++++++++++
+ onecloud/roles/common/templates/ovs.sh.j2     |   5 +-
+ onecloud/roles/k3s/airgap/tasks/main.yml      |  28 +-
+ .../roles/k3s/config/templates/config.yaml.j2 |  12 +
+ .../setup_cloud/tasks/main.yml                |   4 +
+ .../templates/onecloud-manifests.yaml.j2      |  55 +++-
+ .../setup_k3s/tasks/main.yml                  |  14 +
+ onecloud/roles/utils/detect-os/tasks/main.yml |  13 +
+ .../detect-os/vars/openeuler-riscv64.yml      |  52 ++++
+ .../tasks/openeuler-24-riscv64.yml            |   6 +
+ tests/test_k3s_assets.py                      | 136 ++++++++++
+ tests/test_riscv64_config.py                  | 248 ++++++++++++++++++
+ 24 files changed, 1274 insertions(+), 37 deletions(-)
+ create mode 100644 config-example-openeuler-riscv64.yml
+ create mode 100644 docs/riscv64.md
+ create mode 100644 onecloud/roles/common/tasks/os/openeuler_24_riscv64.yml
+ create mode 100644 onecloud/roles/utils/detect-os/vars/openeuler-riscv64.yml
+ create mode 100644 onecloud/roles/utils/kernel-check/tasks/openeuler-24-riscv64.yml
+ create mode 100644 tests/test_k3s_assets.py
+ create mode 100644 tests/test_riscv64_config.py
+
+diff --git a/README.md b/README.md
+index 764f93d..76171d8 100644
+--- a/README.md
++++ b/README.md
+@@ -4,6 +4,9 @@ ocboot 能够快速的在 CentOS 7 、Kylin V10、Debian 10等机器上搭建部
+ 
+ ocboot 依赖 ansible-playbook 部署 cloudpods 服务，可以在单节点使用 local 的方式部署，也可以在多个节点使用 ssh 的方式同时部署。
+ 
++实验性的 openEuler riscv64 部署（需显式提供第三方制品）请参阅
++[docs/riscv64.md](docs/riscv64.md)。
++
+ ## 依赖说明
+ 
+ - 操作系统: Centos 7.x 、Kylin V10、Debian 10
+diff --git a/airgap_assets/k3s-install.sh b/airgap_assets/k3s-install.sh
+index d27e33b..9c595d4 100644
+--- a/airgap_assets/k3s-install.sh
++++ b/airgap_assets/k3s-install.sh
+@@ -314,6 +314,10 @@ setup_verify_arch() {
+             ARCH=arm64
+             SUFFIX=-${ARCH}
+             ;;
++        riscv64)
++            ARCH=riscv64
++            SUFFIX=-${ARCH}
++            ;;
+         arm*)
+             ARCH=arm
+             SUFFIX=-${ARCH}hf
+@@ -1062,4 +1066,3 @@ eval set -- $(escape "${INSTALL_K3S_EXEC}") $(quote "$@")
+     create_service_file
+     service_enable_and_start
+ }
+-
+diff --git a/config-example-openeuler-riscv64.yml b/config-example-openeuler-riscv64.yml
+new file mode 100644
+index 0000000..e20f500
+--- /dev/null
++++ b/config-example-openeuler-riscv64.yml
+@@ -0,0 +1,63 @@
++riscv64:
++  # RISC-V release assets are external until the upstream projects publish
++  # official artifacts. Replace every example value before installation.
++  k3s:
++    url_prefix: https://artifacts.example.com/k3s/REPLACE_WITH_VERSION
++    binary_sha256: REPLACE_WITH_64_HEX_CHARACTERS
++    airgap_images_sha256: REPLACE_WITH_64_HEX_CHARACTERS
++  cni: flannel
++  rpm:
++    baseurl: https://artifacts.example.com/rpm/openEuler/24.03-LTS-SP3/riscv64
++    gpgcheck: true
++    repo_gpgcheck: true
++    gpgkey: https://artifacts.example.com/keys/RPM-GPG-KEY-cloudpods
++  images:
++    pause: registry.example.com/cloudpods-riscv64/pause:REPLACE_ME
++    helm_job: registry.example.com/cloudpods-riscv64/klipper-helm:REPLACE_ME
++    traefik: registry.example.com/cloudpods-riscv64/traefik:REPLACE_ME
++    openvswitch: registry.example.com/cloudpods-riscv64/openvswitch:REPLACE_ME
++  cloudpods:
++    qemu_version: REPLACE_ME
++    etcd_version: REPLACE_ME
++    busybox_image: registry.example.com/cloudpods-riscv64/busybox:REPLACE_ME
++    host_health_tag: REPLACE_ME
++    host_image_tag: REPLACE_ME
++    openvswitch_tag: REPLACE_ME
++    victoria_metrics_tag: REPLACE_ME
++    web_image_name: cloudpods-web
++    web_tag: REPLACE_ME
++    guacd_tag: REPLACE_ME
++    kubeserver_tag: REPLACE_ME
++    # Set true when the artifact provider does not publish the monitoring
++    # images required by this Cloudpods version.
++    monitor_disable: false
++
++mariadb_node:
++  hostname: 192.0.2.10
++  port: 22
++  user: root
++  db_user: root
++  db_password: REPLACE_ME
++
++primary_master_node:
++  hostname: 192.0.2.10
++  node_ip: 192.0.2.10
++  port: 22
++  user: root
++  db_host: 192.0.2.10
++  db_user: root
++  db_password: REPLACE_ME
++  onecloud_version: REPLACE_WITH_RISCV64_CLOUDPODS_TAG
++  operator_version: REPLACE_WITH_RISCV64_OPERATOR_TAG
++  target_architecture: riscv64
++  image_repository: registry.example.com/cloudpods-riscv64
++  onecloud_user: admin
++  onecloud_user_password: REPLACE_ME
++  controlplane_host: 192.0.2.10
++  controlplane_port: "6443"
++  pod_network_cidr: 10.40.0.0/16
++  service_cidr: 10.96.0.0/12
++  as_host: true
++  as_host_on_vm: false
++  region: region0
++  zone: zone0
+diff --git a/docs/riscv64.md b/docs/riscv64.md
+new file mode 100644
+index 0000000..2bfc7f0
+--- /dev/null
++++ b/docs/riscv64.md
+@@ -0,0 +1,56 @@
++# openEuler riscv64 support
++
++The **external artifact provider** is the registry and download service chosen
++by the operator for RISC-V binaries, images, and RPMs. It is not an ocboot
++default and it is not an upstream endorsement. This distinction matters
++because K3s and Cloudpods do not currently publish every riscv64 artifact that
++this deployment path needs.
++
++This path targets openEuler 24.03 LTS SP3 and K3s. Native Kubernetes mode is
++rejected for riscv64. Existing amd64 and arm64 behavior is unchanged unless a
++configuration explicitly declares a riscv64 target.
++
++## Requirements
++
++- Each RISC-V host declares `target_architecture: riscv64`. ocboot compares
++  that declaration with `uname -m` before changing the host.
++- KVM and TUN devices are required when the node is a Cloudpods compute host.
++- The memory and cpuset cgroup v2 controllers must be available. On the
++  supported openEuler U-Boot layout, ocboot can add the cgroup v2 kernel
++  parameter and reboot once.
++- The external provider supplies checksum-pinned K3s binary and air-gap image
++  assets, a Cloudpods RPM repository, and all images listed in the example.
++- Signed RPM metadata and packages are recommended. Unsigned repositories
++  require both checks to be disabled explicitly and emit a warning.
++- `flannel` and `calico` are the supported cluster CNI values. CNI means the
++  pod-network implementation shared by the whole cluster; it cannot differ
++  by node architecture.
++
++Copy `config-example-openeuler-riscv64.yml`, replace every example artifact,
++checksum, tag, address, and password, then run:
++
++```bash
++./ocboot.sh install config-openeuler-riscv64.yml
++```
++
++The `riscv64` mapping is also required when adding a RISC-V node because an
++already-running Cloudpods cluster does not retain the external RPM and K3s
++download configuration. Put that mapping in a separate YAML file (either as
++the root mapping or under a `riscv64` key) and run:
++
++```bash
++./ocboot.sh add-node \
++  --riscv64-config riscv64-artifacts.yml \
++  --runtime qemu \
++  PRIMARY_MASTER_IP NEW_NODE_IP
++```
++
++ocboot validates SHA-256 values before using downloaded K3s assets. It uses a
++temporary `.part` file, deletes failed or mismatched downloads, and caches the
++validated provider metadata beside the air-gap assets for reproducible
++retries. The cache does not make the provider an ocboot default.
++
++Set `riscv64.cloudpods.monitor_disable: true` only when the provider does not
++publish the monitoring images required by the selected Cloudpods version.
++That setting leaves core compute and control-plane deployment available but
++does not constitute monitoring validation.
+diff --git a/lib/add_node.py b/lib/add_node.py
+index cf0ba43..10ab12d 100644
+--- a/lib/add_node.py
++++ b/lib/add_node.py
+@@ -55,6 +55,7 @@ class AddWorkerNodeService(AddNodeService):
+             'ip_dual_conf': getattr(args, 'ip_dual_conf', None),
+             'ip_type': args.ip_type,
+             'offline_data_path': args.offline_data_path,
++            'riscv64_config_file': args.riscv64_config_file,
+             'enable_ai_env': getattr(args, 'enable_ai_env', False),
+             'gpu_device_virtual_number': getattr(args, 'gpu_device_virtual_number', 2),
+             'nvidia_driver_installer_path': getattr(args, 'nvidia_driver_installer_path', None),
+diff --git a/lib/cluster.py b/lib/cluster.py
+index dd780ec..464b9f9 100644
+--- a/lib/cluster.py
++++ b/lib/cluster.py
+@@ -15,7 +15,7 @@ from .color import GB
+ A_OCBOOT_UPGRADE_CURRENT_VERSION = 'upgrade.ocboot.yunion.io/current-version'
+ 
+ 
+-def construct_cluster(primary_master_host, ssh_user, ssh_private_file, ssh_port):
++def resolve_ssh_private_file(ssh_private_file):
+     if ssh_private_file is None or ssh_private_file == '':
+         ssh_path = os.path.expanduser('~/.ssh')
+         files = os.listdir(ssh_path)
+@@ -27,6 +27,11 @@ def construct_cluster(primary_master_host, ssh_user, ssh_private_file, ssh_port)
+         ssh_private_file = os.path.expanduser(ssh_private_file)
+     if not os.path.exists(ssh_private_file):
+         raise Exception(f"Private key file {ssh_private_file} not found")
++    return ssh_private_file
++
++
++def construct_cluster(primary_master_host, ssh_user, ssh_private_file, ssh_port):
++    ssh_private_file = resolve_ssh_private_file(ssh_private_file)
+     cli = SSHClient(
+         primary_master_host,
+         ssh_user,
+diff --git a/lib/install.py b/lib/install.py
+index cb86e23..73ae449 100644
+--- a/lib/install.py
++++ b/lib/install.py
+@@ -88,7 +88,18 @@ def try_reboot_primary(ip):
+ def start(config_file, extra_vars=None):
+     config = ocboot.load_config(config_file)
+ 
+-    k3s.init_airgap_assets(k3s.GET_AIRGAP_DIR(), k3s.VERSION_V1_28_5_K3S_1)
++    target_architectures = config.get_target_architectures()
++    riscv64_config = config.get_riscv64_config()
++    if riscv64_config and not k3s.is_using_k3s():
++        raise ValueError(
++            'riscv64 deployments require K3s; native Kubernetes mode is not '
++            'supported')
++
++    k3s.init_airgap_assets(
++        k3s.GET_AIRGAP_DIR(),
++        k3s.VERSION_V1_28_5_K3S_1,
++        architectures=target_architectures,
++        riscv64_assets=(riscv64_config or {}).get('k3s'))
+ 
+     inventory_f = config.generate_inventory_file()
+     ip = None
+diff --git a/lib/k3s.py b/lib/k3s.py
+index dd3f37c..d98b677 100644
+--- a/lib/k3s.py
++++ b/lib/k3s.py
+@@ -1,5 +1,8 @@
+-import os
+ import hashlib
++import json
++import os
++import re
++import shlex
+ 
+ from lib import consts
+ from lib.cmd import run_cmd
+@@ -14,6 +17,32 @@ def GET_AIRGAP_DIR():
+ 
+ VERSION_V1_28_5_K3S_1 = "v1.28.5+k3s1"
+ 
++UPSTREAM_RELEASE_URL = (
++    "https://github.com/k3s-io/k3s/releases/download/"
++    "v1.28.5%2Bk3s1"
++)
++
++ARCH_ALIASES = {
++    'amd64': 'amd64',
++    'x86_64': 'amd64',
++    'arm64': 'arm64',
++    'aarch64': 'arm64',
++    'riscv64': 'riscv64',
++}
++
++ARCH_ASSETS = {
++    'amd64': ('k3s', 'k3s-airgap-images-amd64.tar.zst'),
++    'arm64': ('k3s-arm64', 'k3s-airgap-images-arm64.tar.zst'),
++    'riscv64': ('k3s-riscv64', 'k3s-airgap-images-riscv64.tar.zst'),
++}
++
++# ocboot has historically prepared both official architectures up front. Keep
++# that behavior so adding RISC-V does not make mixed amd64/arm64 deployments
++# dependent on the architecture of the machine running ocboot.
++DEFAULT_ASSET_ARCHITECTURES = {'amd64', 'arm64'}
++RISCV64_ASSET_METADATA = 'k3s-riscv64-assets.json'
++SHA256_RE = re.compile(r'^[0-9a-fA-F]{64}$')
++
+ '''
+ from:
+ 
+@@ -39,10 +68,97 @@ def cal_file_sha256(filename):
+         return sha256_hash.hexdigest()
+ 
+ 
+-def download_asset(dest_dir, k3s_version, asset_url):
+-    asset_name = os.path.basename(asset_url)
++def normalize_architecture(architecture):
++    value = str(architecture or '').strip().lower()
++    normalized = ARCH_ALIASES.get(value)
++    if normalized is None:
++        raise ValueError("unsupported K3s architecture: %s" % architecture)
++    return normalized
++
++
++def _validate_sha256(value, field):
++    if not isinstance(value, str) or not SHA256_RE.match(value):
++        raise ValueError("%s must be a 64-character SHA-256 value" % field)
++    return value.lower()
++
++
++def normalize_riscv64_asset_config(config):
++    if not isinstance(config, dict):
++        raise ValueError("riscv64 K3s asset configuration must be a mapping")
++    required = ('url_prefix', 'binary_sha256', 'airgap_images_sha256')
++    missing = [field for field in required if not config.get(field)]
++    if missing:
++        raise ValueError(
++            "riscv64 K3s asset configuration misses: %s" %
++            ', '.join(missing))
++    return {
++        'url_prefix': str(config['url_prefix']).rstrip('/'),
++        'binary_sha256': _validate_sha256(
++            config['binary_sha256'], 'binary_sha256'),
++        'airgap_images_sha256': _validate_sha256(
++            config['airgap_images_sha256'], 'airgap_images_sha256'),
++    }
++
++
++def riscv64_asset_config_from_env():
++    fields = {
++        'url_prefix': os.environ.get('K3S_RISCV64_URL_PREFIX'),
++        'binary_sha256': os.environ.get('K3S_RISCV64_BINARY_SHA256'),
++        'airgap_images_sha256': os.environ.get(
++            'K3S_RISCV64_AIRGAP_IMAGES_SHA256'),
++    }
++    if not any(fields.values()):
++        return None
++    return normalize_riscv64_asset_config(fields)
++
++
++def _riscv64_asset_metadata_path(dest_dir):
++    return os.path.join(dest_dir, RISCV64_ASSET_METADATA)
++
++
++def load_cached_riscv64_asset_config(dest_dir):
++    metadata_path = _riscv64_asset_metadata_path(dest_dir)
++    if not os.path.exists(metadata_path):
++        return None
++    with open(metadata_path, encoding='utf-8') as stream:
++        return normalize_riscv64_asset_config(json.load(stream))
++
++
++def cache_riscv64_asset_config(dest_dir, config):
++    metadata_path = _riscv64_asset_metadata_path(dest_dir)
++    temporary_path = "%s.part" % metadata_path
++    try:
++        with open(temporary_path, 'w', encoding='utf-8') as stream:
++            json.dump(config, stream, indent=2, sort_keys=True)
++            stream.write('\n')
++        os.replace(temporary_path, metadata_path)
++    except Exception:
++        if os.path.exists(temporary_path):
++            os.unlink(temporary_path)
++        raise
++
++
++def _download_file(asset_url, target_path):
++    temporary_path = "%s.part" % target_path
++    try:
++        run_cmd(
++            'curl --fail --location --retry 5 --retry-all-errors '
++            '--retry-delay 5 --connect-timeout 20 --max-time 1800 '
++            '--speed-limit 1024 --speed-time 60 --output %s %s' % (
++                shlex.quote(temporary_path), shlex.quote(asset_url)),
++            no_strip=True,
++            realtime_output=True)
++        os.replace(temporary_path, target_path)
++    except Exception:
++        if os.path.exists(temporary_path):
++            os.unlink(temporary_path)
++        raise
++
++
++def download_asset(dest_dir, asset_url, expect_checksum, target_name=None):
++    asset_name = target_name or os.path.basename(asset_url)
+     target_path = os.path.join(dest_dir, asset_name)
+-    expect_checksum = SHA256_CHECK_SUM[k3s_version][asset_name]
++    expect_checksum = _validate_sha256(expect_checksum, asset_name)
+     if os.path.exists(target_path):
+         exists_checksum = cal_file_sha256(target_path)
+         if exists_checksum == expect_checksum:
+@@ -50,7 +166,14 @@ def download_asset(dest_dir, k3s_version, asset_url):
+             return
+         else:
+             print(f"{target_path}'s sha256 checksum {exists_checksum} != {expect_checksum}, redownload it.")
+-    run_cmd(f'curl -L {asset_url} > {target_path}', no_strip=True, realtime_output=True)
++            os.unlink(target_path)
++    _download_file(asset_url, target_path)
++    downloaded_checksum = cal_file_sha256(target_path)
++    if downloaded_checksum != expect_checksum:
++        os.unlink(target_path)
++        raise ValueError(
++            "%s's sha256 checksum %s != %s" % (
++                asset_name, downloaded_checksum, expect_checksum))
+ 
+ 
+ NO_SUCH_FILE_OR_DIR_ERR = [
+@@ -80,18 +203,51 @@ def is_using_k3s(ssh_client=None, use_sudo=False):
+             raise e
+ 
+ 
+-def init_airgap_assets(dest_dir, k3s_version):
++def init_airgap_assets(dest_dir, k3s_version=VERSION_V1_28_5_K3S_1,
++                       architectures=None, riscv64_assets=None):
+     # usage: K3S_URL_PREFIX=http://LOCAL_k3s_host_url
+     # in order to speed up testing.
+     if not is_using_k3s():
+         return
+ 
+-    K3S_URL_PREFIX = os.environ.get('K3S_URL_PREFIX', 'https://github.com/k3s-io/k3s/releases/download/v1.28.5%2Bk3s1')
+-
+     if not os.path.exists(dest_dir):
+         os.makedirs(dest_dir)
+-    download_asset(dest_dir, k3s_version, f'{K3S_URL_PREFIX}/k3s')
+-    download_asset(dest_dir, k3s_version, f'{K3S_URL_PREFIX}/k3s-arm64')
+-    download_asset(dest_dir, k3s_version, f'{K3S_URL_PREFIX}/k3s-airgap-images-arm64.tar.zst')
+-    download_asset(dest_dir, k3s_version, f'{K3S_URL_PREFIX}/k3s-airgap-images-amd64.tar.zst')
+ 
++    requested_architectures = set(DEFAULT_ASSET_ARCHITECTURES)
++    if architectures:
++        requested_architectures.update(
++            normalize_architecture(architecture)
++            for architecture in architectures)
++
++    upstream_url = os.environ.get('K3S_URL_PREFIX', UPSTREAM_RELEASE_URL)
++    for architecture in sorted(
++            requested_architectures.difference({'riscv64'})):
++        for asset_name in ARCH_ASSETS[architecture]:
++            download_asset(
++                dest_dir,
++                '%s/%s' % (upstream_url, asset_name),
++                SHA256_CHECK_SUM[k3s_version][asset_name])
++
++    if 'riscv64' not in requested_architectures:
++        return
++
++    if riscv64_assets is None:
++        riscv64_assets = riscv64_asset_config_from_env()
++    if riscv64_assets is None:
++        riscv64_assets = load_cached_riscv64_asset_config(dest_dir)
++    if riscv64_assets is None:
++        raise ValueError(
++            "riscv64 K3s assets require an explicit URL and SHA-256 values")
++    riscv64_assets = normalize_riscv64_asset_config(riscv64_assets)
++
++    checksums = {
++        'k3s-riscv64': riscv64_assets['binary_sha256'],
++        'k3s-airgap-images-riscv64.tar.zst':
++            riscv64_assets['airgap_images_sha256'],
++    }
++    for asset_name in ARCH_ASSETS['riscv64']:
++        download_asset(
++            dest_dir,
++            '%s/%s' % (riscv64_assets['url_prefix'], asset_name),
++            checksums[asset_name])
++    cache_riscv64_asset_config(dest_dir, riscv64_assets)
+diff --git a/lib/ocboot.py b/lib/ocboot.py
+index f04823f..2f98a45 100644
+--- a/lib/ocboot.py
++++ b/lib/ocboot.py
+@@ -76,6 +76,95 @@ KEY_HOST_NETWORKS = "host_networks"
+ KEY_DISK_PATHS = "disk_paths"
+ 
+ KEY_PRIMARY_MASTER_NODE_IP = "primary_master_node_ip"
++KEY_TARGET_ARCHITECTURE = "target_architecture"
++KEY_TARGET_ARCHITECTURES = "target_architectures"
++KEY_RISCV64 = "riscv64"
++
++RISCV64_CNI_CHOICES = ('calico', 'flannel')
++RISCV64_IMAGE_KEYS = ('pause', 'helm_job', 'traefik', 'openvswitch')
++RISCV64_CLOUDPODS_KEYS = (
++    'qemu_version',
++    'etcd_version',
++    'busybox_image',
++    'host_health_tag',
++    'host_image_tag',
++    'openvswitch_tag',
++    'victoria_metrics_tag',
++    'web_image_name',
++    'web_tag',
++    'guacd_tag',
++    'kubeserver_tag',
++)
++
++
++def normalize_riscv64_config(config):
++    """Validate the external artifacts needed by an openEuler RISC-V run.
++
++    RISC-V release assets are not published by the upstream projects today,
++    so ocboot must not silently select a contributor-owned registry or mirror.
++    The caller supplies every non-upstream artifact explicitly instead.
++    """
++    if not isinstance(config, dict):
++        raise ValueError("riscv64 configuration must be a mapping")
++
++    normalized = dict(config)
++    normalized['k3s'] = k3s.normalize_riscv64_asset_config(
++        config.get('k3s'))
++
++    cni = str(config.get('cni', '')).strip().lower()
++    if cni not in RISCV64_CNI_CHOICES:
++        raise ValueError(
++            "riscv64.cni must be one of: %s" %
++            ', '.join(RISCV64_CNI_CHOICES))
++    normalized['cni'] = cni
++
++    rpm = config.get('rpm')
++    if not isinstance(rpm, dict) or not rpm.get('baseurl'):
++        raise ValueError("riscv64.rpm.baseurl is required")
++    normalized_rpm = dict(rpm)
++    normalized_rpm['baseurl'] = str(rpm['baseurl']).rstrip('/')
++    normalized_rpm['gpgcheck'] = rpm.get('gpgcheck', True)
++    normalized_rpm['repo_gpgcheck'] = rpm.get(
++        'repo_gpgcheck', normalized_rpm['gpgcheck'])
++    for field in ('gpgcheck', 'repo_gpgcheck'):
++        if not isinstance(normalized_rpm[field], bool):
++            raise ValueError("riscv64.rpm.%s must be a boolean" % field)
++    if (normalized_rpm['gpgcheck'] or normalized_rpm['repo_gpgcheck']) \
++            and not rpm.get('gpgkey'):
++        raise ValueError(
++            "riscv64.rpm.gpgkey is required when signature checks are enabled")
++    if rpm.get('gpgkey'):
++        normalized_rpm['gpgkey'] = str(rpm['gpgkey'])
++    normalized['rpm'] = normalized_rpm
++
++    for section, required in (
++            ('images', RISCV64_IMAGE_KEYS),
++            ('cloudpods', RISCV64_CLOUDPODS_KEYS)):
++        values = config.get(section)
++        if not isinstance(values, dict):
++            raise ValueError("riscv64.%s must be a mapping" % section)
++        missing = [key for key in required if not values.get(key)]
++        if missing:
++            raise ValueError(
++                "riscv64.%s misses: %s" %
++                (section, ', '.join(missing)))
++        normalized[section] = dict(values)
++
++    monitor_disable = normalized['cloudpods'].get('monitor_disable', False)
++    if not isinstance(monitor_disable, bool):
++        raise ValueError(
++            "riscv64.cloudpods.monitor_disable must be a boolean")
++    normalized['cloudpods']['monitor_disable'] = monitor_disable
++    return normalized
++
++
++def load_riscv64_config_file(config_file):
++    import yaml
++    with open(config_file, encoding='utf-8') as stream:
++        config = yaml.safe_load(stream)
++    if isinstance(config, dict) and KEY_RISCV64 in config:
++        config = config[KEY_RISCV64]
++    return normalize_riscv64_config(config)
+ 
+ def load_config(config_file):
+     import yaml
+@@ -187,8 +276,36 @@ class OcbootConfig(object):
+                 return version
+         raise Exception("get attr onecloud_version error")
+ 
++    def get_target_architectures(self):
++        architectures = set()
++        for group in (self.primary_master_config, self.master_config,
++                      self.worker_config):
++            if not group:
++                continue
++            architecture = getattr(group, KEY_TARGET_ARCHITECTURE, None)
++            if architecture:
++                architectures.add(k3s.normalize_architecture(architecture))
++            for node in group.get_nodes():
++                if node.target_architecture:
++                    architectures.add(node.target_architecture)
++        return sorted(architectures)
++
++    def get_riscv64_config(self):
++        if KEY_RISCV64 not in self.get_target_architectures():
++            return None
++        return normalize_riscv64_config(
++            self.config.get(KEY_RISCV64, None))
++
+     def ansible_global_vars(self):
+-        return get_ansible_global_vars(self.get_onecloud_version())
++        vars = get_ansible_global_vars(self.get_onecloud_version())
++        architectures = self.get_target_architectures()
++        if architectures:
++            vars[KEY_TARGET_ARCHITECTURES] = architectures
++        riscv64_config = self.get_riscv64_config()
++        if riscv64_config:
++            vars[KEY_RISCV64] = riscv64_config
++            vars['cluster_cni'] = riscv64_config['cni']
++        return vars
+ 
+     def get_ansible_inventory(self):
+         return ansible.get_inventory_config(
+@@ -281,6 +398,10 @@ class Node(object):
+         self.host = '127.0.0.1' if self.use_local else config.ensure_get('host', 'hostname')
+         self.user = config.get('user', 'root')
+         self.port = config.get('port', 22)
++        architecture = config.get(KEY_TARGET_ARCHITECTURE, None)
++        self.target_architecture = (
++            k3s.normalize_architecture(architecture)
++            if architecture else None)
+         self.host_networks = config.get(KEY_HOST_NETWORKS, None)
+         if isinstance(self.host_networks, str):
+             self.host_networks = [self.host_networks]
+@@ -322,6 +443,8 @@ class Node(object):
+             vars[KEY_DISK_PATHS] = self.disk_paths
+         if self.enable_hugepage:
+             vars['enable_hugepage'] = self.enable_hugepage
++        if self.target_architecture:
++            vars[KEY_TARGET_ARCHITECTURE] = self.target_architecture
+         if self.vrrp_interface or self.vrrp_vip:
+             vars['vrrp_vip'] = self.vrrp_vip
+             vars['vrrp_interface'] = self.vrrp_interface
+@@ -489,6 +612,10 @@ class OnecloudConfig(object):
+             self.host_networks = [self.host_networks]
+         self.disk_paths = config.get(KEY_DISK_PATHS, None)
+         self.primary_master_node_ip = config.get(KEY_PRIMARY_MASTER_NODE_IP, None)
++        architecture = config.get(KEY_TARGET_ARCHITECTURE, None)
++        self.target_architecture = (
++            k3s.normalize_architecture(architecture)
++            if architecture else None)
+ 
+     def ansible_vars(self):
+         vars = {
+@@ -523,6 +650,8 @@ class OnecloudConfig(object):
+             vars[KEY_DISK_PATHS] = self.disk_paths
+         if self.primary_master_node_ip:
+             vars[KEY_PRIMARY_MASTER_NODE_IP] = self.primary_master_node_ip
++        if self.target_architecture:
++            vars[KEY_TARGET_ARCHITECTURE] = self.target_architecture
+         return vars
+ 
+ 
+diff --git a/lib/parser.py b/lib/parser.py
+index e3ae604..c5f2ae1 100644
+--- a/lib/parser.py
++++ b/lib/parser.py
+@@ -69,6 +69,12 @@ def inject_add_nodes_options(parser):
+                         default="",
+                         help="offline rpm repo path for upgrade mode")
+ 
++    parser.add_argument(
++        "--riscv64-config",
++        dest="riscv64_config_file",
++        help="YAML file containing the same riscv64 mapping used by install; "
++             "required when adding a riscv64 node")
++
+     parser.add_argument("--ip-type",
+                         dest="ip_type",
+                         default="",
+diff --git a/lib/service.py b/lib/service.py
+index 7da275d..805341d 100644
+--- a/lib/service.py
++++ b/lib/service.py
+@@ -3,7 +3,26 @@
+ 
+ from __future__ import unicode_literals
+ 
+-from .ocboot import KEY_DISK_PATHS, KEY_ENABLE_CONTAINERD, KEY_HOST_NETWORKS, KEY_IMAGE_REPOSITORY, KEY_K8S_CONTROLPLANE_HOST, ClickhouseConfig, NodeConfig, Config, get_ansible_global_vars_by_cluster, KEY_PRIMARY_MASTER_NODE_IP
++import os
++
++from .ocboot import (
++    GROUP_PRIMARY_MASTER_NODE,
++    KEY_DISK_PATHS,
++    KEY_ENABLE_CONTAINERD,
++    KEY_HOST_NETWORKS,
++    KEY_IMAGE_REPOSITORY,
++    KEY_K8S_CONTROLPLANE_HOST,
++    KEY_PRIMARY_MASTER_NODE_IP,
++    KEY_RISCV64,
++    KEY_TARGET_ARCHITECTURE,
++    KEY_TARGET_ARCHITECTURES,
++    ClickhouseConfig,
++    Config,
++    Node,
++    NodeConfig,
++    get_ansible_global_vars_by_cluster,
++    load_riscv64_config_file,
++)
+ from .cmd import run_ansible_playbook
+ from .ansible import get_inventory_config
+ from .parser import help_d, inject_add_hostagent_options, inject_primary_node_options, inject_ssh_options
+@@ -13,8 +32,9 @@ from .parser import inject_ssh_hosts_options
+ from . import utils
+ from . import ansible
+ from . import consts
+-from .cluster import construct_cluster
+-from .ocboot import WorkerConfig, Config
++from . import k3s
++from .cluster import construct_cluster, resolve_ssh_private_file
++from .ocboot import WorkerConfig
+ from .ocboot import get_ansible_global_vars
+ from .ocboot import KEY_ONECLOUD_VERSION
+ from .ssh import SSHClient
+@@ -178,6 +198,7 @@ class AddLBAgentService(AddNodeBaseService):
+             'ip_dual_conf': getattr(args, 'ip_dual_conf', None),
+             'ip_type': args.ip_type,
+             'offline_data_path': args.offline_data_path,
++            'riscv64_config_file': args.riscv64_config_file,
+         }
+ 
+         # 如果是双栈配置，需要处理IPv4和IPv6地址
+@@ -209,10 +230,13 @@ class AddNodesConfig(object):
+                  enable_host_on_vm=False,
+                  enable_lbagent=False,
+                  **kwargs):
+-        target_nodes = list(set(target_nodes))
++        ssh_private_file = resolve_ssh_private_file(ssh_private_file)
++        target_nodes = list(dict.fromkeys(target_nodes))
+         target_hostnames = [node.get_hostname() for node in cluster.k8s_nodes]
+         self.enable_containerd = kwargs.get('runtime') == 'containerd'
+ 
++        detected_nodes = []
++
+         for target_node in target_nodes:
+             # check IP:
+             node = cluster.find_node_by_ip_or_hostname(target_node)
+@@ -230,12 +254,40 @@ class AddNodesConfig(object):
+             target_hostname = cli.get_hostname()
+             if target_hostname in target_hostnames:
+                 raise Exception(Red(f"Node {target_hostname}[{target_node}] already exists in cluster (By Hostname Check). "))
++            target_hostnames.append(target_hostname)
++            target_architecture = k3s.normalize_architecture(
++                cli.exec_command('uname -m').strip())
++            detected_nodes.append((target_node, target_architecture))
++
++        self.target_architectures = sorted({
++            architecture for _, architecture in detected_nodes
++        })
++        self.is_using_k3s = cluster.is_using_k3s()
++        self.riscv64_config = None
++        if KEY_RISCV64 in self.target_architectures:
++            if not self.is_using_k3s:
++                raise ValueError(
++                    'riscv64 nodes require K3s; native Kubernetes mode is not '
++                    'supported')
++            riscv64_config_file = kwargs.get('riscv64_config_file')
++            if not riscv64_config_file:
++                raise ValueError(
++                    '--riscv64-config is required when adding a riscv64 node')
++            self.riscv64_config = load_riscv64_config_file(
++                riscv64_config_file)
+ 
+         self.current_version = cluster.get_current_version()
+         controlplane_host = cluster.get_cluster_controlplane_host()
+         primary_master_node_ip = cluster.get_primary_master_node_ip()
+-        nodes_conf = [{'hostname': target_node, 'user': ssh_user,
+-                       'port': ssh_port} for target_node in target_nodes]
++        nodes_conf = [
++            {
++                'hostname': target_node,
++                'user': ssh_user,
++                'port': ssh_port,
++                KEY_TARGET_ARCHITECTURE: architecture,
++            }
++            for target_node, architecture in detected_nodes
++        ]
+         as_host = True
+         if enable_lbagent:
+             # can't enable lbagent and host at same time
+@@ -260,8 +312,6 @@ class AddNodesConfig(object):
+         self.worker_config = WorkerConfig(Config(woker_config_dict))
+ 
+         self.image_repository = cluster.get_image_repository()
+-        self.is_using_k3s = cluster.is_using_k3s()
+-
+         self.offline_data_path = kwargs.get('offline_data_path', None)
+         self.ip_type = kwargs.get('ip_type', None)
+ 
+@@ -277,6 +327,12 @@ class AddNodesConfig(object):
+         utils.pr_green(f"Get current cluster: {controlplane_host}, primary_master_node_ip: {primary_master_node_ip}, version: {self.current_version}, is_using_k3s: {self.is_using_k3s}")
+ 
+     def run(self):
++        if self.is_using_k3s:
++            k3s.init_airgap_assets(
++                k3s.GET_AIRGAP_DIR(),
++                k3s.VERSION_V1_28_5_K3S_1,
++                architectures=self.target_architectures,
++                riscv64_assets=(self.riscv64_config or {}).get('k3s'))
+         inventory_content = ansible.get_inventory_config(self.worker_config)
+         yaml_content = utils.to_yaml(inventory_content)
+         filepath = './cluster_add_node_inventory.yml'
+@@ -293,6 +349,10 @@ class AddNodesConfig(object):
+     def get_vars(self):
+         vars = get_ansible_global_vars(self.current_version, self.is_using_k3s)
+         vars[KEY_IMAGE_REPOSITORY] = self.image_repository
++        vars[KEY_TARGET_ARCHITECTURES] = self.target_architectures
++        if self.riscv64_config:
++            vars[KEY_RISCV64] = self.riscv64_config
++            vars['cluster_cni'] = self.riscv64_config['cni']
+ 
+         if self.offline_data_path:
+             vars['offline_data_path'] = self.offline_data_path
+diff --git a/ocboot.sh b/ocboot.sh
+index 69a27dc..d8afb55 100755
+--- a/ocboot.sh
++++ b/ocboot.sh
+@@ -62,34 +62,65 @@ buildah_extra_args=()
+ 
+ # buildah accepts --env since 1.23
+ echo "buildah version: $buildah_version"
+-if [[ $buildah_version_major -eq 1 ]] && [[ "$buildah_version_minor" -gt 23 ]]; then
++if [[ $buildah_version_major -gt 1 ]] || \
++    { [[ $buildah_version_major -eq 1 ]] && \
++      [[ "$buildah_version_minor" -ge 23 ]]; }; then
+     buildah_extra_args+=(-e ANSIBLE_VERBOSITY="${ANSIBLE_VERBOSITY:-0}")
+     buildah_extra_args+=(-e HOME="$HOME")
+ fi
+ 
+ cmd_extra_args=""
+-origin_args="$@"
++origin_args=()
++
++normalize_installer_path() {
++    local path="$1"
++    if [[ "$path" == /* ]]; then
++        if [[ "$path" == "$(pwd)"/* ]] || [[ "$path" == "$(pwd)" ]]; then
++            if [[ "$path" == "$(pwd)" ]]; then
++                echo "$ROOT_DIR"
++            else
++                echo "$ROOT_DIR/${path#$(pwd)/}"
++            fi
++        else
++            echo "$path"
++        fi
++    else
++        path="${path#./}"
++        echo "$ROOT_DIR/$path"
++    fi
++}
++
++prev_arg=""
++for arg in "$@"; do
++    case "$prev_arg" in
++        --nvidia-driver-installer-path|--cuda-installer-path|--riscv64-config)
++            origin_args+=("$(normalize_installer_path "$arg")")
++            ;;
++        *)
++            origin_args+=("$arg")
++            ;;
++    esac
++    prev_arg="$arg"
++done
+ 
+-if [[ "$1" == "run.py" ]]; then
++if [[ "${origin_args[0]:-}" == "run.py" ]]; then
+     if [[ "$IMAGE_REPOSITORY" != "$DEFAULT_REPO" ]]; then
+         cmd_extra_args="$cmd_extra_args -i $IMAGE_REPOSITORY"
+     fi
+-    origin_args="$ROOT_DIR/$origin_args"
++    origin_args[0]="$ROOT_DIR/run.py"
+ fi
+ 
+ mkdir -p "$HOME/.kube"
+ 
+-# Parse --nvidia-driver-installer-path and --cuda-installer-path from args and
+-# add bind-mounts so the installer files are accessible inside the container at
+-# their original absolute paths.
++# Bind input files outside $(pwd) so they remain accessible in the container.
+ extra_installer_volumes=()
+ prev_arg=""
+ declare -A mounted_installer_dirs
+ for arg in "$@"; do
+     case "$prev_arg" in
+-        --nvidia-driver-installer-path|--cuda-installer-path)
++        --nvidia-driver-installer-path|--cuda-installer-path|--riscv64-config)
+             # Only handle absolute paths that are not already under $(pwd)
+-            if [[ "$arg" == /* ]] && [[ "${arg#$(pwd)/}" == "$arg" ]]; then
++            if [[ "$arg" == /* ]] && [[ "${arg#$(pwd)/}" == "$arg" ]] && [[ "$arg" != "$(pwd)" ]]; then
+                 _dir="$(dirname "$arg")"
+                 if [[ -z "${mounted_installer_dirs[$_dir]+x}" ]]; then
+                     extra_installer_volumes+=(-v "$_dir:$_dir:ro")
+@@ -112,4 +143,4 @@ buildah run --isolation chroot --user $(id -u):$(id -g) \
+     -v "$(pwd):$ROOT_DIR" \
+     -v "$(pwd)/airgap_assets/k3s-install.sh:/airgap_assets/k3s-install.sh:ro" \
+     "${extra_installer_volumes[@]}" \
+-    "$CONTAINER_NAME" $CMD $origin_args $cmd_extra_args
++    "$CONTAINER_NAME" $CMD "${origin_args[@]}" $cmd_extra_args
+diff --git a/onecloud/roles/common/tasks/os/openeuler_24_riscv64.yml b/onecloud/roles/common/tasks/os/openeuler_24_riscv64.yml
+new file mode 100644
+index 0000000..0dc9131
+--- /dev/null
++++ b/onecloud/roles/common/tasks/os/openeuler_24_riscv64.yml
+@@ -0,0 +1,146 @@
++---
++- name: Verify openEuler 24.03 LTS SP3 release
++  ansible.builtin.command:
++    cmd: grep -Fq '24.03 (LTS-SP3)' /etc/os-release
++  changed_when: false
++
++- name: Check for a unified cgroup v2 hierarchy
++  ansible.builtin.stat:
++    path: /sys/fs/cgroup/cgroup.controllers
++  register: riscv64_cgroup_v2
++
++- name: Enable unified cgroup v2 for the openEuler RISC-V kernel
++  when: not riscv64_cgroup_v2.stat.exists
++  block:
++    - name: Check U-Boot configuration and update command
++      ansible.builtin.stat:
++        path: "{{ item }}"
++      loop:
++        - /etc/default/u-boot
++        - /usr/sbin/u-boot-update
++      register: riscv64_uboot_files
++
++    - name: Require the supported U-Boot configuration layout
++      ansible.builtin.assert:
++        that:
++          - riscv64_uboot_files.results | map(attribute='stat.exists') | min
++        fail_msg: >-
++          This kernel requires cgroup v2, but ocboot could not find
++          /etc/default/u-boot and /usr/sbin/u-boot-update.
++
++    - name: Add the unified cgroup v2 kernel parameter
++      ansible.builtin.replace:
++        path: /etc/default/u-boot
++        regexp: >-
++          ^(U_BOOT_PARAMETERS=")((?:(?!systemd\.unified_cgroup_hierarchy=1)[^"])*)"$
++        replace: '\1\2 systemd.unified_cgroup_hierarchy=1"'
++      register: riscv64_cgroup_boot_parameter
++
++    - name: Require a newly configured unified cgroup v2 parameter
++      ansible.builtin.assert:
++        that:
++          - riscv64_cgroup_boot_parameter.changed
++        fail_msg: >-
++          systemd.unified_cgroup_hierarchy=1 is configured, but the running
++          system still uses legacy cgroups. Verify the active U-Boot entry.
++
++    - name: Regenerate the extlinux configuration
++      ansible.builtin.command:
++        cmd: /usr/sbin/u-boot-update
++      changed_when: true
++
++    - name: Reboot into the unified cgroup v2 hierarchy
++      ansible.builtin.reboot:
++        msg: Reboot initiated by ocboot to enable cgroup v2 for K3s
++        reboot_timeout: 900
++
++- name: Read available cgroup v2 controllers
++  ansible.builtin.command:
++    cmd: cat /sys/fs/cgroup/cgroup.controllers
++  register: riscv64_cgroup_v2_controllers
++  changed_when: false
++
++- name: Require memory and cpuset cgroup v2 controllers
++  ansible.builtin.assert:
++    that:
++      - "'memory' in riscv64_cgroup_v2_controllers.stdout.split()"
++      - "'cpuset' in riscv64_cgroup_v2_controllers.stdout.split()"
++    fail_msg: >-
++      K3s requires the memory and cpuset cgroup v2 controllers, but the
++      running kernel does not expose both controllers.
++
++- name: Check for an existing native Kubernetes installation
++  ansible.builtin.stat:
++    path: /etc/kubernetes/kubelet.conf
++  register: native_kubernetes_kubelet_config
++
++- name: Reject native Kubernetes on a RISC-V target
++  ansible.builtin.assert:
++    that:
++      - not native_kubernetes_kubelet_config.stat.exists
++    fail_msg: >-
++      Native Kubernetes was detected. The openEuler RISC-V path currently
++      supports K3s only.
++
++- name: Check virtualization devices on a Cloudpods host
++  ansible.builtin.stat:
++    path: "{{ item }}"
++  loop:
++    - /dev/kvm
++    - /dev/net/tun
++  register: riscv64_virtualization_devices
++  when: join_as_host | default(false) | bool
++
++- name: Require KVM and TUN on a Cloudpods host
++  ansible.builtin.assert:
++    that:
++      - item.stat.exists
++    fail_msg: "Required virtualization device {{ item.item }} is missing"
++  loop: "{{ riscv64_virtualization_devices.results | default([]) }}"
++  when: join_as_host | default(false) | bool
++
++- name: Select the Cloudpods RISC-V RPM repository URL
++  ansible.builtin.set_fact:
++    riscv64_rpm_baseurl: >-
++      {{ ('file://' + offline_data_path)
++         if (online_status | default('online')) == 'offline'
++         else riscv64.rpm.baseurl }}
++
++- name: Check the offline Cloudpods RISC-V RPM repository
++  ansible.builtin.stat:
++    path: "{{ offline_data_path }}/repodata/repomd.xml"
++  register: riscv64_offline_rpm_metadata
++  when: (online_status | default('online')) == 'offline'
++
++- name: Require valid offline Cloudpods RISC-V RPM metadata
++  ansible.builtin.assert:
++    that:
++      - riscv64_offline_rpm_metadata.stat.exists
++      - riscv64_offline_rpm_metadata.stat.isreg
++    fail_msg: >-
++      --offline-data-path must point to a repository already present on the
++      target and containing repodata/repomd.xml.
++  when: (online_status | default('online')) == 'offline'
++
++- name: Configure the Cloudpods RISC-V RPM repository
++  ansible.builtin.yum_repository:
++    name: yunion-cloudpods-riscv64
++    description: Cloudpods RISC-V packages for openEuler 24.03 LTS SP3
++    baseurl: "{{ riscv64_rpm_baseurl }}"
++    enabled: true
++    gpgcheck: "{{ riscv64.rpm.gpgcheck }}"
++    repo_gpgcheck: "{{ riscv64.rpm.repo_gpgcheck }}"
++    gpgkey: "{{ riscv64.rpm.gpgkey | default(omit) }}"
++    state: present
++
++- name: Warn when the external RPM repository is unsigned
++  ansible.builtin.debug:
++    msg: >-
++      RPM signature verification is disabled explicitly by riscv64.rpm.
++      Use signed artifacts and configure gpgkey for production deployments.
++  when:
++    - not riscv64.rpm.gpgcheck
++    - not riscv64.rpm.repo_gpgcheck
++
++- name: Include RedHat family common tasks
++  ansible.builtin.include_tasks: redhat.yml
+diff --git a/onecloud/roles/common/templates/ovs.sh.j2 b/onecloud/roles/common/templates/ovs.sh.j2
+index b50b481..efcfe76 100644
+--- a/onecloud/roles/common/templates/ovs.sh.j2
++++ b/onecloud/roles/common/templates/ovs.sh.j2
+@@ -1,7 +1,11 @@
+ #!/bin/bash
+ 
+ TTY=""
++{% if ansible_architecture == 'riscv64' %}
++BIMG={{ openvswitch_image }}
++{% else %}
+ BIMG={{ image_repository | default('registry.cn-beijing.aliyuncs.com/yunion') }}/openvswitch:2.12.4-20260212
++{% endif %}
+ 
+ {% if k8s_or_k3s | default('k3s') == 'k3s' %}
+ if [ -t 0 ]; then
+@@ -45,4 +49,3 @@ docker run --rm --network host $TTY \
+     $IMG \
+     /usr/bin/$(basename $0) $@
+ {% endif %}
+-
+diff --git a/onecloud/roles/k3s/airgap/tasks/main.yml b/onecloud/roles/k3s/airgap/tasks/main.yml
+index 8477f54..cb535e1 100644
+--- a/onecloud/roles/k3s/airgap/tasks/main.yml
++++ b/onecloud/roles/k3s/airgap/tasks/main.yml
+@@ -34,7 +34,7 @@
+         group: root
+         mode: 0755
+ 
+-    - name: Distribute K3s x86_64 binary
++    - name: Distribute K3s aarch64 binary
+       when: ansible_architecture == 'aarch64'
+       ansible.builtin.copy:
+         src: "{{ airgap_dir }}/k3s-arm64"
+@@ -43,6 +43,15 @@
+         group: root
+         mode: 0755
+ 
++    - name: Distribute K3s riscv64 binary
++      when: ansible_architecture == 'riscv64'
++      ansible.builtin.copy:
++        src: "{{ airgap_dir }}/k3s-riscv64"
++        dest: /usr/local/bin/k3s
++        owner: root
++        group: root
++        mode: 0755
++
+     # - name: Distribute K3s SELinux RPM
+     #   ansible.builtin.copy:
+     #     src: "{{ item }}"
+@@ -92,6 +101,15 @@
+         group: root
+         mode: 0755
+ 
++    - name: Distribute K3s riscv64 images
++      when: ansible_architecture == 'riscv64'
++      ansible.builtin.copy:
++        src: "{{ airgap_dir }}/k3s-airgap-images-riscv64.tar.zst"
++        dest: /var/lib/rancher/k3s/agent/images/k3s-airgap-images-riscv64.tar.zst
++        owner: root
++        group: root
++        mode: 0644
++
+     # - name: Distribute K3s arm images
+     #   when: ansible_architecture == 'armv7l'
+     #   ansible.builtin.copy:
+@@ -114,6 +132,10 @@
+       environment:
+         INSTALL_K3S_SKIP_START: "true"
+         INSTALL_K3S_SKIP_DOWNLOAD: "true"
++        INSTALL_K3S_SELINUX_WARN: >-
++          {{ 'true' if
++             (ansible_selinux | default({})).get('status', 'disabled') ==
++             'disabled' else 'false' }}
+       changed_when: true
+ 
+     - name: Run K3s Install [agent]
+@@ -124,4 +146,8 @@
+         INSTALL_K3S_SKIP_START: "true"
+         INSTALL_K3S_SKIP_DOWNLOAD: "true"
+         INSTALL_K3S_EXEC: "agent"
++        INSTALL_K3S_SELINUX_WARN: >-
++          {{ 'true' if
++             (ansible_selinux | default({})).get('status', 'disabled') ==
++             'disabled' else 'false' }}
+       changed_when: true
+diff --git a/onecloud/roles/k3s/config/templates/config.yaml.j2 b/onecloud/roles/k3s/config/templates/config.yaml.j2
+index 4bfab52..c1c5f78 100644
+--- a/onecloud/roles/k3s/config/templates/config.yaml.j2
++++ b/onecloud/roles/k3s/config/templates/config.yaml.j2
+@@ -24,13 +24,25 @@ node-ip: {{ node_ip }}
+ {% else %}
+ node-ip: {{ node_ip }}
+ {% endif %}
++{% if ansible_architecture == 'riscv64' %}
++pause-image: {{ k3s_pause_image }}
++{% if is_k3s_server %}
++helm-job-image: {{ k3s_helm_job_image }}
++{% endif %}
++{% else %}
+ pause-image: {{ image_repository }}/pause:3.1
++{% endif %}
+ {% if high_availability_vip is defined %}
+ tls-san: {{ high_availability_vip }}
+ {% endif %}
+ {% if is_k3s_server %}
++{% if cluster_cni | default('calico') == 'flannel' %}
++flannel-backend: vxlan
++disable-network-policy: false
++{% else %}
+ flannel-backend: none
+ disable-network-policy: true
++{% endif %}
+ {% if ip_type == 'dual-stack' %}
+ {% if node_ip | regex_search(':') %}
+ # 当主IP是IPv6时，使用IPv6 CIDR作为主要CIDR
+diff --git a/onecloud/roles/primary-master-node/setup_cloud/tasks/main.yml b/onecloud/roles/primary-master-node/setup_cloud/tasks/main.yml
+index 28079e4..6130e6e 100644
+--- a/onecloud/roles/primary-master-node/setup_cloud/tasks/main.yml
++++ b/onecloud/roles/primary-master-node/setup_cloud/tasks/main.yml
+@@ -108,6 +108,10 @@
+     default_gateway_v6: "{{ default_gateway_v6_ret.stdout if default_gateway_v6_ret is defined and default_gateway_v6_ret.stdout is defined else '' }}"
+     default_gateway_v4: "{{ default_gateway_v4_ret.stdout if default_gateway_v4_ret is defined and default_gateway_v4_ret.stdout is defined else '' }}"
+   when: ip_type is defined and ip_type == 'dual-stack'
++- name: Use the validated hyper image on RISC-V
++  ansible.builtin.set_fact:
++    use_hyper_image: true
++  when: ansible_architecture == 'riscv64'
+ 
+ - name: include k8s cloud if needed
+   include_tasks: "k8s_cloud.yml"
+diff --git a/onecloud/roles/primary-master-node/setup_cloud/templates/onecloud-manifests.yaml.j2 b/onecloud/roles/primary-master-node/setup_cloud/templates/onecloud-manifests.yaml.j2
+index 0c2471a..543ded3 100644
+--- a/onecloud/roles/primary-master-node/setup_cloud/templates/onecloud-manifests.yaml.j2
++++ b/onecloud/roles/primary-master-node/setup_cloud/templates/onecloud-manifests.yaml.j2
+@@ -65,6 +65,59 @@ spec:
+   version: "{{ onecloud_version }}"
+ {% if use_hyper_image %}
+   useHyperImage: true
++{% endif %}
++{% if ansible_architecture == 'riscv64' %}
++  etcd:
++    repository: "{{ image_repository }}"
++    version: "{{ cloudpods_etcd_version }}"
++    pod:
++      busyboxImage: "{{ cloudpods_busybox_image }}"
++  hostagent:
++    defaultQemuVersion: "{{ riscv64.cloudpods.qemu_version }}"
++    hostCpuPassthrough: true
++    disableProbeKubelet: true
++    HostHealth:
++      imageName: host-health
++      repository: "{{ image_repository }}"
++      tag: "{{ cloudpods_host_health_tag }}"
++    OvnController:
++      imageName: openvswitch
++      repository: "{{ image_repository }}"
++      tag: "{{ cloudpods_openvswitch_tag }}"
++  hostdeployer:
++    imageName: cloudpods
++    repository: "{{ image_repository }}"
++    tag: "{{ onecloud_version }}"
++  hostimage:
++    imageName: host-image
++    repository: "{{ image_repository }}"
++    tag: "{{ cloudpods_host_image_tag }}"
++  kubeserver:
++    imageName: kubeserver
++    repository: "{{ image_repository }}"
++    tag: "{{ cloudpods_kubeserver_tag }}"
++  lbagent:
++    OvnController:
++      imageName: openvswitch
++      repository: "{{ image_repository }}"
++      tag: "{{ cloudpods_openvswitch_tag }}"
++  monitor:
++    disable: {{ riscv64.cloudpods.monitor_disable | lower }}
++  victoriaMetrics:
++    disable: {{ riscv64.cloudpods.monitor_disable | lower }}
++    imageName: victoria-metrics
++    repository: "{{ image_repository }}"
++    tag: "{{ cloudpods_victoria_metrics_tag }}"
++  web:
++    imageName: "{{ cloudpods_web_image_name }}"
++    repository: "{{ image_repository }}"
++    tag: "{{ cloudpods_web_tag }}"
++    useHTTP: false
++  webconsole:
++    Guacd:
++      imageName: guacd
++      repository: "{{ image_repository }}"
++      tag: "{{ cloudpods_guacd_tag }}"
+ {% endif %}
+   loadBalancerEndpoint: "{{ api_endpoint }}"
+ {% if disable_resource_management %}
+@@ -156,7 +209,7 @@ spec:
+         effect: NoSchedule
+       containers:
+       - name: onecloud-operator
+-        image: {{ image_repository }}/onecloud-operator:{{ onecloud_version }}
++        image: {{ image_repository }}/onecloud-operator:{{ operator_version }}
+         imagePullPolicy: IfNotPresent
+         command:
+         - "/bin/onecloud-controller-manager"
+diff --git a/onecloud/roles/primary-master-node/setup_k3s/tasks/main.yml b/onecloud/roles/primary-master-node/setup_k3s/tasks/main.yml
+index 47cc2c3..cc422d8 100644
+--- a/onecloud/roles/primary-master-node/setup_k3s/tasks/main.yml
++++ b/onecloud/roles/primary-master-node/setup_k3s/tasks/main.yml
+@@ -78,6 +78,13 @@
+   template:
+     src: calico.yaml.j2
+     dest: /var/lib/rancher/k3s/server/manifests/calico.yaml
++  when: cluster_cni | default('calico') == 'calico'
++
++- name: Remove the Calico manifest when Flannel is selected
++  ansible.builtin.file:
++    path: /var/lib/rancher/k3s/server/manifests/calico.yaml
++    state: absent
++  when: cluster_cni | default('calico') == 'flannel'
+ 
+ - name: Update traefik component configuration
+   copy:
+@@ -88,3 +95,10 @@
+   copy:
+     src: traefik-ds.yaml
+     dest: /var/lib/rancher/k3s/server/manifests/traefik-ds.yaml
++
++- name: Select the configured Traefik image on RISC-V
++  ansible.builtin.replace:
++    path: /var/lib/rancher/k3s/server/manifests/traefik-ds.yaml
++    regexp: '^(\s*image:)\s+.*$'
++    replace: '\1 {{ k3s_traefik_image }}'
++  when: ansible_architecture == 'riscv64'
+diff --git a/onecloud/roles/utils/detect-os/tasks/main.yml b/onecloud/roles/utils/detect-os/tasks/main.yml
+index 67e22ac..9c93190 100644
+--- a/onecloud/roles/utils/detect-os/tasks/main.yml
++++ b/onecloud/roles/utils/detect-os/tasks/main.yml
+@@ -1,5 +1,18 @@
+ ---
+ 
++- name: Verify the declared target architecture
++  ansible.builtin.assert:
++    that:
++      - >-
++        target_architecture ==
++        {'x86_64': 'amd64', 'aarch64': 'arm64',
++         'riscv64': 'riscv64'}.get(ansible_architecture,
++                                   ansible_architecture)
++    fail_msg: >-
++      Inventory declares {{ target_architecture }}, but Ansible detected
++      {{ ansible_architecture }} on {{ inventory_hostname }}.
++  when: target_architecture is defined
++
+ - name: set var
+   set_fact:
+     k8s_controlplane_host: "{{ hostvars[inventory_hostname]['groups']['primary_master_node'][0] }}"
+diff --git a/onecloud/roles/utils/detect-os/vars/openeuler-riscv64.yml b/onecloud/roles/utils/detect-os/vars/openeuler-riscv64.yml
+new file mode 100644
+index 0000000..25296fa
+--- /dev/null
++++ b/onecloud/roles/utils/detect-os/vars/openeuler-riscv64.yml
+@@ -0,0 +1,52 @@
++---
++is_redhat_based: true
++is_openeuler_riscv64: true
++is_openeuler_based: true
++is_centos_based: true
++centos_version: 10
++
++common_packages:
++  - bash-completion
++  - bridge-utils
++  - cloudpods-executor
++  - cloudpods-riscv-firmware
++  - conntrack-tools
++  - curl
++  - fuse
++  - jq
++  - kmod
++  - multipath-tools
++  - nfs-utils
++  - openvswitch
++  - parallel
++  - pciutils
++  - python3-libselinux
++  - python3-pip
++  - qemu-riscv-cloudpods
++  - rsync
++  - tcpdump
++
++common_services:
++  - cloudpods-executor
++
++latest_packages: []
++qemu_10_packages: []
++ovs_packages: []
++ceph_packages: []
++executor_service: cloudpods-executor
++
++k3s_pause_image: "{{ riscv64.images.pause }}"
++k3s_helm_job_image: "{{ riscv64.images.helm_job }}"
++k3s_traefik_image: "{{ riscv64.images.traefik }}"
++openvswitch_image: "{{ riscv64.images.openvswitch }}"
++
++cloudpods_etcd_version: "{{ riscv64.cloudpods.etcd_version }}"
++cloudpods_busybox_image: "{{ riscv64.cloudpods.busybox_image }}"
++cloudpods_host_health_tag: "{{ riscv64.cloudpods.host_health_tag }}"
++cloudpods_host_image_tag: "{{ riscv64.cloudpods.host_image_tag }}"
++cloudpods_openvswitch_tag: "{{ riscv64.cloudpods.openvswitch_tag }}"
++cloudpods_victoria_metrics_tag: "{{ riscv64.cloudpods.victoria_metrics_tag }}"
++cloudpods_web_image_name: "{{ riscv64.cloudpods.web_image_name }}"
++cloudpods_web_tag: "{{ riscv64.cloudpods.web_tag }}"
++cloudpods_guacd_tag: "{{ riscv64.cloudpods.guacd_tag }}"
++cloudpods_kubeserver_tag: "{{ riscv64.cloudpods.kubeserver_tag }}"
+diff --git a/onecloud/roles/utils/kernel-check/tasks/openeuler-24-riscv64.yml b/onecloud/roles/utils/kernel-check/tasks/openeuler-24-riscv64.yml
+new file mode 100644
+index 0000000..d9c6281
+--- /dev/null
++++ b/onecloud/roles/utils/kernel-check/tasks/openeuler-24-riscv64.yml
+@@ -0,0 +1,6 @@
++---
++- name: Keep the openEuler vendor kernel on RISC-V
++  ansible.builtin.debug:
++    msg: >-
++      The openEuler RISC-V kernel supplies the platform KVM support and is not
++      replaced by an x86_64 or aarch64 Yunion kernel package.
+diff --git a/tests/test_k3s_assets.py b/tests/test_k3s_assets.py
+new file mode 100644
+index 0000000..904b055
+--- /dev/null
++++ b/tests/test_k3s_assets.py
+@@ -0,0 +1,136 @@
++import hashlib
++import json
++import os
++import tempfile
++import unittest
++from unittest import mock
++
++from lib import k3s
++
++
++class TestK3sAssets(unittest.TestCase):
++
++    def test_normalize_architecture_aliases(self):
++        aliases = {
++            'amd64': 'amd64',
++            'x86_64': 'amd64',
++            'arm64': 'arm64',
++            'aarch64': 'arm64',
++            'riscv64': 'riscv64',
++            'RISCV64': 'riscv64',
++        }
++        for value, expected in aliases.items():
++            with self.subTest(value=value):
++                self.assertEqual(
++                    k3s.normalize_architecture(value), expected)
++
++    def test_normalize_architecture_rejects_unknown_values(self):
++        with self.assertRaisesRegex(ValueError, 'unsupported K3s architecture'):
++            k3s.normalize_architecture('mips64')
++
++    def test_riscv64_config_requires_explicit_url_and_checksums(self):
++        with self.assertRaisesRegex(ValueError, 'misses'):
++            k3s.normalize_riscv64_asset_config({'url_prefix': 'https://example.test'})
++        with self.assertRaisesRegex(ValueError, '64-character'):
++            k3s.normalize_riscv64_asset_config({
++                'url_prefix': 'https://example.test',
++                'binary_sha256': 'invalid',
++                'airgap_images_sha256': '0' * 64,
++            })
++
++    @mock.patch('lib.k3s.download_asset')
++    @mock.patch('lib.k3s.is_using_k3s', return_value=True)
++    def test_default_assets_preserve_amd64_and_arm64(
++            self, _is_using_k3s, download_asset):
++        with tempfile.TemporaryDirectory() as directory:
++            k3s.init_airgap_assets(directory)
++
++        names = [os.path.basename(call.args[1])
++                 for call in download_asset.call_args_list]
++        self.assertEqual(names, [
++            'k3s',
++            'k3s-airgap-images-amd64.tar.zst',
++            'k3s-arm64',
++            'k3s-airgap-images-arm64.tar.zst',
++        ])
++
++    @mock.patch('lib.k3s.cache_riscv64_asset_config')
++    @mock.patch('lib.k3s.download_asset')
++    @mock.patch('lib.k3s.is_using_k3s', return_value=True)
++    def test_riscv64_is_added_without_removing_default_assets(
++            self, _is_using_k3s, download_asset, _cache_config):
++        config = {
++            'url_prefix': 'https://example.test/k3s',
++            'binary_sha256': '1' * 64,
++            'airgap_images_sha256': '2' * 64,
++        }
++        with tempfile.TemporaryDirectory() as directory:
++            k3s.init_airgap_assets(
++                directory, architectures=['riscv64'],
++                riscv64_assets=config)
++
++        names = [os.path.basename(call.args[1])
++                 for call in download_asset.call_args_list]
++        self.assertEqual(names, [
++            'k3s',
++            'k3s-airgap-images-amd64.tar.zst',
++            'k3s-arm64',
++            'k3s-airgap-images-arm64.tar.zst',
++            'k3s-riscv64',
++            'k3s-airgap-images-riscv64.tar.zst',
++        ])
++
++    @mock.patch('lib.k3s.run_cmd')
++    def test_download_failure_removes_partial_file(self, run_cmd):
++        run_cmd.side_effect = RuntimeError('download failed')
++        with tempfile.TemporaryDirectory() as directory:
++            target = os.path.join(directory, 'asset')
++            partial = target + '.part'
++            with open(partial, 'w', encoding='utf-8') as stream:
++                stream.write('stale')
++            with self.assertRaisesRegex(RuntimeError, 'download failed'):
++                k3s._download_file('https://example.test/asset', target)
++            self.assertFalse(os.path.exists(partial))
++            self.assertFalse(os.path.exists(target))
++
++    @mock.patch('lib.k3s._download_file', side_effect=RuntimeError('failed'))
++    def test_failed_retry_removes_known_bad_cached_asset(self, _download_file):
++        with tempfile.TemporaryDirectory() as directory:
++            target = os.path.join(directory, 'asset')
++            with open(target, 'wb') as stream:
++                stream.write(b'bad cache')
++            with self.assertRaisesRegex(RuntimeError, 'failed'):
++                k3s.download_asset(
++                    directory, 'https://example.test/asset', '0' * 64)
++            self.assertFalse(os.path.exists(target))
++
++    @mock.patch('lib.k3s._download_file')
++    def test_bad_checksum_removes_downloaded_asset(self, download_file):
++        def write_bad_asset(_url, target):
++            with open(target, 'wb') as stream:
++                stream.write(b'bad')
++
++        download_file.side_effect = write_bad_asset
++        with tempfile.TemporaryDirectory() as directory:
++            with self.assertRaisesRegex(ValueError, 'sha256 checksum'):
++                k3s.download_asset(
++                    directory, 'https://example.test/asset', '0' * 64)
++            self.assertFalse(os.path.exists(os.path.join(directory, 'asset')))
++
++    def test_cached_riscv64_config_is_validated(self):
++        config = {
++            'url_prefix': 'https://example.test/k3s',
++            'binary_sha256': hashlib.sha256(b'binary').hexdigest(),
++            'airgap_images_sha256': hashlib.sha256(b'airgap').hexdigest(),
++        }
++        with tempfile.TemporaryDirectory() as directory:
++            k3s.cache_riscv64_asset_config(directory, config)
++            metadata = os.path.join(directory, k3s.RISCV64_ASSET_METADATA)
++            with open(metadata, encoding='utf-8') as stream:
++                self.assertEqual(json.load(stream), config)
++            self.assertEqual(
++                k3s.load_cached_riscv64_asset_config(directory), config)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_riscv64_config.py b/tests/test_riscv64_config.py
+new file mode 100644
+index 0000000..e347b40
+--- /dev/null
++++ b/tests/test_riscv64_config.py
+@@ -0,0 +1,248 @@
++import os
++from pathlib import Path
++import re
++import tempfile
++import unittest
++from unittest import mock
++
++try:
++    import yaml
++except ImportError:
++    yaml = None
++try:
++    from jinja2 import Environment, StrictUndefined
++except ImportError:
++    Environment = None
++    StrictUndefined = None
++
++from lib import ocboot
++from lib import service
++
++
++def valid_riscv64_config():
++    return {
++        'k3s': {
++            'url_prefix': 'https://artifacts.example.test/k3s',
++            'binary_sha256': '1' * 64,
++            'airgap_images_sha256': '2' * 64,
++        },
++        'cni': 'flannel',
++        'rpm': {
++            'baseurl': 'https://artifacts.example.test/rpm/',
++            'gpgcheck': False,
++            'repo_gpgcheck': False,
++        },
++        'images': {
++            key: 'registry.example.test/%s:test' % key
++            for key in ocboot.RISCV64_IMAGE_KEYS
++        },
++        'cloudpods': {
++            key: 'test'
++            for key in ocboot.RISCV64_CLOUDPODS_KEYS
++        },
++    }
++
++
++class FakeGroup(object):
++
++    onecloud_version = 'v4.0.3-test'
++    target_architecture = 'riscv64'
++
++    def get_nodes(self):
++        return []
++
++
++class FakeCluster(object):
++
++    def __init__(self, using_k3s=True):
++        self.k8s_nodes = []
++        self.using_k3s = using_k3s
++
++    def find_node_by_ip_or_hostname(self, _target):
++        return None
++
++    def get_current_version(self):
++        return 'v4.0.3-test'
++
++    def get_cluster_controlplane_host(self):
++        return '192.0.2.10'
++
++    def get_primary_master_node_ip(self):
++        return '192.0.2.10'
++
++    def get_repository(self):
++        return 'registry.example.test/cloudpods', False
++
++    def get_image_repository(self):
++        return 'registry.example.test/cloudpods'
++
++    def is_using_k3s(self):
++        return self.using_k3s
++
++
++class FakeSSHClient(object):
++
++    def __init__(self, host, _user, _key_file, _port):
++        self.host = host
++
++    def get_hostname(self):
++        return 'compute-%s' % self.host.rsplit('.', 1)[-1]
++
++    def exec_command(self, command):
++        if command == 'uname -m':
++            return 'riscv64\n'
++        raise AssertionError('unexpected command: %s' % command)
++
++
++class TestRiscv64Config(unittest.TestCase):
++
++    def test_normalizes_external_artifact_configuration(self):
++        normalized = ocboot.normalize_riscv64_config(
++            valid_riscv64_config())
++        self.assertEqual(normalized['cni'], 'flannel')
++        self.assertEqual(
++            normalized['rpm']['baseurl'],
++            'https://artifacts.example.test/rpm')
++        self.assertFalse(normalized['cloudpods']['monitor_disable'])
++
++    def test_signed_repository_requires_key(self):
++        config = valid_riscv64_config()
++        del config['rpm']['gpgcheck']
++        del config['rpm']['repo_gpgcheck']
++        with self.assertRaisesRegex(ValueError, 'gpgkey'):
++            ocboot.normalize_riscv64_config(config)
++
++    def test_rejects_incomplete_image_set(self):
++        config = valid_riscv64_config()
++        del config['images']['pause']
++        with self.assertRaisesRegex(ValueError, 'pause'):
++            ocboot.normalize_riscv64_config(config)
++
++    @unittest.skipIf(yaml is None, 'PyYAML is not installed')
++    def test_loads_wrapped_configuration_file(self):
++        with tempfile.NamedTemporaryFile(
++                mode='w', suffix='.yml', encoding='utf-8') as stream:
++            yaml.safe_dump({'riscv64': valid_riscv64_config()}, stream)
++            stream.flush()
++            loaded = ocboot.load_riscv64_config_file(stream.name)
++        self.assertEqual(loaded['cni'], 'flannel')
++
++    def test_node_normalizes_declared_architecture(self):
++        node = ocboot.Node(ocboot.Config({
++            'hostname': '192.0.2.10',
++            'target_architecture': 'RISCV64',
++        }))
++        self.assertEqual(node.target_architecture, 'riscv64')
++        self.assertEqual(
++            node.ansible_host_vars()['target_architecture'], 'riscv64')
++
++    def test_global_vars_include_riscv64_only_when_requested(self):
++        config = ocboot.OcbootConfig.__new__(ocboot.OcbootConfig)
++        config.config = ocboot.Config({
++            'riscv64': valid_riscv64_config(),
++        })
++        config.primary_master_config = FakeGroup()
++        config.master_config = None
++        config.worker_config = None
++        config.mariadb_config = None
++        config.mariadb_ha_config = None
++        config.clickhouse_config = None
++        config.registry_config = None
++
++        variables = config.ansible_global_vars()
++
++        self.assertEqual(variables['target_architectures'], ['riscv64'])
++        self.assertEqual(variables['cluster_cni'], 'flannel')
++        self.assertIn('riscv64', variables)
++
++    @unittest.skipIf(yaml is None, 'PyYAML is not installed')
++    @mock.patch('lib.service.resolve_ssh_private_file', return_value='/key')
++    @mock.patch('lib.service.SSHClient', FakeSSHClient)
++    def test_add_node_detects_riscv64_and_forwards_config(self, _resolve_key):
++        with tempfile.NamedTemporaryFile(
++                mode='w', suffix='.yml', encoding='utf-8') as stream:
++            yaml.safe_dump({'riscv64': valid_riscv64_config()}, stream)
++            stream.flush()
++            with mock.patch.dict(
++                    os.environ, {'IGNORE_ALL_CHECKS': 'true'}):
++                config = service.AddNodesConfig(
++                    FakeCluster(), ['192.0.2.11'], 'root', '/key', 22, 22,
++                    runtime='qemu', riscv64_config_file=stream.name)
++
++        self.assertEqual(config.target_architectures, ['riscv64'])
++        variables = config.get_vars()
++        self.assertEqual(variables['cluster_cni'], 'flannel')
++        host = config.worker_config.get_nodes()[0]
++        self.assertEqual(host.target_architecture, 'riscv64')
++
++    @mock.patch('lib.service.resolve_ssh_private_file', return_value='/key')
++    @mock.patch('lib.service.SSHClient', FakeSSHClient)
++    def test_add_riscv64_node_requires_artifact_config(self, _resolve_key):
++        with mock.patch.dict(os.environ, {'IGNORE_ALL_CHECKS': 'true'}):
++            with self.assertRaisesRegex(ValueError, '--riscv64-config'):
++                service.AddNodesConfig(
++                    FakeCluster(), ['192.0.2.11'], 'root', '/key', 22, 22,
++                    runtime='qemu')
++
++    @mock.patch('lib.service.resolve_ssh_private_file', return_value='/key')
++    @mock.patch('lib.service.SSHClient', FakeSSHClient)
++    def test_add_riscv64_node_rejects_native_kubernetes(self, _resolve_key):
++        with mock.patch.dict(os.environ, {'IGNORE_ALL_CHECKS': 'true'}):
++            with self.assertRaisesRegex(ValueError, 'native Kubernetes'):
++                service.AddNodesConfig(
++                    FakeCluster(using_k3s=False), ['192.0.2.11'], 'root',
++                    '/key', 22, 22, runtime='qemu')
++
++    @unittest.skipIf(
++        yaml is None or Environment is None,
++        'PyYAML and Jinja2 are required',
++    )
++    def test_k3s_template_preserves_defaults_and_selects_riscv64_images(self):
++        template_path = (
++            Path(__file__).parents[1] /
++            'onecloud/roles/k3s/config/templates/config.yaml.j2')
++        environment = Environment(
++            undefined=StrictUndefined, keep_trailing_newline=True)
++        environment.filters['regex_search'] = (
++            lambda value, pattern: re.search(pattern, value or ''))
++        template = environment.from_string(
++            template_path.read_text(encoding='utf-8'))
++        variables = {
++            'ip_type': 'ipv4',
++            'node_ip': '192.0.2.10',
++            'image_repository': 'registry.example.test/cloudpods',
++            'is_k3s_server': True,
++            'pod_network_cidr': '10.40.0.0/16',
++            'service_cidr': '10.96.0.0/12',
++            'service_dns_domain': 'cluster.local',
++            'join_as_host': True,
++            'enable_lbagent': False,
++        }
++
++        default_config = yaml.safe_load(template.render(
++            ansible_architecture='x86_64', **variables))
++        self.assertEqual(
++            default_config['pause-image'],
++            'registry.example.test/cloudpods/pause:3.1')
++        self.assertEqual(default_config['flannel-backend'], 'none')
++        self.assertTrue(default_config['disable-network-policy'])
++        self.assertNotIn('helm-job-image', default_config)
++
++        riscv64_config = yaml.safe_load(template.render(
++            ansible_architecture='riscv64',
++            cluster_cni='flannel',
++            k3s_pause_image='registry.example.test/pause:riscv64',
++            k3s_helm_job_image='registry.example.test/helm:riscv64',
++            **variables))
++        self.assertEqual(
++            riscv64_config['pause-image'],
++            'registry.example.test/pause:riscv64')
++        self.assertEqual(
++            riscv64_config['helm-job-image'],
++            'registry.example.test/helm:riscv64')
++        self.assertEqual(riscv64_config['flannel-backend'], 'vxlan')
++        self.assertFalse(riscv64_config['disable-network-policy'])
++
++
++if __name__ == '__main__':
++    unittest.main()
+-- 
+2.54.0 (Apple Git-157)
+
