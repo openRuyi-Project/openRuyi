@@ -1,0 +1,32 @@
+From 3aeb5fe7428ef1c51e99429fe71ea1c2bf5025c7 Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Tue, 29 Sep 2026 01:40:06 +0800
+Subject: [PATCH] tests: round the naive FMA baseline explicitly
+
+`c.x*c.y + c.z` compiles to a single FMADD on most
+architectures (arm64, riscv64, s390x), rather than the MULSS+ADDSS
+sequence used on amd64. It is therefore already correctly rounded, so
+the setup guard aborts all five cases before the FMA assertion runs.
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+---
+ fma_test.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fma_test.go b/fma_test.go
+index a6529f7..eb2bbe3 100644
+--- a/fma_test.go
++++ b/fma_test.go
+@@ -120,7 +120,8 @@ func TestFMASingleRounding(t *testing.T) {
+ 	for _, c := range cases {
+ 		t.Run(c.name, func(t *testing.T) {
+ 			// Confirm the test is set up correctly: naive impl gives the wrong answer.
+-			naive := c.x*c.y + c.z
++			// riscv64 and arm64 fuse x*y+z, so convert explicitly
++			naive := float32(c.x*c.y) + c.z
+ 			if naive != c.naiveWant {
+ 				t.Fatalf("test setup error: naive x*y+z = %v, expected naiveWant %v",
+ 					naive, c.naiveWant)
+-- 
+2.55.0
+
