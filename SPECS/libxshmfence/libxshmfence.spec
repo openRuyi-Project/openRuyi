@@ -13,7 +13,7 @@ Summary:        X Fixes library
 License:        MIT
 URL:            https://www.x.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxshmfence.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d4a4df096aba96fea02c029ee3a44e11a47eb7f7213c1a729be83e85ec3fde10
 Source:         https://www.x.org/archive/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -43,4 +43,4 @@ Requires:       pkgconfig
 %{_libdir}/libxshmfence.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

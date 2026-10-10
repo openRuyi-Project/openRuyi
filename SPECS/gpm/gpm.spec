@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        A mouse server for the Linux console
 License:        GPL-2.0-or-later
 URL:            https://github.com/telmich/gpm
-#!RemoteAsset
+#!RemoteAsset:  sha256:fa199e5c7745506df32ebe84d5454385cd6b82cc5036e9247763e41eb4983259
 Source:         https://github.com/telmich/gpm/archive/refs/tags/%{version}.tar.gz
 Source1:        gpm.service
 BuildSystem:    autotools
@@ -102,4 +102,4 @@ find %{buildroot} -type f -name "*.a" -delete -print
 %{_libdir}/libgpm.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Summary:        Apache Portable Runtime library
 License:        Apache-2.0 AND (BSD-4-Clause-UC AND ISC AND Zlib AND Caldera-no-preamble)
 URL:            https://apr.apache.org/
 VCS:            git:https://github.com/apache/apr
-#!RemoteAsset
+#!RemoteAsset:  sha256:49030d92d2575da735791b496dc322f3ce5cff9494779ba8cc28c7f46c5deb32
 Source:         https://www.apache.org/dist/apr/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -98,4 +98,4 @@ rm -f %{buildroot}%{_libdir}/libapr-1.a
 %{_datadir}/aclocal/*.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

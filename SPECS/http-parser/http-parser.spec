@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        HTTP request/response parser for C
 License:        MIT
 URL:            https://github.com/nodejs/http-parser
-#!RemoteAsset
+#!RemoteAsset:  sha256:467b9e30fd0979ee301065e70f637d525c28193449e1b13fbcb1b1fab3ad224f
 Source0:        https://github.com/nodejs/http-parser/archive/v%{version}/http-parser-%{version}.tar.gz
 Source1:        meson.build
 BuildSystem:    meson
@@ -52,4 +52,4 @@ cp %{SOURCE1} .
 %{_libdir}/libhttp_parser_strict.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

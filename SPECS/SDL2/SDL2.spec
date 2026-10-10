@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Cross-platform multimedia library
 License:        Zlib AND MIT AND Apache-2.0 AND (Apache-2.0 OR MIT)
 URL:            https://github.com/libsdl-org/SDL
-#!RemoteAsset
+#!RemoteAsset:  sha256:03f9d7c191a837525c9cda6406af2f2e48be02b5e7eb03d949cc9f1e9ca41c8b
 Source:         https://github.com/libsdl-org/SDL/archive/refs/tags/release-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -97,4 +97,4 @@ sed -i -e 's/\r//g' TODO.txt README.md WhatsNew.txt BUGS.txt LICENSE.txt CREDITS
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Summary:        Library for Neighbor Discovery Protocol
 License:        LGPL-2.1-or-later
 URL:            http://libndp.org
 VCS:            git:https://github.com/jpirko/libndp
-#!RemoteAsset
+#!RemoteAsset:  sha256:a8ab214e01dc3a9b615276905395637f391298c84d77651f0cbf0b1082dd2dd4
 Source0:        http://libndp.org/files/libndp-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -46,4 +46,4 @@ necessary for developing programs using libndp.
 %{_libdir}/pkgconfig/libndp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Tool to identify or delete duplicate files
 License:        MIT
 URL:            https://github.com/adrianlopezroche/fdupes
-#!RemoteAsset
+#!RemoteAsset:  sha256:527b27a39d031dcbe1d29a220b3423228c28366c2412887eb72c25473d7b1736
 Source0:        https://github.com/adrianlopezroche/fdupes/releases/download/v%{version}/fdupes-%{version}.tar.gz
 Source1:        macros.fdupes
 Source2:        fdupes_wrapper.cpp
@@ -41,4 +41,4 @@ install -D -m755 fdupes_wrapper  %{buildroot}%{_prefix}/lib/rpm/fdupes_wrapper
 %{_prefix}/lib/rpm/fdupes_wrapper
 
 %changelog
-%{?autochangelog}
+%autochangelog

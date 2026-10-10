@@ -13,7 +13,7 @@ Summary:        Embeddable Javascript engine
 License:        MIT
 URL:            https://duktape.org/
 VCS:            git:https://github.com/svaarala/duktape
-#!RemoteAsset
+#!RemoteAsset:  sha256:90f8d2fa8b5567c6899830ddef2c03f3c27960b11aca222fa17aa7ac613c2890
 Source:         https://duktape.org/%name-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -53,7 +53,7 @@ sed -i 's@/lib$@/%{_lib}@g' Makefile.sharedlibrary
 %{_libdir}/libduktape.so.*
 %{_libdir}/libduktaped.so.*
 
-%files  devel
+%files devel
 %{_includedir}/duk_config.h
 %{_includedir}/duktape.h
 %{_libdir}/libduktape.so
@@ -61,4 +61,4 @@ sed -i 's@/lib$@/%{_lib}@g' Makefile.sharedlibrary
 %{_libdir}/pkgconfig/duktape.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

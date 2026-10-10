@@ -13,7 +13,7 @@ Summary:        An unwinding library
 License:        MIT
 URL:            https://www.nongnu.org/libunwind/
 VCS:            git:https://github.com/libunwind/libunwind
-#!RemoteAsset
+#!RemoteAsset:  sha256:21b26bc75cd37b548d7952f2794cde711efa6c6151c4147cc3c52cfedbf11df4
 Source:         https://github.com/libunwind/libunwind/archive/refs/tags/v%{version}.tar.gz
 Patch0000:      0001-Fix-bad-prototype-for-malloc-in-test.patch
 # This patch is from fedora.
@@ -65,4 +65,4 @@ rm -rf %{buildroot}%{_libexecdir}
 %{_includedir}/libunwind*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

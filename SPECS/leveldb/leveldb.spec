@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A fast and lightweight key/value database library by Google
 License:        BSD-3-Clause
 URL:            https://github.com/google/leveldb
-#!RemoteAsset
+#!RemoteAsset:  sha256:9a37f8a6174f09bd622bc723b55881dc541cd50747cbd08831c2a82d620f6d76
 Source:         https://github.com/google/leveldb/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -50,4 +50,4 @@ This package contains the header files and development libraries for leveldb.
 %{_libdir}/libleveldb.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

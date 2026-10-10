@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Create deltas between rpms
 License:        BSD-3-Clause
 URL:            https://github.com/rpm-software-management/deltarpm
-#!RemoteAsset
+#!RemoteAsset:  sha256:f3fba9b96c55be21696466bbfc3b2a623a4fb35646ff9a135f5c29406b412f22
 Source0:        https://github.com/rpm-software-management/deltarpm/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -91,4 +91,4 @@ Python 3 bindings for deltarpm.
 %{python3_sitearch}/_deltarpmmodule.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

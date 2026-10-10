@@ -13,7 +13,7 @@ Summary:        Convert filename encodings
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            http://j3e.de/linux/convmv
 VCS:            git:https://git.altlinux.org/gears/c/convmv.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:a37192e266742e7fe33ec19a3be49aea7fd4d066887863a6e193fa345bf2e592
 Source0:        https://j3e.de/linux/convmv/convmv-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -36,4 +36,4 @@ from Latin1 to UTF-8.
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

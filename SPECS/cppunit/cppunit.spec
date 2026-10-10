@@ -13,7 +13,7 @@ Summary:        C++ port of JUnit testing framework
 License:        LGPL-2.1-or-later
 URL:            https://www.freedesktop.org/wiki/Software/cppunit/
 VCS:            git:https://anongit.freedesktop.org/git/libreoffice/cppunit.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:89c5c6665337f56fd2db36bc3805a5619709d51fb136e51937072f63fcc717a7
 Source:         http://dev-www.libreoffice.org/src/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -48,4 +48,4 @@ applications that use the CppUnit framework.
 %{_libdir}/pkgconfig/cppunit.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

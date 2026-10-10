@@ -13,7 +13,7 @@ Summary:        A library implementing the SSH2 protocol
 License:        BSD-3-Clause
 URL:            https://www.libssh2.org/
 VCS:            git:https://github.com/libssh2/libssh2
-#!RemoteAsset
+#!RemoteAsset:  sha256:d9ec76cbe34db98eec3539fe2c899d26b0c837cb3eb466a56b0f109cabf658f7
 Source:         https://libssh2.org/download/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -66,4 +66,4 @@ mv -v example example.%{_arch}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

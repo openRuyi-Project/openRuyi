@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Network monitoring tools including ping
 License:        BSD-4-Clause-UC AND GPL-2.0-or-later
 URL:            https://github.com/iputils/iputils
-#!RemoteAsset
+#!RemoteAsset:  sha256:6f213700dbf96b5cc4499ca70cb15ecd69c09f405b06785bb4a1a10b572b6276
 Source0:        %{url}/releases/download/%{version}/iputils-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -56,4 +56,4 @@ echo ".so man8/tracepath.8" > ${RPM_BUILD_ROOT}%{_mandir}/man8/tracepath6.8
 %{_mandir}/man8/tracepath6.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

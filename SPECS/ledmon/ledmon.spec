@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Enclosure LED Utilities
 License:        GPL-2.0-only AND LGPL-2.1-only
 URL:            https://github.com/intel/ledmon
-#!RemoteAsset
+#!RemoteAsset:  sha256:4f626400e41ab1e4317b886db5b5df1afa517e8e4faa80fd4378fd22b0bcd055
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -79,4 +79,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/ledmon.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Summary:        A minimalistic user-space library oriented to netlink developers
 License:        LGPL-2.1-or-later
 URL:            https://netfilter.org/projects/libmnl
 VCS:            git:https://git.netfilter.org/libmnl
-#!RemoteAsset
+#!RemoteAsset:  sha256:274b9b919ef3152bfb3da3a13c950dd60d6e2bcd54230ffeca298d03b40d0525
 Source0:        https://netfilter.org/projects/libmnl/files/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -47,4 +47,4 @@ developing applications that use libmnl.
 %{_libdir}/pkgconfig/libmnl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

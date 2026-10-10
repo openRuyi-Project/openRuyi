@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        The GL Vendor-Neutral Dispatch library
 License:        MIT AND BSD-3-Clause AND GPL-3.0-or-later
 URL:            https://gitlab.freedesktop.org/glvnd/libglvnd
-#!RemoteAsset
+#!RemoteAsset:  sha256:2b6e15b06aafb4c0b6e2348124808cbd9b291c647299eaaba2e3202f51ff2f3d
 Source:         https://gitlab.freedesktop.org/glvnd/libglvnd/-/archive/v%{version}/libglvnd-v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -116,4 +116,4 @@ mkdir -p %{buildroot}%{_datadir}/egl/egl_external_platform.d/
 %{_libdir}/pkgconfig/opengl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

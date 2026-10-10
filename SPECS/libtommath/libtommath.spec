@@ -15,7 +15,7 @@ Summary:        A portable number theoretic multiple-precision integer library
 License:        Unlicense
 URL:            http://www.libtom.net/
 VCS:            git:https://github.com/libtom/libtommath
-#!RemoteAsset
+#!RemoteAsset:  sha256:6d099e93ff00fa9b18346f4bcd97dcc48c3e91286f7e16c4ac5515a7171c3149
 Source:         https://github.com/libtom/libtommath/archive/refs/tags/v%{version}.tar.gz
 
 BuildSystem:    autotools
@@ -66,4 +66,4 @@ find %{buildroot} -name '*.a' -delete
 %{_libdir}/pkgconfig/libtommath.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

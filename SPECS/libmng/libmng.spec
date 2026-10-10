@@ -12,7 +12,7 @@ Summary:        Library for Multiple-image Network Graphics support
 License:        Zlib
 URL:            http://www.libmng.com/
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:4a462fdd48d4bc82c1d7a21106c8a18b62f8cc0042454323058e6da0dbb57dd3
 Source0:        https://sourceforge.net/projects/libmng/files/libmng-devel/%{version}/libmng-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -61,4 +61,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libmng.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

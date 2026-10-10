@@ -16,7 +16,7 @@ Release:        %autorelease
 Summary:        D-Bus message bus implementation
 License:        Apache-2.0
 URL:            https://github.com/bus1/dbus-broker
-#!RemoteAsset
+#!RemoteAsset:  sha256:f819a8db8795fa08c767612e3823fd594694a0990f2543ecf35d6a1a6bf2ab5b
 Source:         https://github.com/bus1/dbus-broker/releases/download/v%{version}/%{name}-%{version}.tar.xz
 Patch0:         test-sockopt-loosen-verification-of-stale-pidfds.patch
 BuildSystem:    meson
@@ -60,4 +60,4 @@ to the reference implementation.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

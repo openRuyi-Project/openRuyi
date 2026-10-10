@@ -12,7 +12,7 @@ Summary:        Utility for resizing bitmap fonts in BDF format
 License:        GPL-2.0-only
 URL:            http://openlab.jp/efont/
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:440cfc0620a0237e46352c14a0774caa3f3059759b0a20defefc94e8490897a6
 Source:         http://openlab.ring.gr.jp/efont/dist/tools/bdfresize/bdfresize-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -38,4 +38,4 @@ autoreconf -fiv
 %{_mandir}/man1/bdfresize.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

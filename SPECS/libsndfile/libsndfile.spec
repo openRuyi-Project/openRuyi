@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Library for reading and writing sound files
 License:        LGPL-2.1-or-later AND GPL-2.0-or-later AND BSD-3-Clause
 URL:            https://github.com/libsndfile/libsndfile
-#!RemoteAsset
+#!RemoteAsset:  sha256:3799ca9924d3125038880367bf1468e53a1b7e3686a934f098b7e1d286cdb80e
 Source0:        https://github.com/libsndfile/libsndfile/releases/download/%{version}/libsndfile-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -72,4 +72,4 @@ LD_LIBRARY_PATH=$PWD/src/.libs make check
 %{_libdir}/pkgconfig/sndfile.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

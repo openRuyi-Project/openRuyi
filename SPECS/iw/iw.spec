@@ -11,7 +11,7 @@ Summary:        A nl80211 based wireless configuration tool
 License:        ISC
 URL:            https://wireless.wiki.kernel.org/en/users/Documentation/iw
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/jberg/iw.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:7d182e498289ab39b257da6780d562e415377107f50358ee5b55b8cfe40b1e33
 Source0:        http://www.kernel.org/pub/software/network/iw/iw-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -38,4 +38,4 @@ It supports all recent Linux wireless drivers.
 %{_mandir}/man8/iw.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

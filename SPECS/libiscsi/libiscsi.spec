@@ -11,7 +11,7 @@ Version:        1.20.3
 Release:        %autorelease
 License:        LGPL-2.1-or-later
 URL:            https://github.com/sahlberg/libiscsi
-#!RemoteAsset
+#!RemoteAsset:  sha256:212f6e1fd8e7ddb4b02208aafc6de600f6f330f40359babeefdd83b0c79d47a1
 Source:         https://github.com/sahlberg/libiscsi/archive/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -81,4 +81,4 @@ to iSCSI servers without having to set up the Linux iSCSI initiator.
 %{_mandir}/man1/iscsi-md5sum.1.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Convert DocBook into man pages and Texinfo
 License:        MIT
 URL:            http://docbook2x.sourceforge.net/
-#!RemoteAsset
+#!RemoteAsset:  sha256:4077757d367a9d1b1427e8d5dfc3c49d993e90deabc6df23d05cfe9cd2fcdc45
 Source:         http://downloads.sourceforge.net/docbook2x/docbook2X-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -66,4 +66,4 @@ cp -p doc/*.html __dist_html/html
 %{_infodir}/docbook2*
 
 %changelog
-%{?autochangelog}
+%autochangelog

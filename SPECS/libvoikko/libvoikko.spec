@@ -11,10 +11,8 @@ Summary:        Voikko is a library for spellcheckers and hyphenators
 License:        GPL-2.0-or-later
 URL:            https://voikko.puimula.org/
 VCS:            git:https://github.com/voikko/corevoikko
-#!RemoteAsset
+#!RemoteAsset:  sha256:d1162965c61de44f72162fd87ec1394bd4f90f87bc8152d13fe4ae692fdc73fa
 Source0:        https://www.puimula.org/voikko-sources/libvoikko/libvoikko-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://www.puimula.org/voikko-sources/libvoikko/libvoikko-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -82,4 +80,4 @@ install -pm 0644 python/libvoikko.py %{buildroot}/%{python3_sitelib}/
 %{python3_sitelib}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Summary:        A lightweight daemon framework in C
 License:        LGPL-2.1-or-later
 URL:            https://0pointer.de/lennart/projects/libdaemon/
 # VCS: Upstream git dead
-#!RemoteAsset
+#!RemoteAsset:  sha256:fd23eb5f6f986dcc7e708307355ba3289abe03cc381fc47a80bca4a50aa6b834
 Source:         https://0pointer.de/lennart/projects/libdaemon/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -51,4 +51,4 @@ autoreconf -fiv
 %{_datadir}/doc/%{name}/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

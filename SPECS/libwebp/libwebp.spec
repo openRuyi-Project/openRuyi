@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Library and tools for the WebP graphics format
 License:        Apache-2.0 AND BSD-3-Clause
 URL:            https://github.com/webmproject/libwebp
-#!RemoteAsset
+#!RemoteAsset:  sha256:93a852c2b3efafee3723efd4636de855b46f9fe1efddd607e1f42f60fc8f2136
 Source:         https://github.com/webmproject/libwebp/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -79,4 +79,4 @@ developing applications that use %{name}.
 %{_libdir}/cmake/WebP/
 
 %changelog
-%{?autochangelog}
+%autochangelog

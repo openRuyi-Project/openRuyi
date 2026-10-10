@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A high-performance CORBA Object Request Broker
 License:        LGPL-2.0-or-later AND GPL-2.0-or-later
 URL:            https://github.com/Distrotech/ORBit2
-#!RemoteAsset
+#!RemoteAsset:  sha256:5724ed85c626ce406156d2f7c4d104d670eb82cf78e582c325e713a31632c9bd
 Source:         https://download.gnome.org/sources/ORBit2/2.14/ORBit2-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -58,6 +58,11 @@ Requires:       automake
 This package contains the header files, libraries and utilities necessary
 to write programs that use CORBA technology.
 
+%conf -p
+# A token limit below 1 avoids a large initial allocation and splits all addresses.
+# Also see: https://lists.gnu.org/archive/html/guix-patches/2024-03/msg00554.html
+sed -i 's/g_strsplit (loc, ",", G_MAXINT)/g_strsplit (loc, ",", 0)/' src/orb/orb-core/corba-loc.c
+
 %install -a
 rm -f %{buildroot}%{_libdir}/ORBit-2.0/*.*a
 rm -f %{buildroot}%{_libdir}/orbit-2.0/*.*a
@@ -78,7 +83,10 @@ chrpath --delete %{buildroot}%{_bindir}/typelib-dump
 %{_libdir}/*.so
 # this is needed by libbonobo
 %{_libdir}/libname-server-2.a
-%{_libdir}/pkgconfig/*
+%{_libdir}/pkgconfig/ORBit-2.0.pc
+%{_libdir}/pkgconfig/ORBit-CosNaming-2.0.pc
+%{_libdir}/pkgconfig/ORBit-imodule-2.0.pc
+%{_libdir}/pkgconfig/ORBit-idl-2.0.pc
 %{_bindir}/orbit-idl-2
 %{_bindir}/typelib-dump
 %{_bindir}/orbit2-config
@@ -90,4 +98,4 @@ chrpath --delete %{buildroot}%{_bindir}/typelib-dump
 %{_datadir}/gtk-doc
 
 %changelog
-%{?autochangelog}
+%autochangelog

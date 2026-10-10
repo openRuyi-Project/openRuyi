@@ -19,7 +19,7 @@ Summary:        Fallback Icon Theme
 License:        GPL-2.0-or-later
 URL:            https://freedesktop.org/wiki/Software/icon-theme/
 VCS:            git:https://gitlab.freedesktop.org/xdg/default-icon-theme
-#!RemoteAsset
+#!RemoteAsset:  sha256:db0e50a80aa3bf64bb45cbca5cf9f75efd9348cf2ac690b907435238c3cf81d7
 Source:         https://icon-theme.freedesktop.org/releases/hicolor-icon-theme-%{version}.tar.xz
 BuildArch:      noarch
 BuildSystem:    meson
@@ -45,4 +45,4 @@ mkdir -p %{buildroot}%{_datadir}/icons/hicolor/symbolic/%{hicolor_dir_list}
 %{_datadir}/pkgconfig/default-icon-theme.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

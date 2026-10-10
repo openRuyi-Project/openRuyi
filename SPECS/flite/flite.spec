@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        Small, fast speech synthesis engine (text-to-speech)
 License:        MIT
 URL:            https://github.com/festvox/flite
-#!RemoteAsset
+#!RemoteAsset:  sha256:ab1555fe5adc3f99f1d4a1a0eb1596d329fd6d74f1464a0097c81f53c0cf9e5c
 Source0:        https://github.com/festvox/flite/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -61,4 +61,4 @@ rm %{buildroot}%{_libdir}/libflite*.a
 %{_includedir}/flite/
 
 %changelog
-%{?autochangelog}
+%autochangelog

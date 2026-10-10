@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A console-based network monitoring utility
 License:        GPL-2.0-or-later
 URL:            https://github.com/iptraf-ng/iptraf-ng/
-#!RemoteAsset
+#!RemoteAsset:  sha256:75fd653745ea0705995c25e6c07b34252ecc2563c6a91b007a3a8c26f29cc252
 Source0:        https://github.com/iptraf-ng/iptraf-ng/archive/refs/tags/v%{version}.tar.gz
 Source1:        iptraf-ng.logrotate
 BuildSystem:    autotools
@@ -55,4 +55,4 @@ install -d -m 0755 %{buildroot}/run/%{name}/
 %dir /run/iptraf-ng/
 
 %changelog
-%{?autochangelog}
+%autochangelog

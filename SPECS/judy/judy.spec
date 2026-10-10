@@ -11,7 +11,7 @@ Summary:        A general purpose dynamic array implemented as a C callable libr
 License:        LGPL-2.1-or-later
 URL:            https://judy.sourceforge.net/
 VCS:            svn:https://svn.code.sf.net/p/judy/code/trunk
-#!RemoteAsset
+#!RemoteAsset:  sha256:d2704089f85fdb6f2cd7e77be21170ced4b4375c03ef1ad4cf1075bd414a63eb
 Source0:        https://sourceforge.net/projects/judy/files/judy/Judy-%{version}/Judy-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -62,4 +62,4 @@ This package contains the development libraries and header files for %{name}.
 %{_mandir}/man3/J*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,9 +11,9 @@ Release:        %autorelease
 Summary:        Norman Walsh's XSL stylesheets for DocBook XML & DocBook 5.X
 License:        LicenseRef-DMIT AND MIT AND MPL-1.1
 URL:            https://github.com/docbook/xslt10-stylesheets
-#!RemoteAsset
+#!RemoteAsset:  sha256:316524ea444e53208a2fb90eeb676af755da96e1417835ba5f5eb719c81fa371
 Source0:        %{url}/releases/download/release/%{version}/docbook-xsl-%{version}.tar.bz2
-#!RemoteAsset
+#!RemoteAsset:  sha256:9bc38a3015717279a3a0620efb2d4bcace430077241ae2b0da609ba67d8340bc
 Source1:        %{url}/releases/download/release/%{version}/docbook-xsl-doc-%{version}.tar.bz2
 # Build Script for convienience
 Source2:        %{name}.Makefile
@@ -166,4 +166,4 @@ fi
 %{_datadir}/sgml/docbook/xsl-ns-stylesheets
 
 %changelog
-%{?autochangelog}
+%autochangelog

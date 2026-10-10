@@ -13,7 +13,7 @@ Summary:        Utilities for manipulating .desktop files
 License:        GPL-2.0-or-later
 URL:            https://www.freedesktop.org/software/desktop-file-utils
 VCS:            git:https://gitlab.freedesktop.org/xdg/desktop-file-utils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:4401d4e231d842c2de8242395a74a395ca468cd96f5f610d822df33594898a70
 Source:         https://www.freedesktop.org/software/desktop-file-utils/releases/desktop-file-utils-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -46,4 +46,4 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/emacs/site-lisp/desktop-entry-mode.el
 
 %changelog
-%{?autochangelog}
+%autochangelog

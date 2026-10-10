@@ -13,7 +13,7 @@ Summary:        String handling essentials library
 License:        LGPL-2.1-or-later
 URL:            http://libestr.adiscon.com/
 VCS:            git:https://github.com/rsyslog/libestr
-#!RemoteAsset
+#!RemoteAsset:  sha256:46632b2785ff4a231dcf241eeb0dcb5fc0c7d4da8ee49cf5687722cdbe8b2024
 Source0:        http://libestr.adiscon.com/files/download/libestr-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -47,4 +47,4 @@ rm -f %{buildroot}%{_libdir}/*.{a,la}
 %{_libdir}/pkgconfig/libestr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

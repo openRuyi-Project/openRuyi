@@ -15,7 +15,7 @@ Release:        %autorelease
 Summary:        Utilities for the ipr
 License:        CPL-1.0
 URL:            https://github.com/bjking1/iprutils
-#!RemoteAsset
+#!RemoteAsset:  sha256:027031d2101e448fadf74e1f75852dcc96d017f11758e6b270e10d9737f98c4e
 Source0:        https://github.com/bjking1/iprutils/archive/rel-2-4-19/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -78,4 +78,4 @@ autoreconf -ivf
 %{_sysconfdir}/bash_completion.d/*
 %{_mandir}/man8/*
 %changelog
-%{?autochangelog}
+%autochangelog

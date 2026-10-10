@@ -12,7 +12,7 @@ Summary:        A decoder implementation of the JBIG2 image compression format
 License:        AGPL-3.0-or-later
 URL:            https://jbig2dec.com
 VCS:            git:https://github.com/ArtifexSoftware/jbig2dec/
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b63ff6470289547e7a3a0f145cb8ea6c2afffdd65645b7d87d3b7febc96fb3a
 Source0:        https://github.com/ArtifexSoftware/jbig2dec/releases/download/%{version}/jbig2dec-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -53,4 +53,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/jbig2dec.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

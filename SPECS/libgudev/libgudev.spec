@@ -15,7 +15,7 @@ Summary:        GObject-based wrapper library for libudev
 License:        LGPL-2.1-or-later
 URL:            https://wiki.gnome.org/Projects/libgudev
 VCS:            git:https://gitlab.gnome.org/GNOME/libgudev.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:61266ab1afc9d73dbc60a8b2af73e99d2fdff47d99544d085760e4fa667b5dd1
 Source:         https://download.gnome.org/sources/libgudev/%{version}/libgudev-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -71,4 +71,4 @@ This package is necessary to build programs using %{name}.
 %{_libdir}/pkgconfig/gudev-1.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

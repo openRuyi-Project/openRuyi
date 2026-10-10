@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Linux kernel module management utilities
 License:        GPL-2.0-or-later AND GPL-3.0-or-later AND FSFUL AND FSFULLRWD AND LGPL-2.1-only AND LGPL-2.1-or-later AND X11
 URL:            https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:5a5d5073070cc7e0c7a7a3c6ec2a0e1780850c8b47b3e3892226b93ffcb9cb54
 Source0:        https://www.kernel.org/pub/linux/utils/kernel/kmod/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -108,4 +108,4 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/modprobe.d
 %{_libdir}/libkmod.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

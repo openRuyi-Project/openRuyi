@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        EFI Boot Manager
 License:        GPL-2.0-or-later
 URL:            https://github.com/rhboot/efibootmgr
-#!RemoteAsset
+#!RemoteAsset:  sha256:442867d12f8525034a404fc8af3036dba8e1fc970998af2486c3b940dfad0874
 Source:         https://github.com/rhboot/efibootmgr/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -57,4 +57,4 @@ sed -e '/extern int efi_set_verbose/d' -i "src/efibootmgr.c"
 %{_mandir}/man8/*.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

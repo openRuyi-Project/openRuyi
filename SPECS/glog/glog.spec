@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A C++ application logging library
 License:        BSD-3-Clause
 URL:            https://github.com/google/glog
-#!RemoteAsset
+#!RemoteAsset:  sha256:00e4a87e87b7e7612f519a41e491f16623b12423620006f59f5688bfd8d13b08
 Source0:        %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -53,4 +53,4 @@ developing applications that use %{name}.
 %{_includedir}/glog/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

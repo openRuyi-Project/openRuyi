@@ -12,7 +12,7 @@ Summary:        Mesa libGLU library
 License:        MIT
 URL:            http://mesa3d.org/
 VCS:            git:https://gitlab.freedesktop.org/mesa/glu
-#!RemoteAsset
+#!RemoteAsset:  sha256:7e919cbc1b2677b01d65fc28fd36a19d1f3e23d76663020e0f3b82b991475e8b
 Source0:        https://gitlab.freedesktop.org/mesa/glu/-/archive/glu-%{version}/glu-glu-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -44,4 +44,4 @@ find %{buildroot} -name '*.a' -delete
 %{_libdir}/pkgconfig/glu.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

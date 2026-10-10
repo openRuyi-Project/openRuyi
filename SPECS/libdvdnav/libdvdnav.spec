@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        DVD Navigation Library
 License:        GPL-2.0-or-later
 URL:            https://code.videolan.org/videolan/libdvdnav
-#!RemoteAsset
+#!RemoteAsset:  sha256:a2a18f5ad36d133c74bf9106b6445806fa253b09141a46392550394b647b221e
 Source:         https://download.videolan.org/pub/videolan/libdvdnav/7.0.0/libdvdnav-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -47,4 +47,4 @@ rm -r %{buildroot}%{_datadir}/doc/libdvdnav/
 %{_libdir}/pkgconfig/dvdnav.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

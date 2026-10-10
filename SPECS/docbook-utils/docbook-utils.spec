@@ -16,7 +16,7 @@ Release:        %autorelease
 Summary:        Shell scripts for managing DocBook documents
 License:        GPL-2.0-or-later
 URL:            https://github.com/devexp-db/docbook-utils
-#!RemoteAsset
+#!RemoteAsset:  sha256:154b120dd897d6411a55e5a2833044807eaf31a61412df601384be6fd101ed8f
 Source0:        https://github.com/devexp-db/docbook-utils/releases/download/v%{version}/docbook-utils-%{version}.tar.xz
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -132,4 +132,4 @@ rm -rf $RPM_BUILD_ROOT/tmp
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

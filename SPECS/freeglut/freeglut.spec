@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A freely licensed alternative to the GLUT library
 License:        MIT
 URL:            https://github.com/freeglut/freeglut
-#!RemoteAsset
+#!RemoteAsset:  sha256:bc3d5ab1439769f53ce648657227d6f2f6de84d429cb1dbe0e98e0a2e61c4c49
 Source0:        https://github.com/freeglut/freeglut/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -55,4 +55,4 @@ software which links to the freeglut library.
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

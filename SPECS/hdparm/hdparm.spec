@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A utility for displaying and/or setting hard disk parameters
 License:        hdparm
 URL:            https://sourceforge.net/projects/hdparm/
-#!RemoteAsset
+#!RemoteAsset:  sha256:d14929f910d060932e717e9382425d47c2e7144235a53713d55a94f7de535a4b
 Source:         https://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -40,4 +40,4 @@ mkdir -p "%{buildroot}%{_mandir}/man8"
 %{_mandir}/man8/hdparm.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

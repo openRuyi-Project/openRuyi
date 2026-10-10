@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Library implementing the Unicode Bidirectional Algorithm
 License:        GPL-3.0-or-later
 URL:            https://github.com/fontforge/libspiro
-#!RemoteAsset
+#!RemoteAsset:  sha256:1412a21b943c6e1db834ee2d74145aad20b3f62b12152d475613b8241d9cde10
 Source0:        %{url}/releases/download/%{version}/%{name}-dist-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -45,4 +45,4 @@ developing applications that use %{name}.
 %{_mandir}/man3/libspiro.3.gz
 
 %changelog
-%{?autochangelog}
+%autochangelog

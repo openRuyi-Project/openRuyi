@@ -13,7 +13,7 @@ Summary:        Utility scripts for internationalizing XML
 License:        GPL-2.0-or-later
 URL:            https://launchpad.net/intltool
 # VCS: Bazzar upstream will be deprecated so no upstream?? - 251
-#!RemoteAsset
+#!RemoteAsset:  sha256:67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
 Source:         https://launchpad.net/intltool/trunk/%{version}/+download/intltool-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -39,4 +39,4 @@ strings from various source files, and merging them back into template files.
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

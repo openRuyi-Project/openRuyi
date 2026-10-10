@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Linux Key Management Utilities and Libraries
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/
-#!RemoteAsset
+#!RemoteAsset:  sha256:a61d5706136ae4c05bd48f86186bcfdbd88dd8bd5107e3e195c924cfc1b39bb4
 Source:         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/snapshot/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -81,4 +81,4 @@ popd
 %attr(0644, root, root) %{_libdir}/pkgconfig/libkeyutils.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

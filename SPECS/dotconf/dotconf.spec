@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Libraries to parse configuration files
 License:        LGPL-2.1-only AND Apache-1.1
 URL:            https://github.com/williamh/dotconf/
-#!RemoteAsset
+#!RemoteAsset:  sha256:5922c46cacf99b2ecc4853d28a2bda4a489292e73276e604bd9cba29dfca892d
 Source:         https://github.com/williamh/dotconf/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -56,4 +56,4 @@ done
 %{_libdir}/pkgconfig/dotconf.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

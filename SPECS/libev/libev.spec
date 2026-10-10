@@ -13,14 +13,10 @@ Summary:        An event loop library
 License:        BSD-2-Clause
 URL:            http://software.schmorp.de/pkg/libev.html
 # VCS: TODO: Add cvs link here
-#!RemoteAsset
+#!RemoteAsset:  sha256:507eb7b8d1015fbec5b935f34ebed15bf346bed04a11ab82b8eee848c4205aea
 Source:         http://dist.schmorp.de/%{name}/Attic/%{name}-%{version}.tar.gz
 # Upstream has received patches to add pkg-config support for years but it always ignored them (yes, no answer at all). But since every distribution creates it we just follow.
 Source1:        libev.pc
-#!RemoteAsset
-Source2:        http://dist.schmorp.de/%{name}/Attic/%{name}-%{version}.tar.gz.sig
-#!RemoteAsset
-Source3:        http://dist.schmorp.de/signing-key.pub
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -77,4 +73,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/libev.pc
 %{_includedir}/event.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

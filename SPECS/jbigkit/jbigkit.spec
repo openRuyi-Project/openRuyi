@@ -12,7 +12,7 @@ Summary:        JBIG1 lossless image compression tools
 License:        GPL-2.0-or-later
 URL:            http://www.cl.cam.ac.uk/~mgk25/jbigkit/
 # VCS: No git repo found.
-#!RemoteAsset
+#!RemoteAsset:  sha256:de7106b6bfaf495d6865c7dd7ac6ca1381bd12e0d81405ea81e7f2167263d932
 Source0:        http://www.cl.cam.ac.uk/~mgk25/download/jbigkit-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -84,4 +84,4 @@ make test -j1
 %{_includedir}/jbig*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

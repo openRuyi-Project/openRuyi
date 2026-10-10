@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Library for accessing various audio file formats
 License:        LGPL-2.1-or-later AND GPL-2.0-or-later
 URL:            https://github.com/mpruett/audiofile/
-#!RemoteAsset
+#!RemoteAsset:  sha256:cdc60df19ab08bfe55344395739bb08f50fc15c92da3962fac334d3bff116965
 Source:         http://audiofile.68k.org/audiofile-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -78,4 +78,4 @@ rm -f %{buildroot}%{_libdir}/*.a
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

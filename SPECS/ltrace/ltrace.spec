@@ -12,7 +12,7 @@ Summary:        Tracks runtime library calls in dynamically linked programs
 License:        GPL-2.0-or-later
 URL:            https://ltrace.org/
 VCS:            git:https://gitlab.com/cespedes/ltrace
-#!RemoteAsset
+#!RemoteAsset:  sha256:11c85a1353fcf2b5438b19d0ccc2d376c96656ce6f11cf9537e3a92b84392c58
 Source0:        https://gitlab.com/cespedes/ltrace/-/archive/%{version}/ltrace-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -49,4 +49,4 @@ autoreconf -fiv
 %{_mandir}/man5/ltrace.conf.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog

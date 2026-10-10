@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A testing framework for infrastructure software
 License:        BSD-2-Clause
 URL:            https://github.com/jmmv/kyua
-#!RemoteAsset
+#!RemoteAsset:  sha256:0818efe916f07bd3f7b32c530e0a3af2fcb28529569e47758a37a4ea6d5783dd
 Source:         https://github.com/freebsd/kyua/archive/refs/tags/kyua-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -50,4 +50,4 @@ autoreconf -fiv
 %{_mandir}/man5/kyua*.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog

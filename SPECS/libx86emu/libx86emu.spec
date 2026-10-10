@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        x86 emulation library
 License:        HPND-sell-variant
 URL:            https://github.com/wfeldt/libx86emu
-#!RemoteAsset
+#!RemoteAsset:  sha256:03754aede79530baa0e862e1aad5527e9c1bd3371736b1ab5a2bc769e4a3d680
 Source0:        https://github.com/wfeldt/libx86emu/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -57,4 +57,4 @@ Header files and libraries for developing with libx86emu.
 %{_libdir}/libx86emu.so
 
 %changelog
-%{?autochangelog}
+%autochangelog
