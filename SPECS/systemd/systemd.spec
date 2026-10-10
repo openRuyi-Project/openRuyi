@@ -467,24 +467,20 @@ echo 'disable *' > %{buildroot}%{pkgdir}/system-preset/99-default.preset
 touch %{buildroot}/etc/crypttab
 chmod 600 %{buildroot}/etc/crypttab
 
-# Config files that were moved under /usr.
-# We need to %ghost them so that they are not removed on upgrades.
-touch %{buildroot}/etc/systemd/coredump.conf \
-      %{buildroot}/etc/systemd/homed.conf \
-      %{buildroot}/etc/systemd/journald.conf \
-      %{buildroot}/etc/systemd/journal-remote.conf \
-      %{buildroot}/etc/systemd/journal-upload.conf \
-      %{buildroot}/etc/systemd/logind.conf \
-      %{buildroot}/etc/systemd/networkd.conf \
-      %{buildroot}/etc/systemd/oomd.conf \
-      %{buildroot}/etc/systemd/pstore.conf \
-      %{buildroot}/etc/systemd/resolved.conf \
-      %{buildroot}/etc/systemd/sleep.conf \
-      %{buildroot}/etc/systemd/system.conf \
-      %{buildroot}/etc/systemd/timesyncd.conf \
-      %{buildroot}/etc/systemd/user.conf \
-      %{buildroot}/etc/udev/udev.conf \
-      %{buildroot}/etc/udev/iocost.conf
+# Ship editable (commented) templates in /etc/systemd by copying them
+# from /usr/lib/systemd
+mkdir -p %{buildroot}/etc/systemd %{buildroot}/etc/udev
+for f in coredump homed journald journal-remote journal-upload logind \
+         networkd oomd pstore resolved sleep system timesyncd user; do
+    src=%{buildroot}%{pkgdir}/$f.conf
+    dst=%{buildroot}/etc/systemd/$f.conf
+    if [ -f "$src" ]; then cp -p "$src" "$dst"; else touch "$dst"; fi
+done
+for f in udev iocost; do
+    src=%{buildroot}%{_prefix}/lib/udev/$f.conf
+    dst=%{buildroot}/etc/udev/$f.conf
+    if [ -f "$src" ]; then cp -p "$src" "$dst"; else touch "$dst"; fi
+done
 
 # Make sure these directories are properly owned
 mkdir -p %{buildroot}%{system_unit_dir}/basic.target.wants
@@ -809,10 +805,10 @@ fi
 %ghost %dir %attr(0755,-,-) /etc/systemd/system/multi-user.target.wants
 %ghost %dir %attr(0755,-,-) /etc/systemd/system/sockets.target.wants
 %ghost %dir %attr(0755,-,-) /etc/systemd/system/sysinit.target.wants
-%{_sysconfdir}/systemd/journald.conf
-%{_sysconfdir}/systemd/logind.conf
-%{_sysconfdir}/systemd/system.conf
-%{_sysconfdir}/systemd/user.conf
+%config(noreplace) %{_sysconfdir}/systemd/journald.conf
+%config(noreplace) %{_sysconfdir}/systemd/logind.conf
+%config(noreplace) %{_sysconfdir}/systemd/system.conf
+%config(noreplace) %{_sysconfdir}/systemd/user.conf
 %{_prefix}/lib/sysctl.d/50-*
 %{tmpfiles_dir}/20-*
 %{tmpfiles_dir}/credstore.conf
@@ -1277,7 +1273,7 @@ fi
 %{_bindir}/systemd-resolve
 %{_bindir}/resolvectl
 %{_bindir}/resolvconf
-%{_sysconfdir}/systemd/resolved.conf
+%config(noreplace) %{_sysconfdir}/systemd/resolved.conf
 %{tmpfiles_dir}/systemd-resolve.conf
 %{sysusers_dir}/systemd-resolve.conf
 %{bash_completions_dir}/systemd-resolve
@@ -1326,9 +1322,9 @@ fi
 %{_bindir}/udevadm
 %dir %{pkgdir}
 %{pkgdir}/systemd-udevd
-%{_sysconfdir}/systemd/coredump.conf
-%{_sysconfdir}/systemd/pstore.conf
-%{_sysconfdir}/systemd/sleep.conf
+%config(noreplace) %{_sysconfdir}/systemd/coredump.conf
+%config(noreplace) %{_sysconfdir}/systemd/pstore.conf
+%config(noreplace) %{_sysconfdir}/systemd/sleep.conf
 %{_localstatedir}/lib/systemd/random-seed
 %if %{with docs}
 %{_mandir}/man8/udevadm.8.gz
@@ -1342,6 +1338,9 @@ fi
 %{_mandir}/man8/systemd-hwdb.8.gz
 %endif
 %{_sysconfdir}/udev
+%ghost %{_sysconfdir}/udev/hwdb.bin
+%config(noreplace) %{_sysconfdir}/udev/udev.conf
+%config(noreplace) %{_sysconfdir}/udev/iocost.conf
 %{_prefix}/lib/udev/ata_id
 %{_prefix}/lib/udev/cdrom_id
 %{_prefix}/lib/udev/dmi_memory_id
@@ -1379,7 +1378,7 @@ fi
 %{pkgdir}/ntp-units.d/80-systemd-timesync.list
 %{pkgdir}/timesyncd.conf
 %{sysusers_dir}/systemd-timesync.conf
-%{_sysconfdir}/systemd/timesyncd.conf
+%config(noreplace) %{_sysconfdir}/systemd/timesyncd.conf
 %{_localstatedir}/lib/systemd/timesync/clock
 %{_datadir}/dbus-1/system-services/org.freedesktop.timesync1.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.timedate1.service
@@ -1502,8 +1501,8 @@ fi
 %{system_unit_dir}/systemd-journal-remote.socket
 %{system_unit_dir}/systemd-journal-upload.service
 %{pkgdir}/journal-remote.conf
-%{_sysconfdir}/systemd/journal-remote.conf
-%{_sysconfdir}/systemd/journal-upload.conf
+%config(noreplace) %{_sysconfdir}/systemd/journal-remote.conf
+%config(noreplace) %{_sysconfdir}/systemd/journal-upload.conf
 %{sysusers_dir}/systemd-remote.conf
 %if %{with docs}
 %{_mandir}/man8/systemd-journal-gatewayd.8.gz
@@ -1528,7 +1527,7 @@ fi
 %if %{with network}
 %files networkd
 %{_bindir}/networkctl
-%{_sysconfdir}/systemd/networkd.conf
+%config(noreplace) %{_sysconfdir}/systemd/networkd.conf
 %{tmpfiles_dir}/systemd-network.conf
 %{sysusers_dir}/systemd-network.conf
 %{pkgdir}/network/80-6rd-tunnel.link
@@ -1591,7 +1590,7 @@ fi
 %endif
 
 %files oomd-defaults
-%{_sysconfdir}/systemd/oomd.conf
+%config(noreplace) %{_sysconfdir}/systemd/oomd.conf
 
 %if %{without bootstrap}
 %files cryptsetup
@@ -1604,7 +1603,7 @@ fi
 %{_bindir}/homectl
 %{_bindir}/systemd-home-fallback-shell
 %{pkgdir}/homed.conf
-%{_sysconfdir}/systemd/homed.conf
+%config(noreplace) %{_sysconfdir}/systemd/homed.conf
 %{bash_completions_dir}/homectl
 %dir %{_datadir}/dbus-1/system-services
 %{_datadir}/dbus-1/system-services/org.freedesktop.home1.service
