@@ -1,0 +1,48 @@
+From bebc7acadba29f39e4269aa3c37666d71c2059da Mon Sep 17 00:00:00 2001
+From: Qingyang Hu <103950869+qingyang-hu@users.noreply.github.com>
+Date: Wed, 12 Aug 2026 19:14:35 +0000
+Subject: [PATCH] GODRIVER-4044 Update golang.org/x/text to v0.39.0 and raise
+ minimum Go version to 1.25. (#2522)
+
+Backport: retain only the changes needed by this packaged snapshot.
+Upstream-commit: d20c5dbbd8288f43ed462c8aa74edac2d76a3cb7
+---
+ internal/assert/assertion_compare_test.go | 4 ++--
+ internal/rand/rand_test.go                | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/internal/assert/assertion_compare_test.go b/internal/assert/assertion_compare_test.go
+index 35568e7..5defee1 100644
+--- a/internal/assert/assertion_compare_test.go
++++ b/internal/assert/assertion_compare_test.go
+@@ -75,7 +75,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resGreater != compareGreater {
+-			t.Errorf("object greater should be greater than less for type " + currCase.cType)
++			t.Errorf("object greater should be greater than less for type %s", currCase.cType)
+ 		}
+ 
+ 		resEqual, isComparable := compare(currCase.less, currCase.less, reflect.ValueOf(currCase.less).Kind())
+@@ -84,7 +84,7 @@ func TestCompare(t *testing.T) {
+ 		}
+ 
+ 		if resEqual != 0 {
+-			t.Errorf("objects should be equal for type " + currCase.cType)
++			t.Errorf("objects should be equal for type %s", currCase.cType)
+ 		}
+ 	}
+ }
+diff --git a/internal/rand/rand_test.go b/internal/rand/rand_test.go
+index 73146d5..cb72c47 100644
+--- a/internal/rand/rand_test.go
++++ b/internal/rand/rand_test.go
+@@ -80,7 +80,7 @@ func checkSampleDistribution(t *testing.T, samples []float64, expected *statsRes
+ 	actual := getStatsResults(samples)
+ 	err := actual.checkSimilarDistribution(expected)
+ 	if err != nil {
+-		t.Errorf(err.Error())
++		t.Error(err)
+ 	}
+ }
+ 
