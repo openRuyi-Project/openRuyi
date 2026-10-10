@@ -8,29 +8,29 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           audit
-Version:        4.1.4
+Version:        4.2.1
 Release:        %autorelease
 Summary:        Linux kernel audit subsystem utilities
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://people.redhat.com/sgrubb/audit/
 VCS:            git:https://github.com/linux-audit/audit-userspace
-#!RemoteAsset:  sha256:8396544ea08c69b39f5c00027549394f2149b31c4a9e693097d6ce134f3ffe3d
+#!RemoteAsset:  sha256:42876d195ee2ded19e5f72d7664096eee314928aa36ad346719ba5b25818fc84
 Source:         https://github.com/linux-audit/audit-userspace/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-# Backport from https://github.com/linux-audit/audit-userspace/commit/13e79b7d2c4aa833129487c4cb5837df08e94e77
-Patch0:         0001-put-bash-completions-in-bash-completions-dir.patch
-
 BuildOption(conf):  --libexecdir=%{_libexecdir}/%{name}
 BuildOption(conf):  --with-apparmor
+BuildOption(conf):  --with-riscv
 BuildOption(conf):  --with-libcap-ng=no
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --with-python3=no
 BuildOption(conf):  --disable-zos-remote
 
-BuildRequires:  autoconf >= 2.12
-BuildRequires:  linux-headers >= 2.6.30
+BuildRequires:  autoconf >= 2.50
+BuildRequires:  automake
 BuildRequires:  libtool
+BuildRequires:  linux-headers >= 5.15
+BuildRequires:  make
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(bash-completion)
 
@@ -44,6 +44,7 @@ Linux kernel. This package contains the runtime libraries and user space tools.
 %package        devel
 Summary:        Header files for the audit framework
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       linux-headers >= 5.15
 
 %description    devel
 The audit-devel package contains the header files and development libraries
@@ -56,22 +57,28 @@ export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-Wl,-z,relro,-z,now"
 
 %install -a
-rm -rf %{buildroot}/%{_mandir}/man[578]
-mkdir -p %{buildroot}/%{_mandir}/man5
-install -m 0644 docs/libaudit.conf.5 %{buildroot}/%{_mandir}/man5
+rm -rf %{buildroot}%{_mandir}/man[578]
+mkdir -p %{buildroot}%{_mandir}/man5
+install -m 0644 docs/libaudit.conf.5 %{buildroot}%{_mandir}/man5
 install -m 0644 init.d/libaudit.conf %{buildroot}%{_sysconfdir}
-install -D -m 0644 ./m4/audit.m4  %{buildroot}%{_datadir}/aclocal/audit.m4
+install -D -m 0644 m4/audit.m4 %{buildroot}%{_datadir}/aclocal/audit.m4
 
 install -d -m 750 %{buildroot}%{_sysconfdir}/audisp/plugins.d
-# Better naming
-mv %{buildroot}%{bash_completions_dir}/audit.bash_completion %{buildroot}%{bash_completions_dir}/audit
 
 %files
-%license COPYING
+%license COPYING COPYING.LIB
 %{_bindir}/aulast
 %{_bindir}/aulastlog
 %{_bindir}/ausyscall
-%{_sbindir}/*
+%{_sbindir}/audisp-af_unix
+%{_sbindir}/audisp-filter
+%{_sbindir}/audisp-remote
+%{_sbindir}/audisp-syslog
+%{_sbindir}/auditctl
+%{_sbindir}/auditd
+%{_sbindir}/augenrules
+%{_sbindir}/aureport
+%{_sbindir}/ausearch
 # Merged files from libaudit1
 %{_libdir}/libaudit.so.1
 %{_libdir}/libaudit.so.1.*
@@ -90,8 +97,11 @@ mv %{buildroot}%{bash_completions_dir}/audit.bash_completion %{buildroot}%{bash_
 %dir %{_datadir}/audit-rules
 %{_datadir}/audit-rules/*.rules
 %{_datadir}/audit-rules/README-rules
-%{bash_completions_dir}/audit
-%{_mandir}/man*/*
+%{bash_completions_dir}/auditctl
+%{bash_completions_dir}/ausearch
+%{bash_completions_dir}/aureport
+%{bash_completions_dir}/augenrules
+%{_mandir}/man5/*
 
 %files devel
 %doc contrib/plugin
