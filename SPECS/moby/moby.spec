@@ -47,8 +47,6 @@ BuildRequires:  systemd-rpm-macros
 BuildRequires:  tini-static
 BuildRequires:  tzdata
 
-Provides:       docker = %{version}-%{release}
-
 Requires:       containerd >= 2.1.5
 Requires:       e2fsprogs
 Requires:       iptables-nft
