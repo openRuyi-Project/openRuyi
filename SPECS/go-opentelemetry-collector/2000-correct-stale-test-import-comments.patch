@@ -1,0 +1,54 @@
+From d310f3563de9df7091b8b20bbcc64821bb0bf0ab Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 11 Aug 2026 23:22:38 +0800
+Subject: [PATCH] tests: correct stale package import comments
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ config/configgrpc/wrappedstream_test.go              | 2 +-
+ receiver/otlpreceiver/internal/errors/errors_test.go | 2 +-
+ service/telemetry/otelconftelemetry/logger_test.go   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/config/configgrpc/wrappedstream_test.go b/config/configgrpc/wrappedstream_test.go
+index 828c16ebb..22c25715d 100644
+--- a/config/configgrpc/wrappedstream_test.go
++++ b/config/configgrpc/wrappedstream_test.go
+@@ -2,7 +2,7 @@
+ // Copyright 2016 Michal Witkowski. All Rights Reserved.
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package configgrpc // import "go.opentelemetry.io/collector/internal/middleware"
++package configgrpc // import "go.opentelemetry.io/collector/config/configgrpc"
+ 
+ import (
+ 	"context"
+diff --git a/receiver/otlpreceiver/internal/errors/errors_test.go b/receiver/otlpreceiver/internal/errors/errors_test.go
+index 2ba1631a2..1da57c2fb 100644
+--- a/receiver/otlpreceiver/internal/errors/errors_test.go
++++ b/receiver/otlpreceiver/internal/errors/errors_test.go
+@@ -1,7 +1,7 @@
+ // Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package errors // import "go.opentelemetry.io/collector/receiver/otlpreceiver/internal/util"
++package errors // import "go.opentelemetry.io/collector/receiver/otlpreceiver/internal/errors"
+ 
+ import (
+ 	"errors"
+diff --git a/service/telemetry/otelconftelemetry/logger_test.go b/service/telemetry/otelconftelemetry/logger_test.go
+index df9430d21..1ca792e74 100644
+--- a/service/telemetry/otelconftelemetry/logger_test.go
++++ b/service/telemetry/otelconftelemetry/logger_test.go
+@@ -1,7 +1,7 @@
+ // Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry"
++package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry/otelconftelemetry"
+ 
+ import (
+ 	"context"
+-- 
+2.43.0
+

@@ -1,0 +1,283 @@
+From acacd95fcd74f2441e0b455756463ae1a131b717 Mon Sep 17 00:00:00 2001
+From: Solomon Jacobs <solomonjacobs@protonmail.com>
+Date: Wed, 17 Jun 2026 09:52:31 +0000
+Subject: [PATCH] Bump dependencies (#5308)
+
+* build(deps): bump the go-opentelemetry-io group across 1 directory with 8 updates
+
+Bumps the go-opentelemetry-io group with 4 updates in the / directory: [go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace](https://github.com/open-telemetry/opentelemetry-go-contrib), [go.opentelemetry.io/otel/exporters/otlp/otlptrace](https://github.com/open-telemetry/opentelemetry-go), [go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc](https://github.com/open-telemetry/opentelemetry-go) and [go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp](https://github.com/open-telemetry/opentelemetry-go).
+
+Updates `go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace` from 0.68.0 to 0.69.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go-contrib/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go-contrib/compare/zpages/v0.68.0...zpages/v0.69.0)
+
+Updates `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp` from 0.68.0 to 0.69.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go-contrib/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go-contrib/compare/zpages/v0.68.0...zpages/v0.69.0)
+
+Updates `go.opentelemetry.io/otel` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/sdk` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+Updates `go.opentelemetry.io/otel/trace` from 1.43.0 to 1.44.0
+- [Release notes](https://github.com/open-telemetry/opentelemetry-go/releases)
+- [Changelog](https://github.com/open-telemetry/opentelemetry-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/open-telemetry/opentelemetry-go/compare/v1.43.0...v1.44.0)
+
+---
+updated-dependencies:
+- dependency-name: go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace
+  dependency-version: 0.69.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+  dependency-version: 0.69.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel/exporters/otlp/otlptrace
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel/sdk
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+- dependency-name: go.opentelemetry.io/otel/trace
+  dependency-version: 1.44.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: go-opentelemetry-io
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Signed-off-by: Solomon Jacobs <solomonjacobs@protonmail.com>
+
+* Bump `go.opentelemetry.io/otel/semconv`
+
+Signed-off-by: Solomon Jacobs <solomonjacobs@protonmail.com>
+
+* build(deps): bump the aws group across 1 directory with 14 updates
+
+Bumps the aws group with 8 updates in the / directory:
+
+| Package | From | To |
+| --- | --- | --- |
+| [github.com/aws/aws-sdk-go-v2](https://github.com/aws/aws-sdk-go-v2) | `1.41.7` | `1.42.0` |
+| [github.com/aws/aws-sdk-go-v2/config](https://github.com/aws/aws-sdk-go-v2) | `1.32.17` | `1.32.25` |
+| [github.com/aws/aws-sdk-go-v2/service/sns](https://github.com/aws/aws-sdk-go-v2) | `1.39.17` | `1.40.1` |
+| [github.com/go-openapi/analysis](https://github.com/go-openapi/analysis) | `0.25.0` | `0.25.2` |
+| [github.com/go-openapi/errors](https://github.com/go-openapi/errors) | `0.22.7` | `0.22.8` |
+| [github.com/go-openapi/loads](https://github.com/go-openapi/loads) | `0.23.3` | `0.24.0` |
+| [github.com/go-openapi/runtime](https://github.com/go-openapi/runtime) | `0.29.4` | `0.32.3` |
+| [github.com/go-openapi/swag](https://github.com/go-openapi/swag) | `0.26.0` | `0.26.1` |
+
+Updates `github.com/aws/aws-sdk-go-v2` from 1.41.7 to 1.42.0
+- [Release notes](https://github.com/aws/aws-sdk-go-v2/releases)
+- [Commits](https://github.com/aws/aws-sdk-go-v2/compare/v1.41.7...v1.42.0)
+
+Updates `github.com/aws/aws-sdk-go-v2/config` from 1.32.17 to 1.32.25
+- [Release notes](https://github.com/aws/aws-sdk-go-v2/releases)
+- [Commits](https://github.com/aws/aws-sdk-go-v2/compare/config/v1.32.17...config/v1.32.25)
+
+Updates `github.com/aws/aws-sdk-go-v2/credentials` from 1.19.16 to 1.19.24
+- [Release notes](https://github.com/aws/aws-sdk-go-v2/releases)
+- [Commits](https://github.com/aws/aws-sdk-go-v2/compare/credentials/v1.19.16...credentials/v1.19.24)
+
+Updates `github.com/aws/aws-sdk-go-v2/service/sns` from 1.39.17 to 1.40.1
+- [Release notes](https://github.com/aws/aws-sdk-go-v2/releases)
+- [Commits](https://github.com/aws/aws-sdk-go-v2/compare/service/sns/v1.39.17...v1.40.1)
+
+Updates `github.com/aws/aws-sdk-go-v2/service/sts` from 1.42.1 to 1.43.3
+- [Release notes](https://github.com/aws/aws-sdk-go-v2/releases)
+- [Commits](https://github.com/aws/aws-sdk-go-v2/compare/service/s3/v1.42.1...service/amp/v1.43.3)
+
+Updates `github.com/aws/smithy-go` from 1.25.1 to 1.27.1
+- [Release notes](https://github.com/aws/smithy-go/releases)
+- [Changelog](https://github.com/aws/smithy-go/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/aws/smithy-go/compare/v1.25.1...v1.27.1)
+
+Updates `github.com/go-openapi/analysis` from 0.25.0 to 0.25.2
+- [Release notes](https://github.com/go-openapi/analysis/releases)
+- [Commits](https://github.com/go-openapi/analysis/compare/v0.25.0...v0.25.2)
+
+Updates `github.com/go-openapi/errors` from 0.22.7 to 0.22.8
+- [Release notes](https://github.com/go-openapi/errors/releases)
+- [Commits](https://github.com/go-openapi/errors/compare/v0.22.7...v0.22.8)
+
+Updates `github.com/go-openapi/loads` from 0.23.3 to 0.24.0
+- [Release notes](https://github.com/go-openapi/loads/releases)
+- [Commits](https://github.com/go-openapi/loads/compare/v0.23.3...v0.24.0)
+
+Updates `github.com/go-openapi/runtime` from 0.29.4 to 0.32.3
+- [Release notes](https://github.com/go-openapi/runtime/releases)
+- [Commits](https://github.com/go-openapi/runtime/compare/v0.29.4...v0.32.3)
+
+Updates `github.com/go-openapi/spec` from 0.22.4 to 0.22.5
+- [Release notes](https://github.com/go-openapi/spec/releases)
+- [Commits](https://github.com/go-openapi/spec/compare/v0.22.4...v0.22.5)
+
+Updates `github.com/go-openapi/strfmt` from 0.26.2 to 0.26.3
+- [Release notes](https://github.com/go-openapi/strfmt/releases)
+- [Commits](https://github.com/go-openapi/strfmt/compare/v0.26.2...v0.26.3)
+
+Updates `github.com/go-openapi/swag` from 0.26.0 to 0.26.1
+- [Release notes](https://github.com/go-openapi/swag/releases)
+- [Commits](https://github.com/go-openapi/swag/compare/v0.26.0...v0.26.1)
+
+Updates `github.com/go-openapi/validate` from 0.25.2 to 0.25.3
+- [Release notes](https://github.com/go-openapi/validate/releases)
+- [Commits](https://github.com/go-openapi/validate/compare/v0.25.2...v0.25.3)
+
+---
+updated-dependencies:
+- dependency-name: github.com/aws/aws-sdk-go-v2
+  dependency-version: 1.42.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/aws/aws-sdk-go-v2/config
+  dependency-version: 1.32.25
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/aws/aws-sdk-go-v2/credentials
+  dependency-version: 1.19.24
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/aws/aws-sdk-go-v2/service/sns
+  dependency-version: 1.40.1
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/aws/aws-sdk-go-v2/service/sts
+  dependency-version: 1.43.3
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/aws/smithy-go
+  dependency-version: 1.27.1
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/analysis
+  dependency-version: 0.25.2
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/errors
+  dependency-version: 0.22.8
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/loads
+  dependency-version: 0.24.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/runtime
+  dependency-version: 0.32.3
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/spec
+  dependency-version: 0.22.5
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/strfmt
+  dependency-version: 0.26.3
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/swag
+  dependency-version: 0.26.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+- dependency-name: github.com/go-openapi/validate
+  dependency-version: 0.25.3
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+  dependency-group: aws
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Signed-off-by: Solomon Jacobs <solomonjacobs@protonmail.com>
+
+* replace deprecated `middleware.Spec`
+
+Replace the deprecated `middleware.Spec` call with docui.ServeSpec, which
+it now merely wraps.
+
+See: https://pkg.go.dev/github.com/go-openapi/runtime/middleware
+
+Signed-off-by: Solomon Jacobs <solomonjacobs@protonmail.com>
+
+---------
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Signed-off-by: Solomon Jacobs <solomonjacobs@protonmail.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+
+Backport: retain only the changes needed by this packaged snapshot.
+Upstream-commit: a57a6da433a8cf8a7c065e0f0a8dc7d8343d7fab
+---
+ tracing/tracing.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tracing/tracing.go b/tracing/tracing.go
+index 77a8684..5ec7a2a 100644
+--- a/tracing/tracing.go
++++ b/tracing/tracing.go
+@@ -31,7 +31,7 @@ import (
+ 	"go.opentelemetry.io/otel/propagation"
+ 	"go.opentelemetry.io/otel/sdk/resource"
+ 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
+-	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
++	semconv "go.opentelemetry.io/otel/semconv/v1.41.0"
+ 	"go.opentelemetry.io/otel/trace"
+ 	"go.opentelemetry.io/otel/trace/noop"
+ 	"google.golang.org/grpc/credentials"

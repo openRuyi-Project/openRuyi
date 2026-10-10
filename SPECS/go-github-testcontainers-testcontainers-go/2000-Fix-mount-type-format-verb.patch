@@ -1,0 +1,26 @@
+From 83ce889b9147c148458ef48d6d0d15500bb651b0 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 02:13:08 +0800
+Subject: [PATCH] Fix mount type format verb
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ docker_mounts.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/docker_mounts.go b/docker_mounts.go
+index 5d654b9..d3d2b15 100644
+--- a/docker_mounts.go
++++ b/docker_mounts.go
+@@ -173,7 +173,7 @@ func mapToDockerMounts(containerMounts ContainerMounts) []mount.Mount {
+ 		case ImageMounter:
+ 			containerMount.ImageOptions = typedMounter.ImageOptions()
+ 		case BindMounter:
+-			log.Printf("Mount type %s is not supported by Testcontainers for Go", m.Source.Type())
++			log.Printf("Mount type %v is not supported by Testcontainers for Go", m.Source.Type())
+ 		default:
+ 			// The provided source type has no custom options
+ 		}
+-- 
+2.43.0
+

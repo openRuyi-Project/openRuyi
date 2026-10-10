@@ -1,0 +1,26 @@
+From 16cc8a777e3467b5ffec0d91f3f244ab712d865d Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 11 Aug 2026 23:54:44 +0800
+Subject: [PATCH] tests: allow alert store garbage collection to settle
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ provider/mem/mem_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/provider/mem/mem_test.go b/provider/mem/mem_test.go
+index 9db6ac3..b682f54 100644
+--- a/provider/mem/mem_test.go
++++ b/provider/mem/mem_test.go
+@@ -519,7 +519,7 @@ func TestAlertsConcurrently(t *testing.T) {
+ 	require.Eventually(t, func() bool {
+ 		// When the alert will eventually expire and is considered resolved - it won't be in the store.
+ 		return len(a.alerts.List()) == 0
+-	}, 2*expire, expire)
++	}, time.Second, expire)
+ 	require.Equal(t, int32(0), callback.alerts.Load())
+ 	require.Equal(t, int32(0), callback.gcCount.Load())
+ }
+-- 
+2.43.0
+

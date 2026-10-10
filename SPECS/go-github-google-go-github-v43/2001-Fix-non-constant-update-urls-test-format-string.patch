@@ -1,0 +1,26 @@
+From ee6ae5f87f91e103867d891d3298958ac5df7715 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 01:49:29 +0800
+Subject: [PATCH] Fix non-constant update-urls test format string
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ update-urls/main_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/update-urls/main_test.go b/update-urls/main_test.go
+index 49f165f..df70b02 100644
+--- a/update-urls/main_test.go
++++ b/update-urls/main_test.go
+@@ -127,7 +127,7 @@ func (ps *pipelineSetup) validate(t *testing.T) {
+ 			Eol:      "\n",
+ 		}
+ 		result, _ := difflib.GetContextDiffString(diff)
+-		t.Errorf(strings.Replace(result, "\t", " ", -1))
++		t.Errorf("%s", strings.Replace(result, "\t", " ", -1))
+ 	}
+ }
+ 
+-- 
+2.43.0
+
