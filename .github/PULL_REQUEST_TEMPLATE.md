@@ -29,5 +29,5 @@ Example: Assisted-by: ChatGPT:GPT-5.5 Thinking
 
 Assisted-by:
 
-[openRuyi Code of Conduct]: https://openruyi.cn/governance/legal/code-of-conduct
-[AI-Assisted Contribution Policy]:https://openruyi.cn/governance/policy/ai-contribution-policy
+[openRuyi Code of Conduct]: https://openruyi.cn/community/legal/code-of-conduct
+[AI-Assisted Contribution Policy]:https://openruyi.cn/community/policy/ai-contribution-policy
