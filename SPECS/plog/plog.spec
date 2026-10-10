@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Development files for plog, a C++ logging library
 License:        MIT
 URL:            https://github.com/SergiusTheBest/plog
-#!RemoteAsset
+#!RemoteAsset:  sha256:d60b8b35f56c7c852b7f00f58cbe9c1c2e9e59566c5b200512d0cdbb6309a7c2
 Source:         https://github.com/SergiusTheBest/plog/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -44,4 +44,4 @@ developing applications that use %{name}.
 %{_libdir}/cmake/plog/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,11 +12,11 @@ Summary:        Create and remove virtual network interfaces
 License:        GPL-1.0-or-later
 URL:            http://tunctl.sourceforge.net/
 # VCS: TODO: This is CVS
-#!RemoteAsset
+#!RemoteAsset:  sha256:aa2a6c4cc6bfacb11e0d9f62334a6638a0d435475c61230116f00b6af8b14fff
 Source:         http://downloads.sourceforge.net/tunctl/tunctl-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(install): BIN_DIR=%{_sbindir}
+BuildOption(install):  BIN_DIR=%{_sbindir}
 
 BuildRequires:  gcc
 BuildRequires:  make
@@ -39,4 +39,4 @@ interfaces. It originates from the User Mode Linux project.
 %{_mandir}/man8/tunctl.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

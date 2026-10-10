@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A DSSSL implementation
 License:        LicenseRef-DMIT
 URL:            http://openjade.sourceforge.net/
-#!RemoteAsset
+#!RemoteAsset:  sha256:1d2d7996cc94f9b87d0c51cf0e028070ac177c4123ecbfd7ac1cb8d0b7d322d1
 Source0:        http://download.sourceforge.net/openjade/openjade-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -99,4 +99,4 @@ touch %{_sysconfdir}/sgml/%{name}-%{version}-%{release}.soc
 %{_libdir}/lib*.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

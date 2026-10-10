@@ -13,7 +13,7 @@ Summary:        A fast LZ-based file compressor
 License:        GPL-2.0-or-later
 URL:            https://www.lzop.org/
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:7e72b62a8a60aff5200a047eea0773a8fb205caf7acbe1774d95147f305a2f41
 Source:         https://www.lzop.org/download/lzop-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -40,4 +40,4 @@ lzop was designed with the following goals in mind:
 %doc %{_docdir}/lzop
 
 %changelog
-%{?autochangelog}
+%autochangelog

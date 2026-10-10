@@ -12,7 +12,7 @@ Release:        %autorelease
 License:        GPL-2.0-or-later
 URL:            https://www.smartmontools.org/
 VCS:            git:https://github.com/smartmontools/smartmontools.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:690b83ca331378da9ea0d9d61008c4b22dde391387b9bbad7f29387f2595f76e
 Source0:        https://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:        smartmontools.sysconf
 Source2:        smartmontools.tmpfiles
@@ -87,4 +87,4 @@ mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
 %{_sharedstatedir}/%{name}
 
 %changelog
-%{?autochangelog}
+%autochangelog

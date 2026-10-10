@@ -13,7 +13,7 @@ Summary:        Multitouch Protocol Translation Library
 License:        MIT
 URL:            http://bitmath.org/code/mtdev
 VCS:            git:http://bitmath.org/git/mtdev.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:a107adad2101fecac54ac7f9f0e0a0dd155d954193da55c2340c97f2ff1d814e
 Source0:        http://bitmath.org/code/mtdev/mtdev-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -51,4 +51,4 @@ developing applications that use the mtdev library.
 %{_libdir}/pkgconfig/mtdev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

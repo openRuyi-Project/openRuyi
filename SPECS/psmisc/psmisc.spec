@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Utilities for managing processes on your system
 License:        GPL-2.0-or-later
 URL:            https://gitlab.com/psmisc/psmisc
-#!RemoteAsset
+#!RemoteAsset:  sha256:c4b1df2e671e8194f6c3063e43cb9afa26cbe9859f1026ff6ad258ac562804f4
 Source0:        %{url}/-/archive/v%{version}/%{name}-v%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -72,4 +72,4 @@ autoreconf -fiv
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

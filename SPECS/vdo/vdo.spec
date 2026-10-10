@@ -13,7 +13,7 @@ Version:        8.3.2.1
 Release:        %autorelease
 License:        GPL-2.0-only
 URL:            https://github.com/dm-vdo/vdo
-#!RemoteAsset
+#!RemoteAsset:  sha256:d778eb3bd69ff613f88117e17afc57602bde3381401b0f3be8dcf3efe6f2e1fe
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -103,4 +103,4 @@ This package provides the user-space support tools for VDO.
 %{_mandir}/man8/vdorecover.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

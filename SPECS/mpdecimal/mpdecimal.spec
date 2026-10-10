@@ -13,9 +13,9 @@ Summary:        Library for general decimal arithmetic
 License:        BSD-2-Clause
 URL:            https://www.bytereef.org/mpdecimal/index.html
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8
 Source0:        https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:b70a224cd52e82b7a8150aedac5efa2d0cb3941696fd829bdbe674f9f65c3926
 Source1:        https://speleotrove.com/decimal/dectest.zip
 BuildSystem:    autotools
 
@@ -82,4 +82,4 @@ rm %{buildroot}%{_docdir}/%{name}/COPYRIGHT.txt
 %{_mandir}/man3/mpdecimal*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

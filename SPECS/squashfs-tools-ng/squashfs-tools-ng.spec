@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A new set of tools and libraries for working with SquashFS images
 License:        LGPL-3.0-or-later AND GPL-3.0-or-later AND BSD-2-Clause AND MIT
 URL:	        https://github.com/AgentD/squashfs-tools-ng
-#!RemoteAsset
+#!RemoteAsset:  sha256:ef619b49efb9f792d80c777fdd2d639ed2839da98bffe8b4754c8e5ce61592fb
 Source0:        https://infraroot.at/pub/squashfs/squashfs-tools-ng-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -63,4 +63,4 @@ develop programs that use the squashfs-tools-ng libsquashfs library.
 %{_libdir}/pkgconfig/libsquashfs1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

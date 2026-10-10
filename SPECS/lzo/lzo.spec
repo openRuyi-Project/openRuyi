@@ -9,11 +9,11 @@ Version: 2.10
 Release: %autorelease
 License: GPL-2.0-or-later
 URL:     https://www.oberhumer.com/opensource/lzo/
-#!RemoteAsset
+#!RemoteAsset:  sha256:c0f892943208266f9b6543b3ae308fab6284c5c90e627931446fb49b4221a072
 Source0: https://www.oberhumer.com/opensource/%{name}/download/%{name}-%{version}.tar.gz
 
 BuildSystem: autotools
-BuildOption(conf): --enable-shared
+BuildOption(conf):  --enable-shared
 
 Summary: Data compression library suitable for real-time data de-/compression
 %description
@@ -50,4 +50,4 @@ compression ratio.
 %{_libdir}/pkgconfig/lzo2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

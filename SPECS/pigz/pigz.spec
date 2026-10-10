@@ -14,7 +14,7 @@ License:        Zlib
 Summary:        Parallel implementation of gzip
 URL:            https://zlib.net/pigz/
 VCS:            git:https://github.com/madler/pigz.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:eb872b4f0e1f0ebe59c9f7bd8c506c4204893ba6a8492de31df416f0d5170fd0
 Source0:        https://www.zlib.net/%{name}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -43,4 +43,4 @@ install -p -D pigz.1 -m 0644 $RPM_BUILD_ROOT%{_datadir}/man/man1/pigz.1
 %{_datadir}/man/man1/pigz.*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Summary:        Templatized C++ Command Line Parser
 License:        MIT
 URL:            http://tclap.sourceforge.net
 VCS:            git:https://git.code.sf.net/p/tclap/code
-#!RemoteAsset
+#!RemoteAsset:  sha256:bb649f76dae35e8d0dcba4b52acfd4e062d787e6a81b43f7a4b01275153165a6
 Source:         https://downloads.sourceforge.net/tclap/tclap-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -37,4 +37,4 @@ install -d "%{buildroot}%{_docdir}/%{name}"
 %doc %{_docdir}/tclap/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Summary:        XCB cursor library (libxcursor port)
 License:        MIT
 URL:            http://xcb.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxcb-cursor.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:fdeb8bd127873519be5cc70dcd0d3b5d33b667877200f9925a59fdcad8f7a933
 Source0:        http://xcb.freedesktop.org/dist/xcb-util-cursor-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -62,4 +62,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/xcb-cursor.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

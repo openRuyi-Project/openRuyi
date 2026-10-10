@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Minimal dumb-terminal emulation program
 License:        GPL-2.0-or-later
 URL:            https://gitlab.com/wsakernel/picocom
-#!RemoteAsset
+#!RemoteAsset:  sha256:af2b89bc974060bfb2c5683bd9d905312075d4227456ddafbcb0b280b5451a7f
 Source0:        https://gitlab.com/wsakernel/picocom/-/archive/%{upstreamversion}/picocom-%{upstreamversion}.tar.bz2
 Source1:        picocom.sysusers
 BuildSystem:    autotools
@@ -55,4 +55,4 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/picocom.conf
 %{_sysusersdir}/picocom.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog

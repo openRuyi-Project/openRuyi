@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Optimized MPEG Audio Layer 2 encoding library
 License:        LGPL-2.1-or-later
 URL:            https://github.com/njh/twolame
-#!RemoteAsset
+#!RemoteAsset:  sha256:cc35424f6019a88c6f52570b63e1baf50f62963a3eac52a03a800bb070d7c87d
 Source:         http://downloads.sourceforge.net/twolame/twolame-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -57,4 +57,4 @@ autoreconf -fiv
 %{_includedir}/twolame.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

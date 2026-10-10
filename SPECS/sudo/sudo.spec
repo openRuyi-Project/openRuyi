@@ -13,7 +13,7 @@ Summary:        Allows restricted root access for specified users
 License:        ISC
 URL:            https://www.sudo.ws
 VCS:            git:https://github.com/sudo-project/sudo.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:4a38a1ab3adb1199257edc2a7c4a2bd714665eb605b04368843b06dada2cfcfb
 Source0:        https://www.sudo.ws/dist/%{name}-%{version}.tar.gz
 Source1:        sudoers.conf
 Source2:        sudo.pam
@@ -147,4 +147,4 @@ install -p -c -m 0644 %{S:3} %{buildroot}/etc/pam.d/sudo-i
 %{_includedir}/sudo_plugin.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

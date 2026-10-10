@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        A library for access to RESTful web services
 License:        LGPL-2.1-only
 URL:            https://gitlab.gnome.org/GNOME/librest
-#!RemoteAsset
+#!RemoteAsset:  sha256:7b6cb912bb3a22cfa7dcf005925dcb62883024db0c09099486e7d6851185c9b8
 Source0:        https://download.gnome.org/sources/librest/0.10/librest-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -77,4 +77,4 @@ Files for development with %{name}.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

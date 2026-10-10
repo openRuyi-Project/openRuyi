@@ -12,7 +12,7 @@ Summary:        Basic desktop integration functions
 License:        MIT
 URL:            https://www.freedesktop.org/wiki/Software/xdg-utils/
 VCS:            git:https://gitlab.freedesktop.org/xdg/xdg-utils
-#!RemoteAsset
+#!RemoteAsset:  sha256:f6b648c064464c2636884c05746e80428110a576f8daacf46ef2e554dcfdae75
 Source:         https://gitlab.freedesktop.org/xdg/xdg-utils/-/archive/v%{version}/xdg-utils-v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -57,4 +57,4 @@ The following scripts are provided at this time:
 %{_bindir}/xdg-settings
 
 %changelog
-%{?autochangelog}
+%autochangelog

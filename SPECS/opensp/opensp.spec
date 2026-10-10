@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        SGML and XML parser
 License:        X11
 URL:            http://openjade.sourceforge.net/
-#!RemoteAsset
+#!RemoteAsset:  sha256:57f4898498a368918b0d49c826aa434bb5b703d2c3b169beb348016ab25617ce
 Source0:        http://download.sourceforge.net/openjade/OpenSP-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -82,4 +82,4 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/OpenSP
 %{_libdir}/libosp.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

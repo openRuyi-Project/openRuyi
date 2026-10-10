@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Class library for C++ that manages integer overflows
 License:        MIT
 URL:            https://github.com/dcleblanc/SafeInt
-#!RemoteAsset
+#!RemoteAsset:  sha256:9e652d065a3cef80623287d5dc61edcf6a95ddab38a9dfeb34f155261fc9cef7
 Source0:        %{url}/archive/%{version}/SafeInt-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -47,4 +47,4 @@ install -D -p safe_math_impl.h -t %{buildroot}%{_includedir}/SafeInt/
 %{_includedir}/SafeInt/safe_math_impl.h
 
 %changelog
-%{?autochangelog}
+%autochangelog

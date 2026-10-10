@@ -12,7 +12,7 @@ Summary:        A Free Codec For Free Speech
 License:        BSD-3-Clause
 URL:            http://www.speex.org/
 VCS:            git:https://gitlab.xiph.org/xiph/speex.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:4b44d4f2b38a370a2d98a78329fefc56a0cf93d1c1be70029217baae6628feea
 Source0:        https://downloads.xiph.org/releases/speex/speex-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -65,4 +65,4 @@ rm -rf %{buildroot}%{_docdir}/speex*
 %{_datadir}/aclocal/speex.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

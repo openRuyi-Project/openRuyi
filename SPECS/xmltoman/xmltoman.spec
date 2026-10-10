@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Scripts to convert XML to man pages or HTML
 License:        GPL-2.0-only
 URL:            https://github.com/Distrotech/xmltoman
-#!RemoteAsset
+#!RemoteAsset:  sha256:2ab86b74fe364a866d84c14b20cbd42a09fa85c629deeff52376bbf890854feb
 Source:         https://github.com/Distrotech/xmltoman/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -45,4 +45,4 @@ to groff (man pages) or HTML.
 %{_datadir}/xmltoman/xmltoman.xsl
 
 %changelog
-%{?autochangelog}
+%autochangelog

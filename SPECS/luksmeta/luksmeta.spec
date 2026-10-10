@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Utility for storing small metadata in the LUKSv1 header
 License:        LGPL-2.1-or-later
 URL:            https://github.com/latchset/luksmeta
-#!RemoteAsset
+#!RemoteAsset:  sha256:6d688bc37cdae3b2d11d1ad6ba1882954d5588103b396c5f30962a417b59b3a2
 Source0:        https://github.com/latchset/luksmeta/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -47,4 +47,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/luksmeta.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

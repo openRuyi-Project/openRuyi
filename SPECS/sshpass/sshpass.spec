@@ -13,7 +13,7 @@ Summary:        Non-interactive SSH authentication utility
 License:        GPL-2.0-or-later
 URL:            http://sshpass.sourceforge.net/
 VCS:            svn:https://svn.code.sf.net/p/sshpass/code/trunk
-#!RemoteAsset
+#!RemoteAsset:  sha256:ad1106c203cbb56185ca3bad8c6ccafca3b4064696194da879f81c8d7bdfeeda
 Source0:        https://downloads.sourceforge.net/project/sshpass/sshpass/1.10/sshpass-1.10.tar.gz
 BuildSystem:    autotools
 
@@ -30,4 +30,4 @@ use the more secure public key authentication method instead.
 %{_mandir}/man1/sshpass.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

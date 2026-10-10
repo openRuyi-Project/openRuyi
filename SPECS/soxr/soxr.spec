@@ -10,13 +10,13 @@ Release:        %autorelease
 Summary:        The SoX Resampler library
 License:        LGPL-2.1-or-later
 URL:            https://github.com/chirlu/soxr
-#!RemoteAsset
+#!RemoteAsset:  sha256:db6ca1b1e8405c6ef92f8294fc123d910abf0a114003b3f0f13fa57a95fd62d0
 Source:         https://github.com/chirlu/soxr/archive/refs/tags/%{version}.tar.gz
 Patch:          0001-soxr-cmake.patch
 BuildSystem:    cmake
 
-BuildOption(conf): -DWITH_CR32S=FALSE
-BuildOption(conf): -DCMAKE_POLICY_VERSION_MINIMUM:STRING=3.5
+BuildOption(conf):  -DWITH_CR32S=FALSE
+BuildOption(conf):  -DCMAKE_POLICY_VERSION_MINIMUM:STRING=3.5
 
 BuildRequires:  cmake
 BuildRequires:  gcc
@@ -51,4 +51,4 @@ rm -rf %{buildroot}%{_docdir}/*
 %{_libdir}/pkgconfig/soxr.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

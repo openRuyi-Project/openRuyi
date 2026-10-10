@@ -12,7 +12,7 @@ Summary:        XCB utility module for XImage/XShmImage-like functions
 License:        MIT
 URL:            http://xcb.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxcb-image.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:ccad8ee5dadb1271fd4727ad14d9bd77a64e505608766c4e98267d9aede40d3d
 Source0:        http://xcb.freedesktop.org/dist/xcb-util-image-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -56,4 +56,4 @@ in %lname.
 %{_libdir}/pkgconfig/xcb-image.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
