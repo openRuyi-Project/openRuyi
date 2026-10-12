@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/phayes/freeport
 
 Name:           go-github-phayes-freeport
-Version:        0+git20180830.95f893a
+Version:        0+git20261012.95f893a
 Release:        %autorelease
 Summary:        Get a free open TCP port that is ready to use
 License:        BSD-3-Clause

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/gosuri/uitable
 VCS:            git:https://github.com/gosuri/uitable.git
 #!RemoteAsset:  sha256:7b496d0c8df70ef7ab546081174ad9994917bf4be49f0420079ecc3c66355875
-Source0:        https://github.com/gosuri/uitable/archive/v0.0.4.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/gosuri/uitable/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

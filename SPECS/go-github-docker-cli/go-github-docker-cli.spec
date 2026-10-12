@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -14,7 +13,7 @@
 }
 
 Name:           go-github-docker-cli
-Version:        0+git20200130.5d0cf88
+Version:        0+git20261012.5d0cf88
 Release:        %autorelease
 Summary:        This repository is the home of the Docker CLI
 License:        Apache-2.0

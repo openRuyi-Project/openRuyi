@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,7 +8,7 @@
 %define go_test_include %{go_import_path}/rados
 
 Name:           go-github-ceph-go-ceph
-Version:        0+git20181217.e32f9f0
+Version:        0+git20261012.e32f9f0
 Release:        %autorelease
 Summary:        Is the root of a set of packages that wrap the Ceph APIs
 License:        MIT

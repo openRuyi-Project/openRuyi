@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/exponent-io/jsonpath
 
 Name:           go-github-exponent-io-jsonpath
-Version:        0+git20151013.d6023ce
+Version:        0+git20261012.d6023ce
 Release:        %autorelease
 Summary:        Go library for jsonpath
 License:        MIT

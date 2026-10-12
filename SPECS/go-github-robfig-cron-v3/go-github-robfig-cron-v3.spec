@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/robfig/cron
 VCS:            git:https://github.com/robfig/cron.git
 #!RemoteAsset:  sha256:ef97328622b5eac7adfb1aa47ddab7b3f68271b9a9b76e5bc07bf2ad65bb051a
-Source0:        https://github.com/robfig/cron/archive/v3.0.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/robfig/cron/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

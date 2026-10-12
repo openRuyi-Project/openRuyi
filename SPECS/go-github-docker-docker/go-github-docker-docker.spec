@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -34,7 +33,7 @@
 }
 
 Name:           go-github-docker-docker
-Version:        17.12.0~ce~rc1+git20200916.bd33bbf
+Version:        17.12.0~ce~rc1+git20261012.bd33bbf
 Release:        %autorelease
 Summary:        Go library for docker
 License:        Apache-2.0

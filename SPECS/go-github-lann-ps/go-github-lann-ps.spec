@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/lann/ps
 
 Name:           go-github-lann-ps
-Version:        0+git20150810.62de8c4
+Version:        0+git20261012.62de8c4
 Release:        %autorelease
 Summary:        Fully persistent data structures
 License:        MIT

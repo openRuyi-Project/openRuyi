@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/PuerkitoBio/urlesc
 
 Name:           go-github-puerkitobio-urlesc
-Version:        0+git20170810.de5bf2a
+Version:        0+git20261012.de5bf2a
 Release:        %autorelease
 Summary:        Implements query escaping as per RFC 3986
 License:        BSD-3-Clause

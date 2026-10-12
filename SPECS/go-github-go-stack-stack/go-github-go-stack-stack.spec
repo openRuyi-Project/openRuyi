@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/go-stack/stack
 VCS:            git:https://github.com/go-stack/stack.git
 #!RemoteAsset:  sha256:3b8987e137d76f4f35db1e8005ec7fb766b68eed8cac0ca0b795ac43cd72b319
-Source0:        https://github.com/go-stack/stack/archive/v1.8.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/go-stack/stack/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -18,7 +17,7 @@ License:        MIT
 URL:            https://github.com/deislabs/oras
 VCS:            git:https://github.com/deislabs/oras.git
 #!RemoteAsset:  sha256:4c2482aa2b804c8deaa0a355977960593a10c23b60438575fa239e99d44d4b96
-Source0:        https://github.com/deislabs/oras/archive/v0.8.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/deislabs/oras/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

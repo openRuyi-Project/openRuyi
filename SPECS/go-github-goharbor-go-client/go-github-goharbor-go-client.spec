@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/goharbor/go-client
 VCS:            git:https://github.com/goharbor/go-client.git
 #!RemoteAsset:  sha256:646fe45454f60f71d1cc41be6e9f926e00c0273cfc853349dabaa5eca32dafcd
-Source0:        https://github.com/goharbor/go-client/archive/v0.26.2.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/goharbor/go-client/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

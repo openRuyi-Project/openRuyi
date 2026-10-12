@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,7 +15,7 @@ License:        MIT
 URL:            https://github.com/smartystreets/assertions
 VCS:            git:https://github.com/smartystreets/assertions.git
 #!RemoteAsset:  sha256:b1b6becbca1d6375d426461d95c7daf5532770e4747b4ee600627d97aae10f87
-Source0:        https://github.com/smartystreets/assertions/archive/v1.2.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/smartystreets/assertions/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
