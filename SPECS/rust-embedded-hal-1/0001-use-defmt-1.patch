@@ -1,0 +1,7 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -38,3 +38,3 @@
+ [dependencies.defmt-03]
+-version = "0.3"
++version = "1"
+ optional = true
