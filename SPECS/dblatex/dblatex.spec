@@ -7,7 +7,7 @@
 Name:           dblatex
 Version:        0.3.12
 Release:        %autorelease
-Summary:        A LaTeX-based converter for transforming DocBook XML and SGML documents into DVI, PDF, and PostScript formats.
+Summary:        A LaTeX-based converter for transforming DocBook XML and SGML documents into DVI, PDF, and PostScript formats
 License:        GPL-2.0-or-later AND GPL-2.0-only AND LPPL-1.3a AND LicenseRef-DMIT AND LicenseRef-openRuyi-Public-Domain
 URL:            https://dblatex.sourceforge.net/
 VCS:            hg:http://hg.code.sf.net/p/dblatex/dblatex

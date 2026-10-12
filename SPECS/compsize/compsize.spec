@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Utility for measuring compression ratio of files on btrfs
 License:        GPL-2.0-or-later
 URL:            https://github.com/kilobyte/compsize
-#!RemoteAsset
+#!RemoteAsset:  sha256:8b15b528f6cf95ff99d2ddfd7bce87271fd1356c875e5f5895ed83caf6952535
 Source:         %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 # https://github.com/kilobyte/compsize/pull/54
 Patch0:         compsize-1.5-fix-build-btrfsprogs-0.6.1.patch
@@ -41,4 +41,4 @@ install -D -m 0644 %{name}.8 %{buildroot}%{_mandir}/man8/%{name}.8
 %{_mandir}/man8/compsize.8%{?ext_man}
 
 %changelog
-%{?autochangelog}
+%autochangelog

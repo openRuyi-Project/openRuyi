@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Cursor management library
 License:        HPND-sell-variant
 URL:            https://gitlab.freedesktop.org/xorg/lib/libxcursor
-#!RemoteAsset
+#!RemoteAsset:  sha256:fde9402dd4cfe79da71e2d96bb980afc5e6ff4f8a7d74c159e1966afb2b2c2c0
 Source0:        http://xorg.freedesktop.org/archive/individual/lib/libXcursor-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -61,4 +61,4 @@ install -d -m 755 %{buildroot}%{_datadir}/icons/default
 %{_mandir}/man3/Xcursor*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

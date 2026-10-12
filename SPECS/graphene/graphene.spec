@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Thin layer of types for graphic libraries
 License:        MIT
 URL:            https://github.com/ebassi/graphene
-#!RemoteAsset
+#!RemoteAsset:  sha256:922dc109d2dc5dc56617a29bd716c79dd84db31721a8493a13a5f79109a4a4ed
 Source0:        https://github.com/ebassi/graphene/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
@@ -64,4 +64,4 @@ developing applications that use %{name}.
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

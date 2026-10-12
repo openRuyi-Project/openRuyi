@@ -13,7 +13,7 @@ Summary:        Simple, modern libpng alternative
 License:        BSD-2-Clause
 URL:            https://libspng.org/
 VCS:            git:https://github.com/randy408/libspng
-#!RemoteAsset
+#!RemoteAsset:  sha256:47ec02be6c0a6323044600a9221b049f63e1953faf816903e7383d4dc4234487
 Source0:        https://github.com/randy408/libspng/archive/v%{version}/libspng-%{version}.tar.gz
 BuildSystem:    meson
 
@@ -63,4 +63,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/spng.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

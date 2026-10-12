@@ -13,7 +13,7 @@ Summary:        X Fixes library
 License:        MIT
 URL:            https://www.x.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxfixes.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:39f115d72d9c5f8111e4684164d3d68cc1fd21f9b27ff2401b08fddfc0f409ba
 Source0:        https://www.x.org/archive/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -51,4 +51,4 @@ libXfixes development package
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -14,9 +14,9 @@ Release:        %autorelease
 Summary:        A password-checking library
 License:        LGPL-2.1-or-later
 URL:            https://github.com/cracklib/cracklib
-#!RemoteAsset
+#!RemoteAsset:  sha256:877b823198eb29aa1778b16a70cad05f7b54b164b3bf7ab656fc326c393f4c85
 Source0:        https://github.com/cracklib/cracklib/releases/download/v%{version}/cracklib-%{version}.tar.gz
-#!RemoteAsset
+#!RemoteAsset:  sha256:1d9dd4d8eed30520d83c0f331ac8ddad5b0c78b9fe8a4f456edbba7b6f871250
 Source1:        https://github.com/cracklib/cracklib/releases/download/v%{version}/cracklib-words-%{version}.gz
 BuildSystem:    autotools
 
@@ -138,4 +138,4 @@ fi
 %{_sbindir}/mkdict
 
 %changelog
-%{?autochangelog}
+%autochangelog

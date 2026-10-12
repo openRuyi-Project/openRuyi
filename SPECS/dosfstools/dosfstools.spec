@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        FAT file system userspace tools
 License:        GPL-3.0-or-later
 URL:            https://github.com/dosfstools/dosfstools
-#!RemoteAsset
+#!RemoteAsset:  sha256:64926eebf90092dca21b14259a5301b7b98e7b1943e8a201c7d726084809b527
 Source:         https://github.com/%{name}/%{name}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -35,4 +35,4 @@ create, check and label FAT family file systems.
 %{_mandir}/man8/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

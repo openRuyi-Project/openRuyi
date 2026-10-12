@@ -13,7 +13,7 @@ Summary:        A YAML parser and emitter written in C
 License:        MIT
 URL:            https://pyyaml.org/wiki/LibYAML
 VCS:            git:https://github.com/yaml/libyaml
-#!RemoteAsset
+#!RemoteAsset:  sha256:c642ae9b75fee120b2d96c712538bd2cf283228d2337df2cf2988e3c02678ef4
 Source:         http://pyyaml.org/download/libyaml/yaml-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -45,4 +45,4 @@ a YAML parser and emitter written in C.
 %{_libdir}/pkgconfig/yaml-0.1.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

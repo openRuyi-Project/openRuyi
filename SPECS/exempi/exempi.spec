@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Library for easy parsing of XMP metadata
 License:        BSD-3-Clause
 URL:            https://gitlab.freedesktop.org/libopenraw/exempi
-#!RemoteAsset
+#!RemoteAsset:  sha256:900fb9957be2095c78e5111b99c49378adac58161a358f52f93c55126f34eb8f
 Source0:        https://libopenraw.freedesktop.org/download/exempi-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -59,4 +59,4 @@ rm -rf %{buildroot}%{_libdir}/*.a
 %{_libdir}/pkgconfig/exempi-2.0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

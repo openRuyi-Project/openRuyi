@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A privileged helper for utmp/wtmp updates
 License:        LGPL-2.1-or-later
 URL:            https://github.com/altlinux/libutempter
-#!RemoteAsset
+#!RemoteAsset:  sha256:52809c75af9b0e13249521177def85787f457888cbcee5511bf96fe06e146711
 Source:         https://github.com/altlinux/libutempter/archive/refs/tags/%{version}-alt1.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ Development files for %{name}.
 %{_libdir}/libutempter.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

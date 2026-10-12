@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Lightweight KMS plane library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/emersion/libliftoff
-#!RemoteAsset
+#!RemoteAsset:  sha256:3309218c3137a70faada653690802b514e4e46d9b38e7d9d5948ffcc4831f3b1
 Source0:        https://gitlab.freedesktop.org/emersion/libliftoff/-/archive/v%{version}/libliftoff-v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -47,4 +47,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libliftoff.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

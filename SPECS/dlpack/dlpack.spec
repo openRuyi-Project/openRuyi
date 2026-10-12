@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        DLPack: Open In Memory Tensor Structure
 License:        Apache-2.0
 URL:            https://github.com/dmlc/dlpack
-#!RemoteAsset
+#!RemoteAsset:  sha256:f3d567f885f6c142183afc91a58873b31d0e0b36faa2e45c232b98c74596404f
 Source0:        https://github.com/dmlc/dlpack/archive/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -31,4 +31,4 @@ DLPack is an open in-memory tensor structure to for sharing tensor among framewo
 %{_libdir}/cmake/dlpack/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

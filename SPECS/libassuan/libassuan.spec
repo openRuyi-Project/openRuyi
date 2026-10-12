@@ -13,13 +13,9 @@ Summary:        IPC library used by GnuPG version 2
 License:        GPL-3.0-or-later AND LGPL-2.1-or-later
 URL:            https://www.gnupg.org/related_software/libassuan/index.en.html
 VCS:            git:https://git.gnupg.org/libassuan.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d2931cdad266e633510f9970e1a2f346055e351bb19f9b78912475b8074c36f6
 Source0:        https://www.gnupg.org/ftp/gcrypt/libassuan/%{name}-%{version}.tar.bz2
-#!RemoteAsset
-Source2:        https://www.gnupg.org/ftp/gcrypt/libassuan/%{name}-%{version}.tar.bz2.sig
 # https://www.gnupg.org/signature_key.html
-#!RemoteAsset
-Source3:        https://gnupg.org/signature_key.asc#/%{name}.keyring
 BuildSystem:    autotools
 
 BuildRequires:  gcc
@@ -56,4 +52,4 @@ v2 server, but it uses it's own copy of libassuan.
 %{_datadir}/aclocal/libassuan.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

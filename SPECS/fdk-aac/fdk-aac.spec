@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Fraunhofer FDK AAC Codec Library (Free Version)
 License:        FDK-AAC
 URL:            https://github.com/mstorsjo/fdk-aac
-#!RemoteAsset
+#!RemoteAsset:  sha256:e25671cd96b10bad896aa42ab91a695a9e573395262baed4e4a2ff178d6a3a78
 Source:         https://github.com/mstorsjo/fdk-aac/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/fdk-aac.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

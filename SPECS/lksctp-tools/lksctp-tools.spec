@@ -13,7 +13,7 @@ Summary:        Linux Kernel Stream Control Transmission Protocol Tools
 License:        GPL-2.0-or-later AND LGPL-2.0-only AND MIT
 URL:            https://github.com/sctp/lksctp-tools/wiki
 VCS:            git:https://github.com/sctp/lksctp-tools
-#!RemoteAsset
+#!RemoteAsset:  sha256:8738bf17ecffbbe2440a6e2ffaf1cbcebb633fc99d63d88761af35c02a571893
 Source0:        https://github.com/sctp/lksctp-tools/archive/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -69,4 +69,4 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

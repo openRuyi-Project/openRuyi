@@ -11,7 +11,7 @@ Release:       %autorelease
 Summary:       Low Complexity Communication Codec (LC3) Library
 License:       Apache-2.0
 URL:           https://github.com/google/liblc3
-#!RemoteAsset
+#!RemoteAsset:  sha256:276752ff54ce6a77d54ec133397b9d7e71f90caf3d9afa32d8b0e891b8ecb8af
 Source:        https://github.com/google/liblc3/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:   meson
 
@@ -61,4 +61,4 @@ This package contains Python bindings for the LC3 codec library.
 %pycached %{python3_sitelib}/lc3.py
 
 %changelog
-%{?autochangelog}
+%autochangelog

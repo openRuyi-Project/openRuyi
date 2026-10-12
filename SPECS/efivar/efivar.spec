@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Tools to manage UEFI variables
 License:        LGPL-2.1-only
 URL:            https://github.com/rhboot/efivar
-#!RemoteAsset
+#!RemoteAsset:  sha256:c9edd15f2eeeea63232f3e669a48e992c7be9aff57ee22672ac31f5eca1609a6
 Source:         https://github.com/rhboot/%{name}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -58,4 +58,4 @@ make -j1 V=1 test
 %{_libdir}/pkgconfig/efivar.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

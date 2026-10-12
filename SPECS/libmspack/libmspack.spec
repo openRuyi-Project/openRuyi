@@ -13,7 +13,7 @@ Summary:        Library for Microsoft CAB file compression and decompression
 License:        LGPL-2.1-or-later
 URL:            http://www.cabextract.org.uk/libmspack/
 VCS:            git:https://github.com/kyz/libmspack
-#!RemoteAsset
+#!RemoteAsset:  sha256:81e462fc2377bdac5e652e950321ddf90eb47f9ce5f7ba1a6155a227f4828eac
 Source0:        https://github.com/kyz/libmspack/archive/v%{version}alpha/libmspack-%{version}alpha.tar.gz
 BuildSystem:    autotools
 
@@ -54,4 +54,4 @@ autoreconf -fi
 %{_libdir}/pkgconfig/libmspack.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

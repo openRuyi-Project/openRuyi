@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Wayland client side decoration library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/libdecor/libdecor
-#!RemoteAsset
+#!RemoteAsset:  sha256:7fd50f780a4fee90a03f7b2c09055033e488654cbaff4a0c4bbae616bac9cd1c
 Source:         https://gitlab.freedesktop.org/libdecor/libdecor/-/releases/%{version}/downloads/libdecor-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -55,4 +55,4 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/libdecor-0.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,10 +11,8 @@ Release:        %autorelease
 Summary:        Rotates, compresses, removes and mails system log files
 License:        GPL-2.0-or-later
 URL:            https://github.com/logrotate/logrotate
-#!RemoteAsset
+#!RemoteAsset:  sha256:42b4080ee99c9fb6a7d12d8e787637d057a635194e25971997eebbe8d5e57618
 Source0:        %{url}/releases/download/%{version}/logrotate-%{version}.tar.xz
-#!RemoteAsset
-Source1:        %{url}/releases/download/%{version}/logrotate-%{version}.tar.xz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --with-state-file-path=%{_localstatedir}/lib/logrotate/logrotate.status
@@ -81,4 +79,4 @@ fi
 %ghost %verify(not size md5 mtime) %attr(0640, root, root) %{_localstatedir}/lib/logrotate/logrotate.status
 
 %changelog
-%{?autochangelog}
+%autochangelog

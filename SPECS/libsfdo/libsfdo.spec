@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        Libraries implementing freedesktop.org specifications
 License:        BSD-2-Clause
 URL:            https://gitlab.freedesktop.org/vyivel/libsfdo
-#!RemoteAsset
+#!RemoteAsset:  sha256:9d74a9bff1f872e38ab662d8e2b5f6ecd404d7f82f84e9c324013f856688fa2d
 Source0:        https://gitlab.freedesktop.org/vyivel/libsfdo/-/archive/v%{version}/libsfdo-v%{version}.tar.gz
 BuildSystem:    meson
 
@@ -43,4 +43,4 @@ applications that use libsfdo.
 %{_libdir}/pkgconfig/libsfdo-icon.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

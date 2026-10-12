@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Modify rpath of compiled programs
 License:        GPL-2.0-or-later
 URL:            https://codeberg.org/pere/chrpath
-#!RemoteAsset
+#!RemoteAsset:  sha256:83441d1347a09a249c9f7efeac319454e17334d72e2983f18c812c7032cfef54
 Source0:        %{url}/archive/release-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -37,4 +37,4 @@ rm -fr %{buildroot}/usr/doc
 %{_mandir}/man1/chrpath.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

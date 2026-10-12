@@ -13,7 +13,7 @@ Summary:        Linux-Native Asynchronous I/O Access Library
 License:        LGPL-2.1-or-later
 URL:            https://pagure.io/libaio
 VCS:            git:https://pagure.io/libaio.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:2c44d1c5fd0d43752287c9ae1eb9c023f04ef848ea8d4aafa46e9aedb678200b
 Source0:        https://releases.pagure.org/libaio/libaio-%{version}.tar.gz
 
 # test failing for multilib
@@ -76,4 +76,4 @@ install -p -m 0644 man/*.3 %{buildroot}%{_mandir}/man3/
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

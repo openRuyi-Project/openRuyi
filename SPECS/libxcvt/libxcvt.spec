@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        VESA CVT standard timing modelines generator
 License:        MIT AND HPND-sell-variant
 URL:            https://gitlab.freedesktop.org/xorg/lib/libxcvt/
-#!RemoteAsset
+#!RemoteAsset:  sha256:a929998a8767de7dfa36d6da4751cdbeef34ed630714f2f4a767b351f2442e01
 Source0:        https://xorg.freedesktop.org/archive/individual/lib/%{name}-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -42,4 +42,4 @@ developing applications that use %{name}.
 %{_libdir}/libxcvt.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

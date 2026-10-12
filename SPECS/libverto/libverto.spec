@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Main loop abstraction library
 License:        MIT
 URL:            https://github.com/latchset/libverto
-#!RemoteAsset
+#!RemoteAsset:  sha256:8d1756fd704f147549f606cd987050fb94b0b1ff621ea6aa4d6bf0b74450468a
 Source0:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -145,4 +145,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/%{name}-libev.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -11,7 +11,7 @@ Summary:        An fdisk-like partitioning tool for GPT disks
 License:        GPL-2.0-only
 URL:            http://www.rodsbooks.com/gdisk/
 VCS:            git:https://git.code.sf.net/p/gptfdisk/code
-#!RemoteAsset
+#!RemoteAsset:  sha256:2abed61bc6d2b9ec498973c0440b8b804b7a72d7144069b5a9209b2ad693a282
 Source0:        http://downloads.sourceforge.net/gptfdisk/gptfdisk-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -58,4 +58,4 @@ done
 %{_mandir}/man8/sgdisk.8*
 
 %changelog
-%{?autochangelog}
+%autochangelog

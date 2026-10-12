@@ -9,11 +9,11 @@
 Name:           autofs
 Version:        5.1.9
 Release:        %autorelease
-Summary:        A tool from automatically mounting and umounting filesystems.
+Summary:        A tool from automatically mounting and umounting filesystems
 License:        GPL-2.0-or-later
 URL:            https://docs.kernel.org/filesystems/autofs.html
 VCS:            git:https://git.kernel.org/pub/scm/linux/storage/autofs/autofs.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:46c30b763ef896f4c4a6df6d62aaaef7afc410e0b7f50d52dbfc6cf728cacd4f
 Source:         https://www.kernel.org/pub/linux/daemons/autofs/v5/autofs-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -108,4 +108,4 @@ install -m 600 samples/autofs_ldap_auth.conf $RPM_BUILD_ROOT%{_sysconfdir}/autof
 %dir %{_sysconfdir}/auto.master.d
 
 %changelog
-%{?autochangelog}
+%autochangelog

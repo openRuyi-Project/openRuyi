@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        The Ogg bitstream file format library
 License:        BSD-3-Clause
 URL:            https://github.com/xiph/ogg
-#!RemoteAsset
+#!RemoteAsset:  sha256:5c8253428e181840cd20d41f3ca16557a9cc04bad4a3d04cce84808677fa1061
 Source:         https://downloads.xiph.org/releases/ogg/libogg-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -51,4 +51,4 @@ cp -pr ogg.m4 %{buildroot}%{_datadir}/aclocal/
 %{_libdir}/cmake/Ogg/
 
 %changelog
-%{?autochangelog}
+%autochangelog

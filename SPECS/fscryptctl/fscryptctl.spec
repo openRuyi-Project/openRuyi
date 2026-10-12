@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Low-level tool for handling Linux filesystem encryption
 License:        Apache-2.0
 URL:            https://github.com/google/fscryptctl
-#!RemoteAsset
+#!RemoteAsset:  sha256:d9e2497866da4d0d8eb2dc126a9c18261b6de5aeb73dbccd18d51a6a6fd89b7b
 Source:         https://github.com/google/fscryptctl/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -41,4 +41,4 @@ user-friendly, high-level tool, use fscrypt (written in Go) instead.
 %{_bindir}/fscryptctl
 
 %changelog
-%{?autochangelog}
+%autochangelog

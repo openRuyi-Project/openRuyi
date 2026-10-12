@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Library and tools for cgroup inspection and management
 License:        LGPL-2.0-or-later
 URL:            https://github.com/libcgroup/libcgroup
-#!RemoteAsset
+#!RemoteAsset:  sha256:4035c6660914116b5488b3d007f78ef9a6218080e2633e0af7c963b3b99c5512
 Source0:        https://github.com/libcgroup/libcgroup/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -92,4 +92,4 @@ rm -rf %{buildroot}%{_unitdir}/cgrules.service
 %{_libdir}/pkgconfig/libcgroup.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

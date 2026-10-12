@@ -13,11 +13,11 @@ Summary:        A unit testing framework for C
 License:        LGPL-2.1-or-later
 URL:            https://libcheck.github.io/check/
 VCS:            git:https://github.com/libcheck/check
-#!RemoteAsset
+#!RemoteAsset:  sha256:998d355294bb94072f40584272cf4424571c396c631620ce463f6ea97aa67d2e
 Source:         https://github.com/libcheck/check/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(conf): --disable-option-checking MAKEINFO=true
+BuildOption(conf):  --disable-option-checking MAKEINFO=true
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -57,4 +57,4 @@ autoreconf -fi
 %{_mandir}/man1/checkmk.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

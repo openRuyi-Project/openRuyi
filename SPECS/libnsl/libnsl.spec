@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Public client interface library for NIS(YP) and NIS+
 License:        BSD-3-Clause AND LGPL-2.1-or-later
 URL:            https://github.com/thkukuk/libnsl
-#!RemoteAsset
+#!RemoteAsset:  sha256:59048b53be8d3904bf939313debf13956a881b0de79da40f7719a77bcd1e9c53
 Source0:        %{url}/archive/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ rm %{buildroot}%{_libdir}/%{name}.la
 %{_libdir}/pkgconfig/libnsl.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

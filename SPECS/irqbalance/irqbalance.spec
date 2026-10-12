@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        IRQ balancing daemon
 License:        GPL-2.0-only
 URL:            https://github.com/Irqbalance/irqbalance
-#!RemoteAsset
+#!RemoteAsset:  sha256:c5fc3b1880136437d297afe9a7833781e7849939e104d0780888ffcafc37e339
 Source0:        %{url}/archive/v%{version}/irqbalance-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -62,4 +62,4 @@ sed -i 's|/usr/etc/default/irqbalance.env|/etc/sysconfig/irqbalance|g' %{buildro
 %exclude %{_sbindir}/irqbalance-ui
 
 %changelog
-%{?autochangelog}
+%autochangelog

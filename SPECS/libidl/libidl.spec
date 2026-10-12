@@ -13,7 +13,7 @@ Summary:        Library for parsing IDL (Interface Definition Language)
 License:        LGPL-2.0-or-later AND GPL-3.0-or-later
 URL:            https://download.gnome.org/sources/libIDL/0.8/
 VCS:            git:https://gitlab.gnome.org/Archive/libidl.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:c5d24d8c096546353fbc7cedf208392d5a02afe9d56ebcc1cccb258d7c4d2220
 Source0:        https://download.gnome.org/sources/libIDL/0.8/libIDL-%{version}.tar.bz2
 Source1:        libIDL-config-2.1
 BuildSystem:    autotools
@@ -74,4 +74,4 @@ cp -rp libIDL2.html/* '%{buildroot}%{_docdir}/%{name}/html/'
 %{_mandir}/man1/libIDL-config-2.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

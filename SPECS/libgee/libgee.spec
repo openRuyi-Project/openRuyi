@@ -11,7 +11,7 @@ Summary:        GObject collection library
 License:        LGPL-2.1-or-later
 URL:            https://wiki.gnome.org/Projects/Libgee
 VCS:            git:https://gitlab.gnome.org/GNOME/libgee.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:189815ac143d89867193b0c52b7dc31f3aa108a15f04d6b5dca2b6adfad0b0ee
 Source:         https://download.gnome.org/sources/libgee/0.20/libgee-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -98,4 +98,4 @@ autoreconf -fiv
 %{_datadir}/vala/vapi/gee-0.8.vapi
 
 %changelog
-%{?autochangelog}
+%autochangelog

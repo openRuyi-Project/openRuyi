@@ -14,7 +14,7 @@ Release:        %autorelease
 Summary:        The password-hashing tools
 License:        CC0-1.0 OR Apache-2.0
 URL:            https://github.com/P-H-C/phc-winner-argon2
-#!RemoteAsset
+#!RemoteAsset:  sha256:daf972a89577f8772602bf2eb38b6a3dd3d922bf5724d45e7f9589b5e830442c
 Source:         https://github.com/P-H-C/phc-winner-argon2/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -70,4 +70,4 @@ chmod -x %{buildroot}%{_includedir}/%{name}.h
 %{_libdir}/pkgconfig/libargon2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
