@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/jmoiron/sqlx
 VCS:            git:https://github.com/jmoiron/sqlx.git
 #!RemoteAsset:  sha256:90a0cecf61892ad7d2303720d5fced62df07746b30990b249799593b498f0df9
-Source0:        https://github.com/jmoiron/sqlx/archive/v1.2.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/jmoiron/sqlx/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/regclient/regclient
 VCS:            git:https://github.com/regclient/regclient.git
 #!RemoteAsset:  sha256:9c06fd37df493b5b8f42f0a96174beebaf00012a8826c49c17081687cd0e12f4
-Source0:        https://github.com/regclient/regclient/archive/v0.4.8.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/regclient/regclient/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

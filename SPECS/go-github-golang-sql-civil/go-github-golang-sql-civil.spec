@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/golang-sql/civil
 
 Name:           go-github-golang-sql-civil
-Version:        0+git20190719.cb61b32
+Version:        0+git20261012.cb61b32
 Release:        %autorelease
 Summary:        Go library for civil
 License:        Apache-2.0

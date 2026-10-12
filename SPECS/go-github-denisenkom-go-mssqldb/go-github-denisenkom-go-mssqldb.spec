@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/denisenkom/go-mssqldb
 
 Name:           go-github-denisenkom-go-mssqldb
-Version:        0+git20191001.cfbb681
+Version:        0+git20261012.cfbb681
 Release:        %autorelease
 Summary:        Go library for go-mssqldb
 License:        BSD-3-Clause

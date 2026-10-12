@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/klauspost/cpuid
 VCS:            git:https://github.com/klauspost/cpuid.git
 #!RemoteAsset:  sha256:3bf2da7358c8ed33c05bac2ca733749ade03eadf184d81cc7b16fcbe2e230f1d
-Source0:        https://github.com/klauspost/cpuid/archive/v1.3.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/klauspost/cpuid/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

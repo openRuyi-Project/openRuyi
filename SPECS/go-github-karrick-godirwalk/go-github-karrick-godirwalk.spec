@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        BSD-2-Clause
 URL:            https://github.com/karrick/godirwalk
 VCS:            git:https://github.com/karrick/godirwalk.git
 #!RemoteAsset:  sha256:70e0f389574074eae0de6fe3c91bb1d57d44d1ab62abda311e07a066aed25d73
-Source0:        https://github.com/karrick/godirwalk/archive/v1.10.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/karrick/godirwalk/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

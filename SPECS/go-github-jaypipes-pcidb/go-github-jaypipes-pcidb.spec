@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/jaypipes/pcidb
 VCS:            git:https://github.com/jaypipes/pcidb.git
 #!RemoteAsset:  sha256:f66a46433a79839593905f73589c5051b6eac38d4ee1ed6e260e9290151d8084
-Source0:        https://github.com/jaypipes/pcidb/archive/v1.0.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/jaypipes/pcidb/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,7 +15,7 @@ License:        MIT
 URL:            https://github.com/ClickHouse/clickhouse-go
 VCS:            git:https://github.com/ClickHouse/clickhouse-go.git
 #!RemoteAsset:  sha256:1a625c85a49d3d4eab611492d124065ac1771b2f0eca7f3e5cd0cc28fc45d77b
-Source0:        https://github.com/ClickHouse/clickhouse-go/archive/v1.5.4.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/ClickHouse/clickhouse-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

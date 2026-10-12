@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/gobuffalo/logger
 VCS:            git:https://github.com/gobuffalo/logger.git
 #!RemoteAsset:  sha256:3d4c15d73f9cb709a33afaf2b38d212125188768ac8178f34bb8ff295abc4086
-Source0:        https://github.com/gobuffalo/logger/archive/v1.0.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/gobuffalo/logger/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,7 +8,7 @@
 %define go_test_include  %{go_import_path}/ovsdb/...
 
 Name:           go-github-digitalocean-go-openvswitch
-Version:        0+git20200422.6b2d502
+Version:        0+git20261012.6b2d502
 Release:        %autorelease
 Summary:        Go client for Open vSwitch
 License:        Apache-2.0

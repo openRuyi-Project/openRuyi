@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        BSD-3-Clause
 URL:            https://github.com/PuerkitoBio/purell
 VCS:            git:https://github.com/PuerkitoBio/purell.git
 #!RemoteAsset:  sha256:93e2ae2b12fc656ecc7ca28336009d24431247d2af59949c59fdef26ecc9a971
-Source0:        https://github.com/PuerkitoBio/purell/archive/v1.1.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/PuerkitoBio/purell/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

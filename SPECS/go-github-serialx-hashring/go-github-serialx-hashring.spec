@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/serialx/hashring
 
 Name:           go-github-serialx-hashring
-Version:        0+git20180504.49a4782
+Version:        0+git20261012.49a4782
 Release:        %autorelease
 Summary:        Implements consistent hashing that can be used when
 License:        MIT

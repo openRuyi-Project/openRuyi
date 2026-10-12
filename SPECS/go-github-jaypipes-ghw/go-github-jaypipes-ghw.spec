@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        Apache-2.0
 URL:            https://github.com/jaypipes/ghw
 VCS:            git:https://github.com/jaypipes/ghw.git
 #!RemoteAsset:  sha256:c53da6d7e087d097ade828a066821bc572f95d60247aaca7b77c521c1a347a16
-Source0:        https://github.com/jaypipes/ghw/archive/v0.11.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/jaypipes/ghw/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

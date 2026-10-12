@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -32,7 +31,7 @@ License:        Apache-2.0
 URL:            https://github.com/containerd/containerd
 VCS:            git:https://github.com/containerd/containerd.git
 #!RemoteAsset:  sha256:d410b8efc94e4124990f01de7107223971be8c9258fc651decf9e0ba648485b5
-Source0:        https://github.com/containerd/containerd/archive/v1.4.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/containerd/containerd/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

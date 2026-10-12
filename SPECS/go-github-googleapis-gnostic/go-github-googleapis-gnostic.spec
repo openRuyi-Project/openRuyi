@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -20,7 +19,7 @@ License:        Apache-2.0
 URL:            https://github.com/googleapis/gnostic
 VCS:            git:https://github.com/googleapis/gnostic.git
 #!RemoteAsset:  sha256:cc20ab94cf800fdfe377778aa0e2c640045c80193a873253e97605297801733f
-Source0:        https://github.com/googleapis/gnostic/archive/v0.4.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/googleapis/gnostic/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

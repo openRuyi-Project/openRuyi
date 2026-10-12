@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -19,7 +18,7 @@ License:        MIT
 URL:            https://github.com/docker/docker-credential-helpers
 VCS:            git:https://github.com/docker/docker-credential-helpers.git
 #!RemoteAsset:  sha256:441684cf1d2434aa1024aa2f8455e11502c44858e93ea171b19caa656dd2b2e2
-Source0:        https://github.com/docker/docker-credential-helpers/archive/v0.6.3.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/docker/docker-credential-helpers/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

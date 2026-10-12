@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/ma314smith/signedxml
 
 Name:           go-github-ma314smith-signedxml
-Version:        0+git20210628.abc5b48
+Version:        0+git20261012.abc5b48
 Release:        %autorelease
 Summary:        Transforms and validates signedxml documents
 License:        MIT

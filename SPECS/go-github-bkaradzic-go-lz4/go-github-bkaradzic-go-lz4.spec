@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        BSD-2-Clause
 URL:            https://github.com/bkaradzic/go-lz4
 VCS:            git:https://github.com/bkaradzic/go-lz4.git
 #!RemoteAsset:  sha256:d45102ed9967e7f371844b04a9d66b48f9a11aad2238591c711c8819748afa94
-Source0:        https://github.com/bkaradzic/go-lz4/archive/v1.0.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/bkaradzic/go-lz4/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

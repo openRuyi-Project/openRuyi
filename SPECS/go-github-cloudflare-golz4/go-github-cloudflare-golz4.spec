@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/cloudflare/golz4
 
 Name:           go-github-cloudflare-golz4
-Version:        0+git20150217.ef862a3
+Version:        0+git20261012.ef862a3
 Release:        %autorelease
 Summary:        Implements compression using lz4.c and lz4hc.c
 License:        BSD-3-Clause

@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,7 +8,7 @@
 %define go_test_exclude %{go_import_path}/tlsdemo
 
 Name:           go-github-docker-libtrust
-Version:        0+git20160708.aabc10e
+Version:        0+git20261012.aabc10e
 Release:        %autorelease
 Summary:        Go library for libtrust
 License:        Apache-2.0

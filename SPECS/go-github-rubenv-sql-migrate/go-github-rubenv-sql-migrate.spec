@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/rubenv/sql-migrate
 
 Name:           go-github-rubenv-sql-migrate
-Version:        0+git20200616.8d140a1
+Version:        0+git20261012.8d140a1
 Release:        %autorelease
 Summary:        SQL Schema migration tool for Go
 License:        MIT

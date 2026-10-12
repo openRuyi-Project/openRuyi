@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/liggitt/tabwriter
 
 Name:           go-github-liggitt-tabwriter
-Version:        0+git20181228.89fcab3
+Version:        0+git20261012.89fcab3
 Release:        %autorelease
 Summary:        Go library for tabwriter
 License:        BSD-3-Clause

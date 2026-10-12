@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,7 +15,7 @@ License:        MIT
 URL:            https://github.com/gobuffalo/packr
 VCS:            git:https://github.com/gobuffalo/packr.git
 #!RemoteAsset:  sha256:842bc86dfb34c1ff8d1cc1c12fb46cf30ad279eec17ecef8b122c151cfc16b85
-Source0:        https://github.com/gobuffalo/packr/archive/v2.7.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/gobuffalo/packr/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

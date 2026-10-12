@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        MIT
 URL:            https://github.com/gobuffalo/envy
 VCS:            git:https://github.com/gobuffalo/envy.git
 #!RemoteAsset:  sha256:f7745c63da532e0c6b920e0657a09b3295b7da8bb2b7a3870c0f2c50da611d0b
-Source0:        https://github.com/gobuffalo/envy/archive/v1.7.1.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/gobuffalo/envy/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

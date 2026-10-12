@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,7 +14,7 @@ License:        BSD-3-Clause OR MIT
 URL:            https://github.com/ghodss/yaml
 VCS:            git:https://github.com/ghodss/yaml.git
 #!RemoteAsset:  sha256:8a76b47cd171944612aae1cfa08bbb971b63fec16794c839252808392097de44
-Source0:        https://github.com/ghodss/yaml/archive/v1.0.0.tar.gz#/%{_name}-%{version}.tar.gz
+Source0:        https://github.com/ghodss/yaml/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 

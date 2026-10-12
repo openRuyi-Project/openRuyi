@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/yuin/gopher-lua
 
 Name:           go-github-yuin-gopher-lua
-Version:        0+git20210529.f4c35e4
+Version:        0+git20261012.f4c35e4
 Release:        %autorelease
 Summary:        GopherLua: VM and compiler for Lua in Go
 License:        MIT

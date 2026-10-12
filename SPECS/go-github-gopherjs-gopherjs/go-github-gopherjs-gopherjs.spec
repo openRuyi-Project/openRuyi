@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -19,7 +18,7 @@
 }
 
 Name:           go-github-gopherjs-gopherjs
-Version:        0+git20181017.0766667
+Version:        0+git20261012.0766667
 Release:        %autorelease
 Summary:        GopherJS compiles Go code (go.dev) to pure JavaScript code
 License:        BSD-2-Clause

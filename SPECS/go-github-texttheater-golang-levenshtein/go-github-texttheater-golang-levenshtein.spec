@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,7 +7,7 @@
 %define go_import_path  github.com/texttheater/golang-levenshtein
 
 Name:           go-github-texttheater-golang-levenshtein
-Version:        0+git20180516.d188e65
+Version:        0+git20261012.d188e65
 Release:        %autorelease
 Summary:        An implementation of the Levenshtein algorithm in Go
 License:        MIT

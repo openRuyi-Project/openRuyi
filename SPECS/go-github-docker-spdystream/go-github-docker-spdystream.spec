@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
-# SPDX-FileContributor: wangyf0611 <wangyufeng@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,7 +11,7 @@
 }
 
 Name:           go-github-docker-spdystream
-Version:        0+git20160310.449fdfc
+Version:        0+git20261012.449fdfc
 Release:        %autorelease
 Summary:        A multiplexed stream library using spdy
 License:        Apache-2.0
