@@ -29,6 +29,7 @@ Source0:        edk2-stable-%{version}.tar.gz
 
 # https://github.com/tianocore/edk2/commit/a1abc3032cd271671ee3aa488725305e45a17724
 Patch0:         0001-OvmfPkg-RiscVVirt-Make-SecureBootDefaultKeysInit-dri.patch
+Patch2000:      2000-OvmfPkg-RiscVVirt-Use-FMP-Capsule-as-cab-payload-for.patch
 
 BuildRequires:  gcc
 %ifarch x86_64
@@ -40,7 +41,9 @@ BuildRequires:  util-linux-devel
 BuildRequires:  acpica
 BuildRequires:  make
 BuildRequires:  python3
+BuildRequires:  python-is-python3
 BuildRequires:  coreutils
+BuildRequires:  gcab
 
 %description
 UEFI firmware for ${arch_s} virtual machines. Open Virtual Machine Firmware
@@ -53,7 +56,7 @@ is a build of EDK II for %{arch_s} virtual machines.
 export PACKAGES_PATH=$PWD
 source edksetup.sh
 make -C $EDK_TOOLS_PATH
-build -t GCC -b RELEASE -a %{targetarch} -p %{platformfile} -D SECURE_BOOT_ENABLE
+build -t GCC -b RELEASE -a %{targetarch} -p %{platformfile} -D SECURE_BOOT_ENABLE -D CAPSULE_ENABLE
 
 %install
 %ifarch x86_64
