@@ -1,0 +1,37 @@
+From 3a0b750dc42739a439ef0bc322cf8803b7bf84b4 Mon Sep 17 00:00:00 2001
+From: Xiang W <wangxiang@iscas.ac.cn>
+Date: Thu, 15 Oct 2026 15:51:13 +0800
+Subject: [PATCH] OvmfPkg/RiscVVirt: Use FMP Capsule as cab payload for fwupd
+
+The GenerateCapsule tool produces a properly formatted FMP Capsule,
+but the original script placed the raw Firmware Volume into the
+.cab archive. fwupd expects the payload to already be in EFI Capsule
+format when using the org.uefi.capsule protocol, and incorrectly
+re-packages the raw FD, resulting in a capsule that the firmware
+rejects.
+
+Copy the generated FMP Capsule into the .cab instead of the raw
+payload so that fwupd can use it directly without further
+modification.
+
+Signed-off-by: Xiang W <wangxiang@iscas.ac.cn>
+---
+ OvmfPkg/RiscVVirt/Feature/Capsule/GenerateCapsule/GenCapsule.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/OvmfPkg/RiscVVirt/Feature/Capsule/GenerateCapsule/GenCapsule.py b/OvmfPkg/RiscVVirt/Feature/Capsule/GenerateCapsule/GenCapsule.py
+index 8f7e0da8e1..87cec1c0ff 100644
+--- a/OvmfPkg/RiscVVirt/Feature/Capsule/GenerateCapsule/GenCapsule.py
++++ b/OvmfPkg/RiscVVirt/Feature/Capsule/GenerateCapsule/GenCapsule.py
+@@ -163,7 +163,7 @@ def GenCapsuleDevice (BaseName, PayloadFileName, Guid, Version, Lsv, CapsulesPat
+         LogAlways (ProcessOutput[0].decode())
+         Error ('GenerateCapsule returned an error')
+ 
+-    Copy (PayloadFileName, (CapsulesPath, 'firmware.bin'))
++    Copy (FmpCapsuleFile, (CapsulesPath, 'firmware.bin'))
+     MetaInfoXml = MetaInfoXmlTemplate
+     MetaInfoXml = MetaInfoXml.replace ('FMP_CAPSULE_GUID', Guid)
+     MetaInfoXml = MetaInfoXml.replace ('FMP_CAPSULE_BASE_NAME', BaseName)
+-- 
+2.47.3
+
