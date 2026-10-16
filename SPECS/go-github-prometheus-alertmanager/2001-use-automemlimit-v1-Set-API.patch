@@ -1,0 +1,28 @@
+From 3d3ea3e7df9b8f1c305648a3abc882edce65f164 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 13:45:33 +0800
+Subject: [PATCH] cmd/alertmanager: use automemlimit v1 Set API
+
+automemlimit v1 renamed SetGoMemLimitWithOpts to Set. Keep the ratio and cgroup/system fallback options unchanged.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cmd/alertmanager/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/alertmanager/main.go b/cmd/alertmanager/main.go
+index 0e5142e..52ae724 100644
+--- a/cmd/alertmanager/main.go
++++ b/cmd/alertmanager/main.go
+@@ -211,7 +211,7 @@ func run() int {
+ 			return 1
+ 		}
+ 
+-		if _, err := memlimit.SetGoMemLimitWithOpts(
++		if _, err := memlimit.Set(
+ 			memlimit.WithRatio(*memlimitRatio),
+ 			memlimit.WithProvider(
+ 				memlimit.ApplyFallback(
+-- 
+2.43.0
+

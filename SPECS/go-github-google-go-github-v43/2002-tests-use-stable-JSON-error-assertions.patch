@@ -1,0 +1,53 @@
+From 3bb394068416a59f3a207ead921b2c0b82007c68 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 13:41:38 +0800
+Subject: [PATCH] tests: use stable JSON error assertions
+
+A nil map with interface keys can now be marshaled as null. Use a
+channel, which JSON cannot encode, and inspect UnmarshalTypeError
+instead of matching Go-version-dependent field names in its text.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ github/github_test.go                 | 2 +-
+ github/repos_hooks_deliveries_test.go | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/github/github_test.go b/github/github_test.go
+index aa030d4..344d73b 100644
+--- a/github/github_test.go
++++ b/github/github_test.go
+@@ -511,7 +511,7 @@ func TestNewRequest_invalidJSON(t *testing.T) {
+ 	c := NewClient(nil)
+ 
+ 	type T struct {
+-		A map[interface{}]interface{}
++		A chan int
+ 	}
+ 	_, err := c.NewRequest("GET", ".", &T{})
+ 
+diff --git a/github/repos_hooks_deliveries_test.go b/github/repos_hooks_deliveries_test.go
+index bdcaabe..7778bbd 100644
+--- a/github/repos_hooks_deliveries_test.go
++++ b/github/repos_hooks_deliveries_test.go
+@@ -8,6 +8,7 @@ package github
+ import (
+ 	"context"
+ 	"encoding/json"
++	"errors"
+ 	"fmt"
+ 	"net/http"
+ 	"reflect"
+@@ -217,7 +218,8 @@ func TestHookDelivery_ParsePayload_invalidPayload(t *testing.T) {
+ 	}
+ 
+ 	_, err := d.ParseRequestPayload()
+-	if err == nil || err.Error() != "json: cannot unmarshal string into Go struct field CheckRun.check_run.id of type int64" {
++	var typeError *json.UnmarshalTypeError
++	if !errors.As(err, &typeError) || typeError.Value != "string" || typeError.Type != reflect.TypeOf(int64(0)) {
+ 		t.Errorf("unexpected error: %v", err)
+ 	}
+ }
+-- 
+2.43.0
+

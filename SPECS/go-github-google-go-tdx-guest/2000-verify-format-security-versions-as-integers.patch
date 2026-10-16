@@ -1,0 +1,25 @@
+From 644964135494fff176f11e6f2fcc08ce8b50c02f Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 14:14:47 +0800
+Subject: [PATCH] verify: format ISVSVN values as decimal integers
+
+Both security version values are uint32 values. Use decimal formatting instead of quoted-character formatting, which current Go vet rejects.
+---
+ verify/verify.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/verify/verify.go b/verify/verify.go
+index 6d03334..8ebc6c4 100644
+--- a/verify/verify.go
++++ b/verify/verify.go
+@@ -965,7 +965,7 @@ func getMatchingTdxModuleTcbLevel(tcbInfoTdxModuleIdentities []pcs.TdxModuleIden
+ 		if tdxModuleIdentityID == tdxModuleIdentity.ID {
+ 			for _, tcbLevel := range tdxModuleIdentity.TcbLevels {
+ 				if tdxModuleIsvSvn >= tcbLevel.Tcb.Isvsvn {
+-					logger.V(2).Infof("TDX Module Identity's TCB Level's ISVSVN(%q) matched the TDX Module's ISVSVN(%q)", tcbLevel.Tcb.Isvsvn, tdxModuleIsvSvn)
++					logger.V(2).Infof("TDX Module Identity's TCB Level's ISVSVN(%d) matched the TDX Module's ISVSVN(%d)", tcbLevel.Tcb.Isvsvn, tdxModuleIsvSvn)
+ 					return &tcbLevel, nil
+ 				}
+ 			}
+-- 
+2.43.0
