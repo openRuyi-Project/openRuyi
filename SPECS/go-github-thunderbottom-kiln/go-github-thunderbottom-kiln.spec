@@ -28,6 +28,7 @@ BuildRequires:  go(golang.org/x/term)
 BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
+Provides:       go(%{go_import_path}) = %{version}
 Provides:       go(%{go_import_path}/pkg/kiln) = %{version}
 
 Requires:       go(filippo.io/age)
