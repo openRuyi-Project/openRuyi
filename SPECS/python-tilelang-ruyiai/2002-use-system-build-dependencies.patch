@@ -1,0 +1,12 @@
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -66,9 +66,6 @@
+     "cython>=3.1.0",
+     "scikit-build-core",
+     "z3-solver>=4.13.0,<4.15.5",
+-    # Not for auditwheel, explicitly add patchelf for repairing libz3.so.
+-    # See tvm's CMakeLists.txt for more information.
+-    "patchelf>=0.17.2; platform_system == 'Linux'",
+ ]
+ build-backend = "scikit_build_core.build"
+ 
