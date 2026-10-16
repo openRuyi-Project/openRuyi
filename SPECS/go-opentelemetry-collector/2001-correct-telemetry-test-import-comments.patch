@@ -1,0 +1,40 @@
+From 142e182066e891969294170c5475bc5357812ca4 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 11 Aug 2026 23:40:51 +0800
+Subject: [PATCH] tests: correct telemetry package import comments
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ service/telemetry/otelconftelemetry/resource_test.go | 2 +-
+ service/telemetry/otelconftelemetry/tracer_test.go   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/service/telemetry/otelconftelemetry/resource_test.go b/service/telemetry/otelconftelemetry/resource_test.go
+index 1a945160a..d4525cc32 100644
+--- a/service/telemetry/otelconftelemetry/resource_test.go
++++ b/service/telemetry/otelconftelemetry/resource_test.go
+@@ -1,7 +1,7 @@
+ // Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry"
++package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry/otelconftelemetry"
+ 
+ import (
+ 	"testing"
+diff --git a/service/telemetry/otelconftelemetry/tracer_test.go b/service/telemetry/otelconftelemetry/tracer_test.go
+index 3fcfe56ec..0c72140ba 100644
+--- a/service/telemetry/otelconftelemetry/tracer_test.go
++++ b/service/telemetry/otelconftelemetry/tracer_test.go
+@@ -1,7 +1,7 @@
+ // Copyright The OpenTelemetry Authors
+ // SPDX-License-Identifier: Apache-2.0
+ 
+-package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry"
++package otelconftelemetry // import "go.opentelemetry.io/collector/service/telemetry/otelconftelemetry"
+ 
+ import (
+ 	"context"
+-- 
+2.43.0
+
