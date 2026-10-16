@@ -1,0 +1,88 @@
+From a0d724ee7aaafbbb71ed2bf3fff5e1a07a15d495 Mon Sep 17 00:00:00 2001
+From: Brennan Tracy <brennantracy@google.com>
+Date: Fri, 2 Oct 2026 18:13:42 +0000
+Subject: [PATCH] abi: prevent integer overflow in parser
+
+The certificate table parser uses uint64 arithmetic to compute the
+length of a certificate table entry. Previously, the uint32 offset and
+length fields were summed and could wrap past the 32-bit maximum. If
+this occurred, the following slice would panic.
+
+This change is necessary because verifiers parse this table as it is
+sent alongside an SEV-SNP report. The verifier reads this table before
+validating a signature. This change prevents malformed tables from
+crashing verifiers.
+---
+ abi/abi.go      |  4 ++--
+ abi/abi_test.go | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+
+diff --git a/abi/abi.go b/abi/abi.go
+index ee1f7de..ec8bd24 100644
+--- a/abi/abi.go
++++ b/abi/abi.go
+@@ -872,8 +872,8 @@ func (c *CertTable) Unmarshal(certs []byte) error {
+ 	for i, entry := range certTableHeader {
+ 		var next CertTableEntry
+ 		copy(next.GUID[:], entry.GUID[:])
+-		if entry.Offset+entry.Length > uint32(len(certs)) {
+-			return fmt.Errorf("cert table entry %d specifies a byte range outside the certificate data block (size %d): offset=%d, length%d", i, len(certs), entry.Offset, entry.Length)
++		if uint64(entry.Offset)+uint64(entry.Length) > uint64(len(certs)) {
++			return fmt.Errorf("cert table entry %d specifies a byte range outside the certificate data block (size %d): offset=%d, length=%d", i, len(certs), entry.Offset, entry.Length)
+ 		}
+ 		next.RawCert = make([]byte, entry.Length)
+ 		copy(next.RawCert, certs[entry.Offset:entry.Offset+entry.Length])
+diff --git a/abi/abi_test.go b/abi/abi_test.go
+index 0cd8eac..47c5f3a 100644
+--- a/abi/abi_test.go
++++ b/abi/abi_test.go
+@@ -18,6 +18,7 @@ import (
+ 	"bytes"
+ 	"encoding/hex"
+ 	"fmt"
++	"math"
+ 	"math/rand"
+ 	"runtime"
+ 	"strings"
+@@ -390,6 +391,41 @@ func TestCertTableProto(t *testing.T) {
+ 	}
+ }
+ 
++func TestCertTableUnmarshalUint32Overflow(t *testing.T) {
++	// A cert table is a header of (GUID, offset, length) records followed by certificate bytes.
++	// Each case sets one record's offset and length so that their 32-bit sum wraps to less than
++	// the 100-byte table. The old uint32 bounds check accepted these and the slice that followed
++	// panicked.
++	for _, tc := range []struct {
++		name   string
++		offset uint32
++		length uint32
++	}{
++		{name: "large offset", offset: 0xffffff00, length: 0x150},                           // sum wraps to 80
++		{name: "large length", offset: 2 * CertTableEntrySize, length: math.MaxUint32 - 10}, // sum wraps to 37
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			headers := make([]CertTableHeaderEntry, 2)
++			headers[0].GUID = uuid.MustParse(extraGUID)
++			headers[0].Offset = tc.offset
++			headers[0].Length = tc.length
++
++			table := make([]byte, 100)
++			if err := headers[0].Write(table[:CertTableEntrySize]); err != nil {
++				t.Fatalf("could not write header 0: %v", err)
++			}
++			if err := headers[1].Write(table[CertTableEntrySize : 2*CertTableEntrySize]); err != nil {
++				t.Fatalf("could not write header 1: %v", err)
++			}
++
++			c := new(CertTable)
++			if err := c.Unmarshal(table); err == nil {
++				t.Errorf("c.Unmarshal() succeeded unexpectedly, want error")
++			}
++		})
++	}
++}
++
+ func TestSevProduct(t *testing.T) {
+ 	oldCpuid := cpuid
+ 	defer func() { cpuid = oldCpuid }()

@@ -1,0 +1,25 @@
+From a38364ccbd210f4c4cf5d2141ec6c60d32635333 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 16 Oct 2026 14:12:02 +0800
+Subject: [PATCH] testing: format certificate function values correctly
+
+The certificate function is an integer enum, not a quoted string. Use the generic value verb so current Go vet accepts the fake KDS error path.
+---
+ testing/fakekds.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testing/fakekds.go b/testing/fakekds.go
+index 2227524..1c8e9d2 100644
+--- a/testing/fakekds.go
++++ b/testing/fakekds.go
+@@ -176,7 +176,7 @@ func (f *FakeKDS) Get(url string) ([]byte, error) {
+ 		case kds.VlekCertFunction:
+ 			return []byte(bundles.VlekBundle), nil
+ 		default:
+-			return nil, fmt.Errorf("internal: unsupperted key type for fake bundles: %q", key)
++			return nil, fmt.Errorf("internal: unsupperted key type for fake bundles: %v", key)
+ 		}
+ 	}
+ 	vcek, err := kds.ParseVCEKCertURL(url)
+-- 
+2.43.0
