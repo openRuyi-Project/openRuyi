@@ -1,0 +1,48 @@
+From a126e0bfa7f6232c77969ad286c6acda4cd4756f Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Wed, 9 Sep 2026 11:00:04 +0800
+Subject: [PATCH] server: report standalone readiness after installing signal
+ handlers
+
+RunServerWithOpts calls start before handleSignals. The ready log in
+start therefore lets a supervisor or TestSignalTrapsSIGTERM send SIGTERM
+before signal.Notify is installed, intermittently terminating without
+graceful shutdown. Move standalone readiness to the end of
+RunServerWithOpts. Keep the existing readiness notifications for
+asynchronous FT activation and clustered leadership.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ server/server.go | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/server/server.go b/server/server.go
+index 68eec77..2b56309 100644
+--- a/server/server.go
++++ b/server/server.go
+@@ -1898,6 +1898,11 @@ func RunServerWithOpts(stanOpts *Options, natsOpts *server.Options) (newServer *
+ 	if s.opts.HandleSignals {
+ 		s.handleSignals()
+ 	}
++	// Standalone startup is complete only after signal handlers are installed.
++	// FT activation and clustered leadership report readiness separately.
++	if !s.isClustered && s.opts.FTGroupName == "" {
++		s.log.Noticef(streamingReadyLog)
++	}
+ 	return &s, nil
+ }
+ 
+@@ -2176,7 +2181,9 @@ RECOVER:
+ 	for _, l := range storeLimitsLines {
+ 		s.log.Noticef(l)
+ 	}
+-	if !s.isClustered {
++	// FT mode reports readiness when the server becomes active.
++	// Standalone readiness is reported at the end of RunServerWithOpts.
++	if !s.isClustered && s.opts.FTGroupName != "" {
+ 		s.log.Noticef(streamingReadyLog)
+ 	}
+ 
+-- 
+2.52.0
+
