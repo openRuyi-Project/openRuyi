@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-License-Identifier: MulanPSL-2.0
+
+[Unit]
+Description=MinIO object storage
+Documentation=https://github.com/minio/minio
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+User=minio
+Group=minio
+StateDirectory=minio
+StateDirectoryMode=0750
+WorkingDirectory=/var/lib/minio
+EnvironmentFile=/etc/sysconfig/minio
+# Require explicit credentials before starting a network-facing service.
+ExecStartPre=/usr/bin/test -n "${MINIO_ROOT_USER}"
+ExecStartPre=/usr/bin/test -n "${MINIO_ROOT_PASSWORD}"
+ExecStart=/usr/bin/minio server $MINIO_OPTS $MINIO_VOLUMES
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=1048576
+TasksMax=infinity
+TimeoutStartSec=infinity
+TimeoutStopSec=infinity
+
+[Install]
+WantedBy=multi-user.target

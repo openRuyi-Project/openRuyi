@@ -1,0 +1,18 @@
+MinIO on openRuyi
+================
+
+Set MINIO_ROOT_USER and MINIO_ROOT_PASSWORD in /etc/sysconfig/minio before
+starting the service. The file is readable only by root; systemd passes its
+settings to the service running as the minio user. Configuration is preserved
+on package upgrades.
+
+Start the service with:
+
+    systemctl enable --now minio.service
+
+The default S3 API listens on port 9000 and the Console on port 9001. Data is
+stored in /var/lib/minio/data. To use other disks or endpoints, adjust
+MINIO_VOLUMES and MINIO_OPTS and ensure the minio user can access the data.
+Data is retained when the package is removed.
+
+Use journalctl -u minio.service to inspect service logs.
