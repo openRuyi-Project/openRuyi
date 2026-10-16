@@ -17,6 +17,9 @@ Source0:        https://github.com/cucumber/gherkin-go/archive/v%{version}.tar.g
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Use the SourceReference oneof introduced by messages-go v12.4.0.
+# https://github.com/cucumber/gherkin-go/commit/da99309370c95b20dc358de7c6a610bd348f090b
+Patch1000:      1000-use-SourceReference-oneof.patch
 # Associate the example with the Pickles function for current Go vet.
 Patch2000:      2000-tests-associate-pickle-example-with-exported-function.patch
 
