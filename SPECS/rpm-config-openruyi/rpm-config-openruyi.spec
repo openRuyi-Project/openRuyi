@@ -38,6 +38,7 @@ macros.aaa-buildsystem.rust
 macros.aaa-buildsystem.rustcrates
 macros.aaa-meson
 macros.buildsystem
+macros.buildsystem.waf
 macros.completions
 macros.ldconfig
 macros.sbat

@@ -6,22 +6,25 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+
 Name:           tdb
-Version:        1.4.14
+Version:        1.4.15
 Release:        %autorelease
 Summary:        A Trivial Database library
 License:        LGPL-3.0-or-later
 URL:            https://tdb.samba.org/
-# No VCS link available
-#!RemoteAsset
+VCS:            git:https://git.samba.org/samba.git
+#!RemoteAsset:  sha256:fba09d8df1f1b9072aeae8e78b2bd43c5afef20b2f6deefa633aa14a377a8dd2
 Source:         https://samba.org/ftp/tdb/tdb-%{version}.tar.gz
-BuildSystem:    autotools
+BuildSystem:    waf
 
 BuildOption(conf):  --disable-rpath
 BuildOption(conf):  --bundled-libraries=NONE
 BuildOption(conf):  --builtin-libraries=replace
 BuildOption(conf):  --without-gettext
 
+BuildRequires:  libxslt
+BuildRequires:  docbook-xsl
 BuildRequires:  pkgconfig(python3)
 
 %description
@@ -39,7 +42,6 @@ such as tdbdump and tdbtool.
 %package        devel
 Summary:        Development files for the Tdb library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       %{name}-tools%{?_isa} = %{version}-%{release}
 
 %description    devel
 This package contains the header files, pkg-config file, and development
@@ -48,15 +50,11 @@ documentation needed to build applications that use the Tdb library.
 %package     -n python-tdb
 Summary:        Python 3 bindings for the Tdb library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Provides:       python3-tdb
-%python_provide python3-tdb
+Provides:       python3-tdb = %{version}-%{release}
 
 %description -n python-tdb
 Python bindings for libtdb
 
-%conf -p
-# https://gitlab.com/ita1024/waf/-/issues/2472
-export PYTHONARCHDIR=%{python3_sitearch}
 
 %files
 %license LICENSE
@@ -67,9 +65,13 @@ export PYTHONARCHDIR=%{python3_sitearch}
 %{_bindir}/tdbdump
 %{_bindir}/tdbtool
 %{_bindir}/tdbrestore
-# Man pages disabled due to docbook dependency issues
+%{_mandir}/man8/tdbbackup.8*
+%{_mandir}/man8/tdbdump.8*
+%{_mandir}/man8/tdbtool.8*
+%{_mandir}/man8/tdbrestore.8*
 
 %files devel
+%doc docs/README
 %{_includedir}/tdb.h
 %{_libdir}/libtdb.so
 %{_libdir}/pkgconfig/tdb.pc
@@ -79,4 +81,4 @@ export PYTHONARCHDIR=%{python3_sitearch}
 %{python3_sitearch}/_tdb_text.py
 
 %changelog
-%{?autochangelog}
+%autochangelog

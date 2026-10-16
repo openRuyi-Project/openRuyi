@@ -9,17 +9,17 @@
 %global _lto_cflags %{nil}
 
 Name:           cmocka
-Version:        1.1.7
+Version:        2.0.2
 Release:        %autorelease
 Summary:        Lightweight library to simplify and generalize unit tests for C
 License:        Apache-2.0
 URL:            https://cmocka.org
 VCS:            git:https://git.cryptomilk.org/projects/cmocka.git
-#!RemoteAsset
-Source0:        https://cmocka.org/files/1.1/%{name}-%{version}.tar.xz
-#!RemoteAsset
-Source1:        https://cmocka.org/files/1.1/%{name}-%{version}.tar.xz.asc
+#!RemoteAsset:  sha256:39f92f366bdf3f1a02af4da75b4a5c52df6c9f7e736c7d65de13283f9f0ef416
+Source0:        https://cmocka.org/files/2.0/%{name}-%{version}.tar.xz
 BuildSystem:    cmake
+
+BuildOption(conf):  -DUNIT_TESTING=ON
 
 BuildRequires:  cmake
 BuildRequires:  pkg-config
@@ -48,13 +48,14 @@ Provides:       cmocka-devel:%{_libdir}/cmake/cmocka
 cmake support for developing with the cmocka unit testing library.
 
 %files
-%doc AUTHORS README.md ChangeLog
-%license COPYING
+%doc AUTHORS README.md CHANGELOG.md
+%license LICENSE
 %{_libdir}/libcmocka.so.*
 
 %files devel
 %{_includedir}/cmocka.h
 %{_includedir}/cmocka_pbc.h
+%{_includedir}/cmocka_version.h
 %{_libdir}/libcmocka.so
 %{_libdir}/pkgconfig/cmocka.pc
 
@@ -62,4 +63,4 @@ cmake support for developing with the cmocka unit testing library.
 %{_libdir}/cmake/cmocka
 
 %changelog
-%{?autochangelog}
+%autochangelog

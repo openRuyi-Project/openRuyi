@@ -1,0 +1,21 @@
+# Use the first project Waf entry; do not retry a failed command.
+%waf(-) (\
+    export PYTHONHASHSEED=1\
+    for script in ./waf ./buildtools/bin/waf; do\
+        if [ -f "$script" ]; then\
+            echo "waf: /usr/bin/python3 $script" >&2\
+            exec /usr/bin/python3 "$script" %**\
+        fi\
+    done\
+    echo 'waf: expected ./waf or ./buildtools/bin/waf' >&2\
+    exit 1\
+)
+
+# Set the Python extension path for Waf; see https://gitlab.com/ita1024/waf/-/issues/2472.
+%buildsystem_waf_conf() %{set_build_flags}\
+export LINKFLAGS="$LDFLAGS"\
+%{?python3_sitearch:export PYTHONARCHDIR="${PYTHONARCHDIR:-%{python3_sitearch}}"}\
+%waf configure -j1 --prefix=%{_prefix} --libdir=%{_libdir} %*
+%buildsystem_waf_build() %waf build %{?_smp_mflags} -v %*
+%buildsystem_waf_install() %waf install %{?_smp_mflags} --destdir=%{buildroot} %*
+%buildsystem_waf_check() %waf test %{?_smp_mflags} %*
