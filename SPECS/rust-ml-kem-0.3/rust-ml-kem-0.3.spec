@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name ml-kem
-%global full_version 0.3.0
+%global full_version 0.3.2
 %global pkgname ml-kem-0.3
 
 Name:           rust-ml-kem-0.3
-Version:        0.3.0
+Version:        0.3.2
 Release:        %autorelease
 Summary:        Rust crate "ml-kem"
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/RustCrypto/KEMs/tree/master/ml-kem
-#!RemoteAsset:  sha256:68c77d5ff6d755d09a0ef4d4d28c2b7e83658fe83e8c736d55e93d43e380d1cd
+#!RemoteAsset:  sha256:5e15f3e5b957493873e396a66914e83e616b6afe335cdef7efe5c6e1216aba66
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -24,25 +24,30 @@ Requires:       crate(hybrid-array-0.4/ctutils) >= 0.4.8
 Requires:       crate(hybrid-array-0.4/default) >= 0.4.8
 Requires:       crate(hybrid-array-0.4/extra-sizes) >= 0.4.8
 Requires:       crate(kem-0.3/default) >= 0.3.0
-Requires:       crate(module-lattice-0.2/ctutils) >= 0.2.2
-Requires:       crate(module-lattice-0.2/default) >= 0.2.2
+Requires:       crate(module-lattice-0.2/ctutils) >= 0.2.3
+Requires:       crate(module-lattice-0.2/default) >= 0.2.3
 Requires:       crate(rand-core-0.10/default) >= 0.10.0
 Requires:       crate(sha3-0.11) >= 0.11.0
+
 Provides:       crate(%{pkgname}) = %{version}
-Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/hazmat) = %{version}
 
 %description
 Source code for takopackized Rust crate "ml-kem"
 
 %package     -n %{name}+alloc
-Summary:        Pure Rust implementation of the Module-Lattice-Based Key-Encapsulation Mechanism Standard (formerly known as Kyber) as described in FIPS 203 - feature "alloc"
+Summary:        Pure Rust implementation of the Module-Lattice-Based Key-Encapsulation Mechanism Standard (formerly known as Kyber) as described in FIPS 203 - feature "alloc" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(module-lattice-0.2/alloc) >= 0.2.3
+Requires:       crate(module-lattice-0.2/ctutils) >= 0.2.3
 Requires:       crate(pkcs8-0.11/alloc) >= 0.11.0
 Provides:       crate(%{pkgname}/alloc) = %{version}
+Provides:       crate(%{pkgname}/default) = %{version}
 
 %description -n %{name}+alloc
 This metapackage enables feature "alloc" for the Rust ml-kem crate, by pulling in any additional dependencies needed by that feature.
+
+Additionally, this package also provides the "default" feature.
 
 %package     -n %{name}+getrandom
 Summary:        Pure Rust implementation of the Module-Lattice-Based Key-Encapsulation Mechanism Standard (formerly known as Kyber) as described in FIPS 203 - feature "getrandom"
@@ -75,8 +80,8 @@ This metapackage enables feature "pkcs8" for the Rust ml-kem crate, by pulling i
 %package     -n %{name}+zeroize
 Summary:        Pure Rust implementation of the Module-Lattice-Based Key-Encapsulation Mechanism Standard (formerly known as Kyber) as described in FIPS 203 - feature "zeroize"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(module-lattice-0.2/ctutils) >= 0.2.2
-Requires:       crate(module-lattice-0.2/zeroize) >= 0.2.2
+Requires:       crate(module-lattice-0.2/ctutils) >= 0.2.3
+Requires:       crate(module-lattice-0.2/zeroize) >= 0.2.3
 Requires:       crate(zeroize-1) >= 1.8.1
 Provides:       crate(%{pkgname}/zeroize) = %{version}
 

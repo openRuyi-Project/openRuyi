@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "ml-kem"
-version = "0.3.0"
+version = "0.3.2"
 build = false
 exclude = [
     "tests/key-gen.rs",
@@ -50,7 +50,11 @@ resolver = "2"
 all-features = true
 
 [features]
-alloc = ["pkcs8?/alloc"]
+alloc = [
+    "module-lattice/alloc",
+    "pkcs8?/alloc",
+]
+default = ["alloc"]
 getrandom = ["kem/getrandom"]
 hazmat = []
 pem = ["pkcs8/pem"]
@@ -98,7 +102,7 @@ default-features = false
 version = "0.3"
 
 [dependencies.module-lattice]
-version = "0.2.2"
+version = "0.2.3"
 features = ["ctutils"]
 
 [dependencies.pkcs8]

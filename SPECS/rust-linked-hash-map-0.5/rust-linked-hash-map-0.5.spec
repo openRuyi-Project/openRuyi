@@ -18,9 +18,6 @@ Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/do
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
-# Drop features that depend on unpackaged crates.
-Patch2000:      2000-drop-unpackaged-features.patch
-
 BuildRequires:  rust-rpm-macros
 
 Provides:       crate(%{pkgname}) = %{version}
@@ -29,6 +26,18 @@ Provides:       crate(%{pkgname}/nightly) = %{version}
 
 %description
 Source code for takopackized Rust crate "linked-hash-map"
+
+%package     -n %{name}+heapsize
+Summary:        HashMap wrapper that holds key-value pairs in insertion order - feature "heapsize" and 1 more
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(heapsize-0.4/default) >= 0.4.0
+Provides:       crate(%{pkgname}/heapsize) = %{version}
+Provides:       crate(%{pkgname}/heapsize-impl) = %{version}
+
+%description -n %{name}+heapsize
+This metapackage enables feature "heapsize" for the Rust linked-hash-map crate, by pulling in any additional dependencies needed by that feature.
+
+Additionally, this package also provides the "heapsize_impl" feature.
 
 %package     -n %{name}+serde
 Summary:        HashMap wrapper that holds key-value pairs in insertion order - feature "serde" and 1 more

@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name crossbeam-epoch
-%global full_version 0.9.18
+%global full_version 0.9.21
 %global pkgname crossbeam-epoch-0.9
 
 Name:           rust-crossbeam-epoch-0.9
-Version:        0.9.18
+Version:        0.9.21
 Release:        %autorelease
 Summary:        Rust crate "crossbeam-epoch"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-epoch
-#!RemoteAsset:  sha256:5b82ac4a3c2ca9c3460964f020e1402edd5753411d7737aa39c3714ad1b5420e
+#!RemoteAsset:  sha256:dc74980687109a3b14c72fd458107bf0baa1da1a1a805e178d15501ba9b86d9d
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(crossbeam-utils-0.8) >= 0.8.18
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 
