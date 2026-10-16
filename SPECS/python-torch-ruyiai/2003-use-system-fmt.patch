@@ -1,0 +1,109 @@
+Use the distro fmt CMake package instead of building PyTorch's vendored
+third_party/fmt. Keep a compatibility alias for bundled components and native
+tests which still refer to fmt::fmt-header-only.
+
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index adf7b5e..55c2d99 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -585,9 +585,8 @@ endif()
+
+ if(USE_CUDA)
+   list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/cuda)
+-  # Next two lines are needed because TunableOp uses third-party/fmt
+-  list(APPEND ATen_CUDA_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
+-  list(APPEND ATen_CUDA_DEPENDENCY_LIBS fmt::fmt-header-only)
++  # TunableOp uses fmt.
++  list(APPEND ATen_CUDA_DEPENDENCY_LIBS fmt::fmt)
+   list(APPEND ATen_CUDA_CU_SRCS
+     ${cuda_cu}
+     ${native_cuda_cu}
+@@ -646,9 +645,8 @@ if(USE_ROCM)
+     )
+   endif()
+
+-  # Next two lines are needed because TunableOp uses third-party/fmt
+-  list(APPEND ATen_HIP_INCLUDE $<TARGET_PROPERTY:fmt::fmt-header-only,INTERFACE_INCLUDE_DIRECTORIES>)
+-  list(APPEND ATen_HIP_DEPENDENCY_LIBS fmt::fmt-header-only)
++  # TunableOp uses fmt.
++  list(APPEND ATen_HIP_DEPENDENCY_LIBS fmt::fmt)
+   if(USE_FLASH_ATTENTION AND USE_ROCM_CK_SDPA)
+     list(APPEND ATen_HIP_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/native/transformers/hip/flash_attn/ck)
+   endif()
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index bd138d2..107afc6 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -92,7 +92,7 @@ if(NOT BUILD_LIBTORCHLESS)
+   endif()
+
+   target_link_libraries(c10 PUBLIC headeronly)
+-  target_link_libraries(c10 PRIVATE fmt::fmt-header-only)
++  target_link_libraries(c10 PRIVATE fmt::fmt)
+   target_link_libraries(c10 PRIVATE nlohmann)
+   target_link_libraries(c10 PRIVATE moodycamel)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 2baa187..cabef9c 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1636,7 +1636,13 @@ endif()
+ set(FMT_INSTALL ON)
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
++find_package(fmt REQUIRED)
++# Some bundled components and native tests still use fmt's header-only target.
++# The distro package intentionally provides the compiled target only; preserve
++# the upstream target name as an alias so those consumers use the system fmt.
++if(NOT TARGET fmt::fmt-header-only)
++  add_library(fmt::fmt-header-only ALIAS fmt::fmt)
++endif()
+
+ # Disable compiler feature checks for `fmt`.
+ #
+@@ -1645,7 +1651,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+ # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
+ # `fmt` is compatible with a superset of the compilers that PyTorch is, it
+ # shouldn't be too bad to just disable the checks.
+-set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
++# System fmt's imported targets are used as-is.
+
+ # Keep fmt's header-only type layout stable across mixed C++ modes by forcing
+ # one no_unique_address spelling for all translation units.
+@@ -1654,11 +1660,10 @@ if(MSVC AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ else()
+   set(_fmt_no_unique_address "[[no_unique_address]]")
+ endif()
+-target_compile_definitions(fmt PUBLIC "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+-target_compile_definitions(fmt-header-only INTERFACE "FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
++add_compile_definitions("FMT_NO_UNIQUE_ADDRESS=${_fmt_no_unique_address}")
+ unset(_fmt_no_unique_address)
+
+-list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
++list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt)
+ set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+
+ # ---[ Kineto
+diff --git a/torch/CMakeLists.txt b/torch/CMakeLists.txt
+index 23aa88d..885f831 100644
+--- a/torch/CMakeLists.txt
++++ b/torch/CMakeLists.txt
+@@ -83,7 +83,7 @@ set(TORCH_PYTHON_LINK_LIBRARIES
+     nlohmann
+     moodycamel
+     shm
+-    fmt::fmt-header-only
++    fmt::fmt
+     ATEN_CPU_FILES_GEN_LIB)
+
+ if(USE_ASAN AND TARGET Sanitizer::address)
+@@ -513,7 +513,7 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   else()
+     target_link_libraries(nnapi_backend PRIVATE torch)
+   endif()
+-  target_link_libraries(nnapi_backend PRIVATE torch_python pybind::pybind11 fmt::fmt-header-only)
++  target_link_libraries(nnapi_backend PRIVATE torch_python pybind::pybind11 fmt::fmt)
+   if(MSVC AND TORCH_PYTHON_LINK_FLAGS)
+     set_target_properties(nnapi_backend PROPERTIES LINK_FLAGS "${TORCH_PYTHON_LINK_FLAGS}")
+   endif()
