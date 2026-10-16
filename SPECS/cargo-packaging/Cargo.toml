@@ -1,0 +1,20 @@
+[package]
+name = "rust-rpm-prov"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+auditable-info = { version = "0.6.2" }
+clap = { version = "3.2", features = ["derive", "env"] }
+# toml = "0.5"
+# serde_derive = "1.0"
+# serde = "1.0"
+
+tracing = "^0.1.35"
+tracing-subscriber = { version = "^0.3.14", features = ["env-filter", "fmt"] }
+
+[build-dependencies]
+clap = { version = "^3.2", features = ["derive"] }
+clap_complete = "^3.2"
+
+
