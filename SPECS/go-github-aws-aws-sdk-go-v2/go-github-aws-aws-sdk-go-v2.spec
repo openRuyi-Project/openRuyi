@@ -60,6 +60,9 @@ Source0:        https://github.com/aws/aws-sdk-go-v2/archive/release-%{upstream_
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Allow smithy-go to determine stream length before testing a rewind failure.
+# https://github.com/aws/aws-sdk-go-v2/pull/3513
+Patch1000:      1000-tests-update-semi-seekable-stream-fixture.patch
 # Otherwise we need to -vet=off
 Patch2000:      2000-Wrap-status-code-error-value-for-Go-1.27.patch
 
@@ -74,6 +77,7 @@ Provides:       go(github.com/aws/aws-sdk-go-v2/feature/ec2/imds) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/configsources) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/endpoints/v2) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/ini) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/appconfig) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ec2) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ecs) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/elasticache) = %{version}
@@ -83,6 +87,7 @@ Provides:       go(github.com/aws/aws-sdk-go-v2/service/kafka) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/lightsail) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/rds) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/signin) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/ssm) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/sso) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ssooidc) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/sts) = %{version}

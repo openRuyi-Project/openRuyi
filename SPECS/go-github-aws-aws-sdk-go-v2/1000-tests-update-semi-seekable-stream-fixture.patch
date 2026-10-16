@@ -1,0 +1,54 @@
+From cb376d5fc1551e32d7b1a088f30bbfb034a6ec79 Mon Sep 17 00:00:00 2001
+From: TAO_TONG <63986359+Tongs2000@users.noreply.github.com>
+Date: Tue, 25 Aug 2026 22:56:50 +0000
+Subject: [PATCH] Set Content-Length when the request body is set instead of
+ via middleware (#3513)
+
+Content-Length is now set when the request body is set via smithy-go `Request.SetStream`, so the generated stacks no longer register the standalone `ComputeContentLength` middleware.
+
+(cherry picked from commit c5510c6fa70019f93af63e53b8fc2db59fc44996)
+
+Backport scope: only the semiSeekable test fixture. The packaged smithy-go
+already determines content length in SetStream. Preserve the existing
+production middleware and service generation code.
+Source: https://github.com/aws/aws-sdk-go-v2/pull/3513
+
+---
+ aws/signer/v4/middleware_test.go | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/aws/signer/v4/middleware_test.go b/aws/signer/v4/middleware_test.go
+index d29d04b..85c4dba 100644
+--- a/aws/signer/v4/middleware_test.go
++++ b/aws/signer/v4/middleware_test.go
+@@ -435,19 +435,21 @@ func (nonSeeker) Read(p []byte) (n int, err error) {
+ 	return 0, io.EOF
+ }
+ 
++// semiSeekable is a stream whose seeks succeed until its body has been read,
++// then fail, to exercise a rewind failure while computing the payload hash.
+ type semiSeekable struct {
+-	hasSeeked bool
++	read bool
+ }
+ 
+ func (s *semiSeekable) Seek(offset int64, whence int) (int64, error) {
+-	if !s.hasSeeked {
+-		s.hasSeeked = true
+-		return 0, nil
++	if s.read {
++		return 0, fmt.Errorf("io seek error")
+ 	}
+-	return 0, fmt.Errorf("io seek error")
++	return 0, nil
+ }
+ 
+-func (*semiSeekable) Read(p []byte) (n int, err error) {
++func (s *semiSeekable) Read(p []byte) (n int, err error) {
++	s.read = true
+ 	return 0, io.EOF
+ }
+ 
+-- 
+2.43.0
+
