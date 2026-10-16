@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name regex-automata
-%global full_version 0.4.14
+%global full_version 0.4.18
 %global pkgname regex-automata-0.4
 
 Name:           rust-regex-automata-0.4
-Version:        0.4.14
+Version:        0.4.18
 Release:        %autorelease
 Summary:        Rust crate "regex-automata"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/regex/tree/master/regex-automata
-#!RemoteAsset:  sha256:6e1dd4122fc1595e8162618945476892eefca7b88c52820e74af6262213cae8f
+#!RemoteAsset:  sha256:ad8553b9b26413251cbf30e620595c7a41b3887f03da04579c0e6b0d6a06b4b2
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
