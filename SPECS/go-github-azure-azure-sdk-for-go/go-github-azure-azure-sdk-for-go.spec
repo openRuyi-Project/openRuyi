@@ -123,6 +123,7 @@ Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/azcore/tracing) = %{ver
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/azidentity) = %{ver_azidentity}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/azidentity/internal) = %{ver_azidentity}
 # internal v%{ver_internal}
+Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/internal) = %{ver_internal}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/internal/diag) = %{ver_internal}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/internal/errorinfo) = %{ver_internal}
 Provides:       go(github.com/Azure/azure-sdk-for-go/sdk/internal/exported) = %{ver_internal}
