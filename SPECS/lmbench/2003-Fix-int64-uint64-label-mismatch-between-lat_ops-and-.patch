@@ -1,0 +1,73 @@
+From 38198af4dd56d838eaecd5dcfc80942fce81767d Mon Sep 17 00:00:00 2001
+From: Yafen Fang <yafen@iscas.ac.cn>
+Date: Tue, 22 Sep 2026 11:22:07 +0800
+Subject: [PATCH] Fix int64/uint64 label mismatch between lat_ops and
+ getsummary
+
+lat_ops.c uses the signed int64 type for all 64-bit benchmarks, but
+the add operation was mislabeled "uint64 add" and getsummary used
+print_uint64/"Basic uint64 operations". Rename all to int64 for
+consistency.
+
+Fix the label mismatch by renaming all uint64 references to int64:
+
+  lat_ops.c:
+    - nano("uint64 add", ...) -> nano("int64 add", ...)
+  scripts/getsummary:
+    - print_uint64 -> print_int64  (function name and call site)
+    - "Basic uint64 operations" -> "Basic int64 operations"
+---
+ scripts/getsummary | 6 +++---
+ src/lat_ops.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/getsummary b/scripts/getsummary
+index 476631f..07d9721 100755
+--- a/scripts/getsummary
++++ b/scripts/getsummary
+@@ -451,7 +451,7 @@ EOF
+ &print_basic;
+ &print_process;
+ &print_int;
+-&print_uint64;
++&print_int64;
+ &print_float;
+ &print_double;
+ &print_ctx;
+@@ -588,7 +588,7 @@ EOF
+ 	}
+ }
+ 
+-sub print_uint64
++sub print_int64
+ {
+ 	local($i);
+ 	local($t);
+@@ -600,7 +600,7 @@ sub print_uint64
+ 	}
+ 	print<<EOF;
+ 
+-Basic uint64 operations - times in nanoseconds - smaller is better
++Basic int64 operations - times in nanoseconds - smaller is better
+ ------------------------------------------------------------------
+ Host                 OS int64  int64  int64  int64  int64  
+                          bit    add    mul    div    mod   
+diff --git a/src/lat_ops.c b/src/lat_ops.c
+index d343ff3..8f9affc 100644
+--- a/src/lat_ops.c
++++ b/src/lat_ops.c
+@@ -459,9 +459,9 @@ main(int ac, char **av)
+ 		0, 1, warmup, repetitions, &state);
+ #ifndef __GNUC__
+ 	settime(gettime() - (get_n() * 100000 * iop_time) / iop_N);
+-	nano("uint64 add", get_n() * 100000);
++	nano("int64 add", get_n() * 100000);
+ #else
+-	nano("uint64 add", get_n() * 10000 * 2);
++	nano("int64 add", get_n() * 10000 * 2);
+ #endif
+ 	
+ 	benchmp(NULL, do_int64_mul, NULL, 
+-- 
+2.34.1
+
