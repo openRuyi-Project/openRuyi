@@ -1,8 +1,11 @@
 [Unit]
-Description=Kerberos 5 administration server
+Description=Kerberos administration server
+After=network.target
 
 [Service]
-ExecStart=/usr/sbin/kadmind -nofork
+RuntimeDirectory=krb5kdc
+RuntimeDirectoryMode=0700
+ExecStart=@SBINDIR@/kadmind -nofork
 
 [Install]
 WantedBy=multi-user.target
