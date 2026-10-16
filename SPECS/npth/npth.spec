@@ -13,10 +13,8 @@ Summary:        GNU Portable Threads library
 License:        LGPL-2.1-or-later
 URL:            https://gnupg.org/software/npth/
 VCS:            git:https://git.gnupg.org/npth.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8bd24b4f23a3065d6e5b26e98aba9ce783ea4fd781069c1b35d149694e90ca3e
 Source:         https://gnupg.org/ftp/gcrypt/%{name}/%{name}-%{version}.tar.bz2
-#!RemoteAsset
-Source2:        https://gnupg.org/ftp/gcrypt/%{name}/%{name}-%{version}.tar.bz2.sig
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -49,4 +47,4 @@ developing applications that use %{name}.
 %{_datadir}/aclocal/%{name}.m4
 
 %changelog
-%{?autochangelog}
+%autochangelog

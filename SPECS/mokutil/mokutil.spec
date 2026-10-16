@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Tools for manipulating machine owner keys
 License:        GPL-3.0-or-later
 URL:            https://github.com/lcp/mokutil
-#!RemoteAsset
+#!RemoteAsset:  sha256:839d677c4fc9805f1565703ca32863e4652692c53da66a88ae9b9e30676f9e17
 Source0:        https://github.com/lcp/mokutil/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -39,4 +39,4 @@ autoreconf -fiv
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

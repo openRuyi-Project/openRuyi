@@ -14,7 +14,7 @@ Summary:        Encoding Files for use with poppler
 License:        BSD-3-Clause AND GPL-2.0-only AND GPL-3.0-only
 URL:            https://poppler.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/poppler/poppler-data
-#!RemoteAsset
+#!RemoteAsset:  sha256:41b95c1d82bb0cfa85f50fee7ec94af2bdaaf56b450c9c9d95913d536a3e0c1c
 Source:         https://gitlab.freedesktop.org/poppler/poppler-data/-/archive/POPPLER_DATA_%{ver}/poppler-data-POPPLER_DATA_%{ver}.tar.gz
 BuildSystem:    autotools
 
@@ -52,4 +52,4 @@ for detecting the installation of poppler-data.
 %{_datadir}/pkgconfig/poppler-data.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

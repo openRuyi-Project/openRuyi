@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        JSON for Modern C++ (header-only)
 License:        MIT
 URL:            https://github.com/nlohmann/json
-#!RemoteAsset
+#!RemoteAsset:  sha256:4b92eb0c06d10683f7447ce9406cb97cd4b453be18d7279320f7b2f025c10187
 Source:         https://github.com/nlohmann/json/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -36,4 +36,4 @@ and manipulating JSON data.
 %{_datadir}/pkgconfig/nlohmann_json.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

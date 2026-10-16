@@ -12,7 +12,7 @@ Summary:        The nfs4 ACL tools
 License:        LGPL-2.1-or-later
 URL:            http://git.linux-nfs.org/?p=steved/nfs4-acl-tools.git;a=summary
 VCS:            git:git://git.linux-nfs.org/projects/steved/nfs4-acl-tools.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:eadf0f7c7705ae08210e93bfa543d6b55b3f4a81e7bd1bbdfa319b52cd75775d
 Source0:        http://linux-nfs.org/~steved/nfs4-acl-tools/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -38,4 +38,4 @@ NFSv4 client.
 %{_mandir}/man5/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

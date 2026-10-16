@@ -13,7 +13,7 @@ Summary:        Detect if running in a virtual machine
 License:        GPL-2.0-or-later
 URL:            https://people.redhat.com/~rjones/virt-what/
 VCS:            git:git://git.annexia.org/virt-what.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:d4d9bd9d4ae59095597443fac663495315c7eb4330b872aa5f062df38ac69bf1
 Source:         https://people.redhat.com/~rjones/%{name}/files/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -37,4 +37,4 @@ is running in a virtual machine.
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

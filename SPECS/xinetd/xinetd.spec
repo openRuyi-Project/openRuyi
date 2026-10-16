@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        An extended Internet services daemon
 License:        xinetd
 URL:            https://github.com/openSUSE/xinetd
-#!RemoteAsset
+#!RemoteAsset:  sha256:cbb6d078a8e4d0297cbfc146d5acd0b598de7d30dd0f76301a52ca923b42129a
 Source0:        https://github.com/openSUSE/xinetd/archive/refs/tags/%{version}.tar.gz
 Source1:        sysconfig.xinetd
 BuildSystem:    autotools
@@ -68,4 +68,4 @@ install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/xinetd
 %config(noreplace) %{_sysconfdir}/sysconfig/xinetd
 
 %changelog
-%{?autochangelog}
+%autochangelog

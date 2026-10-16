@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A set of simple OpenGL (ES) and Vulkan demos
 License:        MIT
 URL:            https://gitlab.freedesktop.org/mesa/demos
-#!RemoteAsset
+#!RemoteAsset:  sha256:3046a3d26a7b051af7ebdd257a5f23bfeb160cad6ed952329cdff1e9f1ed496b
 Source:         https://archive.mesa3d.org/demos/mesa-demos-%{version}.tar.xz
 BuildSystem:    meson
 
@@ -62,4 +62,4 @@ of these graphics APIs.
 %{_datadir}/mesa-demos/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

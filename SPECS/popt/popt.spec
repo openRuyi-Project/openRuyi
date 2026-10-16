@@ -11,7 +11,7 @@ Release:        %autorelease
 License:        MIT
 Summary:        Command line option parsing library
 URL:            https://github.com/rpm-software-management/popt
-#!RemoteAsset
+#!RemoteAsset:  sha256:c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9
 Source0:        http://ftp.rpm.org/popt/releases/popt-1.x/popt-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -62,4 +62,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/popt.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

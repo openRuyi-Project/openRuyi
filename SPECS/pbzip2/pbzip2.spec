@@ -11,7 +11,7 @@ Summary:        Parallel implementation of bzip2
 License:        MIT
 URL:            https://launchpad.net/pbzip2
 VCS:            git:https://github.com/ruanhuabin/pbzip2
-#!RemoteAsset
+#!RemoteAsset:  sha256:8fd13eaaa266f7ee91f85c1ea97c86d9c9cc985969db9059cdebcb1e1b7bdbe6
 Source0:        https://launchpad.net/pbzip2/1.1/%{version}/+download/pbzip2-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -48,4 +48,4 @@ ln -sf pbzip2 %{buildroot}%{_bindir}/pbzcat
 %{_mandir}/man1/pbzip2.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

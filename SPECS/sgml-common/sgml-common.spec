@@ -14,19 +14,19 @@ Summary:        Common SGML catalog and DTD files
 License:        GPL-3.0-or-later
 URL:            https://www.docbook.org/xml/
 # VCS: No VCS link available
-#!RemoteAsset
+#!RemoteAsset:  sha256:7dc418c1d361123ffc5e45d61f1b97257940a8eb35d0bfbbc493381cc5b1f959
 Source0:        https://www.sourceware.org/pub/docbook-tools/new-trials/SOURCES/%{name}-%{version}.tgz
 Source1:        xml.dcl
 Source2:        xml.soc
 Source3:        html.dcl
 Source4:        html.soc
-#!RemoteAsset
+#!RemoteAsset:  sha256:cc701736c42cc64126fad063bb95f94484b5de3b5f808a86ea098b0957aff829
 Source5:        http://www.w3.org/%{xmlxsdver}/xml.xsd
-#!RemoteAsset
+#!RemoteAsset:  sha256:d102ad3df7664c307e0c2c776ba4a90513b1969974d8a940bae1a77f9f21e15d
 Source6:        http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd
-#!RemoteAsset
+#!RemoteAsset:  sha256:2032ead9fd47a61b22fe56aa02be1840bd9bb9015b0c0d3f1e8aac75dd91c3b9
 Source7:        http://www.w3.org/2001/XMLSchema.dtd
-#!RemoteAsset
+#!RemoteAsset:  sha256:6946432ca7af2e9584f91b48564111fd2c73c8debbbcd9a0e3f5ddd382eeb51c
 Source8:        http://www.w3.org/2001/datatypes.dtd
 Source9:        sgmlwhich.1
 Source10:       sgml.conf.5
@@ -194,4 +194,4 @@ fi
 %{_datadir}/xml/datatypes.dtd
 
 %changelog
-%{?autochangelog}
+%autochangelog

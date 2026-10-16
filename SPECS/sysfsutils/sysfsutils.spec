@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        Utilities for interfacing with sysfs
 License:        GPL-2.0-only
 URL:            https://github.com/linux-ras/sysfsutils
-#!RemoteAsset
+#!RemoteAsset:  sha256:f7f669d27c997d3eb3f3e014b4c0aa1aa4d07ce4d6f9e41fa835240f2bf38810
 Source:         %{url}/archive/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -59,4 +59,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/libsysfs.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

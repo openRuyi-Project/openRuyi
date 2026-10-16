@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        RPC protocol definitions and rpcgen compiler
 License:        BSD-3-Clause
 URL:            https://github.com/thkukuk/rpcsvc-proto
-#!RemoteAsset
+#!RemoteAsset:  sha256:7988641deae8463303b6273d7af98ece09111c385d4c9134a142a5fad3cdfef8
 Source:         https://github.com/thkukuk/rpcsvc-proto/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -55,4 +55,4 @@ autoreconf -fiv
 %{_includedir}/rpcsvc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

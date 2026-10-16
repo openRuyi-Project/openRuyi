@@ -11,7 +11,7 @@ Version:        0.12.0
 Release:        %autorelease
 License:        BSL-1.0
 URL:            https://github.com/ericniebler/range-v3
-#!RemoteAsset
+#!RemoteAsset:  sha256:015adb2300a98edfceaf0725beec3337f542af4915cec4d0b89fa0886f4ba9cb
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -46,4 +46,4 @@ Summary:        Development files for %{name}
 %{_libdir}/cmake/range-v3
 
 %changelog
-%{?autochangelog}
+%autochangelog

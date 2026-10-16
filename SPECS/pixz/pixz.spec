@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        A parallel, indexing version of XZ
 License:        BSD-2-Clause
 URL:            https://github.com/vasi/pixz
-#!RemoteAsset
+#!RemoteAsset:  sha256:e29fba74ae399e5d27c21a6009002705ebcc20947b283ed0aa721df6a409680a
 Source:         https://github.com/vasi/pixz/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -41,4 +41,4 @@ autoreconf -fiv
 %{_bindir}/pixz
 
 %changelog
-%{?autochangelog}
+%autochangelog

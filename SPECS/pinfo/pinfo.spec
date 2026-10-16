@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        An info file and man page viewer
 License:        GPL-2.0-only
 URL:            https://github.com/baszoetekouw/pinfo
-#!RemoteAsset
+#!RemoteAsset:  sha256:9dc5e848a7a86cb665a885bc5f0fdf6d09ad60e814d75e78019ae3accb42c217
 Source:         https://github.com/baszoetekouw/pinfo/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -59,4 +59,4 @@ rm -f %{buildroot}%{_infodir}/dir
 %{_mandir}/man1/pinfo.1*
 
 %changelog
-%{?autochangelog}
+%autochangelog

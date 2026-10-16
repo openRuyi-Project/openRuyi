@@ -12,7 +12,7 @@ Summary:        XCB utility module for the Render extension
 License:        MIT
 URL:            http://xcb.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/lib/libxcb-render-util.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e15d4f0e22d8ddbfbb9f5d77db43eacd7a304029bf25a6166cc63caa96d04ba
 Source0:        http://xcb.freedesktop.org/dist/xcb-util-renderutil-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -54,4 +54,4 @@ in %lname.
 %{_libdir}/pkgconfig/xcb-renderutil.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -13,7 +13,7 @@ Summary:        Network diagnostic tool combining 'traceroute' and 'ping'
 License:        GPL-2.0-or-later
 URL:            https://www.bitwizard.nl/mtr/
 VCS:            git:https://github.com/traviscross/mtr
-#!RemoteAsset
+#!RemoteAsset:  sha256:73e6aef3fb6c8b482acb5b5e2b8fa7794045c4f2420276f035ce76c5beae632d
 Source0:        https://github.com/traviscross/mtr/archive/refs/tags/v%{version}.tar.gz
 Source1:        net-xmtr.desktop
 
@@ -85,4 +85,4 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog

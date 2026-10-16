@@ -12,7 +12,7 @@ Summary:        A patent-free, Open Source/Free Software DSP library
 License:        BSD-3-Clause
 URL:            http://www.speex.org/
 VCS:            git:https://gitlab.xiph.org/xiph/speexdsp.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8c777343e4a6399569c72abc38a95b24db56882c83dbdb6c6424a5f4aeb54d3d
 Source0:        https://downloads.xiph.org/releases/speex/speexdsp-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -49,4 +49,4 @@ This package contains development files for %{name}.
 %{_libdir}/libspeexdsp.so
 
 %changelog
-%{?autochangelog}
+%autochangelog

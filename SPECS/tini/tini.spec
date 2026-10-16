@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        A tiny but valid init for containers
 License:        MIT
 URL:            https://github.com/krallin/tini
-#!RemoteAsset
+#!RemoteAsset:  sha256:0fd35a7030052acd9f58948d1d900fe1e432ee37103c5561554408bdac6bbf0d
 Source:         https://github.com/krallin/tini/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -46,4 +46,4 @@ inside a container.
 %{_bindir}/tini-static
 
 %changelog
-%{?autochangelog}
+%autochangelog

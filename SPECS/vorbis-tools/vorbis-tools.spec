@@ -11,7 +11,7 @@ Summary:        Ogg Vorbis Tools
 License:        GPL-2.0-only
 URL:            https://www.xiph.org/
 VCS:            git:https://gitlab.xiph.org/xiph/vorbis-tools.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:a1fe3ddc6777bdcebf6b797e7edfe0437954b24756ffcc8c6b816b63e0460dde
 Source0:        https://downloads.xiph.org/releases/vorbis/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -48,4 +48,4 @@ rm -rf %{buildroot}%{_docdir}
 %{_mandir}/man1/*
 
 %changelog
-%{?autochangelog}
+%autochangelog

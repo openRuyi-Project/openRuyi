@@ -10,7 +10,7 @@ Release:        %autorelease
 Summary:        C-Library for JPEG 2000
 License:        BSD-2-Clause AND MIT
 URL:            https://github.com/uclouvain/openjpeg
-#!RemoteAsset
+#!RemoteAsset:  sha256:a695fbe19c0165f295a8531b1e4e855cd94d0875d2f88ec4b61080677e27188a
 Source0:        https://github.com/uclouvain/openjpeg/archive/v%{version}/openjpeg-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -65,4 +65,4 @@ Development files for OpenJPEG 2.
 %{_datadir}/doc/
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Summary:        Header-only hashmap and btree containers for C++
 License:        Apache-2.0
 URL:            https://greg7mdp.github.io/parallel-hashmap/
 VCS:            git:https://github.com/greg7mdp/parallel-hashmap
-#!RemoteAsset
+#!RemoteAsset:  sha256:4f462f51a3468166ea4cf87c80e001dc1999093264cf55cbda3492ca39a7730b
 Source0:        https://github.com/greg7mdp/parallel-hashmap/archive/refs/tags/v%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    cmake
@@ -41,4 +41,4 @@ table is filled up to 87.5%% capacity.
 %{_includedir}/parallel_hashmap
 
 %changelog
-%{?autochangelog}
+%autochangelog

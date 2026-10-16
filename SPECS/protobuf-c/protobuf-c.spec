@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        C bindings for Google's Protocol Buffers
 License:        BSD-2-Clause
 URL:            https://github.com/protobuf-c/protobuf-c
-#!RemoteAsset
+#!RemoteAsset:  sha256:e2c86271873a79c92b58fef7ebf8de1aa0df4738347a8bd5d4e65a80a16d0d24
 Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -64,4 +64,4 @@ This package contains protobuf-c headers and libraries.
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

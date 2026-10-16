@@ -11,7 +11,7 @@ Release:        %autorelease
 Summary:        TOML for modern C++
 License:        MIT
 URL:            https://github.com/ToruNiina/toml11
-#!RemoteAsset
+#!RemoteAsset:  sha256:815bfe6792aa11a13a133b86e7f0f45edc5d71eb78f5fb6686c49c7f792b9049
 Source0:        https://github.com/ToruNiina/toml11/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -46,4 +46,4 @@ literal strings and multiline strings.
 %{_libdir}/cmake/toml11/*.cmake
 
 %changelog
-%{?autochangelog}
+%autochangelog

@@ -12,7 +12,7 @@ Release:        %autorelease
 Summary:        Regular expressions library
 License:        BSD-2-Clause
 URL:            https://github.com/kkos/oniguruma
-#!RemoteAsset
+#!RemoteAsset:  sha256:2a5cfc5ae259e4e97f86b68dfffc152cdaffe94e2060b770cb827238d769fc05
 Source0:        https://github.com/kkos/oniguruma/releases/download/v%{version}/onig-%{version}.tar.gz
 
 BuildSystem:    autotools
@@ -49,7 +49,7 @@ autoreconf -fiv
 %lang(ja)   %doc    README_japanese index_ja.html
 %{_libdir}/libonig.so.5*
 
-%files          devel
+%files devel
 %lang(ja)   %doc    doc/*.ja
 %doc HISTORY README.md index.html doc/API doc/CALLOUTS.API doc/CALLOUTS.BUILTIN doc/FAQ doc/RE
 %{_bindir}/onig-config
@@ -58,4 +58,4 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/oniguruma.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

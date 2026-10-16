@@ -13,7 +13,7 @@ Summary:        XCB protocol descriptions
 License:        X11-distribute-modifications-variant
 URL:            https://xcb.freedesktop.org/
 VCS:            git:https://gitlab.freedesktop.org/xorg/proto/xcbproto.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:2c1bacd2110f4799f74de6ebb714b94cf6f80fb112316b1219480fd22562148c
 Source0:        https://xorg.freedesktop.org/archive/individual/proto/%{name}-%{version}.tar.xz
 BuildArch:      noarch
 BuildSystem:    autotools
@@ -43,4 +43,4 @@ the protocol.
 %{python3_sitelib}/xcbgen
 
 %changelog
-%{?autochangelog}
+%autochangelog
