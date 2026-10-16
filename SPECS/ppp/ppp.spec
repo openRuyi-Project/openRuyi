@@ -2,17 +2,18 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           ppp
-Version:        2.5.2
+Version:        2.5.4
 Release:        %autorelease
 Summary:        The Point-to-Point Protocol daemon
 License:        BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            http://www.samba.org/ppp
 VCS:            git:https://github.com/ppp-project/ppp.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:2853e41d9cdd61db28ec1e690912e1e5f596e047e3242841a07da1b30d89e2c1
 Source0:        https://github.com/ppp-project/ppp/archive/refs/tags/v%{version}.tar.gz
 Source1:        ppp.pam
 Source2:        ppp.logrotate
@@ -27,9 +28,6 @@ Source10:       ipv6-up.initscripts
 Source11:       ipv6-down.initscripts
 Source12:       ppp.sysusers
 BuildSystem:    autotools
-
-# update function to high version of gcc.
-Patch0:         0001-ppp-2.5.1-gcc15.patch
 
 BuildOption(conf):  --enable-systemd
 BuildOption(conf):  --enable-cbcp
@@ -133,4 +131,4 @@ done
 %{_libdir}/pkgconfig/pppd.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

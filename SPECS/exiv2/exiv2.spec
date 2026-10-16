@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond doc 0
 
 Name:           exiv2
-Version:        0.28.8
+Version:        0.28.9
 Release:        %autorelease
 Summary:        Exif, IPTC and XMP metadata manipulation library
 License:        GPL-2.0-or-later AND BSD-3-Clause
 URL:            https://github.com/Exiv2/exiv2
-#!RemoteAsset:  sha256:ea51b0609f58a9afa063b60daa1539948b62247721e154f4fff0ad3aec9f9756
+#!RemoteAsset:  sha256:700b76b97695b2fab4ef8c79619c68ae57d09e0c130724791cafbd39e0eb4aef
 Source0:        https://github.com/Exiv2/exiv2/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 

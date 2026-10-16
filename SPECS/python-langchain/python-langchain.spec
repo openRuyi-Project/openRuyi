@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname langchain
 
 Name:           python-%{srcname}
-Version:        1.3.3
+Version:        1.3.9
 Release:        %autorelease
 Summary:        Building applications with LLMs through composability
 License:        MIT
 URL:            https://github.com/langchain-ai/langchain
 VCS:            git:https://github.com/langchain-ai/langchain.git
-#!RemoteAsset:  sha256:cccb7e3adb7dab82f81025573f51dc5349611d776d9d69f7ed54bd3b191b121e
+#!RemoteAsset:  sha256:9b14ef0db9ef314299ded858b22ca2a40b8f1b05c8c9cb6b82d53a53075fef00
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
