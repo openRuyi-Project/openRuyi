@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 14:30:00 +0800
+Subject: [PATCH] adk: use the MCP 2 streamable HTTP client name
+
+MCP 2.0 renamed streamablehttp_client to streamable_http_client.  Use the
+current public name for both the import and invocation so the ADK MCP modules
+remain importable with the version provided by openRuyi.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/oci/addons/adk/mcp/mcp_client.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/oci/addons/adk/mcp/mcp_client.py b/src/oci/addons/adk/mcp/mcp_client.py
+--- a/src/oci/addons/adk/mcp/mcp_client.py
++++ b/src/oci/addons/adk/mcp/mcp_client.py
+@@ -18,6 +18,6 @@ from mcp.client.session_group import StreamableHttpParameters
+ from mcp import Tool as MCPTool
+ from mcp import stdio_client
+-from mcp.client.streamable_http import streamablehttp_client
++from mcp.client.streamable_http import streamable_http_client
+ from mcp.types import CallToolResult
+ 
+ from oci.addons.adk.agent_error import AgentError
+@@ -404,7 +404,7 @@ class MCPClientStreamableHttp(MCPClientBase):
+         stderr,
+     ):
+         """Create the context manager for the server using streamable HTTP transport."""
+-        transport = streamablehttp_client(
++        transport = streamable_http_client(
+             url=self.params.url,
+             headers=self.params.headers,
+             timeout=self.params.timeout,

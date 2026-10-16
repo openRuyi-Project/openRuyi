@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Gui-Yue <xiangwei.riscv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 
 Name:           python-%{srcname}
 # NOTE: Please check compatibility of python-datasets when updating.
-Version:        2026.4.0
+Version:        2026.6.0
 Release:        %autorelease
 Summary:        File-system specification for Python
 License:        BSD-3-Clause
 URL:            https://pypi.org/project/fsspec/
 VCS:            git:https://github.com/fsspec/filesystem_spec
-#!RemoteAsset:  sha256:301d8ac70ae90ef3ad05dcf94d6c3754a097f9b5fe4667d2787aa359ec7df7e4
+#!RemoteAsset:  sha256:f5bac145310fe30e16e1471bd6840b2d990d609e872251d7e674241822abf01a
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -40,16 +41,11 @@ filesystems.
 %pyproject_extras_subpkg -n python-%{srcname} adl
 %pyproject_extras_subpkg -n python-%{srcname} arrow
 %pyproject_extras_subpkg -n python-%{srcname} dask
-%pyproject_extras_subpkg -n python-%{srcname} dev
-%pyproject_extras_subpkg -n python-%{srcname} doc
 %pyproject_extras_subpkg -n python-%{srcname} dropbox
-%pyproject_extras_subpkg -n python-%{srcname} full
-%pyproject_extras_subpkg -n python-%{srcname} fuse
 %pyproject_extras_subpkg -n python-%{srcname} gcs
 %pyproject_extras_subpkg -n python-%{srcname} git
 %pyproject_extras_subpkg -n python-%{srcname} github
 %pyproject_extras_subpkg -n python-%{srcname} gs
-%pyproject_extras_subpkg -n python-%{srcname} gui
 %pyproject_extras_subpkg -n python-%{srcname} hdfs
 %pyproject_extras_subpkg -n python-%{srcname} http
 %pyproject_extras_subpkg -n python-%{srcname} libarchive
@@ -58,9 +54,6 @@ filesystems.
 %pyproject_extras_subpkg -n python-%{srcname} sftp
 %pyproject_extras_subpkg -n python-%{srcname} smb
 %pyproject_extras_subpkg -n python-%{srcname} ssh
-%pyproject_extras_subpkg -n python-%{srcname} test
-%pyproject_extras_subpkg -n python-%{srcname} test-downstream
-%pyproject_extras_subpkg -n python-%{srcname} test-full
 %pyproject_extras_subpkg -n python-%{srcname} tqdm
 
 %generate_buildrequires

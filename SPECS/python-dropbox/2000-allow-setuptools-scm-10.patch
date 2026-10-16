@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sun, 20 Sep 2026 12:30:00 +0800
+Subject: [PATCH] build: allow setuptools-scm 10
+
+openRuyi provides setuptools-scm 10.0.5. Dropbox uses setuptools-scm only to
+derive its build version, so retain the minimum version while removing the
+obsolete build-only upper bound.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 42a3c64..41e8daf 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,3 +1,3 @@
+ [build-system]
+-requires = ["setuptools>=77", "setuptools-scm>=8,<9"]
++requires = ["setuptools>=77", "setuptools-scm>=8"]
+ build-backend = "setuptools.build_meta"

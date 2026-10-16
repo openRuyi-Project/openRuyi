@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -34,6 +35,8 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 This package contains common protocol buffer types used by Google APIs. These
 definitions provide Python modules under the google namespace for shared API
 annotations and types.
+
+%pyproject_extras_subpkg -n python-%{srcname} grpc
 
 %generate_buildrequires
 %pyproject_buildrequires

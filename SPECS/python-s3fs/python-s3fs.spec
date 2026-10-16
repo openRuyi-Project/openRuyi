@@ -7,12 +7,12 @@
 %global srcname s3fs
 
 Name:           python-%{srcname}
-Version:        2026.4.0
+Version:        2026.6.0
 Release:        %autorelease
 Summary:        S3 Filesystem
 License:        BSD-3-Clause
 URL:            https://github.com/fsspec/s3fs/
-#!RemoteAsset:  sha256:5bdce0abb00b0435ee150807a45fea727451dbc22de4cbc116464f8504ab9d37
+#!RemoteAsset:  sha256:b28de7082d0a4f72392884bdc497e34a4a1582f675d214c7da0acf6e950a0083
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
