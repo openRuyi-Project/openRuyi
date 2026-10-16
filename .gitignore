@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+# Vim creates buffer swapfiles starting at .swp for buffers that are
+# active but untitled and unsaved.
+[._]*.s[a-v][a-z]
+# Still need svg
+!*.svg
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Visual Studio Code
+.vscode/*
