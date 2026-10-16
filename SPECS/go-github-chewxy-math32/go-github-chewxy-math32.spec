@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,6 +18,9 @@ URL:            https://github.com/chewxy/math32
 Source0:        https://github.com/chewxy/math32/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
+
+# https://github.com/chewxy/math32/commit/3aeb5fe7428ef1c51e99429fe71ea1c2bf5025c7
+Patch0:         0001-tests-round-the-naive-FMA-baseline-explicitly.patch
 
 BuildOption(prep):  -n %{_name}-%{version}
 
