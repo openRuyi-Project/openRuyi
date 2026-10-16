@@ -688,7 +688,7 @@ systemd-hwdb update &>/dev/null
 %posttrans udev
 # Restart some services.
 # Others are either oneshot services, or sockets, and restarting them causes issues (#1378974)
-%systemd_posttrans_with_restart systemd-udevd.service systemd-homed.service systemd-oomd.service systemd-portabled.service
+%systemd_posttrans_with_restart systemd-udevd.service systemd-oomd.service systemd-portabled.service
 
 %global timesyncd_units %{shrink:
                           systemd-time-wait-sync.service
@@ -785,6 +785,17 @@ if systemctl -q is-enabled systemd-resolved.service &>/dev/null &&
     ln -fsv ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf || :
   fi
 fi
+%endif
+
+%if %{without bootstrap}
+%post homed
+%systemd_post systemd-homed.service
+
+%preun homed
+%systemd_preun systemd-homed.service
+
+%postun homed
+%systemd_postun_with_restart systemd-homed.service
 %endif
 
 %files
