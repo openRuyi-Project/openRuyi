@@ -51,6 +51,12 @@ BuildRequires:  pkgconfig(libarchive)
 %patchlist
 # https://git.dpdk.org/dpdk/commit/?id=d86c606fe341507071701c16fd56f92db8feca70
 1000-fib-use-scalar-lookup-for-network-byte-order-on-RISC.patch
+# https://git.dpdk.org/dpdk/commit/?id=fb1ba699d679728108a74c08465f064d7c0a6caa
+1001-lpm-group-table-loads-in-scalar-bulk-lookup.patch
+# https://git.dpdk.org/dpdk/commit/?id=a3dc2bed05419a023bad7a108d473a7b6e1f908c
+1002-lpm-use-scalar-bulk-lookup-on-RISC-V.patch
+# https://git.dpdk.org/dpdk/commit/?id=736fa6c1bc14b7db11ec64c985b73e95aae958aa
+1003-fib-gather-entries-at-their-own-width-with-RVV.patch
 
 %description
 The Data Plane Development Kit is a set of libraries and drivers for

@@ -1,0 +1,73 @@
+From fb1ba699d679728108a74c08465f064d7c0a6caa Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 4 Oct 2026 23:30:17 -0700
+Subject: [PATCH] lpm: group table loads in scalar bulk lookup
+
+Read the four tbl24 entries before resolving any of them, as the SSE
+and NEON versions do. On an in-order core the cache misses then
+overlap instead of being served one after another.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ lib/lpm/rte_lpm_scalar.h | 40 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 29 insertions(+), 11 deletions(-)
+
+diff --git a/lib/lpm/rte_lpm_scalar.h b/lib/lpm/rte_lpm_scalar.h
+index df4f83fa48..9ad25838fd 100644
+--- a/lib/lpm/rte_lpm_scalar.h
++++ b/lib/lpm/rte_lpm_scalar.h
+@@ -13,22 +13,40 @@
+ extern "C" {
+ #endif
+ 
++static inline uint32_t
++__rte_lpm_lookupx4_hop(const struct rte_lpm *lpm, uint32_t tbl_entry,
++		uint32_t ip, uint32_t defv)
++{
++	if (unlikely((tbl_entry & RTE_LPM_VALID_EXT_ENTRY_BITMASK) ==
++			RTE_LPM_VALID_EXT_ENTRY_BITMASK)) {
++		const uint32_t *tbl8 = (const uint32_t *)lpm->tbl8;
++
++		tbl_entry = tbl8[(uint8_t)ip + (tbl_entry & 0x00FFFFFF) *
++				RTE_LPM_TBL8_GROUP_NUM_ENTRIES];
++	}
++
++	return (tbl_entry & RTE_LPM_LOOKUP_SUCCESS) ?
++		(tbl_entry & 0x00FFFFFF) : defv;
++}
++
+ static inline void
+ rte_lpm_lookupx4(const struct rte_lpm *lpm, xmm_t ip, uint32_t hop[4],
+ 		uint32_t defv)
+ {
+ 	rte_xmm_t xip = { .x = ip };
+-	uint32_t nh;
+-	int ret;
+-
+-	ret = rte_lpm_lookup(lpm, xip.u32[0], &nh);
+-	hop[0] = (ret == 0) ? nh : defv;
+-	ret = rte_lpm_lookup(lpm, xip.u32[1], &nh);
+-	hop[1] = (ret == 0) ? nh : defv;
+-	ret = rte_lpm_lookup(lpm, xip.u32[2], &nh);
+-	hop[2] = (ret == 0) ? nh : defv;
+-	ret = rte_lpm_lookup(lpm, xip.u32[3], &nh);
+-	hop[3] = (ret == 0) ? nh : defv;
++	const uint32_t *tbl24 = (const uint32_t *)lpm->tbl24;
++	uint32_t tbl0, tbl1, tbl2, tbl3;
++
++	/* Issue the four tbl24 loads before any entry is examined. */
++	tbl0 = tbl24[xip.u32[0] >> 8];
++	tbl1 = tbl24[xip.u32[1] >> 8];
++	tbl2 = tbl24[xip.u32[2] >> 8];
++	tbl3 = tbl24[xip.u32[3] >> 8];
++
++	hop[0] = __rte_lpm_lookupx4_hop(lpm, tbl0, xip.u32[0], defv);
++	hop[1] = __rte_lpm_lookupx4_hop(lpm, tbl1, xip.u32[1], defv);
++	hop[2] = __rte_lpm_lookupx4_hop(lpm, tbl2, xip.u32[2], defv);
++	hop[3] = __rte_lpm_lookupx4_hop(lpm, tbl3, xip.u32[3], defv);
+ }
+ 
+ #ifdef __cplusplus
+-- 
+2.56.0
+
