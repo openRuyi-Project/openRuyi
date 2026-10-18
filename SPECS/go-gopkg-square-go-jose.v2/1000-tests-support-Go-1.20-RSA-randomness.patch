@@ -1,0 +1,77 @@
+From d0e3b9cf08946e7c7bd624fce253db4805514ad8 Mon Sep 17 00:00:00 2001
+From: Arthur Bols <arthur@bols.dev>
+Date: Thu, 7 Mar 2024 20:17:31 +0100
+Subject: [PATCH] Fix TestSignerWithBrokenRand for go1.20 (v2 branch) (#87)
+
+This PR fixes #27 for the v2 branch. Cherry picked from commit
+b7b32c1007cb6e57ac14c6959f6546ca1591f591 (#39).
+Adapted import-path context for the historical square repository.
+---
+ asymmetric.go   |  3 +++
+ signing_test.go | 20 ++++++++++++++++----
+ 2 files changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/asymmetric.go b/asymmetric.go
+index 3ca79cc..43f9ce2 100644
+--- a/asymmetric.go
++++ b/asymmetric.go
+@@ -285,6 +285,9 @@ func (ctx rsaDecrypterSigner) signPayload(payload []byte, alg SignatureAlgorithm
+ 
+ 	switch alg {
+ 	case RS256, RS384, RS512:
++		// TODO(https://github.com/go-jose/go-jose/issues/40): As of go1.20, the
++		// random parameter is legacy and ignored, and it can be nil.
++		// https://cs.opensource.google/go/go/+/refs/tags/go1.20:src/crypto/rsa/pkcs1v15.go;l=263;bpv=0;bpt=1
+ 		out, err = rsa.SignPKCS1v15(RandReader, ctx.privateKey, hash, hashed)
+ 	case PS256, PS384, PS512:
+ 		out, err = rsa.SignPSS(RandReader, ctx.privateKey, hash, hashed, &rsa.PSSOptions{
+diff --git a/signing_test.go b/signing_test.go
+index a9d4ef0..26e9d69 100644
+--- a/signing_test.go
++++ b/signing_test.go
+@@ -24,6 +24,8 @@ import (
+ 	"fmt"
+ 	"io"
+ 	"reflect"
++	"runtime"
++	"strings"
+ 	"testing"
+ 
+ 	"gopkg.in/square/go-jose.v2/json"
+@@ -150,14 +152,24 @@ func TestRoundtripsJWSCorruptSignature(t *testing.T) {
+ 	}
+ }
+ 
++// TestSignerWithBrokenRand tests that using a broken random reader with PSS
++// signature algorithms returns a valid error.
+ func TestSignerWithBrokenRand(t *testing.T) {
+-	sigAlgs := []SignatureAlgorithm{RS256, RS384, RS512, PS256, PS384, PS512}
++	// As of go1.20, the random input parameter used in rsa.SignPKCS1v15 is
++	// legacy and ignored, and it can be nil meaning that there's no broken
++	// random-ness test applicable for signing RS256, RS384, or RS512.
++	sigAlgs := []SignatureAlgorithm{PS256, PS384, PS512}
++
++	// We still need to test that users building/testing go-jose on older
++	// versions of go will return an error if the random reader is broken.
++	if strings.HasPrefix(runtime.Version(), "go1.1") {
++		sigAlgs = append(sigAlgs, RS256, RS384, RS512)
++	}
+ 
+ 	serializer := func(obj *JSONWebSignature) (string, error) { return obj.CompactSerialize() }
+ 	corrupter := func(obj *JSONWebSignature) {}
+ 
+-	// Break rand reader
+-	readers := []func() io.Reader{
++	brokenRandReaders := []func() io.Reader{
+ 		// Totally broken
+ 		func() io.Reader { return bytes.NewReader([]byte{}) },
+ 		// Not enough bytes
+@@ -168,7 +180,7 @@ func TestSignerWithBrokenRand(t *testing.T) {
+ 
+ 	for _, alg := range sigAlgs {
+ 		signingKey, verificationKey := GenerateSigningTestKey(alg)
+-		for i, getReader := range readers {
++		for i, getReader := range brokenRandReaders {
+ 			RandReader = getReader()
+ 			err := RoundtripJWS(alg, serializer, corrupter, signingKey, verificationKey, "test_nonce")
+ 			if err == nil {

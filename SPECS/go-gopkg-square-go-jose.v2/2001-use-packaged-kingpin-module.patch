@@ -1,0 +1,40 @@
+From 13ee61e67070507fc7f72f8176becb56637e700b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 8 Sep 2026 23:07:24 +0800
+Subject: [PATCH] cmd: use the packaged kingpin v2 module
+
+openRuyi provides kingpin under github.com/alecthomas/kingpin/v2. Update both command imports so the complete source package can be checked against this dependency.
+
+---
+ jose-util/main.go  | 2 +-
+ jwk-keygen/main.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/jose-util/main.go b/jose-util/main.go
+index 1b1c11e..b5df32f 100644
+--- a/jose-util/main.go
++++ b/jose-util/main.go
+@@ -21,7 +21,7 @@ import (
+ 	"io/ioutil"
+ 	"os"
+ 
+-	"gopkg.in/alecthomas/kingpin.v2"
++	"github.com/alecthomas/kingpin/v2"
+ 	"gopkg.in/square/go-jose.v2"
+ )
+ 
+diff --git a/jwk-keygen/main.go b/jwk-keygen/main.go
+index 3270cb4..649ef31 100644
+--- a/jwk-keygen/main.go
++++ b/jwk-keygen/main.go
+@@ -30,7 +30,7 @@ import (
+ 
+ 	"golang.org/x/crypto/ed25519"
+ 
+-	"gopkg.in/alecthomas/kingpin.v2"
++	"github.com/alecthomas/kingpin/v2"
+ 	"gopkg.in/square/go-jose.v2"
+ )
+ 
+-- 
+2.43.0

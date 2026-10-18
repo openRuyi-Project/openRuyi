@@ -1,0 +1,85 @@
+From a3d307244c3bc50b25a71aa0688764c32ec419c7 Mon Sep 17 00:00:00 2001
+From: Mariano Cano <mariano.cano@gmail.com>
+Date: Fri, 8 Dec 2023 13:16:55 -0800
+Subject: [PATCH] Fix decryption DoS: Reject too high p2c on v2 (#76)
+
+### Description
+
+This PR is the cherry-pick of 65351c27657d58960c2e6c9fbb2b00f818e50568
+(https://github.com/go-jose/go-jose/pull/66) for the v2 branch. It fixes
+the decryption DoS when p2c is too high.
+
+Signed-off-by: Mariano Cano <mariano.cano@gmail.com>
+
+Adapted error-message context to the historical square repository.
+---
+ crypter_test.go | 39 +++++++++++++++++++++++++++++++++++++++
+ symmetric.go    |  5 +++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/crypter_test.go b/crypter_test.go
+index 604f124..57283af 100644
+--- a/crypter_test.go
++++ b/crypter_test.go
+@@ -609,6 +609,45 @@ func TestEncrypterWithPBES2(t *testing.T) {
+ 	}
+ }
+ 
++func TestRejectTooHighP2C(t *testing.T) {
++	expected := []byte("Lorem ipsum dolor sit amet")
++	algs := []KeyAlgorithm{
++		PBES2_HS256_A128KW, PBES2_HS384_A192KW, PBES2_HS512_A256KW,
++	}
++
++	// Check with both strings and []byte
++	recipientKeys := []interface{}{"password", []byte("password")}
++	for _, key := range recipientKeys {
++		for _, alg := range algs {
++			enc, err := NewEncrypter(A128GCM, Recipient{Algorithm: alg, PBES2Count: 1000001, Key: &JSONWebKey{
++				KeyID: "test-id",
++				Key:   key,
++			}}, nil)
++			if err != nil {
++				t.Error(err)
++			}
++
++			ciphertext, _ := enc.Encrypt(expected)
++
++			serialized1, _ := ciphertext.CompactSerialize()
++			serialized2 := ciphertext.FullSerialize()
++
++			parsed1, _ := ParseEncrypted(serialized1)
++			parsed2, _ := ParseEncrypted(serialized2)
++
++			_, err = parsed1.Decrypt("password")
++			if err == nil {
++				t.Fatal("expected error decrypting expensive PBES2 key, got none")
++			}
++
++			_, err = parsed2.Decrypt([]byte("password"))
++			if err == nil {
++				t.Fatal("expected error decrypting expensive PBES2 key, got none")
++			}
++		}
++	}
++}
++
+ type testKey struct {
+ 	enc, dec interface{}
+ }
+diff --git a/symmetric.go b/symmetric.go
+index 2b8076f..52c8b62 100644
+--- a/symmetric.go
++++ b/symmetric.go
+@@ -402,6 +402,11 @@ func (ctx *symmetricKeyCipher) decryptKey(headers rawHeader, recipient *recipien
+ 		if p2c <= 0 {
+ 			return nil, fmt.Errorf("square/go-jose: invalid P2C: must be a positive integer")
+ 		}
++		if p2c > 1000000 {
++			// An unauthenticated attacker can set a high P2C value. Set an upper limit to avoid
++			// DoS attacks.
++			return nil, fmt.Errorf("square/go-jose: invalid P2C: too high")
++		}
+ 
+ 		// salt is UTF8(Alg) || 0x00 || Salt Input
+ 		alg := headers.getAlgorithm()
