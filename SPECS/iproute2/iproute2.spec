@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           iproute2
-Version:        6.16.0
+Version:        7.2.0
 Release:        %autorelease
 Summary:        Advanced IP routing and network device configuration tools
 License:        BSD-4-Clause-UC AND GPL-2.0-or-later
 URL:            https://wiki.linuxfoundation.org/networking/iproute2
 VCS:            git:https://git.kernel.org/pub/scm/network/iproute2/iproute2
-#!RemoteAsset
+#!RemoteAsset:  sha256:4c2fa124c2cf0afd7ca34d1eeacba6ba048a56f6374e2aab93dafbdbd4eea9c0
 Source0:        https://kernel.org/pub/linux/utils/net/iproute2/iproute2-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -68,14 +68,14 @@ rm -rf %{buildroot}%{_docdir}
 %{_sbindir}/*
 %{_libdir}/tc/*
 %{_datadir}/bash-completion/completions/devlink
+%{_datadir}/bash-completion/completions/dpll
 %{_datadir}/bash-completion/completions/tc
 
 %files devel
 %license COPYING
-%{_mandir}/man3/*
 %{_libdir}/libnetlink.a
 %{_includedir}/libnetlink.h
 %{_includedir}/iproute2/bpf_elf.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
