@@ -7,14 +7,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           liburing
-Version:        2.12
+Version:        2.15
 Release:        %autorelease
 Summary:        High-performance async I/O library for the Linux kernel
 License:        (GPL-2.0-only WITH Linux-syscall-note OR MIT) AND (LGPL-2.0-or-later OR MIT)
 URL:            https://github.com/axboe/liburing
-#!RemoteAsset
-Source0:        https://brick.kernel.dk/snaps/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:8d052f2622dcb3678cbaee5ff582a87572672a6c0a56533cdda5b65cb636120a
+Source0:        %{url}/archive/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+BuildOption(prep):  -n %{name}-%{name}-%{version}
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -70,4 +72,4 @@ install -Dm 755 test/probe.t %{buildroot}%{_bindir}/io_uring_probe
 %{_mandir}/man*/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
