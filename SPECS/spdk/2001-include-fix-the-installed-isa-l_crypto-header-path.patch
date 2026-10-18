@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sun, 18 Oct 2026 01:09:37 -0700
+Subject: [PATCH] include: fix the installed isa-l_crypto header path
+
+isa-l_crypto installs its headers under isa-l_crypto/, not
+isa-l-crypto/, so --with-isal-crypto fails to find aes_xts.h.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ include/spdk/isa-l-crypto.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/spdk/isa-l-crypto.h b/include/spdk/isa-l-crypto.h
+index 79c9ee6..7895de4 100644
+--- a/include/spdk/isa-l-crypto.h
++++ b/include/spdk/isa-l-crypto.h
+@@ -21,8 +21,8 @@ extern "C" {
+ #endif
+ 
+ #ifdef SPDK_CONFIG_ISAL_CRYPTO_INSTALLED
+-#include <isa-l-crypto/aes_xts.h>
+-#include <isa-l-crypto/isal_crypto_api.h>
++#include <isa-l_crypto/aes_xts.h>
++#include <isa-l_crypto/isal_crypto_api.h>
+ #else
+ #include "../isa-l-crypto/include/isa-l_crypto/aes_xts.h"
+ #include "../isa-l-crypto/include/isa-l_crypto/isal_crypto_api.h"
+-- 
+2.56.0
+

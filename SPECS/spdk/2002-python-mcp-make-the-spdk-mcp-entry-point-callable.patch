@@ -1,12 +1,13 @@
-From 07981e276bbbaf83a210f788d87912f47d53cd20 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Sun Yuechi <sunyuechi@iscas.ac.cn>
-Date: Mon, 7 Sep 2026 22:21:41 -0700
-Subject: [PATCH] mcp: make the spdk-mcp entry point callable
+Date: Mon, 5 Oct 2026 00:21:15 -0700
+Subject: [PATCH] python/mcp: make the spdk-mcp entry point callable
 
 spdk.mcp:server resolves to the server module, not a function, so the
-console script fails with "'module' object is not callable". Point it at
-a main() that runs the server.
+installed spdk-mcp script fails with "'module' object is not
+callable". Point it at a main() that runs the server.
 
+Change-Id: I6cea401a06ae6fbac97d970aac4d26a9e59fc858
 Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
 ---
  python/pyproject.toml     | 2 +-
@@ -14,7 +15,7 @@ Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
  2 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/python/pyproject.toml b/python/pyproject.toml
-index a02d8cde0..e61613450 100644
+index 596b124bb..e898021ac 100644
 --- a/python/pyproject.toml
 +++ b/python/pyproject.toml
 @@ -44,7 +44,7 @@ dependencies = []
@@ -27,11 +28,11 @@ index a02d8cde0..e61613450 100644
  [project.optional-dependencies]
  sma = [
 diff --git a/python/spdk/mcp/server.py b/python/spdk/mcp/server.py
-index 01bd4566a..57622b6e1 100644
+index 7e1013b90..fc7155546 100644
 --- a/python/spdk/mcp/server.py
 +++ b/python/spdk/mcp/server.py
-@@ -34,5 +34,10 @@ for func in bdev_functions:
-     newfunc.__doc__ = func.__doc__
+@@ -31,5 +31,10 @@ for func in bdev_functions:
+     update_wrapper(newfunc, func)
      mcp.add_tool(newfunc)
  
 -if __name__ == "__main__":
@@ -43,5 +44,5 @@ index 01bd4566a..57622b6e1 100644
 +if __name__ == "__main__":
 +    main()
 -- 
-2.55.0
+2.56.0
 

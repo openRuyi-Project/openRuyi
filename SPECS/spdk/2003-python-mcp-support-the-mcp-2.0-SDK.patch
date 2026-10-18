@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 5 Oct 2026 00:21:15 -0700
+Subject: [PATCH] python/mcp: support the mcp 2.0 SDK
+
+mcp 2.0 renamed mcp.server.fastmcp.FastMCP to
+mcp.server.mcpserver.MCPServer, so the import fails there. Fall back to
+the new name.
+
+Change-Id: Ie0d7d0c2b1c6206bd9ecfae00eeb2fddbf460e72
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ python/spdk/mcp/server.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/python/spdk/mcp/server.py b/python/spdk/mcp/server.py
+index fc7155546..f3210fb9f 100644
+--- a/python/spdk/mcp/server.py
++++ b/python/spdk/mcp/server.py
+@@ -4,7 +4,11 @@
+ import os
+ from functools import partial, update_wrapper
+ 
+-from mcp.server.fastmcp import FastMCP  # type: ignore[import-not-found]
++try:
++    from mcp.server.fastmcp import FastMCP  # type: ignore[import-not-found]
++except ImportError:
++    # mcp 2.0 renamed FastMCP to MCPServer
++    from mcp.server.mcpserver import MCPServer as FastMCP  # type: ignore[import-not-found]
+ 
+ from spdk.rpc import bdev  # type: ignore[attr-defined]
+ from spdk.rpc.client import JSONRPCClient
+-- 
+2.56.0
+

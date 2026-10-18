@@ -8,13 +8,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           spdk
-Version:        25.09
+Version:        26.09
 Release:        %autorelease
 Summary:        Set of libraries and utilities for high performance user-mode storage
 License:        BSD-3-Clause AND BSD-2-Clause
 URL:            http://spdk.io
 VCS:            git:https://github.com/spdk/spdk
-#!RemoteAsset:  sha256:f2abbd321a8140c908d6a197e2f6e263e6ae3a42beb6e4aee2b1c62def1afd25
+#!RemoteAsset:  sha256:b0206d47bf0859daf6b195a438d0433644bcdb0cf6dca5d143cdf285a21506dc
 Source0:        https://github.com/spdk/spdk/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -45,6 +45,10 @@ BuildRequires:  ceph-devel
 # for --with-sma
 BuildRequires:  python3dist(grpcio)
 BuildRequires:  python3dist(grpcio-tools)
+# for scripts/genrpc.py
+BuildRequires:  python3dist(jinja2)
+BuildRequires:  python3dist(pyyaml)
+BuildRequires:  python3dist(tabulate)
 
 Requires:       dpdk
 Requires:       numactl
@@ -59,20 +63,12 @@ and libraries for writing high performance, scalable, user-mode storage
 applications.
 
 %patchlist
-# Warning: This patch seems abandoned
-# https://github.com/spdk/spdk/issues/2736
-# https://review.spdk.io/c/spdk/spdk/+/14996
-# We're using the patch based on the Alpine one (which looks somehow similar), refreshed to v25.09
-# https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/spdk/isal.patch
-2001-with-system-isal.patch
-# Add support for ISA-L_crypto library on RISC-V 64
-2002-ISAL_CRYPTO.patch
-# mcp 2.0 renamed FastMCP to MCPServer
-2004-mcp-fall-back-to-mcp.server.mcpserver-on-mcp-2.0.patch
-# spdk.mcp:server is a module, not a function
-2005-mcp-make-the-spdk-mcp-entry-point-callable.patch
-# upstream 117acba97: every rpc function was named "wrap", so spdk-mcp registered one tool
-2006-python-rpc-use-functools.wraps-to-fix-deprecation-decorator.patch
+# https://review.spdk.io/c/spdk/spdk/+/29527
+2001-include-fix-the-installed-isa-l_crypto-header-path.patch
+# https://review.spdk.io/c/spdk/spdk/+/29446
+2002-python-mcp-make-the-spdk-mcp-entry-point-callable.patch
+# https://review.spdk.io/c/spdk/spdk/+/29447
+2003-python-mcp-support-the-mcp-2.0-SDK.patch
 
 %package        devel
 Summary:        Storage Performance Development Kit development files
@@ -124,7 +120,8 @@ export CXX="g++ -fuse-ld=bfd"
     --disable-tests \
     --disable-unit-tests \
     --with-shared \
-    --with-system-isal
+    --with-isal \
+    --with-isal-crypto
 
 # bdevperf is an example upstream: --disable-examples skips it and make install
 # never installs it, so build just this one and install it by hand
@@ -132,7 +129,8 @@ export CXX="g++ -fuse-ld=bfd"
 %make_build -C examples/bdev/bdevperf
 
 %install -p
-find . -name "*.mk" -o -name "Makefile" | xargs sed -i 's/pip install/pip install --no-build-isolation/g'
+# upstream installs the python package with uv, which is not packaged
+sed -i 's|uv pip install $(USE_SYSTEM_PYTHON) --prefix=$(DESTDIR)$(CONFIG_PREFIX)|pip install --no-build-isolation --prefix=$(CONFIG_PREFIX) --root=$(DESTDIR)|' python/Makefile
 
 %install -a
 
@@ -145,6 +143,10 @@ chmod +x %{buildroot}%{_bindir}/spdk-setup
 install -Dm755 build/examples/bdevperf %{buildroot}%{_bindir}/spdk_bdevperf
 # mirror upstream INSTALL_EXAMPLE: drop the rpath to the system DPDK libdir
 patchelf --remove-rpath %{buildroot}%{_bindir}/spdk_bdevperf
+# upstream only drops the rpaths from the installed apps; the libraries keep
+# rpaths to the system libdir
+find %{buildroot}%{_libdir} -name 'libspdk_*.so.*' -type f \
+    -exec patchelf --remove-rpath {} +
 
 # Install bash completion
 install -Dm644 scripts/bash-completion/spdk %{buildroot}%{_datadir}/bash-completion/completions/spdk
@@ -173,9 +175,11 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 
 %files devel
 %{_libdir}/pkgconfig/spdk_accel.pc
+%{_libdir}/pkgconfig/spdk_accel_ae4dma.pc
 %{_libdir}/pkgconfig/spdk_accel_error.pc
 %{_libdir}/pkgconfig/spdk_accel_ioat.pc
 %{_libdir}/pkgconfig/spdk_accel_modules.pc
+%{_libdir}/pkgconfig/spdk_ae4dma.pc
 %{_libdir}/pkgconfig/spdk_bdev.pc
 %{_libdir}/pkgconfig/spdk_bdev_aio.pc
 %{_libdir}/pkgconfig/spdk_bdev_delay.pc
@@ -183,6 +187,7 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_bdev_ftl.pc
 %{_libdir}/pkgconfig/spdk_bdev_gpt.pc
 %{_libdir}/pkgconfig/spdk_bdev_iscsi.pc
+%{_libdir}/pkgconfig/spdk_bdev_kvmalloc.pc
 %{_libdir}/pkgconfig/spdk_bdev_lvol.pc
 %{_libdir}/pkgconfig/spdk_bdev_malloc.pc
 %{_libdir}/pkgconfig/spdk_bdev_modules.pc
@@ -216,7 +221,9 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_event_sock.pc
 %{_libdir}/pkgconfig/spdk_event_vhost_blk.pc
 %{_libdir}/pkgconfig/spdk_event_vhost_scsi.pc
+%ifarch x86_64
 %{_libdir}/pkgconfig/spdk_event_vmd.pc
+%endif
 %{_libdir}/pkgconfig/spdk_fsdev.pc
 %{_libdir}/pkgconfig/spdk_fsdev_aio.pc
 %{_libdir}/pkgconfig/spdk_ftl.pc
@@ -235,6 +242,7 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_notify.pc
 %{_libdir}/pkgconfig/spdk_nvme.pc
 %{_libdir}/pkgconfig/spdk_nvmf.pc
+%{_libdir}/pkgconfig/spdk_rdma_cm.pc
 %{_libdir}/pkgconfig/spdk_rdma_provider.pc
 %{_libdir}/pkgconfig/spdk_rdma_utils.pc
 %{_libdir}/pkgconfig/spdk_rpc.pc
@@ -256,7 +264,9 @@ find scripts -type f -regextype egrep -regex '.*(spdkcli|rpc).*[.]py' \
 %{_libdir}/pkgconfig/spdk_vfio_user.pc
 %{_libdir}/pkgconfig/spdk_vhost.pc
 %{_libdir}/pkgconfig/spdk_virtio.pc
+%ifarch x86_64
 %{_libdir}/pkgconfig/spdk_vmd.pc
+%endif
 %{_includedir}/%{name}
 %{_libdir}/*.so
 
