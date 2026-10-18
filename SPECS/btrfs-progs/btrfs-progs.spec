@@ -8,13 +8,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           btrfs-progs
-Version:        6.19.1
+Version:        7.1
 Release:        %autorelease
 Summary:        Userspace programs for btrfs
 License:        GPL-2.0-only AND LGPL-2.1-or-later
 URL:            https://btrfs.wiki.kernel.org/index.php/Main_Page
 VCS:            git:https://github.com/kdave/btrfs-progs
-#!RemoteAsset:  sha256:bb27e1ec54e7c3c0b7b2e596f853a73c07a3d72f21bc94042073c24dbf045796
+#!RemoteAsset:  sha256:d1f55cc2971398c9142eaa79d203e63d586a3b4b867f956664a1d68322cd4e34
 Source:         https://www.kernel.org/pub/linux/kernel/people/kdave/btrfs-progs/btrfs-progs-v%{version}.tar.xz
 BuildSystem:    autotools
 
