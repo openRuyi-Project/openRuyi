@@ -6,18 +6,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           nvme-cli
-Version:        2.16
+Version:        3.1
 Release:        %autorelease
 Summary:        NVMe management command line interface
-License:        GPL-2.0-only
+License:        GPL-2.0-only AND LGPL-2.1-or-later
 URL:            https://github.com/linux-nvme/nvme-cli
-#!RemoteAsset:  sha256:989682ed7b250a2c7a8127e362ffc5d29f5c370127abe405be09c73216da2b97
+#!RemoteAsset:  sha256:8a6879f1f2af53743c03a8f77f247261306300d3f3b0edfd242c5f646bdfdccb
 Source0:        https://github.com/linux-nvme/nvme-cli/archive/v%{version}.tar.gz
 BuildSystem:    meson
 
 BuildOption(conf):  -Dudevrulesdir=%{_udevrulesdir}
 BuildOption(conf):  -Dsystemddir=%{_unitdir}
 BuildOption(conf):  -Ddocs=man
+BuildOption(conf):  -Dpython=disabled
 
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
@@ -25,13 +26,31 @@ BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  pkgconfig(json-c) >= 0.13
-BuildRequires:  pkgconfig(libnvme) >= 1.15
-BuildRequires:  pkgconfig(libnvme-mi)
+BuildRequires:  pkgconfig(libkeyutils)
 BuildRequires:  pkgconfig(libudev)
+BuildRequires:  pkgconfig(openssl)
 %{?systemd_requires}
+Provides:       %{name}-libs = %{version}-%{release}
 
 %description
 nvme-cli provides NVM-Express user space tooling for Linux.
+It also ships libnvme3, the NVMe device management library bundled since 3.0.
+
+%package        devel
+Summary:        Development files for libnvme3
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    devel
+This package provides header files to include and libraries to link with
+for libnvme3.
+
+%package        doc
+Summary:        Reference manual for libnvme3
+License:        LGPL-2.1-or-later
+BuildArch:      noarch
+
+%description    doc
+This package contains the libnvme3 API reference manual.
 
 %install -a
 # hostid and hostnqn are supposed to be unique per machine. We obviously
@@ -65,13 +84,14 @@ fi
 %systemd_postun nvmf-connect-nbft.service
 
 %files
-%license LICENSE
+%license LICENSE LICENSES/LGPL-2.1-or-later.txt
 %doc README.md
 %{_sbindir}/nvme
 %{_datadir}/bash-completion/completions/nvme
 %{_datadir}/zsh/site-functions/_nvme
 %dir %{_sysconfdir}/nvme
-%{_sysconfdir}/nvme/discovery.conf
+%{_sysconfdir}/nvme/nvme-fabrics.conf.sample
+%{_prefix}/lib/NetworkManager/dispatcher.d/80-nvmf-connect-nbft.sh
 %{_unitdir}/nvmefc-boot-connections.service
 %{_unitdir}/nvmf-autoconnect.service
 %{_unitdir}/nvmf-connect.target
@@ -80,10 +100,23 @@ fi
 %{_udevrulesdir}/71-nvmf-hpe.rules
 %{_udevrulesdir}/70-nvmf-autoconnect.rules
 %{_udevrulesdir}/70-nvmf-keys.rules
+%{_udevrulesdir}/70-nvmf-registry.rules
 %{_udevrulesdir}/71-nvmf-netapp.rules
 %{_udevrulesdir}/71-nvmf-vastdata.rules
 %{_udevrulesdir}/65-persistent-net-nbft.rules
 %{_mandir}/man1/nvme*
+%{_mandir}/man5/nvme*
+# libnvme3 libs
+%{_libdir}/libnvme3.so.1*
+
+%files devel
+%{_includedir}/libnvme3/
+%{_libdir}/libnvme3.so
+%{_libdir}/pkgconfig/libnvme3.pc
+
+%files doc
+%license LICENSES/LGPL-2.1-or-later.txt
+%{_mandir}/man2/*
 
 %changelog
 %autochangelog
