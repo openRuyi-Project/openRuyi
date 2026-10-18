@@ -10,12 +10,12 @@
 %bcond pyverbs 1
 
 Name:           rdma-core
-Version:        60.0
+Version:        65.0
 Release:        %autorelease
 Summary:        RDMA core userspace libraries and daemons
 License:        BSD-2-Clause OR GPL-2.0-only
 URL:            https://github.com/linux-rdma/rdma-core
-#!RemoteAsset:  sha256:aa9ca1f5a9e356f770441f52254ddc70ff0a4df76a25383e422075eb730efb4b
+#!RemoteAsset:  sha256:714881af1c875f335aee55e94e770894963af3b9bbb6c1248e4a279058dcba58
 Source:         https://github.com/linux-rdma/rdma-core/archive/v%{version}/rdma-core-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -74,6 +74,7 @@ Provides:       libibumad = %{version}-%{release}
 Provides:       librdmacm = %{version}-%{release}
 Provides:       libefa = %{version}-%{release}
 Provides:       libhns = %{version}-%{release}
+Provides:       libionic = %{version}-%{release}
 Provides:       libmana = %{version}-%{release}
 Provides:       libmlx4 = %{version}-%{release}
 Provides:       libmlx5 = %{version}-%{release}
@@ -92,13 +93,14 @@ This package also includes all RDMA runtime libraries:
 - libibumad: InfiniBand userspace management datagram library
 - libibnetdisc: InfiniBand net discovery library
 - libibmad: Low layer IB functions library
-- Hardware-specific libraries: libefa, libhns, libmana, libmlx4, libmlx5
+- Hardware-specific libraries: libefa, libhns, libionic, libmana, libmlx4, libmlx5
 
 Device-specific plug-in ibverbs userspace drivers included:
 - libcxgb4: Chelsio T4 iWARP HCA
 - libefa: Amazon Elastic Fabric Adapter
 - libhfi1: Intel Omni-Path HFI
 - libhns: HiSilicon Hip08+ SoC
+- libionic: AMD Pensando Distributed Services Card RDMA/RoCE
 - libipathverbs: QLogic InfiniPath HCA
 - libirdma: Intel Ethernet Connection RDMA
 - libmana: Microsoft Azure Network Adapter
@@ -316,6 +318,8 @@ fi
 %{_modprobedir}/50-libmlx4.conf
 %{_libexecdir}/mlx4-setup.sh
 %{_libexecdir}/truescale-serdes.cmds
+%{_sbindir}/rdma_topo
+%{_sysusersdir}/rdma.conf
 %license COPYING.*
 
 # libibverbs runtime files
@@ -343,6 +347,9 @@ fi
 # hardware-specific libs - HiSilicon HNS
 %{_libdir}/libhns*.so.*
 
+# hardware-specific libs - AMD Pensando IONIC
+%{_libdir}/libionic*.so.*
+
 # hardware-specific libs - Microsoft Azure MANA
 %{_libdir}/libmana*.so.*
 
@@ -365,6 +372,7 @@ fi
 %{_libdir}/pkgconfig/libibnetdisc.pc
 %{_libdir}/pkgconfig/libibumad.pc
 %{_libdir}/pkgconfig/libibverbs.pc
+%{_libdir}/pkgconfig/libionic.pc
 %{_libdir}/pkgconfig/libmana.pc
 %{_libdir}/pkgconfig/libmlx4.pc
 %{_libdir}/pkgconfig/libmlx5.pc
