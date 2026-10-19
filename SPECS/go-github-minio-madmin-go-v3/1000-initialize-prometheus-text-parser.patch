@@ -1,0 +1,40 @@
+From a4f97c0d946f552549cf5a6a1ae44efef85020fc Mon Sep 17 00:00:00 2001
+From: Harshavardhana <harsha@minio.io>
+Date: Tue, 16 Dec 2025 02:49:02 -0800
+Subject: [PATCH] fix: use NewTextParser with UTF8Validation for
+ prometheus/common v0.67+
+
+prometheus/common v0.67+ requires explicit validation scheme when
+creating TextParser. Using zero-value TextParser causes panic:
+"Invalid name validation scheme requested: unset"
+Upstream-Status: Backport [https://github.com/minio/madmin-go/commit/d960f54a0e698548a564f631fc0321e6837067e6]
+Only the parser fix is needed in GOPATH mode; omit module lock updates.
+
+---
+ prometheus_metrics.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/prometheus_metrics.go b/prometheus_metrics.go
+index 5e069ac..4558528 100644
+--- a/prometheus_metrics.go
++++ b/prometheus_metrics.go
+@@ -27,6 +27,7 @@ import (
+ 
+ 	"github.com/dustin/go-humanize"
+ 	"github.com/prometheus/common/expfmt"
++	"github.com/prometheus/common/model"
+ 	"github.com/prometheus/prom2json"
+ )
+ 
+@@ -82,7 +83,7 @@ func ParsePrometheusResults(reader io.Reader) (results []*prom2json.Family, err
+ 	// We could do further content-type checks here, but the
+ 	// fallback for now will anyway be the text format
+ 	// version 0.0.4, so just go for it and see if it works.
+-	var parser expfmt.TextParser
++	parser := expfmt.NewTextParser(model.UTF8Validation)
+ 	metricFamilies, err := parser.TextToMetricFamilies(reader)
+ 	if err != nil {
+ 		return nil, fmt.Errorf("reading text format failed: %v", err)
+-- 
+2.56.0
+
