@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        A Go (golang) package for representing a list of errors as a single error.
 License:        MPL-2.0
 URL:            https://github.com/hashicorp/go-multierror
-#!RemoteAsset
+#!RemoteAsset:  sha256:8d1bb3377310e8ffe4c7b5672c5de1eaed153402aebd15d6e5b9673c356a065f
 Source0:        https://github.com/hashicorp/go-multierror/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -23,6 +23,8 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/hashicorp/errwrap)
 
 Provides:       go(github.com/hashicorp/go-multierror) = %{version}
+
+Requires:       go(github.com/hashicorp/errwrap)
 
 %description
 go-multierror is a package for Go that provides a mechanism for
@@ -34,9 +36,9 @@ access the errors. If the caller doesn't know, the error formats to a
 nice human-readable format.
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
