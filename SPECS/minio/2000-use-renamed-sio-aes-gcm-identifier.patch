@@ -1,0 +1,29 @@
+From 3de4d66f79a228d1564dcc605e386c80d07e8d61 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 00:40:24 +0800
+Subject: [PATCH] crypto: use the renamed sio AES-GCM cipher identifier
+
+minio/sio 0.5 renamed AES_256_GCM to AES_GCM when adding support for 128-bit keys. Both identifiers have wire value zero; MinIO continues to provide its existing 256-bit object keys.
+
+Reference: https://github.com/minio/sio/commit/9cd8da74bd935c6dcf3188a1ee346b19622693cd
+Upstream-Status: Inappropriate [distribution library compatibility]
+---
+ internal/crypto/crypto.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/crypto/crypto.go b/internal/crypto/crypto.go
+index f4a9b94..29d2217 100644
+--- a/internal/crypto/crypto.go
++++ b/internal/crypto/crypto.go
+@@ -25,7 +25,7 @@ import (
+ 
+ // DARECiphers returns a list of supported cipher suites
+ // for the DARE object encryption.
+-func DARECiphers() []byte { return []byte{sio.AES_256_GCM, sio.CHACHA20_POLY1305} }
++func DARECiphers() []byte { return []byte{sio.AES_GCM, sio.CHACHA20_POLY1305} }
+ 
+ // TLSCiphers returns a list of supported TLS transport
+ // cipher suite IDs.
+-- 
+2.56.0
+

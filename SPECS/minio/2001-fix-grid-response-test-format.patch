@@ -1,0 +1,38 @@
+From f1f58ee5cb4eba9739ca297f5da3b1614d7a1335 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 00:44:41 +0800
+Subject: [PATCH] grid: format the unexpected response as a value
+
+The response is a struct pointer rather than a string or byte slice. New Go printf analysis rejects %q for this argument. Keep the existing non-nil assertion and print the unexpected value with %v.
+
+Upstream-Status: Pending
+Reference: https://pkg.go.dev/cmd/vet#hdr-Printf
+---
+ internal/grid/grid_test.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/internal/grid/grid_test.go b/internal/grid/grid_test.go
+index 3d1156e..6e2474f 100644
+--- a/internal/grid/grid_test.go
++++ b/internal/grid/grid_test.go
+@@ -242,7 +242,7 @@ func TestSingleRoundtripGenerics(t *testing.T) {
+ 		t.Errorf("want error %v(%T), got %v(%T)", RemoteErr(testPayload), RemoteErr(testPayload), err, err)
+ 	}
+ 	if resp != nil {
+-		t.Errorf("want nil, got %q", resp)
++		t.Errorf("want nil, got %v", resp)
+ 	}
+ 	h2.PutResponse(resp)
+ 	t.Log("Roundtrip:", time.Since(start))
+@@ -304,7 +304,7 @@ func TestSingleRoundtripGenericsRecycle(t *testing.T) {
+ 		t.Errorf("want error %v(%T), got %v(%T)", RemoteErr(testPayload), RemoteErr(testPayload), err, err)
+ 	}
+ 	if resp != nil {
+-		t.Errorf("want nil, got %q", resp)
++		t.Errorf("want nil, got %v", resp)
+ 	}
+ 	t.Log("Roundtrip:", time.Since(start))
+ 	h2.PutResponse(resp)
+-- 
+2.56.0
+
