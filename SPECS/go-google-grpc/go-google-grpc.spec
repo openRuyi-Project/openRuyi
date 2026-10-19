@@ -65,6 +65,9 @@ Provides:       go(google.golang.org/grpc/metadata) = %{version}
 Provides:       go(google.golang.org/grpc/peer) = %{version}
 Provides:       go(google.golang.org/grpc/stats) = %{version}
 Provides:       go(google.golang.org/grpc/status) = %{version}
+# The nested module supplies plugin source, not an installed executable.
+Provides:       go(google.golang.org/grpc/cmd/protoc-gen-go-grpc) = %{version}
+Provides:       go(google.golang.org/grpc/grpclog) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/cncf/xds/go)

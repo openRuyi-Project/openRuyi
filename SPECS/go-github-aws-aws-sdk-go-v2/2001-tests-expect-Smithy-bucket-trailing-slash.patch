@@ -1,0 +1,60 @@
+From 983d83bb9554a173ae243a2e4244eddd81d6473e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 19 Oct 2026 14:58:19 +0800
+Subject: [PATCH] tests: expect bucket trailing slash with current Smithy
+
+The distribution uses Smithy 1.28.2, which includes the JoinPath fix from https://github.com/aws/smithy-go/pull/698. Joining the bucket path with the operation path / now preserves the trailing slash instead of dropping it.
+
+Update the four exact expected request paths for bucket-level operations. Keep all hostname, escaping, query and signing assertions, and leave object-key requests and production code unchanged. This is a downstream compatibility patch for the distribution Smithy version, not an AWS upstream backport.
+---
+ service/s3/internal/customizations/update_endpoint_test.go | 6 +++---
+ service/s3/manual_protocol_test.go                         | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/service/s3/internal/customizations/update_endpoint_test.go b/service/s3/internal/customizations/update_endpoint_test.go
+index 025ad44..58d4837 100644
+--- a/service/s3/internal/customizations/update_endpoint_test.go
++++ b/service/s3/internal/customizations/update_endpoint_test.go
+@@ -941,7 +941,7 @@ func TestVPC_CustomEndpoint(t *testing.T) {
+ 				Region:       "us-west-2",
+ 				UsePathStyle: true,
+ 			},
+-			expectedReqURL:        "https://bucket.vpce-123-abc.s3.us-west-2.vpce.amazonaws.com/bucketname",
++			expectedReqURL:        "https://bucket.vpce-123-abc.s3.us-west-2.vpce.amazonaws.com/bucketname/",
+ 			expectedSigningName:   "s3",
+ 			expectedSigningRegion: "us-west-2",
+ 		},
+@@ -1003,7 +1003,7 @@ func TestVPC_CustomEndpoint(t *testing.T) {
+ 				}),
+ 				Region: "us-west-2",
+ 			},
+-			expectedReqURL:        "https://beta.example.com/bucketname",
++			expectedReqURL:        "https://beta.example.com/bucketname/",
+ 			expectedSigningName:   "s3",
+ 			expectedSigningRegion: "us-west-2",
+ 		},
+@@ -1346,7 +1346,7 @@ func TestMultiRegionAccessPoints_UpdateEndpoint(t *testing.T) {
+ 				}),
+ 			},
+ 			bucket:         "arn:aws:s3::123456789012:accesspoint:mfzwi23gnjvgw.mrap",
+-			expectedReqURL: "https://mockendpoint.amazonaws.com/arn%3Aaws%3As3%3A%3A123456789012%3Aaccesspoint%3Amfzwi23gnjvgw.mrap",
++			expectedReqURL: "https://mockendpoint.amazonaws.com/arn%3Aaws%3As3%3A%3A123456789012%3Aaccesspoint%3Amfzwi23gnjvgw.mrap/",
+ 			expectedHeader: map[string]string{
+ 				v4a.AmzRegionSetKey: "*",
+ 			},
+diff --git a/service/s3/manual_protocol_test.go b/service/s3/manual_protocol_test.go
+index 4aca2d9..6b158fd 100644
+--- a/service/s3/manual_protocol_test.go
++++ b/service/s3/manual_protocol_test.go
+@@ -80,7 +80,7 @@ func TestS3Protocol_ListObjectsV2_Request(t *testing.T) {
+ 
+ 			ExpectMethod: "GET",
+ 			ExpectHost:   "s3.us-west-2.amazonaws.com",
+-			ExpectPath:   "/mybucket",
++			ExpectPath:   "/mybucket/",
+ 			ExpectQuery:  []string{"list-type=2"},
+ 		},
+ 		"S3VirtualHostDualstackAddressing": {
+-- 
+2.53.0
+

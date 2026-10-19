@@ -30,6 +30,8 @@ BuildRequires:  go(go.yaml.in/yaml/v3)
 
 Provides:       go(go.uber.org/zap) = %{version}
 Provides:       go(go.uber.org/zap/zapcore) = %{version}
+Provides:       go(go.uber.org/zap/exp) = %{version}
+Provides:       go(go.uber.org/zap/zaptest) = %{version}
 
 Requires:       go(go.uber.org/multierr)
 

@@ -1,0 +1,29 @@
+From 0f779ba6f964137db737db610d8afa6c252be836 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 19 Oct 2026 15:07:04 +0800
+Subject: [PATCH] metrics/teststat: always populate the gauge before reading it
+
+rand.Intn(len(a)) can select zero updates. Lazy metric backends then have no value to serialize; the Influx test indexes an empty regexp match and panics. Even a backend returning zero reaches want[len(want)-1] with an empty expected slice.
+
+Choose one through len(a) updates so both the backend and the expected sample list are initialized. Keep random coverage and the original exact-value assertions. This downstream fix is not yet submitted upstream.
+---
+ metrics/teststat/teststat.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/metrics/teststat/teststat.go b/metrics/teststat/teststat.go
+index 7918b9f..7e30e69 100644
+--- a/metrics/teststat/teststat.go
++++ b/metrics/teststat/teststat.go
+@@ -42,7 +42,8 @@ func FillCounter(counter metrics.Counter) float64 {
+ // to check that the gauge has the correct final value.
+ func TestGauge(gauge metrics.Gauge, value func() []float64) error {
+ 	a := rand.Perm(100)
+-	n := rand.Intn(len(a))
++	// Lazy backends emit no sample until Set; the assertion also needs want[0].
++	n := 1 + rand.Intn(len(a))
+ 
+ 	var want []float64
+ 	for i := 0; i < n; i++ {
+-- 
+2.53.0
+

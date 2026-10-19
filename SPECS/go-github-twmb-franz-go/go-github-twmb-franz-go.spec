@@ -47,6 +47,8 @@ BuildRequires:  go(go.uber.org/zap)
 BuildRequires:  go(golang.org/x/crypto)
 
 Provides:       go(github.com/twmb/franz-go) = %{version}
+Provides:       go(github.com/twmb/franz-go/pkg/kadm) = %{version}
+Provides:       go(github.com/twmb/franz-go/pkg/kmsg) = %{version}
 
 Requires:       go(github.com/go-logr/logr)
 Requires:       go(github.com/jcmturner/gokrb5/v8)
@@ -68,6 +70,11 @@ Requires:       go(golang.org/x/crypto)
 Franz-go is a Kafka client library for Go. This package bundles its root
 module, public package modules, Kerberos support, and logging, metrics, and
 tracing plugins from one repository snapshot.
+
+%check -a
+# The Kafka smoke test above is intentionally narrow. Also run the complete
+# tests for the already installed administration and protocol message modules.
+go test -v %{go_import_path}/pkg/kadm/... %{go_import_path}/pkg/kmsg/...
 
 %files
 %doc CHANGELOG.md DESIGN.md README.md

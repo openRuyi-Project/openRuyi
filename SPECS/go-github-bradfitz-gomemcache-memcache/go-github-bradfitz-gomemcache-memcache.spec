@@ -22,6 +22,7 @@ BuildSystem:    golangmodules
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
+Provides:       go(%{go_import_path}) = %{version}
 Provides:       go(github.com/bradfitz/gomemcache/memcache) = %{version}
 
 %description

@@ -44,6 +44,23 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/api) = %{version}
+Provides:       go(k8s.io/api/admission/v1) = %{version}
+Provides:       go(k8s.io/api/admission/v1beta1) = %{version}
+Provides:       go(k8s.io/api/admissionregistration/v1) = %{version}
+Provides:       go(k8s.io/api/apidiscovery/v2) = %{version}
+Provides:       go(k8s.io/api/apidiscovery/v2beta1) = %{version}
+Provides:       go(k8s.io/api/apiserverinternal/v1alpha1) = %{version}
+Provides:       go(k8s.io/api/apps/v1) = %{version}
+Provides:       go(k8s.io/api/authentication/v1) = %{version}
+Provides:       go(k8s.io/api/authentication/v1beta1) = %{version}
+Provides:       go(k8s.io/api/authorization/v1) = %{version}
+Provides:       go(k8s.io/api/authorization/v1beta1) = %{version}
+Provides:       go(k8s.io/api/batch/v1) = %{version}
+Provides:       go(k8s.io/api/coordination/v1) = %{version}
+Provides:       go(k8s.io/api/core/v1) = %{version}
+Provides:       go(k8s.io/api/discovery/v1) = %{version}
+Provides:       go(k8s.io/api/extensions/v1beta1) = %{version}
+Provides:       go(k8s.io/api/flowcontrol/v1) = %{version}
 
 Requires:       go(github.com/fxamacker/cbor/v2)
 Requires:       go(github.com/go-logr/logr)

@@ -54,6 +54,14 @@ BuildRequires:  go(k8s.io/utils/trace)
 BuildRequires:  go(sigs.k8s.io/json)
 
 Provides:       go(k8s.io/component-base) = %{version}
+Provides:       go(k8s.io/component-base/cli) = %{version}
+Provides:       go(k8s.io/component-base/compatibility) = %{version}
+Provides:       go(k8s.io/component-base/featuregate) = %{version}
+Provides:       go(k8s.io/component-base/logs) = %{version}
+Provides:       go(k8s.io/component-base/metrics) = %{version}
+Provides:       go(k8s.io/component-base/tracing) = %{version}
+Provides:       go(k8s.io/component-base/version) = %{version}
+Provides:       go(k8s.io/component-base/zpages/features) = %{version}
 
 Requires:       go(github.com/blang/semver/v4)
 Requires:       go(github.com/go-logr/logr)

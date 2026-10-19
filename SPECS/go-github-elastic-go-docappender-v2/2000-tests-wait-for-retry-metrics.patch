@@ -1,0 +1,66 @@
+From 848e76e6c9d859fb16e2c7ea03e256d9e7762ed7 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 19 Oct 2026 14:58:50 +0800
+Subject: [PATCH] tests: wait for retry metrics after response processing
+
+The mock increments failedCount before writing its response. The appender records retry metrics only after it processes that response. Collecting a delta immediately after failedCount changes races with that processing, as reported in https://github.com/elastic/go-docappender/issues/256 and reproduced on the riscv64 OBS worker.
+
+Poll for a nonempty retry delta before the existing exact count and attribute assertions. Do not disable tests, replace exact assertions, or add an unconditional sleep.
+---
+ appender_test.go | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/appender_test.go b/appender_test.go
+index aa75af7..fbc29d2 100644
+--- a/appender_test.go
++++ b/appender_test.go
+@@ -1251,6 +1251,28 @@ func TestAppenderRetryDocument(t *testing.T) {
+ 				},
+ 			))
+ 			var rm metricdata.ResourceMetrics
++			// A received request does not mean its response has been processed.
++			// Wait for a nonempty retry delta before making the exact assertions;
++			// otherwise an early Collect can consume the previous flush's metrics.
++			collectRetryMetrics := func() {
++				t.Helper()
++				require.Eventually(t, func() bool {
++					if err := rdr.Collect(context.Background(), &rm); err != nil {
++						return false
++					}
++					for _, scope := range rm.ScopeMetrics {
++						for _, m := range scope.Metrics {
++							if m.Name == "elasticsearch.events.retried" {
++								sum, ok := m.Data.(metricdata.Sum[int64])
++								if ok && len(sum.DataPoints) > 0 {
++									return true
++								}
++							}
++						}
++					}
++					return false
++				}, 2*time.Second, time.Millisecond, "timed out waiting for retry metrics")
++			}
+ 
+ 			var failedCount atomic.Int32
+ 			var done atomic.Bool
+@@ -1316,7 +1338,7 @@ func TestAppenderRetryDocument(t *testing.T) {
+ 				return failedCount.Load() == 1
+ 			}, 2*time.Second, 50*time.Millisecond, "timed out waiting for first flush request to fail")
+ 
+-			assert.NoError(t, rdr.Collect(context.Background(), &rm))
++			collectRetryMetrics()
+ 
+ 			var asserted atomic.Int64
+ 			assertCounter := docappendertest.NewAssertCounter(t, &asserted)
+@@ -1337,7 +1359,7 @@ func TestAppenderRetryDocument(t *testing.T) {
+ 				return failedCount.Load() == 2
+ 			}, 2*time.Second, 50*time.Millisecond, "timed out waiting for first flush request to fail")
+ 
+-			assert.NoError(t, rdr.Collect(context.Background(), &rm))
++			collectRetryMetrics()
+ 
+ 			assertCounter = docappendertest.NewAssertCounter(t, &asserted)
+ 			docappendertest.AssertOTelMetrics(t, rm.ScopeMetrics[0].Metrics, func(m metricdata.Metrics) {
+-- 
+2.53.0
+

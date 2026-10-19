@@ -27,6 +27,7 @@ BuildOption(prep):  -n %{archive_dir}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+BuildRequires:  go(github.com/go-viper/mapstructure/v2)
 BuildRequires:  go(github.com/google/go-cmp)
 BuildRequires:  go(github.com/hashicorp/consul/sdk)
 BuildRequires:  go(github.com/hashicorp/go-cleanhttp)
@@ -41,6 +42,7 @@ BuildRequires:  go(golang.org/x/exp)
 
 Provides:       go(github.com/hashicorp/consul/api) = %{version}
 
+Requires:       go(github.com/go-viper/mapstructure/v2)
 Requires:       go(github.com/google/go-cmp)
 Requires:       go(github.com/hashicorp/consul/sdk)
 Requires:       go(github.com/hashicorp/go-cleanhttp)

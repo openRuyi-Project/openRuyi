@@ -60,28 +60,41 @@ Source0:        https://github.com/aws/aws-sdk-go-v2/archive/release-%{upstream_
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Allow hash/checksum fixtures to seek while newer Smithy computes body length.
+# https://github.com/aws/aws-sdk-go-v2/commit/c5510c6fa70019f93af63e53b8fc2db59fc44996
+Patch1000:      1000-tests-allow-body-length-seeks-before-hashing.patch
 # Otherwise we need to -vet=off
 Patch2000:      2000-Wrap-status-code-error-value-for-Go-1.27.patch
+# Match the bucket-level paths produced by the system Smithy JoinPath fix.
+# https://github.com/aws/smithy-go/pull/698
+Patch2001:      2001-tests-expect-Smithy-bucket-trailing-slash.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/aws/smithy-go)
 
 Provides:       go(github.com/aws/aws-sdk-go-v2) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/config) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/credentials) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/feature/ec2/imds) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/configsources) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/endpoints/v2) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/ini) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/internal/v4a) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/dynamodb) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ec2) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ecs) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/elasticache) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/internal/checksum) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/internal/presigned-url) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/internal/s3shared) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/kafka) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/lightsail) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/rds) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/service/s3) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/signin) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/sso) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ssooidc) = %{version}
@@ -92,6 +105,18 @@ Requires:       go(github.com/aws/smithy-go)
 %description
 This package provides the AWS SDK for Go v2 core module and selected service
 module import paths from the upstream release archive.
+
+%check -a
+# These module trees are already installed by the aggregate package. Keep the
+# existing core tests and exercise every package in the newly exposed modules.
+go test -v \
+    %{go_import_path}/aws/protocol/eventstream/... \
+    %{go_import_path}/internal/v4a/... \
+    %{go_import_path}/service/dynamodb/... \
+    %{go_import_path}/service/internal/checksum/... \
+    %{go_import_path}/service/internal/endpoint-discovery/... \
+    %{go_import_path}/service/internal/s3shared/... \
+    %{go_import_path}/service/s3/...
 
 %files
 %doc CHANGELOG.md

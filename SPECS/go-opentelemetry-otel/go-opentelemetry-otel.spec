@@ -17,19 +17,15 @@
 }
 
 Name:           go-opentelemetry-otel
-Version:        1.44.0
+Version:        1.46.0
 Release:        %autorelease
 Summary:        OpenTelemetry API for Go
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-go
-#!RemoteAsset:  sha256:fc1c8d58df26300576a8acbc6d53d07477784c656fd22018e86540a4392407d4
+#!RemoteAsset:  sha256:994e4a5ff6dc5f6f22a1aa109fb086e7ff6afefd7319b1ea53b1bd934e955d34
 Source0:        https://github.com/open-telemetry/opentelemetry-go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
-
-# Current Go vet rejects %%q with a uint64 value in codes.UnmarshalJSON.
-# Use the numeric format that matches the parsed value. - HNO3Miracle
-Patch2000:      2000-fix-invalid-code-format-for-go-vet.patch
 
 BuildRequires:  go
 BuildRequires:  go(github.com/cespare/xxhash/v2)
@@ -46,6 +42,8 @@ Provides:       go(go.opentelemetry.io/otel) = %{version}
 Provides:       go(go.opentelemetry.io/otel/attribute) = %{version}
 Provides:       go(go.opentelemetry.io/otel/propagation) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.17.0) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.43.0) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.43.0/otelconv) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdoutmetric) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdouttrace) = %{version}
 Provides:       go(go.opentelemetry.io/otel/exporters/stdout/stdoutlog) = %{version}
@@ -58,6 +56,9 @@ Provides:       go(go.opentelemetry.io/otel/sdk/metric/metricdata) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log/logtest) = %{version}
 Provides:       go(go.opentelemetry.io/otel/trace) = %{version}
+Provides:       go(go.opentelemetry.io/otel/sdk/resource) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.4.0) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.12.0) = %{version}
 
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/go-logr/logr)

@@ -1,0 +1,94 @@
+From d5e7db8fda5c2862886699a97b2b7963295db2ad Mon Sep 17 00:00:00 2001
+From: TAO_TONG <63986359+Tongs2000@users.noreply.github.com>
+Date: Tue, 25 Aug 2026 15:56:50 -0700
+Subject: [PATCH] Set Content-Length when the request body is set instead of
+ via middleware (#3513)
+
+Content-Length is now set when the request body is set via smithy-go Request.SetStream, so the generated stacks no longer register the standalone ComputeContentLength middleware.
+
+Partial backport of c5510c6fa70019f93af63e53b8fc2db59fc44996: retain only the signer and checksum test fixture changes. The system Smithy computes body length in SetStream before these middlewares run. Allow seeks until Read so the tests still exercise the intended rewind errors. Generated service stack changes are not included.
+
+https://github.com/aws/aws-sdk-go-v2/commit/c5510c6fa70019f93af63e53b8fc2db59fc44996
+---
+ aws/signer/v4/middleware_test.go              | 14 +++++++------
+ .../middleware_compute_input_checksum_test.go | 20 +++++++++++++------
+ 2 files changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/aws/signer/v4/middleware_test.go b/aws/signer/v4/middleware_test.go
+index d29d04b..85c4dba 100644
+--- a/aws/signer/v4/middleware_test.go
++++ b/aws/signer/v4/middleware_test.go
+@@ -435,19 +435,21 @@ func (nonSeeker) Read(p []byte) (n int, err error) {
+ 	return 0, io.EOF
+ }
+ 
++// semiSeekable is a stream whose seeks succeed until its body has been read,
++// then fail, to exercise a rewind failure while computing the payload hash.
+ type semiSeekable struct {
+-	hasSeeked bool
++	read bool
+ }
+ 
+ func (s *semiSeekable) Seek(offset int64, whence int) (int64, error) {
+-	if !s.hasSeeked {
+-		s.hasSeeked = true
+-		return 0, nil
++	if s.read {
++		return 0, fmt.Errorf("io seek error")
+ 	}
+-	return 0, fmt.Errorf("io seek error")
++	return 0, nil
+ }
+ 
+-func (*semiSeekable) Read(p []byte) (n int, err error) {
++func (s *semiSeekable) Read(p []byte) (n int, err error) {
++	s.read = true
+ 	return 0, io.EOF
+ }
+ 
+diff --git a/service/internal/checksum/middleware_compute_input_checksum_test.go b/service/internal/checksum/middleware_compute_input_checksum_test.go
+index 46ca3cf..fb86c4e 100644
+--- a/service/internal/checksum/middleware_compute_input_checksum_test.go
++++ b/service/internal/checksum/middleware_compute_input_checksum_test.go
+@@ -574,7 +574,7 @@ func TestComputeInputPayloadChecksum(t *testing.T) {
+ 						r.URL, _ = url.Parse("http://example.aws")
+ 						r.ContentLength = 11
+ 						r = requestMust(r.SetStream(&errSeekReader{
+-							Reader: strings.NewReader("hello world"),
++							ReadSeeker: strings.NewReader("hello world"),
+ 						}))
+ 						return r
+ 					}(),
+@@ -1237,16 +1237,24 @@ func (r *mockReadSeeker) Seek(int64, int) (int64, error) {
+ 	return 0, nil
+ }
+ 
++// errSeekReader seeks normally (delegating to the wrapped reader) until its body
++// has been read, then fails, to exercise a rewind failure while computing the
++// checksum.
+ type errSeekReader struct {
+-	io.Reader
++	io.ReadSeeker
++	read bool
++}
++
++func (r *errSeekReader) Read(p []byte) (int, error) {
++	r.read = true
++	return r.ReadSeeker.Read(p)
+ }
+ 
+ func (r *errSeekReader) Seek(offset int64, whence int) (int64, error) {
+-	if whence == io.SeekCurrent {
+-		return 0, nil
++	if r.read {
++		return 0, fmt.Errorf("seek failed")
+ 	}
+-
+-	return 0, fmt.Errorf("seek failed")
++	return r.ReadSeeker.Seek(offset, whence)
+ }
+ 
+ func requestMust(r *smithyhttp.Request, err error) *smithyhttp.Request {
+-- 
+2.53.0
+

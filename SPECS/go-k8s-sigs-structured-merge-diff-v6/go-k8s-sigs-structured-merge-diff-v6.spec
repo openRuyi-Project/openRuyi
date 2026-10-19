@@ -29,6 +29,7 @@ BuildRequires:  go(go.yaml.in/yaml/v2)
 BuildRequires:  go(sigs.k8s.io/randfill)
 
 Provides:       go(sigs.k8s.io/structured-merge-diff/v6) = %{version}
+Provides:       go(sigs.k8s.io/structured-merge-diff/v6/value) = %{version}
 
 %description
 This package provides Kubernetes structured merge diff support for Go.

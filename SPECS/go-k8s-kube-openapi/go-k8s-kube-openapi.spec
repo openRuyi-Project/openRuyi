@@ -82,6 +82,18 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/kube-openapi) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/builder) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/builder3) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/common) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/common/restfuladapter) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/handler) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/handler3) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/schemamutation) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/spec3) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/util) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/util/proto) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/validation/spec) = %{version}
+Provides:       go(k8s.io/kube-openapi/pkg/validation/strfmt) = %{version}
 
 Requires:       go(github.com/davecgh/go-spew)
 Requires:       go(github.com/emicklei/go-restful/v3)

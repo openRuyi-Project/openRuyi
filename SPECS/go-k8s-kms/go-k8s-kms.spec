@@ -27,6 +27,10 @@ BuildRequires:  go(google.golang.org/protobuf/reflect)
 BuildRequires:  go(google.golang.org/protobuf/runtime)
 
 Provides:       go(k8s.io/kms) = %{version}
+Provides:       go(k8s.io/kms/apis/v1beta1) = %{version}
+Provides:       go(k8s.io/kms/apis/v2) = %{version}
+Provides:       go(k8s.io/kms/pkg/service) = %{version}
+Provides:       go(k8s.io/kms/pkg/util) = %{version}
 
 Requires:       go(google.golang.org/grpc)
 Requires:       go(google.golang.org/grpc/codes)

@@ -34,6 +34,10 @@ Provides:       go(k8s.io/utils/ptr) = %{version}
 Provides:       go(k8s.io/utils/clock) = %{version}
 Provides:       go(k8s.io/utils/exec) = %{version}
 Provides:       go(k8s.io/utils/net) = %{version}
+Provides:       go(k8s.io/utils/dump) = %{version}
+Provides:       go(k8s.io/utils/lru) = %{version}
+Provides:       go(k8s.io/utils/path) = %{version}
+Provides:       go(k8s.io/utils/third_party/forked/golang/btree) = %{version}
 
 Requires:       go(github.com/davecgh/go-spew)
 Requires:       go(github.com/go-logr/logr)

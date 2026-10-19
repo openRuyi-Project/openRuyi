@@ -86,6 +86,35 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/client-go) = %{version}
+Provides:       go(k8s.io/client-go/applyconfigurations) = %{version}
+Provides:       go(k8s.io/client-go/discovery) = %{version}
+Provides:       go(k8s.io/client-go/dynamic) = %{version}
+Provides:       go(k8s.io/client-go/features) = %{version}
+Provides:       go(k8s.io/client-go/informers) = %{version}
+Provides:       go(k8s.io/client-go/kubernetes) = %{version}
+Provides:       go(k8s.io/client-go/listers) = %{version}
+Provides:       go(k8s.io/client-go/openapi) = %{version}
+Provides:       go(k8s.io/client-go/rest) = %{version}
+Provides:       go(k8s.io/client-go/restmapper) = %{version}
+Provides:       go(k8s.io/client-go/testing) = %{version}
+Provides:       go(k8s.io/client-go/tools/cache) = %{version}
+Provides:       go(k8s.io/client-go/tools/cache/synctrack) = %{version}
+Provides:       go(k8s.io/client-go/tools/clientcmd) = %{version}
+Provides:       go(k8s.io/client-go/tools/clientcmd/api) = %{version}
+Provides:       go(k8s.io/client-go/tools/clientcmd/api/v1) = %{version}
+Provides:       go(k8s.io/client-go/tools/events) = %{version}
+Provides:       go(k8s.io/client-go/tools/portforward) = %{version}
+Provides:       go(k8s.io/client-go/tools/remotecommand) = %{version}
+Provides:       go(k8s.io/client-go/transport) = %{version}
+Provides:       go(k8s.io/client-go/util/cert) = %{version}
+Provides:       go(k8s.io/client-go/util/consistencydetector) = %{version}
+Provides:       go(k8s.io/client-go/util/exec) = %{version}
+Provides:       go(k8s.io/client-go/util/flowcontrol) = %{version}
+Provides:       go(k8s.io/client-go/util/keyutil) = %{version}
+Provides:       go(k8s.io/client-go/util/retry) = %{version}
+Provides:       go(k8s.io/client-go/util/testing) = %{version}
+Provides:       go(k8s.io/client-go/util/watchlist) = %{version}
+Provides:       go(k8s.io/client-go/util/workqueue) = %{version}
 
 Requires:       go(github.com/davecgh/go-spew)
 Requires:       go(github.com/emicklei/go-restful/v3)
