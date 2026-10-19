@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        Legacy scram library → use xdg-go/scram instead
 License:        Apache-2.0
 URL:            https://github.com/xdg/scram
-#!RemoteAsset
+#!RemoteAsset:  sha256:04b250a3d79765c8e9a64333dd82bfd59f3cc3b6afa3c32fefe82a0052972727
 Source0:        https://github.com/xdg/scram/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -25,6 +25,9 @@ BuildRequires:  go(golang.org/x/crypto)
 
 Provides:       go(github.com/xdg/scram) = %{version}
 
+Requires:       go(github.com/xdg/stringprep)
+Requires:       go(golang.org/x/crypto)
+
 %description
 Package scram provides client and server implementations of the Salted
 Challenge Response Authentication Mechanism (SCRAM) described in
@@ -32,9 +35,9 @@ Challenge Response Authentication Mechanism (SCRAM) described in
 [RFC-7677](https://tools.ietf.org/html/rfc7677).
 
 %files
-%license LICENSE*
 %doc README*
+%license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
 
 %changelog
-%{?autochangelog}
+%autochangelog
