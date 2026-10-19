@@ -59,12 +59,11 @@ it as a Kafka event-notification target.
 %prep -a
 # examples/ are sample programs with nested modules, not the library.
 rm -rf examples
-# tools/ holds kafka-console-* diagnostics and a performance client,
-# not an upstream-distributed program. This RPM is the importable library.
-rm -rf tools
+# MinIO imports tools/tls. Keep that helper and omit the diagnostic programs.
+find tools -mindepth 1 -maxdepth 1 ! -name tls -exec rm -rf {} +
 
 %files
-%doc README.md CHANGELOG.md
+%doc CHANGELOG.md README.md
 %license LICENSE.md
 %{go_sys_gopath}/%{go_import_path}
 
