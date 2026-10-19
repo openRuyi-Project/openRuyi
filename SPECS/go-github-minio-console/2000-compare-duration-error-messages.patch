@@ -1,0 +1,31 @@
+From 5dcd084018cb95ef2aeaa6d5f81de645ea1240ca Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 00:25:16 +0800
+Subject: [PATCH] Compare duration parsing errors by their message
+
+The Go time package may use different concrete error types. Test the
+expected invalid-duration error text instead of comparing unexported
+standard-library error representations. Preserve the negative-path test.
+
+Upstream-Status: Pending [upstream repository unavailable]
+Reference: https://pkg.go.dev/time#ParseDuration
+---
+ api/user_objects_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/api/user_objects_test.go b/api/user_objects_test.go
+index 7abae34..42f11af 100644
+--- a/api/user_objects_test.go
++++ b/api/user_objects_test.go
+@@ -1072,7 +1072,7 @@ func Test_shareObject(t *testing.T) {
+ 			}
+ 			url, err := getShareObjectURL(ctx, client, tt.args.r, tt.args.versionID, tt.args.expires)
+ 			if tt.wantError != nil {
+-				if !reflect.DeepEqual(err, tt.wantError) {
++				if err == nil || err.Error() != tt.wantError.Error() {
+ 					t.Errorf("getShareObjectURL() error: `%s`, wantErr: `%s`", err, tt.wantError)
+ 					return
+ 				}
+-- 
+2.56.0
+
