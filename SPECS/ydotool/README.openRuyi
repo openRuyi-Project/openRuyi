@@ -1,0 +1,35 @@
+ydotool on openRuyi
+==================
+
+English
+-------
+
+Reboot after installation to initialize device permissions. Then enable
+the user service and run ydotool from an active local login session:
+
+    systemctl --user enable --now ydotool.service
+    ydotool mousemove -x 10 -y 10
+
+The packaged udev rule grants the active local user access to /dev/uinput
+through systemd-logind. The kernel must support uinput; if built as a
+module, the matching module must be installed.
+
+SSH-only and headless sessions need device permissions configured by an
+administrator. Access to /dev/uinput allows input injection into other
+sessions.
+
+简体中文
+--------
+
+安装后请重启系统，以初始化设备权限。然后在当前活动的本地登录会话中
+启用用户服务并运行 ydotool:
+
+    systemctl --user enable --now ydotool.service
+    ydotool mousemove -x 10 -y 10
+
+软件包附带的 udev 规则通过 systemd-logind 为当前活动的本地用户授予
+/dev/uinput 访问权限。内核需要支持 uinput；如果编译为模块，还需要安装
+与当前内核匹配的模块。
+
+仅通过 SSH 登录或无本地会话的环境需要管理员另行配置设备权限。
+拥有 /dev/uinput 访问权限的程序可以向其他会话注入输入事件。

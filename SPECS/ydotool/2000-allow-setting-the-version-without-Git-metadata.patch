@@ -1,0 +1,45 @@
+From 927e973cfb9225b6ce19d1e9e067749fdb0bd4da Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Mon, 19 Oct 2026 23:08:54 +0800
+Subject: [PATCH] Allow setting the version without Git metadata
+
+Use a CMake cache variable to supply the release version when building from a source archive. Preserve git describe as a fallback for development checkouts.
+
+Upstream-Status: Pending
+Upstream: https://github.com/ReimuNotMoe/ydotool/blob/v1.0.4/CMakeLists.txt
+---
+ CMakeLists.txt | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7b91f69..e5b0330 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,12 +17,19 @@ else()
+     set(SD_UNITDIR "lib/systemd/user")
+ endif()
+ 
+-execute_process(COMMAND git describe --tags --long --always RESULT_VARIABLE RC_GIT_VER OUTPUT_VARIABLE GIT_VERSION)
++set(YDOTOOL_VERSION "" CACHE STRING "Version string for release archive builds")
+ 
+-if (${RC_GIT_VER} EQUAL 0)
+-    string(STRIP ${GIT_VERSION} GIT_VERSION)
+-    message("-- Version: " ${GIT_VERSION})
+-    add_definitions(-DVERSION=\"${GIT_VERSION}\")
++if (NOT YDOTOOL_VERSION)
++    execute_process(COMMAND git describe --tags --long --always RESULT_VARIABLE RC_GIT_VER OUTPUT_VARIABLE GIT_VERSION)
++
++    if (${RC_GIT_VER} EQUAL 0)
++        string(STRIP ${GIT_VERSION} YDOTOOL_VERSION)
++    endif()
++endif()
++
++if (YDOTOOL_VERSION)
++    message("-- Version: " ${YDOTOOL_VERSION})
++    add_definitions(-DVERSION=\"${YDOTOOL_VERSION}\")
+ endif()
+ 
+ 
+-- 
+2.56.0
+
