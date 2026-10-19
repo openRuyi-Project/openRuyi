@@ -33,6 +33,7 @@ BuildRequires:  go(github.com/rivo/uniseg)
 BuildRequires:  go(github.com/sahilm/fuzzy)
 
 Provides:       go(github.com/charmbracelet/bubbles) = %{version}
+Provides:       go(github.com/charmbracelet/bubbles/viewport) = %{version}
 
 Requires:       go(github.com/atotto/clipboard)
 Requires:       go(github.com/charmbracelet/bubbletea)
