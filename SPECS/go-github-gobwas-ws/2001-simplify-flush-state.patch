@@ -1,0 +1,26 @@
+From 35b85a576afd3d9d0ef2bc672bf3bf958cef2adb Mon Sep 17 00:00:00 2001
+From: sb123sb123 <152394158+sb123sb123@users.noreply.github.com>
+Date: Tue, 29 Sep 2026 08:25:00 +0000
+Subject: [PATCH 2/2] Simplify successful flush state assignment
+
+Upstream-Status: Submitted [https://github.com/gobwas/ws/pull/227]
+
+---
+ wsflate/writer.go | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/wsflate/writer.go b/wsflate/writer.go
+index 77452dc..5e4d690 100644
+--- a/wsflate/writer.go
++++ b/wsflate/writer.go
+@@ -105,9 +105,7 @@ func (w *Writer) Flush() error {
+ 	w.flushed = false
+ 	w.err = w.c.Flush()
+ 	w.checkTail()
+-	if w.err == nil {
+-		w.flushed = true
+-	}
++	w.flushed = w.err == nil
+ 	return w.err
+ }
+ 

@@ -1,0 +1,140 @@
+From cdd232dc0dca887a90cb95825e1bdbe4cc6a8622 Mon Sep 17 00:00:00 2001
+From: sb123sb123 <152394158+sb123sb123@users.noreply.github.com>
+Date: Tue, 22 Sep 2026 06:44:55 +0800
+Subject: [PATCH 1/2] wsflate: handle short compressor EOF blocks
+
+Upstream-Status: Submitted [https://github.com/gobwas/ws/pull/227]
+
+---
+ wsflate/writer.go      | 27 ++++++++++++++++++++++--
+ wsflate/writer_test.go | 47 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 2 deletions(-)
+
+diff --git a/wsflate/writer.go b/wsflate/writer.go
+index 0342ccb..77452dc 100644
+--- a/wsflate/writer.go
++++ b/wsflate/writer.go
+@@ -55,6 +55,10 @@ type Writer struct {
+ 	c    Compressor
+ 	cbuf cbuf
+ 	err  error
++	// flushed reports whether cbuf currently holds the validated
++	// per-message sync-flush marker. A compressor may append a final block
++	// when it is closed, but that block is not part of a PMCE message.
++	flushed bool
+ }
+ 
+ // NewWriter returns a new Writer.
+@@ -74,6 +78,7 @@ func NewWriter(w io.Writer, ctor func(io.Writer) Compressor) *Writer {
+ // Any not flushed data will be lost.
+ func (w *Writer) Reset(dest io.Writer) {
+ 	w.err = nil
++	w.flushed = false
+ 	w.cbuf.reset(dest)
+ 	if x, ok := w.c.(WriteResetter); ok {
+ 		x.Reset(&w.cbuf)
+@@ -87,6 +92,7 @@ func (w *Writer) Write(p []byte) (n int, err error) {
+ 	if w.err != nil {
+ 		return 0, w.err
+ 	}
++	w.flushed = false
+ 	n, w.err = w.c.Write(p)
+ 	return n, w.err
+ }
+@@ -96,8 +102,12 @@ func (w *Writer) Flush() error {
+ 	if w.err != nil {
+ 		return w.err
+ 	}
++	w.flushed = false
+ 	w.err = w.c.Flush()
+ 	w.checkTail()
++	if w.err == nil {
++		w.flushed = true
++	}
+ 	return w.err
+ }
+ 
+@@ -108,9 +118,22 @@ func (w *Writer) Close() error {
+ 		return w.err
+ 	}
+ 	if c, ok := w.c.(io.Closer); ok {
+-		w.err = c.Close()
++		if w.flushed {
++			// PMCE requires the sync-flush marker to be omitted from the
++			// message. Keep it buffered while closing the compressor so a
++			// final block emitted by newer flate implementations cannot
++			// move any of those bytes to the destination.
++			dst := w.cbuf.dst
++			w.cbuf.dst = io.Discard
++			w.err = c.Close()
++			w.cbuf.dst = dst
++		} else {
++			w.err = c.Close()
++		}
++	}
++	if !w.flushed {
++		w.checkTail()
+ 	}
+-	w.checkTail()
+ 	return w.err
+ }
+ 
+diff --git a/wsflate/writer_test.go b/wsflate/writer_test.go
+index f088b83..5e7aad2 100644
+--- a/wsflate/writer_test.go
++++ b/wsflate/writer_test.go
+@@ -14,6 +14,53 @@ import (
+ 	"github.com/gobwas/ws"
+ )
+ 
++type shortFinalBlockCompressor struct {
++	dst    io.Writer
++	closed bool
++}
++
++func (c *shortFinalBlockCompressor) Write(p []byte) (int, error) {
++	return c.dst.Write(p)
++}
++
++func (c *shortFinalBlockCompressor) Flush() error {
++	_, err := c.dst.Write(compressionTail[:])
++	return err
++}
++
++func (c *shortFinalBlockCompressor) Close() error {
++	c.closed = true
++	// Go 1.27's flate writer uses a short fixed-Huffman EOF block instead
++	// of the four-byte stored block emitted by older versions.
++	_, err := c.dst.Write([]byte{0x03, 0x00})
++	return err
++}
++
++func TestWriterCloseAfterFlushWithShortFinalBlock(t *testing.T) {
++	var buf bytes.Buffer
++	var compressor *shortFinalBlockCompressor
++	w := NewWriter(&buf, func(dst io.Writer) Compressor {
++		compressor = &shortFinalBlockCompressor{dst: dst}
++		return compressor
++	})
++
++	if _, err := w.Write([]byte("payload")); err != nil {
++		t.Fatalf("unexpected Write error: %v", err)
++	}
++	if err := w.Flush(); err != nil {
++		t.Fatalf("unexpected Flush error: %v", err)
++	}
++	if err := w.Close(); err != nil {
++		t.Fatalf("unexpected Close error: %v", err)
++	}
++	if !compressor.closed {
++		t.Fatal("Close did not close the compressor")
++	}
++	if got, want := buf.String(), "payload"; got != want {
++		t.Fatalf("unexpected output: %q; want %q", got, want)
++	}
++}
++
+ func TestWriter(t *testing.T) {
+ 	var buf bytes.Buffer
+ 	w := NewWriter(&buf, func(w io.Writer) Compressor {
+
