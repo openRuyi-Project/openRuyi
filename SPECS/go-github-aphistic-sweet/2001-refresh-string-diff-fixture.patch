@@ -1,0 +1,32 @@
+From a767bf761aceddc91309b759fa8146bf1e6e0d78 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 15:29:00 +0800
+Subject: [PATCH] Refresh string diff fixture for go-diff 1.4
+
+The current go-diff library changes the ANSI reset boundaries around whitespace without changing the resulting edit. Refresh the exact output fixture while preserving the assertion and the remaining differ tests.
+
+Upstream: https://github.com/aphistic/sweet
+Upstream-Status: Pending
+---
+ differ_test.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/differ_test.go b/differ_test.go
+index 8a62b58..1feb481 100644
+--- a/differ_test.go
++++ b/differ_test.go
+@@ -79,8 +79,8 @@ Diff
+     <string>: 
+     [31m    [0mthis
+     [32m	[0mis[32m	[0m
+-    		a[31m
+-    [0m[32m	[0mstring[31m?[0m[32m
+-    	[0m
++    		a[31m[0m
++[31m    [0m[32m	[0mstring[31m?[0m[32m[0m
++[32m    	[0m
+ `))
+ }
+-- 
+2.56.0
+

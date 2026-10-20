@@ -1,0 +1,117 @@
+From b1fce0ab78297db330410620097709a802a9dec3 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 15:24:46 +0800
+Subject: [PATCH] Support the modern Go testing.MainStart signature
+
+Go 1.18 added a fuzz-target argument and extended testing.testDeps. Implement the test-only adapter, with explicit errors for unsupported fuzz operations, and detect the five-argument signature. Also print deprecation messages as data rather than non-constant format strings so current go vet accepts the runner.
+
+Upstream: https://github.com/aphistic/sweet
+Upstream-Status: Pending
+---
+ gotest_integration.go | 47 ++++++++++++++++++++++++++++++++++++++++++-
+ runner.go             |  2 +-
+ 2 files changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/gotest_integration.go b/gotest_integration.go
+index 9926dec..e0c1700 100644
+--- a/gotest_integration.go
++++ b/gotest_integration.go
+@@ -1,10 +1,13 @@
+ package sweet
+ 
+ import (
++	"errors"
+ 	"io"
+ 	"reflect"
++	"regexp"
+ 	"runtime/pprof"
+ 	"testing"
++	"time"
+ )
+ 
+ // Since testing.MainStart can change between versions this file exists to abstract
+@@ -25,6 +28,13 @@ func mainStart(s *S) (*testing.M, error) {
+ 
+ 	fParams := make([]reflect.Value, 0)
+ 	switch {
++	case isModernMainStart():
++		fParams = append(fParams, reflect.ValueOf(testDeps{}))
++		fParams = append(fParams, reflect.ValueOf(tests))
++		fParams = append(fParams, reflect.ValueOf(benchmarks))
++		// Sweet does not register fuzz targets. Use the signature's slice type.
++		fParams = append(fParams, reflect.Zero(reflect.TypeOf(testing.MainStart).In(3)))
++		fParams = append(fParams, reflect.ValueOf(examples))
+ 	case isV1_8MainStart():
+ 		fParams = append(fParams, reflect.ValueOf(testDeps{}))
+ 		fParams = append(fParams, reflect.ValueOf(tests))
+@@ -61,6 +71,12 @@ func mainStart(s *S) (*testing.M, error) {
+ 	return mVal, nil
+ }
+ 
++func isModernMainStart() bool {
++	fType := reflect.TypeOf(testing.MainStart)
++	return fType.NumIn() == 5 && fType.In(0).Kind() == reflect.Interface &&
++		reflect.TypeOf(testDeps{}).Implements(fType.In(0))
++}
++
+ // These functions check the testing.MainStart signatures to see which one matches up.  We only go back
+ // to 1.7 because that's when the subtest functionality that sweet relies on was added. Maybe that's when
+ // MainStart was added too? I dunno, who cares?
+@@ -150,7 +166,7 @@ func (testDeps) ImportPath() string {
+ }
+ 
+ func (testDeps) MatchString(pat, str string) (bool, error) {
+-	return false, nil
++	return regexp.MatchString(pat, str)
+ }
+ 
+ func (testDeps) StartCPUProfile(w io.Writer) error {
+@@ -176,3 +192,32 @@ func (testDeps) WriteHeapProfile(w io.Writer) error {
+ func (testDeps) WriteProfileTo(name string, w io.Writer, debug int) error {
+ 	return pprof.Lookup(name).WriteTo(w, debug)
+ }
++
++// corpusEntry mirrors the anonymous alias used by testing. No fuzz targets are
++// registered by Sweet, so fuzz operations report an explicit unsupported error.
++type corpusEntry = struct {
++	Parent     string
++	Path       string
++	Data       []byte
++	Values     []interface{}
++	Generation int
++	IsSeed     bool
++}
++
++var errFuzzingUnsupported = errors.New("sweet: fuzz targets are unsupported")
++
++func (testDeps) ModulePath() string   { return "" }
++func (testDeps) SetPanicOnExit0(bool) {}
++func (testDeps) CoordinateFuzzing(time.Duration, int64, time.Duration, int64, int, []corpusEntry, []reflect.Type, string, string) error {
++	return errFuzzingUnsupported
++}
++func (testDeps) RunFuzzWorker(func(corpusEntry) error) error { return errFuzzingUnsupported }
++func (testDeps) ReadCorpus(string, []reflect.Type) ([]corpusEntry, error) {
++	return nil, errFuzzingUnsupported
++}
++func (testDeps) CheckCorpus([]interface{}, []reflect.Type) error { return nil }
++func (testDeps) ResetCoverage()                                  {}
++func (testDeps) SnapshotCoverage()                               {}
++func (testDeps) InitRuntimeCoverage() (string, func(string, string) (string, error), func() float64) {
++	return "", nil, nil
++}
+diff --git a/runner.go b/runner.go
+index 3362acc..99f1bf3 100644
+--- a/runner.go
++++ b/runner.go
+@@ -126,7 +126,7 @@ func Run(m *testing.M, f func(s *S)) {
+ 		for idx, usage := range deprecatedUsages {
+ 			additionalUsages := len(deprecatedUsages) - deprecationExampleLength
+ 
+-			fmt.Fprintf(os.Stderr, usage)
++			fmt.Fprint(os.Stderr, usage)
+ 			if idx < deprecationExampleLength-1 {
+ 				fmt.Fprintf(os.Stderr, ",")
+ 			} else if idx >= deprecationExampleLength-1 {
+-- 
+2.56.0
+
