@@ -44,6 +44,9 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/api) = %{version}
+Provides:       go(k8s.io/api/apps/v1) = %{version}
+Provides:       go(k8s.io/api/core/v1) = %{version}
+Provides:       go(k8s.io/api/rbac/v1) = %{version}
 
 Requires:       go(github.com/fxamacker/cbor/v2)
 Requires:       go(github.com/go-logr/logr)
