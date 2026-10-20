@@ -1,0 +1,48 @@
+From d4a5064a0d8d8d8b6aa2d2abad5c95c88258625a Mon Sep 17 00:00:00 2001
+From: Masashi Honma <1505016+masap@users.noreply.github.com>
+Date: Tue, 18 Nov 2025 14:35:33 +0900
+Subject: [PATCH] tests: use constant formats for fixture strings
+
+Fix "non-constant format string in call to fmt.Fprintf" golint errors.
+
+Backport the two test-only printf fixes from upstream commit
+08e4ff4475e5e30c596dc6f8ff94708b3750f9d4 (Fix some CVEs, #2019).
+The fixture strings are data for the writer, so pass them through %s.
+
+Upstream-Status: Backport [https://github.com/vmware-tanzu/sonobuoy/commit/08e4ff4475e5e30c596dc6f8ff94708b3750f9d4]
+
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+---
+ cmd/sonobuoy/app/results_test.go | 2 +-
+ pkg/backplane/ca/ca_test.go      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmd/sonobuoy/app/results_test.go b/cmd/sonobuoy/app/results_test.go
+index 3fbacfc..a062888 100644
+--- a/cmd/sonobuoy/app/results_test.go
++++ b/cmd/sonobuoy/app/results_test.go
+@@ -96,7 +96,7 @@ func TestHumanReadableWriter(t *testing.T) {
+ 		t.Run(tc.desc, func(t *testing.T) {
+ 			buffer := bytes.Buffer{}
+ 			writer := humanReadableWriter{&buffer}
+-			fmt.Fprintf(&writer, tc.input)
++			fmt.Fprintf(&writer, "%s", tc.input)
+ 			for _, contains := range tc.contains {
+ 				out := strings.Contains(buffer.String(), contains)
+ 				if out != tc.expected {
+diff --git a/pkg/backplane/ca/ca_test.go b/pkg/backplane/ca/ca_test.go
+index 337a426..32a8a2e 100644
+--- a/pkg/backplane/ca/ca_test.go
++++ b/pkg/backplane/ca/ca_test.go
+@@ -94,7 +94,7 @@ func TestServer(t *testing.T) {
+ 	testString := "Whose woods these are, I think I know.\n"
+ 
+ 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+-		fmt.Fprintf(w, testString)
++		fmt.Fprintf(w, "%s", testString)
+ 	})
+ 
+ 	cfg, err := auth.MakeServerConfig("127.0.0.1")
+-- 
+2.56.0
+
