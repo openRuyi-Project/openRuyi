@@ -86,6 +86,15 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/client-go) = %{version}
+Provides:       go(k8s.io/client-go/discovery) = %{version}
+Provides:       go(k8s.io/client-go/dynamic) = %{version}
+Provides:       go(k8s.io/client-go/kubernetes) = %{version}
+Provides:       go(k8s.io/client-go/plugin) = %{version}
+Provides:       go(k8s.io/client-go/rest) = %{version}
+Provides:       go(k8s.io/client-go/restmapper) = %{version}
+Provides:       go(k8s.io/client-go/testing) = %{version}
+Provides:       go(k8s.io/client-go/tools) = %{version}
+Provides:       go(k8s.io/client-go/util) = %{version}
 
 Requires:       go(github.com/davecgh/go-spew)
 Requires:       go(github.com/emicklei/go-restful/v3)
