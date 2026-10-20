@@ -1,0 +1,79 @@
+From 041e7bc6da2ad4df16e16b78372101a36b05b404 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 15:25:18 +0800
+Subject: [PATCH] Align automatic signing tests with the service version map
+
+The service map selects Signature Version 4 for EC2, ElastiCache, Route53, and SES, but their automatic signing tests still expect Version 2 or 3 headers. Assert the Version 4 Authorization header for these services. The explicit Sign2 and Sign3 fixture tests remain unchanged.
+
+Upstream: https://github.com/smartystreets/go-aws-auth
+Upstream-Status: Pending
+---
+ awsauth_test.go | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/awsauth_test.go b/awsauth_test.go
+index 36c2c3c..44e0a54 100644
+--- a/awsauth_test.go
++++ b/awsauth_test.go
+@@ -84,24 +84,24 @@ func (this *IntegrationFixture) LongTestSignS3Url() {
+ 	this.assertOK(response)
+ }
+ 
+-func TestSign_Version2(t *testing.T) {
++func TestSign_EC2AndElastiCacheUseVersion4(t *testing.T) {
+ 	requests := []*http.Request{
+ 		newRequest("GET", "https://ec2.amazonaws.com", url.Values{}),
+ 		newRequest("GET", "https://elasticache.amazonaws.com/", url.Values{}),
+ 	}
+ 	for _, request := range requests {
+ 		signed := Sign(request)
+-		assertions.New(t).So(signed.URL.Query().Get("SignatureVersion"), should.Equal, "2")
++		assertions.New(t).So(signed.Header.Get("Authorization"), should.ContainSubstring, ", Signature=")
+ 	}
+ }
+-func TestSign_Version3(t *testing.T) {
++func TestSign_Route53AndSESUseVersion4(t *testing.T) {
+ 	requests := []*http.Request{
+ 		newRequest("GET", "https://route53.amazonaws.com", url.Values{}),
+ 		newRequest("GET", "https://email.us-east-1.amazonaws.com/", url.Values{}),
+ 	}
+ 	for _, request := range requests {
+ 		signed := Sign(request)
+-		assertions.New(t).So(signed.Header.Get("X-Amzn-Authorization"), should.NotBeBlank)
++		assertions.New(t).So(signed.Header.Get("Authorization"), should.ContainSubstring, ", Signature=")
+ 	}
+ }
+ 
+@@ -117,25 +117,25 @@ func TestSign_Version4(t *testing.T) {
+ 	}
+ }
+ 
+-func TestSign_ExistingCredentials_Version2(t *testing.T) {
++func TestSign_ExistingCredentials_EC2AndElastiCacheUseVersion4(t *testing.T) {
+ 	requests := []*http.Request{
+ 		newRequest("GET", "https://ec2.amazonaws.com", url.Values{}),
+ 		newRequest("GET", "https://elasticache.amazonaws.com/", url.Values{}),
+ 	}
+ 	for _, request := range requests {
+ 		signed := Sign(request, newKeys())
+-		assertions.New(t).So(signed.URL.Query().Get("SignatureVersion"), should.Equal, "2")
++		assertions.New(t).So(signed.Header.Get("Authorization"), should.ContainSubstring, ", Signature=")
+ 	}
+ }
+ 
+-func TestSign_ExistingCredentials_Version3(t *testing.T) {
++func TestSign_ExistingCredentials_Route53AndSESUseVersion4(t *testing.T) {
+ 	requests := []*http.Request{
+ 		newRequest("GET", "https://route53.amazonaws.com", url.Values{}),
+ 		newRequest("GET", "https://email.us-east-1.amazonaws.com/", url.Values{}),
+ 	}
+ 	for _, request := range requests {
+ 		signed := Sign(request, newKeys())
+-		assertions.New(t).So(signed.Header.Get("X-Amzn-Authorization"), should.NotBeBlank)
++		assertions.New(t).So(signed.Header.Get("Authorization"), should.ContainSubstring, ", Signature=")
+ 	}
+ }
+ 
+-- 
+2.56.0
+
