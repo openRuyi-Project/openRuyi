@@ -70,6 +70,8 @@ BuildRequires:  go(sigs.k8s.io/structured-merge-diff/v6)
 BuildRequires:  go(sigs.k8s.io/yaml)
 
 Provides:       go(k8s.io/apimachinery) = %{version}
+Provides:       go(k8s.io/apimachinery/pkg) = %{version}
+Provides:       go(k8s.io/apimachinery/pkg/version) = %{version}
 
 Requires:       go(github.com/armon/go-socks5)
 Requires:       go(github.com/davecgh/go-spew)
