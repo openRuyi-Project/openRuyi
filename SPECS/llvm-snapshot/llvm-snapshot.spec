@@ -12,8 +12,8 @@
 %global maj_ver 24
 %global min_ver 0
 %global patch_ver 0
-%global git_ver git20261012.ce2a498
-%global git_commit ce2a4984a3f43327a2b7c40baa74907bc10eb899
+%global git_ver git20261019.91c6a05
+%global git_commit 91c6a053f5bf2972bc7f5395b36b15fef4cee692
 
 %bcond check 0
 
@@ -79,7 +79,7 @@ Summary:        The Low Level Virtual Machine (%{maj_ver})
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
-#!RemoteAsset:  sha256:299b00dbf6d780c21680d87b2c4321cc5f49eb4906a14b1899f47c7b2e980874
+#!RemoteAsset:  sha256:bbcaceadd20f1e0453a4a14885db3c08493580badce8b768dd1808e2bd8d0053
 Source0:        https://github.com/llvm/llvm-project/archive/%{git_commit}.tar.gz
 
 # please keep the patches in different groups for easier maintenance
@@ -646,7 +646,7 @@ OLD_CWD="$PWD"
 %global cmake_config_args %{cmake_config_args} -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON
 %global cmake_config_args %{cmake_config_args} -DLLVM_VERSION_SUFFIX=''
 %global cmake_config_args %{cmake_config_args} \\\
-    -DLLVM_RAM_PER_LINK_JOB=10000 \\\
+    -DLLVM_RAM_PER_LINK_JOB=30000 \\\
     -DLLVM_RAM_PER_COMPILE_JOB=8000
 
 extra_cmake_args=''
