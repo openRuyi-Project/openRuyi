@@ -39,10 +39,6 @@ Requires:       go(github.com/urfave/cli/v2)
 Requires:       go(golang.org/x/crypto)
 Requires:       go(golang.org/x/sys)
 
-# cmd/ builds a CLI and imports github.com/urfave/cli/v2, which is not packaged yet.
-%prep -a
-rm -rf cmd
-
 %description
 mtree is a filesystem hierarchy validation tooling and format.
 This is a library and simple cli tool for mtree(8) support.
@@ -50,6 +46,10 @@ This is a library and simple cli tool for mtree(8) support.
 While the traditional mtree cli utility is primarily on BSDs
 (FreeBSD, openBSD, etc), even broader support for the mtree
 specification format is provided with libarchive (libarchive-formats(5)).
+
+%prep -a
+# Remove vendored sources so consumers use distribution dependencies.
+rm -rf vendor
 
 %files
 %doc README*
