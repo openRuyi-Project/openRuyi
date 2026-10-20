@@ -1,0 +1,29 @@
+From 5c22c6664c2aece8f908359771019d39a5baa06e Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 15:19:13 +0800
+Subject: [PATCH] Pass failure reports as data to Fatalf
+
+A failure report can contain percent signs and must not be interpreted as a format string. Use a constant format string so Go vet accepts the Fatalf call with current Go toolchains.
+
+Upstream: https://github.com/smarty/gunit
+Upstream-Status: Pending
+---
+ fixture.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fixture.go b/fixture.go
+index afe46f7..36e6f28 100644
+--- a/fixture.go
++++ b/fixture.go
+@@ -119,7 +119,7 @@ func (this *Fixture) fail(failure string) {
+ 	this.Print(reports.FailureReport(failure, reports.StackTrace()))
+ }
+ func (this *Fixture) fatal(failure string) {
+-	this.t.Fatalf(reports.FailureReport(failure, reports.StackTrace()))
++	this.t.Fatalf("%s", reports.FailureReport(failure, reports.StackTrace()))
+ }
+ 
+ func (this *Fixture) finalize() {
+-- 
+2.56.0
+
