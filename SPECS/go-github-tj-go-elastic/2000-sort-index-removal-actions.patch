@@ -1,0 +1,39 @@
+From 996b3f01ef1a73a849e6d2c68b6f650095c1524d Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 20 Oct 2026 15:33:19 +0800
+Subject: [PATCH] Sort index removal actions before JSON encoding
+
+Map iteration does not preserve action order. Sort the selected index names before constructing the request so equivalent inputs produce deterministic JSON and the existing alias removal test is reliable.
+
+Upstream: https://github.com/tj/go-elastic
+Upstream-Status: Pending
+---
+ aliases/aliases.go | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/aliases/aliases.go b/aliases/aliases.go
+index d9a6ff5..14c8578 100644
+--- a/aliases/aliases.go
++++ b/aliases/aliases.go
+@@ -2,6 +2,7 @@ package aliases
+ 
+ import (
+ 	"encoding/json"
++	"sort"
+ 	"time"
+ )
+ 
+@@ -76,7 +77,9 @@ type Actions struct {
+ func (i Indexes) RemoveOlderThan(layout, alias string, n int, now time.Time) []byte {
+ 	var actions Actions
+ 
+-	for index := range i.MatchingOlderThan(layout, n, now) {
++	indexes := i.MatchingOlderThan(layout, n, now).Names()
++	sort.Strings(indexes)
++	for _, index := range indexes {
+ 		action := Action{}
+ 		action.Remove.Alias = alias
+ 		action.Remove.Index = index
+-- 
+2.56.0
+
