@@ -57,6 +57,7 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(golang.org/x/sys)
 
+Provides:       go(github.com/moby/sys) = %{version}
 Provides:       go(github.com/moby/sys/atomicwriter) = %{ver_atomicwriter}
 Provides:       go(github.com/moby/sys/mount) = %{ver_mount}
 Provides:       go(github.com/moby/sys/mountinfo) = %{ver_mountinfo}
