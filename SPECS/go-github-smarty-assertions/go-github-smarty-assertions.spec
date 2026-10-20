@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           assertions
@@ -27,15 +28,22 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(%{go_import_path}) = %{version}
+Provides:       go(github.com/smartystreets/assertions) = %{version}
 
 %description
 Smarty assertions provides assertion implementations used by GoConvey and
 other Go testing packages.
 
+%install -a
+# Preserve the import path used before the repository moved to Smarty.
+install -d %{buildroot}%{go_sys_gopath}/github.com/smartystreets
+ln -s ../smarty/assertions %{buildroot}%{go_sys_gopath}/github.com/smartystreets/assertions
+
 %files
 %doc README.md
 %license LICENSE.md
 %{go_sys_gopath}/%{go_import_path}
+%{go_sys_gopath}/github.com/smartystreets/assertions
 
 %changelog
 %autochangelog
