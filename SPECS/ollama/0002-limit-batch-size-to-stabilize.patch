@@ -11,15 +11,15 @@ diff --git a/api/types.go b/api/types.go
 index 3ccf3ce..cba3ffd 100644
 --- a/api/types.go
 +++ b/api/types.go
-@@ -896,7 +896,7 @@ func DefaultOptions() Options {
+@@ -1236,7 +1236,7 @@ func DefaultOptions() Options {
  		Runner: Runner{
  			// options set when the model is loaded
- 			NumCtx:    int(envconfig.ContextLength()),
--			NumBatch:  512,
-+			NumBatch:  8,
- 			NumGPU:    -1, // -1 here indicates that NumGPU should be set dynamically
- 			NumThread: 0,  // let the runtime decide
- 			UseMMap:   nil,
+ 			NumCtx:          int(envconfig.ContextLength()),
+-			NumBatch:        512,
++			NumBatch:        8,
+ 			NumGPU:          -1, // -1 here indicates that NumGPU should be set dynamically
+ 			NumThread:       0,  // let the runtime decide
+ 			DraftNumPredict: 4,
 -- 
 2.53.0
 

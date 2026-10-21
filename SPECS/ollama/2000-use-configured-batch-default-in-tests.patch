@@ -1,0 +1,43 @@
+From b7230e666c58903873b6acbfeb814feb3fcaa5b1 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 29 Oct 2026 23:06:11 +0800
+Subject: [PATCH] Use the configured general batch default in model options
+ tests
+
+The completion-model case checks that modelOptions keeps the general
+batch default, while embedding models use the embedding-specific default.
+Read that expected value from api.DefaultOptions so the test also covers
+the smaller general batch size used by openRuyi.
+
+Upstream-Status: Not submitted
+
+Source: https://github.com/ollama/ollama/blob/v0.40.7/server/routes_options_test.go
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ server/routes_options_test.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/server/routes_options_test.go b/server/routes_options_test.go
+index 39ca563..3829527 100644
+--- a/server/routes_options_test.go
++++ b/server/routes_options_test.go
+@@ -3,6 +3,7 @@ package server
+ import (
+ 	"testing"
+ 
++	"github.com/ollama/ollama/api"
+ 	"github.com/ollama/ollama/llm"
+ 	"github.com/ollama/ollama/types/model"
+ )
+@@ -215,7 +216,7 @@ func TestModelOptionsEmbeddingNumBatchDefault(t *testing.T) {
+ 			name:             "non embedding model keeps general default",
+ 			defaultNumCtx:    40960,
+ 			capabilities:     []string{string(model.CapabilityCompletion)},
+-			expectedNumBatch: 512,
++			expectedNumBatch: api.DefaultOptions().NumBatch,
+ 		},
+ 	}
+ 
+-- 
+2.54.0
+
