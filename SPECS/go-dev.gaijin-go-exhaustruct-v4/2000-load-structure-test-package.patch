@@ -1,0 +1,28 @@
+From bb7b59bca48eb77d8fbae41eaab6fa6c56361018 Mon Sep 17 00:00:00 2001
+From: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 22 Oct 2026 20:57:20 +0800
+Subject: [PATCH] Load the structure fixture with an explicit package pattern
+
+An empty package pattern no longer selects the working directory with the
+current Go toolchain. Load "." so the suite still inspects the fixture's
+syntax and type information and runs all field assertions.
+
+Upstream-Status: Pending
+Upstream: https://github.com/GaijinEntertainment/go-exhaustruct
+---
+ internal/structure/fields_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/internal/structure/fields_test.go b/internal/structure/fields_test.go
+index e12462079911b7d9a6071b3033e43a232590b386..f2f1a5375f3fff890db7278c9aca057522d5b79a 100644
+--- a/internal/structure/fields_test.go
++++ b/internal/structure/fields_test.go
+@@ -36,7 +36,7 @@ func (s *StructFieldsSuite) SetupSuite() {
+ 	pkgs, err := packages.Load(&packages.Config{ //nolint:exhaustruct
+ 		Mode: packages.NeedTypes | packages.NeedTypesInfo | packages.NeedTypesSizes | packages.NeedSyntax,
+ 		Dir:  "testdata",
+-	}, "")
++	}, ".")
+ 	s.Require().NoError(err)
+ 	s.Require().Len(pkgs, 1)
+ 
