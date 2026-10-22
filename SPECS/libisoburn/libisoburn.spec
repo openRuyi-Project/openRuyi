@@ -6,51 +6,51 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-Name:            libisoburn
-Version:         1.5.6
-Release:         %autorelease
-Summary:         Library for creating and expanding ISO-9660 filesystems
-License:         GPL-2.0-or-later
-URL:             https://libburnia-project.org/
-VCS:             git:https://dev.lovelyhq.com/libburnia/libisoburn.git
-#!RemoteAsset
-Source0:         https://files.libburnia-project.org/releases/libisoburn-%{version}.tar.gz
-Source1:         xorriso_extract_iso_image.desktop
-BuildSystem:     autotools
+Name:           libisoburn
+Version:        1.5.6
+Release:        %autorelease
+Summary:        Library for creating and expanding ISO-9660 filesystems
+License:        GPL-2.0-or-later
+URL:            https://libburnia-project.org/
+VCS:            git:https://dev.lovelyhq.com/libburnia/libisoburn.git
+#!RemoteAsset:  sha256:2b80a6f73dd633a5d243facbe97a15e5c9a07644a5e1a242c219b9375a45f71b
+Source0:        https://files.libburnia-project.org/releases/libisoburn-%{version}.tar.gz
+Source1:        xorriso_extract_iso_image.desktop
+BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-doxygen-docs
 
-BuildRequires:   gcc
-BuildRequires:   gcc-c++
-BuildRequires:   make
-BuildRequires:   pkgconfig(readline)
-BuildRequires:   pkgconfig(libacl)
-BuildRequires:   pkgconfig(zlib)
-BuildRequires:   pkgconfig(libburn-1) >= %{version}
-BuildRequires:   pkgconfig(libisofs-1) >= %{version}
-BuildRequires:   autoconf
-BuildRequires:   automake
-BuildRequires:   libtool
+BuildRequires:  gcc
+BuildRequires:  gcc-c++
+BuildRequires:  make
+BuildRequires:  pkgconfig(readline)
+BuildRequires:  pkgconfig(libacl)
+BuildRequires:  pkgconfig(zlib)
+BuildRequires:  pkgconfig(libburn-1) >= %{version}
+BuildRequires:  pkgconfig(libisofs-1) >= %{version}
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
 
 %description
 Libisoburn is a frontend for libburn and libisofs, enabling creation and expansion
 of ISO-9660 filesystems on all optical media.
 
-%package         devel
-Summary:         Development files for %{name}
-Requires:        %{name}%{?_isa} = %{version}-%{release}
-Requires:        pkgconfig
+%package        devel
+Summary:        Development files for %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       pkgconfig
 
-%description     devel
+%description    devel
 This package contains libraries and header files for developing applications
 that use libisoburn.
 
-%package     -n  xorriso
-Summary:         ISO-9660 and Rock Ridge image manipulation tool
-URL:             https://scdbackup.sourceforge.net/xorriso_eng.html
-Requires:        %{name}%{?_isa} = %{version}-%{release}
-Requires(post):  alternatives
+%package     -n xorriso
+Summary:        ISO-9660 and Rock Ridge image manipulation tool
+URL:            https://scdbackup.sourceforge.net/xorriso_eng.html
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires(post): alternatives
 Requires(preun): alternatives
 
 %description -n xorriso
@@ -61,7 +61,7 @@ allows session-wise manipulation of such filesystems.
 autoreconf -fiv
 
 %install -a
-rm -f %{buildroot}%{_bindir}/xorriso-tcltk*
+rm -f %{buildroot}{%{_bindir},%{_infodir},%{_mandir}/man1}/xorriso-tcltk*
 touch %{buildroot}%{_bindir}/cdrecord
 touch %{buildroot}%{_bindir}/mkisofs
 touch %{buildroot}%{_mandir}/man1/cdrecord.1.gz
@@ -97,8 +97,13 @@ fi
 %{_bindir}/xorriso
 %{_bindir}/xorrisofs
 %{_bindir}/xorriso-dd-target
-%{_mandir}/man1/*.1*
+%{_mandir}/man1/xorrecord.1*
+%{_mandir}/man1/xorriso.1*
+%{_mandir}/man1/xorrisofs.1*
+%{_mandir}/man1/xorriso-dd-target.1*
+%ghost %{_mandir}/man1/cdrecord.1.gz
+%ghost %{_mandir}/man1/mkisofs.1.gz
 %{_infodir}/*.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
