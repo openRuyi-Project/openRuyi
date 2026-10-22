@@ -44,15 +44,14 @@
     %%make_build %%{_kernel_make_flags} INSTALL_DTBS_PATH=%%{buildroot}%%{_kernel_modpath}/dtb dtbs_install
     %%endif
     # install devel
+    %%define ksrcpath %%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}
+    install -d %%{ksrcpath}
     %%make_build %%{_kernel_make_flags} run-command KBUILD_RUN_COMMAND="$(pwd)/scripts/package/install-extmod-build %%{ksrcpath}"
     pushd %%{buildroot}%%{_kernel_modpath}
     rm -f build source
-    ln -sf ../../..%%{_usrsrc}/kernels/%%{_kernel_full_version} build
-    ln -sf ../../..%%{_usrsrc}/kernels/%%{_kernel_full_version} source
+    ln -sf %%{_usrsrc}/kernels/%%{_kernel_full_version} build
+    ln -sf %%{_usrsrc}/kernels/%%{_kernel_full_version} source
     popd
-    # install kernel source
-    %%define ksrcpath %%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}
-    install -d %%{buildroot}%%{_kernel_modpath} %%{ksrcpath}
     # install config
     zstd -f .config -o %%{buildroot}%%{_kernel_modpath}/config.zst
 }
