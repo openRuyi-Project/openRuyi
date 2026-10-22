@@ -1,0 +1,33 @@
+From 314c44820a2acb3efe5b39986486e9bad73d99df Mon Sep 17 00:00:00 2001
+From: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 22 Oct 2026 20:57:22 +0800
+Subject: [PATCH] Use a constant format string with analysis.Pass.Reportf
+
+Go 1.27 vet rejects non-constant format strings passed to Reportf. Keep the
+existing diagnostic text while passing it as a string argument.
+---
+ analyzer.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/analyzer.go b/analyzer.go
+index 08f82ccc116f6baed733971195a82b0bb05f5d41..52a08651995452579833abb90531442f82868a8b 100644
+--- a/analyzer.go
++++ b/analyzer.go
+@@ -222,7 +222,7 @@ func declName(gd *ast.GenDecl) string {
+ func (dnc decNumChecker) handleDecOrderCheck(gd *ast.GenDecl, pass *analysis.Pass) {
+ 	l, c := dnc.isToLate(gd.Tok)
+ 	if !c {
+-		pass.Reportf(gd.Pos(), fmtWrongOrderMsg(gd.Tok.String(), l))
++		pass.Reportf(gd.Pos(), "%s", fmtWrongOrderMsg(gd.Tok.String(), l))
+ 	}
+ }
+ 
+@@ -243,7 +243,7 @@ func (dnc *decNumChecker) handleFuncDec(fd *ast.FuncDecl, pass *analysis.Pass) b
+ 	if !opts.disableDecOrderCheck {
+ 		l, c := dnc.isToLate(token.FUNC)
+ 		if !c {
+-			pass.Reportf(fd.Pos(), fmtWrongOrderMsg(token.FUNC.String(), l))
++			pass.Reportf(fd.Pos(), "%s", fmtWrongOrderMsg(token.FUNC.String(), l))
+ 		}
+ 	}
+ 
