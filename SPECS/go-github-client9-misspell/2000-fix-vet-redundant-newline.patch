@@ -1,0 +1,24 @@
+From bdfc8a16ac0caf2e5a10ac513f9920effa42aced Mon Sep 17 00:00:00 2001
+From: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+Date: Thu, 22 Oct 2026 19:43:34 +0800
+Subject: [PATCH] Avoid redundant newline in legal output
+
+The legal text already carries its own line endings. fmt.Println adds an
+additional newline and is rejected by Go vet; fmt.Print preserves the output.
+---
+ cmd/misspell/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/misspell/main.go b/cmd/misspell/main.go
+index 174d79d882dbc445ee39a492ada292021b866517..754dacd832cf3aff5e7ec4a923414d950bf6016b 100644
+--- a/cmd/misspell/main.go
++++ b/cmd/misspell/main.go
+@@ -121,7 +121,7 @@ func main() {
+ 		return
+ 	}
+ 	if *showLegal {
+-		fmt.Println(misspell.Legal)
++		fmt.Print(misspell.Legal)
+ 		return
+ 	}
+ 	if *debugFlag {
