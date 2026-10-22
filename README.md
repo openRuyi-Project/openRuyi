@@ -7,4 +7,4 @@ This openRuyi Repo contains build configurations and scripts for all packages ma
 
 ## Further Readings
 
-Please check our project wiki.
+Please check our project wiki..
