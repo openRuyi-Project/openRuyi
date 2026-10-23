@@ -1,15 +1,16 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           moby
-%define docker_version  29.8.1
-%define docker_commit   464cd50c3d9e92877d56940ea160de6fca7bea23
+%define docker_version  29.9.2
+%define docker_commit   0367cbeb49b9d98cb0b4f51e95f7b54b4803e76c
 %define api_import_path github.com/moby/moby/api
-%define api_version     1.56.0
+%define api_version     1.56.1
 %define client_import_path github.com/moby/moby/client
-%define client_version  0.6.0
+%define client_version  0.6.2
 
 Name:           moby
 Version:        %{docker_version}
@@ -17,7 +18,7 @@ Release:        %autorelease
 Summary:        Moby container engine
 License:        Apache-2.0
 URL:            https://github.com/moby/moby
-#!RemoteAsset:  sha256:94be9d6940b613676335fc494e617b4acf98676435b3744f32649ed72114bd58
+#!RemoteAsset:  sha256:d7ce182528eb4c182f3884a7a83b7652ffcbc59b21d3d302050564ff949a9689
 Source0:        https://github.com/moby/moby/archive/refs/tags/docker-v%{docker_version}.tar.gz#/%{_name}-%{docker_version}.tar.gz
 Source1:        moby.sysusers
 BuildSystem:    golang
@@ -100,8 +101,6 @@ Requires:       go(golang.org/x/time)
 %description -n go-github-moby-moby-client
 This package provides the versioned Moby Docker Engine API client module used
 by Prometheus' Docker and Docker Swarm service discovery.
-
-%prep -a
 
 %build
 # dynbinary produces PIE executables on riscv64; Go requires cgo for PIE.

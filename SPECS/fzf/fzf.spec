@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define go_import_path  github.com/junegunn/fzf
 
 Name:           fzf
-Version:        0.72.0
+Version:        0.74.5
 Release:        %autorelease
 Summary:        Command-line fuzzy finder
 License:        MIT
 URL:            https://github.com/junegunn/fzf
-#!RemoteAsset:  sha256:ca5ce083cec5187503ceb96d837c20d8efde85f03e62bba3a8890f8da526f2fc
+#!RemoteAsset:  sha256:5529d08897b85ae773695787c811ff9c9eeee32419c8a297fa1dbe586ed0a27e
 Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -36,8 +37,9 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(golang.org/x/term)
 BuildRequires:  go(golang.org/x/text)
 
-Requires:       bash
 Recommends:     tmux
+
+Requires:       bash
 
 %description
 fzf is a general-purpose command-line fuzzy finder. It can interactively filter

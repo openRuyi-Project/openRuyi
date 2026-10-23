@@ -7,16 +7,16 @@
 
 %define _name           containerd
 %define go_import_path  github.com/containerd/containerd/v2
-%global commit          1294c24a7da8e5a793ed378161673abe94118892
+%global commit          b7a25261e029d68978bbf290df0a62fc819b3c51
 
 Name:           containerd
-Version:        2.3.5
+Version:        2.4.2
 Release:        %autorelease
 Summary:        Industry-standard container runtime
 License:        Apache-2.0
 URL:            https://containerd.io
 VCS:            git:https://github.com/containerd/containerd.git
-#!RemoteAsset:  sha256:a99a4dca98061064ff4cb35d27d1ec2345717e9108c822329fcec91dc72bff96
+#!RemoteAsset:  sha256:02cbbecd0ef78a521d124afa791b843ba5458ef206e1f7f017999ff45c80c0b4
 Source0:        https://github.com/containerd/containerd/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildRequires:  go >= 1.26.3
@@ -59,6 +59,9 @@ install -d %{buildroot}%{_sysconfdir}/containerd
 bin/containerd config default > %{buildroot}%{_sysconfdir}/containerd/config.toml
 
 %check
+export GOTOOLCHAIN=local
+export GOCACHE=%{_builddir}/go-build-cache
+CGO_ENABLED=0 go test -mod=vendor ./core/images/...
 %{buildroot}%{_bindir}/containerd --version
 %{buildroot}%{_bindir}/ctr --version
 %{buildroot}%{_bindir}/containerd-shim-runc-v2 --help >/dev/null
@@ -75,8 +78,8 @@ grep -q 'io.containerd.grpc.v1.cri' \
 %systemd_postun_with_restart containerd.service
 
 %files
-%license LICENSE NOTICE vendor/modules.txt
 %doc README.md RELEASES.md docs/
+%license LICENSE NOTICE vendor/modules.txt
 %{_bindir}/containerd
 %{_bindir}/containerd-shim-runc-v2
 %{_bindir}/ctr
