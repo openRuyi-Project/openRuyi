@@ -77,6 +77,11 @@ Requires:       glibc
 %patchlist
 # These tests are fragile on our OBS x86-64.
 2000-remove-fragile-tests-on-obs.patch
+# Backport Zvk SHA-2 support for RISC-V from Go master
+# https://go-review.googlesource.com/c/go/+/752981
+1001-crypto-internal-fips140-sha256-enable-zvknha-for-ris.patch
+# https://go-review.googlesource.com/c/go/+/755840
+1002-crypto-internal-fips140-sha512-enable-zvknhb-for-ris.patch
 
 %description
 The Go Programming Language. This package contains the compiler, tools,
