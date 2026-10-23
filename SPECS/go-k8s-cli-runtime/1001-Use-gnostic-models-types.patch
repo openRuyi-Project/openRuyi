@@ -1,0 +1,44 @@
+From 175f99655066a95ef3f667038495f2cc309e53fa Mon Sep 17 00:00:00 2001
+From: Jefftree <jeffrey.ying86@live.com>
+Date: Thu, 1 Jun 2023 18:25:39 +0000
+Subject: [PATCH] Update gnostic references
+
+Kubernetes-commit: 2111e79f56acdfa6a8dab56780c52e3abc608758
+
+(cherry picked from commit ee9e8f3f861931980367799d8523018dc7010ad9)
+Backport the source changes to the pinned OpenShift fork; retain its module metadata.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ pkg/resource/dry_run_verifier.go      | 2 +-
+ pkg/resource/dry_run_verifier_test.go | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pkg/resource/dry_run_verifier.go b/pkg/resource/dry_run_verifier.go
+index 49ab6f8..65e783a 100644
+--- a/pkg/resource/dry_run_verifier.go
++++ b/pkg/resource/dry_run_verifier.go
+@@ -20,7 +20,7 @@ import (
+ 	"errors"
+ 	"fmt"
+ 
+-	openapi_v2 "github.com/googleapis/gnostic/openapiv2"
++	openapi_v2 "github.com/google/gnostic-models/openapiv2"
+ 	yaml "gopkg.in/yaml.v2"
+ 	"k8s.io/apimachinery/pkg/runtime/schema"
+ 	"k8s.io/client-go/discovery"
+diff --git a/pkg/resource/dry_run_verifier_test.go b/pkg/resource/dry_run_verifier_test.go
+index ed3e5c8..8694bd5 100644
+--- a/pkg/resource/dry_run_verifier_test.go
++++ b/pkg/resource/dry_run_verifier_test.go
+@@ -20,7 +20,7 @@ import (
+ 	"path/filepath"
+ 	"testing"
+ 
+-	openapi_v2 "github.com/googleapis/gnostic/openapiv2"
++	openapi_v2 "github.com/google/gnostic-models/openapiv2"
+ 	"k8s.io/apimachinery/pkg/runtime/schema"
+ 	openapitesting "k8s.io/kube-openapi/pkg/util/proto/testing"
+ )
+-- 
+2.39.5 (Apple Git-154)
+
