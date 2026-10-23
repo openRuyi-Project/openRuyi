@@ -7,18 +7,17 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define sonum 1
 %define libname libproc2
 
-Name:          procps-ng
-Version:       4.0.5
-Release:       %autorelease
-Summary:       System and process monitoring utilities
-License:       GPL-2.0-or-later AND LGPL-2.1-or-later
-URL:           https://gitlab.com/procps-ng/procps
-#!RemoteAsset
-Source0:       https://downloads.sourceforge.net/project/%{name}/Production/%{name}-%{version}.tar.xz
-BuildSystem:   autotools
+Name:           procps
+Version:        4.0.5
+Release:        %autorelease
+Summary:        System and process monitoring utilities
+License:        GPL-2.0-or-later AND LGPL-2.1-or-later
+URL:            https://gitlab.com/procps-ng/procps
+#!RemoteAsset:  sha256:c2e6d193cc78f84cd6ddb72aaf6d5c6a9162f0470e5992092057f5ff518562fa
+Source0:        https://downloads.sourceforge.net/project/procps-ng/Production/procps-ng-%{version}.tar.xz
+BuildSystem:    autotools
 
 BuildOption(conf):  --disable-kill
 BuildOption(conf):  --enable-watch8bit
@@ -35,7 +34,7 @@ BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(libsystemd)
 
-Provides:       procps
+Provides:       procps-ng = %{version}-%{release}
 
 %description
 The procps-ng package contains a set of system utilities that provide
@@ -44,6 +43,7 @@ system information, such as ps, top, free, vmstat, and watch.
 %package        devel
 Summary:        Development files for procps-ng
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+Provides:       procps-ng-devel = %{version}-%{release}
 
 %description    devel
 This package contains the header files and development libraries for procps-ng.
@@ -54,21 +54,19 @@ autoreconf -fiv
 
 %install -a
 # Cleanup unnecessary files.
-# kill and uptime are provided by other core packages (util-linux).
+# kill are provided by other core packages (util-linux).
 rm -f %{buildroot}%{_bindir}/kill
-rm -f %{buildroot}%{_bindir}/uptime
 rm -f %{buildroot}%{_mandir}/man1/kill.1*
-rm -f %{buildroot}%{_mandir}/man1/uptime.1*
 rm -rf %{buildroot}%{_mandir}/pl/man5
 rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 
 # Package localization files using the find_lang macro for the -lang subpackage.
-%find_lang %{name}  --all-name --with-man --generate-subpackages
+%find_lang procps-ng  --all-name --with-man --generate-subpackages
 
 %files
 %license COPYING COPYING.LIB
 %doc doc/bugs.md doc/FAQ NEWS README.md doc/libproc.supp
-%{_libdir}/%{libname}.so.%{sonum}*
+%{_libdir}/libproc2.so.1*
 %{_bindir}/free
 %{_bindir}/hugetop
 %{_bindir}/pgrep
@@ -82,6 +80,7 @@ rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 %{_bindir}/sysctl
 %{_bindir}/tload
 %{_bindir}/top
+%{_bindir}/uptime
 %{_bindir}/w
 %{_bindir}/watch
 %{_bindir}/vmstat
@@ -90,12 +89,12 @@ rm -rf %{buildroot}%{_mandir}/{fr,de,pt_BR}/man3
 %{_mandir}/man8/*
 
 %files devel
-%dir %{_includedir}/%{libname}
-%{_includedir}/%{libname}/*.h
-%{_libdir}/%{libname}.so
-%{_libdir}/pkgconfig/%{libname}.pc
-%{_libdir}/%{libname}.a
+%dir %{_includedir}/libproc2
+%{_includedir}/libproc2/*.h
+%{_libdir}/libproc2.so
+%{_libdir}/pkgconfig/libproc2.pc
+%{_libdir}/libproc2.a
 %{_mandir}/man3/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
