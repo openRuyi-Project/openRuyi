@@ -5,26 +5,11 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# XXX: This feature should be moved to a more appropriate location.
-%bcond llvmir 1
+%bcond bootstrap 0
 
-%if %{with llvmir}
-  %define __install /var/lib/clang-wrap/install
-
-  %ifarch x86_64
-     %global emit_llvmir_flags -march=x86-64-v4
-  %elifarch riscv64
-     %global emit_llvmir_flags -march=rva23u64
-  %else
-     %global emit_llvmir_flags 1
-  %endif
-
-%global ___build_pre \
-        set -x \
-        export EMIT_LLVMIR=%{emit_llvmir_flags} \
-        export PATH=%{clang_wrap_varlibdir}:$PATH \
-        set +x \
-        %{?___build_pre}
+%if %{with bootstrap}
+%global toolchain gcc
+%else
 %global toolchain clang
 %endif
 
@@ -47,10 +32,9 @@ BuildOption(conf):  --disable-silent-rules
 BuildOption(conf):  --disable-static
 BuildOption(conf):  CFLAGS="%{optflags} -ffp-contract=off"
 
-%if %{with llvmir}
+%if %{without bootstrap}
 BuildRequires:  clang
 BuildRequires:  llvm
-BuildRequires:  clang-wrap
 %endif
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -86,12 +70,6 @@ rm -rf %{buildroot}%{_infodir}/dir
 %{_libdir}/libgslcblas.so.0*
 %{_mandir}/man1/gsl-histogram.1*
 %{_mandir}/man1/gsl-randist.1*
-%if %{with llvmir}
-%{clang_wrap_llvmir_bin_dir}/gsl-histogram{,_cmd}
-%{clang_wrap_llvmir_bin_dir}/gsl-randist{,_cmd}
-%{clang_wrap_llvmir_dir}/libgsl.so.*
-%{clang_wrap_llvmir_dir}/libgslcblas.so.*
-%endif
 
 %files devel
 %{_bindir}/gsl-config
