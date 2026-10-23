@@ -25,7 +25,7 @@ index a426c7e9b48..173ae8c07d9 100644
 +  }
 +  if (mach->is_MachSpillCopy()) {
 +    const Type* type = mach->bottom_type();
-+    if (type != nullptr && (type->isa_vect() != nullptr || type->isa_vectmask() != nullptr)) {
++    if (type != nullptr && type->isa_vect() != nullptr) {
 +      return true;
 +    }
 +  }

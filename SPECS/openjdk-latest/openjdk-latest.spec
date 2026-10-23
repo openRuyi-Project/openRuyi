@@ -7,11 +7,12 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global majorver        26
+%global majorver        27
 %global minorver        0
-%global securityver     2
-%global buildver        10
-%global newjavaver      %{majorver}.%{minorver}.%{securityver}
+%global securityver     1
+%global extraver        2
+%global buildver        1
+%global newjavaver      %{majorver}.%{minorver}.%{securityver}.0.%{extraver}
 %global _jvmdir         %_libdir/jvm
 
 %bcond bootstrap        1
@@ -22,14 +23,14 @@ Release:        %autorelease
 Summary:        OpenJDK latest Runtime Environment
 License:        GPL-2.0-only WITH Classpath-exception-2.0
 URL:            https://openjdk.org
-VCS:            git:https://github.com/openjdk/jdk26u
-#!RemoteAsset:  sha256:dc7301511e010b22b28f2953c005b1e5bd7845c025440396f940c5c73d4b73d0
+VCS:            git:https://github.com/openjdk/jdk27u
+#!RemoteAsset:  sha256:2f39e68293e3fd3aad04fb0c5aebc0ee8737e82b348f520bd95ebae00f2142e9
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
-#!RemoteAsset:  sha256:3fc35759502b620f010a9cd2b3da8454f8a49a156ceaebb00de1fd8335682d40
-Source1:        https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25%2B36/OpenJDK25U-jdk_riscv64_linux_hotspot_25_36.tar.gz
-#!RemoteAsset:  sha256:ee04de95ab9da7287d40bd2173076ecc2a6dd662f007bedfc6eb0380c0ef90e8
-Source2:        https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25%2B36/OpenJDK25U-jdk_x64_linux_hotspot_25_36.tar.gz
+#!RemoteAsset:  sha256:270d74d7732adbaa7af4e153154126c144e6000bb736fd0985421f75075555aa
+Source1:        https://github.com/adoptium/temurin27-binaries/releases/download/jdk-27%2B35/OpenJDK27U-jdk_riscv64_linux_hotspot_27_35.tar.gz
+#!RemoteAsset:  sha256:1cf69a4848ffb728b3b260dfd45206a51566ab571a02a30092271d4c580bccbc
+Source2:        https://github.com/adoptium/temurin27-binaries/releases/download/jdk-27%2B35/OpenJDK27U-jdk_x64_linux_hotspot_27_35.tar.gz
 %endif
 
 BuildRequires:  autoconf
@@ -93,11 +94,11 @@ The OpenJDK latest runtime environment.
 %if %{with bootstrap}
 %ifarch riscv64
 tar -xf %{SOURCE1} -C %{_tmppath}
-BOOTJDKPATH=%{_tmppath}/jdk-25+36
+BOOTJDKPATH=%{_tmppath}/jdk-27+35
 %endif
 %ifarch x86_64
 tar -xf %{SOURCE2} -C %{_tmppath}
-BOOTJDKPATH=%{_tmppath}/jdk-25+36
+BOOTJDKPATH=%{_tmppath}/jdk-27+35
 %endif
 %else
 BOOTJDKPATH=%{_jvmdir}/java-latest-openjdk
@@ -110,6 +111,7 @@ mkdir -p build-release
 pushd build-release
 bash ../configure \
     --with-version-build=%{buildver} \
+    --with-version-extra1=%{extraver} \
     --with-version-pre= \
     --with-version-opt= \
     --with-boot-jdk=$BOOTJDKPATH \

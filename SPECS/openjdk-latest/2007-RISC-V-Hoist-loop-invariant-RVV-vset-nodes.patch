@@ -89,7 +89,7 @@ index 8f54cfc8184..38cfa33c80d 100644
 +  }
 +  if (mach->is_MachSpillCopy()) {
 +    const Type* type = mach->bottom_type();
-+    if (type != nullptr && (type->isa_vect() != nullptr || type->isa_vectmask() != nullptr)) {
++    if (type != nullptr && type->isa_vect() != nullptr) {
 +      return true;
 +    }
 +  }
@@ -373,7 +373,7 @@ index 5f25ac8c972..53a76851649 100644
 -  }
 -  if (mach->is_MachSpillCopy()) {
 -    const Type* type = mach->bottom_type();
--    if (type != nullptr && (type->isa_vect() != nullptr || type->isa_vectmask() != nullptr)) {
+-    if (type != nullptr && type->isa_vect() != nullptr) {
 -      return true;
 -    }
 -  }
