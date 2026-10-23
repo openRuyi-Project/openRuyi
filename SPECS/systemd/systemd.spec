@@ -512,6 +512,9 @@ touch %{buildroot}%{_sysconfdir}/X11/xorg.conf.d/00-keyboard.conf
 mkdir -p %{buildroot}%{pkgdir}/system-shutdown/
 mkdir -p %{buildroot}%{pkgdir}/system-sleep/
 
+# Make sure modules-load.d exist for convenience
+mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d
+
 # Make sure directories in /var exist
 mkdir -p %{buildroot}%{_localstatedir}/lib/systemd/coredump
 mkdir -p %{buildroot}%{_localstatedir}/lib/systemd/catalog
@@ -1179,6 +1182,7 @@ fi
 %ghost /etc/vconsole.conf
 %ghost /etc/X11/xorg.conf.d/00-keyboard.conf
 %ghost /etc/crypttab
+%dir %{_sysconfdir}/modules-load.d
 # We still got some files installed even if certain features are disabled
 %if %{without network}
 %exclude %{_sysconfdir}/systemd/networkd.conf
