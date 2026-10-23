@@ -1,0 +1,30 @@
+From 8f0068c9c7e9ae045f16b59498dd9fd501309275 Mon Sep 17 00:00:00 2001
+From: jinqiang zhang <jinqiang.oerv@isrc.iscas.ac.cn>
+Date: Mon, 7 Sep 2026 23:03:29 +0800
+Subject: [PATCH] tests: use python3 for test_nonsense_gdb_binary
+
+---
+ numba/tests/test_cli.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/numba/tests/test_cli.py b/numba/tests/test_cli.py
+index 37b1dcefb..8a41dbff8 100644
+--- a/numba/tests/test_cli.py
++++ b/numba/tests/test_cli.py
+@@ -267,11 +267,11 @@ class TestGDBCLIInfoBrokenGdbs(TestCase):
+     def test_nonsense_gdb_binary(self):
+         # Tests that a nonsense binary specified as gdb it picked up ok
+         env = os.environ.copy()
+-        env['NUMBA_GDB_BINARY'] = 'python' # 'python' isn't gdb!
++        env['NUMBA_GDB_BINARY'] = 'python3' # 'python3' isn't gdb!
+         cmdline = [sys.executable, "-m", "numba", "-g"]
+         stdout, stderr = run_cmd(cmdline, env=env)
+         self.assertIn("Testing gdb binary failed", stdout)
+-        # NOTE: should 'python' ever add support for the same flags as the gdb
++        # NOTE: should 'python3' ever add support for the same flags as the gdb
+         # commands used in the information gathering code in `numba_gdbinfo`
+         # this test will fail, it's reasonably unlikely.
+         self.assertIn("Unknown option", stdout)
+-- 
+2.55.0
+
