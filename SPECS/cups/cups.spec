@@ -8,15 +8,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global cups_serverbin %{_exec_prefix}/lib/cups
+%global _test_target unittests
 
 Name:           cups
-Version:        2.4.19
+Version:        2.4.20
 Release:        %autorelease
 Summary:        Standards-based, open source printing system for Linux
 License:        Apache-2.0
 URL:            https://openprinting.github.io/cups/
 VCS:            git:https://github.com/OpenPrinting/cups
-#!RemoteAsset:  sha256:820984b12a67f98705785aae2dd1347fe0ac097828001d4583ff64574aed6389
+#!RemoteAsset:  sha256:ab4d9cd7f3e58060091d2b24972223d6401675f11c49b65abf4f6ef31dea22ff
 Source0:        https://github.com/OpenPrinting/cups/releases/download/v%{version}/cups-%{version}-source.tar.gz
 Source1:        macros.cups
 BuildSystem:    autotools
@@ -35,11 +36,13 @@ BuildOption(conf):  --with-dbusdir=%{_sysconfdir}/dbus-1
 BuildOption(conf):  --with-xinetd=no
 BuildOption(conf):  --with-access-log-level=actions
 BuildOption(conf):  --with-pkgconfpath=%{_libdir}/pkgconfig
+BuildOption(conf):  --with-dnssd=avahi
 BuildOption(conf):  --with-tls=gnutls
 BuildOption(conf):  --with-rundir=%{_rundir}/cups
 BuildOption(conf):  --localedir=%{_datadir}/locale
 
 BuildRequires:  pkgconfig(gnutls)
+BuildRequires:  pkgconfig(avahi-client)
 BuildRequires:  pkgconfig(libacl)
 BuildRequires:  pkgconfig(libusb-1.0)
 BuildRequires:  pkgconfig(krb5)
@@ -70,12 +73,6 @@ Requires(post): sed
 0008-cups-freebind.patch
 0009-cups-ipp-multifile.patch
 0010-cups-web-devices-timeout.patch
-# From https://github.com/OpenPrinting/cups/commit/88e67c00c130a45f3a1edf36686f7a0b2982fef8
-1000-CVE-2026-87876-compare-usernames-consistently.patch
-# From https://github.com/OpenPrinting/cups/commit/28834c719ae76e97b75f8190ee5e941daedb3da8
-1001-GHSA-fw7q-ww8w-phx8-validate-preset-member.patch
-# From https://github.com/OpenPrinting/cups/commit/05fe6b0e848e51243e9d62e2c5adb6c3023f247e
-1002-GHSA-w9hj-hq9p-m7f6-validate-attribute-names.patch
 
 %description
 CUPS is the standards-based, open source printing system developed by
@@ -155,8 +152,8 @@ rm -rf %{buildroot}%{_datadir}/cups/banners
 rm -f %{buildroot}%{_datadir}/cups/data/testprint
 
 %files -f %{name}.lang
-%license LICENSE NOTICE
 %doc README.md CREDITS.md CHANGES.md
+%license LICENSE NOTICE
 %{_bindir}/cupstestppd
 %{_bindir}/ppd*
 %{_sbindir}/*

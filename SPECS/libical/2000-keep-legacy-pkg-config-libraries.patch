@@ -1,0 +1,22 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Fri, 23 Oct 2026 03:15:00 +0800
+Subject: [PATCH] build: preserve the libical pkg-config link interface
+
+libical 3.0.20 listed ical, icalss and icalvcal together in libical.pc.
+Keep that link interface for existing consumers such as BlueZ, whose
+vCard backend calls the VObject functions provided by libicalvcal.
+
+Reference: https://github.com/libical/libical/blob/v3.0.20/libical.pc.in
+Upstream-Status: Inappropriate [distribution upgrade compatibility]
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/src/libical/libical.pc.in b/src/libical/libical.pc.in
+--- a/src/libical/libical.pc.in
++++ b/src/libical/libical.pc.in
+@@ -9,5 +9,5 @@ Name: libical
+ Description: @libical_DESCRIPTION@
+ URL: @libical_HOMEPAGE_URL@
+ Version: @libical_VERSION@
+-Libs: -L${libdir} -lical@PTHREAD_LIBS_PRIVATE@@REQUIRES_PRIVATE_ICU@
++Libs: -L${libdir} -lical -licalss -licalvcal@PTHREAD_LIBS_PRIVATE@@REQUIRES_PRIVATE_ICU@
+ Cflags: -I${includedir}

@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libheif
-Version:        1.23.4
+Version:        1.23.6
 Release:        %autorelease
 Summary:        HEIF and AVIF file format decoder and encoder
 License:        LGPL-3.0-or-later and MIT
 URL:            https://github.com/strukturag/libheif
-#!RemoteAsset:  sha256:ce7739356637b7371dcc0ae876027f6f692de9c9ace8cd0e9ed8d79a01ea61fe
+#!RemoteAsset:  sha256:c9a00b0452f5c16d72ef71e5e40c0e90fbe2ad37148d27a1b2f9bb21546f5f03
 Source0:        https://github.com/strukturag/libheif/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -64,8 +65,8 @@ developing applications that use %{name}.
 rm -rf third-party/
 
 %files
-%license COPYING
 %doc README.md
+%license COPYING
 %{_libdir}/libheif.so.*
 %dir %{_libdir}/libheif
 %{_bindir}/heif-*

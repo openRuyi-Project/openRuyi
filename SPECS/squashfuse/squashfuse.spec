@@ -3,18 +3,22 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           squashfuse
-Version:        0.6.1
+Version:        0.6.5
 Release:        %autorelease
 Summary:        FUSE filesystem to mount squashfs archives
 License:        BSD-2-Clause
 URL:            https://github.com/vasi/squashfuse
-#!RemoteAsset:  sha256:7730066d1e9baf0084c71674d168331296921e0d7ae0f34de7307744be4ed568
+#!RemoteAsset:  sha256:d7c324bd320c4e36de72b2b9db1d5c04c7c04ec57b03c29c7a4870e1ec58a018
 Source:         https://github.com/vasi/squashfuse/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
+
+# The low-level library is linked against the FUSE 3 provider.
+Patch2000:      2000-use-fuse3-pkg-config-dependency.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-demo
@@ -48,8 +52,8 @@ developing applications that use squashfuse.
 ./autogen.sh
 
 %files
-%license LICENSE
 %doc README CONFIGURATION NEWS TODO
+%license LICENSE
 %{_bindir}/squashfuse
 %{_bindir}/squashfuse_ll
 %{_mandir}/man1/squashfuse.1*

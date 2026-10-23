@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define package_version 9.2
-%define patchlevel 1090
+%define patchlevel 1201
 
 %define vimdir vim92
 
@@ -18,7 +18,7 @@ Summary:        A popular VI editor derivative with enhanced functionality
 License:        Vim AND LGPL-2.1-or-later AND MIT AND GPL-1.0-only AND (GPL-2.0-only OR Vim) AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND GPL-3.0-or-later AND OPUBL-1.0 AND Apache-2.0
 URL:            https://www.vim.org/
 VCS:            git:https://github.com/vim/vim
-#!RemoteAsset:  sha256:268201ebd7b8c9d55f839e47d1b192658f24b7b2dfc8402024a3b0fab8d8dd09
+#!RemoteAsset:  sha256:b280c2abebc3b32adb5295f3e7f4dd63340a68127cb26300c745024ef8b31af6
 Source0:        https://github.com/vim/vim/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -59,12 +59,12 @@ ln -s vim %{buildroot}%{_bindir}/vi
 
 %find_lang %{name} --all-name --with-man --generate-subpackages
 
-# Disable tests.
 %check
+%make_build -C src/testdir test_compiler test_syntax
 
 %files
-%license %{_datadir}/%{name}/%{vimdir}/LICENSE
-%doc %{_datadir}/%{name}/%{vimdir}/README.txt
+%doc %{_datadir}/vim/%{vimdir}/README.txt
+%license %{_datadir}/vim/%{vimdir}/LICENSE
 %{_bindir}/vim
 %{_bindir}/vi
 %{_bindir}/rvim
@@ -73,26 +73,26 @@ ln -s vim %{buildroot}%{_bindir}/vi
 %{_bindir}/ex
 %{_bindir}/rview
 %{_bindir}/view
-%{_datadir}/%{name}/%{vimdir}/autoload
-%{_datadir}/%{name}/%{vimdir}/colors
-%{_datadir}/%{name}/%{vimdir}/compiler
-%{_datadir}/%{name}/%{vimdir}/pack
-%{_datadir}/%{name}/%{vimdir}/doc
-%{_datadir}/%{name}/%{vimdir}/*.vim
-%{_datadir}/%{name}/%{vimdir}/ftplugin
-%{_datadir}/%{name}/%{vimdir}/import/dist/vimhelp.vim
-%{_datadir}/%{name}/%{vimdir}/import/dist/vimhighlight.vim
-%{_datadir}/%{name}/%{vimdir}/indent
-%{_datadir}/%{name}/%{vimdir}/keymap
-%{_datadir}/%{name}/%{vimdir}/lang/*.vim
-%{_datadir}/%{name}/%{vimdir}/lang/*.txt
-%{_datadir}/%{name}/%{vimdir}/macros
-%{_datadir}/%{name}/%{vimdir}/plugin
-%{_datadir}/%{name}/%{vimdir}/print
-%{_datadir}/%{name}/%{vimdir}/syntax
-%{_datadir}/%{name}/%{vimdir}/tutor
-%{_datadir}/%{name}/%{vimdir}/spell
-%{_datadir}/%{name}/%{vimdir}/tools
+%{_datadir}/vim/%{vimdir}/autoload
+%{_datadir}/vim/%{vimdir}/colors
+%{_datadir}/vim/%{vimdir}/compiler
+%{_datadir}/vim/%{vimdir}/pack
+%{_datadir}/vim/%{vimdir}/doc
+%{_datadir}/vim/%{vimdir}/*.vim
+%{_datadir}/vim/%{vimdir}/ftplugin
+%{_datadir}/vim/%{vimdir}/import/dist/vimhelp.vim
+%{_datadir}/vim/%{vimdir}/import/dist/vimhighlight.vim
+%{_datadir}/vim/%{vimdir}/indent
+%{_datadir}/vim/%{vimdir}/keymap
+%{_datadir}/vim/%{vimdir}/lang/*.vim
+%{_datadir}/vim/%{vimdir}/lang/*.txt
+%{_datadir}/vim/%{vimdir}/macros
+%{_datadir}/vim/%{vimdir}/plugin
+%{_datadir}/vim/%{vimdir}/print
+%{_datadir}/vim/%{vimdir}/syntax
+%{_datadir}/vim/%{vimdir}/tutor
+%{_datadir}/vim/%{vimdir}/spell
+%{_datadir}/vim/%{vimdir}/tools
 %{_mandir}/man1/vim.*
 %{_mandir}/man1/ex.*
 %{_mandir}/man1/rview.*

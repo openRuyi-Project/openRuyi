@@ -3,28 +3,33 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libical
-Version:        3.0.20
+Version:        4.0.7
 Release:        %autorelease
 Summary:        Reference implementation of the iCalendar data type and serialization format
-License:        LGPL-2.1-only OR MPL-2.0
+License:        (LGPL-2.1-only OR MPL-2.0) AND BSD-3-Clause
 URL:            https://libical.github.io/libical/
 VCS:            git:https://github.com/libical/libical
-#!RemoteAsset:  sha256:e73de92f5a6ce84c1b00306446b290a2b08cdf0a80988eca0a2c9d5c3510b4c2
+#!RemoteAsset:  sha256:47c05bc96e41416578cf1803bb2ba3f8d292cb17d5ac2fca539dee922bae8a94
 Source:         https://github.com/libical/libical/archive/v%{version}/libical-%{version}.tar.gz
 BuildSystem:    cmake
 
-BuildOption(conf):  -DUSE_INTEROPERABLE_VTIMEZONES:BOOL=ON
-BuildOption(conf):  -DICAL_ALLOW_EMPTY_PROPERTIES:BOOL=ON
-BuildOption(conf):  -DGOBJECT_INTROSPECTION:BOOL=ON
-BuildOption(conf):  -DICAL_GLIB:BOOL=ON
-BuildOption(conf):  -DICAL_GLIB_VAPI:BOOL=ON
-BuildOption(conf):  -DSHARED_ONLY:BOOL=ON
-BuildOption(conf):  -DBUILD_DOCS:BOOL=OFF
-BuildOption(conf):  -DENABLE_GTK_DOC=OFF
+# Preserve the libical.pc link interface used by BlueZ's vCard backend.
+Patch2000:      2000-keep-legacy-pkg-config-libraries.patch
+
+# Share generated GIR and typelib rules across parallel Vala targets.
+BuildOption(conf):  -G Ninja
+BuildOption(conf):  -DLIBICAL_GOBJECT_INTROSPECTION:BOOL=ON
+BuildOption(conf):  -DLIBICAL_GLIB:BOOL=ON
+BuildOption(conf):  -DLIBICAL_GLIB_VAPI:BOOL=ON
+BuildOption(conf):  -DLIBICAL_JAVA_BINDINGS:BOOL=OFF
+BuildOption(conf):  -DLIBICAL_BUILD_DOCS:BOOL=OFF
+BuildOption(conf):  -DLIBICAL_GLIB_BUILD_DOCS:BOOL=OFF
+BuildOption(conf):  -DLIBICAL_BUILD_TESTING:BOOL=ON
 
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
@@ -36,6 +41,7 @@ BuildRequires:  pkgconfig(gobject-introspection-1.0)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(icu-i18n)
 BuildRequires:  pkgconfig(icu-uc)
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  perl(Getopt::Std)
 BuildRequires:  perl(lib)
 BuildRequires:  python3
@@ -75,43 +81,48 @@ Requires:       %{name}-glib = %{version}-%{release}
 Development files needed for building things which link against %{name}-glib.
 
 %files
-%doc README.md ReleaseNotes.txt THANKS
-%license LICENSE
-%{_libdir}/libical.so.3
+%doc README.md CHANGELOG.md CONTRIBUTORS.md
+%license LICENSE.txt COPYING.LESSER.txt LICENSES/BSD-3-Clause.txt LICENSES/MPL-2.0.txt
+%{_libdir}/libical.so.4.0
 %{_libdir}/libical.so.%{version}
-%{_libdir}/libical_cxx.so.3
+%{_libdir}/libical_cxx.so.4.0
 %{_libdir}/libical_cxx.so.%{version}
-%{_libdir}/libicalss.so.3
+%{_libdir}/libicalss.so.4.0
 %{_libdir}/libicalss.so.%{version}
-%{_libdir}/libicalss_cxx.so.3
+%{_libdir}/libicalss_cxx.so.4.0
 %{_libdir}/libicalss_cxx.so.%{version}
-%{_libdir}/libicalvcal.so.3
+%{_libdir}/libicalvcal.so.4.0
 %{_libdir}/libicalvcal.so.%{version}
-%{_libdir}/girepository-1.0/ICal-3.0.typelib
+%{_libdir}/libicalvcard.so.4.0
+%{_libdir}/libicalvcard.so.%{version}
+%{_libdir}/girepository-1.0/ICal-4.0.typelib
 
 %files devel
-%doc doc/UsingLibical.md
 %{_libdir}/libical.so
 %{_libdir}/libical_cxx.so
 %{_libdir}/libicalss.so
 %{_libdir}/libicalss_cxx.so
 %{_libdir}/libicalvcal.so
+%{_libdir}/libicalvcard.so
 %{_libdir}/pkgconfig/libical.pc
+%{_libdir}/pkgconfig/libicalss.pc
+%{_libdir}/pkgconfig/libicalvcal.pc
+%{_libdir}/pkgconfig/libicalvcard.pc
 %{_libdir}/cmake/LibIcal/
 %{_includedir}/libical/
-%{_datadir}/gir-1.0/ICal-3.0.gir
+%{_datadir}/gir-1.0/ICal-4.0.gir
 %{_libexecdir}/libical/ical-glib-src-generator
 
 %files glib
-%{_libdir}/libical-glib.so.3
+%{_libdir}/libical-glib.so.4.0
 %{_libdir}/libical-glib.so.%{version}
-%{_libdir}/girepository-1.0/ICalGLib-3.0.typelib
+%{_libdir}/girepository-1.0/ICalGLib-4.0.typelib
 
 %files glib-devel
 %{_libdir}/libical-glib.so
 %{_libdir}/pkgconfig/libical-glib.pc
 %{_includedir}/libical-glib/
-%{_datadir}/gir-1.0/ICalGLib-3.0.gir
+%{_datadir}/gir-1.0/ICalGLib-4.0.gir
 %{_datadir}/vala/vapi/libical-glib.vapi
 
 %changelog

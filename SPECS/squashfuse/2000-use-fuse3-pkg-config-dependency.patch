@@ -1,0 +1,23 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Fri, 23 Oct 2026 03:32:00 +0800
+Subject: [PATCH] build: require the selected FUSE 3 pkg-config module
+
+openRuyi builds the low-level library with FUSE 3. Its pkg-config file
+must request fuse3 so development consumers resolve the matching headers
+and libraries instead of the unavailable FUSE 2 module.
+
+Reference: https://github.com/vasi/squashfuse/blob/0.6.5/squashfuse_ll.pc.in
+Upstream-Status: Inappropriate [distribution FUSE 3 selection]
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+diff --git a/squashfuse_ll.pc.in b/squashfuse_ll.pc.in
+--- a/squashfuse_ll.pc.in
++++ b/squashfuse_ll.pc.in
+@@ -8,6 +8,6 @@ Description: squashfuse low-level library to mount squashfs archives
+ Version: @VERSION@
+ 
+ Requires: squashfuse
+-Requires.private: fuse
++Requires.private: fuse3
+ Libs: -L${libdir} -lsquashfuse_ll
+ Cflags: -I${includedir}

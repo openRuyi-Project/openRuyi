@@ -3,16 +3,17 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           simdutf
-Version:        9.0.0
+Version:        9.3.2
 Release:        %autorelease
 Summary:        High-speed Unicode validation and transcoding library
 License:        Apache-2.0 AND BSD-3-Clause
 URL:            https://github.com/simdutf/simdutf
-#!RemoteAsset:  sha256:fd2ce975f29809a975a8da8843cfb3a7265af3f71be548f199d23cf65e101764
+#!RemoteAsset:  sha256:d92a0a4ce216dcebf18af20fed7ea7279fa535683f790fdaeed39827a234f567
 Source0:        https://github.com/simdutf/simdutf/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -35,8 +36,8 @@ This package contains the header files, pkg-config, and CMake files needed
 to develop applications that use the simdutf library.
 
 %files
-%license LICENSE-APACHE
 %doc AUTHORS README.md
+%license LICENSE-APACHE
 %{_libdir}/libsimdutf.so.*
 
 %files devel

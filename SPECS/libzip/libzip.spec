@@ -1,22 +1,24 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libzip
-Version:        1.11.4
+Version:        1.12.1
 Release:        %autorelease
 Summary:        A C library for reading, creating, and modifying zip archives
 License:        BSD-3-Clause
 URL:            https://libzip.org/
 VCS:            git:https://github.com/nih-at/libzip
-#!RemoteAsset:  sha256:8a247f57d1e3e6f6d11413b12a6f28a9d388de110adc0ec608d893180ed7097b
+#!RemoteAsset:  sha256:c40062022a1963c80573d48f6070792297cecd7c6bffe3aefcac0d8b9bee8913
 Source:         https://github.com/nih-at/libzip/releases/download/v%{version}/libzip-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DDOCUMENTATION_FORMAT:STRING=man
 BuildOption(conf):  -DBUILD_TOOLS:BOOL=ON
+# The regression suite requires the nihtest runner, absent from openRuyi.
 BuildOption(conf):  -DBUILD_REGRESS:BOOL=OFF
 BuildOption(conf):  -DBUILD_EXAMPLES:BOOL=OFF
 
@@ -44,8 +46,8 @@ This package contains the header files, pkg-config files, and other
 files needed to develop applications that use the libzip library.
 
 %files
-%license LICENSE
 %doc AUTHORS NEWS.md THANKS
+%license LICENSE
 # Files from original 'tools' package
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
@@ -66,4 +68,4 @@ files needed to develop applications that use the libzip library.
 %{_mandir}/man3/*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog

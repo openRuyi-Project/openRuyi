@@ -3,20 +3,22 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libyang
-Version:        4.2.2
+Version:        6.4.13
 Release:        %autorelease
 Summary:        YANG data modeling language library
 License:        BSD-3-Clause
 URL:            https://github.com/CESNET/libyang
-#!RemoteAsset
+#!RemoteAsset:  sha256:bf78a437225027ce9e20d2c449b7853204d7fd450bb00fb01e83339145561a86
 Source:         https://github.com/CESNET/libyang/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DCMAKE_BUILD_TYPE:STRING=Release
+BuildOption(conf):  -DENABLE_TESTS:BOOL=ON
 BuildOption(conf):  -DENABLE_LYD_PRIV:BOOL=ON
 BuildOption(conf):  -DGEN_LANGUAGE_BINDINGS:BOOL=ON
 BuildOption(conf):  -DENABLE_VALGRIND_TESTS:BOOL=OFF
@@ -24,7 +26,7 @@ BuildOption(conf):  -DGEN_DOXYGEN_DOCS:BOOL=OFF
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
-BuildRequires:  pkgconfig(libpcre2-posix)
+BuildRequires:  pkgconfig(libpcre2-8) >= 10.21
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  swig
@@ -41,7 +43,7 @@ tools.
 %package        devel
 Summary:        Development files for libyang
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       pkgconfig(libpcre2-posix)
+Requires:       pkgconfig(libpcre2-8) >= 10.21
 
 %description    devel
 Headers, pkg-config, and other development files for the libyang library.
@@ -67,4 +69,4 @@ This package also contains the API documentation.
 %{_includedir}/libyang/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
