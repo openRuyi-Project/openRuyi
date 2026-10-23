@@ -1,23 +1,25 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           librabbitmq
-Version:        0.15.0
+Version:        0.18.1
 Release:        %autorelease
 Summary:        Client library for AMQP 0-9-1 written in C
 License:        MIT
 URL:            https://github.com/alanxz/rabbitmq-c
-#!RemoteAsset:  sha256:7b652df52c0de4d19ca36c798ed81378cba7a03a0f0c5d498881ae2d79b241c2
+#!RemoteAsset:  sha256:0779bd4f00175ff2f722f9dc43b542bea3bc606ed079e7099fa8a18627c2ddc9
 Source:         %{url}/archive/refs/tags/v%{version}.tar.gz#/rabbitmq-c-%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_API_DOCS:BOOL=OFF
 BuildOption(conf):  -DBUILD_EXAMPLES:BOOL=OFF
-BuildOption(conf):  -DBUILD_STATIC_LIBS:BOOL=OFF
-BuildOption(conf):  -DBUILD_TESTING:BOOL=OFF
+BuildOption(conf):  -DBUILD_STATIC_LIBS:BOOL=ON
+BuildOption(conf):  -DBUILD_TESTING:BOOL=ON
+BuildOption(conf):  -DINSTALL_STATIC_LIBS:BOOL=OFF
 BuildOption(conf):  -DBUILD_TOOLS:BOOL=OFF
 BuildOption(conf):  -DENABLE_SSL_SUPPORT:BOOL=ON
 BuildOption(conf):  -DRUN_SYSTEM_TESTS:BOOL=OFF

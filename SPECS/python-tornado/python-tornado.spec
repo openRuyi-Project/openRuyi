@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname tornado
 
 Name:           python-%{srcname}
-Version:        6.5.8
+Version:        6.5.10
 Release:        %autorelease
 Summary:        Scalable, non-blocking web server and tools
 License:        Apache-2.0
 URL:            https://github.com/tornadoweb/tornado
-#!RemoteAsset:  sha256:9452e1b208a8bd771e2cb1f2ff564985b9b214bdebbe622793e1799e0a6bd23f
+#!RemoteAsset:  sha256:a6b1ccd08c04b4a06fb5aeb381be99de5ad1e5375c1785e31d78c880feb57687
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -24,6 +25,7 @@ BuildOption(install):  -l %{srcname}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pytest)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(setuptools)
@@ -46,6 +48,10 @@ ideal for real-time web services.
 
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check -a
+# The optional CaresResolver uses gethostbyname, removed in pycares 5.
+%pytest --pyargs tornado.test -k 'not CaresResolverTest'
 
 %files -f %{pyproject_files}
 %doc README.rst

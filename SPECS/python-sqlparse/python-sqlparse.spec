@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname sqlparse
 
 Name:           python-%{srcname}
-Version:        0.5.5
+Version:        0.6.0
 Release:        %autorelease
 Summary:        Non-validating SQL parser
 License:        BSD-3-Clause
 URL:            https://github.com/andialbrecht/sqlparse
-#!RemoteAsset:  sha256:e20d4a9b0b8585fdf63b10d30066c7c94c5d7a7ec47c889a2d83a3caa93ff28e
+#!RemoteAsset:  sha256:113c35c75365ab9cc9c7231d68c6428fb11c085fc8e9eb1ad659b7ddbf6cd2b9
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -37,7 +38,7 @@ provides support for parsing, splitting and formatting SQL statements.
 %pytest -v tests
 
 %files -f %{pyproject_files}
-%doc CHANGELOG README.rst
+%doc CHANGELOG README.md
 %{_bindir}/sqlformat
 
 %changelog

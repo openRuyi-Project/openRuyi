@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -17,6 +18,8 @@ Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{sr
 BuildSystem:    pyproject
 
 BuildOption(install):  -l PIL
+# The mainline Python build does not provide the optional _tkinter extension.
+BuildOption(check):  -e PIL.ImageTk
 
 BuildRequires:  pkgconfig(freetype2)
 BuildRequires:  pkgconfig(lcms2)
@@ -26,6 +29,7 @@ BuildRequires:  pkgconfig(libwebp)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pyproject-rpm-macros
+BuildRequires:  python3dist(olefile)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(pybind11)
 BuildRequires:  python3dist(pytest)
@@ -48,8 +52,8 @@ Python image processing library, fork of the Python Imaging Library (PIL).
 install -d %{buildroot}/%{_includedir}/python%{python3_version}/Imaging
 install -m 644 src/libImaging/*.h %{buildroot}/%{_includedir}/python%{python3_version}/Imaging
 
-# Maybe add AVIF, LIBIMAGEQUANT, OPENJPEG, RAQM, TKINTER & XCB later for testing
-%check
+%check -a
+%pytest Tests
 
 %files -f %{pyproject_files}
 %doc README.md CHANGES.rst

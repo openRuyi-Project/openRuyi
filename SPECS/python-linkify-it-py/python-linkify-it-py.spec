@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %global pypi_name linkify_it_py
 
 Name:           python-%{srcname}
-Version:        2.1.0
+Version:        2.2.0
 Release:        %autorelease
 Summary:        Link recognition library with full Unicode support
 License:        MIT
 URL:            https://github.com/tsutsu3/linkify-it-py
-#!RemoteAsset:  sha256:43360231720999c10e9328dc3691160e27a718e280673d444c38d7d3aaa3b98b
+#!RemoteAsset:  sha256:907acd2d17ac1fbb9ddb62c8957ccbd6158cac602231a15c3b0cd1e215f03cee
 Source:         https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -43,8 +44,8 @@ plain text.
 %pytest -v
 
 %files -f %{pyproject_files}
-%license LICENSE
 %doc CHANGELOG.md README.md
+%license LICENSE
 
 %changelog
 %autochangelog

@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,12 +11,12 @@
 %bcond tests 0
 
 Name:           xdg-desktop-portal
-Version:        1.20.3
+Version:        1.22.1
 Release:        %autorelease
 Summary:        Portal frontend service to flatpak
 License:        LGPL-2.1-or-later
 URL:            https://github.com/flatpak/xdg-desktop-portal
-#!RemoteAsset:  sha256:4bfb164937f59107eb1a3cc21abaa948d903c76f3b99fac210cea38ce1da9edc
+#!RemoteAsset:  sha256:d4879ddb3d65ff1a8f19187497e6f13dc5d267bcac404a5d501218be355753d3
 Source0:        https://github.com/flatpak/xdg-desktop-portal/releases/download/%{version}/xdg-desktop-portal-%{version}.tar.xz
 BuildSystem:    meson
 

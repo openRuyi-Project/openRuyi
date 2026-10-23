@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name langgraph_sdk
 
 Name:           python-%{srcname}
-Version:        0.4.2
+Version:        0.4.8
 Release:        %autorelease
 Summary:        SDK for interacting with LangGraph API
 License:        MIT
 URL:            https://github.com/langchain-ai/langgraph
 VCS:            git:https://github.com/langchain-ai/langgraph.git
-#!RemoteAsset:  sha256:b88f0f5f6328ac0680d6790614a905b2bcfa257f2276dba4e38f0e86db0aa738
+#!RemoteAsset:  sha256:6dd0c55d0d9040686716581c9e302c21c31ad6e2eebda0defc944a8bb38ec011
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -23,6 +24,10 @@ BuildOption(install):  %{pypi_name}
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(starlette)
+BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(pytest-asyncio)
+BuildRequires:  python3dist(pytest-mock)
 BuildRequires:  python3dist(hatchling)
 BuildRequires:  python3dist(httpx)
 BuildRequires:  python3dist(langchain-core)
@@ -42,6 +47,10 @@ sed -i 's/"websockets>=14,<16"/"websockets>=14"/' pyproject.toml
 
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check -a
+# Integration tests require the separate langgraph-api server stack.
+%pytest --ignore=tests/integration
 
 %files -f %{pyproject_files}
 %doc README.md

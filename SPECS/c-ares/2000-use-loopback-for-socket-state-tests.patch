@@ -1,0 +1,40 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] test: keep socket state queries pending on loopback
+
+The socket-state delivery tests send queries to TEST-NET-1 and expect them
+to remain pending. Without an external route, sending fails immediately
+and the query completes before cancellation or destruction is tested.
+
+Use the existing mock server on an ephemeral loopback port and leave it
+unserviced. This keeps the query pending while retaining all socket-close
+notification assertions.
+
+Upstream-Status: Pending
+Reference: https://github.com/c-ares/c-ares/blob/v1.34.9/test/ares-test-mock.cc
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+--- a/test/ares-test-mock.cc
++++ b/test/ares-test-mock.cc
+@@ -3997,6 +3997,8 @@
+ 
+ class SockStateDeliveryTest : public LibraryTest {
+ protected:
++  MockServer server_{AF_INET, 0};
++
+   void OpenConnection(ares_channel_t **chan, SockStateRecordData *data,
+                       QueryResult *result)
+   {
+@@ -4008,9 +4010,10 @@
+     ASSERT_EQ(ARES_SUCCESS,
+               ares_init_options(chan, &opts, ARES_OPT_SOCK_STATE_CB));
+     ASSERT_NE(nullptr, *chan);
+-    /* TEST-NET-1, guaranteed not to answer, so the socket is still open when
+-     * the call under test runs. */
+-    ASSERT_EQ(ARES_SUCCESS, ares_set_servers_csv(*chan, "192.0.2.1:53"));
++    /* Keep the query pending without requiring a route outside loopback. */
++    std::stringstream server;
++    server << "127.0.0.1:" << server_.udpport();
++    ASSERT_EQ(ARES_SUCCESS, ares_set_servers_csv(*chan, server.str().c_str()));
+ 
+     ares_query_dnsrec(*chan, "www.google.com", ARES_CLASS_IN, ARES_REC_TYPE_A,
+                       QueryCallback, result, NULL);

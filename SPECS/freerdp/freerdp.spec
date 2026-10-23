@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,19 +10,19 @@
 %bcond webview 0
 
 Name:           freerdp
-Version:        3.26.0
+Version:        3.32.2
 Release:        %autorelease
 Summary:        Free implementation of the Remote Desktop Protocol (RDP)
 License:        Apache-2.0
 URL:            http://www.freerdp.com/
 VCS:            git:https://github.com/FreeRDP/FreeRDP
-#!RemoteAsset:  sha256:ae3b1c0b8e334ecbc2c784bce266249309fad32a0ef41947ce5c059eb18e2059
+#!RemoteAsset:  sha256:9ccb8357bf0188044a460de775c7ea289ca7d2a2a917eca0f0a7c4dc9c8b08ea
 Source0:        https://github.com/FreeRDP/FreeRDP/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DCMAKE_SKIP_INSTALL_RPATH=ON
 BuildOption(conf):  -DWITH_MANPAGES=ON
-BuildOption(conf):  -DBUILD_TESTING=OFF
+BuildOption(conf):  -DBUILD_TESTING=ON
 BuildOption(conf):  -DWITH_CHANNELS=ON
 BuildOption(conf):  -DWITH_CLIENT=ON
 BuildOption(conf):  -DWITH_FUSE=ON
@@ -74,6 +75,11 @@ BuildOption(conf):  -DWITH_SOXR=ON
 BuildOption(conf):  -DWITH_IPP=OFF
 BuildOption(conf):  -DWITH_PCSC=OFF
 BuildOption(conf):  -DWITH_PKCS11=OFF
+# The spin-only barrier test sizes its threads from host CPUs, exceeding OBS CPU quotas.
+# The buildroot libavcodec does not provide an H.264 codec for the codec-specific test.
+BuildOption(check):  -j1
+BuildOption(check):  -E '^(TestSynchBarrier|TestFreeRDPCodecH264)$'
+BuildOption(check):  --timeout 600
 
 BuildRequires:  cmake >= 3.13
 BuildRequires:  pkgconfig(soxr)
@@ -90,7 +96,7 @@ BuildRequires:  pkgconfig(fuse3)
 BuildRequires:  pkgconfig(libusb-1.0)
 BuildRequires:  pkgconfig(libclc)
 BuildRequires:  pkgconfig(openssl)
-BuildRequires:  alsa-lib-devel
+BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(libpulse)
 BuildRequires:  pkgconfig(cups)
 BuildRequires:  pkgconfig(krb5)
@@ -133,8 +139,8 @@ Server support for FreeRDP.
 find %{buildroot} -name "*.a" -delete
 
 %files
-%license LICENSE
 %doc README.md ChangeLog
+%license LICENSE
 %{_bindir}/winpr-hash
 %{_bindir}/winpr-makecert
 %{_bindir}/xfreerdp
@@ -158,6 +164,7 @@ find %{buildroot} -name "*.a" -delete
 %{_libdir}/libwinpr3.so.*
 %{_libdir}/libwinpr-tools3.so.*
 %{_mandir}/man7/wlog.*
+%{_mandir}/man7/freerdp.7*
 
 %files devel
 %{_includedir}/freerdp3/
