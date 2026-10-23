@@ -64,18 +64,18 @@
 %bcond have_spice 0
 
 # liburing support.
-%bcond have_liburing 0
+%bcond have_liburing 1
 
-# openRuyi: virtio-gpu not supported yet
-%bcond have_virgl 0
+# virtio-gpu support
+%bcond have_virgl 1
 
-# VNC and SDL image and QEMU-UI not supported yet
-%bcond have_vnc 0
+# vnc-display-test and SDL_image not supported yet
+%bcond have_vnc 1
 %bcond have_gvnc_devel 0
 %bcond have_sdl_image 0
-%bcond have_opengl 0
-%bcond have_egl 0
-%bcond have_gtk3 0
+%bcond have_opengl 1
+%bcond have_egl 1
+%bcond have_gtk3 1
 
 # openRuyi: persistent memory not supported yet
 %bcond have_pmem 0
@@ -101,8 +101,8 @@
 # openRuyi: QEMU multipath not supported yet
 %bcond have_multipath 0
 
-# openRuyi: QEMU USB not supported yet
-%bcond have_usb 0
+# USB support
+%bcond have_usb 1
 
 # openRuyi: QEMU usbredir not supported yet
 %bcond have_usbredir 0
@@ -116,12 +116,12 @@
 # openRuyi: Capstone disassembler not supported yet
 %bcond have_capstone 0
 
-# openRuyi: QEMU pipewire not supported yet
-%bcond have_pipewire 0
+# pipewire support
+%bcond have_pipewire 1
 
-# openRuyi: QEMU keymap not supported yet
-%bcond have_cryptodev_backend_lkcf 0
-%bcond have_xkb 0
+# cryptodev-backend-lkcf and XKB keymap support
+%bcond have_cryptodev_backend_lkcf 1
+%bcond have_xkb 1
 
 # openRuyi: systemtap and dtrace not supported yet
 %bcond have_systemtap 0
@@ -130,14 +130,11 @@
 # openRuyi: SLIRP networking backend not supported yet
 %bcond have_slirp 1
 
-# openRuyi: QEMU Audio support not ready yet
-%bcond have_audio 0
+# audio support
+%bcond have_audio 1
 
 # openRuyi: QEMU dwarf not supported yet
 %bcond have_dwarf 0
-
-# openRuyi: QEMU USB support not ready yet
-%bcond have_usb 0
 
 # All modules should be listed here.
 %bcond have_block_rbd 1
@@ -166,7 +163,7 @@
 # openRuyi: QEMU igvm not supported yet
 %bcond have_igvm 0
 
-# openRuyi: QEMU man not supported yet
+# manual support
 %bcond have_man 0
 
 # openRuyi: QEMU fdt default enabled
@@ -271,6 +268,7 @@ BuildRequires:  pkgconfig(libpmem)
 %if %{with have_xkb}
 # qemu-keymap
 BuildRequires:  pkgconfig(xkbcommon)
+BuildRequires:  xkeyboard-config
 %endif
 %if %{with have_opengl}
 BuildRequires:  pkgconfig(epoxy)
@@ -372,7 +370,7 @@ BuildRequires:  pkgconfig(gvnc-1.0)
 %endif
 %if %{with have_pipewire}
 # Used by pipewire audio backend
-BuildRequires:  pkgconfig(pipewire)
+BuildRequires:  pkgconfig(libpipewire-0.3)
 %endif
 %if %{with have_cryptodev_backend_lkcf}
 # Used by cryptodev-backend-lkcf
@@ -425,6 +423,9 @@ BuildArch:      noarch
 
 %package        tools
 Summary:        %{name} support tools
+%if %{with have_xkb}
+Requires:       xkeyboard-config
+%endif
 %if %{with have_systemtap}
 Recommends:     systemtap-client
 Recommends:     systemtap-devel
