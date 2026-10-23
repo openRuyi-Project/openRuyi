@@ -1,0 +1,68 @@
+From 4d7736b516a69ad2b5705c4ecc4d387593f29412 Mon Sep 17 00:00:00 2001
+From: Paulo Gomes <paulo@entire.io>
+Date: Fri, 23 Oct 2026 16:30:59 +0800
+Subject: [PATCH] tests: derive zlib expectations from the Go toolchain
+
+Backport upstream 4ae786a01dfb96289854ddc6460981531a6fe53c to the v6 snapshot and its testify assertions. Go 1.27 changed empty-stream and loose-object compression output.
+---
+ plumbing/format/packfile/encoder_test.go | 9 ++++++---
+ storage/filesystem/dotgit/dotgit_test.go | 9 ++++++++-
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/plumbing/format/packfile/encoder_test.go b/plumbing/format/packfile/encoder_test.go
+index 73c28b7..6185e9f 100644
+--- a/plumbing/format/packfile/encoder_test.go
++++ b/plumbing/format/packfile/encoder_test.go
+@@ -2,6 +2,7 @@ package packfile
+ 
+ import (
+ 	"bytes"
++	"compress/zlib"
+ 	"io"
+ 	"testing"
+ 
+@@ -61,9 +62,11 @@ func (s *EncoderSuite) TestCorrectPackWithOneEmptyObject() {
+ 	// OBJECT HEADER(TYPE + SIZE)= 0001 0000
+ 	expectedResult = append(expectedResult, []byte{16}...)
+ 
+-	// Zlib header
+-	expectedResult = append(expectedResult,
+-		[]byte{120, 156, 1, 0, 0, 255, 255, 0, 0, 0, 1}...)
++	// Derive the zlib representation from the current Go toolchain.
++	var compressed bytes.Buffer
++	w := zlib.NewWriter(&compressed)
++	s.Require().NoError(w.Close())
++	expectedResult = append(expectedResult, compressed.Bytes()...)
+ 
+ 	// + HASH
+ 	hb := h.Bytes()
+diff --git a/storage/filesystem/dotgit/dotgit_test.go b/storage/filesystem/dotgit/dotgit_test.go
+index 845c62f..3e0d62e 100644
+--- a/storage/filesystem/dotgit/dotgit_test.go
++++ b/storage/filesystem/dotgit/dotgit_test.go
+@@ -2,6 +2,8 @@ package dotgit
+ 
+ import (
+ 	"bufio"
++	"bytes"
++	"compress/zlib"
+ 	"encoding/hex"
+ 	"io"
+ 	"io/fs"
+@@ -578,7 +580,12 @@ func (s *SuiteDotGit) TestNewObject() {
+ 
+ 	i, err := fs.Stat("objects/a8/a940627d132695a9769df883f85992f0ff4a43")
+ 	s.Require().NoError(err)
+-	s.Equal(int64(34), i.Size())
++	var compressed bytes.Buffer
++	zw := zlib.NewWriter(&compressed)
++	_, err = zw.Write([]byte("blob 14\x00this is a test"))
++	s.Require().NoError(err)
++	s.Require().NoError(zw.Close())
++	s.Equal(int64(compressed.Len()), i.Size())
+ }
+ 
+ func (s *SuiteDotGit) TestObjects() {
+-- 
+2.56.0
+

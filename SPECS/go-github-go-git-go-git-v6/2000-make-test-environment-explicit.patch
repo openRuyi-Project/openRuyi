@@ -1,0 +1,105 @@
+From 2ca7de00b4895f65b2d5b19557326643cd898ca5 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Fri, 23 Oct 2026 16:39:42 +0800
+Subject: [PATCH] tests: make loopback endpoints and tag identities explicit
+
+The Git daemon listens only on IPv4 while OBS resolves localhost to IPv6. Use its explicit loopback address. Annotated-tag tests must provide their own local identity instead of relying on the build user configuration.
+---
+ plumbing/transport/git/common_test.go | 2 +-
+ remote_test.go                        | 5 +++++
+ repository_test.go                    | 8 ++++++--
+ status_test.go                        | 2 +-
+ worktree_status_test.go               | 2 +-
+ 5 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/plumbing/transport/git/common_test.go b/plumbing/transport/git/common_test.go
+index e9411d4..a2f14b1 100644
+--- a/plumbing/transport/git/common_test.go
++++ b/plumbing/transport/git/common_test.go
+@@ -21,7 +21,7 @@ import (
+ )
+ 
+ func newEndpoint(t testing.TB, port int, name string) *transport.Endpoint {
+-	ep, err := transport.NewEndpoint(fmt.Sprintf("git://localhost:%d/%s", port, name))
++	ep, err := transport.NewEndpoint(fmt.Sprintf("git://127.0.0.1:%d/%s", port, name))
+ 	require.NoError(t, err)
+ 	return ep
+ }
+diff --git a/remote_test.go b/remote_test.go
+index f54dd8a..af927d2 100644
+--- a/remote_test.go
++++ b/remote_test.go
+@@ -827,6 +827,11 @@ func (s *RemoteSuite) TestPushFollowTags() {
+ 	})
+ 
+ 	localRepo := newRepository(sto, fs)
++	cfg, err := localRepo.Config()
++	s.Require().NoError(err)
++	cfg.User.Name = "Go Git Tests"
++	cfg.User.Email = "tests@example.invalid"
++	s.Require().NoError(localRepo.Storer.SetConfig(cfg))
+ 	tipTag, err := localRepo.CreateTag(
+ 		"tip",
+ 		plumbing.NewHash("e8d3ffab552895c19b9fcf7aa264d277cde33881"),
+diff --git a/repository_test.go b/repository_test.go
+index 615d684..133d08b 100644
+--- a/repository_test.go
++++ b/repository_test.go
+@@ -6,6 +6,7 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"io"
++	"net"
+ 	"os"
+ 	"os/exec"
+ 	"os/user"
+@@ -471,7 +472,10 @@ func TestFailSafeUnsupportedStorage(t *testing.T) {
+ 			require.NoError(t, err)
+ 
+ 			t.Cleanup(func() {
+-				require.NoError(t, srv.Close())
++				err := srv.Close()
++				if !errors.Is(err, net.ErrClosed) {
++					require.NoError(t, err)
++				}
+ 			})
+ 
+ 			st := &sha1OnlyStorage{memory.NewStorage()}
+@@ -2849,7 +2853,7 @@ func (s *RepositorySuite) TestCreateTagAnnotatedBadOpts() {
+ 
+ 	expectedHash := h.Hash()
+ 
+-	ref, err := r.CreateTag("foobar", expectedHash, &CreateTagOptions{})
++	ref, err := r.CreateTag("foobar", expectedHash, &CreateTagOptions{Tagger: defaultSignature()})
+ 	s.Nil(ref)
+ 	s.ErrorIs(err, ErrMissingMessage)
+ }
+diff --git a/status_test.go b/status_test.go
+index e549ab5..12f16a2 100644
+--- a/status_test.go
++++ b/status_test.go
+@@ -90,7 +90,7 @@ func TestStatusReturnsFullPaths(t *testing.T) {
+ 				require.NoError(t, err)
+ 			}
+ 
+-			_, err = w.Commit("foo", &CommitOptions{All: true})
++			_, err = w.Commit("foo", &CommitOptions{All: true, Author: defaultSignature()})
+ 			require.NoError(t, err)
+ 
+ 			if tc.doChange {
+diff --git a/worktree_status_test.go b/worktree_status_test.go
+index 86afd05..5deabf3 100644
+--- a/worktree_status_test.go
++++ b/worktree_status_test.go
+@@ -46,7 +46,7 @@ func TestIndexEntrySizeUpdatedForNonRegularFiles(t *testing.T) {
+ 	_, err = wt.Add(file)
+ 	require.NoError(t, err)
+ 
+-	_, err = wt.Commit("add file", &CommitOptions{})
++	_, err = wt.Commit("add file", &CommitOptions{Author: defaultSignature()})
+ 	require.NoError(t, err)
+ 
+ 	st, err := wt.StatusWithOptions(StatusOptions{Strategy: Preload})
+-- 
+2.56.0
+
