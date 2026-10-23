@@ -1,0 +1,11 @@
+From: openRuyi Project Contributors
+Subject: Use the packaged vmm-sys-util 0.15 compatibility series
+
+The upstream range spans incompatible crate provider keys. Select 0.15,
+which is within the upstream range and is already packaged by openRuyi.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -88 +88 @@
+-version = ">=0.12.1, <=0.15.0"
++version = "0.15"
