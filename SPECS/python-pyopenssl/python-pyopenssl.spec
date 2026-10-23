@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname pyopenssl
 
 Name:           python-%{srcname}
-Version:        26.3.0
+Version:        26.4.0
 Release:        %autorelease
 Summary:        pyopenssl is a wrapper around the OpenSSL library
 License:        Apache-2.0
 URL:            https://github.com/pyca/pyopenssl
-#!RemoteAsset:  sha256:589de7fae1c9ea670d18422ed00fc04da787bbde8e1454aea872aa57b49ad341
+#!RemoteAsset:  sha256:28dfcce0162b9211413e26dfbfdf1d24317fbeba18fc93c12400a1856b2a0bc7
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -21,7 +22,7 @@ BuildOption(install):  OpenSSL
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  openssl
+BuildRequires:  python3dist(pytest)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
@@ -35,6 +36,10 @@ High-level wrapper around a subset of the OpenSSL library, includes among others
 
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check -a
+# test_ssl requires pretend, which is not available in the main repository.
+%pytest --ignore=tests/test_ssl.py
 
 %files -f %{pyproject_files}
 %doc README.rst
