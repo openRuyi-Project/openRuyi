@@ -30,6 +30,7 @@ BuildRequires:  go(github.com/aws/aws-sdk-go)
 BuildRequires:  go(golang.org/x/oauth2)
 
 Provides:       go(github.com/outscale/osc-sdk-go) = %{version}
+Provides:       go(github.com/outscale/osc-sdk-go/v2) = %{version}
 
 Requires:       go(github.com/aws/aws-sdk-go)
 Requires:       go(golang.org/x/oauth2)
