@@ -28,6 +28,10 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/mod) = %{version}
+Provides:       go(golang.org/x/mod/modfile) = %{version}
+Provides:       go(golang.org/x/mod/module) = %{version}
+Provides:       go(golang.org/x/mod/semver) = %{version}
+Provides:       go(golang.org/x/mod/sumdb/dirhash) = %{version}
 
 %description
 This repository holds packages for writing tools
