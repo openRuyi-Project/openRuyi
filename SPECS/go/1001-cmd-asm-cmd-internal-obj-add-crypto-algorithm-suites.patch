@@ -1,0 +1,366 @@
+From f4cef0ce6af2db5f244c9e3e628534f9b9e1765e Mon Sep 17 00:00:00 2001
+From: Meng Zhuo <mengzhuo@iscas.ac.cn>
+Date: Tue, 8 Apr 2025 12:02:42 +0800
+Subject: [PATCH 1/5] cmd/asm, cmd/internal/obj: add crypto algorithm suites
+ for riscv64
+
+Adds crypto algorithm suites' intrinsic encoding and testcase:
+
+* Zvkg - Vector GCM/GMAC
+* Zvkned - NIST Suite: Vector AES Block Cipher
+* Zvknh[ab] - NIST Suite: Vector SHA-2 Secure Hash
+* Zvksed - ShangMi Suite: SM4 Block Cipher
+* Zvksh - ShangMi Suite: SM3 Secure Hash
+
+Updates #77328
+
+Change-Id: I0d841cce0fd734c28e409d6b6edbcfdc0c7da9d4
+Reviewed-on: https://go-review.googlesource.com/c/go/+/664155
+Reviewed-by: Julian Zhu <jz531210@gmail.com>
+Reviewed-by: Joel Sing <joel@sing.id.au>
+Reviewed-by: Carlos Amedee <carlos@golang.org>
+LUCI-TryBot-Result: golang-scoped@luci-project-accounts.iam.gserviceaccount.com <golang-scoped@luci-project-accounts.iam.gserviceaccount.com>
+Reviewed-by: Cherry Mui <cherryyz@google.com>
+---
+ src/cmd/asm/internal/asm/testdata/riscv64.s   | 31 +++++++++++
+ .../asm/internal/asm/testdata/riscv64error.s  | 21 ++++++++
+ .../internal/asm/testdata/riscv64validation.s |  8 +++
+ src/cmd/internal/obj/riscv/anames.go          | 21 ++++++++
+ src/cmd/internal/obj/riscv/cpu.go             | 31 +++++++++++
+ src/cmd/internal/obj/riscv/inst.go            | 44 ++++++++++++++-
+ src/cmd/internal/obj/riscv/obj.go             | 53 +++++++++++++++++++
+ 7 files changed, 208 insertions(+), 1 deletion(-)
+
+diff --git a/src/cmd/asm/internal/asm/testdata/riscv64.s b/src/cmd/asm/internal/asm/testdata/riscv64.s
+index 752743892f..5284e666e6 100644
+--- a/src/cmd/asm/internal/asm/testdata/riscv64.s
++++ b/src/cmd/asm/internal/asm/testdata/riscv64.s
+@@ -2034,6 +2034,37 @@ start:
+ 	VCLMULHVX	X10, V2, V3			// d7612536
+ 	VCLMULHVX	X10, V2, V0, V3			// d7612534
+ 
++	// 32.2.4: Vector GCM/GMAC
++	VGHSHVV		V1, V2, V3			// f7a120b2
++	VGMULVV		V1, V2				// 77a118a2
++
++	// 32.2.5: NIST Suite: Vector AES Block Cipher
++	VAESEFVV	V1, V2				// 77a111a2
++	VAESEFVS	V1, V2				// 77a111a6
++	VAESEMVV	V1, V2				// 772111a2
++	VAESEMVS	V1, V2				// 772111a6
++	VAESDFVV	V1, V2				// 77a110a2
++	VAESDFVS	V1, V2				// 77a110a6
++	VAESDMVV	V1, V2				// 772110a2
++	VAESDMVS	V1, V2				// 772110a6
++	VAESKF1VI	$16, V2, V3			// f721288a
++	VAESKF2VI	$16, V2, V3			// f72128aa
++	VAESZVS		V1, V2				// 77a113a6
++
++	// 32.2.6: NIST Suite: Vector SHA-2 Secure Hash
++	VSHA2MSVV	V1, V2, V3			// f7a120b6
++	VSHA2CHVV	V1, V2, V3			// f7a120ba
++	VSHA2CLVV	V1, V2, V3			// f7a120be
++
++	// 32.2.7: ShangMi Suite: SM4 Block Cipher
++	VSM4KVI		$16, V2, V3			// f7212886
++	VSM4RVV		V1, V2				// 772118a2
++	VSM4RVS		V1, V2				// 772118a6
++
++	// 32.2.8: ShangMi Suite: SM3 Secure Hash
++	VSM3MEVV	V1, V2, V3			// f7a12082
++	VSM3CVI		$16, V2, V3			// f72128ae
++
+ 	//
+ 	// Privileged ISA
+ 	//
+diff --git a/src/cmd/asm/internal/asm/testdata/riscv64error.s b/src/cmd/asm/internal/asm/testdata/riscv64error.s
+index fd5e4acdf3..eb8c306d8d 100644
+--- a/src/cmd/asm/internal/asm/testdata/riscv64error.s
++++ b/src/cmd/asm/internal/asm/testdata/riscv64error.s
+@@ -456,5 +456,26 @@ TEXT errors(SB),$0
+ 	VCLMULVX	X10, V2, V4, V3			// ERROR "invalid vector mask register"
+ 	VCLMULHVV	V1, V2, V4, V3			// ERROR "invalid vector mask register"
+ 	VCLMULHVX	X10, V2, V4, V3			// ERROR "invalid vector mask register"
++	VAESDFVS	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESDFVV	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESDMVS	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESDMVV	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESEFVS	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESEFVV	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESEMVS	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESEMVV	V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESKF1VI	$0, V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESKF2VI	$0, V2, V4, V3			// ERROR "too many operands for instruction"
++	VAESZVS		V2, V4, V3			// ERROR "too many operands for instruction"
++	VGHSHVV		V1, V2, V4, V3			// ERROR "too many operands for instruction"
++	VGMULVV		V2, V4, V3			// ERROR "too many operands for instruction"
++	VSHA2CHVV	V1, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSHA2CLVV	V1, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSHA2MSVV	V1, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSM3CVI		$0, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSM3MEVV	V1, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSM4KVI		$0, V2, V4, V3			// ERROR "too many operands for instruction"
++	VSM4RVS		V2, V4, V3			// ERROR "too many operands for instruction"
++	VSM4RVV		V2, V4, V3			// ERROR "too many operands for instruction"
+ 
+ 	RET
+diff --git a/src/cmd/asm/internal/asm/testdata/riscv64validation.s b/src/cmd/asm/internal/asm/testdata/riscv64validation.s
+index 4e4e16286b..51e1967247 100644
+--- a/src/cmd/asm/internal/asm/testdata/riscv64validation.s
++++ b/src/cmd/asm/internal/asm/testdata/riscv64validation.s
+@@ -601,5 +601,13 @@ TEXT validation(SB),$0
+ 	VRORVI		$-1, V2, V4			// ERROR "unsigned immediate -1 must be in range [0, 31]"
+ 	VWSLLVI		$32, V2, V4			// ERROR "unsigned immediate 32 must be in range [0, 31]"
+ 	VWSLLVI		$-1, V2, V4			// ERROR "unsigned immediate -1 must be in range [0, 31]"
++	VAESKF1VI	$32, V2, V3			// ERROR "unsigned immediate 32 must be in range [0, 31]"
++	VAESKF1VI	$-1, V2, V3			// ERROR "unsigned immediate -1 must be in range [0, 31]"
++	VAESKF2VI	$32, V2, V3			// ERROR "unsigned immediate 32 must be in range [0, 31]"
++	VAESKF2VI	$-1, V2, V3			// ERROR "unsigned immediate -1 must be in range [0, 31]"
++	VSM4KVI		$32, V2, V3			// ERROR "unsigned immediate 32 must be in range [0, 31]"
++	VSM4KVI		$-1, V2, V3			// ERROR "unsigned immediate -1 must be in range [0, 31]"
++	VSM3CVI		$32, V2, V3			// ERROR "unsigned immediate 32 must be in range [0, 31]"
++	VSM3CVI		$-1, V2, V3			// ERROR "unsigned immediate -1 must be in range [0, 31]"
+ 
+ 	RET
+diff --git a/src/cmd/internal/obj/riscv/anames.go b/src/cmd/internal/obj/riscv/anames.go
+index 761efce67a..a934c5c509 100644
+--- a/src/cmd/internal/obj/riscv/anames.go
++++ b/src/cmd/internal/obj/riscv/anames.go
+@@ -921,6 +921,27 @@ var Anames = []string{
+ 	"VCLMULVX",
+ 	"VCLMULHVV",
+ 	"VCLMULHVX",
++	"VGHSHVV",
++	"VGMULVV",
++	"VAESEFVV",
++	"VAESEFVS",
++	"VAESEMVV",
++	"VAESEMVS",
++	"VAESDFVV",
++	"VAESDFVS",
++	"VAESDMVV",
++	"VAESDMVS",
++	"VAESKF1VI",
++	"VAESKF2VI",
++	"VAESZVS",
++	"VSHA2MSVV",
++	"VSHA2CHVV",
++	"VSHA2CLVV",
++	"VSM4KVI",
++	"VSM4RVV",
++	"VSM4RVS",
++	"VSM3MEVV",
++	"VSM3CVI",
+ 	"ECALL",
+ 	"SCALL",
+ 	"EBREAK",
+diff --git a/src/cmd/internal/obj/riscv/cpu.go b/src/cmd/internal/obj/riscv/cpu.go
+index 59e12ed3fb..1e435394bf 100644
+--- a/src/cmd/internal/obj/riscv/cpu.go
++++ b/src/cmd/internal/obj/riscv/cpu.go
+@@ -1476,6 +1476,37 @@ const (
+ 	AVCLMULHVV
+ 	AVCLMULHVX
+ 
++	// 33.2.4: Vector GCM/GMAC (Zvkg)
++	AVGHSHVV
++	AVGMULVV
++
++	// 33.2.5: NIST Suite: Vector AES Block Cipher (Zvkned)
++	AVAESEFVV
++	AVAESEFVS
++	AVAESEMVV
++	AVAESEMVS
++	AVAESDFVV
++	AVAESDFVS
++	AVAESDMVV
++	AVAESDMVS
++	AVAESKF1VI
++	AVAESKF2VI
++	AVAESZVS
++
++	// 33.2.6: NIST Suite: Vector SHA-2 Secure Hash (Zvknh[ab])
++	AVSHA2MSVV
++	AVSHA2CHVV
++	AVSHA2CLVV
++
++	// 33.2.7: ShangMi Suite: SM4 Block Cipher (Zvksed)
++	AVSM4KVI
++	AVSM4RVV
++	AVSM4RVS
++
++	// 33.2.8: ShangMi Suite: SM3 Secure Hash (Zvksh)
++	AVSM3MEVV
++	AVSM3CVI
++
+ 	//
+ 	// Privileged ISA (version 20260120)
+ 	//
+diff --git a/src/cmd/internal/obj/riscv/inst.go b/src/cmd/internal/obj/riscv/inst.go
+index 367cc44f19..ecf648d141 100644
+--- a/src/cmd/internal/obj/riscv/inst.go
++++ b/src/cmd/internal/obj/riscv/inst.go
+@@ -1,4 +1,4 @@
+-// Code generated by make inst.go EXTENSIONS="rv64_a rv64_c rv64_d rv64_f rv64_i rv64_m rv64_q rv64_zba rv64_zbb rv64_zbs rv_a rv_c rv_c_d rv_d rv_f rv_i rv_m rv_q rv_s rv_system rv_v rv_zba rv_zbb rv_zbc rv_zbs rv_zicond rv_zicsr rv_zvbb rv_zvbc"; DO NOT EDIT.
++// Code generated by make inst.go EXTENSIONS="rv64_a rv64_c rv64_d rv64_f rv64_i rv64_m rv64_q rv64_zba rv64_zbb rv64_zbs rv_a rv_c rv_c_d rv_d rv_f rv_i rv_m rv_q rv_s rv_system rv_v rv_zba rv_zbb rv_zbc rv_zbs rv_zicond rv_zicsr rv_zvbb rv_zvbc rv_zvkg rv_zvkned rv_zvknha rv_zvknhb rv_zvksed rv_zvksh"; DO NOT EDIT.
+ package riscv
+ 
+ import "cmd/internal/obj"
+@@ -570,6 +570,28 @@ func encode(a obj.As) *inst {
+ 		return &inst{0x57, 0x0, 0x0, 0x0, 0, 0x0}
+ 	case AVADDVX:
+ 		return &inst{0x57, 0x4, 0x0, 0x0, 0, 0x0}
++	case AVAESDFVS:
++		return &inst{0x77, 0x2, 0x1, 0x0, -1440, 0x53}
++	case AVAESDFVV:
++		return &inst{0x77, 0x2, 0x1, 0x0, -1504, 0x51}
++	case AVAESDMVS:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1440, 0x53}
++	case AVAESDMVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1504, 0x51}
++	case AVAESEFVS:
++		return &inst{0x77, 0x2, 0x3, 0x0, -1440, 0x53}
++	case AVAESEFVV:
++		return &inst{0x77, 0x2, 0x3, 0x0, -1504, 0x51}
++	case AVAESEMVS:
++		return &inst{0x77, 0x2, 0x2, 0x0, -1440, 0x53}
++	case AVAESEMVV:
++		return &inst{0x77, 0x2, 0x2, 0x0, -1504, 0x51}
++	case AVAESKF1VI:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1888, 0x45}
++	case AVAESKF2VI:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1376, 0x55}
++	case AVAESZVS:
++		return &inst{0x77, 0x2, 0x7, 0x0, -1440, 0x53}
+ 	case AVANDVI:
+ 		return &inst{0x57, 0x3, 0x0, 0x0, 576, 0x12}
+ 	case AVANDVV:
+@@ -802,6 +824,10 @@ func encode(a obj.As) *inst {
+ 		return &inst{0x57, 0x5, 0x0, 0x0, -640, 0x6c}
+ 	case AVFWSUBWV:
+ 		return &inst{0x57, 0x1, 0x0, 0x0, -640, 0x6c}
++	case AVGHSHVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1248, 0x59}
++	case AVGMULVV:
++		return &inst{0x77, 0x2, 0x11, 0x0, -1504, 0x51}
+ 	case AVIDV:
+ 		return &inst{0x57, 0x2, 0x11, 0x0, 1280, 0x28}
+ 	case AVIOTAM:
+@@ -1512,6 +1538,12 @@ func encode(a obj.As) *inst {
+ 		return &inst{0x57, 0x2, 0x5, 0x0, 1152, 0x24}
+ 	case AVSEXTVF8:
+ 		return &inst{0x57, 0x2, 0x3, 0x0, 1152, 0x24}
++	case AVSHA2CHVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1120, 0x5d}
++	case AVSHA2CLVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1056, 0x5f}
++	case AVSHA2MSVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1184, 0x5b}
+ 	case AVSLIDE1DOWNVX:
+ 		return &inst{0x57, 0x6, 0x0, 0x0, 960, 0x1e}
+ 	case AVSLIDE1UPVX:
+@@ -1530,6 +1562,16 @@ func encode(a obj.As) *inst {
+ 		return &inst{0x57, 0x0, 0x0, 0x0, -1728, 0x4a}
+ 	case AVSLLVX:
+ 		return &inst{0x57, 0x4, 0x0, 0x0, -1728, 0x4a}
++	case AVSM3CVI:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1312, 0x57}
++	case AVSM3MEVV:
++		return &inst{0x77, 0x2, 0x0, 0x0, -2016, 0x41}
++	case AVSM4KVI:
++		return &inst{0x77, 0x2, 0x0, 0x0, -1952, 0x43}
++	case AVSM4RVS:
++		return &inst{0x77, 0x2, 0x10, 0x0, -1440, 0x53}
++	case AVSM4RVV:
++		return &inst{0x77, 0x2, 0x10, 0x0, -1504, 0x51}
+ 	case AVSMV:
+ 		return &inst{0x27, 0x0, 0x0, 0xb, 43, 0x1}
+ 	case AVSMULVV:
+diff --git a/src/cmd/internal/obj/riscv/obj.go b/src/cmd/internal/obj/riscv/obj.go
+index 629a49a91b..5139aa502a 100644
+--- a/src/cmd/internal/obj/riscv/obj.go
++++ b/src/cmd/internal/obj/riscv/obj.go
+@@ -3436,6 +3436,37 @@ var instructions = [ALAST & obj.AMask]instructionData{
+ 	AVCLMULHVV & obj.AMask: {enc: rVVVEncoding},
+ 	AVCLMULHVX & obj.AMask: {enc: rVIVEncoding},
+ 
++	// 32.2.4: Vector GCM/GMAC
++	AVGHSHVV & obj.AMask: {enc: rVVVEncoding},
++	AVGMULVV & obj.AMask: {enc: rVVEncoding},
++
++	// 32.2.5: NIST Suite: Vector AES Block Cipher
++	AVAESEFVV & obj.AMask:  {enc: rVVEncoding},
++	AVAESEFVS & obj.AMask:  {enc: rVVEncoding},
++	AVAESEMVV & obj.AMask:  {enc: rVVEncoding},
++	AVAESEMVS & obj.AMask:  {enc: rVVEncoding},
++	AVAESDFVV & obj.AMask:  {enc: rVVEncoding},
++	AVAESDFVS & obj.AMask:  {enc: rVVEncoding},
++	AVAESDMVV & obj.AMask:  {enc: rVVEncoding},
++	AVAESDMVS & obj.AMask:  {enc: rVVEncoding},
++	AVAESKF1VI & obj.AMask: {enc: rVVuEncoding},
++	AVAESKF2VI & obj.AMask: {enc: rVVuEncoding},
++	AVAESZVS & obj.AMask:   {enc: rVVEncoding},
++
++	// 32.2.6: NIST Suite: Vector SHA-2 Secure Hash
++	AVSHA2MSVV & obj.AMask: {enc: rVVVEncoding},
++	AVSHA2CHVV & obj.AMask: {enc: rVVVEncoding},
++	AVSHA2CLVV & obj.AMask: {enc: rVVVEncoding},
++
++	// 32.2.7: ShangMi Suite: SM4 Block Cipher
++	AVSM4KVI & obj.AMask: {enc: rVVuEncoding},
++	AVSM4RVV & obj.AMask: {enc: rVVEncoding},
++	AVSM4RVS & obj.AMask: {enc: rVVEncoding},
++
++	// 32.2.8: ShangMi Suite: SM3 Secure Hash
++	AVSM3MEVV & obj.AMask: {enc: rVVVEncoding},
++	AVSM3CVI & obj.AMask:  {enc: rVVuEncoding},
++
+ 	//
+ 	// Privileged ISA
+ 	//
+@@ -4794,6 +4825,13 @@ func instructionsForProg(p *obj.Prog, compress bool) []*instruction {
+ 		}
+ 		ins.rd, ins.rs1, ins.rs2, ins.rs3 = uint32(p.To.Reg), uint32(p.From.Reg), uint32(p.Reg), obj.REG_NONE
+ 
++	case AVGHSHVV, AVSHA2MSVV, AVSHA2CHVV, AVSHA2CLVV, AVSM3MEVV:
++		if ins.rs3 != obj.REG_NONE {
++			p.Ctxt.Diag("%v: too many operands for instruction", p)
++		}
++		ins.funct7 |= 1 // unmasked
++		ins.rd, ins.rs1, ins.rs2, ins.rs3 = uint32(p.To.Reg), uint32(p.From.Reg), uint32(p.Reg), obj.REG_NONE
++
+ 	case AVFMACCVV, AVFMACCVF, AVFNMACCVV, AVFNMACCVF, AVFMSACVV, AVFMSACVF, AVFNMSACVV, AVFNMSACVF,
+ 		AVFMADDVV, AVFMADDVF, AVFNMADDVV, AVFNMADDVF, AVFMSUBVV, AVFMSUBVF, AVFNMSUBVV, AVFNMSUBVF,
+ 		AVFWMACCVV, AVFWMACCVF, AVFWNMACCVV, AVFWNMACCVF, AVFWMSACVV, AVFWMSACVF, AVFWNMSACVV, AVFWNMSACVF,
+@@ -4819,6 +4857,13 @@ func instructionsForProg(p *obj.Prog, compress bool) []*instruction {
+ 		}
+ 		ins.rd, ins.rs1, ins.rs2, ins.rs3 = uint32(p.To.Reg), obj.REG_NONE, uint32(p.Reg), obj.REG_NONE
+ 
++	case AVAESKF1VI, AVAESKF2VI, AVSM4KVI, AVSM3CVI:
++		if ins.rs3 != obj.REG_NONE {
++			p.Ctxt.Diag("%v: too many operands for instruction", p)
++		}
++		ins.funct7 |= 1 // unmasked
++		ins.rd, ins.rs1, ins.rs2, ins.rs3 = uint32(p.To.Reg), obj.REG_NONE, uint32(p.Reg), obj.REG_NONE
++
+ 	case AVZEXTVF2, AVSEXTVF2, AVZEXTVF4, AVSEXTVF4, AVZEXTVF8, AVSEXTVF8,
+ 		AVFSQRTV, AVFRSQRT7V, AVFREC7V, AVFCLASSV,
+ 		AVFCVTXUFV, AVFCVTXFV, AVFCVTRTZXUFV, AVFCVTRTZXFV, AVFCVTFXUV, AVFCVTFXV,
+@@ -4835,6 +4880,14 @@ func instructionsForProg(p *obj.Prog, compress bool) []*instruction {
+ 		}
+ 		ins.rs1 = obj.REG_NONE
+ 
++	case AVGMULVV, AVAESEFVV, AVAESEFVS, AVAESEMVV, AVAESEMVS, AVAESDFVV, AVAESDFVS, AVAESDMVV,
++		AVAESDMVS, AVAESZVS, AVSM4RVV, AVSM4RVS:
++		if ins.rs1 != obj.REG_NONE {
++			p.Ctxt.Diag("%v: too many operands for instruction", p)
++		}
++		ins.funct7 |= 1 // unmasked
++		ins.rs1 = obj.REG_NONE
++
+ 	case AVMVVV, AVMVVX:
+ 		if ins.rs1 != obj.REG_NONE {
+ 			p.Ctxt.Diag("%v: too many operands for instruction", p)
+-- 
+2.47.3
+

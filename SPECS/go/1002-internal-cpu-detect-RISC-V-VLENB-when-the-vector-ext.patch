@@ -1,0 +1,116 @@
+From 3ee102060c19a9d9193f2c45c0846e07a7e34c30 Mon Sep 17 00:00:00 2001
+From: Julian Zhu <julian.oerv@isrc.iscas.ac.cn>
+Date: Mon, 27 Jul 2026 15:47:43 +0800
+Subject: [PATCH 1/4] internal/cpu: detect RISC-V VLENB when the vector
+ extension is available
+
+Add detection of the RISC-V V extension and the hardware VLENB at startup,
+so that the runtime and compiler can gate vector code paths on both
+presence and compatible register width.
+
+Updates #78902
+
+Change-Id: I4f0f2126f53cbb982509ed865b30521631c58eb5
+Reviewed-on: https://go-review.googlesource.com/c/go/+/801681
+Reviewed-by: Keith Randall <khr@google.com>
+LUCI-TryBot-Result: golang-scoped@luci-project-accounts.iam.gserviceaccount.com <golang-scoped@luci-project-accounts.iam.gserviceaccount.com>
+Reviewed-by: Meng Zhuo <mengzhuo1203@gmail.com>
+Reviewed-by: Joel Sing <joel@sing.id.au>
+Reviewed-by: Dmitri Shuralyov <dmitshur@google.com>
+---
+ src/internal/cpu/cpu.go              |  1 +
+ src/internal/cpu/cpu_riscv64.go      | 16 ++++++++++++++++
+ src/internal/cpu/cpu_riscv64.s       | 13 +++++++++++++
+ src/internal/cpu/cpu_riscv64_test.go | 18 ++++++++++++++++++
+ 4 files changed, 48 insertions(+)
+ create mode 100644 src/internal/cpu/cpu_riscv64.s
+ create mode 100644 src/internal/cpu/cpu_riscv64_test.go
+
+diff --git a/src/internal/cpu/cpu.go b/src/internal/cpu/cpu.go
+index 5942544ad9..abdef3f52c 100644
+--- a/src/internal/cpu/cpu.go
++++ b/src/internal/cpu/cpu.go
+@@ -171,6 +171,7 @@ var RISCV64 struct {
+ 	HasZvksed         bool // ShangMi Suite: SM4 Block Cipher
+ 	HasZvksh          bool // ShangMi Suite: SM3 Secure Hash
+ 	HasZvkt           bool // Vector Data-Independent Execution Latency
++	VLENB             uint // Vector register length in bytes, 0 if undetected
+ 	_                 CacheLinePad
+ }
+ 
+diff --git a/src/internal/cpu/cpu_riscv64.go b/src/internal/cpu/cpu_riscv64.go
+index 7028d31cf4..b7018597e0 100644
+--- a/src/internal/cpu/cpu_riscv64.go
++++ b/src/internal/cpu/cpu_riscv64.go
+@@ -24,9 +24,25 @@ func doinit() {
+ 		{Name: "zvksh", Feature: &RISCV64.HasZvksh},
+ 		{Name: "zvkt", Feature: &RISCV64.HasZvkt},
+ 	}
++
++	doDerived = func() {
++		// If the vector extension is disabled by GODEBUG, then the VLENB is zero.
++		if !RISCV64.HasV {
++			RISCV64.VLENB = 0
++		}
++	}
++
+ 	osInit()
++	if RISCV64.HasV {
++		RISCV64.VLENB = readVLENB()
++	}
+ }
+ 
+ func isSet(hwc uint, value uint) bool {
+ 	return hwc&value != 0
+ }
++
++// Read the vector register length in bytes from the vlenb CSR.
++// May only be called when the vector extension is present.
++// Implemented in cpu_riscv64.s.
++func readVLENB() uint
+diff --git a/src/internal/cpu/cpu_riscv64.s b/src/internal/cpu/cpu_riscv64.s
+new file mode 100644
+index 0000000000..6108a3cd0a
+--- /dev/null
++++ b/src/internal/cpu/cpu_riscv64.s
+@@ -0,0 +1,13 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++#include "textflag.h"
++
++// Read the vector register length in bytes from the vlenb CSR.
++// May only be called when the vector extension is present.
++// func readVLENB() uint
++TEXT ·readVLENB(SB), NOSPLIT|NOFRAME, $0-8
++	CSRR	VLENB, X10
++	MOV	X10, ret+0(FP)
++	RET
+diff --git a/src/internal/cpu/cpu_riscv64_test.go b/src/internal/cpu/cpu_riscv64_test.go
+new file mode 100644
+index 0000000000..5a2f45b9cc
+--- /dev/null
++++ b/src/internal/cpu/cpu_riscv64_test.go
+@@ -0,0 +1,18 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++//go:build riscv64
++
++package cpu_test
++
++import (
++	. "internal/cpu"
++	"testing"
++)
++
++func TestRISCV64VectorLength(t *testing.T) {
++	if RISCV64.HasV && RISCV64.VLENB == 0 {
++		t.Fatal("VLENB should be non-zero when HasV is true")
++	}
++}
+-- 
+2.47.3
+

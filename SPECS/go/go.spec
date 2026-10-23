@@ -77,6 +77,11 @@ Requires:       glibc
 %patchlist
 # These tests are fragile on our OBS x86-64.
 2000-remove-fragile-tests-on-obs.patch
+# Backport Zvk SHA-2 support for RISC-V from Go master
+1001-cmd-asm-cmd-internal-obj-add-crypto-algorithm-suites.patch
+1002-internal-cpu-detect-RISC-V-VLENB-when-the-vector-ext.patch
+1003-crypto-internal-fips140-sha256-enable-zvknha-for-ris.patch
+1004-crypto-internal-fips140-sha512-enable-zvknhb-for-ris.patch
 
 %description
 The Go Programming Language. This package contains the compiler, tools,

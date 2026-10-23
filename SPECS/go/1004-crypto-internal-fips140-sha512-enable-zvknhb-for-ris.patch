@@ -1,0 +1,294 @@
+From d3594dd20b7a05fbd309bb8426b7206a1cca5471 Mon Sep 17 00:00:00 2001
+From: Meng Zhuo <mengzhuo@iscas.ac.cn>
+Date: Tue, 17 Mar 2026 11:11:50 +0800
+Subject: [PATCH 2/2] crypto/internal/fips140/sha512: enable zvknhb for riscv64
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Enable zvknhb support for riscv64
+
+goos: linux
+goarch: riscv64
+pkg: crypto/sha512
+cpu: Spacemit(R) X100
+                  │ /root/sha512.old.bench │       /root/sha512.new.bench        │
+                  │         sec/op         │   sec/op     vs base                │
+Hash8Bytes/New                 789.8n ± 0%   553.1n ± 0%  -29.96% (p=0.000 n=10)
+Hash8Bytes/Sum384              848.7n ± 0%   613.8n ± 0%  -27.68% (p=0.000 n=10)
+Hash8Bytes/Sum512              884.2n ± 0%   648.2n ± 0%  -26.69% (p=0.000 n=10)
+Hash1K/New                     4.371µ ± 0%   2.063µ ± 0%  -52.81% (p=0.000 n=10)
+Hash1K/Sum384                  4.418µ ± 0%   2.127µ ± 0%  -51.86% (p=0.000 n=10)
+Hash1K/Sum512                  4.483µ ± 0%   2.172µ ± 0%  -51.54% (p=0.000 n=10)
+Hash8K/New                     29.68µ ± 0%   12.58µ ± 0%  -57.63% (p=0.000 n=10)
+Hash8K/Sum384                  29.72µ ± 0%   12.63µ ± 0%  -57.49% (p=0.000 n=10)
+Hash8K/Sum512                  29.78µ ± 0%   12.68µ ± 0%  -57.43% (p=0.000 n=10)
+geomean                        4.798µ        2.529µ       -47.30%
+
+                  │ /root/sha512.old.bench │         /root/sha512.new.bench         │
+                  │          B/s           │      B/s       vs base                 │
+Hash8Bytes/New                9.661Mi ± 0%   13.790Mi ± 0%   +42.74% (p=0.000 n=10)
+Hash8Bytes/Sum384             8.993Mi ± 0%   12.431Mi ± 0%   +38.23% (p=0.000 n=10)
+Hash8Bytes/Sum512             8.631Mi ± 0%   11.773Mi ± 0%   +36.41% (p=0.000 n=10)
+Hash1K/New                    223.4Mi ± 0%    473.5Mi ± 0%  +111.96% (p=0.000 n=10)
+Hash1K/Sum384                 221.0Mi ± 0%    459.1Mi ± 0%  +107.70% (p=0.000 n=10)
+Hash1K/Sum512                 217.8Mi ± 0%    449.5Mi ± 0%  +106.36% (p=0.000 n=10)
+Hash8K/New                    263.2Mi ± 0%    621.3Mi ± 0%  +136.00% (p=0.000 n=10)
+Hash8K/Sum384                 262.9Mi ± 0%    618.4Mi ± 0%  +135.24% (p=0.000 n=10)
+Hash8K/Sum512                 262.3Mi ± 0%    616.2Mi ± 0%  +134.92% (p=0.000 n=10)
+geomean                       80.78Mi         153.3Mi        +89.75%
+
+Updates #77328
+
+Change-Id: Ib1fc8bce55df1dd5a3b9c1dd0029aa0da96c6a48
+Reviewed-on: https://go-review.googlesource.com/c/go/+/755840
+Reviewed-by: Julian Zhu <jz531210@gmail.com>
+LUCI-TryBot-Result: golang-scoped@luci-project-accounts.iam.gserviceaccount.com <golang-scoped@luci-project-accounts.iam.gserviceaccount.com>
+Reviewed-by: Junyang Shao <shaojunyang@google.com>
+Reviewed-by: Cherry Mui <cherryyz@google.com>
+Reviewed-by: Joel Sing <joel@sing.id.au>
+---
+ .../fips140/sha512/sha512block_asm.go         |   2 +-
+ .../fips140/sha512/sha512block_riscv64.go     |  32 ++++
+ .../fips140/sha512/sha512block_riscv64.s      | 156 +++++++++++++++++-
+ src/crypto/internal/fips140deps/cpu/cpu.go    |   1 +
+ 4 files changed, 188 insertions(+), 3 deletions(-)
+ create mode 100644 src/crypto/internal/fips140/sha512/sha512block_riscv64.go
+
+diff --git a/src/crypto/internal/fips140/sha512/sha512block_asm.go b/src/crypto/internal/fips140/sha512/sha512block_asm.go
+index 532345108f..351dde23bc 100644
+--- a/src/crypto/internal/fips140/sha512/sha512block_asm.go
++++ b/src/crypto/internal/fips140/sha512/sha512block_asm.go
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+-//go:build (loong64 || riscv64) && !purego
++//go:build loong64 && !purego
+ 
+ package sha512
+ 
+diff --git a/src/crypto/internal/fips140/sha512/sha512block_riscv64.go b/src/crypto/internal/fips140/sha512/sha512block_riscv64.go
+new file mode 100644
+index 0000000000..b3ab08bad0
+--- /dev/null
++++ b/src/crypto/internal/fips140/sha512/sha512block_riscv64.go
+@@ -0,0 +1,32 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++//go:build !purego
++
++package sha512
++
++import (
++	"crypto/internal/fips140deps/cpu"
++	"crypto/internal/impl"
++)
++
++var supportsZvknhb = cpu.RISCV64HasZvknhb && cpu.RISCV64HasZvbb && cpu.RISCV64VLENB >= 32
++
++func init() {
++	impl.Register("sha512", "Zvknhb", &supportsZvknhb)
++}
++
++//go:noescape
++func blockZvknhb(dig *Digest, p []byte)
++
++//go:noescape
++func blockScalar(dig *Digest, p []byte)
++
++func block(dig *Digest, p []byte) {
++	if supportsZvknhb {
++		blockZvknhb(dig, p)
++	} else {
++		blockScalar(dig, p)
++	}
++}
+diff --git a/src/crypto/internal/fips140/sha512/sha512block_riscv64.s b/src/crypto/internal/fips140/sha512/sha512block_riscv64.s
+index f25ed62237..c156688625 100644
+--- a/src/crypto/internal/fips140/sha512/sha512block_riscv64.s
++++ b/src/crypto/internal/fips140/sha512/sha512block_riscv64.s
+@@ -149,8 +149,8 @@
+ 	MSGSCHEDULE1(index); \
+ 	SHA512ROUND(index, a, b, c, d, e, f, g, h)
+ 
+-// func block(dig *Digest, p []byte)
+-TEXT ·block(SB),0,$128-32
++// func blockScalar(dig *Digest, p []byte)
++TEXT ·blockScalar(SB),0,$128-32
+ 	MOV	p_base+8(FP), X29
+ 	MOV	p_len+16(FP), X30
+ 	SRL	$7, X30
+@@ -285,3 +285,155 @@ loop:
+ 
+ end:
+ 	RET
++
++// Zvknb requires MessageSched plus Constants
++// VADDVV	K[t:t+3], W[t:t+3], V6	// V6 = W[0] + K[0] ... W[3] + K[3]
++// VSHA2CLVV	V6, V2, V3
++// VSHA2CHVV	V6, V3, V2	// Update states
++//
++// Reuse W[t:t+3] for next schedule
++// VMERGEVVM	W[t+4:t+7], W[t+8:t+11], V0, V7
++// VSHA2MSVV	W[t+12:t+15], V7, Wnext	// Now Wnext = W[t+16:t+19]
++#define ZVKNBROUND(K, WP0) \
++	VADDVV		K, WP0, V6; \
++	VSHA2CLVV	V6, V2, V3; \
++	VSHA2CHVV	V6, V3, V2
++
++#define ZVKNBMSGSCHEDULE(WP0, WP4, WP8, WP12) \
++	VMERGEVVM	WP4, WP8, V0, V7; \
++	VSHA2MSVV	WP12, V7, WP0
++
++
++// func blockZvknhb(dig *Digest, p []byte)
++TEXT ·blockZvknhb(SB),0,$0-32
++	MOV	dig+0(FP), X10
++	MOV	p_base+8(FP), X11
++	MOV	p_len+16(FP), X12
++
++	VSETIVLI	$4, E64, M1, TA, MA, X0
++
++	// Notes from RISC-V manual 33.3.22
++	// The {W11, W10, W9, W4} element group can easily be formed by using a vector
++	// vmerge instruction with the appropriate mask
++	// (for example with vl=4 and 4b0001 as the 4 mask bits)
++	VMVVI	$1, V0
++
++	MOV	$state_mask<>(SB), X14
++	VLE64V	(X14), V1
++	ADD	$16, X10, X15
++	VLUXEI64V	(X10), V1, V2	// V2 = F, E, B, A
++	VLUXEI64V	(X15), V1, V3	// V3 = H, G, D, C
++
++	MOV	$·_K(SB), X14
++	VLE64V	(X14), V8
++	ADD	$32, X14
++	VLE64V	(X14), V9
++	ADD	$32, X14
++	VLE64V	(X14), V10
++	ADD	$32, X14
++	VLE64V	(X14), V11
++	ADD	$32, X14
++	VLE64V	(X14), V12
++	ADD	$32, X14
++	VLE64V	(X14), V13
++	ADD	$32, X14
++	VLE64V	(X14), V14
++	ADD	$32, X14
++	VLE64V	(X14), V15
++	ADD	$32, X14
++	VLE64V	(X14), V16
++	ADD	$32, X14
++	VLE64V	(X14), V17
++	ADD	$32, X14
++	VLE64V	(X14), V18
++	ADD	$32, X14
++	VLE64V	(X14), V19
++	ADD	$32, X14
++	VLE64V	(X14), V20
++	ADD	$32, X14
++	VLE64V	(X14), V21
++	ADD	$32, X14
++	VLE64V	(X14), V22
++	ADD	$32, X14
++	VLE64V	(X14), V23
++	ADD	$32, X14
++	VLE64V	(X14), V24
++	ADD	$32, X14
++	VLE64V	(X14), V25
++	ADD	$32, X14
++	VLE64V	(X14), V26
++	ADD	$32, X14
++	VLE64V	(X14), V27
++
++loop:
++	VMV2RV	V2, V4			// V4, V5 = V2, V3, add later
++
++	VLE64V	(X11), V28
++	VREV8V	V28, V28
++	ADD	$32, X11
++	VLE64V	(X11), V29
++	VREV8V	V29, V29
++	ADD	$32, X11
++	VLE64V	(X11), V30
++	VREV8V	V30, V30
++	ADD	$32, X11
++	VLE64V	(X11), V31
++	VREV8V	V31, V31
++	ADD	$32, X11
++
++	ZVKNBROUND(V8, V28)
++	ZVKNBMSGSCHEDULE(V28, V29, V30, V31)
++	ZVKNBROUND(V9, V29)
++	ZVKNBMSGSCHEDULE(V29, V30, V31, V28)
++	ZVKNBROUND(V10, V30)
++	ZVKNBMSGSCHEDULE(V30, V31, V28, V29)
++	ZVKNBROUND(V11, V31)
++	ZVKNBMSGSCHEDULE(V31, V28, V29, V30)
++
++	ZVKNBROUND(V12, V28)
++	ZVKNBMSGSCHEDULE(V28, V29, V30, V31)
++	ZVKNBROUND(V13, V29)
++	ZVKNBMSGSCHEDULE(V29, V30, V31, V28)
++	ZVKNBROUND(V14, V30)
++	ZVKNBMSGSCHEDULE(V30, V31, V28, V29)
++	ZVKNBROUND(V15, V31)
++	ZVKNBMSGSCHEDULE(V31, V28, V29, V30)
++
++	ZVKNBROUND(V16, V28)
++	ZVKNBMSGSCHEDULE(V28, V29, V30, V31)
++	ZVKNBROUND(V17, V29)
++	ZVKNBMSGSCHEDULE(V29, V30, V31, V28)
++	ZVKNBROUND(V18, V30)
++	ZVKNBMSGSCHEDULE(V30, V31, V28, V29)
++	ZVKNBROUND(V19, V31)
++	ZVKNBMSGSCHEDULE(V31, V28, V29, V30)
++
++	ZVKNBROUND(V20, V28)
++	ZVKNBMSGSCHEDULE(V28, V29, V30, V31)
++	ZVKNBROUND(V21, V29)
++	ZVKNBMSGSCHEDULE(V29, V30, V31, V28)
++	ZVKNBROUND(V22, V30)
++	ZVKNBMSGSCHEDULE(V30, V31, V28, V29)
++	ZVKNBROUND(V23, V31)
++	ZVKNBMSGSCHEDULE(V31, V28, V29, V30)
++
++	ZVKNBROUND(V24, V28)
++	ZVKNBROUND(V25, V29)
++	ZVKNBROUND(V26, V30)
++	ZVKNBROUND(V27, V31)
++
++	VADDVV	V4, V2, V2
++	VADDVV	V5, V3, V3
++
++	SUB	$128, X12
++	BNEZ	X12, loop
++
++	VSUXEI64V	V2, V1, (X10)
++	VSUXEI64V	V3, V1, (X15)
++	RET
++
++DATA state_mask<>+0(SB)/8,  $40
++DATA state_mask<>+8(SB)/8,  $32
++DATA state_mask<>+16(SB)/8, $8
++DATA state_mask<>+24(SB)/8, $0
++GLOBL state_mask<>(SB), RODATA, $32
+diff --git a/src/crypto/internal/fips140deps/cpu/cpu.go b/src/crypto/internal/fips140deps/cpu/cpu.go
+index c7d5be2f78..73f06d41ac 100644
+--- a/src/crypto/internal/fips140deps/cpu/cpu.go
++++ b/src/crypto/internal/fips140deps/cpu/cpu.go
+@@ -30,6 +30,7 @@ var (
+ 	RISCV64HasV      = cpu.RISCV64.HasV
+ 	RISCV64HasZvbb   = cpu.RISCV64.HasZvbb
+ 	RISCV64HasZvknha = cpu.RISCV64.HasZvknha
++	RISCV64HasZvknhb = cpu.RISCV64.HasZvknhb
+ 	RISCV64VLENB     = cpu.RISCV64.VLENB
+ 
+ 	S390XHasAES    = cpu.S390X.HasAES
+-- 
+2.56.0
+
