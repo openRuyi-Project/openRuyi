@@ -9,13 +9,13 @@
 %global pypi_name sagemaker_core
 
 Name:           python-%{srcname}
-Version:        2.20.0
+Version:        2.26.0
 Release:        %autorelease
 Summary:        A library for training and deploying machine learning models on Amazon SageMaker
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:1b8eaf0b6550c682471989e3a0927948deae0d3c903fc9891c5faa5c1c388ad3
+#!RemoteAsset:  sha256:c87d95d6c10da3b9f8130729332c7b9b5a8826ecb6120d40f165239ce5dbc090
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

@@ -8,18 +8,20 @@
 %global pypi_name sagemaker_mlops
 
 Name:           python-%{srcname}
-Version:        1.8.0
+Version:        1.26.0
 Release:        %autorelease
 Summary:        A library for MLOps on Amazon SageMaker
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:b4738d72b3c2e11a54ef9a751db6b5e33fa863556732cb3b8161698d4b4af2f1
+#!RemoteAsset:  sha256:045a26a0873a3f124d6d7479c893f91ffa75ad5d2df173056a78931596197c53
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l sagemaker
+# Feature Processor imports require the optional feature-processor PySpark extra.
+BuildOption(check):  -e 'sagemaker.mlops.feature_store.feature_processor*'
 
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -41,8 +43,13 @@ sed -i '\|/sagemaker/__pycache__/__init__|d' %{pyproject_files}
 %generate_buildrequires
 %pyproject_buildrequires
 
-# No module named 'docker'
-%check
+# SDK initialization needs a region; instance metadata is unavailable during builds.
+%check -p
+export AWS_DEFAULT_REGION=us-east-1
+export AWS_EC2_METADATA_DISABLED=true
+
+%check -a
+PYTHONPATH=%{buildroot}%{python3_sitelib} %{__python3} -c 'from sagemaker.mlops.workflow.pipeline import Pipeline'
 
 %files -f %{pyproject_files}
 %doc README.md

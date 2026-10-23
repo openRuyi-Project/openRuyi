@@ -7,13 +7,13 @@
 %global srcname sagemaker
 
 Name:           python-%{srcname}
-Version:        3.8.0
+Version:        3.26.0
 Release:        %autorelease
 Summary:        A library for training and deploying machine learning models on Amazon SageMaker
 License:        Apache-2.0
 URL:            https://sagemaker.readthedocs.io/en/stable/
 VCS:            git:https://github.com/aws/sagemaker-python-sdk.git
-#!RemoteAsset:  sha256:7b6663186b066cac9916701c8734e3182874a70cfddec7389a1e0edb07fe03c1
+#!RemoteAsset:  sha256:b159455811027ce6b1842876361ff57071e863063ece6a3d277e6c0f054bc173
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject

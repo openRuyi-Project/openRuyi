@@ -1,0 +1,111 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] train: use the string converters without importing GraphQL
+
+ModelTrainer only uses Graphene for its two string conversion helpers.
+The Graphene dependency cannot be resolved with the distribution's GraphQL
+3.3 package. Include the unchanged helpers and their upstream tests from
+Graphene 3.4.3 so training does not pull in the GraphQL stack.
+
+The copied files remain covered by the bundled upstream MIT license.
+
+Upstream-Status: Inappropriate [distribution dependency compatibility]
+Reference: https://github.com/graphql-python/graphene/issues/1609
+Reference: https://github.com/graphql-python/graphene/blob/v3.4.3/graphene/utils/str_converters.py
+Reference: https://github.com/graphql-python/graphene/blob/v3.4.3/graphene/utils/tests/test_str_converters.py
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -34,7 +34,6 @@
+ ]
+ dependencies = [
+     "sagemaker-core>=2.26.0",
+-    "graphene>=3,<4",
+     "typing_extensions>=4.9.0",
+     "tblib>=1.7.0",
+     "PyYAML>=6.0,<7.0",
+@@ -63,7 +62,6 @@
+     "pandas",
+     "scipy",
+     "omegaconf",
+-    "graphene",
+     "IPython",
+     "transformers",
+ ]
+--- a/src/sagemaker/train/model_trainer.py
++++ b/src/sagemaker/train/model_trainer.py
+@@ -25,7 +25,7 @@
+ import yaml
+ 
+ from botocore.exceptions import ClientError, NoCredentialsError, NoRegionError
+-from graphene.utils.str_converters import to_camel_case, to_snake_case
++from sagemaker.train._str_converters import to_camel_case, to_snake_case
+ from sagemaker.core.config.config_manager import SageMakerConfig
+ from sagemaker.core import resources
+ from sagemaker.core.resources import TrainingJob
+--- /dev/null
++++ b/src/sagemaker/train/_str_converters.py
+@@ -0,0 +1,17 @@
++import re
++
++
++# Adapted from this response in Stackoverflow
++# http://stackoverflow.com/a/19053800/1072990
++def to_camel_case(snake_str):
++    components = snake_str.split("_")
++    # We capitalize the first letter of each component except the first one
++    # with the 'capitalize' method and join them together.
++    return components[0] + "".join(x.capitalize() if x else "_" for x in components[1:])
++
++
++# From this response in Stackoverflow
++# http://stackoverflow.com/a/1176023/1072990
++def to_snake_case(name):
++    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
++    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
+--- /dev/null
++++ b/LICENSE.graphene
+@@ -0,0 +1,21 @@
++The MIT License (MIT)
++
++Copyright (c) 2015-Present Syrus Akbary
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+--- /dev/null
++++ b/tests/test_str_converters.py
+@@ -0,0 +1,19 @@
++# coding: utf-8
++from sagemaker.train._str_converters import to_camel_case, to_snake_case
++
++
++def test_snake_case():
++    assert to_snake_case("snakesOnAPlane") == "snakes_on_a_plane"
++    assert to_snake_case("SnakesOnAPlane") == "snakes_on_a_plane"
++    assert to_snake_case("SnakesOnA_Plane") == "snakes_on_a__plane"
++    assert to_snake_case("snakes_on_a_plane") == "snakes_on_a_plane"
++    assert to_snake_case("snakes_on_a__plane") == "snakes_on_a__plane"
++    assert to_snake_case("IPhoneHysteria") == "i_phone_hysteria"
++    assert to_snake_case("iPhoneHysteria") == "i_phone_hysteria"
++
++
++def test_camel_case():
++    assert to_camel_case("snakes_on_a_plane") == "snakesOnAPlane"
++    assert to_camel_case("snakes_on_a__plane") == "snakesOnA_Plane"
++    assert to_camel_case("i_phone_hysteria") == "iPhoneHysteria"
++    assert to_camel_case("field_i18n") == "fieldI18n"
