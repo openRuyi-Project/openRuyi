@@ -1,0 +1,16 @@
+Pass diagnostic text as data instead of interpreting it as a format string.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/sanposhiho/wastedassign/blob/v2.1.0/wastedassign.go
+
+--- a/wastedassign.go
++++ b/wastedassign.go
+@@ -142,7 +142,7 @@
+ 	}
+ 
+ 	for _, was := range wastedAssignMap {
+-		pass.Reportf(was.pos, was.reason)
++		pass.Reportf(was.pos, "%s", was.reason)
+ 	}
+ 
+ 	return nil, nil

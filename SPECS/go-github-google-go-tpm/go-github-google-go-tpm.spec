@@ -5,13 +5,12 @@
 
 %define _name           go-tpm
 %define go_import_path  github.com/google/go-tpm
-# TPMDirect and legacy integration tests depend on the optional Microsoft TPM
-# simulator, which is not part of the packaged production source tree.
+# Keep integration tests requiring the optional Microsoft TPM simulator out of
+# the OBS test run, while shipping the simulator transport package for consumers.
 %define go_test_exclude %{shrink:
     %{go_import_path}/legacy/tpm2/test
     %{go_import_path}/tpm2
     %{go_import_path}/tpm2/test
-    %{go_import_path}/tpm2/transport/simulator
 }
 
 Name:           go-github-google-go-tpm
@@ -34,6 +33,7 @@ BuildRequires:  go(github.com/google/go-cmp)
 BuildRequires:  go(golang.org/x/sys)
 
 Provides:       go(github.com/google/go-tpm) = %{version}
+Provides:       go(github.com/google/go-tpm/tpm2/transport/simulator) = %{version}
 
 Requires:       go(golang.org/x/sys)
 
@@ -45,8 +45,6 @@ Go-TPM provides Go libraries for communicating directly with TPM 1.2 and TPM
 %doc README.md
 %license LICENSE
 %{go_sys_gopath}/%{go_import_path}
-# The TPM transport simulator is used only by the excluded test packages.
-%exclude %{go_sys_gopath}/%{go_import_path}/tpm2/transport/simulator
 
 %changelog
 %autochangelog

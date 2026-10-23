@@ -25,6 +25,8 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/sync) = %{version}
+Provides:       go(golang.org/x/sync/errgroup) = %{version}
+Provides:       go(golang.org/x/sync/semaphore) = %{version}
 
 %description
 This package provides supplemental Go libraries (golang.org/x/sync) that

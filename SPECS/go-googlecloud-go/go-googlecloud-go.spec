@@ -27,6 +27,10 @@ BuildRequires:  go(cloud.google.com/go/auth)
 BuildRequires:  go(cloud.google.com/go/auth/oauth2adapt)
 BuildRequires:  go(cloud.google.com/go/compute/metadata)
 BuildRequires:  go(cloud.google.com/go/iam)
+BuildRequires:  go(cloud.google.com/go/internal)
+BuildRequires:  go(cloud.google.com/go/internal/detect)
+BuildRequires:  go(cloud.google.com/go/internal/pubsub)
+BuildRequires:  go(cloud.google.com/go/longrunning)
 BuildRequires:  go(cloud.google.com/go/monitoring)
 BuildRequires:  go(cloud.google.com/go/storage)
 BuildRequires:  go(github.com/cespare/xxhash/v2)
@@ -48,9 +52,13 @@ BuildRequires:  go(github.com/GoogleCloudPlatform/opentelemetry-operations-go/ex
 BuildRequires:  go(github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping)
 BuildRequires:  go(github.com/spiffe/go-spiffe/v2)
 BuildRequires:  go(github.com/zeebo/errs)
+BuildRequires:  go(go.einride.tech/aip)
+BuildRequires:  go(go.opencensus.io)
 BuildRequires:  go(go.opentelemetry.io/auto/sdk)
 BuildRequires:  go(go.opentelemetry.io/contrib/detectors/gcp)
 BuildRequires:  go(go.opentelemetry.io/contrib)
+BuildRequires:  go(go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc)
+BuildRequires:  go(go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp)
 BuildRequires:  go(go.opentelemetry.io/otel)
 BuildRequires:  go(go.opentelemetry.io/otel/metric)
 BuildRequires:  go(go.opentelemetry.io/otel/sdk)
@@ -70,10 +78,23 @@ BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(cloud.google.com/go) = %{version}
+Provides:       go(cloud.google.com/go/confidentialcomputing) = %{version}
+Provides:       go(cloud.google.com/go/functions) = %{version}
+Provides:       go(cloud.google.com/go/kms) = %{version}
+Provides:       go(cloud.google.com/go/pubsub) = %{version}
+Provides:       go(cloud.google.com/go/pubsub/v2) = %{version}
 Provides:       go(cloud.google.com/go/secretmanager) = %{ver_secretmanager}
 
 Requires:       go(cloud.google.com/go/iam)
+Requires:       go(cloud.google.com/go/internal)
+Requires:       go(cloud.google.com/go/internal/detect)
+Requires:       go(cloud.google.com/go/internal/pubsub)
+Requires:       go(cloud.google.com/go/longrunning)
 Requires:       go(github.com/googleapis/gax-go/v2)
+Requires:       go(go.einride.tech/aip)
+Requires:       go(go.opencensus.io)
+Requires:       go(go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc)
+Requires:       go(go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp)
 Requires:       go(google.golang.org/api)
 Requires:       go(google.golang.org/genproto)
 Requires:       go(google.golang.org/genproto/googleapis/api)
@@ -81,9 +102,10 @@ Requires:       go(google.golang.org/grpc)
 Requires:       go(google.golang.org/protobuf)
 
 %description
-This package provides the root cloud.google.com/go import path and common
-metadata for Google Cloud Go client modules, including the Secret Manager
-client already present in this archive.
+This package provides the root cloud.google.com/go import path and Google
+Cloud client sources, including Secret Manager, Cloud KMS, Cloud Functions,
+Confidential Computing, and Pub/Sub. Separately packaged modules are excluded
+from this aggregate package to avoid overlapping files.
 
 %check
 export GO111MODULE=off
@@ -92,6 +114,14 @@ rm -rf "%{_builddir}/go/src/%{go_import_path}"
 mkdir -p "%{_builddir}/go/src/$(dirname "%{go_import_path}")"
 cp -a . "%{_builddir}/go/src/%{go_import_path}"
 cd "%{_builddir}/go/src/%{go_import_path}"
+# These dependencies are excluded from this RPM. Test against their installed
+# sources instead of accidentally using the archive's private copies; stage
+# them beside this module to preserve Go internal-package visibility.
+for module in auth compute/metadata iam internal longrunning; do
+    rm -rf "$module"
+    mkdir -p "$(dirname "$module")"
+    cp -a "%{go_sys_gopath}/%{go_import_path}/$module" "$module"
+done
 # The default golangmodules check expands ./... across thousands of generated
 # cloud client and snippet packages; OBS killed that run with "Logfile got too
 # big". This aggregate package is only needed for the root import path, while
@@ -100,6 +130,12 @@ go test -v %{go_import_path}
 # Verify the complete Secret Manager module before exporting its provider.
 cd secretmanager
 go test -v ./...
+cd ..
+# These modules are already installed by the aggregate package. Test their
+# complete trees before advertising the additional module providers.
+for module in confidentialcomputing functions kms pubsub; do
+    (cd "$module" && go test -v ./...)
+done
 
 %files
 %doc CONTRIBUTING.md

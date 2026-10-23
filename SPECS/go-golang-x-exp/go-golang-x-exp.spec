@@ -48,6 +48,7 @@ BuildRequires:  go(golang.org/x/mod)
 BuildRequires:  go(golang.org/x/tools)
 
 Provides:       go(golang.org/x/exp) = %{version}
+Provides:       go(golang.org/x/exp/typeparams) = %{version}
 
 Requires:       go(github.com/google/go-cmp)
 Requires:       go(golang.org/x/mod)

@@ -30,6 +30,9 @@ Provides:       go(github.com/charmbracelet/x) = %{version}
 Provides:       go(github.com/charmbracelet/x/ansi) = 0.11.6
 Provides:       go(github.com/charmbracelet/x/cellbuf) = 0.0.15
 Provides:       go(github.com/charmbracelet/x/term) = 0.2.2
+# These modules are also present in the installed repository snapshot.
+Provides:       go(github.com/charmbracelet/x/termios) = %{version}
+Provides:       go(github.com/charmbracelet/x/windows) = %{version}
 
 Requires:       go(github.com/bits-and-blooms/bitset)
 Requires:       go(github.com/clipperhouse/displaywidth)

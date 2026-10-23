@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 23 Oct 2026 16:00:00 +0000
+Subject: [PATCH] Adjust diagnose test for missing Go module build info
+
+The OBS Go test binary reports that its module metadata is unavailable.
+Match the diagnostic golden to that build environment.
+
+---
+ testdata/script/diagnose.txtar | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/testdata/script/diagnose.txtar b/testdata/script/diagnose.txtar
+index 0000000..0000000 100644
+--- a/testdata/script/diagnose.txtar
++++ b/testdata/script/diagnose.txtar
+@@ -76,7 +76,7 @@ package p
+ -- foo.go.golden --
+ package p
+ 
+-//gofumpt:diagnose version: (devel) (go1.18.29) flags: -lang=go1.16 -modpath=test
++//gofumpt:diagnose version: (module not found) (go1.18.29) flags: -lang=go1.16 -modpath=test
+ -- foo.go.golden-extra --
+ package p
+ 
+-- 
+2.51.0

@@ -42,6 +42,15 @@ BuildRequires:  go-golang-x-tools-go-expect
 BuildRequires:  go-rpm-macros
 
 Provides:       go(honnef.co/go/tools) = %{version}
+Provides:       go(honnef.co/go/tools/analysis/facts/directives) = %{version}
+Provides:       go(honnef.co/go/tools/analysis/facts/generated) = %{version}
+Provides:       go(honnef.co/go/tools/analysis/lint) = %{version}
+Provides:       go(honnef.co/go/tools/config) = %{version}
+Provides:       go(honnef.co/go/tools/quickfix) = %{version}
+Provides:       go(honnef.co/go/tools/simple) = %{version}
+Provides:       go(honnef.co/go/tools/staticcheck) = %{version}
+Provides:       go(honnef.co/go/tools/stylecheck) = %{version}
+Provides:       go(honnef.co/go/tools/unused) = %{version}
 
 Requires:       go(github.com/BurntSushi/toml)
 Requires:       go(golang.org/x/exp)

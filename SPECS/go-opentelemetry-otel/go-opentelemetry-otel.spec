@@ -40,6 +40,7 @@ BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/otel) = %{version}
 Provides:       go(go.opentelemetry.io/otel/attribute) = %{version}
+Provides:       go(go.opentelemetry.io/otel/codes) = %{version}
 Provides:       go(go.opentelemetry.io/otel/propagation) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.17.0) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.43.0) = %{version}
@@ -56,7 +57,6 @@ Provides:       go(go.opentelemetry.io/otel/sdk/metric/metricdata) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log/logtest) = %{version}
 Provides:       go(go.opentelemetry.io/otel/trace) = %{version}
-
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/go-logr/logr)
 Requires:       go(github.com/go-logr/stdr)

@@ -21,6 +21,8 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(%{go_import_path}) = %{version}
+Provides:       go(github.com/magefile/mage/mage) = %{version}
+Provides:       go(github.com/magefile/mage/sh) = %{version}
 
 %description
 Mage is a make-like build tool that uses ordinary Go functions as build

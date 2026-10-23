@@ -33,6 +33,9 @@ BuildRequires:  go(golang.org/x/tools)
 BuildRequires:  go(golang.org/x/sys)
 
 Provides:       go(github.com/rogpeppe/go-internal) = %{version}
+Provides:       go(github.com/rogpeppe/go-internal/diff) = %{version}
+Provides:       go(github.com/rogpeppe/go-internal/lockedfile) = %{version}
+Provides:       go(github.com/rogpeppe/go-internal/robustio) = %{version}
 
 Requires:       go(golang.org/x/mod)
 Requires:       go(golang.org/x/tools)

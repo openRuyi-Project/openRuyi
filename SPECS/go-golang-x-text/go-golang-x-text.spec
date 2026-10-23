@@ -38,6 +38,7 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/text) = %{version}
+Provides:       go(golang.org/x/text/width) = %{version}
 
 %description
 This repository provides text-related packages, such as character
