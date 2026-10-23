@@ -8,22 +8,19 @@
 %define go_import_path  maunium.net/go/mautrix
 
 Name:           go-maunium-go-mautrix
-Version:        0.26.3
+Version:        0.32.0
 Release:        %autorelease
-Summary:        Go framework for the Matrix protocol
+Summary:        A Golang Matrix framework
 License:        MPL-2.0 AND Apache-2.0 AND BSD-3-Clause
 URL:            https://github.com/mautrix/go
-#!RemoteAsset:  sha256:a9ae03675d9ce87a3b83e4efa37252d3cf3e57ef4a8c2b19cdfddf999e51af1f
+#!RemoteAsset:  sha256:51cc07ad1fd103d821822bcedbf59b18f656aaffe308ca1b3fcc0de6a5a93779
 Source0:        https://github.com/mautrix/go/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
-# Go 1.27 renamed JSON v2 unknown-member embedding; preserve event hashes.
-Patch2000:      2000-pdu-support-json-v2-embed-tag.patch
-
 # Live federation/DNS tests fail with lookup maunium.net or matrix.org on
 # [::1]:53: connection refused in the offline OBS build.
-BuildOption(check):  -skip '^(TestClient_Version|TestResolveServerName|TestServerKeyResponse_VerifySelfSignature)$'
+BuildOption(check):  -skip '^(TestClient_Version|TestResolveServerName|TestServerKeyResponse_VerifySelfSignature|TestServerKeyResponse_FailWithFilter)$'
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
@@ -44,7 +41,8 @@ BuildRequires:  go(go.mau.fi/util/base58)
 BuildRequires:  go(go.mau.fi/util/configupgrade)
 BuildRequires:  go(go.mau.fi/util/confusable)
 BuildRequires:  go(go.mau.fi/util/curl)
-BuildRequires:  go(go.mau.fi/util/dbutil)
+BuildRequires:  go(go.mau.fi/util/dbutil) >= 0.11.0
+BuildRequires:  go(go.mau.fi/util/dbutil/litestream)
 BuildRequires:  go(go.mau.fi/util/exbytes)
 BuildRequires:  go(go.mau.fi/util/exerrors)
 BuildRequires:  go(go.mau.fi/util/exfmt)
@@ -60,6 +58,7 @@ BuildRequires:  go(go.mau.fi/util/fallocate)
 BuildRequires:  go(go.mau.fi/util/glob)
 BuildRequires:  go(go.mau.fi/util/jsonbytes)
 BuildRequires:  go(go.mau.fi/util/jsontime)
+BuildRequires:  go(go.mau.fi/util/pkcs7)
 BuildRequires:  go(go.mau.fi/util/progver)
 BuildRequires:  go(go.mau.fi/util/ptr)
 BuildRequires:  go(go.mau.fi/util/random)
@@ -93,7 +92,8 @@ Requires:       go(go.mau.fi/util/base58)
 Requires:       go(go.mau.fi/util/configupgrade)
 Requires:       go(go.mau.fi/util/confusable)
 Requires:       go(go.mau.fi/util/curl)
-Requires:       go(go.mau.fi/util/dbutil)
+Requires:       go(go.mau.fi/util/dbutil) >= 0.11.0
+Requires:       go(go.mau.fi/util/dbutil/litestream)
 Requires:       go(go.mau.fi/util/exbytes)
 Requires:       go(go.mau.fi/util/exerrors)
 Requires:       go(go.mau.fi/util/exfmt)
@@ -109,6 +109,7 @@ Requires:       go(go.mau.fi/util/fallocate)
 Requires:       go(go.mau.fi/util/glob)
 Requires:       go(go.mau.fi/util/jsonbytes)
 Requires:       go(go.mau.fi/util/jsontime)
+Requires:       go(go.mau.fi/util/pkcs7)
 Requires:       go(go.mau.fi/util/progver)
 Requires:       go(go.mau.fi/util/ptr)
 Requires:       go(go.mau.fi/util/random)
@@ -124,8 +125,8 @@ Requires:       go(gopkg.in/yaml.v3)
 Requires:       go(maunium.net/go/mauflag)
 
 %description
-A Go implementation of the Matrix client-server API with application service
-support, end-to-end encryption, federation helpers and bridge utilities.
+A Golang Matrix framework. Used by gomuks, go-neb, mautrix-whatsapp and
+others.
 
 # GOPATH defaults to the pre-Go-1.22 HTTP router, causing mock login HTTP 404.
 # Enable method/wildcard routes required by the verification test server.

@@ -1,0 +1,31 @@
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Subject: [PATCH] Avoid division by zero when generating receiver reports
+
+An interval without packets computes 0/0 for FractionLost. Converting NaN
+to uint8 is architecture dependent and produces 255 on riscv64. Report
+zero loss for an empty interval and retain the calculation otherwise.
+The existing receiver-report tests cover empty report intervals.
+
+--- a/pkg/report/receiver_stream.go
++++ b/pkg/report/receiver_stream.go
+@@ -143,6 +143,11 @@ func (stream *receiverStream) generateReport(now time.Time) *rtcp.ReceiverReport {
+ 		stream.totalLost = 0xFFFFFF
+ 	}
+ 
++	fractionLost := uint8(0)
++	if totalSinceReport != 0 {
++		fractionLost = uint8(float64(totalLostSinceReport*256) / float64(totalSinceReport))
++	}
++
+ 	r := &rtcp.ReceiverReport{
+ 		SSRC: stream.receiverSSRC,
+ 		Reports: []rtcp.ReceptionReport{
+@@ -150,7 +155,7 @@ func (stream *receiverStream) generateReport(now time.Time) *rtcp.ReceiverReport {
+ 				SSRC:               stream.ssrc,
+ 				LastSequenceNumber: uint32(stream.seqnumCycles)<<16 | uint32(stream.lastSeqnum),
+ 				LastSenderReport:   stream.lastSenderReport,
+-				FractionLost:       uint8(float64(totalLostSinceReport*256) / float64(totalSinceReport)),
++				FractionLost:       fractionLost,
+ 				TotalLost:          stream.totalLost,
+ 				Delay: func() uint32 {
+ 					if stream.lastSenderReportTime.IsZero() {
