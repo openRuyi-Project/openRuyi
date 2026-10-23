@@ -1,0 +1,68 @@
+From fd38c1cb832bf63e577776d998c3b217b73565ca Mon Sep 17 00:00:00 2001
+From: Han Kang <hankang@google.com>
+Date: Thu, 13 Oct 2022 12:03:35 -0700
+Subject: [PATCH] remove rate limiter metric as it is not in use
+
+Change-Id: I91157653e3860eeecc3f572aee88da6ffc65faed
+
+Kubernetes-commit: 2bbd445f509c7de792086fce5b8843cf88dedc80
+
+(cherry picked from commit 3fefb5ab90595e1c6ea16334431cb684d199cc86)
+Backported to the v0.19.3 file context.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ controllers/route/route_controller.go | 5 -----
+ controllers/service/controller.go     | 7 -------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/controllers/route/route_controller.go b/controllers/route/route_controller.go
+index 6f93422..18ab704 100644
+--- a/controllers/route/route_controller.go
++++ b/controllers/route/route_controller.go
+@@ -41,7 +41,6 @@ import (
+ 	clientretry "k8s.io/client-go/util/retry"
+ 	cloudprovider "k8s.io/cloud-provider"
+ 	cloudnodeutil "k8s.io/cloud-provider/node/helpers"
+-	"k8s.io/component-base/metrics/prometheus/ratelimiter"
+ )
+ 
+ const (
+@@ -68,10 +67,6 @@ type RouteController struct {
+ }
+ 
+ func New(routes cloudprovider.Routes, kubeClient clientset.Interface, nodeInformer coreinformers.NodeInformer, clusterName string, clusterCIDRs []*net.IPNet) *RouteController {
+-	if kubeClient != nil && kubeClient.CoreV1().RESTClient().GetRateLimiter() != nil {
+-		ratelimiter.RegisterMetricAndTrackRateLimiterUsage("route_controller", kubeClient.CoreV1().RESTClient().GetRateLimiter())
+-	}
+-
+ 	if len(clusterCIDRs) == 0 {
+ 		klog.Fatal("RouteController: Must specify clusterCIDR.")
+ 	}
+diff --git a/controllers/service/controller.go b/controllers/service/controller.go
+index 9722439..fdcec45 100644
+--- a/controllers/service/controller.go
++++ b/controllers/service/controller.go
+@@ -40,7 +40,6 @@ import (
+ 	cloudprovider "k8s.io/cloud-provider"
+ 	servicehelper "k8s.io/cloud-provider/service/helpers"
+ 	"k8s.io/component-base/featuregate"
+-	"k8s.io/component-base/metrics/prometheus/ratelimiter"
+ 	"k8s.io/klog/v2"
+ )
+ 
+@@ -130,12 +129,6 @@ func New(
+ 	broadcaster.StartRecordingToSink(&v1core.EventSinkImpl{Interface: kubeClient.CoreV1().Events("")})
+ 	recorder := broadcaster.NewRecorder(scheme.Scheme, v1.EventSource{Component: "service-controller"})
+ 
+-	if kubeClient != nil && kubeClient.CoreV1().RESTClient().GetRateLimiter() != nil {
+-		if err := ratelimiter.RegisterMetricAndTrackRateLimiterUsage("service_controller", kubeClient.CoreV1().RESTClient().GetRateLimiter()); err != nil {
+-			return nil, err
+-		}
+-	}
+-
+ 	s := &Controller{
+ 		cloud:                              cloud,
+ 		knownHosts:                         []*v1.Node{},
+-- 
+2.39.5 (Apple Git-154)
+
