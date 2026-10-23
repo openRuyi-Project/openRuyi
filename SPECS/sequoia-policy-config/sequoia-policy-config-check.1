@@ -1,0 +1,30 @@
+.TH SEQUOIA-POLICY-CONFIG-CHECK 1 "2026-10-15" "Sequoia 0.8.2" "User Commands"
+.SH NAME
+sequoia-policy-config-check \- validate Sequoia cryptographic
+policy configuration
+.SH SYNOPSIS
+.B sequoia-policy-config-check
+.RB [ --dump ]
+.RI [ config.toml ]
+.SH DESCRIPTION
+Validate a TOML configuration for Sequoia's cryptographic policy.
+With no file argument, check the default policy configuration.
+A successful check produces no output unless
+.B --dump
+is given.
+.SH OPTIONS
+.TP
+.B --dump
+Write a policy configuration template to standard output.
+.TP
+.I config.toml
+Read and validate this configuration file instead of the default configuration.
+.SH EXIT STATUS
+.TP
+.B 0
+The configuration was read and validated successfully.
+.TP
+.B 1
+An argument, file, or configuration error occurred.
+.SH SEE ALSO
+.BR sq (1)

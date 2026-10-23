@@ -1,0 +1,265 @@
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Subject: [PATCH] Align integration fixtures with the 5.11 live and daemon APIs
+
+The integration tests still expect whole-provider live writes and legacy
+Codex authentication routing. Check key-field projections, canonical custom
+routes and provider-scoped credentials instead. Configure the fake editor
+through AppSettings, and give custom Usage Query fixtures a third-party URL.
+
+The daemon owns its worker independently of the persisted runtime marker.
+Check that disabling the last app stops that worker after a failed HTTP
+probe; the separate reused-PID tests still cover unrelated processes.
+
+Upstream-Reference: https://github.com/SaladDay/cc-switch-cli/pull/506
+Upstream-Reference: https://github.com/SaladDay/cc-switch-cli/pull/508
+---
+diff --git a/src-tauri/tests/import_export_sync.rs b/src-tauri/tests/import_export_sync.rs
+--- a/src-tauri/tests/import_export_sync.rs
++++ b/src-tauri/tests/import_export_sync.rs
+@@ -51,14 +51,15 @@
+     );
+ 
+     let live_value: serde_json::Value = read_json_file(&settings_path).expect("read live file");
+-    assert_eq!(live_value, provider_config);
++    let projected = json!({ "env": provider_config["env"].clone() });
++    assert_eq!(live_value, projected);
+ 
+     // 确认 SSOT 中的供应商也同步了最新内容
+     let updated = config
+         .get_manager(&AppType::Claude)
+         .and_then(|m| m.providers.get("prov-1"))
+         .expect("provider in config");
+-    assert_eq!(updated.settings_config, provider_config);
++    assert_eq!(updated.settings_config, projected);
+ 
+     // 额外确认写入位置位于测试 HOME 下
+     assert!(
+@@ -68,7 +69,7 @@
+ }
+ 
+ #[test]
+-fn sync_codex_provider_writes_auth_and_config() {
++fn sync_codex_provider_writes_route_credentials_and_config() {
+     let _guard = lock_test_mutex();
+     reset_test_fs();
+ 
+@@ -114,15 +115,8 @@
+     let config_path = cc_switch_lib::get_codex_config_path();
+ 
+     assert!(
+-        auth_path.exists(),
+-        "auth.json should be refreshed by third-party provider sync at {}",
+-        auth_path.display()
+-    );
+-    let auth: serde_json::Value = read_json_file(&auth_path).expect("read auth.json");
+-    assert_eq!(
+-        auth.get("OPENAI_API_KEY").and_then(|value| value.as_str()),
+-        Some("codex-key"),
+-        "forced sync should write the current provider API key"
++        !auth_path.exists(),
++        "third-party credentials belong in the route, not the official login cache"
+     );
+     assert!(
+         config_path.exists(),
+@@ -135,14 +129,26 @@
+         toml_text.contains("command = \"echo\""),
+         "config.toml should contain serialized enabled MCP server"
+     );
+-    assert!(
+-        !toml_text.contains("experimental_bearer_token"),
+-        "preserve disabled should keep the provider key in auth.json"
++    let live_config: toml::Value = toml::from_str(&toml_text).expect("parse live config");
++    assert_eq!(live_config["model_provider"].as_str(), Some("custom"));
++    let route = &live_config["model_providers"]["custom"];
++    assert_eq!(route["base_url"].as_str(), Some("https://codex.test"));
++    assert_eq!(
++        route["experimental_bearer_token"].as_str(),
++        Some("codex-key")
+     );
+ 
+     // 当前供应商应同步最新 config 文本
+     let manager = config.get_manager(&AppType::Codex).expect("codex manager");
+     let synced = manager.providers.get("codex-1").expect("codex provider");
++    assert_eq!(
++        synced
++            .settings_config
++            .pointer("/auth/OPENAI_API_KEY")
++            .and_then(|v| v.as_str()),
++        Some("codex-key"),
++        "provider storage should recover the key from the generated live route"
++    );
+     let synced_cfg = synced
+         .settings_config
+         .get("config")
+@@ -155,7 +161,7 @@
+ }
+ 
+ #[test]
+-fn sync_codex_provider_preserves_provider_model_provider_after_history_migration() {
++fn sync_codex_provider_normalizes_route_after_history_migration() {
+     let _guard = lock_test_mutex();
+     reset_test_fs();
+ 
+@@ -209,8 +215,8 @@
+ 
+     assert_eq!(
+         parsed.get("model_provider").and_then(|v| v.as_str()),
+-        Some("aihubmix"),
+-        "ConfigService sync should preserve the provider template's model_provider"
++        Some("custom"),
++        "ConfigService sync should use the canonical third-party route"
+     );
+ 
+     let model_providers = parsed
+@@ -219,7 +225,7 @@
+         .expect("model_providers should exist");
+     assert_eq!(
+         model_providers
+-            .get("aihubmix")
++            .get("custom")
+             .and_then(|v| v.get("base_url"))
+             .and_then(|v| v.as_str()),
+         Some("https://aihubmix.example/v1")
+@@ -232,8 +238,8 @@
+         .and_then(|v| v.as_str())
+         .expect("synced config string");
+     assert!(
+-        synced_cfg.contains("[model_providers.aihubmix]"),
+-        "ConfigService keeps syncing provider-specific config from live"
++        synced_cfg.contains("[model_providers.custom]"),
++        "ConfigService should backfill the canonical route from live"
+     );
+ }
+ 
+@@ -1319,7 +1325,7 @@
+     ConfigService::sync_current_providers_to_live(&mut config)
+         .expect("syncing gemini live should succeed");
+ 
+-    let settings_path = home.join(".cc-switch").join("settings.json");
++    let settings_path = home.join(".gemini").join("settings.json");
+     assert!(
+         settings_path.exists(),
+         "settings.json should exist at {}",
+@@ -1377,12 +1383,9 @@
+     );
+     let cc_raw = std::fs::read_to_string(&cc_settings).expect("read .cc-switch settings");
+     let cc_value: serde_json::Value = serde_json::from_str(&cc_raw).expect("parse app settings");
+-    assert_eq!(
+-        cc_value
+-            .pointer("/security/auth/selectedType")
+-            .and_then(|v| v.as_str()),
+-        Some("oauth-personal"),
+-        "syncing Google official should set oauth-personal in app settings"
++    assert!(
++        cc_value.pointer("/security/auth/selectedType").is_none(),
++        "Gemini authentication settings must stay out of app settings"
+     );
+ 
+     let gemini_settings = home.join(".gemini").join("settings.json");
+diff --git a/src-tauri/tests/prompt_commands.rs b/src-tauri/tests/prompt_commands.rs
+--- a/src-tauri/tests/prompt_commands.rs
++++ b/src-tauri/tests/prompt_commands.rs
+@@ -137,8 +137,11 @@
+         std::fs::set_permissions(&editor_script, perms).expect("chmod fake editor");
+     }
+ 
+-    std::env::set_var("EDITOR", &editor_script);
+-    std::env::set_var("VISUAL", &editor_script);
++    cc_switch_lib::update_settings(cc_switch_lib::AppSettings {
++        preferred_editor: Some(editor_script.display().to_string()),
++        ..Default::default()
++    })
++    .expect("configure fake editor");
+ 
+     execute(
+         PromptsCommand::Create {
+@@ -150,9 +153,6 @@
+         Some(AppType::Claude),
+     )
+     .expect("create command succeeds");
+-
+-    std::env::remove_var("EDITOR");
+-    std::env::remove_var("VISUAL");
+ 
+     let persisted = cc_switch_lib::AppState::try_new().expect("reload state");
+     let prompts = PromptService::get_prompts(&persisted, AppType::Claude).expect("load prompts");
+@@ -232,8 +232,11 @@
+         std::fs::set_permissions(&editor_script, perms).expect("chmod fake editor");
+     }
+ 
+-    std::env::set_var("EDITOR", &editor_script);
+-    std::env::set_var("VISUAL", &editor_script);
++    cc_switch_lib::update_settings(cc_switch_lib::AppSettings {
++        preferred_editor: Some(editor_script.display().to_string()),
++        ..Default::default()
++    })
++    .expect("configure fake editor");
+ 
+     execute(
+         PromptsCommand::Create {
+@@ -246,9 +249,6 @@
+     )
+     .expect("create command succeeds");
+ 
+-    std::env::remove_var("EDITOR");
+-    std::env::remove_var("VISUAL");
+-
+     let persisted = cc_switch_lib::AppState::try_new().expect("reload state");
+     let prompts = PromptService::get_prompts(&persisted, AppType::Claude).expect("load prompts");
+     let prompt = prompts
+diff --git a/src-tauri/tests/provider_commands.rs b/src-tauri/tests/provider_commands.rs
+--- a/src-tauri/tests/provider_commands.rs
++++ b/src-tauri/tests/provider_commands.rs
+@@ -128,7 +128,8 @@
+             "Demo".to_string(),
+             json!({
+                 "env": {
+-                    "ANTHROPIC_API_KEY": "sk-provider"
++                    "ANTHROPIC_API_KEY": "sk-provider",
++                    "ANTHROPIC_BASE_URL": "https://provider.example.com"
+                 }
+             }),
+             None,
+@@ -197,7 +198,8 @@
+             "Demo".to_string(),
+             json!({
+                 "env": {
+-                    "ANTHROPIC_API_KEY": "sk-provider"
++                    "ANTHROPIC_API_KEY": "sk-provider",
++                    "ANTHROPIC_BASE_URL": "https://provider.example.com"
+                 }
+             }),
+             None,
+@@ -370,7 +372,8 @@
+                 "Demo".to_string(),
+                 json!({
+                     "env": {
+-                        "ANTHROPIC_API_KEY": "sk-provider"
++                        "ANTHROPIC_API_KEY": "sk-provider",
++                        "ANTHROPIC_BASE_URL": "https://provider.example.com"
+                     }
+                 }),
+                 None,
+diff --git a/src-tauri/tests/proxy_service.rs b/src-tauri/tests/proxy_service.rs
+--- a/src-tauri/tests/proxy_service.rs
++++ b/src-tauri/tests/proxy_service.rs
+@@ -1147,7 +1147,7 @@
+ #[cfg(unix)]
+ #[tokio::test]
+ #[serial]
+-async fn managed_session_disable_last_app_does_not_terminate_when_status_probe_fails() {
++async fn managed_session_disable_last_app_stops_daemon_owned_worker_when_status_probe_fails() {
+     let _guard = lock_test_mutex();
+     reset_test_fs();
+     let home = ensure_test_home();
+@@ -1212,8 +1212,8 @@
+         .expect("disable final managed app and clear runtime marker");
+ 
+     assert!(
+-        is_process_alive(runtime_pid),
+-        "unreachable status must not terminate a process based only on stale persisted metadata"
++        !is_process_alive(runtime_pid),
++        "the daemon must stop its own worker even after stale metadata is cleared"
+     );
+ 
+     assert!(
