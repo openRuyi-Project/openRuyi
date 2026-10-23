@@ -2,22 +2,24 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <ialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libfyaml
-Version:        0.9.3
+Version:        0.9.6
 Release:        %autorelease
 Summary:        Complete YAML parser and emitter
 License:        MIT AND GPL-2.0-only AND BSD-2-Clause
 URL:            https://github.com/pantoniou/libfyaml
-#!RemoteAsset:  sha256:99ec52a528c629de11da7ead35ffa3c0e8cb548e4acafbd292db47535720f04c
+#!RemoteAsset:  sha256:2d016379a69f6cf6beaf06d12bcefe1ad1784bab28fbb41a6fa8d49d25f1bc0a
 Source0:        https://github.com/pantoniou/libfyaml/archive/refs/tags/v%{version}.tar.gz
 Source1:        LICENSE-GPL-2.0
 Source2:        LICENSE-BSD-2-Clause
 BuildSystem:    autotools
 
-BuildOption(conf):  --disable-static
+BuildOption(conf):  --enable-static
+BuildOption(conf):  --disable-network
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -25,6 +27,7 @@ BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  pkgconfig(yaml-0.1)
+BuildRequires:  pkgconfig(check)
 
 %description
 A fancy 1.2 YAML and JSON parser/writer.
@@ -43,17 +46,22 @@ cp %{SOURCE2} .
 %conf -p
 autoreconf -fiv
 
+%install -a
+rm -f %{buildroot}%{_libdir}/libfyaml.a
+
 %files
-%license LICENSE LICENSE-GPL-2.0 LICENSE-BSD-2-Clause
 %doc README.md AUTHORS
+%license LICENSE LICENSE-GPL-2.0 LICENSE-BSD-2-Clause
 %{_bindir}/fy-*
 %{_libdir}/libfyaml.so.0*
 %{_mandir}/man1/fy-*.1*
 
 %files devel
 %{_includedir}/libfyaml.h
+%{_includedir}/libfyaml/
 %{_libdir}/libfyaml.so
 %{_libdir}/pkgconfig/libfyaml.pc
+%{_mandir}/man3/libfyaml*.3*
 
 %changelog
-%{?autochangelog}
+%autochangelog
