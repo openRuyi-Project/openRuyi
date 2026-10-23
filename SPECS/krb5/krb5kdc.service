@@ -1,0 +1,11 @@
+[Unit]
+Description=Kerberos key distribution center
+After=network.target
+
+[Service]
+RuntimeDirectory=krb5kdc
+RuntimeDirectoryMode=0700
+ExecStart=@SBINDIR@/krb5kdc -n
+
+[Install]
+WantedBy=multi-user.target

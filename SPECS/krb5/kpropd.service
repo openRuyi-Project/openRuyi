@@ -1,8 +1,11 @@
 [Unit]
-Description=Kerberos 5 propagation server
+Description=Kerberos propagation server
+After=network.target
 
 [Service]
-ExecStart=/usr/sbin/kpropd -S
+RuntimeDirectory=krb5kdc
+RuntimeDirectoryMode=0700
+ExecStart=@SBINDIR@/kpropd -S
 
 [Install]
 WantedBy=multi-user.target
