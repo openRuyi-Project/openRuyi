@@ -1,0 +1,53 @@
+From 8521e74381491ae1714a40b70bd27d10aba80a1c Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 24 Oct 2026 05:33:13 -0700
+Subject: [PATCH] mgr: set program_name to the python path, not the macro name
+
+WCHAR() stringizes its argument without expanding it, so program_name
+has always been the literal "MGR_PYTHON_EXECUTABLE". Python then cannot
+find its executable: sys.executable is empty and sys.prefix is derived
+from the current directory.
+
+Since Python 3.14 multiprocessing defaults to forkserver on Linux and
+spawns its helpers with sys.executable, so creating the ThreadPool in
+the cephadm module fails with BrokenPipeError and the module does not
+load.
+
+Pass the byte string to PyConfig_SetBytesString() instead.
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/mgr/PyModuleRegistry.cc | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/mgr/PyModuleRegistry.cc b/src/mgr/PyModuleRegistry.cc
+index c98ab1a986f8..a3e705307912 100644
+--- a/src/mgr/PyModuleRegistry.cc
++++ b/src/mgr/PyModuleRegistry.cc
+@@ -48,7 +48,6 @@ void PyModuleRegistry::init()
+   std::lock_guard locker(lock);
+ 
+   // Set up global python interpreter
+-#define WCHAR(s) L ## #s
+   PyConfig py_config;
+   // do not enable isolated mode, otherwise we would not be able to have access
+   // to the site packages. since we cannot import any module before initializing
+@@ -69,8 +68,8 @@ void PyModuleRegistry::init()
+   py_config.pathconfig_warnings = 0;
+ 
+   PyStatus status;
+-  status = PyConfig_SetString(&py_config, &py_config.program_name, WCHAR(MGR_PYTHON_EXECUTABLE));
+-  ceph_assertf(!PyStatus_Exception(status), "PyConfig_SetString: %s:%s", status.func, status.err_msg);
++  status = PyConfig_SetBytesString(&py_config, &py_config.program_name, MGR_PYTHON_EXECUTABLE);
++  ceph_assertf(!PyStatus_Exception(status), "PyConfig_SetBytesString: %s:%s", status.func, status.err_msg);
+   // Some python modules do not cope with an unpopulated argv, so lets
+   // fake one.  This step also picks up site-packages into sys.path.
+   const wchar_t* argv[] = {L"ceph-mgr"};
+@@ -92,7 +91,6 @@ void PyModuleRegistry::init()
+   dout(10) << "set PYTHONPATH to " << std::quoted(pythonpath_env) << dendl;
+   status = Py_InitializeFromConfig(&py_config);
+   ceph_assertf(!PyStatus_Exception(status), "Py_InitializeFromConfig: %s:%s", status.func, status.err_msg);
+-#undef WCHAR
+ 
+   // Drop the GIL and remember the main thread state (current
+   // thread state becomes NULL)

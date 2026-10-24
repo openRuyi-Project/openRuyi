@@ -453,6 +453,10 @@ Requires:       luarocks
 1023-cephfs-shell-declare-the-distro-and-packaging-deps.patch
 # https://github.com/ceph/ceph/pull/71853
 1024-ceph-crash-fall-back-on-a-missing-keyring-too.patch
+# https://github.com/ceph/ceph/pull/72181
+1025-ceph-volume-record-a-partition-db-wal-device-in-the-block-LV-s-tags.patch
+# https://github.com/ceph/ceph/pull/73050
+1026-mgr-set-program_name-to-the-python-path-not-the-macro-name.patch
 
 # Bump pylint 2.6.0 -> 2.17.7 for Python 3.13 / wrapt compat.
 2001-monitoring-ceph-mixin-bump-pylint.patch
