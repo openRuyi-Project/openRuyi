@@ -1,0 +1,99 @@
+From 97cb5200e8828215be13726c2478b4187844c66e Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 28 Sep 2026 10:58:24 -0700
+Subject: [PATCH] ceph-volume: record a partition db/wal device in the block
+ LV's tags
+
+setup_metadata_devices() sets the db/wal uuid and device tags on the
+block LV only for an LV device; since the setup_device() refactor
+(7626c12e5fd) a partition gets none, so activate makes no block.db
+symlink and the OSD aborts in BlueFS::_open_super().
+
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ .../ceph_volume/objectstore/lvm.py            | 35 +++++++++++--------
+ .../ceph_volume/tests/objectstore/test_lvm.py |  8 +++++
+ 2 files changed, 29 insertions(+), 14 deletions(-)
+
+diff --git a/src/ceph-volume/ceph_volume/objectstore/lvm.py b/src/ceph-volume/ceph_volume/objectstore/lvm.py
+index aae347406ce..59e36c895a3 100644
+--- a/src/ceph-volume/ceph_volume/objectstore/lvm.py
++++ b/src/ceph-volume/ceph_volume/objectstore/lvm.py
+@@ -261,6 +261,17 @@ class Lvm(BaseObjectStore):
+         if not (disk.is_partition(device_name) or disk.is_device(device_name)):
+             return None
+ 
++        if disk.is_partition(device_name):
++            # activate looks the partition up by PARTUUID
++            tags.update(
++                {
++                    f"ceph.{device_type}_uuid": self.get_ptuuid(device_name),
++                    f"ceph.{device_type}_device": device_name,
++                }
++            )
++            self.tags.update(tags)
++            return device_name
++
+         lv_type = f"osd-{device_type}"
+         name_uuid = system.generate_uuid()
+ 
+@@ -275,20 +286,16 @@ class Lvm(BaseObjectStore):
+             "tags": tags,
+         }
+ 
+-        lv = None if disk.is_partition(device_name) else api.create_lv(**kwargs)
+-
+-        if lv is not None:
+-            tags.update(
+-                {
+-                    f"ceph.{device_type}_uuid": lv.lv_uuid,
+-                    f"ceph.{device_type}_device": lv.lv_path,
+-                }
+-            )
+-            self.tags.update(tags)
+-            lv.set_tags(tags)
+-            return lv.lv_path
+-
+-        return device_name
++        lv = api.create_lv(**kwargs)
++        tags.update(
++            {
++                f"ceph.{device_type}_uuid": lv.lv_uuid,
++                f"ceph.{device_type}_device": lv.lv_path,
++            }
++        )
++        self.tags.update(tags)
++        lv.set_tags(tags)
++        return lv.lv_path
+ 
+     def get_osd_device_path(self,
+                             osd_lvs: List[api.Volume],
+diff --git a/src/ceph-volume/ceph_volume/tests/objectstore/test_lvm.py b/src/ceph-volume/ceph_volume/tests/objectstore/test_lvm.py
+index 98382d3f568..b5f823e6fbe 100644
+--- a/src/ceph-volume/ceph_volume/tests/objectstore/test_lvm.py
++++ b/src/ceph-volume/ceph_volume/tests/objectstore/test_lvm.py
+@@ -270,6 +270,11 @@ class TestLvm:
+         assert self.lvm.db_device_path == '/dev/foo2'
+         assert self.lvm.block_lv.set_tags.mock_calls == [call({
+             'ceph.type': 'block',
++            'ceph.vdo': '0',
++            'ceph.db_uuid': 'c6798f59-01',
++            'ceph.db_device': '/dev/foo2',
++            'ceph.wal_uuid': 'c6798f59-01',
++            'ceph.wal_device': '/dev/foo1',
+             })]
+         assert not self.lvm.prepare_dmcrypt.called
+         assert self.lvm.osd_mkfs.called
+@@ -405,6 +410,9 @@ class TestLvm:
+         self.lvm.setup_metadata_devices()
+         m_create_lv.assert_not_called()
+         m_set_tags.assert_not_called()
++        assert self.lvm.db_device_path == '/dev/foo1'
++        assert self.lvm.tags['ceph.db_uuid'] == 'c6798f59-01'
++        assert self.lvm.tags['ceph.db_device'] == '/dev/foo1'
+ 
+     def test_get_osd_device_path_lv_block(self):
+         lvs = [Volume(lv_name='lv_foo',
+-- 
+2.56.0
+

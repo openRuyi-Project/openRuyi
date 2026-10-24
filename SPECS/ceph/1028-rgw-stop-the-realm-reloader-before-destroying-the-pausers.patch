@@ -1,0 +1,43 @@
+From c76fae935f7a1df504c510486e25bb63adb486ac Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Mon, 26 Oct 2026 20:35:14 -0700
+Subject: [PATCH] rgw: stop the realm reloader before destroying the pausers
+
+A period commit schedules a realm reload, which takes seconds. If
+radosgw gets SIGTERM meanwhile, AppMain::shutdown() destroys
+rgw_pauser and fe_pauser before reloader, and the running reload()
+calls pause()/resume() on freed objects and segfaults.
+
+Reset the realm watcher and the reloader first. The reloader's
+destructor joins its timer thread, so it waits for a reload in
+progress. This order was changed in e70d9328fc7.
+
+Fixes: https://tracker.ceph.com/issues/82140
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ src/rgw/rgw_appmain.cc | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/rgw/rgw_appmain.cc b/src/rgw/rgw_appmain.cc
+index d36a9ad2377..e4eca377d82 100644
+--- a/src/rgw/rgw_appmain.cc
++++ b/src/rgw/rgw_appmain.cc
+@@ -808,11 +808,12 @@ void rgw::AppMain::init_s3vector()
+ 
+ void rgw::AppMain::shutdown(std::function<void(void)> finalize_async_signals)
+ {
+-  // stop the realm reloader
+-  rgw_pauser.reset();
+-  fe_pauser.reset();
++  // stop the realm reloader. its destructor waits for a reload in progress,
++  // which still uses the pausers
+   realm_watcher.reset();
+   reloader.reset();
++  rgw_pauser.reset();
++  fe_pauser.reset();
+ #ifdef WITH_RADOSGW_RADOS
+   pusher.reset();
+   if (env.driver->get_name() == "rados") {
+-- 
+2.56.0
+
