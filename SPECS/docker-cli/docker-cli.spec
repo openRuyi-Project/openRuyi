@@ -5,15 +5,15 @@
 
 %define _name           docker-cli
 %define go_import_path  github.com/docker/cli
-%define docker_commit   4a63305d74332de5ceba7fcbccbc3cbb7412f5ba
+%define docker_commit   a82e528901260c8df6073311379eac65f92db204
 
 Name:           docker-cli
-Version:        29.8.1
+Version:        29.9.2
 Release:        %autorelease
 Summary:        Docker command-line client
 License:        Apache-2.0
 URL:            https://github.com/docker/cli
-#!RemoteAsset:  sha256:55bcae5053f0914118d229658e2ac3a877dbdead6cb2c322e525d0c1e8bf78d2
+#!RemoteAsset:  sha256:e3b1fab5e2ee2d6b63b8ce0e8bbd08d6f54c0537c470332f2c345ab997233409
 Source0:        https://github.com/docker/cli/archive/refs/tags/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildSystem:    golang
 
