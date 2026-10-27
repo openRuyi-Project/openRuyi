@@ -7,7 +7,7 @@
 %global srcname httptools
 
 Name:           python-%{srcname}
-Version:        0.8.0
+Version:        0.9.0
 Release:        %autorelease
 Summary:        A collection of framework independent HTTP protocol utils
 License:        MIT

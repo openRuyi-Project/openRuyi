@@ -10,14 +10,13 @@
 %bcond test 0
 
 Name:           python-%{srcname}
-Version:        0.12.2
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Build backend for CMake based projects
 License:        Apache-2.0 AND MIT
 URL:            https://github.com/scikit-build/scikit-build-core
-#!RemoteAsset:  sha256:562e0bbc9de1a354c87825ccf732080268d6582a0200f648e8c4a2dcb1e3736d
+#!RemoteAsset:  sha256:e347a59193c878ac56a363e57506938652a6dd8c965790cb1cbc6bc7e8d5abad
 Source:         https://files.pythonhosted.org/packages/source/s/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
-BuildArch:      noarch
 BuildSystem:    pyproject
 
 BuildOption(install):  -l %{pypi_name}
@@ -37,6 +36,7 @@ BuildRequires:  python3dist(virtualenv)
 BuildRequires:  python3dist(numpy)
 
 Provides:       python3-%{srcname} = %{version}-%{release}
+Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
 %description
@@ -56,6 +56,8 @@ cp -p src/scikit_build_core/_vendor/pyproject_metadata/LICENSE LICENSE-pyproject
 %files -f %{pyproject_files}
 %doc README.md
 %license LICENSE LICENSE-pyproject-metadata
+%{_bindir}/scikit-build
+%{_bindir}/scikit-build-core
 
 %changelog
 %autochangelog
