@@ -1,0 +1,99 @@
+From 3af8cc51d5f596866cf971b750a0546c0205cf02 Mon Sep 17 00:00:00 2001
+From: Janis Heims <janis.heims@undertheprinter.com>
+Date: Tue, 13 Oct 2026 22:39:42 +0200
+Subject: [PATCH] replace rbd option auth_supported with auth_*_required
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+As stated in Yusuke Fujimaki's patch, Ceph recently removed the
+deprecated auth_supported option that is still used by libvirt, causing
+errors when attempting to start a storage pool on a newer Ceph server:
+https://lists.libvirt.org/archives/list/devel@lists.libvirt.org/thread/RELDVG6A3LAA4IFA32EOFQ5OJPMI6OGR/
+https://github.com/ceph/ceph/commit/350cc71d7d9e9cd6239d24080082de7ac9bf8b70
+
+This patch addresses the issue by replacing the deprecated option with
+auth_client_required. While all three replacement options
+(auth_cluster_required, auth_service_required and auth_client_required)
+were previously set by Ceph, it really only makes sense to keep the last
+in libvirt as the other options are only relevant on the server side.
+See the discussion here:
+https://lists.libvirt.org/archives/list/devel@lists.libvirt.org/thread/3TVM5DVH3MOIQAM6ZUS5TYBLNSA6UA7K/
+
+Resolves: https://gitlab.com/libvirt/libvirt/-/work_items/918
+
+Signed-off-by: Janis Heims <janis.heims@undertheprinter.com>
+Reviewed-by: Ján Tomko <jtomko@redhat.com>
+---
+ src/libxl/libxl_conf.c                           | 7 +++----
+ src/libxl/xen_xl.c                               | 2 +-
+ src/storage/storage_backend_rbd.c                | 5 +++--
+ tests/xlconfigdata/test-rbd-multihost-noauth.cfg | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/libxl/libxl_conf.c b/src/libxl/libxl_conf.c
+index 3bb5c1e5917..9050caf4001 100644
+--- a/src/libxl/libxl_conf.c
++++ b/src/libxl/libxl_conf.c
+@@ -1087,11 +1087,10 @@ libxlMakeNetworkDiskSrcStr(virStorageSource *src,
+ 
+         if (username) {
+             virBufferEscape(&buf, '\\', ":", ":id=%s", username);
+-            virBufferEscape(&buf, '\\', ":",
+-                            ":key=%s:auth_supported=cephx\\;none",
+-                            secret);
++            virBufferEscape(&buf, '\\', ":", ":key=%s", secret);
++            virBufferAddLit(&buf, ":auth_client_required=cephx\\;none");
+         } else {
+-            virBufferAddLit(&buf, ":auth_supported=none");
++            virBufferAddLit(&buf, ":auth_client_required=none");
+         }
+ 
+         if (src->nhosts > 0) {
+diff --git a/src/libxl/xen_xl.c b/src/libxl/xen_xl.c
+index d05972af5bc..5a31fc69397 100644
+--- a/src/libxl/xen_xl.c
++++ b/src/libxl/xen_xl.c
+@@ -1478,7 +1478,7 @@ xenFormatXLDiskSrcNet(virStorageSource *src)
+ 
+         virBufferStrcat(&buf, "rbd:", src->path, NULL);
+ 
+-        virBufferAddLit(&buf, ":auth_supported=none");
++        virBufferAddLit(&buf, ":auth_client_required=none");
+ 
+         if (src->nhosts > 0) {
+             virBufferAddLit(&buf, ":mon_host=");
+diff --git a/src/storage/storage_backend_rbd.c b/src/storage/storage_backend_rbd.c
+index 25cad4a28d3..9832a992647 100644
+--- a/src/storage/storage_backend_rbd.c
++++ b/src/storage/storage_backend_rbd.c
+@@ -241,7 +241,7 @@ virStorageBackendRBDOpenRADOSConn(virStorageBackendRBDState *ptr,
+             goto cleanup;
+ 
+         if (virStorageBackendRBDRADOSConfSet(ptr->cluster,
+-                                             "auth_supported", "cephx") < 0)
++                                             "auth_client_required", "cephx") < 0)
+             goto cleanup;
+     } else {
+         VIR_DEBUG("Not using cephx authorization");
+@@ -250,8 +250,9 @@ virStorageBackendRBDOpenRADOSConn(virStorageBackendRBDState *ptr,
+                            _("failed to create the RADOS cluster"));
+             goto cleanup;
+         }
++
+         if (virStorageBackendRBDRADOSConfSet(ptr->cluster,
+-                                             "auth_supported", "none") < 0)
++                                             "auth_client_required", "none") < 0)
+             goto cleanup;
+     }
+ 
+diff --git a/tests/xlconfigdata/test-rbd-multihost-noauth.cfg b/tests/xlconfigdata/test-rbd-multihost-noauth.cfg
+index 5906865047b..8ff1878885d 100644
+--- a/tests/xlconfigdata/test-rbd-multihost-noauth.cfg
++++ b/tests/xlconfigdata/test-rbd-multihost-noauth.cfg
+@@ -22,4 +22,4 @@ parallel = "none"
+ serial = "none"
+ builder = "hvm"
+ boot = "d"
+-disk = [ "format=raw,vdev=hda,access=rw,backendtype=phy,target=/dev/HostVG/XenGuest2", "format=raw,vdev=hdb,access=rw,backendtype=qdisk,target=rbd:pool/image:auth_supported=none:mon_host=mon1.example.org\\:6321\\;mon2.example.org\\:6322\\;mon3.example.org\\:6322" ]
++disk = [ "format=raw,vdev=hda,access=rw,backendtype=phy,target=/dev/HostVG/XenGuest2", "format=raw,vdev=hdb,access=rw,backendtype=qdisk,target=rbd:pool/image:auth_client_required=none:mon_host=mon1.example.org\\:6321\\;mon2.example.org\\:6322\\;mon3.example.org\\:6322" ]

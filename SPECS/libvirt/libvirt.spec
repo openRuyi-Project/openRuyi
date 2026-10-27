@@ -22,6 +22,10 @@ VCS:            git:https://gitlab.com/libvirt/libvirt.git
 Source0:        https://libvirt.org/sources/%{name}-%{version}.tar.xz
 BuildSystem:    meson
 
+# Ceph 21 removed auth_supported, rbd storage pools fail to start
+# From https://gitlab.com/libvirt/libvirt/-/commit/3af8cc51d5f596866cf971b750a0546c0205cf02
+Patch1000:      1000-replace-rbd-option-auth_supported.patch
+
 BuildOption(conf):  -Dsystem=true
 BuildOption(conf):  -Dno_git=true
 BuildOption(conf):  -Dapparmor=disabled
