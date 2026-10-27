@@ -355,6 +355,7 @@ applications using libvirt.
 %exclude %{_libdir}/libvirt/storage-backend/libvirt_storage_backend_logical.so
 %{_libdir}/libvirt/storage-file/
 %{_libdir}/libvirt/lock-driver/
+%dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/secrets/
 %{_libdir}/libnss_libvirt*.so.*
 %{_datadir}/augeas/lenses/*virt*
 %exclude %{_datadir}/augeas/lenses/libvirtd_qemu.aug
