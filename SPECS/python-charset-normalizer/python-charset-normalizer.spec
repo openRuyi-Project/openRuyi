@@ -9,12 +9,12 @@
 %global pypi_name charset_normalizer
 
 Name:           python-%{srcname}
-Version:        3.4.7
+Version:        3.5.2
 Release:        %autorelease
 Summary:        The Real First Universal Charset Detector
 License:        MIT
 URL:            https://github.com/Ousret/charset_normalizer
-#!RemoteAsset:  sha256:ae89db9e5f98a11a4bf50407d4363e7b09b31e55bc117b4f7d80aab97ba009e5
+#!RemoteAsset:  sha256:39de2a259fc954455c57274dc94c79d5842774e1247a016aff30bc0efed0f4ef
 Source:         https://files.pythonhosted.org/packages/source/c/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
