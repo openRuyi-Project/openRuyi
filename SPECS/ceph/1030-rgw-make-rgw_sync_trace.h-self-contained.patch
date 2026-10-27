@@ -1,0 +1,62 @@
+From 2ece72edf44e96ef83c12b361f120221e8720b09 Mon Sep 17 00:00:00 2001
+From: Ronen Friedman <rfriedma@redhat.com>
+Date: Sun, 18 Oct 2026 10:57:43 +0000
+Subject: [PATCH] rgw: make rgw_sync_trace.h self-contained
+
+rgw_sync_trace.h declares its AdminSocketHook::call() override using the
+unqualified names bufferlist and Formatter.  Those global aliases are
+provided by include/buffer.h and common/Formatter.h, neither of which the
+header includes: common/admin_socket.h only brings in the namespaced
+forward declarations (ceph::buffer::list via include/buffer_fwd.h and
+ceph::Formatter via common/cmdparse.h).
+
+In the RGW build this went unnoticed, as the header is only ever reached
+after rgw_common.h and friends have pulled in the global aliases.  The
+new test/rgw/test_rgw_sync_trace.cc includes it directly, and fails with:
+
+  rgw_sync_trace.h:132:18: error: 'bufferlist' does not name a type
+  rgw_sync_trace.h:133:12: error: 'Formatter' has not been declared
+  rgw_sync_trace.h:131:7: error: 'int RGWSyncTraceManager::call(...)'
+                                 marked 'override', but does not override
+
+Spell the parameter types the way AdminSocketHook::call() declares them,
+so the already-included forward declarations suffice and no additional
+headers are needed.
+
+Also include <sstream>: the SSTR macro uses std::ostringstream, while the
+header only included <ostream>.
+
+Assisted-by: Claude
+Signed-off-by: Ronen Friedman <rfriedma@redhat.com>
+---
+ src/rgw/driver/rados/rgw_sync_trace.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/rgw/driver/rados/rgw_sync_trace.h b/src/rgw/driver/rados/rgw_sync_trace.h
+index 074844ad501..e96ef1a912a 100644
+--- a/src/rgw/driver/rados/rgw_sync_trace.h
++++ b/src/rgw/driver/rados/rgw_sync_trace.h
+@@ -11,6 +11,7 @@
+ 
+ #include <set>
+ #include <ostream>
++#include <sstream>
+ #include <string>
+ #include <shared_mutex>
+ #include <boost/circular_buffer.hpp>
+@@ -129,9 +130,9 @@ public:
+ 
+   int hook_to_admin_command();
+   int call(std::string_view command, const cmdmap_t& cmdmap,
+-	   const bufferlist&,
+-	   Formatter *f,
++	   const ceph::buffer::list&,
++	   ceph::Formatter *f,
+ 	   std::ostream& ss,
+-	   bufferlist& out) override;
++	   ceph::buffer::list& out) override;
+   std::string get_active_names();
+ };
+-- 
+2.56.0
+
