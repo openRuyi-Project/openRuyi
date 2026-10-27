@@ -8,18 +8,14 @@
 %global pypi_name ml_dtypes
 
 Name:           python-%{srcname}
-Version:        0.5.4
+Version:        0.6.0
 Release:        %autorelease
 Summary:        A stand-alone implementation of several NumPy dtype extensions
 License:        Apache-2.0
 URL:            https://github.com/jax-ml/ml_dtypes
-#!RemoteAsset:  sha256:8ab06a50fb9bf9666dd0fe5dfb4676fa2b0ac0f31ecff72a6c3af8e22c063453
+#!RemoteAsset:  sha256:5e60251d32ced5598972e4d5e06a2f044341f9291402551a3f6f0ec44f9299b0
 Source0:        https://files.pythonhosted.org/packages/source/m/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
-
-# https://github.com/jax-ml/ml_dtypes/pull/358
-# Upstream not merge the PR, instead, changed the build backend.
-Patch1000:      1000-Update-setuptools-requirement.patch
 
 BuildOption(install):  -l %{pypi_name}
 
@@ -29,6 +25,9 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(numpy)
+BuildRequires:  python3dist(scikit-build-core)
+BuildRequires:  python3dist(cmake)
+BuildRequires:  python3dist(ninja)
 BuildRequires:  gcc-c++
 
 Provides:       python3-%{srcname} = %{version}-%{release}
@@ -42,8 +41,9 @@ used in machine learning libraries, including:
 * float8 (e4m3, e5m2)
 * int4
 
-%generate_buildrequires
-%pyproject_buildrequires
+# TODO: For some reason, Open Build Service does not like this and will cause build loop. - 251
+#generate_buildrequires
+#pyproject_buildrequires
 
 %files -f %{pyproject_files}
 %doc README.md
