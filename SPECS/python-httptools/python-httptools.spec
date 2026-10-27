@@ -13,7 +13,7 @@ Summary:        A collection of framework independent HTTP protocol utils
 License:        MIT
 URL:            https://github.com/MagicStack/httptools
 VCS:            git:https://github.com/MagicStack/httptools.git
-#!RemoteAsset:  sha256:6b2a32f18d97e16e90827d7a819ffa8dbd8cc245fc4e1fa9d1095b54ef4bd999
+#!RemoteAsset:  sha256:d484ebb7e3a3f3597b0f645fbd1b85633674ca808c1f5ba11c2caf7c66f5c8b6
 Source:         https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -31,6 +31,10 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 A collection of framework independent HTTP protocol utils. httptools is a
 Python binding for the nodejs HTTP parser, providing high-performance HTTP
 parsing capabilities.
+
+%prep -a
+# Relax exact version pins on setuptools.
+sed -i 's/"setuptools>=80\.9\.0,<=82\.0\.1"/"setuptools>=80.9.0"/g' pyproject.toml
 
 %generate_buildrequires
 %pyproject_buildrequires
