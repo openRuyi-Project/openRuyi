@@ -46,6 +46,11 @@ BuildRequires:  openssl-devel
 Obsoletes:      cmake-bootstrap <= %{version}
 %endif
 
+# For python3dist(cmake)
+%if %{without bootstrap}
+BuildRequires:  pkgconfig(python3)
+%endif
+
 # For tests
 BuildRequires:  git
 
@@ -92,6 +97,18 @@ BuildArch:      noarch
 
 %description    rpm-macros
 This package contains common RPM macros for cmake.
+
+%if %{without bootstrap}
+%package     -n python-cmake
+Summary:        Python metadata for packages depending on %{name}
+Provides:       python3-cmake = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
+BuildArch:      noarch
+
+%description -n python-cmake
+This package contains Python metadata for packages depending on %{name}.
+Does not include the PyPI cmake Python package.
+%endif
 
 %conf
 %if %{with bootstrap}
@@ -144,6 +161,20 @@ find %{buildroot}%{_libdir}/cmake -type d | sed -e 's!^%{buildroot}!%%dir "!g' -
 # remove unnecessary emac lisp files
 rm -rf %{buildroot}%{_datadir}/emacs
 
+# For python distribution metadata
+%if %{without bootstrap}
+mkdir -p %{buildroot}%{python3_sitelib}/cmake-%{version}.dist-info
+
+cat > %{buildroot}%{python3_sitelib}/cmake-%{version}.dist-info/METADATA <<EOF
+Metadata-Version: 2.1
+Name: cmake
+Version: %{version}
+Summary: Python metadata for system CMake
+EOF
+
+echo rpm > %{buildroot}%{python3_sitelib}/cmake-%{version}.dist-info/INSTALLER
+%endif
+
 %check
 # Requires network access to run some tests, so exclude them
 NO_TEST="CTestTestUpload"
@@ -183,6 +214,11 @@ bin/ctest %{?_smp_mflags} -V -E "$NO_TEST" --output-on-failure
 %{_fileattrsdir}/cmake.attr
 %{_rpmmacrodir}/macros.cmake
 %{_rpmmacrodir}/macros.buildsystem.cmake
+
+%if %{without bootstrap}
+%files -n python-cmake
+%{python3_sitelib}/cmake-%{version}.dist-info/
+%endif
 
 %changelog
 %autochangelog
