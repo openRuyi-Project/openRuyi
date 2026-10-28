@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name memchr
-%global full_version 2.8.1
+%global full_version 2.8.3
 %global pkgname memchr-2
 
 Name:           rust-memchr-2
-Version:        2.8.1
+Version:        2.8.3
 Release:        %autorelease
 Summary:        Rust crate "memchr"
 License:        Unlicense OR MIT
 URL:            https://github.com/BurntSushi/memchr
-#!RemoteAsset:  sha256:6b947ae49db0d222b1dbc6b113ce7248a3fc3a6ca21b696717bfc000ba4484d8
+#!RemoteAsset:  sha256:cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
