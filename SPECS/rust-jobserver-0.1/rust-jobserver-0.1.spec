@@ -4,25 +4,26 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name jobserver
-%global full_version 0.1.34
+%global full_version 0.1.35
 %global pkgname jobserver-0.1
 
 Name:           rust-jobserver-0.1
-Version:        0.1.34
+Version:        0.1.35
 Release:        %autorelease
 Summary:        Rust crate "jobserver"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/jobserver-rs
-#!RemoteAsset:  sha256:9afb3de4395d6b3e67a780b6de64b51c978ecf11cb9a462c66be7d4ca9039d33
+#!RemoteAsset:  sha256:1c00acbd29eabad4a2392fa0e921c874934dbbf4194312ad20f04a0ed67a3cb3
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(getrandom-0.3/default) >= 0.3.2
-Requires:       crate(getrandom-0.3/std) >= 0.3.2
+Requires:       crate(getrandom-0.4/default) >= 0.4.0
+Requires:       crate(getrandom-0.4/std) >= 0.4.0
 Requires:       crate(libc-0.2/default) >= 0.2.171
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 
