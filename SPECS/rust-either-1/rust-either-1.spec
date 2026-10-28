@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name either
-%global full_version 1.16.0
+%global full_version 1.18.0
 %global pkgname either-1
 
 Name:           rust-either-1
-Version:        1.16.0
+Version:        1.18.0
 Release:        %autorelease
 Summary:        Rust crate "either"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rayon-rs/either
-#!RemoteAsset:  sha256:91622ff5e7162018101f2fea40d6ebf4a78bbe5a49736a2020649edf9693679e
+#!RemoteAsset:  sha256:252afb9ae5eaa683babdc6a068b3f5726eb19e05070c731f9b2a23a7c3e8ed34
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
