@@ -4,23 +4,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name serde
-%global full_version 1.0.228
+%global full_version 1.0.229
 %global pkgname serde-1
 
 Name:           rust-serde-1
-Version:        1.0.228
+Version:        1.0.229
 Release:        %autorelease
 Summary:        Rust crate "serde"
 License:        MIT OR Apache-2.0
 URL:            https://serde.rs
-#!RemoteAsset:  sha256:9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e
+#!RemoteAsset:  sha256:4148590afebada386688f18773da617792bf2ef03ffc1e4cbd2b1d45b023e0ba
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(serde-core-1/result) >= 1.0.228
+Requires:       crate(serde-core-1/result) >= 1.0.229
+
 Provides:       crate(%{pkgname}) = %{version}
 
 %description
@@ -29,8 +30,8 @@ Source code for takopackized Rust crate "serde"
 %package     -n %{name}+alloc
 Summary:        Generic serialization/deserialization framework - feature "alloc"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(serde-core-1/alloc) >= 1.0.228
-Requires:       crate(serde-core-1/result) >= 1.0.228
+Requires:       crate(serde-core-1/alloc) >= 1.0.229
+Requires:       crate(serde-core-1/result) >= 1.0.229
 Provides:       crate(%{pkgname}/alloc) = %{version}
 
 %description -n %{name}+alloc
@@ -39,8 +40,8 @@ This metapackage enables feature "alloc" for the Rust serde crate, by pulling in
 %package     -n %{name}+rc
 Summary:        Generic serialization/deserialization framework - feature "rc"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(serde-core-1/rc) >= 1.0.228
-Requires:       crate(serde-core-1/result) >= 1.0.228
+Requires:       crate(serde-core-1/rc) >= 1.0.229
+Requires:       crate(serde-core-1/result) >= 1.0.229
 Provides:       crate(%{pkgname}/rc) = %{version}
 
 %description -n %{name}+rc
@@ -61,8 +62,8 @@ Additionally, this package also provides the "derive" feature.
 %package     -n %{name}+std
 Summary:        Generic serialization/deserialization framework - feature "std" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(serde-core-1/result) >= 1.0.228
-Requires:       crate(serde-core-1/std) >= 1.0.228
+Requires:       crate(serde-core-1/result) >= 1.0.229
+Requires:       crate(serde-core-1/std) >= 1.0.229
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/std) = %{version}
 
@@ -74,8 +75,8 @@ Additionally, this package also provides the "default" feature.
 %package     -n %{name}+unstable
 Summary:        Generic serialization/deserialization framework - feature "unstable"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(serde-core-1/result) >= 1.0.228
-Requires:       crate(serde-core-1/unstable) >= 1.0.228
+Requires:       crate(serde-core-1/result) >= 1.0.229
+Requires:       crate(serde-core-1/unstable) >= 1.0.229
 Provides:       crate(%{pkgname}/unstable) = %{version}
 
 %description -n %{name}+unstable
