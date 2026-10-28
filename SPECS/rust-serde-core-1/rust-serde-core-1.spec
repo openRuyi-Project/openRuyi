@@ -4,23 +4,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name serde_core
-%global full_version 1.0.228
+%global full_version 1.0.229
 %global pkgname serde-core-1
 
 Name:           rust-serde-core-1
-Version:        1.0.228
+Version:        1.0.229
 Release:        %autorelease
 Summary:        Rust crate "serde_core"
 License:        MIT OR Apache-2.0
 URL:            https://serde.rs
-#!RemoteAsset:  sha256:41d385c7d4ca58e59fc732af25c3983b67ac852c1a25000afe1175de458b67ad
+#!RemoteAsset:  sha256:67dca2c9c51e58a4791a4b1ed58308b39c64224d349a935ab5039aa360942a48
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(serde-derive-1/default) >= 1.0.228
+Requires:       crate(serde-derive-1/default) >= 1.0.229
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/rc) = %{version}
