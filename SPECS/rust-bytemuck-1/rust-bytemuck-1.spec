@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name bytemuck
-%global full_version 1.25.0
+%global full_version 1.25.2
 %global pkgname bytemuck-1
 
 Name:           rust-bytemuck-1
-Version:        1.25.0
+Version:        1.25.2
 Release:        %autorelease
 Summary:        Rust crate "bytemuck"
 License:        Zlib OR Apache-2.0 OR MIT
 URL:            https://github.com/Lokathor/bytemuck
-#!RemoteAsset:  sha256:c8efb64bd706a16a1bdde310ae86b351e4d21550d98d056f22f8a7f7a2183fec
+#!RemoteAsset:  sha256:95832e849adfb21180ccb6826a99da14e5d266ae5c2e668e1602cf234f153797
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
