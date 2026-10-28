@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name clap_derive
-%global full_version 4.6.1
+%global full_version 4.6.4
 %global pkgname clap-derive-4
 
 Name:           rust-clap-derive-4
-Version:        4.6.1
+Version:        4.6.4
 Release:        %autorelease
 Summary:        Rust crate "clap_derive"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/clap-rs/clap
-#!RemoteAsset:  sha256:f2ce8604710f6733aa641a2b3731eaa1e8b3d9973d5e3565da11800813f997a9
+#!RemoteAsset:  sha256:d012d2b9d65aca7f18f4d9878a045bc17899bba951561ba5ec3c2ba1eed9a061
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,8 +23,9 @@ BuildRequires:  rust-rpm-macros
 Requires:       crate(heck-0.5/default) >= 0.5.0
 Requires:       crate(proc-macro2-1/default) >= 1.0.106
 Requires:       crate(quote-1/default) >= 1.0.45
-Requires:       crate(syn-2/default) >= 2.0.117
-Requires:       crate(syn-2/full) >= 2.0.117
+Requires:       crate(syn-3/default) >= 3.0.2
+Requires:       crate(syn-3/full) >= 3.0.2
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/debug) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
