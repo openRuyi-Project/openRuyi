@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "rand"
-version = "0.10.1"
+version = "0.10.2"
 authors = [
     "The Rand Project Developers",
     "The Rust Project Developers",
