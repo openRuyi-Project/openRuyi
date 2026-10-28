@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name serde_derive
-%global full_version 1.0.228
+%global full_version 1.0.229
 %global pkgname serde-derive-1
 
 Name:           rust-serde-derive-1
-Version:        1.0.228
+Version:        1.0.229
 Release:        %autorelease
 Summary:        Rust crate "serde_derive"
 License:        MIT OR Apache-2.0
 URL:            https://serde.rs
-#!RemoteAsset:  sha256:d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79
+#!RemoteAsset:  sha256:e7a5d71263a5a7d47b41f6b3f06ba276f10cc18b0931f1799f710578e2309348
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,11 +22,12 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(proc-macro2-1/proc-macro) >= 1.0.74
 Requires:       crate(quote-1/proc-macro) >= 1.0.35
-Requires:       crate(syn-2/clone-impls) >= 2.0.81
-Requires:       crate(syn-2/derive) >= 2.0.81
-Requires:       crate(syn-2/parsing) >= 2.0.81
-Requires:       crate(syn-2/printing) >= 2.0.81
-Requires:       crate(syn-2/proc-macro) >= 2.0.81
+Requires:       crate(syn-3/clone-impls) >= 3.0.0
+Requires:       crate(syn-3/derive) >= 3.0.0
+Requires:       crate(syn-3/parsing) >= 3.0.0
+Requires:       crate(syn-3/printing) >= 3.0.0
+Requires:       crate(syn-3/proc-macro) >= 3.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/deserialize-in-place) = %{version}
