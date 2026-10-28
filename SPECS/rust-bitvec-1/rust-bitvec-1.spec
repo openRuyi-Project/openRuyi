@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name bitvec
-%global full_version 1.0.1
+%global full_version 1.1.1
 %global pkgname bitvec-1
 
 Name:           rust-bitvec-1
-Version:        1.0.1
+Version:        1.1.1
 Release:        %autorelease
 Summary:        Rust crate "bitvec"
 License:        MIT
 URL:            https://bitvecto-rs.github.io/bitvec
-#!RemoteAsset:  sha256:1bc2832c24239b0141d5674bb9174f9d68a8b5b3f2753311927c172ca46f7e9c
+#!RemoteAsset:  sha256:ddcec3d12c579d40898fe0a9a358a803c23e9c52ca3c425707f81c9436211837
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -24,6 +24,7 @@ Requires:       crate(funty-2) >= 2.0.0
 Requires:       crate(radium-0.7/default) >= 0.7.0
 Requires:       crate(tap-1/default) >= 1.0.0
 Requires:       crate(wyz-0.5) >= 0.5.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/atomic) = %{version}
