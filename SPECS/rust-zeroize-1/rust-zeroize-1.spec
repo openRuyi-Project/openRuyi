@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name zeroize
-%global full_version 1.8.2
+%global full_version 1.9.0
 %global pkgname zeroize-1
 
 Name:           rust-zeroize-1
-Version:        1.8.2
+Version:        1.9.0
 Release:        %autorelease
 Summary:        Rust crate "zeroize"
 License:        Apache-2.0 OR MIT
-URL:            https://github.com/RustCrypto/utils/tree/master/zeroize
-#!RemoteAsset:  sha256:b97154e67e32c85465826e8bcc1c59429aaaf107c1e4a9e53c8d8ccd5eff88d0
+URL:            https://github.com/RustCrypto/utils
+#!RemoteAsset:  sha256:e13c156562582aa81c60cb29407084cdb54c4164760106ab78e6c5b0858cf64e
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -44,7 +44,7 @@ This metapackage enables feature "serde" for the Rust zeroize crate, by pulling 
 %package     -n %{name}+zeroize-derive
 Summary:        Securely clear secrets from memory with a simple trait built on stable Rust primitives which guarantee memory is zeroed using an operation will not be 'optimized away' by the compiler - feature "zeroize_derive" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(zeroize-derive-1/default) >= 1.3.0
+Requires:       crate(zeroize-derive-1/default) >= 1.5.0
 Provides:       crate(%{pkgname}/derive) = %{version}
 Provides:       crate(%{pkgname}/zeroize-derive) = %{version}
 
