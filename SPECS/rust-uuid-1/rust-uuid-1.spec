@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name uuid
-%global full_version 1.23.2
+%global full_version 1.24.1
 %global pkgname uuid-1
 
 Name:           rust-uuid-1
-Version:        1.23.2
+Version:        1.24.1
 Release:        %autorelease
 Summary:        Rust crate "uuid"
 License:        Apache-2.0 OR MIT
 URL:            https://github.com/uuid-rs/uuid
-#!RemoteAsset:  sha256:d258b83ceec21034727ecee8c382cfa6c3e133699b0742c64571814fb420c9f7
+#!RemoteAsset:  sha256:2cefc03fd367c0c6d4305de1b312cf00248c4114f4a0418ce6a6af769e3b0bd9
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -120,7 +120,7 @@ Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/rng) = %{version}
 Requires:       crate(%{pkgname}/uuid-rng-internal-lib) = %{version}
 Requires:       crate(getrandom-0.4/default) >= 0.4.0
-Requires:       crate(uuid-rng-internal-1/getrandom) >= 1.23.2
+Requires:       crate(uuid-rng-internal-1/getrandom) >= 1.24.1
 Provides:       crate(%{pkgname}/rng-getrandom) = %{version}
 
 %description -n %{name}+rng-getrandom
@@ -132,7 +132,7 @@ Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/rng) = %{version}
 Requires:       crate(%{pkgname}/uuid-rng-internal-lib) = %{version}
 Requires:       crate(rand-0.10/default) >= 0.10.0
-Requires:       crate(uuid-rng-internal-1/rand) >= 1.23.2
+Requires:       crate(uuid-rng-internal-1/rand) >= 1.24.1
 Provides:       crate(%{pkgname}/rng-rand) = %{version}
 
 %description -n %{name}+rng-rand
@@ -184,7 +184,7 @@ Additionally, this package also provides the "default" feature.
 %package     -n %{name}+uuid-rng-internal-lib
 Summary:        Generate and parse UUIDs - feature "uuid-rng-internal-lib"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(uuid-rng-internal-1/default) >= 1.23.2
+Requires:       crate(uuid-rng-internal-1/default) >= 1.24.1
 Provides:       crate(%{pkgname}/uuid-rng-internal-lib) = %{version}
 
 %description -n %{name}+uuid-rng-internal-lib
