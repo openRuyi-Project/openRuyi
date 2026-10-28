@@ -82,6 +82,8 @@ Requires:       glibc
 1002-internal-cpu-detect-RISC-V-VLENB-when-the-vector-ext.patch
 1003-crypto-internal-fips140-sha256-enable-zvknha-for-ris.patch
 1004-crypto-internal-fips140-sha512-enable-zvknhb-for-ris.patch
+# Backport index optimization for RISC-V from Go gerrit
+2001-internal-bytealg-add-index-assembly-optimization-for.patch
 
 %description
 The Go Programming Language. This package contains the compiler, tools,
