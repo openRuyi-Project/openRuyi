@@ -4,24 +4,25 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name clap_builder
-%global full_version 4.6.0
+%global full_version 4.6.6
 %global pkgname clap-builder-4
 
 Name:           rust-clap-builder-4
-Version:        4.6.0
+Version:        4.6.6
 Release:        %autorelease
 Summary:        Rust crate "clap_builder"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/clap-rs/clap
-#!RemoteAsset:  sha256:714a53001bf66416adb0e2ef5ac857140e7dc3a0c48fb28b2f10762fc4b5069f
+#!RemoteAsset:  sha256:7b48fea5a88e9ae728a2dcbedbfc0e730f7d60da42e1cb049a83c9fb8b789889
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(anstyle-1/default) >= 1.0.13
+Requires:       crate(anstyle-1/default) >= 1.0.14
 Requires:       crate(clap-lex-1/default) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/cargo) = %{version}
 Provides:       crate(%{pkgname}/deprecated) = %{version}
@@ -74,7 +75,7 @@ This metapackage enables feature "default" for the Rust clap_builder crate, by p
 %package     -n %{name}+std
 Summary:        Simple to use, efficient, and full-featured Command Line Argument Parser - feature "std"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(anstyle-1/std) >= 1.0.13
+Requires:       crate(anstyle-1/std) >= 1.0.14
 Provides:       crate(%{pkgname}/std) = %{version}
 
 %description -n %{name}+std
@@ -118,7 +119,7 @@ This metapackage enables feature "unstable-doc" for the Rust clap_builder crate,
 Summary:        Simple to use, efficient, and full-featured Command Line Argument Parser - feature "wrap_help"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/help) = %{version}
-Requires:       crate(terminal-size-0.4/default) >= 0.4.3
+Requires:       crate(terminal-size-0.4/default) >= 0.4.4
 Provides:       crate(%{pkgname}/wrap-help) = %{version}
 
 %description -n %{name}+wrap-help
