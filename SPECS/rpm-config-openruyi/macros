@@ -97,15 +97,19 @@
 # we expects bash for building
 %_buildshell           /usr/bin/bash
 
+# Optional compiler major version; leave empty to use the unversioned command.
+%toolchain_major_version %{nil}
+%_toolchain_version_suffix %{lua:local version = rpm.expand("%{?toolchain_major_version}"); if version ~= "" then print("-" .. version) end}
+
 # GCC toolchain
-%__cc_gcc gcc
-%__cxx_gcc g++
-%__cpp_gcc gcc -E
+%__cc_gcc gcc%{_toolchain_version_suffix}
+%__cxx_gcc g++%{_toolchain_version_suffix}
+%__cpp_gcc gcc%{_toolchain_version_suffix} -E
 
 # Clang toolchain
-%__cc_clang clang
-%__cxx_clang clang++
-%__cpp_clang clang-cpp
+%__cc_clang clang%{_toolchain_version_suffix}
+%__cxx_clang clang++%{_toolchain_version_suffix}
+%__cpp_clang clang-cpp%{_toolchain_version_suffix}
 
 # Default to the GCC toolchain
 %toolchain gcc
