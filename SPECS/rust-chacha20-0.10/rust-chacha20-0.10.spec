@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name chacha20
-%global full_version 0.10.0
+%global full_version 0.10.2
 %global pkgname chacha20-0.10
 
 Name:           rust-chacha20-0.10
-Version:        0.10.0
+Version:        0.10.2
 Release:        %autorelease
 Summary:        Rust crate "chacha20"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/RustCrypto/stream-ciphers
-#!RemoteAsset:  sha256:6f8d983286843e49675a4b7a2d174efe136dc93a18d69130dd18198a6c167601
+#!RemoteAsset:  sha256:65c35e4b699c7e15ccbe7ee35c005e4fc0a278d22238a2857e6ce2dadeda1b06
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,6 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(cfg-if-1/default) >= 1.0.0
 Requires:       crate(cpufeatures-0.3/default) >= 0.3.0
+
 Provides:       crate(%{pkgname}) = %{version}
 
 %description
