@@ -1,0 +1,12 @@
+diff --git a/src/firecracker/Cargo.toml b/src/firecracker/Cargo.toml
+--- a/src/firecracker/Cargo.toml
++++ b/src/firecracker/Cargo.toml
+@@ -28 +28 @@
+-micro_http = { git = "https://github.com/firecracker-microvm/micro-http" }
++micro_http = { path = "../../deps/micro-http" }
+diff --git a/src/vmm/Cargo.toml b/src/vmm/Cargo.toml
+--- a/src/vmm/Cargo.toml
++++ b/src/vmm/Cargo.toml
+@@ -43 +43 @@
+-micro_http = { git = "https://github.com/firecracker-microvm/micro-http" }
++micro_http = { path = "../../deps/micro-http" }
