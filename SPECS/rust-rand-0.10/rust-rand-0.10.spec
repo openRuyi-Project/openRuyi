@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name rand
-%global full_version 0.10.1
+%global full_version 0.10.2
 %global pkgname rand-0.10
 
 Name:           rust-rand-0.10
-Version:        0.10.1
+Version:        0.10.2
 Release:        %autorelease
 Summary:        Rust crate "rand"
 License:        MIT OR Apache-2.0
 URL:            https://rust-random.github.io/book
-#!RemoteAsset:  sha256:d2e8e8bcc7961af1fdac401278c6a831614941f6164ee3bf4ce61b7edb162207
+#!RemoteAsset:  sha256:c7f5fa3a058cd35567ef9bfa5e75732bee0f9e4c55fa90477bef2dfcdbc4be80
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(rand-core-0.10) >= 0.10.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/log) = %{version}
