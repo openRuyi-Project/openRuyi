@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name bitflags
-%global full_version 2.13.0
+%global full_version 2.13.1
 %global pkgname bitflags-2
 
 Name:           rust-bitflags-2
-Version:        2.13.0
+Version:        2.13.1
 Release:        %autorelease
 Summary:        Rust crate "bitflags"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/bitflags/bitflags
-#!RemoteAsset:  sha256:b4388bee8683e3d04af747c73422af53102d2bd24d9eadb6cbc100baef4b43f8
+#!RemoteAsset:  sha256:b588b76d00fde79687d7646a9b5bdf3cc0f655e0bbd080335a95d7e96f3587da
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
