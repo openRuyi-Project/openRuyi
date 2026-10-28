@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name serde_json
-%global full_version 1.0.150
+%global full_version 1.0.151
 %global pkgname serde-json-1
 
 Name:           rust-serde-json-1
-Version:        1.0.150
+Version:        1.0.151
 Release:        %autorelease
 Summary:        Rust crate "serde_json"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/serde-rs/json
-#!RemoteAsset:  sha256:e8014e44b4736ed0538adeecded0fce2a272f22dc9578a7eb6b2d9993c74cfb9
+#!RemoteAsset:  sha256:c841b55ecdae098c80dcae9cf767f6f8a0c2cdb3416bbef72181df4d0fe73f14
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -25,6 +25,7 @@ Requires:       crate(memchr-2) >= 2.0.0
 Requires:       crate(serde-1) >= 1.0.220
 Requires:       crate(serde-core-1) >= 1.0.220
 Requires:       crate(zmij-1/default) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/arbitrary-precision) = %{version}
 Provides:       crate(%{pkgname}/float-roundtrip) = %{version}
