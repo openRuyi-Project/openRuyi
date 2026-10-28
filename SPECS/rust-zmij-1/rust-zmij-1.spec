@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name zmij
-%global full_version 1.0.21
+%global full_version 1.0.23
 %global pkgname zmij-1
 
 Name:           rust-zmij-1
-Version:        1.0.21
+Version:        1.0.23
 Release:        %autorelease
 Summary:        Rust crate "zmij"
 License:        MIT
 URL:            https://github.com/dtolnay/zmij
-#!RemoteAsset:  sha256:b8848ee67ecc8aedbaf3e4122217aff892639231befc6a1b58d29fff4c2cabaa
+#!RemoteAsset:  sha256:29666d0abbfad1e3dc4dcf6144730dd3a3ab225bbbdac83319345b1b44ccfc1b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -27,7 +27,7 @@ Provides:       crate(%{pkgname}/default) = %{version}
 Source code for takopackized Rust crate "zmij"
 
 %package     -n %{name}+no-panic
-Summary:        Double-to-string conversion algorithm based on Schubfach and yy - feature "no-panic"
+Summary:        Double-to-string conversion algorithm based on Schubfach and xjb - feature "no-panic"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(no-panic-0.1/default) >= 0.1.36
 Provides:       crate(%{pkgname}/no-panic) = %{version}
