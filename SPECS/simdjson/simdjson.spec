@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global counters_version 3.1.0
+%global test_data_commit 351949906abde446f0314bf79606fb5d884f5be7
+
 Name:           simdjson
 Version:        5.0.8
 Release:        %autorelease
@@ -15,14 +18,25 @@ VCS:            git:https://github.com/simdjson/simdjson.git
 Source0:        https://github.com/simdjson/simdjson/archive/refs/tags/v%{version}.tar.gz
 #!RemoteAsset:  sha256:c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566
 Source1:        https://www.boost.org/LICENSE_1_0.txt
+#!RemoteAsset:  sha256:c8cdc32c03816538ce22781ed72964dc864b2a34a310d3b7104812a5ca2d835d
+Source2:        https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.2/CPM.cmake
+#!RemoteAsset:  sha256:cc2bd298d7e48f8b16c648972c9375860c37a20534594d968eee3827b6fe4025
+Source3:        https://github.com/lemire/counters/archive/refs/tags/v%{counters_version}.tar.gz
+#!RemoteAsset:  sha256:257371accdfca69814ec88841031bd8183409abf5048fff797df516092b6ded9
+Source4:        https://github.com/simdjson/simdjson-data/archive/%{test_data_commit}.tar.gz
 BuildSystem:    cmake
 
-BuildOption(conf):  -DSIMDJSON_TESTS=ON
-BuildOption(conf):  -DSIMDJSON_BUILD_STATIC=OFF
+BuildOption(conf):  -G Ninja
+BuildOption(conf):  -DSIMDJSON_DEVELOPER_MODE:BOOL=ON
+BuildOption(conf):  -DSIMDJSON_ALLOW_DOWNLOADS:BOOL=OFF
+BuildOption(conf):  -DCPM_LOCAL_PACKAGES_ONLY:BOOL=ON
+BuildOption(conf):  -DCPM_counters_SOURCE:PATH="$PWD/counters-%{counters_version}"
+BuildOption(conf):  -DCPM_simdjson-data_SOURCE:PATH="$PWD/simdjson-data-%{test_data_commit}"
+BuildOption(check):  --no-tests=error
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
-BuildRequires:  make
+BuildRequires:  ninja
 BuildRequires:  pkgconfig(python3)
 
 %description
@@ -39,6 +53,8 @@ The package contains libraries and header files for developing applications
 that use %{name}.
 
 %prep -a
+%setup -q -T -D -a 3 -a 4
+install -m 0644 %{SOURCE2} cmake/CPM.cmake
 install -m 0644 %{SOURCE1} LICENSE-Boost
 sed -n '1,/^\*\//p' src/internal/isadetection.h > LICENSE-BSD
 
