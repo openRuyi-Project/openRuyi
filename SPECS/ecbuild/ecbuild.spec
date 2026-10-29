@@ -28,7 +28,7 @@ ecbuild is the CMake-based build system used by ECMWF software.
 %license LICENSE
 %{_bindir}/ecbuild
 %{_datadir}/ecbuild/
-%{_prefix}/lib/cmake/ecbuild/
+%{_libdir}/cmake/ecbuild/
 
 %changelog
 %autochangelog
