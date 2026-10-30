@@ -1,0 +1,14 @@
+diff --git a/binutils/testsuite/binutils-all/objcopy.exp b/binutils/testsuite/binutils-all/objcopy.exp
+index eed6658..d7a5f78 100644
+--- a/binutils/testsuite/binutils-all/objcopy.exp
++++ b/binutils/testsuite/binutils-all/objcopy.exp
+@@ -613,6 +613,9 @@ proc strip_test { } {
+     set exec_output [binutils_run $NM "-a $NMFLAGS $objfile"]
+     set exec_output [prune_warnings $exec_output]
+     if ![string match "*: no symbols*" $exec_output] {
++	# RISC-V annotation symbols can remain after stripping.
++	setup_xfail riscv*-*-*
++
+ 	fail $test
+ 	return
+     }

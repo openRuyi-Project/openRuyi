@@ -1,0 +1,72 @@
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pic.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pic.d
+index 5bf85b9..ea96835 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pic.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pic.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv32i -mabi=ilp32 -defsym __abs__=1 -defsym __addr__=1 -defsym __undef__=1
+-#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared
++#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pie.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pie.d
+index 4ed7f28..8a3b5d8 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pie.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-pie.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv32i -mabi=ilp32 -defsym __abs__=1 -defsym __addr__=1
+-#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -pie
++#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -pie -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-symbolic.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-symbolic.d
+index 4f8a1a1..0a16656 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv32-symbolic.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv32-symbolic.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv32i -mabi=ilp32 -defsym __abs__=1 -defsym __addr__=1 -defsym __undef__=1
+-#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -Bsymbolic
++#ld: -m[riscv_choose_ilp32_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -Bsymbolic -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pic.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pic.d
+index f77be5a..a65fc00 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pic.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pic.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv64i -mabi=lp64 -defsym __64_bit__=1 -defsym __abs__=1 -defsym __addr__=1 -defsym __undef__=1
+-#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared
++#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pie.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pie.d
+index f85c323..a0f8233 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pie.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-pie.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv64i -mabi=lp64 -defsym __64_bit__=1 -defsym __abs__=1 -defsym __addr__=1
+-#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -pie
++#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -pie -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
+diff --git a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-symbolic.d b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-symbolic.d
+index 0c3ce86..b6b797a 100644
+--- a/ld/testsuite/ld-riscv-elf/data-reloc-rv64-symbolic.d
++++ b/ld/testsuite/ld-riscv-elf/data-reloc-rv64-symbolic.d
+@@ -1,6 +1,6 @@
+ #source: data-reloc.s
+ #as: -march=rv64i -mabi=lp64 -defsym __64_bit__=1 -defsym __abs__=1 -defsym __addr__=1 -defsym __undef__=1
+-#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -Bsymbolic
++#ld: -m[riscv_choose_lp64_emul] -Ttext 0x8000 --defsym _start=0x0 --defsym abs=0x100 --defsym abs_local=0x200 -shared -Bsymbolic -z notext
+ #objdump: -dR
+ 
+ .*:[ 	]+file format .*
