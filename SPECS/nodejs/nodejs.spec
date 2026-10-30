@@ -97,6 +97,8 @@ Requires:       sqlite%{?_isa} >= 3.54.0
 2002-zlib-ng-version-test.patch
 # Report unsupported Wasm SIMD as skipped; https://github.com/felixonmars/archriscv-packages/blob/2c56f9918e59cb5cfb7af860d2336785d0a36dea/nodejs/wasm-simd-skip.patch.
 2003-wpt-wasm-simd-skip.patch
+# Accept CLDR 49 date and time-zone formats; https://github.com/unicode-org/cldr/pull/5725 and https://github.com/unicode-org/cldr/pull/5783.
+2004-test-cldr49-date-formats.patch
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.
