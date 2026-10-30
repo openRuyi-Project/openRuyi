@@ -1,0 +1,100 @@
+From faf2c0a24b3da00ab4b8872e48a70a855b577ee8 Mon Sep 17 00:00:00 2001
+From: sirzooro <daniel@poradnik-webmastera.com>
+Date: Tue, 27 May 2025 06:58:37 +0200
+Subject: [PATCH] Properly encrypt RTP packets with padding
+
+---
+ session_srtp.go                 | 14 +++++++++-
+ session_srtp_test.go            | 48 +++++++++++++++++++++++++++++++++
+ srtp.go                         |  7 ++---
+ srtp_cipher.go                  |  2 +-
+ srtp_cipher_aead_aes_gcm.go     | 21 ++++++++++-----
+ srtp_cipher_aes_cm_hmac_sha1.go | 22 ++++++++-------
+ srtp_cipher_test.go             | 12 +++++++++
+ util.go                         | 28 ++++++++++++++++---
+ 8 files changed, 130 insertions(+), 24 deletions(-)
+
+--- a/session_srtp.go
++++ b/session_srtp.go
+@@ -149,8 +149,18 @@
+ 	ibuf := bufferpool.Get()
+ 	defer bufferpool.Put(ibuf)
+ 
++	buf := ibuf.([]byte)
++	headerLen, marshalSize := rtp.HeaderAndPacketMarshalSize(header, payload)
++	if len(buf) < marshalSize+20 {
++		buf = make([]byte, marshalSize+20)
++	}
++	_, err := rtp.MarshalPacketTo(buf, header, payload)
++	if err != nil {
++		return 0, err
++	}
++
+ 	s.session.localContextMutex.Lock()
+-	encrypted, err := s.localContext.encryptRTP(ibuf.([]byte), header, payload)
++	encrypted, err := s.localContext.encryptRTP(buf, header, buf[headerLen:marshalSize])
+ 	s.session.localContextMutex.Unlock()
+ 
+ 	if err != nil {
+--- a/session_srtp_test.go
++++ b/session_srtp_test.go
+@@ -15,6 +15,7 @@
+ 
+ 	"github.com/pion/rtp"
+ 	"github.com/pion/transport/v2/test"
++	"github.com/stretchr/testify/assert"
+ )
+ 
+ func TestSessionSRTPBadInit(t *testing.T) {
+@@ -424,3 +425,51 @@
+ 	}
+ 	return encrypted, nil
+ }
++
++func TestSessionSRTPPacketWithPadding(t *testing.T) {
++	lim := test.TimeOut(time.Second * 5)
++	defer lim.Stop()
++
++	report := test.CheckRoutines(t)
++	defer report()
++
++	const (
++		testSSRC      = 5000
++		rtpHeaderSize = 12
++		paddingSize   = 5
++		authTagLen    = 10 // For AES_CM_128_HMAC_SHA1_80, the auth tag length is 10 bytes.
++	)
++	testPayload := []byte{0x00, 0x01, 0x03, 0x04}
++	readBuffer := make([]byte, rtpHeaderSize+paddingSize+len(testPayload))
++	aSession, bSession := buildSessionSRTPPair(t)
++
++	aWriteStream, err := aSession.OpenWriteStream()
++	assert.NoError(t, err)
++
++	writeBytes, err := aWriteStream.WriteRTP(&rtp.Header{SSRC: testSSRC, Padding: true, PaddingSize: paddingSize},
++		append([]byte{}, testPayload...))
++	assert.NoError(t, err)
++	assert.Equalf(t, rtpHeaderSize+paddingSize+len(testPayload)+authTagLen, writeBytes,
++		"WriteRTP should return the size of the packet including padding, exp(%v) actual(%v)",
++		rtpHeaderSize+paddingSize+len(testPayload)+authTagLen, writeBytes)
++
++	bReadStream, ssrc, err := bSession.AcceptStream()
++	assert.NoError(t, err)
++	assert.Equalf(t, uint32(testSSRC), ssrc, "SSRC mismatch during accept exp(%v) actual(%v)", testSSRC, ssrc)
++
++	readBytes, err := bReadStream.Read(readBuffer)
++	assert.NoError(t, err)
++	assert.Equal(t, rtpHeaderSize+paddingSize+len(testPayload), readBytes,
++		"Read should return the size of the packet including padding, exp(%v) actual(%v)",
++		rtpHeaderSize+paddingSize+len(testPayload), readBytes)
++
++	var rtpPacket rtp.Packet
++	err = rtpPacket.Unmarshal(readBuffer[:readBytes])
++	assert.NoError(t, err)
++	assert.Equal(t, rtpPacket.Padding, true)
++	assert.Equal(t, rtpPacket.PaddingSize, byte(paddingSize))
++	assert.Equal(t, rtpPacket.Payload, testPayload)
++
++	assert.NoError(t, aSession.Close())
++	assert.NoError(t, bSession.Close())
++}
