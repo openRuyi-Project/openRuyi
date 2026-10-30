@@ -1,0 +1,52 @@
+From f01186bc960f51584c14161f9199b732dcd6f9ee Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Thu, 2 Jul 2026 14:50:24 +0800
+Subject: [PATCH] force cblas complex dot for openblas
+
+cmake/BLAS_ABI.cmake decides at configure time how ATen must call the
+complex level-1 BLAS dot routines: with AT_BLAS_USE_CBLAS_DOT it uses the
+unambiguous cblas_cdotu_sub()/cblas_cdotc_sub() (result written through an
+output pointer), otherwise it calls the Fortran cdotu_/cdotc_ with the
+f2c "result via first argument" convention.  OpenBLAS's Fortran cdotu_/
+cdotc_ instead return the complex value in registers, so the non-CBLAS
+path silently yields 0 for torch.dot()/torch.vdot()/inner() on complex
+tensors.
+
+The CHECK_C_SOURCE_RUNS() probe that is meant to pick AT_BLAS_USE_CBLAS_DOT
+misdetects in our rpmbuild environment and leaves it FALSE, producing that
+0 result (verified: AT_BLAS_USE_CBLAS_DOT() == 0 in the built ATen/Config.h).
+OpenBLAS does export cblas_cdotu_sub/cblas_cdotc_sub, so opt into the CBLAS
+path.  Upstream already honors the PYTORCH_BLAS_USE_CBLAS_DOT env var, but
+only when cross compiling; extend it to native builds so the spec can set
+PYTORCH_BLAS_USE_CBLAS_DOT=ON.  Pre-setting the result variable makes the
+later check_c_source_runs() a no-op, mirroring how the NVPL branch forces
+BLAS_USE_CBLAS_DOT.
+---
+ cmake/BLAS_ABI.cmake | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/cmake/BLAS_ABI.cmake b/cmake/BLAS_ABI.cmake
+index 45a15af..387df1e 100644
+--- a/cmake/BLAS_ABI.cmake
++++ b/cmake/BLAS_ABI.cmake
+@@ -6,6 +6,17 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x8
+   list(APPEND CMAKE_REQUIRED_FLAGS "-arch ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+ endif()
+ 
++# openRuyi: honor the PYTORCH_BLAS_USE_CBLAS_DOT override for native builds too
++# (upstream reads it only when cross compiling).  The CHECK_C_SOURCE_RUNS probe
++# below misdetects OpenBLAS's cblas_*dot*_sub interface in our rpmbuild sandbox
++# and leaves BLAS_USE_CBLAS_DOT FALSE; that compiles torch.dot()/torch.vdot() on
++# complex tensors down to the by-value Fortran cdotc_/cdotu_ path, so they return
++# 0.  OpenBLAS exports cblas_cdotu_sub/cblas_cdotc_sub, so let the spec opt in.
++# Pre-setting the result variable makes the check_c_source_runs() below a no-op.
++if("$ENV{PYTORCH_BLAS_USE_CBLAS_DOT}" STREQUAL "ON")
++  set(BLAS_USE_CBLAS_DOT TRUE)
++endif()
++
+ # Set values through env variables if cross compiling
+ if(CMAKE_CROSSCOMPILING)
+   if("$ENV{PYTORCH_BLAS_F2C}" STREQUAL "ON")
+-- 
+2.53.0
+

@@ -1,0 +1,51 @@
+From b6a381e639068fb91a05077c17925314fc8f4735 Mon Sep 17 00:00:00 2001
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Date: Fri, 28 Aug 2026 11:57:27 +0800
+Subject: [PATCH] riscv: gate RVV kernel on vector target
+
+__riscv_v_intrinsic indicates RVV intrinsic API availability and is defined
+even when the selected target(rva20) does not enable V.
+
+---
+ aten/src/ATen/native/Convolution.cpp             | 2 +-
+ aten/src/ATen/native/cpu/DepthwiseConvKernel.cpp | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/aten/src/ATen/native/Convolution.cpp b/aten/src/ATen/native/Convolution.cpp
+index 0354d0d..e407246 100644
+--- a/aten/src/ATen/native/Convolution.cpp
++++ b/aten/src/ATen/native/Convolution.cpp
+@@ -355,7 +355,7 @@ struct ConvParams {
+   }
+ 
+   bool use_cpu_depthwise3x3_winograd(const at::Tensor& input, const at::Tensor& weight, const std::optional<at::Tensor>& bias) const {
+-#if defined(__ARM_NEON__) || (defined(__riscv_v_intrinsic) && __riscv_v_intrinsic>=12000)
++#if defined(__ARM_NEON__) || defined(__riscv_vector)
+     // Currently only 3x3 depthwise convolutions on tensors of float are supported.
+     return (input.ndimension() == 4) &&
+            (at::symint::size<T>(input, 1) == groups) &&
+diff --git a/aten/src/ATen/native/cpu/DepthwiseConvKernel.cpp b/aten/src/ATen/native/cpu/DepthwiseConvKernel.cpp
+index cce4c43..c88a05a 100644
+--- a/aten/src/ATen/native/cpu/DepthwiseConvKernel.cpp
++++ b/aten/src/ATen/native/cpu/DepthwiseConvKernel.cpp
+@@ -13,7 +13,7 @@
+ 
+ #ifdef __ARM_NEON__
+ #include <arm_neon.h>
+-#elif defined(__riscv_v_intrinsic) && __riscv_v_intrinsic>=12000
++#elif defined(__riscv_vector)
+ #include <riscv_vector.h>
+ #endif
+ 
+@@ -246,7 +246,7 @@ void convolution_depthwise3x3_winograd_impl(
+   }
+ }
+ 
+-#elif defined(__riscv_v_intrinsic) && __riscv_v_intrinsic>=12000
++#elif defined(__riscv_vector)
+ 
+ inline void winograd_f2k3_input_transform_inplace__rvv(
+     vfloat32m1x4_t* input_tile_val) {
+-- 
+2.53.0
+
