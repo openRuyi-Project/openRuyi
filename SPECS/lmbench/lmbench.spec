@@ -22,6 +22,9 @@ BuildSystem:    autotools
 Patch2000:      2000-Fix-build-errors.patch
 # Change default mail setting from "yes" to "no"
 Patch2001:      2001-set-no-mail.patch
+# Upstream is unmaintained (last release 2007-11-27), no upstream repository to submit patches to
+Patch2002:      2002-scripts-getsummary-fix-size-pattern-matching-to-avoi.patch
+Patch2003:      2003-Fix-int64-uint64-label-mismatch-between-lat_ops-and-.patch
 
 BuildRequires:  libtirpc-devel
 
