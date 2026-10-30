@@ -1,0 +1,148 @@
+From def38dd3f8726ed595932624ee5d681a3f02ed4a Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Thu, 27 Aug 2026 18:45:40 +0800
+Subject: [PATCH] [riscv] Replace JAL with AUIPC/JALR in lazy compile jump
+ slots
+
+The lazy compile jump slot previously emitted a single JAL instruction to
+branch to the far jump table slot. For large Wasm modules, the target
+offset can exceed the 21-bit signed range of JAL. In release builds, the
+existing DCHECK was omitted, causing the offset to be silently truncated
+modulo 0x200000. This could redirect execution to an unintended address,
+skipping security checks and leading to memory corruption.
+
+Fix this by emitting a checked AUIPC/JALR pair, which can reach any
+32-bit offset. The CHECK(is_int32(target_offset)) ensures that
+out-of-range displacements are caught rather than truncated.
+
+The lazy compile table slot size is increased from 3 to 4 instructions
+to accommodate the new sequence.
+
+Fixed:539663717
+
+Change-Id: If8088c6f33f84ba064d54536b3f6323b89a568eb
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8301500
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Commit-Queue: Matthias Liedtke <mliedtke@chromium.org>
+Reviewed-by: Matthias Liedtke <mliedtke@chromium.org>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#109580}
+---
+ src/wasm/jump-table-assembler.cc | 41 +++++++++++++++++++-------------
+ src/wasm/jump-table-assembler.h  |  4 ++--
+ 2 files changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/deps/v8/src/wasm/jump-table-assembler.cc b/deps/v8/src/wasm/jump-table-assembler.cc
+index dfebd423c7c0..2c911498f827 100644
+--- a/deps/v8/src/wasm/jump-table-assembler.cc
++++ b/deps/v8/src/wasm/jump-table-assembler.cc
+@@ -687,15 +687,20 @@ void JumpTableAssembler::SkipUntil(int offset) {
+ #elif V8_TARGET_ARCH_RISCV64
+ void JumpTableAssembler::EmitLazyCompileJumpSlot(uint32_t func_index,
+                                                  Address lazy_compile_target) {
+-  static_assert(kLazyCompileTableSlotSize == 3 * kInstrSize);
++  static_assert(kLazyCompileTableSlotSize == 4 * kInstrSize);
+   int64_t high_20 = (func_index + 0x800) >> 12;
+   int64_t low_12 = int64_t(func_index) << 52 >> 52;
+ 
++  // The lazy compile target (a slot in the far jump table) can be farther away
++  // than the range of a single JAL for large modules. Use a checked AUIPC/JALR
++  // pair instead, so an out-of-range displacement cannot be silently truncated
++  // in release builds.
+   int64_t target_offset = MacroAssembler::CalculateTargetOffset(
+       lazy_compile_target, RelocInfo::NO_INFO,
+       reinterpret_cast<uint8_t*>(pc_ + 2 * kInstrSize));
+-  DCHECK(is_int21(target_offset));
+-  DCHECK_EQ(target_offset & 0x1, 0);
++  CHECK(is_int32(target_offset));
++  int32_t hi20 = (static_cast<int32_t>(target_offset) + 0x800) >> 12;
++  int32_t lo12 = static_cast<int32_t>(target_offset) << 20 >> 20;
+ 
+   const uint32_t inst[kLazyCompileTableSlotSize / 4] = {
+       (RO_LUI | (kWasmCompileLazyFuncIndexRegister.code() << kRdShift) |
+@@ -703,16 +708,16 @@ void JumpTableAssembler::EmitLazyCompileJumpSlot(uint32_t func_index,
+       (RO_ADDI | (kWasmCompileLazyFuncIndexRegister.code() << kRdShift) |
+        (kWasmCompileLazyFuncIndexRegister.code() << kRs1Shift) |
+        int32_t(low_12 << kImm12Shift)),  // addi t0, t0, low_12
+-      (RO_JAL | (zero_reg.code() << kRdShift) |
+-       uint32_t(target_offset & 0xff000) |           // bits 19-12
+-       uint32_t((target_offset & 0x800) << 9) |      // bit  11
+-       uint32_t((target_offset & 0x7fe) << 20) |     // bits 10-1
+-       uint32_t((target_offset & 0x100000) << 11)),  // bit  20 ),  // jal
++      (RO_AUIPC | (t6.code() << kRdShift) |
++       (uint32_t(hi20) << kImm20Shift)),  // auipc t6, hi20
++      (RO_JALR | (zero_reg.code() << kRdShift) | (t6.code() << kRs1Shift) |
++       (uint32_t(lo12) << kImm12Shift)),  // jalr x0, t6, lo12
+   };
+ 
+   emit<uint32_t>(inst[0]);
+   emit<uint32_t>(inst[1]);
+   emit<uint32_t>(inst[2]);
++  emit<uint32_t>(inst[3]);
+ }
+ 
+ bool JumpTableAssembler::EmitJumpSlot(Address target) {
+@@ -802,15 +807,19 @@ void JumpTableAssembler::SkipUntil(int offset) {
+ #elif V8_TARGET_ARCH_RISCV32
+ void JumpTableAssembler::EmitLazyCompileJumpSlot(uint32_t func_index,
+                                                  Address lazy_compile_target) {
+-  static_assert(kLazyCompileTableSlotSize == 3 * kInstrSize);
++  static_assert(kLazyCompileTableSlotSize == 4 * kInstrSize);
+   int64_t high_20 = (func_index + 0x800) >> 12;
+   int64_t low_12 = int64_t(func_index) << 52 >> 52;
+ 
++  // See the RISC-V64 implementation: use a checked AUIPC/JALR pair instead of
++  // a range-limited JAL so an out-of-range displacement cannot be silently
++  // truncated in release builds.
+   int64_t target_offset = MacroAssembler::CalculateTargetOffset(
+       lazy_compile_target, RelocInfo::NO_INFO,
+       reinterpret_cast<uint8_t*>(pc_ + 2 * kInstrSize));
+-  DCHECK(is_int21(target_offset));
+-  DCHECK_EQ(target_offset & 0x1, 0);
++  CHECK(is_int32(target_offset));
++  int32_t hi20 = (static_cast<int32_t>(target_offset) + 0x800) >> 12;
++  int32_t lo12 = static_cast<int32_t>(target_offset) << 20 >> 20;
+ 
+   const uint32_t inst[kLazyCompileTableSlotSize / 4] = {
+       (RO_LUI | (kWasmCompileLazyFuncIndexRegister.code() << kRdShift) |
+@@ -818,16 +827,16 @@ void JumpTableAssembler::EmitLazyCompileJumpSlot(uint32_t func_index,
+       (RO_ADDI | (kWasmCompileLazyFuncIndexRegister.code() << kRdShift) |
+        (kWasmCompileLazyFuncIndexRegister.code() << kRs1Shift) |
+        int32_t(low_12 << kImm12Shift)),  // addi t0, t0, low_12
+-      (RO_JAL | (zero_reg.code() << kRdShift) |
+-       uint32_t(target_offset & 0xff000) |           // bits 19-12
+-       uint32_t((target_offset & 0x800) << 9) |      // bit  11
+-       uint32_t((target_offset & 0x7fe) << 20) |     // bits 10-1
+-       uint32_t((target_offset & 0x100000) << 11)),  // bit  20 ),  // jal
++      (RO_AUIPC | (t6.code() << kRdShift) |
++       (uint32_t(hi20) << kImm20Shift)),  // auipc t6, hi20
++      (RO_JALR | (zero_reg.code() << kRdShift) | (t6.code() << kRs1Shift) |
++       (uint32_t(lo12) << kImm12Shift)),  // jalr x0, t6, lo12
+   };
+ 
+   emit<uint32_t>(inst[0], kRelaxedStore);
+   emit<uint32_t>(inst[1], kRelaxedStore);
+   emit<uint32_t>(inst[2], kRelaxedStore);
++  emit<uint32_t>(inst[3], kRelaxedStore);
+ }
+ bool JumpTableAssembler::EmitJumpSlot(Address target) {
+   uint32_t high_20 = (int64_t(3 * kInstrSize + 0x800) >> 12);
+diff --git a/deps/v8/src/wasm/jump-table-assembler.h b/deps/v8/src/wasm/jump-table-assembler.h
+index 91252dc6e67c..d863b51ef617 100644
+--- a/deps/v8/src/wasm/jump-table-assembler.h
++++ b/deps/v8/src/wasm/jump-table-assembler.h
+@@ -231,12 +231,12 @@ class V8_EXPORT_PRIVATE JumpTableAssembler {
+   static constexpr int kJumpTableSlotSize = 6 * kInstrSize;
+   static constexpr int kJumpTableLineSize = kJumpTableSlotSize;
+   static constexpr int kFarJumpTableSlotSize = 6 * kInstrSize;
+-  static constexpr int kLazyCompileTableSlotSize = 3 * kInstrSize;
++  static constexpr int kLazyCompileTableSlotSize = 4 * kInstrSize;
+ #elif V8_TARGET_ARCH_RISCV32
+   static constexpr int kJumpTableSlotSize = 4 * kInstrSize;
+   static constexpr int kJumpTableLineSize = kJumpTableSlotSize;
+   static constexpr int kFarJumpTableSlotSize = kJumpTableSlotSize;
+-  static constexpr int kLazyCompileTableSlotSize = 3 * kInstrSize;
++  static constexpr int kLazyCompileTableSlotSize = 4 * kInstrSize;
+ #elif V8_TARGET_ARCH_LOONG64
+   static constexpr int kJumpTableLineSize = 1 * kInstrSize;
+   static constexpr int kJumpTableSlotSize = 1 * kInstrSize;

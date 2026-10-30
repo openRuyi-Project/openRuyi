@@ -1,0 +1,310 @@
+From 79e68af289ae7ccba094e569857f018f65041fd3 Mon Sep 17 00:00:00 2001
+From: Jakob Linke <jgruber@chromium.org>
+Date: Fri, 9 Oct 2026 10:41:30 +0000
+Subject: [PATCH] regexp: Handle supplementary case equivalents with ICU 79
+
+Upstream: https://github.com/v8/v8/commit/f607706154eabc4a949628a88b38dbe95cd2274c
+
+Unicode 18 adds U+1DF95 to the case-equivalence class of U+00DF and
+U+1E9E. Filter supplementary characters from non-Unicode closures and
+desugar the affected BMP literals in Unicode mode.
+
+Adapt the upstream fix to V8 14.6's RegExpCaseFolding and existing
+closure call sites. Keep SpecialAddSet and the UTF-16 assertion. Run
+the upstream JavaScript cases in Node's parallel suite. Backreferences
+with differing UTF-16 widths remain tracked in crbug.com/571793821.
+
+Bug: https://crbug.com/571232615
+Bug: https://crbug.com/571668686
+---
+ deps/v8/src/regexp/gen-regexp-special-case.cc |  18 +++
+ deps/v8/src/regexp/regexp-compiler-tonode.cc  |   1 +
+ deps/v8/src/regexp/regexp-compiler.cc         |   1 +
+ deps/v8/src/regexp/regexp-parser.cc           |  15 ++-
+ deps/v8/src/regexp/special-case.h             |  10 ++
+ .../test-regexp-unicode18-case-folding.js     | 112 ++++++++++++++++++
+ 6 files changed, 154 insertions(+), 3 deletions(-)
+ create mode 100644 test/parallel/test-regexp-unicode18-case-folding.js
+
+diff --git a/deps/v8/src/regexp/gen-regexp-special-case.cc b/deps/v8/src/regexp/gen-regexp-special-case.cc
+index 86f6b21..98f7097 100644
+--- a/deps/v8/src/regexp/gen-regexp-special-case.cc
++++ b/deps/v8/src/regexp/gen-regexp-special-case.cc
+@@ -9,6 +9,7 @@
+ 
+ #include "src/base/strings.h"
+ #include "src/regexp/special-case.h"
++#include "unicode/uchar.h"
+ 
+ namespace v8 {
+ namespace internal {
+@@ -17,6 +18,19 @@ static const base::uc32 kSurrogateStart = 0xd800;
+ static const base::uc32 kSurrogateEnd = 0xdfff;
+ static const base::uc32 kNonBmpStart = 0x10000;
+ 
++// Removes supplementary code points from |set| and returns whether any were
++// present. Since Unicode 18, the case closure of a BMP character can contain
++// supplementary code points (U+1DF95 LATIN SMALL LIGATURE LONG S WITH
++// DESCENDER S case-folds to U+00DF LATIN SMALL LETTER SHARP S). Non-unicode
++// ignoreCase matching compares UTF-16 code units, so a supplementary code
++// point never matches a BMP character and does not take part in Canonicalize.
++bool RemoveSupplementary(icu::UnicodeSet& set) {
++  constexpr UChar32 kFirstSupplementary = static_cast<UChar32>(kNonBmpStart);
++  if (!set.containsSome(kFirstSupplementary, UCHAR_MAX_VALUE)) return false;
++  set.remove(kFirstSupplementary, UCHAR_MAX_VALUE);
++  return true;
++}
++
+ // The following code generates "src/regexp/special-case.cc".
+ void PrintSet(std::ofstream& out, const char* name,
+               const icu::UnicodeSet& set) {
+@@ -51,6 +65,7 @@ void PrintSpecial(std::ofstream& out) {
+   icu::UnicodeSet current;
+   icu::UnicodeSet special_add;
+   icu::UnicodeSet ignore;
++  icu::UnicodeSet supplementary_equivalents;
+   UErrorCode status = U_ZERO_ERROR;
+   icu::UnicodeSet upper("[\\p{Lu}]", status);
+   CHECK(U_SUCCESS(status));
+@@ -63,6 +78,7 @@ void PrintSpecial(std::ofstream& out) {
+     }
+     current.set(i, i);
+     current.closeOver(USET_CASE_INSENSITIVE);
++    if (RemoveSupplementary(current)) supplementary_equivalents.add(i);
+ 
+     // Check to see if all characters in the case-folding equivalence
+     // class as defined by UnicodeSet::closeOver all map to the same
+@@ -112,6 +128,7 @@ void PrintSpecial(std::ofstream& out) {
+       UChar32 canonical = RegExpCaseFolding::Canonicalize(c);
+       current.set(c, c);
+       current.closeOver(USET_CASE_INSENSITIVE);
++      RemoveSupplementary(current);
+       current.removeAll(ignore);
+       for (int32_t j = 0; j < current.getRangeCount(); j++) {
+         for (UChar32 c2 = current.getRangeStart(j);
+@@ -124,6 +141,7 @@ void PrintSpecial(std::ofstream& out) {
+ 
+   PrintSet(out, "IgnoreSet", ignore);
+   PrintSet(out, "SpecialAddSet", special_add);
++  PrintSet(out, "SupplementaryEquivalentsSet", supplementary_equivalents);
+ }
+ 
+ void WriteHeader(const char* header_filename) {
+diff --git a/deps/v8/src/regexp/regexp-compiler-tonode.cc b/deps/v8/src/regexp/regexp-compiler-tonode.cc
+index a129e58..54a9a23 100644
+--- a/deps/v8/src/regexp/regexp-compiler-tonode.cc
++++ b/deps/v8/src/regexp/regexp-compiler-tonode.cc
+@@ -1705,6 +1705,7 @@ void CharacterRange::AddCaseEquivalents(Isolate* isolate, Zone* zone,
+   icu::UnicodeSet already_added(others);
+   others.removeAll(RegExpCaseFolding::IgnoreSet());
+   others.closeOver(USET_CASE_INSENSITIVE);
++  others.remove(0x10000, 0x10ffff);
+   others.removeAll(RegExpCaseFolding::IgnoreSet());
+   others.removeAll(already_added);
+ 
+diff --git a/deps/v8/src/regexp/regexp-compiler.cc b/deps/v8/src/regexp/regexp-compiler.cc
+index a3e7c17..c1dcad7 100644
+--- a/deps/v8/src/regexp/regexp-compiler.cc
++++ b/deps/v8/src/regexp/regexp-compiler.cc
+@@ -918,6 +918,7 @@ int GetCaseIndependentLetters(Isolate* isolate, base::uc16 character,
+   set.add(character);
+   set = set.closeOver(unicode ? USET_SIMPLE_CASE_INSENSITIVE
+                               : USET_CASE_INSENSITIVE);
++  if (!unicode) set.remove(0x10000, 0x10ffff);
+ 
+   UChar32 canon = 0;
+   if (in_special_add_set && !unicode) {
+diff --git a/deps/v8/src/regexp/regexp-parser.cc b/deps/v8/src/regexp/regexp-parser.cc
+index 2792cd0..33897a3 100644
+--- a/deps/v8/src/regexp/regexp-parser.cc
++++ b/deps/v8/src/regexp/regexp-parser.cc
+@@ -10,6 +10,7 @@
+ #include "src/regexp/regexp-ast.h"
+ #include "src/regexp/regexp-macro-assembler.h"
+ #include "src/regexp/regexp.h"
++#include "src/regexp/special-case.h"
+ #include "src/strings/char-predicates-inl.h"
+ #include "src/utils/ostreams.h"
+ #include "src/utils/utils.h"
+@@ -156,6 +157,10 @@ void RegExpTextBuilder::FlushText() {
+ 
+ void RegExpTextBuilder::AddCharacter(base::uc16 c) {
+   FlushPendingSurrogate();
++  if (NeedsDesugaringForIgnoreCase(c)) {
++    AddClassRangesForDesugaring(c);
++    return;
++  }
+   if (characters_ == nullptr) {
+     characters_ = zone()->New<ZoneList<base::uc16>>(4, zone());
+   }
+@@ -238,12 +243,16 @@ bool RegExpTextBuilder::NeedsDesugaringForUnicode(RegExpClassRanges* cc) {
+   return false;
+ }
+ 
+-// We only use this for characters made of surrogate pairs.  All other
+-// characters outside of character classes are made case independent in the
+-// code generation.
++// Desugar supplementary characters with case equivalents and BMP characters
++// with supplementary equivalents. Other atoms are folded during code
++// generation.
+ bool RegExpTextBuilder::NeedsDesugaringForIgnoreCase(base::uc32 c) {
+ #ifdef V8_INTL_SUPPORT
+   if (IsUnicodeMode() && ignore_case()) {
++    if (c <= unibrow::Utf16::kMaxNonSurrogateCharCode) {
++      return RegExpCaseFolding::HasSupplementaryEquivalents(
++          static_cast<base::uc16>(c));
++    }
+     icu::UnicodeSet set(c, c);
+     set.closeOver(USET_CASE_INSENSITIVE);
+     set.removeAllStrings();
+diff --git a/deps/v8/src/regexp/special-case.h b/deps/v8/src/regexp/special-case.h
+index 753c923..b6cbd95 100644
+--- a/deps/v8/src/regexp/special-case.h
++++ b/deps/v8/src/regexp/special-case.h
+@@ -7,6 +7,7 @@
+ 
+ #ifdef V8_INTL_SUPPORT
+ #include "src/base/logging.h"
++#include "src/base/strings.h"
+ #include "src/common/globals.h"
+ 
+ #include "unicode/uchar.h"
+@@ -71,11 +72,20 @@ namespace internal {
+ // another character. Characters that match no other characters in
+ // their equivalence class are added to IgnoreSet. Characters that
+ // match at least one other character are added to SpecialAddSet.
++// Supplementary code points are ignored for non-unicode matching, which
++// compares UTF-16 code units. SupplementaryEquivalentsSet contains the BMP
++// characters whose Unicode case closure includes supplementary code points.
+ 
+ class RegExpCaseFolding final : public AllStatic {
+  public:
+   static const icu::UnicodeSet& IgnoreSet();
+   static const icu::UnicodeSet& SpecialAddSet();
++  static const icu::UnicodeSet& SupplementaryEquivalentsSet();
++
++  // Whether c has supplementary Unicode case equivalents.
++  static bool HasSupplementaryEquivalents(base::uc16 c) {
++    return SupplementaryEquivalentsSet().contains(c);
++  }
+ 
+   // This implements ECMAScript 2020 21.2.2.8.2 (Runtime Semantics:
+   // Canonicalize) step 3, which is used to determine whether
+diff --git a/test/parallel/test-regexp-unicode18-case-folding.js b/test/parallel/test-regexp-unicode18-case-folding.js
+new file mode 100644
+index 0000000..899142c
+--- /dev/null
++++ b/test/parallel/test-regexp-unicode18-case-folding.js
+@@ -0,0 +1,112 @@
++// Copyright 2026 the V8 project authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++'use strict';
++const common = require('../common');
++if (!common.hasIntl) common.skip('missing Intl');
++const assert = require('node:assert');
++
++// Unicode 18 assigns U+1DF95 LATIN SMALL LIGATURE LONG S WITH DESCENDER S,
++// the first supplementary character that case-folds to a BMP character
++// (U+00DF). It is thus case-equivalent to U+00DF and U+1E9E under /iu and
++// /iv, but never under /i, which compares UTF-16 code units.
++const hasUnicode18 = '\u{1DF95}'.toUpperCase() === 'SS';
++
++// Exercise literals, ranges, backreferences, lookbehinds, and class strings
++// with the same case pairs.
++const pairs = [
++  ['a', 'A', true, true],
++  ['k', '\u212a', false, true],
++  ['s', '\u017f', false, true],
++  ['\u00df', '\u1e9e', false, true],
++  ['\u00b5', '\u03bc', true, true],
++  ['i', '\u0130', false, false],
++  ['I', '\u0131', false, false],
++  ['\u{10400}', '\u{10428}', false, true],
++  ['\u00df', '\u{1DF95}', false, hasUnicode18],
++  ['\u1e9e', '\u{1DF95}', false, hasUnicode18],
++  ['\ud800', '\ud800', true, true],
++  ['\ud800', '\ud801', false, false],
++];
++
++for (const [a, b, legacy, unicode] of pairs) {
++  for (const [c1, c2] of [[a, b], [b, a]]) {
++    for (const flags of ['i', 'iu', 'iv']) {
++      const expected = flags === 'i' ? legacy : unicode;
++      // Force two-byte subjects even when the pair is entirely Latin1.
++      for (const prefix of ['', '\u2603']) {
++        const literal = new RegExp('^' + prefix + c1 + '$', flags);
++        const backref = new RegExp('^' + prefix + '(' + c1 + ')\\1$', flags);
++        // A legacy character class cannot represent an astral character.
++        const range = flags !== 'i' || c1.length === 1
++            ? new RegExp('^' + prefix + '[' + c1 + '-' + c1 + ']$', flags)
++            : null;
++        assert.deepStrictEqual(expected, literal.test(prefix + c2), literal.toString());
++        // TODO(crbug.com/571793821): Case-insensitive backreferences do not
++        // yet match captures of a different UTF-16 length (U+00DF vs U+1DF95).
++        if (c1.length === c2.length) {
++          assert.deepStrictEqual(expected, backref.test(prefix + c1 + c2),
++                       backref.toString());
++        }
++        if (range !== null) {
++          assert.deepStrictEqual(expected, range.test(prefix + c2), range.toString());
++        }
++        const lookbehind = new RegExp('(?<=^' + prefix + c1 + ')x$', flags);
++        assert.deepStrictEqual(expected, lookbehind.test(prefix + c2 + 'x'),
++                     lookbehind.toString());
++        if (flags === 'iv') {
++          const classString = new RegExp(
++              '^' + prefix + '[\\q{' + c1 + 'x}]$', flags);
++          assert.deepStrictEqual(expected, classString.test(prefix + c2 + 'x'),
++                       classString.toString());
++        }
++      }
++    }
++  }
++}
++
++// Supplementary case equivalents of BMP characters must be matched in
++// unicode mode both as plain pattern characters and inside character
++// classes, but never in legacy mode.
++if (hasUnicode18) {
++  const S = '\u{1DF95}';
++  const cases = [
++    // [pattern, subject, expected]
++    ['^\u00df$', S, true],
++    ['^\u1e9e$', S, true],
++    ['^' + S + '$', '\u00df', true],
++    ['^' + S + '$', '\u1e9e', true],
++    ['^\\u00df$', S, true],
++    ['^\\u{df}$', S, true],
++    ['^a\u00dfb$', 'A' + S + 'B', true],
++    ['^(?:\u00df)+$', S + '\u00df\u1e9e' + S, true],
++    ['^\u00df{2}$', S + '\u1e9e', true],
++    ['^\u00df{2}$', S, false],
++    ['^(?:x|\u00df)$', S, true],
++    ['^[\u00df]$', S, true],
++    ['^[^\u00df]$', S, false],
++    ['^(\u00df)$', S, true],
++  ];
++  for (const [pattern, subject, expected] of cases) {
++    for (const flags of ['iu', 'iv']) {
++      const re = new RegExp(pattern, flags);
++      assert.deepStrictEqual(expected, re.test(subject), re.toString() + ' ' + subject);
++    }
++    // In legacy mode, the astral character consists of two code units,
++    // neither of which has case equivalents.
++    const re = new RegExp(pattern, 'i');
++    assert.strictEqual(false, re.test(subject), re.toString() + ' ' + subject);
++  }
++  assert.deepStrictEqual([S, S], Array.from(/(\u00df)/iu.exec(S)));
++}
++
++for (const flags of ['i', 'iu', 'iv']) {
++  const re = new RegExp('^[a-c\u017f\u00df]$', flags);
++  for (const c of ['a', 'B', 'c', '\u017f', '\u00df']) {
++    assert.strictEqual(true, re.test(c));
++  }
++  for (const c of ['s', 'S', '\u1e9e']) {
++    assert.deepStrictEqual(flags !== 'i', re.test(c));
++  }
++}

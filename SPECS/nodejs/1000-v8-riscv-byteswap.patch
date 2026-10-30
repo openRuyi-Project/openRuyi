@@ -1,0 +1,151 @@
+From 7e40e4bee05bbecad063f618ec64d48aa3a63ca7 Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Wed, 30 Sep 2026 17:02:02 +0800
+Subject: [PATCH] [riscv][maglev] Avoid clobbering allocatable register t4 in
+ ByteSwap
+
+The no-Zbb fallback of MacroAssembler::ByteSwap pulled t4 into its
+scratch scope via temps.Include(t4, t6). t4 is allocatable in Maglev, so
+a live value kept in it across a big-endian DataView access could be
+silently overwritten with the byte-swap mask constant.
+
+Only use non-allocatable scratch registers (the default {t3, t5} plus
+t6), and relax the over-strict rs!=rd DCHECK since the implementation
+reads rs before writing rd and is safe when they alias.
+
+Apply the same treatment to the currently unreachable unaligned float
+load/store helpers, which also hard-coded t4, and document the
+scratch-register rules in register-riscv.h.
+
+Fixed: 516128144
+Change-Id: I42ea449f7a331a39467ddc9f86ccb63827be596b
+Fixed: 516128144
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8492392
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#110446}
+Backport: adjust the scratch-register comment context for Node.js 26.12.0.
+
+---
+ src/codegen/riscv/macro-assembler-riscv.cc | 29 +++++++++++++++-------
+ src/codegen/riscv/register-riscv.h         |  7 +++++-
+ 2 files changed, 26 insertions(+), 10 deletions(-)
+
+diff --git a/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc b/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc
+index efa8bedeaeb8..9738df8c4a54 100644
+--- a/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc
++++ b/deps/v8/src/codegen/riscv/macro-assembler-riscv.cc
+@@ -1891,10 +1891,15 @@ void MacroAssembler::ByteSwap(Register rd, Register rs, int operand_size,
+     return;
+   }
+   UseScratchRegisterScope temps(this);
+-  temps.Include(t4, t6);
++  temps.Include(t6);
+   Register tmp0 = temps.Acquire();
+   Register tmp1 = temps.Acquire();
+-  DCHECK(!AreAliased(rs, rd, tmp0, tmp1, scratch));
++  // {rs} and {rd} are allowed to alias: the implementation below reads {rs}
++  // before writing {rd} and is therefore safe when they are the same register.
++  // The checks below cover every pair except {rs}/{rd}.
++  DCHECK(!AreAliased(tmp0, tmp1, scratch));
++  DCHECK(!AreAliased(rs, tmp0, tmp1, scratch));
++  DCHECK(!AreAliased(rd, tmp0, tmp1, scratch));
+   BlockPoolsScope block_pools(this);
+   if (operand_size == 4) {
+     DCHECK((rd != t6) && (rs != t6));
+@@ -2082,7 +2087,7 @@ void MacroAssembler::UnalignedFLoadHelper(FPURegister frd,
+     AdjustBaseAndOffset(&source, scratch_base, OffsetAccessType::TWO_ACCESSES,
+                         NBYTES - 1);
+   }
+-  temps.Include(t4, t6);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
+   Register scratch_other = temps.Acquire();
+   DCHECK(scratch != rs.rm() && scratch_other != scratch &&
+@@ -2108,7 +2113,7 @@ void MacroAssembler::UnalignedFLoadHelper(FPURegister frd,
+     AdjustBaseAndOffset(&source, scratch_base, OffsetAccessType::TWO_ACCESSES,
+                         NBYTES - 1);
+   }
+-  temps.Include(t4, t6);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
+   Register scratch_other = temps.Acquire();
+   DCHECK(scratch != rs.rm() && scratch_other != scratch &&
+@@ -2129,7 +2134,7 @@ void MacroAssembler::UnalignedDoubleHelper(FPURegister frd,
+     AdjustBaseAndOffset(&source, scratch_base, OffsetAccessType::TWO_ACCESSES,
+                         8 - 1);
+   }
+-  temps.Include(t4, t6);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
+   Register scratch_other = temps.Acquire();
+   DCHECK(scratch != rs.rm() && scratch_other != scratch &&
+@@ -2178,13 +2183,15 @@ void MacroAssembler::UnalignedFStoreHelper(FPURegister frd,
+                                            const MemOperand& rs) {
+   DCHECK(NBYTES == 8 || NBYTES == 4);
+   UseScratchRegisterScope temps(this);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
+   if (NBYTES == 4) {
+     fmv_x_w(scratch, frd);
+   } else {
+     fmv_x_d(scratch, frd);
+   }
+-  UnalignedStoreHelper<NBYTES>(scratch, rs, t4);
++  Register scratch_other = temps.Acquire();
++  UnalignedStoreHelper<NBYTES>(scratch, rs, scratch_other);
+ }
+ #elif V8_TARGET_ARCH_RISCV32
+ template <int NBYTES>
+@@ -2192,22 +2199,26 @@ void MacroAssembler::UnalignedFStoreHelper(FPURegister frd,
+                                            const MemOperand& rs) {
+   DCHECK_EQ(NBYTES, 4);
+   UseScratchRegisterScope temps(this);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
+   fmv_x_w(scratch, frd);
+-  UnalignedStoreHelper<NBYTES>(scratch, rs, t4);
++  Register scratch_other = temps.Acquire();
++  UnalignedStoreHelper<NBYTES>(scratch, rs, scratch_other);
+ }
+ void MacroAssembler::UnalignedDStoreHelper(FPURegister frd,
+                                            const MemOperand& rs) {
+   UseScratchRegisterScope temps(this);
++  temps.Include(t6);
+   Register scratch = temps.Acquire();
++  Register scratch_other = temps.Acquire();
+   Sub32(sp, sp, 8);
+   StoreDouble(frd, MemOperand(sp, 0));
+   Lw(scratch, MemOperand(sp, 0));
+-  UnalignedStoreHelper<4>(scratch, rs, t4);
++  UnalignedStoreHelper<4>(scratch, rs, scratch_other);
+   Lw(scratch, MemOperand(sp, 4));
+   MemOperand source = rs;
+   source.set_offset(source.offset() + 4);
+-  UnalignedStoreHelper<4>(scratch, source, t4);
++  UnalignedStoreHelper<4>(scratch, source, scratch_other);
+   Add32(sp, sp, 8);
+ }
+ #endif
+diff --git a/deps/v8/src/codegen/riscv/register-riscv.h b/deps/v8/src/codegen/riscv/register-riscv.h
+index 447f3316dfa3..1dee5a0a2a93 100644
+--- a/deps/v8/src/codegen/riscv/register-riscv.h
++++ b/deps/v8/src/codegen/riscv/register-riscv.h
+@@ -23,10 +23,15 @@ namespace internal {
+ // s6: roots in Javascript code s7: context register
+ // s11: PtrComprCageBaseRegister
+ // t3 t5 : scratch register used in scratch_register_list
+-// t6 : call reg.
++// t6 : call reg / kMaglevFlagsRegister. t6 is not allocatable, so it can be
++// used as an extra scratch register: the default scratch list only holds two
++// registers ({t3, t5}), so add t6 when a third one is needed.
+ // t0 t1 t2 t4:caller saved scratch register can be used in macroassembler and
+ // t2: kMaglevExtraScratchRegister
+ // builtin-riscv64
++// Note: t4 is allocatable in Maglev, so macro-assembler helpers must not use it
++// as an implicit scratch register. Add t6 instead, so that t4 is never
++// clobbered.
+ #define ALWAYS_ALLOCATABLE_GENERAL_REGISTERS(V)  \
+              V(a0)  V(a1)  V(a2)  V(a3) \
+              V(a4)  V(a5)  V(a6)  V(a7)  V(s1) V(s2)  \

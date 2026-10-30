@@ -1,0 +1,76 @@
+From 634bfd45341b92a639944687e1f9468687484b0e Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Mon, 16 Mar 2026 15:16:27 +0800
+Subject: [PATCH] [riscv] Fix vector lmul calculation for RVV
+
+The comparison should use the Enum VSew (E64) rather than the  constant kRvvELEN(64).
+
+Change-Id: Ia6df7da5524c1767d704f8c0a8a6f066714a06ea
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7669710
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#105838}
+---
+ src/codegen/riscv/assembler-riscv.h | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/deps/v8/src/codegen/riscv/assembler-riscv.h b/deps/v8/src/codegen/riscv/assembler-riscv.h
+index 3c93124eb11e..de7a0d9aa472 100644
+--- a/deps/v8/src/codegen/riscv/assembler-riscv.h
++++ b/deps/v8/src/codegen/riscv/assembler-riscv.h
+@@ -631,15 +631,16 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase,
+       // mf2 -> n is 1.
+       // mf4 -> n is 2.
+       // mf8 -> n is 3.
++      DCHECK_EQ(kRvvELEN, 64);
+       switch (CpuFeatures::vlen()) {
+         case 128:
+           lmul = m1;
+           break;
+         case 256:
+-          lmul = (sew + 1) > kRvvELEN ? m1 : mf2;
++          lmul = (sew + 1) > E64 ? m1 : mf2;
+           break;
+         case 512:
+-          lmul = (sew + 2) > kRvvELEN ? m1 : mf4;
++          lmul = (sew + 2) > E64 ? m1 : mf4;
+           break;
+         default:
+           static_assert(kMaxRvvVLEN <= 512, "Unsupported VLEN");
+@@ -660,15 +661,16 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase,
+ 
+     void SetSimd128Half(VSew sew, TailAgnosticType tail = ta) {
+       Vlmul lmul;
++      DCHECK_EQ(kRvvELEN, 64);
+       switch (CpuFeatures::vlen()) {
+         case 128:
+-          lmul = (sew + 1) > kRvvELEN ? m1 : mf2;
++          lmul = (sew + 1) > E64 ? m1 : mf2;
+           break;
+         case 256:
+-          lmul = (sew + 2) > kRvvELEN ? m1 : mf4;
++          lmul = (sew + 2) > E64 ? m1 : mf4;
+           break;
+         case 512:
+-          lmul = (sew + 3) > kRvvELEN ? m1 : mf8;
++          lmul = (sew + 3) > E64 ? m1 : mf8;
+           break;
+         default:
+           static_assert(kMaxRvvVLEN <= 512, "Unsupported VLEN");
+@@ -689,6 +691,7 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase,
+ 
+     void SetSimd128x2(VSew sew, TailAgnosticType tail = ta) {
+       Vlmul lmul;
++      DCHECK_EQ(kRvvELEN, 64);
+       switch (CpuFeatures::vlen()) {
+         case 128:
+           lmul = m2;
+@@ -697,7 +700,7 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase,
+           lmul = m1;
+           break;
+         case 512:
+-          lmul = (sew + 1) > kRvvELEN ? m1 : mf2;
++          lmul = (sew + 1) > E64 ? m1 : mf2;
+           break;
+         default:
+           static_assert(kMaxRvvVLEN <= 512, "Unsupported VLEN");
