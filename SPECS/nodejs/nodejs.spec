@@ -5,7 +5,10 @@
 
 # Enabling LTO will cause the compilation to fail.
 %global _lto_cflags           %{nil}
+# Show build output without waiting for a Make target to finish.
+%global _make_output_sync     %{nil}
 %global toolchain             clang
+%global _test_target          test-ci-js
 %global nodejs_major          26
 %global nodejs_minor          13
 %global nodejs_patch          0
@@ -35,11 +38,16 @@ Source0:        https://nodejs.org/dist/v%{version}/node-v%{version}.tar.xz
 Source1:        nodejs_native.attr
 BuildSystem:    autotools
 
+BuildOption(build):  NINJA_ARGS="%{__ninja_common_opts} node"
+BuildOption(install):  NINJA_ARGS="%{__ninja_common_opts} node"
+BuildOption(check):  JOBS="$RPM_BUILD_NCPUS"
+
 BuildRequires:  chrpath
 BuildRequires:  clang >= 19.1
 BuildRequires:  rust >= 1.86
 BuildRequires:  cargo >= 1.86
 BuildRequires:  make >= 3.81
+BuildRequires:  ninja
 BuildRequires:  pkgconfig(ada)
 BuildRequires:  pkgconfig(openssl) >= 3.5.1
 BuildRequires:  pkgconfig(icu-i18n) >= 73
@@ -148,6 +156,7 @@ rm -rf deps/v8/third_party/simdutf
 %set_build_flags
 %{__python3} configure.py --prefix=%{_prefix} \
            --verbose \
+           --ninja \
            --shared \
            --libdir=%{_lib} \
            --shared-ada \
@@ -168,6 +177,9 @@ rm -rf deps/v8/third_party/simdutf
            --with-intl=system-icu \
            --v8-enable-temporal-support \
            --openssl-use-def-ca-store
+
+%build -p
+%set_build_flags
 
 %install -a
 chmod 0755 %{buildroot}/%{_bindir}/node
@@ -219,8 +231,10 @@ chmod 0755 %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/node-gyp/bin
 mkdir -p %{buildroot}%{_sysconfdir}
 touch %{buildroot}%{_sysconfdir}/npmrc
 
-# TODO: Make tests pass.
-%check
+%check -p
+# Match the upstream test library layout; https://github.com/nodejs/node/blob/v26.12.1/test/common/shared-lib-util.js.
+ln -sfn lib/libnode.so.%{nodejs_soversion} out/Release/libnode.so.%{nodejs_soversion}
+export LD_LIBRARY_PATH="$PWD/out/Release${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 %files
 %doc %{_mandir}/man1/node.1*
