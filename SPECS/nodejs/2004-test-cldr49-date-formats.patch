@@ -1,0 +1,52 @@
+From 591c83c1c603e9b7ff62978edca360d666d33f32 Mon Sep 17 00:00:00 2001
+From: Jingwiw <wangjingwei@iscas.ac.cn>
+Date: Sat, 31 Oct 2026 01:23:50 +0800
+Subject: [PATCH] test: accept CLDR 49 date and time-zone formats
+
+CLDR 49 adds an apostrophe before abbreviated English years and moves
+Europe/Dublin to the Irish metazone. Its missing standard name uses the
+localized GMT offset. Accept these outputs and retain the older formats.
+
+Sources:
+https://github.com/unicode-org/cldr/commit/3e217b1d93d55c504c897b914f66fba06f0fc3aa
+https://github.com/unicode-org/cldr/commit/4728ca3485005ff6654281b26c6dbf23b8e6ace3
+---
+ test/parallel/test-datetime-change-notify.js | 2 +-
+ test/parallel/test-intl.js                   | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/test/parallel/test-datetime-change-notify.js b/test/parallel/test-datetime-change-notify.js
+index 0184351..53b3320 100644
+--- a/test/parallel/test-datetime-change-notify.js
++++ b/test/parallel/test-datetime-change-notify.js
+@@ -26,7 +26,7 @@ const cases = [
+   },
+   {
+     timeZone: 'Europe/Dublin',
+-    expected: /Irish Standard Time|Greenwich Mean Time/,
++    expected: /Irish Standard Time|Greenwich Mean Time|GMT\+00:00/,
+   },
+ ];
+ 
+diff --git a/test/parallel/test-intl.js b/test/parallel/test-intl.js
+index 7d1742f..2d403a2 100644
+--- a/test/parallel/test-intl.js
++++ b/test/parallel/test-intl.js
+@@ -65,7 +65,7 @@ if (!common.hasIntl) {
+   // Use the GMT time zone
+   const GMT = 'Etc/GMT';
+ 
+-  // Construct an English formatter. Should format to "Jan 70"
++  // Construct an English formatter with a short month and two-digit year.
+   const dtf = new Intl.DateTimeFormat(['en'], {
+     timeZone: GMT,
+     month: 'short',
+@@ -89,7 +89,7 @@ if (!common.hasIntl) {
+   // Check with toLocaleString
+   {
+     const localeString = dtf.format(date0);
+-    assert.strictEqual(localeString, 'Jan 70');
++    assert.match(localeString, /^Jan \u2019?70$/);
+   }
+   // Options to request GMT
+   const optsGMT = { timeZone: GMT };
