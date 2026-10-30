@@ -1,0 +1,53 @@
+From def0be5e34d6657c84407c8afe4ace05d10d1848 Mon Sep 17 00:00:00 2001
+From: weebney <weebney@gmail.com>
+Date: Mon, 12 Dec 2022 19:10:54 +0000
+Subject: [PATCH] all: upgrade Unicode from 13.0.0 to 15.0.0
+
+Update unicode/tables.go to reflect changes in the Unicode Standard up to
+Unicode 15.0.0, released 13 Sept 2022.
+
+In order to accommodate this update, strconv/isPrint has been updated to
+reflect changes in printable characters.
+
+Also changed is template/exec_test.go for both text and html packages- in
+the test "TestJSEscaping", rune U+FDFF was used as a placeholder for an
+unprintable character. This codepoint was assigned and made printable in
+Unicode 14.0.0, breaking this test. It has been replaced with the assigned
+and never-printable U+FFFE to fix the test and provide resiliency in the
+future.
+
+This upgrade bypasses Unicode 14.0.0, but is compatible.
+
+Updates https://github.com/golang/go/issues/48621
+Fixes https://github.com/golang/go/issues/55079
+
+Change-Id: I40efd097eb746db0727ebf7437280916d1242e47
+GitHub-Last-Rev: c8885cab7a0c23632e1e5a433b1e8d5634a45a30
+GitHub-Pull-Request: golang/go#57265
+Reviewed-on: https://go-review.googlesource.com/c/go/+/456837
+Reviewed-by: Robert Griesemer <gri@google.com>
+Run-TryBot: Rob Pike <r@golang.org>
+TryBot-Result: Gopher Robot <gobot@golang.org>
+Run-TryBot: Robert Griesemer <gri@google.com>
+Reviewed-by: Cherry Mui <cherryyz@google.com>
+Reviewed-by: Rob Pike <r@golang.org>
+
+Upstream: https://github.com/golang/go/commit/def0be5e34d6657c84407c8afe4ace05d10d1848
+Backport only the text/template TestJSEscaping hunk to this fork. Adjust
+the path and surrounding context; do not change runtime Unicode tables
+or library behavior.
+---
+ exec_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/exec_test.go b/exec_test.go
+--- a/exec_test.go
++++ b/exec_test.go
+@@ -749,6 +749,6 @@ func TestJSEscaping(t *testing.T) {
+ 		{`Go "jump" \`, `Go \"jump\" \\`},
+ 		{`Yukihiro says "今日は世界"`, `Yukihiro says \"今日は世界\"`},
+-		{"unprintable \uFDFF", `unprintable \uFDFF`},
++		{"unprintable \uFFFE", `unprintable \uFFFE`},
+ 		{`<html>`, `\x3Chtml\x3E`},
+ 	}
+ 	for _, tc := range testCases {

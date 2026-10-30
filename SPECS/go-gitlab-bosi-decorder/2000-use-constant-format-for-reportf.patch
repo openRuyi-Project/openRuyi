@@ -1,0 +1,14 @@
+From: openRuyi contributors
+Subject: [PATCH] Use a constant format string with analysis.Pass.Reportf
+
+Go 1.27 vet rejects non-constant format strings passed to Reportf. Keep the
+existing diagnostic text while passing it as a string argument.
+
+--- a/analyzer.go
++++ b/analyzer.go
+@@ -225,1 +225,1 @@
+-		pass.Reportf(gd.Pos(), fmtWrongOrderMsg(gd.Tok.String(), l))
++		pass.Reportf(gd.Pos(), "%s", fmtWrongOrderMsg(gd.Tok.String(), l))
+@@ -246,1 +246,1 @@
+-			pass.Reportf(fd.Pos(), fmtWrongOrderMsg(token.FUNC.String(), l))
++			pass.Reportf(fd.Pos(), "%s", fmtWrongOrderMsg(token.FUNC.String(), l))
