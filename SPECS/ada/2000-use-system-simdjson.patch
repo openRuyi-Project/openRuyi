@@ -1,0 +1,25 @@
+From 4325f79cb7b02a6e511ca2eb8a4a5688a0c6cfb5 Mon Sep 17 00:00:00 2001
+From: Zephyr Lykos <git@mochaa.ws>
+Date: Thu, 28 May 2026 11:53:01 +0800
+Subject: [PATCH] Use the system simdjson package
+
+Origin: https://src.fedoraproject.org/rpms/ada-url/blob/2d879cf10d96d3b8c1ddd792efdedf37bf5ad1e2/f/1000-Remove-cmake-CPM.patch
+
+Backport: retain only the simdjson hunk.
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 126fc05..70a4412 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,7 @@ if(ADA_TESTING OR ADA_BENCHMARKS OR ADA_TOOLS OR ADA_USE_SIMDUTF)
+   endif()
+   # We use simdjson in both the benchmarks and tests
+   if(ADA_TESTING OR ADA_BENCHMARKS)
+-    CPMAddPackage("gh:simdjson/simdjson@3.10.1")
++    find_package(simdjson REQUIRED)
+   endif()
+   # We use Google Benchmark, but it does not build under several 32-bit systems.
+   if(ADA_BENCHMARKS AND (CMAKE_SIZEOF_VOID_P EQUAL 8))
