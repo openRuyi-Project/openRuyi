@@ -41,6 +41,9 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(gopkg.in/yaml.v3)
 
 Provides:       go(%{go_import_path}) = %{version}
+Provides:       go(%{go_import_path}/common) = %{version}
+Provides:       go(%{go_import_path}/mem) = %{version}
+Provides:       go(%{go_import_path}/process) = %{version}
 
 Requires:       go(github.com/ebitengine/purego)
 Requires:       go(github.com/lufia/plan9stats)
@@ -52,6 +55,13 @@ Requires:       go(golang.org/x/sys)
 %description
 Gopsutil retrieves CPU, memory, process, disk, network, host, and sensor
 information through a portable Go API.
+
+%check -p
+# OBS has no utmp database. An empty file represents no logged-in users;
+# on Linux, HOST_VAR is used only for this path, leaving other host data intact.
+export HOST_VAR="%{_builddir}/test-var"
+mkdir -p "$HOST_VAR/run"
+: > "$HOST_VAR/run/utmp"
 
 %files
 %doc README.md
