@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+#
+# OpenSSL request configuration for the self-signed certificate that
+# partimaged loads for its SSL listener. You can reissue it with:
+#
+#   openssl req -new -x509 -nodes \
+#       -config /etc/partimaged/partimage-certs.cnf \
+#       -out /etc/partimaged/partimaged.cert \
+#       -keyout /etc/partimaged/partimaged.key
+#
+# See OpenSSL's manpage for more info.
+# By default the generated certificate is valid for 30 days (without the -days option).
+# Reissue it when it expires, or replace the pair with a certificate issued by your own CA.
+[ req ]
+default_bits = 4096
+distinguished_name = req_dn
+x509_extensions = cert_type
+prompt = no
+
+[ req_dn ]
+C = US
+O = Partimage Server
+CN = localhost
+
+[ cert_type ]
+nsCertType = server
