@@ -1,0 +1,31 @@
+From 46c23bcc83781d196a27beea6987ffb5c37712c6 Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 22 Sep 2026 18:23:20 +0800
+Subject: [PATCH] Prevent fused arithmetic from changing round results
+
+When Modf is inlined, a fused multiply-subtract can retain extra precision from pow * val and turn a half-way fractional part into a value just below 0.5. On arm64 and riscv64 this makes round(123.5555, 3) return 123.555 instead of 123.556.
+
+An explicit float64 conversion requires the product to be rounded before Modf examines it, as specified by the Go floating-point operator rules. The existing TestRound case covers the regression.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ numeric.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/numeric.go b/numeric.go
+index f4af4af..5dc7acc 100644
+--- a/numeric.go
++++ b/numeric.go
+@@ -149,7 +149,8 @@ func round(a interface{}, p int, r_opt ...float64) float64 {
+ 
+ 	var round float64
+ 	pow := math.Pow(10, places)
+-	digit := pow * val
++	// Round the product before Modf subtracts its integer part.
++	digit := float64(pow * val)
+ 	_, div := math.Modf(digit)
+ 	if div >= roundOn {
+ 		round = math.Ceil(digit)
+-- 
+2.52.0
+
