@@ -16,7 +16,7 @@ URL:            https://github.com/google/brotli
 Source:         https://github.com/google/brotli/archive/v%{version}.tar.gz
 BuildSystem:    cmake
 
-BuildRequires:  cmake >= 2.8.6
+BuildRequires:  cmake >= 3.15
 BuildRequires:  gcc-c++
 BuildRequires:  gzip
 BuildRequires:  pkg-config
@@ -46,7 +46,7 @@ Brotli general purpose lossless compression algorithm.
 The specification of the Brotli Compressed Data Format is defined in
 RFC 7932.
 
-%build -p
+%conf -p
 export CFLAGS="%{optflags} -DBROTLI_ENCODER_CLEANUP_ON_OOM"
 
 %install -a
