@@ -1,0 +1,40 @@
+From 4a233f1427ca15a79d25e53ae3ac3aec33c63fc8 Mon Sep 17 00:00:00 2001
+From: Yifan Xu <xuyifan@iscas.ac.cn>
+Date: Fri, 30 Oct 2026 00:00:00 +0000
+Subject: [PATCH] build: use the distribution's build tools and nanobind
+
+Drop the cmake and ninja requirements from build-system.requires and stop
+pinning nanobind to an exact version, so the RPM builds against the
+distribution packages with --no-build-isolation.  Add a NANOBIND_CMAKE_DIR
+override so the CMake package location can be supplied by the packager.
+
+openRuyi-specific; not submitted upstream.
+---
+ pyproject.toml | 2 +-
+ setup.py       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 85d1fc3..0ed0033 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["setuptools>=40.8.0", "cmake>=3.20,<4.0", "ninja>=1.11.1", "nanobind==2.10.2"]
++requires = ["setuptools>=40.8.0", "nanobind"]
+ build-backend = "setuptools.build_meta"
+ 
+ [tool.mypy]
+diff --git a/setup.py b/setup.py
+index 2faa56f..bda52a0 100644
+--- a/setup.py
++++ b/setup.py
+@@ -242,7 +242,7 @@ class CMakeBuild(build_ext):
+             self.build_extension(ext)
+ 
+     def get_nanobind_cmake_args(self):
+-        return [f"-Dnanobind_ROOT='{nanobind.cmake_dir()}'"]
++        return [f"-Dnanobind_ROOT='{os.environ.get('NANOBIND_CMAKE_DIR') or nanobind.cmake_dir()}'"]
+ 
+     def get_proton_cmake_args(self):
+         cmake_args = self.get_nanobind_cmake_args()

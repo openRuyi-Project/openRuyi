@@ -1,0 +1,16 @@
+--- a/3rdparty/tvm/CMakeLists.txt
++++ b/3rdparty/tvm/CMakeLists.txt
+@@ -566,7 +566,12 @@
+     )
+   else()
+     find_program(PATCHELF_EXECUTABLE patchelf)
+-    if (PATCHELF_EXECUTABLE)
++    # Z3_LIBRARY is only defined by the FindZ3 module used with
++    # USE_PYPI_Z3=ON; a system CMake config package (z3-devel) provides
++    # only the imported target, and the DT_NEEDED rewrite below exists
++    # for the pip z3-solver layout anyway, so skip it when there is no
++    # library path to inspect.
++    if (PATCHELF_EXECUTABLE AND Z3_LIBRARY)
+       execute_process(
+         COMMAND ${PATCHELF_EXECUTABLE} --print-soname ${Z3_LIBRARY}
+         OUTPUT_VARIABLE Z3_SONAME
