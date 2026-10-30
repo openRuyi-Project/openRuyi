@@ -42,6 +42,9 @@ BuildSystem:    autotools
 Patch0:         hwy-broken-rvv.diff
 # https://github.com/nodejs/node/pull/66895
 Patch1:         0001-fix-build-with-shared-brotli.patch
+# Upstream https://github.com/nodejs/node/pull/65753 misses a fix for RISC-V sandbox
+# https://github.com/v8/v8/commit/ec2f506f97dfbb5fa19e4fe9103965a3c94690af
+Patch2:         0002-riscv-sandbox-Make-sure-we-have-a-valid-dispatch-han.patch
 
 BuildRequires:  chrpath
 BuildRequires:  gcc-c++
