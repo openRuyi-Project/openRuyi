@@ -1,0 +1,59 @@
+From 2023a2b37593073de0e789455b6a362ceeecd1d1 Mon Sep 17 00:00:00 2001
+From: drh <>
+Date: Wed, 14 Oct 2026 17:52:44 +0000
+Subject: [PATCH] Fix json_tree() when it is given a root that ends with an
+ array index so that it returns the correct "key" for the first root.  This
+ was broken by check-in [858b76a00e8ff552] and in version 3.45.0.  Problem
+ reported by [forum:/info/2026-10-14T08:42:26Z|Forum post
+ 2026-10-14T08:42:26Z].
+
+FossilOrigin-Name: eaf646e376a5a3e10a874ed1c07ca1382f0ccb7cdf1cc963697638a54b98c779
+
+Backport: omit Fossil repository manifests; retain source and tests.
+
+diff --git a/src/json.c b/src/json.c
+index e5d9830a3c..98a4167c85 100644
+--- a/src/json.c
++++ b/src/json.c
+@@ -5512,17 +5512,16 @@ static int jsonEachPathLength(JsonEachCursor *p){
+   u32 n = p->path.nUsed;
+   char *z = p->path.zBuf;
+   if( p->iRowid==0 && p->bRecursive && n>=2 ){
+-    while( n>1 ){
++    while( ALWAYS(n>1) ){
+       n--;
+       if( z[n]=='[' || z[n]=='.' ){
+-        u32 x, sz = 0;
++        u32 x;
+         char cSaved = z[n];
+         z[n] = 0;
+         assert( p->sParse.eEdit==0 );
+         x = jsonLookupStep(&p->sParse, 0, z+1, 0);
+         z[n] = cSaved;
+-        if( JSON_LOOKUP_ISERROR(x) ) continue;
+-        if( x + jsonbPayloadSize(&p->sParse, x, &sz) == p->i ) break;
++        if( !JSON_LOOKUP_ISERROR(x) ) break;
+       }
+     }
+   }
+diff --git a/test/json501.test b/test/json501.test
+index bfd21055a7..0a523d2201 100644
+--- a/test/json501.test
++++ b/test/json501.test
+@@ -332,5 +332,16 @@ for {set c 1} {$c<=0x1f} {incr c} {
+   } "{{\"label\":\"abc${e}xyz\"}}"
+ }
+ 
++# Forum post 2026-10-14T08:42:26Z
++#
++do_execsql_test 15.0 {
++  WITH json(jid,jx) AS (VALUES
++    (1,'{"a":"text","b":123,"c":[1,2,3,"t",{"cc":99,"dd":100}],"d":null}'),
++    (2,'[1,"a",{"aa":11,"bb":[9,8,7]},null]')
++  ), paths(pid,px) AS (VALUES(1,'$.c[4]'),(2,'$.c'),(3,'$[2].bb'),(4,'$[2]'))
++  SELECT jj.key, typeof(jj.key) FROM json, paths, json_tree(jx,px) AS jj
++   WHERE parent IS NULL
++   ORDER BY jid, pid;
++} {4 integer c text bb text 2 integer}
+ 
+ finish_test
