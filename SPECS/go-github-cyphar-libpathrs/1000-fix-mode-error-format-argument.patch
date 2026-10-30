@@ -1,0 +1,28 @@
+From 0f150c3d23853ed5a74b8883838f1b60f1178ce3 Mon Sep 17 00:00:00 2001
+From: Aleksa Sarai <cyphar@cyphar.com>
+Date: Thu, 15 Oct 2026 05:42:43 +1100
+Subject: [PATCH] e2e-tests: minor fixes
+
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+Upstream-Status: Backport [https://github.com/cyphar/libpathrs/commit/0f150c3d23853ed5a74b8883838f1b60f1178ce3]
+Backport the Go format argument fix; omit the unrelated README corrections.
+
+---
+ e2e-tests/cmd/go/ux_mode.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/e2e-tests/cmd/go/ux_mode.go b/e2e-tests/cmd/go/ux_mode.go
+index bae45b7..109c911 100644
+--- a/e2e-tests/cmd/go/ux_mode.go
++++ b/e2e-tests/cmd/go/ux_mode.go
+@@ -30,7 +30,7 @@ func parseModeFlag(modeStr string) (os.FileMode, error) {
+ 		return 0, fmt.Errorf("failed to parse --mode: %w", err)
+ 	}
+ 	if unixMode&^0o7777 != 0 {
+-		return 0, fmt.Errorf("invalid --mode %#o: must be subset of 0o7777")
++		return 0, fmt.Errorf("invalid --mode %#o: must be subset of 0o7777", unixMode)
+ 	}
+ 
+ 	mode := os.FileMode(unixMode & 0o777)
+-- 
+2.53.0

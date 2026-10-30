@@ -1,0 +1,353 @@
+Run module queries and HTTP tests deterministically without external services.
+
+Enable modules only for subprocesses whose behavior requires them. Replay
+proxy, go-get metadata, and Go version responses through local HTTP servers.
+Keep every existing test and assertion, and validate proxy archive contents
+and decoded metadata in the integration cases. Unknown requests fail.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/ldez/grignotin/tree/v0.10.1
+
+--- a/goenv/goenv_test.go
++++ b/goenv/goenv_test.go
+@@ -10,6 +10,8 @@
+ )
+ 
+ func TestGetOne(t *testing.T) {
++	t.Setenv("GO111MODULE", "on")
++	t.Setenv("GOWORK", "off")
+ 	p, err := GetOne(context.Background(), GOMOD)
+ 	require.NoError(t, err)
+ 
+@@ -20,6 +22,8 @@
+ }
+ 
+ func TestGet(t *testing.T) {
++	t.Setenv("GO111MODULE", "on")
++	t.Setenv("GOWORK", "off")
+ 	values, err := Get(context.Background(), GOMOD, GOCACHE)
+ 	require.NoError(t, err)
+ 
+--- a/gomod/gomod_test.go
++++ b/gomod/gomod_test.go
+@@ -9,6 +9,8 @@
+ )
+ 
+ func TestGetModuleInfo(t *testing.T) {
++	t.Setenv("GO111MODULE", "on")
++	t.Setenv("GOWORK", "off")
+ 	info, err := GetModuleInfo(context.Background())
+ 	require.NoError(t, err)
+ 
+@@ -20,6 +22,8 @@
+ }
+ 
+ func TestGetModulePath(t *testing.T) {
++	t.Setenv("GO111MODULE", "on")
++	t.Setenv("GOWORK", "off")
+ 	p, err := GetModulePath(context.Background())
+ 	require.NoError(t, err)
+ 
+--- a/goproxy/auth_test.go
++++ b/goproxy/auth_test.go
+@@ -28,18 +28,28 @@
+ }
+ 
+ func TestTokenTransport_RoundTrip(t *testing.T) {
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		user, pass, ok := r.BasicAuth()
++		assert.True(t, ok)
++		assert.Equal(t, "user", user)
++		assert.Equal(t, "secret", pass)
++		w.WriteHeader(http.StatusNoContent)
++	}))
++	defer server.Close()
++
+ 	username := "user"
+ 	password := "secret"
+ 
+ 	transport, err := NewBasicAuthTransport(username, password)
+ 	require.NoError(t, err)
+ 
+-	req := httptest.NewRequest(http.MethodGet, "http://example.com", nil)
++	req := httptest.NewRequest(http.MethodGet, server.URL, nil)
+ 
+ 	resp, err := transport.RoundTrip(req)
+ 	require.NoError(t, err)
+ 
+ 	defer func() { _ = resp.Body.Close() }()
++	assert.Equal(t, http.StatusNoContent, resp.StatusCode)
+ 
+ 	user, pass, ok := resp.Request.BasicAuth()
+ 	assert.True(t, ok)
+--- a/goproxy/client_test.go
++++ b/goproxy/client_test.go
+@@ -34,6 +34,7 @@
+ 
+ 	raw, err := client.GetSources("github.com/ldez/grignotin", "v0.1.0")
+ 	require.NoError(t, err)
++	checkSourceArchive(t, raw)
+ 
+ 	fmt.Println(string(raw))
+ }
+@@ -70,6 +71,7 @@
+ 
+ 	raw, err := io.ReadAll(reader)
+ 	require.NoError(t, err)
++	checkSourceArchive(t, raw)
+ 
+ 	fmt.Println(string(raw))
+ }
+@@ -97,6 +99,7 @@
+ 
+ 	versions, err := client.GetVersions("github.com/hashicorp/consul/api")
+ 	require.NoError(t, err)
++	assert.Equal(t, []string{"v1.2.3", "v1.2.4", "v1.2.5"}, versions)
+ 
+ 	fmt.Println(versions)
+ }
+@@ -128,6 +131,7 @@
+ 
+ 	info, err := client.GetInfo("github.com/ijc25/Gotty", "a8b993ba6abdb0e0c12b0125c603323a71c7790c")
+ 	require.NoError(t, err)
++	assert.Equal(t, "v0.0.0-20170406111628-a8b993ba6abd", info.Version)
+ 
+ 	fmt.Println(info)
+ }
+@@ -159,6 +163,7 @@
+ 
+ 	file, err := client.GetModFile("github.com/ldez/grignotin", "v0.1.0")
+ 	require.NoError(t, err)
++	assert.Equal(t, "github.com/ldez/grignotin", file.Module.Mod.Path)
+ 
+ 	fmt.Println(file)
+ }
+@@ -190,6 +195,7 @@
+ 
+ 	info, err := client.GetLatest("golang.org/x/lint")
+ 	require.NoError(t, err)
++	assert.Equal(t, "v0.0.0-20241112194109-818c5a804067", info.Version)
+ 
+ 	fmt.Println(info)
+ }
+--- /dev/null
++++ b/goproxy/offline_test.go
+@@ -0,0 +1,88 @@
++package goproxy
++
++import (
++	"archive/zip"
++	"bytes"
++	"fmt"
++	"net/http"
++	"net/http/httptest"
++	"net/url"
++	"os"
++	"testing"
++)
++
++type proxyTransport struct {
++	base *url.URL
++	next http.RoundTripper
++}
++
++func (p proxyTransport) RoundTrip(req *http.Request) (*http.Response, error) {
++	if req.URL.Host == "proxy.golang.org" {
++		req = req.Clone(req.Context())
++		target := *req.URL
++		target.Scheme, target.Host = p.base.Scheme, p.base.Host
++		req.URL = &target
++	} else if req.URL.Hostname() != "127.0.0.1" {
++		return nil, fmt.Errorf("unexpected external test request: %s", req.URL)
++	}
++	return p.next.RoundTrip(req)
++}
++
++// Exercise the default proxy URL and the real HTTP client using deterministic
++// protocol responses. The existing unit-test servers still receive requests.
++func TestMain(m *testing.M) {
++	var archive bytes.Buffer
++	w := zip.NewWriter(&archive)
++	files := map[string]string{
++		"github.com/ldez/grignotin@v0.1.0/go.mod": "module github.com/ldez/grignotin\n\ngo 1.13\n",
++		"github.com/ldez/grignotin@v0.1.0/doc.go": "package grignotin\n",
++	}
++	for name, body := range files {
++		entry, err := w.Create(name)
++		if err != nil {
++			panic(err)
++		}
++		if _, err := entry.Write([]byte(body)); err != nil {
++			panic(err)
++		}
++	}
++	if err := w.Close(); err != nil {
++		panic(err)
++	}
++	responses := map[string]string{
++		"/github.com/ldez/grignotin/@v/v0.1.0.zip":                                  archive.String(),
++		"/github.com/ldez/grignotin/@v/v0.1.0.mod":                                  "module github.com/ldez/grignotin\n\ngo 1.13\n",
++		"/github.com/hashicorp/consul/api/@v/list":                                  "v1.2.3\nv1.2.4\nv1.2.5\n",
++		"/github.com/ijc25/!gotty/@v/a8b993ba6abdb0e0c12b0125c603323a71c7790c.info": `{"Version":"v0.0.0-20170406111628-a8b993ba6abd","Time":"2017-04-06T11:16:28Z"}`,
++		"/golang.org/x/lint/@latest":                                                `{"Version":"v0.0.0-20241112194109-818c5a804067","Time":"2024-11-12T19:41:09Z"}`,
++	}
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		body, ok := responses[r.URL.RequestURI()]
++		if !ok || r.Method != http.MethodGet {
++			http.Error(w, "unexpected proxy request", http.StatusNotFound)
++			return
++		}
++		_, _ = w.Write([]byte(body))
++	}))
++	base, err := url.Parse(server.URL)
++	if err != nil {
++		panic(err)
++	}
++	original := http.DefaultTransport
++	http.DefaultTransport = proxyTransport{base: base, next: original}
++	code := m.Run()
++	http.DefaultTransport = original
++	server.Close()
++	os.Exit(code)
++}
++
++func checkSourceArchive(t *testing.T, raw []byte) {
++	t.Helper()
++	archive, err := zip.NewReader(bytes.NewReader(raw), int64(len(raw)))
++	if err != nil {
++		t.Fatal(err)
++	}
++	if len(archive.File) != 2 {
++		t.Fatalf("expected two module files, got %d", len(archive.File))
++	}
++}
+--- /dev/null
++++ b/metago/offline_test.go
+@@ -0,0 +1,72 @@
++package metago
++
++import (
++	"fmt"
++	"net/http"
++	"net/http/httptest"
++	"net/url"
++	"os"
++	"strings"
++	"testing"
++)
++
++type metaTransport struct {
++	base *url.URL
++	next http.RoundTripper
++}
++
++func (p metaTransport) RoundTrip(req *http.Request) (*http.Response, error) {
++	if req.Method != http.MethodGet || req.URL.Scheme != "https" || req.URL.RawQuery != "go-get=1" {
++		return nil, fmt.Errorf("unexpected metadata request: %s %s", req.Method, req.URL)
++	}
++	clone := req.Clone(req.Context())
++	target := *req.URL
++	target.Scheme, target.Host = p.base.Scheme, p.base.Host
++	clone.URL = &target
++	return p.next.RoundTrip(clone)
++}
++
++func TestMain(m *testing.M) {
++	// Representative go-get responses, including go-source, go-import and
++	// hosts without metadata. Preserve every original host/path assertion.
++	responses := map[string]string{
++		"github.com/stretchr/testify":       `<html><head></head><body></body></html>`,
++		"k8s.io/api":                        `<meta name="go-import" content="k8s.io/api git https://github.com/kubernetes/api">`,
++		"go.elastic.co/apm":                 `<meta name="go-source" content="go.elastic.co/apm https://github.com/elastic/apm-agent-go https://github.com/elastic/apm-agent-go/tree/master{/dir} https://github.com/elastic/apm-agent-go/blob/master{/dir}/{file}#L{line}">`,
++		"gopkg.in/DataDog/dd-trace-go.v1":   `<meta name="go-import" content="gopkg.in/DataDog/dd-trace-go.v1 git https://github.com/DataDog/dd-trace-go">`,
++		"mvdan.cc/xurls/v2":                 `<meta name="go-import" content="mvdan.cc/xurls git https://github.com/mvdan/xurls">`,
++		"gotest.tools":                      `<meta name="go-import" content="gotest.tools git https://github.com/gotestyourself/gotest.tools">`,
++		"gocloud.dev":                       `<meta name="go-import" content="gocloud.dev git https://github.com/google/go-cloud">`,
++		"google.golang.org/appengine":       `<meta name="go-import" content="google.golang.org/appengine git https://github.com/golang/appengine">`,
++		"golang.org/x/crypto":               `<meta name="go-import" content="golang.org/x/crypto git https://go.googlesource.com/crypto">`,
++		"google.golang.org/grpc":            `<meta name="go-import" content="google.golang.org/grpc git https://github.com/grpc/grpc-go">`,
++		"launchpad.net/gocheck":             `<meta name="go-import" content="launchpad.net/gocheck bzr https://launchpad.net/~niemeyer/gocheck/trunk">`,
++		"code.gitea.io/sdk/gitea":           `<meta name="go-import" content="code.gitea.io/sdk/gitea git https://gitea.com/gitea/go-sdk">`,
++		"code.gitea.io/gitea":               `<meta name="go-import" content="code.gitea.io/gitea git https://github.com/go-gitea/gitea">`,
++		"gitlab.com/golang-commonmark/html": `<html><head></head><body></body></html>`,
++		"bitbucket.org/dtolpin/wigp":        `<html><head></head><body></body></html>`,
++	}
++	// Map the transport's original authority and request path to a fixture.
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		key := strings.TrimSuffix(r.Host+r.URL.Path, "/")
++		if r.Host == "mvdan.cc" && r.URL.Path == "/xurls" {
++			key = "mvdan.cc/xurls/v2"
++		}
++		body, ok := responses[key]
++		if !ok {
++			http.Error(w, "unexpected metadata path", http.StatusNotFound)
++			return
++		}
++		_, _ = w.Write([]byte(body))
++	}))
++	base, err := url.Parse(server.URL)
++	if err != nil {
++		panic(err)
++	}
++	original := http.DefaultClient
++	http.DefaultClient = &http.Client{Transport: metaTransport{base: base, next: http.DefaultTransport}}
++	code := m.Run()
++	http.DefaultClient = original
++	server.Close()
++	os.Exit(code)
++}
+--- /dev/null
++++ b/version/offline_test.go
+@@ -0,0 +1,52 @@
++package version
++
++import (
++	"fmt"
++	"net/http"
++	"net/http/httptest"
++	"net/url"
++	"os"
++	"testing"
++)
++
++type versionTransport struct {
++	base *url.URL
++	next http.RoundTripper
++}
++
++func (p versionTransport) RoundTrip(req *http.Request) (*http.Response, error) {
++	if req.Method != http.MethodGet || req.URL.Scheme != "https" {
++		return nil, fmt.Errorf("unexpected version request: %s %s", req.Method, req.URL)
++	}
++	clone := req.Clone(req.Context())
++	target := *req.URL
++	target.Scheme, target.Host = p.base.Scheme, p.base.Host
++	clone.URL = &target
++	return p.next.RoundTrip(clone)
++}
++
++func TestMain(m *testing.M) {
++	responses := map[string]string{
++		"build.golang.org/?mode=json": `{"builders":["linux-amd64"],"revisions":[{"repo":"go","revision":"0123456789abcdef","date":"2025-05-06T12:00:00Z","branch":"master","author":"Go Authors","desc":"test fixture","results":["ok"]}]}`,
++		"golang.org/dl/?mode=json":    `[{"version":"go1.24.3","stable":true,"files":[{"filename":"go1.24.3.linux-amd64.tar.gz","os":"linux","arch":"amd64","version":"go1.24.3","kind":"archive"}]},{"version":"go1.23.9","stable":true,"files":[{"filename":"go1.23.9.src.tar.gz","version":"go1.23.9","kind":"source"}]}]`,
++	}
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		body, ok := responses[r.Host+r.URL.RequestURI()]
++		if !ok {
++			http.Error(w, "unexpected version request", http.StatusNotFound)
++			return
++		}
++		w.Header().Set("Content-Type", "application/json")
++		_, _ = w.Write([]byte(body))
++	}))
++	base, err := url.Parse(server.URL)
++	if err != nil {
++		panic(err)
++	}
++	original := http.DefaultClient
++	http.DefaultClient = &http.Client{Transport: versionTransport{base: base, next: http.DefaultTransport}}
++	code := m.Run()
++	http.DefaultClient = original
++	server.Close()
++	os.Exit(code)
++}
