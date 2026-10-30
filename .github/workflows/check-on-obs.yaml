@@ -1,0 +1,95 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+name: check on obs
+
+permissions:
+  contents: read
+  pull-requests: read
+
+on:
+  pull_request:
+    branches: [main, ci-test]
+    paths:
+     - 'SPECS/**'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
+    steps:
+    - name: setup osc repo
+      run: |
+        echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
+        wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
+    - name: install tools
+      run:  sudo apt update && sudo apt install osc libwww-perl -y
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Setup osc config
+      run: |
+        set -x
+        mkdir -p ~/.config/osc
+        cat > ~/.config/osc/oscrc <<EOF
+        [general]
+        apiurl = https://build.openruyi.cn
+        [https://build.openruyi.cn]
+        pass = ${{ secrets.PRBOT }}
+        user = pr-bot
+        credentials_mgr_class=osc.credentials.PlaintextConfigFileCredentialsManager
+        EOF
+    - name: get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # v47.0.1
+      with:
+        files_yaml: |
+          specs:
+            - SPECS/**
+    - name: disbale build
+      if: github.event.action == 'closed'
+      run: |
+        set -x
+        PROJECT="openruyi:pull:${{ github.event.pull_request.number }}"
+        osc api -X POST /source/$PROJECT?cmd=set_flag&flag=build&status=disable
+    - name: run osc
+      if: github.event.action != 'closed' && steps.changed-files.outputs.specs_any_changed == 'true'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -x
+        all_file="${{ steps.changed-files.outputs.specs_all_changed_files }}"
+        onlybuilds=""
+        for i in $all_file; do
+         p=$(basename $(dirname $i))
+         onlybuilds="$onlybuilds&amp;onlybuild=$p"
+        done
+        echo $onlybuilds
+        PROJECT="openruyi:pull:${{ github.event.pull_request.number }}"
+        osc api -X PUT /source/$PROJECT/_meta -d "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <project name=\"$PROJECT\">
+        <title>${{ github.event.pull_request.title }}</title>
+        <description>${{ github.sha }}</description>
+        <link project=\"openruyi\"/>
+        <url>${{ github.event.pull_request.html_url }}</url>
+        <scmsync>https://github.com/${GITHUB_REPOSITORY}?arch=riscv64&amp;arch=x86_64$onlybuilds#${{ github.sha }}</scmsync>
+        <person userid=\"z572\" role=\"maintainer\">
+        </person>
+        <person userid=\"pr-bot\" role=\"maintainer\">
+        </person>
+        <repository name=\"x86_64\" linkedbuild=\"localdep\">
+             <path project=\"openruyi\" repository=\"x86_64\">
+             </path>
+             <arch>x86_64</arch>
+        </repository>
+        <repository name=\"rva20\" linkedbuild=\"localdep\">
+             <path project=\"openruyi\" repository=\"rva20\">
+             </path>
+             <arch>riscv64</arch>
+        </repository>
+        </project>"
+        gh api --method POST /repos/${{ github.repository }}/statuses/${{ github.sha }} -f state='pending' -f context='obs-remote-build' -f description='obs build' -f target_url="https://build.openruyi.cn/project/show/$PROJECT"
