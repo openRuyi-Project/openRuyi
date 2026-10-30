@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name hashbrown
-%global full_version 0.17.0
+%global full_version 0.17.1
 %global pkgname hashbrown-0.17
 
 Name:           rust-hashbrown-0.17
-Version:        0.17.0
+Version:        0.17.1
 Release:        %autorelease
 Summary:        Rust crate "hashbrown"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/hashbrown
-#!RemoteAsset:  sha256:4f467dd6dccf739c208452f8014c75c18bb8301b050ad1cfb27153803edb0f51
+#!RemoteAsset:  sha256:ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
