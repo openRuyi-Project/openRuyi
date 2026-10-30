@@ -1,0 +1,123 @@
+Subject: [PATCH] Synchronize send quota tests instead of sleeping
+
+TestQuotaBasics assumes goroutines will be scheduled within a few
+milliseconds, while TestQuotaLoad starts 20000 parallel goroutines. The
+20ms context can expire before a queued waiter is released on busy
+builders, and sleeps do not establish FIFO acquisition order.
+
+Run the basic test in a synctest bubble and wait for each waiter to block
+before releasing quota. Check every acquisition result after release,
+retaining the blocked-waiter, FIFO and quota-state assertions without
+depending on host scheduling latency. TestQuotaContext continues to
+exercise context cancellation, and TestQuotaLoad remains unchanged.
+
+Upstream-Status: Pending
+Reference: https://github.com/eclipse-paho/paho.golang/blob/v0.23.0/paho/session/state/sendquota_test.go
+
+--- a/paho/session/state/sendquota_test.go
++++ b/paho/session/state/sendquota_test.go
+@@ -22,13 +22,17 @@
+ 	"sync"
+ 	"sync/atomic"
+ 	"testing"
++	"testing/synctest"
+ 	"time"
+ )
+ 
+ // TestQuotaBasics performs basic testing of allocating/releasing message ids in inflight
+ func TestQuotaBasics(t *testing.T) {
+ 	t.Parallel()
++	synctest.Test(t, testQuotaBasics)
++}
+ 
++func testQuotaBasics(t *testing.T) {
+ 	it := newSendQuota(5)
+ 
+ 	// We should be able to acquire until the quota is hit
+@@ -42,36 +46,38 @@
+ 
+ 	// subsequent waiters should block until Release is called
+ 	for i := uint32(1); i < 5; i++ {
+-		release := make(chan struct{})
+-		released := make(chan error, 1)
+-		ctx, cancel = context.WithTimeout(context.Background(), 20*time.Millisecond)
+-		go func() {
+-			<-release
+-			it.Release()
+-			close(released)
+-		}()
++		ctx, cancel = context.WithCancel(context.Background())
++		defer cancel()
+ 
+ 		aResult := make(chan error, 1)
+ 		go func() {
+ 			aResult <- it.Acquire(ctx)
+ 		}()
++		synctest.Wait() // Ensure Acquire has joined the queue and is blocked.
+ 		select {
+ 		case err := <-aResult:
+ 			t.Fatalf("slot should not be gained before previous one released: %d, %v", i, err)
+-		case <-time.After(10 * time.Millisecond):
++		default:
+ 		}
+ 
+-		close(release)
++		if err := it.Release(); err != nil {
++			t.Fatalf("failed to release slot: %v", err)
++		}
++		synctest.Wait()
+ 		select {
+-		case <-released:
+-		case <-time.After(10 * time.Millisecond):
+-			t.Fatalf("slot should have been released")
++		case err := <-aResult:
++			if err != nil {
++				t.Fatalf("failed to acquire released slot: %v", err)
++			}
++		default:
++			t.Fatalf("slot should have been acquired")
+ 		}
+ 		cancel()
+ 	}
+ 
+ 	// Waiters should be released in order
+-	ctx, cancel = context.WithTimeout(context.Background(), 20*time.Millisecond)
++	ctx, cancel = context.WithCancel(context.Background())
++	defer cancel()
+ 	aResult := make(chan struct {
+ 		uint32
+ 		error
+@@ -83,7 +89,7 @@
+ 				error
+ 			}{i, it.Acquire(ctx)}
+ 		}(i)
+-		time.Sleep(time.Millisecond) // we want slots to be requested in known order
++		synctest.Wait() // Enqueue each waiter before starting the next one.
+ 	}
+ 	select {
+ 	case result := <-aResult:
+@@ -91,11 +97,10 @@
+ 	default:
+ 	}
+ 	for i := uint32(0); i < 5; i++ {
+-		it.Release()
+-		time.Sleep(time.Millisecond) // provide time for release to be processed
+-	}
+-	time.Sleep(time.Millisecond) // allow time for slots to be allocated
+-	for i := uint32(0); i < 5; i++ {
++		if err := it.Release(); err != nil {
++			t.Fatalf("failed to release slot: %v", err)
++		}
++		synctest.Wait()
+ 		select {
+ 		case result := <-aResult:
+ 			if result.error != nil {
+@@ -105,7 +110,7 @@
+ 				t.Fatalf("release out of order; expected %d, got %d", i, result.uint32)
+ 			}
+ 		default:
+-			t.Fatalf("await should have compelted")
++			t.Fatalf("await should have completed")
+ 		}
+ 	}
+ 

@@ -1,0 +1,22 @@
+Subject: [PATCH] tests: load fixtures by their canonical import paths
+
+Relative patterns under testdata resolve to local import IDs in GOPATH mode.
+Use the canonical import paths already computed by the test so package loading
+and the expected Unit keys refer to the same packages. Keep every fixture,
+load mode and assertion.
+
+Upstream: https://github.com/go-toolsmith/pkgload/blob/v1.2.2/pkgload_test.go
+Status: Not submitted; downstream GOPATH test compatibility fix.
+
+diff --git a/pkgload_test.go b/pkgload_test.go
+--- a/pkgload_test.go
++++ b/pkgload_test.go
+@@ -69,7 +69,7 @@ func TestVisitUnits(t *testing.T) {
+ 	testsMap := make(map[string]testPackage)
+ 	for i, test := range tests {
+ 		pkgPath := "github.com/go-toolsmith/pkgload/" + strings.TrimPrefix(test.path, "./")
+-		paths[i] = tests[i].path
++		paths[i] = pkgPath
+ 		absPath, err := filepath.Abs(tests[i].path)
+ 		if err != nil {
+ 			t.Fatalf("get abs path: %v", err)
