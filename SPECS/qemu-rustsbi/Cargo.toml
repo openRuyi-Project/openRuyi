@@ -1,0 +1,35 @@
+[workspace]
+resolver = "3"
+members = [
+    "library/macros",
+    "library/sbi-rt",
+    "library/sbi-spec",
+    "library/rustsbi",
+    "library/riscv-aia",
+    "firmware/macros",
+    "firmware/runtime",
+    "firmware/prototyper",
+    "xtask",
+]
+default-members = ["xtask"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.88"
+license = "MulanPSL-2.0 OR MIT"
+repository = "https://github.com/rustsbi/rustsbi"
+
+[profile.release]
+debug = true
+
+[profile.release.package.rustsbi-prototyper]
+codegen-units = 1
+
+[profile.release.package.rustsbi-firmware-runtime]
+codegen-units = 1
+
+[workspace.dependencies]
+fdt = "0.1.5"
+riscv = { version = "0.16.1", default-features = false }
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

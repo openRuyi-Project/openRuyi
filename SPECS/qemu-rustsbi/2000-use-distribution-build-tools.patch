@@ -1,0 +1,85 @@
+Subject: Limit the firmware workspace and use distribution LLVM tools
+Upstream: https://github.com/rustsbi/rustsbi/tree/f16c20d769a30d057b70009089f1277266f7bccd
+Upstream-Status: Inappropriate [distribution packaging]
+
+Keep the Prototyper and its in-tree dependencies, plus the official xtask
+builder. Unrelated test kernels require git-only crates during workspace
+resolution even when they are not built. No firmware code is changed.
+Use the distribution LLVM objcopy directly instead of the rustup-oriented
+cargo-binutils wrapper; both accept the same conversion arguments.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -4,38 +4,14 @@
+     "library/macros",
+     "library/sbi-rt",
+     "library/sbi-spec",
+-    "library/sbi-testing",
+     "library/rustsbi",
+     "library/riscv-aia",
+-    "library/riscv-cove",
+-    "library/riscv-cove-rt",
+-    "library/rpmi",
+-    "library/penglai",
+-    "library/pmpm",
+-    "library/smm",
+     "firmware/macros",
+     "firmware/runtime",
+     "firmware/prototyper",
+-    "firmware/bench-kernel",
+-    "firmware/test-kernel",
+     "xtask",
+ ]
+-# Default Cargo commands operate on host-testable libraries.
+-# `sbi-testing` is checked on RISC-V targets in CI. Firmware is built through
+-# xtask.
+-default-members = [
+-    "library/macros",
+-    "library/sbi-rt",
+-    "library/sbi-spec",
+-    "library/rustsbi",
+-    "library/riscv-aia",
+-    "library/riscv-cove",
+-    "library/riscv-cove-rt",
+-    "library/rpmi",
+-    "library/penglai",
+-    "library/pmpm",
+-    "library/smm",
+-]
++default-members = ["xtask"]
+
+ [workspace.package]
+ edition = "2024"
+--- a/xtask/src/prototyper/build.rs
++++ b/xtask/src/prototyper/build.rs
+@@ -103,7 +103,7 @@
+
+     let exit_status = convert_elf_to_binary(&paths)?;
+     if !exit_status.success() {
+-        error!("rust-objcopy failed to convert the prototyper ELF to binary");
++        error!("llvm-objcopy failed to convert the prototyper ELF to binary");
+         return Ok(exit_status);
+     }
+
+@@ -149,8 +149,8 @@
+     let elf_path = paths.artifact_dir.join(PACKAGE_NAME);
+     let binary_path = paths.artifact_dir.join(format!("{PACKAGE_NAME}.bin"));
+
+-    info!("Converting ELF to binary with rust-objcopy");
+-    Command::new("rust-objcopy")
++    info!("Converting ELF to binary with llvm-objcopy");
++    Command::new("llvm-objcopy")
+         .args([
+             "-O",
+             "binary",
+@@ -161,8 +161,8 @@
+         .status()
+         .with_context(|| {
+             format!(
+-                "failed to execute rust-objcopy: '{}' -> '{}'; \
+-                 please install cargo-binutils with cmd: cargo install --locked cargo-binutils@0.4.0",
++                "failed to execute llvm-objcopy: '{}' -> '{}'; \
++                 please install LLVM tools",
+                 elf_path.display(),
+                 binary_path.display()
+             )
