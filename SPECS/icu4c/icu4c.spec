@@ -7,42 +7,47 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           icu4c
-Version:        77.1
+Version:        79.1
 Release:        %autorelease
 Summary:        International Components for Unicode
 License:        Unicode-3.0
 URL:            https://icu.unicode.org/
 VCS:            git:https://github.com/unicode-org/icu
-#!RemoteAsset
-Source0:        https://github.com/unicode-org/icu/releases/download/release-77-1/%{name}-77_1-src.tgz
-#!RemoteAsset
-Source1:        https://github.com/unicode-org/icu/releases/download/release-77-1/%{name}-77_1-docs.zip
+#!RemoteAsset:  sha256:06fa63ecb521048f8082f12ad988f6b678d90cbd88aafce24cbc94902b191d99
+Source0:        https://github.com/unicode-org/icu/releases/download/release-%{version}/%{name}-%{version}-sources.tgz
+#!RemoteAsset:  sha256:1939663d6a0a4a6523c69ea655438bd3fbce3186358279d4717d4c06fe697182
+Source1:        https://github.com/unicode-org/icu/releases/download/release-%{version}/%{name}-%{version}-docs.zip
 BuildSystem:    autotools
-
-Patch0:         0001-icu-fix-install-mode-files.patch
-Patch1:         0002-icu-error-reporting.patch
-Patch2:         0003-icu-avoid-x87-excess-precision.patch
-Patch3:         0004-locale.patch
-Patch4:         0005-nan-undefined-conversion.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --enable-shared
 BuildOption(conf):  --disable-samples
-BuildOption(conf):  --with-data-packaging=archive
 BuildOption(build):  -C source
 BuildOption(install):  -C source
 BuildOption(check):  -C source
 
 BuildRequires:  gcc-c++
+BuildRequires:  make
 BuildRequires:  pkg-config
-BuildRequires:  python3
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  unzip
 
-# TODO: keep this information sync or delete it? - 251
-Provides:       bundled(tzdata) = 2024b
+Provides:       bundled(tzdata) = 2026e
 Provides:       icu
 
 Requires:       tzdata
+
+%patchlist
+# Honor DESTDIR for unpacked ICU data; https://api.opensuse.org/public/source/openSUSE:Factory/icu/icu-fix-install-mode-files.diff?rev=95.
+2000-icu-fix-install-mode-files.patch
+# Include errno details in ICU data-tool errors; https://api.opensuse.org/public/source/openSUSE:Factory/icu/icu-error-reporting.diff?rev=95.
+2001-icu-error-reporting.patch
+# Avoid excess x87 precision in tests; https://api.opensuse.org/public/source/openSUSE:Factory/icu/icu-avoid-x87-excess-precision.diff?rev=95.
+2002-icu-avoid-x87-excess-precision.patch
+# Honor empty POSIX locale variables; https://api.opensuse.org/public/source/openSUSE:Factory/icu/locale.diff?rev=95.
+2003-locale.patch
+# Avoid non-finite integer conversion; https://github.com/unicode-org/icu/commit/29f1188d191a7a75ac7ffa4bfa390f625da39c53.
+2004-nan-undefined-conversion.patch
 
 %description
 ICU is a set of C and C++ libraries that provide extensive Unicode and locale
@@ -57,45 +62,37 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This package contains the headers, symbolic links, and other files needed to
 develop applications that use the ICU libraries.
 
+%package        doc
+Summary:        API documentation for ICU
+BuildArch:      noarch
+
+%description    doc
+API reference for the ICU libraries.
+
 %prep -a
 mkdir html
 cd html
 unzip %SOURCE1
 
-%conf
+%conf -p
 cd source
 mkdir -p data/out/tmp
 export CXXFLAGS="%{optflags} -DICU_DATA_DIR='\"%{_datadir}/icu/%{version}\"' -fexcess-precision=fast"
 export CFLAGS="$CXXFLAGS"
-%configure
-
-%build -a
-cd source/data/
-%ifarch %armb hppa mips mips64 ppc ppc64 %sparc s390 s390x m68k
-  cp in/icudt77l.dat out/
-%else
-  LD_LIBRARY_PATH="../lib:../stubdata:../tools/ctestfw:$LD_LIBRARY_PATH" \
-  ../bin/icupkg -tb in/icudt77l.dat out/icudt77b.dat
-%endif
 
 %install -a
-install -d -m 755 %{buildroot}%{_datadir}/icu/%{version}
-install -m 644 source/data/out/icudt*.dat %{buildroot}%{_datadir}/icu/%{version}/
-install -d -m 755 %{buildroot}%{_docdir}/%{name}
-cp -a html/* %{buildroot}%{_docdir}/%{name}/
-cp -a license.html readme.html %{buildroot}%{_docdir}/%{name}/
 chmod a+rx %{buildroot}%{_libdir}/lib*.so.*
-rm -f %{buildroot}%{_libdir}/icu/%{version}/{Makefile.inc,pkgdata.inc}
 
 %files
-%license license.html
 %doc readme.html
+%license license.html
 %{_bindir}/*
-%{_sbindir}/*
+%exclude %{_bindir}/icu-config
 %{_mandir}/man*/*
 %dir %{_datadir}/icu
 %dir %{_datadir}/icu/%{version}
 %{_datadir}/icu/%{version}/*
+%exclude %{_datadir}/icu/%{version}/config/
 %{_libdir}/libicu*.so.*
 
 %files devel
@@ -103,6 +100,8 @@ rm -f %{buildroot}%{_libdir}/icu/%{version}/{Makefile.inc,pkgdata.inc}
 %{_includedir}/unicode/
 %dir %{_libdir}/icu/
 %dir %{_libdir}/icu/%{version}/
+%{_libdir}/icu/%{version}/Makefile.inc
+%{_libdir}/icu/%{version}/pkgdata.inc
 %{_libdir}/pkgconfig/icu-i18n.pc
 %{_libdir}/pkgconfig/icu-io.pc
 %{_libdir}/pkgconfig/icu-uc.pc
@@ -110,10 +109,12 @@ rm -f %{buildroot}%{_libdir}/icu/%{version}/{Makefile.inc,pkgdata.inc}
 %dir %{_datadir}/icu/
 %dir %{_datadir}/icu/%{version}/
 %{_datadir}/icu/%{version}/config/
-%doc %{_docdir}/icu4c/
 %{_libdir}/icu/Makefile.inc
 %{_libdir}/icu/pkgdata.inc
 %{_libdir}/icu/current
 
+%files doc
+%doc html
+
 %changelog
-%{?autochangelog}
+%autochangelog
