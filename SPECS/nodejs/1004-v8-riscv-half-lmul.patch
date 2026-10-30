@@ -1,0 +1,33 @@
+From cac8aa44a153889da1ee8542a503339f17f3a1cd Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Wed, 18 Mar 2026 16:44:12 +0800
+Subject: [PATCH] [riscv] Fix lmul calculation in SetSimd128Half for VLEN
+ 256/512
+
+Change-Id: Id613d0f54bade4c7941910b04d9c0bc27b611a09
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7676638
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#106185}
+---
+ src/codegen/riscv/assembler-riscv.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/deps/v8/src/codegen/riscv/assembler-riscv.h b/deps/v8/src/codegen/riscv/assembler-riscv.h
+index 873e6b2914e4..75b1a90942e8 100644
+--- a/deps/v8/src/codegen/riscv/assembler-riscv.h
++++ b/deps/v8/src/codegen/riscv/assembler-riscv.h
+@@ -671,10 +671,10 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase,
+           lmul = (sew + 1) > E64 ? m1 : mf2;
+           break;
+         case 256:
+-          lmul = (sew + 2) > E64 ? m1 : mf4;
++          lmul = (sew + 2) > E64 ? (sew == E32 ? mf2 : m1) : mf4;
+           break;
+         case 512:
+-          lmul = (sew + 3) > E64 ? m1 : mf8;
++          lmul = (sew + 3) > E64 ? (sew <= E32 ? mf2 : m1) : mf8;
+           break;
+         default:
+           static_assert(kMaxRvvVLEN <= 512, "Unsupported VLEN");

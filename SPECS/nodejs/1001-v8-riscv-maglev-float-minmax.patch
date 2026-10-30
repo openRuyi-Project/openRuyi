@@ -1,0 +1,41 @@
+From 7d081be20f980a472a3460027d78423dd7efe603 Mon Sep 17 00:00:00 2001
+From: Jojo R <rjiejie@gmail.com>
+Date: Fri, 11 Sep 2026 15:22:20 +0800
+Subject: [PATCH] [riscv][maglev] Use public Float64Min/Max helpers
+
+Route Float64 min/max through the public MacroAssembler helpers so
+Maglev can use native Zfa instructions when available. Non-Zfa targets
+retain the existing fallback implementation.
+
+Change-Id: If4b247f030b3e901501f66e622e15c96d50a10b1
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8397048
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Reviewed-by: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#109847}
+---
+ src/maglev/riscv/maglev-ir-riscv.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/deps/v8/src/maglev/riscv/maglev-ir-riscv.cc b/deps/v8/src/maglev/riscv/maglev-ir-riscv.cc
+index 85498270ad81..beb9865edce7 100644
+--- a/deps/v8/src/maglev/riscv/maglev-ir-riscv.cc
++++ b/deps/v8/src/maglev/riscv/maglev-ir-riscv.cc
+@@ -909,7 +909,7 @@ void Float64Min::GenerateCode(MaglevAssembler* masm,
+   DoubleRegister right = ToDoubleRegister(RightInput());
+   DoubleRegister out = ToDoubleRegister(result());
+ 
+-  __ FloatMinMaxHelper<double>(out, left, right, MaxMinKind::kMin);
++  __ Float64Min(out, left, right);
+ }
+ 
+ void Float64Max::SetValueLocationConstraints() {
+@@ -932,7 +932,7 @@ void Float64Max::GenerateCode(MaglevAssembler* masm,
+   DoubleRegister right = ToDoubleRegister(RightInput());
+   DoubleRegister out = ToDoubleRegister(result());
+ 
+-  __ FloatMinMaxHelper<double>(out, left, right, MaxMinKind::kMax);
++  __ Float64Max(out, left, right);
+ }
+ 
+ int Float64Ieee754Unary::MaxCallStackArgs() const { return 0; }
