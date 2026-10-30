@@ -1,0 +1,21 @@
+Fix a build failure with glibc 2.28 and later: the makedev macro expands
+to an expression with balanced parentheses, so the extra closing
+parenthesis in partimage's own definition breaks it.
+
+Backported from the Debian partimage package
+(debian/patches/04-fix-FTBFS-glic-2.28.patch), original patch from Gentoo
+by Mike Frysinger <vapier@gentoo.org>, Debian bug #915987.
+
+diff --git a/src/client/misc.h b/src/client/misc.h
+index 2ec4b63..15567f0 100644
+--- a/src/client/misc.h
++++ b/src/client/misc.h
+@@ -36,7 +36,7 @@ struct COptions;
+ #endif
+ 
+ #ifndef makedev
+-  #define makedev(maj,min) (((maj) << 8) | min))
++  #define makedev(maj,min) (((maj) << 8) | (min))
+ #endif
+ 
+ // =======================================================
