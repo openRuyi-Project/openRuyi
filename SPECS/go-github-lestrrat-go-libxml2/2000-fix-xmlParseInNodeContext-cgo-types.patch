@@ -1,0 +1,40 @@
+From d06374c0f56fe2f3e7ff6dacc46d0d376a6c88bd Mon Sep 17 00:00:00 2001
+From: Atul Patil <patilatul@google.com>
+Date: Wed, 24 Jun 2026 13:28:07 +0000
+Subject: [PATCH] Fix CGO type mismatch in xmlParseInNodeContext
+
+Upstream-Status: Pending [https://github.com/atulpatildbz/libxml2/commit/d06374c0f56fe2f3e7ff6dacc46d0d376a6c88bd]
+The original repository is archived. Apply the fork's isolated CGO fix to
+the current upstream snapshot without changing its module path.
+
+---
+ clib/clib.go | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/clib/clib.go b/clib/clib.go
+index e8319ae..667a24a 100644
+--- a/clib/clib.go
++++ b/clib/clib.go
+@@ -331,6 +331,10 @@ void
+ MY_setErrWarnAccumulator(xmlSchemaValidCtxtPtr ctxt, go_libxml2_errwarn_accumulator *accum) {
+ 	xmlSchemaSetValidErrors(ctxt, MY_accumulateErr, NULL, accum);
+ }
++
++static inline int MY_xmlParseInNodeContext(xmlNodePtr node, const char *data, int datalen, int options, xmlNodePtr *lst) {
++    return xmlParseInNodeContext(node, data, datalen, options, (xmlNode **)lst);
++}
+ */
+ import "C"
+ import (
+@@ -1886,7 +1890,7 @@ func XMLParseInNodeContext(n PtrSource, data string, o int) (uintptr, error) {
+ 	var ret C.xmlNodePtr
+ 	cdata := C.CString(data)
+ 	defer C.free(unsafe.Pointer(cdata))
+-	if C.xmlParseInNodeContext(nptr, cdata, C.int(len(data)), C.int(o), &ret) != 0 {
++	if C.MY_xmlParseInNodeContext(nptr, cdata, C.int(len(data)), C.int(o), &ret) != 0 {
+ 		return 0, errors.New("XXX PLACE HOLDER XXX")
+ 	}
+ 
+-- 
+2.53.0
+
