@@ -6,78 +6,67 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global _test_target test
+# SQLite Autosetup rejects the default Autotools --docdir option.
+%define buildsystem_autotools_conf() %configure %*
 
 # These are for SQLite sources
 %define year 2026
-%define download_version 3530200
+%define download_version 3540100
 # Doc version might be different
-%define doc_version 3530200
+%define doc_version 3540100
 
 Name:           sqlite
-Version:        3.53.2
+Version:        3.54.1
 Release:        %autorelease
 Summary:        Library that implements an embeddable SQL database engine
-License:        GPL-3.0-or-later
+License:        LicenseRef-openRuyi-Public-Domain
 URL:            https://www.sqlite.org/
 VCS:            git:https://github.com/sqlite/sqlite.git
-#!RemoteAsset:  sha256:cafff764c03f6d720968f746e2f47a986bbf12bf4c18904f1eb131c0b0b592d3
-Source0:        http://www.sqlite.org/%{year}/sqlite-src-%{download_version}.zip
-#!RemoteAsset:  sha256:30c5488926e72a0b958d64377c91c975a35a8f16d285cbb83cfad31f4af71c6d
-Source1:        http://www.sqlite.org/%{year}/sqlite-doc-%{doc_version}.zip
+#!RemoteAsset:  sha256:387e7f6cad4797b17848c07d453dc6606917bb356a6cfe5a3abafd38c240c71b
+Source0:        https://www.sqlite.org/%{year}/sqlite-src-%{download_version}.zip
+#!RemoteAsset:  sha256:e9f634ac28a4c7b48f5c389e4b08c039654ec1487512092b330ccfcfdc0816e0
+Source1:        https://www.sqlite.org/%{year}/sqlite-doc-%{doc_version}.zip
 BuildSystem:    autotools
 
-# Support system-wide template (located at /usr/share/lemon/lempar.c) in lemon.
+# Backport the JSON tree root key fix; https://github.com/sqlite/sqlite/commit/2023a2b37593073de0e789455b6a362ceeecd1d1.
+Patch1000:      1000-json-tree.patch
+# Find the installed Lemon template; https://gitlab.archlinux.org/archlinux/packaging/packages/sqlite/-/blob/4a8c4319f91e02fb521e058858fedcfaa6ff8f1b/sqlite-lemon-system-template.patch.
 Patch2000:      2000-sqlite-lemon-system-template.patch
 
 BuildOption(prep):  -a 1
+BuildOption(conf):  --disable-rpath
+BuildOption(conf):  --disable-static
+BuildOption(conf):  --enable-fts3
+BuildOption(conf):  --enable-fts4
+BuildOption(conf):  --enable-fts5
+BuildOption(conf):  --enable-session
+BuildOption(conf):  --enable-column-metadata
+BuildOption(conf):  --enable-dbstat
+BuildOption(conf):  --enable-rtree
+BuildOption(conf):  --enable-geopoly
+BuildOption(conf):  --soname=legacy
+# Skip ASAN fuzz tests under the worker data limit; https://clang.llvm.org/docs/AddressSanitizer.html#limitations.
+BuildOption(check):  TSTRNNR_OPTS=~fuzzcheck-asan
 
 BuildRequires:  gcc-c++
-BuildRequires:  autoconf
 BuildRequires:  make
 BuildRequires:  ncurses-devel
 BuildRequires:  glibc-devel
 BuildRequires:  tcl-devel
+BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  unzip
 
 Provides:       %{name}3 = %{version}-%{release}
+Obsoletes:      %{name}-analyzer < %{version}-%{release}
 
 %description
-SQLite is a C library that implements an SQL database engine. A large
-subset of SQL92 is supported. A complete database is stored in a
-single disk file. The API is designed for convenience and ease of use.
-Applications that link against SQLite can enjoy the power and
-flexibility of an SQL database without the administrative hassles of
-supporting a separate database server. Version 2 and version 3 binaries
-are named to permit each to be installed on a single host
+SQLite is a C library that provides an embedded SQL database engine.
+Each database is stored in a single file. No separate server is required.
 
-SQLite is built with some non-default settings:
-- Additional APIs for table's and query's metadata are enabled
-  (SQLITE_ENABLE_COLUMN_METADATA)
-- Directory syncs are disabled (SQLITE_DISABLE_DIRSYNC)
-- `secure_delete` defaults to 'on', so deleted content is overwritten
-  with zeros (SQLITE_SECURE_DELETE)
-- `sqlite3_unlock_notify()` is enabled - this feature allows to register a
-  callback that's invoked when lock is removed (SQLITE_ENABLE_UNLOCK_NOTIFY)
-- `dbstat` virtual table with disk space usage is enabled
-- `dbpage` virtual table providing direct access to underlying database file
-  is enabled (SQLITE_ENABLE_DBPAGE_VTAB)
-- Threadsafe mode is set to 1 - Serialized, so it is safe to use in a
-  multithreaded environment (SQLITE_THREADSAFE=1)
-- FTS3, FTS4 and FTS5 are enabled so versions 3 to 5 of the full-text search
-  engine are available (SQLITE_ENABLE_FTS3, SQLITE_ENABLE_FTS4,
-  SQLITE_ENABLE_FTS5)
-- Pattern parser in FTS3 extension supports nested parenthesis and operators
-  `AND`, `OR` (SQLITE_ENABLE_FTS3_PARENTHESIS)
-- R*Tree index extension is enabled (SQLITE_ENABLE_RTREE)
-- Extension loading is enabled
-- Sessions (sqlite-session feature) is enabled
-- Preupdate hook is enabled
-
-It is also important to note that shell has some extensions as its dependencies,
-so some extensions are enabled by default in SQLite shell, but not in the system
-libraries. Only the aforementioned extensions are available in the libraries:
-FTS3, FTS4, FTS5, R*Tree
+This build includes FTS3, FTS4, FTS5, R*Tree, Geopoly, dbstat, session
+changesets, and resumable bulk updates. It provides column metadata
+and unlock notifications. Secure deletion is enabled by default.
 
 %package        devel
 Summary:        Development tools for the sqlite3 embeddable SQL database engine
@@ -119,92 +108,68 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    tcl
 This package contains the tcl modules for %{name}.
 
-%package        analyzer
-Summary:        An analysis program for sqlite3 database files
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description    analyzer
-This package contains the analysis program for %{name}.
-
-%prep -a
-# Remove backup-file
-rm -f %{name}-doc-%{docver}/sqlite.css~ || :
-
-%conf
-# These are needed otherwise configure will fail
-export CC=gcc
-export CC_FOR_BUILD=gcc
+%conf -p
+%set_build_flags
+export BUILD_CFLAGS="$CFLAGS $LDFLAGS"
 export TCLLIBDIR=%{tcl_archdir}/sqlite%{version}
-export CFLAGS="$RPM_OPT_FLAGS $RPM_LD_FLAGS \
- -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+export CPPFLAGS="$CPPFLAGS \
  -DSQLITE_ENABLE_UNLOCK_NOTIFY \
- -DSQLITE_ENABLE_DBSTAT_VTAB=1 \
  -DSQLITE_ENABLE_FTS3_TOKENIZER=1 \
  -DSQLITE_ENABLE_FTS3_PARENTHESIS \
  -DSQLITE_SECURE_DELETE \
- -DSQLITE_ENABLE_SESSION \
- -DSQLITE_ENABLE_PREUPDATE_HOOK \
  -DSQLITE_ENABLE_STMTVTAB \
  -DSQLITE_ENABLE_STAT4 \
  -DSQLITE_MAX_VARIABLE_NUMBER=250000 \
  -DSQLITE_MAX_EXPR_DEPTH=10000 \
- -DSQLITE_ENABLE_MATH_FUNCTIONS"
-# By default, we use disable-rpath, which will
-# cause failure here, so we overwrite the conf here
-%configure                      \
-    --disable-silent-rules      \
-    --disable-static            \
-    --enable-fts3               \
-    --enable-fts4               \
-    --enable-fts5               \
-    --enable-session            \
-    --enable-rtree              \
-    --soname=legacy
+ -DSQLITE_ENABLE_RBU"
 
 %build -a
-# We also need to build tcl & sqldiff
-%make_build sqlite3_analyzer
 %make_build sqldiff
+
+%check -p
+trap 'status=$?
+    if [ "$status" -ne 0 ]; then
+        tclsh test/testrunner.tcl errors --verbose || :
+    fi
+    exit "$status"
+' EXIT
 
 %install -a
 # Install lemon
-install -D -m0644 sqlite3.1 $RPM_BUILD_ROOT/%{_mandir}/man1/sqlite3.1
 install -D -m0755 lemon $RPM_BUILD_ROOT/%{_bindir}/lemon
 install -D -m0644 tool/lempar.c $RPM_BUILD_ROOT/%{_datadir}/lemon/lempar.c
 # Install tcl
 # Fix up permissions to enable dep extraction
 install -d $RPM_BUILD_ROOT/%{tcl_archdir}
 chmod 0755 $RPM_BUILD_ROOT/%{tcl_archdir}/sqlite%{version}/*.so
-# Install sqlite3_analyzer
-install -D -m0755 sqlite3_analyzer $RPM_BUILD_ROOT/%{_bindir}/sqlite3_analyzer
 # Install sqldiff
 install -D -m0755 sqldiff $RPM_BUILD_ROOT/%{_bindir}/sqldiff
 
 %files
+%license LICENSE.md
 %{_bindir}/sqlite3
 %{_bindir}/sqldiff
 %{_mandir}/man?/*
 %{_libdir}/*.so.%{version}
+%{_libdir}/*.so.0
 
 %files devel
 %doc README.md
 %{_includedir}/*.h
 %{_libdir}/*.so
-%{_libdir}/*.so.0
 %{_libdir}/pkgconfig/sqlite3.pc
 
 %files doc
 %doc sqlite-doc-%{doc_version}/*
+%license LICENSE.md
 
 %files -n lemon
+%license LICENSE.md
 %{_bindir}/lemon
 %{_datadir}/lemon
 
 %files tcl
 %{tcl_archdir}/*
-
-%files analyzer
-%{_bindir}/sqlite3_analyzer
 
 %changelog
 %autochangelog
