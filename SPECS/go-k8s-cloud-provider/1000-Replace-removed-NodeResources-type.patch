@@ -1,0 +1,30 @@
+From ef30e51220fb1255d3514c659e50168750b804fe Mon Sep 17 00:00:00 2001
+From: Tim Hockin <thockin@google.com>
+Date: Sun, 18 Feb 2024 16:25:50 -0800
+Subject: [PATCH] Get rid of unused API type NodeResources
+
+Kubernetes-commit: 467d5d745c26f950589d52d05a0edbf97862e015
+
+(cherry picked from commit 4b7a2d804e79314fd866210268a9bf7e2d35aa07)
+Backported to the v0.19.3 file context.
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ fake/fake.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fake/fake.go b/fake/fake.go
+index 1637dd8..84de629 100644
+--- a/fake/fake.go
++++ b/fake/fake.go
+@@ -72,7 +72,7 @@ type Cloud struct {
+ 	ExtIDErr      map[types.NodeName]error
+ 	InstanceTypes map[types.NodeName]string
+ 	Machines      []types.NodeName
+-	NodeResources *v1.NodeResources
++	NodeResources v1.ResourceList
+ 	ClusterList   []string
+ 	MasterName    string
+ 	ExternalIP    net.IP
+-- 
+2.39.5 (Apple Git-154)
+
