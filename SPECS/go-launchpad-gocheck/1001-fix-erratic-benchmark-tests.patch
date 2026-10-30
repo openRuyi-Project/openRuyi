@@ -1,0 +1,52 @@
+From 822ff90e51871de6e9ffe102e1be8627b597fca8 Mon Sep 17 00:00:00 2001
+From: unclejack <unclejack@users.noreply.github.com>
+Date: Thu, 17 Nov 2016 16:58:13 +0200
+Subject: [PATCH] benchmark_test.go: fix erratic tests
+
+Signed-off-by: Cristian Staretu <cristian.staretu@gmail.com>
+
+Upstream-Status: Backport [https://github.com/go-check/check/commit/822ff90e51871de6e9ffe102e1be8627b597fca8]
+Backport the four existing benchmark tests to the Launchpad snapshot.
+Keep gocheck_test.go in expected output; this snapshot has no memory
+benchmark, so omit that hunk. Preserve the upstream Signed-off-by.
+
+---
+ benchmark_test.go | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/benchmark_test.go b/benchmark_test.go
+index 4dd827c..8b6a8a6 100644
+--- a/benchmark_test.go
++++ b/benchmark_test.go
+@@ -21,8 +21,8 @@ func (s *BenchmarkS) TestBasicTestTiming(c *C) {
+ 	runConf := RunConf{Output: &output, Verbose: true}
+ 	Run(&helper, &runConf)
+ 
+-	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Test1\t0\\.001s\n" +
+-		"PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Test2\t0\\.000s\n"
++	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Test1\t0\\.0[0-9]+s\n" +
++		"PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Test2\t0\\.0[0-9]+s\n"
+ 	c.Assert(output.value, Matches, expected)
+ }
+ 
+@@ -32,7 +32,7 @@ func (s *BenchmarkS) TestStreamTestTiming(c *C) {
+ 	runConf := RunConf{Output: &output, Stream: true}
+ 	Run(&helper, &runConf)
+ 
+-	expected := "(?s).*\nPASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.SetUpSuite\t *0\\.001s\n.*"
++	expected := "(?s).*\nPASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.SetUpSuite\t[0-9]+\\.[0-9]+s\n.*"
+ 	c.Assert(output.value, Matches, expected)
+ }
+ 
+@@ -55,7 +55,7 @@ func (s *BenchmarkS) TestBenchmark(c *C) {
+ 	c.Check(helper.calls[6], Equals, "TearDownTest")
+ 	// ... and more.
+ 
+-	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark1\t *100\t *[12][0-9]{5} ns/op\n"
++	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark1\t\\s+[0-9]+\t\\s+[0-9]+ ns/op\n"
+ 	c.Assert(output.value, Matches, expected)
+ }
+ 
+@@ -73,1 +73,1 @@ func (s *BenchmarkS) TestBenchmarkBytes(c *C) {
+-	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark2\t *100\t *[12][0-9]{5} ns/op\t *[4-9]\\.[0-9]{2} MB/s\n"
++	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark2\t\\s+[0-9]+\t\\s+[0-9]+ ns/op\t\\s+ *[1-9]\\.[0-9]{2} MB/s\n"
