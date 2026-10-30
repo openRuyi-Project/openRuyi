@@ -1,0 +1,173 @@
+From 595360a2316f8dd47f62c7f461490832ba6abcf9 Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Mon, 24 Mar 2025 16:32:50 -0700
+Subject: [PATCH] automated(deps): bump github.com/gostaticanalysis/testutil
+ from 0.5.0 to 0.6.1 (#57)
+
+* automated(deps): bump github.com/gostaticanalysis/testutil
+
+Bumps [github.com/gostaticanalysis/testutil](https://github.com/gostaticanalysis/testutil) from 0.5.0 to 0.6.1.
+- [Release notes](https://github.com/gostaticanalysis/testutil/releases)
+- [Changelog](https://github.com/gostaticanalysis/testutil/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/gostaticanalysis/testutil/compare/v0.5.0...v0.6.1)
+---
+ go.mod                                 | 11 +++++-----
+ go.sum                                 | 28 +++++++++++++++-----------
+ go.work                                |  6 +++---
+ intrange_test.go                       |  2 +-
+ testdata/{ => src/main}/go.mod         |  4 +++-
+ testdata/{ => src/main}/go.sum         |  0
+ testdata/{ => src/main}/main.go        |  0
+ testdata/{ => src/main}/main.go.golden |  2 ++
+ 8 files changed, 31 insertions(+), 22 deletions(-)
+ rename testdata/{ => src/main}/go.mod (75%)
+ rename testdata/{ => src/main}/go.sum (100%)
+ rename testdata/{ => src/main}/main.go (100%)
+ rename testdata/{ => src/main}/main.go.golden (99%)
+
+diff --git a/go.mod b/go.mod
+index 8a7832d..ffa3fd5 100644
+--- a/go.mod
++++ b/go.mod
+@@ -1,21 +1,22 @@
+ module github.com/ckaznocha/intrange
+ 
+-go 1.23.0
++go 1.23.7
+ 
+-toolchain go1.23.4
++toolchain go1.24.1
+ 
+ require (
+-	github.com/gostaticanalysis/testutil v0.5.0
++	github.com/gostaticanalysis/testutil v0.6.1
+ 	golang.org/x/tools v0.31.0
+ )
+ 
+ require (
+ 	github.com/hashicorp/go-version v1.7.0 // indirect
+-	github.com/otiai10/copy v1.14.0 // indirect
++	github.com/otiai10/copy v1.14.1 // indirect
++	github.com/otiai10/mint v1.6.3 // indirect
+ 	github.com/tenntenn/modver v1.0.1 // indirect
+ 	github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3 // indirect
+ 	golang.org/x/mod v0.24.0 // indirect
+ 	golang.org/x/sync v0.12.0 // indirect
+ 	golang.org/x/sys v0.31.0 // indirect
+-	golang.org/x/text v0.20.0 // indirect
++	golang.org/x/text v0.23.0 // indirect
+ )
+diff --git a/go.sum b/go.sum
+index 9058f5f..dcf573a 100644
+--- a/go.sum
++++ b/go.sum
+@@ -1,17 +1,21 @@
+ github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+-github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+-github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+-github.com/gostaticanalysis/testutil v0.5.0 h1:Dq4wT1DdTwTGCQQv3rl3IvD5Ld0E6HiY+3Zh0sUGqw8=
+-github.com/gostaticanalysis/testutil v0.5.0/go.mod h1:OLQSbuM6zw2EvCcXTz1lVq5unyoNft372msDY0nY5Hs=
++github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
++github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
++github.com/gostaticanalysis/testutil v0.6.1 h1:DeKCG96QlhtNAz+/z2jjO3gIHFV+lHEwELddAsLohxg=
++github.com/gostaticanalysis/testutil v0.6.1/go.mod h1:XfUs9IH5sPfXbPIq+kHR64fCpB6pBf5mYeaZQdaTBpw=
+ github.com/hashicorp/go-version v1.2.1/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
+ github.com/hashicorp/go-version v1.7.0 h1:5tqGy27NaOTB8yJKUZELlFAS/LTKJkrmONwQKeRZfjY=
+ github.com/hashicorp/go-version v1.7.0/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
+-github.com/josharian/txtarfs v0.0.0-20210218200122-0702f000015a h1:8NZHLa6Gp0hW6xJ0c3F1Kse7dJw30fOcDzHuF9sLbnE=
+-github.com/josharian/txtarfs v0.0.0-20210218200122-0702f000015a/go.mod h1:izVPOvVRsHiKkeGCT6tYBNWyDVuzj9wAaBb5R9qamfw=
+-github.com/otiai10/copy v1.14.0 h1:dCI/t1iTdYGtkvCuBG2BgR6KZa83PTclw4U5n2wAllU=
+-github.com/otiai10/copy v1.14.0/go.mod h1:ECfuL02W+/FkTWZWgQqXPWZgW9oeKCSQ5qVfSc4qc4w=
+-github.com/otiai10/mint v1.5.1 h1:XaPLeE+9vGbuyEHem1JNk3bYc7KKqyI/na0/mLd/Kks=
+-github.com/otiai10/mint v1.5.1/go.mod h1:MJm72SBthJjz8qhefc4z1PYEieWmy8Bku7CjcAqyUSM=
++github.com/josharian/mapfs v0.0.0-20210615234106-095c008854e6 h1:c+ctPFdISggaSNCfU1IueNBAsqetJSvMcpQlT+0OVdY=
++github.com/josharian/mapfs v0.0.0-20210615234106-095c008854e6/go.mod h1:Rv/momJI8DgrWnBZip+SgagpcgORIZQE5SERlxNb8LY=
++github.com/josharian/txtarfs v0.0.0-20240408113805-5dc76b8fe6bf h1:ZWuoyLMwZvLJ6OHUhPq1sZHa37Pikt6DXkZPhhOBzEE=
++github.com/josharian/txtarfs v0.0.0-20240408113805-5dc76b8fe6bf/go.mod h1:UbC32ft9G/jG+sZI8wLbIBNIrYr7vp/yqMDa9SxVBNA=
++github.com/newmo-oss/gotestingmock v0.1.1 h1:EtZrif5qSsVrJ4w944pToOL3L9ux0WKwrtKXnzv+Mj8=
++github.com/newmo-oss/gotestingmock v0.1.1/go.mod h1:ee64ZPEODG1GK+c4fHzxRzE9WbMi9VuIgEItMA0yXjI=
++github.com/otiai10/copy v1.14.1 h1:5/7E6qsUMBaH5AnQ0sSLzzTg1oTECmcCmT6lvF45Na8=
++github.com/otiai10/copy v1.14.1/go.mod h1:oQwrEDDOci3IM8dJF0d8+jnbfPDllW6vUjNc3DoZm9I=
++github.com/otiai10/mint v1.6.3 h1:87qsV/aw1F5as1eH1zS/yqHY85ANKVMgkDrf9rcxbQs=
++github.com/otiai10/mint v1.6.3/go.mod h1:MJm72SBthJjz8qhefc4z1PYEieWmy8Bku7CjcAqyUSM=
+ github.com/tenntenn/modver v1.0.1 h1:2klLppGhDgzJrScMpkj9Ujy3rXPUspSjAcev9tSEBgA=
+ github.com/tenntenn/modver v1.0.1/go.mod h1:bePIyQPb7UeioSRkw3Q0XeMhYZSMx9B8ePqg6SAMGH0=
+ github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3 h1:f+jULpRQGxTSkNYKJ51yaw6ChIqO+Je8UqsTKN/cDag=
+@@ -23,8 +27,8 @@ golang.org/x/sync v0.12.0/go.mod h1:1dzgHSNfp02xaA81J2MS99Qcpr2w7fw1gpm99rleRqA=
+ golang.org/x/sys v0.31.0 h1:ioabZlmFYtWhL+TRYpcnNlLwhyxaM9kWTDEmfnprqik=
+ golang.org/x/sys v0.31.0/go.mod h1:BJP2sWEmIv4KK5OTEluFJCKSidICx8ciO85XgH3Ak8k=
+ golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
+-golang.org/x/text v0.20.0 h1:gK/Kv2otX8gz+wn7Rmb3vT96ZwuoxnQlY+HlJVj7Qug=
+-golang.org/x/text v0.20.0/go.mod h1:D4IsuqiFMhST5bX19pQ9ikHC2GsaKyk/oF+pn3ducp4=
++golang.org/x/text v0.23.0 h1:D71I7dUrlY+VX0gQShAThNGHFxZ13dGLBHQLVl1mJlY=
++golang.org/x/text v0.23.0/go.mod h1:/BLNzu4aZCJ1+kcD0DNRotWKage4q2rGVAg4o22unh4=
+ golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
+ golang.org/x/tools v0.31.0 h1:0EedkvKDbh+qistFTd0Bcwe/YLh4vHwWEkiI0toFIBU=
+ golang.org/x/tools v0.31.0/go.mod h1:naFTU+Cev749tSJRXJlna0T3WxKvb1kWEx15xA4SdmQ=
+diff --git a/go.work b/go.work
+index b7e127d..496c8bc 100644
+--- a/go.work
++++ b/go.work
+@@ -1,8 +1,8 @@
+-go 1.23.0
++go 1.23.7
+ 
+-toolchain go1.23.4
++toolchain go1.24.1
+ 
+ use (
+ 	.
+-	./testdata
++	./testdata/src/main
+ )
+diff --git a/intrange_test.go b/intrange_test.go
+index 11b9529..04f272e 100644
+--- a/intrange_test.go
++++ b/intrange_test.go
+@@ -11,5 +11,5 @@ import (
+ 
+ func TestAnalyzer(t *testing.T) {
+ 	testdata := testutil.WithModules(t, analysistest.TestData(), nil)
+-	analysistest.RunWithSuggestedFixes(t, testdata, intrange.Analyzer)
++	analysistest.RunWithSuggestedFixes(t, testdata, intrange.Analyzer, "main")
+ }
+diff --git a/testdata/go.mod b/testdata/src/main/go.mod
+similarity index 75%
+rename from testdata/go.mod
+rename to testdata/src/main/go.mod
+index cb63906..fa5f6ec 100644
+--- a/testdata/go.mod
++++ b/testdata/src/main/go.mod
+@@ -1,5 +1,7 @@
+ module github.com/ckaznocha/intrange/testdata
+ 
+-go 1.23
++go 1.23.7
++
++toolchain go1.24.1
+ 
+ require google.golang.org/protobuf v1.33.0
+diff --git a/testdata/go.sum b/testdata/src/main/go.sum
+similarity index 100%
+rename from testdata/go.sum
+rename to testdata/src/main/go.sum
+diff --git a/testdata/main.go b/testdata/src/main/main.go
+similarity index 100%
+rename from testdata/main.go
+rename to testdata/src/main/main.go
+diff --git a/testdata/main.go.golden b/testdata/src/main/main.go.golden
+similarity index 99%
+rename from testdata/main.go.golden
+rename to testdata/src/main/main.go.golden
+index 171624f..d31f945 100644
+--- a/testdata/main.go.golden
++++ b/testdata/src/main/main.go.golden
+@@ -1,3 +1,5 @@
++//line main.go:1
++
+ package main
+ 
+ import (
+-- 
+2.53.0
+

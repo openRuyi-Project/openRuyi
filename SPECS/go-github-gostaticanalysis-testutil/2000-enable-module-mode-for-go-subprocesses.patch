@@ -1,0 +1,37 @@
+Subject: [PATCH] Enable module mode for Go module subprocesses
+
+The caller may be built and tested in GOPATH mode. Its GO111MODULE=off
+must not disable the go list -m and go mod commands used to inspect and
+prepare the copied module fixtures. Explicitly enable module mode and
+keep workspace discovery disabled for these child processes.
+
+This preserves every test assertion and the issue00023 golden output.
+The upstream fixes for workspace and tool directives are already in
+v0.6.1; neither overrides an inherited GO111MODULE=off.
+
+Upstream: https://github.com/gostaticanalysis/testutil
+Status: downstream; no corresponding upstream fix found on 2026-10-23
+
+diff --git a/mod.go b/mod.go
+index 32b68e6..5523c76 100644
+--- a/mod.go
++++ b/mod.go
+@@ -243,6 +243,8 @@ func modfilePath(t *testing.T, dir string) string {
+ 
+ 	var stdout bytes.Buffer
+ 	cmd := exec.Command("go", "list", "-m", "-f", "{{.GoMod}}")
++	// Module commands must work even when the caller uses GOPATH mode.
++	cmd.Env = append(os.Environ(), "GO111MODULE=on", "GOWORK=off")
+ 	cmd.Dir = dir
+ 	cmd.Stdout = &stdout
+ 	if err := cmd.Run(); err != nil {
+@@ -349,7 +351,8 @@ func execCmd(tb testing.TB, dir, cmd string, args ...string) io.Reader {
+ 	tb.Helper()
+ 	var stdout, stderr bytes.Buffer
+ 	_cmd := exec.Command(cmd, args...)
+-	_cmd.Env = append(os.Environ(), "GOWORK=off")
++	// Module commands must work even when the caller uses GOPATH mode.
++	_cmd.Env = append(os.Environ(), "GO111MODULE=on", "GOWORK=off")
+ 	_cmd.Stdout = &stdout
+ 	_cmd.Stderr = &stderr
+ 	_cmd.Dir = dir

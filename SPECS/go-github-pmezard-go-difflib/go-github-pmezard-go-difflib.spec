@@ -28,6 +28,7 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(github.com/pmezard/go-difflib) = %{version}
+Provides:       go(github.com/pmezard/go-difflib/difflib) = %{version}
 
 %description
 Go-difflib is a partial port of python 3 difflib package. Its main goal
