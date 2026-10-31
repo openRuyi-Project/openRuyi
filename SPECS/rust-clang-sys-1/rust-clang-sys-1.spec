@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name clang-sys
-%global full_version 1.8.1
+%global full_version 1.9.1
 %global pkgname clang-sys-1
 
 Name:           rust-clang-sys-1
-Version:        1.8.1
+Version:        1.9.1
 Release:        %autorelease
 Summary:        Rust crate "clang-sys"
 License:        Apache-2.0
 URL:            https://github.com/KyleMayes/clang-sys
-#!RemoteAsset:  sha256:0b023947811758c97c59bf9d1c188fd619ad4718dcaa767947df1cadb14f39f4
+#!RemoteAsset:  sha256:157a8ba7b480713b56f4c09fd13fc3e0a22a5dfab8097ba61cbc5feef950788a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,6 +23,7 @@ BuildRequires:  rust-rpm-macros
 Requires:       crate(glob-0.3) >= 0.3.0
 Requires:       crate(glob-0.3/default) >= 0.3.0
 Requires:       crate(libc-0.2) >= 0.2.39
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/clang-10-0) = %{version}
 Provides:       crate(%{pkgname}/clang-11-0) = %{version}
@@ -33,6 +34,8 @@ Provides:       crate(%{pkgname}/clang-15-0) = %{version}
 Provides:       crate(%{pkgname}/clang-16-0) = %{version}
 Provides:       crate(%{pkgname}/clang-17-0) = %{version}
 Provides:       crate(%{pkgname}/clang-18-0) = %{version}
+Provides:       crate(%{pkgname}/clang-19-0) = %{version}
+Provides:       crate(%{pkgname}/clang-20-0) = %{version}
 Provides:       crate(%{pkgname}/clang-3-5) = %{version}
 Provides:       crate(%{pkgname}/clang-3-6) = %{version}
 Provides:       crate(%{pkgname}/clang-3-7) = %{version}

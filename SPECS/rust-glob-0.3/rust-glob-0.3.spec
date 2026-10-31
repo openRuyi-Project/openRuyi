@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name glob
-%global full_version 0.3.3
+%global full_version 0.3.4
 %global pkgname glob-0.3
 
 Name:           rust-glob-0.3
-Version:        0.3.3
+Version:        0.3.4
 Release:        %autorelease
 Summary:        Rust crate "glob"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/glob
-#!RemoteAsset:  sha256:0cc23270f6e1808e30a928bdc84dea0b9b4136a8bc82338574f23baf47bbd280
+#!RemoteAsset:  sha256:e4eba85ea1d0a966a983acd07deee566e67395d2d96b6fb39e62b5a833f1eb0b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates

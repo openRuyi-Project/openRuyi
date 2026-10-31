@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "chacha20"
-version = "0.10.0"
+version = "0.10.2"
 authors = ["RustCrypto Developers"]
 build = false
 autolib = false
@@ -47,10 +47,6 @@ resolver = "2"
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = [
-    "--cfg",
-    "docsrs",
-]
 
 [features]
 default = ["cipher"]
@@ -138,6 +134,7 @@ missing_debug_implementations = "warn"
 missing_docs = "warn"
 trivial_casts = "warn"
 trivial_numeric_casts = "warn"
+unreachable_pub = "warn"
 unused_lifetimes = "warn"
 unused_qualifications = "warn"
 

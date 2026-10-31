@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name getrandom
-%global full_version 0.4.2
+%global full_version 0.4.3
 %global pkgname getrandom-0.4
 
 Name:           rust-getrandom-0.4
-Version:        0.4.2
+Version:        0.4.3
 Release:        %autorelease
 Summary:        Rust crate "getrandom"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-random/getrandom
-#!RemoteAsset:  sha256:0de51e6874e94e7bf76d726fc5d13ba782deca734ff60d5bb2fb2607c7406555
+#!RemoteAsset:  sha256:300e883d756b2e4ec94e02791f39b04b522276138852cfc41d9fb7e904106099
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,8 +23,7 @@ BuildRequires:  rust-rpm-macros
 Requires:       crate(cfg-if-1/default) >= 1.0.0
 Requires:       crate(libc-0.2) >= 0.2.154
 Requires:       crate(r-efi-6) >= 6.0.0
-Requires:       crate(wasip2-1) >= 1.0.0
-Requires:       crate(wasip3-0.4/default) >= 0.4.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/std) = %{version}

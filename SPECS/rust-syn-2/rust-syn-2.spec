@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name syn
-%global full_version 2.0.117
+%global full_version 2.0.119
 %global pkgname syn-2
 
 Name:           rust-syn-2
-Version:        2.0.117
+Version:        2.0.119
 Release:        %autorelease
 Summary:        Rust crate "syn"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/dtolnay/syn
-#!RemoteAsset:  sha256:e665b8803e7b1d2a727f4023456bbbbe74da67099c585258af0ad9c5013b9b99
+#!RemoteAsset:  sha256:872831b642d1a07999a962a351ed35b955ea2cfc8f3862091e2a240a84f17297
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,6 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(proc-macro2-1) >= 1.0.91
 Requires:       crate(unicode-ident-1/default) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/clone-impls) = %{version}
 Provides:       crate(%{pkgname}/derive) = %{version}

@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name pkg-config
-%global full_version 0.3.33
+%global full_version 0.3.34
 %global pkgname pkg-config-0.3
 
 Name:           rust-pkg-config-0.3
-Version:        0.3.33
+Version:        0.3.34
 Release:        %autorelease
 Summary:        Rust crate "pkg-config"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/pkg-config-rs
-#!RemoteAsset:  sha256:19f132c84eca552bf34cab8ec81f1c1dcc229b811638f9d283dceabe58c5569e
+#!RemoteAsset:  sha256:f6b464fbc74e149a392436b17d523f769e057cb6877f6a5c4618bc6f11800548
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
