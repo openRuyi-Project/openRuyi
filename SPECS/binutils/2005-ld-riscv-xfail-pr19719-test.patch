@@ -1,0 +1,16 @@
+Subject: [PATCH] ld: xfail pr19719 execution tests on RISC-V
+
+Upstream-Status: Pending (ld/32983)
+Bug: https://sourceware.org/bugzilla/show_bug.cgi?id=32983
+
+Mark the two pr19719 execution tests as expected failures on RISC-V while
+the upstream regression is unresolved. Keep running the tests so other
+unexpected failures remain visible.
+
+--- a/ld/testsuite/ld-elf/shared.exp
++++ b/ld/testsuite/ld-elf/shared.exp
+@@ -1733,2 +1733,2 @@
+-mix_pic_and_non_pic [list "arm*-*-*"] "$NOPIE_CFLAGS" "$NOPIE_LDFLAGS" "pr19719"
+-mix_pic_and_non_pic [] "-fPIE" "-pie" "pr19719pie"
++mix_pic_and_non_pic [list "arm*-*-*" "riscv*-*-*"] "$NOPIE_CFLAGS" "$NOPIE_LDFLAGS" "pr19719"
++mix_pic_and_non_pic [list "riscv*-*-*"] "-fPIE" "-pie" "pr19719pie"
