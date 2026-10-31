@@ -21,7 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(bit-field-0.10/default) >= 0.10.1
-Requires:       crate(bitflags/default)
+Requires:       crate(bitflags-1/default) >= 1.3.2
 Requires:       crate(raw-cpuid-10/default) >= 10.2.0
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
