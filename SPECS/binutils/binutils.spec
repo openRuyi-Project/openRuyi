@@ -37,6 +37,9 @@ Patch2003:      2003-binutils-riscv-xfail-strip-annotation-symbol-tests.patch
 # undefined reference expected by upstream:
 # relocation R_RISCV_CALL_PLT against `bar' which may bind externally can not be used when making a shared object; recompile with -fPIC
 Patch2004:      2004-ld-elf-dwarf3-accept-riscv-pie-output.patch
+# Upstream ld/32983: pr19719 execution tests fail on RISC-V.
+# https://sourceware.org/bugzilla/show_bug.cgi?id=32983
+Patch2005:      2005-ld-riscv-xfail-pr19719-test.patch
 
 BuildOption(build):  -C build-dir
 
@@ -121,10 +124,6 @@ cd ..
 %find_lang %{name} --all-name --generate-subpackages
 
 %check
-# Drop upstream-known pr19719 tests pending ld/32983.
-# https://sourceware.org/bugzilla/show_bug.cgi?id=32983
-sed -i '/"pr19719/d' ld/testsuite/ld-elf/shared.exp
-
 cd build-dir
 
 # Keep successful builds quiet, but print concise DejaGnu context on failure.
