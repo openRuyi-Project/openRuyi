@@ -41,6 +41,10 @@ BuildSystem:    autotools
 BuildOption(build):  NINJA_ARGS="%{__ninja_common_opts} node"
 BuildOption(install):  NINJA_ARGS="%{__ninja_common_opts} node"
 BuildOption(check):  JOBS="$RPM_BUILD_NCPUS"
+%ifarch riscv64
+# Exclude the unstable snapshot byte comparison; https://issues.chromium.org/issues/460332153.
+BuildOption(check):  CI_SKIP_TESTS=parallel/test-snapshot-reproducible
+%endif
 
 BuildRequires:  chrpath
 BuildRequires:  clang >= 19.1
