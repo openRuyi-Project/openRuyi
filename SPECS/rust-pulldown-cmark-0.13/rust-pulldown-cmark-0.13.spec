@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name pulldown-cmark
-%global full_version 0.13.0
+%global full_version 0.13.3
 %global pkgname pulldown-cmark-0.13
 
 Name:           rust-pulldown-cmark-0.13
-Version:        0.13.0
+Version:        0.13.3
 Release:        %autorelease
 Summary:        Rust crate "pulldown-cmark"
 License:        MIT
 URL:            https://github.com/raphlinus/pulldown-cmark
-#!RemoteAsset:  sha256:1e8bbe1a966bd2f362681a44f6edce3c2310ac21e4d5067a6e7ec396297a6ea0
+#!RemoteAsset:  sha256:7c3a14896dfa883796f1cb410461aef38810ea05f2b2c33c5aded3649095fdad
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,6 +23,7 @@ BuildRequires:  rust-rpm-macros
 Requires:       crate(bitflags-2/default) >= 2.0.0
 Requires:       crate(memchr-2/default) >= 2.5.0
 Requires:       crate(unicase-2/default) >= 2.6.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/gen-tests) = %{version}
 
