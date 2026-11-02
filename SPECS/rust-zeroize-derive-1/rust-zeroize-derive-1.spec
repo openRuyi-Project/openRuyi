@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name zeroize_derive
-%global full_version 1.4.2
+%global full_version 1.5.0
 %global pkgname zeroize-derive-1
 
 Name:           rust-zeroize-derive-1
-Version:        1.4.2
+Version:        1.5.0
 Release:        %autorelease
 Summary:        Rust crate "zeroize_derive"
 License:        Apache-2.0 OR MIT
-URL:            https://github.com/RustCrypto/utils/tree/master/zeroize/derive
-#!RemoteAsset:  sha256:ce36e65b0d2999d2aafac989fb249189a141aee1f53c612c1f37d72631959f69
+URL:            https://github.com/RustCrypto/utils
+#!RemoteAsset:  sha256:3c50655cbb0fe3fc43170059e702f1ce5e19b84cec58dc87b037a09935c2f328
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
