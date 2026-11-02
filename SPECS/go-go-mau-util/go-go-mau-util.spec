@@ -11,12 +11,12 @@
 %global go_test_flags_default -v -skip '^(TestAdd_Full|TestFullyQualify_Full)$'
 
 Name:           go-go-mau-util
-Version:        0.10.1
+Version:        0.11.0
 Release:        %autorelease
 Summary:        Go utilities for mautrix and related projects
 License:        MPL-2.0
 URL:            https://github.com/mautrix/go-util
-#!RemoteAsset:  sha256:e48b97b8ba7a9069c9f3c80bf9d56ed2272e273b3a3f75d1552602016101ba26
+#!RemoteAsset:  sha256:d18e692fc98ff3fc12ba52fd02658647071f6b809064a39179a8987a0beaa4ea
 Source0:        https://github.com/mautrix/go-util/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -45,6 +45,7 @@ Provides:       go(go.mau.fi/util/configupgrade) = %{version}
 Provides:       go(go.mau.fi/util/confusable) = %{version}
 Provides:       go(go.mau.fi/util/curl) = %{version}
 Provides:       go(go.mau.fi/util/dbutil) = %{version}
+Provides:       go(go.mau.fi/util/dbutil/litestream) = %{version}
 Provides:       go(go.mau.fi/util/exbytes) = %{version}
 Provides:       go(go.mau.fi/util/exerrors) = %{version}
 Provides:       go(go.mau.fi/util/exfmt) = %{version}
@@ -60,6 +61,7 @@ Provides:       go(go.mau.fi/util/fallocate) = %{version}
 Provides:       go(go.mau.fi/util/glob) = %{version}
 Provides:       go(go.mau.fi/util/jsonbytes) = %{version}
 Provides:       go(go.mau.fi/util/jsontime) = %{version}
+Provides:       go(go.mau.fi/util/pkcs7) = %{version}
 Provides:       go(go.mau.fi/util/progver) = %{version}
 Provides:       go(go.mau.fi/util/ptr) = %{version}
 Provides:       go(go.mau.fi/util/random) = %{version}
