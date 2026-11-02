@@ -38,11 +38,16 @@
 %buildsystem_linux_install() %{expand:\
     # install Linux image
     install -Dm644 $(make -s image_name) %%{buildroot}%%{_kernel_modpath}/vmlinuz
+
     # install Linux modules
-    %%make_build %%{_kernel_make_flags} INSTALL_MOD_PATH=%%{buildroot} INSTALL_MOD_STRIP=1 DEPMOD=true modules_install
+    # keep modules uncompressed and unstripped here
+    %%make_build %%{_kernel_make_flags} INSTALL_MOD_PATH=%%{buildroot} DEPMOD=true CONFIG_MODULE_COMPRESS_ALL= modules_install
+
     %%if %%{with dtbs}
+    # optional dtbs
     %%make_build %%{_kernel_make_flags} INSTALL_DTBS_PATH=%%{buildroot}%%{_kernel_modpath}/dtb dtbs_install
     %%endif
+
     # install devel
     %%define ksrcpath %%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}
     install -d %%{ksrcpath}
@@ -52,11 +57,51 @@
     ln -sf %%{_usrsrc}/kernels/%%{_kernel_full_version} build
     ln -sf %%{_usrsrc}/kernels/%%{_kernel_full_version} source
     popd
+
     # install config
     zstd -f .config -o %%{buildroot}%%{_kernel_modpath}/config.zst
+
+    # prepare rpm debug info generation
+    if [ -n "%%{?__debug_package}" ]; then
+        install -Dm755 vmlinux "%%{buildroot}%%{_prefix}/lib/debug%%{_kernel_modpath}/vmlinux"
+        # mark modules executable to be processed by find-debuginfo
+        find "%%{buildroot}%%{_kernel_modpath}" -name '*.ko' -type f -exec chmod u+x {} +
+    fi
+}
+
+%linux_compress_modules() %{expand:\
+    module_dir=%%{buildroot}%%{_kernel_modpath}
+    if grep -q '^CONFIG_MODULE_COMPRESS_ALL=y' .config; then
+        if grep -q '^CONFIG_MODULE_COMPRESS_ZSTD=y' .config; then
+            find "${module_dir}" -name '*.ko' -type f -exec zstd --rm -f -q {} + || exit 1
+        elif grep -q '^CONFIG_MODULE_COMPRESS_GZIP=y' .config; then
+            find "${module_dir}" -name '*.ko' -type f -exec gzip -n -f {} + || exit 1
+        elif grep -q '^CONFIG_MODULE_COMPRESS_XZ=y' .config; then
+            find "${module_dir}" -name '*.ko' -type f -exec xz --check=crc32 --lzma2=dict=1MiB -f {} + || exit 1
+        else
+            echo "Error: CONFIG_MODULE_COMPRESS_ALL is set but no compression format is selected" 1>&2
+            exit 1
+        fi
+        if find "${module_dir}" -name '*.ko' -type f | grep -q .; then
+            echo "Error: uncompressed kernel modules remain after compression" 1>&2
+            exit 1
+        fi
+    fi
+
+    # revert executable bit
+    find "${module_dir}" -name '*.ko' -type f -exec chmod 644 {} + || exit 1
+    find "${module_dir}" -name '*.ko.*' -type f -exec chmod 644 {} + || exit 1
+}
+
+%linux_debuginfo_setup() %{expand:\
+%%global _no_recompute_build_ids 1
+%%undefine _unique_build_ids
+%%global _find_debuginfo_opts --keep-section '.BTF' --keep-section '.rustc'
+%%global __spec_install_post %%%%{?__debug_package:%%%%{__debug_install_post}} true ; %%%%{__arch_install_post} true ; %%%%{__os_install_post} true ; %%%%{linux_compress_modules}
 }
 
 %linux_package_dependencies() %{expand:\
+%%linux_debuginfo_setup
 # Provides linux for flavored variant
 %%if "%{name}" != "linux"
 Provides:       linux = %{?epoch:%{epoch}:}%{version}-%{release}
