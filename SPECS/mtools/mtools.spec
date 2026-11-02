@@ -7,12 +7,12 @@
 
 Name:           mtools
 Summary:        Programs for accessing MS-DOS disks without mounting the disks
-Version:        4.0.49
+Version:        4.0.50
 Release:        %autorelease
 License:        GPL-3.0-or-later
-Url:            https://www.gnu.org/software/mtools/
-#!RemoteAsset
-Source0:        https://ftpmirror.gnu.org/gnu/mtools/mtools-%{version}.tar.gz
+URL:            https://www.gnu.org/software/mtools/
+#!RemoteAsset:  sha256:7f078accae7551c6b3a316ccd8296357329f7bbbc09583dcd1a2bbaeb081a7a4
+Source0:        https://ftp.gnu.org/gnu/mtools/mtools-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-floppyd
@@ -43,4 +43,4 @@ rm -f $RPM_BUILD_ROOT/%{_infodir}/dir
 %{_infodir}/mtools.info*
 
 %changelog
-%{?autochangelog}
+%autochangelog
