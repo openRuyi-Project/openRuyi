@@ -25,6 +25,13 @@
         echo "CONFIG_LOCALVERSION_AUTO should not be enabled!" 1>&2
         exit 1
     fi
+    # CONFIG_DEBUG_INFO_SPLIT is not supported: the packaging does not ship
+    # the .dwo files required for complete split-DWARF debug information.
+    debuginfosplit="$(./scripts/config --state CONFIG_DEBUG_INFO_SPLIT)"
+    if [ "${debuginfosplit}" = "y" ]; then
+        echo "CONFIG_DEBUG_INFO_SPLIT should not be enabled!" 1>&2
+        exit 1
+    fi
 }
 
 %buildsystem_linux_build() %{expand:\
