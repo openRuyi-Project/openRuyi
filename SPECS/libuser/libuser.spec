@@ -4,36 +4,29 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond doc 0
-# skip the tests, as some deps we don't have yet.
-%bcond tests 0
-
 Name:           libuser
 Version:        0.64
 Release:        %autorelease
 Summary:        A user and group account administration library
 License:        LGPL-2.0-or-later
-URL:            https://pagure.io/libuser
-VCS:            git:https://pagure.io/libuser
-#!RemoteAsset:  sha256:17448006338dbf4fa19dd561335a75193b64ff58ac93cfb6ee7d8504f3f9bd64
-Source:         https://pagure.io/libuser/archive/libuser-%{version}/libuser-libuser-%{version}.tar.gz
+URL:            https://codeberg.org/libuser/libuser
+VCS:            git:https://codeberg.org/libuser/libuser
+#!RemoteAsset:  sha256:34abb60ac0ee336adcbff5f99008a5d9396fd4d0a5c31612e9c26c679eb9e596
+Source:         https://codeberg.org/libuser/libuser/archive/libuser-%{version}.tar.gz
 BuildSystem:    autotools
 
-%if %{without doc}
-# disable all the docs.
-Patch:          0001-disable-docs.patch
-%endif
+# Create edit files beside symlink targets; https://codeberg.org/libuser/libuser/commit/93134cfbc7c80dff0fe5b4b6b2352d44419dfadd
+Patch1000:      1000-edit-at-symlink-target.patch
+# Restore Python password tests; https://codeberg.org/libuser/libuser/commit/3341a12021e5dbfd198cdb13ea8c4e1509ba2d42
+Patch1001:      1001-python-crypt-r.patch
 
+BuildOption(prep):  -n %{name}
 BuildOption(conf):  --with-selinux
 BuildOption(conf):  PYTHON=%{__python3}
 BuildOption(conf):  --with-ldap
 BuildOption(conf):  --with-audit
-%if %{with doc}
 BuildOption(conf):  --enable-gtk-doc
 BuildOption(conf):  --with-html-dir=%{_datadir}/gtk-doc/html
-%else
-BuildOption(conf):  --disable-gtk-doc
-%endif
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -51,10 +44,12 @@ BuildRequires:  bison
 BuildRequires:  pkgconfig(ldap)
 BuildRequires:  pkgconfig(libsasl2)
 BuildRequires:  pkgconfig(audit)
-%if %{with doc}
-BuildRequires:  linuxdoc-tools
 BuildRequires:  gtk-doc
-%endif
+BuildRequires:  diffutils
+BuildRequires:  python3dist(crypt-r)
+BuildRequires:  openldap
+BuildRequires:  openldap-client
+BuildRequires:  openssl
 
 %description
 The libuser library implements a standardized interface for manipulating
@@ -72,25 +67,27 @@ developing applications with libuser.
 %package     -n python-libuser
 Summary:        Python 3 bindings for the libuser library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Provides:       python3-%{name}
-%python_provide python3-%{name}
+Provides:       python3-%{name} = %{version}-%{release}
 
 %description -n python-libuser
 Python 3 bindings for libuser.
 
 %conf -p
+# Skip SGML output until linuxdoc-tools is available.
+sed -i '/^all: sgml\/libuser.txt sgml\/libuser.html$/d' docs/Makefile.am
 ./autogen.sh
+# Load the MDB module provided by openRuyi for the LDAP tests.
+sed -i '/^database mdb/i moduleload %{_libexecdir}/openldap/back_mdb.so' tests/slapd.conf.in
 
 %install -a
 %find_lang %{name} --generate-subpackages
 
-%if %{without tests}
-%check
-%endif
+%check -p
+export LC_ALL=C.UTF-8
 
 %files -f %{name}.lang
-%license COPYING
 %doc AUTHORS NEWS README TODO docs/*.txt
+%license COPYING
 %config(noreplace) %{_sysconfdir}/libuser.conf
 %attr(0755,root,root) %{_bindir}/*
 %{_libdir}/*.so.*
@@ -103,13 +100,11 @@ Python 3 bindings for libuser.
 %{_includedir}/libuser/
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libuser.pc
-%if %{with doc}
-%{_datadir}/gtk-doc/html/*
-%endif
+%{_datadir}/gtk-doc/html/libuser/
 
 %files -n python-libuser
 %doc python/modules.txt
-%{python3_sitearch}/*.so
+%{python3_sitearch}/libuser*.so
 
 %changelog
 %autochangelog
