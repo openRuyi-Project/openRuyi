@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-integration
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plugins responsible for better integration of Qt applications in KDE Workspace
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-integration.git
-#!RemoteAsset:  sha256:1e323d55105f55d99bfa2626387e8e6682a698cc4eb3fb9c22cfd0f6c4e0321a
+#!RemoteAsset:  sha256:7a8d759211e453d8f1dbbb9b5fbd59a65500d9588d8aff9ff3f3e0bcafff36ac
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -30,7 +30,6 @@ BuildOption(conf):  -DBUILD_QT5:BOOL=FALSE
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
 BuildRequires:  pkgconfig
 BuildRequires:  qt6-qtbase-private-devel >= %{qt6_version}
-BuildRequires:  cmake(Breeze) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(KF6ColorScheme) >= %{kf6_version}
 BuildRequires:  cmake(KF6Config) >= %{kf6_version}
 BuildRequires:  cmake(KF6ConfigWidgets) >= %{kf6_version}
@@ -43,7 +42,6 @@ BuildRequires:  cmake(KF6StatusNotifierItem) >= %{kf6_version}
 BuildRequires:  cmake(KF6WidgetsAddons) >= %{kf6_version}
 BuildRequires:  cmake(KF6WindowSystem) >= %{kf6_version}
 BuildRequires:  cmake(KF6XmlGui) >= %{kf6_version}
-BuildRequires:  cmake(KWayland) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaWaylandProtocols)
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
 BuildRequires:  cmake(Qt6QuickControls2) >= %{qt6_version}
