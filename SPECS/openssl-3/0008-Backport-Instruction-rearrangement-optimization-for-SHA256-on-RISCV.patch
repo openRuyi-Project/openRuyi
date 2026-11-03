@@ -1,0 +1,66 @@
+From 2f026a5ca84a49f957b4c2d479aeb6416ee86326 Mon Sep 17 00:00:00 2001
+From: Lu Zhou <zhou.lu1@zte.com.cn>
+Date: Wed, 8 Jul 2026 08:55:27 +0800
+Subject: [PATCH] Backport (riscv):Instruction Reordering Further Optimizes OpenSSL SHA256 Performance on RISC-V
+
+Reference:https://github.com/openssl/openssl/commit/68bf1a8eee6f85c7972eb64a94f5a6638c84832b
+Reviewed-by: Paul Dale <paul.dale@oracle.com>
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/28673)
+
+Further optimized the performance of OpenSSL SHA256 on RISC-V. This involves reordering instructions in the core function to reduce the use of two vsetivli instructions, thereby improving performance for packets of 1024KB and smaller.
+
+Performance Improvement
+
+Test	Baseline (C)	Optimized	Improvement ratio
+16bytes	2375.29k	2505.53k	5%
+64bytes	7494.73k	7972.58k	6%
+256bytes	24337.32k	25175.52k	3%
+1024bytes	54514.31k	55948.01k	3%
+Test Verification
+All relevant tests pass in the default build configuration:
+make test
+All tests successful.
+
+Signed-off-by: Lu Zhou <zhou.lu1@zte.com.cn>
+Signed-off-by: Shangcheng Huang <huang.shangcheng@zte.com.cn>
+
+---
+ .../sha/asm/sha256-riscv64-zvkb-zvknha_or_zvknhb.pl | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/crypto/sha/asm/sha256-riscv64-zvkb-zvknha_or_zvknhb.pl b/crypto/sha/asm/sha256-riscv64-zvkb-zvknha_or_zvknhb.pl
+index 5e4d6be..74fc9a7 100644
+--- a/crypto/sha/asm/sha256-riscv64-zvkb-zvknha_or_zvknhb.pl
++++ b/crypto/sha/asm/sha256-riscv64-zvkb-zvknha_or_zvknhb.pl
+@@ -117,9 +117,11 @@ $code .= <<___;
+ .globl sha256_block_data_order_zvkb_zvknha_or_zvknhb
+ .type   sha256_block_data_order_zvkb_zvknha_or_zvknhb,\@function
+ sha256_block_data_order_zvkb_zvknha_or_zvknhb:
+-    @{[vsetivli "zero", 4, "e32", "m1", "ta", "ma"]}
+ 
+-    @{[sha_256_load_constant]}
++    # Setup v0 mask for the vmerge to replace the first word (idx==0) in key-scheduling.
++    # The AVL is 4 in SHA, so we could use a single e8(8 element masking) for masking.
++    @{[vsetivli "zero", 1, "e8", "m1", "ta", "ma"]}
++    @{[vmv_v_i $V0, 0x01]}
+ 
+     # H is stored as {a,b,c,d},{e,f,g,h}, but we need {f,e,b,a},{h,g,d,c}
+     # The dst vtype is e32m1 and the index vtype is e8mf4.
+@@ -141,12 +143,7 @@ sha256_block_data_order_zvkb_zvknha_or_zvknhb:
+     @{[vluxei8_v $V6, $H, $V26]}
+     @{[vluxei8_v $V7, $H2, $V26]}
+ 
+-    # Setup v0 mask for the vmerge to replace the first word (idx==0) in key-scheduling.
+-    # The AVL is 4 in SHA, so we could use a single e8(8 element masking) for masking.
+-    @{[vsetivli "zero", 1, "e8", "m1", "ta", "ma"]}
+-    @{[vmv_v_i $V0, 0x01]}
+-
+-    @{[vsetivli "zero", 4, "e32", "m1", "ta", "ma"]}
++    @{[sha_256_load_constant]}
+ 
+ L_round_loop:
+     # Decrement length by 1
+-- 
+2.27.0
+
