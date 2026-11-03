@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname paste
 
 Name:           python-%{srcname}
-Version:        3.10.1
+Version:        3.11.0
 Release:        %autorelease
 Summary:        Tools for using a Web Server Gateway Interface stack
 License:        MIT
 URL:            https://github.com/pasteorg/paste
-#!RemoteAsset:  sha256:1c3d12065a5e8a7a18c0c7be1653a97cf38cc3e9a5a0c8334a9dd992d3a05e4a
+#!RemoteAsset:  sha256:c8e95401cbeb80c34bf832a5cd517fbaec7499225b334b2b24ba539a7f54e3ae
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -56,8 +57,6 @@ interfaces.
 
 %files -f %{pyproject_files}
 %doc docs/*
-# Why this file?
-%{python3_sitelib}/Paste-%{version}-py*-nspkg.pth
 
 %changelog
 %autochangelog
