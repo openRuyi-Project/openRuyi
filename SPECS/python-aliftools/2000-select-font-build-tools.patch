@@ -1,0 +1,41 @@
+From 381f114355a621641aff467666f1750b6a925ad3 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 04:11:33 +0800
+Subject: [PATCH] Install the build filters and glyph-name tools
+
+Keep the shaping and SVG sample applications with their optional rendering stacks out of the distribution. Declare the FontTools import used by the glyph-name command.
+---
+ pyproject.toml | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 052baae..3bfc644 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -10,12 +10,10 @@ readme = "README.md"
+ dynamic = ["version"]
+ authors = [{ name = "Khaled Hosny", email = "khaled@aliftype.com" }]
+ classifiers = ['Environment :: Console', 'Topic :: Text Processing :: Fonts']
+-dependencies = []
++dependencies = ["fontTools"]
+ 
+ [project.optional-dependencies]
+ test = ["pytest", "black", "isort", "flake8", "ufolib2"]
+-shaping = ["pyyaml", "uharfbuzz>=0.52.0"]
+-sample = ["blackrenderer", "uharfbuzz>=0.43.0", "fontTools[lxml]"]
+ filters = ["ufo2ft"]
+ 
+ [project.urls]
+@@ -24,11 +22,9 @@ Issues = "https://github.com/aliftype/tools/issues"
+ 
+ [tool.setuptools.packages.find]
+ where = ["Lib"]
++include = ["alifTools", "alifTools.filters", "alifTools.glyphNames"]
+ 
+ [project.scripts]
+-check-shaping = "alifTools.shaping.check:main"
+-update-shaping-tests = "alifTools.shaping.update:main"
+-make-sample = "alifTools.sample:main"
+ strip-glyph-names = "alifTools.glyphNames:main"
+ 
+ [tool.setuptools_scm]
