@@ -1,0 +1,38 @@
+From 49ebbda0a623c6669ecd2f0309f08bb3765bf601 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:36:50 +0800
+Subject: [PATCH] Initialize the inherited constructors in C API test doubles
+
+Pass the null session to Document and Folder after inheriting the
+Object constructors for GCC 16 virtual-base construction.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ qa/libcmis-c/test-dummies.cxx | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/qa/libcmis-c/test-dummies.cxx b/qa/libcmis-c/test-dummies.cxx
+index 3e62101..06390cd 100644
+--- a/qa/libcmis-c/test-dummies.cxx
++++ b/qa/libcmis-c/test-dummies.cxx
+@@ -430,7 +430,7 @@ namespace dummies
+ 
+     Folder::Folder( bool isRoot, bool triggersFaults ) :
+         libcmis::Object( NULL ),
+-        libcmis::Folder(),
++        libcmis::Folder( NULL ),
+         dummies::Object( triggersFaults, "Folder" ),
+         m_isRoot( isRoot )
+     {
+@@ -514,7 +514,7 @@ namespace dummies
+ 
+     Document::Document( bool isFiled, bool triggersFaults ) :
+         libcmis::Object( NULL ),
+-        libcmis::Document(),
++        libcmis::Document( NULL ),
+         dummies::Object( triggersFaults, "Document" ),
+         m_isFiled( isFiled ),
+         m_contentString( "Document::ContentStream" )
+-- 
+2.54.0
+
