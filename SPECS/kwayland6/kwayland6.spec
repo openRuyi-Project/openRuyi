@@ -10,13 +10,13 @@
 %define rname kwayland
 
 Name:           kwayland6
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        KDE Wayland library
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kwayland
-#!RemoteAsset:  sha256:8d4c83524919dc87b5dec546d0fb14c591c03957888cb7b240a4a9d1bbdc8269
+#!RemoteAsset:  sha256:98ee6ce9e03b9872a8503aebc60308b1feb9e931e53dee60948904072a4df8d3
 Source:         https://download.kde.org/stable/plasma/%{version}/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -30,7 +30,7 @@ BuildRequires:  xcb-util
 BuildRequires:  qt6-qtbase-gui >= %{qt6_version}
 BuildRequires:  qt6-doctools
 BuildRequires:  qt6-qtwayland-devel >= %{qt6_version}
-BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.21.0
+BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.22.0
 BuildRequires:  cmake(Qt6Concurrent) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Gui) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Test) >= %{qt6_version}
@@ -38,9 +38,9 @@ BuildRequires:  cmake(Qt6ToolsTools) >= %{qt6_version}
 BuildRequires:  cmake(Qt6WaylandClient) >= %{qt6_version}
 BuildRequires:  cmake(Qt6WaylandGlobalPrivate) >= %{qt6_version}
 BuildRequires:  pkgconfig(egl)
-BuildRequires:  pkgconfig(wayland-client) >= 1.15.0
+BuildRequires:  pkgconfig(wayland-client) >= 1.26.0
 BuildRequires:  pkgconfig(wayland-protocols) >= 1.15.0
-BuildRequires:  pkgconfig(wayland-server) >= 1.15.0
+BuildRequires:  pkgconfig(wayland-server) >= 1.26.0
 
 %description
 KWayland provides a Qt-style Client and Server library wrapper for the Wayland
