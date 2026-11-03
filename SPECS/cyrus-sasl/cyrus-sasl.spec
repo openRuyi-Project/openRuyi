@@ -17,11 +17,6 @@ URL:            https://github.com/cyrusimap/cyrus-sasl/
 Source:         https://github.com/cyrusimap/cyrus-sasl/releases/download/%{name}-%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
-Patch0:         0001-cyrus-sasl-lfs.patch
-Patch1:         0002-fix_libpq-fe_include.patch
-Patch2:         0003-Fix-time.h-check.patch
-Patch3:         0004-cyrus-sasl-make-digestmd5-work-ssl3.patch
-
 BuildOption(conf):  --with-pic
 BuildOption(conf):  --with-plugindir=%{_libdir}/sasl2
 BuildOption(conf):  --with-configdir=%{_sysconfdir}/sasl2/
@@ -37,6 +32,18 @@ BuildRequires:  pkgconfig(krb5)
 BuildRequires:  libtool
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig
+
+%patchlist
+# Enable large-file support; https://api.opensuse.org/public/source/openSUSE:Factory/cyrus-sasl/cyrus-sasl-lfs.patch?rev=9b3edd460a7ba3e27e4da5bc18fbd19e
+0001-cyrus-sasl-lfs.patch
+# Use the packaged PostgreSQL headers; https://api.opensuse.org/public/source/openSUSE:Factory/cyrus-sasl/fix_libpq-fe_include.diff?rev=9b3edd460a7ba3e27e4da5bc18fbd19e
+0002-fix_libpq-fe_include.patch
+# Detect the time header; https://api.opensuse.org/public/source/openSUSE:Factory/cyrus-sasl/0001-Fix-time.h-check.patch?rev=9b3edd460a7ba3e27e4da5bc18fbd19e
+0003-Fix-time.h-check.patch
+# Support the OpenSSL 3 legacy provider; https://api.opensuse.org/public/source/openSUSE:Factory/cyrus-sasl/cyrus-sasl-make-digestmd5-work-ssl3.patch?rev=9b3edd460a7ba3e27e4da5bc18fbd19e
+0004-cyrus-sasl-make-digestmd5-work-ssl3.patch
+# Fix C23 prototypes and signal handlers; https://src.fedoraproject.org/rpms/cyrus-sasl/blob/rawhide/f/cyrus-sasl-2.1.28-gcc15.patch
+2000-gcc15.patch
 
 %description
 The Cyrus SASL (Simple Authentication and Security Layer) is a framework for
@@ -54,7 +61,7 @@ documentation needed to build applications that use the Cyrus SASL API.
 
 %conf -p
 autoreconf -fi
-export CFLAGS="%{optflags} -fno-strict-aliasing -std=gnu17"
+export CFLAGS="%{optflags} -fno-strict-aliasing"
 
 %install -a
 mkdir -p %{buildroot}%{_sysconfdir}/sasl2
@@ -77,8 +84,8 @@ mkdir -p %{buildroot}%{_sysconfdir}/sasl2
 %{_mandir}/man8/testsaslauthd.8*
 
 %files devel
-%license COPYING
 %doc AUTHORS ChangeLog README doc
+%license COPYING
 %{_includedir}/sasl/
 %{_mandir}/man3/sasl*.3*
 %{_libdir}/libsasl2.so
