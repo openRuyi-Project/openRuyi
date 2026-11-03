@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name opentelemetry_exporter_otlp_proto_http
 
 Name:           python-%{srcname}
-Version:        1.42.1
+Version:        1.45.2
 Release:        %autorelease
 Summary:        OpenTelemetry OTLP protobuf HTTP exporter
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-python
 VCS:            git:https://github.com/open-telemetry/opentelemetry-python.git
-#!RemoteAsset:  sha256:bf142a21035d7571ac3a09cb2e5639f49886f243972883cfe777ed3bf02b734d
+#!RemoteAsset:  sha256:5984a3fb46bc4628e4e2b85d4a6e72637e03962aae6cf372791137768a4ad939
 Source0:        https://files.pythonhosted.org/packages/source/o/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
