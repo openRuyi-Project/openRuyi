@@ -1,0 +1,30 @@
+From 9b0dd49558f5c56c76828d6129618362492964ec Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Match the memory pool prototype to its implementation
+
+wgmempool_Init takes a size_t block size. Its private header declares a
+32-bit argument, causing incompatible calls on LP64 targets and a type
+mismatch at link time with GCC LTO. Use size_t in the declaration.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/wg_mempool.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/wg_mempool.h b/src/wg_mempool.h
+index 1041a84..4702c04 100644
+--- a/src/wg_mempool.h
++++ b/src/wg_mempool.h
+@@ -88,7 +88,7 @@ extern "C"
+      * mempool handler on success, NULL on error.
+      * 
+      */
+-    extern void *wgmempool_Init(uint4 blocksize, size_t maxstrsize);
++    extern void *wgmempool_Init(size_t blocksize, size_t maxstrsize);
+ 
+ 
+     /* 
+-- 
+2.54.0
+
