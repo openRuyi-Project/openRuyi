@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Gui-Yue <xiangwei.riscv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname huggingface_hub
 
 Name:           python-huggingface-hub
-Version:        1.16.0
+Version:        1.32.0
 Release:        %autorelease
 Summary:        Client library for the Hugging Face Hub
 License:        Apache-2.0
 URL:            https://pypi.org/project/huggingface-hub/
 VCS:            git:https://github.com/huggingface/huggingface_hub
-#!RemoteAsset:  sha256:05764336d618062c5fc5a7cf3d6b1477c0f6ef1a29f92122a87df7d6651c1b9b
+#!RemoteAsset:  sha256:ed70a45498abe86039df7c2f4e5f7575de524be908d3840e8f828d5525eafd6a
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
