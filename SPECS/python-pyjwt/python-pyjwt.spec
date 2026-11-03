@@ -9,12 +9,12 @@
 %global srcname pyjwt
 
 Name:           python-%{srcname}
-Version:        2.14.0
+Version:        2.15.1
 Release:        %autorelease
 Summary:        Implementation of JSON Web Token validation for Python
 License:        MIT
 URL:            https://github.com/jpadilla/pyjwt
-#!RemoteAsset:  sha256:77283c83fb56ecf566a886c757a714bc83668e38156de2cce8263302f42e0b86
+#!RemoteAsset:  sha256:4f259e80cdfb6b3fc18a7de51fd1ef9ec79652f25019bae68975ca2468a34df8
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -22,6 +22,7 @@ BuildSystem:    pyproject
 # Import as jwt
 BuildOption(install):  -l jwt
 
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(cryptography) >= 3.4
@@ -39,6 +40,10 @@ digitally signed and encrypted JSON objects.
 
 %generate_buildrequires
 %pyproject_buildrequires
+
+%check -a
+# Exercise JWT decoding, algorithm selection and rejection of invalid signatures.
+%pytest tests
 
 %files -f %{pyproject_files}
 %doc README.rst
