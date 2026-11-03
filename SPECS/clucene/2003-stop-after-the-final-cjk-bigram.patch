@@ -1,0 +1,32 @@
+From a67d57e6d041e9c4d4420a07e413b7d5a2308263 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Stop at EOF after the final CJK bigram
+
+The last character of a bigram is reused for lookahead. Do not emit an
+empty token when that overlap reaches end of input. Adapt the end-of-
+stream check in Michael McCandless's Apache Lucene fix for LUCENE-973.
+
+Upstream-Reference: https://github.com/apache/lucene/commit/835c405be09d20f0b174e7ce96bd675e9400c946
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/contribs-lib/CLucene/analysis/cjk/CJKAnalyzer.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/contribs-lib/CLucene/analysis/cjk/CJKAnalyzer.cpp b/src/contribs-lib/CLucene/analysis/cjk/CJKAnalyzer.cpp
+index 05a17e5..77e29b2 100644
+--- a/src/contribs-lib/CLucene/analysis/cjk/CJKAnalyzer.cpp
++++ b/src/contribs-lib/CLucene/analysis/cjk/CJKAnalyzer.cpp
+@@ -182,6 +182,9 @@ CL_NS(analysis)::Token* CJKTokenizer::next(Token* token){
+         }
+     }
+ 
++	if (length == 0 && dataLen == -1)
++		return NULL;
++
+ 	buffer[length]='\0';
+ 	token->set(buffer,start, start+length, tokenType);
+ 	return token;
+-- 
+2.54.0
+

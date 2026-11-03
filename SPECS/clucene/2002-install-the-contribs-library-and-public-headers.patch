@@ -1,0 +1,64 @@
+From c77f64bfe0a79dbfc340451284a094f414981097 Mon Sep 17 00:00:00 2001
+From: Vitaliy Filippov <>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Install the contribs library and public headers
+
+BUILD_CONTRIBS_LIB excludes the library from the default build and lacks
+installation rules. Build the library by default when enabled and
+install its public headers and shared library.
+
+Upstream-Status: Submitted
+Upstream-Reference: https://sourceforge.net/p/clucene/bugs/200/
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ CMakeLists.txt                  |  2 +-
+ src/contribs-lib/CMakeLists.txt | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4950ddb..349ed75 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,7 +163,7 @@ IF ( BUILD_CONTRIBS )
+   SET(BUILD_CONTRIBS_LIB 1)
+ ENDIF ( BUILD_CONTRIBS )
+ IF ( BUILD_CONTRIBS_LIB )
+-  ADD_SUBDIRECTORY (src/contribs-lib EXCLUDE_FROM_ALL)
++  ADD_SUBDIRECTORY (src/contribs-lib)
+ ENDIF ( BUILD_CONTRIBS_LIB )
+ 
+ 
+diff --git a/src/contribs-lib/CMakeLists.txt b/src/contribs-lib/CMakeLists.txt
+index c3cd213..7109e02 100644
+--- a/src/contribs-lib/CMakeLists.txt
++++ b/src/contribs-lib/CMakeLists.txt
+@@ -106,9 +106,26 @@ add_library(clucene-contribs-lib SHARED
+ )
+ TARGET_LINK_LIBRARIES(clucene-contribs-lib ${clucene_contrib_extra_libs})
+ 
++#install public headers.
++FOREACH(file ${HEADERS})
++	get_filename_component(apath ${file} PATH)
++	get_filename_component(aname ${file} NAME)
++	file(RELATIVE_PATH relpath ${CMAKE_SOURCE_DIR}/src/contribs-lib ${apath})
++	IF ( NOT aname MATCHES "^_.*" )
++		install(FILES ${file} 
++		        DESTINATION include/${relpath}
++		        COMPONENT development)
++	ENDIF ( NOT aname MATCHES "^_.*" )
++ENDFOREACH(file)
++
+ #set properties on the libraries
+ SET_TARGET_PROPERTIES(clucene-contribs-lib PROPERTIES
+     VERSION ${CLUCENE_VERSION}
+     SOVERSION ${CLUCENE_SOVERSION}
+     COMPILE_DEFINITIONS_DEBUG _DEBUG
+ )
++
++#and install library
++install(TARGETS clucene-contribs-lib 
++        DESTINATION ${LIB_DESTINATION}  
++        COMPONENT runtime )
+-- 
+2.54.0
+
