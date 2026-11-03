@@ -1,0 +1,11 @@
+Index: openldap-2.6.7/contrib/slapd-modules/cloak/cloak.c
+===================================================================
+--- openldap-2.6.7.orig/contrib/slapd-modules/cloak/cloak.c
++++ openldap-2.6.7/contrib/slapd-modules/cloak/cloak.c
+@@ -242,6 +242,7 @@ cloak_search_response_cb( Operation *op,
+ 			else
+ 				me->e_attrs = a->a_next;
+ 
++			extern void attr_clean(Attribute *);
+ 			attr_clean( a );
+ 		}
