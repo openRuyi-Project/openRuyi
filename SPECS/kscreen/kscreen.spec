@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kscreen
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Screen management software by KDE
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kscreen.git
-#!RemoteAsset:  sha256:9a4bf3aa089b57db7727948a86a22678605f7e1c90e3774478b7bb2753a2ee7b
+#!RemoteAsset:  sha256:05b11c23dcc3ccd13f1b1c481ec3217ba691411aad10982a2efa86f260d2c680
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -56,7 +56,6 @@ BuildRequires:  pkgconfig(wayland-client) >= 1.9
 BuildRequires:  pkgconfig(xcb-atom)
 BuildRequires:  pkgconfig(xi)
 
-Requires:       kf6-kded
 Requires:       libkscreen-plugin >= %{_plasma6_bugfix}
 Requires:       kf6-kimageformats
 Requires:       xrdb
@@ -82,14 +81,20 @@ KScreen handles screen management for both X11 and Wayland sessions, including r
 %{_kf6_applicationsdir}/kcm_kscreen.desktop
 %{_kf6_bindir}/hdrcalibrator
 %{_kf6_bindir}/kscreen-console
+%{_kf6_bindir}/kscreenctl
 %{_kf6_debugdir}/kscreen.categories
-%{_kf6_plugindir}/kf6/kded/kscreen.so
+%dir %{_datadir}/fish
+%dir %{_datadir}/fish/vendor_completions.d
+%{_datadir}/fish/vendor_completions.d/kscreenctl.fish
 %{_kf6_plugindir}/plasma/applets/org.kde.kscreen.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_kscreen.so
 %{_kf6_sharedir}/dbus-1/services/org.kde.kscreen.osdService.service
 %{_kf6_sharedir}/kglobalaccel/org.kde.kscreen.desktop
 %{_libexecdir}/kscreen_osd_service
 %{_userunitdir}/plasma-kscreen-osd.service
+%dir %{_datadir}/zsh
+%dir %{_datadir}/zsh/site-functions
+%{_datadir}/zsh/site-functions/_kscreenctl
 
 %changelog
 %autochangelog
