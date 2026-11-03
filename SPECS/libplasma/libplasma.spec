@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           libplasma
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plasma library and runtime components based upon KF6 and Qt6
 License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/libplasma
-#!RemoteAsset:  sha256:097bfbc24a8054dd6c19428d590d3d99bec89c0af36f1b9dff79005cdb185911
+#!RemoteAsset:  sha256:ac81e63385667d9d61f55b5b81c7195a343c560673939ba774d26aba5ec32a6d
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -100,6 +100,8 @@ Plasma library and runtime components based upon KF6 and Qt6
 %{_kf6_debugdir}/plasma-framework.renamecategories
 %{_kf6_libdir}/libPlasma.so.*
 %{_kf6_libdir}/libPlasmaQuick.so.*
+%{_kf6_libdir}/qt6/metatypes/qt6plasma_metatypes.json
+%{_kf6_libdir}/qt6/metatypes/qt6plasmaquick_metatypes.json
 %{_kf6_plugindir}/kf6/kirigami/
 %{_kf6_plugindir}/kf6/packagestructure/
 %{_kf6_qmldir}/org/kde/kirigami/
