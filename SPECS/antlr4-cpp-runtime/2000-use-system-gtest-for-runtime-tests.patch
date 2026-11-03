@@ -1,0 +1,46 @@
+From 891524687410407538e630df46454d18ecb4e33b Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 02:48:15 +0800
+Subject: [PATCH] Build the C++ runtime tests against installed GoogleTest
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ runtime/Cpp/runtime/CMakeLists.txt | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/runtime/Cpp/runtime/CMakeLists.txt b/runtime/Cpp/runtime/CMakeLists.txt
+index be0d8bf..58a19b6 100644
+--- a/runtime/Cpp/runtime/CMakeLists.txt
++++ b/runtime/Cpp/runtime/CMakeLists.txt
+@@ -66,18 +66,7 @@ IF(TRACE_ATN)
+ ENDIF(TRACE_ATN)
+ 
+ if (ANTLR_BUILD_CPP_TESTS)
+-  include(FetchContent)
+-
+-  FetchContent_Declare(
+-    googletest
+-    URL https://github.com/google/googletest/archive/e2239ee6043f73722e7aa812a459f54a28552929.zip
+-  )
+-
+-  if(WITH_STATIC_CRT)
+-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+-  endif()
+-
+-  FetchContent_MakeAvailable(googletest)
++  find_package(GTest REQUIRED)
+ 
+   file(GLOB libantlrcpp_TESTS
+     "${PROJECT_SOURCE_DIR}/runtime/tests/*.cpp"
+@@ -91,7 +80,7 @@ if (ANTLR_BUILD_CPP_TESTS)
+   target_link_libraries(
+     antlr4_tests
+ 	$<IF:$<TARGET_EXISTS:antlr4_static>,antlr4_static,antlr4_shared>
+-    gtest_main
++    GTest::gtest_main
+   )
+ 
+   include(GoogleTest)
+-- 
+2.54.0
+
