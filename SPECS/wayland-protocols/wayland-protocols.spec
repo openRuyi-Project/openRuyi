@@ -8,12 +8,12 @@
 %bcond test 1
 
 Name:           wayland-protocols
-Version:        1.48
+Version:        1.50
 Release:        %autorelease
 Summary:        Wayland protocols that add functionality not available in the core protocol
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wayland/wayland-protocols
-#!RemoteAsset:  sha256:598e3a51125d0e3cab02303fef39e801604dd4a458d077aacdf318f4910b3f5c
+#!RemoteAsset:  sha256:dc5899a21274fd03d06472a753d1954ab30ecc6af372105d72d472ba17a65705
 Source0:        https://gitlab.freedesktop.org/wayland/wayland-protocols/-/archive/%{version}/wayland-protocols-%{version}.tar.bz2
 BuildSystem:    meson
 
@@ -45,4 +45,4 @@ available in the Wayland core protocol.
 %{_includedir}/wayland-protocols/
 
 %changelog
-%{?autochangelog}
+%autochangelog
