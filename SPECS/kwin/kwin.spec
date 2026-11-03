@@ -16,13 +16,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kwin
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        KDE Window Manager
 License:        GPL-2.0-or-later AND GPL-3.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kwin.git
-#!RemoteAsset:  sha256:29ebcd04aaf1bd05d5a3d23478ff2d5fdacd8ac142950b539686445490cc4442
+#!RemoteAsset:  sha256:7af0f67e2153f3bf607b45550f523325a1712bac9920f27f2f54fbb96a32fb77
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -31,6 +31,8 @@ BuildOption(conf):  -DBUILD_TESTING=OFF
 BuildRequires:  doxygen
 BuildRequires:  gcc-c++
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
+BuildRequires:  libcap-devel
+BuildRequires:  libcap-progs
 BuildRequires:  pkgconfig
 BuildRequires:  qt6-qtbase-private-devel >= %{qt6_version}
 BuildRequires:  systemd-rpm-macros
@@ -66,7 +68,7 @@ BuildRequires:  cmake(KNightTime) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(KScreenLocker) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(KWayland) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaActivities) >= %{_plasma6_bugfix}
-BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.14.0
+BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.23.0
 BuildRequires:  cmake(QAccessibilityClient6)
 BuildRequires:  cmake(Qt6Concurrent) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Core) >= %{qt6_version}
@@ -89,16 +91,16 @@ BuildRequires:  pkgconfig(gbm)
 BuildRequires:  pkgconfig(lcms2)
 BuildRequires:  pkgconfig(libcanberra)
 BuildRequires:  pkgconfig(libdisplay-info) >= 0.2.0
-BuildRequires:  pkgconfig(libdrm) >= 2.4.116
-BuildRequires:  pkgconfig(libeis-1.0)
-BuildRequires:  pkgconfig(libinput) >= 1.26
-BuildRequires:  pkgconfig(libpipewire-0.3) >= 1.2.0
+BuildRequires:  pkgconfig(libdrm) >= 2.4.127
+BuildRequires:  pkgconfig(libeis-1.0) >= 1.4
+BuildRequires:  pkgconfig(libinput) >= 1.28
+BuildRequires:  pkgconfig(libpipewire-0.3) >= 1.4.0
 BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  pkgconfig(libudev)
 BuildRequires:  pkgconfig(libxcvt)
-BuildRequires:  pkgconfig(wayland-cursor) >= 1.22
+BuildRequires:  pkgconfig(wayland-cursor) >= 1.26.0
 BuildRequires:  pkgconfig(wayland-egl)
-BuildRequires:  pkgconfig(wayland-protocols) >= 1.38
+BuildRequires:  pkgconfig(wayland-protocols) >= 1.49
 BuildRequires:  pkgconfig(x11)
 BuildRequires:  pkgconfig(x11-xcb)
 BuildRequires:  pkgconfig(xcb) >= 1.10
@@ -164,7 +166,7 @@ This package provides development files.
 %files
 %doc README.md
 %doc %{_kf6_htmldir}/*
-%verify(not caps) %{_kf6_bindir}/kwin_wayland
+%caps(cap_sys_nice=ep) %{_kf6_bindir}/kwin_wayland
 %license LICENSES/*
 %{_kf6_applicationsdir}/kcm_animations.desktop
 %{_kf6_applicationsdir}/kcm_kwin_effects.desktop
@@ -190,7 +192,6 @@ This package provides development files.
 %{_kf6_libdir}/kconf_update_bin/kwin-6.0-reset-active-mouse-screen
 %{_kf6_libdir}/kconf_update_bin/kwin-6.1-remove-gridview-expose-shortcuts
 %{_kf6_libdir}/kconf_update_bin/kwin-6.5-showpaint-changes
-%{_kf6_libdir}/kconf_update_bin/kwin5_update_default_rules
 %{_kf6_libdir}/libkcmkwincommon.so.*
 %{_kf6_libdir}/libkwin.so.*
 %{_kf6_notificationsdir}/kwin.notifyrc
@@ -237,7 +238,7 @@ This package provides development files.
 %{_kf6_qmldir}/org/kde/kwin/private/
 %{_kf6_sharedir}/kconf_update/kwin.upd
 %{_kf6_sharedir}/krunner/dbusplugins/kwin-runner-windows.desktop
-%{_kf6_sharedir}/kwin-wayland/
+%{_kf6_sharedir}/kwin/
 %{_libexecdir}/kwin_killer_helper
 %{_libexecdir}/kwin-applywindowdecoration
 %{_libexecdir}/kwin-tabbox-preview
