@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,12 +9,12 @@
 %global pypi_name sentence_transformers
 
 Name:           python-%{srcname}
-Version:        5.4.1
+Version:        6.2.0
 Release:        %autorelease
 Summary:        Embeddings, Retrieval, and Reranking
 License:        Apache-2.0
 URL:            https://www.sbert.net
-#!RemoteAsset:  sha256:436bcb1182a0ff42a8fb2b1c43498a70d0a75b688d182f2cd0d1dd115af61ddc
+#!RemoteAsset:  sha256:1e3cd8796ab7bcad4cfa2f51e2083d8b37b15d6b68e6fa6b91a147c67380574d
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
