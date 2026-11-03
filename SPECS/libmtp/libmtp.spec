@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -16,6 +17,10 @@ BuildSystem:    autotools
 
 # fix non-root ignore --with-udev.
 Patch0:         0001-fix-configure.patch
+# https://github.com/libmtp/libmtp/commit/95d5c888520c296b1aac805e26e72d38648f4a80
+Patch1000:      1000-ptp_free_objectpropdesc-NULL-freed-pointers.patch
+# https://github.com/libmtp/libmtp/commit/7c29b868dba17ba0224a26f0998536137c7c013a
+Patch1001:      1001-handle-return-code-of-OPD-unpack.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --enable-doxygen
@@ -46,8 +51,8 @@ export ACLOCAL_PATH=%{_datadir}/gettext/m4/
 ./autogen.sh
 
 %files
-%license COPYING
 %doc AUTHORS README TODO
+%license COPYING
 %{_libdir}/libmtp.so.*
 %{_udevrulesdir}/69-libmtp.rules
 %{_prefix}/lib/udev/hwdb.d/69-libmtp.hwdb
@@ -61,4 +66,4 @@ export ACLOCAL_PATH=%{_datadir}/gettext/m4/
 %{_libdir}/pkgconfig/libmtp.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog

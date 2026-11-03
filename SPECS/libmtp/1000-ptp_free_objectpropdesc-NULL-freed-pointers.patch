@@ -1,0 +1,39 @@
+From 98691f917dd12d503ed2d8e142f554c48eed008c Mon Sep 17 00:00:00 2001
+From: Marcus Meissner <marcus@jet.franken.de>
+Date: Sat, 31 Oct 2026 16:11:58 +0100
+Subject: [PATCH] ptp_free_objectpropdesc: NULL freed pointers
+
+Otherwise we can run into use-after-frees on error conditions.
+
+Reported-By: Louis Clinckx <lclinckx@proton.me>
+
+Upstream-Commit: 95d5c888520c296b1aac805e26e72d38648f4a80
+---
+ src/ptp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/ptp.c b/src/ptp.c
+index 62898ef..7521d67 100644
+--- a/src/ptp.c
++++ b/src/ptp.c
+@@ -1455,13 +1455,17 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
+ 			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
+ 				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
+ 			free (opd->FORM.Enum.SupportedValue);
++			opd->FORM.Enum.SupportedValue = NULL;
++			opd->FORM.Enum.NumberOfValues = 0;
+ 		}
+ 		break;
+ 	case PTP_OPFF_DateTime:
+ 		free(opd->FORM.DateTime.String);
++		opd->FORM.DateTime.String = NULL;
+ 		break;
+ 	case PTP_OPFF_RegularExpression:
+ 		free(opd->FORM.RegularExpression.String);
++		opd->FORM.RegularExpression.String = NULL;
+ 		break;
+ 	case PTP_OPFF_FixedLengthArray:	/* nothing to free */ /* fallthrough */
+ 	case PTP_OPFF_ByteArray:	/* nothing to free */ /* fallthrough */
+-- 
+2.54.0
+

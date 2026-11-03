@@ -1,0 +1,40 @@
+From f6df08d38c3156691397e271c3414be623700b0a Mon Sep 17 00:00:00 2001
+From: Marcus Meissner <marcus@jet.franken.de>
+Date: Sun, 1 Nov 2026 11:18:23 +0100
+Subject: [PATCH] handle return code of OPD unpack
+
+Reported-By: lclinckx <lclinckx@proton.me>
+
+Upstream-Commit: 7c29b868dba17ba0224a26f0998536137c7c013a
+---
+ src/ptp.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/ptp.c b/src/ptp.c
+index 7521d67..e264e23 100644
+--- a/src/ptp.c
++++ b/src/ptp.c
+@@ -4798,12 +4798,18 @@ ptp_mtp_getobjectpropdesc (
+ 	PTPContainer	ptp;
+ 	unsigned char	*data = NULL;
+ 	unsigned int	size;
++	uint16_t	ret;
+ 
+         PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropDesc, opc, ofc);
+         CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+-	ptp_unpack_OPD (params, data, opd, size);
++	ret = ptp_unpack_OPD (params, data, opd, size);
+ 	free(data);
+-	return PTP_RC_OK;
++	if (ret) {
++		return PTP_RC_OK;
++	} else {
++		ptp_debug (params, "ptp_mtp_getobjectpropdesc: unpacking OPD failed");
++		return PTP_RC_GeneralError;
++	}
+ }
+ 
+ /**
+-- 
+2.54.0
+
