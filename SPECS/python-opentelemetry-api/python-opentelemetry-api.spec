@@ -10,13 +10,13 @@
 
 Name:           python-%{srcname}
 # Update with python-opentelemetry-semantic-conventions - 251
-Version:        1.44.0
+Version:        1.45.2
 Release:        %autorelease
 Summary:        OpenTelemetry Python API
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-python
 VCS:            git:https://github.com/open-telemetry/opentelemetry-python.git
-#!RemoteAsset:  sha256:67647e5e9566edcf421166fdf022b3537f818635daa852b289e34604dc6fb33a
+#!RemoteAsset:  sha256:d7b0008e21e5fd61cbe7a7f34ca3b6905a78ab677d9bc395e299359c75cda6b4
 Source:         https://files.pythonhosted.org/packages/source/o/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
