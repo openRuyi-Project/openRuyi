@@ -1,0 +1,33 @@
+From 73a4eab23baedd96590f3e124db9972cf2bd48d7 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Report the release version in CMake package metadata
+
+The 1.2.0 tag still sets PROJECT_VERSION to 1.1.0. Correct the project
+version so the installed frozenConfigVersion.cmake accepts consumers
+requesting 1.2 and the generated cmake(frozen) capability matches the
+RPM.
+
+Upstream-Status: Pending
+Upstream-Reference: https://github.com/serge-sans-paille/frozen/blob/1.2.0/CMakeLists.txt#L21
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 19c4efc..43737f6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,7 +15,7 @@ else()
+   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+ endif()
+ 
+-project(frozen VERSION 1.1.0 LANGUAGES CXX)
++project(frozen VERSION 1.2.0 LANGUAGES CXX)
+ include(CMakeDependentOption)
+ include(CMakePackageConfigHelpers) # provides `write_basic_package_version_file`
+ include(CTest)
+-- 
+2.54.0
+
