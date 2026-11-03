@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname trio
 
 Name:           python-%{srcname}
-Version:        0.33.0
+Version:        0.35.0
 Release:        %autorelease
 Summary:        A friendly Python library for async concurrency and I/O
 License:        MIT
 URL:            https://github.com/python-trio/trio
-#!RemoteAsset:  sha256:a29b92b73f09d4b48ed249acd91073281a7f1063f09caba5dc70465b5c7aa970
+#!RemoteAsset:  sha256:7efb295c78a0ecd1235c5759e620b5da564ca80d2efcb0055423588547248b96
 Source0:        https://files.pythonhosted.org/packages/source/t/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
