@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           ksystemstats
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plugin based system monitoring daemon
 License:        BSD-2-Clause AND BSD-3-Clause AND CC0-1.0 AND GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/ksystemstats.git
-#!RemoteAsset:  sha256:72195c08a722e307dd60f5d8e7cd620574341e29d604ad4cf7dbd64c0aeecbcf
+#!RemoteAsset:  sha256:4b12d219e8ab49435d618c3140e6b6cea8a859d512b3c41ea1cfd127d47c5fd5
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -67,7 +67,7 @@ KSystemStats is a daemon that collects statistics about the running system.
 %dir %{_kf6_plugindir}/ksystemstats/
 %{_kf6_plugindir}/ksystemstats/ksystemstats_plugin_{cpu,disk,gpu,lmsensors,memory,network,osinfo,power,pressure}.so
 %{_kf6_sharedir}/dbus-1/services/org.kde.ksystemstats1.service
-%{_libexecdir}/ksystemstats_intel_helper
+%{_libexecdir}/ksystemstats_*_helper
 %{_userunitdir}/plasma-ksystemstats.service
 
 %changelog
