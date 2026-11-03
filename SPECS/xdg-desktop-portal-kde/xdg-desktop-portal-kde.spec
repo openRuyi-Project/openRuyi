@@ -16,13 +16,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           xdg-desktop-portal-kde
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        QT/KF6 backend for xdg-desktop-portal
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/xdg-desktop-portal-kde.git
-#!RemoteAsset:  sha256:027790dfdbbd8fa643fd48287cc169bce247e9cacf39e509f9403150c69c2d77
+#!RemoteAsset:  sha256:4ea894067327dd7d07927646ce0647feba7f5b305e6cca6f791387cb0c10b3a8
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -45,6 +45,7 @@ BuildRequires:  cmake(KF6Notifications) >= %{kf6_version}
 BuildRequires:  cmake(KF6StatusNotifierItem) >= %{kf6_version}
 BuildRequires:  cmake(KF6WidgetsAddons) >= %{kf6_version}
 BuildRequires:  cmake(KF6WindowSystem) >= %{kf6_version}
+BuildRequires:  cmake(KPipeWire) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(KWayland) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.7.0
 BuildRequires:  cmake(Qt6Concurrent) >= %{qt6_version}
