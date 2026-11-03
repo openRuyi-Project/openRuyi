@@ -1,0 +1,37 @@
+From 06f626091cb9f1d717cb9d63b7bc2ffdbf0c3cdf Mon Sep 17 00:00:00 2001
+From: Kartik Kenchi <netliomax25@gmail.com>
+Date: Tue, 9 Jun 2026 12:14:46 +0530
+Subject: [PATCH] commands: validate string in lxc_cmd_get_config_item_callback
+
+Signed-off-by: Kartik Kenchi <netliomax25@gmail.com>
+---
+ src/lxc/commands.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/src/lxc/commands.c b/src/lxc/commands.c
+index 8c6460cdc..1454d0eba 100644
+--- a/src/lxc/commands.c
++++ b/src/lxc/commands.c
+@@ -1028,8 +1028,19 @@ static int lxc_cmd_get_config_item_callback(int fd, struct lxc_cmd_req *req,
+ 	int cilen;
+ 	struct lxc_config_t *item;
+ 	struct lxc_cmd_rsp rsp;
++	ssize_t ret;
+ 
+ 	memset(&rsp, 0, sizeof(rsp));
++
++	if (req->datalen <= 0) {
++		rsp.ret = -EINVAL;
++		return lxc_cmd_rsp_send_reap(fd, &rsp);
++	}
++
++	ret = validate_string_request(fd, req);
++	if (ret != 0)
++		return ret;
++
+ 	item = lxc_get_config(req->data);
+ 	cilen = item->get(req->data, NULL, 0, handler->conf, NULL);
+ 	if (cilen <= 0)
+-- 
+2.54.0
+

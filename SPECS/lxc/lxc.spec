@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -55,6 +56,16 @@ Requires:       openssl
 Requires:       wget
 %{?systemd_requires}
 
+%patchlist
+# https://github.com/lxc/lxc/commit/06f626091cb9f1d717cb9d63b7bc2ffdbf0c3cdf
+1000-commands-validate-string-in-lxc_cmd_get_config_item_callback.patch
+# https://github.com/lxc/lxc/commit/19ad80ed8e6288904caaee5b7bd3c485d51a2291
+1001-commands-validate-datalen-in-lxc_cmd_console_log_callback.patch
+# https://github.com/lxc/lxc/commit/6424a91a55efc54edc25ca46e9165bd9f35b50b7
+1002-lxc-copy-open-hostname-in-a-safer-way.patch
+# https://github.com/lxc/lxc/commit/fa12709a79c2b63b3918297d7505108fcc840eb6
+1003-lxc-copy-fix-hostname-truncation-during-clone.patch
+
 %description
 Linux Resource Containers provide process and resource isolation without the
 overhead of full virtualization. This package contains the main command-line tools.
@@ -83,8 +94,8 @@ install -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/lxc-net
 %systemd_postun lxc-net.service lxc.service lxc-monitord.service
 
 %files
-%license COPYING
 %doc AUTHORS README.md
+%license COPYING
 %{_bindir}/lxc-*
 %{_datadir}/bash-completion/completions/*
 %{_datadir}/lxc/*

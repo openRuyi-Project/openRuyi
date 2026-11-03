@@ -1,0 +1,32 @@
+From fa12709a79c2b63b3918297d7505108fcc840eb6 Mon Sep 17 00:00:00 2001
+From: Shuo Huai <shuohuai@mail.nankai.edu.cn>
+Date: Tue, 28 Jul 2026 17:22:28 +0800
+Subject: [PATCH] lxc-copy: fix hostname truncation during clone
+
+The hostname update code switched from fopen() to openat2()
+and fdopen(), but fdopen() does not truncate an existing file.
+
+Add O_TRUNC to preserve the previous fopen() behavior and avoid
+leaving stale bytes after updating the hostname.
+
+Signed-off-by: Shuo Huai <shuohuai@mail.nankai.edu.cn>
+---
+ src/lxc/lxccontainer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/lxc/lxccontainer.c b/src/lxc/lxccontainer.c
+index 736df037a..c820f5909 100644
+--- a/src/lxc/lxccontainer.c
++++ b/src/lxc/lxccontainer.c
+@@ -3591,7 +3591,7 @@ static int do_update_hostname(struct lxc_container *c, int flags)
+ 	__do_close int hfd = -EBADF;
+ 	__do_fclose FILE *fout = NULL;
+ 	struct open_how how = {
+-		.flags = O_RDWR,
++		.flags = O_RDWR | O_TRUNC,
+ 		.resolve = RESOLVE_IN_ROOT
+ 	};
+ 
+-- 
+2.54.0
+
