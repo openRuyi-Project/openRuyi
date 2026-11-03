@@ -2,18 +2,19 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: panglars <panghao.riscv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname authlib
 
 Name:           python-%{srcname}
-Version:        1.7.2
+Version:        1.9.3
 Release:        %autorelease
 Summary:        Python library for OAuth and OpenID Connect
 License:        BSD-3-Clause
 URL:            https://github.com/authlib/authlib
-#!RemoteAsset:  sha256:2cea25fefcd4e7173bdf1372c0afc265c8034b23a8cd5dcb6a9164b826c64231
+#!RemoteAsset:  sha256:2f834630f452d2e01d787b5477cf37341b73577073bfab38f10d988782da018b
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
