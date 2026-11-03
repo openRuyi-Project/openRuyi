@@ -1,0 +1,22 @@
+From df4d68c09cdef73e023b8838a8bc7ca4dff1d1de Mon Sep 17 00:00:00 2001
+From: Lily Wang <94091114+LilyWangLL@users.noreply.github.com>
+Date: Fri, 28 Feb 2025 09:53:08 -0800
+Subject: [PATCH] Include <chrono> for high_resolution_clock (#4738)
+
+Signed-off-by: LilyWangLL <494550702@qq.com>
+---
+ runtime/Cpp/runtime/src/atn/ProfilingATNSimulator.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/runtime/Cpp/runtime/src/atn/ProfilingATNSimulator.cpp b/runtime/Cpp/runtime/src/atn/ProfilingATNSimulator.cpp
+index 9fd86d67d4..522049231e 100755
+--- a/runtime/Cpp/runtime/src/atn/ProfilingATNSimulator.cpp
++++ b/runtime/Cpp/runtime/src/atn/ProfilingATNSimulator.cpp
+@@ -10,6 +10,7 @@
+ #include "support/CPPUtils.h"
+ 
+ #include "atn/ProfilingATNSimulator.h"
++#include <chrono>
+ 
+ using namespace antlr4;
+ using namespace antlr4::atn;

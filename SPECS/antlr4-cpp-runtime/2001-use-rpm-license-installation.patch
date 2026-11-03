@@ -1,0 +1,32 @@
+From 9a845f8368f11d5f3ab0273ea3aa10b23a17de4f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 09:48:03 +0800
+Subject: [PATCH] Use the package license installation
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ runtime/Cpp/CMakeLists.txt | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/runtime/Cpp/CMakeLists.txt b/runtime/Cpp/CMakeLists.txt
+index 7efb19c..968f453 100644
+--- a/runtime/Cpp/CMakeLists.txt
++++ b/runtime/Cpp/CMakeLists.txt
+@@ -200,14 +200,6 @@ if (ANTLR4_INSTALL)
+ 
+ endif(ANTLR4_INSTALL)
+ 
+-if(EXISTS LICENSE.txt)
+-install(FILES LICENSE.txt
+-        DESTINATION "share/doc/libantlr4")
+-elseif(EXISTS ../../LICENSE.txt)
+-install(FILES ../../LICENSE.txt
+-    DESTINATION "share/doc/libantlr4")
+-endif()
+-
+ install(FILES README.md VERSION
+     DESTINATION "share/doc/libantlr4")
+ 
+-- 
+2.54.0
+
