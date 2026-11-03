@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kscreenlocker
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Library and components for secure lock screen architecture
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kscreenlocker.git
-#!RemoteAsset:  sha256:35936f816d2c83f0a18de856061156dbc4c45859ff5980886828e662471b1c8b
+#!RemoteAsset:  sha256:44962d221ff24be44521a494897693001e01c214ce14e0877fc8401ddffdf053
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 Source1:        kde
 Source2:        kde-fingerprint
@@ -49,7 +49,6 @@ BuildRequires:  cmake(KF6Solid) >= %{kf6_version}
 BuildRequires:  cmake(KF6Svg) >= %{kf6_version}
 BuildRequires:  cmake(KF6WindowSystem) >= %{kf6_version}
 BuildRequires:  cmake(KF6XmlGui) >= %{kf6_version}
-BuildRequires:  cmake(KWayland) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(LayerShellQt) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaQuick) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
@@ -94,11 +93,13 @@ install -D -m0644 %{SOURCE3} %{buildroot}%{_pam_confdir}/kde-smartcard
 %files -f %{name}.lang
 %license LICENSES/*
 %{_kf6_applicationsdir}/kcm_screenlocker.desktop
+%{_kf6_configkcfgdir}/kscreenlockersettings.kcfg
 %{_kf6_debugdir}/kscreenlocker.categories
 %{_kf6_notificationsdir}/ksmserver.notifyrc
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_screenlocker.so
-%{_kf6_sharedir}/ksmserver/
+%{_kf6_qmldir}/org/kde/kscreenlocker/
 %{_libexecdir}/kscreenlocker_greet
+%{_libexecdir}/kscreenlocker_worker
 %{_pam_confdir}/kde
 %{_pam_confdir}/kde-fingerprint
 %{_pam_confdir}/kde-smartcard
