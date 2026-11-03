@@ -1,0 +1,46 @@
+From b769829c9da49a7eac69768eaf235dbbd2fcdbd9 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Mon, 9 Nov 2026 03:06:10 +0800
+Subject: [PATCH] Link the Linux solver library to system COLAMD and set its
+ ABI soname
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ lpsolve55/ccc | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/lpsolve55/ccc b/lpsolve55/ccc
+index bf24703..5ca32af 100644
+--- a/lpsolve55/ccc
++++ b/lpsolve55/ccc
+@@ -1,5 +1,5 @@
+ :
+-src='../lp_MDO.c ../shared/commonlib.c ../shared/mmio.c ../shared/myblas.c ../ini.c ../fortify.c ../colamd/colamd.c ../lp_rlp.c ../lp_crash.c ../bfp/bfp_LUSOL/lp_LUSOL.c ../bfp/bfp_LUSOL/LUSOL/lusol.c ../lp_Hash.c ../lp_lib.c ../lp_wlp.c ../lp_matrix.c ../lp_mipbb.c ../lp_MPS.c ../lp_params.c ../lp_presolve.c ../lp_price.c ../lp_pricePSE.c ../lp_report.c ../lp_scale.c ../lp_simplex.c ../lp_SOS.c ../lp_utils.c ../yacc_read.c'
++src='../lp_MDO.c ../shared/commonlib.c ../shared/mmio.c ../shared/myblas.c ../ini.c ../fortify.c ../lp_rlp.c ../lp_crash.c ../bfp/bfp_LUSOL/lp_LUSOL.c ../bfp/bfp_LUSOL/LUSOL/lusol.c ../lp_Hash.c ../lp_lib.c ../lp_wlp.c ../lp_matrix.c ../lp_mipbb.c ../lp_MPS.c ../lp_params.c ../lp_presolve.c ../lp_price.c ../lp_pricePSE.c ../lp_report.c ../lp_scale.c ../lp_simplex.c ../lp_SOS.c ../lp_utils.c ../yacc_read.c'
+ c=${CC:-cc}
+ 
+ MYTMP=`mktemp -d "${TMPDIR:-/tmp}"/lp_solve_XXXXXX`
+@@ -39,16 +39,16 @@ else dl=-ldl
+      so=y
+ fi
+ 
+-opts='-O3'
++opts=${CFLAGS:--O3}
+ 
+-$c -s -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -I../colamd $opts $def $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
++$c -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL ${COLAMD_CFLAGS} $opts $def $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
+ ar rv bin/$PLATFORM/liblpsolve55.a `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'`
+ ranlib bin/$PLATFORM/liblpsolve55.a
+ 
+ if [ "$so" != "" ]
+ then
+-  $c -fpic -s -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL -I../colamd -I. $opts $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
+-  $c -shared -Wl,-Bsymbolic -Wl,-soname,liblpsolve55.so -o bin/$PLATFORM/liblpsolve55.so `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'` -lc -lm -ldl
++  $c -fpic -c -I.. -I../shared -I../bfp -I../bfp/bfp_LUSOL -I../bfp/bfp_LUSOL/LUSOL ${COLAMD_CFLAGS} -I. $opts $NOISNAN -DYY_NEVER_INTERACTIVE -DPARSER_LP -DINVERSE_ACTIVE=INVERSE_LUSOL -DRoleIsExternalInvEngine $src
++  $c $LDFLAGS -shared -Wl,-Bsymbolic -Wl,-soname,liblpsolve55.so.5.5 -o bin/$PLATFORM/liblpsolve55.so `echo $src|sed s/[.]c/.o/g|sed 's/[^ ]*\///g'` $COLAMD_LIBS -lc -lm -ldl
+ fi
+ 
+ rm *.o 2>/dev/null
+-- 
+2.54.0
+
