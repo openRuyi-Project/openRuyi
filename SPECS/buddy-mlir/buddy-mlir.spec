@@ -27,9 +27,9 @@ License:        Apache-2.0 AND (Apache-2.0 WITH LLVM-exception OR NCSA)
 URL:            https://github.com/buddy-compiler/buddy-mlir
 VCS:            git:https://github.com/buddy-compiler/buddy-mlir.git
 #!RemoteAsset:  sha256:0f0a65448a9db1dc53f0719d2a1ef42b669bed3a077228ee9efee81c794e4ffe
-Source0:        %{url}/archive/%{commit}#/%{name}-%{commit}.tar.gz
+Source0:        %{url}/archive/%{commit}/%{name}-%{commit}.tar.gz
 #!RemoteAsset:  sha256:2bdef4109d89d1306cf432bd02d9a1add1ee1e898aea151bfa7d5dd5b40be5d9
-Source1:        https://github.com/RuyiAI-Stack/llvm-project/archive/%{llvm_commit}#/llvm-project-%{llvm_commit}.tar.gz
+Source1:        https://github.com/RuyiAI-Stack/llvm-project/archive/%{llvm_commit}/llvm-project-%{llvm_commit}.tar.gz
 BuildSystem:    cmake
 
 BuildOption(conf):  -G Ninja
