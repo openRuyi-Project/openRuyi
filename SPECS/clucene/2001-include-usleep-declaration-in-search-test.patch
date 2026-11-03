@@ -1,0 +1,33 @@
+From d1dfd97e4de60874993be6d44d70dadce5cd92ff Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Include the Unix sleep declaration in the threaded search
+ test
+
+The POSIX threaded search test calls usleep; include unistd.h on non-
+Windows targets.
+
+Upstream-Status: Pending
+Upstream-Reference: https://sourceforge.net/p/clucene/code/ci/clucene-src-2.3.3.4/tree/src/test/search/TestIndexSearcher.cpp
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/test/search/TestIndexSearcher.cpp | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/test/search/TestIndexSearcher.cpp b/src/test/search/TestIndexSearcher.cpp
+index a5b6122..5b6b2d4 100644
+--- a/src/test/search/TestIndexSearcher.cpp
++++ b/src/test/search/TestIndexSearcher.cpp
+@@ -5,6 +5,9 @@
+ * the GNU Lesser General Public License, as specified in the COPYING file.
+ ------------------------------------------------------------------------------*/
+ #include "test.h"
++#ifndef _WIN32
++#include <unistd.h>
++#endif
+ 
+ DEFINE_MUTEX(searchMutex);
+ DEFINE_CONDITION(searchCondition);
+-- 
+2.54.0
+
