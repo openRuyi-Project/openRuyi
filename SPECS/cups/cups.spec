@@ -73,6 +73,38 @@ Requires(post): sed
 0008-cups-freebind.patch
 0009-cups-ipp-multifile.patch
 0010-cups-web-devices-timeout.patch
+# https://github.com/OpenPrinting/cups/commit/6c61d23f5523055ec4374465e85d1dec9396994f
+1000-Don-t-allow-clients-to-hold-a-job-open-longer-than-the-multiple-.patch
+# https://github.com/OpenPrinting/cups/commit/7683948211d2ae36a1bc5bd1eab091ca389801ea
+1001-Increase-size-of-supply-level-name-buffer-GHSA-g863-fq3c-86jm.patch
+# https://github.com/OpenPrinting/cups/commit/1ce8bb41d3d39241d7d37f3f8482cb582de8110b
+1002-Increase-space-reservation-to-27-characters-for-resolution-value.patch
+# https://github.com/OpenPrinting/cups/commit/d98a2face6390f88173ceec13e60603effe19530
+1003-Range-limit-supply-level-values-to-avoid-buffer-overflow-GHSA-5c.patch
+# https://github.com/OpenPrinting/cups/commit/4f79650387c5e1fed0573b7b1c549815c82df726
+1004-Only-do-local-authentication-over-the-default-domain-socket-GHSA.patch
+# https://github.com/OpenPrinting/cups/commit/bfdee59c7301a1722fbebf9a4fc87a9816f02324
+1005-Update-the-random-number-generator-used-for-local-certificates-G.patch
+# https://github.com/OpenPrinting/cups/commit/66dcc00b520f589324e27489958410c6aeb4cdeb
+1006-Improve-validation-of-subscription-attributes-GHSA-p6cf-j6h3-rcf.patch
+# https://github.com/OpenPrinting/cups/commit/b52b85906fd889ad3859b0dfcacc9235f5681b44
+1007-Fix-octetString-check-in-get_options.patch
+# https://github.com/OpenPrinting/cups/commit/441cda8da54f3da81850865014fb388fc8a622b8
+1008-Protect-against-Foomatic-driver-vulnerabilities-GHSA-w5p3-jrq8-w.patch
+# https://github.com/OpenPrinting/cups/commit/0beeb4e78730ab11e975d19eaf6bb53679ec6086
+1009-Validate-printer-server-responses-GHSA-hp44-ph36-rc52.patch
+# https://github.com/OpenPrinting/cups/commit/25d68309b1af89c4b003f27f56ab0f8e7a189ea3
+1010-Add-JobTicketComments-directive-fix-job-ticket-comment-support-a.patch
+# https://github.com/OpenPrinting/cups/commit/5d44355084c3efdcdd8729eab65f18635adf6a0c
+1011-Don-t-use-bool-type-in-2.4.x-code.patch
+# https://github.com/OpenPrinting/cups/commit/b268a155d0ce1c1d88b76c758c874cbf1bea1a13
+1012-Make-sure-that-supply-level-names-do-not-contain-newlines-Issue-.patch
+# https://github.com/OpenPrinting/cups/commit/a7a0f4fd4497180aed601836a3159f9f79e4375f
+1013-Fix-build-error.patch
+# https://github.com/OpenPrinting/cups/commit/e195881f4a7179c0caf79a1212894f877b19963c
+1014-Update-list-of-read-only-job-attributes-GHSA-3mc2-9qgx-j5rx.patch
+# https://github.com/OpenPrinting/cups/commit/586fbabcf6603bce630fdf34cfa9e53eddd89019
+1015-Don-t-allow-printer-MIME-media-types-for-print-jobs-GHSA-fw5x-gq.patch
 
 %description
 CUPS is the standards-based, open source printing system developed by

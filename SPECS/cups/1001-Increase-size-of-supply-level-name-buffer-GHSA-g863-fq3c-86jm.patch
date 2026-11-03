@@ -1,0 +1,27 @@
+From 79e7f502e95f8e6515901b52d4f1c610ca8e1fb6 Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Fri, 9 Oct 2026 13:20:50 -0400
+Subject: [PATCH] Increase size of supply level name
+ buffer(GHSA-g863-fq3c-86jm)
+
+Upstream-Commit: 7683948211d2ae36a1bc5bd1eab091ca389801ea
+---
+ backend/snmp-supplies.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/backend/snmp-supplies.c b/backend/snmp-supplies.c
+index 503e641..dde0681 100644
+--- a/backend/snmp-supplies.c
++++ b/backend/snmp-supplies.c
+@@ -448,7 +448,7 @@ backend_init_supplies(
+ 		cachefilename[1024],	/* Cache filename */
+ 		description[CUPS_SNMP_MAX_STRING],
+ 					/* Device description string */
+-		value[CUPS_MAX_SUPPLIES * (CUPS_SNMP_MAX_STRING * 4 + 3)],
++		value[CUPS_MAX_SUPPLIES * (CUPS_SNMP_MAX_STRING * 4 + 5)],
+ 					/* Value string */
+ 		*ptr,			/* Pointer into value string */
+ 		*name_ptr;		/* Pointer into name string */
+-- 
+2.54.0
+
