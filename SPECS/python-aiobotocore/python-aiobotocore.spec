@@ -7,13 +7,13 @@
 %global srcname aiobotocore
 
 Name:           python-%{srcname}
-Version:        3.7.0
+Version:        3.10.0
 Release:        %autorelease
 Summary:        asyncio support for botocore library using aiohttp
 License:        Apache-2.0
 URL:            https://aiobotocore.aio-libs.org/en/latest/
 VCS:            git:https://github.com/aio-libs/aiobotocore.git
-#!RemoteAsset:  sha256:c64d871ed5491a6571948dd48eabd185b46c6c23b64e3afd0c059fc7593ada30
+#!RemoteAsset:  sha256:35480ef11c51e23087273b85d97f80da2f356a46ce5f3fb88e24483cd343ffdb
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
