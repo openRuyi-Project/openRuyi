@@ -11,13 +11,13 @@
 %bcond flatpak 0
 
 Name:           discover
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Software store for the KDE Plasma desktop
 License:        GPL-2.0-only AND GPL-3.0-only AND GPL-3.0-or-later
 URL:            https://apps.kde.org/discover/
 VCS:            git:https://invent.kde.org/plasma/discover.git
-#!RemoteAsset:  sha256:cb9673b1b1815450b128984b9d5abb461ed60eb431ceadcaa41dedf827570baa
+#!RemoteAsset:  sha256:f7f0964994436e714917722c20cd54b8b0276de8f366fd51c685f39bdf046216
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -129,14 +129,21 @@ rm %{buildroot}%{_kf6_applicationsdir}/org.kde.discover.snap.desktop
 %license LICENSES/*
 %dir %{_kf6_plugindir}/discover/
 %{_kf6_applicationsdir}/org.kde.discover.desktop
+%{_kf6_applicationsdir}/org.kde.discover.appstreampreview.desktop
 %{_kf6_applicationsdir}/org.kde.discover.urlhandler.desktop
 %{_kf6_appstreamdir}/org.kde.discover.appdata.xml
+%{_kf6_appstreamdir}/org.kde.discover.appstreampreview.metainfo.xml
 %{_kf6_bindir}/plasma-discover
+%{_kf6_configkcfgdir}/discover-appstream-settings.kcfg
+%{_kf6_configkcfgdir}/discover-updates.kcfg
+%{_kf6_configkcfgdir}/discoversettings-kcm.kcfg
+%{_kf6_configkcfgdir}/discoversettings.kcfg
 %{_kf6_debugdir}/discover.categories
 %{_kf6_iconsdir}/hicolor/*/apps/plasmadiscover.*
 %{_kf6_kxmlguidir}/plasmadiscover/
 %{_kf6_libdir}/plasma-discover/
 %{_kf6_notificationsdir}/discoverabstractnotifier.notifyrc
+%{_kf6_plugindir}/discover/appstream-preview-backend.so
 %{_kf6_plugindir}/discover/kns-backend.so
 %dir %{_kf6_sharedir}/libdiscover
 %dir %{_kf6_sharedir}/libdiscover/categories
