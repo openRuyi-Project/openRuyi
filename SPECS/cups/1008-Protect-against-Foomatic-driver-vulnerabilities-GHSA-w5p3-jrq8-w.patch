@@ -1,0 +1,27 @@
+From 94d618ebeb13e3db6660ded56b061c547dfe2b57 Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Tue, 27 Oct 2026 11:41:25 -0400
+Subject: [PATCH] Protect against Foomatic driver vulnerabilities
+ (GHSA-w5p3-jrq8-wx4v)
+
+Upstream-Commit: 441cda8da54f3da81850865014fb388fc8a622b8
+---
+ scheduler/job.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scheduler/job.c b/scheduler/job.c
+index 4c2b260..e41b34d 100644
+--- a/scheduler/job.c
++++ b/scheduler/job.c
+@@ -5470,7 +5470,7 @@ update_job(cupsd_job_t *job)		/* I - Job to check */
+         * Filter out "special" PPD keywords...
+         */
+ 
+-        if (_cups_strcasecmp(keyword->name, "cupsFilter") && _cups_strcasecmp(keyword->name, "cupsFilter2") && _cups_strcasecmp(keyword->name, "cupsFinishingTemplate") && _cups_strcasecmp(keyword->name, "cupsIPPFinishings") && _cups_strcasecmp(keyword->name, "cupsIPPReason") && _cups_strcasecmp(keyword->name, "cupsMarkerName") && _cups_strcasecmp(keyword->name, "cupsMaxSize") && strncmp(keyword->name, "cupsMediaQualifier", 18) && _cups_strcasecmp(keyword->name, "cupsMinSize") && _cups_strcasecmp(keyword->name, "cupsPageSizeCategory") && _cups_strcasecmp(keyword->name, "cupsPortMonitor") && _cups_strcasecmp(keyword->name, "cupsPreFilter") && _cups_strcasecmp(keyword->name, "cupsPrintQuality") && _cups_strcasecmp(keyword->name, "APPrinterPreset"))
++        if (_cups_strcasecmp(keyword->name, "cupsFilter") && _cups_strcasecmp(keyword->name, "cupsFilter2") && _cups_strcasecmp(keyword->name, "cupsFinishingTemplate") && _cups_strcasecmp(keyword->name, "cupsIPPFinishings") && _cups_strcasecmp(keyword->name, "cupsIPPReason") && _cups_strcasecmp(keyword->name, "cupsMarkerName") && _cups_strcasecmp(keyword->name, "cupsMaxSize") && strncmp(keyword->name, "cupsMediaQualifier", 18) && _cups_strcasecmp(keyword->name, "cupsMinSize") && _cups_strcasecmp(keyword->name, "cupsPageSizeCategory") && _cups_strcasecmp(keyword->name, "cupsPortMonitor") && _cups_strcasecmp(keyword->name, "cupsPreFilter") && _cups_strcasecmp(keyword->name, "cupsPrintQuality") && _cups_strcasecmp(keyword->name, "APPrinterPreset") && _cups_strncasecmp(keyword->name, "Foomatic", 8))
+           job->num_keywords = cupsAddOption(keyword->name, keyword->value, job->num_keywords, &job->keywords);
+       }
+ 
+-- 
+2.54.0
+

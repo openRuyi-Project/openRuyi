@@ -1,0 +1,171 @@
+From 142b4a61dc70c8cff5f05fb621e998ecb8694847 Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 7 Oct 2026 11:59:46 -0400
+Subject: [PATCH] Add JobTicketComments directive, fix job ticket comment
+ support, and disable by default (GHSA-58wv-9ffm-5w78)
+
+Upstream-Commit: 25d68309b1af89c4b003f27f56ab0f8e7a189ea3
+---
+ cups/encode.c                     |  2 ++
+ doc/help/man-cancel.html          |  2 +-
+ doc/help/man-cups-files.conf.html |  8 +++++++-
+ man/cups-files.conf.5             | 15 ++++++++++++---
+ scheduler/conf.c                  |  2 ++
+ scheduler/ipp.c                   |  5 +++--
+ scheduler/job.h                   |  2 ++
+ 7 files changed, 29 insertions(+), 7 deletions(-)
+
+diff --git a/cups/encode.c b/cups/encode.c
+index 3ba525a..9ed75ab 100644
+--- a/cups/encode.c
++++ b/cups/encode.c
+@@ -97,6 +97,8 @@ static const ipp_op_t cups_ppd_name[] =
+ 
+ static const _ipp_option_t ipp_options[] =
+ {
++  { 0, "attributes-charset",	IPP_TAG_CHARSET,	IPP_TAG_ZERO }, /* never send as option */
++  { 0, "attributes-natural-language", IPP_TAG_LANGUAGE,	IPP_TAG_ZERO }, /* never send as option */
+   { 1, "auth-info",		IPP_TAG_TEXT,		IPP_TAG_JOB },
+   { 1, "auth-info-default",	IPP_TAG_TEXT,		IPP_TAG_PRINTER },
+   { 1, "auth-info-required",	IPP_TAG_KEYWORD,	IPP_TAG_PRINTER },
+diff --git a/doc/help/man-cancel.html b/doc/help/man-cancel.html
+index cc8d9f5..2ba9261 100644
+--- a/doc/help/man-cancel.html
++++ b/doc/help/man-cancel.html
+@@ -87,7 +87,7 @@ file for the "Cancel-Jobs" and "Cancel-My-Jobs" operations, respectively.
+ <a href="man-lpstat.html?TOPIC=Man+Pages"><b>lpstat</b>(1),</a>
+ CUPS Online Help (<a href="http://localhost:631/help">http://localhost:631/help</a>)
+ <h2 class="title"><a name="COPYRIGHT">Copyright</a></h2>
+-Copyright &copy; 2020-2026 by OpenPrinting.
++Copyright &copy; 2020-2024 by OpenPrinting.
+ 
+ </body>
+ </html>
+diff --git a/doc/help/man-cups-files.conf.html b/doc/help/man-cups-files.conf.html
+index 5a9ddef..f2537e4 100644
+--- a/doc/help/man-cups-files.conf.html
++++ b/doc/help/man-cups-files.conf.html
+@@ -97,6 +97,12 @@ The <i>kind</i> strings are:
+ <dd style="margin-left: 5.0em">Specifies the group name or ID that will be used when executing external programs.
+ The default group is operating system specific but is usually "lp" or "nobody".
+ </div>
++<dt><a name="JobTicketComments"></a><b>JobTicketComments On</b>
++<dd style="margin-left: 5.0em"><dt><b>JobTicketComments Off</b>
++<dd style="margin-left: 5.0em">Specifies whether to allow job ticket comments in PostScript or PDF files as used by the obsolete Windows CUPS driver.
++The default is to not allow job ticket comments.
++Job ticket comments are a deprecated feature and will be removed in CUPS 2.5.
++</div>
+ <dt><a name="LogFileGroup"></a><b>LogFileGroup </b><i>group-name-or-number</i>
+ <dd style="margin-left: 5.0em">Specifies the group name or ID that will be used for log files.
+ The default group is operating system specific but is usually "lp" or "nobody".
+@@ -214,7 +220,7 @@ command is used instead.
+ <a href="man-subscriptions.conf.html?TOPIC=Man+Pages"><b>subscriptions.conf</b>(5),</a>
+ CUPS Online Help (<a href="http://localhost:631/help">http://localhost:631/help</a>)
+ <h2 class="title"><a name="COPYRIGHT">Copyright</a></h2>
+-Copyright &copy; 2020-2025 by OpenPrinting.
++Copyright &copy; 2020-2026 by OpenPrinting.
+ 
+ </body>
+ </html>
+diff --git a/man/cups-files.conf.5 b/man/cups-files.conf.5
+index 18ce2be..e03f9cd 100644
+--- a/man/cups-files.conf.5
++++ b/man/cups-files.conf.5
+@@ -1,14 +1,14 @@
+ .\"
+ .\" cups-files.conf man page for CUPS.
+ .\"
+-.\" Copyright © 2020-2025 by OpenPrinting.
++.\" Copyright © 2020-2026 by OpenPrinting.
+ .\" Copyright © 2007-2019 by Apple Inc.
+ .\" Copyright © 1997-2006 by Easy Software Products.
+ .\"
+ .\" Licensed under Apache License v2.0.  See the file "LICENSE" for more
+ .\" information.
+ .\"
+-.TH cups-files.conf 5 "CUPS" "2025-10-08" "OpenPrinting"
++.TH cups-files.conf 5 "CUPS" "2026-10-07" "OpenPrinting"
+ .SH NAME
+ cups\-files.conf \- file and directory configuration file for cups
+ .SH DESCRIPTION
+@@ -133,6 +133,15 @@ Bad startup file permissions are fatal, for example shared TLS certificate and k
+ Specifies the group name or ID that will be used when executing external programs.
+ The default group is operating system specific but is usually "lp" or "nobody".
+ .RE
++.\"#JobTicketComments
++.TP 5
++\fBJobTicketComments On\fR
++.TP 5
++\fBJobTicketComments Off\fR
++Specifies whether to allow job ticket comments in PostScript or PDF files as used by the obsolete Windows CUPS driver.
++The default is to not allow job ticket comments.
++Job ticket comments are a deprecated feature and will be removed in CUPS 2.5.
++.RE
+ .\"#LogFileGroup
+ .TP 5
+ \fBLogFileGroup \fIgroup-name-or-number\fR
+@@ -300,4 +309,4 @@ command is used instead.
+ .BR subscriptions.conf (5),
+ CUPS Online Help (http://localhost:631/help)
+ .SH COPYRIGHT
+-Copyright \[co] 2020-2025 by OpenPrinting.
++Copyright \[co] 2020-2026 by OpenPrinting.
+diff --git a/scheduler/conf.c b/scheduler/conf.c
+index fb259ce..1245dfa 100644
+--- a/scheduler/conf.c
++++ b/scheduler/conf.c
+@@ -145,6 +145,7 @@ static const cupsd_var_t	cupsfiles_vars[] =
+   { "DocumentRoot",		&DocumentRoot,		CUPSD_VARTYPE_STRING },
+   { "ErrorLog",			&ErrorLog,		CUPSD_VARTYPE_STRING },
+   { "FileDevice",		&FileDevice,		CUPSD_VARTYPE_BOOLEAN },
++  { "JobTicketComments",	&JobTicketComments,	CUPSD_VARTYPE_BOOLEAN },
+   { "LogFilePerm",		&LogFilePerm,		CUPSD_VARTYPE_PERM },
+   { "PageLog",			&PageLog,		CUPSD_VARTYPE_STRING },
+   { "Printcap",			&Printcap,		CUPSD_VARTYPE_STRING },
+@@ -800,6 +801,7 @@ cupsdReadConfiguration(void)
+ 
+   cupsdSetString(&ErrorPolicy, CUPS_DEFAULT_ERROR_POLICY);
+ 
++  JobTicketComments   = FALSE;
+   JobHistory          = DEFAULT_HISTORY;
+   JobFiles            = DEFAULT_FILES;
+   JobAutoPurge        = 0;
+diff --git a/scheduler/ipp.c b/scheduler/ipp.c
+index 1b6181b..86da1ae 100644
+--- a/scheduler/ipp.c
++++ b/scheduler/ipp.c
+@@ -8982,7 +8982,8 @@ print_job(cupsd_client_t  *con,		/* I - Client connection */
+   * Read any embedded job ticket info from PS files...
+   */
+ 
+-  if (!_cups_strcasecmp(filetype->super, "application") &&
++  if (JobTicketComments &&
++      !_cups_strcasecmp(filetype->super, "application") &&
+       (!_cups_strcasecmp(filetype->type, "postscript") ||
+        !_cups_strcasecmp(filetype->type, "pdf")))
+     read_job_ticket(con);
+@@ -9173,7 +9174,7 @@ read_job_ticket(cupsd_client_t *con)	/* I - Client connection */
+   */
+ 
+   ticket = ippNew();
+-  cupsEncodeOptions(ticket, num_options, options);
++  cupsEncodeOptions2(ticket, num_options, options, IPP_TAG_JOB);
+ 
+  /*
+   * See what the user wants to change.
+diff --git a/scheduler/job.h b/scheduler/job.h
+index 47ea2d6..8226fbf 100644
+--- a/scheduler/job.h
++++ b/scheduler/job.h
+@@ -133,6 +133,8 @@ VAR int			JobKillDelay	VALUE(DEFAULT_TIMEOUT),
+ 					/* Max number of tries */
+ 			JobRetryInterval VALUE(300);
+ 					/* Seconds between retries */
++VAR int			JobTicketComments VALUE(FALSE);
++					/* Allow job ticket comments? */
+ 
+ 
+ /*
+-- 
+2.54.0
+

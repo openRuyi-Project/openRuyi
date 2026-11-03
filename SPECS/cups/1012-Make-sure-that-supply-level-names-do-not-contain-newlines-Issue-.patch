@@ -1,0 +1,45 @@
+From ce125c16977a5a0e48047282953338d7de728d0c Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Thu, 29 Oct 2026 15:45:13 -0400
+Subject: [PATCH] Make sure that supply level names do not contain newlines
+ (Issue #1786)
+
+Upstream-Commit: b268a155d0ce1c1d88b76c758c874cbf1bea1a13
+---
+ backend/snmp-supplies.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/backend/snmp-supplies.c b/backend/snmp-supplies.c
+index f396970..4c904a6 100644
+--- a/backend/snmp-supplies.c
++++ b/backend/snmp-supplies.c
+@@ -725,16 +725,23 @@ backend_init_supplies(
+ 
+     *ptr++ = '\'';
+     *ptr++ = '\"';
+-    for (name_ptr = supplies[i].name; *name_ptr;)
++    for (name_ptr = supplies[i].name; *name_ptr; name_ptr ++)
+     {
+       if (*name_ptr == '\\' || *name_ptr == '\"' || *name_ptr == '\'')
+       {
+         *ptr++ = '\\';
+         *ptr++ = '\\';
+         *ptr++ = '\\';
++	*ptr++ = *name_ptr;
++      }
++      else if (_cups_isspace(*name_ptr))
++      {
++        *ptr++ = ' ';
++      }
++      else if (!_cups_iscntrl(*name_ptr))
++      {
++	*ptr++ = *name_ptr;
+       }
+-
+-      *ptr++ = *name_ptr++;
+     }
+     *ptr++ = '\"';
+     *ptr++ = '\'';
+-- 
+2.54.0
+

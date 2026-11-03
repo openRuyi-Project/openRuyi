@@ -1,0 +1,31 @@
+From 644123ae590a165b7c86cd68c22e10240f15f2ea Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 14 Oct 2026 10:34:00 -0400
+Subject: [PATCH] Increase space reservation to 27 characters for resolution
+ values (GHSA-56v5-mj3w-4f59)
+
+Upstream-Commit: 1ce8bb41d3d39241d7d37f3f8482cb582de8110b
+---
+ scheduler/job.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scheduler/job.c b/scheduler/job.c
+index 5b4f8a4..18a9cb1 100644
+--- a/scheduler/job.c
++++ b/scheduler/job.c
+@@ -4301,10 +4301,10 @@ ipp_length(ipp_t *ipp)			/* I - IPP request */
+       case IPP_TAG_RESOLUTION :
+          /*
+ 	  * A resolution is two signed integers separated by an "x" and
+-	  * suffixed by the units, or 26 characters max.
++	  * suffixed by the units, or 27 characters max.
+ 	  */
+ 
+-	  bytes += (size_t)attr->num_values * 26;
++	  bytes += (size_t)attr->num_values * 27;
+ 	  break;
+ 
+       case IPP_TAG_STRING :
+-- 
+2.54.0
+
