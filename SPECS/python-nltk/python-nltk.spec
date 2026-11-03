@@ -8,12 +8,12 @@
 %global srcname nltk
 
 Name:           python-%{srcname}
-Version:        3.10.3
+Version:        3.10.4
 Release:        %autorelease
 Summary:        Natural Language Toolkit
 License:        Apache-2.0
 URL:            https://www.nltk.org/
-#!RemoteAsset:  sha256:bb9327a461c3811c2fa4900e03840401f2126adfb30c0072827c433bd2444ea4
+#!RemoteAsset:  sha256:44679f4e9220abfd496d2c8cdb22f8425ccbe557604f9aa5cacb1c44003dabc1
 Source0:        https://files.pythonhosted.org/packages/source/n/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -48,27 +48,6 @@ BuildRequires:  python3dist(wheel)
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
-%patchlist
-# CVE-2026-81726 / GHSA-8mgp-746c-j5xp
-# Minimal prerequisites for the upstream security commits below.
-# https://github.com/nltk/nltk/commit/99ead96679eecec5a3b95fe6caaf2c1b29107b44
-# https://github.com/nltk/nltk/commit/479060632c9642983eaa4a8849875967489d5ce5
-# https://github.com/nltk/nltk/commit/f1b96e145ce8d525fb02cc481906147e5934cd06
-# https://github.com/nltk/nltk/commit/9e6d5f05902b9aaa1221a0a565448d17a9c9b3e8
-# https://github.com/nltk/nltk/commit/1504cccb117714a117730586f2dfe3b29bb150fc
-# https://github.com/nltk/nltk/commit/3a8069fa00d98d467164fbec87e4c39b2f16c970
-# https://github.com/nltk/nltk/commit/25b5d614c7e81254c4ad7553d9ae45a4208abd1b
-1000-CVE-2026-81726-backport-security-helpers.patch
-# https://github.com/nltk/nltk/pull/3759
-# https://github.com/nltk/nltk/commit/2a92b71827d754ae8920261e7ed0c4bb283ab2d7
-1001-CVE-2026-81726-harden-maxent-model-saves.patch
-# https://github.com/nltk/nltk/pull/3757
-# https://github.com/nltk/nltk/commit/a44a7af69bca87e92d9c4a701fcbbe4512e8d450
-1002-CVE-2026-81726-harden-transitionparser-pickle.patch
-# https://github.com/nltk/nltk/pull/3813
-# https://github.com/nltk/nltk/commit/cbc98458b43de5f792f0382583c16df39e5c5117
-1003-CVE-2026-81726-harden-tagger-model-paths.patch
-
 %description
 NLTK provides a broad collection of libraries and tools for natural language
 processing.
@@ -78,7 +57,8 @@ processing.
 
 %check -a
 %pytest -q \
-    nltk/test/unit/test_maxent_ne_save_security.py \
+    nltk/test/unit/test_maxent_save_security.py \
+    nltk/test/unit/test_pathsec_sweep_chunk.py \
     nltk/test/unit/test_pickle_allowlist_security.py::test_allowlist_blocks_unlisted_global \
     nltk/test/unit/test_pickle_allowlist_security.py::test_transitionparser_loads_legitimate_model \
     nltk/test/unit/test_pickle_allowlist_security.py::test_transitionparser_rejects_malicious_model \
