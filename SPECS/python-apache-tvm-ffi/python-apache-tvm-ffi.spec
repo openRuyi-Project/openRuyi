@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: CHEN Xuan <chenxuan@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name apache_tvm_ffi
 
 Name:           python-%{srcname}
-Version:        0.1.10
+Version:        0.1.11
 Release:        %autorelease
 Summary:        Open ABI and FFI for machine learning systems
 License:        Apache-2.0
 URL:            https://tvm.apache.org/ffi/
 VCS:            git:https://github.com/apache/tvm-ffi.git
-#!RemoteAsset:  sha256:974c208766c304c780c17c6d405449e862f83b22c7b6b2b8c28b29d55a806ae3
+#!RemoteAsset:  sha256:153cd2c5a9717804cb0bcd9b2709f22a1e5f80ed05b5a490faf5949b136eedba
 Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -29,6 +30,7 @@ BuildRequires:  cmake
 BuildRequires:  gcc-c++
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(pytest)
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  python3dist(cython)
 BuildRequires:  python3dist(scikit-build-core) >= 0.10
