@@ -1,0 +1,50 @@
+From 5c8d33f64b94f8e34ceba835752e376038343a0c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 03:25:28 +0800
+Subject: [PATCH] Resolve requested system libraries in the consuming CMake
+ scope
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ CMakeLists.txt             | 11 +++++++++++
+ third_party/CMakeLists.txt |  8 ++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6b30c8..0c36291 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,6 +42,17 @@ set(ANTLR4_WITH_STATIC_CRT OFF)
+ # include directive needed in more recent Visual Studio releases
+ set(ANTLR4_TAG df4d68c09cdef73e023b8838a8bc7ca4dff1d1de)
+ set(LIBXML2_TAG tags/v2.9.13)
++if(DEFINED ENV{FORCE_SYSTEM_ANTLR4})
++    find_package(antlr4-runtime CONFIG REQUIRED)
++    if(TARGET antlr4_shared)
++        add_library(afdko::antlr4 ALIAS antlr4_shared)
++    else()
++        add_library(afdko::antlr4 ALIAS antlr4_static)
++    endif()
++endif()
++if(DEFINED ENV{FORCE_SYSTEM_LIBXML2})
++    find_package(LibXml2 REQUIRED)
++endif()
+ add_subdirectory(third_party)
+ 
+ # ============================================================================
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index cb703f7..3975118 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -1,2 +1,6 @@
+-add_subdirectory(antlr4cpp)
+-add_subdirectory(LibXml2)
++if(NOT TARGET afdko::antlr4)
++    add_subdirectory(antlr4cpp)
++endif()
++if(NOT TARGET LibXml2::LibXml2)
++    add_subdirectory(LibXml2)
++endif()
+-- 
+2.54.0
+
