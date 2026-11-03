@@ -1,13 +1,14 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
+# SPDX-FileCopyrightText: (C) 2025, 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Julian Zhu <julian.oe@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define ssletcdir %{_sysconfdir}/pki/tls
-%define sonum 3
+%define sonum 4
 
 %bcond lto 0
 %if %{with lto}
@@ -17,13 +18,13 @@
 %global _test_target test
 
 Name:           openssl
-Version:        3.6.5
+Version:        4.1.0
 Release:        %autorelease
 Summary:        Cryptography and SSL/TLS Toolkit
 License:        Apache-2.0
 URL:            https://www.openssl.org/
 VCS:            git:https://github.com/openssl/openssl.git
-#!RemoteAsset:  sha256:a2157c2830efdec3788939b00c9b0638306d3f0bbb76dc4832ee503bb397df98
+#!RemoteAsset:  sha256:50c17baf54cb008f6ce42d50deb4b28050a1aad711636cabd4b241c7e90cc2fd
 Source:         https://www.openssl.org/source/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -35,6 +36,10 @@ BuildRequires:  perl
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(zlib)
 
+%patchlist
+# Use the shared jitterentropy library instead of static
+0001-openssl-shared-jitterentropy.patch
+
 %description
 OpenSSL is a software library to be used in applications that need to
 secure communications over computer networks against eavesdropping or
@@ -44,29 +49,6 @@ OpenSSL contains an implementation of the SSL and TLS protocols.
 %package        devel
 Summary:        Development files for building with OpenSSL
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%patchlist
-# Use the shared jitterentropy library instead of static
-0001-openssl-shared-jitterentropy.patch
-# https://github.com/openssl/openssl/pull/30787
-0004-RISC-V-Port-dot-asm-ChaCha20-assembly-implementation.patch
-# https://github.com/openssl/openssl/pull/31178
-0005-RISC-V-GHASH-multi-block-aggregation.patch
-0006-RISC-V-GHASH-Zvbc-multi-block-aggregation.patch
-0007-RISC-V-GHASH-Zvkg-multi-block-aggregation.patch
-# https://github.com/openssl/openssl/pull/28673
-0008-Backport-Instruction-rearrangement-optimization-for-SHA256-on-RISCV.patch
-# https://github.com/openssl/openssl/pull/30194
-0009-Backport-riscv-AES-XTS-Code-Comment-Correction.patch
-# https://github.com/openssl/openssl/pull/29134
-# https://github.com/openssl/openssl/pull/29137
-# https://github.com/openssl/openssl/pull/29451
-# https://github.com/openssl/openssl/pull/29544
-0010-Backport-riscv-Performance-Optimization-of-SM4-CBC-on-RISC-V-Architecture.patch
-# https://github.com/openssl/openssl/pull/31116
-0011-Backport-riscv-Further-improve-the-decryption-performance-of-AES-128-CBC-on-RISC-V.patch
-# https://github.com/openssl/openssl/pull/25918
-0012-Add-SM2-implementation-in-generic-riscv64-asm.patch
 
 %description    devel
 This package contains the header files, pkgconfig/cmake files, development
@@ -139,16 +121,14 @@ mv %{buildroot}/%{ssletcdir}/misc %{buildroot}/%{_datadir}/ssl/
 find demos -type f -perm /111 -exec chmod 644 {} +
 
 %files
-%license LICENSE.txt
 %doc NEWS.md README.md
+%license LICENSE.txt
 # Runtime libraries
 %{_libdir}/libcrypto.so.%{sonum}
 %{_libdir}/libssl.so.%{sonum}
 # Command-line tool
 %{_bindir}/openssl
-%{_bindir}/c_rehash
-# Engines and modules
-%{_libdir}/engines-3/
+# Modules
 %{_libdir}/ossl-modules/
 %dir %{ssletcdir}
 # Configuration files and directories
@@ -180,7 +160,7 @@ find demos -type f -perm /111 -exec chmod 644 {} +
 %{_datadir}/ssl/misc
 
 %files doc
-%{_datadir}/doc/openssl/html/
+%{_datadir}/doc/%{name}/html/
 
 %changelog
 %autochangelog
