@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           powerdevil
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        KDE Power Management module
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/powerdevil.git
-#!RemoteAsset:  sha256:d18808b344af12baae5f20f373ecf129e5caaf3fe757f6829899d2cce899831b
+#!RemoteAsset:  sha256:667bac22a35bf6b572904ec2b56595be1766fe465e2bea9bab3e3d0e826d373e
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -52,7 +52,7 @@ BuildRequires:  cmake(KF6Solid) >= %{kf6_version}
 BuildRequires:  cmake(KF6XmlGui) >= %{kf6_version}
 BuildRequires:  cmake(LibKWorkspace) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaActivities) >= %{_plasma6_bugfix}
-BuildRequires:  cmake(PlasmaWaylandProtocols)
+BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.22.0
 BuildRequires:  cmake(QCoro6)
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
 BuildRequires:  cmake(Qt6WaylandClient) >= %{qt6_version}
