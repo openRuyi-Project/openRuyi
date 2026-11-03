@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-nm
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plasma applet written in QML for managing network connections
 License:        (GPL-2.0-only OR GPL-3.0-only) AND (LGPL-2.1-only OR LGPL-3.0-only)
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-nm.git
-#!RemoteAsset:  sha256:7fc94b5862d5ee7abf922712c19ffae054773e8b7d12f5d21ecd5161973027d9
+#!RemoteAsset:  sha256:10553099455981033f50cdab7ea40c50067486eff438b5aca94e451ec166b7cd
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
