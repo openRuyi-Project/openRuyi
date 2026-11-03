@@ -1,0 +1,35 @@
+diff --git a/Configurations/00-base-templates.conf b/Configurations/00-base-templates.conf
+index 86287c3..4852fa0 100644
+--- a/Configurations/00-base-templates.conf
++++ b/Configurations/00-base-templates.conf
+@@ -107,7 +107,7 @@ my %targets=(
+         ex_libs         =>
+             sub {
+                 my @libs = ();
+-                push(@libs, "-l:libjitterentropy.a") if !defined($disabled{jitter});
++                push(@libs, "-l:libjitterentropy.so") if !defined($disabled{jitter});
+                 push(@libs, "-lz") if !defined($disabled{zlib}) && defined($disabled{"zlib-dynamic"});
+                 if (!defined($disabled{brotli}) && defined($disabled{"brotli-dynamic"})) {
+                     push(@libs, "-lbrotlienc");
+diff --git a/apps/openssl.cnf b/apps/openssl.cnf
+index abace0e..c41669c 100644
+--- a/apps/openssl.cnf
++++ b/apps/openssl.cnf
+@@ -52,6 +52,7 @@ tsa_policy3 = 1.2.3.4.5.7
+ 
+ [openssl_init]
+ providers = provider_sect
++random = random
+ 
+ # List of providers to load
+ [provider_sect]
+@@ -60,6 +61,9 @@ default = default_sect
+ # included fipsmodule.cnf.
+ # fips = fips_sect
+ 
++[random]
++seed=JITTER
++
+ # If no providers are activated explicitly, the default one is activated implicitly.
+ # See man 7 OSSL_PROVIDER-default for more details.
+ #
