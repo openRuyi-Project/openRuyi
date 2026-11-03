@@ -19,13 +19,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-desktop
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        The KDE Plasma Workspace Components
 License:        GPL-2.0-only
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-desktop.git
-#!RemoteAsset:  sha256:9c93dd185dbe761130f871e15c68896e4d740b987d779137c30f846e7926754f
+#!RemoteAsset:  sha256:56b95785fe46a046728357fcad88d96063eee3a5474047f59863785973a20b55
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -90,6 +90,7 @@ BuildRequires:  cmake(PlasmaActivities) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaActivitiesStats) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaQuick) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaWaylandProtocols) >= 1.10.0
+BuildRequires:  cmake(PolkitQt6-1)
 BuildRequires:  cmake(Qt6Concurrent) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Core5Compat) >= %{qt6_version}
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
@@ -197,17 +198,8 @@ Plasma Input Method Backend for SCIM (Smart Chinese/Common Input Method) support
 %endif
 
 %install -a
-# no devel files needed here
-rm -rv %{buildroot}%{_kf6_sharedir}/dbus-1/interfaces/
-
 # Use langpacks macro to auto-split translations
 %find_lang %{name} --with-qt --all-name --with-html --generate-subpackages
-# Manually put these non-locale format lang files into the subpackage meta.
-sed -i '/_langpack_template sr/a\
-%%lang(sr) /usr/share/locale/sr/LC_SCRIPTS/kfontinst/kfontinst.js\
-%%lang(sr@ijekavian) /usr/share/locale/sr@ijekavian/LC_SCRIPTS/kfontinst/kfontinst.js\
-%%lang(sr@ijekavianlatin) /usr/share/locale/sr@ijekavianlatin/LC_SCRIPTS/kfontinst/kfontinst.js\
-%%lang(sr@latin) /usr/share/locale/sr@latin/LC_SCRIPTS/kfontinst/kfontinst.js' ../SPECPARTS/find-lang-%{name}.lang.specpart
 
 %post
 %systemd_user_post plasma-kaccess.service
@@ -219,7 +211,7 @@ sed -i '/_langpack_template sr/a\
 %systemd_user_postun plasma-kaccess.service
 
 %files -f %{name}.lang
-%docdir %{_kf6_htmldir}/en/*
+%doc %lang(en) %{_kf6_htmldir}/en/*/
 %license COPYING*
 %{_kf6_applicationsdir}/kaccess.desktop
 %{_kf6_applicationsdir}/kcm_access.desktop
@@ -244,7 +236,7 @@ sed -i '/_langpack_template sr/a\
 %{_kf6_applicationsdir}/kcm_tablet.desktop
 %{_kf6_applicationsdir}/kcm_touchscreen.desktop
 %{_kf6_applicationsdir}/kcm_workspace.desktop
-%{_kf6_applicationsdir}/kcmspellchecking.desktop
+%{_kf6_applicationsdir}/kcm_spellchecking.desktop
 %{_kf6_applicationsdir}/kde-mimeapps.list
 %{_kf6_applicationsdir}/org.kde.knetattach.desktop
 %{_kf6_applicationsdir}/kcm_mouse.desktop
@@ -268,10 +260,10 @@ sed -i '/_langpack_template sr/a\
 %{_kf6_plasmadir}/shells/
 %{_kf6_plugindir}/attica_kde.so
 %{_kf6_plugindir}/kf6/kded/device_automounter.so
-%{_kf6_plugindir}/kf6/kded/keyboard.so
-%{_kf6_plugindir}/kf6/kded/kded_touchpad.so
+%{_kf6_plugindir}/kf6/kded/screenreader.so
 %{_kf6_plugindir}/kf6/krunner/
 %{_kf6_plugindir}/plasma/applets/org.kde.panel.so
+%{_kf6_plugindir}/plasma/applets/org.kde.plasma.dwellclicker.so
 %{_kf6_plugindir}/plasma/applets/org.kde.plasma.keyboardlayout.so
 %{_kf6_plugindir}/plasma/applets/org.kde.plasma.kicker.so
 %{_kf6_plugindir}/plasma/applets/org.kde.plasma.kickoff.so
@@ -291,9 +283,6 @@ sed -i '/_langpack_template sr/a\
 %if %{have_gamecontroller_kcm}
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_gamecontroller.so
 %endif
-%dir %{_kf6_plugindir}/plasma/kcminit
-%{_kf6_plugindir}/plasma/kcminit/kcm_mouse_init.so
-%{_kf6_plugindir}/plasma/kcminit/kcm_touchpad_init.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_mouse.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_touchpad.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings/kcm_kded.so
@@ -311,7 +300,7 @@ sed -i '/_langpack_template sr/a\
 %{_kf6_plugindir}/plasma/kcms/systemsettings_qwidgets/kcm_qtquicksettings.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings_qwidgets/kcm_recentFiles.so
 %{_kf6_plugindir}/plasma/kcms/systemsettings_qwidgets/kcm_solid_actions.so
-%{_kf6_plugindir}/plasma/kcms/systemsettings_qwidgets/kcmspellchecking.so
+%{_kf6_plugindir}/plasma/kcms/systemsettings_qwidgets/kcm_spellchecking.so
 %{_kf6_qmldir}/org/kde/plasma/
 %{_kf6_qmldir}/org/kde/private/
 %dir %{_kf6_sharedir}/accounts/
@@ -326,6 +315,11 @@ sed -i '/_langpack_template sr/a\
 %{_kf6_sharedir}/kcmsolidactions/
 %{_kf6_sharedir}/kconf_update/50-krunner-activate-typing.sh
 %{_kf6_sharedir}/kconf_update/50-krunner-activate-typing.upd
+%{_kf6_sharedir}/locale/sr/LC_SCRIPTS/kfontinst/kfontinst.js
+%{_kf6_sharedir}/locale/sr@ijekavian/LC_SCRIPTS/kfontinst/kfontinst.js
+%{_kf6_sharedir}/locale/sr@ijekavianlatin/LC_SCRIPTS/kfontinst/kfontinst.js
+%{_kf6_sharedir}/locale/sr@latin/LC_SCRIPTS/kfontinst/kfontinst.js
+%{_kf6_sharedir}/kglobalaccel/org.kde.screenreader.desktop
 %{_kf6_sharedir}/kglobalaccel/org.kde.touchpadshortcuts.desktop
 %dir %{_kf6_sharedir}/sddm
 %dir %{_kf6_sharedir}/sddm/themes
