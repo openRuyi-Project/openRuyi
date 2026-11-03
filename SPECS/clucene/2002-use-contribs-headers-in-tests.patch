@@ -1,0 +1,30 @@
+From 8a9b045fb07f458902be22798444bce36b8a2a0f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Use the source-relative contribs include path in its tests
+
+The tests are configured before the contribs subproject defines its
+source directory. Resolve the contribs headers relative to the test
+source directory.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/test/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/test/CMakeLists.txt b/src/test/CMakeLists.txt
+index 33fcaa1..c4c2f90 100644
+--- a/src/test/CMakeLists.txt
++++ b/src/test/CMakeLists.txt
+@@ -21,7 +21,7 @@ IF ( BUILD_CONTRIBS_LIB )
+     SET(test_contribs_lib_files ./contribs-lib/analysis/de/TestGermanStemFilter.cpp)
+     SET(EXTRA_LIBS ${EXTRA_LIBS} clucene-contribs-lib)
+     ADD_DEFINITIONS(-DTEST_CONTRIB_LIBS)
+-    INCLUDE_DIRECTORIES(${clucene-test_SOURCE_DIR} ${clucene-contribs-lib_SOURCE_DIR})
++    INCLUDE_DIRECTORIES(${clucene-test_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../contribs-lib)
+ 	
+     SOURCE_GROUP("contribs-lib" REGULAR_EXPRESSION ./contribs-lib/*)
+     SOURCE_GROUP("contribs-lib\\analysis" REGULAR_EXPRESSION ./contribs-lib/analysis/*)
+-- 
+2.54.0
+
