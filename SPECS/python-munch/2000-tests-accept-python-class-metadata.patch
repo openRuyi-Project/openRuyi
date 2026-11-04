@@ -1,0 +1,25 @@
+From 85e0015855773805bc154435a8ff4afaf9c587fe Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 23:48:50 +0800
+Subject: [PATCH] tests: Accept Python class metadata in reserved attributes
+
+Python 3.13 adds __firstlineno__ and __static_attributes__ to classes. Check their types alongside the other non-callable reserved attributes.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ tests/test_munch.py | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tests/test_munch.py b/tests/test_munch.py
+index c80b757..85e8a2f 100644
+--- a/tests/test_munch.py
++++ b/tests/test_munch.py
+@@ -226,4 +226,8 @@ def test_reserved_attributes(attrname):
+     elif attrname == '__dict__':
+         assert attr == {}
++    elif attrname == '__firstlineno__':
++        assert isinstance(attr, int)
++    elif attrname == '__static_attributes__':
++        assert isinstance(attr, tuple)
+     else:
+         assert callable(attr)
