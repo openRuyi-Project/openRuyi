@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# 75 failed, 1248 passed, 510 errors - 251
+# Keep the full pytest suite opt-in; the default build checks Python imports.
 %bcond check 0
 %bcond docs 0
 %bcond containers 0
@@ -13,27 +14,33 @@
 %bcond pxeboot 0
 
 Name:           kiwi
-Version:        10.2.42
+Version:        11.1.6
 Release:        %autorelease
 Summary:        Flexible operating system image builder
 License:        GPL-3.0-or-later
 URL:            http://osinside.github.io/kiwi/
 VCS:            git:https://github.com/OSInside/kiwi.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:9898e3ba141d10ab9ad0e9881fbe096110dd54d758808a3f78de52d53abae5d7
 Source0:        https://files.pythonhosted.org/packages/source/k/%{name}/%{name}-%{version}.tar.gz
+BuildSystem:    pyproject
 
 %if %{without docs}
-Patch0:         2000-optional-manpage.patch
+# The PyPI source archive does not contain generated man pages.
+Patch2000:      2000-optional-manpage.patch
 %endif
 
+BuildOption(install):  -l kiwi
+
+BuildRequires:  pyproject-rpm-macros
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  dracut
 BuildRequires:  fdupes
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  pkgconfig(python3)
-BuildRequires:  pyproject-rpm-macros
 BuildRequires:  shadow
+BuildRequires:  python3dist(pip) >= 19
+BuildRequires:  python3dist(poetry-core) >= 1.2.0
 # for docs
 %if %{with docs}
 BuildRequires:  python3dist(sphinx)
@@ -44,8 +51,8 @@ BuildRequires:  python3dist(sphinx-rtd-theme)
 BuildRequires:  python3dist(pytest)
 %endif
 
-Requires:      %{name}-systemdeps = %{version}-%{release}
-Requires:      python3dist(kiwi)
+Requires:       %{name}-systemdeps = %{version}-%{release}
+Requires:       python3dist(kiwi)
 
 %description
 KIWI is a powerful, command-line-driven tool that allows you to create
@@ -317,29 +324,25 @@ This package contains the kiwi-verity dracut module which is used for
 booting oem images built with KIWI and configured to use an embedded verity
 metadata block via the embed_verity_metadata type attribute.
 
-%prep
-%autosetup -p1
-
+%prep -a
 # Drop shebang for kiwi/xml_parse.py, as we don't intend to use it as an independent script
 sed -e "s|#!/usr/bin/env python||" -i kiwi/xml_parse.py
 
 %generate_buildrequires
 %pyproject_buildrequires
 
-%build
-%pyproject_wheel
-
 %if %{with docs}
+%build -a
 # Build docs
 make -C doc man
 %endif
 
-%install
-%pyproject_install
-
+%install -a
 # DO NOT REMOVE THE SLASH HERE!
 # man-pages, completion and kiwi default configuration
 make buildroot=%{buildroot}/ install
+# Keep the existing administrator configuration path for RPM upgrades.
+install -pm 0644 kiwi.yml %{buildroot}%{_sysconfdir}/kiwi.yml
 # dracut modules
 make buildroot=%{buildroot}/ install_dracut
 # other docs
@@ -365,7 +368,8 @@ done
 %endif
 
 %if %{with check}
-%check
+%check -a
+# Run the full upstream Python test suite when explicitly enabled.
 %pytest
 %endif
 
@@ -401,10 +405,12 @@ done
 
 %files systemdeps
 
-%files -n python-%{name}
+%files -n python-%{name} -f %{pyproject_files}
+%doc %{_datadir}/kiwi/kiwi.yml.example
 %license LICENSE
-%{python3_sitelib}/kiwi*/
+%dir %{_sysconfdir}/kiwi.yml.d
 %dir %{_datadir}/kiwi
+%dir %{_datadir}/kiwi/kiwi.yml.d
 %{_datadir}/kiwi/xsl_to_v74/
 
 %if %{with pxeboot}
@@ -441,4 +447,4 @@ done
 %{_bindir}/kiwi-parse-verity
 
 %changelog
-%{?autochangelog}
+%autochangelog
