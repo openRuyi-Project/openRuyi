@@ -1,0 +1,47 @@
+From feb6ce62a14c68718b37341304472ea9dcae5255 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 21:20:08 +0800
+Subject: [PATCH] tests: dd: allow 4 KiB alignment for direct I/O
+
+The direct output probe uses 512-byte blocks, which fail with EINVAL on OBS workers that accept 4 KiB writes. Fall back to 4 KiB blocks and keep testing input shorter than one block and input on either side of the 8192-byte boundary.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ tests/dd/direct.sh | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/tests/dd/direct.sh b/tests/dd/direct.sh
+index 55e6f32..5478cdf 100755
+--- a/tests/dd/direct.sh
++++ b/tests/dd/direct.sh
+@@ -20,16 +20,22 @@
+ print_ver_ dd
+ 
+ truncate -s 8192 in || framework_failure_
+-dd if=in oflag=direct of=out 2> /dev/null \
+-  || skip_ '512 byte aligned O_DIRECT is not supported on this (file) system'
+-
+-truncate -s 511 short || framework_failure_
++block_size=512
++if ! dd if=in of=out ibs=$block_size obs=$block_size oflag=direct 2> /dev/null; then
++  # Some filesystems require 4 KiB alignment for direct I/O.
++  block_size=4096
++  dd if=in of=out ibs=$block_size obs=$block_size oflag=direct \
++    || skip_ 'neither 512 byte nor 4 KiB aligned O_DIRECT writes succeeded'
++fi
++
++truncate -s $((block_size - 1)) short || framework_failure_
+ truncate -s 8191 m1 || framework_failure_
+ truncate -s 8193 p1 || framework_failure_
+ 
+ for i in short m1 p1; do
+   rm -f out
+-  dd if=$i iflag=direct oflag=direct of=out || fail=1
++  dd if=$i of=out ibs=$block_size obs=$block_size \
++    iflag=direct oflag=direct || fail=1
+ done
+ 
+ Exit $fail
+-- 
+2.54.0
+

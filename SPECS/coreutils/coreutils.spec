@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,6 +16,9 @@ VCS:            git:https://github.com/coreutils/coreutils.git
 #!RemoteAsset:  sha256:394024eda0a5955217ceda9cd1201e65dc8fa3aa29c2951135a49521d57c3cc3
 Source0:        https://ftpmirror.gnu.org/gnu/coreutils/coreutils-%{version}.tar.xz
 BuildSystem:    autotools
+
+# Allow the direct I/O test to run on filesystems requiring 4 KiB writes.
+Patch2000:      2000-dd-test-direct-io-alignment.patch
 
 BuildOption(conf):  DEFAULT_POSIX2_VERSION=200112
 BuildOption(conf):  --enable-no-install-program=kill
