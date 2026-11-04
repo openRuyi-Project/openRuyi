@@ -30,6 +30,8 @@ BuildRequires:  libomp%{maj_ver}-devel
 BuildRequires:  llvm-bolt%{maj_ver}
 BuildRequires:  lld%{maj_ver}
 BuildRequires:  lldb%{maj_ver}
+BuildRequires:  python-clang%{maj_ver}
+BuildRequires:  python3-rpm-macros
 # Generate virtual cmake(xx) provides
 BuildRequires:  cmake
 
@@ -86,6 +88,17 @@ Provides:       cmake(Clang) = %{maj_ver}
 %description -n clang-devel
 This package provides default unversioned symlinks for clang %{maj_ver}
 development tools, creating symlinks like /usr/bin/clang-tblgen -> clang-tblgen-22.
+
+# ============================================================================
+# clang-devel subpackage
+# ============================================================================
+%package     -n python-clang
+Summary:        Default symlinks for clang python bindings
+Requires:       python-clang%{maj_ver} > %{maj_ver}
+Provides:       python3-clang = %{maj_ver}
+
+%description -n python-clang
+This package provides default symlinks for clang python bindings.
 
 # ============================================================================
 # clang-tools-extra subpackage
@@ -356,6 +369,10 @@ ln -sf lldb-instr-%{maj_ver} %{buildroot}%{_bindir}/lldb-instr
 ln -sf lldb-server-%{maj_ver} %{buildroot}%{_bindir}/lldb-server
 ln -sf lldb-mcp-%{maj_ver} %{buildroot}%{_bindir}/lldb-mcp
 
+# python-clang
+mkdir -p %{buildroot}%{_libdir}/python%{python3_version}/site-packages/
+ln -sf ../../llvm%{maj_ver}/lib/python%{python3_version}/site-packages/clang %{buildroot}%{_libdir}/python%{python3_version}/site-packages/
+
 # Install macros
 # RPM macros for the default Clang toolchain.
 # Query the version from the installed clang package, so llvm-defaults
@@ -509,6 +526,9 @@ fi
 %{_bindir}/lldb-instr
 %{_bindir}/lldb-server
 %{_bindir}/lldb-mcp
+
+%files -n python-clang
+%{_libdir}/python%{python3_version}/site-packages/clang
 
 %changelog
 %autochangelog
