@@ -24,9 +24,14 @@ jobs:
         fetch-depth: 0
     - name: Install tools
       run: |
-        echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
-        wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
-        sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
+        . /etc/os-release
+        obs_repo="https://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_${VERSION_ID}"
+        sudo install -d -m 0755 /etc/apt/keyrings
+        sudo wget -qO /etc/apt/keyrings/obs.asc "${obs_repo}/Release.key"
+        sudo chmod 0644 /etc/apt/keyrings/obs.asc
+        echo "deb [signed-by=/etc/apt/keyrings/obs.asc] ${obs_repo}/ /" | sudo tee /etc/apt/sources.list.d/obs.list
+        sudo apt-get update
+        sudo apt-get install -y osc obs-build libwww-perl libxml-parser-perl
     - name: Setup osc config
       run: |
         set -x
