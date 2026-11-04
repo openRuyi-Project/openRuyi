@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -12,19 +13,17 @@
 %global firewall_backend_priority nftables,iptables
 
 Name:           libvirt
-Version:        12.2.0
+Version:        12.9.0
 Release:        %autorelease
 Summary:        Library providing a simple virtualization API
 License:        GPL-2.0-or-later AND LGPL-2.1-only AND LGPL-2.1-or-later AND OFL-1.1
 URL:            https://libvirt.org
 VCS:            git:https://gitlab.com/libvirt/libvirt.git
-#!RemoteAsset:  sha256:ac93cd0da743a6c231911fb549399b415102ecfee775329bebbf61ed843b9786
+#!RemoteAsset:  sha256:dcf579d8a949f4cbf56820529d48f200382a48ea12855ffded7c16a189353cd7
 Source0:        https://libvirt.org/sources/%{name}-%{version}.tar.xz
+# Upstream src/qemu/libvirt-qemu.sysusers.conf for pre-install account creation.
+Source1:        libvirt-qemu.sysusers
 BuildSystem:    meson
-
-# Ceph 21 removed auth_supported, rbd storage pools fail to start
-# From https://gitlab.com/libvirt/libvirt/-/commit/3af8cc51d5f596866cf971b750a0546c0205cf02
-Patch1000:      1000-replace-rbd-option-auth_supported.patch
 
 BuildOption(conf):  -Dsystem=true
 BuildOption(conf):  -Dno_git=true
@@ -88,10 +87,10 @@ BuildRequires:  pkgconfig(bash-completion)
 BuildRequires:  pkgconfig(blkid)
 BuildRequires:  pkgconfig(devmapper)
 BuildRequires:  pkgconfig(fuse3)
-BuildRequires:  pkgconfig(gio-unix-2.0) >= 2.66
-BuildRequires:  pkgconfig(glib-2.0) >= 2.66
+BuildRequires:  pkgconfig(gio-unix-2.0) >= 2.68
+BuildRequires:  pkgconfig(glib-2.0) >= 2.68
 BuildRequires:  pkgconfig(glusterfs-api) >= 3.4.1
-BuildRequires:  pkgconfig(gobject-2.0) >= 2.66
+BuildRequires:  pkgconfig(gobject-2.0) >= 2.68
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  pkgconfig(json-c)
 BuildRequires:  pkgconfig(libacl)
@@ -149,6 +148,7 @@ through libvirt. This package pulls in the supported daemon driver packages.
 
 %package        daemon-driver-qemu
 Summary:        QEMU driver for libvirt
+Requires(pre):  systemd-sysusers
 Requires:       %{name}-client%{_isa} = %{version}-%{release}
 Requires:       bzip2
 Requires:       gzip
@@ -210,12 +210,16 @@ This package contains the header files and pkg-config files needed to develop
 applications using libvirt.
 
 %install -a
+cmp %{SOURCE1} %{buildroot}%{_sysusersdir}/libvirt-qemu.conf
 %find_lang %{name}
+
+%pre daemon-driver-qemu
+%sysusers_create_package libvirt-qemu %{SOURCE1}
 
 %files -f %{name}.lang
 %doc AUTHORS.rst CONTRIBUTING.rst NEWS.rst README.rst
-%doc %{_docdir}/%{name}/examples/
-%doc %{_docdir}/%{name}/html/
+%doc %{_docdir}/libvirt/examples/
+%doc %{_docdir}/libvirt/html/
 %license COPYING COPYING.LESSER
 
 %files client
@@ -223,11 +227,14 @@ applications using libvirt.
 %{_bindir}/virt-admin
 %{_bindir}/virt-host-validate
 %{_bindir}/virt-login-shell
+%{_bindir}/virt-pki-query-dn
 %{_bindir}/virt-pki-validate
+%{_bindir}/virt-ssh-helper
 %{_bindir}/virt-xml-validate
 %{_libexecdir}/virt-login-shell-helper
 %{_libdir}/libvirt*.so.*
 %{_datadir}/bash-completion/completions/virsh
+%{_datadir}/bash-completion/completions/virt-admin
 %{_mandir}/man1/virsh.1*
 %{_mandir}/man1/virt-admin.1*
 %{_mandir}/man1/virt-host-validate.1*
@@ -242,13 +249,13 @@ applications using libvirt.
 
 %files daemon
 %{_sbindir}/libvirtd
-%{_datadir}/bash-completion/completions/virt-admin
 %{_datadir}/libvirt/
 %exclude %{_datadir}/libvirt/api/
 %exclude %{_datadir}/libvirt/api/*
 %{_datadir}/polkit-1/actions/*libvirt*.policy
 %{_datadir}/polkit-1/rules.d/*libvirt*.rules
 %{_unitdir}/libvirtd.service
+%{_unitdir}/libvirtd.service.d/
 %{_unitdir}/libvirtd.socket
 %{_unitdir}/libvirtd-ro.socket
 %{_unitdir}/libvirtd-admin.socket
@@ -343,7 +350,7 @@ applications using libvirt.
 
 %files daemon-driver-others
 %config(noreplace) %{_sysconfdir}/sasl2/libvirt.conf
-%{_sbindir}/virt*
+%{_sbindir}/virt*d
 %exclude %{_sbindir}/virtqemud
 %exclude %{_sbindir}/virtlxcd
 %exclude %{_sbindir}/virtstoraged
@@ -392,10 +399,14 @@ applications using libvirt.
 %{_prefix}/lib/firewalld/zones/*libvirt*.xml
 %{_datadir}/systemtap/tapset/*libvirt*.stp
 %{_unitdir}/*virt*.service
+%exclude %{_unitdir}/libvirtd.service
 %exclude %{_unitdir}/virtqemud.service
 %exclude %{_unitdir}/virtlxcd.service
 %exclude %{_unitdir}/virtstoraged.service
 %{_unitdir}/*virt*.socket
+%exclude %{_unitdir}/libvirtd.socket
+%exclude %{_unitdir}/libvirtd-ro.socket
+%exclude %{_unitdir}/libvirtd-admin.socket
 %exclude %{_unitdir}/virtqemud.socket
 %exclude %{_unitdir}/virtqemud-ro.socket
 %exclude %{_unitdir}/virtqemud-admin.socket
