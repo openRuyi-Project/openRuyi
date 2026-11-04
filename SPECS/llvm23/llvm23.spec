@@ -714,6 +714,7 @@ popd
 
 mkdir -p %{buildroot}/%{install_python3mod}
 cp -a clang/bindings/python/clang %{buildroot}/%{install_python3mod}
+sed -i 's/^\([[:space:]]*file = \)"libclang\.so"$/\1"libclang.so.%{maj_ver}.%{min_ver}.%{patch_ver}"/' %{buildroot}/%{install_python3mod}/clang/cindex.py
 mv -f %{buildroot}/%{install_prefix}/python_packages/mlir_core/mlir %{buildroot}/%{install_python3mod}
 
 rm -rf %{buildroot}/%{install_prefix}/src
