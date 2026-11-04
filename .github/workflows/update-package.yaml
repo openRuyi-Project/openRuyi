@@ -18,15 +18,14 @@ concurrency:
 jobs:
   build:
     runs-on: [ubuntu-latest]
+    container:
+      image: ghcr.io/openruyi-project/creek-x86_64:latest
     steps:
+    - name: Install tools
+      run: dnf install osc obs-build tar gzip git --assumeyes
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Install tools
-      run: |
-        echo "deb http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/ /" | sudo tee /etc/apt/sources.list.d/obs.list
-        wget -qO - http://download.opensuse.org/repositories/openSUSE:/Tools/xUbuntu_24.04/Release.key | sudo apt-key add -
-        sudo apt update && sudo apt install osc obs-build libwww-perl libxml-parser-perl -y
     - name: Setup osc config
       run: |
         set -x
