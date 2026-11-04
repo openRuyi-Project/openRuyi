@@ -2,28 +2,29 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global unversion 2_8_5
+%global unversion 2_10_0
 
 Name:           expat
-Version:        2.8.5
+Version:        2.10.0
 Release:        %autorelease
 Summary:        XML Parser Toolkit
 License:        MIT
 URL:            https://libexpat.github.io
 VCS:            git:https://github.com/libexpat/libexpat
-#!RemoteAsset:  sha256:1e727b8933ec51a77a9a9d9afcf8e688bce45d907c13e36ab7393fe36e703182
+#!RemoteAsset:  sha256:c624ba2998fc65df1163a49641ff3f9ab73138b11641d92c86bee0fb01b1bc7f
 Source0:        https://github.com/libexpat/libexpat/releases/download/R_%{unversion}/expat-%{version}.tar.xz
 BuildSystem:    autotools
 
-BuildOption(conf):  --disable-silent-rules
 BuildOption(conf):  --without-docbook
 BuildOption(conf):  --disable-static
 
 BuildRequires:  gcc-c++
 BuildRequires:  autoconf
+BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  make
 BuildRequires:  pkgconfig
@@ -44,6 +45,9 @@ parser might find in the XML document (like start tags).
 
 This package contains the development headers for the library found
 in libexpat.
+
+%conf -p
+autoreconf -fiv
 
 %files
 %license COPYING
