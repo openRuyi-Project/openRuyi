@@ -80,9 +80,10 @@ install -Dpm644 dist/java_websocket.jar %{buildroot}%{_datadir}/java/Java-WebSoc
 %check
 # Run the upstream aggregate suite, including local WebSocket client/server exchanges.
 mkdir classes-test
-find src/test/java -name '*.java' | sort > test.sources
+# Compile the aggregate's dependency closure; the LibreOffice build omits
+# permessage-deflate, used by standalone tests outside this aggregate.
 cp=dist/java_websocket.jar:%{_datadir}/java/junit4.jar:%{_datadir}/java/slf4j-api.jar:%{_datadir}/java/slf4j-jdk14.jar
-javac --release 8 -encoding UTF-8 -cp "$cp" -d classes-test @test.sources
+javac --release 8 -encoding UTF-8 -cp "$cp" -sourcepath src/test/java -d classes-test src/test/java/org/java_websocket/AllTests.java
 java -cp "classes-test:src/test/resources:$cp" org.junit.runner.JUnitCore org.java_websocket.AllTests
 
 %files
