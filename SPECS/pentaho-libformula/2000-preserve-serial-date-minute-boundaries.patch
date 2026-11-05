@@ -1,0 +1,54 @@
+From bc953c6e9fd0fee11845eb7ee1cafa50eb3f98b0 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 23:53:10 +0800
+Subject: [PATCH] Keep exact minute boundaries after division of a serial date
+
+One minute is a repeating fraction of a day. After division at the engine decimal scale, multiplication by 1440 can leave the result just below the mathematical integer. Normalize that conversion error before truncating, then return the minute within the hour. Retain the distinction between 59.9999 and 60 minutes and handle negative serial dates.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ .../function/datetime/MinuteFunction.java     | 22 +++++++++----------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/source/org/pentaho/reporting/libraries/formula/function/datetime/MinuteFunction.java b/source/org/pentaho/reporting/libraries/formula/function/datetime/MinuteFunction.java
+index f261238..27f2483 100644
+--- a/source/org/pentaho/reporting/libraries/formula/function/datetime/MinuteFunction.java
++++ b/source/org/pentaho/reporting/libraries/formula/function/datetime/MinuteFunction.java
+@@ -18,6 +18,8 @@
+ package org.pentaho.reporting.libraries.formula.function.datetime;
+ 
+ import java.math.BigDecimal;
++import java.math.RoundingMode;
++import org.pentaho.reporting.libraries.formula.LibFormulaBoot;
+ import org.pentaho.reporting.libraries.formula.EvaluationException;
+ import org.pentaho.reporting.libraries.formula.FormulaContext;
+ import org.pentaho.reporting.libraries.formula.LibFormulaErrorValue;
+@@ -64,17 +66,13 @@ public class MinuteFunction implements Function
+       throw EvaluationException.getInstance(LibFormulaErrorValue.ERROR_INVALID_ARGUMENT_VALUE);
+     }
+ 
+-    // calculation is as follows
+-
+-    // time * 24 so that we get the full hours (which we remove later)
+-    final BigDecimal bd = NumberUtil.getAsBigDecimal(n);
+-    final BigDecimal hours = bd.multiply(HOURS);
+-    final BigDecimal dayAndHoursAsInt = new BigDecimal(NumberUtil.performIntRounding(hours).intValue());
+-    final BigDecimal minutesFraction = hours.subtract(dayAndHoursAsInt);
+-    
+-    // Multiply the minutes with 60 to get the minutes as ints 
+-    final BigDecimal minutes = minutesFraction.multiply(MINUTES);
+-    final BigDecimal minutesAsInt = NumberUtil.performIntRounding(minutes);
+-    return new TypeValuePair(NumberType.GENERIC_NUMBER, minutesAsInt);
++    // Converting the day fraction to minutes shifts rounding error from the
++    // 40-decimal division by up to four places. Keep whole-minute boundaries
++    // exact while truncating fractional minutes.
++    final BigDecimal total = NumberUtil.getAsBigDecimal(n).multiply(HOURS).multiply(MINUTES);
++    final BigDecimal whole = total.setScale(LibFormulaBoot.GLOBAL_SCALE - 4, RoundingMode.HALF_UP)
++        .setScale(0, RoundingMode.FLOOR);
++    final BigDecimal minute = whole.remainder(MINUTES);
++    return new TypeValuePair(NumberType.GENERIC_NUMBER, minute.signum() < 0 ? minute.add(MINUTES) : minute);
+   }
+ }
+-- 
+2.54.0
+
