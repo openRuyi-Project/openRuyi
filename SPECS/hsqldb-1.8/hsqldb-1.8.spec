@@ -125,7 +125,15 @@ org.hsqldb.test.TestTimestamp
 org.hsqldb.test.TestViewAsterisks"
 for suite in $suites; do printf 'src/%s.java\n' "$(echo "$suite" | tr . /)"; done > test.sources
 javac --release 8 -encoding UTF-8 -cp lib/hsqldb.jar:%{_datadir}/java/junit4.jar -sourcepath src -d classes-test @test.sources
-java -cp classes-test:lib/hsqldb.jar:%{_datadir}/java/junit4.jar org.junit.runner.JUnitCore $suites
+# TestBase stops its TCP server asynchronously. Isolate methods so a subsequent
+# fixture cannot reconnect while the preceding server is still shutting down.
+for suite in $suites; do
+    source="src/$(echo "$suite" | tr . /).java"
+    methods=$(sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p' "$source")
+    for method in $methods; do
+        java -cp classes-test:lib/hsqldb.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner -m "$suite.$method" || exit 1
+    done
+done
 
 %files
 %license doc/hsqldb_lic.txt doc/hypersonic_lic.txt
