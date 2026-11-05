@@ -59,6 +59,14 @@ Requires:       libgcrypt >= 1.12.0
 Dirmngr handles access to OpenPGP keyservers, CRLs, and OCSP providers
 for GnuPG. It is invoked internally by gpg and gpgsm.
 
+%package        scdaemon
+Summary:        GnuPG SmartCard daemon
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    scdaemon
+GnuPG is GNU's tool for secure communication and data storage. This
+package contains the SmartCard daemon.
+
 %install -a
 install -Dm 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-scdaemon.rules
 
@@ -82,11 +90,23 @@ install -Dm 0644 %{SOURCE1} %{buildroot}%{_udevrulesdir}/60-scdaemon.rules
 %{_sbindir}/g13-syshelp
 %{_udevrulesdir}/60-scdaemon.rules
 %{_datadir}/gnupg
+%exclude %{_bindir}/gpg-card
+%exclude %{_libexecdir}/gpg-auth
+%exclude %{_libexecdir}/scdaemon
+%exclude %{_mandir}/man?/gpg-card.*
+%exclude %{_mandir}/man?/scdaemon.*
 
 %files -n dirmngr
 %{_mandir}/*/dirmngr*%{?ext_man}
 %{_bindir}/dirmngr*
 %{_libexecdir}/dirmngr_ldap
+
+%files scdaemon
+%{_bindir}/gpg-card
+%{_libexecdir}/gpg-auth
+%{_libexecdir}/scdaemon
+%{_mandir}/man?/gpg-card.*
+%{_mandir}/man?/scdaemon.*
 
 %changelog
 %autochangelog
