@@ -18,6 +18,7 @@ BuildArch:      noarch
 BuildRequires:  java-25-openjdk-devel
 BuildRequires:  junit4
 BuildRequires:  python3
+BuildRequires:  python-srpm-macros
 BuildRequires:  java-sac
 BuildRequires:  rhino
 BuildRequires:  xml-commons-apis-ext
