@@ -24,6 +24,7 @@ It can test Hamcrest without the dependency on Hamcrest introduced by JUnit 4.
 
 %prep
 %autosetup -n junit%{version}
+unzip -q src.jar
 find . -type f \( -name '*.jar' -o -name '*.class' \) -delete
 
 %build
@@ -44,8 +45,8 @@ find junit/tests junit/samples -name '*.java' | sort > test.sources
 %{_prefix}/lib64/jvm/java-17-openjdk/bin/java -Djava.awt.headless=true -cp classes-test:junit-3.jar junit.textui.TestRunner junit.tests.AllTests
 
 %files
-%doc README.html
 %license cpl-v10.html
+%doc README.html
 %{_datadir}/java/junit-3.jar
 
 %changelog
