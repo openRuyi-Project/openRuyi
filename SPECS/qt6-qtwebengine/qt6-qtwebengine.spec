@@ -30,6 +30,9 @@ Patch3:         0004-riscv-enable-v8-webasm.patch
 %endif
 # Based on various upstream commits.
 Patch4:         0005-adapt-chromium-to-gcc16-glibc2.43-and-rvv.patch
+# Fix gen-regexp-special-case crash (SIGTRAP) when built against ICU 79 (Unicode 18)
+# Backport of https://chromium-review.googlesource.com/c/v8/v8/+/8548134
+Patch5:         0006-v8-regexp-ignore-supplementary-case-equivalents.patch
 
 BuildOption(conf):  -DCMAKE_TOOLCHAIN_FILE="%{_libdir}/cmake/Qt6/qt.toolchain.cmake"
 BuildOption(conf):  -DFEATURE_webengine_build_gn=ON
