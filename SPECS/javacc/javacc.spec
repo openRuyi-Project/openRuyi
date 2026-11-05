@@ -22,6 +22,8 @@ Patch0:         https://raw.githubusercontent.com/fedora-java/javapackages-boots
 
 BuildRequires:  java-25-openjdk-devel
 BuildRequires:  ant
+# The functional-test build files explicitly compile Java 7 source.
+BuildRequires:  java-17-openjdk-devel
 Requires:       java-25-openjdk-headless
 
 %description
@@ -68,7 +70,7 @@ done
 # Run the upstream parser-generator functional regressions against the rebuilt JAR.
 mkdir -p target
 cp -p javacc.jar target/javacc.jar
-ant -nouserlib -f test/build.xml test
+JAVA_HOME=%{_prefix}/lib64/jvm/java-17-openjdk ant -nouserlib -f test/build.xml test
 
 %files
 %doc README.md
