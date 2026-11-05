@@ -1,0 +1,62 @@
+From 387f8c0de0f5d29902cef5527a9f3a9b1df20261 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 02:10:14 +0800
+Subject: [PATCH] Keep document formula settings local when separators conflict
+
+Resetting separators for a comma-decimal locale must not propagate a
+workbook's reference syntax into subsequent documents. Preserve the
+document calculation settings independently of the module options.
+
+Restore the raw work locale after the Hungarian export fixture so
+later tests retain their original locale defaults.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ sc/qa/unit/subsequent_export_test2.cxx | 3 ++-
+ sc/source/ui/docshell/docsh6.cxx       | 6 +++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/sc/qa/unit/subsequent_export_test2.cxx b/sc/qa/unit/subsequent_export_test2.cxx
+index 0ab20ca..239d9f8 100644
+--- a/sc/qa/unit/subsequent_export_test2.cxx
++++ b/sc/qa/unit/subsequent_export_test2.cxx
+@@ -21,6 +21,7 @@
+ #include <editeng/flditem.hxx>
+ #include <comphelper/scopeguard.hxx>
+ #include <comphelper/propertyvalue.hxx>
++#include <unotools/configmgr.hxx>
+ #include <unotools/syslocaleoptions.hxx>
+ #include <formula/grammar.hxx>
+ #include <sfx2/docfilt.hxx>
+@@ -1477,7 +1478,7 @@ CPPUNIT_TEST_FIXTURE(ScExportTest2, testTdf112567b)
+ {
+     // Set the system locale to Hungarian (a language with different range separator)
+     SvtSysLocaleOptions aOptions;
+-    OUString sLocaleConfigString = aOptions.GetLanguageTag().getBcp47();
++    OUString sLocaleConfigString = utl::ConfigManager::getWorkLocale();
+     aOptions.SetLocaleConfigString(u"hu-HU"_ustr);
+     aOptions.Commit();
+     comphelper::ScopeGuard g([&aOptions, &sLocaleConfigString] {
+diff --git a/sc/source/ui/docshell/docsh6.cxx b/sc/source/ui/docshell/docsh6.cxx
+index 7ff1b05..4a3b2e7 100644
+--- a/sc/source/ui/docshell/docsh6.cxx
++++ b/sc/source/ui/docshell/docsh6.cxx
+@@ -494,10 +494,14 @@ void ScDocShell::CheckConfigOptions()
+         // One of arg separators conflicts with the current decimal
+         // separator.  Reset them to default.
+         ScFormulaOptions aNew = rOpt;
+-        aNew.GetCalcConfig().MergeDocumentSpecific(m_pDocument->GetCalcConfig());
++        // A separator conflict changes global formula separators, not the
++        // address syntax or string conversion settings of subsequent documents.
++        ScCalcConfig aDocumentConfig = aNew.GetCalcConfig();
++        aDocumentConfig.MergeDocumentSpecific(m_pDocument->GetCalcConfig());
+         aNew.ResetFormulaSeparators();
+         SetFormulaOptions(aNew);
+         pScMod->SetFormulaOptions(aNew);
++        m_pDocument->SetCalcConfig(aDocumentConfig);
+ 
+         // Launch a nice warning dialog to let the users know of this change.
+         ScTabViewShell* pViewShell = comphelper::LibreOfficeKit::isActive() ? nullptr : GetBestViewShell();
+-- 
+2.54.0
+

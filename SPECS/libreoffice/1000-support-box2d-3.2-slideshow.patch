@@ -1,0 +1,44 @@
+From 8927e95539463a027c6f28da2ac5ac46746cf1bd Mon Sep 17 00:00:00 2001
+From: Xisco Fauli <xiscofauli@libreoffice.org>
+Date: Mon, 19 Oct 2026 21:51:41 +0200
+Subject: [PATCH] box2d: upgrade to 3.2.0
+
+Downloaded https://github.com/erincatto/box2d/archive/refs/tags/v3.2.0.tar.gz
+
+Change-Id: Icaa610aa48e24a7c33b74101b75450d210e08db3
+Reviewed-on: https://gerrit.libreoffice.org/c/core/+/212645
+Tested-by: Jenkins
+Reviewed-by: Xisco Fauli <xiscofauli@libreoffice.org>
+
+Backport only the slideshow API changes for system Box2D.
+---
+diff --git a/slideshow/source/engine/box2dtools.cxx b/slideshow/source/engine/box2dtools.cxx
+index 26be1c7fdd7b1..cfa4953c1872d 100644
+--- a/slideshow/source/engine/box2dtools.cxx
++++ b/slideshow/source/engine/box2dtools.cxx
+@@ -307,7 +307,11 @@ void box2DWorld::createStaticFrameAroundSlide(const ::basegfx::B2DVector& rSlide
+ 
+     b2ChainDef aChainDef = b2DefaultChainDef();
+     aChainDef.points = aEdgePoints;
++#if BOX2D_CHECK_VERSION(3, 2)
++    aChainDef.pointCount = 4;
++#else
+     aChainDef.count = 4;
++#endif
+     aChainDef.isLoop = true;
+     b2CreateChain(aBody, &aChainDef);
+ #else
+@@ -991,8 +995,12 @@ void box2DBody::setDensityAndRestitution(const double fDensity, const double fRe
+ #endif
+         b2Shape_SetRestitution(aShapeId, static_cast<float>(fRestitution));
+     }
+-    // without resetting the massdata of the body, density change won't take effect
++        // without resetting the massdata of the body, density change won't take effect
++#if BOX2D_CHECK_VERSION(3, 2)
++    b2Body_UpdateMassFromShapes(*mpBox2DBody);
++#else
+     b2Body_ApplyMassFromShapes(*mpBox2DBody);
++#endif
+ #else
+     // density and restitution have to be set for each fixture of the body individually
+     for (b2Fixture* pFixture = mpBox2DBody->GetFixtureList(); pFixture;

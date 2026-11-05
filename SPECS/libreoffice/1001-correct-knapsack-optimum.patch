@@ -1,0 +1,41 @@
+From 925784135c7c1564381baa32f947ebbfda4bc23e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Toma=C5=BE=20Vajngerl?= <tomaz.vajngerl@collabora.co.uk>
+Date: Thu, 4 Jun 2026 13:35:50 +0000
+Subject: [PATCH] sc: expect the optimal value of the knapsack fixture
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The 15-item model has a unique optimum of 6987. The system lp_solve
+finds that optimum, so use the value established by the upstream fix.
+
+Backport the expected-value correction; keep this release's lp_solve
+test engine. The upstream commit also removes the lp_solve component,
+which is outside this correction.
+
+Upstream-Commit: https://github.com/LibreOffice/core/commit/bfc9cfdecf54885bb0d38ad29fee36affd0d9df5
+Signed-off-by: Tomaž Vajngerl <tomaz.vajngerl@collabora.co.uk>
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ sc/qa/extras/scsolverobj.cxx | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/sc/qa/extras/scsolverobj.cxx b/sc/qa/extras/scsolverobj.cxx
+index b7735a7..e404dae 100644
+--- a/sc/qa/extras/scsolverobj.cxx
++++ b/sc/qa/extras/scsolverobj.cxx
+@@ -116,8 +116,9 @@ void ScSolverSettingsObj::testXSolverSettings()
+     xSolverModel->setSuppressDialog(true);
+     xSolverModel->solve();
+ 
+-    // The correct solution value is 6981 (using LpsolveSolver)
+-    CPPUNIT_ASSERT_EQUAL(static_cast<double>(6981), xSheet->getCellByPosition(6, 6)->getValue());
++    // The optimal total value for this knapsack is 6987, which fills the weight
++    // capacity of 1000 exactly.
++    CPPUNIT_ASSERT_EQUAL(static_cast<double>(6987), xSheet->getCellByPosition(6, 6)->getValue());
+ 
+     // Check objective function and variable cells
+     testCellAddress(aObjCell, xSolverModel->getObjectiveCell());
+-- 
+2.54.0
+

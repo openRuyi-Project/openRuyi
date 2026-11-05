@@ -1,0 +1,39 @@
+From a149d0fa990c07f2205697bef9d590b109f326af Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Mon, 9 Nov 2026 02:11:26 +0800
+Subject: [PATCH] Bind Firebird result types to the representations supported
+ by Base
+
+Firebird 5 returns INT128 for ordinary numeric aggregates and zoned temporal values for CURRENT_TIME and CURRENT_TIMESTAMP. Request the SQLDA representations implemented by the SDBC driver for this connection.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ connectivity/source/drivers/firebird/Connection.cxx | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/connectivity/source/drivers/firebird/Connection.cxx b/connectivity/source/drivers/firebird/Connection.cxx
+index 40606a7..f9b927c 100644
+--- a/connectivity/source/drivers/firebird/Connection.cxx
++++ b/connectivity/source/drivers/firebird/Connection.cxx
+@@ -296,7 +296,17 @@ void Connection::construct(const OUString& url, const Sequence< PropertyValue >&
+             dpbBuffer.push_back(sizeof(sCharset) - 1);
+             dpbBuffer.append(sCharset);
+ 
+-            // Do any more dpbBuffer additions here
++#ifdef isc_dpb_set_bind
++            // Firebird 4+ returns INT128 for some aggregates and zoned temporal
++            // types for CURRENT_TIME/STAMP. The SDBC driver consumes the legacy
++            // SQLDA types, so request that representation for this connection.
++            const char sBindings[] =
++                "INT128 TO LEGACY; DECFLOAT TO LEGACY; TIME ZONE TO LEGACY";
++            dpbBuffer.push_back(isc_dpb_set_bind);
++            dpbBuffer.push_back(sizeof(sBindings) - 1);
++            dpbBuffer.append(sBindings);
++#endif
++
+ 
+             // attach without running the database's own event triggers
+             if (m_bIsEmbedded || m_bIsFile)
+-- 
+2.54.0
+
