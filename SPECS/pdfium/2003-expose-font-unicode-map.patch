@@ -1,0 +1,61 @@
+From 24a2babd20b4a1e7ee716e7059eff879103ed770 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
+Date: Thu, 21 Aug 2025 16:20:19 +0000
+Subject: [PATCH] Expose the PDF font ToUnicode stream
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ fpdfsdk/fpdf_edittext.cpp | 20 ++++++++++++++++++++
+ public/fpdf_edit.h        |  5 +++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/fpdfsdk/fpdf_edittext.cpp b/fpdfsdk/fpdf_edittext.cpp
+index 727d302..ea85ec3 100644
+--- a/fpdfsdk/fpdf_edittext.cpp
++++ b/fpdfsdk/fpdf_edittext.cpp
+@@ -749,6 +749,26 @@ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFFont_GetFontData(FPDF_FONT font,
+   return true;
+ }
+ 
++FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFFont_GetToUnicodeContent(FPDF_FONT font,
++                                                                 uint8_t* buffer,
++                                                                 size_t buflen,
++                                                                 size_t* out_buflen)
++{
++  auto* cfont = CPDFFontFromFPDFFont(font);
++  if (!cfont || !out_buflen)
++    return false;
++
++  RetainPtr<const CPDF_Stream> pStream = cfont->GetFontDict()->GetStreamFor("ToUnicode");
++  if (!pStream)
++    return false;
++
++  // SAFETY: caller ensures `buffer` points to at least `buflen` bytes.
++  *out_buflen = DecodeStreamMaybeCopyAndReturnLength(
++      pStream, UNSAFE_BUFFERS(pdfium::span(buffer, buflen)));
++
++  return true;
++}
++
+ FPDF_EXPORT int FPDF_CALLCONV FPDFFont_GetIsEmbedded(FPDF_FONT font) {
+   auto* cfont = CPDFFontFromFPDFFont(font);
+   if (!cfont) {
+diff --git a/public/fpdf_edit.h b/public/fpdf_edit.h
+index 77fa19c..ab23f58 100644
+--- a/public/fpdf_edit.h
++++ b/public/fpdf_edit.h
+@@ -1645,6 +1645,11 @@ FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFFont_GetFontData(FPDF_FONT font,
+                                                          size_t buflen,
+                                                          size_t* out_buflen);
+ 
++FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV FPDFFont_GetToUnicodeContent(FPDF_FONT font,
++                          				  	 uint8_t* buffer,
++					                         size_t buflen,
++					                         size_t* out_buflen);
++
+ // Experimental API.
+ // Get whether |font| is embedded or not.
+ //
+-- 
+2.54.0
+

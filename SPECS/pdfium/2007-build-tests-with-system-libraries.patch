@@ -1,0 +1,401 @@
+From ae41ed090d32240bc9c1d236b0738dd1b9075f49 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:01:34 +0800
+Subject: [PATCH] Build upstream tests with system GoogleTest and simdutf.
+
+Use distribution test libraries through pkg-config and their installed headers. Add a root target for the shared library and upstream unit and embedder tests without pulling in unrelated fuzzing targets.
+
+Account for temporary const RetainPtr conversions in libstdc++ set lookups when checking retain and release counts in the upstream SetContains test.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ BUILD.gn                                      |  10 +-
+ core/fxcrt/retain_ptr_unittest.cpp            |  12 +-
+ testing/embedder_test.cpp                     |   2 +-
+ testing/gmock/include/gmock/gmock-actions.h   |   2 +-
+ .../gmock/gmock-generated-function-mockers.h  |   2 +-
+ testing/gmock/include/gmock/gmock-matchers.h  |   2 +-
+ testing/gmock/include/gmock/gmock.h           |   2 +-
+ .../gtest/include/gtest/gtest-death-test.h    |   2 +-
+ testing/gtest/include/gtest/gtest-message.h   |   2 +-
+ .../gtest/include/gtest/gtest-param-test.h    |   2 +-
+ testing/gtest/include/gtest/gtest-spi.h       |   2 +-
+ testing/gtest/include/gtest/gtest.h           |   2 +-
+ testing/gtest/include/gtest/gtest_prod.h      |   2 +-
+ third_party/googletest/BUILD.gn               | 173 +-----------------
+ third_party/simdutf/BUILD.gn                  |  13 ++
+ 15 files changed, 48 insertions(+), 182 deletions(-)
+ create mode 100644 third_party/simdutf/BUILD.gn
+
+diff --git a/BUILD.gn b/BUILD.gn
+index cf5541a..f684a4d 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -386,7 +386,6 @@ test("pdfium_embeddertests") {
+     "//testing/gmock",
+     "//testing/gtest",
+   ]
+-  include_dirs = [ "testing/gmock/include" ]
+   configs += [ ":pdfium_core_config" ]
+ 
+   if (is_android) {
+@@ -458,3 +457,12 @@ if (current_toolchain == default_toolchain) {
+ 
+   write_file("$root_build_dir/gn_logs.txt", _lines)
+ }
++
++group("distribution_tests") {
++  testonly = true
++  deps = [
++    ":pdfium",
++    ":pdfium_unittests",
++    ":pdfium_embeddertests",
++  ]
++}
+diff --git a/core/fxcrt/retain_ptr_unittest.cpp b/core/fxcrt/retain_ptr_unittest.cpp
+index d8be056..4bcc1fe 100644
+--- a/core/fxcrt/retain_ptr_unittest.cpp
++++ b/core/fxcrt/retain_ptr_unittest.cpp
+@@ -494,16 +494,18 @@ TEST(RetainPtr, SetContains) {
+   EXPECT_EQ(the_set.end(), the_set.find(ptr2));
+   EXPECT_TRUE(pdfium::Contains(the_set, ptr1));
+   EXPECT_FALSE(pdfium::Contains(the_set, ptr2));
+-#if !BUILDFLAG(IS_WIN) &&                                       \
+-    (defined(ADDRESS_SANITIZER) || defined(MEMORY_SANITIZER) || \
+-     defined(UNDEFINED_SANITIZER))
++  // libstdc++ compares the stored const RetainPtr with the mutable lookup key,
++  // creating a temporary const RetainPtr for each unsuccessful lookup.
++#if defined(__GLIBCXX__) || \
++    (!BUILDFLAG(IS_WIN) && \
++     (defined(ADDRESS_SANITIZER) || defined(MEMORY_SANITIZER) || \
++      defined(UNDEFINED_SANITIZER)))
+   constexpr int kExpectedObj2RetainCount = 4;
+   constexpr int kExpectedObj2ReleaseCount = 2;
+ #else
+   constexpr int kExpectedObj2RetainCount = 2;
+   constexpr int kExpectedObj2ReleaseCount = 0;
+-#endif  // !BUILDFLAG(IS_WIN) && (defined(ADDRESS_SANITIZER) ||
+-        // defined(MEMORY_SANITIZER))
++#endif
+   EXPECT_EQ(kExpectedObj2RetainCount, obj2.retain_count());
+   EXPECT_EQ(kExpectedObj2ReleaseCount, obj2.release_count());
+ }
+diff --git a/testing/embedder_test.cpp b/testing/embedder_test.cpp
+index 5018647..2f9337f 100644
+--- a/testing/embedder_test.cpp
++++ b/testing/embedder_test.cpp
+@@ -39,7 +39,7 @@
+ #include "testing/utils/hash.h"
+ #include "testing/utils/path_service.h"
+ #include "testing/utils/pixel_diff_util.h"
+-#include "third_party/simdutf/simdutf.h"
++#include <simdutf.h>
+ 
+ namespace {
+ 
+diff --git a/testing/gmock/include/gmock/gmock-actions.h b/testing/gmock/include/gmock/gmock-actions.h
+index 21fc6b0..cf34353 100644
+--- a/testing/gmock/include/gmock/gmock-actions.h
++++ b/testing/gmock/include/gmock/gmock-actions.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googlemock/include/gmock/gmock-actions.h"
++#include <gmock/gmock-actions.h>
+diff --git a/testing/gmock/include/gmock/gmock-generated-function-mockers.h b/testing/gmock/include/gmock/gmock-generated-function-mockers.h
+index 8ce51a0..7d848c1 100644
+--- a/testing/gmock/include/gmock/gmock-generated-function-mockers.h
++++ b/testing/gmock/include/gmock/gmock-generated-function-mockers.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googlemock/include/gmock/gmock-generated-function-mockers.h"
++#include <gmock/gmock-generated-function-mockers.h>
+diff --git a/testing/gmock/include/gmock/gmock-matchers.h b/testing/gmock/include/gmock/gmock-matchers.h
+index ca7cf0e..dd14914 100644
+--- a/testing/gmock/include/gmock/gmock-matchers.h
++++ b/testing/gmock/include/gmock/gmock-matchers.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googlemock/include/gmock/gmock-matchers.h"
++#include <gmock/gmock-matchers.h>
+diff --git a/testing/gmock/include/gmock/gmock.h b/testing/gmock/include/gmock/gmock.h
+index dfcd2d4..552d0d8 100644
+--- a/testing/gmock/include/gmock/gmock.h
++++ b/testing/gmock/include/gmock/gmock.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googlemock/include/gmock/gmock.h"
++#include <gmock/gmock.h>
+diff --git a/testing/gtest/include/gtest/gtest-death-test.h b/testing/gtest/include/gtest/gtest-death-test.h
+index 6e79c82..3429353 100644
+--- a/testing/gtest/include/gtest/gtest-death-test.h
++++ b/testing/gtest/include/gtest/gtest-death-test.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest-death-test.h"
++#include <gtest/gtest-death-test.h>
+diff --git a/testing/gtest/include/gtest/gtest-message.h b/testing/gtest/include/gtest/gtest-message.h
+index 7859730..5b1e7f1 100644
+--- a/testing/gtest/include/gtest/gtest-message.h
++++ b/testing/gtest/include/gtest/gtest-message.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest-message.h"
++#include <gtest/gtest-message.h>
+diff --git a/testing/gtest/include/gtest/gtest-param-test.h b/testing/gtest/include/gtest/gtest-param-test.h
+index 3d681e4..7cba173 100644
+--- a/testing/gtest/include/gtest/gtest-param-test.h
++++ b/testing/gtest/include/gtest/gtest-param-test.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest-param-test.h"
++#include <gtest/gtest-param-test.h>
+diff --git a/testing/gtest/include/gtest/gtest-spi.h b/testing/gtest/include/gtest/gtest-spi.h
+index 24ba5ee..fd0fbd6 100644
+--- a/testing/gtest/include/gtest/gtest-spi.h
++++ b/testing/gtest/include/gtest/gtest-spi.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest-spi.h"
++#include <gtest/gtest-spi.h>
+diff --git a/testing/gtest/include/gtest/gtest.h b/testing/gtest/include/gtest/gtest.h
+index 4706280..9534ec9 100644
+--- a/testing/gtest/include/gtest/gtest.h
++++ b/testing/gtest/include/gtest/gtest.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest.h"
++#include <gtest/gtest.h>
+diff --git a/testing/gtest/include/gtest/gtest_prod.h b/testing/gtest/include/gtest/gtest_prod.h
+index 703a176..f112b8f 100644
+--- a/testing/gtest/include/gtest/gtest_prod.h
++++ b/testing/gtest/include/gtest/gtest_prod.h
+@@ -7,4 +7,4 @@
+ // and testing/gmock, instead of directly including files in
+ // third_party/googletest.
+ 
+-#include "third_party/googletest/src/googletest/include/gtest/gtest_prod.h"
++#include <gtest/gtest_prod.h>
+diff --git a/third_party/googletest/BUILD.gn b/third_party/googletest/BUILD.gn
+index a664701..8f92b1d 100644
+--- a/third_party/googletest/BUILD.gn
++++ b/third_party/googletest/BUILD.gn
+@@ -2,171 +2,14 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+ 
+-import("//build_overrides/build.gni")
++import("//build/config/linux/pkg_config.gni")
+ 
+-config("gtest_config") {
+-  visibility = [
+-    ":*",  # gmock also shares this config.
+-  ]
+-
+-  defines = [
+-    # Chromium always links googletest statically, so no API qualifier is
+-    # necessary. The definition in gtest-port.h at the time of this writing
+-    # causes crashes in content_browsertests.
+-    "GTEST_API_=",
+-
+-    # In order to allow regex matches in gtest to be shared between Windows
+-    # and other systems, we tell gtest to always use its internal engine.
+-    "GTEST_HAS_POSIX_RE=0",
+-
+-    # Enables C++11 features.
+-    "GTEST_LANG_CXX11=1",
+-
+-    # Prevents gtest from including both <tr1/tuple> and <tuple>.
+-    "GTEST_HAS_TR1_TUPLE=0",
+-  ]
+-
+-  # Gtest headers need to be able to find themselves.
+-  include_dirs = [
+-    "custom",
+-    "src/googletest/include",
+-  ]
+-}
+-
+-config("gmock_config") {
+-  # Gmock headers need to be able to find themselves.
+-  include_dirs = [
+-    "custom",
+-    "src/googlemock/include",
+-  ]
+-
+-  if (is_clang) {
+-    # TODO(tikuta): remove this when the issue is fixed.
+-    # https://github.com/google/googletest/issues/533
+-    cflags = [ "-Wno-inconsistent-missing-override" ]
++foreach(module, [ "gtest", "gtest_main", "gmock", "gmock_main" ]) {
++  pkg_config(module + "_config") {
++    packages = [ module ]
++  }
++  group(module) {
++    testonly = true
++    public_configs = [ ":" + module + "_config" ]
+   }
+-}
+-
+-# Do NOT depend on this directly. Use //testing/gtest instead.
+-# See README.chromium for details.
+-source_set("gtest") {
+-  testonly = true
+-  sources = [
+-    "custom/gtest/internal/custom/gtest-printers.h",
+-    "custom/gtest/internal/custom/gtest.h",
+-    "custom/gtest/internal/custom/stack_trace_getter.cc",
+-    "custom/gtest/internal/custom/stack_trace_getter.h",
+-
+-    # TODO(crbug.com/1009553): Remove this wrapper and custom temp dir
+-    # after plumbing a workable temporary path into googletest on Android.
+-    "custom/gtest/internal/custom/gtest_port_wrapper.cc",
+-    "custom/gtest/internal/custom/pdfium_custom_temp_dir.cc",
+-    "custom/gtest/internal/custom/pdfium_custom_temp_dir.h",
+-    "src/googletest/include/gtest/gtest-assertion-result.h",
+-    "src/googletest/include/gtest/gtest-death-test.h",
+-    "src/googletest/include/gtest/gtest-matchers.h",
+-    "src/googletest/include/gtest/gtest-message.h",
+-    "src/googletest/include/gtest/gtest-param-test.h",
+-    "src/googletest/include/gtest/gtest-printers.h",
+-    "src/googletest/include/gtest/gtest-spi.h",
+-    "src/googletest/include/gtest/gtest-test-part.h",
+-    "src/googletest/include/gtest/gtest-typed-test.h",
+-    "src/googletest/include/gtest/gtest.h",
+-    "src/googletest/include/gtest/gtest_pred_impl.h",
+-    "src/googletest/include/gtest/gtest_prod.h",
+-
+-    #"src/googletest/include/gtest/internal/custom/gtest.h",  # Superseded.
+-    "src/googletest/include/gtest/internal/custom/gtest-port.h",
+-    "src/googletest/include/gtest/internal/custom/gtest-printers.h",
+-    "src/googletest/include/gtest/internal/gtest-death-test-internal.h",
+-    "src/googletest/include/gtest/internal/gtest-filepath.h",
+-    "src/googletest/include/gtest/internal/gtest-internal.h",
+-    "src/googletest/include/gtest/internal/gtest-param-util.h",
+-    "src/googletest/include/gtest/internal/gtest-port-arch.h",
+-    "src/googletest/include/gtest/internal/gtest-port.h",
+-    "src/googletest/include/gtest/internal/gtest-string.h",
+-    "src/googletest/include/gtest/internal/gtest-type-util.h",
+-
+-    #"src/googletest/src/gtest-all.cc",  # Not needed by our build.
+-    "src/googletest/src/gtest-assertion-result.cc",
+-    "src/googletest/src/gtest-death-test.cc",
+-    "src/googletest/src/gtest-filepath.cc",
+-    "src/googletest/src/gtest-internal-inl.h",
+-    "src/googletest/src/gtest-matchers.cc",
+-
+-    # gtest_port_wrapper.cc is used instead of gtest-port.cc.
+-    # TODO(crbug.com/1009553): Re-enable this file after plumbing a workable
+-    #                          temporary path into googletest on Android.
+-    #"src/googletest/src/gtest-port.cc",
+-    "src/googletest/src/gtest-printers.cc",
+-    "src/googletest/src/gtest-test-part.cc",
+-    "src/googletest/src/gtest-typed-test.cc",
+-    "src/googletest/src/gtest.cc",
+-  ]
+-
+-  # Some files include "src/gtest-internal-inl.h".
+-  include_dirs = [ "src/googletest" ]
+-
+-  public_configs = [ ":gtest_config" ]
+-
+-  configs -= [ "//build/config/compiler:chromium_code" ]
+-  configs += [ "//build/config/compiler:no_chromium_code" ]
+-
+-  defines = [ "GTEST_DISABLE_PRINT_STACK_TRACE" ]
+-  sources -= [
+-    "custom/gtest/internal/custom/stack_trace_getter.cc",
+-    "custom/gtest/internal/custom/stack_trace_getter.h",
+-  ]
+-}
+-
+-# Do NOT depend on this directly. Use //testing/gtest:gtest_main instead.
+-# See README.chromium for details.
+-source_set("gtest_main") {
+-  testonly = true
+-  sources = [ "src/googletest/src/gtest_main.cc" ]
+-  deps = [ ":gtest" ]
+-}
+-
+-# Do NOT depend on this directly. Use //testing/gmock:gmock_main instead.
+-# See README.chromium for details.
+-source_set("gmock") {
+-  testonly = true
+-  sources = [
+-    "src/googlemock/include/gmock/gmock-actions.h",
+-    "src/googlemock/include/gmock/gmock-cardinalities.h",
+-    "src/googlemock/include/gmock/gmock-function-mocker.h",
+-    "src/googlemock/include/gmock/gmock-matchers.h",
+-    "src/googlemock/include/gmock/gmock-more-matchers.h",
+-    "src/googlemock/include/gmock/gmock-nice-strict.h",
+-    "src/googlemock/include/gmock/gmock-spec-builders.h",
+-    "src/googlemock/include/gmock/gmock.h",
+-
+-    #"src/googlemock/include/gmock/internal/custom/gmock-port.h",  # Superseded.
+-    "src/googlemock/include/gmock/internal/custom/gmock-generated-actions.h",
+-    "src/googlemock/include/gmock/internal/custom/gmock-matchers.h",
+-    "src/googlemock/include/gmock/internal/gmock-internal-utils.h",
+-    "src/googlemock/include/gmock/internal/gmock-port.h",
+-    "src/googlemock/include/gmock/internal/gmock-pp.h",
+-
+-    #"src/googlemock/src/gmock-all.cc",  # Not needed by our build.
+-    "src/googlemock/src/gmock-cardinalities.cc",
+-    "src/googlemock/src/gmock-internal-utils.cc",
+-    "src/googlemock/src/gmock-matchers.cc",
+-    "src/googlemock/src/gmock-spec-builders.cc",
+-    "src/googlemock/src/gmock.cc",
+-  ]
+-
+-  configs += [ "//build/config/compiler:no_exit_time_destructors" ]
+-
+-  public_deps = [ ":gtest" ]
+-
+-  public_configs = [ ":gmock_config" ]
+-}
+-
+-# Do NOT depend on this directly. Use //testing/gmock:gmock_main instead.
+-# See README.chromium for details.
+-static_library("gmock_main") {
+-  testonly = true
+-  sources = [ "src/googlemock/src/gmock_main.cc" ]
+-  deps = [ ":gmock" ]
+ }
+diff --git a/third_party/simdutf/BUILD.gn b/third_party/simdutf/BUILD.gn
+new file mode 100644
+index 0000000..6da5f2c
+--- /dev/null
++++ b/third_party/simdutf/BUILD.gn
+@@ -0,0 +1,13 @@
++# Copyright 2026 Li Guan
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++import("//build/config/linux/pkg_config.gni")
++
++pkg_config("system_simdutf") {
++  packages = [ "simdutf" ]
++}
++group("simdutf") {
++  testonly = true
++  public_configs = [ ":system_simdutf" ]
++}
+-- 
+2.54.0
+
