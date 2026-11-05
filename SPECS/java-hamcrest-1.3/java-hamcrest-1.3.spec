@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global junit_version 4.13.2
+
 Name:           java-hamcrest-1.3
 Version:        1.3
 Release:        %autorelease
@@ -15,10 +17,13 @@ VCS:            git:https://github.com/hamcrest/JavaHamcrest
 # published source JARs with the two generated matcher factories.
 #!RemoteAsset:  sha256:8e9ac0c51762cf8117df610740157749d1dfdffd9d4e6727e5af9056675e065f
 Source0:        https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/hamcrest/hamcrest-%{version}.zip
+# JUnit needs Hamcrest itself; build its test runner against the new matcher JARs.
+#!RemoteAsset:  sha256:1b6d700fc374c82951d247f6d80238951d87c61661ceb151f9fbf40f65413561
+Source1:        https://github.com/junit-team/junit4/archive/refs/tags/r%{junit_version}.tar.gz#/junit4-r%{junit_version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires:  java-25-openjdk-devel
-BuildRequires:  junit-3
+BuildRequires:  java-17-openjdk-devel
 BuildRequires:  unzip
 
 %patchlist
@@ -56,14 +61,20 @@ install -d %{buildroot}%{_datadir}/java/hamcrest%{version}
 install -pm644 hamcrest-{core,library}.jar %{buildroot}%{_datadir}/java/hamcrest%{version}/
 
 %check
-# Test the packaged core and library matchers with upstream's JUnit 3 suites.
-# Generator/integration suites belong to the modules not built by this package.
-mkdir classes-test
-find hamcrest-unit-test/src/main/java/org/hamcrest -name '*.java' ! -path '*/generator/*' ! -path '*/integration/*' | sort > test.sources
-cp=hamcrest-core.jar:hamcrest-library.jar:%{_datadir}/java/junit-3.jar
-javac --release 8 -encoding UTF-8 -cp "$cp" -d classes-test @test.sources
-suites=$(find hamcrest-unit-test/src/main/java/org/hamcrest -name '*Test.java' ! -name 'Abstract*' ! -path '*/generator/*' ! -path '*/integration/*' | sed 's|^hamcrest-unit-test/src/main/java/||;s|/|.|g;s|[.]java$||')
-for suite in $suites; do java -cp "classes-test:$cp" junit.textui.TestRunner "$suite" || exit 1; done
+# Build the upstream JUnit runner against this Hamcrest build to avoid a
+# Hamcrest-test -> JUnit -> Hamcrest package dependency cycle.
+mkdir junit-runner classes-test
+tar -xf %{SOURCE1}
+find junit4-r%{junit_version}/src/main/java -name '*.java' | sort > junit.sources
+javac --release 8 -encoding UTF-8 -cp hamcrest-core.jar -d junit-runner @junit.sources
+cp -rp junit4-r%{junit_version}/src/main/resources/. junit-runner/
+# Generator and integration tests exercise modules not packaged here.
+# JDK 7 language mode retains the inference rules used by the original generic tests.
+find hamcrest-unit-test/src/main/java/org/hamcrest -name '*.java' ! -name JavaLangMatcherAssertTest.java ! -path '*/generator/*' ! -path '*/integration/*' | sort > test.sources
+cp=hamcrest-core.jar:hamcrest-library.jar:junit-runner
+%{_prefix}/lib64/jvm/java-17-openjdk/bin/javac --release 7 -encoding UTF-8 -cp "$cp" -d classes-test @test.sources
+suites=$(find hamcrest-unit-test/src/main/java/org/hamcrest -name '*Test.java' ! -name 'Abstract*' ! -name JavaLangMatcherAssertTest.java ! -path '*/generator/*' ! -path '*/integration/*' | sed 's|^hamcrest-unit-test/src/main/java/||;s|/|.|g;s|[.]java$||')
+java -cp "classes-test:$cp" org.junit.runner.JUnitCore $suites
 
 %files
 %license LICENSE.txt
