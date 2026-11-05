@@ -19,6 +19,8 @@ BuildArch:      noarch
 # https://github.com/apache/ant/pull/239
 Patch2000:      2000-compare-explicit-zip-compression-levels.patch
 
+# The upstream ImageIO draw fixture renders text through Java AWT logical fonts.
+BuildRequires:  fonts-dejavu
 BuildRequires:  java-25-openjdk-devel
 BuildRequires:  java-hamcrest-1.3
 BuildRequires:  junit4
