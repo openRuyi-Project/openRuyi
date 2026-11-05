@@ -42,7 +42,9 @@ install -Dpm644 backport-util-concurrent.jar %{buildroot}%{_datadir}/java/backpo
 mkdir classes-test
 find test/tck/src -name '*.java' | sort > test.sources
 javac --release 8 -encoding UTF-8 -cp backport-util-concurrent.jar:%{_datadir}/java/junit4.jar -d classes-test @test.sources
-%{_prefix}/lib64/jvm/java-17-openjdk/bin/java -Dtck.shortDelay=100 -cp classes-test:backport-util-concurrent.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner JSR166TestCase
+# Match upstream's combined test JAR so access-control contexts share a code source.
+jar --create --file backport-util-concurrent-test.jar -C classes edu -C classes-test .
+%{_prefix}/lib64/jvm/java-17-openjdk/bin/java -Dtck.shortDelay=100 -cp backport-util-concurrent-test.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner JSR166TestCase
 
 %files
 %license license.html
