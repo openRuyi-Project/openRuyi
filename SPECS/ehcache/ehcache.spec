@@ -64,12 +64,16 @@ find core/src/test/java/net/sf/ehcache -maxdepth 1 -name '*.java' | sort > test.
 printf '%s\n' core/src/test/java/net/sf/ehcache/event/CountingCacheEventListenerFactory.java core/src/test/java/net/sf/ehcache/event/NullCacheEventListenerFactory.java core/src/test/java/net/sf/ehcache/event/TestCacheManagerEventListenerFactory.java core/src/test/java/net/sf/ehcache/exceptionhandler/CountingExceptionHandlerFactory.java core/src/test/java/net/sf/ehcache/extension/TestCacheExtensionFactory.java core/src/test/java/net/sf/ehcache/loader/ComponentALoader.java core/src/test/java/net/sf/ehcache/loader/ComponentBLoader.java core/src/test/java/net/sf/ehcache/loader/CountingCacheLoaderFactory.java >> test.sources
 javac --release 8 -encoding UTF-8 -cp "$cp" -sourcepath core/src/test/java -d classes-test @test.sources
 cp -rp core/src/test/resources/. classes-test/
-# Match the upstream module working directory and per-test-class JVM isolation.
+# Match the upstream module working directory. Isolate test methods because
+# cache-manager shutdown leaves asynchronous RMI and disk-store worker threads.
 # DiskStoreTest expects a 64 MiB heap; allow extra spool time through upstream's setting.
 cp="$PWD/classes-test:$PWD/$cp"
 cd core
 for suite in CacheExceptionTest CacheManagerTest CacheTest DiskStoreTest ElementTest StatusTest; do
-    java -Xmx64m -Djava.awt.headless=true -Dnet.sf.ehcache.speedAdjustmentFactor=4 -cp "$cp" org.junit.runner.JUnitCore "net.sf.ehcache.$suite" || exit 1
+    methods=$(sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p' "src/test/java/net/sf/ehcache/$suite.java")
+    for method in $methods; do
+        java -Xmx64m -Djava.awt.headless=true -Dnet.sf.ehcache.speedAdjustmentFactor=4 -cp "$cp" junit.textui.TestRunner -m "net.sf.ehcache.$suite.$method" || exit 1
+    done
 done
 # testAverageGetTime assumes reads take at least 0.05 ms, which is not portable to
 # current processors. Run every other upstream StatisticsTest method unchanged.
