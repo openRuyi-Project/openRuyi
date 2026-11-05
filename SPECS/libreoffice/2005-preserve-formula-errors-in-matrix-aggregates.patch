@@ -1,0 +1,188 @@
+From 2c17eb87340c30e61ed5dadebe6f68542b95a02f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 21:30:02 +0800
+Subject: [PATCH] Preserve Calc error codes across matrix arithmetic
+
+Calc stores formula errors in the payload of a NaN. Arithmetic may canonicalize that payload, as RISC-V does for the 502 and 538 errors returned by the GCD, LCM and external SUM tests. Record the first non-finite matrix input before doing arithmetic and keep the ignore-errors count unchanged. Propagate the explicit error to the interpreter and return a matrix GCD or LCM error before combining it with other operands.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ sc/inc/scmatrix.hxx              |  2 ++
+ sc/source/core/tool/interpr5.cxx | 18 ++++++++++++++----
+ sc/source/core/tool/interpr6.cxx | 15 ++++++++++++---
+ sc/source/core/tool/scmatrix.cxx | 25 ++++++++++++++++++++-----
+ 4 files changed, 48 insertions(+), 12 deletions(-)
+
+diff --git a/sc/inc/scmatrix.hxx b/sc/inc/scmatrix.hxx
+index 3142804..2b191dd 100644
+--- a/sc/inc/scmatrix.hxx
++++ b/sc/inc/scmatrix.hxx
+@@ -151,6 +151,8 @@ public:
+         tRes maAccumulator;
+         size_t mnCount;
+ 
++        FormulaError meError = FormulaError::NONE;
++
+         IterateResult(tRes fAccumulator, size_t nCount)
+             : maAccumulator(fAccumulator), mnCount(nCount) {}
+     };
+diff --git a/sc/source/core/tool/interpr5.cxx b/sc/source/core/tool/interpr5.cxx
+index a2bc2df..04992da 100644
+--- a/sc/source/core/tool/interpr5.cxx
++++ b/sc/source/core/tool/interpr5.cxx
+@@ -173,8 +173,13 @@ void ScInterpreter::ScGCD()
+                         SetError(FormulaError::IllegalArgument);
+                     else
+                     {
+-                     double nVal = pMat->GetGcd();
+-                     fy = ScGetGCD(nVal,fy);
++                        double nVal = pMat->GetGcd();
++                        if (!std::isfinite(nVal))
++                        {
++                            PushError(GetDoubleErrorValue(nVal));
++                            return;
++                        }
++                        fy = ScGetGCD(nVal, fy);
+                     }
+                 }
+             }
+@@ -253,8 +258,13 @@ void ScInterpreter:: ScLCM()
+                         SetError(FormulaError::IllegalArgument);
+                     else
+                     {
+-                     double nVal = pMat->GetLcm();
+-                     fy = (nVal * fy ) / ScGetGCD(nVal, fy);
++                        double nVal = pMat->GetLcm();
++                        if (!std::isfinite(nVal))
++                        {
++                            PushError(GetDoubleErrorValue(nVal));
++                            return;
++                        }
++                        fy = (nVal * fy) / ScGetGCD(nVal, fy);
+                     }
+                 }
+             }
+diff --git a/sc/source/core/tool/interpr6.cxx b/sc/source/core/tool/interpr6.cxx
+index dd7fb47..a8c1036 100644
+--- a/sc/source/core/tool/interpr6.cxx
++++ b/sc/source/core/tool/interpr6.cxx
+@@ -416,12 +416,12 @@ public:
+ 
+ }
+ 
+-static void IterateMatrix(
++static FormulaError IterateMatrix(
+     const ScMatrixRef& pMat, ScIterFunc eFunc, bool bTextAsZero, SubtotalFlags nSubTotalFlags,
+     sal_uLong& rCount, SvNumFormatType& rFuncFmtType, KahanSum& fRes )
+ {
+     if (!pMat)
+-        return;
++        return FormulaError::NONE;
+ 
+     const bool bIgnoreErrVal = bool(nSubTotalFlags & SubtotalFlags::IgnoreErrVal);
+     rFuncFmtType = SvNumFormatType::NUMBER;
+@@ -431,6 +431,8 @@ static void IterateMatrix(
+         case ifSUM:
+         {
+             ScMatrix::KahanIterateResult aRes = pMat->Sum(bTextAsZero, bIgnoreErrVal);
++            if (aRes.meError != FormulaError::NONE)
++                return aRes.meError;
+             fRes += aRes.maAccumulator;
+             rCount += aRes.mnCount;
+         }
+@@ -445,6 +447,8 @@ static void IterateMatrix(
+         case ifPRODUCT:
+         {
+             ScMatrix::DoubleIterateResult aRes = pMat->Product(bTextAsZero, bIgnoreErrVal);
++            if (aRes.meError != FormulaError::NONE)
++                return aRes.meError;
+             fRes *= aRes.maAccumulator;
+             rCount += aRes.mnCount;
+         }
+@@ -452,6 +456,8 @@ static void IterateMatrix(
+         case ifSUMSQ:
+         {
+             ScMatrix::KahanIterateResult aRes = pMat->SumSquare(bTextAsZero, bIgnoreErrVal);
++            if (aRes.meError != FormulaError::NONE)
++                return aRes.meError;
+             fRes += aRes.maAccumulator;
+             rCount += aRes.mnCount;
+         }
+@@ -459,6 +465,7 @@ static void IterateMatrix(
+         default:
+             ;
+     }
++    return FormulaError::NONE;
+ }
+ 
+ size_t ScInterpreter::GetRefListArrayMaxSize( short nParamCount )
+@@ -945,7 +952,9 @@ void ScInterpreter::IterateParameters( ScIterFunc eFunc, bool bTextAsZero )
+                 if ( nGlobalError != FormulaError::NONE && !( mnSubTotalFlags & SubtotalFlags::IgnoreErrVal ) )
+                     break;
+ 
+-                IterateMatrix( pMat, eFunc, bTextAsZero, mnSubTotalFlags, nCount, nFuncFmtType, fRes );
++                FormulaError eMatrixError = IterateMatrix( pMat, eFunc, bTextAsZero, mnSubTotalFlags, nCount, nFuncFmtType, fRes );
++                if (eMatrixError != FormulaError::NONE)
++                    SetError(eMatrixError);
+             }
+             break;
+             case svMatrix :
+diff --git a/sc/source/core/tool/scmatrix.cxx b/sc/source/core/tool/scmatrix.cxx
+index 63acabf..739cd38 100644
+--- a/sc/source/core/tool/scmatrix.cxx
++++ b/sc/source/core/tool/scmatrix.cxx
+@@ -1209,9 +1209,12 @@ public:
+                 block_type::const_iterator itEnd = block_type::end(*node.data);
+                 for (; it != itEnd; ++it)
+                 {
+-                    if (mbIgnoreErrorValues && !std::isfinite(*it))
++                    if (!std::isfinite(*it))
+                     {
+-                        ++nIgnored;
++                        if (mbIgnoreErrorValues)
++                            ++nIgnored;
++                        else if (maRes.meError == FormulaError::NONE)
++                            maRes.meError = GetDoubleErrorValue(*it);
+                         continue;
+                     }
+                     maOp(maRes.maAccumulator, *it);
+@@ -1664,6 +1667,8 @@ public:
+ 
+     void operator() ( const MatrixImplType::element_block_node_type& node )
+     {
++        if (!std::isfinite(mfval))
++            return;
+         switch (node.type)
+         {
+             case mdds::mtm::element_numeric:
+@@ -1675,9 +1680,16 @@ public:
+                     for ( ; it != itEnd; ++it)
+                     {
+                         if (*it < 0.0)
++                        {
+                             mfval = CreateDoubleError(FormulaError::IllegalArgument);
+-                        else
+-                            mfval = ::rtl::math::approxFloor( Op::calculate(*it,mfval));
++                            return;
++                        }
++                        if (!std::isfinite(*it))
++                        {
++                            mfval = *it;
++                            return;
++                        }
++                        mfval = ::rtl::math::approxFloor(Op::calculate(*it, mfval));
+                     }
+                 }
+             break;
+@@ -2132,7 +2144,10 @@ ScMatrix::IterateResult<tRes> GetValueWithCount(bool bTextAsZero, bool bIgnoreEr
+ {
+     WalkElementBlocks<TOp, tRes> aFunc(bTextAsZero, bIgnoreErrorValues);
+     aFunc = maMat.walk(aFunc);
+-    return aFunc.getResult();
++    auto result = aFunc.getResult();
++    if (result.meError != FormulaError::NONE)
++        result.maAccumulator = tRes(CreateDoubleError(result.meError));
++    return result;
+ }
+ 
+ }
