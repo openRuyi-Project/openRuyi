@@ -1,0 +1,51 @@
+From 7b39ada2e5dc36707167d3ab962e9020cff10706 Mon Sep 17 00:00:00 2001
+From: nickl- <github@jigsoft.co.za>
+Date: Wed, 4 Nov 2026 00:17:58 +0800
+Subject: [PATCH] Honor explicit accessibility for members of non-public
+ classes
+
+The upstream Invocable opens members when the caller requests access.
+On the 2.x constructor, method and field paths a public declaration on a
+package-private class still needs the same access override. Preserve the
+default public-only mode and the exclusion of java.lang.Class constructors.
+
+Upstream-Commit: https://github.com/beanshell/beanshell/commit/9a3f3e411bd7c651a3642a41cbfdb6687d24bc9f
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/bsh/Reflect.java | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/bsh/Reflect.java b/src/bsh/Reflect.java
+index 56379456..cfc9c32a 100644
+--- a/src/bsh/Reflect.java
++++ b/src/bsh/Reflect.java
+@@ -444,7 +444,7 @@ final class Reflect {
+ 			checkFoundStaticMethod(method, staticOnly, clas);
+ 
+ 			// This is the first time we've seen this method, set accessibility if needed
+-			if ((method != null) && !isPublic(method)) {
++			if (method != null && (!isPublic(method) || !isPublic(method.getDeclaringClass()))) {
+ 				if (publicOnly) {
+ 					Interpreter.debug("resolveJavaMethod - no accessible method found");
+ 					method = null;
+@@ -561,7 +561,7 @@ final class Reflect {
+ 			throw cantFindConstructor(clas, types);
+ 		}
+ 
+-		if (!isPublic(con) && Capabilities.haveAccessibility()) {
++		if (Capabilities.haveAccessibility() && clas != Class.class && (!isPublic(con) || !isPublic(clas))) {
+ 			con.setAccessible(true);
+ 		}
+ 
+@@ -913,7 +913,7 @@ final class Reflect {
+ 
+ 
+ 	static void setAccessible(final Field field) {
+-		if ( ! isPublic(field) && Capabilities.haveAccessibility()) {
++		if (Capabilities.haveAccessibility() && (!isPublic(field) || !isPublic(field.getDeclaringClass()))) {
+ 			field.setAccessible(true);
+ 		}
+ 	}
+-- 
+2.54.0
+

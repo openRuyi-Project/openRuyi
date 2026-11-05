@@ -1,0 +1,34 @@
+From b8160e63a0c822f047fda1f560a2e4a1d2edb040 Mon Sep 17 00:00:00 2001
+From: nickl- <github@jigsoft.co.za>
+Date: Wed, 4 Nov 2026 00:22:04 +0800
+Subject: [PATCH] Apply the access override before returning a public field
+
+The getField fast path can return a public field declared by a non-public
+class. Apply the access check before returning, as for other members.
+Use the 2.x helper to keep exported public declarations accessible without
+requesting a reflective override.
+
+Upstream-Commit: https://github.com/beanshell/beanshell/commit/c98a9741cd3f2690c89927bfc60eb6849d71aae0
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/bsh/Reflect.java | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/bsh/Reflect.java b/src/bsh/Reflect.java
+index cfc9c32a..6951af41 100644
+--- a/src/bsh/Reflect.java
++++ b/src/bsh/Reflect.java
+@@ -346,7 +346,9 @@ final class Reflect {
+ 	private static Field findAccessibleField(Class clas, String fieldName) throws UtilEvalError, NoSuchFieldException {
+ 		// Quick check catches public fields include those in interfaces
+         try {
+-            return clas.getField(fieldName);
++            Field field = clas.getField(fieldName);
++            setAccessible(field);
++            return field;
+ 		} catch (NoSuchFieldException e) {
+ 			// ignore
+ 		}
+-- 
+2.54.0
+

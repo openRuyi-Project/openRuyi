@@ -1,0 +1,59 @@
+From d515ebb5fa6327fd19b31d76d68f0c5c00dc27bb Mon Sep 17 00:00:00 2001
+From: Jim Jagielski <jimjag@gmail.com>
+Date: Wed, 4 Nov 2026 00:08:54 +0800
+Subject: [PATCH] Choose exported declarations when resolving public Java
+ methods
+
+Use the upstream module-export predicate in the 2.x candidate collector.
+An implementation in a JDK-internal package can implement a method of an
+exported superclass. Invoke the public superclass declaration in that case.
+
+Upstream-Commit: https://github.com/beanshell/beanshell/commit/3afe1c973b012bc78754fbad0e7f7c9e36a82ef4
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/bsh/Reflect.java | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/src/bsh/Reflect.java b/src/bsh/Reflect.java
+index 89cbe0e5..56379456 100644
+--- a/src/bsh/Reflect.java
++++ b/src/bsh/Reflect.java
+@@ -510,10 +510,11 @@ final class Reflect {
+ 		if (superclass != null) {
+ 			collectMethods(superclass, methodName, numArgs, publicMethods, nonPublicMethods);
+ 		}
++		final boolean exported = isPublic(baseClass) && isExportedToUnnamedModules(baseClass);
+ 		final Method[] methods = baseClass.getDeclaredMethods();
+ 		for (final Method m : methods) {
+ 			if (matchesNameAndSignature(m, methodName, numArgs)) {
+-				if (isPublic(m.getDeclaringClass()) && isPublic(m)) {
++				if (exported && isPublic(m)) {
+ 					publicMethods.add(m);
+ 				} else {
+ 					nonPublicMethods.add(m);
+@@ -880,6 +881,22 @@ final class Reflect {
+ 	}
+ 
+ 
++    private static boolean isExportedToUnnamedModules(Class<?> type) {
++        try {
++            Object module = Class.class.getMethod("getModule").invoke(type);
++            Method isNamed = module.getClass().getMethod("isNamed");
++            if (!(Boolean) isNamed.invoke(module))
++                return true;
++            Package pkg = type.getPackage();
++            String packageName = pkg == null ? "" : pkg.getName();
++            return (Boolean) module.getClass().getMethod("isExported", String.class)
++                .invoke(module, packageName);
++        } catch (ReflectiveOperationException noModuleSystem) {
++            // JDK 8: nothing to export from.
++            return true;
++        }
++    }
++
+ 	private static boolean isPublic(Member member) {
+ 		return Modifier.isPublic(member.getModifiers());
+ 	}
+-- 
+2.54.0
+

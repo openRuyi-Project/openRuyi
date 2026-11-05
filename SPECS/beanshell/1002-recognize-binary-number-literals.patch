@@ -1,0 +1,79 @@
+From 468964dec71328209ff69cced97fda95a0d58f37 Mon Sep 17 00:00:00 2001
+From: nickl- <github@jigsoft.co.za>
+Date: Wed, 4 Nov 2026 00:03:30 +0800
+Subject: [PATCH] Recognize binary integer literals in the 2.x grammar
+
+Backport the upstream binary radix and token production to the release
+grammar. Require an actual binary digit before the token ends, since the
+2.x accumulation loop does not reject an empty sequence of digits. Retain
+the existing decimal and hexadecimal productions.
+
+Upstream-Commit: https://github.com/beanshell/beanshell/commit/ca6d368aeef66908e4e9550ed93f23d896d07304
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/bsh/bsh.jjt | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/src/bsh/bsh.jjt b/src/bsh/bsh.jjt
+index 174eeb16..b90d049a 100644
+--- a/src/bsh/bsh.jjt
++++ b/src/bsh/bsh.jjt
+@@ -199,7 +199,10 @@ public class Parser
+ 	int parseInt(String s) throws NumberFormatException {
+ 		int radix;
+ 		int i;
+-		if( s.startsWith("0x") || s.startsWith("0X") ) {
++		if( s.startsWith("0b") || s.startsWith("0B") ) {
++			radix = 2;
++			i = 2;
++		} else if( s.startsWith("0x") || s.startsWith("0X") ) {
+ 			radix = 16;
+ 			i = 2;
+ 		} else if( s.startsWith("0") && s.length() > 1 ) {
+@@ -212,6 +215,7 @@ public class Parser
+ 		int result = 0;
+ 		int len = s.length();
+ 		for( ; i<len; i++ ) {
++			if (s.charAt(i) == '_') continue;
+ 			if( result < 0 )
+ 				throw new NumberFormatException("Number too big for integer type: "+s);
+ 			result *= radix;
+@@ -226,7 +230,10 @@ public class Parser
+ 	long parseLong(String s) throws NumberFormatException {
+ 		int radix;
+ 		int i;
+-		if( s.startsWith("0x") || s.startsWith("0X") ) {
++		if( s.startsWith("0b") || s.startsWith("0B") ) {
++			radix = 2;
++			i = 2;
++		} else if( s.startsWith("0x") || s.startsWith("0X") ) {
+ 			radix = 16;
+ 			i = 2;
+ 		} else if( s.startsWith("0") && s.length() > 1 ) {
+@@ -239,6 +246,7 @@ public class Parser
+ 		long result = 0;
+ 		int len = s.length();
+ 		for( ; i<len; i++ ) {
++			if (s.charAt(i) == '_') continue;
+ 			if( result < 0L )
+ 				throw new NumberFormatException("Number too big for long type: "+s);
+ 			result *= radix;
+@@ -336,12 +344,15 @@ TOKEN : /* LITERALS */
+   < INTEGER_LITERAL:
+         <DECIMAL_LITERAL> (["l","L"])?
+       | <HEX_LITERAL> (["l","L"])?
++      | <BINARY_LITERAL> (["l","L"])?
+       | <OCTAL_LITERAL> (["l","L"])?
+   >
+ |
+   < #DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+ |
+   < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
++|
++  < #BINARY_LITERAL: "0" ["b","B"] (["0","1","_"])* ["0","1"] >
+ |
+   < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+ |
+-- 
+2.54.0
+

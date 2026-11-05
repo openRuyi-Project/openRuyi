@@ -1,0 +1,100 @@
+From edf70aea98adfdbc6029cd9e526775afa4d5e3c6 Mon Sep 17 00:00:00 2001
+From: nickl- <github@jigsoft.co.za>
+Date: Mon, 6 Nov 2017 18:21:53 +0200
+Subject: [PATCH] Report filtered test methods through JUnit's notifier
+
+JUnit can return an unmodifiable list from getChildren(). Adopt the
+upstream runChild implementation so that known-issue categories are
+reported as ignored and other tests in those classes still run.
+
+Upstream-Commit: 4ed14a79a4a9e5de27c2bc0a29d95d1fae86f28d
+Upstream-Status: Backport [https://github.com/beanshell/beanshell/commit/4ed14a79a4a9e5de27c2bc0a29d95d1fae86f28d]
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ .../src/bsh/FilteredTestRunner.java           | 63 +++++++++----------
+ 1 file changed, 28 insertions(+), 35 deletions(-)
+
+diff --git a/tests/junitTests/src/bsh/FilteredTestRunner.java b/tests/junitTests/src/bsh/FilteredTestRunner.java
+index e3a397e0..4f5aa57f 100644
+--- a/tests/junitTests/src/bsh/FilteredTestRunner.java
++++ b/tests/junitTests/src/bsh/FilteredTestRunner.java
+@@ -26,48 +26,41 @@
+ package bsh;
+ 
+ import org.junit.experimental.categories.Category;
++import org.junit.runner.Description;
++import org.junit.runner.notification.RunNotifier;
+ import org.junit.runners.BlockJUnit4ClassRunner;
+ import org.junit.runners.model.FrameworkMethod;
+ import org.junit.runners.model.InitializationError;
+ 
+-import java.util.Iterator;
+-import java.util.List;
+-
+ public class FilteredTestRunner extends BlockJUnit4ClassRunner {
+ 
+ 
+-	public FilteredTestRunner(final Class<?> klass) throws InitializationError {
+-		super(klass);
+-	}
++    public FilteredTestRunner(final Class<?> klass) throws InitializationError {
++        super(klass);
++    }
+ 
+ 
+-	@Override
+-	protected List<FrameworkMethod> getChildren() {
+-		final List<FrameworkMethod> children = super.getChildren();
+-		final Iterator<FrameworkMethod> iterator = children.iterator();
+-		while (iterator.hasNext()) {
+-			final FrameworkMethod child = iterator.next();
+-			final Category category = child.getAnnotation(Category.class);
+-			if (category != null) {
+-				final Class<?>[] value = category.value();
+-				for (final Class<?> categoryClass : value) {
+-					if (TestFilter.class.isAssignableFrom(categoryClass)) {
+-						try {
+-							final TestFilter testFilter = (TestFilter) categoryClass.newInstance();
+-							if (testFilter.skip()) {
+-								System.out.println("skipping test " + child.getMethod() + " due filter " + categoryClass.getSimpleName());
+-								iterator.remove();
+-								break;
+-							}
+-						} catch (final InstantiationException e) {
+-							throw new AssertionError(e);
+-						} catch (final IllegalAccessException e) {
+-							throw new AssertionError(e);
+-						}
+-					}
+-				}
+-			}
+-		}
+-		return children;
+-	}
++    @Override
++    protected void runChild(final FrameworkMethod method, RunNotifier notifier) {
++        Description description= describeChild(method);
++        final Category category = method.getAnnotation(Category.class);
++        if (category != null) {
++            final Class<?>[] value = category.value();
++            for (final Class<?> categoryClass : value) {
++                if (TestFilter.class.isAssignableFrom(categoryClass)) {
++                    try {
++                        final TestFilter testFilter = (TestFilter) categoryClass.newInstance();
++                        if (testFilter.skip()) {
++                            notifier.fireTestIgnored(description);
++//                            System.out.println("skipping test " + method.getMethod() + " due filter " + categoryClass.getSimpleName());
++                            return;
++                        }
++                    } catch (final InstantiationException | IllegalAccessException e) {
++                        throw new AssertionError(e);
++                    }
++                }
++            }
++        }
++        runLeaf(methodBlock(method), description, notifier);
++    }
+ }
+-- 
+2.54.0
+

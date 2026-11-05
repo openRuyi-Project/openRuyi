@@ -1,0 +1,31 @@
+From 2f03a8808350a3f9c28c50429bb4a1749a1a00b3 Mon Sep 17 00:00:00 2001
+From: nickl- <github@jigsoft.co.za>
+Date: Mon, 21 May 2018 13:38:00 +0200
+Subject: [PATCH] Import the script engine factory in Issue_55_Test
+
+The factory is defined in bsh.engine while the test is in bsh.
+Backport the upstream import to the 2.x Ant test layout.
+
+Upstream-Commit: b01a7aff570ace1c66eef03133efc30ad67086f1
+Upstream-Status: Backport [https://github.com/beanshell/beanshell/commit/b01a7aff570ace1c66eef03133efc30ad67086f1]
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ tests/junitTests/src/bsh/Issue_55_Test.java | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tests/junitTests/src/bsh/Issue_55_Test.java b/tests/junitTests/src/bsh/Issue_55_Test.java
+index f47b3927..5a3f1d11 100644
+--- a/tests/junitTests/src/bsh/Issue_55_Test.java
++++ b/tests/junitTests/src/bsh/Issue_55_Test.java
+@@ -29,6 +29,8 @@ import org.junit.Test;
+ import org.junit.experimental.categories.Category;
+ import org.junit.runner.RunWith;
+ 
++import bsh.engine.BshScriptEngineFactory;
++
+ import javax.script.ScriptException;
+ 
+ import static junit.framework.Assert.assertEquals;
+-- 
+2.54.0
+

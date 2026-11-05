@@ -1,0 +1,70 @@
+From ce5112db345458b30a4b8e0b2bfc0cbb4663d82c Mon Sep 17 00:00:00 2001
+From: Patrick Niemeyer <patniemeyer@gmail.com>
+Date: Wed, 4 Nov 2026 00:11:37 +0800
+Subject: [PATCH] Recognize static initializer blocks in scripted classes
+
+Restore the upstream block marker and class-node filter in the 2.x
+generator. The named and anonymous class-body productions set the marker
+so ordinary statement blocks retain their previous grammar.
+
+Upstream-Commit: https://github.com/beanshell/beanshell/commit/fa7c10c341de6c9cb22c780a209737bcb76adccd
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/bsh/ClassGenerator.java |  3 +--
+ src/bsh/bsh.jjt             | 12 ++++++++++--
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/src/bsh/ClassGenerator.java b/src/bsh/ClassGenerator.java
+index 959a6f37..82b98889 100644
+--- a/src/bsh/ClassGenerator.java
++++ b/src/bsh/ClassGenerator.java
+@@ -245,8 +245,7 @@ public final class ClassGenerator {
+             if (node instanceof BSHMethodDeclaration)
+                 return ((BSHMethodDeclaration) node).modifiers != null && ((BSHMethodDeclaration) node).modifiers.hasModifier("static");
+ 
+-            // need to add static block here
+-            if (node instanceof BSHBlock) return false;
++            if (node instanceof BSHBlock) return ((BSHBlock) node).isStatic;
+ 
+             return false;
+         }
+diff --git a/src/bsh/bsh.jjt b/src/bsh/bsh.jjt
+index 3fca52e6..dbfc775e 100644
+--- a/src/bsh/bsh.jjt
++++ b/src/bsh/bsh.jjt
+@@ -583,7 +583,7 @@ void ClassDeclaration() #ClassDeclaration :
+ 	[ "extends" AmbiguousName() { jjtThis.extend = true; } ] 
+ 	[ "implements" numInterfaces=NameList() 
+ 		{ jjtThis.numInterfaces=numInterfaces; } ]
+-	Block() 
++	ClassBody() 
+ 	{
+ 		jjtThis.modifiers = mods;
+ 		jjtThis.name = name.image;
+@@ -1159,7 +1159,7 @@ void AllocationExpression() #AllocationExpression :
+ 		ArrayDimensions() 
+ 	| 
+ 		// SYNTACTIC_LOOKAHEAD
+-		Arguments() [ LOOKAHEAD(2) Block() ]
++		Arguments() [ LOOKAHEAD(2) ClassBody() ]
+ 	)
+ }
+ 
+@@ -1223,6 +1223,14 @@ void LabeledStatement() :
+   <IDENTIFIER> ":" Statement()
+ }
+ 
++void ClassBody() #Block :
++{}
++{
++  "{" ( LOOKAHEAD("static" "{") "static" Block()
++          { ((BSHBlock)jjtree.peekNode()).isStatic = true; }
++      | BlockStatement() )* "}"
++}
++
+ void Block() #Block :
+ {}
+ {
+-- 
+2.54.0
+
