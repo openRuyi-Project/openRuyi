@@ -59,7 +59,8 @@ org.apache.xmlgraphics.util.UnitConvTestCase"
 for suite in $suites; do printf 'src/test/java/%s.java\n' "$(echo "$suite" | tr . /)"; done > test.sources
 javac --release 11 -encoding UTF-8 -cp "$cp" -sourcepath src/test/java -d classes-test @test.sources
 cp -rp src/test/resources/. classes-test/
-java -Djava.awt.headless=true -cp "classes-test:$cp" org.junit.runner.JUnitCore $suites
+# The DSC text fixtures are stored alongside the Java test sources.
+java -Djava.awt.headless=true -cp "classes-test:src/test/java:$cp" org.junit.runner.JUnitCore $suites
 
 %files
 %license LICENSE NOTICE
