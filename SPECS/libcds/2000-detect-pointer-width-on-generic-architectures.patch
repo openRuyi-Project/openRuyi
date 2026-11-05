@@ -1,0 +1,36 @@
+From 27a431757eb24078c9f6be485afac086bd11c96d Mon Sep 17 00:00:00 2001
+From: Yangfl <mmyangfl@gmail.com>
+Date: Thu, 5 Nov 2026 21:27:38 +0800
+Subject: [PATCH] Detect pointer width on generic architectures
+
+The generic C++ atomic implementation must use 64-bit words on riscv64.
+Reuse the pointer-size check used for ARM.
+
+Based on Debian libcds 2.3.3-7 ftbfs.patch by Yangfl.
+Upstream-Reference: https://sources.debian.org/patches/libcds/2.3.3-7/ftbfs.patch/
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ cds/compiler/gcc/compiler_macro.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/cds/compiler/gcc/compiler_macro.h b/cds/compiler/gcc/compiler_macro.h
+index f954d6c..841eca6 100644
+--- a/cds/compiler/gcc/compiler_macro.h
++++ b/cds/compiler/gcc/compiler_macro.h
+@@ -127,7 +127,11 @@
+ #       error "Libcds does not support atomic implementation for the processor architecture. Try to use C++11-compatible compiler and remove CDS_USE_LIBCDS_ATOMIC flag from compiler command line"
+ #   else
+ #       define CDS_PROCESSOR_ARCH    CDS_PROCESSOR_UNKNOWN
+-#       define CDS_BUILD_BITS        32
++#       if __SIZEOF_POINTER__ == 8
++#           define CDS_BUILD_BITS        64
++#       else
++#           define CDS_BUILD_BITS        32
++#       endif
+ #       define CDS_PROCESSOR__NAME   "unknown"
+ #       define CDS_PROCESSOR__NICK   "unknown"
+ #   endif
+-- 
+2.54.0
+
