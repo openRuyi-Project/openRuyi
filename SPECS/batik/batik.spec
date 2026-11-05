@@ -86,12 +86,14 @@ for module in batik-css batik-bridge batik-swing batik-util batik-test; do
     if test -d "$module/src/test/resources"; then cp -rp "$module/src/test/resources/." classes-test/; fi
     if test -d "$module/src/main/resources"; then cp -rp "$module/src/main/resources/." classes-test/; fi
 done
-java -Djava.awt.headless=true -cp "classes-test:$cp" org.junit.runner.JUnitCore \
+# The bridge regression test resolves its SVG relative to the module directory.
+cp="$PWD/classes-test:$PWD/$cp"
+(cd batik-bridge && java -Djava.awt.headless=true -cp "$cp" org.junit.runner.JUnitCore \
     org.apache.batik.css.parser.ParserTestCase \
     org.apache.batik.bridge.UserAgentAdapterTestCase \
     org.apache.batik.bridge.SVGUseElementBridgeTestCase \
     org.apache.batik.swing.svg.SVGUserAgentAdapterTestCase \
-    org.apache.batik.util.UtilitiesTestSuite
+    org.apache.batik.util.UtilitiesTestSuite)
 
 %files
 %license LICENSE NOTICE
