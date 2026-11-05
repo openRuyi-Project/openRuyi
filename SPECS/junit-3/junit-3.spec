@@ -42,11 +42,13 @@ install -Dpm644 junit-3.jar %{buildroot}%{_datadir}/java/junit-3.jar
 mkdir classes-test
 find junit/tests junit/samples -name '*.java' | sort > test.sources
 %{_prefix}/lib64/jvm/java-17-openjdk/bin/javac --release 7 -encoding ISO-8859-1 -cp junit-3.jar -d classes-test @test.sources
+# Rebuild the upstream class-loader fixture from its accompanying Java source.
+%{_prefix}/lib64/jvm/java-17-openjdk/bin/jar --create --file classes-test/junit/tests/runner/test.jar -C classes-test junit/tests/runner/LoadedFromJar.class
 %{_prefix}/lib64/jvm/java-17-openjdk/bin/java -Djava.awt.headless=true -cp classes-test:junit-3.jar junit.textui.TestRunner junit.tests.AllTests
 
 %files
-%license cpl-v10.html
 %doc README.html
+%license cpl-v10.html
 %{_datadir}/java/junit-3.jar
 
 %changelog
