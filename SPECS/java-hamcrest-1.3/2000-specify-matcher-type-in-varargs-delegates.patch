@@ -1,0 +1,98 @@
+From 4ecbd02038db860696edfffd0047af6e739e626c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 23:45:15 +0800
+Subject: [PATCH] Make the type of Hamcrest varargs matcher delegates explicit
+
+Current javac cannot infer a single type for the iterable overload from the wildcard matcher array. Supply the same method type argument when delegating to that overload. Preserve all public factories and matcher behavior.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java        | 2 +-
+ hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java        | 2 +-
+ .../org/hamcrest/collection/IsArrayContainingInAnyOrder.java    | 2 +-
+ .../java/org/hamcrest/collection/IsArrayContainingInOrder.java  | 2 +-
+ .../org/hamcrest/collection/IsIterableContainingInAnyOrder.java | 2 +-
+ .../org/hamcrest/collection/IsIterableContainingInOrder.java    | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java b/hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java
+index a5daf94..2756cfd 100644
+--- a/hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java
++++ b/hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java
+@@ -57,7 +57,7 @@ public class AllOf<T> extends DiagnosingMatcher<T> {
+      */
+     @Factory
+     public static <T> Matcher<T> allOf(Matcher<? super T>... matchers) {
+-        return allOf(Arrays.asList(matchers));
++        return AllOf.<T>allOf(Arrays.asList(matchers));
+     }
+ 
+     /**
+diff --git a/hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java b/hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java
+index de00677..ae2e9b3 100644
+--- a/hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java
++++ b/hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java
+@@ -47,7 +47,7 @@ public class AnyOf<T> extends ShortcutCombination<T> {
+      */
+     @Factory
+     public static <T> AnyOf<T> anyOf(Matcher<? super T>... matchers) {
+-        return anyOf(Arrays.asList(matchers));
++        return AnyOf.<T>anyOf(Arrays.asList(matchers));
+     }
+ 
+     /**
+diff --git a/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInAnyOrder.java b/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInAnyOrder.java
+index d4e01f0..ece8bd6 100644
+--- a/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInAnyOrder.java
++++ b/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInAnyOrder.java
+@@ -55,7 +55,7 @@ public class IsArrayContainingInAnyOrder<E> extends TypeSafeMatcher<E[]> {
+      */
+     @Factory
+     public static <E> Matcher<E[]> arrayContainingInAnyOrder(Matcher<? super E>... itemMatchers) {
+-        return arrayContainingInAnyOrder(Arrays.asList(itemMatchers));
++        return IsArrayContainingInAnyOrder.<E>arrayContainingInAnyOrder(Arrays.asList(itemMatchers));
+     }
+ 
+     /**
+diff --git a/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInOrder.java b/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInOrder.java
+index 145f964..8657bc7 100644
+--- a/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInOrder.java
++++ b/hamcrest-library/src/main/java/org/hamcrest/collection/IsArrayContainingInOrder.java
+@@ -69,7 +69,7 @@ public class IsArrayContainingInOrder<E> extends TypeSafeMatcher<E[]> {
+      */
+     @Factory
+     public static <E> Matcher<E[]> arrayContaining(Matcher<? super E>... itemMatchers) {
+-        return arrayContaining(asList(itemMatchers));
++        return IsArrayContainingInOrder.<E>arrayContaining(asList(itemMatchers));
+     }
+ 
+     /**
+diff --git a/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInAnyOrder.java b/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInAnyOrder.java
+index 22fd299..fcc8a46 100644
+--- a/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInAnyOrder.java
++++ b/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInAnyOrder.java
+@@ -122,7 +122,7 @@ public class IsIterableContainingInAnyOrder<T> extends TypeSafeDiagnosingMatcher
+      */
+     @Factory
+     public static <T> Matcher<Iterable<? extends T>> containsInAnyOrder(Matcher<? super T>... itemMatchers) {
+-        return containsInAnyOrder(Arrays.asList(itemMatchers));
++        return IsIterableContainingInAnyOrder.<T>containsInAnyOrder(Arrays.asList(itemMatchers));
+     }
+ 
+     /**
+diff --git a/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInOrder.java b/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInOrder.java
+index 8c0552a..bb8af73 100644
+--- a/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInOrder.java
++++ b/hamcrest-library/src/main/java/org/hamcrest/collection/IsIterableContainingInOrder.java
+@@ -138,7 +138,7 @@ public class IsIterableContainingInOrder<E> extends TypeSafeDiagnosingMatcher<It
+      */
+     @Factory
+     public static <E> Matcher<Iterable<? extends E>> contains(Matcher<? super E>... itemMatchers) {
+-        return contains(asList(itemMatchers));
++        return IsIterableContainingInOrder.<E>contains(asList(itemMatchers));
+     }
+ 
+     /**
+-- 
+2.54.0
+
