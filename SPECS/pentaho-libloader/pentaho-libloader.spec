@@ -14,6 +14,15 @@ License:        LGPL-2.1-only
 URL:            https://github.com/pentaho/pentaho-reporting
 #!RemoteAsset:  sha256:3d853b19b1d94a6efa69e7af90f7f2b09ecf302913bee3da796c15ecfebcfac8
 Source0:        https://downloads.sourceforge.net/project/jfreereport/02.%20Libraries/%{version}-stable/libloader-%{version}.zip
+# Applied by the LibreOffice external project for this source release.
+#!RemoteAsset:  sha256:8980ba27dc14ba20a9f78ccf3c5612dbafdb7add66a95e75a0501bfddd82e765
+Source1:        https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/common_build.patch#/2000-common_build.patch
+# LibreOffice upstream patch.
+#!RemoteAsset:  sha256:a231318b1877fd418c7f27eab7a0fc0178be812f96b593f207f50ee1902ab99e
+Source2:        https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/libloader-1.1.6-deprecated.patch#/2001-libloader-1.1.6-deprecated.patch
+# LibreOffice upstream patch.
+#!RemoteAsset:  sha256:f6266a81995e3ad7dd491dd9e9efefd5a98471542d0d3d0699a99fcad51e98a7
+Source3:        https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/libloader-1.1.3-remove-commons-logging.patch.1#/2002-libloader-1.1.3-remove-commons-logging.patch
 BuildArch:      noarch
 
 BuildRequires:  ant
@@ -32,21 +41,15 @@ Requires:       pentaho-libpixie
 Requires:       xml-commons-apis-ext
 
 %patchlist
-# Applied by the LibreOffice external project for this source release.
-#!RemoteAsset:  sha256:8980ba27dc14ba20a9f78ccf3c5612dbafdb7add66a95e75a0501bfddd82e765
-https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/common_build.patch
-# LibreOffice upstream patch.
-#!RemoteAsset:  sha256:a231318b1877fd418c7f27eab7a0fc0178be812f96b593f207f50ee1902ab99e
-https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/libloader-1.1.6-deprecated.patch
-# LibreOffice upstream patch.
-#!RemoteAsset:  sha256:f6266a81995e3ad7dd491dd9e9efefd5a98471542d0d3d0699a99fcad51e98a7
-https://raw.githubusercontent.com/LibreOffice/core/libreoffice-%{lo_version}/external/jfreereport/patches/libloader-1.1.3-remove-commons-logging.patch.1
+%{SOURCE1}
+%{SOURCE2}
+%{SOURCE3}
 # Downstream fix for SVG resource detection and rendering through the public resource manager.
 # https://github.com/pentaho/pentaho-reporting/tree/master/libraries/libloader
-2000-match-resource-file-extensions.patch
+2003-match-resource-file-extensions.patch
 # Downstream fix for SVG resource detection and rendering through the public resource manager.
 # https://github.com/pentaho/pentaho-reporting/tree/master/libraries/libloader
-2001-render-svg-before-reading-pixels.patch
+2004-render-svg-before-reading-pixels.patch
 
 %description
 LibLoader loads and caches typed report resources, including SVG and WMF images.
