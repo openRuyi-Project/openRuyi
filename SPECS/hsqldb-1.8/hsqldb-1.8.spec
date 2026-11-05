@@ -128,8 +128,7 @@ javac --release 8 -encoding UTF-8 -cp lib/hsqldb.jar:%{_datadir}/java/junit4.jar
 # TestBase stops its TCP server asynchronously. Isolate methods so a subsequent
 # fixture cannot reconnect while the preceding server is still shutting down.
 for suite in $suites; do
-    source="src/$(echo "$suite" | tr . /).java"
-    methods=$(sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p' "$source")
+    methods=$(javap -classpath classes-test "$suite" | sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p')
     for method in $methods; do
         java -cp classes-test:lib/hsqldb.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner -m "$suite.$method" || exit 1
     done
