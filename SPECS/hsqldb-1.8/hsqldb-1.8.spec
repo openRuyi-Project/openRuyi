@@ -101,11 +101,26 @@ ant -nouserlib -f build/build.xml -Dbuild.label=%{version} \
 install -Dpm644 lib/hsqldb.jar %{buildroot}%{_datadir}/java/hsqldb1.8/hsqldb.jar
 
 %check
-# Run the upstream JDBC and persistent SQL regression suite with its SQL fixtures.
+# Run the self-contained JDBC suites listed by upstream AllTests.
+# TestGroupByHaving, TestSubselect and TestSqlPersistent depend on TestSelf,
+# whose StringComparator helper is absent from this release. The persistent
+# suite additionally hardcodes the unwritable /hsql/test database directory.
 mkdir classes-test
-find src/org/hsqldb/test -name '*.java' | sort > test.sources
-javac --release 8 -encoding UTF-8 -cp lib/hsqldb.jar:%{_datadir}/java/junit4.jar -d classes-test @test.sources
-java -cp classes-test:lib/hsqldb.jar:%{_datadir}/java/junit4.jar org.junit.runner.JUnitCore org.hsqldb.test.AllTests
+suites="org.hsqldb.test.TestBatchExecution
+org.hsqldb.test.TestBug778213
+org.hsqldb.test.TestBug785429
+org.hsqldb.test.TestBug808460
+org.hsqldb.test.TestDatabaseMetaData
+org.hsqldb.test.TestDateTime
+org.hsqldb.test.TestJDBCSavepoints
+org.hsqldb.test.TestINPredicateParameterizationAndCorrelation
+org.hsqldb.test.TestLikePredicateOptimizations
+org.hsqldb.test.TestSql
+org.hsqldb.test.TestTimestamp
+org.hsqldb.test.TestViewAsterisks"
+for suite in $suites; do printf 'src/%s.java\n' "$(echo "$suite" | tr . /)"; done > test.sources
+javac --release 8 -encoding UTF-8 -cp lib/hsqldb.jar:%{_datadir}/java/junit4.jar -sourcepath src -d classes-test @test.sources
+java -cp classes-test:lib/hsqldb.jar:%{_datadir}/java/junit4.jar org.junit.runner.JUnitCore $suites
 
 %files
 %license doc/hsqldb_lic.txt doc/hypersonic_lic.txt
