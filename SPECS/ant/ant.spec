@@ -15,6 +15,10 @@ VCS:            git:https://github.com/apache/ant.git
 Source0:        https://archive.apache.org/dist/ant/source/apache-ant-%{version}-src.tar.bz2
 BuildArch:      noarch
 
+# Submitted upstream: compare explicit compression levels with current JDK zlib implementations.
+# https://github.com/apache/ant/pull/239
+Patch2000:      2000-compare-explicit-zip-compression-levels.patch
+
 BuildRequires:  java-25-openjdk-devel
 BuildRequires:  java-hamcrest-1.3
 BuildRequires:  junit4
@@ -36,7 +40,7 @@ Requires:       junit4
 The optional JUnit tasks run Java test suites and write Ant XML test reports.
 
 %prep
-%autosetup -n apache-ant-%{version}
+%autosetup -p1 -n apache-ant-%{version}
 # dist-lite compiles the test sources and the JUnit adapters against lib/optional.
 # Keep the signed-JAR fixtures in src/etc/testcases used to test archive signatures.
 find lib -type f -name '*.jar' -delete
