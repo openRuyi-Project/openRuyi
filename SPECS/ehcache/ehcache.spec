@@ -60,6 +60,8 @@ install -Dpm644 ehcache.jar %{buildroot}%{_datadir}/java/ehcache.jar
 mkdir classes-test
 cp=ehcache.jar:%{_datadir}/java/backport-util-concurrent.jar:%{_datadir}/java/jsr107cache.jar:%{_datadir}/java/commons-collections3.jar:%{_datadir}/java/jcl-over-slf4j.jar:%{_datadir}/java/slf4j-jdk14.jar:%{_datadir}/java/junit4.jar
 find core/src/test/java/net/sf/ehcache -maxdepth 1 -name '*.java' | sort > test.sources
+# The XML fixtures instantiate these upstream test factories by reflection.
+printf '%s\n' core/src/test/java/net/sf/ehcache/event/CountingCacheEventListenerFactory.java core/src/test/java/net/sf/ehcache/event/NullCacheEventListenerFactory.java core/src/test/java/net/sf/ehcache/event/TestCacheManagerEventListenerFactory.java core/src/test/java/net/sf/ehcache/exceptionhandler/CountingExceptionHandlerFactory.java core/src/test/java/net/sf/ehcache/extension/TestCacheExtensionFactory.java core/src/test/java/net/sf/ehcache/loader/ComponentALoader.java core/src/test/java/net/sf/ehcache/loader/ComponentBLoader.java core/src/test/java/net/sf/ehcache/loader/CountingCacheLoaderFactory.java >> test.sources
 javac --release 8 -encoding UTF-8 -cp "$cp" -sourcepath core/src/test/java -d classes-test @test.sources
 cp -rp core/src/test/resources/. classes-test/
 java -Djava.awt.headless=true -cp "classes-test:$cp" org.junit.runner.JUnitCore net.sf.ehcache.CacheExceptionTest net.sf.ehcache.CacheManagerTest net.sf.ehcache.CacheTest net.sf.ehcache.DiskStoreTest net.sf.ehcache.ElementTest net.sf.ehcache.StatisticsTest net.sf.ehcache.StatusTest
