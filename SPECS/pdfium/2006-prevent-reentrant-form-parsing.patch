@@ -1,0 +1,58 @@
+From 0a27079ee5c60f806bdb6e1aa5a703c03a098476 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
+Date: Sun, 12 Oct 2025 19:30:00 +0000
+Subject: [PATCH] Prevent re-entry while parsing a PDF form XObject
+
+Carry the LibreOffice fix for OSS-Fuzz issue 451333752.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ core/fpdfapi/page/cpdf_form.h                  | 15 +++++++++++++++
+ core/fpdfapi/page/cpdf_streamcontentparser.cpp |  3 +++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/core/fpdfapi/page/cpdf_form.h b/core/fpdfapi/page/cpdf_form.h
+index ae864b0..1e2d56c 100644
+--- a/core/fpdfapi/page/cpdf_form.h
++++ b/core/fpdfapi/page/cpdf_form.h
+@@ -28,7 +28,22 @@ class CPDF_Form final : public CPDF_PageObjectHolder,
+     RecursionState();
+     ~RecursionState();
+ 
++    // returns false if that form is already getting parsed
++    bool PushForm(CPDF_Stream* pForm)
++    {
++      if (std::find(current_forms.begin(), current_forms.end(), pForm) != current_forms.end())
++        return false;
++      current_forms.push_back(pForm);
++      return true;
++    }
++
++    void PopForm()
++    {
++      current_forms.pop_back();
++    }
++
+     std::set<const uint8_t*> parsed_set;
++    std::vector<CPDF_Stream*> current_forms;
+   };
+ 
+   // Helper method to choose the first non-null resources dictionary.
+diff --git a/core/fpdfapi/page/cpdf_streamcontentparser.cpp b/core/fpdfapi/page/cpdf_streamcontentparser.cpp
+index a0d239f..4356832 100644
+--- a/core/fpdfapi/page/cpdf_streamcontentparser.cpp
++++ b/core/fpdfapi/page/cpdf_streamcontentparser.cpp
+@@ -796,7 +796,10 @@ void CPDF_StreamContentParser::Handle_ExecuteXObject() {
+ 
+   const ByteString type = pXObject->GetDict()->GetByteStringFor("Subtype");
+   if (type == "Form") {
++    if (!recursion_state_->PushForm(pXObject.Get()))
++        return;
+     AddForm(std::move(pXObject), name);
++    recursion_state_->PopForm();
+     return;
+   }
+ 
+-- 
+2.54.0
+
