@@ -1,0 +1,33 @@
+From 7aff6df9f408b544e433befd9a177724eba8c74a Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 09:39:16 +0800
+Subject: [PATCH] Avoid invalid RISC-V SLP code in the Junkyard benchmark
+
+GCC 16.2 combines the two float return registers from b2ComputeCosSin without zero-extending the low word before inserting the high word. A negative cosine then corrupts the sine, and b2ComputeHull returns an empty hull for the five valid input points. Disable SLP for this caller on the affected compiler. The engine and the entire test suite retain their usual build options.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ shared/CMakeLists.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/shared/CMakeLists.txt b/shared/CMakeLists.txt
+index e17b091..821f6eb 100644
+--- a/shared/CMakeLists.txt
++++ b/shared/CMakeLists.txt
+@@ -13,6 +13,13 @@ set(BOX2D_SHARED_FILES
+ 
+ add_library(shared STATIC ${BOX2D_SHARED_FILES})
+ 
++# GCC 16.2 sign-extends the first float when combining the sine and cosine
++# return registers for the pairwise multiply in CreateJunkyard.
++if(CMAKE_SYSTEM_PROCESSOR STREQUAL "riscv64" AND CMAKE_C_COMPILER_ID STREQUAL "GNU"
++    AND CMAKE_C_COMPILER_VERSION VERSION_EQUAL "16.2.0")
++    set_property(SOURCE benchmarks.c APPEND PROPERTY COMPILE_OPTIONS -fno-tree-slp-vectorize)
++endif()
++
+ set_target_properties(shared PROPERTIES
+ 	C_STANDARD 17
+ )
+-- 
+2.54.0
+
