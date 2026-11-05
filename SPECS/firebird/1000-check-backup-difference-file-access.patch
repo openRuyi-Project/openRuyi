@@ -1,0 +1,61 @@
+From 9f9e32dc0039413cac98aa57edcc26b7d574699d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
+Date: Thu, 5 Nov 2026 21:34:23 +0800
+Subject: [PATCH] Verify difference file paths against DatabaseAccess
+
+Carry the engine-side restriction merged by LibreOffice. Apply the
+original patch unchanged to Firebird 5.0.4.
+
+Upstream-Commit: https://github.com/LibreOffice/core/commit/736210ff4ced4919c9d045032833b060f3fb4bb5
+Submitted to Firebird: https://github.com/FirebirdSQL/firebird/pull/9089
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/jrd/nbak.cpp | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/jrd/nbak.cpp b/src/jrd/nbak.cpp
+index 6655bf6..47bda23 100644
+--- a/src/jrd/nbak.cpp
++++ b/src/jrd/nbak.cpp
+@@ -35,6 +35,7 @@
+ #include "lck.h"
+ #include "cch.h"
+ #include "lck_proto.h"
++#include "jrd_proto.h"
+ #include "pag_proto.h"
+ #include "err_proto.h"
+ #include "cch_proto.h"
+@@ -226,6 +227,14 @@ void BackupManager::generateFilename()
+ void BackupManager::openDelta(thread_db* tdbb)
+ {
+ 	fb_assert(!diff_file);
++
++	// Verify difference file path against DatabaseAccess entry of firebird.conf
++	if (!JRD_verify_database_access(diff_name))
++	{
++		ERR_post(Arg::Gds(isc_conf_access_denied) << Arg::Str("difference file") <<
++													 Arg::Str(diff_name));
++	}
++
+ 	diff_file = PIO_open(tdbb, diff_name, diff_name);
+ 
+ 	if (database->dbb_flags & (DBB_force_write | DBB_no_fs_cache))
+@@ -285,6 +294,14 @@ void BackupManager::beginBackup(thread_db* tdbb)
+ 	{
+ 		// Create file
+ 		NBAK_TRACE(("Creating difference file %s", diff_name.c_str()));
++
++		// Verify difference file path against DatabaseAccess entry of firebird.conf
++		if (!JRD_verify_database_access(diff_name))
++		{
++			ERR_post(Arg::Gds(isc_conf_access_denied) << Arg::Str("difference file") <<
++														 Arg::Str(diff_name));
++		}
++
+ 		diff_file = PIO_create(tdbb, diff_name, true, false);
+ 	}
+ 	catch (const Firebird::Exception&)
+-- 
+2.54.0
+
