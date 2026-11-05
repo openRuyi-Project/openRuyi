@@ -1,0 +1,29 @@
+From 99ff5a464143b542109ddf420466c964591f8ad8 Mon Sep 17 00:00:00 2001
+From: Miklos Vajna <vmiklos@collabora.com>
+Date: Fri, 25 Sep 2026 06:38:23 +0000
+Subject: [PATCH] Use system dragonbox headers when requested
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ core/fxcrt/stream_write_utils.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/core/fxcrt/stream_write_utils.cpp b/core/fxcrt/stream_write_utils.cpp
+index 927f64b..1671ca2 100644
+--- a/core/fxcrt/stream_write_utils.cpp
++++ b/core/fxcrt/stream_write_utils.cpp
+@@ -10,7 +10,11 @@
+ #include <ostream>
+ 
+ #include "core/fxcrt/span.h"
++#ifdef USE_SYSTEM_DRAGONBOX
++#include <dragonbox/dragonbox.h>
++#else
+ #include "third_party/dragonbox/src/include/dragonbox/dragonbox.h"
++#endif
+ 
+ namespace {
+ 
+-- 
+2.54.0
+
