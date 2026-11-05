@@ -1,0 +1,34 @@
+From c0d2f4534c158081bc3da4a09d5f66a3d5eba8ee Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 16:19:18 +0800
+Subject: [PATCH] Run the HTTP savepoint test on an unprivileged port.
+
+The default HTTP port 80 cannot be bound by the OBS build user. Use port 8080 for both the server and JDBC connection.
+
+Upstream-Status: Downstream [build environment]
+Upstream: https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_1_8_0_10/
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/org/hsqldb/test/TestJDBCSavepoints.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/org/hsqldb/test/TestJDBCSavepoints.java b/src/org/hsqldb/test/TestJDBCSavepoints.java
+index aa5973a..003252c 100644
+--- a/src/org/hsqldb/test/TestJDBCSavepoints.java
++++ b/src/org/hsqldb/test/TestJDBCSavepoints.java
+@@ -58,10 +58,10 @@ public class TestJDBCSavepoints extends TestCase {
+ //  You change the url and serverProps to reflect your preferred settings
+     // String serverProps = "database.0=mem:test;dbname.0=;silent=false;trace=true" // debugging
+     String serverProps =
+-        "database.0=mem:test;dbname.0=;silent=true;trace=false";
++        "port=8080;database.0=mem:test;dbname.0=;silent=true;trace=false";
+ 
+     //String     url         = "jdbc:hsqldb:hsql://localhost";
+-    String     url = "jdbc:hsqldb:http://localhost";
++    String     url = "jdbc:hsqldb:http://localhost:8080";
+     String     user;
+     String     password;
+     Statement  stmt;
+-- 
+2.54.0
+

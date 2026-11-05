@@ -77,6 +77,10 @@ Requires:       java-25-openjdk-headless
 %{SOURCE15}
 %{SOURCE16}
 
+# Downstream build-environment adaptation of the upstream HTTP savepoint test.
+# https://sourceforge.net/projects/hsqldb/files/hsqldb/hsqldb_1_8_0_10/
+2016-use-unprivileged-http-test-port.patch
+
 %description
 HyperSQL 1.8 is a Java SQL database engine for legacy embedded databases.
 LibreOffice Base uses this version to open and edit existing HSQLDB files.
@@ -91,6 +95,7 @@ rm -f lib/hsqldb.jar lib/servlet.jar
 %autopatch -p0 -m11 -M11
 %autopatch -p1 -m12 -M14
 %autopatch -p2 -m15 -M15
+%autopatch -p1 -m16 -M16
 ln -s %{_datadir}/java/javax-servlet-api.jar lib/servlet.jar
 
 %build
