@@ -17,6 +17,8 @@ BuildArch:      noarch
 
 BuildRequires:  java-25-openjdk-devel
 BuildRequires:  junit4
+# The upstream security-policy TCK requires APIs removed after JDK 17.
+BuildRequires:  java-17-openjdk-headless
 
 %description
 The Emory backport provides the JSR-166 concurrency API in the namespace
@@ -40,7 +42,7 @@ install -Dpm644 backport-util-concurrent.jar %{buildroot}%{_datadir}/java/backpo
 mkdir classes-test
 find test/tck/src -name '*.java' | sort > test.sources
 javac --release 8 -encoding UTF-8 -cp backport-util-concurrent.jar:%{_datadir}/java/junit4.jar -d classes-test @test.sources
-java -Dtck.shortDelay=100 -cp classes-test:backport-util-concurrent.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner JSR166TestCase
+%{_prefix}/lib64/jvm/java-17-openjdk/bin/java -Dtck.shortDelay=100 -cp classes-test:backport-util-concurrent.jar:%{_datadir}/java/junit4.jar junit.textui.TestRunner JSR166TestCase
 
 %files
 %license license.html
