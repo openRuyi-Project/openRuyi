@@ -70,7 +70,7 @@ cp -rp core/src/test/resources/. classes-test/
 cp="$PWD/classes-test:$PWD/$cp"
 cd core
 for suite in CacheExceptionTest CacheManagerTest CacheTest DiskStoreTest ElementTest StatusTest; do
-    methods=$(sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p' "src/test/java/net/sf/ehcache/$suite.java")
+    methods=$(javap -classpath ../classes-test "net.sf.ehcache.$suite" | sed -n 's/.*public void \(test[A-Za-z0-9_]*\)(.*/\1/p')
     for method in $methods; do
         java -Xmx64m -Djava.awt.headless=true -Dnet.sf.ehcache.speedAdjustmentFactor=4 -cp "$cp" junit.textui.TestRunner -m "net.sf.ehcache.$suite.$method" || exit 1
     done
