@@ -1,0 +1,32 @@
+From f0747cbfd5c69645209de935174300a3047667fc Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 02:33:49 +0800
+Subject: [PATCH] Keep format checking enabled on Linux
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ build/gen.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/build/gen.py b/build/gen.py
+index e4e377e..90839bd 100755
+--- a/build/gen.py
++++ b/build/gen.py
+@@ -625,11 +625,13 @@ def WriteGNNinja(path, platform, host, options, args_list):
+         '-Wno-implicit-fallthrough',
+         '-Wno-redundant-move',
+         '-Wno-unused-variable',
+-        '-Wno-format',             # Use of %llx, which is supported by _UCRT, false positive
+         '-Wno-strict-aliasing',    # Dereferencing punned pointer
+         '-Wno-cast-function-type', # Casting FARPROC to RegDeleteKeyExPtr
+       ])
+ 
++      if not platform.is_linux():
++        cflags.append('-Wno-format')  # UCRT accepts %llx.
++
+     elif platform.is_darwin():
+       # Feel free to bump this value whenever you want, as long as all non-EOL
+       # macOS versions are supported.
+-- 
+2.54.0
+
