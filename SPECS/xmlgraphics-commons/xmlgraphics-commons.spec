@@ -45,7 +45,7 @@ install -Dpm644 xmlgraphics-commons.jar %{buildroot}%{_datadir}/java/xmlgraphics
 # ImageEncodingHelperTestCase needs Mockito, which the target repository does not provide.
 mkdir classes-test
 cp=xmlgraphics-commons.jar:%{_datadir}/java/jcl-over-slf4j.jar:%{_datadir}/java/slf4j-jdk14.jar:%{_datadir}/java/junit4.jar
-suites="org.apache.xmlgraphics.util.io.Base64Test
+suites="org.apache.xmlgraphics.util.io.Base64TestCase
 org.apache.xmlgraphics.util.io.ASCII85InputStreamTestCase
 org.apache.xmlgraphics.util.io.ASCII85OutputStreamTestCase
 org.apache.xmlgraphics.image.codec.png.PNGEncoderTestCase
