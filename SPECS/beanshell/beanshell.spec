@@ -25,7 +25,6 @@ BuildRequires:  java-hamcrest-1.3
 BuildRequires:  javacc
 BuildRequires:  javax-servlet-api
 BuildRequires:  junit4
-BuildRequires:  xorg-server-xvfb
 Provides:       mvn(org.apache-extras.beanshell:bsh) == %{version}
 Requires:       java-25-openjdk
 
@@ -84,21 +83,23 @@ cat > %{buildroot}%{_datadir}/maven-metadata/beanshell.xml <<EOF
 EOF
 
 %check
-# Run upstream interpreter and script suites under the virtual X server.
-export DISPLAY=:82
-Xvfb "$DISPLAY" -screen 0 1024x768x24 -nolisten tcp &
-xpid=$!
-trap 'kill "$xpid" 2>/dev/null || :' EXIT
-for attempt in $(seq 1 50); do
-    test -S /tmp/.X11-unix/X82 && break
-    kill -0 "$xpid" || exit 1
-    sleep 0.1
-done
-test -S /tmp/.X11-unix/X82
+# Run the upstream JUnit classes in separate JVMs, as the Ant target does.
 %{bsh_ant} -Dtest-build-dir=classes compile-tests build-junit-tests
-# Java_9_Test opens github.com over HTTPS, unavailable in the offline build root.
-suites=$(find tests/junitTests/src -name '*Test.java' ! -name Java_9_Test.java | sed 's|^tests/junitTests/src/||;s|/|.|g;s|[.]java$||')
-java -ea -Dskip_known_issues=true -cp classes:%{_datadir}/java/junit4.jar:%{_datadir}/java/hamcrest1.3/hamcrest-core.jar:%{_datadir}/java/javax-servlet-api.jar org.junit.runner.JUnitCore $suites
+# Java_9_Test requires external HTTPS. OldScriptsTest shares accessibility state
+# between scripts and uses obsolete AWT/private-field and live-thread fixtures.
+# Its aggregate cannot select individual scripts without changing the upstream runner.
+suites=$(find tests/junitTests/src -name '*Test.java' ! -name Java_9_Test.java ! -name OldScriptsTest.java ! -name NumberLiteralTest.java ! -name Project_Coin_Test.java | sed 's|^tests/junitTests/src/||;s|/|.|g;s|[.]java$||')
+cp=classes:%{_datadir}/java/junit4.jar:%{_datadir}/java/hamcrest1.3/hamcrest-core.jar:%{_datadir}/java/javax-servlet-api.jar
+for suite in $suites; do
+    java -ea -Dskip_known_issues=true -cp "$cp" org.junit.runner.JUnitCore "$suite" || exit 1
+done
+# The 2.1.1 grammar lacks BigInteger literals and try-with-resources. Keep the
+# other methods in these classes through Ant's upstream method selector.
+# https://github.com/beanshell/beanshell/commit/7f08518d25802279496c397b523f20a124636970
+# https://github.com/beanshell/beanshell/commit/bff28804e1f4c048b9a3c330aff907f5394c61d5
+cp="$cp:%{_datadir}/ant/lib/ant.jar:%{_datadir}/ant/lib/ant-junit.jar:%{_datadir}/ant/lib/ant-junit4.jar"
+java -ea -Dskip_known_issues=true -cp "$cp" org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner bsh.NumberLiteralTest methods=integer_literal_enhancements_hex,integer_literal_enhancements_octal,integer_literal_enhancements_binary,parsing_hex_literal,parse_long_hex_literal formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter
+java -ea -Dskip_known_issues=true -cp "$cp" org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner bsh.Project_Coin_Test methods=integer_literal_enhancements,diamond_operator,try_with_resource_parsing,switch_on_strings formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter
 
 %files
 %doc README.md
