@@ -1,0 +1,29 @@
+From fa20d01589a6f134b56f3657eb4a9b1618247059 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 01:34:58 +0800
+Subject: [PATCH] Paint the SVG graphics tree before returning its raster.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ .../modules/factory/svg/SVGImageFactoryModule.java           | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/source/org/pentaho/reporting/libraries/resourceloader/modules/factory/svg/SVGImageFactoryModule.java b/source/org/pentaho/reporting/libraries/resourceloader/modules/factory/svg/SVGImageFactoryModule.java
+index 6964a38..3efa2b6 100644
+--- a/source/org/pentaho/reporting/libraries/resourceloader/modules/factory/svg/SVGImageFactoryModule.java
++++ b/source/org/pentaho/reporting/libraries/resourceloader/modules/factory/svg/SVGImageFactoryModule.java
+@@ -65,7 +65,10 @@ public class SVGImageFactoryModule extends AbstractSVGFactoryModule
+       final StaticRenderer staticRenderer = new StaticRenderer();
+       staticRenderer.setDoubleBuffered(true);
+       staticRenderer.setTree(node);
+-      staticRenderer.updateOffScreen((int) bounds.getWidth(), (int) bounds.getHeight());
++      staticRenderer.setTransform(java.awt.geom.AffineTransform.getTranslateInstance(-bounds.getX(), -bounds.getY()));
++      staticRenderer.updateOffScreen(Math.max(1, (int) Math.ceil(bounds.getWidth())),
++          Math.max(1, (int) Math.ceil(bounds.getHeight())));
++      staticRenderer.repaint(bounds);
+       return new SimpleResource(data.getKey(), staticRenderer.getOffScreen(), Image.class, version);
+     }
+     catch (IOException e)
+-- 
+2.54.0
+

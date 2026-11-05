@@ -1,0 +1,26 @@
+From 6f2efce33925ad1955012de9eaf64eb963895627 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 01:34:13 +0800
+Subject: [PATCH] Match resource extensions at the end of filenames.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ .../libraries/resourceloader/factory/AbstractFactoryModule.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/source/org/pentaho/reporting/libraries/resourceloader/factory/AbstractFactoryModule.java b/source/org/pentaho/reporting/libraries/resourceloader/factory/AbstractFactoryModule.java
+index a2acb81..cda3ca4 100644
+--- a/source/org/pentaho/reporting/libraries/resourceloader/factory/AbstractFactoryModule.java
++++ b/source/org/pentaho/reporting/libraries/resourceloader/factory/AbstractFactoryModule.java
+@@ -132,7 +132,7 @@ public abstract class AbstractFactoryModule implements FactoryModule
+     final String[] fexts = getFileExtensions();
+     for (int i = 0; i < fexts.length; i++)
+     {
+-      if (name.equalsIgnoreCase(fexts[i]))
++      if (name.regionMatches(true, name.length() - fexts[i].length(), fexts[i], 0, fexts[i].length()))
+       {
+         return true;
+       }
+-- 
+2.54.0
+
