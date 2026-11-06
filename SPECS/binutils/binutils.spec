@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -13,34 +14,23 @@
 %bcond bootstrap 1
 
 Name:           binutils
+Version:        2.47
+Release:        %autorelease
 Summary:        GNU Binutils
 License:        GFDL-1.3-only AND GPL-3.0-or-later
-Version:        2.46.0
-Release:        %autorelease
 URL:            https://www.gnu.org/software/binutils/
 VCS:            git:https://sourceware.org/git/binutils-gdb.git
-#!RemoteAsset:  sha256:0f3152632a2a9ce066f20963e9bb40af7cf85b9b6c409ed892fd0676e84ecd12
-Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
+#!RemoteAsset:  sha256:154ab23b60070e8f27013c22977f1129425d67d1e8acd6e13010e617811e4cff
+Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.xz
 BuildSystem:    autotools
-
-# Backports from Fedora f44 binutils-riscv-testsuite-fixes.patch:
-# https://src.fedoraproject.org/rpms/binutils/blob/f44/f/binutils-riscv-testsuite-fixes.patch
-# https://src.fedoraproject.org/rpms/binutils/c/f3398aab: allow data-reloc tests when text relocations are rejected
-Patch2000:      2000-ld-riscv-data-reloc-allow-textrels-in-tests.patch
-# https://src.fedoraproject.org/rpms/binutils/c/a8edbcb: accept signed RISC-V relaxation immediates without full wildcarding
-Patch2001:      2001-ld-riscv-relax-tests-accept-signed-immediates.patch
-# https://src.fedoraproject.org/rpms/binutils/c/f6c1766: accept layout-dependent RISC-V Zicfilp PLT offsets
-Patch2002:      2002-ld-riscv-zicfilp-accept-variable-plt-offset.patch
-# https://src.fedoraproject.org/rpms/binutils/c/9e81b24: xfail RISC-V strip test where annotation symbols remain
-Patch2003:      2003-binutils-riscv-xfail-strip-annotation-symbol-tests.patch
-# openRuyi: default PIE on RISC-V emits this diagnostic before the second
-# undefined reference expected by upstream:
-# relocation R_RISCV_CALL_PLT against `bar' which may bind externally can not be used when making a shared object; recompile with -fPIC
-Patch2004:      2004-ld-elf-dwarf3-accept-riscv-pie-output.patch
 
 BuildOption(build):  -C build-dir
 
 BuildRequires:  gcc-c++
+BuildRequires:  autoconf
+BuildRequires:  automake
+BuildRequires:  libtool
+BuildRequires:  make
 BuildRequires:  bison
 BuildRequires:  dejagnu
 BuildRequires:  flex
@@ -52,6 +42,24 @@ BuildRequires:  pkgconfig(libzstd)
 
 Requires(post):  update-alternatives
 Requires(preun):  update-alternatives
+
+%patchlist
+# Backports from Fedora f44 binutils-riscv-testsuite-fixes.patch:
+# https://src.fedoraproject.org/rpms/binutils/blob/f44/f/binutils-riscv-testsuite-fixes.patch
+# https://src.fedoraproject.org/rpms/binutils/c/f3398aab: allow data-reloc tests when text relocations are rejected
+2000-ld-riscv-data-reloc-allow-textrels-in-tests.patch
+# https://src.fedoraproject.org/rpms/binutils/c/a8edbcb: accept signed RISC-V relaxation immediates without full wildcarding
+2001-ld-riscv-relax-tests-accept-signed-immediates.patch
+# https://src.fedoraproject.org/rpms/binutils/c/f6c1766: accept layout-dependent RISC-V Zicfilp PLT offsets
+2002-ld-riscv-zicfilp-accept-variable-plt-offset.patch
+# https://src.fedoraproject.org/rpms/binutils/c/9e81b24: xfail RISC-V strip test where annotation symbols remain
+2003-binutils-riscv-xfail-strip-annotation-symbol-tests.patch
+# openRuyi: default PIE on RISC-V emits this diagnostic before the second
+# undefined reference expected by upstream:
+# relocation R_RISCV_CALL_PLT against `bar' which may bind externally can not be used when making a shared object; recompile with -fPIC
+2004-ld-elf-dwarf3-accept-riscv-pie-output.patch
+# Enable BFD decompression before opening compressed separate debug files.
+2005-gprof-enable-decompression-before-format-check.patch
 
 %description
 C compiler utilities: ar, as, gprof, ld, nm, objcopy, objdump, ranlib,
@@ -150,7 +158,8 @@ if [ "$1" = 0 ]; then
 fi;
 
 %files
-%defattr(-,root,root)
+%doc %{_infodir}/*.gz
+%license COPYING3 COPYING3.LIB COPYING.LIB COPYING
 %dir %{_prefix}/%{_host}
 %dir %{_prefix}/%{_host}/lib
 %{_prefix}/%{_host}/bin/*
@@ -162,12 +171,11 @@ fi;
 %{_libdir}/bfd-plugins/libdep.so
 %{_bindir}/*
 %ghost %{_sysconfdir}/alternatives/ld
-%doc %{_infodir}/*.gz
 %{_libdir}/lib*-%{version}*.so
-%doc %{_mandir}/man1/*.1.gz
+%{_mandir}/man1/*.1.gz
 
 %files devel
-%defattr(-,root,root)
+%license COPYING3 COPYING3.LIB COPYING.LIB COPYING
 %{_includedir}/*.h
 %{_libdir}/lib*.*a
 %{_libdir}/libctf.so
