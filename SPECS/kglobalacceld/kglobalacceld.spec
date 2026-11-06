@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kglobalacceld
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Global keyboard shortcut daemon
 License:        LGPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kglobalacceld.git
-#!RemoteAsset:  sha256:ea0562004a938e8125830a8889cf205d02906db7bc0b8cdff463a543c41320b2
+#!RemoteAsset:  sha256:95ca2f8ec9537d145a233955b46e81188da6aebbe3f96d81131c97e73cf38779
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -27,24 +27,14 @@ BuildOption(conf):  -DBUILD_TESTING=OFF
 
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
 BuildRequires:  pkgconfig
-BuildRequires:  qt6-qtbase-private-devel >= %{qt6_version}
 BuildRequires:  cmake(KF6Config) >= %{kf6_version}
 BuildRequires:  cmake(KF6CoreAddons) >= %{kf6_version}
-BuildRequires:  cmake(KF6Crash) >= %{kf6_version}
-BuildRequires:  cmake(KF6DBusAddons) >= %{kf6_version}
 BuildRequires:  cmake(KF6GlobalAccel) >= %{kf6_version}
 BuildRequires:  cmake(KF6JobWidgets) >= %{kf6_version}
 BuildRequires:  cmake(KF6KIO) >= %{kf6_version}
 BuildRequires:  cmake(KF6Service) >= %{kf6_version}
-BuildRequires:  cmake(KF6WindowSystem) >= %{kf6_version}
 BuildRequires:  cmake(Qt6DBus) >= %{qt6_version}
 BuildRequires:  cmake(Qt6Gui) >= %{qt6_version}
-BuildRequires:  cmake(Qt6Widgets) >= %{qt6_version}
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xcb)
-BuildRequires:  pkgconfig(xcb-keysyms)
-BuildRequires:  pkgconfig(xcb-record)
-BuildRequires:  pkgconfig(xcb-xkb)
 
 %description
 Daemon providing Global Keyboard Shortcut (Accelerator) functionality.
@@ -53,30 +43,15 @@ Daemon providing Global Keyboard Shortcut (Accelerator) functionality.
 Summary:        Global keyboard shortcut daemon: Build Environment
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       cmake(Qt6DBus) >= %{qt6_version}
-Requires:       cmake(Qt6Widgets) >= %{qt6_version}
 
 %description    devel
 Daemon providing Global Keyboard Shortcut (Accelerator) functionality.
 Development files.
 
-%post
-%systemd_user_post plasma-kglobalaccel.service
-
-%preun
-%systemd_user_preun plasma-kglobalaccel.service
-
-%postun
-%systemd_user_postun plasma-kglobalaccel.service
-
 %files
 %license LICENSES/*
-%{_kf6_configdir}/autostart/kglobalacceld.desktop
 %{_kf6_debugdir}/kglobalacceld.categories
-%dir %{_kf6_plugindir}/org.kde.kglobalacceld.platforms
-%{_kf6_plugindir}/org.kde.kglobalacceld.platforms/KGlobalAccelDXcb.so
 %{_kf6_libdir}/libKGlobalAccelD.so.*
-%{_libexecdir}/kglobalacceld
-%{_userunitdir}/plasma-kglobalaccel.service
 
 %files devel
 %{_kf6_cmakedir}/KGlobalAccelD/

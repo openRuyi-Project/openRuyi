@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           kde-gtk-config
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Daemon for GTK2 and GTK3 Applications Appearance Under KDE
 License:        GPL-3.0-or-later AND LGPL-3.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/kde-gtk-config.git
-#!RemoteAsset:  sha256:dff76da1ae6dc9f5b95b10d02bba8981509ddac67306710c15422801e56156e5
+#!RemoteAsset:  sha256:6a3254145e7664fbbe5056f2a8c5a2704457b10f0841fcdcaed489e1b7b7a6b1
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

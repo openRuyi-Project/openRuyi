@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-pa
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        The Plasma Volume Manager
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-pa.git
-#!RemoteAsset:  sha256:808ecd07d00574f137d793e5f26ac2b953bcf538927b2fd2e592ea08447481db
+#!RemoteAsset:  sha256:d01c34d5f34d77b4d406e43d24cb5523b909876b25acb35241be34840d3a9a81
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -69,6 +69,7 @@ A volume manager plasmoid superseding kmix.
 %doc %{_kf6_htmldir}/en/kcontrol/
 %license LICENSES/*
 %{_kf6_applicationsdir}/kcm_pulseaudio.desktop
+%{_kf6_configkcfgdir}/plasmapa.kcfg
 %{_kf6_debugdir}/plasmapa.categories
 %{_kf6_libdir}/libplasma-volume.so.*
 %{_kf6_plugindir}/kf6/kded/audioshortcutsservice.so

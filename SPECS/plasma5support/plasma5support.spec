@@ -14,13 +14,13 @@
 %{!?_kf6_bugfix_version: %define _kf6_bugfix_version %(echo %{_kf6_version} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma5support
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        KF6 Porting aid
 License:        LGPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma5support
-#!RemoteAsset:  sha256:9301922bccd038cde410cb81a6dc12e27cd6a3ded6c93fcf67e88b228ee232fd
+#!RemoteAsset:  sha256:6851752f7aed98710e7cb76caa780b7ef673c7732a5ed4ada979a1cf36703638
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

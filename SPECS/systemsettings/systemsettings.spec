@@ -15,13 +15,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           systemsettings
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        KDE's control center
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/systemsettings.git
-#!RemoteAsset:  sha256:e01d55f0d8111138fca480b9839ba5440abdf3ca3c42e5f671a4133d80f3bda1
+#!RemoteAsset:  sha256:1bd6244eadb964ab389b81e8965bcd1eb69284b7b1dba71410a615f458bc6e68
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -75,6 +75,7 @@ applications by KDE.
 %{_kf6_applicationsdir}/systemsettings.desktop
 %{_kf6_appstreamdir}/org.kde.systemsettings.metainfo.xml
 %{_kf6_bindir}/systemsettings
+%{_kf6_configkcfgdir}/systemsettings-config.kcfg
 %{_kf6_debugdir}/systemsettings.categories
 %dir %{_kf6_plugindir}/kf6/krunner
 %{_kf6_plugindir}/kf6/krunner/krunner_systemsettings.so

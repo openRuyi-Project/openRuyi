@@ -8,13 +8,13 @@
 %define qt6_version 6.9.0
 
 Name:           plasma-disks
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plasma service for monitoring disk health
 License:        GPL-2.0-only OR GPL-3.0-only
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-disks.git
-#!RemoteAsset:  sha256:7bc25e2e4bb50e923e5cf02d5ddb15e5603ecd90752163cedfed4ce930b99f06
+#!RemoteAsset:  sha256:2d99b0c47b3a52f24ce11dc1ea62ce1ec4eaa8f5874688f6074d8ff7432db9ee
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           libksysguard
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Task management and system monitoring library
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/libksysguard.git
-#!RemoteAsset:  sha256:0235ce45ae5f2686e363f981a032cdeb166da5f04bd58d51fe3af4d2ed9fa860
+#!RemoteAsset:  sha256:6990a6a17def207768c35293e23c7217d2deb7d04d1147d58b68ba3b125f7606
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 

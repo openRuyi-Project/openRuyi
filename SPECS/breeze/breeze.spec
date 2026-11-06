@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           breeze
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plasma Desktop artwork, styles and assets
 License:        GPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/breeze
-#!RemoteAsset:  sha256:42dbb6861db3a6c73b9b681ee90edbd49e8253bba3fae98b18460c3551316dca
+#!RemoteAsset:  sha256:2865950dd4f2742bcaa2af6a4d9c911b247e0dc77b2a1ef784a7078edbef2111
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -127,6 +127,7 @@ EOF
 %license LICENSES/*
 %{_kf6_applicationsdir}/breezestyleconfig.desktop
 %{_kf6_bindir}/breeze-settings6
+%{_kf6_configkcfgdir}/breeze.kcfg
 %{_kf6_iconsdir}/hicolor/scalable/apps/breeze-settings.svgz
 %dir %{_kf6_plugindir}/kstyle_config
 %{_kf6_plugindir}/kstyle_config/breezestyleconfig.so
@@ -150,6 +151,7 @@ EOF
 %files -n breeze-decoration
 %license LICENSES/*
 %{_kf6_applicationsdir}/kcm_breezedecoration.desktop
+%{_kf6_configkcfgdir}/breeze-decoration.kcfg
 %dir %{_kf6_plugindir}/org.kde.kdecoration3.kcm
 %{_kf6_plugindir}/org.kde.kdecoration3.kcm/kcm_breezedecoration.so
 %dir %{_kf6_plugindir}/org.kde.kdecoration3

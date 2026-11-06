@@ -13,13 +13,13 @@
 %{!?_plasma6_version: %define _plasma6_version %(echo %{_plasma6_bugfix} | awk -F. '{print $1"."$2}')}
 
 Name:           plasma-sdk
-Version:        6.7.5
+Version:        6.8.2
 Release:        %autorelease
 Summary:        Plasma SDK
 License:        GPL-2.0-only AND LGPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-sdk.git
-#!RemoteAsset:  sha256:5e1d636761faf2c9fc60aa1ce3e7d07dde3f87f373f2bb8fe5973810b97a8776
+#!RemoteAsset:  sha256:59f9efbd97c601d59a744109a48cc7615e8db55956aa22de0bc0f70a4b81ffae
 Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 BuildSystem:    cmake
 
