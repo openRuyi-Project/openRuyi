@@ -1,54 +1,70 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
+# GCC 16 crashes during LTO of the freestanding zstd EFI module.
+%global _lto_cflags %{nil}
 
 # We have to set _libdir to /usr/lib for grub - 251
 %global _libdir %{_exec_prefix}/lib
 
-%global grub_platforms riscv64-efi
+%global grub_cpu riscv64
 %global kernel_module linux
 
 %ifarch x86_64
-%global grub_platforms x86_64-efi
+%global grub_cpu x86_64
 %endif
 
+%global grub_platforms %{grub_cpu}-efi
+
 Name:           grub
-Version:        2.14
+Version:        2.16
 Release:        %autorelease
 Summary:        Bootloader with support for Linux, Multiboot and more
-License:        GPL-3.0-or-later
-URL:            http://www.gnu.org/software/grub/
-VCS:            git:https://https.git.savannah.gnu.org/git/grub.git
-#!RemoteAsset:  sha256:bc8d3c73535b8838d8c8e2654d73edc4e6ae8c8acdb45d5df5dc9a1547446d43
-Source0:        https://ftpmirror.gnu.org/gnu/grub/grub-%{version}.tar.xz
+License:        GPL-3.0-or-later AND GFDL-1.2-no-invariants-or-later AND CC-BY-SA-3.0
+URL:            https://www.gnu.org/software/grub/
+VCS:            git:https://gitlab.freedesktop.org/gnu-grub/grub.git
+#!RemoteAsset:  sha256:f0db0104927df0b9a48bc41b735c702936190d17eb2d73d3018fa77474a0cabe
+Source0:        https://gitlab.freedesktop.org/api/v4/projects/26558/packages/generic/source-assets/grub-%{version}/grub-%{version}.tar.xz
 Source1:        grub.default
 
-# https://gitlab.freedesktop.org/gnu-grub/grub/-/merge_requests/10
-Patch0:         skip-efi_uga.patch
+BuildSystem:    autotools
 
-# https://gitlab.freedesktop.org/gnu-grub/grub/-/merge_requests/14
-Patch1:         blsuki-append-version.patch
-
-# https://lists.gnu.org/archive/html/grub-devel/2026-02/msg00078.html
-Patch2:         grub-c23-string-func-handling-updates.patch
-
-# https://lists.gnu.org/archive/html/grub-devel/2026-01/msg00059.html
-Patch3:         conditionally-apply-regparm-attr.patch
+# Distribution FORTIFY flags expose warnings outside the upstream build.
+# Keep userspace architecture flags out of the freestanding EFI code.
+BuildOption(conf):  CFLAGS=""
+BuildOption(conf):  HOST_CFLAGS="%{optflags}"
+BuildOption(conf):  --disable-werror
+BuildOption(conf):  --with-grubdir=grub
+BuildOption(conf):  --with-platform=efi
+BuildOption(conf):  --target=%{grub_cpu}
+BuildOption(conf):  --enable-boot-time
+BuildOption(conf):  --enable-cache-stats
+BuildOption(conf):  --enable-stack-protector=strong
+BuildOption(conf):  --with-sbat-file=$PWD/vendor-sbat.csv
+BuildOption(install):  bashcompletiondir=%{bash_completions_dir}
+# Filesystem tests need privileged mounts; firmware tests need QEMU and EFI firmware.
+BuildOption(check):  TESTS='$(check_PROGRAMS_native) grub_script_blanklines grub_script_final_semicolon grub_script_dollar grub_script_no_commands grub_mkconfig_bootnext_test grub_mkconfig_bootnext_self_test'
 
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  bison
 BuildRequires:  libtool
-BuildRequires:  device-mapper-devel
+BuildRequires:  make
+BuildRequires:  gcc-c++
+BuildRequires:  help2man
+BuildRequires:  texinfo
+BuildRequires:  pkgconfig(devmapper)
 BuildRequires:  fonts-dejavu
 BuildRequires:  flex
 BuildRequires:  pkgconfig(freetype2)
 BuildRequires:  pkgconfig(fuse3)
 BuildRequires:  pkgconfig(libtasn1)
 BuildRequires:  python3
-BuildRequires:  xz-devel
+BuildRequires:  pkgconfig(liblzma)
 BuildRequires:  fonts-unifont
 BuildRequires:  squashfs-tools
 BuildRequires:  bash-completion
@@ -61,11 +77,12 @@ customizable bootloader with modular architecture.  It supports a rich
 variety of kernel formats, file systems, computer architectures and
 hardware devices.
 
-%package       unsigned
-Summary:       GRand Unified Bootloader unsigned monolithic efi image
-Requires:      %{name}%{?_isa} = %{version}-%{release}
+%package        unsigned
+Summary:        GRand Unified Bootloader unsigned monolithic efi image
+License:        GPL-3.0-or-later
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description unsigned
+%description    unsigned
 The GRand Unified Bootloader (GRUB) is a highly configurable and
 customizable bootloader with modular architecture.  It supports a rich
 variety of kernel formats, file systems, computer architectures and
@@ -73,125 +90,66 @@ hardware devices.
 
 This package contains an unsigned monolithic EFI image.
 
-%prep
-%autosetup -n %{name}-%{version} -p1
+%conf -p
+autoreconf -fiv
+# Give shim a separate SBAT generation for revoking vulnerable openRuyi
+# GRUB EFI images.
+echo "grub.or,1,openRuyi,%{name},%{version},https://openruyi.cn/" > vendor-sbat.csv
 
-%conf
-for plat in %{grub_platforms}; do
-    echo "==> configure for $plat"
-    src="$PWD"
-    bdir="$PWD/../%{name}-%{version}-$plat"
-    rm -rf -- "$bdir"
+%build -a
+# Make fonts here
+mkdir -p ./fonts
+./grub-mkfont -s 24 -o unicode.pf2 %{_datadir}/fonts/opentype/unifont/unifont.otf
+cp ./unicode.pf2 ./fonts
+tar --sort=name -cf - ./fonts | mksquashfs - memdisk.sqsh -tar -comp xz -quiet -no-progress
 
-    # Copy source files to build directory
-    ( set +x; cp -a "$src" "$bdir" >/dev/null 2>&1; set -x )
-    pushd "$bdir"
+FS_MODULES="btrfs ext2 xfs jfs reiserfs"
+CD_MODULES="all_video blsuki boot cat configfile echo true \
+        font gfxmenu gfxterm gzio halt iso9660 \
+        jpeg minicmd normal part_apple part_msdos part_gpt \
+        password password_pbkdf2 png reboot search search_fs_uuid \
+        search_fs_file search_label sleep test video fat loadenv loopback"
+PXE_MODULES="tftp http"
+CRYPTO_MODULES="luks luks2 gcry_rijndael gcry_sha1 gcry_sha256 gcry_sha512"
 
-    case "$plat" in
-        x86_64-efi) extra="--with-platform=efi --target=x86_64"                  ;;
-        riscv64-efi) extra="--with-platform=efi --target=riscv64"                ;;
-    esac
+CD_MODULES="${CD_MODULES} chain efifwsetup efinet read tpm tss2 tpm2_key_protector memdisk tar squash4 xzio"
+PXE_MODULES="${PXE_MODULES} efinet"
 
-    # Do Out of tree build
-    CFLAGS="$CFLAGS -Wno-error=unterminated-string-initialization -Wno-unterminated-string-initialization" \
-    %configure \
-        --with-grubdir=grub \
-        --with-rpm-version=%{version}-%{release} \
-        --enable-boot-time \
-        --enable-cache-stats \
-        $extra
-    popd
-done
+CD_MODULES="$CD_MODULES %{kernel_module}"
 
-%build
-for plat in %{grub_platforms}; do
-    echo "==> build for $plat"
-    pushd "$PWD/../%{name}-%{version}-$plat"
+# Final GRUB modules list
+GRUB_MODULES="$CD_MODULES $FS_MODULES $PXE_MODULES $CRYPTO_MODULES mdraid09 mdraid1x lvm serial"
+mkdir monolithic
+echo configfile \${cmdpath}/grub.cfg > grub.cfg
+case "%{grub_platforms}" in
+    x86_64-efi) arch=x64 ;;
+    riscv64-efi) arch=riscv64 ;;
+esac
+./grub-mkstandalone \
+    -O "%{grub_platforms}" \
+    -o monolithic/grub${arch}.efi \
+    --sbat grub-core/sbat.csv \
+    -d grub-core \
+    --modules="${GRUB_MODULES}" \
+    "/boot/grub/grub.cfg=./grub.cfg"
 
-    if [ "$plat" = x86_64-efi ] || [ "$plat" = riscv64-efi ]; then
-        make -j1 po/
-    else
-        sed -i -e 's#po docs##' Makefile
-    fi
-    %make_build
-
-    echo "sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md" > sbat.csv
-    echo "grub,5,Free Software Foundation,grub,%{version},https://www.gnu.org/software/grub/" >> sbat.csv
-    echo "grub.or,1,openRuyi,%{name},%{version},https://www.openruyi.org/" >> sbat.csv
-
-    # Make fonts here
-    mkdir -p ./fonts
-    ./grub-mkfont -s 24 -o unicode.pf2 %{_datadir}/fonts/opentype/unifont/unifont.otf
-    cp ./unicode.pf2 ./fonts
-    tar --sort=name -cf - ./fonts | mksquashfs - memdisk.sqsh -tar -comp xz -quiet -no-progress
-
-    FS_MODULES="btrfs ext2 xfs jfs reiserfs"
-    CD_MODULES="all_video blsuki boot cat configfile echo true \
-            font gfxmenu gfxterm gzio halt iso9660 \
-            jpeg minicmd normal part_apple part_msdos part_gpt \
-            password password_pbkdf2 png reboot search search_fs_uuid \
-            search_fs_file search_label sleep test video fat loadenv loopback"
-    PXE_MODULES="tftp http"
-    CRYPTO_MODULES="luks luks2 gcry_rijndael gcry_sha1 gcry_sha256 gcry_sha512"
-
-    # Add efi related modules
-    %ifarch x86_64
-    CD_MODULES="${CD_MODULES} efi_uga"
-    %endif
-    CD_MODULES="${CD_MODULES} chain efifwsetup efinet read tpm tss2 tpm2_key_protector memdisk tar squash4 xzio"
-    PXE_MODULES="${PXE_MODULES} efinet"
-
-    CD_MODULES="$CD_MODULES %{kernel_module}"
-
-    # Final GRUB modules list
-    GRUB_MODULES="$CD_MODULES $FS_MODULES $PXE_MODULES $CRYPTO_MODULES mdraid09 mdraid1x lvm serial"
-    PRESENT_MODS=""
-    for m in $GRUB_MODULES; do
-        if [ -f grub-core/$m.mod ] || [ -f grub-core/$m.image ] || ls grub-core/$m.mo* >/dev/null 2>&1; then
-            PRESENT_MODS="$PRESENT_MODS $m"
-        fi
-    done
-
-    mkdir monolithic
-    echo configfile \${cmdpath}/grub.cfg > grub.cfg
-    case "$plat" in
-        x86_64-efi) arch=x64 ;;
-        riscv64-efi) arch=riscv64 ;;
-    esac
-    ./grub-mkstandalone \
-        -O "$plat" \
-        -o monolithic/grub${arch}.efi \
-        --sbat sbat.csv \
-        -d grub-core \
-        --modules="${GRUB_MODULES}" \
-        "/boot/grub/grub.cfg=./grub.cfg"
-    popd
-done
-
-%install
-for plat in %{grub_platforms}; do
-    echo "==> install for $plat"
-    pushd "$PWD/../%{name}-%{version}-$plat"
-    %make_install bashcompletiondir=%{bash_completions_dir}
-    rm -f %{buildroot}%{_libdir}/grub/$plat/*.module
-    rm -f %{buildroot}%{_libdir}/grub/$plat/*.image
-    rm -f %{buildroot}%{_libdir}/grub/$plat/{kernel.exec,gdb_grub,gmodule.pl}
-    for efi_file in $(ls monolithic/*.efi); do
-        install -D -m 644 $efi_file %{buildroot}%{_libdir}/grub/$plat/$efi_file
-    done
-    popd
-done
+%install -a
+rm -f %{buildroot}%{_libdir}/grub/%{grub_platforms}/*.module
+rm -f %{buildroot}%{_libdir}/grub/%{grub_platforms}/*.image
+rm -f %{buildroot}%{_libdir}/grub/%{grub_platforms}/{kernel.exec,gdb_grub,gmodule.pl}
+install -D -m 0644 -t %{buildroot}%{_libdir}/grub/%{grub_platforms}/monolithic monolithic/*.efi
 
 install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 
 %find_lang %{name} --generate-subpackages
 
 %files -f %{name}.lang
-%license COPYING
+%doc AUTHORS NEWS README
+%license COPYING docs/fdl.texi themes/starfield/COPYING.CC-BY-SA-3.0
 %dir %{_sysconfdir}/grub.d
-%dir %{_libdir}/%{name}/
-%dir %{_datadir}/%{name}/
-%dir %{_datadir}/%{name}/themes
+%dir %{_libdir}/grub/
+%dir %{_datadir}/grub/
+%dir %{_datadir}/grub/themes
 %attr(0644,root,root) %ghost %config(noreplace) %{_sysconfdir}/default/grub
 %config(noreplace) %{_sysconfdir}/grub.d/00_header
 %config(noreplace) %{_sysconfdir}/grub.d/10_linux
@@ -199,6 +157,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %attr(0644, root, root) %config(noreplace) %{_sysconfdir}/grub.d/25_bli
 %config(noreplace) %{_sysconfdir}/grub.d/30_os-prober
 %config(noreplace) %{_sysconfdir}/grub.d/30_uefi-firmware
+%config(noreplace) %{_sysconfdir}/grub.d/31_efi_bootnext
 %config(noreplace) %{_sysconfdir}/grub.d/40_custom
 %config(noreplace) %{_sysconfdir}/grub.d/41_custom
 %{_sysconfdir}/grub.d/README
@@ -213,6 +172,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %{_bindir}/grub-mklayout
 %{_bindir}/grub-mknetdir
 %{_bindir}/grub-editenv
+%{_bindir}/grub-mkpasswd-argon2
 %{_bindir}/grub-mkpasswd-pbkdf2
 %{_bindir}/grub-mount
 %{_bindir}/grub-mkrescue
@@ -240,6 +200,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %{_libdir}/%{name}/%{grub_platforms}/*.lst
 %{_libdir}/%{name}/%{grub_platforms}/gdb_helper.py
 %{_libdir}/%{name}/%{grub_platforms}/config.h
+%{_libdir}/%{name}/%{grub_platforms}/sbat.csv
 %{_datadir}/%{name}/*.pf2
 %{_datadir}/%{name}/grub-mkconfig_lib
 %{_datadir}/%{name}/ascii.h
@@ -248,9 +209,11 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %{bash_completions_dir}/grub*
 %{_datadir}/info/%{name}.info*
 %{_datadir}/info/grub-dev.info*
+%{_mandir}/man1/grub-*.1*
+%{_mandir}/man8/grub-*.8*
 
 %files unsigned
-%{_libdir}/%{name}/%{grub_platforms}/monolithic/*.efi
+%{_libdir}/grub/%{grub_platforms}/monolithic/*.efi
 
 %changelog
 %autochangelog
