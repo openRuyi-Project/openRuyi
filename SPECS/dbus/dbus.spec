@@ -76,7 +76,7 @@ This package contains the core D-Bus components and runtime libraries.
 %package        common
 Summary:        D-BUS message bus configuration
 BuildArch:      noarch
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name} = %{version}-%{release}
 %if %{with systemd}
 %{?systemd_requires}
 %endif
