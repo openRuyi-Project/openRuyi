@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name opentelemetry_proto
 
 Name:           python-%{srcname}
-Version:        1.43.0
+Version:        1.45.2
 Release:        %autorelease
 Summary:        OpenTelemetry Python protobuf bindings
 License:        Apache-2.0
 URL:            https://github.com/open-telemetry/opentelemetry-python
 VCS:            git:https://github.com/open-telemetry/opentelemetry-python.git
-#!RemoteAsset:  sha256:224778df17e1f3fafeaaa21d874236ca5f6ffc2f86e0899298ec7351aac27924
+#!RemoteAsset:  sha256:bd8d23cf770605b0af9b7be2071d26a464fea289d35429abfd2a66226114ad64
 Source0:        https://files.pythonhosted.org/packages/source/o/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
