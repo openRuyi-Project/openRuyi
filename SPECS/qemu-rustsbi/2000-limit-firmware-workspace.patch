@@ -1,0 +1,53 @@
+Subject: Limit the firmware workspace to packaged dependencies
+Upstream: https://github.com/rustsbi/rustsbi/tree/d8e552d37ddca0e15f4ad13f6a7cf1141cd103eb
+Upstream-Status: Inappropriate [distribution packaging]
+
+Keep the Prototyper and its in-tree dependencies, plus the official xtask
+builder. Unrelated test kernels require git-only crates during workspace
+resolution even when they are not built. No firmware code is changed.
+
+diff --git a/Cargo.toml b/Cargo.toml
+index c65f09b..ced7837 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -4,39 +4,14 @@ members = [
+     "library/macros",
+     "library/sbi-rt",
+     "library/sbi-spec",
+-    "library/sbi-testing",
+     "library/rustsbi",
+-    "library/riscv-aia",
+-    "library/riscv-cove",
+-    "library/riscv-cove-rt",
+-    "library/rpmi",
+-    "library/penglai",
+-    "library/pmpm",
+-    "library/smm",
+     "firmware/runtime",
+     "firmware/runtime/macros",
+     "firmware/runtime/lib/csr",
+     "firmware/prototyper",
+-    "firmware/bench-kernel",
+-    "firmware/test-kernel",
+     "xtask",
+ ]
+-# Default Cargo commands operate on host-testable libraries.
+-# `sbi-testing` is checked on RISC-V targets in CI. Firmware is built through
+-# xtask.
+-default-members = [
+-    "library/macros",
+-    "library/sbi-rt",
+-    "library/sbi-spec",
+-    "library/rustsbi",
+-    "library/riscv-aia",
+-    "library/riscv-cove",
+-    "library/riscv-cove-rt",
+-    "library/rpmi",
+-    "library/penglai",
+-    "library/pmpm",
+-    "library/smm",
+-]
++default-members = ["xtask"]
+ 
+ [workspace.package]
+ edition = "2024"
