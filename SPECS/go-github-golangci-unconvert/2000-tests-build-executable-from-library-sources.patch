@@ -1,0 +1,43 @@
+Subject: [PATCH] tests: build an executable from the library sources
+
+The fork changed package main to package unconvert, but TestBinary still
+builds the package as an executable. Go now produces a library archive, so
+executing it fails without any analyzer diagnostics.
+
+Build a temporary command from both implementation files with only their
+package clauses changed. Keep the installed library and all four CLI tests,
+fixtures and expected diagnostics unchanged.
+
+Upstream: https://github.com/golangci/unconvert/commit/ae9b62b123752942e95fc6456caa57f67c6ca47b
+Status: Not submitted; downstream test harness fix.
+
+diff --git a/unconvert_test.go b/unconvert_test.go
+--- a/unconvert_test.go
++++ b/unconvert_test.go
+@@ -182,9 +182,24 @@ func ParseFile(file string) ([]Annotation, error) {
+ }
+ 
+ func build(t *testing.T) (exePath string) {
+-	exePath = filepath.Join(t.TempDir(), "test_unconvert.exe")
++	dir := t.TempDir()
++	exePath = filepath.Join(dir, "test_unconvert.exe")
++	args := []string{"build", "-o", exePath}
++	// The fork is a library, but the tests exercise its retained CLI entry point.
++	for _, name := range []string{"unconvert.go", "golangci.go"} {
++		source, err := os.ReadFile(name)
++		if err != nil {
++			t.Fatal(err)
++		}
++		source = []byte(strings.Replace(string(source), "package unconvert\n", "package main\n", 1))
++		path := filepath.Join(dir, name)
++		if err := os.WriteFile(path, source, 0600); err != nil {
++			t.Fatal(err)
++		}
++		args = append(args, path)
++	}
+ 
+-	output, err := exec.Command("go", "build", "-o", exePath, ".").CombinedOutput()
++	output, err := exec.Command("go", args...).CombinedOutput()
+ 	if err != nil {
+ 		t.Fatalf("failed to build service program: %v\n%v", err, string(output))
+ 	}
