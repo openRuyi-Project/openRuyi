@@ -1,0 +1,120 @@
+From 6416123bc4c79c80675cae97e5ec3f47867101f6 Mon Sep 17 00:00:00 2001
+From: wangyf0611 <wangyufeng@iscas.ac.cn>
+Date: Mon, 14 Sep 2026 12:54:27 +0800
+Subject: [PATCH] fix: support installed ocboot source layouts
+
+Signed-off-by: wangyf0611 <wangyufeng@iscas.ac.cn>
+---
+ ocboot.sh | 43 +++++++++++++++++++++++++++++++------------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
+
+diff --git a/ocboot.sh b/ocboot.sh
+index d8afb55..896ad84 100755
+--- a/ocboot.sh
++++ b/ocboot.sh
+@@ -10,14 +10,15 @@ VERSION=${VERSION:-v4-k3s.4}
+ OCBOOT_IMAGE="$IMAGE_REPOSITORY/ocboot:$VERSION"
+ 
+ CUR_DIR="$(pwd)"
++SOURCE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ CONTAINER_NAME="buildah-ocboot"
+ 
+ alias buildah="sudo buildah"
+ 
+ ensure_buildah() {
+-    if ! [ -x "$(command -v buildah)" ]; then
++    if [[ -z "$(type -P buildah)" ]]; then
+         echo "Installing buildah ..."
+-        ./scripts/install-buildah.sh
++        "$SOURCE_DIR/scripts/install-buildah.sh"
+     fi
+ }
+ 
+@@ -75,32 +76,39 @@ origin_args=()
+ normalize_installer_path() {
+     local path="$1"
+     if [[ "$path" == /* ]]; then
+-        if [[ "$path" == "$(pwd)"/* ]] || [[ "$path" == "$(pwd)" ]]; then
+-            if [[ "$path" == "$(pwd)" ]]; then
++        if [[ "$path" == "$SOURCE_DIR"/* ]] || [[ "$path" == "$SOURCE_DIR" ]]; then
++            if [[ "$path" == "$SOURCE_DIR" ]]; then
+                 echo "$ROOT_DIR"
+             else
+-                echo "$ROOT_DIR/${path#$(pwd)/}"
++                echo "$ROOT_DIR/${path#$SOURCE_DIR/}"
+             fi
+         else
+             echo "$path"
+         fi
+     else
+         path="${path#./}"
+-        echo "$ROOT_DIR/$path"
++        normalize_installer_path "$CUR_DIR/$path"
+     fi
+ }
+ 
+ prev_arg=""
++arg_index=0
+ for arg in "$@"; do
+     case "$prev_arg" in
+         --nvidia-driver-installer-path|--cuda-installer-path|--riscv64-config)
+             origin_args+=("$(normalize_installer_path "$arg")")
+             ;;
+         *)
+-            origin_args+=("$arg")
++            if [[ "$arg_index" -gt 0 ]] && [[ "$arg" != -* ]] && \
++                [[ "$arg" != /* ]] && [[ -e "$CUR_DIR/${arg#./}" ]]; then
++                origin_args+=("$CUR_DIR/${arg#./}")
++            else
++                origin_args+=("$arg")
++            fi
+             ;;
+     esac
+     prev_arg="$arg"
++    arg_index=$((arg_index + 1))
+ done
+ 
+ if [[ "${origin_args[0]:-}" == "run.py" ]]; then
+@@ -112,15 +120,25 @@ fi
+ 
+ mkdir -p "$HOME/.kube"
+ 
+-# Bind input files outside $(pwd) so they remain accessible in the container.
++# Bind the caller's working directory when ocboot is installed separately from
++# its source tree. Preserve the same absolute path for normalized input files.
++caller_volume_args=()
++if [[ "$CUR_DIR" != "$SOURCE_DIR" ]]; then
++    caller_volume_args+=(-v "$CUR_DIR:$CUR_DIR")
++fi
++
++# Bind input files outside the caller and source directories so they remain
++# accessible in the container.
+ extra_installer_volumes=()
+ prev_arg=""
+ declare -A mounted_installer_dirs
+ for arg in "$@"; do
+     case "$prev_arg" in
+         --nvidia-driver-installer-path|--cuda-installer-path|--riscv64-config)
+-            # Only handle absolute paths that are not already under $(pwd)
+-            if [[ "$arg" == /* ]] && [[ "${arg#$(pwd)/}" == "$arg" ]] && [[ "$arg" != "$(pwd)" ]]; then
++            # Only handle absolute paths that are outside both existing mounts.
++            if [[ "$arg" == /* ]] && \
++                [[ "${arg#$CUR_DIR/}" == "$arg" ]] && [[ "$arg" != "$CUR_DIR" ]] && \
++                [[ "${arg#$SOURCE_DIR/}" == "$arg" ]] && [[ "$arg" != "$SOURCE_DIR" ]]; then
+                 _dir="$(dirname "$arg")"
+                 if [[ -z "${mounted_installer_dirs[$_dir]+x}" ]]; then
+                     extra_installer_volumes+=(-v "$_dir:$_dir:ro")
+@@ -140,7 +158,8 @@ buildah run --isolation chroot --user $(id -u):$(id -g) \
+     -v "$HOME/.kube:$HOME/.kube" \
+     -v "/etc/passwd:/etc/passwd:ro" \
+     -v "/etc/group:/etc/group:ro" \
+-    -v "$(pwd):$ROOT_DIR" \
+-    -v "$(pwd)/airgap_assets/k3s-install.sh:/airgap_assets/k3s-install.sh:ro" \
++    -v "$SOURCE_DIR:$ROOT_DIR" \
++    -v "$SOURCE_DIR/airgap_assets/k3s-install.sh:/airgap_assets/k3s-install.sh:ro" \
++    "${caller_volume_args[@]}" \
+     "${extra_installer_volumes[@]}" \
+     "$CONTAINER_NAME" $CMD "${origin_args[@]}" $cmd_extra_args
+-- 
+2.54.0 (Apple Git-157)
+
