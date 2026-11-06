@@ -1,26 +1,25 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname httpx2
 
 Name:           python-%{srcname}
-Version:        2.12.0
+Version:        2.13.0
 Release:        %autorelease
 Summary:        HTTP client for Python
 License:        BSD-3-Clause
 URL:            https://github.com/pydantic/httpx2
-#!RemoteAsset:  sha256:7631fe9887a8a2275f4a2540e053aa670fcc50742864a9ae7c66e609fdcf12cf
+#!RemoteAsset:  sha256:81bd07dc67a3701729ef1f777a3c00c915d4539604fdb5afd327f8682f6b7b44
 Source0:        https://files.pythonhosted.org/packages/source/h/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
 
-# Disable dynamic versioning and use the system TLS backend.
-Patch2000:      2000-python-httpx2-use-static-version-and-system-tls.patch
-
 BuildOption(install):  -l %{srcname}
+# The WebSocket adapter imports wsproto, which is provided by the optional WebSocket extra.
 BuildOption(check):  -e %{srcname}.websockets
 
 BuildRequires:  pyproject-rpm-macros

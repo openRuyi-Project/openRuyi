@@ -9,13 +9,13 @@
 %global pypi_name langgraph_sdk
 
 Name:           python-%{srcname}
-Version:        0.4.8
+Version:        0.4.11
 Release:        %autorelease
 Summary:        SDK for interacting with LangGraph API
 License:        MIT
 URL:            https://github.com/langchain-ai/langgraph
 VCS:            git:https://github.com/langchain-ai/langgraph.git
-#!RemoteAsset:  sha256:6dd0c55d0d9040686716581c9e302c21c31ad6e2eebda0defc944a8bb38ec011
+#!RemoteAsset:  sha256:2550af3bc7cb78ac4facb97d141ec1a76568fa3eb3d29040cff70b45bda84740
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
