@@ -1,0 +1,20 @@
+From c553e930b6e30c845cf004fdb112eebe9d4b63bd Mon Sep 17 00:00:00 2001
+From: purofle <yuguo.or@isrc.iscas.ac.cn>
+Date: Mon, 2 Nov 2026 17:24:07 +0800
+Subject: [PATCH] Fix vendor script shebang
+
+Signed-off-by: purofle <yuguo.or@isrc.iscas.ac.cn>
+
+diff --git a/internal/hmac/vendor.sh b/internal/hmac/vendor.sh
+index 190d2b9..9475481 100755
+--- a/internal/hmac/vendor.sh
++++ b/internal/hmac/vendor.sh
+@@ -1,4 +1,4 @@
+-#!/bin/env bash
++#!/usr/bin/env bash
+ 
+ # SPDX-FileCopyrightText: 2023 The Pion community <https://pion.ly>
+ # SPDX-License-Identifier: MIT
+-- 
+2.56.0
+
