@@ -1,0 +1,23 @@
+From e3f8a2ea802df36e3e667804ef2c724a7e2c52f4 Mon Sep 17 00:00:00 2001
+From: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 30 Oct 2026 22:38:46 +0800
+Subject: [PATCH] comment: name the test analyzer
+
+Signed-off-by: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+---
+ passes/commentmap/commentmap_test.go | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/passes/commentmap/commentmap_test.go b/passes/commentmap/commentmap_test.go
+index f47d9da..5d78734 100644
+--- a/passes/commentmap/commentmap_test.go
++++ b/passes/commentmap/commentmap_test.go
+@@ -47,6 +47,8 @@ func Test_Maps_Ignore(t *testing.T) {
+ 
+ 			testdata := parseTestdata(t, tt.path)
+ 			analyzer := &analysis.Analyzer{
++				Name: "test",
++				Doc:  "test analyzer",
+ 				Requires: []*analysis.Analyzer{
+ 					inspect.Analyzer,
+ 					commentmap.Analyzer,
