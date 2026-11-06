@@ -1,0 +1,23 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Resolve aliases in slice element types
+
+Resolving an alias for the slice does not resolve the alias for its element.
+Go 1.27 always represents any as an alias, so []any was not recognized as a
+slice of empty interfaces. Resolve the element before inspecting it; the
+existing unit and analyzer tests retain their expected diagnostics.
+
+Upstream-Status: Pending
+Upstream: https://github.com/alingse/asasalint
+
+diff --git a/asasalint.go b/asasalint.go
+--- a/asasalint.go
++++ b/asasalint.go
+@@ -160,7 +160,7 @@ func isSliceAnyType(typ types.Type) (r bool) {
+ 	if !ok {
+ 		return
+ 	}
+-	elemType, ok := sliceType.Elem().(*types.Interface)
++	elemType, ok := types.Unalias(sliceType.Elem()).(*types.Interface)
+ 	if !ok {
+ 		return
+ 	}
