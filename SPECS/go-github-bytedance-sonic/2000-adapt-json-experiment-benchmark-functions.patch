@@ -1,0 +1,23 @@
+Subject: [PATCH] Adapt experimental JSON functions to benchmark signatures
+
+The current go-json-experiment/json Marshal and Unmarshal functions accept
+variadic Options. Wrap their default calls so they still fit the shared
+benchmark function types, preserving all JSON implementations and tests.
+
+Upstream-Status: Pending
+Reference: https://github.com/bytedance/sonic/blob/v1.15.4/generic_test/benchmark_test.go
+
+--- a/generic_test/benchmark_test.go
++++ b/generic_test/benchmark_test.go
+@@ -44,7 +44,10 @@
+ 
+ var jsonLibs = []jsonLibEntry {
+     {"Std", json.Marshal, json.Unmarshal},
+-    {"StdV2", jsonv2.Marshal, jsonv2.Unmarshal},
++    {"StdV2", func(v any) ([]byte, error) { return jsonv2.Marshal(v) },
++        func(data []byte, v any) error {
++            return jsonv2.Unmarshal(data, v)
++        }},
+     {"Sonic", sonic.Marshal, sonic.Unmarshal},
+     {"SonicStd", sonic.ConfigStd.Marshal, sonic.ConfigStd.Unmarshal},
+     {"GoJson", gojson.Marshal, gojson.Unmarshal},
