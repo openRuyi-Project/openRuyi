@@ -78,10 +78,12 @@
 # Architecture Specific
 %openruyi_riscv_arch   -march=rva23u64
 %openruyi_riscv_tune   -mtune=generic-ooo
+%openruyi_x86_64_arch  %{nil}
+%openruyi_x86_64_tune  %{nil}
 
 %openruyi_optflags_noarch  %{nil}
 %openruyi_optflags_riscv64 %{openruyi_general_flags} %{openruyi_security_cflags} %{openruyi_riscv_arch} %{openruyi_riscv_tune}
-%openruyi_optflags_x86_64  %{openruyi_general_flags} %{openruyi_security_cflags}
+%openruyi_optflags_x86_64  %{openruyi_general_flags} %{openruyi_security_cflags} %{openruyi_x86_64_arch} %{openruyi_x86_64_tune}
 
 %__global_cflags()   %{expand:%{?_target_cpu:%%{openruyi_optflags_%{_target_cpu}}}}
 %__global_cxxflags() %{__global_cflags} %{openruyi_security_cxxflags}
