@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,21 +24,6 @@ VCS:            git:https://sourceware.org/git/binutils-gdb.git
 Source0:        https://ftpmirror.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
 BuildSystem:    autotools
 
-# Backports from Fedora f44 binutils-riscv-testsuite-fixes.patch:
-# https://src.fedoraproject.org/rpms/binutils/blob/f44/f/binutils-riscv-testsuite-fixes.patch
-# https://src.fedoraproject.org/rpms/binutils/c/f3398aab: allow data-reloc tests when text relocations are rejected
-Patch2000:      2000-ld-riscv-data-reloc-allow-textrels-in-tests.patch
-# https://src.fedoraproject.org/rpms/binutils/c/a8edbcb: accept signed RISC-V relaxation immediates without full wildcarding
-Patch2001:      2001-ld-riscv-relax-tests-accept-signed-immediates.patch
-# https://src.fedoraproject.org/rpms/binutils/c/f6c1766: accept layout-dependent RISC-V Zicfilp PLT offsets
-Patch2002:      2002-ld-riscv-zicfilp-accept-variable-plt-offset.patch
-# https://src.fedoraproject.org/rpms/binutils/c/9e81b24: xfail RISC-V strip test where annotation symbols remain
-Patch2003:      2003-binutils-riscv-xfail-strip-annotation-symbol-tests.patch
-# openRuyi: default PIE on RISC-V emits this diagnostic before the second
-# undefined reference expected by upstream:
-# relocation R_RISCV_CALL_PLT against `bar' which may bind externally can not be used when making a shared object; recompile with -fPIC
-Patch2004:      2004-ld-elf-dwarf3-accept-riscv-pie-output.patch
-
 BuildOption(build):  -C build-dir
 
 BuildRequires:  gcc-c++
@@ -52,6 +38,25 @@ BuildRequires:  pkgconfig(libzstd)
 
 Requires(post):  update-alternatives
 Requires(preun):  update-alternatives
+
+%patchlist
+# Backports from Fedora f44 binutils-riscv-testsuite-fixes.patch:
+# https://src.fedoraproject.org/rpms/binutils/blob/f44/f/binutils-riscv-testsuite-fixes.patch
+# https://src.fedoraproject.org/rpms/binutils/c/f3398aab: allow data-reloc tests when text relocations are rejected
+2000-ld-riscv-data-reloc-allow-textrels-in-tests.patch
+# https://src.fedoraproject.org/rpms/binutils/c/a8edbcb: accept signed RISC-V relaxation immediates without full wildcarding
+2001-ld-riscv-relax-tests-accept-signed-immediates.patch
+# https://src.fedoraproject.org/rpms/binutils/c/f6c1766: accept layout-dependent RISC-V Zicfilp PLT offsets
+2002-ld-riscv-zicfilp-accept-variable-plt-offset.patch
+# https://src.fedoraproject.org/rpms/binutils/c/9e81b24: xfail RISC-V strip test where annotation symbols remain
+2003-binutils-riscv-xfail-strip-annotation-symbol-tests.patch
+# openRuyi: default PIE on RISC-V emits this diagnostic before the second
+# undefined reference expected by upstream:
+# relocation R_RISCV_CALL_PLT against `bar' which may bind externally can not be used when making a shared object; recompile with -fPIC
+2004-ld-elf-dwarf3-accept-riscv-pie-output.patch
+# Keep the known riscv64 non-PIE result visible during PGO training and check.
+# https://sourceware.org/bugzilla/show_bug.cgi?id=32983
+2005-ld-riscv64-xfail-pr19719.patch
 
 %description
 C compiler utilities: ar, as, gprof, ld, nm, objcopy, objdump, ranlib,
@@ -121,10 +126,6 @@ cd ..
 %find_lang %{name} --all-name --generate-subpackages
 
 %check
-# Drop upstream-known pr19719 tests pending ld/32983.
-# https://sourceware.org/bugzilla/show_bug.cgi?id=32983
-sed -i '/"pr19719/d' ld/testsuite/ld-elf/shared.exp
-
 cd build-dir
 
 # Keep successful builds quiet, but print concise DejaGnu context on failure.

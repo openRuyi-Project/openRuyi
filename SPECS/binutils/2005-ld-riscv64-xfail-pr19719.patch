@@ -1,0 +1,54 @@
+From e01a79cc945750e7d1f0e69f6c96b823063bee34 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 22:05:33 +0800
+Subject: [PATCH] ld: Record the expected non-PIE pr19719 failure on riscv64
+
+Keep running both PIE and non-PIE cases. Mark the known non-PIE
+execution failure as expected on riscv64 Linux and print both final
+results before PGO cleanup removes the DejaGnu summary.
+
+Bug: https://sourceware.org/bugzilla/show_bug.cgi?id=32983
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ ld/testsuite/ld-elf/shared.exp | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/ld/testsuite/ld-elf/shared.exp b/ld/testsuite/ld-elf/shared.exp
+index 2e71ed4..3ea7f85 100644
+--- a/ld/testsuite/ld-elf/shared.exp
++++ b/ld/testsuite/ld-elf/shared.exp
+@@ -1668,6 +1668,8 @@ if { [istarget *-*-linux*]
+ }
+ 
+ proc mix_pic_and_non_pic {xfails cflags ldflags exe} {
++    global all_flag
++
+     run_cc_link_tests [list \
+ 	[list \
+ 	    "Build libpr19719a.so" \
+@@ -1723,14 +1725,21 @@ proc mix_pic_and_non_pic {xfails cflags ldflags exe} {
+     }
+ 
+     set exec_output [run_host_cmd "tmpdir/$exe" ""]
++
++    # Report the result during PGO training before make clean removes ld.sum.
++    set saved_all_flag $all_flag
++    set all_flag 1
+     if {![string match "PASS\n" $exec_output]} {
+ 	fail "Run $exe fun defined"
+     } else {
+ 	pass "Run $exe fun defined"
+     }
++    set all_flag $saved_all_flag
+ }
+ 
+-mix_pic_and_non_pic [list "arm*-*-*"] "$NOPIE_CFLAGS" "$NOPIE_LDFLAGS" "pr19719"
++# PR ld/32983 affects the non-PIE run with the function defined on RISC-V.
++mix_pic_and_non_pic [list "arm*-*-*" "riscv64-*-linux*"] \
++    "$NOPIE_CFLAGS" "$NOPIE_LDFLAGS" "pr19719"
+ mix_pic_and_non_pic [] "-fPIE" "-pie" "pr19719pie"
+ 
+ set AFLAGS_PIE ""
+-- 
+2.54.0
+
