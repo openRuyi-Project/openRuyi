@@ -1,0 +1,50 @@
+From 43ea981e9937abce9ffbb66ac4380b571e410a78 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
+Date: Fri, 24 Oct 2025 11:33:26 +0000
+Subject: [PATCH] Expose the PDF font dictionary object number
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ fpdfsdk/fpdf_edittext.cpp | 9 +++++++++
+ public/fpdf_edit.h        | 5 +++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/fpdfsdk/fpdf_edittext.cpp b/fpdfsdk/fpdf_edittext.cpp
+index 218d3aa..f9840b8 100644
+--- a/fpdfsdk/fpdf_edittext.cpp
++++ b/fpdfsdk/fpdf_edittext.cpp
+@@ -889,6 +889,15 @@ FPDFFont_GetGlyphPath(FPDF_FONT font, uint32_t glyph, float font_size) {
+   return FPDFGlyphPathFromCFXPath(pPath);
+ }
+ 
++FPDF_EXPORT int FPDF_CALLCONV
++FPDFFont_GetFontDictObjNum(FPDF_FONT font) {
++  auto* pFont = CPDFFontFromFPDFFont(font);
++  if (!pFont)
++    return -1;
++
++  return pFont->GetFontDictObjNum();
++}
++
+ FPDF_EXPORT uint32_t FPDF_CALLCONV
+ FPDFFont_GetGlyphIndexFromCharCode(FPDF_FONT font, uint32_t char_code) {
+   auto* pFont = CPDFFontFromFPDFFont(font);
+diff --git a/public/fpdf_edit.h b/public/fpdf_edit.h
+index 26f4440..d10ddd4 100644
+--- a/public/fpdf_edit.h
++++ b/public/fpdf_edit.h
+@@ -1753,6 +1753,11 @@ FPDF_EXPORT FPDF_GLYPHPATH FPDF_CALLCONV FPDFFont_GetGlyphPath(FPDF_FONT font,
+ FPDF_EXPORT uint32_t FPDF_CALLCONV
+ FPDFFont_GetGlyphIndexFromCharCode(FPDF_FONT font, uint32_t charcode);
+ 
++// Experimental API.
++// Get FontDictObjNum of the PDF character code
++FPDF_EXPORT int FPDF_CALLCONV
++FPDFFont_GetFontDictObjNum(FPDF_FONT font);
++
+ // Experimental API.
+ // Get number of segments inside glyphpath.
+ //
+-- 
+2.54.0
+
