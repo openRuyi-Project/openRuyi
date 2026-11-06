@@ -1,0 +1,142 @@
+From 65223ede6143cd656de1e5a9292641df1be543a2 Mon Sep 17 00:00:00 2001
+From: Jeff Law <jeffreyalaw@gmail.com>
+Date: Sun, 13 Sep 2026 13:50:44 -0600
+Subject: [PATCH 2/2] [RISC-V] Fix problems with bclr variable bit optimization
+
+A patch from Sun Yuechi as well as a recent PR prompted me to look at this code
+fairly closely.  The issue raised by Sun Yuechi is still there and needs to be
+addressed.
+
+The basic idea of the mini pass is to find cases where we do x & (x-1) and
+there's a nearby ctz (x).   Ultimately we want to change a sequence like
+addi+and with a nearby ctz to just ctz+bclr.  The dependency tree is the same
+height, but clearly we have fewer instructions.
+
+The code was originally meant to target cases in deepsjeng IIRC and like so
+much code it works with integer types.  So the x-1 step is being done with 32
+bit arithmetic while the logical and step is done on the full 64-bit wide
+register.
+
+The x-1 step looks something like (set (dest) (sign_extend (plus (subreg (x))
+-1))).
+
+Sun Yuechi's patch added a an explicit sign extend after the bclr step and we
+could often eliminate it during combine if we moved this pass before combine.
+That was enough to fix the reported testcase.  But it's wrong in other cases,
+the key problem being it would set the upper 32 bits to sign bit copies of the
+result, but there are some cases where we need to preserve the upper 32 bits.
+Without querying for the precise bits set in the input I couldn't come up with
+any way to save this optimization for 32bit objects on rv64.
+
+The net is I'm removing support for that case.  It's actually pretty trivial as
+we can just remove the one step that strips the SIGN_EXTEND and the code
+immediately thereafter now sees the SIGN_EXTEND and rejects the transformation.
+
+Naturally this requires some minor adjustments to testsuite output.  It also
+includes a new execution test from Sun Yuechi.  So I'm noting Sun Yeuchi as
+co-author.
+
+I've bootstrapped and regression tested this on riscv64 (K3 and c920 platforms)
+and also tested riscv32 and riscv64 ELF platforms.  Pushing to the trunk.  I'll
+back port it to the relevant release branches along with the other fix from
+yesterday after some simmering time.
+
+gcc/
+	* config/riscv/riscv-bclr-lowest-set-bit.cc
+	(pass_bclr_lowest_set_bit::execute): Do not handle addiw forms.
+
+gcc/testsuite
+	* gcc.target/riscv/bclr-lowest-set-bit-1.c: Update expected output.
+	* gcc.target/riscv/bclr-lowest-set-bit-2.c: New test.
+
+Co-authored-by: Sun Yuechi <sunyuechi@iscas.ac.cn
+---
+ gcc/config/riscv/riscv-bclr-lowest-set-bit.cc | 17 +++++++----
+ .../gcc.target/riscv/bclr-lowest-set-bit-1.c  |  6 ++--
+ .../gcc.target/riscv/bclr-lowest-set-bit-2.c  | 30 +++++++++++++++++++
+ 3 files changed, 46 insertions(+), 7 deletions(-)
+ create mode 100644 gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+
+diff --git a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+index 403250757419..1f6070f7e89f 100644
+--- a/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
++++ b/gcc/config/riscv/riscv-bclr-lowest-set-bit.cc
+@@ -193,12 +193,19 @@ pass_bclr_lowest_set_bit::execute (function *fn)
+ 	  rtx dec_src = SET_SRC (dec_set);
+ 	  rtx dec_dest = SET_DEST (dec_set);
+ 
+-	  /* For a 32 bit object on rv64, the decrement will
+-	     be wrapped by a SIGN_EXTEND.  Strip it.  */
+-	  if (GET_CODE (dec_src) == SIGN_EXTEND)
+-	    dec_src = XEXP (dec_src, 0);
++	  /* Verify it's res = x - 1, if not proceed to the next insn.
++	     It seems like we ought to be able to handle the rv64 addiw form
++	     for the subtraction step, but that's unsafe.
+ 
+-	  /* Verify it's res = x - 1, if not proceed to the next insn.  */
++	     Consider if x has the value like 0x0000000200000004.  The
++	     original sequence would produce 0x0.  ctz+bclr would produce
++	     0x0000000200000000.
++
++	     If we sign extended the result the previous case works, but
++	     others do not (consider 0x1234567800000008).
++
++	     And there's the added complexity of ctzw when the low 32 bits are
++	     zero. The would result in changing bit 32 inadvertently.  */
+ 	  if (!dec_set
+ 	      || !REG_P (dec_dest)
+ 	      || GET_CODE (dec_src) != PLUS
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-1.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-1.c
+index fa201cec3590..211f3cb6a40f 100644
+--- a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-1.c
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-1.c
+@@ -123,6 +123,8 @@ void foo12(unsigned long x)
+   foo12_res2 = tz;
+ }
+ 
+-/* { dg-final { scan-assembler-not "\\sand\\s" } } */
+-/* { dg-final { scan-assembler-times "\\sbclr\\s" 12 } } */
++/* { dg-final { scan-assembler-not "\\sand\\s" { target rv32 } } } */
++/* { dg-final { scan-assembler-times "\\sbclr\\s" 12 { target rv32 } } } */
++/* { dg-final { scan-assembler-times "\\sand\\s" 6 { target rv64 } } } */
++/* { dg-final { scan-assembler-times "\\sbclr\\s" 6 { target rv64 } } } */
+ 
+diff --git a/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+new file mode 100644
+index 000000000000..e40fd6c10f78
+--- /dev/null
++++ b/gcc/testsuite/gcc.target/riscv/bclr-lowest-set-bit-2.c
+@@ -0,0 +1,30 @@
++/* { dg-do run } */
++/* { dg-additional options "-march=rv64gc_zbb_zbs -mabi=lp64d" { target rv64 } } */
++/* { dg-additional options "-march=rv32gc_zbb_zbs -mabi=ilp32" { target rv32 } } */
++
++/* If bclr drops the sign extension, this loop never terminates.  */
++
++extern void abort (void);
++
++__attribute__((noipa)) unsigned
++bit_walk (unsigned x)
++{
++  unsigned r = 0;
++  unsigned guard = 0;
++
++  for (unsigned m = x; m; m &= m - 1)
++    {
++      if (++guard > 32)
++	abort ();
++      r += (unsigned) __builtin_ctz (m);
++    }
++  return r;
++}
++
++int
++main (void)
++{
++  if (bit_walk (0x80000001u) != 31)
++    abort ();
++  return 0;
++}
+-- 
+2.52.0
+

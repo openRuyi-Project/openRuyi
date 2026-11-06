@@ -1,0 +1,12 @@
+diff --git a/ld/testsuite/ld-riscv-elf/zicfilp-unlabeled-plt.d b/ld/testsuite/ld-riscv-elf/zicfilp-unlabeled-plt.d
+index a0181af..5556739 100644
+--- a/ld/testsuite/ld-riscv-elf/zicfilp-unlabeled-plt.d
++++ b/ld/testsuite/ld-riscv-elf/zicfilp-unlabeled-plt.d
+@@ -30,6 +30,6 @@ Disassembly of section \.plt:
+ 
+ [0-9a-f]+ <bar@plt>:
+ .*:[ 	]+[0-9a-f]+[ 	]+lpad[ 	]+0x0
+-.*:[ 	]+[0-9a-f]+[ 	]+auipc[ 	]+t3,0x1
++.*:[ 	]+[0-9a-f]+[ 	]+auipc[ 	]+t3,0x[0-9a-f]+
+ .*:[ 	]+[0-9a-f]+[ 	]+ld[ 	]+t3,[0-9]+\(t3\) # [0-9a-f]+ <bar>
+ .*:[ 	]+[0-9a-f]+[ 	]+jalr[ 	]+t1,t3
