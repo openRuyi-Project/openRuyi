@@ -1,0 +1,24 @@
+Subject: [PATCH] Enable Go 1.22 HTTP routing in GOPATH builds
+
+--- a/cmd/picoclaw/main.go
++++ b/cmd/picoclaw/main.go
+@@ -3,6 +3,8 @@
+ // License: MIT
+ //
+ // Copyright (c) 2026 PicoClaw contributors
++
++//go:debug httpmuxgo121=0
+ 
+ package main
+ 
+--- a/web/backend/main.go
++++ b/web/backend/main.go
+@@ -8,6 +8,8 @@
+ //	go build -o picoclaw-web ./web/backend/
+ //	./picoclaw-web [config.json]
+ //	./picoclaw-web -public config.json
++
++//go:debug httpmuxgo121=0
+ 
+ package main
+ 
