@@ -1,28 +1,30 @@
 [Unit]
-Description=OpenLDAP Server Daemon
-After=syslog.target network.target
+Description=OpenLDAP Directory Server
+Documentation=man:slapd(8) man:slapd-config(5)
+After=network.target
 
 [Service]
-Type=forking
-ExecStart=/usr/lib/openldap/start
-
-# Hardening to prevent security escalation.
-## Future hardening for FS protection.
-# ProtectSystem=full
-# ReadWritePaths=/etc/openldap/slapd.d /var/lib/ldap
-
-RestrictSUIDSGID=true
+Type=notify
+User=ldap
+Group=ldap
+RuntimeDirectory=slapd
+RuntimeDirectoryMode=0755
+UMask=0077
+ExecStart=@LIBEXECDIR@/slapd -d 0 -F /etc/openldap/slapd.d -h ldapi:///
 NoNewPrivileges=true
 PrivateTmp=true
 PrivateDevices=true
-ProtectHostname=true
-ProtectClock=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/etc/openldap/slapd.d /var/lib/ldap
+RestrictSUIDSGID=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
-ProtectKernelLogs=true
 ProtectControlGroups=true
+ProtectHostname=true
+ProtectClock=true
+ProtectKernelLogs=true
 MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target
-

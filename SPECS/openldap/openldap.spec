@@ -5,45 +5,26 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define run_test_suite 0
 %define slapdrundir %{_rundir}/slapd
 
-%global _lto_cflags %{_lto_cflags} -ffat-lto-objects
+%global contrib_overlays addpartial allowed allop autogroup authzid datamorph lastbind denyop cloak noopsrch passwd/sha2 passwd/pbkdf2 trace variant vc
 
 Name:           openldap
-Version:        2.6.13
+Version:        2.7.2
 Release:        %autorelease
 Summary:        An implementation of the Lightweight Directory Access Protocol
 License:        OLDAP-2.8
 URL:            https://www.openldap.org
 VCS:            git:https://git.openldap.org/openldap/openldap.git
-#!RemoteAsset:  sha256:d693b49517a42efb85a1a364a310aed16a53d428d1b46c0d31ef3fba78fcb656
+#!RemoteAsset:  sha256:aad731aa22118ff327b9b4ddfc4b6f18ef9476586205da88a532e90940b523d2
 Source0:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz
-#!RemoteAsset:  sha256:9e9317a322ba4b01a125fe4e292b6862d753696f1487839066eb0ccbaa599c5c
-Source1:        https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-%{version}.tgz.asc
-Source2:        slapd.conf
-Source3:        sasl-slapd.conf
-Source4:        README.module-loading
-Source5:        schema2ldif
-Source6:        slapd.conf.olctemplate
-Source7:        slapd.conf.example
-Source8:        start
-Source9:        slapd.service
-Source11:       openldap.conf
-Source12:       ldap-user.conf
-Source13:       fixup-modulepath.sh
-Source14:       slapd-ldif-update-crc.sh
-Source15:       update-crc.sh
+Source1:        slapd.service
+Source2:        openldap.conf
+Source3:        ldap-user.conf
+Source4:        slapd-initial.ldif
+Source5:        README.openruyi
 BuildSystem:    autotools
 
-Patch0:         0001-reproducible.patch
-Patch1:         0002-LDAPI-socket-location.patch
-Patch2:         0003-pie-compile.patch
-Patch3:         0004-In-monitor-backend-do-not-return-Connection0-entries.patch
-Patch4:         0005-Clear-shared-key-only-in-close-function.patch
-Patch5:         0006-gcc14-v2.patch
-
-BuildOption(conf):  --sysconfdir=%{_sysconfdir}/openldap
 BuildOption(conf):  --libexecdir=%{_libexecdir}
 BuildOption(conf):  --localstatedir=%{slapdrundir}
 BuildOption(conf):  --enable-wrappers=no
@@ -53,15 +34,14 @@ BuildOption(conf):  --enable-shared
 BuildOption(conf):  --enable-dynamic
 BuildOption(conf):  --with-tls=openssl
 BuildOption(conf):  --with-cyrus-sasl
+BuildOption(conf):  --with-systemd
 BuildOption(conf):  --enable-crypt
 BuildOption(conf):  --enable-ipv6=yes
 BuildOption(conf):  --enable-dynacl
 BuildOption(conf):  --enable-aci
 BuildOption(conf):  --enable-ldap=mod
 BuildOption(conf):  --enable-meta=mod
-BuildOption(conf):  --enable-perl=mod
 BuildOption(conf):  --enable-sock=mod
-BuildOption(conf):  --enable-sql=mod
 BuildOption(conf):  --enable-mdb=mod
 BuildOption(conf):  --enable-relay=mod
 BuildOption(conf):  --enable-overlays=mod
@@ -69,36 +49,37 @@ BuildOption(conf):  --enable-syncprov=mod
 BuildOption(conf):  --enable-ppolicy=mod
 BuildOption(conf):  --with-yielding-select
 BuildOption(conf):  --with-argon2=libargon2
-BuildOption(install):  STRIP="" "sysconfdir=%{_sysconfdir}/openldap" "libexecdir=%{_libexecdir}"
+BuildOption(check):  SLAPD_DEBUG=0
+BuildOption(install):  STRIP_OPTS=""
 
 BuildRequires:  pkgconfig(libargon2)
 BuildRequires:  cyrus-sasl-devel
-BuildRequires:  db-devel
 BuildRequires:  mandoc
-BuildRequires:  perl-devel
 BuildRequires:  libtool
-BuildRequires:  unixODBC-devel
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(systemd)
+BuildRequires:  systemd-rpm-macros
 BuildRequires:  pkgconfig(openssl)
-Requires:       /usr/bin/awk
+Requires(pre):  systemd-sysusers
+Requires(pre):  systemd
+%systemd_requires
 Recommends:     cyrus-sasl
+
+%patchlist
+# Remove build timestamps; https://api.opensuse.org/public/source/openSUSE:Factory/openldap2/reproducible.patch?rev=b02b3f2b76ff3785b64f1d45167beb94
+2000-reproducible.patch
+# Use the configured runtime directory; https://api.opensuse.org/public/source/openSUSE:Factory/openldap2/0003-LDAPI-socket-location.dif?rev=b02b3f2b76ff3785b64f1d45167beb94
+2001-ldapi-socket-location.patch
+# Build position-independent executables; https://api.opensuse.org/public/source/openSUSE:Factory/openldap2/0005-pie-compile.dif?rev=b02b3f2b76ff3785b64f1d45167beb94
+2002-pie-compile.patch
+# Declare the attribute cleanup function; https://api.opensuse.org/public/source/openSUSE:Factory/openldap2/gcc14-v2.patch?rev=b02b3f2b76ff3785b64f1d45167beb94
+2003-cloak-attribute-declaration.patch
 
 %description
 OpenLDAP is a client and server reference implementation of the
 Lightweight Directory Access Protocol v3 (LDAPv3).
 
 The server provides several database backends and overlays.
-
-%package        back-perl
-Summary:        OpenLDAP Perl backend
-Requires:       %{name} = %{version}-%{release}
-BuildRequires:  perl-devel
-Requires:       perl
-
-%description    back-perl
-The OpenLDAP Perl back-end allows you to execute Perl code specific to
-different LDAP operations.
 
 %package        back-sock
 Summary:        OpenLDAP Socket backend
@@ -119,15 +100,6 @@ The OpenLDAP Meta back-end is able to perform basic LDAP proxying with
 respect to a set of remote LDAP servers. The information contained in
 these servers can be presented as belonging to a single Directory
 Information Tree (DIT).
-
-%package        back-sql
-Summary:        OpenLDAP SQL backend
-Requires:       %{name} = %{version}-%{release}
-
-%description    back-sql
-The primary purpose of this OpenLDAP backend is to present information
-stored in a Relational (SQL) Database as an LDAP subtree without the need
-to do any programming.
 
 %package     -n libldap-data
 Summary:        Configuration file for system-wide defaults for all uses of libldap
@@ -187,120 +159,65 @@ This package provides the static versions of the OpenLDAP libraries
 for development.
 
 %build -p
-cp %{SOURCE4} .
 make depend
-%global _lto_cflags %{_lto_cflags} -ffat-lto-objects
-export CFLAGS="%{optflags} -Wno-format-extra-args -fno-strict-aliasing -DNDEBUG -DSLAP_CONFIG_DELETE -DSLAP_SCHEMA_EXPOSE -DLDAP_COLLECTIVE_ATTRIBUTES -DLDAP_USE_NON_BLOCKING_TLS"
-export STRIP=""
 
 %build -a
+%set_build_flags
 # Build selected contrib overlays
-for SLAPO_NAME in addpartial allowed allop autogroup authzid datamorph lastbind denyop cloak noopsrch passwd/sha2 passwd/pbkdf2 trace variant vc
+for SLAPO_NAME in %{contrib_overlays}
 do
-  make -C contrib/slapd-modules/${SLAPO_NAME} %{?_smp_mflags} "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}"
+  make -C contrib/slapd-modules/${SLAPO_NAME} %{?_smp_mflags} libexecdir=%{_libexecdir}
 done
 # slapo-smbk5pwd only for Samba password hashes
-make -C contrib/slapd-modules/smbk5pwd %{?_smp_mflags} "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}" DEFS="-DDO_SAMBA" HEIMDAL_LIB=""
+make -C contrib/slapd-modules/smbk5pwd %{?_smp_mflags} libexecdir=%{_libexecdir} DEFS="-DDO_SAMBA" HEIMDAL_LIB=""
 
-%check
-%if %run_test_suite
-# calculate the base port to be use in the test-suite
-SLAPD_BASEPORT=10000
-if [ -f /.buildenv ] ; then
-    . /.buildenv
-    SLAPD_BASEPORT=$(($SLAPD_BASEPORT + ${BUILD_INCARNATION:-0} * 10))
-fi
-export SLAPD_BASEPORT
-rm -f tests/scripts/test019-syncreplication-cascade
-rm -f tests/scripts/test022-ppolicy
-rm -f tests/scripts/test023-refint
-rm -f tests/scripts/test033-glue-syncrepl
-#rm -f tests/scripts/test036-meta-concurrency
-#rm -f tests/scripts/test039-glue-ldap-concurrency
-rm -f tests/scripts/test043-delta-syncrepl
-#rm -f tests/scripts/test045-syncreplication-proxied
-rm -f tests/scripts/test048-syncrepl-multiproxy
-rm -f tests/scripts/test050-syncrepl-multimaster
-rm -f tests/scripts/test058-syncrepl-asymmetric
-make SLAPD_DEBUG=0 test
-%endif
-
-%install
-mkdir -p %{buildroot}%{_libdir}/openldap
-mkdir -p %{buildroot}/usr/lib/openldap
-mkdir -p %{buildroot}%{_sbindir}
-mkdir -p %{buildroot}%{_unitdir}
-make STRIP="" DESTDIR="%{buildroot}" "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}" install
-
-# Additional symbolic link to slapd executable in /usr/sbin/
-rm -f %{buildroot}%{_sbindir}/slapd
-(cd %{buildroot}%{_sbindir} && ln -s ../lib64/slapd slapd)
+%install -a
+ln -sfn %{_libexecdir}/slapd %{buildroot}%{_sbindir}/slapd
 
 # Install selected contrib overlays
-for SLAPO_NAME in addpartial allowed allop autogroup authzid datamorph lastbind denyop cloak noopsrch passwd/sha2 passwd/pbkdf2 trace variant vc
+for SLAPO_NAME in %{contrib_overlays}
 do
-  make -C contrib/slapd-modules/${SLAPO_NAME} STRIP="" DESTDIR="%{buildroot}" "mandir=%{_mandir}" "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}" install
+  make -C contrib/slapd-modules/${SLAPO_NAME} DESTDIR=%{buildroot} mandir=%{_mandir} libexecdir=%{_libexecdir} install
 done
 # slapo-smbk5pwd only for Samba password hashes
-make -C contrib/slapd-modules/smbk5pwd STRIP="" DESTDIR="%{buildroot}" "mandir=%{_mandir}" "sysconfdir=%{_sysconfdir}/openldap" "libdir=%{_libdir}" "libexecdir=%{_libexecdir}" install
-install -m 755 %{SOURCE8} %{buildroot}/usr/lib/openldap/start
-install -m 644 %{SOURCE9} %{buildroot}%{_unitdir}
-mkdir -p %{buildroot}%{_sysconfdir}/openldap/slapd.d
-mkdir -p %{buildroot}%{_sysconfdir}/sasl2
-install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sasl2/slapd.conf
-install -m 755 -d %{buildroot}/var/lib/ldap
+make -C contrib/slapd-modules/smbk5pwd DESTDIR=%{buildroot} mandir=%{_mandir} libexecdir=%{_libexecdir} DEFS="-DDO_SAMBA" HEIMDAL_LIB="" install
+install -D -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/slapd.service
+sed -i 's|@LIBEXECDIR@|%{_libexecdir}|g' %{buildroot}%{_unitdir}/slapd.service
+install -D -m 644 %{SOURCE4} %{buildroot}%{_datadir}/openldap/slapd-initial.ldif
+install -d -m 0700 %{buildroot}%{_sharedstatedir}/ldap
 chmod a+x %{buildroot}%{_libdir}/liblber.so*
 chmod a+x %{buildroot}%{_libdir}/libldap.so*
-install -m 755 %{SOURCE5} %{buildroot}%{_sbindir}/schema2ldif
-mkdir -p  %{buildroot}%{_tmpfilesdir}/
-install -m 644 %{SOURCE11} %{buildroot}%{_tmpfilesdir}/
-mkdir -p %{buildroot}%{_sysusersdir}
-install -m 644 %{SOURCE12} %{buildroot}%{_sysusersdir}/
+install -D -m 644 %{SOURCE2} %{buildroot}%{_tmpfilesdir}/openldap.conf
+install -D -m 644 %{SOURCE3} %{buildroot}%{_sysusersdir}/ldap-user.conf
 
-install -m 755 %{SOURCE12}  ${RPM_BUILD_ROOT}/usr/lib/openldap/fixup-modulepath
-install -m 755 %{SOURCE13}  ${RPM_BUILD_ROOT}/%{_sbindir}/slapd-ldif-update-crc
-install -m 755 %{SOURCE14}  ${RPM_BUILD_ROOT}/usr/lib/openldap/update-crc
-
-# Install default and sample configuration files
-install -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/openldap
-install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/openldap
-install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/openldap
-find doc/guide '(' ! -name *.html -a ! -name *.gif -a ! -name *.png -a ! -type d ')' -delete
-rm -rf doc/guide/release
+# Remove upstream server examples; initialization uses the reviewed LDIF.
+rm -f %{buildroot}%{_sysconfdir}/openldap/slapd.conf*
 
 %define DOCDIR %{_defaultdocdir}/%{name}
-# Install default database optimisation
+# Install upstream documentation
 install -d %{buildroot}%{DOCDIR}/adminguide \
            %{buildroot}%{DOCDIR}/images \
            %{buildroot}%{DOCDIR}/drafts
-install -m 644 doc/guide/admin/* %{buildroot}%{DOCDIR}/adminguide
+install -m 644 doc/guide/admin/*.html doc/guide/admin/*.png %{buildroot}%{DOCDIR}/adminguide
 install -m 644 doc/guide/images/*.gif %{buildroot}%{DOCDIR}/images
 install -m 644 doc/drafts/* %{buildroot}%{DOCDIR}/drafts
-install -m 644 ANNOUNCEMENT \
-               COPYRIGHT \
-               README \
-               CHANGES \
-               %{SOURCE4} \
-               %{buildroot}%{DOCDIR}
-install -m 644 servers/slapd/slapd.ldif \
-               %{buildroot}%{DOCDIR}/slapd.ldif.default
-rm -f %{buildroot}/etc/openldap/schema/README
-rm -f %{buildroot}/etc/openldap/slapd.ldif*
-mv servers/slapd/back-sql/rdbms_depend servers/slapd/back-sql/examples
+install -m 644 ANNOUNCEMENT COPYRIGHT README CHANGES %{buildroot}%{DOCDIR}
+install -m 644 %{SOURCE5} %{buildroot}%{DOCDIR}/README.openruyi
+sed -i -e 's|@LIBEXECDIR@|%{_libexecdir}|g' -e 's|@DATADIR@|%{_datadir}|g' %{buildroot}%{DOCDIR}/README.openruyi
+rm -f %{buildroot}%{_sysconfdir}/openldap/schema/README
+rm -f %{buildroot}%{_sysconfdir}/openldap/slapd.ldif*
 
-rm -f %{buildroot}%{_libdir}/openldap/*.a
-rm -f %{buildroot}/usr/share/man/man5/slapd-dnssrv.5
-rm -f %{buildroot}/usr/share/man/man5/slapd-null.5
-rm -f %{buildroot}/usr/share/man/man5/slapd-passwd.5
-rm -f %{buildroot}/usr/share/man/man5/slapd-shell.5
-rm -f %{buildroot}/usr/share/man/man5/slapd-tcl.5
+rm -f %{buildroot}%{_libexecdir}/openldap/*.a
+rm -f %{buildroot}%{_mandir}/man5/slapd-dnssrv.5
+rm -f %{buildroot}%{_mandir}/man5/slapd-null.5
+rm -f %{buildroot}%{_mandir}/man5/slapd-passwd.5
 
 # Provide a libldap_r for backwards-compatibility with OpenLDAP < 2.5.
 ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 
 %pre
-%sysusers_create_package ldap-user.conf %SOURCE12
-%tmpfiles_create_package %{name} %SOURCE11
+%sysusers_create_package ldap-user.conf %SOURCE3
+%tmpfiles_create_package %{name} %SOURCE2
 
 %post
 %systemd_post slapd.service
@@ -314,48 +231,36 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %files
 %config %{_sysconfdir}/openldap/schema/*.schema
 %config %{_sysconfdir}/openldap/schema/*.ldif
-%config(noreplace) /etc/sasl2/slapd.conf
-%config(noreplace) %attr(640, root, ldap) %{_sysconfdir}/openldap/slapd.conf
-%config(noreplace) %attr(640, root, ldap) %{_sysconfdir}/openldap/slapd.conf.olctemplate
-%config %attr(640, root, ldap) %{_sysconfdir}/openldap/slapd.conf.default
-%config %attr(640, root, ldap) %{_sysconfdir}/openldap/slapd.conf.example
-%dir /usr/lib/openldap
-%dir %{_sysconfdir}/sasl2
 %dir %{_sysconfdir}/openldap
-%dir %attr(0770, ldap, ldap) %{_sysconfdir}/openldap/slapd.d
 %dir %{_sysconfdir}/openldap/schema
 %{_sbindir}/slap*
 %{_libexecdir}/openldap/*
 %exclude %{_libexecdir}/openldap/back_meta*
-%exclude %{_libexecdir}/openldap/back_sql*
-%exclude %{_libexecdir}/openldap/back_perl*
 %exclude %{_libexecdir}/openldap/back_sock*
 %{_libexecdir}/slapd
-/usr/lib/openldap/*
 %{_unitdir}/slapd.service
 %{_tmpfilesdir}/openldap.conf
 %{_sysusersdir}/ldap-user.conf
-%dir %attr(0750, ldap, ldap) %{_sharedstatedir}/ldap
-%ghost %attr(0750, ldap, ldap) %{slapdrundir}
+%dir %attr(0700, ldap, ldap) %{_sharedstatedir}/ldap
+%dir %{_datadir}/openldap
+%{_datadir}/openldap/slapd-initial.ldif
 %doc %{_mandir}/man8/sl*
 %doc %{_mandir}/man8/lloadd.*
 %doc %{_mandir}/man5/*
+%exclude %{_mandir}/man5/slapd-sock.*
+%exclude %{_mandir}/man5/slapd-meta.*
+%exclude %{_mandir}/man5/ldap.conf*
 %dir %{DOCDIR}
 %doc %{DOCDIR}/ANNOUNCEMENT
 %doc %{DOCDIR}/COPYRIGHT
-%license LICENSE
 %doc %{DOCDIR}/README*
 %doc %{DOCDIR}/CHANGES
-%doc %{DOCDIR}/slapd.ldif.default
 %doc %{DOCDIR}/drafts
 %doc %{DOCDIR}/adminguide
 %doc %{DOCDIR}/images
+%license LICENSE
 %{_libdir}/liblber.so.*
 %{_libdir}/libldap.so.*
-
-%files back-perl
-%{_libexecdir}/openldap/back_perl*
-%doc %{_mandir}/man5/slapd-perl.*
 
 %files back-sock
 %{_libexecdir}/openldap/back_sock*
@@ -364,13 +269,6 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %files back-meta
 %{_libexecdir}/openldap/back_meta*
 %doc %{_mandir}/man5/slapd-meta.*
-
-%files back-sql
-%{_libexecdir}/openldap/back_sql*
-%doc %{_mandir}/man5/slapd-sql.*
-%doc servers/slapd/back-sql/examples
-%doc servers/slapd/back-sql/docs/bugs
-%doc servers/slapd/back-sql/docs/install
 
 %files -n libldap-data
 %config(noreplace) %{_sysconfdir}/openldap/ldap.conf
@@ -399,7 +297,6 @@ ln -fs libldap.so "%{buildroot}%{_libdir}/libldap_r.so"
 %doc %{_mandir}/man1/ldap*
 %doc %{_mandir}/man5/ldif.*
 %dir /etc/openldap
-%{_sbindir}/schema2ldif
 %{_bindir}/ldap*
 
 %files devel

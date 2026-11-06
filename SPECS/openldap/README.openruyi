@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+OpenLDAP on openRuyi
+===================
+
+Defaults
+--------
+slapd runs as ldap and listens only on ldapi:///.
+Local root can manage cn=config through SASL EXTERNAL.
+The initial configuration contains no default password or user directory database.
+
+For existing OpenLDAP 2.6 databases, follow the migration section below.
+
+Initialize a new installation
+-----------------------------
+Install openldap-client. Stop slapd. Run these commands as root only for a new installation:
+
+    mkdir -m 0700 /etc/openldap/slapd.d &&
+    slapadd -F /etc/openldap/slapd.d -n 0 -l @DATADIR@/openldap/slapd-initial.ldif &&
+    slaptest -F /etc/openldap/slapd.d -u &&
+    chown -R ldap:ldap /etc/openldap/slapd.d
+
+If a command fails, keep the directory and leave slapd stopped.
+Do not delete existing configuration to repeat initialization.
+After all commands succeed:
+
+    systemctl start slapd
+    ldapsearch -Q -Y EXTERNAL -H ldapi:/// -b cn=config dn
+
+Service configuration
+---------------------
+Use systemctl edit slapd to override ExecStart and change listeners or process options.
+Clear ExecStart with an empty assignment before setting its replacement.
+The service does not read /etc/sysconfig/openldap or use slapd.conf by default.
+ProtectHome=true blocks service access to home directories.
+Store TLS files elsewhere and give ldap read access.
+For TCP ports that require privileges, grant the service CAP_NET_BIND_SERVICE.
+Configure TLS and access controls before enabling network access.
+
+OpenLDAP 2.6 databases
+---------------------
+OpenLDAP 2.7 uses a different MDB format. The package does not migrate data.
+
+Stop slapd. Keep the original data unchanged.
+If you have no LDIF export, use a working 2.6 environment.
+Export a copy of the old database with the 2.6 slapcat.
+Use the 2.7 slapadd to import the LDIF into a new directory.
+Follow the migration instructions before starting slapd:
+
+https://www.openldap.org/doc/admin27/appendix-upgrading.html
+
+Database, schema and TLS configuration:
+https://www.openldap.org/doc/admin27/
