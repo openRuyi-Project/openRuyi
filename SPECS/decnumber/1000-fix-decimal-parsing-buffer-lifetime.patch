@@ -1,0 +1,73 @@
+From d07e7d05b50cc9468e99fa3bc2630f4a25473942 Mon Sep 17 00:00:00 2001
+From: Dmitry Kovalenko <dmitry.lipetsk@gmail.com>
+Date: Tue, 30 May 2023 10:25:22 +0000
+Subject: [PATCH] The part of fix #7599. Problems with pointers in decNumber
+ library (#7607)
+
+* Fix for #7599 - strip leading zeros in decFloatFromString
+* Bug fix for #7599 - the scope of a local buffer in decFinalize was corrected
+
+(cherry picked from commit f5af6a92c6edd98eda36a295206d94c1ed75a986)
+
+Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/a31b3bcb5b8249b405569b9490955edfa06ad3bd
+
+Apply the decCommon.c fixes to the standalone decNumber 3.68 source.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ decCommon.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/decCommon.c b/decCommon.c
+index 6a0c112..e16d6ee 100644
+--- a/decCommon.c
++++ b/decCommon.c
+@@ -236,6 +236,7 @@ static decFloat * decFinalize(decFloat *df, bcdnum *num,
+   uByte *ulsd=num->lsd;       // ..
+   uInt   encode;              // encoding accumulator
+   Int    length;              // coefficient length
++  uByte  buffer[ROUNDUP(DECPMAX+3, 4)]; // [+3 allows uInt padding]
+ 
+   #if DECCHECK
+   Int clen=ulsd-umsd+1;
+@@ -456,7 +457,6 @@ static decFloat * decFinalize(decFloat *df, bcdnum *num,
+           // fold down needed; must copy to buffer in order to pad
+           // with zeros safely; fortunately this is not the worst case
+           // path because cannot have had a round
+-          uByte buffer[ROUNDUP(DECPMAX+3, 4)]; // [+3 allows uInt padding]
+           uByte *s=umsd;                // source
+           uByte *t=buffer;              // safe target
+           uByte *tlsd=buffer+(ulsd-umsd)+shift; // target LSD
+@@ -905,16 +905,20 @@ decFloat * decFloatFromString(decFloat *result, const char *string,
+        else {                                // too long for buffer
+         // [This is a rare and unusual case; arbitrary-length input]
+         // strip leading zeros [but leave final 0 if all 0's]
+-        if (*cfirst=='.') cfirst++;          // step past dot at start
+-        if (*cfirst=='0') {                  // [cfirst always -> digit]
+-          for (; cfirst<clast; cfirst++) {
+-            if (*cfirst!='0') {              // non-zero found
+-              if (*cfirst=='.') continue;    // [ignore]
+-              break;                         // done
+-              }
+-            digits--;                        // 0 stripped
++        {
++          const char* cfirst2=NULL;
++
++          for (; cfirst<=clast; cfirst++) {
++            if (*cfirst == '.') continue;  // [ignore]
++            cfirst2=cfirst;                // let's save the position of this digit
++            if (*cfirst!='0') break;       // done
++            digits--;                      // 0 stripped
+             } // cfirst
+-          } // at least one leading 0
++          if(clast<cfirst) { // all the symbols are ZEROs
++            digits=1;
++            }
++          cfirst=cfirst2;
++        } // local - at least one leading 0
+ 
+         // the coefficient is now as short as possible, but may still
+         // be too long; copy up to Pmax+1 digits to the buffer, then
+-- 
+2.54.0
+
