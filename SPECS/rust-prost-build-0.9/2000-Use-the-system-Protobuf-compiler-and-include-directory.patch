@@ -1,0 +1,35 @@
+From b0c3fc842ab0c64efb88c2fefec27ee538324a2f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 01:22:20 +0800
+Subject: [PATCH] Use the system Protobuf compiler and include directory
+
+Select protoc from PROTOC or PATH and use the installed Protobuf headers. The crate archive ships native executables for several host architectures, which cannot be distributed as a noarch source provider.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ build.rs | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/build.rs b/build.rs
+index 7f5860f..b09bcdc 100644
+--- a/build.rs
++++ b/build.rs
+@@ -100,14 +100,13 @@ fn bundled_protoc_include() -> PathBuf {
+ 
+ fn main() {
+     let protoc = env_protoc()
+-        .or_else(bundled_protoc)
+         .or_else(path_protoc)
+         .expect(
+             "Failed to find the protoc binary. The PROTOC environment variable is not set, \
+              there is no bundled protoc for this platform, and protoc is not in the PATH",
+         );
+ 
+-    let protoc_include = env_protoc_include().unwrap_or_else(bundled_protoc_include);
++    let protoc_include = env_protoc_include().unwrap_or_else(|| PathBuf::from("/usr/include"));
+ 
+     println!("cargo:rustc-env=PROTOC={}", protoc.display());
+     println!(
+-- 
+2.54.0
+
