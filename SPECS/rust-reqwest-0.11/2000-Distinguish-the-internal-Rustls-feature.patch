@@ -1,0 +1,584 @@
+From 7ea267f52e80216471a0271cd63e33bec3ce41d7 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 01:22:21 +0800
+Subject: [PATCH] Rename the internal Rustls feature to avoid RPM capability 
+ collisions.
+
+The private __rustls feature and the optional rustls dependency normalize
+to the same RPM feature name. Keep them distinct while preserving the
+public TLS feature selections and their dependency graph.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ Cargo.toml               |  8 +++----
+ Cargo.toml.orig          |  8 +++----
+ src/async_impl/client.rs | 28 ++++++++++++------------
+ src/blocking/client.rs   | 10 ++++-----
+ src/connect.rs           | 24 ++++++++++-----------
+ src/tls.rs               | 46 ++++++++++++++++++++--------------------
+ tests/client.rs          |  6 +++---
+ tests/redirect.rs        |  2 +-
+ 8 files changed, 66 insertions(+), 66 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 6a6a648..8e45fd0 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -153,7 +153,7 @@ version = "2.2"
+ 
+ [features]
+ __internal_proxy_sys_no_cache = []
+-__rustls = [
++internal-rustls = [
+     "hyper-rustls",
+     "tokio-rustls",
+     "rustls",
+@@ -210,14 +210,14 @@ native-tls-vendored = [
+     "native-tls-crate/vendored",
+ ]
+ rustls-tls = ["rustls-tls-webpki-roots"]
+-rustls-tls-manual-roots = ["__rustls"]
++rustls-tls-manual-roots = ["internal-rustls"]
+ rustls-tls-native-roots = [
+     "rustls-native-certs",
+-    "__rustls",
++    "internal-rustls",
+ ]
+ rustls-tls-webpki-roots = [
+     "webpki-roots",
+-    "__rustls",
++    "internal-rustls",
+ ]
+ socks = ["tokio-socks"]
+ stream = [
+diff --git a/Cargo.toml.orig b/Cargo.toml.orig
+index eb0b2c1..3e30c02 100644
+--- a/Cargo.toml.orig
++++ b/Cargo.toml.orig
+@@ -39,9 +39,9 @@ native-tls-alpn = ["native-tls", "native-tls-crate/alpn"]
+ native-tls-vendored = ["native-tls", "native-tls-crate/vendored"]
+ 
+ rustls-tls = ["rustls-tls-webpki-roots"]
+-rustls-tls-manual-roots = ["__rustls"]
+-rustls-tls-webpki-roots = ["webpki-roots", "__rustls"]
+-rustls-tls-native-roots = ["rustls-native-certs", "__rustls"]
++rustls-tls-manual-roots = ["internal-rustls"]
++rustls-tls-webpki-roots = ["webpki-roots", "internal-rustls"]
++rustls-tls-native-roots = ["rustls-native-certs", "internal-rustls"]
+ 
+ blocking = ["futures-util/io", "tokio/sync"]
+ 
+@@ -76,7 +76,7 @@ __tls = ["dep:rustls-pemfile"]
+ 
+ # Enables common rustls code.
+ # Equivalent to rustls-tls-manual-roots but shorter :)
+-__rustls = ["hyper-rustls", "tokio-rustls", "rustls", "__tls"]
++internal-rustls = ["hyper-rustls", "tokio-rustls", "rustls", "__tls"]
+ 
+ # When enabled, disable using the cached SYS_PROXIES.
+ __internal_proxy_sys_no_cache = []
+diff --git a/src/async_impl/client.rs b/src/async_impl/client.rs
+index b247624..084d287 100644
+--- a/src/async_impl/client.rs
++++ b/src/async_impl/client.rs
+@@ -1,4 +1,4 @@
+-#[cfg(any(feature = "native-tls", feature = "__rustls",))]
++#[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+ use std::any::Any;
+ use std::net::IpAddr;
+ use std::sync::Arc;
+@@ -43,7 +43,7 @@ use crate::redirect::{self, remove_sensitive_headers};
+ use crate::tls::{self, TlsBackend};
+ #[cfg(feature = "__tls")]
+ use crate::Certificate;
+-#[cfg(any(feature = "native-tls", feature = "__rustls"))]
++#[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+ use crate::Identity;
+ use crate::{IntoUrl, Method, Proxy, StatusCode, Url};
+ use log::{debug, trace};
+@@ -99,7 +99,7 @@ struct Config {
+     pool_idle_timeout: Option<Duration>,
+     pool_max_idle_per_host: usize,
+     tcp_keepalive: Option<Duration>,
+-    #[cfg(any(feature = "native-tls", feature = "__rustls"))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+     identity: Option<Identity>,
+     proxies: Vec<Proxy>,
+     auto_sys_proxy: bool,
+@@ -193,7 +193,7 @@ impl ClientBuilder {
+                 root_certs: Vec::new(),
+                 #[cfg(feature = "__tls")]
+                 tls_built_in_root_certs: true,
+-                #[cfg(any(feature = "native-tls", feature = "__rustls"))]
++                #[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+                 identity: None,
+                 #[cfg(feature = "__tls")]
+                 min_tls_version: None,
+@@ -286,7 +286,7 @@ impl ClientBuilder {
+             let mut http = HttpConnector::new_with_resolver(DynResolver::new(resolver.clone()));
+             http.set_connect_timeout(config.connect_timeout);
+ 
+-            #[cfg(all(feature = "http3", feature = "__rustls"))]
++            #[cfg(all(feature = "http3", feature = "internal-rustls"))]
+             let build_h3_connector =
+                 |resolver,
+                  tls,
+@@ -377,7 +377,7 @@ impl ClientBuilder {
+                             id.add_to_native_tls(&mut tls)?;
+                         }
+                     }
+-                    #[cfg(all(feature = "__rustls", not(feature = "native-tls")))]
++                    #[cfg(all(feature = "internal-rustls", not(feature = "native-tls")))]
+                     {
+                         // Default backend + rustls Identity doesn't work.
+                         if let Some(_id) = config.identity {
+@@ -426,7 +426,7 @@ impl ClientBuilder {
+                     config.nodelay,
+                     config.tls_info,
+                 ),
+-                #[cfg(feature = "__rustls")]
++                #[cfg(feature = "internal-rustls")]
+                 TlsBackend::BuiltRustls(conn) => {
+                     #[cfg(feature = "http3")]
+                     {
+@@ -452,7 +452,7 @@ impl ClientBuilder {
+                         config.tls_info,
+                     )
+                 }
+-                #[cfg(feature = "__rustls")]
++                #[cfg(feature = "internal-rustls")]
+                 TlsBackend::Rustls => {
+                     use crate::tls::NoVerifier;
+ 
+@@ -595,7 +595,7 @@ impl ClientBuilder {
+                         config.tls_info,
+                     )
+                 }
+-                #[cfg(any(feature = "native-tls", feature = "__rustls",))]
++                #[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+                 TlsBackend::UnknownPreconfigured => {
+                     return Err(crate::error::builder(
+                         "Unknown TLS backend passed to `use_preconfigured_tls`",
+@@ -1277,7 +1277,7 @@ impl ClientBuilder {
+     ///
+     /// This requires the optional `native-tls` or `rustls-tls(-...)` feature to be
+     /// enabled.
+-    #[cfg(any(feature = "native-tls", feature = "__rustls"))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+     #[cfg_attr(docsrs, doc(cfg(any(feature = "native-tls", feature = "rustls-tls"))))]
+     pub fn identity(mut self, identity: Identity) -> ClientBuilder {
+         self.config.identity = Some(identity);
+@@ -1441,7 +1441,7 @@ impl ClientBuilder {
+     /// # Optional
+     ///
+     /// This requires the optional `rustls-tls(-...)` feature to be enabled.
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     #[cfg_attr(docsrs, doc(cfg(feature = "rustls-tls")))]
+     pub fn use_rustls_tls(mut self) -> ClientBuilder {
+         self.config.tls = TlsBackend::Rustls;
+@@ -1466,7 +1466,7 @@ impl ClientBuilder {
+     ///
+     /// This requires one of the optional features `native-tls` or
+     /// `rustls-tls(-...)` to be enabled.
+-    #[cfg(any(feature = "native-tls", feature = "__rustls",))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+     #[cfg_attr(docsrs, doc(cfg(any(feature = "native-tls", feature = "rustls-tls"))))]
+     pub fn use_preconfigured_tls(mut self, tls: impl Any) -> ClientBuilder {
+         let mut tls = Some(tls);
+@@ -1481,7 +1481,7 @@ impl ClientBuilder {
+                 return self;
+             }
+         }
+-        #[cfg(feature = "__rustls")]
++        #[cfg(feature = "internal-rustls")]
+         {
+             if let Some(conn) =
+                 (&mut tls as &mut dyn Any).downcast_mut::<Option<rustls::ClientConfig>>()
+@@ -2069,7 +2069,7 @@ impl Config {
+             f.field("tls_info", &self.tls_info);
+         }
+ 
+-        #[cfg(all(feature = "native-tls-crate", feature = "__rustls"))]
++        #[cfg(all(feature = "native-tls-crate", feature = "internal-rustls"))]
+         {
+             f.field("tls_backend", &self.tls);
+         }
+diff --git a/src/blocking/client.rs b/src/blocking/client.rs
+index 8a419c2..f3a8cdf 100644
+--- a/src/blocking/client.rs
++++ b/src/blocking/client.rs
+@@ -1,4 +1,4 @@
+-#[cfg(any(feature = "native-tls", feature = "__rustls",))]
++#[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+ use std::any::Any;
+ use std::convert::TryInto;
+ use std::fmt;
+@@ -20,7 +20,7 @@ use super::wait;
+ use crate::tls;
+ #[cfg(feature = "__tls")]
+ use crate::Certificate;
+-#[cfg(any(feature = "native-tls", feature = "__rustls"))]
++#[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+ use crate::Identity;
+ use crate::{async_impl, header, redirect, IntoUrl, Method, Proxy};
+ 
+@@ -596,7 +596,7 @@ impl ClientBuilder {
+     ///
+     /// This requires the optional `native-tls` or `rustls-tls(-...)` feature to be
+     /// enabled.
+-    #[cfg(any(feature = "native-tls", feature = "__rustls"))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls"))]
+     #[cfg_attr(docsrs, doc(cfg(any(feature = "native-tls", feature = "rustls-tls"))))]
+     pub fn identity(self, identity: Identity) -> ClientBuilder {
+         self.with_inner(move |inner| inner.identity(identity))
+@@ -740,7 +740,7 @@ impl ClientBuilder {
+     /// # Optional
+     ///
+     /// This requires the optional `rustls-tls(-...)` feature to be enabled.
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     #[cfg_attr(docsrs, doc(cfg(feature = "rustls-tls")))]
+     pub fn use_rustls_tls(self) -> ClientBuilder {
+         self.with_inner(move |inner| inner.use_rustls_tls())
+@@ -783,7 +783,7 @@ impl ClientBuilder {
+     ///
+     /// This requires one of the optional features `native-tls` or
+     /// `rustls-tls(-...)` to be enabled.
+-    #[cfg(any(feature = "native-tls", feature = "__rustls",))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+     #[cfg_attr(docsrs, doc(cfg(any(feature = "native-tls", feature = "rustls-tls"))))]
+     pub fn use_preconfigured_tls(self, tls: impl Any) -> ClientBuilder {
+         self.with_inner(move |inner| inner.use_preconfigured_tls(tls))
+diff --git a/src/connect.rs b/src/connect.rs
+index b6b5113..b1a2b81 100644
+--- a/src/connect.rs
++++ b/src/connect.rs
+@@ -19,7 +19,7 @@ use std::time::Duration;
+ 
+ #[cfg(feature = "default-tls")]
+ use self::native_tls_conn::NativeTlsConn;
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ use self::rustls_tls_conn::RustlsTlsConn;
+ use crate::dns::DynResolver;
+ use crate::error::BoxError;
+@@ -47,7 +47,7 @@ enum Inner {
+     Http(HttpConnector),
+     #[cfg(feature = "default-tls")]
+     DefaultTls(HttpConnector, TlsConnector),
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     RustlsTls {
+         http: HttpConnector,
+         tls: Arc<rustls::ClientConfig>,
+@@ -124,7 +124,7 @@ impl Connector {
+         }
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     pub(crate) fn new_rustls_tls<T>(
+         mut http: HttpConnector,
+         tls: rustls::ClientConfig,
+@@ -202,7 +202,7 @@ impl Connector {
+                     });
+                 }
+             }
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             Inner::RustlsTls { tls_proxy, .. } => {
+                 if dst.scheme() == Some(&Scheme::HTTPS) {
+                     use std::convert::TryFrom;
+@@ -277,7 +277,7 @@ impl Connector {
+                     })
+                 }
+             }
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             Inner::RustlsTls { http, tls, .. } => {
+                 let mut http = http.clone();
+ 
+@@ -359,7 +359,7 @@ impl Connector {
+                     });
+                 }
+             }
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             Inner::RustlsTls {
+                 http,
+                 tls,
+@@ -403,7 +403,7 @@ impl Connector {
+         match &mut self.inner {
+             #[cfg(feature = "default-tls")]
+             Inner::DefaultTls(http, _tls) => http.set_keepalive(dur),
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             Inner::RustlsTls { http, .. } => http.set_keepalive(dur),
+             #[cfg(not(feature = "__tls"))]
+             Inner::Http(http) => http.set_keepalive(dur),
+@@ -512,7 +512,7 @@ impl TlsInfoFactory for tokio_native_tls::TlsStream<tokio::net::TcpStream> {
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ impl TlsInfoFactory for hyper_rustls::MaybeHttpsStream<tokio::net::TcpStream> {
+     fn tls_info(&self) -> Option<crate::tls::TlsInfo> {
+         match self {
+@@ -522,7 +522,7 @@ impl TlsInfoFactory for hyper_rustls::MaybeHttpsStream<tokio::net::TcpStream> {
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ impl TlsInfoFactory for tokio_rustls::TlsStream<tokio::net::TcpStream> {
+     fn tls_info(&self) -> Option<crate::tls::TlsInfo> {
+         let peer_certificate = self
+@@ -535,7 +535,7 @@ impl TlsInfoFactory for tokio_rustls::TlsStream<tokio::net::TcpStream> {
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ impl TlsInfoFactory
+     for tokio_rustls::client::TlsStream<hyper_rustls::MaybeHttpsStream<tokio::net::TcpStream>>
+ {
+@@ -550,7 +550,7 @@ impl TlsInfoFactory
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ impl TlsInfoFactory for tokio_rustls::client::TlsStream<tokio::net::TcpStream> {
+     fn tls_info(&self) -> Option<crate::tls::TlsInfo> {
+         let peer_certificate = self
+@@ -839,7 +839,7 @@ mod native_tls_conn {
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ mod rustls_tls_conn {
+     use super::TlsInfoFactory;
+     use hyper::client::connect::{Connected, Connection};
+diff --git a/src/tls.rs b/src/tls.rs
+index 3f53d87..eda0ee6 100644
+--- a/src/tls.rs
++++ b/src/tls.rs
+@@ -44,7 +44,7 @@
+ //!
+ //! [rustls]: https://crates.io/crates/rustls
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ use rustls::{
+     client::HandshakeSignatureValid, client::ServerCertVerified, client::ServerCertVerifier,
+     DigitallySignedStruct, Error as TLSError, ServerName,
+@@ -59,11 +59,11 @@ use std::{
+ pub struct Certificate {
+     #[cfg(feature = "native-tls-crate")]
+     native: native_tls_crate::Certificate,
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     original: Cert,
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ #[derive(Clone)]
+ enum Cert {
+     Der(Vec<u8>),
+@@ -73,7 +73,7 @@ enum Cert {
+ /// Represents a private key and X509 cert as a client certificate.
+ #[derive(Clone)]
+ pub struct Identity {
+-    #[cfg_attr(not(any(feature = "native-tls", feature = "__rustls")), allow(unused))]
++    #[cfg_attr(not(any(feature = "native-tls", feature = "internal-rustls")), allow(unused))]
+     inner: ClientCert,
+ }
+ 
+@@ -83,7 +83,7 @@ enum ClientCert {
+     Pkcs12(native_tls_crate::Identity),
+     #[cfg(feature = "native-tls")]
+     Pkcs8(native_tls_crate::Identity),
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     Pem {
+         key: rustls::PrivateKey,
+         certs: Vec<rustls::Certificate>,
+@@ -111,7 +111,7 @@ impl Certificate {
+         Ok(Certificate {
+             #[cfg(feature = "native-tls-crate")]
+             native: native_tls_crate::Certificate::from_der(der).map_err(crate::error::builder)?,
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             original: Cert::Der(der.to_owned()),
+         })
+     }
+@@ -136,7 +136,7 @@ impl Certificate {
+         Ok(Certificate {
+             #[cfg(feature = "native-tls-crate")]
+             native: native_tls_crate::Certificate::from_pem(pem).map_err(crate::error::builder)?,
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             original: Cert::Pem(pem.to_owned()),
+         })
+     }
+@@ -172,7 +172,7 @@ impl Certificate {
+         tls.add_root_certificate(self.native);
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     pub(crate) fn add_to_rustls(
+         self,
+         root_cert_store: &mut rustls::RootCertStore,
+@@ -302,7 +302,7 @@ impl Identity {
+     /// # Optional
+     ///
+     /// This requires the `rustls-tls(-...)` Cargo feature enabled.
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     pub fn from_pem(buf: &[u8]) -> crate::Result<Identity> {
+         use std::io::Cursor;
+ 
+@@ -355,12 +355,12 @@ impl Identity {
+                 tls.identity(id);
+                 Ok(())
+             }
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             ClientCert::Pem { .. } => Err(crate::error::builder("incompatible TLS identity type")),
+         }
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     pub(crate) fn add_to_rustls(
+         self,
+         config_builder: rustls::ConfigBuilder<
+@@ -427,7 +427,7 @@ impl Version {
+         }
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     pub(crate) fn from_rustls(version: rustls::ProtocolVersion) -> Option<Self> {
+         match version {
+             rustls::ProtocolVersion::SSLv2 => None,
+@@ -448,11 +448,11 @@ pub(crate) enum TlsBackend {
+     Default,
+     #[cfg(feature = "native-tls")]
+     BuiltNativeTls(native_tls_crate::TlsConnector),
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     Rustls,
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     BuiltRustls(rustls::ClientConfig),
+-    #[cfg(any(feature = "native-tls", feature = "__rustls",))]
++    #[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+     UnknownPreconfigured,
+ }
+ 
+@@ -463,11 +463,11 @@ impl fmt::Debug for TlsBackend {
+             TlsBackend::Default => write!(f, "Default"),
+             #[cfg(feature = "native-tls")]
+             TlsBackend::BuiltNativeTls(_) => write!(f, "BuiltNativeTls"),
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             TlsBackend::Rustls => write!(f, "Rustls"),
+-            #[cfg(feature = "__rustls")]
++            #[cfg(feature = "internal-rustls")]
+             TlsBackend::BuiltRustls(_) => write!(f, "BuiltRustls"),
+-            #[cfg(any(feature = "native-tls", feature = "__rustls",))]
++            #[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+             TlsBackend::UnknownPreconfigured => write!(f, "UnknownPreconfigured"),
+         }
+     }
+@@ -481,7 +481,7 @@ impl Default for TlsBackend {
+         }
+ 
+         #[cfg(any(
+-            all(feature = "__rustls", not(feature = "default-tls")),
++            all(feature = "internal-rustls", not(feature = "default-tls")),
+             feature = "http3"
+         ))]
+         {
+@@ -490,10 +490,10 @@ impl Default for TlsBackend {
+     }
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ pub(crate) struct NoVerifier;
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ impl ServerCertVerifier for NoVerifier {
+     fn verify_server_cert(
+         &self,
+@@ -574,13 +574,13 @@ mod tests {
+         Identity::from_pkcs8_pem(b"not pem", b"not key").unwrap_err();
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     #[test]
+     fn identity_from_pem_invalid() {
+         Identity::from_pem(b"not pem").unwrap_err();
+     }
+ 
+-    #[cfg(feature = "__rustls")]
++    #[cfg(feature = "internal-rustls")]
+     #[test]
+     fn identity_from_pem_pkcs1_key() {
+         let pem = b"-----BEGIN CERTIFICATE-----\n\
+diff --git a/tests/client.rs b/tests/client.rs
+index e7fe96d..6b8c80f 100644
+--- a/tests/client.rs
++++ b/tests/client.rs
+@@ -288,7 +288,7 @@ async fn overridden_dns_resolution_with_hickory_dns_multiple() {
+     assert_eq!("Hello", text);
+ }
+ 
+-#[cfg(any(feature = "native-tls", feature = "__rustls",))]
++#[cfg(any(feature = "native-tls", feature = "internal-rustls",))]
+ #[test]
+ fn use_preconfigured_tls_with_bogus_backend() {
+     struct DefinitelyNotTls;
+@@ -314,7 +314,7 @@ fn use_preconfigured_native_tls_default() {
+         .expect("preconfigured default tls");
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ #[test]
+ fn use_preconfigured_rustls_default() {
+     extern crate rustls;
+@@ -331,7 +331,7 @@ fn use_preconfigured_rustls_default() {
+         .expect("preconfigured rustls tls");
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ #[tokio::test]
+ #[ignore = "Needs TLS support in the test server"]
+ async fn http2_upgrade() {
+diff --git a/tests/redirect.rs b/tests/redirect.rs
+index 9df6265..e983145 100644
+--- a/tests/redirect.rs
++++ b/tests/redirect.rs
+@@ -334,7 +334,7 @@ async fn test_redirect_302_with_set_cookies() {
+     assert_eq!(res.status(), reqwest::StatusCode::OK);
+ }
+ 
+-#[cfg(feature = "__rustls")]
++#[cfg(feature = "internal-rustls")]
+ #[tokio::test]
+ #[ignore = "Needs TLS support in the test server"]
+ async fn test_redirect_https_only_enforced_gh1312() {
+-- 
+2.54.0
+
