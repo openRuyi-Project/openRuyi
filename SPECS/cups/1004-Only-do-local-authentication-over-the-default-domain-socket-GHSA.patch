@@ -1,0 +1,27 @@
+From 718d56946e2dfb283ea6aac6901c44006360b10a Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 14 Oct 2026 11:39:28 -0400
+Subject: [PATCH] Only do local authentication over the default domain socket
+ (GHSA-8q78-mrwh-rm85)
+
+Upstream-Commit: 4f79650387c5e1fed0573b7b1c549815c82df726
+---
+ cups/auth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cups/auth.c b/cups/auth.c
+index c18bf4b..8887311 100644
+--- a/cups/auth.c
++++ b/cups/auth.c
+@@ -988,7 +988,7 @@ cups_local_auth(http_t *http)		/* I - HTTP connection to server */
+   * See if we are accessing localhost...
+   */
+ 
+-  if (httpAddrFamily(httpGetAddress(http)) != AF_LOCAL)
++  if (httpAddrFamily(httpGetAddress(http)) != AF_LOCAL || strcmp(http->hostname, cg->server))
+   {
+     DEBUG_puts("8cups_local_auth: Not a local connection!");
+     return (1);
+-- 
+2.54.0
+

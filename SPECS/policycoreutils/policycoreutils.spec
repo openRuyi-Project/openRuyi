@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -9,38 +10,38 @@
 # NOTE: When updating this package, update SELinux first.
 
 Name:           policycoreutils
-Version:        3.10
+Version:        3.11
 Release:        %autorelease
 Summary:        SELinux policy core utilities
 License:        GPL-2.0-or-later
 URL:            https://github.com/SELinuxProject/selinux
-#!RemoteAsset:  sha256:8dbd50d868acbfae9d1a972f6bbb2587f06c9ec73308d11af6acb3a401de9832
+#!RemoteAsset:  sha256:054e41ec039731a5ee6b797a8e0b8d6e346ee1d0a9bac2f252db48c23f9a8b1b
 Source0:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz
-#!RemoteAsset:  sha256:a3e175f2cc0019d1904b2cefb864d94cc2718421f1e850e733183ed4fb6e81a1
+#!RemoteAsset:  sha256:ad3cf23d4e0744502159485919ae0f68d7b4b72636b5a0e9f09f9411a227eacc
 Source1:        %{url}/releases/download/%{version}/%{name}-%{version}.tar.gz.asc
-#!RemoteAsset:  sha256:5fb88e50eaf2b25f74c2022352aefe54fc24b416eef672a5ce55fae26bc79501
+#!RemoteAsset:  sha256:d21950372c73e16ef4906528f837d18066d620d48e4d35be558b13401d24b685
 Source2:        %{url}/releases/download/%{version}/selinux-dbus-%{version}.tar.gz
-#!RemoteAsset:  sha256:3b29100bbb5018cd8b6a570e4d08c250f7859b3a921a3bd93d587e6e58bd8ab8
+#!RemoteAsset:  sha256:33d92be2bae1b8c5f46ea3bbf39a3e56131e4c84412e7e97241c1f31ce669018
 Source3:        %{url}/releases/download/%{version}/selinux-dbus-%{version}.tar.gz.asc
-#!RemoteAsset:  sha256:9d0a5b69f2fbcce8e5ccd8e0f17d56f71e6005a756386f8fb36c31f9424191a2
+#!RemoteAsset:  sha256:f854d7fe67981d80c612067e97c1804f641a9dfcca2d38baeb3efe52b7875398
 Source4:        %{url}/releases/download/%{version}/selinux-python-%{version}.tar.gz
-#!RemoteAsset:  sha256:d711c7ccae7b757e929bed02c681028f2cd1d11ffe842a01e4427960779769ab
+#!RemoteAsset:  sha256:085ed0710e29bd2febd9a1e1cfdefe784026d38ec0ded6a51ee4026d8053439f
 Source5:        %{url}/releases/download/%{version}/selinux-python-%{version}.tar.gz.asc
-#!RemoteAsset:  sha256:4e98cf387f2e30d8f29fa58f4ff2889d07f294fade3da1216a0fceae831d8e8a
+#!RemoteAsset:  sha256:1aa328c75ccedcd2ee6d1f8b3f3bb11080c05d8700f1de334795cb573293728c
 Source6:        %{url}/releases/download/%{version}/selinux-gui-%{version}.tar.gz
-#!RemoteAsset:  sha256:5cd8f2a318fe36e94993bdae834a8182ca16c910cb6b6891c75c5f6bed69f376
+#!RemoteAsset:  sha256:d978dddae48e3f1a169603d9848c92a17e788776e4fc1875c3fcfbecd4920ed4
 Source7:        %{url}/releases/download/%{version}/selinux-gui-%{version}.tar.gz.asc
-#!RemoteAsset:  sha256:1c2f14cc098cbb4d75912d131c5f747e70246e1042e72f2ab40e28f53cf45c10
+#!RemoteAsset:  sha256:0c574e15413ff7ed660c45e011befe248bb89eaa273db6f56eb297d61deb2ed6
 Source8:        %{url}/releases/download/%{version}/semodule-utils-%{version}.tar.gz
-#!RemoteAsset:  sha256:a99dcefc28c97ed677250602bc2e40d4dbe52cc1bbeeb5f566a35b3b37085d93
+#!RemoteAsset:  sha256:374f19182cde4755315324954b2a39092a7ddda1230e93e846d7f7e51a13cd5c
 Source9:        %{url}/releases/download/%{version}/semodule-utils-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 # Because the way we build this pacakge, so we need
 # to change the make targets
 Patch0:         0001-make_targets.patch
-# From https://github.com/SELinuxProject/selinux/pull/507
-Patch1:         fix-discarded-qualifiers-warning-with-glib-2.43.patch
+# https://github.com/SELinuxProject/selinux/commit/a556538c2d5d2583273e025b45c02651fef47679
+Patch1000:      1000-policycoreutils-scripts-fixfiles-drop-tmp-cleanup.patch
 
 BuildOption(install):  SBINDIR="%{_sbindir}"
 
@@ -56,7 +57,8 @@ BuildRequires:  pkgconfig(pam)
 BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(dbus-1)
-BuildRequires:  python3-devel
+BuildRequires:  pkgconfig(python3)
+BuildRequires:  python3dist(build)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  python3dist(wheel)
@@ -105,7 +107,8 @@ an SELinux environment.
 %package        dbus
 Summary:        SELinux policy core DBUS api
 Requires:       python3-policycoreutils = %{version}-%{release}
-Requires:       python3-pygobject
+Requires:       python3dist(pygobject)
+Requires:       python3dist(dbus-python)
 Requires:       polkit
 BuildArch:      noarch
 
@@ -115,10 +118,13 @@ an SELinux environment.
 
 %package        gui
 Summary:        SELinux configuration GUI
+# GTK imports the xlib and cairo typelibs supplied by gobject-introspection.
+Requires:       gobject-introspection
+Requires:       gtk3
 Requires:       policycoreutils-devel = %{version}-%{release}
 Requires:       python3-policycoreutils = %{version}-%{release}
 Requires:       policycoreutils-dbus = %{version}-%{release}
-Requires:       python3-pygobject
+Requires:       python3dist(pygobject)
 BuildRequires:  desktop-file-utils
 BuildArch:      noarch
 
@@ -138,7 +144,7 @@ or level of a logged in user.
 setools_python_pwd="$PWD/selinux-python-%{version}"
 semodule_utils_pwd="$PWD/semodule-utils-%{version}"
 %patch -P 0 -p1
-%patch -P 1 -p2
+%patch -P 1000 -p2
 mv ${setools_python_pwd}/audit2allow ${setools_python_pwd}/chcat ${setools_python_pwd}/semanage ${setools_python_pwd}/sepolgen ${setools_python_pwd}/sepolicy .
 mv ${semodule_utils_pwd}/semodule_expand ${semodule_utils_pwd}/semodule_link ${semodule_utils_pwd}/semodule_package .
 

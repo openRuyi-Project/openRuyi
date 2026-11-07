@@ -1,0 +1,30 @@
+From 88495efbfa7e7b7656eed212d4387671f3af329c Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Wed, 14 Oct 2026 11:09:13 -0400
+Subject: [PATCH] Range limit supply level values to avoid buffer overflow
+ (GHSA-5cpc-rwrw-jp83)
+
+Upstream-Commit: d98a2face6390f88173ceec13e60603effe19530
+---
+ backend/snmp-supplies.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/backend/snmp-supplies.c b/backend/snmp-supplies.c
+index dde0681..f396970 100644
+--- a/backend/snmp-supplies.c
++++ b/backend/snmp-supplies.c
+@@ -253,6 +253,11 @@ backendSNMPSupplies(
+       else
+         percent = 50;
+ 
++      if (percent < 0)
++        percent = 0;
++      else if (percent > 100)
++        percent = 100;
++
+       if (supplies[i].sclass == CUPS_TC_receptacleThatIsFilled)
+         percent = 100 - percent;
+ 
+-- 
+2.54.0
+

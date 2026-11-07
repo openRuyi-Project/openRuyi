@@ -1,0 +1,56 @@
+From af56b5ac3b9e34163f63bdc2e35ad2c79bf83b14 Mon Sep 17 00:00:00 2001
+From: Michael R Sweet <msweet@msweet.org>
+Date: Fri, 9 Oct 2026 13:55:03 -0400
+Subject: [PATCH] Don't allow printer MIME media types for print jobs
+ (GHSA-fw5x-gqfr-7jh7)
+
+Upstream-Commit: 586fbabcf6603bce630fdf34cfa9e53eddd89019
+---
+ scheduler/ipp.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/scheduler/ipp.c b/scheduler/ipp.c
+index 03524d4..bccbc20 100644
+--- a/scheduler/ipp.c
++++ b/scheduler/ipp.c
+@@ -8878,8 +8878,7 @@ print_job(cupsd_client_t  *con,		/* I - Client connection */
+     * Grab format from client...
+     */
+ 
+-    if (sscanf(format->values[0].string.text, "%15[^/]/%255[^;]", super,
+-               type) != 2)
++    if (sscanf(format->values[0].string.text, "%15[^/]/%255[^;]", super, type) != 2 || !_cups_strcasecmp(super, "printer"))
+     {
+       send_ipp_status(con, IPP_BAD_REQUEST,
+                       _("Bad document-format \"%s\"."),
+@@ -8897,7 +8896,7 @@ print_job(cupsd_client_t  *con,		/* I - Client connection */
+     * Use default document format...
+     */
+ 
+-    if (sscanf(default_format, "%15[^/]/%255[^;]", super, type) != 2)
++    if (sscanf(default_format, "%15[^/]/%255[^;]", super, type) != 2 || !_cups_strcasecmp(super, "printer"))
+     {
+       send_ipp_status(con, IPP_BAD_REQUEST,
+                       _("Bad document-format \"%s\"."),
+@@ -10133,8 +10132,7 @@ send_document(cupsd_client_t  *con,	/* I - Client connection */
+     * Grab format from client...
+     */
+ 
+-    if (sscanf(format->values[0].string.text, "%15[^/]/%255[^;]",
+-               super, type) != 2)
++    if (sscanf(format->values[0].string.text, "%15[^/]/%255[^;]", super, type) != 2 || !_cups_strcasecmp(super, "printer"))
+     {
+       send_ipp_status(con, IPP_BAD_REQUEST, _("Bad document-format \"%s\"."),
+ 	              format->values[0].string.text);
+@@ -10151,7 +10149,7 @@ send_document(cupsd_client_t  *con,	/* I - Client connection */
+     * Use default document format...
+     */
+ 
+-    if (sscanf(default_format, "%15[^/]/%255[^;]", super, type) != 2)
++    if (sscanf(default_format, "%15[^/]/%255[^;]", super, type) != 2 || !_cups_strcasecmp(super, "printer"))
+     {
+       send_ipp_status(con, IPP_BAD_REQUEST,
+                       _("Bad document-format-default \"%s\"."), default_format);
+-- 
+2.54.0
+
