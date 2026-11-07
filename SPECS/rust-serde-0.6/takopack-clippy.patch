@@ -1,0 +1,30 @@
+From b884a8dfe172bff92d4edf3f451eca6f0fa4835c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:07:42 +0800
+Subject: [PATCH] Specify a concrete compatible Clippy dependency
+
+Resolve the optional ^0.* range to Clippy 0.0.166, which is within that range and is shared with the Clap 2 lint feature.
+
+Upstream: https://github.com/serde-rs/serde
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 4f29db4..2028822 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -49,7 +49,7 @@ name = "serde"
+ path = "src/lib.rs"
+ 
+ [dependencies.clippy]
+-version = "^0.*"
++version = "0.0.166"
+ optional = true
+ 
+ [dependencies.num]
+-- 
+2.54.0
+
