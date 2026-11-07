@@ -1,0 +1,30 @@
+From 7036160c6f5c611c793c4d7314c48004ec0a9730 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:19:14 +0800
+Subject: [PATCH] Use a versioned compatible dependency
+
+Keep the numeric types on the compatible Num 0.1 API rather than an unbounded wildcard. This also gives RPM dependency generation an explicit version namespace.
+
+Upstream: https://github.com/serde-rs/serde
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f47a913..6b63d3f 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -10,7 +10,7 @@ readme = "../README.md"
+ keywords = ["serialization"]
+ 
+ [dependencies]
+-num = "*"
++num = "0.1.27"
+ 
+ [features]
+ nightly = []
+-- 
+2.54.0
+

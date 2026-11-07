@@ -1,0 +1,30 @@
+From 5585ab13fd4921cdb4f1a1fecab2d1714a9eda7c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 16:46:09 +0800
+Subject: [PATCH] Use the system OpenCV distribution name
+
+openRuyi ships the cv2 module with Python distribution metadata named opencv. Require that distribution so watermark encoders use the system bindings.
+
+Upstream: https://github.com/ShieldMnt/invisible-watermark
+
+Status: distribution-specific
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index f17a054..4e239f6 100644
+--- a/setup.py
++++ b/setup.py
+@@ -15,7 +15,7 @@ setuptools.setup(
+   url='https://github.com/ShieldMnt/invisible-watermark',
+   packages=setuptools.find_packages(),
+   install_requires=[
+-      'opencv-python>=4.1.0.25',
++      'opencv>=4.1.0',
+       'torch',
+       'Pillow>=6.0.0',
+       'PyWavelets>=1.1.1',
+-- 
+2.54.0
+

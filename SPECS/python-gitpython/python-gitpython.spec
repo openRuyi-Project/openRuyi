@@ -28,6 +28,9 @@ BuildRequires:  python3dist(gitdb)
 # used for check
 BuildRequires:  git
 
+# Repository operations use the system Git executable.
+Requires:       git-core
+
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 

@@ -8,12 +8,12 @@
 %global srcname click
 
 Name:           python-%{srcname}
-Version:        8.3.3
+Version:        8.4.2
 Release:        %autorelease
 Summary:        Simple wrapper around optparse for powerful command line utilities
 License:        BSD-3-Clause
 URL:            https://github.com/pallets/click
-#!RemoteAsset:  sha256:398329ad4837b2ff7cbe1dd166a4c0f8900c3ca3a218de04466f38f6497f18a2
+#!RemoteAsset:  sha256:9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6
 Source0:        https://files.pythonhosted.org/packages/source/c/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -36,7 +36,7 @@ comes with good defaults out of the box.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%doc README.md CHANGES.rst
+%doc README.md
 %license LICENSE.txt
 
 %changelog

@@ -7,12 +7,12 @@
 %global srcname xgrammar
 
 Name:           python-%{srcname}
-Version:        0.2.1
+Version:        0.2.8
 Release:        %autorelease
 Summary:        Fast, Flexible and Portable Structured Generation
 License:        Apache-2.0
 URL:            https://github.com/mlc-ai/xgrammar
-#!RemoteAsset:  sha256:4c48c251b75d211e9ffa7f4f4ac8b5b0164f89fd5f0d1883ad7ff4554922030d
+#!RemoteAsset:  sha256:8305646fd2b319d6c3003f51a1665e54cbbe9cba1fb636bc41d0b46434ccbb80
 Source0:        https://files.pythonhosted.org/packages/source/x/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 

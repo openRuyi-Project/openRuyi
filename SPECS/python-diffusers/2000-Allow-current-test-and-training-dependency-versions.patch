@@ -1,0 +1,80 @@
+From 502f662424332a8bb8eb8a61b531ce812337ba2d Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 17:01:43 +0800
+Subject: [PATCH] Allow current test and training dependency versions
+
+Accept requests-mock 1.x and GitPython 3.x, whose HTTP request history and repository diff/checkout APIs remain compatible with the test utilities. Permit Protobuf 7 used by current SentencePiece and TensorBoard releases, keeping the upper major bound aligned with TensorBoard 2.21.
+
+Upstream: https://github.com/huggingface/diffusers
+
+Status: distribution-specific
+---
+ setup.py                                   | 6 +++---
+ src/diffusers/dependency_versions_table.py | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index d360282..e0611be 100644
+--- a/setup.py
++++ b/setup.py
+@@ -101,7 +101,7 @@ _deps = [
+     "ftfy",
+     "hf-doc-builder>=0.3.0",
+     "huggingface-hub>=1.32.0,<3.0",
+-    "requests-mock==1.10.0",
++    "requests-mock>=1.10.0,<2",
+     "importlib_metadata",
+     "invisible-watermark>=0.2.0",
+     "isort>=5.5.4",
+@@ -115,7 +115,7 @@ _deps = [
+     "numpy",
+     "parameterized",
+     "peft>=0.17.0",
+-    "protobuf>=3.20.3,<4",
++    "protobuf>=3.20.3,<8",
+     "pytest",
+     "pytest-timeout",
+     "pytest-xdist",
+@@ -123,7 +123,7 @@ _deps = [
+     "ruff==0.9.10",
+     "safetensors>=0.8.0",
+     "sentencepiece>=0.1.91,!=0.1.92",
+-    "GitPython<3.1.19",
++    "GitPython>=3.1.19,<4",
+     "scipy",
+     "onnx",
+     "optimum_quanto>=0.2.6",
+diff --git a/src/diffusers/dependency_versions_table.py b/src/diffusers/dependency_versions_table.py
+index da57291..d9e6bbd 100644
+--- a/src/diffusers/dependency_versions_table.py
++++ b/src/diffusers/dependency_versions_table.py
+@@ -9,7 +9,7 @@ deps = {
+     "ftfy": "ftfy",
+     "hf-doc-builder": "hf-doc-builder>=0.3.0",
+     "huggingface-hub": "huggingface-hub>=1.32.0,<3.0",
+-    "requests-mock": "requests-mock==1.10.0",
++    "requests-mock": "requests-mock>=1.10.0,<2",
+     "importlib_metadata": "importlib_metadata",
+     "invisible-watermark": "invisible-watermark>=0.2.0",
+     "isort": "isort>=5.5.4",
+@@ -22,7 +22,7 @@ deps = {
+     "numpy": "numpy",
+     "parameterized": "parameterized",
+     "peft": "peft>=0.17.0",
+-    "protobuf": "protobuf>=3.20.3,<4",
++    "protobuf": "protobuf>=3.20.3,<8",
+     "pytest": "pytest",
+     "pytest-timeout": "pytest-timeout",
+     "pytest-xdist": "pytest-xdist",
+@@ -30,7 +30,7 @@ deps = {
+     "ruff": "ruff==0.9.10",
+     "safetensors": "safetensors>=0.8.0",
+     "sentencepiece": "sentencepiece>=0.1.91,!=0.1.92",
+-    "GitPython": "GitPython<3.1.19",
++    "GitPython": "GitPython>=3.1.19,<4",
+     "scipy": "scipy",
+     "onnx": "onnx",
+     "optimum_quanto": "optimum_quanto>=0.2.6",
+-- 
+2.54.0
+

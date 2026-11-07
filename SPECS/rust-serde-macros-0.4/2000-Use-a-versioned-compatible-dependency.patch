@@ -1,0 +1,30 @@
+From bde44145640e772ef70bf401bf308c48014190a7 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:19:15 +0800
+Subject: [PATCH] Use a versioned compatible dependency
+
+Use the code generator from the same Serde 0.4 series as the compiler plugin. This also gives RPM dependency generation an explicit version namespace.
+
+Upstream: https://github.com/serde-rs/serde
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index f9ce2bb..24aec9b 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -11,7 +11,7 @@ name = "serde_macros"
+ plugin = true
+ 
+ [dependencies]
+-serde_codegen = { version = "*", path = "../serde_codegen", default-features = false, features = ["nightly"] }
++serde_codegen = { version = "0.4.3", path = "../serde_codegen", default-features = false, features = ["nightly"] }
+ 
+ [dev-dependencies]
+ num = "*"
+-- 
+2.54.0
+

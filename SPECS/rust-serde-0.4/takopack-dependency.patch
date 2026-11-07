@@ -1,0 +1,27 @@
+From 71e153f06fd69f348b7e6784b119579d4ae99863 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:19:14 +0800
+Subject: [PATCH] Use a versioned compatible dependency
+
+Keep the numeric types on the compatible Num 0.1 API rather than an unbounded wildcard. This also gives RPM dependency generation an explicit version namespace.
+
+Upstream: https://github.com/serde-rs/serde
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index b37a0ba..ad13890 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -34,4 +34,4 @@ name = "serde"
+ path = "src/lib.rs"
+ 
+ [dependencies.num]
+-version = "*"
++version = "0.1.27"
+-- 
+2.54.0
+

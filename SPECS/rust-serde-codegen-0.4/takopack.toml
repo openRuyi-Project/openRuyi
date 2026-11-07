@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+crate_src_path = "source"
+
+[source]
+url = "https://static.crates.io/crates/serde_codegen/0.4.3/download#/%{name}-%{version}.tar.gz"
+sha256 = "78039c094484c3f82dd91717644aa922f5372c8ca24b876cc4c8028d377cc704"
+
+[packages.lib]
+extra_lines = [
+    "Patch2000:      2000-Correct-dependency-metadata-for-the-Serde-0.4-generator.patch",
+]

@@ -1,0 +1,28 @@
+From cf45bc051f78d639e885e960b80c324f66195b0d Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 17:47:18 +0800
+Subject: [PATCH] Specify a concrete compatible Clippy dependency
+
+The broad ^0.* requirement maps to a nonexistent clippy-0.0.0 RPM capability. Use Clippy 0.0.166, which is within the allowed range and is also required by the Clap 2 lint feature.
+
+Upstream: https://github.com/chyh1990/yaml-rust
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index ad3ed81..93d3237 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -12,5 +12,5 @@ repository = "https://github.com/chyh1990/yaml-rust"
+ preserve_order = ["linked-hash-map"]
+ 
+ [dependencies]
+-clippy = { version = "^0.*", optional = true }
++clippy = { version = "0.0.166", optional = true }
+ linked-hash-map = { version = ">=0.0.9, <0.4", optional = true }
+-- 
+2.54.0
+
