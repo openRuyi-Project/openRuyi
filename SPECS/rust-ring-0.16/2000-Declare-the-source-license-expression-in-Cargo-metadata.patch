@@ -1,0 +1,29 @@
+From eab12e44f18498dfaf038ca72592e632d5cd30d4 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 01:22:21 +0800
+Subject: [PATCH] Declare the source license expression in Cargo metadata
+
+The LICENSE file covers the ISC-licensed Rust and BoringSSL code, the
+OpenSSL/SSLeay code, and the MIT-licensed Fiat implementations. State their
+SPDX expression in Cargo metadata so source package generators retain it.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 0c24247..f3be516 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -23,6 +23,7 @@ documentation = "https://briansmith.org/rustdoc/ring/"
+ readme = "doc/link-to-readme.md"
+ keywords = ["crypto", "cryptography", "rand", "ECC", "RSA"]
+ categories = ["cryptography", "no-std"]
++license = "ISC AND MIT AND OpenSSL"
+ license-file = "LICENSE"
+ repository = "https://github.com/briansmith/ring"
+ [package.metadata.docs.rs]
+-- 
+2.54.0
+
