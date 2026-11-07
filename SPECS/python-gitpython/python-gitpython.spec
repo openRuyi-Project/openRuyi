@@ -31,6 +31,9 @@ BuildRequires:  git
 Provides:       python3-%{srcname} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
+# Repository operations use the system Git executable.
+Requires:       git-core
+
 %description
 GitPython is a python library used to interact with git repositories,
 high-level like git-porcelain, or low-level like git-plumbing.
@@ -48,6 +51,7 @@ and data streaming.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
+%doc README.md
 %doc CHANGES AUTHORS
 
 %changelog
