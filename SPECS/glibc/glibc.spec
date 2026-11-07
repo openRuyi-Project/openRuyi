@@ -11,7 +11,7 @@
 # Authors: SUSE LLC and contributors
 
 %define upstream_version %{lua:print(rpm.expand("%{version}"):match("^[^+]+"))}
-%global git_commit 1f5026241027260e9280039698bca031484c82ad
+%global git_commit c5c6fc6f449dbc95e3a68cacd61852dc0a48e57c
 
 # Disable LTO due to a usage of top-level assembler that causes LTO issues
 %global _lto_cflags %{nil}
@@ -28,12 +28,12 @@
 Name:           glibc
 Summary:        Standard Shared Libraries (from the GNU C Library)
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-2.1-or-later WITH GCC-exception-2.0 AND GPL-3.0-or-later
-Version:        2.44+git20260918.1f5026241027
+Version:        2.44+git20261107.c5c6fc6f449d
 Release:        %autorelease
 URL:            https://www.gnu.org/software/libc/libc.html
 VCS:            git:https://forge.sourceware.org/glibc/glibc-mirror.git
-#!RemoteAsset:  sha256:9475c022bc2b201ba6455ae6bfb4c59c5c675d8a7065b61ad2db646c1003c699
-Source0:        https://forge.sourceware.org/glibc/glibc-mirror/archive/%{git_commit}.tar.gz#/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:410218b6d866d0b5878c9d030c6997f307f5d7cb2b5188167b3997534eef3789
+Source0:        https://forge.sourceware.org/api/v1/repos/glibc/glibc-mirror/archive/%{git_commit}.tar.gz#/%{name}-%{version}.tar.gz
 %if %{with nscd}
 Source2:        nscd.tmpfiles
 Source3:        nscd.service
