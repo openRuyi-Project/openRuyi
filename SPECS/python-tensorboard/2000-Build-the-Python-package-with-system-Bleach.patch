@@ -1,0 +1,43 @@
+From 1ba12eea4a01881abd4bedf7fedcdcdb70292da1 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 16:54:27 +0800
+Subject: [PATCH] Build the Python package with system Bleach
+
+Scope package discovery to the staged TensorBoard namespace and declare the system Bleach sanitizer used by plugin_util.
+
+Upstream: https://github.com/tensorflow/tensorboard
+
+Status: distribution-specific
+---
+ tensorboard/pip_package/requirements.txt | 1 +
+ tensorboard/pip_package/setup.py         | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tensorboard/pip_package/requirements.txt b/tensorboard/pip_package/requirements.txt
+index 7ee4b97..68f1163 100644
+--- a/tensorboard/pip_package/requirements.txt
++++ b/tensorboard/pip_package/requirements.txt
+@@ -16,6 +16,7 @@
+ # Non-vendored runtime dependencies of TensorBoard.
+ 
+ absl-py >= 0.4
++bleach >= 6.2.0, < 7.0
+ # NOTE: this version should be >= the grpc version in our WORKSPACE file.
+ grpcio >= 1.74.0, < 2.0
+ markdown >= 2.6.8
+diff --git a/tensorboard/pip_package/setup.py b/tensorboard/pip_package/setup.py
+index 8bcf841..780c3eb 100644
+--- a/tensorboard/pip_package/setup.py
++++ b/tensorboard/pip_package/setup.py
+@@ -44,7 +44,7 @@ setup(
+     author="Google Inc.",
+     author_email="packages@tensorflow.org",
+     # Contained modules and scripts.
+-    packages=find_packages(),
++    packages=find_packages(include=["tensorboard", "tensorboard.*"]),
+     entry_points={
+         "console_scripts": CONSOLE_SCRIPTS,
+         "tensorboard_plugins": [
+-- 
+2.54.0
+
