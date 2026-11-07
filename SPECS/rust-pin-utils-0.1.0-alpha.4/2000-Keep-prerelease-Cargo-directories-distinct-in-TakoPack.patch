@@ -1,0 +1,92 @@
+From 0682b81a29f6a3effbe52f57b64267f84b00f268 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:44:02 +0800
+Subject: [PATCH] Keep prerelease crate source directories distinct.
+
+Use the full Cargo version in installed registry paths and file lists so prerelease and stable providers can be installed together with the current rust-rpm-macros.
+
+Upstream: https://github.com/TakoPack/TakoPack
+
+Status: distribution-specific
+---
+ crates/takopack-rust/src/rpm/mod.rs | 46 +++++++++++++++++++++++++----
+ 1 file changed, 41 insertions(+), 5 deletions(-)
+
+diff --git a/crates/takopack-rust/src/rpm/mod.rs b/crates/takopack-rust/src/rpm/mod.rs
+index 2f17964..750d99c 100644
+--- a/crates/takopack-rust/src/rpm/mod.rs
++++ b/crates/takopack-rust/src/rpm/mod.rs
+@@ -437,7 +437,7 @@ fn prepare_takopack_spec<F: FnMut(&str) -> std::result::Result<fs::File, io::Err
+     }
+ 
+     write_extra_packages(&mut spec_file, config)?;
+-    write_trailing_spec_sections(&mut spec_file)?;
++    write_trailing_spec_sections(&mut spec_file, !crate_info.version().pre.is_empty())?;
+ 
+     Ok(prepared.source)
+ }
+@@ -779,21 +779,57 @@ fn write_extra_packages(spec_file: &mut io::BufWriter<fs::File>, config: &Config
+     Ok(())
+ }
+ 
+-fn write_trailing_spec_sections(spec_file: &mut io::BufWriter<fs::File>) -> Result<()> {
++fn write_trailing_spec_sections(
++    spec_file: &mut io::BufWriter<fs::File>,
++    prerelease: bool,
++) -> Result<()> {
+     writeln!(spec_file)?;
++    write!(spec_file, "{}", render_trailing_spec_sections(prerelease)?)?;
++    Ok(())
++}
++
++fn render_trailing_spec_sections(prerelease: bool) -> Result<String> {
+     let mut trailing_sections = String::new();
+     render_patch_prep_placeholder(&mut trailing_sections)?;
+     render_build_check_install_placeholder(&mut trailing_sections)?;
++    let registry_path = if prerelease {
++        trailing_sections.push_str(
++            "%install -a\n# Keep prerelease sources separate from the corresponding stable release.\nmv %{buildroot}%{_datadir}/cargo/registry/%{crate_name}-%{version} %{buildroot}%{_datadir}/cargo/registry/%{crate_name}-%{full_version}\n\n",
++        );
++        "%{_datadir}/cargo/registry/%{crate_name}-%{full_version}/"
++    } else {
++        "%{_datadir}/cargo/registry/%{crate_name}-%{version}/"
++    };
+     render_files_section(
+         &mut trailing_sections,
+         &[SpecFiles {
+             package: None,
+-            entries: vec!["%{_datadir}/cargo/registry/%{crate_name}-%{version}/".to_string()],
++            entries: vec![registry_path.to_string()],
+         }],
+     )?;
+     render_changelog_section(&mut trailing_sections)?;
+-    write!(spec_file, "{}", trailing_sections)?;
+-    Ok(())
++    Ok(trailing_sections)
++}
++
++#[cfg(test)]
++mod prerelease_registry_tests {
++    use super::render_trailing_spec_sections;
++
++    #[test]
++    fn prerelease_install_and_file_list_use_the_full_version() {
++        let spec = render_trailing_spec_sections(true).unwrap();
++        assert!(spec.contains("%install -a"));
++        assert!(spec.contains("mv %{buildroot}%{_datadir}/cargo/registry/%{crate_name}-%{version} %{buildroot}%{_datadir}/cargo/registry/%{crate_name}-%{full_version}"));
++        assert!(spec.contains("%files\n%{_datadir}/cargo/registry/%{crate_name}-%{full_version}/"));
++    }
++
++    #[test]
++    fn stable_install_and_file_list_are_unchanged() {
++        let spec = render_trailing_spec_sections(false).unwrap();
++        assert!(!spec.contains("%install"));
++        assert!(!spec.contains("%{full_version}"));
++        assert!(spec.contains("%files\n%{_datadir}/cargo/registry/%{crate_name}-%{version}/"));
++    }
+ }
+ 
+ fn collapse_features(
+-- 
+2.54.0
+

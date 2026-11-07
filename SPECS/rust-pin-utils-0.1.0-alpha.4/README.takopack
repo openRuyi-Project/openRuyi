@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+The current rust-rpm-macros install providers under the RPM Version, which
+omits Cargo prerelease identifiers. This makes pin-utils 0.1.0-alpha.4
+overwrite the source files owned by pin-utils 0.1.0.
+
+2000-Keep-prerelease-Cargo-directories-distinct-in-TakoPack.patch updates
+TakoPack's install step and file list to retain the full Cargo version.
+Apply it to TakoPack commit 43d3ac3496aad36548da82f2e46bb79f6b59eecb with git am
+and build the generator with cargo build --release --locked -p takopack.
+
+Regenerate this provider using the resulting tool:
+
+    takopack cargo pkg pin-utils 0.1.0-alpha.4 --with-spdx --directory OUTPUT
