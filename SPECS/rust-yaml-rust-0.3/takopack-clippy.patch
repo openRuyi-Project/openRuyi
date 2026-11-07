@@ -1,0 +1,30 @@
+From 3314f0e341251fed5899b02f7f3af1007dad8a3c Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 17:48:23 +0800
+Subject: [PATCH] Specify a concrete compatible Clippy dependency
+
+Resolve the optional broad Clippy requirement to the version used by Clap 2.
+
+Upstream: https://github.com/chyh1990/yaml-rust
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 207841d..591daf5 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -42,7 +42,7 @@ name = "spec_test"
+ path = "tests/spec_test.rs"
+ 
+ [dependencies.clippy]
+-version = "^0.*"
++version = "0.0.166"
+ optional = true
+ 
+ [dependencies.linked-hash-map]
+-- 
+2.54.0
+
