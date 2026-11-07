@@ -1,0 +1,29 @@
+From 0242e4cb54fded2d61df271e975c3815f7d9f374 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 01:22:21 +0800
+Subject: [PATCH] Declare the source license expression in Cargo metadata
+
+The source provider includes ISC-licensed library code, Chromium test
+fixtures under BSD-3-Clause, and BetterTLS fixtures under Apache-2.0.
+Describe all three licenses in Cargo metadata for source packaging.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 5bec9cb..8241b27 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -38,6 +38,7 @@ categories = [
+     "cryptography",
+     "no-std",
+ ]
++license = "ISC AND BSD-3-Clause AND Apache-2.0"
+ license-file = "LICENSE"
+ repository = "https://github.com/briansmith/webpki"
+ 
+-- 
+2.54.0
+
