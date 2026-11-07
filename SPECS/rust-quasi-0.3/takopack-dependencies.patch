@@ -1,0 +1,28 @@
+From cc2b31a6a55289a336b12b01f7ca39f7f4ce33d9 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:32:54 +0800
+Subject: [PATCH] Use compatible versioned dependencies
+
+Keep the Serde 0.4 compiler-plugin stack on a common Syntex syntax and registry API. Replace unbounded dependencies with the compatible release series.
+
+Upstream: https://github.com/erickt/rust-quasi
+
+Status: distribution-specific
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 50707e9..87d526c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -32,5 +32,5 @@ name = "quasi"
+ path = "src/lib.rs"
+ 
+ [dependencies.syntex_syntax]
+-version = "*"
++version = "=0.8.0"
+ optional = true
+-- 
+2.54.0
+
