@@ -215,7 +215,7 @@ def get_remoteasset_lines(text: str) -> dict[str, RemoteAssetData]:
 def download_asset(outdir: pathlib.Path, url: str) -> pathlib.Path | None:
     outdir.mkdir(parents=True, exist_ok=True)
     orig_base = url.rsplit('/', 1)[-1]
-    base = re.sub(r'[^\w.-]', '_', orig_base)
+    base = re.sub(r'[^\w.+-]', '_', orig_base)
     if base != orig_base:
         message('WARN', f'Sanitized file name to {base}')
 
