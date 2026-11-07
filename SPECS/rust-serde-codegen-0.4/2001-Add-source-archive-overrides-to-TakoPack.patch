@@ -1,0 +1,169 @@
+From 387adc6d04131aedc202eb8c1714d896dac46566 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:25:00 +0800
+Subject: [PATCH] Allow original source archive metadata with local manifest
+ inputs.
+
+Preserve the original release archive URL and checksum when Cargo must first read a repaired local manifest.
+
+Upstream: https://github.com/TakoPack/TakoPack
+
+Status: distribution-specific
+---
+ README.md                                | 10 ++++
+ crates/takopack-core/src/config.rs       | 10 ++++
+ crates/takopack-rust/src/rpm/metadata.rs | 67 +++++++++++++++++++++++-
+ 3 files changed, 86 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index bdff641..7321531 100644
+--- a/README.md
++++ b/README.md
+@@ -337,3 +337,13 @@ Takopack is designed to support multiple language ecosystems:
+ ## 贡献
+ 
+ 欢迎贡献！请随时提交 issue 和 pull request。
++
++
++### Original source archives with a patched local manifest
++
++When crate_src_path supplies a manifest that needs repair before Cargo can
++parse it, [source] accepts url and sha256 to retain the original release
++archive in the generated RPM recipe. The checksum must describe the archive
++at url, and the recipe must apply the corresponding source patch. If these
++fields are absent, the downloaded or locally packaged archive remains the
++source of the URL and checksum.
+diff --git a/crates/takopack-core/src/config.rs b/crates/takopack-core/src/config.rs
+index 3fca474..9b1465e 100644
+--- a/crates/takopack-core/src/config.rs
++++ b/crates/takopack-core/src/config.rs
+@@ -39,6 +39,8 @@ pub struct Config {
+ #[derive(Deserialize, Debug, Clone, Default)]
+ pub struct SourceOverride {
+     homepage: Option<String>,
++    url: Option<String>,
++    sha256: Option<String>,
+ 
+     #[serde(flatten)]
+     pub unknown_fields: HashMap<String, IgnoredAny>,
+@@ -150,6 +152,14 @@ impl Config {
+         Some(self.source.as_ref()?.homepage.as_ref()?)
+     }
+ 
++    pub fn source_url(&self) -> Option<&str> {
++        self.source.as_ref()?.url.as_deref()
++    }
++
++    pub fn source_sha256(&self) -> Option<&str> {
++        self.source.as_ref()?.sha256.as_deref()
++    }
++
+     pub fn configured_packages(&'_ self) -> impl Iterator<Item = PackageKey<'_>> {
+         self.packages.keys().flat_map(|k| PackageKey::from_key(k))
+     }
+diff --git a/crates/takopack-rust/src/rpm/metadata.rs b/crates/takopack-rust/src/rpm/metadata.rs
+index 2caf58f..ab2b7c3 100644
+--- a/crates/takopack-rust/src/rpm/metadata.rs
++++ b/crates/takopack-rust/src/rpm/metadata.rs
+@@ -23,6 +23,7 @@ pub struct Source {
+     crate_name: String,
+     license: String,
+     sha256: Option<String>, // SHA256 hash of the downloaded crate file
++    source_url: Option<String>,
+     with_spdx: bool,
+ }
+ 
+@@ -229,7 +230,7 @@ impl fmt::Display for Source {
+                 "FIXME".to_string()
+             },
+             // Use full version (including build metadata) in Source URL.
+-            source_url: "https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz".to_string(),
++            source_url: self.source_url.clone().unwrap_or_else(|| "https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz".to_string()),
+             sha256: self.sha256.clone(),
+             build_requires: vec!["rust-rpm-macros".to_string()],
+             with_spdx: self.with_spdx,
+@@ -489,6 +490,7 @@ impl Source {
+             crate_name: crate_name.to_string(),
+             license: license.to_string(),
+             sha256,
++            source_url: None,
+             with_spdx: false,
+         })
+     }
+@@ -502,6 +504,12 @@ impl Source {
+             self.homepage = homepage.to_string();
+         }
+ 
++        if let Some(url) = config.source_url() {
++            self.source_url = Some(url.to_string());
++        }
++        if let Some(sha256) = config.source_sha256() {
++            self.sha256 = Some(sha256.to_string());
++        }
+         self.with_spdx = with_spdx;
+     }
+ }
+@@ -1030,3 +1038,60 @@ windows = ["dep:windows-sys"]
+         );
+     }
+ }
++
++#[cfg(test)]
++mod source_archive_override_tests {
++    use super::Source;
++    use takopack_core::config::Config;
++
++    #[test]
++    fn explicit_archive_overrides_local_repacked_checksum() {
++        let config: Config = toml::from_str(
++            r#"
++[source]
++url = "https://example.org/original.crate"
++sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++"#,
++        )
++        .unwrap();
++        let mut source = Source::new(
++            "example",
++            "1.0.0",
++            None,
++            "example",
++            "https://example.org/",
++            "MIT",
++            "1.0.0".into(),
++            Some("local-repack".into()),
++        )
++        .unwrap();
++        source.apply_overrides(&config, true);
++        let rendered = source.to_string();
++        assert!(rendered.contains("Source:         https://example.org/original.crate"));
++        assert!(
++            rendered.contains(
++                "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++            )
++        );
++        assert!(!rendered.contains("local-repack"));
++    }
++
++    #[test]
++    fn default_archive_and_checksum_are_unchanged() {
++        let mut source = Source::new(
++            "example",
++            "1.0.0",
++            None,
++            "example",
++            "https://example.org/",
++            "MIT",
++            "1.0.0".into(),
++            Some("downloaded-archive".into()),
++        )
++        .unwrap();
++        source.apply_overrides(&Config::default(), true);
++        let rendered = source.to_string();
++        assert!(rendered.contains("https://static.crates.io/crates/"));
++        assert!(rendered.contains("sha256:downloaded-archive"));
++    }
++}
+-- 
+2.54.0
+

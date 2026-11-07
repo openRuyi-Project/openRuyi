@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+The published Cargo manifest misspells two version keys. Cargo therefore
+rejects it before TakoPack can apply a normal manifest overlay.
+
+regenerate.sh verifies the published crate archive, applies Patch2000 to a
+temporary source directory, and passes that directory through crate_src_path.
+The source.url and source.sha256 configuration fields preserve the original
+release archive in the generated Spec.
+
+Those two configuration fields are implemented by
+2001-Add-source-archive-overrides-to-TakoPack.patch, based on TakoPack commit
+43d3ac3496aad36548da82f2e46bb79f6b59eecb. Apply that patch to the tool checkout
+with git am and build it with cargo build --release --locked -p takopack.
+Place the resulting takopack on PATH, then run:
+
+    sh regenerate.sh /absolute/output/directory
+
+Patch2001 is a generator patch. Only Patch2000 applies to the crate source.

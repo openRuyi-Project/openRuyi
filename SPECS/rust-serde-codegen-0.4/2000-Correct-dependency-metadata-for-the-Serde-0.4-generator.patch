@@ -1,0 +1,41 @@
+From b910349165536e57f4f68a34d64f0aeeb3616ea9 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Sat, 7 Nov 2026 18:26:03 +0800
+Subject: [PATCH] Correct dependency metadata for the Serde 0.4 generator
+
+Correct the misspelled version keys so current Cargo can parse the manifest. Pin the Aster 0.3.3, Quasi 0.3.1, Syntex 0.7.0 and syntex_syntax 0.8.0 APIs together: build.rs passes its Syntex registry directly to quasi_codegen::register.
+
+Upstream: https://github.com/serde-rs/serde
+
+Status: distribution-specific
+---
+ Cargo.toml | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 968ca3a..4bfaffa 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -13,12 +13,12 @@ nightly = ["quasi_macros"]
+ with-syntex = ["quasi/with-syntex", "quasi_codegen/with-syntex", "syntex", "syntex_syntax"]
+ 
+ [build-dependencies]
+-quasi_codegen = { verision = "*", optional = true }
+-syntex = { version = "*", optional = true }
++quasi_codegen = { version = "=0.3.1", optional = true }
++syntex = { version = "=0.7.0", optional = true }
+ 
+ [dependencies]
+-aster = { version = "*", default-features = false }
+-quasi = { verision = "*", default-features = false }
+-quasi_macros = { version = "*", optional = true }
+-syntex = { version = "*", optional = true }
+-syntex_syntax = { version = "*", optional = true }
++aster = { version = "=0.3.3", default-features = false }
++quasi = { version = "=0.3.1", default-features = false }
++quasi_macros = { version = "=0.3.1", optional = true }
++syntex = { version = "=0.7.0", optional = true }
++syntex_syntax = { version = "=0.8.0", optional = true }
+-- 
+2.54.0
+
