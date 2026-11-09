@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           openruyi-linux-build
-Version:        20260713
+Version:        20261109
 Release:        %autorelease
 Summary:        Dependencies for building linux kernel on openRuyi
 License:        MulanPSL-2.0
