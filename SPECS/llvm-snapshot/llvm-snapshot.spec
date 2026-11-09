@@ -12,8 +12,8 @@
 %global maj_ver 24
 %global min_ver 0
 %global patch_ver 0
-%global git_ver git20261019.91c6a05
-%global git_commit 91c6a053f5bf2972bc7f5395b36b15fef4cee692
+%global git_ver git20261109.b1de84e
+%global git_commit b1de84ea1aa8c686639f4c0144e045e4a2a12510
 
 %bcond check 0
 
@@ -79,7 +79,7 @@ Summary:        The Low Level Virtual Machine (%{maj_ver})
 License:        Apache-2.0 WITH LLVM-exception OR NCSA
 URL:            http://llvm.org
 VCS:            git:https://github.com/llvm/llvm-project.git
-#!RemoteAsset:  sha256:bbcaceadd20f1e0453a4a14885db3c08493580badce8b768dd1808e2bd8d0053
+#!RemoteAsset:  sha256:84d435841d4227537f27ba89ca7647013264b380050c520b28c74e452e466963
 Source0:        https://github.com/llvm/llvm-project/archive/%{git_commit}.tar.gz
 
 # please keep the patches in different groups for easier maintenance
@@ -913,6 +913,7 @@ rm -rf %{buildroot}/%{install_prefix}/src
 %license clang/LICENSE.TXT
 %{install_libdir}/libclang*.a
 %{install_libdir}/libfindAllSymbols.a
+%{install_libdir}/libCIR*.a
 
 %files -n clang%{maj_ver}-analyzer
 %license clang/LICENSE.TXT
@@ -977,6 +978,9 @@ rm -rf %{buildroot}/%{install_prefix}/src
     run-clang-tidy
     offload-arch
     llvm-extract-bundle-entry
+    cir-lsp-server
+    cir-opt
+    cir-translate
 }}
 %{install_datadir}/clang/clang-format.py*
 %{install_datadir}/clang/clang-format-diff.py*
