@@ -7,6 +7,8 @@
 %_kernel_local_version    %[ "%{?variant_name}" != "" ? "%{variant_name}-" : "" ]%{release}
 %_kernel_full_version    %{version}-%{_kernel_local_version}
 %_kernel_modpath /lib/modules/%{_kernel_full_version}
+%_kernel_docdir %{_defaultdocdir}/%{name}-%{_kernel_full_version}
+%_kernel_licensedir %{_defaultlicensedir}/%{name}-%{_kernel_full_version}
 %_kernel_make_flags LD=ld.bfd
 
 %buildsystem_linux_conf() %{expand:\
@@ -79,6 +81,10 @@
 
     # install config
     zstd -f .config -o %%{buildroot}%%{_kernel_modpath}/config.zst
+
+    # install versioned docs
+    install -Dm644 README "%%{buildroot}%%{_kernel_docdir}/README"
+    install -Dm644 COPYING "%%{buildroot}%%{_kernel_licensedir}/COPYING"
 
     # prepare rpm debug info generation
     if [ -n "%%{?__debug_package}" ]; then
@@ -209,8 +215,10 @@ fi
 rm -f "%%{_localstatedir}/lib/rpm-state/%%{name}-%%{_kernel_full_version}.just_installed"
 
 %%files
-%%%%license COPYING
-%%%%doc README
+%%%%dir %%{_kernel_docdir}
+%%%%doc %%{_kernel_docdir}/README
+%%%%dir %%{_kernel_licensedir}
+%%%%license %%{_kernel_licensedir}/COPYING
 
 %%files core
 %%dir %%{_kernel_modpath}
