@@ -59,6 +59,18 @@
     %%define ksrcpath %%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}
     install -d %%{ksrcpath}
     %%make_build %%{_kernel_make_flags} run-command KBUILD_RUN_COMMAND="$(pwd)/scripts/package/install-extmod-build %%{ksrcpath}"
+
+    # re-seeding build-id for devel tools, avoiding file conflicts
+    find "%%{buildroot}%%{_usrsrc}/kernels/%%{_kernel_full_version}" -type f -perm /111 -exec sh -c '
+        seed=$1
+        shift
+        for host_tool do
+            if readelf -n "$host_tool" 2>/dev/null | grep -q "Build ID:"; then
+                debugedit -i -s "$seed" "$host_tool" >/dev/null || exit 1
+            fi
+        done
+    ' sh "%%{name}-%%{version}-%%{release}" {} +
+
     pushd %%{buildroot}%%{_kernel_modpath}
     rm -f build source
     ln -sf %%{_usrsrc}/kernels/%%{_kernel_full_version} build
