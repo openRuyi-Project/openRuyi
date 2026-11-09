@@ -8,12 +8,12 @@
 %bcond as_wget 1
 
 Name:           wget2
-Version:        2.2.1
+Version:        2.3.0
 Release:        %autorelease
 Summary:        An advanced file and recursive website downloader
 License:        GPL-3.0-or-later AND LGPL-3.0-or-later AND GFDL-1.3-or-later
 URL:            https://gitlab.com/gnuwget/wget2
-#!RemoteAsset:  sha256:d7544b13e37f18e601244fce5f5f40688ac1d6ab9541e0fbb01a32ee1fb447b4
+#!RemoteAsset:  sha256:4f1915b2a55a789a15f2f9ada7cc44bca81418e648f76fd88a7f4dd028b2149f
 Source:         https://ftpmirror.gnu.org/gnu/wget/wget2-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -107,4 +107,4 @@ ln -sr %{buildroot}%{_bindir}/wget2 %{buildroot}%{_bindir}/wget
 %endif
 
 %changelog
-%{?autochangelog}
+%autochangelog
