@@ -11,14 +11,14 @@ Name:           python-%{srcname}
 Version:        4.19.0
 Release:        %autorelease
 Summary:        Python driver for MongoDB
-License:        Apache-2.0
+License:        Apache-2.0 AND MIT
 URL:            https://pymongo.readthedocs.io/en/stable/
 VCS:            git:https://github.com/mongodb/mongo-python-driver
 #!RemoteAsset:  sha256:3c510dd3c5d9b392d3b33bb5d2a594758acfe8f026fca654253f947ce0af9d40
 Source0:        https://files.pythonhosted.org/packages/source/p/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
-BuildOption(install):  -l %{srcname}
+BuildOption(install):  -l %{srcname} bson
 # The PyOpenSSL TLS backend imports the optional service_identity integration.
 BuildOption(check):  -e pymongo.pyopenssl_context
 
@@ -38,28 +38,12 @@ Provides:       python3-%{srcname} = %{version}-%{release}
 Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
 %python_provide python3-%{srcname}
 
-# PyMongo's _cmessage extension uses the C API exported by bson._cbson.
-# Install both extensions from the same build and architecture.
-Requires:       python-bson%{?_isa} = %{version}-%{release}
-
 %description
 The Python driver for MongoDB.
 
-%package     -n python-bson
-# All code is Apache-2.0 except bson/time64*.{c,h} which is MIT
-License:        Apache-2.0 AND MIT
-Summary:        Python bson library
-Provides:       python3-bson = %{version}-%{release}
-Provides:       python3-bson%{?_isa} = %{version}-%{release}
-%python_provide python3-bson
-
-%description -n python-bson
-BSON is a binary-encoded serialization of JSON-like documents. BSON is designed
-to be lightweight, traversable, and efficient. BSON, like JSON, supports the
-embedding of objects and arrays within other objects and arrays.
-
 %package     -n python-pymongo-gridfs
 Summary:        Python GridFS driver for MongoDB
+License:        Apache-2.0
 Requires:       python-pymongo%{?_isa} = %{version}-%{release}
 Provides:       python3-pymongo-gridfs = %{version}-%{release}
 Provides:       python3-pymongo-gridfs%{?_isa} = %{version}-%{release}
@@ -135,11 +119,7 @@ export PYMONGO_C_EXT_MUST_BUILD=1
 
 %files -f %{pyproject_files}
 %doc README.md
-
-%files -n python-bson
-%doc README.md
-%license LICENSE
-%{python3_sitearch}/bson
+%license THIRD-PARTY-NOTICES
 
 %files -n python-pymongo-gridfs
 %doc README.md
