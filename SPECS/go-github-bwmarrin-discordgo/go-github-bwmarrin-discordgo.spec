@@ -27,6 +27,9 @@ BuildRequires:  go(golang.org/x/crypto)
 
 Provides:       go(github.com/bwmarrin/discordgo) = %{version}
 
+# Both packages install different sources under github.com/bwmarrin/discordgo
+Conflicts:      go-github-yeongaori-discordgo-fork
+
 Requires:       go(github.com/gorilla/websocket)
 Requires:       go(golang.org/x/crypto)
 
