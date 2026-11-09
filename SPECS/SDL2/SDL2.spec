@@ -29,8 +29,10 @@ BuildOption(conf):  -DSDL_JACK_SHARED=ON
 BuildOption(conf):  -DSDL_PIPEWIRE=OFF
 BuildOption(conf):  -DSDL_PIPEWIRE_SHARED=ON
 BuildOption(conf):  -DSDL_ALSA=ON
-BuildOption(conf):  -DSDL_VIDEO_WAYLAND=OFF
-BuildOption(conf):  -DSDL_LIBDECOR_SHARED=ON
+BuildOption(conf):  -DSDL_WAYLAND=ON
+BuildOption(conf):  -DSDL_WAYLAND_SHARED=ON
+BuildOption(conf):  -DSDL_WAYLAND_LIBDECOR=ON
+BuildOption(conf):  -DSDL_WAYLAND_LIBDECOR_SHARED=ON
 BuildOption(conf):  -DSDL_VIDEO_VULKAN=OFF
 BuildOption(conf):  -DSDL_SSE3=OFF
 BuildOption(conf):  -DSDL_RPATH=OFF
@@ -47,6 +49,21 @@ BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(alsa)
+BuildRequires:  pkgconfig(egl)
+BuildRequires:  pkgconfig(libdecor-0)
+BuildRequires:  pkgconfig(wayland-client)
+BuildRequires:  pkgconfig(wayland-cursor)
+BuildRequires:  pkgconfig(wayland-egl)
+BuildRequires:  pkgconfig(wayland-scanner)
+BuildRequires:  pkgconfig(x11)
+BuildRequires:  pkgconfig(xcursor)
+BuildRequires:  pkgconfig(xext)
+BuildRequires:  pkgconfig(xfixes)
+BuildRequires:  pkgconfig(xi)
+BuildRequires:  pkgconfig(xkbcommon)
+BuildRequires:  pkgconfig(xrandr)
+BuildRequires:  pkgconfig(xrender)
+BuildRequires:  pkgconfig(xscrnsaver)
 
 %description
 Simple DirectMedia Layer (SDL) is a cross-platform multimedia library designed
