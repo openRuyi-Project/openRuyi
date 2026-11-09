@@ -8,12 +8,12 @@
 %bcond xwayland 0
 
 Name:           wlroots
-Version:        0.20.1
+Version:        0.20.2
 Release:        %autorelease
 Summary:        A modular Wayland compositor library
 License:        MIT
 URL:            https://gitlab.freedesktop.org/wlroots/wlroots
-#!RemoteAsset:  sha256:e9e699a06492121153ce3a3448b0aa610f3285130754b85fbb58736c931fffec
+#!RemoteAsset:  sha256:972c7ac44b17828f4702bfae7cd8347346a3fb5b2c1076cfa2c3fcedac5ec343
 Source0:        https://gitlab.freedesktop.org/wlroots/wlroots/-/archive/%{version}/wlroots-%{version}.tar.gz
 BuildSystem:    meson
 
