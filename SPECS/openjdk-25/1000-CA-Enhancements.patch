@@ -1,11 +1,11 @@
-From 09f7e238d8f3c9d0c4cba3b0531c7e4b473fdff1 Mon Sep 17 00:00:00 2001
-From: Sean Coffey <coffeys@openjdk.org>
-Date: Tue, 20 Oct 2026 22:44:59 +0000
+From 1a8a646ef3c8f5ad2f766d43114847a2ee31cf41 Mon Sep 17 00:00:00 2001
+From: Sergey Bylokhov <serb@openjdk.org>
+Date: Thu, 22 Oct 2026 15:17:04 +0000
 Subject: [PATCH] 8395142: CA Enhancements
 
-Backport-of: bdb4872d18292aeae014c3e7d07fc2f5e73fd34c
-Upstream: https://github.com/openjdk/jdk27u/commit/09f7e238d8f3c9d0c4cba3b0531c7e4b473fdff1
-Status: Backport.
+Reviewed-by: abakhtin
+Backport-of: 22bc7357ce6bc5f1ed2f1e83e0544b2c25f781d4
+Signed-off-by: Dingli Zhang <dingli@iscas.ac.cn>
 ---
  .../BlockedCertsConverter.java                |  29 +-
  .../blockedcertsconverter/blocked.certs.pem   | 430 ++++++++++++++++++
