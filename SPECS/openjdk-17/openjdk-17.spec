@@ -32,8 +32,8 @@ Source1:        https://github.com/adoptium/temurin17-binaries/releases/download
 Source2:        https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.16%2B8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.16_8.tar.gz
 %endif
 
-# CVE-2026-91403: backport JDK-8395142 until the 17u emergency release is tagged.
-# Upstream: https://github.com/openjdk/jdk27u/commit/09f7e238d8f3c9d0c4cba3b0531c7e4b473fdff1
+# CVE-2026-91403: backport JDK-8395142 from jdk-17.0.21.0.2-ga.
+# Upstream: https://github.com/openjdk/jdk17u/commit/10d196353d5abdcc64f6d4bcf4f5ddcbfd97839e
 Patch0:         1000-CA-Enhancements.patch
 
 BuildRequires:  autoconf

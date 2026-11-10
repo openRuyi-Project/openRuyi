@@ -32,8 +32,8 @@ Source1:        https://github.com/adoptium/temurin21-binaries/releases/download
 Source2:        https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jdk_x64_linux_hotspot_21.0.8_9.tar.gz
 %endif
 
-# CVE-2026-91403: backport JDK-8395142 until the 21u emergency release is tagged.
-# Upstream: https://github.com/openjdk/jdk27u/commit/09f7e238d8f3c9d0c4cba3b0531c7e4b473fdff1
+# CVE-2026-91403: backport JDK-8395142 from jdk-21.0.13.0.2-ga.
+# Upstream: https://github.com/openjdk/jdk21u/commit/85974eed594aa5a9e13a6a20713156ed8d9cd0ed
 Patch0:         1000-CA-Enhancements.patch
 
 BuildRequires:  autoconf
