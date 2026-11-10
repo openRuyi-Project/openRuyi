@@ -24,20 +24,20 @@
 %global variant_name %nil
 
 # Managed under kernel-team-tools
-%global patchset_release 1
+%global patchset_release 2
 %global config_version 0
 # Initial mainline tarballs omit the .0 that the kernel Makefile reports.
-%global upstream_version 7.3.3
+%global upstream_version 7.3.4
 
 Name:           linux
-Version:        7.3.3
+Version:        7.3.4
 Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:79c66dde66cd96877fcde8f7d36aec946b1f423d2b97b5a7b1751b75c764f3d1
+#!RemoteAsset:  sha256:b11b6df8295e8e991ff040b71aaa4994a8b55caa23b6b092907f195b5840fd1f
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{upstream_version}.tar.xz
-#!RemoteAsset:  sha256:a3c5e8253e324deda1a80718da63bb998b6edf7d00531763b0d9ca0f1e6d56aa
+#!RemoteAsset:  sha256:32583e3ce2d524790ab52d168731780a8190d722b23be3d9dfbf138af822e53f
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/%{name}-v%{upstream_version}-%{patchset_release}.tar.gz
 BuildSystem:    linux
 
