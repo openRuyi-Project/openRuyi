@@ -34,13 +34,13 @@ targets. It also lists build arguments, target relationships and files.
 cp -p src/base/third_party/icu/LICENSE ICU-LICENSE.txt
 
 %build
-export CC=%{__cc} CXX=%{__cxx} CFLAGS="%{build_cflags}" CXXFLAGS="%{build_cxxflags}" LDFLAGS="%{build_ldflags}"
-%{python3} build/gen.py --allow-warnings --no-last-commit-position --no-static-libstdc++ --no-strip --out-path=out
+%set_build_flags
+%{python3} build/gen.py --allow-warnings --no-last-commit-position --no-static-libstdc++ --no-strip
 cat >out/last_commit_position.h <<'HEADER'
 #define LAST_COMMIT_POSITION_NUM %{version}
 #define LAST_COMMIT_POSITION "%{version} (%{shortcommit})"
 HEADER
-ninja -C out -j%{_smp_build_ncpus} gn gn_unittests
+%ninja_build -C out gn gn_unittests
 
 %install
 install -Dpm 0755 out/gn %{buildroot}%{_bindir}/gn
