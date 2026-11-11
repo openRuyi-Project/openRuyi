@@ -38,6 +38,7 @@ BuildOption(conf):  --no-system-libs
 BuildRequires:  coreutils
 BuildRequires:  findutils
 BuildRequires:  gcc-c++
+BuildRequires:  ncurses-devel
 
 %if %{with bootstrap}
 Provides:       cmake
@@ -195,6 +196,7 @@ bin/ctest %{?_smp_mflags} -V -E "$NO_TEST" --output-on-failure
 %license Copyright_* COPYING* LICENSE.rst CONTRIBUTORS.rst
 %license LICENSE.cppdap NOTICE.cppdap
 %{_bindir}/cmake
+%{_bindir}/ccmake
 %{_bindir}/cpack
 %{_bindir}/ctest
 %{_libdir}/cmake
