@@ -1,4 +1,4 @@
-From 8927e95539463a027c6f28da2ac5ac46746cf1bd Mon Sep 17 00:00:00 2001
+From ac59ed69d45683086feb344e1bfd4d7b542c42c6 Mon Sep 17 00:00:00 2001
 From: Xisco Fauli <xiscofauli@libreoffice.org>
 Date: Mon, 19 Oct 2026 21:51:41 +0200
 Subject: [PATCH] box2d: upgrade to 3.2.0
@@ -9,11 +9,12 @@ Change-Id: Icaa610aa48e24a7c33b74101b75450d210e08db3
 Reviewed-on: https://gerrit.libreoffice.org/c/core/+/212645
 Tested-by: Jenkins
 Reviewed-by: Xisco Fauli <xiscofauli@libreoffice.org>
-
-Backport only the slideshow API changes for system Box2D.
 ---
+ slideshow/source/engine/box2dtools.cxx | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
 diff --git a/slideshow/source/engine/box2dtools.cxx b/slideshow/source/engine/box2dtools.cxx
-index 26be1c7fdd7b1..cfa4953c1872d 100644
+index c3ddac0..b164099 100644
 --- a/slideshow/source/engine/box2dtools.cxx
 +++ b/slideshow/source/engine/box2dtools.cxx
 @@ -307,7 +307,11 @@ void box2DWorld::createStaticFrameAroundSlide(const ::basegfx::B2DVector& rSlide
@@ -28,7 +29,7 @@ index 26be1c7fdd7b1..cfa4953c1872d 100644
      aChainDef.isLoop = true;
      b2CreateChain(aBody, &aChainDef);
  #else
-@@ -991,8 +995,12 @@ void box2DBody::setDensityAndRestitution(const double fDensity, const double fRe
+@@ -1001,8 +1005,12 @@ void box2DBody::setDensityAndRestitution(const double fDensity, const double fRe
  #endif
          b2Shape_SetRestitution(aShapeId, static_cast<float>(fRestitution));
      }

@@ -270,6 +270,7 @@ Requires:       %{name}-writer%{?_isa} = %{version}-%{release}
 # https://github.com/LibreOffice/core/commit/8927e95539463a027c6f28da2ac5ac46746cf1bd
 1000-support-box2d-3.2-slideshow.patch
 # Correct the optimum of the upstream knapsack test model.
+# Backport only the expected-value correction; retain this release's lp_solve engine.
 # https://github.com/LibreOffice/core/commit/bfc9cfdecf54885bb0d38ad29fee36affd0d9df5
 1001-correct-knapsack-optimum.patch
 # System-library integration for the PDF filters and their upstream tests.
