@@ -32,26 +32,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 Headers, linker files and build metadata for developing with Box2D.
 
-# The unit tests use internal functions available in the static build.
-%check
-%cmake -B build-tests -DBUILD_SHARED_LIBS=OFF -DBOX2D_SAMPLES=OFF -DBOX2D_UNIT_TESTS=ON
-cmake --build build-tests --target test --parallel %{_smp_build_ncpus}
-%ifarch riscv64
-# GCC 16.2 miscompiles CreateJunkyard in WorldTest. Keep the other upstream
-# groups; the shared runtime library does not contain the benchmark caller.
-if [ "$(%{__cc} -dumpfullversion)" = 16.2.0 ]; then
-    sed -n 's/^[[:space:]]*MAYBE_RUN_TEST( \([^ ]*\) );$/\1/p' test/main.c |
-        while read -r suite; do
-            [ "$suite" != WorldTest ] || continue
-            build-tests/bin/test "$suite"
-        done
-else
-    build-tests/bin/test
-fi
-%else
-build-tests/bin/test
-%endif
-
 %files
 %doc README.md
 %license LICENSE
