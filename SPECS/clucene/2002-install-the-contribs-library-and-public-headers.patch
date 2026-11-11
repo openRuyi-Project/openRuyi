@@ -1,20 +1,3 @@
-From c77f64bfe0a79dbfc340451284a094f414981097 Mon Sep 17 00:00:00 2001
-From: Vitaliy Filippov <>
-Date: Thu, 5 Nov 2026 15:41:59 +0800
-Subject: [PATCH] Install the contribs library and public headers
-
-BUILD_CONTRIBS_LIB excludes the library from the default build and lacks
-installation rules. Build the library by default when enabled and
-install its public headers and shared library.
-
-Upstream-Status: Submitted
-Upstream-Reference: https://sourceforge.net/p/clucene/bugs/200/
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- CMakeLists.txt                  |  2 +-
- src/contribs-lib/CMakeLists.txt | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 4950ddb..349ed75 100644
 --- a/CMakeLists.txt
@@ -59,6 +42,3 @@ index c3cd213..7109e02 100644
 +install(TARGETS clucene-contribs-lib 
 +        DESTINATION ${LIB_DESTINATION}  
 +        COMPONENT runtime )
--- 
-2.54.0
-
