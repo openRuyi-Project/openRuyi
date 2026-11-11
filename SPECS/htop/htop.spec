@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           htop
-Version:        3.5.1
+Version:        3.5.3
 Release:        %autorelease
 Summary:        An interactive process viewer
 License:        GPL-2.0-or-later
 URL:            https://htop.dev
 VCS:            git:https://github.com/htop-dev/htop
-#!RemoteAsset:  sha256:dfc4a09845e9bc86f466a722e62b8f87d59028ff39689077ff2257a6a605061d
+#!RemoteAsset:  sha256:edf25ee020a5263ffbef9eef5a8c14392bf74e78b3d5c8bc64d9343dd9a82605
 Source0:        https://github.com/htop-dev/htop/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
