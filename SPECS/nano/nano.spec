@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           nano
-Version:        9.0
+Version:        9.3
 Release:        %autorelease
 Summary:        Text editor
 License:        GPL-3.0-or-later
 URL:            https://www.nano-editor.org
 VCS:            git:https://https.git.savannah.gnu.org/git/nano.git
-#!RemoteAsset:  sha256:9f384374b496110a25b73ad5a5febb384783c6e3188b37063f677ac908013fde
+#!RemoteAsset:  sha256:a9affc52c9596ee0682bcdd4ceb3c0b235eb221d83d733dfd9b0dff45897cb0d
 Source0:        https://www.nano-editor.org/dist/latest/%{name}-%{version}.tar.xz
 Source2:        nanorc
 BuildSystem:    autotools
