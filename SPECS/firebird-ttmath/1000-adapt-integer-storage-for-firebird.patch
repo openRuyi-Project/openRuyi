@@ -1,31 +1,12 @@
-From 36683d7adf5b3c93be1c66655605fbab66ec1b2d Mon Sep 17 00:00:00 2001
+From 85aa02c2ac00e18e5d5d31f67fd0b6747285b64b Mon Sep 17 00:00:00 2001
 From: Alexander Peshkov <alexander.peshkoff@gmail.com>
 Date: Mon, 16 Sep 2019 20:59:54 +0300
-Subject: [PATCH] Int128 - new datatype (#220)
+Subject: [PATCH] Adapt TTMath integer headers for Firebird
 
-* Int128 support - work in progress
+Backport the integer-only includes, public storage and trivial
+constructors required by Firebird's INT128 backend to TTMath 0.9.3.
 
-* Work in progress
-
-* Int128 datatype appears to be mostly OK except sort & index
-
-* Fixed divide scaling, added sorting & network (xdr) support
-
-* Binding control, aggregate nodes, cleanup and documentation
-
-* Fixed VS2017 AppVeyor build
-
-* Next attempt to fix vs2017 build
-
-* Next attempt to fix vs2017 build
-
-* Next attempt to fix vs2017 build
-
-* Update MSVC build.
-
-* Set VS architecture correctly
-
-* Fixed a number of issues noticed by Mark
+Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/861d536fc26542335f0fb84cdea825e891364057
 ---
  ttmath/ttmath.h     | 14 ++--------
  ttmath/ttmathint.h  | 65 +++++++++++++++++++++------------------------
@@ -36,20 +17,14 @@ diff --git a/ttmath/ttmath.h b/ttmath/ttmath.h
 index ee40e6e..9b9e8ee 100644
 --- a/ttmath/ttmath.h
 +++ b/ttmath/ttmath.h
-@@ -54,8 +54,9 @@
- #pragma warning( disable: 4800 )
- #endif
+@@ -56,4 +56,5 @@
  
 +#define TTMATH_DONT_USE_WCHAR
  
 -#include "ttmathbig.h"
 +#include "ttmathint.h"
  #include "ttmathobjects.h"
- 
- 
-@@ -2830,17 +2831,6 @@ namespace ttmath
- } // namespace
- 
+@@ -2832,13 +2833,2 @@ namespace ttmath
  
 -/*!
 -	this is for convenience for the user
@@ -63,193 +38,141 @@ index ee40e6e..9b9e8ee 100644
 -
 -
  #ifdef _MSC_VER
- //warning C4127: conditional expression is constant
- #pragma warning( default: 4127 )
 diff --git a/ttmath/ttmathint.h b/ttmath/ttmathint.h
 index ad306f0..8ad0189 100644
 --- a/ttmath/ttmathint.h
 +++ b/ttmath/ttmathint.h
-@@ -767,27 +767,27 @@ public:
- 	/*!
- 		the default assignment operator
+@@ -769,3 +769,3 @@ public:
  	*/
 -	Int<value_size> & operator=(const Int<value_size> & p)
 +/*	Int<value_size> & operator=(const Int<value_size> & p)
  	{
- 		FromInt(p);
- 
- 	return *this;
+@@ -775,3 +775,3 @@ public:
  	}
 -
 + */
  
- 	/*!
- 		this operator converts an Int<another_size> type to this class
- 
- 		it doesn't return a carry
+@@ -782,3 +782,3 @@ public:
  	*/
 -	template<uint argument_size>
 +/*	template<uint argument_size>
  	Int<value_size> & operator=(const Int<argument_size> & p)
- 	{
- 		FromInt(p);
- 
- 	return *this;
+@@ -789,3 +789,3 @@ public:
  	}
 -
 + */
  
- 	/*!
- 		this method converts the sint type to this class
-@@ -803,31 +803,31 @@ public:
- 	/*!
- 		a constructor for converting the uint to this class
+@@ -805,3 +805,3 @@ public:
  	*/
 -	Int(sint i)
 +/*	Int(sint i)
  	{
- 		FromInt(i);
+@@ -809,3 +809,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a copy constructor
+@@ -814,3 +814,3 @@ public:
  	*/
 -	Int(const Int<value_size> & u)
 +/*	Int(const Int<value_size> & u)
  	{
- 		FromInt(u);
+@@ -818,3 +818,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a constructor for copying from another types
+@@ -823,3 +823,3 @@ public:
  	*/
 -	template<uint argument_size>
 +/*	template<uint argument_size>
  	Int(const Int<argument_size> & u)
- 	{
- 		// look that 'size' we still set as 'value_size' and not as u.value_size
- 		FromInt(u);
+@@ -829,3 +829,3 @@ public:
  	}
 -
 +*/
  
- 
- 	/*!
-@@ -858,22 +858,22 @@ public:
- 	/*!
- 		a constructor for converting the uint to this class
+@@ -860,3 +860,3 @@ public:
  	*/
 -	Int(uint i)
 +/*	Int(uint i)
  	{
- 		FromUInt(i);
+@@ -864,3 +864,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a constructor for copying from another types
+@@ -869,3 +869,3 @@ public:
  	*/
 -	template<uint argument_size>
 +/*	template<uint argument_size>
  	Int(const UInt<argument_size> & u)
- 	{
- 		// look that 'size' we still set as 'value_size' and not as u.value_size
- 		FromUInt(u);
+@@ -875,3 +875,3 @@ public:
  	}
 - 
 +*/
  
- 
- #ifdef TTMATH_PLATFORM32
-@@ -953,11 +953,11 @@ public:
- 		a constructor for converting unsigned 64 bit int to this class
- 		***this constructor is created only on a 32bit platform***
+@@ -955,3 +955,3 @@ public:
  	*/
 -	Int(ulint n)
 +/*	Int(ulint n)
  	{
- 		FromUInt(n);
+@@ -959,3 +959,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		this operator converts signed 64 bit int type to this class
-@@ -975,11 +975,11 @@ public:
- 		a constructor for converting signed 64 bit int to this class
- 		***this constructor is created only on a 32bit platform***
+@@ -977,3 +977,3 @@ public:
  	*/
 -	Int(slint n)
 +/*	Int(slint n)
  	{
- 		FromInt(n);
+@@ -981,3 +981,3 @@ public:
  	}
 -
 +*/
  #endif
- 
- 
-@@ -1033,11 +1033,11 @@ public:
- 		a constructor for converting 32 bit unsigned int to this class
- 		***this constructor is created only on a 64bit platform***
+@@ -1035,3 +1035,3 @@ public:
  	*/
 -	Int(unsigned int i)
 +/*	Int(unsigned int i)
  	{
- 		FromUInt(i);
+@@ -1039,3 +1039,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		this operator converts 32 bit signed int type to this class
-@@ -1055,11 +1055,11 @@ public:
- 		a constructor for converting 32 bit signed int to this class
- 		***this constructor is created only on a 64bit platform***
+@@ -1057,3 +1057,3 @@ public:
  	*/
 -	Int(signed int i)
 +/*	Int(signed int i)
  	{
- 		FromInt(i);
+@@ -1061,3 +1061,3 @@ public:
  	}
 -
 +*/
  #endif
- 
- 
-@@ -1067,20 +1067,20 @@ public:
- 	/*!
- 		a constructor for converting string to this class (with the base=10)
+@@ -1069,3 +1069,3 @@ public:
  	*/
 -	Int(const char * s)
 +/*	Int(const char * s)
  	{
- 		FromString(s);
+@@ -1073,3 +1073,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a constructor for converting a string to this class (with the base=10)
+@@ -1078,3 +1078,3 @@ public:
  	*/
 -	Int(const std::string & s)
 +/*	Int(const std::string & s)
  	{
- 		FromString( s.c_str() );
+@@ -1082,3 +1082,3 @@ public:
  	}
 -
 +*/
  
- #ifndef TTMATH_DONT_USE_WCHAR
- 
-@@ -1109,18 +1109,18 @@ public:
- 
- 		we don't clear table etc.
+@@ -1111,6 +1111,6 @@ public:
  	*/
 -	Int()
 +/*	Int()
@@ -258,8 +181,7 @@ index ad306f0..8ad0189 100644
 -
 +*/
  
- 	/*!
- 		the destructor
+@@ -1119,6 +1119,6 @@ public:
  	*/
 -	~Int()
 +/*	~Int()
@@ -268,220 +190,152 @@ index ad306f0..8ad0189 100644
 -
 +*/
  
- 	/*!
- 		this method returns the lowest value from table with a sign
-@@ -1302,9 +1302,6 @@ public:
- 
- 
+@@ -1304,5 +1304,2 @@ public:
  
 -
 -private:
 -
  	/*!	
- 		an auxiliary method for converting to a string
- 	*/
-@@ -1323,8 +1320,6 @@ private:
- 		}
- 	}
+@@ -1325,4 +1322,2 @@ private:
  
 -public:
 -
  	/*!	
- 		this method converts the value to a string with a base equal 'b'
- 	*/
 diff --git a/ttmath/ttmathuint.h b/ttmath/ttmathuint.h
 index d00a0d7..7d82d08 100644
 --- a/ttmath/ttmathuint.h
 +++ b/ttmath/ttmathuint.h
-@@ -2722,19 +2722,19 @@ public:
- 
- 		it doesn't return a carry
+@@ -2724,3 +2724,3 @@ public:
  	*/
 -	template<uint argument_size>
 +/*	template<uint argument_size>
  	UInt<value_size> & operator=(const UInt<argument_size> & p)
- 	{
- 		FromUInt(p);
- 
- 	return *this;
+@@ -2731,3 +2731,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		the assignment operator
+@@ -2736,3 +2736,3 @@ public:
  	*/
 -	UInt<value_size> & operator=(const UInt<value_size> & p)
 +/*	UInt<value_size> & operator=(const UInt<value_size> & p)
  	{
- 		for(uint i=0 ; i<value_size ; ++i)
- 			table[i] = p.table[i];
-@@ -2743,7 +2743,7 @@ public:
- 
- 		return *this;
+@@ -2745,3 +2745,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		this method converts the uint type to this class
-@@ -2759,11 +2759,11 @@ public:
- 	/*!
- 		a constructor for converting the uint to this class
+@@ -2761,3 +2761,3 @@ public:
  	*/
 -	UInt(uint i)
 +/*	UInt(uint i)
  	{
- 		FromUInt(i);
+@@ -2765,3 +2765,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		this method converts the sint type to this class
-@@ -2781,11 +2781,11 @@ public:
- 
- 		look at the description of UInt::operator=(sint)
+@@ -2783,3 +2783,3 @@ public:
  	*/
 -	UInt(sint i)
 +/*	UInt(sint i)
  	{
- 		FromInt(i);
+@@ -2787,3 +2787,3 @@ public:
  	}
 -
 +*/
  
- #ifdef TTMATH_PLATFORM32
- 
-@@ -2858,11 +2858,11 @@ public:
- 		a constructor for converting unsigned 64 bit int to this class
- 		***this constructor is created only on a 32bit platform***
+@@ -2860,3 +2860,3 @@ public:
  	*/
 -	UInt(ulint n)
 +/*	UInt(ulint n)
  	{
- 		FromUInt(n);
+@@ -2864,3 +2864,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		this operator converts signed 64 bit int type to this class
-@@ -2880,11 +2880,11 @@ public:
- 		a constructor for converting signed 64 bit int to this class
- 		***this constructor is created only on a 32bit platform***
+@@ -2882,3 +2882,3 @@ public:
  	*/
 -	UInt(slint n)
 +/*	UInt(slint n)
  	{
- 		FromInt(n);
+@@ -2886,3 +2886,3 @@ public:
  	}
 -
 +*/
  #endif
- 
- 
-@@ -2937,11 +2937,11 @@ public:
- 		a constructor for converting 32 bit unsigned int to this class
- 		***this constructor is created only on a 64bit platform***
+@@ -2939,3 +2939,3 @@ public:
  	*/
 -	UInt(unsigned int i)
 +/*	UInt(unsigned int i)
  	{
- 		FromUInt(i);
+@@ -2943,3 +2943,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		an operator for converting 32 bit signed int to this class
-@@ -2959,11 +2959,11 @@ public:
- 		a constructor for converting 32 bit signed int to this class
- 		***this constructor is created only on a 64bit platform***
+@@ -2961,3 +2961,3 @@ public:
  	*/
 -	UInt(signed int i)
 +/*	UInt(signed int i)
  	{
- 		FromInt(i);
+@@ -2965,3 +2965,3 @@ public:
  	}
 -
 +*/
  
- #endif
- 
-@@ -2974,20 +2974,20 @@ public:
- 	/*!
- 		a constructor for converting a string to this class (with the base=10)
+@@ -2976,3 +2976,3 @@ public:
  	*/
 -	UInt(const char * s)
 +/*	UInt(const char * s)
  	{
- 		FromString(s);
+@@ -2980,3 +2980,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a constructor for converting a string to this class (with the base=10)
+@@ -2985,3 +2985,3 @@ public:
  	*/
 -	UInt(const std::string & s)
 +/*	UInt(const std::string & s)
  	{
- 		FromString( s.c_str() );
+@@ -2989,3 +2989,3 @@ public:
  	}
 -
 +*/
  
- #ifndef TTMATH_DONT_USE_WCHAR
- 
-@@ -3018,7 +3018,7 @@ public:
- 
- 		we don't clear the table
+@@ -3020,3 +3020,3 @@ public:
  	*/
 -	UInt()
 +/*	UInt()
  	{
- 	// when macro TTMATH_DEBUG_LOG is defined
- 	// we set special values to the table
-@@ -3034,41 +3034,41 @@ public:
- 		#endif
- 	#endif
+@@ -3036,3 +3036,3 @@ public:
  	}
 -
 +*/
  
- 	/*!
- 		a copy constructor
+@@ -3041,3 +3041,3 @@ public:
  	*/
 -	UInt(const UInt<value_size> & u)
 +/*	UInt(const UInt<value_size> & u)
  	{
- 		for(uint i=0 ; i<value_size ; ++i)
- 			table[i] = u.table[i];
- 
- 		TTMATH_LOG("UInt::UInt(UInt<>)")
+@@ -3048,3 +3048,3 @@ public:
  	}
 -
 +*/
  
- 
- 	/*!
- 		a template for producting constructors for copying from another types
+@@ -3054,3 +3054,3 @@ public:
  	*/
 -	template<uint argument_size>
 +/*	template<uint argument_size>
  	UInt(const UInt<argument_size> & u)
- 	{
- 		// look that 'size' we still set as 'value_size' and not as u.value_size
- 		FromUInt(u);
+@@ -3060,3 +3060,3 @@ public:
  	}
 -
 +*/
  
- 
- 
- 	/*!
- 		a destructor
+@@ -3067,6 +3067,6 @@ public:
  	*/
 -	~UInt()
 +/*	~UInt()
@@ -490,18 +344,9 @@ index d00a0d7..7d82d08 100644
 -
 +*/
  
- 	/*!
- 		this method returns the lowest value from table
-@@ -3385,7 +3385,8 @@ private:
- 	template<class char_type>
- 	uint FromStringBase(const char_type * s, uint b = 10, const char_type ** after_source = 0, bool * value_read = 0)
+@@ -3387,3 +3387,4 @@ private:
  	{
 -	UInt<value_size> base( b );
 +	UInt<value_size> base;
 +	base.FromUInt( b );
  	UInt<value_size> temp;
- 	sint z;
- 	uint c = 0;
--- 
-2.54.0
-
