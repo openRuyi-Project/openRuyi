@@ -4,8 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global git_ver git20261109.e5101c2
-%global git_commit e5101c2acb02a350c8197eb456343b2d0903e87e
+%global git_ver git20261111.d0a73bb
+%global git_commit d0a73bbbe5fa5ccc081ae6603b33809b1f119b45
 
 Name:           clang-wrap
 Version:        0+%{git_ver}
@@ -13,7 +13,7 @@ Release:        %{autorelease}
 License:        Mulan-2.0
 Summary:        clang-wrap to collect LLVM IR
 URL:            https://github.com/openRuyi-Project/clang-wrap
-#!RemoteAsset:  sha256:dd479721cffc75a3e360d393b78020c02a89063056034dac8ae6551c084de442
+#!RemoteAsset:  sha256:4cf8d3e1cdf50f2ec9404676c1905e025084c87c256447858fe1e94c88e1c6ab
 Source0:        https://github.com/openRuyi-Project/clang-wrap/archive/%{git_commit}.tar.gz
 Source1:        macros.clang-wrap
 BuildSystem:    rust
