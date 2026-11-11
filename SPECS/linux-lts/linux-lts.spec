@@ -18,7 +18,7 @@
 %global variant_name lts
 
 # Managed under kernel-team-tools
-%global patchset_release 2
+%global patchset_release 3
 %global config_version 0
 
 Name:           linux-lts
@@ -29,7 +29,7 @@ License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:81764a545072d160748beff4d9de2e7d95aa9f16e8261110288f067a2cc61d71
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
-#!RemoteAsset:  sha256:45377264836057338a5fc380fe45dbce344e4bf6d6165f49a0389c3cdbaa19f9
+#!RemoteAsset:  sha256:cc38cc8cf0e1a5476b23266e14107f9fc40fed15804d4de740fb3634000e811f
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
 %if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
     %global arch_suffix -rva20
