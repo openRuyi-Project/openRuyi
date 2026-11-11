@@ -1,18 +1,6 @@
-From 27a431757eb24078c9f6be485afac086bd11c96d Mon Sep 17 00:00:00 2001
-From: Yangfl <mmyangfl@gmail.com>
-Date: Thu, 5 Nov 2026 21:27:38 +0800
-Subject: [PATCH] Detect pointer width on generic architectures
+Description: libcds FTBFS on some 64-bit archs, because they hard-code CDS_BUILD_BITS to be 32 for unknown archs
+Author: Yangfl <mmyangfl@gmail.com>
 
-The generic C++ atomic implementation must use 64-bit words on riscv64.
-Reuse the pointer-size check used for ARM.
-
-Based on Debian libcds 2.3.3-7 ftbfs.patch by Yangfl.
-Upstream-Reference: https://sources.debian.org/patches/libcds/2.3.3-7/ftbfs.patch/
-
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- cds/compiler/gcc/compiler_macro.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/cds/compiler/gcc/compiler_macro.h b/cds/compiler/gcc/compiler_macro.h
 index f954d6c..841eca6 100644
@@ -31,6 +19,3 @@ index f954d6c..841eca6 100644
  #       define CDS_PROCESSOR__NAME   "unknown"
  #       define CDS_PROCESSOR__NICK   "unknown"
  #   endif
--- 
-2.54.0
-

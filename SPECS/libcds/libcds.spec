@@ -21,8 +21,10 @@ Source0:        %{url}/archive/refs/tags/v%{version}.tar.gz#/%{name}-%{version}.
 BuildSystem:    cmake
 
 # Firebird page-cache insertion needs the key/value update overload.
+# https://github.com/FirebirdSQL/firebird/commit/6f93d275d0d2506ab774e17b16c748bf201069f6
 Patch1000:      1000-support-preconstructed-michael-kvlist-values.patch
 # Detect 64-bit pointers in the generic C++ atomics path on riscv64.
+# https://sources.debian.org/src/libcds/2.3.3-7/debian/patches/ftbfs.patch/
 Patch2000:      2000-detect-pointer-width-on-generic-architectures.patch
 # Install the shared library and export its public compiler options.
 Patch2001:      2001-install-shared-library-with-system-layout.patch

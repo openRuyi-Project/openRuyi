@@ -1,11 +1,9 @@
-From d5458b056c9ebca1b3d8783648e0d6f0d039c344 Mon Sep 17 00:00:00 2001
+From e0909d0d25e93f9eb7be015664c470414dac6ef5 Mon Sep 17 00:00:00 2001
 From: Vlad Khorsun <hvlad@users.sourceforge.net>
-Date: Tue, 10 Aug 2021 10:44:02 +0000
+Date: Tue, 10 Aug 2021 13:44:02 +0300
 Subject: [PATCH] Implement update() with key and value, see issue #170. It
  allows to insert pre-constructed value if key was not found in list.
 
-Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/6f93d275d0d2506ab774e17b16c748bf201069f6
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 ---
  cds/container/impl/michael_kvlist.h | 59 +++++++++++++++++++++++++++--
  1 file changed, 55 insertions(+), 4 deletions(-)
