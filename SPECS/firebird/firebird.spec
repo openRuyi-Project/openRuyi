@@ -24,6 +24,7 @@ Source1:        THIRD-PARTY-NOTICES.txt
 BuildSystem:    autotools
 
 # LibreOffice's merged backup difference-file access restriction.
+# https://github.com/LibreOffice/core/commit/736210ff4ced4919c9d045032833b060f3fb4bb5
 Patch1000:      1000-check-backup-difference-file-access.patch
 # Use packaged generators, numeric libraries and integer headers.
 Patch2000:      2000-use-installed-generators-and-numeric-libraries.patch

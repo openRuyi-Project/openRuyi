@@ -1,18 +1,10 @@
-From 9f9e32dc0039413cac98aa57edcc26b7d574699d Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
-Date: Thu, 5 Nov 2026 21:34:23 +0800
-Subject: [PATCH] Verify difference file paths against DatabaseAccess
+Verify difference file path against DatabaseAccess
 
-Carry the engine-side restriction merged by LibreOffice. Apply the
-original patch unchanged to Firebird 5.0.4.
+The difference file opened in openDelta and beginBackup was not verified
+against DatabaseAccess like the other database file paths.
 
-Upstream-Commit: https://github.com/LibreOffice/core/commit/736210ff4ced4919c9d045032833b060f3fb4bb5
-Submitted to Firebird: https://github.com/FirebirdSQL/firebird/pull/9089
+Submitted upstream as https://github.com/FirebirdSQL/firebird/pull/9089
 
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- src/jrd/nbak.cpp | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
 
 diff --git a/src/jrd/nbak.cpp b/src/jrd/nbak.cpp
 index 6655bf6..47bda23 100644
@@ -56,6 +48,3 @@ index 6655bf6..47bda23 100644
  		diff_file = PIO_create(tdbb, diff_name, true, false);
  	}
  	catch (const Firebird::Exception&)
--- 
-2.54.0
-
