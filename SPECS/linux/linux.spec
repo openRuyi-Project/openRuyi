@@ -25,7 +25,7 @@
 
 # Managed under kernel-team-tools
 %global patchset_release 2
-%global config_version 0
+%global config_version 1
 # Initial mainline tarballs omit the .0 that the kernel Makefile reports.
 %global upstream_version 7.3.4
 
@@ -37,7 +37,7 @@ License:        GPL-2.0-only
 URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:b11b6df8295e8e991ff040b71aaa4994a8b55caa23b6b092907f195b5840fd1f
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{upstream_version}.tar.xz
-#!RemoteAsset:  sha256:32583e3ce2d524790ab52d168731780a8190d722b23be3d9dfbf138af822e53f
+#!RemoteAsset:  sha256:be90f56556560447fb04c4d0c1e069c5732635ae7832002cf01a117f3038837f
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/%{name}-v%{upstream_version}-%{patchset_release}.tar.gz
 BuildSystem:    linux
 
