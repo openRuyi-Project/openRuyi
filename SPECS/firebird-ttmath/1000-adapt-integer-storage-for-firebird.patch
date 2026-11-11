@@ -1,15 +1,31 @@
-From 2789124a28e587331b523757c3a38701a2449b88 Mon Sep 17 00:00:00 2001
+From 36683d7adf5b3c93be1c66655605fbab66ec1b2d Mon Sep 17 00:00:00 2001
 From: Alexander Peshkov <alexander.peshkoff@gmail.com>
-Date: Mon, 16 Sep 2019 17:59:54 +0000
-Subject: [PATCH] Adapt TTMath integer storage for Firebird
+Date: Mon, 16 Sep 2019 20:59:54 +0300
+Subject: [PATCH] Int128 - new datatype (#220)
 
-Firebird stores Int128 in unions and descriptors and requires trivial
-integer storage. Keep its integer-only header entry point and conversions.
+* Int128 support - work in progress
 
-Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/861d536fc26542335f0fb84cdea825e891364057
-Extract the integer storage and conversion changes from the INT128 implementation.
+* Work in progress
 
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+* Int128 datatype appears to be mostly OK except sort & index
+
+* Fixed divide scaling, added sorting & network (xdr) support
+
+* Binding control, aggregate nodes, cleanup and documentation
+
+* Fixed VS2017 AppVeyor build
+
+* Next attempt to fix vs2017 build
+
+* Next attempt to fix vs2017 build
+
+* Next attempt to fix vs2017 build
+
+* Update MSVC build.
+
+* Set VS architecture correctly
+
+* Fixed a number of issues noticed by Mark
 ---
  ttmath/ttmath.h     | 14 ++--------
  ttmath/ttmathint.h  | 65 +++++++++++++++++++++------------------------

@@ -1,11 +1,9 @@
-From ee6827def1558abbe977c42e7247a2d257100817 Mon Sep 17 00:00:00 2001
+From 05819f1134fcf9db8667e716d3260f66774d5875 Mon Sep 17 00:00:00 2001
 From: AlexPeshkoff <alexander.peshkoff@gmail.com>
-Date: Mon, 19 Jun 2023 15:46:58 +0000
+Date: Mon, 19 Jun 2023 18:46:58 +0300
 Subject: [PATCH] Fix for #7603: BIN_SHR on INT128 does not apply sign
  extension
 
-Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/3da900bf178eb45500dd774e6d22c99683e47d25
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 ---
  ttmath/ttmathint.h | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)

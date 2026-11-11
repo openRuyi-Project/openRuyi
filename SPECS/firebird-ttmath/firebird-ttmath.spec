@@ -15,7 +15,11 @@ VCS:            git:https://gitea.ttmath.org/tomasz.sowa/ttmath.git
 Source0:        https://downloads.sourceforge.net/project/ttmath/ttmath/ttmath-%{version}/ttmath-%{version}-src.tar.gz
 BuildArch:      noarch
 
+# Backport only the TTMath integer storage and constructor changes.
+# https://github.com/FirebirdSQL/firebird/commit/861d536fc26542335f0fb84cdea825e891364057
 Patch1000:      1000-adapt-integer-storage-for-firebird.patch
+# Backport signed right-shift extension for the adapted INT128 backend.
+# https://github.com/FirebirdSQL/firebird/commit/3da900bf178eb45500dd774e6d22c99683e47d25
 Patch1001:      1001-preserve-sign-in-right-shifts.patch
 
 %description
