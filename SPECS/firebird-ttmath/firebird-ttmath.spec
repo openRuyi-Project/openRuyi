@@ -37,10 +37,11 @@ and signed shift fix. These headers use a private include directory.
 %autosetup -p1 -n ttmath-%{version}
 
 %install
-install -d %{buildroot}%{_includedir}/firebird-ttmath
-for header in ttmath.h ttmathint.h ttmathuint.h ttmathtypes.h ttmathmisc.h ttmathobjects.h ttmaththreads.h ttmathuint_x86.h ttmathuint_x86_64.h ttmathuint_noasm.h; do
-    install -pm 0644 ttmath/$header %{buildroot}%{_includedir}/firebird-ttmath/
-done
+install -Dpm 0644 -t %{buildroot}%{_includedir}/firebird-ttmath \
+    ttmath/ttmath.h ttmath/ttmathint.h ttmath/ttmathuint.h \
+    ttmath/ttmathtypes.h ttmath/ttmathmisc.h ttmath/ttmathobjects.h \
+    ttmath/ttmaththreads.h \
+    ttmath/ttmathuint_x86.h ttmath/ttmathuint_x86_64.h ttmath/ttmathuint_noasm.h
 
 %files devel
 %license COPYRIGHT
