@@ -1,16 +1,3 @@
-From 0a27079ee5c60f806bdb6e1aa5a703c03a098476 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
-Date: Sun, 12 Oct 2025 19:30:00 +0000
-Subject: [PATCH] Prevent re-entry while parsing a PDF form XObject
-
-Carry the LibreOffice fix for OSS-Fuzz issue 451333752.
-
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- core/fpdfapi/page/cpdf_form.h                  | 15 +++++++++++++++
- core/fpdfapi/page/cpdf_streamcontentparser.cpp |  3 +++
- 2 files changed, 18 insertions(+)
-
 diff --git a/core/fpdfapi/page/cpdf_form.h b/core/fpdfapi/page/cpdf_form.h
 index ae864b0..1e2d56c 100644
 --- a/core/fpdfapi/page/cpdf_form.h
@@ -53,6 +40,3 @@ index a0d239f..4356832 100644
      return;
    }
  
--- 
-2.54.0
-

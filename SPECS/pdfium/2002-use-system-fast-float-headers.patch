@@ -1,14 +1,3 @@
-From 776808c5002b4001ec7267e995831679cdd5d237 Mon Sep 17 00:00:00 2001
-From: Rene Engelhard <rene@rene-engelhard.de>
-Date: Sun, 21 Sep 2025 10:55:47 +0000
-Subject: [PATCH] Use system fast_float headers when requested
-
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- core/fxcrt/fx_extension.cpp | 4 ++++
- core/fxcrt/fx_string.cpp    | 4 ++++
- 2 files changed, 8 insertions(+)
-
 diff --git a/core/fxcrt/fx_extension.cpp b/core/fxcrt/fx_extension.cpp
 index 7739b82..9296e66 100644
 --- a/core/fxcrt/fx_extension.cpp
@@ -41,6 +30,3 @@ index 4d1d6bd..0ce5e2f 100644
  
  #if !defined(WCHAR_T_IS_16_BIT) && !defined(WCHAR_T_IS_32_BIT)
  #error "Unknown wchar_t size"
--- 
-2.54.0
-

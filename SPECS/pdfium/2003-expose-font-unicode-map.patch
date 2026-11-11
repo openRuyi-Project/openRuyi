@@ -1,14 +1,3 @@
-From 24a2babd20b4a1e7ee716e7059eff879103ed770 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Caol=C3=A1n=20McNamara?= <caolan.mcnamara@collabora.com>
-Date: Thu, 21 Aug 2025 16:20:19 +0000
-Subject: [PATCH] Expose the PDF font ToUnicode stream
-
-Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
----
- fpdfsdk/fpdf_edittext.cpp | 20 ++++++++++++++++++++
- public/fpdf_edit.h        |  5 +++++
- 2 files changed, 25 insertions(+)
-
 diff --git a/fpdfsdk/fpdf_edittext.cpp b/fpdfsdk/fpdf_edittext.cpp
 index 727d302..ea85ec3 100644
 --- a/fpdfsdk/fpdf_edittext.cpp
@@ -56,6 +45,3 @@ index 77fa19c..ab23f58 100644
  // Experimental API.
  // Get whether |font| is embedded or not.
  //
--- 
-2.54.0
-
