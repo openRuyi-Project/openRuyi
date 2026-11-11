@@ -5,17 +5,15 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libexttextcat
-Version:        3.4.8
+Version:        3.4.9
 Release:        %autorelease
 Summary:        Language identification using text fingerprints
 License:        BSD-3-Clause
 URL:            https://wiki.documentfoundation.org/Libexttextcat
 VCS:            git:https://git.libreoffice.org/libexttextcat
-#!RemoteAsset:  sha256:76fabd6247b89bfa61671f021470f115ea3f643f809516f8bb5beb2a722b8563
-Source0:        https://github.com/LibreOffice/libexttextcat/archive/refs/tags/v%{version}.tar.gz#/libexttextcat-%{version}.tar.gz
+#!RemoteAsset:  sha256:71e9a3cc6c4a270efd61d76281664341e1fb0412b591f1939516413a992d1e87
+Source0:        https://dev-www.libreoffice.org/src/libexttextcat/%{name}-%{version}.tar.xz
 BuildSystem:    autotools
-# Upstream declaration in v3.4.8 uses a 32-bit size on LP64.
-Patch2000:      2000-match-memory-pool-prototype.patch
 
 BuildOption(conf):  --disable-static
 
@@ -35,10 +33,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    devel
 Headers, linker files and pkg-config metadata for developing with %{name}.
-
-%prep -a
-# Generate configure and the host-triplet support files from the upstream tag.
-autoreconf -fi
 
 %files
 %doc README
