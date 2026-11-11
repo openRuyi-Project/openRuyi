@@ -18,7 +18,8 @@ Source1:        CMakeLists.txt
 Source2:        decnumber.pc.in
 BuildSystem:    cmake
 
-# Firebird's merged decimal conversion fixes.
+# Firebird's merged decimal conversion fixes, adapted to standalone decNumber 3.68.
+# https://github.com/FirebirdSQL/firebird/commit/a31b3bcb5b8249b405569b9490955edfa06ad3bd
 Patch1000:      1000-fix-decimal-parsing-buffer-lifetime.patch
 
 BuildRequires:  cmake
