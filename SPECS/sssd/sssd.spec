@@ -91,6 +91,8 @@ BuildRequires:  pkgconfig(uid_wrapper)
 
 Requires:       bind-utils
 Requires:       python3-systemd
+Requires(post): alternatives
+Requires(preun): alternatives
 
 %systemd_requires
 
@@ -290,45 +292,32 @@ install -Dpm0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/sssd.conf
 %sysusers_create_package %{name} %{SOURCE1}
 
 %post
+alternatives --install %{_sysconfdir}/cifs-utils/idmap-plugin cifs-idmap-plugin %{_libdir}/cifs-utils/cifs_idmap_sss.so 20
 if [ -x /usr/bin/systemd-tmpfiles ]; then
    systemd-tmpfiles --create %{_tmpfilesdir}/sssd.conf || :
 fi
 
-%systemd_post sssd.service
-%systemd_post sssd-autofs.socket
-%systemd_post sssd-nss.socket
-%systemd_post sssd-ssh.socket
-%systemd_post sssd-sudo.socket
-%__rm -f %{_localstatedir}/lib/sss/mc/passwd
-%__rm -f %{_localstatedir}/lib/sss/mc/group
-%__rm -f %{_localstatedir}/lib/sss/mc/initgroups
-%__rm -f %{_localstatedir}/lib/sss/mc/sid
+%systemd_post sssd.service sssd-autofs.socket sssd-nss.socket sssd-pac.socket sssd-pam.socket sssd-ssh.socket sssd-sudo.socket
+rm -f %{_localstatedir}/lib/sss/mc/passwd \
+    %{_localstatedir}/lib/sss/mc/group \
+    %{_localstatedir}/lib/sss/mc/initgroups \
+    %{_localstatedir}/lib/sss/mc/sid
 %__rm -f %{_localstatedir}/lib/sss/pubconf/known_hosts
 
 %preun
-%systemd_preun sssd.service
-%systemd_preun sssd-autofs.socket
-%systemd_preun sssd-nss.socket
-%systemd_preun sssd-pam.socket
-%systemd_preun sssd-ssh.socket
-%systemd_preun sssd-sudo.socket
+if [ "$1" -eq 0 ]; then
+    alternatives --remove cifs-idmap-plugin %{_libdir}/cifs-utils/cifs_idmap_sss.so
+fi
+%systemd_preun sssd.service sssd-autofs.socket sssd-nss.socket sssd-pac.socket sssd-pam.socket sssd-ssh.socket sssd-sudo.socket
 
 %postun
-%__rm -f %{_localstatedir}/lib/sss/mc/passwd
-%__rm -f %{_localstatedir}/lib/sss/mc/group
-%__rm -f %{_localstatedir}/lib/sss/mc/initgroups
-%__rm -f %{_localstatedir}/lib/sss/mc/sid
-%systemd_postun_with_restart sssd-autofs.socket
-%systemd_postun_with_restart sssd-nss.socket
-%systemd_postun_with_restart sssd-pam.socket
-%systemd_postun_with_restart sssd-ssh.socket
-%systemd_postun_with_restart sssd-sudo.socket
+rm -f %{_localstatedir}/lib/sss/mc/passwd \
+    %{_localstatedir}/lib/sss/mc/group \
+    %{_localstatedir}/lib/sss/mc/initgroups \
+    %{_localstatedir}/lib/sss/mc/sid
+%systemd_postun_with_restart sssd-autofs.socket sssd-nss.socket sssd-pac.socket sssd-pam.socket sssd-ssh.socket sssd-sudo.socket
 
-%systemd_postun sssd-autofs.service
-%systemd_postun sssd-nss.service
-%systemd_postun sssd-pam.service
-%systemd_postun sssd-ssh.service
-%systemd_postun sssd-sudo.service
+%systemd_postun sssd-autofs.service sssd-nss.service sssd-pac.service sssd-pam.service sssd-ssh.service sssd-sudo.service
 
 %post dbus
 %systemd_post sssd-ifp.service
@@ -346,17 +335,10 @@ fi
 %systemd_preun sssd-kcm.socket
 
 %postun kcm
-%systemd_postun_with_restart sssd-kcm.socket
-%systemd_postun_with_restart sssd-kcm.service
+%systemd_postun_with_restart sssd-kcm.socket sssd-kcm.service
 
 %posttrans
 %systemd_postun_with_restart sssd.service
-%__chown -f -R root:sssd %{_sysconfdir}/sssd || true
-%__chmod -f -R g+r %{_sysconfdir}/sssd || true
-%__chown -f -h sssd:sssd %{_localstatedir}/lib/sss/db/* || true
-%__chown -f -h sssd:sssd %{_localstatedir}/log/%{name}/*.log* || true
-%__chown -f -h sssd:sssd %{_localstatedir}/lib/sss/secrets/*.ldb || true
-%__chown -f -R sssd:sssd %{_localstatedir}/lib/sss/gpo_cache || true
 
 %files -f sssd-man.lang
 %doc src/examples/sssd-example.conf
