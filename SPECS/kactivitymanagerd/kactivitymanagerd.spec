@@ -4,6 +4,9 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%define kf6_version 6.18.0
+%define qt6_version 6.9.0
+
 Name:           kactivitymanagerd
 Version:        6.8.2
 Release:        %autorelease
