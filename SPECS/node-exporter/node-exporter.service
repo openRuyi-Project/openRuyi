@@ -1,0 +1,16 @@
+[Unit]
+Description=Prometheus Node Exporter
+Documentation=https://github.com/prometheus/node_exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=node-exporter
+EnvironmentFile=-/etc/sysconfig/node-exporter
+ExecStart=/usr/bin/node_exporter $NODE_EXPORTER_OPTS
+Restart=on-failure
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
