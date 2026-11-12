@@ -19,14 +19,14 @@ Name:           cmake-bootstrap
 %else
 Name:           cmake
 %endif
-Version:        4.3.2
+Version:        4.4.5
 Release:        %autorelease
 Summary:        Cross-platform make system
 License:        BSD and MIT and zlib
 URL:            http://www.cmake.org
 VCS:            git:https://gitlab.kitware.com/cmake/cmake
-#!RemoteAsset:  sha256:b0231eb39b3c3cabdc568c619df78208a7bd95ea10c9b2236d61218bac1b367d
-Source0:        https://www.cmake.org/files/v4.3/cmake-%{version}.tar.gz
+#!RemoteAsset:  sha256:a0c54c88abb8078dd8eccadb717fc6bb194bf18e7d44c86309910288886e04e2
+Source0:        https://www.cmake.org/files/v4.4/cmake-%{version}.tar.gz
 Source1:        macros.cmake
 Source2:        macros.buildsystem.cmake
 Source3:        cmake.attr
