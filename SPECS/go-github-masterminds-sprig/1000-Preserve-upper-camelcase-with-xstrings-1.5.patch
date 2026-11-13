@@ -1,0 +1,36 @@
+From 5a91c5b0a8fa9e14c42c24964ec1ca61f3326849 Mon Sep 17 00:00:00 2001
+From: Matt Farina <matt@mattfarina.com>
+Date: Wed, 28 Aug 2024 14:41:36 +0000
+Subject: [PATCH] Updating dependencies
+
+Note, xstrings had a breaking change in the camel case handling
+for version 1.5. A new function in xstrings is used to keep the
+old functionality and the public API for sprig from breaking.
+
+Signed-off-by: Matt Farina <matt@mattfarina.com>
+
+(cherry picked from commit fe8e5b963cddb929b1ba4a9684401a84f382845a)
+
+Backport only the camelcase compatibility fix to the v2 function map.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ functions.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/functions.go b/functions.go
+index 7b5b0af..7e28898 100644
+--- a/functions.go
++++ b/functions.go
+@@ -133,7 +133,7 @@ var genericMap = map[string]interface{}{
+ 	"swapcase":     util.SwapCase,
+ 	"shuffle":      xstrings.Shuffle,
+ 	"snakecase":    xstrings.ToSnakeCase,
+-	"camelcase":    xstrings.ToCamelCase,
++	"camelcase":    xstrings.ToPascalCase,
+ 	"kebabcase":    xstrings.ToKebabCase,
+ 	"wrap":         func(l int, s string) string { return util.Wrap(s, l) },
+ 	"wrapWith":     func(l int, sep, str string) string { return util.WrapCustom(str, l, sep, true) },
+-- 
+2.52.0
+
