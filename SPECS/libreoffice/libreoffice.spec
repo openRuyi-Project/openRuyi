@@ -76,6 +76,63 @@ BuildOption(check):  --old-file="$PWD/workdir/UITest/writer_tests2/done"
 # The embedded HSQLDB UI groups require the disabled Java driver.
 BuildOption(check):  --old-file="$PWD/workdir/UITest/edit_field/done"
 BuildOption(check):  --old-file="$PWD/workdir/UITest/query/done"
+# Calibri chart-placement and vertical-text fixtures require Carlito metrics.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/chart2_import.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/chart2_import2.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/chart2_export2.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/svx_unit.test"
+# Calc column widths and drawing anchors require Carlito's Calibri metrics.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sc_jumbosheets_test.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sc_subsequent_export_test4.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sc_subsequent_filters_test3.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sc_uicalc2.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sc_vba_macro_test.test"
+# Impress vertical text and table bounds require Carlito's Calibri metrics.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sd_layout_tests.test"
+# Writer export and pagination fixtures require Carlito for Calibri text layout.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_core_objectpositioning.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_globalfilter.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_odfexport3.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport11.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport12.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport13.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport21.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport23.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport25.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport26.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlexport_de_locale.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ooxmlimport.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_uiwriter3.test"
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_ww8export2.test"
+# The PDF text-layout fixtures require Carlito's Calibri metrics.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/vcl_pdfexport.test"
+# The CJK punctuation fixture needs a full Source Han Serif SC face to avoid
+# substituting its embedded subset with system CJK fonts during measurement.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_core_text.test"
+# The SVG font-variation fixture requires Reem Kufi's variable-font axes.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/svgio.test"
+# Nested floating-table DOCX fixtures require Caladea's Cambria metrics.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_core_layout.test"
+# Arabic layout fixtures need Amiri/Quran; malformed RTF text also triggers
+# glyph fallback that the suite's strict font selection rejects.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter.test"
+# DOCX and ODT layout fixtures require Caladea and Linux Libertine G.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter2.test"
+# The drop-cap fixture uses Liberation Mono for Bengali text, requiring glyph
+# fallback that the suite treats as a missing font.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter3.test"
+# Mixed-script Arabic wrapping assumes Amiri and the upstream full Noto Sans
+# Arabic font version rather than the system script subset.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter4.test"
+# Script-change and extrusion fixtures require full Noto Sans and glyph
+# fallback from DejaVu Sans, which strict font selection rejects.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter5.test"
+# Bidirectional fixtures need full Noto Sans Hebrew, Linux Libertine G and
+# Liberation Sans Narrow.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/sw_layoutwriter6.test"
+# PDF text-object bounds assume upstream full Noto and supplemental Hebrew
+# fonts; malformed RTF glyph fallback also aborts strict font selection.
+BuildOption(check):  --old-file="$PWD/workdir/CppunitTest/vcl_pdfexport2.test"
 
 BuildRequires:  autoconf
 BuildRequires:  bison
