@@ -1,0 +1,20 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Avoid redundant newline in legal output
+
+The legal text already carries its own line endings. fmt.Println adds an
+additional newline and is rejected by Go vet; fmt.Print preserves the output.
+
+---
+ cmd/misspell/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/misspell/main.go b/cmd/misspell/main.go
+--- a/cmd/misspell/main.go
++++ b/cmd/misspell/main.go
+@@ -122,5 +122,5 @@
+ 	}
+ 	if *showLegal {
+-		fmt.Println(misspell.Legal)
++		fmt.Print(misspell.Legal)
+ 		return
+ 	}

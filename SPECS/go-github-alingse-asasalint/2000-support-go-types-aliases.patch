@@ -1,0 +1,27 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Handle predeclared any aliases in Go 1.23 and later
+
+Go 1.23 materializes aliases in go/types, so the predeclared any type is no
+longer exposed directly as an empty *types.Interface. Unalias the inspected
+types before applying the existing empty-interface check.
+
+---
+ asasalint.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/asasalint.go b/asasalint.go
+--- a/asasalint.go
++++ b/asasalint.go
+@@ -156,10 +156,11 @@ func isSliceAnyType(typ types.Type) (r bool) {
+ func isSliceAnyType(typ types.Type) (r bool) {
++	typ = types.Unalias(typ)
+ 	sliceType, ok := typ.(*types.Slice)
+ 	if !ok {
+ 		return
+ 	}
+ 	elemType, ok := sliceType.Elem().(*types.Interface)
+ 	if !ok {
+ 		return
+ 	}
+ 	return elemType.NumMethods() == 0
+ }

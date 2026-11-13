@@ -1,0 +1,22 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Load the structure fixture with an explicit package pattern
+
+An empty package pattern no longer selects the working directory with the
+current Go toolchain. Load "." so the suite still inspects the fixture's
+syntax and type information and runs all field assertions.
+
+Upstream-Status: Pending
+Upstream: https://github.com/GaijinEntertainment/go-exhaustruct
+
+diff --git a/internal/structure/fields_test.go b/internal/structure/fields_test.go
+--- a/internal/structure/fields_test.go
++++ b/internal/structure/fields_test.go
+@@ -36,7 +36,7 @@ func (s *StructFieldsSuite) SetupSuite() {
+ 	pkgs, err := packages.Load(&packages.Config{ //nolint:exhaustruct
+ 		Mode: packages.NeedTypes | packages.NeedTypesInfo | packages.NeedTypesSizes | packages.NeedSyntax,
+ 		Dir:  "testdata",
+-	}, "")
++	}, ".")
+ 	s.Require().NoError(err)
+ 	s.Require().Len(pkgs, 1)
+ 
