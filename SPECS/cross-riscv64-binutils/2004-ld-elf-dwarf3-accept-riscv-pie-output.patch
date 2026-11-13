@@ -1,0 +1,9 @@
+diff --git a/ld/testsuite/ld-elf/dwarf3.err b/ld/testsuite/ld-elf/dwarf3.err
+index 8d1f0d5..a76c83a 100644
+--- a/ld/testsuite/ld-elf/dwarf3.err
++++ b/ld/testsuite/ld-elf/dwarf3.err
+@@ -1,4 +1,3 @@
+ .*/dwarf3\.o: in function `main':
+ .*\(\.text.*\+0x[0-9a-f]+\): undefined reference to `bar'
+-.*\(\.text.*\+0x[0-9a-f]+\): undefined reference to `bar'
+ #...
