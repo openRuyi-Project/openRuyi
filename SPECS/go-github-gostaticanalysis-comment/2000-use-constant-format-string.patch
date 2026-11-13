@@ -1,0 +1,23 @@
+From f4dc402b1c03b16051e4879f3762fb42325b90aa Mon Sep 17 00:00:00 2001
+From: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 30 Oct 2026 22:38:46 +0800
+Subject: [PATCH] comment: use constant format string in tests
+
+Signed-off-by: Xiang'ao Liu <xiangao.or@isrc.iscas.ac.cn>
+---
+ comment_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/comment_test.go b/comment_test.go
+index f8867b0..5015866 100644
+--- a/comment_test.go
++++ b/comment_test.go
+@@ -33,7 +33,7 @@ func TestMaps_CommentsByPosLine(t *testing.T) {
+ 			}
+ 
+ 			if diff := cmp.Diff(tt.want, got); diff != "" {
+-				t.Errorf(diff)
++				t.Errorf("%s", diff)
+ 			}
+ 		})
+ 	}

@@ -1,0 +1,24 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Preserve any in empty generic constraint diagnostics
+
+Go 1.27 prints the underlying empty interface as interface{}, whereas older
+toolchains could print any. Stripping the interface braces leaves an empty
+constraint description. Normalize empty constraints to any explicitly so
+diagnostics retain the constraint and existing exact assertions still hold.
+
+Upstream-Status: Pending
+Upstream: https://github.com/butuzov/ireturn
+
+diff --git a/analyzer/analyzer.go b/analyzer/analyzer.go
+--- a/analyzer/analyzer.go
++++ b/analyzer/analyzer.go
+@@ -178,6 +178,9 @@ func filterInterfaces(p *analysis.Pass, ft *ast.FuncType, di map[string]struct{}
+ 				if strings.HasSuffix(typeParams, suffix) {
+ 					typeParams = typeParams[:len(typeParams)-1]
+ 				}
++				if isEmpty {
++					typeParams = "any"
++				}
+ 
+ 				// todo: write test for this (1.18&1.19 only?)
+ 				goVersion := runtime.Version()
