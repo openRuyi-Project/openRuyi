@@ -56,6 +56,7 @@ prec_flags[0]=--enable-single
 prec_flags[1]=--enable-double
 prec_flags[2]=--enable-long-double
 prec_flags[3]=--enable-quad-precision
+prec_flags[3]+=" CC=%{__cc_gcc}"
 
 %ifarch x86_64
 for ((i=0; i<2; i++)) ; do prec_flags[i]+=" --enable-sse2 --enable-avx --enable-avx2"; done
