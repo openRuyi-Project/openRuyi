@@ -1,0 +1,22 @@
+From c39f1e5d0ab40177e83d1223186796fb1583691f Mon Sep 17 00:00:00 2001
+From: Fernandez Ludovic <ldez@users.noreply.github.com>
+Date: Wed, 17 Sep 2025 07:02:47 +0200
+Subject: [PATCH] tests: fix
+
+---
+ gomod/gomod_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gomod/gomod_test.go b/gomod/gomod_test.go
+index a11d561..e477ff6 100644
+--- a/gomod/gomod_test.go
++++ b/gomod/gomod_test.go
+@@ -15,7 +15,7 @@ func TestGetModuleInfo(t *testing.T) {
+ 	require.Len(t, info, 1)
+ 
+ 	assert.Equal(t, "github.com/ldez/grignotin", info[0].Path)
+-	assert.Equal(t, "1.23.0", info[0].GoVersion)
++	assert.Equal(t, "1.24.0", info[0].GoVersion)
+ 	assert.True(t, info[0].Main)
+ }
+ 

@@ -1,0 +1,105 @@
+Reuse the complete offline analyzer fixture staging from known-three-repair.
+All source fixtures and diagnostic assertions remain enabled.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/jjti/go-spancheck/blob/v0.6.5/spancheck_test.go
+
+--- a/spancheck_test.go
++++ b/spancheck_test.go
+@@ -1,6 +1,7 @@
+ package spancheck_test
+ 
+ import (
++	"os"
+ 	"testing"
+ 
+ 	"golang.org/x/tools/go/analysis/analysistest"
+@@ -43,7 +44,13 @@
+ 	} {
+ 		dir := dir
+ 		t.Run(dir, func(t *testing.T) {
+-			analysistest.Run(t, "testdata/"+dir, spancheck.NewAnalyzerWithConfig(configFactory()))
++			if os.Getenv("GO111MODULE") == "off" {
++				root := offlineTestData(t, "testdata", "github.com/jjti/go-spancheck/testdata")
++				analysistest.Run(t, root, spancheck.NewAnalyzerWithConfig(configFactory()),
++					"github.com/jjti/go-spancheck/testdata/"+dir)
++			} else {
++				analysistest.Run(t, "testdata/"+dir, spancheck.NewAnalyzerWithConfig(configFactory()))
++			}
+ 		})
+ 	}
+ }
+--- /dev/null
++++ b/offline_test.go
+@@ -0,0 +1,71 @@
++package spancheck_test
++
++import (
++	"os"
++	"path/filepath"
++	"testing"
++)
++
++// offlineTestData retains the fixtures and resolves their imports from the
++// distribution's installed sources, without a module cache or network access.
++func offlineTestData(t *testing.T, source, destination string) string {
++	t.Helper()
++	root := t.TempDir()
++	target := filepath.Join(root, "src", destination)
++	if err := os.MkdirAll(target, 0755); err != nil {
++		t.Fatal(err)
++	}
++	if err := os.CopyFS(target, os.DirFS(source)); err != nil {
++		t.Fatal(err)
++	}
++	// analysistest switches to module mode whenever a fixture contains go.mod.
++	// The distribution build already supplies the real dependencies in GOPATH;
++	// remove fixture module markers so x/tools exercises that installed tree.
++	if err := filepath.Walk(target, func(path string, info os.FileInfo, err error) error {
++		if err != nil {
++			return err
++		}
++		if !info.IsDir() && (info.Name() == "go.mod" || info.Name() == "go.sum") {
++			return os.Remove(path)
++		}
++		return nil
++	}); err != nil {
++		t.Fatal(err)
++	}
++	paths := filepath.SplitList(os.Getenv("GOPATH"))
++	for _, path := range paths {
++		linkInstalledSources(t, filepath.Join(path, "src"), filepath.Join(root, "src"))
++	}
++	return root
++}
++
++// Use canonical GOPATH import paths: a vendor prefix changes go/types method
++// signatures and prevents the Tracer.Start matcher from recognizing spans.
++func linkInstalledSources(t *testing.T, source, target string) {
++	t.Helper()
++	entries, err := os.ReadDir(source)
++	if os.IsNotExist(err) {
++		return
++	}
++	if err != nil {
++		t.Fatal(err)
++	}
++	for _, entry := range entries {
++		src, dst := filepath.Join(source, entry.Name()), filepath.Join(target, entry.Name())
++		info, err := os.Lstat(dst)
++		if os.IsNotExist(err) {
++			if err := os.Symlink(src, dst); err != nil {
++				t.Fatal(err)
++			}
++			continue
++		}
++		if err != nil {
++			t.Fatal(err)
++		}
++		if info.IsDir() && info.Mode()&os.ModeSymlink == 0 {
++			if sourceInfo, err := os.Stat(src); err == nil && sourceInfo.IsDir() {
++				linkInstalledSources(t, src, dst)
++			}
++		}
++	}
++}

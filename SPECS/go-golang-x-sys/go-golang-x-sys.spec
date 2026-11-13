@@ -26,6 +26,8 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/sys) = %{version}
+Provides:       go(golang.org/x/sys/unix) = %{version}
+Provides:       go(golang.org/x/sys/windows) = %{version}
 
 %description
 This repository provides supplemental Go packages for low-level interactions with
