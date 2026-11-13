@@ -35,6 +35,7 @@ BuildRequires:  go(github.com/rs/xid)
 BuildRequires:  go(golang.org/x/tools)
 
 Provides:       go(github.com/rs/zerolog) = %{version}
+Provides:       go(github.com/rs/zerolog/log) = %{version}
 
 Requires:       go(github.com/coreos/go-systemd/v22)
 Requires:       go(github.com/mattn/go-colorable)
