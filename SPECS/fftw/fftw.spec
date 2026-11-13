@@ -61,6 +61,12 @@ prec_flags[3]=--enable-quad-precision
 for ((i=0; i<2; i++)) ; do prec_flags[i]+=" --enable-sse2 --enable-avx --enable-avx2"; done
 %endif
 
+%if "%{?toolchain}" == "gcc" && "%{?toolchain_major_version}" != ""
+  prec_flags[3]+=" CC=gcc-%{toolchain_major_version}"
+%else
+  prec_flags[3]+=" CC=gcc"
+%endif
+
 for ((iprec=0; iprec<%{nprec}; iprec++)) ; do
     mkdir ${prec_name[iprec]}
     cd ${prec_name[iprec]}
