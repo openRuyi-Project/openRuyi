@@ -1,0 +1,15 @@
+#! /bin/sh
+set -e
+. "$pkgdatadir/grub-mkconfig_lib"
+
+for entries_dir in /boot /boot/efi; do
+    if [ -d "$entries_dir"/loader/entries ]; then
+
+        cat << EOF
+insmod blsuki
+search --set root -u $(grub-probe $entries_dir --target=fs_uuid)
+blscfg -p /loader/entries
+EOF
+
+    fi
+done
