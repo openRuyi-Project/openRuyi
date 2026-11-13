@@ -1,0 +1,45 @@
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Subject: [PATCH] build: create missing parents of directory symlinks
+
+Directory symlinks need their own parent directories as well as their
+targets. The systemd /etc/xdg/systemd/user link exposes this when its
+parent is absent from the RPM file list. Add a hostfiles regression
+fixture to the existing chroot and ext2 build test.
+
+Upstream-Status: Pending
+Reference: https://github.com/libguestfs/supermin/blob/v5.3.5/src/mode_build.ml
+
+---
+diff --git a/src/mode_build.ml b/src/mode_build.ml
+--- a/src/mode_build.ml
++++ b/src/mode_build.ml
+@@ -410,6 +410,13 @@
+     | dir :: rest when stat_is_dir dir.ft_path && dir_seen dir.ft_path ->
+       dir :: loop rest
+ 
++    | dir :: rest when is_lnk_to_dir dir.ft_path &&
++                       not (dir_seen (Filename.dirname dir.ft_path)) ->
++      let parent = Filename.dirname dir.ft_path in
++      let parent =
++        {ft_path = parent; ft_source_path = parent; ft_config = false} in
++      loop (parent :: dir :: rest)
++
+     | dir :: rest when is_lnk_to_dir dir.ft_path ->
+       insert_dir dir.ft_path;
+ 
+diff --git a/tests/test-build-bash.sh b/tests/test-build-bash.sh
+--- a/tests/test-build-bash.sh
++++ b/tests/test-build-bash.sh
+@@ -34,6 +34,12 @@
+ # We assume 'bash' is a package everywhere.
+ ../src/supermin -v --prepare $USE_INSTALLED bash -o $d1
+ 
++# Only list the directory symlink, not its parent or its target.
++# ext2 construction must create both before copying the symlink.
++mkdir -p "$tmpdir/link-parent" "$tmpdir/target"
++ln -s ../target "$tmpdir/link-parent/link"
++printf '%s\n' "$tmpdir/link-parent/link" >> "$d1/hostfiles"
++
+ arch="$(uname -m)"
+ 
+ # Check all supermin-helper formats work.
