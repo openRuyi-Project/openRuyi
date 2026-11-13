@@ -29,18 +29,27 @@ BuildRequires:  go(github.com/googleapis/gax-go/v2)
 BuildRequires:  go(go.opentelemetry.io/otel)
 BuildRequires:  go(go.opentelemetry.io/otel/sdk)
 BuildRequires:  go(golang.org/x/oauth2)
+BuildRequires:  go(golang.org/x/oauth2/google)
 BuildRequires:  go(google.golang.org/api/googleapi)
 BuildRequires:  go(google.golang.org/api)
 BuildRequires:  go(google.golang.org/grpc)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(cloud.google.com/go/internal) = %{version}
+Provides:       go(cloud.google.com/go/internal/detect) = %{version}
+Provides:       go(cloud.google.com/go/internal/optional) = %{version}
+Provides:       go(cloud.google.com/go/internal/pubsub) = %{version}
+Provides:       go(cloud.google.com/go/internal/testutil) = %{version}
+Provides:       go(cloud.google.com/go/internal/trace) = %{version}
+Provides:       go(cloud.google.com/go/internal/uid) = %{version}
+Provides:       go(cloud.google.com/go/internal/version) = %{version}
 
 Requires:       go(github.com/google/go-cmp)
 Requires:       go(github.com/googleapis/gax-go/v2)
 Requires:       go(go.opentelemetry.io/otel)
 Requires:       go(go.opentelemetry.io/otel/sdk)
 Requires:       go(golang.org/x/oauth2)
+Requires:       go(golang.org/x/oauth2/google)
 Requires:       go(google.golang.org/api/googleapi)
 Requires:       go(google.golang.org/api)
 Requires:       go(google.golang.org/grpc)
@@ -53,7 +62,9 @@ client modules.
 %install
 install -dm0755 %{buildroot}%{go_sys_gopath}/%{go_import_path}
 cp -a internal/*.go %{buildroot}%{go_sys_gopath}/%{go_import_path}/
-for dir in internal/optional internal/testutil internal/trace internal/uid internal/version; do
+# Pub/Sub also needs the project-ID detector and shared message types; the
+# aggregate cloud package excludes this directory and cannot supply them.
+for dir in internal/detect internal/optional internal/pubsub internal/testutil internal/trace internal/uid internal/version; do
     install -dm0755 %{buildroot}%{go_sys_gopath}/cloud.google.com/go/$dir
     cp -a $dir/*.go %{buildroot}%{go_sys_gopath}/cloud.google.com/go/$dir/
 done
@@ -61,14 +72,18 @@ done
 %check
 mkdir -p _build/src/cloud.google.com/go/internal
 cp -a internal/*.go _build/src/cloud.google.com/go/internal/
+cp -a internal/detect _build/src/cloud.google.com/go/internal/
 cp -a internal/optional _build/src/cloud.google.com/go/internal/
+cp -a internal/pubsub _build/src/cloud.google.com/go/internal/
 cp -a internal/testutil _build/src/cloud.google.com/go/internal/
 cp -a internal/trace _build/src/cloud.google.com/go/internal/
 cp -a internal/uid _build/src/cloud.google.com/go/internal/
 cp -a internal/version _build/src/cloud.google.com/go/internal/
 GO111MODULE=off GOPATH="$PWD/_build:%{_datadir}/gocode" go test -v \
     cloud.google.com/go/internal \
+    cloud.google.com/go/internal/detect \
     cloud.google.com/go/internal/optional \
+    cloud.google.com/go/internal/pubsub \
     cloud.google.com/go/internal/testutil \
     cloud.google.com/go/internal/trace \
     cloud.google.com/go/internal/uid \
