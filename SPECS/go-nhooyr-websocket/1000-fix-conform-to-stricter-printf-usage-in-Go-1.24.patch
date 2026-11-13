@@ -1,0 +1,22 @@
+From aec630d59c74431ffd33ada5a75acf564d27863f Mon Sep 17 00:00:00 2001
+From: "W. Michael Petullo" <mike@flyn.org>
+Date: Wed, 29 Jan 2025 08:51:48 -0600
+Subject: [PATCH] fix: conform to stricter printf usage in Go 1.24 (#508)
+
+---
+ autobahn_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/autobahn_test.go b/autobahn_test.go
+index b1b3a7e9..cd0cc9bb 100644
+--- a/autobahn_test.go
++++ b/autobahn_test.go
+@@ -92,7 +92,7 @@ func TestAutobahn(t *testing.T) {
+ 		}
+ 	})
+ 
+-	c, _, err := websocket.Dial(ctx, fmt.Sprintf(wstestURL+"/updateReports?agent=main"), nil)
++	c, _, err := websocket.Dial(ctx, wstestURL+"/updateReports?agent=main", nil)
+ 	assert.Success(t, err)
+ 	c.Close(websocket.StatusNormalClosure, "")
+ 

@@ -1,0 +1,98 @@
+Vendor installed x/exp sources for offline analyzer tests.
+
+Keep fixture module paths, Go language versions, diagnostics, and suggested
+fix assertions. Local replacements record the actual source directory.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/ldez/exptostd/blob/v0.4.5/exptostd_test.go
+
+--- a/exptostd_test.go
++++ b/exptostd_test.go
+@@ -52,6 +52,11 @@
+ 
+ 	t.Chdir(srcPath)
+ 
++	if os.Getenv("GO111MODULE") == "off" {
++		vendorInstalledExp(t, srcPath)
++		return analysistest.RunWithSuggestedFixes(t, srcPath, a, patterns...)
++	}
++
+ 	output, err := exec.CommandContext(t.Context(), "go", "mod", "vendor").CombinedOutput()
+ 	if err != nil {
+ 		t.Log(string(output))
+--- /dev/null
++++ b/offline_test.go
+@@ -0,0 +1,73 @@
++package exptostd_test
++
++import (
++	"fmt"
++	"os"
++	"path/filepath"
++	"testing"
++
++	"golang.org/x/mod/modfile"
++)
++
++// Keep each fixture's Go language version, including the Go 1.22 negative
++// cases, while vendoring the distribution's installed exp sources offline.
++func vendorInstalledExp(t *testing.T, dir string) {
++	t.Helper()
++	filename := filepath.Join(dir, "go.mod")
++	raw, err := os.ReadFile(filename)
++	if err != nil {
++		t.Fatal(err)
++	}
++	mod, err := modfile.Parse(filename, raw, nil)
++	if err != nil {
++		t.Fatal(err)
++	}
++	for _, req := range mod.Require {
++		if req.Mod.Path != "golang.org/x/exp" {
++			t.Fatalf("unexpected fixture dependency: %s", req.Mod.Path)
++		}
++		var installed string
++		for _, root := range filepath.SplitList(os.Getenv("GOPATH")) {
++			candidate := filepath.Join(root, "src", req.Mod.Path)
++			if _, err := os.Stat(filepath.Join(candidate, "go.mod")); err == nil {
++				installed = candidate
++				break
++			}
++		}
++		if installed == "" {
++			t.Fatal("golang.org/x/exp is missing from the distribution GOPATH")
++		}
++		vendor := filepath.Join(dir, "vendor")
++		target := filepath.Join(vendor, filepath.FromSlash(req.Mod.Path))
++		if err := os.CopyFS(target, os.DirFS(installed)); err != nil {
++			t.Fatal(err)
++		}
++		// The replacement records that the code comes from installed sources,
++		// rather than pretending it is the version pinned by the fixture.
++		if err := mod.AddReplace(req.Mod.Path, "", installed, ""); err != nil {
++			t.Fatal(err)
++		}
++		systemRaw, err := os.ReadFile(filepath.Join(installed, "go.mod"))
++		if err != nil {
++			t.Fatal(err)
++		}
++		systemMod, err := modfile.Parse("go.mod", systemRaw, nil)
++		if err != nil {
++			t.Fatal(err)
++		}
++		modules := fmt.Sprintf("# %s %s => %s\n## explicit; go %s\n"+
++			"golang.org/x/exp/constraints\ngolang.org/x/exp/maps\ngolang.org/x/exp/slices\n"+
++			"# %s => %s\n", req.Mod.Path, req.Mod.Version, installed, systemMod.Go.Version,
++			req.Mod.Path, installed)
++		if err := os.WriteFile(filepath.Join(vendor, "modules.txt"), []byte(modules), 0644); err != nil {
++			t.Fatal(err)
++		}
++	}
++	raw, err = mod.Format()
++	if err != nil {
++		t.Fatal(err)
++	}
++	if err := os.WriteFile(filename, raw, 0644); err != nil {
++		t.Fatal(err)
++	}
++}
