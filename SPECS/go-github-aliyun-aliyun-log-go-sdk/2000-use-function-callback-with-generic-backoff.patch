@@ -1,0 +1,34 @@
+From 534943315f17c110505d56dd05062c99f20ef270 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Tue, 18 Aug 2026 16:17:01 +0800
+Subject: [PATCH] retry: accept function callbacks with generic backoff
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ retry.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/retry.go b/retry.go
+index e47b062..fa69e54 100644
+--- a/retry.go
++++ b/retry.go
+@@ -21,13 +21,13 @@ import (
+ //  8          8.538                   [4.269, 12.807]
+ //  9         12.807                   [6.403, 19.210]
+ // ...
+-// The signature of backoff.Operation is "func() error".
+-func Retry(ctx context.Context, o backoff.Operation) error {
++// The operation returns an error and is retried with exponential backoff.
++func Retry(ctx context.Context, o func() error) error {
+ 	return RetryWithBackOff(ctx, backoff.NewExponentialBackOff(), o)
+ }
+ 
+ // RetryWithBackOff ...
+-func RetryWithBackOff(ctx context.Context, b backoff.BackOff, o backoff.Operation) error {
++func RetryWithBackOff(ctx context.Context, b backoff.BackOff, o func() error) error {
+ 	ticker := backoff.NewTicker(b)
+ 	defer ticker.Stop()
+ 	var err error
+-- 
+2.43.0
+
