@@ -1,0 +1,29 @@
+From 8fecdbda79f624daa8e5ed35c2b83348bcda0008 Mon Sep 17 00:00:00 2001
+From: Kanaga Shanmugam <kshanmugam@digitalocean.com>
+Date: Sun, 3 Mar 2019 20:19:22 -0800
+Subject: [PATCH] Updated with ICMPv6 code and type.
+
+Fix for Travis-CI build. Removed HeaderFlags prefix based on netlink's recent change:
+https://github.com/mdlayher/netlink/commit/080e8e36878e0f73c5a28fb285527eefe3603390#diff-b95c50d14ed7b4bb1cfecdc4e498d4dcL64
+
+[Backport only the netlink flag renaming; retain the pinned fork API.]
+
+(cherry picked from commit bdadc6af1303873144e9c9c245b92ca56445c638)
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ ovsnl/datapath.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ovsnl/datapath.go b/ovsnl/datapath.go
+index 4c09071..6751cde 100644
+--- a/ovsnl/datapath.go
++++ b/ovsnl/datapath.go
+@@ -109,7 +109,7 @@ func (s *DatapathService) List() ([]Datapath, error) {
+ 		}),
+ 	}
+ 
+-	flags := netlink.HeaderFlagsRequest | netlink.HeaderFlagsDump
++	flags := netlink.Request | netlink.Dump
+ 	msgs, err := s.c.c.Execute(req, s.f.ID, flags)
+ 	if err != nil {
+ 		return nil, err
