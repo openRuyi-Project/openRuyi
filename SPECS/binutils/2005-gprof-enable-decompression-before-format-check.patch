@@ -1,0 +1,45 @@
+From 24016c9f327952840fdcfc1c7970e3165ca42954 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 10:26:38 +0800
+Subject: [PATCH] gprof: Enable decompression before checking separate debug
+ files
+
+With compressed DWARF enabled by default, tst-gmon-gprof-l2 reports
+<unknown>:0 for f1, f2 and f3 instead of the expected source lines.
+
+BFD initializes compressed section sizes while checking the object
+format. Set BFD_DECOMPRESS before bfd_check_format(), as core_init()
+already does for the main executable, so the separate debug file is
+opened with the same section decompression behavior.
+
+Upstream-Status: Pending
+Upstream: https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=gprof/corefile.c;hb=binutils-2_47
+Reference: https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=bfd/elf.c;hb=binutils-2_47
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ gprof/corefile.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/gprof/corefile.c b/gprof/corefile.c
+index 712dd243..5c181f19 100644
+--- a/gprof/corefile.c
++++ b/gprof/corefile.c
+@@ -205,12 +205,11 @@ open_separated_debug_file (bfd *abfd)
+ 
+       if (debug_bfd)
+ 	{
++	  /* Enable decompression before BFD reads the section headers.  */
++	  debug_bfd->flags |= BFD_DECOMPRESS;
++
+ 	  if (bfd_check_format (debug_bfd, bfd_object))
+ 	    {
+-	      /* Successfully opened the debug file.
+-	         Enable decompression on the debug file.  */
+-              debug_bfd->flags |= BFD_DECOMPRESS;
+-
+ 	      /* Store the debug BFD for use during symbol reading.
+ 	         We'll use this for bfd_canonicalize_symtab and other symbol ops.  */
+ 	      core_debug_bfd = debug_bfd;
+-- 
+2.54.0
+
