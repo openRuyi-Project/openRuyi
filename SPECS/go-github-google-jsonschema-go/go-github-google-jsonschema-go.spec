@@ -27,6 +27,7 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/google/go-cmp)
 
 Provides:       go(github.com/google/jsonschema-go) = %{version}
+Provides:       go(github.com/google/jsonschema-go/jsonschema) = %{version}
 
 %description
 Jsonschema-go provides JSON Schema types, resolution, validation, and related
