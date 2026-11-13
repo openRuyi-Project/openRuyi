@@ -1,0 +1,5 @@
+#!/bin/bash
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-License-Identifier: MulanPSL-2.0
+
+exec /usr/libexec/ocboot/ocboot.sh "$@"
