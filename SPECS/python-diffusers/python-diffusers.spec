@@ -2,21 +2,25 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: CHEN Xuan <chenxuan@iscas.ac.cn>
 # SPDX-FileContributor: Zitao Zhou <zitao.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname diffusers
 
 Name:           python-%{srcname}
-Version:        0.38.0
+Version:        0.42.1
 Release:        %autorelease
 Summary:        State-of-the-art diffusion models for image, video, and audio generation in PyTorch
 License:        Apache-2.0
 URL:            https://github.com/huggingface/diffusers
-#!RemoteAsset:  sha256:1e094ec5c16f18c42fb89d37f07a94cf9aab3ebbe527ab059c609597b8857626
+#!RemoteAsset:  sha256:ce855ab670c8cd1c7a61be8f12fbc68c081bca8ec5e747273946d8d6c2aff23b
 Source0:        https://files.pythonhosted.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
+
+# Allow compatible requests-mock, GitPython, and Protobuf versions.
+Patch2000:      2000-Allow-current-test-and-training-dependency-versions.patch
 
 BuildOption(install):  -l %{srcname}
 # Core install_requires only; modules below need optional dependencies not present:
@@ -29,6 +33,8 @@ BuildOption(check):  -e '*flax*'
 BuildOption(check):  -e 'diffusers.*pipelines*'
 BuildOption(check):  -e 'diffusers.loaders.textual_inversion'
 BuildOption(check):  -e 'diffusers.quantizers.gguf.utils'
+# The optional Nunchaku loader imports Hugging Face kernels at module import time.
+BuildOption(check):  -e 'diffusers.quantizers.nunchaku.utils'
 BuildOption(check):  -e 'diffusers.schedulers.scheduling_dpmsolver_sde'
 BuildOption(check):  -e 'diffusers.schedulers.scheduling_cosine_dpmsolver_multistep'
 
@@ -56,7 +62,6 @@ Diffusers offers three core components:
 - Pretrained models that can be used as building blocks, and combined with
   schedulers, for creating your own end-to-end diffusion systems.
 
-# training and test suit are not satisfied on openRuyi
 %pyproject_extras_subpkg -n python-%{srcname} torch training test
 
 %generate_buildrequires

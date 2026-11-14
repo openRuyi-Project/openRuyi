@@ -1,0 +1,9 @@
+overlay = "takopack-overlay"
+
+[packages.lib]
+extra_lines = [
+    "",
+    "%patchlist",
+    "# Record the ISC, MIT, and OpenSSL source licenses in Cargo metadata.",
+    "2000-Declare-the-source-license-expression-in-Cargo-metadata.patch",
+]

@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+overlay = "takopack-overlay"
+
+[packages.lib]
+extra_lines = [
+    "Requires:       pkgconfig(protobuf)",
+    "",
+    "%prep -a",
+    "# Use the system compiler instead of the bundled executables for other hosts.",
+    "rm -f third-party/protobuf/protoc-*",
+    "",
+    "%patchlist",
+    "# Select the installed Protobuf compiler and headers.",
+    "2000-Use-the-system-Protobuf-compiler-and-include-directory.patch",
+]

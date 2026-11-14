@@ -1,0 +1,139 @@
+From 7040c69da88e079d8b061b62b830d584ae279a1f Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 11 Nov 2026 01:22:17 +0800
+Subject: [PATCH] Use the stable Clap 3 command-line API
+
+Use the Parser derive and trait, enable derive explicitly, and express empty-value acceptance with forbid_empty_values(false) in Clap 3.2.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ tensorboard/data/server/Cargo.toml    |  2 +-
+ tensorboard/data/server/bench.rs      |  4 ++--
+ tensorboard/data/server/cli.rs        |  8 ++++----
+ tensorboard/data/server/gcs/gsutil.rs | 12 ++++++------
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/tensorboard/data/server/Cargo.toml b/tensorboard/data/server/Cargo.toml
+index 01d48bd..ac964dd 100644
+--- a/tensorboard/data/server/Cargo.toml
++++ b/tensorboard/data/server/Cargo.toml
+@@ -29,7 +29,7 @@ async-trait = "0.1.41"
+ base64 = "0.13.0"
+ byteorder = "1.3.4"
+ bytes = "1.0.1"
+-clap = "3.0.0-beta.2"
++clap = { version = "3.2.25", features = ["derive"] }
+ crc = "1.8.1"
+ crossbeam = "0.8.0"
+ env_logger = "0.8.2"
+diff --git a/tensorboard/data/server/bench.rs b/tensorboard/data/server/bench.rs
+index f9d8aaf..1e4a3aa 100644
+--- a/tensorboard/data/server/bench.rs
++++ b/tensorboard/data/server/bench.rs
+@@ -15,7 +15,7 @@ limitations under the License.
+ 
+ //! Simple benchmark to completely load a logdir and then exit.
+ 
+-use clap::Clap;
++use clap::Parser;
+ use log::info;
+ use std::path::PathBuf;
+ use std::sync::Arc;
+@@ -25,7 +25,7 @@ use rustboard_core::commit::Commit;
+ use rustboard_core::logdir::LogdirLoader;
+ use rustboard_core::{cli::dynamic_logdir::DynLogdir, types::PluginSamplingHint};
+ 
+-#[derive(Clap)]
++#[derive(Parser)]
+ struct Opts {
+     #[clap(long)]
+     logdir: PathBuf,
+diff --git a/tensorboard/data/server/cli.rs b/tensorboard/data/server/cli.rs
+index 41e44c9..7a43be1 100644
+--- a/tensorboard/data/server/cli.rs
++++ b/tensorboard/data/server/cli.rs
+@@ -15,7 +15,7 @@ limitations under the License.
+ 
+ //! Command-line interface for the main entry point.
+ 
+-use clap::Clap;
++use clap::Parser;
+ use log::{debug, error, info, LevelFilter};
+ use std::fs::File;
+ use std::io::{Read, Write};
+@@ -39,7 +39,7 @@ use data::tensor_board_data_provider_server::TensorBoardDataProviderServer;
+ pub mod dynamic_logdir;
+ use dynamic_logdir::DynLogdir;
+ 
+-#[derive(Clap, Debug)]
++#[derive(Parser, Debug)]
+ #[clap(name = "rustboard", version = crate::VERSION)]
+ struct Opts {
+     /// Log directory to load
+@@ -48,7 +48,7 @@ struct Opts {
+     /// directory, its descendants, and its event files will be periodically polled for new data.
+     ///
+     /// If this log directory is invalid or unsupported, exits with status 8.
+-    #[clap(long, setting(clap::ArgSettings::AllowEmptyValues))]
++    #[clap(long, forbid_empty_values = false)]
+     logdir: PathBuf,
+ 
+     /// Bind to this host name
+@@ -134,7 +134,7 @@ struct Opts {
+     /// jobs. Each `num_samples` may be the special token `all` to retain all data without
+     /// downsampling. For instance, `--samples_per_plugin=scalars=500,images=all,audio=0` keeps 500
+     /// events in each scalar series, all of the images, and none of the audio.
+-    #[clap(long, default_value = "", setting(clap::ArgSettings::AllowEmptyValues))]
++    #[clap(long, default_value = "", forbid_empty_values = false)]
+     samples_per_plugin: PluginSamplingHint,
+ }
+ 
+diff --git a/tensorboard/data/server/gcs/gsutil.rs b/tensorboard/data/server/gcs/gsutil.rs
+index 09d609b..e10f56b 100644
+--- a/tensorboard/data/server/gcs/gsutil.rs
++++ b/tensorboard/data/server/gcs/gsutil.rs
+@@ -15,12 +15,12 @@ limitations under the License.
+ 
+ //! CLI for testing GCS integration.
+ 
+-use clap::Clap;
++use clap::Parser;
+ use std::io::Write;
+ 
+ use rustboard_core::gcs;
+ 
+-#[derive(Clap, Debug)]
++#[derive(Parser, Debug)]
+ #[clap(name = "gsutil")]
+ struct Opts {
+     #[clap(long, default_value = "info")]
+@@ -29,7 +29,7 @@ struct Opts {
+     subcmd: Subcommand,
+ }
+ 
+-#[derive(Clap, Debug)]
++#[derive(Parser, Debug)]
+ enum Subcommand {
+     /// List objects in a bucket.
+     Ls(LsOpts),
+@@ -37,14 +37,14 @@ enum Subcommand {
+     Cat(CatOpts),
+ }
+ 
+-#[derive(Clap, Debug)]
++#[derive(Parser, Debug)]
+ struct LsOpts {
+     bucket: String,
+-    #[clap(long, default_value = "", setting(clap::ArgSettings::AllowEmptyValues))]
++    #[clap(long, default_value = "", forbid_empty_values = false)]
+     prefix: String,
+ }
+ 
+-#[derive(Clap, Debug)]
++#[derive(Parser, Debug)]
+ struct CatOpts {
+     bucket: String,
+     object: String,
+-- 
+2.54.0
+
