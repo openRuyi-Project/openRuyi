@@ -1,4 +1,4 @@
-From 5d76b8936e3d770dcb24f039ee2ca8943b119c92 Mon Sep 17 00:00:00 2001
+From 0215d0538a6b088a5a40be7c28d9e974b650b589 Mon Sep 17 00:00:00 2001
 From: misaka00251 <liuxin@iscas.ac.cn>
 Date: Thu, 26 Feb 2026 22:14:32 +0800
 Subject: [PATCH] Optional install for manpage
@@ -8,7 +8,7 @@ Subject: [PATCH] Optional install for manpage
  1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 80c0418..ddc1607 100644
+index add2eb1..5ae25ac 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -30,9 +30,14 @@ install:
@@ -28,7 +28,7 @@ index 80c0418..ddc1607 100644
 +	fi
  	# completion
  	install -d -m 755 ${buildroot}usr/share/bash-completion/completions
- 	$(python) helper/completion_generator.py \
+ 	install -m 644 completions/bash-completion \
 -- 
-2.53.0
+2.54.0
 
