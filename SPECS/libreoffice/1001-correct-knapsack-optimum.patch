@@ -1,0 +1,64 @@
+From ef169b9a39572fa3acc2d34502b9999e7f2c564f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Toma=C5=BE=20Vajngerl?= <tomaz.vajngerl@collabora.co.uk>
+Date: Thu, 4 Jun 2026 22:35:50 +0900
+Subject: [PATCH] Remove the lp_solve solver, which CoinMP makes redundant
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The Lpsolve solver and the CoinMP solver are both used for the same
+thing: a linear model, with optional integer variables by branch
+and bound. CoinMP (CLP plus CBC) is the more capable and better
+maintained of the two, so the lp_solve one adds a second bundled
+dependency and a parallel copy of the solver code for no capability
+the other lacks.
+
+Remove the LpsolveSolver component, the bundled lp_solve external
+(and its colamd dependency, which only lp_solve used), and all the
+build, configure, packaging and license references to them.
+
+A document may still name com.sun.star.comp.Calc.LpsolveSolver as
+its engine. SolverSettings now reads that name as the CoinMP
+solver, which solves the same model, so such documents keep
+working.
+
+The Calc solver test that exercised the engine now uses CoinMP. Its
+knapsack model has a single optimal total value of 6987, which fills
+the weight capacity of 1000 exactly and which CoinMP finds. The
+lp_solve run had returned a suboptimal 6981, so the test now expects
+the true optimum.
+
+The build setup changes only take effect after re-running autogen.
+
+Signed-off-by: Tomaž Vajngerl <tomaz.vajngerl@collabora.co.uk>
+Change-Id: Ia14d8c491779873da6b0157aa524056275adf8f5
+Reviewed-on: https://gerrit.collaboraoffice.com/c/online/+/3810
+Reviewed-by: Miklos Vajna <vmiklos@collabora.com>
+Tested-by: Jenkins CPCI <releng@collaboraoffice.com>
+(cherry picked from commit e77738a7ca7d44fd9d1f852e26d46e3a6d60467b)
+Reviewed-on: https://gerrit.libreoffice.org/c/core/+/208038
+Tested-by: Jenkins
+Reviewed-by: Xisco Fauli <xiscofauli@libreoffice.org>
+---
+ sc/qa/extras/scsolverobj.cxx | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/sc/qa/extras/scsolverobj.cxx b/sc/qa/extras/scsolverobj.cxx
+index b7735a7..e404dae 100644
+--- a/sc/qa/extras/scsolverobj.cxx
++++ b/sc/qa/extras/scsolverobj.cxx
+@@ -116,8 +116,9 @@ void ScSolverSettingsObj::testXSolverSettings()
+     xSolverModel->setSuppressDialog(true);
+     xSolverModel->solve();
+ 
+-    // The correct solution value is 6981 (using LpsolveSolver)
+-    CPPUNIT_ASSERT_EQUAL(static_cast<double>(6981), xSheet->getCellByPosition(6, 6)->getValue());
++    // The optimal total value for this knapsack is 6987, which fills the weight
++    // capacity of 1000 exactly.
++    CPPUNIT_ASSERT_EQUAL(static_cast<double>(6987), xSheet->getCellByPosition(6, 6)->getValue());
+ 
+     // Check objective function and variable cells
+     testCellAddress(aObjCell, xSolverModel->getObjectiveCell());
+-- 
+2.54.0
+

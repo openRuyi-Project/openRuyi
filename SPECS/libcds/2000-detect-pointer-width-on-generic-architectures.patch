@@ -1,0 +1,21 @@
+Description: libcds FTBFS on some 64-bit archs, because they hard-code CDS_BUILD_BITS to be 32 for unknown archs
+Author: Yangfl <mmyangfl@gmail.com>
+
+
+diff --git a/cds/compiler/gcc/compiler_macro.h b/cds/compiler/gcc/compiler_macro.h
+index f954d6c..841eca6 100644
+--- a/cds/compiler/gcc/compiler_macro.h
++++ b/cds/compiler/gcc/compiler_macro.h
+@@ -127,7 +127,11 @@
+ #       error "Libcds does not support atomic implementation for the processor architecture. Try to use C++11-compatible compiler and remove CDS_USE_LIBCDS_ATOMIC flag from compiler command line"
+ #   else
+ #       define CDS_PROCESSOR_ARCH    CDS_PROCESSOR_UNKNOWN
+-#       define CDS_BUILD_BITS        32
++#       if __SIZEOF_POINTER__ == 8
++#           define CDS_BUILD_BITS        64
++#       else
++#           define CDS_BUILD_BITS        32
++#       endif
+ #       define CDS_PROCESSOR__NAME   "unknown"
+ #       define CDS_PROCESSOR__NICK   "unknown"
+ #   endif

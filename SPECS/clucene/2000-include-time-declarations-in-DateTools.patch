@@ -1,0 +1,30 @@
+From 741ba1d47c14d102c52b77a49e3ad00c8b8823e9 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] DateTools: include the C time functions used by date
+ conversion
+
+Date conversion calls gmtime and strftime without including their
+declarations.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/core/CLucene/document/DateTools.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/core/CLucene/document/DateTools.cpp b/src/core/CLucene/document/DateTools.cpp
+index f99ab25..4823c86 100644
+--- a/src/core/CLucene/document/DateTools.cpp
++++ b/src/core/CLucene/document/DateTools.cpp
+@@ -9,6 +9,8 @@
+ #include "DateTools.h"
+ #include "CLucene/util/Misc.h"
+ 
++#include <time.h>
++
+ CL_NS_USE(util)
+ CL_NS_DEF(document)
+ 
+-- 
+2.54.0
+

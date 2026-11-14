@@ -1,0 +1,42 @@
+From 05819f1134fcf9db8667e716d3260f66774d5875 Mon Sep 17 00:00:00 2001
+From: AlexPeshkoff <alexander.peshkoff@gmail.com>
+Date: Mon, 19 Jun 2023 18:46:58 +0300
+Subject: [PATCH] Fix for #7603: BIN_SHR on INT128 does not apply sign
+ extension
+
+---
+ ttmath/ttmathint.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/ttmath/ttmathint.h b/ttmath/ttmathint.h
+index 8ad0189..f9971bd 100644
+--- a/ttmath/ttmathint.h
++++ b/ttmath/ttmathint.h
+@@ -1797,6 +1797,24 @@ public:
+ 	}
+ 
+ 
++	Int<value_size> operator>>(int move) const
++	{
++	Int<value_size> temp( *this );
++
++		temp.Rcr(move, UInt<value_size>::IsTheHighestBitSet() ? 1 : 0);
++
++	return temp;
++	}
++
++
++	UInt<value_size> & operator>>=(int move)
++	{
++		UInt<value_size>::Rcr(move, UInt<value_size>::IsTheHighestBitSet() ? 1 : 0);
++
++	return *this;
++	}
++
++
+ 
+ 	/*!
+ 	*
+-- 
+2.54.0
+

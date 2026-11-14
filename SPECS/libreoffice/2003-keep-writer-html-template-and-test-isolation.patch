@@ -1,0 +1,58 @@
+From 09c234ca4cb00524c9bc383325ea59e41d24709a Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Mon, 9 Nov 2026 03:56:21 +0800
+Subject: [PATCH] Keep the HTML outline fixture on the Writer filter
+
+The outline test introduced by upstream commit
+303f8e5160ddb39914ba7f669698d5dbe958878a checks Writer heading levels.
+Select that filter explicitly and retain its original assertion and input.
+Do not apply a cached Writer/Web template to a Writer import unless the
+selected filter supplies a template.
+
+Upstream reference: https://github.com/LibreOffice/core/commit/303f8e5160ddb39914ba7f669698d5dbe958878a
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ sw/qa/extras/htmlimport/htmlimport.cxx |  3 ++-
+ sw/source/filter/basflt/shellio.cxx    | 11 +++++++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/sw/qa/extras/htmlimport/htmlimport.cxx b/sw/qa/extras/htmlimport/htmlimport.cxx
+index 9fa79e7..a776260 100644
+--- a/sw/qa/extras/htmlimport/htmlimport.cxx
++++ b/sw/qa/extras/htmlimport/htmlimport.cxx
+@@ -307,7 +307,8 @@ CPPUNIT_TEST_FIXTURE(HtmlImportTest, testTableBorder1px)
+ 
+ CPPUNIT_TEST_FIXTURE(HtmlImportTest, testOutlineLevel)
+ {
+-    createSwWebDoc("outline-level.html");
++    setImportFilterName(TestFilter::HTML_WRITER);
++    createSwDoc("outline-level.html");
+     // This was 0, HTML imported into Writer lost the outline numbering for
+     // Heading 1 styles.
+     CPPUNIT_ASSERT_EQUAL(static_cast<sal_Int32>(1),
+diff --git a/sw/source/filter/basflt/shellio.cxx b/sw/source/filter/basflt/shellio.cxx
+index 13c5aab..cdbf16b 100644
+--- a/sw/source/filter/basflt/shellio.cxx
++++ b/sw/source/filter/basflt/shellio.cxx
+@@ -133,10 +133,13 @@ ErrCodeMsg SwReader::Read( const Reader& rOptions )
+     {
+         // if the Reader was not called by a Shell, create a PaM ourselves
+         pPam = new SwPaM( mxDoc->GetNodes().GetEndOfContent(), SwNodeOffset(-1) );
+-        // For Web documents the default template was set already by InitNew,
+-        // unless the filter is not HTML,
+-        // or a SetTemplateName was called in ConvertFrom.
+-        if( !mxDoc->getIDocumentSettingAccess().get(DocumentSettingId::HTML_MODE) || ReadHTML != po || !po->mxTemplate.is()  )
++        // Writer/Web normally applies its HTML template in InitNew. A Writer
++        // import only needs a template if the selected filter supplied one.
++        const bool bHasFilterTemplate = mpMedium && mpMedium->GetFilter()
++                                        && !mpMedium->GetFilter()->GetDefaultTemplate().isEmpty();
++        if (po != ReadHTML || bHasFilterTemplate
++            || (mxDoc->getIDocumentSettingAccess().get(DocumentSettingId::HTML_MODE)
++                && !po->mxTemplate.is()))
+             po->SetTemplate( *mxDoc );
+     }
+ 
+-- 
+2.54.0
+
