@@ -32,6 +32,7 @@ Prefer: python3 python3-packaging python3-pip python3-wheel
 Prefer: python-torch
 Prefer: python-torchvision
 Prefer: rust
+Prefer: openssl
 
 Prefer: libgcc-s
 Prefer: libstdc++
