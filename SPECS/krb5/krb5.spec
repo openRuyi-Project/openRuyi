@@ -8,13 +8,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           krb5
-Version:        1.22.2
+Version:        1.22.3
 Release:        %autorelease
 Summary:        The Kerberos 5 network authentication system
 License:        MIT
 URL:            https://web.mit.edu/kerberos/
 VCS:            git:https://github.com/krb5/krb5
-#!RemoteAsset:  sha256:3243ffbc8ea4d4ac22ddc7dd2a1dc54c57874c40648b60ff97009763554eaf13
+#!RemoteAsset:  sha256:fe90af8441ad9fa9b064b8e53077cefb782a96f8a68276b031dc54af1789ff0b
 Source:         https://kerberos.org/dist/krb5/1.22/%{name}-%{version}.tar.gz
 Source1:        kadmind.service
 Source2:        kpropd.service
@@ -22,8 +22,6 @@ Source3:        krb5.conf
 Source4:        krb5kdc.service
 BuildSystem:    autotools
 
-# Fix C23 strchr const handling: https://github.com/krb5/krb5/commit/ad4dcf1856dadc4b352b5c8ff08e51c7290fb41f
-Patch0:         1000-fix-strchr-conformance-to-c23.patch
 # Initialize PKINIT test data: https://github.com/krb5/krb5/commit/34d661676b1db04d870be3d7ad26616aa69d1f3d
 Patch1:         1001-initialize-pkinit-test-data.patch
 
