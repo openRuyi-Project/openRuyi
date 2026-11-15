@@ -7,12 +7,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           opensbi
-Version:        1.8
+Version:        1.9
 Release:        %autorelease
 Summary:        RISC-V Open Source Supervisor Binary Interface
 License:        BSD-2-Clause
 URL:            https://github.com/riscv-software-src/opensbi
-#!RemoteAsset:  sha256:8293bca3c7507ecf15dd5dfb59fe0f700075974a1f60379f1b6626104c3f0afe
+#!RemoteAsset:  sha256:f6c4985843d6d878b5b511d7d7a930b6b541d3d9305371f2d9780765428f66f4
 Source0:        https://github.com/riscv-software-src/opensbi/archive/refs/tags/v%{version}.tar.gz
 ExclusiveArch:  riscv64
 
@@ -76,6 +76,7 @@ rm %{buildroot}%{_datadir}/opensbi/lp64/generic/firmware/payloads/test.elf
 %{_includedir}/sbi/sbi_emulate_csr.h
 %{_includedir}/sbi/sbi_error.h
 %{_includedir}/sbi/sbi_fifo.h
+%{_includedir}/sbi/sbi_fp.h
 %{_includedir}/sbi/sbi_fwft.h
 %{_includedir}/sbi/sbi_hart.h
 %{_includedir}/sbi/sbi_hart_pmp.h
@@ -93,6 +94,7 @@ rm %{buildroot}%{_datadir}/opensbi/lp64/generic/firmware/payloads/test.elf
 %{_includedir}/sbi/sbi_math.h
 %{_includedir}/sbi/sbi_mpxy.h
 %{_includedir}/sbi/sbi_platform.h
+%{_includedir}/sbi/sbi_pmp.h
 %{_includedir}/sbi/sbi_pmu.h
 %{_includedir}/sbi/sbi_scratch.h
 %{_includedir}/sbi/sbi_slist.h
@@ -104,10 +106,12 @@ rm %{buildroot}%{_datadir}/opensbi/lp64/generic/firmware/payloads/test.elf
 %{_includedir}/sbi/sbi_trap.h
 %{_includedir}/sbi/sbi_trap_ldst.h
 %{_includedir}/sbi/sbi_types.h
+%{_includedir}/sbi/sbi_ubsan.h
 %{_includedir}/sbi/sbi_unit_test.h
 %{_includedir}/sbi/sbi_unpriv.h
+%{_includedir}/sbi/sbi_vector.h
 %{_includedir}/sbi/sbi_version.h
 %{_includedir}/sbi/sbi_visibility.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
