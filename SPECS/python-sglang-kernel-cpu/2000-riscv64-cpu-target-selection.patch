@@ -1,0 +1,227 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
+# SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+# Sponsored by cha86.dev <https://cha86.dev>
+
+From: A. Donz <Avrova@Donz.si>
+Subject: [PATCH] cpu: select portable sources and explicit target ISA
+
+Upstream-Reference: https://github.com/sgl-project/sglang/tree/v0.5.21/python/sglang/kernels/aot/csrc/cpu/CMakeLists.txt
+Upstream-Status: Downstream (RISC-V target selection and source exclusion)
+
+--- a/python/sglang/kernels/aot/csrc/cpu/CMakeLists.txt
++++ b/python/sglang/kernels/aot/csrc/cpu/CMakeLists.txt
+@@ -1,6 +1,13 @@
+ cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
+ project(sgl_kernel)
+ 
++# Cross builds must select the target CPU explicitly; host-specific ISA flags
++# are invalid when the compiler host and target differ.
++set(SGLANG_CPU_TARGET_ARCH "${CMAKE_SYSTEM_PROCESSOR}" CACHE STRING
++    "CPU architecture used to select platform-specific sources")
++set(SGLANG_CPU_MARCH "" CACHE STRING
++    "Optional target ISA passed as -march=<value>")
++
+ set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+@@ -36,22 +43,25 @@
+ 
+ # Platform-specific source and library directory
+ set(MY_ARCH_DIR "")
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64")
++if(SGLANG_CPU_TARGET_ARCH MATCHES "x86_64|AMD64")
+     set(PLAT_LIB_DIR "/usr/lib/x86_64-linux-gnu")
+     set(MY_ARCH_DIR "x86_64")
+-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
++elseif(SGLANG_CPU_TARGET_ARCH MATCHES "aarch64|arm64")
+     set(PLAT_LIB_DIR "/usr/lib/aarch64-linux-gnu")
+     set(MY_ARCH_DIR "aarch64")
+-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le|ppc64")
++elseif(SGLANG_CPU_TARGET_ARCH MATCHES "ppc64le|ppc64")
+     set(PLAT_LIB_DIR "/usr/lib/powerpc64le-linux-gnu")
+     set(MY_ARCH_DIR "ppc64")
+ else()
+-    set(PLAT_LIB_DIR "/usr/lib/${CMAKE_SYSTEM_PROCESSOR}-linux-gnu")
++    set(PLAT_LIB_DIR "/usr/lib/${SGLANG_CPU_TARGET_ARCH}-linux-gnu")
+ endif()
+ link_directories(${PLAT_LIB_DIR})
+ if(MY_ARCH_DIR)
+     file(GLOB_RECURSE ARCH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${MY_ARCH_DIR}/*.cpp")
+     list(APPEND SOURCES ${ARCH_SOURCES})
++elseif(SGLANG_CPU_TARGET_ARCH MATCHES "riscv64")
++    file(GLOB_RECURSE ARCH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/riscv64/*.cpp")
++    list(APPEND SOURCES ${ARCH_SOURCES})
+ endif()
+ 
+ # Conda library path support
+@@ -102,8 +109,8 @@ set(SGLANG_CPU_X86_ONLY_SOURCES
+     ${CMAKE_CURRENT_SOURCE_DIR}/mamba/conv.cpp
+ )
+ 
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+-    add_compile_definitions(SGLANG_CPU_ARM64_SKIP_X86_ONLY_OPS)
++if(NOT SGLANG_CPU_TARGET_ARCH MATCHES "x86_64|AMD64")
++    add_compile_definitions(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+     list(REMOVE_ITEM SOURCES ${SGLANG_CPU_X86_ONLY_SOURCES})
+ endif()
+ 
+@@ -132,9 +139,11 @@ else()
+     add_compile_options(
+         -O3
+         -Wno-unknown-pragmas
+-        -march=native
+         -fopenmp
+     )
++    if(SGLANG_CPU_MARCH)
++        add_compile_options("-march=${SGLANG_CPU_MARCH}")
++    endif()
+ endif()
+ 
+ Python_add_library(common_ops MODULE USE_SABI ${SKBUILD_SABI_VERSION} WITH_SOABI ${SOURCES})
+--- a/python/sglang/kernels/aot/csrc/cpu/torch_extension_cpu.cpp
++++ b/python/sglang/kernels/aot/csrc/cpu/torch_extension_cpu.cpp
+@@ -327,6 +327,7 @@ at::Tensor convert_scale_packed(at::Tensor& scale);
+ // quant
+ std::tuple<at::Tensor, at::Tensor> per_token_quant_int8_cpu(at::Tensor& A);
+ 
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+ // igemm
+ at::Tensor int8_scaled_mm_cpu(
+     at::Tensor& mat1,
+@@ -336,6 +337,7 @@ at::Tensor int8_scaled_mm_cpu(
+     const std::optional<at::Tensor>& bias,
+     at::ScalarType out_dtype,
+     bool is_vnni);
++#endif
+ 
+ // fp8 gemm
+ at::Tensor fp8_scaled_mm_cpu(
+@@ -359,6 +361,7 @@ at::Tensor fp8_per_tensor_scaled_mm_cpu(
+ at::Tensor mxfp4_scaled_mm_cpu(
+     at::Tensor& mat1, at::Tensor& mat2, at::Tensor& scales2, const std::optional<at::Tensor>& bias, bool is_vnni);
+ 
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+ // quant + igemm
+ at::Tensor int8_scaled_mm_with_quant(
+     at::Tensor& mat1,
+@@ -367,8 +370,9 @@ at::Tensor int8_scaled_mm_with_quant(
+     const std::optional<at::Tensor>& bias,
+     at::ScalarType out_dtype,
+     bool is_vnni);
++#endif
+ 
+-#if !defined(SGLANG_CPU_ARM64_SKIP_X86_ONLY_OPS)
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+ // int4 gemm
+ at::Tensor int4_scaled_mm_cpu(
+     at::Tensor& x, at::Tensor& w, at::Tensor& w_zeros, at::Tensor& w_scales, std::optional<at::Tensor> bias);
+@@ -396,6 +400,7 @@ at::Tensor fused_linear_sigmoid_mul(
+ // bmm
+ void bmm_cpu(at::Tensor& out, at::Tensor& mat1, at::Tensor& mat2, bool is_vnni, const std::optional<at::Tensor>& scale);
+ 
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+ // fused moe
+ at::Tensor fused_experts_cpu(
+     at::Tensor& hidden_states,
+@@ -416,8 +421,6 @@ at::Tensor fused_experts_cpu(
+     const std::optional<double>& limit,
+     bool is_vnni,
+     const std::optional<std::string>& activation);
+-
+-#if !defined(SGLANG_CPU_ARM64_SKIP_X86_ONLY_OPS)
+ at::Tensor shared_expert_cpu(
+     at::Tensor& hidden_states,
+     at::Tensor& w1,
+@@ -838,10 +841,12 @@ TORCH_LIBRARY_FRAGMENT(sgl_kernel, m) {
+   m.impl("per_token_quant_int8_cpu", torch::kCPU, &per_token_quant_int8_cpu);
+ 
+   // igemm
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+   m.def(
+       "int8_scaled_mm_cpu(Tensor mat1, Tensor mat2, Tensor scales1, Tensor scales2, Tensor? bias, ScalarType "
+       "out_dtype, bool is_vnni) -> Tensor");
+   m.impl("int8_scaled_mm_cpu", torch::kCPU, &int8_scaled_mm_cpu);
++#endif
+ 
+   // fp8 gemm
+   m.def(
+@@ -857,13 +862,15 @@ TORCH_LIBRARY_FRAGMENT(sgl_kernel, m) {
+   m.def("mxfp4_scaled_mm_cpu(Tensor mat1, Tensor mat2, Tensor scales2, Tensor? bias, bool is_vnni) -> Tensor");
+   m.impl("mxfp4_scaled_mm_cpu", torch::kCPU, &mxfp4_scaled_mm_cpu);
+ 
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+   // quant + igemm
+   m.def(
+       "int8_scaled_mm_with_quant(Tensor mat1, Tensor mat2, Tensor scales2, Tensor? bias, ScalarType out_dtype, bool "
+       "is_vnni) -> Tensor");
+   m.impl("int8_scaled_mm_with_quant", torch::kCPU, &int8_scaled_mm_with_quant);
++#endif
+ 
+-#if !defined(SGLANG_CPU_ARM64_SKIP_X86_ONLY_OPS)
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+   // int4 gemm
+   m.def("int4_scaled_mm_cpu(Tensor x, Tensor w, Tensor w_zeros, Tensor w_scales, Tensor? bias) -> Tensor");
+   m.impl("int4_scaled_mm_cpu", torch::kCPU, &int4_scaled_mm_cpu);
+@@ -889,6 +896,7 @@ TORCH_LIBRARY_FRAGMENT(sgl_kernel, m) {
+   m.impl("bmm_cpu", torch::kCPU, &bmm_cpu);
+ 
+   // moe
++#if !defined(SGLANG_CPU_SKIP_X86_ONLY_OPS)
+   m.def(
+       "fused_experts_cpu(Tensor hidden_states, Tensor w1, Tensor w2, Tensor topk_weights, Tensor topk_ids, bool "
+       "inplace, int moe_comp_method, Tensor? w1_scale, Tensor? w2_scale, "
+@@ -896,7 +904,6 @@ TORCH_LIBRARY_FRAGMENT(sgl_kernel, m) {
+       "limit, bool is_vnni, str? activation=None) -> Tensor");
+   m.impl("fused_experts_cpu", torch::kCPU, &fused_experts_cpu);
+ 
+-#if !defined(SGLANG_CPU_ARM64_SKIP_X86_ONLY_OPS)
+   // weight absorption
+   m.def(
+       "qkv_proj_with_rope(Tensor hidden_states, Tensor q_a_proj_weight, Tensor q_b_proj_weight, Tensor "
+--- /dev/null
++++ b/python/sglang/kernels/aot/csrc/cpu/riscv64/gemm_int8.cpp
+@@ -0,0 +1,39 @@
++// SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
++// SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
++// SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
++// SPDX-License-Identifier: Apache-2.0
++
++#include "../common.h"
++#include "../vec.h"
++
++#include <ATen/ATen.h>
++#include <ATen/Parallel.h>
++
++#include <tuple>
++
++std::tuple<at::Tensor, at::Tensor> per_token_quant_int8_cpu(at::Tensor& A) {
++  CHECK_LAST_DIM_CONTIGUOUS_INPUT(A);
++  CHECK_DIM(2, A);
++
++  const int64_t M = A.size(0);
++  const int64_t K = A.size(1);
++  const int64_t lda = A.stride(0);
++  const auto st = A.scalar_type();
++  TORCH_CHECK(st == at::kBFloat16 || st == at::kHalf,
++              "per_token_quant_int8: expect A to be bfloat16 or half.");
++
++  auto Aq = at::empty({M, K}, A.options().dtype(at::kByte));
++  auto As = at::empty({M}, A.options().dtype(at::kFloat));
++
++  AT_DISPATCH_REDUCED_FLOATING_TYPES(st, "per_token_quant_int8", [&] {
++    auto* Aq_data = Aq.data_ptr<uint8_t>();
++    auto* As_data = As.data_ptr<float>();
++    const auto* A_data = A.data_ptr<scalar_t>();
++    at::parallel_for(0, M, 0, [&](int64_t begin, int64_t end) {
++      for (int64_t m = begin; m < end; ++m) {
++        quantize_row_int8<scalar_t>(Aq_data + m * K, As_data[m], A_data + m * lda, K);
++      }
++    });
++  });
++  return std::make_tuple(Aq, As);
++}

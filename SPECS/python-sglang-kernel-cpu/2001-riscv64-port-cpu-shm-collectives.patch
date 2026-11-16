@@ -1,0 +1,150 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
+# SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+# Sponsored by cha86.dev <https://cha86.dev>
+
+From: A. Donz <Avrova@Donz.si>
+Subject: [PATCH] cpu: add portable RISC-V shared-memory collectives
+
+Upstream-Reference: https://github.com/sgl-project/sglang/tree/v0.5.21/python/sglang/kernels/aot/csrc/cpu
+Upstream-Status: Downstream (no upstream RISC-V port or fix found)
+
+diff --git a/python/sglang/kernels/aot/csrc/cpu/riscv64/shm.h b/python/sglang/kernels/aot/csrc/cpu/riscv64/shm.h
+new file mode 100644
+index 0000000..804c347
+--- /dev/null
++++ b/python/sglang/kernels/aot/csrc/cpu/riscv64/shm.h
+@@ -0,0 +1,43 @@
++// SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
++// SPDX-License-Identifier: Apache-2.0
++// SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
++// SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
++
++#pragma once
++
++#include <ATen/ATen.h>
++
++#include <cstddef>
++#include <cstring>
++
++template <typename scalar_t>
++inline void reduce_buffers(
++    int start_elements, int num_elements, char* to_buffer, char** buffers, int world_size) {
++  auto* output = reinterpret_cast<scalar_t*>(to_buffer);
++  for (int i = start_elements; i < start_elements + num_elements; ++i) {
++    float value = 0.0f;
++    for (int rank = 0; rank < world_size; ++rank) {
++      value += static_cast<float>(reinterpret_cast<scalar_t*>(buffers[rank])[i]);
++    }
++    output[i] = static_cast<scalar_t>(value);
++  }
++}
++
++inline void reduce_bf16_buffers(
++    int start_elements, int num_elements, char* to_buffer, char** buffers, int world_size) {
++  reduce_buffers<at::BFloat16>(start_elements, num_elements, to_buffer, buffers, world_size);
++}
++
++inline void reduce_fp16_buffers(
++    int start_elements, int num_elements, char* to_buffer, char** buffers, int world_size) {
++  reduce_buffers<at::Half>(start_elements, num_elements, to_buffer, buffers, world_size);
++}
++
++inline void reduce_fp32_buffers(
++    int start_elements, int num_elements, char* to_buffer, char** buffers, int world_size) {
++  reduce_buffers<float>(start_elements, num_elements, to_buffer, buffers, world_size);
++}
++
++inline void parallel_memcpy(void* to, const void* from, size_t n_bytes) {
++  std::memcpy(to, from, n_bytes);
++}
+diff --git a/python/sglang/kernels/aot/csrc/cpu/shm.cpp b/python/sglang/kernels/aot/csrc/cpu/shm.cpp
+index 83b0b6b..6f15899 100644
+--- a/python/sglang/kernels/aot/csrc/cpu/shm.cpp
++++ b/python/sglang/kernels/aot/csrc/cpu/shm.cpp
+@@ -3,11 +3,15 @@
+ #include "x86_64/shm.h"
+ #elif defined(__aarch64__)
+ #include "aarch64/shm.h"
++#elif defined(__riscv)
++#include "riscv64/shm.h"
+ #else
+ #error "unsupported architecture"
+ #endif
+ 
+ #include <ATen/ATen.h>
++#include <atomic>
++#include <cassert>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <stddef.h>
+@@ -121,14 +125,18 @@ char** allgather_into_tensor_buffer[2];
+ char** reduce_scatter_buffer[2];
+ 
+ void wait_buffer_state_until_2(int index, enum coll_state state0, enum coll_state state1, int state_group) {
+-  volatile enum coll_state* state_ptr = &(workspace[index]->states[state_group]);
++  enum coll_state* state_ptr = &(workspace[index]->states[state_group]);
+ 
+   while (1) {
+-    volatile enum coll_state cur_state = *state_ptr;
++    enum coll_state cur_state = __atomic_load_n(state_ptr, __ATOMIC_ACQUIRE);
+     if (cur_state == state0 || cur_state == state1) break;
+   }
+ }
+ 
++static inline void publish_buffer_state(enum coll_state* state_ptr, enum coll_state state) {
++  __atomic_store_n(state_ptr, state, __ATOMIC_RELEASE);
++}
++
+ void reduce_all_buffers(
+     int start_elements,
+     int num_elements,
+@@ -275,7 +283,7 @@ void symmetric_naive_all_reduce(char* data_ptr, c10::ScalarType scalar_type, siz
+ 
+   parallel_memcpy(symmetric_buffer[current_buffer][world_rank], data_ptr, chunk_size);
+   std::atomic_thread_fence(std::memory_order_release);
+-  workspace[world_rank]->states[state_group] = copy_current;
++  publish_buffer_state(&workspace[world_rank]->states[state_group], copy_current);
+ 
+   for (int i = 0; i < world_size; i++) {
+     // wait until the other rank copy the buffer
+@@ -324,7 +332,7 @@ void distributed_naive_reduce(char* data_ptr, c10::ScalarType scalar_type, size_
+   int data_size = chunk_size / chunk_el;
+   parallel_memcpy(distributed_buffer[current_buffer][world_rank], data_ptr, chunk_size);
+   std::atomic_thread_fence(std::memory_order_release);
+-  workspace[world_rank]->states[state_group] = copy_current;
++  publish_buffer_state(&workspace[world_rank]->states[state_group], copy_current);
+ 
+   for (int i = 0; i < world_size; i++) {
+     // wait until all the other ranks copy the buffer
+@@ -340,7 +348,7 @@ void distributed_naive_reduce(char* data_ptr, c10::ScalarType scalar_type, size_
+       distributed_buffer[current_buffer][world_rank],
+       distributed_buffer[current_buffer]);
+   std::atomic_thread_fence(std::memory_order_release);
+-  workspace[world_rank]->states[state_group] = reduce_current;
++  publish_buffer_state(&workspace[world_rank]->states[state_group], reduce_current);
+ 
+   for (int i = 0; i < world_size; i++) {
+     // wait until all the other ranks reduce the buffer
+@@ -411,7 +419,7 @@ void naive_all_gather(char* result_ptr, char* data_ptr, size_t res_stride, size_
+ 
+   parallel_memcpy(buffer[current_buffer][world_rank], data_ptr, chunk_size);
+   std::atomic_thread_fence(std::memory_order_release);
+-  workspace[world_rank]->states[STATE_GROUP] = copy_current;
++  publish_buffer_state(&workspace[world_rank]->states[STATE_GROUP], copy_current);
+ 
+   for (int i = 0; i < world_size; i++) {
+     // wait until all the other ranks copy the buffer
+@@ -485,7 +493,7 @@ void naive_reduce_scatter(
+   // Step 1: copy local data to shared buffer
+   parallel_memcpy(reduce_scatter_buffer[current_buffer][world_rank], data_ptr, chunk_size);
+   std::atomic_thread_fence(std::memory_order_release);
+-  workspace[world_rank]->states[state_group] = copy_current;
++  publish_buffer_state(&workspace[world_rank]->states[state_group], copy_current);
+ 
+   // Step 2: wait for all ranks to copy in
+   for (int i = 0; i < world_size; i++) {
