@@ -11,12 +11,12 @@
 %bcond lint 0
 
 Name:           mock
-Version:        6.5
+Version:        6.9
 Release:        %autorelease
 Summary:        Builds packages inside chroots
 License:        GPL-2.0-or-later
 URL:            https://github.com/rpm-software-management/mock
-#!RemoteAsset:  sha256:c3672842b68f0e58f331ec6280be516a830afbbb607edfdd5dee09847fbde687
+#!RemoteAsset:  sha256:55974ff195c44396653a8bf0fb9a5e8ea652b59134040646eba8648c864b26f1
 Source0:        %{url}/releases/download/%{name}-%{version}-1/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
