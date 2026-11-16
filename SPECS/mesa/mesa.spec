@@ -11,23 +11,22 @@
 
 Name:           mesa
 Summary:        The Mesa 3D graphics library
-Version:        26.2.4
+Version:        26.3.0
 Release:        %autorelease
 License:        MIT
 URL:            https://mesa3d.org/
 VCS:            git:https://gitlab.freedesktop.org/mesa/mesa
-#!RemoteAsset:  sha256:bce5f7fbebb934373b86c999a064d52fb5065878dc57f287f95346648ec832e9
+#!RemoteAsset:  sha256:91d729aa68bb89e4ec857841300bbe922bcb3e52b1f97566ca83930d3b28343a
 Source:         https://archive.mesa3d.org/mesa-%{version}.tar.xz
 BuildSystem:    meson
 
 # Patches to allow Zink running on libVK_IMG w/o IMG GLES driver
 # See FD.o gitlab mesa/mesa MRs: !37115
-# The IMG blob related part isn't submitted yet
-Patch1:         mesa-26.2.1-zink-kmsro-for-img-blob.patch
-# Patches to fix CTS failures and advertise BXM-4-64 as conformant
-Patch2:         mesa-26.2.1-pvr-conformance.patch
-# Patches backport from Mesa main for pvr driver
-Patch3:         mesa-26.2.4-pvr-backport.patch
+# The IMG blob related part might be never submitted because of the status of !37115
+Patch1:         mesa-26.3.0-zink-kmsro-for-img-blob.patch
+# Patches to fix CTS failures and advertise K3 BXM-4-64 as conformant
+# See FD.o gitlab mesa/mesa MRs: !41382 !46329
+Patch2:         mesa-26.3.0-pvr-conformance.patch
 
 BuildOption(conf):  -Dgallium-drivers=llvmpipe,softpipe,r300,r600,radeonsi,nouveau,virgl,iris,etnaviv,zink,crocus
 BuildOption(conf):  -Dvulkan-drivers=amd,intel,swrast,imagination,virtio,gfxstream,intel_hasvk,nouveau
@@ -64,7 +63,7 @@ BuildOption(conf):  -Dgallium-rusticl=false
 BuildOption(conf):  -Dgallium-va=enabled
 
 BuildOption(conf):  -Dvulkan-manifest-per-architecture=false
-BuildOption(conf):  -Dvulkan-layers=device-select,overlay,screenshot,anti-lag,vram-report-limit
+BuildOption(conf):  -Dvulkan-layers=device-select,overlay,screenshot,vram-report-limit
 BuildOption(conf):  -Dxlib-lease=enabled
 
 BuildRequires:  meson
@@ -103,6 +102,7 @@ BuildRequires:  pkgconfig(wayland-protocols)
 BuildRequires:  pkgconfig(wayland-client)
 BuildRequires:  pkgconfig(wayland-egl-backend)
 BuildRequires:  pkgconfig(libva)
+BuildRequires:  pkgconfig(venus-protocol)
 BuildRequires:  pkgconfig(vulkan)
 # FIXME: use crate(xxx) when it's allowed by pre-commit hook
 BuildRequires:  rust-syn-2 >= 2.0.87

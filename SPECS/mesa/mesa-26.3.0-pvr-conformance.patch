@@ -1,6 +1,6 @@
-From b1d2cb7ff02c55d25fa2c1028ad45e729a643a51 Mon Sep 17 00:00:00 2001
+From 58f1c9129302b2a07b6da9efc88d3c621977cc1a Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
-Date: Tue, 5 May 2026 17:29:31 +0800
+Date: Mon, 24 Aug 2026 13:42:00 +0800
 Subject: [PATCH 1/2] pvr: allow STORAGE usage for WSI images
 
 WSI images are expected to accept the same usage with OPTIMAL tiling
@@ -17,10 +17,10 @@ Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/src/imagination/vulkan/pvr_formats.c b/src/imagination/vulkan/pvr_formats.c
-index 5d5a6d982d9..4291e6568b0 100644
+index 770e5739010..1ffcb602ee5 100644
 --- a/src/imagination/vulkan/pvr_formats.c
 +++ b/src/imagination/vulkan/pvr_formats.c
-@@ -629,6 +629,16 @@ pvr_get_image_format_properties(struct pvr_physical_device *pdevice,
+@@ -633,6 +633,16 @@ pvr_get_image_format_properties(struct pvr_physical_device *pdevice,
        goto err_unsupported_format;
     }
  
@@ -37,17 +37,17 @@ index 5d5a6d982d9..4291e6568b0 100644
     /* If VK_IMAGE_CREATE_EXTENDED_USAGE_BIT is set, the driver can't decide if a
      * specific format isn't supported based on the usage.
      */
-@@ -810,7 +820,8 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
+@@ -814,7 +824,8 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
  
     /* Extract input structs */
-    vk_foreach_struct_const (ext, pImageFormatInfo->pNext) {
--      switch (ext->sType) {
+    vk_foreach_struct_const (sType, ext, pImageFormatInfo->pNext) {
+-      switch (sType) {
 +      /* Casting to accept Mesa-private types w/o compiler warning */
-+      switch ((unsigned)ext->sType) {
++      switch ((unsigned)sType) {
        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO:
-          external_info = (const void *)ext;
+          external_info = ext;
           break;
-@@ -818,6 +829,7 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
+@@ -822,6 +833,7 @@ VkResult pvr_GetPhysicalDeviceImageFormatProperties2(
           break;
        case VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO:
        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT:
@@ -56,37 +56,35 @@ index 5d5a6d982d9..4291e6568b0 100644
            * pvr_get_image_format_properties)
            */
 -- 
-2.52.0
+2.56.0
 
-From fafad66af159db0c7deae29899d511061bae7b49 Mon Sep 17 00:00:00 2001
+From f57a10592c2c7e3a9b2eb822dc90b48ff33b9c39 Mon Sep 17 00:00:00 2001
 From: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 Date: Wed, 27 May 2026 20:50:44 +0800
-Subject: [PATCH 2/2] pvr: advertise BXM-4-64 as conformant
+Subject: [PATCH 2/2] pvr: advertise BXM-4-64 (36.56.104.183) as conformant
 
-CTS tests have passed on BXM-4-64 (both 36.52.104.182 and 36.56.104.183)
-with the open source driver.
+CTS tests have passed on BXM-4-64 (36.56.104.183) with the open source
+driver.
 
-Advertise them as conformant.
+Advertise it as conformant.
 
 Signed-off-by: Icenowy Zheng <zhengxingda@iscas.ac.cn>
 ---
- src/imagination/vulkan/pvr_physical_device.c | 2 ++
- 1 file changed, 2 insertions(+)
+ src/imagination/vulkan/pvr_physical_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/src/imagination/vulkan/pvr_physical_device.c b/src/imagination/vulkan/pvr_physical_device.c
-index 51af21a832c..93e775a01a1 100644
+index 16cb03b6d6d..70454e3d65a 100644
 --- a/src/imagination/vulkan/pvr_physical_device.c
 +++ b/src/imagination/vulkan/pvr_physical_device.c
-@@ -1056,7 +1056,9 @@ static bool pvr_device_is_conformant(const struct pvr_device_info *info)
- {
-    const uint64_t bvnc = pvr_get_packed_bvnc(info);
+@@ -1137,6 +1137,7 @@ static bool pvr_device_is_conformant(const struct pvr_device_info *info)
     switch (bvnc) {
-+   case PVR_BVNC_PACK(36, 52, 104, 182):
+    case PVR_BVNC_PACK(36, 52, 104, 182):
     case PVR_BVNC_PACK(36, 53, 104, 796):
 +   case PVR_BVNC_PACK(36, 56, 104, 183):
        return true;
  
     default:
 -- 
-2.52.0
+2.56.0
 
