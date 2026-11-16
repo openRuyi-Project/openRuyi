@@ -7,18 +7,17 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libjpeg-turbo
-Version:        3.1.2
+Version:        3.2.1
 Release:        %autorelease
 Summary:        A SIMD-accelerated library for manipulating JPEG image files
-License:        Zlib AND BSD-3-Clause AND MIT AND IJG
+License:        Zlib AND BSD-2-Clause AND BSD-3-Clause AND MIT AND IJG
 URL:            https://github.com/libjpeg-turbo/libjpeg-turbo
-#!RemoteAsset:  sha256:560f6338b547544c4f9721b18d8b87685d433ec78b3c644c70d77adad22c55e6
+#!RemoteAsset:  sha256:6f5819c51649bce2571a23b1b0cd41eae2f57fc3f8908c7ec9e7047efb65ca13
 Source:         https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/%{version}.tar.gz
 Patch:          0001-libjpeg-turbo-cmake.patch
 BuildSystem:    cmake
 
 BuildOption(conf):  -DENABLE_STATIC:BOOL=NO
-BuildOption(conf):  -DFLOATTEST:STRING="fp-contract"
 
 BuildRequires:  gcc
 BuildRequires:  cmake
