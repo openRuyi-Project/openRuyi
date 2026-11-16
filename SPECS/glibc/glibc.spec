@@ -219,7 +219,7 @@ cd build-%{_target_cpu}
 
 ../configure \
     CFLAGS="$BuildFlags" BUILD_CFLAGS="$BuildFlags" \
-    CC="%__cc" CXX="%__cxx" \
+    CC="%__cc_gcc" CXX="%__cxx_gcc" \
     --prefix=%{_prefix} \
     --libexecdir=%{_libexecdir} \
     --infodir=%{_infodir} \
