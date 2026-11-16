@@ -100,18 +100,20 @@
 %_buildshell           /usr/bin/bash
 
 # Optional compiler major version; leave empty to use the unversioned command.
+# The version applies only to the toolchain selected by %toolchain, so the
+# macros of the other toolchain keep naming the unversioned commands.
 %toolchain_major_version %{nil}
-%_toolchain_version_suffix %{lua:local version = rpm.expand("%{?toolchain_major_version}"); if version ~= "" then print("-" .. version) end}
+%_toolchain_version_suffix(name) %{lua:local toolchain = rpm.expand("%{?toolchain}"); local version = rpm.expand("%{?toolchain_major_version}"); if toolchain == rpm.expand("%1") and version ~= "" then print("-" .. version) end}
 
 # GCC toolchain
-%__cc_gcc gcc%{_toolchain_version_suffix}
-%__cxx_gcc g++%{_toolchain_version_suffix}
-%__cpp_gcc gcc%{_toolchain_version_suffix} -E
+%__cc_gcc gcc%{_toolchain_version_suffix gcc}
+%__cxx_gcc g++%{_toolchain_version_suffix gcc}
+%__cpp_gcc gcc%{_toolchain_version_suffix gcc} -E
 
 # Clang toolchain
-%__cc_clang clang%{_toolchain_version_suffix}
-%__cxx_clang clang++%{_toolchain_version_suffix}
-%__cpp_clang clang-cpp%{_toolchain_version_suffix}
+%__cc_clang clang%{_toolchain_version_suffix clang}
+%__cxx_clang clang++%{_toolchain_version_suffix clang}
+%__cpp_clang clang-cpp%{_toolchain_version_suffix clang}
 
 # Default to the GCC toolchain
 %toolchain gcc
