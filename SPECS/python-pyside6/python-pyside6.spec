@@ -40,7 +40,7 @@ BuildRequires:  ninja
 BuildRequires:  gcc
 BuildRequires:  gcc-c++
 BuildRequires:  clang-devel
-BuildRequires:  llvm22-static
+BuildRequires:  llvm-static
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(numpy)
 BuildRequires:  python3dist(setuptools)
