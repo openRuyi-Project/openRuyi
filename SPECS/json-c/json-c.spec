@@ -6,15 +6,15 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define version_date 20240915
+%define version_date 20260627
 
 Name:           json-c
-Version:        0.18
+Version:        0.19
 Release:        %autorelease
 Summary:        JSON implementation in C
 License:        MIT
 URL:            https://github.com/json-c/json-c
-#!RemoteAsset:  sha256:3112c1f25d39eca661fe3fc663431e130cc6e2f900c081738317fba49d29e298
+#!RemoteAsset:  sha256:f17a6d7d265cf840dfd8f0f46a606d98c6b5b26dc7cfe27275d1546a213086c8
 Source0:        https://github.com/json-c/json-c/archive/json-c-%{version}-%{version_date}.tar.gz
 BuildSystem:    cmake
 
@@ -23,11 +23,10 @@ BuildOption(conf):  -DENABLE_THREADING=ON
 BuildOption(conf):  -DENABLE_RDRAND=ON
 BuildOption(conf):  -DBUILD_STATIC_LIBS=ON
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
-# The json-c declaration depends on an outdated version of cmake.
-BuildOption(conf):  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 
 BuildRequires:  cmake
 BuildRequires:  libtool
+BuildRequires:  xxd
 
 %description
 JSON-C implements a reference counting object model that allows you to
@@ -58,7 +57,7 @@ cp -R doc/html "%{buildroot}%{_docdir}/%{name}/"
 %files
 %license COPYING
 %doc AUTHORS ChangeLog README.md
-%{_docdir}/json-c/
+%{_docdir}/json-c/html/
 %{_libdir}/libjson-c.so.*
 
 %files devel
