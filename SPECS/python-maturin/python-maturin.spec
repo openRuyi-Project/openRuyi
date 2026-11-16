@@ -23,9 +23,9 @@ Patch2000:      2000-fix-cargo.patch
 
 BuildOption(install):  %{srcname}
 
-# TakoPack-generated dependencies.
 BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
+# TakoPack-generated dependencies.
 BuildRequires:  crate(anyhow-1/default) >= 1.0.80
 BuildRequires:  crate(base64-0.22/default) >= 0.22.0
 BuildRequires:  crate(cargo-config2-0.1/default) >= 0.1.24
@@ -111,6 +111,7 @@ BuildRequires:  crate(ureq-3/native-tls) >= 3.2.0
 BuildRequires:  crate(ureq-3/multipart) >= 3.2.0
 BuildRequires:  crate(ureq-3/rustls-webpki-roots) >= 3.2.0
 BuildRequires:  crate(jni-sys-0.4/default) >= 0.4.0
+BuildRequires:  crate(unicode-xid-0.2/default) >= 0.2.4
 
 Provides:       python3-%{srcname} = %{version}-%{release}
 Provides:       python3-%{srcname}%{?_isa} = %{version}-%{release}
