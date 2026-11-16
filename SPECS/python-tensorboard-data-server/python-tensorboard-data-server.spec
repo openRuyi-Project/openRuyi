@@ -18,6 +18,8 @@ BuildSystem:    pyproject
 
 # Use the stable Clap 3 derive and argument API.
 Patch2000:      2000-Use-the-stable-Clap-3-command-line-API.patch
+# gcp_auth 0.10 uses the RISC-V-capable ring 0.17 backend.
+Patch2001:      2001-Use-gcp_auth-0.10-with-RISC-V-capable-ring-0.17.patch
 
 BuildOption(prep):  -n tensorboard-data-server-v%{version}
 BuildOption(install):  tensorboard_data_server
@@ -38,7 +40,7 @@ BuildRequires:  crate(crc-1/default) >= 1.8.1
 BuildRequires:  crate(crossbeam-0.8/default) >= 0.8.0
 BuildRequires:  crate(env-logger-0.8/default) >= 0.8.2
 BuildRequires:  crate(futures-core-0.3/default) >= 0.3.12
-BuildRequires:  crate(gcp-auth-0.7/default) >= 0.7.4
+BuildRequires:  crate(gcp-auth-0.10/default) >= 0.10.0
 BuildRequires:  crate(log-0.4/default) >= 0.4.11
 BuildRequires:  crate(prost-0.9/default) >= 0.9.0
 BuildRequires:  crate(prost-types-0.9/default) >= 0.9.0
@@ -86,6 +88,12 @@ export RUST_BUILD_ARGS="--bin rustboard"
 %rust_build_release
 popd
 install -Dpm0755 tensorboard/data/server/target/release/rustboard tensorboard_data_server/bin/server
+
+%check -a
+# Verify the Rust event-data server and its local file and streaming logic.
+pushd tensorboard/data/server
+%rust_test
+popd
 
 %files -f %{pyproject_files}
 %doc tensorboard/data/server/DEVELOPMENT.md

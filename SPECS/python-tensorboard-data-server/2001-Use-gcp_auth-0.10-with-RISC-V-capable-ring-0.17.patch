@@ -1,0 +1,30 @@
+From c7eb3d01231ae8d5a061da51b480cd2393c554e0 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Tue, 17 Nov 2026 01:41:04 +0800
+Subject: [PATCH] Use gcp_auth 0.10 with RISC-V-capable ring 0.17
+
+The AuthenticationManager and Token interfaces used by the data server are preserved in gcp_auth 0.10. This version incorporates the upstream ring 0.17 migration and avoids the unsupported ring 0.16 backend on riscv64.
+
+Reference: https://github.com/djc/gcp_auth/commit/d9ee2abff4121484acca2c9491bc0b145d86e7cc
+
+BARNACLE: MISSING HUMAN DCO SIGN-OFF
+---
+ tensorboard/data/server/Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tensorboard/data/server/Cargo.toml b/tensorboard/data/server/Cargo.toml
+index ac964dd..6878904 100644
+--- a/tensorboard/data/server/Cargo.toml
++++ b/tensorboard/data/server/Cargo.toml
+@@ -34,7 +34,7 @@ crc = "1.8.1"
+ crossbeam = "0.8.0"
+ env_logger = "0.8.2"
+ futures-core = "0.3.12"
+-gcp_auth = "0.7.4"
++gcp_auth = "0.10.0"
+ log = "0.4.11"
+ prost = "0.9.0"
+ prost-types = "0.9.0"
+-- 
+2.54.0
+
