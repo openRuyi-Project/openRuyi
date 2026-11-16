@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
+# SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+# Sponsored by cha86.dev <https://cha86.dev>
+
+# Start the SGLang server from the distribution Python environment.  Inherited
+# interpreter and loader settings are dropped so the run resolves packages from
+# the installed site-packages tree only.
+
+set -e
+unset PYTHONHOME PYTHONPATH
+unset LD_LIBRARY_PATH LD_PRELOAD
+export PYTHONNOUSERSITE=1
+export PYTHONSAFEPATH=1
+exec @PYTHON3@ -sP @LIBEXEC@/sglang "$@"
