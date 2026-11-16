@@ -1,0 +1,73 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
+# SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
+#
+# SPDX-License-Identifier: MIT
+
+# Sponsored by cha86.dev <https://cha86.dev>
+
+[package]
+name = "remoteprocess"
+version = "0.5.1"
+edition = "2021"
+authors = ["Ben Frederickson <github@benfrederickson.com>"]
+build = "build.rs"
+description = "Cross platform api for getting information on a running processes"
+license = "MIT"
+repository = "https://github.com/benfred/remoteprocess"
+
+[features]
+default = []
+unwind = []
+
+[dependencies.cfg-if]
+version = "1.0.1"
+
+[dependencies.goblin]
+version = "0.10"
+
+[dependencies.libc]
+version = "0.2"
+
+[dependencies.log]
+version = "0.4"
+
+[dependencies.proc-maps]
+version = "0.4"
+
+[dependencies.read-process-memory]
+version = "0.1.6"
+
+[dependencies.regex]
+version = ">=1.8.3"
+
+[target.'cfg(target_os="linux")'.dependencies.addr2line]
+version = "0.25"
+
+[target.'cfg(target_os="linux")'.dependencies.lazy_static]
+version = "1.5.0"
+
+[target.'cfg(target_os="linux")'.dependencies.memmap2]
+version = "0.9.7"
+
+[target.'cfg(target_os="linux")'.dependencies.nix]
+version = "0.26"
+features = ["ptrace", "sched", "signal"]
+default-features = false
+
+[target.'cfg(target_os="linux")'.dependencies.object]
+version = "0.37"
+
+[target.'cfg(target_os="macos")'.dependencies.libproc]
+version = "0.14"
+
+[target.'cfg(target_os="macos")'.dependencies.mach]
+version = "0.3.2"
+
+[target.'cfg(target_os="macos")'.dependencies.mach_o_sys]
+version = "0.1.1"
+
+[target."cfg(windows)".dependencies.winapi]
+version = "0.3"
+features = ["winbase", "consoleapi", "wincon", "handleapi", "timeapi", "processenv", "errhandlingapi"]
