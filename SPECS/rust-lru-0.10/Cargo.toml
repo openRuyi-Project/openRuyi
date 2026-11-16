@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: A.Donz <avrova.minix@donz.si>
+# SPDX-FileContributor: MMLA-org <https://github.com/MMLA-org>
+#
+# SPDX-License-Identifier: MIT
+
+# Sponsored by cha86.dev <https://cha86.dev>
+
+[package]
+name = "lru"
+version = "0.10.1"
+edition = "2021"
+license = "MIT"
+description = "A LRU cache implementation"
+repository = "https://github.com/jeromefroe/lru-rs"
+
+[dependencies.hashbrown]
+version = "0.13"
+optional = true
+
+[features]
+default = ["hashbrown"]
