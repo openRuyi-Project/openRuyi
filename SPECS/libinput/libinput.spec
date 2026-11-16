@@ -8,13 +8,13 @@
 %bcond tests 0
 
 Name:           libinput
-Version:        1.31.3
+Version:        1.32.0
 Release:        %autorelease
 Summary:        Input device library
 License:        MIT
 URL:            http://www.freedesktop.org/wiki/Software/libinput/
 VCS:            git:https://gitlab.freedesktop.org/libinput/libinput.git
-#!RemoteAsset:  sha256:01414457befc3d1c68a328ebe01eacec8e7077a4ff08e181f5659daf9f50930e
+#!RemoteAsset:  sha256:3a6065c07b118c08d0c7b7b85a265ecb050a8cfc91eeb360890d768a51b4cce9
 Source:         https://gitlab.freedesktop.org/libinput/libinput/-/archive/%{version}/libinput-%{version}.tar.bz2
 BuildSystem:    meson
 
