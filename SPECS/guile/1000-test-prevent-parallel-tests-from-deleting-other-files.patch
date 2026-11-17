@@ -1,0 +1,64 @@
+From ba9cc0fa9bd220511591e1fb67520ac192ee3c32 Mon Sep 17 00:00:00 2001
+From: Olivier Dion <olivier.dion@polymtl.ca>
+Date: Tue, 15 Sep 2026 16:05:27 -0400
+Subject: [PATCH] test: Prevent parallel tests from deleting other files
+
+Some tests are generating temporary files.  Often developers will
+copy/paste code from one test-suite to another, to save time, but will
+end up copying also some filenames that are now shared between the
+tests.
+
+This is a problem when tests are run in parallel because one test-suite
+can be deleting the temporary file when done while the other test-suite
+is running.
+
+Fix this by making temporary file use the test-suite filename as a
+infix.
+
+* test-suite/guile-test (data-file-name): Convert to a syntax
+transformer to inject the filename of the current source location as an
+infix.
+* test-suite/tests/rdelim.test (test-file): Rename temporary file from
+`port-test.tmp' to `rdelim-test.tmp' to avoid any problem.
+
+Fix: https://codeberg.org/guile/guile/issues/286
+Signed-off-by: Olivier Dion <olivier.dion@polymtl.ca>
+---
+ test-suite/guile-test        | 10 ++++++++--
+ test-suite/tests/rdelim.test |  2 +-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/test-suite/guile-test b/test-suite/guile-test
+index 1430e6354..d433f3c03 100755
+--- a/test-suite/guile-test
++++ b/test-suite/guile-test
+@@ -169,8 +169,14 @@ template) that is always removed on exit from f."
+ 
+ ;;; Localizing test files and temporary data files.
+ 
+-(define (data-file-name filename)
+-  (in-vicinity tmp-dir filename))
++(define-syntax-rule (data-file-name f)
++  (in-vicinity tmp-dir
++               (string-append
++                (or
++                 (and=> (assq-ref (current-source-location) 'filename) basename)
++                 "unknown")
++                "-"
++                f)))
+ 
+ (define (test-file-name test)
+   (in-vicinity test-suite test))
+diff --git a/test-suite/tests/rdelim.test b/test-suite/tests/rdelim.test
+index ad44278d2..e69316491 100644
+--- a/test-suite/tests/rdelim.test
++++ b/test-suite/tests/rdelim.test
+@@ -252,7 +252,7 @@
+ (with-test-prefix "for-line-in-file"
+ 
+   (define (test-file)
+-    (data-file-name "ports-test.tmp"))
++    (data-file-name "rdelim-test.tmp"))
+ 
+   (let ((lst '())
+         (lines '())
