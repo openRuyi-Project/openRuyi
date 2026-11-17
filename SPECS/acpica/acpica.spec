@@ -4,23 +4,22 @@
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: corestudy <2760018909@qq.com>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           acpica
-Version:        20260408
+Version:        20260930
 Release:        %autorelease
 Summary:        ACPICA tools for the development and debug of ACPI tables
-License:        GPL-2.0-only
-URL:            https://www.acpica.org
-VCS:            git:https://github.com/acpica/acpica
-#!RemoteAsset:  sha256:ddc5d3e0f54030e2348484fff681861a161efb4e388e20631209574e7884ad39
-Source0:        https://github.com/acpica/acpica/archive/refs/tags/%{version}.tar.gz
+License:        BSD-3-Clause OR GPL-2.0-only
+URL:            https://open-acpica.github.io
+VCS:            git:https://github.com/open-acpica/acpica.git
+#!RemoteAsset:  sha256:aa18901b92e30749be0edc3081c8d550c61fce4fa37546fc6a65d367a4ae71a5
+Source0:        https://github.com/open-acpica/acpica/releases/download/%{version}/acpica-unix-%{version}.tar.gz
 BuildSystem:    autotools
 
-# https://github.com/acpica/acpica/pull/1187
-Patch0:         0001-fix-build-error-with-gcc-16-unused-but-set-variable.patch
-
+BuildOption(prep):  -n acpica-unix-%{version}
 BuildOption(install):  PREFIX=%{_prefix}
 
 BuildRequires:  gcc
@@ -59,6 +58,8 @@ ACPICA tools for the development and debug of ACPI tables
 %check
 
 %files
+%license LICENSE.BSD-3-Clause
+%license LICENSE.GPL-2.0-only
 %{_bindir}/iasl
 %{_bindir}/acpixtract
 %{_bindir}/acpisrc
