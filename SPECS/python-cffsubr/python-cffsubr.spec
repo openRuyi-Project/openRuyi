@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Gui-Yue <xiangwei.riscv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -33,7 +34,7 @@ BuildOption(generate_buildrequires):  -N
 
 BuildRequires:  cmake
 BuildRequires:  git
-BuildRequires:  ninja
+BuildRequires:  make
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(uuid)
@@ -58,6 +59,9 @@ cffsubr is a standalone CFF subroutinizer based on the AFDKO tx tool.
 %build -p
 export ANTLR4_ZIP_REPOSITORY=%{SOURCE1}
 export FORCE_SYSTEM_LIBXML2=1
+# Use Unix Makefiles instead of Ninja to avoid manifest dirty-timestamp loops
+# triggered by ExternalProject_Add under build hosts with clock skew.
+export CMAKE_GENERATOR="Unix Makefiles"
 
 %files -f %{pyproject_files}
 %doc README.md
