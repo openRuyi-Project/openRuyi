@@ -117,6 +117,7 @@ BuildRequires:  crate(link-section-0.18) >= 0.18.2
 BuildRequires:  crate(linktime-proc-macro-0.2) >= 0.2.0
 BuildRequires:  crate(zeroize-derive-1) >= 1.4.2
 BuildRequires:  crate(annotate-snippets-0.11) >= 0.11.5
+BuildRequires:  crate(bindgen-0.72/default) >= 0.72.0
 
 Recommends:     gnupg
 Recommends:     sequoia-keystore-server
