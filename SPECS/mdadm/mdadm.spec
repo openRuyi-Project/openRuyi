@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -23,15 +24,22 @@ Source5:        raid-check.service
 Source6:        raid-check.timer
 BuildSystem:    autotools
 
+# Avoid O_DIRECT on regular image files where 512B reads fail on 4K-aligned storage.
+# https://github.com/md-raid-utilities/mdadm/pull/341
+Patch2000:      2000-util-avoid-o-direct-on-non-block-files.patch
+
 BuildOption(build):  CXFLAGS="%{optflags} -std=gnu17 -Wno-error=unterminated-string-initialization"
 BuildOption(build):  SYSCONFDIR="%{_sysconfdir}"
+# Clean buildroots may lack /run before %install creates /run/mdadm.
+BuildOption(build):  CHECK_RUN_DIR=0
 BuildOption(build):  mdadm mdmon raid6check raid6check.man
-
 BuildOption(install):  MANDIR=%{_mandir}
 BuildOption(install):  BINDIR=%{_sbindir}
 BuildOption(install):  SYSTEMD_DIR=%{_unitdir}
 BuildOption(install):  UDEVDIR=%{_prefix}/lib/udev/
+BuildOption(install):  CHECK_RUN_DIR=0
 BuildOption(install):  install install-systemd
+BuildOption(check):  CHECK_RUN_DIR=0
 
 BuildRequires:  make
 BuildRequires:  gcc
