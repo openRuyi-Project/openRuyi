@@ -37,6 +37,10 @@ BuildOption(conf):  -DWITH_PYTHON3:BOOL=ON
 BuildOption(conf):  -DWITH_RUBY:BOOL=OFF
 BuildOption(conf):  -DWITH_TESTS:BOOL=OFF
 BuildOption(conf):  -DWITH_PLUGIN_APPSTREAM:BOOL=OFF
+# Avoid build failed with json-c 0.19
+# /usr/include/json-c/linkhash.h:376:33: error: ‘long unsigned int lh_get_hash(const lh_table*, const void*)’ defined but not used [-Werror=unused-function]
+#   376 | static _LH_INLINE unsigned long lh_get_hash(const struct lh_table *t, const void *k)
+BuildOption(conf):  -DCMAKE_CXX_FLAGS=-Wno-error=unused-function
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++ >= 10.1
