@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: purofle <yuguo.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -38,6 +39,7 @@ Requires:       m4
 Requires:       grep
 Requires:       gawk
 Requires:       help2man
+Requires:       python3
 
 %description
 The GNU portability library is a macro system and C declarations and
@@ -88,8 +90,8 @@ mkdir -p %{buildroot}%{_mandir}/man1
 
 cp -p check-module %{buildroot}%{_bindir}
 cp -p gnulib-tool gnulib-tool.sh gnulib-tool.py %{buildroot}%{_datadir}/gnulib/
-cp -rp build-aux lib m4 modules config tests %{buildroot}%{_datadir}/gnulib/
-cp -p .gnulib-tool.py %{buildroot}%{_datadir}/gnulib/
+cp -rp build-aux lib m4 modules config pygnulib tests %{buildroot}%{_datadir}/gnulib/
+cp -p .gnulib-tool.py ChangeLog %{buildroot}%{_datadir}/gnulib/
 mkdir -p %{buildroot}%{_datadir}/gnulib/doc
 cp -p NEWS COPYING ChangeLog HACKING users.txt doc/COPYING* %{buildroot}%{_pkgdocdir}/
 rm -f doc/COPYING*
