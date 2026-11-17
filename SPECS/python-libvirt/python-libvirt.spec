@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -8,13 +9,13 @@
 %global pypi_name libvirt_python
 
 Name:           python-libvirt
-Version:        12.2.0
+Version:        12.9.0
 Release:        %autorelease
 Summary:        Python bindings for libvirt
 License:        LGPL-2.1-or-later
 URL:            https://libvirt.org
 VCS:            git:https://gitlab.com/libvirt/libvirt-python.git
-#!RemoteAsset:  sha256:742147988bba7d400f6892beeeb7e0a27758f10ff65421b569b7b4b6a2572e44
+#!RemoteAsset:  sha256:598b85cd1f5e94b97684b725cd45a65f6ab734c6edaa61d4aec98721f30e9401
 Source0:        https://files.pythonhosted.org/packages/source/l/%{srcname}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 
