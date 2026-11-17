@@ -1,0 +1,13 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-License-Identifier: MulanPSL-2.0
+set -eu
+case "${1:-}" in
+    empty) binary=empty; set --  ;;
+    *) echo 'unknown test ID' >&2; exit 2 ;;
+esac
+umask 077
+workdir=$(mktemp -d "${TMPDIR:-/tmp}/zchunk-test.XXXXXX")
+trap 'rm -rf -- "$workdir"' EXIT HUP INT TERM
+cd "$workdir"
+/usr/libexec/openruyi-tests/zchunk/"$binary" "$@"

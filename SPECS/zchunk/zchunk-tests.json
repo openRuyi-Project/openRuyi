@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "package": "zchunk",
+  "tests": [
+    {
+      "id": "empty",
+      "command": [
+        "/usr/libexec/openruyi-tests/zchunk/dispatch",
+        "empty"
+      ],
+      "timeout": 180
+    }
+  ]
+}

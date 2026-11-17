@@ -1,0 +1,10 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-License-Identifier: MulanPSL-2.0
+set -eu
+case "${1:-}" in
+    list|run) action=$1; shift ;;
+    ''|--*) action=run ;;
+    *) echo "usage: $0 [list | run] [runner options]" >&2; exit 2 ;;
+esac
+exec /usr/bin/openruyi-test "$action" zchunk "$@"
