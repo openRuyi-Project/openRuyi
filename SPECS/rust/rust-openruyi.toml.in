@@ -1,5 +1,5 @@
 # see src/bootstrap/src/utils/change_tracker.rs
-change-id = 154587
+change-id = 160100
 
 [llvm]
 download-ci-llvm = false
@@ -45,10 +45,18 @@ llvm-config = "/usr/bin/llvm-config"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.builtins.a"
 [target.riscv64gc-unknown-linux-gnu]
+cc = "gcc"
+cxx = "g++"
+ar = "ar"
+ranlib = "ranlib"
 llvm-config = "/usr/bin/llvm-config"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"
 [target.riscv64a23-unknown-linux-gnu]
+cc = "gcc"
+cxx = "g++"
+ar = "ar"
+ranlib = "ranlib"
 llvm-config = "/usr/bin/llvm-config"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"
