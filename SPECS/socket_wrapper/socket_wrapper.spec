@@ -2,24 +2,20 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           socket_wrapper
-Version:        1.5.0
+Version:        1.5.2
 Release:        %autorelease
 Summary:        A library passing all socket communications through Unix sockets
 License:        BSD-3-Clause
 URL:            http://cwrap.org/
 VCS:            git:https://git.samba.org/socket_wrapper.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:8b0f4d6c2ae7f5f0f475f03fad5496cadb8cb57914a811616599092cd830b56e
 Source0:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz
-#!RemoteAsset
-Source1:        https://ftp.samba.org/pub/cwrap/%{name}-%{version}.tar.gz.asc
 BuildSystem:    cmake
-
-# Fix tests
-Patch0:         0001-swrap-fix-tests.patch
 
 BuildOption(conf):  -DUNIT_TESTING=ON
 
@@ -59,7 +55,7 @@ Development headers for applications with the need to call
 socket_wrapper_enabled().
 
 %files
-%doc AUTHORS README.md CHANGELOG
+%doc AUTHORS README.md CHANGELOG.md
 %license LICENSE
 %{_libdir}/libsocket_wrapper.so*
 %dir %{_libdir}/cmake/socket_wrapper
@@ -78,4 +74,4 @@ socket_wrapper_enabled().
 %{_libdir}/pkgconfig/socket_wrapper_noop.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
