@@ -4,6 +4,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -21,6 +22,8 @@ BuildSystem:    autotools
 BuildOption(conf):  --disable-static
 
 Patch0:         guile-fix-riscv64-jit.patch
+# https://codeberg.org/guile/guile/commit/ba9cc0fa9bd220511591e1fb67520ac192ee3c32
+Patch1000:      1000-test-prevent-parallel-tests-from-deleting-other-files.patch
 
 BuildRequires:  pkgconfig(bdw-gc)
 BuildRequires:  pkgconfig(gmp)
