@@ -51,11 +51,6 @@ developing applications that use %{name}.
 %{_libdir}/libspng.so.0
 %{_libdir}/libspng.so.0.*
 
-%ifarch riscv64
-%check
-# waiting to fix/check the feature in riscv64.
-%endif
-
 %files devel
 %doc docs
 %{_includedir}/spng.h
