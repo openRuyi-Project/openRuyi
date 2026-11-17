@@ -4,11 +4,12 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           tzdata
-Version:        2026c
+Version:        2026f
 Release:        %autorelease
 Summary:        Timezone data
 # I'm not sure about this... but I checked from below - 251
@@ -16,9 +17,9 @@ Summary:        Timezone data
 License:        CC0-1.0 AND BSD-3-Clause
 URL:            https://www.iana.org/time-zones
 # VCS: No VCS link available
-#!RemoteAsset:  sha256:e4a178a4477f3d0ea77cc31828ff72aa38feff8d61aa13e7e99e142e9d902be4
+#!RemoteAsset:  sha256:01b4a91cec5167ed48c11e8ab78f2048cead78ce94b0cafcad0ae8c5a3044d3d
 Source0:        https://www.iana.org/time-zones/repository/releases/tzdata%{version}.tar.gz
-#!RemoteAsset:  sha256:b1cffc3ace4c4c7cd0efba2f7add86ec3d0b79da48bcf03582671fd3c8feace8
+#!RemoteAsset:  sha256:5a18da01393679ef2559214dc687563f7f3d05691f6f58b7fbc0166f3e796cd6
 Source2:        https://www.iana.org/time-zones/repository/releases/tzcode%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -28,6 +29,11 @@ BuildOption(build):  VERSION=%{version} ZFLAGS="-b fat" DATAFORM=vanguard tzdata
 BuildOption(check):  CC=%__cc
 # Disable use of the Internet.
 BuildOption(check):  CURL=:
+# Pin now.ck to the 2026f release timestamp (before 2026-11-01 when
+# America/Vancouver and America/Edmonton transitions converge with
+# America/Phoenix and America/Mexico_City):
+# https://lists.iana.org/hyperkitty/list/tz@iana.org/message/R4XDBOBBLD6RRIABZQUA6H5ZVWRP7YP3/
+BuildOption(check):  CHECK_NOW_TIMESTAMP=1793168209
 
 BuildRequires:  make
 BuildRequires:  perl
