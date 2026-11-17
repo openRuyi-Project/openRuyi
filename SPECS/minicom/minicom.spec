@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Xuhai Chang <xuhai.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -15,6 +16,9 @@ License:        GPL-2.0-or-later AND LGPL-2.0-or-later
 #!RemoteAsset:  sha256:b296b0e5795ca143fb1ffa78f46fd294daddfccd720faf9909a842d2f70c564e
 Source0:        https://salsa.debian.org/minicom-team/minicom/-/archive/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
+
+# Explicit lock directory because clean buildroots may not pre-create /var/lock.
+BuildOption(conf):  --enable-lock-dir=/var/lock
 
 # patch from https://sources.debian.org/src/minicom/2.11.1-2/debian/patches/04reproducible.diff
 Patch2000:      2000-reproducible.patch
