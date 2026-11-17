@@ -3,22 +3,23 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 # Avoid tests marked as "flaky"
 %global _test_target test-nonflaky
 
-%bcond_with openssl
+%bcond openssl 0
 
 Name:           curl
-Version:        8.21.0
+Version:        8.23.0
 Release:        %autorelease
 Summary:        A Tool for Transferring Data from URLs
 License:        curl
 URL:            https://curl.se
 VCS:            git:https://github.com/curl/curl
-#!RemoteAsset:  sha256:aa1b66a70eace83dc624508745646c08ae561de512ab403adffb93ac87fc72e6
+#!RemoteAsset:  sha256:8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5
 Source0:        https://curl.se/download/curl-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -91,25 +92,17 @@ server using any of the supported protocols (HTTP, HTTPS, FTP, GOPHER,
 DICT, TELNET, LDAP, or FILE). The command is designed to work without
 user interaction or any kind of interactivity.
 
-%build -p
-CPPFLAGS="-D_FORTIFY_SOURCE=2"
-CFLAGS=$(echo "%{optflags}" | sed -e 's/-D_FORTIFY_SOURCE=2//')
-export CPPFLAGS
-export CFLAGS="$CFLAGS -fPIE"
-export LDFLAGS="$LDFLAGS -Wl,-z,defs,-z,now,-z,relro -pie"
+%conf -p
 autoreconf -fiv
 
 %install -a
 rm -f %{buildroot}%{_libdir}/libcurl.la
 install -Dm 0644 docs/libcurl/libcurl.m4 %{buildroot}%{_datadir}/aclocal/libcurl.m4
-pushd scripts
-%make_install
-popd
 
 %files
 %license COPYING
 %doc README RELEASE-NOTES CHANGES.md
-%doc docs/{BUGS.md,FAQ,FEATURES.md,TODO,TheArtOfHttpScripting.md}
+%doc docs/{BUGS.md,FAQ.md,FEATURES.md,TODO.md,TheArtOfHttpScripting.md}
 %{_bindir}/curl
 %{_bindir}/wcurl
 %{_mandir}/man1/curl.*
