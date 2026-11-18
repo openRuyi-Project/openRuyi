@@ -6,19 +6,21 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%define date 2025-08-12
+%global date 2025-11-05
 
 Name:           re2
-Version:        2025.08.12
+Version:        2025.11.05
 Release:        %autorelease
 Summary:        A fast, safe, and thread-friendly regular expression engine
 License:        BSD-3-Clause
 URL:            https://github.com/google/re2
-#!RemoteAsset
-Source0:        https://github.com/google/re2/archive/%{date}/re2-%{date}.tar.gz
+VCS:            git:https://github.com/google/re2
+#!RemoteAsset:  sha256:87f6029d2f6de8aa023654240a03ada90e876ce9a4676e258dd01ea4c26ffd67
+Source0:        https://github.com/google/re2/releases/download/%{date}/re2-%{date}.tar.gz
 BuildSystem:    cmake
 
-BuildOption(conf):  -DRE2_TEST:BOOL=OFF
+BuildOption(conf):  -DRE2_TEST:BOOL=ON
+BuildOption(conf):  -DRE2_BENCHMARK:BOOL=OFF
 BuildOption(conf):  -DRE2_USE_ICU:BOOL=ON
 
 BuildRequires:  gcc-c++
@@ -26,6 +28,7 @@ BuildRequires:  cmake
 BuildRequires:  ninja
 BuildRequires:  abseil-cpp-devel
 BuildRequires:  icu4c-devel
+BuildRequires:  pkgconfig(gtest)
 
 %description
 RE2 is a fast, safe, thread-friendly alternative to backtracking regular
@@ -40,8 +43,8 @@ This package contains the C++ header files, libraries, and build system files
 needed to develop applications that use the re2 library.
 
 %files
-%license LICENSE
 %doc README.md
+%license LICENSE
 %{_libdir}/libre2.so.*
 
 %files devel
@@ -51,4 +54,4 @@ needed to develop applications that use the re2 library.
 %{_libdir}/pkgconfig/re2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
