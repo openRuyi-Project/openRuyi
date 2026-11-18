@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: zhangjinqiang <jinqiang.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname ipykernel
 
 Name:           python-%{srcname}
-Version:        6.25.2
+Version:        7.4.0
 Release:        %autorelease
 Summary:        IPython kernel for Jupyter
 License:        BSD-3-Clause
 URL:            https://github.com/ipython/ipykernel
-#!RemoteAsset:  sha256:f468ddd1f17acb48c8ce67fcfa49ba6d46d4f9ac0438c1f441be7c3d1372230b
+#!RemoteAsset:  sha256:4330114d22b9b33575b2c7c68753fc8faabbbcfbc60b0cdff9f14dd4ce63742f
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -33,7 +34,7 @@ BuildRequires:  python3dist(jupyter-client)
 BuildRequires:  python3dist(jupyter-core)
 BuildRequires:  python3dist(matplotlib)
 BuildRequires:  python3dist(matplotlib-inline)
-BuildRequires:  python3dist(nest-asyncio)
+BuildRequires:  python3dist(nest-asyncio2)
 BuildRequires:  python3dist(packaging)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(psutil)
