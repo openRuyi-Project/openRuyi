@@ -2,16 +2,17 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           glew
-Version:        2.2.0
+Version:        2.3.1
 Release:        %autorelease
 Summary:        The OpenGL Extension Wrangler Library
 License:        BSD-3-Clause AND MIT
 URL:            https://github.com/nigels-com/glew
-#!RemoteAsset
+#!RemoteAsset:  sha256:09e0083ae46930aba9b53e72c92ee1a557e24ed393526fec26cb0ebabd834720
 Source0:        https://github.com/nigels-com/glew/releases/download/glew-%{version}/glew-%{version}.zip
 BuildSystem:    autotools
 
@@ -32,7 +33,6 @@ BuildOption(install):  BINDIR=%{_bindir}
 BuildOption(install):  LIBDIR=%{_libdir}
 BuildOption(install):  PKGDIR=%{_libdir}/pkgconfig
 
-BuildRequires:  gcc
 BuildRequires:  zip
 BuildRequires:  make
 BuildRequires:  pkgconfig(glu)
@@ -65,7 +65,7 @@ find %{buildroot} -type f -name "*.a" -delete
 %files
 %license LICENSE.txt
 %{_bindir}/*
-%{_libdir}/libGLEW.so.2.2*
+%{_libdir}/libGLEW.so.2.3*
 
 %files devel
 %{_libdir}/libGLEW.so
@@ -74,4 +74,4 @@ find %{buildroot} -type f -name "*.a" -delete
 %doc doc/*
 
 %changelog
-%{?autochangelog}
+%autochangelog
