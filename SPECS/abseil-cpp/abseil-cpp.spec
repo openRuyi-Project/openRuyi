@@ -7,14 +7,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global lib_version 2608.0.0
+
 Name:           abseil-cpp
-Version:        20260526.0
+Version:        20260817.0
 Release:        %autorelease
 Summary:        C++ Common Libraries
 License:        Apache-2.0 AND LicenseRef-openRuyi-Public-Domain
 URL:            https://abseil.io
 VCS:            git:https://github.com/abseil/abseil-cpp
-#!RemoteAsset:  sha256:6e1aee535473414164bf83e4ebc40240dec71a4701f8a642d906e95bea1aea0c
+#!RemoteAsset:  sha256:f7e05179df39c45434cad433f5783840bb3788ef322976f9138bc6b72b3a107d
 Source:         https://github.com/abseil/abseil-cpp/archive/%{version}/abseil-cpp-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -88,9 +90,8 @@ Development headers for %{name}
 export TZDIR=%{builddir}/%{name}-%{version}/absl/time/internal/cctz/testdata/zoneinfo
 
 %files
-%global lib_version 2605.0.0
-%license LICENSE
 %doc FAQ.md README.md UPGRADES.md
+%license LICENSE
 # All shared libraries except installed TESTONLY libraries; see the %%files
 # list for the -testing subpackage for those.
 %{_libdir}/libabsl_base.so.%{lib_version}
@@ -104,7 +105,7 @@ export TZDIR=%{builddir}/%{name}-%{version}/absl/time/internal/cctz/testdata/zon
 %{_libdir}/libabsl_cordz_sample_token.so.%{lib_version}
 %{_libdir}/libabsl_crc32c.so.%{lib_version}
 %{_libdir}/libabsl_crc_cord_state.so.%{lib_version}
-%{_libdir}/libabsl_crc_cpu_detect.so.%{lib_version}
+%{_libdir}/libabsl_base_cpu_detect.so.%{lib_version}
 %{_libdir}/libabsl_crc_internal.so.%{lib_version}
 %{_libdir}/libabsl_debugging_internal.so.%{lib_version}
 %{_libdir}/libabsl_decode_rust_punycode.so.%{lib_version}
@@ -126,6 +127,7 @@ export TZDIR=%{builddir}/%{name}-%{version}/absl/time/internal/cctz/testdata/zon
 %{_libdir}/libabsl_flags_usage.so.%{lib_version}
 %{_libdir}/libabsl_flags_usage_internal.so.%{lib_version}
 %{_libdir}/libabsl_graphcycles_internal.so.%{lib_version}
+%{_libdir}/libabsl_hardening.so.%{lib_version}
 %{_libdir}/libabsl_hash.so.%{lib_version}
 %{_libdir}/libabsl_hashtable_profiler.so.%{lib_version}
 %{_libdir}/libabsl_hashtablez_sampler.so.%{lib_version}
@@ -265,7 +267,7 @@ export TZDIR=%{builddir}/%{name}-%{version}/absl/time/internal/cctz/testdata/zon
 %{_libdir}/pkgconfig/absl_core_headers.pc
 %{_libdir}/pkgconfig/absl_crc32c.pc
 %{_libdir}/pkgconfig/absl_crc_cord_state.pc
-%{_libdir}/pkgconfig/absl_crc_cpu_detect.pc
+%{_libdir}/pkgconfig/absl_base_cpu_detect.pc
 %{_libdir}/pkgconfig/absl_crc_internal.pc
 %{_libdir}/pkgconfig/absl_debugging.pc
 %{_libdir}/pkgconfig/absl_debugging_internal.pc
