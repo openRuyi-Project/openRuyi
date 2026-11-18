@@ -122,7 +122,6 @@ BuildRequires:  libpq-devel
 BuildRequires:  libdbi-devel
 %endif
 
-Requires:       system-logos
 Requires:       %{name}-filesystem = %{version}-%{release}
 Requires:       %{name}-mod_deflate = %{version}-%{release}
 Requires:       %{name}-mod_webdav = %{version}-%{release}
