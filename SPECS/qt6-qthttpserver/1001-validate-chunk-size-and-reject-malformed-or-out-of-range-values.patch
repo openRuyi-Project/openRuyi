@@ -1,0 +1,128 @@
+From 6650873ed0cfcb05ede1546c1cac846f84ad096e Mon Sep 17 00:00:00 2001
+From: Mate Barany <mate.barany@qt.io>
+Date: Wed, 9 Sep 2026 14:58:17 +0200
+Subject: [PATCH] Validate chunk size and reject malformed or out-of-range
+ values
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+getChunkSize() parsed the chunk-size line with toLong(&ok, 16) and
+ignored ok.
+
+Parse with toULongLong() at qsizetype width, check ok, and reject a
+value that does not fit qsizetype with 400 Bad Request.
+
+Task-number: QTBUG-150270
+Pick-to: 6.12.0 6.11
+Change-Id: I2b42a7971f2bb2f909477bb7e1a6cb120be2aca5
+Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
+Reviewed-by: Mårten Nordheim <marten.nordheim@qt.io>
+(cherry picked from commit 283ee840051532421dcc5788b4233b23eaec1752)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/httpserver/qhttpserverparser.cpp b/src/httpserver/qhttpserverparser.cpp
+index dd5b563..6669479 100644
+--- a/src/httpserver/qhttpserverparser.cpp
++++ b/src/httpserver/qhttpserverparser.cpp
+@@ -631,11 +631,22 @@ qsizetype QHttpServerParser::getChunkSize(QIODevice *socket, qsizetype *chunkSiz
+             bytes += socket->read(crlf, 1); // read the \r or \n
+             if (crlf[0] == '\r')
+                 bytes += socket->read(crlf, 1); // read the \n
+-            bool ok = false;
++
+             // ignore the chunk-extension
+-            fragment = fragment.mid(0, fragment.indexOf(';')).trimmed();
+-            *chunkSize = fragment.toLong(&ok, 16);
++            QByteArrayView sizeField = fragment;
++            if (const qsizetype pos = sizeField.indexOf(';'); pos != -1)
++                sizeField = sizeField.first(pos);
++            bool ok = false;
++            const qulonglong parsed = sizeField.trimmed().toULongLong(&ok, 16);
+             fragment.clear();
++            if (!ok || parsed > qulonglong(QByteArray::maxSize())) {
++                sendError(socket, QHttpServerResponder::StatusCode::BadRequest);
++                socket->skip(socket->bytesAvailable());
++                qCDebug(lcHttpServerParser) << "Invalid chunk size from client"
++                                            << getClientIpAddressAndPort();
++                return -1; // hard failure -> caller closes the connection
++            }
++            *chunkSize = qsizetype(parsed);
+             break; // size done
+         } else {
+             // read the fragment to the buffer
+diff --git a/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp b/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
+index 39ac8dc..c3d597d 100644
+--- a/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
++++ b/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
+@@ -156,6 +156,8 @@ private slots:
+     void keepAliveTimeout();
+     void chunkedRequest();
+     void chunkedSizeLineTooLong();
++    void chunkedInvalidSize_data();
++    void chunkedInvalidSize();
+ 
+ private:
+ #if QT_CONFIG(ssl)
+@@ -1076,6 +1078,61 @@ void tst_QAbstractHttpServer::chunkedSizeLineTooLong()
+     QVERIFY(!server.handleRequestCalled);
+ }
+ 
++void tst_QAbstractHttpServer::chunkedInvalidSize_data()
++{
++    QTest::addColumn<QByteArray>("chunkSizeLine");
++
++    // Fits quint64 but exceeds qsizetype: parses, then fails the range check.
++    QTest::addRow("uint64-max") << QByteArray("ffffffffffffffff");
++    QTest::addRow("above-int64-max") << QByteArray("8000000000000000");
++    // Fails to parse: toULongLong() rejects a leading '-', and non-hex digits.
++    QTest::addRow("negative") << QByteArray("-2");
++    QTest::addRow("non-hex") << QByteArray("zz");
++}
++
++void tst_QAbstractHttpServer::chunkedInvalidSize()
++{
++    QFETCH(QByteArray, chunkSizeLine);
++
++    struct HttpServer : QAbstractHttpServer
++    {
++        bool handleRequestCalled = false;
++        bool handleRequest(const QHttpServerRequest &, QHttpServerResponder &responder) override
++        {
++            handleRequestCalled = true;
++            auto _responder = std::move(responder);
++            return true;
++        }
++
++        void missingHandler(const QHttpServerRequest &, QHttpServerResponder &) override { }
++    } server;
++
++    QTcpServer tcpServer;
++    QVERIFY(tcpServer.listen());
++    server.bind(&tcpServer);
++
++    QTcpSocket client;
++    client.connectToHost(QHostAddress::LocalHost, tcpServer.serverPort());
++    QVERIFY(client.waitForConnected());
++
++    // A malformed or out-of-range chunk size must be rejected with 400 and the
++    // connection closed.
++    QByteArray request = "POST / HTTP/1.1\r\n"
++                         "Host: localhost\r\n"
++                         "Transfer-Encoding: chunked\r\n"
++                         "\r\n";
++    request += chunkSizeLine + "\r\n";
++    client.write(request);
++    QVERIFY(client.waitForBytesWritten());
++
++    // waitForDisconnected() would only wait on the client socket and time out
++    QTRY_COMPARE(client.state(), QAbstractSocket::UnconnectedState);
++    const QByteArray response = client.readAll();
++    QVERIFY2(response.startsWith("HTTP/1.1 400"), response.constData());
++    QVERIFY(!server.handleRequestCalled);
++}
++
++
+ QT_END_NAMESPACE
+ 
+ QTEST_MAIN(tst_QAbstractHttpServer)
