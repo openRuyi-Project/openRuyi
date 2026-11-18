@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           xmlstarlet
-Version:        1.6.1
+Version:        1.7.0
 Release:        %autorelease
 Summary:        Command line XML toolkit
 License:        MIT
-URL:            https://xmlstar.sourceforge.net/
-VCS:            git:https://git.code.sf.net/p/xmlstar/code
-#!RemoteAsset:  sha256:15d838c4f3375332fd95554619179b69e4ec91418a3a5296e7c631b7ed19e7ca
-Source0:        https://downloads.sourceforge.net/xmlstar/%{name}-%{version}.tar.gz
+URL:            https://github.com/xmlstarlet/xmlstarlet
+VCS:            git:https://github.com/xmlstarlet/xmlstarlet.git
+#!RemoteAsset:  sha256:df4c93458fc6b2ad144d65dccf3ef251349871e0578c5bc59edbfeecf9bf3454
+Source0:        https://github.com/xmlstarlet/%{name}/releases/download/%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 BuildRequires:  autoconf
@@ -28,8 +29,6 @@ BuildRequires:  pkgconfig(libxslt)
 # by newer libxml2 as expected failures
 # https://src.fedoraproject.org/rpms/xmlstarlet/blob/rawhide/f/xmlstarlet-1.6.1-fix-xxe.patch
 1000-fix-xxe.patch
-# libxml2 2.13 removed ATTRIBUTE_UNUSED from its public headers
-2000-Define-ATTRIBUTE_UNUSED-fallback-for-libxml2-2.13.patch
 
 %description
 XMLStarlet is a set of command line utilities (tools) which can be used

@@ -1,43 +1,39 @@
-diff -Naur xmlstarlet-1.6.1.orig/examples/tests.mk xmlstarlet-1.6.1/examples/tests.mk
---- xmlstarlet-1.6.1.orig/examples/tests.mk	2013-06-22 17:36:56.000000000 +0200
-+++ xmlstarlet-1.6.1/examples/tests.mk	2026-05-26 13:31:13.886894244 +0200
-@@ -98,7 +98,13 @@
+diff --git a/examples/tests.mk b/examples/tests.mk
+index 47539ae..d50b95e 100644
+--- a/examples/tests.mk
++++ b/examples/tests.mk
+@@ -112,7 +112,8 @@ qcheck :
  
  XFAIL_TESTS =\
  examples/bigxml-dtd\
 -examples/ed-namespace
 +examples/ed-namespace\
-+examples/external-entity\
-+examples/bigxml-embed-ref\
-+examples/bigxml-embed\
-+examples/bigxml-relaxng\
-+examples/bigxml-well-formed\
-+examples/bigxml-xsd
++examples/external-entity
  
  if !HAVE_EXSLT_XPATH_REGISTER
  XFAIL_TESTS += examples/exslt-ed
-diff -Naur xmlstarlet-1.6.1.orig/src/trans.c xmlstarlet-1.6.1/src/trans.c
---- xmlstarlet-1.6.1.orig/src/trans.c	2012-08-12 17:18:59.000000000 +0200
-+++ xmlstarlet-1.6.1/src/trans.c	2026-05-26 13:31:20.240064967 +0200
-@@ -174,7 +174,10 @@
+diff --git a/src/trans.c b/src/trans.c
+index e49bbe7..19e28a8 100644
+--- a/src/trans.c
++++ b/src/trans.c
+@@ -135,6 +135,9 @@ int xsltRun(xsltOptionsPtr ops, char* xsl, const char** params,
      int i, options = 0;
  
      options = XSLT_PARSE_OPTIONS;
--     
 +    /* Disable entity expansion to prevent XXE attacks */
 +    options &= ~XML_PARSE_NOENT;
 +    options |= XML_PARSE_NONET;
-+
-     /*
-      * Compile XSLT Sylesheet
-      */
-diff -Naur xmlstarlet-1.6.1.orig/src/xml_C14N.c xmlstarlet-1.6.1/src/xml_C14N.c
---- xmlstarlet-1.6.1.orig/src/xml_C14N.c	2012-08-12 17:18:59.000000000 +0200
-+++ xmlstarlet-1.6.1/src/xml_C14N.c	2026-05-26 13:31:20.240173256 +0200
-@@ -62,8 +62,8 @@
+     if (ops->noval)
+         options &= ~(XML_PARSE_DTDLOAD | XML_PARSE_DTDATTR);
+     if (ops->noblanks)
+diff --git a/src/xml_C14N.c b/src/xml_C14N.c
+index 6379ccc..4c4881f 100644
+--- a/src/xml_C14N.c
++++ b/src/xml_C14N.c
+@@ -56,8 +56,8 @@ run_c14n(const char* xml_filename, int with_comments, int exclusive,
       */
  
-     doc = xmlReadFile(xml_filename, NULL,
+     doc = xmlstarReadFile(xml_filename, NULL,
 -        XML_PARSE_NOENT | XML_PARSE_DTDLOAD |
 -        XML_PARSE_DTDATTR | (nonet? XML_PARSE_NONET:0));
 +        XML_PARSE_DTDLOAD |
@@ -45,10 +41,11 @@ diff -Naur xmlstarlet-1.6.1.orig/src/xml_C14N.c xmlstarlet-1.6.1/src/xml_C14N.c
      if (doc == NULL) {
          fprintf(stderr, "Error: unable to parse file \"%s\"\n", xml_filename);
          return(EXIT_BAD_FILE);
-diff -Naur xmlstarlet-1.6.1.orig/src/xml_select.c xmlstarlet-1.6.1/src/xml_select.c
---- xmlstarlet-1.6.1.orig/src/xml_select.c	2014-03-03 01:15:08.000000000 +0100
-+++ xmlstarlet-1.6.1/src/xml_select.c	2026-05-26 13:31:20.240276580 +0200
-@@ -708,9 +708,9 @@
+diff --git a/src/xml_select.c b/src/xml_select.c
+index d2eeea7..a1da53b 100644
+--- a/src/xml_select.c
++++ b/src/xml_select.c
+@@ -716,9 +716,9 @@ selMain(int argc, char **argv)
      selInitOptions(&ops);
      xsltInitOptions(&xsltOps);
      start = selParseOptions(&ops, argc, argv);
@@ -57,6 +54,6 @@ diff -Naur xmlstarlet-1.6.1.orig/src/xml_select.c xmlstarlet-1.6.1/src/xml_selec
      xml_options |= XML_PARSE_DTDATTR; /* use default attrib values */
 -    xml_options |= ops.nonet? XML_PARSE_NONET : 0;
 +    xml_options |= XML_PARSE_NONET;
+     xml_options |= ops.noblanks? XML_PARSE_NOBLANKS : 0;
      xsltOps.nonet = ops.nonet;
      xsltOps.noblanks = ops.noblanks;
-     xsltInitLibXml(&xsltOps);
