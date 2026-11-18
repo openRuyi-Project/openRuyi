@@ -192,7 +192,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 %dir %{_libdir}/%{name}/
 %dir %{_datadir}/%{name}/
 %dir %{_datadir}/%{name}/themes
-%attr(0644,root,root) %ghost %config(noreplace) %{_sysconfdir}/default/grub
+%attr(0644,root,root) %config(noreplace) %{_sysconfdir}/default/grub
 %config(noreplace) %{_sysconfdir}/grub.d/00_header
 %config(noreplace) %{_sysconfdir}/grub.d/10_linux
 %config(noreplace) %{_sysconfdir}/grub.d/20_linux_xen

@@ -1,14 +1,65 @@
-# SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
-# SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
-# SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
-# SPDX-FileContributor: Xiang W <wangxiang@iscas.ac.cn>
+# /etc/default/grub
 #
-# SPDX-License-Identifier: MulanPSL-2.0
+# Regenerate grub.cfg after editing, e.g.:
+#   grub-mkconfig -o /boot/grub/grub.cfg
+#
 
-# GRUB boot loader configuration
-
+# -----------------------------------------------------------------------------
+# Boot menu
+# -----------------------------------------------------------------------------
+GRUB_DISTRIBUTOR="$( ( . /etc/os-release; echo "${NAME:-openRuyi}" ) 2>/dev/null || echo "openRuyi" )"
 GRUB_DEFAULT=0
-GRUB_TIMEOUT=10
-GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
-GRUB_CMDLINE_LINUX=""
-GRUB_DISTRIBUTOR=`(. /etc/os-release && echo ${NAME})`
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TIMEOUT=5
+# GRUB_DISABLE_SUBMENU=true
+# GRUB_DEFAULT=saved
+# GRUB_SAVEDEFAULT=true
+
+# -----------------------------------------------------------------------------
+# Linux kernel command line
+# -----------------------------------------------------------------------------
+GRUB_CMDLINE_LINUX="rw rootwait earlycon"
+GRUB_CMDLINE_LINUX_DEFAULT=""
+
+# -----------------------------------------------------------------------------
+# Boot kernel overrides
+# -----------------------------------------------------------------------------
+# GRUB_TOP_LEVEL="/boot/vmlinuz-xxx"
+
+# -----------------------------------------------------------------------------
+# Recovery configuration
+# -----------------------------------------------------------------------------
+# GRUB_CMDLINE_LINUX_RECOVERY="single"
+# GRUB_DISABLE_RECOVERY=true
+
+# -----------------------------------------------------------------------------
+# OS probe
+# -----------------------------------------------------------------------------
+# GRUB_DISABLE_OS_PROBER=false
+# GRUB_OS_PROBER_SKIP_LIST="UUID1 UUID2"
+# GRUB_TOP_LEVEL_OS_PROBER=""
+
+# -----------------------------------------------------------------------------
+# GRUB terminal and graphics
+# -----------------------------------------------------------------------------
+# GRUB_TERMINAL_INPUT=console
+# GRUB_TERMINAL_OUTPUT=console
+# GRUB_GFXMODE=auto
+# GRUB_GFXPAYLOAD_LINUX=keep
+# GRUB_FONT="/boot/grub/fonts/unicode.pf2"
+# GRUB_BACKGROUND="/boot/grub/background.png"
+# GRUB_THEME="/boot/grub/themes/default/theme.txt"
+# GRUB_VIDEO_BACKEND=""
+
+# -----------------------------------------------------------------------------
+# Early initrd overrides
+# -----------------------------------------------------------------------------
+# GRUB_EARLY_INITRD_LINUX_CUSTOM="custom-ucode.img"
+# GRUB_EARLY_INITRD_LINUX_STOCK="intel-uc.img intel-ucode.img amd-uc.img amd-ucode.img early_ucode.cpio microcode.cpio"
+
+# -----------------------------------------------------------------------------
+# Misc. GRUB configurations
+# -----------------------------------------------------------------------------
+# GRUB_PRELOAD_MODULES="part_gpt ext2"
+# GRUB_INIT_TUNE="480 440 1"
+# GRUB_BADRAM="0x01234567,0xfefefefe"
