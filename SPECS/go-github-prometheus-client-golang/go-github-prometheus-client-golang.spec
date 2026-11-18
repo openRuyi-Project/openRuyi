@@ -24,6 +24,13 @@ Source0:        https://github.com/prometheus/client_golang/archive/%{commit_id}
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Go 1.27 collector fixtures only; retain the current client API.
+# https://github.com/prometheus/client_golang/commit/57bb367da472cadc62ac8210c55ea2cd83143e5c
+Patch1000:      1000-Update-Go-Collector-metrics-for-new-Go-version-2095.patch
+# Update the fixtures for runtime metrics added in Go security releases.
+# https://github.com/prometheus/client_golang/commit/dc77e03d34b019228e68a97d37d7a3c0ba076628
+Patch1001:      1001-tests-update-runtime-metrics-for-Go-security-releases.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/beorn7/perks)
@@ -40,6 +47,8 @@ BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(github.com/prometheus/client_golang) = %{version}
+Provides:       go(github.com/prometheus/client_golang/prometheus) = %{version}
+Provides:       go(github.com/prometheus/client_golang/prometheus/promauto) = %{version}
 
 Requires:       go(github.com/beorn7/perks)
 Requires:       go(github.com/cespare/xxhash/v2)

@@ -7,6 +7,10 @@
 
 %define _name           otel
 %define go_import_path  go.opentelemetry.io/otel
+# This noarch package contains Go source only. The riscv64 OBS worker's
+# brp-remove-la-files crashes while scanning this tree, which cannot contain
+# libtool archives.
+%global __brp_remove_la_files %{nil}
 # go.opentelemetry.io/otel/internal/global imports go.opentelemetry.io/auto/sdk,
 # while auto/sdk imports otel APIs. Limit bootstrap %check to leaf API packages
 # that do not require auto/sdk so the BuildRequires cycle can be resolved. - HNO3Miracle
@@ -40,6 +44,7 @@ BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/otel) = %{version}
 Provides:       go(go.opentelemetry.io/otel/attribute) = %{version}
+Provides:       go(go.opentelemetry.io/otel/codes) = %{version}
 Provides:       go(go.opentelemetry.io/otel/propagation) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.17.0) = %{version}
 Provides:       go(go.opentelemetry.io/otel/semconv/v1.43.0) = %{version}
@@ -56,7 +61,9 @@ Provides:       go(go.opentelemetry.io/otel/sdk/metric/metricdata) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log) = %{version}
 Provides:       go(go.opentelemetry.io/otel/sdk/log/logtest) = %{version}
 Provides:       go(go.opentelemetry.io/otel/trace) = %{version}
-
+Provides:       go(go.opentelemetry.io/otel/sdk/resource) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.4.0) = %{version}
+Provides:       go(go.opentelemetry.io/otel/semconv/v1.12.0) = %{version}
 Requires:       go(github.com/cespare/xxhash/v2)
 Requires:       go(github.com/go-logr/logr)
 Requires:       go(github.com/go-logr/stdr)
