@@ -7,13 +7,13 @@
 %global srcname mock
 
 Name:           python-%{srcname}
-Version:        4.0.3
+Version:        5.2.0
 Release:        %autorelease
 Summary:        The Python mock library
 License:        BSD-2-Clause
 URL:            https://mock.readthedocs.io/en/latest/
 VCS:            git:https://github.com/testing-cabal/mock.git
-#!RemoteAsset:  sha256:7d3fbbde18228f4ff2f1f119a45cdffa458b4c0dee32eb4d2bb2f82554bac7bc
+#!RemoteAsset:  sha256:4e460e818629b4b173f32d08bf30d3af8123afbb8e04bb5707a1fd4799e503f0
 Source0:        https://files.pythonhosted.org/packages/source/m/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
