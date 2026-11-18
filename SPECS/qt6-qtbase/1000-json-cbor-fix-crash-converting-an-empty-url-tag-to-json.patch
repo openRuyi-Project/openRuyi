@@ -1,0 +1,115 @@
+From 887cac75055ba8983701ea3561ffa1c8999a3fe6 Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 2 Sep 2026 12:04:25 -0300
+Subject: [PATCH] JSON/CBOR: fix crash converting an empty URL tag to JSON
+
+A CBOR URL (tag 32) wrapping an empty, definite-length text string has
+no backing ByteData after decoding via QCborValue::fromCbor(), so
+byteData() returns nullptr. convertExtendedTypeToJson() dereferenced it
+unconditionally and crashed. Guard against the null pointer.
+
+Fixes: QTBUG-149841
+Pick-to: 6.8 6.5 5.15
+Change-Id: I919b870f7a23d41fdb98fffde1fa84247d5c2d18
+Reviewed-by: Ivan Solovev <ivan.solovev@qt.io>
+(cherry picked from commit 9e9988ee57c0210a5ba57435182b094f50b50f28)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/corelib/serialization/qjsoncbor.cpp b/src/corelib/serialization/qjsoncbor.cpp
+index 40937194..f35c1279 100644
+--- a/src/corelib/serialization/qjsoncbor.cpp
++++ b/src/corelib/serialization/qjsoncbor.cpp
+@@ -174,15 +174,21 @@ static QJsonValue convertExtendedTypeToJson(QCborContainerPrivate *d)
+     qint64 tag = d->elements.at(0).value;
+ 
+     switch (tag) {
+-    case qint64(QCborKnownTags::Url):
++    case qint64(QCborKnownTags::Url): {
+ #ifdef QT_BOOTSTRAPPED
+         break;
+ #else
+         // use the fully-encoded URL form
+-        if (d->elements.at(1).type == QCborValue::String)
+-            return QUrl::fromEncoded(d->byteData(1)->asByteArrayView()).toString(QUrl::FullyEncoded);
++        Element e = d->elements.at(1);
++        const ByteData *bd = d->byteData(e);
++        if (e.type == QCborValue::String) {
++            if (!bd)
++                return QString();
++            return QUrl::fromEncoded(bd->asByteArrayView()).toString(QUrl::FullyEncoded);
++        }
+         Q_FALLTHROUGH();
+ #endif
++    }
+ 
+     case qint64(QCborKnownTags::DateTimeString):
+     case qint64(QCborKnownTags::ExpectedBase64url):
+diff --git a/tests/auto/corelib/serialization/qcborvalue_json/tst_qcborvalue_json.cpp b/tests/auto/corelib/serialization/qcborvalue_json/tst_qcborvalue_json.cpp
+index c7b9b3b5..e56622ff 100644
+--- a/tests/auto/corelib/serialization/qcborvalue_json/tst_qcborvalue_json.cpp
++++ b/tests/auto/corelib/serialization/qcborvalue_json/tst_qcborvalue_json.cpp
+@@ -51,8 +51,13 @@ void tst_QCborValue_Json::toVariant_data()
+                 return QTest::addRow("Double:%g", exp.toDouble());
+             if (v.type() == QCborValue::ByteArray || v.type() == QCborValue::String)
+                 return QTest::addRow("%s:%zd", typeString, size_t(exp.toString().size()));
+-            if (v.type() >= 0x10000)
++            if (v.type() == QCborValue::Uuid)
+                 return QTest::newRow(exp.typeName());
++            if (v.type() >= 0x10000) {
++                // all others are based on string
++                return QTest::addRow("%s:%zd", exp.typeName(),
++                                     size_t(v.taggedValue().toString().size()));
++            }
+             return QTest::newRow(typeString);
+         };
+         addRow() << v << exp << json;
+@@ -75,10 +80,15 @@ void tst_QCborValue_Json::toVariant_data()
+     add(std::numeric_limits<qint64>::min(), std::numeric_limits<qint64>::min(), std::numeric_limits<qint64>::min());
+ 
+     // converts to string in JSON:
++    add(QByteArray(), QByteArray(), QString());
+     add(QByteArray("Hello"), QByteArray("Hello"), "SGVsbG8");
++    // Invalid datetimes are not QCborValue::DateTime
++    //add(QCborValue(QDateTime()), QString(), QString());
+     add(QCborValue(dt), dt, dt.toString(Qt::ISODateWithMs));
++    add(QCborValue(QUrl()), QUrl(), QString());
+     add(QCborValue(QUrl("http://example.com/{q}")), QUrl("http://example.com/{q}"),
+         "http://example.com/%7Bq%7D");      // note the encoded form in JSON
++    add(QCborValue(QRegularExpression()), QRegularExpression(), QString());
+     add(QCborValue(QRegularExpression(".")), QRegularExpression("."), ".");
+     add(QCborValue(uuid), uuid, uuid.toString(QUuid::WithoutBraces));
+ 
+@@ -116,6 +126,7 @@ void tst_QCborValue_Json::toVariant()
+     }
+ 
+     QCOMPARE(v.toVariant(), variant);
++
+     if (variant.isValid()) {
+         QVariant variant2 = QVariant::fromValue(v);
+         QVERIFY(variant2.canConvert(variant.metaType()));
+@@ -123,6 +134,12 @@ void tst_QCborValue_Json::toVariant()
+         QCOMPARE(variant2, variant);
+     }
+ 
++#if QT_CONFIG(cborstreamreader) && QT_CONFIG(cborstreamwriter)
++    // repeat after a round-trip through CBOR encoding, which exercises the
++    // decoding paths in QCborValue::fromCbor()
++    QCOMPARE(QCborValue::fromCbor(v.toCbor()).toVariant(), variant);
++#endif
++
+     // tags get ignored:
+     QCOMPARE(QCborValue(QCborKnownTags::Signature, v).toVariant(), variant);
+ 
+@@ -147,6 +164,12 @@ void tst_QCborValue_Json::toJson()
+     QCOMPARE(v.toJsonValue(), json);
+     QCOMPARE(QVariant::fromValue(v).toJsonValue(), json);
+ 
++#if QT_CONFIG(cborstreamreader) && QT_CONFIG(cborstreamwriter)
++    // repeat after a round-trip through CBOR encoding, which exercises the
++    // decoding paths in QCborValue::fromCbor()
++    QCOMPARE(QCborValue::fromCbor(v.toCbor()).toJsonValue(), json);
++#endif
++
+     // most tags get ignored:
+     QCOMPARE(QCborValue(QCborKnownTags::Signature, v).toJsonValue(), json);
+ 

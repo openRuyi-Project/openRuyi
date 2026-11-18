@@ -1,0 +1,37 @@
+From da6f5638252bd5bd08c446ee6647b5012bfb48a0 Mon Sep 17 00:00:00 2001
+From: David Redondo <qt@david-redondo.de>
+Date: Fri, 9 Oct 2026 07:14:36 +0000
+Subject: [PATCH] Revert "wayland: Report pixelScroll capability for touchpads"
+
+This reverts commit 1f94e2782c071c9c687da1bc0141f55118943623.
+
+Reason for revert: While touchpads indeed have pixel scroll, currently all events
+are attributed to this device if it exists also the ones that come from mice. This
+has further side effects like slow scrolling in widgets or not working functionality
+in QTabbar. If we want to go in this direction it needs more work likely also in
+widgets.
+Task: QTBUG-150280
+
+Change-Id: I1e774fce9888caa4c485405679b2a45499429813
+Pick-to: 6.12
+Reviewed-by: David Edmundson <davidedmundson@kde.org>
+
+diff --git a/src/plugins/platforms/wayland/qwaylandinputdevice.cpp b/src/plugins/platforms/wayland/qwaylandinputdevice.cpp
+index 30da040e..ca4666db 100644
+--- a/src/plugins/platforms/wayland/qwaylandinputdevice.cpp
++++ b/src/plugins/platforms/wayland/qwaylandinputdevice.cpp
+@@ -414,13 +414,10 @@ void QWaylandInputDevice::seat_capabilities(uint32_t caps)
+ 
+         auto *pointerGestures = mQDisplay->pointerGestures();
+         if (pointerGestures) {
+-              QInputDevice::Capabilities  pointerCapabilities = QInputDevice::Capability::Position
+-                                                             | QInputDevice::Capability::PixelScroll
+-                                                             | QInputDevice::Capability::Scroll;
+             // NOTE: The name of the device and its system ID are not exposed on Wayland.
+             mTouchPadDevice = new QPointingDevice(
+                     QLatin1StringView("touchpad"), 0, QInputDevice::DeviceType::TouchPad,
+-                    QPointingDevice::PointerType::Finger, pointerCapabilities,
++                    QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position,
+                     MaxTouchPoints, 0, mSeatName, QPointingDeviceUniqueId(), this);
+             QWindowSystemInterface::registerInputDevice(mTouchPadDevice);
+             mPointerGesturePinch.reset(pointerGestures->createPointerGesturePinch(this));
