@@ -4,37 +4,38 @@
 # SPDX-FileContributor: jingyupu <pujingyu@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qttools
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qttools
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - QtTool components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
-#!RemoteAsset:  sha256:8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:8dab8f3611496486a470ad5f115ceea584f36bc22a2b8b6f6ebdbafbb8160693
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 Source1:        assistant.desktop
 Source2:        designer.desktop
 Source3:        linguist.desktop
 Source4:        qdbusviewer.desktop
 BuildSystem:    cmake
 
-# some install dir is error.
-Patch0:         0001-fix-install-dir.patch
+# Use the LLVM 22 QualTypeNames header and disable Qt's emit macro in QDoc. https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-tools/-/blob/19e83dd083700044acfec5aa06d19c726ef0ab8d/llvm22.patch
+Patch0:         2000-adapt-to-llvm22.patch
+# Install Designer example plugins under the distribution prefix; https://github.com/qt/qttools/blob/v6.12.0/examples/designer/containerextension/CMakeLists.txt.
+Patch1:         2001-fix-install-dir.patch
 
-# https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-tools/-/blob/19e83dd083700044acfec5aa06d19c726ef0ab8d/llvm22.patch
-Patch2000:      2000-adapt-to-llvm22.patch
-
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  desktop-file-utils
@@ -145,7 +146,7 @@ popd
 find %{buildroot}%{_qt6_libdir} -type f -name "*.o" -delete -print
 
 %files
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 %{_bindir}/qdbus-qt6
 %{_qt6_bindir}/qdbus
 %{_qt6_bindir}/qdbus-qt6
