@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtcoap
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtcoap
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - CoAP component
-License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND BSD-3-Clause AND CC0-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtcoap
-#!RemoteAsset:  sha256:4fa5790a48fe98d6373b5b3d0d8ee34a990da8fb39305d37128b6a959fb24fbd
+#!RemoteAsset:  sha256:e947c0477220348084df3f46e5f9c5f67fafe50fc92aa4b9033e27b7c6ccb0d2
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -54,7 +56,7 @@ Programming examples for %{name}.
 %files
 %license LICENSES/*
 %{_qt6_libdir}/libQt6Coap.so.*
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtCoap/
