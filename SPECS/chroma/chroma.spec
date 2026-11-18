@@ -16,6 +16,9 @@ URL:            https://github.com/alecthomas/chroma
 Source0:        https://github.com/alecthomas/chroma/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildSystem:    golang
 
+# Compare rule values independently of repr's repeated-pointer formatting.
+Patch2000:      2000-tests-compare-included-rules-structurally.patch
+
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/alecthomas/assert/v2)
@@ -34,6 +37,7 @@ pure Go and based on Pygments concepts.
 Summary:        General-purpose syntax highlighting library for Go
 BuildArch:      noarch
 Provides:       go(github.com/alecthomas/chroma/v2) = %{version}
+Provides:       go(github.com/alecthomas/chroma/v2/quick) = %{version}
 Requires:       go(github.com/alecthomas/kong)
 Requires:       go(github.com/dlclark/regexp2)
 Requires:       go(github.com/mattn/go-colorable)

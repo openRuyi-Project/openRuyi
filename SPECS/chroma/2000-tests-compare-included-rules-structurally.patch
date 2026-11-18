@@ -1,0 +1,33 @@
+From 9ed5ac9254446d5c6b0ce26dca7645d11f9f0792 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 23 Oct 2026 14:31:50 +0800
+Subject: [PATCH] tests: compare included rules structurally
+
+The include mutator deliberately shares CompiledRule pointers between states. Repr marks repeated pointers, so comparing rendered representations makes equivalent rule values differ solely because one graph shares pointers. Use reflect.DeepEqual to retain the complete expected-versus-actual comparison without requiring identical pointer sharing.
+---
+ mutators_test.go | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mutators_test.go b/mutators_test.go
+index ca346c2..3b9917a 100644
+--- a/mutators_test.go
++++ b/mutators_test.go
+@@ -1,6 +1,7 @@
+ package chroma
+ 
+ import (
++	"reflect"
+ 	"testing"
+ 
+ 	assert "github.com/alecthomas/assert/v2"
+@@ -40,7 +41,9 @@ func TestInclude(t *testing.T) {
+ 			}},
+ 		},
+ 	}
+-	assert.Equal(t, expected, actual)
++	// Included rules share pointers with their source state. Compare values,
++	// not repr's rendering of repeated pointers as cycle markers.
++	assert.True(t, reflect.DeepEqual(expected, actual))
+ }
+ 
+ func TestCombine(t *testing.T) {
