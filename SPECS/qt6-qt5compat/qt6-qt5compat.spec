@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qt5compat
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qt5compat
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Qt 5 Compatibility Libraries
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qt5compat
-#!RemoteAsset:  sha256:cfcb9fdaa051aad54b0e61b24ac5693b4887a86e07609f665fea67328a6f161b
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:78cf1c283795312a7fa31c73eb7f7f556b48374adc484f10ad5a3c0bcb59264e
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -35,6 +37,24 @@ BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(icu-i18n)
+
+%patchlist
+# SAX: use ranged-for loops; https://download.qt.io/official_releases/qt/6.12/CVE-2026-100140-qt5compat-6.12.zip
+1000-sax-use-ranged-for-loops.patch
+# QXmlAttributes: do not allow more than INT_MAX attributes; https://download.qt.io/official_releases/qt/6.12/CVE-2026-100140-qt5compat-6.12.zip
+1001-qxmlattributes-do-not-allow-more-than-int-max-attributes.patch
+# SAX: port internal implementation to qsizetype; https://download.qt.io/official_releases/qt/6.12/CVE-2026-100140-qt5compat-6.12.zip
+1002-sax-port-internal-implementation-to-qsizetype.patch
+# QXmlSimpleReader: add tests that show unconstrained entity expansion; https://download.qt.io/official_releases/qt/6.12/CVE-2026-105925-qt5compat-6.12.zip
+1003-qxmlsimplereader-add-tests-that-show-unconstrained-entity-expansion.patch
+# QXmlSimpleReader: limit entity expansion size at expansion time; https://download.qt.io/official_releases/qt/6.12/CVE-2026-105925-qt5compat-6.12.zip
+1004-qxmlsimplereader-limit-entity-expansion-size-at-expansion-time.patch
+# QXmlSimpleReader: add parameter entity length checks; https://download.qt.io/official_releases/qt/6.12/CVE-2026-105925-qt5compat-6.12.zip
+1005-qxmlsimplereader-add-parameter-entity-length-checks.patch
+# QXmlSimpleReader: add a property to control entity expansion limit; https://download.qt.io/official_releases/qt/6.12/CVE-2026-105925-qt5compat-6.12.zip
+1006-qxmlsimplereader-add-a-property-to-control-entity-expansion-limit.patch
+# SAX: avoid integer truncation when reporting column and line; https://download.qt.io/official_releases/qt/6.12/CVE-2026-100140-qt5compat-6.12.zip
+1007-sax-avoid-integer-truncation-when-reporting-column-and-line.patch
 
 %description
 Qt 5 Compatibility Libraries for Qt 6. This module contains classes that
@@ -70,7 +90,7 @@ popd
 %license LICENSES/*
 %{_qt6_libdir}/libQt6Core5Compat.so.6*
 %{_qt6_qmldir}/Qt5Compat/GraphicalEffects/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtCore5Compat/

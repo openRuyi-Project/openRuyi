@@ -1,0 +1,337 @@
+From 098427caaf801627044b6cdbfe41e06e4e2ceeea Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Tue, 1 Sep 2026 13:47:02 +0200
+Subject: [PATCH] QXmlSimpleReader: add tests that show unconstrained entity
+ expansion
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+There is a single entityCharacterLimit limit (4096 characters), but it
+is not checked consistently. As a result, the entity expansion can cause
+an unbound memory allocation.
+
+The tests also revealed that the existing entity size validation logic
+depends on the order of entity declarations - if they're declared in
+the reverse order, then entitiy expansion simply does not happen.
+
+The tests do not aim to reach the OOM condition, but rather check that
+the expansion exceeds the entityCharacterLimit.
+
+Another set of tests covers references to standard XML entities,
+numeric character references, references to undefined entities,
+references to entities that have empty values, and entity loops.
+
+They all are supposed to cover corner cases that might trigger
+unconstrained entity expansions.
+
+The unknown_entity_in_attlist testcase required to add an
+overload of attributeDecl() to the custom handler. That is
+required to make sure that the entity size check fails before
+ATTLIST is expanded, not after the entire DTD is parsed.
+Otherwise ATTLIST itself can be uset to exhaust memory.
+
+Task-number: QTBUG-149213
+Pick-to: 6.8 6.5 5.15
+Change-Id: Ic38fb280fc76784386c45e3a33b3eb3968a85d7e
+Reviewed-by: Mårten Nordheim <marten.nordheim@qt.io>
+Reviewed-by: Marc Mutz <marc.mutz@qt.io>
+(cherry picked from commit 82cccc5cd6842c51f0217842329a9961754a44c3)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+index 0c8a05e..5dcd755 100644
+--- a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
++++ b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+@@ -136,6 +136,9 @@ class tst_QXmlSimpleReader : public QObject
+ 
+         void valueLongerThanIntMaxDoesNotCrash();
+ 
++        void entityExpansionLimit_data();
++        void entityExpansionLimit();
++
+     private:
+         static QDomDocument fromByteArray(const QString &title, const QByteArray &ba, bool *ok);
+         XmlServer *server;
+@@ -1070,5 +1073,281 @@ void tst_QXmlSimpleReader::valueLongerThanIntMaxDoesNotCrash()
+     }
+ }
+ 
++constexpr qsizetype EntityCharacterLimit = 4096;
++
++void tst_QXmlSimpleReader::entityExpansionLimit_data()
++{
++    QTest::addColumn<QByteArray>("xml");
++
++    constexpr qsizetype OversizedLiteralSize = EntityCharacterLimit + 1;
++    constexpr qsizetype ExpandedSize = 16 * EntityCharacterLimit;
++
++    // Literal entity in content is larger than the expansion limit
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e '" + QByteArray(OversizedLiteralSize, 'A') + "'>]>"
++                "<d>&e;</d>";
++
++        QTest::newRow("literal_entity_in_content") << xml;
++    }
++
++    // Literal entity in attribute value is larger than the expansion limit
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e '" + QByteArray(OversizedLiteralSize, 'A') + "'>]>"
++                "<d a='&e;'/>";
++
++        QTest::newRow("literal_entity_in_attribute_value") << xml;
++    }
++
++    constexpr qsizetype NestedReferences = 2;
++
++    // e2 references e1 multiple times. The total expanded size of e2 exceeds the limit.
++    // e2 is used in the content.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '" + QByteArray(EntityCharacterLimit, 'A') + "'>"
++                "<!ENTITY e2 '" + QByteArray("&e1;").repeated(NestedReferences) + "'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("two_declarations_in_content") << xml;
++    }
++
++    // e2 references e1 multiple times. The total expanded size of e2 exceeds the limit.
++    // e2 is used in the attribute value.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '" + QByteArray(EntityCharacterLimit, 'A') + "'>"
++                "<!ENTITY e2 '" + QByteArray("&e1;").repeated(NestedReferences) + "'>]>"
++                "<d a='&e2;'/>";
++
++        QTest::newRow("two_declarations_in_attribute_value") << xml;
++    }
++
++    constexpr qsizetype ChainReferences = 2;
++    constexpr qsizetype ChainLiteralSize = EntityCharacterLimit / 4;
++
++    // The entities are declared in the reverse order. Verifies that we properly
++    // re-evaluate the expanded sizes once new entities are parsed.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d ["
++                "<!ENTITY e4 '" + QByteArray("&e3;").repeated(ChainReferences) + "'>"
++                "<!ENTITY e3 '" + QByteArray("&e2;").repeated(ChainReferences) + "'>"
++                "<!ENTITY e2 '" + QByteArray("&e1;").repeated(ChainReferences) + "'>"
++                "<!ENTITY e1 '" + QByteArray(ChainLiteralSize, 'A') + "'>"
++                "]><d>&e4;</d>";
++
++        QTest::newRow("reverse_declaration_order") << xml;
++    }
++
++    // Parameter entity with oversized literal size
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY % a '" + QByteArray(OversizedLiteralSize, 'A') + "'>"
++                "<!ENTITY % b '%a;'>"
++                "]><d/>";
++
++        QTest::newRow("parameter_entity_in_DTD") << xml;
++    }
++
++    // Parameter entity b references parameter entity a multiple times. The total
++    // expanded size of b exceeds the limit.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY % a '" + QByteArray(EntityCharacterLimit, 'A') + "'>"
++                "<!ENTITY % b '"
++                + QByteArray("%a;").repeated(ExpandedSize / EntityCharacterLimit)
++                + "'>]><d/>";
++
++        QTest::newRow("parameter_entity_run_in_DTD") << xml;
++    }
++
++    // Entity e references parameter entity a multiple times. The total expanded
++    // size of e exceeds the limit, and parameter entity a itself exceeds the limit.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY % a '" + QByteArray(OversizedLiteralSize, 'A') + "'>"
++                "<!ENTITY e '"
++                + QByteArray("%a;").repeated(ExpandedSize / OversizedLiteralSize)
++                +"'>]><d/>";
++
++        QTest::newRow("parameter_entity_in_entity_value") << xml;
++    }
++
++    // Expansion of standard XML entities.
++    // e1 contains multiple &amp; references, but fits into EntityCharacterLimit.
++    // e2 is a repetition of e1 that exceeds the limit.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '"
++                + QByteArray("&amp;").repeated(EntityCharacterLimit / 5) + "'>"
++                "<!ENTITY e2 '" + QByteArray("&e1;").repeated(NestedReferences) + "'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("standard_entities") << xml;
++    }
++
++    // Expansion of numeric character references.
++    // The string "&#38;#65;" is first transformed into "&#65;" (when &#38; is
++    // parsed as '&'), and that value is only replaced with 'A' in content.
++    // e1 contains multiple "&#38;#65;" entries, but fits into
++    // EntityCharacterLimit.
++    // e2 is a repetition of e1 that exceeds the limit.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '"
++                + QByteArray("&#38;#65;").repeated(EntityCharacterLimit / 5) + "'>"
++                "<!ENTITY e2 '" + QByteArray("&e1;").repeated(NestedReferences) + "'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("numeric_character_references") << xml;
++    }
++
++    // Expansion with unresolved entity.
++    // The entity e1 contains EntityCharacterLimit valid characters + a reference
++    // to an unknown entity u.
++    // The entity e2 simply uses e1.
++    // e1 itself already exceeds the limit, because an unknown entity reference
++    // is treated as a literal.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '"
++                + QByteArray(EntityCharacterLimit, 'A') + "&u;'>"
++                "<!ENTITY e2 '&e1;'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("unknown_entity") << xml;
++    }
++
++    // Expansion with unresolved entity in ATTLIST.
++    // The entity e1 contains (EntityCharacterLimit - 3) characters + a reference
++    // to an unknown entity u. So, it's fine on its own.
++    // The entity e2 references e1 twice, so it exceeds the limit.
++    // The ATTLIST expands entity e2.
++    // The test should fail during the e2 entity expansion in ATTLIST, so the
++    // attributeDecl() callback of the handler should never be called.
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '"
++                + QByteArray(EntityCharacterLimit - 3, 'A') + "&u;'>"
++                "<!ENTITY e2 '&e1;&e1;'>"
++                "<!ATTLIST d a CDATA '&e2;'>"
++                "]><d/>";
++
++        QTest::newRow("unknown_entity_in_attlist") << xml;
++    }
++
++    // Expansion when one of the entities contains an empty value.
++    // Verifies that this empty value does not invalidate the calculations.
++    // Entity e0 has an empty value.
++    // Entity e1 has EntityCharacterLimit characters + a reference to e0 - it's
++    // still fine.
++    // Entity e2 references e1 two times - it should exceed the limit
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e0 ''>"
++                "<!ENTITY e1 '" + QByteArray(EntityCharacterLimit, 'A') + "&e0;'>"
++                "<!ENTITY e2 '&e1;&e1;'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("empty_entity") << xml;
++    }
++
++    // Expansion with entity reference loop.
++    // Should be handled by the parser when substituting the entity in content
++    {
++        const QByteArray xml =
++                "<!DOCTYPE d [<!ENTITY e1 '&e2;'>"
++                "<!ENTITY e2 '&e1;'>]>"
++                "<d>&e2;</d>";
++
++        QTest::newRow("entity_loop") << xml;
++    }
++}
++
++void tst_QXmlSimpleReader::entityExpansionLimit()
++{
++    // Counts every expanded character the parser hands out, wherever it hands it
++    // out: as character data, as an attribute value, or as the value of a declared
++    // entity.
++    class ExpansionHandler : public QXmlDefaultHandler
++    {
++    public:
++        bool startElement(const QString &, const QString &, const QString &,
++                          const QXmlAttributes &atts) override
++        {
++            for (int i = 0; i < atts.length(); ++i)
++                expandedCharacters += atts.value(i).size();
++            return true;
++        }
++
++        bool characters(const QString &ch) override
++        {
++            expandedCharacters += ch.size();
++            return true;
++        }
++
++        bool internalEntityDecl(const QString &, const QString &value) override
++        {
++            expandedCharacters += value.size();
++            return true;
++        }
++
++        bool fatalError(const QXmlParseException &exception) override
++        {
++            errorMessage = exception.message();
++            return false;
++        }
++
++        bool attributeDecl(const QString &, const QString &, const QString &,
++                           const QString &, const QString &) override
++        {
++            attDeclCalled = true;
++            return true;
++        }
++
++        qsizetype expandedCharacters = 0;
++        QString errorMessage;
++        bool attDeclCalled = false;
++    };
++
++    static constexpr qsizetype expansionSanityBound = EntityCharacterLimit * 2;
++
++    QFETCH(QByteArray, xml);
++
++    QBuffer buffer(&xml);
++    QVERIFY(buffer.open(QIODevice::ReadOnly));
++    QXmlInputSource source(&buffer);
++
++    ExpansionHandler handler;
++    QXmlSimpleReader reader;
++    reader.setContentHandler(&handler);
++    reader.setErrorHandler(&handler);
++    reader.setDeclHandler(&handler);
++
++    QEXPECT_FAIL("literal_entity_in_content", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("literal_entity_in_attribute_value", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("two_declarations_in_content", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("two_declarations_in_attribute_value", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("reverse_declaration_order", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("parameter_entity_in_DTD", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("parameter_entity_run_in_DTD", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("parameter_entity_in_entity_value", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("standard_entities", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("numeric_character_references", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("unknown_entity", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("unknown_entity_in_attlist", "QTBUG-149213", Abort);
++    QEXPECT_FAIL("empty_entity", "QTBUG-149213", Abort);
++    QVERIFY(!reader.parse(source));
++    QVERIFY(!handler.errorMessage.isEmpty());
++    QVERIFY(!handler.attDeclCalled);
++    QVERIFY2(handler.expandedCharacters <= expansionSanityBound,
++             qPrintable(QString::fromLatin1("Expanded %1 characters, which is more than the "
++                                            "sanity bound of %2.")
++                                .arg(handler.expandedCharacters)
++                                .arg(expansionSanityBound)));
++}
++
+ QTEST_MAIN(tst_QXmlSimpleReader)
+ #include "tst_qxmlsimplereader.moc"

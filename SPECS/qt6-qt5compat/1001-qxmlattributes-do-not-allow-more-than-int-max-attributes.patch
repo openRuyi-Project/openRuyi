@@ -1,0 +1,116 @@
+From 8ca10fb6201efdd1ade91de82614a23ad78ae6ba Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Wed, 9 Sep 2026 13:54:33 +0200
+Subject: [PATCH] QXmlAttributes: do not allow more than INT_MAX attributes
+
+The implementation stores the attributes in a QList, meaning that its
+size is represented as qsizetype.
+
+However, the public API, like index() and length() only returns int.
+This may lead to a (very unlikely in practice) situation when some of
+the parsed attributes are not accessible to the user.
+
+To avoid such situations, this patch limits the amount of attributes
+for a single element to INT_MAX. If a document contains an element with
+more than INT_MAX attibutes, it is considered malformed, and an error
+is reported.
+
+Task-number: QTBUG-149566
+Pick-to: 6.12.0 6.11 6.11.3 6.8 6.5
+Change-Id: I4d930a4c8917154d895311b96bbb3904d79d6495
+Reviewed-by: Marc Mutz <marc.mutz@qt.io>
+(cherry picked from commit a8def6219491537fd9dbdb74d98b8f67946ad82d)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/core5/sax/qxml.cpp b/src/core5/sax/qxml.cpp
+index aa385ac..48e9f1a 100644
+--- a/src/core5/sax/qxml.cpp
++++ b/src/core5/sax/qxml.cpp
+@@ -732,6 +732,9 @@ QXmlAttributes::~QXmlAttributes()
+ */
+ int QXmlAttributes::index(const QString& qName) const
+ {
++#if QT_POINTER_SIZE != 4
++    Q_PRE(attList.size() <= INT_MAX);
++#endif
+     for (int i = 0; i < attList.size(); ++i) {
+         if (attList.at(i).qname == qName)
+             return i;
+@@ -743,6 +746,9 @@ int QXmlAttributes::index(const QString& qName) const
+   */
+ int QXmlAttributes::index(QLatin1String qName) const
+ {
++#if QT_POINTER_SIZE != 4
++    Q_PRE(attList.size() <= INT_MAX);
++#endif
+     for (int i = 0; i < attList.size(); ++i) {
+         if (attList.at(i).qname == qName)
+             return i;
+@@ -763,6 +769,9 @@ int QXmlAttributes::index(QLatin1String qName) const
+ */
+ int QXmlAttributes::index(const QString& uri, const QString& localPart) const
+ {
++#if QT_POINTER_SIZE != 4
++    Q_PRE(attList.size() <= INT_MAX);
++#endif
+     for (int i = 0; i < attList.size(); ++i) {
+         const Attribute &att = attList.at(i);
+         if (att.uri == uri && att.localname == localPart)
+@@ -931,6 +940,8 @@ void QXmlAttributes::clear()
+ */
+ void QXmlAttributes::append(const QString &qName, const QString &uri, const QString &localPart, const QString &value)
+ {
++    Q_PRE(attList.size() < INT_MAX);
++
+     Attribute att;
+     att.qname = qName;
+     att.uri = uri;
+@@ -3967,6 +3978,15 @@ bool QXmlSimpleReaderPrivate::processElementAttribute()
+     const QString &name = QXmlSimpleReaderPrivate::name();
+     const QString &string = QXmlSimpleReaderPrivate::string();
+ 
++    auto tryAppend = [this](const QString &qName, const QString &uri,
++                            const QString &localPart, const QString &value) {
++        if (attList.length() < INT_MAX) {
++            attList.append(qName, uri, localPart, value);
++            return true;
++        }
++        return false;
++    };
++
+     // add the attribute to the list
+     if (useNamespaces) {
+         // is it a namespace declaration?
+@@ -3978,7 +3998,11 @@ bool QXmlSimpleReaderPrivate::processElementAttribute()
+                 // according to http://www.w3.org/2000/xmlns/, the "prefix"
+                 // xmlns maps to the namespace name
+                 // http://www.w3.org/2000/xmlns/
+-                attList.append(name, QLatin1String("http://www.w3.org/2000/xmlns/"), lname, string);
++                if (!tryAppend(name, QLatin1String("http://www.w3.org/2000/xmlns/"),
++                               lname, string)) {
++                    reportParseError(QLatin1String(XMLERR_ERRORPARSINGELEMENT));
++                    return false;
++                }
+             }
+             // call the handler for prefix mapping
+             if (contentHnd) {
+@@ -3990,11 +4014,17 @@ bool QXmlSimpleReaderPrivate::processElementAttribute()
+         } else {
+             // no namespace delcaration
+             namespaceSupport.processName(name, true, uri, lname);
+-            attList.append(name, uri, lname, string);
++            if (!tryAppend(name, uri, lname, string)) {
++                reportParseError(QLatin1String(XMLERR_ERRORPARSINGELEMENT));
++                return false;
++            }
+         }
+     } else {
+         // no namespace support
+-        attList.append(name, uri, lname, string);
++        if (!tryAppend(name, uri, lname, string)) {
++            reportParseError(QLatin1String(XMLERR_ERRORPARSINGELEMENT));
++            return false;
++        }
+     }
+     return true;
+ }
