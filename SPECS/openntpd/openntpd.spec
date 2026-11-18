@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Suyun <ziyu.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           openntpd
-Version:        6.8p1
+Version:        7.9p1
 Release:        %autorelease
 Summary:        OpenNTPD portable version - a lightweight NTP server
 License:        ISC
 URL:            https://www.openntpd.org/
 VCS:            git:https://github.com/openntpd-portable/openntpd-portable.git
-#!RemoteAsset:  sha256:8582db838a399153d4a17f2a76518b638cc3020f58028575bf54127518f55a46
-Source0:        https://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:091eeb3f4e358e28c3ab2ea58f93d7a0b5758a20d7c8a0418e162e9b2c27addc
+Source0:        https://cdn.openbsd.org/pub/OpenBSD/OpenNTPD/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
 %description
