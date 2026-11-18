@@ -3,6 +3,7 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: sunyuechi <sunyuechi@iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -10,13 +11,13 @@
 %global nginx_moduleconfdir %{_datadir}/nginx/modules
 
 Name:           nginx
-Version:        1.31.8
+Version:        1.31.9
 Release:        %autorelease
 Summary:        High performance web server and reverse proxy server
 License:        BSD-2-Clause
 URL:            https://nginx.org
 VCS:            git:https://github.com/nginx/nginx.git
-#!RemoteAsset:  sha256:0652b760b3b772d2ec17b47c2fc15d9a95e6fe35cd5b877eadc1a62d9bc75af1
+#!RemoteAsset:  sha256:a11c5eeee2e257f4478f0e649f84b0040787d277d2d3e5233952aa6b6dcb80ad
 Source0:        https://nginx.org/download/nginx-%{version}.tar.gz
 Source1:        nginx.service
 Source2:        nginx.logrotate
