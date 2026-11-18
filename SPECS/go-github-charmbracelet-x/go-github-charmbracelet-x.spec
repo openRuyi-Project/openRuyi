@@ -28,8 +28,22 @@ Provides:       go(github.com/charmbracelet/x) = %{version}
 # Dedicated submodule packages were removed as duplicates of this monorepo
 # package. Export providers for the source versions included at this commit.
 Provides:       go(github.com/charmbracelet/x/ansi) = 0.11.6
+Provides:       go(github.com/charmbracelet/x/ansi/iterm2) = %{version}
+Provides:       go(github.com/charmbracelet/x/ansi/kitty) = %{version}
+Provides:       go(github.com/charmbracelet/x/ansi/parser) = %{version}
+Provides:       go(github.com/charmbracelet/x/ansi/sixel) = %{version}
 Provides:       go(github.com/charmbracelet/x/cellbuf) = 0.0.15
+Provides:       go(github.com/charmbracelet/x/conpty) = %{version}
+Provides:       go(github.com/charmbracelet/x/errors) = %{version}
+Provides:       go(github.com/charmbracelet/x/exp/charmtone) = %{version}
+Provides:       go(github.com/charmbracelet/x/exp/golden) = %{version}
+Provides:       go(github.com/charmbracelet/x/exp/ordered) = %{version}
+Provides:       go(github.com/charmbracelet/x/mosaic) = %{version}
 Provides:       go(github.com/charmbracelet/x/term) = 0.2.2
+# These modules are also present in the installed repository snapshot.
+Provides:       go(github.com/charmbracelet/x/termios) = %{version}
+Provides:       go(github.com/charmbracelet/x/vt) = %{version}
+Provides:       go(github.com/charmbracelet/x/windows) = %{version}
 
 Requires:       go(github.com/bits-and-blooms/bitset)
 Requires:       go(github.com/clipperhouse/displaywidth)
