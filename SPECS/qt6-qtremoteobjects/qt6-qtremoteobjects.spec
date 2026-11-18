@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtremoteobjects
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtremoteobjects
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Qt Remote Objects
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtremoteobjects
-#!RemoteAsset:  sha256:40629895c69531a687a9c0258316cee3f04c2d18b2bf2ad36dc83e76a58f111a
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:54faf680f7cc84d7f54ae9bd5f98255e5d2d7ab2d6f4d0464a3fbe50f8a55509
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -60,7 +62,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6RemoteObjects.so.6*
 %{_qt6_libdir}/libQt6RemoteObjectsQml.so.6*
 %{_qt6_qmldir}/QtRemoteObjects/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtRemoteObjects/
