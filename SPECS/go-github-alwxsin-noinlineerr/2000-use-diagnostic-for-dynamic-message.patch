@@ -1,0 +1,25 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Report dynamic analyzer messages without Reportf
+
+Go vet rejects passing a runtime string as the format argument to Reportf.
+The analyzer message has no formatting arguments, so use the diagnostic API
+while preserving the exact message and source range.
+
+---
+ noinlineerr.go | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/noinlineerr.go b/noinlineerr.go
+--- a/noinlineerr.go
++++ b/noinlineerr.go
+@@ -76,5 +76,9 @@ func inlineErrorInspector(pass *analysis.Pass) func(n ast.Node) {
+ 			// so don't do anything beside simple error message
+ 			if len(assignStmt.Lhs) != 1 || (assignStmt.Tok == token.DEFINE && shadowVarsExists(ident.Name, pass.TypesInfo.Scopes[ifStmt])) {
+-				pass.Reportf(ident.Pos(), errMessage(assignStmt.Tok))
++				pass.Report(analysis.Diagnostic{
++					Pos:     ident.Pos(),
++					End:     ident.End(),
++					Message: errMessage(assignStmt.Tok),
++				})
+ 				return
+ 			}

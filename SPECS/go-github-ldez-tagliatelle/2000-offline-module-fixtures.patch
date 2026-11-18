@@ -1,0 +1,28 @@
+Avoid module vendoring for dependency-free fixture modules in GOPATH builds.
+
+Retain module metadata so package override tests exercise the same paths.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/ldez/tagliatelle/blob/v0.8.0/tagliatelle_test.go
+
+--- a/tagliatelle_test.go
++++ b/tagliatelle_test.go
+@@ -237,10 +237,14 @@
+ 
+ 	t.Chdir(srcPath)
+ 
+-	output, err := exec.CommandContext(context.TODO(), "go", "mod", "vendor").CombinedOutput()
+-	if err != nil {
+-		t.Log(string(output))
+-		t.Fatal(err)
++	// These fixture modules have no dependencies. Distribution builds keep
++	// module metadata for package overrides without invoking module vendoring.
++	if os.Getenv("GO111MODULE") != "off" {
++		output, err := exec.CommandContext(context.TODO(), "go", "mod", "vendor").CombinedOutput()
++		if err != nil {
++			t.Log(string(output))
++			t.Fatal(err)
++		}
+ 	}
+ 
+ 	return analysistest.Run(t, srcPath, a, patterns...)

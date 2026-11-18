@@ -1,0 +1,95 @@
+From 945f498648b254fd9e0331718edc9fb8350c6340 Mon Sep 17 00:00:00 2001
+From: Julien Pinsonneau <jpinsonn@redhat.com>
+Date: Fri, 9 Oct 2026 15:28:38 +0200
+Subject: [PATCH 1001/1001] prometheus: update runtime metric fixtures for Go
+ 1.26.9 and 1.27.2
+
+Signed-off-by: Julien Pinsonneau <jpinsonn@redhat.com>
+
+Backport to the older fixture set, whose Go 1.26 cardinality was 192.
+The additional runtime metric increments that count to 193 instead of 194.
+
+Upstream: https://github.com/prometheus/client_golang/commit/dc77e03d34b019228e68a97d37d7a3c0ba076628
+---
+ prometheus/collectors/go_collector_go126_test.go | 2 ++
+ prometheus/collectors/go_collector_go127_test.go | 2 ++
+ prometheus/go_collector_metrics_go126_test.go    | 3 ++-
+ prometheus/go_collector_metrics_go127_test.go    | 3 ++-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/prometheus/collectors/go_collector_go126_test.go b/prometheus/collectors/go_collector_go126_test.go
+index 5aad924..e3ff957 100644
+--- a/prometheus/collectors/go_collector_go126_test.go
++++ b/prometheus/collectors/go_collector_go126_test.go
+@@ -74,6 +74,7 @@ func withAllMetrics() []string {
+ 		"go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxparts_events_total",
+@@ -221,6 +222,7 @@ func withDebugMetrics() []string {
+ 		"go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxparts_events_total",
+diff --git a/prometheus/collectors/go_collector_go127_test.go b/prometheus/collectors/go_collector_go127_test.go
+index c51419a..6c119f1 100644
+--- a/prometheus/collectors/go_collector_go127_test.go
++++ b/prometheus/collectors/go_collector_go127_test.go
+@@ -73,6 +73,7 @@ func withAllMetrics() []string {
+ 		"go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxparts_events_total",
+@@ -215,6 +216,7 @@ func withDebugMetrics() []string {
+ 		"go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"go_godebug_non_default_behavior_multipartmaxparts_events_total",
+diff --git a/prometheus/go_collector_metrics_go126_test.go b/prometheus/go_collector_metrics_go126_test.go
+index c1b582c..181fcee 100644
+--- a/prometheus/go_collector_metrics_go126_test.go
++++ b/prometheus/go_collector_metrics_go126_test.go
+@@ -64,6 +64,7 @@ var (
+ 		"/godebug/non-default-behavior/httplaxcontentlength:events":        "go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"/godebug/non-default-behavior/httpmuxgo121:events":                "go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"/godebug/non-default-behavior/httpservecontentkeepheaders:events": "go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"/godebug/non-default-behavior/httpservecontentmaxranges:events":   "go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"/godebug/non-default-behavior/installgoroot:events":               "go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"/godebug/non-default-behavior/multipartmaxheaders:events":         "go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"/godebug/non-default-behavior/multipartmaxparts:events":           "go_godebug_non_default_behavior_multipartmaxparts_events_total",
+@@ -129,4 +130,4 @@ var (
+ 	}
+ )
+ 
+-const expectedRuntimeMetricsCardinality = 192
++const expectedRuntimeMetricsCardinality = 193
+diff --git a/prometheus/go_collector_metrics_go127_test.go b/prometheus/go_collector_metrics_go127_test.go
+index 0b108d7..52c5a31 100644
+--- a/prometheus/go_collector_metrics_go127_test.go
++++ b/prometheus/go_collector_metrics_go127_test.go
+@@ -63,6 +63,7 @@ var (
+ 		"/godebug/non-default-behavior/httplaxcontentlength:events":        "go_godebug_non_default_behavior_httplaxcontentlength_events_total",
+ 		"/godebug/non-default-behavior/httpmuxgo121:events":                "go_godebug_non_default_behavior_httpmuxgo121_events_total",
+ 		"/godebug/non-default-behavior/httpservecontentkeepheaders:events": "go_godebug_non_default_behavior_httpservecontentkeepheaders_events_total",
++		"/godebug/non-default-behavior/httpservecontentmaxranges:events":   "go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+ 		"/godebug/non-default-behavior/installgoroot:events":               "go_godebug_non_default_behavior_installgoroot_events_total",
+ 		"/godebug/non-default-behavior/multipartmaxheaders:events":         "go_godebug_non_default_behavior_multipartmaxheaders_events_total",
+ 		"/godebug/non-default-behavior/multipartmaxparts:events":           "go_godebug_non_default_behavior_multipartmaxparts_events_total",
+@@ -124,4 +125,4 @@ var (
+ 	}
+ )
+ 
+-const expectedRuntimeMetricsCardinality = 187
++const expectedRuntimeMetricsCardinality = 188

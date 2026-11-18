@@ -1,0 +1,436 @@
+From: openRuyi contributors
+Subject: [PATCH] Restore analyzer fixtures omitted from release archives
+
+The upstream .gitattributes marks testdata as export-ignore, but the analyzer
+tests require these fixtures. Restore the files from the v2.5.1 Git tree so
+the package keeps running the complete upstream test suite.
+
+--- /dev/null
++++ b/testdata/src/argument/argument.go
+@@ -0,0 +1,107 @@
++package argument
++
++import (
++	"context"
++	"math"
++	"net/http"
++	"os"
++	"strconv"
++	"strings"
++	"sync"
++	"time"
++)
++
++var MyValue = float32(20) // want "Magic number: 20"
++
++const MyConstantValue = float32(20)
++
++const (
++	FooBlockTypeConversion = int64(512)
++	BarBlockTypeConversion = uint8(2)
++)
++
++func example() {
++	math.Abs(9.5) // want "Magic number: 9.5"
++}
++
++func example2() {
++	strings.ToUpper("foo")
++}
++
++type s struct {
++	count int
++}
++
++func (s *s) Add(count int) {
++	s.count += count
++}
++
++func example3() {
++	s := &s{}
++	s.Add(10) // want "Magic number: 10"
++}
++
++func example4() {
++	ctx, cancelFunc := context.WithTimeout(context.Background(), 5*time.Second) // want "Magic number: 5"
++	defer cancelFunc()
++
++	ctx.Value("foo")
++}
++
++func example5() {
++	http.StatusText(200) // want "Magic number: 200"
++}
++
++func example6() string {
++	t := time.Date(2017, time.September, 26, 12, 13, 14, 0, time.UTC)
++	return t.String()
++}
++
++func example7() {
++	c := make(chan int, 1)
++	c <- 1
++}
++
++func example8() {
++	c := make(chan int, 2) // want "Magic number: 2"
++	c <- 1
++}
++
++func example9() {
++	os.Exit(1)
++}
++
++func example10() {
++	var wg sync.WaitGroup
++	wg.Add(1)
++
++	go func() {
++		duration := 500 * time.Millisecond // want "Magic number: 500"
++		time.Sleep(duration)
++		wg.Done()
++	}()
++}
++
++func foobar(a, b int) {}
++
++func example11() {
++	foobar(0, 3) // want "Magic number: 3"
++}
++
++func foobaz(numbers ...int) {}
++
++func example12() {
++	foobaz(0, 1, 3, 5, 6) // want "Magic number: 3" "Magic number: 5" "Magic number: 6"
++}
++
++func example13() {
++	strconv.FormatInt(10, 32)
++	strconv.FormatUint(5, 32)
++	strconv.FormatFloat(5.0, 'E', -1, 32)
++}
++
++func example14() {
++	_, _ = strconv.ParseInt("10", 10, 64)
++	_, _ = strconv.ParseUint("5", 10, 64)
++	_, _ = strconv.ParseFloat("5.0", 32)
++}
+--- /dev/null
++++ b/testdata/src/assign/assign.go
+@@ -0,0 +1,48 @@
++package assign
++
++import (
++	"fmt"
++	"net/http"
++	"time"
++)
++
++func example() interface{} {
++	s := struct {
++		Amount int
++	}{
++		Amount: 100, // want "Magic number: 100"
++	}
++
++	return s
++}
++
++func example2() *http.Client {
++	return &http.Client{
++		Timeout: 5 * time.Second, // want "Magic number: 5"
++	}
++}
++
++func example3() *http.Client {
++	c := &http.Client{
++		Timeout: 2 * time.Second, // want "Magic number: 2"
++	}
++
++	return c
++}
++
++func example4() {
++	res := -12 // want "Magic number: 12"
++	fmt.Println(res)
++}
++
++func example5() {
++	var x int32
++	res := x + -12 // want "Magic number: 12"
++	fmt.Println(res)
++}
++
++func example6() {
++	var x int32
++	res := 12 + x // want "Magic number: 12"
++	fmt.Println(res)
++}
+--- /dev/null
++++ b/testdata/src/case/case.go
+@@ -0,0 +1,39 @@
++package _case
++
++import (
++	"fmt"
++	"time"
++)
++
++func example() {
++	var x interface{}
++
++	// ...
++
++	switch x {
++	case "test":
++	case 3: // want "Magic number: 3"
++	}
++}
++
++func example2() {
++	t := time.Now()
++	switch {
++	case t.Hour() < 12: // want "Magic number: 12"
++		fmt.Println("Good morning!")
++	case 17 > t.Hour(): // want "Magic number: 17"
++		fmt.Println("Good afternoon.")
++	default:
++		fmt.Println("Good evening.")
++	}
++}
++
++func example3() {
++	var x interface{}
++
++	switch x {
++	case 1.0:
++	case 0.0:
++	case 3.0: // want "Magic number: 3.0"
++	}
++}
+--- /dev/null
++++ b/testdata/src/condition/condition.go
+@@ -0,0 +1,27 @@
++package condition
++
++func example() {
++	var x int
++	var y string
++
++	// ...
++
++	if x > 7 { // want "Magic number: 7"
++	}
++
++	if 8 > x { // want "Magic number: 8"
++	}
++
++	if "test" == y {
++	}
++}
++
++func example2() {
++	var x float32
++
++	if x > 1.0 {
++	}
++
++	if x < 0.0 {
++	}
++}
+--- /dev/null
++++ b/testdata/src/ignored/files/ignored1.go
+@@ -0,0 +1,9 @@
++package files
++
++import "net/http"
++
++// ignored file
++
++func example2() {
++	http.StatusText(200)
++}
+--- /dev/null
++++ b/testdata/src/ignored/files/ignored2.go
+@@ -0,0 +1,11 @@
++package files
++
++import (
++	"net/http"
++)
++
++// ignored file
++
++func example1() {
++	http.StatusText(200)
++}
+--- /dev/null
++++ b/testdata/src/ignored/files/normal.go
+@@ -0,0 +1,9 @@
++package files
++
++import (
++	"net/http"
++)
++
++func example3() {
++	http.StatusText(200) // want "Magic number: 200"
++}
+--- /dev/null
++++ b/testdata/src/ignored/functions/functions.go
+@@ -0,0 +1,26 @@
++package functions
++
++import (
++	"math"
++	"net/http"
++)
++
++func example1() {
++	http.StatusText(200) // want "Magic number: 200"
++}
++
++func example2() {
++	// ignored via configuration
++	math.Abs(1.0)
++}
++
++func example3() {
++	// ignored via configuration
++	math.Acos(1.5)
++}
++
++func example4() {
++	// ignored via configuration
++	a := make([]int, 0, 10)
++	a[0] = 1
++}
+--- /dev/null
++++ b/testdata/src/ignored/numbers/numbers.go
+@@ -0,0 +1,38 @@
++package numbers
++
++import (
++	"log"
++	"net/http"
++	"time"
++)
++
++// ignored via configuration
++var numberWithDigitSeparator int = 1_000
++
++func example() interface{} {
++	s := struct {
++		Amount int
++	}{
++		Amount: numberWithDigitSeparator,
++	}
++
++	return s
++}
++
++func example2() *http.Client {
++	return &http.Client{
++		Timeout: 5 * time.Second, // want "Magic number: 5"
++	}
++}
++
++func example3() {
++	// ignored via configuration
++	if int32(1234_567_890)-int32(1_234_567_890) == 0 {
++		log.Println(3.1415_9265) // want "Magic number: 3.1415_9265"
++	}
++}
++
++func example4() {
++	// ignored via configuration
++	_ = float32(3.1415_9264)
++}
+--- /dev/null
++++ b/testdata/src/operation/operation.go
+@@ -0,0 +1,41 @@
++package operation
++
++func example() {
++	var y int
++	_ = y * 20 // want "Magic number: 20"
++}
++
++func example2() {
++	var y int
++	_ = 10 * y // want "Magic number: 10"
++}
++
++func example3() {
++	var y int
++	_ = 5 * y * 6 // want "Magic number: 5" "Magic number: 6"
++}
++
++func example4() {
++	const c = 24
++	_ = c + (42 * 10) // want "Magic number: 42" "Magic number: 10"
++}
++
++func example5() {
++	var x int32
++	if (42 * x) > 10 { // want "Magic number: 42" "Magic number: 10"
++		// ...
++	}
++}
++
++func example6() {
++	var x int32
++	if 10 < (x * 42) { // want "Magic number: 42" "Magic number: 10"
++		// ...
++	}
++}
++
++func example7() {
++	var x float32
++	if 10 < (x * 1.0) { // want "Magic number: 10"
++	}
++}
+--- /dev/null
++++ b/testdata/src/return/return.go
+@@ -0,0 +1,41 @@
++package _return
++
++func example() int {
++	return 3 // want "Magic number: 3"
++}
++
++func example2() string {
++	return "3"
++}
++
++func example3() float64 {
++	return 2.0 // want "Magic number: 2.0"
++}
++
++func example4(x int32) int32 {
++	return x + 42 // want "Magic number: 42"
++}
++
++func example5(x int32) int32 {
++	return 42 + x // want "Magic number: 42"
++}
++
++func example6(x int32) int32 {
++	return x + (42 * 10) // want "Magic number: 42" "Magic number: 10"
++}
++
++func example7(x int32) int32 {
++	return (42 * x) + 10 // want "Magic number: 42" "Magic number: 10"
++}
++
++func example8() float32 {
++	return 0.0
++}
++
++func example9() float32 {
++	return 1.0
++}
++
++func example10() float32 {
++	return 3.0 // want "Magic number: 3.0"
++}
