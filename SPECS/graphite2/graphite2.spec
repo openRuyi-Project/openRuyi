@@ -6,20 +6,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           graphite2
-Version:        1.3.14
+Version:        1.3.15
 Release:        %autorelease
 Summary:        Font rendering capabilities for complex non-Roman writing systems
 License:        LGPL-2.1-or-later OR MPL-2.0 OR GPL-2.0-or-later
 URL:            https://graphite.sil.org
 VCS:            git:https://github.com/silnrsi/graphite
-#!RemoteAsset
+#!RemoteAsset:  sha256:c6bc8b4252724665297f7cad0c55897285c673f9b8e6db3522ace833593fe0b1
 Source0:        https://github.com/silnrsi/graphite/releases/download/%{version}/%{name}-%{version}.tgz
 BuildSystem:    cmake
 
 # Let other package find the cmake files
 Patch0:         0001-graphite2-1.2.0-cmakepath.patch
-# This fixes compilation with gcc15
-Patch1:         0002-graphite2-1.3.14-gcc15.patch
 
 BuildOption(conf):  -DGRAPHITE2_COMPARE_RENDERER=OFF
 BuildOption(conf):  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
@@ -27,6 +25,7 @@ BuildOption(check):  -E 'nametabletest'
 
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(freetype2)
+BuildRequires:  python3dist(fonttools)
 
 %description
 Graphite2 is a project within SIL’s Non-Roman Script Initiative and Language
@@ -59,4 +58,4 @@ Includes and definitions for developing with graphite2.
 %{_libdir}/pkgconfig/graphite2.pc
 
 %changelog
-%{?autochangelog}
+%autochangelog
