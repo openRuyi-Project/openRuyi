@@ -2,29 +2,31 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquickeffectmaker
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtquickeffectmaker
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Tool for creating shader effects for Qt Quick
-License:        GPL-3.0-only
+License:        GPL-3.0-only AND BSD-3-Clause AND OFL-1.1
 URL:            https://doc.qt.io/qt-6/qtquickeffectmaker-index.html
 VCS:            git:https://github.com/qt/qtquickeffectmaker
-#!RemoteAsset:  sha256:cfe63e70e88bdd126a175762d3eeb38eb336e45beceedcbd027bc5362744136b
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:290c8c3c9835e9d3991cbf7e8fe965992c8f7c8730e694f7cf90fb719c2c63ac
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 Source1:        quickeffectmaker.desktop
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  desktop-file-utils
 BuildRequires:  qt6-macros
@@ -56,7 +58,7 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications --vendor="qt6" %
 %license LICENSES/GPL-3.0-only.txt
 %{_qt6_bindir}/qqem
 %{_qt6_qmldir}/QtQuickEffectMaker/
-%{_qt6_archdatadir}/sbom/qqeffectmaker-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/qqeffectmaker-%{version}.spdx
 %{_datadir}/applications/*.desktop
 
 %files examples
