@@ -3,21 +3,22 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           xmltoman
-Version:        0.4
+Version:        0.6
 Release:        %autorelease
 Summary:        Scripts to convert XML to man pages or HTML
 License:        GPL-2.0-only
-URL:            https://github.com/Distrotech/xmltoman
-#!RemoteAsset:  sha256:2ab86b74fe364a866d84c14b20cbd42a09fa85c629deeff52376bbf890854feb
-Source:         https://github.com/Distrotech/xmltoman/archive/refs/tags/%{version}.tar.gz
+URL:            https://github.com/atsb/xmltoman
+#!RemoteAsset:  sha256:cdd5063ca8beb6fe51ec6ab85f70d31fc8ed034e85e32dd9b7c0b7142bb72fb6
+Source:         https://github.com/atsb/xmltoman/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    autotools
 
-BuildOption(build):  PREFIX="%{_prefix}"
-BuildOption(install):  PREFIX="%{_prefix}"
+BuildOption(build):  prefix="%{_prefix}"
+BuildOption(install):  prefix="%{_prefix}"
 
 BuildRequires:  perl(XML::Parser)
 BuildRequires:  make
@@ -35,10 +36,12 @@ to groff (man pages) or HTML.
 %check
 
 %files
-%license COPYING
 %doc ChangeLog README
+%license COPYING
 %{_bindir}/xmlmantohtml
 %{_bindir}/xmltoman
+%{_mandir}/man1/xmlmantohtml.1*
+%{_mandir}/man1/xmltoman.1*
 %dir %{_datadir}/xmltoman
 %{_datadir}/xmltoman/xmltoman.css
 %{_datadir}/xmltoman/xmltoman.dtd
