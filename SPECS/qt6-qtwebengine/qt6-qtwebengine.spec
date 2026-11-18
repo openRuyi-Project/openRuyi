@@ -1,38 +1,27 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwebengine
-%define real_version 6.11.1
-%define short_version 6.11
+
+# Keep GN response filenames below the filesystem limit. https://bugreports.qt.io/browse/QTBUG-59769
+%global _vpath_builddir b
 
 Name:           qt6-qtwebengine
-Version:        6.11.1
+Version:        6.140.0
 Release:        %autorelease
 Summary:        Qt6 - QtWebEngine components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwebengine
-#!RemoteAsset:  sha256:679c66ccc6c158fc215e9c58ef160331ecd29974232e345c05161889f8667083
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:82352854a1d01dfe6abeefaf023554e4722c1d7df48ba3ce0078f6c0a9c7e1a3
+Source0:        https://download.qt.io/official_releases/qtwebengine/6.140/%{version}/src/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
-# enable to link pipewire
-Patch0:         0001-qtwebengine-link-pipewire.patch
-%ifarch riscv64
-# Patches from https://build.opensuse.org/package/show/openSUSE:Factory:RISCV/qt6-webengine
-# Updated for Qt 6.11.1 (openSUSE Factory RISCV)
-Patch1:         0002-riscv-sandbox.patch
-Patch2:         0003-riscv-misc.patch
-Patch3:         0004-riscv-enable-v8-webasm.patch
-%endif
-# Based on various upstream commits.
-Patch4:         0005-adapt-chromium-to-gcc16-glibc2.43-and-rvv.patch
-# Fix gen-regexp-special-case crash (SIGTRAP) when built against ICU 79 (Unicode 18)
-# Backport of https://chromium-review.googlesource.com/c/v8/v8/+/8548134
-Patch5:         0006-v8-regexp-ignore-supplementary-case-equivalents.patch
+BuildOption(prep):  -n %{qt_module}-everywhere-src-%{version}
 
 BuildOption(conf):  -DCMAKE_TOOLCHAIN_FILE="%{_libdir}/cmake/Qt6/qt.toolchain.cmake"
 BuildOption(conf):  -DFEATURE_webengine_build_gn=ON
@@ -53,8 +42,7 @@ BuildOption(conf):  -DFEATURE_webengine_system_libvpx=OFF
 BuildOption(conf):  -DFEATURE_webengine_system_snappy=ON
 BuildOption(conf):  -DFEATURE_webengine_system_glib=ON
 BuildOption(conf):  -DFEATURE_webengine_system_zlib=ON
-BuildOption(conf):  -DFEATURE_webengine_system_minizip=OFF
-BuildOption(conf):  -DFEATURE_webengine_system_libevent=ON
+BuildOption(conf):  -DFEATURE_webengine_system_minizip=ON
 BuildOption(conf):  -DFEATURE_webengine_system_libxml=ON
 BuildOption(conf):  -DFEATURE_webengine_system_lcms2=ON
 BuildOption(conf):  -DFEATURE_webengine_system_libpng=ON
@@ -72,9 +60,8 @@ BuildOption(conf):  -DFEATURE_webengine_pepper_plugins=ON
 BuildOption(conf):  -DFEATURE_webengine_printing_and_pdf=ON
 BuildOption(conf):  -DFEATURE_webengine_proprietary_codecs=ON
 BuildOption(conf):  -DFEATURE_webengine_spellchecker=ON
-# TODO
-BuildOption(conf):  -DFEATURE_webengine_webrtc=OFF
-BuildOption(conf):  -DFEATURE_webengine_webrtc_pipewire=OFF
+BuildOption(conf):  -DFEATURE_webengine_webrtc=ON
+BuildOption(conf):  -DFEATURE_webengine_webrtc_pipewire=ON
 BuildOption(conf):  -DFEATURE_webengine_geolocation=ON
 BuildOption(conf):  -DFEATURE_webengine_webchannel=ON
 BuildOption(conf):  -DFEATURE_webengine_kerberos=ON
@@ -89,8 +76,9 @@ BuildOption(conf):  -DQT_BUILD_EXAMPLES=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
-BuildRequires:  python3
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(html5lib)
 BuildRequires:  gperf
 BuildRequires:  bison
@@ -100,7 +88,7 @@ BuildRequires:  nodejs
 BuildRequires:  python3dist(six)
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  qt6-macros
-BuildRequires:  qt6-qtbase-private-devel
+BuildRequires:  qt6-qtbase-private-devel >= 6.12.0
 BuildRequires:  cmake(Qt6Core)
 BuildRequires:  cmake(Qt6Designer)
 BuildRequires:  cmake(Qt6Gui)
@@ -128,11 +116,13 @@ BuildRequires:  pkgconfig(icu-i18n)
 BuildRequires:  pkgconfig(libwebp)
 BuildRequires:  pkgconfig(opus)
 BuildRequires:  ffmpeg-devel
-BuildRequires:  pkgconfig(vpx)
 BuildRequires:  snappy-devel
 BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(gio-unix-2.0)
+BuildRequires:  pkgconfig(libpipewire-0.3)
 BuildRequires:  pkgconfig(zlib)
-# BuildRequires:  pkgconfig(minizip)
+BuildRequires:  pkgconfig(minizip)
 BuildRequires:  pkgconfig(libevent)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(libxslt)
@@ -161,7 +151,6 @@ BuildRequires:  pkgconfig(xdamage)
 BuildRequires:  pkgconfig(alsa)
 BuildRequires:  pkgconfig(libpulse)
 BuildRequires:  pkgconfig(libva)
-BuildRequires:  pkgconfig(libpipewire-0.3)
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(egl)
 BuildRequires:  pkgconfig(epoxy)
@@ -171,6 +160,67 @@ BuildRequires:  pkgconfig(gl)
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(nss)
 BuildRequires:  pkgconfig(poppler-cpp)
+
+Recommends:     pipewire
+Recommends:     xdg-desktop-portal
+
+%patchlist
+# Find PdfQuick for PDF examples; https://github.com/qt/qtwebengine/commit/667e0fe22e12663e0016a0c7af81730464d36ca4
+0001-qtpdf-example-find.patch
+# Serve extension resources to ordinary pages; https://github.com/qt/qtwebengine/commit/182770309831c9167a0e1102c92e4ddb9e0ab6c3
+0002-webengine-extension-resources.patch
+# Bind extension worker and frame interfaces; https://github.com/qt/qtwebengine/commit/85c4b70af12dd018f8188c4ae2f0425158a5f7be
+0003-webengine-extension-workers.patch
+# Report incompatible system FFmpeg; https://github.com/qt/qtwebengine/commit/9cd16a4802645aeb37ec3f2fa7ee8d47538cd0e2
+0004-webengine-ffmpeg-diagnostic.patch
+
+# Avoid SYS_SECCOMP conflicts with glibc; https://chromium.googlesource.com/chromium/src/+/83a9ccb1265dcdeeb8bf17205e00b751f86641d3
+1000-chromium-seccomp-glibc.patch
+# Fix the OSR code check; https://github.com/v8/v8/commit/3b52f29d09b8941a43696b207529fb11aec19c66
+1001-v8-riscv-osr-check.patch
+# Fix large Wasm lazy jumps; https://github.com/v8/v8/commit/def38dd3f8726ed595932624ee5d681a3f02ed4a
+1002-v8-riscv-lazy-jump.patch
+# Preserve character-code inputs; https://github.com/v8/v8/commit/953d0bd5b0629fc42775f8fc08ffe6e7599ce6a6
+1003-v8-riscv-charcode-register.patch
+# Preserve concurrent subword updates; https://github.com/v8/v8/commit/d45bc027023297658f992b72af33c466e9d4487b
+1004-v8-riscv-subword-atomic.patch
+# Guard GLX access when Ozone X11 is disabled; https://github.com/qt/qtwebengine/commit/ca137f50ec704caecba07f8c4a30fb046999ce02
+1005-qt-ozone-x11-guard.patch
+# Link PDF examples to PdfQuick; https://github.com/qt/qtwebengine/commit/dc73367655df769ca69c65ffa6c776e9edcc94a6
+1006-qtpdf-example-link.patch
+# Parse underscore-separated ISA features; https://github.com/v8/v8/commit/79b2369ad746e3208e6984ceccf7f661a83b2058
+1007-v8-riscv-isa-parser.patch
+# Relocate ELF string tables on RISC-V Linux; https://github.com/chromium/chromium/commit/fe71107697d8bccdc4e95048147f97826142ba75
+1008-chromium-riscv-elf-strtab.patch
+# Round clamped values to integers; https://github.com/v8/v8/commit/09e5fa753e99d658e77044ff9b9f150397cee059
+1009-v8-riscv-clamped-rounding.patch
+# Keep the high bits of signed products; https://github.com/v8/v8/commit/7c405ae0da48c68a2d558cbbc8fe38f5377f60b1
+1010-v8-riscv-multiply-high.patch
+# Preserve live registers during RISC-V byte swaps; https://github.com/v8/v8/commit/7e40e4bee05bbecad063f618ec64d48aa3a63ca7
+1011-v8-riscv-byteswap-registers.patch
+# Preserve saved RISC-V frames across signals; https://github.com/v8/v8/commit/6a0a25abaed397f83eb0d92e4b33a5e18204f8bc
+1012-v8-riscv-leave-frame.patch
+# Use Highway comparisons on RISC-V; https://github.com/v8/v8/commit/77c3daed6d2b89a45531bf4b0f81d9b697768f87
+1013-v8-riscv-highway-comparisons.patch
+# Check RISC-V assembler buffer growth; https://github.com/v8/v8/commit/639a7d02772c0bc212bc29b6b4eaddbed115488a
+1014-v8-riscv-grow-buffer.patch
+# Handle ICU 79 case folding; https://github.com/v8/v8/commit/f607706154eabc4a949628a88b38dbe95cd2274c.
+1015-v8-icu79-case-folding.patch
+# Correct RISC-V Wasm parameter spill slots; https://github.com/v8/v8/commit/792ce35f2cd9f65962030e8d536a8a480d721d2d.
+1016-v8-riscv-frame-parameter-spills.patch
+# Locate the saved RISC-V Wasm return address; https://github.com/v8/v8/commit/9235e225af3555365398cd7d24b31a2efe51650f.
+1017-v8-riscv-frame-calling-pc.patch
+
+# Support RISC-V seccomp (adapted from openSUSE); https://api.opensuse.org/public/source/openSUSE:Factory:RISCV/qt6-webengine/riscv-sandbox.patch?rev=41
+2000-riscv-sandbox.patch
+# Fix RISC-V audio and musttail builds (adapted from openSUSE); https://api.opensuse.org/public/source/openSUSE:Factory:RISCV/qt6-webengine/riscv-misc.patch?rev=41
+2001-riscv-misc.patch
+# Declare fixed-width integer types; https://src.fedoraproject.org/rpms/qt6-qtwebengine/blob/bd8905f045f73300ca319773fc8f5a1558ccfc9b/f/qtwebengine-fix-build-against-gcc16.patch.
+2002-chromium-integer-header.patch
+# Correct RISC-V Liftoff SIMD register handling; https://github.com/felixonmars/archriscv-packages/blob/90ecae0ca9cfa948345ef826082eec76eb234eac/qt6-webengine/riscv-v8.patch
+2003-v8-riscv-liftoff-registers.patch
+# Report the RISC-V extension platform; https://github.com/felixonmars/archriscv-packages/blob/7dad19467ed1a7e306510925de72558dbdc64b43/chromium/0001-chrome-runtime_api_delegate-add-riscv64-define.patch.
+2004-runtime-riscv64.patch
 
 %description
 The Qt WebEngine module provides a web browser engine that makes it easy to
@@ -196,7 +246,6 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Examples for %{name}.
 
 %prep -a
-system_libs=(re2 icu libwebp opus ffmpeg libvpx snappy glib zlib libevent libxml libxslt lcms2 libpng libtiff libjpegflint libopenjpeg2 harfbuzz freetype libpci)
 sed -i -e '/toolprefix = /d' -e 's/\${toolprefix}//g' src/3rdparty/chromium/build/toolchain/linux/BUILD.gn
 
 cp -p src/3rdparty/chromium/LICENSE LICENSE.Chromium
@@ -218,9 +267,6 @@ done
 rm -fv Qt6WebEngineCore.la
 popd
 
-sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
-  %{buildroot}%{_qt6_libdir}/cmake/Qt6WebEngine*/Qt6WebEngine*Config.cmake
-
 %files
 %license LICENSE.*
 %{_qt6_libdir}/libQt6WebEngineCore.so.*
@@ -234,8 +280,8 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/qt6/qml/QtWebEngine/
 %{_qt6_datadir}/resources/
 %{_qt6_translationsdir}/qtwebengine_locales/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
-%{_qt6_archdatadir}/sbom/qtpdf-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
+%{_qt6_archdatadir}/sbom/qtpdf-%{version}.spdx
 %{_qt6_libdir}/libQt6Pdf.so.*
 %{_qt6_libdir}/libQt6PdfQuick.so.*
 %{_qt6_libdir}/libQt6PdfWidgets.so.*
@@ -254,6 +300,12 @@ sed -i -e "s|%{version} \${_Qt6WebEngine|%{real_version} \${_Qt6WebEngine|" \
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6qtwebengine*.cmake
 %{_qt6_libdir}/cmake/Qt6WebEngine*/
 %{_qt6_libdir}/cmake/Qt6/*.cmake
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/Pdf/
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/PdfQuick/
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/PdfWidgets/
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/WebEngineCore/
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/WebEngineQuick/
+%{_qt6_libdir}/cmake/Qt6/ConfigVersionOverrides/WebEngineWidgets/
 %{_qt6_libdir}/cmake/Qt6BuildInternals/StandaloneTests/QtWebEngine*
 %{_qt6_libdir}/pkgconfig/Qt6WebEngineCore.pc
 %{_qt6_libdir}/pkgconfig/Qt6WebEngineQuick.pc

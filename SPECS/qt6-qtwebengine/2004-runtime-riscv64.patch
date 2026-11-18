@@ -1,0 +1,26 @@
+From a55dfbd6523238856d1b501dbf6114effa218bd2 Mon Sep 17 00:00:00 2001
+From: kxxt <rsworktech@outlook.com>
+Date: Sun, 25 Aug 2024 10:46:25 +0200
+Subject: [PATCH] Support RISC-V in the extension runtime platform query
+
+Adapt the platform architecture hunk from Arch Linux RISC-V to Qt.
+Qt does not use the original patch's NaCl architecture hunk.
+
+Origin: https://github.com/felixonmars/archriscv-packages/blob/7dad19467ed1a7e306510925de72558dbdc64b43/chromium/0001-chrome-runtime_api_delegate-add-riscv64-define.patch
+---
+ src/core/extensions/api/runtime_api_delegate_qt.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/core/extensions/api/runtime_api_delegate_qt.cpp b/src/core/extensions/api/runtime_api_delegate_qt.cpp
+index 3dc22ae..1ee542e 100644
+--- a/src/core/extensions/api/runtime_api_delegate_qt.cpp
++++ b/src/core/extensions/api/runtime_api_delegate_qt.cpp
+@@ -74,6 +74,8 @@ bool RuntimeAPIDelegateQt::GetPlatformInfo(PlatformInfo *info)
+         info->arch = extensions::api::runtime::PlatformArch::kMips;
+     } else if (strcmp(arch, "mips64el") == 0) {
+         info->arch = extensions::api::runtime::PlatformArch::kMips64;
++    } else if (strcmp(arch, "riscv64") == 0) {
++        info->arch = extensions::api::runtime::PlatformArch::kRiscv64;
+     } else {
+         NOTREACHED();
+     }

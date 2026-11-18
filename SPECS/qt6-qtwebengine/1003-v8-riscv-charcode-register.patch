@@ -1,0 +1,31 @@
+From 953d0bd5b0629fc42775f8fc08ffe6e7599ce6a6 Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Thu, 3 Sep 2026 13:33:22 +0800
+Subject: [PATCH] [riscv] Fix input constraint  in
+ BuiltinStringFromCharCode::SetValueLocationConstraints()
+
+Change-Id: I3c1b3eb6549875c1d035d63e7abe9251189e13bd
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8349148
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#109691}
+Backport: Use the V8 14.0 code_input accessor.
+
+---
+ src/maglev/riscv/maglev-ir-riscv.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-ir-riscv.cc b/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-ir-riscv.cc
+index 59a4e5682416..85498270ad81 100644
+--- a/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-ir-riscv.cc
++++ b/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-ir-riscv.cc
+@@ -145,7 +145,7 @@ void BuiltinStringFromCharCode::SetValueLocationConstraints() {
+   if (code_input().node()->Is<Int32Constant>()) {
+     UseAny(code_input());
+   } else {
+-    UseRegister(code_input());
++    UseAndClobberRegister(code_input());
+   }
+   set_temporaries_needed(2);
+   DefineAsRegister(this);

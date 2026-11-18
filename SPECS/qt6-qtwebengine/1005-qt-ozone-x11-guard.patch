@@ -1,0 +1,39 @@
+From ca137f50ec704caecba07f8c4a30fb046999ce02 Mon Sep 17 00:00:00 2001
+From: Kaloyan Chehlarski <kaloyan.chehlarski@qt.io>
+Date: Thu, 4 Jun 2026 16:51:10 +0200
+Subject: [PATCH] Fixup: Synchronize DRM render node between Qt and Chromium
+ under EGL/Wayland
+
+Linking fails when the webengine_ozone_x11 feature is off, but
+xcb_glx_plugin is on. Add an #if BUILDFLAG(IS_OZONE_X11) as a fix.
+
+This commit amends b0044b3ce4e8281797837a0496b7ef90cc6ccee9
+
+Pick-to: 6.12
+Change-Id: I636220cddca993cf534253d0228852ef7eed4e77
+Reviewed-by: Moss Heim <moss.heim@qt.io>
+---
+ src/core/ozone/gbm_buffer_factory.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/core/ozone/gbm_buffer_factory.cpp b/src/core/ozone/gbm_buffer_factory.cpp
+index 4b72b5fe2b9..3a315c59ccc 100644
+--- a/src/core/ozone/gbm_buffer_factory.cpp
++++ b/src/core/ozone/gbm_buffer_factory.cpp
+@@ -8,6 +8,7 @@
+ #include "ozone/glx_helper.h"
+ #include "ozone/ozone_util_qt.h"
+ 
++#include "ui/base/ozone_buildflags.h"
+ #include "ui/gfx/buffer_format_util.h"
+ #include "ui/gfx/linux/drm_util_linux.h"
+ #include "ui/gfx/linux/gbm_buffer.h"
+@@ -70,7 +71,7 @@ static base::ScopedFD openDrmNodePath(const std::string &path)
+ 
+ GbmBufferFactory *GbmBufferFactory::instance()
+ {
+-#if QT_CONFIG(xcb_glx_plugin)
++#if BUILDFLAG(IS_OZONE_X11) && QT_CONFIG(xcb_glx_plugin)
+     if (OzoneUtilQt::usingGLX())
+         return GLXHelper::instance()->gbmFactory();
+ #endif

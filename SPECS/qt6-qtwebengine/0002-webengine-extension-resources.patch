@@ -1,0 +1,273 @@
+From ea9c2647cddc90d6e0c31bfc7ea4372c00c40445 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ville=20Kivel=C3=A4?= <ville.d.kivela@gmail.com>
+Date: Mon, 21 Sep 2026 22:08:26 +0300
+Subject: [PATCH] Serve web accessible resources to ordinary pages
+
+A page cannot load a resource an extension declares in
+web_accessible_resources, by fetch, as an image or as a script. The
+request never reaches the browser as itself: it arrives as
+chrome-extension://invalid/.
+
+There are two copies of the renderer's resource policy.
+ExtensionsRendererClient owns a ResourceRequestPolicy, is told which
+extensions have loaded through OnExtensionLoaded, and answers
+WillSendRequest from it. ExtensionsRendererClientQt creates a second
+ResourceRequestPolicyQt and overrides WillSendRequest to use that one.
+Nothing calls OnExtensionLoaded on it, so its set of ids with web
+accessible resources is always empty, CanRequestResource refuses every
+request, and the renderer rewrites the URL to
+kExtensionInvalidRequestURL. The Qt copy predates the base class owning
+one.
+
+Remove the copy and the override so the base class answers. Its
+WillSendRequest also takes upstream_url, which
+ContentRendererClientQt::WillSendRequest already receives and drops, so
+a resource reached through a redirect is now allowed by the extension
+that redirected to it.
+
+This breaks a class of extension rather than an API: one whose scripts
+are all declared in the manifest never notices, while one that declares
+a small loader and imports its real bundle gets nothing into the page.
+
+Fixes: QTBUG-150590
+Pick-to: 6.140
+Change-Id: I290d735d1de6abef30b967417f9e5861d9a9c0e1
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+
+Backport: Rebase test slot declarations onto QtWebEngine 6.140.0.
+---
+ .../renderer/content_renderer_client_qt.cpp   |  6 ++-
+ .../extensions_renderer_client_qt.cpp         | 17 ---------
+ .../extensions_renderer_client_qt.h           |  8 ----
+ tests/auto/widgets/extensions/CMakeLists.txt  |  2 +
+ .../web_accessible_ext/manifest.json          | 19 ++++++++++
+ .../web_accessible_ext/service_worker.js      |  1 +
+ .../resources/web_accessible_ext/shared.js    |  1 +
+ .../resources/web_accessible_ext/shared.txt   |  1 +
+ .../extensions/tst_qwebengineextension.cpp    | 38 +++++++++++++++++++
+ 9 files changed, 67 insertions(+), 26 deletions(-)
+ create mode 100644 tests/auto/widgets/extensions/resources/web_accessible_ext/manifest.json
+ create mode 100644 tests/auto/widgets/extensions/resources/web_accessible_ext/service_worker.js
+ create mode 100644 tests/auto/widgets/extensions/resources/web_accessible_ext/shared.js
+ create mode 100644 tests/auto/widgets/extensions/resources/web_accessible_ext/shared.txt
+
+diff --git a/src/core/renderer/content_renderer_client_qt.cpp b/src/core/renderer/content_renderer_client_qt.cpp
+index 3c83765..9f90d77 100644
+--- a/src/core/renderer/content_renderer_client_qt.cpp
++++ b/src/core/renderer/content_renderer_client_qt.cpp
+@@ -537,7 +537,11 @@ void ContentRendererClientQt::WillSendRequest(blink::WebLocalFrame *frame,
+                                               GURL *new_url)
+ {
+ #if BUILDFLAG(ENABLE_EXTENSIONS)
+-    ExtensionsRendererClientQt::GetInstance()->WillSendRequest(frame, transition_type, target_url, site_for_cookies,
++    // The base class answers this, because it is the one holding the policy that is told which
++    // extensions have loaded. `upstream_url` is passed on rather than dropped: a resource reached
++    // through a redirect is allowed by the extension that redirected to it.
++    ExtensionsRendererClientQt::GetInstance()->WillSendRequest(frame, transition_type, upstream_url,
++                                                               target_url, site_for_cookies,
+                                                                initiator_origin, new_url);
+     if (!new_url->is_empty())
+         return;
+diff --git a/src/core/renderer/extensions/extensions_renderer_client_qt.cpp b/src/core/renderer/extensions/extensions_renderer_client_qt.cpp
+index 254ba25..b24d13b 100644
+--- a/src/core/renderer/extensions/extensions_renderer_client_qt.cpp
++++ b/src/core/renderer/extensions/extensions_renderer_client_qt.cpp
+@@ -10,7 +10,6 @@
+ #include "extensions_renderer_client_qt.h"
+ 
+ #include "renderer/render_configuration.h"
+-#include "resource_request_policy_qt.h"
+ 
+ #include "base/command_line.h"
+ #include "base/lazy_instance.h"
+@@ -72,7 +71,6 @@ ExtensionsRendererClientQt *ExtensionsRendererClientQt::GetInstance()
+ 
+ void ExtensionsRendererClientQt::FinishInitialization()
+ {
+-    resource_request_policy_.reset(new extensions::ResourceRequestPolicyQt(dispatcher()));
+ }
+ 
+ void ExtensionsRendererClientQt::WebViewCreated(blink::WebView *web_view, const url::Origin *outermost_origin)
+@@ -89,21 +87,6 @@ bool ExtensionsRendererClientQt::OverrideCreatePlugin(content::RenderFrame *rend
+     return !guest_view_api_available;
+ }
+ 
+-void ExtensionsRendererClientQt::WillSendRequest(blink::WebLocalFrame *frame,
+-                                                 ui::PageTransition transition_type,
+-                                                 const blink::WebURL &url,
+-                                                 const net::SiteForCookies &site_for_cookies,
+-                                                 const url::Origin *initiator_origin,
+-                                                 GURL *new_url)
+-{
+-    if (url.ProtocolIs(extensions::kExtensionScheme) &&
+-            !resource_request_policy_->CanRequestResource(url, frame,
+-                                                          transition_type,
+-                                                          initiator_origin)) {
+-        *new_url = GURL(chrome::kExtensionInvalidRequestURL);
+-    }
+-}
+-
+ void ExtensionsRendererClientQt::RunScriptsAtDocumentStart(content::RenderFrame *render_frame)
+ {
+     dispatcher()->RunScriptsAtDocumentStart(render_frame);
+diff --git a/src/core/renderer/extensions/extensions_renderer_client_qt.h b/src/core/renderer/extensions/extensions_renderer_client_qt.h
+index b6711b0..fc450f6 100644
+--- a/src/core/renderer/extensions/extensions_renderer_client_qt.h
++++ b/src/core/renderer/extensions/extensions_renderer_client_qt.h
+@@ -33,7 +33,6 @@ class Origin;
+ }
+ 
+ namespace extensions {
+-class ResourceRequestPolicyQt;
+ }
+ 
+ namespace QtWebEngineCore {
+@@ -54,12 +53,6 @@ public:
+                         const url::Origin *outermost_origin);
+     bool OverrideCreatePlugin(content::RenderFrame *render_frame,
+                               const blink::WebPluginParams &params);
+-    void WillSendRequest(blink::WebLocalFrame *frame,
+-                         ui::PageTransition transition_type,
+-                         const blink::WebURL &url,
+-                         const net::SiteForCookies &site_for_cookies,
+-                         const url::Origin *initiator_origin,
+-                         GURL *new_url);
+ 
+     void RunScriptsAtDocumentStart(content::RenderFrame *render_frame);
+     void RunScriptsAtDocumentEnd(content::RenderFrame *render_frame);
+@@ -68,7 +61,6 @@ public:
+     static ExtensionsRendererClientQt *GetInstance();
+ 
+ private:
+-    std::unique_ptr<extensions::ResourceRequestPolicyQt> resource_request_policy_;
+ };
+ 
+ } // namespace QtWebEngineCore
+diff --git a/tests/auto/widgets/extensions/CMakeLists.txt b/tests/auto/widgets/extensions/CMakeLists.txt
+index 4c99fa6..b684910 100644
+--- a/tests/auto/widgets/extensions/CMakeLists.txt
++++ b/tests/auto/widgets/extensions/CMakeLists.txt
+@@ -2,6 +2,7 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ 
+ include(../../util/util.cmake)
++include(../../httpserver/httpserver.cmake)
+ 
+ qt_internal_add_test(tst_qwebengineextension
+     SOURCES
+@@ -9,6 +10,7 @@ qt_internal_add_test(tst_qwebengineextension
+     LIBRARIES
+         Qt::WebEngineWidgets
+         Test::Util
++        Test::HttpServer
+ )
+ 
+ set(tst_qwebengineextension_resource_files
+diff --git a/tests/auto/widgets/extensions/resources/web_accessible_ext/manifest.json b/tests/auto/widgets/extensions/resources/web_accessible_ext/manifest.json
+new file mode 100644
+index 0000000..1c9571b
+--- /dev/null
++++ b/tests/auto/widgets/extensions/resources/web_accessible_ext/manifest.json
+@@ -0,0 +1,19 @@
++{
++    "name": "web accessible",
++    "version": "1.0",
++    "manifest_version": 3,
++    "background": {
++        "service_worker": "service_worker.js"
++    },
++    "web_accessible_resources": [
++        {
++            "resources": [
++                "shared.js",
++                "shared.txt"
++            ],
++            "matches": [
++                "<all_urls>"
++            ]
++        }
++    ]
++}
+diff --git a/tests/auto/widgets/extensions/resources/web_accessible_ext/service_worker.js b/tests/auto/widgets/extensions/resources/web_accessible_ext/service_worker.js
+new file mode 100644
+index 0000000..e9b6a44
+--- /dev/null
++++ b/tests/auto/widgets/extensions/resources/web_accessible_ext/service_worker.js
+@@ -0,0 +1 @@
++// nothing
+diff --git a/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.js b/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.js
+new file mode 100644
+index 0000000..5e1aea0
+--- /dev/null
++++ b/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.js
+@@ -0,0 +1 @@
++globalThis.sharedLoaded = true
+diff --git a/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.txt b/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.txt
+new file mode 100644
+index 0000000..8a205e8
+--- /dev/null
++++ b/tests/auto/widgets/extensions/resources/web_accessible_ext/shared.txt
+@@ -0,0 +1 @@
++shared
+diff --git a/tests/auto/widgets/extensions/tst_qwebengineextension.cpp b/tests/auto/widgets/extensions/tst_qwebengineextension.cpp
+index 81e7a61..d070f1e 100644
+--- a/tests/auto/widgets/extensions/tst_qwebengineextension.cpp
++++ b/tests/auto/widgets/extensions/tst_qwebengineextension.cpp
+@@ -2,6 +2,7 @@
+ // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+ 
+ #include <util.h>
++#include <httpserver.h>
+ #include <QtTest/QtTest>
+ #include <QTemporaryDir>
+ #include <QtWebEngineCore/qwebengineprofile.h>
+@@ -41,6 +42,7 @@ private Q_SLOTS:
+     void installOffTheRecord();
+     void loadInstalledExtensions();
+     void serviceWorkerMessaging();
++    void webAccessibleResource();
+     void anOffscreenDocumentCanBeCreated();
+ 
+ private:
+@@ -420,5 +422,41 @@ void tst_QWebEngineExtension::anOffscreenDocumentCanBeCreated()
+     QTRY_COMPARE(m_page->title(), "offscreen ready"_L1);
+ }
+ 
++void tst_QWebEngineExtension::webAccessibleResource()
++{
++    // A resource an extension declares web accessible can be loaded by an ordinary page. Served
++    // over HTTP because an extension's host permissions cannot match qrc.
++    HttpServer server;
++    server.setResourceDirs({ resourcesPath() });
++    QVERIFY(server.start());
++
++    QWebEngineExtensionInfo extension = loadExtensionSync(resourcesPath() + "web_accessible_ext"_L1);
++    QVERIFY2(extension.isLoaded(), qPrintable(extension.error()));
++    m_manager->setExtensionEnabled(extension, true);
++
++    QSignalSpy loadSpy(m_page, SIGNAL(loadFinished(bool)));
++    m_page->load(server.url("/index.html"_L1));
++    QTRY_COMPARE(loadSpy.size(), 1);
++
++    const QString resource = "chrome-extension://"_L1 + extension.id() + "/shared.txt"_L1;
++    evaluateJavaScriptSync(m_page,
++                           "fetch(\"" + resource
++                                   + "\").then(async r => window.fetched = r.ok ? await r.text() "
++                                     ": \"status \" + r.status).catch(e => window.fetched = "
++                                     "\"threw: \" + e.message)");
++    QTRY_VERIFY(evaluateJavaScriptSync(m_page, "window.fetched !== undefined").toBool());
++    QCOMPARE(evaluateJavaScriptSync(m_page, "window.fetched.trim()"), "shared"_L1);
++
++    // And as a script element, which is how an injected bundle arrives.
++    const QString script = "chrome-extension://"_L1 + extension.id() + "/shared.js"_L1;
++    evaluateJavaScriptSync(m_page,
++                           "const el = document.createElement('script');"
++                           "el.onload = () => window.scriptRan = globalThis.sharedLoaded === true;"
++                           "el.onerror = () => window.scriptRan = false;"
++                           "el.src = \"" + script + "\"; document.head.appendChild(el)");
++    QTRY_VERIFY(evaluateJavaScriptSync(m_page, "window.scriptRan !== undefined").toBool());
++    QVERIFY(evaluateJavaScriptSync(m_page, "window.scriptRan").toBool());
++}
++
+ QTEST_MAIN(tst_QWebEngineExtension)
+ #include "tst_qwebengineextension.moc"
