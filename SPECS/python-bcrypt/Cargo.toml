@@ -1,0 +1,28 @@
+[package]
+name = "bcrypt-rust"
+version = "0.1.0"
+authors = ["The bcrypt developers <cryptography-dev@python.org>"]
+edition = "2018"
+# This specifies the MSRV
+rust-version = "1.74.0"
+publish = false
+
+[dependencies]
+pyo3 = { version = "0.26", features = ["abi3"] }
+bcrypt = "0.17"
+bcrypt-pbkdf = "0.10.0"
+base64 = "0.22.1"
+subtle = "2.6"
+getrandom = "0.3"
+
+[features]
+extension-module = ["pyo3/extension-module"]
+default = ["extension-module"]
+
+[lib]
+name = "bcrypt_rust"
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = "thin"
+overflow-checks = true
