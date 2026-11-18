@@ -15,7 +15,7 @@ ProtectControlGroups=true
 RestrictRealtime=true
 # end of automatic additions
 Type=oneshot
-ExecStart=/usr/sbin/powertop --auto-tune
+ExecStart=/usr/bin/powertop --auto-tune
 
 [Install]
 WantedBy=multi-user.target
