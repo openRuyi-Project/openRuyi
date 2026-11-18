@@ -2,26 +2,27 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qt3d
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
-%bcond system_assimp 0
+%bcond system_assimp 1
 
 Name:           qt6-qt3d
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Qt3D QML bindings and C++ APIs
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qt3d.git
-#!RemoteAsset:  sha256:a66d8c8e049d1ee7a7687b34940f3555d0d7084858b6dc78d1e1cb7df40a0107
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:d16f7489945c6c9e971cedd4362202a2681f3c10393461e1f5e74425f7fef59a
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 %if %{with system_assimp}
@@ -45,8 +46,18 @@ BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  pkgconfig(Qt6ShaderTools) >= %{version}
 BuildRequires:  qt6-qtimageformats >= %{version}
 %if %{with system_assimp}
-BuildRequires:  pkgconfig(assimp) >= 5.0.0
+BuildRequires:  pkgconfig(assimp) >= 6.0.0
 %endif
+
+%patchlist
+# Find Assimp 6; https://gitlab.archlinux.org/archlinux/packaging/packages/qt6-3d/-/blob/967e89b1c51d836e509faa7e9eddf777f9b07b71/assimp-6.patch
+2000-find-system-assimp6.patch
+# Add test for the assimp scene importer plugin; https://github.com/qt/qt3d/commit/7be78fa243e257315be76c5a1c5a332194042f94
+1000-add-test-for-the-assimp-scene-importer-plugin.patch
+# tst_assimpplugin: add test for morph target import; https://github.com/qt/qt3d/commit/5e81a4a0780542c0c024e54c6d692195038e8bb6
+1001-tst-assimpplugin-add-test-for-morph-target-import.patch
+# assimp plugin: handle morph targets with mixed attributes; https://github.com/qt/qt3d/commit/1eefe29327c5d7dd6020c5dd0735eb8e5e798f05
+1002-assimp-plugin-handle-morph-targets-with-mixed-attributes.patch
 
 %description
 Qt 3D provides functionality for near-realtime simulation systems with
@@ -87,7 +98,7 @@ popd
 %{_qt6_qmldir}/Qt3D/
 %{_qt6_qmldir}/QtQuick/Scene2D/
 %{_qt6_qmldir}/QtQuick/Scene3D/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_libdir}/cmake/Qt63D*/

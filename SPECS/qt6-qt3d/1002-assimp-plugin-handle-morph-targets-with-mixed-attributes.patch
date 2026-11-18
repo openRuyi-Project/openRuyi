@@ -1,0 +1,365 @@
+From 714d47d6e480e6d7d749df4c9375340b41cdc710 Mon Sep 17 00:00:00 2001
+From: Mauro Persano <mauro.persano@kdab.com>
+Date: Tue, 6 Oct 2026 15:42:50 -0300
+Subject: [PATCH] assimp plugin: handle morph targets with mixed attributes
+
+We were computing the size of all morph target buffers based on the
+attributes of the first morph target. This breaks when we have morph
+targets with different attributes.
+
+Fixes: QTBUG-150977
+Pick-to: 6.11 6.8
+Change-Id: Ia35ef9597fbc965da42af8da438d811104cb52f5
+Reviewed-by: Mike Krus <mike.krus@kdab.com>
+(cherry picked from commit 1eefe29327c5d7dd6020c5dd0735eb8e5e798f05)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/plugins/sceneparsers/assimp/assimpimporter.cpp b/src/plugins/sceneparsers/assimp/assimpimporter.cpp
+index e0df867..23072db 100644
+--- a/src/plugins/sceneparsers/assimp/assimpimporter.cpp
++++ b/src/plugins/sceneparsers/assimp/assimpimporter.cpp
+@@ -817,51 +817,19 @@ QGeometryRenderer *AssimpImporter::loadMesh(uint meshIndex)
+ 
+         Qt3DAnimation::QMorphingAnimation *morphingAnimation
+                 = new Qt3DAnimation::QMorphingAnimation(geometryRenderer);
+-        QList<QString> names;
+ 
+         QList<Qt3DAnimation::QMorphTarget *> targets;
+-        uint voff = 0;
+-        uint noff = 0;
+-        uint tanoff = 0;
+-        uint texoff = 0;
+-        uint coloff = 0;
+-        uint offset = 0;
+-        if (animesh->mVertices) {
+-            names.push_back(VERTICES_ATTRIBUTE_NAME);
+-            offset += 3;
+-        }
+-        if (animesh->mNormals) {
+-            names.push_back(NORMAL_ATTRIBUTE_NAME);
+-            noff = offset;
+-            offset += 3;
+-        }
+-        if (animesh->mTangents) {
+-            names.push_back(TANGENT_ATTRIBUTE_NAME);
+-            tanoff = offset;
+-            offset += 3;
+-        }
+-        if (animesh->mTextureCoords[0]) {
+-            names.push_back(TEXTCOORD_ATTRIBUTE_NAME);
+-            texoff = offset;
+-            offset += 2;
+-        }
+-        if (animesh->mColors[0]) {
+-            names.push_back(COLOR_ATTRIBUTE_NAME);
+-            coloff = offset;
+-        }
+-
+-        ushort clumpSize = (animesh->mVertices ? 3 : 0)
+-                            + (animesh->mNormals ? 3 : 0)
+-                            + (animesh->mTangents ? 3 : 0)
+-                            + (animesh->mColors[0] ? 4 : 0)
+-                            + (animesh->mTextureCoords[0] ? 2 : 0);
+-
+ 
+         for (uint i = 0; i < mesh->mNumAnimMeshes; i++) {
+             aiAnimMesh *animesh = mesh->mAnimMeshes[i];
+             Qt3DAnimation::QMorphTarget *target = new Qt3DAnimation::QMorphTarget(geometryRenderer);
+             targets.push_back(target);
+             QList<QAttribute *> attributes;
++            ushort clumpSize = (animesh->mVertices ? 3 : 0)
++                    + (animesh->mNormals ? 3 : 0)
++                    + (animesh->mTangents ? 3 : 0)
++                    + (animesh->mColors[0] ? 4 : 0)
++                    + (animesh->mTextureCoords[0] ? 2 : 0);
+             QByteArray targetBufferArray;
+             targetBufferArray.resize(clumpSize * mesh->mNumVertices * sizeof(float));
+             float *dst = reinterpret_cast<float *>(targetBufferArray.data());
+@@ -899,34 +867,39 @@ QGeometryRenderer *AssimpImporter::loadMesh(uint meshIndex)
+             targetBuffer->setData(targetBufferArray);
+             targetBuffer->setParent(meshGeometry);
+ 
++            uint offset = 0;
+             if (animesh->mVertices) {
+                 attributes.push_back(createAttribute(targetBuffer, VERTICES_ATTRIBUTE_NAME,
+                                                      QAttribute::Float, 3,
+-                                                     animesh->mNumVertices, voff * sizeof(float),
++                                                     animesh->mNumVertices, offset * sizeof(float),
+                                                      clumpSize * sizeof(float), meshGeometry));
++                offset += 3;
+             }
+             if (animesh->mNormals) {
+                 attributes.push_back(createAttribute(targetBuffer, NORMAL_ATTRIBUTE_NAME,
+                                                      QAttribute::Float, 3,
+-                                                     animesh->mNumVertices, noff * sizeof(float),
++                                                     animesh->mNumVertices, offset * sizeof(float),
+                                                      clumpSize * sizeof(float), meshGeometry));
++                offset += 3;
+             }
+             if (animesh->mTangents) {
+                 attributes.push_back(createAttribute(targetBuffer, TANGENT_ATTRIBUTE_NAME,
+                                                      QAttribute::Float, 3,
+-                                                     animesh->mNumVertices, tanoff * sizeof(float),
++                                                     animesh->mNumVertices, offset * sizeof(float),
+                                                      clumpSize * sizeof(float), meshGeometry));
++                offset += 3;
+             }
+             if (animesh->mTextureCoords[0]) {
+                 attributes.push_back(createAttribute(targetBuffer, TEXTCOORD_ATTRIBUTE_NAME,
+                                                      QAttribute::Float, 2,
+-                                                     animesh->mNumVertices, texoff * sizeof(float),
++                                                     animesh->mNumVertices, offset * sizeof(float),
+                                                      clumpSize * sizeof(float), meshGeometry));
++                offset += 2;
+             }
+             if (animesh->mColors[0]) {
+                 attributes.push_back(createAttribute(targetBuffer, COLOR_ATTRIBUTE_NAME,
+                                                      QAttribute::Float, 4,
+-                                                     animesh->mNumVertices, coloff * sizeof(float),
++                                                     animesh->mNumVertices, offset * sizeof(float),
+                                                      clumpSize * sizeof(float), meshGeometry));
+             }
+             target->setAttributes(attributes);
+diff --git a/tests/auto/render/assimpplugin/CMakeLists.txt b/tests/auto/render/assimpplugin/CMakeLists.txt
+index 3c715c1..2afe647 100644
+--- a/tests/auto/render/assimpplugin/CMakeLists.txt
++++ b/tests/auto/render/assimpplugin/CMakeLists.txt
+@@ -23,6 +23,7 @@ qt_internal_add_test(tst_assimpplugin
+ set(tst_assimpplugin_resource_files
+     "triangle.gltf"
+     "morph_target.gltf"
++    "mixed_morph_target_attribs.gltf"
+ )
+ 
+ qt_internal_add_resource(tst_assimpplugin "assimpplugin"
+diff --git a/tests/auto/render/assimpplugin/mixed_morph_target_attribs.gltf b/tests/auto/render/assimpplugin/mixed_morph_target_attribs.gltf
+new file mode 100644
+index 0000000..cf93700
+--- /dev/null
++++ b/tests/auto/render/assimpplugin/mixed_morph_target_attribs.gltf
+@@ -0,0 +1,137 @@
++{
++    "asset": {
++        "version": "2.0"
++    },
++    "extensionsRequired": [
++        "KHR_morph_targets"
++    ],
++    "extensionsUsed": [
++        "KHR_morph_targets"
++    ],
++    "scene": 0,
++    "scenes": [
++        {
++            "nodes": [
++                0
++            ]
++        }
++    ],
++    "nodes": [
++        {
++            "mesh": 0,
++            "name": "m"
++        }
++    ],
++    "meshes": [
++        {
++            "name": "m",
++            "primitives": [
++                {
++                    "attributes": {
++                        "POSITION": 0,
++                        "NORMAL": 1
++                    },
++                    "indices": 5,
++                    "mode": 4,
++                    "targets": [
++                        {
++                            "POSITION": 2
++                        },
++                        {
++                            "POSITION": 3,
++                            "NORMAL": 4
++                        }
++                    ]
++                }
++            ]
++        }
++    ],
++    "accessors": [
++        {
++            "bufferView": 0,
++            "componentType": 5126,
++            "count": 3,
++            "type": "VEC3",
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "bufferView": 1,
++            "componentType": 5126,
++            "count": 3,
++            "type": "VEC3",
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "bufferView": 2,
++            "componentType": 5126,
++            "count": 3,
++            "type": "VEC3",
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "bufferView": 3,
++            "componentType": 5126,
++            "count": 3,
++            "type": "VEC3",
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "bufferView": 4,
++            "componentType": 5126,
++            "count": 3,
++            "type": "VEC3",
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "bufferView": 5,
++            "componentType": 5123,
++            "count": 3,
++            "type": "SCALAR",
++            "byteOffset": 0,
++            "byteLength": 6
++        }
++    ],
++    "bufferViews": [
++        {
++            "buffer": 0,
++            "byteOffset": 0,
++            "byteLength": 36
++        },
++        {
++            "buffer": 0,
++            "byteOffset": 36,
++            "byteLength": 36
++        },
++        {
++            "buffer": 0,
++            "byteOffset": 72,
++            "byteLength": 36
++        },
++        {
++            "buffer": 0,
++            "byteOffset": 108,
++            "byteLength": 36
++        },
++        {
++            "buffer": 0,
++            "byteOffset": 144,
++            "byteLength": 36
++        },
++        {
++            "buffer": 0,
++            "byteOffset": 180,
++            "byteLength": 6
++        }
++    ],
++    "buffers": [
++        {
++            "byteLength": 186,
++            "uri": "data:application/octet-stream;base64,AAAAAM3MzD3NzEw+mpmZPs3MzD4AAAA/mpkZPzMzMz/NzEw/AAAAAAAAAAAAAAAAAACAPwAAgD8AAIA/AAAAAAAAAAAAAAAACtcjPArXIzwK1yM8CtcjPArXIzwK1yM8CtcjPArXIzwK1yM8CtejPArXozwK16M8CtejPArXozwK16M8CtejPArXozwK16M8AAAAAAAAAAAAAAAAzczMPc3MzD3NzMw9AAAAAAAAAAAAAAAAAAABAAIA"
++        }
++    ]
++}
+diff --git a/tests/auto/render/assimpplugin/tst_assimpplugin.cpp b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+index 715ab4e..1d6143d 100644
+--- a/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
++++ b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+@@ -13,6 +13,18 @@
+ #include <Qt3DRender/private/qsceneimportfactory_p.h>
+ #include <Qt3DRender/private/qsceneimporter_p.h>
+ 
++namespace {
++
++bool morphTargetHasAttribute(const Qt3DAnimation::QMorphTarget *morphTarget, const QString &attributeName)
++{
++    const auto attrList = morphTarget->attributeList();
++    return std::any_of(attrList.begin(), attrList.end(), [&attributeName](const Qt3DCore::QAttribute *attr) {
++        return attr->name() == attributeName;
++    });
++}
++
++} // namespace
++
+ class tst_assimpPlugin : public QObject
+ {
+     Q_OBJECT
+@@ -23,6 +35,7 @@ private Q_SLOTS:
+     void cleanup();
+     void importMesh();
+     void importMorphTarget();
++    void importMorphTargetMixedAttribs();
+ 
+ private:
+     Qt3DRender::QSceneImporter *m_importer{ nullptr };
+@@ -91,6 +104,56 @@ void tst_assimpPlugin::importMorphTarget()
+     delete rootEntity;
+ }
+ 
++void tst_assimpPlugin::importMorphTargetMixedAttribs()
++{
++    if (m_importer == nullptr)
++        QSKIP("Missing assimp importer");
++
++    m_importer->setSource(QUrl(QStringLiteral("qrc:/mixed_morph_target_attribs.gltf")));
++
++    Qt3DCore::QEntity *rootEntity = m_importer->scene();
++    QVERIFY(rootEntity != nullptr);
++
++    auto *morphingAnimation = rootEntity->findChild<Qt3DAnimation::QMorphingAnimation *>();
++    QVERIFY(morphingAnimation != nullptr);
++
++    const auto morphTargets = morphingAnimation->morphTargetList();
++    QCOMPARE(morphTargets.size(), 2);
++
++    // POSITION morph target
++    const Qt3DAnimation::QMorphTarget *positionMorphTarget = [&morphTargets]() -> Qt3DAnimation::QMorphTarget * {
++        auto it = std::find_if(morphTargets.begin(), morphTargets.end(), [](const Qt3DAnimation::QMorphTarget *morphTarget) {
++            return morphTarget->attributeList().size() == 1 && morphTargetHasAttribute(morphTarget, Qt3DCore::QAttribute::defaultPositionAttributeName());
++        });
++        return it != morphTargets.end() ? *it : nullptr;
++    }();
++    QVERIFY(positionMorphTarget != nullptr);
++
++    // POSITION/NORMAL morph target
++    const Qt3DAnimation::QMorphTarget *positionNormalMorphTarget = [&morphTargets]() -> Qt3DAnimation::QMorphTarget * {
++        auto it = std::find_if(morphTargets.begin(), morphTargets.end(), [](const Qt3DAnimation::QMorphTarget *morphTarget) {
++            return morphTarget->attributeList().size() == 2
++                    && morphTargetHasAttribute(morphTarget, Qt3DCore::QAttribute::defaultPositionAttributeName())
++                    && morphTargetHasAttribute(morphTarget, Qt3DCore::QAttribute::defaultNormalAttributeName());
++        });
++        return it != morphTargets.end() ? *it : nullptr;
++    }();
++    QVERIFY(positionNormalMorphTarget != nullptr);
++
++    const auto vertexCount = positionMorphTarget->attributeList().front()->count();
++    QCOMPARE(vertexCount, 3);
++
++    const Qt3DCore::QBuffer *positionBuffer = positionMorphTarget->attributeList().front()->buffer();
++    QVERIFY(positionBuffer != nullptr);
++    QCOMPARE(positionBuffer->data().size(), vertexCount * 3 * sizeof(float));
++
++    const Qt3DCore::QBuffer *positionNormalBuffer = positionNormalMorphTarget->attributeList().front()->buffer();
++    QVERIFY(positionNormalBuffer != nullptr);
++    QCOMPARE(positionNormalBuffer->data().size(), vertexCount * 6 * sizeof(float));
++
++    delete rootEntity;
++}
++
+ QTEST_MAIN(tst_assimpPlugin)
+ 
+ #include "tst_assimpplugin.moc"

@@ -1,0 +1,221 @@
+From 18a4caecc3cb960dd3869c91654fb34197602410 Mon Sep 17 00:00:00 2001
+From: Mauro Persano <mauro.persano@kdab.com>
+Date: Tue, 6 Oct 2026 12:45:29 -0300
+Subject: [PATCH] Add test for the assimp scene importer plugin
+
+Pick-to: 6.12 6.11 6.8
+Change-Id: I2daac68a5ec6ea5d828dc70bcef29fcab92135f9
+Reviewed-by: Mike Krus <mike.krus@kdab.com>
+
+diff --git a/REUSE.toml b/REUSE.toml
+index e8036f7..3eda436 100644
+--- a/REUSE.toml
++++ b/REUSE.toml
+@@ -5,6 +5,7 @@ path = ["tests/manual/planets-qml/android/AndroidManifest.xml",
+         "tests/manual/planets-qml/planets-watchos/PlanetsClient**",
+         "tests/auto/quick3d/dynamicnodecreation/data/*.qml",
+         "tests/auto/quick3d/quick3dnodeinstantiator/data/*.qml",
++        "tests/auto/render/assimpplugin/*.gltf",
+         "tests/auto/render/ddstextures/data/*.dds",
+         "tests/auto/render/ddstextures/data/*.pkm",
+         "tests/auto/render/gltfplugins/*",
+diff --git a/tests/auto/render/CMakeLists.txt b/tests/auto/render/CMakeLists.txt
+index 9285364..28db245 100644
+--- a/tests/auto/render/CMakeLists.txt
++++ b/tests/auto/render/CMakeLists.txt
+@@ -145,3 +145,6 @@ if(QT_FEATURE_private_tests AND NOT (CMAKE_OSX_ARCHITECTURES MATCHES ";") AND
+         (TEST_architecture_arch STREQUAL i386 OR TEST_architecture_arch STREQUAL x86_64))
+     add_subdirectory(alignedresourcesmanagers-sse)
+ endif()
++if(QT_FEATURE_private_tests AND QT_FEATURE_qt3d_assimp)
++    add_subdirectory(assimpplugin)
++endif()
+diff --git a/tests/auto/render/assimpplugin/CMakeLists.txt b/tests/auto/render/assimpplugin/CMakeLists.txt
+new file mode 100644
+index 0000000..bb0fb20
+--- /dev/null
++++ b/tests/auto/render/assimpplugin/CMakeLists.txt
+@@ -0,0 +1,31 @@
++# Copyright (C) 2026 Klaralvdalens Datakonsult AB (KDAB).
++# SPDX-License-Identifier: BSD-3-Clause
++
++if(NOT QT_BUILD_STANDALONE_TESTS AND NOT QT_BUILDING_QT)
++    cmake_minimum_required(VERSION 3.16)
++    project(tst_assimpplugin LANGUAGES CXX)
++    find_package(Qt6BuildInternals REQUIRED COMPONENTS STANDALONE_TEST)
++endif()
++
++qt_internal_add_test(tst_assimpplugin
++    SOURCES
++        tst_assimpplugin.cpp
++    LIBRARIES
++        Qt::3DCore
++        Qt::3DCorePrivate
++        Qt::3DExtras
++        Qt::3DRender
++        Qt::3DRenderPrivate
++        Qt::Gui
++)
++
++set(tst_assimpplugin_resource_files
++    "triangle.gltf"
++)
++
++qt_internal_add_resource(tst_assimpplugin "assimpplugin"
++    PREFIX
++        "/"
++    FILES
++        ${tst_assimpplugin_resource_files}
++)
+diff --git a/tests/auto/render/assimpplugin/triangle.gltf b/tests/auto/render/assimpplugin/triangle.gltf
+new file mode 100644
+index 0000000..f244f49
+--- /dev/null
++++ b/tests/auto/render/assimpplugin/triangle.gltf
+@@ -0,0 +1,70 @@
++{
++  "scene": 0,
++  "scenes" : [
++    {
++      "nodes" : [ 0 ]
++    }
++  ],
++
++  "nodes" : [
++    {
++      "mesh" : 0
++    }
++  ],
++
++  "meshes" : [
++    {
++      "primitives" : [ {
++        "attributes" : {
++          "POSITION" : 1
++        },
++        "indices" : 0
++      } ]
++    }
++  ],
++
++  "buffers" : [
++    {
++      "uri" : "data:application/octet-stream;base64,AAABAAIAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAA=",
++      "byteLength" : 44
++    }
++  ],
++  "bufferViews" : [
++    {
++      "buffer" : 0,
++      "byteOffset" : 0,
++      "byteLength" : 6,
++      "target" : 34963
++    },
++    {
++      "buffer" : 0,
++      "byteOffset" : 8,
++      "byteLength" : 36,
++      "target" : 34962
++    }
++  ],
++  "accessors" : [
++    {
++      "bufferView" : 0,
++      "byteOffset" : 0,
++      "componentType" : 5123,
++      "count" : 3,
++      "type" : "SCALAR",
++      "max" : [ 2 ],
++      "min" : [ 0 ]
++    },
++    {
++      "bufferView" : 1,
++      "byteOffset" : 0,
++      "componentType" : 5126,
++      "count" : 3,
++      "type" : "VEC3",
++      "max" : [ 1.0, 1.0, 0.0 ],
++      "min" : [ 0.0, 0.0, 0.0 ]
++    }
++  ],
++
++  "asset" : {
++    "version" : "2.0"
++  }
++}
+diff --git a/tests/auto/render/assimpplugin/tst_assimpplugin.cpp b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+new file mode 100644
+index 0000000..64f7932
+--- /dev/null
++++ b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+@@ -0,0 +1,70 @@
++// Copyright (C) 2026 Klaralvdalens Datakonsult AB (KDAB).
++// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
++
++#include <QtTest/qtest.h>
++
++#include <Qt3DCore/qnode.h>
++#include <Qt3DCore/qentity.h>
++
++#include <Qt3DRender/qgeometryrenderer.h>
++
++#include <Qt3DRender/private/qsceneimportfactory_p.h>
++#include <Qt3DRender/private/qsceneimporter_p.h>
++
++class tst_assimpPlugin : public QObject
++{
++    Q_OBJECT
++
++private Q_SLOTS:
++
++    void init();
++    void cleanup();
++    void importMesh();
++
++private:
++    Qt3DRender::QSceneImporter *m_importer{ nullptr };
++};
++
++void tst_assimpPlugin::init()
++{
++    m_importer = Qt3DRender::QSceneImportFactory::create(QStringLiteral("assimp"), { });
++}
++
++void tst_assimpPlugin::cleanup()
++{
++    delete m_importer;
++    m_importer = nullptr;
++}
++
++void tst_assimpPlugin::importMesh()
++{
++    if (m_importer == nullptr)
++        QSKIP("Missing assimp importer");
++
++    m_importer->setSource(QUrl(QStringLiteral("qrc:/triangle.gltf")));
++
++    Qt3DCore::QEntity *rootEntity = m_importer->scene();
++    QVERIFY(rootEntity != nullptr);
++
++    auto geometryRenderers = rootEntity->componentsOfType<Qt3DRender::QGeometryRenderer>();
++    QCOMPARE(geometryRenderers.size(), 1);
++
++    Qt3DRender::QGeometryRenderer *geometryRenderer = geometryRenderers.front();
++    QCOMPARE(geometryRenderer->primitiveType(), Qt3DRender::QGeometryRenderer::Triangles);
++
++    Qt3DCore::QGeometry *geometry = geometryRenderer->geometry();
++    QVERIFY(geometry != nullptr);
++
++    const auto attributes = geometry->attributes();
++    QCOMPARE(attributes.size(), 3);
++
++    for (const Qt3DCore::QAttribute *attr : attributes) {
++        QCOMPARE(attr->count(), 3);
++    }
++
++    delete rootEntity;
++}
++
++QTEST_MAIN(tst_assimpPlugin)
++
++#include "tst_assimpplugin.moc"
