@@ -3,38 +3,45 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           tclap
-Version:        1.2.5
+Version:        1.6.0
 Release:        %autorelease
 Summary:        Templatized C++ Command Line Parser
 License:        MIT
-URL:            http://tclap.sourceforge.net
-VCS:            git:https://git.code.sf.net/p/tclap/code
-#!RemoteAsset:  sha256:bb649f76dae35e8d0dcba4b52acfd4e062d787e6a81b43f7a4b01275153165a6
-Source:         https://downloads.sourceforge.net/tclap/tclap-%{version}.tar.gz
-BuildSystem:    autotools
+URL:            https://github.com/DAarno/tclap
+VCS:            git:https://github.com/DAarno/tclap.git
+#!RemoteAsset:  sha256:2ed4bb7655cb4feb7a0432311f1194875bf2d61d6624bf3e513fa101cb0bcb10
+Source:         https://github.com/DAarno/tclap/releases/download/v%{version}/%{name}-%{version}.tar.gz
+BuildSystem:    cmake
 
-BuildRequires:  fdupes
+BuildRequires:  cmake
+BuildRequires:  docbook-xsl
+BuildRequires:  doxygen
 BuildRequires:  gcc-c++
-BuildRequires:  libstdc++-devel
-BuildRequires:  pkgconfig
+BuildRequires:  libxslt
+BuildRequires:  pkgconfig(python3)
 
 %description
 TCLAP is a header-only, flexible C++ library for parsing command line arguments.
 This is a metapackage that requires the development files.
 
-%install -a
-install -d "%{buildroot}%{_docdir}/%{name}"
+%conf -p
+sed -i 's|/usr/share/xml/docbook/stylesheet/docbook-xsl/html/docbook.xsl|%{_datadir}/sgml/docbook/xsl-stylesheets/html/docbook.xsl|' docs/CMakeLists.txt
 
 %files
-%license COPYING
 %doc AUTHORS ChangeLog NEWS README
+%doc %{_docdir}/tclap/*.html
+%doc %{_docdir}/tclap/style.css
+%doc %{_docdir}/tclap/test1.cpp
+%doc %{_docdir}/tclap/html/
+%license COPYING
 %{_includedir}/tclap
+%{_libdir}/cmake/TCLAP/
 %{_libdir}/pkgconfig/tclap.pc
-%doc %{_docdir}/tclap/
 
 %changelog
 %autochangelog
