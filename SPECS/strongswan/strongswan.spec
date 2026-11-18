@@ -8,13 +8,13 @@
 %bcond check 0
 
 Name:           strongswan
-Version:        6.0.2
+Version:        6.1.0
 Release:        %autorelease
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 License:        GPL-2.0-or-later
 URL:            https://www.strongswan.org/
 VCS:            git:https://github.com/strongswan/strongswan
-#!RemoteAsset
+#!RemoteAsset:  sha256:fe6c97481298767213cfc2e9a1da29fdd8018d481ff4cb9cf0283099654f20d4
 Source0:        https://download.strongswan.org/strongswan-%{version}.tar.bz2
 Source1:        strongswan.tmpfiles
 BuildSystem:    autotools
@@ -190,10 +190,8 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_sbindir}/strongswan
 %{_sbindir}/swanctl
 %{_libdir}/strongswan/*.so.*
-%{_libdir}/strongswan/plugins/*.so.*
 %exclude %{_libdir}/strongswan/libimcv.so.*
 %exclude %{_libdir}/strongswan/libtnccs.so.*
-%exclude %{_libdir}/strongswan/libipsec.so.*
 %{_libdir}/strongswan/plugins/*.so
 %{_libexecdir}/strongswan/*
 %exclude %{_libexecdir}/strongswan/attest
@@ -204,7 +202,7 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_datadir}/strongswan/templates/database/
 %attr(0755,root,root) %dir %{_rundir}/strongswan
 %{_tmpfilesdir}/strongswan.conf
-%{_libdir}/strongswan/libipsec.so.*
+%exclude %{_libdir}/strongswan/plugins/libstrongswan-*tnc*.so
 
 %files tnc-imcvs
 %{_sbindir}/sw-collector
@@ -220,4 +218,4 @@ install -D -m 0644 %{SOURCE1} %{buildroot}/%{_tmpfilesdir}/strongswan.conf
 %{_datadir}/strongswan/swidtag/*.swidtag
 
 %changelog
-%{?autochangelog}
+%autochangelog
