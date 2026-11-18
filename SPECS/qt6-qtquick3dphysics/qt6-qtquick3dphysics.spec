@@ -2,32 +2,34 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtquick3dphysics
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtquick3dphysics
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Quick3D Physics Libraries and utilities
-License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND BSD-3-Clause AND CC-BY-4.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtquick3dphysics
-#!RemoteAsset:  sha256:d1086d6f014e7b698945cf0ee1dc3e43545ed7dcf0b5e501c0d6836a96ac79af
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:8ddb23147e4677c759d36a65ae50f6b0d0d79fa8590ac89576b91f572918b481
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
 # enable riscv64 by disable simd.
-# It's from https://github.com/felixonmars/archriscv-packages/blob/master/qt6-quick3dphysics/physx-rv64.patch.
-Patch0:         0001-enable-build-for-riscv64.patch
+# Support the RISC-V PhysX platform; https://github.com/felixonmars/archriscv-packages/blob/4fbabc5329d3caf025c15ca0c095d1d01bf559cd/qt6-quick3dphysics/physx-rv64.patch.
+Patch0:         2000-enable-build-for-riscv64.patch
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -63,7 +65,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6Quick3DPhysics.so.6*
 %{_qt6_libdir}/libQt6Quick3DPhysicsHelpers.so.6*
 %{_qt6_qmldir}/QtQuick3D/Physics/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_bindir}/cooker
