@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           ntfs-3g
-Version:        2022.10.3
+Version:        2026.9.28
 Release:        %autorelease
 Summary:        NTFS userspace driver for Linux
 License:        GPL-2.0-or-later
 URL:            https://github.com/tuxera/ntfs-3g
-#!RemoteAsset:  sha256:8bd7749ea9d8534c9f0664d48b576e90b96d45ec8803c9427f6ffaa2f0dde299
+#!RemoteAsset:  sha256:8a75293f07bf40df5701d296de32a4cb0e46d6ae135abb4f41b438df9868a390
 Source0:        %{url}/archive/refs/tags/%{version}.tar.gz#%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
