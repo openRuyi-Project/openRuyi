@@ -24,6 +24,7 @@ VCS:            git:https://https.git.savannah.gnu.org/git/grub.git
 #!RemoteAsset:  sha256:bc8d3c73535b8838d8c8e2654d73edc4e6ae8c8acdb45d5df5dc9a1547446d43
 Source0:        https://ftpmirror.gnu.org/gnu/grub/grub-%{version}.tar.xz
 Source1:        grub.default
+Source2:        90-grub.install
 
 # https://gitlab.freedesktop.org/gnu-grub/grub/-/merge_requests/10
 Patch0:         skip-efi_uga.patch
@@ -54,6 +55,7 @@ BuildRequires:  squashfs-tools
 BuildRequires:  bash-completion
 
 Recommends:     efibootmgr
+Recommends:     kernel-install-grub
 
 %description
 The GRand Unified Bootloader (GRUB) is a highly configurable and
@@ -72,6 +74,15 @@ variety of kernel formats, file systems, computer architectures and
 hardware devices.
 
 This package contains an unsigned monolithic EFI image.
+
+%package    -n kernel-install-grub
+Summary:       kernel-install plugin for legacy grub menu
+Requires:      kernel-install
+Requires:      %{name}%{?_isa} = %{version}-%{release}
+
+%description -n kernel-install-grub
+This plugin provides legacy grub layout integration for kernel-install.
+Note only grub config is maintained, but not automatic grub-install.
 
 %prep
 %autosetup -n %{name}-%{version} -p1
@@ -183,6 +194,7 @@ for plat in %{grub_platforms}; do
 done
 
 install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
+install -D -m 0755 %{SOURCE2} %{buildroot}%{_prefix}/lib/kernel/install.d/90-grub.install
 
 %find_lang %{name} --generate-subpackages
 
@@ -251,6 +263,9 @@ install -D -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/default/grub
 
 %files unsigned
 %{_libdir}/%{name}/%{grub_platforms}/monolithic/*.efi
+
+%files -n kernel-install-grub
+%{_prefix}/lib/kernel/install.d/90-grub.install
 
 %changelog
 %autochangelog
