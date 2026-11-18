@@ -15,13 +15,13 @@
 %bcond nss 0
 
 Name:           lighttpd
-Version:        1.4.82
+Version:        1.4.85
 Release:        %autorelease
 Summary:        Lightning fast webserver with light system requirements
 License:        BSD-3-Clause
 URL:            http://www.lighttpd.net/
 VCS:            git:https://git.lighttpd.net/lighttpd/lighttpd1.4.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:18de51b393bac4a6827879e1a7ff377c169e414bae92cd245091d80fc2601d13
 Source0:        http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-%{version}.tar.xz
 Source1:        lighttpd.logrotate
 Source2:        php.d-lighttpd.ini
@@ -431,4 +431,4 @@ install -m0644 -D %{SOURCE4} %{buildroot}/usr/lib/tmpfiles.d/lighttpd.conf
 %{_sysusersdir}/lighttpd.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
