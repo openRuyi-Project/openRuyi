@@ -1,18 +1,19 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname installer
 
 Name:           python-%{srcname}
-Version:        0.7.0
+Version:        1.1.0
 Release:        %autorelease
 Summary:        Installer library for Python wheels
 License:        MIT
 URL:            https://installer.rtfd.io/
-#!RemoteAsset:  sha256:a26d3e3116289bb08216e0d0f7d925fcef0b0194eedfa0c944bcaaa106c4b631
+#!RemoteAsset:  sha256:5adc0c01ce62d809989e246987cd68944fe5df8af562d0358f65b2ab15cb5de7
 Source0:        https://files.pythonhosted.org/packages/source/i/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -38,8 +39,8 @@ abstractions for handling wheels and installing packages from wheels.
 %pytest
 
 %files -f %{pyproject_files}
+%doc README.md
 %license LICENSE
-%doc CONTRIBUTING.md README.md
 
 %changelog
 %autochangelog
