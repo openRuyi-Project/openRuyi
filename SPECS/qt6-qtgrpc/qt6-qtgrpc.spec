@@ -3,31 +3,33 @@
 # SPDX-FileContributor: Jingkun Zheng <zhengjingkun@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtgrpc
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtgrpc
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Support for using gRPC and Protobuf
-License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND (LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only) AND (GPL-3.0-only WITH Qt-GPL-exception-1.0) AND BSD-3-Clause AND Apache-2.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtgrpc
-#!RemoteAsset:  sha256:437b04f0c550ccdb1739ca5f9119b73dfa0376564815e8bfc199890643e2a250
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:771852c4e5fbeb3d7c3b2a9aacc13db9efe942a46e7d1454ec1f16092ec3ef9c
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
-#  nothing provides libmagic8ball_plugin.so()
+# Install the magic8ball example plugin; https://github.com/qt/qtgrpc/blob/v6.12.0/examples/grpc/magic8ball/CMakeLists.txt.
 Patch0:         2000-install-magic8ball-plugin.patch
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -36,9 +38,9 @@ BuildRequires:  pkgconfig(Qt6Network)
 BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
-BuildRequires:  pkgconfig(libprotobuf-c)
+BuildRequires:  pkgconfig(grpc++)
 BuildRequires:  pkgconfig(protobuf)
-BuildRequires:  zlib-ng-compat-static
+BuildRequires:  pkgconfig(zlib)
 
 %description
 Protocol Buffers (Protobuf) is a cross-platform data format used to
@@ -50,7 +52,6 @@ use these technologies.
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       pkgconfig(Qt6Network)
-Requires:       pkgconfig(grpc++)
 Requires:       pkgconfig(protobuf)
 
 %description    devel
@@ -74,7 +75,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6ProtobufQuick.so.6*
 %{_qt6_qmldir}/QtGrpc/
 %{_qt6_qmldir}/QtProtobuf/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtGrpc/
