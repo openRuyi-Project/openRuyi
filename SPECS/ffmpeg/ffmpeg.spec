@@ -12,42 +12,30 @@
 # Enable NVIDIA NVENC/NVDEC hardware acceleration support via ffnvcodec
 %bcond ffnvcodec 0
 
-%bcond lv2 0
-
 %if %{with all_codecs}
 %bcond librtmp 1
-%bcond vvc 1
 %bcond x264 1
 %bcond x265 1
 %else
 %bcond librtmp 0
-%bcond vvc 0
 %bcond x264 0
 %bcond x265 0
 %endif
 
+%global _test_target fate
+
 Name:           ffmpeg
-Version:        8.1.2
+Version:        9.0.2
 Release:        %autorelease
 Summary:        A complete solution to record, convert and stream audio and video
 License:        GPL-3.0-or-later
 URL:            https://ffmpeg.org/
 VCS:            git:https://git.ffmpeg.org/ffmpeg.git
-#!RemoteAsset:  sha256:464beb5e7bf0c311e68b45ae2f04e9cc2af88851abb4082231742a74d97b524c
+#!RemoteAsset:  sha256:8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e
 Source0:        https://ffmpeg.org/releases/ffmpeg-%{version}.tar.xz
 Source1:        enable_decoders
 Source2:        enable_encoders
 BuildSystem:    autotools
-
-# Fixes for reduced codec selection on free build
-Patch1:         0001-ffmpeg-codec-choice.patch
-# Allow to build with fdk-aac-free
-# See https://bugzilla.redhat.com/show_bug.cgi?id=1501522#c112
-Patch2:         0002-ffmpeg-allow-fdk-aac-free.patch
-# Add first_dts getter to libavformat for Chromium
-# See: https://bugzilla.redhat.com/show_bug.cgi?id=2240127
-# Reference: https://crbug.com/1306560
-Patch4:         0004-ffmpeg-chromium.patch
 
 BuildRequires:  pkgconfig(fdk-aac)
 BuildRequires:  gcc
@@ -73,11 +61,6 @@ BuildRequires:  pkgconfig(libpulse)
 %if %{with ffnvcodec}
 BuildRequires:  pkgconfig(ffnvcodec)
 %endif
-%if %{with lv2}
-BuildRequires:  pkgconfig(lilv-0)
-BuildRequires:  pkgconfig(lv2)
-BuildRequires:  pkgconfig(oapv)
-%endif
 BuildRequires:  pkgconfig(flac)
 BuildRequires:  pkgconfig(fontconfig)
 BuildRequires:  pkgconfig(freetype2)
@@ -91,7 +74,8 @@ BuildRequires:  pkgconfig(libass)
 BuildRequires:  pkgconfig(libssh)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(ogg)
-BuildRequires:  pkgconfig(smbclient)
+BuildRequires:  pkgconfig(opus)
+BuildRequires:  pkgconfig(libva)
 BuildRequires:  snappy-devel
 BuildRequires:  pkgconfig(soxr)
 BuildRequires:  pkgconfig(twolame)
@@ -124,6 +108,16 @@ BuildRequires:  pkgconfig(x265)
 BuildRequires:  pkgconfig(libvmaf)
 %endif
 
+%patchlist
+# Choose available default codecs; https://src.fedoraproject.org/rpms/ffmpeg/raw/8ad83c420d5beed414ed48726c7168fef5278355/f/ffmpeg-codec-choice.patch.
+2000-ffmpeg-codec-choice.patch
+# Permit fdk-aac-free builds; https://src.fedoraproject.org/rpms/ffmpeg/raw/8ad83c420d5beed414ed48726c7168fef5278355/f/ffmpeg-allow-fdk-aac-free.patch.
+2001-ffmpeg-allow-fdk-aac-free.patch
+# Export the Chromium first-DTS accessor; https://src.fedoraproject.org/rpms/ffmpeg/raw/8ad83c420d5beed414ed48726c7168fef5278355/f/ffmpeg-chromium.patch.
+2002-ffmpeg-chromium.patch
+# Compare decoded data across zlib implementations; https://ffmpeg.org/pipermail/ffmpeg-devel/2024-October/335181.html.
+2003-fate-zlib-implementations.patch
+
 %description
 FFmpeg is a leading multimedia framework, able to decode, encode, transcode,
 mux, demux, stream, filter and play pretty much anything that humans and
@@ -134,8 +128,6 @@ community or a corporation.
 %if %{without all_codecs}
 This build of ffmpeg is limited in the number of codecs supported.
 %endif
-
-Summary:        A complete solution to record, convert and stream audio and video
 
 %package        devel
 Summary:        Development package for %{name}
@@ -239,7 +231,6 @@ cp %{SOURCE2} .
     --disable-libmodplug \
     --enable-libmp3lame \
     --disable-libmysofa \
-    --disable-libnpp \
     --disable-libopencore-amrnb \
     --disable-libopencore-amrwb \
     --disable-libopencv \
@@ -247,7 +238,7 @@ cp %{SOURCE2} .
     --disable-libopenh264 \
     --enable-libopenjpeg \
     --disable-libopenmpt \
-    --disable-libopus \
+    --enable-libopus \
     --enable-libpulse \
     --disable-libqrencode \
     --disable-libquirc \
@@ -256,7 +247,6 @@ cp %{SOURCE2} .
     --disable-librist \
     --disable-librsvg \
     --disable-librubberband \
-    --disable-libshaderc \
     --disable-libshine \
     --disable-libsmbclient \
     --enable-libsnappy \
@@ -297,11 +287,10 @@ cp %{SOURCE2} .
     --disable-openssl \
     --enable-pthreads \
     --enable-sdl2 \
-    --enable-shared \
     --enable-swresample \
     --enable-swscale \
-    --disable-v4l2-m2m \
-    --disable-vaapi \
+    --enable-v4l2-m2m \
+    --enable-vaapi \
     --disable-vapoursynth \
     --enable-vdpau \
     --disable-vulkan \
@@ -310,7 +299,6 @@ cp %{SOURCE2} .
 %if %{without all_codecs}
     --enable-muxers \
     --enable-demuxers \
-    --disable-hwaccels \
     --disable-encoders \
     --disable-decoders \
     --disable-decoder="h264,hevc,vc1,vvc" \
@@ -321,7 +309,7 @@ cp %{SOURCE2} .
 # Paranoia check
 %if %{without all_codecs}
 # DECODER
-for i in H264 HEVC HEVC_RKMPP VC1 VVC; do
+for i in H264 HEVC H264_V4L2M2M HEVC_V4L2M2M HEVC_RKMPP VC1 VVC; do
     grep -q "#define CONFIG_${i}_DECODER 0" config_components.h
 done
 
@@ -340,11 +328,12 @@ done
 make documentation
 make alltools
 
-# TODO: fix tests,here just skip it.
-%check
+%check -p
+export LD_LIBRARY_PATH="$PWD/libavcodec:$PWD/libavdevice:$PWD/libavfilter:$PWD/libavformat:$PWD/libavutil:$PWD/libswresample:$PWD/libswscale"
 
 %files
 %doc CREDITS README.md
+%license COPYING.GPLv3
 %{_bindir}/ffmpeg
 %{_bindir}/ffplay
 %{_bindir}/ffprobe
