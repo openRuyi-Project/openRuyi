@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           meson
-Version:        1.10.2
+Version:        1.12.1
 Release:        %autorelease
 Summary:        High productivity build system
 License:        Apache-2.0
 URL:            https://mesonbuild.com/
 VCS:            git:https://github.com/mesonbuild/meson.git
-#!RemoteAsset:  sha256:7890287d911dd4ee1ebd0efb61ed0321bfcd87c725df923a837cf90c6508f96b
+#!RemoteAsset:  sha256:ab0a6ca09f8ef70c564c8241fb5a23957886a0b53fb58412b5e07eaf07dba743
 Source0:        https://github.com/mesonbuild/meson/releases/download/%{version}/meson-%{version}.tar.gz
 BuildArch:      noarch
 
@@ -63,4 +63,4 @@ install -Dpm0644 -t %{buildroot}%{_datadir}/zsh/site-functions/ data/shell-compl
 %{_datadir}/zsh/site-functions/_meson
 
 %changelog
-%{?autochangelog}
+%autochangelog
