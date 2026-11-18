@@ -2,34 +2,34 @@
 # SPDX-FileCopyrightText: (C) 2025, 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           rtkit
-Version:        0.11
+Version:        0.14
 Release:        %autorelease
 Summary:        Realtime Policy and Watchdog Daemon
 License:        GPL-3.0-or-later AND MIT
-URL:            http://git.0pointer.net/rtkit.git/
-VCS:            git:http://git.0pointer.net/clone/rtkit.git
-#!RemoteAsset
-Source0:        http://0pointer.de/public/rtkit-%{version}.tar.xz
+URL:            https://gitlab.freedesktop.org/pipewire/rtkit
+VCS:            git:https://gitlab.freedesktop.org/pipewire/rtkit.git
+#!RemoteAsset:  sha256:55dd379b11f52b81655e2dc676de9d602d050cb0beb18ef01f0f65569f0a5e59
+Source0:        https://gitlab.freedesktop.org/pipewire/rtkit/-/archive/v%{version}/%{name}-v%{version}.tar.gz
 Source1:        rtkit.sysusers
-BuildSystem:    autotools
+BuildSystem:    meson
 
-BuildOption(conf):  --with-systemdsystemunitdir=%{_unitdir}
-# Avoid false positive -Werror=format-security.
-BuildOption(conf):  CFLAGS='%{build_cflags} -Wno-error=format-security'
+BuildOption(conf):  -Dsystemd_systemunitdir=%{_unitdir}
+BuildOption(conf):  -Dinstalled_tests=false
+BuildOption(conf):  -Dlibsystemd=enabled
 
-BuildRequires:  make
-BuildRequires:  pkgconfig(libsystemd)
-BuildRequires:  systemd-rpm-macros
+BuildRequires:  meson
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(libcap)
+BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  pkgconfig(polkit-gobject-1)
-BuildRequires:  autoconf
-BuildRequires:  automake
-BuildRequires:  libtool
+BuildRequires:  pkgconfig(systemd)
+BuildRequires:  systemd-rpm-macros
+BuildRequires:  xxd
 
 Requires:       dbus
 Requires:       polkit
@@ -38,19 +38,6 @@ Requires:       polkit
 RealtimeKit is a D-Bus system service that changes the
 scheduling policy of user processes/threads to SCHED_RR (i.e. realtime
 scheduling mode) on request.
-
-%conf -p
-autoreconf -fiv
-
-%build -a
-./rtkit-daemon --introspect > org.freedesktop.RealtimeKit1.xml
-
-%install -a
-install -Dm0644 org.freedesktop.RealtimeKit1.xml %{buildroot}%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
-install -Dpm 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/rtkit.conf
-
-mkdir -p %{buildroot}%{_datadir}/dbus-1/system.d
-mv %{buildroot}%{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf %{buildroot}%{_datadir}/dbus-1/system.d/
 
 %pre
 %sysusers_create_package %{name} %{SOURCE1}
@@ -77,4 +64,4 @@ mv %{buildroot}%{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf 
 %{_sysusersdir}/rtkit.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
