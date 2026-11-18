@@ -2,31 +2,33 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtwayland
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtwayland
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - Wayland platform support and QtCompositor module
-License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND (LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only) AND (GPL-3.0-only WITH Qt-GPL-exception-1.0) AND BSD-3-Clause AND MIT
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtwayland
-#!RemoteAsset:  sha256:95788aa502f75441d4edf65932b235f76523084e13dbbb7b9ee2d207b32bd9b3
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:226cafcfd3b8c009f178d157d0772f902f6ee693ee39d219aba50eef0473c143
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
-# fix cmake error by set prefix.
-Patch0:         0001-set-prefix.patch
+# Use /usr when the installed Qt prefix is empty or /; https://github.com/qt/qtwayland/blob/v6.12.0/cmake/QtWaylandSetup.cmake.
+Patch2000:      2000-set-prefix.patch
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -35,8 +37,8 @@ BuildRequires:  pkgconfig(Qt6Network)
 BuildRequires:  pkgconfig(Qt6OpenGL)
 BuildRequires:  qt6-qtbase-static
 BuildRequires:  qt6-qtbase-private-devel
-BuildRequires:  pkgconfig(Qt6Quick)
-BuildRequires:  pkgconfig(Qt6Svg)
+BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
+BuildRequires:  pkgconfig(Qt6Svg) >= %{version}
 BuildRequires:  wayland-protocols
 
 BuildRequires:  pkgconfig(xkbcommon)
@@ -105,7 +107,7 @@ popd
 %{_qt6_pluginsdir}/wayland-graphics-integration-server/
 %{_qt6_pluginsdir}/wayland-shell-integration/
 %{_qt6_qmldir}/QtWayland/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtWaylandCompositor/
