@@ -5,17 +5,18 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname antlr4-python3-runtime
+%global pypi_name antlr4_python3_runtime
 
 Name:           python-%{srcname}
-Version:        4.9.3
+Version:        4.13.2
 Release:        %autorelease
 Summary:        ANTLR4 Python3 Runtime
 License:        BSD-3-Clause
 URL:            https://www.antlr.org/
 VCS:            git:https://github.com/antlr/antlr4.git
-#!RemoteAsset:  sha256:f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b
-Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{srcname}-%{version}.tar.gz
-#!RemoteAsset:  sha256:b1b379fcaf3219593a4c433feb1b35c780bed23fafaae440b1ae2771a9521e3a
+#!RemoteAsset:  sha256:909b647e1d2fc2b70180ac586df3933e38919c85f98ccc656a96cd3f25ef3916
+Source0:        https://files.pythonhosted.org/packages/source/a/%{srcname}/%{pypi_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:3db1fb3ee79a4b4f9918fc4d0f6133bf18a3cf787f126cd22f8aa9b862281c0c
 Source1:        https://raw.githubusercontent.com/antlr/antlr4/%{version}/LICENSE.txt
 BuildArch:      noarch
 BuildSystem:    pyproject
