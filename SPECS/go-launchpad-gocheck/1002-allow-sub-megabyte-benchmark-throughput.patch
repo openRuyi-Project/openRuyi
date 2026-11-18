@@ -1,0 +1,22 @@
+From 3e22adfe2c10bbb92cf3b317e92ee2d7f52c5305 Mon Sep 17 00:00:00 2001
+From: James Henstridge <jamesh@jamesh.id.au>
+Date: Sat, 28 Nov 2020 15:04:02 +0800
+Subject: [PATCH] tests: fix a few problems preventing the tests from passing
+ on Windows
+
+Upstream-Status: Backport [https://github.com/go-check/check/commit/3e22adfe2c10bbb92cf3b317e92ee2d7f52c5305]
+Backport the benchmark expectation to the historical Launchpad filename.
+
+---
+ benchmark_test.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/benchmark_test.go b/benchmark_test.go
+index 8b6a8a6..122291e 100644
+--- a/benchmark_test.go
++++ b/benchmark_test.go
+@@ -73,1 +73,1 @@ func (s *BenchmarkS) TestBenchmarkBytes(c *C) {
+-	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark2\t\\s+[0-9]+\t\\s+[0-9]+ ns/op\t\\s+ *[1-9]\\.[0-9]{2} MB/s\n"
++	expected := "PASS: gocheck_test\\.go:[0-9]+: FixtureHelper\\.Benchmark2\t\\s+[0-9]+\t\\s+[0-9]+ ns/op\t\\s+ *[0-9]\\.[0-9]{2} MB/s\n"
+-- 
+2.51.0

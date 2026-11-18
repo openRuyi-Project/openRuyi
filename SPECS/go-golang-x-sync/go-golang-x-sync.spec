@@ -8,6 +8,9 @@
 
 %define _name           sync
 %define go_import_path  golang.org/x/sync
+# This noarch package installs Go source only. Disable the worker's
+# brp-remove-la-files pass, which can segfault while scanning this tree.
+%global __brp_remove_la_files %{nil}
 
 Name:           go-golang-x-sync
 Version:        0.23.0
@@ -25,6 +28,8 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(golang.org/x/sync) = %{version}
+Provides:       go(golang.org/x/sync/errgroup) = %{version}
+Provides:       go(golang.org/x/sync/semaphore) = %{version}
 
 %description
 This package provides supplemental Go libraries (golang.org/x/sync) that

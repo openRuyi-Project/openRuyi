@@ -1,0 +1,176 @@
+From 4af061d0126b44e7fb584b15b0f9fe442f493445 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 19 Oct 2026 13:51:47 +0800
+Subject: [PATCH] tests: load temporary module fixtures in module mode
+
+The test fixtures declare their own root modules. Inheriting GO111MODULE=off from a distribution GOPATH build prevents go/packages from resolving their local imports. Set the environment only for fixture loaders and restorers; retain the surrounding environment for tests that load DST and its packaged dependencies. Disable workspace discovery and network module lookup for these self-contained fixtures.
+
+Status: downstream, not submitted upstream.
+---
+ decorations_test.go                            | 12 ++++++++----
+ decorator/decorator_resolver_test.go           |  1 +
+ decorator/load_test.go                         |  3 +++
+ decorator/resolver/gopackages/resolver_test.go |  5 ++++-
+ decorator/resolver/gotypes/resolver_test.go    |  1 +
+ decorator/restorer_resolver_test.go            |  6 ++++--
+ 6 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/decorations_test.go b/decorations_test.go
+index 3cde8a9..40e50dd 100644
+--- a/decorations_test.go
++++ b/decorations_test.go
+@@ -179,7 +179,9 @@ func Example_imports() {
+ 
+ 	// Use the Load convenience function that calls go/packages to load the package. All loaded
+ 	// ast files are decorated to dst.
+-	pkgs, err := decorator.Load(&packages.Config{Dir: dir, Mode: packages.LoadSyntax}, "root")
++	// The fixture is a temporary module, even when DST itself uses GOPATH.
++	env := append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off")
++	pkgs, err := decorator.Load(&packages.Config{Dir: dir, Mode: packages.LoadSyntax, Env: env}, "root")
+ 	if err != nil {
+ 		panic(err)
+ 	}
+@@ -203,7 +205,7 @@ func Example_imports() {
+ 
+ 	// Create a restorer with the import manager enabled, and print the result. As you can see, the
+ 	// import block is automatically managed, and the Println ident is converted to a SelectorExpr:
+-	r := decorator.NewRestorerWithImports("root", gopackages.New(dir))
++	r := decorator.NewRestorerWithImports("root", gopackages.WithConfig(dir, packages.Config{Env: env}))
+ 	if err := r.Print(p.Syntax[0]); err != nil {
+ 		panic(err)
+ 	}
+@@ -235,7 +237,9 @@ func Example_goTypesImport() {
+ 	}
+ 
+ 	// Use golang.org/x/tools/go/packages.Load to load the package and parse the syntax
+-	pkgs, err := packages.Load(&packages.Config{Dir: dir, Mode: packages.LoadSyntax}, "root")
++	// The fixture is a temporary module, even when DST itself uses GOPATH.
++	env := append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off")
++	pkgs, err := packages.Load(&packages.Config{Dir: dir, Mode: packages.LoadSyntax, Env: env}, "root")
+ 	if err != nil {
+ 		panic(err)
+ 	}
+@@ -250,7 +254,7 @@ func Example_goTypesImport() {
+ 		panic(err)
+ 	}
+ 
+-	res := decorator.NewRestorerWithImports("root", gopackages.New(dir))
++	res := decorator.NewRestorerWithImports("root", gopackages.WithConfig(dir, packages.Config{Env: env}))
+ 	fr := res.FileRestorer()
+ 	fr.Alias["fmt"] = "" // change the dot-import to a regular import
+ 
+diff --git a/decorator/decorator_resolver_test.go b/decorator/decorator_resolver_test.go
+index ce06ffd..b0a6960 100644
+--- a/decorator/decorator_resolver_test.go
++++ b/decorator/decorator_resolver_test.go
+@@ -99,6 +99,7 @@ func TestDecoratorResolver(t *testing.T) {
+ 				&packages.Config{
+ 					Mode: packages.LoadSyntax,
+ 					Dir:  filepath.Join(root, "main"),
++					Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 				},
+ 				"root/main",
+ 			)
+diff --git a/decorator/load_test.go b/decorator/load_test.go
+index e74c324..966735d 100644
+--- a/decorator/load_test.go
++++ b/decorator/load_test.go
+@@ -1,6 +1,7 @@
+ package decorator
+ 
+ import (
++	"os"
+ 	"testing"
+ 
+ 	"github.com/dave/dst"
+@@ -38,6 +39,7 @@ func TestLoad(t *testing.T) {
+ 	cfg := &packages.Config{
+ 		Mode: packages.LoadSyntax,
+ 		Dir:  dir,
++		Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 	}
+ 	pkgs, err := Load(cfg, "root")
+ 	if err != nil {
+@@ -90,6 +92,7 @@ func TestPackage_SaveWithResolver(t *testing.T) {
+ 	cfg := &packages.Config{
+ 		Mode: packages.LoadSyntax,
+ 		Dir:  dir,
++		Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 	}
+ 	pkgs, err := Load(cfg, "root")
+ 	if err != nil {
+diff --git a/decorator/resolver/gopackages/resolver_test.go b/decorator/resolver/gopackages/resolver_test.go
+index 52ddc16..88d5d37 100644
+--- a/decorator/resolver/gopackages/resolver_test.go
++++ b/decorator/resolver/gopackages/resolver_test.go
+@@ -7,6 +7,7 @@ import (
+ 
+ 	"github.com/dave/dst/decorator/resolver"
+ 	"github.com/dave/dst/decorator/resolver/gopackages"
++	"golang.org/x/tools/go/packages"
+ )
+ 
+ func TestRestorerResolver(t *testing.T) {
+@@ -31,7 +32,9 @@ func TestRestorerResolver(t *testing.T) {
+ 					t.Fatal(err)
+ 				}
+ 				end = func() { os.RemoveAll(root) }
+-				r = &gopackages.RestorerResolver{}
++				r = &gopackages.RestorerResolver{Config: packages.Config{
++					Env: append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
++				}}
+ 				return
+ 			},
+ 			cases: []tc{
+diff --git a/decorator/resolver/gotypes/resolver_test.go b/decorator/resolver/gotypes/resolver_test.go
+index 54d1769..05badf8 100644
+--- a/decorator/resolver/gotypes/resolver_test.go
++++ b/decorator/resolver/gotypes/resolver_test.go
+@@ -131,6 +131,7 @@ func TestDecoratorResolver(t *testing.T) {
+ 				&packages.Config{
+ 					Mode: packages.LoadSyntax,
+ 					Dir:  filepath.Join(root, "main"),
++					Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 				},
+ 				"root/main",
+ 			)
+diff --git a/decorator/restorer_resolver_test.go b/decorator/restorer_resolver_test.go
+index 9cf5194..1024dff 100644
+--- a/decorator/restorer_resolver_test.go
++++ b/decorator/restorer_resolver_test.go
+@@ -1103,6 +1103,7 @@ func TestRestorerResolver(t *testing.T) {
+ 				cfg := &packages.Config{
+ 					Mode: packages.LoadSyntax,
+ 					Dir:  mainDir,
++					Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 				}
+ 
+ 				pkgs, err := packages.Load(cfg, mainPkg)
+@@ -1139,7 +1140,7 @@ func TestRestorerResolver(t *testing.T) {
+ 					c.mutate(file)
+ 				}
+ 
+-				r := NewRestorerWithImports(mainPkg, gopackages.New(mainDir))
++				r := NewRestorerWithImports(mainPkg, gopackages.WithConfig(mainDir, packages.Config{Env: cfg.Env}))
+ 				fr := r.FileRestorer()
+ 
+ 				if c.restorer != nil {
+@@ -1481,6 +1482,7 @@ func TestRestorerDecorationResolver(t *testing.T) {
+ 			cfg := &packages.Config{
+ 				Mode: packages.LoadSyntax,
+ 				Dir:  mainDir,
++				Env:  append(os.Environ(), "GO111MODULE=on", "GOWORK=off", "GOPROXY=off"),
+ 			}
+ 
+ 			pkgs, err := packages.Load(cfg, mainPkg)
+@@ -1513,7 +1515,7 @@ func TestRestorerDecorationResolver(t *testing.T) {
+ 				}
+ 			}
+ 
+-			r := NewRestorerWithImports(mainPkg, gopackages.New(mainDir))
++			r := NewRestorerWithImports(mainPkg, gopackages.WithConfig(mainDir, packages.Config{Env: cfg.Env}))
+ 			fr := r.FileRestorer()
+ 
+ 			restoredFile, err := fr.RestoreFile(file)
+-- 
+2.53.0
