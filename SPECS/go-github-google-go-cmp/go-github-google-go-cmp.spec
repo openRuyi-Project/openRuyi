@@ -23,6 +23,8 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(github.com/google/go-cmp) = %{version}
+Provides:       go(github.com/google/go-cmp/cmp) = %{version}
+Provides:       go(github.com/google/go-cmp/cmp/cmpopts) = %{version}
 
 %description
 This package is intended to be a more powerful and safer alternative to

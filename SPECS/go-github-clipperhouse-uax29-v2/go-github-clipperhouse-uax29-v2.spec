@@ -32,6 +32,7 @@ BuildRequires:  go
 BuildRequires:  go-rpm-macros
 
 Provides:       go(github.com/clipperhouse/uax29/v2) = %{version}
+Provides:       go(github.com/clipperhouse/uax29/v2/graphemes) = %{version}
 
 %description
 This package tokenizes words, sentences and graphemes based on Unicode text

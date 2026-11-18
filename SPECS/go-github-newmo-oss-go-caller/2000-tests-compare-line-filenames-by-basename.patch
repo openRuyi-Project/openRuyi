@@ -1,0 +1,34 @@
+From c8b431f0e2b70b404c58ce678f1f366bdedb2f5e Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Fri, 30 Oct 2026 02:18:49 +0800
+Subject: [PATCH] tests: compare //line filenames by basename
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+
+---
+ caller_test.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/caller_test.go b/caller_test.go
+index 5bc8981..8e2b287 100644
+--- a/caller_test.go
++++ b/caller_test.go
+@@ -2,6 +2,7 @@ package caller_test
+ 
+ import (
+ 	"fmt"
++	"path/filepath"
+ 	"runtime"
+ 	"testing"
+ 
+@@ -32,7 +33,7 @@ func TestNew(t *testing.T) {
+ 			}
+ 
+ 			frame := tt.stacktrace[0]
+-			got := fmt.Sprintf("%s:%d %s.%s", frame.File(), frame.Line(), frame.PkgPath(), frame.FuncName())
++			got := fmt.Sprintf("%s:%d %s.%s", filepath.Base(frame.File()), frame.Line(), frame.PkgPath(), frame.FuncName())
+ 			if diff := cmp.Diff(got, tt.want); diff != "" {
+ 				t.Error("(-got, +want) =", diff)
+ 			}
+-- 
+2.53.0
