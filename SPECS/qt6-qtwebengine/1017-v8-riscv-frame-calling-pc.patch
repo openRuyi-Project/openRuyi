@@ -1,0 +1,40 @@
+From 1db2400ea274af75f4d9bcc98a2c34ea5ee1d91b Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Thu, 12 Mar 2026 03:26:08 +0000
+Subject: [PATCH] [riscv][wasm] Fix walking WasmLiftoffSetupFrame
+
+Port commit dec5f6bdbe683eb74f7908310ac9a742d057181a
+Bug:490980546
+
+Change-Id: I7e8b4c78536f7b1c070302ce04e9ce67d401d42c
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7660033
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#105750}
+
+Upstream: https://github.com/v8/v8/commit/86e1877043898d223b6ba57ace74c15e863bfa47
+Upstream: https://github.com/v8/v8/commit/9235e225af3555365398cd7d24b31a2efe51650f
+Backport: Combine the frame-walking fix with its instance-slot correction.
+Use Qt 6.140.0's GP/FP-only save layout; omit the newer vector-register
+save/restore changes and vector slots, which are absent from this source.
+Adjust file paths for Qt WebEngine.
+---
+ .../chromium/v8/src/execution/riscv/frame-constants-riscv.h    | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h b/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
+index 8916a6e..7b7d7f5 100644
+--- a/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
++++ b/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
+@@ -42,6 +42,9 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   // the saved register closest to fp at index 0.
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
++  // Count the instance, GP and FP parameter spills before the saved ra.
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(
++      1 + kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs);
+ 
+   // The parameters are pushed onto the stack using MacroAssembler::MultiPush;
+   // see src/codegen/riscv/macro-assembler-riscv.cc. That means that the last

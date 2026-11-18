@@ -1,0 +1,103 @@
+From 09e5fa753e99d658e77044ff9b9f150397cee059 Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Thu, 9 Apr 2026 18:23:02 +0800
+Subject: [PATCH] [riscv] Fix ToUint8Clamp in Maglev
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Author: Junyoung Park(candymatedh@gmail.com)
+The RISC-V Maglev ToUint8Clamp implementation had a bug
+in its rounding logic for [0.0, 255.0]. Replace the complex
+manual handling with a simple fcvt.l.d with RNE rounding, matching
+ECMA-262 §7.1.12 semantics.
+
+Fixed: 500507435
+Change-Id: I24cddbf787e1146d728c5c40d837835acefdf4c3
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7741807
+Commit-Queue: Jakob Linke <jgruber@chromium.org>
+Reviewed-by: Jakob Linke <jgruber@chromium.org>
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#106413}
+---
+ src/maglev/riscv/maglev-assembler-riscv-inl.h | 28 +++--------------
+ test/mjsunit/maglev/regress-500507435.js      | 30 +++++++++++++++++++
+ 2 files changed, 34 insertions(+), 24 deletions(-)
+ create mode 100644 test/mjsunit/maglev/regress-500507435.js
+
+diff --git a/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-assembler-riscv-inl.h b/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-assembler-riscv-inl.h
+index 92eb6bb19dc5..e91106213029 100644
+--- a/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-assembler-riscv-inl.h
++++ b/src/3rdparty/chromium/v8/src/maglev/riscv/maglev-assembler-riscv-inl.h
+@@ -995,30 +995,10 @@ inline void MaglevAssembler::ToUint8Clamped(Register result,
+   MacroAssembler::Branch(max,  // value >= 255.0
+                          not_equal, scratch, Operand(zero_reg));
+ 
+-  // value in (0.0, 255.0)
+-  fmv_x_d(result, value);
+-  // check if fractional part in result is absent
+-  Label has_fraction;
+-  Mv(scratch, result);
+-  SllWord(scratch, scratch, Operand(64 - kFloat64MantissaBits));
+-  MacroAssembler::Branch(&has_fraction, not_equal, scratch, Operand(zero_reg));
+-  // no fractional part, compute exponent part taking bias into account.
+-  SrlWord(result, result, Operand(kFloat64MantissaBits));
+-  SubWord(result, result, kFloat64ExponentBias);
+-  MacroAssembler::Branch(done);
+-
+-  bind(&has_fraction);
+-  // Actual rounding is here. Notice that ToUint8Clamp does “round half to even”
+-  // tie-breaking and that differs from Math.round which does “round half up”
+-  // tie-breaking.
+-  fcvt_l_d(scratch, value, RNE);
+-  fcvt_d_l(ftmp1, scratch, RNE);
+-  // A special handling is needed if the result is a very small positive number
+-  // that rounds to zero. JS semantics requires that the rounded result retains
+-  // the sign of the input, so a very small positive floating-point number
+-  // should be rounded to positive 0.
+-  fsgnj_d(ftmp1, ftmp1, value);
+-  fmv_x_d(result, ftmp1);
++  // value in (0.0, 255.0): round to nearest even, then store as integer.
++  // fcvt.l.d converts float64 to int64 with round-to-nearest-even (RNE),
++  // matching the ECMA-262 §7.1.12 ToUint8Clamp rounding semantics.
++  fcvt_l_d(result, value, RNE);
+   MacroAssembler::Branch(done);
+ }
+ 
+diff --git a/src/3rdparty/chromium/v8/test/mjsunit/maglev/regress-500507435.js b/src/3rdparty/chromium/v8/test/mjsunit/maglev/regress-500507435.js
+new file mode 100644
+index 000000000000..d1c30c0f7476
+--- /dev/null
++++ b/src/3rdparty/chromium/v8/test/mjsunit/maglev/regress-500507435.js
+@@ -0,0 +1,30 @@
++// Copyright 2026 the V8 project authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++// Flags: --allow-natives-syntax --maglev
++let arr = new Uint8ClampedArray(4);
++
++function store(a, v) { a[0] = v; return a[0]; }
++
++%PrepareFunctionForOptimization(store);
++
++for (let i = 0; i < 100; i++) store(arr, 42.7);
++
++%OptimizeMaglevOnNextCall(store);
++
++assertEquals(100, store(arr, 100.5));
++assertEquals(128, store(arr, 128.0));
++assertEquals(0,   store(arr, 0.4));
++assertEquals(0,   store(arr, 0.5));
++assertEquals(2,   store(arr, 1.5));
++assertEquals(2,   store(arr, 2.5));
++assertEquals(1,   store(arr, 1.0));
++assertEquals(128, store(arr, 128.0));
++assertEquals(43,  store(arr, 42.7));
++assertEquals(100, store(arr, 100.5));
++assertEquals(255, store(arr, 255.0));
++assertEquals(0,   store(arr, -0.3));
++assertEquals(0,   store(arr, NaN));
++
++assertTrue(isMaglevved(store));

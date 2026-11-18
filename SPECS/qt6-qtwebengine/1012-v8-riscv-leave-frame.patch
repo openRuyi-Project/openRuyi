@@ -1,0 +1,21 @@
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+Subject: [PATCH] [riscv] Fix sp handling in MacroAssembler::LeaveFrame
+
+Keep saved frame data on the stack until it has been restored.
+Upstream: https://github.com/v8/v8/commit/6a0a25abaed397f83eb0d92e4b33a5e18204f8bc
+Adapted to the Qt WebEngine source path.
+
+--- a/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc
++++ b/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc
+@@ -6713,9 +6713,10 @@
+ 
+ void MacroAssembler::LeaveFrame(StackFrame::Type type) {
+   ASM_CODE_COMMENT(this);
+-  AddWord(sp, fp, 2 * kSystemPointerSize);
++  Move(sp, fp);
+   LoadWord(ra, MemOperand(fp, 1 * kSystemPointerSize));
+   LoadWord(fp, MemOperand(fp, 0 * kSystemPointerSize));
++  AddWord(sp, sp, 2 * kSystemPointerSize);
+ }
+ 
+ void MacroAssembler::EnterExitFrame(Register scratch, int stack_space,

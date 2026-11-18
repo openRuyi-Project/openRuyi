@@ -1,0 +1,43 @@
+From 667e0fe22e12663e0016a0c7af81730464d36ca4 Mon Sep 17 00:00:00 2001
+From: Shawn Rutledge <shawn.rutledge@qt.io>
+Date: Fri, 25 Sep 2026 17:50:42 +0200
+Subject: [PATCH] PDF Quick examples: add find_package(... PdfQuick)
+
+It was ok before, but not in current release builds
+after qtbase commit 2a04c2501f627c6d09f030355c9ab6031b2eebc0
+
+Pick-to: 6.140 6.11
+Task-number: QTBUG-149668
+Change-Id: Id4b9c5a1787d2dc409ed551e9abbe62087210845
+Reviewed-by: Moss Heim <moss.heim@qt.io>
+---
+ examples/pdf/multipage/CMakeLists.txt  | 2 +-
+ examples/pdf/singlepage/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/examples/pdf/multipage/CMakeLists.txt b/examples/pdf/multipage/CMakeLists.txt
+index 87125da788a..eaee18a99af 100644
+--- a/examples/pdf/multipage/CMakeLists.txt
++++ b/examples/pdf/multipage/CMakeLists.txt
+@@ -10,7 +10,7 @@ endif()
+ 
+ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/pdf/multipage")
+ 
+-find_package(Qt6 REQUIRED COMPONENTS Gui Qml OPTIONAL_COMPONENTS Svg)
++find_package(Qt6 REQUIRED COMPONENTS Gui Qml PdfQuick OPTIONAL_COMPONENTS Svg)
+ if(NOT TARGET Qt::Svg)
+     message(WARNING "QtSvg is required as runtime dependency for qtpdfquick examples.")
+ endif()
+diff --git a/examples/pdf/singlepage/CMakeLists.txt b/examples/pdf/singlepage/CMakeLists.txt
+index a7887c3f538..958f01c7447 100644
+--- a/examples/pdf/singlepage/CMakeLists.txt
++++ b/examples/pdf/singlepage/CMakeLists.txt
+@@ -10,7 +10,7 @@ endif()
+ 
+ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/pdf/singlepage")
+ 
+-find_package(Qt6 REQUIRED COMPONENTS Gui Qml OPTIONAL_COMPONENTS Svg)
++find_package(Qt6 REQUIRED COMPONENTS Gui Qml PdfQuick OPTIONAL_COMPONENTS Svg)
+ if(NOT TARGET Qt::Svg)
+     message(WARNING "QtSvg is required as runtime dependency for qtpdfquick examples.")
+ endif()

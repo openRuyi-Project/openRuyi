@@ -1,0 +1,14 @@
+Include the declarations of int64_t and uint64_t used by this header.
+Origin: https://src.fedoraproject.org/rpms/qt6-qtwebengine/blob/bd8905f045f73300ca319773fc8f5a1558ccfc9b/f/qtwebengine-fix-build-against-gcc16.patch
+
+diff --git a/src/3rdparty/chromium/base/strings/to_string.h b/src/3rdparty/chromium/base/strings/to_string.h
+--- a/src/3rdparty/chromium/base/strings/to_string.h
++++ b/src/3rdparty/chromium/base/strings/to_string.h
+@@ -6,6 +6,7 @@
+ #define BASE_STRINGS_TO_STRING_H_
+ 
+ #include <concepts>
++#include <cstdint>
+ #include <memory>
+ #include <sstream>
+ #include <string>

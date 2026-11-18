@@ -1,0 +1,49 @@
+From 639a7d02772c0bc212bc29b6b4eaddbed115488a Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Tue, 28 Apr 2026 22:06:00 +0800
+Subject: [PATCH] [riscv][codegen] Fix signed integer overflow in
+ Assembler::GrowBuffer
+
+Port commit 19b8e4cb5e838e786d3883b531765b3b07514dfb
+
+Bug:506629455
+
+Change-Id: Iabb2fbd2f025f3180576d8571873d76c3f6599ea
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7800114
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#106902}
+
+Upstream: https://github.com/v8/v8/commit/639a7d02772c0bc212bc29b6b4eaddbed115488a
+Adapted to the Qt WebEngine source path and context.
+
+--- a/src/3rdparty/chromium/v8/src/codegen/riscv/assembler-riscv.cc
++++ b/src/3rdparty/chromium/v8/src/codegen/riscv/assembler-riscv.cc
+@@ -1364,13 +1364,7 @@
+   DEBUG_PRINTF("GrowBuffer: %p -> ", buffer_start_);
+   // Compute new buffer size.
+   int old_size = buffer_->size();
+-  int new_size = std::min(2 * old_size, old_size + 1 * MB);
+-
+-  // Some internal data structures overflow for very large buffers,
+-  // they must ensure that kMaximalBufferSize is not too large.
+-  if (new_size > kMaximalBufferSize) {
+-    V8::FatalProcessOutOfMemory(nullptr, "Assembler::GrowBuffer");
+-  }
++  int new_size = ComputeNewBufferSize(BufferGrowthStrategy::kDoubleCapped1MB);
+ 
+   // Set up new buffer.
+   std::unique_ptr<AssemblerBuffer> new_buffer = buffer_->Grow(new_size);
+--- a/src/3rdparty/chromium/v8/src/codegen/riscv/assembler-riscv.h
++++ b/src/3rdparty/chromium/v8/src/codegen/riscv/assembler-riscv.h
+@@ -803,9 +803,6 @@
+   }
+ 
+  private:
+-  // Avoid overflows for displacements etc.
+-  static const int kMaximalBufferSize = 512 * MB;
+-
+   // Buffer size and constant pool distance are checked together at regular
+   // intervals of kBufferCheckInterval emitted bytes.
+   static constexpr int kBufferCheckInterval = 1 * KB / 2;
