@@ -5,12 +5,14 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libeot
-Version:        0.01
+Version:        0.0.3
 Release:        %autorelease
+# Upstream changed versioning from 0.01 to 0.0.3, and RPM sorts 0.01 > 0.0.3; keep Epoch permanently.
+Epoch:          1
 Summary:        Embedded OpenType font decoder
 License:        MPL-2.0
 URL:            https://github.com/umanwizard/libeot
-#!RemoteAsset:  sha256:6f76f57b7819885e4dc4ca278eaef8ba332bef278ee757e3aea2b8d85d06b4bb
+#!RemoteAsset:  sha256:2cb904cbe291019b928dbc2231620bcf273be0298f596c2494348e7be1d7051a
 Source0:        https://github.com/umanwizard/libeot/archive/refs/tags/v%{version}.tar.gz#/libeot-%{version}.tar.gz
 BuildSystem:    autotools
 
@@ -27,7 +29,7 @@ The eot2ttf utility extracts the underlying TrueType font.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description    devel
 Headers, linker files and pkg-config metadata for developing with %{name}.
