@@ -6,15 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libp11
-Version:        0.4.13
+Version:        0.4.21
 Release:        %autorelease
 Summary:        Library Implementing a Small Layer on Top of PKCS#11 API
 License:        LGPL-2.1-or-later AND BSD-2-Clause AND OpenSSL
 URL:            https://github.com/OpenSC/libp11
-#!RemoteAsset
+#!RemoteAsset:  sha256:efdb523aef8613d447e6a2d38227d4b389866f4bcf4b503130acd7f759490847
 Source0:        %{url}/releases/download/libp11-%{version}/libp11-%{version}.tar.gz
-#!RemoteAsset
-Source1:        %{url}/releases/download/libp11-%{version}/libp11-%{version}.tar.gz.asc
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
@@ -55,16 +53,14 @@ autoreconf -fvi
 %license COPYING
 %doc NEWS
 %{_libdir}/libp11.so.*
-%{_libdir}/libpkcs11.so.*
 
 %files devel
 %doc %{_docdir}/libp11
 %{_libdir}/libp11.so
-%{_libdir}/libpkcs11.so
-%{_libdir}/engines-3/libpkcs11.so
-%{_libdir}/engines-3/pkcs11.so
+%{_libdir}/ossl-modules/libpkcs11.so
+%{_libdir}/ossl-modules/pkcs11prov.so
 %{_libdir}/pkgconfig/libp11.pc
 %{_includedir}/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
