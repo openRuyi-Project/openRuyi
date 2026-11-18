@@ -1,0 +1,23 @@
+Temporary fixture modules must use module mode during GOPATH package builds.
+
+Downstream status: not submitted upstream.
+Reference: https://github.com/kisielk/errcheck/blob/v1.30.0/errcheck/errcheck_test.go
+
+--- a/errcheck/errcheck_test.go
++++ b/errcheck/errcheck_test.go
+@@ -246,6 +246,7 @@
+ 
+ 	loadPackages = func(cfg *packages.Config, paths ...string) ([]*packages.Package, error) {
+ 		cfg.Dir = tmpDir
++		cfg.Env = append(os.Environ(), "GO111MODULE=on", "GOWORK=off")
+ 		return packages.Load(cfg, paths...)
+ 	}
+ 
+@@ -627,6 +628,7 @@
+ 
+ 	loadPackages = func(cfg *packages.Config, paths ...string) ([]*packages.Package, error) {
+ 		cfg.Dir = tmpDir
++		cfg.Env = append(os.Environ(), "GO111MODULE=on", "GOWORK=off")
+ 		return packages.Load(cfg, paths...)
+ 	}
+ 
