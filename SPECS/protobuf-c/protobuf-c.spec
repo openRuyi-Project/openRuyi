@@ -16,6 +16,9 @@ URL:            https://github.com/protobuf-c/protobuf-c
 Source0:        %{url}/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    autotools
 
+# Replace removed field-label access; https://github.com/protobuf-c/protobuf-c/pull/797.
+Patch0:         0001-Fix-compilation-against-protobuf-v34.patch
+
 BuildOption(conf):  --disable-static
 
 BuildRequires:  autoconf
@@ -35,7 +38,7 @@ It uses a modified version of protoc called protoc-c.
 Summary:        Protocol Buffers C compiler
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description compiler
+%description    compiler
 This package contains a modified version of the Protocol Buffers
 compiler for the C programming language called protoc-c.
 
@@ -48,8 +51,8 @@ Requires:       %{name}-compiler%{?_isa} = %{version}-%{release}
 This package contains protobuf-c headers and libraries.
 
 %files
-%license LICENSE
 %doc README.md TODO
+%license LICENSE
 %{_libdir}/libprotobuf-c.so.1*
 
 %files compiler
