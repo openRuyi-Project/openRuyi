@@ -7,21 +7,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           protobuf
-Version:        33.2
+Version:        36.2
 Release:        %autorelease
 Summary:        Protocol Buffers - Google's data interchange format
 License:        BSD-3-Clause
 URL:            https://github.com/protocolbuffers/protobuf
-#!RemoteAsset:  sha256:6b6599b54c88d75904b7471f5ca34a725fa0af92e134dd1a32d5b395aa4b4ca8
+VCS:            git:https://github.com/protocolbuffers/protobuf
+#!RemoteAsset:  sha256:3d9642a662d10e68ebae5e53f14dcce5105684212d5078f8e0d47d1ab3ae6b64
 Source0:        https://github.com/protocolbuffers/protobuf/releases/download/v%{version}/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 
-BuildOption(conf):  -Dprotobuf_BUILD_TESTS=OFF
-BuildOption(conf):  -Dprotobuf_ABSL_PROVIDER=package
+BuildOption(conf):  -Dprotobuf_BUILD_TESTS=ON
+BuildOption(conf):  -Dprotobuf_LOCAL_DEPENDENCIES_ONLY=ON
 
 BuildRequires:  cmake
 BuildRequires:  fdupes
 BuildRequires:  gcc-c++
+BuildRequires:  pkgconfig(gmock)
+BuildRequires:  pkgconfig(gtest)
 BuildRequires:  pkgconfig
 BuildRequires:  python-rpm-macros
 BuildRequires:  pkgconfig(absl_absl_check)
@@ -80,13 +83,18 @@ Protocol Buffers are a way of encoding structured data in an efficient yet
 extensible format. Google uses Protocol Buffers for almost all of its internal
 RPC protocols and file formats.
 
+%check -p
+# Re-execute death tests so child exit handlers cannot delete the parent test directory.
+export GTEST_DEATH_TEST_STYLE=threadsafe
+
 %files
 %license LICENSE
-%{_libdir}/lib*.so*
+%{_libdir}/lib*.so.*
 
 %files devel
-%license LICENSE
+%{_libdir}/lib*.so
 %doc CONTRIBUTORS.txt README.md
+%license LICENSE
 %{_bindir}/protoc*
 %{_includedir}/google
 %{_includedir}/upb
