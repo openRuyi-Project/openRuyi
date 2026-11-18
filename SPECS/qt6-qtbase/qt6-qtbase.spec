@@ -3,45 +3,33 @@
 # SPDX-FileContributor: jingyupu <pujingyu@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtbase
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 %bcond xcb 1
-%bcond mysql 0
-%bcond postgresql 0
+%bcond mysql 1
+%bcond postgresql 1
 %bcond tests 0
 
 Name:           qt6-qtbase
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt 6 core components
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtbase.git
-#!RemoteAsset:  sha256:d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:cd837bb9fd631e20439a04eaa0c2f252f19ad92fdf5adf10229d0fbc2fab2d53
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 Source1:        macros.qt6-qtbase
 BuildSystem:    cmake
 
-# Moves object files installation destination to ARCHDATADIR.
-Patch0:         0001-qtbase-CMake-Install-objects-files-into-ARCHDATADIR.patch
-# Removes patch version from the private API version tag.
-Patch1:         0002-qtbase-use-only-major-minor-for-private-api-tag.patch
-# namespace QT_VERSION_CHECK to workaround major/minor being pre-defined (#1396755)
-Patch2:         0003-qtbase-version-check.patch
-# Adds _SYS_SYSMACROS_H_OUTER and __WORDSIZE macros to the moc preprocessor.
-Patch3:         0004-qtbase-moc-macros.patch
-# drop -O3 and make -O2 by default
-Patch4:         0005-qtbase-cxxflag.patch
-# fix for new mariadb
-Patch5:         0006-qtbase-mysql.patch
-# fix FTBFS against libglvnd-1.3.4+
-Patch6:         0007-qtbase-libglvnd.patch
-
+BuildOption(conf):  -GNinja
+BuildOption(conf):  -DFEATURE_use_lld_linker=ON
+BuildOption(conf):  -DFEATURE_harmonydeployqt=OFF
 BuildOption(conf):  -DINSTALL_ARCHDATADIR=%{_qt6_archdatadir}
 BuildOption(conf):  -DINSTALL_BINDIR=%{_qt6_bindir}
 BuildOption(conf):  -DINSTALL_DATADIR=%{_qt6_datadir}
@@ -59,7 +47,7 @@ BuildOption(conf):  -DINSTALL_TESTSDIR=%{_qt6_testsdir}
 BuildOption(conf):  -DINSTALL_TRANSLATIONSDIR=%{_qt6_translationsdir}
 BuildOption(conf):  -DBUILD_WITH_PCH=OFF
 BuildOption(conf):  -DQT_CREATE_VERSIONED_HARD_LINK=OFF
-BuildOption(conf):  -DQT_DISABLE_RPATH=OFF
+BuildOption(conf):  -DFEATURE_rpath=OFF
 BuildOption(conf):  -DQT_GENERATE_SBOM=OFF
 BuildOption(conf):  -DFEATURE_elf_private_full_version=ON
 BuildOption(conf):  -DFEATURE_enable_new_dtags=ON
@@ -86,22 +74,26 @@ BuildOption(conf):  -DQT_BUILD_TESTS=OFF
 %endif
 %if %{with xcb}
 BuildOption(conf):  -DFEATURE_system_xcb_xinput=ON
-BuildOption(conf):  -DFEATURE_xcb_native_painting=ON
 BuildOption(conf):  -DFEATURE_xcb=ON
 %else
 BuildOption(conf):  -DFEATURE_xcb=OFF
 %endif
 %if %{with mysql}
 BuildOption(conf):  -DFEATURE_sql_mysql=ON
+%else
+BuildOption(conf):  -DFEATURE_sql_mysql=OFF
 %endif
 %if %{with postgresql}
 BuildOption(conf):  -DFEATURE_sql_psql=ON
+%else
+BuildOption(conf):  -DFEATURE_sql_psql=OFF
 %endif
 BuildOption(conf):  -DFEATURE_sql_odbc=ON
 
 BuildRequires:  cmake >= 3.18.3
 BuildRequires:  gcc-c++
-BuildRequires:  make
+BuildRequires:  ninja
+BuildRequires:  lld
 BuildRequires:  perl
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(xkbcommon)
@@ -160,6 +152,22 @@ BuildRequires:  pkgconfig(libmariadb)
 BuildRequires:  pkgconfig(libpq)
 %endif
 
+%patchlist
+# Install resource objects under ARCHDATADIR; https://api.opensuse.org/public/source/openSUSE:Factory/qt6-base/0001-CMake-Install-objects-files-into-ARCHDATADIR.patch?rev=86.
+2000-qtbase-CMake-Install-objects-files-into-ARCHDATADIR.patch
+# Use major and minor versions for private API tags; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-use-only-major-minor-for-private-api-tag.patch.
+2001-qtbase-use-only-major-minor-for-private-api-tag.patch
+# Avoid major/minor macro collisions; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-version-check.patch.
+2002-qtbase-version-check.patch
+# Teach moc the system-header guard macros; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-moc-macros.patch.
+2003-qtbase-moc-macros.patch
+# Use the distribution optimization level; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-cxxflag.patch.
+2004-qtbase-cxxflag.patch
+# Include the MariaDB version header; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-mysql.patch.
+2005-qtbase-mysql.patch
+# Build with current libglvnd headers; https://src.fedoraproject.org/rpms/qt6-qtbase/raw/7b093c11df66bdceea2eb068a107a6362dc18ebf/f/qtbase-libglvnd.patch.
+2006-qtbase-libglvnd.patch
+
 %description
 Qt is a software toolkit for developing applications.
 
@@ -174,6 +182,7 @@ Common files for Qt6.
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-gui%{?_isa} = %{version}-%{release}
+Requires:       lld
 Requires:       qt6-macros
 Requires:       pkgconfig(egl)
 Requires:       pkgconfig(gl)
@@ -221,6 +230,24 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    examples
 %{summary}.
+
+%if %{with mysql}
+%package        mysql
+Summary:        MySQL and MariaDB driver for Qt6 SQL
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    mysql
+MySQL and MariaDB database driver for Qt6 SQL.
+%endif
+
+%if %{with postgresql}
+%package        postgresql
+Summary:        PostgreSQL driver for Qt6 SQL
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    postgresql
+PostgreSQL database driver for Qt6 SQL.
+%endif
 
 %prep -a
 rm -rf src/3rdparty/{harfbuzz-ng,freetype,libjpeg,libpng,sqlite,zlib,pcre2}
@@ -304,12 +331,17 @@ done
 %{_qt6_pluginsdir}/networkinformation/libqconnman.so
 %{_bindir}/qtpaths*
 %{_qt6_bindir}/qtpaths*
+
 %if %{with postgresql}
+%files postgresql
 %{_qt6_pluginsdir}/sqldrivers/libqsqlpsql.so
+%{_qt6_libdir}/cmake/Qt6Sql/Qt6QPSQLDriverPlugin*.cmake
 %endif
+
 %if %{with mysql}
 %files mysql
 %{_qt6_pluginsdir}/sqldrivers/libqsqlmysql.so
+%{_qt6_libdir}/cmake/Qt6Sql/Qt6QMYSQLDriverPlugin*.cmake
 %endif
 
 %files common
@@ -400,7 +432,7 @@ done
 %{_qt6_includedir}/QtEglFSDeviceIntegration/QtEglFSDeviceIntegrationDepends
 %{_qt6_includedir}/QtEglFSDeviceIntegration/QtEglFSDeviceIntegrationVersion
 %{_qt6_includedir}/QtEglFSDeviceIntegration/qteglfsdeviceintegrationversion.h
-%{_qt6_includedir}/*/%{real_version}/
+%{_qt6_includedir}/*/%{version}/
 %{_qt6_libdir}/cmake/Qt6CorePrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6DBusPrivate/*.cmake
 %{_qt6_libdir}/cmake/Qt6GuiPrivate/*.cmake
