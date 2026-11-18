@@ -1,0 +1,98 @@
+#!/usr/bin/env sh
+
+set -e
+
+kernel_add() {
+    KERNEL_VERSION="${1}"
+    KERNEL_IMAGE="${2}"
+
+    KERNEL_DEST="/boot/vmlinuz-${KERNEL_VERSION}"
+    [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Installing ${KERNEL_DEST}"
+    install -m 0644 -o root -g root "$KERNEL_IMAGE" "$KERNEL_DEST" || {
+        echo "Error: could not copy '$KERNEL_IMAGE' to '$KERNEL_DEST'." >&2
+        exit 1
+    }
+
+    INITRD_SRC="${KERNEL_INSTALL_STAGING_AREA}/initrd"
+    INITRD_DEST="/boot/initramfs-${KERNEL_VERSION}.img"
+    if [ -f "${INITRD_SRC}" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Installing ${INITRD_DEST}"
+        install -m 0644 -o root -g root "${INITRD_SRC}" "${INITRD_DEST}" || {
+            echo "Error: could not copy '${INITRD_SRC}' to '${INITRD_DEST}'." >&2
+            exit 1
+        }
+    fi
+
+    DTB_SRC="/usr/lib/modules/${KERNEL_VERSION}/dtb"
+    DTB_DEST="/boot/dtb-${KERNEL_VERSION}"
+    if [ -d "${DTB_SRC}" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Installing ${DTB_DEST}"
+        cp -a "${DTB_SRC}" "${DTB_DEST}" || {
+            echo "Error: could not copy '${DTB_SRC}' to '${DTB_DEST}'." >&2
+            exit 1
+        }
+        chown -R root:root "${DTB_DEST}" || :
+        chmod -R 644 "${DTB_DEST}" || :
+    fi
+
+    grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+kernel_remove() {
+    KERNEL_VERSION="${1}"
+
+    DTB_DEST="/boot/dtb-${KERNEL_VERSION}"
+    if [ -d "${DTB_DEST}" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Removing ${DTB_DEST}"
+        rm -rf "${DTB_DEST}" || {
+            echo "Error: could not remove '${DTB_DEST}'." >&2
+            exit 1
+        }
+    fi
+
+    INITRD_DEST="/boot/initramfs-${KERNEL_VERSION}.img"
+    if [ -f "${INITRD_DEST}" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Removing ${INITRD_DEST}"
+        rm "${INITRD_DEST}" || {
+            echo "Error: could not remove '${INITRD_DEST}'." >&2
+            exit 1
+        }
+    fi
+
+    KERNEL_DEST="/boot/vmlinuz-${KERNEL_VERSION}"
+    [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && echo "Removing ${KERNEL_DEST}"
+    rm "${KERNEL_DEST}" || {
+        echo "Error: could not remove '${KERNEL_DEST}'." >&2
+        exit 1
+    }
+
+    grub-mkconfig -o /boot/grub/grub.cfg
+}
+
+main() {
+    COMMAND="${1}"
+    KERNEL_VERSION="${2}"
+    KERNEL_IMAGE="${4}"
+
+    if [ "$KERNEL_INSTALL_LAYOUT" != "grub" ]; then
+        [ "$KERNEL_INSTALL_VERBOSE" -gt 0 ] && \
+            echo "KERNEL_INSTALL_LAYOUT=$KERNEL_INSTALL_LAYOUT, quitting."
+        exit 0
+    fi
+
+    case "$COMMAND" in
+        remove)
+            kernel_remove "${KERNEL_VERSION}"
+            ;;
+        add)
+            kernel_add "${KERNEL_VERSION}" "${KERNEL_IMAGE}"
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+}
+
+main "$@"
+
+exit 0
