@@ -1,0 +1,30 @@
+From 0bcaec859f446a5f4fc610e2e48d18c199b81690 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 18 Nov 2026 20:19:35 +0800
+Subject: [PATCH] genext2fs.c: store full ino_t in struct hdlink_s
+
+struct hdlink_s stored src_inode as uint32, truncating 64-bit host inode
+numbers returned by lstat() and breaking hardlink detection in
+is_hardlink(filesystem *, ino_t) on filesystems with >32-bit inodes.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ genext2fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/genext2fs.c b/genext2fs.c
+index 2e36da3..c082a1d 100644
+--- a/genext2fs.c
++++ b/genext2fs.c
+@@ -743,7 +743,7 @@ typedef struct
+ #define HDLINK_CNT   16
+ struct hdlink_s
+ {
+-	uint32	src_inode;
++	ino_t	src_inode;
+ 	uint32	dst_nod;
+ };
+ 
+-- 
+2.54.0
+
