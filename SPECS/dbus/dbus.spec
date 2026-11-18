@@ -6,11 +6,9 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# default without selinux
-%bcond selinux 0
-
-# default without systemd
-%bcond systemd 0
+# bootstrap may need to disable selinux and systemd.
+%bcond selinux 1
+%bcond systemd 1
 
 Name:           dbus
 Version:        1.16.2
