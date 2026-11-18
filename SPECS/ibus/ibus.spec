@@ -37,6 +37,7 @@ BuildRequires:  pkgconfig(libnotify)
 BuildRequires:  pkgconfig(iso-codes)
 BuildRequires:  pkgconfig(wayland-protocols)
 BuildRequires:  pkgconfig(gobject-introspection-1.0)
+BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  unicode-ucd
 BuildRequires:  automake
 BuildRequires:  vala
