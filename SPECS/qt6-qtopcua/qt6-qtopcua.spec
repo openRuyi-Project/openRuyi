@@ -34,7 +34,7 @@ BuildRequires:  pkgconfig(Qt6Network)
 BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
-BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(openssl3)
 
 %description
 Qt OPC UA (API) provides classes and functions to access the OPC UA protocol.
