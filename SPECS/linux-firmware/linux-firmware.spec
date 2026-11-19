@@ -20,8 +20,6 @@ VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/lin
 Source0:        https://cdn.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
 
 BuildRequires:  make
-BuildRequires:  git
-BuildRequires:  python3
 BuildRequires:  parallel
 BuildRequires:  rdfind
 
@@ -289,7 +287,7 @@ cx23885, cx23840, cx231xx), Xceive xc4000/xc5000, DiBcom dib0700,
 Terratec H5 DRX-K, ITEtech IT9135 Ax and Bx, and av7110.
 
 %prep
-%autosetup -S git -p1
+%autosetup
 
 %build
 
