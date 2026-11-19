@@ -7,7 +7,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global _firmwarepath /usr/lib/firmware
+%{!?_firmwaredir:%global _firmwaredir /usr/lib/firmware}
 
 Name:           linux-firmware
 Version:        20261019
@@ -292,13 +292,13 @@ Terratec H5 DRX-K, ITEtech IT9135 Ax and Bx, and av7110.
 %build
 
 %install
-mkdir -p %{buildroot}/%{_firmwarepath}
-mkdir -p %{buildroot}/%{_firmwarepath}/updates
+mkdir -p %{buildroot}/%{_firmwaredir}
+mkdir -p %{buildroot}/%{_firmwaredir}/updates
 
-make %{?_smp_mflags} DESTDIR=%{buildroot} FIRMWAREDIR=%{_firmwarepath} install-xz
+make %{?_smp_mflags} DESTDIR=%{buildroot} FIRMWAREDIR=%{_firmwaredir} install-xz
 
 # Cleanup files we don't want to ship
-pushd %{buildroot}/%{_firmwarepath}
+pushd %{buildroot}/%{_firmwaredir}
 # Remove firmware shipped in separate packages already
 # Perhaps these should be built as subpackages of linux-firmware?
 rm -rf ess korg sb16 yamaha
@@ -327,7 +327,7 @@ popd
 
 # Create file list but exclude firmwares that we place in subpackages
 FILEDIR=`pwd`
-pushd %{buildroot}/%{_firmwarepath}
+pushd %{buildroot}/%{_firmwaredir}
 find . \! -type d > $FILEDIR/linux-firmware.files
 find . -type d | sed -e '/^.$/d' > $FILEDIR/linux-firmware.dirs
 popd
@@ -389,13 +389,13 @@ sed \
     -i -e '/^ti-connectivity/d' \
     -i -e '/^v4l-cx2/d' \
     linux-firmware.{files,dirs}
-sed -i -e 's!^!/usr/lib/firmware/!' linux-firmware.{files,dirs}
+sed -i -e 's!^!%{_firmwaredir}/!' linux-firmware.{files,dirs}
 sed -i -e 's/^/"/;s/$/"/' linux-firmware.files
 sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 
 # temporary workaround for directory->symlink changes/migration
 %pretrans -n nvidia-gpu-firmware -p <lua>
-path = "/usr/lib/firmware/nvidia/ad103"
+path = "%{_firmwaredir}/nvidia/ad103"
 st = posix.stat(path)
 if st and st.type == "directory" then
   status = os.rename(path, path .. ".rpmmoved")
@@ -408,7 +408,7 @@ if st and st.type == "directory" then
     os.rename(path, path .. ".rpmmoved")
   end
 end
-path = "/usr/lib/firmware/nvidia/ad104"
+path = "%{_firmwaredir}/nvidia/ad104"
 st = posix.stat(path)
 if st and st.type == "directory" then
   status = os.rename(path, path .. ".rpmmoved")
@@ -421,7 +421,7 @@ if st and st.type == "directory" then
     os.rename(path, path .. ".rpmmoved")
   end
 end
-path = "/usr/lib/firmware/nvidia/ad106"
+path = "%{_firmwaredir}/nvidia/ad106"
 st = posix.stat(path)
 if st and st.type == "directory" then
   status = os.rename(path, path .. ".rpmmoved")
@@ -434,7 +434,7 @@ if st and st.type == "directory" then
     os.rename(path, path .. ".rpmmoved")
   end
 end
-path = "/usr/lib/firmware/nvidia/ad107"
+path = "%{_firmwaredir}/nvidia/ad107"
 st = posix.stat(path)
 if st and st.type == "directory" then
   status = os.rename(path, path .. ".rpmmoved")
@@ -450,7 +450,7 @@ end
 
 
 %files -f linux-firmware.files
-%dir %{_firmwarepath}
+%dir %{_firmwaredir}
 %license LICENSES/LICENCE.* LICENSES/LICENSE.* LICENSES/GPL-*
 
 %files whence
@@ -459,27 +459,27 @@ end
 # GPU firmwares
 %files -n amd-gpu-firmware
 %license LICENSES/LICENSE.radeon LICENSES/LICENSE.amdgpu LICENSES/LICENSE.amdnpu
-%{_firmwarepath}/amdgpu/
-%{_firmwarepath}/amdnpu/
-%{_firmwarepath}/radeon/
+%{_firmwaredir}/amdgpu/
+%{_firmwaredir}/amdnpu/
+%{_firmwaredir}/radeon/
 
 %files -n intel-gpu-firmware
 %license LICENSES/LICENSE.i915
-%{_firmwarepath}/i915/
+%{_firmwaredir}/i915/
 
 %files -n nvidia-gpu-firmware
 %license LICENSES/LICENCE.nvidia
-%dir %{_firmwarepath}/nvidia/
-%{_firmwarepath}/nvidia/a*
-%{_firmwarepath}/nvidia/g*
-%{_firmwarepath}/nvidia/tu*
+%dir %{_firmwaredir}/nvidia/
+%{_firmwaredir}/nvidia/a*
+%{_firmwaredir}/nvidia/g*
+%{_firmwaredir}/nvidia/tu*
 
 # Microcode updates
 %files -n amd-ucode-firmware
 %license LICENSES/LICENSE.amd-ucode
-%{_firmwarepath}/amd/
-%{_firmwarepath}/amdtee/
-%{_firmwarepath}/amd-ucode/
+%{_firmwaredir}/amd/
+%{_firmwaredir}/amdtee/
+%{_firmwaredir}/amd-ucode/
 
 # WiFi/Bluetooth firmwares
 %files -n atheros-firmware
@@ -488,192 +488,192 @@ end
 %license LICENSES/LICENSE.QualcommAtheros_ath10k
 %license LICENSES/LICENCE.open-ath9k-htc-firmware
 %license LICENSES/NOTICE.qca
-%{_firmwarepath}/ar3k/
-%{_firmwarepath}/ath6k/
-%{_firmwarepath}/ath9k_htc/
-%{_firmwarepath}/ath10k/
-%{_firmwarepath}/ath11k/
-%{_firmwarepath}/ath12k/
-%{_firmwarepath}/qca/
+%{_firmwaredir}/ar3k/
+%{_firmwaredir}/ath6k/
+%{_firmwaredir}/ath9k_htc/
+%{_firmwaredir}/ath10k/
+%{_firmwaredir}/ath11k/
+%{_firmwaredir}/ath12k/
+%{_firmwaredir}/qca/
 
 %files -n brcmfmac-firmware
 %license LICENSES/LICENCE.broadcom_bcm43xx
 %license LICENSES/LICENCE.cypress
-%{_firmwarepath}/brcm/
-%{_firmwarepath}/cypress/
+%{_firmwaredir}/brcm/
+%{_firmwaredir}/cypress/
 
 %files -n iwlegacy-firmware
 %license LICENSES/LICENCE.iwlwifi_firmware
-%{_firmwarepath}/iwlwifi-3945-*.ucode*
-%{_firmwarepath}/intel/iwlwifi/iwlwifi-3945-*.ucode*
-%{_firmwarepath}/iwlwifi-4965-*.ucode*
-%{_firmwarepath}/intel/iwlwifi/iwlwifi-4965-*.ucode*
+%{_firmwaredir}/iwlwifi-3945-*.ucode*
+%{_firmwaredir}/intel/iwlwifi/iwlwifi-3945-*.ucode*
+%{_firmwaredir}/iwlwifi-4965-*.ucode*
+%{_firmwaredir}/intel/iwlwifi/iwlwifi-4965-*.ucode*
 
 %files -n iwlwifi-firmware
 %license LICENSES/LICENCE.iwlwifi_firmware
-%{_firmwarepath}/iwlwifi-*.ucode*
-%{_firmwarepath}/intel/iwlwifi/iwlwifi-*.ucode*
-%{_firmwarepath}/iwlwifi-*.pnvm*
-%{_firmwarepath}/intel/iwlwifi/iwlwifi-*.pnvm*
-%exclude %{_firmwarepath}/iwlwifi-3945-*.ucode*
-%exclude %{_firmwarepath}/intel/iwlwifi/iwlwifi-3945-*.ucode*
-%exclude %{_firmwarepath}/iwlwifi-4965-*.ucode*
-%exclude %{_firmwarepath}/intel/iwlwifi/iwlwifi-4965-*.ucode*
+%{_firmwaredir}/iwlwifi-*.ucode*
+%{_firmwaredir}/intel/iwlwifi/iwlwifi-*.ucode*
+%{_firmwaredir}/iwlwifi-*.pnvm*
+%{_firmwaredir}/intel/iwlwifi/iwlwifi-*.pnvm*
+%exclude %{_firmwaredir}/iwlwifi-3945-*.ucode*
+%exclude %{_firmwaredir}/intel/iwlwifi/iwlwifi-3945-*.ucode*
+%exclude %{_firmwaredir}/iwlwifi-4965-*.ucode*
+%exclude %{_firmwaredir}/intel/iwlwifi/iwlwifi-4965-*.ucode*
 
 %files -n libertas-firmware
 %license LICENSES/LICENCE.Marvell LICENSES/LICENCE.OLPC
-%dir %{_firmwarepath}/libertas
-%dir %{_firmwarepath}/mrvl
-%{_firmwarepath}/libertas/*
-%{_firmwarepath}/mrvl/sd8787*
+%dir %{_firmwaredir}/libertas
+%dir %{_firmwaredir}/mrvl
+%{_firmwaredir}/libertas/*
+%{_firmwaredir}/mrvl/sd8787*
 
 %files -n mt7xxx-firmware
 %license LICENSES/LICENCE.mediatek
 %license LICENSES/LICENCE.ralink_a_mediatek_company_firmware
-%dir %{_firmwarepath}/mediatek
-%{_firmwarepath}/mediatek/mt76*
-%{_firmwarepath}/mediatek/mt791*
-%{_firmwarepath}/mediatek/mt7925/
-%{_firmwarepath}/mediatek/mt7996/
-%{_firmwarepath}/mediatek/BT*
-%{_firmwarepath}/mediatek/WIFI*
-%{_firmwarepath}/mt76*
+%dir %{_firmwaredir}/mediatek
+%{_firmwaredir}/mediatek/mt76*
+%{_firmwaredir}/mediatek/mt791*
+%{_firmwaredir}/mediatek/mt7925/
+%{_firmwaredir}/mediatek/mt7996/
+%{_firmwaredir}/mediatek/BT*
+%{_firmwaredir}/mediatek/WIFI*
+%{_firmwaredir}/mt76*
 
 %files -n nxpwireless-firmware
 %license LICENSES/LICENSE.nxp
-%dir %{_firmwarepath}/nxp
-%{_firmwarepath}/nxp/*
+%dir %{_firmwaredir}/nxp
+%{_firmwaredir}/nxp/*
 
 %files -n qcom-wwan-firmware
 %license LICENSES/LICENSE.qcom LICENSES/NOTICE.qcom
-%dir %{_firmwarepath}/qcom
-%{_firmwarepath}/qcom/sdx*/
+%dir %{_firmwaredir}/qcom
+%{_firmwaredir}/qcom/sdx*/
 
 %files -n realtek-firmware
 %license LICENSES/LICENCE.rtlwifi_firmware.txt
-%{_firmwarepath}/rtl_bt/
-%{_firmwarepath}/rtlwifi/
-%{_firmwarepath}/rtw88/
-%{_firmwarepath}/rtw89/
+%{_firmwaredir}/rtl_bt/
+%{_firmwaredir}/rtlwifi/
+%{_firmwaredir}/rtw88/
+%{_firmwaredir}/rtw89/
 
 %files -n tiwilink-firmware
 %license LICENSES/LICENCE.ti-connectivity
-%dir %{_firmwarepath}/ti-connectivity/
-%{_firmwarepath}/ti-connectivity/*
+%dir %{_firmwaredir}/ti-connectivity/
+%{_firmwaredir}/ti-connectivity/*
 
 # SMART NIC and network switch firmwares
 %files -n liquidio-firmware
 %license LICENSES/LICENCE.cavium_liquidio
-%dir %{_firmwarepath}/liquidio
-%{_firmwarepath}/liquidio/*
+%dir %{_firmwaredir}/liquidio
+%{_firmwaredir}/liquidio/*
 
 %files -n mrvlprestera-firmware
 %license LICENSES/LICENCE.Marvell
-%dir %{_firmwarepath}/mrvl/prestera
-%{_firmwarepath}/mrvl/prestera/*
+%dir %{_firmwaredir}/mrvl/prestera
+%{_firmwaredir}/mrvl/prestera/*
 
 %files -n mlxsw_spectrum-firmware
-%dir %{_firmwarepath}/mellanox/
-%{_firmwarepath}/mellanox/*
+%dir %{_firmwaredir}/mellanox/
+%{_firmwaredir}/mellanox/*
 
 %files -n netronome-firmware
 %license LICENSES/LICENCE.Netronome
-%dir %{_firmwarepath}/netronome
-%{_firmwarepath}/netronome/*
+%dir %{_firmwaredir}/netronome
+%{_firmwaredir}/netronome/*
 
 %files -n qcom-accel-firmware
-%dir %{_firmwarepath}/qcom
-%dir %{_firmwarepath}/qcom/aic100
-%dir %{_firmwarepath}/qcom/qdu100
-%{_firmwarepath}/qcom/aic100/*
-%{_firmwarepath}/qcom/qdu100/*
+%dir %{_firmwaredir}/qcom
+%dir %{_firmwaredir}/qcom/aic100
+%dir %{_firmwaredir}/qcom/qdu100
+%{_firmwaredir}/qcom/aic100/*
+%{_firmwaredir}/qcom/qdu100/*
 
 %files -n qed-firmware
-%dir %{_firmwarepath}/qed
-%{_firmwarepath}/qed/*
+%dir %{_firmwaredir}/qed
+%{_firmwaredir}/qed/*
 
 # Silicon Vendor specific
 %files -n mediatek-firmware
 %license LICENSES/LICENCE.mediatek
-%dir %{_firmwarepath}/mediatek
-%{_firmwarepath}/mediatek/mt7927/
-%{_firmwarepath}/mediatek/mt798?*
-%{_firmwarepath}/mediatek/mt8173/
-%{_firmwarepath}/mediatek/mt8183/
-%{_firmwarepath}/mediatek/mt8186/
-%{_firmwarepath}/mediatek/mt8188/
-%{_firmwarepath}/mediatek/mt8189/
-%{_firmwarepath}/mediatek/mt8192/
-%{_firmwarepath}/mediatek/mt8195/
-%{_firmwarepath}/mediatek/mt8196/
-%{_firmwarepath}/mediatek/sof/
-%{_firmwarepath}/mediatek/sof-tplg/
+%dir %{_firmwaredir}/mediatek
+%{_firmwaredir}/mediatek/mt7927/
+%{_firmwaredir}/mediatek/mt798?*
+%{_firmwaredir}/mediatek/mt8173/
+%{_firmwaredir}/mediatek/mt8183/
+%{_firmwaredir}/mediatek/mt8186/
+%{_firmwaredir}/mediatek/mt8188/
+%{_firmwaredir}/mediatek/mt8189/
+%{_firmwaredir}/mediatek/mt8192/
+%{_firmwaredir}/mediatek/mt8195/
+%{_firmwaredir}/mediatek/mt8196/
+%{_firmwaredir}/mediatek/sof/
+%{_firmwaredir}/mediatek/sof-tplg/
 
 %files -n qcom-firmware
 %license LICENSES/LICENSE.qcom LICENSES/LICENSE.qcom_yamato LICENSES/NOTICE.qcom
-%dir %{_firmwarepath}/qcom
-%{_firmwarepath}/a300_p*
-%{_firmwarepath}/qcom/*.fw*
-%{_firmwarepath}/qcom/*.bin*
-%{_firmwarepath}/qcom/*.m*
-%{_firmwarepath}/qcom/apq*/
-%{_firmwarepath}/qcom/eliza/
-%{_firmwarepath}/qcom/glymur/
-%{_firmwarepath}/qcom/hawi/
-%{_firmwarepath}/qcom/kaanapali/
-%{_firmwarepath}/qcom/maili/
-%{_firmwarepath}/qcom/nord/
-%{_firmwarepath}/qcom/qcm*/
-%{_firmwarepath}/qcom/qcs*/
-%{_firmwarepath}/qcom/qrb*/
-%{_firmwarepath}/qcom/sa*/
-%{_firmwarepath}/qcom/sc*/
-%{_firmwarepath}/qcom/sdm*/
-%{_firmwarepath}/qcom/shikra/
-%{_firmwarepath}/qcom/sm*/
-%{_firmwarepath}/qcom/venus-*/
-%{_firmwarepath}/qcom/vpu*/
-%{_firmwarepath}/qcom/x1*/
+%dir %{_firmwaredir}/qcom
+%{_firmwaredir}/a300_p*
+%{_firmwaredir}/qcom/*.fw*
+%{_firmwaredir}/qcom/*.bin*
+%{_firmwaredir}/qcom/*.m*
+%{_firmwaredir}/qcom/apq*/
+%{_firmwaredir}/qcom/eliza/
+%{_firmwaredir}/qcom/glymur/
+%{_firmwaredir}/qcom/hawi/
+%{_firmwaredir}/qcom/kaanapali/
+%{_firmwaredir}/qcom/maili/
+%{_firmwaredir}/qcom/nord/
+%{_firmwaredir}/qcom/qcm*/
+%{_firmwaredir}/qcom/qcs*/
+%{_firmwaredir}/qcom/qrb*/
+%{_firmwaredir}/qcom/sa*/
+%{_firmwaredir}/qcom/sc*/
+%{_firmwaredir}/qcom/sdm*/
+%{_firmwaredir}/qcom/shikra/
+%{_firmwaredir}/qcom/sm*/
+%{_firmwaredir}/qcom/venus-*/
+%{_firmwaredir}/qcom/vpu*/
+%{_firmwaredir}/qcom/x1*/
 
 # Vision and ISP hardware
 %files -n intel-vsc-firmware
 %license LICENSES/LICENSE.ivsc
-%dir %{_firmwarepath}/intel/ipu/
-%dir %{_firmwarepath}/intel/vsc/
-%{_firmwarepath}/intel/ipu3-fw.bin*
-%{_firmwarepath}/intel/irci_irci_ecr-master_20161208_0213_20170112_1500.bin*
-%{_firmwarepath}/intel/ipu/*
-%{_firmwarepath}/intel/vsc/*
+%dir %{_firmwaredir}/intel/ipu/
+%dir %{_firmwaredir}/intel/vsc/
+%{_firmwaredir}/intel/ipu3-fw.bin*
+%{_firmwaredir}/intel/irci_irci_ecr-master_20161208_0213_20170112_1500.bin*
+%{_firmwaredir}/intel/ipu/*
+%{_firmwaredir}/intel/vsc/*
 
 # Sound codec hardware
 %files -n cirrus-audio-firmware
 %license LICENSES/LICENSE.cirrus
-%dir %{_firmwarepath}/cirrus
-%{_firmwarepath}/cirrus/*
+%dir %{_firmwaredir}/cirrus
+%{_firmwaredir}/cirrus/*
 
 %files -n intel-audio-firmware
 %license LICENSES/LICENCE.adsp_sst LICENSES/LICENCE.IntcSST2
-%dir %{_firmwarepath}/intel/
-%dir %{_firmwarepath}/intel/avs/
-%dir %{_firmwarepath}/intel/catpt/
-%{_firmwarepath}/intel/avs/*
-%{_firmwarepath}/intel/catpt/*
-%{_firmwarepath}/intel/dsp_fw*
-%{_firmwarepath}/intel/fw_sst*
+%dir %{_firmwaredir}/intel/
+%dir %{_firmwaredir}/intel/avs/
+%dir %{_firmwaredir}/intel/catpt/
+%{_firmwaredir}/intel/avs/*
+%{_firmwaredir}/intel/catpt/*
+%{_firmwaredir}/intel/dsp_fw*
+%{_firmwaredir}/intel/fw_sst*
 
 # Random other hardware
 %files -n dvb-firmware
 %license LICENSES/LICENSE.dib0700 LICENSES/LICENCE.it913x LICENSES/LICENCE.siano
 %license LICENSES/LICENCE.xc4000 LICENSES/LICENCE.xc5000 LICENSES/LICENCE.xc5000c
-%dir %{_firmwarepath}/av7110/
-%{_firmwarepath}/av7110/*
-%{_firmwarepath}/as102_data*
-%{_firmwarepath}/cmmb*
-%{_firmwarepath}/dvb*
-%{_firmwarepath}/isdbt*
-%{_firmwarepath}/sms1xxx*
-%{_firmwarepath}/tdmb*
-%{_firmwarepath}/v4l-cx2*
+%dir %{_firmwaredir}/av7110/
+%{_firmwaredir}/av7110/*
+%{_firmwaredir}/as102_data*
+%{_firmwaredir}/cmmb*
+%{_firmwaredir}/dvb*
+%{_firmwaredir}/isdbt*
+%{_firmwaredir}/sms1xxx*
+%{_firmwaredir}/tdmb*
+%{_firmwaredir}/v4l-cx2*
 
 %changelog
 %autochangelog
