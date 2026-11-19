@@ -7,11 +7,14 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+# Only header files are shipped, so there is no debuginfo
+%global debug_package %{nil}
+
+# Kernel ARCH value for the target architecture
 %ifarch riscv64
-%global archdir riscv
-%endif
-%ifarch x86_64
-%global archdir x86_64
+%global kernel_arch riscv
+%elifarch x86_64
+%global kernel_arch x86_64
 %endif
 
 Name:           linux-headers
@@ -24,6 +27,8 @@ VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/lin
 #!RemoteAsset:  sha256:067dadd445578284ea6158f312f7970d8940fed3e094dbe49cff66d188d3bda4
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
 
+BuildRequires:  gcc
+BuildRequires:  make
 BuildRequires:  rsync
 
 %description
@@ -31,10 +36,13 @@ Linux-headers includes the C header files that specify the stable API
 interface between the Linux kernel and userspace libraries and programs.
 
 %prep
-%autosetup -p1 -n linux-%{version}
+%autosetup -n linux-%{version}
+
+%build
+%make_build ARCH=%{kernel_arch} headers
 
 %install
-%make_build ARCH=%{archdir} headers_install INSTALL_HDR_PATH=%{buildroot}%{_prefix}
+%make_build ARCH=%{kernel_arch} INSTALL_HDR_PATH=%{buildroot}%{_prefix} headers_install
 
 %files
 %license COPYING
