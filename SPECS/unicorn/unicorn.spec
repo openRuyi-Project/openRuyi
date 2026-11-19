@@ -56,9 +56,10 @@ The python-unicorn package contains python bindings for unicorn.
 
 %prep -a
 %generate_buildrequires
-pushd bindings/python
+>/dev/null pushd bindings/python
+export SETUPTOOLS_SCM_PRETEND_VERSION=%{version}
 %pyproject_buildrequires
-popd
+>/dev/null popd
 
 %build -a
 pushd bindings/python
