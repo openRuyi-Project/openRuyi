@@ -18,14 +18,14 @@
 %endif
 
 Name:           linux-headers
-Version:        6.18.32
+Version:        7.3.5
 Release:        %autorelease
 Summary:        Header files for the Linux kernel for use by userspace
 License:        GPL-2.0-only AND LGPL-2.1-only AND MIT AND BSD-2-Clause AND BSD-3-Clause
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-#!RemoteAsset:  sha256:067dadd445578284ea6158f312f7970d8940fed3e094dbe49cff66d188d3bda4
-Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
+#!RemoteAsset:  sha256:8f293f83d54f0b7b9be56863ebc5e4ea79d73e530b4ae55c572be97ef39f0990
+Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{version}.tar.xz
 
 BuildRequires:  gcc
 BuildRequires:  make
