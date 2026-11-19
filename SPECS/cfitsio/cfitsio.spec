@@ -39,10 +39,18 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 Headers and pkg-config metadata for developing applications with CFITSIO.
 
+%package        test
+Summary:        Regression tests for %{name}
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    test
+A FITS input/output regression program for CFITSIO.
+
 %prep -a
 rm cfortran.h
 
 %files
+%exclude %{_bindir}/cookbook
 %license licenses/License.txt
 %{_bindir}/cookbook
 %{_bindir}/fitscopy
@@ -62,6 +70,9 @@ rm cfortran.h
 %{_libdir}/libcfitsio.so
 %{_libdir}/cmake/cfitsio/
 %{_libdir}/pkgconfig/cfitsio.pc
+
+%files test
+%{_bindir}/cookbook
 
 %changelog
 %autochangelog
