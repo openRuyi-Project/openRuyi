@@ -29,6 +29,7 @@ BuildRequires:  go(github.com/mattn/go-runewidth)
 BuildRequires:  go(golang.org/x/sys)
 BuildRequires:  go(golang.org/x/term)
 BuildRequires:  go(golang.org/x/text)
+BuildRequires:  go(github.com/rivo/uniseg)
 
 Provides:       go(github.com/gdamore/tcell/v2) = %{version}
 
