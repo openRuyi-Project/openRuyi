@@ -44,6 +44,12 @@ BuildOption(conf):  %{_sourcedir}/defconfig
 BuildRequires:  openruyi-linux-build
 %linux_package_dependencies
 
+%if %{with rust}
+BuildRequires:  bindgen
+BuildRequires:  cargo
+BuildRequires:  rust
+%endif
+
 %description
 This is the meta package that handles standard %{name} kernel installation.
 
