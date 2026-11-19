@@ -10,13 +10,13 @@
 %global _firmwarepath /usr/lib/firmware
 
 Name:           linux-firmware
-Version:        20260519
+Version:        20261019
 Release:        %autorelease
 Summary:        Firmware files used by the Linux kernel
 License:        GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-#!RemoteAsset:  sha256:b14e7197a290a7e5569f5ef790cde289bddc47e32126f2eb262a8e677fc39727
+#!RemoteAsset:  sha256:a10d1ab5baf2c74ba92e8c7cf313e691696c26bddfa6df00db795e48d70cd4ca
 Source0:        https://cdn.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
 
 BuildRequires:  make
@@ -369,7 +369,6 @@ sed \
     -i -e '/^nvidia\/a/d' \
     -i -e '/^nvidia\/g/d' \
     -i -e '/^nvidia\/tu/d' \
-    -i -e '/^lgs8g75/d' \
     -i -e '/^libertas/d' \
     -i -e '/^liquidio/d' \
     -i -e '/^mellanox/d' \
@@ -454,24 +453,24 @@ end
 
 %files -f linux-firmware.files
 %dir %{_firmwarepath}
-%license LICENCE.* LICENSE.* GPL*
+%license LICENSES/LICENCE.* LICENSES/LICENSE.* LICENSES/GPL-*
 
 %files whence
 %license WHENCE
 
 # GPU firmwares
 %files -n amd-gpu-firmware
-%license LICENSE.radeon LICENSE.amdgpu LICENSE.amdnpu
+%license LICENSES/LICENSE.radeon LICENSES/LICENSE.amdgpu LICENSES/LICENSE.amdnpu
 %{_firmwarepath}/amdgpu/
 %{_firmwarepath}/amdnpu/
 %{_firmwarepath}/radeon/
 
 %files -n intel-gpu-firmware
-%license LICENSE.i915
+%license LICENSES/LICENSE.i915
 %{_firmwarepath}/i915/
 
 %files -n nvidia-gpu-firmware
-%license LICENCE.nvidia
+%license LICENSES/LICENCE.nvidia
 %dir %{_firmwarepath}/nvidia/
 %{_firmwarepath}/nvidia/a*
 %{_firmwarepath}/nvidia/g*
@@ -479,18 +478,18 @@ end
 
 # Microcode updates
 %files -n amd-ucode-firmware
-%license LICENSE.amd-ucode
+%license LICENSES/LICENSE.amd-ucode
 %{_firmwarepath}/amd/
 %{_firmwarepath}/amdtee/
 %{_firmwarepath}/amd-ucode/
 
 # WiFi/Bluetooth firmwares
 %files -n atheros-firmware
-%license LICENCE.atheros_firmware
-%license LICENSE.QualcommAtheros_ar3k
-%license LICENSE.QualcommAtheros_ath10k
-%license LICENCE.open-ath9k-htc-firmware
-%license qca/NOTICE.txt
+%license LICENSES/LICENCE.atheros_firmware
+%license LICENSES/LICENSE.QualcommAtheros_ar3k
+%license LICENSES/LICENSE.QualcommAtheros_ath10k
+%license LICENSES/LICENCE.open-ath9k-htc-firmware
+%license LICENSES/NOTICE.qca
 %{_firmwarepath}/ar3k/
 %{_firmwarepath}/ath6k/
 %{_firmwarepath}/ath9k_htc/
@@ -500,20 +499,20 @@ end
 %{_firmwarepath}/qca/
 
 %files -n brcmfmac-firmware
-%license LICENCE.broadcom_bcm43xx
-%license LICENCE.cypress
+%license LICENSES/LICENCE.broadcom_bcm43xx
+%license LICENSES/LICENCE.cypress
 %{_firmwarepath}/brcm/
 %{_firmwarepath}/cypress/
 
 %files -n iwlegacy-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-3945-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-3945-*.ucode*
 %{_firmwarepath}/iwlwifi-4965-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-4965-*.ucode*
 
 %files -n iwlwifi-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-*.ucode*
 %{_firmwarepath}/iwlwifi-*.pnvm*
@@ -524,15 +523,15 @@ end
 %exclude %{_firmwarepath}/intel/iwlwifi/iwlwifi-4965-*.ucode*
 
 %files -n libertas-firmware
-%license LICENCE.Marvell LICENCE.OLPC
+%license LICENSES/LICENCE.Marvell LICENSES/LICENCE.OLPC
 %dir %{_firmwarepath}/libertas
 %dir %{_firmwarepath}/mrvl
 %{_firmwarepath}/libertas/*
 %{_firmwarepath}/mrvl/sd8787*
 
 %files -n mt7xxx-firmware
-%license LICENCE.mediatek
-%license LICENCE.ralink_a_mediatek_company_firmware
+%license LICENSES/LICENCE.mediatek
+%license LICENSES/LICENCE.ralink_a_mediatek_company_firmware
 %dir %{_firmwarepath}/mediatek
 %{_firmwarepath}/mediatek/mt76*
 %{_firmwarepath}/mediatek/mt791*
@@ -543,35 +542,35 @@ end
 %{_firmwarepath}/mt76*
 
 %files -n nxpwireless-firmware
-%license LICENSE.nxp
+%license LICENSES/LICENSE.nxp
 %dir %{_firmwarepath}/nxp
 %{_firmwarepath}/nxp/*
 
 %files -n qcom-wwan-firmware
-%license LICENSE.qcom qcom/NOTICE.txt
+%license LICENSES/LICENSE.qcom LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
 %{_firmwarepath}/qcom/sdx*/
 
 %files -n realtek-firmware
-%license LICENCE.rtlwifi_firmware.txt
+%license LICENSES/LICENCE.rtlwifi_firmware.txt
 %{_firmwarepath}/rtl_bt/
 %{_firmwarepath}/rtlwifi/
 %{_firmwarepath}/rtw88/
 %{_firmwarepath}/rtw89/
 
 %files -n tiwilink-firmware
-%license LICENCE.ti-connectivity
+%license LICENSES/LICENCE.ti-connectivity
 %dir %{_firmwarepath}/ti-connectivity/
 %{_firmwarepath}/ti-connectivity/*
 
 # SMART NIC and network switch firmwares
 %files -n liquidio-firmware
-%license LICENCE.cavium_liquidio
+%license LICENSES/LICENCE.cavium_liquidio
 %dir %{_firmwarepath}/liquidio
 %{_firmwarepath}/liquidio/*
 
 %files -n mrvlprestera-firmware
-%license LICENCE.Marvell
+%license LICENSES/LICENCE.Marvell
 %dir %{_firmwarepath}/mrvl/prestera
 %{_firmwarepath}/mrvl/prestera/*
 
@@ -580,7 +579,7 @@ end
 %{_firmwarepath}/mellanox/*
 
 %files -n netronome-firmware
-%license LICENCE.Netronome
+%license LICENSES/LICENCE.Netronome
 %dir %{_firmwarepath}/netronome
 %{_firmwarepath}/netronome/*
 
@@ -597,7 +596,7 @@ end
 
 # Silicon Vendor specific
 %files -n mediatek-firmware
-%license LICENCE.mediatek
+%license LICENSES/LICENCE.mediatek
 %dir %{_firmwarepath}/mediatek
 %{_firmwarepath}/mediatek/mt7927/
 %{_firmwarepath}/mediatek/mt798?*
@@ -613,15 +612,19 @@ end
 %{_firmwarepath}/mediatek/sof-tplg/
 
 %files -n qcom-firmware
-%license LICENSE.qcom LICENSE.qcom_yamato qcom/NOTICE.txt
+%license LICENSES/LICENSE.qcom LICENSES/LICENSE.qcom_yamato LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
 %{_firmwarepath}/a300_p*
 %{_firmwarepath}/qcom/*.fw*
 %{_firmwarepath}/qcom/*.bin*
 %{_firmwarepath}/qcom/*.m*
 %{_firmwarepath}/qcom/apq*/
+%{_firmwarepath}/qcom/eliza/
 %{_firmwarepath}/qcom/glymur/
+%{_firmwarepath}/qcom/hawi/
 %{_firmwarepath}/qcom/kaanapali/
+%{_firmwarepath}/qcom/maili/
+%{_firmwarepath}/qcom/nord/
 %{_firmwarepath}/qcom/qcm*/
 %{_firmwarepath}/qcom/qcs*/
 %{_firmwarepath}/qcom/qrb*/
@@ -636,7 +639,7 @@ end
 
 # Vision and ISP hardware
 %files -n intel-vsc-firmware
-%license LICENSE.ivsc
+%license LICENSES/LICENSE.ivsc
 %dir %{_firmwarepath}/intel/ipu/
 %dir %{_firmwarepath}/intel/vsc/
 %{_firmwarepath}/intel/ipu3-fw.bin*
@@ -646,12 +649,12 @@ end
 
 # Sound codec hardware
 %files -n cirrus-audio-firmware
-%license LICENSE.cirrus
+%license LICENSES/LICENSE.cirrus
 %dir %{_firmwarepath}/cirrus
 %{_firmwarepath}/cirrus/*
 
 %files -n intel-audio-firmware
-%license LICENCE.adsp_sst LICENCE.IntcSST2
+%license LICENSES/LICENCE.adsp_sst LICENSES/LICENCE.IntcSST2
 %dir %{_firmwarepath}/intel/
 %dir %{_firmwarepath}/intel/avs/
 %dir %{_firmwarepath}/intel/catpt/
@@ -662,15 +665,14 @@ end
 
 # Random other hardware
 %files -n dvb-firmware
-%license LICENSE.dib0700 LICENCE.it913x LICENCE.siano
-%license LICENCE.xc4000 LICENCE.xc5000 LICENCE.xc5000c
+%license LICENSES/LICENSE.dib0700 LICENSES/LICENCE.it913x LICENSES/LICENCE.siano
+%license LICENSES/LICENCE.xc4000 LICENSES/LICENCE.xc5000 LICENSES/LICENCE.xc5000c
 %dir %{_firmwarepath}/av7110/
 %{_firmwarepath}/av7110/*
 %{_firmwarepath}/as102_data*
 %{_firmwarepath}/cmmb*
 %{_firmwarepath}/dvb*
 %{_firmwarepath}/isdbt*
-%{_firmwarepath}/lgs8g75*
 %{_firmwarepath}/sms1xxx*
 %{_firmwarepath}/tdmb*
 %{_firmwarepath}/v4l-cx2*
