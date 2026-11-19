@@ -39,10 +39,20 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 Headers and pkg-config metadata for developing applications with CFITSIO.
 
+%package        tests
+Summary:        FITS I/O example program for CFITSIO
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    tests
+The upstream cookbook example program demonstrating FITS image and
+table I/O. Upstream also registers this program as a CMake test.
+This package does not contain the full CFITSIO test suite.
+
 %prep -a
 rm cfortran.h
 
 %files
+%exclude %{_bindir}/cookbook
 %license licenses/License.txt
 %{_bindir}/cookbook
 %{_bindir}/fitscopy
@@ -62,6 +72,9 @@ rm cfortran.h
 %{_libdir}/libcfitsio.so
 %{_libdir}/cmake/cfitsio/
 %{_libdir}/pkgconfig/cfitsio.pc
+
+%files tests
+%{_bindir}/cookbook
 
 %changelog
 %autochangelog
