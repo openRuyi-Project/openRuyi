@@ -6,11 +6,11 @@
 
 Name:           qca
 Summary:        Qt6 Cryptographic Architecture
-Version:        2.3.10
+Version:        2.3.12
 Release:        %autorelease
 License:        LGPL-2.1-only
 URL:            https://invent.kde.org/libraries/qca
-#!RemoteAsset:  sha256:1c5b722da93d559365719226bb121c726ec3c0dc4c67dea34f1e50e4e0d14a02
+#!RemoteAsset:  sha256:d4a2b3aa0272d73ea0c4cd2140960177fa34ddc2030e59a48ecfb80c757572c3
 Source0:        https://download.kde.org/stable/qca/%{version}/qca-%{version}.tar.xz
 BuildSystem:    cmake
 
@@ -85,4 +85,4 @@ export PKG_CONFIG_PATH=%{buildroot}%{_libdir}/pkgconfig
 %{_libdir}/cmake/Qca-qt6/
 
 %changelog
-%{?autochangelog}
+%autochangelog
