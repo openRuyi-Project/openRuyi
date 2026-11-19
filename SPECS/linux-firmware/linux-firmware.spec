@@ -37,6 +37,7 @@ Recommends:     intel-audio-firmware
 Recommends:     intel-gpu-firmware
 Recommends:     mt7xxx-firmware
 Recommends:     nvidia-gpu-firmware
+Recommends:     powervr-firmware
 Recommends:     nxpwireless-firmware
 Recommends:     realtek-firmware
 Recommends:     tiwilink-firmware
@@ -78,6 +79,14 @@ Requires:       linux-firmware-whence = %{version}-%{release}
 
 %description -n nvidia-gpu-firmware
 Firmware for NVIDIA GPUs.
+
+%package     -n powervr-firmware
+Summary:        Firmware for Imagination Technologies PowerVR GPUs
+License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+Requires:       linux-firmware-whence = %{version}-%{release}
+
+%description -n powervr-firmware
+Firmware for Imagination Technologies PowerVR GPUs.
 
 # Microcode updates
 %package     -n amd-ucode-firmware
@@ -380,6 +389,7 @@ sed \
     -i -e '/^mt76/d' \
     -i -e '/^netronome/d' \
     -i -e '/^nxp/d' \
+    -i -e '/^powervr/d' \
     -i -e '/^qca/d' \
     -i -e '/^qcom/d' \
     -i -e '/^qed/d' \
@@ -477,6 +487,10 @@ end
 %{_firmwaredir}/nvidia/a*
 %{_firmwaredir}/nvidia/g*
 %{_firmwaredir}/nvidia/tu*
+
+%files -n powervr-firmware
+%license LICENSES/LICENSE.powervr
+%{_firmwaredir}/powervr/
 
 # Microcode updates
 %files -n amd-ucode-firmware
