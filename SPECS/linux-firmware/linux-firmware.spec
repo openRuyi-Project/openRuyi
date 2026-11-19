@@ -13,7 +13,7 @@ Name:           linux-firmware
 Version:        20261019
 Release:        %autorelease
 Summary:        Firmware files used by the Linux kernel
-License:        GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        (GPL-2.0-only OR BSD-2-Clause) AND (GPL-2.0-only OR MPL-1.1) AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only AND ISC AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 #!RemoteAsset:  sha256:a10d1ab5baf2c74ba92e8c7cf313e691696c26bddfa6df00db795e48d70cd4ca
@@ -47,7 +47,7 @@ operate.
 
 %package        whence
 Summary:        WHENCE License file
-License:        GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        (GPL-2.0-only OR BSD-2-Clause) AND (GPL-2.0-only OR MPL-1.1) AND BSD-2-Clause AND BSD-3-Clause AND BSD-4-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-3.0-only AND ISC AND MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 
 %description    whence
 This package contains the WHENCE license file which documents the vendor license details.
@@ -55,7 +55,7 @@ This package contains the WHENCE license file which documents the vendor license
 # GPU firmwares
 %package     -n amd-gpu-firmware
 Summary:        Firmware for AMD GPUs
-License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        MIT AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 Requires:       linux-firmware-whence = %{version}-%{release}
 
 %description -n amd-gpu-firmware
@@ -99,7 +99,7 @@ Firmware for Qualcomm Atheros ath6k/ath9k/ath10k/ath11k WiFi adapters.
 
 %package     -n brcmfmac-firmware
 Summary:        Firmware for Broadcom/Cypress brcmfmac WiFi/Bluetooth adapters
-License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        GPL-2.0-only AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 Requires:       linux-firmware-whence = %{version}-%{release}
 
 %description -n brcmfmac-firmware
@@ -240,7 +240,7 @@ Firmware for various compoents in Mediatek SoCs, in particular SCP.
 
 %package     -n qcom-firmware
 Summary:        Firmware for Qualcomm SoCs
-License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        BSD-3-Clause AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 Requires:       linux-firmware-whence = %{version}-%{release}
 Requires:       atheros-firmware = %{version}-%{release}
 
@@ -269,7 +269,7 @@ Firmware for Cirrus audio amplifiers and codecs
 
 %package     -n intel-audio-firmware
 Summary:        Firmware for Intel audio DSP amplifiers and codecs
-License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        Apache-2.0 AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 Requires:       linux-firmware-whence = %{version}-%{release}
 
 %description -n intel-audio-firmware
@@ -278,7 +278,7 @@ Firmware for Intel audio DSP amplifiers and codecs
 # Random other hardware
 %package     -n dvb-firmware
 Summary:        Firmware for various DVB broadcast receivers
-License:        LicenseRef-openRuyi-Redistributable-no-modification-permitted
+License:        GPL-2.0-or-later AND ISC AND LicenseRef-openRuyi-Redistributable-no-modification-permitted
 Requires:       linux-firmware-whence = %{version}-%{release}
 
 %description -n dvb-firmware
