@@ -296,6 +296,7 @@ mkdir -p %{buildroot}/%{_firmwaredir}
 mkdir -p %{buildroot}/%{_firmwaredir}/updates
 
 make %{?_smp_mflags} DESTDIR=%{buildroot} FIRMWAREDIR=%{_firmwaredir} install-xz
+make DESTDIR=%{buildroot} FIRMWAREDIR=%{_firmwaredir} dedup
 
 # Cleanup files we don't want to ship
 pushd %{buildroot}/%{_firmwaredir}
@@ -372,6 +373,7 @@ sed \
     -i -e '/^mellanox/d' \
     -i -e '/^mediatek/d' \
     -i -e '/^mrvl\/prestera/d' \
+    -i -e '/^mrvl\/sd8688/d' \
     -i -e '/^mrvl\/sd8787/d' \
     -i -e '/^mt76/d' \
     -i -e '/^netronome/d' \
@@ -525,6 +527,7 @@ end
 %dir %{_firmwaredir}/libertas
 %dir %{_firmwaredir}/mrvl
 %{_firmwaredir}/libertas/*
+%{_firmwaredir}/mrvl/sd8688*
 %{_firmwaredir}/mrvl/sd8787*
 
 %files -n mt7xxx-firmware
