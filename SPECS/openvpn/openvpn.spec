@@ -8,13 +8,13 @@
 %bcond pkcs11 0
 
 Name:           openvpn
-Version:        2.6.16
+Version:        2.7.9
 Release:        %autorelease
 Summary:        A full-featured TLS VPN solution
 License:        GPL-2.0-only
 URL:            https://community.openvpn.net/
 VCS:            git:https://github.com/OpenVPN/openvpn
-#!RemoteAsset:  sha256:80256bf2f9f4c912dbc72e8b00180f6c30fb40a1bb2122fb5e686e71af6a06e7
+#!RemoteAsset:  sha256:727d574df8d2628d7363751e326f32ae5b798353f17040c1642f2a5c7f131ae2
 Source0:        https://github.com/OpenVPN/openvpn/archive/refs/tags/v%{version}.tar.gz
 Source1:        roadwarrior-server.conf
 Source2:        roadwarrior-client.conf
@@ -25,7 +25,6 @@ BuildOption(conf):  --enable-silent-rules
 BuildOption(conf):  --with-crypto-library=openssl
 BuildOption(conf):  --enable-selinux
 BuildOption(conf):  --enable-systemd
-BuildOption(conf):  --enable-x509-alt-username
 BuildOption(conf):  --enable-async-push
 BuildOption(conf):  --docdir=%{_pkgdocdir}
 BuildOption(conf):  SYSTEMD_UNIT_DIR=%{_unitdir}
@@ -136,6 +135,7 @@ rm -rf %{buildroot}%{_pkgdocdir}/contrib/cmake*
 %{_mandir}/man5/openvpn-*.5*
 %{_sbindir}/openvpn
 %{_libdir}/openvpn/
+%{_libexecdir}/openvpn/
 %{_unitdir}/openvpn-client@.service
 %{_unitdir}/openvpn-server@.service
 %{_tmpfilesdir}/openvpn.conf
