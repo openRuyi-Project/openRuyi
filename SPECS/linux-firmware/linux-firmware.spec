@@ -354,6 +354,7 @@ sed \
     -i -e '/^cypress/d' \
     -i -e '/^dvb/d' \
     -i -e '/^i915/d' \
+    -i -e '/^intel\/IntcSST2/d' \
     -i -e '/^intel\/avs/d' \
     -i -e '/^intel\/catpt/d' \
     -i -e '/^intel\/dsp_fw/d' \
@@ -663,6 +664,7 @@ end
 %{_firmwaredir}/intel/catpt/*
 %{_firmwaredir}/intel/dsp_fw*
 %{_firmwaredir}/intel/fw_sst*
+%{_firmwaredir}/intel/IntcSST2.bin*
 
 # Random other hardware
 %files -n dvb-firmware
