@@ -15,7 +15,7 @@
 
 %bcond  static        1
 # For -tests subpackage.
-%bcond  tests         0
+%bcond  tests         1
 %bcond  doc           0
 %bcond  man           0
 
@@ -116,6 +116,7 @@ This package contains the API documentation for the GLib library.
 %package        tests
 Summary:        Tests for the GLib library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+
 %description    tests
 Contains installed tests that can be used to verify the functionality
 of the installed GLib package.
@@ -150,8 +151,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %meson_test --timeout-multiplier 5 || cat %{_build}/meson-logs/testlog.txt
 
 %files -f glib20.lang
-%license LICENSES/LGPL-2.1-or-later.txt
 %doc NEWS README.md
+%license LICENSES/LGPL-2.1-or-later.txt
 # Runtime libraries
 %{_libdir}/libglib-2.0.so.*
 %{_libdir}/libgthread-2.0.so.*
