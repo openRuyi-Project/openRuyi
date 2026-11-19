@@ -18,6 +18,7 @@ URL:            https://www.kernel.org/
 VCS:            git:https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
 #!RemoteAsset:  sha256:a10d1ab5baf2c74ba92e8c7cf313e691696c26bddfa6df00db795e48d70cd4ca
 Source0:        https://cdn.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
+BuildArch:      noarch
 
 BuildRequires:  make
 BuildRequires:  parallel
