@@ -20,6 +20,8 @@ BuildSystem:    autotools
 Patch0:         0001-opensc-0.19.0-pinpad.patch
 # Disable cache bacause cache brings trouble.
 Patch1:         0002-opensc-0.22.0-file-cache.patch
+# https://github.com/OpenSC/OpenSC/commit/8ad96adc5fea0cef923a2a679600f3a5c4c5bfce
+Patch2:         0003-opensc-0.27.1-changes-for-openssl-4.0.0.patch
 
 BuildOption(conf):  --disable-static
 BuildOption(conf):  --disable-autostart-items
