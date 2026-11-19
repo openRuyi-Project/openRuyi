@@ -29,6 +29,7 @@ BuildRequires:  go(github.com/gorilla/websocket)
 BuildRequires:  go(github.com/shirou/gopsutil)
 BuildRequires:  go(github.com/shirou/w32)
 BuildRequires:  go(github.com/stretchr/testify)
+BuildRequires:  go(github.com/tklauser/go-sysconf)
 BuildRequires:  go(golang.org/x/sys)
 
 Provides:       go(%{go_import_path}) = %{version}
