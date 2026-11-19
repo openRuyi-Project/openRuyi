@@ -4078,206 +4078,25 @@ This source package installs the complete Datadog Agent repository, including
 its component, telemetry mapping, protocol, trace, and utility Go modules.
 
 %install
-# Install each module at its declared import path. Remove nested module
-# copies from each parent before installing them at their own paths.
-while read -r _source _import _children; do
-    _target="%{buildroot}%{go_sys_gopath}/${_import}"
+# Install modules at their declared import paths, removing nested modules from
+# parent copies first. Ignore testdata go.mod fixtures; they are not modules.
+find . -name go.mod -not -path './.git/*' -not -path '*/testdata/*' \
+    | sort | while IFS= read -r _go_mod; do
+    _module_dir=${_go_mod%/go.mod}
+    _module_path=$(awk '$1 == "module" { print $2; exit }' "${_go_mod}")
+    _target="%{buildroot}%{go_sys_gopath}/${_module_path}"
     install -d "${_target}"
-    cp -aL "${_source}"/. "${_target}/"
-    for _child in ${_children}; do
-        rm -rf "${_target}/${_child}"
+    cp -aL "${_module_dir}"/. "${_target}/"
+    find "${_module_dir}" -mindepth 2 -name go.mod \
+        -not -path '*/.git/*' -not -path '*/testdata/*' \
+        | sort | while IFS= read -r _child_go_mod; do
+        _child_dir=${_child_go_mod%/go.mod}
+        _relative=${_child_dir#"${_module_dir}/"}
+        rm -rf "${_target}/${_relative}"
     done
-done <<'GO_MODULES'
-. github.com/DataDog/datadog-agent comp/def comp/logs-library internal/tools pkg/api pkg/errors pkg/fips pkg/gohai pkg/metrics pkg/obfuscate pkg/proto pkg/serializer pkg/tagset pkg/template pkg/trace pkg/version test/e2e-framework test/fakeintake test/new-e2e test/otel tools/build-ddot-byoc tools/retry_file_dump comp/core/config comp/core/configsync comp/core/delegatedauth comp/core/status comp/core/telemetry comp/forwarder/defaultforwarder comp/netflow/payload comp/otelcol/logsagentpipeline comp/serializer/logscompression comp/serializer/metricscompression internal/tools/gotest-custom internal/tools/independent-lint internal/tools/modformatter internal/tools/modparser internal/tools/proto internal/tools/worksynchronizer pkg/aggregator/ckey pkg/config/basic pkg/config/buildschema pkg/config/create pkg/config/env pkg/config/helper pkg/config/mock pkg/config/model pkg/config/nodetreemodel pkg/config/remote pkg/config/render_config pkg/config/schema pkg/config/setup pkg/config/structure pkg/config/teeconfig pkg/config/utils pkg/config/viperconfig pkg/fleet/installer pkg/logs/diagnostic pkg/logs/message pkg/logs/sources pkg/logs/types pkg/network/driver pkg/network/payload pkg/networkdevice/profile pkg/networkpath/payload pkg/opentelemetry-mapping-go/inframetadata pkg/orchestrator/model pkg/orchestrator/util pkg/remoteconfig/state pkg/security/secl pkg/security/seclwin pkg/ssi/testutils pkg/status/health pkg/tagger/types pkg/trace/log pkg/trace/otel pkg/trace/stats pkg/trace/traceutil pkg/util/backoff pkg/util/buf pkg/util/cache pkg/util/cgroups pkg/util/common pkg/util/compression pkg/util/defaultpaths pkg/util/executable pkg/util/filesystem pkg/util/flavor pkg/util/fxutil pkg/util/grpc pkg/util/hostinfo pkg/util/hostport pkg/util/http pkg/util/json pkg/util/jsonquery pkg/util/log pkg/util/option pkg/util/otel pkg/util/pointer pkg/util/prometheus pkg/util/quantile pkg/util/scrubber pkg/util/sort pkg/util/startstop pkg/util/statstracker pkg/util/system pkg/util/testutil pkg/util/utilizationtracker pkg/util/uuid pkg/util/winutil comp/anomalydetection/observer/def comp/anomalydetection/recorder/def comp/api/api/def comp/core/agenttelemetry/def comp/core/agenttelemetry/fx comp/core/agenttelemetry/impl comp/core/flare/builder comp/core/flare/types comp/core/hostname/hostnameinterface comp/core/ipc/def comp/core/ipc/httphelpers comp/core/ipc/impl comp/core/ipc/mock comp/core/log/def comp/core/log/fx comp/core/log/impl comp/core/log/impl-trace comp/core/log/mock comp/core/secrets/def comp/core/secrets/fx comp/core/secrets/impl comp/core/secrets/mock comp/core/secrets/noop-impl comp/core/secrets/utils comp/core/status/statusimpl comp/core/tagger/def comp/core/tagger/fx-remote comp/core/tagger/generic_store comp/core/tagger/impl-remote comp/core/tagger/origindetection comp/core/tagger/subscriber comp/core/tagger/tags comp/core/tagger/telemetry comp/core/tagger/types comp/core/tagger/utils comp/forwarder/orchestrator/orchestratorinterface comp/logs/agent/config comp/otelcol/collector-contrib/def comp/otelcol/collector-contrib/impl comp/otelcol/converter/def comp/otelcol/converter/impl comp/otelcol/ddflareextension/def comp/otelcol/ddflareextension/impl comp/otelcol/ddflareextension/types comp/otelcol/ddprofilingextension/def comp/otelcol/ddprofilingextension/impl comp/otelcol/logsagentpipeline/logsagentpipelineimpl comp/otelcol/otlp/testutil comp/otelcol/status/def comp/otelcol/status/impl comp/trace/agent/def comp/trace/compression/def comp/trace/compression/impl-gzip comp/trace/compression/impl-zstd pkg/collector/check/defaults pkg/discovery/tracermetadata/model pkg/dyninst/testprogs/progs pkg/logs/status/statusinterface pkg/logs/status/utils pkg/logs/util/testutils pkg/opentelemetry-mapping-go/otlp/attributes pkg/opentelemetry-mapping-go/otlp/logs pkg/opentelemetry-mapping-go/otlp/metrics pkg/opentelemetry-mapping-go/otlp/rum pkg/process/util/api pkg/util/aws/creds pkg/util/containers/image pkg/util/hostname/validate pkg/util/log/setup pkg/util/quantile/sketchtest comp/otelcol/otlp/components/metricsclient comp/core/delegatedauth/api/cloudauth/aws comp/otelcol/otlp/components/exporter/datadogexporter comp/otelcol/otlp/components/exporter/logsagentexporter comp/otelcol/otlp/components/exporter/serializerexporter comp/otelcol/otlp/components/processor/infraattributesprocessor pkg/opentelemetry-mapping-go/inframetadata/gohai/internal/gohaitest pkg/util/kubernetes/apiserver/common/namespace
-comp/def github.com/DataDog/datadog-agent/comp/def
-comp/logs-library github.com/DataDog/datadog-agent/comp/logs-library
-internal/tools github.com/DataDog/datadog-agent/internal/tools gotest-custom independent-lint modformatter modparser proto worksynchronizer
-pkg/api github.com/DataDog/datadog-agent/pkg/api
-pkg/errors github.com/DataDog/datadog-agent/pkg/errors
-pkg/fips github.com/DataDog/datadog-agent/pkg/fips
-pkg/gohai github.com/DataDog/datadog-agent/pkg/gohai
-pkg/metrics github.com/DataDog/datadog-agent/pkg/metrics
-pkg/obfuscate github.com/DataDog/datadog-agent/pkg/obfuscate
-pkg/proto github.com/DataDog/datadog-agent/pkg/proto
-pkg/serializer github.com/DataDog/datadog-agent/pkg/serializer
-pkg/tagset github.com/DataDog/datadog-agent/pkg/tagset
-pkg/template github.com/DataDog/datadog-agent/pkg/template
-pkg/trace github.com/DataDog/datadog-agent/pkg/trace log otel stats traceutil
-pkg/version github.com/DataDog/datadog-agent/pkg/version
-test/e2e-framework github.com/DataDog/datadog-agent/test/e2e-framework
-test/fakeintake github.com/DataDog/datadog-agent/test/fakeintake
-test/new-e2e github.com/DataDog/datadog-agent/test/new-e2e
-test/otel github.com/DataDog/datadog-agent/test/otel
-tools/build-ddot-byoc github.com/DataDog/datadog-agent/tools/build-ddot-byoc
-tools/retry_file_dump github.com/DataDog/datadog-agent/tools/retry_file_dump
-comp/core/config github.com/DataDog/datadog-agent/comp/core/config
-comp/core/configsync github.com/DataDog/datadog-agent/comp/core/configsync
-comp/core/delegatedauth github.com/DataDog/datadog-agent/comp/core/delegatedauth api/cloudauth/aws
-comp/core/status github.com/DataDog/datadog-agent/comp/core/status statusimpl
-comp/core/telemetry github.com/DataDog/datadog-agent/comp/core/telemetry
-comp/forwarder/defaultforwarder github.com/DataDog/datadog-agent/comp/forwarder/defaultforwarder
-comp/netflow/payload github.com/DataDog/datadog-agent/comp/netflow/payload
-comp/otelcol/logsagentpipeline github.com/DataDog/datadog-agent/comp/otelcol/logsagentpipeline logsagentpipelineimpl
-comp/serializer/logscompression github.com/DataDog/datadog-agent/comp/serializer/logscompression
-comp/serializer/metricscompression github.com/DataDog/datadog-agent/comp/serializer/metricscompression
-internal/tools/gotest-custom github.com/DataDog/datadog-agent/internal/tools/gotest-custom
-internal/tools/independent-lint github.com/DataDog/datadog-agent/internal/tools/independent-lint
-internal/tools/modformatter github.com/DataDog/datadog-agent/internal/tools/modformatter
-internal/tools/modparser github.com/DataDog/datadog-agent/internal/tools/modparser
-internal/tools/proto github.com/DataDog/datadog-agent/internal/tools/proto
-internal/tools/worksynchronizer github.com/DataDog/datadog-agent/internal/tools/worksynchronizer
-pkg/aggregator/ckey github.com/DataDog/datadog-agent/pkg/aggregator/ckey
-pkg/config/basic github.com/DataDog/datadog-agent/pkg/config/basic
-pkg/config/buildschema github.com/DataDog/datadog-agent/pkg/config/buildschema
-pkg/config/create github.com/DataDog/datadog-agent/pkg/config/create
-pkg/config/env github.com/DataDog/datadog-agent/pkg/config/env
-pkg/config/helper github.com/DataDog/datadog-agent/pkg/config/helper
-pkg/config/mock github.com/DataDog/datadog-agent/pkg/config/mock
-pkg/config/model github.com/DataDog/datadog-agent/pkg/config/model
-pkg/config/nodetreemodel github.com/DataDog/datadog-agent/pkg/config/nodetreemodel
-pkg/config/remote github.com/DataDog/datadog-agent/pkg/config/remote
-pkg/config/render_config github.com/DataDog/datadog-agent/pkg/config
-pkg/config/schema github.com/DataDog/datadog-agent/pkg/config/schema
-pkg/config/setup github.com/DataDog/datadog-agent/pkg/config/setup
-pkg/config/structure github.com/DataDog/datadog-agent/pkg/config/structure
-pkg/config/teeconfig github.com/DataDog/datadog-agent/pkg/config/teeconfig
-pkg/config/utils github.com/DataDog/datadog-agent/pkg/config/utils
-pkg/config/viperconfig github.com/DataDog/datadog-agent/pkg/config/viperconfig
-pkg/fleet/installer github.com/DataDog/datadog-agent/pkg/fleet/installer
-pkg/logs/diagnostic github.com/DataDog/datadog-agent/pkg/logs/diagnostic
-pkg/logs/message github.com/DataDog/datadog-agent/pkg/logs/message
-pkg/logs/sources github.com/DataDog/datadog-agent/pkg/logs/sources
-pkg/logs/types github.com/DataDog/datadog-agent/pkg/logs/types
-pkg/network/driver github.com/DataDog/datadog-agent/pkg/network/driver
-pkg/network/payload github.com/DataDog/datadog-agent/pkg/network/payload
-pkg/networkdevice/profile github.com/DataDog/datadog-agent/pkg/networkdevice/profile
-pkg/networkpath/payload github.com/DataDog/datadog-agent/pkg/networkpath/payload
-pkg/opentelemetry-mapping-go/inframetadata github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/inframetadata gohai/internal/gohaitest
-pkg/orchestrator/model github.com/DataDog/datadog-agent/pkg/orchestrator/model
-pkg/orchestrator/util github.com/DataDog/datadog-agent/pkg/orchestrator/util
-pkg/remoteconfig/state github.com/DataDog/datadog-agent/pkg/remoteconfig/state
-pkg/security/secl github.com/DataDog/datadog-agent/pkg/security/secl
-pkg/security/seclwin github.com/DataDog/datadog-agent/pkg/security/seclwin
-pkg/ssi/testutils github.com/DataDog/datadog-agent/pkg/ssi/testutils
-pkg/status/health github.com/DataDog/datadog-agent/pkg/status/health
-pkg/tagger/types github.com/DataDog/datadog-agent/pkg/tagger/types
-pkg/trace/log github.com/DataDog/datadog-agent/pkg/trace/log
-pkg/trace/otel github.com/DataDog/datadog-agent/pkg/trace/otel
-pkg/trace/stats github.com/DataDog/datadog-agent/pkg/trace/stats
-pkg/trace/traceutil github.com/DataDog/datadog-agent/pkg/trace/traceutil
-pkg/util/backoff github.com/DataDog/datadog-agent/pkg/util/backoff
-pkg/util/buf github.com/DataDog/datadog-agent/pkg/util/buf
-pkg/util/cache github.com/DataDog/datadog-agent/pkg/util/cache
-pkg/util/cgroups github.com/DataDog/datadog-agent/pkg/util/cgroups
-pkg/util/common github.com/DataDog/datadog-agent/pkg/util/common
-pkg/util/compression github.com/DataDog/datadog-agent/pkg/util/compression
-pkg/util/defaultpaths github.com/DataDog/datadog-agent/pkg/util/defaultpaths
-pkg/util/executable github.com/DataDog/datadog-agent/pkg/util/executable
-pkg/util/filesystem github.com/DataDog/datadog-agent/pkg/util/filesystem
-pkg/util/flavor github.com/DataDog/datadog-agent/pkg/util/flavor
-pkg/util/fxutil github.com/DataDog/datadog-agent/pkg/util/fxutil
-pkg/util/grpc github.com/DataDog/datadog-agent/pkg/util/grpc
-pkg/util/hostinfo github.com/DataDog/datadog-agent/pkg/util/hostinfo
-pkg/util/hostport github.com/DataDog/datadog-agent/pkg/util/hostport
-pkg/util/http github.com/DataDog/datadog-agent/pkg/util/http
-pkg/util/json github.com/DataDog/datadog-agent/pkg/util/json
-pkg/util/jsonquery github.com/DataDog/datadog-agent/pkg/util/jsonquery
-pkg/util/log github.com/DataDog/datadog-agent/pkg/util/log setup
-pkg/util/option github.com/DataDog/datadog-agent/pkg/util/option
-pkg/util/otel github.com/DataDog/datadog-agent/pkg/util/otel
-pkg/util/pointer github.com/DataDog/datadog-agent/pkg/util/pointer
-pkg/util/prometheus github.com/DataDog/datadog-agent/pkg/util/prometheus
-pkg/util/quantile github.com/DataDog/datadog-agent/pkg/util/quantile sketchtest
-pkg/util/scrubber github.com/DataDog/datadog-agent/pkg/util/scrubber
-pkg/util/sort github.com/DataDog/datadog-agent/pkg/util/sort
-pkg/util/startstop github.com/DataDog/datadog-agent/pkg/util/startstop
-pkg/util/statstracker github.com/DataDog/datadog-agent/pkg/util/statstracker
-pkg/util/system github.com/DataDog/datadog-agent/pkg/util/system
-pkg/util/testutil github.com/DataDog/datadog-agent/pkg/util/testutil
-pkg/util/utilizationtracker github.com/DataDog/datadog-agent/pkg/util/utilizationtracker
-pkg/util/uuid github.com/DataDog/datadog-agent/pkg/util/uuid
-pkg/util/winutil github.com/DataDog/datadog-agent/pkg/util/winutil
-comp/anomalydetection/observer/def github.com/DataDog/datadog-agent/comp/anomalydetection/observer/def
-comp/anomalydetection/recorder/def github.com/DataDog/datadog-agent/comp/anomalydetection/recorder/def
-comp/api/api/def github.com/DataDog/datadog-agent/comp/api/api/def
-comp/core/agenttelemetry/def github.com/DataDog/datadog-agent/comp/core/agenttelemetry/def
-comp/core/agenttelemetry/fx github.com/DataDog/datadog-agent/comp/core/agenttelemetry/fx
-comp/core/agenttelemetry/impl github.com/DataDog/datadog-agent/comp/core/agenttelemetry/impl
-comp/core/flare/builder github.com/DataDog/datadog-agent/comp/core/flare/builder
-comp/core/flare/types github.com/DataDog/datadog-agent/comp/core/flare/types
-comp/core/hostname/hostnameinterface github.com/DataDog/datadog-agent/comp/core/hostname/hostnameinterface
-comp/core/ipc/def github.com/DataDog/datadog-agent/comp/core/ipc/def
-comp/core/ipc/httphelpers github.com/DataDog/datadog-agent/comp/core/ipc/httphelpers
-comp/core/ipc/impl github.com/DataDog/datadog-agent/comp/core/ipc/impl
-comp/core/ipc/mock github.com/DataDog/datadog-agent/comp/core/ipc/mock
-comp/core/log/def github.com/DataDog/datadog-agent/comp/core/log/def
-comp/core/log/fx github.com/DataDog/datadog-agent/comp/core/log/fx
-comp/core/log/impl github.com/DataDog/datadog-agent/comp/core/log/impl
-comp/core/log/impl-trace github.com/DataDog/datadog-agent/comp/core/log/impl-trace
-comp/core/log/mock github.com/DataDog/datadog-agent/comp/core/log/mock
-comp/core/secrets/def github.com/DataDog/datadog-agent/comp/core/secrets/def
-comp/core/secrets/fx github.com/DataDog/datadog-agent/comp/core/secrets/fx
-comp/core/secrets/impl github.com/DataDog/datadog-agent/comp/core/secrets/impl
-comp/core/secrets/mock github.com/DataDog/datadog-agent/comp/core/secrets/mock
-comp/core/secrets/noop-impl github.com/DataDog/datadog-agent/comp/core/secrets/noop-impl
-comp/core/secrets/utils github.com/DataDog/datadog-agent/comp/core/secrets/utils
-comp/core/status/statusimpl github.com/DataDog/datadog-agent/comp/core/status/statusimpl
-comp/core/tagger/def github.com/DataDog/datadog-agent/comp/core/tagger/def
-comp/core/tagger/fx-remote github.com/DataDog/datadog-agent/comp/core/tagger/fx-remote
-comp/core/tagger/generic_store github.com/DataDog/datadog-agent/comp/core/tagger/generic_store
-comp/core/tagger/impl-remote github.com/DataDog/datadog-agent/comp/core/tagger/impl-remote
-comp/core/tagger/origindetection github.com/DataDog/datadog-agent/comp/core/tagger/origindetection
-comp/core/tagger/subscriber github.com/DataDog/datadog-agent/comp/core/tagger/subscriber
-comp/core/tagger/tags github.com/DataDog/datadog-agent/comp/core/tagger/tags
-comp/core/tagger/telemetry github.com/DataDog/datadog-agent/comp/core/tagger/telemetry
-comp/core/tagger/types github.com/DataDog/datadog-agent/comp/core/tagger/types
-comp/core/tagger/utils github.com/DataDog/datadog-agent/comp/core/tagger/utils
-comp/forwarder/orchestrator/orchestratorinterface github.com/DataDog/datadog-agent/comp/forwarder/orchestrator/orchestratorinterface
-comp/logs/agent/config github.com/DataDog/datadog-agent/comp/logs/agent/config
-comp/otelcol/collector-contrib/def github.com/DataDog/datadog-agent/comp/otelcol/collector-contrib/def
-comp/otelcol/collector-contrib/impl github.com/DataDog/datadog-agent/comp/otelcol/collector-contrib/impl
-comp/otelcol/converter/def github.com/DataDog/datadog-agent/comp/otelcol/converter/def
-comp/otelcol/converter/impl github.com/DataDog/datadog-agent/comp/otelcol/converter/impl
-comp/otelcol/ddflareextension/def github.com/DataDog/datadog-agent/comp/otelcol/ddflareextension/def
-comp/otelcol/ddflareextension/impl github.com/DataDog/datadog-agent/comp/otelcol/ddflareextension/impl
-comp/otelcol/ddflareextension/types github.com/DataDog/datadog-agent/comp/otelcol/ddflareextension/types
-comp/otelcol/ddprofilingextension/def github.com/DataDog/datadog-agent/comp/otelcol/ddprofilingextension/def
-comp/otelcol/ddprofilingextension/impl github.com/DataDog/datadog-agent/comp/otelcol/ddprofilingextension/impl
-comp/otelcol/logsagentpipeline/logsagentpipelineimpl github.com/DataDog/datadog-agent/comp/otelcol/logsagentpipeline/logsagentpipelineimpl
-comp/otelcol/otlp/testutil github.com/DataDog/datadog-agent/comp/otelcol/otlp/testutil
-comp/otelcol/status/def github.com/DataDog/datadog-agent/comp/otelcol/status/def
-comp/otelcol/status/impl github.com/DataDog/datadog-agent/comp/otelcol/status/impl
-comp/trace/agent/def github.com/DataDog/datadog-agent/comp/trace/agent/def
-comp/trace/compression/def github.com/DataDog/datadog-agent/comp/trace/compression/def
-comp/trace/compression/impl-gzip github.com/DataDog/datadog-agent/comp/trace/compression/impl-gzip
-comp/trace/compression/impl-zstd github.com/DataDog/datadog-agent/comp/trace/compression/impl-zstd
-pkg/collector/check/defaults github.com/DataDog/datadog-agent/pkg/collector/check/defaults
-pkg/discovery/tracermetadata/model github.com/DataDog/datadog-agent/pkg/discovery/tracermetadata/model
-pkg/dyninst/testprogs/progs github.com/DataDog/datadog-agent/pkg/dyninst/testprogs/progs
-pkg/logs/status/statusinterface github.com/DataDog/datadog-agent/pkg/logs/status/statusinterface
-pkg/logs/status/utils github.com/DataDog/datadog-agent/pkg/logs/status/utils
-pkg/logs/util/testutils github.com/DataDog/datadog-agent/pkg/logs/util/testutils
-pkg/opentelemetry-mapping-go/otlp/attributes github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/otlp/attributes
-pkg/opentelemetry-mapping-go/otlp/logs github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/otlp/logs
-pkg/opentelemetry-mapping-go/otlp/metrics github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/otlp/metrics
-pkg/opentelemetry-mapping-go/otlp/rum github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/otlp/rum
-pkg/process/util/api github.com/DataDog/datadog-agent/pkg/process/util/api
-pkg/util/aws/creds github.com/DataDog/datadog-agent/pkg/util/aws/creds
-pkg/util/containers/image github.com/DataDog/datadog-agent/pkg/util/containers/image
-pkg/util/hostname/validate github.com/DataDog/datadog-agent/pkg/util/hostname/validate
-pkg/util/log/setup github.com/DataDog/datadog-agent/pkg/util/log/setup
-pkg/util/quantile/sketchtest github.com/DataDog/datadog-agent/pkg/util/quantile/sketchtest
-comp/otelcol/otlp/components/metricsclient github.com/DataDog/datadog-agent/comp/otelcol/otlp/components/metricsclient
-comp/core/delegatedauth/api/cloudauth/aws github.com/DataDog/datadog-agent/comp/core/delegatedauth/api/cloudauth/aws
-comp/otelcol/otlp/components/exporter/datadogexporter github.com/DataDog/datadog-agent/comp/otelcol/otlp/components/exporter/datadogexporter
-comp/otelcol/otlp/components/exporter/logsagentexporter github.com/DataDog/datadog-agent/comp/otelcol/otlp/components/exporter/logsagentexporter
-comp/otelcol/otlp/components/exporter/serializerexporter github.com/DataDog/datadog-agent/comp/otelcol/otlp/components/exporter/serializerexporter
-comp/otelcol/otlp/components/processor/infraattributesprocessor github.com/DataDog/datadog-agent/comp/otelcol/otlp/components/processor/infraattributesprocessor
-pkg/opentelemetry-mapping-go/inframetadata/gohai/internal/gohaitest github.com/DataDog/datadog-agent/pkg/opentelemetry-mapping-go/inframetadata/gohai/internal/gohaitest
-pkg/util/kubernetes/apiserver/common/namespace github.com/DataDog/datadog-agent/pkg/util/kubernetes/apiserver/common/namespace
-GO_MODULES
+done
 
-# Architecture-specific binaries are test fixtures, not Go source artifacts.
+# Remove architecture-specific test fixtures from this noarch source package.
 find "%{buildroot}%{go_sys_gopath}/%{go_import_path}" -type f \
     \( -name '*.so' -o -name '*.dll' -o -name '*.o' -o -name '*.exe' \) \
     -delete
@@ -4286,28 +4105,10 @@ find "%{buildroot}%{go_sys_gopath}/%{go_import_path}" -type f -exec chmod a-x {}
 
 %check
 %go_common
-# Test the installed layout, including nested modules, without loading a
-# second copy of the repository or using the system's older source package.
+# Test the installed import tree, including packages from nested modules.
 install -d "%{_builddir}/go/src"
 cp -a "%{buildroot}%{go_sys_gopath}/." "%{_builddir}/go/src/"
-_go_packages=$(go list -e -f '{{.ImportPath}}' github.com/DataDog/datadog-agent/...)
-_go_packages=$(printf '%s\n' "${_go_packages}" | sort -u)
-_go_tests=
-set -f
-for _package in ${_go_packages}; do
-    _skip=0
-    for _exclude in %{?go_test_exclude}; do
-        if [ "${_package}" = "${_exclude}" ]; then _skip=1; fi
-    done
-    for _exclude in %{?go_test_exclude_glob}; do
-        case "${_package}" in ${_exclude}) _skip=1 ;; esac
-    done
-    [ "${_skip}" -eq 1 ] || _go_tests="${_go_tests} ${_package}"
-done
-set +f
-test -n "${_go_tests}"
-go test %{go_test_flags_default} ${_go_tests}
-
+go test %{go_test_flags_default} %{go_import_path}/...
 %files
 %doc README.md
 %license LICENSE
