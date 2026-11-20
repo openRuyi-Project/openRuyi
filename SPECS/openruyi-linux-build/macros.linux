@@ -121,7 +121,8 @@
 %linux_debuginfo_setup() %{expand:\
 %%global _no_recompute_build_ids 1
 %%undefine _unique_build_ids
-%%global _find_debuginfo_opts --keep-section '.BTF' --keep-section '.rustc'
+# WWORKAROUND: explictly preserve .codetag.alloc_tags
+%%global _find_debuginfo_opts --keep-section '.BTF' --keep-section '.rustc' --keep-section '.codetag.alloc_tags'
 %%global __spec_install_post %%%%{?__debug_package:%%%%{__debug_install_post}} true ; %%%%{__arch_install_post} true ; %%%%{__os_install_post} true ; %%%%{linux_compress_modules}
 }
 
