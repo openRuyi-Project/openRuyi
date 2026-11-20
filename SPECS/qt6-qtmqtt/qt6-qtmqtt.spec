@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtmqtt
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtmqtt
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Mqtt module
-License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND BSD-3-Clause
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtmqtt
-#!RemoteAsset:  sha256:704c74568156f0fe16fa13dbae21bc3ea62629d37b97162bac70c4195a123df2
+#!RemoteAsset:  sha256:55b2ac2938c6057aebd1df5366860d277ebda445f960111fba0998fedeced700
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 
 BuildRequires:  cmake >= 3.16
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -56,7 +58,7 @@ Programming examples for %{name}.
 %files
 %license LICENSES/*
 %{_qt6_libdir}/libQt6Mqtt.so.6*
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtMqtt/

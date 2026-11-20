@@ -1,0 +1,117 @@
+From d45bc027023297658f992b72af33c466e9d4487b Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Wed, 9 Sep 2026 15:50:19 +0800
+Subject: [PATCH] [riscv][wasm] Fix Liftoff sub-word atomic RMW
+
+Use LR/SC loops on the containing word or doubleword for 8/16-bit
+atomic RMW operations, preserving concurrent updates on riscv64.
+
+
+Change-Id: I18a5a1dcc5a08e1259ac561deb0752f3f366306a
+Fixed: 518023382
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8378121
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Auto-Submit: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#109762}
+
+Backport: Use the V8 14.0 switch-based AtomicBinop and retain
+protected_load_pc; do not add the later AMO fast path.
+
+---
+--- a/src/3rdparty/chromium/v8/src/wasm/baseline/riscv/liftoff-assembler-riscv64-inl.h
++++ b/src/3rdparty/chromium/v8/src/wasm/baseline/riscv/liftoff-assembler-riscv64-inl.h
+@@ -490,31 +490,58 @@
+   Register result_reg = result.gp();
+   if (result_reg == value.gp() || result_reg == dst_addr ||
+       result_reg == offset_reg) {
+-    result_reg = __ GetUnusedRegister(kGpReg, pinned).gp();
++    result_reg = pinned.set(__ GetUnusedRegister(kGpReg, pinned)).gp();
+   }
+ 
+   UseScratchRegisterScope temps(lasm);
+   Register actual_addr = liftoff::CalculateActualAddress(
+       lasm, temps, dst_addr, offset_reg, offset_imm);
+ 
++  bool is_subword = type.value() == StoreType::kI64Store8 ||
++                    type.value() == StoreType::kI32Store8 ||
++                    type.value() == StoreType::kI64Store16 ||
++                    type.value() == StoreType::kI32Store16;
++  Register word = no_reg;
++  Register shift = no_reg;
++  if (is_subword) {
++    // TODO(riscv): use Zabha instruction if enabled
++    word = pinned.set(lasm->GetUnusedRegister(kGpReg, pinned)).gp();
++    shift = pinned.set(lasm->GetUnusedRegister(kGpReg, pinned)).gp();
++    Register addr = pinned.set(lasm->GetUnusedRegister(kGpReg, pinned)).gp();
++    __ mv(addr, actual_addr);
++    if (offset_reg != no_reg || offset_imm != 0) {
++      temps.Include(actual_addr);
++    }
++    actual_addr = addr;
++    bool is_doubleword = type.value() == StoreType::kI64Store8 ||
++                         type.value() == StoreType::kI64Store16;
++    __ andi(shift, actual_addr, is_doubleword ? 0x7 : 0x3);
++    __ Sub64(actual_addr, actual_addr, Operand(shift));
++    __ Sll32(shift, shift, 3);
++  }
++
+   // Allocate an additional {temp} register to hold the result that should be
+   // stored to memory. Note that {temp} and {store_result} are not allowed to be
+   // the same register.
+-  Register temp = temps.Acquire();
++  Register temp =
++      is_subword ? pinned.set(lasm->GetUnusedRegister(kGpReg, pinned)).gp()
++                 : temps.Acquire();
+ 
+   Label retry;
+   __ bind(&retry);
+   if (protected_load_pc) *protected_load_pc = lasm->pc_offset();
+   switch (type.value()) {
+     case StoreType::kI64Store8:
++    case StoreType::kI64Store16:
++      __ lr_d(true, false, word, actual_addr);
++      __ ExtractBits(result_reg, word, shift,
++                     type.value() == StoreType::kI64Store8 ? 8 : 16, false);
++      break;
+     case StoreType::kI32Store8:
+-      __ lbu(result_reg, actual_addr, 0);
+-      __ sync();
+-      break;
+-    case StoreType::kI64Store16:
+     case StoreType::kI32Store16:
+-      __ lhu(result_reg, actual_addr, 0);
+-      __ sync();
++      __ lr_w(true, false, word, actual_addr);
++      __ ExtractBits(result_reg, word, shift,
++                     type.value() == StoreType::kI32Store8 ? 8 : 16, false);
+       break;
+     case StoreType::kI64Store32:
+       __ lr_w(true, false, result_reg, actual_addr);
+@@ -552,18 +579,16 @@
+   }
+   switch (type.value()) {
+     case StoreType::kI64Store8:
++    case StoreType::kI64Store16:
++      __ InsertBits(word, temp, shift,
++                    type.value() == StoreType::kI64Store8 ? 8 : 16);
++      __ sc_d(false, true, store_result, actual_addr, word);
++      break;
+     case StoreType::kI32Store8:
+-      __ sync();
+-      __ sb(temp, actual_addr, 0);
+-      __ sync();
+-      __ mv(store_result, zero_reg);
+-      break;
+-    case StoreType::kI64Store16:
+     case StoreType::kI32Store16:
+-      __ sync();
+-      __ sh(temp, actual_addr, 0);
+-      __ sync();
+-      __ mv(store_result, zero_reg);
++      __ InsertBits(word, temp, shift,
++                    type.value() == StoreType::kI32Store8 ? 8 : 16);
++      __ sc_w(false, true, store_result, actual_addr, word);
+       break;
+     case StoreType::kI64Store32:
+     case StoreType::kI32Store:

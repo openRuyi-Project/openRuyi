@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtlottie
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtlottie
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - Lottie Animation
-License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND BSD-3-Clause AND MIT AND LicenseRef-Lottie-Simple-License-9.13.21
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtlottie
-#!RemoteAsset:  sha256:e0d0fadbdc33e97c8241c56273b54b6a7b1139e076fdd21281bc4662ee4b2679
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:6b8f04c917f2666f8cca4e7804bcabb6edffe151406b89fb28de3bba5a5d997e
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -33,6 +35,7 @@ BuildRequires:  qt6-qtbase-static
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  qt6-qtdeclarative-static >= %{version}
 BuildRequires:  pkgconfig(Qt6Svg) >= %{version}
+BuildRequires:  pkgconfig(Qt6QuickTimeline) >= %{version}
 BuildRequires:  pkgconfig(xkbcommon)
 BuildRequires:  pkgconfig(openssl)
 
@@ -62,7 +65,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6LottieVectorImageHelpers.so.6*
 %{_qt6_pluginsdir}/vectorimageformats/libqlottievectorimage.so
 %{_qt6_qmldir}/Qt/labs/lottieqt/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_bindir}/lottietoqml

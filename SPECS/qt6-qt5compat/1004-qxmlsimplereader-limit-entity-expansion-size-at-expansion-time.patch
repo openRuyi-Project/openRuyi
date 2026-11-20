@@ -1,0 +1,493 @@
+From 34c2c2f8dd24c609fc82519d59e2e42a57843281 Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Tue, 6 Oct 2026 17:30:09 +0200
+Subject: [PATCH] QXmlSimpleReader: limit entity expansion size at expansion
+ time
+
+The old check calculated the expanded size of each internal general
+entity when the entity was declared. That approach has several
+problems:
+
+- It does not support forward references. When an entity was declared,
+  its value was only searched for references to entities that were
+  already declared. A reference to an entity declared later stayed in
+  the value as plain text, and was counted as a few literal characters
+  forever. Declaring the entities in reverse order was enough to bypass
+  the limit.
+
+- The expanded sizes were calculated once and cached, using whatever
+  sizes of the referenced entities happened to be known at that point
+  (which also depended on the hash iteration order). They were never
+  updated when more entities were declared.
+
+- An entity that does not reference other entities was never checked,
+  so a single literal entity larger than the limit was accepted.
+
+- At declaration time it is impossible to tell whether a reference to a
+  not-yet-declared entity is a forward reference or a reference to an
+  entity that will never be declared. That is only known once the DTD
+  is complete. However, entities can be expanded before that point,
+  in the default value of an attribute in an ATTLIST declaration.
+  Fixing this at declaration time would require tracking
+  unresolved references, re-running the calculation once the DTD ends,
+  and adding extra checks wherever an entity is expanded inside the
+  DTD. Propagating size updates through the unresolved entities can
+  also cost quadratic time on a crafted DTD.
+
+Instead, count the size while the entities are actually being
+expanded. All internal general entities are expanded through
+insertXmlRef(), both in content and in attribute values (including
+the default values in ATTLIST). Before an entity value is pushed to
+the reference stack, update a counter for the outermost internal
+general entity that is being expanded:
+
+- if no other internal general entity is being expanded, this is the
+  outermost one, so restart the counter with the size of its value;
+- if the reference comes from the value of the enclosing entity, the
+  "&name;" text was already counted as a part of that value, so
+  replace it with the size of the referenced value;
+- if the reference comes from an external entity included by the
+  enclosing entity, its text was not counted, so add the full size of
+  the referenced value.
+
+Parsing fails as soon as the counter exceeds the limit. This measures
+the expanded size in the same way as before: references to unknown
+entities, standard entities and character references are counted
+with their literal size.
+
+This approach is more robust:
+
+- The order of declarations does not matter, because all entities are
+  known by the time they are expanded.
+- There is no need to decide whether a reference is truly unknown.
+  The parser already resolves each reference when it gets to it, and
+  the counter only follows what actually gets expanded.
+- It covers every place where an internal general entity is expanded,
+  including the ones inside the DTD, without a separate finalization
+  step.
+- It costs O(1) per expansion and needs no bookkeeping for the
+  declared entities.
+
+As a consequence, oversized entities are now rejected when they are
+used, not when they are declared. An entity that is never referenced
+is not checked. Also, the size is checked when a value is pushed, before
+its own references are replaced, so a value that references an entity
+shorter than its "&name;" text can be rejected even if its final
+expansion would fit into the limit.
+
+Update the dtdRecursionLimit() test accordingly: all four entities in
+internal-entity-polynomial-attribute.xml are now declared before the
+expansion in the attribute fails.
+
+This fixes all tests cases that handle general entity expansion in the
+entityExpansionLimit() test. Parameter entities are not covered by this
+change, so the related test cases are still expected to fail.
+
+The patch also adds a new test that checks the entity expansion limit
+with an external entity resolver.
+
+Task-number: QTBUG-149213
+Pick-to: 6.8 6.5 5.15
+Change-Id: Ie4d201a03ba420108db9078da37a49404596f47d
+Reviewed-by: Edward Welbourne <edward.welbourne@qt.io>
+(cherry picked from commit b79352273c9a841efeddfa768646f0cc9e378a4d)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/core5/sax/qxml.cpp b/src/core5/sax/qxml.cpp
+index c82946a..688610a 100644
+--- a/src/core5/sax/qxml.cpp
++++ b/src/core5/sax/qxml.cpp
+@@ -3206,10 +3206,6 @@ bool QXmlSimpleReader::parse(const QXmlInputSource *input, bool incremental)
+ {
+     Q_D(QXmlSimpleReader);
+ 
+-    d->literalEntitySizes.clear();
+-    d->referencesToOtherEntities.clear();
+-    d->expandedSizes.clear();
+-
+     if (incremental) {
+         d->initIncrementalParsing();
+     } else {
+@@ -6310,66 +6306,55 @@ QXmlSimpleReaderPrivate::FrameParseResult QXmlSimpleReaderPrivate::parseChoiceSe
+     return FrameParseResult::Failed;
+ }
+ 
+-bool QXmlSimpleReaderPrivate::isExpandedEntityValueTooLarge(QString *errorMessage)
++/*
++    Called before the value \a value of the internal general entity \a name
++    is inserted for parsing. Accumulates the expanded size of the outermost
++    internal general entity that is currently being expanded. Returns \c true
++    and sets \a errorMessage if that size exceeds entityCharacterLimit.
++
++    The size is counted like the expanded value of the outermost entity: every
++    reference to an internal general entity is replaced by the value of that
++    entity. All other references (unknown entities, standard entities, and
++    character references) are counted with their literal size.
++
++    Since the size is accumulated while the entities are being expanded, it
++    does not depend on the order in which the entities were declared, and it
++    covers every place where the entities are expanded (content, attribute
++    values, and default attribute values in the DTD).
++*/
++bool QXmlSimpleReaderPrivate::addToExpandedEntitySize(const QString &name, const QString &value,
++                                                      QString *errorMessage)
+ {
+-    QString entityNameBuffer;
++    // Find the closest internal general entity that is being expanded.
++    // The entity that contains this reference is still on the stack, even if
++    // the reference is at the very end of its value, because the stack is
++    // only popped when the next character is read.
++    qsizetype i = xmlRefStack.size() - 1;
++    while (i >= 0 && xmlRefStack.at(i).check == ExpansionCheck::None)
++        --i;
+ 
+-    // For every entity, check how many times all entity names were referenced in its value.
+-    for (QMap<QString,QString>::const_iterator toSearchIt = entities.constBegin();
+-         toSearchIt != entities.constEnd();
+-         ++toSearchIt) {
+-        const QString &toSearch = toSearchIt.key();
+-
+-        // Don't check the same entities twice.
+-        if (!literalEntitySizes.contains(toSearch)) {
+-            // The amount of characters that weren't entity names, but literals, like 'X'.
+-            QString leftOvers = entities.value(toSearch);
+-            // How many times was entityName referenced by toSearch?
+-            for (QMap<QString,QString>::const_iterator referencedIt = entities.constBegin();
+-                 referencedIt != entities.constEnd();
+-                 ++referencedIt) {
+-                const QString &entityName = referencedIt.key();
+-
+-                for (qsizetype i = 0; i < leftOvers.size() && i != -1; ) {
+-                    entityNameBuffer = QLatin1Char('&') + entityName + QLatin1Char(';');
+-
+-                    i = leftOvers.indexOf(entityNameBuffer, i);
+-                    if (i != -1) {
+-                        leftOvers.remove(i, entityName.size() + 2);
+-                        // The entityName we're currently trying to find was matched in this string; increase our count.
+-                        ++referencesToOtherEntities[toSearch][entityName];
+-                    }
+-                }
+-            }
+-            literalEntitySizes[toSearch] = leftOvers.size();
+-        }
++    if (i < 0) {
++        // This is the outermost internal general entity, start counting.
++        expandedEntityName = name;
++        expandedEntitySize = value.size();
++    } else if (i == xmlRefStack.size() - 1) {
++        // The reference "&name;" is a part of the value of the enclosing
++        // entity, so it was already counted. Replace it with the value.
++        expandedEntitySize += value.size() - (name.size() + 2);
++    } else {
++        // The reference comes from an external entity included by the
++        // enclosing entity, so it was not counted.
++        expandedEntitySize += value.size();
+     }
+ 
+-    for (QHash<QString, QHash<QString, qsizetype> >::const_iterator entityIt = referencesToOtherEntities.constBegin();
+-         entityIt != referencesToOtherEntities.constEnd();
+-         ++entityIt) {
+-        const QString &entity = entityIt.key();
+-
+-        QHash<QString, qsizetype>::iterator expandedIt = expandedSizes.find(entity);
+-        if (expandedIt == expandedSizes.end()) {
+-            expandedIt = expandedSizes.insert(entity, literalEntitySizes.value(entity));
+-            for (QHash<QString, qsizetype>::const_iterator referenceIt = entityIt->constBegin();
+-                 referenceIt != entityIt->constEnd();
+-                 ++referenceIt) {
+-                const QString &referenceTo = referenceIt.key();
+-                const qsizetype references = referencesToOtherEntities.value(entity).value(referenceTo);
+-                // The total size of an entity's value is the expanded size of all of its referenced entities, plus its literal size.
+-                *expandedIt += expandedSizes.value(referenceTo) * references + literalEntitySizes.value(referenceTo) * references;
+-            }
+-
+-            if (*expandedIt > entityCharacterLimit) {
+-                if (errorMessage) {
+-                    *errorMessage = QString::fromLatin1("The XML entity \"%1\" expands to a string that is too large to process (%2 characters > %3).")
+-                        .arg(entity, QString::number(*expandedIt), QString::number(entityCharacterLimit));
+-                }
+-                return true;
+-            }
++    if (expandedEntitySize > entityCharacterLimit) {
++        if (errorMessage) {
++            *errorMessage = QString::fromLatin1("The XML entity \"%1\" expands to a string that "
++                                                "is too large to process (%2 characters > %3).")
++                    .arg(expandedEntityName, QString::number(expandedEntitySize),
++                         QString::number(entityCharacterLimit));
+         }
++        return true;
+     }
+     return false;
+ }
+@@ -6450,12 +6435,6 @@ bool QXmlSimpleReaderPrivate::parseEntityDecl()
+         switch (state) {
+             case EValue:
+                 if ( !entityExist(name())) {
+-                    QString errorMessage;
+-                    if (isExpandedEntityValueTooLarge(&errorMessage)) {
+-                        reportParseError(errorMessage);
+-                        return false;
+-                    }
+-
+                     entities.insert(name(), string());
+                     if (declHnd) {
+                         if (!declHnd->internalEntityDecl(name(), string())) {
+@@ -7307,13 +7286,13 @@ bool QXmlSimpleReaderPrivate::processReference()
+             switch (parseReference_context) {
+                 case InContent:
+                     // Included
+-                    if (!insertXmlRef(*it, reference, false))
++                    if (!insertXmlRef(*it, reference, false, ExpansionCheck::GeneralEntity))
+                         return false;
+                     parseReference_charDataRead = false;
+                     break;
+                 case InAttributeValue:
+                     // Included in literal
+-                    if (!insertXmlRef(*it, reference, true))
++                    if (!insertXmlRef(*it, reference, true, ExpansionCheck::GeneralEntity))
+                         return false;
+                     parseReference_charDataRead = false;
+                     break;
+@@ -7503,18 +7482,28 @@ bool QXmlSimpleReaderPrivate::parseString()
+   This private function inserts and reports an entity substitution. The
+   substituted string is \a data and the name of the entity reference is \a
+   name. If \a inLiteral is true, the entity is IncludedInLiteral (i.e., " and '
+-  must be quoted. Otherwise they are not quoted.
++  must be quoted. Otherwise they are not quoted. If \a check
++  is true, the size of the substitution is checked against the expansion limit.
+ 
+   This function returns \c false on error.
+ */
+-bool QXmlSimpleReaderPrivate::insertXmlRef(const QString &data, const QString &name, bool inLiteral)
++bool QXmlSimpleReaderPrivate::insertXmlRef(const QString &data, const QString &name, bool inLiteral,
++                                           ExpansionCheck check)
+ {
++    if (check != ExpansionCheck::None) {
++        QString errorMessage;
++        if (addToExpandedEntitySize(name, data, &errorMessage)) {
++            reportParseError(errorMessage);
++            return false;
++        }
++    }
+     if (inLiteral) {
+         QString tmp = data;
+-        xmlRefStack.push(XmlRef(name, tmp.replace(QLatin1Char('\"'),
+-                            QLatin1String("&quot;")).replace(QLatin1Char('\''), QLatin1String("&apos;"))));
++        xmlRefStack.push(XmlRef(name, tmp.replace(QLatin1Char('\"'), QLatin1String("&quot;"))
++                                         .replace(QLatin1Char('\''), QLatin1String("&apos;")),
++                                check));
+     } else {
+-        xmlRefStack.push(XmlRef(name, data));
++        xmlRefStack.push(XmlRef(name, data, check));
+     }
+     qsizetype n = qMax(parameterEntities.size(), entities.size());
+     if (xmlRefStack.size() > n+1) {
+diff --git a/src/core5/sax/qxml_p.h b/src/core5/sax/qxml_p.h
+index b8c3809..80a820f 100644
+--- a/src/core5/sax/qxml_p.h
++++ b/src/core5/sax/qxml_p.h
+@@ -69,17 +69,25 @@ private:
+     QMap<QString,ExternEntity> externEntities;
+     QMap<QString,QString> entities;
+ 
++    enum class ExpansionCheck
++    {
++        None,
++        GeneralEntity,
++    };
++
+     // used for parsing of entity references
+     struct XmlRef {
+         XmlRef()
+             : index(0) {}
+-        XmlRef(const QString &_name, const QString &_value)
+-            : name(_name), value(_value), index(0) {}
++        XmlRef(const QString &_name, const QString &_value, ExpansionCheck _check)
++            : name(_name), value(_value), index(0),
++              check(_check) {}
+         bool isEmpty() const { return index == value.size(); }
+         QChar next() { return value.at(index++); }
+         QString name;
+         QString value;
+         qsizetype index;
++        ExpansionCheck check = ExpansionCheck::None;
+     };
+     friend class QTypeInfo<XmlRef>;
+     QStack<XmlRef> xmlRefStack;
+@@ -185,10 +193,10 @@ private:
+     int     stringArrayPos;
+     QString emptyStr;
+ 
+-    QHash<QString, qsizetype> literalEntitySizes;
+-    // The entity at (QMap<QString,) referenced the entities at (QMap<QString,) (qsizetype>) times.
+-    QHash<QString, QHash<QString, qsizetype> > referencesToOtherEntities;
+-    QHash<QString, qsizetype> expandedSizes;
++    // The outermost internal general entity that is currently being expanded,
++    // and the amount of characters it has expanded to so far.
++    QString expandedEntityName;
++    qsizetype expandedEntitySize = 0;
+     // The limit to the amount of times the DTD parsing functions can be called
+     // for the DTD currently being parsed.
+     static const int dtdRecursionLimit = 2;
+@@ -280,7 +288,8 @@ private:
+ 
+     bool parseString();
+ 
+-    bool insertXmlRef(const QString&, const QString&, bool);
++    bool insertXmlRef(const QString&, const QString&, bool,
++                      ExpansionCheck check = ExpansionCheck::None);
+ 
+     bool reportEndEntities();
+     void reportParseError(const QString& error);
+@@ -290,7 +299,7 @@ private:
+     void parseFailed(ParseFunction where, int state);
+     void pushParseState(ParseFunction function, int state);
+ 
+-    bool isExpandedEntityValueTooLarge(QString *errorMessage);
++    bool addToExpandedEntitySize(const QString &name, const QString &value, QString *errorMessage);
+ 
+     Q_DECLARE_PUBLIC(QXmlSimpleReader)
+     QXmlSimpleReader *q_ptr;
+diff --git a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+index 5dcd755..477160c 100644
+--- a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
++++ b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+@@ -138,6 +138,8 @@ class tst_QXmlSimpleReader : public QObject
+ 
+         void entityExpansionLimit_data();
+         void entityExpansionLimit();
++        void entityExpansionLimitEntityResolver_data();
++        void entityExpansionLimitEntityResolver();
+ 
+     private:
+         static QDomDocument fromByteArray(const QString &title, const QByteArray &ba, bool *ok);
+@@ -792,7 +794,9 @@ void tst_QXmlSimpleReader::dtdRecursionLimit()
+         xmlReader.setDeclHandler(&handler);
+         xmlReader.setErrorHandler(&handler);
+         QVERIFY(!xmlReader.parse(&source));
+-        QCOMPARE(handler.recursionCount, 2);
++        // The entity sizes are checked when the entities are expanded, so all
++        // four entities are declared before the expansion in the attribute fails.
++        QCOMPARE(handler.recursionCount, 4);
+     }
+ }
+ 
+@@ -1326,19 +1330,9 @@ void tst_QXmlSimpleReader::entityExpansionLimit()
+     reader.setErrorHandler(&handler);
+     reader.setDeclHandler(&handler);
+ 
+-    QEXPECT_FAIL("literal_entity_in_content", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("literal_entity_in_attribute_value", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("two_declarations_in_content", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("two_declarations_in_attribute_value", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("reverse_declaration_order", "QTBUG-149213", Abort);
+     QEXPECT_FAIL("parameter_entity_in_DTD", "QTBUG-149213", Abort);
+     QEXPECT_FAIL("parameter_entity_run_in_DTD", "QTBUG-149213", Abort);
+     QEXPECT_FAIL("parameter_entity_in_entity_value", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("standard_entities", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("numeric_character_references", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("unknown_entity", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("unknown_entity_in_attlist", "QTBUG-149213", Abort);
+-    QEXPECT_FAIL("empty_entity", "QTBUG-149213", Abort);
+     QVERIFY(!reader.parse(source));
+     QVERIFY(!handler.errorMessage.isEmpty());
+     QVERIFY(!handler.attDeclCalled);
+@@ -1349,5 +1343,98 @@ void tst_QXmlSimpleReader::entityExpansionLimit()
+                                 .arg(expansionSanityBound)));
+ }
+ 
++void tst_QXmlSimpleReader::entityExpansionLimitEntityResolver_data()
++{
++    QTest::addColumn<QByteArray>("xml");
++    QTest::addColumn<bool>("expectSuccess");
++
++    // The internal entity "outer" references the external parsed entity
++    // "ext", which in turn references the internal entity "e1" twice.
++    // The references to e1 come from the text of the external entity, so they
++    // were not counted as a part of the value of "outer", and the full size of
++    // e1 has to be added for each of them.
++    // The expanded size of "outer" is 5 ("&ext;") + 2 * e1.size()
++
++    const QByteArray xmlStart =
++            "<!DOCTYPE d ["
++            "<!ENTITY ext SYSTEM 'ext.ent'>"
++            "<!ENTITY e1 '";
++
++    const QByteArray withinLimit = QByteArray(EntityCharacterLimit / 2 - 3, 'A');
++    const QByteArray aboveLimit = QByteArray(EntityCharacterLimit / 2, 'A');
++
++    const QByteArray xmlEnd =
++            "'>"
++            "<!ENTITY outer '&ext;'>"
++            "]><d>&outer;</d>";
++
++    // 5 + 2 * (EntityCharacterLimit / 2 - 3) == EntityCharacterLimit - 1
++    QTest::newRow("within_limit") << xmlStart + withinLimit + xmlEnd << true;
++
++    // 5 + 2 * (EntityCharacterLimit / 2) == EntityCharacterLimit + 5.
++    QTest::newRow("exceeds_limit") << xmlStart + aboveLimit + xmlEnd << false;
++}
++
++void tst_QXmlSimpleReader::entityExpansionLimitEntityResolver()
++{
++    class ExternalEntityHandler : public QXmlDefaultHandler
++    {
++    public:
++        explicit ExternalEntityHandler(const QByteArray &externalEntity)
++            : externalEntityData(externalEntity)
++        {
++        }
++
++        bool resolveEntity(const QString &, const QString &systemId,
++                           QXmlInputSource *&ret) override
++        {
++            ++resolveCount;
++            if (systemId == QLatin1String("ext.ent")) {
++                externalEntityBuffer.close();
++                externalEntityBuffer.setData(externalEntityData);
++                externalEntityBuffer.open(QIODevice::ReadOnly);
++                ret = new QXmlInputSource(&externalEntityBuffer);
++            }
++            return true;
++        }
++
++        bool characters(const QString &ch) override
++        {
++            expandedCharacters += ch.size();
++            return true;
++        }
++
++        bool fatalError(const QXmlParseException &exception) override
++        {
++            errorMessage = exception.message();
++            return false;
++        }
++
++        QByteArray externalEntityData;
++        QBuffer externalEntityBuffer;
++        int resolveCount = 0;
++        qsizetype expandedCharacters = 0;
++        QString errorMessage;
++    };
++
++    QFETCH(QByteArray, xml);
++    QFETCH(const bool, expectSuccess);
++
++    QBuffer buffer(&xml);
++    QVERIFY(buffer.open(QIODevice::ReadOnly));
++    QXmlInputSource source(&buffer);
++
++    ExternalEntityHandler handler("&e1;&e1;");
++    QXmlSimpleReader reader;
++    reader.setContentHandler(&handler);
++    reader.setErrorHandler(&handler);
++    reader.setEntityResolver(&handler);
++
++    QCOMPARE(reader.parse(source), expectSuccess);
++    QCOMPARE(handler.errorMessage.isEmpty(), expectSuccess);
++    QCOMPARE_LE(handler.expandedCharacters, EntityCharacterLimit);
++    QCOMPARE(handler.resolveCount, 1);
++}
++
+ QTEST_MAIN(tst_QXmlSimpleReader)
+ #include "tst_qxmlsimplereader.moc"

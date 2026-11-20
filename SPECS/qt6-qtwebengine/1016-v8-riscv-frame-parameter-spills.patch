@@ -1,0 +1,71 @@
+From 884d3f6410717fab33c37e493ff5f5ff8ac6c4c1 Mon Sep 17 00:00:00 2001
+From: Kasper Lund <kasperl@rivosinc.com>
+Date: Tue, 12 Aug 2025 13:47:08 +0000
+Subject: [PATCH] [riscv][wasm] Reverse order of spilled parameters in frame
+ setup
+
+This fixes an issue where we would crash in GC when allocating the
+feedback vector, because we would look for the reference parameters in
+the wrong stack slots.
+
+The mjsunit/wasm/gc-casts-subtypes test has been flaky because of this
+issue for quite a while.
+
+Change-Id: Ib691bfb3528675942c8abd5e77fd5cf0ce9fdbe7
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/6839045
+Reviewed-by: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#101888}
+
+Upstream: https://github.com/v8/v8/commit/792ce35f2cd9f65962030e8d536a8a480d721d2d
+Backport: Adjust file paths for Qt WebEngine; retain all upstream changes.
+---
+ .../v8/src/codegen/riscv/macro-assembler-riscv.cc   |  7 +++++--
+ .../v8/src/execution/riscv/frame-constants-riscv.h  | 13 ++++++++++---
+ 2 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc b/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc
+index 618fa60..86d93ef 100644
+--- a/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc
++++ b/src/3rdparty/chromium/v8/src/codegen/riscv/macro-assembler-riscv.cc
+@@ -2759,8 +2759,11 @@ void MacroAssembler::MultiPush(RegList regs) {
+   SubWord(sp, sp, Operand(stack_offset));
+ 
+   // Certain usage of MultiPush requires that registers are pushed onto the
+-  // stack in a particular: ra, fp, sp, gp, .... (basically in the decreasing
+-  // order of register numbers according to MIPS register numbers)
++  // stack in a particular order: ra, fp, sp, gp, ... etc.
++  // One example of a place where we rely on this is in the mapping from Wasm
++  // parameter indexes to fp-relative stack positions. This is the reason why
++  // the WasmLiftoffSetupFrameConstants::kParameterSpillsOffset mapping appears
++  // reversed.
+   TEST_AND_PUSH_REG(ra);
+   TEST_AND_PUSH_REG(fp);
+   TEST_AND_PUSH_REG(sp);
+diff --git a/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h b/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
+index 840b2ee..8916a6e 100644
+--- a/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
++++ b/src/3rdparty/chromium/v8/src/execution/riscv/frame-constants-riscv.h
+@@ -37,12 +37,19 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   static constexpr int kNumberOfSavedFpParamRegs = 8;
+   static constexpr int kNumberOfSavedAllParamRegs =
+       kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs;
++
++  // The instance is pushed separately from the other saved parameters. It is
++  // the saved register closest to fp at index 0.
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
++
++  // The parameters are pushed onto the stack using MacroAssembler::MultiPush;
++  // see src/codegen/riscv/macro-assembler-riscv.cc. That means that the last
++  // parameter is pushed first, so it ends second closest to fp at index 1.
+   static constexpr int kParameterSpillsOffset[] = {
+-      TYPED_FRAME_PUSHED_VALUE_OFFSET(1), TYPED_FRAME_PUSHED_VALUE_OFFSET(2),
+-      TYPED_FRAME_PUSHED_VALUE_OFFSET(3), TYPED_FRAME_PUSHED_VALUE_OFFSET(4),
+-      TYPED_FRAME_PUSHED_VALUE_OFFSET(5), TYPED_FRAME_PUSHED_VALUE_OFFSET(6)};
++      TYPED_FRAME_PUSHED_VALUE_OFFSET(6), TYPED_FRAME_PUSHED_VALUE_OFFSET(5),
++      TYPED_FRAME_PUSHED_VALUE_OFFSET(4), TYPED_FRAME_PUSHED_VALUE_OFFSET(3),
++      TYPED_FRAME_PUSHED_VALUE_OFFSET(2), TYPED_FRAME_PUSHED_VALUE_OFFSET(1)};
+ 
+   // SP-relative.
+   static constexpr int kWasmInstanceDataOffset = 2 * kSystemPointerSize;

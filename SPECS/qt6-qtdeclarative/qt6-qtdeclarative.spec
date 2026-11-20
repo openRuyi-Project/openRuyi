@@ -2,22 +2,22 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtdeclarative
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtdeclarative
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Qt6 - QtDeclarative component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtdeclarative
-#!RemoteAsset:  sha256:52e670f670b0304f534b24f98c47ceb8a41bb710464414ebc9527ec71cc86aa4
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:311f3a2603e1973bb59baef9dfa740a376de713157d4782ee043681e889c9260
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
@@ -33,7 +33,7 @@ BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  qt6-qtlanguageserver-devel >= %{version}
 BuildRequires:  pkgconfig(Qt6ShaderTools) >= %{version}
 BuildRequires:  pkgconfig(Qt6Svg) >= %{version}
-BuildRequires:  python3
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(xkbcommon) >= 0.4.1
 
 %description
@@ -96,6 +96,7 @@ popd
 %{_qt6_libdir}/libQt6Qml.so.6*
 %{_qt6_libdir}/libQt6QmlCompiler.so.*
 %{_qt6_libdir}/libQt6QmlCore.so.6*
+%{_qt6_libdir}/libQt6QmlDesignSupport.so.6*
 %{_qt6_libdir}/libQt6QmlLocalStorage.so.6*
 %{_qt6_libdir}/libQt6QmlMeta.so.6*
 %{_qt6_libdir}/libQt6QmlModels.so.6*
@@ -118,7 +119,7 @@ popd
 %{_qt6_pluginsdir}/qmllint/
 %{_qt6_pluginsdir}/qmlls/
 %{_qt6_qmldir}/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_bindir}/qml*
@@ -152,6 +153,7 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6Qml.pc
 %{_qt6_libdir}/pkgconfig/Qt6QmlCompiler.pc
 %{_qt6_libdir}/pkgconfig/Qt6QmlCore.pc
+%{_qt6_libdir}/pkgconfig/Qt6QmlDesignSupport.pc
 %{_qt6_libdir}/pkgconfig/Qt6QmlIntegration.pc
 %{_qt6_libdir}/pkgconfig/Qt6QmlLocalStorage.pc
 %{_qt6_libdir}/pkgconfig/Qt6QmlMeta.pc
@@ -163,6 +165,7 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2Basic.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2BasicStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2FluentWinUI3.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2FluentWinUI3StyleImpl.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2Fusion.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2FusionStyleImpl.pc
@@ -171,6 +174,7 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2Impl.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2Material.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2MaterialStyleImpl.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickControls2Native.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2Universal.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickControls2UniversalStyleImpl.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickDialogs2.pc
@@ -178,7 +182,9 @@ popd
 %{_qt6_libdir}/pkgconfig/Qt6QuickDialogs2Utils.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickEffects.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickLayouts.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickParticles.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickShapes.pc
+%{_qt6_libdir}/pkgconfig/Qt6QuickShapesDesignHelpers.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickTemplates2.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickTest.pc
 %{_qt6_libdir}/pkgconfig/Qt6QuickVectorImage.pc

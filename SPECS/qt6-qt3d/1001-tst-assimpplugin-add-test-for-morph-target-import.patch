@@ -1,0 +1,276 @@
+From 8e0f544b5ea7ccd69310976317cab0d5e1fa3e71 Mon Sep 17 00:00:00 2001
+From: Mauro Persano <mauro.persano@kdab.com>
+Date: Tue, 6 Oct 2026 14:42:26 -0300
+Subject: [PATCH] tst_assimpplugin: add test for morph target import
+
+Pick-to: 6.12 6.11 6.8
+Change-Id: I9a71cbe753327c2558e5f3f6670532293fb592f5
+Reviewed-by: Paul Lemire <paul.lemire@kdab.com>
+
+diff --git a/tests/auto/render/assimpplugin/CMakeLists.txt b/tests/auto/render/assimpplugin/CMakeLists.txt
+index bb0fb20..3c715c1 100644
+--- a/tests/auto/render/assimpplugin/CMakeLists.txt
++++ b/tests/auto/render/assimpplugin/CMakeLists.txt
+@@ -16,11 +16,13 @@ qt_internal_add_test(tst_assimpplugin
+         Qt::3DExtras
+         Qt::3DRender
+         Qt::3DRenderPrivate
++        Qt::3DAnimation
+         Qt::Gui
+ )
+ 
+ set(tst_assimpplugin_resource_files
+     "triangle.gltf"
++    "morph_target.gltf"
+ )
+ 
+ qt_internal_add_resource(tst_assimpplugin "assimpplugin"
+diff --git a/tests/auto/render/assimpplugin/morph_target.gltf b/tests/auto/render/assimpplugin/morph_target.gltf
+new file mode 100644
+index 0000000..99770a1
+--- /dev/null
++++ b/tests/auto/render/assimpplugin/morph_target.gltf
+@@ -0,0 +1,192 @@
++{
++  "scene": 0,
++  "scenes":[
++    {
++      "nodes":[
++        0
++      ]
++    }
++  ],
++  "nodes":[
++    {
++      "mesh":0
++    }
++  ],
++  "meshes":[
++    {
++      "primitives":[
++        {
++          "attributes":{
++            "POSITION":1
++          },
++          "targets":[
++            {
++              "POSITION":2
++            },
++            {
++              "POSITION":3
++            }
++          ],
++          "indices":0
++        }
++      ],
++      "weights":[
++        0.5,
++        0.5
++      ]
++    }
++  ],
++
++  "animations":[
++    {
++      "samplers":[
++        {
++          "input":4,
++          "interpolation":"LINEAR",
++          "output":5
++        }
++      ],
++      "channels":[
++        {
++          "sampler":0,
++          "target":{
++            "node":0,
++            "path":"weights"
++          }
++        }
++      ]
++    }
++  ],
++
++  "buffers":[
++    {
++      "uri":"data:application/gltf-buffer;base64,AAABAAIAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAA/AAAAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC/AACAPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA/AACAPwAAAAA=",
++      "byteLength":116
++    },
++    {
++      "uri":"data:application/gltf-buffer;base64,AAAAAAAAgD8AAABAAABAQAAAgEAAAAAAAAAAAAAAAAAAAIA/AACAPwAAgD8AAIA/AAAAAAAAAAAAAAAA",
++      "byteLength":60
++    }
++  ],
++  "bufferViews":[
++    {
++      "buffer":0,
++      "byteOffset":0,
++      "byteLength":6,
++      "target":34963
++    },
++    {
++      "buffer":0,
++      "byteOffset":8,
++      "byteLength":108,
++      "byteStride":12,
++      "target":34962
++    },
++    {
++      "buffer":1,
++      "byteOffset":0,
++      "byteLength":20
++    },
++    {
++      "buffer":1,
++      "byteOffset":20,
++      "byteLength":40
++    }
++  ],
++  "accessors":[
++    {
++      "bufferView":0,
++      "byteOffset":0,
++      "componentType":5123,
++      "count":3,
++      "type":"SCALAR",
++      "max":[
++        2
++      ],
++      "min":[
++        0
++      ]
++    },
++    {
++      "bufferView":1,
++      "byteOffset":0,
++      "componentType":5126,
++      "count":3,
++      "type":"VEC3",
++      "max":[
++        1.0,
++        0.5,
++        0.0
++      ],
++      "min":[
++        0.0,
++        0.0,
++        0.0
++      ]
++    },
++    {
++      "bufferView":1,
++      "byteOffset":36,
++      "componentType":5126,
++      "count":3,
++      "type":"VEC3",
++      "max":[
++        0.0,
++        1.0,
++        0.0
++      ],
++      "min":[
++        -1.0,
++        0.0,
++        0.0
++      ]
++    },
++    {
++      "bufferView":1,
++      "byteOffset":72,
++      "componentType":5126,
++      "count":3,
++      "type":"VEC3",
++      "max":[
++        1.0,
++        1.0,
++        0.0
++      ],
++      "min":[
++        0.0,
++        0.0,
++        0.0
++      ]
++    },
++    {
++      "bufferView":2,
++      "byteOffset":0,
++      "componentType":5126,
++      "count":5,
++      "type":"SCALAR",
++      "max":[
++        4.0
++      ],
++      "min":[
++        0.0
++      ]
++    },
++    {
++      "bufferView":3,
++      "byteOffset":0,
++      "componentType":5126,
++      "count":10,
++      "type":"SCALAR",
++      "max":[
++        1.0
++      ],
++      "min":[
++        0.0
++      ]
++    }
++  ],
++
++  "asset":{
++    "version":"2.0"
++  }
++}
+diff --git a/tests/auto/render/assimpplugin/tst_assimpplugin.cpp b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+index 64f7932..715ab4e 100644
+--- a/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
++++ b/tests/auto/render/assimpplugin/tst_assimpplugin.cpp
+@@ -6,6 +6,8 @@
+ #include <Qt3DCore/qnode.h>
+ #include <Qt3DCore/qentity.h>
+ 
++#include <Qt3DAnimation/qmorphinganimation.h>
++
+ #include <Qt3DRender/qgeometryrenderer.h>
+ 
+ #include <Qt3DRender/private/qsceneimportfactory_p.h>
+@@ -20,6 +22,7 @@ private Q_SLOTS:
+     void init();
+     void cleanup();
+     void importMesh();
++    void importMorphTarget();
+ 
+ private:
+     Qt3DRender::QSceneImporter *m_importer{ nullptr };
+@@ -65,6 +68,29 @@ void tst_assimpPlugin::importMesh()
+     delete rootEntity;
+ }
+ 
++void tst_assimpPlugin::importMorphTarget()
++{
++    if (m_importer == nullptr)
++        QSKIP("Missing assimp importer");
++
++    m_importer->setSource(QUrl(QStringLiteral("qrc:/morph_target.gltf")));
++
++    Qt3DCore::QEntity *rootEntity = m_importer->scene();
++    QVERIFY(rootEntity != nullptr);
++
++    auto *morphingAnimation = rootEntity->findChild<Qt3DAnimation::QMorphingAnimation *>();
++    QVERIFY(morphingAnimation != nullptr);
++    QCOMPARE(morphingAnimation->morphTargetList().size(), 2);
++
++    for (const Qt3DAnimation::QMorphTarget* morphTarget : morphingAnimation->morphTargetList()) {
++        QVERIFY(morphTarget->attributeList().size() == 1);
++        Qt3DCore::QAttribute* attr = morphTarget->attributeList().front();
++        QCOMPARE(attr->count(), 3);
++    }
++
++    delete rootEntity;
++}
++
+ QTEST_MAIN(tst_assimpPlugin)
+ 
+ #include "tst_assimpplugin.moc"

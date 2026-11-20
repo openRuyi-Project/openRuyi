@@ -1,0 +1,247 @@
+From 377808aec150c2e0384d8e52bc7587fdadc41c34 Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Wed, 9 Sep 2026 11:53:45 +0200
+Subject: [PATCH] QXmlSimpleReader: add a property to control entity expansion
+ limit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The limit was always set to 4096 characters, but was not enforced
+consistently. Now, when the limit is applied more strictly, some of
+the existing valid usecases can break, so we need a way to tune the
+expansion limit.
+
+Since we want to apply it retroactively to the existing branches, we
+cannot add new public API for that, so let's try to use what we have.
+
+QXml(Simple)Reader offers a property()/setProperty()/hasProperty()
+API that so far was a no-op.
+Add a new property that allows tuning of the entity expansion limit.
+The only problem here is that the API uses void * for the input and
+return values. To avoid handing out pointers to private members, the
+limit value itself is passed through the void *, converted via
+qintptr. This is explained in the new documentation.
+
+[ChangeLog][Important Behavior Changes][QXmlSimpleReader] The entity
+expansion limit of 4096 characters is now applied more strictly, which
+can lead to some previously valid documents to be considered malformed.
+Use setProperty() with a new property
+"http://qt-project.org/xml/properties/entity-expansion-limit" to adjust
+the limit.
+
+Fixes: QTBUG-149213
+Pick-to: 6.8 6.5 5.15
+Change-Id: If4cd2244e423ea5c3e97041cedc12e77c5d88099
+Reviewed-by: Mårten Nordheim <marten.nordheim@qt.io>
+(cherry picked from commit 3aee49e27e58b41af1050ec1b71bb71a9ad5ddfc)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/core5/sax/qxml.cpp b/src/core5/sax/qxml.cpp
+index fd870de..6cb483f 100644
+--- a/src/core5/sax/qxml.cpp
++++ b/src/core5/sax/qxml.cpp
+@@ -2855,6 +2855,20 @@ QXmlReader::~QXmlReader()
+ 
+     Note that this class is now deprecated, please use QXmlStreamReader or
+     QDomDocument for reading XML files.
++
++    \section1 Entity expansion limit
++
++    QXmlSimpleReader enforces a limit of \c {4096} characters when expanding
++    general and parameter entities. If any entity expands past this limit, the
++    document is considered to be malformed, and an error is raised. This limit
++    can be adjusted using the
++    \e {http://qt-project.org/xml/properties/entity-expansion-limit} property.
++
++    See \l {QXmlSimpleReader::}{setProperty()} for an example of how to apply
++    a new limit.
++
++    \note This limit is only applicable to the internal entities. Use
++    QXmlEntityResolver to handle external entities.
+ */
+ 
+ static inline bool is_S(QChar ch)
+@@ -3029,27 +3043,81 @@ bool QXmlSimpleReader::hasFeature(const QString& name) const
+     }
+ }
+ 
+-/*! \reimp
++constexpr const char *SaxEntityExpansionLimitProperty =
++        "http://qt-project.org/xml/properties/entity-expansion-limit";
++
++/*!
++    \reimp
++
++    Returns the value of the property \a name and sets \a ok to \c {true} if the
++    property exists. Otherwise sets \a ok to \c {false} and returns \c nullptr.
++
++    The only supported property is
++    \e {http://qt-project.org/xml/properties/entity-expansion-limit}. The
++    returned value is not a pointer to the limit, but the limit itself, stored
++    in the \c {void *}. Convert it back to an integer using \l qintptr, and
++    never dereference it.
++
++    \code
++    QXmlSimpleReader reader;
++    bool ok = false;
++    void *value =
++        reader.property("http://qt-project.org/xml/properties/entity-expansion-limit", &ok);
++    if (ok) {
++        const qintptr limit = reinterpret_cast<qintptr>(value);
++        qDebug() << "The entity expansion limit is" << limit;
++    }
++    \endcode
+ */
+-void* QXmlSimpleReader::property(const QString&, bool *ok) const
++void* QXmlSimpleReader::property(const QString &name, bool *ok) const
+ {
++    if (name == QLatin1String(SaxEntityExpansionLimitProperty)) {
++        if (ok)
++            *ok = true;
++        Q_D(const QXmlSimpleReader);
++        return reinterpret_cast<void *>(qintptr(d->entityCharacterLimit));
++    }
++
+     if (ok)
+         *ok = false;
+     return nullptr;
+ }
+ 
+-/*! \reimp
++/*!
++    \reimp
++
++    Sets the property \a name to \a value.
++
++    The only supported property is
++    \e {http://qt-project.org/xml/properties/entity-expansion-limit}. The
++    input value is not a pointer to the limit, but the limit itself, converted
++    to \c {void *} via \l qintptr. Values that are not positive or do not fit
++    into an \c int are ignored.
++
++    \code
++    QXmlSimpleReader reader;
++    const qintptr limit = 1024;
++    reader.setProperty("http://qt-project.org/xml/properties/entity-expansion-limit",
++                       reinterpret_cast<void *>(limit));
++    \endcode
+ */
+-void QXmlSimpleReader::setProperty(const QString&, void*)
++void QXmlSimpleReader::setProperty(const QString &name, void *value)
+ {
++    if (name == QLatin1String(SaxEntityExpansionLimitProperty)) {
++        const qintptr limit = reinterpret_cast<qintptr>(value);
++        if (limit > 0 && limit <= INT_MAX) {
++            Q_D(QXmlSimpleReader);
++            d->entityCharacterLimit = int(limit);
++        }
++    }
+ }
+ 
+ /*!
+     \reimp
+ */
+-bool QXmlSimpleReader::hasProperty(const QString&) const
++bool QXmlSimpleReader::hasProperty(const QString &name) const
+ {
+-    return false;
++    return name == QLatin1String(SaxEntityExpansionLimitProperty);
+ }
+ 
+ /*!
+diff --git a/src/core5/sax/qxml_p.h b/src/core5/sax/qxml_p.h
+index 3dabbf9..715441d 100644
+--- a/src/core5/sax/qxml_p.h
++++ b/src/core5/sax/qxml_p.h
+@@ -202,11 +202,15 @@ private:
+     // The amount of characters that parameter entity references have contributed
+     // to the parameter entity value that is currently being parsed.
+     qsizetype includedParameterEntitySize = 0;
++
++    int entityCharacterLimit = DefaultEntityCharacterLimit;
++
+     // The limit to the amount of times the DTD parsing functions can be called
+     // for the DTD currently being parsed.
+     static const int dtdRecursionLimit = 2;
+-    // The maximum amount of characters an entity value may contain, after expansion.
+-    static const int entityCharacterLimit = 4096;
++    // The default maximum amount of characters an entity value may contain,
++    // after expansion.
++    static constexpr int DefaultEntityCharacterLimit = 4096;
+ 
+     const QString &string();
+     void stringClear();
+diff --git a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+index ee29349..4e053e0 100644
+--- a/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
++++ b/tests/auto/core5/sax/qxmlsimplereader/tst_qxmlsimplereader.cpp
+@@ -141,6 +141,9 @@ class tst_QXmlSimpleReader : public QObject
+         void entityExpansionLimitEntityResolver_data();
+         void entityExpansionLimitEntityResolver();
+ 
++        void entityExpansionProperty_data();
++        void entityExpansionProperty();
++
+     private:
+         static QDomDocument fromByteArray(const QString &title, const QByteArray &ba, bool *ok);
+         XmlServer *server;
+@@ -1492,5 +1495,58 @@ void tst_QXmlSimpleReader::entityExpansionLimitEntityResolver()
+     QCOMPARE(handler.resolveCount, 1);
+ }
+ 
++void tst_QXmlSimpleReader::entityExpansionProperty_data()
++{
++    QTest::addColumn<qint64>("limit");
++    QTest::addColumn<qint64>("expectedLimit");
++    QTest::addColumn<int>("entityLength");
++    QTest::addColumn<bool>("wellFormed");
++
++    QTest::newRow("large_limit_valid_length") << qint64(8192) << qint64(8192) << 8000 << true;
++    QTest::newRow("small_limit_invalid_length") << qint64(32) << qint64(32) << 64 << false;
++    QTest::newRow("zero_limit_uses_default") << qint64(0) << qint64(4096) << 5000 << false;
++    QTest::newRow("negative_limit_uses_default") << qint64(-1) << qint64(4096) << 4000 << true;
++    if constexpr (sizeof(qintptr) > sizeof(int)) {
++        QTest::newRow("too_large_limit_uses_default")
++                << qint64(std::numeric_limits<int>::max()) + 1 << qint64(4096) << 5000 << false;
++    }
++}
++
++void tst_QXmlSimpleReader::entityExpansionProperty()
++{
++    QFETCH(const qint64, limit);
++    QFETCH(const qint64, expectedLimit);
++    QFETCH(const int, entityLength);
++    QFETCH(const bool, wellFormed);
++
++    constexpr const char *propName = "http://qt-project.org/xml/properties/entity-expansion-limit";
++
++    QXmlSimpleReader reader;
++
++    QVERIFY(reader.hasProperty(QLatin1String(propName)));
++
++    bool ok = false;
++    void *value = reader.property(QLatin1String(propName), &ok);
++    QVERIFY(ok);
++    QCOMPARE(reinterpret_cast<qintptr>(value), qintptr(4096));
++
++    reader.setProperty(QLatin1String(propName), reinterpret_cast<void *>(qintptr(limit)));
++
++    // verify the limit
++    ok = false;
++    value = reader.property(QLatin1String(propName), &ok);
++    QVERIFY(ok);
++    QCOMPARE(reinterpret_cast<qintptr>(value), qintptr(expectedLimit));
++
++    QByteArray xml =
++            "<!DOCTYPE d [<!ENTITY e '" + QByteArray(entityLength, 'A') + "'>]><d>&e;</d>";
++
++    QBuffer buffer(&xml);
++    QVERIFY(buffer.open(QIODevice::ReadOnly));
++    QXmlInputSource source(&buffer);
++
++    QCOMPARE(reader.parse(source), wellFormed);
++}
++
+ QTEST_MAIN(tst_QXmlSimpleReader)
+ #include "tst_qxmlsimplereader.moc"

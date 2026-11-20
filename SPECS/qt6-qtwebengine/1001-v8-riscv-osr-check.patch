@@ -1,0 +1,36 @@
+From 3b52f29d09b8941a43696b207529fb11aec19c66 Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Fri, 28 Aug 2026 09:34:16 +0800
+Subject: [PATCH] [riscv] Fix OSR code check in OnStackReplacement
+
+Load32U zero-extends the 32-bit osr_offset_ field on riscv64, so the
+SbxCheck comparison against the sign-extended -1 (kExpectedOsrCode)
+never matches and the security check is always skipped. Use the
+sign-extending Lw instead.
+
+Fixed:522120311
+
+Change-Id: I32a89f078d1de2876948a30863186b40250f9414
+Fixed: 522120311
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8311188
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#109551}
+---
+ src/builtins/riscv/builtins-riscv.cc | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/3rdparty/chromium/v8/src/builtins/riscv/builtins-riscv.cc b/src/3rdparty/chromium/v8/src/builtins/riscv/builtins-riscv.cc
+index 1f6161d45d70..e2f017ea0534 100644
+--- a/src/3rdparty/chromium/v8/src/builtins/riscv/builtins-riscv.cc
++++ b/src/3rdparty/chromium/v8/src/builtins/riscv/builtins-riscv.cc
+@@ -2178,8 +2178,7 @@ void OnStackReplacement(MacroAssembler* masm, OsrSourceTier source,
+ 
+   // Check we are actually jumping to an OSR code object. This among other
+   // things ensures that the object contains deoptimization data below.
+-  __ Load32U(scratch,
+-             FieldMemOperand(maybe_target_code, Code::kOsrOffsetOffset));
++  __ Lw(scratch, FieldMemOperand(maybe_target_code, Code::kOsrOffsetOffset));
+   __ SbxCheck(ne, AbortReason::kExpectedOsrCode, scratch,
+               Operand(BytecodeOffset::None().ToInt()));
+ 

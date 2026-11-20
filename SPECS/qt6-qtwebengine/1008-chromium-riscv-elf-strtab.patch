@@ -1,0 +1,59 @@
+From fe71107697d8bccdc4e95048147f97826142ba75 Mon Sep 17 00:00:00 2001
+From: Levi Zim <rsworktech@outlook.com>
+Date: Tue, 14 Oct 2025 18:40:52 -0700
+Subject: [PATCH] Manually relocate strtab pointer for riscv64 Linux
+
+On GNU Linux, When the dynamic section is readonly, it is not relocated.
+(See
+https://github.com/bminor/glibc/blob/eda354cfd8b998b55e4d62f1ad8aecf128be8d3c/sysdeps/generic/ldsodefs.h#L78-L79)
+
+For RISC-V, the dynamic section is set to readonly for ABI
+compatibility. (See
+https://github.com/bminor/glibc/blob/eda354cfd8b998b55e4d62f1ad8aecf128be8d3c/sysdeps/riscv/dl-relocate-ld.h#L22-L23)
+Thus manually relocate the strtab pointer for RISC-V Linux in
+ReadElfLibraryName.
+
+Bug: 40945588
+Change-Id: Id2edefbb9a0ff4ee76ee5fc34029b7c924772fdf
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7026651
+Commit-Queue: Levi Zim <rsworktech@outlook.com>
+Reviewed-by: Daniel Cheng <dcheng@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1529906}
+---
+ base/debug/elf_reader.cc             | 8 ++++++--
+ base/debug/test_elf_image_builder.cc | 3 ++-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/src/3rdparty/chromium/base/debug/elf_reader.cc b/src/3rdparty/chromium/base/debug/elf_reader.cc
+index 2d4cf7f1e0534c..d618c69840a1b7 100644
+--- a/src/3rdparty/chromium/base/debug/elf_reader.cc
++++ b/src/3rdparty/chromium/base/debug/elf_reader.cc
+@@ -162,8 +162,12 @@ std::optional<std::string_view> ReadElfLibraryName(
+     for (const Dyn* dynamic_iter = dynamic_start; dynamic_iter < dynamic_end;
+          ++dynamic_iter) {
+       if (dynamic_iter->d_tag == DT_STRTAB) {
+-#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID)
+-        // Fuchsia and Android do not relocate the symtab pointer on ELF load.
++#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID) || \
++    (defined(ARCH_CPU_RISCV_FAMILY) && BUILDFLAG(IS_LINUX))
++        // Fuchsia and Android do not relocate the strtab pointer on ELF load.
++        // When the dynamic section is readonly, the strtab pointer is also not
++        // relocated. This is the default ABI behavior on RISC-V GNU Linux (See
++        // sysdeps/riscv/dl-relocate-ld.h).
+         strtab_addr = static_cast<size_t>(dynamic_iter->d_un.d_ptr) +
+                       reinterpret_cast<const char*>(relocation_offset);
+ #else
+diff --git a/src/3rdparty/chromium/base/debug/test_elf_image_builder.cc b/src/3rdparty/chromium/base/debug/test_elf_image_builder.cc
+index dd4d0f0bde0a2a..027ad0f959f7ed 100644
+--- a/src/3rdparty/chromium/base/debug/test_elf_image_builder.cc
++++ b/src/3rdparty/chromium/base/debug/test_elf_image_builder.cc
+@@ -270,7 +270,8 @@ TestElfImage TestElfImageBuilder::Build() {
+ 
+   Dyn strtab_dyn;
+   strtab_dyn.d_tag = DT_STRTAB;
+-#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID)
++#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_ANDROID) || \
++    (defined(ARCH_CPU_RISCV_FAMILY) && BUILDFLAG(IS_LINUX))
+   // Fuchsia and Android do not alter the symtab pointer on ELF load -- it's
+   // expected to remain a 'virutal address'.
+   strtab_dyn.d_un.d_ptr =

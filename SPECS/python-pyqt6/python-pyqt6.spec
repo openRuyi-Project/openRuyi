@@ -9,13 +9,13 @@
 %global pypi_name pyqt6
 
 Name:           python-pyqt6
-Version:        6.10.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        PyQt6 is Python bindings for Qt6
 License:        GPL-3.0-only
 URL:            http://www.riverbankcomputing.com/software/pyqt/
-#!RemoteAsset:  sha256:d733a6c712c0b7a7b99e4ad59b211ea25a5d1b9d1131e47a1f50b5e524266e57
-Source0:        https://pypi.python.org/packages/source/p/%{srcname}/%{pypi_name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:17bb18b3ae953ab54b23026291ecea2579b028597b56c281a752c8ed66dd1a58
+Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 Source1:        macros.pyqt6
 BuildSystem:    autotools
 
@@ -32,6 +32,7 @@ BuildRequires:  pkgconfig(dbus-python)
 BuildRequires:  pkgconfig(libpulse-mainloop-glib)
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick)
+BuildRequires:  pkgconfig(Qt6QuickControls2)
 BuildRequires:  pkgconfig(Qt6Svg)
 BuildRequires:  pkgconfig(Qt6SerialPort)
 BuildRequires:  pkgconfig(Qt6SerialBus)
@@ -46,9 +47,9 @@ BuildRequires:  pkgconfig(Qt6WebSockets)
 BuildRequires:  pkgconfig(Qt6Quick3D)
 BuildRequires:  pkgconfig(Qt6RemoteObjects)
 BuildRequires:  pkgconfig(python3)
-BuildRequires:  python3dist(pyqt-builder)
+BuildRequires:  (python3dist(pyqt-builder) >= 1.20 with python3dist(pyqt-builder) < 2)
 BuildRequires:  python3dist(dbus-python)
-BuildRequires:  python3dist(sip)
+BuildRequires:  (python3dist(sip) >= 6.17 with python3dist(sip) < 7)
 
 Provides:       python3-pyqt6 = %{version}-%{release}
 Provides:       python3-pyqt6%{?_isa} = %{version}-%{release}
@@ -113,7 +114,7 @@ sed -i \
 # No tests.
 
 %files
-%doc NEWS
+%doc NEWS examples/
 %license LICENSE
 %dir %{python3_sitearch}/PyQt6/
 %{python3_sitearch}/PyQt6/QtMultimedia.*
@@ -121,6 +122,7 @@ sed -i \
 %{python3_sitearch}/PyQt6/QtPositioning.*
 %{python3_sitearch}/PyQt6/QtQml.*
 %{python3_sitearch}/PyQt6/QtQuick.*
+%{python3_sitearch}/PyQt6/QtQuickControls2.*
 %{python3_sitearch}/PyQt6/QtQuickWidgets.*
 %{python3_sitearch}/PyQt6/QtSensors.*
 %{python3_sitearch}/PyQt6/QtSerialPort.*
@@ -154,7 +156,6 @@ sed -i \
 %{_bindir}/pyuic6
 %{python3_sitearch}/PyQt6/py.typed
 %{python3_sitearch}/PyQt6/sip.pyi
-%doc examples/
 %dir %{_qt6_datadir}/qsci/
 %dir %{_qt6_datadir}/qsci/api/
 %dir %{_qt6_datadir}/qsci/api/python/

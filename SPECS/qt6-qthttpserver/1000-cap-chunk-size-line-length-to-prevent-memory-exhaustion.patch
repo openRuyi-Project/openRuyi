@@ -1,0 +1,160 @@
+From 966fda6a71c9e35903d9a2e9a60751ade8cf3f6e Mon Sep 17 00:00:00 2001
+From: Mate Barany <mate.barany@qt.io>
+Date: Tue, 8 Sep 2026 17:15:25 +0200
+Subject: [PATCH] Cap chunk-size line length to prevent memory exhaustion
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+getChunkSize() appended the chunk-size line into the shared fragment
+buffer byte by byte with no ceiling, and the body-size limit never
+applies (it gates decoded body bytes only). A chunked request with an
+endless hex string or unterminated chunk-extension thus grew fragment
+until OOM.
+
+Bound it per byte via isHeaderFieldSizeAllowed() (48 KiB),
+sending 400 and returning -1.
+
+Fixes: QTBUG-150270
+Pick-to: 6.12.0 6.11
+Change-Id: I104d2adca36710ca812e58024dfc5544dcba52af
+Reviewed-by: Mårten Nordheim <marten.nordheim@qt.io>
+Reviewed-by: Thiago Macieira <thiago.macieira@intel.com>
+(cherry picked from commit 988f1d72679f4fe55442af4f431d1c5b11171656)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/httpserver/qhttpserverparser.cpp b/src/httpserver/qhttpserverparser.cpp
+index 4fbec04..dd5b563 100644
+--- a/src/httpserver/qhttpserverparser.cpp
++++ b/src/httpserver/qhttpserverparser.cpp
+@@ -563,7 +563,10 @@ qsizetype QHttpServerParser::readRequestBodyChunked(QIODevice *socket)
+             }
+             // Note that chunk size gets stored in currentChunkSize, what is returned is the bytes
+             // read
+-            bytes += getChunkSize(socket, &currentChunkSize);
++            const qsizetype chunkSizeBytes = getChunkSize(socket, &currentChunkSize);
++            if (chunkSizeBytes < 0)
++                return -1;
++            bytes += chunkSizeBytes;
+             if (currentChunkSize == -1)
+                 break;
+             if (!filter->isBodySizeAllowed(bodyBuffer.byteAmount() + currentChunkSize)) {
+@@ -643,6 +646,14 @@ qsizetype QHttpServerParser::getChunkSize(QIODevice *socket, qsizetype *chunkSiz
+ 
+             bytes += haveRead;
+             fragment.append(c);
++            if (!filter->isHeaderFieldSizeAllowed(fragment.size())) {
++                sendError(socket, QHttpServerResponder::StatusCode::BadRequest);
++                socket->skip(socket->bytesAvailable());
++                qCDebug(lcHttpServerParser) << "Chunk size line too long at" << fragment.size()
++                                            << "bytes from client" << getClientIpAddressAndPort();
++                fragment.clear();
++                return -1;
++            }
+         }
+     }
+ 
+diff --git a/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp b/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
+index 1ef3fc2..39ac8dc 100644
+--- a/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
++++ b/tests/auto/qabstracthttpserver/tst_qabstracthttpserver.cpp
+@@ -154,6 +154,8 @@ private slots:
+     void http2request();
+     void socketDisconnected();
+     void keepAliveTimeout();
++    void chunkedRequest();
++    void chunkedSizeLineTooLong();
+ 
+ private:
+ #if QT_CONFIG(ssl)
+@@ -990,6 +992,90 @@ void tst_QAbstractHttpServer::keepAliveTimeout()
+ #endif // QT_CONFIG(ssl)
+ }
+ 
++void tst_QAbstractHttpServer::chunkedRequest()
++{
++    struct HttpServer : QAbstractHttpServer
++    {
++        QByteArray body;
++        bool handleRequest(const QHttpServerRequest &request,
++                           QHttpServerResponder &responder) override
++        {
++            body = request.body();
++            auto _responder = std::move(responder);
++            return true;
++        }
++
++        void missingHandler(const QHttpServerRequest &, QHttpServerResponder &) override { }
++    } server;
++
++    QTcpServer tcpServer;
++    QVERIFY(tcpServer.listen());
++    server.bind(&tcpServer);
++
++    QTcpSocket client;
++    client.connectToHost(QHostAddress::LocalHost, tcpServer.serverPort());
++    QVERIFY(client.waitForConnected());
++
++    // A well-formed chunked request body must be decoded and delivered.
++    client.write("POST / HTTP/1.1\r\n"
++                 "Host: localhost\r\n"
++                 "Transfer-Encoding: chunked\r\n"
++                 "\r\n"
++                 "5\r\nHello\r\n"
++                 "6\r\n World\r\n"
++                 "0\r\n\r\n");
++    QVERIFY(client.waitForBytesWritten());
++
++    QTRY_COMPARE(server.body, QByteArray("Hello World"));
++}
++
++void tst_QAbstractHttpServer::chunkedSizeLineTooLong()
++{
++    struct HttpServer : QAbstractHttpServer
++    {
++        bool handleRequestCalled = false;
++        bool handleRequest(const QHttpServerRequest &, QHttpServerResponder &responder) override
++        {
++            handleRequestCalled = true;
++            auto _responder = std::move(responder);
++            return true;
++        }
++
++        void missingHandler(const QHttpServerRequest &, QHttpServerResponder &) override { }
++    } server;
++
++    QTcpServer tcpServer;
++    QVERIFY(tcpServer.listen());
++    server.bind(&tcpServer);
++
++    // Lower the per-field limit (default 48 KiB) so a few hundred bytes trip the
++    // size-line cap
++    QHttpServerConfiguration config;
++    config.setMaximumHeaderFieldSize(256);
++    server.setConfiguration(config);
++
++    QTcpSocket client;
++    client.connectToHost(QHostAddress::LocalHost, tcpServer.serverPort());
++    QVERIFY(client.waitForConnected());
++
++    // Send a chunk-size line that never terminates: a run of digits with no CRLF.
++    // This is not a valid chunk. The parser must bound the size-line buffer,
++    // reply 400, and close.
++    QByteArray request = "POST / HTTP/1.1\r\n"
++                         "Host: localhost\r\n"
++                         "Transfer-Encoding: chunked\r\n"
++                         "\r\n";
++    request += QByteArray(512, '0'); // exceeds the 256-byte size-line cap, no CRLF
++    client.write(request);
++    QVERIFY(client.waitForBytesWritten());
++
++    // waitForDisconnected() would only wait on the client socket and time out
++    QTRY_COMPARE(client.state(), QAbstractSocket::UnconnectedState);
++    const QByteArray response = client.readAll();
++    QVERIFY2(response.startsWith("HTTP/1.1 400"), response.constData());
++    QVERIFY(!server.handleRequestCalled);
++}
++
+ QT_END_NAMESPACE
+ 
+ QTEST_MAIN(tst_QAbstractHttpServer)

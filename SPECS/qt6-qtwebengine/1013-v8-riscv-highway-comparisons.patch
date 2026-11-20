@@ -1,0 +1,56 @@
+From 0b4df86b1cf1e6d99abe7217ae1ee070eecc8535 Mon Sep 17 00:00:00 2001
+From: Florian Loitsch <floitsch@rivosinc.com>
+Date: Thu, 25 Sep 2025 10:14:24 +0000
+Subject: [PATCH] [riscv] Use Highway comparisons in JSON and RegExp
+
+Upstream: https://github.com/v8/v8/commit/77c3daed6d2b89a45531bf4b0f81d9b697768f87
+---
+ src/3rdparty/chromium/v8/src/json/json-stringifier.cc  | 8 +++++---
+ src/3rdparty/chromium/v8/src/runtime/runtime-regexp.cc | 8 ++++++--
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/src/3rdparty/chromium/v8/src/json/json-stringifier.cc b/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
+index c176025..9f97961 100644
+--- a/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
++++ b/src/3rdparty/chromium/v8/src/json/json-stringifier.cc
+@@ -3385,9 +3385,11 @@ bool FastJsonStringifier<Char>::AppendStringSIMD(
+ 
+   for (; block + (stride - 1) < end; block += stride) {
+     const auto input = hw::LoadU(tag, block);
+-    const auto has_lower_than_0x20 = input < mask_0x20;
+-    const auto has_0x22 = input == mask_0x22;
+-    const auto has_0x5c = input == mask_0x5c;
++    // TODO(floitsch): use operators for the comparisons when they are available
++    // on RISC-V.
++    const auto has_lower_than_0x20 = hw::Lt(input, mask_0x20);
++    const auto has_0x22 = hw::Eq(input, mask_0x22);
++    const auto has_0x5c = hw::Eq(input, mask_0x5c);
+     const auto result = hw::Or(hw::Or(has_lower_than_0x20, has_0x22), has_0x5c);
+ 
+     // No character that needs escaping found in block.
+diff --git a/src/3rdparty/chromium/v8/src/runtime/runtime-regexp.cc b/src/3rdparty/chromium/v8/src/runtime/runtime-regexp.cc
+index e2c9e5a..a09fb1e 100644
+--- a/src/3rdparty/chromium/v8/src/runtime/runtime-regexp.cc
++++ b/src/3rdparty/chromium/v8/src/runtime/runtime-regexp.cc
+@@ -2203,7 +2203,9 @@ inline void RegExpMatchGlobalAtom_OneCharPattern(
+   while (stride * max_count <= static_cast<size_t>(end - block)) {
+     for (int i = 0; i < max_count; i++, block += stride) {
+       const auto input = hw::LoadU(tag, block);
+-      const auto match = input == mask;
++      // TODO(floitsch): use an operator for the comparison when it is available
++      // on RISC-V.
++      const auto match = hw::Eq(input, mask);
+       // Lanes with matches have all bits set, so we subtract to increase the
+       // count by 1.
+       submatches = hw::Sub(submatches, hw::VecFromMask(tag, match));
+@@ -2224,7 +2226,9 @@ inline void RegExpMatchGlobalAtom_OneCharPattern(
+   DCHECK_LT(end - block, stride * max_count);
+   for (; stride <= static_cast<size_t>(end - block); block += stride) {
+     const auto input = hw::LoadU(tag, block);
+-    const auto match = input == mask;
++    // TODO(floitsch): use an operator for the comparison when it is available
++    // on RISC-V.
++    const auto match = hw::Eq(input, mask);
+     submatches = hw::Sub(submatches, hw::VecFromMask(tag, match));
+     if (!hw::AllFalse(tag, match)) {
+       last_match_block = block;

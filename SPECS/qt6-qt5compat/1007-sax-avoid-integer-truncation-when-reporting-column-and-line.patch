@@ -1,0 +1,97 @@
+From 5fa267cacccf88974c9cf18a34778df5c79d5906 Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Wed, 9 Sep 2026 13:48:08 +0200
+Subject: [PATCH] SAX: avoid integer truncation when reporting column and line
+
+We ported the internal implementation to qsizetype, but the public API
+of QXmlLocator still reports the column and line as int.
+
+To avoid integer truncation when reporting results, explicitly check
+if the reported value is larger than INT_MAX and report -1 if it is.
+This is in line with the documentation, which explicitly states that -1
+is returned when no column/line number is available.
+
+Task-number: QTBUG-149566
+Pick-to: 6.12.0 6.11 6.11.3 6.8 6.5
+Change-Id: I277ab4ed390d63348d426619a7c01a079d2a057f
+Reviewed-by: Marc Mutz <marc.mutz@qt.io>
+(cherry picked from commit 0d2c086cb8cfa6833b82abb200b53a51a0321bdf)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/core5/sax/qxml.cpp b/src/core5/sax/qxml.cpp
+index 6cb483f..59b5a26 100644
+--- a/src/core5/sax/qxml.cpp
++++ b/src/core5/sax/qxml.cpp
+@@ -16,6 +16,7 @@
+ #include "qstack.h"
+ #include <QtCore/qvarlengtharray.h>
+ #include <qdebug.h>
++#include <climits>
+ 
+ #ifdef Q_CC_BOR // borland 6 finds bogus warnings when building this file in uic3
+ #    pragma warn -8080
+@@ -390,6 +391,21 @@ QXmlLocator::~QXmlLocator()
+     number available.
+ */
+ 
++/*
++    The public API returns position as int.
++    Returns the value + 1, since human-readable line and column numbers start
++    from 1.
++
++    Report -1 if the value does not fit into the int range, in line with the
++    columnNumber() and lineNumber() docs.
++*/
++static int reportedPosition(qsizetype position)
++{
++    if (position >= INT_MAX - 1)
++        return -1;
++    return int(position + 1);
++}
++
+ class QXmlSimpleReaderLocator : public QXmlLocator
+ {
+ public:
+@@ -403,11 +419,11 @@ public:
+ 
+     int columnNumber() const override
+     {
+-        return (reader->d_ptr->columnNr == -1 ? -1 : reader->d_ptr->columnNr + 1);
++        return (reader->d_ptr->columnNr == -1 ? -1 : reportedPosition(reader->d_ptr->columnNr));
+     }
+     int lineNumber() const override
+     {
+-        return (reader->d_ptr->lineNr == -1 ? -1 : reader->d_ptr->lineNr + 1);
++        return (reader->d_ptr->lineNr == -1 ? -1 : reportedPosition(reader->d_ptr->lineNr));
+     }
+ 
+ private:
+@@ -7744,12 +7760,12 @@ void QXmlSimpleReaderPrivate::reportParseError(const QString& error)
+     this->error = error;
+     if (errorHnd) {
+         if (this->error.isNull()) {
+-            const QXmlParseException ex(QLatin1String(XMLERR_OK), columnNr+1, lineNr+1,
+-                                        thisPublicId, thisSystemId);
++            const QXmlParseException ex(QLatin1String(XMLERR_OK), reportedPosition(columnNr),
++                                        reportedPosition(lineNr), thisPublicId, thisSystemId);
+             errorHnd->fatalError(ex);
+         } else {
+-            const QXmlParseException ex(this->error, columnNr+1, lineNr+1,
+-                                        thisPublicId, thisSystemId);
++            const QXmlParseException ex(this->error, reportedPosition(columnNr),
++                                        reportedPosition(lineNr), thisPublicId, thisSystemId);
+             errorHnd->fatalError(ex);
+         }
+     }
+diff --git a/src/core5/sax/qxml_p.h b/src/core5/sax/qxml_p.h
+index 715441d..fdafcfd 100644
+--- a/src/core5/sax/qxml_p.h
++++ b/src/core5/sax/qxml_p.h
+@@ -179,6 +179,7 @@ private:
+     QXmlInputSource *inputSource;
+ 
+     QChar c; // the character at reading position
++    // The public API is int-based, range-checked in reportedPosition().
+     qsizetype   lineNr; // number of line
+     qsizetype   columnNr; // position in line
+ 

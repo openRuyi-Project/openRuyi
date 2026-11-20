@@ -8,12 +8,12 @@
 %global pypi_name pyqt6_sip
 
 Name:           python-pyqt6-sip
-Version:        13.11.1
+Version:        13.13.1
 Release:        %autorelease
 Summary:        The sip module support for PyQt6
-License:        GPL-2.0-only OR GPL-3.0-only
+License:        BSD-2-Clause
 URL:            https://www.riverbankcomputing.com/software/sip/
-#!RemoteAsset:  sha256:869c5b48afe38e55b1ee0dd72182b0886e968cc509b98023ff50010b013ce1be
+#!RemoteAsset:  sha256:83c3c9cb93b6c631af7048084fb0f234b610a01edbf9b2b44c4ee4bda4197efe
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildSystem:    pyproject
 

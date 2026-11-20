@@ -1,0 +1,55 @@
+From b08158c336a0ef63b1ed79145008768697bde9dd Mon Sep 17 00:00:00 2001
+From: Ivan Solovev <ivan.solovev@qt.io>
+Date: Wed, 9 Sep 2026 13:39:22 +0200
+Subject: [PATCH] SAX: use ranged-for loops
+
+In places where we do not need the index.
+It is the part of porting the code from int to qsizetype.
+
+Task-number: QTBUG-149566
+Pick-to: 6.12.0 6.11 6.11.3 6.8 6.5
+Change-Id: Ia24e05b4b54f0e4d3298b2067381eb48c3a68630
+Reviewed-by: Marc Mutz <marc.mutz@qt.io>
+(cherry picked from commit 6cae8a4aebc82fb59116d55a551c168b2cd9e053)
+Reviewed-by: Qt Cherry-pick Bot <cherrypick_bot@qt-project.org>
+
+diff --git a/src/core5/sax/qxml.cpp b/src/core5/sax/qxml.cpp
+index af17b61..aa385ac 100644
+--- a/src/core5/sax/qxml.cpp
++++ b/src/core5/sax/qxml.cpp
+@@ -7292,9 +7292,8 @@ bool QXmlSimpleReaderPrivate::processReference()
+                     {
+                         // Bypassed
+                         stringAddC(QLatin1Char('&'));
+-                        for (int i=0; i<(int)reference.size(); i++) {
+-                            stringAddC(reference[i]);
+-                        }
++                        for (const QChar c : std::as_const(reference))
++                            stringAddC(c);
+                         stringAddC(QLatin1Char(';'));
+                         parseReference_charDataRead = true;
+                     }
+@@ -7314,9 +7313,8 @@ bool QXmlSimpleReaderPrivate::processReference()
+                 if (parseReference_context == InEntityValue) {
+                     // Bypassed
+                     stringAddC(QLatin1Char('&'));
+-                    for (int i=0; i<(int)reference.size(); i++) {
+-                        stringAddC(reference[i]);
+-                    }
++                    for (const QChar c : std::as_const(reference))
++                        stringAddC(c);
+                     stringAddC(QLatin1Char(';'));
+                     parseReference_charDataRead = true;
+                 } else {
+@@ -7397,9 +7395,8 @@ bool QXmlSimpleReaderPrivate::processReference()
+                         {
+                             // Bypassed
+                             stringAddC(QLatin1Char('&'));
+-                            for (int i=0; i<(int)reference.size(); i++) {
+-                                stringAddC(reference[i]);
+-                            }
++                            for (const QChar c : std::as_const(reference))
++                                stringAddC(c);
+                             stringAddC(QLatin1Char(';'));
+                             parseReference_charDataRead = true;
+                         }
