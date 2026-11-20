@@ -1,0 +1,50 @@
+Change the built-in default socket directory to be /run/postgresql.
+For backwards compatibility with (probably non-libpq-based) clients that
+might still expect to find the socket in /tmp, also create a socket in
+/tmp.  This is to resolve communication problems with clients operating
+under systemd's PrivateTmp environment, which won't be using the same
+global /tmp directory as the server; see bug #825448.
+
+Note that we apply the socket directory change at the level of the
+hard-wired defaults in the C code, not by just twiddling the setting in
+postgresql.conf.sample; this is so that the change will take effect on
+server package update, without requiring any existing postgresql.conf
+to be updated.  (Of course, a user who dislikes this behavior can still
+override it via postgresql.conf.)
+
+diff --git a/src/backend/utils/misc/guc_parameters.dat b/src/backend/utils/misc/guc_parameters.dat
+--- a/src/backend/utils/misc/guc_parameters.dat
++++ b/src/backend/utils/misc/guc_parameters.dat
+@@ -3284,7 +3284,7 @@
+   short_desc => 'Sets the directories where Unix-domain sockets will be created.',
+   flags => 'GUC_LIST_INPUT | GUC_LIST_QUOTE | GUC_SUPERUSER_ONLY',
+   variable => 'Unix_socket_directories',
+-  boot_val => 'DEFAULT_PGSOCKET_DIR',
++  boot_val => 'DEFAULT_PGSOCKET_DIR ", /tmp"',
+ },
+ 
+ { name => 'unix_socket_group', type => 'string', context => 'PGC_POSTMASTER', group => 'CONN_AUTH_SETTINGS',
+diff --git a/src/bin/initdb/initdb.c b/src/bin/initdb/initdb.c
+--- a/src/bin/initdb/initdb.c
++++ b/src/bin/initdb/initdb.c
+@@ -1384,7 +1384,7 @@
+ 	 * these are indeed defaults, keep the postgresql.conf lines commented.
+ 	 */
+ 	conflines = replace_guc_value(conflines, "unix_socket_directories",
+-								  DEFAULT_PGSOCKET_DIR, true);
++								  DEFAULT_PGSOCKET_DIR ", /tmp", true);
+ 
+ 	conflines = replace_guc_value(conflines, "port",
+ 								  DEF_PGPORT_STR, true);
+diff --git a/src/include/pg_config_manual.h b/src/include/pg_config_manual.h
+--- a/src/include/pg_config_manual.h
++++ b/src/include/pg_config_manual.h
+@@ -195,7 +195,7 @@
+  * support them yet.
+  */
+ #ifndef WIN32
+-#define DEFAULT_PGSOCKET_DIR  "/tmp"
++#define DEFAULT_PGSOCKET_DIR  "/run/postgresql"
+ #else
+ #define DEFAULT_PGSOCKET_DIR ""
+ #endif
