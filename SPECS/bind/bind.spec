@@ -110,14 +110,13 @@ install -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/named.service
 
 mkdir -p %{buildroot}%{_sysconfdir}
 install -m 640 %{SOURCE4} %{buildroot}%{_sysconfdir}/named.conf
-mkdir -p %{buildroot}%{_localstatedir}/named
+mkdir -p %{buildroot}%{_localstatedir}/named/data
 install -m 644 %{SOURCE5} %{buildroot}%{_localstatedir}/named/127.0.0.zone
 install -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/named/localhost.zone
 install -m 644 %{SOURCE7} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 
 %pre
 %sysusers_create_package %{name} %{SOURCE1}
-%tmpfiles_create_package %{name} %{SOURCE2}
 
 %post
 %systemd_post named.service
@@ -130,7 +129,9 @@ install -m 644 %{SOURCE7} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 
 %files
 %license LICENSE COPYRIGHT
-%config(noreplace) %verify(not link) %{_sysconfdir}/named.conf
+%dir %{_localstatedir}/named
+%dir %attr(0750,named,named) %{_localstatedir}/named/data
+%config(noreplace) %attr(0640,root,named) %{_sysconfdir}/named.conf
 %config(noreplace) %verify(not link) %{_localstatedir}/named/127.0.0.zone
 %config(noreplace) %verify(not link) %{_localstatedir}/named/localhost.zone
 %config(noreplace) %verify(not link) %{_localstatedir}/named/localhost.ip6.zone
