@@ -10,9 +10,9 @@
 %global majorver        27
 %global minorver        0
 %global securityver     1
-%global extraver        2
-%global buildver        1
-%global newjavaver      %{majorver}.%{minorver}.%{securityver}.0.%{extraver}
+%global patchver        1
+%global buildver        4
+%global newjavaver      %{majorver}.%{minorver}.%{securityver}.%{patchver}
 %global _jvmdir         %_libdir/jvm
 
 %bcond bootstrap        1
@@ -24,7 +24,7 @@ Summary:        OpenJDK latest Runtime Environment
 License:        GPL-2.0-only WITH Classpath-exception-2.0
 URL:            https://openjdk.org
 VCS:            git:https://github.com/openjdk/jdk27u
-#!RemoteAsset:  sha256:2f39e68293e3fd3aad04fb0c5aebc0ee8737e82b348f520bd95ebae00f2142e9
+#!RemoteAsset:  sha256:93eb9316f5c932929cb91dd6781d5537e972661ac4b9f8037de35bef4e1181bc
 Source0:        https://github.com/openjdk/jdk%{majorver}u/archive/refs/tags/jdk-%{newjavaver}+%{buildver}.tar.gz
 %if %{with bootstrap}
 #!RemoteAsset:  sha256:270d74d7732adbaa7af4e153154126c144e6000bb736fd0985421f75075555aa
@@ -110,8 +110,8 @@ echo $BOOTJDKPATH
 mkdir -p build-release
 pushd build-release
 bash ../configure \
+    --with-version-patch=%{patchver} \
     --with-version-build=%{buildver} \
-    --with-version-extra1=%{extraver} \
     --with-version-pre= \
     --with-version-opt= \
     --with-boot-jdk=$BOOTJDKPATH \
