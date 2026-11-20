@@ -6,56 +6,64 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond test 0
-%bcond docs 0
+%bcond test 1
+%bcond docs 1
 
-%global majorversion 18
-%global service_name postgresql.service
+%global majorversion 19
 
 Name:           postgresql
-Version:        18.4
+Version:        19.0
 Release:        %autorelease
 Summary:        PostgreSQL client programs
 # The PostgreSQL license is very similar to other MIT licenses, but the OSI
 # recognizes it as an independent license, so we do as well.
 License:        PostgreSQL
-Url:            http://www.postgresql.org/
+URL:            https://www.postgresql.org/
 VCS:            git:https://git.postgresql.org/git/postgresql.git
-#!RemoteAsset:  sha256:81a81ec695fb0c7901407defaa1d2f7973617154cf27ba74e3a7ab8e64436094
+#!RemoteAsset:  sha256:a89fd70efbad6a08c7dbed8d4872e3af30170d9e5ca9dc7906523be95b4e692d
 Source0:        https://ftp.postgresql.org/pub/source/v%{version}/postgresql-%{version}.tar.bz2
 Source1:        Makefile.regress
 Source2:        postgresql.pam
 Source3:        postgresql-bashprofile
 Source4:        postgresql.sysusers
-Source5:        postgresql.tmpfiles
-Source6:        postgresql.service
-BuildSystem:    autotools
+Source5:        postgresql.service
+BuildSystem:    meson
 
-# Comments for these patches are in the patch files.
-Patch0:         rpm-pgsql.patch
-Patch1:         postgresql-var-run-socket.patch
-Patch2:         postgresql-no-libecpg.patch
+# Use runtime sockets outside private temporary directories; https://git.almalinux.org/rpms/postgresql19/src/commit/4152478c89f2be5c28cf24848d825a874694a3a7/postgresql-var-run-socket.patch
+Patch2001:      2001-runtime-socket-directory.patch
 
-BuildOption(conf):  --disable-rpath
-BuildOption(conf):  --with-ldap
-BuildOption(conf):  --with-openssl
-BuildOption(conf):  --with-pam
-BuildOption(conf):  --with-gssapi
-BuildOption(conf):  --with-ossp-uuid
-BuildOption(conf):  --with-libxml
-BuildOption(conf):  --with-libxslt
-BuildOption(conf):  --enable-nls
-BuildOption(conf):  --enable-dtrace
-BuildOption(conf):  --with-selinux
-BuildOption(conf):  --with-system-tzdata=/usr/share/zoneinfo
-BuildOption(conf):  --datadir=%_datadir/pgsql
-BuildOption(conf):  --with-systemd
-BuildOption(conf):  --with-lz4
-BuildOption(conf):  --with-zstd
-BuildOption(conf):  --with-icu
-BuildOption(conf):  --with-python
+BuildOption(conf):  --auto-features=disabled
+BuildOption(conf):  -Drpath=false
+BuildOption(conf):  -Dldap=enabled
+BuildOption(conf):  -Dssl=openssl
+BuildOption(conf):  -Dpam=enabled
+BuildOption(conf):  -Dgssapi=enabled
+BuildOption(conf):  -Duuid=e2fs
+BuildOption(conf):  -Dlibxml=enabled
+BuildOption(conf):  -Dlibxslt=enabled
+BuildOption(conf):  -Dnls=enabled
+BuildOption(conf):  -Ddtrace=enabled
+BuildOption(conf):  -Dselinux=enabled
+BuildOption(conf):  -Dsystem_tzdata=/usr/share/zoneinfo
+BuildOption(conf):  -Dsystemd=enabled
+BuildOption(conf):  -Dlz4=enabled
+BuildOption(conf):  -Dzstd=enabled
+BuildOption(conf):  -Dicu=enabled
+BuildOption(conf):  -Dplpython=enabled
+BuildOption(conf):  -DPYTHON=%{__python3}
+BuildOption(conf):  -Dreadline=enabled
+BuildOption(conf):  -Dzlib=enabled
+BuildOption(conf):  -Dtap_tests=enabled
+BuildOption(conf):  -Ddocs_pdf=disabled
+%if %{with docs}
+BuildOption(conf):  -Ddocs=enabled
+BuildOption(build):  world
+%else
+BuildOption(conf):  -Ddocs=disabled
+%endif
 
 BuildRequires:  make
+BuildRequires:  meson
 BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  glibc-devel
@@ -63,17 +71,20 @@ BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  gawk
 BuildRequires:  perl
+BuildRequires:  perl(IPC::Run)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Time::HiRes)
 BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  systemd
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  util-linux
-BuildRequires:  pkgconfig(python)
+BuildRequires:  pkgconfig(python3)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(ldap)
 BuildRequires:  gettext
-BuildRequires:  pkgconfig(ossp-uuid)
+BuildRequires:  pkgconfig(uuid)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  pkgconfig(pam)
@@ -83,19 +94,18 @@ BuildRequires:  pkgconfig(libselinux)
 BuildRequires:  pkgconfig(icu-uc)
 
 %if %{with docs}
+BuildRequires:  docbook-dtds
 BuildRequires:  docbook-xsl
+BuildRequires:  libxml2
+BuildRequires:  libxslt
 %endif
 
 Provides:       %{name}-libs = %{version}-%{release}
 
 %description
-PostgreSQL is an advanced Object-Relational database management system (DBMS).
-The base postgresql package contains the client programs that you'll need to
-access a PostgreSQL DBMS server, as well as HTML documentation for the whole
-system.  These client programs can be located on the same machine as the
-PostgreSQL server, or on a remote machine that accesses a PostgreSQL server
-over a network connection.  The PostgreSQL server can be found in the
-postgresql-server sub-package.
+PostgreSQL is an object-relational database management system.
+This package provides client programs and libraries for local and remote servers.
+The server and HTML manual are available in postgresql-server and postgresql-doc.
 
 %package        devel
 Summary:        PostgreSQL development header files and libraries
@@ -111,11 +121,8 @@ will interact with a PostgreSQL server.
 %package        server
 Summary:        The programs needed to create and run a PostgreSQL server
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-# We require this to be present for %%{_prefix}/lib/tmpfiles.d
 Requires:       systemd
-# We require this to be present for /usr/sbin/runuser when using --initdb (rhbz#2071437)
 Requires:       util-linux
-# postgresql setup requires runuser from util-linux package
 Provides:       %{name}-server(:MODULE_COMPAT_%{majorversion})
 
 %description    server
@@ -130,9 +137,7 @@ Summary:        Extra documentation for PostgreSQL
 BuildArch:      noarch
 
 %description    doc
-The postgresql-doc package contains some additional documentation for
-PostgreSQL.  Currently, this includes the main documentation in PDF format
-and source files for the PostgreSQL tutorial.
+This package contains the PostgreSQL HTML manual and tutorial files.
 %endif
 
 %package        contrib
@@ -168,6 +173,7 @@ Summary:        The test suite distributed with PostgreSQL
 Requires:       %{name}-server%{?_isa} = %{version}-%{release}
 Requires:       %{name}-server-devel%{?_isa} = %{version}-%{release}
 Requires:       %{name}-contrib%{?_isa} = %{version}-%{release}
+Requires:       selinux-tools
 
 %description    test
 The postgresql-test package contains files needed for various tests for the
@@ -175,25 +181,18 @@ PostgreSQL database management system, including regression tests and
 benchmarks.
 %endif
 
-%prep
-%autosetup -n postgresql-%{version} -p1
-
-%build -a
-%make_build -C contrib
-
-%if %{with test}
-    make all -C src/test/regress
+%install -a
+%if %{with docs}
+export DESTDIR=%{buildroot}
+%meson_build install-docs
+rm -f src/tutorial/.gitignore
 %endif
 
-%install -a
-%make_install -C contrib
-
 # make sure these directories exist even if we suppressed all contrib modules
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/pgsql/contrib
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/pgsql/extension
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/postgresql/contrib
+install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/postgresql/extension
 
-install -d $RPM_BUILD_ROOT/etc/pam.d
-install -m 644 %{SOURCE2} $RPM_BUILD_ROOT/etc/pam.d/postgresql
+install -D -m 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/pam.d/postgresql
 
 # PGDATA needs removal of group and world permissions due to pg_pwd hole.
 install -d -m 700 $RPM_BUILD_ROOT%{?_localstatedir}/lib/pgsql/data
@@ -208,74 +207,67 @@ install -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{?_localstatedir}/lib/pgsql/.bash_prof
     # tests. There are many files included here that are unnecessary,
     # but include them anyway for completeness.  We replace the original
     # Makefiles, however.
-    mkdir -p $RPM_BUILD_ROOT%{_libdir}/pgsql/test
-    cp -a src/test/regress $RPM_BUILD_ROOT%{_libdir}/pgsql/test
+    mkdir -p $RPM_BUILD_ROOT%{_libdir}/postgresql/test
+    cp -a src/test/regress $RPM_BUILD_ROOT%{_libdir}/postgresql/test
+    install -m 755 %{_vpath_builddir}/src/test/regress/regress.so $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/
     # pg_regress binary should be only in one subpackage,
     # there will be a symlink from -test to -devel
-    rm -f $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/pg_regress
-    rm -f $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/refint.so
-    rm -f $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/autoinc.so
-    ln -sf ../../pgxs/src/test/regress/pg_regress $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/pg_regress
-    ln -sf ../../autoinc.so $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/autoinc.so
-    ln -sf ../../refint.so $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/refint.so
-    pushd  $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress
-    rm -f GNUmakefile Makefile *.o
+    rm -f $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/pg_regress
+    rm -f $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/refint.so
+    rm -f $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/autoinc.so
+    ln -sf ../../pgxs/src/test/regress/pg_regress $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/pg_regress
+    ln -sf ../../autoinc.so $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/autoinc.so
+    ln -sf ../../refint.so $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/refint.so
+    pushd  $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress
+    rm -f .gitignore GNUmakefile Makefile *.o
     chmod 0755 pg_regress regress.so
     popd
-    sed 's|@bindir@|%{_bindir}|g' \
+    sed -e 's|@bindir@|%{_bindir}|g' -e 's|@sbindir@|%{_sbindir}|g' \
         < %{SOURCE1} \
-        > $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/Makefile
-    chmod 0644 $RPM_BUILD_ROOT%{_libdir}/pgsql/test/regress/Makefile
+        > $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/Makefile
+    chmod 0644 $RPM_BUILD_ROOT%{_libdir}/postgresql/test/regress/Makefile
 %endif
 
 # remove files not to be packaged
 rm %{buildroot}%{_libdir}/*.a
 
 # Remove extension example docs
-rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/pgsql/extension/*.example
+rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/extension/*.example
 
-find_lang_bins ()
-{
-    lstfile=$1 ; shift
-    cp /dev/null "$lstfile"
-    for binary; do
-        %find_lang "$binary"-%{majorversion}
-        cat "$binary"-%{majorversion}.lang >>"$lstfile"
-    done
-}
-find_lang_bins devel.lst pg_config
-find_lang_bins server.lst \
-    initdb pg_basebackup pg_controldata pg_ctl pg_resetwal pg_rewind plpgsql \
-    postgres pg_checksums pg_verifybackup pg_combinebackup \
-    pg_walsummary
-find_lang_bins contrib.lst \
-    pg_amcheck pg_archivecleanup pg_test_fsync pg_test_timing pg_waldump
-find_lang_bins main.lst \
-    pg_dump pg_upgrade pgscripts psql \
-libpq5
-
-find_lang_bins plpython3.lst plpython
+%find_lang pg_config-%{majorversion} ecpg-%{majorversion} devel.lst
+%find_lang initdb-%{majorversion} pg_basebackup-%{majorversion} pg_controldata-%{majorversion} pg_ctl-%{majorversion} \
+    pg_resetwal-%{majorversion} pg_rewind-%{majorversion} plpgsql-%{majorversion} postgres-%{majorversion} \
+    pg_checksums-%{majorversion} pg_verifybackup-%{majorversion} pg_combinebackup-%{majorversion} pg_walsummary-%{majorversion} server.lst
+%find_lang pg_amcheck-%{majorversion} pg_archivecleanup-%{majorversion} pg_test_fsync-%{majorversion} pg_test_timing-%{majorversion} \
+    pg_waldump-%{majorversion} contrib.lst
+%find_lang pg_dump-%{majorversion} pg_upgrade-%{majorversion} pgscripts-%{majorversion} psql-%{majorversion} \
+    libpq5-%{majorversion} ecpglib6-%{majorversion} main.lst
+%find_lang plpython-%{majorversion} plpython3.lst
+%if %{with test}
+%find_lang postgresql-regress-%{majorversion} test.lst
+%else
+rm -f %{buildroot}%{_datadir}/locale/*/LC_MESSAGES/postgresql-regress-%{majorversion}.mo
+%endif
 
 install -m0644 -D %{SOURCE4} %{buildroot}%{_sysusersdir}/postgresql.conf
-install -m0644 -D %{SOURCE5} %{buildroot}%{_tmpfilesdir}/postgresql.conf
-install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
+install -m0644 -D %{SOURCE5} %{buildroot}%{_unitdir}/postgresql.service
 
 %pre server
-%sysusers_create_package postgresql postgresql.sysusers.conf
-%tmpfiles_create_package postgresql postgresql.tmpfiles.conf
+%sysusers_create_package postgresql %{SOURCE4}
 
 %post server
-%systemd_post %service_name
+%systemd_post postgresql.service
 
 %preun server
-%systemd_preun %service_name
+%systemd_preun postgresql.service
 
 %postun server
-%systemd_postun_with_restart %service_name
+%systemd_postun postgresql.service
 
 %files -f main.lst
 %doc doc/KNOWN_BUGS doc/MISSING_FEATURES doc/TODO
-%doc COPYRIGHT HISTORY
+%doc HISTORY
+%license COPYRIGHT
 %{_bindir}/clusterdb
 %{_bindir}/createdb
 %{_bindir}/createuser
@@ -290,11 +282,18 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %{_bindir}/reindexdb
 %{_bindir}/vacuumdb
 %{_libdir}/libpq.so.*
+%{_libdir}/libecpg.so.*
+%{_libdir}/libecpg_compat.so.*
+%{_libdir}/libpgtypes.so.*
 
 %if %{with docs}
 %files doc
-%doc doc/html
-%{_libdir}/pgsql/tutorial/
+%doc src/tutorial
+%{_docdir}/%{name}/html/
+%{_mandir}/man1/*
+%{_mandir}/man3/*
+%{_mandir}/man7/*
+%license COPYRIGHT
 %endif
 
 %files contrib -f contrib.lst
@@ -311,108 +310,111 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 
 %{_bindir}/pgbench
 %{_bindir}/vacuumlo
-%{_datadir}/pgsql/extension/amcheck*
-%{_datadir}/pgsql/extension/autoinc*
-%{_datadir}/pgsql/extension/bloom*
-%{_datadir}/pgsql/extension/btree_gin*
-%{_datadir}/pgsql/extension/btree_gist*
-%{_datadir}/pgsql/extension/citext*
-%{_datadir}/pgsql/extension/cube*
-%{_datadir}/pgsql/extension/dblink*
-%{_datadir}/pgsql/extension/dict_int*
-%{_datadir}/pgsql/extension/dict_xsyn*
-%{_datadir}/pgsql/extension/earthdistance*
-%{_datadir}/pgsql/extension/file_fdw*
-%{_datadir}/pgsql/extension/fuzzystrmatch*
-%{_datadir}/pgsql/extension/hstore*
-%{_datadir}/pgsql/extension/insert_username*
-%{_datadir}/pgsql/extension/intagg*
-%{_datadir}/pgsql/extension/intarray*
-%{_datadir}/pgsql/extension/isn*
-%{_datadir}/pgsql/extension/jsonb_plpython3u*
-%{_datadir}/pgsql/extension/lo*
-%{_datadir}/pgsql/extension/pg_logicalinspect*
-%{_datadir}/pgsql/extension/ltree*
-%{_datadir}/pgsql/extension/moddatetime*
-%{_datadir}/pgsql/extension/pageinspect*
-%{_datadir}/pgsql/extension/pg_buffercache*
-%{_datadir}/pgsql/extension/pg_freespacemap*
-%{_datadir}/pgsql/extension/pg_prewarm*
-%{_datadir}/pgsql/extension/pg_stat_statements*
-%{_datadir}/pgsql/extension/pg_surgery*
-%{_datadir}/pgsql/extension/pg_trgm*
-%{_datadir}/pgsql/extension/pg_visibility*
-%{_datadir}/pgsql/extension/pg_walinspect*
-%{_datadir}/pgsql/extension/pgcrypto*
-%{_datadir}/pgsql/extension/pgrowlocks*
-%{_datadir}/pgsql/extension/pgstattuple*
-%{_datadir}/pgsql/extension/postgres_fdw*
-%{_datadir}/pgsql/extension/refint*
-%{_datadir}/pgsql/extension/seg*
-%{_datadir}/pgsql/extension/tablefunc*
-%{_datadir}/pgsql/extension/tcn*
-%{_datadir}/pgsql/extension/tsm_system_rows*
-%{_datadir}/pgsql/extension/tsm_system_time*
-%{_datadir}/pgsql/extension/unaccent*
-%{_libdir}/pgsql/_int.so
-%{_libdir}/pgsql/amcheck.so
-%{_libdir}/pgsql/auth_delay.so
-%{_libdir}/pgsql/auto_explain.so
-%{_libdir}/pgsql/autoinc.so
-%{_libdir}/pgsql/bloom.so
-%{_libdir}/pgsql/btree_gin.so
-%{_libdir}/pgsql/btree_gist.so
-%{_libdir}/pgsql/citext.so
-%{_libdir}/pgsql/cube.so
-%{_libdir}/pgsql/dblink.so
-%{_libdir}/pgsql/dict_int.so
-%{_libdir}/pgsql/dict_xsyn.so
-%{_libdir}/pgsql/earthdistance.so
-%{_libdir}/pgsql/file_fdw.so
-%{_libdir}/pgsql/fuzzystrmatch.so
-%{_libdir}/pgsql/hstore.so
-%{_libdir}/pgsql/hstore_plpython3.so
-%{_libdir}/pgsql/insert_username.so
-%{_libdir}/pgsql/isn.so
-%{_libdir}/pgsql/jsonb_plpython3.so
-%{_libdir}/pgsql/lo.so
-%{_libdir}/pgsql/ltree.so
-%{_libdir}/pgsql/ltree_plpython3.so
-%{_libdir}/pgsql/pg_logicalinspect.so
-%{_libdir}/pgsql/pg_overexplain.so
-%{_libdir}/pgsql/moddatetime.so
-%{_libdir}/pgsql/pageinspect.so
-%{_libdir}/pgsql/passwordcheck.so
-%{_libdir}/pgsql/pg_buffercache.so
-%{_libdir}/pgsql/pg_freespacemap.so
-%{_libdir}/pgsql/pg_prewarm.so
-%{_libdir}/pgsql/pg_stat_statements.so
-%{_libdir}/pgsql/pg_surgery.so
-%{_libdir}/pgsql/pg_trgm.so
-%{_libdir}/pgsql/pg_visibility.so
-%{_libdir}/pgsql/pg_walinspect.so
-%{_libdir}/pgsql/basic_archive.so
-%{_libdir}/pgsql/basebackup_to_shell.so
-%{_libdir}/pgsql/pgcrypto.so
-%{_libdir}/pgsql/pgrowlocks.so
-%{_libdir}/pgsql/pgstattuple.so
-%{_libdir}/pgsql/postgres_fdw.so
-%{_libdir}/pgsql/refint.so
-%{_libdir}/pgsql/seg.so
-%{_libdir}/pgsql/tablefunc.so
-%{_libdir}/pgsql/tcn.so
-%{_libdir}/pgsql/test_decoding.so
-%{_libdir}/pgsql/tsm_system_rows.so
-%{_libdir}/pgsql/tsm_system_time.so
-%{_libdir}/pgsql/unaccent.so
-%{_datadir}/pgsql/contrib/sepgsql.sql
-%{_libdir}/pgsql/sepgsql.so
-%{_datadir}/pgsql/extension/sslinfo*
-%{_libdir}/pgsql/sslinfo.so
-%{_datadir}/pgsql/extension/uuid-ossp*
-%{_libdir}/pgsql/uuid-ossp.so
-%{_datadir}/pgsql/extension/xml2*
-%{_libdir}/pgsql/pgxml.so
+%{_datadir}/postgresql/extension/amcheck*
+%{_datadir}/postgresql/extension/autoinc*
+%{_datadir}/postgresql/extension/bloom*
+%{_datadir}/postgresql/extension/btree_gin*
+%{_datadir}/postgresql/extension/btree_gist*
+%{_datadir}/postgresql/extension/citext*
+%{_datadir}/postgresql/extension/cube*
+%{_datadir}/postgresql/extension/dblink*
+%{_datadir}/postgresql/extension/dict_int*
+%{_datadir}/postgresql/extension/dict_xsyn*
+%{_datadir}/postgresql/extension/earthdistance*
+%{_datadir}/postgresql/extension/file_fdw*
+%{_datadir}/postgresql/extension/fuzzystrmatch*
+%{_datadir}/postgresql/extension/hstore*
+%{_datadir}/postgresql/extension/insert_username*
+%{_datadir}/postgresql/extension/intagg*
+%{_datadir}/postgresql/extension/intarray*
+%{_datadir}/postgresql/extension/isn*
+%{_datadir}/postgresql/extension/jsonb_plpython3u*
+%{_datadir}/postgresql/extension/lo*
+%{_datadir}/postgresql/extension/pg_logicalinspect*
+%{_datadir}/postgresql/extension/ltree*
+%{_datadir}/postgresql/extension/moddatetime*
+%{_datadir}/postgresql/extension/pageinspect*
+%{_datadir}/postgresql/extension/pg_buffercache*
+%{_datadir}/postgresql/extension/pg_freespacemap*
+%{_datadir}/postgresql/extension/pg_prewarm*
+%{_datadir}/postgresql/extension/pg_stash_advice*
+%{_datadir}/postgresql/extension/pg_stat_statements*
+%{_datadir}/postgresql/extension/pg_surgery*
+%{_datadir}/postgresql/extension/pg_trgm*
+%{_datadir}/postgresql/extension/pg_visibility*
+%{_datadir}/postgresql/extension/pg_walinspect*
+%{_datadir}/postgresql/extension/pgcrypto*
+%{_datadir}/postgresql/extension/pgrowlocks*
+%{_datadir}/postgresql/extension/pgstattuple*
+%{_datadir}/postgresql/extension/postgres_fdw*
+%{_datadir}/postgresql/extension/refint*
+%{_datadir}/postgresql/extension/seg*
+%{_datadir}/postgresql/extension/tablefunc*
+%{_datadir}/postgresql/extension/tcn*
+%{_datadir}/postgresql/extension/tsm_system_rows*
+%{_datadir}/postgresql/extension/tsm_system_time*
+%{_datadir}/postgresql/extension/unaccent*
+%{_libdir}/postgresql/_int.so
+%{_libdir}/postgresql/amcheck.so
+%{_libdir}/postgresql/auth_delay.so
+%{_libdir}/postgresql/auto_explain.so
+%{_libdir}/postgresql/autoinc.so
+%{_libdir}/postgresql/bloom.so
+%{_libdir}/postgresql/btree_gin.so
+%{_libdir}/postgresql/btree_gist.so
+%{_libdir}/postgresql/citext.so
+%{_libdir}/postgresql/cube.so
+%{_libdir}/postgresql/dblink.so
+%{_libdir}/postgresql/dict_int.so
+%{_libdir}/postgresql/dict_xsyn.so
+%{_libdir}/postgresql/earthdistance.so
+%{_libdir}/postgresql/file_fdw.so
+%{_libdir}/postgresql/fuzzystrmatch.so
+%{_libdir}/postgresql/hstore.so
+%{_libdir}/postgresql/hstore_plpython3.so
+%{_libdir}/postgresql/insert_username.so
+%{_libdir}/postgresql/isn.so
+%{_libdir}/postgresql/jsonb_plpython3.so
+%{_libdir}/postgresql/lo.so
+%{_libdir}/postgresql/ltree.so
+%{_libdir}/postgresql/ltree_plpython3.so
+%{_libdir}/postgresql/pg_logicalinspect.so
+%{_libdir}/postgresql/pg_overexplain.so
+%{_libdir}/postgresql/pg_plan_advice.so
+%{_libdir}/postgresql/pg_stash_advice.so
+%{_libdir}/postgresql/moddatetime.so
+%{_libdir}/postgresql/pageinspect.so
+%{_libdir}/postgresql/passwordcheck.so
+%{_libdir}/postgresql/pg_buffercache.so
+%{_libdir}/postgresql/pg_freespacemap.so
+%{_libdir}/postgresql/pg_prewarm.so
+%{_libdir}/postgresql/pg_stat_statements.so
+%{_libdir}/postgresql/pg_surgery.so
+%{_libdir}/postgresql/pg_trgm.so
+%{_libdir}/postgresql/pg_visibility.so
+%{_libdir}/postgresql/pg_walinspect.so
+%{_libdir}/postgresql/basic_archive.so
+%{_libdir}/postgresql/basebackup_to_shell.so
+%{_libdir}/postgresql/pgcrypto.so
+%{_libdir}/postgresql/pgrowlocks.so
+%{_libdir}/postgresql/pgstattuple.so
+%{_libdir}/postgresql/postgres_fdw.so
+%{_libdir}/postgresql/refint.so
+%{_libdir}/postgresql/seg.so
+%{_libdir}/postgresql/tablefunc.so
+%{_libdir}/postgresql/tcn.so
+%{_libdir}/postgresql/test_decoding.so
+%{_libdir}/postgresql/tsm_system_rows.so
+%{_libdir}/postgresql/tsm_system_time.so
+%{_libdir}/postgresql/unaccent.so
+%{_datadir}/postgresql/contrib/sepgsql.sql
+%{_libdir}/postgresql/sepgsql.so
+%{_datadir}/postgresql/extension/sslinfo*
+%{_libdir}/postgresql/sslinfo.so
+%{_datadir}/postgresql/extension/uuid-ossp*
+%{_libdir}/postgresql/uuid-ossp.so
+%{_datadir}/postgresql/extension/xml2*
+%{_libdir}/postgresql/pgxml.so
 
 %files server -f server.lst
 %{_bindir}/initdb
@@ -430,27 +432,29 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %{_bindir}/pg_createsubscriber
 
 %{_bindir}/postgres
-%dir %{_datadir}/pgsql
-%{_datadir}/pgsql/*.sample
-%dir %{_datadir}/pgsql/contrib
-%dir %{_datadir}/pgsql/extension
-%{_datadir}/pgsql/extension/plpgsql*
-%{_datadir}/pgsql/information_schema.sql
-%{_datadir}/pgsql/postgres.bki
-%{_datadir}/pgsql/snowball_create.sql
-%{_datadir}/pgsql/sql_features.txt
-%{_datadir}/pgsql/system_constraints.sql
-%{_datadir}/pgsql/system_functions.sql
-%{_datadir}/pgsql/system_views.sql
-%{_datadir}/pgsql/timezonesets/
-%{_datadir}/pgsql/tsearch_data/
-%dir %{_libdir}/pgsql
-%{_libdir}/pgsql/*_and_*.so
-%{_libdir}/pgsql/dict_snowball.so
-%{_libdir}/pgsql/euc2004_sjis2004.so
-%{_libdir}/pgsql/libpqwalreceiver.so
-%{_libdir}/pgsql/pgoutput.so
-%{_libdir}/pgsql/plpgsql.so
+%dir %{_datadir}/postgresql
+%{_datadir}/postgresql/*.sample
+%dir %{_datadir}/postgresql/contrib
+%dir %{_datadir}/postgresql/extension
+%{_datadir}/postgresql/extension/plpgsql*
+%{_datadir}/postgresql/information_schema.sql
+%{_datadir}/postgresql/postgres.bki
+%{_datadir}/postgresql/snowball_create.sql
+%{_datadir}/postgresql/sql_features.txt
+%{_datadir}/postgresql/system_constraints.sql
+%{_datadir}/postgresql/system_functions.sql
+%{_datadir}/postgresql/system_views.sql
+%{_datadir}/postgresql/timezonesets/
+%{_datadir}/postgresql/tsearch_data/
+%dir %{_libdir}/postgresql
+%{_libdir}/postgresql/*_and_*.so
+%{_libdir}/postgresql/dict_snowball.so
+%{_libdir}/postgresql/cyrillic.so
+%{_libdir}/postgresql/euc2004_sjis2004.so
+%{_libdir}/postgresql/libpqwalreceiver.so
+%{_libdir}/postgresql/pgoutput.so
+%{_libdir}/postgresql/pgrepack.so
+%{_libdir}/postgresql/plpgsql.so
 
 %attr(700,postgres,postgres) %dir %{?_localstatedir}/lib/pgsql
 %attr(644,postgres,postgres) %config(noreplace) %{?_localstatedir}/lib/pgsql/.bash_profile
@@ -459,26 +463,37 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %ghost %attr(755,postgres,postgres) %dir %{_rundir}/postgresql
 %config(noreplace) /etc/pam.d/postgresql
 %{_sysusersdir}/postgresql.conf
-%{_tmpfilesdir}/postgresql.conf
 %{_unitdir}/postgresql.service
 
-%files server-devel -f devel.lst
-%{_bindir}/pg_config
-%dir %{_datadir}/pgsql
-%{_datadir}/pgsql/errcodes.txt
-%dir %{_includedir}/pgsql
-%{_includedir}/pgsql/server
-%{_libdir}/pgsql/pgxs/
+%files server-devel
+%dir %{_datadir}/postgresql
+%{_datadir}/postgresql/errcodes.txt
+%dir %{_includedir}/postgresql
+%{_includedir}/postgresql/server
+%{_libdir}/postgresql/pgxs/
 
-%files devel
+%files devel -f devel.lst
+%{_bindir}/ecpg
+%{_includedir}/ecpg*.h
+%{_includedir}/pgtypes*.h
+%{_includedir}/sqlca.h
+%{_includedir}/sql3types.h
+%{_includedir}/sqlda*.h
+%{_includedir}/postgresql/informix/
+%{_libdir}/libecpg.so
+%{_libdir}/libecpg_compat.so
+%{_libdir}/libpgtypes.so
+%{_libdir}/pkgconfig/libecpg.pc
+%{_libdir}/pkgconfig/libecpg_compat.pc
+%{_libdir}/pkgconfig/libpgtypes.pc
 %{_bindir}/pg_config
 %{_includedir}/libpq-events.h
 %{_includedir}/libpq-fe.h
 %{_includedir}/postgres_ext.h
-%{_includedir}/pgsql/internal/*.h
-%{_includedir}/pgsql/internal/libpq/pqcomm.h
+%{_includedir}/postgresql/internal/*.h
+%{_includedir}/postgresql/internal/libpq/pqcomm.h
 
-%{_includedir}/pgsql/internal/libpq/protocol.h
+%{_includedir}/postgresql/internal/libpq/protocol.h
 
 %{_includedir}/libpq/*.h
 %{_libdir}/pkgconfig/libpq.pc
@@ -486,12 +501,12 @@ install -m0644 -D %{SOURCE6} %{buildroot}%{_unitdir}/postgresql.service
 %{_includedir}/pg_config*.h
 
 %files plpython3 -f plpython3.lst
-%{_datadir}/pgsql/extension/plpython3*
-%{_libdir}/pgsql/plpython3.so
+%{_datadir}/postgresql/extension/plpython3*
+%{_libdir}/postgresql/plpython3.so
 
 %if %{with test}
-%files test
-%attr(-,postgres,postgres) %{_libdir}/pgsql/test
+%files test -f test.lst
+%attr(-,postgres,postgres) %{_libdir}/postgresql/test
 %endif
 
 %changelog
