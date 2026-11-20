@@ -4,25 +4,20 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# TODO: better way to keep opendnssec and softhsm versions in sync
-%global opendnssec_ver 2.1.14
-
 Name:           softhsm
-Version:        2.6.1
+Version:        2.7.0
 Release:        %autorelease
 Summary:        Software version of a PKCS#11 Hardware Security Module
 License:        BSD-2-clause
 URL:            https://www.opendnssec.org/
 VCS:            git:https://github.com/softhsm/SoftHSMv2
-#!RemoteAsset:  sha256:61249473054bcd1811519ef9a989a880a7bdcc36d317c9c25457fc614df475f2
-Source0:        https://github.com/opendnssec/opendnssec/releases/download/%{opendnssec_ver}/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:be14a5820ec457eac5154462ffae51ba5d8a643f6760514d4b4b83a77be91573
+Source0:        https://github.com/softhsm/SoftHSMv2/archive/refs/tags/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:        softhsm.sysusers
 BuildSystem:    autotools
 
-# https://github.com/softhsm/SoftHSMv2/pull/633
-Patch0:         0001-fix-openssl3-tests.patch
-# https://github.com/softhsm/SoftHSMv2/pull/742
-Patch1:         0002-prevent-global-deleted-objects-access.patch
+# Backport https://github.com/softhsm/SoftHSMv2/pull/858 for OpenSSL 4 compatibility
+Patch0:         0001-fix-openssl4.patch
 
 BuildOption(conf):  --libdir=%{_libdir}/pkcs11
 BuildOption(conf):  --with-openssl=%{_prefix}
@@ -117,7 +112,6 @@ popd
 %{_datadir}/p11-kit/modules/softhsm2.module
 %attr(0750,ods,ods) %dir %{_sharedstatedir}/softhsm
 %attr(1770,ods,ods) %dir %{_sharedstatedir}/softhsm/tokens
-%doc LICENSE README.md NEWS
 %{_mandir}/*/*
 %{_sysusersdir}/%{name}.conf
 
@@ -126,4 +120,4 @@ popd
 %{_includedir}/softhsm/*.h
 
 %changelog
-%{?autochangelog}
+%autochangelog
