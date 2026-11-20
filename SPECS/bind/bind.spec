@@ -4,33 +4,30 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# For enable these, change to 1
-%bcond geoip2 0
+%bcond geoip2 1
 %bcond dnstap 0
-%bcond jemalloc 0
+%bcond jemalloc 1
 
 Name:           bind
-Version:        9.20.15
+Version:        9.20.31
 Release:        %autorelease
 Summary:        Domain Name System (DNS) Server
-License:        MPL-2.0
+License:        MPL-2.0 AND ISC AND MIT AND BSD-2-Clause AND BSD-3-Clause
 URL:            https://www.isc.org/bind/
 VCS:            git:https://gitlab.isc.org/isc-projects/bind9.git
-#!RemoteAsset:  sha256:d62b38fae48ba83fca6181112d0c71018d8b0f2ce285dc79dc6a0367722ccabb
+#!RemoteAsset:  sha256:9bfecd503ec79209d321053689c794da9f8dba993a24e9cd6bd7aa87cdf4122f
 Source0:        https://downloads.isc.org/isc/bind9/%{version}/%{name}-%{version}.tar.xz
-#!RemoteAsset:  sha256:2e9215f01c68734fd03b207dc1dd62fe32af79d02fe8182002529faaca6c9361
-Source1:        https://downloads.isc.org/isc/bind9/%{version}/%{name}-%{version}.tar.xz.asc
-Source2:        bind.sysusers
-Source3:        bind.tmpfiles
-Source4:        named.service
-Source5:        named.conf
-Source6:        127.0.0.zone
-Source7:        localhost.zone
-Source8:        localhost.ip6.zone
+Source1:        bind.sysusers
+Source2:        bind.tmpfiles
+Source3:        named.service
+Source4:        named.conf
+Source5:        127.0.0.zone
+Source6:        localhost.zone
+Source7:        localhost.ip6.zone
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
-BuildOption(conf):  --disable-rpath
+BuildOption(conf):  --with-gssapi
 BuildOption(conf):  --with-openssl
 BuildOption(conf):  --with-libidn2
 BuildOption(conf):  --with-json-c
@@ -38,32 +35,33 @@ BuildOption(conf):  --with-libxml2
 BuildOption(conf):  --with-lmdb
 %if %{with geoip2}
 BuildOption(conf):  --with-maxminddb
+%else
+BuildOption(conf):  --disable-geoip
 %endif
 %if %{with dnstap}
-BuildOption(conf):  --with-dnstap
+BuildOption(conf):  --enable-dnstap
 %endif
-%if %{without jemalloc}
+%if %{with jemalloc}
+BuildOption(conf):  --with-jemalloc
+%else
 BuildOption(conf):  --without-jemalloc
 %endif
 BuildOption(conf):  --enable-fixed-rrset
 BuildOption(conf):  --enable-full-report
-BuildOption(conf):  --with-tuning=large
 
-BuildRequires:  autoconf
-BuildRequires:  automake
-BuildRequires:  libtool
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(openssl)
 %if %{with jemalloc}
 BuildRequires:  pkgconfig(jemalloc)
 %endif
-BuildRequires:  pkgconfig(json)
+BuildRequires:  pkgconfig(json-c)
 BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(libidn2)
 %if %{with geoip2}
 BuildRequires:  pkgconfig(libmaxminddb)
 %endif
 %if %{with dnstap}
+BuildRequires:  protobuf-c-compiler
 BuildRequires:  pkgconfig(libfstrm)
 BuildRequires:  pkgconfig(libprotobuf-c)
 %endif
@@ -100,29 +98,26 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 This package contains full version of the header files and libraries
 required for developing applications with BIND.
 
-%conf -p
-autoreconf -fiv
-
 %install -a
 mkdir -p %{buildroot}%{_sysusersdir}
-install -m 644 %{SOURCE2} %{buildroot}%{_sysusersdir}/bind.conf
+install -m 644 %{SOURCE1} %{buildroot}%{_sysusersdir}/bind.conf
 
 mkdir -p %{buildroot}%{_tmpfilesdir}
-install -p -m 644 %{SOURCE3} %{buildroot}%{_tmpfilesdir}/bind.conf
+install -p -m 644 %{SOURCE2} %{buildroot}%{_tmpfilesdir}/bind.conf
 
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE4} %{buildroot}%{_unitdir}/named.service
+install -m 644 %{SOURCE3} %{buildroot}%{_unitdir}/named.service
 
 mkdir -p %{buildroot}%{_sysconfdir}
-install -m 640 %{SOURCE5} %{buildroot}%{_sysconfdir}/named.conf
+install -m 640 %{SOURCE4} %{buildroot}%{_sysconfdir}/named.conf
 mkdir -p %{buildroot}%{_localstatedir}/named
-install -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/named/127.0.0.zone
-install -m 644 %{SOURCE7} %{buildroot}%{_localstatedir}/named/localhost.zone
-install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
+install -m 644 %{SOURCE5} %{buildroot}%{_localstatedir}/named/127.0.0.zone
+install -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/named/localhost.zone
+install -m 644 %{SOURCE7} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 
 %pre
-%sysusers_create_package %{name} %{SOURCE2}
-%tmpfiles_create_package %{name} %{SOURCE3}
+%sysusers_create_package %{name} %{SOURCE1}
+%tmpfiles_create_package %{name} %{SOURCE2}
 
 %post
 %systemd_post named.service
@@ -134,6 +129,7 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %systemd_postun_with_restart named.service
 
 %files
+%license LICENSE COPYRIGHT
 %config(noreplace) %verify(not link) %{_sysconfdir}/named.conf
 %config(noreplace) %verify(not link) %{_localstatedir}/named/127.0.0.zone
 %config(noreplace) %verify(not link) %{_localstatedir}/named/localhost.zone
@@ -160,6 +156,7 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %{_mandir}/man8/filter-a.8*
 
 %files utils
+%license LICENSE COPYRIGHT
 %{_libdir}/libisccc-%{version}.so
 %{_libdir}/libns-%{version}.so
 %{_libdir}/libdns-%{version}.so
@@ -218,6 +215,7 @@ install -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
 %{_mandir}/man1/named-nzd2nzf.1*
 
 %files devel
+%license LICENSE COPYRIGHT
 %{_libdir}/libisccc.so
 %{_libdir}/libns.so
 %{_libdir}/libdns.so
