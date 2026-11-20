@@ -7,12 +7,12 @@
 %global srcname rfc3986
 
 Name:           python-%{srcname}
-Version:        1.5.0
+Version:        2.0.0
 Release:        %autorelease
 Summary:        A Python Implementation of RFC3986 including validations
 License:        Apache-2.0
 URL:            https://github.com/python-hyper/rfc3986
-#!RemoteAsset:  sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835
+#!RemoteAsset:  sha256:97aacf9dbd4bfd829baad6e6309fa6573aaf1be3f6fa735c8ab05e46cecb261c
 Source0:        https://files.pythonhosted.org/packages/source/r/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
