@@ -34,6 +34,7 @@ Patch2001:      2001-runtime-socket-directory.patch
 
 BuildOption(conf):  --auto-features=disabled
 BuildOption(conf):  -Drpath=false
+BuildOption(conf):  -Dliburing=enabled
 BuildOption(conf):  -Dldap=enabled
 BuildOption(conf):  -Dssl=openssl
 BuildOption(conf):  -Dpam=enabled
@@ -64,6 +65,7 @@ BuildOption(conf):  -Ddocs=disabled
 
 BuildRequires:  make
 BuildRequires:  meson
+BuildRequires:  pkgconfig(liburing)
 BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  glibc-devel
