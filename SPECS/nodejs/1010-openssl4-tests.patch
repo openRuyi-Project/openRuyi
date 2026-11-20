@@ -1,0 +1,90 @@
+From 77a4d7c2cb66abe704b30cb3bb997c6da6824419 Mon Sep 17 00:00:00 2001
+From: Filip Skokan <panva.ip@gmail.com>
+Date: Sat, 17 Oct 2026 17:10:16 +0000
+Subject: [PATCH] test: account for OpenSSL 4.x changes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Skip the client certificate and private key engine addon tests on
+OpenSSL 4, which no longer supports engines.
+
+Account for OpenSSL 4.1 no longer checking the subject CN by default in
+X509Certificate.checkHost(). Keep explicit subject matching and TLS CN
+fallback expectations unchanged.
+
+Signed-off-by: Filip Skokan <panva.ip@gmail.com>
+Assisted-by: Codex
+PR-URL: https://github.com/nodejs/node/pull/66775
+Reviewed-By: Richard Lau <richard.lau@ibm.com>
+Reviewed-By: Gürgün Dayıoğlu <hey@gurgun.day>
+Reviewed-By: Luigi Pinca <luigipinca@gmail.com>
+
+Upstream: https://github.com/nodejs/node/commit/c61ba86ed02dc0c80c51b9333d3fe9e3e4e2f887
+---
+ test/addons/openssl-client-cert-engine/test.js | 5 +++++
+ test/addons/openssl-key-engine/test.js         | 5 +++++
+ test/parallel/test-x509-escaping.js            | 7 +++----
+ 3 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/test/addons/openssl-client-cert-engine/test.js b/test/addons/openssl-client-cert-engine/test.js
+index 648600c..77fef53 100644
+--- a/test/addons/openssl-client-cert-engine/test.js
++++ b/test/addons/openssl-client-cert-engine/test.js
+@@ -5,6 +5,11 @@ const fixture = require('../../common/fixtures');
+ if (!common.hasCrypto)
+   common.skip('missing crypto');
+ 
++const { hasOpenSSL } = require('../../common/crypto');
++
++if (hasOpenSSL(4))
++  common.skip('OpenSSL 4 does not support engines');
++
+ const fs = require('fs');
+ const path = require('path');
+ 
+diff --git a/test/addons/openssl-key-engine/test.js b/test/addons/openssl-key-engine/test.js
+index 58885e4..187f95b 100644
+--- a/test/addons/openssl-key-engine/test.js
++++ b/test/addons/openssl-key-engine/test.js
+@@ -5,6 +5,11 @@ const fixture = require('../../common/fixtures');
+ if (!common.hasCrypto)
+   common.skip('missing crypto');
+ 
++const { hasOpenSSL } = require('../../common/crypto');
++
++if (hasOpenSSL(4))
++  common.skip('OpenSSL 4 does not support engines');
++
+ const fs = require('fs');
+ const path = require('path');
+ 
+diff --git a/test/parallel/test-x509-escaping.js b/test/parallel/test-x509-escaping.js
+index 4790114..daa51e2 100644
+--- a/test/parallel/test-x509-escaping.js
++++ b/test/parallel/test-x509-escaping.js
+@@ -472,7 +472,7 @@ const { hasOpenSSL, isBoringSSL } = require('../common/crypto');
+   })).unref();
+ }
+ 
+-// The subject MUST NOT be ignored if no dNSName subject alternative name
++// TLS MUST NOT ignore the subject if no dNSName subject alternative name
+ // exists, even if other subject alternative names exist.
+ {
+   const key = fixtures.readKey('irrelevant_san_correct_subject-key.pem');
+@@ -485,13 +485,12 @@ const { hasOpenSSL, isBoringSSL } = require('../common/crypto');
+   assert.strictEqual(certX509.subjectAltName, 'IP Address:1.2.3.4');
+ 
+   // The newer X509Certificate API allows customizing this behavior:
+-  const cnFallback = isBoringSSL ? undefined :
+-    servername;
++  const cnFallback = isBoringSSL || hasOpenSSL(4, 1) ? undefined : servername;
+   assert.strictEqual(certX509.checkHost(servername), cnFallback);
+   assert.strictEqual(certX509.checkHost(servername, { subject: 'default' }),
+                      cnFallback);
+   assert.strictEqual(certX509.checkHost(servername, { subject: 'always' }),
+-                     cnFallback);
++                     isBoringSSL ? undefined : servername);
+   assert.strictEqual(certX509.checkHost(servername, { subject: 'never' }),
+                      undefined);
+ 
