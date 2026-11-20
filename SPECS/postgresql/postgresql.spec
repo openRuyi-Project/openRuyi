@@ -52,6 +52,8 @@ BuildOption(conf):  -Dsystemd=enabled
 BuildOption(conf):  -Dlz4=enabled
 BuildOption(conf):  -Dzstd=enabled
 BuildOption(conf):  -Dicu=enabled
+BuildOption(conf):  -Dplperl=enabled
+BuildOption(conf):  -Dpltcl=enabled
 BuildOption(conf):  -Dplpython=enabled
 BuildOption(conf):  -DPYTHON=%{__python3}
 BuildOption(conf):  -Dreadline=enabled
@@ -68,6 +70,10 @@ BuildOption(conf):  -Ddocs=disabled
 BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  pkgconfig(numa)
+BuildRequires:  pkgconfig(tcl)
+BuildRequires:  perl-devel
+BuildRequires:  perl(Opcode)
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  pkgconfig(liburing)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(liblz4)
@@ -173,6 +179,24 @@ Provides:       postgresql(major) = %{majorversion}
 The postgresql-server-devel package contains the header files and configuration
 needed to compile PostgreSQL server extension.
 
+%package        plperl
+Summary:        Perl procedural languages for PostgreSQL
+Requires:       %{name}-server%{?_isa} = %{version}-%{release}
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%description    plperl
+PL/Perl and PL/PerlU let database functions use Perl. Install this package
+and create the required language extension in each database.
+
+%package        pltcl
+Summary:        Tcl procedural languages for PostgreSQL
+Requires:       %{name}-server%{?_isa} = %{version}-%{release}
+Requires:       tcl%{?_isa}
+
+%description    pltcl
+PL/Tcl and PL/TclU let database functions use Tcl. Install this package
+and create the required language extension in each database.
+
 %package        plpython3
 Summary:        The Python3 procedural language for PostgreSQL
 Requires:       %{name}-server%{?_isa} = %{version}-%{release}
@@ -257,6 +281,8 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/extension/*.example
     pg_waldump-%{majorversion} contrib.lst
 %find_lang pg_dump-%{majorversion} pg_upgrade-%{majorversion} pgscripts-%{majorversion} psql-%{majorversion} \
     libpq5-%{majorversion} ecpglib6-%{majorversion} main.lst
+%find_lang plperl-%{majorversion} plperl.lst
+%find_lang pltcl-%{majorversion} pltcl.lst
 %find_lang plpython-%{majorversion} plpython3.lst
 %if %{with test}
 %find_lang postgresql-regress-%{majorversion} test.lst
@@ -338,15 +364,16 @@ install -m0644 -D %{SOURCE5} %{buildroot}%{_unitdir}/postgresql.service
 %{_datadir}/postgresql/extension/earthdistance*
 %{_datadir}/postgresql/extension/file_fdw*
 %{_datadir}/postgresql/extension/fuzzystrmatch*
-%{_datadir}/postgresql/extension/hstore*
+%{_datadir}/postgresql/extension/hstore.control
+%{_datadir}/postgresql/extension/hstore--*.sql
 %{_datadir}/postgresql/extension/insert_username*
 %{_datadir}/postgresql/extension/intagg*
 %{_datadir}/postgresql/extension/intarray*
 %{_datadir}/postgresql/extension/isn*
-%{_datadir}/postgresql/extension/jsonb_plpython3u*
 %{_datadir}/postgresql/extension/lo*
 %{_datadir}/postgresql/extension/pg_logicalinspect*
-%{_datadir}/postgresql/extension/ltree*
+%{_datadir}/postgresql/extension/ltree.control
+%{_datadir}/postgresql/extension/ltree--*.sql
 %{_datadir}/postgresql/extension/moddatetime*
 %{_datadir}/postgresql/extension/pageinspect*
 %{_datadir}/postgresql/extension/pg_buffercache*
@@ -386,13 +413,10 @@ install -m0644 -D %{SOURCE5} %{buildroot}%{_unitdir}/postgresql.service
 %{_libdir}/postgresql/file_fdw.so
 %{_libdir}/postgresql/fuzzystrmatch.so
 %{_libdir}/postgresql/hstore.so
-%{_libdir}/postgresql/hstore_plpython3.so
 %{_libdir}/postgresql/insert_username.so
 %{_libdir}/postgresql/isn.so
-%{_libdir}/postgresql/jsonb_plpython3.so
 %{_libdir}/postgresql/lo.so
 %{_libdir}/postgresql/ltree.so
-%{_libdir}/postgresql/ltree_plpython3.so
 %{_libdir}/postgresql/pg_logicalinspect.so
 %{_libdir}/postgresql/pg_overexplain.so
 %{_libdir}/postgresql/pg_plan_advice.so
@@ -519,9 +543,32 @@ install -m0644 -D %{SOURCE5} %{buildroot}%{_unitdir}/postgresql.service
 %{_libdir}/libpq.so
 %{_includedir}/pg_config*.h
 
+%files plperl -f plperl.lst
+%license COPYRIGHT
+%{_datadir}/postgresql/extension/plperl*
+%{_libdir}/postgresql/plperl.so
+
+%{_datadir}/postgresql/extension/bool_plperl*
+%{_datadir}/postgresql/extension/hstore_plperl*
+%{_datadir}/postgresql/extension/jsonb_plperl*
+%{_libdir}/postgresql/bool_plperl.so
+%{_libdir}/postgresql/hstore_plperl.so
+%{_libdir}/postgresql/jsonb_plperl.so
+
+%files pltcl -f pltcl.lst
+%license COPYRIGHT
+%{_datadir}/postgresql/extension/pltcl*
+%{_libdir}/postgresql/pltcl.so
+
 %files plpython3 -f plpython3.lst
 %{_datadir}/postgresql/extension/plpython3*
 %{_libdir}/postgresql/plpython3.so
+%{_datadir}/postgresql/extension/hstore_plpython3u*
+%{_datadir}/postgresql/extension/jsonb_plpython3u*
+%{_datadir}/postgresql/extension/ltree_plpython3u*
+%{_libdir}/postgresql/hstore_plpython3.so
+%{_libdir}/postgresql/jsonb_plpython3.so
+%{_libdir}/postgresql/ltree_plpython3.so
 
 %if %{with test}
 %files test -f test.lst
