@@ -1,0 +1,41 @@
+diff --git a/ld/testsuite/ld-riscv-elf/pcgp-relax-01-norelaxgp.d b/ld/testsuite/ld-riscv-elf/pcgp-relax-01-norelaxgp.d
+index 9099641..3272f46 100644
+--- a/ld/testsuite/ld-riscv-elf/pcgp-relax-01-norelaxgp.d
++++ b/ld/testsuite/ld-riscv-elf/pcgp-relax-01-norelaxgp.d
+@@ -9,10 +9,10 @@
+ Disassembly of section \.text:
+ 
+ 0+[0-9a-f]+ <_start>:
+-.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a0,a0,[0-9]+
++.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a0,a0,[-]?[0-9]+
+ .*:[ 	]+[0-9a-f]+[ 	]+jal[ 	        ]+ra,[0-9a-f]+ <_start>
+ .*:[ 	]+[0-9a-f]+[ 	]+auipc[ 	]+a1,0x[0-9a-f]+
+-.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a1,a1,[0-9]+ # [0-9a-f]+ <data_g>
++.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a1,a1,[-]?[0-9]+ # [0-9a-f]+ <data_g>
+ .*:[ 	]+[0-9a-f]+[ 	]+lui[ 	        ]+a2,0x[0-9a-f]+
+ .*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a2,a2,[0-9]+ # [0-9a-f]+ <data_g>
+ .*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a3,tp,0 # 0 <data_t>
+diff --git a/ld/testsuite/ld-riscv-elf/pcgp-relax-01.d b/ld/testsuite/ld-riscv-elf/pcgp-relax-01.d
+index 5cc3a53..cc7f80b 100644
+--- a/ld/testsuite/ld-riscv-elf/pcgp-relax-01.d
++++ b/ld/testsuite/ld-riscv-elf/pcgp-relax-01.d
+@@ -9,7 +9,7 @@
+ Disassembly of section \.text:
+ 
+ 0+[0-9a-f]+ <_start>:
+-.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a0,a0,[0-9]+
++.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a0,a0,[-]?[0-9]+
+ .*:[ 	]+[0-9a-f]+[ 	]+jal[ 	]+ra,[0-9a-f]+ <_start>
+ .*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a1,gp,\-[0-9]+ # [0-9a-f]+ <data_g>
+ .*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a2,gp,\-[0-9]+ # [0-9a-f]+ <data_g>
+diff --git a/ld/testsuite/ld-riscv-elf/pcgp-relax-02.d b/ld/testsuite/ld-riscv-elf/pcgp-relax-02.d
+index 513a126..e586844 100644
+--- a/ld/testsuite/ld-riscv-elf/pcgp-relax-02.d
++++ b/ld/testsuite/ld-riscv-elf/pcgp-relax-02.d
+@@ -11,5 +11,5 @@ Disassembly of section .text:
+ [0-9a-f]+ <_start>:
+ .*:[ 	]+[0-9a-f]+[ 	]+auipc[ 	]+a1.*
+ .*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a0,gp.*<data_a>
+-.*:[ 	]+[0-9a-f]+[ 	]+addi[ 	]+a1,a1.*<data_b>
++.*:[ 	]+[0-9a-f]+[ 	]+(mv[ 	]+a1,a1|addi[ 	]+a1,a1,[-]?[0-9]+( # [0-9a-f]+ <data_b>)?)
+ #pass

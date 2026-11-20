@@ -1,0 +1,22 @@
+Index: glibc-2.27/localedata/locales/zh_TW
+===================================================================
+--- glibc-2.27.orig/localedata/locales/zh_TW
++++ glibc-2.27/localedata/locales/zh_TW
+@@ -8,7 +8,7 @@ escape_char /
+ % exempt you from the conditions of the license if your use would
+ % otherwise be governed by that license.
+ 
+-% Chinese language locale for Taiwan R.O.C.
++% Chinese language locale for Taiwan
+ %
+ % Original Author:
+ %    Ming-Che Chuang
+@@ -23,7 +23,7 @@ escape_char /
+ % Reference:	http://wwwold.dkuug.dk/JTC1/SC22/WG20/docs/n690.pdf
+ 
+ LC_IDENTIFICATION
+-title      "Chinese locale for Taiwan R.O.C."
++title      "Chinese locale for Taiwan"
+ source     ""
+ address    ""
+ contact    ""
