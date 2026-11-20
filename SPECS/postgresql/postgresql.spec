@@ -34,6 +34,7 @@ Patch2001:      2001-runtime-socket-directory.patch
 
 BuildOption(conf):  --auto-features=disabled
 BuildOption(conf):  -Drpath=false
+BuildOption(conf):  -Dlibnuma=enabled
 BuildOption(conf):  -Dliburing=enabled
 BuildOption(conf):  -Dlibcurl=enabled
 BuildOption(conf):  -Dldap=enabled
@@ -66,6 +67,7 @@ BuildOption(conf):  -Ddocs=disabled
 
 BuildRequires:  make
 BuildRequires:  meson
+BuildRequires:  pkgconfig(numa)
 BuildRequires:  pkgconfig(liburing)
 BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(liblz4)
