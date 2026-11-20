@@ -1,0 +1,117 @@
+From d89b78801ca1d5385fec275eb7c118a4a205c173 Mon Sep 17 00:00:00 2001
+From: Jakob Kummerow <jkummerow@chromium.org>
+Date: Tue, 10 Mar 2026 21:05:11 +0000
+Subject: [PATCH] [wasm] Fix walking WasmLiftoffSetupFrame
+
+It can happen that a Liftoff code object that just called its own
+frame setup has immediately afterwards been flushed due to memory
+pressure. In that case, we can't look it up by func index via the
+NativeModule (because that would return nullptr); instead we must
+look it up by contained PC address via the WasmCodeManager.
+
+Fixed: 490980546
+Change-Id: I448d6f35eaa9761cbfe1c852a273f240f782df84
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7653477
+Reviewed-by: Clemens Backes <clemensb@chromium.org>
+Commit-Queue: Jakob Kummerow <jkummerow@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#105744}
+
+Upstream: https://github.com/v8/v8/commit/dec5f6bdbe683eb74f7908310ac9a742d057181a
+Backport: Adjust file paths for Node.js.
+---
+ deps/v8/src/execution/arm/frame-constants-arm.h     | 1 +
+ deps/v8/src/execution/arm64/frame-constants-arm64.h | 3 +++
+ deps/v8/src/execution/frames.cc                     | 8 +++++++-
+ deps/v8/src/execution/frames.h                      | 1 +
+ deps/v8/src/execution/ia32/frame-constants-ia32.h   | 1 +
+ deps/v8/src/execution/x64/frame-constants-x64.h     | 1 +
+ 6 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/deps/v8/src/execution/arm/frame-constants-arm.h b/deps/v8/src/execution/arm/frame-constants-arm.h
+index b47f6c4..729ad6d 100644
+--- a/deps/v8/src/execution/arm/frame-constants-arm.h
++++ b/deps/v8/src/execution/arm/frame-constants-arm.h
+@@ -84,6 +84,7 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   //   r0, r2, r6: param1, param2, param3
+   //   lr (== r14): internal usage of the caller
+   // in the following FP-relative order: [lr, r6, r3, r2, r0].
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(2);
+ 
+diff --git a/deps/v8/src/execution/arm64/frame-constants-arm64.h b/deps/v8/src/execution/arm64/frame-constants-arm64.h
+index 15f49cd..3882805 100644
+--- a/deps/v8/src/execution/arm64/frame-constants-arm64.h
++++ b/deps/v8/src/execution/arm64/frame-constants-arm64.h
+@@ -93,6 +93,9 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   // The instance slot is in position '0', the first spill slot is at '1'.
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
++  // We then spill floating-point param regs and finally lr.
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(
++      kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs);
+ 
+   static constexpr int kParameterSpillsOffset[] = {
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(6), TYPED_FRAME_PUSHED_VALUE_OFFSET(5),
+diff --git a/deps/v8/src/execution/frames.cc b/deps/v8/src/execution/frames.cc
+index f587dd4..77cac43 100644
+--- a/deps/v8/src/execution/frames.cc
++++ b/deps/v8/src/execution/frames.cc
+@@ -4124,6 +4124,11 @@ FullObjectSlot WasmLiftoffSetupFrame::wasm_instance_data_slot() const {
+       sp() + WasmLiftoffSetupFrameConstants::kWasmInstanceDataOffset));
+ }
+ 
++Address WasmLiftoffSetupFrame::CallingPC() const {
++  return Memory<Address>(fp() +
++                         WasmLiftoffSetupFrameConstants::kCallingPCOffset);
++}
++
+ void WasmLiftoffSetupFrame::Iterate(RootVisitor* v) const {
+   FullObjectSlot spilled_instance_slot(&Memory<Address>(
+       fp() + WasmLiftoffSetupFrameConstants::kInstanceSpillOffset));
+@@ -4176,7 +4181,8 @@ void WasmLiftoffSetupFrame::Iterate(RootVisitor* v) const {
+   }
+ 
+   // Next we scan the slots of stack parameters.
+-  wasm::WasmCode* wasm_code = native_module->GetCode(func_index);
++  wasm::WasmCode* wasm_code =
++      wasm::GetWasmCodeManager()->LookupCode(isolate(), CallingPC());
+   uint32_t first_tagged_stack_slot = wasm_code->first_tagged_parameter_slot();
+   uint32_t num_tagged_stack_slots = wasm_code->num_tagged_parameter_slots();
+ 
+diff --git a/deps/v8/src/execution/frames.h b/deps/v8/src/execution/frames.h
+index 550fdde..eac8a4a 100644
+--- a/deps/v8/src/execution/frames.h
++++ b/deps/v8/src/execution/frames.h
+@@ -1595,6 +1595,7 @@ class WasmLiftoffSetupFrame : public TypedFrame {
+ 
+   FullObjectSlot wasm_instance_data_slot() const;
+ 
++  Address CallingPC() const;
+   int GetDeclaredFunctionIndex() const;
+ 
+   wasm::NativeModule* GetNativeModule() const;
+diff --git a/deps/v8/src/execution/ia32/frame-constants-ia32.h b/deps/v8/src/execution/ia32/frame-constants-ia32.h
+index 064d16f..5aaced4 100644
+--- a/deps/v8/src/execution/ia32/frame-constants-ia32.h
++++ b/deps/v8/src/execution/ia32/frame-constants-ia32.h
+@@ -47,6 +47,7 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   static constexpr int kNumberOfSavedFpParamRegs = 6;
+ 
+   // There's one spilled value (which doesn't need visiting) below the instance.
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(1);
+ 
+diff --git a/deps/v8/src/execution/x64/frame-constants-x64.h b/deps/v8/src/execution/x64/frame-constants-x64.h
+index 542e15f..584af0c 100644
+--- a/deps/v8/src/execution/x64/frame-constants-x64.h
++++ b/deps/v8/src/execution/x64/frame-constants-x64.h
+@@ -89,6 +89,7 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   static constexpr int kNumberOfSavedFpParamRegs = 6;
+ 
+   // There's one spilled value (which doesn't need visiting) below the instance.
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(1);
+ 

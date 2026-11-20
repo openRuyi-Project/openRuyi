@@ -1,0 +1,118 @@
+From 40817f02f58cb19e836fa7945961b1083fec62a2 Mon Sep 17 00:00:00 2001
+From: LuYahan <yahan@iscas.ac.cn>
+Date: Fri, 13 Mar 2026 15:28:21 +0000
+Subject: [PATCH] [riscv][wasm] Fix walking WasmLiftoffSetupFrame
+
+Port commit 42ae3ed711b2a9a4a78f33415dbdf1f1246dc3f8
+
+Bug: 490980546
+Change-Id: I40be9a8ce9b577dd12d880547315d3851dddf528
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7665010
+Reviewed-by: Ji Qiu <qiuji@iscas.ac.cn>
+Commit-Queue: Ji Qiu <qiuji@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#105800}
+
+Upstream: https://github.com/v8/v8/commit/86e1877043898d223b6ba57ace74c15e863bfa47
+Upstream: https://github.com/v8/v8/commit/9235e225af3555365398cd7d24b31a2efe51650f
+Backport: Combine both commits and prefix paths with deps/v8/.
+---
+ deps/v8/src/builtins/riscv/builtins-riscv.cc  | 19 ++++++++++++++-----
+ .../execution/riscv/frame-constants-riscv.h   | 13 +++++++++++--
+ 2 files changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/deps/v8/src/builtins/riscv/builtins-riscv.cc b/deps/v8/src/builtins/riscv/builtins-riscv.cc
+index ff81ed5..e4068bc 100644
+--- a/deps/v8/src/builtins/riscv/builtins-riscv.cc
++++ b/deps/v8/src/builtins/riscv/builtins-riscv.cc
+@@ -3119,13 +3119,14 @@ static void SaveVectorRegisters(MacroAssembler* masm,
+                                 const VRegList& reg_list) {
+   // Check if the machine has simd128 support. Otherwise, the
+   // vector registers might not exist and accessing them would SIGILL.
+-  Label done;
++  Label not_simd, done;
+ 
+   ASM_CODE_COMMENT(masm);
+   __ li(kScratchReg, ExternalReference::supports_wasm_simd_128_address());
+   __ Lb(kScratchReg, MemOperand(kScratchReg, 0));
+   // If != 0, then simd is available.
+-  __ Branch(&done, eq, kScratchReg, Operand(zero_reg), Label::Distance::kNear);
++  __ Branch(&not_simd, eq, kScratchReg, Operand(zero_reg),
++            Label::Distance::kNear);
+ 
+   // Since the builtins are compiled into a snapshot, we can't query the
+   // actual hardware vector length. This means that we are not allowed to use
+@@ -3136,7 +3137,9 @@ static void SaveVectorRegisters(MacroAssembler* masm,
+     __ SubWord(sp, sp, Operand(kSimd128Size));
+     __ vs(vector_reg, sp, 0, E8);
+   }
+-
++  __ Branch(&done);
++  __ bind(&not_simd);
++  __ SubWord(sp, sp, Operand(reg_list.Count() * kSimd128Size));
+   __ bind(&done);
+ }
+ 
+@@ -3144,12 +3147,13 @@ static void RestoreVectorRegisters(MacroAssembler* masm,
+                                    const VRegList& reg_list) {
+   // Check if the machine has simd128 support. Otherwise, the
+   // vector registers might not exist and accessing them would SIGILL.
+-  Label done;
++  Label not_simd, done;
+   ASM_CODE_COMMENT(masm);
+   __ li(kScratchReg, ExternalReference::supports_wasm_simd_128_address());
+   __ Lb(kScratchReg, MemOperand(kScratchReg, 0));
+   // If != 0, then simd is available.
+-  __ Branch(&done, eq, kScratchReg, Operand(zero_reg), Label::Distance::kNear);
++  __ Branch(&not_simd, eq, kScratchReg, Operand(zero_reg),
++            Label::Distance::kNear);
+ 
+   // Since the builtins are compiled into a snapshot, we can't query the
+   // actual hardware vector length. This means that we are not allowed to use
+@@ -3161,6 +3165,9 @@ static void RestoreVectorRegisters(MacroAssembler* masm,
+     __ AddWord(sp, sp, Operand(kSimd128Size));
+   }
+ 
++  __ Branch(&done);
++  __ bind(&not_simd);
++  __ AddWord(sp, sp, Operand(reg_list.Count() * kSimd128Size));
+   __ bind(&done);
+ }
+ 
+@@ -3169,6 +3176,8 @@ static void SaveWasmParams(MacroAssembler* masm) {
+   // overwritten in the subsequent runtime call. We don't have any
+   // callee-saved registers in Wasm, so no need to store anything else.
+   __ MultiPush(kSavedGpRegs);
++  static_assert(kSavedVectorRegs.Count() ==
++                WasmLiftoffSetupFrameConstants::kNumberOfSavedVpParamRegs);
+   SaveVectorRegisters(masm, kSavedVectorRegs);
+   __ MultiPushFPU(kSavedFpRegs);
+ }
+diff --git a/deps/v8/src/execution/riscv/frame-constants-riscv.h b/deps/v8/src/execution/riscv/frame-constants-riscv.h
+index 8916a6e..df221b8 100644
+--- a/deps/v8/src/execution/riscv/frame-constants-riscv.h
++++ b/deps/v8/src/execution/riscv/frame-constants-riscv.h
+@@ -35,13 +35,22 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   // linkage_location.h, issue: v8:14035) and resultant compilation errors.
+   static constexpr int kNumberOfSavedGpParamRegs = 6;
+   static constexpr int kNumberOfSavedFpParamRegs = 8;
+-  static constexpr int kNumberOfSavedAllParamRegs =
+-      kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs;
++  static constexpr int kNumberOfSavedVpParamRegs = 8;
++  static constexpr int kNumberOfSavedAllParamRegs = kNumberOfSavedGpParamRegs +
++                                                    kNumberOfSavedFpParamRegs +
++                                                    kNumberOfSavedVpParamRegs;
+ 
+   // The instance is pushed separately from the other saved parameters. It is
+   // the saved register closest to fp at index 0.
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
++  // We then spill floating-point/vector param regs and finally ra.
++  // Offset computation:
++  // 1 for the instance, and counting each 128bit vector reg as two slots.
++  static_assert(kSimd128Size == 2 * kSystemPointerSize);
++  static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(
++      1 + kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs +
++      kNumberOfSavedVpParamRegs * 2);
+ 
+   // The parameters are pushed onto the stack using MacroAssembler::MultiPush;
+   // see src/codegen/riscv/macro-assembler-riscv.cc. That means that the last
