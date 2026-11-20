@@ -111,6 +111,8 @@ Requires:       sqlite%{?_isa} >= 3.54.0
 1008-v8-arm64-frame-calling-pc.patch
 # Account for RISC-V parameter and vector slots; https://github.com/v8/v8/commit/9235e225af3555365398cd7d24b31a2efe51650f.
 1009-v8-riscv-frame-calling-pc.patch
+# Adjust test expectations for OpenSSL 4; https://github.com/nodejs/node/commit/c61ba86ed02dc0c80c51b9333d3fe9e3e4e2f887.
+1010-openssl4-tests.patch
 # Adapt the version test for zlib-ng compatibility; https://github.com/nodejs/node/blob/v26.12.0/test/parallel/test-process-versions.js.
 2002-zlib-ng-version-test.patch
 # Report unsupported Wasm SIMD as skipped; https://github.com/felixonmars/archriscv-packages/blob/2c56f9918e59cb5cfb7af860d2336785d0a36dea/nodejs/wasm-simd-skip.patch.
