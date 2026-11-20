@@ -1,0 +1,108 @@
+From 21a3a03d7b20cb0a0f6685b7899fbe317080b78c Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Wed, 19 Aug 2026 03:11:51 +0800
+Subject: [PATCH] exporter/coralogix: avoid resolver-specific error messages
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ exporter/coralogixexporter/logs_client_test.go     | 4 +++-
+ exporter/coralogixexporter/metrics_client_test.go  | 4 +++-
+ exporter/coralogixexporter/profiles_client_test.go | 4 +++-
+ exporter/coralogixexporter/traces_client_test.go   | 4 +++-
+ 4 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/exporter/coralogixexporter/logs_client_test.go b/exporter/coralogixexporter/logs_client_test.go
+index 6bc73ba..fc462ef 100644
+--- a/exporter/coralogixexporter/logs_client_test.go
++++ b/exporter/coralogixexporter/logs_client_test.go
+@@ -26,7 +26,9 @@ import (
+ 	"go.uber.org/zap/zapcore"
+ 	"go.uber.org/zap/zaptest/observer"
+ 	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
+ 	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
+ )
+ 
+ func TestNewLogsExporter(t *testing.T) {
+@@ -203,7 +205,7 @@ func TestLogsExporter_PushLogs_WhenCannotSend(t *testing.T) {
+ 			if tt.enabled {
+ 				assert.Contains(t, err.Error(), "rate limit exceeded")
+ 			} else {
+-				assert.Contains(t, err.Error(), "produced zero addresses")
++				assert.Equal(t, codes.Unavailable, status.Code(err))
+ 			}
+ 		})
+ 	}
+diff --git a/exporter/coralogixexporter/metrics_client_test.go b/exporter/coralogixexporter/metrics_client_test.go
+index eff5b7d..0a79b10 100644
+--- a/exporter/coralogixexporter/metrics_client_test.go
++++ b/exporter/coralogixexporter/metrics_client_test.go
+@@ -26,7 +26,9 @@ import (
+ 	"go.uber.org/zap/zapcore"
+ 	"go.uber.org/zap/zaptest/observer"
+ 	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
+ 	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
+ )
+ 
+ func TestNewMetricsExporter(t *testing.T) {
+@@ -216,7 +218,7 @@ func TestMetricsExporter_PushMetrics_WhenCannotSend(t *testing.T) {
+ 			if tt.enabled {
+ 				assert.Contains(t, err.Error(), "rate limit exceeded")
+ 			} else {
+-				assert.Contains(t, err.Error(), "produced zero addresses")
++				assert.Equal(t, codes.Unavailable, status.Code(err))
+ 			}
+ 		})
+ 	}
+diff --git a/exporter/coralogixexporter/profiles_client_test.go b/exporter/coralogixexporter/profiles_client_test.go
+index 4ff81e2..1fcbb29 100644
+--- a/exporter/coralogixexporter/profiles_client_test.go
++++ b/exporter/coralogixexporter/profiles_client_test.go
+@@ -26,7 +26,9 @@ import (
+ 	"go.uber.org/zap/zapcore"
+ 	"go.uber.org/zap/zaptest/observer"
+ 	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
+ 	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
+ )
+ 
+ func TestNewProfilesExporter(t *testing.T) {
+@@ -199,7 +201,7 @@ func TestProfilesExporter_PushProfiles_WhenCannotSend(t *testing.T) {
+ 			if tt.enabled {
+ 				assert.Contains(t, err.Error(), "rate limit exceeded")
+ 			} else {
+-				assert.Contains(t, err.Error(), "produced zero addresses")
++				assert.Equal(t, codes.Unavailable, status.Code(err))
+ 			}
+ 		})
+ 	}
+diff --git a/exporter/coralogixexporter/traces_client_test.go b/exporter/coralogixexporter/traces_client_test.go
+index ca563e5..1d5d6b5 100644
+--- a/exporter/coralogixexporter/traces_client_test.go
++++ b/exporter/coralogixexporter/traces_client_test.go
+@@ -26,7 +26,9 @@ import (
+ 	"go.uber.org/zap/zapcore"
+ 	"go.uber.org/zap/zaptest/observer"
+ 	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
+ 	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
+ 
+ 	"github.com/open-telemetry/opentelemetry-collector-contrib/exporter/coralogixexporter/internal/validation"
+ )
+@@ -205,7 +207,7 @@ func TestTracesExporter_PushTraces_WhenCannotSend(t *testing.T) {
+ 			if tt.configEnabled {
+ 				assert.Contains(t, err.Error(), "rate limit exceeded")
+ 			} else {
+-				assert.Contains(t, err.Error(), "produced zero addresses")
++				assert.Equal(t, codes.Unavailable, status.Code(err))
+ 			}
+ 		})
+ 	}
+-- 
+2.43.0
+
