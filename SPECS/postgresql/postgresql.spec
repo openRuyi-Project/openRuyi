@@ -35,6 +35,7 @@ Patch2001:      2001-runtime-socket-directory.patch
 BuildOption(conf):  --auto-features=disabled
 BuildOption(conf):  -Drpath=false
 BuildOption(conf):  -Dliburing=enabled
+BuildOption(conf):  -Dlibcurl=enabled
 BuildOption(conf):  -Dldap=enabled
 BuildOption(conf):  -Dssl=openssl
 BuildOption(conf):  -Dpam=enabled
@@ -66,6 +67,7 @@ BuildOption(conf):  -Ddocs=disabled
 BuildRequires:  make
 BuildRequires:  meson
 BuildRequires:  pkgconfig(liburing)
+BuildRequires:  pkgconfig(libcurl)
 BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  glibc-devel
@@ -108,6 +110,14 @@ Provides:       %{name}-libs = %{version}-%{release}
 PostgreSQL is an object-relational database management system.
 This package provides client programs and libraries for local and remote servers.
 The server and HTML manual are available in postgresql-server and postgresql-doc.
+
+%package        oauth
+Summary:        OAuth client authentication for PostgreSQL
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    oauth
+This module provides the OAuth device authorization flow for libpq clients.
+Install it when a PostgreSQL connection requires OAuth authentication.
 
 %package        devel
 Summary:        PostgreSQL development header files and libraries
@@ -473,6 +483,10 @@ install -m0644 -D %{SOURCE5} %{buildroot}%{_unitdir}/postgresql.service
 %dir %{_includedir}/postgresql
 %{_includedir}/postgresql/server
 %{_libdir}/postgresql/pgxs/
+
+%files oauth
+%license COPYRIGHT
+%{_libdir}/libpq-oauth.so
 
 %files devel -f devel.lst
 %{_bindir}/ecpg
