@@ -9,7 +9,7 @@ Name:           quota
 Version:        4.11
 Release:        %autorelease
 Summary:        Linux Diskquota system as part of the Linux kernel
-License:        GPL-2.0-only AND GPL-2.0-or-later
+License:        GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later
 URL:            https://sourceforge.net/projects/linuxquota/
 VCS:            git:https://git.code.sf.net/p/linuxquota/code
 #!RemoteAsset:  sha256:0a51b8f920254d8e83c34a4c3082b7d241f5d6fd65188afadf29859d5223ef78
@@ -18,9 +18,12 @@ Source1:        quota_nld.service
 Source2:        quota_nld.sysconfig
 Source3:        rpc-rquotad.service
 Source4:        rpc-rquotad.sysconfig
+#!RemoteAsset:  sha256:20e50fe7aae3e56378ebf0417d9de904f55a0e61e4df315333e632a4d3555d95
+Source5:        https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+Source6:        warnquota.conf
 BuildSystem:    autotools
 
-# Check the RPC port upper bound; https://src.fedoraproject.org/rpms/quota/blob/rawhide/f/quota-4.03-Validate-upper-bound-of-RPC-port.patch
+# Check the RPC port upper bound; https://src.fedoraproject.org/rpms/quota/blob/2e8eac20489e1836c5f43b58d5b909e7d0c70d42/f/quota-4.03-Validate-upper-bound-of-RPC-port.patch
 Patch2001:      2001-validate-rpc-port.patch
 
 BuildOption(conf):  --enable-bsd-behaviour
@@ -76,7 +79,11 @@ BuildArch:      noarch
 This package contains additional documentation for disk quotas concept in
 Linux/UNIX environment.
 
+%prep -a
+cp -p %{SOURCE5} lgpl-2.1.txt
+
 %install -a
+install -D -p -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/warnquota.conf
 install -D -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/quota_nld.service
 install -D -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/quota_nld
 install -D -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_unitdir}/rpc-rquotad.service
@@ -94,8 +101,8 @@ install -D -p -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rpc-rquo
 %systemd_postun_with_restart quota_nld.service rpc-rquotad.service
 
 %files
-%doc Changelog README.ldap-support README.mailserver
-%license COPYING
+%doc Changelog
+%license COPYING lgpl-2.1.txt
 %{_bindir}/*
 %{_unitdir}/*.service
 %config(noreplace) %{_sysconfdir}/quotatab
@@ -106,11 +113,12 @@ install -D -p -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/rpc-rquo
 %exclude %{_docdir}/%{name}
 
 %files devel
+%license COPYING
 %dir %{_includedir}/rpcsvc
 %{_includedir}/rpcsvc/rquota.*
 
 %files help
-%doc doc/* ldap-scripts
+%doc doc/* ldap-scripts README.ldap-support README.mailserver
 %{_mandir}/man*/*
 
 %changelog
