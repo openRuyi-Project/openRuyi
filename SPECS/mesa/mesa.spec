@@ -11,12 +11,12 @@
 
 Name:           mesa
 Summary:        The Mesa 3D graphics library
-Version:        26.3.0
+Version:        26.3.1
 Release:        %autorelease
 License:        MIT
 URL:            https://mesa3d.org/
 VCS:            git:https://gitlab.freedesktop.org/mesa/mesa
-#!RemoteAsset:  sha256:91d729aa68bb89e4ec857841300bbe922bcb3e52b1f97566ca83930d3b28343a
+#!RemoteAsset:  sha256:4e4e438eac7b840a9383988cbb7c08dad8041da544b9319fc26d319fa7348961
 Source:         https://archive.mesa3d.org/mesa-%{version}.tar.xz
 BuildSystem:    meson
 
