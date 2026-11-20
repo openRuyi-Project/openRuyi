@@ -1,0 +1,58 @@
+From 7e2aaf0db28ece85781128271aa9b85208e8f3c0 Mon Sep 17 00:00:00 2001
+From: Jakob Kummerow <jkummerow@chromium.org>
+Date: Thu, 12 Mar 2026 11:00:45 +0000
+Subject: [PATCH] [wasm][arm64] Really fix walking WasmLiftoffSetupFrame
+
+The recent fix crrev.com/c/7653477 wasn't entirely correct on arm64:
+it got the offset wrong, and it didn't account for pointer authentication.
+
+No-Tree-Checks: true
+Bug: 490980546
+Change-Id: I6745b7c69e4636b4cdb91fe3757f6fdca4b9cb15
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7660963
+Auto-Submit: Jakob Kummerow <jkummerow@chromium.org>
+Reviewed-by: Matthias Liedtke <mliedtke@chromium.org>
+Commit-Queue: Jakob Kummerow <jkummerow@chromium.org>
+Commit-Queue: Matthias Liedtke <mliedtke@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#105756}
+
+Upstream: https://github.com/v8/v8/commit/42ae3ed711b2a9a4a78f33415dbdf1f1246dc3f8
+Backport: Adjust file paths for Node.js.
+---
+ deps/v8/src/execution/arm64/frame-constants-arm64.h | 6 ++++--
+ deps/v8/src/execution/frames.cc                     | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/deps/v8/src/execution/arm64/frame-constants-arm64.h b/deps/v8/src/execution/arm64/frame-constants-arm64.h
+index 3882805..975df67 100644
+--- a/deps/v8/src/execution/arm64/frame-constants-arm64.h
++++ b/deps/v8/src/execution/arm64/frame-constants-arm64.h
+@@ -93,9 +93,11 @@ class WasmLiftoffSetupFrameConstants : public TypedFrameConstants {
+   // The instance slot is in position '0', the first spill slot is at '1'.
+   static constexpr int kInstanceSpillOffset =
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(0);
+-  // We then spill floating-point param regs and finally lr.
++  // We then spill floating-point param regs and finally lr. Offset computation:
++  // 1 for the instance, and counting each floating-point reg as two slots.
++  static_assert(kQRegSize == 2 * kSystemPointerSize);
+   static constexpr int kCallingPCOffset = TYPED_FRAME_PUSHED_VALUE_OFFSET(
+-      kNumberOfSavedGpParamRegs + kNumberOfSavedFpParamRegs);
++      1 + kNumberOfSavedGpParamRegs + 2 * kNumberOfSavedFpParamRegs);
+ 
+   static constexpr int kParameterSpillsOffset[] = {
+       TYPED_FRAME_PUSHED_VALUE_OFFSET(6), TYPED_FRAME_PUSHED_VALUE_OFFSET(5),
+diff --git a/deps/v8/src/execution/frames.cc b/deps/v8/src/execution/frames.cc
+index 77cac43..6d765c4 100644
+--- a/deps/v8/src/execution/frames.cc
++++ b/deps/v8/src/execution/frames.cc
+@@ -4125,8 +4125,8 @@ FullObjectSlot WasmLiftoffSetupFrame::wasm_instance_data_slot() const {
+ }
+ 
+ Address WasmLiftoffSetupFrame::CallingPC() const {
+-  return Memory<Address>(fp() +
+-                         WasmLiftoffSetupFrameConstants::kCallingPCOffset);
++  return ReadPC(reinterpret_cast<Address*>(
++      fp() + WasmLiftoffSetupFrameConstants::kCallingPCOffset));
+ }
+ 
+ void WasmLiftoffSetupFrame::Iterate(RootVisitor* v) const {
