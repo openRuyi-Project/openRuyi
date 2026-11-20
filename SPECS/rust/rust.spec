@@ -25,18 +25,17 @@
 # PKG_CONFIG_ALLOW_CROSS let pkg-config work in this
 # special "cross-compile" scenario.
 %global rust_env PKG_CONFIG_ALLOW_CROSS=1
-%global rust_env %{rust_env} RUSTONIG_SYSTEM_LIBONIG=1
 %global rust_env %{rust_env} LIBSSH2_SYS_USE_PKG_CONFIG=1
 %global rust_env %{rust_env} RUST_BACKTRACE=1
 
 Name:           rust
-Version:        1.97.1
+Version:        1.99.1
 Release:        %autorelease
 Summary:        Rust systems programming language
 License:        MIT AND Apache-2.0
 URL:            http://www.rust-lang.org/
 VCS:            git:https://github.com/rust-lang/rust.git
-#!RemoteAsset:  sha256:0ed06fdaffd4722a7702e0b4eebfafc897ab8f513e8e1b247cdd7e5c6df6ded2
+#!RemoteAsset:  sha256:6451598a99e77f07571960f6b21d577399d3a30f33e80cbd2e3a4aae6535d265
 Source0:        https://static.rust-lang.org/dist/rustc-%{version}-src.tar.xz
 Source1:        rust-openruyi.toml.in
 
@@ -53,20 +52,18 @@ BuildRequires:  compiler-rt
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(libcurl)
-BuildRequires:  pkgconfig(libgit2) >= 1.9.2
-BuildRequires:  pkgconfig(libgit2) < 1.10.0
+# Upstream requires libgit2 >= 1.9.6; when no matching system copy is
+# available the vendored one is used, so no libgit2 requirement here.
 BuildRequires:  pkgconfig(liblzma)
-BuildRequires:  pkgconfig(libpcre2-8)
 BuildRequires:  pkgconfig(libssh2)
-BuildRequires:  pkgconfig(oniguruma)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  python3
 BuildRequires:  findutils
 %if %{with rust_bin}
-BuildRequires:  rust-bin >= 1.96.0
+BuildRequires:  rust-bin >= 1.98.0
 %else
-BuildRequires:  rust >= 1.96.0
+BuildRequires:  rust >= 1.98.0
 %endif
 # For tests.
 BuildRequires:  git-core
@@ -104,7 +101,7 @@ rm -rf %{buildroot}/usr/share/doc/docs
 export %{rust_env}
 # Exclude this test due to our llvm has no arm target.
 ./x.py test --no-fail-fast --target %{rust_arch} --host %{rust_arch} \
-            --exclude tests/run-make/rustdoc-target-modifiers || :
+            --exclude tests/run-make/rustdoc/target-modifiers || :
 # Skip these 2 tests due to no network access.
 ./x.py test --no-fail-fast --target %{rust_arch} --host %{rust_arch} cargo \
             --test-args '--skip net_err_suggests_fetch_with_cli --skip publish_to_crates_io_warns' || :
