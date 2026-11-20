@@ -8,6 +8,7 @@
 # Show build output without waiting for a Make target to finish.
 %global _make_output_sync     %{nil}
 %global toolchain             clang
+%global build_ldflags         %{build_ldflags} -fuse-ld=lld
 %global _test_target          test-ci-js
 %global nodejs_major          26
 %global nodejs_minor          13
@@ -48,10 +49,10 @@ BuildOption(check):  CI_SKIP_TESTS=parallel/test-snapshot-reproducible
 
 BuildRequires:  chrpath
 BuildRequires:  clang >= 19.1
-BuildRequires:  rust >= 1.86
-BuildRequires:  cargo >= 1.86
+BuildRequires:  lld
 BuildRequires:  make >= 3.81
 BuildRequires:  ninja
+BuildRequires:  pkgconfig(absl_base)
 BuildRequires:  pkgconfig(ada)
 BuildRequires:  pkgconfig(openssl) >= 3.5.1
 BuildRequires:  pkgconfig(icu-i18n) >= 73
@@ -68,6 +69,7 @@ BuildRequires:  pkgconfig(libzstd)
 BuildRequires:  pkgconfig(simdjson)
 BuildRequires:  pkgconfig(sqlite3) >= 3.54.0
 BuildRequires:  pkgconfig(simdutf)
+BuildRequires:  pkgconfig(temporal_capi) >= 0.2.6
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  python-rpm-macros
 BuildRequires:  pkgconfig(python3)
@@ -167,10 +169,12 @@ rm -rf deps/v8/third_party/simdutf
 # Node.js uses GYP instead of GNU configure.
 %set_build_flags
 %{__python3} configure.py --prefix=%{_prefix} \
+           --use-prefix-to-find-headers \
            --verbose \
            --ninja \
            --shared \
            --libdir=%{_lib} \
+           --shared-abseil \
            --shared-ada \
            --shared-brotli \
            --shared-cares \
@@ -184,6 +188,7 @@ rm -rf deps/v8/third_party/simdutf
            --shared-simdjson \
            --shared-simdutf \
            --shared-sqlite \
+           --shared-temporal_capi \
            --shared-zlib \
            --shared-zstd \
            --with-intl=system-icu \
