@@ -165,6 +165,7 @@ Summary:        PostgreSQL development header files and libraries
 Requires:       pkgconfig(icu-uc)
 Requires:       pkgconfig(krb5)
 Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
+Provides:       postgresql(major) = %{majorversion}
 
 %description    server-devel
 The postgresql-server-devel package contains the header files and configuration
