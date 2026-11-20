@@ -27,6 +27,7 @@ Source7:        localhost.ip6.zone
 BuildSystem:    autotools
 
 BuildOption(conf):  --disable-static
+BuildOption(conf):  --with-cmocka
 BuildOption(conf):  --with-gssapi
 BuildOption(conf):  --with-openssl
 BuildOption(conf):  --with-libidn2
@@ -48,7 +49,10 @@ BuildOption(conf):  --without-jemalloc
 %endif
 BuildOption(conf):  --enable-fixed-rrset
 BuildOption(conf):  --enable-full-report
+# Bound lock benchmark iterations under the upstream test timeout.
+BuildOption(check):  ISC_BENCHMARK_LOOPS=10
 
+BuildRequires:  pkgconfig(cmocka) >= 1.1.3
 BuildRequires:  pkgconfig(libcap)
 BuildRequires:  pkgconfig(openssl)
 %if %{with jemalloc}
@@ -70,8 +74,16 @@ BuildRequires:  pkgconfig(liburcu)
 BuildRequires:  pkgconfig(libuv)
 BuildRequires:  pkgconfig(libxml-2.0)
 BuildRequires:  pkgconfig(lmdb)
+BuildRequires:  python3dist(cryptography)
 BuildRequires:  python3dist(dnspython)
-BuildRequires:  python3dist(pytest)
+BuildRequires:  python3dist(gssapi)
+BuildRequires:  python3dist(h2)
+BuildRequires:  python3dist(hypothesis) >= 4.41.2
+BuildRequires:  python3dist(jinja2) >= 3.0.0
+BuildRequires:  python3dist(pytest) >= 7
+BuildRequires:  python3dist(pytest-xdist)
+BuildRequires:  python3dist(pyyaml)
+BuildRequires:  python3dist(requests)
 
 %description
 BIND (Berkeley Internet Name Domain) is an implementation of the DNS
@@ -114,6 +126,12 @@ mkdir -p %{buildroot}%{_localstatedir}/named/data
 install -m 644 %{SOURCE5} %{buildroot}%{_localstatedir}/named/127.0.0.zone
 install -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/named/localhost.zone
 install -m 644 %{SOURCE7} %{buildroot}%{_localstatedir}/named/localhost.ip6.zone
+
+%check -a
+# Automake can report success when pytest exits before writing its results.
+for result in bin/tests/system/*.trs; do
+    grep -q '^:test-result: ' "$result" || exit 1
+done
 
 %pre
 %sysusers_create_package %{name} %{SOURCE1}
