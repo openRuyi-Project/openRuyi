@@ -15,6 +15,9 @@ VCS:            git:https://repo.or.cz/socat.git
 Source:         http://www.dest-unreach.org/socat/download/socat-%{version}.tar.gz
 BuildSystem:    autotools
 
+# https://github.com/openembedded/openembedded-core/commit/aa435ebaaf7446ec07a88586f2de4109e02a2d38
+Patch0:         0001-Fix-build-with-OpenSSL-4.0-use-ASN1_STRING-accessors.patch
+
 BuildOption(conf):  --enable-help
 BuildOption(conf):  --enable-stdio
 BuildOption(conf):  --enable-fdnum
@@ -80,4 +83,4 @@ cp -a %{buildroot}/%{_mandir}/man1/filan.1.gz %{buildroot}/%{_mandir}/man1/proca
 %{_docdir}/socat/*.sh
 
 %changelog
-%{?autochangelog}
+%autochangelog
