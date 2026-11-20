@@ -11,7 +11,7 @@
 %global _test_target          test-ci-js
 %global nodejs_major          26
 %global nodejs_minor          13
-%global nodejs_patch          0
+%global nodejs_patch          1
 %global nodejs_abi            %{nodejs_major}.%{nodejs_minor}
 %global nodejs_soversion      147
 %global nodejs_version        %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -33,7 +33,7 @@ Summary:        JavaScript runtime
 License:        Apache-2.0 AND Artistic-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BlueOak-1.0.0 AND CC-BY-3.0 AND CC0-1.0 AND ISC AND MIT AND Unicode-3.0
 URL:            https://nodejs.org/
 VCS:            git:https://github.com/nodejs/node
-#!RemoteAsset:  sha256:263f639ecfa7a17b49438d76cdbf9aff73179e3c7cb789da69b900718427fa2e
+#!RemoteAsset:  sha256:a7f6204ff63b6a2cd274d48903285abb86ed53a99070e532d4c2fd787457d9e6
 Source0:        https://nodejs.org/dist/v%{version}/node-v%{version}.tar.xz
 Source1:        nodejs_native.attr
 BuildSystem:    autotools
