@@ -1,7 +1,7 @@
 /* make sure that users that are in an admin group always authenticate with
  * their own password and don't get a choice. Users not in an admin group get
  * the full choice and may also authenticate as root */
-polkit._openruyi_admin_groups = [];
+polkit._openruyi_admin_groups = ["wheel"];
 polkit.addAdminRule(function(action, subject) {
 	var rules = ["unix-user:0"];
 	for (var i in polkit._openruyi_admin_groups) {
