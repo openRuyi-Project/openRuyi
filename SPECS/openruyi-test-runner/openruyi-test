@@ -1,0 +1,438 @@
+#!/usr/bin/python3
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+"""Discover and run installed package tests through a stable local interface."""
+
+import argparse
+import configparser
+import fnmatch
+import json
+import os
+import platform
+import re
+import shlex
+import signal
+import subprocess
+import sys
+import time
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+SCHEMA_VERSION = 1
+PACKAGE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.+-]*$")
+VALID_REQUIREMENTS = {"hardware", "network", "root"}
+
+
+class TestDefinitionError(ValueError):
+    """A packaged test definition is invalid."""
+
+
+@dataclass(frozen=True)
+class TestCase:
+    package: str
+    test_id: str
+    command: list
+    timeout: float
+    source: str
+    requirements: tuple = ()
+    working_directory: str = ""
+    default: bool = True
+
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def validate_package(package):
+    if not PACKAGE_NAME.fullmatch(package):
+        raise TestDefinitionError(f"invalid package name: {package!r}")
+    return package
+
+
+def prefixed(root, absolute_path):
+    return root / absolute_path.lstrip("/")
+
+
+def rewrite_staged_command(command, root):
+    """Map installed payload paths into a temporary RPM build root."""
+    if root == Path("/") or not command:
+        return command
+    command = list(command)
+    executable_index = 0
+    if command[0] == "/usr/bin/env":
+        executable_index = 1
+        while executable_index < len(command) and re.fullmatch(
+            r"[A-Za-z_][A-Za-z_0-9]*=.*", command[executable_index]
+        ):
+            key, value = command[executable_index].split("=", 1)
+            if value.startswith(("/usr/libexec/", "/usr/local/libexec/", "/opt/")):
+                command[executable_index] = f"{key}={prefixed(root, value)}"
+            executable_index += 1
+    if executable_index < len(command) and command[executable_index].startswith(
+        ("/usr/libexec/", "/usr/local/libexec/", "/opt/")
+    ):
+        command[executable_index] = str(prefixed(root, command[executable_index]))
+    return command
+
+
+def load_installed_tests(package, root, default_timeout):
+    directory = prefixed(root, f"/usr/share/installed-tests/{package}")
+    if not directory.is_dir():
+        return []
+    cases = []
+    for descriptor in sorted(directory.glob("*.test")):
+        parser = configparser.ConfigParser(interpolation=None, strict=True)
+        try:
+            with descriptor.open(encoding="utf-8") as stream:
+                parser.read_file(stream)
+        except (OSError, configparser.Error) as error:
+            raise TestDefinitionError(f"cannot parse {descriptor}: {error}") from error
+        if not parser.has_section("Test") or not parser.has_option("Test", "Exec"):
+            raise TestDefinitionError(f"{descriptor}: missing [Test] Exec")
+        test_type = parser.get("Test", "Type", fallback="session")
+        if test_type != "session":
+            raise TestDefinitionError(f"{descriptor}: unsupported Type={test_type!r}")
+        try:
+            command = shlex.split(parser.get("Test", "Exec"))
+        except ValueError as error:
+            raise TestDefinitionError(f"{descriptor}: invalid Exec: {error}") from error
+        if not command:
+            raise TestDefinitionError(f"{descriptor}: empty Exec")
+        timeout = parser.getfloat("Test", "Timeout", fallback=default_timeout)
+        cases.append(TestCase(
+            package=package,
+            test_id=descriptor.stem,
+            command=rewrite_staged_command(command, root),
+            timeout=timeout,
+            source=str(descriptor),
+        ))
+    return cases
+
+
+def load_manifest_tests(package, root, default_timeout):
+    path = prefixed(root, f"/usr/share/openruyi-tests/v1/{package}.json")
+    if not path.is_file():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise TestDefinitionError(f"cannot parse {path}: {error}") from error
+    if payload.get("schema_version") != SCHEMA_VERSION or payload.get("package") != package:
+        raise TestDefinitionError(f"{path}: schema version or package identity mismatch")
+    definitions = payload.get("tests")
+    if not isinstance(definitions, list):
+        raise TestDefinitionError(f"{path}: tests must be a list")
+    cases = []
+    for index, definition in enumerate(definitions):
+        if not isinstance(definition, dict):
+            raise TestDefinitionError(f"{path}: tests[{index}] must be an object")
+        test_id = definition.get("id")
+        command = definition.get("command")
+        if not isinstance(test_id, str) or not test_id or not PACKAGE_NAME.fullmatch(test_id):
+            raise TestDefinitionError(f"{path}: tests[{index}].id is invalid")
+        if (not isinstance(command, list) or not command
+                or any(not isinstance(item, str) or not item for item in command)):
+            raise TestDefinitionError(f"{path}: tests[{index}].command must be a string array")
+        requirements = tuple(sorted(set(definition.get("requirements", []))))
+        invalid = set(requirements) - VALID_REQUIREMENTS
+        if invalid:
+            raise TestDefinitionError(
+                f"{path}: tests[{index}] has invalid requirements: {', '.join(sorted(invalid))}"
+            )
+        timeout = definition.get("timeout", default_timeout)
+        if not isinstance(timeout, (int, float)) or timeout <= 0:
+            raise TestDefinitionError(f"{path}: tests[{index}].timeout must be positive")
+        working_directory = definition.get("working_directory", "")
+        if not isinstance(working_directory, str):
+            raise TestDefinitionError(f"{path}: tests[{index}].working_directory must be a string")
+        default = definition.get("default", True)
+        if not isinstance(default, bool):
+            raise TestDefinitionError(f"{path}: tests[{index}].default must be a boolean")
+        cases.append(TestCase(
+            package=package,
+            test_id=test_id,
+            command=rewrite_staged_command(command, root),
+            timeout=float(timeout),
+            source=str(path),
+            requirements=requirements,
+            working_directory=working_directory,
+            default=default,
+        ))
+    return cases
+
+
+def discover(package, root, default_timeout):
+    validate_package(package)
+    cases = load_installed_tests(package, root, default_timeout)
+    cases.extend(load_manifest_tests(package, root, default_timeout))
+    seen = set()
+    duplicates = []
+    for case in cases:
+        if case.test_id in seen:
+            duplicates.append(case.test_id)
+        seen.add(case.test_id)
+    if duplicates:
+        raise TestDefinitionError(
+            f"{package}: duplicate test IDs: {', '.join(sorted(set(duplicates)))}"
+        )
+    return sorted(cases, key=lambda case: case.test_id)
+
+
+def default_log_directory(package):
+    state_home = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state"))
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return state_home / "openruyi-tests" / package / f"{stamp}-{os.getpid()}"
+
+
+def selected_cases(cases, requested, patterns):
+    known = {case.test_id: case for case in cases}
+    missing = sorted(set(requested) - set(known))
+    if missing:
+        raise TestDefinitionError(f"unknown test IDs: {', '.join(missing)}")
+    selected = [case for case in cases if not requested or case.test_id in requested]
+    if patterns:
+        selected = [case for case in selected
+                    if any(fnmatch.fnmatchcase(case.test_id, pattern) for pattern in patterns)]
+    return selected
+
+
+def stop_process(process):
+    try:
+        os.killpg(process.pid, signal.SIGTERM)
+        process.wait(timeout=2)
+    except (ProcessLookupError, subprocess.TimeoutExpired):
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait()
+
+
+def run_case(case, log_directory, allowed_requirements):
+    result = {
+        "id": case.test_id,
+        "command": case.command,
+        "source": case.source,
+        "requirements": list(case.requirements),
+        "started_at_utc": utc_now(),
+    }
+    denied = sorted(set(case.requirements) - allowed_requirements)
+    if "root" in case.requirements and os.geteuid() != 0:
+        denied = sorted(set(denied) | {"root"})
+    if denied:
+        result.update({
+            "status": "skip",
+            "reason": "requirements not allowed: " + ", ".join(denied),
+            "exit_code": None,
+            "duration_seconds": 0.0,
+            "finished_at_utc": utc_now(),
+        })
+        return result
+
+    stdout_path = log_directory / f"{case.test_id}.stdout.log"
+    stderr_path = log_directory / f"{case.test_id}.stderr.log"
+    if case.working_directory:
+        working_directory = Path(case.working_directory)
+    else:
+        working_directory = log_directory / f"{case.test_id}.work"
+        working_directory.mkdir()
+    result.update({
+        "stdout_log": str(stdout_path),
+        "stderr_log": str(stderr_path),
+        "working_directory": str(working_directory),
+    })
+    started = time.monotonic()
+    try:
+        with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
+            process = subprocess.Popen(
+                case.command,
+                cwd=working_directory,
+                stdout=stdout,
+                stderr=stderr,
+                start_new_session=True,
+            )
+            try:
+                exit_code = process.wait(timeout=case.timeout)
+                status = "pass" if exit_code == 0 else "skip" if exit_code == 77 else "fail"
+                reason = ""
+            except subprocess.TimeoutExpired:
+                stop_process(process)
+                exit_code = None
+                status = "timeout"
+                reason = f"exceeded {case.timeout:g} seconds"
+    except OSError as error:
+        exit_code = None
+        status = "error"
+        reason = str(error)
+    result.update({
+        "status": status,
+        "reason": reason,
+        "exit_code": exit_code,
+        "duration_seconds": round(time.monotonic() - started, 6),
+        "finished_at_utc": utc_now(),
+    })
+    return result
+
+
+def command_list(args):
+    if not args.package:
+        packages = installed_packages(args.root)
+        print(json.dumps({"schema_version": SCHEMA_VERSION, "packages": packages}, indent=2)
+              if args.json else "\n".join(packages))
+        return 0
+    cases = discover(args.package, args.root, args.timeout)
+    if args.json:
+        print(json.dumps({
+            "schema_version": SCHEMA_VERSION,
+            "package": args.package,
+            "tests": [asdict(case) for case in cases],
+        }, ensure_ascii=False, indent=2))
+    else:
+        for case in cases:
+            requirements = ",".join(case.requirements) or "none"
+            print(f"{case.test_id}\ttimeout={case.timeout:g}\tdefault={str(case.default).lower()}\trequires={requirements}\t{case.source}")
+    return 0 if cases else 2
+
+
+def installed_packages(root):
+    descriptors = prefixed(root, "/usr/share/installed-tests")
+    manifests = prefixed(root, "/usr/share/openruyi-tests/v1")
+    names = {path.name for path in descriptors.glob("*") if path.is_dir() and any(path.glob("*.test"))}
+    names.update(path.stem for path in manifests.glob("*.json"))
+    return sorted(name for name in names if PACKAGE_NAME.fullmatch(name))
+
+
+def environment_info(package, cases):
+    def query(*arguments):
+        try:
+            return subprocess.check_output(["rpm", *arguments], text=True, stderr=subprocess.DEVNULL, timeout=15).strip()
+        except (OSError, subprocess.SubprocessError):
+            return "unknown"
+    os_release = {}
+    path = Path("/etc/os-release")
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            if "=" in line and not line.startswith("#"):
+                key, value = line.split("=", 1)
+                os_release[key] = value.strip('"')
+    return {
+        "package_nevra": query("-q", "--qf", "%{NEVRA}", package),
+        "test_package_nevra": query("-qf", "--qf", "%{NEVRA}", cases[0].source) if cases else "unknown",
+        "distribution": os_release,
+        "openruyi_version": os_release.get("VERSION_ID", "unknown") if os_release.get("ID") == "openruyi" else "not-applicable",
+        "cpu_architecture": query("--eval", "%{_arch}"),
+        "kernel_machine": platform.machine(),
+        "kernel_release": platform.release(),
+        "uid": os.geteuid(),
+    }
+
+
+def command_info(args):
+    cases = discover(args.package, args.root, args.timeout)
+    print(json.dumps({"schema_version": SCHEMA_VERSION, "package": args.package,
+                      "environment": environment_info(args.package, cases),
+                      "tests": [asdict(case) for case in cases]}, ensure_ascii=False, indent=2))
+    return 0 if cases else 2
+
+
+def command_run(args):
+    cases = discover(args.package, args.root, args.timeout)
+    explicitly_selected = bool(args.test or args.match or getattr(args, "filter", None)
+                               or getattr(args, "all", False))
+    excluded_from_default = ([] if explicitly_selected else
+                             [case.test_id for case in cases if not case.default])
+    cases = selected_cases(cases, args.test, args.match)
+    if not cases:
+        raise TestDefinitionError(f"{args.package}: no tests selected")
+    if getattr(args, "filter", None):
+        cases = [case for case in cases if args.filter in case.test_id]
+        if not cases:
+            raise TestDefinitionError(f"{args.package}: filter selected no tests")
+    if not explicitly_selected:
+        cases = [case for case in cases if case.default]
+        if not cases:
+            raise TestDefinitionError(f"{args.package}: no default tests; select one explicitly")
+    log_directory = (args.log_dir or default_log_directory(args.package)).resolve()
+    log_directory.mkdir(parents=True, exist_ok=False)
+    started = utc_now()
+    results = []
+    for case in cases:
+        print(f"RUN  {case.test_id}", flush=True)
+        result = run_case(case, log_directory, set(args.allow))
+        results.append(result)
+        print(f"{result['status'].upper():7} {case.test_id}", flush=True)
+    counts = {status: sum(result["status"] == status for result in results)
+              for status in ("pass", "fail", "skip", "timeout", "error")}
+    exit_code = (1 if counts["fail"] or counts["timeout"] else
+                 77 if counts["error"] or not counts["pass"] else 0)
+    report = {
+        "schema_version": SCHEMA_VERSION,
+        "package": args.package,
+        "started_at_utc": started,
+        "finished_at_utc": utc_now(),
+        "log_directory": str(log_directory),
+        "counts": counts,
+        "results": results,
+        "environment": environment_info(args.package, cases),
+        "execution_command": sys.argv,
+        "allowed_requirements": args.allow,
+        "excluded_from_default": excluded_from_default,
+        "exit_code": exit_code,
+    }
+    report_path = log_directory / "results.json"
+    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print("SUMMARY " + " ".join(f"{key}={value}" for key, value in counts.items()))
+    print(f"RESULTS {report_path}")
+    return exit_code
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(prog="openruyi-test")
+    parser.add_argument(
+        "--root", type=Path, default=Path(os.environ.get("OPENRUYI_TEST_ROOT", "/")),
+        help="alternate installed root used for staged payload validation",
+    )
+    parser.add_argument("--timeout", type=float, default=300,
+                        help="default per-test timeout in seconds")
+    subparsers = parser.add_subparsers(dest="action", required=True)
+
+    list_parser = subparsers.add_parser("list", help="list packaged tests")
+    list_parser.add_argument("package", nargs="?")
+    list_parser.add_argument("--json", action="store_true")
+    list_parser.set_defaults(handler=command_list)
+
+    info_parser = subparsers.add_parser("info", help="show package, environment and test metadata")
+    info_parser.add_argument("package")
+    info_parser.set_defaults(handler=command_info)
+
+    run_parser = subparsers.add_parser("run", help="run packaged tests")
+    run_parser.add_argument("package")
+    run_parser.add_argument("--test", action="append", default=[], help="exact test ID; repeatable")
+    run_parser.add_argument("--match", action="append", default=[], help="shell-style ID pattern")
+    run_parser.add_argument("--filter", help="select test IDs containing this name")
+    run_parser.add_argument("--all", action="store_true", help="include tests excluded from the default set")
+    run_parser.add_argument("--log-dir", "--output", dest="log_dir", type=Path)
+    run_parser.add_argument("--allow", action="append", default=[], choices=sorted(VALID_REQUIREMENTS),
+                            help="allow tests with this environment requirement")
+    run_parser.set_defaults(handler=command_run)
+    return parser
+
+
+def main(argv=None):
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.timeout <= 0:
+        parser.error("--timeout must be positive")
+    try:
+        return args.handler(args)
+    except TestDefinitionError as error:
+        print(f"openruyi-test: {error}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
