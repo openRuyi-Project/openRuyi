@@ -22,6 +22,7 @@ BuildOption(conf):  -Donnxruntime_ENABLE_PYTHON=ON
 BuildOption(conf):  -Donnxruntime_ENABLE_ABSEIL=ON
 BuildOption(conf):  -Donnxruntime_ENABLE_ABSEIL=ON
 BuildOption(conf):  -Donnxruntime_USE_FULL_PROTOBUF=ON
+BuildOption(conf):  -DCMAKE_CXX_STANDARD_LIBRARIES="-labsl_throw_delegate"
 BuildOption(conf):  -Donnxruntime_USE_NEURAL_SPEED=OFF
 BuildOption(conf):  -Donnxruntime_USE_PREINSTALLED_EIGEN=ON
 BuildOption(conf):  -Deigen_SOURCE_PATH=%{_includedir}/eigen3
@@ -31,7 +32,7 @@ BuildOption(conf):  -DCMAKE_INSTALL_INCLUDEDIR=include
 BuildOption(conf):  -Donnxruntime_ENABLE_CPUINFO=ON
 BuildOption(conf):  -Donnxruntime_INSTALL_UNIT_TESTS=OFF
 # FIXME: Avoid build failures with gcc >= 15.
-BuildOption(conf):  -DCMAKE_CXX_FLAGS="-Wno-error=uninitialized -Wno-error=sfinae-incomplete -Wno-error=maybe-uninitialized"
+BuildOption(conf):  -DCMAKE_CXX_FLAGS="-Wno-error=uninitialized -Wno-error=sfinae-incomplete -Wno-error=maybe-uninitialized -Wno-error=unused-variable -Wno-error=unused-result -Wno-error=deprecated-declarations"
 BuildOption(conf):  -DCMAKE_C_FLAGS="-Wno-error=uninitialized"
 
 BuildRequires:  cmake
