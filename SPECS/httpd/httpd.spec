@@ -15,14 +15,14 @@
 %define mmnisa %{mmn}%{__isa_name}%{__isa_bits}
 
 Name:           httpd
-Version:        2.4.68
+Version:        2.4.71
 Release:        %autorelease
 Summary:        Apache HTTP Server
 License:        Apache-2.0
 URL:            https://httpd.apache.org/
 VCS:            git:https://github.com/apache/httpd.git
-#!RemoteAsset:  sha256:68c74d4df38c26bed4dfbdb8f3baf1eb532f3872357becc1bba5d136f6b63c06
-Source0:        https://www.apache.org/dist/httpd/httpd-%{version}.tar.bz2
+#!RemoteAsset:  sha256:2bc5da5a33c247341de082717d4ebcb5cb49e8b73a05b7fddf7d5d6dc2f8de62
+Source0:        https://archive.apache.org/dist/httpd/httpd-%{version}.tar.bz2
 Source1:        config.layout
 Source2:        httpd.sysusers
 Source3:        httpd.tmpfiles
@@ -79,7 +79,6 @@ BuildOption(conf):  --enable-http2
 BuildOption(conf):  --disable-imagemap
 BuildOption(conf):  --disable-file-cache
 BuildOption(conf):  --disable-md
-BuildOption(install):  DESTDIR=%{buildroot}
 
 BuildRequires:  gcc
 BuildRequires:  autoconf
@@ -111,12 +110,16 @@ BuildRequires:  systemd-rpm-macros
 # Add after we have
 # Requires:       /etc/mime.types
 
+Requires:       apr-util-ldap
+
 Provides:       webserver
 Provides:       mod_dav = %{version}-%{release}
 Provides:       httpd-suexec = %{version}-%{release}
 Provides:       httpd-mmn = %{mmn}
 Provides:       httpd-mmn = %{mmnisa}
-%{?systemd_requires}
+Requires(pre):  systemd-sysusers
+Requires(pre):  systemd
+%systemd_requires
 
 %description
 The Apache HTTP Server Project is an effort to develop and maintain an
@@ -126,7 +129,7 @@ extensible server that provides HTTP services in sync with the current
 HTTP standards.
 
 %package        devel
-Summary:        Development interfaces for the Apache HTTP server.
+Summary:        Development interfaces for the Apache HTTP server
 Requires:       pkgconfig(apr-1) >= 1.5.0
 Requires:       pkgconfig(apr-util-1) >= 1.5.0
 Requires:       libtool
@@ -149,7 +152,7 @@ The httpd-tools package contains tools which can be used with
 the Apache HTTP Server.
 
 %prep -a
-cat %{_sourcedir}/config.layout >> config.layout
+cat %{SOURCE1} >> config.layout
 
 # set default user
 sed -e "s#User daemon#User %{suexec_caller}#" \
@@ -161,19 +164,16 @@ sed -i '/suexec/s,setcap ,echo Skipping setcap for ,' Makefile.in
 
 %install -a
 # Install systemd service files
-mkdir -p %{buildroot}%{_unitdir}
-install -p -m644 %{_sourcedir}/httpd.service %{buildroot}%{_unitdir}/httpd.service
+install -D -p -m644 %{SOURCE5} %{buildroot}%{_unitdir}/httpd.service
 
-# Fix content dir in sysusers file and install it
-install -p -D -m 0644 %{_sourcedir}/httpd.sysusers %{buildroot}%{_sysusersdir}/httpd.conf
+# Install the service account definition
+install -p -D -m 0644 %{SOURCE2} %{buildroot}%{_sysusersdir}/httpd.conf
 
 # tmpfiles.d configuration
-mkdir -p  %{buildroot}%{_prefix}/lib/tmpfiles.d
-install -m 644 -p %{_sourcedir}/httpd.tmpfiles %{buildroot}%{_prefix}/lib/tmpfiles.d/httpd.conf
+install -D -m 644 -p %{SOURCE3} %{buildroot}%{_tmpfilesdir}/httpd.conf
 
 # Install logrotate config
-mkdir -p %{buildroot}/etc/logrotate.d
-install -m 644 -p %{_sourcedir}/httpd.logrotate %{buildroot}/etc/logrotate.d/httpd
+install -D -m 644 -p %{SOURCE4} %{buildroot}%{_sysconfdir}/logrotate.d/httpd
 
 mkdir -p %{buildroot}%{_localstatedir}/log/httpd \
          %{buildroot}%{_localstatedir}/lib/httpd
@@ -204,38 +204,31 @@ ln -s /run/httpd %{buildroot}/etc/httpd/run
 
 mkdir -p %{buildroot}%{_sysconfdir}/httpd/conf.d
 
-cat %{buildroot}%{_sysconfdir}/httpd/conf/httpd.conf
-# set sane defaults
 sed -e 's#/usr/lib/httpd/modules/#modules/#' \
     -e 's|#\(LoadModule negotiation_module \)|\1|' \
     -e 's|#\(LoadModule include_module \)|\1|' \
-    -e 's|#\(LoadModule userdir_module \)|\1|' \
     -e 's|#\(LoadModule slotmem_shm_module \)|\1|' \
     -e 's|#\(Include conf/extra/httpd-multilang-errordoc.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-autoindex.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-languages.conf\)|\1|' \
-    -e 's|#\(Include conf/extra/httpd-userdir.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-default.conf\)|\1|' \
     -e 's|#\(Include conf/extra/httpd-mpm.conf\)|\1|' \
     -i "%{buildroot}%{_sysconfdir}/httpd/conf/httpd.conf"
 
-# allow optional drop-in conf files for local configuration
 echo "IncludeOptional conf.d/*.conf" >> %{buildroot}%{_sysconfdir}/httpd/conf/httpd.conf
-
-ls -al %{buildroot}%{_sysconfdir}/httpd/conf/extra/
-cat %{buildroot}%{_sysconfdir}/httpd/conf/httpd.conf
 
 rm -rf %{buildroot}/etc/httpd/conf/original \
        %{buildroot}%{_libdir}/httpd/build/config.nice \
        %{buildroot}%{_libdir}/httpd/modules/*.exp \
        %{buildroot}%{docroot}/html/*.html \
-       %{buildroot}%{docroot}/cgi-bin/* \
+       %{buildroot}%{docroot}/cgi-bin/*
 
-# No tests
 %check
+# The upstream integration suite requires an installed server.
 
 %pre
 %sysusers_create_package %{name} %{SOURCE2}
+%tmpfiles_create_package %{name} %{SOURCE3}
 
 %post
 %systemd_post httpd.service
@@ -247,9 +240,9 @@ rm -rf %{buildroot}/etc/httpd/conf/original \
 %systemd_postun httpd.service
 
 %files
-%license LICENSE NOTICE
 %doc ABOUT_APACHE README CHANGES VERSIONING
 %doc docs/conf/extra/*.conf
+%license LICENSE NOTICE
 %{_sysconfdir}/httpd/modules
 %{_sysconfdir}/httpd/logs
 %{_sysconfdir}/httpd/state
@@ -275,8 +268,8 @@ rm -rf %{buildroot}/etc/httpd/conf/original \
 %caps(cap_setuid,cap_setgid+pe) %attr(0510,root,%{suexec_caller}) %{_sbindir}/suexec
 %{_unitdir}/httpd.service
 %{_sysusersdir}/httpd.conf
-%{_prefix}/lib/tmpfiles.d/httpd.conf
-%attr(0710,root,apache) %dir /run/httpd
+%{_tmpfilesdir}/httpd.conf
+%ghost %attr(0710,root,apache) %dir %{_rundir}/httpd
 %attr(0700,root,root) %dir %{_localstatedir}/log/httpd
 %attr(0700,apache,apache) %dir %{_localstatedir}/lib/httpd
 %attr(0700,apache,apache) %dir %{_localstatedir}/cache/httpd
@@ -316,7 +309,6 @@ rm -rf %{buildroot}/etc/httpd/conf/original \
 %{_bindir}/htpasswd
 %{_bindir}/logresolve
 %{_mandir}/man1/*
-%doc LICENSE NOTICE
 %exclude %{_bindir}/apxs
 %exclude %{_mandir}/man1/apxs.1*
 %exclude %{_mandir}/man1/dbmmanage.1*
