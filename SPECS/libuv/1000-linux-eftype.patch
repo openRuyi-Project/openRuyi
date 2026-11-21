@@ -1,0 +1,45 @@
+From a4d2bec8a2fc437ab98bc0741b6e4261a2cc475e Mon Sep 17 00:00:00 2001
+From: Ben Noordhuis <info@bnoordhuis.nl>
+Date: Mon, 5 Oct 2026 09:50:57 +0200
+Subject: [PATCH] linux: fix value of UV_EFTYPE (#5328)
+
+EFTYPE was never defined on Linux until 7.2. Now that newer kernel
+headers define it but older kernel headers don't, we get different
+values for UV_EFTYPE depending on where libuv is compiled: -4028 vs.
+-134, -136, -169 or -258; the exact value depends on the architecture.
+
+This commit technically breaks ABI because people that compile libuv
+against kernel headers will see the value of UV_EFTYPE flip, but since
+older kernels don't return the value, and downstream users therefore
+are unlikely to actually see or use it, it's probably fine.
+
+The alternative is to remap the new EFTYPE value to the old one
+everywhere but that's both a lot of work and it adds overhead.
+
+Fixes: https://github.com/libuv/libuv/issues/5327
+---
+ include/uv/errno.h | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/include/uv/errno.h b/include/uv/errno.h
+index ac00778cfc5..1727253b844 100644
+--- a/include/uv/errno.h
++++ b/include/uv/errno.h
+@@ -432,7 +432,16 @@
+ # define UV__ENOTTY (-4029)
+ #endif
+ 
+-#if defined(EFTYPE) && !defined(_WIN32)
++/* Le sigh. Added in Linux 7.2. */
++#if defined(__linux__) && defined(__hppa__)
++# define UV__EFTYPE (-258)
++#elif defined(__linux__) && defined(__mips__)
++# define UV__EFTYPE (-169)
++#elif defined(__linux__) && defined(__sparc__)
++# define UV__EFTYPE (-136)
++#elif defined(__linux__)
++# define UV__EFTYPE (-134)
++#elif defined(EFTYPE) && !defined(_WIN32)
+ # define UV__EFTYPE UV__ERR(EFTYPE)
+ #else
+ # define UV__EFTYPE (-4028)
