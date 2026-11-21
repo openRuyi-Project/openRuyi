@@ -40,10 +40,46 @@ decompression.
 It is a viable "always on" option, even if some content already is
 compressed.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-minio-minlz.
+
 %files
+%exclude /usr/share/gocode/src/github.com/minio/minlz/cmd/internal/filepathx/filepathx_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/cmd/mz/search_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/decode_asm_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/decode_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/encode_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/index_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/internal/reference/search_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/lz4convert_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/minlz_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/search_compressed_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/search_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/sidecar_test.go
+%exclude /usr/share/gocode/src/github.com/minio/minlz/writer_test.go
 %doc README.md
 %license LICENSE
 %{go_sys_gopath}/%{go_import_path}
+
+%files tests
+/usr/share/gocode/src/github.com/minio/minlz/cmd/internal/filepathx/filepathx_test.go
+/usr/share/gocode/src/github.com/minio/minlz/cmd/mz/search_test.go
+/usr/share/gocode/src/github.com/minio/minlz/decode_asm_test.go
+/usr/share/gocode/src/github.com/minio/minlz/decode_test.go
+/usr/share/gocode/src/github.com/minio/minlz/encode_test.go
+/usr/share/gocode/src/github.com/minio/minlz/index_test.go
+/usr/share/gocode/src/github.com/minio/minlz/internal/reference/search_test.go
+/usr/share/gocode/src/github.com/minio/minlz/lz4convert_test.go
+/usr/share/gocode/src/github.com/minio/minlz/minlz_test.go
+/usr/share/gocode/src/github.com/minio/minlz/search_compressed_test.go
+/usr/share/gocode/src/github.com/minio/minlz/search_test.go
+/usr/share/gocode/src/github.com/minio/minlz/sidecar_test.go
+/usr/share/gocode/src/github.com/minio/minlz/writer_test.go
 
 %changelog
 %autochangelog
