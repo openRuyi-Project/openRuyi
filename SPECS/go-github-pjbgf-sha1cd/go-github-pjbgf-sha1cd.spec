@@ -30,10 +30,24 @@ Requires:       go(github.com/klauspost/cpuid/v2)
 sha1cd is a Go implementation of SHA-1 with counter-cryptanalysis support for
 detecting known collision attacks.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-pjbgf-sha1cd.
+
 %files
+%exclude /usr/share/gocode/src/github.com/pjbgf/sha1cd/sha1cd_test.go
+%exclude /usr/share/gocode/src/github.com/pjbgf/sha1cd/test/native_test.go
 %doc README.md
 %license LICENSE
 %{go_sys_gopath}/%{go_import_path}
+
+%files tests
+/usr/share/gocode/src/github.com/pjbgf/sha1cd/sha1cd_test.go
+/usr/share/gocode/src/github.com/pjbgf/sha1cd/test/native_test.go
 
 %changelog
 %autochangelog
