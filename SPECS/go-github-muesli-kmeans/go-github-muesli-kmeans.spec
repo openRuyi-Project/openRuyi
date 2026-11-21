@@ -13,7 +13,7 @@ Release:        %autorelease
 Summary:        k-means clustering algorithm implementation written in Go
 License:        MIT
 URL:            https://github.com/muesli/kmeans
-#!RemoteAsset
+#!RemoteAsset:  sha256:3e1d9309f35cf21cf22320218d9b48f609fd783e955a75bd5fb0cbb3a4fec253
 Source0:        https://github.com/muesli/kmeans/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -39,10 +39,22 @@ partitions a multi-dimensional data set into k clusters, where each data
 point belongs to the cluster with the nearest mean, serving as a
 prototype of the cluster.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-muesli-kmeans.
+
 %files
+%exclude /usr/share/gocode/src/github.com/muesli/kmeans/kmeans_test.go
 %license LICENSE*
 %doc README*
 %{go_sys_gopath}/%{go_import_path}
 
+%files tests
+/usr/share/gocode/src/github.com/muesli/kmeans/kmeans_test.go
+
 %changelog
-%{?autochangelog}
+%autochangelog
