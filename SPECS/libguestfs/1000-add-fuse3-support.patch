@@ -1,0 +1,247 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Mon, 29 Dec 2025 01:27:29 +0100
+Subject: Add FUSE 3 support
+
+Reference: https://sources.debian.org/patches/libguestfs/1:1.60.1-2/Add-FUSE-3-support.patch/
+Upstream-Status: Pending [https://github.com/libguestfs/libguestfs/issues/227]
+
+---
+ fuse/guestmount.c  |  2 --
+ lib/fuse.c         | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++---
+ m4/guestfs-fuse.m4 | 18 +++++++++++---
+ 3 files changed, 83 insertions(+), 8 deletions(-)
+
+diff --git a/fuse/guestmount.c b/fuse/guestmount.c
+index ae3bb75..c5fbc70 100644
+--- a/fuse/guestmount.c
++++ b/fuse/guestmount.c
+@@ -16,8 +16,6 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  */
+ 
+-#define FUSE_USE_VERSION 26
+-
+ #include <config.h>
+ 
+ #include <stdio.h>
+diff --git a/lib/fuse.c b/lib/fuse.c
+index e45b56c..d5d056d 100644
+--- a/lib/fuse.c
++++ b/lib/fuse.c
+@@ -40,8 +40,6 @@
+ #define ENOATTR ENODATA
+ #endif
+ 
+-#define FUSE_USE_VERSION 26
+-
+ #include <fuse.h>
+ #include <fuse_lowlevel.h>
+ #endif
+@@ -112,9 +110,15 @@ copy_xattr_list (guestfs_h *g, const struct guestfs_xattr *first, size_t num)
+   return xattrs;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_readdir (const char *path, void *buf, fuse_fill_dir_t filler,
+                      off_t offset, struct fuse_file_info *fi)
++#else
++static int
++mount_local_readdir (const char *path, void *buf, fuse_fill_dir_t filler,
++                     off_t offset, struct fuse_file_info *fi, enum fuse_readdir_flags)
++#endif
+ {
+   time_t now;
+   size_t i;
+@@ -150,8 +154,13 @@ mount_local_readdir (const char *path, void *buf, fuse_fill_dir_t filler,
+      * not quite sure how this is ever supposed to work on large
+      * directories. XXX
+      */
++#if FUSE_USE_VERSION < 30
+     if (filler (buf, ents->val[i].name, &st, 0))
+       break;
++#else
++    if (filler (buf, ents->val[i].name, &st, 0, 0))
++      break;
++#endif
+   }
+ 
+   /* Now prepopulate the directory caches.  This step is just an
+@@ -244,8 +253,13 @@ mount_local_readdir (const char *path, void *buf, fuse_fill_dir_t filler,
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_getattr (const char *path, struct stat *statbuf)
++#else
++static int
++mount_local_getattr (const char *path, struct stat *statbuf, struct fuse_file_info*)
++#endif
+ {
+   const struct stat *buf;
+   CLEANUP_FREE_STAT struct guestfs_statns *r = NULL;
+@@ -307,7 +321,7 @@ mount_local_access (const char *path, int mask)
+   if (g->ml_read_only && (mask & W_OK))
+     return -EROFS;
+ 
+-  r = mount_local_getattr (path, &statbuf);
++  r = mount_local_getattr (path, &statbuf, NULL);
+   if (r < 0 || mask == F_OK) {
+     debug (g, "%s: mount_local_getattr returned r = %d", path, r);
+     return r;
+@@ -485,8 +499,13 @@ mount_local_symlink (const char *from, const char *to)
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_rename (const char *from, const char *to)
++#else
++static int
++mount_local_rename (const char *from, const char *to, unsigned int)
++#endif
+ {
+   int r;
+   DECL_G ();
+@@ -523,8 +542,13 @@ mount_local_link (const char *from, const char *to)
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_chmod (const char *path, mode_t mode)
++#else
++static int
++mount_local_chmod (const char *path, mode_t mode, struct fuse_file_info*)
++#endif
+ {
+   int r;
+   DECL_G ();
+@@ -541,8 +565,13 @@ mount_local_chmod (const char *path, mode_t mode)
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_chown (const char *path, uid_t uid, gid_t gid)
++#else
++static int
++mount_local_chown (const char *path, uid_t uid, gid_t gid, struct fuse_file_info*)
++#endif
+ {
+   int r;
+   DECL_G ();
+@@ -559,8 +588,13 @@ mount_local_chown (const char *path, uid_t uid, gid_t gid)
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_truncate (const char *path, off_t size)
++#else
++static int
++mount_local_truncate (const char *path, off_t size, struct fuse_file_info*)
++#endif
+ {
+   int r;
+   DECL_G ();
+@@ -577,8 +611,13 @@ mount_local_truncate (const char *path, off_t size)
+   return 0;
+ }
+ 
++#if FUSE_USE_VERSION < 30
+ static int
+ mount_local_utimens (const char *path, const struct timespec ts[2])
++#else
++static int
++mount_local_utimens (const char *path, const struct timespec ts[2], struct fuse_file_info*)
++#endif
+ {
+   int r;
+   time_t atsecs, mtsecs;
+@@ -966,7 +1005,9 @@ guestfs_impl_mount_local (guestfs_h *g, const char *localmountpoint,
+ {
+   const char *t;
+   struct fuse_args args = FUSE_ARGS_INIT (0, NULL);
++#if FUSE_USE_VERSION < 30
+   struct fuse_chan *ch;
++#endif
+   int fd;
+ 
+   /* You can only mount each handle in one place in one thread. */
+@@ -1013,6 +1054,7 @@ guestfs_impl_mount_local (guestfs_h *g, const char *localmountpoint,
+ 
+   debug (g, "%s: fuse_mount %s", __func__, localmountpoint);
+ 
++#if FUSE_USE_VERSION < 30
+   /* Create the FUSE mountpoint. */
+   ch = fuse_mount (localmountpoint, &args);
+   if (ch == NULL) {
+@@ -1041,6 +1083,29 @@ guestfs_impl_mount_local (guestfs_h *g, const char *localmountpoint,
+     guestfs_int_free_fuse (g);
+     return -1;
+   }
++#else
++  g->fuse = fuse_new (&args,
++                      &mount_local_operations, sizeof mount_local_operations,
++                      g);
++  if (!g->fuse) {
++    perrorf (g, _("fuse_new: %s"), localmountpoint);
++    fuse_opt_free_args (&args);
++    guestfs_int_free_fuse (g);
++    return -1;
++  }
++
++  if (fuse_mount (g->fuse, localmountpoint) == -1) {
++    error (g, _("fuse_mount failed: %s, see error messages above"),
++           localmountpoint);
++    fuse_opt_free_args (&args);
++    guestfs_int_free_fuse (g);
++    return -1;
++  }
++
++  fd = fuse_session_fd (fuse_get_session (g->fuse));
++  if (fd >= 0)
++    set_cloexec_flag (fd, 1);
++#endif
+ 
+   fuse_opt_free_args (&args);
+ 
+diff --git a/m4/guestfs-fuse.m4 b/m4/guestfs-fuse.m4
+index 08b2bff..f6964e7 100644
+--- a/m4/guestfs-fuse.m4
++++ b/m4/guestfs-fuse.m4
+@@ -21,17 +21,29 @@ AC_ARG_ENABLE([fuse],
+     [],
+     [enable_fuse=yes])
+ AS_IF([test "x$enable_fuse" != "xno"],[
+-    PKG_CHECK_MODULES([FUSE],[fuse],[
++    PKG_CHECK_MODULES([FUSE],[fuse3],[
+         AC_SUBST([FUSE_CFLAGS])
+         AC_SUBST([FUSE_LIBS])
+         AC_DEFINE([HAVE_FUSE],[1],[Define to 1 if you have FUSE.])
++        AC_DEFINE([FUSE_USE_VERSION],[30],[Set FUSE compatibility version])
+         old_LIBS="$LIBS"
+         LIBS="$FUSE_LIBS $LIBS"
+         AC_CHECK_FUNCS([fuse_opt_add_opt_escaped])
+         LIBS="$old_LIBS"
+     ],[
+-        enable_fuse=no
+-        AC_MSG_WARN([FUSE library and headers are missing, so optional FUSE module won't be built])
++        PKG_CHECK_MODULES([FUSE],[fuse],[
++            AC_SUBST([FUSE_CFLAGS])
++            AC_SUBST([FUSE_LIBS])
++            AC_DEFINE([HAVE_FUSE],[1],[Define to 1 if you have FUSE.])
++            AC_DEFINE([FUSE_USE_VERSION],[26],[Set FUSE compatibility version])
++            old_LIBS="$LIBS"
++            LIBS="$FUSE_LIBS $LIBS"
++            AC_CHECK_FUNCS([fuse_opt_add_opt_escaped])
++            LIBS="$old_LIBS"
++        ],[
++            enable_fuse=no
++            AC_MSG_WARN([FUSE library and headers are missing, so optional FUSE module won't be built])
++        ])
+     ])
+ ])
+ AM_CONDITIONAL([HAVE_FUSE],[test "x$enable_fuse" != "xno"])
