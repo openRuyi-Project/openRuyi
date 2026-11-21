@@ -1,17 +1,18 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           opencv
-Version:        4.13.0
+Version:        5.1.0
 Release:        %autorelease
 Summary:        Open Source Computer Vision Library
 License:        Apache-2.0
 URL:            https://opencv.org
 VCS:            git:https://github.com/opencv/opencv.git
-#!RemoteAsset:  sha256:1d40ca017ea51c533cf9fd5cbde5b5fe7ae248291ddf2af99d4c17cf8e13017d
+#!RemoteAsset:  sha256:638c1dae7e37e45afea21aa217dc667ad7cf57acc66cdf652c074f1e0e5ad6d2
 Source0:        https://github.com/opencv/opencv/archive/%{version}/opencv-%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -25,10 +26,10 @@ BuildOption(conf):  -DBUILD_OPENJPEG=OFF
 BuildOption(conf):  -DBUILD_JASPER=OFF
 BuildOption(conf):  -DBUILD_JPEG=OFF
 BuildOption(conf):  -DBUILD_PNG=OFF
-BuildOption(conf):  -DBUILD_OPENEXR=OFF
 BuildOption(conf):  -DBUILD_WEBP=OFF
 BuildOption(conf):  -DBUILD_TBB=OFF
 BuildOption(conf):  -DBUILD_PROTOBUF=OFF
+BuildOption(conf):  -DPROTOBUF_UPDATE_FILES=ON
 # Build options
 BuildOption(conf):  -DBUILD_SHARED_LIBS=ON
 BuildOption(conf):  -DBUILD_TESTS=OFF
@@ -61,7 +62,6 @@ BuildOption(conf):  -DWITH_OPENCL=ON
 BuildOption(conf):  -DWITH_CUDA=OFF
 BuildOption(conf):  -DWITH_VTK=OFF
 BuildOption(conf):  -DWITH_IPP=OFF
-BuildOption(conf):  -DWITH_HALIDE=OFF
 BuildOption(conf):  -DWITH_VULKAN=OFF
 BuildOption(conf):  -DWITH_QT=OFF
 BuildOption(conf):  -DWITH_OPENGL=OFF
@@ -71,7 +71,6 @@ BuildOption(conf):  -DWITH_AVIF=OFF
 # Disable setup_vars script generation
 BuildOption(conf):  -DOPENCV_GENERATE_SETUPVARS=OFF
 # Enable Python 3 bindings
-BuildOption(conf):  -DBUILD_opencv_python2=OFF
 BuildOption(conf):  -DBUILD_opencv_python3=ON
 
 BuildRequires:  cmake
@@ -146,22 +145,20 @@ sed -i "s#'%{_builddir}.*'#'%{python3_sitelib}/cv2/python-%{python3_version}'#" 
 %check
 
 %files
-%license LICENSE
 %doc README.md
+%license LICENSE
 %{_bindir}/opencv_*
 %{_libdir}/libopencv_*.so.*
-%dir %{_datadir}/opencv4
-%{_datadir}/opencv4/haarcascades
-%{_datadir}/opencv4/lbpcascades
-%{_datadir}/opencv4/valgrind.supp
-%{_datadir}/opencv4/valgrind_3rdparty.supp
-%license %{_datadir}/licenses/opencv4/
+%dir %{_datadir}/opencv5
+%{_datadir}/opencv5/valgrind.supp
+%{_datadir}/opencv5/valgrind_3rdparty.supp
+%license %{_datadir}/licenses/opencv5/
 
 %files devel
-%{_includedir}/opencv4
+%{_includedir}/opencv5
 %{_libdir}/libopencv_*.so
-%{_libdir}/cmake/opencv4
-%{_libdir}/pkgconfig/opencv4.pc
+%{_libdir}/cmake/opencv5
+%{_libdir}/pkgconfig/opencv5.pc
 
 %files -n python-opencv-python
 %{python3_sitelib}/opencv*.dist-info
