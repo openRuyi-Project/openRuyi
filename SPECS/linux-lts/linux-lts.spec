@@ -30,7 +30,7 @@ URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:020d45510c539972e6f14c5c71566878d3b7ef56fb082b3e09134f2ebaade562
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
 #!RemoteAsset:  sha256:39c3306e1a305e45d106b72cf416a97b7c10851ce65455a7702eae528272a2f2
-Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/%{name}-v%{version}-%{patchset_release}.tar.gz
+Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/linux-lts-v%{version}-%{patchset_release}.tar.gz
 %if "%{?openruyi_riscv_arch}" == "-march=rva20u64"
     %global arch_suffix -rva20
 %else
