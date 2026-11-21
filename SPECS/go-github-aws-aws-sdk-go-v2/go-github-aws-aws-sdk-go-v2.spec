@@ -98,13 +98,35 @@ Requires:       go(github.com/aws/smithy-go)
 This package provides the AWS SDK for Go v2 core module and selected service
 module import paths from the upstream release archive.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-aws-aws-sdk-go-v2.
+
 %files
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*_test.go
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*_test.go
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*_test.go
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*_test.go
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*/*_test.go
+%exclude %{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*/*/*_test.go
 %doc CHANGELOG.md
 %doc CONTRIBUTING.md
 %doc README.md
 %license LICENSE.txt
 %license NOTICE.txt
 %{go_sys_gopath}/%{go_import_path}
+
+%files tests
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*_test.go
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*_test.go
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*_test.go
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*_test.go
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*/*_test.go
+%{go_sys_gopath}/github.com/aws/aws-sdk-go-v2/*/*/*/*/*/*/*_test.go
 
 %changelog
 %autochangelog
