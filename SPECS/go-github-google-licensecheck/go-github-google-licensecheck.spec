@@ -29,10 +29,42 @@ The licensecheck package scans source texts for known licenses.
 The design aims never to give a false positive. It also reports
 matches of known license URLs.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-google-licensecheck.
+
 %files
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/internal/match/dict_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/internal/match/regexp_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/internal/match/rematch_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/internal/match/resyntax_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/license_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/old/coverage_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/old/license_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/old/normalize_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/old/url_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/type_test.go
+%exclude /usr/share/gocode/src/github.com/google/licensecheck/url_test.go
 %doc README*
 %license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
+
+%files tests
+/usr/share/gocode/src/github.com/google/licensecheck/internal/match/dict_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/internal/match/regexp_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/internal/match/rematch_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/internal/match/resyntax_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/license_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/old/coverage_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/old/license_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/old/normalize_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/old/url_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/type_test.go
+/usr/share/gocode/src/github.com/google/licensecheck/url_test.go
 
 %changelog
 %autochangelog
