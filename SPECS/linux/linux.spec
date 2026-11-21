@@ -38,7 +38,7 @@ URL:            https://www.kernel.org/
 #!RemoteAsset:  sha256:8f293f83d54f0b7b9be56863ebc5e4ea79d73e530b4ae55c572be97ef39f0990
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-%{upstream_version}.tar.xz
 #!RemoteAsset:  sha256:d426897a7bd515437a6f87556fcf280eb8fcc6e3b5ec54867887b8fd442bce57
-Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/%{name}-v%{upstream_version}-%{patchset_release}.tar.gz
+Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{upstream_version}-%{patchset_release}.%{config_version}/linux-v%{upstream_version}-%{patchset_release}.tar.gz
 BuildSystem:    linux
 
 # Extracted within %%prep
@@ -94,7 +94,7 @@ tools/ directory from the kernel source.
 %endif
 
 %prep
-%setup -n %{name}-%{upstream_version}
+%setup -n linux-%{upstream_version}
 patchset_dir=.openruyi-patchset
 mkdir "${patchset_dir}"
 tar -xf "%{SOURCE1}" -C "${patchset_dir}"
