@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
+#
+# SPDX-License-Identifier: MulanPSL-2.0
+
+prefix=@PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@/temporal_capi
+
+Name: temporal_capi
+Description: C and C++ interface to ECMAScript Temporal
+Version: @VERSION@
+Libs: -L${libdir} -ltemporal_capi
+Cflags: -I${includedir}
