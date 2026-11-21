@@ -27,10 +27,28 @@ Filetype is a dependency-free Go package that infers file and MIME types from
 magic number signatures. It supports extension and MIME lookup as well as
 custom matchers.
 
+%package        tests
+Summary:        Regression tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       go
+
+%description    tests
+Go regression test sources for go-github-h2non-filetype.
+
 %files
+%exclude /usr/share/gocode/src/github.com/h2non/filetype/filetype_test.go
+%exclude /usr/share/gocode/src/github.com/h2non/filetype/kind_test.go
+%exclude /usr/share/gocode/src/github.com/h2non/filetype/match_test.go
+%exclude /usr/share/gocode/src/github.com/h2non/filetype/types/split_test.go
 %doc README*
 %license LICENSE*
 %{go_sys_gopath}/%{go_import_path}
+
+%files tests
+/usr/share/gocode/src/github.com/h2non/filetype/filetype_test.go
+/usr/share/gocode/src/github.com/h2non/filetype/kind_test.go
+/usr/share/gocode/src/github.com/h2non/filetype/match_test.go
+/usr/share/gocode/src/github.com/h2non/filetype/types/split_test.go
 
 %changelog
 %autochangelog
