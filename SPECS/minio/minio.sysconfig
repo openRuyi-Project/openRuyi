@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+# SPDX-License-Identifier: MulanPSL-2.0
+
+# Set both credentials before starting minio.service.
+MINIO_ROOT_USER=""
+MINIO_ROOT_PASSWORD=""
+
+# Storage directories must be writable by the minio user.
+MINIO_VOLUMES="/var/lib/minio/data"
+MINIO_OPTS="--address :9000 --console-address :9001"
+
+# Update MinIO through the package manager.
+MINIO_UPDATE="off"

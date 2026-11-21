@@ -7,6 +7,8 @@
 
 %define _name           minio
 %define go_import_path  github.com/minio/minio
+%define MinIO_VERSION   2025-10-15T17-29-55Z
+%define commit_id       9e49d5e7a648f00e26f2246f4dc28e6b07f8c84a
 # These endpoint tests resolve example.org/com/net. Offline OBS reports
 # "lookup example.org on [::1]:53: ... connection refused".
 %global go_test_flags_default -v -skip '^(TestNewEndpoint|TestCreateEndpoints|TestGetLocalPeer|TestGetRemotePeers|TestCheckLocalServerAddr)$'
@@ -19,6 +21,10 @@ License:        AGPL-3.0-or-later
 URL:            https://github.com/minio/minio
 #!RemoteAsset:  sha256:be6d0bd3696c3a13a35f02d3a0280b64319c67918b4501c5c3d87f96d000085c
 Source0:        https://github.com/minio/minio/archive/RELEASE.2025-10-15T17-29-55Z.tar.gz#/minio-RELEASE.2025-10-15T17-29-55Z.tar.gz
+Source2:        minio.service
+Source3:        minio.sysconfig
+Source4:        minio.sysusers
+Source5:        README.openruyi
 BuildSystem:    golang
 
 # minio/sio 0.5 renamed its AES-GCM identifier without changing the wire value.
@@ -28,6 +34,7 @@ Patch2001:      2001-fix-grid-response-test-format.patch
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
+BuildRequires:  systemd-rpm-macros
 BuildRequires:  go(aead.dev/mtls)
 BuildRequires:  go(cloud.google.com/go/storage)
 BuildRequires:  go(github.com/Azure/azure-sdk-for-go)
@@ -123,6 +130,11 @@ BuildRequires:  go(google.golang.org/api/option)
 BuildRequires:  go(gopkg.in/yaml.v2)
 BuildRequires:  go(gopkg.in/yaml.v3)
 
+Provides:       user(minio)
+Provides:       group(minio)
+
+Requires(pre):  systemd-sysusers
+
 %description
 MinIO is an S3-compatible object storage server for AI, analytics and other
 data-intensive workloads. It builds against distribution-provided Go libraries.
@@ -132,12 +144,40 @@ data-intensive workloads. It builds against distribution-provided Go libraries.
 # The canonical import comment requires building inside the GOPATH workspace.
 minio_build_dir="$PWD"
 cd %{_builddir}/go/src/%{go_import_path}
-go build -v -buildmode=pie -trimpath -o "$minio_build_dir/%{_name}" .
+go build -v -buildmode=pie -trimpath -ldflags "-X github.com/minio/minio/cmd.Version=2025-10-15T17:29:55Z -X github.com/minio/minio/cmd.ReleaseTag=RELEASE.%{MinIO_VERSION} -X github.com/minio/minio/cmd.CommitID=%{commit_id} -X github.com/minio/minio/cmd.ShortCommitID=9e49d5e7a648 -X github.com/minio/minio/cmd.CopyrightYear=2025" -o "$minio_build_dir/%{_name}" .
+
+%install -a
+install -D -m 0644 %{SOURCE2} %{buildroot}%{_unitdir}/minio.service
+install -D -m 0600 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/minio
+install -D -m 0644 %{SOURCE4} %{buildroot}%{_sysusersdir}/minio.conf
+install -d -m 0750 %{buildroot}%{_sharedstatedir}/minio
+cp %{SOURCE5} README.openruyi
+
+%check -a
+%{buildroot}%{_bindir}/minio --version | tee minio-version.txt
+grep -F 'RELEASE.%{MinIO_VERSION}' minio-version.txt
+grep -F '%{commit_id}' minio-version.txt
+
+%pre
+%sysusers_create_package %{name} %{SOURCE4}
+
+%post
+%systemd_post minio.service
+
+%preun
+%systemd_preun minio.service
+
+%postun
+%systemd_postun_with_restart minio.service
 
 %files
-%doc README.md
+%doc README.md README.openruyi
 %license LICENSE
 %{_bindir}/%{_name}
+%{_unitdir}/minio.service
+%{_sysusersdir}/minio.conf
+%config(noreplace) %attr(0600, root, root) %{_sysconfdir}/sysconfig/minio
+%dir %attr(0750, minio, minio) %{_sharedstatedir}/minio
 
 %changelog
 %autochangelog
