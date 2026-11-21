@@ -1,0 +1,236 @@
+From c9bb9f0ae3d3839f3cc1fbeec98bed451a8e2e39 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Mon, 9 Nov 2026 08:08:09 +0800
+Subject: [PATCH] Build with installed generators and numeric libraries
+
+Use installed CLoop and Firebird BtYacc executables, system decNumber and
+libcds libraries, and Firebird TTMath headers on little-endian targets.
+Import libcds public compiler flags so the page cache and shared library
+agree on DCAS. Use CLoop named options for generated interfaces.
+Append the external-authentication example include and linker options
+to distribution flags passed on the make command line.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ builds/posix/Makefile.in   | 26 ++++++++------------------
+ builds/posix/make.defaults | 11 +++++------
+ builds/posix/make.rules    |  2 +-
+ configure.ac               | 14 +++++++++++++-
+ examples/extauth/Makefile  |  4 ++--
+ src/common/DecFloat.cpp    |  6 +++---
+ src/common/DecFloat.h      |  4 ++--
+ src/common/Int128.h        |  2 +-
+ 8 files changed, 35 insertions(+), 34 deletions(-)
+
+diff --git a/builds/posix/Makefile.in b/builds/posix/Makefile.in
+index 8f698b0..1e6fa37 100644
+--- a/builds/posix/Makefile.in
++++ b/builds/posix/Makefile.in
+@@ -136,10 +136,10 @@ RPL_GREP_SRC=$(MISC)/isc_grep.c
+ updateCloopInterfaces : $(API_H_FILE) $(API_PAS_FILE) $(API_C_H_FILE)
+ 
+ $(API_H_FILE): $(IDL_FILE)
+-	$(CLOOP) $< c++ $@ IDL_FB_INTERFACES_H Firebird I
++	$(CLOOP) --input $< --output-format c++ --output $@ --header-guard IDL_FB_INTERFACES_H --class-name Firebird --prefix I
+ 
+ $(API_C_TMP_FILE): $(IDL_FILE)
+-	$(CLOOP) $< c-header $@ FB_C_API_H I macro
++	$(CLOOP) --input $< --output-format c-header --output $@ --header-guard FB_C_API_H --prefix I --macro
+ 
+ $(API_C_H_FILE): $(API_C_TEMPLATE) $(API_C_TMP_FILE)
+ 	cat $(API_C_TEMPLATE) $(API_C_TMP_FILE) >$(API_C_H_FILE)
+@@ -172,12 +172,12 @@ $(TMP_FUNCS_PAS): $(PASCAL_SOURCES) $(XPB_CONSTS) $(INF_CONSTS) $(TMP_ROOT)/iber
+ 	$(RPL_GREP) <$(TMP_ROOT)/iberror.pas >>$(TMP_FUNCS_PAS)
+ 
+ $(API_PAS_FILE): $(IDL_FILE) $(PASCAL_SOURCES) $(TMP_FUNCS_PAS)
+-	$(CLOOP) $(IDL_FILE) pascal $@ Firebird --uses SysUtils \
+-		--interfaceFile $(PAS_ROOT)/Pascal.interface.pas \
+-    	--implementationFile $(PAS_ROOT)/Pascal.implementation.pas \
+-    	--exceptionClass FbException \
+-    	--functionsFile $(TMP_FUNCS_PAS) \
+-    	--prefix I
++	$(CLOOP) --input $(IDL_FILE) --output-format pascal --output $@ --unit-name Firebird --uses SysUtils \
++		--interface-file $(PAS_ROOT)/Pascal.interface.pas \
++		--implementation-file $(PAS_ROOT)/Pascal.implementation.pas \
++		--exception-class FbException \
++		--functions-file $(TMP_FUNCS_PAS) \
++		--prefix I
+ 
+ updateBuildNum : $(SRC_ROOT)/jrd/build_no.h $(GEN_ROOT)/Make.Version
+ 
+@@ -193,15 +193,6 @@ $(GEN_ROOT)/Make.Version : $(SRC_ROOT)/misc/writeBuildNum.sh
+ #
+ 
+ external:
+-ifeq ($(CLIENT_ONLY_FLG),N)
+-	CC="$(CC)" CFLAGS="$(CFLAGS)" AR="$(AR)" $(MAKE) -C $(ROOT)/extern/btyacc
+-endif
+-
+-	CXX="$(CXX)" $(MAKE) -C $(ROOT)/extern/cloop TARGET=release WITH_FPC=0 BUILD_DIR=$(TMP_ROOT)/cloop OUT_DIR=$(GEN_ROOT)/$(TARGET)/cloop core
+-
+-	CC="$(CC)" CFLAGS="$(CFLAGS)" AR="$(AR)" $(MAKE) -C $(ROOT)/extern/decNumber
+-	ln -sf $(ROOT)/extern/decNumber/libdecFloat.a $(STATIC_LIB)
+-
+ ifeq ($(ABSEIL_BUILD_FLG),Y)
+ 	CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" $(MAKE) -C $(ROOT)/extern/int128/absl/numeric
+ 	ln -sf $(ROOT)/extern/int128/absl/numeric/libi128.a $(STATIC_LIB)
+@@ -213,7 +204,6 @@ ifeq ($(RE2_BUILD_FLG),Y)
+ 	ln -sf $(ROOT)/extern/re2/obj/libre2.a $(STATIC_LIB)
+ endif
+ 
+-	$(MAKE) libcds
+ endif
+ 
+ ifeq ($(TOMMATH_BUILD_FLG),Y)
+diff --git a/builds/posix/make.defaults b/builds/posix/make.defaults
+index 0d5717d..288bf60 100755
+--- a/builds/posix/make.defaults
++++ b/builds/posix/make.defaults
+@@ -147,7 +147,7 @@ ABSEIL_BUILD_FLG = @ABSEIL_BUILD_FLG@
+ 
+ # multiple-precision integer library
+ MATHLIB=@MATHLIB@
+-DECLIB=-ldecFloat$(CROSS)
++DECLIB=@DECNUMBER_LIBS@
+ RE2LIB=-lre2
+ ifeq ($(ABSEIL_BUILD_FLG), Y)
+   I128LIB=-li128$(CROSS)
+@@ -155,7 +155,8 @@ else
+   I128LIB=
+ endif
+ 
+-LIBCDSLIB=-lcds
++LIBCDSLIB=@LIBCDS_LIBS@
++SYSTEM_PACKAGE_CFLAGS=@DECNUMBER_CFLAGS@ @LIBCDS_CFLAGS@
+ 
+ # crypt library
+ CRYPTLIB=@CRYPTLIB@
+@@ -187,8 +188,8 @@ CAT=			cat
+ AR=			ar @AR_OPTIONS@
+ LN=			@LN_S@
+ RANLIB=			@RANLIB@
+-BTYACC=$(ROOT)/extern/btyacc/btyacc
+-CLOOP=$(GEN_ROOT)/$(TARGET)/cloop/release/bin/cloop
++BTYACC=@BTYACC@
++CLOOP=@CLOOP@
+ 
+ AR =	@AR@
+ CC =	@CC@
+@@ -305,8 +306,6 @@ TOMCRYPT_VER=1
+ 
+ # Own libcds support
+ LIBCDS=$(ROOT)/extern/libcds
+-LIBCDS_INC=$(LIBCDS)
+-LIBCDS_DEF=CDS_BUILD_STATIC_LIB
+ 
+ # LINKER OPTIONS
+ #
+diff --git a/builds/posix/make.rules b/builds/posix/make.rules
+index 659830d..1bc93a7 100644
+--- a/builds/posix/make.rules
++++ b/builds/posix/make.rules
+@@ -38,7 +38,7 @@ ifneq ($(SYSTEM_BOOST_FLG),Y)
+   WFLAGS += -I$(ROOT)/extern/boost
+ endif
+ 
+-WFLAGS += -I$(LIBCDS_INC) -D$(LIBCDS_DEF)
++WFLAGS += $(SYSTEM_PACKAGE_CFLAGS)
+ 
+ ifeq ($(TOMMATH_BUILD_FLG),Y)
+   WFLAGS += -I$(TOMMATH_INC)
+diff --git a/configure.ac b/configure.ac
+index 32adf0a..036daef 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1235,15 +1235,27 @@ if test "$ac_cv_sys_file_offset_bits" = "no"; then
+    AC_MSG_RESULT(yes)],[AC_MSG_RESULT(no)],[])
+ fi
+ 
+-dnl Use int128 support for big endians
++dnl Use installed decimal and concurrency libraries and integer headers.
++PKG_CHECK_MODULES([DECNUMBER], [decnumber >= 3.68])
++PKG_CHECK_MODULES([LIBCDS], [libcds >= 2.3.3])
+ if test "$ac_cv_c_bigendian" = "yes"; then
+   ABSEIL_BUILD_FLG=Y
+   AC_DEFINE(FB_USE_ABSEIL_INT128, 1, [Use Abseil's class int128])
+ else
+   ABSEIL_BUILD_FLG=N
++  AC_LANG_PUSH([C++])
++  AC_CHECK_HEADER([firebird-ttmath/ttmath.h], [],
++    [AC_MSG_ERROR([the Firebird TTMath headers are required])])
++  AC_LANG_POP([C++])
+ fi
+ AC_SUBST(ABSEIL_BUILD_FLG)
+ 
++AC_PATH_PROG([CLOOP], [cloop])
++AS_IF([test -z "$CLOOP"], [AC_MSG_ERROR([cloop is required])])
++AC_PATH_PROG([BTYACC], [firebird-btyacc])
++AS_IF([test -z "$BTYACC"], [AC_MSG_ERROR([firebird-btyacc is required])])
++
++
+ AC_CHECK_SIZEOF(void *)
+ VOID_PTR_SIZE=$ac_cv_sizeof_void_p
+ AC_SUBST(VOID_PTR_SIZE)
+diff --git a/examples/extauth/Makefile b/examples/extauth/Makefile
+index 3c8b878..fcb46cc 100644
+--- a/examples/extauth/Makefile
++++ b/examples/extauth/Makefile
+@@ -61,8 +61,8 @@ KEYGEN_objects=$(INTERMED)/keygen.o
+ TCWRAP_objects=$(INTERMED)/TcWrapper.o
+ KEY_AUTH_objects=$(INTERMED)/ExtAuth.o
+ 
+-CXXFLAGS=-std=c++17 -pthread -I$(ROOT)/include -fPIC $(TOMCRYPT_COMPILE)
+-LDFLAGS=-pthread -L$(LIB) -Wl,-rpath,'$$ORIGIN/../lib' $(TOMCRYPT_LINK)
++override CXXFLAGS += -std=c++17 -pthread -I$(ROOT)/include -fPIC $(TOMCRYPT_COMPILE)
++override LDFLAGS += -pthread -L$(LIB) -Wl,-rpath,'$$ORIGIN/../lib' $(TOMCRYPT_LINK)
+ 
+ LINK_LIBS=-lfbclient -ltomcrypt -ltommath
+ 
+diff --git a/src/common/DecFloat.cpp b/src/common/DecFloat.cpp
+index 51557f5..4c0f2f7 100644
+--- a/src/common/DecFloat.cpp
++++ b/src/common/DecFloat.cpp
+@@ -38,9 +38,9 @@
+ 
+ extern "C"
+ {
+-#include "../../extern/decNumber/decimal128.h"
+-#include "../../extern/decNumber/decimal64.h"
+-#include "../../extern/decNumber/decNumber.h"
++#include <decimal128.h>
++#include <decimal64.h>
++#include <decNumber.h>
+ }
+ 
+ #include <stdlib.h>
+diff --git a/src/common/DecFloat.h b/src/common/DecFloat.h
+index 6b44064..14090c0 100644
+--- a/src/common/DecFloat.h
++++ b/src/common/DecFloat.h
+@@ -38,8 +38,8 @@
+ 
+ extern "C"
+ {
+-#include "../../extern/decNumber/decQuad.h"
+-#include "../../extern/decNumber/decDouble.h"
++#include <decQuad.h>
++#include <decDouble.h>
+ }
+ 
+ namespace Firebird {
+diff --git a/src/common/Int128.h b/src/common/Int128.h
+index 446a744..12048b6 100644
+--- a/src/common/Int128.h
++++ b/src/common/Int128.h
+@@ -360,7 +360,7 @@ public:
+ 
+ #else // FB_USE_ABSEIL_INT128
+ 
+-#include "../../extern/ttmath/ttmath.h"
++#include <firebird-ttmath/ttmath.h>
+ 
+ namespace Firebird {
+ 
+-- 
+2.54.0
+

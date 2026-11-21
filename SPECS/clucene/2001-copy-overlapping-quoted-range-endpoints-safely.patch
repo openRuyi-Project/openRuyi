@@ -1,0 +1,35 @@
+From 392331fb6dfdf0a4ce67a840586e5d6f250c5010 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:41:59 +0800
+Subject: [PATCH] Use an overlap-safe copy when stripping range endpoint quotes
+
+Quoted query endpoints are moved within the same buffer. Use memmove to
+handle the overlapping ranges exercised by the upstream testEscaped
+case.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/core/CLucene/queryParser/QueryParser.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/core/CLucene/queryParser/QueryParser.cpp b/src/core/CLucene/queryParser/QueryParser.cpp
+index 2f9df9a..bc3d5ad 100644
+--- a/src/core/CLucene/queryParser/QueryParser.cpp
++++ b/src/core/CLucene/queryParser/QueryParser.cpp
+@@ -992,11 +992,11 @@ Query* QueryParser::fTerm(const TCHAR* _field) {
+ 
+ 	  // TODO: Allow analysis::Term to accept ownership on a TCHAR* and save on extra dup's
+       if (goop1->kind == RANGEIN_QUOTED) {
+-        _tcscpy(goop1->image, goop1->image+1);
++        memmove(goop1->image, goop1->image + 1, _tcslen(goop1->image) * sizeof(TCHAR));
+ 		goop1->image[_tcslen(goop1->image)-1]='\0';
+       }
+       if (goop2->kind == RANGEIN_QUOTED) {
+-        _tcscpy(goop2->image, goop2->image+1);
++        memmove(goop2->image, goop2->image + 1, _tcslen(goop2->image) * sizeof(TCHAR));
+ 		goop2->image[_tcslen(goop2->image)-1]='\0';
+       }
+       TCHAR* t1 = discardEscapeChar(goop1->image);
+-- 
+2.54.0
+

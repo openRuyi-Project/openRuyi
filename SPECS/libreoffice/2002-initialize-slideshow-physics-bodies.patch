@@ -1,0 +1,43 @@
+From fc74f51b29aef3dd1c229e24827a809b52add72b Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 06:04:17 +0800
+Subject: [PATCH] Initialize Box2D 3 body definitions for Impress animations
+
+The C API checks a cookie set by b2DefaultBodyDef and reads defaults for rotation, gravity and body enablement. Initialize the frame and shape definitions before overriding their position and type.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ slideshow/source/engine/box2dtools.cxx | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/slideshow/source/engine/box2dtools.cxx b/slideshow/source/engine/box2dtools.cxx
+index b164099..c1d7e3a 100644
+--- a/slideshow/source/engine/box2dtools.cxx
++++ b/slideshow/source/engine/box2dtools.cxx
+@@ -289,7 +289,11 @@ void box2DWorld::createStaticFrameAroundSlide(const ::basegfx::B2DVector& rSlide
+     float fHeight = static_cast<float>(rSlideSize.getY() * mfScaleFactor);
+ 
+     // static body for creating the frame around the slide
++#if BOX2D_CHECK_VERSION(3, 0)
++    b2BodyDef aBodyDef = b2DefaultBodyDef();
++#else
+     b2BodyDef aBodyDef;
++#endif
+     aBodyDef.type = b2_staticBody;
+ #if BOX2D_CHECK_VERSION(3, 0)
+     aBodyDef.position = { 0, 0 };
+@@ -740,7 +744,11 @@ Box2DBodySharedPtr box2DWorld::createStaticBody(const slideshow::internal::Shape
+ {
+     ::basegfx::B2DRectangle aShapeBounds = rShape->getBounds();
+ 
++#if BOX2D_CHECK_VERSION(3, 0)
++    b2BodyDef aBodyDef = b2DefaultBodyDef();
++#else
+     b2BodyDef aBodyDef;
++#endif
+     aBodyDef.type = b2_staticBody;
+     aBodyDef.position = convertB2DPointToBox2DVec2(aShapeBounds.getCenter(), mfScaleFactor);
+ 
+-- 
+2.54.0
+

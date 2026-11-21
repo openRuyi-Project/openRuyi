@@ -1,0 +1,28 @@
+From e3c89dd93957bc479785a0e04bb22736bf8b6e72 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Wed, 4 Nov 2026 04:11:34 +0800
+Subject: [PATCH] Read the configured OpenSSL backend before initializing curl
+
+LanguageTool includes the curl initializer without a preceding crypto configuration header. Include it before testing SYSTEM_OPENSSL so the system TLS backend keeps its configured trust store.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ include/systools/curlinit.hxx | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/systools/curlinit.hxx b/include/systools/curlinit.hxx
+index 26e46d2..ad1bd03 100644
+--- a/include/systools/curlinit.hxx
++++ b/include/systools/curlinit.hxx
+@@ -9,6 +9,8 @@
+ 
+ #pragma once
+ 
++#include <config_crypto.h>
++
+ #include <curl/curl.h>
+ 
+ #include <officecfg/Office/Security.hxx>
+-- 
+2.54.0
+

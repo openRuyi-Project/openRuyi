@@ -1,0 +1,84 @@
+From 3bdd2efacff0ee10d078a8571933caf8d59288f5 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 14:54:58 +0800
+Subject: [PATCH] Apply DESTDIR once when installing CoinMP examples and linker
+ metadata
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ CoinMP/Makefile.am | 12 ++++++------
+ CoinMP/Makefile.in | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/CoinMP/Makefile.am b/CoinMP/Makefile.am
+index 24a5e70..ae186a8 100644
+--- a/CoinMP/Makefile.am
++++ b/CoinMP/Makefile.am
+@@ -57,25 +57,25 @@ distclean-local:
+ pkgconfiglibdir = $(libdir)/pkgconfig
+ pkgconfiglib_DATA = coinmp.pc
+ 
+-addlibsdir = $(DESTDIR)$(datadir)/coin/doc/CoinMP
++addlibsdir = $(datadir)/coin/doc/CoinMP
+ 
+ addlibs_DATA = examples/Makefile examples/example.c
+ 
+ install-data-hook:
+-	@$(mkdir_p) "$(addlibsdir)"
++	@$(mkdir_p) "$(DESTDIR)$(addlibsdir)"
+ if COIN_HAS_PKGCONFIG
+ 	PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir) \
+-	$(PKG_CONFIG) --libs coinmp > $(addlibsdir)/coinmp_addlibs.txt
++	$(PKG_CONFIG) --libs coinmp > $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
+ else
+ if COIN_CXX_IS_CL
+-	echo "-libpath:`$(CYGPATH_W) @abs_lib_dir@` libCoinMP.lib @CBCLIB_LIBS_INSTALLED@" > $(addlibsdir)/coin_addlibs.txt
++	echo "-libpath:`$(CYGPATH_W) @abs_lib_dir@` libCoinMP.lib @CBCLIB_LIBS_INSTALLED@" > $(DESTDIR)$(addlibsdir)/coin_addlibs.txt
+ else
+-	echo -L@abs_lib_dir@ -lCoinMP @COINMP_LIBS_INSTALLED@ > $(addlibsdir)/coinmp_addlibs.txt
++	echo -L@abs_lib_dir@ -lCoinMP @COINMP_LIBS_INSTALLED@ > $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
+ endif
+ endif
+ 
+ uninstall-hook:
+-	rm -f $(addlibsdir)/coinmp_addlibs.txt
++	rm -f $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
+ 
+ install-exec-local: install-doc
+ 
+diff --git a/CoinMP/Makefile.in b/CoinMP/Makefile.in
+index b23f078..a82b8ca 100644
+--- a/CoinMP/Makefile.in
++++ b/CoinMP/Makefile.in
+@@ -291,7 +291,7 @@ EXTRA_DIST = examples/Makefile examples/example.c $(am__append_2)
+ ########################################################################
+ pkgconfiglibdir = $(libdir)/pkgconfig
+ pkgconfiglib_DATA = coinmp.pc
+-addlibsdir = $(DESTDIR)$(datadir)/coin/doc/CoinMP
++addlibsdir = $(datadir)/coin/doc/CoinMP
+ addlibs_DATA = examples/Makefile examples/example.c
+ 
+ ########################################################################
+@@ -792,14 +792,14 @@ distclean-local:
+ .PHONY: test unitTest
+ 
+ install-data-hook:
+-	@$(mkdir_p) "$(addlibsdir)"
++	@$(mkdir_p) "$(DESTDIR)$(addlibsdir)"
+ @COIN_HAS_PKGCONFIG_TRUE@	PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir) \
+-@COIN_HAS_PKGCONFIG_TRUE@	$(PKG_CONFIG) --libs coinmp > $(addlibsdir)/coinmp_addlibs.txt
+-@COIN_CXX_IS_CL_TRUE@@COIN_HAS_PKGCONFIG_FALSE@	echo "-libpath:`$(CYGPATH_W) @abs_lib_dir@` libCoinMP.lib @CBCLIB_LIBS_INSTALLED@" > $(addlibsdir)/coin_addlibs.txt
+-@COIN_CXX_IS_CL_FALSE@@COIN_HAS_PKGCONFIG_FALSE@	echo -L@abs_lib_dir@ -lCoinMP @COINMP_LIBS_INSTALLED@ > $(addlibsdir)/coinmp_addlibs.txt
++@COIN_HAS_PKGCONFIG_TRUE@	$(PKG_CONFIG) --libs coinmp > $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
++@COIN_CXX_IS_CL_TRUE@@COIN_HAS_PKGCONFIG_FALSE@	echo "-libpath:`$(CYGPATH_W) @abs_lib_dir@` libCoinMP.lib @CBCLIB_LIBS_INSTALLED@" > $(DESTDIR)$(addlibsdir)/coin_addlibs.txt
++@COIN_CXX_IS_CL_FALSE@@COIN_HAS_PKGCONFIG_FALSE@	echo -L@abs_lib_dir@ -lCoinMP @COINMP_LIBS_INSTALLED@ > $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
+ 
+ uninstall-hook:
+-	rm -f $(addlibsdir)/coinmp_addlibs.txt
++	rm -f $(DESTDIR)$(addlibsdir)/coinmp_addlibs.txt
+ 
+ install-exec-local: install-doc
+ 
+-- 
+2.54.0
+

@@ -1,0 +1,30 @@
+From 5b175bf6e4ebee14c9da23237db47e865bee8473 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 15:36:50 +0800
+Subject: [PATCH] Reset Turtle input state when reusing a parser for another
+ document
+
+Clear the buffered-input offset and error count when starting a new
+input stream on an existing Turtle parser.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ src/turtle_parser.y | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/turtle_parser.y b/src/turtle_parser.y
+index 1474a3d..3b2bed9 100644
+--- a/src/turtle_parser.y
++++ b/src/turtle_parser.y
+@@ -1811,6 +1811,8 @@ raptor_turtle_parse_start(raptor_parser *rdf_parser)
+     turtle_parser->buffer_length = 0;
+   }
+   
++  turtle_parser->consumed = 0;
++  turtle_parser->error_count = 0;
+   turtle_parser->lineno = 1;
+ 
+   return 0;
+-- 
+2.54.0
+
