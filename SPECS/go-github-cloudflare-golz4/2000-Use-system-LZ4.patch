@@ -1,0 +1,46 @@
+From d3d8bef5f20b23579fab56cb099dc08986b7c88d Mon Sep 17 00:00:00 2001
+From: cl2t <yihong.or@isrc.iscas.ac.cn>
+Date: Tue, 22 Sep 2026 17:50:31 +0800
+Subject: [PATCH] Link against system LZ4
+
+The bundled 2015 LZ4 implementation crashes in TestCompressionHCRatio with the distribution toolchain. Use the maintained system library while retaining the public Go API and all compression tests.
+
+Signed-off-by: cl2t <yihong.or@isrc.iscas.ac.cn>
+---
+ lz4.go    | 5 ++---
+ lz4_hc.go | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/lz4.go b/lz4.go
+index f9abcb2..14de615 100644
+--- a/lz4.go
++++ b/lz4.go
+@@ -1,8 +1,7 @@
+ package lz4
+ 
+-// #cgo CFLAGS: -O3
+-// #include "src/lz4.h"
+-// #include "src/lz4.c"
++// #cgo pkg-config: liblz4
++// #include <lz4.h>
+ import "C"
+ 
+ import (
+diff --git a/lz4_hc.go b/lz4_hc.go
+index 9779352..7795deb 100644
+--- a/lz4_hc.go
++++ b/lz4_hc.go
+@@ -1,8 +1,7 @@
+ package lz4
+ 
+-// #cgo CFLAGS: -O3
+-// #include "src/lz4hc.h"
+-// #include "src/lz4hc.c"
++// #cgo pkg-config: liblz4
++// #include <lz4hc.h>
+ import "C"
+ 
+ import (
+-- 
+2.52.0
+
