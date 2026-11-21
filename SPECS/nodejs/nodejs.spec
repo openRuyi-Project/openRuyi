@@ -115,6 +115,8 @@ Requires:       sqlite%{?_isa} >= 3.54.0
 1009-v8-riscv-frame-calling-pc.patch
 # Adjust test expectations for OpenSSL 4; https://github.com/nodejs/node/commit/c61ba86ed02dc0c80c51b9333d3fe9e3e4e2f887.
 1010-openssl4-tests.patch
+# Adapt BlockList tests to libuv 1.53; https://github.com/nodejs/node/commit/62b471723d60845d6f094a41348d59d59faf4246.
+1011-blocklist-libuv153.patch
 # Adapt the version test for zlib-ng compatibility; https://github.com/nodejs/node/blob/v26.12.0/test/parallel/test-process-versions.js.
 2002-zlib-ng-version-test.patch
 # Report unsupported Wasm SIMD as skipped; https://github.com/felixonmars/archriscv-packages/blob/2c56f9918e59cb5cfb7af860d2336785d0a36dea/nodejs/wasm-simd-skip.patch.
