@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Martin Hoyer <mhoyer@redhat.com>
+Date: Wed, 30 Sep 2026 10:12:01 +0000
+Subject: [PATCH] Handle a missing system bus
+
+Taken from the ui_backstore.py part of upstream commit 2397008 ("Make
+PyGObject an optional dependency") in
+https://github.com/open-iscsi/targetcli-fb/pull/237. Import gi lazily and
+connect to the system bus inside the try block, so targetcli does not die
+with "g-io-error-quark: Could not connect" in a container or a minimal
+server without a system bus.
+---
+diff --git a/src/targetcli/ui_backstore.py b/src/targetcli/ui_backstore.py
+index 6172980..60c82e2 100644
+--- a/src/targetcli/ui_backstore.py
++++ b/src/targetcli/ui_backstore.py
+@@ -27,7 +27,6 @@
+ from pathlib import Path
+
+ from configshell import ExecutionError
+-from gi.repository import Gio
+ from rtslib import (
+     ALUATargetPortGroup,
+     BlockStorageObject,
+@@ -237,8 +236,13 @@ def _user_backstores(self):
+         tcmu-runner (or other daemon providing the same service) exposes a
+         DBus ObjectManager-based iface to find handlers it supports.
+         '''
+-        bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+         try:
++            # PyGObject is optional, it is only needed for user backstores
++            from gi.repository import Gio  # noqa: PLC0415
++        except ImportError:
++            return
++        try:
++            bus = Gio.bus_get_sync(Gio.BusType.SYSTEM, None)
+             mgr_iface = Gio.DBusProxy.new_sync(bus,
+                                                Gio.DBusProxyFlags.NONE,
+                                                None,
