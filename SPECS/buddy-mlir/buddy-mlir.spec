@@ -4,8 +4,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global commit 60f354a7b659a1ce36fdf9ba7bd97fdbf6bb0e5f
-%global llvm_commit 3845a20590afedfbece4d000f97a6cfbbea3bf43
+%global llvm_commit f346011a7ac59144fe085e0bc029cb24835f7a69
 
 %global bootstrap_llvm_maj_ver 22
 %global bootstrap_llvm_bindir %{_libdir}/llvm%{bootstrap_llvm_maj_ver}/bin
@@ -20,15 +19,15 @@
 %define _find_debuginfo_dwz_opts %{nil}
 
 Name:           buddy-mlir
-Version:        0.1.2
+Version:        0.1.4
 Release:        %autorelease
 Summary:        MLIR-based compiler framework with RISC-V vector lowering passes
 License:        Apache-2.0 AND (Apache-2.0 WITH LLVM-exception OR NCSA)
 URL:            https://github.com/buddy-compiler/buddy-mlir
 VCS:            git:https://github.com/buddy-compiler/buddy-mlir.git
-#!RemoteAsset:  sha256:0f0a65448a9db1dc53f0719d2a1ef42b669bed3a077228ee9efee81c794e4ffe
-Source0:        %{url}/archive/%{commit}/%{name}-%{commit}.tar.gz
-#!RemoteAsset:  sha256:2bdef4109d89d1306cf432bd02d9a1add1ee1e898aea151bfa7d5dd5b40be5d9
+#!RemoteAsset:  sha256:7f969e4f1b296a9bbb12078774e4a601078a840b8cfa866f128a22a3ce4e40f5
+Source0:        %{url}/archive/refs/tags/release/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:d5e5a0b206ac7ff12b0deef16b5b3d289d9b6d151a8c4f2f35fc97588d149118
 Source1:        https://github.com/RuyiAI-Stack/llvm-project/archive/%{llvm_commit}/llvm-project-%{llvm_commit}.tar.gz
 BuildSystem:    cmake
 
@@ -87,11 +86,11 @@ License:        Apache-2.0 WITH LLVM-exception
 
 %description    llvm
 The pinned LLVM/MLIR build (RuyiAI's llvm-project fork, branch riscv) that
-buddy-mlir and the Triton-RISCV stack compile and link against. It is
-installed under %{llvm_prefix} and is deliberately not the distribution LLVM:
-the MLIR version has to match buddy-mlir exactly, and the fork carries the
-RISC-V backend work the lowering emits code for. It is built statically, so the
-tools in this package are self-contained.
+buddy-mlir compiles and links against. It is installed under %{llvm_prefix}
+and is deliberately not the distribution LLVM: the MLIR version has to match
+buddy-mlir exactly, and the fork carries the RISC-V backend work the lowering
+emits code for. It is built statically, so the tools in this package are
+self-contained.
 
 %package        llvm-devel
 Summary:        Development files of the pinned LLVM/MLIR toolchain
@@ -110,8 +109,7 @@ License:        Apache-2.0 WITH LLVM-exception
 Requires:       %{name}-llvm%{?_isa} = %{version}-%{release}
 
 %description    llvm-static
-The static LLVM/MLIR libraries of the pinned toolchain; they are what the
-Triton-RISCV stack links against when it builds its tools from the
+The static LLVM/MLIR libraries for consumers of the
 %{name}-llvm-devel configuration.
 
 %prep -a
@@ -201,8 +199,7 @@ printf 'module {}\n' | %{buildroot}%{_bindir}/buddy-opt > /dev/null
 %{buildroot}%{_bindir}/buddy-translate --help > /dev/null
 %{buildroot}%{_bindir}/buddy-llc --version > /dev/null
 
-# The pinned LLVM must be able to emit RVV code for both the JIT and the AOT
-# paths of the Triton-RISCV backend.
+# The pinned LLVM must be able to emit RVV code for both the JIT and the AOT paths.
 %{buildroot}%{llvm_prefix}/bin/llc --version | grep -q riscv64
 cat > rvv-smoke.ll <<'EOF'
 define void @smoke() {
