@@ -1,0 +1,124 @@
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Subject: [PATCH] Disable the NVIDIA backend
+
+Remove nvidia from the built-in backend list so only AMD and external
+plugins (such as triton-riscv) are built. Keep the NVIDIA dialect
+definitions that common Gluon and AMD lowering still depend on.
+
+Skip building Proton and NVIDIA-dependent tools when disabled, and exclude
+the NVIDIA-specific triton_to_gluon_translater package from the wheel.
+
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,9 +20,8 @@
+
+ option(TRITON_BUILD_PYTHON_MODULE "Build Python Triton bindings" OFF)
+ option(TRITON_BUILD_PROTON "Build the Triton Proton profiler" ON)
+-option(TRITON_BUILD_NVIDIA_GSAN_RUNTIME
+-       "Build the CUDA/NVPTX GSan device runtime for the NVIDIA backend" ON)
+ option(TRITON_STABLE_ABI "Build with Python Stable ABI (abi3) for Python 3.12+" OFF)
++option(TRITON_BUILD_TOOLS "Build Triton command-line tools and tests" ON)
+ option(TRITON_BUILD_UT "Build C++ Triton Unit Tests" ON)
+ option(TRITON_BUILD_WITH_CCACHE "Build with ccache (if available)" ON)
+ option(TRITON_OFFLINE_BUILD "Build without downloading dependencies" OFF)
+@@ -355,11 +354,14 @@
+     add_subdirectory(third_party/${CODEGEN_BACKEND})
+   endforeach()
+
++  # Common Gluon and AMD lowering still depend on NVIDIA dialect definitions.
++  add_subdirectory(third_party/nvidia/include/Dialect)
++  add_subdirectory(third_party/nvidia/lib/Dialect)
+   if (TRITON_BUILD_PROTON)
+     add_subdirectory(third_party/proton)
++    list(APPEND TRITON_PLUGIN_NAMES "proton")
+   endif()
+   # We always build proton dialect
+-  list(APPEND TRITON_PLUGIN_NAMES "proton")
+   add_subdirectory(third_party/proton/Dialect)
+
+   if (DEFINED TRITON_PLUGIN_DIRS)
+@@ -536,8 +538,10 @@
+ find_package(Threads REQUIRED)
+
+ add_subdirectory(third_party/f2reduce)
+-add_subdirectory(bin)
+-add_subdirectory(test)
++if(TRITON_BUILD_TOOLS)
++  add_subdirectory(bin)
++  add_subdirectory(test)
++endif()
+
+ if(TRITON_BUILD_UT)
+   add_subdirectory(unittest)
+--- a/setup.py
++++ b/setup.py
+@@ -349,7 +349,6 @@
+         # environment variables we will pass through to cmake
+         passthrough_args = [
+             "TRITON_BUILD_PROTON",
+-            "TRITON_BUILD_NVIDIA_GSAN_RUNTIME",
+             "TRITON_BUILD_WITH_CCACHE",
+             "TRITON_PARALLEL_LINK_JOBS",
+             "TRITON_OFFLINE_BUILD",
+@@ -398,7 +397,7 @@
+                                   cwd=cmake_dir)
+
+
+-backends = [*BackendInstaller.copy(["nvidia", "amd"]), *BackendInstaller.copy_externals()]
++backends = [*BackendInstaller.copy(["amd"]), *BackendInstaller.copy_externals()]
+
+
+ def get_package_dirs():
+@@ -429,7 +428,10 @@
+
+
+ def get_packages():
+-    yield from find_packages(where="python")
++    yield from find_packages(where="python", exclude=[
++        "triton.tools.triton_to_gluon_translater",
++        "triton.tools.triton_to_gluon_translater.*",
++    ])
+
+     for backend in backends:
+         yield f"triton.backends.{backend.name}"
+--- a/third_party/proton/Dialect/CMakeLists.txt
++++ b/third_party/proton/Dialect/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+ add_subdirectory(include)
+ add_subdirectory(lib)
+-if(TRITON_BUILD_PYTHON_MODULE)
++if(TRITON_BUILD_PYTHON_MODULE AND TRITON_BUILD_PROTON)
+   add_triton_plugin(TritonProton ${CMAKE_CURRENT_SOURCE_DIR}/triton_proton.cc LINK_LIBS ProtonToProtonGPU ProtonGPUToLLVM ProtonAMDGPUToLLVM ProtonNVIDIAGPUToLLVM ProtonAnalysis)
+   target_link_libraries(TritonProton PRIVATE Python3::Module nanobind-static)
+ endif()
+--- a/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt
++++ b/third_party/proton/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt
+@@ -2,5 +2,6 @@
+ mlir_tablegen(Passes.h.inc -gen-pass-decls --name ProtonGPUToLLVM)
+ add_public_tablegen_target(ProtonGPUConversionPassIncGen)
+
+-add_subdirectory(ProtonNvidiaGPUToLLVM)
+-add_subdirectory(ProtonAMDGPUToLLVM)
++if(TRITON_BUILD_PROTON)
++  add_subdirectory(ProtonAMDGPUToLLVM)
++endif()
+--- a/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt
++++ b/third_party/proton/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt
+@@ -12,5 +12,6 @@
+     ProtonAnalysis
+ )
+
+-add_subdirectory(ProtonNvidiaGPUToLLVM)
+-add_subdirectory(ProtonAMDGPUToLLVM)
++if(TRITON_BUILD_PROTON)
++  add_subdirectory(ProtonAMDGPUToLLVM)
++endif()
+--- a/third_party/nvidia/lib/Dialect/CMakeLists.txt
++++ b/third_party/nvidia/lib/Dialect/CMakeLists.txt
+@@ -1,2 +1,5 @@
++include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include
++                    ${CMAKE_CURRENT_BINARY_DIR}/../../include)
++
+ add_subdirectory(NVGPU)
+ add_subdirectory(NVWS)

@@ -1,0 +1,210 @@
+From: Peter Bell <peterbell10@openai.com>
+Subject: [PATCH] Adapt Triton 3.9.0 to newer LLVM and MLIR
+
+Backport the MLIR dialect assembly settings, FuncOp traits, and LLVM/MLIR
+API updates from upstream PR #12236 so Triton 3.9.0 builds against the
+newer LLVM revision used by buddy-mlir.
+https://github.com/triton-lang/triton/commit/408f1a31f23e976e342e4309cebdb4d4d24392c5
+
+Also pass convergent=false to LLVM::InlineAsmOp::create in GCNAsmFormat.cpp,
+which still exists in 3.9.0 (removed on upstream main before #12236).
+
+--- a/include/triton/Dialect/Triton/IR/TritonDialect.td
++++ b/include/triton/Dialect/Triton/IR/TritonDialect.td
+@@ -8,6 +8,9 @@ def Triton_Dialect : Dialect {
+
+   let cppNamespace = "::mlir::triton";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let summary = "The Triton IR in MLIR";
+
+   let description = [{
+--- a/include/triton/Dialect/Triton/IR/TritonOps.td
++++ b/include/triton/Dialect/Triton/IR/TritonOps.td
+@@ -1224,8 +1224,8 @@
+
+ def FuncOp : TT_Op<"func", [
+     AffineScope, AutomaticAllocationScope, CallableOpInterface,
+-    FunctionOpInterface, IsolatedFromAbove, OpAsmOpInterface,
+-    HasParent<"ModuleOp">
++    SymbolName, SymbolVisibility, FunctionOpInterface, IsolatedFromAbove,
++    OpAsmOpInterface, HasParent<"ModuleOp">
+ ]> {
+   let summary = "An operation with a name containing a single `SSACFG` region";
+   let description = [{
+--- a/include/triton/Dialect/TritonGPU/IR/TritonGPUDialect.td
++++ b/include/triton/Dialect/TritonGPU/IR/TritonGPUDialect.td
+@@ -8,6 +8,9 @@ def TritonGPU_Dialect : Dialect {
+
+   let cppNamespace = "::mlir::triton::gpu";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let hasOperationAttrVerify = 1;
+
+   let description = [{
+--- a/include/triton/Dialect/TritonInstrument/IR/TritonInstrumentDialect.td
++++ b/include/triton/Dialect/TritonInstrument/IR/TritonInstrumentDialect.td
+@@ -6,6 +6,9 @@ include "mlir/IR/OpBase.td"
+ def TritonInstrument_Dialect : Dialect {
+   let name = "tti";
+   let cppNamespace = "::mlir::triton::instrument";
++
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
+ }
+
+ #endif // TRITONINSTRUMENT_DIALECT
+--- a/include/triton/Dialect/TritonNvidiaGPU/IR/TritonNvidiaGPUDialect.td
++++ b/include/triton/Dialect/TritonNvidiaGPU/IR/TritonNvidiaGPUDialect.td
+@@ -29,6 +29,9 @@ def TritonNvidiaGPU_Dialect : Dialect {
+
+   let cppNamespace = "::mlir::triton::nvidia_gpu";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let hasOperationAttrVerify = 1;
+   let hasCanonicalizer = 1;
+
+--- a/lib/Conversion/TritonGPUToLLVM/ElementwiseOpToLLVM.cpp
++++ b/lib/Conversion/TritonGPUToLLVM/ElementwiseOpToLLVM.cpp
+@@ -269,6 +269,7 @@
+                            /*constraints=*/op.getConstraints(),
+                            /*has_side_effects=*/!op.getPure(),
+                            /*is_align_stack=*/false, LLVM::TailCallKind::None,
++                           /*convergent=*/false,
+                            /*asm_dialect=*/
+                            LLVM::AsmDialectAttr::get(rewriter.getContext(),
+                                                      LLVM::AsmDialect::AD_ATT),
+@@ -417,6 +418,7 @@
+     auto call = LLVM::InlineAsmOp::create(
+         rewriter, loc, returnType, operands, op.getAsmString(),
+         op.getConstraints(), !op.getPure(), false, LLVM::TailCallKind::None,
++        /*convergent=*/false,
+         LLVM::AsmDialectAttr::get(ctx, LLVM::AsmDialect::AD_ATT), ArrayAttr());
+
+     SmallVector<Value> elements;
+--- a/python/src/llvm.cc
++++ b/python/src/llvm.cc
+@@ -204,7 +204,7 @@
+   llvm::TargetOptions opt;
+   bool disableLLVMOpt = mlir::triton::tools::getBoolEnv("DISABLE_LLVM_OPT");
+   if (enable_fp_fusion)
+-    opt.AllowFPOpFusion = llvm::FPOpFusion::Fast;
++    enableFPContraction(*module);
+   opt.TrapUnreachable = true;
+   opt.MCOptions.AsmVerbose = true;
+   opt.MCOptions.PreserveAsmComments = true;
+@@ -700,7 +700,7 @@
+           // registry name "vector-combine".
+           const StringRef kVectorCombinePassName = "VectorCombinePass";
+           passInstrCb.registerShouldRunOptionalPassCallback(
+-              [kVectorCombinePassName](StringRef passName, Any) {
++              [kVectorCombinePassName](StringRef passName, IRUnitRef) {
+                 return passName != kVectorCombinePassName;
+               });
+           enablePassInstrumentation = true;
+@@ -740,7 +740,7 @@
+         if (!pluginFile.empty()) {
+           // TODO: Add some logging here that we inserted a pass into the LLVM
+           // pass pipeline
+-          auto passPlugin = llvm::PassPlugin::Load(pluginFile);
++          auto passPlugin = llvm::PassPlugin::load(pluginFile);
+           if (!passPlugin) {
+             llvm::Error Err = passPlugin.takeError();
+             std::string ErrMsg =
+--- a/third_party/amd/include/Dialect/TritonAMDGPU/IR/TritonAMDGPUDialect.td
++++ b/third_party/amd/include/Dialect/TritonAMDGPU/IR/TritonAMDGPUDialect.td
+@@ -30,6 +30,9 @@ def TritonAMDGPU_Dialect : Dialect {
+   let name = "amdg";
+   let cppNamespace = "::mlir::triton::amdgpu";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let description = [{
+     TritonAMDGPU Dialect hosts AMD specific ops at TritonGPU abstraction level.
+   }];
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/DotOpToLLVM/MFMA.cpp
+@@ -152,6 +152,7 @@
+                rewriter, loc, acc.getType(), ValueRange{acc},
+                /*asm_string=*/"", constraints, /*has_side_effects=*/false,
+                /*is_align_stack=*/false, LLVM::TailCallKind::None,
++               /*convergent=*/false,
+                LLVM::AsmDialectAttr::get(ctx, LLVM::AsmDialect::AD_ATT),
+                /*operand_attrs=*/ArrayAttr())
+         ->getResult(0);
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/GCNAsmFormat.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/GCNAsmFormat.cpp
+@@ -82,7 +82,7 @@
+       getConstraints(),                       // constraints
+       hasSideEffect,                          // has_side_effects
+       isAlignStack,                           // is_align_stack
+-      LLVM::TailCallKind::None,
++      LLVM::TailCallKind::None, /*convergent=*/false,
+       LLVM::AsmDialectAttr::get(ctx,
+                                 LLVM::AsmDialect::AD_ATT), // asm_dialect
+       ArrayAttr::get(ctx, attrs)                           // operand_attrs
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/TDMUtility.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/TDMUtility.cpp
+@@ -36,7 +36,7 @@
+              rewriter, loc, group0.getType(), ValueRange{group0},
+              /*asm_string=*/"", /*constraints=*/"=s,0",
+              /*has_side_effects=*/true, /*is_align_stack=*/false,
+-             LLVM::TailCallKind::None,
++             LLVM::TailCallKind::None, /*convergent=*/false,
+              LLVM::AsmDialectAttr::get(ctx, LLVM::AsmDialect::AD_ATT),
+              /*operand_attrs=*/ArrayAttr::get(ctx, {}))
+       .getRes();
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/TargetInfo.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/TargetInfo.cpp
+@@ -748,7 +748,7 @@
+       rewriter, loc, LLVM::LLVMVoidType::get(ctx), /*operands=*/ValueRange{},
+       "s_trap 2", /*constraints=*/"",
+       /*has_side_effects=*/true, /*is_align_stack=*/false,
+-      LLVM::TailCallKind::None,
++      LLVM::TailCallKind::None, /*convergent=*/false,
+       LLVM::AsmDialectAttr::get(ctx, LLVM::AsmDialect::AD_ATT),
+       /*operand_attrs=*/ArrayAttr::get(ctx, {}));
+ }
+--- a/third_party/nvidia/include/Dialect/NVGPU/IR/NVGPUDialect.td
++++ b/third_party/nvidia/include/Dialect/NVGPU/IR/NVGPUDialect.td
+@@ -28,6 +28,9 @@ def NVGPU_Dialect : Dialect {
+   let name = "nvg";
+   let cppNamespace = "::mlir::triton::nvgpu";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let description = [{
+     NVGPU Dialect.
+   }];
+--- a/third_party/nvidia/include/Dialect/NVWS/IR/NVWSDialect.td
++++ b/third_party/nvidia/include/Dialect/NVWS/IR/NVWSDialect.td
+@@ -28,6 +28,9 @@ def NVWS_Dialect : Dialect {
+   let name = "nvws";
+   let cppNamespace = "::mlir::triton::nvws";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let description = [{
+     Nvidia Warp Specialization Dialect.
+   }];
+--- a/third_party/proton/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUDialect.td
++++ b/third_party/proton/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUDialect.td
+@@ -7,6 +7,9 @@ def ProtonGPU_Dialect : Dialect {
+   let name = "proton_gpu";
+   let cppNamespace = "::mlir::triton::proton::gpu";
+
++  // Preserve the existing attr-dict syntax for inherent attributes.
++  let useStrictPropertiesInAssemblyFormat = 0;
++
+   let description = [{
+     Proton GPU dialect.
+   }];

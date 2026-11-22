@@ -1,0 +1,17 @@
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Subject: [PATCH] Use system build tools and relax nanobind pin
+
+Drop cmake and ninja from pyproject.toml build-system.requires so the RPM
+build uses the packaged system tools instead of expecting Python wheels.
+Relax the exact nanobind==2.10.2 pin to >=2.10.2 to accept newer packaged
+versions.
+
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,5 +1,5 @@
+ [build-system]
+-requires = ["setuptools>=40.8.0", "cmake>=3.20,<4.0", "ninja>=1.11.1", "nanobind==2.10.2"]
++requires = ["setuptools>=40.8.0", "nanobind>=2.10.2"]
+ build-backend = "setuptools.build_meta"
+
+ [tool.mypy]

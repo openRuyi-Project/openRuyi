@@ -1,0 +1,23 @@
+From: CHEN Xuan <chenxuan@iscas.ac.cn>
+Subject: [PATCH] Find Buddy's LLVM tools for triton-riscv
+
+The buddy-mlir-llvm RPM installs its LLVM tools (opt, llc, mlir-translate,
+clang++) in a private bin directory. Search that directory before PATH so
+triton-riscv uses the LLVM toolchain matching buddy-mlir.
+
+The @BUDDY_LLVM_BINDIR@ placeholder is filled in during RPM %prep.
+
+--- a/triton-riscv-9ded1d4c19462dd13a9addef5551a4d09e7e3e97/backend/paths.py
++++ b/triton-riscv-9ded1d4c19462dd13a9addef5551a4d09e7e3e97/backend/paths.py
+@@ -61,6 +61,11 @@
+     if bundled := _bundled_bin_path(bin_name):
+         return bundled
+
++    # Check the private bin directory supplied by the buddy-mlir-llvm RPM.
++    private_tool = Path("@BUDDY_LLVM_BINDIR@") / bin_name
++    if private_tool.is_file():
++        return str(private_tool)
++
+     path_entry = shutil.which(bin_name)
+     if path_entry:
+         return path_entry
