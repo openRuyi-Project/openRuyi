@@ -1,0 +1,173 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Sun Yuechi <sunyuechi@iscas.ac.cn>
+Date: Sat, 21 Nov 2026 23:46:05 -0800
+Subject: [PATCH] python/mcp: build the tools from the RPC schema
+
+7c0720d ("python/rpc: remove deprecated python modules") deleted
+python/spdk/rpc/bdev.py, but the MCP server still imports it, so the
+installed spdk-mcp fails at import time.
+
+Register one tool per RPC method from schema/schema.yaml instead -- the
+same source the CLI is generated from. The schema is shipped in the wheel,
+the 'mcp' extra now pulls pyyaml, and a missing schema fails at startup.
+
+Change-Id: I526065a197defefd60ff20fbcd8c5e8bf4465efb
+Signed-off-by: Sun Yuechi <sunyuechi@iscas.ac.cn>
+---
+ python/pyproject.toml     |  5 ++-
+ python/spdk/mcp/server.py | 93 +++++++++++++++++++++++++++++++++++----
+ 2 files changed, 88 insertions(+), 10 deletions(-)
+
+diff --git a/python/pyproject.toml b/python/pyproject.toml
+index e898021ac..51b8b9258 100644
+--- a/python/pyproject.toml
++++ b/python/pyproject.toml
+@@ -56,7 +56,8 @@ cli = [
+     "configshell_fb"
+ ]
+ mcp = [
+-    "mcp[cli]>=1.9.2"
++    "mcp[cli]>=1.9.2",
++    "pyyaml"
+ ]
+ dev = [
+     "grpcio",
+@@ -89,6 +90,7 @@ core-metadata-version = "2.4"
+ "../scripts/rpc.py" = "../scripts/rpc.py"
+ "../scripts/sma.py" = "../scripts/sma.py"
+ "../scripts/spdkcli.py" = "../scripts/spdkcli.py"
++"../schema/schema.yaml" = "../schema/schema.yaml"
+ 
+ [tool.hatch.build.targets.wheel]
+ core-metadata-version = "2.4"
+@@ -97,6 +99,7 @@ core-metadata-version = "2.4"
+ "../scripts/rpc.py" = "spdk/spdk_rpc.py"
+ "../scripts/sma.py" = "spdk/spdk_sma.py"
+ "../scripts/spdkcli.py" = "spdk/spdk_cli.py"
++"../schema/schema.yaml" = "spdk/schema.yaml"
+ 
+ [tool.ruff]
+ fix = false
+diff --git a/python/spdk/mcp/server.py b/python/spdk/mcp/server.py
+index f3210fb9f..428e29910 100644
+--- a/python/spdk/mcp/server.py
++++ b/python/spdk/mcp/server.py
+@@ -1,8 +1,14 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # Copyright (C) 2025 Dell Inc, or its subsidiaries.  All rights reserved.
+ 
++import keyword
+ import os
+-from functools import partial, update_wrapper
++import sys
++from pathlib import Path
++from typing import Annotated, Optional
++
++import yaml  # type: ignore[import-untyped]
++from pydantic import Field  # type: ignore[import-not-found]
+ 
+ try:
+     from mcp.server.fastmcp import FastMCP  # type: ignore[import-not-found]
+@@ -10,7 +16,6 @@ except ImportError:
+     # mcp 2.0 renamed FastMCP to MCPServer
+     from mcp.server.mcpserver import MCPServer as FastMCP  # type: ignore[import-not-found]
+ 
+-from spdk.rpc import bdev  # type: ignore[attr-defined]
+ from spdk.rpc.client import JSONRPCClient
+ 
+ # Create an MCP server
+@@ -26,14 +31,84 @@ def spdk_get_version() -> dict:
+     return client.spdk_get_version()
+ 
+ 
+-# TODO: make this a loop over all rpc.*, not just bdev
+-bdev_functions = [y for x, y in bdev.__dict__.items() if x.startswith('bdev')]
++# Build the tools from schema.yaml, the same source the CLI is generated from.
++# Wire types mirror rpc_autogen.h.jinja2: bitmask is an array of enum names,
++# enum a name.
++_TYPE_MAP = {
++    "string": "str",
++    "uuid": "str",
++    "enum": "str",
++    "bitmask": "list[str]",
++    "int32": "int",
++    "int64": "int",
++    "uint8": "int",
++    "uint16": "int",
++    "uint32": "int",
++    "uint64": "int",
++    "number": "float",
++    "boolean": "bool",
++    "array": "list",
++    "object": "dict",
++}
++
++
++def _find_schema():
++    server = Path(__file__).resolve()
++    # installed: spdk/schema.yaml (wheel); source tree: schema/ at the checkout root.
++    for candidate in (
++        server.parents[1] / "schema.yaml",
++        server.parents[3] / "schema" / "schema.yaml",
++    ):
++        if candidate.is_file():
++            return candidate
++    return None
++
++
++def _register_tools(schema):
++    for method in schema.get("methods", []):
++        name = method["name"]
++        if name == "spdk_get_version" or method.get("private"):
++            continue
++
++        params = method.get("params") or []
++        bad = [p["name"] for p in params
++               if not p["name"].isidentifier() or keyword.iskeyword(p["name"])]
++        if bad:
++            # A non-identifier parameter name would be a SyntaxError in exec().
++            print(f"spdk-mcp: skipping {name}: parameter name(s) {bad} cannot be an argument",
++                  file=sys.stderr)
++            continue
++
++        namespace = {"_client": client, "Annotated": Annotated, "Optional": Optional}
++        required, optional, names = [], [], []
++        for i, param in enumerate(params):
++            field = f"_field_{i}"
++            namespace[field] = Field(description=param.get("description", ""))
++            names.append(param["name"])
++            pytype = _TYPE_MAP.get(param.get("type"), "str")
++            if param.get("required"):
++                required.append(f"{param['name']}: Annotated[{pytype}, {field}]")
++            else:
++                optional.append(f"{param['name']}: Annotated[Optional[{pytype}], {field}] = None")
++
++        signature = ", ".join(required + optional)
++        arguments = ", ".join(f"{n}={n}" for n in names)
++        source = (f"def {name}({signature}):\n"
++                  f"    return getattr(_client, {name!r})({arguments})\n")
++        exec(source, namespace)
++        tool = namespace[name]
++        tool.__doc__ = method.get("description", "")
++        mcp.add_tool(tool)
++
+ 
+-# add all functions as tools to MCP server
+-for func in bdev_functions:
+-    newfunc = partial(func, client)
+-    update_wrapper(newfunc, func)
+-    mcp.add_tool(newfunc)
++_schema_file = _find_schema()
++if _schema_file is None:
++    raise RuntimeError("spdk-mcp: no RPC schema found; run from a source tree or install the wheel")
++with open(_schema_file) as f:
++    _schema = yaml.safe_load(f)
++if not isinstance(_schema, dict):
++    raise RuntimeError(f"spdk-mcp: {_schema_file} is not a usable schema")
++_register_tools(_schema)
+ 
+ 
+ def main():
+-- 
+2.56.1
+
