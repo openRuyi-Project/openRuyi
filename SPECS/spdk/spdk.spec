@@ -69,6 +69,8 @@ applications.
 2002-python-mcp-make-the-spdk-mcp-entry-point-callable.patch
 # https://review.spdk.io/c/spdk/spdk/+/29447
 2003-python-mcp-support-the-mcp-2.0-SDK.patch
+# https://review.spdk.io/c/spdk/spdk/+/29788
+2004-python-mcp-build-the-tools-from-the-rpc-schema.patch
 
 %package        devel
 Summary:        Storage Performance Development Kit development files
@@ -97,6 +99,8 @@ Requires:       python3dist(mcp)
 Requires:       python3dist(protobuf)
 Requires:       python3dist(pyparsing)
 Requires:       python3dist(pyyaml)
+# spdk-mcp registers its tools from the RPC schema with pydantic annotations
+Requires:       python3dist(pydantic)
 BuildArch:      noarch
 
 %description    tools
