@@ -1,0 +1,109 @@
+From: Ayshe Kuran <ayshek@graphcore.ai>
+Subject: [PATCH] Adapt Triton 3.9.0 to pending LLVM API updates
+
+Port the LLVM/MLIR API updates from pending upstream PR #12608
+(commit c4221ae39c4f661e8feb8a97cb86219c3c1695ad) so Triton 3.9.0 builds
+against the newer LLVM revision used by buddy-mlir:
+- pass the new arguments to LLVM::LoopAnnotationAttr::get and PassBuilder
+- pass isNoundef=false to LLVM::LoadOp::create in AMD TargetInfo
+- switch AMD GPU-to-ROCDL lowering from amdgpu::Chipset to ROCDL::TargetInfo
+
+https://github.com/triton-lang/triton/pull/12608
+
+--- a/lib/Conversion/TritonGPUToLLVM/WarpSpecializeUtility.cpp
++++ b/lib/Conversion/TritonGPUToLLVM/WarpSpecializeUtility.cpp
+@@ -368,9 +368,12 @@ static void disableLICM(LLVM::BrOp latchBr) {
+   Builder b(latchBr.getContext());
+   MLIRContext *ctx = b.getContext();
+   auto licmMD = LLVM::LoopLICMAttr::get(ctx, b.getBoolAttr(true), {});
+-  auto loopMD =
+-      LLVM::LoopAnnotationAttr::get(b.getContext(), {}, {}, {}, {}, {}, licmMD,
+-                                    {}, {}, {}, {}, {}, {}, {}, {}, {});
++  auto loopMD = LLVM::LoopAnnotationAttr::get(
++      ctx, /*id=*/{}, /*disableNonforced=*/{}, /*vectorize=*/{},
++      /*interleave=*/{}, /*unroll=*/{}, /*unrollAndJam=*/{}, licmMD,
++      /*distribute=*/{}, /*pipeline=*/{}, /*peeled=*/{}, /*unswitch=*/{},
++      /*mustProgress=*/{}, /*isVectorized=*/{}, /*align=*/0,
++      /*startLoc=*/{}, /*endLoc=*/{}, /*parallelAccesses=*/{});
+   latchBr.setLoopAnnotationAttr(loopMD);
+ }
+ 
+--- a/python/src/ir.cc
++++ b/python/src/ir.cc
+@@ -968,8 +968,13 @@ void init_triton_ir(py::module_ &m) {
+                                          self.getBuilder().getBoolAttr(true));
+              mlir::LLVM::LoopAnnotationAttr la =
+                  mlir::LLVM::LoopAnnotationAttr::get(
+-                     self.getBuilder().getContext(), {}, {}, {}, {}, {},
+-                     licmAttr, {}, {}, {}, {}, {}, {}, {}, {}, {});
++                     self.getBuilder().getContext(), /*id=*/{},
++                     /*disableNonforced=*/{}, /*vectorize=*/{},
++                     /*interleave=*/{}, /*unroll=*/{}, /*unrollAndJam=*/{},
++                     licmAttr, /*distribute=*/{}, /*pipeline=*/{},
++                     /*peeled=*/{}, /*unswitch=*/{}, /*mustProgress=*/{},
++                     /*isVectorized=*/{}, /*align=*/0, /*startLoc=*/{},
++                     /*endLoc=*/{}, /*parallelAccesses=*/{});
+              return la;
+            })
+       // Use arith.ConstantOp to create constants
+--- a/python/src/llvm.cc
++++ b/python/src/llvm.cc
+@@ -730,8 +730,8 @@ void init_triton_llvm(py::module_ &m) {
+         if (!arch.empty())
+           targetMachine =
+               createTargetMachine(mod, arch, enable_fp_fusion, features);
+-        PassBuilder pb(/*targetMachine=*/targetMachine.get(), tuningOptions,
+-                       std::nullopt, instrCbPtr);
++        PassBuilder pb(mod->getContext(), /*targetMachine=*/targetMachine.get(),
++                       tuningOptions, std::nullopt, instrCbPtr);
+ 
+         if (!pluginFile.empty()) {
+           // TODO: Add some logging here that we inserted a pass into the LLVM
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/TargetInfo.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/TargetInfo.cpp
+@@ -217,7 +217,8 @@
+         Value loaded = LLVM::LoadOp::create(
+             rewriter, loc, valueTy, ptr, alignment, /*isVolatile=*/false,
+             /*isNonTemporal=*/false, /*isInvariant=*/false,
+-            /*isInvariantGroup=*/false, LLVM::AtomicOrdering::monotonic,
++            /*isInvariantGroup=*/false, /*isNoundef=*/false,
++            LLVM::AtomicOrdering::monotonic,
+             getAtomicSyncScope(scope));
+         return SmallVector<Value>{loaded};
+       });
+--- a/third_party/amd/lib/TritonAMDGPUToLLVM/TritonGPUToLLVM.cpp
++++ b/third_party/amd/lib/TritonAMDGPUToLLVM/TritonGPUToLLVM.cpp
+@@ -10,10 +10,10 @@
+ #include "mlir/Conversion/MathToLLVM/MathToLLVM.h"
+ #include "mlir/Conversion/SCFToControlFlow/SCFToControlFlow.h"
+ #include "mlir/Conversion/UBToLLVM/UBToLLVM.h"
+-#include "mlir/Dialect/AMDGPU/Utils/Chipset.h"
+ #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+ #include "mlir/Dialect/LLVMIR/NVVMDialect.h"
+ #include "mlir/Dialect/LLVMIR/ROCDLDialect.h"
++#include "mlir/Dialect/LLVMIR/ROCDLTargetInfo.h"
+ #include "mlir/Pass/Pass.h"
+ #include "third_party/amd/include/Analysis/AMDGPUAllocation.h"
+ #include "third_party/amd/include/Analysis/AxisInfoExt.h"
+@@ -213,16 +213,17 @@
+     mlir::triton::AMD::populateWarpIdOpToLLVMPattern(typeConverter, targetInfo,
+                                                      patterns, commonBenefit);
+ 
+-    FailureOr<mlir::amdgpu::Chipset> maybeChipset =
+-        mlir::amdgpu::Chipset::parse(targetInfo.getBaseArch());
+-    if (failed(maybeChipset)) {
++    FailureOr<mlir::ROCDL::TargetInfo> rocdlTarget =
++        mlir::ROCDL::TargetInfo::get(targetInfo.getBaseArch(),
++                                    targetInfo.getWarpSize());
++    if (failed(rocdlTarget)) {
+       emitError(UnknownLoc::get(&getContext()),
+                 "Invalid AMDGPU chipset name: " + this->gfxArch);
+       return signalPassFailure();
+     }
+     // Native lowering patterns
+     mlir::populateGpuToROCDLConversionPatterns(
+-        typeConverter, patterns, mlir::gpu::amd::HIP, *maybeChipset);
++        typeConverter, patterns, mlir::gpu::amd::HIP, *rocdlTarget);
+ 
+     mlir::cf::populateControlFlowToLLVMConversionPatterns(typeConverter,
+                                                           patterns);
