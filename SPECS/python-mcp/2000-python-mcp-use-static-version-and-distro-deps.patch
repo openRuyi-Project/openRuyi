@@ -23,7 +23,7 @@ Subject: [PATCH] python-mcp: use static metadata and distro dependencies
 +    "uvicorn>=0.31.1; sys_platform != 'emscripten'",
 +    "jsonschema>=4.20.0",
 +    "pywin32>=311; sys_platform == 'win32'",
-+    "pyjwt>=2.10.1",
++    "pyjwt[crypto]>=2.10.1",
 +    "typing-extensions>=4.13.0",
 +    "typing-inspection>=0.4.1",
 +    "opentelemetry-api>=1.28.0",
