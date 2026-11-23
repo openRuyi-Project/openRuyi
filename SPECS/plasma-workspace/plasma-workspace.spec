@@ -190,7 +190,7 @@ Requires:       ksystemstats
 Requires:       kf6-kuserfeedback
 Requires:       cpp
 Requires:       %{_bindir}/grep
-Requires:       sddm
+Requires:       (sddm or plasma-login-manager)
 Requires:       kio-extras
 Requires:       knighttime >= %{_plasma6_bugfix}
 %requires_ge    libplasma
