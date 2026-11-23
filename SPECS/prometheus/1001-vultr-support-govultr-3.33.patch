@@ -1,0 +1,47 @@
+From 0298fe0018398944307f3e5b59c1bcc64a7661d3 Mon Sep 17 00:00:00 2001
+From: "renovate[bot]" <29139614+renovate[bot]@users.noreply.github.com>
+Date: Mon, 7 Sep 2026 15:29:53 +0200
+Subject: [PATCH] fix(deps): update module github.com/vultr/govultr/v3 to
+ v3.33.0 (#19618)
+
+* fix(deps): update module github.com/vultr/govultr/v3 to v3.33.0
+
+* fix: guard against nil dereference in vultr service discovery
+
+Signed-off-by: Jan Fajerski <jfajersk@redhat.com>
+
+* fix(discovery/vultr): update mock content-type for govultr v3.33.0
+
+govultr v3.33.0 only unmarshals response bodies when the Content-Type
+header is exactly "application/json". The test mock returned
+"application/json; charset=utf-8", so the instance list was never
+unmarshaled and TestVultrSDRefresh failed. Align the mock with the
+Content-Type returned by the real Vultr API.
+
+Assisted-by: opencode (claude-opus-4-8)
+Signed-off-by: Jan Fajerski <jfajersk@redhat.com>
+
+---------
+
+Signed-off-by: Jan Fajerski <jfajersk@redhat.com>
+Co-authored-by: renovate[bot] <29139614+renovate[bot]@users.noreply.github.com>
+Co-authored-by: Jan Fajerski <jfajersk@redhat.com>
+---
+ discovery/vultr/mock_test.go | 2 +-
+ discovery/vultr/vultr.go     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/discovery/vultr/mock_test.go b/discovery/vultr/mock_test.go
+index 03e5952..9a4405c 100644
+--- a/discovery/vultr/mock_test.go
++++ b/discovery/vultr/mock_test.go
+@@ -63 +63 @@ func (m *SDMock) HandleInstanceList() {
+-		w.Header().Add("content-type", "application/json; charset=utf-8")
++		w.Header().Add("content-type", "application/json")
+diff --git a/discovery/vultr/vultr.go b/discovery/vultr/vultr.go
+index 56d8862..de8e22d 100644
+--- a/discovery/vultr/vultr.go
++++ b/discovery/vultr/vultr.go
+@@ -219 +219 @@ func (d *Discovery) listInstances(ctx context.Context) ([]govultr.Instance, erro
+-		if meta.Links.Next == "" {
++		if meta == nil || meta.Links == nil || meta.Links.Next == "" {

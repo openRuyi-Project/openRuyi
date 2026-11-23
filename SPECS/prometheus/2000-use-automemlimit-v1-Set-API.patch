@@ -1,0 +1,19 @@
+From 4153ae397e6abf3c29cc02dd7855e28d8e7226bf Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 21 Nov 2026 08:46:55 +0800
+Subject: [PATCH] Use automemlimit v1 Set API
+
+Keep Prometheus compatible with the repository-provided automemlimit v1 API.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ cmd/prometheus/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/prometheus/main.go b/cmd/prometheus/main.go
+index 6795c6b..82ad66f 100644
+--- a/cmd/prometheus/main.go
++++ b/cmd/prometheus/main.go
+@@ -797 +797 @@ func main() {
+-		if _, err := memlimit.SetGoMemLimitWithOpts(
++		if _, err := memlimit.Set(
