@@ -121,9 +121,11 @@ cd ..
 %find_lang %{name} --all-name --generate-subpackages
 
 %check
-# Drop upstream-known pr19719 tests pending ld/32983.
+# Drop the pr19719 tests on riscv64 pending ld/32983.
 # https://sourceware.org/bugzilla/show_bug.cgi?id=32983
+%ifarch riscv64
 sed -i '/"pr19719/d' ld/testsuite/ld-elf/shared.exp
+%endif
 
 cd build-dir
 
