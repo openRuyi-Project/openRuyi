@@ -1,0 +1,28 @@
+From e3e455527a455f3a96857e817bb96e3158d94703 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Tue, 24 Nov 2026 15:28:29 +0800
+Subject: [PATCH] Use palette 0.7.6
+
+eza 0.23.5 pins palette to 0.7.5 because palette_derive 0.7.6
+introduced by_address. openRuyi packages palette 0.7.6, so allow the
+matching palette release instead of downgrading the palette package.
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 7cf1b1b..f52015c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -167,7 +167,7 @@ features = [
+ ]
+ 
+ [dependencies.palette]
+-version = "=0.7.5"
++version = "=0.7.6"
+ features = ["std"]
+ default-features = false
+ 
+-- 
+2.56.0
+

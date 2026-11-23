@@ -1,0 +1,33 @@
+From c2c8f87f6944fc0d6e143df17de6842014d8b8be Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Wed, 25 Nov 2026 16:34:31 +0800
+Subject: [PATCH] Remove the Windows-only windows-sys dependency
+
+The Linux build does not use the Windows console bindings. Dropping the
+target-specific dependency keeps the offline Cargo resolution free of
+Windows-only crates.
+---
+ Cargo.toml | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 7cf1b1b..f34351c 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -226,13 +226,6 @@ default-features = false
+ [target.'cfg(target_os = "linux")'.dependencies.proc-mounts]
+ version = "0.3"
+ 
+-[target.'cfg(target_os = "windows")'.dependencies.windows-sys]
+-version = "0.61.2"
+-features = [
+-    "Win32_System_Console",
+-    "Win32_Foundation",
+-]
+-
+ [target."cfg(unix)".dependencies.uzers]
+ version = "0.12.1"
+ 
+-- 
+2.56.0
+
