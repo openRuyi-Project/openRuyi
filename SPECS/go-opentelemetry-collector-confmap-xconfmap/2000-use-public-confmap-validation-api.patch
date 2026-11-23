@@ -1,0 +1,22 @@
+From ae2704a9280695fa597816e68146281745e093c3 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 21 Nov 2026 07:57:50 +0800
+Subject: [PATCH] Use public confmap validation API
+
+Keep the deprecated xconfmap validation API available while using the public confmap implementation.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ confmap/xconfmap/config.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/confmap/xconfmap/config.go b/confmap/xconfmap/config.go
+index 0a626e7..f85443d 100644
+--- a/confmap/xconfmap/config.go
++++ b/confmap/xconfmap/config.go
+@@ -14 +14 @@ import (
+-type Validator = internal.Validator
++type Validator = confmap.Validator
+@@ -21 +21 @@ func Validate(cfg any) error {
+-	return internal.Validate(cfg)
++	return confmap.Validate(cfg)
