@@ -52,6 +52,18 @@ Network Security Services (NSS) is a set of libraries for developing
 security-enabled client and server applications. This all-in-one package
 contains the runtime libraries, development files, and command-line tools.
 
+%package        tests
+Summary:        Test programs and helpers for NSS
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    tests
+NSS cryptographic and database test executables, GoogleTest programs
+and test helpers, including nss_bogo_shim. The upstream shell harness,
+test vectors and external BoGo runner are not included. Some programs
+require matching test data, prepared databases or a PKCS #11 test device.
+
+
+
 # No configure
 %conf
 
@@ -140,9 +152,79 @@ export NSS_SKIP_BADSSL_OCSP=1
 %{_libdir}/lib*.so*
 %{_libdir}/*.chk
 %{_bindir}/*
+%exclude %{_bindir}/baddbdir
+%exclude %{_bindir}/bltest
+%exclude %{_bindir}/chktest
+%exclude %{_bindir}/dbtest
+%exclude %{_bindir}/dertimetest
+%exclude %{_bindir}/encodeinttest
+%exclude %{_bindir}/fbectest
+%exclude %{_bindir}/fipstest
+%exclude %{_bindir}/multinit
+%exclude %{_bindir}/nonspr10
+%exclude %{_bindir}/pk11ectest
+%exclude %{_bindir}/pk11gcmtest
+%exclude %{_bindir}/pk11importtest
+%exclude %{_bindir}/pk11mode
+%exclude %{_bindir}/remtest
+%exclude %{_bindir}/rsapoptst
+%exclude %{_bindir}/sdbthreadtst
+%exclude %{_bindir}/sdrtest
+%exclude %{_bindir}/secmodtest
+%exclude %{_bindir}/base_gtest
+%exclude %{_bindir}/certdb_gtest
+%exclude %{_bindir}/certhigh_gtest
+%exclude %{_bindir}/cryptohi_gtest
+%exclude %{_bindir}/der_gtest
+%exclude %{_bindir}/freebl_gtest
+%exclude %{_bindir}/pk11_gtest
+%exclude %{_bindir}/smime_gtest
+%exclude %{_bindir}/softoken_gtest
+%exclude %{_bindir}/ssl_gtest
+%exclude %{_bindir}/sysinit_gtest
+%exclude %{_bindir}/util_gtest
+%exclude %{_bindir}/nss_bogo_shim
+%exclude %{_bindir}/lowhashtest
+%exclude %{_bindir}/mangle
 %{_includedir}/nss3
 %{_libdir}/pkgconfig/nss-util.pc
 %{_libdir}/pkgconfig/nss.pc
+
+%files tests
+%{_bindir}/baddbdir
+%{_bindir}/bltest
+%{_bindir}/chktest
+%{_bindir}/dbtest
+%{_bindir}/dertimetest
+%{_bindir}/encodeinttest
+%{_bindir}/fbectest
+%{_bindir}/fipstest
+%{_bindir}/multinit
+%{_bindir}/nonspr10
+%{_bindir}/pk11ectest
+%{_bindir}/pk11gcmtest
+%{_bindir}/pk11importtest
+%{_bindir}/pk11mode
+%{_bindir}/remtest
+%{_bindir}/rsapoptst
+%{_bindir}/sdbthreadtst
+%{_bindir}/sdrtest
+%{_bindir}/secmodtest
+%{_bindir}/base_gtest
+%{_bindir}/certdb_gtest
+%{_bindir}/certhigh_gtest
+%{_bindir}/cryptohi_gtest
+%{_bindir}/der_gtest
+%{_bindir}/freebl_gtest
+%{_bindir}/pk11_gtest
+%{_bindir}/smime_gtest
+%{_bindir}/softoken_gtest
+%{_bindir}/ssl_gtest
+%{_bindir}/sysinit_gtest
+%{_bindir}/util_gtest
+%{_bindir}/nss_bogo_shim
+%{_bindir}/lowhashtest
+%{_bindir}/mangle
 
 %changelog
 %autochangelog
