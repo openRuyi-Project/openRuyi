@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Mon, 23 Nov 2026 18:00:00 +0800
+Subject: [PATCH] Remove unused sysinfo dependency on Linux
+
+The dust sources do not use sysinfo. Removing the unused dependency keeps
+Linux offline resolution independent of sysinfo's Apple-only dependencies.
+
+---
+ Cargo.toml | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -138,9 +138,6 @@ version = "1.0"
+ [dependencies.stfu8]
+ version = "0.2"
+ 
+-[dependencies.sysinfo]
+-version = "0.39"
+-
+ [dependencies.terminal_size]
+ version = "0.4"
