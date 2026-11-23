@@ -1,0 +1,11 @@
+#%PAM-1.0
+# Authentication is authorized by the display manager's autologin setting.
+auth      required       pam_env.so
+auth      required       pam_permit.so
+account   required       pam_nologin.so
+account   include        system-auth
+password  include        system-auth
+session   required       pam_loginuid.so
+session   optional       pam_keyinit.so revoke force
+session   include        system-auth
+session   include        postlogin

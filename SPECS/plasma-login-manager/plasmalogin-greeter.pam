@@ -1,0 +1,10 @@
+#%PAM-1.0
+# The greeter needs a systemd session without password authentication.
+auth      required       pam_env.so
+auth      required       pam_permit.so
+account   required       pam_permit.so
+password  required       pam_deny.so
+session   required       pam_loginuid.so
+session   optional       pam_keyinit.so revoke
+session   include        system-auth
+session   include        postlogin
