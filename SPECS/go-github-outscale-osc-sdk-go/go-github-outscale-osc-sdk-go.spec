@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define _name           osc-sdk-go
-%define go_import_path  github.com/outscale/osc-sdk-go
+%define go_import_path  github.com/outscale/osc-sdk-go/v2
 
 Name:           go-github-outscale-osc-sdk-go
 Version:        2.34.0
@@ -29,14 +29,31 @@ BuildRequires:  go-rpm-macros
 BuildRequires:  go(github.com/aws/aws-sdk-go)
 BuildRequires:  go(golang.org/x/oauth2)
 
-Provides:       go(github.com/outscale/osc-sdk-go) = %{version}
+Provides:       go(%{go_import_path}) = %{version}
 
 Requires:       go(github.com/aws/aws-sdk-go)
 Requires:       go(golang.org/x/oauth2)
 
 %description
-This package bundles the OUTSCALE API SDK modules from one repository
-snapshot, including the version 2 API.
+This package provides the version 2 OUTSCALE API SDK for Go.
+
+%prep -a
+# Resolve links to ../examples before copying the v2 module outside the repository.
+cp -aL v2 v2-resolved
+rm -r v2
+mv v2-resolved v2
+
+%install
+# The v2 module lives below the repository root; install it at its import path.
+pushd v2
+%buildsystem_golangmodules_install
+popd
+
+%check
+# Run the packaged module's tests from its own source directory.
+pushd v2
+%buildsystem_golangmodules_check
+popd
 
 %files
 %doc README.md
