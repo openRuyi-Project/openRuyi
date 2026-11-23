@@ -20,12 +20,16 @@ License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND BSD-3-Clause AND CC0-
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/plasma/plasma-login-manager.git
 #!RemoteAsset:  sha256:2022c5da0edb4160202bf33e239b6bbd450ae1acadfe1104624db74439fb731c
-Source:         https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+Source0:        https://invent.kde.org/plasma/%{name}/-/archive/v%{version}/%{name}-v%{version}.tar.gz
+Source1:        plasmalogin.pam
+Source2:        plasmalogin-autologin.pam
+Source3:        plasmalogin-greeter.pam
+Source4:        plasmalogin.sysusers
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
-# Ship the Fedora/RPM-style PAM stack; "auto" detection aborts on unknown distros.
-BuildOption(conf):  -DPAM_OS_CONFIGURATION=fedora
+# Install the openRuyi PAM configuration below.
+BuildOption(conf):  -DINSTALL_PAM_CONFIGURATION=OFF
 
 BuildRequires:  cmake >= 3.22
 BuildRequires:  kf6-extra-cmake-modules >= %{kf6_version}
@@ -67,6 +71,11 @@ BuildRequires:  cmake(LibKLookAndFeel) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(LibKWorkspace) >= %{_plasma6_bugfix}
 BuildRequires:  cmake(PlasmaQuick) >= %{_plasma6_bugfix}
 
+Requires:       kwin >= %{_plasma6_bugfix}
+Requires:       plasma-workspace >= %{_plasma6_bugfix}
+Requires:       qt6-qtwayland
+Requires:       openruyi-authselect-profiles
+
 %{?systemd_requires}
 
 %description
@@ -75,6 +84,11 @@ from KDE. It provides the graphical greeter and the session machinery used to
 start Plasma on Wayland, along with a System Settings module to configure it.
 
 %install -a
+install -Dpm 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pam.d/plasmalogin
+install -Dpm 644 %{SOURCE2} %{buildroot}%{_sysconfdir}/pam.d/plasmalogin-autologin
+install -Dpm 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/pam.d/plasmalogin-greeter
+install -Dpm 644 %{SOURCE4} %{buildroot}%{_sysusersdir}/plasmalogin.conf
+
 # Avoid clashing with sddm's DisplayManager D-Bus configuration file name
 mv %{buildroot}%{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager.conf \
    %{buildroot}%{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager-plasmalogin.conf
@@ -86,8 +100,8 @@ mkdir -p %{buildroot}%{_localstatedir}/lib/plasmalogin
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 
 %pre
-# Create the plasmalogin service account from the upstream sysusers.d file
-%sysusers_create_package %{name} %{buildroot}%{_sysusersdir}/plasmalogin.conf
+# Create the account before RPM assigns ownership to its state directory.
+%sysusers_create_package plasmalogin %{SOURCE4}
 
 %post
 %systemd_post plasmalogin.service
@@ -104,9 +118,9 @@ mkdir -p %{buildroot}%{_localstatedir}/lib/plasmalogin
 %files -f %{name}.lang
 %doc README.md
 %license LICENSE LICENSE.* LICENSES/*
-%{_prefix}/lib/pam.d/plasmalogin
-%{_prefix}/lib/pam.d/plasmalogin-autologin
-%{_prefix}/lib/pam.d/plasmalogin-greeter
+%config(noreplace) %{_sysconfdir}/pam.d/plasmalogin
+%config(noreplace) %{_sysconfdir}/pam.d/plasmalogin-autologin
+%config(noreplace) %{_sysconfdir}/pam.d/plasmalogin-greeter
 %{_datadir}/dbus-1/system.d/org.freedesktop.DisplayManager-plasmalogin.conf
 %{_bindir}/plasmalogin
 %{_bindir}/plasma-login-wallpaper
