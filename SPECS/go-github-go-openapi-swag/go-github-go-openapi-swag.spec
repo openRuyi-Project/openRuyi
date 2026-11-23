@@ -31,6 +31,17 @@ BuildRequires:  go(github.com/mailru/easyjson)
 BuildRequires:  go(go.yaml.in/yaml/v3)
 
 Provides:       go(github.com/go-openapi/swag) = %{version}
+Provides:       go(github.com/go-openapi/swag/cmdutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/conv) = %{version}
+Provides:       go(github.com/go-openapi/swag/fileutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/jsonname) = %{version}
+Provides:       go(github.com/go-openapi/swag/jsonutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/loading) = %{version}
+Provides:       go(github.com/go-openapi/swag/mangling) = %{version}
+Provides:       go(github.com/go-openapi/swag/netutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/stringutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/typeutils) = %{version}
+Provides:       go(github.com/go-openapi/swag/yamlutils) = %{version}
 
 Requires:       go(github.com/mailru/easyjson)
 Requires:       go(go.yaml.in/yaml/v3)
