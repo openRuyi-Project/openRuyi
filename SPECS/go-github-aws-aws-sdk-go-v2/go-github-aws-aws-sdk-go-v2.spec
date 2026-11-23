@@ -76,6 +76,7 @@ Provides:       go(github.com/aws/aws-sdk-go-v2/credentials) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/feature/ec2/imds) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/configsources) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/endpoints/v2) = %{version}
+Provides:       go(github.com/aws/aws-sdk-go-v2/internal/v4a) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/internal/ini) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/appconfig) = %{version}
 Provides:       go(github.com/aws/aws-sdk-go-v2/service/ec2) = %{version}
