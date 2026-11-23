@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+Date: Mon, 23 Nov 2026 12:00:00 +0800
+Subject: [PATCH] Use the packaged stable yansi release
+
+The prerelease yansi dependency cannot be resolved from the openRuyi
+registry. The stable release provides the same API required here.
+
+---
+ Cargo.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -33,3 +33,3 @@
+ [dependencies.yansi]
+-version = "1.0.0-rc"
++version = "1.0.1"
+ optional = true
