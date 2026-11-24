@@ -18,18 +18,18 @@
 %global variant_name lts
 
 # Managed under kernel-team-tools
-%global patchset_release 5
+%global patchset_release 1
 %global config_version 0
 
 Name:           linux-lts
-Version:        6.18.64
+Version:        6.18.65
 Release:        %{patchset_release}.%{config_version}_%autorelease
 Summary:        The Linux lts Kernel
 License:        GPL-2.0-only
 URL:            https://www.kernel.org/
-#!RemoteAsset:  sha256:020d45510c539972e6f14c5c71566878d3b7ef56fb082b3e09134f2ebaade562
+#!RemoteAsset:  sha256:c92606f956f09dc50b5a0e2af9e86763fce27ada1647de97f8d1ac8cfc95801d
 Source0:        https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{version}.tar.xz
-#!RemoteAsset:  sha256:39c3306e1a305e45d106b72cf416a97b7c10851ce65455a7702eae528272a2f2
+#!RemoteAsset:  sha256:b96362b22930c854ae07c56d72efb91fb32d42b7f2d234cc2742f49d1d902070
 Source1:        https://github.com/openRuyi-Project/kernel-team-tools/releases/download/v%{version}-%{patchset_release}.%{config_version}/linux-lts-v%{version}-%{patchset_release}.tar.gz
 BuildSystem:    linux
 
