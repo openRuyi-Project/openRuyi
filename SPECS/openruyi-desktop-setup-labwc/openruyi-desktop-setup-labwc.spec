@@ -5,16 +5,19 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           openruyi-desktop-setup-labwc
-Version:        20260324
+Version:        20261124
 Release:        %autorelease
 Summary:        Preset labwc configuration for openRuyi desktop user
 License:        MIT
 BuildArch:      noarch
-VCS:            git:https://git.openruyi.cn/openRuyi/openruyi-desktop-setup-labwc
-#!RemoteAsset
-Source0:        https://git.openruyi.cn/openRuyi/openruyi-desktop-setup-labwc/archive/%{version}.tar.gz
+VCS:            git:https://github.com/openRuyi-Project/openruyi-desktop-setup-labwc
+#!RemoteAsset:  sha256:f7f474e13b521676509a90ea7719fc2452681aa012893d6ee0bcf21940ffeea7
+Source0:        https://github.com/openRuyi-Project/openruyi-desktop-setup-labwc/archive/refs/tags/%{version}.tar.gz
 
-Requires:       labwc
+BuildRequires:  systemd-rpm-macros
+
+Requires:       labwc >= 0.20
+Requires:       systemd
 Requires:       wofi
 Requires:       sfwbar
 Requires:       swaybg
@@ -29,8 +32,7 @@ This package installs system-wide defaults for labwc under
 ${XDG_CONFIG_DIRS:-/etc/xdg}/labwc.
 
 %prep
-%autosetup -T -c
-tar -xzf %{SOURCE0} --strip-components=1
+%autosetup -n openruyi-desktop-setup-labwc-%{version}
 
 %build
 
@@ -45,6 +47,9 @@ install -m 0644 waybar/power_menu.xml %{buildroot}%{_datadir}/openruyi-desktop-s
 install -m 0644 rc.xml %{buildroot}%{_sysconfdir}/xdg/labwc/rc.xml
 install -m 0644 menu.xml %{buildroot}%{_sysconfdir}/xdg/labwc/menu.xml
 install -m 0755 autostart %{buildroot}%{_sysconfdir}/xdg/labwc/autostart
+install -m 0755 shutdown %{buildroot}%{_sysconfdir}/xdg/labwc/shutdown
+install -D -m 0644 systemd/waybar.service.d/50-openruyi-labwc.conf \
+    %{buildroot}%{_userunitdir}/waybar.service.d/50-openruyi-labwc.conf
 
 %posttrans
 install -d %{_sysconfdir}/xdg/waybar
@@ -60,6 +65,9 @@ install -m 0644 %{_datadir}/openruyi-desktop-setup-labwc/waybar/power_menu.xml %
 %{_sysconfdir}/xdg/labwc/rc.xml
 %{_sysconfdir}/xdg/labwc/menu.xml
 %{_sysconfdir}/xdg/labwc/autostart
+%{_sysconfdir}/xdg/labwc/shutdown
+%dir %{_userunitdir}/waybar.service.d
+%{_userunitdir}/waybar.service.d/50-openruyi-labwc.conf
 
 %changelog
-%{?autochangelog}
+%autochangelog
