@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name libgit2-sys
-%global full_version 0.18.3+1.9.2
+%global full_version 0.18.4+1.9.3
 %global pkgname libgit2-sys-0.18
 
 Name:           rust-libgit2-sys-0.18
-Version:        0.18.3
+Version:        0.18.4
 Release:        %autorelease
 Summary:        Rust crate "libgit2-sys"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/git2-rs
-#!RemoteAsset:  sha256:c9b3acc4b91781bb0b3386669d325163746af5f6e4f73e6d2d630e09a35f3487
+#!RemoteAsset:  sha256:9b26f66f35e1871b22efcf7191564123d2a446ca0538cde63c23adfefa9b15b7
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -25,8 +25,10 @@ Requires:       crate(cc-1/parallel) >= 1.0.43
 Requires:       crate(libc-0.2/default) >= 0.2.0
 Requires:       crate(libz-sys-1/libc) >= 1.1.0
 Requires:       crate(pkg-config-0.3) >= 0.3.15
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
+Provides:       crate(%{pkgname}/unstable-sha256) = %{version}
 Provides:       crate(%{pkgname}/vendored) = %{version}
 
 %description
