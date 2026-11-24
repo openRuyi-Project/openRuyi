@@ -16,11 +16,11 @@ Summary:        Library for Capabilities (linux-privs) Support
 License:        BSD-3-Clause OR GPL-2.0-only
 URL:            https://sites.google.com/site/fullycapable/
 VCS:            git:https://git.kernel.org/pub/scm/libs/libcap/libcap.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:629da4ab29900d0f7fcc36227073743119925fd711c99a1689bbf5c9b40c8e6f
 Source:         https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.xz
-#!RemoteAsset
+#!RemoteAsset:  sha256:04ac58ad1cb220df031e17b8cc38ae550642b74ecb53b3c8ddfab95f97e54585
 Source1:        https://mirrors.edge.kernel.org/pub/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.sign
-#!RemoteAsset
+#!RemoteAsset:  sha256:fe4c1f6257512f3b02ee175f736ce118b02d0ca5caad7e47933bb5c8f546d89a
 Source2:        https://git.kernel.org/pub/scm/libs/libcap/libcap.git/plain/pgp.keys.asc#/%{name}.keyring
 BuildSystem:    autotools
 
@@ -68,11 +68,6 @@ libcap.
 
 %install -a
 rm %{buildroot}%{_libdir}/libcap.a
-
-%ifarch riscv64
-%check
-# need to test on qemu-system.
-%endif
 
 %files
 %license License
