@@ -1,0 +1,54 @@
+# sysbasiccmd
+# * see the repository LICENSE, README, and CONTRIBUTING files for more information
+
+# spell-checker:ignore (libs) libselinux gethostid procfs
+
+[package]
+name = "easybox"
+version = "0.0.1"
+authors = ["openeuler developers"]
+license = "MulanPSL-2.0"
+description = "sysbasiccmd ~ GNU coreutils (updated); implemented as universal (cross-platform) utils, written in Rust"
+default-run = "easybox"
+
+homepage = "https://gitee.com/openeuler/easybox"
+repository = "https://gitee.com/openeuler/easybox"
+readme = "README.md"
+keywords = ["coreutils", "easybox", "util-linux", "cli", "utility"]
+categories = ["command-line-utilities"]
+rust-version = "1.76.0"
+edition = "2021"
+build = "build.rs"
+resolver = "2"  # Use the new dependency resolver
+
+[workspace]
+members = [
+    "src/uucore",
+    "src/uucore_procs",
+    "src/oe/base32",
+    "src/oe/md5sum",
+    "src/oe/sha256sum",
+]
+
+[features]
+default = []
+base32 = ["dep:base32"]
+md5sum = ["dep:md5sum"]
+sha256sum = ["dep:sha256sum"]
+
+[dependencies]
+clap = { version = "3.2.0", features = ["wrap_help", "cargo"] }
+clap_complete = "3.1.0"
+phf = "0.11.3"
+textwrap = { version = "0.16.1", features = ["terminal_size"] }
+uucore = { package = "uucore", path = "src/uucore" }
+base32 = { optional = true, package = "oe_base32", path = "src/oe/base32" }
+md5sum = { optional = true, package = "oe_md5sum", path = "src/oe/md5sum" }
+sha256sum = { optional = true, package = "oe_sha256sum", path = "src/oe/sha256sum" }
+
+[build-dependencies]
+phf_codegen = "0.11.3"
+
+[[bin]]
+name = "easybox"
+path = "src/bin/coreutils.rs"
