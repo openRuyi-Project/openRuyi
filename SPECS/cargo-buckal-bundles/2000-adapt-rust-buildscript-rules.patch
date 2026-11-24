@@ -1,0 +1,58 @@
+Subject: Adapt Rust build script rules to the Buck2 2026-11-15 prelude
+Upstream: https://github.com/buck2hub/buckal-bundles
+Upstream-Status: Pending
+Reference: https://github.com/meta/buck2/blob/2026-11-15/prelude/rust/cargo_buildscript.bzl
+
+Use the prelude buildscript module and its indexed transition. Resolve
+the make shim path relative to its parent directory.
+
+--- a/cargo_buildscript.bzl
++++ b/cargo_buildscript.bzl
+@@ -34,8 +34,7 @@
+ load("@prelude//rust:targets.bzl", "targets")
+ load("@prelude//rust/tools:attrs.bzl", "RustInternalToolsInfo")
+ load(
+-    "@prelude//rust/tools:buildscript_platform.bzl",
+-    "buildscript_platform_constraints",
++    "@prelude//rust/buildscript:buildscript_platform.bzl",
+     "transition_alias",
+ )
+ load("@prelude//utils:cmd_script.bzl", "cmd_script")
+@@ -172,7 +171,7 @@
+                 # Change directory to the script's location in buck-out, then up
+                 # to the repo root.
+                 'cd -- "$(dirname -- "$(realpath "${BASH_SOURCE[0]}")")"',
+-                cmd_args(ctx.label.project_root, relative_to = script, parent = 1, format = "cd {}"),
++                cmd_args(ctx.label.project_root, relative_to = (script, 1), format = "cd {}"),
+                 # Run from_any_dir.py.
+                 cmd_args(
+                     cmd_args(
+@@ -212,7 +211,7 @@
+                 ] if name == "__ld_shim" else [],
+                 "set cc_original_dir=%CD%",
+                 'cd /d "%~dp0"',
+-                cmd_args(ctx.label.project_root, relative_to = script, parent = 1, format = "cd {}"),
++                cmd_args(ctx.label.project_root, relative_to = (script, 1), format = "cd {}"),
+                 cmd_args(
+                     cmd_args(
+                         cmd_args(internal_tools_info.from_any_dir, quote = "shell"),
+@@ -468,17 +467,11 @@
+         else:
+             return "{}-{}".format(name, plat)
+
+-    if not rule_exists("buildscript_for_platform="):
+-        buildscript_platform_constraints(
+-            name = "buildscript_for_platform=",
+-            reindeer_platforms = get_reindeer_platform_names(),
+-        )
+-
+-    for plat in get_reindeer_platform_names():
++    for i, plat in enumerate(get_reindeer_platform_names()):
+         transition_alias(
+             name = platform_buildscript_build_name(plat),
+             actual = buildscript_rule,
+-            incoming_transition = ":buildscript_for_platform=[{}]".format(plat),
++            incoming_transition = "prelude//rust/buildscript:buildscript_platform_transition[{}]".format(i),
+             target_compatible_with = buildscript_compatible_with,
+             visibility = [],
+         )
