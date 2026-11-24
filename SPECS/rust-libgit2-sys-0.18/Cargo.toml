@@ -12,7 +12,7 @@
 [package]
 edition = "2021"
 name = "libgit2-sys"
-version = "0.18.3+1.9.2"
+version = "0.18.4+1.9.3"
 authors = [
     "Josh Triplett <josh@joshtriplett.org>",
     "Alex Crichton <alex@alexcrichton.com>",
@@ -39,6 +39,7 @@ repository = "https://github.com/rust-lang/git2-rs"
 [features]
 https = ["openssl-sys"]
 ssh = ["libssh2-sys"]
+unstable-sha256 = []
 vendored = []
 vendored-openssl = ["openssl-sys/vendored"]
 zlib-ng-compat = [
