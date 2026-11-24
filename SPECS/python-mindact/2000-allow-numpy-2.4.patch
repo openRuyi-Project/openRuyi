@@ -1,0 +1,15 @@
+From: openRuyi Project Contributors
+Subject: [PATCH] Allow NumPy 2.4 for the system Python
+Upstream: https://github.com/candle-org/MindAct
+Upstream-Status: Pending
+
+The openRuyi Python 3.14 stack uses NumPy 2.4. Include that minor
+version in the tested range for the core package.
+
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -32,3 +32,3 @@
+ dependencies = [
+-    "numpy>=2.0,<2.3",
++    "numpy>=2.0,<2.5",
+     "pyyaml>=6.0",
