@@ -227,6 +227,7 @@ BuildRequires:  pkgconfig
 %if %{without bootstrap}
 BuildRequires:  java-latest-openjdk-devel
 %endif
+
 # Preserve the complete JDK when upgrading the former monolithic package.
 Requires:       %{name}-headless%{?_isa} = %{version}-%{release}
 Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
@@ -266,7 +267,7 @@ The complete OpenJDK development kit, including the desktop runtime,
 development tools, packaged modules, source archive, and demonstrations.
 Install the headless or devel subpackage for a smaller installation.
 
-%package headless
+%package        headless
 Summary:        OpenJDK %{majorver} headless runtime environment
 Requires:       fontconfig
 Requires:       fonts-dejavu
@@ -281,7 +282,7 @@ Requires(posttrans): update-alternatives
 The OpenJDK runtime environment without desktop and audio libraries.
 The default-java link in the JVM directory follows the selected Java runtime.
 
-%package devel
+%package        devel
 Summary:        OpenJDK %{majorver} development tools
 Requires:       %{name}-headless%{?_isa} = %{version}-%{release}
 Requires(post): update-alternatives
@@ -292,21 +293,21 @@ Requires(posttrans): update-alternatives
 The OpenJDK compiler, command-line development tools, and JNI headers.
 Install the jmods subpackage to create custom runtimes with jlink.
 
-%package jmods
+%package        jmods
 Summary:        OpenJDK %{majorver} packaged modules
 Requires:       %{name}-headless%{?_isa} = %{version}-%{release}
 
 %description jmods
 Packaged OpenJDK modules for creating custom runtimes with jlink.
 
-%package src
+%package        src
 Summary:        OpenJDK %{majorver} Java source archive
 Requires:       %{name}-headless%{?_isa} = %{version}-%{release}
 
 %description src
 The Java source archive for the OpenJDK class libraries.
 
-%package demo
+%package        demo
 Summary:        OpenJDK %{majorver} demonstration programs
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
@@ -556,8 +557,8 @@ done
 %files -f desktop.files
 
 %files headless -f headless.files
-%license LICENSE
 %doc README.md
+%license LICENSE
 %dir %{_jvmdir}
 %dir %{rpm_state_dir}
 
