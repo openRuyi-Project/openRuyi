@@ -4,23 +4,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name ctutils
-%global full_version 0.4.2
+%global full_version 0.4.8
 %global pkgname ctutils-0.4
 
 Name:           rust-ctutils-0.4
-Version:        0.4.2
+Version:        0.4.8
 Release:        %autorelease
 Summary:        Rust crate "ctutils"
 License:        Apache-2.0 OR MIT
-URL:            https://github.com/RustCrypto/utils/tree/master/ctselect
-#!RemoteAsset:  sha256:7d5515a3834141de9eafb9717ad39eea8247b5674e6066c404e8c4b365d2a29e
+URL:            https://github.com/RustCrypto/utils
+#!RemoteAsset:  sha256:261af4dc7a06ea8a527a8717d8cbba3417530d6ea14e1edb3de6b67806be474f
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(cmov-0.5/default) >= 0.5.3
+Requires:       crate(cmov-0.5/default) >= 0.5.4
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
@@ -32,7 +33,7 @@ Source code for takopackized Rust crate "ctutils"
 %package     -n %{name}+subtle
 Summary:        Constant-time utility library with selection and equality testing support targeting cryptographic applications - feature "subtle"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(subtle-2) >= 2.0.0
+Requires:       crate(subtle-2) >= 2.6.0
 Provides:       crate(%{pkgname}/subtle) = %{version}
 
 %description -n %{name}+subtle

@@ -11,11 +11,12 @@
 
 [package]
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.87"
 name = "ctutils"
-version = "0.4.2"
+version = "0.4.8"
 authors = ["RustCrypto Developers"]
 build = false
+exclude = ["checkct"]
 autolib = false
 autobins = false
 autoexamples = false
@@ -26,7 +27,7 @@ Constant-time utility library with selection and equality testing support target
 applications. Supports `const fn` where appropriate. Built on the `cmov` crate which provides
 architecture-specific predication intrinsics. Heavily inspired by the `subtle` crate.
 """
-homepage = "https://github.com/RustCrypto/utils/tree/master/ctselect"
+documentation = "https://docs.rs/ctutils"
 readme = "README.md"
 keywords = [
     "constant-time",
@@ -52,14 +53,18 @@ name = "ctutils"
 path = "src/lib.rs"
 
 [[test]]
+name = "primitives"
+path = "tests/primitives.rs"
+
+[[test]]
 name = "proptests"
 path = "tests/proptests.rs"
 
 [dependencies.cmov]
-version = "0.5.3"
+version = "0.5.4"
 
 [dependencies.subtle]
-version = "2"
+version = "2.6"
 optional = true
 default-features = false
 
@@ -75,7 +80,6 @@ cast_precision_loss = "warn"
 cast_sign_loss = "warn"
 checked_conversions = "warn"
 doc_markdown = "warn"
-from_iter_instead_of_collect = "warn"
 implicit_saturating_sub = "warn"
 manual_assert = "warn"
 map_unwrap_or = "warn"
