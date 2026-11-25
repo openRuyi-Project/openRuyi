@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name similar
-%global full_version 3.1.1
+%global full_version 3.1.2
 %global pkgname similar-3
 
 Name:           rust-similar-3
-Version:        3.1.1
+Version:        3.1.2
 Release:        %autorelease
 Summary:        Rust crate "similar"
 License:        Apache-2.0
 URL:            https://github.com/mitsuhiko/similar
-#!RemoteAsset:  sha256:e6505efef05804732ed8a3f2d4f279429eb485bd69d5b0cc6b19cc02005cda16
+#!RemoteAsset:  sha256:85ee016af5d736b69fc89e19254540fa4b5f5492853fb5503920f084011c78b6
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
