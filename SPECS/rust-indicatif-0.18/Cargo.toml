@@ -11,9 +11,9 @@
 
 [package]
 edition = "2021"
-rust-version = "1.71"
+rust-version = "1.85"
 name = "indicatif"
-version = "0.18.4"
+version = "0.18.6"
 build = false
 exclude = ["screenshots/*"]
 autolib = false
@@ -104,10 +104,6 @@ name = "long-spinner"
 path = "examples/long-spinner.rs"
 
 [[example]]
-name = "message"
-path = "examples/message.rs"
-
-[[example]]
 name = "morebars"
 path = "examples/morebars.rs"
 
@@ -128,18 +124,6 @@ name = "single"
 path = "examples/single.rs"
 
 [[example]]
-name = "slow"
-path = "examples/slow.rs"
-
-[[example]]
-name = "spinner-loop"
-path = "examples/spinner-loop.rs"
-
-[[example]]
-name = "steady"
-path = "examples/steady.rs"
-
-[[example]]
 name = "tokio"
 path = "examples/tokio.rs"
 
@@ -156,7 +140,7 @@ name = "render"
 path = "tests/render.rs"
 
 [dependencies.console]
-version = "0.16"
+version = "0.16.4"
 features = [
     "ansi-parsing",
     "std",
@@ -212,7 +196,7 @@ version = "1"
 version = "1.4.0"
 
 [dev-dependencies.rand]
-version = "0.9"
+version = "0.10"
 
 [dev-dependencies.tokio]
 version = "1"
