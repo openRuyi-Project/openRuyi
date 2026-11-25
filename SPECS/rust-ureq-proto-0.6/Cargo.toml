@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "ureq-proto"
-version = "0.6.0"
+version = "0.6.3"
 authors = ["Martin Algesten <martin@algesten.se>"]
 build = false
 exclude = [
@@ -51,7 +51,7 @@ name = "ureq_proto"
 path = "src/lib.rs"
 
 [dependencies.base64]
-version = "0.22.1"
+version = "0.23.1"
 features = ["std"]
 default-features = false
 

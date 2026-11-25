@@ -4,26 +4,27 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name ureq-proto
-%global full_version 0.6.0
+%global full_version 0.6.3
 %global pkgname ureq-proto-0.6
 
 Name:           rust-ureq-proto-0.6
-Version:        0.6.0
+Version:        0.6.3
 Release:        %autorelease
 Summary:        Rust crate "ureq-proto"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/algesten/ureq-proto
-#!RemoteAsset:  sha256:e994ba84b0bd1b1b0cf92878b7ef898a5c1760108fe7b6010327e274917a808c
+#!RemoteAsset:  sha256:5b0809a01d1ca5a51ca70db32bb2a19157582a526505ef3c19e3b343a59aa5ad
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(base64-0.22/std) >= 0.22.1
+Requires:       crate(base64-0.23/std) >= 0.23.1
 Requires:       crate(http-1/std) >= 1.1.0
 Requires:       crate(httparse-1) >= 1.8.0
 Requires:       crate(log-0.4/default) >= 0.4.22
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/client) = %{version}
 Provides:       crate(%{pkgname}/server) = %{version}
