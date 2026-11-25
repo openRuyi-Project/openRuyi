@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name http-body-util
-%global full_version 0.1.3
+%global full_version 0.1.5
 %global pkgname http-body-util-0.1
 
 Name:           rust-http-body-util-0.1
-Version:        0.1.3
+Version:        0.1.5
 Release:        %autorelease
 Summary:        Rust crate "http-body-util"
 License:        MIT
 URL:            https://github.com/hyperium/http-body
-#!RemoteAsset:  sha256:b021d93e26becf5dc7e1b75b1bed1fd93124b374ceb73f43d4d4eafec896a64a
+#!RemoteAsset:  sha256:23169fe34a5fbcdd3f3862e78fb9b6fccd5f02a6dc6f732547005d45631ce71c
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -25,6 +25,7 @@ Requires:       crate(futures-core-0.3) >= 0.3.0
 Requires:       crate(http-1/default) >= 1.0.0
 Requires:       crate(http-body-1/default) >= 1.0.0
 Requires:       crate(pin-project-lite-0.2/default) >= 0.2.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 
@@ -40,7 +41,8 @@ Provides:       crate(%{pkgname}/channel) = %{version}
 Provides:       crate(%{pkgname}/full) = %{version}
 
 %description -n %{name}+channel
-This metapackage enables feature "channel" for the Rust http-body-util crate, by pulling in any additional dependencies needed by that feature.
+This metapackage enables feature "channel" for the Rust http-body-util
+crate, by pulling in any additional dependencies needed by that feature.
 
 Additionally, this package also provides the "full" feature.
 
