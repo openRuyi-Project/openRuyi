@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name toml_edit
-%global full_version 0.25.12+spec-1.1.0
+%global full_version 0.25.13+spec-1.1.0
 %global pkgname toml-edit-0.25
 
 Name:           rust-toml-edit-0.25
-Version:        0.25.12
+Version:        0.25.13
 Release:        %autorelease
 Summary:        Rust crate "toml_edit"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
-#!RemoteAsset:  sha256:d2153edc6955a6c354fad8f5efd38b6a8769bdccf9fe50f8e1329f81b0baa5d7
+#!RemoteAsset:  sha256:6975367e4d2ef766d86af01ffad14b622fecc8d4357a998fbc4deb6e9bacaf9b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,6 +23,7 @@ BuildRequires:  rust-rpm-macros
 Requires:       crate(indexmap-2/default) >= 2.13.0
 Requires:       crate(indexmap-2/std) >= 2.13.0
 Requires:       crate(toml-datetime-1/default) >= 1.1.1
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/unbounded) = %{version}
 
@@ -54,7 +55,7 @@ This metapackage enables feature "default" for the Rust toml_edit crate, by pull
 %package     -n %{name}+display
 Summary:        Yet another format-preserving TOML parser - feature "display"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(toml-writer-1/default) >= 1.1.1
+Requires:       crate(toml-writer-1/default) >= 1.1.2
 Provides:       crate(%{pkgname}/display) = %{version}
 
 %description -n %{name}+display
