@@ -4,25 +4,26 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-util
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-util-0.3
 
 Name:           rust-futures-util-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-util"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:389ca41296e6190b48053de0321d02a77f32f8a5d2461dd38762c0593805c6d6
+#!RemoteAsset:  sha256:a77a90a256fce34da66415271e30f94ee91c57b04b8a2c042d9cf3220179deaa
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(futures-core-0.3) >= 0.3.32
-Requires:       crate(futures-task-0.3) >= 0.3.32
+Requires:       crate(futures-core-0.3) >= 0.3.33
+Requires:       crate(futures-task-0.3) >= 0.3.33
 Requires:       crate(pin-project-lite-0.2/default) >= 0.2.6
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/async-await) = %{version}
 Provides:       crate(%{pkgname}/bilock) = %{version}
@@ -35,8 +36,8 @@ Source code for takopackized Rust crate "futures-util"
 Summary:        Common utilities and extension traits for the futures-rs library - feature "alloc"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/slab) = %{version}
-Requires:       crate(futures-core-0.3/alloc) >= 0.3.32
-Requires:       crate(futures-task-0.3/alloc) >= 0.3.32
+Requires:       crate(futures-core-0.3/alloc) >= 0.3.33
+Requires:       crate(futures-task-0.3/alloc) >= 0.3.33
 Provides:       crate(%{pkgname}/alloc) = %{version}
 
 %description -n %{name}+alloc
@@ -87,7 +88,7 @@ This metapackage enables feature "default" for the Rust futures-util crate, by p
 %package     -n %{name}+futures-channel
 Summary:        Common utilities and extension traits for the futures-rs library - feature "futures-channel"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-channel-0.3/std) >= 0.3.32
+Requires:       crate(futures-channel-0.3/std) >= 0.3.33
 Provides:       crate(%{pkgname}/futures-channel) = %{version}
 
 %description -n %{name}+futures-channel
@@ -96,7 +97,7 @@ This metapackage enables feature "futures-channel" for the Rust futures-util cra
 %package     -n %{name}+futures-io
 Summary:        Common utilities and extension traits for the futures-rs library - feature "futures-io"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-io-0.3/std) >= 0.3.32
+Requires:       crate(futures-io-0.3/std) >= 0.3.33
 Provides:       crate(%{pkgname}/futures-io) = %{version}
 
 %description -n %{name}+futures-io
@@ -105,7 +106,7 @@ This metapackage enables feature "futures-io" for the Rust futures-util crate, b
 %package     -n %{name}+futures-macro
 Summary:        Common utilities and extension traits for the futures-rs library - feature "futures-macro"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-macro-0.3) >= 0.3.32
+Requires:       crate(futures-macro-0.3) >= 0.3.33
 Provides:       crate(%{pkgname}/futures-macro) = %{version}
 
 %description -n %{name}+futures-macro
@@ -114,7 +115,7 @@ This metapackage enables feature "futures-macro" for the Rust futures-util crate
 %package     -n %{name}+futures-sink
 Summary:        Common utilities and extension traits for the futures-rs library - feature "futures-sink" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-sink-0.3) >= 0.3.32
+Requires:       crate(futures-sink-0.3) >= 0.3.33
 Provides:       crate(%{pkgname}/futures-sink) = %{version}
 Provides:       crate(%{pkgname}/sink) = %{version}
 
@@ -179,11 +180,40 @@ This metapackage enables feature "memchr" for the Rust futures-util crate, by pu
 %package     -n %{name}+portable-atomic
 Summary:        Common utilities and extension traits for the futures-rs library - feature "portable-atomic"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-core-0.3/portable-atomic) >= 0.3.32
+Requires:       crate(%{pkgname}/portable-atomic-crate) = %{version}
+Requires:       crate(futures-core-0.3/portable-atomic) >= 0.3.33
 Provides:       crate(%{pkgname}/portable-atomic) = %{version}
 
 %description -n %{name}+portable-atomic
 This metapackage enables feature "portable-atomic" for the Rust futures-util crate, by pulling in any additional dependencies needed by that feature.
+
+%package     -n %{name}+portable-atomic-alloc
+Summary:        Common utilities and extension traits for the futures-rs library - feature "portable-atomic-alloc"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(%{pkgname}/portable-atomic) = %{version}
+Requires:       crate(portable-atomic-util-0.2/alloc) >= 0.2.7
+Provides:       crate(%{pkgname}/portable-atomic-alloc) = %{version}
+
+%description -n %{name}+portable-atomic-alloc
+This metapackage enables feature "portable-atomic-alloc" for the Rust futures-util crate, by pulling in any additional dependencies needed by that feature.
+
+%package     -n %{name}+portable-atomic-util
+Summary:        Common utilities and extension traits for the futures-rs library - feature "portable-atomic-util"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(portable-atomic-util-0.2) >= 0.2.7
+Provides:       crate(%{pkgname}/portable-atomic-util) = %{version}
+
+%description -n %{name}+portable-atomic-util
+This metapackage enables feature "portable-atomic-util" for the Rust futures-util crate, by pulling in any additional dependencies needed by that feature.
+
+%package     -n %{name}+portable-atomic-crate
+Summary:        Common utilities and extension traits for the futures-rs library - feature "portable_atomic_crate"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(portable-atomic-1) >= 1.13.1
+Provides:       crate(%{pkgname}/portable-atomic-crate) = %{version}
+
+%description -n %{name}+portable-atomic-crate
+This metapackage enables feature "portable_atomic_crate" for the Rust futures-util crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+slab
 Summary:        Common utilities and extension traits for the futures-rs library - feature "slab"
@@ -197,7 +227,7 @@ This metapackage enables feature "slab" for the Rust futures-util crate, by pull
 %package     -n %{name}+spin
 Summary:        Common utilities and extension traits for the futures-rs library - feature "spin"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(spin-0.10/default) >= 0.10.0
+Requires:       crate(spin-0.12/default) >= 0.12.0
 Provides:       crate(%{pkgname}/spin) = %{version}
 
 %description -n %{name}+spin
@@ -207,8 +237,8 @@ This metapackage enables feature "spin" for the Rust futures-util crate, by pull
 Summary:        Common utilities and extension traits for the futures-rs library - feature "std"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/alloc) = %{version}
-Requires:       crate(futures-core-0.3/std) >= 0.3.32
-Requires:       crate(futures-task-0.3/std) >= 0.3.32
+Requires:       crate(futures-core-0.3/std) >= 0.3.33
+Requires:       crate(futures-task-0.3/std) >= 0.3.33
 Requires:       crate(slab-0.4/std) >= 0.4.7
 Provides:       crate(%{pkgname}/std) = %{version}
 
@@ -227,8 +257,8 @@ This metapackage enables feature "tokio-io" for the Rust futures-util crate, by 
 %package     -n %{name}+unstable
 Summary:        Common utilities and extension traits for the futures-rs library - feature "unstable"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-core-0.3/unstable) >= 0.3.32
-Requires:       crate(futures-task-0.3/unstable) >= 0.3.32
+Requires:       crate(futures-core-0.3/unstable) >= 0.3.33
+Requires:       crate(futures-task-0.3/unstable) >= 0.3.33
 Provides:       crate(%{pkgname}/unstable) = %{version}
 
 %description -n %{name}+unstable
