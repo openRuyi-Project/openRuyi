@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name tonic
-%global full_version 0.14.2
+%global full_version 0.14.6
 %global pkgname tonic-0.14
 
 Name:           rust-tonic-0.14
-Version:        0.14.2
+Version:        0.14.6
 Release:        %autorelease
 Summary:        Rust crate "tonic"
 License:        MIT
 URL:            https://github.com/hyperium/tonic
-#!RemoteAsset:  sha256:eb7613188ce9f7df5bfe185db26c5814347d110db17920415cf2fbcad85e7203
+#!RemoteAsset:  sha256:ac2a5518c70fa84342385732db33fb3f44bc4cc748936eb5833d2df34d6445ef
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,7 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(base64-0.22/default) >= 0.22.0
 Requires:       crate(bytes-1/default) >= 1.0.0
-Requires:       crate(http-1/default) >= 1.0.0
+Requires:       crate(http-1/default) >= 1.1.0
 Requires:       crate(http-body-1/default) >= 1.0.0
 Requires:       crate(http-body-util-0.1/default) >= 0.1.0
 Requires:       crate(percent-encoding-2/default) >= 2.1.0
@@ -32,6 +32,7 @@ Requires:       crate(tokio-stream-0.1) >= 0.1.16
 Requires:       crate(tower-layer-0.3/default) >= 0.3.0
 Requires:       crate(tower-service-0.3/default) >= 0.3.0
 Requires:       crate(tracing-0.1/default) >= 0.1.0
+
 Provides:       crate(%{pkgname}) = %{version}
 
 %description
@@ -57,9 +58,9 @@ Requires:       crate(hyper-1/default) >= 1.0.0
 Requires:       crate(hyper-1/http1) >= 1.0.0
 Requires:       crate(hyper-1/http2) >= 1.0.0
 Requires:       crate(hyper-timeout-0.5/default) >= 0.5.0
-Requires:       crate(hyper-util-0.1/client-legacy) >= 0.1.4
-Requires:       crate(hyper-util-0.1/default) >= 0.1.4
-Requires:       crate(hyper-util-0.1/tokio) >= 0.1.4
+Requires:       crate(hyper-util-0.1/client-legacy) >= 0.1.11
+Requires:       crate(hyper-util-0.1/default) >= 0.1.11
+Requires:       crate(hyper-util-0.1/tokio) >= 0.1.11
 Requires:       crate(tokio-1) >= 1.0.0
 Requires:       crate(tokio-1/time) >= 1.0.0
 Requires:       crate(tower-0.5) >= 0.5.0
@@ -125,10 +126,10 @@ Requires:       crate(hyper-1/default) >= 1.0.0
 Requires:       crate(hyper-1/http1) >= 1.0.0
 Requires:       crate(hyper-1/http2) >= 1.0.0
 Requires:       crate(hyper-1/server) >= 1.0.0
-Requires:       crate(hyper-util-0.1/default) >= 0.1.4
-Requires:       crate(hyper-util-0.1/server-auto) >= 0.1.4
-Requires:       crate(hyper-util-0.1/service) >= 0.1.4
-Requires:       crate(hyper-util-0.1/tokio) >= 0.1.4
+Requires:       crate(hyper-util-0.1/default) >= 0.1.11
+Requires:       crate(hyper-util-0.1/server-auto) >= 0.1.11
+Requires:       crate(hyper-util-0.1/service) >= 0.1.11
+Requires:       crate(hyper-util-0.1/tokio) >= 0.1.11
 Requires:       crate(socket2-0.6/all) >= 0.6.0
 Requires:       crate(socket2-0.6/default) >= 0.6.0
 Requires:       crate(tokio-1) >= 1.0.0
