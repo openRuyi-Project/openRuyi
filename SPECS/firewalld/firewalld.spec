@@ -70,6 +70,8 @@ the firewall settings.
 Summary:        Firewall configuration application
 Requires:       %{name} = %{version}-%{release}
 Requires:       hicolor-icon-theme
+Requires:       gtk3
+Requires:       gobject-introspection
 Requires:       python3dist(pygobject)
 
 %description -n firewall-config
