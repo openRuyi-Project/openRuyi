@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.71"
 name = "tokio-stream"
-version = "0.1.18"
+version = "0.1.19"
 authors = ["Tokio Contributors <team@tokio.rs>"]
 build = false
 autolib = false
@@ -32,11 +32,11 @@ repository = "https://github.com/tokio-rs/tokio"
 
 [package.metadata.docs.rs]
 all-features = true
-rustc-args = [
+rustdoc-args = [
     "--cfg",
     "docsrs",
 ]
-rustdoc-args = [
+rustc-args = [
     "--cfg",
     "docsrs",
 ]
@@ -49,11 +49,13 @@ full = [
     "net",
     "io-util",
     "fs",
+    "rt",
     "sync",
     "signal",
 ]
 io-util = ["tokio/io-util"]
 net = ["tokio/net"]
+rt = ["tokio/rt"]
 signal = ["tokio/signal"]
 sync = [
     "tokio/sync",
@@ -72,6 +74,10 @@ path = "tests/async_send_sync.rs"
 [[test]]
 name = "chunks_timeout"
 path = "tests/chunks_timeout.rs"
+
+[[test]]
+name = "join_set_stream"
+path = "tests/join_set_stream.rs"
 
 [[test]]
 name = "mpsc_bounded_stream"
@@ -106,8 +112,16 @@ name = "stream_fuse"
 path = "tests/stream_fuse.rs"
 
 [[test]]
+name = "stream_fused"
+path = "tests/stream_fused.rs"
+
+[[test]]
 name = "stream_iter"
 path = "tests/stream_iter.rs"
+
+[[test]]
+name = "stream_map_while"
+path = "tests/stream_map_while.rs"
 
 [[test]]
 name = "stream_merge"
@@ -120,6 +134,10 @@ path = "tests/stream_once.rs"
 [[test]]
 name = "stream_panic"
 path = "tests/stream_panic.rs"
+
+[[test]]
+name = "stream_peekable"
+path = "tests/stream_peekable.rs"
 
 [[test]]
 name = "stream_pending"
@@ -148,7 +166,7 @@ version = "0.3.0"
 version = "0.2.11"
 
 [dependencies.tokio]
-version = "1.15.0"
+version = "1.38.0"
 features = ["sync"]
 
 [dependencies.tokio-util]
@@ -166,7 +184,7 @@ default-features = false
 version = "0.12.0"
 
 [dev-dependencies.tokio]
-version = "1.2.0"
+version = "1.38.0"
 features = [
     "full",
     "test-util",

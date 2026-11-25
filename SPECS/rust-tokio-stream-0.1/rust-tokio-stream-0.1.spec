@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name tokio-stream
-%global full_version 0.1.18
+%global full_version 0.1.19
 %global pkgname tokio-stream-0.1
 
 Name:           rust-tokio-stream-0.1
-Version:        0.1.18
+Version:        0.1.19
 Release:        %autorelease
 Summary:        Rust crate "tokio-stream"
 License:        MIT
 URL:            https://tokio.rs
-#!RemoteAsset:  sha256:32da49809aab5c3bc678af03902d4ccddea2a87d028d86392a4b1560c6906c70
+#!RemoteAsset:  sha256:a3d06f0b082ba57c26b79407372e57cf2a1e28124f78e9479fe80322cf53420b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,8 +22,9 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(futures-core-0.3/default) >= 0.3.0
 Requires:       crate(pin-project-lite-0.2/default) >= 0.2.11
-Requires:       crate(tokio-1/default) >= 1.15.0
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/default) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
+
 Provides:       crate(%{pkgname}) = %{version}
 
 %description
@@ -32,8 +33,8 @@ Source code for takopackized Rust crate "tokio-stream"
 %package     -n %{name}+fs
 Summary:        Utilities to work with `Stream` and `tokio` - feature "fs"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(tokio-1/fs) >= 1.15.0
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/fs) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
 Provides:       crate(%{pkgname}/fs) = %{version}
 
 %description -n %{name}+fs
@@ -45,6 +46,7 @@ Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/fs) = %{version}
 Requires:       crate(%{pkgname}/io-util) = %{version}
 Requires:       crate(%{pkgname}/net) = %{version}
+Requires:       crate(%{pkgname}/rt) = %{version}
 Requires:       crate(%{pkgname}/signal) = %{version}
 Requires:       crate(%{pkgname}/sync) = %{version}
 Requires:       crate(%{pkgname}/time) = %{version}
@@ -56,8 +58,8 @@ This metapackage enables feature "full" for the Rust tokio-stream crate, by pull
 %package     -n %{name}+io-util
 Summary:        Utilities to work with `Stream` and `tokio` - feature "io-util"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(tokio-1/io-util) >= 1.15.0
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/io-util) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
 Provides:       crate(%{pkgname}/io-util) = %{version}
 
 %description -n %{name}+io-util
@@ -66,18 +68,28 @@ This metapackage enables feature "io-util" for the Rust tokio-stream crate, by p
 %package     -n %{name}+net
 Summary:        Utilities to work with `Stream` and `tokio` - feature "net"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(tokio-1/net) >= 1.15.0
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/net) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
 Provides:       crate(%{pkgname}/net) = %{version}
 
 %description -n %{name}+net
 This metapackage enables feature "net" for the Rust tokio-stream crate, by pulling in any additional dependencies needed by that feature.
 
+%package     -n %{name}+rt
+Summary:        Utilities to work with `Stream` and `tokio` - feature "rt"
+Requires:       crate(%{pkgname}) = %{version}
+Requires:       crate(tokio-1/rt) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
+Provides:       crate(%{pkgname}/rt) = %{version}
+
+%description -n %{name}+rt
+This metapackage enables feature "rt" for the Rust tokio-stream crate, by pulling in any additional dependencies needed by that feature.
+
 %package     -n %{name}+signal
 Summary:        Utilities to work with `Stream` and `tokio` - feature "signal"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(tokio-1/signal) >= 1.15.0
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/signal) >= 1.38.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
 Provides:       crate(%{pkgname}/signal) = %{version}
 
 %description -n %{name}+signal
@@ -87,7 +99,7 @@ This metapackage enables feature "signal" for the Rust tokio-stream crate, by pu
 Summary:        Utilities to work with `Stream` and `tokio` - feature "sync"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/tokio-util) = %{version}
-Requires:       crate(tokio-1/sync) >= 1.15.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
 Provides:       crate(%{pkgname}/sync) = %{version}
 
 %description -n %{name}+sync
@@ -96,8 +108,8 @@ This metapackage enables feature "sync" for the Rust tokio-stream crate, by pull
 %package     -n %{name}+time
 Summary:        Utilities to work with `Stream` and `tokio` - feature "time" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(tokio-1/sync) >= 1.15.0
-Requires:       crate(tokio-1/time) >= 1.15.0
+Requires:       crate(tokio-1/sync) >= 1.38.0
+Requires:       crate(tokio-1/time) >= 1.38.0
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/time) = %{version}
 
