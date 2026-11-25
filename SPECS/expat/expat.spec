@@ -6,16 +6,16 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%global unversion 2_10_0
+%global unversion 2_11_0
 
 Name:           expat
-Version:        2.10.0
+Version:        2.11.0
 Release:        %autorelease
 Summary:        XML Parser Toolkit
 License:        MIT
 URL:            https://libexpat.github.io
 VCS:            git:https://github.com/libexpat/libexpat
-#!RemoteAsset:  sha256:c624ba2998fc65df1163a49641ff3f9ab73138b11641d92c86bee0fb01b1bc7f
+#!RemoteAsset:  sha256:61e7614b602201c28a189dafee78f5bceaee192bbde46a930752ff09cf5542fa
 Source0:        https://github.com/libexpat/libexpat/releases/download/R_%{unversion}/expat-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -63,7 +63,6 @@ autoreconf -fiv
 %{_libdir}/pkgconfig/expat.pc
 %{_includedir}/*.h
 %{_libdir}/cmake/expat-%{version}
-%exclude %{_libdir}/libexpat.la
 
 %changelog
 %autochangelog
