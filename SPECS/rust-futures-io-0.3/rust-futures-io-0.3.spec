@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-io
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-io-0.3
 
 Name:           rust-futures-io-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-io"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:cecba35d7ad927e23624b22ad55235f2239cfa44fd10428eecbeba6d6a717718
+#!RemoteAsset:  sha256:4577ecaa3c4f96589d473f679a71b596316f6641bc350038b962a5daf0085d7a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
