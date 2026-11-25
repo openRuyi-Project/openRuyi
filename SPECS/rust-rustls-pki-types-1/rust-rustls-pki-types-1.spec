@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name rustls-pki-types
-%global full_version 1.14.0
+%global full_version 1.15.1
 %global pkgname rustls-pki-types-1
 
 Name:           rust-rustls-pki-types-1
-Version:        1.14.0
+Version:        1.15.1
 Release:        %autorelease
 Summary:        Rust crate "rustls-pki-types"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rustls/pki-types
-#!RemoteAsset:  sha256:be040f8b0a225e40375822a563fa9524378b9d63112f53e19ffff34df5d33fdd
+#!RemoteAsset:  sha256:2f4925028c7eb5d1fcdaf196971378ed9d2c1c4efc7dc5d011256f76c99c0a96
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
