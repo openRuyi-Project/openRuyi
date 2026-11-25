@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name axum
-%global full_version 0.8.6
+%global full_version 0.8.9
 %global pkgname axum-0.8
 
 Name:           rust-axum-0.8
-Version:        0.8.6
+Version:        0.8.9
 Release:        %autorelease
 Summary:        Rust crate "axum"
 License:        MIT
 URL:            https://github.com/tokio-rs/axum
-#!RemoteAsset:  sha256:8a18ed336352031311f4e0b4dd2ff392d4fbb370777c9d18d7fc9d7359f73871
+#!RemoteAsset:  sha256:31b698c5f9a010f6573133b09e0de5408834d0c82f8d7475a89fc1867a71cd90
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -37,6 +37,7 @@ Requires:       crate(sync-wrapper-1/default) >= 1.0.0
 Requires:       crate(tower-0.5/util) >= 0.5.2
 Requires:       crate(tower-layer-0.3/default) >= 0.3.2
 Requires:       crate(tower-service-0.3/default) >= 0.3.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/matched-path) = %{version}
 Provides:       crate(%{pkgname}/original-uri) = %{version}
@@ -45,7 +46,7 @@ Provides:       crate(%{pkgname}/original-uri) = %{version}
 Source code for takopackized Rust crate "axum"
 
 %package     -n %{name}+private
-Summary:        Web framework that focuses on ergonomics and modularity - feature "__private"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "__private"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/http1) = %{version}
 Requires:       crate(%{pkgname}/tokio) = %{version}
@@ -58,47 +59,47 @@ Provides:       crate(%{pkgname}/private) = %{version}
 This metapackage enables feature "__private" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+private-docs
-Summary:        Web framework that focuses on ergonomics and modularity - feature "__private_docs"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "__private_docs"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(axum-core-0.5/private-docs) >= 0.5.5
 Requires:       crate(serde-1/default) >= 1.0.211
 Requires:       crate(tower-0.5/full) >= 0.5.2
 Requires:       crate(tower-0.5/util) >= 0.5.2
-Requires:       crate(tower-http-0.6/add-extension) >= 0.6.0
-Requires:       crate(tower-http-0.6/auth) >= 0.6.0
-Requires:       crate(tower-http-0.6/catch-panic) >= 0.6.0
-Requires:       crate(tower-http-0.6/compression-br) >= 0.6.0
-Requires:       crate(tower-http-0.6/compression-deflate) >= 0.6.0
-Requires:       crate(tower-http-0.6/compression-gzip) >= 0.6.0
-Requires:       crate(tower-http-0.6/cors) >= 0.6.0
-Requires:       crate(tower-http-0.6/decompression-br) >= 0.6.0
-Requires:       crate(tower-http-0.6/decompression-deflate) >= 0.6.0
-Requires:       crate(tower-http-0.6/decompression-gzip) >= 0.6.0
-Requires:       crate(tower-http-0.6/default) >= 0.6.0
-Requires:       crate(tower-http-0.6/follow-redirect) >= 0.6.0
-Requires:       crate(tower-http-0.6/fs) >= 0.6.0
-Requires:       crate(tower-http-0.6/limit) >= 0.6.0
-Requires:       crate(tower-http-0.6/map-request-body) >= 0.6.0
-Requires:       crate(tower-http-0.6/map-response-body) >= 0.6.0
-Requires:       crate(tower-http-0.6/metrics) >= 0.6.0
-Requires:       crate(tower-http-0.6/normalize-path) >= 0.6.0
-Requires:       crate(tower-http-0.6/propagate-header) >= 0.6.0
-Requires:       crate(tower-http-0.6/redirect) >= 0.6.0
-Requires:       crate(tower-http-0.6/request-id) >= 0.6.0
-Requires:       crate(tower-http-0.6/sensitive-headers) >= 0.6.0
-Requires:       crate(tower-http-0.6/set-header) >= 0.6.0
-Requires:       crate(tower-http-0.6/set-status) >= 0.6.0
-Requires:       crate(tower-http-0.6/timeout) >= 0.6.0
-Requires:       crate(tower-http-0.6/trace) >= 0.6.0
-Requires:       crate(tower-http-0.6/util) >= 0.6.0
-Requires:       crate(tower-http-0.6/validate-request) >= 0.6.0
+Requires:       crate(tower-http-0.6/add-extension) >= 0.6.8
+Requires:       crate(tower-http-0.6/auth) >= 0.6.8
+Requires:       crate(tower-http-0.6/catch-panic) >= 0.6.8
+Requires:       crate(tower-http-0.6/compression-br) >= 0.6.8
+Requires:       crate(tower-http-0.6/compression-deflate) >= 0.6.8
+Requires:       crate(tower-http-0.6/compression-gzip) >= 0.6.8
+Requires:       crate(tower-http-0.6/cors) >= 0.6.8
+Requires:       crate(tower-http-0.6/decompression-br) >= 0.6.8
+Requires:       crate(tower-http-0.6/decompression-deflate) >= 0.6.8
+Requires:       crate(tower-http-0.6/decompression-gzip) >= 0.6.8
+Requires:       crate(tower-http-0.6/default) >= 0.6.8
+Requires:       crate(tower-http-0.6/follow-redirect) >= 0.6.8
+Requires:       crate(tower-http-0.6/fs) >= 0.6.8
+Requires:       crate(tower-http-0.6/limit) >= 0.6.8
+Requires:       crate(tower-http-0.6/map-request-body) >= 0.6.8
+Requires:       crate(tower-http-0.6/map-response-body) >= 0.6.8
+Requires:       crate(tower-http-0.6/metrics) >= 0.6.8
+Requires:       crate(tower-http-0.6/normalize-path) >= 0.6.8
+Requires:       crate(tower-http-0.6/propagate-header) >= 0.6.8
+Requires:       crate(tower-http-0.6/redirect) >= 0.6.8
+Requires:       crate(tower-http-0.6/request-id) >= 0.6.8
+Requires:       crate(tower-http-0.6/sensitive-headers) >= 0.6.8
+Requires:       crate(tower-http-0.6/set-header) >= 0.6.8
+Requires:       crate(tower-http-0.6/set-status) >= 0.6.8
+Requires:       crate(tower-http-0.6/timeout) >= 0.6.8
+Requires:       crate(tower-http-0.6/trace) >= 0.6.8
+Requires:       crate(tower-http-0.6/util) >= 0.6.8
+Requires:       crate(tower-http-0.6/validate-request) >= 0.6.8
 Provides:       crate(%{pkgname}/private-docs) = %{version}
 
 %description -n %{name}+private-docs
 This metapackage enables feature "__private_docs" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+default
-Summary:        Web framework that focuses on ergonomics and modularity - feature "default"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "default"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/form) = %{version}
 Requires:       crate(%{pkgname}/http1) = %{version}
@@ -115,7 +116,7 @@ Provides:       crate(%{pkgname}/default) = %{version}
 This metapackage enables feature "default" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+form
-Summary:        Web framework that focuses on ergonomics and modularity - feature "form" and 1 more
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "form" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(form-urlencoded-1/default) >= 1.1.0
 Requires:       crate(serde-path-to-error-0.1/default) >= 0.1.8
@@ -129,7 +130,7 @@ This metapackage enables feature "form" for the Rust axum crate, by pulling in a
 Additionally, this package also provides the "query" feature.
 
 %package     -n %{name}+http1
-Summary:        Web framework that focuses on ergonomics and modularity - feature "http1"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "http1"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(hyper-1/default) >= 1.1.0
 Requires:       crate(hyper-1/http1) >= 1.1.0
@@ -143,7 +144,7 @@ Provides:       crate(%{pkgname}/http1) = %{version}
 This metapackage enables feature "http1" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+http2
-Summary:        Web framework that focuses on ergonomics and modularity - feature "http2"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "http2"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(hyper-1/default) >= 1.1.0
 Requires:       crate(hyper-1/http2) >= 1.1.0
@@ -157,7 +158,7 @@ Provides:       crate(%{pkgname}/http2) = %{version}
 This metapackage enables feature "http2" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+json
-Summary:        Web framework that focuses on ergonomics and modularity - feature "json"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "json"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(serde-json-1/default) >= 1.0.0
 Requires:       crate(serde-json-1/raw-value) >= 1.0.0
@@ -168,16 +169,16 @@ Provides:       crate(%{pkgname}/json) = %{version}
 This metapackage enables feature "json" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+macros
-Summary:        Web framework that focuses on ergonomics and modularity - feature "macros"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "macros"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(axum-macros-0.5/default) >= 0.5.0
+Requires:       crate(axum-macros-0.5/default) >= 0.5.1
 Provides:       crate(%{pkgname}/macros) = %{version}
 
 %description -n %{name}+macros
 This metapackage enables feature "macros" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+multipart
-Summary:        Web framework that focuses on ergonomics and modularity - feature "multipart"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "multipart"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(multer-3/default) >= 3.0.0
 Provides:       crate(%{pkgname}/multipart) = %{version}
@@ -186,7 +187,7 @@ Provides:       crate(%{pkgname}/multipart) = %{version}
 This metapackage enables feature "multipart" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+tokio
-Summary:        Web framework that focuses on ergonomics and modularity - feature "tokio"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "tokio"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(hyper-util-0.1/default) >= 0.1.3
 Requires:       crate(hyper-util-0.1/server) >= 0.1.3
@@ -205,7 +206,7 @@ Provides:       crate(%{pkgname}/tokio) = %{version}
 This metapackage enables feature "tokio" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+tower-log
-Summary:        Web framework that focuses on ergonomics and modularity - feature "tower-log"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "tower-log"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(tower-0.5/log) >= 0.5.2
 Requires:       crate(tower-0.5/util) >= 0.5.2
@@ -215,7 +216,7 @@ Provides:       crate(%{pkgname}/tower-log) = %{version}
 This metapackage enables feature "tower-log" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+tracing
-Summary:        Web framework that focuses on ergonomics and modularity - feature "tracing"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "tracing"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(axum-core-0.5/tracing) >= 0.5.5
 Requires:       crate(tracing-0.1) >= 0.1.0
@@ -225,13 +226,13 @@ Provides:       crate(%{pkgname}/tracing) = %{version}
 This metapackage enables feature "tracing" for the Rust axum crate, by pulling in any additional dependencies needed by that feature.
 
 %package     -n %{name}+ws
-Summary:        Web framework that focuses on ergonomics and modularity - feature "ws"
+Summary:        HTTP routing and request handling library that focuses on ergonomics and modularity - feature "ws"
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/tokio) = %{version}
 Requires:       crate(base64-0.22/default) >= 0.22.1
 Requires:       crate(hyper-1/default) >= 1.1.0
 Requires:       crate(sha1-0.10/default) >= 0.10.0
-Requires:       crate(tokio-tungstenite-0.28/default) >= 0.28.0
+Requires:       crate(tokio-tungstenite-0.29/default) >= 0.29.0
 Provides:       crate(%{pkgname}/ws) = %{version}
 
 %description -n %{name}+ws
