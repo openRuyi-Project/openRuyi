@@ -1,0 +1,11 @@
+Subject: Select the locked SeaQuery version
+Upstream: https://github.com/SeaQL/sea-orm
+Upstream-Status: Inappropriate [distribution policy]
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -53,3 +53,3 @@
+ [dependencies.sea-query]
+-version = "1.0.0-rc"
++version = "=1.0.1"
+ features = ["thread-safe"]
