@@ -1,0 +1,16 @@
+Subject: Enable the compression method used by the archive command
+Upstream: https://github.com/libra-tools/libra
+Upstream-Status: Pending
+
+Declare the Deflate feature explicitly so the archive command can use
+Deflated even when the distribution disables zip's default features.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -46,5 +46,5 @@
+ flate2 = "1.1.9"  # add features = ["zlib"] if slow
+ tar = "0.4"
+-zip = "0.6"
++zip = { version = "0.6", features = ["deflate"] }
+ bzip2 = "0.6"
+ futures = "0.3.32"

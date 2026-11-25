@@ -1,0 +1,48 @@
+Subject: Limit build dependencies to the packaged CLI
+Upstream: https://github.com/libra-tools/libra
+Upstream-Status: Inappropriate [distribution policy]
+
+The RPM check exercises the installed CLI and its Git repository
+compatibility. Exclude the upstream development harness, which includes
+container and network integration tests.
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 3fd53d4..8b2a1b0 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -157,35 +157,6 @@ seccompiler = { version = "0.5.0", features = ["json"] }
+ [target.'cfg(windows)'.dependencies]
+ windows-sys = { version = "0.61.2", features = ["Wdk_Foundation", "Wdk_Storage_FileSystem", "Win32_Storage_FileSystem", "Win32_System_Console", "Win32_System_Threading", "Win32_System_Pipes", "Win32_Foundation", "Win32_Security", "Win32_Security_Authorization", "Win32_System_IO", "Win32_System_JobObjects", "Win32_System_Diagnostics_ToolHelp", "Win32_System_SystemInformation"] }
+
+-[dev-dependencies]
+-serial_test = { version = "3.4.0", default-features = false, features = ["async"] }
+-tokio = { version = "1.52.1", features = [
+-    "io-util",
+-    "net",
+-    "rt-multi-thread",
+-    "rt",
+-    "macros",
+-    "process",
+-    "sync",
+-    "time"
+-]}
+-testcontainers = { version = "0.27.3", features = [
+-    "http_wait",
+-    "reusable-containers",
+-] }
+-reqwest = { version = "0.13.2", default-features = false, features = ["blocking", "query", "rustls"] }
+-assert_cmd = "2.2.1"
+-gag = "1.0.0"
+-portable-pty = "0.9.0"
+-# AST-level use-tree/path walking for tests/compat/agent_architecture_guard.rs
+-# (syn 2.x is already in the dependency graph via derive macros).
+-syn = { version = "2.0", features = ["full", "visit", "visit-mut"] }
+-proc-macro2 = { version = "1", features = ["span-locations"] }
+-jsonschema = { version = "=0.59.0", default-features = false }
+-
+-# Compatibility-surface integration tests live under tests/compat/. Cargo's
+-# default test discovery only picks up *.rs directly under tests/, so each
+-# compat surface file must be registered here.
+ [[test]]
+ name = "agent_native_origin_test"
+ path = "tests/agent_native_origin_test.rs"

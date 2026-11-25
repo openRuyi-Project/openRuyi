@@ -1,0 +1,111 @@
+Subject: Make the desktop user interface optional
+Upstream: https://github.com/libra-tools/libra
+Upstream-Status: Pending
+
+Allow the CLI and SQLite storage to build independently of the GPUI
+toolkit. Keep the default feature set for upstream desktop builds.
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 86bbac3..e49f629 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -12,7 +12,8 @@ categories = ["command-line-utilities", "development-tools"]
+ readme = "README.md"
+
+ [features]
+-default = ["storage-sqlite"]
++default = ["storage-sqlite", "desktop-ui"]
++desktop-ui = ["dep:gpui", "dep:gpui_platform", "dep:ely-gpui-component"]
+ storage-sqlite = []
+ storage-redb = ["storage-queue", "dep:redb", "dep:postcard", "dep:crc32c"]
+ storage-queue = ["dep:postcard", "dep:crc32c"]
+@@ -108,11 +109,10 @@ dirs = "6.0.0"
+ axum = "0.8.9"
+ tempfile = "3.27.0"
+ fastcdc = { version = "=3.2.1", optional = true }
+-# Desktop window (`libra ui`). Ely pins this GPUI snapshot; the window is part
+-# of every ordinary build, so these dependencies are not feature-gated.
+-gpui = { package = "gpui-pre", version = "=0.3.10" }
+-gpui_platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["font-kit", "wayland", "x11"] }
+-ely-gpui-component = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "dd727f4dc3ff26c5aa0b233ac23cac7b5f41d6f6" }
++# Desktop window (`libra ui`). Keep enabled by default for desktop builds.
++gpui = { package = "gpui-pre", version = "=0.3.10", optional = true }
++gpui_platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["font-kit", "wayland", "x11"], optional = true }
++ely-gpui-component = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "dd727f4dc3ff26c5aa0b233ac23cac7b5f41d6f6", optional = true }
+
+ # Async stream helpers
+ tokio-stream = { version = "0.1.18", features = ["sync"] }
+diff --git a/src/command/ui.rs b/src/command/ui.rs
+index 1b0ec70..bd54d6d 100644
+--- a/src/command/ui.rs
++++ b/src/command/ui.rs
+@@ -23,6 +23,11 @@ pub struct UiArgs {}
+ /// this runs. Reaching here means the caller is not the process entry point (for
+ /// example `libra::exec`), which cannot hand the main thread to GPUI.
+ pub fn unavailable_error() -> CliError {
++    #[cfg(not(feature = "desktop-ui"))]
++    return CliError::fatal("This build of Libra does not include the desktop UI.")
++        .with_stable_code(StableErrorCode::Unsupported);
++
++    #[cfg(feature = "desktop-ui")]
+     CliError::fatal(
+         "`libra ui` opens its window on the process main thread. Run the `libra` executable directly (`libra ui`). The library dispatcher cannot open it.",
+     )
+@@ -47,6 +52,7 @@ pub fn execute(_args: UiArgs) -> CliResult<()> {
+ mod tests {
+     use super::*;
+
++    #[cfg(feature = "desktop-ui")]
+     #[test]
+     fn unavailable_error_explains_the_main_thread_requirement() {
+         let error = unavailable_error();
+diff --git a/src/lib.rs b/src/lib.rs
+index fce5900..82191fb 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -23,6 +23,7 @@ pub mod cli;
+ pub mod command;
+ pub mod common_utils;
+ pub mod git_protocol;
++#[cfg(feature = "desktop-ui")]
+ pub mod gui;
+ pub mod internal;
+ pub mod lfs_structs;
+diff --git a/src/main.rs b/src/main.rs
+index bdf8547..03aacb3 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -518,7 +518,7 @@ fn run_capture_scope_binding_helper_if_requested() -> Option<i32> {
+ ///
+ /// GPUI needs Wayland or X11 on Linux. macOS and Windows always have a window
+ /// server, so the check is a no-op there.
+-#[cfg(target_os = "linux")]
++#[cfg(all(feature = "desktop-ui", target_os = "linux"))]
+ fn desktop_display_available() -> bool {
+     let non_empty = |name: &str| {
+         std::env::var_os(name)
+@@ -528,7 +528,7 @@ fn desktop_display_available() -> bool {
+     non_empty("WAYLAND_DISPLAY") || non_empty("DISPLAY")
+ }
+
+-#[cfg(not(target_os = "linux"))]
++#[cfg(all(feature = "desktop-ui", not(target_os = "linux")))]
+ fn desktop_display_available() -> bool {
+     true
+ }
+@@ -538,6 +538,7 @@ fn desktop_display_available() -> bool {
+ /// GPUI owns the main thread, so this runs before the CLI worker thread
+ /// starts. A window failure exits with code `128` and the standard
+ /// internal-error report hint.
++#[cfg(feature = "desktop-ui")]
+ fn run_desktop_ui() -> i32 {
+     if !desktop_display_available() {
+         let err = libra::command::ui::display_unavailable_error();
+@@ -645,6 +646,7 @@ fn main() {
+     // side) never enters the CLI worker below; `--help`, unknown flags and
+     // extra arguments stay on the clap path.
+     let argv: Vec<std::ffi::OsString> = std::env::args_os().collect();
++    #[cfg(feature = "desktop-ui")]
+     if cli::ui_window_launch(&argv) {
+         let exit_code = run_desktop_ui();
+         flush_telemetry();

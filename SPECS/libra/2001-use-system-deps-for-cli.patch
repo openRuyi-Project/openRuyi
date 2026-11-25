@@ -1,0 +1,40 @@
+Subject: Resolve the packaged CLI against openRuyi Rust providers
+Upstream: https://github.com/libra-tools/libra
+Upstream-Status: Inappropriate [distribution policy]
+
+Keep the package's manifest independent of the desktop Git source and
+link the CLI against the distribution OpenSSL libraries.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -12,8 +12,8 @@
+ readme = "README.md"
+
+ [features]
+-default = ["storage-sqlite", "desktop-ui"]
+-desktop-ui = ["dep:gpui", "dep:gpui_platform", "dep:ely-gpui-component"]
++default = ["storage-sqlite"]
++desktop-ui = []
+ storage-sqlite = []
+ storage-redb = ["storage-queue", "dep:redb", "dep:postcard", "dep:crc32c"]
+ storage-queue = ["dep:postcard", "dep:crc32c"]
+@@ -56,7 +56,7 @@
+ lazy_static = "1.5.0"
+ lru-mem = "0.3.0"
+ once_cell = "1.21.4"
+-openssl = { version = "0.10.78", features = ["vendored"] }
++openssl = "0.10.78"
+ fancy-regex = "0.16.2"
+ regex = "1.12.3"
+ reqwest = { version = "0.13.2", default-features = false, features = [
+@@ -109,10 +109,6 @@
+ axum = "0.8.9"
+ tempfile = "3.27.0"
+ fastcdc = { version = "=3.2.1", optional = true }
+-# Desktop window (`libra ui`). Keep enabled by default for desktop builds.
+-gpui = { package = "gpui-pre", version = "=0.3.10", optional = true }
+-gpui_platform = { package = "gpui-pre-platform", version = "=0.3.10", features = ["font-kit", "wayland", "x11"], optional = true }
+-ely-gpui-component = { git = "https://github.com/ELY-Open-Source/Ely-GPUI-Components", rev = "dd727f4dc3ff26c5aa0b233ac23cac7b5f41d6f6", optional = true }
+
+ # Async stream helpers
+ tokio-stream = { version = "0.1.18", features = ["sync"] }

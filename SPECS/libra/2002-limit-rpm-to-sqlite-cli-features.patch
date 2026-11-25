@@ -1,0 +1,66 @@
+Subject: Limit the RPM dependency graph to the SQLite CLI
+Upstream: https://github.com/libra-tools/libra
+Upstream-Status: Inappropriate [distribution policy]
+
+The distribution build enables the SQLite CLI. Omit optional features'
+dependency declarations so Cargo can resolve this package from the
+system registry. These features are outside the distributed build.
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 6842f2f..3fd53d4 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -15,8 +15,8 @@ readme = "README.md"
+ default = ["storage-sqlite"]
+ desktop-ui = []
+ storage-sqlite = []
+-storage-redb = ["storage-queue", "dep:redb", "dep:postcard", "dep:crc32c"]
+-storage-queue = ["dep:postcard", "dep:crc32c"]
++storage-redb = ["storage-queue"]
++storage-queue = []
+ worktree-fuse  = []   # Unix FUSE-backed worktree commands (optional)
+ test-network   = []   # L2: tests requiring outbound network but no secrets
+ test-live-ai   = []   # L3: tests calling real LLM APIs
+@@ -24,10 +24,10 @@ test-live-cloud = []  # L3: tests hitting real D1/R2 endpoints
+ test-live-agent = [] # plan-20260713 live agent gate: real local claude/codex/opencode CLI data (dev machine acceptance; env LIBRA_RUN_LIVE_AGENT_GATE=1)
+ test-upgrade   = []   # plan-20260714 §A.11: auto-upgrade test hooks (trust-root/endpoint injection; requires LIBRA_TEST=1 at runtime; release workflow must NEVER enable this feature)
+ test-bridge-hooks = [] # fault injection for isolated bridge integration tests; never enable in released binaries
+-fastcdc        = ["dep:fastcdc"]   # default-OFF FastCDC LFS transport (fastcdc crate; SHA-256 digests)
++fastcdc = []
+ subagent-scaffold = []  # CEX-S2-10 schema-only scaffold (Step 2 sub-agent contracts; gated on CP-4 in production — see docs/development/tracing/agent.md "Step 2 audit closure")
+-otlp = ["dep:opentelemetry", "dep:opentelemetry_sdk", "dep:opentelemetry-otlp", "dep:tracing-opentelemetry"]  # lore.md 1.7: OTLP trace export (default binary unaffected)
+-keyring = ["dep:keyring"]  # lore.md 2.7: OS-keyring auth backend (release builds enable it; default dev builds unaffected)
++otlp = []
++keyring = []
+
+ [dependencies]
+ uuid = { version = "1.23.1", features = ["v4", "v5", "v7"] }
+@@ -108,7 +108,6 @@ crc32fast = "1.5.0"
+ dirs = "6.0.0"
+ axum = "0.8.9"
+ tempfile = "3.27.0"
+-fastcdc = { version = "=3.2.1", optional = true }
+
+ # Async stream helpers
+ tokio-stream = { version = "0.1.18", features = ["sync"] }
+@@ -139,20 +138,12 @@ rsa = "0.9"
+ # OTLP telemetry (lore.md 1.7) — optional, compiled only with `--features otlp`;
+ # http-proto + blocking reqwest + rustls (no tonic: init/flush run on the
+ # runtime-free main thread)
+-opentelemetry = { version = "0.32.0", optional = true }
+-opentelemetry_sdk = { version = "0.32.1", optional = true }
+-opentelemetry-otlp = { version = "0.32.0", optional = true, default-features = false, features = ["trace", "http-proto", "reqwest-blocking-client", "reqwest-rustls"] }
+-tracing-opentelemetry = { version = "0.33.0", optional = true }
+
+ # OS-keyring auth backend (lore.md 2.7) — optional; Linux uses the sync
+ # secret-service transport with VENDORED libdbus (static, no runtime dylib
+ # dependency on end-user machines); macOS/Windows use native stores.
+-keyring = { version = "3", optional = true, default-features = false, features = ["apple-native", "windows-native", "sync-secret-service", "vendored"] }
+
+ # Storage engine optional backends (plan-20261121-redb-storage-concurrency)
+-redb = { version = "5.0.0", optional = true }
+-postcard = { version = "1.1", features = ["use-std"], optional = true }
+-crc32c = { version = "0.6.9", optional = true }
+
+ [target.'cfg(unix)'.dependencies] # only on Unix
+ libfuse-fs = "0.1.13"
