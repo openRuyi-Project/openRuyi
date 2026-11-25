@@ -1,0 +1,14 @@
+Subject: Pin the optional SeaORM Arrow pre-release used by the package
+Upstream: https://github.com/SeaQL/sea-orm
+Upstream-Status: Inappropriate [distribution policy]
+
+Match the source dependency to the versioned pre-release crate provider
+selected in the distribution build.
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -543,3 +543,3 @@
+ [dependencies.sea-orm-arrow]
+-version = "2.0.0-rc"
++version = "=2.0.0-rc.3"
+ optional = true
