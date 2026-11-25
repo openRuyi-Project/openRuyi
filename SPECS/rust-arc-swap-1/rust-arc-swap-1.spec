@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name arc-swap
-%global full_version 1.9.1
+%global full_version 1.9.2
 %global pkgname arc-swap-1
 
 Name:           rust-arc-swap-1
-Version:        1.9.1
+Version:        1.9.2
 Release:        %autorelease
 Summary:        Rust crate "arc-swap"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/vorner/arc-swap
-#!RemoteAsset:  sha256:6a3a1fd6f75306b68087b831f025c712524bcb19aad54e557b1129cfa0a2b207
+#!RemoteAsset:  sha256:c049c0be4daef0b145cb3555416b3b8ef5b7888a38aea1a3a155801fe7b0810b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(rustversion-1/default) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/experimental-strategies) = %{version}
