@@ -4,24 +4,25 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name time-macros
-%global full_version 0.2.27
+%global full_version 0.2.32
 %global pkgname time-macros-0.2
 
 Name:           rust-time-macros-0.2
-Version:        0.2.27
+Version:        0.2.32
 Release:        %autorelease
 Summary:        Rust crate "time-macros"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/time-rs/time
-#!RemoteAsset:  sha256:2e70e4c5a0e0a8a4823ad65dfe1a6930e4f4d756dcd9dd7939022b5e8c501215
+#!RemoteAsset:  sha256:7e689342a48d2ea927c87ea50cabf8594854bf940e9310208848d680d668ed85
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(num-conv-0.2/default) >= 0.2.0
-Requires:       crate(time-core-0.1/default) >= 0.1.8
+Requires:       crate(num-conv-0.2/default) >= 0.2.2
+Requires:       crate(time-core-0.1/default) >= 0.1.9
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/formatting) = %{version}
