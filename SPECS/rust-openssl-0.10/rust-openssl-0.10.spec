@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name openssl
-%global full_version 0.10.80
+%global full_version 0.10.81
 %global pkgname openssl-0.10
 
 Name:           rust-openssl-0.10
-Version:        0.10.80
+Version:        0.10.81
 Release:        %autorelease
 Summary:        Rust crate "openssl"
 License:        Apache-2.0
 URL:            https://github.com/rust-openssl/rust-openssl
-#!RemoteAsset:  sha256:a45fa2aa886c42762255da344f0a0d313e254066c46aad76f300c3d3da62d967
+#!RemoteAsset:  sha256:77823a27f0babb03091cb9ed9ef80af3b39dbc82f97e8fa530374b7dafd87a45
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -25,7 +25,8 @@ Requires:       crate(cfg-if-1/default) >= 1.0.0
 Requires:       crate(foreign-types-0.3/default) >= 0.3.1
 Requires:       crate(libc-0.2/default) >= 0.2.0
 Requires:       crate(openssl-macros-0.1/default) >= 0.1.1
-Requires:       crate(openssl-sys-0.9/default) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/default) >= 0.9.117
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/v101) = %{version}
@@ -39,7 +40,7 @@ Source code for takopackized Rust crate "openssl"
 %package     -n %{name}+aws-lc
 Summary:        OpenSSL bindings - feature "aws-lc"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(openssl-sys-0.9/aws-lc) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/aws-lc) >= 0.9.117
 Provides:       crate(%{pkgname}/aws-lc) = %{version}
 
 %description -n %{name}+aws-lc
@@ -48,7 +49,7 @@ This metapackage enables feature "aws-lc" for the Rust openssl crate, by pulling
 %package     -n %{name}+aws-lc-fips
 Summary:        OpenSSL bindings - feature "aws-lc-fips"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(openssl-sys-0.9/aws-lc-fips) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/aws-lc-fips) >= 0.9.117
 Provides:       crate(%{pkgname}/aws-lc-fips) = %{version}
 
 %description -n %{name}+aws-lc-fips
@@ -57,7 +58,7 @@ This metapackage enables feature "aws-lc-fips" for the Rust openssl crate, by pu
 %package     -n %{name}+bindgen
 Summary:        OpenSSL bindings - feature "bindgen"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(openssl-sys-0.9/bindgen) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/bindgen) >= 0.9.117
 Provides:       crate(%{pkgname}/bindgen) = %{version}
 
 %description -n %{name}+bindgen
@@ -66,7 +67,7 @@ This metapackage enables feature "bindgen" for the Rust openssl crate, by pullin
 %package     -n %{name}+unstable-boringssl
 Summary:        OpenSSL bindings - feature "unstable_boringssl"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(openssl-sys-0.9/unstable-boringssl) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/unstable-boringssl) >= 0.9.117
 Provides:       crate(%{pkgname}/unstable-boringssl) = %{version}
 
 %description -n %{name}+unstable-boringssl
@@ -75,7 +76,7 @@ This metapackage enables feature "unstable_boringssl" for the Rust openssl crate
 %package     -n %{name}+vendored
 Summary:        OpenSSL bindings - feature "vendored"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(openssl-sys-0.9/vendored) >= 0.9.116
+Requires:       crate(openssl-sys-0.9/vendored) >= 0.9.117
 Provides:       crate(%{pkgname}/vendored) = %{version}
 
 %description -n %{name}+vendored
