@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name toml_parser
-%global full_version 1.1.2+spec-1.1.0
+%global full_version 1.1.3+spec-1.1.0
 %global pkgname toml-parser-1
 
 Name:           rust-toml-parser-1
-Version:        1.1.2
+Version:        1.1.3
 Release:        %autorelease
 Summary:        Rust crate "toml_parser"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
-#!RemoteAsset:  sha256:a2abe9b86193656635d2411dc43050282ca48aa31c2451210f4202550afb7526
+#!RemoteAsset:  sha256:1d38ac1cf9b95face32296c0a3ede1fdc270627c9d9c02a7274dd6d960dc4d56
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(winnow-1) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
