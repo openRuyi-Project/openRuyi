@@ -9,7 +9,7 @@
 
 %bcond doc 0
 # No display.
-%bcond tests 0
+%bcond tests 1
 
 Name:           gtk3
 Version:        3.24.51
@@ -43,6 +43,11 @@ BuildOption(conf):  -Dtests=false
 %endif
 BuildOption(conf):  -Dprofiler=false
 
+BuildRequires:  adwaita-icon-theme
+BuildRequires:  dbus
+BuildRequires:  fonts-dejavu
+BuildRequires:  librsvg-pixbuf-loader
+BuildRequires:  xorg-server-xvfb
 BuildRequires:  meson
 BuildRequires:  gcc
 BuildRequires:  gettext
@@ -91,11 +96,22 @@ Development files for GTK+.
 
 %if %{with tests}
 %package        tests
-Summary:        Tests for the %{name} package
+Summary:        Installed GTK3 tests and reference data
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
+Requires:       xorg-server-xvfb
+
+Requires:       dbus
+Requires:       fonts-dejavu
+Requires:       librsvg-pixbuf-loader
+
+Requires:       adwaita-icon-theme
+
 %description    tests
-Tests for gtk3.
+GTK3 test programs, UI and CSS reference inputs, and installed-tests
+metadata. GUI cases require a suitable display server, session D-Bus,
+fonts and image loaders. An external installed-tests runner is not included.
+
 %endif
 
 %install -a
@@ -109,6 +125,22 @@ mkdir -p %{buildroot}%{_libdir}/gtk-3.0/immodules
 %check
 desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 %if %{with tests}
+session_address_file=$(mktemp)
+session_pid_file=$(mktemp)
+dbus-daemon --session --fork --print-address=3 --print-pid=4 3>"$session_address_file" 4>"$session_pid_file"
+export DBUS_SESSION_BUS_ADDRESS="$(cat "$session_address_file")"
+session_bus_pid=$(cat "$session_pid_file")
+display_file=$(mktemp)
+Xvfb -noreset -displayfd 3 -screen 0 1280x1024x24 -nolisten tcp 3>"$display_file" >xvfb.log 2>&1 &
+display_pid=$!
+trap 'kill "$display_pid" "$session_bus_pid" 2>/dev/null || :; wait "$display_pid" 2>/dev/null || :; rm -f "$display_file" "$session_address_file" "$session_pid_file"' EXIT
+for display_attempt in $(seq 1 100); do
+    test -s "$display_file" && break
+    kill -0 "$display_pid"
+    sleep 0.1
+done
+test -s "$display_file"
+export DISPLAY=":$(cat "$display_file")"
 %meson_test
 %endif
 
@@ -174,8 +206,8 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
 
 %if %{with tests}
 %files tests
-%{_libexecdir}/installed-tests/
-%{_datadir}/installed-tests/
+%{_libexecdir}/installed-tests/gtk+/
+%{_datadir}/installed-tests/gtk+/
 %endif
 
 %changelog
