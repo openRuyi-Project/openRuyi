@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name toml
-%global full_version 1.1.2+spec-1.1.0
+%global full_version 1.1.6+spec-1.1.0
 %global pkgname toml-1
 
 Name:           rust-toml-1
-Version:        1.1.2
+Version:        1.1.6
 Release:        %autorelease
 Summary:        Rust crate "toml"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/toml-rs/toml
-#!RemoteAsset:  sha256:81f3d15e84cbcd896376e6730314d59fb5a87f31e4b038454184435cd57defee
+#!RemoteAsset:  sha256:920602543f0911ab71da12c50d59701da54c196d1a2bf5cb4b75667f137a406a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,6 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(serde-spanned-1/alloc) >= 1.1.1
 Requires:       crate(toml-datetime-1/alloc) >= 1.1.1
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/unbounded) = %{version}
 
@@ -35,8 +36,8 @@ Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/std) = %{version}
 Requires:       crate(anstream-1/default) >= 1.0.0
 Requires:       crate(anstyle-1/default) >= 1.0.14
-Requires:       crate(toml-parser-1/alloc) >= 1.1.2
-Requires:       crate(toml-parser-1/debug) >= 1.1.2
+Requires:       crate(toml-parser-1/alloc) >= 1.1.3
+Requires:       crate(toml-parser-1/debug) >= 1.1.3
 Provides:       crate(%{pkgname}/debug) = %{version}
 
 %description -n %{name}+debug
@@ -59,7 +60,7 @@ This metapackage enables feature "default" for the Rust toml crate, by pulling i
 %package     -n %{name}+display
 Summary:        Native Rust encoder and decoder of TOML-formatted files and streams - feature "display"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(toml-writer-1/alloc) >= 1.1.1
+Requires:       crate(toml-writer-1/alloc) >= 1.1.2
 Provides:       crate(%{pkgname}/display) = %{version}
 
 %description -n %{name}+display
@@ -80,7 +81,7 @@ This metapackage enables feature "fast_hash" for the Rust toml crate, by pulling
 %package     -n %{name}+parse
 Summary:        Native Rust encoder and decoder of TOML-formatted files and streams - feature "parse"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(toml-parser-1/alloc) >= 1.1.2
+Requires:       crate(toml-parser-1/alloc) >= 1.1.3
 Requires:       crate(winnow-1) >= 1.0.0
 Provides:       crate(%{pkgname}/parse) = %{version}
 
@@ -123,10 +124,10 @@ Requires:       crate(serde-spanned-1/alloc) >= 1.1.1
 Requires:       crate(serde-spanned-1/std) >= 1.1.1
 Requires:       crate(toml-datetime-1/alloc) >= 1.1.1
 Requires:       crate(toml-datetime-1/std) >= 1.1.1
-Requires:       crate(toml-parser-1/alloc) >= 1.1.2
-Requires:       crate(toml-parser-1/std) >= 1.1.2
-Requires:       crate(toml-writer-1/alloc) >= 1.1.1
-Requires:       crate(toml-writer-1/std) >= 1.1.1
+Requires:       crate(toml-parser-1/alloc) >= 1.1.3
+Requires:       crate(toml-parser-1/std) >= 1.1.3
+Requires:       crate(toml-writer-1/alloc) >= 1.1.2
+Requires:       crate(toml-writer-1/std) >= 1.1.2
 Provides:       crate(%{pkgname}/std) = %{version}
 
 %description -n %{name}+std
