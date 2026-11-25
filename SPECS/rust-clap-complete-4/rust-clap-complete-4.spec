@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name clap_complete
-%global full_version 4.6.5
+%global full_version 4.6.6
 %global pkgname clap-complete-4
 
 Name:           rust-clap-complete-4
-Version:        4.6.5
+Version:        4.6.6
 Release:        %autorelease
 Summary:        Rust crate "clap_complete"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/clap-rs/clap
-#!RemoteAsset:  sha256:e0a7a9bfdb35811f9e59832f0f05975114d2251b415fb534108e6f34060fd772
+#!RemoteAsset:  sha256:97bf4965940c2382204c0ded6dd3dd48c0c4e872f1e76fb1bf94f45991a2cb6a
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -65,8 +65,6 @@ Provides:       crate(%{pkgname}/unstable-shell-tests) = %{version}
 This metapackage enables feature "unstable-shell-tests" for the Rust clap_complete crate, by pulling in any additional dependencies needed by that feature.
 
 %files
-%license LICENSE-APACHE
-%license LICENSE-MIT
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
