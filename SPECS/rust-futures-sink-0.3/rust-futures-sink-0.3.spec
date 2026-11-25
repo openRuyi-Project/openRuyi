@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-sink
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-sink-0.3
 
 Name:           rust-futures-sink-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-sink"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:c39754e157331b013978ec91992bde1ac089843443c49cbc7f46150b0fad0893
+#!RemoteAsset:  sha256:e34418ac499d6305c2fb5ad0ed2f6ac998c5f8ca209b4510f7f94242c647e307
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
