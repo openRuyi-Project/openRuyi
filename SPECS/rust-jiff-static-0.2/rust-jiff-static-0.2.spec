@@ -4,22 +4,23 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name jiff-static
-%global full_version 0.2.27
+%global full_version 0.2.37
 %global pkgname jiff-static-0.2
 
 Name:           rust-jiff-static-0.2
-Version:        0.2.27
+Version:        0.2.37
 Release:        %autorelease
 Summary:        Rust crate "jiff-static"
 License:        Unlicense OR MIT
 URL:            https://github.com/BurntSushi/jiff/tree/master/crates/jiff-static
-#!RemoteAsset:  sha256:47b605b0c050d845fc355bb11eb3f9a8deddc218ea60c76e61aa1f2adfb2c96a
+#!RemoteAsset:  sha256:378268a1116ad67ae6228701118ac9f491d78fda38a40a1f1a9e1348de6f7212
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
+Requires:       crate(jiff-core-0.1/default) >= 0.1.0
 Requires:       crate(proc-macro2-1/default) >= 1.0.93
 Requires:       crate(quote-1/default) >= 1.0.38
 Requires:       crate(syn-2/default) >= 2.0.98
@@ -42,9 +43,6 @@ Provides:       crate(%{pkgname}/tzdb) = %{version}
 This metapackage enables feature "tzdb" for the Rust jiff-static crate, by pulling in any additional dependencies needed by that feature.
 
 %files
-%license COPYING
-%license LICENSE-MIT
-%license UNLICENSE
 %{_datadir}/cargo/registry/%{crate_name}-%{version}/
 
 %changelog
