@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname prison
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-prison
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        Barcode abstraction layer library
 License:        MIT
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/prison.git
-#!RemoteAsset:  sha256:30cdb5564ef76c4c2a6fe509234095c1329f30165243b81008312a1182d326bc
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:13d904f7514ffe32e49fe09a2b5e10125f825d42c26ee52294c15ce1bfab3970
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
