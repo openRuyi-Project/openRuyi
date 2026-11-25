@@ -17,7 +17,7 @@ URL:            https://github.com/ebassi/graphene
 Source0:        https://github.com/ebassi/graphene/archive/refs/tags/%{version}.tar.gz
 BuildSystem:    meson
 
-BuildOption(conf):  -Dinstalled_tests=false
+BuildOption(conf):  -Dinstalled_tests=true
 %if %{with doc}
 BuildOption(conf):  -Dgtk_doc=true
 %else
@@ -36,6 +36,16 @@ BuildRequires:  gtk-doc
 Graphene provides a small set of mathematical types needed to implement graphic
 libraries that deal with 2D and 3D transformations and projections.
 
+%package        tests
+Summary:        Python introspection test for Graphene
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       python-pygobject
+
+%description    tests
+The installed Graphene introspection.py test and installed-tests metadata.
+It uses PyGObject and the installed Graphene introspection bindings.
+The native C test suite is not included.
+
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -51,6 +61,7 @@ developing applications that use %{name}.
 %{_libdir}/libgraphene-1.0.so.0*
 
 %files devel
+%exclude %{_libexecdir}/installed-tests/graphene-1.0/
 %{_includedir}/graphene-1.0/
 %dir %{_libdir}/graphene-1.0
 %{_libdir}/graphene-1.0/include/
@@ -62,6 +73,10 @@ developing applications that use %{name}.
 %if %{with doc}
 %{_datadir}/gtk-doc/
 %endif
+
+%files tests
+%{_datadir}/installed-tests/graphene-1.0/
+%{_libexecdir}/installed-tests/graphene-1.0/
 
 %changelog
 %autochangelog
