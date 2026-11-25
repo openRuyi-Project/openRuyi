@@ -15,6 +15,8 @@ VCS:            git:https://gitlab.gnome.org/GNOME/gcab.git
 Source0:        https://gitlab.gnome.org/GNOME/gcab/-/archive/v%{version}/gcab-v%{version}.tar.gz
 BuildSystem:    meson
 
+BuildOption(conf):  -Dinstalled_tests=true
+
 BuildRequires:  gettext
 BuildRequires:  git
 BuildRequires:  gtk-doc
@@ -46,6 +48,14 @@ libgcab is a library to manipulate Cabinet archive.
 
 Libraries, includes, etc. to compile with the gcab library.
 
+%package        tests
+Summary:        Installed libgcab tests and cabinet samples
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    tests
+The libgcab self-test program, sample cabinet files and installed-tests
+metadata. The sample files include malformed archives used by the tests.
+
 %install -a
 %find_lang %{name} --generate-subpackages
 
@@ -67,6 +77,10 @@ Libraries, includes, etc. to compile with the gcab library.
 %{_includedir}/libgcab-1.0/*
 %{_libdir}/libgcab-1.0.so
 %{_libdir}/pkgconfig/libgcab-1.0.pc
+
+%files tests
+%{_libexecdir}/installed-tests/libgcab-1.0/
+%{_datadir}/installed-tests/libgcab-1.0/
 
 %changelog
 %autochangelog
