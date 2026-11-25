@@ -1,0 +1,15 @@
+Subject: Select the released argon2 version from the lockfile
+Upstream: https://github.com/RustCrypto/SSH
+Upstream-Status: Inappropriate [distribution policy]
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -173,7 +173,7 @@
+ path = "tests/sshsig.rs"
+
+ [dependencies.argon2]
+-version = "0.6.0-rc.8"
++version = "0.6.0"
+ features = ["alloc"]
+ optional = true
+ default-features = false
