@@ -12,7 +12,7 @@
 [package]
 edition = "2024"
 name = "blake3"
-version = "1.8.4"
+version = "1.8.7"
 authors = [
     "Jack O'Connor <oconnor663@gmail.com>",
     "Samuel Neves",
@@ -68,9 +68,6 @@ path = "src/lib.rs"
 [[bench]]
 name = "bench"
 path = "benches/bench.rs"
-
-[dependencies.arrayref]
-version = "0.3.5"
 
 [dependencies.arrayvec]
 version = "0.7.4"

@@ -4,28 +4,28 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name blake3
-%global full_version 1.8.4
+%global full_version 1.8.7
 %global pkgname blake3-1
 
 Name:           rust-blake3-1
-Version:        1.8.4
+Version:        1.8.7
 Release:        %autorelease
 Summary:        Rust crate "blake3"
 License:        CC0-1.0 OR Apache-2.0 OR Apache-2.0 WITH LLVM-exception
 URL:            https://github.com/BLAKE3-team/BLAKE3
-#!RemoteAsset:  sha256:4d2d5991425dfd0785aed03aedcf0b321d61975c9b5b3689c774a2610ae0b51e
+#!RemoteAsset:  sha256:6d9e454fc11f76977dc803893aff6304ed33d6a26efae8696573bea74baa27ae
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(arrayref-0.3/default) >= 0.3.5
 Requires:       crate(arrayvec-0.7) >= 0.7.4
 Requires:       crate(cc-1) >= 1.1.12
 Requires:       crate(cfg-if-1/default) >= 1.0.0
 Requires:       crate(constant-time-eq-0.4) >= 0.4.2
 Requires:       crate(cpufeatures-0.3/default) >= 0.3.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/neon) = %{version}
 Provides:       crate(%{pkgname}/no-avx2) = %{version}
