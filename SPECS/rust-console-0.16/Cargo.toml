@@ -13,8 +13,16 @@
 edition = "2021"
 rust-version = "1.71"
 name = "console"
-version = "0.16.1"
+version = "0.16.6"
 build = false
+include = [
+    "CHANGELOG.md",
+    "Cargo.toml",
+    "LICENSE",
+    "README.md",
+    "src/**/*.rs",
+    "tests/data/sample_zellij_session.log",
+]
 autolib = false
 autobins = false
 autoexamples = false
@@ -44,7 +52,6 @@ default = [
 ]
 std = [
     "dep:libc",
-    "dep:once_cell",
     "alloc",
 ]
 windows-console-colors = ["ansi-parsing"]
@@ -53,41 +60,8 @@ windows-console-colors = ["ansi-parsing"]
 name = "console"
 path = "src/lib.rs"
 
-[[example]]
-name = "colors"
-path = "examples/colors.rs"
-required-features = ["std"]
-
-[[example]]
-name = "colors256"
-path = "examples/colors256.rs"
-required-features = ["std"]
-
-[[example]]
-name = "cursor_at"
-path = "examples/cursor_at.rs"
-required-features = ["std"]
-
-[[example]]
-name = "keyboard"
-path = "examples/keyboard.rs"
-required-features = ["std"]
-
-[[example]]
-name = "term"
-path = "examples/term.rs"
-required-features = ["std"]
-
-[[bench]]
-name = "ansi_parser"
-path = "benches/ansi_parser.rs"
-
 [dependencies.libc]
 version = "0.2.99"
-optional = true
-
-[dependencies.once_cell]
-version = "1.8"
 optional = true
 
 [dependencies.unicode-width]
