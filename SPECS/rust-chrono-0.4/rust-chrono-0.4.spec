@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name chrono
-%global full_version 0.4.44
+%global full_version 0.4.45
 %global pkgname chrono-0.4
 
 Name:           rust-chrono-0.4
-Version:        0.4.44
+Version:        0.4.45
 Release:        %autorelease
 Summary:        Rust crate "chrono"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/chronotope/chrono
-#!RemoteAsset:  sha256:c673075a2e0e5f4a1dde27ce9dee1ea4558c7ffe648f576438a20ca1d2acc4b0
+#!RemoteAsset:  sha256:1aa79e62e7697b8e29b513a68abacf485adcd1fe8284a4316c5ae868e6633327
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(num-traits-0.2) >= 0.2.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/core-error) = %{version}
