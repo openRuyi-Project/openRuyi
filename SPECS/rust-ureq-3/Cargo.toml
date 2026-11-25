@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "ureq"
-version = "3.3.0"
+version = "3.4.1"
 authors = [
     "Martin Algesten <martin@algesten.se>",
     "Jacob Hoffman-Andrews <ureq@hoffman-andrews.com>",
@@ -141,7 +141,9 @@ path = "examples/proxy.rs"
 required-features = ["rustls"]
 
 [dependencies.base64]
-version = "0.22.1"
+version = "0.23.1"
+features = ["std"]
+default-features = false
 
 [dependencies.brotli-decompressor]
 version = "5.0.0"
@@ -206,7 +208,7 @@ optional = true
 default-features = false
 
 [dependencies.rustls-platform-verifier]
-version = "0.6.0"
+version = "0.7.0"
 optional = true
 default-features = false
 
@@ -227,7 +229,7 @@ version = "0.3.4"
 optional = true
 
 [dependencies.ureq-proto]
-version = "0.6.0"
+version = "0.6.2"
 features = ["client"]
 default-features = false
 
@@ -251,6 +253,7 @@ default-features = false
 
 [dev-dependencies.assert_no_alloc]
 version = "1.1.2"
+default-features = false
 
 [dev-dependencies.auto-args]
 version = "0.3.0"

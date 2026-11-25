@@ -4,27 +4,28 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name ureq
-%global full_version 3.3.0
+%global full_version 3.4.1
 %global pkgname ureq-3
 
 Name:           rust-ureq-3
-Version:        3.3.0
+Version:        3.4.1
 Release:        %autorelease
 Summary:        Rust crate "ureq"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/algesten/ureq
-#!RemoteAsset:  sha256:dea7109cdcd5864d4eeb1b58a1648dc9bf520360d7af16ec26d0a9354bafcfc0
+#!RemoteAsset:  sha256:af5546be8f5378d5414f83733f5c9a2526f4645829edbc1c41790aeef1b38e8b
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(base64-0.22/default) >= 0.22.1
+Requires:       crate(base64-0.23/std) >= 0.23.1
 Requires:       crate(log-0.4/default) >= 0.4.25
 Requires:       crate(percent-encoding-2/default) >= 2.3.1
-Requires:       crate(ureq-proto-0.6/client) >= 0.6.0
+Requires:       crate(ureq-proto-0.6/client) >= 0.6.2
 Requires:       crate(utf8-zero-0.8/default) >= 0.8.1
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/rustls) = %{version}
 Provides:       crate(%{pkgname}/test) = %{version}
@@ -180,7 +181,7 @@ This metapackage enables feature "native-tls-webpki-roots" for the Rust ureq cra
 %package     -n %{name}+platform-verifier
 Summary:        Simple, safe HTTP client - feature "platform-verifier"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(rustls-platform-verifier-0.6) >= 0.6.0
+Requires:       crate(rustls-platform-verifier-0.7) >= 0.7.0
 Provides:       crate(%{pkgname}/platform-verifier) = %{version}
 
 %description -n %{name}+platform-verifier
