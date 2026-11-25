@@ -21,33 +21,29 @@
 # Search path for pc files for pkgconf
 %global pkgconf_libdirs %{_libdir}/pkgconfig:%{_datadir}/pkgconfig
 
-%global somajor 7
+%global somajor 8
 %global libname lib%{name}%{somajor}
 %global devname lib%{name}-devel
 
 Name:           pkgconf
-Version:        2.5.1
+Version:        3.0.11
 Release:        %autorelease
 Summary:        Package compiler and linker metadata toolkit
 License:        ISC
 URL:            https://pkgconf.org/
 VCS:            git:https://github.com/pkgconf/pkgconf.git
-#!RemoteAsset:  sha256:cd05c9589b9f86ecf044c10a2269822bc9eb001eced2582cfffd658b0a50c243
-Source0:        https://distfiles.dereferenced.org/%{name}/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:d0cd841bc8e55b9da888106c00dc256d05b7d1d8e5a46f4be4eb4c5125bd2dc4
+Source0:        https://distfiles.dereferenced.org/pkgconf/%{name}-%{version}.tar.xz
 # Simple wrapper script to offer platform versions of pkgconfig from Fedora
 Source1:        platform-pkg-config.in
-Buildsystem:    autotools
+Buildsystem:    meson
 
-BuildOption(conf):  --disable-static
-BuildOption(conf):  --with-pkg-config-dir=%{pkgconf_libdirs}
-BuildOption(conf):  --with-system-includedir=%{_includedir}
-BuildOption(conf):  --with-system-libdir=%{_libdir}
+BuildOption(conf):  -D with-pkg-config-dir=%{pkgconf_libdirs}
+BuildOption(conf):  -D with-system-includedir=%{_includedir}
+BuildOption(conf):  -D with-system-libdir=%{_libdir}
 
 BuildRequires:  gcc
-BuildRequires:  make
-# for tests.
-BuildRequires:  kyua
-BuildRequires:  atf
+BuildRequires:  meson
 
 # pkgconf uses libpkgconf internally
 Requires:       %{libname}%{?_isa} = %{version}-%{release}
@@ -159,10 +155,14 @@ rm -rf %{buildroot}%{_mandir}/man7
 %files
 %license COPYING
 %doc README.md AUTHORS NEWS
-%{_bindir}/pkgconf
 %{_bindir}/bomtool
-%{_mandir}/man1/pkgconf.1*
+%{_bindir}/pccritic
+%{_bindir}/pkgconf
+%{_bindir}/spdxtool
 %{_mandir}/man1/bomtool.1*
+%{_mandir}/man1/pccritic.1*
+%{_mandir}/man1/pkgconf.1*
+%{_mandir}/man1/spdxtool.1*
 %{_mandir}/man5/pc.5*
 %{_mandir}/man5/pkgconf-personality.5*
 %{_rpmmacrodir}/macros.pkgconf
@@ -188,13 +188,13 @@ rm -rf %{buildroot}%{_mandir}/man7
 %license COPYING
 %dir %{_datadir}/aclocal
 %{_datadir}/aclocal/pkg.m4
-%{_mandir}/man7/pkg.m4.7%{?ext_man}
+%{_mandir}/man7/pkg.m4.7*
 
 %files pkg-config
 %license COPYING
 %{_bindir}/pkg-config
 %{_bindir}/%{pkgconf_target_platform}-pkg-config
-%{_mandir}/man1/pkg-config.1%{?ext_man}
+%{_mandir}/man1/pkg-config.1*
 %endif
 
 %changelog
