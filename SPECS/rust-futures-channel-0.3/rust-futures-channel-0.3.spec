@@ -4,23 +4,24 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-channel
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-channel-0.3
 
 Name:           rust-futures-channel-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-channel"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:07bbe89c50d7a535e539b8c17bc0b49bdb77747034daa8087407d655f3f7cc1d
+#!RemoteAsset:  sha256:262590f4fe6afeb0bc83be1daa64e52657fe185690a958af7f3ad0e92085c5ae
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(futures-core-0.3) >= 0.3.32
+Requires:       crate(futures-core-0.3) >= 0.3.33
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/cfg-target-has-atomic) = %{version}
 Provides:       crate(%{pkgname}/unstable) = %{version}
@@ -31,7 +32,7 @@ Source code for takopackized Rust crate "futures-channel"
 %package     -n %{name}+alloc
 Summary:        Channels for asynchronous communication using futures-rs - feature "alloc"
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-core-0.3/alloc) >= 0.3.32
+Requires:       crate(futures-core-0.3/alloc) >= 0.3.33
 Provides:       crate(%{pkgname}/alloc) = %{version}
 
 %description -n %{name}+alloc
@@ -40,7 +41,7 @@ This metapackage enables feature "alloc" for the Rust futures-channel crate, by 
 %package     -n %{name}+futures-sink
 Summary:        Channels for asynchronous communication using futures-rs - feature "futures-sink" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(futures-sink-0.3) >= 0.3.32
+Requires:       crate(futures-sink-0.3) >= 0.3.33
 Provides:       crate(%{pkgname}/futures-sink) = %{version}
 Provides:       crate(%{pkgname}/sink) = %{version}
 
@@ -53,7 +54,7 @@ Additionally, this package also provides the "sink" feature.
 Summary:        Channels for asynchronous communication using futures-rs - feature "std" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
 Requires:       crate(%{pkgname}/alloc) = %{version}
-Requires:       crate(futures-core-0.3/std) >= 0.3.32
+Requires:       crate(futures-core-0.3/std) >= 0.3.33
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/std) = %{version}
 
