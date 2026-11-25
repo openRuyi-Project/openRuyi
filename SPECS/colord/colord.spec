@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond enable_sane 0
-%bcond tests 0
+%bcond tests 1
 %bcond doc 0
 
 Name:           colord
@@ -45,6 +45,7 @@ BuildOption(conf):  -Dinstalled_tests=false
 %endif
 BuildOption(conf):  -Dvapi=true
 
+BuildRequires:  shared-mime-info
 BuildRequires:  meson
 BuildRequires:  gcc
 BuildRequires:  gettext
@@ -86,10 +87,14 @@ Files for development with %{name}.
 
 %if %{with tests}
 %package        tests
-Summary:        Data files for installed tests
+Requires:       shared-mime-info
+Summary:        Installed test programs and reference data for colord
 
 %description    tests
-Data files for installed tests.
+Colord test executables, ICC profiles, EDID samples, spectral and
+calibration reference data, and installed-tests metadata. Integration
+cases may require the colord daemon and a suitable D-Bus environment.
+
 %endif
 
 %install -a
