@@ -1,0 +1,14 @@
+Subject: Select the system windows crate branch
+Upstream: https://github.com/GuillaumeGomez/sysinfo
+Upstream-Status: Inappropriate [distribution policy]
+
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -238,5 +238,5 @@
+ optional = true
+
+ [target."cfg(windows)".dependencies.windows]
+-version = ">=0.59, <0.62"
+-optional = true
++version = "0.61"
++optional = true
