@@ -1,0 +1,89 @@
+Subject: Use local repository fixtures in Resolver smoke tests
+
+The Resolver supplier tests create their own sessions and contact Maven
+Central even during an offline Maven build. Use the repository fixtures
+already shipped in the source archive for version range resolution and
+dependency collection. Ignore repositories declared by artifact descriptors
+so the test fixtures cannot reintroduce Central transitively.
+
+Upstream-Status: Not submitted
+
+SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+SPDX-License-Identifier: MulanPSL-2.0
+
+--- a/maven-resolver-provider/src/test/java/org/apache/maven/repository/internal/AbstractRepositoryTest.java
++++ b/maven-resolver-provider/src/test/java/org/apache/maven/repository/internal/AbstractRepositoryTest.java
+@@ -47,6 +47,7 @@
+
+     public static RepositorySystemSession newMavenRepositorySystemSession(RepositorySystem system) {
+         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
++        session.setIgnoreArtifactDescriptorRepositories(true);
+
+         LocalRepository localRepo = new LocalRepository("target/local-repo");
+         session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepo));
+--- a/maven-resolver-provider/src/test/java/org/apache/maven/repository/supplier/RepositorySystemSupplierTest.java
++++ b/maven-resolver-provider/src/test/java/org/apache/maven/repository/supplier/RepositorySystemSupplierTest.java
+@@ -30,7 +30,6 @@
+ import org.eclipse.aether.collection.CollectResult;
+ import org.eclipse.aether.graph.Dependency;
+ import org.eclipse.aether.impl.Deployer;
+-import org.eclipse.aether.repository.RemoteRepository;
+ import org.eclipse.aether.resolution.VersionRangeRequest;
+ import org.eclipse.aether.resolution.VersionRangeResult;
+ import org.eclipse.aether.spi.io.PathProcessor;
+@@ -39,6 +38,8 @@
+ import org.junit.jupiter.api.Assertions;
+ import org.junit.jupiter.api.Test;
+
++import static org.apache.maven.repository.internal.AbstractRepositoryTest.newTestRepository;
++
+ public class RepositorySystemSupplierTest {
+     @Test
+     void smoke() throws Exception {
+@@ -46,18 +47,17 @@
+                 CloseableSession session = new SessionBuilderSupplier(system, Maven3ScopeManagerConfiguration.INSTANCE)
+                         .get()
+                         .withLocalRepositoryBaseDirectories(new File("target/local-repo").toPath())
++                        .setIgnoreArtifactDescriptorRepositories(true)
+                         .build()) {
+-            Artifact artifact = new DefaultArtifact("org.apache.maven.resolver:maven-resolver-util:[0,)");
++            Artifact artifact = new DefaultArtifact("ut.simple:artifact:[0,)");
+             VersionRangeRequest rangeRequest = new VersionRangeRequest();
+             rangeRequest.setArtifact(artifact);
+-            rangeRequest.setRepositories(Collections.singletonList(
+-                    new RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2/")
+-                            .build()));
++            rangeRequest.setRepositories(Collections.singletonList(newTestRepository()));
+             VersionRangeResult rangeResult = system.resolveVersionRange(session, rangeRequest);
+             List<Version> versions = rangeResult.getVersions();
+
+-            // As of 2023-11-14, Maven Central has 36 versions of this artifact (and it will just grow)
+-            Assertions.assertTrue(versions.size() >= 36);
++            Assertions.assertEquals(1, versions.size());
++            Assertions.assertEquals("1.0", versions.get(0).toString());
+             System.out.println("Available " + versions.size() + " versions: " + versions);
+         }
+     }
+@@ -68,18 +68,18 @@
+                 CloseableSession session = new SessionBuilderSupplier(system, Maven3ScopeManagerConfiguration.INSTANCE)
+                         .get()
+                         .withLocalRepositoryBaseDirectories(new File("target/local-repo").toPath())
++                        .setIgnoreArtifactDescriptorRepositories(true)
+                         .build()) {
+             CollectRequest collectRequest = new CollectRequest();
+             collectRequest.setResolutionScope(session.getScopeManager()
+                     .getResolutionScope(Maven3ScopeManagerConfiguration.RS_TEST_RUNTIME)
+                     .orElseThrow(AssertionError::new));
+             collectRequest.setRoot(
+-                    new Dependency(new DefaultArtifact("org.apache.maven:maven-resolver-provider:3.6.1"), ""));
+-            collectRequest.setRepositories(Collections.singletonList(
+-                    new RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2/")
+-                            .build()));
++                    new Dependency(new DefaultArtifact("ut.simple:artifact:1.0"), ""));
++            collectRequest.setRepositories(Collections.singletonList(newTestRepository()));
+
+             CollectResult collectResult = system.collectDependencies(session, collectRequest);
++            Assertions.assertEquals(2, collectResult.getRoot().getChildren().size());
+
+             collectResult.getRoot().accept(new DependencyGraphDumper(System.out::println));
+         }

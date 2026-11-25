@@ -1,0 +1,69 @@
+From: Dingli Zhang <dingli@iscas.ac.cn>
+Subject: Disable formatting and SCM discovery for offline distribution builds
+
+Source formatting is an upstream development task. Avoid its formatter and
+SCM dependency trees in the bootstrap repository. Supply the distribution
+build identifier explicitly instead of querying a nonexistent Git checkout.
+Compilation, bytecode checks, license checks, and unit tests remain enabled.
+
+Upstream-Status: Not submitted
+
+SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
+SPDX-License-Identifier: MulanPSL-2.0
+
+--- a/pom.xml
++++ b/pom.xml
+@@ -653,6 +653,27 @@
+       </plugins>
+     </pluginManagement>
+     <plugins>
++      <!-- Distribution builds do not rewrite or lint upstream source files. -->
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-checkstyle-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>checkstyle-check</id>
++            <phase>none</phase>
++          </execution>
++        </executions>
++      </plugin>
++      <plugin>
++        <groupId>com.diffplug.spotless</groupId>
++        <artifactId>spotless-maven-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>default</id>
++            <phase>none</phase>
++          </execution>
++        </executions>
++      </plugin>
+       <plugin>
+         <groupId>org.codehaus.mojo</groupId>
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+--- a/maven-core/pom.xml
++++ b/maven-core/pom.xml
+@@ -244,23 +244,6 @@
+           </execution>
+         </executions>
+       </plugin>
+-      <plugin>
+-        <groupId>org.codehaus.mojo</groupId>
+-        <artifactId>buildnumber-maven-plugin</artifactId>
+-        <executions>
+-          <execution>
+-            <id>create-buildnumber</id>
+-            <goals>
+-              <goal>create</goal>
+-            </goals>
+-            <configuration>
+-              <doCheck>false</doCheck>
+-              <doUpdate>false</doUpdate>
+-              <revisionOnScmFailure>NON_CANONICAL</revisionOnScmFailure>
+-            </configuration>
+-          </execution>
+-        </executions>
+-      </plugin>
+     </plugins>
+   </build>
+ </project>
