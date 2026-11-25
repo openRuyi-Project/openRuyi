@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name hybrid-array
-%global full_version 0.4.11
+%global full_version 0.4.15
 %global pkgname hybrid-array-0.4
 
 Name:           rust-hybrid-array-0.4
-Version:        0.4.11
+Version:        0.4.15
 Release:        %autorelease
 Summary:        Rust crate "hybrid-array"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/RustCrypto/hybrid-array
-#!RemoteAsset:  sha256:08d46837a0ed51fe95bd3b05de33cd64a1ee88fc797477ca48446872504507c5
+#!RemoteAsset:  sha256:27f864f10dfb56725ce5ce5472bc52252c8f93a4ab86327122cebf62c5f59a17
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -22,6 +22,7 @@ BuildRequires:  rust-rpm-macros
 
 Requires:       crate(typenum-1/const-generics) >= 1.20.0
 Requires:       crate(typenum-1/default) >= 1.20.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}

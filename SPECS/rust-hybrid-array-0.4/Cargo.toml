@@ -13,7 +13,7 @@
 edition = "2024"
 rust-version = "1.85"
 name = "hybrid-array"
-version = "0.4.11"
+version = "0.4.15"
 authors = ["RustCrypto Developers"]
 build = false
 autolib = false
