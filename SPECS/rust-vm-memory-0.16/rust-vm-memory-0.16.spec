@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name vm-memory
-%global full_version 0.16.0
+%global full_version 0.16.2
 %global pkgname vm-memory-0.16
 
 Name:           rust-vm-memory-0.16
-Version:        0.16.0
+Version:        0.16.2
 Release:        %autorelease
 Summary:        Rust crate "vm-memory"
 License:        Apache-2.0 OR BSD-3-Clause
 URL:            https://github.com/rust-vmm/vm-memory
-#!RemoteAsset:  sha256:e2919f87420b6998a131eb7c78843890295e91a3f8f786ccc925c8d387b75121
+#!RemoteAsset:  sha256:1fd5e56d48353c5f54ef50bd158a0452fc82f5383da840f7b8efc31695dd3b9d
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -25,6 +25,7 @@ Requires:       crate(thiserror-1/default) >= 1.0.40
 Requires:       crate(winapi-0.3/default) >= 0.3.0
 Requires:       crate(winapi-0.3/errhandlingapi) >= 0.3.0
 Requires:       crate(winapi-0.3/sysinfoapi) >= 0.3.0
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/backend-bitmap) = %{version}
 Provides:       crate(%{pkgname}/backend-mmap) = %{version}

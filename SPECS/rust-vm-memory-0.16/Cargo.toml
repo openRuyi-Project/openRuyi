@@ -12,9 +12,10 @@
 [package]
 edition = "2021"
 name = "vm-memory"
-version = "0.16.0"
+version = "0.16.2"
 authors = ["Liu Jiang <gerry@linux.alibaba.com>"]
 build = false
+autolib = false
 autobins = false
 autoexamples = false
 autotests = false
@@ -33,9 +34,16 @@ rustdoc-args = [
     "docsrs",
 ]
 
-[profile.bench]
-lto = true
-codegen-units = 1
+[features]
+backend-atomic = ["arc-swap"]
+backend-bitmap = []
+backend-mmap = []
+default = []
+xen = [
+    "backend-mmap",
+    "bitflags",
+    "vmm-sys-util",
+]
 
 [lib]
 name = "vm_memory"
@@ -61,7 +69,7 @@ version = "0.2.39"
 version = "1.0.40"
 
 [dependencies.vmm-sys-util]
-version = "0.12.1"
+version = ">=0.12.1,<=0.14.0"
 optional = true
 
 [dev-dependencies.criterion]
@@ -71,18 +79,7 @@ version = "0.5.0"
 version = "0.1.0"
 
 [dev-dependencies.vmm-sys-util]
-version = "0.12.1"
-
-[features]
-backend-atomic = ["arc-swap"]
-backend-bitmap = []
-backend-mmap = []
-default = []
-xen = [
-    "backend-mmap",
-    "bitflags",
-    "vmm-sys-util",
-]
+version = "0.14.0"
 
 [target."cfg(windows)".dependencies.winapi]
 version = "0.3"
@@ -90,3 +87,7 @@ features = [
     "errhandlingapi",
     "sysinfoapi",
 ]
+
+[profile.bench]
+lto = true
+codegen-units = 1
