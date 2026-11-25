@@ -13,7 +13,7 @@
 edition = "2021"
 rust-version = "1.77"
 name = "wasm-bindgen-macro-support"
-version = "0.2.121"
+version = "0.2.128"
 authors = ["The wasm-bindgen Developers"]
 build = false
 include = [
@@ -30,7 +30,7 @@ homepage = "https://wasm-bindgen.github.io/wasm-bindgen/"
 documentation = "https://docs.rs/wasm-bindgen"
 readme = false
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/wasm-bindgen/wasm-bindgen/tree/master/crates/macro-support"
+repository = "https://github.com/wasm-bindgen/wasm-bindgen/tree/main/crates/macro-support"
 
 [features]
 extra-traits = ["syn/extra-traits"]
@@ -50,7 +50,7 @@ version = "1.0"
 version = "1.0"
 
 [dependencies.syn]
-version = "2.0"
+version = "3.0"
 features = [
     "visit",
     "visit-mut",
@@ -59,7 +59,7 @@ features = [
 ]
 
 [dependencies.wasm-bindgen-shared]
-version = "=0.2.121"
+version = "=0.2.128"
 
 [lints.clippy]
 large_enum_variant = "allow"
@@ -79,4 +79,5 @@ check-cfg = [
     "cfg(wasm_bindgen_unstable_test_coverage)",
     "cfg(wasm_bindgen_use_js_sys)",
     "cfg(xxx_debug_only_print_generated_code)",
+    "cfg(legacy_eh)",
 ]
