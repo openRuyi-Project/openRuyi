@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name inquire
-%global full_version 0.9.2
+%global full_version 0.9.4
 %global pkgname inquire-0.9
 
 Name:           rust-inquire-0.9
-Version:        0.9.2
+Version:        0.9.4
 Release:        %autorelease
 Summary:        Rust crate "inquire"
 License:        MIT
 URL:            https://github.com/mikaelmello/inquire
-#!RemoteAsset:  sha256:ae51d5da01ce7039024fbdec477767c102c454dbdb09d4e2a432ece705b1b25d
+#!RemoteAsset:  sha256:6654738b8024300cf062d04a1c13c10c8e2cea598ec1c47dc9b6641159429756
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -26,6 +26,7 @@ Requires:       crate(unicode-segmentation-1/default) >= 1.0.0
 Requires:       crate(unicode-width-0.2/default) >= 0.2.0
 
 Provides:       crate(%{pkgname}) = %{version}
+Provides:       crate(%{pkgname}/experimental-multiline-input) = %{version}
 Provides:       crate(%{pkgname}/macros) = %{version}
 Provides:       crate(%{pkgname}/one-liners) = %{version}
 
