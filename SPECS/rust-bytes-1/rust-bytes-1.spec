@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name bytes
-%global full_version 1.11.1
+%global full_version 1.12.1
 %global pkgname bytes-1
 
 Name:           rust-bytes-1
-Version:        1.11.1
+Version:        1.12.1
 Release:        %autorelease
 Summary:        Rust crate "bytes"
 License:        MIT
 URL:            https://github.com/tokio-rs/bytes
-#!RemoteAsset:  sha256:1e748733b7cbc798e1434b6ac524f0c1ff2ab456fe201501e6497c8417a4fc33
+#!RemoteAsset:  sha256:fc652a48c352aef3ea3aed32080501cf3ef6ed5da78602a020c991775b0aff04
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
