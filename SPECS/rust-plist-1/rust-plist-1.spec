@@ -4,28 +4,29 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name plist
-%global full_version 1.9.0
+%global full_version 1.10.1
 %global pkgname plist-1
 
 Name:           rust-plist-1
-Version:        1.9.0
+Version:        1.10.1
 Release:        %autorelease
 Summary:        Rust crate "plist"
 License:        MIT
 URL:            https://github.com/ebarnard/rust-plist/
-#!RemoteAsset:  sha256:092791278e026273c1b65bbdcfbba3a300f2994c896bd01ab01da613c29c46f1
+#!RemoteAsset:  sha256:2896bade328c13f7042a297ea5ac5b0951f6cf989dea5f32c2fd98da398195cb
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(base64-0.22/default) >= 0.22.0
-Requires:       crate(indexmap-2/default) >= 2.1.0
-Requires:       crate(quick-xml-0.39/default) >= 0.39.2
+Requires:       crate(base64-0.23/default) >= 0.23.1
+Requires:       crate(indexmap-2/default) >= 2.14.0
+Requires:       crate(quick-xml-0.42/default) >= 0.42.0
 Requires:       crate(time-0.3/default) >= 0.3.47
 Requires:       crate(time-0.3/formatting) >= 0.3.47
 Requires:       crate(time-0.3/parsing) >= 0.3.47
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/enable-unstable-features-that-may-break-with-minor-version-bumps) = %{version}
 
