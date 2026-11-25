@@ -1,0 +1,141 @@
+Subject: Support RISC-V and the current Buck2 prelude
+Upstream: https://github.com/buck2hub/cargo-buckal
+Upstream-Status: Pending
+
+Select the RISC-V toolchain and allow the distribution host triple to
+be set for build scripts. Recognize Rust targets after the prelude
+moved rule declarations to a separate module.
+
+diff --git a/assets/platforms/BUCK.template b/assets/platforms/BUCK.template
+index 59f242e..b6e2b0d 100644
+--- a/assets/platforms/BUCK.template
++++ b/assets/platforms/BUCK.template
+@@ -35,6 +35,22 @@ platform(
+     visibility = ["PUBLIC"],
+ )
+
++constraint_value(
++    name = "riscv64",
++    constraint_setting = "prelude//cpu/constraints:cpu",
++    visibility = ["PUBLIC"],
++)
++
++platform(
++    name = "riscv64gc-unknown-linux-gnu",
++    constraint_values = [
++        "prelude//os/constraints:linux",
++        ":riscv64",
++        "prelude//abi/constraints:gnu",
++    ],
++    visibility = ["PUBLIC"],
++)
++
+ config_setting(
+     name = "cross",
+     values = {
+diff --git a/assets/toolchains/rust/demo_rust.bzl b/assets/toolchains/rust/demo_rust.bzl
+index 00292d9..2bdba13 100644
+--- a/assets/toolchains/rust/demo_rust.bzl
++++ b/assets/toolchains/rust/demo_rust.bzl
+@@ -3,12 +3,23 @@
+ load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
+
+ def system_demo_rust_toolchain():
+-    # Buck prelude only maps a small set of CPU constraints to Rust triples by
+-    # default. We provide an explicit mapping so `--target-platforms` works.
++    # Use the distribution Rust target on systems with a custom triple.
+     system_rust_toolchain(
+         name = "rust",
+         rustc_target_triple = select({
+-            "prelude//os/constraints:linux": "x86_64-unknown-linux-gnu",
++            "prelude//os/constraints:linux": select({
++                "root//platforms:riscv64": read_root_config(
++                    "buckal",
++                    "riscv64_rust_target",
++                    "riscv64gc-unknown-linux-gnu",
++                ),
++                "prelude//cpu/constraints:x86_64": "x86_64-unknown-linux-gnu",
++                "DEFAULT": read_root_config(
++                    "buckal",
++                    "linux_host_rust_target",
++                    "x86_64-unknown-linux-gnu",
++                ),
++            }),
+             "prelude//os/constraints:macos": "aarch64-apple-darwin",
+             "prelude//os/constraints:windows": "x86_64-pc-windows-msvc",
+             "DEFAULT": "x86_64-unknown-linux-gnu",
+diff --git a/src/filter.rs b/src/filter.rs
+index 91586a2..cd2217a 100644
+--- a/src/filter.rs
++++ b/src/filter.rs
+@@ -281,9 +281,7 @@ pub struct BuckTargetEntry {
+ impl BuckTargetEntry {
+     /// Checks if this target is a Rust rule, excluding helper rules.
+     pub fn is_rust_rule(&self) -> bool {
+-        self.buck_type == "prelude//rules.bzl:rust_library"
+-            || self.buck_type == "prelude//rules.bzl:rust_binary"
+-            || self.buck_type == "prelude//rules.bzl:rust_test"
++        matches!(self.kind(), TargetKind::Lib | TargetKind::Bin | TargetKind::Test)
+     }
+
+     /// Checks if this target is third-party.
+@@ -304,9 +302,15 @@ impl BuckTargetEntry {
+     /// Returns the target kind (e.g., bin, test, bench, example, lib).
+     pub fn kind(&self) -> TargetKind {
+         match self.buck_type.as_str() {
+-            "prelude//rules.bzl:rust_library" => TargetKind::Lib,
+-            "prelude//rules.bzl:rust_binary" => TargetKind::Bin,
+-            "prelude//rules.bzl:rust_test" => TargetKind::Test,
++            "rust_library" | "prelude//rules.bzl:rust_library" | "prelude//rust/rules.bzl:rust_library" => {
++                TargetKind::Lib
++            }
++            "rust_binary" | "prelude//rules.bzl:rust_binary" | "prelude//rust/rules.bzl:rust_binary" => {
++                TargetKind::Bin
++            }
++            "rust_test" | "prelude//rules.bzl:rust_test" | "prelude//rust/rules.bzl:rust_test" => {
++                TargetKind::Test
++            }
+             _ => TargetKind::Unknown("Unsupported".into()),
+         }
+     }
+@@ -358,6 +362,19 @@ mod tests {
+         }
+     }
+
++    #[test]
++    fn recognizes_rust_targets_from_both_prelude_rule_paths() {
++        for prefix in ["", "prelude//rules.bzl:", "prelude//rust/rules.bzl:"] {
++            let binary = mk_target(&format!("{prefix}rust_binary"), "app");
++            let library = mk_target(&format!("{prefix}rust_library"), "lib");
++            let test = mk_target(&format!("{prefix}rust_test"), "test");
++            assert!(binary.is_rust_rule());
++            assert!(matches!(binary.kind(), TargetKind::Bin));
++            assert!(matches!(library.kind(), TargetKind::Lib));
++            assert!(matches!(test.kind(), TargetKind::Test));
++        }
++    }
++
+     #[test]
+     fn new_returns_default_when_no_specific_rules() {
+         let filter = TargetFilter::new(
+diff --git a/src/platform.rs b/src/platform.rs
+index 80c866c..242f2fc 100644
+--- a/src/platform.rs
++++ b/src/platform.rs
+@@ -37,12 +37,15 @@ impl Os {
+     }
+ }
+
+-/// Tier1 host platforms used for cfg evaluation.
++/// Host platforms used for cfg evaluation.
+ /// Ref: https://doc.rust-lang.org/nightly/rustc/platform-support.html#tier-1-with-host-tools
+ static SUPPORTED_TARGETS: &[(Os, &str)] = &[
+     (Os::Macos, "aarch64-apple-darwin"),
+     (Os::Windows, "x86_64-pc-windows-msvc"),
++    #[cfg(not(target_arch = "riscv64"))]
+     (Os::Linux, "x86_64-unknown-linux-gnu"),
++    #[cfg(target_arch = "riscv64")]
++    (Os::Linux, "riscv64gc-unknown-linux-gnu"),
+ ];
+
+ /// Cache of `rustc --print=cfg --target <triple>` output for supported triples.
