@@ -64,7 +64,7 @@ BuildOption(conf):  -DLLAMA_BUILD_NUMBER=%{build_number}
 # Source0 is an archive without .git; preserve the verified release tag commit
 BuildOption(conf):  -DLLAMA_BUILD_COMMIT=b29c606e28a01b1bc8c1351026a0fa6e616bf6c4
 BuildOption(conf):  -DLLAMA_BUILD_EXAMPLES=OFF
-BuildOption(conf):  -DLLAMA_TESTS_INSTALL=OFF
+BuildOption(conf):  -DLLAMA_TESTS_INSTALL=ON
 # Building the Web UI downloads frontend assets
 BuildOption(conf):  -DLLAMA_BUILD_UI=OFF
 BuildOption(conf):  -DLLAMA_USE_PREBUILT_UI=OFF
@@ -131,6 +131,16 @@ Conflicts:      llama-cpp-vulkan
 llama.cpp provides performant inference for large language models in plain
 C/C++. This package includes command-line tools, a server, and shared libraries.
 
+%package        tests
+Summary:        Native test programs for llama.cpp
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    tests
+Native test executables for llama.cpp parsers, grammars, memory handling,
+model formats and backend operations. Model-dependent cases require
+compatible model files that are not included. Backend-dependent cases
+require the corresponding CPU or GPU support.
+
 %package        devel
 Summary:        Development files for %{name}
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -170,6 +180,9 @@ LD_LIBRARY_PATH=%{_vpath_builddir}/bin %{_vpath_builddir}/bin/llama-cli --versio
 %{_libdir}/libllama-common.so
 %{_libdir}/libmtmd.so
 %{_libdir}/pkgconfig/llama.pc
+
+%files tests
+%{_bindir}/test-*
 
 %changelog
 %autochangelog
