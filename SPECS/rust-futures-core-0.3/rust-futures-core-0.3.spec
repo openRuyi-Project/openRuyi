@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-core
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-core-0.3
 
 Name:           rust-futures-core-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-core"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:7e3450815272ef58cec6d564423f6e755e25379b217b0bc688e295ba24df6b1d
+#!RemoteAsset:  sha256:2cd50c473c80f6d7c3670a752354b8e569b1a7cbfdc0419ec88e5edad85e0dc7
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
