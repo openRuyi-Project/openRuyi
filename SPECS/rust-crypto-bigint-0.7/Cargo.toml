@@ -11,9 +11,9 @@
 
 [package]
 edition = "2024"
-rust-version = "1.85"
+rust-version = "1.87"
 name = "crypto-bigint"
-version = "0.7.3"
+version = "0.7.11"
 authors = ["RustCrypto Developers"]
 build = false
 exclude = [
@@ -28,9 +28,9 @@ autoexamples = false
 autotests = false
 autobenches = false
 description = """
-Pure Rust implementation of a big integer library which has been designed from
-the ground-up for use in cryptographic applications. Provides constant-time,
-no_std-friendly implementations of modern formulas using const generics.
+Pure Rust implementation of a big integer library which has been designed from the ground-up for use
+in cryptographic applications. Provides constant-time, `no_std`/`no_alloc`-friendly implementations
+of modern formulas using const generics. Also includes optional support for heap-backed integers.
 """
 readme = "README.md"
 keywords = [
@@ -49,7 +49,6 @@ categories = [
 ]
 license = "Apache-2.0 OR MIT"
 repository = "https://github.com/RustCrypto/crypto-bigint"
-resolver = "2"
 
 [package.metadata.docs.rs]
 all-features = true
@@ -64,6 +63,10 @@ extend-ignore-re = ["([0-9A-Fa-f]{16,})"]
 [features]
 alloc = ["serdect?/alloc"]
 default = ["rand_core"]
+der = [
+    "dep:der",
+    "hybrid-array",
+]
 extra-sizes = []
 getrandom = [
     "dep:getrandom",
@@ -94,6 +97,10 @@ name = "const_monty_form"
 path = "tests/const_monty_form.rs"
 
 [[test]]
+name = "const_prime_monty_params"
+path = "tests/const_prime_monty_params.rs"
+
+[[test]]
 name = "fixed_monty_form"
 path = "tests/fixed_monty_form.rs"
 
@@ -106,8 +113,16 @@ name = "int"
 path = "tests/int.rs"
 
 [[test]]
+name = "num_traits"
+path = "tests/num_traits.rs"
+
+[[test]]
 name = "safegcd"
 path = "tests/safegcd.rs"
+
+[[test]]
+name = "serde"
+path = "tests/serde.rs"
 
 [[test]]
 name = "uint"
@@ -154,7 +169,7 @@ harness = false
 version = "0.1"
 
 [dependencies.ctutils]
-version = "0.4"
+version = "0.4.8"
 
 [dependencies.der]
 version = "0.8"
@@ -167,7 +182,7 @@ features = ["sys_rng"]
 optional = true
 
 [dependencies.hybrid-array]
-version = "0.4.8"
+version = "0.4.12"
 optional = true
 
 [dependencies.num-traits]
@@ -208,21 +223,21 @@ default-features = false
 version = "1"
 
 [dev-dependencies.num-bigint]
-version = "0.4"
+version = "0.5"
 
 [dev-dependencies.num-integer]
 version = "0.1"
 
 [dev-dependencies.num-modular]
-version = "0.6"
+version = "0.7"
 features = [
     "num-bigint",
-    "num-integer",
     "num-traits",
 ]
 
 [dev-dependencies.rand_core]
 version = "0.10"
+default-features = true
 
 [target."cfg(any(unix, windows))".dev-dependencies.criterion]
 version = "0.7"
@@ -240,7 +255,6 @@ cast_precision_loss = "warn"
 cast_sign_loss = "warn"
 checked_conversions = "warn"
 doc_markdown = "warn"
-from_iter_instead_of_collect = "warn"
 implicit_saturating_sub = "warn"
 integer_division_remainder_used = "warn"
 manual_assert = "warn"
