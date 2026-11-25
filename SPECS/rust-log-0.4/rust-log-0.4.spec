@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name log
-%global full_version 0.4.33
+%global full_version 0.4.34
 %global pkgname log-0.4
 
 Name:           rust-log-0.4
-Version:        0.4.33
+Version:        0.4.34
 Release:        %autorelease
 Summary:        Rust crate "log"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/rust-lang/log
-#!RemoteAsset:  sha256:0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad
+#!RemoteAsset:  sha256:f9f8bd3e56ce4dfc153cf470fffbfa98c7620958b312ca5c3a4b8d5181fd13c6
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Provides:       crate(%{pkgname}) = %{version}
+Provides:       crate(%{pkgname}/alloc) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/kv) = %{version}
 Provides:       crate(%{pkgname}/max-level-debug) = %{version}
