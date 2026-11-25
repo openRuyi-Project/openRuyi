@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name smallvec
-%global full_version 1.15.1
+%global full_version 1.16.1
 %global pkgname smallvec-1
 
 Name:           rust-smallvec-1
-Version:        1.15.1
+Version:        1.16.1
 Release:        %autorelease
 Summary:        Rust crate "smallvec"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/servo/rust-smallvec
-#!RemoteAsset:  sha256:67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03
+#!RemoteAsset:  sha256:ba467056f1b547ed52077911161fc86985becbc60e8e1857c8a144dab0def891
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -23,7 +23,6 @@ BuildRequires:  rust-rpm-macros
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/const-generics) = %{version}
 Provides:       crate(%{pkgname}/const-new) = %{version}
-Provides:       crate(%{pkgname}/debugger-visualizer) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/drain-filter) = %{version}
 Provides:       crate(%{pkgname}/drain-keep-rest) = %{version}
