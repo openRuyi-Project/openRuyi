@@ -95,6 +95,8 @@ BuildOption(conf):  -Dvmspawn=%{?with_bootstrap:disabled}%{!?with_bootstrap:enab
 BuildOption(conf):  -Dlibidn2=enabled
 BuildOption(conf):  -Dnetworkd=%{?with_network:true}%{!?with_network:false}
 BuildOption(conf):  -Dresolve=%{?with_network:true}%{!?with_network:false}
+# Install the non-.example .network files owned by systemd-networkd-defaults.
+BuildOption(conf):  -Ddefault-network=true
 BuildOption(conf):  -Dnss-resolve=%{?with_network:enabled}%{!?with_network:disabled}
 BuildOption(conf):  -Dntp-servers="0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org"
 BuildOption(conf):  -Dlibcurl=enabled
@@ -998,6 +1000,7 @@ fi
 %endif
 %{system_unit_dir}/
 %dir %{pkgdir}
+%dir %{pkgdir}/network
 %dir %{pkgdir}/catalog
 %{pkgdir}/catalog/systemd.catalog
 %{pkgdir}/catalog/systemd.*.catalog
@@ -1333,6 +1336,7 @@ fi
 
 %files udev
 %{_libdir}/libudev.so*
+%{pkgdir}/network/99-default.link
 %{_bindir}/systemd-hwdb
 %{_bindir}/udevadm
 %dir %{pkgdir}
@@ -1601,7 +1605,10 @@ fi
 %{system_unit_dir}/systemd-networkd-wait-online.service
 
 %files networkd-defaults
-%{pkgdir}/network/99-default.link
+%{pkgdir}/network/80-auto-link-local.network
+%{pkgdir}/network/80-wifi-ap.network
+%{pkgdir}/network/80-wifi-station.network
+%{pkgdir}/network/89-ethernet.network
 %endif
 
 %files oomd-defaults
