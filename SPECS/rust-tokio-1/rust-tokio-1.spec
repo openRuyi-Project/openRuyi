@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name tokio
-%global full_version 1.52.3
+%global full_version 1.53.1
 %global pkgname tokio-1
 
 Name:           rust-tokio-1
-Version:        1.52.3
+Version:        1.53.1
 Release:        %autorelease
 Summary:        Rust crate "tokio"
 License:        MIT
 URL:            https://tokio.rs
-#!RemoteAsset:  sha256:8fc7f01b389ac15039e4dc9531aa973a135d7a4135281b12d7c1bc79fd57fffe
+#!RemoteAsset:  sha256:202caea871b69668250d242070849eb495be178ed697a3e98aebce5bc81a0bed
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,12 +21,14 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(pin-project-lite-0.2/default) >= 0.2.11
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/fs) = %{version}
 Provides:       crate(%{pkgname}/io-std) = %{version}
 Provides:       crate(%{pkgname}/rt) = %{version}
 Provides:       crate(%{pkgname}/rt-multi-thread) = %{version}
+Provides:       crate(%{pkgname}/schedule-latency) = %{version}
 Provides:       crate(%{pkgname}/sync) = %{version}
 Provides:       crate(%{pkgname}/time) = %{version}
 
