@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name crossbeam-channel
-%global full_version 0.5.15
+%global full_version 0.5.17
 %global pkgname crossbeam-channel-0.5
 
 Name:           rust-crossbeam-channel-0.5
-Version:        0.5.15
+Version:        0.5.17
 Release:        %autorelease
 Summary:        Rust crate "crossbeam-channel"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-channel
-#!RemoteAsset:  sha256:82b8f8f868b36967f9606790d1903570de9ceaf870a7bf9fbbd3016d636a2cb2
+#!RemoteAsset:  sha256:98b0cc327b5bc766e7fda9c9260cc0fa81b43a8e240440422dff70788e3f9ef1
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
@@ -21,6 +21,7 @@ BuildSystem:    rustcrates
 BuildRequires:  rust-rpm-macros
 
 Requires:       crate(crossbeam-utils-0.8) >= 0.8.18
+
 Provides:       crate(%{pkgname}) = %{version}
 
 %description
