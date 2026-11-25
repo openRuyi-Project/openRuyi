@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname sonnet
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-sonnet
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        KDE spell checking library
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/sonnet
-#!RemoteAsset:  sha256:8a0db04df7c8d9d386dddc2e5d94f1504b15c63b3dc091a4eeb2519788b5aec6
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:cae2686b18f41bde6494f353e1dccc5f045e9748b63175a9ff539b3bc93466f1
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
