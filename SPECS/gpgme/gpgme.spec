@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           gpgme
-Version:        2.0.1
+Version:        2.3.1
 Release:        %autorelease
 Summary:        GnuPG Made Easy
 License:        LGPL-2.1-or-later AND MIT
 URL:            https://gnupg.org/related_software/gpgme/
 VCS:            git:https://git.gnupg.org/gpgme.git
-#!RemoteAsset:  sha256:821ab0695c842eab51752a81980c92b0410c7eadd04103f791d5d2a526784966
+#!RemoteAsset:  sha256:2bf94e0e677e5a8fc31f79dd323f91c5416b36fb851058bc1e8bce39f2642434
 Source:         https://gnupg.org/ftp/gcrypt/gpgme/gpgme-%{version}.tar.bz2
 BuildSystem:    autotools
 
@@ -67,4 +67,4 @@ rm -fv %{buildroot}%{_infodir}/dir
 %{_datadir}/common-lisp/source/gpgme/
 
 %changelog
-%{?autochangelog}
+%autochangelog
