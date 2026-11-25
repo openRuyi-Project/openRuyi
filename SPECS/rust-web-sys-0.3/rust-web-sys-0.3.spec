@@ -4,24 +4,25 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name web-sys
-%global full_version 0.3.98
+%global full_version 0.3.105
 %global pkgname web-sys-0.3
 
 Name:           rust-web-sys-0.3
-Version:        0.3.98
+Version:        0.3.105
 Release:        %autorelease
 Summary:        Rust crate "web-sys"
 License:        MIT OR Apache-2.0
 URL:            https://wasm-bindgen.github.io/wasm-bindgen/web-sys/index.html
-#!RemoteAsset:  sha256:4b572dff8bcf38bad0fa19729c89bb5748b2b9b1d8be70cf90df697e3a8f32aa
+#!RemoteAsset:  sha256:9fbddc4a036f00ec4f18c83445bd3115cb306a91da554919a099d9222fe4a7f8
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(js-sys-0.3) >= 0.3.98
-Requires:       crate(wasm-bindgen-0.2) >= 0.2.121
+Requires:       crate(js-sys-0.3) >= 0.3.105
+Requires:       crate(wasm-bindgen-0.2) >= 0.2.128
+
 Provides:       crate(%{pkgname}) = %{version}
 Provides:       crate(%{pkgname}/abortcontroller) = %{version}
 Provides:       crate(%{pkgname}/abortsignal) = %{version}
@@ -795,7 +796,26 @@ Provides:       crate(%{pkgname}/mutationrecord) = %{version}
 Provides:       crate(%{pkgname}/namednodemap) = %{version}
 Provides:       crate(%{pkgname}/nativeosfilereadoptions) = %{version}
 Provides:       crate(%{pkgname}/nativeosfilewriteatomicoptions) = %{version}
+Provides:       crate(%{pkgname}/navigateevent) = %{version}
+Provides:       crate(%{pkgname}/navigateeventinit) = %{version}
+Provides:       crate(%{pkgname}/navigation) = %{version}
+Provides:       crate(%{pkgname}/navigationactivation) = %{version}
+Provides:       crate(%{pkgname}/navigationapitype) = %{version}
+Provides:       crate(%{pkgname}/navigationcurrententrychangeevent) = %{version}
+Provides:       crate(%{pkgname}/navigationcurrententrychangeeventinit) = %{version}
+Provides:       crate(%{pkgname}/navigationdestination) = %{version}
+Provides:       crate(%{pkgname}/navigationfocusreset) = %{version}
+Provides:       crate(%{pkgname}/navigationhistorybehavior) = %{version}
+Provides:       crate(%{pkgname}/navigationhistoryentry) = %{version}
+Provides:       crate(%{pkgname}/navigationinterceptoptions) = %{version}
+Provides:       crate(%{pkgname}/navigationnavigateoptions) = %{version}
+Provides:       crate(%{pkgname}/navigationoptions) = %{version}
+Provides:       crate(%{pkgname}/navigationreloadoptions) = %{version}
+Provides:       crate(%{pkgname}/navigationresult) = %{version}
+Provides:       crate(%{pkgname}/navigationscrollbehavior) = %{version}
+Provides:       crate(%{pkgname}/navigationtransition) = %{version}
 Provides:       crate(%{pkgname}/navigationtype) = %{version}
+Provides:       crate(%{pkgname}/navigationupdatecurrententryoptions) = %{version}
 Provides:       crate(%{pkgname}/navigator) = %{version}
 Provides:       crate(%{pkgname}/navigatorautomationinformation) = %{version}
 Provides:       crate(%{pkgname}/navigatoruabrandversion) = %{version}
@@ -2231,8 +2251,8 @@ This metapackage enables feature "XrWebGlLayer" for the Rust web-sys crate, by p
 %package     -n %{name}+std
 Summary:        Bindings for all Web APIs, a procedurally generated crate from WebIDL - feature "std" and 1 more
 Requires:       crate(%{pkgname}) = %{version}
-Requires:       crate(js-sys-0.3/std) >= 0.3.98
-Requires:       crate(wasm-bindgen-0.2/std) >= 0.2.121
+Requires:       crate(js-sys-0.3/std) >= 0.3.105
+Requires:       crate(wasm-bindgen-0.2/std) >= 0.2.128
 Provides:       crate(%{pkgname}/default) = %{version}
 Provides:       crate(%{pkgname}/std) = %{version}
 
