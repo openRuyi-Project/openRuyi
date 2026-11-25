@@ -7,13 +7,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           libgit2
-Version:        1.9.2
+Version:        1.9.7
 Release:        %autorelease
 Summary:        C implementation of the Git core methods as a library with a solid API
 License:        GPL-2.0-only WITH GCC-exception-2.0
 URL:            https://libgit2.org/
 VCS:            git:https://github.com/libgit2/libgit2
-#!RemoteAsset
+#!RemoteAsset:  sha256:1a4fbe7589e814777ae76b64734ad80f4ecad22cd33a22682a2aaea4ae5375e7
 Source:         https://github.com/libgit2/libgit2/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
@@ -66,4 +66,4 @@ sed -i '/-sonline/s/^/#/' tests/libgit2/CMakeLists.txt
 %{_includedir}/git2/
 
 %changelog
-%{?autochangelog}
+%autochangelog
