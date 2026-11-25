@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name num-conv
-%global full_version 0.2.1
+%global full_version 0.2.2
 %global pkgname num-conv-0.2
 
 Name:           rust-num-conv-0.2
-Version:        0.2.1
+Version:        0.2.2
 Release:        %autorelease
 Summary:        Rust crate "num-conv"
 License:        MIT OR Apache-2.0
 URL:            https://github.com/jhpratt/num-conv
-#!RemoteAsset:  sha256:c6673768db2d862beb9b39a78fdcb1a69439615d5794a1be50caa9bc92c81967
+#!RemoteAsset:  sha256:521739c6d2bac4aa25192232afe6841231376b2b26d4d9fae5ecf8ca5772e441
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
