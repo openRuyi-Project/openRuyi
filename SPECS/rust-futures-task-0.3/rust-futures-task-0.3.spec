@@ -4,16 +4,16 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global crate_name futures-task
-%global full_version 0.3.32
+%global full_version 0.3.33
 %global pkgname futures-task-0.3
 
 Name:           rust-futures-task-0.3
-Version:        0.3.32
+Version:        0.3.33
 Release:        %autorelease
 Summary:        Rust crate "futures-task"
 License:        MIT OR Apache-2.0
 URL:            https://rust-lang.github.io/futures-rs
-#!RemoteAsset:  sha256:037711b3d59c33004d3856fbdc83b99d4ff37a24768fa1be9ce3538a1cde4393
+#!RemoteAsset:  sha256:b231ed28831efb4a61a08580c4bc233ec56bc009f4cd8f52da2c3cb97df0c109
 Source:         https://static.crates.io/crates/%{crate_name}/%{full_version}/download#/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    rustcrates
