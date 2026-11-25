@@ -7,14 +7,14 @@
 %bcond milter 0
 
 Name:           clamav
-Version:        1.5.2
+Version:        1.5.5
 Release:        %autorelease
 Summary:        End-user tools for the Clam Antivirus scanner
 License:        MPL-2.0
 URL:            https://www.clamav.net
 VCS:            git:https://github.com/Cisco-Talos/clamav
-#!RemoteAsset:  sha256:f34018cf22f05bdd9d1a1574ca07193e3e030ca52050c3e5c220e23a32314965
-Source0:        https://www.clamav.net/downloads/production/%{name}-%{version}.tar.gz
+#!RemoteAsset:  sha256:90284644e5568732c15fc4f4312fd0f09ac14c14e5b29fba3909d4da4e281b1e
+Source0:        https://www.clamav.net/downloads/production/clamav-%{version}.tar.gz
 Source1:        clamav.sysusers
 Source2:        clamav.tmpfiles
 Source3:        clamd.service
