@@ -12,8 +12,9 @@ Release:        %autorelease
 Summary:        Package fileutil collects some file utility functions
 License:        BSD-3-Clause
 URL:            https://gitlab.com/cznic/fileutil
-#!RemoteAsset:  sha256:a5c4b0d98f8cf4b8c4594cc9158dfa9752ef9486419571610f72481e72fb0cd6
-Source0:        https://gitlab.com/cznic/fileutil/-/archive/v%{version}/fileutil-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/cznic/fileutil.git#2543588afcb295e9914df64339955f24ccc2d811
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
