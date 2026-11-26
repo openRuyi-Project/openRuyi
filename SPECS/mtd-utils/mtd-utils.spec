@@ -13,12 +13,12 @@ Summary:        Utilities for dealing with MTD (flash) devices
 License:        GPL-2.0-or-later
 URL:            http://www.linux-mtd.infradead.org/
 VCS:            git:git://git.infradead.org/mtd-utils.git
-#!RemoteAsset
+#!RemoteAsset:  sha256:2db102908b232406ccb20719c0f43b61196aef4534493419fbf98a273c598c10
 Source:         https://infraroot.at/pub/mtd/mtd-utils-%{version}.tar.bz2
 BuildSystem:    autotools
 
-BuildOption(conf): --without-tests
-BuildOption(conf): --disable-unit-tests
+BuildOption(conf):  --without-tests
+BuildOption(conf):  --disable-unit-tests
 
 BuildRequires:  make
 BuildRequires:  autoconf
@@ -81,4 +81,4 @@ autoreconf -fiv
 %{_sbindir}/fsck.ubifs
 
 %changelog
-%{?autochangelog}
+%autochangelog
