@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: zhangjinqiang <jinqiang.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
@@ -28,6 +29,8 @@ BuildOption(check):  -e 'numba.tests.pycc_distutils_usecase.setup_setuptools'
 # No module named 'nested'
 BuildOption(check):  -e 'numba.tests.pycc_distutils_usecase.setup_distutils_nested'
 BuildOption(check):  -e 'numba.tests.pycc_distutils_usecase.setup_setuptools_nested'
+# ipykernel >= 7 no longer ships ipykernel.tests.
+BuildOption(check):  -e 'numba.testing.notebook'
 
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  pyproject-rpm-macros
