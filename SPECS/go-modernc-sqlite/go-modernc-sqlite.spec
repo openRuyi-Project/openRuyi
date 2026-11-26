@@ -13,8 +13,9 @@ Release:        %autorelease
 Summary:        a sql/database driver using a CGo-free port of the C SQLite3 library
 License:        BSD-3-Clause
 URL:            https://gitlab.com/cznic/sqlite
-#!RemoteAsset:  sha256:3f91d99d1ce3cafbff61969c1c6f85104940bb2c22e1e845c957fcf40b445272
-Source0:        https://gitlab.com/cznic/sqlite/-/archive/v%{version}/sqlite-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/cznic/sqlite.git#6b32d1ee965dfe59bf2e50baeb6f451b67d6a71e
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
