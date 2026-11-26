@@ -33,6 +33,11 @@ BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(cmocka)
 BuildRequires:  pkgconfig(lzo2)
 
+%patchlist
+# https://lists.infradead.org/pipermail/linux-mtd/2026-August/114868.html
+# Don't compile ENGINE support when OpenSSL does not provide it
+0001-ubifs-utils-Don-t-compile-engine-support-if-not-avai.patch
+
 %description
 The mtd-utils package contains utilities for handling MTD devices,
 and for dealing with FTL, NFTL, JFFS2, etc.
