@@ -12,8 +12,9 @@ Release:        %autorelease
 Summary:        utilities supplementing the standard 'math' and 'math/rand' packages
 License:        BSD-3-Clause
 URL:            https://gitlab.com/cznic/mathutil
-#!RemoteAsset:  sha256:78174f3ed1cea720592a31a8fc154278802d3fd8e461a074ed3caad1752f4fb6
-Source0:        https://gitlab.com/cznic/mathutil/-/archive/v%{version}/mathutil-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/cznic/mathutil.git#28129eec384c30a304561c3c8779e4bb29cbff12
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
