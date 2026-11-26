@@ -20,7 +20,8 @@ BuildOption(build):  tools-only
 
 BuildRequires:  bison
 BuildRequires:  flex
-BuildRequires:  pkgconfig(openssl)
+# FIXME: U-Boot still uses the OpenSSL ENGINE API, which OpenSSL 4 removed.
+BuildRequires:  openssl-3-devel
 BuildRequires:  pkgconfig(gnutls)
 BuildRequires:  make
 
