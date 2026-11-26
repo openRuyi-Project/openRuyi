@@ -6,13 +6,13 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           wpa_supplicant
-Version:        2.11
+Version:        2.12
 Release:        %autorelease
 Summary:        WPA/WPA2/IEEE 802.1X Supplicant
 License:        BSD-3-Clause
 URL:            http://w1.fi/wpa_supplicant/
 VCS:            git:https://git.w1.fi/cgit/hostap/
-#!RemoteAsset
+#!RemoteAsset:  sha256:08e23937e16d0155e55cab2b51f51fbe10d80a1aa91c4e15442645059b737ef6
 Source0:        http://w1.fi/releases/wpa_supplicant-%{version}.tar.gz
 Source1:        wpa_supplicant.conf
 Source2:        wpa_supplicant.service
@@ -29,7 +29,6 @@ BuildOption(install):  LIBDIR=%{_libdir}
 BuildOption(install):  DESTDIR=%{buildroot}
 
 BuildRequires:  make
-BuildRequires:  gcc
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(readline)
 BuildRequires:  pkgconfig(dbus-1)
@@ -101,4 +100,4 @@ install -m 0644 wpa_supplicant/doc/docbook/*.5 %{buildroot}%{_mandir}/man5
 %{_mandir}/man5/wpa_supplicant.conf.5*
 
 %changelog
-%{?autochangelog}
+%autochangelog
