@@ -21,11 +21,13 @@ BuildSystem:    rustcrates
 
 BuildRequires:  rust-rpm-macros
 
-Requires:       crate(cc-1/default) >= 1.0.0
+Requires:       crate(cc-1) >= 1.0.0
+
 Provides:       crate(%{pkgname}) = %{version}
+Provides:       crate(%{pkgname}/default) = %{version}
+Provides:       crate(%{pkgname}/stack-clash-protection) = %{version}
 
 %description
-Mostly safe wrapper for alloca.
 Source code for takopackized Rust crate "alloca"
 
 %files
