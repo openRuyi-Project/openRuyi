@@ -13,8 +13,9 @@ Release:        %autorelease
 Summary:        Package libc is a partial reimplementation of C libc in pure Go
 License:        BSD-3-Clause
 URL:            https://gitlab.com/cznic/libc
-#!RemoteAsset:  sha256:611241e59553c1df4fce7c69df800726cbfef438a8f15080e9f12f4701688515
-Source0:        https://gitlab.com/cznic/libc/-/archive/v%{version}/libc-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/cznic/libc.git#70624da7facfac5a8d2f9b70cba0288b68b5ad01
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
