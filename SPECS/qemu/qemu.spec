@@ -171,14 +171,14 @@
 %global qemudocdir %{_docdir}/%{name}
 
 Name:           qemu
-Version:        11.1.2
+Version:        11.2.0~rc0
 Release:        %autorelease
 Summary:        Machine emulator and virtualizer
 License:        BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT
 URL:            http://www.qemu.org/
 VCS:            git:https://gitlab.com/qemu-project/qemu
-#!RemoteAsset:  sha256:731b5681e4bb18be313231579b8efd0296c5b015fa36dc533874b639ba838016
-Source0:        https://download.qemu.org/%{name}-%{version}.tar.xz
+#!RemoteAsset:  sha256:1055588c7acb8b083ca69c3f8625ca240de823e6a34b02b16fa8cabeb1be49be
+Source0:        https://download.qemu.org/qemu-11.2.0-rc0.tar.xz
 Source1:        qemu-guest-agent.service
 Source2:        qemu-ga.sysconfig
 Source3:        vhost.conf
@@ -467,7 +467,7 @@ Summary:        QEMU system emulator for multi-arch
 This package provides the QEMU system emulator for multi-arch systems.
 
 %prep
-%setup -q -n qemu-%{version}
+%setup -q -n qemu-11.2.0-rc0
 %autopatch -p1 -q
 
 %global qemu_kvm_build qemu_kvm_build
@@ -1009,6 +1009,10 @@ pushd %{qemu_kvm_build}
 %make_install
 
 popd
+
+# Exclude build-generated Python bytecode from the packaged test sources.
+find %{buildroot}%{testsdir} -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete
+find %{buildroot}%{testsdir} -type d -name __pycache__ -empty -delete
 
 # We need to make the block device modules and other qemu SO files executable
 # otherwise RPM won't pick up their dependencies.
@@ -1685,6 +1689,9 @@ popd
 %endif
 
 %files system -f %{name}.lang
+%license %{_datadir}/%{name}/hexagon-hypervisor-license.txt
+%{_datadir}/%{name}/hexagon_booter_*
+%{_datadir}/%{name}/hexagon_loadlinux_*
 %{_bindir}/qemu-system-aarch64
 %{_bindir}/qemu-system-alpha
 %{_bindir}/qemu-system-hppa
