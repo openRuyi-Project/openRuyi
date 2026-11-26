@@ -12,15 +12,14 @@ Release:        %autorelease
 Summary:        Go analyzer for declaration ordering
 License:        MIT
 URL:            https://gitlab.com/bosi/decorder
-#!RemoteAsset:  sha256:5a880c5fcc4a51a1725082bdd0d08767508d2e481fbabf45c4dab34143249927
-Source0:        https://gitlab.com/bosi/decorder/-/archive/v%{version}/decorder-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/bosi/decorder.git#1590c2504b32b4e93de792936d91cfca4308cf53
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
 # Go 1.27 vet requires a constant format string for Reportf.
 Patch2000:      2000-use-constant-format-for-reportf.patch
-
-BuildOption(prep):  -n decorder-v%{version}
 
 BuildRequires:  go
 BuildRequires:  go-rpm-macros
