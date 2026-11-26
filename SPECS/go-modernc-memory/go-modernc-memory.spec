@@ -12,8 +12,9 @@ Release:        %autorelease
 Summary:        Package memory implements a memory allocator
 License:        BSD-3-Clause
 URL:            https://gitlab.com/cznic/memory
-#!RemoteAsset:  sha256:d9b141d67ab64feafc90be428419ee048af852fbac4f33164dcf5e5d15c41272
-Source0:        https://gitlab.com/cznic/memory/-/archive/v%{version}/memory-v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
+#!RemoteAsset:  git+https://gitlab.com/cznic/memory.git#0a6f7544739330ad95572cc272626a60176f2faf
+#!CreateArchive
+Source0:        %{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
