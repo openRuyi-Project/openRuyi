@@ -45,7 +45,7 @@
 # We don't want eBPF support yet
 %bcond bpf 0
 
-%global base_version 261.1
+%global base_version 262.2
 
 Name:           systemd
 Version:        %{base_version}
@@ -54,7 +54,7 @@ Summary:        System and service manager
 License:        LGPL-2.1-or-later AND MIT AND GPL-2.0-or-later
 URL:            https://systemd.io
 VCS:            git:https://github.com/systemd/systemd
-#!RemoteAsset:  sha256:f9b9da1103d1714703503d1746971ccbeeae945663ef3ede3b7348169b5df064
+#!RemoteAsset:  sha256:116432ee9dce9bfef4c7da7963c6de41899ab44197f2876ee99545707a5c7c1f
 Source0:        https://github.com/systemd/systemd/archive/v%{version}/%{name}-%{version}.tar.gz
 # These are essential files
 Source1:        systemd-user.pam
@@ -865,6 +865,7 @@ fi
 %{bash_completions_dir}/systemd-run
 %{bash_completions_dir}/systemd-sysext
 %{bash_completions_dir}/systemd-sysinstall
+%{bash_completions_dir}/systemd-sysupdate
 %{bash_completions_dir}/systemd-vpick
 %{bash_completions_dir}/userdbctl
 %{bash_completions_dir}/varlinkctl
@@ -917,7 +918,6 @@ fi
 %{_bindir}/systemd-stdio-bridge
 %{_bindir}/systemd-sysext
 %{_bindir}/systemd-sysinstall
-%{_bindir}/systemd-sysupdate
 %{_bindir}/systemd-tmpfiles
 %{_bindir}/systemd-tty-ask-password-agent
 %{_bindir}/systemd-umount
@@ -950,6 +950,7 @@ fi
 %{_datadir}/polkit-1/actions/io.systemd.mount-file-system.policy
 %{_datadir}/polkit-1/actions/io.systemd.namespace-resource.policy
 %{_datadir}/polkit-1/actions/io.systemd.storage.policy
+%{_datadir}/polkit-1/actions/io.systemd.sysinstall.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.hostname1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.locale1.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
@@ -988,6 +989,7 @@ fi
 %{zsh_completions_dir}/_systemd-path
 %{zsh_completions_dir}/_systemd-run
 %{zsh_completions_dir}/_systemd-sysinstall
+%{zsh_completions_dir}/_systemd-sysupdate
 %{zsh_completions_dir}/_systemd-tmpfiles
 %{zsh_completions_dir}/_timedatectl
 %{zsh_completions_dir}/_userdbctl
@@ -1019,6 +1021,7 @@ fi
 %{pkgdir}/sshd_config.d/20-systemd-userdb.conf
 %{pkgdir}/system-environment-generators
 %{pkgdir}/system-generators/systemd-bless-boot-generator
+%{pkgdir}/system-generators/systemd-clonesetup-generator
 %{pkgdir}/system-generators/systemd-cryptsetup-generator
 %{pkgdir}/system-generators/systemd-debug-generator
 %{pkgdir}/system-generators/systemd-factory-reset-generator
@@ -1044,6 +1047,7 @@ fi
 %{pkgdir}/systemd-binfmt
 %{pkgdir}/systemd-bless-boot
 %{pkgdir}/systemd-boot-check-no-failures
+%{pkgdir}/systemd-clonesetup
 %{pkgdir}/systemd-coredump
 %{pkgdir}/systemd-cryptsetup
 %{pkgdir}/systemd-executor
@@ -1086,6 +1090,9 @@ fi
 %{pkgdir}/systemd-report
 %{pkgdir}/systemd-report-basic
 %{pkgdir}/systemd-report-cgroup
+%{pkgdir}/systemd-report-files
+%{pkgdir}/systemd-report-sign-plain
+%{pkgdir}/systemd-report-sign-tsm
 %{pkgdir}/systemd-resolved
 %{pkgdir}/systemd-rfkill
 %{pkgdir}/systemd-sbsign
@@ -1612,6 +1619,8 @@ fi
 %{_bindir}/systemd-cryptenroll
 %{_bindir}/systemd-cryptsetup
 %{bash_completions_dir}/systemd-cryptenroll
+%{zsh_completions_dir}/_systemd-cryptenroll
+%{_datadir}/polkit-1/actions/io.systemd.cryptenroll.policy
 %{_libdir}/cryptsetup/libcryptsetup-token-systemd-pkcs11.so
 
 %files homed
