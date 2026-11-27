@@ -30,6 +30,7 @@ BuildOption(conf):  -DHDF5_BUILD_EXAMPLES=OFF
 BuildOption(conf):  -DBUILD_TESTING=ON
 BuildOption(conf):  -DCMAKE_SKIP_RPATH=ON
 BuildOption(conf):  -DHDF5_ENABLE_SZIP_SUPPORT=ON
+BuildOption(conf):  -DHDF5_TEST_API_INSTALL=ON
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -38,6 +39,16 @@ BuildRequires:  pkgconfig(krb5)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  libaec-devel
+
+%package        tests
+Summary:        Test programs and support library for HDF5
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    tests
+The h5_api_test and testhdf5 programs, together with the libhdf5_test
+support library. Reference test data is not included.
+Running data-dependent testhdf5 cases requires matching-version testfiles,
+with srcdir set to the directory containing testfiles.
 
 %prep -a
 # The official release asset wraps the source in an additional
@@ -97,6 +108,11 @@ export LD_LIBRARY_PATH="$PWD/%{_vpath_builddir}/bin${LD_LIBRARY_PATH:+:$LD_LIBRA
 %{_libdir}/pkgconfig/hdf5_cpp.pc
 %{_libdir}/pkgconfig/hdf5_hl.pc
 %{_libdir}/pkgconfig/hdf5_hl_cpp.pc
+
+%files tests
+%{_bindir}/h5_api_test
+%{_bindir}/testhdf5
+%{_libdir}/libhdf5_test.so*
 
 %changelog
 %autochangelog
