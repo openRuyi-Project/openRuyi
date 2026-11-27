@@ -5,7 +5,7 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-%bcond tests 0
+%bcond tests 1
 
 Name:           bolt
 Version:        0.9.11
@@ -34,15 +34,29 @@ BuildRequires:  pkgconfig(systemd)
 BuildRequires:  systemd-rpm-macros
 
 %if %{with tests}
-BuildRequires:  python3-gobject-base
-BuildRequires:  python3-dbus
-BuildRequires:  python3-dbusmock
+BuildRequires:  python-pygobject
+BuildRequires:  python-dbus-python
+BuildRequires:  python-dbusmock
 BuildRequires:  umockdev-devel
 %endif
 %{?systemd_requires}
 
 %description
 bolt is a system daemon to manage Thunderbolt devices via a D-BUS API.
+
+%package        tests
+Summary:        Installed test programs for bolt
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+Requires:       python-pygobject
+Requires:       python-dbus-python
+Requires:       python-dbusmock
+Requires:       umockdev
+
+%description    tests
+Native bolt test programs and the bolt-mock helper. Integration cases
+use D-Bus and umockdev and require suitable device-emulation conditions.
+This package does not provide a complete source-tree test environment.
 
 %check
 %if %{with tests}
@@ -59,6 +73,7 @@ bolt is a system daemon to manage Thunderbolt devices via a D-BUS API.
 %systemd_postun_with_restart %{name}.service
 
 %files
+%exclude %{_libexecdir}/installed-tests/bolt
 %license COPYING
 %doc README.md CHANGELOG.md
 %{_bindir}/boltctl
@@ -74,6 +89,9 @@ bolt is a system daemon to manage Thunderbolt devices via a D-BUS API.
 %if %{with tests}
 %{_libexecdir}/installed-tests/bolt
 %endif
+
+%files tests
+%{_libexecdir}/installed-tests/bolt
 
 %changelog
 %autochangelog
