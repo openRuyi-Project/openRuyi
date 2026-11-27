@@ -8,6 +8,13 @@
 %global _lto_cflags %{nil}
 # Mesa contains some features not applicable to Linux that must be disabled
 %global __meson_auto_features disabled
+%global llvm_maj_ver 22
+
+%global ___build_pre \
+	set -x	\
+	export LLVM_CONFIG=/usr/bin/llvm-config-%{llvm_maj_ver} \
+	set +x	\
+        %{?___build_pre}
 
 Name:           mesa
 Summary:        The Mesa 3D graphics library
@@ -88,7 +95,8 @@ BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libdisplay-info)
 BuildRequires:  pkgconfig(libunwind)
 BuildRequires:  pkgconfig(libglvnd)
-BuildRequires:  pkgconfig(LLVMSPIRVLib)
+BuildRequires:  pkgconfig(LLVMSPIRVLib) >= %{llvm_maj_ver}
+BuildRequires:  pkgconfig(LLVMSPIRVLib) < %[ %{llvm_maj_ver} + 1 ]
 BuildRequires:  pkgconfig(SPIRV-Tools)
 BuildRequires:  pkgconfig(x11) >= 1.6
 BuildRequires:  pkgconfig(xcb) >= 1.13
@@ -113,8 +121,8 @@ BuildRequires:  rust-paste-1 >= 1.0.14
 BuildRequires:  rust-unicode-ident-1 >= 1.0.12
 BuildRequires:  lm_sensors-devel
 BuildRequires:  zstd-devel
-BuildRequires:  llvm-devel
-BuildRequires:  clang-devel
+BuildRequires:  llvm%{llvm_maj_ver}-devel
+BuildRequires:  clang%{llvm_maj_ver}-devel
 
 %description
 Mesa is a 3D graphics library containing implementation of OpenGL (along with
