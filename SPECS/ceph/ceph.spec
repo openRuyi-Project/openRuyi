@@ -165,6 +165,9 @@ Source34:       https://github.com/ceph/ceph-nvmeof/archive/%{sub_nvmeof_gateway
 BuildSystem:    cmake
 
 # ceph requires STATIC internal libs
+BuildOption(conf):  -DOPENSSL_INCLUDE_DIR=%{_includedir}/openssl3-compat
+BuildOption(conf):  -DOPENSSL_SSL_LIBRARY=%{_libdir}/libssl.so.3
+BuildOption(conf):  -DOPENSSL_CRYPTO_LIBRARY=%{_libdir}/libcrypto.so.3
 BuildOption(conf):  -DBUILD_SHARED_LIBS:BOOL=OFF
 BuildOption(conf):  -DWITH_SYSTEM_ZSTD:BOOL=ON
 %if %{with jaeger}
@@ -388,7 +391,7 @@ BuildRequires:  pkgconfig(babeltrace)
 BuildRequires:  ninja
 BuildRequires:  pkgconfig(ldap)
 BuildRequires:  pkgconfig(numa)
-BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(openssl3-compat)
 BuildRequires:  python3dist(prettytable)
 BuildRequires:  python3dist(pyyaml)
 BuildRequires:  pkgconfig(liblz4)
@@ -478,7 +481,7 @@ on commodity hardware and delivers object, block and file system storage.
 
 %package        base
 Summary:        Ceph Base Package
-Provides:       ceph-test:/usr/bin/ceph-kvstore-tool
+Provides:       ceph-tests:/usr/bin/ceph-kvstore-tool
 Requires:       ceph-common%{?_isa} = %{version}-%{release}
 Requires:       findutils
 Requires:       grep
@@ -547,7 +550,7 @@ namespace, coordinating access to the shared OSD cluster.
 
 %package        mon
 Summary:        Ceph Monitor Daemon
-Provides:       ceph-test:/usr/bin/ceph-monstore-tool
+Provides:       ceph-tests:/usr/bin/ceph-monstore-tool
 Requires:       ceph-base%{?_isa} = %{version}-%{release}
 
 %description    mon
@@ -782,7 +785,7 @@ It also contains utilities used for the cephadm orchestrator, as well as
 types and routines for the Ceph CLI and RESTful interface.
 
 %if %{with ceph_test_package}
-%package     -n ceph-test
+%package     -n ceph-tests
 Summary:        Ceph benchmarks and test tools
 Requires:       ceph-common%{?_isa} = %{version}-%{release}
 Requires:       xmlstarlet
@@ -791,8 +794,12 @@ Requires:       socat
 BuildRequires:  pkgconfig(gtest)
 BuildRequires:  pkgconfig(gmock)
 
-%description -n ceph-test
-This package contains Ceph benchmarks and test tools.
+%description -n ceph-tests
+Ceph native test executables, benchmark and stress programs, and
+diagnostic helpers. Cluster-dependent programs require a configured Ceph
+cluster; other cases may require writable storage or privileged access.
+Benchmark and stress-tool completion is not a correctness-test result.
+
 %endif
 
 %package        monitoring
@@ -1543,7 +1550,7 @@ fi
 %{python3_sitelib}/ceph_daemon.py
 
 %if %{with ceph_test_package}
-%files -n ceph-test
+%files -n ceph-tests
 %{_bindir}/ceph-client-debug
 %{_bindir}/ceph_bench_log
 %{_bindir}/ceph_multi_stress_watch
