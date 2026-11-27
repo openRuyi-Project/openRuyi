@@ -76,12 +76,15 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description    devel
 %{_description}
 
-%package        test
-Summary:        Tests for %{name}
+%package        tests
+Summary:        Native and Python tests for AMD SMI
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
-%description    test
-%{_description}
+%description    tests
+The amdsmitst executable and Python unit and integration tests for AMD SMI.
+Device-facing tests require supported AMD hardware and kernel drivers.
+Integration tests require privileged access. The Python BDF-validation
+unit tests can run without a GPU.
 
 %prep
 %autosetup -p1 -C
@@ -153,7 +156,7 @@ fi
 %{_libdir}/libgoamdsmi_shim64.so
 %endif
 
-%files test
+%files tests
 %{_datadir}/amdsmi/
 
 %changelog
