@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: YunQiang Su <yunqiang@isrc.iscas.ac.cn>
 #
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MulanPSL-2.0
 
 %global git_ver git20260923.027f1dc
 %global git_commit 027f1dc3cb9e9269be898adbc57fefb8a6a1b394
