@@ -41,14 +41,14 @@ llvm-tools = false
 prefix = "/usr"
 
 [target.x86_64-unknown-linux-gnu]
-llvm-config = "/usr/bin/llvm-config"
+llvm-config = "/usr/bin/llvm-config-CLANG-MAJOR-VERSION"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/x86_64-openruyi-linux/libclang_rt.builtins.a"
 [target.riscv64gc-unknown-linux-gnu]
-llvm-config = "/usr/bin/llvm-config"
+llvm-config = "/usr/bin/llvm-config-CLANG-MAJOR-VERSION"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"
 [target.riscv64a23-unknown-linux-gnu]
-llvm-config = "/usr/bin/llvm-config"
+llvm-config = "/usr/bin/llvm-config-CLANG-MAJOR-VERSION"
 profiler = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.profile.a"
 optimized-compiler-builtins = "/usr/lib/clang/CLANG-MAJOR-VERSION/lib/riscv64-openruyi-linux/libclang_rt.builtins.a"
