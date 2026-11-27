@@ -9,11 +9,11 @@
 Name:           acl
 Summary:        Commands for Manipulating POSIX Access Control Lists
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later
-Version:        2.3.2
+Version:        2.4.0
 Release:        %autorelease
 URL:            https://savannah.nongnu.org/projects/acl
 VCS:            git:https://git.savannah.nongnu.org/git/acl.git
-#!RemoteAsset:  sha256:97203a72cae99ab89a067fe2210c1cbf052bc492b479eca7d226d9830883b0bd
+#!RemoteAsset:  sha256:e661131456d2708a01c614a0f400e11d7d1bfaeb6f3e74b75bb980b72f0161a3
 Source:         https://download.savannah.nongnu.org/releases/acl/acl-%{version}.tar.xz
 BuildSystem:    autotools
 
@@ -35,8 +35,6 @@ control lists.
 Summary:        Header files for the POSIX ACL library
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       glibc-devel
-Provides:       acl-devel = %{version}
-Obsoletes:      acl-devel < %{version}
 
 %description    devel
 This package contains all necessary include files and libraries needed
