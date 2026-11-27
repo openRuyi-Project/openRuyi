@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %bcond stemmer 0
-%bcond tests 0
+%bcond tests 1
 %bcond doc 0
 
 Name:           libxmlb
@@ -68,11 +68,13 @@ Files for development with %{name}.
 
 %if %{with tests}
 %package        tests
-Summary:        Files for installed tests
+Summary:        Installed test program and sample data for libxmlb
 Requires:       %{name} = %{version}-%{release}
 
 %description    tests
-Executable and data files for installed tests.
+The xb-self-test executable, XML and compressed-data samples, and
+installed-tests metadata for libxmlb.
+
 %endif
 
 %files
