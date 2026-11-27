@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           bpftrace
-Version:        0.26.1
+Version:        0.27.1
 Release:        %autorelease
 Summary:        High-level tracing language for Linux eBPF
 License:        Apache-2.0
 URL:            https://github.com/iovisor/bpftrace
-#!RemoteAsset:  sha256:555368f32f94bfcb74b119a3d9c67b68200be6375b8f452f794a2d3f6ebbcd16
+#!RemoteAsset:  sha256:52a923555b6e16fe13a285b6713637bfaab30a5efa60f44c03134bd832342012
 Source0:        https://github.com/bpftrace/bpftrace/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
