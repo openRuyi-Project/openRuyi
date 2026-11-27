@@ -58,12 +58,13 @@ This package contains the libraries and header files that are needed
 for writing applications that are using gdk-pixbuf.
 
 %package        tests
-Summary:        Tests for the %{name} package
+Summary:        Installed tests and reference images for GdkPixbuf
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description    tests
-The %{name}-tests package contains tests that can be used to verify
-the functionality of the installed %{name} package.
+GdkPixbuf test executables, reference images and installed-tests metadata.
+Format-specific cases require the corresponding image loaders.
+This package does not include an external installed-tests runner.
 
 %install -a
 %find_lang %{name} --generate-subpackages
@@ -102,8 +103,8 @@ gdk-pixbuf-query-loaders --update-cache
 %doc %{_datadir}/doc/gdk-pixdata/
 
 %files tests
-%{_libexecdir}/installed-tests
-%{_datadir}/installed-tests
+%{_libexecdir}/installed-tests/gdk-pixbuf/
+%{_datadir}/installed-tests/gdk-pixbuf/
 
 %changelog
 %autochangelog
