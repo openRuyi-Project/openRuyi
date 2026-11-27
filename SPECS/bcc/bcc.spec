@@ -4,6 +4,8 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
+%global llvm_maj_ver 22
+
 Name:           bcc
 Version:        0.37.0
 Release:        %autorelease
@@ -20,6 +22,7 @@ BuildOption(conf):  -DPYTHON_CMD=python3
 BuildOption(conf):  -DCMAKE_USE_LIBBPF_PACKAGE:BOOL=TRUE
 BuildOption(conf):  -DENABLE_NO_PIE=OFF
 BuildOption(conf):  -DENABLE_LLVM_SHARED=1
+BuildOption(conf):  -DLLVM_ROOT=%{_libdir}/llvm%{llvm_maj_ver}
 
 BuildRequires:  gcc-c++
 BuildRequires:  bison
@@ -30,9 +33,9 @@ BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(setuptools)
 BuildRequires:  pkgconfig(libelf)
 BuildRequires:  pkgconfig(libdebuginfod)
-BuildRequires:  llvm-devel
-BuildRequires:  clang-devel
-BuildRequires:  llvm-static
+BuildRequires:  llvm%{llvm_maj_ver}-devel
+BuildRequires:  clang%{llvm_maj_ver}-devel
+BuildRequires:  llvm%{llvm_maj_ver}-static
 BuildRequires:  pkgconfig(ncurses)
 BuildRequires:  pkgconfig(luajit)
 BuildRequires:  libbpf-devel
@@ -106,7 +109,7 @@ Command line libbpf tools for BPF Compiler Collection (BCC)
 
 %build -a
 pushd libbpf-tools
-%make_build BPFTOOL=%{_sbindir}/bpftool LIBBPF_OBJ=%{_libdir}/libbpf.a
+%make_build BPFTOOL=%{_sbindir}/bpftool LIBBPF_OBJ=%{_libdir}/libbpf.a USE_BLAZESYM=0 CLANG=clang-%{llvm_maj_ver} LLVM_STRIP=llvm-strip-%{llvm_maj_ver}
 popd
 
 %install -a
