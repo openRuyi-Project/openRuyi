@@ -42,6 +42,18 @@ BuildRequires:  python3dist(cram)
 %description
 SysBench is a modular, cross-platform and multi-threaded benchmark tool.
 
+%package        tests
+Summary:        Cram self-tests and helper scripts for sysbench
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       python-cram
+Requires:       python-unversioned-command
+
+%description    tests
+Cram cases, shell helpers and Lua test inputs for testing sysbench itself.
+Database-dependent cases require configured MySQL or PostgreSQL test
+instances and credentials. Tests must run from a writable copy of the
+installed test directory. This is not the production benchmark suite.
+
 %prep -a
 rm -r third_party/luajit/luajit/
 rm -r third_party/concurrency_kit/ck/
@@ -51,10 +63,14 @@ rm -r third_party/cram/
 autoreconf -vif
 
 %files
+%exclude %{_datadir}/sysbench/tests/
 %license COPYING
 %doc ChangeLog README.md manual.html
 %{_bindir}/*
 %{_datadir}/sysbench/
 
+%files tests
+%{_datadir}/sysbench/tests/
+
 %changelog
-%{?autochangelog}
+%autochangelog
