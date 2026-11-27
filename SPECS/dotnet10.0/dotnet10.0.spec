@@ -3,6 +3,7 @@
 # SPDX-FileContributor: gns <wangbingzhen.riscv@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
+
 # Originally extracted from Fedora Project
 # Authors: The Fedora Project Contributors
 
