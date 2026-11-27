@@ -4,7 +4,6 @@
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
-#
 
 # avoid bootstrapping problem
 %define _binary_payload w9.bzdio
