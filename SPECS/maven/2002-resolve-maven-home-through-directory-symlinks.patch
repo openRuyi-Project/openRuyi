@@ -1,0 +1,20 @@
+Subject: Resolve Maven home through directory symlinks
+
+On merged-usr systems, /bin can point to /usr/bin. Resolve directory
+symlinks before processing parent components in the install path so
+relative launcher links work through both entry points.
+
+Upstream-Status: Not submitted
+
+SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
+SPDX-License-Identifier: MulanPSL-2.0
+
+--- a/apache-maven/src/bin/mvn
++++ b/apache-maven/src/bin/mvn
+@@ -116,5 +116,5 @@
+
+ # make it fully qualified
+-MAVEN_HOME=`cd "$MAVEN_HOME" && pwd`
++MAVEN_HOME=`cd -P "$MAVEN_HOME" && pwd -P`
+
+ cd "$saveddir"
