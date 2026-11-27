@@ -12,14 +12,14 @@
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-knotifications
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        KDE Desktop notifications
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/knotifications
-#!RemoteAsset:  sha256:34a9a071585bc3e0993ab19c9a9c7dd4813f5a6104b7b0a470e007f258beaf76
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:5da86674bfbe532427f2ea52c86e6d5220cdfb8d0fadb8cbec2ba53d48ec5be9
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF

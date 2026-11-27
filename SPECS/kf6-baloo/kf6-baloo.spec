@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname baloo
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-baloo
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        Framework for searching and managing metadata
 License:        GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-3.0-only
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/baloo.git
-#!RemoteAsset:  sha256:178d6550a7c55a820322182814a96a7564343a506772971e4aac8b1e7e4d1829
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:305c0e41dab070cac27d2e9530a81aab95157dd76c1c00ffe87d1ad08734dad7
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
@@ -91,13 +91,13 @@ package contains aditional command line utilities. Development files.
 %find_lang %{name} --with-qt --all-name --generate-subpackages
 
 %post file
-%systemd_user_post kde-baloo.service
+%systemd_user_post kde-baloo.service kde-baloo-idle-monitor.service
 
 %preun file
-%systemd_user_preun kde-baloo.service
+%systemd_user_preun kde-baloo.service kde-baloo-idle-monitor.service
 
 %postun file
-%systemd_user_postun kde-baloo.service
+%systemd_user_postun kde-baloo.service kde-baloo-idle-monitor.service
 
 %files -f %{name}.lang
 %license LICENSES/*
@@ -113,7 +113,11 @@ package contains aditional command line utilities. Development files.
 %{_kf6_debugdir}/baloo.renamecategories
 %{_kf6_libexecdir}/baloo_file
 %{_kf6_libexecdir}/baloo_file_extractor
+%{_kf6_libexecdir}/baloo_idle_monitor
 %{_userunitdir}/kde-baloo.service
+%{_userunitdir}/kde-baloo-idle-monitor.service
+%{_kf6_sharedir}/dbus-1/services/org.kde.baloo.service
+%{_kf6_sharedir}/dbus-1/services/org.kde.baloo_idle_monitor.service
 
 %files kioslaves
 %{_kf6_plugindir}/kf6/kded/baloosearchmodule.so

@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname kuserfeedback
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kuserfeedback
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        Framework for collecting feedback from application users
 License:        MIT
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kuserfeedback.git
-#!RemoteAsset:  sha256:6a761f2eb1507110107b2ddf2a723bbe6fa205eac086ce04a4272fdfabb7c31a
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:156cadff9de487538440a7f6cfce4a4f0240dc22ccbe4d48f37fb1bd84c75ee5
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DQT_MAJOR_VERSION:STRING=6

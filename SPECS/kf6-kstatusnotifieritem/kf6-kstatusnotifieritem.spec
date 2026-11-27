@@ -8,18 +8,18 @@
 
 %define rname kstatusnotifieritem
 
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kstatusnotifieritem
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        Implementation of Status Notifier Items
 License:        LGPL-2.0-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kstatusnotifieritem.git
-#!RemoteAsset:  sha256:24a23df7564a7e2916a211eb467470480e44c9e2a55f88350fc418ad8f211e83
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:46c9ebf7d5319a2bde9123427edb277b871740f4f79f65e79a382dde7e1891d9
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF

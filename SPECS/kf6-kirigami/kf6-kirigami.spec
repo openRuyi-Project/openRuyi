@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname kirigami
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-kirigami
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        Set of QtQuick components
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/kirigami
-#!RemoteAsset:  sha256:811a8a150e636216269c0346e62470997fa282113a39e32b2d332bd5969926f0
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:1cb13ef3ad1885726c383bcd1a35c494db3e9c2cf87b49398ea34d63129cf6d7
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
@@ -81,7 +81,6 @@ Development files.
 %{_kf6_libdir}/libKirigamiPlatform.so.*
 %{_kf6_libdir}/qt6/metatypes/qt6kirigamiplatform_metatypes.json
 %{_kf6_libdir}/libKirigamiPrimitives.so.*
-%{_kf6_libdir}/libKirigamiPolyfill.so.*
 %{_kf6_libdir}/libKirigamiTemplates.so.*
 
 %files devel
@@ -103,7 +102,6 @@ Development files.
 %{_kf6_libdir}/libKirigamiPlatform.so
 %{_kf6_libdir}/libKirigamiPrimitives.so
 %{_kf6_libdir}/libKirigamiPrivate.so
-%{_kf6_libdir}/libKirigamiPolyfill.so
 %{_kf6_libdir}/libKirigamiTemplates.so
 %{_kf6_sharedir}/kdevappwizard/templates/kirigami6.tar.bz2
 

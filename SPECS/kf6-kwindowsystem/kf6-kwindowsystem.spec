@@ -8,14 +8,14 @@
 %define qt6_version 6.8.0
 
 Name:           kf6-kwindowsystem
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        KDE Access to window manager
 License:        LGPL-2.1-or-later
 URL:            https://kde.org
 VCS:            git:https://invent.kde.org/frameworks/kwindowsystem
-#!RemoteAsset:  sha256:9968f66ba750432480960e321dd7ec32e2ea19a1596496f39147797684842f57
-Source0:        https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:43a32eb940c740f5acc917ce24c4939ba08b9e08c26091dbb5577ad0ef74f3a0
+Source0:        https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
@@ -28,7 +28,7 @@ BuildRequires:  doxygen
 BuildRequires:  graphviz
 BuildRequires:  xmlto
 BuildRequires:  pkgconfig
-BuildRequires:  kf6-extra-cmake-modules >= 6.31.0
+BuildRequires:  kf6-extra-cmake-modules >= 6.32.0
 BuildRequires:  qt6-qtbase-private-devel >= 6.8.0
 BuildRequires:  cmake(Qt6GuiPrivate)
 BuildRequires:  cmake(Qt6LinguistTools)

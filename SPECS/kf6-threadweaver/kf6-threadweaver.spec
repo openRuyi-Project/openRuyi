@@ -7,18 +7,18 @@
 %define qt6_version 6.8.0
 
 %define rname threadweaver
-# Full KF6 version (e.g. 6.31.0)
+# Full KF6 version (e.g. 6.32.0)
 %{!?_kf6_version: %global _kf6_version %{version}}
 
 Name:           kf6-threadweaver
-Version:        6.31.0
+Version:        6.32.0
 Release:        %autorelease
 Summary:        KDE Helper for multithreaded programming
 License:        LGPL-2.1-or-later
 URL:            https://www.kde.org
 VCS:            git:https://invent.kde.org/frameworks/threadweaver.git
-#!RemoteAsset:  sha256:4a65944dcca12672ace6d54a48b3a993d4b46b6095106316c3a95ecae6af9906
-Source:         https://download.kde.org/stable/frameworks/6.31/%{rname}-%{version}.tar.xz
+#!RemoteAsset:  sha256:b3ee9e6cdfdb3dec7c7df8e7f66ace6a94e73a531ba4f1d8f7b74360e7201e05
+Source:         https://download.kde.org/stable/frameworks/6.32/%{rname}-%{version}.tar.xz
 BuildSystem:    cmake
 
 BuildOption(conf):  -DBUILD_TESTING=OFF
