@@ -10,6 +10,7 @@
 
 %bcond rust_bin 0
 
+%global llvm_maj_ver 22
 %ifarch x86_64
 %global rust_arch x86_64-unknown-linux-gnu
 %endif
@@ -45,11 +46,11 @@ Source1:        rust-openruyi.toml.in
 # https://github.com/AOSC-Tracking/rustc/commit/ff025502e771540faa8d562bfe8906377f2db1e9
 Patch1000:      1000-bootstrap-Workaround-for-system-stage0.patch
 
-BuildRequires:  clang
+BuildRequires:  clang%{llvm_maj_ver}
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(libxml-2.0)
-BuildRequires:  llvm-devel
-BuildRequires:  compiler-rt
+BuildRequires:  llvm%{llvm_maj_ver}-devel
+BuildRequires:  compiler-rt%{llvm_maj_ver}
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(libcurl)
@@ -89,7 +90,7 @@ rm -rf src/llvm-project/libunwind/*
 
 find . -type f -regex  ".*\.\(exe\|a\|dll\|lib\)$" -delete
 find vendor -name .cargo-checksum.json -exec sed -i.uncheck -e 's/"files":{[^}]*}/"files":{ }/' '{}' '+'
-sed 's/CLANG-MAJOR-VERSION/%{clang_major_version}/' %{SOURCE1} > bootstrap.toml
+sed 's/CLANG-MAJOR-VERSION/%{llvm_maj_ver}/' %{SOURCE1} > bootstrap.toml
 
 %build
 export %{rust_env}
