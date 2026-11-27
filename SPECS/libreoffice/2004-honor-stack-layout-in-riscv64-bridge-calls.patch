@@ -1,0 +1,64 @@
+From fe7b31ba9969e0426ed61e86ebb5c1bd641f2d13 Mon Sep 17 00:00:00 2001
+From: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+Date: Thu, 5 Nov 2026 16:06:21 +0800
+Subject: [PATCH] riscv64: use the outgoing argument buffer as the bridge call
+ stack
+
+GCC can reserve an outgoing-argument area below an alloca result. With
+stack-clash protection, the native UNO bridge self-test receives stack
+arguments 16 bytes before the copied argument buffer and crashes in
+Test_Impl::setValues.
+
+Set sp to the allocated argument buffer while calling the C++ method.
+Keep the original sp in a callee-saved register and restore it on normal
+return. The compiler-generated frame pointer remains available for
+exception unwinding. Also declare every caller-saved integer and
+floating-point temporary clobbered by the foreign call.
+
+Signed-off-by: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
+---
+ .../cpp_uno/gcc3_linux_riscv64/uno2cpp.cxx    | 20 +++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/bridges/source/cpp_uno/gcc3_linux_riscv64/uno2cpp.cxx b/bridges/source/cpp_uno/gcc3_linux_riscv64/uno2cpp.cxx
+index d0370ce..414bc9a 100644
+--- a/bridges/source/cpp_uno/gcc3_linux_riscv64/uno2cpp.cxx
++++ b/bridges/source/cpp_uno/gcc3_linux_riscv64/uno2cpp.cxx
+@@ -106,8 +106,15 @@ static void callVirtualMethod(void* pAdjustedThisPtr, sal_Int32 nVtableIndex, vo
+         "fld fa5, 40(%[fpr]) \n\t"
+         "fld fa6, 48(%[fpr]) \n\t"
+         "fld fa7, 56(%[fpr]) \n\t"
+-        // Perform the call
++        // alloca may leave an outgoing-argument area below pCallStack.
++        // Use the argument buffer as sp for the foreign call and keep the
++        // original sp in a callee-saved register for normal return.
++        "mv s1, sp \n\t"
++        "beqz %[stack], 1f \n\t"
++        "mv sp, %[stack] \n\t"
++        "1: \n\t"
+         "jalr ra,%[mfunc],0 \n\t"
++        "mv sp, s1 \n\t"
+         // Fill the return values
+         "add %[gret1], a0,zero \n\t"
+         "add %[gret2], a1,zero \n\t"
+@@ -115,11 +122,12 @@ static void callVirtualMethod(void* pAdjustedThisPtr, sal_Int32 nVtableIndex, vo
+         "fmv.d %[fret2], fa1 \n\t"
+         //".set pop \n\t"
+         : [gret1] "=&r"(*gret1), [gret2] "=&r"(*gret2), [fret1] "=&f"(*fret1), [fret2] "=&f"(*fret2)
+-        : [gpr] "r"(pGPR), [fpr] "r"(pFPR), [mfunc] "r"(mfunc),
+-          [stack] "m"(
+-              pCallStack) // dummy input to prevent the compiler from optimizing the alloca out
+-        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "ra", "fa0", "fa1", "fa2", "fa3", "fa4",
+-          "fa5", "fa6", "fa7", "memory");
++        : [gpr] "r"(pGPR), [fpr] "r"(pFPR), [mfunc] "r"(mfunc), [stack] "r"(pCallStack)
++        : "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "ra", "s1",
++          "t0", "t1", "t2", "t3", "t4", "t5", "t6",
++          "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7",
++          "ft0", "ft1", "ft2", "ft3", "ft4", "ft5", "ft6", "ft7",
++          "ft8", "ft9", "ft10", "ft11", "memory");
+     BRIDGE_LOG("In callVirtualMethod, fret = %p, gret = %p\n", fret, gret);
+ 
+     switch (pReturnTypeRef->eTypeClass)
+-- 
+2.54.0
+
