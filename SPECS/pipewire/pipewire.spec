@@ -53,6 +53,9 @@ BuildOption(conf):  -Dlv2=disabled
 BuildOption(conf):  -Droc=disabled
 BuildOption(conf):  -Dlibffado=disabled
 
+BuildOption(conf):  -Dinstalled_tests=enabled
+BuildOption(conf):  -Dexamples=disabled
+
 BuildRequires:  meson >= 0.59.0
 BuildRequires:  gcc
 BuildRequires:  pkgconfig
@@ -98,6 +101,17 @@ Recommends:     %{name}-jack%{?_isa} = %{version}-%{release}
 %description
 PipeWire is a multimedia server for Linux.
 
+%package        tests
+Summary:        Test, benchmark and stress programs for PipeWire
+Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
+
+%description    tests
+Upstream PipeWire test executables, benchmark and stress programs,
+and installed-tests metadata. Some programs require a running PipeWire
+daemon, configured ALSA devices or optional plugins; others use an
+in-process context. Benchmarks and stress programs are not correctness
+tests. Upstream example clients are not included.
+
 %package        jack
 Summary:        PipeWire JACK implementation
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -118,6 +132,8 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 Development headers for PipeWire.
 
 %install -a
+# JACK examples in this upstream version ignore the examples option.
+rm -rf -- %{buildroot}%{_libexecdir}/installed-tests/pipewire-0.3/examples/
 install -p -D -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/pipewire.conf
 
 install -d -m 0755 %{buildroot}%{_datadir}/pipewire/pipewire.conf.d/
@@ -320,6 +336,10 @@ ln -s ../pipewire.conf.avail/50-raop.conf \
 %{_includedir}/spa-%{spaversion}/
 %{_libdir}/pkgconfig/libpipewire-%{apiversion}.pc
 %{_libdir}/pkgconfig/libspa-%{spaversion}.pc
+
+%files tests
+%{_libexecdir}/installed-tests/pipewire-0.3/
+%{_datadir}/installed-tests/pipewire-0.3/
 
 %changelog
 %autochangelog
