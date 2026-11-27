@@ -1,0 +1,352 @@
+From 85aa02c2ac00e18e5d5d31f67fd0b6747285b64b Mon Sep 17 00:00:00 2001
+From: Alexander Peshkov <alexander.peshkoff@gmail.com>
+Date: Mon, 16 Sep 2019 20:59:54 +0300
+Subject: [PATCH] Adapt TTMath integer headers for Firebird
+
+Backport the integer-only includes, public storage and trivial
+constructors required by Firebird's INT128 backend to TTMath 0.9.3.
+
+Upstream-Commit: https://github.com/FirebirdSQL/firebird/commit/861d536fc26542335f0fb84cdea825e891364057
+---
+ ttmath/ttmath.h     | 14 ++--------
+ ttmath/ttmathint.h  | 65 +++++++++++++++++++++------------------------
+ ttmath/ttmathuint.h | 59 ++++++++++++++++++++--------------------
+ 3 files changed, 62 insertions(+), 76 deletions(-)
+
+diff --git a/ttmath/ttmath.h b/ttmath/ttmath.h
+index ee40e6e..9b9e8ee 100644
+--- a/ttmath/ttmath.h
++++ b/ttmath/ttmath.h
+@@ -56,4 +56,5 @@
+ 
++#define TTMATH_DONT_USE_WCHAR
+ 
+-#include "ttmathbig.h"
++#include "ttmathint.h"
+ #include "ttmathobjects.h"
+@@ -2832,13 +2833,2 @@ namespace ttmath
+ 
+-/*!
+-	this is for convenience for the user
+-	he can only use '#include <ttmath/ttmath.h>'
+-*/
+-#include "ttmathparser.h"
+-
+-// Dec is not finished yet
+-//#include "ttmathdec.h"
+-
+-
+-
+ #ifdef _MSC_VER
+diff --git a/ttmath/ttmathint.h b/ttmath/ttmathint.h
+index ad306f0..8ad0189 100644
+--- a/ttmath/ttmathint.h
++++ b/ttmath/ttmathint.h
+@@ -769,3 +769,3 @@ public:
+ 	*/
+-	Int<value_size> & operator=(const Int<value_size> & p)
++/*	Int<value_size> & operator=(const Int<value_size> & p)
+ 	{
+@@ -775,3 +775,3 @@ public:
+ 	}
+-
++ */
+ 
+@@ -782,3 +782,3 @@ public:
+ 	*/
+-	template<uint argument_size>
++/*	template<uint argument_size>
+ 	Int<value_size> & operator=(const Int<argument_size> & p)
+@@ -789,3 +789,3 @@ public:
+ 	}
+-
++ */
+ 
+@@ -805,3 +805,3 @@ public:
+ 	*/
+-	Int(sint i)
++/*	Int(sint i)
+ 	{
+@@ -809,3 +809,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -814,3 +814,3 @@ public:
+ 	*/
+-	Int(const Int<value_size> & u)
++/*	Int(const Int<value_size> & u)
+ 	{
+@@ -818,3 +818,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -823,3 +823,3 @@ public:
+ 	*/
+-	template<uint argument_size>
++/*	template<uint argument_size>
+ 	Int(const Int<argument_size> & u)
+@@ -829,3 +829,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -860,3 +860,3 @@ public:
+ 	*/
+-	Int(uint i)
++/*	Int(uint i)
+ 	{
+@@ -864,3 +864,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -869,3 +869,3 @@ public:
+ 	*/
+-	template<uint argument_size>
++/*	template<uint argument_size>
+ 	Int(const UInt<argument_size> & u)
+@@ -875,3 +875,3 @@ public:
+ 	}
+- 
++*/
+ 
+@@ -955,3 +955,3 @@ public:
+ 	*/
+-	Int(ulint n)
++/*	Int(ulint n)
+ 	{
+@@ -959,3 +959,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -977,3 +977,3 @@ public:
+ 	*/
+-	Int(slint n)
++/*	Int(slint n)
+ 	{
+@@ -981,3 +981,3 @@ public:
+ 	}
+-
++*/
+ #endif
+@@ -1035,3 +1035,3 @@ public:
+ 	*/
+-	Int(unsigned int i)
++/*	Int(unsigned int i)
+ 	{
+@@ -1039,3 +1039,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -1057,3 +1057,3 @@ public:
+ 	*/
+-	Int(signed int i)
++/*	Int(signed int i)
+ 	{
+@@ -1061,3 +1061,3 @@ public:
+ 	}
+-
++*/
+ #endif
+@@ -1069,3 +1069,3 @@ public:
+ 	*/
+-	Int(const char * s)
++/*	Int(const char * s)
+ 	{
+@@ -1073,3 +1073,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -1078,3 +1078,3 @@ public:
+ 	*/
+-	Int(const std::string & s)
++/*	Int(const std::string & s)
+ 	{
+@@ -1082,3 +1082,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -1111,6 +1111,6 @@ public:
+ 	*/
+-	Int()
++/*	Int()
+ 	{
+ 	}
+-
++*/
+ 
+@@ -1119,6 +1119,6 @@ public:
+ 	*/
+-	~Int()
++/*	~Int()
+ 	{
+ 	}
+-
++*/
+ 
+@@ -1304,5 +1304,2 @@ public:
+ 
+-
+-private:
+-
+ 	/*!	
+@@ -1325,4 +1322,2 @@ private:
+ 
+-public:
+-
+ 	/*!	
+diff --git a/ttmath/ttmathuint.h b/ttmath/ttmathuint.h
+index d00a0d7..7d82d08 100644
+--- a/ttmath/ttmathuint.h
++++ b/ttmath/ttmathuint.h
+@@ -2724,3 +2724,3 @@ public:
+ 	*/
+-	template<uint argument_size>
++/*	template<uint argument_size>
+ 	UInt<value_size> & operator=(const UInt<argument_size> & p)
+@@ -2731,3 +2731,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2736,3 +2736,3 @@ public:
+ 	*/
+-	UInt<value_size> & operator=(const UInt<value_size> & p)
++/*	UInt<value_size> & operator=(const UInt<value_size> & p)
+ 	{
+@@ -2745,3 +2745,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2761,3 +2761,3 @@ public:
+ 	*/
+-	UInt(uint i)
++/*	UInt(uint i)
+ 	{
+@@ -2765,3 +2765,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2783,3 +2783,3 @@ public:
+ 	*/
+-	UInt(sint i)
++/*	UInt(sint i)
+ 	{
+@@ -2787,3 +2787,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2860,3 +2860,3 @@ public:
+ 	*/
+-	UInt(ulint n)
++/*	UInt(ulint n)
+ 	{
+@@ -2864,3 +2864,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2882,3 +2882,3 @@ public:
+ 	*/
+-	UInt(slint n)
++/*	UInt(slint n)
+ 	{
+@@ -2886,3 +2886,3 @@ public:
+ 	}
+-
++*/
+ #endif
+@@ -2939,3 +2939,3 @@ public:
+ 	*/
+-	UInt(unsigned int i)
++/*	UInt(unsigned int i)
+ 	{
+@@ -2943,3 +2943,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2961,3 +2961,3 @@ public:
+ 	*/
+-	UInt(signed int i)
++/*	UInt(signed int i)
+ 	{
+@@ -2965,3 +2965,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2976,3 +2976,3 @@ public:
+ 	*/
+-	UInt(const char * s)
++/*	UInt(const char * s)
+ 	{
+@@ -2980,3 +2980,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -2985,3 +2985,3 @@ public:
+ 	*/
+-	UInt(const std::string & s)
++/*	UInt(const std::string & s)
+ 	{
+@@ -2989,3 +2989,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -3020,3 +3020,3 @@ public:
+ 	*/
+-	UInt()
++/*	UInt()
+ 	{
+@@ -3036,3 +3036,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -3041,3 +3041,3 @@ public:
+ 	*/
+-	UInt(const UInt<value_size> & u)
++/*	UInt(const UInt<value_size> & u)
+ 	{
+@@ -3048,3 +3048,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -3054,3 +3054,3 @@ public:
+ 	*/
+-	template<uint argument_size>
++/*	template<uint argument_size>
+ 	UInt(const UInt<argument_size> & u)
+@@ -3060,3 +3060,3 @@ public:
+ 	}
+-
++*/
+ 
+@@ -3067,6 +3067,6 @@ public:
+ 	*/
+-	~UInt()
++/*	~UInt()
+ 	{
+ 	}
+-
++*/
+ 
+@@ -3387,3 +3387,4 @@ private:
+ 	{
+-	UInt<value_size> base( b );
++	UInt<value_size> base;
++	base.FromUInt( b );
+ 	UInt<value_size> temp;
