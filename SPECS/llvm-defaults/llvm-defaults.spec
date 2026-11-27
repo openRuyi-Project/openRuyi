@@ -3,10 +3,10 @@
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
-# This package provides default/unversioned symlinks for LLVM 22 tools
-# It creates symlinks like /usr/bin/clang -> clang-22
+# This package provides default/unversioned symlinks for LLVM MAJ_VER tools
+# It creates symlinks like /usr/bin/clang -> clang-MAJ_VER
 
-%global maj_ver 22
+%global maj_ver 23
 
 Name:           llvm-defaults
 Version:        %{maj_ver}
@@ -37,7 +37,7 @@ BuildRequires:  cmake
 
 %description
 This package provides default unversioned symlinks for LLVM %{maj_ver} tools,
-creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/flang -> flang-22, etc.
+creating symlinks like /usr/bin/clang -> clang-%{maj_ver}, /usr/bin/flang -> flang-%{maj_ver}, etc.
 
 # ============================================================================
 # llvm subpackage
@@ -48,7 +48,7 @@ Requires:       llvm%{maj_ver} > %{maj_ver}
 
 %description -n llvm
 This package provides default unversioned symlinks for LLVM %{maj_ver} tools,
-creating symlinks like /usr/bin/llc -> llc-22, /usr/bin/opt -> opt-22, etc.
+creating symlinks like /usr/bin/llc -> llc-%{maj_ver}, /usr/bin/opt -> opt-%{maj_ver}, etc.
 
 # ============================================================================
 # llvm-devel subpackage
@@ -61,7 +61,7 @@ Provides:       cmake(LLVM) = %{maj_ver}
 
 %description -n llvm-devel
 This package provides default unversioned symlinks for LLVM %{maj_ver}
-development tools, creating symlinks like /usr/bin/llvm-config -> llvm-config-22.
+development tools, creating symlinks like /usr/bin/llvm-config -> llvm-config-%{maj_ver}.
 
 # ============================================================================
 # clang subpackage
@@ -73,7 +73,7 @@ Requires:       clang-rpm-macros = %{version}-%{release}
 
 %description -n clang
 This package provides default unversioned symlinks for clang %{maj_ver},
-creating symlinks like /usr/bin/clang -> clang-22, /usr/bin/clang++ -> clang++-22, etc.
+creating symlinks like /usr/bin/clang -> clang-%{maj_ver}, /usr/bin/clang++ -> clang++-%{maj_ver}, etc.
 
 # ============================================================================
 # clang-devel subpackage
@@ -87,7 +87,7 @@ Provides:       cmake(Clang) = %{maj_ver}
 
 %description -n clang-devel
 This package provides default unversioned symlinks for clang %{maj_ver}
-development tools, creating symlinks like /usr/bin/clang-tblgen -> clang-tblgen-22.
+development tools, creating symlinks like /usr/bin/clang-tblgen -> clang-tblgen-%{maj_ver}.
 
 # ============================================================================
 # clang-devel subpackage
@@ -171,7 +171,7 @@ default Clang toolchain.
 # ============================================================================
 %package     -n flang
 Summary:        Default symlinks for flang (Fortran frontend)
-Requires:       llvm%{maj_ver} > %{maj_ver}
+Requires:       flang%{maj_ver} > %{maj_ver}
 
 %description -n flang
 This package provides default unversioned symlinks for flang %{maj_ver},
@@ -282,6 +282,13 @@ ln -sf llvm-lto-%{maj_ver} %{buildroot}%{_bindir}/llvm-lto
 ln -sf llvm-lto2-%{maj_ver} %{buildroot}%{_bindir}/llvm-lto2
 ln -sf llvm-mc-%{maj_ver} %{buildroot}%{_bindir}/llvm-mc
 ln -sf llvm-mca-%{maj_ver} %{buildroot}%{_bindir}/llvm-mca
+ln -sf llvm-cxxfilt-%{maj_ver} %{buildroot}%{_bindir}/llvm-cxxfilt
+ln -sf llvm-tblgen-%{maj_ver} %{buildroot}%{_bindir}/llvm-tblgen
+ln -sf llvm-extract-%{maj_ver} %{buildroot}%{_bindir}/llvm-extract
+ln -sf llvm-reduce-%{maj_ver} %{buildroot}%{_bindir}/llvm-reduce
+ln -sf llvm-diff-%{maj_ver} %{buildroot}%{_bindir}/llvm-diff
+ln -sf llvm-profgen-%{maj_ver} %{buildroot}%{_bindir}/llvm-profgen
+ln -sf llvm-dwarfutil-%{maj_ver} %{buildroot}%{_bindir}/llvm-dwarfutil
 
 # llvm-devel symlinks
 ln -sf llvm-config-%{maj_ver} %{buildroot}%{_bindir}/llvm-config
@@ -337,11 +344,13 @@ ln -sf run-clang-tidy-%{maj_ver} %{buildroot}%{_bindir}/run-clang-tidy
 # clang-analyzer symlinks
 ln -sf scan-view-%{maj_ver} %{buildroot}%{_bindir}/scan-view
 ln -sf scan-build-%{maj_ver} %{buildroot}%{_bindir}/scan-build
+ln -sf intercept-build-%{maj_ver} %{buildroot}%{_bindir}/intercept-build
+ln -sf analyze-build-%{maj_ver} %{buildroot}%{_bindir}/analyze-build
+ln -sf scan-build-py-%{maj_ver} %{buildroot}%{_bindir}/scan-build-py
 
 # flang symlinks
 ln -sf flang-%{maj_ver} %{buildroot}%{_bindir}/flang
 ln -sf flang-new-%{maj_ver} %{buildroot}%{_bindir}/flang-new
-ln -sf f18-%{maj_ver} %{buildroot}%{_bindir}/f18
 ln -sf bbc-%{maj_ver} %{buildroot}%{_bindir}/bbc
 ln -sf fir-opt-%{maj_ver} %{buildroot}%{_bindir}/fir-opt
 ln -sf tco-%{maj_ver} %{buildroot}%{_bindir}/tco
@@ -434,6 +443,13 @@ fi
 %{_bindir}/llvm-lto2
 %{_bindir}/llvm-mc
 %{_bindir}/llvm-mca
+%{_bindir}/llvm-cxxfilt
+%{_bindir}/llvm-tblgen
+%{_bindir}/llvm-extract
+%{_bindir}/llvm-reduce
+%{_bindir}/llvm-diff
+%{_bindir}/llvm-profgen
+%{_bindir}/llvm-dwarfutil
 
 %files -n llvm-devel
 %{_bindir}/llvm-config
@@ -476,6 +492,9 @@ fi
 %files -n clang-analyzer
 %{_bindir}/scan-view
 %{_bindir}/scan-build
+%{_bindir}/intercept-build
+%{_bindir}/analyze-build
+%{_bindir}/scan-build-py
 
 %files -n clang-static
 
@@ -487,7 +506,6 @@ fi
 %files -n flang
 %{_bindir}/flang
 %{_bindir}/flang-new
-%{_bindir}/f18
 %{_bindir}/bbc
 %{_bindir}/fir-opt
 %{_bindir}/tco
