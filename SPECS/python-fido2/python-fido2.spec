@@ -1,19 +1,20 @@
 # SPDX-FileCopyrightText: (C) 2026 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: Kimmy <yucheng.or@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname fido2
 
 Name:           python-%{srcname}
-Version:        1.1.2
+Version:        1.2.0
 Release:        %autorelease
 Summary:        FIDO2/WebAuthn library for clients and servers
 License:        BSD-2-Clause AND Apache-2.0 AND MPL-2.0
 URL:            https://github.com/Yubico/python-fido2
 VCS:            git:https://github.com/Yubico/python-fido2.git
-#!RemoteAsset:  sha256:6110d913106f76199201b32d262b2857562cc46ba1d0b9c51fbce30dc936c573
+#!RemoteAsset:  sha256:e39f95920122d64283fda5e5581d95a206e704fa42846bfa4662f86aa0d3333b
 Source0:        https://files.pythonhosted.org/packages/source/f/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
@@ -41,7 +42,7 @@ U2F authenticators, and for implementing WebAuthn clients and servers.
 
 %prep -a
 # Relax cryptography upper bound for the version packaged in openRuyi.
-sed -i 's/cryptography = ">=2.6, !=35, <44"/cryptography = ">=2.6, !=35"/' pyproject.toml
+sed -i 's/cryptography = ">=2.6, !=35, <45"/cryptography = ">=2.6, !=35"/' pyproject.toml
 
 %generate_buildrequires
 %pyproject_buildrequires

@@ -3,18 +3,19 @@
 # SPDX-FileContributor: Zheng Junjie <zhengjunjie@iscas.ac.cn>
 # SPDX-FileContributor: laokz <zhangkai@iscas.ac.cn>
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Li Guan <guanli.oerv@isrc.iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global srcname simplejson
 
 Name:           python-%{srcname}
-Version:        3.17.6
+Version:        4.3.0
 Release:        %autorelease
 Summary:        Json library for Python
 License:        AFL-2.1 OR MIT
 URL:            https://simplejson.readthedocs.io/en/latest
-#!RemoteAsset:  sha256:cf98038d2abf63a1ada5730e91e84c642ba6c225b0198c3684151b1f80c5f8a6
+#!RemoteAsset:  sha256:ffe34ab51a0d37e6d1c661a5672df00d2d5e18804e38eac07abffb83fa5ec3d7
 Source0:        https://files.pythonhosted.org/packages/source/s/%{srcname}/%{srcname}-%{version}.tar.gz
 BuildSystem:    pyproject
 
@@ -47,8 +48,8 @@ Python 3.3+.
 %pyproject_buildrequires
 
 %files -f %{pyproject_files}
-%license LICENSE*
 %doc README*
+%license LICENSE*
 
 %changelog
 %autochangelog
