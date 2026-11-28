@@ -65,6 +65,13 @@ SDDM is a modern graphical display manager aiming to be fast, simple and
 beautiful. It uses modern technologies like QtQuick, which in turn gives the
 designer the ability to create smooth, animated user interfaces.
 
+%prep -a
+# Allow the Weston greeter to start without input devices.
+sed -i '/Entry(CompositorCommand,/s/_S("weston --shell=kiosk")/_S("weston --shell=kiosk --continue-without-input")/' \
+    src/common/Configuration.h
+grep -Eq 'Entry\(CompositorCommand,.*_S\("weston --shell=kiosk --continue-without-input"\)' \
+    src/common/Configuration.h
+
 %install -a
 mkdir -p %{buildroot}%{_sysconfdir}/sddm.conf.d
 mkdir -p %{buildroot}%{_prefix}/lib/sddm/sddm.conf.d
