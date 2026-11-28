@@ -62,23 +62,25 @@ Requires:       pciutils
 # GLX is always present
 Requires:       /usr/bin/glxinfo
 # Vulkan might not be needed
-Requires:       (/usr/bin/vulkaninfo if libvulkan1)
+Requires:       (/usr/bin/vulkaninfo if vulkan-loader)
 # Plasma Wayland is always installed
 Requires:       /usr/bin/wayland-info
 # The "Firmware Security" page does fwupdmgr ... | aha | ...
+Recommends:     fwupd
 Requires:       (aha if fwupd)
-
-Recommends:      /usr/bin/xdpyinfo
-# Note: Not available as /usr/bin/eglinfo yet (boo#1195695)
-Recommends:     /usr/bin/eglinfo
 # clinfo if OpenCL is installed
-Requires:       (clinfo if libOpenCL1)
+Requires:       (clinfo if opencl-icd-loader)
+# The "Video Acceleration" page calls vainfo
+Requires:       (/usr/bin/vainfo if libva)
+
+Recommends:     /usr/bin/xdpyinfo
+Recommends:     /usr/bin/eglinfo
 # dmidecode is used to show information on memory
 Recommends:     dmidecode
 # EDID kcm requires di-edid-decode
-Recommends:     libdisplay-info-tools >= 0.2.0
+Recommends:     /usr/bin/di-edid-decode
 # Temperature sensors
-Recommends:     sensors
+Recommends:     lm_sensors
 
 %description
 KDE Utility that provides information about a computer system.
