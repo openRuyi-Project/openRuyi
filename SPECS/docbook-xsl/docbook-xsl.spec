@@ -17,6 +17,8 @@ Source0:        %{url}/releases/download/release/%{version}/docbook-xsl-%{versio
 Source1:        %{url}/releases/download/release/%{version}/docbook-xsl-doc-%{version}.tar.bz2
 # Build Script for convienience
 Source2:        %{name}.Makefile
+#!RemoteAsset:  sha256:ee8b9eca0b7a8f89075832a2da7534bce8c5478fc8fc2676f512d5d87d832102
+Source3:        %{url}/releases/download/release/%{version}/docbook-xsl-nons-%{version}.tar.bz2
 BuildArch:      noarch
 
 # For compatibility
@@ -37,6 +39,7 @@ tar jxf %{SOURCE0}
 mv docbook-xsl-%{version}/* .
 pushd ..
 tar jxf %{SOURCE1}
+tar jxf %{SOURCE3}
 popd
 
 # Remove .gitignore files
@@ -50,7 +53,7 @@ rm -f extensions/*.jar
 rm -fr tools/
 
 # Make ruby scripts executable
-chmod +x epub/bin/dbtoepub
+chmod +x epub/bin/dbtoepub ../docbook-xsl-nons-%{version}/epub/bin/dbtoepub
 
 # Remove misc
 rm slides/slidy/scripts/slidy.js.gz
@@ -58,6 +61,7 @@ rm roundtrip/template.dot
 
 # Copy our Makefile
 cp -p %{SOURCE2} Makefile
+cp -p %{SOURCE2} ../docbook-xsl-nons-%{version}/Makefile
 
 # fix of non UTF-8 files rpmlint warnings
 for fhtml in $(find ./doc -name '*.html' -type f)
@@ -77,8 +81,8 @@ done
 
 %install
 # Version 4
-make install BINDIR=%{buildroot}%{_bindir} DESTDIR=%{buildroot}%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}
-cp -a VERSION.xsl %{buildroot}%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}/VERSION.xsl
+make -C ../docbook-xsl-nons-%{version} install BINDIR=%{buildroot}%{_bindir} DESTDIR=%{buildroot}%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}
+cp -a ../docbook-xsl-nons-%{version}/VERSION.xsl %{buildroot}%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}/VERSION.xsl
 ln -s xsl-stylesheets-%{version} \
         %{buildroot}%{_datadir}/sgml/docbook/xsl-stylesheets
 # Don't ship the extensions
