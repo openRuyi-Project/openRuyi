@@ -8,12 +8,12 @@
 # SPDX-License-Identifier: MulanPSL-2.0
 
 Name:           bubblewrap
-Version:        0.12.0
+Version:        0.13.1
 Release:        %autorelease
 Summary:        Core execution tool for unprivileged containers
 License:        LGPL-2.1-or-later
 URL:            https://github.com/containers/bubblewrap
-#!RemoteAsset:  sha256:9760d007363e3abba7c747489910f9f82d9fca53ba3bd3282e396fa3c97a3314
+#!RemoteAsset:  sha256:0e85c8702248b8dd64144f594147553650cdd0e4c951690345faace79c217c4d
 Source:         %{url}/releases/download/v%{version}/bubblewrap-%{version}.tar.xz
 BuildSystem:    meson
 
