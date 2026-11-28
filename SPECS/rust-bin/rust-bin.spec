@@ -17,14 +17,14 @@
 %endif
 
 Name:           rust-bin
-Version:        1.97.1
+Version:        1.99.1
 Release:        %autorelease
 Summary:        A systems programming language
 License:        Apache-2.0 OR MIT
 URL:            https://forge.rust-lang.org/infra/other-installation-methods.html#standalone
-#!RemoteAsset:  sha256:59bec35d8febb2ab918fa41cffbaa5b07146a63bdc33f029ff756d70a3151ece
+#!RemoteAsset:  sha256:b66f5a0ce75cab10fa38b6f1ec989d0b2f4310da5efd24f3dd2573e6fae2dfd3
 Source0:        https://static.rust-lang.org/dist/rust-%{version}-riscv64gc-unknown-linux-gnu.tar.gz
-#!RemoteAsset:  sha256:b4cdbc7cc6b0ee0a2666b1872769fdb2ad8393b28b63952f6493b4b400e4832b
+#!RemoteAsset:  sha256:aded4e6c1d580415e7b594a3080d8e23e9cbe06f159f97e300aa6875211f71bf
 Source1:        https://static.rust-lang.org/dist/rust-%{version}-x86_64-unknown-linux-gnu.tar.gz
 ExclusiveArch:  riscv64 x86_64
 
