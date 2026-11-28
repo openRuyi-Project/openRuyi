@@ -11,12 +11,12 @@
 %define go_test_exclude_glob github.com/prometheus/common/config*
 
 Name:           go-github-prometheus-common
-Version:        0.71.0
+Version:        0.72.0
 Release:        %autorelease
 Summary:        Go libraries shared across Prometheus components and libraries.
 License:        Apache-2.0
 URL:            https://github.com/prometheus/common
-#!RemoteAsset:  sha256:72f597ad183c0c348d7e94a18a79ed7d47c78f7cb5b7f7f229808a92ab6e6389
+#!RemoteAsset:  sha256:6a943c70fc156783660be1bc4a1353b3ad22b03c1301c7d8bedc8c6fca7f1288
 Source0:        https://github.com/prometheus/common/archive/v%{version}.tar.gz#/%{_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    golangmodules
@@ -40,6 +40,8 @@ BuildRequires:  go(golang.org/x/oauth2)
 BuildRequires:  go(google.golang.org/protobuf)
 
 Provides:       go(github.com/prometheus/common) = %{version}
+Provides:       go(github.com/prometheus/common/assets) = %{version}
+Provides:       go(github.com/prometheus/common/version) = %{version}
 
 Requires:       go(github.com/alecthomas/kingpin/v2)
 Requires:       go(github.com/golang-jwt/jwt/v5)

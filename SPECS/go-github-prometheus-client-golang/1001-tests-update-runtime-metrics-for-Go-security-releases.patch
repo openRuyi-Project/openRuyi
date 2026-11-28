@@ -1,0 +1,52 @@
+From b8364892d5f87c515c8265dbc12ef8d420fc1a13 Mon Sep 17 00:00:00 2001
+From: Julien Pinsonneau <jpinsonn@redhat.com>
+Date: Fri, 9 Oct 2026 15:28:38 +0200
+Subject: [PATCH 1001/1001] prometheus: update runtime metric fixtures for Go
+ 1.26.9 and 1.27.2
+
+Backport to the older fixture set, whose Go 1.26 cardinality was 192. The additional runtime metric increments that count to 193 instead of 194.
+
+Upstream: https://github.com/prometheus/client_golang/commit/dc77e03d34b019228e68a97d37d7a3c0ba076628
+
+Signed-off-by: Julien Pinsonneau <jpinsonn@redhat.com>
+---
+ prometheus/collectors/go_collector_go126_test.go | 2 ++
+ prometheus/collectors/go_collector_go127_test.go | 2 ++
+ prometheus/go_collector_metrics_go126_test.go    | 3 ++-
+ prometheus/go_collector_metrics_go127_test.go    | 3 ++-
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/prometheus/collectors/go_collector_go126_test.go b/prometheus/collectors/go_collector_go126_test.go
+index 5aad924..e3ff957 100644
+--- a/prometheus/collectors/go_collector_go126_test.go
++++ b/prometheus/collectors/go_collector_go126_test.go
+@@ -76,0 +77 @@ func withAllMetrics() []string {
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+@@ -223,0 +225 @@ func withDebugMetrics() []string {
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+diff --git a/prometheus/collectors/go_collector_go127_test.go b/prometheus/collectors/go_collector_go127_test.go
+index c51419a..6c119f1 100644
+--- a/prometheus/collectors/go_collector_go127_test.go
++++ b/prometheus/collectors/go_collector_go127_test.go
+@@ -75,0 +76 @@ func withAllMetrics() []string {
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+@@ -217,0 +219 @@ func withDebugMetrics() []string {
++		"go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+diff --git a/prometheus/go_collector_metrics_go126_test.go b/prometheus/go_collector_metrics_go126_test.go
+index c1b582c..181fcee 100644
+--- a/prometheus/go_collector_metrics_go126_test.go
++++ b/prometheus/go_collector_metrics_go126_test.go
+@@ -66,0 +67 @@ var (
++		"/godebug/non-default-behavior/httpservecontentmaxranges:events":   "go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+@@ -132 +133 @@ var (
+-const expectedRuntimeMetricsCardinality = 192
++const expectedRuntimeMetricsCardinality = 193
+diff --git a/prometheus/go_collector_metrics_go127_test.go b/prometheus/go_collector_metrics_go127_test.go
+index 0b108d7..52c5a31 100644
+--- a/prometheus/go_collector_metrics_go127_test.go
++++ b/prometheus/go_collector_metrics_go127_test.go
+@@ -65,0 +66 @@ var (
++		"/godebug/non-default-behavior/httpservecontentmaxranges:events":   "go_godebug_non_default_behavior_httpservecontentmaxranges_events_total",
+@@ -127 +128 @@ var (
+-const expectedRuntimeMetricsCardinality = 187
++const expectedRuntimeMetricsCardinality = 188

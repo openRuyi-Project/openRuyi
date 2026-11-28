@@ -45,6 +45,9 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/collector/pdata) = %{version}
+Provides:       go(go.opentelemetry.io/collector/pdata/pprofile) = %{version}
+Provides:       go(go.opentelemetry.io/collector/pdata/testdata) = %{version}
+Provides:       go(go.opentelemetry.io/collector/pdata/xpdata) = %{version}
 
 Requires:       go(github.com/json-iterator/go)
 Requires:       go(go.opentelemetry.io/collector/featuregate)

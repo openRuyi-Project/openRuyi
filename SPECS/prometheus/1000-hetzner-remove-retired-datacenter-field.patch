@@ -1,0 +1,165 @@
+From 087ef21433184112559ba850c48db2eda56b1725 Mon Sep 17 00:00:00 2001
+From: "Jonas L." <jooola@users.noreply.github.com>
+Date: Tue, 28 Jul 2026 13:25:30 +0200
+Subject: [PATCH] discovery: remove unused "datacenter" code in hetzner cloud
+ discovery (#19269)
+
+* discovery: remove "datacenter" unused code in hetzner cloud discovery
+
+The datacenter property was removed from the server object in the Hetzner Cloud API: https://docs.hetzner.cloud/changelog#2026-07-01-removing-datacenters
+
+This commit reflects the changes made in the API. This should also make upgrading the github.com/hetznercloud/hcloud-go dependency easier.
+
+Signed-off-by: Jonas Lammler <jonas.lammler@hetzner-cloud.de>
+
+* docs: remove note about deprecated label for role hcloud
+
+Signed-off-by: Jonas Lammler <jonas.lammler@hetzner-cloud.de>
+
+* deps: bump github.com/hetznercloud/hcloud-go/v2 to v2.47.0
+
+Signed-off-by: Jonas Lammler <jonas.lammler@hetzner-cloud.de>
+
+---------
+
+Signed-off-by: Jonas Lammler <jonas.lammler@hetzner-cloud.de>
+---
+ discovery/hetzner/hcloud.go         |  6 --
+ discovery/hetzner/hcloud_test.go    |  3 -
+ discovery/hetzner/mock_test.go      | 96 -----------------------------
+ docs/configuration/configuration.md |  4 +-
+ 4 files changed, 1 insertion(+), 108 deletions(-)
+
+diff --git a/discovery/hetzner/hcloud.go b/discovery/hetzner/hcloud.go
+index c28bfd2..7c2d638 100644
+--- a/discovery/hetzner/hcloud.go
++++ b/discovery/hetzner/hcloud.go
+@@ -120,6 +119,0 @@ func (d *hcloudDiscovery) refresh(ctx context.Context) ([]*targetgroup.Group, er
+-		// [hcloud.Server.Datacenter] is deprecated and will be removed after 1 July 2026.
+-		// See https://docs.hetzner.cloud/changelog#2025-12-16-phasing-out-datacenters
+-		if server.Datacenter != nil { // nolint: staticcheck
+-			labels[hetznerLabelDatacenter] = model.LabelValue(server.Datacenter.Name) // nolint: staticcheck
+-		}
+-
+diff --git a/discovery/hetzner/hcloud_test.go b/discovery/hetzner/hcloud_test.go
+index e7a1160..fea6ae0 100644
+--- a/discovery/hetzner/hcloud_test.go
++++ b/discovery/hetzner/hcloud_test.go
+@@ -67 +66,0 @@ func TestHCloudSDRefresh(t *testing.T) {
+-			"__meta_hetzner_datacenter":                              model.LabelValue("fsn1-dc8"),
+@@ -91 +89,0 @@ func TestHCloudSDRefresh(t *testing.T) {
+-			"__meta_hetzner_datacenter":                              model.LabelValue("fsn1-dc14"),
+@@ -118 +115,0 @@ func TestHCloudSDRefresh(t *testing.T) {
+-			"__meta_hetzner_datacenter":                              model.LabelValue("fsn1-dc14"),
+diff --git a/discovery/hetzner/mock_test.go b/discovery/hetzner/mock_test.go
+index fb69a76..927da6f 100644
+--- a/discovery/hetzner/mock_test.go
++++ b/discovery/hetzner/mock_test.go
+@@ -137,32 +136,0 @@ func (m *SDMock) HandleHcloudServers() {
+-      "datacenter": {
+-        "id": 1,
+-        "name": "fsn1-dc8",
+-        "description": "Falkenstein 1 DC 8",
+-        "location": {
+-          "id": 1,
+-          "name": "fsn1",
+-          "description": "Falkenstein DC Park 1",
+-          "country": "DE",
+-          "city": "Falkenstein",
+-          "latitude": 50.47612,
+-          "longitude": 12.370071,
+-          "network_zone": "eu-central"
+-        },
+-        "server_types": {
+-          "supported": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available_for_migration": [
+-            1,
+-            2,
+-            3
+-          ]
+-        }
+-      },
+@@ -267,32 +234,0 @@ func (m *SDMock) HandleHcloudServers() {
+-      "datacenter": {
+-        "id": 2,
+-        "name": "fsn1-dc14",
+-        "description": "Falkenstein 1 DC 14",
+-        "location": {
+-          "id": 1,
+-          "name": "fsn1",
+-          "description": "Falkenstein DC Park 1",
+-          "country": "DE",
+-          "city": "Falkenstein",
+-          "latitude": 50.47612,
+-          "longitude": 12.370071,
+-          "network_zone": "eu-central"
+-        },
+-        "server_types": {
+-          "supported": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available_for_migration": [
+-            1,
+-            2,
+-            3
+-          ]
+-        }
+-      },
+@@ -398,32 +333,0 @@ func (m *SDMock) HandleHcloudServers() {
+-      "datacenter": {
+-        "id": 2,
+-        "name": "fsn1-dc14",
+-        "description": "Falkenstein 1 DC 14",
+-        "location": {
+-          "id": 1,
+-          "name": "fsn1",
+-          "description": "Falkenstein DC Park 1",
+-          "country": "DE",
+-          "city": "Falkenstein",
+-          "latitude": 50.47612,
+-          "longitude": 12.370071,
+-          "network_zone": "eu-central"
+-        },
+-        "server_types": {
+-          "supported": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available": [
+-            1,
+-            2,
+-            3
+-          ],
+-          "available_for_migration": [
+-            1,
+-            2,
+-            3
+-          ]
+-        }
+-      },
+diff --git a/docs/configuration/configuration.md b/docs/configuration/configuration.md
+index f023c47..99e4ba0 100644
+--- a/docs/configuration/configuration.md
++++ b/docs/configuration/configuration.md
+@@ -2292,3 +2292 @@ The following meta labels are available on all targets during [relabeling](#rela
+-Note that the `__meta_hetzner_datacenter` label is deprecated for both roles `robot` and `hcloud`:
+-- For the `robot` role, the replacement label is `__meta_hetzner_robot_datacenter`.
+-- For the `hcloud` role, the label will be removed after 1 July 2026. For more details, see the [changelog](https://docs.hetzner.cloud/changelog#2025-12-16-phasing-out-datacenters).
++Note that the `__meta_hetzner_datacenter` label is deprecated for the `robot` role, the replacement label is `__meta_hetzner_robot_datacenter`.

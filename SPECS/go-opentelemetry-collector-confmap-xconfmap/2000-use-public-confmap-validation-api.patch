@@ -1,0 +1,37 @@
+From e01f39966a6525f295675bfa439694fdd5c791d0 Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Mon, 23 Nov 2026 16:32:29 +0800
+Subject: [PATCH] Restore deprecated xconfmap validation API
+
+Retain the Validator and Validate API used by Collector Contrib 0.154 while delegating validation to the public confmap module.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ confmap/xconfmap/config.go | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 confmap/xconfmap/config.go
+
+diff --git a/confmap/xconfmap/config.go b/confmap/xconfmap/config.go
+new file mode 100644
+index 0000000..20e8814
+--- /dev/null
++++ b/confmap/xconfmap/config.go
+@@ -0,0 +1,18 @@
++// SPDX-FileCopyrightText: (C) 2026 HNO3Miracle
++// SPDX-License-Identifier: Apache-2.0
++
++package xconfmap // import "go.opentelemetry.io/collector/confmap/xconfmap"
++
++import "go.opentelemetry.io/collector/confmap"
++
++// Validator is kept for compatibility with consumers using the deprecated xconfmap API.
++//
++// Deprecated: Use confmap.Validator instead.
++type Validator = confmap.Validator
++
++// Validate is kept for compatibility with consumers using the deprecated xconfmap API.
++//
++// Deprecated: Use confmap.Validate instead.
++func Validate(cfg any) error {
++	return confmap.Validate(cfg)
++}

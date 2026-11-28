@@ -48,6 +48,8 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/collector/processor) = %{version}
+Provides:       go(go.opentelemetry.io/collector/processor/processortest) = %{version}
+Provides:       go(go.opentelemetry.io/collector/processor/xprocessor) = %{version}
 
 Requires:       go(go.opentelemetry.io/collector/component)
 Requires:       go(go.opentelemetry.io/collector/consumer)

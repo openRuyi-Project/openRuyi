@@ -38,6 +38,7 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/collector/consumer) = %{version}
+Provides:       go(go.opentelemetry.io/collector/consumer/xconsumer) = %{version}
 
 Requires:       go(go.opentelemetry.io/collector/pdata)
 

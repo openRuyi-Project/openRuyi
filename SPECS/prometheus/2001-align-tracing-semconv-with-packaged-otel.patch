@@ -1,0 +1,20 @@
+From f74a6ae92dbbc49a0fcca54a621121265940679b Mon Sep 17 00:00:00 2001
+From: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+Date: Sat, 21 Nov 2026 09:02:49 +0800
+Subject: [PATCH] Align tracing semantic conventions with packaged
+ OpenTelemetry
+
+Use the semantic convention schema provided by the repository OpenTelemetry release to avoid conflicting resource schema URLs.
+
+Signed-off-by: HNO3Miracle <xiangao.or@isrc.iscas.ac.cn>
+---
+ tracing/tracing.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tracing/tracing.go b/tracing/tracing.go
+index f3d1e04..9a63217 100644
+--- a/tracing/tracing.go
++++ b/tracing/tracing.go
+@@ -32 +32 @@ import (
+-	semconv "go.opentelemetry.io/otel/semconv/v1.41.0"
++	semconv "go.opentelemetry.io/otel/semconv/v1.43.0"

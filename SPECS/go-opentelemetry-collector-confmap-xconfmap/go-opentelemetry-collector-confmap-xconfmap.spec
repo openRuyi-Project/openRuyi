@@ -22,6 +22,9 @@ Source0:        https://github.com/open-telemetry/opentelemetry-collector/archiv
 BuildArch:      noarch
 BuildSystem:    golangmodules
 
+# Preserve the deprecated validation API required by Collector Contrib 0.154 consumers.
+Patch2000:      2000-use-public-confmap-validation-api.patch
+
 BuildRequires:  go
 BuildRequires:  go(github.com/davecgh/go-spew)
 BuildRequires:  go(github.com/go-viper/mapstructure/v2)

@@ -43,6 +43,8 @@ BuildRequires:  go(gopkg.in/yaml.v3)
 BuildRequires:  go-rpm-macros
 
 Provides:       go(go.opentelemetry.io/collector/component) = %{version}
+Provides:       go(go.opentelemetry.io/collector/component/componentstatus) = %{version}
+Provides:       go(go.opentelemetry.io/collector/component/componenttest) = %{version}
 
 Requires:       go(go.opentelemetry.io/collector/pdata)
 Requires:       go(go.opentelemetry.io/otel)
