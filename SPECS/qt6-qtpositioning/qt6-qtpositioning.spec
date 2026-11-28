@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtpositioning
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtpositioning
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - Positioning component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtpositioning
-#!RemoteAsset:  sha256:d5e6b91801ae286e7630016caea3bdc5e1978b4291d6741d0d64c125650f78f5
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:8d8a27660c52c45ad71ab552968c1b073912cd09a4eb864ef67b7d6133e74fef
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -76,7 +78,7 @@ popd
 %{_qt6_libdir}/libQt6PositioningQuick.so.6*
 %{_qt6_pluginsdir}/position/
 %{_qt6_qmldir}/QtPositioning/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtPositioning/

@@ -2,38 +2,39 @@
 # SPDX-FileCopyrightText: (C) 2026 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: jingyupu <pujingyu@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %global pypi_name pyside6
 %global camel_name PySide6
-%global qt6ver 6.11.1
+%global qt6ver 6.12.0
 
 Name:           python-%{pypi_name}
-Version:        6.11.1
+Version:        6.12.0
 Release:        %autorelease
 Summary:        Python bindings for the Qt 6 cross-platform application and UI framework
-License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        (LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only) AND (GPL-3.0-only WITH Qt-GPL-exception-1.0) AND BSD-3-Clause
 URL:            https://wiki.qt.io/Qt_for_Python
 VCS:            git:https://github.com/qtproject/pyside-pyside-setup
-#!RemoteAsset:  sha256:6ffd9835bb0dd2c56f061d62f1616bb1707cfc0202b80e3165d6be087f3965e2
+#!RemoteAsset:  sha256:099c1a597cf33c1b000e11cf68a0b82d216fb802bf81726efc720394f10c7751
 Source0:        https://download.qt.io/official_releases/QtForPython/%{pypi_name}/%{camel_name}-%{qt6ver}-src/pyside-setup-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
-# Revert header installation paths to use standard system include directories.
-Patch0:         0001-Revert-Modify-headers-installation-for-CMake-builds.patch
-# Unconditionally link against Python libraries on all platforms.
-Patch1:         0002-Always-link-to-python-libraries.patch
-# Install CMake configuration files and binaries to standard system locations.
-Patch2:         0003-Fix-installation.patch
+# Link Python extension libraries explicitly (adapted from openSUSE); https://api.opensuse.org/public/source/openSUSE:Factory/python3-pyside6/0001-Always-link-to-python-libraries.patch?rev=55.
+Patch2000:      2000-Always-link-to-python-libraries.patch
+# Use system paths for CMake files and tools (adapted from openSUSE); https://api.opensuse.org/public/source/openSUSE:Factory/python3-pyside6/0001-Fix-installation.patch?rev=55.
+Patch2001:      2001-Fix-installation.patch
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DCMAKE_BUILD_TYPE=Release
-BuildOption(conf):  -DBUILD_TESTS=OFF
+BuildOption(conf):  -DBUILD_TESTS=ON
 BuildOption(conf):  -DBUILD_DOCS=OFF
 BuildOption(conf):  -DNO_QT_TOOLS=yes
 BuildOption(conf):  -DCMAKE_SKIP_INSTALL_RPATH=ON
 BuildOption(conf):  -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON
 BuildOption(conf):  -DFORCE_LIMITED_API=no
+BuildOption(conf):  -DNUMPY_INCLUDE_DIR="$(%{__python3} -c 'import numpy; print(numpy.get_include())')"
 
 BuildRequires:  cmake
 BuildRequires:  ninja
@@ -88,10 +89,14 @@ BuildRequires:  cmake(Qt6Graphs)
 BuildRequires:  cmake(Qt6GraphsWidgets)
 BuildRequires:  cmake(Qt6Bluetooth)
 BuildRequires:  cmake(Qt6WebChannel)
-# we don't have yet.
-# BuildRequires:  cmake(Qt6WebEngineCore)
-# BuildRequires:  cmake(Qt6WebEngineWidgets)
-# BuildRequires:  cmake(Qt6WebEngineQuick)
+BuildRequires:  cmake(Qt6WebEngineCore)
+BuildRequires:  cmake(Qt6WebEngineWidgets)
+BuildRequires:  cmake(Qt6WebEngineQuick)
+BuildRequires:  cmake(Qt6Pdf)
+BuildRequires:  cmake(Qt6PdfWidgets)
+BuildRequires:  cmake(Qt6WebView)
+BuildRequires:  cmake(Qt6CanvasPainter)
+BuildRequires:  cmake(Qt6LabsStyleKit)
 BuildRequires:  cmake(Qt6WebSockets)
 BuildRequires:  cmake(Qt6HttpServer)
 BuildRequires:  cmake(Qt63DCore)
@@ -187,6 +192,10 @@ mv %{buildroot}%{_bindir}/{android_deploy.py,deploy_lib,deploy.py,metaobjectdump
 mkdir -p %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
 mv %{buildroot}%{_bindir}/shiboken_tool.py %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
 
+# Match the upstream Linux wheel tool selection.
+rm -f %{buildroot}%{_bindir}/{ios_deploy.py,requirements-ios.txt}
+rm -rf %{buildroot}%{python3_sitelib}/%{camel_name}/scripts/deploy_lib/ios
+
 # Fix all Python shebangs recursively
 # -p preserves timestamps
 # -n prevents creating ~backup files
@@ -196,8 +205,11 @@ mv %{buildroot}%{_bindir}/shiboken_tool.py %{buildroot}%{python3_sitelib}/shibok
 %py3_shebang_fix %{buildroot}%{python3_sitelib}/shiboken6_generator/scripts
 
 %check
+# Run the upstream non-GUI binding and generator tests.
+%{__ctest} --test-dir %{_vpath_builddir}/sources/shiboken6_generator/ApiExtractor/tests --output-on-failure --no-tests=error --parallel %{_smp_build_ncpus}
+%{__ctest} --test-dir %{_vpath_builddir}/sources/shiboken6 --output-on-failure --no-tests=error --parallel %{_smp_build_ncpus}
 export LD_LIBRARY_PATH="%{buildroot}%{_libdir}"
-%py3_check_import PySide6
+%py3_check_import PySide6.QtWebEngineCore PySide6.QtWebEngineQuick PySide6.QtWebEngineWidgets PySide6.QtPdf PySide6.QtPdfWidgets PySide6.QtWebView PySide6.QtCanvasPainter PySide6.QtLabsStyleKit
 %py3_check_import shiboken6
 
 %files
@@ -219,9 +231,11 @@ export LD_LIBRARY_PATH="%{buildroot}%{_libdir}"
 %{_libdir}/qt6/plugins/designer/libPySidePlugin.so
 
 %files -n shiboken6
+%license LICENSES/*
 %{_libdir}/cmake/Shiboken6Tools/*
 
 %files -n python-shiboken6
+%license LICENSES/*
 %{_libdir}/libshiboken6*.so.6*
 %{python3_sitelib}/shiboken6/
 %{python3_sitearch}/shiboken6-%{version}-py%{python3_version}.egg-info/

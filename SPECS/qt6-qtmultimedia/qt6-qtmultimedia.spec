@@ -2,26 +2,27 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtmultimedia
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
-%bcond ffmpeg 0
+%bcond ffmpeg 1
 
 Name:           qt6-qtmultimedia
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - Multimedia support
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://code.qt.io/qt/qtmultimedia.git
-#!RemoteAsset:  sha256:390f8e52ddee3aca5c4de7eead900c84c4fa61ff6d1f0ebea9c7543365c09b0a
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:5a125bc2bede8c6512296e0f3204a9922741fd144fcae7d4a66b3c007bb125e3
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 BuildOption(conf):  -DFEATURE_gstreamer=OFF
@@ -30,8 +31,11 @@ BuildOption(conf):  -DFEATURE_ffmpeg=ON
 %else
 BuildOption(conf):  -DFEATURE_ffmpeg=OFF
 %endif
+BuildOption(conf):  -DFEATURE_pulseaudio=ON
+BuildOption(conf):  -DFEATURE_pipewire=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core) >= %{version}
@@ -40,6 +44,9 @@ BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
 BuildRequires:  pkgconfig(Qt6ShaderTools) >= %{version}
 BuildRequires:  pkgconfig(Qt6Quick3D) >= %{version}
 BuildRequires:  pkgconfig(alsa)
+BuildRequires:  pkgconfig(libpulse)
+BuildRequires:  pkgconfig(libpipewire-0.3)
+BuildRequires:  pkgconfig(libspa-0.2)
 BuildRequires:  pkgconfig(xkbcommon) >= 0.5.0
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  wayland-devel
@@ -97,7 +104,7 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %if %{with ffmpeg}
 %{_qt6_pluginsdir}/multimedia/libffmpegmediaplugin.so
 %endif
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %if %{with ffmpeg}
@@ -127,6 +134,7 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %{_qt6_libdir}/libQt6Quick3DSpatialAudio.so
 %{_qt6_libdir}/libQt6Quick3DSpatialAudio.prl
 %{_qt6_libdir}/cmake/Qt6MultimediaQuickPrivate/
+%{_qt6_libdir}/cmake/Qt6MultimediaQuick/
 %{_qt6_libdir}/cmake/Qt6BundledResonanceAudio/
 %if %{with ffmpeg}
 %{_qt6_libdir}/cmake/Qt6FFmpegMediaPluginImplPrivate/
@@ -139,6 +147,7 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6quickmultimedia*.cmake
 %{_qt6_libdir}/cmake/Qt6Qml/QmlPlugins/Qt6quick3dspatialaudio*.cmake
 %{_qt6_libdir}/cmake/Qt6Quick3DSpatialAudioPrivate/
+%{_qt6_libdir}/cmake/Qt6Quick3DSpatialAudio/
 %{_qt6_libdir}/cmake/Qt6SpatialAudio/
 %{_qt6_libdir}/cmake/Qt6SpatialAudioPrivate/
 %{_qt6_libdir}/cmake/Qt6/*.cmake
@@ -147,8 +156,10 @@ rm -rf %{buildroot}%{_qt6_archdatadir}/mkspecs/features/ios
 %{_qt6_libdir}/qt6/metatypes/qt6*_metatypes.json
 %{_qt6_datadir}/modules/*.json
 %{_qt6_libdir}/pkgconfig/Qt6Multimedia.pc
+%{_qt6_libdir}/pkgconfig/Qt6MultimediaQuick.pc
 %{_qt6_libdir}/pkgconfig/Qt6MultimediaWidgets.pc
 %{_qt6_libdir}/pkgconfig/Qt6SpatialAudio.pc
+%{_qt6_libdir}/pkgconfig/Qt6Quick3DSpatialAudio.pc
 
 %files examples
 %{_qt6_examplesdir}/

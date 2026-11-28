@@ -1,23 +1,27 @@
 # SPDX-FileCopyrightText: (C) 2025 Institute of Software, Chinese Academy of Sciences (ISCAS)
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtimageformats
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtimageformats
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - QtImageFormats component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtimageformats
-#!RemoteAsset:  sha256:b2bf6c6845ac175ed7f819145483ba4676f617aaa6a5012c8efee63c8bbac413
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:20a40732228cf0734c5b2335d4a816c1cab97dcdcc6d13073c0b1065e1c6c608
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
+
+BuildOption(conf):  -GNinja
+BuildOption(conf):  -DFEATURE_mng=ON
+BuildOption(conf):  -DFEATURE_jasper=ON
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
@@ -48,7 +52,7 @@ rm -rv src/3rdparty
 %{_qt6_pluginsdir}/imageformats/libqwebp.so
 %{_qt6_libdir}/cmake/Qt6/*.cmake
 %{_qt6_libdir}/cmake/Qt6Gui/*.cmake
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %changelog
 %autochangelog

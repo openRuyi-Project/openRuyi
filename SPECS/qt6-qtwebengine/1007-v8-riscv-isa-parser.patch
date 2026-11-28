@@ -1,0 +1,85 @@
+From 79b2369ad746e3208e6984ceccf7f661a83b2058 Mon Sep 17 00:00:00 2001
+From: Zhijin Zeng <zhijin.zeng@spacemit.com>
+Date: Wed, 4 Feb 2026 13:55:02 +0800
+Subject: [PATCH] [riscv] Fix ISA feature parsing error from /proc/cpuinfo
+
+HasListItem only supports whitespace-separated items, but RISC-V ISA features
+in /proc/cpuinfo are separated by underscores ('_'), as follows:
+
+`isa             : rv64imafdcv_zicbom_zicboz_zicntr_zicond_zicsr_zifencei`
+
+Change-Id: I6028546f7eee9ee1912967a366a818350ef8394c
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7320200
+Reviewed-by: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Reviewed-by: Clemens Backes <clemensb@chromium.org>
+Commit-Queue: Yahan Lu (LuYahan) <yahan@iscas.ac.cn>
+Cr-Commit-Position: refs/heads/main@{#105120}
+---
+ src/base/cpu.cc | 31 ++++++++++++++++++++++++-------
+ 1 file changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/src/3rdparty/chromium/v8/src/base/cpu.cc b/src/3rdparty/chromium/v8/src/base/cpu.cc
+index 9683d99910d0..f64e1e71bed0 100644
+--- a/src/3rdparty/chromium/v8/src/base/cpu.cc
++++ b/src/3rdparty/chromium/v8/src/base/cpu.cc
+@@ -349,18 +349,24 @@ class CPUInfo final {
+   size_t datalen_;
+ };
+ 
+-// Checks that a space-separated list of items contains one given 'item'.
+-static bool HasListItem(const char* list, const char* item) {
++// Checks whether the given item appears in a list of items separated by
++// characters for which isseparator returns true.
++template <typename Predicate>
++static bool HasListItem(const char* list, const char* item,
++                        Predicate isseparator) {
+   ssize_t item_len = strlen(item);
+   const char* p = list;
+   if (p != nullptr) {
++    // Skip whitespace.
++    while (isspace(*p)) ++p;
++
+     while (*p != '\0') {
+-      // Skip whitespace.
+-      while (isspace(*p)) ++p;
++      // Skip separator.
++      while (isseparator(*p)) ++p;
+ 
+       // Find end of current list item.
+       const char* q = p;
+-      while (*q != '\0' && !isspace(*q)) ++q;
++      while (*q != '\0' && !isseparator(*q)) ++q;
+ 
+       if (item_len == q - p && memcmp(p, item, item_len) == 0) {
+         return true;
+@@ -373,6 +379,11 @@ static bool HasListItem(const char* list, const char* item) {
+   return false;
+ }
+ 
++// Checks that a space-separated list of items contains one given 'item'.
++static bool HasListItem(const char* list, const char* item) {
++  return HasListItem(list, item, isspace);
++}
++
+ #endif  // V8_OS_LINUX
+ 
+ #endif  // V8_HOST_ARCH_ARM || V8_HOST_ARCH_ARM64 ||
+@@ -1050,10 +1061,16 @@ CPU::CPU()
+ #else
+   char* features = cpu_info.ExtractField("isa");
+ 
+-  if (HasListItem(features, "rv64imafdc")) {
++  // Underscore (_) is used as the separator for RISC-V ISA features.
++  auto HasFeature = [features](const char* feature) {
++    return HasListItem(features, feature,
++                       std::bind_front(std::equal_to{}, '_'));
++  };
++
++  if (HasFeature("rv64imafdc")) {
+     has_fpu_ = true;
+   }
+-  if (HasListItem(features, "rv64imafdcv")) {
++  if (HasFeature("rv64imafdcv")) {
+     has_fpu_ = true;
+     has_rvv_ = true;
+   }

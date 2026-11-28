@@ -10,13 +10,13 @@
 %bcond crash_handler 0
 
 Name:           quickshell
-Version:        0.3.0
+Version:        0.3.2
 Release:        %autorelease
 Summary:        QtQuick-based desktop shell toolkit
 License:        LGPL-3.0-only
 URL:            https://quickshell.outfoxxed.me
 VCS:            git:https://git.outfoxxed.me/quickshell/quickshell.git
-#!RemoteAsset:  sha256:f4821f9084cab04bd2b5384cc92b9726aecc4ce3eb27200dca24edc67da3b6e5
+#!RemoteAsset:  sha256:f14115a73c9fff6aa6399f924b632e88c3ce2cead2657f814a7825341f35baad
 Source0:        https://git.outfoxxed.me/quickshell/quickshell/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:    cmake
 

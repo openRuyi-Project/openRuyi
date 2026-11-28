@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtcharts
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtcharts
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - Charts component
-License:        GPL-3.0-only WITH Qt-GPL-exception-1.0
+License:        GPL-3.0-only AND BSD-3-Clause
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtcharts
-#!RemoteAsset:  sha256:3fe3ed318c2a86d1417c5c29cf7494275e8fd4b537cd37453f5599c57365515c
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:ba7ef1ec8fcd1b70d0a0d39d31924009b146ebc38db92b657a39387e33c2cd07
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -62,7 +64,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6Charts.so.6*
 %{_qt6_libdir}/libQt6ChartsQml.so.6*
 %{_qt6_qmldir}/QtCharts/
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtCharts/

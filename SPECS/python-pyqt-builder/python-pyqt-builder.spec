@@ -8,18 +8,15 @@
 %global pypi_name pyqt_builder
 
 Name:           python-pyqt-builder
-Version:        1.19.1
+Version:        1.21.0
 Release:        %autorelease
 Summary:        The PEP 517 compliant PyQt build system
 License:        BSD-2-Clause
 URL:            https://www.riverbankcomputing.com/software/pyqt/
-#!RemoteAsset:  sha256:6af6646ba29668751b039bfdced51642cb510e300796b58a4d68b7f956a024d8
+#!RemoteAsset:  sha256:673efa27237a81ffefc7d9a6419565600a129b4f4cf4d358c89a348b39b3a454
 Source0:        https://files.pythonhosted.org/packages/source/p/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
 BuildArch:      noarch
 BuildSystem:    pyproject
-
-# not support dynamic version.
-Patch0:         0001-fix-version.patch
 
 BuildOption(install):  -l pyqtbuild
 
@@ -27,7 +24,7 @@ BuildRequires:  pyproject-rpm-macros
 BuildRequires:  pkgconfig(python3)
 BuildRequires:  python3dist(pip)
 BuildRequires:  python3dist(sip)
-BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools) >= 77
 BuildRequires:  python3dist(wheel)
 BuildRequires:  python3dist(setuptools-scm) >= 8
 

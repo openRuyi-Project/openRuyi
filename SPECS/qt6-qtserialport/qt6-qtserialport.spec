@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtserialport
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtserialport
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - SerialPort component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtserialport
-#!RemoteAsset:  sha256:9af31a898ffd9a7e4faf6fed845d29e783c716885789055cbe319f3e072d3974
-Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{real_version}/submodules/%{qt_module}-everywhere-src-%{real_version}.tar.xz
+#!RemoteAsset:  sha256:ee05511d4993438b6b2babd8df8f8fae8c5e7aab563090dd81f1f0be9bbb3374
+Source0:        https://download.qt.io/official_releases/qt/%{short_version}/%{version}/submodules/%{qt_module}-everywhere-src-%{version}.tar.xz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES:BOOL=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES:BOOL=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -67,7 +69,7 @@ popd
 %files
 %license LICENSES/*
 %{_qt6_libdir}/libQt6SerialPort.so.6*
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtSerialPort/

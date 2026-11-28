@@ -2,28 +2,30 @@
 # SPDX-FileCopyrightText: (C) 2025 openRuyi Project Contributors
 # SPDX-FileContributor: yyjeqhc <jialin.oerv@isrc.iscas.ac.cn>
 # SPDX-FileContributor: misaka00251 <liuxin@iscas.ac.cn>
+# SPDX-FileContributor: Jingwiw <wangjingwei@iscas.ac.cn>
 #
 # SPDX-License-Identifier: MulanPSL-2.0
 
 %define qt_module qtopcua
-%define real_version 6.11.1
-%define short_version 6.11
+%define short_version 6.12
 
 Name:           qt6-qtopcua
-Version:        6.11.1
+Version:        6.12.1
 Release:        %autorelease
 Summary:        Qt6 - OPC UA component
 License:        LGPL-3.0-only OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 URL:            https://www.qt.io
 VCS:            git:https://github.com/qt/qtopcua
-#!RemoteAsset:  sha256:d261f2ac7ee8d5dc8ac3d23de79bde6acd1abbfeeeaa7a56974eac1f0594c932
+#!RemoteAsset:  sha256:4fcd23dc6c7dcceee06f1ef40d3ea79d9f85fde8b489279c8b4ef393c4b9f8e2
 Source0:        https://github.com/qt/%{qt_module}/archive/refs/tags/v%{version}.tar.gz
 BuildSystem:    cmake
 
+BuildOption(conf):  -GNinja
 BuildOption(conf):  -DQT_BUILD_EXAMPLES=ON
 BuildOption(conf):  -DQT_INSTALL_EXAMPLES_SOURCES=ON
 
 BuildRequires:  cmake
+BuildRequires:  ninja
 BuildRequires:  gcc-c++
 BuildRequires:  qt6-macros
 BuildRequires:  pkgconfig(Qt6Core)
@@ -32,7 +34,7 @@ BuildRequires:  pkgconfig(Qt6Network)
 BuildRequires:  pkgconfig(Qt6Widgets)
 BuildRequires:  qt6-qtbase-private-devel
 BuildRequires:  pkgconfig(Qt6Quick) >= %{version}
-BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(openssl3)
 
 %description
 Qt OPC UA (API) provides classes and functions to access the OPC UA protocol.
@@ -59,7 +61,7 @@ Programming examples for %{name}.
 %{_qt6_libdir}/libQt6DeclarativeOpcua.so.*
 %{_qt6_qmldir}/QtOpcUa/
 %{_qt6_bindir}/qopcuaxmldatatypes2cpp
-%{_qt6_archdatadir}/sbom/%{qt_module}-%{real_version}.spdx
+%{_qt6_archdatadir}/sbom/%{qt_module}-%{version}.spdx
 
 %files devel
 %{_qt6_includedir}/QtOpcUa/

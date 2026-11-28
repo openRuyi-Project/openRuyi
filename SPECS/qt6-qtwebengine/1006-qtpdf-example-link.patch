@@ -1,0 +1,48 @@
+From dc73367655df769ca69c65ffa6c776e9edcc94a6 Mon Sep 17 00:00:00 2001
+From: Michal Klocek <michal.klocek@qt.io>
+Date: Tue, 30 Jun 2026 11:13:32 +0200
+Subject: [PATCH] Fix build race condition resulting in QASSERT in qmlcachegen
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add PdfQuick to target linker in qtpdf examples otherwise after
+
+https://codereview.qt-project.org/c/qt/qtdeclarative/+/713674
+
+it asserts when doing qmlcachegen from time to time with
+
+ASSERT: "type->baseType()" in file
+.../qtdeclarative.6.13/src/qmlcompiler/qqmljslookupsignatures.cpp
+
+Change-Id: I236e50f3eef971349dca937cf61200fd2481c72c
+Reviewed-by: Olivier De Cannière <olivier.decanniere@qt.io>
+---
+ examples/pdf/multipage/CMakeLists.txt  | 1 +
+ examples/pdf/singlepage/CMakeLists.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/examples/pdf/multipage/CMakeLists.txt b/examples/pdf/multipage/CMakeLists.txt
+index ff25c02cc83..87125da788a 100644
+--- a/examples/pdf/multipage/CMakeLists.txt
++++ b/examples/pdf/multipage/CMakeLists.txt
+@@ -66,6 +66,7 @@ set_target_properties(multipage PROPERTIES
+ target_link_libraries(multipage PUBLIC
+     Qt::Gui
+     Qt::Qml
++    Qt::PdfQuick
+ )
+ 
+ install(TARGETS multipage
+diff --git a/examples/pdf/singlepage/CMakeLists.txt b/examples/pdf/singlepage/CMakeLists.txt
+index 724d517c512..a7887c3f538 100644
+--- a/examples/pdf/singlepage/CMakeLists.txt
++++ b/examples/pdf/singlepage/CMakeLists.txt
+@@ -53,6 +53,7 @@ set_target_properties(singlepage PROPERTIES
+ target_link_libraries(singlepage PUBLIC
+     Qt::Gui
+     Qt::Qml
++    Qt::PdfQuick
+ )
+ 
+ install(TARGETS singlepage
